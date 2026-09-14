@@ -11,7 +11,7 @@ underneath, hidden behind adapters.
             └───────┬──────────────────────┘
                     io              native .bcad, STEP/STL export
                     │
-                 features           extrude, revolve, chamfer, fillet (later: hole, ...)
+                 features           extrude, revolve, chamfer, fillet, hole (later: patterns, ...)
                     │
                   sketch            entities, constraints, solver
                     │
@@ -252,6 +252,61 @@ milestones start; see `TODO.md`.
   - the guarded kernel build and result validation.
 
   Messages name the operation, so each is reported in its own terms.
+- **Faces and face references** (`Faces.hpp`). `listFaces(body)` describes
+  a body's faces: surface kind, area, centroid and, for planar faces, a
+  `FaceSignature`. A signature is the face's plane and outward side: the
+  plane's point nearest the origin and the outward normal, without negative
+  zeros. `findFaces(body, signature)` returns the faces on that plane that
+  face the same way (normals within 1e-9 rad, the point within 1e-7 mm of
+  the plane). Only planar faces can be referenced; curved ones are refused
+  by `validate()`. As for edges, this is geometric matching, not persistent
+  topological naming:
+  - it survives changes that keep the face on its plane (a wider block);
+  - it fails with NotFound when the plane moves (the top of a taller block);
+  - several faces can lie on one plane; users of references say how they
+    choose.
+
+  `facePoint()` and `faceCoordinates()` map between model space and the
+  face's (u, v) coordinates: the origin is the plane's point nearest the
+  origin, and u and v are two model axes projected into the plane (X and Y
+  for a plane facing ±Z, X and Z for ±Y, otherwise Y and Z). The rule does not
+  depend on the side, so both faces of a plate share coordinates, and on a
+  box's faces (u, v) are model coordinates.
+- **Hole** (`Hole.hpp`). `cutHole(body, request)` drills a cylindrical hole
+  into a planar face, perpendicular to it and always into the material (along
+  the reversed outward normal). A `HoleRequest` is:
+  - the face reference and a centre in its (u, v) coordinates;
+  - a type (`Simple`, `Counterbore`, `Countersink`) and an extent
+    (`Through`, `Blind`);
+  - the diameter, a blind hole's depth, and the head's dimensions.
+
+  Fields a type or extent does not use must be zero; in particular a through
+  hole has no depth. Before the kernel runs:
+  1. **Placement.** The face is the one on the referenced plane that contains
+     the centre. No face on the plane: NotFound. Faces on the plane but none
+     under the centre: FailedPrecondition. The centre on two faces (on the
+     edge between coplanar faces): FailedPrecondition, ambiguous. No other
+     face is substituted.
+  2. **No side breakout.** The entry outline (the head's, if any) must lie
+     inside the face, at least 0.001 mm from every edge of it (its outer
+     boundary and any holes in it). A hole that would break out of a side is
+     refused, not built.
+  3. **Depth.** The material along the axis is measured from the face. A
+     blind hole, or a through hole's head, must end at least 0.001 mm before
+     it does. A blind hole that would reach the far side is refused ("make it
+     a through hole"), never silently made through.
+
+  The cutter is the hole's section revolved about the axis. It starts
+  0.01 mm outside the face; a through cutter runs 1 mm past the body's
+  bounding box, so it has no stored depth and follows the body's thickness.
+  It is subtracted with `booleanDifference()`. The result must be valid,
+  keep the number of solids, and have a finite positive volume below the
+  input's. A blind hole must remove exactly its own volume (within 1e-9 of
+  the body's volume): less means it broke into a cavity, which is refused.
+  A through hole may pass through cavities along its axis ("through all").
+  The preflight is for these guarantees, not for crash avoidance: a
+  kernel probe of degenerate holes found no crashes
+  (`docs/verification/P11-FEAT-004/`).
 
 ### Sketches (`bettercad/sketch/`, library `bettercad_sketch`)
 
@@ -320,8 +375,23 @@ milestones start; see `TODO.md`.
   - the edges;
   - a constant radius, literal or driven by a length parameter.
 
-  The private `SolidSupport` helper `applyToTargetBody()` gives chamfer and
-  fillet the same target-body handling and message prefix.
+  The private `SolidSupport` helper `applyToTargetBody()` gives chamfer,
+  fillet and hole the same target-body handling and message prefix.
+- **Hole** (`HoleFeature.hpp`) drills into another feature's body, which it
+  consumes. A `HoleDefinition` holds:
+  - the target feature and the placement face (`geometry::FaceSignature`);
+  - the centre in face coordinates, each coordinate literal or driven by a
+    length parameter;
+  - the type and extent, the diameter and a blind hole's depth, each
+    literal or driven by a length parameter, and the head's dimensions.
+
+  `validate()` applies the geometry request's rules to literal values;
+  relations that involve a driven value (a counterbore wider than a driven
+  diameter) are checked at regeneration. Regeneration resolves the face on
+  the target's current body, so a hole placed on the bottom face of an
+  extrude (its start plane) follows any thickness, and a through hole stays
+  through. A hole on a face that moves (the top of a thicker extrude) fails
+  with NotFound and keeps no body.
 - Bodies are derived: regeneration computes them from the current document.
   Regenerating does not change the document's revision or dirty state.
 - `extractRegions()` turns a sketch into `geometry::PlanarRegion`s. It
@@ -349,7 +419,8 @@ milestones start; see `TODO.md`.
   a copy of the document:
   1. document consistency (references point at the right kind of item and
      dimension, e.g. revolve axes are lines, revolve angles are angles, and
-     chamfer distances and fillet radii are lengths);
+     chamfer distances, fillet radii and hole dimensions and centres are
+     lengths);
   2. missing references (including revolve axis lines in their sketches);
   3. dependency cycles;
   4. sketch constraints (each sketch solves with its driving parameters;
@@ -386,7 +457,16 @@ milestones start; see `TODO.md`.
     `"distance_angle"`, and a chamfer stores `distance2`, `angle` and
     `reference_side` only when its mode uses them;
   - a fillet stores `target`, `edges` (as for chamfers), `radius` in
-    metres and an optional `radius_parameter`.
+    metres and an optional `radius_parameter`;
+  - a hole stores `target`; `face` as
+    `{"surface": "plane", "point": [...], "normal": [...]}`; `center` as
+    face `[u, v]` with optional `center_u_parameter` and
+    `center_v_parameter`; `type` (`"simple"`, `"counterbore"`,
+    `"countersink"`), `extent` (`"through"`, `"blind"`), `diameter` and an
+    optional `diameter_parameter`. Only a blind hole stores `depth` and
+    `depth_parameter`, only a counterbore `counterbore_diameter` and
+    `counterbore_depth`, and only a countersink `countersink_diameter` and
+    `countersink_angle` (radians).
 
   The rules are:
   - **Only inputs are stored.** Geometry is derived and is regenerated after
@@ -433,7 +513,8 @@ milestones start; see `TODO.md`.
 
 - `tests/support/` holds shared fixtures:
   - the P9 bracket model, the turned part (revolves), and the parametric
-    block (`BlockModel`) with its chamfered and filleted variants;
+    block (`BlockModel`) with its chamfered, filleted and drilled
+    (`HoleModels.hpp`) variants;
   - temporary directories;
   - mesh and STL analysis written from first principles (divergence-theorem
     volume, edge-manifold watertightness).

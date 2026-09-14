@@ -1,0 +1,16 @@
+Hole kernel probe runs, 2026-09-15 03:58:45
+Source: docs/verification/P11-FEAT-004/kernel-probe/hole_kernel_probe.cpp
+Built with: c++.exe (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r4) 16.1.0, -O2, against build/release (OCCT 8.0.1)
+One process per case, 60 s timeout. Exit 0x00000000 = no crash; 0xC0000005 would be an access violation.
+kernel = booleanDifference() of a plain cylinder, no preflight; cutHole = BetterCAD's hole operation.
+
+through            exit 0x00000000    0.3 s  kernel: solids 1 valid 1 volume 98429.203673205091 | cutHole: solids 1 valid 1 volume 98429.203673205106
+flush-entry        exit 0x00000000    0.1 s  kernel: solids 1 valid 1 volume 99214.601836602567 | cutHole: solids 1 valid 1 volume 99214.601836602567
+far-flush          exit 0x00000000    0.4 s  kernel: solids 1 valid 1 volume 98429.203673205091 | cutHole: failed precondition: hole: a blind hole 20 mm deep would reach the far side: there are only 20 mm of material along its axis; make it a through hole
+far-hair           exit 0x00000000    0.1 s  kernel: solids 1 valid 1 volume 98429.203667969108 | cutHole: failed precondition: hole: a blind hole 20 mm deep would reach the far side: there are only 20 mm of material along its axis; make it a through hole
+tangent            exit 0x00000000    0.4 s  kernel: solids 1 valid 1 volume 98429.203673205120 | cutHole: failed precondition: hole: the hole does not fit on its face: its entry is 10 mm across, but the centre (50, 5) mm is only 5 mm from the face's edge (a hole must stay at least 0.001 mm inside its face)
+near-tangent       exit 0x00000000    0.1 s  kernel: solids 1 valid 1 volume 98429.203673205120 | cutHole: failed precondition: hole: the hole does not fit on its face: its entry is 10 mm across, but the centre (50, 5) mm is only 5 mm from the face's edge (a hole must stay at least 0.001 mm inside its face)
+breakout           exit 0x00000000    0.5 s  kernel: solids 1 valid 1 volume 98652.851282218340 | cutHole: failed precondition: hole: the hole does not fit on its face: its entry is 10 mm across, but the centre (50, 3) mm is only 3 mm from the face's edge (a hole must stay at least 0.001 mm inside its face)
+corner             exit 0x00000000    0.1 s  kernel: solids 1 valid 1 volume 99607.300918301276 | cutHole: failed precondition: hole: the hole does not fit on its face: its entry is 10 mm across, but the centre (0, 0) mm is only 0 mm from the face's edge (a hole must stay at least 0.001 mm inside its face)
+outside            exit 0x00000000    0.4 s  kernel: solids 1 valid 1 volume 100000.000000000000 | cutHole: failed precondition: hole: the centre (200, 25) mm is not on a face of the body on the plane through (0, 0, 20) mm facing (0, 0, 1) (1 face(s) lie on that plane elsewhere)
+tiny               exit 0x00000000    0.1 s  kernel: solids 1 valid 1 volume 99999.999999999942 | cutHole: failed precondition: hole: the hole removes no material

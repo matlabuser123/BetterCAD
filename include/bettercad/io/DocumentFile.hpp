@@ -14,7 +14,7 @@
 //     "format": "bettercad-document", "version": 1, "units": "SI",
 //     "document":   { "id": "<uuid>", "name": ..., "metadata": {...}, "last_allocated_id": N },
 //     "parameters": [ ... ],
-//     "objects":    [ { "id": N, "type": "sketch" | "extrude" | "revolve" | "chamfer" | "fillet",
+//     "objects":    [ { "id": N, "type": "sketch" | "extrude" | "revolve" | "chamfer" | "fillet" | "hole",
 //                       "name": ..., "data": {...} } ]
 //   }
 //

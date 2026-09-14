@@ -10,6 +10,7 @@
 #include <bettercad/features/ChamferFeature.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/features/FilletFeature.hpp>
+#include <bettercad/features/HoleFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
 #include <bettercad/sketch/Sketch.hpp>
 
@@ -56,5 +57,12 @@ chamferFromJson(const Json& data, std::string name, std::string_view path);
 [[nodiscard]] Json filletToJson(const features::FilletFeature& feature);
 [[nodiscard]] Result<std::unique_ptr<features::FilletFeature>>
 filletFromJson(const Json& data, std::string name, std::string_view path);
+
+/// Lengths in metres, the angle in radians; the face as
+/// {"surface": "plane", "point": [...], "normal": [...]} and the centre as
+/// face-local [u, v]. Keys a type or extent does not use are left out.
+[[nodiscard]] Json holeToJson(const features::HoleFeature& feature);
+[[nodiscard]] Result<std::unique_ptr<features::HoleFeature>>
+holeFromJson(const Json& data, std::string name, std::string_view path);
 
 } // namespace bettercad::io::detail

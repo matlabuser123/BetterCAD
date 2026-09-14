@@ -184,21 +184,60 @@ line or circle), not semantic topology naming, which stays under "Later".
 controls. **Known limitation:** edge references are geometric, as for
 Chamfer.
 
+#### P11-FEAT-004 — Hole feature — [evidence](docs/verification/P11-FEAT-004/README.md)
+
+- [x] Hole feature definition
+- [x] Planar-face placement/reference
+- [x] Through hole
+- [x] Blind hole
+- [x] Counterbore
+- [x] Countersink
+- [x] Diameter/depth parameters
+- [x] Direction/orientation
+- [x] Hole on extruded and revolved bodies
+- [x] Geometry validity checks
+- [x] Parameter-driven regeneration
+- [x] Topology-change diagnostics
+- [x] Save/load round-trip
+- [x] Undo/redo regression
+- [x] STEP/STL export regression
+- [x] Analytic volume validation
+- [x] Failure diagnostics
+- [x] Evidence under `docs/verification/P11-FEAT-004/`
+
+**Acceptance (met):**
+
+- A 10 mm through hole in a 100 × 50 × 20 mm block matches LWH − π(d/2)²H,
+  and a blind hole V0 − π(d/2)²h. Counterbores and countersinks (the latter
+  checked by two independent frustum derivations) match closed-form
+  volumes.
+- A through hole stays through when the block goes from 20 to 40 mm thick.
+  A blind hole keeps its depth, and one that would reach the far side is
+  refused.
+- Diameter, depth and position parameters regenerate only the hole. Faces
+  that move, vanish or become ambiguous fail with structured diagnostics,
+  never with a substituted face.
+- Holes that would break out of their face's side are refused (policy:
+  contained holes only).
+- Save → destroy → load → regenerate reproduces the definitions, stable IDs
+  and geometry.
+- Existing P0–P11-FEAT-003 regression suite remains green.
+
+**Not implemented:** threads, drill points, spotface, standards databases,
+tolerance classes and cosmetic threads. **Known limitation:** face references
+are geometric (a face's plane and side), not semantic topology naming.
+
 ## Current
 
 ### P11 — Production Part Modeling
 
-#### P11-FEAT-004 — Hole feature ← NEXT
+#### P11-FEAT-005 — Linear pattern ← NEXT
 
 - [ ] Not started.
 
 ## Next
 
 ### P11 — Production Part Modeling (remaining)
-
-#### P11-FEAT-005 — Linear pattern
-
-- [ ] Not started.
 
 #### P11-FEAT-006 — Circular pattern
 

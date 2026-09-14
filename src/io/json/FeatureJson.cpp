@@ -402,6 +402,164 @@ Result<std::unique_ptr<features::ChamferFeature>> chamferFromJson(const Json& da
     return std::move(*feature);
 }
 
+namespace {
+
+using geometry::FaceSurface;
+using geometry::HoleExtent;
+using geometry::HoleType;
+
+// Only surfaces that can be referenced; see geometry::validate(FaceSignature).
+constexpr std::array<std::pair<FaceSurface, std::string_view>, 1> kFaceSurfaces{{
+    {FaceSurface::Plane, "plane"},
+}};
+
+constexpr std::array<std::pair<HoleType, std::string_view>, 3> kHoleTypes{{
+    {HoleType::Simple, "simple"},
+    {HoleType::Counterbore, "counterbore"},
+    {HoleType::Countersink, "countersink"},
+}};
+
+constexpr std::array<std::pair<HoleExtent, std::string_view>, 2> kHoleExtents{{
+    {HoleExtent::Through, "through"},
+    {HoleExtent::Blind, "blind"},
+}};
+
+Json faceToJson(const geometry::FaceSignature& face) {
+    Json json = Json::object();
+    json["surface"] = std::string{nameOf(kFaceSurfaces, face.surface)};
+    json["point"] = pointToJson(face.point);
+    json["normal"] = directionToJson(face.normal);
+    return json;
+}
+
+/// A plane reference: its surface, a point on it and its outward normal,
+/// kept as written.
+Result<geometry::FaceSignature> faceFromJson(const Json& data, std::string_view key, std::string_view path) {
+    auto field = requireField(data, key, path);
+    if (!field) {
+        return std::unexpected(field.error());
+    }
+    const std::string facePath = childPath(path, key);
+    if (auto object = requireObject(**field, facePath, {"surface", "point", "normal"}); !object) {
+        return std::unexpected(object.error());
+    }
+    auto surface = valueOf(kFaceSurfaces, **field, "surface", facePath);
+    auto point = pointFromJson(**field, "point", facePath);
+    auto normal = directionFromJson(**field, "normal", facePath);
+    if (!surface || !point || !normal) {
+        return std::unexpected(!surface ? surface.error() : !point ? point.error() : normal.error());
+    }
+    const geometry::FaceSignature face{.surface = *surface, .point = *point, .normal = *normal};
+    if (auto valid = geometry::validate(face); !valid) {
+        return atPath(facePath, valid.error());
+    }
+    return face;
+}
+
+} // namespace
+
+Json holeToJson(const features::HoleFeature& feature) {
+    const features::HoleDefinition& d = feature.definition();
+    Json json = Json::object();
+    json["target"] = d.target.value();
+    json["face"] = faceToJson(d.face);
+    json["center"] = Json::array({d.center.x.si(), d.center.y.si()});
+    if (d.centerUParameter) {
+        json["center_u_parameter"] = d.centerUParameter->value();
+    }
+    if (d.centerVParameter) {
+        json["center_v_parameter"] = d.centerVParameter->value();
+    }
+    json["type"] = std::string{nameOf(kHoleTypes, d.type)};
+    json["extent"] = std::string{nameOf(kHoleExtents, d.extent)};
+    json["diameter"] = d.diameter.si();
+    if (d.diameterParameter) {
+        json["diameter_parameter"] = d.diameterParameter->value();
+    }
+    // Fields a type or extent does not use are zero (the definition's invariant).
+    if (d.extent == HoleExtent::Blind) {
+        json["depth"] = d.depth.si();
+        if (d.depthParameter) {
+            json["depth_parameter"] = d.depthParameter->value();
+        }
+    }
+    if (d.type == HoleType::Counterbore) {
+        json["counterbore_diameter"] = d.counterboreDiameter.si();
+        json["counterbore_depth"] = d.counterboreDepth.si();
+    }
+    if (d.type == HoleType::Countersink) {
+        json["countersink_diameter"] = d.countersinkDiameter.si();
+        json["countersink_angle"] = d.countersinkAngle.si();
+    }
+    return json;
+}
+
+Result<std::unique_ptr<features::HoleFeature>> holeFromJson(const Json& data, std::string name,
+                                                            std::string_view path) {
+    if (auto object = requireObject(data, path,
+                                    {"target", "face", "center", "center_u_parameter", "center_v_parameter", "type",
+                                     "extent", "diameter", "diameter_parameter", "depth", "depth_parameter",
+                                     "counterbore_diameter", "counterbore_depth", "countersink_diameter",
+                                     "countersink_angle"});
+        !object) {
+        return std::unexpected(object.error());
+    }
+    auto target = readId(data, "target", path);
+    auto face = faceFromJson(data, "face", path);
+    auto center = readNumbers(data, "center", path, 2);
+    auto centerU = readOptionalId(data, "center_u_parameter", path);
+    auto centerV = readOptionalId(data, "center_v_parameter", path);
+    auto type = valueOf(kHoleTypes, data, "type", path);
+    auto extent = valueOf(kHoleExtents, data, "extent", path);
+    auto diameter = readNumber(data, "diameter", path);
+    auto diameterParameter = readOptionalId(data, "diameter_parameter", path);
+    auto depth = readNumberOrZero(data, "depth", path);
+    auto depthParameter = readOptionalId(data, "depth_parameter", path);
+    auto counterboreDiameter = readNumberOrZero(data, "counterbore_diameter", path);
+    auto counterboreDepth = readNumberOrZero(data, "counterbore_depth", path);
+    auto countersinkDiameter = readNumberOrZero(data, "countersink_diameter", path);
+    auto countersinkAngle = readNumberOrZero(data, "countersink_angle", path);
+    for (const Error* error :
+         {!target ? &target.error() : nullptr, !face ? &face.error() : nullptr, !center ? &center.error() : nullptr,
+          !centerU ? &centerU.error() : nullptr, !centerV ? &centerV.error() : nullptr,
+          !type ? &type.error() : nullptr, !extent ? &extent.error() : nullptr,
+          !diameter ? &diameter.error() : nullptr, !diameterParameter ? &diameterParameter.error() : nullptr,
+          !depth ? &depth.error() : nullptr, !depthParameter ? &depthParameter.error() : nullptr,
+          !counterboreDiameter ? &counterboreDiameter.error() : nullptr,
+          !counterboreDepth ? &counterboreDepth.error() : nullptr,
+          !countersinkDiameter ? &countersinkDiameter.error() : nullptr,
+          !countersinkAngle ? &countersinkAngle.error() : nullptr}) {
+        if (error != nullptr) {
+            return std::unexpected(*error);
+        }
+    }
+    const auto optionalParameter = [](const std::optional<std::uint64_t>& id) -> std::optional<ParameterId> {
+        return id ? std::optional<ParameterId>{ParameterId::fromValue(*id)} : std::nullopt;
+    };
+    const features::HoleDefinition definition{
+        .target = FeatureId::fromValue(*target),
+        .face = *face,
+        .center = Point2D{Length::fromSi((*center)[0]), Length::fromSi((*center)[1])},
+        .centerUParameter = optionalParameter(*centerU),
+        .centerVParameter = optionalParameter(*centerV),
+        .type = *type,
+        .extent = *extent,
+        .diameter = Length::fromSi(*diameter),
+        .diameterParameter = optionalParameter(*diameterParameter),
+        .depth = Length::fromSi(*depth),
+        .depthParameter = optionalParameter(*depthParameter),
+        .counterboreDiameter = Length::fromSi(*counterboreDiameter),
+        .counterboreDepth = Length::fromSi(*counterboreDepth),
+        .countersinkDiameter = Length::fromSi(*countersinkDiameter),
+        .countersinkAngle = Angle::fromSi(*countersinkAngle),
+    };
+    auto feature = features::HoleFeature::create(std::move(name), definition);
+    if (!feature) {
+        return atPath(path, feature.error());
+    }
+    return std::move(*feature);
+}
+
 Json filletToJson(const features::FilletFeature& feature) {
     const features::FilletDefinition& d = feature.definition();
     Json json = Json::object();

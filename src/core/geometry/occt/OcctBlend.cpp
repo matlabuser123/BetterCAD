@@ -4,9 +4,7 @@
 
 #include <BRepAdaptor_Curve.hxx>
 #include <BRepAdaptor_Surface.hxx>
-#include <BRepBuilderAPI_MakeVertex.hxx>
 #include <BRepClass_FaceClassifier.hxx>
-#include <BRepExtrema_DistShapeShape.hxx>
 #include <BRepTools.hxx>
 #include <BRep_Tool.hxx>
 #include <Precision.hxx>
@@ -30,20 +28,6 @@ namespace {
 // Sample counts for finding how far a face reaches from an edge.
 constexpr int kBoundarySamples = 16; // intervals per boundary edge
 constexpr int kInteriorSamples = 8;  // intervals per surface parameter
-
-/// Shortest distance between two shapes in model units, or nothing if the
-/// kernel cannot measure it.
-std::optional<double> distance(const TopoDS_Shape& a, const TopoDS_Shape& b) {
-    BRepExtrema_DistShapeShape extrema(a, b);
-    if (!extrema.IsDone() || extrema.NbSolution() == 0) {
-        return std::nullopt;
-    }
-    return extrema.Value();
-}
-
-std::optional<double> distance(const gp_Pnt& point, const TopoDS_Edge& edge) {
-    return distance(BRepBuilderAPI_MakeVertex(point).Vertex(), edge);
-}
 
 bool touches(const TopoDS_Edge& a, const TopoDS_Edge& b) {
     TopoDS_Vertex common;

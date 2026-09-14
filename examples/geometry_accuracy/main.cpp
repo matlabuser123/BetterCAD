@@ -1,12 +1,14 @@
 // Prints geometry-kernel results next to analytic solutions for primitive
-// solids, boolean operations, solids of revolution, chamfers and fillets. The
-// relative errors in the output are the basis for the tolerances used by
-// tests/core/geometry.
+// solids, boolean operations, solids of revolution, chamfers, fillets and
+// holes. The relative errors in the output are the basis for the tolerances
+// used by tests/core/geometry.
 #include <bettercad/core/Units.hpp>
 #include <bettercad/core/geometry/Booleans.hpp>
 #include <bettercad/core/geometry/Chamfer.hpp>
 #include <bettercad/core/geometry/Edges.hpp>
+#include <bettercad/core/geometry/Faces.hpp>
 #include <bettercad/core/geometry/Fillet.hpp>
+#include <bettercad/core/geometry/Hole.hpp>
 #include <bettercad/core/geometry/Kernel.hpp>
 #include <bettercad/core/geometry/Primitives.hpp>
 #include <bettercad/core/geometry/Profile.hpp>
@@ -206,5 +208,57 @@ int main() {
     report("fillet cylinder rim r=2", filletEdges(*rod, {.edges = {*rim}, .radius = 2_mm}),
            pi * 225.0 * 40.0 - 2.0 * pi * (15.0 - centroid(2)) * corner(2),
            2.0 * pi * 15.0 * 38.0 + pi * 225.0 + pi * 13.0 * 13.0 + pi * 2.0 / 2.0 * 2.0 * pi * (13.0 + 4.0 / pi));
+
+    std::printf("\nHoles (faces by their planes; the box 100x50x20 mm, centre (50, 25))\n");
+    const FaceSignature top = planeSignature(Point3D{0_mm, 0_mm, 20_mm}, Direction3D::unitZ());
+    const FaceSignature bottom = planeSignature(Point3D{}, Direction3D::unitZ().reversed());
+    const HoleRequest simple{.face = top, .center = mm(50, 25), .diameter = 10_mm};
+    // Through: V = L W H - pi r^2 H; the top and bottom lose pi r^2 each, the
+    // bore adds 2 pi r H.
+    report("hole through d=10", cutHole(*box, simple), 100000.0 - pi * 25.0 * 20.0, 16000.0 + 150.0 * pi);
+    HoleRequest blind = simple;
+    blind.extent = HoleExtent::Blind;
+    blind.depth = 8_mm;
+    report("hole blind d=10 h=8", cutHole(*box, blind), 100000.0 - pi * 25.0 * 8.0, 16000.0 + 80.0 * pi);
+    HoleRequest fromBelow = blind;
+    fromBelow.face = bottom;
+    report("hole blind from the bottom face", cutHole(*box, fromBelow), 100000.0 - pi * 25.0 * 8.0, 16000.0 + 80.0 * pi);
+    const auto thick = makeBox(100_mm, 50_mm, 40_mm);
+    HoleRequest throughBelow = simple;
+    throughBelow.face = bottom;
+    report("hole through from below, H=40", cutHole(*thick, throughBelow), 200000.0 - pi * 25.0 * 40.0,
+           2.0 * (5000.0 + 4000.0 + 2000.0) + 350.0 * pi);
+    // Counterbore D=18 h=5: V = V0 - pi r^2 H - pi (R^2 - r^2) h. The top
+    // loses pi R^2, the bottom pi r^2; the walls 2 pi R h and 2 pi r (H - h),
+    // the shelf pi (R^2 - r^2).
+    HoleRequest bored = simple;
+    bored.type = HoleType::Counterbore;
+    bored.counterboreDiameter = 18_mm;
+    bored.counterboreDepth = 5_mm;
+    report("hole counterbore 18x5", cutHole(*box, bored), 100000.0 - pi * 25.0 * 20.0 - pi * 56.0 * 5.0,
+           16000.0 + (-81.0 - 25.0 + 90.0 + 150.0 + 56.0) * pi);
+    // Countersink D=20: the cone from R=10 to r=5 over h = (R - r) / tan(a/2)
+    // removes the frustum pi h (R^2 + R r + r^2) / 3 less pi r^2 h beyond the
+    // bore; its side is pi (R + r) sqrt((R - r)^2 + h^2).
+    for (const double angle : {90.0, 82.0}) {
+        const double h = 5.0 / std::tan(angle * pi / 360.0);
+        HoleRequest sunk = simple;
+        sunk.type = HoleType::Countersink;
+        sunk.countersinkDiameter = 20_mm;
+        sunk.countersinkAngle = angle * units::deg;
+        const std::string name = angle == 90.0 ? "hole countersink 20 at 90 deg" : "hole countersink 20 at 82 deg";
+        report(name.c_str(), cutHole(*box, sunk),
+               100000.0 - pi * 25.0 * 20.0 - (pi * h * 175.0 / 3.0 - pi * 25.0 * h),
+               16000.0 - 100.0 * pi - 25.0 * pi + 2.0 * pi * 5.0 * (20.0 - h) + pi * 15.0 * std::sqrt(25.0 + h * h));
+    }
+    // An axial blind bore in the end face of a turned cylinder R=15 h=40.
+    const auto turned = revolve(polygon({{0, 0}, {15, 0}, {15, 40}, {0, 40}}), 360_deg);
+    report("hole in revolved end face d=10 h=20",
+           cutHole(*turned, {.face = planeSignature(Point3D{0_mm, 0_mm, 40_mm}, Direction3D::unitZ()),
+                             .center = mm(0, 0),
+                             .extent = HoleExtent::Blind,
+                             .diameter = 10_mm,
+                             .depth = 20_mm}),
+           pi * 225.0 * 40.0 - pi * 25.0 * 20.0, 2.0 * pi * 15.0 * 40.0 + 2.0 * pi * 225.0 + 2.0 * pi * 5.0 * 20.0);
     return 0;
 }

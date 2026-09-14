@@ -11,6 +11,9 @@ bettercad_add_library(bettercad_geometry
         Blends.cpp
         EdgeMatching.hpp
         Edges.cpp
+        FaceMatching.hpp
+        Faces.cpp
+        Holes.cpp
         Profile.cpp
         occt/OcctBlend.cpp
         occt/OcctBlend.hpp
@@ -19,7 +22,9 @@ bettercad_add_library(bettercad_geometry
         occt/OcctBooleans.cpp
         occt/OcctChamfer.cpp
         occt/OcctEdges.cpp
+        occt/OcctFaces.cpp
         occt/OcctFillet.cpp
+        occt/OcctHole.cpp
         occt/OcctGuard.hpp
         occt/OcctKernel.cpp
         occt/OcctMesh.cpp

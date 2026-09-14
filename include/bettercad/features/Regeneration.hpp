@@ -8,6 +8,7 @@
 #include <bettercad/features/Export.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/features/FilletFeature.hpp>
+#include <bettercad/features/HoleFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
 #include <bettercad/sketch/Sketch.hpp>
 
@@ -73,5 +74,19 @@ regenerateChamfer(const ChamferFeature& feature, const Document& document, const
 /// are errors, never guesses; see geometry::filletEdges().
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::Body>
 regenerateFillet(const FilletFeature& feature, const Document& document, const geometry::Body* target);
+
+/// The geometry request of a hole, with the driven diameter, depth and
+/// centre coordinates taken from their parameters (NotFound if missing,
+/// DimensionMismatch if not lengths). The values' ranges are checked by the
+/// hole itself.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::HoleRequest>
+resolveHoleRequest(const HoleDefinition& definition, const Document& document);
+
+/// Computes the body of a hole feature: @p target (the target feature's
+/// body) drilled as defined. Fails with FailedPrecondition if there is no
+/// target body; placement faces that match nothing, or several faces under
+/// the centre, are errors, never guesses; see geometry::cutHole().
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::Body>
+regenerateHole(const HoleFeature& feature, const Document& document, const geometry::Body* target);
 
 } // namespace bettercad::features

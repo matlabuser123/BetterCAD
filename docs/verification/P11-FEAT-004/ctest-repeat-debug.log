@@ -1,0 +1,1195 @@
+﻿Test project C:/Users/uqhas/OneDrive/Desktop/CAD/build/debug
+        Start  24: unit.An off-centre hole moves the centre of mass as predicted
+      Test  #24: unit.An off-centre hole moves the centre of mass as predicted ...........   Passed    0.08 sec
+        Start  24: unit.An off-centre hole moves the centre of mass as predicted
+      Test  #24: unit.An off-centre hole moves the centre of mass as predicted ...........   Passed    0.06 sec
+        Start  24: unit.An off-centre hole moves the centre of mass as predicted
+      Test  #24: unit.An off-centre hole moves the centre of mass as predicted ...........   Passed    0.08 sec
+        Start  24: unit.An off-centre hole moves the centre of mass as predicted
+      Test  #24: unit.An off-centre hole moves the centre of mass as predicted ...........   Passed    0.18 sec
+        Start  24: unit.An off-centre hole moves the centre of mass as predicted
+  1/119 Test  #24: unit.An off-centre hole moves the centre of mass as predicted ...........   Passed    0.23 sec
+        Start  46: unit.ChamferFeature_DataIsStoredAsTransparentJson
+      Test  #46: unit.ChamferFeature_DataIsStoredAsTransparentJson .......................   Passed    0.09 sec
+        Start  46: unit.ChamferFeature_DataIsStoredAsTransparentJson
+      Test  #46: unit.ChamferFeature_DataIsStoredAsTransparentJson .......................   Passed    0.05 sec
+        Start  46: unit.ChamferFeature_DataIsStoredAsTransparentJson
+      Test  #46: unit.ChamferFeature_DataIsStoredAsTransparentJson .......................   Passed    0.07 sec
+        Start  46: unit.ChamferFeature_DataIsStoredAsTransparentJson
+      Test  #46: unit.ChamferFeature_DataIsStoredAsTransparentJson .......................   Passed    0.05 sec
+        Start  46: unit.ChamferFeature_DataIsStoredAsTransparentJson
+  2/119 Test  #46: unit.ChamferFeature_DataIsStoredAsTransparentJson .......................   Passed    0.04 sec
+        Start  47: unit.ChamferFeature_DefinitionIsValidatedOnCreateAndEdit
+      Test  #47: unit.ChamferFeature_DefinitionIsValidatedOnCreateAndEdit ................   Passed    0.05 sec
+        Start  47: unit.ChamferFeature_DefinitionIsValidatedOnCreateAndEdit
+      Test  #47: unit.ChamferFeature_DefinitionIsValidatedOnCreateAndEdit ................   Passed    0.04 sec
+        Start  47: unit.ChamferFeature_DefinitionIsValidatedOnCreateAndEdit
+      Test  #47: unit.ChamferFeature_DefinitionIsValidatedOnCreateAndEdit ................   Passed    0.04 sec
+        Start  47: unit.ChamferFeature_DefinitionIsValidatedOnCreateAndEdit
+      Test  #47: unit.ChamferFeature_DefinitionIsValidatedOnCreateAndEdit ................   Passed    0.06 sec
+        Start  47: unit.ChamferFeature_DefinitionIsValidatedOnCreateAndEdit
+  3/119 Test  #47: unit.ChamferFeature_DefinitionIsValidatedOnCreateAndEdit ................   Passed    0.04 sec
+        Start  48: unit.ChamferFeature_DependsOnItsTargetAndDistanceParameter
+      Test  #48: unit.ChamferFeature_DependsOnItsTargetAndDistanceParameter ..............   Passed    0.06 sec
+        Start  48: unit.ChamferFeature_DependsOnItsTargetAndDistanceParameter
+      Test  #48: unit.ChamferFeature_DependsOnItsTargetAndDistanceParameter ..............   Passed    0.09 sec
+        Start  48: unit.ChamferFeature_DependsOnItsTargetAndDistanceParameter
+      Test  #48: unit.ChamferFeature_DependsOnItsTargetAndDistanceParameter ..............   Passed    0.05 sec
+        Start  48: unit.ChamferFeature_DependsOnItsTargetAndDistanceParameter
+      Test  #48: unit.ChamferFeature_DependsOnItsTargetAndDistanceParameter ..............   Passed    0.13 sec
+        Start  48: unit.ChamferFeature_DependsOnItsTargetAndDistanceParameter
+  4/119 Test  #48: unit.ChamferFeature_DependsOnItsTargetAndDistanceParameter ..............   Passed    0.05 sec
+        Start  49: unit.ChamferFeature_DistanceAngleMeasuresTheAngleFromTheReferenceFace
+      Test  #49: unit.ChamferFeature_DistanceAngleMeasuresTheAngleFromTheReferenceFace ...   Passed    0.08 sec
+        Start  49: unit.ChamferFeature_DistanceAngleMeasuresTheAngleFromTheReferenceFace
+      Test  #49: unit.ChamferFeature_DistanceAngleMeasuresTheAngleFromTheReferenceFace ...   Passed    0.07 sec
+        Start  49: unit.ChamferFeature_DistanceAngleMeasuresTheAngleFromTheReferenceFace
+      Test  #49: unit.ChamferFeature_DistanceAngleMeasuresTheAngleFromTheReferenceFace ...   Passed    0.14 sec
+        Start  49: unit.ChamferFeature_DistanceAngleMeasuresTheAngleFromTheReferenceFace
+      Test  #49: unit.ChamferFeature_DistanceAngleMeasuresTheAngleFromTheReferenceFace ...   Passed    0.07 sec
+        Start  49: unit.ChamferFeature_DistanceAngleMeasuresTheAngleFromTheReferenceFace
+  5/119 Test  #49: unit.ChamferFeature_DistanceAngleMeasuresTheAngleFromTheReferenceFace ...   Passed    0.09 sec
+        Start  50: unit.ChamferFeature_EdgeChangedUpstreamFailsInsteadOfSubstituting
+      Test  #50: unit.ChamferFeature_EdgeChangedUpstreamFailsInsteadOfSubstituting .......   Passed    0.19 sec
+        Start  50: unit.ChamferFeature_EdgeChangedUpstreamFailsInsteadOfSubstituting
+      Test  #50: unit.ChamferFeature_EdgeChangedUpstreamFailsInsteadOfSubstituting .......   Passed    0.21 sec
+        Start  50: unit.ChamferFeature_EdgeChangedUpstreamFailsInsteadOfSubstituting
+      Test  #50: unit.ChamferFeature_EdgeChangedUpstreamFailsInsteadOfSubstituting .......   Passed    0.27 sec
+        Start  50: unit.ChamferFeature_EdgeChangedUpstreamFailsInsteadOfSubstituting
+      Test  #50: unit.ChamferFeature_EdgeChangedUpstreamFailsInsteadOfSubstituting .......   Passed    0.21 sec
+        Start  50: unit.ChamferFeature_EdgeChangedUpstreamFailsInsteadOfSubstituting
+  6/119 Test  #50: unit.ChamferFeature_EdgeChangedUpstreamFailsInsteadOfSubstituting .......   Passed    0.19 sec
+        Start  51: unit.ChamferFeature_ExportsToStepAndStl
+      Test  #51: unit.ChamferFeature_ExportsToStepAndStl .................................   Passed    0.23 sec
+        Start  51: unit.ChamferFeature_ExportsToStepAndStl
+      Test  #51: unit.ChamferFeature_ExportsToStepAndStl .................................   Passed    0.29 sec
+        Start  51: unit.ChamferFeature_ExportsToStepAndStl
+      Test  #51: unit.ChamferFeature_ExportsToStepAndStl .................................   Passed    0.18 sec
+        Start  51: unit.ChamferFeature_ExportsToStepAndStl
+      Test  #51: unit.ChamferFeature_ExportsToStepAndStl .................................   Passed    0.17 sec
+        Start  51: unit.ChamferFeature_ExportsToStepAndStl
+  7/119 Test  #51: unit.ChamferFeature_ExportsToStepAndStl .................................   Passed    0.17 sec
+        Start  52: unit.ChamferFeature_FailedChamferSavesAndLoadsUnchanged
+      Test  #52: unit.ChamferFeature_FailedChamferSavesAndLoadsUnchanged .................   Passed    0.11 sec
+        Start  52: unit.ChamferFeature_FailedChamferSavesAndLoadsUnchanged
+      Test  #52: unit.ChamferFeature_FailedChamferSavesAndLoadsUnchanged .................   Passed    0.11 sec
+        Start  52: unit.ChamferFeature_FailedChamferSavesAndLoadsUnchanged
+      Test  #52: unit.ChamferFeature_FailedChamferSavesAndLoadsUnchanged .................   Passed    0.13 sec
+        Start  52: unit.ChamferFeature_FailedChamferSavesAndLoadsUnchanged
+      Test  #52: unit.ChamferFeature_FailedChamferSavesAndLoadsUnchanged .................   Passed    0.10 sec
+        Start  52: unit.ChamferFeature_FailedChamferSavesAndLoadsUnchanged
+  8/119 Test  #52: unit.ChamferFeature_FailedChamferSavesAndLoadsUnchanged .................   Passed    0.15 sec
+        Start  53: unit.ChamferFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact
+      Test  #53: unit.ChamferFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact .....   Passed    0.10 sec
+        Start  53: unit.ChamferFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact
+      Test  #53: unit.ChamferFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact .....   Passed    0.17 sec
+        Start  53: unit.ChamferFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact
+      Test  #53: unit.ChamferFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact .....   Passed    0.12 sec
+        Start  53: unit.ChamferFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact
+      Test  #53: unit.ChamferFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact .....   Passed    0.11 sec
+        Start  53: unit.ChamferFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact
+  9/119 Test  #53: unit.ChamferFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact .....   Passed    0.12 sec
+        Start  54: unit.ChamferFeature_InvalidInputsFailWithStructuredDiagnostics
+      Test  #54: unit.ChamferFeature_InvalidInputsFailWithStructuredDiagnostics ..........   Passed    0.35 sec
+        Start  54: unit.ChamferFeature_InvalidInputsFailWithStructuredDiagnostics
+      Test  #54: unit.ChamferFeature_InvalidInputsFailWithStructuredDiagnostics ..........   Passed    0.34 sec
+        Start  54: unit.ChamferFeature_InvalidInputsFailWithStructuredDiagnostics
+      Test  #54: unit.ChamferFeature_InvalidInputsFailWithStructuredDiagnostics ..........   Passed    0.52 sec
+        Start  54: unit.ChamferFeature_InvalidInputsFailWithStructuredDiagnostics
+      Test  #54: unit.ChamferFeature_InvalidInputsFailWithStructuredDiagnostics ..........   Passed    0.43 sec
+        Start  54: unit.ChamferFeature_InvalidInputsFailWithStructuredDiagnostics
+ 10/119 Test  #54: unit.ChamferFeature_InvalidInputsFailWithStructuredDiagnostics ..........   Passed    0.63 sec
+        Start  55: unit.ChamferFeature_MalformedDataIsRejectedWithTheJsonPath
+      Test  #55: unit.ChamferFeature_MalformedDataIsRejectedWithTheJsonPath ..............   Passed    0.09 sec
+        Start  55: unit.ChamferFeature_MalformedDataIsRejectedWithTheJsonPath
+      Test  #55: unit.ChamferFeature_MalformedDataIsRejectedWithTheJsonPath ..............   Passed    0.44 sec
+        Start  55: unit.ChamferFeature_MalformedDataIsRejectedWithTheJsonPath
+      Test  #55: unit.ChamferFeature_MalformedDataIsRejectedWithTheJsonPath ..............   Passed    0.20 sec
+        Start  55: unit.ChamferFeature_MalformedDataIsRejectedWithTheJsonPath
+      Test  #55: unit.ChamferFeature_MalformedDataIsRejectedWithTheJsonPath ..............   Passed    0.30 sec
+        Start  55: unit.ChamferFeature_MalformedDataIsRejectedWithTheJsonPath
+ 11/119 Test  #55: unit.ChamferFeature_MalformedDataIsRejectedWithTheJsonPath ..............   Passed    0.08 sec
+        Start  56: unit.ChamferFeature_ModelsAreValidatedLikeAnyOther
+      Test  #56: unit.ChamferFeature_ModelsAreValidatedLikeAnyOther ......................   Passed    0.29 sec
+        Start  56: unit.ChamferFeature_ModelsAreValidatedLikeAnyOther
+      Test  #56: unit.ChamferFeature_ModelsAreValidatedLikeAnyOther ......................   Passed    0.14 sec
+        Start  56: unit.ChamferFeature_ModelsAreValidatedLikeAnyOther
+      Test  #56: unit.ChamferFeature_ModelsAreValidatedLikeAnyOther ......................   Passed    0.52 sec
+        Start  56: unit.ChamferFeature_ModelsAreValidatedLikeAnyOther
+      Test  #56: unit.ChamferFeature_ModelsAreValidatedLikeAnyOther ......................   Passed    0.51 sec
+        Start  56: unit.ChamferFeature_ModelsAreValidatedLikeAnyOther
+ 12/119 Test  #56: unit.ChamferFeature_ModelsAreValidatedLikeAnyOther ......................   Passed    0.20 sec
+        Start  57: unit.ChamferFeature_MultipleEdgesMatchAnalyticVolume
+      Test  #57: unit.ChamferFeature_MultipleEdgesMatchAnalyticVolume ....................   Passed    0.31 sec
+        Start  57: unit.ChamferFeature_MultipleEdgesMatchAnalyticVolume
+      Test  #57: unit.ChamferFeature_MultipleEdgesMatchAnalyticVolume ....................   Passed    0.21 sec
+        Start  57: unit.ChamferFeature_MultipleEdgesMatchAnalyticVolume
+      Test  #57: unit.ChamferFeature_MultipleEdgesMatchAnalyticVolume ....................   Passed    0.25 sec
+        Start  57: unit.ChamferFeature_MultipleEdgesMatchAnalyticVolume
+      Test  #57: unit.ChamferFeature_MultipleEdgesMatchAnalyticVolume ....................   Passed    0.27 sec
+        Start  57: unit.ChamferFeature_MultipleEdgesMatchAnalyticVolume
+ 13/119 Test  #57: unit.ChamferFeature_MultipleEdgesMatchAnalyticVolume ....................   Passed    0.30 sec
+        Start  58: unit.ChamferFeature_OnRevolvedBodyMatchesPappusAndFollowsTheSweep
+      Test  #58: unit.ChamferFeature_OnRevolvedBodyMatchesPappusAndFollowsTheSweep .......   Passed    0.54 sec
+        Start  58: unit.ChamferFeature_OnRevolvedBodyMatchesPappusAndFollowsTheSweep
+      Test  #58: unit.ChamferFeature_OnRevolvedBodyMatchesPappusAndFollowsTheSweep .......   Passed    0.54 sec
+        Start  58: unit.ChamferFeature_OnRevolvedBodyMatchesPappusAndFollowsTheSweep
+      Test  #58: unit.ChamferFeature_OnRevolvedBodyMatchesPappusAndFollowsTheSweep .......   Passed    0.53 sec
+        Start  58: unit.ChamferFeature_OnRevolvedBodyMatchesPappusAndFollowsTheSweep
+      Test  #58: unit.ChamferFeature_OnRevolvedBodyMatchesPappusAndFollowsTheSweep .......   Passed    0.52 sec
+        Start  58: unit.ChamferFeature_OnRevolvedBodyMatchesPappusAndFollowsTheSweep
+ 14/119 Test  #58: unit.ChamferFeature_OnRevolvedBodyMatchesPappusAndFollowsTheSweep .......   Passed    0.58 sec
+        Start  59: unit.ChamferFeature_RegeneratesWhenTheUpstreamWidthChanges
+      Test  #59: unit.ChamferFeature_RegeneratesWhenTheUpstreamWidthChanges ..............   Passed    0.38 sec
+        Start  59: unit.ChamferFeature_RegeneratesWhenTheUpstreamWidthChanges
+      Test  #59: unit.ChamferFeature_RegeneratesWhenTheUpstreamWidthChanges ..............   Passed    0.25 sec
+        Start  59: unit.ChamferFeature_RegeneratesWhenTheUpstreamWidthChanges
+      Test  #59: unit.ChamferFeature_RegeneratesWhenTheUpstreamWidthChanges ..............   Passed    0.26 sec
+        Start  59: unit.ChamferFeature_RegeneratesWhenTheUpstreamWidthChanges
+      Test  #59: unit.ChamferFeature_RegeneratesWhenTheUpstreamWidthChanges ..............   Passed    0.22 sec
+        Start  59: unit.ChamferFeature_RegeneratesWhenTheUpstreamWidthChanges
+ 15/119 Test  #59: unit.ChamferFeature_RegeneratesWhenTheUpstreamWidthChanges ..............   Passed    0.30 sec
+        Start  60: unit.ChamferFeature_SaveLoadPreservesCircleReferences
+      Test  #60: unit.ChamferFeature_SaveLoadPreservesCircleReferences ...................   Passed    0.52 sec
+        Start  60: unit.ChamferFeature_SaveLoadPreservesCircleReferences
+      Test  #60: unit.ChamferFeature_SaveLoadPreservesCircleReferences ...................   Passed    0.52 sec
+        Start  60: unit.ChamferFeature_SaveLoadPreservesCircleReferences
+      Test  #60: unit.ChamferFeature_SaveLoadPreservesCircleReferences ...................   Passed    0.55 sec
+        Start  60: unit.ChamferFeature_SaveLoadPreservesCircleReferences
+      Test  #60: unit.ChamferFeature_SaveLoadPreservesCircleReferences ...................   Passed    0.51 sec
+        Start  60: unit.ChamferFeature_SaveLoadPreservesCircleReferences
+ 16/119 Test  #60: unit.ChamferFeature_SaveLoadPreservesCircleReferences ...................   Passed    0.46 sec
+        Start  61: unit.ChamferFeature_SaveLoadPreservesDefinitionsAndGeometry
+      Test  #61: unit.ChamferFeature_SaveLoadPreservesDefinitionsAndGeometry .............   Passed    0.35 sec
+        Start  61: unit.ChamferFeature_SaveLoadPreservesDefinitionsAndGeometry
+      Test  #61: unit.ChamferFeature_SaveLoadPreservesDefinitionsAndGeometry .............   Passed    0.34 sec
+        Start  61: unit.ChamferFeature_SaveLoadPreservesDefinitionsAndGeometry
+      Test  #61: unit.ChamferFeature_SaveLoadPreservesDefinitionsAndGeometry .............   Passed    0.29 sec
+        Start  61: unit.ChamferFeature_SaveLoadPreservesDefinitionsAndGeometry
+      Test  #61: unit.ChamferFeature_SaveLoadPreservesDefinitionsAndGeometry .............   Passed    0.31 sec
+        Start  61: unit.ChamferFeature_SaveLoadPreservesDefinitionsAndGeometry
+ 17/119 Test  #61: unit.ChamferFeature_SaveLoadPreservesDefinitionsAndGeometry .............   Passed    0.27 sec
+        Start  62: unit.ChamferFeature_SingleEdgeMatchesAnalyticVolume
+      Test  #62: unit.ChamferFeature_SingleEdgeMatchesAnalyticVolume .....................   Passed    0.11 sec
+        Start  62: unit.ChamferFeature_SingleEdgeMatchesAnalyticVolume
+      Test  #62: unit.ChamferFeature_SingleEdgeMatchesAnalyticVolume .....................   Passed    0.11 sec
+        Start  62: unit.ChamferFeature_SingleEdgeMatchesAnalyticVolume
+      Test  #62: unit.ChamferFeature_SingleEdgeMatchesAnalyticVolume .....................   Passed    0.08 sec
+        Start  62: unit.ChamferFeature_SingleEdgeMatchesAnalyticVolume
+      Test  #62: unit.ChamferFeature_SingleEdgeMatchesAnalyticVolume .....................   Passed    0.08 sec
+        Start  62: unit.ChamferFeature_SingleEdgeMatchesAnalyticVolume
+ 18/119 Test  #62: unit.ChamferFeature_SingleEdgeMatchesAnalyticVolume .....................   Passed    0.09 sec
+        Start  63: unit.ChamferFeature_TwoDistancesPutTheFirstDistanceOnTheReferenceFace
+      Test  #63: unit.ChamferFeature_TwoDistancesPutTheFirstDistanceOnTheReferenceFace ...   Passed    0.11 sec
+        Start  63: unit.ChamferFeature_TwoDistancesPutTheFirstDistanceOnTheReferenceFace
+      Test  #63: unit.ChamferFeature_TwoDistancesPutTheFirstDistanceOnTheReferenceFace ...   Passed    0.09 sec
+        Start  63: unit.ChamferFeature_TwoDistancesPutTheFirstDistanceOnTheReferenceFace
+      Test  #63: unit.ChamferFeature_TwoDistancesPutTheFirstDistanceOnTheReferenceFace ...   Passed    0.09 sec
+        Start  63: unit.ChamferFeature_TwoDistancesPutTheFirstDistanceOnTheReferenceFace
+      Test  #63: unit.ChamferFeature_TwoDistancesPutTheFirstDistanceOnTheReferenceFace ...   Passed    0.10 sec
+        Start  63: unit.ChamferFeature_TwoDistancesPutTheFirstDistanceOnTheReferenceFace
+ 19/119 Test  #63: unit.ChamferFeature_TwoDistancesPutTheFirstDistanceOnTheReferenceFace ...   Passed    0.11 sec
+        Start  64: unit.ChamferFeature_UndoRedoRestoresIdenticalGeometry
+      Test  #64: unit.ChamferFeature_UndoRedoRestoresIdenticalGeometry ...................   Passed    0.19 sec
+        Start  64: unit.ChamferFeature_UndoRedoRestoresIdenticalGeometry
+      Test  #64: unit.ChamferFeature_UndoRedoRestoresIdenticalGeometry ...................   Passed    0.20 sec
+        Start  64: unit.ChamferFeature_UndoRedoRestoresIdenticalGeometry
+      Test  #64: unit.ChamferFeature_UndoRedoRestoresIdenticalGeometry ...................   Passed    0.17 sec
+        Start  64: unit.ChamferFeature_UndoRedoRestoresIdenticalGeometry
+      Test  #64: unit.ChamferFeature_UndoRedoRestoresIdenticalGeometry ...................   Passed    0.19 sec
+        Start  64: unit.ChamferFeature_UndoRedoRestoresIdenticalGeometry
+ 20/119 Test  #64: unit.ChamferFeature_UndoRedoRestoresIdenticalGeometry ...................   Passed    0.18 sec
+        Start  65: unit.Chamfer_AdjacentEdgesMeetInAMitredCorner
+      Test  #65: unit.Chamfer_AdjacentEdgesMeetInAMitredCorner ...........................   Passed    0.07 sec
+        Start  65: unit.Chamfer_AdjacentEdgesMeetInAMitredCorner
+      Test  #65: unit.Chamfer_AdjacentEdgesMeetInAMitredCorner ...........................   Passed    0.07 sec
+        Start  65: unit.Chamfer_AdjacentEdgesMeetInAMitredCorner
+      Test  #65: unit.Chamfer_AdjacentEdgesMeetInAMitredCorner ...........................   Passed    0.09 sec
+        Start  65: unit.Chamfer_AdjacentEdgesMeetInAMitredCorner
+      Test  #65: unit.Chamfer_AdjacentEdgesMeetInAMitredCorner ...........................   Passed    0.08 sec
+        Start  65: unit.Chamfer_AdjacentEdgesMeetInAMitredCorner
+ 21/119 Test  #65: unit.Chamfer_AdjacentEdgesMeetInAMitredCorner ...........................   Passed    0.06 sec
+        Start  66: unit.Chamfer_CircularEdgeOfCylinderMatchesPappus
+      Test  #66: unit.Chamfer_CircularEdgeOfCylinderMatchesPappus ........................   Passed    0.13 sec
+        Start  66: unit.Chamfer_CircularEdgeOfCylinderMatchesPappus
+      Test  #66: unit.Chamfer_CircularEdgeOfCylinderMatchesPappus ........................   Passed    0.13 sec
+        Start  66: unit.Chamfer_CircularEdgeOfCylinderMatchesPappus
+      Test  #66: unit.Chamfer_CircularEdgeOfCylinderMatchesPappus ........................   Passed    0.17 sec
+        Start  66: unit.Chamfer_CircularEdgeOfCylinderMatchesPappus
+      Test  #66: unit.Chamfer_CircularEdgeOfCylinderMatchesPappus ........................   Passed    0.12 sec
+        Start  66: unit.Chamfer_CircularEdgeOfCylinderMatchesPappus
+ 22/119 Test  #66: unit.Chamfer_CircularEdgeOfCylinderMatchesPappus ........................   Passed    0.13 sec
+        Start  67: unit.Chamfer_DistanceAngleMeasuresTheAngleFromTheReferenceFace
+      Test  #67: unit.Chamfer_DistanceAngleMeasuresTheAngleFromTheReferenceFace ..........   Passed    0.08 sec
+        Start  67: unit.Chamfer_DistanceAngleMeasuresTheAngleFromTheReferenceFace
+      Test  #67: unit.Chamfer_DistanceAngleMeasuresTheAngleFromTheReferenceFace ..........   Passed    0.07 sec
+        Start  67: unit.Chamfer_DistanceAngleMeasuresTheAngleFromTheReferenceFace
+      Test  #67: unit.Chamfer_DistanceAngleMeasuresTheAngleFromTheReferenceFace ..........   Passed    0.08 sec
+        Start  67: unit.Chamfer_DistanceAngleMeasuresTheAngleFromTheReferenceFace
+      Test  #67: unit.Chamfer_DistanceAngleMeasuresTheAngleFromTheReferenceFace ..........   Passed    0.06 sec
+        Start  67: unit.Chamfer_DistanceAngleMeasuresTheAngleFromTheReferenceFace
+ 23/119 Test  #67: unit.Chamfer_DistanceAngleMeasuresTheAngleFromTheReferenceFace ..........   Passed    0.06 sec
+        Start  68: unit.Chamfer_FollowsTangentEdgesAndRejectsTwoReferencesToOneChain
+      Test  #68: unit.Chamfer_FollowsTangentEdgesAndRejectsTwoReferencesToOneChain .......   Passed    0.10 sec
+        Start  68: unit.Chamfer_FollowsTangentEdgesAndRejectsTwoReferencesToOneChain
+      Test  #68: unit.Chamfer_FollowsTangentEdgesAndRejectsTwoReferencesToOneChain .......   Passed    0.09 sec
+        Start  68: unit.Chamfer_FollowsTangentEdgesAndRejectsTwoReferencesToOneChain
+      Test  #68: unit.Chamfer_FollowsTangentEdgesAndRejectsTwoReferencesToOneChain .......   Passed    0.13 sec
+        Start  68: unit.Chamfer_FollowsTangentEdgesAndRejectsTwoReferencesToOneChain
+      Test  #68: unit.Chamfer_FollowsTangentEdgesAndRejectsTwoReferencesToOneChain .......   Passed    0.09 sec
+        Start  68: unit.Chamfer_FollowsTangentEdgesAndRejectsTwoReferencesToOneChain
+ 24/119 Test  #68: unit.Chamfer_FollowsTangentEdgesAndRejectsTwoReferencesToOneChain .......   Passed    0.09 sec
+        Start  69: unit.Chamfer_IsDeterministic
+      Test  #69: unit.Chamfer_IsDeterministic ............................................   Passed    0.10 sec
+        Start  69: unit.Chamfer_IsDeterministic
+      Test  #69: unit.Chamfer_IsDeterministic ............................................   Passed    0.09 sec
+        Start  69: unit.Chamfer_IsDeterministic
+      Test  #69: unit.Chamfer_IsDeterministic ............................................   Passed    0.09 sec
+        Start  69: unit.Chamfer_IsDeterministic
+      Test  #69: unit.Chamfer_IsDeterministic ............................................   Passed    0.09 sec
+        Start  69: unit.Chamfer_IsDeterministic
+ 25/119 Test  #69: unit.Chamfer_IsDeterministic ............................................   Passed    0.09 sec
+        Start  70: unit.Chamfer_MultipleSeparateEdgesMatchAnalyticVolume
+      Test  #70: unit.Chamfer_MultipleSeparateEdgesMatchAnalyticVolume ...................   Passed    0.07 sec
+        Start  70: unit.Chamfer_MultipleSeparateEdgesMatchAnalyticVolume
+      Test  #70: unit.Chamfer_MultipleSeparateEdgesMatchAnalyticVolume ...................   Passed    0.07 sec
+        Start  70: unit.Chamfer_MultipleSeparateEdgesMatchAnalyticVolume
+      Test  #70: unit.Chamfer_MultipleSeparateEdgesMatchAnalyticVolume ...................   Passed    0.07 sec
+        Start  70: unit.Chamfer_MultipleSeparateEdgesMatchAnalyticVolume
+      Test  #70: unit.Chamfer_MultipleSeparateEdgesMatchAnalyticVolume ...................   Passed    0.06 sec
+        Start  70: unit.Chamfer_MultipleSeparateEdgesMatchAnalyticVolume
+ 26/119 Test  #70: unit.Chamfer_MultipleSeparateEdgesMatchAnalyticVolume ...................   Passed    0.07 sec
+        Start  71: unit.Chamfer_RefusesChamfersThatDoNotFitBeforeTheKernel
+      Test  #71: unit.Chamfer_RefusesChamfersThatDoNotFitBeforeTheKernel .................   Passed    0.21 sec
+        Start  71: unit.Chamfer_RefusesChamfersThatDoNotFitBeforeTheKernel
+      Test  #71: unit.Chamfer_RefusesChamfersThatDoNotFitBeforeTheKernel .................   Passed    0.19 sec
+        Start  71: unit.Chamfer_RefusesChamfersThatDoNotFitBeforeTheKernel
+      Test  #71: unit.Chamfer_RefusesChamfersThatDoNotFitBeforeTheKernel .................   Passed    0.19 sec
+        Start  71: unit.Chamfer_RefusesChamfersThatDoNotFitBeforeTheKernel
+      Test  #71: unit.Chamfer_RefusesChamfersThatDoNotFitBeforeTheKernel .................   Passed    0.20 sec
+        Start  71: unit.Chamfer_RefusesChamfersThatDoNotFitBeforeTheKernel
+ 27/119 Test  #71: unit.Chamfer_RefusesChamfersThatDoNotFitBeforeTheKernel .................   Passed    0.19 sec
+        Start  72: unit.Chamfer_RejectsInvalidRequestsBeforeTheKernel
+      Test  #72: unit.Chamfer_RejectsInvalidRequestsBeforeTheKernel ......................   Passed    0.05 sec
+        Start  72: unit.Chamfer_RejectsInvalidRequestsBeforeTheKernel
+      Test  #72: unit.Chamfer_RejectsInvalidRequestsBeforeTheKernel ......................   Passed    0.05 sec
+        Start  72: unit.Chamfer_RejectsInvalidRequestsBeforeTheKernel
+      Test  #72: unit.Chamfer_RejectsInvalidRequestsBeforeTheKernel ......................   Passed    0.04 sec
+        Start  72: unit.Chamfer_RejectsInvalidRequestsBeforeTheKernel
+      Test  #72: unit.Chamfer_RejectsInvalidRequestsBeforeTheKernel ......................   Passed    0.10 sec
+        Start  72: unit.Chamfer_RejectsInvalidRequestsBeforeTheKernel
+ 28/119 Test  #72: unit.Chamfer_RejectsInvalidRequestsBeforeTheKernel ......................   Passed    0.06 sec
+        Start  73: unit.Chamfer_RejectsOversizedDistance
+      Test  #73: unit.Chamfer_RejectsOversizedDistance ...................................   Passed    0.07 sec
+        Start  73: unit.Chamfer_RejectsOversizedDistance
+      Test  #73: unit.Chamfer_RejectsOversizedDistance ...................................   Passed    0.07 sec
+        Start  73: unit.Chamfer_RejectsOversizedDistance
+      Test  #73: unit.Chamfer_RejectsOversizedDistance ...................................   Passed    0.06 sec
+        Start  73: unit.Chamfer_RejectsOversizedDistance
+      Test  #73: unit.Chamfer_RejectsOversizedDistance ...................................   Passed    0.09 sec
+        Start  73: unit.Chamfer_RejectsOversizedDistance
+ 29/119 Test  #73: unit.Chamfer_RejectsOversizedDistance ...................................   Passed    0.10 sec
+        Start  74: unit.Chamfer_SingleEdgeMatchesAnalyticVolume
+      Test  #74: unit.Chamfer_SingleEdgeMatchesAnalyticVolume ............................   Passed    0.08 sec
+        Start  74: unit.Chamfer_SingleEdgeMatchesAnalyticVolume
+      Test  #74: unit.Chamfer_SingleEdgeMatchesAnalyticVolume ............................   Passed    0.09 sec
+        Start  74: unit.Chamfer_SingleEdgeMatchesAnalyticVolume
+      Test  #74: unit.Chamfer_SingleEdgeMatchesAnalyticVolume ............................   Passed    0.08 sec
+        Start  74: unit.Chamfer_SingleEdgeMatchesAnalyticVolume
+      Test  #74: unit.Chamfer_SingleEdgeMatchesAnalyticVolume ............................   Passed    0.07 sec
+        Start  74: unit.Chamfer_SingleEdgeMatchesAnalyticVolume
+ 30/119 Test  #74: unit.Chamfer_SingleEdgeMatchesAnalyticVolume ............................   Passed    0.13 sec
+        Start  75: unit.Chamfer_TwoDistancesPutTheFirstDistanceOnTheReferenceFace
+      Test  #75: unit.Chamfer_TwoDistancesPutTheFirstDistanceOnTheReferenceFace ..........   Passed    0.07 sec
+        Start  75: unit.Chamfer_TwoDistancesPutTheFirstDistanceOnTheReferenceFace
+      Test  #75: unit.Chamfer_TwoDistancesPutTheFirstDistanceOnTheReferenceFace ..........   Passed    0.07 sec
+        Start  75: unit.Chamfer_TwoDistancesPutTheFirstDistanceOnTheReferenceFace
+      Test  #75: unit.Chamfer_TwoDistancesPutTheFirstDistanceOnTheReferenceFace ..........   Passed    0.07 sec
+        Start  75: unit.Chamfer_TwoDistancesPutTheFirstDistanceOnTheReferenceFace
+      Test  #75: unit.Chamfer_TwoDistancesPutTheFirstDistanceOnTheReferenceFace ..........   Passed    0.07 sec
+        Start  75: unit.Chamfer_TwoDistancesPutTheFirstDistanceOnTheReferenceFace
+ 31/119 Test  #75: unit.Chamfer_TwoDistancesPutTheFirstDistanceOnTheReferenceFace ..........   Passed    0.07 sec
+        Start  76: unit.Chamfer_UnresolvableReferencesAreReportedNotGuessed
+      Test  #76: unit.Chamfer_UnresolvableReferencesAreReportedNotGuessed ................   Passed    0.09 sec
+        Start  76: unit.Chamfer_UnresolvableReferencesAreReportedNotGuessed
+      Test  #76: unit.Chamfer_UnresolvableReferencesAreReportedNotGuessed ................   Passed    0.07 sec
+        Start  76: unit.Chamfer_UnresolvableReferencesAreReportedNotGuessed
+      Test  #76: unit.Chamfer_UnresolvableReferencesAreReportedNotGuessed ................   Passed    0.06 sec
+        Start  76: unit.Chamfer_UnresolvableReferencesAreReportedNotGuessed
+      Test  #76: unit.Chamfer_UnresolvableReferencesAreReportedNotGuessed ................   Passed    0.06 sec
+        Start  76: unit.Chamfer_UnresolvableReferencesAreReportedNotGuessed
+ 32/119 Test  #76: unit.Chamfer_UnresolvableReferencesAreReportedNotGuessed ................   Passed    0.06 sec
+        Start 115: unit.Edges_BoxHasTwelveStraightEdgesBetweenTwoFaces
+      Test #115: unit.Edges_BoxHasTwelveStraightEdgesBetweenTwoFaces .....................   Passed    0.06 sec
+        Start 115: unit.Edges_BoxHasTwelveStraightEdgesBetweenTwoFaces
+      Test #115: unit.Edges_BoxHasTwelveStraightEdgesBetweenTwoFaces .....................   Passed    0.05 sec
+        Start 115: unit.Edges_BoxHasTwelveStraightEdgesBetweenTwoFaces
+      Test #115: unit.Edges_BoxHasTwelveStraightEdgesBetweenTwoFaces .....................   Passed    0.05 sec
+        Start 115: unit.Edges_BoxHasTwelveStraightEdgesBetweenTwoFaces
+      Test #115: unit.Edges_BoxHasTwelveStraightEdgesBetweenTwoFaces .....................   Passed    0.05 sec
+        Start 115: unit.Edges_BoxHasTwelveStraightEdgesBetweenTwoFaces
+ 33/119 Test #115: unit.Edges_BoxHasTwelveStraightEdgesBetweenTwoFaces .....................   Passed    0.07 sec
+        Start 117: unit.Edges_FaceAngleTellsSharpFromSmoothEdges
+      Test #117: unit.Edges_FaceAngleTellsSharpFromSmoothEdges ...........................   Passed    0.06 sec
+        Start 117: unit.Edges_FaceAngleTellsSharpFromSmoothEdges
+      Test #117: unit.Edges_FaceAngleTellsSharpFromSmoothEdges ...........................   Passed    0.06 sec
+        Start 117: unit.Edges_FaceAngleTellsSharpFromSmoothEdges
+      Test #117: unit.Edges_FaceAngleTellsSharpFromSmoothEdges ...........................   Passed    0.08 sec
+        Start 117: unit.Edges_FaceAngleTellsSharpFromSmoothEdges
+      Test #117: unit.Edges_FaceAngleTellsSharpFromSmoothEdges ...........................   Passed    0.10 sec
+        Start 117: unit.Edges_FaceAngleTellsSharpFromSmoothEdges
+ 34/119 Test #117: unit.Edges_FaceAngleTellsSharpFromSmoothEdges ...........................   Passed    0.05 sec
+        Start 135: unit.Extruded regions with circles, holes and arcs
+      Test #135: unit.Extruded regions with circles, holes and arcs ......................   Passed    0.11 sec
+        Start 135: unit.Extruded regions with circles, holes and arcs
+      Test #135: unit.Extruded regions with circles, holes and arcs ......................   Passed    0.10 sec
+        Start 135: unit.Extruded regions with circles, holes and arcs
+      Test #135: unit.Extruded regions with circles, holes and arcs ......................   Passed    0.10 sec
+        Start 135: unit.Extruded regions with circles, holes and arcs
+      Test #135: unit.Extruded regions with circles, holes and arcs ......................   Passed    0.11 sec
+        Start 135: unit.Extruded regions with circles, holes and arcs
+ 35/119 Test #135: unit.Extruded regions with circles, holes and arcs ......................   Passed    0.10 sec
+        Start 136: unit.FaceSignature_IsCanonicalAndHasModelAlignedCoordinates
+      Test #136: unit.FaceSignature_IsCanonicalAndHasModelAlignedCoordinates .............   Passed    0.06 sec
+        Start 136: unit.FaceSignature_IsCanonicalAndHasModelAlignedCoordinates
+      Test #136: unit.FaceSignature_IsCanonicalAndHasModelAlignedCoordinates .............   Passed    0.08 sec
+        Start 136: unit.FaceSignature_IsCanonicalAndHasModelAlignedCoordinates
+      Test #136: unit.FaceSignature_IsCanonicalAndHasModelAlignedCoordinates .............   Passed    0.04 sec
+        Start 136: unit.FaceSignature_IsCanonicalAndHasModelAlignedCoordinates
+      Test #136: unit.FaceSignature_IsCanonicalAndHasModelAlignedCoordinates .............   Passed    0.05 sec
+        Start 136: unit.FaceSignature_IsCanonicalAndHasModelAlignedCoordinates
+ 36/119 Test #136: unit.FaceSignature_IsCanonicalAndHasModelAlignedCoordinates .............   Passed    0.04 sec
+        Start 137: unit.Faces_BoxHasSixPlanarFacesWithReferences
+      Test #137: unit.Faces_BoxHasSixPlanarFacesWithReferences ...........................   Passed    0.05 sec
+        Start 137: unit.Faces_BoxHasSixPlanarFacesWithReferences
+      Test #137: unit.Faces_BoxHasSixPlanarFacesWithReferences ...........................   Passed    0.05 sec
+        Start 137: unit.Faces_BoxHasSixPlanarFacesWithReferences
+      Test #137: unit.Faces_BoxHasSixPlanarFacesWithReferences ...........................   Passed    0.07 sec
+        Start 137: unit.Faces_BoxHasSixPlanarFacesWithReferences
+      Test #137: unit.Faces_BoxHasSixPlanarFacesWithReferences ...........................   Passed    0.07 sec
+        Start 137: unit.Faces_BoxHasSixPlanarFacesWithReferences
+ 37/119 Test #137: unit.Faces_BoxHasSixPlanarFacesWithReferences ...........................   Passed    0.07 sec
+        Start 142: unit.FilletFeature_DataIsStoredAsTransparentJson
+      Test #142: unit.FilletFeature_DataIsStoredAsTransparentJson ........................   Passed    0.06 sec
+        Start 142: unit.FilletFeature_DataIsStoredAsTransparentJson
+      Test #142: unit.FilletFeature_DataIsStoredAsTransparentJson ........................   Passed    0.05 sec
+        Start 142: unit.FilletFeature_DataIsStoredAsTransparentJson
+      Test #142: unit.FilletFeature_DataIsStoredAsTransparentJson ........................   Passed    0.06 sec
+        Start 142: unit.FilletFeature_DataIsStoredAsTransparentJson
+      Test #142: unit.FilletFeature_DataIsStoredAsTransparentJson ........................   Passed    0.05 sec
+        Start 142: unit.FilletFeature_DataIsStoredAsTransparentJson
+ 38/119 Test #142: unit.FilletFeature_DataIsStoredAsTransparentJson ........................   Passed    0.05 sec
+        Start 143: unit.FilletFeature_DefinitionIsValidatedOnCreateAndEdit
+      Test #143: unit.FilletFeature_DefinitionIsValidatedOnCreateAndEdit .................   Passed    0.05 sec
+        Start 143: unit.FilletFeature_DefinitionIsValidatedOnCreateAndEdit
+      Test #143: unit.FilletFeature_DefinitionIsValidatedOnCreateAndEdit .................   Passed    0.04 sec
+        Start 143: unit.FilletFeature_DefinitionIsValidatedOnCreateAndEdit
+      Test #143: unit.FilletFeature_DefinitionIsValidatedOnCreateAndEdit .................   Passed    0.04 sec
+        Start 143: unit.FilletFeature_DefinitionIsValidatedOnCreateAndEdit
+      Test #143: unit.FilletFeature_DefinitionIsValidatedOnCreateAndEdit .................   Passed    0.06 sec
+        Start 143: unit.FilletFeature_DefinitionIsValidatedOnCreateAndEdit
+ 39/119 Test #143: unit.FilletFeature_DefinitionIsValidatedOnCreateAndEdit .................   Passed    0.04 sec
+        Start 144: unit.FilletFeature_DependsOnItsTargetAndRadiusParameter
+      Test #144: unit.FilletFeature_DependsOnItsTargetAndRadiusParameter .................   Passed    0.06 sec
+        Start 144: unit.FilletFeature_DependsOnItsTargetAndRadiusParameter
+      Test #144: unit.FilletFeature_DependsOnItsTargetAndRadiusParameter .................   Passed    0.05 sec
+        Start 144: unit.FilletFeature_DependsOnItsTargetAndRadiusParameter
+      Test #144: unit.FilletFeature_DependsOnItsTargetAndRadiusParameter .................   Passed    0.05 sec
+        Start 144: unit.FilletFeature_DependsOnItsTargetAndRadiusParameter
+      Test #144: unit.FilletFeature_DependsOnItsTargetAndRadiusParameter .................   Passed    0.04 sec
+        Start 144: unit.FilletFeature_DependsOnItsTargetAndRadiusParameter
+ 40/119 Test #144: unit.FilletFeature_DependsOnItsTargetAndRadiusParameter .................   Passed    0.04 sec
+        Start 145: unit.FilletFeature_ExportsClosedStl
+      Test #145: unit.FilletFeature_ExportsClosedStl .....................................   Passed    0.14 sec
+        Start 145: unit.FilletFeature_ExportsClosedStl
+      Test #145: unit.FilletFeature_ExportsClosedStl .....................................   Passed    0.13 sec
+        Start 145: unit.FilletFeature_ExportsClosedStl
+      Test #145: unit.FilletFeature_ExportsClosedStl .....................................   Passed    0.13 sec
+        Start 145: unit.FilletFeature_ExportsClosedStl
+      Test #145: unit.FilletFeature_ExportsClosedStl .....................................   Passed    0.13 sec
+        Start 145: unit.FilletFeature_ExportsClosedStl
+ 41/119 Test #145: unit.FilletFeature_ExportsClosedStl .....................................   Passed    0.14 sec
+        Start 146: unit.FilletFeature_ExportsStep
+      Test #146: unit.FilletFeature_ExportsStep ..........................................   Passed    0.16 sec
+        Start 146: unit.FilletFeature_ExportsStep
+      Test #146: unit.FilletFeature_ExportsStep ..........................................   Passed    0.14 sec
+        Start 146: unit.FilletFeature_ExportsStep
+      Test #146: unit.FilletFeature_ExportsStep ..........................................   Passed    0.16 sec
+        Start 146: unit.FilletFeature_ExportsStep
+      Test #146: unit.FilletFeature_ExportsStep ..........................................   Passed    0.14 sec
+        Start 146: unit.FilletFeature_ExportsStep
+ 42/119 Test #146: unit.FilletFeature_ExportsStep ..........................................   Passed    0.12 sec
+        Start 147: unit.FilletFeature_FailedFilletSavesAndLoadsUnchanged
+      Test #147: unit.FilletFeature_FailedFilletSavesAndLoadsUnchanged ...................   Passed    0.11 sec
+        Start 147: unit.FilletFeature_FailedFilletSavesAndLoadsUnchanged
+      Test #147: unit.FilletFeature_FailedFilletSavesAndLoadsUnchanged ...................   Passed    0.10 sec
+        Start 147: unit.FilletFeature_FailedFilletSavesAndLoadsUnchanged
+      Test #147: unit.FilletFeature_FailedFilletSavesAndLoadsUnchanged ...................   Passed    0.11 sec
+        Start 147: unit.FilletFeature_FailedFilletSavesAndLoadsUnchanged
+      Test #147: unit.FilletFeature_FailedFilletSavesAndLoadsUnchanged ...................   Passed    0.11 sec
+        Start 147: unit.FilletFeature_FailedFilletSavesAndLoadsUnchanged
+ 43/119 Test #147: unit.FilletFeature_FailedFilletSavesAndLoadsUnchanged ...................   Passed    0.13 sec
+        Start 148: unit.FilletFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact
+      Test #148: unit.FilletFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact ......   Passed    0.13 sec
+        Start 148: unit.FilletFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact
+      Test #148: unit.FilletFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact ......   Passed    0.11 sec
+        Start 148: unit.FilletFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact
+      Test #148: unit.FilletFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact ......   Passed    0.11 sec
+        Start 148: unit.FilletFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact
+      Test #148: unit.FilletFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact ......   Passed    0.11 sec
+        Start 148: unit.FilletFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact
+ 44/119 Test #148: unit.FilletFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact ......   Passed    0.11 sec
+        Start 149: unit.FilletFeature_InvalidInputsFailWithStructuredDiagnostics
+      Test #149: unit.FilletFeature_InvalidInputsFailWithStructuredDiagnostics ...........   Passed    0.37 sec
+        Start 149: unit.FilletFeature_InvalidInputsFailWithStructuredDiagnostics
+      Test #149: unit.FilletFeature_InvalidInputsFailWithStructuredDiagnostics ...........   Passed    0.36 sec
+        Start 149: unit.FilletFeature_InvalidInputsFailWithStructuredDiagnostics
+      Test #149: unit.FilletFeature_InvalidInputsFailWithStructuredDiagnostics ...........   Passed    0.38 sec
+        Start 149: unit.FilletFeature_InvalidInputsFailWithStructuredDiagnostics
+      Test #149: unit.FilletFeature_InvalidInputsFailWithStructuredDiagnostics ...........   Passed    0.34 sec
+        Start 149: unit.FilletFeature_InvalidInputsFailWithStructuredDiagnostics
+ 45/119 Test #149: unit.FilletFeature_InvalidInputsFailWithStructuredDiagnostics ...........   Passed    0.38 sec
+        Start 150: unit.FilletFeature_MalformedDataIsRejectedWithTheJsonPath
+      Test #150: unit.FilletFeature_MalformedDataIsRejectedWithTheJsonPath ...............   Passed    0.07 sec
+        Start 150: unit.FilletFeature_MalformedDataIsRejectedWithTheJsonPath
+      Test #150: unit.FilletFeature_MalformedDataIsRejectedWithTheJsonPath ...............   Passed    0.07 sec
+        Start 150: unit.FilletFeature_MalformedDataIsRejectedWithTheJsonPath
+      Test #150: unit.FilletFeature_MalformedDataIsRejectedWithTheJsonPath ...............   Passed    0.07 sec
+        Start 150: unit.FilletFeature_MalformedDataIsRejectedWithTheJsonPath
+      Test #150: unit.FilletFeature_MalformedDataIsRejectedWithTheJsonPath ...............   Passed    0.06 sec
+        Start 150: unit.FilletFeature_MalformedDataIsRejectedWithTheJsonPath
+ 46/119 Test #150: unit.FilletFeature_MalformedDataIsRejectedWithTheJsonPath ...............   Passed    0.07 sec
+        Start 151: unit.FilletFeature_ModelsAreValidatedLikeAnyOther
+      Test #151: unit.FilletFeature_ModelsAreValidatedLikeAnyOther .......................   Passed    0.13 sec
+        Start 151: unit.FilletFeature_ModelsAreValidatedLikeAnyOther
+      Test #151: unit.FilletFeature_ModelsAreValidatedLikeAnyOther .......................   Passed    0.22 sec
+        Start 151: unit.FilletFeature_ModelsAreValidatedLikeAnyOther
+      Test #151: unit.FilletFeature_ModelsAreValidatedLikeAnyOther .......................   Passed    0.14 sec
+        Start 151: unit.FilletFeature_ModelsAreValidatedLikeAnyOther
+      Test #151: unit.FilletFeature_ModelsAreValidatedLikeAnyOther .......................   Passed    0.12 sec
+        Start 151: unit.FilletFeature_ModelsAreValidatedLikeAnyOther
+ 47/119 Test #151: unit.FilletFeature_ModelsAreValidatedLikeAnyOther .......................   Passed    0.14 sec
+        Start 152: unit.FilletFeature_MultipleAndAdjacentEdgesMatchAnalyticVolume
+      Test #152: unit.FilletFeature_MultipleAndAdjacentEdgesMatchAnalyticVolume ..........   Passed    0.24 sec
+        Start 152: unit.FilletFeature_MultipleAndAdjacentEdgesMatchAnalyticVolume
+      Test #152: unit.FilletFeature_MultipleAndAdjacentEdgesMatchAnalyticVolume ..........   Passed    0.25 sec
+        Start 152: unit.FilletFeature_MultipleAndAdjacentEdgesMatchAnalyticVolume
+      Test #152: unit.FilletFeature_MultipleAndAdjacentEdgesMatchAnalyticVolume ..........   Passed    0.26 sec
+        Start 152: unit.FilletFeature_MultipleAndAdjacentEdgesMatchAnalyticVolume
+      Test #152: unit.FilletFeature_MultipleAndAdjacentEdgesMatchAnalyticVolume ..........   Passed    0.23 sec
+        Start 152: unit.FilletFeature_MultipleAndAdjacentEdgesMatchAnalyticVolume
+ 48/119 Test #152: unit.FilletFeature_MultipleAndAdjacentEdgesMatchAnalyticVolume ..........   Passed    0.23 sec
+        Start 153: unit.FilletFeature_RadiusParameterDrivesTheFillet
+      Test #153: unit.FilletFeature_RadiusParameterDrivesTheFillet .......................   Passed    0.33 sec
+        Start 153: unit.FilletFeature_RadiusParameterDrivesTheFillet
+      Test #153: unit.FilletFeature_RadiusParameterDrivesTheFillet .......................   Passed    0.32 sec
+        Start 153: unit.FilletFeature_RadiusParameterDrivesTheFillet
+      Test #153: unit.FilletFeature_RadiusParameterDrivesTheFillet .......................   Passed    0.32 sec
+        Start 153: unit.FilletFeature_RadiusParameterDrivesTheFillet
+      Test #153: unit.FilletFeature_RadiusParameterDrivesTheFillet .......................   Passed    0.31 sec
+        Start 153: unit.FilletFeature_RadiusParameterDrivesTheFillet
+ 49/119 Test #153: unit.FilletFeature_RadiusParameterDrivesTheFillet .......................   Passed    0.32 sec
+        Start 154: unit.FilletFeature_RefusesSubstitutionAfterTopologyChange
+      Test #154: unit.FilletFeature_RefusesSubstitutionAfterTopologyChange ...............   Passed    0.24 sec
+        Start 154: unit.FilletFeature_RefusesSubstitutionAfterTopologyChange
+      Test #154: unit.FilletFeature_RefusesSubstitutionAfterTopologyChange ...............   Passed    0.25 sec
+        Start 154: unit.FilletFeature_RefusesSubstitutionAfterTopologyChange
+      Test #154: unit.FilletFeature_RefusesSubstitutionAfterTopologyChange ...............   Passed    0.24 sec
+        Start 154: unit.FilletFeature_RefusesSubstitutionAfterTopologyChange
+      Test #154: unit.FilletFeature_RefusesSubstitutionAfterTopologyChange ...............   Passed    0.26 sec
+        Start 154: unit.FilletFeature_RefusesSubstitutionAfterTopologyChange
+ 50/119 Test #154: unit.FilletFeature_RefusesSubstitutionAfterTopologyChange ...............   Passed    0.26 sec
+        Start 155: unit.FilletFeature_RegeneratesAfterUpstreamDimensionChange
+      Test #155: unit.FilletFeature_RegeneratesAfterUpstreamDimensionChange ..............   Passed    0.17 sec
+        Start 155: unit.FilletFeature_RegeneratesAfterUpstreamDimensionChange
+      Test #155: unit.FilletFeature_RegeneratesAfterUpstreamDimensionChange ..............   Passed    0.16 sec
+        Start 155: unit.FilletFeature_RegeneratesAfterUpstreamDimensionChange
+      Test #155: unit.FilletFeature_RegeneratesAfterUpstreamDimensionChange ..............   Passed    0.14 sec
+        Start 155: unit.FilletFeature_RegeneratesAfterUpstreamDimensionChange
+      Test #155: unit.FilletFeature_RegeneratesAfterUpstreamDimensionChange ..............   Passed    0.14 sec
+        Start 155: unit.FilletFeature_RegeneratesAfterUpstreamDimensionChange
+ 51/119 Test #155: unit.FilletFeature_RegeneratesAfterUpstreamDimensionChange ..............   Passed    0.14 sec
+        Start 156: unit.FilletFeature_RegenerationIsDeterministic
+      Test #156: unit.FilletFeature_RegenerationIsDeterministic ..........................   Passed    0.23 sec
+        Start 156: unit.FilletFeature_RegenerationIsDeterministic
+      Test #156: unit.FilletFeature_RegenerationIsDeterministic ..........................   Passed    0.23 sec
+        Start 156: unit.FilletFeature_RegenerationIsDeterministic
+      Test #156: unit.FilletFeature_RegenerationIsDeterministic ..........................   Passed    0.21 sec
+        Start 156: unit.FilletFeature_RegenerationIsDeterministic
+      Test #156: unit.FilletFeature_RegenerationIsDeterministic ..........................   Passed    0.22 sec
+        Start 156: unit.FilletFeature_RegenerationIsDeterministic
+ 52/119 Test #156: unit.FilletFeature_RegenerationIsDeterministic ..........................   Passed    0.22 sec
+        Start 157: unit.FilletFeature_SaveLoadPreservesCircleReferences
+      Test #157: unit.FilletFeature_SaveLoadPreservesCircleReferences ....................   Passed    0.51 sec
+        Start 157: unit.FilletFeature_SaveLoadPreservesCircleReferences
+      Test #157: unit.FilletFeature_SaveLoadPreservesCircleReferences ....................   Passed    0.54 sec
+        Start 157: unit.FilletFeature_SaveLoadPreservesCircleReferences
+      Test #157: unit.FilletFeature_SaveLoadPreservesCircleReferences ....................   Passed    0.51 sec
+        Start 157: unit.FilletFeature_SaveLoadPreservesCircleReferences
+      Test #157: unit.FilletFeature_SaveLoadPreservesCircleReferences ....................   Passed    0.53 sec
+        Start 157: unit.FilletFeature_SaveLoadPreservesCircleReferences
+ 53/119 Test #157: unit.FilletFeature_SaveLoadPreservesCircleReferences ....................   Passed    0.52 sec
+        Start 158: unit.FilletFeature_SaveLoadPreservesReferencesAndRadius
+      Test #158: unit.FilletFeature_SaveLoadPreservesReferencesAndRadius .................   Passed    0.35 sec
+        Start 158: unit.FilletFeature_SaveLoadPreservesReferencesAndRadius
+      Test #158: unit.FilletFeature_SaveLoadPreservesReferencesAndRadius .................   Passed    0.34 sec
+        Start 158: unit.FilletFeature_SaveLoadPreservesReferencesAndRadius
+      Test #158: unit.FilletFeature_SaveLoadPreservesReferencesAndRadius .................   Passed    0.33 sec
+        Start 158: unit.FilletFeature_SaveLoadPreservesReferencesAndRadius
+      Test #158: unit.FilletFeature_SaveLoadPreservesReferencesAndRadius .................   Passed    0.35 sec
+        Start 158: unit.FilletFeature_SaveLoadPreservesReferencesAndRadius
+ 54/119 Test #158: unit.FilletFeature_SaveLoadPreservesReferencesAndRadius .................   Passed    0.31 sec
+        Start 159: unit.FilletFeature_SingleStraightEdgeMatchesAnalyticVolume
+      Test #159: unit.FilletFeature_SingleStraightEdgeMatchesAnalyticVolume ..............   Passed    0.21 sec
+        Start 159: unit.FilletFeature_SingleStraightEdgeMatchesAnalyticVolume
+      Test #159: unit.FilletFeature_SingleStraightEdgeMatchesAnalyticVolume ..............   Passed    0.11 sec
+        Start 159: unit.FilletFeature_SingleStraightEdgeMatchesAnalyticVolume
+      Test #159: unit.FilletFeature_SingleStraightEdgeMatchesAnalyticVolume ..............   Passed    0.11 sec
+        Start 159: unit.FilletFeature_SingleStraightEdgeMatchesAnalyticVolume
+      Test #159: unit.FilletFeature_SingleStraightEdgeMatchesAnalyticVolume ..............   Passed    0.10 sec
+        Start 159: unit.FilletFeature_SingleStraightEdgeMatchesAnalyticVolume
+ 55/119 Test #159: unit.FilletFeature_SingleStraightEdgeMatchesAnalyticVolume ..............   Passed    0.10 sec
+        Start 160: unit.FilletFeature_UndoRedoRestoresGeometry
+      Test #160: unit.FilletFeature_UndoRedoRestoresGeometry .............................   Passed    0.44 sec
+        Start 160: unit.FilletFeature_UndoRedoRestoresGeometry
+      Test #160: unit.FilletFeature_UndoRedoRestoresGeometry .............................   Passed    0.38 sec
+        Start 160: unit.FilletFeature_UndoRedoRestoresGeometry
+      Test #160: unit.FilletFeature_UndoRedoRestoresGeometry .............................   Passed    0.37 sec
+        Start 160: unit.FilletFeature_UndoRedoRestoresGeometry
+      Test #160: unit.FilletFeature_UndoRedoRestoresGeometry .............................   Passed    0.37 sec
+        Start 160: unit.FilletFeature_UndoRedoRestoresGeometry
+ 56/119 Test #160: unit.FilletFeature_UndoRedoRestoresGeometry .............................   Passed    0.37 sec
+        Start 161: unit.FilletFeature_WorksOnRevolvedBody
+      Test #161: unit.FilletFeature_WorksOnRevolvedBody ..................................   Passed    0.55 sec
+        Start 161: unit.FilletFeature_WorksOnRevolvedBody
+      Test #161: unit.FilletFeature_WorksOnRevolvedBody ..................................   Passed    0.58 sec
+        Start 161: unit.FilletFeature_WorksOnRevolvedBody
+      Test #161: unit.FilletFeature_WorksOnRevolvedBody ..................................   Passed    0.55 sec
+        Start 161: unit.FilletFeature_WorksOnRevolvedBody
+      Test #161: unit.FilletFeature_WorksOnRevolvedBody ..................................   Passed    0.59 sec
+        Start 161: unit.FilletFeature_WorksOnRevolvedBody
+ 57/119 Test #161: unit.FilletFeature_WorksOnRevolvedBody ..................................   Passed    0.54 sec
+        Start 162: unit.Fillet_AdjacentEdgesAreBlendedAtTheirCorner
+      Test #162: unit.Fillet_AdjacentEdgesAreBlendedAtTheirCorner ........................   Passed    0.11 sec
+        Start 162: unit.Fillet_AdjacentEdgesAreBlendedAtTheirCorner
+      Test #162: unit.Fillet_AdjacentEdgesAreBlendedAtTheirCorner ........................   Passed    0.11 sec
+        Start 162: unit.Fillet_AdjacentEdgesAreBlendedAtTheirCorner
+      Test #162: unit.Fillet_AdjacentEdgesAreBlendedAtTheirCorner ........................   Passed    0.10 sec
+        Start 162: unit.Fillet_AdjacentEdgesAreBlendedAtTheirCorner
+      Test #162: unit.Fillet_AdjacentEdgesAreBlendedAtTheirCorner ........................   Passed    0.18 sec
+        Start 162: unit.Fillet_AdjacentEdgesAreBlendedAtTheirCorner
+ 58/119 Test #162: unit.Fillet_AdjacentEdgesAreBlendedAtTheirCorner ........................   Passed    0.22 sec
+        Start 163: unit.Fillet_CircularEdgeMatchesPappus
+      Test #163: unit.Fillet_CircularEdgeMatchesPappus ...................................   Passed    0.20 sec
+        Start 163: unit.Fillet_CircularEdgeMatchesPappus
+      Test #163: unit.Fillet_CircularEdgeMatchesPappus ...................................   Passed    0.16 sec
+        Start 163: unit.Fillet_CircularEdgeMatchesPappus
+      Test #163: unit.Fillet_CircularEdgeMatchesPappus ...................................   Passed    0.18 sec
+        Start 163: unit.Fillet_CircularEdgeMatchesPappus
+      Test #163: unit.Fillet_CircularEdgeMatchesPappus ...................................   Passed    0.18 sec
+        Start 163: unit.Fillet_CircularEdgeMatchesPappus
+ 59/119 Test #163: unit.Fillet_CircularEdgeMatchesPappus ...................................   Passed    0.16 sec
+        Start 164: unit.Fillet_ConcaveEdgeAddsMaterial
+      Test #164: unit.Fillet_ConcaveEdgeAddsMaterial .....................................   Passed    0.13 sec
+        Start 164: unit.Fillet_ConcaveEdgeAddsMaterial
+      Test #164: unit.Fillet_ConcaveEdgeAddsMaterial .....................................   Passed    0.12 sec
+        Start 164: unit.Fillet_ConcaveEdgeAddsMaterial
+      Test #164: unit.Fillet_ConcaveEdgeAddsMaterial .....................................   Passed    0.15 sec
+        Start 164: unit.Fillet_ConcaveEdgeAddsMaterial
+      Test #164: unit.Fillet_ConcaveEdgeAddsMaterial .....................................   Passed    0.14 sec
+        Start 164: unit.Fillet_ConcaveEdgeAddsMaterial
+ 60/119 Test #164: unit.Fillet_ConcaveEdgeAddsMaterial .....................................   Passed    0.13 sec
+        Start 165: unit.Fillet_IsDeterministic
+      Test #165: unit.Fillet_IsDeterministic .............................................   Passed    0.12 sec
+        Start 165: unit.Fillet_IsDeterministic
+      Test #165: unit.Fillet_IsDeterministic .............................................   Passed    0.11 sec
+        Start 165: unit.Fillet_IsDeterministic
+      Test #165: unit.Fillet_IsDeterministic .............................................   Passed    0.10 sec
+        Start 165: unit.Fillet_IsDeterministic
+      Test #165: unit.Fillet_IsDeterministic .............................................   Passed    0.10 sec
+        Start 165: unit.Fillet_IsDeterministic
+ 61/119 Test #165: unit.Fillet_IsDeterministic .............................................   Passed    0.10 sec
+        Start 166: unit.Fillet_MultipleIndependentEdgesMatchAnalyticVolume
+      Test #166: unit.Fillet_MultipleIndependentEdgesMatchAnalyticVolume .................   Passed    0.08 sec
+        Start 166: unit.Fillet_MultipleIndependentEdgesMatchAnalyticVolume
+      Test #166: unit.Fillet_MultipleIndependentEdgesMatchAnalyticVolume .................   Passed    0.09 sec
+        Start 166: unit.Fillet_MultipleIndependentEdgesMatchAnalyticVolume
+      Test #166: unit.Fillet_MultipleIndependentEdgesMatchAnalyticVolume .................   Passed    0.09 sec
+        Start 166: unit.Fillet_MultipleIndependentEdgesMatchAnalyticVolume
+      Test #166: unit.Fillet_MultipleIndependentEdgesMatchAnalyticVolume .................   Passed    0.07 sec
+        Start 166: unit.Fillet_MultipleIndependentEdgesMatchAnalyticVolume
+ 62/119 Test #166: unit.Fillet_MultipleIndependentEdgesMatchAnalyticVolume .................   Passed    0.07 sec
+        Start 167: unit.Fillet_RefusesEdgesWhereFacesJoinSmoothly
+      Test #167: unit.Fillet_RefusesEdgesWhereFacesJoinSmoothly ..........................   Passed    0.10 sec
+        Start 167: unit.Fillet_RefusesEdgesWhereFacesJoinSmoothly
+      Test #167: unit.Fillet_RefusesEdgesWhereFacesJoinSmoothly ..........................   Passed    0.09 sec
+        Start 167: unit.Fillet_RefusesEdgesWhereFacesJoinSmoothly
+      Test #167: unit.Fillet_RefusesEdgesWhereFacesJoinSmoothly ..........................   Passed    0.10 sec
+        Start 167: unit.Fillet_RefusesEdgesWhereFacesJoinSmoothly
+      Test #167: unit.Fillet_RefusesEdgesWhereFacesJoinSmoothly ..........................   Passed    0.07 sec
+        Start 167: unit.Fillet_RefusesEdgesWhereFacesJoinSmoothly
+ 63/119 Test #167: unit.Fillet_RefusesEdgesWhereFacesJoinSmoothly ..........................   Passed    0.11 sec
+        Start 168: unit.Fillet_RefusesRadiiThatDoNotFitBeforeTheKernel
+      Test #168: unit.Fillet_RefusesRadiiThatDoNotFitBeforeTheKernel .....................   Passed    0.30 sec
+        Start 168: unit.Fillet_RefusesRadiiThatDoNotFitBeforeTheKernel
+      Test #168: unit.Fillet_RefusesRadiiThatDoNotFitBeforeTheKernel .....................   Passed    0.42 sec
+        Start 168: unit.Fillet_RefusesRadiiThatDoNotFitBeforeTheKernel
+      Test #168: unit.Fillet_RefusesRadiiThatDoNotFitBeforeTheKernel .....................   Passed    0.28 sec
+        Start 168: unit.Fillet_RefusesRadiiThatDoNotFitBeforeTheKernel
+      Test #168: unit.Fillet_RefusesRadiiThatDoNotFitBeforeTheKernel .....................   Passed    0.29 sec
+        Start 168: unit.Fillet_RefusesRadiiThatDoNotFitBeforeTheKernel
+ 64/119 Test #168: unit.Fillet_RefusesRadiiThatDoNotFitBeforeTheKernel .....................   Passed    0.29 sec
+        Start 169: unit.Fillet_RejectsInvalidRequestsBeforeTheKernel
+      Test #169: unit.Fillet_RejectsInvalidRequestsBeforeTheKernel .......................   Passed    0.05 sec
+        Start 169: unit.Fillet_RejectsInvalidRequestsBeforeTheKernel
+      Test #169: unit.Fillet_RejectsInvalidRequestsBeforeTheKernel .......................   Passed    0.04 sec
+        Start 169: unit.Fillet_RejectsInvalidRequestsBeforeTheKernel
+      Test #169: unit.Fillet_RejectsInvalidRequestsBeforeTheKernel .......................   Passed    0.04 sec
+        Start 169: unit.Fillet_RejectsInvalidRequestsBeforeTheKernel
+      Test #169: unit.Fillet_RejectsInvalidRequestsBeforeTheKernel .......................   Passed    0.06 sec
+        Start 169: unit.Fillet_RejectsInvalidRequestsBeforeTheKernel
+ 65/119 Test #169: unit.Fillet_RejectsInvalidRequestsBeforeTheKernel .......................   Passed    0.05 sec
+        Start 170: unit.Fillet_SingleStraightEdgeMatchesAnalyticVolume
+      Test #170: unit.Fillet_SingleStraightEdgeMatchesAnalyticVolume .....................   Passed    0.07 sec
+        Start 170: unit.Fillet_SingleStraightEdgeMatchesAnalyticVolume
+      Test #170: unit.Fillet_SingleStraightEdgeMatchesAnalyticVolume .....................   Passed    0.07 sec
+        Start 170: unit.Fillet_SingleStraightEdgeMatchesAnalyticVolume
+      Test #170: unit.Fillet_SingleStraightEdgeMatchesAnalyticVolume .....................   Passed    0.06 sec
+        Start 170: unit.Fillet_SingleStraightEdgeMatchesAnalyticVolume
+      Test #170: unit.Fillet_SingleStraightEdgeMatchesAnalyticVolume .....................   Passed    0.07 sec
+        Start 170: unit.Fillet_SingleStraightEdgeMatchesAnalyticVolume
+ 66/119 Test #170: unit.Fillet_SingleStraightEdgeMatchesAnalyticVolume .....................   Passed    0.09 sec
+        Start 171: unit.Fillet_TangentChainIsRoundedAsAWhole
+      Test #171: unit.Fillet_TangentChainIsRoundedAsAWhole ...............................   Passed    0.14 sec
+        Start 171: unit.Fillet_TangentChainIsRoundedAsAWhole
+      Test #171: unit.Fillet_TangentChainIsRoundedAsAWhole ...............................   Passed    0.11 sec
+        Start 171: unit.Fillet_TangentChainIsRoundedAsAWhole
+      Test #171: unit.Fillet_TangentChainIsRoundedAsAWhole ...............................   Passed    0.14 sec
+        Start 171: unit.Fillet_TangentChainIsRoundedAsAWhole
+      Test #171: unit.Fillet_TangentChainIsRoundedAsAWhole ...............................   Passed    0.16 sec
+        Start 171: unit.Fillet_TangentChainIsRoundedAsAWhole
+ 67/119 Test #171: unit.Fillet_TangentChainIsRoundedAsAWhole ...............................   Passed    0.14 sec
+        Start 172: unit.Fillet_UnresolvableReferencesAreReportedNotGuessed
+      Test #172: unit.Fillet_UnresolvableReferencesAreReportedNotGuessed .................   Passed    0.10 sec
+        Start 172: unit.Fillet_UnresolvableReferencesAreReportedNotGuessed
+      Test #172: unit.Fillet_UnresolvableReferencesAreReportedNotGuessed .................   Passed    0.21 sec
+        Start 172: unit.Fillet_UnresolvableReferencesAreReportedNotGuessed
+      Test #172: unit.Fillet_UnresolvableReferencesAreReportedNotGuessed .................   Passed    0.10 sec
+        Start 172: unit.Fillet_UnresolvableReferencesAreReportedNotGuessed
+      Test #172: unit.Fillet_UnresolvableReferencesAreReportedNotGuessed .................   Passed    0.24 sec
+        Start 172: unit.Fillet_UnresolvableReferencesAreReportedNotGuessed
+ 68/119 Test #172: unit.Fillet_UnresolvableReferencesAreReportedNotGuessed .................   Passed    0.25 sec
+        Start 178: unit.HoleFeature_BlindHoleKeepsItsDepthWhenTheBodyChanges
+      Test #178: unit.HoleFeature_BlindHoleKeepsItsDepthWhenTheBodyChanges ...............   Passed    0.19 sec
+        Start 178: unit.HoleFeature_BlindHoleKeepsItsDepthWhenTheBodyChanges
+      Test #178: unit.HoleFeature_BlindHoleKeepsItsDepthWhenTheBodyChanges ...............   Passed    0.19 sec
+        Start 178: unit.HoleFeature_BlindHoleKeepsItsDepthWhenTheBodyChanges
+      Test #178: unit.HoleFeature_BlindHoleKeepsItsDepthWhenTheBodyChanges ...............   Passed    0.19 sec
+        Start 178: unit.HoleFeature_BlindHoleKeepsItsDepthWhenTheBodyChanges
+      Test #178: unit.HoleFeature_BlindHoleKeepsItsDepthWhenTheBodyChanges ...............   Passed    0.22 sec
+        Start 178: unit.HoleFeature_BlindHoleKeepsItsDepthWhenTheBodyChanges
+ 69/119 Test #178: unit.HoleFeature_BlindHoleKeepsItsDepthWhenTheBodyChanges ...............   Passed    0.19 sec
+        Start 179: unit.HoleFeature_BlindHoleMatchesAnalyticVolume
+      Test #179: unit.HoleFeature_BlindHoleMatchesAnalyticVolume .........................   Passed    0.13 sec
+        Start 179: unit.HoleFeature_BlindHoleMatchesAnalyticVolume
+      Test #179: unit.HoleFeature_BlindHoleMatchesAnalyticVolume .........................   Passed    0.13 sec
+        Start 179: unit.HoleFeature_BlindHoleMatchesAnalyticVolume
+      Test #179: unit.HoleFeature_BlindHoleMatchesAnalyticVolume .........................   Passed    0.12 sec
+        Start 179: unit.HoleFeature_BlindHoleMatchesAnalyticVolume
+      Test #179: unit.HoleFeature_BlindHoleMatchesAnalyticVolume .........................   Passed    0.13 sec
+        Start 179: unit.HoleFeature_BlindHoleMatchesAnalyticVolume
+ 70/119 Test #179: unit.HoleFeature_BlindHoleMatchesAnalyticVolume .........................   Passed    0.12 sec
+        Start 180: unit.HoleFeature_ComposesWithChamferAndFillet
+      Test #180: unit.HoleFeature_ComposesWithChamferAndFillet ...........................   Passed    0.46 sec
+        Start 180: unit.HoleFeature_ComposesWithChamferAndFillet
+      Test #180: unit.HoleFeature_ComposesWithChamferAndFillet ...........................   Passed    0.44 sec
+        Start 180: unit.HoleFeature_ComposesWithChamferAndFillet
+      Test #180: unit.HoleFeature_ComposesWithChamferAndFillet ...........................   Passed    0.46 sec
+        Start 180: unit.HoleFeature_ComposesWithChamferAndFillet
+      Test #180: unit.HoleFeature_ComposesWithChamferAndFillet ...........................   Passed    0.43 sec
+        Start 180: unit.HoleFeature_ComposesWithChamferAndFillet
+ 71/119 Test #180: unit.HoleFeature_ComposesWithChamferAndFillet ...........................   Passed    0.43 sec
+        Start 181: unit.HoleFeature_CounterboreMatchesAnalyticVolume
+      Test #181: unit.HoleFeature_CounterboreMatchesAnalyticVolume .......................   Passed    0.30 sec
+        Start 181: unit.HoleFeature_CounterboreMatchesAnalyticVolume
+      Test #181: unit.HoleFeature_CounterboreMatchesAnalyticVolume .......................   Passed    0.30 sec
+        Start 181: unit.HoleFeature_CounterboreMatchesAnalyticVolume
+      Test #181: unit.HoleFeature_CounterboreMatchesAnalyticVolume .......................   Passed    0.32 sec
+        Start 181: unit.HoleFeature_CounterboreMatchesAnalyticVolume
+      Test #181: unit.HoleFeature_CounterboreMatchesAnalyticVolume .......................   Passed    0.32 sec
+        Start 181: unit.HoleFeature_CounterboreMatchesAnalyticVolume
+ 72/119 Test #181: unit.HoleFeature_CounterboreMatchesAnalyticVolume .......................   Passed    0.30 sec
+        Start 182: unit.HoleFeature_CountersinkMatchesAnalyticVolume
+      Test #182: unit.HoleFeature_CountersinkMatchesAnalyticVolume .......................   Passed    0.43 sec
+        Start 182: unit.HoleFeature_CountersinkMatchesAnalyticVolume
+      Test #182: unit.HoleFeature_CountersinkMatchesAnalyticVolume .......................   Passed    0.46 sec
+        Start 182: unit.HoleFeature_CountersinkMatchesAnalyticVolume
+      Test #182: unit.HoleFeature_CountersinkMatchesAnalyticVolume .......................   Passed    0.47 sec
+        Start 182: unit.HoleFeature_CountersinkMatchesAnalyticVolume
+      Test #182: unit.HoleFeature_CountersinkMatchesAnalyticVolume .......................   Passed    0.43 sec
+        Start 182: unit.HoleFeature_CountersinkMatchesAnalyticVolume
+ 73/119 Test #182: unit.HoleFeature_CountersinkMatchesAnalyticVolume .......................   Passed    0.40 sec
+        Start 183: unit.HoleFeature_DataIsStoredAsTransparentJson
+      Test #183: unit.HoleFeature_DataIsStoredAsTransparentJson ..........................   Passed    0.05 sec
+        Start 183: unit.HoleFeature_DataIsStoredAsTransparentJson
+      Test #183: unit.HoleFeature_DataIsStoredAsTransparentJson ..........................   Passed    0.05 sec
+        Start 183: unit.HoleFeature_DataIsStoredAsTransparentJson
+      Test #183: unit.HoleFeature_DataIsStoredAsTransparentJson ..........................   Passed    0.05 sec
+        Start 183: unit.HoleFeature_DataIsStoredAsTransparentJson
+      Test #183: unit.HoleFeature_DataIsStoredAsTransparentJson ..........................   Passed    0.05 sec
+        Start 183: unit.HoleFeature_DataIsStoredAsTransparentJson
+ 74/119 Test #183: unit.HoleFeature_DataIsStoredAsTransparentJson ..........................   Passed    0.05 sec
+        Start 184: unit.HoleFeature_DefinitionIsValidatedOnCreateAndEdit
+      Test #184: unit.HoleFeature_DefinitionIsValidatedOnCreateAndEdit ...................   Passed    0.05 sec
+        Start 184: unit.HoleFeature_DefinitionIsValidatedOnCreateAndEdit
+      Test #184: unit.HoleFeature_DefinitionIsValidatedOnCreateAndEdit ...................   Passed    0.04 sec
+        Start 184: unit.HoleFeature_DefinitionIsValidatedOnCreateAndEdit
+      Test #184: unit.HoleFeature_DefinitionIsValidatedOnCreateAndEdit ...................   Passed    0.04 sec
+        Start 184: unit.HoleFeature_DefinitionIsValidatedOnCreateAndEdit
+      Test #184: unit.HoleFeature_DefinitionIsValidatedOnCreateAndEdit ...................   Passed    0.04 sec
+        Start 184: unit.HoleFeature_DefinitionIsValidatedOnCreateAndEdit
+ 75/119 Test #184: unit.HoleFeature_DefinitionIsValidatedOnCreateAndEdit ...................   Passed    0.04 sec
+        Start 185: unit.HoleFeature_DependsOnItsTargetAndParameters
+      Test #185: unit.HoleFeature_DependsOnItsTargetAndParameters ........................   Passed    0.05 sec
+        Start 185: unit.HoleFeature_DependsOnItsTargetAndParameters
+      Test #185: unit.HoleFeature_DependsOnItsTargetAndParameters ........................   Passed    0.08 sec
+        Start 185: unit.HoleFeature_DependsOnItsTargetAndParameters
+      Test #185: unit.HoleFeature_DependsOnItsTargetAndParameters ........................   Passed    0.08 sec
+        Start 185: unit.HoleFeature_DependsOnItsTargetAndParameters
+      Test #185: unit.HoleFeature_DependsOnItsTargetAndParameters ........................   Passed    0.09 sec
+        Start 185: unit.HoleFeature_DependsOnItsTargetAndParameters
+ 76/119 Test #185: unit.HoleFeature_DependsOnItsTargetAndParameters ........................   Passed    0.05 sec
+        Start 186: unit.HoleFeature_DoesNotSubstituteFaceAfterTopologyChange
+      Test #186: unit.HoleFeature_DoesNotSubstituteFaceAfterTopologyChange ...............   Passed    0.28 sec
+        Start 186: unit.HoleFeature_DoesNotSubstituteFaceAfterTopologyChange
+      Test #186: unit.HoleFeature_DoesNotSubstituteFaceAfterTopologyChange ...............   Passed    0.30 sec
+        Start 186: unit.HoleFeature_DoesNotSubstituteFaceAfterTopologyChange
+      Test #186: unit.HoleFeature_DoesNotSubstituteFaceAfterTopologyChange ...............   Passed    0.32 sec
+        Start 186: unit.HoleFeature_DoesNotSubstituteFaceAfterTopologyChange
+      Test #186: unit.HoleFeature_DoesNotSubstituteFaceAfterTopologyChange ...............   Passed    0.27 sec
+        Start 186: unit.HoleFeature_DoesNotSubstituteFaceAfterTopologyChange
+ 77/119 Test #186: unit.HoleFeature_DoesNotSubstituteFaceAfterTopologyChange ...............   Passed    0.27 sec
+        Start 187: unit.HoleFeature_ExportsClosedStl
+      Test #187: unit.HoleFeature_ExportsClosedStl .......................................   Passed    0.50 sec
+        Start 187: unit.HoleFeature_ExportsClosedStl
+      Test #187: unit.HoleFeature_ExportsClosedStl .......................................   Passed    0.59 sec
+        Start 187: unit.HoleFeature_ExportsClosedStl
+      Test #187: unit.HoleFeature_ExportsClosedStl .......................................   Passed    0.53 sec
+        Start 187: unit.HoleFeature_ExportsClosedStl
+      Test #187: unit.HoleFeature_ExportsClosedStl .......................................   Passed    0.50 sec
+        Start 187: unit.HoleFeature_ExportsClosedStl
+ 78/119 Test #187: unit.HoleFeature_ExportsClosedStl .......................................   Passed    0.53 sec
+        Start 188: unit.HoleFeature_ExportsStep
+      Test #188: unit.HoleFeature_ExportsStep ............................................   Passed    0.31 sec
+        Start 188: unit.HoleFeature_ExportsStep
+      Test #188: unit.HoleFeature_ExportsStep ............................................   Passed    0.28 sec
+        Start 188: unit.HoleFeature_ExportsStep
+      Test #188: unit.HoleFeature_ExportsStep ............................................   Passed    0.26 sec
+        Start 188: unit.HoleFeature_ExportsStep
+      Test #188: unit.HoleFeature_ExportsStep ............................................   Passed    0.27 sec
+        Start 188: unit.HoleFeature_ExportsStep
+ 79/119 Test #188: unit.HoleFeature_ExportsStep ............................................   Passed    0.27 sec
+        Start 189: unit.HoleFeature_FailedHoleSavesAndLoadsUnchanged
+      Test #189: unit.HoleFeature_FailedHoleSavesAndLoadsUnchanged .......................   Passed    0.13 sec
+        Start 189: unit.HoleFeature_FailedHoleSavesAndLoadsUnchanged
+      Test #189: unit.HoleFeature_FailedHoleSavesAndLoadsUnchanged .......................   Passed    0.14 sec
+        Start 189: unit.HoleFeature_FailedHoleSavesAndLoadsUnchanged
+      Test #189: unit.HoleFeature_FailedHoleSavesAndLoadsUnchanged .......................   Passed    0.15 sec
+        Start 189: unit.HoleFeature_FailedHoleSavesAndLoadsUnchanged
+      Test #189: unit.HoleFeature_FailedHoleSavesAndLoadsUnchanged .......................   Passed    0.22 sec
+        Start 189: unit.HoleFeature_FailedHoleSavesAndLoadsUnchanged
+ 80/119 Test #189: unit.HoleFeature_FailedHoleSavesAndLoadsUnchanged .......................   Passed    0.18 sec
+        Start 190: unit.HoleFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact
+      Test #190: unit.HoleFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact ........   Passed    0.41 sec
+        Start 190: unit.HoleFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact
+      Test #190: unit.HoleFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact ........   Passed    0.18 sec
+        Start 190: unit.HoleFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact
+      Test #190: unit.HoleFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact ........   Passed    0.13 sec
+        Start 190: unit.HoleFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact
+      Test #190: unit.HoleFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact ........   Passed    0.13 sec
+        Start 190: unit.HoleFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact
+ 81/119 Test #190: unit.HoleFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact ........   Passed    0.13 sec
+        Start 191: unit.HoleFeature_InvalidInputsFailWithStructuredDiagnostics
+      Test #191: unit.HoleFeature_InvalidInputsFailWithStructuredDiagnostics .............   Passed    0.34 sec
+        Start 191: unit.HoleFeature_InvalidInputsFailWithStructuredDiagnostics
+      Test #191: unit.HoleFeature_InvalidInputsFailWithStructuredDiagnostics .............   Passed    0.35 sec
+        Start 191: unit.HoleFeature_InvalidInputsFailWithStructuredDiagnostics
+      Test #191: unit.HoleFeature_InvalidInputsFailWithStructuredDiagnostics .............   Passed    0.34 sec
+        Start 191: unit.HoleFeature_InvalidInputsFailWithStructuredDiagnostics
+      Test #191: unit.HoleFeature_InvalidInputsFailWithStructuredDiagnostics .............   Passed    0.34 sec
+        Start 191: unit.HoleFeature_InvalidInputsFailWithStructuredDiagnostics
+ 82/119 Test #191: unit.HoleFeature_InvalidInputsFailWithStructuredDiagnostics .............   Passed    0.37 sec
+        Start 192: unit.HoleFeature_MalformedDataIsRejectedWithTheJsonPath
+      Test #192: unit.HoleFeature_MalformedDataIsRejectedWithTheJsonPath .................   Passed    0.08 sec
+        Start 192: unit.HoleFeature_MalformedDataIsRejectedWithTheJsonPath
+      Test #192: unit.HoleFeature_MalformedDataIsRejectedWithTheJsonPath .................   Passed    0.08 sec
+        Start 192: unit.HoleFeature_MalformedDataIsRejectedWithTheJsonPath
+      Test #192: unit.HoleFeature_MalformedDataIsRejectedWithTheJsonPath .................   Passed    0.09 sec
+        Start 192: unit.HoleFeature_MalformedDataIsRejectedWithTheJsonPath
+      Test #192: unit.HoleFeature_MalformedDataIsRejectedWithTheJsonPath .................   Passed    0.08 sec
+        Start 192: unit.HoleFeature_MalformedDataIsRejectedWithTheJsonPath
+ 83/119 Test #192: unit.HoleFeature_MalformedDataIsRejectedWithTheJsonPath .................   Passed    0.08 sec
+        Start 193: unit.HoleFeature_ModelsAreValidatedLikeAnyOther
+      Test #193: unit.HoleFeature_ModelsAreValidatedLikeAnyOther .........................   Passed    0.13 sec
+        Start 193: unit.HoleFeature_ModelsAreValidatedLikeAnyOther
+      Test #193: unit.HoleFeature_ModelsAreValidatedLikeAnyOther .........................   Passed    0.13 sec
+        Start 193: unit.HoleFeature_ModelsAreValidatedLikeAnyOther
+      Test #193: unit.HoleFeature_ModelsAreValidatedLikeAnyOther .........................   Passed    0.14 sec
+        Start 193: unit.HoleFeature_ModelsAreValidatedLikeAnyOther
+      Test #193: unit.HoleFeature_ModelsAreValidatedLikeAnyOther .........................   Passed    0.15 sec
+        Start 193: unit.HoleFeature_ModelsAreValidatedLikeAnyOther
+ 84/119 Test #193: unit.HoleFeature_ModelsAreValidatedLikeAnyOther .........................   Passed    0.13 sec
+        Start 194: unit.HoleFeature_RegeneratesAfterDiameterChange
+      Test #194: unit.HoleFeature_RegeneratesAfterDiameterChange .........................   Passed    0.38 sec
+        Start 194: unit.HoleFeature_RegeneratesAfterDiameterChange
+      Test #194: unit.HoleFeature_RegeneratesAfterDiameterChange .........................   Passed    0.37 sec
+        Start 194: unit.HoleFeature_RegeneratesAfterDiameterChange
+      Test #194: unit.HoleFeature_RegeneratesAfterDiameterChange .........................   Passed    0.36 sec
+        Start 194: unit.HoleFeature_RegeneratesAfterDiameterChange
+      Test #194: unit.HoleFeature_RegeneratesAfterDiameterChange .........................   Passed    0.40 sec
+        Start 194: unit.HoleFeature_RegeneratesAfterDiameterChange
+ 85/119 Test #194: unit.HoleFeature_RegeneratesAfterDiameterChange .........................   Passed    0.37 sec
+        Start 195: unit.HoleFeature_RegeneratesAfterPositionChange
+      Test #195: unit.HoleFeature_RegeneratesAfterPositionChange .........................   Passed    0.60 sec
+        Start 195: unit.HoleFeature_RegeneratesAfterPositionChange
+      Test #195: unit.HoleFeature_RegeneratesAfterPositionChange .........................   Passed    0.60 sec
+        Start 195: unit.HoleFeature_RegeneratesAfterPositionChange
+      Test #195: unit.HoleFeature_RegeneratesAfterPositionChange .........................   Passed    0.58 sec
+        Start 195: unit.HoleFeature_RegeneratesAfterPositionChange
+      Test #195: unit.HoleFeature_RegeneratesAfterPositionChange .........................   Passed    0.59 sec
+        Start 195: unit.HoleFeature_RegeneratesAfterPositionChange
+ 86/119 Test #195: unit.HoleFeature_RegeneratesAfterPositionChange .........................   Passed    0.59 sec
+        Start 196: unit.HoleFeature_RegenerationIsDeterministic
+      Test #196: unit.HoleFeature_RegenerationIsDeterministic ............................   Passed    0.47 sec
+        Start 196: unit.HoleFeature_RegenerationIsDeterministic
+      Test #196: unit.HoleFeature_RegenerationIsDeterministic ............................   Passed    0.45 sec
+        Start 196: unit.HoleFeature_RegenerationIsDeterministic
+      Test #196: unit.HoleFeature_RegenerationIsDeterministic ............................   Passed    0.38 sec
+        Start 196: unit.HoleFeature_RegenerationIsDeterministic
+      Test #196: unit.HoleFeature_RegenerationIsDeterministic ............................   Passed    0.37 sec
+        Start 196: unit.HoleFeature_RegenerationIsDeterministic
+ 87/119 Test #196: unit.HoleFeature_RegenerationIsDeterministic ............................   Passed    0.37 sec
+        Start 197: unit.HoleFeature_RejectsAmbiguousFaceReference
+      Test #197: unit.HoleFeature_RejectsAmbiguousFaceReference ..........................   Passed    0.10 sec
+        Start 197: unit.HoleFeature_RejectsAmbiguousFaceReference
+      Test #197: unit.HoleFeature_RejectsAmbiguousFaceReference ..........................   Passed    0.11 sec
+        Start 197: unit.HoleFeature_RejectsAmbiguousFaceReference
+      Test #197: unit.HoleFeature_RejectsAmbiguousFaceReference ..........................   Passed    0.10 sec
+        Start 197: unit.HoleFeature_RejectsAmbiguousFaceReference
+      Test #197: unit.HoleFeature_RejectsAmbiguousFaceReference ..........................   Passed    0.09 sec
+        Start 197: unit.HoleFeature_RejectsAmbiguousFaceReference
+ 88/119 Test #197: unit.HoleFeature_RejectsAmbiguousFaceReference ..........................   Passed    0.09 sec
+        Start 198: unit.HoleFeature_RejectsInvalidBlindDepth
+      Test #198: unit.HoleFeature_RejectsInvalidBlindDepth ...............................   Passed    0.18 sec
+        Start 198: unit.HoleFeature_RejectsInvalidBlindDepth
+      Test #198: unit.HoleFeature_RejectsInvalidBlindDepth ...............................   Passed    0.17 sec
+        Start 198: unit.HoleFeature_RejectsInvalidBlindDepth
+      Test #198: unit.HoleFeature_RejectsInvalidBlindDepth ...............................   Passed    0.16 sec
+        Start 198: unit.HoleFeature_RejectsInvalidBlindDepth
+      Test #198: unit.HoleFeature_RejectsInvalidBlindDepth ...............................   Passed    0.50 sec
+        Start 198: unit.HoleFeature_RejectsInvalidBlindDepth
+ 89/119 Test #198: unit.HoleFeature_RejectsInvalidBlindDepth ...............................   Passed    0.43 sec
+        Start 199: unit.HoleFeature_RejectsMissingFace
+      Test #199: unit.HoleFeature_RejectsMissingFace .....................................   Passed    0.29 sec
+        Start 199: unit.HoleFeature_RejectsMissingFace
+      Test #199: unit.HoleFeature_RejectsMissingFace .....................................   Passed    0.14 sec
+        Start 199: unit.HoleFeature_RejectsMissingFace
+      Test #199: unit.HoleFeature_RejectsMissingFace .....................................   Passed    0.14 sec
+        Start 199: unit.HoleFeature_RejectsMissingFace
+      Test #199: unit.HoleFeature_RejectsMissingFace .....................................   Passed    0.16 sec
+        Start 199: unit.HoleFeature_RejectsMissingFace
+ 90/119 Test #199: unit.HoleFeature_RejectsMissingFace .....................................   Passed    0.15 sec
+        Start 200: unit.HoleFeature_RejectsNegativeDiameter
+      Test #200: unit.HoleFeature_RejectsNegativeDiameter ................................   Passed    0.09 sec
+        Start 200: unit.HoleFeature_RejectsNegativeDiameter
+      Test #200: unit.HoleFeature_RejectsNegativeDiameter ................................   Passed    0.08 sec
+        Start 200: unit.HoleFeature_RejectsNegativeDiameter
+      Test #200: unit.HoleFeature_RejectsNegativeDiameter ................................   Passed    0.11 sec
+        Start 200: unit.HoleFeature_RejectsNegativeDiameter
+      Test #200: unit.HoleFeature_RejectsNegativeDiameter ................................   Passed    0.09 sec
+        Start 200: unit.HoleFeature_RejectsNegativeDiameter
+ 91/119 Test #200: unit.HoleFeature_RejectsNegativeDiameter ................................   Passed    0.08 sec
+        Start 201: unit.HoleFeature_RejectsNonFiniteDiameter
+      Test #201: unit.HoleFeature_RejectsNonFiniteDiameter ...............................   Passed    0.11 sec
+        Start 201: unit.HoleFeature_RejectsNonFiniteDiameter
+      Test #201: unit.HoleFeature_RejectsNonFiniteDiameter ...............................   Passed    0.11 sec
+        Start 201: unit.HoleFeature_RejectsNonFiniteDiameter
+      Test #201: unit.HoleFeature_RejectsNonFiniteDiameter ...............................   Passed    0.09 sec
+        Start 201: unit.HoleFeature_RejectsNonFiniteDiameter
+      Test #201: unit.HoleFeature_RejectsNonFiniteDiameter ...............................   Passed    0.09 sec
+        Start 201: unit.HoleFeature_RejectsNonFiniteDiameter
+ 92/119 Test #201: unit.HoleFeature_RejectsNonFiniteDiameter ...............................   Passed    0.09 sec
+        Start 202: unit.HoleFeature_RejectsZeroDiameter
+      Test #202: unit.HoleFeature_RejectsZeroDiameter ....................................   Passed    0.09 sec
+        Start 202: unit.HoleFeature_RejectsZeroDiameter
+      Test #202: unit.HoleFeature_RejectsZeroDiameter ....................................   Passed    0.08 sec
+        Start 202: unit.HoleFeature_RejectsZeroDiameter
+      Test #202: unit.HoleFeature_RejectsZeroDiameter ....................................   Passed    0.08 sec
+        Start 202: unit.HoleFeature_RejectsZeroDiameter
+      Test #202: unit.HoleFeature_RejectsZeroDiameter ....................................   Passed    0.08 sec
+        Start 202: unit.HoleFeature_RejectsZeroDiameter
+ 93/119 Test #202: unit.HoleFeature_RejectsZeroDiameter ....................................   Passed    0.09 sec
+        Start 203: unit.HoleFeature_SaveLoadKeepsAThroughHoleThrough
+      Test #203: unit.HoleFeature_SaveLoadKeepsAThroughHoleThrough .......................   Passed    0.19 sec
+        Start 203: unit.HoleFeature_SaveLoadKeepsAThroughHoleThrough
+      Test #203: unit.HoleFeature_SaveLoadKeepsAThroughHoleThrough .......................   Passed    0.18 sec
+        Start 203: unit.HoleFeature_SaveLoadKeepsAThroughHoleThrough
+      Test #203: unit.HoleFeature_SaveLoadKeepsAThroughHoleThrough .......................   Passed    0.18 sec
+        Start 203: unit.HoleFeature_SaveLoadKeepsAThroughHoleThrough
+      Test #203: unit.HoleFeature_SaveLoadKeepsAThroughHoleThrough .......................   Passed    0.19 sec
+        Start 203: unit.HoleFeature_SaveLoadKeepsAThroughHoleThrough
+ 94/119 Test #203: unit.HoleFeature_SaveLoadKeepsAThroughHoleThrough .......................   Passed    0.19 sec
+        Start 204: unit.HoleFeature_SaveLoadPreservesEngineeringIntent
+      Test #204: unit.HoleFeature_SaveLoadPreservesEngineeringIntent .....................   Passed    0.73 sec
+        Start 204: unit.HoleFeature_SaveLoadPreservesEngineeringIntent
+      Test #204: unit.HoleFeature_SaveLoadPreservesEngineeringIntent .....................   Passed    0.72 sec
+        Start 204: unit.HoleFeature_SaveLoadPreservesEngineeringIntent
+      Test #204: unit.HoleFeature_SaveLoadPreservesEngineeringIntent .....................   Passed    0.72 sec
+        Start 204: unit.HoleFeature_SaveLoadPreservesEngineeringIntent
+      Test #204: unit.HoleFeature_SaveLoadPreservesEngineeringIntent .....................   Passed    0.73 sec
+        Start 204: unit.HoleFeature_SaveLoadPreservesEngineeringIntent
+ 95/119 Test #204: unit.HoleFeature_SaveLoadPreservesEngineeringIntent .....................   Passed    0.72 sec
+        Start 205: unit.HoleFeature_ThroughHoleMatchesAnalyticVolume
+      Test #205: unit.HoleFeature_ThroughHoleMatchesAnalyticVolume .......................   Passed    0.11 sec
+        Start 205: unit.HoleFeature_ThroughHoleMatchesAnalyticVolume
+      Test #205: unit.HoleFeature_ThroughHoleMatchesAnalyticVolume .......................   Passed    0.09 sec
+        Start 205: unit.HoleFeature_ThroughHoleMatchesAnalyticVolume
+      Test #205: unit.HoleFeature_ThroughHoleMatchesAnalyticVolume .......................   Passed    0.09 sec
+        Start 205: unit.HoleFeature_ThroughHoleMatchesAnalyticVolume
+      Test #205: unit.HoleFeature_ThroughHoleMatchesAnalyticVolume .......................   Passed    0.10 sec
+        Start 205: unit.HoleFeature_ThroughHoleMatchesAnalyticVolume
+ 96/119 Test #205: unit.HoleFeature_ThroughHoleMatchesAnalyticVolume .......................   Passed    0.12 sec
+        Start 206: unit.HoleFeature_ThroughHoleRemainsThroughAfterThicknessChange
+      Test #206: unit.HoleFeature_ThroughHoleRemainsThroughAfterThicknessChange ..........   Passed    0.25 sec
+        Start 206: unit.HoleFeature_ThroughHoleRemainsThroughAfterThicknessChange
+      Test #206: unit.HoleFeature_ThroughHoleRemainsThroughAfterThicknessChange ..........   Passed    0.24 sec
+        Start 206: unit.HoleFeature_ThroughHoleRemainsThroughAfterThicknessChange
+      Test #206: unit.HoleFeature_ThroughHoleRemainsThroughAfterThicknessChange ..........   Passed    0.24 sec
+        Start 206: unit.HoleFeature_ThroughHoleRemainsThroughAfterThicknessChange
+      Test #206: unit.HoleFeature_ThroughHoleRemainsThroughAfterThicknessChange ..........   Passed    0.24 sec
+        Start 206: unit.HoleFeature_ThroughHoleRemainsThroughAfterThicknessChange
+ 97/119 Test #206: unit.HoleFeature_ThroughHoleRemainsThroughAfterThicknessChange ..........   Passed    0.26 sec
+        Start 207: unit.HoleFeature_UndoRedoRestoresGeometry
+      Test #207: unit.HoleFeature_UndoRedoRestoresGeometry ...............................   Passed    0.46 sec
+        Start 207: unit.HoleFeature_UndoRedoRestoresGeometry
+      Test #207: unit.HoleFeature_UndoRedoRestoresGeometry ...............................   Passed    0.44 sec
+        Start 207: unit.HoleFeature_UndoRedoRestoresGeometry
+      Test #207: unit.HoleFeature_UndoRedoRestoresGeometry ...............................   Passed    0.44 sec
+        Start 207: unit.HoleFeature_UndoRedoRestoresGeometry
+      Test #207: unit.HoleFeature_UndoRedoRestoresGeometry ...............................   Passed    0.44 sec
+        Start 207: unit.HoleFeature_UndoRedoRestoresGeometry
+ 98/119 Test #207: unit.HoleFeature_UndoRedoRestoresGeometry ...............................   Passed    0.44 sec
+        Start 208: unit.HoleFeature_WorksOnAnExtrudedChain
+      Test #208: unit.HoleFeature_WorksOnAnExtrudedChain .................................   Passed    0.31 sec
+        Start 208: unit.HoleFeature_WorksOnAnExtrudedChain
+      Test #208: unit.HoleFeature_WorksOnAnExtrudedChain .................................   Passed    0.31 sec
+        Start 208: unit.HoleFeature_WorksOnAnExtrudedChain
+      Test #208: unit.HoleFeature_WorksOnAnExtrudedChain .................................   Passed    0.33 sec
+        Start 208: unit.HoleFeature_WorksOnAnExtrudedChain
+      Test #208: unit.HoleFeature_WorksOnAnExtrudedChain .................................   Passed    0.35 sec
+        Start 208: unit.HoleFeature_WorksOnAnExtrudedChain
+ 99/119 Test #208: unit.HoleFeature_WorksOnAnExtrudedChain .................................   Passed    0.34 sec
+        Start 209: unit.HoleFeature_WorksOnRevolvedBody
+      Test #209: unit.HoleFeature_WorksOnRevolvedBody ....................................   Passed    0.43 sec
+        Start 209: unit.HoleFeature_WorksOnRevolvedBody
+      Test #209: unit.HoleFeature_WorksOnRevolvedBody ....................................   Passed    0.43 sec
+        Start 209: unit.HoleFeature_WorksOnRevolvedBody
+      Test #209: unit.HoleFeature_WorksOnRevolvedBody ....................................   Passed    0.45 sec
+        Start 209: unit.HoleFeature_WorksOnRevolvedBody
+      Test #209: unit.HoleFeature_WorksOnRevolvedBody ....................................   Passed    0.45 sec
+        Start 209: unit.HoleFeature_WorksOnRevolvedBody
+100/119 Test #209: unit.HoleFeature_WorksOnRevolvedBody ....................................   Passed    0.46 sec
+        Start 210: unit.Hole_BlindHoleMatchesAnalyticVolume
+      Test #210: unit.Hole_BlindHoleMatchesAnalyticVolume ................................   Passed    0.09 sec
+        Start 210: unit.Hole_BlindHoleMatchesAnalyticVolume
+      Test #210: unit.Hole_BlindHoleMatchesAnalyticVolume ................................   Passed    0.08 sec
+        Start 210: unit.Hole_BlindHoleMatchesAnalyticVolume
+      Test #210: unit.Hole_BlindHoleMatchesAnalyticVolume ................................   Passed    0.09 sec
+        Start 210: unit.Hole_BlindHoleMatchesAnalyticVolume
+      Test #210: unit.Hole_BlindHoleMatchesAnalyticVolume ................................   Passed    0.09 sec
+        Start 210: unit.Hole_BlindHoleMatchesAnalyticVolume
+101/119 Test #210: unit.Hole_BlindHoleMatchesAnalyticVolume ................................   Passed    0.08 sec
+        Start 211: unit.Hole_BlindHoleMayNotReachTheFarSide
+      Test #211: unit.Hole_BlindHoleMayNotReachTheFarSide ................................   Passed    0.10 sec
+        Start 211: unit.Hole_BlindHoleMayNotReachTheFarSide
+      Test #211: unit.Hole_BlindHoleMayNotReachTheFarSide ................................   Passed    0.10 sec
+        Start 211: unit.Hole_BlindHoleMayNotReachTheFarSide
+      Test #211: unit.Hole_BlindHoleMayNotReachTheFarSide ................................   Passed    0.09 sec
+        Start 211: unit.Hole_BlindHoleMayNotReachTheFarSide
+      Test #211: unit.Hole_BlindHoleMayNotReachTheFarSide ................................   Passed    0.10 sec
+        Start 211: unit.Hole_BlindHoleMayNotReachTheFarSide
+102/119 Test #211: unit.Hole_BlindHoleMayNotReachTheFarSide ................................   Passed    0.10 sec
+        Start 212: unit.Hole_BlindHoleThatBreaksIntoACavityIsRefused
+      Test #212: unit.Hole_BlindHoleThatBreaksIntoACavityIsRefused .......................   Passed    0.18 sec
+        Start 212: unit.Hole_BlindHoleThatBreaksIntoACavityIsRefused
+      Test #212: unit.Hole_BlindHoleThatBreaksIntoACavityIsRefused .......................   Passed    0.17 sec
+        Start 212: unit.Hole_BlindHoleThatBreaksIntoACavityIsRefused
+      Test #212: unit.Hole_BlindHoleThatBreaksIntoACavityIsRefused .......................   Passed    0.18 sec
+        Start 212: unit.Hole_BlindHoleThatBreaksIntoACavityIsRefused
+      Test #212: unit.Hole_BlindHoleThatBreaksIntoACavityIsRefused .......................   Passed    0.17 sec
+        Start 212: unit.Hole_BlindHoleThatBreaksIntoACavityIsRefused
+103/119 Test #212: unit.Hole_BlindHoleThatBreaksIntoACavityIsRefused .......................   Passed    0.17 sec
+        Start 213: unit.Hole_CounterboreMatchesAnalyticVolume
+      Test #213: unit.Hole_CounterboreMatchesAnalyticVolume ..............................   Passed    0.17 sec
+        Start 213: unit.Hole_CounterboreMatchesAnalyticVolume
+      Test #213: unit.Hole_CounterboreMatchesAnalyticVolume ..............................   Passed    0.14 sec
+        Start 213: unit.Hole_CounterboreMatchesAnalyticVolume
+      Test #213: unit.Hole_CounterboreMatchesAnalyticVolume ..............................   Passed    0.15 sec
+        Start 213: unit.Hole_CounterboreMatchesAnalyticVolume
+      Test #213: unit.Hole_CounterboreMatchesAnalyticVolume ..............................   Passed    0.14 sec
+        Start 213: unit.Hole_CounterboreMatchesAnalyticVolume
+104/119 Test #213: unit.Hole_CounterboreMatchesAnalyticVolume ..............................   Passed    0.15 sec
+        Start 214: unit.Hole_CountersinkMatchesAnalyticVolume
+      Test #214: unit.Hole_CountersinkMatchesAnalyticVolume ..............................   Passed    0.25 sec
+        Start 214: unit.Hole_CountersinkMatchesAnalyticVolume
+      Test #214: unit.Hole_CountersinkMatchesAnalyticVolume ..............................   Passed    0.20 sec
+        Start 214: unit.Hole_CountersinkMatchesAnalyticVolume
+      Test #214: unit.Hole_CountersinkMatchesAnalyticVolume ..............................   Passed    0.21 sec
+        Start 214: unit.Hole_CountersinkMatchesAnalyticVolume
+      Test #214: unit.Hole_CountersinkMatchesAnalyticVolume ..............................   Passed    0.20 sec
+        Start 214: unit.Hole_CountersinkMatchesAnalyticVolume
+105/119 Test #214: unit.Hole_CountersinkMatchesAnalyticVolume ..............................   Passed    0.20 sec
+        Start 215: unit.Hole_DrillsIntoTheMaterialFromEitherSide
+      Test #215: unit.Hole_DrillsIntoTheMaterialFromEitherSide ...........................   Passed    0.14 sec
+        Start 215: unit.Hole_DrillsIntoTheMaterialFromEitherSide
+      Test #215: unit.Hole_DrillsIntoTheMaterialFromEitherSide ...........................   Passed    0.14 sec
+        Start 215: unit.Hole_DrillsIntoTheMaterialFromEitherSide
+      Test #215: unit.Hole_DrillsIntoTheMaterialFromEitherSide ...........................   Passed    0.13 sec
+        Start 215: unit.Hole_DrillsIntoTheMaterialFromEitherSide
+      Test #215: unit.Hole_DrillsIntoTheMaterialFromEitherSide ...........................   Passed    0.13 sec
+        Start 215: unit.Hole_DrillsIntoTheMaterialFromEitherSide
+106/119 Test #215: unit.Hole_DrillsIntoTheMaterialFromEitherSide ...........................   Passed    0.14 sec
+        Start 216: unit.Hole_IsDeterministic
+      Test #216: unit.Hole_IsDeterministic ...............................................   Passed    0.14 sec
+        Start 216: unit.Hole_IsDeterministic
+      Test #216: unit.Hole_IsDeterministic ...............................................   Passed    0.13 sec
+        Start 216: unit.Hole_IsDeterministic
+      Test #216: unit.Hole_IsDeterministic ...............................................   Passed    0.12 sec
+        Start 216: unit.Hole_IsDeterministic
+      Test #216: unit.Hole_IsDeterministic ...............................................   Passed    0.13 sec
+        Start 216: unit.Hole_IsDeterministic
+107/119 Test #216: unit.Hole_IsDeterministic ...............................................   Passed    0.13 sec
+        Start 217: unit.Hole_OnRevolvedEndFace
+      Test #217: unit.Hole_OnRevolvedEndFace .............................................   Passed    0.13 sec
+        Start 217: unit.Hole_OnRevolvedEndFace
+      Test #217: unit.Hole_OnRevolvedEndFace .............................................   Passed    0.13 sec
+        Start 217: unit.Hole_OnRevolvedEndFace
+      Test #217: unit.Hole_OnRevolvedEndFace .............................................   Passed    0.15 sec
+        Start 217: unit.Hole_OnRevolvedEndFace
+      Test #217: unit.Hole_OnRevolvedEndFace .............................................   Passed    0.13 sec
+        Start 217: unit.Hole_OnRevolvedEndFace
+108/119 Test #217: unit.Hole_OnRevolvedEndFace .............................................   Passed    0.12 sec
+        Start 218: unit.Hole_PositionIsWhereTheFaceCoordinatesSay
+      Test #218: unit.Hole_PositionIsWhereTheFaceCoordinatesSay ..........................   Passed    0.15 sec
+        Start 218: unit.Hole_PositionIsWhereTheFaceCoordinatesSay
+      Test #218: unit.Hole_PositionIsWhereTheFaceCoordinatesSay ..........................   Passed    0.16 sec
+        Start 218: unit.Hole_PositionIsWhereTheFaceCoordinatesSay
+      Test #218: unit.Hole_PositionIsWhereTheFaceCoordinatesSay ..........................   Passed    0.16 sec
+        Start 218: unit.Hole_PositionIsWhereTheFaceCoordinatesSay
+      Test #218: unit.Hole_PositionIsWhereTheFaceCoordinatesSay ..........................   Passed    0.15 sec
+        Start 218: unit.Hole_PositionIsWhereTheFaceCoordinatesSay
+109/119 Test #218: unit.Hole_PositionIsWhereTheFaceCoordinatesSay ..........................   Passed    0.16 sec
+        Start 219: unit.Hole_RefusesHolesThatDoNotFitTheFace
+      Test #219: unit.Hole_RefusesHolesThatDoNotFitTheFace ...............................   Passed    0.06 sec
+        Start 219: unit.Hole_RefusesHolesThatDoNotFitTheFace
+      Test #219: unit.Hole_RefusesHolesThatDoNotFitTheFace ...............................   Passed    0.06 sec
+        Start 219: unit.Hole_RefusesHolesThatDoNotFitTheFace
+      Test #219: unit.Hole_RefusesHolesThatDoNotFitTheFace ...............................   Passed    0.06 sec
+        Start 219: unit.Hole_RefusesHolesThatDoNotFitTheFace
+      Test #219: unit.Hole_RefusesHolesThatDoNotFitTheFace ...............................   Passed    0.06 sec
+        Start 219: unit.Hole_RefusesHolesThatDoNotFitTheFace
+110/119 Test #219: unit.Hole_RefusesHolesThatDoNotFitTheFace ...............................   Passed    0.06 sec
+        Start 220: unit.Hole_RejectsInvalidRequestsBeforeTheKernel
+      Test #220: unit.Hole_RejectsInvalidRequestsBeforeTheKernel .........................   Passed    0.05 sec
+        Start 220: unit.Hole_RejectsInvalidRequestsBeforeTheKernel
+      Test #220: unit.Hole_RejectsInvalidRequestsBeforeTheKernel .........................   Passed    0.05 sec
+        Start 220: unit.Hole_RejectsInvalidRequestsBeforeTheKernel
+      Test #220: unit.Hole_RejectsInvalidRequestsBeforeTheKernel .........................   Passed    0.04 sec
+        Start 220: unit.Hole_RejectsInvalidRequestsBeforeTheKernel
+      Test #220: unit.Hole_RejectsInvalidRequestsBeforeTheKernel .........................   Passed    0.04 sec
+        Start 220: unit.Hole_RejectsInvalidRequestsBeforeTheKernel
+111/119 Test #220: unit.Hole_RejectsInvalidRequestsBeforeTheKernel .........................   Passed    0.04 sec
+        Start 221: unit.Hole_ThatRemovesNothingMeasurableIsRefused
+      Test #221: unit.Hole_ThatRemovesNothingMeasurableIsRefused .........................   Passed    0.08 sec
+        Start 221: unit.Hole_ThatRemovesNothingMeasurableIsRefused
+      Test #221: unit.Hole_ThatRemovesNothingMeasurableIsRefused .........................   Passed    0.10 sec
+        Start 221: unit.Hole_ThatRemovesNothingMeasurableIsRefused
+      Test #221: unit.Hole_ThatRemovesNothingMeasurableIsRefused .........................   Passed    0.07 sec
+        Start 221: unit.Hole_ThatRemovesNothingMeasurableIsRefused
+      Test #221: unit.Hole_ThatRemovesNothingMeasurableIsRefused .........................   Passed    0.07 sec
+        Start 221: unit.Hole_ThatRemovesNothingMeasurableIsRefused
+112/119 Test #221: unit.Hole_ThatRemovesNothingMeasurableIsRefused .........................   Passed    0.09 sec
+        Start 222: unit.Hole_ThroughHoleMatchesAnalyticVolume
+      Test #222: unit.Hole_ThroughHoleMatchesAnalyticVolume ..............................   Passed    0.09 sec
+        Start 222: unit.Hole_ThroughHoleMatchesAnalyticVolume
+      Test #222: unit.Hole_ThroughHoleMatchesAnalyticVolume ..............................   Passed    0.09 sec
+        Start 222: unit.Hole_ThroughHoleMatchesAnalyticVolume
+      Test #222: unit.Hole_ThroughHoleMatchesAnalyticVolume ..............................   Passed    0.11 sec
+        Start 222: unit.Hole_ThroughHoleMatchesAnalyticVolume
+      Test #222: unit.Hole_ThroughHoleMatchesAnalyticVolume ..............................   Passed    0.08 sec
+        Start 222: unit.Hole_ThroughHoleMatchesAnalyticVolume
+113/119 Test #222: unit.Hole_ThroughHoleMatchesAnalyticVolume ..............................   Passed    0.09 sec
+        Start 223: unit.Hole_UnresolvablePlacementIsReportedNotGuessed
+      Test #223: unit.Hole_UnresolvablePlacementIsReportedNotGuessed .....................   Passed    0.11 sec
+        Start 223: unit.Hole_UnresolvablePlacementIsReportedNotGuessed
+      Test #223: unit.Hole_UnresolvablePlacementIsReportedNotGuessed .....................   Passed    0.13 sec
+        Start 223: unit.Hole_UnresolvablePlacementIsReportedNotGuessed
+      Test #223: unit.Hole_UnresolvablePlacementIsReportedNotGuessed .....................   Passed    0.10 sec
+        Start 223: unit.Hole_UnresolvablePlacementIsReportedNotGuessed
+      Test #223: unit.Hole_UnresolvablePlacementIsReportedNotGuessed .....................   Passed    0.11 sec
+        Start 223: unit.Hole_UnresolvablePlacementIsReportedNotGuessed
+114/119 Test #223: unit.Hole_UnresolvablePlacementIsReportedNotGuessed .....................   Passed    0.10 sec
+        Start 262: unit.Nested loops become holes; loops inside holes become islands
+      Test #262: unit.Nested loops become holes; loops inside holes become islands .......   Passed    0.05 sec
+        Start 262: unit.Nested loops become holes; loops inside holes become islands
+      Test #262: unit.Nested loops become holes; loops inside holes become islands .......   Passed    0.04 sec
+        Start 262: unit.Nested loops become holes; loops inside holes become islands
+      Test #262: unit.Nested loops become holes; loops inside holes become islands .......   Passed    0.06 sec
+        Start 262: unit.Nested loops become holes; loops inside holes become islands
+      Test #262: unit.Nested loops become holes; loops inside holes become islands .......   Passed    0.04 sec
+        Start 262: unit.Nested loops become holes; loops inside holes become islands
+115/119 Test #262: unit.Nested loops become holes; loops inside holes become islands .......   Passed    0.06 sec
+        Start 354: unit.Spec examples: width, height and hole diameter
+      Test #354: unit.Spec examples: width, height and hole diameter .....................   Passed    0.05 sec
+        Start 354: unit.Spec examples: width, height and hole diameter
+      Test #354: unit.Spec examples: width, height and hole diameter .....................   Passed    0.05 sec
+        Start 354: unit.Spec examples: width, height and hole diameter
+      Test #354: unit.Spec examples: width, height and hole diameter .....................   Passed    0.04 sec
+        Start 354: unit.Spec examples: width, height and hole diameter
+      Test #354: unit.Spec examples: width, height and hole diameter .....................   Passed    0.05 sec
+        Start 354: unit.Spec examples: width, height and hole diameter
+116/119 Test #354: unit.Spec examples: width, height and hole diameter .....................   Passed    0.04 sec
+        Start 400: unit.info and validate describe chamfers
+      Test #400: unit.info and validate describe chamfers ................................   Passed    0.20 sec
+        Start 400: unit.info and validate describe chamfers
+      Test #400: unit.info and validate describe chamfers ................................   Passed    0.20 sec
+        Start 400: unit.info and validate describe chamfers
+      Test #400: unit.info and validate describe chamfers ................................   Passed    0.18 sec
+        Start 400: unit.info and validate describe chamfers
+      Test #400: unit.info and validate describe chamfers ................................   Passed    0.18 sec
+        Start 400: unit.info and validate describe chamfers
+117/119 Test #400: unit.info and validate describe chamfers ................................   Passed    0.19 sec
+        Start 401: unit.info and validate describe fillets
+      Test #401: unit.info and validate describe fillets .................................   Passed    0.19 sec
+        Start 401: unit.info and validate describe fillets
+      Test #401: unit.info and validate describe fillets .................................   Passed    0.18 sec
+        Start 401: unit.info and validate describe fillets
+      Test #401: unit.info and validate describe fillets .................................   Passed    0.19 sec
+        Start 401: unit.info and validate describe fillets
+      Test #401: unit.info and validate describe fillets .................................   Passed    0.22 sec
+        Start 401: unit.info and validate describe fillets
+118/119 Test #401: unit.info and validate describe fillets .................................   Passed    0.18 sec
+        Start 402: unit.info and validate describe holes
+      Test #402: unit.info and validate describe holes ...................................   Passed    0.29 sec
+        Start 402: unit.info and validate describe holes
+      Test #402: unit.info and validate describe holes ...................................   Passed    0.30 sec
+        Start 402: unit.info and validate describe holes
+      Test #402: unit.info and validate describe holes ...................................   Passed    0.27 sec
+        Start 402: unit.info and validate describe holes
+      Test #402: unit.info and validate describe holes ...................................   Passed    0.31 sec
+        Start 402: unit.info and validate describe holes
+119/119 Test #402: unit.info and validate describe holes ...................................   Passed    0.28 sec
+
+100% tests passed out of 119
+
+Total Test time (real) = 113.33 sec

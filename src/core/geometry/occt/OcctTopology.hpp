@@ -5,6 +5,7 @@
 
 #include <bettercad/core/Error.hpp>
 #include <bettercad/core/geometry/Edges.hpp>
+#include <bettercad/core/geometry/Faces.hpp>
 
 #include <NCollection_IndexedDataMap.hxx>
 #include <NCollection_List.hxx>
@@ -12,7 +13,9 @@
 #include <TopoDS_Edge.hxx>
 #include <TopoDS_Face.hxx>
 #include <TopoDS_Shape.hxx>
+#include <gp_Pnt.hxx>
 
+#include <optional>
 #include <vector>
 
 namespace bettercad::geometry::occt {
@@ -43,5 +46,22 @@ struct KernelEdge {
 /// along the edge, ends excluded.
 [[nodiscard]] Result<double> faceAngleAt(const KernelEdge& edge, double fraction);
 [[nodiscard]] Result<double> largestFaceAngle(const KernelEdge& edge);
+
+/// Shortest distance between two shapes, or from a point to a shape, in
+/// model units; nothing if the kernel cannot measure it.
+[[nodiscard]] std::optional<double> distance(const TopoDS_Shape& a, const TopoDS_Shape& b);
+[[nodiscard]] std::optional<double> distance(const gp_Pnt& point, const TopoDS_Shape& shape);
+
+struct KernelFace {
+    TopoDS_Face face;
+    FaceInfo info;
+};
+
+/// The faces of @p shape with their geometry.
+[[nodiscard]] std::vector<KernelFace> kernelFaces(const TopoDS_Shape& shape);
+
+/// The planar faces on the signature's plane, facing its way.
+[[nodiscard]] std::vector<const KernelFace*> matchingFaces(const std::vector<KernelFace>& faces,
+                                                           const FaceSignature& signature);
 
 } // namespace bettercad::geometry::occt

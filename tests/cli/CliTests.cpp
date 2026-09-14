@@ -2,6 +2,7 @@
 #include "support/BracketModel.hpp"
 #include "support/ChamferBlockModel.hpp"
 #include "support/FilletModels.hpp"
+#include "support/HoleModels.hpp"
 #include "support/MeshAnalysis.hpp"
 #include "support/TestFiles.hpp"
 #include "support/TurnedPartModel.hpp"
@@ -402,6 +403,43 @@ TEST_CASE("info and validate describe fillets", "[cli][fillet]") {
                                              "reference 1 (line through (0, 0, 20) mm along (1, 0, 0)) matches no "
                                              "edge of the body\n"));
     CHECK_THAT(broken.out, EndsWith("Result: invalid (2 errors)\n"));
+}
+
+TEST_CASE("info and validate describe holes", "[cli][hole]") {
+    TempDir dir;
+    test::HoleVariants model;
+    const auto path = dir.path() / "block.bcad";
+    REQUIRE(io::saveDocument(model.doc, path).has_value());
+
+    const auto info = runCli({"info", arg(path)});
+    CHECK(info.exitCode == ExitCode::Success);
+    CHECK_THAT(info.out, ContainsSubstring("\n  object:9   hole     Drill   target Pad, simple through hole, diameter "
+                                           "diameter, centre (hole_x, hole_y) on plane through (0, 0, 20) mm facing "
+                                           "(0, 0, 1)\n"
+                                           "  object:10  hole     Pocket  target Drill, counterbore blind hole 12 mm "
+                                           "deep, diameter 6 mm, counterbore 10 mm x 4 mm deep, centre (20 mm, 25 mm) "
+                                           "on plane through (0, 0, 20) mm facing (0, 0, 1)\n"
+                                           "  object:11  hole     Sink    target Pocket, countersink through hole, "
+                                           "diameter 6 mm, countersink 12 mm at 90 deg, centre (80 mm, 25 mm) on "
+                                           "plane through (0, 0, 20) mm facing (0, 0, 1)\n"));
+
+    // V = 100 x 50 x 20 - 500 pi - 172 pi - 216 pi = 97210.266 mm^3.
+    const auto validate = runCli({"validate", arg(path)});
+    CHECK(validate.exitCode == ExitCode::Success);
+    CHECK_THAT(validate.out, ContainsSubstring("geometry              ok, 1 result body\n"
+                                               "Result bodies (1):\n"
+                                               "  Sink (object:11): 1 solid, volume 97210.266 mm^3, area "));
+    CHECK_THAT(validate.out, EndsWith("bounds (0, 0, 0) to (100, 50, 20) mm\nResult: valid\n"));
+
+    // A hole whose face has moved makes the document invalid, with the reason.
+    REQUIRE(model.doc.setParameterValue(model.height, 30_mm).has_value());
+    REQUIRE(io::saveDocument(model.doc, path).has_value());
+    const auto broken = runCli({"validate", arg(path)});
+    CHECK(broken.exitCode == ExitCode::Failure);
+    CHECK_THAT(broken.out, ContainsSubstring("    error: Drill (object:9) failed to regenerate: Drill: hole: the "
+                                             "placement face (plane through (0, 0, 20) mm facing (0, 0, 1)) matches no "
+                                             "face of the body\n"));
+    CHECK_THAT(broken.out, EndsWith("Result: invalid (3 errors)\n"));
 }
 
 TEST_CASE("Exports of a document without bodies fail", "[cli][export]") {

@@ -4,6 +4,7 @@
 #include <bettercad/features/ChamferFeature.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/features/FilletFeature.hpp>
+#include <bettercad/features/HoleFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
 #include <bettercad/features/Validation.hpp>
 #include <bettercad/io/DocumentFile.hpp>
@@ -92,6 +93,33 @@ std::string describeChamferSize(const Document& document, const features::Chamfe
     return distance;
 }
 
+/// A length that may be driven: the parameter's name, or "10 mm".
+std::string describeLength(const Document& document, Length value, const std::optional<ParameterId>& parameter) {
+    return parameter ? nameOrId(document, ObjectId{*parameter}) : std::format("{:.10g} mm", value.in(units::mm));
+}
+
+/// "target Pad, simple through hole, diameter 10 mm, centre (50 mm, 25 mm)
+/// on plane through (0, 0, 20) mm facing (0, 0, 1)", with the depth of a
+/// blind hole and the head of a counterbore or countersink.
+std::string describeHole(const Document& document, const features::HoleDefinition& d) {
+    std::string text = std::format("target {}, {} {} hole", nameOrId(document, ObjectId{d.target}),
+                                   geometry::toString(d.type), geometry::toString(d.extent));
+    if (d.extent == geometry::HoleExtent::Blind) {
+        text += std::format(" {} deep", describeLength(document, d.depth, d.depthParameter));
+    }
+    text += std::format(", diameter {}", describeLength(document, d.diameter, d.diameterParameter));
+    if (d.type == geometry::HoleType::Counterbore) {
+        text += std::format(", counterbore {:.10g} mm x {:.10g} mm deep", d.counterboreDiameter.in(units::mm),
+                            d.counterboreDepth.in(units::mm));
+    } else if (d.type == geometry::HoleType::Countersink) {
+        text += std::format(", countersink {:.10g} mm at {:.10g} deg", d.countersinkDiameter.in(units::mm),
+                            d.countersinkAngle.in(units::deg));
+    }
+    text += std::format(", centre ({}, {}) on {}", describeLength(document, d.center.x, d.centerUParameter),
+                        describeLength(document, d.center.y, d.centerVParameter), geometry::describe(d.face));
+    return text;
+}
+
 std::string describeObject(const Document& document, const DocumentObject& object) {
     if (const auto* sketch = dynamic_cast<const sketch::Sketch*>(&object)) {
         const auto disabled = std::ranges::count_if(sketch->constraints(),
@@ -137,6 +165,9 @@ std::string describeObject(const Document& document, const DocumentObject& objec
                                                      : std::format("{:.10g} mm", d.radius.in(units::mm));
         return std::format("target {}, {}, radius {}", nameOrId(document, ObjectId{d.target}),
                            plural(d.edges.size(), "edge", "edges"), radius);
+    }
+    if (const auto* hole = dynamic_cast<const features::HoleFeature*>(&object)) {
+        return describeHole(document, hole->definition());
     }
     return {};
 }

@@ -25,6 +25,8 @@ Result<Json> objectToJson(const DocumentObject& object) {
         data = detail::chamferToJson(*chamfer);
     } else if (const auto* fillet = dynamic_cast<const features::FilletFeature*>(&object)) {
         data = detail::filletToJson(*fillet);
+    } else if (const auto* hole = dynamic_cast<const features::HoleFeature*>(&object)) {
+        data = detail::holeToJson(*hole);
     } else {
         return makeError(ErrorCode::InvalidArgument,
                          std::format("objects of type '{}' cannot be saved", object.typeName()));
@@ -82,6 +84,13 @@ Result<std::unique_ptr<DocumentObject>> objectFromJson(const Json& value, std::s
             return std::unexpected(fillet.error());
         }
         return std::unique_ptr<DocumentObject>(std::move(*fillet));
+    }
+    if (*type == features::HoleFeature::kTypeName) {
+        auto hole = detail::holeFromJson(**data, std::move(*name), dataPath);
+        if (!hole) {
+            return std::unexpected(hole.error());
+        }
+        return std::unique_ptr<DocumentObject>(std::move(*hole));
     }
     return detail::parseError(detail::childPath(path, "type"), std::format("unknown object type '{}'", *type));
 }

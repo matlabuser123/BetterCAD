@@ -3,6 +3,7 @@
 #include <bettercad/features/ChamferFeature.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/features/FilletFeature.hpp>
+#include <bettercad/features/HoleFeature.hpp>
 #include <bettercad/features/Regenerator.hpp>
 #include <bettercad/features/ResultBodies.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
@@ -14,6 +15,8 @@
 #include <algorithm>
 #include <format>
 #include <set>
+#include <string_view>
+#include <utility>
 #include <variant>
 
 namespace bettercad::features {
@@ -140,6 +143,19 @@ private:
                 if (definition.radiusParameter) {
                     checkParameter(object.id(), *definition.radiusParameter, dimensions::length,
                                    "the radius is driven by");
+                }
+            } else if (const auto* hole = dynamic_cast<const HoleFeature*>(&object)) {
+                const HoleDefinition& definition = hole->definition();
+                const std::pair<const std::optional<ParameterId>*, std::string_view> drivers[] = {
+                    {&definition.diameterParameter, "the diameter is driven by"},
+                    {&definition.depthParameter, "the depth is driven by"},
+                    {&definition.centerUParameter, "the centre's u coordinate is driven by"},
+                    {&definition.centerVParameter, "the centre's v coordinate is driven by"},
+                };
+                for (const auto& [parameter, reference] : drivers) {
+                    if (*parameter) {
+                        checkParameter(object.id(), **parameter, dimensions::length, reference);
+                    }
                 }
             }
             if (const auto* feature = dynamic_cast<const SolidFeature*>(&object)) {
