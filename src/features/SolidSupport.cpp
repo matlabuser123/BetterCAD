@@ -5,6 +5,20 @@
 
 namespace bettercad::features::detail {
 
+Result<geometry::Body> applyToTargetBody(std::string_view featureName, std::string_view operation,
+                                         const geometry::Body* target,
+                                         const std::function<Result<geometry::Body>(const geometry::Body&)>& apply) {
+    if (target == nullptr || target->isEmpty()) {
+        return makeError(ErrorCode::FailedPrecondition,
+                         std::format("{}: a {} needs the body of its target feature", featureName, operation));
+    }
+    auto body = apply(*target);
+    if (!body) {
+        return makeError(body.error().code, std::format("{}: {}", featureName, body.error().message));
+    }
+    return body;
+}
+
 Result<const sketch::Sketch*> requireProfileSketch(const Document& document, SketchId profile,
                                                    std::string_view featureName) {
     const auto* sketch = document.findObjectAs<sketch::Sketch>(ObjectId{profile});

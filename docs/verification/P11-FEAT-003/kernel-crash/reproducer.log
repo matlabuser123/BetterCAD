@@ -1,0 +1,31 @@
+OCCT fillet reproducer runs, 2026-09-15 02:24:10
+Source: docs/verification/P11-FEAT-003/kernel-crash/occt_fillet_reproducer.cpp (built at -O2)
+Toolchain: c++.exe (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r4) 16.1.0
+OCCT: 8.0.1 from the dependency superbuild (Release, exceptions enabled)
+One process per run. Exit code 0xC0000005 is an access violation (the process crashed).
+removed = V0 - V; negative for the concave L edge, where the fillet adds material.
+
+box 5              exit 0x00000000    0.1 s  box 5: 1 edge(s), IsDone 1, valid 1, V0 99999.999999999971, V 99463.495408493618, removed 536.50459150635288
+box 19.9           exit 0x00000000    0.1 s  box 19.9: 1 edge(s), IsDone 1, valid 1, V0 99999.999999999971, V 91501.552668702367, removed 8498.4473312976043
+box 19.999         exit 0x00000000    0.1 s  box 19.999: 1 edge(s), IsDone 1, valid 1, V0 99999.999999999971, V 91416.784921784172, removed 8583.2150782157987
+box 20             exit 0xC0000005    3.6 s  (no output)
+box 25             exit 0xC0000005    2.2 s  (no output)
+box 25             exit 0xC0000005    3.2 s  (no output)
+box 25             exit 0xC0000005    3.4 s  (no output)
+pair 0.5           exit 0x00000000    0.1 s  pair 0.5: 2 edge(s), IsDone 1, valid 1, V0 10000, V 9973.1747704246809, removed 26.825229575319099
+pair 0.999         exit 0x00000000    0.1 s  pair 0.999: 2 edge(s), IsDone 1, valid 1, V0 10000, V 9957.1225315866286, removed 42.877468413371389
+pair 1             exit 0xC0000005    2.2 s  (no output)
+pair 1.5           exit 0xC0000005    3.1 s  (no output)
+opposite 24.9      exit 0x00000000    0.0 s  opposite 24.9: 2 edge(s), IsDone 1, valid 1, V0 150000, V 123388.94305761044, removed 26611.056942389565
+opposite 26        exit 0xC0000005    2.1 s  (no output)
+corner2 5          exit 0x00000000    0.0 s  corner2 5: 2 edge(s), IsDone 1, valid 1, V0 99999.999999999971, V 99207.226905219228, removed 792.77309478074312
+corner2 19.99      exit 0x00000000    0.1 s  corner2 19.99: 2 edge(s), IsDone 1, valid 1, V0 99999.999999999971, V 87902.575544961175, removed 12097.424455038796
+corner3 5          exit 0x00000000    0.1 s  corner3 5: 3 edge(s), IsDone 1, valid 1, V0 99999.999999999971, V 99108.867730114885, removed 891.13226988508541
+corner3 19.99      exit 0x00000000    0.1 s  corner3 19.99: 3 edge(s), IsDone 1, valid 1, V0 99999.999999999971, V 86758.890823765323, removed 13241.109176234648
+lshape 5           exit 0x00000000    0.1 s  lshape 5: 1 edge(s), IsDone 1, valid 1, V0 32000, V 32107.300918301276, removed -107.3009183012764
+lshape 29.99       exit 0x00000000    0.1 s  lshape 29.99: 1 edge(s), IsDone 1, valid 1, V0 32000, V 35860.258266010373, removed -3860.2582660103726
+lshape 30          exit 0xC0000005    3.1 s  (no output)
+lshape 31          exit 0xC0000005    2.1 s  (no output)
+rim 2              exit 0x00000000    0.0 s  rim 2: 1 edge(s), IsDone 1, valid 1, V0 28274.333882308143, V 28195.840380353551, removed 78.49350195459192
+rim 15             exit 0x00000000    0.0 s  rim 15: 1 edge(s), IsDone 1, valid 1, V0 28274.333882308143, V 24740.042147019623, removed 3534.2917352885197
+rim 16             exit 0xC0000005    3.1 s  (no output)

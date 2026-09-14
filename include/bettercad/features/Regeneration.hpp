@@ -7,6 +7,7 @@
 #include <bettercad/features/ChamferFeature.hpp>
 #include <bettercad/features/Export.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
+#include <bettercad/features/FilletFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
 #include <bettercad/sketch/Sketch.hpp>
 
@@ -59,5 +60,18 @@ regenerateRevolve(const RevolveFeature& feature, const Document& document,
 /// several, are errors, never guesses; see geometry::chamferEdges().
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::Body>
 regenerateChamfer(const ChamferFeature& feature, const Document& document, const geometry::Body* target);
+
+/// Radius of a fillet: the driving parameter's value if it has one (NotFound
+/// if missing, DimensionMismatch if not a length), otherwise the literal
+/// radius. Its range is checked by the fillet itself.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<Length> resolveFilletRadius(const FilletDefinition& definition,
+                                                                          const Document& document);
+
+/// Computes the body of a fillet feature: @p target (the target feature's
+/// body) with the referenced edges rounded. Fails with FailedPrecondition if
+/// there is no target body. Edge references that match no edge, or several,
+/// are errors, never guesses; see geometry::filletEdges().
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::Body>
+regenerateFillet(const FilletFeature& feature, const Document& document, const geometry::Body* target);
 
 } // namespace bettercad::features

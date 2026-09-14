@@ -8,14 +8,18 @@ bettercad_add_library(bettercad_geometry
     EXPORT_BASE BETTERCAD_GEOMETRY
     EXPORT_HEADER bettercad/core/geometry/Export.hpp
     SOURCES
+        Blends.cpp
         EdgeMatching.hpp
         Edges.cpp
         Profile.cpp
+        occt/OcctBlend.cpp
+        occt/OcctBlend.hpp
         occt/OcctBody.cpp
         occt/OcctBody.hpp
         occt/OcctBooleans.cpp
         occt/OcctChamfer.cpp
         occt/OcctEdges.cpp
+        occt/OcctFillet.cpp
         occt/OcctGuard.hpp
         occt/OcctKernel.cpp
         occt/OcctMesh.cpp

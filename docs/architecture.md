@@ -11,7 +11,7 @@ underneath, hidden behind adapters.
             └───────┬──────────────────────┘
                     io              native .bcad, STEP/STL export
                     │
-                 features           extrude, revolve, chamfer (later: fillet, ...)
+                 features           extrude, revolve, chamfer, fillet (later: hole, ...)
                     │
                   sketch            entities, constraints, solver
                     │
@@ -183,8 +183,9 @@ milestones start; see `TODO.md`.
   Afterwards it requires one or more valid solids with a finite, positive
   volume.
 - **Edges and edge references** (`Edges.hpp`). `listEdges(body)` describes a
-  body's edges by their geometry (curve kind, ends, length, number of
-  faces). Features refer to an edge by an `EdgeSignature`: the edge's
+  body's edges by their geometry: curve kind, ends, length, number of faces,
+  and `faceAngle`, the angle between the two faces' outward normals (0 where
+  they join smoothly, 90° along a box edge). Features refer to an edge by an `EdgeSignature`: the edge's
   supporting line, or its circle (centre, axis, radius), in a canonical form.
   `findEdges(body, signature)` returns the edges on that curve, matched
   within 1e-7 mm and 1e-9 rad. Kernel enumeration order and kernel object
@@ -228,6 +229,29 @@ milestones start; see `TODO.md`.
 
   Kernel failures that remain become `FailedPrecondition`, and every result
   must be one valid solid with a finite, positive volume.
+- **Fillet** (`Fillet.hpp`). `filletEdges(body, request)` rounds edges with a
+  constant radius; the input body is never modified. A `FilletRequest` is
+  edge signatures plus a radius. The kernel continues a fillet along
+  tangent edges, so a smooth chain is rounded as a whole. Where selected
+  edges meet at a vertex, the kernel blends the corner: two edges meet as the
+  union of their corner regions, three as a spherical corner.
+  - Edges whose faces join smoothly (face angle below 1e-6 rad) have no
+    corner to round and are refused.
+  - The fit check is the chamfer's, with a strip width of r·tan(γ/2), where
+    γ is the largest face angle sampled along the edge. That is r where
+    faces meet square, and exact for planes and for the planes and
+    cylinders of turned parts.
+  - The same OCCT builder crashes on fillets that do not fit, including
+    concave ones (`docs/verification/P11-FEAT-003/`).
+- **Shared blend machinery** (`occt/OcctBlend.{hpp,cpp}`). Chamfer and
+  fillet share:
+  - edge resolution (exactly one edge between two faces, not already in
+    another reference's chain);
+  - the strips of each tangent chain;
+  - the fit check;
+  - the guarded kernel build and result validation.
+
+  Messages name the operation, so each is reported in its own terms.
 
 ### Sketches (`bettercad/sketch/`, library `bettercad_sketch`)
 
@@ -290,6 +314,14 @@ milestones start; see `TODO.md`.
   reference that matches no edge, or several, fails the chamfer with a
   message naming the reference. The chamfer then keeps no body, and the
   target's body is untouched.
+- **Fillet** (`FilletFeature.hpp`) works the same way on the same edge
+  references. A `FilletDefinition` holds:
+  - the target feature;
+  - the edges;
+  - a constant radius, literal or driven by a length parameter.
+
+  The private `SolidSupport` helper `applyToTargetBody()` gives chamfer and
+  fillet the same target-body handling and message prefix.
 - Bodies are derived: regeneration computes them from the current document.
   Regenerating does not change the document's revision or dirty state.
 - `extractRegions()` turns a sketch into `geometry::PlanarRegion`s. It
@@ -316,8 +348,8 @@ milestones start; see `TODO.md`.
 - **Validation** (`Validation.hpp`). `validateDocument()` runs six checks on
   a copy of the document:
   1. document consistency (references point at the right kind of item and
-     dimension, e.g. revolve axes are lines, revolve angles are angles and
-     chamfer distances are lengths);
+     dimension, e.g. revolve axes are lines, revolve angles are angles, and
+     chamfer distances and fillet radii are lengths);
   2. missing references (including revolve axis lines in their sketches);
   3. dependency cycles;
   4. sketch constraints (each sketch solves with its driving parameters;
@@ -352,7 +384,9 @@ milestones start; see `TODO.md`.
     `{"curve": "circle", "center": [...], "axis": [...], "radius": r}`;
   - a chamfer mode is `"equal_distance"`, `"two_distance"` or
     `"distance_angle"`, and a chamfer stores `distance2`, `angle` and
-    `reference_side` only when its mode uses them.
+    `reference_side` only when its mode uses them;
+  - a fillet stores `target`, `edges` (as for chamfers), `radius` in
+    metres and an optional `radius_parameter`.
 
   The rules are:
   - **Only inputs are stored.** Geometry is derived and is regenerated after
@@ -398,7 +432,8 @@ milestones start; see `TODO.md`.
 ### Test tooling
 
 - `tests/support/` holds shared fixtures:
-  - the P9 bracket model, the turned part (revolves) and the chamfered block;
+  - the P9 bracket model, the turned part (revolves), and the parametric
+    block (`BlockModel`) with its chamfered and filleted variants;
   - temporary directories;
   - mesh and STL analysis written from first principles (divergence-theorem
     volume, edge-manifold watertightness).

@@ -1,11 +1,13 @@
 #include "FeatureTestSupport.hpp"
 #include "support/BracketModel.hpp"
 #include "support/ChamferBlockModel.hpp"
+#include "support/FilletModels.hpp"
 #include "support/TurnedPartModel.hpp"
 
 #include <bettercad/core/document/Document.hpp>
 #include <bettercad/features/ChamferFeature.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
+#include <bettercad/features/FilletFeature.hpp>
 #include <bettercad/features/ResultBodies.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
 #include <bettercad/features/Validation.hpp>
@@ -27,6 +29,7 @@ using namespace bettercad::sketch;
 using bettercad::test::addRectangle;
 using bettercad::test::BracketModel;
 using bettercad::test::ChamferBlockModel;
+using bettercad::test::FilletBlockModel;
 using bettercad::test::require;
 using bettercad::test::TurnedPartModel;
 using Catch::Matchers::ContainsSubstring;
@@ -392,5 +395,56 @@ TEST_CASE("ChamferFeature_ModelsAreValidatedLikeAnyOther", "[validation][chamfer
                                          "(line through (0, 0, 20) mm along (1, 0, 0)) matches no edge of the body");
         CHECK_FALSE(report.valid());
         CHECK(report.bodies.empty()); // the pad is consumed and the chamfer has no body
+    }
+}
+
+TEST_CASE("FilletFeature_ModelsAreValidatedLikeAnyOther", "[validation][fillet]") {
+    FilletBlockModel m;
+
+    SECTION("a sound model: the fillet is the one valid result body") {
+        const ValidationReport report = validateDocument(m.doc);
+        INFO(describe(report));
+        CHECK(report.valid());
+        CHECK(report.issues.empty());
+        CHECK(report.regenerated == 3);
+        REQUIRE(report.bodies.size() == 1);
+        CHECK(report.bodies[0].feature == m.round);
+        CHECK(report.bodies[0].valid);
+        CHECK(report.bodies[0].topology.faces == 7);
+        CHECK_THAT(report.bodies[0].properties->volume.in(units::mm3),
+                   WithinRel(FilletBlockModel::expectedVolume(100, 50, 20, 5), 1e-12));
+    }
+    SECTION("a radius driven by an angle") {
+        const ParameterId tilt = m.doc.createParameter("tilt", 5_deg, units::deg).value();
+        FilletDefinition d = m.definitionOf(m.round);
+        d.radiusParameter = tilt;
+        m.setDefinition(m.round, d);
+        const ValidationReport report = validateDocument(m.doc);
+        const auto issues = issuesOf(report, ValidationCheck::DocumentConsistency);
+        REQUIRE(issues.size() == 1);
+        CHECK(issues[0].message ==
+              "Round (object:7): the radius is driven by tilt (object:8), which is an angle, not a length");
+        CHECK(issuesOf(report, ValidationCheck::FeatureRegeneration).empty()); // reported once
+    }
+    SECTION("a target that is a sketch") {
+        FilletDefinition d = m.definitionOf(m.round);
+        d.target = FilletBlockModel::featureId(m.base);
+        m.setDefinition(m.round, d);
+        const auto issues = issuesOf(validateDocument(m.doc), ValidationCheck::DocumentConsistency);
+        REQUIRE(issues.size() == 1);
+        CHECK(issues[0].message ==
+              "Round (object:7): the target is Base (object:5), which is a sketch, not a feature with a body");
+    }
+    SECTION("an edge that the model no longer has") {
+        REQUIRE(m.doc.setParameterValue(m.height, 30_mm).has_value());
+        const ValidationReport report = validateDocument(m.doc);
+        INFO(describe(report));
+        const auto regeneration = issuesOf(report, ValidationCheck::FeatureRegeneration);
+        REQUIRE(regeneration.size() == 1);
+        CHECK(regeneration[0].item == m.round);
+        CHECK(regeneration[0].message == "Round (object:7) failed to regenerate: Round: fillet: edge reference 1 "
+                                         "(line through (0, 0, 20) mm along (1, 0, 0)) matches no edge of the body");
+        CHECK_FALSE(report.valid());
+        CHECK(report.bodies.empty());
     }
 }

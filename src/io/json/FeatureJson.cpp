@@ -294,6 +294,27 @@ Result<geometry::EdgeSignature> edgeFromJson(const Json& value, std::string_view
     return edge;
 }
 
+Json edgeListToJson(const std::vector<geometry::EdgeSignature>& edges) {
+    Json json = Json::array();
+    for (const geometry::EdgeSignature& edge : edges) {
+        json.push_back(edgeToJson(edge));
+    }
+    return json;
+}
+
+/// The edge references in @p array (already known to be an array) at @p path.
+Result<std::vector<geometry::EdgeSignature>> edgeListFromJson(const Json& array, std::string_view path) {
+    std::vector<geometry::EdgeSignature> edges;
+    for (std::size_t i = 0; i < array.size(); ++i) {
+        auto edge = edgeFromJson(array[i], indexPath(path, i));
+        if (!edge) {
+            return std::unexpected(edge.error());
+        }
+        edges.push_back(*edge);
+    }
+    return edges;
+}
+
 /// An absent key reads as 0.
 Result<double> readNumberOrZero(const Json& object, std::string_view key, std::string_view path) {
     return object.contains(key) ? readNumber(object, key, path) : Result<double>{0.0};
@@ -305,11 +326,7 @@ Json chamferToJson(const features::ChamferFeature& feature) {
     const features::ChamferDefinition& d = feature.definition();
     Json json = Json::object();
     json["target"] = d.target.value();
-    Json edges = Json::array();
-    for (const geometry::EdgeSignature& edge : d.edges) {
-        edges.push_back(edgeToJson(edge));
-    }
-    json["edges"] = std::move(edges);
+    json["edges"] = edgeListToJson(d.edges);
     json["mode"] = std::string{nameOf(kChamferModes, d.mode)};
     json["distance"] = d.distance.si();
     if (d.distanceParameter) {
@@ -363,14 +380,11 @@ Result<std::unique_ptr<features::ChamferFeature>> chamferFromJson(const Json& da
         .angle = Angle::fromSi(*angle),
         .referenceSide = std::nullopt,
     };
-    const std::string edgesPath = childPath(path, "edges");
-    for (std::size_t i = 0; i < (*edgesField)->size(); ++i) {
-        auto edge = edgeFromJson((**edgesField)[i], indexPath(edgesPath, i));
-        if (!edge) {
-            return std::unexpected(edge.error());
-        }
-        definition.edges.push_back(*edge);
+    auto edges = edgeListFromJson(**edgesField, childPath(path, "edges"));
+    if (!edges) {
+        return std::unexpected(edges.error());
     }
+    definition.edges = std::move(*edges);
     if (*distanceParameter) {
         definition.distanceParameter = ParameterId::fromValue(**distanceParameter);
     }
@@ -382,6 +396,54 @@ Result<std::unique_ptr<features::ChamferFeature>> chamferFromJson(const Json& da
         definition.referenceSide = *side;
     }
     auto feature = features::ChamferFeature::create(std::move(name), definition);
+    if (!feature) {
+        return atPath(path, feature.error());
+    }
+    return std::move(*feature);
+}
+
+Json filletToJson(const features::FilletFeature& feature) {
+    const features::FilletDefinition& d = feature.definition();
+    Json json = Json::object();
+    json["target"] = d.target.value();
+    json["edges"] = edgeListToJson(d.edges);
+    json["radius"] = d.radius.si();
+    if (d.radiusParameter) {
+        json["radius_parameter"] = d.radiusParameter->value();
+    }
+    return json;
+}
+
+Result<std::unique_ptr<features::FilletFeature>> filletFromJson(const Json& data, std::string name,
+                                                                std::string_view path) {
+    if (auto object = requireObject(data, path, {"target", "edges", "radius", "radius_parameter"}); !object) {
+        return std::unexpected(object.error());
+    }
+    auto target = readId(data, "target", path);
+    auto edgesField = requireArray(data, "edges", path);
+    auto radius = readNumber(data, "radius", path);
+    auto radiusParameter = readOptionalId(data, "radius_parameter", path);
+    if (!target || !edgesField || !radius || !radiusParameter) {
+        const Error& error = !target ? target.error()
+                           : !edgesField ? edgesField.error()
+                           : !radius ? radius.error()
+                                     : radiusParameter.error();
+        return std::unexpected(error);
+    }
+    auto edges = edgeListFromJson(**edgesField, childPath(path, "edges"));
+    if (!edges) {
+        return std::unexpected(edges.error());
+    }
+    features::FilletDefinition definition{
+        .target = FeatureId::fromValue(*target),
+        .edges = std::move(*edges),
+        .radius = Length::fromSi(*radius),
+        .radiusParameter = std::nullopt,
+    };
+    if (*radiusParameter) {
+        definition.radiusParameter = ParameterId::fromValue(**radiusParameter);
+    }
+    auto feature = features::FilletFeature::create(std::move(name), definition);
     if (!feature) {
         return atPath(path, feature.error());
     }

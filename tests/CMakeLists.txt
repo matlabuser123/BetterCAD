@@ -33,6 +33,7 @@ bettercad_add_executable(bettercad_tests
         core/document/TestObjects.hpp
         core/geometry/BooleanTests.cpp
         core/geometry/ChamferTests.cpp
+        core/geometry/FilletTests.cpp
         core/geometry/GeometryTestSupport.hpp
         core/geometry/MeshTests.cpp
         core/geometry/PrimitiveTests.cpp
@@ -47,6 +48,7 @@ bettercad_add_executable(bettercad_tests
         features/ChamferFeatureTests.cpp
         features/ExtrudeTests.cpp
         features/FeatureTestSupport.hpp
+        features/FilletFeatureTests.cpp
         features/ProfileTests.cpp
         features/RegenerationTests.cpp
         features/RegeneratorTests.cpp
@@ -55,6 +57,7 @@ bettercad_add_executable(bettercad_tests
         io/ChamferFileTests.cpp
         io/DocumentFileTests.cpp
         io/ExampleModelTests.cpp
+        io/FilletFileTests.cpp
         io/ParameterJsonTests.cpp
         io/RevolveFileTests.cpp
         io/StepExportTests.cpp
@@ -63,8 +66,10 @@ bettercad_add_executable(bettercad_tests
         sketch/SketchDocumentTests.cpp
         sketch/SketchTests.cpp
         sketch/SolverTests.cpp
+        support/BlockModel.hpp
         support/BracketModel.hpp
         support/ChamferBlockModel.hpp
+        support/FilletModels.hpp
         support/MeshAnalysis.hpp
         support/TestFiles.hpp
         support/TurnedPartModel.hpp

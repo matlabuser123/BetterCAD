@@ -1,11 +1,9 @@
 #include "core/geometry/EdgeMatching.hpp"
 
-#include <bettercad/core/geometry/Chamfer.hpp>
 #include <bettercad/core/units/Format.hpp>
 
 #include <cmath>
 #include <format>
-#include <numbers>
 
 namespace bettercad::geometry {
 
@@ -141,61 +139,28 @@ std::string describe(const EdgeSignature& signature) {
                        format(signature.direction));
 }
 
-std::string_view toString(ChamferMode mode) noexcept {
-    switch (mode) {
-    case ChamferMode::EqualDistance:
-        return "equal distance";
-    case ChamferMode::TwoDistance:
-        return "two distances";
-    case ChamferMode::DistanceAngle:
-        return "distance and angle";
-    }
-    return "unknown";
-}
+namespace detail {
 
-Result<void> validate(const ChamferRequest& request) {
-    if (request.edges.empty()) {
-        return makeError(ErrorCode::InvalidArgument, "a chamfer needs at least one edge");
+Result<void> validateEdgeSelection(std::string_view operation, const std::vector<EdgeSignature>& edges) {
+    if (edges.empty()) {
+        return makeError(ErrorCode::InvalidArgument, std::format("a {} needs at least one edge", operation));
     }
-    for (std::size_t i = 0; i < request.edges.size(); ++i) {
-        if (auto valid = validate(request.edges[i]); !valid) {
-            return makeError(ErrorCode::InvalidArgument, std::format("edge reference {}: {}", i + 1,
-                                                                     valid.error().message));
+    for (std::size_t i = 0; i < edges.size(); ++i) {
+        if (auto valid = validate(edges[i]); !valid) {
+            return makeError(ErrorCode::InvalidArgument,
+                             std::format("edge reference {}: {}", i + 1, valid.error().message));
         }
         for (std::size_t j = 0; j < i; ++j) {
-            if (detail::sameCurve(request.edges[i], request.edges[j])) {
+            if (sameCurve(edges[i], edges[j])) {
                 return makeError(ErrorCode::InvalidArgument,
                                  std::format("edge references {} and {} refer to the same {}", j + 1, i + 1,
-                                             describe(request.edges[i])));
+                                             describe(edges[i])));
             }
         }
     }
-    const auto positive = [](Length value) { return isFinite(value) && value > Length{}; };
-    if (!positive(request.distance)) {
-        return makeError(ErrorCode::InvalidArgument,
-                         std::format("the chamfer distance must be positive and finite, got {}",
-                                     toString(request.distance, units::mm)));
-    }
-    if (request.mode == ChamferMode::TwoDistance && !positive(request.distance2)) {
-        return makeError(ErrorCode::InvalidArgument,
-                         std::format("the second chamfer distance must be positive and finite, got {}",
-                                     toString(request.distance2, units::mm)));
-    }
-    if (request.mode == ChamferMode::DistanceAngle &&
-        (!isFinite(request.angle) || request.angle <= Angle{} || request.angle.si() >= std::numbers::pi / 2.0)) {
-        return makeError(ErrorCode::InvalidArgument,
-                         std::format("the chamfer angle must be in (0, 90) deg, got {}",
-                                     toString(request.angle, units::deg)));
-    }
-    const bool needsSide = request.mode != ChamferMode::EqualDistance;
-    if (needsSide && !request.referenceSide) {
-        return makeError(ErrorCode::InvalidArgument,
-                         std::format("a chamfer by {} needs a reference side", toString(request.mode)));
-    }
-    if (!needsSide && request.referenceSide) {
-        return makeError(ErrorCode::InvalidArgument, "an equal-distance chamfer takes no reference side");
-    }
     return {};
 }
+
+} // namespace detail
 
 } // namespace bettercad::geometry

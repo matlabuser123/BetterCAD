@@ -1,6 +1,7 @@
 #include "Cli.hpp"
 #include "support/BracketModel.hpp"
 #include "support/ChamferBlockModel.hpp"
+#include "support/FilletModels.hpp"
 #include "support/MeshAnalysis.hpp"
 #include "support/TestFiles.hpp"
 #include "support/TurnedPartModel.hpp"
@@ -372,6 +373,35 @@ TEST_CASE("info and validate describe chamfers", "[cli][chamfer]") {
                                              "reference 1 (line through (0, 0, 20) mm along (1, 0, 0)) matches no "
                                              "edge of the body\n"));
     CHECK_THAT(broken.out, EndsWith("Result: invalid (3 errors)\n"));
+}
+
+TEST_CASE("info and validate describe fillets", "[cli][fillet]") {
+    TempDir dir;
+    test::FilletVariants model;
+    const auto path = dir.path() / "block.bcad";
+    REQUIRE(io::saveDocument(model.doc, path).has_value());
+
+    const auto info = runCli({"info", arg(path)});
+    CHECK(info.exitCode == ExitCode::Success);
+    CHECK_THAT(info.out, ContainsSubstring("\n  object:7  fillet   Round   target Pad, 1 edge, radius radius\n"
+                                           "  object:8  fillet   Corner  target Round, 3 edges, radius 3 mm\n"));
+
+    const auto validate = runCli({"validate", arg(path)});
+    CHECK(validate.exitCode == ExitCode::Success);
+    CHECK_THAT(validate.out, ContainsSubstring("geometry              ok, 1 result body\n"
+                                               "Result bodies (1):\n"
+                                               "  Corner (object:8): 1 solid, volume 99139.675 mm^3, area "));
+    CHECK_THAT(validate.out, EndsWith("bounds (0, 0, 0) to (100, 50, 20) mm\nResult: valid\n"));
+
+    // A fillet whose edge has moved makes the document invalid, with the reason.
+    REQUIRE(model.doc.setParameterValue(model.height, 30_mm).has_value());
+    REQUIRE(io::saveDocument(model.doc, path).has_value());
+    const auto broken = runCli({"validate", arg(path)});
+    CHECK(broken.exitCode == ExitCode::Failure);
+    CHECK_THAT(broken.out, ContainsSubstring("    error: Round (object:7) failed to regenerate: Round: fillet: edge "
+                                             "reference 1 (line through (0, 0, 20) mm along (1, 0, 0)) matches no "
+                                             "edge of the body\n"));
+    CHECK_THAT(broken.out, EndsWith("Result: invalid (2 errors)\n"));
 }
 
 TEST_CASE("Exports of a document without bodies fail", "[cli][export]") {

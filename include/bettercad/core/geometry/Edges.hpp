@@ -89,6 +89,11 @@ struct EdgeInfo {
     /// Distinct faces bounded by the edge: 2 for an ordinary edge of a solid,
     /// 1 for a seam of a closed face.
     std::size_t faces = 0;
+    /// For an edge between two faces: the angle between their outward
+    /// normals at the edge's midpoint. 0 where the faces join smoothly
+    /// (tangent), 90° along the edges of a box; it does not tell convex from
+    /// concave edges.
+    std::optional<Angle> faceAngle{};
 };
 
 /// The edges of @p body, degenerate edges excluded. The order is the

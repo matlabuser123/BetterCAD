@@ -13,8 +13,18 @@
 #include <string_view>
 #include <vector>
 
-// Steps shared by the profile-based solid features (extrude, revolve, ...).
+// Steps shared by the profile-based solid features (extrude, revolve, ...)
+// and the edge operations on another feature's body (chamfer, fillet).
 namespace bettercad::features::detail {
+
+/// Applies an edge operation to the target feature's body. Fails with
+/// FailedPrecondition "<featureName>: a <operation> needs the body of its
+/// target feature" if there is no non-empty target body; errors of @p apply
+/// come back prefixed with @p featureName. @p apply never modifies the
+/// target body (bodies are immutable), so a failure leaves it intact.
+[[nodiscard]] Result<geometry::Body> applyToTargetBody(
+    std::string_view featureName, std::string_view operation, const geometry::Body* target,
+    const std::function<Result<geometry::Body>(const geometry::Body&)>& apply);
 
 /// The feature's profile sketch; NotFound if @p profile is not a sketch of
 /// the document. Errors are prefixed with @p featureName.

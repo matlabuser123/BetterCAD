@@ -2,6 +2,7 @@
 #include <bettercad/core/units/Format.hpp>
 #include <bettercad/features/ChamferFeature.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
+#include <bettercad/features/FilletFeature.hpp>
 #include <bettercad/features/Regenerator.hpp>
 #include <bettercad/features/ResultBodies.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
@@ -133,6 +134,12 @@ private:
                 if (definition.distanceParameter) {
                     checkParameter(object.id(), *definition.distanceParameter, dimensions::length,
                                    "the distance is driven by");
+                }
+            } else if (const auto* fillet = dynamic_cast<const FilletFeature*>(&object)) {
+                const FilletDefinition& definition = fillet->definition();
+                if (definition.radiusParameter) {
+                    checkParameter(object.id(), *definition.radiusParameter, dimensions::length,
+                                   "the radius is driven by");
                 }
             }
             if (const auto* feature = dynamic_cast<const SolidFeature*>(&object)) {

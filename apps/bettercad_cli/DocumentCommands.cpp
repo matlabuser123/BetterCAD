@@ -3,6 +3,7 @@
 #include <bettercad/core/document/Document.hpp>
 #include <bettercad/features/ChamferFeature.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
+#include <bettercad/features/FilletFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
 #include <bettercad/features/Validation.hpp>
 #include <bettercad/io/DocumentFile.hpp>
@@ -129,6 +130,13 @@ std::string describeObject(const Document& document, const DocumentObject& objec
         const features::ChamferDefinition& d = chamfer->definition();
         return std::format("target {}, {}, {}", nameOrId(document, ObjectId{d.target}),
                            plural(d.edges.size(), "edge", "edges"), describeChamferSize(document, d));
+    }
+    if (const auto* fillet = dynamic_cast<const features::FilletFeature*>(&object)) {
+        const features::FilletDefinition& d = fillet->definition();
+        const std::string radius = d.radiusParameter ? nameOrId(document, ObjectId{*d.radiusParameter})
+                                                     : std::format("{:.10g} mm", d.radius.in(units::mm));
+        return std::format("target {}, {}, radius {}", nameOrId(document, ObjectId{d.target}),
+                           plural(d.edges.size(), "edge", "edges"), radius);
     }
     return {};
 }

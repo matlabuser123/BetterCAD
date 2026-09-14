@@ -7,6 +7,7 @@
 #include <bettercad/core/document/Document.hpp>
 #include <bettercad/features/ChamferFeature.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
+#include <bettercad/features/FilletFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
 
 #include <format>
@@ -128,5 +129,7 @@ using CreateRevolveCommand = CreateFeatureCommand<RevolveFeature>;
 using ModifyRevolveCommand = ModifyFeatureCommand<RevolveFeature>;
 using CreateChamferCommand = CreateFeatureCommand<ChamferFeature>;
 using ModifyChamferCommand = ModifyFeatureCommand<ChamferFeature>;
+using CreateFilletCommand = CreateFeatureCommand<FilletFeature>;
+using ModifyFilletCommand = ModifyFeatureCommand<FilletFeature>;
 
 } // namespace bettercad::features

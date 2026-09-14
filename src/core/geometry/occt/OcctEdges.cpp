@@ -19,6 +19,7 @@
 #include <gp_Pnt2d.hxx>
 
 #include <algorithm>
+#include <cmath>
 
 namespace bettercad::geometry {
 
@@ -84,6 +85,11 @@ std::vector<KernelEdge> kernelEdges(const TopoDS_Shape& shape) {
             }
         }
         KernelEdge entry{edge, describeEdge(edge, faces.size()), std::move(faces)};
+        if (entry.faces.size() == 2) {
+            if (const auto angle = faceAngleAt(entry, 0.5)) {
+                entry.info.faceAngle = Angle::fromSi(*angle);
+            }
+        }
         edges.push_back(std::move(entry));
     }
     return edges;
@@ -99,14 +105,14 @@ std::vector<const KernelEdge*> matchingEdges(const std::vector<KernelEdge>& edge
     return matches;
 }
 
-Result<Direction3D> outwardNormalAt(const TopoDS_Face& face, const TopoDS_Edge& edge) {
+Result<Direction3D> outwardNormalAt(const TopoDS_Face& face, const TopoDS_Edge& edge, double fraction) {
     double first = 0.0;
     double last = 0.0;
     const occ::handle<Geom2d_Curve> pcurve = BRep_Tool::CurveOnSurface(edge, face, first, last);
     if (pcurve.IsNull()) {
         return makeError(ErrorCode::Internal, "the edge has no curve on its face");
     }
-    const gp_Pnt2d uv = pcurve->Value(0.5 * (first + last));
+    const gp_Pnt2d uv = pcurve->Value(first + fraction * (last - first));
     const BRepAdaptor_Surface surface(face);
     BRepLProp_SLProps properties(surface, uv.X(), uv.Y(), 1, Precision::Confusion());
     if (!properties.IsNormalDefined()) {
@@ -117,6 +123,35 @@ Result<Direction3D> outwardNormalAt(const TopoDS_Face& face, const TopoDS_Edge& 
         normal.Reverse();
     }
     return direction(normal);
+}
+
+Result<double> faceAngleAt(const KernelEdge& edge, double fraction) {
+    if (edge.faces.size() != 2) {
+        return makeError(ErrorCode::FailedPrecondition, "the edge does not lie between two faces");
+    }
+    auto a = outwardNormalAt(edge.faces[0], edge.edge, fraction);
+    auto b = outwardNormalAt(edge.faces[1], edge.edge, fraction);
+    if (!a || !b) {
+        return std::unexpected((!a ? a : b).error());
+    }
+    // atan2 of |a x b| and a.b stays accurate near 0, unlike acos(a.b).
+    const double cx = a->y() * b->z() - a->z() * b->y();
+    const double cy = a->z() * b->x() - a->x() * b->z();
+    const double cz = a->x() * b->y() - a->y() * b->x();
+    return std::atan2(std::sqrt(cx * cx + cy * cy + cz * cz), a->dot(*b));
+}
+
+Result<double> largestFaceAngle(const KernelEdge& edge) {
+    constexpr int kIntervals = 16;
+    double largest = 0.0;
+    for (int i = 1; i < kIntervals; ++i) {
+        auto angle = faceAngleAt(edge, static_cast<double>(i) / kIntervals);
+        if (!angle) {
+            return angle;
+        }
+        largest = std::max(largest, *angle);
+    }
+    return largest;
 }
 
 } // namespace occt

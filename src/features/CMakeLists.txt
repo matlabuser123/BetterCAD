@@ -14,6 +14,8 @@ bettercad_add_library(bettercad_features
         chamfer/ChamferRegeneration.cpp
         extrude/ExtrudeFeature.cpp
         extrude/ExtrudeRegeneration.cpp
+        fillet/FilletFeature.cpp
+        fillet/FilletRegeneration.cpp
         profile/Profiles.cpp
         revolve/RevolveFeature.cpp
         revolve/RevolveRegeneration.cpp

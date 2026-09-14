@@ -9,6 +9,7 @@
 #include <bettercad/core/math/Point.hpp>
 #include <bettercad/features/ChamferFeature.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
+#include <bettercad/features/FilletFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
 #include <bettercad/sketch/Sketch.hpp>
 
@@ -50,5 +51,10 @@ revolveFromJson(const Json& data, std::string name, std::string_view path);
 [[nodiscard]] Json chamferToJson(const features::ChamferFeature& feature);
 [[nodiscard]] Result<std::unique_ptr<features::ChamferFeature>>
 chamferFromJson(const Json& data, std::string name, std::string_view path);
+
+/// The radius in metres; edge references as for chamfers.
+[[nodiscard]] Json filletToJson(const features::FilletFeature& feature);
+[[nodiscard]] Result<std::unique_ptr<features::FilletFeature>>
+filletFromJson(const Json& data, std::string name, std::string_view path);
 
 } // namespace bettercad::io::detail

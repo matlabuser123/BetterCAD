@@ -1,11 +1,12 @@
 // Prints geometry-kernel results next to analytic solutions for primitive
-// solids, boolean operations, solids of revolution and chamfers. The relative
-// errors in the output are the basis for the tolerances used by
+// solids, boolean operations, solids of revolution, chamfers and fillets. The
+// relative errors in the output are the basis for the tolerances used by
 // tests/core/geometry.
 #include <bettercad/core/Units.hpp>
 #include <bettercad/core/geometry/Booleans.hpp>
 #include <bettercad/core/geometry/Chamfer.hpp>
 #include <bettercad/core/geometry/Edges.hpp>
+#include <bettercad/core/geometry/Fillet.hpp>
 #include <bettercad/core/geometry/Kernel.hpp>
 #include <bettercad/core/geometry/Primitives.hpp>
 #include <bettercad/core/geometry/Profile.hpp>
@@ -161,5 +162,49 @@ int main() {
     const auto rim = circleSignature(Point3D{0_mm, 0_mm, 40_mm}, Direction3D::unitZ(), 15_mm);
     report("chamfer cylinder rim d=2", chamferEdges(*rod, {.edges = {*rim}, .distance = 2_mm}),
            pi * 225.0 * 40.0 - pi * 4.0 * (15.0 - 2.0 / 3.0), 0.0);
+
+    std::printf("\nConstant-radius fillets (same box and cylinder)\n");
+    // A fillet of radius r takes r^2 (1 - pi/4) out of a square corner per
+    // unit length; that area's centroid lies r (10 - 3 pi) / (3 (4 - pi))
+    // from the corner along either face.
+    const auto corner = [&](double r) { return r * r * (1.0 - pi / 4.0); };
+    const auto centroid = [&](double r) { return r * (10.0 - 3.0 * pi) / (3.0 * (4.0 - pi)); };
+    const EdgeSignature frontLeft = lineSignature(Point3D{0_mm, 0_mm, 0_mm}, Direction3D::unitZ());
+    const auto fillet = [&](std::vector<EdgeSignature> edges, Length r) {
+        return filletEdges(*box, {.edges = std::move(edges), .radius = r});
+    };
+    // One edge: the top and front faces lose r x L, the end faces a corner
+    // area each, and the quarter cylinder adds (pi r / 2) L.
+    report("fillet 1 edge r=5 (L=100)", fillet({topFront}, 5_mm), 100000.0 - 100.0 * corner(5),
+           16000.0 - 1000.0 - 2.0 * corner(5) + pi * 5.0 / 2.0 * 100.0);
+    report("fillet 1 edge r=0.5 (L=100)", fillet({topFront}, 0.5_mm), 100000.0 - 100.0 * corner(0.5),
+           16000.0 - 100.0 - 2.0 * corner(0.5) + pi * 0.5 / 2.0 * 100.0);
+    report("fillet 2 separate edges r=5", fillet({topFront, bottomBack}, 5_mm), 100000.0 - 200.0 * corner(5), 0.0);
+    // Two edges at a vertex: the union of the two corner regions, which
+    // overlap in r^3 (5/3 - pi/2).
+    report("fillet 2 adjacent edges r=5", fillet({topFront, topLeft}, 5_mm),
+           100000.0 - corner(5) * 150.0 + 125.0 * (5.0 / 3.0 - pi / 2.0), 0.0);
+    // Three edges at a vertex: a spherical corner; the corner cube keeps an
+    // eighth of a ball.
+    report("fillet 3 edges at a vertex r=5", fillet({topFront, topLeft, frontLeft}, 5_mm),
+           100000.0 - corner(5) * (170.0 - 15.0) - 125.0 * (1.0 - pi / 6.0), 0.0);
+    // The inner edge of an L (50 x 50 less a 30 x 30 corner, 20 high) is
+    // concave: the fillet adds the corner area.
+    PlanarRegion l{.plane = Frame3D::xy(), .outer = {}, .holes = {}};
+    const std::pair<double, double> lCorners[] = {{0, 0}, {50, 0}, {50, 20}, {20, 20}, {20, 50}, {0, 50}};
+    for (std::size_t i = 0; i < 6; ++i) {
+        const auto& [x0, y0] = lCorners[i];
+        const auto& [x1, y1] = lCorners[(i + 1) % 6];
+        l.outer.segments.emplace_back(LineSegment2D{Point2D{x0 * units::mm, y0 * units::mm},
+                                                    Point2D{x1 * units::mm, y1 * units::mm}});
+    }
+    const auto lPrism = makePrism(l, 0_mm, 20_mm);
+    const EdgeSignature inner = lineSignature(Point3D{20_mm, 20_mm, 0_mm}, Direction3D::unitZ());
+    report("fillet concave L edge r=5", filletEdges(*lPrism, {.edges = {inner}, .radius = 5_mm}),
+           32000.0 + corner(5) * 20.0, 0.0);
+    // The top rim of the cylinder: by Pappus, V = V0 - 2 pi (R - centroid) A.
+    report("fillet cylinder rim r=2", filletEdges(*rod, {.edges = {*rim}, .radius = 2_mm}),
+           pi * 225.0 * 40.0 - 2.0 * pi * (15.0 - centroid(2)) * corner(2),
+           2.0 * pi * 15.0 * 38.0 + pi * 225.0 + pi * 13.0 * 13.0 + pi * 2.0 / 2.0 * 2.0 * pi * (13.0 + 4.0 / pi));
     return 0;
 }

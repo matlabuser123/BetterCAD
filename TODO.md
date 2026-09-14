@@ -143,21 +143,58 @@ Release v0.1.0 (commit `2da8966`, tag `v0.1.0`) is P0–P10.
 **Known limitation:** edge references are geometric (the edge's supporting
 line or circle), not semantic topology naming, which stays under "Later".
 
+#### P11-FEAT-003 — Fillet — [evidence](docs/verification/P11-FEAT-003/README.md)
+
+- [x] Fillet feature definition
+- [x] Edge references (P11-FEAT-002 geometric signatures, reused)
+- [x] Constant-radius fillet
+- [x] Single-edge fillet
+- [x] Multiple-edge fillet
+- [x] Adjacent-edge behavior (two- and three-edge corners)
+- [x] Tangent-chain fillet
+- [x] Concave-edge fillet
+- [x] Fillet of extruded and revolved bodies
+- [x] Geometry validity checks
+- [x] Radius/preflight validation
+- [x] Parameter-driven regeneration
+- [x] Topology-change diagnostics
+- [x] Save/load round-trip
+- [x] Undo/redo regression
+- [x] STEP/STL export regression
+- [x] Analytic volume validation
+- [x] Failure diagnostics
+- [x] Evidence under `docs/verification/P11-FEAT-003/`
+
+**Acceptance (met):**
+
+- A single-edge fillet of a 100 × 50 × 20 mm block matches
+  V0 − L r²(1 − π/4).
+- Independent, adjacent (two- and three-edge corners), chained, concave and
+  revolved-rim fillets match closed-form volumes.
+- Changing upstream dimensions or the radius regenerates the fillet. Edges
+  that move or split fail with structured diagnostics, never with a
+  substituted edge.
+- Radii that do not fit are refused before the kernel, which crashes on
+  them in this toolchain.
+- Save → destroy → load → regenerate reproduces the definitions, stable IDs
+  and geometry.
+- Existing P0–P11-FEAT-002 regression suite remains green.
+
+**Not implemented:** variable-radius fillets and setback/corner-transition
+controls. **Known limitation:** edge references are geometric, as for
+Chamfer.
+
 ## Current
 
 ### P11 — Production Part Modeling
 
-#### P11-FEAT-003 — Fillet ← NEXT
+#### P11-FEAT-004 — Hole feature ← NEXT
 
 - [ ] Not started.
 
 ## Next
 
 ### P11 — Production Part Modeling (remaining)
-
-#### P11-FEAT-004 — Hole feature
-
-- [ ] Not started.
 
 #### P11-FEAT-005 — Linear pattern
 
