@@ -8,6 +8,7 @@
 #include <bettercad/core/geometry/Hole.hpp>
 #include <bettercad/core/geometry/Primitives.hpp>
 #include <bettercad/core/geometry/Transform.hpp>
+#include <bettercad/core/math/RigidTransform.hpp>
 #include <bettercad/core/math/Vector.hpp>
 
 #include <catch2/catch_test_macros.hpp>
@@ -131,6 +132,72 @@ TEST_CASE("Transform_TranslatedReferencesDescribeTheMovedGeometry", "[geometry][
         REQUIRE(block.has_value());
         CHECK(errorCode(cutHole(*block, translated(drill, mm(80, 0, 0)))) == ErrorCode::FailedPrecondition);
         CHECK(errorCode(cutHole(*block, up)) == ErrorCode::NotFound);
+    }
+}
+
+TEST_CASE("Transform_RotatedBodyMovesExactly", "[geometry][transform]") {
+    // The cube [45, 55] x [-5, 5] x [0, 10] turned 90° about Z: [-5, 5] x [45, 55] x [0, 10].
+    const auto cube = makeBox(Point3D{45_mm, -5_mm, 0_mm}, 10_mm, 10_mm, 10_mm);
+    REQUIRE(cube.has_value());
+    const auto turn = RigidTransform3D::rotation(Axis3D{Point3D{}, Direction3D::unitZ()}, 90_deg);
+    const auto turned = transformed(*cube, turn);
+    REQUIRE(turned.has_value());
+    CHECK(turned->isValid());
+    CHECK(turned->topology() == cube->topology());
+    const auto box = turned->boundingBox().value();
+    checkPoint(box.min, -5, 45, 0);
+    checkPoint(box.max, 5, 55, 10);
+    const MassProperties properties = requireProperties(*turned);
+    CHECK_THAT(properties.volume.in(units::mm3), WithinRel(1000.0, kRelTight));
+    checkPoint(properties.centerOfMass, 0, 50, 5);
+    CHECK(facesOn(*turned, planeSignature(Point3D{0_mm, 45_mm, 0_mm}, Direction3D::unitY().reversed())) == 1);
+    CHECK(facesOn(*turned, planeSignature(Point3D{0_mm, 55_mm, 0_mm}, Direction3D::unitY())) == 1);
+    // A pure translation takes the translation path, bit for bit.
+    const auto shifted = transformed(*cube, RigidTransform3D::translation(mm(20, 0, 0)));
+    const auto direct = translated(*cube, mm(20, 0, 0));
+    REQUIRE(shifted.has_value());
+    REQUIRE(direct.has_value());
+    CHECK(shifted->boundingBox().value() == direct->boundingBox().value());
+    CHECK(requireProperties(*shifted).volume.si() == requireProperties(*direct).volume.si());
+    CHECK(errorCode(transformed(Body{}, turn)) == ErrorCode::FailedPrecondition);
+}
+
+TEST_CASE("Transform_RotatedReferencesDescribeTheMovedGeometry", "[geometry][transform]") {
+    const auto turn = RigidTransform3D::rotation(Axis3D{Point3D{}, Direction3D::unitZ()}, 90_deg);
+    SECTION("edges") {
+        // A circle about Z at (40, 0, 10) turns to (0, 40, 10), axis still Z.
+        const auto rim = circleSignature(Point3D{40_mm, 0_mm, 10_mm}, Direction3D::unitZ(), 5_mm);
+        REQUIRE(rim.has_value());
+        const EdgeSignature moved = transformed(*rim, turn);
+        CHECK(moved.curve == EdgeCurve::Circle);
+        checkPoint(moved.point, 0, 40, 10);
+        CHECK_THAT(moved.direction.z(), WithinAbs(1.0, 1e-15));
+        CHECK(moved.radius == 5_mm);
+        // A line along X through (0, 5, 0) turns to a line along Y through (-5, 0, 0).
+        const EdgeSignature line = transformed(lineSignature(Point3D{0_mm, 5_mm, 0_mm}, Direction3D::unitX()), turn);
+        checkPoint(line.point, -5, 0, 0);
+        CHECK_THAT(std::abs(line.direction.y()), WithinAbs(1.0, 1e-15));
+    }
+    SECTION("faces") {
+        // A plane perpendicular to the axis keeps its reference; a side plane turns.
+        const FaceSignature top = planeSignature(Point3D{0_mm, 0_mm, 10_mm}, Direction3D::unitZ());
+        const FaceSignature turnedTop = transformed(top, turn);
+        checkPoint(turnedTop.point, 0, 0, 10);
+        CHECK_THAT(turnedTop.normal.z(), WithinAbs(1.0, 1e-15));
+        const FaceSignature side = transformed(planeSignature(Point3D{55_mm, 0_mm, 0_mm}, Direction3D::unitX()), turn);
+        checkPoint(side.point, 0, 55, 0);
+        CHECK_THAT(side.normal.y(), WithinAbs(1.0, 1e-15));
+    }
+    SECTION("holes") {
+        const HoleRequest bolt{.face = planeSignature(Point3D{}, Direction3D::unitZ().reversed()),
+                               .center = Point2D{40_mm, 0_mm},
+                               .diameter = 10_mm};
+        const auto sixty = RigidTransform3D::rotation(Axis3D{Point3D{}, Direction3D::unitZ()}, 60_deg);
+        const HoleRequest moved = transformed(bolt, sixty);
+        CHECK(moved.face == bolt.face);
+        CHECK_THAT(moved.center.x.in(units::mm), WithinAbs(20.0, kPositionToleranceMm));
+        CHECK_THAT(moved.center.y.in(units::mm), WithinAbs(40.0 * std::sqrt(3.0) / 2.0, kPositionToleranceMm));
+        CHECK(moved.diameter == bolt.diameter);
     }
 }
 

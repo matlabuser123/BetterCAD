@@ -1,6 +1,7 @@
 #include <bettercad/core/document/DependencyGraph.hpp>
 #include <bettercad/core/units/Format.hpp>
 #include <bettercad/features/ChamferFeature.hpp>
+#include <bettercad/features/CircularPatternFeature.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/features/FilletFeature.hpp>
 #include <bettercad/features/HoleFeature.hpp>
@@ -174,6 +175,16 @@ private:
                 if (definition.second) {
                     checkDirection(*definition.second, "direction 2");
                 }
+            } else if (const auto* circular = dynamic_cast<const CircularPatternFeature*>(&object)) {
+                const CircularPatternDefinition& definition = circular->definition();
+                if (definition.countParameter) {
+                    checkParameter(object.id(), *definition.countParameter, dimensions::dimensionless,
+                                   "the count is driven by");
+                }
+                if (definition.angleParameter) {
+                    checkParameter(object.id(), *definition.angleParameter, dimensions::angle,
+                                   "the angle is driven by");
+                }
             }
             if (const auto* feature = dynamic_cast<const SolidFeature*>(&object)) {
                 checkTarget(*feature);
@@ -204,7 +215,8 @@ private:
         const ObjectId id{*target};
         if (id != feature.id() && document_.contains(id) && document_.findObjectAs<SolidFeature>(id) == nullptr) {
             // A pattern's consumed feature is its source.
-            const bool pattern = dynamic_cast<const LinearPatternFeature*>(&feature) != nullptr;
+            const bool pattern = dynamic_cast<const LinearPatternFeature*>(&feature) != nullptr ||
+                                 dynamic_cast<const CircularPatternFeature*>(&feature) != nullptr;
             wrongKind(feature.id(), pattern ? "the source is" : "the target is", id, kindOf(document_, id),
                       "a feature with a body");
         }

@@ -1,0 +1,12 @@
+Circular pattern timing, 2026-09-15 08:31:47
+Source: docs/verification/P11-FEAT-006/performance/circular_pattern_timing.cpp
+Built with: c++.exe (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r4) 16.1.0, -O2, against build/release of the qualified tree (OCCT 8.0.1)
+CPU: AMD Ryzen 7 5800H with Radeon Graphics; single-threaded kernel calls (booleans run with SetRunParallel(false)).
+Each line: one full regeneration of a fresh document, wall-clock, with the result checked against the analytic volume.
+
+holes  N=  10  regenerate    0.602 s  solids    1  valid 1  V=18271.906420 expected 18271.906420 (rel err 4.0e-16)
+holes  N=  50  regenerate   10.993 s  solids    1  valid 1  V=237948.104577 expected 237948.104577 (rel err 1.6e-15)
+holes  N= 100  regenerate   45.018 s  solids    1  valid 1  V=870641.974231 expected 870641.974231 (rel err 6.0e-15)
+cubes  N=  10  regenerate    0.178 s  solids   10  valid 1  V=1250.000000 expected 1250.000000 (rel err 1.8e-16)
+cubes  N=  50  regenerate    3.184 s  solids   50  valid 1  V=6250.000000 expected 6250.000000 (rel err 2.5e-15)
+cubes  N= 100  regenerate   12.277 s  solids  100  valid 1  V=12500.000000 expected 12500.000000 (rel err 5.1e-15)

@@ -132,6 +132,15 @@ FaceSignature translated(const FaceSignature& signature, const Translation3D& tr
     return moved;
 }
 
+FaceSignature transformed(const FaceSignature& signature, const RigidTransform3D& motion) {
+    if (motion.isTranslation()) {
+        return translated(signature, motion.translationPart());
+    }
+    FaceSignature moved = planeSignature(motion.apply(signature.point), motion.apply(signature.normal));
+    moved.surface = signature.surface;
+    return moved;
+}
+
 Result<void> validate(const FaceSignature& signature) {
     if (signature.surface != FaceSurface::Plane) {
         return makeError(ErrorCode::InvalidArgument,

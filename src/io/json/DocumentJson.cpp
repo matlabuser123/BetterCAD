@@ -29,6 +29,8 @@ Result<Json> objectToJson(const DocumentObject& object) {
         data = detail::holeToJson(*hole);
     } else if (const auto* pattern = dynamic_cast<const features::LinearPatternFeature*>(&object)) {
         data = detail::linearPatternToJson(*pattern);
+    } else if (const auto* circular = dynamic_cast<const features::CircularPatternFeature*>(&object)) {
+        data = detail::circularPatternToJson(*circular);
     } else {
         return makeError(ErrorCode::InvalidArgument,
                          std::format("objects of type '{}' cannot be saved", object.typeName()));
@@ -100,6 +102,13 @@ Result<std::unique_ptr<DocumentObject>> objectFromJson(const Json& value, std::s
             return std::unexpected(pattern.error());
         }
         return std::unique_ptr<DocumentObject>(std::move(*pattern));
+    }
+    if (*type == features::CircularPatternFeature::kTypeName) {
+        auto circular = detail::circularPatternFromJson(**data, std::move(*name), dataPath);
+        if (!circular) {
+            return std::unexpected(circular.error());
+        }
+        return std::unique_ptr<DocumentObject>(std::move(*circular));
     }
     return detail::parseError(detail::childPath(path, "type"), std::format("unknown object type '{}'", *type));
 }

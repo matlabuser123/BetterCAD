@@ -5,6 +5,7 @@
 #include <bettercad/core/geometry/Body.hpp>
 #include <bettercad/core/math/Direction.hpp>
 #include <bettercad/features/ChamferFeature.hpp>
+#include <bettercad/features/CircularPatternFeature.hpp>
 #include <bettercad/features/Export.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/features/FilletFeature.hpp>
@@ -130,5 +131,21 @@ resolvePatternInstances(const LinearPatternDefinition& definition, const Documen
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::Body>
 regenerateLinearPattern(const LinearPatternFeature& feature, const Document& document,
                         const geometry::Body* target);
+
+/// The instances of a circular pattern, in order, with the driven count and
+/// angle taken from their parameters and checked as the definition's literal
+/// values are (a whole count from 1 to kMaxPatternInstances; an angle that
+/// never reaches 360°).
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<std::vector<CircularPatternInstance>>
+resolveCircularPatternInstances(const CircularPatternDefinition& definition, const Document& document);
+
+/// Computes the body of a circular pattern exactly as a linear pattern's
+/// (regenerateLinearPattern()), with each instance turned about the axis
+/// instead of moved: the source's operation is repeated at every instance
+/// with the same checks, the first failure fails the pattern ("instance 4 at
+/// 180 deg: …"), and patterns of patterns are refused.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::Body>
+regenerateCircularPattern(const CircularPatternFeature& feature, const Document& document,
+                          const geometry::Body* target);
 
 } // namespace bettercad::features

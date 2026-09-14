@@ -1,7 +1,7 @@
 // Prints geometry-kernel results next to analytic solutions for primitive
 // solids, boolean operations, solids of revolution, chamfers, fillets, holes
-// and translated copies. The relative errors in the output are the basis for
-// the tolerances used by tests/core/geometry.
+// and translated and rotated copies. The relative errors in the output are
+// the basis for the tolerances used by tests/core/geometry.
 #include <bettercad/core/Units.hpp>
 #include <bettercad/core/geometry/Booleans.hpp>
 #include <bettercad/core/geometry/Chamfer.hpp>
@@ -294,5 +294,54 @@ int main() {
     }
     report("5 through holes 20 mm apart", drilled, 120000.0 - 5.0 * pi * 25.0 * 20.0,
            18800.0 + 5.0 * (2.0 * pi * 5.0 * 20.0 - 2.0 * pi * 25.0));
+
+    std::printf("\nRotated copies (circular patterns: instance i turned by i x 360/N deg about an axis)\n");
+    const auto ring = [](const Body& first, const Axis3D& axis, int count) -> Result<Body> {
+        Body result = first;
+        for (int i = 1; i < count; ++i) {
+            auto copy = transformed(first, RigidTransform3D::rotation(
+                                               axis, 360_deg * (static_cast<double>(i) / static_cast<double>(count))));
+            if (!copy) {
+                return copy;
+            }
+            auto united = booleanUnion(result, *copy);
+            if (!united) {
+                return united;
+            }
+            result = *united;
+        }
+        return result;
+    };
+    const Axis3D zAxis{Point3D{}, Direction3D::unitZ()};
+    const auto offAxis = makeBox(Point3D{45_mm, -5_mm, 0_mm}, 10_mm, 10_mm, 10_mm);
+    // A rigid motion keeps volume and area: a cube turned about a skew axis.
+    report("cube 10 mm turned 137 deg about (1,1,1)",
+           transformed(*cube, RigidTransform3D::rotation(
+                                  Axis3D{Point3D{5_mm, -2_mm, 1_mm}, *Direction3D::fromComponents(1.0, 1.0, 1.0)},
+                                  137_deg)),
+           1000.0, 600.0);
+    // Disjoint: count x V; touching (a half turn about x = 45): one 20 x 10 x 10
+    // bar; overlapping (a half turn about (50, 2.5)): 10 x 15 x 10.
+    report("4 cubes at (50, 0) about Z", ring(*offAxis, zAxis, 4), 4000.0, 2400.0);
+    report("2 cubes, half turn (touching)", ring(*offAxis, Axis3D{Point3D{45_mm, 0_mm, 0_mm}}, 2), 2000.0, 1000.0);
+    report("2 cubes, half turn (overlap)", ring(*offAxis, Axis3D{Point3D{50_mm, 2.5_mm, 0_mm}}, 2), 1500.0, 800.0);
+    // 36 cubes 10 deg apart: the band between regular 36-gons of apothems 45
+    // and 55 (n a^2 tan(pi/n) each) plus 72 corner tips, right triangles with
+    // legs 5 - 55 tan 5 deg and 55 - (55 - 5 sin 10 deg) / cos 10 deg.
+    const double tipY = 5.0 - 55.0 * std::tan(pi / 36.0);
+    const double tipX = 55.0 - (55.0 - 5.0 * std::sin(pi / 18.0)) / std::cos(pi / 18.0);
+    report("36 cubes 10 deg apart (overlap)", ring(*offAxis, zAxis, 36),
+           10.0 * (36.0 * std::tan(pi / 36.0) * (55.0 * 55.0 - 45.0 * 45.0) + 36.0 * tipX * tipY), 0.0);
+    // A bolt circle: the disc R = 60, H = 10 less six turned cylinders r = 5
+    // on radius 40: V = pi H (R^2 - 6 r^2); A = 2 pi R^2 + 2 pi R H - 12 pi
+    // r^2 + 6 (2 pi r H).
+    const auto flange = makeCylinder(60_mm, 10_mm);
+    const auto bolt = makeCylinder(Axis3D{Point3D{40_mm, 0_mm, -1_mm}}, 5_mm, 12_mm);
+    Result<Body> bolted = *flange;
+    for (int i = 0; i < 6 && bolted; ++i) {
+        auto moved = transformed(*bolt, RigidTransform3D::rotation(zAxis, 60_deg * static_cast<double>(i)));
+        bolted = moved ? booleanDifference(*bolted, *moved) : moved;
+    }
+    report("6 through holes on a 40 mm circle", bolted, 34500.0 * pi, 8700.0 * pi);
     return 0;
 }

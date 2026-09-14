@@ -11,7 +11,7 @@ underneath, hidden behind adapters.
             └───────┬──────────────────────┘
                     io              native .bcad, STEP/STL export
                     │
-                 features           extrude, revolve, chamfer, fillet, hole, linear pattern (later: ...)
+                 features           extrude, revolve, chamfer, fillet, hole, linear and circular patterns (later: ...)
                     │
                   sketch            entities, constraints, solver
                     │
@@ -140,6 +140,12 @@ milestones start; see `TODO.md`.
   user gives it before it is normalized. `Translation3D` is a displacement in
   lengths. `Translation3D::along(direction, distance)` is one product per
   component, so a pattern offset k·s·d is computed exactly once per instance.
+- `RigidTransform3D` (`RigidTransform.hpp`) is a rotation matrix plus a
+  translation, applied as p' = R·p + t. `RigidTransform3D::rotation(axis,
+  angle)` builds R with Rodrigues' formula from the angle's own sine and
+  cosine, and t = o − R·o, so the axis stays fixed. A pure translation keeps
+  an exactly identity matrix (`isTranslation()`), and applying it is
+  bit-identical to adding the translation.
 
 ### Geometry (`bettercad/core/geometry/`, library `bettercad_geometry`)
 
@@ -311,18 +317,22 @@ milestones start; see `TODO.md`.
   The preflight is for these guarantees, not for crash avoidance: a
   kernel probe of degenerate holes found no crashes
   (`docs/verification/P11-FEAT-004/`).
-- **Translation** (`Transform.hpp`). `translated(body, translation)` returns
-  a moved copy with its own geometry (`BRepBuilderAPI_Transform`, copying);
-  the input is never modified. References move with their own
-  `translated()` functions:
-  - an `EdgeSignature` gives the moved line or circle;
+- **Translation and rotation** (`Transform.hpp`). `translated(body,
+  translation)` and `transformed(body, motion)` return a moved copy with its
+  own geometry (`BRepBuilderAPI_Transform`, copying); the input is never
+  modified. `transformed()` hands the kernel BetterCAD's own matrix
+  (`gp_Trsf::SetValues`), so the kernel does not recompute the rotation, and
+  a pure translation takes the `translated()` path exactly. References move
+  with their own `translated()` and `transformed()` functions:
+  - an `EdgeSignature` gives the moved line or circle (a circle's axis turns
+    with it);
   - a `FaceSignature` gives the moved plane, unchanged by a move within the
     plane;
-  - a `HoleRequest` gets the moved face and centre.
+  - a `HoleRequest` gets the moved face and centre (the centre is moved in
+    3D and re-expressed in the moved face's coordinates).
 
   Each is the exact moved geometry, never a search for similar entities.
-  Rotations and reflections come with the circular pattern and mirror
-  milestones.
+  Reflections come with the mirror milestone.
 
 ### Sketches (`bettercad/sketch/`, library `bettercad_sketch`)
 
@@ -442,6 +452,41 @@ milestones start; see `TODO.md`.
   offset in the message ("instance 5 at (100, 0, 0) mm: hole: …"). The
   pattern then keeps no body; partial patterns are never produced. Patterns
   of patterns are refused (a second direction makes grids).
+- **Circular pattern** (`CircularPatternFeature.hpp`) repeats another
+  feature's operation around an axis. A `CircularPatternDefinition` holds:
+  - the source feature, which the pattern consumes (its `target()`);
+  - the axis: an origin and a direction as given (any finite, non-zero
+    vector, normalized when used);
+  - a count, which includes the source and may be driven by a
+    dimensionless parameter holding a whole number;
+  - the spacing: `FullCircle` (360°/count apart, no angle), `IncludedAngle`
+    (the source to the last instance, angle/(count − 1) apart) or
+    `AngleStep` (angle apart), the angle literal or driven by an angle
+    parameter;
+  - the direction: `Positive` (right-handed about the axis) or `Negative`.
+
+  Instance i is the source turned by i·step, computed from the source for
+  every instance (`circularPatternInstances()`), never by adding to the
+  previous one. A full circle never has an instance at 360°, which would be
+  the source again; for the same reason an included angle or the span
+  (count − 1)·step of an angle step must stay below 360° (to within
+  1e-9 rad). Angles are not normalized: 400° is refused, not taken as 40°.
+  The count shares the linear pattern's limit (`kMaxPatternInstances`).
+
+  Regeneration (`regenerateCircularPattern()`) works as for linear
+  patterns, with a rotation in place of the offset, and its first failure
+  names the instance and its angle ("instance 3 at 90 deg: hole: …"). A
+  source that the axis passes through turns onto itself: new-body instances
+  coincide and fuse into the source, and a hole is refused by the hole's own
+  placement check (the second instance would be drilled into the first).
+  Circular patterns of patterns, and linear patterns of circular ones, are
+  refused.
+- **Pattern support** (`src/features/pattern/PatternSupport.hpp`, private).
+  Both patterns share one subsystem: the per-instance operation of each
+  source kind (`instanceOperation()`), the build loop that applies it
+  instance by instance with atomic failure (`buildPattern()`), the count
+  resolution and the circular angle rules. Each pattern only computes its
+  placements (`RigidTransform3D`s) and their labels.
 - Bodies are derived: regeneration computes them from the current document.
   Regenerating does not change the document's revision or dirty state.
 - `extractRegions()` turns a sketch into `geometry::PlanarRegion`s. It
@@ -470,7 +515,8 @@ milestones start; see `TODO.md`.
   1. document consistency (references point at the right kind of item and
      dimension, e.g. revolve axes are lines, revolve angles are angles, and
      chamfer distances, fillet radii and hole dimensions and centres are
-     lengths; pattern counts are dimensionless and spacings lengths);
+     lengths; pattern counts are dimensionless, spacings lengths and
+     circular pattern angles angles);
   2. missing references (including revolve axis lines in their sketches);
   3. dependency cycles;
   4. sketch constraints (each sketch solves with its driving parameters;
@@ -520,7 +566,13 @@ milestones start; see `TODO.md`.
   - a linear pattern stores `source` and `first` (plus `second` for a grid).
     Each direction is `{"direction": [x, y, z], "count": n, "spacing":
     metres}`, with optional `count_parameter` and `spacing_parameter`. The
-    vector is stored as given, not normalized.
+    vector is stored as given, not normalized;
+  - a circular pattern stores `source`; `axis` as `{"origin": [...],
+    "direction": [x, y, z]}` (the direction as given); `count` with an
+    optional `count_parameter`; `spacing` (`"full_circle"`,
+    `"included_angle"`, `"angle_step"`); and `rotation` (`"positive"`,
+    `"negative"`). Only the angle spacings store `angle` (radians) and an
+    optional `angle_parameter`.
 
   The rules are:
   - **Only inputs are stored.** Geometry is derived and is regenerated after

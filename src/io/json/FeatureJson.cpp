@@ -714,4 +714,104 @@ Result<std::unique_ptr<features::LinearPatternFeature>> linearPatternFromJson(co
     return std::move(*feature);
 }
 
+namespace {
+
+using features::CircularSpacing;
+using features::RotationDirection;
+
+constexpr std::array<std::pair<CircularSpacing, std::string_view>, 3> kCircularSpacings{{
+    {CircularSpacing::FullCircle, "full_circle"},
+    {CircularSpacing::IncludedAngle, "included_angle"},
+    {CircularSpacing::AngleStep, "angle_step"},
+}};
+
+constexpr std::array<std::pair<RotationDirection, std::string_view>, 2> kRotationDirections{{
+    {RotationDirection::Positive, "positive"},
+    {RotationDirection::Negative, "negative"},
+}};
+
+} // namespace
+
+Json circularPatternToJson(const features::CircularPatternFeature& feature) {
+    const features::CircularPatternDefinition& d = feature.definition();
+    Json json = Json::object();
+    json["source"] = d.source.value();
+    Json axis = Json::object();
+    axis["origin"] = pointToJson(d.axis.origin);
+    axis["direction"] = Json::array({d.axis.direction.x, d.axis.direction.y, d.axis.direction.z});
+    json["axis"] = std::move(axis);
+    json["count"] = d.count;
+    if (d.countParameter) {
+        json["count_parameter"] = d.countParameter->value();
+    }
+    json["spacing"] = std::string{nameOf(kCircularSpacings, d.spacing)};
+    // A full circle has no angle (the definition's invariant).
+    if (d.spacing != CircularSpacing::FullCircle) {
+        json["angle"] = d.angle.si();
+        if (d.angleParameter) {
+            json["angle_parameter"] = d.angleParameter->value();
+        }
+    }
+    json["rotation"] = std::string{nameOf(kRotationDirections, d.direction)};
+    return json;
+}
+
+Result<std::unique_ptr<features::CircularPatternFeature>> circularPatternFromJson(const Json& data, std::string name,
+                                                                                  std::string_view path) {
+    if (auto object = requireObject(data, path,
+                                    {"source", "axis", "count", "count_parameter", "spacing", "angle",
+                                     "angle_parameter", "rotation"});
+        !object) {
+        return std::unexpected(object.error());
+    }
+    auto source = readId(data, "source", path);
+    auto axisField = requireField(data, "axis", path);
+    if (!source || !axisField) {
+        return std::unexpected(!source ? source.error() : axisField.error());
+    }
+    const std::string axisPath = childPath(path, "axis");
+    if (auto object = requireObject(**axisField, axisPath, {"origin", "direction"}); !object) {
+        return std::unexpected(object.error());
+    }
+    auto origin = pointFromJson(**axisField, "origin", axisPath);
+    auto direction = readNumbers(**axisField, "direction", axisPath, 3);
+    auto count = readUnsigned(data, "count", path);
+    auto countParameter = readOptionalId(data, "count_parameter", path);
+    auto spacing = valueOf(kCircularSpacings, data, "spacing", path);
+    auto angle = readNumberOrZero(data, "angle", path);
+    auto angleParameter = readOptionalId(data, "angle_parameter", path);
+    auto rotation = valueOf(kRotationDirections, data, "rotation", path);
+    for (const Error* error :
+         {!origin ? &origin.error() : nullptr, !direction ? &direction.error() : nullptr,
+          !count ? &count.error() : nullptr, !countParameter ? &countParameter.error() : nullptr,
+          !spacing ? &spacing.error() : nullptr, !angle ? &angle.error() : nullptr,
+          !angleParameter ? &angleParameter.error() : nullptr, !rotation ? &rotation.error() : nullptr}) {
+        if (error != nullptr) {
+            return std::unexpected(*error);
+        }
+    }
+    if (*count > std::numeric_limits<std::uint32_t>::max()) {
+        return parseError(childPath(path, "count"),
+                          std::format("expected at most {}", std::numeric_limits<std::uint32_t>::max()));
+    }
+    const auto optionalParameter = [](const std::optional<std::uint64_t>& id) -> std::optional<ParameterId> {
+        return id ? std::optional<ParameterId>{ParameterId::fromValue(*id)} : std::nullopt;
+    };
+    const features::CircularPatternDefinition definition{
+        .source = FeatureId::fromValue(*source),
+        .axis = {.origin = *origin, .direction = Vector3D{(*direction)[0], (*direction)[1], (*direction)[2]}},
+        .count = static_cast<std::uint32_t>(*count),
+        .countParameter = optionalParameter(*countParameter),
+        .spacing = *spacing,
+        .angle = Angle::fromSi(*angle),
+        .angleParameter = optionalParameter(*angleParameter),
+        .direction = *rotation,
+    };
+    auto feature = features::CircularPatternFeature::create(std::move(name), definition);
+    if (!feature) {
+        return atPath(path, feature.error());
+    }
+    return std::move(*feature);
+}
+
 } // namespace bettercad::io::detail

@@ -270,21 +270,65 @@ are geometric (a face's plane and side), not semantic topology naming.
 patterns of patterns. **Known limitation:** building time grows with the
 square of the count (at most 500 instances); references stay geometric.
 
+#### P11-FEAT-006 — Circular pattern — [evidence](docs/verification/P11-FEAT-006/README.md)
+
+- [x] Circular Pattern feature definition
+- [x] Stable source feature/body reference
+- [x] Axis representation (explicit origin and direction, any 3D axis)
+- [x] Instance count
+- [x] Full-circle equal-spacing pattern
+- [x] Partial-angle pattern (included angle; also an explicit angle step)
+- [x] Positive/negative direction
+- [x] Deterministic instance rotation
+- [x] Body pattern
+- [x] Additive feature pattern
+- [x] Subtractive/Hole pattern
+- [x] Geometry validity checks
+- [x] Parameter-driven regeneration
+- [x] Atomic failure diagnostics
+- [x] Save/load round-trip
+- [x] Undo/redo regression
+- [x] STEP/STL export regression
+- [x] Analytic/geometric validation
+- [x] Failure diagnostics
+- [x] Evidence under `docs/verification/P11-FEAT-006/`
+
+**Acceptance (met):**
+
+- The count includes the source. Instance i is the source turned by θ_i,
+  computed afresh for every instance: 2πi/N for a full circle (never 360°),
+  iα/(N − 1) over an included angle, iα for an angle step. With 100
+  instances, θ₉₉ = 356.4° to 3.4e-14°.
+- Six 10 mm holes on a 40 mm bolt circle in a 60 × 10 mm flange give 34500π
+  mm³ (2.7e-16 relative), each at 40·(cos 60i°, sin 60i°). Cubes, bosses,
+  pockets, chamfered and filleted rims, a revolve, and pegs about X, Y, Z
+  and (1, 1, 1) match closed-form volumes and positions.
+- Changing the source, the count, the angle, the direction or the axis
+  regenerates every instance; through holes stay through.
+- An instance that fails fails the whole pattern, naming the instance and
+  its angle; no partial pattern is kept.
+- Save → destroy → load → regenerate reproduces the definition, the source's
+  ID and the geometry bit for bit.
+- Linear and circular patterns share one pattern subsystem. The existing
+  P0–P11-FEAT-005 regression suite remains green.
+
+**Not implemented:** symmetric patterns, suppressed instances, patterns of
+patterns, and axis references to sketch lines, edges or datum axes (the axis
+is explicit model coordinates). **Known limitation:** building time grows
+with the square of the count (at most 500 instances); references stay
+geometric.
+
 ## Current
 
 ### P11 — Production Part Modeling
 
-#### P11-FEAT-006 — Circular pattern ← NEXT
+#### P11-FEAT-007 — Mirror ← NEXT
 
 - [ ] Not started.
 
 ## Next
 
 ### P11 — Production Part Modeling (remaining)
-
-#### P11-FEAT-007 — Mirror
-
-- [ ] Not started.
 
 #### P11-FEAT-008 — Sweep
 

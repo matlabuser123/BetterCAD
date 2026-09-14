@@ -116,6 +116,19 @@ EdgeSignature translated(const EdgeSignature& signature, const Translation3D& tr
     return moved;
 }
 
+EdgeSignature transformed(const EdgeSignature& signature, const RigidTransform3D& motion) {
+    if (motion.isTranslation()) {
+        return translated(signature, motion.translationPart());
+    }
+    if (signature.curve == EdgeCurve::Line) {
+        return lineSignature(motion.apply(signature.point), motion.apply(signature.direction));
+    }
+    EdgeSignature moved = signature;
+    moved.point = motion.apply(signature.point);
+    moved.direction = canonical(motion.apply(signature.direction));
+    return moved;
+}
+
 Result<EdgeSignature> circleSignature(const Point3D& center, const Direction3D& axis, Length radius) {
     EdgeSignature signature{
         .curve = EdgeCurve::Circle, .point = center, .direction = canonical(axis), .radius = radius};

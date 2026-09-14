@@ -8,6 +8,7 @@
 #include <bettercad/core/math/Frame.hpp>
 #include <bettercad/core/math/Point.hpp>
 #include <bettercad/features/ChamferFeature.hpp>
+#include <bettercad/features/CircularPatternFeature.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/features/FilletFeature.hpp>
 #include <bettercad/features/HoleFeature.hpp>
@@ -73,5 +74,14 @@ holeFromJson(const Json& data, std::string name, std::string_view path);
 [[nodiscard]] Json linearPatternToJson(const features::LinearPatternFeature& feature);
 [[nodiscard]] Result<std::unique_ptr<features::LinearPatternFeature>>
 linearPatternFromJson(const Json& data, std::string name, std::string_view path);
+
+/// The source's ID; the axis as {"origin": [...] (metres), "direction":
+/// [x, y, z] (as given)}; "count" and an optional "count_parameter";
+/// "spacing": "full_circle" | "included_angle" | "angle_step", with "angle"
+/// (radians) and an optional "angle_parameter" for the last two only; and
+/// "rotation": "positive" | "negative".
+[[nodiscard]] Json circularPatternToJson(const features::CircularPatternFeature& feature);
+[[nodiscard]] Result<std::unique_ptr<features::CircularPatternFeature>>
+circularPatternFromJson(const Json& data, std::string name, std::string_view path);
 
 } // namespace bettercad::io::detail

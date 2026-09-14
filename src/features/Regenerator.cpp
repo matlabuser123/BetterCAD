@@ -93,6 +93,8 @@ Regenerator::Regenerator() {
     registerHandler(std::string{HoleFeature::kTypeName}, regenerateSolidFeature<HoleFeature, &regenerateHole>);
     registerHandler(std::string{LinearPatternFeature::kTypeName},
                     regenerateSolidFeature<LinearPatternFeature, &regenerateLinearPattern>);
+    registerHandler(std::string{CircularPatternFeature::kTypeName},
+                    regenerateSolidFeature<CircularPatternFeature, &regenerateCircularPattern>);
 }
 
 void Regenerator::registerHandler(std::string typeName, RegenerationHandler handler) {

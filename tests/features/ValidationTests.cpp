@@ -30,6 +30,7 @@ using namespace bettercad::features;
 using namespace bettercad::literals;
 using namespace bettercad::sketch;
 using bettercad::test::addRectangle;
+using bettercad::test::BoltCircleModel;
 using bettercad::test::BracketModel;
 using bettercad::test::ChamferBlockModel;
 using bettercad::test::FilletBlockModel;
@@ -558,6 +559,61 @@ TEST_CASE("LinearPattern_ModelsAreValidatedLikeAnyOther", "[validation][pattern]
         CHECK_THAT(regeneration[0].message,
                    StartsWith("Holes (object:10) failed to regenerate: Holes: linear pattern: instance 5 at "
                               "(100, 0, 0) mm: hole: the hole does not fit on its face"));
+        CHECK_FALSE(report.valid());
+        CHECK(report.bodies.empty());
+    }
+}
+
+TEST_CASE("CircularPattern_ModelsAreValidatedLikeAnyOther", "[validation][pattern][circular]") {
+    BoltCircleModel m;
+
+    SECTION("a sound model: the pattern is the one valid result body") {
+        const ValidationReport report = validateDocument(m.doc);
+        INFO(describe(report));
+        CHECK(report.valid());
+        CHECK(report.issues.empty());
+        CHECK(report.regenerated == 4);
+        REQUIRE(report.bodies.size() == 1);
+        CHECK(report.bodies[0].feature == m.bolts);
+        CHECK(report.bodies[0].valid);
+        CHECK(report.bodies[0].topology.solids == 1);
+        CHECK_THAT(report.bodies[0].properties->volume.in(units::mm3),
+                   WithinRel(BoltCircleModel::expectedVolume(60, 10, 10, 6), 1e-12));
+    }
+    SECTION("a count driven by a length and an angle driven by a number") {
+        CircularPatternDefinition d = m.definitionOf(m.bolts);
+        d.countParameter = m.radius;
+        d.spacing = CircularSpacing::IncludedAngle;
+        d.angleParameter = m.count;
+        m.setDefinition(m.bolts, d);
+        const ValidationReport report = validateDocument(m.doc);
+        const auto issues = issuesOf(report, ValidationCheck::DocumentConsistency);
+        REQUIRE(issues.size() == 2);
+        CHECK(issues[0].message == "Bolts (object:8): the count is driven by radius (object:1), which is a length, "
+                                   "not dimensionless");
+        CHECK(issues[1].message == "Bolts (object:8): the angle is driven by count (object:4), which is "
+                                   "dimensionless, not an angle");
+        CHECK(issuesOf(report, ValidationCheck::FeatureRegeneration).empty()); // reported once
+    }
+    SECTION("a source that is a sketch") {
+        CircularPatternDefinition d = m.definitionOf(m.bolts);
+        d.source = BoltCircleModel::featureId(m.disc);
+        m.setDefinition(m.bolts, d);
+        const auto issues = issuesOf(validateDocument(m.doc), ValidationCheck::DocumentConsistency);
+        REQUIRE(issues.size() == 1);
+        CHECK(issues[0].message ==
+              "Bolts (object:8): the source is Disc (object:5), which is a sketch, not a feature with a body");
+    }
+    SECTION("an instance that does not fit") {
+        REQUIRE(m.doc.setParameterValue(m.count, 40.0, kUnitless).has_value());
+        const ValidationReport report = validateDocument(m.doc);
+        INFO(describe(report));
+        const auto regeneration = issuesOf(report, ValidationCheck::FeatureRegeneration);
+        REQUIRE(regeneration.size() == 1);
+        CHECK(regeneration[0].item == m.bolts);
+        CHECK_THAT(regeneration[0].message,
+                   StartsWith("Bolts (object:8) failed to regenerate: Bolts: circular pattern: instance 1 at 9 deg: "
+                              "hole: the hole does not fit on its face"));
         CHECK_FALSE(report.valid());
         CHECK(report.bodies.empty());
     }

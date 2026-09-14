@@ -42,12 +42,14 @@ bettercad_add_executable(bettercad_tests
         core/geometry/RevolutionTests.cpp
         core/geometry/TransformTests.cpp
         core/math/FrameTests.cpp
+        core/math/RigidTransformTests.cpp
         core/parameters/ParameterTableTests.cpp
         core/parameters/ParameterTests.cpp
         core/units/ConversionTests.cpp
         core/units/FormatAndCatalogTests.cpp
         core/units/QuantityTests.cpp
         features/ChamferFeatureTests.cpp
+        features/CircularPatternFeatureTests.cpp
         features/ExtrudeTests.cpp
         features/FeatureTestSupport.hpp
         features/FilletFeatureTests.cpp
@@ -59,6 +61,7 @@ bettercad_add_executable(bettercad_tests
         features/RevolveTests.cpp
         features/ValidationTests.cpp
         io/ChamferFileTests.cpp
+        io/CircularPatternFileTests.cpp
         io/DocumentFileTests.cpp
         io/ExampleModelTests.cpp
         io/FilletFileTests.cpp

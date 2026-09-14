@@ -5,6 +5,7 @@
 #include <bettercad/core/geometry/Export.hpp>
 #include <bettercad/core/math/Direction.hpp>
 #include <bettercad/core/math/Point.hpp>
+#include <bettercad/core/math/RigidTransform.hpp>
 #include <bettercad/core/math/Vector.hpp>
 #include <bettercad/core/units/Units.hpp>
 
@@ -75,6 +76,11 @@ struct FaceSignature {
 /// plane gives the same signature.
 [[nodiscard]] BETTERCAD_GEOMETRY_EXPORT FaceSignature translated(const FaceSignature& signature,
                                                                  const Translation3D& translation);
+
+/// The signature of the same plane moved by @p motion, facing the moved
+/// way, in canonical form. A pure translation is translated() exactly.
+[[nodiscard]] BETTERCAD_GEOMETRY_EXPORT FaceSignature transformed(const FaceSignature& signature,
+                                                                  const RigidTransform3D& motion);
 
 /// For messages, e.g. "plane through (0, 0, 20) mm facing (0, 0, 1)".
 [[nodiscard]] BETTERCAD_GEOMETRY_EXPORT std::string describe(const FaceSignature& signature);

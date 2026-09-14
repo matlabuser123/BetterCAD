@@ -69,6 +69,14 @@ struct HoleRequest {
 [[nodiscard]] BETTERCAD_GEOMETRY_EXPORT HoleRequest translated(const HoleRequest& request,
                                                                const Translation3D& translation);
 
+/// The same hole moved by @p motion: its face reference moves with it, and
+/// its centre is the moved centre in the moved plane's coordinates. A
+/// rotation about an axis perpendicular to the face keeps the face
+/// reference and turns only the centre. A pure translation is translated()
+/// exactly.
+[[nodiscard]] BETTERCAD_GEOMETRY_EXPORT HoleRequest transformed(const HoleRequest& request,
+                                                                const RigidTransform3D& motion);
+
 /// Checks everything that does not depend on a body. Fails with
 /// InvalidArgument for a non-planar or non-finite face reference, a
 /// non-finite centre, a diameter or depth that is not positive and finite,

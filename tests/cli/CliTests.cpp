@@ -472,6 +472,56 @@ TEST_CASE("info and validate describe linear patterns", "[cli][pattern]") {
     CHECK_THAT(broken.out, EndsWith("Result: invalid (1 error)\n"));
 }
 
+TEST_CASE("info and validate describe circular patterns", "[cli][pattern][circular]") {
+    TempDir dir;
+    test::BoltCircleModel model;
+    const auto path = dir.path() / "bolts.bcad";
+    REQUIRE(io::saveDocument(model.doc, path).has_value());
+
+    const auto info = runCli({"info", arg(path)});
+    CHECK(info.exitCode == ExitCode::Success);
+    CHECK_THAT(info.out, ContainsSubstring("\n  object:8  circular_pattern  Bolts   source Bolt, count around the axis "
+                                           "through (0, 0, 0) mm along (0, 0, 1), full circle\n"));
+
+    // V = pi 60^2 10 - 6 pi 5^2 10 = 34500 pi = 108384.947 mm^3.
+    const auto validate = runCli({"validate", arg(path)});
+    CHECK(validate.exitCode == ExitCode::Success);
+    CHECK_THAT(validate.out, ContainsSubstring("geometry              ok, 1 result body\n"
+                                               "Result bodies (1):\n"
+                                               "  Bolts (object:8): 1 solid, volume 108384.947 mm^3, area "));
+    CHECK_THAT(validate.out, EndsWith("bounds (-60, -60, 0) to (60, 60, 10) mm\nResult: valid\n"));
+
+    // A driven included angle, the other way round, about a moved axis.
+    const ParameterId span = model.doc.createParameter("span", 90_deg, units::deg).value();
+    features::CircularPatternDefinition d = model.definitionOf(model.bolts);
+    d.axis.origin = Point3D{5_mm, 0_mm, 0_mm};
+    d.spacing = features::CircularSpacing::IncludedAngle;
+    d.angleParameter = span;
+    d.direction = features::RotationDirection::Negative;
+    model.setDefinition(model.bolts, d);
+    REQUIRE(io::saveDocument(model.doc, path).has_value());
+    const auto driven = runCli({"info", arg(path)});
+    CHECK_THAT(driven.out, ContainsSubstring("source Bolt, count around the axis through (5, 0, 0) mm along (0, 0, 1), "
+                                             "span included, negative\n"));
+    d.angleParameter.reset();
+    d.spacing = features::CircularSpacing::AngleStep;
+    d.angle = 30_deg;
+    model.setDefinition(model.bolts, d);
+    REQUIRE(io::saveDocument(model.doc, path).has_value());
+    CHECK_THAT(runCli({"info", arg(path)}).out, ContainsSubstring(", 30 deg apart, negative\n"));
+
+    // Forty holes on the bolt circle would overlap: the document is invalid,
+    // with the reason.
+    test::BoltCircleModel crowded;
+    REQUIRE(crowded.doc.setParameterValue(crowded.count, 40.0, kUnitless).has_value());
+    REQUIRE(io::saveDocument(crowded.doc, path).has_value());
+    const auto broken = runCli({"validate", arg(path)});
+    CHECK(broken.exitCode == ExitCode::Failure);
+    CHECK_THAT(broken.out, ContainsSubstring("    error: Bolts (object:8) failed to regenerate: Bolts: circular "
+                                             "pattern: instance 1 at 9 deg: hole: the hole does not fit on its face"));
+    CHECK_THAT(broken.out, EndsWith("Result: invalid (1 error)\n"));
+}
+
 TEST_CASE("Exports of a document without bodies fail", "[cli][export]") {
     TempDir dir;
     const auto input = dir.path() / "empty.bcad";

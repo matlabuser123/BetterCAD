@@ -54,6 +54,17 @@ HoleRequest translated(const HoleRequest& request, const Translation3D& translat
     return moved;
 }
 
+HoleRequest transformed(const HoleRequest& request, const RigidTransform3D& motion) {
+    if (motion.isTranslation()) {
+        return translated(request, motion.translationPart());
+    }
+    const Point3D centre = motion.apply(facePoint(request.face, request.center));
+    HoleRequest moved = request;
+    moved.face = transformed(request.face, motion);
+    moved.center = faceCoordinates(moved.face, centre);
+    return moved;
+}
+
 Result<void> validate(const HoleRequest& request) {
     if (auto face = validate(request.face); !face) {
         return makeError(ErrorCode::InvalidArgument, std::format("placement face: {}", face.error().message));

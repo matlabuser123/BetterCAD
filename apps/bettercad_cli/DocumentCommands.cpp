@@ -2,6 +2,7 @@
 
 #include <bettercad/core/document/Document.hpp>
 #include <bettercad/features/ChamferFeature.hpp>
+#include <bettercad/features/CircularPatternFeature.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/features/FilletFeature.hpp>
 #include <bettercad/features/HoleFeature.hpp>
@@ -132,6 +133,38 @@ std::string describePatternDirection(const Document& document, const features::P
                        tidy(d.direction.y), tidy(d.direction.z));
 }
 
+/// "source Bolt, 6 around the axis through (0, 0, 0) mm along (0, 0, 1),
+/// full circle", or "..., 90 deg included" / "..., 30 deg apart", and
+/// ", negative" for the other direction; driven values show their
+/// parameter's name.
+std::string describeCircularPattern(const Document& document, const features::CircularPatternDefinition& d) {
+    const auto tidy = [](double value) { return value == 0.0 ? 0.0 : value; };
+    const std::string count =
+        d.countParameter ? nameOrId(document, ObjectId{*d.countParameter}) : std::format("{}", d.count);
+    const Point3D& o = d.axis.origin;
+    std::string text = std::format(
+        "source {}, {} around the axis through ({:.6g}, {:.6g}, {:.6g}) mm along ({:.6g}, {:.6g}, {:.6g}), ",
+        nameOrId(document, ObjectId{d.source}), count, tidy(o.x.in(units::mm)), tidy(o.y.in(units::mm)),
+        tidy(o.z.in(units::mm)), tidy(d.axis.direction.x), tidy(d.axis.direction.y), tidy(d.axis.direction.z));
+    const std::string angle = d.angleParameter ? nameOrId(document, ObjectId{*d.angleParameter})
+                                               : std::format("{:.10g} deg", d.angle.in(units::deg));
+    switch (d.spacing) {
+    case features::CircularSpacing::FullCircle:
+        text += "full circle";
+        break;
+    case features::CircularSpacing::IncludedAngle:
+        text += std::format("{} included", angle);
+        break;
+    case features::CircularSpacing::AngleStep:
+        text += std::format("{} apart", angle);
+        break;
+    }
+    if (d.direction == features::RotationDirection::Negative) {
+        text += ", negative";
+    }
+    return text;
+}
+
 std::string describeObject(const Document& document, const DocumentObject& object) {
     if (const auto* sketch = dynamic_cast<const sketch::Sketch*>(&object)) {
         const auto disabled = std::ranges::count_if(sketch->constraints(),
@@ -189,6 +222,9 @@ std::string describeObject(const Document& document, const DocumentObject& objec
             text += std::format(" by {}", describePatternDirection(document, *d.second));
         }
         return text;
+    }
+    if (const auto* circular = dynamic_cast<const features::CircularPatternFeature*>(&object)) {
+        return describeCircularPattern(document, circular->definition());
     }
     return {};
 }
