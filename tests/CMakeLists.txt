@@ -40,6 +40,7 @@ bettercad_add_executable(bettercad_tests
         core/geometry/PrimitiveTests.cpp
         core/geometry/PropertyTests.cpp
         core/geometry/RevolutionTests.cpp
+        core/geometry/TransformTests.cpp
         core/math/FrameTests.cpp
         core/parameters/ParameterTableTests.cpp
         core/parameters/ParameterTests.cpp
@@ -51,6 +52,7 @@ bettercad_add_executable(bettercad_tests
         features/FeatureTestSupport.hpp
         features/FilletFeatureTests.cpp
         features/HoleFeatureTests.cpp
+        features/LinearPatternFeatureTests.cpp
         features/ProfileTests.cpp
         features/RegenerationTests.cpp
         features/RegeneratorTests.cpp
@@ -61,6 +63,7 @@ bettercad_add_executable(bettercad_tests
         io/ExampleModelTests.cpp
         io/FilletFileTests.cpp
         io/HoleFileTests.cpp
+        io/LinearPatternFileTests.cpp
         io/ParameterJsonTests.cpp
         io/RevolveFileTests.cpp
         io/StepExportTests.cpp
@@ -75,6 +78,7 @@ bettercad_add_executable(bettercad_tests
         support/FilletModels.hpp
         support/HoleModels.hpp
         support/MeshAnalysis.hpp
+        support/PatternModels.hpp
         support/TestFiles.hpp
         support/TurnedPartModel.hpp
     LINK

@@ -11,6 +11,7 @@
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/features/FilletFeature.hpp>
 #include <bettercad/features/HoleFeature.hpp>
+#include <bettercad/features/LinearPatternFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
 #include <bettercad/sketch/Sketch.hpp>
 
@@ -64,5 +65,13 @@ filletFromJson(const Json& data, std::string name, std::string_view path);
 [[nodiscard]] Json holeToJson(const features::HoleFeature& feature);
 [[nodiscard]] Result<std::unique_ptr<features::HoleFeature>>
 holeFromJson(const Json& data, std::string name, std::string_view path);
+
+/// The source's ID; each direction as {"direction": [x, y, z] (as given, not
+/// normalized), "count": n, "count_parameter": id, "spacing": metres,
+/// "spacing_parameter": id}, parameters only when set; "second" only for a
+/// grid.
+[[nodiscard]] Json linearPatternToJson(const features::LinearPatternFeature& feature);
+[[nodiscard]] Result<std::unique_ptr<features::LinearPatternFeature>>
+linearPatternFromJson(const Json& data, std::string name, std::string_view path);
 
 } // namespace bettercad::io::detail

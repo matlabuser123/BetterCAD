@@ -61,6 +61,14 @@ struct HoleRequest {
 /// Depth of a countersink cone: (D - d) / 2 / tan(angle / 2).
 [[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Length countersinkDepth(const HoleRequest& request);
 
+/// The same hole moved by @p translation (which must be finite): its face
+/// reference moves with it, and its centre is the moved centre in the moved
+/// plane's coordinates. A translation within the face's plane keeps the
+/// face reference and moves only the centre. Whether the moved hole fits is
+/// decided by cutHole(), as for any hole.
+[[nodiscard]] BETTERCAD_GEOMETRY_EXPORT HoleRequest translated(const HoleRequest& request,
+                                                               const Translation3D& translation);
+
 /// Checks everything that does not depend on a body. Fails with
 /// InvalidArgument for a non-planar or non-finite face reference, a
 /// non-finite centre, a diameter or depth that is not positive and finite,

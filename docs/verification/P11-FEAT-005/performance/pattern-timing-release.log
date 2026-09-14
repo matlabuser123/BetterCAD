@@ -1,0 +1,14 @@
+Linear pattern timing, 2026-09-15 06:41:29
+Source: docs/verification/P11-FEAT-005/performance/pattern_timing.cpp
+Built with: c++.exe (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r4) 16.1.0, -O2, against build/release of the qualified tree (OCCT 8.0.1)
+CPU: AMD Ryzen 7 5800H with Radeon Graphics; single-threaded kernel calls (booleans run with SetRunParallel(false)).
+Each line: one full regeneration of a fresh document, wall-clock, with the result checked against the analytic volume.
+
+holes  N=  10  regenerate    0.628 s  solids    1  valid 1  V=52172.566612 expected 52172.566612 (rel err 2.8e-16)
+holes  N=  50  regenerate    9.028 s  solids    1  valid 1  V=240862.833059 expected 240862.833059 (rel err 7.2e-16)
+holes  N= 100  regenerate   33.471 s  solids    1  valid 1  V=476725.666118 expected 476725.666118 (rel err 4.3e-15)
+holes  N= 200  regenerate  178.550 s  solids    1  valid 1  V=948451.332235 expected 948451.332235 (rel err 3.7e-16)
+cubes  N=  10  regenerate    0.217 s  solids   10  valid 1  V=1250.000000 expected 1250.000000 (rel err 0.0e+00)
+cubes  N=  50  regenerate    3.110 s  solids   50  valid 1  V=6250.000000 expected 6250.000000 (rel err 3.1e-15)
+cubes  N= 100  regenerate   12.448 s  solids  100  valid 1  V=12500.000000 expected 12500.000000 (rel err 6.3e-15)
+cubes  N= 200  regenerate   50.164 s  solids  200  valid 1  V=25000.000000 expected 25000.000000 (rel err 1.2e-14)

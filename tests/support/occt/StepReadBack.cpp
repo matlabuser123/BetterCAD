@@ -1,7 +1,9 @@
 #include "support/occt/StepReadBack.hpp"
 
+#include <BRepBndLib.hxx>
 #include <BRepCheck_Analyzer.hxx>
 #include <BRepGProp.hxx>
+#include <Bnd_Box.hxx>
 #include <GProp_GProps.hxx>
 #include <IFSelect_ReturnStatus.hxx>
 #include <Message.hxx>
@@ -46,6 +48,12 @@ std::optional<StepContents> readStepFile(const std::filesystem::path& path) {
         contents.volumeMm3 = volume.Mass();
         contents.areaMm2 = area.Mass();
         contents.valid = BRepCheck_Analyzer(shape).IsValid();
+        Bnd_Box box;
+        BRepBndLib::AddOptimal(shape, box, /*useTriangulation=*/false, /*useShapeTolerance=*/false);
+        if (!box.IsVoid()) {
+            box.Get(contents.minMm[0], contents.minMm[1], contents.minMm[2], contents.maxMm[0], contents.maxMm[1],
+                    contents.maxMm[2]);
+        }
         return contents;
     } catch (const Standard_Failure&) {
         return std::nullopt;

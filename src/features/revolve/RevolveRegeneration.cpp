@@ -60,8 +60,7 @@ Result<Axis3D> resolveAxis(const RevolveAxis& axis, const sketch::Sketch& profil
     return Axis3D{start, *direction};
 }
 
-Result<geometry::Body> regenerateRevolve(const RevolveFeature& feature, const Document& document,
-                                         const geometry::Body* target) {
+Result<geometry::Body> revolveTool(const RevolveFeature& feature, const Document& document) {
     const RevolveDefinition& definition = feature.definition();
     const auto prefixed = [&](const Error& error) {
         return makeError(error.code, std::format("{}: {}", feature.name(), error.message));
@@ -98,7 +97,16 @@ Result<geometry::Body> regenerateRevolve(const RevolveFeature& feature, const Do
     if (!solid) {
         return prefixed(solid.error());
     }
-    return combineWithTarget(definition.operation, *solid, target, feature.name());
+    return solid;
+}
+
+Result<geometry::Body> regenerateRevolve(const RevolveFeature& feature, const Document& document,
+                                         const geometry::Body* target) {
+    auto tool = revolveTool(feature, document);
+    if (!tool) {
+        return std::unexpected(tool.error());
+    }
+    return combineWithTarget(feature.definition().operation, *tool, target, feature.name());
 }
 
 } // namespace bettercad::features

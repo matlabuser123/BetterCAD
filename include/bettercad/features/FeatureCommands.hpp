@@ -9,6 +9,7 @@
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/features/FilletFeature.hpp>
 #include <bettercad/features/HoleFeature.hpp>
+#include <bettercad/features/LinearPatternFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
 
 #include <format>
@@ -134,5 +135,7 @@ using CreateFilletCommand = CreateFeatureCommand<FilletFeature>;
 using ModifyFilletCommand = ModifyFeatureCommand<FilletFeature>;
 using CreateHoleCommand = CreateFeatureCommand<HoleFeature>;
 using ModifyHoleCommand = ModifyFeatureCommand<HoleFeature>;
+using CreateLinearPatternCommand = CreateFeatureCommand<LinearPatternFeature>;
+using ModifyLinearPatternCommand = ModifyFeatureCommand<LinearPatternFeature>;
 
 } // namespace bettercad::features

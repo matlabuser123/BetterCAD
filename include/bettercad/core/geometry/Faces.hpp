@@ -5,6 +5,7 @@
 #include <bettercad/core/geometry/Export.hpp>
 #include <bettercad/core/math/Direction.hpp>
 #include <bettercad/core/math/Point.hpp>
+#include <bettercad/core/math/Vector.hpp>
 #include <bettercad/core/units/Units.hpp>
 
 #include <optional>
@@ -68,6 +69,12 @@ struct FaceSignature {
 /// Checks a signature from any source (e.g. a file): a plane through a
 /// finite point. Fails with InvalidArgument otherwise.
 [[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Result<void> validate(const FaceSignature& signature);
+
+/// The signature of the same plane moved by @p translation (which must be
+/// finite), facing the same way, in canonical form. A translation within the
+/// plane gives the same signature.
+[[nodiscard]] BETTERCAD_GEOMETRY_EXPORT FaceSignature translated(const FaceSignature& signature,
+                                                                 const Translation3D& translation);
 
 /// For messages, e.g. "plane through (0, 0, 20) mm facing (0, 0, 1)".
 [[nodiscard]] BETTERCAD_GEOMETRY_EXPORT std::string describe(const FaceSignature& signature);

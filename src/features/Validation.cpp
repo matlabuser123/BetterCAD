@@ -4,6 +4,7 @@
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/features/FilletFeature.hpp>
 #include <bettercad/features/HoleFeature.hpp>
+#include <bettercad/features/LinearPatternFeature.hpp>
 #include <bettercad/features/Regenerator.hpp>
 #include <bettercad/features/ResultBodies.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
@@ -157,6 +158,22 @@ private:
                         checkParameter(object.id(), **parameter, dimensions::length, reference);
                     }
                 }
+            } else if (const auto* pattern = dynamic_cast<const LinearPatternFeature*>(&object)) {
+                const LinearPatternDefinition& definition = pattern->definition();
+                const auto checkDirection = [&](const PatternDirection& direction, std::string_view label) {
+                    if (direction.countParameter) {
+                        checkParameter(object.id(), *direction.countParameter, dimensions::dimensionless,
+                                       std::format("{}'s count is driven by", label));
+                    }
+                    if (direction.spacingParameter) {
+                        checkParameter(object.id(), *direction.spacingParameter, dimensions::length,
+                                       std::format("{}'s spacing is driven by", label));
+                    }
+                };
+                checkDirection(definition.first, "direction 1");
+                if (definition.second) {
+                    checkDirection(*definition.second, "direction 2");
+                }
             }
             if (const auto* feature = dynamic_cast<const SolidFeature*>(&object)) {
                 checkTarget(*feature);
@@ -186,7 +203,10 @@ private:
         }
         const ObjectId id{*target};
         if (id != feature.id() && document_.contains(id) && document_.findObjectAs<SolidFeature>(id) == nullptr) {
-            wrongKind(feature.id(), "the target is", id, kindOf(document_, id), "a feature with a body");
+            // A pattern's consumed feature is its source.
+            const bool pattern = dynamic_cast<const LinearPatternFeature*>(&feature) != nullptr;
+            wrongKind(feature.id(), pattern ? "the source is" : "the target is", id, kindOf(document_, id),
+                      "a feature with a body");
         }
     }
 

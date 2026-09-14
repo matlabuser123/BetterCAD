@@ -107,6 +107,15 @@ EdgeSignature lineSignature(const Point3D& point, const Direction3D& direction) 
     return {.curve = EdgeCurve::Line, .point = nearest, .direction = d, .radius = {}};
 }
 
+EdgeSignature translated(const EdgeSignature& signature, const Translation3D& translation) {
+    if (signature.curve == EdgeCurve::Line) {
+        return lineSignature(signature.point + translation, signature.direction);
+    }
+    EdgeSignature moved = signature;
+    moved.point = signature.point + translation;
+    return moved;
+}
+
 Result<EdgeSignature> circleSignature(const Point3D& center, const Direction3D& axis, Length radius) {
     EdgeSignature signature{
         .curve = EdgeCurve::Circle, .point = center, .direction = canonical(axis), .radius = radius};

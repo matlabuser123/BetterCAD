@@ -3,6 +3,7 @@
 #include "support/ChamferBlockModel.hpp"
 #include "support/FilletModels.hpp"
 #include "support/HoleModels.hpp"
+#include "support/PatternModels.hpp"
 #include "support/TurnedPartModel.hpp"
 
 #include <bettercad/core/document/Document.hpp>
@@ -33,9 +34,11 @@ using bettercad::test::BracketModel;
 using bettercad::test::ChamferBlockModel;
 using bettercad::test::FilletBlockModel;
 using bettercad::test::HoleBlockModel;
+using bettercad::test::HoleRowModel;
 using bettercad::test::require;
 using bettercad::test::TurnedPartModel;
 using Catch::Matchers::ContainsSubstring;
+using Catch::Matchers::StartsWith;
 using Catch::Matchers::WithinRel;
 
 namespace {
@@ -501,6 +504,60 @@ TEST_CASE("HoleFeature_ModelsAreValidatedLikeAnyOther", "[validation][hole]") {
         CHECK(regeneration[0].item == m.drill);
         CHECK(regeneration[0].message == "Drill (object:9) failed to regenerate: Drill: hole: the placement face "
                                          "(plane through (0, 0, 20) mm facing (0, 0, 1)) matches no face of the body");
+        CHECK_FALSE(report.valid());
+        CHECK(report.bodies.empty());
+    }
+}
+
+TEST_CASE("LinearPattern_ModelsAreValidatedLikeAnyOther", "[validation][pattern]") {
+    HoleRowModel m;
+
+    SECTION("a sound model: the pattern is the one valid result body") {
+        const ValidationReport report = validateDocument(m.doc);
+        INFO(describe(report));
+        CHECK(report.valid());
+        CHECK(report.issues.empty());
+        CHECK(report.regenerated == 4);
+        REQUIRE(report.bodies.size() == 1);
+        CHECK(report.bodies[0].feature == m.holes);
+        CHECK(report.bodies[0].valid);
+        CHECK(report.bodies[0].topology.solids == 1);
+        CHECK_THAT(report.bodies[0].properties->volume.in(units::mm3),
+                   WithinRel(HoleRowModel::expectedVolume(120, 20, 10, 5), 1e-12));
+    }
+    SECTION("a count driven by a length and a spacing driven by a number") {
+        LinearPatternDefinition d = m.patternOf(m.holes);
+        d.first.countParameter = m.width;
+        d.first.spacingParameter = m.count;
+        m.setPattern(m.holes, d);
+        const ValidationReport report = validateDocument(m.doc);
+        const auto issues = issuesOf(report, ValidationCheck::DocumentConsistency);
+        REQUIRE(issues.size() == 2);
+        CHECK(issues[0].message == "Holes (object:10): direction 1's count is driven by width (object:1), which is a "
+                                   "length, not dimensionless");
+        CHECK(issues[1].message == "Holes (object:10): direction 1's spacing is driven by count (object:7), which is "
+                                   "dimensionless, not a length");
+        CHECK(issuesOf(report, ValidationCheck::FeatureRegeneration).empty()); // reported once
+    }
+    SECTION("a source that is a sketch") {
+        LinearPatternDefinition d = m.patternOf(m.holes);
+        d.source = HoleRowModel::featureId(m.base);
+        m.setPattern(m.holes, d);
+        const auto issues = issuesOf(validateDocument(m.doc), ValidationCheck::DocumentConsistency);
+        REQUIRE(issues.size() == 1);
+        CHECK(issues[0].message ==
+              "Holes (object:10): the source is Base (object:5), which is a sketch, not a feature with a body");
+    }
+    SECTION("an instance that does not fit") {
+        REQUIRE(m.doc.setParameterValue(m.count, 6.0, kUnitless).has_value());
+        const ValidationReport report = validateDocument(m.doc);
+        INFO(describe(report));
+        const auto regeneration = issuesOf(report, ValidationCheck::FeatureRegeneration);
+        REQUIRE(regeneration.size() == 1);
+        CHECK(regeneration[0].item == m.holes);
+        CHECK_THAT(regeneration[0].message,
+                   StartsWith("Holes (object:10) failed to regenerate: Holes: linear pattern: instance 5 at "
+                              "(100, 0, 0) mm: hole: the hole does not fit on its face"));
         CHECK_FALSE(report.valid());
         CHECK(report.bodies.empty());
     }

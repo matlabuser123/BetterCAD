@@ -227,21 +227,60 @@ Chamfer.
 tolerance classes and cosmetic threads. **Known limitation:** face references
 are geometric (a face's plane and side), not semantic topology naming.
 
+#### P11-FEAT-005 — Linear pattern — [evidence](docs/verification/P11-FEAT-005/README.md)
+
+- [x] Linear Pattern feature definition
+- [x] Stable source feature/body reference
+- [x] Direction representation
+- [x] Instance count
+- [x] Instance spacing
+- [x] One-direction pattern
+- [x] Two-direction rectangular pattern
+- [x] Deterministic instance placement
+- [x] Additive feature pattern
+- [x] Subtractive/Hole pattern
+- [x] Geometry validity checks
+- [x] Parameter-driven regeneration
+- [x] Atomic failure diagnostics
+- [x] Save/load round-trip
+- [x] Undo/redo regression
+- [x] STEP/STL export regression
+- [x] Analytic volume validation
+- [x] Failure diagnostics
+- [x] Evidence under `docs/verification/P11-FEAT-005/`
+
+**Acceptance (met):**
+
+- The count includes the source; instance i is the source moved by
+  i · spacing · d̂, computed afresh for every instance (100 instances land
+  exactly on k × s).
+- Four 10 mm cubes 20 mm apart give 4000 mm³ and a 70 mm extent. Five
+  10 mm through holes 20 mm apart in a 120 × 50 × 20 mm block match
+  V0 − 5πr²H. Bosses, pockets, chamfered and filleted rims, a revolve and a
+  grid match closed-form volumes.
+- Changing the source, the count, the spacing or the direction regenerates
+  every instance; through holes stay through.
+- An instance that fails fails the whole pattern, naming the instance; no
+  partial pattern is kept.
+- Save → destroy → load → regenerate reproduces the definition, the source's
+  ID and the geometry.
+- Existing P0–P11-FEAT-004 regression suite remains green.
+
+**Not implemented:** symmetric and total-length modes, suppressed instances,
+patterns of patterns. **Known limitation:** building time grows with the
+square of the count (at most 500 instances); references stay geometric.
+
 ## Current
 
 ### P11 — Production Part Modeling
 
-#### P11-FEAT-005 — Linear pattern ← NEXT
+#### P11-FEAT-006 — Circular pattern ← NEXT
 
 - [ ] Not started.
 
 ## Next
 
 ### P11 — Production Part Modeling (remaining)
-
-#### P11-FEAT-006 — Circular pattern
-
-- [ ] Not started.
 
 #### P11-FEAT-007 — Mirror
 

@@ -5,6 +5,7 @@
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/features/FilletFeature.hpp>
 #include <bettercad/features/HoleFeature.hpp>
+#include <bettercad/features/LinearPatternFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
 #include <bettercad/features/Validation.hpp>
 #include <bettercad/io/DocumentFile.hpp>
@@ -120,6 +121,17 @@ std::string describeHole(const Document& document, const features::HoleDefinitio
     return text;
 }
 
+/// "5 x 20 mm along (1, 0, 0)": the count, the spacing and the direction as
+/// given; driven values show their parameter's name.
+std::string describePatternDirection(const Document& document, const features::PatternDirection& d) {
+    const auto tidy = [](double value) { return value == 0.0 ? 0.0 : value; };
+    const std::string count =
+        d.countParameter ? nameOrId(document, ObjectId{*d.countParameter}) : std::format("{}", d.count);
+    return std::format("{} x {} along ({:.6g}, {:.6g}, {:.6g})", count,
+                       describeLength(document, d.spacing, d.spacingParameter), tidy(d.direction.x),
+                       tidy(d.direction.y), tidy(d.direction.z));
+}
+
 std::string describeObject(const Document& document, const DocumentObject& object) {
     if (const auto* sketch = dynamic_cast<const sketch::Sketch*>(&object)) {
         const auto disabled = std::ranges::count_if(sketch->constraints(),
@@ -168,6 +180,15 @@ std::string describeObject(const Document& document, const DocumentObject& objec
     }
     if (const auto* hole = dynamic_cast<const features::HoleFeature*>(&object)) {
         return describeHole(document, hole->definition());
+    }
+    if (const auto* pattern = dynamic_cast<const features::LinearPatternFeature*>(&object)) {
+        const features::LinearPatternDefinition& d = pattern->definition();
+        std::string text = std::format("source {}, {}", nameOrId(document, ObjectId{d.source}),
+                                       describePatternDirection(document, d.first));
+        if (d.second) {
+            text += std::format(" by {}", describePatternDirection(document, *d.second));
+        }
+        return text;
     }
     return {};
 }

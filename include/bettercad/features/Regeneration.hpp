@@ -9,8 +9,11 @@
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/features/FilletFeature.hpp>
 #include <bettercad/features/HoleFeature.hpp>
+#include <bettercad/features/LinearPatternFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
 #include <bettercad/sketch/Sketch.hpp>
+
+#include <vector>
 
 // Evaluation of individual features from the current document state. The
 // sketch geometry is used as it is; solving sketches first is the job of the
@@ -22,9 +25,13 @@ namespace bettercad::features {
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<Length> resolveDepth(const ExtrudeDefinition& definition,
                                                                    const Document& document);
 
-/// Computes the body of an extrude feature: the profile sketch's closed
-/// regions, extruded by the resolved depth, and combined with @p target for
-/// Join/Cut/Intersect.
+/// The tool solid of an extrude: the profile sketch's closed regions,
+/// extruded by the resolved depth, before it is combined with a target.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::Body> extrudeTool(const ExtrudeFeature& feature,
+                                                                          const Document& document);
+
+/// Computes the body of an extrude feature: its tool (extrudeTool()),
+/// combined with @p target for Join/Cut/Intersect.
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::Body>
 regenerateExtrude(const ExtrudeFeature& feature, const Document& document,
                   const geometry::Body* target = nullptr);
@@ -41,10 +48,15 @@ regenerateExtrude(const ExtrudeFeature& feature, const Document& document,
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<Axis3D> resolveAxis(const RevolveAxis& axis,
                                                                   const sketch::Sketch& profile);
 
-/// Computes the body of a revolve feature: the profile sketch's closed
-/// regions rotated about the resolved axis through the resolved angle in the
-/// chosen direction, combined with @p target for Join/Cut/Intersect.
-/// Profiles that cross the axis fail with InvalidArgument.
+/// The tool solid of a revolve: the profile sketch's closed regions rotated
+/// about the resolved axis through the resolved angle in the chosen
+/// direction, before it is combined with a target. Profiles that cross the
+/// axis fail with InvalidArgument.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::Body> revolveTool(const RevolveFeature& feature,
+                                                                          const Document& document);
+
+/// Computes the body of a revolve feature: its tool (revolveTool()),
+/// combined with @p target for Join/Cut/Intersect.
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::Body>
 regenerateRevolve(const RevolveFeature& feature, const Document& document,
                   const geometry::Body* target = nullptr);
@@ -54,6 +66,10 @@ regenerateRevolve(const RevolveFeature& feature, const Document& document,
 /// literal distance. Its range is checked by the chamfer itself.
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<Length> resolveChamferDistance(const ChamferDefinition& definition,
                                                                              const Document& document);
+
+/// The geometry request of a chamfer, with its distance resolved.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::ChamferRequest>
+resolveChamferRequest(const ChamferDefinition& definition, const Document& document);
 
 /// Computes the body of a chamfer feature: @p target (the target feature's
 /// body) with the referenced edges chamfered. Fails with FailedPrecondition
@@ -88,5 +104,31 @@ resolveHoleRequest(const HoleDefinition& definition, const Document& document);
 /// the centre, are errors, never guesses; see geometry::cutHole().
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::Body>
 regenerateHole(const HoleFeature& feature, const Document& document, const geometry::Body* target);
+
+/// The instances of a linear pattern, in order, with the driven counts and
+/// spacings taken from their parameters: counts must be whole numbers of at
+/// least 1 (DimensionMismatch unless the parameter is dimensionless),
+/// spacings positive lengths, and there may be at most
+/// kMaxPatternInstances instances (InvalidArgument).
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<std::vector<PatternInstance>>
+resolvePatternInstances(const LinearPatternDefinition& definition, const Document& document);
+
+/// Computes the body of a linear pattern: @p target (the source feature's
+/// body, which is instance 0) with the source's operation applied at every
+/// other instance, in order:
+/// - an extrude or revolve's tool is moved and united with the body (new
+///   body and join) or subtracted from it (cut); intersect is not
+///   supported. Instances of a new body that touch or overlap fuse, as the
+///   regions of one extrude do;
+/// - a hole, chamfer or fillet is applied with its face or edge references
+///   moved exactly by the offset, with all of its own checks (a hole must
+///   fit on its face, a moved edge must match exactly one edge).
+///
+/// The first instance that fails fails the pattern, with its index and
+/// offset in the message; there are no partial patterns. Patterns of
+/// patterns are refused.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::Body>
+regenerateLinearPattern(const LinearPatternFeature& feature, const Document& document,
+                        const geometry::Body* target);
 
 } // namespace bettercad::features

@@ -4,6 +4,7 @@
 #include "support/FilletModels.hpp"
 #include "support/HoleModels.hpp"
 #include "support/MeshAnalysis.hpp"
+#include "support/PatternModels.hpp"
 #include "support/TestFiles.hpp"
 #include "support/TurnedPartModel.hpp"
 #include "support/occt/StepReadBack.hpp"
@@ -440,6 +441,35 @@ TEST_CASE("info and validate describe holes", "[cli][hole]") {
                                              "placement face (plane through (0, 0, 20) mm facing (0, 0, 1)) matches no "
                                              "face of the body\n"));
     CHECK_THAT(broken.out, EndsWith("Result: invalid (3 errors)\n"));
+}
+
+TEST_CASE("info and validate describe linear patterns", "[cli][pattern]") {
+    TempDir dir;
+    test::HoleRowModel model;
+    const auto path = dir.path() / "holes.bcad";
+    REQUIRE(io::saveDocument(model.doc, path).has_value());
+
+    const auto info = runCli({"info", arg(path)});
+    CHECK(info.exitCode == ExitCode::Success);
+    CHECK_THAT(info.out, ContainsSubstring("\n  object:10  linear_pattern  Holes  source Drill, count x pitch along "
+                                           "(1, 0, 0)\n"));
+
+    // V = 120 x 50 x 20 - 5 pi 5^2 20 = 112146.018 mm^3.
+    const auto validate = runCli({"validate", arg(path)});
+    CHECK(validate.exitCode == ExitCode::Success);
+    CHECK_THAT(validate.out, ContainsSubstring("geometry              ok, 1 result body\n"
+                                               "Result bodies (1):\n"
+                                               "  Holes (object:10): 1 solid, volume 112146.018 mm^3, area "));
+    CHECK_THAT(validate.out, EndsWith("bounds (0, 0, 0) to (120, 50, 20) mm\nResult: valid\n"));
+
+    // A sixth hole would not fit: the document is invalid, with the reason.
+    REQUIRE(model.doc.setParameterValue(model.count, 6.0, kUnitless).has_value());
+    REQUIRE(io::saveDocument(model.doc, path).has_value());
+    const auto broken = runCli({"validate", arg(path)});
+    CHECK(broken.exitCode == ExitCode::Failure);
+    CHECK_THAT(broken.out, ContainsSubstring("    error: Holes (object:10) failed to regenerate: Holes: linear pattern: "
+                                             "instance 5 at (100, 0, 0) mm: hole: the hole does not fit on its face"));
+    CHECK_THAT(broken.out, EndsWith("Result: invalid (1 error)\n"));
 }
 
 TEST_CASE("Exports of a document without bodies fail", "[cli][export]") {

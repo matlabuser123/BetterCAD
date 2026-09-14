@@ -24,8 +24,7 @@ Result<Length> resolveDepth(const ExtrudeDefinition& definition, const Document&
     return depth;
 }
 
-Result<geometry::Body> regenerateExtrude(const ExtrudeFeature& feature, const Document& document,
-                                         const geometry::Body* target) {
+Result<geometry::Body> extrudeTool(const ExtrudeFeature& feature, const Document& document) {
     const ExtrudeDefinition& definition = feature.definition();
     auto profile = detail::requireProfileSketch(document, definition.profile, feature.name());
     if (!profile) {
@@ -49,12 +48,17 @@ Result<geometry::Body> regenerateExtrude(const ExtrudeFeature& feature, const Do
         from = -*depth / 2.0;
         to = *depth / 2.0;
     }
-    auto solid = detail::uniteRegionSolids(
+    return detail::uniteRegionSolids(
         *regions, [&](const geometry::PlanarRegion& region) { return geometry::makePrism(region, from, to); });
-    if (!solid) {
-        return std::unexpected(solid.error());
+}
+
+Result<geometry::Body> regenerateExtrude(const ExtrudeFeature& feature, const Document& document,
+                                         const geometry::Body* target) {
+    auto tool = extrudeTool(feature, document);
+    if (!tool) {
+        return std::unexpected(tool.error());
     }
-    return combineWithTarget(definition.operation, *solid, target, feature.name());
+    return combineWithTarget(feature.definition().operation, *tool, target, feature.name());
 }
 
 } // namespace bettercad::features

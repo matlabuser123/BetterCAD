@@ -11,7 +11,7 @@ underneath, hidden behind adapters.
             └───────┬──────────────────────┘
                     io              native .bcad, STEP/STL export
                     │
-                 features           extrude, revolve, chamfer, fillet, hole (later: patterns, ...)
+                 features           extrude, revolve, chamfer, fillet, hole, linear pattern (later: ...)
                     │
                   sketch            entities, constraints, solver
                     │
@@ -136,6 +136,10 @@ milestones start; see `TODO.md`.
   sketch module) does not depend on the solid-modelling kernel.
 - `Frame3D` is a right-handed orthonormal frame (Y = normal × X). It is the
   placement of a sketch plane.
+- `Vector3D` (`Vector.hpp`) is a dimensionless vector, e.g. a direction as a
+  user gives it before it is normalized. `Translation3D` is a displacement in
+  lengths. `Translation3D::along(direction, distance)` is one product per
+  component, so a pattern offset k·s·d is computed exactly once per instance.
 
 ### Geometry (`bettercad/core/geometry/`, library `bettercad_geometry`)
 
@@ -307,6 +311,18 @@ milestones start; see `TODO.md`.
   The preflight is for these guarantees, not for crash avoidance: a
   kernel probe of degenerate holes found no crashes
   (`docs/verification/P11-FEAT-004/`).
+- **Translation** (`Transform.hpp`). `translated(body, translation)` returns
+  a moved copy with its own geometry (`BRepBuilderAPI_Transform`, copying);
+  the input is never modified. References move with their own
+  `translated()` functions:
+  - an `EdgeSignature` gives the moved line or circle;
+  - a `FaceSignature` gives the moved plane, unchanged by a move within the
+    plane;
+  - a `HoleRequest` gets the moved face and centre.
+
+  Each is the exact moved geometry, never a search for similar entities.
+  Rotations and reflections come with the circular pattern and mirror
+  milestones.
 
 ### Sketches (`bettercad/sketch/`, library `bettercad_sketch`)
 
@@ -392,6 +408,40 @@ milestones start; see `TODO.md`.
   extrude (its start plane) follows any thickness, and a through hole stays
   through. A hole on a face that moves (the top of a thicker extrude) fails
   with NotFound and keeps no body.
+- **Linear pattern** (`LinearPatternFeature.hpp`) repeats another feature's
+  operation along one direction, or two for a grid. A
+  `LinearPatternDefinition` holds:
+  - the source feature, which the pattern consumes (its `target()`);
+  - for each direction, a vector as given (any finite, non-zero vector,
+    normalized when used), a count and a spacing. The count may be driven by
+    a dimensionless parameter holding a whole number, the spacing by a
+    length parameter.
+
+  The count includes the source, so 1 is the source alone. Instance (i, j)
+  is the source moved by i·s1·d1 + j·s2·d2, computed from the source for
+  every instance, never by adding to the previous one. Instances are
+  numbered i + j·count1, with 0 the source. They are not document objects:
+  an instance is identified by its pattern and index, and
+  `patternInstances()` lists them. There are at most `kMaxPatternInstances`
+  (500), a guard against runaway input: building time grows with the square
+  of the count.
+
+  Regeneration (`regenerateLinearPattern()`) starts from the source's body
+  (instance 0) and applies the source's own operation at every other
+  instance, in order:
+  - **Extrude and revolve.** The tool (`extrudeTool()`, `revolveTool()`) is
+    moved and united (new body, join) or subtracted (cut). New-body
+    instances that touch or overlap fuse, like the regions of one extrude.
+    Intersect sources are refused.
+  - **Hole, chamfer and fillet.** The feature's references are moved exactly
+    and applied with all of the feature's own checks. A moved hole must fit
+    its face (so overlapping holes are refused); a moved edge must match
+    exactly one edge.
+
+  The first failing instance fails the whole pattern, with its index and
+  offset in the message ("instance 5 at (100, 0, 0) mm: hole: …"). The
+  pattern then keeps no body; partial patterns are never produced. Patterns
+  of patterns are refused (a second direction makes grids).
 - Bodies are derived: regeneration computes them from the current document.
   Regenerating does not change the document's revision or dirty state.
 - `extractRegions()` turns a sketch into `geometry::PlanarRegion`s. It
@@ -420,7 +470,7 @@ milestones start; see `TODO.md`.
   1. document consistency (references point at the right kind of item and
      dimension, e.g. revolve axes are lines, revolve angles are angles, and
      chamfer distances, fillet radii and hole dimensions and centres are
-     lengths);
+     lengths; pattern counts are dimensionless and spacings lengths);
   2. missing references (including revolve axis lines in their sketches);
   3. dependency cycles;
   4. sketch constraints (each sketch solves with its driving parameters;
@@ -466,7 +516,11 @@ milestones start; see `TODO.md`.
     optional `diameter_parameter`. Only a blind hole stores `depth` and
     `depth_parameter`, only a counterbore `counterbore_diameter` and
     `counterbore_depth`, and only a countersink `countersink_diameter` and
-    `countersink_angle` (radians).
+    `countersink_angle` (radians);
+  - a linear pattern stores `source` and `first` (plus `second` for a grid).
+    Each direction is `{"direction": [x, y, z], "count": n, "spacing":
+    metres}`, with optional `count_parameter` and `spacing_parameter`. The
+    vector is stored as given, not normalized.
 
   The rules are:
   - **Only inputs are stored.** Geometry is derived and is regenerated after
@@ -513,15 +567,15 @@ milestones start; see `TODO.md`.
 
 - `tests/support/` holds shared fixtures:
   - the P9 bracket model, the turned part (revolves), and the parametric
-    block (`BlockModel`) with its chamfered, filleted and drilled
-    (`HoleModels.hpp`) variants;
+    block (`BlockModel`) with its chamfered, filleted, drilled
+    (`HoleModels.hpp`) and patterned (`PatternModels.hpp`) variants;
   - temporary directories;
   - mesh and STL analysis written from first principles (divergence-theorem
     volume, edge-manifold watertightness).
-- `tests/support/occt/` reads exported STEP files back with the kernel. It
-  is test-only tooling, since STEP import is a later milestone, and follows
-  the same rule as product code: only an `occt/` directory includes OCCT
-  headers.
+- `tests/support/occt/` reads exported STEP files back with the kernel
+  (solids, validity, volume, area and bounds). It is test-only tooling,
+  since STEP import is a later milestone, and follows the same rule as
+  product code: only an `occt/` directory includes OCCT headers.
 
 ## Dependencies
 

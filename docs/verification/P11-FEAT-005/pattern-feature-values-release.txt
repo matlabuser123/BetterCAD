@@ -1,0 +1,188 @@
+Measured feature-level values (Release build of the qualified tree), captured 2026-09-15.
+Produced by: build/release/bin/bettercad_tests.exe <the linear pattern tests below> -s --reporter console,
+keeping the CHECK_THAT assertions (volumes, areas, bounds, distances). Each line: source line,
+assertion, then Catch2's expansion 'actual and expected are within <tolerance>' (values printed exactly).
+Bounds checked through checkPoint() in GeometryTestSupport.hpp are not listed here.
+
+
+== LinearPattern_RegeneratesWhenCountChanges
+L457  CHECK_THAT( volumes.back(), WithinRel(HoleRowModel::expectedVolume(120, 20, 10, count), kRel) )
+        => 116858.40734641021117568 and 116858.40734641021117568 are within 1e-10% of each other with message: count := 2.0
+L457  CHECK_THAT( volumes.back(), WithinRel(HoleRowModel::expectedVolume(120, 20, 10, count), kRel) )
+        => 113716.81469282042235136 and 113716.81469282040779945 are within 1e-10% of each other with message: count := 4.0
+L457  CHECK_THAT( volumes.back(), WithinRel(HoleRowModel::expectedVolume(120, 20, 10, count), kRel) )
+        => 107433.62938564081559889 and 107433.62938564083015081 are within 1e-10% of each other with message: count := 8.0
+
+== LinearPattern_BoundingBoxMatchesAnalyticExtent
+
+== LinearPattern_NormalizesDirection
+L520  CHECK_THAT( volumeMm3(regenerator, m.row), WithinRel(4000.0, kRel) )
+        => 3999.99999999999909051 and 4000.0 are within 1e-10% of each other with message:
+L520  CHECK_THAT( volumeMm3(regenerator, m.row), WithinRel(4000.0, kRel) )
+        => 3999.99999999999909051 and 4000.0 are within 1e-10% of each other with message:
+L520  CHECK_THAT( volumeMm3(regenerator, m.row), WithinRel(4000.0, kRel) )
+        => 3999.99999999999909051 and 4000.0 are within 1e-10% of each other with message:
+L520  CHECK_THAT( volumeMm3(regenerator, m.row), WithinRel(4000.0, kRel) )
+        => 3999.99999999999909051 and 4000.0 are within 1e-10% of each other with message:
+L520  CHECK_THAT( volumeMm3(regenerator, m.row), WithinRel(4000.0, kRel) )
+        => 3999.99999999999909051 and 4000.0 are within 1e-10% of each other with message:
+L520  CHECK_THAT( volumeMm3(regenerator, m.row), WithinRel(4000.0, kRel) )
+        => 3999.99999999999818101 and 4000.0 are within 1e-10% of each other with message:
+L536  CHECK_THAT( std::hypot(last.x.in(units::mm), last.y.in(units::mm)), WithinRel(60.0, 1e-15) )
+        => 59.99999999999999289 and 60.0 are within 1e-13% of each other
+L520  CHECK_THAT( volumeMm3(regenerator, m.row), WithinRel(4000.0, kRel) )
+        => 3999.99999999999818101 and 4000.0 are within 1e-10% of each other with message:
+L537  CHECK_THAT( along({3.0, 3.0, 0.0}).max.x.in(units::mm), WithinAbs(diagonal.max.x.in(units::mm), 1e-12) )
+        => 52.42640687119284593 is within 0.000000000001 of 52.42640687119284593
+
+== LinearPattern_PatternsChamferAndFilletByTranslatedReferences
+
+== LinearPattern_PatternsChamferAndFilletByTranslatedReferences / chamfers: pi c^2 (r + c/3) per rim, by Pappus
+L752  CHECK_THAT( volumeMm3(regenerator, eases), WithinRel(holes - 5.0 * pi * (5.0 + 1.0 / 3.0), kRel) )
+        => 112062.24256192980101332 and 112062.24256192978646141 are within 1e-10% of each other with message:
+L760  CHECK_THAT( volumeMm3(regenerator, eases), WithinRel(holes - 5.0 * pi * 4.0 * (5.0 + 2.0 / 3.0), kRel) )
+        => 111789.9711986186739523 and 111789.9711986186739523 are within 1e-10% of each other with message:
+
+== LinearPattern_PatternsChamferAndFilletByTranslatedReferences
+
+== LinearPattern_PatternsChamferAndFilletByTranslatedReferences / fillets: 2 pi (r + u) r_f^2 (1 - pi/4) per rim
+L784  CHECK_THAT( volumeMm3(regenerator, rounds), WithinRel(holes - 5.0 * 2.0 * pi * (5.0 + centroid) * filletCorner(rf), kRel) )
+        => 111999.13263314450159669 and 111999.13263314448704477 are within 1e-10% of each other with message:
+
+== LinearPattern_TouchingAndOverlappingInstancesFuse
+
+== LinearPattern_TouchingAndOverlappingInstancesFuse / touching: one 40 mm bar, no inner faces
+L310  CHECK_THAT( volumeMm3(regenerator, m.row), WithinRel(4000.0, kRel) )
+        => 4000.00000000000136424 and 4000.0 are within 1e-10% of each other
+L311  CHECK_THAT( body.boundingBox()->max.x.in(units::mm), WithinAbs(40.0, kPositionToleranceMm) )
+        => 40.0 is within 0.000000001 of 40.0
+L314  CHECK_THAT( areaOn(regenerator, m.row, topFace(10)), WithinRel(400.0, kRel) )
+        => 399.99999999999994316 and 400.0 are within 1e-10% of each other
+
+== LinearPattern_TouchingAndOverlappingInstancesFuse
+
+== LinearPattern_TouchingAndOverlappingInstancesFuse / overlapping: the union, 25 mm long
+L320  CHECK_THAT( volumeMm3(regenerator, m.row), WithinRel(10.0 * 10.0 * 25.0, kRel) )
+        => 2500.0 and 2500.0 are within 1e-10% of each other
+
+== LinearPattern_WorksOnRevolvedSource
+L809  CHECK_THAT( volumeMm3(regenerator, shafts), WithinRel(3.0 * pi * 225.0 * 40.0, kRel) )
+        => 84823.00164692440012004 and 84823.00164692441467196 are within 1e-10% of each other with message:
+L811  CHECK_THAT( box.min.x.in(units::mm), WithinAbs(-15.0, kPositionToleranceMm) )
+        => -14.99999999999999645 is within 0.000000001 of -15.0 with message:
+L812  CHECK_THAT( box.max.x.in(units::mm), WithinAbs(95.0, kPositionToleranceMm) )
+        => 95.0 is within 0.000000001 of 95.0 with message:
+L816  CHECK_THAT( volumeMm3(regenerator, shafts), WithinRel(3.0 * 0.75 * pi * 225.0 * 40.0, kRel) )
+        => 63617.25123519330372801 and 63617.25123519331100397 are within 1e-10% of each other with message:
+
+== LinearPattern_SingleDirectionPlacesInstancesExactly
+
+== LinearPattern_TwoDirectionGridHasExpectedInstanceCount
+L850  CHECK_THAT( volumeMm3(regenerator, m.holes), WithinRel(HoleRowModel::expectedVolume(120, 20, 10, 12), kRel) )
+        => 101150.44407846120884642 and 101150.44407846123795025 are within 1e-10% of each other with message:
+L863  CHECK_THAT( volumeMm3(regenerator, m.holes), WithinRel(HoleRowModel::expectedVolume(120, 20, 10, 4), kRel) )
+        => 113716.81469282042235136 and 113716.81469282040779945 are within 1e-10% of each other with message:
+
+== LinearPattern_ReverseDirectionWorks
+L547  CHECK_THAT( volumeMm3(regenerator, m.row), WithinRel(4000.0, kRel) )
+        => 3999.99999999999909051 and 4000.0 are within 1e-10% of each other
+
+== LinearPattern_SubtractiveExtrudePatternMatchesAnalyticVolume
+L397  CHECK_THAT( volumeMm3(regenerator, m.bosses), WithinRel(100000.0 - 4.0 * 500.0, kRel) )
+        => 98000.00000000007275958 and 98000.0 are within 1e-10% of each other
+L399  CHECK_THAT( areaOn(regenerator, m.bosses, topFace(15)), WithinRel(400.0, kRel) )
+        => 399.99999999999994316 and 400.0 are within 1e-10% of each other
+
+== LinearPattern_HolePatternMatchesAnalyticVolume
+L336  CHECK_THAT( expected, WithinRel(120000.0 - 2500.0 * pi, 1e-15) )
+        => 112146.01836602551338729 and 112146.01836602551338729 are within 1e-13% of each other with message:
+L338  CHECK_THAT( props.volume.in(units::mm3), WithinRel(expected, kRel) )
+        => 112146.01836602551338729 and 112146.01836602551338729 are within 1e-10% of each other with message:
+L339  CHECK_THAT( props.surfaceArea.in(units::mm2), WithinRel(2.0 * (6000.0 + 2400.0 + 1000.0) + 5.0 * (2.0 * pi * 5.0 * 20.0 - 2.0 * 25.0 * pi), kRel) )
+        => 21156.19449019234161824 and 21156.19449019234525622 are within 1e-10% of each other with message:
+L348  CHECK_THAT( areaOn(regenerator, m.holes, topFace()), WithinRel(6000.0 - 5.0 * 25.0 * pi, kRel) )
+        => 5607.30091830127730645 and 5607.30091830127548747 are within 1e-10% of each other with message:
+L350  CHECK_THAT( volumeMm3(regenerator, m.drill), WithinRel(HoleRowModel::expectedVolume(120, 20, 10, 1), kRel) )
+        => 118429.20367320512013976 and 118429.20367320510558784 are within 1e-10% of each other with message:
+
+== LinearPattern_DoesNotAccumulateTransformDrift
+L671  CHECK_THAT( instances.back().offset.x.in(units::mm), WithinAbs(99.0 * 1.25, 1e-12) )
+        => 123.75 is within 0.000000000001 of 123.75
+L676  CHECK_THAT( std::hypot(last.x.in(units::mm), last.y.in(units::mm), last.z.in(units::mm)), WithinRel(123.75, 1e-15) )
+        => 123.74999999999997158 and 123.75 are within 1e-13% of each other
+L688  CHECK_THAT( volumeMm3(regenerator, m.row), WithinRel(100.0, kRel) )
+        => 100.0000000000006537 and 100.0 are within 1e-10% of each other
+L689  CHECK_THAT( body.boundingBox()->max.x.in(units::mm), WithinAbs(124.75, kPositionToleranceMm) )
+        => 124.75 is within 0.000000001 of 124.75
+
+== LinearPattern_RegeneratesWhenSourceChanges
+
+== LinearPattern_RegeneratesWhenSourceChanges / a larger hole diameter changes every hole
+L411  CHECK_THAT( volumeMm3(regenerator, m.holes), WithinRel(HoleRowModel::expectedVolume(120, 20, 12, 5), kRel) )
+        => 108690.26644707677769475 and 108690.26644707674859092 are within 1e-10% of each other
+
+== LinearPattern_RegeneratesWhenSourceChanges
+
+== LinearPattern_RegeneratesWhenSourceChanges / a thicker block: every through hole stays through
+L427  CHECK_THAT( volumeMm3(regenerator, m.holes), WithinRel(HoleRowModel::expectedVolume(120, 40, 10, 5), kRel) )
+        => 224292.03673205102677457 and 224292.03673205102677457 are within 1e-10% of each other
+
+== LinearPattern_RegeneratesWhenSourceChanges
+
+== LinearPattern_RegeneratesWhenSourceChanges / a longer block keeps the holes where they are
+L438  CHECK_THAT( volumeMm3(regenerator, m.holes), WithinRel(HoleRowModel::expectedVolume(150, 20, 10, 5), kRel) )
+        => 142146.01836602555704303 and 142146.0183660255279392 are within 1e-10% of each other
+
+== LinearPattern_NonOverlappingBodiesMatchesAnalyticVolume
+L276  CHECK_THAT( props.volume.in(units::mm3), WithinRel(4000.0, kRel) )
+        => 3999.99999999999909051 and 4000.0 are within 1e-10% of each other
+L277  CHECK_THAT( props.surfaceArea.in(units::mm2), WithinRel(4.0 * 600.0, kRel) )
+        => 2400.0 and 2400.0 are within 1e-10% of each other
+L279  CHECK_THAT( props.centerOfMass.x.in(units::mm), WithinAbs(35.0, kPositionToleranceMm) )
+        => 35.00000000000000711 is within 0.000000001 of 35.0
+L281  CHECK_THAT( volumeMm3(regenerator, m.cube), WithinRel(1000.0, kRel) )
+        => 1000.00000000000011369 and 1000.0 are within 1e-10% of each other
+
+== LinearPattern_RegeneratesWhenSpacingChanges / cubes 10, 15 and 25 mm apart
+L487  CHECK_THAT( volumeMm3(regenerator, m.row), WithinRel(4000.0, kRel) )
+        => 4000.00000000000136424 and 4000.0 are within 1e-10% of each other with message: pitch := 10.0
+L488  CHECK_THAT( requireBody(regenerator, m.row).boundingBox()->max.x.in(units::mm), WithinAbs(10.0 + 3.0 * pitch, kPositionToleranceMm) )
+        => 40.0 is within 0.000000001 of 40.0 with message: pitch := 10.0
+L487  CHECK_THAT( volumeMm3(regenerator, m.row), WithinRel(4000.0, kRel) )
+        => 3999.99999999999909051 and 4000.0 are within 1e-10% of each other with message: pitch := 15.0
+L488  CHECK_THAT( requireBody(regenerator, m.row).boundingBox()->max.x.in(units::mm), WithinAbs(10.0 + 3.0 * pitch, kPositionToleranceMm) )
+        => 55.0 is within 0.000000001 of 55.0 with message: pitch := 15.0
+L487  CHECK_THAT( volumeMm3(regenerator, m.row), WithinRel(4000.0, kRel) )
+        => 3999.99999999999909051 and 4000.0 are within 1e-10% of each other with message: pitch := 25.0
+L488  CHECK_THAT( requireBody(regenerator, m.row).boundingBox()->max.x.in(units::mm), WithinAbs(10.0 + 3.0 * pitch, kPositionToleranceMm) )
+        => 85.00000000000001421 is within 0.000000001 of 85.0 with message: pitch := 25.0
+
+== LinearPattern_RegeneratesWhenSpacingChanges / holes 15 mm apart
+L506  CHECK_THAT( volumeMm3(regenerator, m.holes), WithinRel(HoleRowModel::expectedVolume(120, 20, 10, 5), kRel) )
+        => 112146.01836602551338729 and 112146.01836602551338729 are within 1e-10% of each other
+
+== LinearPattern_AdditivePatternMatchesAnalyticVolume
+
+== LinearPattern_AdditivePatternMatchesAnalyticVolume / separate bosses: V = V_base + 4 x 10 x 10 x 5
+L364  CHECK_THAT( volumeMm3(regenerator, m.bosses), WithinRel(100000.0 + 4.0 * 500.0, kRel) )
+        => 102000.00000000001455192 and 102000.0 are within 1e-10% of each other with message:
+L366  CHECK_THAT( areaOn(regenerator, m.bosses, topFace(25)), WithinRel(400.0, kRel) )
+        => 399.99999999999994316 and 400.0 are within 1e-10% of each other with message:
+L367  CHECK_THAT( areaOn(regenerator, m.bosses, topFace(20)), WithinRel(5000.0 - 400.0, kRel) )
+        => 4600.00000000000181899 and 4600.0 are within 1e-10% of each other with message:
+L368  CHECK_THAT( body.boundingBox()->max.z.in(units::mm), WithinAbs(25.0, kPositionToleranceMm) )
+        => 25.0 is within 0.000000001 of 25.0 with message:
+
+== LinearPattern_AdditivePatternMatchesAnalyticVolume
+
+== LinearPattern_AdditivePatternMatchesAnalyticVolume / touching bosses fuse into one bar
+L374  CHECK_THAT( volumeMm3(regenerator, m.bosses), WithinRel(102000.0, kRel) )
+        => 102000.00000000002910383 and 102000.0 are within 1e-10% of each other
+L376  CHECK_THAT( areaOn(regenerator, m.bosses, topFace(25)), WithinRel(400.0, kRel) )
+        => 399.99999999999994316 and 400.0 are within 1e-10% of each other
+
+== LinearPattern_AdditivePatternMatchesAnalyticVolume
+
+== LinearPattern_AdditivePatternMatchesAnalyticVolume / overlapping bosses: the union, 25 mm long
+L382  CHECK_THAT( volumeMm3(regenerator, m.bosses), WithinRel(100000.0 + 25.0 * 10.0 * 5.0, kRel) )
+        => 101250.00000000002910383 and 101250.0 are within 1e-10% of each other

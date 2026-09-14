@@ -33,6 +33,7 @@ bettercad_add_library(bettercad_geometry
         occt/OcctStep.cpp
         occt/OcctSweeps.cpp
         occt/OcctTopology.hpp
+        occt/OcctTransform.cpp
     PUBLIC_LINK
         BetterCAD::core
     PRIVATE_LINK

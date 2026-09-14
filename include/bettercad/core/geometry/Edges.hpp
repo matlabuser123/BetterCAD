@@ -5,6 +5,7 @@
 #include <bettercad/core/geometry/Export.hpp>
 #include <bettercad/core/math/Direction.hpp>
 #include <bettercad/core/math/Point.hpp>
+#include <bettercad/core/math/Vector.hpp>
 #include <bettercad/core/units/Units.hpp>
 
 #include <cstddef>
@@ -73,6 +74,12 @@ circleSignature(const Point3D& center, const Direction3D& axis, Length radius);
 /// Checks a signature from any source (e.g. a file): a Line or Circle curve,
 /// a finite point, and for circles a positive finite radius.
 [[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Result<void> validate(const EdgeSignature& signature);
+
+/// The signature of the same curve moved by @p translation (which must be
+/// finite), in canonical form. It refers to the moved curve exactly; it is
+/// not a search for similar edges.
+[[nodiscard]] BETTERCAD_GEOMETRY_EXPORT EdgeSignature translated(const EdgeSignature& signature,
+                                                                 const Translation3D& translation);
 
 /// For messages, e.g. "line through (0, 0, 20) mm along (1, 0, 0)".
 [[nodiscard]] BETTERCAD_GEOMETRY_EXPORT std::string describe(const EdgeSignature& signature);

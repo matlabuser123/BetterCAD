@@ -14,8 +14,8 @@
 //     "format": "bettercad-document", "version": 1, "units": "SI",
 //     "document":   { "id": "<uuid>", "name": ..., "metadata": {...}, "last_allocated_id": N },
 //     "parameters": [ ... ],
-//     "objects":    [ { "id": N, "type": "sketch" | "extrude" | "revolve" | "chamfer" | "fillet" | "hole",
-//                       "name": ..., "data": {...} } ]
+//     "objects":    [ { "id": N, "type": "sketch" | "extrude" | "revolve" | "chamfer" | "fillet" | "hole" |
+//                       "linear_pattern", "name": ..., "data": {...} } ]
 //   }
 //
 // All lengths are metres and all stored numbers round-trip exactly. IDs are

@@ -1,0 +1,55 @@
+Kernel: Open CASCADE Technology 8.0.1
+
+box 100x50x20 mm                   V=100000 expected 100000 (abs err 0.00e+00, rel err 0.00e+00, est 1.7e-16)  A=16000 (rel err 0.00e+00)  valid=1 solids=1
+cylinder r=10 h=30 mm              V=9424.7779607693792 expected 9424.7779607693792 (abs err 0.00e+00, rel err 0.00e+00, est 0.0e+00)  A=2513.27412287 (rel err 5.43e-16)  valid=1 solids=1
+sphere r=25 mm                     V=65449.846949787352 expected 65449.846949787352 (abs err 0.00e+00, rel err 0.00e+00, est 1.7e-16)  A=7853.98163397 (rel err 5.79e-16)  valid=1 solids=1
+sphere r=0.5 m                     V=523598775.59829903 expected 523598775.59829879 (abs err 2.38e-07, rel err 4.55e-16, est 0.0e+00)  A=3141592.65359 (rel err 4.45e-16)  valid=1 solids=1
+box - cylinder (through hole)      V=93716.814692820408 expected 93716.814692820408 (abs err 0.00e+00, rel err 0.00e+00, est 2.7e-16)  valid=1 solids=1
+box U box (overlap)                V=1500 expected 1500 (abs err 0.00e+00, rel err 0.00e+00, est 2.1e-16)  valid=1 solids=1
+box n box (overlap)                V=500.00000000000017 expected 500 (abs err 1.71e-13, rel err 3.41e-16, est 2.1e-16)  valid=1 solids=1
+sphere n octant box                V=523.59877559830147 expected 523.59877559829886 (abs err 2.61e-12, rel err 4.99e-15, est 3.7e-16)  valid=1 solids=1
+bicylinder (Steinmetz)             V=5333.3333333343253 expected 5333.333333333333 (abs err 9.92e-10, rel err 1.86e-13, est 4.0e-16)  valid=1 solids=1
+
+Solids of revolution about Z (profiles in the XZ plane)
+revolve tube r=10..20 h=30         V=28274.333882308139 expected 28274.333882308136 (abs err 3.64e-12, rel err 1.29e-16, est 2.0e-16)  A=7539.82236862 (rel err 3.62e-16)  valid=1 solids=1
+revolve tube wedge 90 deg          V=7068.5834705770358 expected 7068.5834705770339 (abs err 1.82e-12, rel err 2.57e-16, est 1.9e-16)  A=2484.95559215 (rel err 0.00e+00)  valid=1 solids=1
+revolve tube wedge 180 deg         V=14137.166941154075 expected 14137.166941154068 (abs err 7.28e-12, rel err 5.15e-16, est 2.5e-16)  A=4369.91118431 (rel err 0.00e+00)  valid=1 solids=1
+revolve tube wedge 270 deg         V=21205.750411731107 expected 21205.750411731104 (abs err 3.64e-12, rel err 1.72e-16, est 2.7e-16)  A=6254.86677646 (rel err 0.00e+00)  valid=1 solids=1
+revolve cone r=10 h=20             V=2094.3951023931959 expected 2094.3951023931954 (abs err 4.55e-13, rel err 2.17e-16, est 2.8e-16)  A=1016.64073846 (rel err 1.12e-16)  valid=1 solids=1
+revolve sphere r=10                V=4188.7902047863881 expected 4188.7902047863909 (abs err 2.73e-12, rel err 6.51e-16, est 6.8e-16)  A=1256.63706144 (rel err 5.43e-16)  valid=1 solids=1
+revolve torus R=20 a=5             V=9869.6044010893602 expected 9869.6044010893584 (abs err 1.82e-12, rel err 1.84e-16, est 1.4e-16)  A=3947.84176044 (rel err 1.04e-15)  valid=1 solids=1
+revolve torus wedge 120 deg        V=3289.8681336964519 expected 3289.8681336964528 (abs err 9.09e-13, rel err 2.76e-16, est 2.6e-16)  valid=1 solids=1
+
+Chamfers of the box 100x50x20 mm (edges by their supporting lines)
+chamfer 1 edge d=5 (L=100)         V=98749.999999999985 expected 98750 (abs err 1.46e-11, rel err 1.47e-16, est 1.9e-16)  A=15682.1067812 (rel err 0.00e+00)  valid=1 solids=1
+chamfer 1 edge d=0.5 (L=100)       V=99987.499999999985 expected 99987.5 (abs err 1.46e-11, rel err 1.46e-16, est 2.2e-16)  A=15970.4606781 (rel err 2.28e-16)  valid=1 solids=1
+chamfer 2 separate edges d=5       V=97500 expected 97500 (abs err 0.00e+00, rel err 0.00e+00, est 3.2e-16)  valid=1 solids=1
+chamfer 2 adjacent edges d=5       V=98166.666666666686 expected 98166.666666666672 (abs err 1.46e-11, rel err 1.48e-16, est 2.5e-16)  valid=1 solids=1
+chamfer two distances 5/3          V=99250 expected 99250 (abs err 0.00e+00, rel err 0.00e+00, est 2.0e-16)  valid=1 solids=1
+chamfer distance 5 angle 30 deg    V=99278.312163512979 expected 99278.312163512965 (abs err 1.46e-11, rel err 1.47e-16, est 2.4e-16)  valid=1 solids=1
+chamfer cylinder rim d=2           V=28094.215903502321 expected 28094.215903502321 (abs err 0.00e+00, rel err 0.00e+00, est 1.5e-16)  valid=1 solids=1
+
+Constant-radius fillets (same box and cylinder)
+fillet 1 edge r=5 (L=100)          V=99463.495408493603 expected 99463.495408493618 (abs err 1.46e-11, rel err 1.46e-16, est 1.9e-16)  A=15774.6680716 (rel err 0.00e+00)  valid=1 solids=1
+fillet 1 edge r=0.5 (L=100)        V=99994.634954084933 expected 99994.634954084933 (abs err 0.00e+00, rel err 0.00e+00, est 2.2e-16)  A=15978.4325154 (rel err 0.00e+00)  valid=1 solids=1
+fillet 2 separate edges r=5        V=98926.990816987236 expected 98926.990816987236 (abs err 0.00e+00, rel err 0.00e+00, est 2.6e-16)  valid=1 solids=1
+fillet 2 adjacent edges r=5        V=99207.226905219242 expected 99207.226905224394 (abs err 5.15e-09, rel err 5.19e-14, est 2.5e-16)  valid=1 solids=1
+fillet 3 edges at a vertex r=5     V=99108.8677301149 expected 99108.8677301149 (abs err 0.00e+00, rel err 0.00e+00, est 3.4e-16)  valid=1 solids=1
+fillet concave L edge r=5          V=32107.30091830128 expected 32107.300918301276 (abs err 3.64e-12, rel err 1.13e-16, est 2.1e-16)  valid=1 solids=1
+fillet cylinder rim r=2            V=28195.840380353555 expected 28195.840380353548 (abs err 7.28e-12, rel err 2.58e-16, est 1.1e-15)  A=5100.94558626 (rel err 1.78e-16)  valid=1 solids=1
+
+Holes (faces by their planes; the box 100x50x20 mm, centre (50, 25))
+hole through d=10                  V=98429.203673205106 expected 98429.203673205106 (abs err 0.00e+00, rel err 0.00e+00, est 1.7e-16)  A=16471.238898 (rel err 2.21e-16)  valid=1 solids=1
+hole blind d=10 h=8                V=99371.681469282048 expected 99371.681469282048 (abs err 0.00e+00, rel err 0.00e+00, est 1.7e-16)  A=16251.3274123 (rel err 0.00e+00)  valid=1 solids=1
+hole blind from the bottom face    V=99371.681469282048 expected 99371.681469282048 (abs err 0.00e+00, rel err 0.00e+00, est 1.7e-16)  A=16251.3274123 (rel err 0.00e+00)  valid=1 solids=1
+hole through from below, H=40      V=196858.40734641021 expected 196858.40734641021 (abs err 0.00e+00, rel err 0.00e+00, est 1.7e-16)  A=23099.5574288 (rel err 1.57e-16)  valid=1 solids=1
+hole counterbore 18x5              V=97549.557730199973 expected 97549.557730199958 (abs err 1.46e-11, rel err 1.49e-16, est 3.4e-16)  A=16596.9026042 (rel err 0.00e+00)  valid=1 solids=1
+hole countersink 20 at 90 deg      V=97905.604897606798 expected 97905.604897606812 (abs err 1.46e-11, rel err 1.49e-16, est 1.5e-15)  A=16411.7560367 (rel err 0.00e+00)  valid=1 solids=1
+hole countersink 20 at 82 deg      V=97826.872183697211 expected 97826.872183697225 (abs err 1.46e-11, rel err 1.49e-16, est 5.2e-16)  A=16414.0636746 (rel err 0.00e+00)  valid=1 solids=1
+hole in revolved end face d=10 h=20 V=26703.537555513245 expected 26703.537555513238 (abs err 7.28e-12, rel err 2.72e-16, est 3.4e-16)  A=5811.94640914 (rel err 1.56e-16)  valid=1 solids=1
+
+Translated copies (linear patterns: instance k moved by k s along X)
+4 cubes 10 mm, 20 mm apart         V=3999.9999999999991 expected 4000 (abs err 9.09e-13, rel err 2.27e-16, est 2.1e-16)  A=2400 (rel err 0.00e+00)  valid=1 solids=4
+4 cubes 10 mm, 10 mm apart (touching) V=4000.0000000000014 expected 4000 (abs err 1.36e-12, rel err 3.41e-16, est 2.1e-16)  A=1800 (rel err 0.00e+00)  valid=1 solids=1
+4 cubes 10 mm, 5 mm apart (overlap) V=2500 expected 2500 (abs err 0.00e+00, rel err 0.00e+00, est 2.1e-16)  A=1200 (rel err 0.00e+00)  valid=1 solids=1
+5 through holes 20 mm apart        V=112146.01836602551 expected 112146.01836602551 (abs err 0.00e+00, rel err 0.00e+00, est 2.7e-16)  A=21156.1944902 (rel err 1.72e-16)  valid=1 solids=1

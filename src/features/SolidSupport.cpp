@@ -7,10 +7,11 @@ namespace bettercad::features::detail {
 
 Result<geometry::Body> applyToTargetBody(std::string_view featureName, std::string_view operation,
                                          const geometry::Body* target,
-                                         const std::function<Result<geometry::Body>(const geometry::Body&)>& apply) {
+                                         const std::function<Result<geometry::Body>(const geometry::Body&)>& apply,
+                                         std::string_view role) {
     if (target == nullptr || target->isEmpty()) {
         return makeError(ErrorCode::FailedPrecondition,
-                         std::format("{}: a {} needs the body of its target feature", featureName, operation));
+                         std::format("{}: a {} needs the body of its {} feature", featureName, operation, role));
     }
     auto body = apply(*target);
     if (!body) {

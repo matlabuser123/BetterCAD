@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <cstddef>
 #include <filesystem>
 #include <optional>
@@ -17,6 +18,10 @@ struct StepContents {
     double volumeMm3 = 0.0; ///< In the reader's unit, millimetres.
     double areaMm2 = 0.0;
     bool valid = false;     ///< Kernel validity check of the whole result.
+    /// Tight axis-aligned bounds (x, y, z) of the geometry, not enlarged by
+    /// tolerances.
+    std::array<double, 3> minMm{};
+    std::array<double, 3> maxMm{};
 };
 
 /// std::nullopt if the file cannot be read or transferred.

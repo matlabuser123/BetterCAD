@@ -46,6 +46,14 @@ Length countersinkDepth(const HoleRequest& request) {
     return (request.countersinkDiameter - request.diameter) / 2.0 / std::tan(request.countersinkAngle.si() / 2.0);
 }
 
+HoleRequest translated(const HoleRequest& request, const Translation3D& translation) {
+    const Point3D centre = facePoint(request.face, request.center) + translation;
+    HoleRequest moved = request;
+    moved.face = translated(request.face, translation);
+    moved.center = faceCoordinates(moved.face, centre);
+    return moved;
+}
+
 Result<void> validate(const HoleRequest& request) {
     if (auto face = validate(request.face); !face) {
         return makeError(ErrorCode::InvalidArgument, std::format("placement face: {}", face.error().message));

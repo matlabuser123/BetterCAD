@@ -1,7 +1,7 @@
 // Prints geometry-kernel results next to analytic solutions for primitive
-// solids, boolean operations, solids of revolution, chamfers, fillets and
-// holes. The relative errors in the output are the basis for the tolerances
-// used by tests/core/geometry.
+// solids, boolean operations, solids of revolution, chamfers, fillets, holes
+// and translated copies. The relative errors in the output are the basis for
+// the tolerances used by tests/core/geometry.
 #include <bettercad/core/Units.hpp>
 #include <bettercad/core/geometry/Booleans.hpp>
 #include <bettercad/core/geometry/Chamfer.hpp>
@@ -13,6 +13,7 @@
 #include <bettercad/core/geometry/Primitives.hpp>
 #include <bettercad/core/geometry/Profile.hpp>
 #include <bettercad/core/geometry/Sweeps.hpp>
+#include <bettercad/core/geometry/Transform.hpp>
 
 #include <cmath>
 #include <cstdio>
@@ -260,5 +261,38 @@ int main() {
                              .diameter = 10_mm,
                              .depth = 20_mm}),
            pi * 225.0 * 40.0 - pi * 25.0 * 20.0, 2.0 * pi * 15.0 * 40.0 + 2.0 * pi * 225.0 + 2.0 * pi * 5.0 * 20.0);
+
+    std::printf("\nTranslated copies (linear patterns: instance k moved by k s along X)\n");
+    const auto cube = makeBox(10_mm, 10_mm, 10_mm);
+    const auto row = [&](Length spacing, int count) -> Result<Body> {
+        Body result = *cube;
+        for (int k = 1; k < count; ++k) {
+            auto copy = translated(*cube, Translation3D::along(Direction3D::unitX(), spacing * static_cast<double>(k)));
+            if (!copy) {
+                return copy;
+            }
+            auto united = booleanUnion(result, *copy);
+            if (!united) {
+                return united;
+            }
+            result = *united;
+        }
+        return result;
+    };
+    // Disjoint: count x V; touching: one 40 x 10 x 10 bar; overlapping: the union.
+    report("4 cubes 10 mm, 20 mm apart", row(20_mm, 4), 4000.0, 2400.0);
+    report("4 cubes 10 mm, 10 mm apart (touching)", row(10_mm, 4), 4000.0, 1800.0);
+    report("4 cubes 10 mm, 5 mm apart (overlap)", row(5_mm, 4), 2500.0, 2.0 * (250.0 + 250.0 + 100.0));
+    // Five through holes: the plate 120 x 50 x 20 less five translated
+    // cylinders r = 5: V = V0 - 5 pi r^2 H; each hole adds 2 pi r H - 2 pi r^2.
+    const auto plate = makeBox(120_mm, 50_mm, 20_mm);
+    const auto bore = makeCylinder(Axis3D{Point3D{20_mm, 25_mm, -1_mm}}, 5_mm, 22_mm);
+    Result<Body> drilled = *plate;
+    for (int k = 0; k < 5 && drilled; ++k) {
+        auto moved = translated(*bore, Translation3D::along(Direction3D::unitX(), 20_mm * static_cast<double>(k)));
+        drilled = moved ? booleanDifference(*drilled, *moved) : moved;
+    }
+    report("5 through holes 20 mm apart", drilled, 120000.0 - 5.0 * pi * 25.0 * 20.0,
+           18800.0 + 5.0 * (2.0 * pi * 5.0 * 20.0 - 2.0 * pi * 25.0));
     return 0;
 }

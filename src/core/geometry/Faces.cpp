@@ -126,6 +126,12 @@ FaceSignature planeSignature(const Point3D& p, const Direction3D& outwardNormal)
             .normal = normal};
 }
 
+FaceSignature translated(const FaceSignature& signature, const Translation3D& translation) {
+    FaceSignature moved = planeSignature(signature.point + translation, signature.normal);
+    moved.surface = signature.surface;
+    return moved;
+}
+
 Result<void> validate(const FaceSignature& signature) {
     if (signature.surface != FaceSurface::Plane) {
         return makeError(ErrorCode::InvalidArgument,

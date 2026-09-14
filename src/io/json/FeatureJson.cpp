@@ -1,7 +1,9 @@
 #include "io/json/ObjectJson.hpp"
 
 #include <array>
+#include <cstdint>
 #include <format>
+#include <limits>
 #include <string_view>
 #include <utility>
 
@@ -602,6 +604,110 @@ Result<std::unique_ptr<features::FilletFeature>> filletFromJson(const Json& data
         definition.radiusParameter = ParameterId::fromValue(**radiusParameter);
     }
     auto feature = features::FilletFeature::create(std::move(name), definition);
+    if (!feature) {
+        return atPath(path, feature.error());
+    }
+    return std::move(*feature);
+}
+
+namespace {
+
+Json patternDirectionToJson(const features::PatternDirection& d) {
+    Json json = Json::object();
+    json["direction"] = Json::array({d.direction.x, d.direction.y, d.direction.z});
+    json["count"] = d.count;
+    if (d.countParameter) {
+        json["count_parameter"] = d.countParameter->value();
+    }
+    json["spacing"] = d.spacing.si();
+    if (d.spacingParameter) {
+        json["spacing_parameter"] = d.spacingParameter->value();
+    }
+    return json;
+}
+
+/// The vector is kept as written; the definition checks it.
+Result<features::PatternDirection> patternDirectionFromJson(const Json& data, std::string_view key,
+                                                           std::string_view path) {
+    auto field = requireField(data, key, path);
+    if (!field) {
+        return std::unexpected(field.error());
+    }
+    const std::string directionPath = childPath(path, key);
+    if (auto object = requireObject(**field, directionPath,
+                                    {"direction", "count", "count_parameter", "spacing", "spacing_parameter"});
+        !object) {
+        return std::unexpected(object.error());
+    }
+    auto vector = readNumbers(**field, "direction", directionPath, 3);
+    auto count = readUnsigned(**field, "count", directionPath);
+    auto countParameter = readOptionalId(**field, "count_parameter", directionPath);
+    auto spacing = readNumber(**field, "spacing", directionPath);
+    auto spacingParameter = readOptionalId(**field, "spacing_parameter", directionPath);
+    if (!vector || !count || !countParameter || !spacing || !spacingParameter) {
+        const Error& error = !vector ? vector.error()
+                           : !count ? count.error()
+                           : !countParameter ? countParameter.error()
+                           : !spacing ? spacing.error()
+                                      : spacingParameter.error();
+        return std::unexpected(error);
+    }
+    if (*count > std::numeric_limits<std::uint32_t>::max()) {
+        return parseError(childPath(directionPath, "count"),
+                          std::format("expected at most {}", std::numeric_limits<std::uint32_t>::max()));
+    }
+    features::PatternDirection direction{
+        .direction = Vector3D{(*vector)[0], (*vector)[1], (*vector)[2]},
+        .count = static_cast<std::uint32_t>(*count),
+        .countParameter = std::nullopt,
+        .spacing = Length::fromSi(*spacing),
+        .spacingParameter = std::nullopt,
+    };
+    if (*countParameter) {
+        direction.countParameter = ParameterId::fromValue(**countParameter);
+    }
+    if (*spacingParameter) {
+        direction.spacingParameter = ParameterId::fromValue(**spacingParameter);
+    }
+    return direction;
+}
+
+} // namespace
+
+Json linearPatternToJson(const features::LinearPatternFeature& feature) {
+    const features::LinearPatternDefinition& d = feature.definition();
+    Json json = Json::object();
+    json["source"] = d.source.value();
+    json["first"] = patternDirectionToJson(d.first);
+    if (d.second) {
+        json["second"] = patternDirectionToJson(*d.second);
+    }
+    return json;
+}
+
+Result<std::unique_ptr<features::LinearPatternFeature>> linearPatternFromJson(const Json& data, std::string name,
+                                                                              std::string_view path) {
+    if (auto object = requireObject(data, path, {"source", "first", "second"}); !object) {
+        return std::unexpected(object.error());
+    }
+    auto source = readId(data, "source", path);
+    if (!source) {
+        return std::unexpected(source.error());
+    }
+    auto first = patternDirectionFromJson(data, "first", path);
+    if (!first) {
+        return std::unexpected(first.error());
+    }
+    features::LinearPatternDefinition definition{
+        .source = FeatureId::fromValue(*source), .first = *first, .second = std::nullopt};
+    if (data.contains("second")) {
+        auto second = patternDirectionFromJson(data, "second", path);
+        if (!second) {
+            return std::unexpected(second.error());
+        }
+        definition.second = *second;
+    }
+    auto feature = features::LinearPatternFeature::create(std::move(name), definition);
     if (!feature) {
         return atPath(path, feature.error());
     }

@@ -12,23 +12,29 @@ Result<Length> resolveChamferDistance(const ChamferDefinition& definition, const
     return detail::drivingValue<Length>(document, *definition.distanceParameter, "distance parameter");
 }
 
+Result<geometry::ChamferRequest> resolveChamferRequest(const ChamferDefinition& definition, const Document& document) {
+    auto distance = resolveChamferDistance(definition, document);
+    if (!distance) {
+        return std::unexpected(distance.error());
+    }
+    return geometry::ChamferRequest{
+        .edges = definition.edges,
+        .mode = definition.mode,
+        .distance = *distance,
+        .distance2 = definition.distance2,
+        .angle = definition.angle,
+        .referenceSide = definition.referenceSide,
+    };
+}
+
 Result<geometry::Body> regenerateChamfer(const ChamferFeature& feature, const Document& document,
                                          const geometry::Body* target) {
-    const ChamferDefinition& definition = feature.definition();
     const auto chamfer = [&](const geometry::Body& body) -> Result<geometry::Body> {
-        auto distance = resolveChamferDistance(definition, document);
-        if (!distance) {
-            return std::unexpected(distance.error());
+        auto request = resolveChamferRequest(feature.definition(), document);
+        if (!request) {
+            return std::unexpected(request.error());
         }
-        const geometry::ChamferRequest request{
-            .edges = definition.edges,
-            .mode = definition.mode,
-            .distance = *distance,
-            .distance2 = definition.distance2,
-            .angle = definition.angle,
-            .referenceSide = definition.referenceSide,
-        };
-        return geometry::chamferEdges(body, request);
+        return geometry::chamferEdges(body, *request);
     };
     return detail::applyToTargetBody(feature.name(), "chamfer", target, chamfer);
 }
