@@ -74,20 +74,100 @@ recorded under `docs/verification/`. `[ ]` means not complete.
 - [x] STEP export — [evidence](docs/verification/P10/README.md)
 - [x] STL export — [evidence](docs/verification/P10/README.md)
 
+Release v0.1.0 (commit `2da8966`, tag `v0.1.0`) is P0–P10.
+
+### P11 — Production Part Modeling (completed items)
+
+#### P11-FEAT-001 — Revolve — [evidence](docs/verification/P11-FEAT-001/README.md)
+
+- [x] Revolve feature definition
+- [x] Axis/reference representation
+- [x] Closed-profile revolve
+- [x] Partial-angle revolve
+- [x] Positive/negative direction
+- [x] New-body operation
+- [x] Add/remove/intersect operation
+- [x] Geometry validity checks
+- [x] Parameter-driven regeneration
+- [x] Save/load round-trip
+- [x] Undo/redo regression
+- [x] STEP/STL export regression
+- [x] Analytic volume validation
+- [x] Failure diagnostics
+- [x] Evidence under `docs/verification/P11-FEAT-001/`
+
+**Acceptance (met):**
+
+- Full 360° revolve of a known profile matches analytic volume.
+- Partial revolve produces the expected proportional volume where
+  analytically applicable.
+- Changing angle/radius regenerates downstream geometry correctly.
+- Invalid or intersecting-axis profiles fail with structured diagnostics.
+- Save → destroy → load → regenerate reproduces equivalent geometry and
+  stable IDs.
+- Existing P0–P10 regression suite remains green.
+
 ## Current
 
-Nothing in progress: P0–P10 are complete. The items below are deliberately
-not started.
+### P11 — Production Part Modeling
+
+#### P11-FEAT-002 — Chamfer ← NEXT
+
+- [ ] Not started.
+
+## Next
+
+### P11 — Production Part Modeling (remaining)
+
+#### P11-FEAT-003 — Fillet
+
+- [ ] Not started.
+
+#### P11-FEAT-004 — Hole feature
+
+- [ ] Not started.
+
+#### P11-FEAT-005 — Linear pattern
+
+- [ ] Not started.
+
+#### P11-FEAT-006 — Circular pattern
+
+- [ ] Not started.
+
+#### P11-FEAT-007 — Mirror
+
+- [ ] Not started.
+
+#### P11-FEAT-008 — Sweep
+
+- [ ] Not started.
+
+#### P11-FEAT-009 — Loft
+
+- [ ] Not started.
+
+#### P11-REF-001 — Mechanical reference models
+
+- [ ] Shaft
+- [ ] Flange
+- [ ] Pulley
+- [ ] Bearing housing
+- [ ] Mounting bracket
+
+#### P11-QUAL-001 — Qualification
+
+- [ ] Debug build
+- [ ] Release build
+- [ ] Debug-shared build
+- [ ] Zero compiler warnings
+- [ ] All legacy tests pass
+- [ ] All P11 tests pass
+- [ ] Reference models regenerate deterministically
+- [ ] Evidence recorded
 
 ## Later — Do Not Start Yet
 
-- [ ] Revolve
-- [ ] Sweep
-- [ ] Loft
-- [ ] Fillet
-- [ ] Chamfer
-- [ ] Hole wizard
-- [ ] Patterns
 - [ ] Assemblies
 - [ ] Drawings
 - [ ] Semantic topology naming

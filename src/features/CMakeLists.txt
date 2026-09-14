@@ -4,13 +4,17 @@ bettercad_add_library(bettercad_features
     EXPORT_BASE BETTERCAD_FEATURES
     EXPORT_HEADER bettercad/features/Export.hpp
     SOURCES
-        FeatureCommands.cpp
+        Feature.cpp
         Regenerator.cpp
         ResultBodies.cpp
+        SolidSupport.cpp
+        SolidSupport.hpp
         Validation.cpp
         extrude/ExtrudeFeature.cpp
         extrude/ExtrudeRegeneration.cpp
         profile/Profiles.cpp
+        revolve/RevolveFeature.cpp
+        revolve/RevolveRegeneration.cpp
     PUBLIC_LINK
         BetterCAD::core
         BetterCAD::geometry

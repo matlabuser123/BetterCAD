@@ -1,9 +1,11 @@
 #include "FeatureTestSupport.hpp"
 #include "support/BracketModel.hpp"
+#include "support/TurnedPartModel.hpp"
 
 #include <bettercad/core/document/Document.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/features/ResultBodies.hpp>
+#include <bettercad/features/RevolveFeature.hpp>
 #include <bettercad/features/Validation.hpp>
 #include <bettercad/sketch/Sketch.hpp>
 
@@ -23,6 +25,7 @@ using namespace bettercad::sketch;
 using bettercad::test::addRectangle;
 using bettercad::test::BracketModel;
 using bettercad::test::require;
+using bettercad::test::TurnedPartModel;
 using Catch::Matchers::ContainsSubstring;
 using Catch::Matchers::WithinRel;
 
@@ -277,4 +280,64 @@ TEST_CASE("An empty document is valid", "[validation]") {
     CHECK(report.valid());
     CHECK(report.issues.empty());
     CHECK(report.bodies.empty());
+}
+
+TEST_CASE("Revolve models are validated like any other", "[validation][revolve]") {
+    TurnedPartModel m;
+    const auto setRevolve = [&](ObjectId id, auto&& change) {
+        RevolveDefinition d = m.doc.findObjectAs<RevolveFeature>(id)->definition();
+        change(d);
+        REQUIRE(m.doc.modifyObject<RevolveFeature>(id, [&](RevolveFeature& f) { return f.setDefinition(d); })
+                    .has_value());
+    };
+
+    SECTION("a sound model: only the unconstrained groove sketch is worth a warning") {
+        const ValidationReport report = validateDocument(m.doc);
+        INFO(describe(report));
+        CHECK(report.valid());
+        REQUIRE(report.issues.size() == 1);
+        CHECK(report.issues[0].item == m.grooveSketch);
+        CHECK(report.issues[0].severity == Severity::Warning);
+        CHECK(resultFeatures(m.doc) == std::vector<ObjectId>{m.groove});
+        REQUIRE(report.bodies.size() == 1);
+        CHECK(report.bodies[0].valid);
+        CHECK_THAT(report.bodies[0].properties->volume.in(units::mm3),
+                   WithinRel(TurnedPartModel::expectedVolume(15, 40, 360, 5), 1e-12));
+    }
+    SECTION("an angle driven by a length") {
+        setRevolve(m.turn, [&](RevolveDefinition& d) { d.angleParameter = m.radius; });
+        const auto issues = issuesOf(validateDocument(m.doc), ValidationCheck::DocumentConsistency);
+        REQUIRE(issues.size() == 1);
+        CHECK(issues[0].message ==
+              "Turn (object:6): the angle is driven by radius (object:1), which is a length, not an angle");
+    }
+    SECTION("an axis entity that is not a line") {
+        setRevolve(m.groove, [](RevolveDefinition& d) { d.axis = RevolveAxis::alongLine(EntityId::fromValue(1)); });
+        const ValidationReport report = validateDocument(m.doc);
+        const auto issues = issuesOf(report, ValidationCheck::DocumentConsistency);
+        REQUIRE(issues.size() == 1);
+        CHECK(issues[0].message == "Groove (object:10): the axis is entity:1, which is a point, not a line");
+        CHECK(issuesOf(report, ValidationCheck::FeatureRegeneration).empty()); // reported once
+    }
+    SECTION("an axis line that does not exist") {
+        setRevolve(m.groove, [](RevolveDefinition& d) { d.axis = RevolveAxis::alongLine(EntityId::fromValue(99)); });
+        const ValidationReport report = validateDocument(m.doc);
+        const auto missing = issuesOf(report, ValidationCheck::MissingReferences);
+        REQUIRE(missing.size() == 1);
+        CHECK(missing[0].message ==
+              "Groove (object:10): the axis line entity:99 does not exist in GrooveSketch (object:9)");
+        CHECK(issuesOf(report, ValidationCheck::FeatureRegeneration).empty());
+    }
+    SECTION("a profile that crosses the axis") {
+        REQUIRE(m.doc.modifyObject<Sketch>(m.grooveSketch, [](Sketch& s) -> Result<bool> {
+                       REQUIRE(s.setPointPosition(EntityId::fromValue(1), Point2D{-(2_mm), 15_mm}).has_value());
+                       return s.setPointPosition(EntityId::fromValue(4), Point2D{-(2_mm), 20_mm});
+                   }).has_value());
+        const ValidationReport report = validateDocument(m.doc);
+        const auto regeneration = issuesOf(report, ValidationCheck::FeatureRegeneration);
+        REQUIRE(regeneration.size() == 1);
+        CHECK(regeneration[0].item == m.groove);
+        CHECK_THAT(regeneration[0].message, ContainsSubstring("crosses the revolution axis"));
+        CHECK_FALSE(report.valid());
+    }
 }

@@ -5,6 +5,7 @@
 #include <bettercad/core/document/DocumentObject.hpp>
 #include <bettercad/core/units/Units.hpp>
 #include <bettercad/features/Export.hpp>
+#include <bettercad/features/Feature.hpp>
 
 #include <memory>
 #include <optional>
@@ -21,16 +22,7 @@ enum class ExtrudeDirection {
     Symmetric, ///< half the depth on each side
 };
 
-/// How the feature's solid combines with an existing body.
-enum class FeatureOperation {
-    NewBody,   ///< the extruded solid on its own
-    Join,      ///< union with the target body
-    Cut,       ///< target body minus the extruded solid
-    Intersect, ///< intersection with the target body
-};
-
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT std::string_view toString(ExtrudeDirection direction) noexcept;
-[[nodiscard]] BETTERCAD_FEATURES_EXPORT std::string_view toString(FeatureOperation operation) noexcept;
 
 /// Inputs of an extrude feature, e.g.
 /// `ExtrudeDefinition{.profile = sketchId, .depth = 20_mm}`.
@@ -55,19 +47,22 @@ struct ExtrudeDefinition {
 
 /// A linear extrusion of a sketch's closed profiles (type name "extrude").
 /// The feature stores its inputs only; its body is computed by regeneration.
-class BETTERCAD_FEATURES_EXPORT ExtrudeFeature final : public DocumentObject {
+class BETTERCAD_FEATURES_EXPORT ExtrudeFeature final : public SolidFeature {
 public:
+    using Definition = ExtrudeDefinition;
+    static constexpr std::string_view kTypeName = "extrude";
+
     [[nodiscard]] static Result<std::unique_ptr<ExtrudeFeature>> create(std::string name,
                                                                          const ExtrudeDefinition& definition);
 
-    [[nodiscard]] std::string_view typeName() const noexcept override { return "extrude"; }
+    [[nodiscard]] std::string_view typeName() const noexcept override { return kTypeName; }
     [[nodiscard]] std::unique_ptr<DocumentObject> clone() const override;
     [[nodiscard]] bool contentEquals(const DocumentObject& other) const override;
     /// The profile sketch, the depth parameter and the target feature.
     [[nodiscard]] std::vector<ObjectId> dependencies() const override;
+    [[nodiscard]] FeatureOperation operation() const noexcept override { return definition_.operation; }
+    [[nodiscard]] std::optional<FeatureId> target() const noexcept override { return definition_.target; }
 
-    /// Typed view of id(); invalid until the feature is in a document.
-    [[nodiscard]] FeatureId featureId() const noexcept { return FeatureId::fromValue(id().value()); }
     [[nodiscard]] const ExtrudeDefinition& definition() const noexcept { return definition_; }
     /// Replaces the definition after validating it.
     Result<bool> setDefinition(const ExtrudeDefinition& definition);

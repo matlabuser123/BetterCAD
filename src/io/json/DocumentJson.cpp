@@ -19,6 +19,8 @@ Result<Json> objectToJson(const DocumentObject& object) {
         data = detail::sketchToJson(*sketch);
     } else if (const auto* extrude = dynamic_cast<const features::ExtrudeFeature*>(&object)) {
         data = detail::extrudeToJson(*extrude);
+    } else if (const auto* revolve = dynamic_cast<const features::RevolveFeature*>(&object)) {
+        data = detail::revolveToJson(*revolve);
     } else {
         return makeError(ErrorCode::InvalidArgument,
                          std::format("objects of type '{}' cannot be saved", object.typeName()));
@@ -49,12 +51,19 @@ Result<std::unique_ptr<DocumentObject>> objectFromJson(const Json& value, std::s
         }
         return std::unique_ptr<DocumentObject>(std::move(*sketch));
     }
-    if (*type == "extrude") {
+    if (*type == features::ExtrudeFeature::kTypeName) {
         auto extrude = detail::extrudeFromJson(**data, std::move(*name), dataPath);
         if (!extrude) {
             return std::unexpected(extrude.error());
         }
         return std::unique_ptr<DocumentObject>(std::move(*extrude));
+    }
+    if (*type == features::RevolveFeature::kTypeName) {
+        auto revolve = detail::revolveFromJson(**data, std::move(*name), dataPath);
+        if (!revolve) {
+            return std::unexpected(revolve.error());
+        }
+        return std::unique_ptr<DocumentObject>(std::move(*revolve));
     }
     return detail::parseError(detail::childPath(path, "type"), std::format("unknown object type '{}'", *type));
 }

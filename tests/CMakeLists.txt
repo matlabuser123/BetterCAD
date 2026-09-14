@@ -36,6 +36,7 @@ bettercad_add_executable(bettercad_tests
         core/geometry/MeshTests.cpp
         core/geometry/PrimitiveTests.cpp
         core/geometry/PropertyTests.cpp
+        core/geometry/RevolutionTests.cpp
         core/math/FrameTests.cpp
         core/parameters/ParameterTableTests.cpp
         core/parameters/ParameterTests.cpp
@@ -47,10 +48,12 @@ bettercad_add_executable(bettercad_tests
         features/ProfileTests.cpp
         features/RegenerationTests.cpp
         features/RegeneratorTests.cpp
+        features/RevolveTests.cpp
         features/ValidationTests.cpp
         io/DocumentFileTests.cpp
         io/ExampleModelTests.cpp
         io/ParameterJsonTests.cpp
+        io/RevolveFileTests.cpp
         io/StepExportTests.cpp
         io/StlTests.cpp
         sketch/ConstraintTests.cpp
@@ -60,6 +63,7 @@ bettercad_add_executable(bettercad_tests
         support/BracketModel.hpp
         support/MeshAnalysis.hpp
         support/TestFiles.hpp
+        support/TurnedPartModel.hpp
     LINK
         BetterCAD::core
         BetterCAD::features

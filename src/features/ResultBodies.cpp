@@ -1,4 +1,4 @@
-#include <bettercad/features/ExtrudeFeature.hpp>
+#include <bettercad/features/Feature.hpp>
 #include <bettercad/features/Regenerator.hpp>
 #include <bettercad/features/ResultBodies.hpp>
 
@@ -11,10 +11,10 @@ std::vector<ObjectId> resultFeatures(const Document& document) {
     std::set<ObjectId> consumed;
     std::vector<ObjectId> producers;
     for (const DocumentObject& object : document.objects()) {
-        if (const auto* extrude = dynamic_cast<const ExtrudeFeature*>(&object)) {
+        if (const auto* feature = dynamic_cast<const SolidFeature*>(&object)) {
             producers.push_back(object.id());
-            if (extrude->definition().target) {
-                consumed.insert(ObjectId{*extrude->definition().target});
+            if (const auto target = feature->target()) {
+                consumed.insert(ObjectId{*target});
             }
         }
     }

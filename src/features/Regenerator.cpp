@@ -34,17 +34,19 @@ Result<std::optional<geometry::Body>> regenerateSketchObject(Document& document,
     return std::optional<geometry::Body>{};
 }
 
-Result<std::optional<geometry::Body>> regenerateExtrudeObject(Document& document, ObjectId id,
-                                                              const Regenerator& regenerator) {
-    const auto* feature = document.findObjectAs<ExtrudeFeature>(id);
+/// Handler for a solid feature kind F with its evaluation function.
+template <typename F, Result<geometry::Body> (*Evaluate)(const F&, const Document&, const geometry::Body*)>
+Result<std::optional<geometry::Body>> regenerateSolidFeature(Document& document, ObjectId id,
+                                                             const Regenerator& regenerator) {
+    const auto* feature = document.findObjectAs<F>(id);
     if (feature == nullptr) {
-        return makeError(ErrorCode::Internal, std::format("{} is not an extrude feature", id));
+        return makeError(ErrorCode::Internal, std::format("{} is not a {} feature", id, F::kTypeName));
     }
     const geometry::Body* target = nullptr;
-    if (feature->definition().target) {
-        target = regenerator.body(ObjectId{*feature->definition().target});
+    if (const auto targetId = feature->target()) {
+        target = regenerator.body(ObjectId{*targetId});
     }
-    auto body = regenerateExtrude(*feature, document, target);
+    auto body = Evaluate(*feature, document, target);
     if (!body) {
         return std::unexpected(body.error());
     }
@@ -81,7 +83,10 @@ std::string_view toString(NodeState state) noexcept {
 
 Regenerator::Regenerator() {
     registerHandler("sketch", regenerateSketchObject);
-    registerHandler("extrude", regenerateExtrudeObject);
+    registerHandler(std::string{ExtrudeFeature::kTypeName},
+                    regenerateSolidFeature<ExtrudeFeature, &regenerateExtrude>);
+    registerHandler(std::string{RevolveFeature::kTypeName},
+                    regenerateSolidFeature<RevolveFeature, &regenerateRevolve>);
 }
 
 void Regenerator::registerHandler(std::string typeName, RegenerationHandler handler) {

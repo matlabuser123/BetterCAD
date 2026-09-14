@@ -2,6 +2,7 @@
 #include "support/BracketModel.hpp"
 #include "support/MeshAnalysis.hpp"
 #include "support/TestFiles.hpp"
+#include "support/TurnedPartModel.hpp"
 #include "support/occt/StepReadBack.hpp"
 
 #include <bettercad/core/BuildInfo.hpp>
@@ -316,6 +317,28 @@ TEST_CASE("Exports report models that do not regenerate", "[cli][export]") {
         CHECK_THAT(result.err, ContainsSubstring("the model does not regenerate"));
         CHECK_FALSE(std::filesystem::exists(output));
     }
+}
+
+TEST_CASE("info and validate describe revolves", "[cli][revolve]") {
+    TempDir dir;
+    test::TurnedPartModel model;
+    const auto path = dir.path() / "shaft.bcad";
+    REQUIRE(io::saveDocument(model.doc, path).has_value());
+
+    const auto info = runCli({"info", arg(path)});
+    CHECK(info.exitCode == ExitCode::Success);
+    CHECK_THAT(info.out, ContainsSubstring(
+                             "\n  object:6   revolve  Turn          profile Profile, axis sketch Y axis, angle sweep, "
+                             "positive, new body\n"));
+    CHECK_THAT(info.out, ContainsSubstring(
+                             "\n  object:10  revolve  Groove        profile GrooveSketch, axis line entity:11, "
+                             "angle 360 deg, positive, cut Bore\n"));
+    CHECK_THAT(info.out, ContainsSubstring("\n  sweep   360 deg\n"));
+
+    const auto validate = runCli({"validate", arg(path)});
+    CHECK(validate.exitCode == ExitCode::Success);
+    CHECK_THAT(validate.out, ContainsSubstring("  Groove (object:10): 1 solid, volume "));
+    CHECK_THAT(validate.out, EndsWith("Result: valid (1 warning)\n"));
 }
 
 TEST_CASE("Exports of a document without bodies fail", "[cli][export]") {

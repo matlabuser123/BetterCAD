@@ -6,6 +6,7 @@
 
 #include <bettercad/core/math/Frame.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
+#include <bettercad/features/RevolveFeature.hpp>
 #include <bettercad/sketch/Sketch.hpp>
 
 #include <memory>
@@ -25,5 +26,10 @@ namespace bettercad::io::detail {
 [[nodiscard]] Json extrudeToJson(const features::ExtrudeFeature& feature);
 [[nodiscard]] Result<std::unique_ptr<features::ExtrudeFeature>>
 extrudeFromJson(const Json& data, std::string name, std::string_view path);
+
+/// Angle in radians; the axis as {"type": "sketch_x" | "sketch_y" | "line", "line": id}.
+[[nodiscard]] Json revolveToJson(const features::RevolveFeature& feature);
+[[nodiscard]] Result<std::unique_ptr<features::RevolveFeature>>
+revolveFromJson(const Json& data, std::string name, std::string_view path);
 
 } // namespace bettercad::io::detail

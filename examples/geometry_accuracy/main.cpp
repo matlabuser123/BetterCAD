@@ -1,15 +1,20 @@
 // Prints geometry-kernel results next to analytic solutions for primitive
-// solids and boolean operations. The relative errors in the output are the
-// basis for the tolerances used by tests/core/geometry.
+// solids, boolean operations and solids of revolution. The relative errors in
+// the output are the basis for the tolerances used by tests/core/geometry.
 #include <bettercad/core/Units.hpp>
 #include <bettercad/core/geometry/Booleans.hpp>
 #include <bettercad/core/geometry/Kernel.hpp>
 #include <bettercad/core/geometry/Primitives.hpp>
+#include <bettercad/core/geometry/Profile.hpp>
+#include <bettercad/core/geometry/Sweeps.hpp>
 
 #include <cmath>
 #include <cstdio>
+#include <initializer_list>
 #include <numbers>
 #include <string>
+#include <utility>
+#include <vector>
 
 using namespace bettercad;
 using namespace bettercad::geometry;
@@ -34,12 +39,33 @@ void report(const char* name, const Result<Body>& body, double expectedVolumeMm3
     }
     const double volume = props->volume.in(units::mm3);
     const double area = props->surfaceArea.in(units::mm2);
-    std::printf("%-34s V=%.12g (rel err %.2e, est %.1e)", name, volume,
-                relativeError(volume, expectedVolumeMm3), props->volumeRelativeError);
+    std::printf("%-34s V=%.17g expected %.17g (abs err %.2e, rel err %.2e, est %.1e)", name, volume,
+                expectedVolumeMm3, std::fabs(volume - expectedVolumeMm3), relativeError(volume, expectedVolumeMm3),
+                props->volumeRelativeError);
     if (expectedAreaMm2 > 0.0) {
         std::printf("  A=%.12g (rel err %.2e)", area, relativeError(area, expectedAreaMm2));
     }
-    std::printf("  valid=%d\n", body->isValid() ? 1 : 0);
+    std::printf("  valid=%d solids=%zu\n", body->isValid() ? 1 : 0, body->topology().solids);
+}
+
+Point2D mm(double u, double v) {
+    return Point2D{u * units::mm, v * units::mm};
+}
+
+/// Closed polygon in (radius, height) on the XZ plane.
+PlanarRegion polygon(std::initializer_list<std::pair<double, double>> points) {
+    const std::vector<std::pair<double, double>> p(points);
+    PlanarRegion region{.plane = Frame3D::xz(), .outer = {}, .holes = {}};
+    for (std::size_t i = 0; i < p.size(); ++i) {
+        region.outer.segments.emplace_back(
+            LineSegment2D{mm(p[i].first, p[i].second), mm(p[(i + 1) % p.size()].first, p[(i + 1) % p.size()].second)});
+    }
+    return region;
+}
+
+/// Revolution about the global Z axis, which lies in the XZ plane.
+Result<Body> revolve(const PlanarRegion& region, Angle sweep) {
+    return makeRevolution(region, Axis3D{Point3D{}, Direction3D::unitZ()}, Angle{}, sweep);
 }
 
 } // namespace
@@ -77,5 +103,26 @@ int main() {
     const auto cx = makeCylinder(Axis3D{Point3D{-20_mm, 0_mm, 0_mm}, Direction3D::unitX()}, 10_mm, 40_mm);
     const auto cy = makeCylinder(Axis3D{Point3D{0_mm, -20_mm, 0_mm}, Direction3D::unitY()}, 10_mm, 40_mm);
     report("bicylinder (Steinmetz)", booleanIntersection(*cx, *cy), 16.0 / 3.0 * 1000.0, 0.0);
+
+    std::printf("\nSolids of revolution about Z (profiles in the XZ plane)\n");
+    const PlanarRegion tube = polygon({{10, 0}, {20, 0}, {20, 30}, {10, 30}});
+    const double tubeArea = 2 * pi * 20 * 30 + 2 * pi * 10 * 30 + 2 * pi * (400 - 100);
+    report("revolve tube r=10..20 h=30", revolve(tube, 360_deg), pi * (400 - 100) * 30, tubeArea);
+    report("revolve tube wedge 90 deg", revolve(tube, 90_deg), pi * (400 - 100) * 30 / 4,
+           tubeArea / 4 + 2 * 10 * 30);
+    report("revolve tube wedge 180 deg", revolve(tube, 180_deg), pi * (400 - 100) * 30 / 2,
+           tubeArea / 2 + 2 * 10 * 30);
+    report("revolve tube wedge 270 deg", revolve(tube, 270_deg), pi * (400 - 100) * 30 * 3 / 4,
+           tubeArea * 3 / 4 + 2 * 10 * 30);
+    report("revolve cone r=10 h=20", revolve(polygon({{0, 0}, {10, 0}, {0, 20}}), 360_deg), pi * 100 * 20 / 3.0,
+           pi * 10 * std::sqrt(500.0) + pi * 100);
+    PlanarRegion halfDisc{.plane = Frame3D::xz(), .outer = {}, .holes = {}};
+    halfDisc.outer.segments.emplace_back(ArcSegment2D{mm(0, 0), mm(0, -10), mm(0, 10), true});
+    halfDisc.outer.segments.emplace_back(LineSegment2D{mm(0, 10), mm(0, -10)});
+    report("revolve sphere r=10", revolve(halfDisc, 360_deg), 4.0 / 3.0 * pi * 1000, 4 * pi * 100);
+    PlanarRegion disc{.plane = Frame3D::xz(), .outer = {}, .holes = {}};
+    disc.outer.segments.emplace_back(CircleSegment2D{mm(20, 0), 5_mm, true});
+    report("revolve torus R=20 a=5", revolve(disc, 360_deg), 2 * pi * pi * 20 * 25, 4 * pi * pi * 20 * 5);
+    report("revolve torus wedge 120 deg", revolve(disc, 120_deg), 2 * pi * pi * 20 * 25 / 3, 0.0);
     return 0;
 }

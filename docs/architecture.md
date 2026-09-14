@@ -167,6 +167,21 @@ milestones start; see `TODO.md`.
   printer once per process (`occt::initializeSession()`): a library must not
   write to the application's output, and problems are reported as `Result`
   errors.
+- **Sweeps** (`Sweeps.hpp`). `makePrism(region, from, to)` translates a
+  planar region along its normal; `makeRevolution(region, axis, from, to)`
+  rotates it about an axis in its plane, right-handed, with
+  0 < to − from ≤ 360°. Both share one profile-face builder
+  (`occt/OcctSweeps.cpp`). Before calling the kernel, `makeRevolution`
+  checks:
+  - that the axis origin is finite (directions are finite unit vectors by
+    construction) and the axis lies in the plane;
+  - that the region lies on one side of the axis (touching is allowed).
+    The check is exact: it uses segment ends and, for arcs and circles,
+    their extreme points, so an arc bulging across the axis is caught even
+    when its ends are not.
+
+  Afterwards it requires one or more valid solids with a finite, positive
+  volume.
 
 ### Sketches (`bettercad/sketch/`, library `bettercad_sketch`)
 
@@ -192,12 +207,34 @@ milestones start; see `TODO.md`.
 - Features are `DocumentObject`s that store inputs only. For example,
   `ExtrudeFeature` holds an `ExtrudeDefinition` (profile sketch, depth or
   driving depth parameter, direction, operation, target).
+- **Solid features** (`Feature.hpp`) derive from `SolidFeature`, which
+  exposes the `FeatureOperation` (new body, join, cut, intersect) and the
+  target feature. Shared infrastructure serves every kind:
+  - `validateOperation()` checks the operation/target pairing;
+  - `combineWithTarget()` performs the body combination, so no feature
+    encodes booleans itself. Kernel failures come back prefixed with the
+    feature's name;
+  - the private `SolidSupport` helpers resolve the profile sketch and its
+    regions and unite one tool solid per region;
+  - `CreateFeatureCommand<F>` / `ModifyFeatureCommand<F>` provide undoable
+    creation and editing for any kind with a `Definition`.
+
+  Result bodies, validation and the CLI use `SolidFeature`, so a new kind
+  plugs in without touching them.
+- **Extrude** (`ExtrudeFeature.hpp`) and **Revolve** (`RevolveFeature.hpp`)
+  are the solid features so far. A `RevolveDefinition` holds:
+  - the profile sketch;
+  - a `RevolveAxis`: the sketch's X or Y axis, or a line entity of the
+    profile sketch, so the axis follows the sketch;
+  - an angle in (0, 360°], literal or driven by an angle parameter;
+  - a direction (positive, negative or symmetric by the right-hand rule);
+  - the operation and target.
 - Bodies are derived: regeneration computes them from the current document.
   Regenerating does not change the document's revision or dirty state.
 - `extractRegions()` turns a sketch into `geometry::PlanarRegion`s. It
   connects edges by position, rejects open ends and branches, and classifies
-  holes by nesting. `geometry::makePrism()` extrudes regions; the kernel sees
-  only these value types.
+  holes by nesting. `geometry::makePrism()` and `makeRevolution()` sweep
+  regions; the kernel sees only these value types.
 
 ### Dependencies and regeneration
 
@@ -217,8 +254,8 @@ milestones start; see `TODO.md`.
 - **Validation** (`Validation.hpp`). `validateDocument()` runs six checks on
   a copy of the document:
   1. document consistency (references point at the right kind of item and
-     dimension);
-  2. missing references;
+     dimension, e.g. revolve axes are lines and revolve angles are angles);
+  2. missing references (including revolve axis lines in their sketches);
   3. dependency cycles;
   4. sketch constraints (each sketch solves with its driving parameters;
      not fully constrained is a warning);
@@ -242,8 +279,10 @@ milestones start; see `TODO.md`.
   - the objects, as `{id, type, name, data}` in ascending ID order.
 
   Sketch data holds the placement frame, the entities and constraints with
-  their own IDs, and the sketch's ID counters. Extrude data holds its
-  definition. The rules are:
+  their own IDs, and the sketch's ID counters. Extrude and revolve data hold
+  their definitions; a revolve axis is stored as
+  `{"type": "sketch_x" | "sketch_y" | "line", "line": id}` and its angle in
+  radians. The rules are:
   - **Only inputs are stored.** Geometry is derived and is regenerated after
     loading; the solved sketch state is saved, so regenerating a loaded file
     reproduces the saved geometry bit for bit.
@@ -262,6 +301,10 @@ milestones start; see `TODO.md`.
 - New object kinds need a serializer in `src/io/json/`; saving a document
   that contains an unsupported kind fails with `InvalidArgument` rather than
   dropping data.
+- **Versioning policy.** Adding an object type is an additive change within
+  format version 1: files without the new type are byte-identical to before,
+  and an older reader rejects the new type with "unknown object type". The
+  version changes only when the meaning of existing data changes.
 - **Model export** (`ModelExport.hpp`). `exportStep` and `exportStl` write a
   document's result bodies. STL is written by BetterCAD from
   `geometry::Mesh` (`Stl.hpp`, binary or ASCII, millimetres, one solid).

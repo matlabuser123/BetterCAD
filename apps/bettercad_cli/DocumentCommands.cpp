@@ -2,6 +2,7 @@
 
 #include <bettercad/core/document/Document.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
+#include <bettercad/features/RevolveFeature.hpp>
 #include <bettercad/features/Validation.hpp>
 #include <bettercad/io/DocumentFile.hpp>
 #include <bettercad/sketch/Sketch.hpp>
@@ -57,6 +58,15 @@ std::string describeParameter(const Parameter& parameter) {
     return text;
 }
 
+/// "new body", or the operation and its target: "cut Pad".
+std::string describeOperation(const Document& document, const features::SolidFeature& feature) {
+    std::string operation{features::toString(feature.operation())};
+    if (const auto target = feature.target()) {
+        operation += " " + nameOrId(document, ObjectId{*target});
+    }
+    return operation;
+}
+
 std::string describeObject(const Document& document, const DocumentObject& object) {
     if (const auto* sketch = dynamic_cast<const sketch::Sketch*>(&object)) {
         const auto disabled = std::ranges::count_if(sketch->constraints(),
@@ -78,12 +88,18 @@ std::string describeObject(const Document& document, const DocumentObject& objec
         const features::ExtrudeDefinition& d = extrude->definition();
         const std::string depth = d.depthParameter ? nameOrId(document, ObjectId{*d.depthParameter})
                                                    : std::format("{:.10g} mm", d.depth.in(units::mm));
-        std::string operation{features::toString(d.operation)};
-        if (d.target) {
-            operation += " " + nameOrId(document, ObjectId{*d.target});
-        }
         return std::format("profile {}, depth {}, {}, {}", nameOrId(document, ObjectId{d.profile}), depth,
-                           features::toString(d.direction), operation);
+                           features::toString(d.direction), describeOperation(document, *extrude));
+    }
+    if (const auto* revolve = dynamic_cast<const features::RevolveFeature*>(&object)) {
+        const features::RevolveDefinition& d = revolve->definition();
+        const std::string axis = d.axis.kind == features::RevolveAxisKind::Line
+                                     ? std::format("line {}", d.axis.line)
+                                     : std::string{features::toString(d.axis.kind)};
+        const std::string angle = d.angleParameter ? nameOrId(document, ObjectId{*d.angleParameter})
+                                                   : std::format("{:.10g} deg", d.angle.in(units::deg));
+        return std::format("profile {}, axis {}, angle {}, {}, {}", nameOrId(document, ObjectId{d.profile}), axis,
+                           angle, features::toString(d.direction), describeOperation(document, *revolve));
     }
     return {};
 }

@@ -18,9 +18,12 @@ namespace bettercad::features {
 /// The checks of validateDocument(), in the order they run.
 enum class ValidationCheck {
     /// References point at items of the right kind: profiles are sketches,
-    /// targets are features with bodies, and driving parameters are lengths.
+    /// targets are features with bodies, revolve axes are lines, and driving
+    /// parameters have the right dimension (lengths for dimensions and
+    /// depths, angles for revolve angles).
     DocumentConsistency,
-    /// Every referenced item exists.
+    /// Every referenced item exists, including revolve axis lines in their
+    /// profile sketches.
     MissingReferences,
     /// No item depends on itself, directly or indirectly.
     DependencyCycles,

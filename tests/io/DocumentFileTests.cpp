@@ -500,8 +500,11 @@ TEST_CASE("Invalid document files are rejected with the JSON path", "[io][docume
               "document.metadata.properties.material: expected a string");
     }
     SECTION("unknown kinds and names") {
+        CHECK(loadError(replaceOnce(good, "\"type\": \"extrude\"", "\"type\": \"teapot\"")).message ==
+              "objects[1].type: unknown object type 'teapot'");
+        // A known type with another type's data is rejected field by field.
         CHECK(loadError(replaceOnce(good, "\"type\": \"extrude\"", "\"type\": \"revolve\"")).message ==
-              "objects[1].type: unknown object type 'revolve'");
+              "objects[1].data.depth: unknown field");
         CHECK(loadError(replaceOnce(good, "\"type\": \"circle\"", "\"type\": \"spline\"")).message ==
               "objects[0].data.entities[1].type: unknown type 'spline'");
         CHECK(loadError(replaceOnce(good, "\"direction\": \"normal\"", "\"direction\": \"sideways\"")).message ==

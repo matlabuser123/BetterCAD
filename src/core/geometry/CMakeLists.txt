@@ -16,9 +16,9 @@ bettercad_add_library(bettercad_geometry
         occt/OcctKernel.cpp
         occt/OcctMesh.cpp
         occt/OcctPrimitives.cpp
-        occt/OcctPrism.cpp
         occt/OcctSession.hpp
         occt/OcctStep.cpp
+        occt/OcctSweeps.cpp
     PUBLIC_LINK
         BetterCAD::core
     PRIVATE_LINK

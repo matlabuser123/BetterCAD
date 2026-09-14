@@ -224,6 +224,26 @@ P25  Production Hardening
 P26  BetterCAD 1.0
 ```
 
+## Milestone numbering
+
+`TODO.md` is the authority for milestone IDs such as `P11-FEAT-001`. The
+phase numbers above describe the long-term plan and were set before
+implementation began, so they do not all match the IDs used in `TODO.md`:
+
+| Roadmap phase | `TODO.md` milestones | Status |
+| --- | --- | --- |
+| P0–P4 | P0–P4 | done (v0.1.0) |
+| P5 Constraint Solver | P5 Constraints, P6 Sketch Solver | done (v0.1.0) |
+| P6 Parametric Features | P7 Extrude; the remaining features in P11 | P7 done; P11 in progress |
+| P7 Regeneration Engine | P8 Dependency Graph | done (v0.1.0) |
+| P8 Persistence / File Formats | P9 Persistence, P10 CLI (STEP/STL export) | done (v0.1.0) |
+| P9 Desktop CAD Application | not yet scheduled | — |
+| P10 Production Part Modeling | P11 Production Part Modeling | in progress |
+| P11 and later | not yet scheduled | — |
+
+New milestones take the next `TODO.md` number. When a later roadmap phase
+is scheduled, record its `TODO.md` number in this table.
+
 ---
 
 # P0 — Repository Foundation
@@ -820,7 +840,7 @@ A user must be able to create a parametric mechanical part entirely from the GUI
 
 ---
 
-# P10 — Production Part Modeling
+# P10 — Production Part Modeling (`TODO.md` milestone P11)
 
 ## Goal
 

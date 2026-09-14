@@ -3,6 +3,7 @@
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/features/Regenerator.hpp>
 #include <bettercad/features/ResultBodies.hpp>
+#include <bettercad/features/RevolveFeature.hpp>
 #include <bettercad/features/Validation.hpp>
 #include <bettercad/sketch/Sketch.hpp>
 #include <bettercad/sketch/SketchRegeneration.hpp>
@@ -11,6 +12,7 @@
 #include <algorithm>
 #include <format>
 #include <set>
+#include <variant>
 
 namespace bettercad::features {
 
@@ -73,8 +75,9 @@ private:
                         actual, expected));
     }
 
-    /// A reference that exists must name a length parameter.
-    void checkLengthParameter(ObjectId owner, ParameterId parameter, std::string_view reference) {
+    /// A reference that exists must name a parameter of dimension @p expected.
+    void checkParameter(ObjectId owner, ParameterId parameter, const Dimension& expected,
+                        std::string_view reference) {
         const ObjectId id{parameter};
         if (!document_.contains(id)) {
             return; // a missing reference
@@ -82,8 +85,16 @@ private:
         const Parameter* found = document_.parameters().find(parameter);
         if (found == nullptr) {
             wrongKind(owner, reference, id, kindOf(document_, id), "a parameter");
-        } else if (found->dimension() != dimensions::length) {
-            wrongKind(owner, reference, id, describeQuantity(found->dimension()), "a length");
+        } else if (found->dimension() != expected) {
+            wrongKind(owner, reference, id, describeQuantity(found->dimension()), describeQuantity(expected));
+        }
+    }
+
+    /// A profile reference that exists must name a sketch.
+    void checkProfile(ObjectId owner, SketchId profile) {
+        const ObjectId id{profile};
+        if (document_.contains(id) && document_.findObjectAs<sketch::Sketch>(id) == nullptr) {
+            wrongKind(owner, "the profile is", id, kindOf(document_, id), "a sketch");
         }
     }
 
@@ -92,28 +103,60 @@ private:
             if (const auto* sketch = dynamic_cast<const sketch::Sketch*>(&object)) {
                 for (const sketch::Constraint& constraint : sketch->constraints()) {
                     if (constraint.parameter) {
-                        checkLengthParameter(object.id(), *constraint.parameter,
-                                             std::format("{} is driven by", constraint.id));
+                        checkParameter(object.id(), *constraint.parameter, dimensions::length,
+                                       std::format("{} is driven by", constraint.id));
                     }
                 }
             } else if (const auto* extrude = dynamic_cast<const ExtrudeFeature*>(&object)) {
                 const ExtrudeDefinition& definition = extrude->definition();
-                const ObjectId profile{definition.profile};
-                if (document_.contains(profile) && document_.findObjectAs<sketch::Sketch>(profile) == nullptr) {
-                    wrongKind(object.id(), "the profile is", profile, kindOf(document_, profile), "a sketch");
-                }
+                checkProfile(object.id(), definition.profile);
                 if (definition.depthParameter) {
-                    checkLengthParameter(object.id(), *definition.depthParameter, "the depth is driven by");
+                    checkParameter(object.id(), *definition.depthParameter, dimensions::length,
+                                   "the depth is driven by");
                 }
-                if (definition.target) {
-                    const ObjectId target{*definition.target};
-                    if (target != object.id() && document_.contains(target) &&
-                        document_.findObjectAs<ExtrudeFeature>(target) == nullptr) {
-                        wrongKind(object.id(), "the target is", target, kindOf(document_, target),
-                                  "a feature with a body");
-                    }
+            } else if (const auto* revolve = dynamic_cast<const RevolveFeature*>(&object)) {
+                const RevolveDefinition& definition = revolve->definition();
+                checkProfile(object.id(), definition.profile);
+                if (definition.angleParameter) {
+                    checkParameter(object.id(), *definition.angleParameter, dimensions::angle,
+                                   "the angle is driven by");
+                }
+                const sketch::Entity* axis = revolveAxisEntity(*revolve);
+                if (axis != nullptr && !std::holds_alternative<sketch::LineEntity>(axis->geometry)) {
+                    add(ValidationCheck::DocumentConsistency, Severity::Error, object.id(),
+                        std::format("{}: the axis is {}, which is {}, not a line", label(document_, object.id()),
+                                    definition.axis.line, withArticle(sketch::toString(axis->type()))));
                 }
             }
+            if (const auto* feature = dynamic_cast<const SolidFeature*>(&object)) {
+                checkTarget(*feature);
+            }
+        }
+    }
+
+    /// The profile sketch of a revolve about a line, if the sketch exists.
+    [[nodiscard]] const sketch::Sketch* revolveAxisSketch(const RevolveFeature& revolve) const {
+        if (revolve.definition().axis.kind != RevolveAxisKind::Line) {
+            return nullptr;
+        }
+        return document_.findObjectAs<sketch::Sketch>(ObjectId{revolve.definition().profile});
+    }
+
+    /// The axis entity of a revolve about a line, if it exists.
+    [[nodiscard]] const sketch::Entity* revolveAxisEntity(const RevolveFeature& revolve) const {
+        const sketch::Sketch* sketch = revolveAxisSketch(revolve);
+        return sketch == nullptr ? nullptr : sketch->findEntity(revolve.definition().axis.line);
+    }
+
+    /// A solid feature's target must be another feature that has a body.
+    void checkTarget(const SolidFeature& feature) {
+        const auto target = feature.target();
+        if (!target) {
+            return;
+        }
+        const ObjectId id{*target};
+        if (id != feature.id() && document_.contains(id) && document_.findObjectAs<SolidFeature>(id) == nullptr) {
+            wrongKind(feature.id(), "the target is", id, kindOf(document_, id), "a feature with a body");
         }
     }
 
@@ -122,6 +165,19 @@ private:
             add(ValidationCheck::MissingReferences, Severity::Error, reference.dependent,
                 std::format("{} references {}, which does not exist", label(document_, reference.dependent),
                             reference.missing));
+        }
+        // References into sketches are not graph edges: revolve axis lines.
+        for (const DocumentObject& object : document_.objects()) {
+            const auto* revolve = dynamic_cast<const RevolveFeature*>(&object);
+            if (revolve == nullptr || failedItems_.contains(object.id())) {
+                continue;
+            }
+            const sketch::Sketch* sketch = revolveAxisSketch(*revolve);
+            if (sketch != nullptr && sketch->findEntity(revolve->definition().axis.line) == nullptr) {
+                add(ValidationCheck::MissingReferences, Severity::Error, object.id(),
+                    std::format("{}: the axis line {} does not exist in {}", label(document_, object.id()),
+                                revolve->definition().axis.line, label(document_, sketch->id())));
+            }
         }
     }
 

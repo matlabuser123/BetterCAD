@@ -18,20 +18,6 @@ std::string_view toString(ExtrudeDirection direction) noexcept {
     return "unknown";
 }
 
-std::string_view toString(FeatureOperation operation) noexcept {
-    switch (operation) {
-    case FeatureOperation::NewBody:
-        return "new body";
-    case FeatureOperation::Join:
-        return "join";
-    case FeatureOperation::Cut:
-        return "cut";
-    case FeatureOperation::Intersect:
-        return "intersect";
-    }
-    return "unknown";
-}
-
 Result<void> validate(const ExtrudeDefinition& definition) {
     if (!definition.profile.isValid()) {
         return makeError(ErrorCode::InvalidArgument, "an extrude needs a profile sketch");
@@ -45,19 +31,11 @@ Result<void> validate(const ExtrudeDefinition& definition) {
                          std::format("extrude depth must be positive, got {}",
                                      toString(definition.depth, units::mm)));
     }
-    const bool needsTarget = definition.operation != FeatureOperation::NewBody;
-    if (needsTarget && (!definition.target || !definition.target->isValid())) {
-        return makeError(ErrorCode::InvalidArgument,
-                         std::format("a {} extrude needs a target feature", toString(definition.operation)));
-    }
-    if (!needsTarget && definition.target) {
-        return makeError(ErrorCode::InvalidArgument, "a new-body extrude takes no target feature");
-    }
-    return {};
+    return validateOperation(definition.operation, definition.target);
 }
 
 ExtrudeFeature::ExtrudeFeature(std::string name, const ExtrudeDefinition& definition)
-    : DocumentObject(std::move(name)), definition_(definition) {}
+    : SolidFeature(std::move(name)), definition_(definition) {}
 
 Result<std::unique_ptr<ExtrudeFeature>> ExtrudeFeature::create(std::string name,
                                                                const ExtrudeDefinition& definition) {
