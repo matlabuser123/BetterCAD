@@ -1,5 +1,6 @@
 #include <bettercad/core/document/DependencyGraph.hpp>
 #include <bettercad/core/units/Format.hpp>
+#include <bettercad/features/ChamferFeature.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/features/Regenerator.hpp>
 #include <bettercad/features/ResultBodies.hpp>
@@ -126,6 +127,12 @@ private:
                     add(ValidationCheck::DocumentConsistency, Severity::Error, object.id(),
                         std::format("{}: the axis is {}, which is {}, not a line", label(document_, object.id()),
                                     definition.axis.line, withArticle(sketch::toString(axis->type()))));
+                }
+            } else if (const auto* chamfer = dynamic_cast<const ChamferFeature*>(&object)) {
+                const ChamferDefinition& definition = chamfer->definition();
+                if (definition.distanceParameter) {
+                    checkParameter(object.id(), *definition.distanceParameter, dimensions::length,
+                                   "the distance is driven by");
                 }
             }
             if (const auto* feature = dynamic_cast<const SolidFeature*>(&object)) {

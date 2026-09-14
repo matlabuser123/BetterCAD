@@ -11,7 +11,7 @@ underneath, hidden behind adapters.
             └───────┬──────────────────────┘
                     io              native .bcad, STEP/STL export
                     │
-                 features           extrude (later: revolve, boolean, ...)
+                 features           extrude, revolve, chamfer (later: fillet, ...)
                     │
                   sketch            entities, constraints, solver
                     │
@@ -182,6 +182,52 @@ milestones start; see `TODO.md`.
 
   Afterwards it requires one or more valid solids with a finite, positive
   volume.
+- **Edges and edge references** (`Edges.hpp`). `listEdges(body)` describes a
+  body's edges by their geometry (curve kind, ends, length, number of
+  faces). Features refer to an edge by an `EdgeSignature`: the edge's
+  supporting line, or its circle (centre, axis, radius), in a canonical form.
+  `findEdges(body, signature)` returns the edges on that curve, matched
+  within 1e-7 mm and 1e-9 rad. Kernel enumeration order and kernel object
+  identity are never used as references. This is geometric matching, **not**
+  persistent topological naming (a later milestone), and its limits are part
+  of the contract:
+  - it survives changes that keep the edge on its curve, such as widening a
+    box, which lengthens its edges along the width;
+  - it fails with NotFound when the curve moves or changes size, for example
+    when a box gets taller and its top edges move;
+  - it fails as ambiguous when several edges lie on the curve, for example
+    when a cut splits the edge.
+
+  No other edge is ever substituted.
+- **Chamfer** (`Chamfer.hpp`). `chamferEdges(body, request)` returns a new
+  body; the input is never modified. A `ChamferRequest` holds edge
+  signatures, a mode and its values:
+  - `EqualDistance`: d on both faces;
+  - `TwoDistance`: d1 on the reference face and d2 on the other;
+  - `DistanceAngle`: d on the reference face, with the chamfer face at the
+    given angle to it.
+
+  The reference face at each edge is the one whose outward normal is closer
+  to the request's `referenceSide`. If the two normals cannot be told apart,
+  the chamfer fails instead of guessing. `validate(request)` checks
+  everything that does not depend on a body.
+
+  **Fit check.** Before the kernel runs, every chamfer must fit, by at least
+  0.001 mm. That includes edges the kernel adds along a smooth (tangent)
+  chain. On each face next to a chamfered edge, the chamfer's strip must:
+  - stay clear of the face's other edges;
+  - not run across the face;
+  - not meet another chamfer's strip.
+
+  Otherwise the result is `FailedPrecondition` with the widths and the room.
+
+  The check exists because OCCT 8.0.1, built with our toolchain, crashes
+  the process on chamfers that do not fit, instead of failing (see
+  `docs/verification/P11-FEAT-002/`). It measures straight-line
+  distances, so on curved faces it errs towards refusing.
+
+  Kernel failures that remain become `FailedPrecondition`, and every result
+  must be one valid solid with a finite, positive volume.
 
 ### Sketches (`bettercad/sketch/`, library `bettercad_sketch`)
 
@@ -208,8 +254,9 @@ milestones start; see `TODO.md`.
   `ExtrudeFeature` holds an `ExtrudeDefinition` (profile sketch, depth or
   driving depth parameter, direction, operation, target).
 - **Solid features** (`Feature.hpp`) derive from `SolidFeature`, which
-  exposes the `FeatureOperation` (new body, join, cut, intersect) and the
-  target feature. Shared infrastructure serves every kind:
+  exposes the target feature whose body the feature consumes, if any.
+  Extrude and Revolve also have a `FeatureOperation` (new body, join, cut,
+  intersect). Shared infrastructure serves every kind:
   - `validateOperation()` checks the operation/target pairing;
   - `combineWithTarget()` performs the body combination, so no feature
     encodes booleans itself. Kernel failures come back prefixed with the
@@ -229,6 +276,20 @@ milestones start; see `TODO.md`.
   - an angle in (0, 360°], literal or driven by an angle parameter;
   - a direction (positive, negative or symmetric by the right-hand rule);
   - the operation and target.
+- **Chamfer** (`ChamferFeature.hpp`) modifies another feature's body. A
+  `ChamferDefinition` holds:
+  - the target feature, which the chamfer consumes;
+  - edge references (`geometry::EdgeSignature`, with the limits described
+    under Geometry);
+  - the mode, with a distance that is literal or driven by a length
+    parameter, plus the second distance or the angle, and the reference
+    side.
+
+  Values a mode does not use must be zero, so none is silently ignored.
+  Regeneration resolves the references on the target's current body. A
+  reference that matches no edge, or several, fails the chamfer with a
+  message naming the reference. The chamfer then keeps no body, and the
+  target's body is untouched.
 - Bodies are derived: regeneration computes them from the current document.
   Regenerating does not change the document's revision or dirty state.
 - `extractRegions()` turns a sketch into `geometry::PlanarRegion`s. It
@@ -248,13 +309,15 @@ milestones start; see `TODO.md`.
   references and cycles are blocked and keep no stale results.
 - New object kinds plug in a regeneration handler by type name.
 - **Result bodies** (`ResultBodies.hpp`). A feature's body is a model result
-  unless another feature consumes it as its Join/Cut/Intersect target.
+  unless another feature consumes it as its target (the target of a
+  Join/Cut/Intersect, or the body a chamfer modifies).
   `regenerateResultBodies()` regenerates a copy of the document and returns
   those bodies. Exports use it.
 - **Validation** (`Validation.hpp`). `validateDocument()` runs six checks on
   a copy of the document:
   1. document consistency (references point at the right kind of item and
-     dimension, e.g. revolve axes are lines and revolve angles are angles);
+     dimension, e.g. revolve axes are lines, revolve angles are angles and
+     chamfer distances are lengths);
   2. missing references (including revolve axis lines in their sketches);
   3. dependency cycles;
   4. sketch constraints (each sketch solves with its driving parameters;
@@ -279,10 +342,19 @@ milestones start; see `TODO.md`.
   - the objects, as `{id, type, name, data}` in ascending ID order.
 
   Sketch data holds the placement frame, the entities and constraints with
-  their own IDs, and the sketch's ID counters. Extrude and revolve data hold
-  their definitions; a revolve axis is stored as
-  `{"type": "sketch_x" | "sketch_y" | "line", "line": id}` and its angle in
-  radians. The rules are:
+  their own IDs, and the sketch's ID counters. Extrude, revolve and chamfer
+  data hold their definitions:
+  - a revolve axis is stored as
+    `{"type": "sketch_x" | "sketch_y" | "line", "line": id}` and its angle
+    in radians;
+  - a chamfer edge reference is stored as
+    `{"curve": "line", "point": [...], "direction": [...]}` or
+    `{"curve": "circle", "center": [...], "axis": [...], "radius": r}`;
+  - a chamfer mode is `"equal_distance"`, `"two_distance"` or
+    `"distance_angle"`, and a chamfer stores `distance2`, `angle` and
+    `reference_side` only when its mode uses them.
+
+  The rules are:
   - **Only inputs are stored.** Geometry is derived and is regenerated after
     loading; the solved sketch state is saved, so regenerating a loaded file
     reproduces the saved geometry bit for bit.
@@ -326,7 +398,7 @@ milestones start; see `TODO.md`.
 ### Test tooling
 
 - `tests/support/` holds shared fixtures:
-  - the P9 bracket model;
+  - the P9 bracket model, the turned part (revolves) and the chamfered block;
   - temporary directories;
   - mesh and STL analysis written from first principles (divergence-theorem
     volume, edge-manifold watertightness).

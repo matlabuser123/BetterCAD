@@ -13,22 +13,6 @@ Json pointToJson(const Point2D& p) {
     return Json::array({p.x.si(), p.y.si()});
 }
 
-Json directionToJson(const Direction3D& d) {
-    return Json::array({d.x(), d.y(), d.z()});
-}
-
-Result<Direction3D> directionFromJson(const Json& object, std::string_view key, std::string_view path) {
-    auto values = readNumbers(object, key, path, 3);
-    if (!values) {
-        return std::unexpected(values.error());
-    }
-    const auto direction = Direction3D::fromUnitComponents((*values)[0], (*values)[1], (*values)[2]);
-    if (!direction) {
-        return parseError(childPath(path, key), "expected a unit vector");
-    }
-    return *direction;
-}
-
 constexpr std::array kEntityTypes{sketch::EntityType::Point, sketch::EntityType::Line,
                                   sketch::EntityType::Circle, sketch::EntityType::Arc};
 constexpr std::array kConstraintTypes{
@@ -218,6 +202,34 @@ Result<sketch::Constraint> constraintFromJson(const Json& value, std::string_vie
 }
 
 } // namespace
+
+Json pointToJson(const Point3D& point) {
+    return Json::array({point.x.si(), point.y.si(), point.z.si()});
+}
+
+Result<Point3D> pointFromJson(const Json& object, std::string_view key, std::string_view path) {
+    auto values = readNumbers(object, key, path, 3);
+    if (!values) {
+        return std::unexpected(values.error());
+    }
+    return Point3D{Length::fromSi((*values)[0]), Length::fromSi((*values)[1]), Length::fromSi((*values)[2])};
+}
+
+Json directionToJson(const Direction3D& direction) {
+    return Json::array({direction.x(), direction.y(), direction.z()});
+}
+
+Result<Direction3D> directionFromJson(const Json& object, std::string_view key, std::string_view path) {
+    auto values = readNumbers(object, key, path, 3);
+    if (!values) {
+        return std::unexpected(values.error());
+    }
+    const auto direction = Direction3D::fromUnitComponents((*values)[0], (*values)[1], (*values)[2]);
+    if (!direction) {
+        return parseError(childPath(path, key), "expected a unit vector");
+    }
+    return *direction;
+}
 
 Json frameToJson(const Frame3D& frame) {
     Json json = Json::object();

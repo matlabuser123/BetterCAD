@@ -223,4 +223,169 @@ Result<std::unique_ptr<features::RevolveFeature>> revolveFromJson(const Json& da
     return std::move(*feature);
 }
 
+namespace {
+
+using geometry::ChamferMode;
+using geometry::EdgeCurve;
+
+constexpr std::array<std::pair<ChamferMode, std::string_view>, 3> kChamferModes{{
+    {ChamferMode::EqualDistance, "equal_distance"},
+    {ChamferMode::TwoDistance, "two_distance"},
+    {ChamferMode::DistanceAngle, "distance_angle"},
+}};
+
+// Only curves that can be referenced; see geometry::validate(EdgeSignature).
+constexpr std::array<std::pair<EdgeCurve, std::string_view>, 2> kEdgeCurves{{
+    {EdgeCurve::Line, "line"},
+    {EdgeCurve::Circle, "circle"},
+}};
+
+Json edgeToJson(const geometry::EdgeSignature& edge) {
+    Json json = Json::object();
+    json["curve"] = std::string{nameOf(kEdgeCurves, edge.curve)};
+    if (edge.curve == EdgeCurve::Circle) {
+        json["center"] = pointToJson(edge.point);
+        json["axis"] = directionToJson(edge.direction);
+        json["radius"] = edge.radius.si();
+    } else {
+        json["point"] = pointToJson(edge.point);
+        json["direction"] = directionToJson(edge.direction);
+    }
+    return json;
+}
+
+/// A line reference has a point and a direction; a circle reference a
+/// centre, an axis and a radius. The signature is kept as written.
+Result<geometry::EdgeSignature> edgeFromJson(const Json& value, std::string_view path) {
+    if (auto object = requireObject(value, path, {"curve", "point", "direction", "center", "axis", "radius"});
+        !object) {
+        return std::unexpected(object.error());
+    }
+    auto curve = valueOf(kEdgeCurves, value, "curve", path);
+    if (!curve) {
+        return std::unexpected(curve.error());
+    }
+    const bool circle = *curve == EdgeCurve::Circle;
+    for (const std::string_view key : {"point", "direction", "center", "axis", "radius"}) {
+        const bool circleKey = key == "center" || key == "axis" || key == "radius";
+        if (circleKey != circle && value.contains(key)) {
+            return parseError(childPath(path, key),
+                              std::format("a {} reference has no {}", circle ? "circle" : "line", key));
+        }
+    }
+    geometry::EdgeSignature edge{.curve = *curve};
+    auto point = pointFromJson(value, circle ? "center" : "point", path);
+    auto direction = directionFromJson(value, circle ? "axis" : "direction", path);
+    if (!point || !direction) {
+        return std::unexpected(!point ? point.error() : direction.error());
+    }
+    edge.point = *point;
+    edge.direction = *direction;
+    if (circle) {
+        auto radius = readNumber(value, "radius", path);
+        if (!radius) {
+            return std::unexpected(radius.error());
+        }
+        edge.radius = Length::fromSi(*radius);
+    }
+    if (auto valid = geometry::validate(edge); !valid) {
+        return atPath(path, valid.error());
+    }
+    return edge;
+}
+
+/// An absent key reads as 0.
+Result<double> readNumberOrZero(const Json& object, std::string_view key, std::string_view path) {
+    return object.contains(key) ? readNumber(object, key, path) : Result<double>{0.0};
+}
+
+} // namespace
+
+Json chamferToJson(const features::ChamferFeature& feature) {
+    const features::ChamferDefinition& d = feature.definition();
+    Json json = Json::object();
+    json["target"] = d.target.value();
+    Json edges = Json::array();
+    for (const geometry::EdgeSignature& edge : d.edges) {
+        edges.push_back(edgeToJson(edge));
+    }
+    json["edges"] = std::move(edges);
+    json["mode"] = std::string{nameOf(kChamferModes, d.mode)};
+    json["distance"] = d.distance.si();
+    if (d.distanceParameter) {
+        json["distance_parameter"] = d.distanceParameter->value();
+    }
+    // Fields a mode does not use are zero (the definition's invariant).
+    if (d.mode == ChamferMode::TwoDistance) {
+        json["distance2"] = d.distance2.si();
+    }
+    if (d.mode == ChamferMode::DistanceAngle) {
+        json["angle"] = d.angle.si();
+    }
+    if (d.referenceSide) {
+        json["reference_side"] = directionToJson(*d.referenceSide);
+    }
+    return json;
+}
+
+Result<std::unique_ptr<features::ChamferFeature>> chamferFromJson(const Json& data, std::string name,
+                                                                  std::string_view path) {
+    if (auto object = requireObject(data, path,
+                                    {"target", "edges", "mode", "distance", "distance_parameter", "distance2",
+                                     "angle", "reference_side"});
+        !object) {
+        return std::unexpected(object.error());
+    }
+    auto target = readId(data, "target", path);
+    auto edgesField = requireArray(data, "edges", path);
+    auto mode = valueOf(kChamferModes, data, "mode", path);
+    auto distance = readNumber(data, "distance", path);
+    auto distanceParameter = readOptionalId(data, "distance_parameter", path);
+    auto distance2 = readNumberOrZero(data, "distance2", path);
+    auto angle = readNumberOrZero(data, "angle", path);
+    if (!target || !edgesField || !mode || !distance || !distanceParameter || !distance2 || !angle) {
+        const Error& error = !target ? target.error()
+                           : !edgesField ? edgesField.error()
+                           : !mode ? mode.error()
+                           : !distance ? distance.error()
+                           : !distanceParameter ? distanceParameter.error()
+                           : !distance2 ? distance2.error()
+                                        : angle.error();
+        return std::unexpected(error);
+    }
+    features::ChamferDefinition definition{
+        .target = FeatureId::fromValue(*target),
+        .edges = {},
+        .mode = *mode,
+        .distance = Length::fromSi(*distance),
+        .distanceParameter = std::nullopt,
+        .distance2 = Length::fromSi(*distance2),
+        .angle = Angle::fromSi(*angle),
+        .referenceSide = std::nullopt,
+    };
+    const std::string edgesPath = childPath(path, "edges");
+    for (std::size_t i = 0; i < (*edgesField)->size(); ++i) {
+        auto edge = edgeFromJson((**edgesField)[i], indexPath(edgesPath, i));
+        if (!edge) {
+            return std::unexpected(edge.error());
+        }
+        definition.edges.push_back(*edge);
+    }
+    if (*distanceParameter) {
+        definition.distanceParameter = ParameterId::fromValue(**distanceParameter);
+    }
+    if (data.contains("reference_side")) {
+        auto side = directionFromJson(data, "reference_side", path);
+        if (!side) {
+            return std::unexpected(side.error());
+        }
+        definition.referenceSide = *side;
+    }
+    auto feature = features::ChamferFeature::create(std::move(name), definition);
+    if (!feature) {
+        return atPath(path, feature.error());
+    }
+    return std::move(*feature);
+}
+
 } // namespace bettercad::io::detail

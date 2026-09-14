@@ -10,6 +10,8 @@ bettercad_add_library(bettercad_features
         SolidSupport.cpp
         SolidSupport.hpp
         Validation.cpp
+        chamfer/ChamferFeature.cpp
+        chamfer/ChamferRegeneration.cpp
         extrude/ExtrudeFeature.cpp
         extrude/ExtrudeRegeneration.cpp
         profile/Profiles.cpp

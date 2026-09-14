@@ -8,10 +8,14 @@ bettercad_add_library(bettercad_geometry
     EXPORT_BASE BETTERCAD_GEOMETRY
     EXPORT_HEADER bettercad/core/geometry/Export.hpp
     SOURCES
+        EdgeMatching.hpp
+        Edges.cpp
         Profile.cpp
         occt/OcctBody.cpp
         occt/OcctBody.hpp
         occt/OcctBooleans.cpp
+        occt/OcctChamfer.cpp
+        occt/OcctEdges.cpp
         occt/OcctGuard.hpp
         occt/OcctKernel.cpp
         occt/OcctMesh.cpp
@@ -19,18 +23,21 @@ bettercad_add_library(bettercad_geometry
         occt/OcctSession.hpp
         occt/OcctStep.cpp
         occt/OcctSweeps.cpp
+        occt/OcctTopology.hpp
     PUBLIC_LINK
         BetterCAD::core
     PRIVATE_LINK
         TKernel
         TKMath
         TKG3d
+        TKG2d
         TKGeomBase
         TKBRep
         TKTopAlgo
         TKPrim
         TKBO
         TKBool
+        TKFillet
         TKMesh
         TKLCAF
         TKXCAF

@@ -107,21 +107,53 @@ Release v0.1.0 (commit `2da8966`, tag `v0.1.0`) is P0–P10.
   stable IDs.
 - Existing P0–P10 regression suite remains green.
 
+#### P11-FEAT-002 — Chamfer — [evidence](docs/verification/P11-FEAT-002/README.md)
+
+- [x] Chamfer feature definition
+- [x] Edge references (geometric signatures; limits documented)
+- [x] Equal-distance chamfer
+- [x] Two-distance chamfer
+- [x] Distance-angle chamfer
+- [x] Single-edge chamfer
+- [x] Multiple-edge chamfer (separate, adjacent, tangent chain)
+- [x] Chamfer of extruded and revolved bodies
+- [x] Geometry validity checks
+- [x] Parameter-driven regeneration
+- [x] Topology-change diagnostics (no edge substitution)
+- [x] Save/load round-trip
+- [x] Undo/redo regression
+- [x] STEP/STL export regression
+- [x] Analytic volume validation
+- [x] Failure diagnostics
+- [x] Evidence under `docs/verification/P11-FEAT-002/`
+
+**Acceptance (met):**
+
+- A single-edge chamfer of a 100 × 50 × 20 mm block matches V0 − ½d²L.
+- Multiple, adjacent and chained edges and revolved rims match analytic
+  volumes.
+- Changing upstream dimensions regenerates the chamfer. Edges that move or
+  split fail with structured diagnostics, never with a substituted edge.
+- Chamfers that do not fit are refused before the kernel, which crashes on
+  them in this toolchain.
+- Save → destroy → load → regenerate reproduces the definitions, stable IDs
+  and geometry.
+- Existing P0–P11-FEAT-001 regression suite remains green.
+
+**Known limitation:** edge references are geometric (the edge's supporting
+line or circle), not semantic topology naming, which stays under "Later".
+
 ## Current
 
 ### P11 — Production Part Modeling
 
-#### P11-FEAT-002 — Chamfer ← NEXT
+#### P11-FEAT-003 — Fillet ← NEXT
 
 - [ ] Not started.
 
 ## Next
 
 ### P11 — Production Part Modeling (remaining)
-
-#### P11-FEAT-003 — Fillet
-
-- [ ] Not started.
 
 #### P11-FEAT-004 — Hole feature
 

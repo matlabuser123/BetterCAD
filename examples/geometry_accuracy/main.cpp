@@ -1,8 +1,11 @@
 // Prints geometry-kernel results next to analytic solutions for primitive
-// solids, boolean operations and solids of revolution. The relative errors in
-// the output are the basis for the tolerances used by tests/core/geometry.
+// solids, boolean operations, solids of revolution and chamfers. The relative
+// errors in the output are the basis for the tolerances used by
+// tests/core/geometry.
 #include <bettercad/core/Units.hpp>
 #include <bettercad/core/geometry/Booleans.hpp>
+#include <bettercad/core/geometry/Chamfer.hpp>
+#include <bettercad/core/geometry/Edges.hpp>
 #include <bettercad/core/geometry/Kernel.hpp>
 #include <bettercad/core/geometry/Primitives.hpp>
 #include <bettercad/core/geometry/Profile.hpp>
@@ -124,5 +127,39 @@ int main() {
     disc.outer.segments.emplace_back(CircleSegment2D{mm(20, 0), 5_mm, true});
     report("revolve torus R=20 a=5", revolve(disc, 360_deg), 2 * pi * pi * 20 * 25, 4 * pi * pi * 20 * 5);
     report("revolve torus wedge 120 deg", revolve(disc, 120_deg), 2 * pi * pi * 20 * 25 / 3, 0.0);
+
+    std::printf("\nChamfers of the box 100x50x20 mm (edges by their supporting lines)\n");
+    const EdgeSignature topFront = lineSignature(Point3D{0_mm, 0_mm, 20_mm}, Direction3D::unitX());
+    const EdgeSignature topLeft = lineSignature(Point3D{0_mm, 0_mm, 20_mm}, Direction3D::unitY());
+    const EdgeSignature bottomBack = lineSignature(Point3D{0_mm, 50_mm, 0_mm}, Direction3D::unitX());
+    const auto chamfer = [&](std::vector<EdgeSignature> edges, ChamferMode mode, Length d1, Length d2, Angle angle) {
+        ChamferRequest request{.edges = std::move(edges), .mode = mode, .distance = d1};
+        if (mode != ChamferMode::EqualDistance) {
+            request.distance2 = mode == ChamferMode::TwoDistance ? d2 : Length{};
+            request.angle = mode == ChamferMode::DistanceAngle ? angle : Angle{};
+            request.referenceSide = Direction3D::unitZ(); // the top face
+        }
+        return chamferEdges(*box, request);
+    };
+    // One edge: V = V0 - d^2 L / 2. The top and front faces lose d x L each,
+    // the end faces d^2 / 2 each, and the chamfer face adds d sqrt(2) L.
+    report("chamfer 1 edge d=5 (L=100)", chamfer({topFront}, ChamferMode::EqualDistance, 5_mm, {}, {}),
+           100000.0 - 0.5 * 25.0 * 100.0, 16000.0 - 1000.0 - 25.0 + 500.0 * std::sqrt(2.0));
+    report("chamfer 1 edge d=0.5 (L=100)", chamfer({topFront}, ChamferMode::EqualDistance, 0.5_mm, {}, {}),
+           100000.0 - 0.5 * 0.25 * 100.0, 16000.0 - 100.0 - 0.25 + 50.0 * std::sqrt(2.0));
+    report("chamfer 2 separate edges d=5", chamfer({topFront, bottomBack}, ChamferMode::EqualDistance, 5_mm, {}, {}),
+           100000.0 - 2 * 0.5 * 25.0 * 100.0, 0.0);
+    // Two edges meeting at a corner: two prisms overlapping in d^3 / 3.
+    report("chamfer 2 adjacent edges d=5", chamfer({topFront, topLeft}, ChamferMode::EqualDistance, 5_mm, {}, {}),
+           100000.0 - 0.5 * 25.0 * (100.0 + 50.0) + 125.0 / 3.0, 0.0);
+    report("chamfer two distances 5/3", chamfer({topFront}, ChamferMode::TwoDistance, 5_mm, 3_mm, {}),
+           100000.0 - 0.5 * 5.0 * 3.0 * 100.0, 0.0);
+    report("chamfer distance 5 angle 30 deg", chamfer({topFront}, ChamferMode::DistanceAngle, 5_mm, {}, 30_deg),
+           100000.0 - 0.5 * 5.0 * 5.0 * std::tan(pi / 6.0) * 100.0, 0.0);
+    // The top rim of a cylinder r=15 h=40: by Pappus, V = V0 - pi d^2 (r - d/3).
+    const auto rod = makeCylinder(15_mm, 40_mm);
+    const auto rim = circleSignature(Point3D{0_mm, 0_mm, 40_mm}, Direction3D::unitZ(), 15_mm);
+    report("chamfer cylinder rim d=2", chamferEdges(*rod, {.edges = {*rim}, .distance = 2_mm}),
+           pi * 225.0 * 40.0 - pi * 4.0 * (15.0 - 2.0 / 3.0), 0.0);
     return 0;
 }

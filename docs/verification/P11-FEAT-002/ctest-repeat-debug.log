@@ -1,0 +1,325 @@
+﻿Test project C:/Users/uqhas/OneDrive/Desktop/CAD/build/debug
+      Start  46: unit.ChamferFeature_DataIsStoredAsTransparentJson
+    Test  #46: unit.ChamferFeature_DataIsStoredAsTransparentJson .......................   Passed    0.11 sec
+      Start  46: unit.ChamferFeature_DataIsStoredAsTransparentJson
+    Test  #46: unit.ChamferFeature_DataIsStoredAsTransparentJson .......................   Passed    0.10 sec
+      Start  46: unit.ChamferFeature_DataIsStoredAsTransparentJson
+    Test  #46: unit.ChamferFeature_DataIsStoredAsTransparentJson .......................   Passed    0.09 sec
+      Start  46: unit.ChamferFeature_DataIsStoredAsTransparentJson
+    Test  #46: unit.ChamferFeature_DataIsStoredAsTransparentJson .......................   Passed    0.06 sec
+      Start  46: unit.ChamferFeature_DataIsStoredAsTransparentJson
+ 1/32 Test  #46: unit.ChamferFeature_DataIsStoredAsTransparentJson .......................   Passed    0.05 sec
+      Start  47: unit.ChamferFeature_DefinitionIsValidatedOnCreateAndEdit
+    Test  #47: unit.ChamferFeature_DefinitionIsValidatedOnCreateAndEdit ................   Passed    0.14 sec
+      Start  47: unit.ChamferFeature_DefinitionIsValidatedOnCreateAndEdit
+    Test  #47: unit.ChamferFeature_DefinitionIsValidatedOnCreateAndEdit ................   Passed    0.04 sec
+      Start  47: unit.ChamferFeature_DefinitionIsValidatedOnCreateAndEdit
+    Test  #47: unit.ChamferFeature_DefinitionIsValidatedOnCreateAndEdit ................   Passed    0.21 sec
+      Start  47: unit.ChamferFeature_DefinitionIsValidatedOnCreateAndEdit
+    Test  #47: unit.ChamferFeature_DefinitionIsValidatedOnCreateAndEdit ................   Passed    0.04 sec
+      Start  47: unit.ChamferFeature_DefinitionIsValidatedOnCreateAndEdit
+ 2/32 Test  #47: unit.ChamferFeature_DefinitionIsValidatedOnCreateAndEdit ................   Passed    0.04 sec
+      Start  48: unit.ChamferFeature_DependsOnItsTargetAndDistanceParameter
+    Test  #48: unit.ChamferFeature_DependsOnItsTargetAndDistanceParameter ..............   Passed    0.05 sec
+      Start  48: unit.ChamferFeature_DependsOnItsTargetAndDistanceParameter
+    Test  #48: unit.ChamferFeature_DependsOnItsTargetAndDistanceParameter ..............   Passed    0.04 sec
+      Start  48: unit.ChamferFeature_DependsOnItsTargetAndDistanceParameter
+    Test  #48: unit.ChamferFeature_DependsOnItsTargetAndDistanceParameter ..............   Passed    0.04 sec
+      Start  48: unit.ChamferFeature_DependsOnItsTargetAndDistanceParameter
+    Test  #48: unit.ChamferFeature_DependsOnItsTargetAndDistanceParameter ..............   Passed    0.05 sec
+      Start  48: unit.ChamferFeature_DependsOnItsTargetAndDistanceParameter
+ 3/32 Test  #48: unit.ChamferFeature_DependsOnItsTargetAndDistanceParameter ..............   Passed    0.04 sec
+      Start  49: unit.ChamferFeature_DistanceAngleMeasuresTheAngleFromTheReferenceFace
+    Test  #49: unit.ChamferFeature_DistanceAngleMeasuresTheAngleFromTheReferenceFace ...   Passed    0.08 sec
+      Start  49: unit.ChamferFeature_DistanceAngleMeasuresTheAngleFromTheReferenceFace
+    Test  #49: unit.ChamferFeature_DistanceAngleMeasuresTheAngleFromTheReferenceFace ...   Passed    0.18 sec
+      Start  49: unit.ChamferFeature_DistanceAngleMeasuresTheAngleFromTheReferenceFace
+    Test  #49: unit.ChamferFeature_DistanceAngleMeasuresTheAngleFromTheReferenceFace ...   Passed    0.07 sec
+      Start  49: unit.ChamferFeature_DistanceAngleMeasuresTheAngleFromTheReferenceFace
+    Test  #49: unit.ChamferFeature_DistanceAngleMeasuresTheAngleFromTheReferenceFace ...   Passed    0.07 sec
+      Start  49: unit.ChamferFeature_DistanceAngleMeasuresTheAngleFromTheReferenceFace
+ 4/32 Test  #49: unit.ChamferFeature_DistanceAngleMeasuresTheAngleFromTheReferenceFace ...   Passed    0.07 sec
+      Start  50: unit.ChamferFeature_EdgeChangedUpstreamFailsInsteadOfSubstituting
+    Test  #50: unit.ChamferFeature_EdgeChangedUpstreamFailsInsteadOfSubstituting .......   Passed    0.18 sec
+      Start  50: unit.ChamferFeature_EdgeChangedUpstreamFailsInsteadOfSubstituting
+    Test  #50: unit.ChamferFeature_EdgeChangedUpstreamFailsInsteadOfSubstituting .......   Passed    0.20 sec
+      Start  50: unit.ChamferFeature_EdgeChangedUpstreamFailsInsteadOfSubstituting
+    Test  #50: unit.ChamferFeature_EdgeChangedUpstreamFailsInsteadOfSubstituting .......   Passed    0.21 sec
+      Start  50: unit.ChamferFeature_EdgeChangedUpstreamFailsInsteadOfSubstituting
+    Test  #50: unit.ChamferFeature_EdgeChangedUpstreamFailsInsteadOfSubstituting .......   Passed    0.17 sec
+      Start  50: unit.ChamferFeature_EdgeChangedUpstreamFailsInsteadOfSubstituting
+ 5/32 Test  #50: unit.ChamferFeature_EdgeChangedUpstreamFailsInsteadOfSubstituting .......   Passed    0.19 sec
+      Start  51: unit.ChamferFeature_ExportsToStepAndStl
+    Test  #51: unit.ChamferFeature_ExportsToStepAndStl .................................   Passed    0.20 sec
+      Start  51: unit.ChamferFeature_ExportsToStepAndStl
+    Test  #51: unit.ChamferFeature_ExportsToStepAndStl .................................   Passed    0.32 sec
+      Start  51: unit.ChamferFeature_ExportsToStepAndStl
+    Test  #51: unit.ChamferFeature_ExportsToStepAndStl .................................   Passed    0.24 sec
+      Start  51: unit.ChamferFeature_ExportsToStepAndStl
+    Test  #51: unit.ChamferFeature_ExportsToStepAndStl .................................   Passed    0.17 sec
+      Start  51: unit.ChamferFeature_ExportsToStepAndStl
+ 6/32 Test  #51: unit.ChamferFeature_ExportsToStepAndStl .................................   Passed    0.19 sec
+      Start  52: unit.ChamferFeature_FailedChamferSavesAndLoadsUnchanged
+    Test  #52: unit.ChamferFeature_FailedChamferSavesAndLoadsUnchanged .................   Passed    0.13 sec
+      Start  52: unit.ChamferFeature_FailedChamferSavesAndLoadsUnchanged
+    Test  #52: unit.ChamferFeature_FailedChamferSavesAndLoadsUnchanged .................   Passed    0.10 sec
+      Start  52: unit.ChamferFeature_FailedChamferSavesAndLoadsUnchanged
+    Test  #52: unit.ChamferFeature_FailedChamferSavesAndLoadsUnchanged .................   Passed    0.09 sec
+      Start  52: unit.ChamferFeature_FailedChamferSavesAndLoadsUnchanged
+    Test  #52: unit.ChamferFeature_FailedChamferSavesAndLoadsUnchanged .................   Passed    0.13 sec
+      Start  52: unit.ChamferFeature_FailedChamferSavesAndLoadsUnchanged
+ 7/32 Test  #52: unit.ChamferFeature_FailedChamferSavesAndLoadsUnchanged .................   Passed    0.11 sec
+      Start  53: unit.ChamferFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact
+    Test  #53: unit.ChamferFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact .....   Passed    0.15 sec
+      Start  53: unit.ChamferFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact
+    Test  #53: unit.ChamferFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact .....   Passed    0.24 sec
+      Start  53: unit.ChamferFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact
+    Test  #53: unit.ChamferFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact .....   Passed    0.11 sec
+      Start  53: unit.ChamferFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact
+    Test  #53: unit.ChamferFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact .....   Passed    0.11 sec
+      Start  53: unit.ChamferFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact
+ 8/32 Test  #53: unit.ChamferFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact .....   Passed    0.09 sec
+      Start  54: unit.ChamferFeature_InvalidInputsFailWithStructuredDiagnostics
+    Test  #54: unit.ChamferFeature_InvalidInputsFailWithStructuredDiagnostics ..........   Passed    0.37 sec
+      Start  54: unit.ChamferFeature_InvalidInputsFailWithStructuredDiagnostics
+    Test  #54: unit.ChamferFeature_InvalidInputsFailWithStructuredDiagnostics ..........   Passed    0.43 sec
+      Start  54: unit.ChamferFeature_InvalidInputsFailWithStructuredDiagnostics
+    Test  #54: unit.ChamferFeature_InvalidInputsFailWithStructuredDiagnostics ..........   Passed    0.42 sec
+      Start  54: unit.ChamferFeature_InvalidInputsFailWithStructuredDiagnostics
+    Test  #54: unit.ChamferFeature_InvalidInputsFailWithStructuredDiagnostics ..........   Passed    0.44 sec
+      Start  54: unit.ChamferFeature_InvalidInputsFailWithStructuredDiagnostics
+ 9/32 Test  #54: unit.ChamferFeature_InvalidInputsFailWithStructuredDiagnostics ..........   Passed    0.33 sec
+      Start  55: unit.ChamferFeature_MalformedDataIsRejectedWithTheJsonPath
+    Test  #55: unit.ChamferFeature_MalformedDataIsRejectedWithTheJsonPath ..............   Passed    0.09 sec
+      Start  55: unit.ChamferFeature_MalformedDataIsRejectedWithTheJsonPath
+    Test  #55: unit.ChamferFeature_MalformedDataIsRejectedWithTheJsonPath ..............   Passed    0.07 sec
+      Start  55: unit.ChamferFeature_MalformedDataIsRejectedWithTheJsonPath
+    Test  #55: unit.ChamferFeature_MalformedDataIsRejectedWithTheJsonPath ..............   Passed    0.08 sec
+      Start  55: unit.ChamferFeature_MalformedDataIsRejectedWithTheJsonPath
+    Test  #55: unit.ChamferFeature_MalformedDataIsRejectedWithTheJsonPath ..............   Passed    0.19 sec
+      Start  55: unit.ChamferFeature_MalformedDataIsRejectedWithTheJsonPath
+10/32 Test  #55: unit.ChamferFeature_MalformedDataIsRejectedWithTheJsonPath ..............   Passed    0.11 sec
+      Start  56: unit.ChamferFeature_ModelsAreValidatedLikeAnyOther
+    Test  #56: unit.ChamferFeature_ModelsAreValidatedLikeAnyOther ......................   Passed    0.13 sec
+      Start  56: unit.ChamferFeature_ModelsAreValidatedLikeAnyOther
+    Test  #56: unit.ChamferFeature_ModelsAreValidatedLikeAnyOther ......................   Passed    0.19 sec
+      Start  56: unit.ChamferFeature_ModelsAreValidatedLikeAnyOther
+    Test  #56: unit.ChamferFeature_ModelsAreValidatedLikeAnyOther ......................   Passed    0.32 sec
+      Start  56: unit.ChamferFeature_ModelsAreValidatedLikeAnyOther
+    Test  #56: unit.ChamferFeature_ModelsAreValidatedLikeAnyOther ......................   Passed    0.16 sec
+      Start  56: unit.ChamferFeature_ModelsAreValidatedLikeAnyOther
+11/32 Test  #56: unit.ChamferFeature_ModelsAreValidatedLikeAnyOther ......................   Passed    0.16 sec
+      Start  57: unit.ChamferFeature_MultipleEdgesMatchAnalyticVolume
+    Test  #57: unit.ChamferFeature_MultipleEdgesMatchAnalyticVolume ....................   Passed    0.15 sec
+      Start  57: unit.ChamferFeature_MultipleEdgesMatchAnalyticVolume
+    Test  #57: unit.ChamferFeature_MultipleEdgesMatchAnalyticVolume ....................   Passed    0.15 sec
+      Start  57: unit.ChamferFeature_MultipleEdgesMatchAnalyticVolume
+    Test  #57: unit.ChamferFeature_MultipleEdgesMatchAnalyticVolume ....................   Passed    0.21 sec
+      Start  57: unit.ChamferFeature_MultipleEdgesMatchAnalyticVolume
+    Test  #57: unit.ChamferFeature_MultipleEdgesMatchAnalyticVolume ....................   Passed    0.28 sec
+      Start  57: unit.ChamferFeature_MultipleEdgesMatchAnalyticVolume
+12/32 Test  #57: unit.ChamferFeature_MultipleEdgesMatchAnalyticVolume ....................   Passed    0.15 sec
+      Start  58: unit.ChamferFeature_OnRevolvedBodyMatchesPappusAndFollowsTheSweep
+    Test  #58: unit.ChamferFeature_OnRevolvedBodyMatchesPappusAndFollowsTheSweep .......   Passed    0.55 sec
+      Start  58: unit.ChamferFeature_OnRevolvedBodyMatchesPappusAndFollowsTheSweep
+    Test  #58: unit.ChamferFeature_OnRevolvedBodyMatchesPappusAndFollowsTheSweep .......   Passed    0.56 sec
+      Start  58: unit.ChamferFeature_OnRevolvedBodyMatchesPappusAndFollowsTheSweep
+    Test  #58: unit.ChamferFeature_OnRevolvedBodyMatchesPappusAndFollowsTheSweep .......   Passed    0.53 sec
+      Start  58: unit.ChamferFeature_OnRevolvedBodyMatchesPappusAndFollowsTheSweep
+    Test  #58: unit.ChamferFeature_OnRevolvedBodyMatchesPappusAndFollowsTheSweep .......   Passed    0.51 sec
+      Start  58: unit.ChamferFeature_OnRevolvedBodyMatchesPappusAndFollowsTheSweep
+13/32 Test  #58: unit.ChamferFeature_OnRevolvedBodyMatchesPappusAndFollowsTheSweep .......   Passed    0.63 sec
+      Start  59: unit.ChamferFeature_RegeneratesWhenTheUpstreamWidthChanges
+    Test  #59: unit.ChamferFeature_RegeneratesWhenTheUpstreamWidthChanges ..............   Passed    0.36 sec
+      Start  59: unit.ChamferFeature_RegeneratesWhenTheUpstreamWidthChanges
+    Test  #59: unit.ChamferFeature_RegeneratesWhenTheUpstreamWidthChanges ..............   Passed    0.19 sec
+      Start  59: unit.ChamferFeature_RegeneratesWhenTheUpstreamWidthChanges
+    Test  #59: unit.ChamferFeature_RegeneratesWhenTheUpstreamWidthChanges ..............   Passed    0.44 sec
+      Start  59: unit.ChamferFeature_RegeneratesWhenTheUpstreamWidthChanges
+    Test  #59: unit.ChamferFeature_RegeneratesWhenTheUpstreamWidthChanges ..............   Passed    0.30 sec
+      Start  59: unit.ChamferFeature_RegeneratesWhenTheUpstreamWidthChanges
+14/32 Test  #59: unit.ChamferFeature_RegeneratesWhenTheUpstreamWidthChanges ..............   Passed    0.25 sec
+      Start  60: unit.ChamferFeature_SaveLoadPreservesCircleReferences
+    Test  #60: unit.ChamferFeature_SaveLoadPreservesCircleReferences ...................   Passed    0.54 sec
+      Start  60: unit.ChamferFeature_SaveLoadPreservesCircleReferences
+    Test  #60: unit.ChamferFeature_SaveLoadPreservesCircleReferences ...................   Passed    0.49 sec
+      Start  60: unit.ChamferFeature_SaveLoadPreservesCircleReferences
+    Test  #60: unit.ChamferFeature_SaveLoadPreservesCircleReferences ...................   Passed    0.53 sec
+      Start  60: unit.ChamferFeature_SaveLoadPreservesCircleReferences
+    Test  #60: unit.ChamferFeature_SaveLoadPreservesCircleReferences ...................   Passed    0.49 sec
+      Start  60: unit.ChamferFeature_SaveLoadPreservesCircleReferences
+15/32 Test  #60: unit.ChamferFeature_SaveLoadPreservesCircleReferences ...................   Passed    0.54 sec
+      Start  61: unit.ChamferFeature_SaveLoadPreservesDefinitionsAndGeometry
+    Test  #61: unit.ChamferFeature_SaveLoadPreservesDefinitionsAndGeometry .............   Passed    0.48 sec
+      Start  61: unit.ChamferFeature_SaveLoadPreservesDefinitionsAndGeometry
+    Test  #61: unit.ChamferFeature_SaveLoadPreservesDefinitionsAndGeometry .............   Passed    0.55 sec
+      Start  61: unit.ChamferFeature_SaveLoadPreservesDefinitionsAndGeometry
+    Test  #61: unit.ChamferFeature_SaveLoadPreservesDefinitionsAndGeometry .............   Passed    0.48 sec
+      Start  61: unit.ChamferFeature_SaveLoadPreservesDefinitionsAndGeometry
+    Test  #61: unit.ChamferFeature_SaveLoadPreservesDefinitionsAndGeometry .............   Passed    0.55 sec
+      Start  61: unit.ChamferFeature_SaveLoadPreservesDefinitionsAndGeometry
+16/32 Test  #61: unit.ChamferFeature_SaveLoadPreservesDefinitionsAndGeometry .............   Passed    0.26 sec
+      Start  62: unit.ChamferFeature_SingleEdgeMatchesAnalyticVolume
+    Test  #62: unit.ChamferFeature_SingleEdgeMatchesAnalyticVolume .....................   Passed    0.09 sec
+      Start  62: unit.ChamferFeature_SingleEdgeMatchesAnalyticVolume
+    Test  #62: unit.ChamferFeature_SingleEdgeMatchesAnalyticVolume .....................   Passed    0.20 sec
+      Start  62: unit.ChamferFeature_SingleEdgeMatchesAnalyticVolume
+    Test  #62: unit.ChamferFeature_SingleEdgeMatchesAnalyticVolume .....................   Passed    0.27 sec
+      Start  62: unit.ChamferFeature_SingleEdgeMatchesAnalyticVolume
+    Test  #62: unit.ChamferFeature_SingleEdgeMatchesAnalyticVolume .....................   Passed    0.08 sec
+      Start  62: unit.ChamferFeature_SingleEdgeMatchesAnalyticVolume
+17/32 Test  #62: unit.ChamferFeature_SingleEdgeMatchesAnalyticVolume .....................   Passed    0.24 sec
+      Start  63: unit.ChamferFeature_TwoDistancesPutTheFirstDistanceOnTheReferenceFace
+    Test  #63: unit.ChamferFeature_TwoDistancesPutTheFirstDistanceOnTheReferenceFace ...   Passed    0.10 sec
+      Start  63: unit.ChamferFeature_TwoDistancesPutTheFirstDistanceOnTheReferenceFace
+    Test  #63: unit.ChamferFeature_TwoDistancesPutTheFirstDistanceOnTheReferenceFace ...   Passed    0.09 sec
+      Start  63: unit.ChamferFeature_TwoDistancesPutTheFirstDistanceOnTheReferenceFace
+    Test  #63: unit.ChamferFeature_TwoDistancesPutTheFirstDistanceOnTheReferenceFace ...   Passed    0.37 sec
+      Start  63: unit.ChamferFeature_TwoDistancesPutTheFirstDistanceOnTheReferenceFace
+    Test  #63: unit.ChamferFeature_TwoDistancesPutTheFirstDistanceOnTheReferenceFace ...   Passed    0.17 sec
+      Start  63: unit.ChamferFeature_TwoDistancesPutTheFirstDistanceOnTheReferenceFace
+18/32 Test  #63: unit.ChamferFeature_TwoDistancesPutTheFirstDistanceOnTheReferenceFace ...   Passed    0.09 sec
+      Start  64: unit.ChamferFeature_UndoRedoRestoresIdenticalGeometry
+    Test  #64: unit.ChamferFeature_UndoRedoRestoresIdenticalGeometry ...................   Passed    0.20 sec
+      Start  64: unit.ChamferFeature_UndoRedoRestoresIdenticalGeometry
+    Test  #64: unit.ChamferFeature_UndoRedoRestoresIdenticalGeometry ...................   Passed    0.21 sec
+      Start  64: unit.ChamferFeature_UndoRedoRestoresIdenticalGeometry
+    Test  #64: unit.ChamferFeature_UndoRedoRestoresIdenticalGeometry ...................   Passed    0.21 sec
+      Start  64: unit.ChamferFeature_UndoRedoRestoresIdenticalGeometry
+    Test  #64: unit.ChamferFeature_UndoRedoRestoresIdenticalGeometry ...................   Passed    0.18 sec
+      Start  64: unit.ChamferFeature_UndoRedoRestoresIdenticalGeometry
+19/32 Test  #64: unit.ChamferFeature_UndoRedoRestoresIdenticalGeometry ...................   Passed    0.22 sec
+      Start  65: unit.Chamfer_AdjacentEdgesMeetInAMitredCorner
+    Test  #65: unit.Chamfer_AdjacentEdgesMeetInAMitredCorner ...........................   Passed    0.13 sec
+      Start  65: unit.Chamfer_AdjacentEdgesMeetInAMitredCorner
+    Test  #65: unit.Chamfer_AdjacentEdgesMeetInAMitredCorner ...........................   Passed    0.13 sec
+      Start  65: unit.Chamfer_AdjacentEdgesMeetInAMitredCorner
+    Test  #65: unit.Chamfer_AdjacentEdgesMeetInAMitredCorner ...........................   Passed    0.08 sec
+      Start  65: unit.Chamfer_AdjacentEdgesMeetInAMitredCorner
+    Test  #65: unit.Chamfer_AdjacentEdgesMeetInAMitredCorner ...........................   Passed    0.18 sec
+      Start  65: unit.Chamfer_AdjacentEdgesMeetInAMitredCorner
+20/32 Test  #65: unit.Chamfer_AdjacentEdgesMeetInAMitredCorner ...........................   Passed    0.12 sec
+      Start  66: unit.Chamfer_CircularEdgeOfCylinderMatchesPappus
+    Test  #66: unit.Chamfer_CircularEdgeOfCylinderMatchesPappus ........................   Passed    0.14 sec
+      Start  66: unit.Chamfer_CircularEdgeOfCylinderMatchesPappus
+    Test  #66: unit.Chamfer_CircularEdgeOfCylinderMatchesPappus ........................   Passed    0.16 sec
+      Start  66: unit.Chamfer_CircularEdgeOfCylinderMatchesPappus
+    Test  #66: unit.Chamfer_CircularEdgeOfCylinderMatchesPappus ........................   Passed    0.21 sec
+      Start  66: unit.Chamfer_CircularEdgeOfCylinderMatchesPappus
+    Test  #66: unit.Chamfer_CircularEdgeOfCylinderMatchesPappus ........................   Passed    0.12 sec
+      Start  66: unit.Chamfer_CircularEdgeOfCylinderMatchesPappus
+21/32 Test  #66: unit.Chamfer_CircularEdgeOfCylinderMatchesPappus ........................   Passed    0.18 sec
+      Start  67: unit.Chamfer_DistanceAngleMeasuresTheAngleFromTheReferenceFace
+    Test  #67: unit.Chamfer_DistanceAngleMeasuresTheAngleFromTheReferenceFace ..........   Passed    0.08 sec
+      Start  67: unit.Chamfer_DistanceAngleMeasuresTheAngleFromTheReferenceFace
+    Test  #67: unit.Chamfer_DistanceAngleMeasuresTheAngleFromTheReferenceFace ..........   Passed    0.09 sec
+      Start  67: unit.Chamfer_DistanceAngleMeasuresTheAngleFromTheReferenceFace
+    Test  #67: unit.Chamfer_DistanceAngleMeasuresTheAngleFromTheReferenceFace ..........   Passed    0.08 sec
+      Start  67: unit.Chamfer_DistanceAngleMeasuresTheAngleFromTheReferenceFace
+    Test  #67: unit.Chamfer_DistanceAngleMeasuresTheAngleFromTheReferenceFace ..........   Passed    0.08 sec
+      Start  67: unit.Chamfer_DistanceAngleMeasuresTheAngleFromTheReferenceFace
+22/32 Test  #67: unit.Chamfer_DistanceAngleMeasuresTheAngleFromTheReferenceFace ..........   Passed    0.09 sec
+      Start  68: unit.Chamfer_FollowsTangentEdgesAndRejectsTwoReferencesToOneChain
+    Test  #68: unit.Chamfer_FollowsTangentEdgesAndRejectsTwoReferencesToOneChain .......   Passed    0.11 sec
+      Start  68: unit.Chamfer_FollowsTangentEdgesAndRejectsTwoReferencesToOneChain
+    Test  #68: unit.Chamfer_FollowsTangentEdgesAndRejectsTwoReferencesToOneChain .......   Passed    0.27 sec
+      Start  68: unit.Chamfer_FollowsTangentEdgesAndRejectsTwoReferencesToOneChain
+    Test  #68: unit.Chamfer_FollowsTangentEdgesAndRejectsTwoReferencesToOneChain .......   Passed    0.12 sec
+      Start  68: unit.Chamfer_FollowsTangentEdgesAndRejectsTwoReferencesToOneChain
+    Test  #68: unit.Chamfer_FollowsTangentEdgesAndRejectsTwoReferencesToOneChain .......   Passed    0.18 sec
+      Start  68: unit.Chamfer_FollowsTangentEdgesAndRejectsTwoReferencesToOneChain
+23/32 Test  #68: unit.Chamfer_FollowsTangentEdgesAndRejectsTwoReferencesToOneChain .......   Passed    0.23 sec
+      Start  69: unit.Chamfer_IsDeterministic
+    Test  #69: unit.Chamfer_IsDeterministic ............................................   Passed    0.29 sec
+      Start  69: unit.Chamfer_IsDeterministic
+    Test  #69: unit.Chamfer_IsDeterministic ............................................   Passed    0.12 sec
+      Start  69: unit.Chamfer_IsDeterministic
+    Test  #69: unit.Chamfer_IsDeterministic ............................................   Passed    0.23 sec
+      Start  69: unit.Chamfer_IsDeterministic
+    Test  #69: unit.Chamfer_IsDeterministic ............................................   Passed    0.13 sec
+      Start  69: unit.Chamfer_IsDeterministic
+24/32 Test  #69: unit.Chamfer_IsDeterministic ............................................   Passed    0.21 sec
+      Start  70: unit.Chamfer_MultipleSeparateEdgesMatchAnalyticVolume
+    Test  #70: unit.Chamfer_MultipleSeparateEdgesMatchAnalyticVolume ...................   Passed    0.18 sec
+      Start  70: unit.Chamfer_MultipleSeparateEdgesMatchAnalyticVolume
+    Test  #70: unit.Chamfer_MultipleSeparateEdgesMatchAnalyticVolume ...................   Passed    0.08 sec
+      Start  70: unit.Chamfer_MultipleSeparateEdgesMatchAnalyticVolume
+    Test  #70: unit.Chamfer_MultipleSeparateEdgesMatchAnalyticVolume ...................   Passed    0.08 sec
+      Start  70: unit.Chamfer_MultipleSeparateEdgesMatchAnalyticVolume
+    Test  #70: unit.Chamfer_MultipleSeparateEdgesMatchAnalyticVolume ...................   Passed    0.11 sec
+      Start  70: unit.Chamfer_MultipleSeparateEdgesMatchAnalyticVolume
+25/32 Test  #70: unit.Chamfer_MultipleSeparateEdgesMatchAnalyticVolume ...................   Passed    0.11 sec
+      Start  71: unit.Chamfer_RefusesChamfersThatDoNotFitBeforeTheKernel
+    Test  #71: unit.Chamfer_RefusesChamfersThatDoNotFitBeforeTheKernel .................   Passed    0.39 sec
+      Start  71: unit.Chamfer_RefusesChamfersThatDoNotFitBeforeTheKernel
+    Test  #71: unit.Chamfer_RefusesChamfersThatDoNotFitBeforeTheKernel .................   Passed    0.23 sec
+      Start  71: unit.Chamfer_RefusesChamfersThatDoNotFitBeforeTheKernel
+    Test  #71: unit.Chamfer_RefusesChamfersThatDoNotFitBeforeTheKernel .................   Passed    0.19 sec
+      Start  71: unit.Chamfer_RefusesChamfersThatDoNotFitBeforeTheKernel
+    Test  #71: unit.Chamfer_RefusesChamfersThatDoNotFitBeforeTheKernel .................   Passed    0.19 sec
+      Start  71: unit.Chamfer_RefusesChamfersThatDoNotFitBeforeTheKernel
+26/32 Test  #71: unit.Chamfer_RefusesChamfersThatDoNotFitBeforeTheKernel .................   Passed    0.30 sec
+      Start  72: unit.Chamfer_RejectsInvalidRequestsBeforeTheKernel
+    Test  #72: unit.Chamfer_RejectsInvalidRequestsBeforeTheKernel ......................   Passed    0.05 sec
+      Start  72: unit.Chamfer_RejectsInvalidRequestsBeforeTheKernel
+    Test  #72: unit.Chamfer_RejectsInvalidRequestsBeforeTheKernel ......................   Passed    0.04 sec
+      Start  72: unit.Chamfer_RejectsInvalidRequestsBeforeTheKernel
+    Test  #72: unit.Chamfer_RejectsInvalidRequestsBeforeTheKernel ......................   Passed    0.04 sec
+      Start  72: unit.Chamfer_RejectsInvalidRequestsBeforeTheKernel
+    Test  #72: unit.Chamfer_RejectsInvalidRequestsBeforeTheKernel ......................   Passed    0.07 sec
+      Start  72: unit.Chamfer_RejectsInvalidRequestsBeforeTheKernel
+27/32 Test  #72: unit.Chamfer_RejectsInvalidRequestsBeforeTheKernel ......................   Passed    0.07 sec
+      Start  73: unit.Chamfer_RejectsOversizedDistance
+    Test  #73: unit.Chamfer_RejectsOversizedDistance ...................................   Passed    0.06 sec
+      Start  73: unit.Chamfer_RejectsOversizedDistance
+    Test  #73: unit.Chamfer_RejectsOversizedDistance ...................................   Passed    0.17 sec
+      Start  73: unit.Chamfer_RejectsOversizedDistance
+    Test  #73: unit.Chamfer_RejectsOversizedDistance ...................................   Passed    0.15 sec
+      Start  73: unit.Chamfer_RejectsOversizedDistance
+    Test  #73: unit.Chamfer_RejectsOversizedDistance ...................................   Passed    0.05 sec
+      Start  73: unit.Chamfer_RejectsOversizedDistance
+28/32 Test  #73: unit.Chamfer_RejectsOversizedDistance ...................................   Passed    0.05 sec
+      Start  74: unit.Chamfer_SingleEdgeMatchesAnalyticVolume
+    Test  #74: unit.Chamfer_SingleEdgeMatchesAnalyticVolume ............................   Passed    0.07 sec
+      Start  74: unit.Chamfer_SingleEdgeMatchesAnalyticVolume
+    Test  #74: unit.Chamfer_SingleEdgeMatchesAnalyticVolume ............................   Passed    0.07 sec
+      Start  74: unit.Chamfer_SingleEdgeMatchesAnalyticVolume
+    Test  #74: unit.Chamfer_SingleEdgeMatchesAnalyticVolume ............................   Passed    0.06 sec
+      Start  74: unit.Chamfer_SingleEdgeMatchesAnalyticVolume
+    Test  #74: unit.Chamfer_SingleEdgeMatchesAnalyticVolume ............................   Passed    0.12 sec
+      Start  74: unit.Chamfer_SingleEdgeMatchesAnalyticVolume
+29/32 Test  #74: unit.Chamfer_SingleEdgeMatchesAnalyticVolume ............................   Passed    0.15 sec
+      Start  75: unit.Chamfer_TwoDistancesPutTheFirstDistanceOnTheReferenceFace
+    Test  #75: unit.Chamfer_TwoDistancesPutTheFirstDistanceOnTheReferenceFace ..........   Passed    0.17 sec
+      Start  75: unit.Chamfer_TwoDistancesPutTheFirstDistanceOnTheReferenceFace
+    Test  #75: unit.Chamfer_TwoDistancesPutTheFirstDistanceOnTheReferenceFace ..........   Passed    0.06 sec
+      Start  75: unit.Chamfer_TwoDistancesPutTheFirstDistanceOnTheReferenceFace
+    Test  #75: unit.Chamfer_TwoDistancesPutTheFirstDistanceOnTheReferenceFace ..........   Passed    0.12 sec
+      Start  75: unit.Chamfer_TwoDistancesPutTheFirstDistanceOnTheReferenceFace
+    Test  #75: unit.Chamfer_TwoDistancesPutTheFirstDistanceOnTheReferenceFace ..........   Passed    0.16 sec
+      Start  75: unit.Chamfer_TwoDistancesPutTheFirstDistanceOnTheReferenceFace
+30/32 Test  #75: unit.Chamfer_TwoDistancesPutTheFirstDistanceOnTheReferenceFace ..........   Passed    0.08 sec
+      Start  76: unit.Chamfer_UnresolvableReferencesAreReportedNotGuessed
+    Test  #76: unit.Chamfer_UnresolvableReferencesAreReportedNotGuessed ................   Passed    0.10 sec
+      Start  76: unit.Chamfer_UnresolvableReferencesAreReportedNotGuessed
+    Test  #76: unit.Chamfer_UnresolvableReferencesAreReportedNotGuessed ................   Passed    0.06 sec
+      Start  76: unit.Chamfer_UnresolvableReferencesAreReportedNotGuessed
+    Test  #76: unit.Chamfer_UnresolvableReferencesAreReportedNotGuessed ................   Passed    0.06 sec
+      Start  76: unit.Chamfer_UnresolvableReferencesAreReportedNotGuessed
+    Test  #76: unit.Chamfer_UnresolvableReferencesAreReportedNotGuessed ................   Passed    0.06 sec
+      Start  76: unit.Chamfer_UnresolvableReferencesAreReportedNotGuessed
+31/32 Test  #76: unit.Chamfer_UnresolvableReferencesAreReportedNotGuessed ................   Passed    0.09 sec
+      Start 320: unit.info and validate describe chamfers
+    Test #320: unit.info and validate describe chamfers ................................   Passed    0.19 sec
+      Start 320: unit.info and validate describe chamfers
+    Test #320: unit.info and validate describe chamfers ................................   Passed    0.21 sec
+      Start 320: unit.info and validate describe chamfers
+    Test #320: unit.info and validate describe chamfers ................................   Passed    0.28 sec
+      Start 320: unit.info and validate describe chamfers
+    Test #320: unit.info and validate describe chamfers ................................   Passed    0.23 sec
+      Start 320: unit.info and validate describe chamfers
+32/32 Test #320: unit.info and validate describe chamfers ................................   Passed    0.38 sec
+
+100% tests passed out of 32
+
+Total Test time (real) =  30.56 sec

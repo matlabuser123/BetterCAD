@@ -1,6 +1,7 @@
 #include "Commands.hpp"
 
 #include <bettercad/core/document/Document.hpp>
+#include <bettercad/features/ChamferFeature.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
 #include <bettercad/features/Validation.hpp>
@@ -9,6 +10,7 @@
 
 #include <algorithm>
 #include <format>
+#include <optional>
 #include <ostream>
 #include <string>
 #include <vector>
@@ -43,6 +45,10 @@ void printTable(std::ostream& out, const std::vector<Row>& rows) {
     }
 }
 
+std::string plural(std::size_t count, std::string_view singular, std::string_view pluralForm) {
+    return std::format("{} {}", count, count == 1 ? singular : pluralForm);
+}
+
 std::string nameOrId(const Document& document, ObjectId id) {
     const auto name = document.nameOf(id);
     return name ? std::string{*name} : std::format("{} (missing)", id);
@@ -59,12 +65,30 @@ std::string describeParameter(const Parameter& parameter) {
 }
 
 /// "new body", or the operation and its target: "cut Pad".
-std::string describeOperation(const Document& document, const features::SolidFeature& feature) {
-    std::string operation{features::toString(feature.operation())};
-    if (const auto target = feature.target()) {
-        operation += " " + nameOrId(document, ObjectId{*target});
+std::string describeOperation(const Document& document, features::FeatureOperation operation,
+                              std::optional<FeatureId> target) {
+    std::string text{features::toString(operation)};
+    if (target) {
+        text += " " + nameOrId(document, ObjectId{*target});
     }
-    return operation;
+    return text;
+}
+
+/// "equal distance 5 mm", "two distances 5 mm and 3 mm" or
+/// "distance and angle 5 mm and 30 deg"; a driven distance shows its
+/// parameter's name.
+std::string describeChamferSize(const Document& document, const features::ChamferDefinition& d) {
+    const std::string distance = d.distanceParameter ? nameOrId(document, ObjectId{*d.distanceParameter})
+                                                     : std::format("{:.10g} mm", d.distance.in(units::mm));
+    switch (d.mode) {
+    case geometry::ChamferMode::EqualDistance:
+        return std::format("equal distance {}", distance);
+    case geometry::ChamferMode::TwoDistance:
+        return std::format("two distances {} and {:.10g} mm", distance, d.distance2.in(units::mm));
+    case geometry::ChamferMode::DistanceAngle:
+        return std::format("distance and angle {} and {:.10g} deg", distance, d.angle.in(units::deg));
+    }
+    return distance;
 }
 
 std::string describeObject(const Document& document, const DocumentObject& object) {
@@ -89,7 +113,7 @@ std::string describeObject(const Document& document, const DocumentObject& objec
         const std::string depth = d.depthParameter ? nameOrId(document, ObjectId{*d.depthParameter})
                                                    : std::format("{:.10g} mm", d.depth.in(units::mm));
         return std::format("profile {}, depth {}, {}, {}", nameOrId(document, ObjectId{d.profile}), depth,
-                           features::toString(d.direction), describeOperation(document, *extrude));
+                           features::toString(d.direction), describeOperation(document, d.operation, d.target));
     }
     if (const auto* revolve = dynamic_cast<const features::RevolveFeature*>(&object)) {
         const features::RevolveDefinition& d = revolve->definition();
@@ -99,7 +123,12 @@ std::string describeObject(const Document& document, const DocumentObject& objec
         const std::string angle = d.angleParameter ? nameOrId(document, ObjectId{*d.angleParameter})
                                                    : std::format("{:.10g} deg", d.angle.in(units::deg));
         return std::format("profile {}, axis {}, angle {}, {}, {}", nameOrId(document, ObjectId{d.profile}), axis,
-                           angle, features::toString(d.direction), describeOperation(document, *revolve));
+                           angle, features::toString(d.direction), describeOperation(document, d.operation, d.target));
+    }
+    if (const auto* chamfer = dynamic_cast<const features::ChamferFeature*>(&object)) {
+        const features::ChamferDefinition& d = chamfer->definition();
+        return std::format("target {}, {}, {}", nameOrId(document, ObjectId{d.target}),
+                           plural(d.edges.size(), "edge", "edges"), describeChamferSize(document, d));
     }
     return {};
 }
@@ -133,10 +162,6 @@ void printInfo(const Document& document, const std::filesystem::path& path, std:
                            describeObject(document, object)});
     }
     printTable(out, objects);
-}
-
-std::string plural(std::size_t count, std::string_view singular, std::string_view pluralForm) {
-    return std::format("{} {}", count, count == 1 ? singular : pluralForm);
 }
 
 std::string checkStatus(const features::ValidationReport& report, features::ValidationCheck check) {

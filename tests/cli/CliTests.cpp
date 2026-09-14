@@ -1,5 +1,6 @@
 #include "Cli.hpp"
 #include "support/BracketModel.hpp"
+#include "support/ChamferBlockModel.hpp"
 #include "support/MeshAnalysis.hpp"
 #include "support/TestFiles.hpp"
 #include "support/TurnedPartModel.hpp"
@@ -339,6 +340,38 @@ TEST_CASE("info and validate describe revolves", "[cli][revolve]") {
     CHECK(validate.exitCode == ExitCode::Success);
     CHECK_THAT(validate.out, ContainsSubstring("  Groove (object:10): 1 solid, volume "));
     CHECK_THAT(validate.out, EndsWith("Result: valid (1 warning)\n"));
+}
+
+TEST_CASE("info and validate describe chamfers", "[cli][chamfer]") {
+    TempDir dir;
+    test::ChamferVariants model;
+    const auto path = dir.path() / "block.bcad";
+    REQUIRE(io::saveDocument(model.doc, path).has_value());
+
+    const auto info = runCli({"info", arg(path)});
+    CHECK(info.exitCode == ExitCode::Success);
+    CHECK_THAT(info.out, ContainsSubstring("\n  object:7  chamfer  Edge   target Pad, 1 edge, equal distance size\n"
+                                           "  object:8  chamfer  Bevel  target Edge, 1 edge, two distances 4 mm and "
+                                           "2 mm\n"
+                                           "  object:9  chamfer  Slope  target Bevel, 1 edge, distance and angle 3 mm "
+                                           "and 30 deg\n"));
+
+    const auto validate = runCli({"validate", arg(path)});
+    CHECK(validate.exitCode == ExitCode::Success);
+    CHECK_THAT(validate.out, ContainsSubstring("geometry              ok, 1 result body\n"
+                                               "Result bodies (1):\n"
+                                               "  Slope (object:9): 1 solid, volume 98220.096 mm^3, area "));
+    CHECK_THAT(validate.out, EndsWith("bounds (0, 0, 0) to (100, 50, 20) mm\nResult: valid\n"));
+
+    // A chamfer whose edge has moved makes the document invalid, with the reason.
+    REQUIRE(model.doc.setParameterValue(model.height, 30_mm).has_value());
+    REQUIRE(io::saveDocument(model.doc, path).has_value());
+    const auto broken = runCli({"validate", arg(path)});
+    CHECK(broken.exitCode == ExitCode::Failure);
+    CHECK_THAT(broken.out, ContainsSubstring("    error: Edge (object:7) failed to regenerate: Edge: chamfer: edge "
+                                             "reference 1 (line through (0, 0, 20) mm along (1, 0, 0)) matches no "
+                                             "edge of the body\n"));
+    CHECK_THAT(broken.out, EndsWith("Result: invalid (3 errors)\n"));
 }
 
 TEST_CASE("Exports of a document without bodies fail", "[cli][export]") {

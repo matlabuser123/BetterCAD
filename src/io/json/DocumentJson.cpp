@@ -21,6 +21,8 @@ Result<Json> objectToJson(const DocumentObject& object) {
         data = detail::extrudeToJson(*extrude);
     } else if (const auto* revolve = dynamic_cast<const features::RevolveFeature*>(&object)) {
         data = detail::revolveToJson(*revolve);
+    } else if (const auto* chamfer = dynamic_cast<const features::ChamferFeature*>(&object)) {
+        data = detail::chamferToJson(*chamfer);
     } else {
         return makeError(ErrorCode::InvalidArgument,
                          std::format("objects of type '{}' cannot be saved", object.typeName()));
@@ -64,6 +66,13 @@ Result<std::unique_ptr<DocumentObject>> objectFromJson(const Json& value, std::s
             return std::unexpected(revolve.error());
         }
         return std::unique_ptr<DocumentObject>(std::move(*revolve));
+    }
+    if (*type == features::ChamferFeature::kTypeName) {
+        auto chamfer = detail::chamferFromJson(**data, std::move(*name), dataPath);
+        if (!chamfer) {
+            return std::unexpected(chamfer.error());
+        }
+        return std::unique_ptr<DocumentObject>(std::move(*chamfer));
     }
     return detail::parseError(detail::childPath(path, "type"), std::format("unknown object type '{}'", *type));
 }

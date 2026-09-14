@@ -29,13 +29,13 @@ enum class FeatureOperation {
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<void> validateOperation(FeatureOperation operation,
                                                                        const std::optional<FeatureId>& target);
 
-/// Base class of features that produce a body (extrude, revolve, ...).
-/// A Join, Cut or Intersect feature consumes the body of its target
-/// feature, which then becomes an intermediate result.
+/// Base class of features that produce a body (extrude, revolve, chamfer,
+/// ...). A feature that builds on another feature's body (a Join, Cut or
+/// Intersect, or a chamfer) consumes that body, which then becomes an
+/// intermediate result.
 class BETTERCAD_FEATURES_EXPORT SolidFeature : public DocumentObject {
 public:
-    [[nodiscard]] virtual FeatureOperation operation() const noexcept = 0;
-    /// The feature whose body this one combines with; empty for NewBody.
+    /// The feature whose body this one consumes; empty for a new body.
     [[nodiscard]] virtual std::optional<FeatureId> target() const noexcept = 0;
 
     /// Typed view of id(); invalid until the feature is in a document.

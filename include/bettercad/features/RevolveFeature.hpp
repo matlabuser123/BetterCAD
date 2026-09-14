@@ -96,7 +96,7 @@ public:
     [[nodiscard]] bool contentEquals(const DocumentObject& other) const override;
     /// The profile sketch, the angle parameter and the target feature.
     [[nodiscard]] std::vector<ObjectId> dependencies() const override;
-    [[nodiscard]] FeatureOperation operation() const noexcept override { return definition_.operation; }
+    [[nodiscard]] FeatureOperation operation() const noexcept { return definition_.operation; }
     [[nodiscard]] std::optional<FeatureId> target() const noexcept override { return definition_.target; }
 
     [[nodiscard]] const RevolveDefinition& definition() const noexcept { return definition_; }

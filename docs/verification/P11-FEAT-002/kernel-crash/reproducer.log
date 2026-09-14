@@ -1,0 +1,21 @@
+OCCT chamfer reproducer runs, 2026-09-15 01:19:36
+Source: docs/verification/P11-FEAT-002/kernel-crash/occt_chamfer_reproducer.cpp
+Toolchain: c++.exe (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r4) 16.1.0
+OCCT: 8.0.1 from the dependency superbuild (Release, exceptions enabled)
+Exit code 0xC0000005 is an access violation (the process crashed).
+
+chamfer 25             exit 0xC0000005    3.5 s  (no output)
+chamfer 25             exit 0xC0000005    2.1 s  (no output)
+chamfer 25             exit 0xC0000005    3.1 s  (no output)
+chamfer 20             exit 0xC0000005    2.1 s  (no output)
+chamfer 60             exit 0xC0000005    3.1 s  (no output)
+pair 1.5               exit 0xC0000005    2.1 s  (no output)
+chamfer 5              exit 0x00000000    0.0 s  chamfer 5: IsDone 1
+chamfer 19.9           exit 0x00000000    0.0 s  chamfer 19.9: IsDone 1
+chamfer 19.999         exit 0x00000000    0.0 s  chamfer 19.999: IsDone 1
+chamfer 19.9999999     exit 0x00000000    0.0 s  chamfer 19.9999999: IsDone 1
+pair 0.9               exit 0x00000000    0.0 s  pair 0.9: IsDone 1
+pair 0.9999            exit 0x00000000    0.0 s  pair 0.9999: IsDone 1
+pair 0.99999           exit 0xC0000005    3.1 s  (no output)
+exception              exit 0x00000000    0.0 s  exception: caught StdFail_NotDone: BRep_API: command not done
+no-edges               exit 0x00000000    0.0 s  no-edges: caught Standard_Failure: There are no suitable edges for chamfer or fillet

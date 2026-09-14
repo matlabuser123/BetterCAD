@@ -4,6 +4,7 @@
 #include <bettercad/core/document/Document.hpp>
 #include <bettercad/core/geometry/Body.hpp>
 #include <bettercad/core/math/Direction.hpp>
+#include <bettercad/features/ChamferFeature.hpp>
 #include <bettercad/features/Export.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
@@ -45,5 +46,18 @@ regenerateExtrude(const ExtrudeFeature& feature, const Document& document,
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::Body>
 regenerateRevolve(const RevolveFeature& feature, const Document& document,
                   const geometry::Body* target = nullptr);
+
+/// Distance of a chamfer: the driving parameter's value if it has one
+/// (NotFound if missing, DimensionMismatch if not a length), otherwise the
+/// literal distance. Its range is checked by the chamfer itself.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<Length> resolveChamferDistance(const ChamferDefinition& definition,
+                                                                             const Document& document);
+
+/// Computes the body of a chamfer feature: @p target (the target feature's
+/// body) with the referenced edges chamfered. Fails with FailedPrecondition
+/// if there is no target body. Edge references that match no edge, or
+/// several, are errors, never guesses; see geometry::chamferEdges().
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::Body>
+regenerateChamfer(const ChamferFeature& feature, const Document& document, const geometry::Body* target);
 
 } // namespace bettercad::features

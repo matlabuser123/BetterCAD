@@ -5,6 +5,7 @@
 #include <bettercad/core/document/Command.hpp>
 #include <bettercad/core/document/Commands.hpp>
 #include <bettercad/core/document/Document.hpp>
+#include <bettercad/features/ChamferFeature.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
 
@@ -125,5 +126,7 @@ using CreateExtrudeCommand = CreateFeatureCommand<ExtrudeFeature>;
 using ModifyExtrudeCommand = ModifyFeatureCommand<ExtrudeFeature>;
 using CreateRevolveCommand = CreateFeatureCommand<RevolveFeature>;
 using ModifyRevolveCommand = ModifyFeatureCommand<RevolveFeature>;
+using CreateChamferCommand = CreateFeatureCommand<ChamferFeature>;
+using ModifyChamferCommand = ModifyFeatureCommand<ChamferFeature>;
 
 } // namespace bettercad::features

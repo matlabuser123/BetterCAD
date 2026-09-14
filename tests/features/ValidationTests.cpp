@@ -1,8 +1,10 @@
 #include "FeatureTestSupport.hpp"
 #include "support/BracketModel.hpp"
+#include "support/ChamferBlockModel.hpp"
 #include "support/TurnedPartModel.hpp"
 
 #include <bettercad/core/document/Document.hpp>
+#include <bettercad/features/ChamferFeature.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/features/ResultBodies.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
@@ -24,6 +26,7 @@ using namespace bettercad::literals;
 using namespace bettercad::sketch;
 using bettercad::test::addRectangle;
 using bettercad::test::BracketModel;
+using bettercad::test::ChamferBlockModel;
 using bettercad::test::require;
 using bettercad::test::TurnedPartModel;
 using Catch::Matchers::ContainsSubstring;
@@ -339,5 +342,55 @@ TEST_CASE("Revolve models are validated like any other", "[validation][revolve]"
         CHECK(regeneration[0].item == m.groove);
         CHECK_THAT(regeneration[0].message, ContainsSubstring("crosses the revolution axis"));
         CHECK_FALSE(report.valid());
+    }
+}
+
+TEST_CASE("ChamferFeature_ModelsAreValidatedLikeAnyOther", "[validation][chamfer]") {
+    ChamferBlockModel m;
+
+    SECTION("a sound model: the chamfer is the one valid result body") {
+        const ValidationReport report = validateDocument(m.doc);
+        INFO(describe(report));
+        CHECK(report.valid());
+        CHECK(report.issues.empty());
+        CHECK(report.regenerated == 3);
+        REQUIRE(report.bodies.size() == 1);
+        CHECK(report.bodies[0].feature == m.edge);
+        CHECK(report.bodies[0].valid);
+        CHECK(report.bodies[0].topology.faces == 7);
+        CHECK_THAT(report.bodies[0].properties->volume.in(units::mm3), WithinRel(98750.0, 1e-12));
+    }
+    SECTION("a distance driven by an angle") {
+        const ParameterId tilt = m.doc.createParameter("tilt", 5_deg, units::deg).value();
+        ChamferDefinition d = m.definitionOf(m.edge);
+        d.distanceParameter = tilt;
+        m.setDefinition(m.edge, d);
+        const ValidationReport report = validateDocument(m.doc);
+        const auto issues = issuesOf(report, ValidationCheck::DocumentConsistency);
+        REQUIRE(issues.size() == 1);
+        CHECK(issues[0].message ==
+              "Edge (object:7): the distance is driven by tilt (object:8), which is an angle, not a length");
+        CHECK(issuesOf(report, ValidationCheck::FeatureRegeneration).empty()); // reported once
+    }
+    SECTION("a target that is a sketch") {
+        ChamferDefinition d = m.definitionOf(m.edge);
+        d.target = ChamferBlockModel::featureId(m.base);
+        m.setDefinition(m.edge, d);
+        const auto issues = issuesOf(validateDocument(m.doc), ValidationCheck::DocumentConsistency);
+        REQUIRE(issues.size() == 1);
+        CHECK(issues[0].message ==
+              "Edge (object:7): the target is Base (object:5), which is a sketch, not a feature with a body");
+    }
+    SECTION("an edge that the model no longer has") {
+        REQUIRE(m.doc.setParameterValue(m.height, 30_mm).has_value());
+        const ValidationReport report = validateDocument(m.doc);
+        INFO(describe(report));
+        const auto regeneration = issuesOf(report, ValidationCheck::FeatureRegeneration);
+        REQUIRE(regeneration.size() == 1);
+        CHECK(regeneration[0].item == m.edge);
+        CHECK(regeneration[0].message == "Edge (object:7) failed to regenerate: Edge: chamfer: edge reference 1 "
+                                         "(line through (0, 0, 20) mm along (1, 0, 0)) matches no edge of the body");
+        CHECK_FALSE(report.valid());
+        CHECK(report.bodies.empty()); // the pad is consumed and the chamfer has no body
     }
 }
