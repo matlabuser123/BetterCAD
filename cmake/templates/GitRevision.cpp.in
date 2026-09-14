@@ -1,0 +1,14 @@
+// Generated at build time by cmake/GitRevision.cmake - do not edit.
+#include "core/GitRevision.hpp"
+
+namespace bettercad::detail {
+
+std::string_view gitRevision() noexcept {
+    return "@BETTERCAD_GIT_REVISION@";
+}
+
+bool gitDirty() noexcept {
+    return @BETTERCAD_GIT_DIRTY@;
+}
+
+} // namespace bettercad::detail

@@ -1,0 +1,4 @@
+﻿[1/9] Checking git revision
+[2/4] Building CXX object src/sketch/CMakeFiles/bettercad_sketch.dir/solver/Solver.cpp.obj
+[3/4] Linking CXX static library lib\libbettercad_sketch.a
+[4/4] Linking CXX executable bin\bettercad_tests.exe

@@ -1,0 +1,63 @@
+﻿[1/59] Checking git revision
+[2/55] Building CXX object tests/CMakeFiles/bettercad_test_occt.dir/support/occt/StepReadBack.cpp.obj
+[3/55] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctKernel.cpp.obj
+cmake : ninja: error: WriteFile(.ninja_lock): Unable to create file. Permission denied
+At C:\Users\uqhas\AppData\Local\Temp\claude\c--Users-uqhas-OneDrive-Desktop-CAD\ac14f97f-a455-43ad-8de7-a8bbd1db04f9\sc
+ratchpad\evidence.ps1:13 char:5
++     cmake --build --preset $preset *> (Join-Path $out "build-$preset. ...
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (ninja: error: W...rmission denied:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[4/55] Building CXX object apps/bettercad_cli/CMakeFiles/bettercad_cli.dir/main.cpp.obj
+[5/55] Linking CXX static library lib\libbettercad_test_occt.a
+[6/55] Building CXX object src/io/CMakeFiles/bettercad_io.dir/StlWriter.cpp.obj
+[7/55] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/BuildInfoTests.cpp.obj
+[8/55] Building CXX object src/io/CMakeFiles/bettercad_io.dir/FileIo.cpp.obj
+[9/55] Building CXX object src/io/CMakeFiles/bettercad_io.dir/DocumentFile.cpp.obj
+[10/55] Building CXX object apps/bettercad_cli/CMakeFiles/bettercad_cli_lib.dir/Cli.cpp.obj
+[11/55] Building CXX object src/features/CMakeFiles/bettercad_features.dir/ResultBodies.cpp.obj
+[12/55] Building CXX object apps/bettercad_cli/CMakeFiles/bettercad_cli_lib.dir/ExportCommands.cpp.obj
+[13/55] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/UuidTests.cpp.obj
+[14/55] Building CXX object apps/bettercad_cli/CMakeFiles/bettercad_cli_lib.dir/Arguments.cpp.obj
+[15/55] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctStep.cpp.obj
+[16/55] Building CXX object src/io/CMakeFiles/bettercad_io.dir/ModelExport.cpp.obj
+[17/55] Building CXX object apps/bettercad_cli/CMakeFiles/bettercad_cli_lib.dir/DocumentCommands.cpp.obj
+[18/55] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctMesh.cpp.obj
+[19/55] Building CXX object src/features/CMakeFiles/bettercad_features.dir/Validation.cpp.obj
+[20/55] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/IdTests.cpp.obj
+[21/55] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/geometry/BooleanTests.cpp.obj
+[22/55] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/geometry/MeshTests.cpp.obj
+[23/55] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/geometry/PropertyTests.cpp.obj
+[24/55] Linking CXX shared library bin\libbettercad_geometry.dll
+[25/55] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/document/CommandTests.cpp.obj
+[26/55] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/document/DependencyGraphTests.cpp.obj
+[27/55] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/geometry/PrimitiveTests.cpp.obj
+[28/55] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/units/ConversionTests.cpp.obj
+[29/55] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/math/FrameTests.cpp.obj
+[30/55] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/units/FormatAndCatalogTests.cpp.obj
+[31/55] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/parameters/ParameterTableTests.cpp.obj
+[32/55] Linking CXX shared library bin\libbettercad_features.dll
+[33/55] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/parameters/ParameterTests.cpp.obj
+[34/55] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/document/DocumentTests.cpp.obj
+[35/55] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/units/QuantityTests.cpp.obj
+[36/55] Building CXX object tests/CMakeFiles/bettercad_tests.dir/features/ProfileTests.cpp.obj
+[37/55] Building CXX object tests/CMakeFiles/bettercad_tests.dir/features/ExtrudeTests.cpp.obj
+[38/55] Linking CXX shared library bin\libbettercad_io.dll
+[39/55] Building CXX object tests/CMakeFiles/bettercad_tests.dir/io/ExampleModelTests.cpp.obj
+[40/55] Linking CXX static library lib\libbettercad_cli_lib.a
+[41/55] Building CXX object tests/CMakeFiles/bettercad_tests.dir/features/RegenerationTests.cpp.obj
+[42/55] Building CXX object tests/CMakeFiles/bettercad_tests.dir/io/ParameterJsonTests.cpp.obj
+[43/55] Building CXX object tests/CMakeFiles/bettercad_tests.dir/features/RegeneratorTests.cpp.obj
+[44/55] Linking CXX executable bin\bettercad_example_geometry_accuracy.exe
+[45/55] Building CXX object tests/CMakeFiles/bettercad_tests.dir/features/ValidationTests.cpp.obj
+[46/55] Building CXX object tests/CMakeFiles/bettercad_tests.dir/io/StepExportTests.cpp.obj
+[47/55] Building CXX object tests/CMakeFiles/bettercad_tests.dir/sketch/ConstraintTests.cpp.obj
+[48/55] Building CXX object tests/CMakeFiles/bettercad_tests.dir/sketch/SketchDocumentTests.cpp.obj
+[49/55] Building CXX object tests/CMakeFiles/bettercad_tests.dir/sketch/SolverTests.cpp.obj
+[50/55] Linking CXX executable bin\bettercad-cli.exe
+[51/55] Building CXX object tests/CMakeFiles/bettercad_tests.dir/sketch/SketchTests.cpp.obj
+[52/55] Building CXX object tests/CMakeFiles/bettercad_tests.dir/io/StlTests.cpp.obj
+[53/55] Building CXX object tests/CMakeFiles/bettercad_tests.dir/io/DocumentFileTests.cpp.obj
+[54/55] Building CXX object tests/CMakeFiles/bettercad_tests.dir/cli/CliTests.cpp.obj
+[55/55] Linking CXX executable bin\bettercad_tests.exe

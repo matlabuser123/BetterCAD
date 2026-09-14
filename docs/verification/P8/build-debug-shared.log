@@ -1,0 +1,46 @@
+﻿[1/47] Checking git revision
+[2/46] Building CXX object src/sketch/CMakeFiles/bettercad_sketch.dir/entities/Entities.cpp.obj
+[3/46] Building CXX object src/core/CMakeFiles/bettercad_core.dir/document/DocumentObject.cpp.obj
+[4/46] Building CXX object src/features/CMakeFiles/bettercad_features.dir/extrude/ExtrudeFeature.cpp.obj
+[5/46] Building CXX object src/core/CMakeFiles/bettercad_core.dir/document/CommandHistory.cpp.obj
+[6/46] Building CXX object src/core/CMakeFiles/bettercad_core.dir/document/DependencyGraph.cpp.obj
+[7/46] Building CXX object src/core/CMakeFiles/bettercad_core.dir/parameters/Parameter.cpp.obj
+[8/46] Building CXX object src/sketch/CMakeFiles/bettercad_sketch.dir/SketchRegeneration.cpp.obj
+[9/46] Building CXX object src/sketch/CMakeFiles/bettercad_sketch.dir/SketchCommands.cpp.obj
+[10/46] Building CXX object src/core/CMakeFiles/bettercad_core.dir/document/Commands.cpp.obj
+[11/46] Building CXX object src/core/CMakeFiles/bettercad_core.dir/parameters/ParameterTable.cpp.obj
+[12/46] Building CXX object src/features/CMakeFiles/bettercad_features.dir/extrude/ExtrudeRegeneration.cpp.obj
+[13/46] Building CXX object src/core/CMakeFiles/bettercad_core.dir/document/Document.cpp.obj
+[14/46] Building CXX object src/features/CMakeFiles/bettercad_features.dir/FeatureCommands.cpp.obj
+[15/46] Building CXX object src/sketch/CMakeFiles/bettercad_sketch.dir/constraints/SketchConstraints.cpp.obj
+[16/46] Building CXX object src/sketch/CMakeFiles/bettercad_sketch.dir/Sketch.cpp.obj
+[17/46] Linking CXX shared library bin\libbettercad_core.dll
+[18/46] Building CXX object src/sketch/CMakeFiles/bettercad_sketch.dir/solver/SolverSystem.cpp.obj
+[19/46] Building CXX object src/features/CMakeFiles/bettercad_features.dir/Regenerator.cpp.obj
+[20/46] Building CXX object src/features/CMakeFiles/bettercad_features.dir/profile/Profiles.cpp.obj
+[21/46] Linking CXX shared library bin\libbettercad_geometry.dll
+[22/46] Linking CXX executable bin\bettercad-cli.exe
+[23/46] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/IdTests.cpp.obj
+[24/46] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/parameters/ParameterTests.cpp.obj
+[25/46] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/document/DependencyGraphTests.cpp.obj
+[26/46] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/parameters/ParameterTableTests.cpp.obj
+[27/46] Building CXX object src/io/CMakeFiles/bettercad_io.dir/json/ParameterJson.cpp.obj
+[28/46] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/document/CommandTests.cpp.obj
+[29/46] Building CXX object tests/CMakeFiles/bettercad_tests.dir/features/ExtrudeTests.cpp.obj
+[30/46] Linking CXX executable bin\bettercad_example_geometry_accuracy.exe
+[31/46] Linking CXX shared library bin\libbettercad_io.dll
+[32/46] Linking CXX executable bin\bettercad.exe; Deploying Qt runtime for bettercad
+[33/46] Building CXX object tests/CMakeFiles/bettercad_tests.dir/features/ProfileTests.cpp.obj
+[34/46] Building CXX object tests/CMakeFiles/bettercad_tests.dir/features/RegenerationTests.cpp.obj
+[35/46] Building CXX object tests/CMakeFiles/bettercad_tests.dir/sketch/ConstraintTests.cpp.obj
+[36/46] Building CXX object tests/compile_fail/CMakeFiles/bettercad_cf_ids_control.dir/IdsMisuse.cpp.obj
+[37/46] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/document/DocumentTests.cpp.obj
+[38/46] Building CXX object tests/CMakeFiles/bettercad_tests.dir/io/ParameterJsonTests.cpp.obj
+[39/46] Building CXX object tests/CMakeFiles/bettercad_tests.dir/features/RegeneratorTests.cpp.obj
+[40/46] Building CXX object tests/CMakeFiles/bettercad_tests.dir/sketch/SketchDocumentTests.cpp.obj
+[41/46] Building CXX object tests/CMakeFiles/bettercad_tests.dir/sketch/SketchTests.cpp.obj
+[42/46] Building CXX object tests/CMakeFiles/bettercad_tests.dir/sketch/SolverTests.cpp.obj
+[43/46] Building CXX object src/sketch/CMakeFiles/bettercad_sketch.dir/solver/Solver.cpp.obj
+[44/46] Linking CXX shared library bin\libbettercad_sketch.dll
+[45/46] Linking CXX shared library bin\libbettercad_features.dll
+[46/46] Linking CXX executable bin\bettercad_tests.exe

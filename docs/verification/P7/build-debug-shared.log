@@ -1,0 +1,14 @@
+﻿[1/20] Checking git revision
+[2/14] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/Profile.cpp.obj
+[3/14] Building CXX object src/features/CMakeFiles/bettercad_features.dir/extrude/ExtrudeFeature.cpp.obj
+[4/14] Building CXX object src/features/CMakeFiles/bettercad_features.dir/FeatureCommands.cpp.obj
+[5/14] Building CXX object src/features/CMakeFiles/bettercad_features.dir/extrude/ExtrudeRegeneration.cpp.obj
+[6/14] Building CXX object src/features/CMakeFiles/bettercad_features.dir/profile/Profiles.cpp.obj
+[7/14] Building CXX object tests/CMakeFiles/bettercad_tests.dir/features/ProfileTests.cpp.obj
+[8/14] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctPrism.cpp.obj
+[9/14] Linking CXX shared library bin\libbettercad_geometry.dll
+[10/14] Building CXX object tests/CMakeFiles/bettercad_tests.dir/features/ExtrudeTests.cpp.obj
+[11/14] Building CXX object tests/CMakeFiles/bettercad_tests.dir/features/RegenerationTests.cpp.obj
+[12/14] Linking CXX shared library bin\libbettercad_features.dll
+[13/14] Linking CXX executable bin\bettercad_example_geometry_accuracy.exe
+[14/14] Linking CXX executable bin\bettercad_tests.exe

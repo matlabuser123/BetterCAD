@@ -1,0 +1,19 @@
+﻿-- Using the multi-header code from C:/Users/uqhas/OneDrive/Desktop/CAD/build/release/_deps/nlohmann_json-src/include/
+-- 
+-- BetterCAD 0.1.0 configuration
+--   CMake                 : 4.4.2 (Ninja)
+--   C++ compiler          : GNU 16.1.0
+--   Compiler path         : C:/Users/uqhas/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/bin/c++.exe
+--   C++ standard          : C++23
+--   Target platform       : Windows AMD64
+--   Build type            : Release
+--   Shared libraries      : OFF
+--   Warnings as errors    : ON
+--   CLI                   : ON
+--   Desktop app           : ON (Qt 6.11.2, C:/Users/uqhas/AppData/Local/bettercad-deps/gnu-16-mingw-amd64/lib/cmake/Qt6)
+--   Tests                 : ON (Catch2 3.16.0 (fetched))
+--   Dependency prefix     : C:/Users/uqhas/AppData/Local/bettercad-deps/gnu-16-mingw-amd64
+-- 
+-- Configuring done (3.6s)
+-- Generating done (0.7s)
+-- Build files have been written to: C:/Users/uqhas/OneDrive/Desktop/CAD/build/release

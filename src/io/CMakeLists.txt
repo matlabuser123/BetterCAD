@@ -1,0 +1,32 @@
+bettercad_add_library(bettercad_io
+    ALIAS io
+    EXPORT_BASE BETTERCAD_IO
+    EXPORT_HEADER bettercad/io/Export.hpp
+    SOURCES
+        DocumentFile.cpp
+        FileIo.cpp
+        FileIo.hpp
+        ModelExport.cpp
+        StlWriter.cpp
+        json/DocumentJson.cpp
+        json/FeatureJson.cpp
+        json/JsonReader.cpp
+        json/JsonReader.hpp
+        json/ObjectJson.hpp
+        json/ParameterJson.cpp
+        json/ParameterJsonDetail.hpp
+        json/SketchJson.cpp
+    PUBLIC_LINK
+        BetterCAD::core
+        BetterCAD::geometry
+    PRIVATE_LINK
+        BetterCAD::features
+        BetterCAD::sketch
+        nlohmann_json::nlohmann_json
+)
+
+install(TARGETS bettercad_io
+    RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+)

@@ -1,0 +1,24 @@
+﻿[1/25] Checking git revision
+[2/24] Building CXX object src/core/CMakeFiles/bettercad_core.dir/math/Direction.cpp.obj
+[3/24] Building CXX object src/core/CMakeFiles/bettercad_core.dir/math/Frame.cpp.obj
+[4/24] Linking CXX shared library bin\libbettercad_core.dll
+[5/24] Building CXX object examples/CMakeFiles/bettercad_example_geometry_accuracy.dir/geometry_accuracy/main.cpp.obj
+[6/24] Building CXX object src/sketch/CMakeFiles/bettercad_sketch.dir/entities/Entities.cpp.obj
+[7/24] Linking CXX executable bin\bettercad-cli.exe
+[8/24] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/geometry/BooleanTests.cpp.obj
+[9/24] Linking CXX shared library bin\libbettercad_io.dll
+[10/24] Linking CXX executable bin\bettercad.exe; Deploying Qt runtime for bettercad
+[11/24] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/geometry/PropertyTests.cpp.obj
+[12/24] Building CXX object src/sketch/CMakeFiles/bettercad_sketch.dir/SketchCommands.cpp.obj
+[13/24] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/geometry/PrimitiveTests.cpp.obj
+[14/24] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctBody.cpp.obj
+[15/24] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/math/FrameTests.cpp.obj
+[16/24] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctPrimitives.cpp.obj
+[17/24] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctBooleans.cpp.obj
+[18/24] Building CXX object src/sketch/CMakeFiles/bettercad_sketch.dir/Sketch.cpp.obj
+[19/24] Linking CXX shared library bin\libbettercad_geometry.dll
+[20/24] Linking CXX shared library bin\libbettercad_sketch.dll
+[21/24] Building CXX object tests/CMakeFiles/bettercad_tests.dir/sketch/SketchTests.cpp.obj
+[22/24] Building CXX object tests/CMakeFiles/bettercad_tests.dir/sketch/SketchDocumentTests.cpp.obj
+[23/24] Linking CXX executable bin\bettercad_example_geometry_accuracy.exe
+[24/24] Linking CXX executable bin\bettercad_tests.exe

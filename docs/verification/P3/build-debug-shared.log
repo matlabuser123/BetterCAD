@@ -1,0 +1,13 @@
+﻿[1/18] Checking git revision
+[2/13] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctKernel.cpp.obj
+[3/13] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/Types.cpp.obj
+[4/13] Building CXX object examples/CMakeFiles/bettercad_example_geometry_accuracy.dir/geometry_accuracy/main.cpp.obj
+[5/13] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/geometry/BooleanTests.cpp.obj
+[6/13] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/geometry/PropertyTests.cpp.obj
+[7/13] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctBody.cpp.obj
+[8/13] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/geometry/PrimitiveTests.cpp.obj
+[9/13] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctPrimitives.cpp.obj
+[10/13] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctBooleans.cpp.obj
+[11/13] Linking CXX shared library bin\libbettercad_geometry.dll
+[12/13] Linking CXX executable bin\bettercad_example_geometry_accuracy.exe
+[13/13] Linking CXX executable bin\bettercad_tests.exe

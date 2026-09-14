@@ -1,0 +1,157 @@
+﻿Test project C:/Users/uqhas/OneDrive/Desktop/CAD/build/debug
+      Start  1: unit.Build info identifies the compiler that built the core library
+ 1/76 Test  #1: unit.Build info identifies the compiler that built the core library ...   Passed    0.05 sec
+      Start  2: unit.Build info reports the active build configuration
+ 2/76 Test  #2: unit.Build info reports the active build configuration ................   Passed    0.06 sec
+      Start  3: unit.Build info reports the library linkage
+ 3/76 Test  #3: unit.Build info reports the library linkage ...........................   Passed    0.05 sec
+      Start  4: unit.Build info reports the project version configured by CMake
+ 4/76 Test  #4: unit.Build info reports the project version configured by CMake .......   Passed    0.07 sec
+      Start  5: unit.C++ standard names map __cplusplus values
+ 5/76 Test  #5: unit.C++ standard names map __cplusplus values ........................   Passed    0.03 sec
+      Start  6: unit.CLI --version prints program name and version
+ 6/76 Test  #6: unit.CLI --version prints program name and version ....................   Passed    0.03 sec
+      Start  7: unit.CLI commands reject unexpected arguments
+ 7/76 Test  #7: unit.CLI commands reject unexpected arguments .........................   Passed    0.02 sec
+      Start  8: unit.CLI help lists every command
+ 8/76 Test  #8: unit.CLI help lists every command .....................................   Passed    0.03 sec
+      Start  9: unit.CLI rejects unknown commands
+ 9/76 Test  #9: unit.CLI rejects unknown commands .....................................   Passed    0.07 sec
+      Start 10: unit.CLI version command prints the full build report
+10/76 Test #10: unit.CLI version command prints the full build report .................   Passed    0.03 sec
+      Start 11: unit.CLI without arguments prints usage to stderr and fails
+11/76 Test #11: unit.CLI without arguments prints usage to stderr and fails ...........   Passed    0.03 sec
+      Start 12: unit.Compound assignment updates the quantity
+12/76 Test #12: unit.Compound assignment updates the quantity .........................   Passed    0.11 sec
+      Start 13: unit.Core library is compiled as C++23 or newer
+13/76 Test #13: unit.Core library is compiled as C++23 or newer .......................   Passed    0.19 sec
+      Start 14: unit.Default-constructed IDs are invalid
+14/76 Test #14: unit.Default-constructed IDs are invalid ..............................   Passed    0.03 sec
+      Start 15: unit.Default-constructed and zero quantities are zero
+15/76 Test #15: unit.Default-constructed and zero quantities are zero .................   Passed    0.21 sec
+      Start 16: unit.Degrees and radians convert to and from SI
+16/76 Test #16: unit.Degrees and radians convert to and from SI .......................   Passed    0.03 sec
+      Start 17: unit.Document object IDs widen to ObjectId
+17/76 Test #17: unit.Document object IDs widen to ObjectId ............................   Passed    0.04 sec
+      Start 18: unit.Formatted build info contains every field
+18/76 Test #18: unit.Formatted build info contains every field ........................   Passed    0.07 sec
+      Start 19: unit.Formatted build info marks modified working trees
+19/76 Test #19: unit.Formatted build info marks modified working trees ................   Passed    0.03 sec
+      Start 20: unit.Generated UUIDs are version 4, RFC variant and distinct
+20/76 Test #20: unit.Generated UUIDs are version 4, RFC variant and distinct ..........   Passed    0.04 sec
+      Start 21: unit.IDs carry their value and compare by value
+21/76 Test #21: unit.IDs carry their value and compare by value .......................   Passed    0.02 sec
+      Start 22: unit.IDs format as kind:value
+22/76 Test #22: unit.IDs format as kind:value .........................................   Passed    0.02 sec
+      Start 23: unit.IDs work as ordered and hashed container keys
+23/76 Test #23: unit.IDs work as ordered and hashed container keys ....................   Passed    0.02 sec
+      Start 24: unit.IdAllocator can reserve IDs loaded from a document
+24/76 Test #24: unit.IdAllocator can reserve IDs loaded from a document ...............   Passed    0.07 sec
+      Start 25: unit.IdAllocator hands out increasing IDs starting at 1
+25/76 Test #25: unit.IdAllocator hands out increasing IDs starting at 1 ...............   Passed    0.03 sec
+      Start 26: unit.IdAllocator never reuses values
+26/76 Test #26: unit.IdAllocator never reuses values ..................................   Passed    0.05 sec
+      Start 27: unit.IdAllocator reports exhaustion instead of wrapping
+27/76 Test #27: unit.IdAllocator reports exhaustion instead of wrapping ...............   Passed    0.03 sec
+      Start 28: unit.Imperial lengths use their exact definitions
+28/76 Test #28: unit.Imperial lengths use their exact definitions .....................   Passed    0.03 sec
+      Start 29: unit.Independent allocators produce independent ID spaces
+29/76 Test #29: unit.Independent allocators produce independent ID spaces .............   Passed    0.04 sec
+      Start 30: unit.Integer and floating-point literals agree
+30/76 Test #30: unit.Integer and floating-point literals agree ........................   Passed    0.03 sec
+      Start 31: unit.Like quantities add and subtract
+31/76 Test #31: unit.Like quantities add and subtract .................................   Passed    0.03 sec
+      Start 32: unit.Like quantities compare by value regardless of the unit used
+32/76 Test #32: unit.Like quantities compare by value regardless of the unit used .....   Passed    0.03 sec
+      Start 33: unit.Malformed UUID text is rejected
+33/76 Test #33: unit.Malformed UUID text is rejected ..................................   Passed    0.02 sec
+      Start 34: unit.Megapascals and pascals convert to and from SI
+34/76 Test #34: unit.Megapascals and pascals convert to and from SI ...................   Passed    0.02 sec
+      Start 35: unit.Millimetres and metres convert to and from SI
+35/76 Test #35: unit.Millimetres and metres convert to and from SI ....................   Passed    0.03 sec
+      Start 36: unit.Other engineering units convert to SI
+36/76 Test #36: unit.Other engineering units convert to SI ............................   Passed    0.02 sec
+      Start 37: unit.Products and quotients derive the correct quantity
+37/76 Test #37: unit.Products and quotients derive the correct quantity ...............   Passed    0.03 sec
+      Start 38: unit.Quantities format with their unit
+38/76 Test #38: unit.Quantities format with their unit ................................   Passed    0.03 sec
+      Start 39: unit.Quantities scale by plain numbers
+39/76 Test #39: unit.Quantities scale by plain numbers ................................   Passed    0.04 sec
+      Start 40: unit.SI unit symbols are derived from dimensions
+40/76 Test #40: unit.SI unit symbols are derived from dimensions ......................   Passed    0.03 sec
+      Start 41: unit.Seeded generation is reproducible
+41/76 Test #41: unit.Seeded generation is reproducible ................................   Passed    0.03 sec
+      Start 42: unit.Spec usage: literals construct typed quantities
+42/76 Test #42: unit.Spec usage: literals construct typed quantities ..................   Passed    0.02 sec
+      Start 43: unit.Square root of an area is a length
+43/76 Test #43: unit.Square root of an area is a length ...............................   Passed    0.02 sec
+      Start 44: unit.The default UUID is nil
+44/76 Test #44: unit.The default UUID is nil ..........................................   Passed    0.02 sec
+      Start 45: unit.Trigonometric functions take and return angles
+45/76 Test #45: unit.Trigonometric functions take and return angles ...................   Passed    0.02 sec
+      Start 46: unit.UUID parsing accepts either case and formats lowercase
+46/76 Test #46: unit.UUID parsing accepts either case and formats lowercase ...........   Passed    0.02 sec
+      Start 47: unit.UUIDs round-trip through their canonical text form
+47/76 Test #47: unit.UUIDs round-trip through their canonical text form ...............   Passed    0.02 sec
+      Start 48: unit.Unit catalog lists every unit with a unique symbol
+48/76 Test #48: unit.Unit catalog lists every unit with a unique symbol ...............   Passed    0.02 sec
+      Start 49: unit.Units can be looked up by symbol at run time
+49/76 Test #49: unit.Units can be looked up by symbol at run time .....................   Passed    0.02 sec
+      Start 50: unit.Unknown unit symbols are not found
+50/76 Test #50: unit.Unknown unit symbols are not found ...............................   Passed    0.02 sec
+      Start 51: unit.abs, isFinite and approxEqual
+51/76 Test #51: unit.abs, isFinite and approxEqual ....................................   Passed    0.02 sec
+      Start 52: cli.launch.version
+52/76 Test #52: cli.launch.version ....................................................   Passed    0.06 sec
+      Start 53: cli.launch.version-command
+53/76 Test #53: cli.launch.version-command ............................................   Passed    0.05 sec
+      Start 54: cli.launch.help
+54/76 Test #54: cli.launch.help .......................................................   Passed    0.05 sec
+      Start 55: cli.launch.no-arguments
+55/76 Test #55: cli.launch.no-arguments ...............................................   Passed    0.05 sec
+      Start 56: cli.launch.unknown-command
+56/76 Test #56: cli.launch.unknown-command ............................................   Passed    0.06 sec
+      Start 57: gui.launch.smoke
+57/76 Test #57: gui.launch.smoke ......................................................   Passed    0.06 sec
+      Start 58: architecture.layering
+58/76 Test #58: architecture.layering .................................................   Passed    0.05 sec
+      Start 59: architecture.checker.valid
+59/76 Test #59: architecture.checker.valid ............................................   Passed    0.10 sec
+      Start 60: architecture.checker.occt-leak
+60/76 Test #60: architecture.checker.occt-leak ........................................   Passed    0.13 sec
+      Start 61: architecture.checker.qt-leak
+61/76 Test #61: architecture.checker.qt-leak ..........................................   Passed    0.07 sec
+      Start 62: architecture.checker.layer-violation
+62/76 Test #62: architecture.checker.layer-violation ..................................   Passed    0.13 sec
+      Start 63: architecture.checker.private-include
+63/76 Test #63: architecture.checker.private-include ..................................   Passed    0.09 sec
+      Start 64: compile_fail.units.add-length-angle
+64/76 Test #64: compile_fail.units.add-length-angle ...................................   Passed    2.32 sec
+      Start 65: compile_fail.units.assign-mass-to-length
+65/76 Test #65: compile_fail.units.assign-mass-to-length ..............................   Passed    2.56 sec
+      Start 66: compile_fail.units.assign-double-to-length
+66/76 Test #66: compile_fail.units.assign-double-to-length ............................   Passed    1.90 sec
+      Start 67: compile_fail.units.length-to-double
+67/76 Test #67: compile_fail.units.length-to-double ...................................   Passed    2.01 sec
+      Start 68: compile_fail.units.force-per-length-as-pressure
+68/76 Test #68: compile_fail.units.force-per-length-as-pressure .......................   Passed    2.70 sec
+      Start 69: compile_fail.units.compare-length-time
+69/76 Test #69: compile_fail.units.compare-length-time ................................   Passed    1.94 sec
+      Start 70: compile_fail.units.sqrt-of-volume
+70/76 Test #70: compile_fail.units.sqrt-of-volume .....................................   Passed    1.88 sec
+      Start 71: compile_fail.ids.sketch-id-as-feature-id
+71/76 Test #71: compile_fail.ids.sketch-id-as-feature-id ..............................   Passed    1.95 sec
+      Start 72: compile_fail.ids.integer-to-id
+72/76 Test #72: compile_fail.ids.integer-to-id ........................................   Passed    1.92 sec
+      Start 73: compile_fail.ids.id-to-integer
+73/76 Test #73: compile_fail.ids.id-to-integer ........................................   Passed    1.94 sec
+      Start 74: compile_fail.ids.compare-different-kinds
+74/76 Test #74: compile_fail.ids.compare-different-kinds ..............................   Passed    1.91 sec
+      Start 75: compile_fail.ids.object-to-sketch-id
+75/76 Test #75: compile_fail.ids.object-to-sketch-id ..................................   Passed    1.91 sec
+      Start 76: compile_fail.ids.entity-id-as-object-id
+76/76 Test #76: compile_fail.ids.entity-id-as-object-id ...............................   Passed    1.96 sec
+
+100% tests passed out of 76
+
+Total Test time (real) =  30.18 sec

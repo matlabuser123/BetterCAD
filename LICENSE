@@ -1,0 +1,9 @@
+Copyright (c) 2026 BetterCAD contributors. All rights reserved.
+
+No license has been chosen for BetterCAD yet. Until one is added to this file,
+no permission is granted to use, copy, modify or distribute this software.
+
+Third-party components keep their own licenses:
+  - Open CASCADE Technology: GNU LGPL 2.1 with the Open CASCADE exception
+  - Qt: GNU LGPL 3 (or commercial)
+  - Catch2 (tests only): Boost Software License 1.0

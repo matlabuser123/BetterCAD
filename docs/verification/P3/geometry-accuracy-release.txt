@@ -1,0 +1,11 @@
+﻿Kernel: Open CASCADE Technology 8.0.1
+
+box 100x50x20 mm                   V=100000 (rel err 0.00e+00, est 1.7e-16)  A=16000 (rel err 0.00e+00)  valid=1
+cylinder r=10 h=30 mm              V=9424.77796077 (rel err 0.00e+00, est 0.0e+00)  A=2513.27412287 (rel err 5.43e-16)  valid=1
+sphere r=25 mm                     V=65449.8469498 (rel err 0.00e+00, est 1.7e-16)  A=7853.98163397 (rel err 5.79e-16)  valid=1
+sphere r=0.5 m                     V=523598775.598 (rel err 4.55e-16, est 0.0e+00)  A=3141592.65359 (rel err 4.45e-16)  valid=1
+box - cylinder (through hole)      V=93716.8146928 (rel err 0.00e+00, est 2.7e-16)  valid=1
+box U box (overlap)                V=1500 (rel err 0.00e+00, est 2.1e-16)  valid=1
+box n box (overlap)                V=500 (rel err 3.41e-16, est 2.1e-16)  valid=1
+sphere n octant box                V=523.598775598 (rel err 4.99e-15, est 3.7e-16)  valid=1
+bicylinder (Steinmetz)             V=5333.33333333 (rel err 1.86e-13, est 4.0e-16)  valid=1

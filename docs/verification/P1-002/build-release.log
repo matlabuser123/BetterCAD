@@ -1,0 +1,9 @@
+﻿[1/10] Checking git revision
+[2/9] Building CXX object tests/compile_fail/CMakeFiles/bettercad_cf_ids_control.dir/IdsMisuse.cpp.obj
+[3/9] Building CXX object src/core/CMakeFiles/bettercad_core.dir/Uuid.cpp.obj
+[4/9] Linking CXX static library lib\libbettercad_core.a
+[5/9] Linking CXX executable bin\bettercad-cli.exe
+[6/9] Linking CXX executable bin\bettercad.exe; Deploying Qt runtime for bettercad
+[7/9] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/UuidTests.cpp.obj
+[8/9] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/IdTests.cpp.obj
+[9/9] Linking CXX executable bin\bettercad_tests.exe

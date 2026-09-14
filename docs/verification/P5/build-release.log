@@ -1,0 +1,9 @@
+﻿[1/14] Checking git revision
+[2/9] Building CXX object src/sketch/CMakeFiles/bettercad_sketch.dir/SketchCommands.cpp.obj
+[3/9] Building CXX object src/sketch/CMakeFiles/bettercad_sketch.dir/constraints/SketchConstraints.cpp.obj
+[4/9] Building CXX object tests/CMakeFiles/bettercad_tests.dir/sketch/SketchDocumentTests.cpp.obj
+[5/9] Building CXX object src/sketch/CMakeFiles/bettercad_sketch.dir/Sketch.cpp.obj
+[6/9] Linking CXX static library lib\libbettercad_sketch.a
+[7/9] Building CXX object tests/CMakeFiles/bettercad_tests.dir/sketch/ConstraintTests.cpp.obj
+[8/9] Building CXX object tests/CMakeFiles/bettercad_tests.dir/sketch/SketchTests.cpp.obj
+[9/9] Linking CXX executable bin\bettercad_tests.exe

@@ -1,0 +1,373 @@
+﻿Test project C:/Users/uqhas/OneDrive/Desktop/CAD/build/debug
+        Start   1: unit.A default body is empty
+  1/184 Test   #1: unit.A default body is empty ......................................................   Passed    0.04 sec
+        Start   2: unit.A general frame is orthonormal and round-trips points
+  2/184 Test   #2: unit.A general frame is orthonormal and round-trips points ........................   Passed    0.06 sec
+        Start   3: unit.A history limit drops the oldest commands
+  3/184 Test   #3: unit.A history limit drops the oldest commands ....................................   Passed    0.05 sec
+        Start   4: unit.A history refuses to operate on another document
+  4/184 Test   #4: unit.A history refuses to operate on another document .............................   Passed    0.04 sec
+        Start   5: unit.A new document has an identity, a name and no content
+  5/184 Test   #5: unit.A new document has an identity, a name and no content ........................   Passed    0.04 sec
+        Start   6: unit.A new sketch lies on the global XY plane
+  6/184 Test   #6: unit.A new sketch lies on the global XY plane .....................................   Passed    0.04 sec
+        Start   7: unit.A sketch on another plane places its geometry in model space
+  7/184 Test   #7: unit.A sketch on another plane places its geometry in model space .................   Passed    0.04 sec
+        Start   8: unit.AddObjectCommand re-adds the same object with the same ID
+  8/184 Test   #8: unit.AddObjectCommand re-adds the same object with the same ID ....................   Passed    0.07 sec
+        Start   9: unit.An empty table round-trips
+  9/184 Test   #9: unit.An empty table round-trips ...................................................   Passed    0.04 sec
+        Start  10: unit.An off-centre hole moves the centre of mass as predicted
+ 10/184 Test  #10: unit.An off-centre hole moves the centre of mass as predicted .....................   Passed    0.09 sec
+        Start  11: unit.Assigning a value of another dimension fails and changes nothing
+ 11/184 Test  #11: unit.Assigning a value of another dimension fails and changes nothing .............   Passed    0.05 sec
+        Start  12: unit.Bodies are immutable values that share their shape
+ 12/184 Test  #12: unit.Bodies are immutable values that share their shape ...........................   Passed    0.08 sec
+        Start  13: unit.Boolean operands must not be empty
+ 13/184 Test  #13: unit.Boolean operands must not be empty ...........................................   Passed    0.07 sec
+        Start  14: unit.Boolean operations are deterministic and leave their inputs unchanged
+ 14/184 Test  #14: unit.Boolean operations are deterministic and leave their inputs unchanged ........   Passed    0.10 sec
+        Start  15: unit.Bounding boxes of entities are exact
+ 15/184 Test  #15: unit.Bounding boxes of entities are exact .........................................   Passed    0.04 sec
+        Start  16: unit.Box minus a through cylinder is a valid solid with V = LWH - pi r^2 H
+ 16/184 Test  #16: unit.Box minus a through cylinder is a valid solid with V = LWH - pi r^2 H ........   Passed    0.06 sec
+        Start  17: unit.Box properties match V = LWH and A = 2(LW + LH + WH)
+ 17/184 Test  #17: unit.Box properties match V = LWH and A = 2(LW + LH + WH) .........................   Passed    0.06 sec
+        Start  18: unit.Build info identifies the compiler that built the core library
+ 18/184 Test  #18: unit.Build info identifies the compiler that built the core library ...............   Passed    0.06 sec
+        Start  19: unit.Build info reports the active build configuration
+ 19/184 Test  #19: unit.Build info reports the active build configuration ............................   Passed    0.04 sec
+        Start  20: unit.Build info reports the library linkage
+ 20/184 Test  #20: unit.Build info reports the library linkage .......................................   Passed    0.04 sec
+        Start  21: unit.Build info reports the project version configured by CMake
+ 21/184 Test  #21: unit.Build info reports the project version configured by CMake ...................   Passed    0.05 sec
+        Start  22: unit.C++ standard names map __cplusplus values
+ 22/184 Test  #22: unit.C++ standard names map __cplusplus values ....................................   Passed    0.09 sec
+        Start  23: unit.CLI --version prints program name and version
+ 23/184 Test  #23: unit.CLI --version prints program name and version ................................   Passed    0.04 sec
+        Start  24: unit.CLI commands reject unexpected arguments
+ 24/184 Test  #24: unit.CLI commands reject unexpected arguments .....................................   Passed    0.12 sec
+        Start  25: unit.CLI help lists every command
+ 25/184 Test  #25: unit.CLI help lists every command .................................................   Passed    0.06 sec
+        Start  26: unit.CLI rejects unknown commands
+ 26/184 Test  #26: unit.CLI rejects unknown commands .................................................   Passed    0.03 sec
+        Start  27: unit.CLI version command prints the full build report
+ 27/184 Test  #27: unit.CLI version command prints the full build report .............................   Passed    0.03 sec
+        Start  28: unit.CLI without arguments prints usage to stderr and fails
+ 28/184 Test  #28: unit.CLI without arguments prints usage to stderr and fails .......................   Passed    0.03 sec
+        Start  29: unit.Changing the value updates it and increments the revision
+ 29/184 Test  #29: unit.Changing the value updates it and increments the revision ....................   Passed    0.03 sec
+        Start  30: unit.CommandHistory keeps undo and redo stacks
+ 30/184 Test  #30: unit.CommandHistory keeps undo and redo stacks ....................................   Passed    0.04 sec
+        Start  31: unit.Commands make the document dirty; undo after saving does too
+ 31/184 Test  #31: unit.Commands make the document dirty; undo after saving does too .................   Passed    0.04 sec
+        Start  32: unit.Compound assignment updates the quantity
+ 32/184 Test  #32: unit.Compound assignment updates the quantity .....................................   Passed    0.03 sec
+        Start  33: unit.Core library is compiled as C++23 or newer
+ 33/184 Test  #33: unit.Core library is compiled as C++23 or newer ...................................   Passed    0.03 sec
+        Start  34: unit.CreateParameterCommand executes, undoes and redoes with the same ID
+ 34/184 Test  #34: unit.CreateParameterCommand executes, undoes and redoes with the same ID ..........   Passed    0.03 sec
+        Start  35: unit.CreateSketchCommand creates a sketch that undo removes and redo restores
+ 35/184 Test  #35: unit.CreateSketchCommand creates a sketch that undo removes and redo restores .....   Passed    0.03 sec
+        Start  36: unit.Cylinder properties match V = pi r^2 h and A = 2 pi r (r + h)
+ 36/184 Test  #36: unit.Cylinder properties match V = pi r^2 h and A = 2 pi r (r + h) ................   Passed    0.05 sec
+        Start  37: unit.Default-constructed IDs are invalid
+ 37/184 Test  #37: unit.Default-constructed IDs are invalid ..........................................   Passed    0.04 sec
+        Start  38: unit.Default-constructed and zero quantities are zero
+ 38/184 Test  #38: unit.Default-constructed and zero quantities are zero .............................   Passed    0.08 sec
+        Start  39: unit.Degrees and radians convert to and from SI
+ 39/184 Test  #39: unit.Degrees and radians convert to and from SI ...................................   Passed    0.04 sec
+        Start  40: unit.DeleteObjectCommand deletes and restores objects and parameters
+ 40/184 Test  #40: unit.DeleteObjectCommand deletes and restores objects and parameters ..............   Passed    0.04 sec
+        Start  41: unit.Direction products
+ 41/184 Test  #41: unit.Direction products ...........................................................   Passed    0.04 sec
+        Start  42: unit.Directions are normalized and reject zero vectors
+ 42/184 Test  #42: unit.Directions are normalized and reject zero vectors ............................   Passed    0.04 sec
+        Start  43: unit.Dirty state follows effective changes since markClean
+ 43/184 Test  #43: unit.Dirty state follows effective changes since markClean ........................   Passed    0.04 sec
+        Start  44: unit.Disjoint bodies: union keeps both solids, intersection is empty
+ 44/184 Test  #44: unit.Disjoint bodies: union keeps both solids, intersection is empty ..............   Passed    0.06 sec
+        Start  45: unit.Document names are validated and renames are tracked
+ 45/184 Test  #45: unit.Document names are validated and renames are tracked .........................   Passed    0.05 sec
+        Start  46: unit.Document object IDs widen to ObjectId
+ 46/184 Test  #46: unit.Document object IDs widen to ObjectId ........................................   Passed    0.04 sec
+        Start  47: unit.Documents get distinct IDs unless one is given
+ 47/184 Test  #47: unit.Documents get distinct IDs unless one is given ...............................   Passed    0.04 sec
+        Start  48: unit.Duplicate IDs and names are rejected
+ 48/184 Test  #48: unit.Duplicate IDs and names are rejected .........................................   Passed    0.04 sec
+        Start  49: unit.Edit, undo and redo return the document to equivalent states
+ 49/184 Test  #49: unit.Edit, undo and redo return the document to equivalent states .................   Passed    0.03 sec
+        Start  50: unit.Editing reports whether anything changed
+ 50/184 Test  #50: unit.Editing reports whether anything changed .....................................   Passed    0.05 sec
+        Start  51: unit.Endpoints of lines and arcs
+ 51/184 Test  #51: unit.Endpoints of lines and arcs ..................................................   Passed    0.03 sec
+        Start  52: unit.Equivalence ignores revision counters
+ 52/184 Test  #52: unit.Equivalence ignores revision counters ........................................   Passed    0.05 sec
+        Start  53: unit.Expressions are stored and cleared
+ 53/184 Test  #53: unit.Expressions are stored and cleared ...........................................   Passed    0.04 sec
+        Start  54: unit.Failed commands are not recorded
+ 54/184 Test  #54: unit.Failed commands are not recorded .............................................   Passed    0.04 sec
+        Start  55: unit.Formatted build info contains every field
+ 55/184 Test  #55: unit.Formatted build info contains every field ....................................   Passed    0.04 sec
+        Start  56: unit.Formatted build info marks modified working trees
+ 56/184 Test  #56: unit.Formatted build info marks modified working trees ............................   Passed    0.03 sec
+        Start  57: unit.Frame creation projects the X direction into the plane
+ 57/184 Test  #57: unit.Frame creation projects the X direction into the plane .......................   Passed    0.04 sec
+        Start  58: unit.Generated UUIDs are version 4, RFC variant and distinct
+ 58/184 Test  #58: unit.Generated UUIDs are version 4, RFC variant and distinct ......................   Passed    0.04 sec
+        Start  59: unit.IDs are never reused and insertObject restores an ID
+ 59/184 Test  #59: unit.IDs are never reused and insertObject restores an ID .........................   Passed    0.03 sec
+        Start  60: unit.IDs carry their value and compare by value
+ 60/184 Test  #60: unit.IDs carry their value and compare by value ...................................   Passed    0.04 sec
+        Start  61: unit.IDs format as kind:value
+ 61/184 Test  #61: unit.IDs format as kind:value .....................................................   Passed    0.04 sec
+        Start  62: unit.IDs work as ordered and hashed container keys
+ 62/184 Test  #62: unit.IDs work as ordered and hashed container keys ................................   Passed    0.03 sec
+        Start  63: unit.IdAllocator can reserve IDs loaded from a document
+ 63/184 Test  #63: unit.IdAllocator can reserve IDs loaded from a document ...........................   Passed    0.03 sec
+        Start  64: unit.IdAllocator hands out increasing IDs starting at 1
+ 64/184 Test  #64: unit.IdAllocator hands out increasing IDs starting at 1 ...........................   Passed    0.03 sec
+        Start  65: unit.IdAllocator never reuses values
+ 65/184 Test  #65: unit.IdAllocator never reuses values ..............................................   Passed    0.03 sec
+        Start  66: unit.IdAllocator reports exhaustion instead of wrapping
+ 66/184 Test  #66: unit.IdAllocator reports exhaustion instead of wrapping ...........................   Passed    0.04 sec
+        Start  67: unit.Imperial lengths use their exact definitions
+ 67/184 Test  #67: unit.Imperial lengths use their exact definitions .................................   Passed    0.04 sec
+        Start  68: unit.Inclusion-exclusion holds: V(A u B) = V(A) + V(B) - V(A n B)
+ 68/184 Test  #68: unit.Inclusion-exclusion holds: V(A u B) = V(A) + V(B) - V(A n B) .................   Passed    0.71 sec
+        Start  69: unit.Independent allocators produce independent ID spaces
+ 69/184 Test  #69: unit.Independent allocators produce independent ID spaces .........................   Passed    0.03 sec
+        Start  70: unit.Integer and floating-point literals agree
+ 70/184 Test  #70: unit.Integer and floating-point literals agree ....................................   Passed    0.03 sec
+        Start  71: unit.Integration error estimates are reported and small
+ 71/184 Test  #71: unit.Integration error estimates are reported and small ...........................   Passed    0.25 sec
+        Start  72: unit.Invalid entities are rejected and leave the sketch unchanged
+ 72/184 Test  #72: unit.Invalid entities are rejected and leave the sketch unchanged .................   Passed    0.04 sec
+        Start  73: unit.Invalid frames are rejected
+ 73/184 Test  #73: unit.Invalid frames are rejected ..................................................   Passed    0.03 sec
+        Start  74: unit.Invalid parameters are rejected at creation
+ 74/184 Test  #74: unit.Invalid parameters are rejected at creation ..................................   Passed    0.04 sec
+        Start  75: unit.Lengths of lines, arcs and circles
+ 75/184 Test  #75: unit.Lengths of lines, arcs and circles ...........................................   Passed    0.03 sec
+        Start  76: unit.Like quantities add and subtract
+ 76/184 Test  #76: unit.Like quantities add and subtract .............................................   Passed    0.03 sec
+        Start  77: unit.Like quantities compare by value regardless of the unit used
+ 77/184 Test  #77: unit.Like quantities compare by value regardless of the unit used .................   Passed    0.05 sec
+        Start  78: unit.Lines can share end points
+ 78/184 Test  #78: unit.Lines can share end points ...................................................   Passed    0.44 sec
+        Start  79: unit.Lookup by name and ID works across kinds
+ 79/184 Test  #79: unit.Lookup by name and ID works across kinds .....................................   Passed    0.07 sec
+        Start  80: unit.Malformed UUID text is rejected
+ 80/184 Test  #80: unit.Malformed UUID text is rejected ..............................................   Passed    0.23 sec
+        Start  81: unit.Malformed parameter documents are rejected with a path
+ 81/184 Test  #81: unit.Malformed parameter documents are rejected with a path .......................   Passed    0.31 sec
+        Start  82: unit.Megapascals and pascals convert to and from SI
+ 82/184 Test  #82: unit.Megapascals and pascals convert to and from SI ...............................   Passed    0.04 sec
+        Start  83: unit.Metadata changes are tracked
+ 83/184 Test  #83: unit.Metadata changes are tracked .................................................   Passed    0.04 sec
+        Start  84: unit.Millimetres and metres convert to and from SI
+ 84/184 Test  #84: unit.Millimetres and metres convert to and from SI ................................   Passed    0.07 sec
+        Start  85: unit.ModifyParameterCommand is atomic
+ 85/184 Test  #85: unit.ModifyParameterCommand is atomic .............................................   Passed    0.23 sec
+        Start  86: unit.ModifyParameterCommand round-trips every kind of change
+ 86/184 Test  #86: unit.ModifyParameterCommand round-trips every kind of change ......................   Passed    0.06 sec
+        Start  87: unit.Names are unique across parameters and objects
+ 87/184 Test  #87: unit.Names are unique across parameters and objects ...............................   Passed    0.04 sec
+        Start  88: unit.Non-finite values are rejected
+ 88/184 Test  #88: unit.Non-finite values are rejected ...............................................   Passed    0.04 sec
+        Start  89: unit.Objects are listed in ID order
+ 89/184 Test  #89: unit.Objects are listed in ID order ...............................................   Passed    0.04 sec
+        Start  90: unit.Objects can be added, found by ID and name, and removed
+ 90/184 Test  #90: unit.Objects can be added, found by ID and name, and removed ......................   Passed    0.03 sec
+        Start  91: unit.Other engineering units convert to SI
+ 91/184 Test  #91: unit.Other engineering units convert to SI ........................................   Passed    0.03 sec
+        Start  92: unit.Overlapping boxes: union, difference and intersection volumes
+ 92/184 Test  #92: unit.Overlapping boxes: union, difference and intersection volumes ................   Passed    0.34 sec
+        Start  93: unit.Parameter names must be identifiers
+ 93/184 Test  #93: unit.Parameter names must be identifiers ..........................................   Passed    0.10 sec
+        Start  94: unit.Parameter tables round-trip through JSON
+ 94/184 Test  #94: unit.Parameter tables round-trip through JSON .....................................   Passed    0.08 sec
+        Start  95: unit.Parameters and objects share one ID space
+ 95/184 Test  #95: unit.Parameters and objects share one ID space ....................................   Passed    0.36 sec
+        Start  96: unit.Parameters are created with ID, name, value, unit and revision 1
+ 96/184 Test  #96: unit.Parameters are created with ID, name, value, unit and revision 1 .............   Passed    0.04 sec
+        Start  97: unit.Parameters are found by ID and by name
+ 97/184 Test  #97: unit.Parameters are found by ID and by name .......................................   Passed    0.05 sec
+        Start  98: unit.Parameters are listed in ID order
+ 98/184 Test  #98: unit.Parameters are listed in ID order ............................................   Passed    0.03 sec
+        Start  99: unit.Parameters can be created from a number and a runtime unit
+ 99/184 Test  #99: unit.Parameters can be created from a number and a runtime unit ...................   Passed    0.03 sec
+        Start 100: unit.Parameters of other dimensions keep their dimension and unit
+100/184 Test #100: unit.Parameters of other dimensions keep their dimension and unit .................   Passed    0.03 sec
+        Start 101: unit.Placement moves the centre of mass and bounds, not the volume
+101/184 Test #101: unit.Placement moves the centre of mass and bounds, not the volume ................   Passed    0.29 sec
+        Start 102: unit.Points and bounding boxes
+102/184 Test #102: unit.Points and bounding boxes ....................................................   Passed    0.13 sec
+        Start 103: unit.Points, lines, circles and arcs have stable IDs and types
+103/184 Test #103: unit.Points, lines, circles and arcs have stable IDs and types ....................   Passed    0.03 sec
+        Start 104: unit.Primitive sizes must be positive, finite and above kernel precision
+104/184 Test #104: unit.Primitive sizes must be positive, finite and above kernel precision ..........   Passed    0.03 sec
+        Start 105: unit.Primitives have the expected topology
+105/184 Test #105: unit.Primitives have the expected topology ........................................   Passed    0.14 sec
+        Start 106: unit.Products and quotients derive the correct quantity
+106/184 Test #106: unit.Products and quotients derive the correct quantity ...........................   Passed    0.10 sec
+        Start 107: unit.Quantities format with their unit
+107/184 Test #107: unit.Quantities format with their unit ............................................   Passed    0.09 sec
+        Start 108: unit.Quantities scale by plain numbers
+108/184 Test #108: unit.Quantities scale by plain numbers ............................................   Passed    0.12 sec
+        Start 109: unit.Radius, centre and sweep of circles and arcs
+109/184 Test #109: unit.Radius, centre and sweep of circles and arcs .................................   Passed    0.03 sec
+        Start 110: unit.Random edit, undo and redo sequences stay consistent and deterministic
+110/184 Test #110: unit.Random edit, undo and redo sequences stay consistent and deterministic .......   Passed    0.05 sec
+        Start 111: unit.Reading a parameter as the wrong quantity type fails
+111/184 Test #111: unit.Reading a parameter as the wrong quantity type fails .........................   Passed    0.31 sec
+        Start 112: unit.Referenced points cannot be removed
+112/184 Test #112: unit.Referenced points cannot be removed ..........................................   Passed    0.14 sec
+        Start 113: unit.Removing returns the parameter and frees its name
+113/184 Test #113: unit.Removing returns the parameter and frees its name ............................   Passed    0.03 sec
+        Start 114: unit.RenameObjectCommand renames parameters and objects
+114/184 Test #114: unit.RenameObjectCommand renames parameters and objects ...........................   Passed    0.04 sec
+        Start 115: unit.Renaming keeps names unique and the name index current
+115/184 Test #115: unit.Renaming keeps names unique and the name index current .......................   Passed    0.36 sec
+        Start 116: unit.Renaming validates the new name
+116/184 Test #116: unit.Renaming validates the new name ..............................................   Passed    0.11 sec
+        Start 117: unit.Renaming works for parameters and objects and keeps names unique
+117/184 Test #117: unit.Renaming works for parameters and objects and keeps names unique .............   Passed    0.03 sec
+        Start 118: unit.Round trip preserves IDs, names, dimensions, units and expressions
+118/184 Test #118: unit.Round trip preserves IDs, names, dimensions, units and expressions ...........   Passed    0.04 sec
+        Start 119: unit.SI unit symbols are derived from dimensions
+119/184 Test #119: unit.SI unit symbols are derived from dimensions ..................................   Passed    0.07 sec
+        Start 120: unit.SI values round-trip bit for bit
+120/184 Test #120: unit.SI values round-trip bit for bit .............................................   Passed    0.04 sec
+        Start 121: unit.Seeded generation is reproducible
+121/184 Test #121: unit.Seeded generation is reproducible ............................................   Passed    0.04 sec
+        Start 122: unit.Setting an identical value is not a change
+122/184 Test #122: unit.Setting an identical value is not a change ...................................   Passed    0.04 sec
+        Start 123: unit.Sketch edits inside a document are tracked
+123/184 Test #123: unit.Sketch edits inside a document are tracked ...................................   Passed    0.03 sec
+        Start 124: unit.Spec example: 100 x 50 x 20 mm box has V = 100000 mm^3
+124/184 Test #124: unit.Spec example: 100 x 50 x 20 mm box has V = 100000 mm^3 .......................   Passed    0.24 sec
+        Start 125: unit.Spec examples: width, height and hole diameter
+125/184 Test #125: unit.Spec examples: width, height and hole diameter ...............................   Passed    0.03 sec
+        Start 126: unit.Spec usage: literals construct typed quantities
+126/184 Test #126: unit.Spec usage: literals construct typed quantities ..............................   Passed    0.03 sec
+        Start 127: unit.Spec usage: makeBox(100_mm, 50_mm, 20_mm)
+127/184 Test #127: unit.Spec usage: makeBox(100_mm, 50_mm, 20_mm) ....................................   Passed    0.23 sec
+        Start 128: unit.Spec usage: sketch.addLine(Point2D{0_mm, 0_mm}, Point2D{100_mm, 0_mm})
+128/184 Test #128: unit.Spec usage: sketch.addLine(Point2D{0_mm, 0_mm}, Point2D{100_mm, 0_mm}) .......   Passed    0.21 sec
+        Start 129: unit.Sphere intersected with an octant box is one eighth of the sphere
+129/184 Test #129: unit.Sphere intersected with an octant box is one eighth of the sphere ............   Passed    0.05 sec
+        Start 130: unit.Sphere properties match V = 4/3 pi r^3 and A = 4 pi r^2
+130/184 Test #130: unit.Sphere properties match V = 4/3 pi r^3 and A = 4 pi r^2 ......................   Passed    0.04 sec
+        Start 131: unit.Square root of an area is a length
+131/184 Test #131: unit.Square root of an area is a length ...........................................   Passed    0.04 sec
+        Start 132: unit.Subtracting an enclosing body leaves nothing
+132/184 Test #132: unit.Subtracting an enclosing body leaves nothing .................................   Passed    0.05 sec
+        Start 133: unit.Table modifications are dimension-checked
+133/184 Test #133: unit.Table modifications are dimension-checked ....................................   Passed    0.04 sec
+        Start 134: unit.The JSON format is transparent
+134/184 Test #134: unit.The JSON format is transparent ...............................................   Passed    0.03 sec
+        Start 135: unit.The XZ and YZ planes are right-handed
+135/184 Test #135: unit.The XZ and YZ planes are right-handed ........................................   Passed    0.04 sec
+        Start 136: unit.The default UUID is nil
+136/184 Test #136: unit.The default UUID is nil ......................................................   Passed    0.04 sec
+        Start 137: unit.The display unit can change without changing the value
+137/184 Test #137: unit.The display unit can change without changing the value .......................   Passed    0.03 sec
+        Start 138: unit.The geometry kernel is Open CASCADE 8.0
+138/184 Test #138: unit.The geometry kernel is Open CASCADE 8.0 ......................................   Passed    0.04 sec
+        Start 139: unit.The global XY plane maps sketch coordinates unchanged
+139/184 Test #139: unit.The global XY plane maps sketch coordinates unchanged ........................   Passed    0.03 sec
+        Start 140: unit.The revision counts every effective change
+140/184 Test #140: unit.The revision counts every effective change ...................................   Passed    0.03 sec
+        Start 141: unit.The same construction steps produce identical sketches
+141/184 Test #141: unit.The same construction steps produce identical sketches .......................   Passed    0.03 sec
+        Start 142: unit.The table revision tracks effective changes only
+142/184 Test #142: unit.The table revision tracks effective changes only .............................   Passed    0.03 sec
+        Start 143: unit.Trigonometric functions take and return angles
+143/184 Test #143: unit.Trigonometric functions take and return angles ...............................   Passed    0.03 sec
+        Start 144: unit.Two perpendicular cylinders intersect in a Steinmetz solid, V = 16 r^3 / 3
+144/184 Test #144: unit.Two perpendicular cylinders intersect in a Steinmetz solid, V = 16 r^3 / 3 ...   Passed    0.08 sec
+        Start 145: unit.Typed lookup checks the object kind
+145/184 Test #145: unit.Typed lookup checks the object kind ..........................................   Passed    0.03 sec
+        Start 146: unit.UUID parsing accepts either case and formats lowercase
+146/184 Test #146: unit.UUID parsing accepts either case and formats lowercase .......................   Passed    0.03 sec
+        Start 147: unit.UUIDs round-trip through their canonical text form
+147/184 Test #147: unit.UUIDs round-trip through their canonical text form ...........................   Passed    0.03 sec
+        Start 148: unit.Undo and redo report when there is nothing to do
+148/184 Test #148: unit.Undo and redo report when there is nothing to do .............................   Passed    0.03 sec
+        Start 149: unit.Unit catalog lists every unit with a unique symbol
+149/184 Test #149: unit.Unit catalog lists every unit with a unique symbol ...........................   Passed    0.03 sec
+        Start 150: unit.Units can be looked up by symbol at run time
+150/184 Test #150: unit.Units can be looked up by symbol at run time .................................   Passed    0.03 sec
+        Start 151: unit.Units resolve by symbol, the empty symbol meaning unitless
+151/184 Test #151: unit.Units resolve by symbol, the empty symbol meaning unitless ...................   Passed    0.04 sec
+        Start 152: unit.Unknown unit symbols are not found
+152/184 Test #152: unit.Unknown unit symbols are not found ...........................................   Passed    0.03 sec
+        Start 153: unit.abs, isFinite and approxEqual
+153/184 Test #153: unit.abs, isFinite and approxEqual ................................................   Passed    0.03 sec
+        Start 154: unit.addObject needs a new object and insertObject an identified one
+154/184 Test #154: unit.addObject needs a new object and insertObject an identified one ..............   Passed    0.04 sec
+        Start 155: unit.clone produces an equivalent, independent document
+155/184 Test #155: unit.clone produces an equivalent, independent document ...........................   Passed    0.04 sec
+        Start 156: unit.equivalent compares identity and content, not revisions
+156/184 Test #156: unit.equivalent compares identity and content, not revisions ......................   Passed    0.03 sec
+        Start 157: unit.modifyObject tracks changes and checks the kind
+157/184 Test #157: unit.modifyObject tracks changes and checks the kind ..............................   Passed    0.04 sec
+        Start 158: unit.restoreParameter makes a parameter equal to a stored state
+158/184 Test #158: unit.restoreParameter makes a parameter equal to a stored state ...................   Passed    0.03 sec
+        Start 159: unit.uniqueName finds the first free numbered name
+159/184 Test #159: unit.uniqueName finds the first free numbered name ................................   Passed    0.05 sec
+        Start 160: cli.launch.version
+160/184 Test #160: cli.launch.version ................................................................   Passed    0.07 sec
+        Start 161: cli.launch.version-command
+161/184 Test #161: cli.launch.version-command ........................................................   Passed    0.06 sec
+        Start 162: cli.launch.help
+162/184 Test #162: cli.launch.help ...................................................................   Passed    0.07 sec
+        Start 163: cli.launch.no-arguments
+163/184 Test #163: cli.launch.no-arguments ...........................................................   Passed    0.06 sec
+        Start 164: cli.launch.unknown-command
+164/184 Test #164: cli.launch.unknown-command ........................................................   Passed    0.06 sec
+        Start 165: gui.launch.smoke
+165/184 Test #165: gui.launch.smoke ..................................................................   Passed    0.08 sec
+        Start 166: architecture.layering
+166/184 Test #166: architecture.layering .............................................................   Passed    0.14 sec
+        Start 167: architecture.checker.valid
+167/184 Test #167: architecture.checker.valid ........................................................   Passed    0.09 sec
+        Start 168: architecture.checker.occt-leak
+168/184 Test #168: architecture.checker.occt-leak ....................................................   Passed    0.12 sec
+        Start 169: architecture.checker.qt-leak
+169/184 Test #169: architecture.checker.qt-leak ......................................................   Passed    0.11 sec
+        Start 170: architecture.checker.layer-violation
+170/184 Test #170: architecture.checker.layer-violation ..............................................   Passed    0.14 sec
+        Start 171: architecture.checker.private-include
+171/184 Test #171: architecture.checker.private-include ..............................................   Passed    0.24 sec
+        Start 172: compile_fail.units.add-length-angle
+172/184 Test #172: compile_fail.units.add-length-angle ...............................................   Passed    3.42 sec
+        Start 173: compile_fail.units.assign-mass-to-length
+173/184 Test #173: compile_fail.units.assign-mass-to-length ..........................................   Passed    2.87 sec
+        Start 174: compile_fail.units.assign-double-to-length
+174/184 Test #174: compile_fail.units.assign-double-to-length ........................................   Passed    2.91 sec
+        Start 175: compile_fail.units.length-to-double
+175/184 Test #175: compile_fail.units.length-to-double ...............................................   Passed    2.82 sec
+        Start 176: compile_fail.units.force-per-length-as-pressure
+176/184 Test #176: compile_fail.units.force-per-length-as-pressure ...................................   Passed    3.00 sec
+        Start 177: compile_fail.units.compare-length-time
+177/184 Test #177: compile_fail.units.compare-length-time ............................................   Passed    2.90 sec
+        Start 178: compile_fail.units.sqrt-of-volume
+178/184 Test #178: compile_fail.units.sqrt-of-volume .................................................   Passed    3.00 sec
+        Start 179: compile_fail.ids.sketch-id-as-feature-id
+179/184 Test #179: compile_fail.ids.sketch-id-as-feature-id ..........................................   Passed    3.18 sec
+        Start 180: compile_fail.ids.integer-to-id
+180/184 Test #180: compile_fail.ids.integer-to-id ....................................................   Passed    3.13 sec
+        Start 181: compile_fail.ids.id-to-integer
+181/184 Test #181: compile_fail.ids.id-to-integer ....................................................   Passed    3.78 sec
+        Start 182: compile_fail.ids.compare-different-kinds
+182/184 Test #182: compile_fail.ids.compare-different-kinds ..........................................   Passed    3.63 sec
+        Start 183: compile_fail.ids.object-to-sketch-id
+183/184 Test #183: compile_fail.ids.object-to-sketch-id ..............................................   Passed    3.72 sec
+        Start 184: compile_fail.ids.entity-id-as-object-id
+184/184 Test #184: compile_fail.ids.entity-id-as-object-id ...........................................   Passed    3.91 sec
+
+100% tests passed out of 184
+
+Total Test time (real) =  55.49 sec

@@ -1,0 +1,30 @@
+﻿-- The CXX compiler identification is GNU 16.1.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/Users/uqhas/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/bin/c++.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test HAVE_FLAG__ffile_prefix_map_C__Users_uqhas_OneDrive_Desktop_CAD_build_debug_shared__deps_catch2_src__
+-- Performing Test HAVE_FLAG__ffile_prefix_map_C__Users_uqhas_OneDrive_Desktop_CAD_build_debug_shared__deps_catch2_src__ - Success
+-- Performing Test HAVE_STDATOMIC
+-- Performing Test HAVE_STDATOMIC - Success
+-- Performing Test COMPILER_HAS_DEPRECATED_ATTR
+-- Performing Test COMPILER_HAS_DEPRECATED_ATTR - Success
+-- 
+-- BetterCAD 0.1.0 configuration
+--   CMake                 : 4.4.2 (Ninja)
+--   C++ compiler          : GNU 16.1.0
+--   Compiler path         : C:/Users/uqhas/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/bin/c++.exe
+--   C++ standard          : C++23
+--   Target platform       : Windows AMD64
+--   Build type            : Debug
+--   Shared libraries      : ON
+--   Warnings as errors    : ON
+--   CLI                   : ON
+--   Desktop app           : ON (Qt 6.11.2, C:/Users/uqhas/AppData/Local/bettercad-deps/gnu-16-mingw-amd64/lib/cmake/Qt6)
+--   Tests                 : ON (Catch2 3.16.0 (fetched))
+--   Dependency prefix     : C:/Users/uqhas/AppData/Local/bettercad-deps/gnu-16-mingw-amd64
+-- 
+-- Configuring done (81.4s)
+-- Generating done (2.1s)
+-- Build files have been written to: C:/Users/uqhas/OneDrive/Desktop/CAD/build/debug-shared

@@ -1,0 +1,26 @@
+﻿[1/27] Checking git revision
+[2/26] Building CXX object src/core/CMakeFiles/bettercad_core.dir/document/DocumentObject.cpp.obj
+[3/26] Building CXX object src/core/CMakeFiles/bettercad_core.dir/parameters/Parameter.cpp.obj
+[4/26] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/parameters/ParameterTableTests.cpp.obj
+[5/26] Building CXX object src/core/CMakeFiles/bettercad_core.dir/Naming.cpp.obj
+[6/26] Building CXX object src/core/CMakeFiles/bettercad_core.dir/parameters/ParameterTable.cpp.obj
+[7/26] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/UuidTests.cpp.obj
+[8/26] Building CXX object src/core/CMakeFiles/bettercad_core.dir/document/CommandHistory.cpp.obj
+[9/26] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/units/QuantityTests.cpp.obj
+[10/26] Building CXX object src/core/CMakeFiles/bettercad_core.dir/document/Commands.cpp.obj
+[11/26] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/BuildInfoTests.cpp.obj
+[12/26] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/units/ConversionTests.cpp.obj
+[13/26] Building CXX object src/core/CMakeFiles/bettercad_core.dir/document/Document.cpp.obj
+[14/26] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/IdTests.cpp.obj
+[15/26] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/units/FormatAndCatalogTests.cpp.obj
+[16/26] Building CXX object tests/CMakeFiles/bettercad_tests.dir/cli/CliTests.cpp.obj
+[17/26] Linking CXX shared library bin\libbettercad_core.dll
+[18/26] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/document/CommandTests.cpp.obj
+[19/26] Linking CXX executable bin\bettercad-cli.exe
+[20/26] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/document/DocumentTests.cpp.obj
+[21/26] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/parameters/ParameterTests.cpp.obj
+[22/26] Linking CXX executable bin\bettercad.exe; Deploying Qt runtime for bettercad
+[23/26] Building CXX object src/io/CMakeFiles/bettercad_io.dir/json/ParameterJson.cpp.obj
+[24/26] Linking CXX shared library bin\libbettercad_io.dll
+[25/26] Building CXX object tests/CMakeFiles/bettercad_tests.dir/io/ParameterJsonTests.cpp.obj
+[26/26] Linking CXX executable bin\bettercad_tests.exe

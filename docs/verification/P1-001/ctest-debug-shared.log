@@ -1,0 +1,113 @@
+﻿Test project C:/Users/uqhas/OneDrive/Desktop/CAD/build/debug-shared
+      Start  1: unit.Build info identifies the compiler that built the core library
+ 1/54 Test  #1: unit.Build info identifies the compiler that built the core library ...   Passed    0.03 sec
+      Start  2: unit.Build info reports the active build configuration
+ 2/54 Test  #2: unit.Build info reports the active build configuration ................   Passed    0.08 sec
+      Start  3: unit.Build info reports the library linkage
+ 3/54 Test  #3: unit.Build info reports the library linkage ...........................   Passed    0.09 sec
+      Start  4: unit.Build info reports the project version configured by CMake
+ 4/54 Test  #4: unit.Build info reports the project version configured by CMake .......   Passed    0.02 sec
+      Start  5: unit.C++ standard names map __cplusplus values
+ 5/54 Test  #5: unit.C++ standard names map __cplusplus values ........................   Passed    0.05 sec
+      Start  6: unit.CLI --version prints program name and version
+ 6/54 Test  #6: unit.CLI --version prints program name and version ....................   Passed    0.04 sec
+      Start  7: unit.CLI commands reject unexpected arguments
+ 7/54 Test  #7: unit.CLI commands reject unexpected arguments .........................   Passed    0.03 sec
+      Start  8: unit.CLI help lists every command
+ 8/54 Test  #8: unit.CLI help lists every command .....................................   Passed    0.06 sec
+      Start  9: unit.CLI rejects unknown commands
+ 9/54 Test  #9: unit.CLI rejects unknown commands .....................................   Passed    0.03 sec
+      Start 10: unit.CLI version command prints the full build report
+10/54 Test #10: unit.CLI version command prints the full build report .................   Passed    0.05 sec
+      Start 11: unit.CLI without arguments prints usage to stderr and fails
+11/54 Test #11: unit.CLI without arguments prints usage to stderr and fails ...........   Passed    0.03 sec
+      Start 12: unit.Compound assignment updates the quantity
+12/54 Test #12: unit.Compound assignment updates the quantity .........................   Passed    0.06 sec
+      Start 13: unit.Core library is compiled as C++23 or newer
+13/54 Test #13: unit.Core library is compiled as C++23 or newer .......................   Passed    0.03 sec
+      Start 14: unit.Default-constructed and zero quantities are zero
+14/54 Test #14: unit.Default-constructed and zero quantities are zero .................   Passed    0.03 sec
+      Start 15: unit.Degrees and radians convert to and from SI
+15/54 Test #15: unit.Degrees and radians convert to and from SI .......................   Passed    0.05 sec
+      Start 16: unit.Formatted build info contains every field
+16/54 Test #16: unit.Formatted build info contains every field ........................   Passed    0.02 sec
+      Start 17: unit.Formatted build info marks modified working trees
+17/54 Test #17: unit.Formatted build info marks modified working trees ................   Passed    0.05 sec
+      Start 18: unit.Imperial lengths use their exact definitions
+18/54 Test #18: unit.Imperial lengths use their exact definitions .....................   Passed    0.04 sec
+      Start 19: unit.Integer and floating-point literals agree
+19/54 Test #19: unit.Integer and floating-point literals agree ........................   Passed    0.03 sec
+      Start 20: unit.Like quantities add and subtract
+20/54 Test #20: unit.Like quantities add and subtract .................................   Passed    0.04 sec
+      Start 21: unit.Like quantities compare by value regardless of the unit used
+21/54 Test #21: unit.Like quantities compare by value regardless of the unit used .....   Passed    0.03 sec
+      Start 22: unit.Megapascals and pascals convert to and from SI
+22/54 Test #22: unit.Megapascals and pascals convert to and from SI ...................   Passed    0.03 sec
+      Start 23: unit.Millimetres and metres convert to and from SI
+23/54 Test #23: unit.Millimetres and metres convert to and from SI ....................   Passed    0.03 sec
+      Start 24: unit.Other engineering units convert to SI
+24/54 Test #24: unit.Other engineering units convert to SI ............................   Passed    0.03 sec
+      Start 25: unit.Products and quotients derive the correct quantity
+25/54 Test #25: unit.Products and quotients derive the correct quantity ...............   Passed    0.03 sec
+      Start 26: unit.Quantities format with their unit
+26/54 Test #26: unit.Quantities format with their unit ................................   Passed    0.05 sec
+      Start 27: unit.Quantities scale by plain numbers
+27/54 Test #27: unit.Quantities scale by plain numbers ................................   Passed    0.08 sec
+      Start 28: unit.SI unit symbols are derived from dimensions
+28/54 Test #28: unit.SI unit symbols are derived from dimensions ......................   Passed    0.04 sec
+      Start 29: unit.Spec usage: literals construct typed quantities
+29/54 Test #29: unit.Spec usage: literals construct typed quantities ..................   Passed    0.04 sec
+      Start 30: unit.Square root of an area is a length
+30/54 Test #30: unit.Square root of an area is a length ...............................   Passed    0.02 sec
+      Start 31: unit.Trigonometric functions take and return angles
+31/54 Test #31: unit.Trigonometric functions take and return angles ...................   Passed    0.03 sec
+      Start 32: unit.Unit catalog lists every unit with a unique symbol
+32/54 Test #32: unit.Unit catalog lists every unit with a unique symbol ...............   Passed    0.03 sec
+      Start 33: unit.Units can be looked up by symbol at run time
+33/54 Test #33: unit.Units can be looked up by symbol at run time .....................   Passed    0.03 sec
+      Start 34: unit.Unknown unit symbols are not found
+34/54 Test #34: unit.Unknown unit symbols are not found ...............................   Passed    0.05 sec
+      Start 35: unit.abs, isFinite and approxEqual
+35/54 Test #35: unit.abs, isFinite and approxEqual ....................................   Passed    0.03 sec
+      Start 36: cli.launch.version
+36/54 Test #36: cli.launch.version ....................................................   Passed    0.22 sec
+      Start 37: cli.launch.version-command
+37/54 Test #37: cli.launch.version-command ............................................   Passed    0.08 sec
+      Start 38: cli.launch.help
+38/54 Test #38: cli.launch.help .......................................................   Passed    0.29 sec
+      Start 39: cli.launch.no-arguments
+39/54 Test #39: cli.launch.no-arguments ...............................................   Passed    0.26 sec
+      Start 40: cli.launch.unknown-command
+40/54 Test #40: cli.launch.unknown-command ............................................   Passed    0.07 sec
+      Start 41: gui.launch.smoke
+41/54 Test #41: gui.launch.smoke ......................................................   Passed    2.38 sec
+      Start 42: architecture.layering
+42/54 Test #42: architecture.layering .................................................   Passed    0.07 sec
+      Start 43: architecture.checker.valid
+43/54 Test #43: architecture.checker.valid ............................................   Passed    0.13 sec
+      Start 44: architecture.checker.occt-leak
+44/54 Test #44: architecture.checker.occt-leak ........................................   Passed    0.14 sec
+      Start 45: architecture.checker.qt-leak
+45/54 Test #45: architecture.checker.qt-leak ..........................................   Passed    0.12 sec
+      Start 46: architecture.checker.layer-violation
+46/54 Test #46: architecture.checker.layer-violation ..................................   Passed    0.10 sec
+      Start 47: architecture.checker.private-include
+47/54 Test #47: architecture.checker.private-include ..................................   Passed    0.10 sec
+      Start 48: compile_fail.units.add-length-angle
+48/54 Test #48: compile_fail.units.add-length-angle ...................................   Passed    3.79 sec
+      Start 49: compile_fail.units.assign-mass-to-length
+49/54 Test #49: compile_fail.units.assign-mass-to-length ..............................   Passed    3.31 sec
+      Start 50: compile_fail.units.assign-double-to-length
+50/54 Test #50: compile_fail.units.assign-double-to-length ............................   Passed    3.80 sec
+      Start 51: compile_fail.units.length-to-double
+51/54 Test #51: compile_fail.units.length-to-double ...................................   Passed    4.17 sec
+      Start 52: compile_fail.units.force-per-length-as-pressure
+52/54 Test #52: compile_fail.units.force-per-length-as-pressure .......................   Passed    3.98 sec
+      Start 53: compile_fail.units.compare-length-time
+53/54 Test #53: compile_fail.units.compare-length-time ................................   Passed    3.37 sec
+      Start 54: compile_fail.units.sqrt-of-volume
+54/54 Test #54: compile_fail.units.sqrt-of-volume .....................................   Passed    3.37 sec
+
+100% tests passed out of 54
+
+Total Test time (real) =  31.54 sec

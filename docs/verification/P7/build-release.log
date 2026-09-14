@@ -1,0 +1,34 @@
+﻿[1/38] Checking git revision
+[2/34] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/Profile.cpp.obj
+[3/34] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/parameters/ParameterTableTests.cpp.obj
+[4/34] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/geometry/BooleanTests.cpp.obj
+[5/34] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/geometry/PropertyTests.cpp.obj
+[6/34] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctPrism.cpp.obj
+[7/34] Building CXX object src/features/CMakeFiles/bettercad_features.dir/extrude/ExtrudeFeature.cpp.obj
+[8/34] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/BuildInfoTests.cpp.obj
+[9/34] Building CXX object src/features/CMakeFiles/bettercad_features.dir/FeatureCommands.cpp.obj
+[10/34] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/IdTests.cpp.obj
+[11/34] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/units/ConversionTests.cpp.obj
+[12/34] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/UuidTests.cpp.obj
+[13/34] Building CXX object src/features/CMakeFiles/bettercad_features.dir/profile/Profiles.cpp.obj
+[14/34] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/math/FrameTests.cpp.obj
+[15/34] Linking CXX static library lib\libbettercad_geometry.a
+[16/34] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/document/CommandTests.cpp.obj
+[17/34] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/parameters/ParameterTests.cpp.obj
+[18/34] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/geometry/PrimitiveTests.cpp.obj
+[19/34] Building CXX object src/features/CMakeFiles/bettercad_features.dir/extrude/ExtrudeRegeneration.cpp.obj
+[20/34] Linking CXX executable bin\bettercad_example_geometry_accuracy.exe
+[21/34] Linking CXX static library lib\libbettercad_features.a
+[22/34] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/units/FormatAndCatalogTests.cpp.obj
+[23/34] Building CXX object tests/CMakeFiles/bettercad_tests.dir/cli/CliTests.cpp.obj
+[24/34] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/document/DocumentTests.cpp.obj
+[25/34] Building CXX object tests/CMakeFiles/bettercad_tests.dir/io/ParameterJsonTests.cpp.obj
+[26/34] Building CXX object tests/CMakeFiles/bettercad_tests.dir/core/units/QuantityTests.cpp.obj
+[27/34] Building CXX object tests/CMakeFiles/bettercad_tests.dir/features/ProfileTests.cpp.obj
+[28/34] Building CXX object tests/CMakeFiles/bettercad_tests.dir/features/ExtrudeTests.cpp.obj
+[29/34] Building CXX object tests/CMakeFiles/bettercad_tests.dir/sketch/SketchDocumentTests.cpp.obj
+[30/34] Building CXX object tests/CMakeFiles/bettercad_tests.dir/features/RegenerationTests.cpp.obj
+[31/34] Building CXX object tests/CMakeFiles/bettercad_tests.dir/sketch/SketchTests.cpp.obj
+[32/34] Building CXX object tests/CMakeFiles/bettercad_tests.dir/sketch/ConstraintTests.cpp.obj
+[33/34] Building CXX object tests/CMakeFiles/bettercad_tests.dir/sketch/SolverTests.cpp.obj
+[34/34] Linking CXX executable bin\bettercad_tests.exe
