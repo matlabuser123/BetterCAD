@@ -11,6 +11,7 @@
 #include <bettercad/features/FilletFeature.hpp>
 #include <bettercad/features/HoleFeature.hpp>
 #include <bettercad/features/LinearPatternFeature.hpp>
+#include <bettercad/features/MirrorFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
 
 #include <format>
@@ -140,5 +141,7 @@ using CreateLinearPatternCommand = CreateFeatureCommand<LinearPatternFeature>;
 using ModifyLinearPatternCommand = ModifyFeatureCommand<LinearPatternFeature>;
 using CreateCircularPatternCommand = CreateFeatureCommand<CircularPatternFeature>;
 using ModifyCircularPatternCommand = ModifyFeatureCommand<CircularPatternFeature>;
+using CreateMirrorCommand = CreateFeatureCommand<MirrorFeature>;
+using ModifyMirrorCommand = ModifyFeatureCommand<MirrorFeature>;
 
 } // namespace bettercad::features

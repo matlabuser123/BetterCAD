@@ -39,15 +39,29 @@ Vec minus(const Vec& a, const Vec& b) {
     return {a.x - b.x, a.y - b.y, a.z - b.z};
 }
 
+/// Negative zero (as in a reversed or mirrored axis) as 0, so equal
+/// references are also written and printed the same way.
+double tidy(double value) {
+    return value == 0.0 ? 0.0 : value;
+}
+
+Point3D tidy(const Point3D& p) {
+    return {Length::fromSi(tidy(p.x.si())), Length::fromSi(tidy(p.y.si())), Length::fromSi(tidy(p.z.si()))};
+}
+
+Direction3D tidy(const Direction3D& d) {
+    return Direction3D::fromUnitComponents(tidy(d.x()), tidy(d.y()), tidy(d.z())).value_or(d);
+}
+
 /// The direction or its reverse: the one whose first component that is
-/// clearly non-zero is positive.
+/// clearly non-zero is positive, without negative zeros.
 Direction3D canonical(const Direction3D& d) {
     for (const double c : {d.x(), d.y(), d.z()}) {
         if (std::abs(c) > detail::kEdgeAngularTolerance) {
-            return c > 0.0 ? d : d.reversed();
+            return tidy(c > 0.0 ? d : d.reversed());
         }
     }
-    return d;
+    return tidy(d);
 }
 
 bool parallel(const Direction3D& a, const Direction3D& b) {
@@ -104,7 +118,7 @@ EdgeSignature lineSignature(const Point3D& point, const Direction3D& direction) 
     const double t = dot(p, u);
     const Point3D nearest{Length::fromSi(p.x - t * u.x), Length::fromSi(p.y - t * u.y),
                           Length::fromSi(p.z - t * u.z)};
-    return {.curve = EdgeCurve::Line, .point = nearest, .direction = d, .radius = {}};
+    return {.curve = EdgeCurve::Line, .point = tidy(nearest), .direction = d, .radius = {}};
 }
 
 EdgeSignature translated(const EdgeSignature& signature, const Translation3D& translation) {
@@ -112,7 +126,7 @@ EdgeSignature translated(const EdgeSignature& signature, const Translation3D& tr
         return lineSignature(signature.point + translation, signature.direction);
     }
     EdgeSignature moved = signature;
-    moved.point = signature.point + translation;
+    moved.point = tidy(signature.point + translation);
     return moved;
 }
 
@@ -124,14 +138,14 @@ EdgeSignature transformed(const EdgeSignature& signature, const RigidTransform3D
         return lineSignature(motion.apply(signature.point), motion.apply(signature.direction));
     }
     EdgeSignature moved = signature;
-    moved.point = motion.apply(signature.point);
+    moved.point = tidy(motion.apply(signature.point));
     moved.direction = canonical(motion.apply(signature.direction));
     return moved;
 }
 
 Result<EdgeSignature> circleSignature(const Point3D& center, const Direction3D& axis, Length radius) {
     EdgeSignature signature{
-        .curve = EdgeCurve::Circle, .point = center, .direction = canonical(axis), .radius = radius};
+        .curve = EdgeCurve::Circle, .point = tidy(center), .direction = canonical(axis), .radius = radius};
     if (auto valid = validate(signature); !valid) {
         return std::unexpected(valid.error());
     }
@@ -150,6 +164,10 @@ Result<void> validate(const EdgeSignature& signature) {
         return makeError(ErrorCode::InvalidArgument, "a circle edge reference needs a positive radius");
     }
     return {};
+}
+
+bool sameCurve(const EdgeSignature& a, const EdgeSignature& b) noexcept {
+    return detail::sameCurve(a, b);
 }
 
 std::string describe(const EdgeSignature& signature) {
@@ -173,7 +191,7 @@ Result<void> validateEdgeSelection(std::string_view operation, const std::vector
                              std::format("edge reference {}: {}", i + 1, valid.error().message));
         }
         for (std::size_t j = 0; j < i; ++j) {
-            if (sameCurve(edges[i], edges[j])) {
+            if (detail::sameCurve(edges[i], edges[j])) {
                 return makeError(ErrorCode::InvalidArgument,
                                  std::format("edge references {} and {} refer to the same {}", j + 1, i + 1,
                                              describe(edges[i])));

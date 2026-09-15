@@ -13,6 +13,7 @@
 #include <bettercad/features/FilletFeature.hpp>
 #include <bettercad/features/HoleFeature.hpp>
 #include <bettercad/features/LinearPatternFeature.hpp>
+#include <bettercad/features/MirrorFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
 #include <bettercad/sketch/Sketch.hpp>
 
@@ -83,5 +84,12 @@ linearPatternFromJson(const Json& data, std::string name, std::string_view path)
 [[nodiscard]] Json circularPatternToJson(const features::CircularPatternFeature& feature);
 [[nodiscard]] Result<std::unique_ptr<features::CircularPatternFeature>>
 circularPatternFromJson(const Json& data, std::string name, std::string_view path);
+
+/// The source's ID; the plane as {"origin": [...] (metres), "normal":
+/// [x, y, z] (as given), "offset": metres} with an optional
+/// "offset_parameter"; "scope": "feature" | "body"; and "keep_original".
+[[nodiscard]] Json mirrorToJson(const features::MirrorFeature& feature);
+[[nodiscard]] Result<std::unique_ptr<features::MirrorFeature>> mirrorFromJson(const Json& data, std::string name,
+                                                                              std::string_view path);
 
 } // namespace bettercad::io::detail

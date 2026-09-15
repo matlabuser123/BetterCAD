@@ -55,6 +55,7 @@ bettercad_add_executable(bettercad_tests
         features/FilletFeatureTests.cpp
         features/HoleFeatureTests.cpp
         features/LinearPatternFeatureTests.cpp
+        features/MirrorFeatureTests.cpp
         features/ProfileTests.cpp
         features/RegenerationTests.cpp
         features/RegeneratorTests.cpp
@@ -67,6 +68,7 @@ bettercad_add_executable(bettercad_tests
         io/FilletFileTests.cpp
         io/HoleFileTests.cpp
         io/LinearPatternFileTests.cpp
+        io/MirrorFileTests.cpp
         io/ParameterJsonTests.cpp
         io/RevolveFileTests.cpp
         io/StepExportTests.cpp
@@ -81,6 +83,7 @@ bettercad_add_executable(bettercad_tests
         support/FilletModels.hpp
         support/HoleModels.hpp
         support/MeshAnalysis.hpp
+        support/MirrorModels.hpp
         support/PatternModels.hpp
         support/TestFiles.hpp
         support/TurnedPartModel.hpp

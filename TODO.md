@@ -318,21 +318,73 @@ is explicit model coordinates). **Known limitation:** building time grows
 with the square of the count (at most 500 instances); references stay
 geometric.
 
+#### P11-FEAT-007 — Mirror — [evidence](docs/verification/P11-FEAT-007/README.md)
+
+- [x] Mirror feature definition
+- [x] Stable source feature/body reference
+- [x] Explicit 3D mirror-plane representation (origin, normal, offset; the
+  offset literal or driven by a length parameter)
+- [x] Arbitrary-plane reflection (including offset planes)
+- [x] Body mirror (keep original or mirror image only)
+- [x] Additive feature mirror
+- [x] Subtractive/Hole mirror (all hole types and extents; cut extrudes and
+  revolves)
+- [x] Mirror of extruded, revolved, chamfered and filleted sources
+- [x] Deterministic reflection transform
+- [x] Geometry validity checks (orientation-safe mirror images)
+- [x] Parameter-driven regeneration
+- [x] Atomic failure diagnostics
+- [x] Save/load round-trip
+- [x] Undo/redo regression
+- [x] STEP/STL export regression
+- [x] Analytic/geometric validation
+- [x] Failure diagnostics
+- [x] Evidence under `docs/verification/P11-FEAT-007/`
+
+**Acceptance (met):**
+
+- Every point goes to p' = p − 2((p − p0)·n̂)n̂ (a Householder reflection,
+  det −1), checked against the formula, M(M(p)) = p and the signed-distance
+  invariant. (4, 1, 3) across the plane through (1, 0, 0) with normal
+  (1, 1, 0) lands 1.2e-15 mm from (0, −3, 3).
+- A 10 mm cube centred at (20, 0, 0) mirrors across x = 0 to (−20, 0, 0),
+  with 1000 mm³ each and X bounds [−25, 25]. Across x = 10 a cube at x = 30
+  goes to −10. A double mirror returns the source. Volume, area and
+  centroid are preserved across skew planes.
+- A 10 mm through hole at x = 30 in a 100 × 50 × 20 mm block, mirrored
+  across x = 50, gives a hole at x = 70 and V0 − 2πr²H (1.5e-16 relative).
+  A boss pair matches V_plate + 2V_boss. Counterbores, countersinks, blind
+  holes, chamfered and filleted rims, a revolve and a revolved cut match
+  closed-form volumes.
+- Changing the source or the plane (offset parameter, origin, normal)
+  regenerates the mirror, and through holes stay through. An image that
+  fails fails the whole mirror, naming the image, its plane and the cause.
+- Mirror images of solids keep their faces pointing outward: a face-normal
+  bug for left-handed plane frames was found and fixed, with a regression
+  proof. STL meshes of mirrored bodies are closed and outward-facing.
+- Save → destroy → load → regenerate reproduces the definition, the source's
+  ID, the plane bit for bit and the geometry.
+- The mirror shares the pattern subsystem and transform infrastructure. The
+  existing P0–P11-FEAT-006 regression suite remains green.
+
+**Not implemented:** mirror planes referencing datum planes, planar faces or
+sketch planes (the plane is explicit model coordinates); named global
+planes; feature mirrors of patterns or mirrors, and patterns of mirrors (a
+body mirror of a pattern works). **Known limitation:** chamfer, fillet and
+hole images use geometric references reflected exactly, not semantic
+topology naming.
+
 ## Current
 
 ### P11 — Production Part Modeling
 
-#### P11-FEAT-007 — Mirror ← NEXT
+#### P11-FEAT-008 — Sweep ← NEXT
 
 - [ ] Not started.
 
 ## Next
 
 ### P11 — Production Part Modeling (remaining)
-
-#### P11-FEAT-008 — Sweep
-
-- [ ] Not started.
 
 #### P11-FEAT-009 — Loft
 

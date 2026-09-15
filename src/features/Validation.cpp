@@ -6,6 +6,7 @@
 #include <bettercad/features/FilletFeature.hpp>
 #include <bettercad/features/HoleFeature.hpp>
 #include <bettercad/features/LinearPatternFeature.hpp>
+#include <bettercad/features/MirrorFeature.hpp>
 #include <bettercad/features/Regenerator.hpp>
 #include <bettercad/features/ResultBodies.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
@@ -185,6 +186,10 @@ private:
                     checkParameter(object.id(), *definition.angleParameter, dimensions::angle,
                                    "the angle is driven by");
                 }
+            } else if (const auto* mirror = dynamic_cast<const MirrorFeature*>(&object)) {
+                if (const auto& offset = mirror->definition().plane.offsetParameter) {
+                    checkParameter(object.id(), *offset, dimensions::length, "the plane's offset is driven by");
+                }
             }
             if (const auto* feature = dynamic_cast<const SolidFeature*>(&object)) {
                 checkTarget(*feature);
@@ -214,9 +219,10 @@ private:
         }
         const ObjectId id{*target};
         if (id != feature.id() && document_.contains(id) && document_.findObjectAs<SolidFeature>(id) == nullptr) {
-            // A pattern's consumed feature is its source.
+            // A pattern's or mirror's consumed feature is its source.
             const bool pattern = dynamic_cast<const LinearPatternFeature*>(&feature) != nullptr ||
-                                 dynamic_cast<const CircularPatternFeature*>(&feature) != nullptr;
+                                 dynamic_cast<const CircularPatternFeature*>(&feature) != nullptr ||
+                                 dynamic_cast<const MirrorFeature*>(&feature) != nullptr;
             wrongKind(feature.id(), pattern ? "the source is" : "the target is", id, kindOf(document_, id),
                       "a feature with a body");
         }

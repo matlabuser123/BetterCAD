@@ -47,7 +47,14 @@ FaceInfo describeFace(const TopoDS_Face& face) {
     info.centroid = pointFromModel(properties.CentreOfMass());
     if (info.surface == FaceSurface::Plane) {
         const gp_Pln plane = surface.Plane();
+        // The surface's own normal is XDirection x YDirection, which is the
+        // frame's main direction only for a right-handed frame: a mirrored
+        // plane has a left-handed one, whose normal is the opposite. A
+        // reversed face then points the other way.
         gp_Dir normal = plane.Axis().Direction();
+        if (!plane.Position().Direct()) {
+            normal.Reverse();
+        }
         if (face.Orientation() == TopAbs_REVERSED) {
             normal.Reverse();
         }

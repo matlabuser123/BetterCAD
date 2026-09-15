@@ -4,6 +4,7 @@
 #include "support/FilletModels.hpp"
 #include "support/HoleModels.hpp"
 #include "support/MeshAnalysis.hpp"
+#include "support/MirrorModels.hpp"
 #include "support/PatternModels.hpp"
 #include "support/TestFiles.hpp"
 #include "support/TurnedPartModel.hpp"
@@ -519,6 +520,52 @@ TEST_CASE("info and validate describe circular patterns", "[cli][pattern][circul
     CHECK(broken.exitCode == ExitCode::Failure);
     CHECK_THAT(broken.out, ContainsSubstring("    error: Bolts (object:8) failed to regenerate: Bolts: circular "
                                              "pattern: instance 1 at 9 deg: hole: the hole does not fit on its face"));
+    CHECK_THAT(broken.out, EndsWith("Result: invalid (1 error)\n"));
+}
+
+TEST_CASE("info and validate describe mirrors", "[cli][mirror]") {
+    TempDir dir;
+    test::HoleMirrorModel model;
+    const auto path = dir.path() / "mirror.bcad";
+    REQUIRE(io::saveDocument(model.doc, path).has_value());
+
+    const auto info = runCli({"info", arg(path)});
+    CHECK(info.exitCode == ExitCode::Success);
+    CHECK_THAT(info.out, ContainsSubstring("\n  object:11  mirror   Mirror  source Drill, feature mirror across the plane "
+                                           "through (0, 0, 0) mm facing (1, 0, 0), offset mid\n"));
+
+    // V = 100 x 50 x 20 - 2 pi 5^2 20 = 96858.407 mm^3.
+    const auto validate = runCli({"validate", arg(path)});
+    CHECK(validate.exitCode == ExitCode::Success);
+    CHECK_THAT(validate.out, ContainsSubstring("geometry              ok, 1 result body\n"
+                                               "Result bodies (1):\n"
+                                               "  Mirror (object:11): 1 solid, volume 96858.407 mm^3, area "));
+    CHECK_THAT(validate.out, EndsWith("bounds (0, 0, 0) to (100, 50, 20) mm\nResult: valid\n"));
+
+    // The mirror image of the whole block alone, across a literal offset.
+    features::MirrorDefinition d = model.mirrorOf(model.mirror);
+    d.plane.offsetParameter.reset();
+    d.plane.offset = 12.5_mm;
+    d.scope = features::MirrorScope::Body;
+    d.keepOriginal = false;
+    model.setMirror(model.mirror, d);
+    REQUIRE(io::saveDocument(model.doc, path).has_value());
+    CHECK_THAT(runCli({"info", arg(path)}).out,
+               ContainsSubstring("source Drill, body mirror across the plane through (0, 0, 0) mm facing (1, 0, 0), "
+                                 "offset 12.5 mm, mirror image only\n"));
+    // Across x = 12.5 the block [0, 100] goes to [-75, 25].
+    CHECK_THAT(runCli({"validate", arg(path)}).out, EndsWith("bounds (-75, 0, 0) to (25, 50, 20) mm\nResult: valid\n"));
+
+    // Across x = 64 the hole's image would be 2 mm from the block's end: the
+    // document is invalid, with the reason.
+    test::HoleMirrorModel crowded;
+    REQUIRE(crowded.doc.setParameterValue(crowded.mid, 64_mm).has_value());
+    REQUIRE(io::saveDocument(crowded.doc, path).has_value());
+    const auto broken = runCli({"validate", arg(path)});
+    CHECK(broken.exitCode == ExitCode::Failure);
+    CHECK_THAT(broken.out, ContainsSubstring("    error: Mirror (object:11) failed to regenerate: Mirror: mirror: the "
+                                             "mirror image across the plane through (64, 0, 0) mm facing (1, 0, 0): "
+                                             "hole: the hole does not fit on its face"));
     CHECK_THAT(broken.out, EndsWith("Result: invalid (1 error)\n"));
 }
 

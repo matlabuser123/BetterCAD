@@ -814,4 +814,78 @@ Result<std::unique_ptr<features::CircularPatternFeature>> circularPatternFromJso
     return std::move(*feature);
 }
 
+namespace {
+
+using features::MirrorScope;
+
+constexpr std::array<std::pair<MirrorScope, std::string_view>, 2> kMirrorScopes{{
+    {MirrorScope::Feature, "feature"},
+    {MirrorScope::Body, "body"},
+}};
+
+} // namespace
+
+Json mirrorToJson(const features::MirrorFeature& feature) {
+    const features::MirrorDefinition& d = feature.definition();
+    Json json = Json::object();
+    json["source"] = d.source.value();
+    Json plane = Json::object();
+    plane["origin"] = pointToJson(d.plane.origin);
+    plane["normal"] = Json::array({d.plane.normal.x, d.plane.normal.y, d.plane.normal.z});
+    plane["offset"] = d.plane.offset.si();
+    if (d.plane.offsetParameter) {
+        plane["offset_parameter"] = d.plane.offsetParameter->value();
+    }
+    json["plane"] = std::move(plane);
+    json["scope"] = std::string{nameOf(kMirrorScopes, d.scope)};
+    json["keep_original"] = d.keepOriginal;
+    return json;
+}
+
+Result<std::unique_ptr<features::MirrorFeature>> mirrorFromJson(const Json& data, std::string name,
+                                                                std::string_view path) {
+    if (auto object = requireObject(data, path, {"source", "plane", "scope", "keep_original"}); !object) {
+        return std::unexpected(object.error());
+    }
+    auto source = readId(data, "source", path);
+    auto planeField = requireField(data, "plane", path);
+    if (!source || !planeField) {
+        return std::unexpected(!source ? source.error() : planeField.error());
+    }
+    const std::string planePath = childPath(path, "plane");
+    if (auto object = requireObject(**planeField, planePath, {"origin", "normal", "offset", "offset_parameter"});
+        !object) {
+        return std::unexpected(object.error());
+    }
+    auto origin = pointFromJson(**planeField, "origin", planePath);
+    auto normal = readNumbers(**planeField, "normal", planePath, 3);
+    auto offset = readNumber(**planeField, "offset", planePath);
+    auto offsetParameter = readOptionalId(**planeField, "offset_parameter", planePath);
+    auto scope = valueOf(kMirrorScopes, data, "scope", path);
+    auto keepOriginal = readBool(data, "keep_original", path);
+    for (const Error* error :
+         {!origin ? &origin.error() : nullptr, !normal ? &normal.error() : nullptr, !offset ? &offset.error() : nullptr,
+          !offsetParameter ? &offsetParameter.error() : nullptr, !scope ? &scope.error() : nullptr,
+          !keepOriginal ? &keepOriginal.error() : nullptr}) {
+        if (error != nullptr) {
+            return std::unexpected(*error);
+        }
+    }
+    const features::MirrorDefinition definition{
+        .source = FeatureId::fromValue(*source),
+        .plane = {.origin = *origin,
+                  .normal = Vector3D{(*normal)[0], (*normal)[1], (*normal)[2]},
+                  .offset = Length::fromSi(*offset),
+                  .offsetParameter = *offsetParameter ? std::optional<ParameterId>{ParameterId::fromValue(**offsetParameter)}
+                                                      : std::nullopt},
+        .scope = *scope,
+        .keepOriginal = *keepOriginal,
+    };
+    auto feature = features::MirrorFeature::create(std::move(name), definition);
+    if (!feature) {
+        return atPath(path, feature.error());
+    }
+    return std::move(*feature);
+}
+
 } // namespace bettercad::io::detail

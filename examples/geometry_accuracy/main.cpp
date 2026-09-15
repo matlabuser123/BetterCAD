@@ -1,7 +1,7 @@
 // Prints geometry-kernel results next to analytic solutions for primitive
 // solids, boolean operations, solids of revolution, chamfers, fillets, holes
-// and translated and rotated copies. The relative errors in the output are
-// the basis for the tolerances used by tests/core/geometry.
+// and translated, rotated and mirrored copies. The relative errors in the
+// output are the basis for the tolerances used by tests/core/geometry.
 #include <bettercad/core/Units.hpp>
 #include <bettercad/core/geometry/Booleans.hpp>
 #include <bettercad/core/geometry/Chamfer.hpp>
@@ -343,5 +343,78 @@ int main() {
         bolted = moved ? booleanDifference(*bolted, *moved) : moved;
     }
     report("6 through holes on a 40 mm circle", bolted, 34500.0 * pi, 8700.0 * pi);
+
+    std::printf("\nMirror images (mirrors: p' = p - 2 ((p - p0) . n) n across the plane through p0, unit normal n)\n");
+    const auto across = [](const Point3D& p0, double nx, double ny, double nz) {
+        return RigidTransform3D::reflection(p0, *Direction3D::fromComponents(nx, ny, nz));
+    };
+    const auto withImage = [](const Body& body, const RigidTransform3D& mirror) -> Result<Body> {
+        auto image = transformed(body, mirror);
+        return image ? booleanUnion(body, *image) : image;
+    };
+    // A reflection keeps volume and area, whatever the plane.
+    const auto offCentre = makeBox(Point3D{15_mm, -5_mm, -5_mm}, 10_mm, 10_mm, 10_mm);
+    const auto skew = across(Point3D{3_mm, -2_mm, 1_mm}, 1.0, 2.0, 2.0);
+    report("cube 10 mm mirrored across x = 0", transformed(*offCentre, across(Point3D{}, 1.0, 0.0, 0.0)), 1000.0,
+           600.0);
+    report("cube 10 mm mirrored across (1,2,2)", transformed(*offCentre, skew), 1000.0, 600.0);
+    const auto once = transformed(*offCentre, skew);
+    report("cube mirrored twice across (1,2,2)", once ? transformed(*once, skew) : once, 1000.0, 600.0);
+    // With the original: disjoint, 2 V; touching (across x = 15), one 20 x 10
+    // x 10 bar; coincident (across x = 20, the cube's own mid-plane), V.
+    report("cube + image across x = 0", withImage(*offCentre, across(Point3D{}, 1.0, 0.0, 0.0)), 2000.0, 1200.0);
+    report("cube + image across x = 15 (touching)", withImage(*offCentre, across(Point3D{15_mm, 0_mm, 0_mm}, 1, 0, 0)),
+           2000.0, 1000.0);
+    report("cube + image across x = 20 (coincident)",
+           withImage(*offCentre, across(Point3D{20_mm, 0_mm, 0_mm}, 1.0, 0.0, 0.0)), 1000.0, 600.0);
+    // The flagship: a 10 mm through hole at x = 30 in the block 100 x 50 x 20
+    // and its image across x = 50: V = V0 - 2 pi r^2 H, A = A0 + 2 (2 pi r H -
+    // 2 pi r^2).
+    const HoleRequest drill{.face = planeSignature(Point3D{0_mm, 0_mm, 20_mm}, Direction3D::unitZ()),
+                            .center = mm(30, 25),
+                            .diameter = 10_mm};
+    const auto drilledOnce = cutHole(*box, drill);
+    report("block + hole + mirrored hole (x = 50)",
+           drilledOnce ? cutHole(*drilledOnce, transformed(drill, across(Point3D{50_mm, 0_mm, 0_mm}, 1.0, 0.0, 0.0)))
+                       : drilledOnce,
+           100000.0 - 1000.0 * pi, 16000.0 + 300.0 * pi);
+    // Curved faces mirrored across skew planes: the turned cylinder, a sphere
+    // and the countersunk block (a cone; R = 10, r = 5, h = 5 as above).
+    const auto tilted = across(Point3D{5_mm, -2_mm, 1_mm}, 0.3, -0.1, 0.9);
+    report("turned cylinder mirrored across (0.3,-0.1,0.9)", turned ? transformed(*turned, tilted) : turned,
+           pi * 225.0 * 40.0, 2.0 * pi * 15.0 * 40.0 + 2.0 * pi * 225.0);
+    const auto ball = makeSphere(Point3D{40_mm, 10_mm, 20_mm}, 25_mm);
+    report("sphere r=25 mm mirrored across (0.3,-0.1,0.9)", ball ? transformed(*ball, tilted) : ball,
+           4.0 / 3.0 * pi * std::pow(25.0, 3), 4.0 * pi * 25.0 * 25.0);
+    HoleRequest countersunk = drill;
+    countersunk.type = HoleType::Countersink;
+    countersunk.countersinkDiameter = 20_mm;
+    countersunk.countersinkAngle = 90_deg;
+    const auto sunkBlock = cutHole(*box, countersunk);
+    report("countersunk block mirrored across (1,1,1)",
+           sunkBlock ? transformed(*sunkBlock, across(Point3D{5_mm, -2_mm, 1_mm}, 1.0, 1.0, 1.0)) : sunkBlock,
+           100000.0 - 500.0 * pi - (pi * 5.0 * 175.0 / 3.0 - pi * 25.0 * 5.0),
+           16000.0 - 125.0 * pi + 2.0 * pi * 5.0 * 15.0 + pi * 15.0 * std::sqrt(50.0));
+    // transformed() refuses a mirror image whose volume differs from its
+    // source's by more than 1e-9 relative. The kernel's two volumes, compared
+    // directly, for each kind of surface:
+    const auto compare = [](const char* name, const Result<Body>& source, const RigidTransform3D& mirror) {
+        const auto image = source ? transformed(*source, mirror) : source;
+        if (!image) {
+            std::printf("%-44s ERROR: %s\n", name, image.error().message.c_str());
+            return;
+        }
+        const double v0 = source->massProperties()->volume.in(units::mm3);
+        const double v1 = image->massProperties()->volume.in(units::mm3);
+        std::printf("%-44s source V=%.17g image V=%.17g (rel diff %.2e)\n", name, v0, v1, relativeError(v1, v0));
+    };
+    compare("image vs source: cube, x = 0", offCentre, across(Point3D{}, 1.0, 0.0, 0.0));
+    compare("image vs source: cube, (1,2,2)", offCentre, skew);
+    compare("image vs source: turned cylinder", turned, tilted);
+    compare("image vs source: sphere", ball, tilted);
+    compare("image vs source: torus", revolve(disc, 360_deg), tilted);
+    compare("image vs source: countersunk block", sunkBlock, tilted);
+    compare("image vs source: fillet 3 edges at a vertex", fillet({topFront, topLeft, frontLeft}, 5_mm), tilted);
+    compare("image vs source: bicylinder (Steinmetz)", booleanIntersection(*cx, *cy), tilted);
     return 0;
 }

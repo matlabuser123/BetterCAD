@@ -16,6 +16,7 @@
 
 #include <cmath>
 #include <limits>
+#include <numbers>
 
 using namespace bettercad;
 using namespace bettercad::geometry;
@@ -198,6 +199,168 @@ TEST_CASE("Transform_RotatedReferencesDescribeTheMovedGeometry", "[geometry][tra
         CHECK_THAT(moved.center.x.in(units::mm), WithinAbs(20.0, kPositionToleranceMm));
         CHECK_THAT(moved.center.y.in(units::mm), WithinAbs(40.0 * std::sqrt(3.0) / 2.0, kPositionToleranceMm));
         CHECK(moved.diameter == bolt.diameter);
+    }
+}
+
+namespace {
+
+/// The mirror across the plane through @p p0 (mm) with normal @p n (any
+/// length).
+RigidTransform3D mirrorAcross(Point3D p0, double nx, double ny, double nz) {
+    return RigidTransform3D::reflection(p0, *Direction3D::fromComponents(nx, ny, nz));
+}
+
+} // namespace
+
+TEST_CASE("Transform_MirroredBodyKeepsVolumeAndPointsOutward", "[geometry][transform][mirror]") {
+    // The cube [15, 25] x [-5, 5] x [-5, 5] (centre (20, 0, 0)) mirrored
+    // across x = 0: [-25, -15] x [-5, 5] x [-5, 5].
+    const auto cube = makeBox(Point3D{15_mm, -5_mm, -5_mm}, 10_mm, 10_mm, 10_mm);
+    REQUIRE(cube.has_value());
+    const auto mirror = mirrorAcross(Point3D{}, 1.0, 0.0, 0.0);
+    CHECK(mirror.reversesOrientation());
+    const auto image = transformed(*cube, mirror);
+    REQUIRE(image.has_value());
+    CHECK(image->isValid());
+    CHECK(image->topology() == cube->topology());
+    const auto box = image->boundingBox().value();
+    checkPoint(box.min, -25, -5, -5);
+    checkPoint(box.max, -15, 5, 5);
+    const MassProperties properties = requireProperties(*image);
+    CHECK_THAT(properties.volume.in(units::mm3), WithinRel(1000.0, kRelTight));
+    CHECK_THAT(properties.surfaceArea.in(units::mm2), WithinRel(600.0, kRelTight));
+    checkPoint(properties.centerOfMass, -20, 0, 0);
+
+    // Every face of the mirror image points out of its material (a
+    // reflection turns the kernel's face frames left-handed; the outward
+    // normal must not flip with them). For a box, outward is away from the
+    // centre.
+    const auto faces = listFaces(*image);
+    REQUIRE(faces.has_value());
+    REQUIRE(faces->size() == 6);
+    for (const FaceInfo& face : *faces) {
+        REQUIRE(face.signature.has_value());
+        const double outward = (face.centroid.x - properties.centerOfMass.x).si() * face.signature->normal.x() +
+                               (face.centroid.y - properties.centerOfMass.y).si() * face.signature->normal.y() +
+                               (face.centroid.z - properties.centerOfMass.z).si() * face.signature->normal.z();
+        CAPTURE(face.centroid.x.in(units::mm), face.centroid.y.in(units::mm), face.centroid.z.in(units::mm));
+        CHECK(outward > 0.0);
+    }
+    CHECK(facesOn(*image, planeSignature(Point3D{-25_mm, 0_mm, 0_mm}, Direction3D::unitX().reversed())) == 1);
+    CHECK(facesOn(*image, planeSignature(Point3D{-15_mm, 0_mm, 0_mm}, Direction3D::unitX())) == 1);
+    CHECK(facesOn(*image, planeSignature(Point3D{-25_mm, 0_mm, 0_mm}, Direction3D::unitX())) == 0);
+
+    // A hole can be placed on a mirrored face: the drilled block
+    // 100 x 50 x 20 mirrored across x = 0 takes a hole in its top face.
+    const auto block = makeBox(100_mm, 50_mm, 20_mm);
+    REQUIRE(block.has_value());
+    const auto mirroredBlock = transformed(*block, mirror);
+    REQUIRE(mirroredBlock.has_value());
+    const auto drilled = cutHole(*mirroredBlock, {.face = planeSignature(Point3D{0_mm, 0_mm, 20_mm}, Direction3D::unitZ()),
+                                                  .center = Point2D{-30_mm, 25_mm},
+                                                  .diameter = 10_mm});
+    REQUIRE(drilled.has_value());
+    CHECK_THAT(requireProperties(*drilled).volume.in(units::mm3),
+               WithinRel(100000.0 - 500.0 * std::numbers::pi, kRelTight));
+
+    // About an offset plane (x = 10) the centre 20 goes to 0; about the
+    // plane through the origin with normal (1, 1, 0)/sqrt 2 it goes to
+    // (0, -20, 0), and the +X face (x = 25) becomes the face y = -25 facing -Y.
+    const auto offset = transformed(*cube, mirrorAcross(Point3D{10_mm, 0_mm, 0_mm}, 1.0, 0.0, 0.0));
+    REQUIRE(offset.has_value());
+    checkPoint(requireProperties(*offset).centerOfMass, 0, 0, 0);
+    checkPoint(offset->boundingBox()->min, -5, -5, -5);
+    const auto diagonal = transformed(*cube, mirrorAcross(Point3D{}, 1.0, 1.0, 0.0));
+    REQUIRE(diagonal.has_value());
+    CHECK(diagonal->isValid());
+    CHECK_THAT(requireProperties(*diagonal).volume.in(units::mm3), WithinRel(1000.0, kRelTight));
+    checkPoint(requireProperties(*diagonal).centerOfMass, 0, -20, 0);
+    CHECK(facesOn(*diagonal, planeSignature(Point3D{0_mm, -25_mm, 0_mm}, Direction3D::unitY().reversed())) == 1);
+
+    // Mirroring twice across the same plane gives the cube back.
+    const auto back = transformed(*diagonal, mirrorAcross(Point3D{}, 1.0, 1.0, 0.0));
+    REQUIRE(back.has_value());
+    CHECK(back->isValid());
+    CHECK_THAT(requireProperties(*back).volume.in(units::mm3), WithinRel(1000.0, kRelTight));
+    checkPoint(requireProperties(*back).centerOfMass, 20, 0, 0);
+    checkPoint(back->boundingBox()->min, 15, -5, -5);
+    checkPoint(back->boundingBox()->max, 25, 5, 5);
+    CHECK(facesOn(*back, planeSignature(Point3D{25_mm, 0_mm, 0_mm}, Direction3D::unitX())) == 1);
+
+    CHECK(errorCode(transformed(Body{}, mirror)) == ErrorCode::FailedPrecondition);
+}
+
+TEST_CASE("Transform_MirroredReferencesDescribeTheMirroredGeometry", "[geometry][transform][mirror]") {
+    const auto across50 = mirrorAcross(Point3D{50_mm, 0_mm, 0_mm}, 1.0, 0.0, 0.0);
+    SECTION("edges") {
+        // A circle about Z at (30, 25, 20) goes to (70, 25, 20), axis still Z.
+        const auto rim = circleSignature(Point3D{30_mm, 25_mm, 20_mm}, Direction3D::unitZ(), 5_mm);
+        REQUIRE(rim.has_value());
+        const EdgeSignature image = transformed(*rim, across50);
+        CHECK(image.curve == EdgeCurve::Circle);
+        checkPoint(image.point, 70, 25, 20);
+        CHECK_THAT(image.direction.z(), WithinAbs(1.0, 1e-15));
+        CHECK(image.radius == 5_mm);
+        // The mirrored axis is (-1 x 0, 0, 1): canonical form has no
+        // negative zero, so the reference reads (and is written) as any other.
+        CHECK_FALSE(std::signbit(image.direction.x()));
+        CHECK(describe(image) == "circle around (70, 25, 20) mm with axis (0, 0, 1) and radius 5 mm");
+        // Mirrored once it is another circle; twice, the same one again. A
+        // line in the plane is its own mirror image.
+        CHECK_FALSE(sameCurve(image, *rim));
+        CHECK(sameCurve(transformed(image, across50), *rim));
+        const EdgeSignature inPlane = lineSignature(Point3D{50_mm, 0_mm, 20_mm}, Direction3D::unitY());
+        CHECK(sameCurve(transformed(inPlane, across50), inPlane));
+        // A circle whose axis the plane mirrors: about X at x = 30 goes to x = 70.
+        const auto ring = circleSignature(Point3D{30_mm, 0_mm, 0_mm}, Direction3D::unitX(), 4_mm);
+        REQUIRE(ring.has_value());
+        const EdgeSignature ringImage = transformed(*ring, across50);
+        checkPoint(ringImage.point, 70, 0, 0);
+        CHECK_THAT(ringImage.direction.x(), WithinAbs(1.0, 1e-15)); // canonical sign
+        // A line along Y through (0, 0, 20) goes to the line along Y through (100, 0, 20).
+        const EdgeSignature line = transformed(lineSignature(Point3D{0_mm, 0_mm, 20_mm}, Direction3D::unitY()), across50);
+        checkPoint(line.point, 100, 0, 20);
+        CHECK_THAT(std::abs(line.direction.y()), WithinAbs(1.0, 1e-15));
+    }
+    SECTION("faces") {
+        // A plane perpendicular to the mirror keeps its reference; a parallel
+        // one moves to the other side and faces the other way.
+        const FaceSignature top = planeSignature(Point3D{0_mm, 0_mm, 20_mm}, Direction3D::unitZ());
+        const FaceSignature topImage = transformed(top, across50);
+        checkPoint(topImage.point, 0, 0, 20);
+        CHECK_THAT(topImage.normal.z(), WithinAbs(1.0, 1e-15));
+        const FaceSignature left = planeSignature(Point3D{}, Direction3D::unitX().reversed());
+        const FaceSignature leftImage = transformed(left, across50);
+        checkPoint(leftImage.point, 100, 0, 0);
+        CHECK_THAT(leftImage.normal.x(), WithinAbs(1.0, 1e-15));
+    }
+    SECTION("holes") {
+        // A hole at (30, 25) in the top face goes to (70, 25) in the same face.
+        const HoleRequest drill{.face = planeSignature(Point3D{0_mm, 0_mm, 20_mm}, Direction3D::unitZ()),
+                                .center = Point2D{30_mm, 25_mm},
+                                .diameter = 10_mm};
+        const HoleRequest image = transformed(drill, across50);
+        CHECK(image.face == drill.face);
+        CHECK_THAT(image.center.x.in(units::mm), WithinAbs(70.0, kPositionToleranceMm));
+        CHECK_THAT(image.center.y.in(units::mm), WithinAbs(25.0, kPositionToleranceMm));
+        CHECK(image.diameter == drill.diameter);
+        // Across z = 10, a hole from the bottom face comes from the top face.
+        const HoleRequest below{.face = planeSignature(Point3D{}, Direction3D::unitZ().reversed()),
+                                .center = Point2D{30_mm, 25_mm},
+                                .diameter = 10_mm};
+        const HoleRequest above = transformed(below, mirrorAcross(Point3D{0_mm, 0_mm, 10_mm}, 0.0, 0.0, 1.0));
+        CHECK(above.face == drill.face);
+        CHECK_THAT(above.center.x.in(units::mm), WithinAbs(30.0, kPositionToleranceMm));
+        CHECK_THAT(above.center.y.in(units::mm), WithinAbs(25.0, kPositionToleranceMm));
+        // Both holes cut the block to V0 - 2 pi r^2 H.
+        const auto block = makeBox(100_mm, 50_mm, 20_mm);
+        REQUIRE(block.has_value());
+        const auto one = cutHole(*block, drill);
+        REQUIRE(one.has_value());
+        const auto two = cutHole(*one, image);
+        REQUIRE(two.has_value());
+        CHECK_THAT(requireProperties(*two).volume.in(units::mm3),
+                   WithinRel(100000.0 - 1000.0 * std::numbers::pi, kRelTight));
     }
 }
 

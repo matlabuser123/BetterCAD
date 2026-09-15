@@ -1,0 +1,52 @@
+Regression check for the planar-face normal fix in src/core/geometry/occt/OcctFaces.cpp (P11-FEAT-007).
+Captured 2026-09-15T13:38:09+10:00 on the Debug build, with the three-line fix removed:
+
+@@ -52,9 +52,6 @@ FaceInfo describeFace(const TopoDS_Face& face) {
+         // plane has a left-handed one, whose normal is the opposite. A
+         // reversed face then points the other way.
+         gp_Dir normal = plane.Axis().Direction();
+-        if (!plane.Position().Direct()) {
+-            normal.Reverse();
+-        }
+         if (face.Orientation() == TopAbs_REVERSED) {
+             normal.Reverse();
+         }
+
+Command: build/debug/bin/bettercad_tests.exe "[mirror]" --reporter compact
+Result: 26 assertions fail in 7 test cases (the fix was then restored; SHA-256 checked):
+  MirrorFeature_AdditiveBossMirrorMatchesAnalyticVolume: 6 failed assertion(s)
+  MirrorFeature_RegeneratesWhenSourceChanges: 1 failed assertion(s)
+  MirrorFeature_BodyScopeMirrorsTheWholeBody: 1 failed assertion(s)
+  MirrorFeature_ArbitraryPlaneMatchesAnalyticPointReflection: 3 failed assertion(s)
+  MirrorFeature_ReflectsCubeAcrossYZPlane: 3 failed assertion(s)
+  Transform_MirroredBodyKeepsVolumeAndPointsOutward: 10 failed assertion(s)
+  MirrorFeature_WorksWithExtrudedBody: 2 failed assertion(s)
+
+Compact output (failed assertions only):
+tests/features/MirrorFeatureTests.cpp:613: failed: facesOn(regenerator, m.mirror, topFace(15)) == 2 for: 1 == 2 with 1 message: ''
+tests/features/MirrorFeatureTests.cpp:614: failed: areaOn(regenerator, m.mirror, topFace(15)), WithinRel(200.0, kRel) for: 100.00000000000001421 and 200.0 are within 1e-10% of each other with 1 message: ''
+tests/features/MirrorFeatureTests.cpp:619: failed: facesOn(regenerator, m.mirror, plane(65, 0, 0, -1, 0, 0)) == 1 for: 0 == 1 with 1 message: ''
+tests/features/MirrorFeatureTests.cpp:620: failed: facesOn(regenerator, m.mirror, plane(75, 0, 0, 1, 0, 0)) == 1 for: 0 == 1 with 1 message: ''
+tests/features/MirrorFeatureTests.cpp:633: failed: facesOn(regenerator, m.mirror, topFace(5)) == 2 for: 1 == 2
+tests/features/MirrorFeatureTests.cpp:634: failed: areaOn(regenerator, m.mirror, topFace(5)), WithinRel(200.0, kRel) for: 100.00000000000001421 and 200.0 are within 1e-10% of each other
+tests/features/MirrorFeatureTests.cpp:412: failed: facesOn(regenerator, m.mirror, plane(xFace[0], xFace[1], xFace[2], xNormal[0], xNormal[1], xNormal[2])) == 1 for: 0 == 1
+tests/features/MirrorFeatureTests.cpp:416: failed: facesOn(regenerator, m.mirror, plane(yFace[0], yFace[1], yFace[2], yNormal[0], yNormal[1], yNormal[2])) == 1 for: 0 == 1
+tests/features/MirrorFeatureTests.cpp:418: failed: facesOn(regenerator, m.mirror, plane(yFace[0], yFace[1], yFace[2], -yNormal[0], -yNormal[1], -yNormal[2])) == 0 for: 1 == 0
+tests/features/MirrorFeatureTests.cpp:687: failed: facesOn(regenerator, m.mirror, plane(61, 0, 0, -1, 0, 0)) == 1 for: 0 == 1
+tests/core/geometry/TransformTests.cpp:247: failed: outward > 0.0 for: -0.005 > 0.0 with 3 messages: 'face.centroid.x.in(units::mm) := -15.0' and 'face.centroid.y.in(units::mm) := 0.00000000000000002' and 'face.centroid.z.in(units::mm) := -0.00000000000000001'
+tests/core/geometry/TransformTests.cpp:247: failed: outward > 0.0 for: -0.005 > 0.0 with 3 messages: 'face.centroid.x.in(units::mm) := -25.0' and 'face.centroid.y.in(units::mm) := 0.00000000000000002' and 'face.centroid.z.in(units::mm) := -0.00000000000000001'
+tests/core/geometry/TransformTests.cpp:247: failed: outward > 0.0 for: -0.005 > 0.0 with 3 messages: 'face.centroid.x.in(units::mm) := -20.0' and 'face.centroid.y.in(units::mm) := -5.0' and 'face.centroid.z.in(units::mm) := -0.00000000000000001'
+tests/core/geometry/TransformTests.cpp:247: failed: outward > 0.0 for: -0.005 > 0.0 with 3 messages: 'face.centroid.x.in(units::mm) := -20.0' and 'face.centroid.y.in(units::mm) := 5.0' and 'face.centroid.z.in(units::mm) := -0.00000000000000001'
+tests/core/geometry/TransformTests.cpp:247: failed: outward > 0.0 for: -0.005 > 0.0 with 3 messages: 'face.centroid.x.in(units::mm) := -20.0' and 'face.centroid.y.in(units::mm) := 0.00000000000000007' and 'face.centroid.z.in(units::mm) := -5.0'
+tests/core/geometry/TransformTests.cpp:247: failed: outward > 0.0 for: -0.005 > 0.0 with 3 messages: 'face.centroid.x.in(units::mm) := -20.0' and 'face.centroid.y.in(units::mm) := 0.00000000000000007' and 'face.centroid.z.in(units::mm) := 5.0'
+tests/core/geometry/TransformTests.cpp:249: failed: facesOn(*image, planeSignature(Point3D{-25_mm, 0_mm, 0_mm}, Direction3D::unitX().reversed())) == 1 for: 0 == 1
+tests/core/geometry/TransformTests.cpp:250: failed: facesOn(*image, planeSignature(Point3D{-15_mm, 0_mm, 0_mm}, Direction3D::unitX())) == 1 for: 0 == 1
+tests/core/geometry/TransformTests.cpp:251: failed: facesOn(*image, planeSignature(Point3D{-25_mm, 0_mm, 0_mm}, Direction3D::unitX())) == 0 for: 1 == 0
+tests/core/geometry/TransformTests.cpp:262: failed: drilled.has_value() for: false
+tests/features/MirrorFeatureTests.cpp:268: failed: facesOn(regenerator, m.mirror, plane(-25, 0, 0, -1, 0, 0)) == 1 for: 0 == 1 with 1 message: ''
+tests/features/MirrorFeatureTests.cpp:269: failed: facesOn(regenerator, m.mirror, plane(-15, 0, 0, 1, 0, 0)) == 1 for: 0 == 1 with 1 message: ''
+tests/features/MirrorFeatureTests.cpp:270: failed: facesOn(regenerator, m.mirror, plane(-25, 0, 0, 1, 0, 0)) == 0 for: 1 == 0 with 1 message: ''
+tests/features/MirrorFeatureTests.cpp:947: failed: facesOn(regenerator, m.mirror, plane(-(15.0 + size), 0, 0, -1, 0, 0)) == 1 for: 0 == 1 with 1 message: 'size := 6.0'
+tests/features/MirrorFeatureTests.cpp:947: failed: facesOn(regenerator, m.mirror, plane(-(15.0 + size), 0, 0, -1, 0, 0)) == 1 for: 0 == 1 with 1 message: 'size := 14.0'
+tests/features/MirrorFeatureTests.cpp:1175: failed: requireReport(regenerator, m.doc).succeeded() for: false
+

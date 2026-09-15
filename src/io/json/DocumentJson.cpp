@@ -31,6 +31,8 @@ Result<Json> objectToJson(const DocumentObject& object) {
         data = detail::linearPatternToJson(*pattern);
     } else if (const auto* circular = dynamic_cast<const features::CircularPatternFeature*>(&object)) {
         data = detail::circularPatternToJson(*circular);
+    } else if (const auto* mirror = dynamic_cast<const features::MirrorFeature*>(&object)) {
+        data = detail::mirrorToJson(*mirror);
     } else {
         return makeError(ErrorCode::InvalidArgument,
                          std::format("objects of type '{}' cannot be saved", object.typeName()));
@@ -109,6 +111,13 @@ Result<std::unique_ptr<DocumentObject>> objectFromJson(const Json& value, std::s
             return std::unexpected(circular.error());
         }
         return std::unique_ptr<DocumentObject>(std::move(*circular));
+    }
+    if (*type == features::MirrorFeature::kTypeName) {
+        auto mirror = detail::mirrorFromJson(**data, std::move(*name), dataPath);
+        if (!mirror) {
+            return std::unexpected(mirror.error());
+        }
+        return std::unique_ptr<DocumentObject>(std::move(*mirror));
     }
     return detail::parseError(detail::childPath(path, "type"), std::format("unknown object type '{}'", *type));
 }

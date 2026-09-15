@@ -3,6 +3,7 @@
 #include "support/ChamferBlockModel.hpp"
 #include "support/FilletModels.hpp"
 #include "support/HoleModels.hpp"
+#include "support/MirrorModels.hpp"
 #include "support/PatternModels.hpp"
 #include "support/TurnedPartModel.hpp"
 
@@ -11,6 +12,7 @@
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/features/FilletFeature.hpp>
 #include <bettercad/features/HoleFeature.hpp>
+#include <bettercad/features/MirrorFeature.hpp>
 #include <bettercad/features/ResultBodies.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
 #include <bettercad/features/Validation.hpp>
@@ -35,6 +37,7 @@ using bettercad::test::BracketModel;
 using bettercad::test::ChamferBlockModel;
 using bettercad::test::FilletBlockModel;
 using bettercad::test::HoleBlockModel;
+using bettercad::test::HoleMirrorModel;
 using bettercad::test::HoleRowModel;
 using bettercad::test::require;
 using bettercad::test::TurnedPartModel;
@@ -614,6 +617,58 @@ TEST_CASE("CircularPattern_ModelsAreValidatedLikeAnyOther", "[validation][patter
         CHECK_THAT(regeneration[0].message,
                    StartsWith("Bolts (object:8) failed to regenerate: Bolts: circular pattern: instance 1 at 9 deg: "
                               "hole: the hole does not fit on its face"));
+        CHECK_FALSE(report.valid());
+        CHECK(report.bodies.empty());
+    }
+}
+
+TEST_CASE("MirrorFeature_ModelsAreValidatedLikeAnyOther", "[validation][mirror]") {
+    HoleMirrorModel m;
+
+    SECTION("a sound model: the mirror is the one valid result body") {
+        const ValidationReport report = validateDocument(m.doc);
+        INFO(describe(report));
+        CHECK(report.valid());
+        CHECK(report.issues.empty());
+        CHECK(report.regenerated == 4);
+        REQUIRE(report.bodies.size() == 1);
+        CHECK(report.bodies[0].feature == m.mirror);
+        CHECK(report.bodies[0].valid);
+        CHECK(report.bodies[0].topology.solids == 1);
+        CHECK_THAT(report.bodies[0].properties->volume.in(units::mm3),
+                   WithinRel(HoleMirrorModel::expectedVolume(100, 20, 10), 1e-12));
+    }
+    SECTION("a plane offset driven by an angle") {
+        const ParameterId tilt = m.doc.createParameter("tilt", 5_deg, units::deg).value();
+        MirrorDefinition d = m.mirrorOf(m.mirror);
+        d.plane.offsetParameter = tilt;
+        m.setMirror(m.mirror, d);
+        const ValidationReport report = validateDocument(m.doc);
+        const auto issues = issuesOf(report, ValidationCheck::DocumentConsistency);
+        REQUIRE(issues.size() == 1);
+        CHECK(issues[0].message ==
+              "Mirror (object:11): the plane's offset is driven by tilt (object:12), which is an angle, not a length");
+        CHECK(issuesOf(report, ValidationCheck::FeatureRegeneration).empty()); // reported once
+    }
+    SECTION("a source that is a sketch") {
+        MirrorDefinition d = m.mirrorOf(m.mirror);
+        d.source = HoleMirrorModel::featureId(m.base);
+        m.setMirror(m.mirror, d);
+        const auto issues = issuesOf(validateDocument(m.doc), ValidationCheck::DocumentConsistency);
+        REQUIRE(issues.size() == 1);
+        CHECK(issues[0].message ==
+              "Mirror (object:11): the source is Base (object:5), which is a sketch, not a feature with a body");
+    }
+    SECTION("a mirror image that does not fit") {
+        REQUIRE(m.doc.setParameterValue(m.mid, 64_mm).has_value());
+        const ValidationReport report = validateDocument(m.doc);
+        INFO(describe(report));
+        const auto regeneration = issuesOf(report, ValidationCheck::FeatureRegeneration);
+        REQUIRE(regeneration.size() == 1);
+        CHECK(regeneration[0].item == m.mirror);
+        CHECK_THAT(regeneration[0].message,
+                   StartsWith("Mirror (object:11) failed to regenerate: Mirror: mirror: the mirror image across the "
+                              "plane through (64, 0, 0) mm facing (1, 0, 0): hole: the hole does not fit on its face"));
         CHECK_FALSE(report.valid());
         CHECK(report.bodies.empty());
     }

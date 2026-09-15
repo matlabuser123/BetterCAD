@@ -48,9 +48,10 @@ enum class EdgeCurve {
 ///
 /// Use lineSignature() and circleSignature(), which make the form canonical:
 /// the direction (or axis) points into the half-space where its first
-/// non-zero component is positive, and a line's point is the point of the
-/// line nearest the origin. The same curve then gives the same signature
-/// whichever point and orientation it was described with.
+/// non-zero component is positive, a line's point is the point of the line
+/// nearest the origin, and no component is a negative zero. The same curve
+/// then gives the same signature whichever point and orientation it was
+/// described with.
 struct EdgeSignature {
     EdgeCurve curve = EdgeCurve::Line;
     /// Line: the point of the line nearest the origin. Circle: the centre.
@@ -87,6 +88,12 @@ circleSignature(const Point3D& center, const Direction3D& axis, Length radius);
 /// circle's radius stays. A pure translation is translated() exactly.
 [[nodiscard]] BETTERCAD_GEOMETRY_EXPORT EdgeSignature transformed(const EdgeSignature& signature,
                                                                   const RigidTransform3D& motion);
+
+/// Whether @p a and @p b describe the same curve, to the tolerances of
+/// findEdges() (1e-7 mm, 1e-9 rad): the same line (through any of its
+/// points, either way along it), or the same circle (centre, axis either way,
+/// radius).
+[[nodiscard]] BETTERCAD_GEOMETRY_EXPORT bool sameCurve(const EdgeSignature& a, const EdgeSignature& b) noexcept;
 
 /// For messages, e.g. "line through (0, 0, 20) mm along (1, 0, 0)".
 [[nodiscard]] BETTERCAD_GEOMETRY_EXPORT std::string describe(const EdgeSignature& signature);

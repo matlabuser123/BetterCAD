@@ -11,6 +11,7 @@
 #include <bettercad/features/FilletFeature.hpp>
 #include <bettercad/features/HoleFeature.hpp>
 #include <bettercad/features/LinearPatternFeature.hpp>
+#include <bettercad/features/MirrorFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
 #include <bettercad/sketch/Sketch.hpp>
 
@@ -147,5 +148,26 @@ resolveCircularPatternInstances(const CircularPatternDefinition& definition, con
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::Body>
 regenerateCircularPattern(const CircularPatternFeature& feature, const Document& document,
                           const geometry::Body* target);
+
+/// The mirror plane in model space, with a driven offset taken from its
+/// length parameter (DimensionMismatch otherwise), and the reflection
+/// across it.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<MirrorReflection>
+resolveMirrorReflection(const MirrorDefinition& definition, const Document& document);
+
+/// Computes the body of a mirror from @p target (the source feature's body,
+/// instance 0) and its mirror image (instance 1):
+/// - feature scope: the source's operation is applied again, reflected, as
+///   one more pattern instance (the same sources and checks as for linear
+///   patterns; patterns and mirrors are refused as sources). A hole the plane
+///   maps onto itself, and a chamfer or fillet edge it maps onto one of the
+///   feature's own edges, are refused: they are already there;
+/// - body scope: the whole source body is reflected and united with the
+///   original, or on its own when the original is not kept.
+///
+/// A failure fails the mirror, naming the mirror image and its plane; there
+/// is no partial result.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::Body>
+regenerateMirror(const MirrorFeature& feature, const Document& document, const geometry::Body* target);
 
 } // namespace bettercad::features

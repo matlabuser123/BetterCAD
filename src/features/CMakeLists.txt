@@ -22,6 +22,8 @@ bettercad_add_library(bettercad_features
         pattern/CircularPatternRegeneration.cpp
         pattern/LinearPatternFeature.cpp
         pattern/LinearPatternRegeneration.cpp
+        pattern/MirrorFeature.cpp
+        pattern/MirrorRegeneration.cpp
         pattern/PatternSupport.cpp
         pattern/PatternSupport.hpp
         profile/Profiles.cpp

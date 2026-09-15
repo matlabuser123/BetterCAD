@@ -11,7 +11,7 @@ underneath, hidden behind adapters.
             └───────┬──────────────────────┘
                     io              native .bcad, STEP/STL export
                     │
-                 features           extrude, revolve, chamfer, fillet, hole, linear and circular patterns (later: ...)
+                 features           extrude, revolve, chamfer, fillet, hole, linear and circular patterns, mirror (later: ...)
                     │
                   sketch            entities, constraints, solver
                     │
@@ -140,12 +140,18 @@ milestones start; see `TODO.md`.
   user gives it before it is normalized. `Translation3D` is a displacement in
   lengths. `Translation3D::along(direction, distance)` is one product per
   component, so a pattern offset k·s·d is computed exactly once per instance.
-- `RigidTransform3D` (`RigidTransform.hpp`) is a rotation matrix plus a
-  translation, applied as p' = R·p + t. `RigidTransform3D::rotation(axis,
-  angle)` builds R with Rodrigues' formula from the angle's own sine and
-  cosine, and t = o − R·o, so the axis stays fixed. A pure translation keeps
-  an exactly identity matrix (`isTranslation()`), and applying it is
-  bit-identical to adding the translation.
+- `RigidTransform3D` (`RigidTransform.hpp`) is an orthogonal matrix plus a
+  translation, applied as p' = A·p + t: a Euclidean isometry, which never
+  scales. `RigidTransform3D::rotation(axis, angle)` builds A with Rodrigues'
+  formula from the angle's own sine and cosine, and t = o − A·o, so the axis
+  stays fixed. `RigidTransform3D::reflection(point, normal)` builds
+  Householder's A = I − 2·n·nᵀ (det A = −1), with t = p0 − A·p0, so the plane
+  stays fixed: p' = p − 2((p − p0)·n)n. `reversesOrientation()` (the sign of
+  det A) tells a mirror from a rotation. A pure translation keeps an exactly
+  identity matrix (`isTranslation()`), and applying it is bit-identical to
+  adding the translation. Up to P11-FEAT-006 the class only held rotations;
+  P11-FEAT-007 widened it to reflections (`rotationMatrix()` became
+  `matrix()`) rather than adding a second transform type.
 
 ### Geometry (`bettercad/core/geometry/`, library `bettercad_geometry`)
 
@@ -317,22 +323,33 @@ milestones start; see `TODO.md`.
   The preflight is for these guarantees, not for crash avoidance: a
   kernel probe of degenerate holes found no crashes
   (`docs/verification/P11-FEAT-004/`).
-- **Translation and rotation** (`Transform.hpp`). `translated(body,
-  translation)` and `transformed(body, motion)` return a moved copy with its
-  own geometry (`BRepBuilderAPI_Transform`, copying); the input is never
-  modified. `transformed()` hands the kernel BetterCAD's own matrix
-  (`gp_Trsf::SetValues`), so the kernel does not recompute the rotation, and
-  a pure translation takes the `translated()` path exactly. References move
-  with their own `translated()` and `transformed()` functions:
+- **Translation, rotation and reflection** (`Transform.hpp`).
+  `translated(body, translation)` and `transformed(body, motion)` return a
+  moved copy with its own geometry (`BRepBuilderAPI_Transform`, copying); the
+  input is never modified. `transformed()` hands the kernel BetterCAD's own
+  matrix (`gp_Trsf::SetValues`), so the kernel does not recompute the
+  rotation, and a pure translation takes the `translated()` path exactly.
+  References move with their own `translated()` and `transformed()`
+  functions:
   - an `EdgeSignature` gives the moved line or circle (a circle's axis turns
     with it);
   - a `FaceSignature` gives the moved plane, unchanged by a move within the
-    plane;
+    plane, with its outward normal moved as a vector (so a reflected face
+    faces the mirrored way);
   - a `HoleRequest` gets the moved face and centre (the centre is moved in
     3D and re-expressed in the moved face's coordinates).
 
   Each is the exact moved geometry, never a search for similar entities.
-  Reflections come with the mirror milestone.
+  **Reflections** (det A = −1) become a negative `gp_Trsf`. The kernel's
+  copy then reverses every face, so faces keep pointing out of the material,
+  and `transformed()` checks the result: the image must enclose a positive
+  volume equal to the source's within 1e-9 relative (measured agreement is
+  below 1e-15), or the call fails with Internal. A reflected planar face has
+  a left-handed frame, whose surface normal (XDirection × YDirection) is the
+  opposite of its main direction; the face descriptor (`OcctFaces.cpp`)
+  takes that into account, so face references on mirrored bodies resolve.
+  Meshes follow the surface parametrization and the face orientation, so
+  mirrored bodies triangulate outward-facing (checked by the STL tests).
 
 ### Sketches (`bettercad/sketch/`, library `bettercad_sketch`)
 
@@ -481,12 +498,43 @@ milestones start; see `TODO.md`.
   placement check (the second instance would be drilled into the first).
   Circular patterns of patterns, and linear patterns of circular ones, are
   refused.
+- **Mirror** (`MirrorFeature.hpp`) reflects another feature across a plane.
+  A `MirrorDefinition` holds:
+  - the source feature, which the mirror consumes (its `target()`);
+  - the plane (`MirrorPlane`): an origin, a normal as given (any finite,
+    non-zero vector, normalized when used; its sense does not matter) and an
+    offset along the unit normal, literal or driven by a length parameter.
+    The plane passes through origin + offset·n̂;
+  - the scope: `Feature` applies the source's own operation once more,
+    reflected, to the body the source made (a pattern instance); `Body`
+    reflects the source's whole body, with everything that built it;
+  - keep-original: whether the result keeps the source next to its image. A
+    feature mirror always does; a body mirror may leave it out, giving the
+    image alone.
+
+  Every point goes to p' = p − 2((p − p0)·n̂)n̂ (`resolveMirrorReflection()`
+  resolves the plane, `RigidTransform3D::reflection()` builds the motion).
+  The result is instance 0 (the source's body) and instance 1 (its image),
+  in that order, built by the pattern support's atomic loop; the image is not
+  a document object. A failure fails the whole mirror, naming the image and
+  its plane ("the mirror image across the plane through (64, 0, 0) mm facing
+  (1, 0, 0): hole: …"), and the mirror keeps no body. A feature mirror takes
+  the same sources as a pattern (new-body, join and cut extrudes and
+  revolves, holes, chamfers and fillets, whose references are reflected
+  exactly); a body mirror takes any feature with a body, patterns and
+  mirrors included. Feature mirrors of patterns or mirrors, and patterns of
+  mirrors, are refused. Where the image coincides with the source, extrudes
+  and revolves unite or cut the same tool again (the body is unchanged),
+  while a hole the plane maps onto itself, or a chamfer or fillet edge it
+  maps onto one of the feature's own edges, is refused with its own
+  diagnostic instead of being applied twice.
 - **Pattern support** (`src/features/pattern/PatternSupport.hpp`, private).
-  Both patterns share one subsystem: the per-instance operation of each
-  source kind (`instanceOperation()`), the build loop that applies it
-  instance by instance with atomic failure (`buildPattern()`), the count
-  resolution and the circular angle rules. Each pattern only computes its
-  placements (`RigidTransform3D`s) and their labels.
+  Both patterns and the mirror share one subsystem: the per-instance
+  operation of each source kind (`instanceOperation()`), the build loop that
+  applies it instance by instance with atomic failure (`buildPattern()`),
+  the count resolution and the circular angle rules. Each pattern only
+  computes its placements (`RigidTransform3D`s) and their labels; the mirror
+  has one placement, the reflection.
 - Bodies are derived: regeneration computes them from the current document.
   Regenerating does not change the document's revision or dirty state.
 - `extractRegions()` turns a sketch into `geometry::PlanarRegion`s. It
@@ -515,8 +563,8 @@ milestones start; see `TODO.md`.
   1. document consistency (references point at the right kind of item and
      dimension, e.g. revolve axes are lines, revolve angles are angles, and
      chamfer distances, fillet radii and hole dimensions and centres are
-     lengths; pattern counts are dimensionless, spacings lengths and
-     circular pattern angles angles);
+     lengths; pattern counts are dimensionless, spacings lengths, circular
+     pattern angles angles and mirror plane offsets lengths);
   2. missing references (including revolve axis lines in their sketches);
   3. dependency cycles;
   4. sketch constraints (each sketch solves with its driving parameters;
@@ -572,7 +620,11 @@ milestones start; see `TODO.md`.
     optional `count_parameter`; `spacing` (`"full_circle"`,
     `"included_angle"`, `"angle_step"`); and `rotation` (`"positive"`,
     `"negative"`). Only the angle spacings store `angle` (radians) and an
-    optional `angle_parameter`.
+    optional `angle_parameter`;
+  - a mirror stores `source`; `plane` as `{"origin": [...], "normal":
+    [x, y, z], "offset": metres}` (the normal as given) with an optional
+    `offset_parameter`; `scope` (`"feature"`, `"body"`); and
+    `keep_original`.
 
   The rules are:
   - **Only inputs are stored.** Geometry is derived and is regenerated after
@@ -620,7 +672,8 @@ milestones start; see `TODO.md`.
 - `tests/support/` holds shared fixtures:
   - the P9 bracket model, the turned part (revolves), and the parametric
     block (`BlockModel`) with its chamfered, filleted, drilled
-    (`HoleModels.hpp`) and patterned (`PatternModels.hpp`) variants;
+    (`HoleModels.hpp`), patterned (`PatternModels.hpp`) and mirrored
+    (`MirrorModels.hpp`) variants;
   - temporary directories;
   - mesh and STL analysis written from first principles (divergence-theorem
     volume, edge-manifold watertightness).

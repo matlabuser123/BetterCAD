@@ -5,8 +5,10 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
 
+#include <algorithm>
 #include <array>
 #include <cmath>
+#include <cstddef>
 #include <numbers>
 
 using namespace bettercad;
@@ -48,6 +50,22 @@ V rodrigues(const V& p, const V& o, const V& kIn, double t) {
     const V parallel = scale(k, dot(r, k));
     const V perpendicular = sub(r, parallel);
     return add(o, add(parallel, add(scale(perpendicular, std::cos(t)), scale(cross(k, perpendicular), std::sin(t)))));
+}
+
+/// An independent reference: p mirrored across the plane through p0 with
+/// normal n (any length), p' = p - 2 ((p - p0) . n) n with n made unit.
+V reflect(const V& p, const V& p0, const V& nIn) {
+    const V n = unit(nIn);
+    return sub(p, scale(n, 2.0 * dot(sub(p, p0), n)));
+}
+
+/// Signed distance of p from the plane through p0 with normal n.
+double signedDistance(const V& p, const V& p0, const V& nIn) {
+    return dot(sub(p, p0), unit(nIn));
+}
+
+Direction3D direction(const V& v) {
+    return *Direction3D::fromComponents(v[0], v[1], v[2]);
 }
 
 /// Distance of p from the line through o along k.
@@ -128,6 +146,99 @@ TEST_CASE("RigidTransform_RotationMatchesRodrigues", "[math][transform]") {
             }
         }
     }
+}
+
+TEST_CASE("RigidTransform_ReflectionMatchesPointFormula", "[math][transform][mirror]") {
+    // p = (4, 1, 3) across the plane through (1, 0, 0) with normal (1, 1, 0)/sqrt 2:
+    // (p - p0) . n = 4/sqrt 2, so p' = p - 4 (1, 1, 0) = (0, -3, 3).
+    const auto mirror = RigidTransform3D::reflection(point({1, 0, 0}), direction({1, 1, 0}));
+    const V image = mm(mirror.apply(point({4, 1, 3})));
+    checkClose(image, {0, -3, 3}, 1e-14);
+    checkClose(image, reflect({4, 1, 3}, {1, 0, 0}, {1, 1, 0}), 1e-14);
+    // The axis planes through the origin: one coordinate changes sign,
+    // exactly (q is p as stored).
+    const V p{12.5, -4, 7};
+    const V q = mm(point(p));
+    CHECK(mm(RigidTransform3D::reflection(Point3D{}, Direction3D::unitX()).apply(point(p))) == V{-q[0], q[1], q[2]});
+    CHECK(mm(RigidTransform3D::reflection(Point3D{}, Direction3D::unitY()).apply(point(p))) == V{q[0], -q[1], q[2]});
+    CHECK(mm(RigidTransform3D::reflection(Point3D{}, Direction3D::unitZ()).apply(point(p))) == V{q[0], q[1], -q[2]});
+    // An offset plane: x = 10 takes x = 30 to 2 x 10 - 30 = -10.
+    checkClose(mm(RigidTransform3D::reflection(point({10, 0, 0}), Direction3D::unitX()).apply(point({30, 2, 3}))),
+               {-10, 2, 3}, 1e-12);
+    // Arbitrary planes and points against the formula; directions mirror as
+    // vectors, v' = v - 2 (v . n) n, whatever the plane's position.
+    const V normals[] = {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}, {1, 1, 0}, {1, 1, 1}, {1, -2, 3}, {-0.3, 0.1, 0.9}};
+    const V origins[] = {{0, 0, 0}, {12.5, -4, 30}};
+    const V points[] = {{40, 10, 20}, {-3, 0.5, 11}, {0, 0, 0}};
+    for (const V& n : normals) {
+        for (const V& o : origins) {
+            CAPTURE(n[0], n[1], n[2], o[0]);
+            const auto reflection = RigidTransform3D::reflection(point(o), direction(n));
+            CHECK(reflection.reversesOrientation());
+            CHECK_FALSE(reflection.isTranslation());
+            for (const V& r : points) {
+                checkClose(mm(reflection.apply(point(r))), reflect(r, o, n), 1e-12);
+            }
+            const V d = unit({1, 2, 2});
+            const Direction3D mirrored = reflection.apply(direction(d));
+            checkClose({mirrored.x(), mirrored.y(), mirrored.z()}, reflect(d, {0, 0, 0}, n), 1e-15);
+        }
+    }
+    // Rotations and translations keep orientation.
+    CHECK_FALSE(RigidTransform3D::rotation(axis({0, 0, 0}, {1, 1, 1}), 137_deg).reversesOrientation());
+    CHECK_FALSE(RigidTransform3D::translation({1_mm, 2_mm, 3_mm}).reversesOrientation());
+    CHECK_FALSE(RigidTransform3D{}.reversesOrientation());
+}
+
+TEST_CASE("RigidTransform_ReflectionIsAnInvolution", "[math][transform][mirror]") {
+    // M(M(p)) = p, and the matrix is its own inverse: A A = I, det A = -1.
+    const V n{1, -2, 3};
+    const V o{12.5, -4, 30};
+    const auto mirror = RigidTransform3D::reflection(point(o), direction(n));
+    const auto& a = mirror.matrix();
+    double worstIdentity = 0.0;
+    for (std::size_t i = 0; i < 3; ++i) {
+        for (std::size_t j = 0; j < 3; ++j) {
+            double sum = 0.0;
+            for (std::size_t k = 0; k < 3; ++k) {
+                sum += a[3 * i + k] * a[3 * k + j];
+            }
+            worstIdentity = std::max(worstIdentity, std::abs(sum - (i == j ? 1.0 : 0.0)));
+        }
+    }
+    const double det = a[0] * (a[4] * a[8] - a[5] * a[7]) - a[1] * (a[3] * a[8] - a[5] * a[6]) +
+                       a[2] * (a[3] * a[7] - a[4] * a[6]);
+    INFO("worst entry of A A - I: " << worstIdentity << ", det A = " << det);
+    CHECK(worstIdentity < 1e-15);
+    CHECK_THAT(det, WithinAbs(-1.0, 1e-15));
+    double worst = 0.0;
+    for (const V& p : {V{40, 10, 20}, V{-3, 0.5, 11}, V{0, 0, 0}, V{1e3, -2e3, 5e2}}) {
+        const V twice = mm(mirror.apply(mirror.apply(point(p))));
+        worst = std::max(worst, std::sqrt(dot(sub(twice, p), sub(twice, p))));
+    }
+    INFO("worst |M(M(p)) - p|: " << worst << " mm");
+    CHECK(worst < 1e-11);
+}
+
+TEST_CASE("RigidTransform_ReflectionNegatesSignedDistanceToThePlane", "[math][transform][mirror]") {
+    // A mirror image is as far from the plane as the point, on the other
+    // side; points on the plane stay put.
+    const V n{1, 1, 1};
+    const V o{5, -2, 1};
+    const auto mirror = RigidTransform3D::reflection(point(o), direction(n));
+    double worst = 0.0;
+    for (const V& p : {V{40, 10, 20}, V{-3, 0.5, 11}, V{0, 0, 0}, V{7, 7, -30}}) {
+        const V image = mm(mirror.apply(point(p)));
+        worst = std::max(worst, std::abs(signedDistance(image, o, n) + signedDistance(p, o, n)));
+        // The segment from p to its image is perpendicular to the plane.
+        const V chord = sub(image, p);
+        const V across = cross(chord, unit(n));
+        worst = std::max(worst, std::sqrt(dot(across, across)));
+    }
+    INFO("worst distance or direction error: " << worst << " mm");
+    CHECK(worst < 1e-12);
+    const V onPlane = add(o, V{3, -2, -1}); // (3, -2, -1) . (1, 1, 1) = 0
+    checkClose(mm(mirror.apply(point(onPlane))), onPlane, 1e-13);
 }
 
 TEST_CASE("RigidTransform_RotationPreservesDistanceToAxis", "[math][transform]") {

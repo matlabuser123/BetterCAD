@@ -7,6 +7,7 @@
 #include <bettercad/features/FilletFeature.hpp>
 #include <bettercad/features/HoleFeature.hpp>
 #include <bettercad/features/LinearPatternFeature.hpp>
+#include <bettercad/features/MirrorFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
 #include <bettercad/features/Validation.hpp>
 #include <bettercad/io/DocumentFile.hpp>
@@ -165,6 +166,27 @@ std::string describeCircularPattern(const Document& document, const features::Ci
     return text;
 }
 
+/// "source Drill, feature mirror across the plane through (50, 0, 0) mm
+/// facing (1, 0, 0)", with ", offset 10 mm" (or the offset parameter's name)
+/// for a moved plane, and "body mirror … , original kept" or "…, mirror
+/// image only" for a body mirror.
+std::string describeMirror(const Document& document, const features::MirrorDefinition& d) {
+    const auto tidy = [](double value) { return value == 0.0 ? 0.0 : value; };
+    const Point3D& o = d.plane.origin;
+    std::string text = std::format(
+        "source {}, {} mirror across the plane through ({:.6g}, {:.6g}, {:.6g}) mm facing ({:.6g}, {:.6g}, {:.6g})",
+        nameOrId(document, ObjectId{d.source}), features::toString(d.scope), tidy(o.x.in(units::mm)),
+        tidy(o.y.in(units::mm)), tidy(o.z.in(units::mm)), tidy(d.plane.normal.x), tidy(d.plane.normal.y),
+        tidy(d.plane.normal.z));
+    if (d.plane.offsetParameter || d.plane.offset != Length{}) {
+        text += std::format(", offset {}", describeLength(document, d.plane.offset, d.plane.offsetParameter));
+    }
+    if (d.scope == features::MirrorScope::Body) {
+        text += d.keepOriginal ? ", original kept" : ", mirror image only";
+    }
+    return text;
+}
+
 std::string describeObject(const Document& document, const DocumentObject& object) {
     if (const auto* sketch = dynamic_cast<const sketch::Sketch*>(&object)) {
         const auto disabled = std::ranges::count_if(sketch->constraints(),
@@ -225,6 +247,9 @@ std::string describeObject(const Document& document, const DocumentObject& objec
     }
     if (const auto* circular = dynamic_cast<const features::CircularPatternFeature*>(&object)) {
         return describeCircularPattern(document, circular->definition());
+    }
+    if (const auto* mirror = dynamic_cast<const features::MirrorFeature*>(&object)) {
+        return describeMirror(document, mirror->definition());
     }
     return {};
 }

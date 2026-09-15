@@ -1,0 +1,1220 @@
+Measured feature-level values (Release build of the qualified tree), captured 2026-09-15.
+Produced by: build/release/bin/bettercad_tests.exe "[mirror]" -s --reporter xml --rng-seed 1, filtered by
+values.py (kept in this directory): every passed CHECK_THAT / REQUIRE_THAT (volumes, areas, bounds, positions,
+error messages), and every passed CHECK whose INFO context reports a measured error (worst, error, meshed,
+rounding, largest). Each entry: file:line, the assertion, then Catch2's expansion (values printed exactly) and
+any CAPTURE/INFO context. GeometryTestSupport.hpp:35-37 is checkPoint(), which compares x, y and z of a point
+(a centre, a bound or a centre of mass) with 1e-9 mm; MirrorFeatureTests.cpp's checkPoint(actual, V) calls it
+with a position computed by the independent formula p' = p - 2 ((p - p0) . n) n.
+Checks on whole-file text (STEP text, JSON, CLI output; expansions over 1000 characters) are left out.
+
+
+== MirrorFeature_MirrorsHoleTypesAndExtents / a blind counterbore, across x = 50
+MirrorFeatureTests.cpp:560  CHECK_THAT( build(), WithinRel(100000.0 - 2.0 * 456.0 * pi, kRel) )
+        => 97134.86749992615659721 and 97134.86749992611294147 are within 1e-10% of each other
+
+== MirrorFeature_MirrorsHoleTypesAndExtents / a through countersink, across x = 50
+MirrorFeatureTests.cpp:577  CHECK_THAT( build(), WithinRel(100000.0 - 2.0 * (500.0 + 500.0 / 3.0) * pi, kRel) )
+        => 95811.20979521362460218 and 95811.20979521361005027 are within 1e-10% of each other
+
+== MirrorFeature_MirrorsHoleTypesAndExtents / a blind hole across the mid-plane z = 10 enters the opposite face
+MirrorFeatureTests.cpp:591  CHECK_THAT( build(), WithinRel(100000.0 - 2.0 * 150.0 * pi, kRel) )
+        => 99057.52220392308663577 and 99057.52220392305753194 are within 1e-10% of each other
+
+== MirrorFeature_AdditiveBossMirrorMatchesAnalyticVolume / a boss and its mirror image
+MirrorFeatureTests.cpp:612  CHECK_THAT( volumeMm3(regenerator, m.mirror), WithinRel(50000.0 + 2.0 * 500.0, kRel) )
+        => 51000.00000000001455192 and 51000.0 are within 1e-10% of each other with message: 
+MirrorFeatureTests.cpp:614  CHECK_THAT( areaOn(regenerator, m.mirror, topFace(15)), WithinRel(200.0, kRel) )
+        => 200.00000000000002842 and 200.0 are within 1e-10% of each other with message: 
+MirrorFeatureTests.cpp:615  CHECK_THAT( areaOn(regenerator, m.mirror, topFace(10)), WithinRel(5000.0 - 200.0, kRel) )
+        => 4800.00000000000181899 and 4800.0 are within 1e-10% of each other with message: 
+MirrorFeatureTests.cpp:621  CHECK_THAT( body.boundingBox()->max.z.in(units::mm), WithinAbs(15.0, kPositionToleranceMm) )
+        => 15.0 is within 0.000000001 of 15.0 with message: 
+
+== MirrorFeature_AdditiveBossMirrorMatchesAnalyticVolume / the boss as a pocket (cut 5 mm down): V = V_plate - 2 V_pocket
+MirrorFeatureTests.cpp:632  CHECK_THAT( volumeMm3(regenerator, m.mirror), WithinRel(50000.0 - 2.0 * 500.0, kRel) )
+        => 49000.00000000001455192 and 49000.0 are within 1e-10% of each other
+MirrorFeatureTests.cpp:634  CHECK_THAT( areaOn(regenerator, m.mirror, topFace(5)), WithinRel(200.0, kRel) )
+        => 200.00000000000002842 and 200.0 are within 1e-10% of each other
+
+== MirrorFeature_MirrorsChamferAndFilletByMirroredReferences / an asymmetric chamfer keeps its handedness
+MirrorFeatureTests.cpp:1036  CHECK_THAT( volumeMm3(regenerator, mirror), WithinRel(100000.0 - 2.0 * 0.5 * 3.0 * 5.0 * 50.0, kRel) )
+        => 99250.00000000001455192 and 99250.0 are within 1e-10% of each other with message: 
+MirrorFeatureTests.cpp:1037  CHECK_THAT( areaOn(regenerator, mirror, topFace(20)), WithinRel((100.0 - 5.0 - 5.0) * 50.0, kRel) )
+        => 4500.00000000000272848 and 4500.0 are within 1e-10% of each other with message: 
+MirrorFeatureTests.cpp:1038  CHECK_THAT( areaOn(regenerator, mirror, plane(0, 0, 0, -1, 0, 0)), WithinRel((20.0 - 3.0) * 50.0, kRel) )
+        => 850.00000000000068212 and 850.0 are within 1e-10% of each other with message: 
+MirrorFeatureTests.cpp:1039  CHECK_THAT( areaOn(regenerator, mirror, plane(100, 0, 0, 1, 0, 0)), WithinRel((20.0 - 3.0) * 50.0, kRel) )
+        => 849.99999999999897682 and 850.0 are within 1e-10% of each other with message: 
+
+== MirrorFeature_MirrorsChamferAndFilletByMirroredReferences / a chamfered hole rim: pi c^2 (r + c/3) per rim, by Pappus
+MirrorFeatureTests.cpp:1052  CHECK_THAT( volumeMm3(regenerator, eases), WithinRel(holes - 2.0 * pi * (5.0 + 1.0 / 3.0), kRel) )
+        => 96824.89702477192622609 and 96824.89702477192622609 are within 1e-10% of each other with message: 
+
+== MirrorFeature_MirrorsChamferAndFilletByMirroredReferences / a filleted hole rim: 2 pi (r + u) r_f^2 (1 - pi/4) per rim
+MirrorFeatureTests.cpp:1078  CHECK_THAT( volumeMm3(regenerator, rounds), WithinRel(holes - 2.0 * 2.0 * pi * (5.0 + centroid) * filletCorner(rf), kRel) )
+        => 96799.65305325781810097 and 96799.65305325780354906 are within 1e-10% of each other with message: 
+MirrorFeatureTests.cpp:1089  CHECK_THAT( volumeMm3(regenerator, rounds), WithinRel(holes - 2.0 * 2.0 * pi * (5.0 + smaller) * filletCorner(1.5), kRel) )
+        => 96826.03572401173005346 and 96826.03572401171550155 are within 1e-10% of each other with message: 
+
+== MirrorFeature_MirrorsChamferAndFilletByMirroredReferences / an edge the plane maps onto the feature's own edges is refused, not blended again
+MirrorFeatureTests.cpp:1117  CHECK_THAT( error.message, ContainsSubstring("of edge reference 1 (line through (0, 0, 20) mm along (0, 1, 0)) of " "the chamfer 'Bevel' is that edge itself, which is already " "chamfered") )
+        => "Mirror: mirror: the mirror image across the plane through (0, 25, 0) mm facing (0, 1, 0) of edge reference 1 (line through (0, 0, 20) mm along (0, 1, 0)) of the chamfer 'Bevel' is that edge itself, which is already chamfered, so there is nothing to mirror onto" contains: "of edge reference 1 (line through (0, 0, 20) mm along (0, 1, 0)) of the chamfer 'Bevel' is that edge itself, which is already chamfered"
+MirrorFeatureTests.cpp:1125  CHECK_THAT( volumeMm3(regenerator, mirror), WithinRel(100000.0 - 4.0 * 0.5 * 4.0 * 50.0, kRel) )
+        => 99600.00000000002910383 and 99600.0 are within 1e-10% of each other
+MirrorFeatureTests.cpp:1126  CHECK_THAT( areaOn(regenerator, mirror, plane(0, 0, 0, 0, 0, -1)), WithinRel((100.0 - 4.0) * 50.0, kRel) )
+        => 4800.00000000000181899 and 4800.0 are within 1e-10% of each other
+
+== MirrorFeature_KeepOriginalDoublesNonOverlappingBodyVolume
+MirrorFeatureTests.cpp:487  CHECK_THAT( volumeWith(MirrorScope::Feature, true), WithinRel(2000.0, kRel) )
+        => 2000.00000000000068212 and 2000.0 are within 1e-10% of each other
+MirrorFeatureTests.cpp:489  CHECK_THAT( volumeWith(MirrorScope::Body, true), WithinRel(2000.0, kRel) )
+        => 2000.00000000000068212 and 2000.0 are within 1e-10% of each other
+MirrorFeatureTests.cpp:491  CHECK_THAT( volumeWith(MirrorScope::Body, false), WithinRel(1000.0, kRel) )
+        => 1000.00000000000034106 and 1000.0 are within 1e-10% of each other
+MirrorFeatureTests.cpp:493  CHECK_THAT( volumeWith(MirrorScope::Body, true), WithinRel(2000.0, kRel) )
+        => 2000.00000000000068212 and 2000.0 are within 1e-10% of each other
+
+== MirrorFeature_RegeneratesWhenSourceChanges / a larger hole diameter changes both holes
+MirrorFeatureTests.cpp:645  CHECK_THAT( volumeMm3(regenerator, m.mirror), WithinRel(HoleMirrorModel::expectedVolume(100, 20, 12), kRel) )
+        => 95476.10657883071689866 and 95476.10657883070234675 are within 1e-10% of each other
+
+== MirrorFeature_RegeneratesWhenSourceChanges / a thicker block: both through holes stay through
+MirrorFeatureTests.cpp:658  CHECK_THAT( volumeMm3(regenerator, m.mirror), WithinRel(HoleMirrorModel::expectedVolume(100, 40, 10), kRel) )
+        => 193716.81469282045145519 and 193716.81469282042235136 are within 1e-10% of each other
+
+== MirrorFeature_RegeneratesWhenSourceChanges / moving the hole moves its mirror image: 30 -> 20 gives 70 -> 80
+MirrorFeatureTests.cpp:675  CHECK_THAT( volumeMm3(regenerator, m.mirror), WithinRel(HoleMirrorModel::expectedVolume(100, 20, 10), kRel) )
+        => 96858.4073464102257276 and 96858.40734641021117568 are within 1e-10% of each other
+
+== MirrorFeature_RegeneratesWhenSourceChanges / a wider boss: both bosses grow
+MirrorFeatureTests.cpp:685  CHECK_THAT( volumeMm3(regenerator, m.mirror), WithinRel(50000.0 + 2.0 * 14.0 * 14.0 * 5.0, kRel) )
+        => 51960.00000000002182787 and 51960.0 are within 1e-10% of each other
+
+== MirrorFeature_WorksWithRevolvedBody
+MirrorFeatureTests.cpp:894  CHECK_THAT( volumeMm3(regenerator, pair), WithinRel(2.0 * pi * 225.0 * 40.0, kRel) )
+        => 56548.66776461626432138 and 56548.66776461627159733 are within 1e-10% of each other with message: 
+MirrorFeatureTests.cpp:895  CHECK_THAT( body.boundingBox()->min.x.in(units::mm), WithinAbs(-15.0, kPositionToleranceMm) )
+        => -14.99999999999999645 is within 0.000000001 of -15.0 with message: 
+MirrorFeatureTests.cpp:896  CHECK_THAT( body.boundingBox()->max.x.in(units::mm), WithinAbs(75.0, kPositionToleranceMm) )
+        => 75.0 is within 0.000000001 of 75.0 with message: 
+MirrorFeatureTests.cpp:901  CHECK_THAT( volumeMm3(regenerator, pair), WithinRel(2.0 * 0.75 * pi * 225.0 * 40.0, kRel) )
+        => 42411.50082346220733598 and 42411.50082346220733598 are within 1e-10% of each other with message: 
+MirrorFeatureTests.cpp:911  CHECK_THAT( volumeMm3(regenerator, image), WithinRel(TurnedPartModel::expectedVolume(15, 40, 360, 5), kRel) )
+        => 24253.09528571319242474 and 24253.09528571320333867 are within 1e-10% of each other with message: 
+MirrorFeatureTests.cpp:912  CHECK_THAT( requireBody(regenerator, image).boundingBox()->min.x.in(units::mm), WithinAbs(45.0, kPositionToleranceMm) )
+        => 45.0 is within 0.000000001 of 45.0 with message: 
+MirrorFeatureTests.cpp:926  CHECK_THAT( volumeMm3(cutRegenerator, both), WithinRel(7440.0 * pi, kRel) )
+        => 23373.44934270803787513 and 23373.449342708059703 are within 1e-10% of each other with message: 
+
+== MirrorFeature_BodyScopeMirrorsTheWholeBody / the drilled block across its end face
+MirrorFeatureTests.cpp:1157  CHECK_THAT( volumeMm3(regenerator, pair), WithinRel(2.0 * HoleBlockModel::expectedVolume(100, 50, 20, 10), kRel) )
+        => 196858.407346410327591 and 196858.40734641021117568 are within 1e-10% of each other
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 200.0 is within 0.000000001 of 200.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 50.00000000000004263 is within 0.000000001 of 50.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 20.0 is within 0.000000001 of 20.0
+MirrorFeatureTests.cpp:1166  CHECK_THAT( volumeMm3(regenerator, pair), WithinRel(HoleBlockModel::expectedVolume(100, 50, 20, 10), kRel) )
+        => 98429.20367320513469167 and 98429.20367320510558784 are within 1e-10% of each other
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 100.0 is within 0.000000001 of 100.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0
+MirrorFeatureTests.cpp:1176  CHECK_THAT( volumeMm3(regenerator, extra), WithinRel(100000.0 - 1000.0 * pi, kRel) )
+        => 96858.40734641021117568 and 96858.40734641021117568 are within 1e-10% of each other
+
+== MirrorFeature_BodyScopeMirrorsTheWholeBody / a linear pattern's body (a pattern cannot be repeated, but its body can be mirrored)
+MirrorFeatureTests.cpp:1189  CHECK_THAT( volumeMm3(regenerator, pair), WithinRel(2.0 * HoleRowModel::expectedVolume(120, 20, 10, 5), kRel) )
+        => 224292.03673205111408606 and 224292.03673205102677457 are within 1e-10% of each other with message: 
+
+== MirrorFeature_RejectsNonFinitePlane
+MirrorFeatureTests.cpp:738  CHECK_THAT( refused.message, StartsWith("the plane's normal must be a finite, non-zero vector, got ") )
+        => "the plane's normal must be a finite, non-zero vector, got (nan, 0, 0)" starts with: "the plane's normal must be a finite, non-zero vector, got " with message: bad[0] := nan; bad[1] := 0.0; bad[2] := 0.0
+MirrorFeatureTests.cpp:738  CHECK_THAT( refused.message, StartsWith("the plane's normal must be a finite, non-zero vector, got ") )
+        => "the plane's normal must be a finite, non-zero vector, got (0, inf, 0)" starts with: "the plane's normal must be a finite, non-zero vector, got " with message: bad[0] := 0.0; bad[1] := inf; bad[2] := 0.0
+MirrorFeatureTests.cpp:738  CHECK_THAT( refused.message, StartsWith("the plane's normal must be a finite, non-zero vector, got ") )
+        => "the plane's normal must be a finite, non-zero vector, got (1, 0, -inf)" starts with: "the plane's normal must be a finite, non-zero vector, got " with message: bad[0] := 1.0; bad[1] := 0.0; bad[2] := -inf
+
+== MirrorFeature_FailsAtomicallyWhenMirroredFeatureInvalid / the mirror image of the hole lands 2 mm from the block's end
+MirrorFeatureTests.cpp:762  CHECK_THAT( error.message, StartsWith("Mirror: mirror: the mirror image across the plane through (64, 0, 0) mm facing (1, 0, " "0): hole: the hole does not fit on its face: its entry is 10 mm across, but the centre " "(98, 25) mm is only ") )
+        => "Mirror: mirror: the mirror image across the plane through (64, 0, 0) mm facing (1, 0, 0): hole: the hole does not fit on its face: its entry is 10 mm across, but the centre (98, 25) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face)" starts with: "Mirror: mirror: the mirror image across the plane through (64, 0, 0) mm facing (1, 0, 0): hole: the hole does not fit on its face: its entry is 10 mm across, but the centre (98, 25) mm is only "
+MirrorFeatureTests.cpp:766  CHECK_THAT( error.message, ContainsSubstring("2 mm from the face's edge") )
+        => "Mirror: mirror: the mirror image across the plane through (64, 0, 0) mm facing (1, 0, 0): hole: the hole does not fit on its face: its entry is 10 mm across, but the centre (98, 25) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face)" contains: "2 mm from the face's edge"
+
+== MirrorFeature_FailsAtomicallyWhenMirroredFeatureInvalid / the mirror image of the hole lands beyond the block
+MirrorFeatureTests.cpp:780  CHECK_THAT( error.message, StartsWith("Mirror: mirror: the mirror image across the plane through (80, 0, 0) mm " "facing (1, 0, 0): hole: the centre (130, 25) mm is not on a face of the " "body") )
+        => "Mirror: mirror: the mirror image across the plane through (80, 0, 0) mm facing (1, 0, 0): hole: the centre (130, 25) mm is not on a face of the body on the plane through (0, 0, 0) mm facing (0, 0, -1) (1 face(s) lie on that plane elsewhere)" starts with: "Mirror: mirror: the mirror image across the plane through (80, 0, 0) mm facing (1, 0, 0): hole: the centre (130, 25) mm is not on a face of the body"
+
+== MirrorFeature_DoubleMirrorReturnsOriginal
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 15.77777777777777679 is within 0.000000001 of 15.77777777777777857 with message: 
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -8.44444444444444464 is within 0.000000001 of -8.44444444444444287 with message: 
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => -8.44444444444444464 is within 0.000000001 of -8.44444444444444287 with message: 
+MirrorFeatureTests.cpp:468  CHECK_THAT( twice.volume.in(units::mm3), WithinRel(source.volume.in(units::mm3), kRel) )
+        => 1000.00000000000034106 and 1000.00000000000034106 are within 1e-10% of each other with message: 
+MirrorFeatureTests.cpp:469  CHECK_THAT( twice.surfaceArea.in(units::mm2), WithinRel(source.surfaceArea.in(units::mm2), kRel) )
+        => 600.00000000000011369 and 600.0 are within 1e-10% of each other with message: 
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 20.00000000000000355 is within 0.000000001 of 20.0 with message: 
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 0.00000000000000172 is within 0.000000001 of 0.0 with message: 
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => -0.00000000000000125 is within 0.000000001 of 0.0 with message: 
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 14.99999999999999645 is within 0.000000001 of 15.0 with message: 
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -5.00000000000000178 is within 0.000000001 of -5.0 with message: 
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => -5.00000000000000089 is within 0.000000001 of -5.0 with message: 
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 25.00000000000000711 is within 0.000000001 of 25.0 with message: 
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 5.00000000000000533 is within 0.000000001 of 5.0 with message: 
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 5.00000000000000178 is within 0.000000001 of 5.0 with message: 
+
+== MirrorFeature_UndoRedoRestoresGeometry
+MirrorFeatureTests.cpp:822  CHECK_THAT( states.back().volume, WithinRel(HoleMirrorModel::expectedVolume(100, 20, 10), kRel) )
+        => 96858.4073464102257276 and 96858.40734641021117568 are within 1e-10% of each other
+MirrorFeatureTests.cpp:832  CHECK_THAT( states.back().volume, WithinRel(HoleMirrorModel::expectedVolume(100, 20, 10, 1), kRel) )
+        => 98429.20367320513469167 and 98429.20367320510558784 are within 1e-10% of each other
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -18.00000000000004263 is within 0.000000001 of -18.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0
+MirrorFeatureTests.cpp:837  CHECK_THAT( states.back().volume, WithinRel(100.0 * 68.0 * 20.0, kRel) )
+        => 136000.00000000014551915 and 136000.0 are within 1e-10% of each other
+
+== RigidTransform_ReflectionMatchesPointFormula
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 0.00000000000000087 is within 0.00000000000001 of 0.0
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => -2.99999999999999911 is within 0.00000000000001 of -3.0
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 3.0 is within 0.00000000000001 of 3.0
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 0.00000000000000087 is within 0.00000000000001 of 0.00000000000000089
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => -2.99999999999999911 is within 0.00000000000001 of -2.99999999999999911
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 3.0 is within 0.00000000000001 of 3.0
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => -9.99999999999999822 is within 0.000000000001 of -10.0
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 2.0 is within 0.000000000001 of 2.0
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 3.0 is within 0.000000000001 of 3.0
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => -40.0 is within 0.000000000001 of -40.0 with message: n[0] := 1.0; n[1] := 0.0; n[2] := 0.0; o[0] := 0.0
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 10.0 is within 0.000000000001 of 10.0 with message: n[0] := 1.0; n[1] := 0.0; n[2] := 0.0; o[0] := 0.0
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 20.0 is within 0.000000000001 of 20.0 with message: n[0] := 1.0; n[1] := 0.0; n[2] := 0.0; o[0] := 0.0
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 3.0 is within 0.000000000001 of 3.0 with message: n[0] := 1.0; n[1] := 0.0; n[2] := 0.0; o[0] := 0.0
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 0.5 is within 0.000000000001 of 0.5 with message: n[0] := 1.0; n[1] := 0.0; n[2] := 0.0; o[0] := 0.0
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 11.0 is within 0.000000000001 of 11.0 with message: n[0] := 1.0; n[1] := 0.0; n[2] := 0.0; o[0] := 0.0
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: n[0] := 1.0; n[1] := 0.0; n[2] := 0.0; o[0] := 0.0
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: n[0] := 1.0; n[1] := 0.0; n[2] := 0.0; o[0] := 0.0
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: n[0] := 1.0; n[1] := 0.0; n[2] := 0.0; o[0] := 0.0
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => -0.33333333333333331 is within 0.000000000000001 of -0.33333333333333331 with message: n[0] := 1.0; n[1] := 0.0; n[2] := 0.0; o[0] := 0.0
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 0.66666666666666663 is within 0.000000000000001 of 0.66666666666666663 with message: n[0] := 1.0; n[1] := 0.0; n[2] := 0.0; o[0] := 0.0
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 0.66666666666666663 is within 0.000000000000001 of 0.66666666666666663 with message: n[0] := 1.0; n[1] := 0.0; n[2] := 0.0; o[0] := 0.0
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => -15.0 is within 0.000000000001 of -15.0 with message: n[0] := 1.0; n[1] := 0.0; n[2] := 0.0; o[0] := 12.5
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 10.0 is within 0.000000000001 of 10.0 with message: n[0] := 1.0; n[1] := 0.0; n[2] := 0.0; o[0] := 12.5
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 20.0 is within 0.000000000001 of 20.0 with message: n[0] := 1.0; n[1] := 0.0; n[2] := 0.0; o[0] := 12.5
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 28.0 is within 0.000000000001 of 28.0 with message: n[0] := 1.0; n[1] := 0.0; n[2] := 0.0; o[0] := 12.5
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 0.5 is within 0.000000000001 of 0.5 with message: n[0] := 1.0; n[1] := 0.0; n[2] := 0.0; o[0] := 12.5
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 11.0 is within 0.000000000001 of 11.0 with message: n[0] := 1.0; n[1] := 0.0; n[2] := 0.0; o[0] := 12.5
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 25.0 is within 0.000000000001 of 25.0 with message: n[0] := 1.0; n[1] := 0.0; n[2] := 0.0; o[0] := 12.5
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: n[0] := 1.0; n[1] := 0.0; n[2] := 0.0; o[0] := 12.5
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: n[0] := 1.0; n[1] := 0.0; n[2] := 0.0; o[0] := 12.5
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => -0.33333333333333331 is within 0.000000000000001 of -0.33333333333333331 with message: n[0] := 1.0; n[1] := 0.0; n[2] := 0.0; o[0] := 12.5
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 0.66666666666666663 is within 0.000000000000001 of 0.66666666666666663 with message: n[0] := 1.0; n[1] := 0.0; n[2] := 0.0; o[0] := 12.5
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 0.66666666666666663 is within 0.000000000000001 of 0.66666666666666663 with message: n[0] := 1.0; n[1] := 0.0; n[2] := 0.0; o[0] := 12.5
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 40.0 is within 0.000000000001 of 40.0 with message: n[0] := 0.0; n[1] := 1.0; n[2] := 0.0; o[0] := 0.0
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => -10.0 is within 0.000000000001 of -10.0 with message: n[0] := 0.0; n[1] := 1.0; n[2] := 0.0; o[0] := 0.0
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 20.0 is within 0.000000000001 of 20.0 with message: n[0] := 0.0; n[1] := 1.0; n[2] := 0.0; o[0] := 0.0
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => -3.0 is within 0.000000000001 of -3.0 with message: n[0] := 0.0; n[1] := 1.0; n[2] := 0.0; o[0] := 0.0
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => -0.5 is within 0.000000000001 of -0.5 with message: n[0] := 0.0; n[1] := 1.0; n[2] := 0.0; o[0] := 0.0
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 11.0 is within 0.000000000001 of 11.0 with message: n[0] := 0.0; n[1] := 1.0; n[2] := 0.0; o[0] := 0.0
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: n[0] := 0.0; n[1] := 1.0; n[2] := 0.0; o[0] := 0.0
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: n[0] := 0.0; n[1] := 1.0; n[2] := 0.0; o[0] := 0.0
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: n[0] := 0.0; n[1] := 1.0; n[2] := 0.0; o[0] := 0.0
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 0.33333333333333331 is within 0.000000000000001 of 0.33333333333333331 with message: n[0] := 0.0; n[1] := 1.0; n[2] := 0.0; o[0] := 0.0
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => -0.66666666666666663 is within 0.000000000000001 of -0.66666666666666663 with message: n[0] := 0.0; n[1] := 1.0; n[2] := 0.0; o[0] := 0.0
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 0.66666666666666663 is within 0.000000000000001 of 0.66666666666666663 with message: n[0] := 0.0; n[1] := 1.0; n[2] := 0.0; o[0] := 0.0
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 40.0 is within 0.000000000001 of 40.0 with message: n[0] := 0.0; n[1] := 1.0; n[2] := 0.0; o[0] := 12.5
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => -18.00000000000000355 is within 0.000000000001 of -18.0 with message: n[0] := 0.0; n[1] := 1.0; n[2] := 0.0; o[0] := 12.5
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 20.0 is within 0.000000000001 of 20.0 with message: n[0] := 0.0; n[1] := 1.0; n[2] := 0.0; o[0] := 12.5
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => -3.0 is within 0.000000000001 of -3.0 with message: n[0] := 0.0; n[1] := 1.0; n[2] := 0.0; o[0] := 12.5
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => -8.5 is within 0.000000000001 of -8.5 with message: n[0] := 0.0; n[1] := 1.0; n[2] := 0.0; o[0] := 12.5
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 11.0 is within 0.000000000001 of 11.0 with message: n[0] := 0.0; n[1] := 1.0; n[2] := 0.0; o[0] := 12.5
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: n[0] := 0.0; n[1] := 1.0; n[2] := 0.0; o[0] := 12.5
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => -8.0 is within 0.000000000001 of -8.0 with message: n[0] := 0.0; n[1] := 1.0; n[2] := 0.0; o[0] := 12.5
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: n[0] := 0.0; n[1] := 1.0; n[2] := 0.0; o[0] := 12.5
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 0.33333333333333331 is within 0.000000000000001 of 0.33333333333333331 with message: n[0] := 0.0; n[1] := 1.0; n[2] := 0.0; o[0] := 12.5
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => -0.66666666666666663 is within 0.000000000000001 of -0.66666666666666663 with message: n[0] := 0.0; n[1] := 1.0; n[2] := 0.0; o[0] := 12.5
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 0.66666666666666663 is within 0.000000000000001 of 0.66666666666666663 with message: n[0] := 0.0; n[1] := 1.0; n[2] := 0.0; o[0] := 12.5
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 40.0 is within 0.000000000001 of 40.0 with message: n[0] := 0.0; n[1] := 0.0; n[2] := 1.0; o[0] := 0.0
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 10.0 is within 0.000000000001 of 10.0 with message: n[0] := 0.0; n[1] := 0.0; n[2] := 1.0; o[0] := 0.0
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => -20.0 is within 0.000000000001 of -20.0 with message: n[0] := 0.0; n[1] := 0.0; n[2] := 1.0; o[0] := 0.0
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => -3.0 is within 0.000000000001 of -3.0 with message: n[0] := 0.0; n[1] := 0.0; n[2] := 1.0; o[0] := 0.0
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 0.5 is within 0.000000000001 of 0.5 with message: n[0] := 0.0; n[1] := 0.0; n[2] := 1.0; o[0] := 0.0
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => -11.0 is within 0.000000000001 of -11.0 with message: n[0] := 0.0; n[1] := 0.0; n[2] := 1.0; o[0] := 0.0
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: n[0] := 0.0; n[1] := 0.0; n[2] := 1.0; o[0] := 0.0
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: n[0] := 0.0; n[1] := 0.0; n[2] := 1.0; o[0] := 0.0
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: n[0] := 0.0; n[1] := 0.0; n[2] := 1.0; o[0] := 0.0
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 0.33333333333333331 is within 0.000000000000001 of 0.33333333333333331 with message: n[0] := 0.0; n[1] := 0.0; n[2] := 1.0; o[0] := 0.0
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 0.66666666666666663 is within 0.000000000000001 of 0.66666666666666663 with message: n[0] := 0.0; n[1] := 0.0; n[2] := 1.0; o[0] := 0.0
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => -0.66666666666666663 is within 0.000000000000001 of -0.66666666666666663 with message: n[0] := 0.0; n[1] := 0.0; n[2] := 1.0; o[0] := 0.0
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 40.0 is within 0.000000000001 of 40.0 with message: n[0] := 0.0; n[1] := 0.0; n[2] := 1.0; o[0] := 12.5
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 10.0 is within 0.000000000001 of 10.0 with message: n[0] := 0.0; n[1] := 0.0; n[2] := 1.0; o[0] := 12.5
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 39.99999999999999289 is within 0.000000000001 of 40.0 with message: n[0] := 0.0; n[1] := 0.0; n[2] := 1.0; o[0] := 12.5
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => -3.0 is within 0.000000000001 of -3.0 with message: n[0] := 0.0; n[1] := 0.0; n[2] := 1.0; o[0] := 12.5
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 0.5 is within 0.000000000001 of 0.5 with message: n[0] := 0.0; n[1] := 0.0; n[2] := 1.0; o[0] := 12.5
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 49.0 is within 0.000000000001 of 49.0 with message: n[0] := 0.0; n[1] := 0.0; n[2] := 1.0; o[0] := 12.5
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: n[0] := 0.0; n[1] := 0.0; n[2] := 1.0; o[0] := 12.5
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: n[0] := 0.0; n[1] := 0.0; n[2] := 1.0; o[0] := 12.5
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 60.0 is within 0.000000000001 of 60.0 with message: n[0] := 0.0; n[1] := 0.0; n[2] := 1.0; o[0] := 12.5
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 0.33333333333333331 is within 0.000000000000001 of 0.33333333333333331 with message: n[0] := 0.0; n[1] := 0.0; n[2] := 1.0; o[0] := 12.5
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 0.66666666666666663 is within 0.000000000000001 of 0.66666666666666663 with message: n[0] := 0.0; n[1] := 0.0; n[2] := 1.0; o[0] := 12.5
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => -0.66666666666666663 is within 0.000000000000001 of -0.66666666666666663 with message: n[0] := 0.0; n[1] := 0.0; n[2] := 1.0; o[0] := 12.5
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => -9.99999999999998934 is within 0.000000000001 of -9.99999999999998579 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 0.0; o[0] := 0.0
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => -39.99999999999999289 is within 0.000000000001 of -39.99999999999998579 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 0.0; o[0] := 0.0
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 20.0 is within 0.000000000001 of 20.0 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 0.0; o[0] := 0.0
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => -0.50000000000000056 is within 0.000000000001 of -0.50000000000000044 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 0.0; o[0] := 0.0
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 2.99999999999999911 is within 0.000000000001 of 2.99999999999999956 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 0.0; o[0] := 0.0
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 11.0 is within 0.000000000001 of 11.0 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 0.0; o[0] := 0.0
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 0.0; o[0] := 0.0
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 0.0; o[0] := 0.0
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 0.0; o[0] := 0.0
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => -0.66666666666666641 is within 0.000000000000001 of -0.66666666666666652 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 0.0; o[0] := 0.0
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => -0.33333333333333309 is within 0.000000000000001 of -0.33333333333333315 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 0.0; o[0] := 0.0
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 0.66666666666666663 is within 0.000000000000001 of 0.66666666666666663 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 0.0; o[0] := 0.0
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => -1.4999999999999909 is within 0.000000000001 of -1.49999999999999289 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 0.0; o[0] := 12.5
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => -31.49999999999999289 is within 0.000000000001 of -31.49999999999999289 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 0.0; o[0] := 12.5
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 20.0 is within 0.000000000001 of 20.0 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 0.0; o[0] := 12.5
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 7.99999999999999822 is within 0.000000000001 of 7.99999999999999822 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 0.0; o[0] := 12.5
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 11.49999999999999822 is within 0.000000000001 of 11.49999999999999822 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 0.0; o[0] := 12.5
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 11.0 is within 0.000000000001 of 11.0 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 0.0; o[0] := 12.5
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 8.49999999999999822 is within 0.000000000001 of 8.49999999999999822 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 0.0; o[0] := 12.5
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 8.49999999999999822 is within 0.000000000001 of 8.49999999999999822 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 0.0; o[0] := 12.5
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 0.0; o[0] := 12.5
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => -0.66666666666666641 is within 0.000000000000001 of -0.66666666666666652 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 0.0; o[0] := 12.5
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => -0.33333333333333309 is within 0.000000000000001 of -0.33333333333333315 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 0.0; o[0] := 12.5
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 0.66666666666666663 is within 0.000000000000001 of 0.66666666666666663 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 0.0; o[0] := 12.5
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => -6.66666666666668117 is within 0.000000000001 of -6.66666666666667851 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 1.0; o[0] := 0.0
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => -36.66666666666667851 is within 0.000000000001 of -36.66666666666667851 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 1.0; o[0] := 0.0
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => -26.66666666666668561 is within 0.000000000001 of -26.66666666666667851 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 1.0; o[0] := 0.0
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => -8.66666666666666785 is within 0.000000000001 of -8.66666666666666785 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 1.0; o[0] := 0.0
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => -5.16666666666666874 is within 0.000000000001 of -5.16666666666666874 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 1.0; o[0] := 0.0
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 5.33333333333333126 is within 0.000000000001 of 5.33333333333333126 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 1.0; o[0] := 0.0
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 1.0; o[0] := 0.0
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 1.0; o[0] := 0.0
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 1.0; o[0] := 0.0
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => -0.77777777777777801 is within 0.000000000000001 of -0.7777777777777779 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 1.0; o[0] := 0.0
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => -0.4444444444444447 is within 0.000000000000001 of -0.44444444444444453 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 1.0; o[0] := 0.0
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => -0.44444444444444464 is within 0.000000000000001 of -0.44444444444444453 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 1.0; o[0] := 0.0
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 18.99999999999998934 is within 0.000000000001 of 18.99999999999999289 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 1.0; o[0] := 12.5
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => -11.00000000000000711 is within 0.000000000001 of -11.00000000000000711 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 1.0; o[0] := 12.5
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => -1.00000000000001132 is within 0.000000000001 of -1.00000000000000711 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 1.0; o[0] := 12.5
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 17.0 is within 0.000000000001 of 17.00000000000000355 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 1.0; o[0] := 12.5
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 20.50000000000000355 is within 0.000000000001 of 20.50000000000000355 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 1.0; o[0] := 12.5
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 31.00000000000000711 is within 0.000000000001 of 31.00000000000000355 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 1.0; o[0] := 12.5
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 25.6666666666666714 is within 0.000000000001 of 25.6666666666666714 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 1.0; o[0] := 12.5
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 25.66666666666667496 is within 0.000000000001 of 25.6666666666666714 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 1.0; o[0] := 12.5
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 25.66666666666667496 is within 0.000000000001 of 25.6666666666666714 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 1.0; o[0] := 12.5
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => -0.77777777777777801 is within 0.000000000000001 of -0.7777777777777779 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 1.0; o[0] := 12.5
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => -0.4444444444444447 is within 0.000000000000001 of -0.44444444444444453 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 1.0; o[0] := 12.5
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => -0.44444444444444464 is within 0.000000000000001 of -0.44444444444444453 with message: n[0] := 1.0; n[1] := 1.0; n[2] := 1.0; o[0] := 12.5
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 28.5714285714285694 is within 0.000000000001 of 28.5714285714285694 with message: n[0] := 1.0; n[1] := -2.0; n[2] := 3.0; o[0] := 0.0
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 32.8571428571428612 is within 0.000000000001 of 32.8571428571428612 with message: n[0] := 1.0; n[1] := -2.0; n[2] := 3.0; o[0] := 0.0
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => -14.28571428571429891 is within 0.000000000001 of -14.2857142857142847 with message: n[0] := 1.0; n[1] := -2.0; n[2] := 3.0; o[0] := 0.0
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => -7.14285714285714324 is within 0.000000000001 of -7.14285714285714324 with message: n[0] := 1.0; n[1] := -2.0; n[2] := 3.0; o[0] := 0.0
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 8.78571428571428648 is within 0.000000000001 of 8.78571428571428648 with message: n[0] := 1.0; n[1] := -2.0; n[2] := 3.0; o[0] := 0.0
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => -1.42857142857143393 is within 0.000000000001 of -1.42857142857142883 with message: n[0] := 1.0; n[1] := -2.0; n[2] := 3.0; o[0] := 0.0
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: n[0] := 1.0; n[1] := -2.0; n[2] := 3.0; o[0] := 0.0
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: n[0] := 1.0; n[1] := -2.0; n[2] := 3.0; o[0] := 0.0
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: n[0] := 1.0; n[1] := -2.0; n[2] := 3.0; o[0] := 0.0
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 0.19047619047619041 is within 0.000000000000001 of 0.19047619047619044 with message: n[0] := 1.0; n[1] := -2.0; n[2] := 3.0; o[0] := 0.0
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 0.95238095238095233 is within 0.000000000000001 of 0.95238095238095233 with message: n[0] := 1.0; n[1] := -2.0; n[2] := 3.0; o[0] := 0.0
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 0.23809523809523778 is within 0.000000000000001 of 0.23809523809523803 with message: n[0] := 1.0; n[1] := -2.0; n[2] := 3.0; o[0] := 0.0
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 44.3571428571428612 is within 0.000000000001 of 44.3571428571428612 with message: n[0] := 1.0; n[1] := -2.0; n[2] := 3.0; o[0] := 12.5
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 1.28571428571428581 is within 0.000000000001 of 1.2857142857142847 with message: n[0] := 1.0; n[1] := -2.0; n[2] := 3.0; o[0] := 12.5
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 33.0714285714285765 is within 0.000000000001 of 33.0714285714285694 with message: n[0] := 1.0; n[1] := -2.0; n[2] := 3.0; o[0] := 12.5
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 8.64285714285714413 is within 0.000000000001 of 8.64285714285714413 with message: n[0] := 1.0; n[1] := -2.0; n[2] := 3.0; o[0] := 12.5
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => -22.7857142857142918 is within 0.000000000001 of -22.78571428571428825 with message: n[0] := 1.0; n[1] := -2.0; n[2] := 3.0; o[0] := 12.5
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 45.92857142857144481 is within 0.000000000001 of 45.92857142857143771 with message: n[0] := 1.0; n[1] := -2.0; n[2] := 3.0; o[0] := 12.5
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 15.78571428571428825 is within 0.000000000001 of 15.78571428571428648 with message: n[0] := 1.0; n[1] := -2.0; n[2] := 3.0; o[0] := 12.5
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => -31.5714285714285765 is within 0.000000000001 of -31.57142857142857295 with message: n[0] := 1.0; n[1] := -2.0; n[2] := 3.0; o[0] := 12.5
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 47.35714285714287541 is within 0.000000000001 of 47.3571428571428612 with message: n[0] := 1.0; n[1] := -2.0; n[2] := 3.0; o[0] := 12.5
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 0.19047619047619041 is within 0.000000000000001 of 0.19047619047619044 with message: n[0] := 1.0; n[1] := -2.0; n[2] := 3.0; o[0] := 12.5
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 0.95238095238095233 is within 0.000000000000001 of 0.95238095238095233 with message: n[0] := 1.0; n[1] := -2.0; n[2] := 3.0; o[0] := 12.5
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 0.23809523809523778 is within 0.000000000000001 of 0.23809523809523803 with message: n[0] := 1.0; n[1] := -2.0; n[2] := 3.0; o[0] := 12.5
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 44.6153846153846132 is within 0.000000000001 of 44.6153846153846132 with message: n[0] := -0.29999999999999999; n[1] := 0.10000000000000001; n[2] := 0.90000000000000002; o[0] := 0.0
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 8.46153846153846168 is within 0.000000000001 of 8.46153846153846168 with message: n[0] := -0.29999999999999999; n[1] := 0.10000000000000001; n[2] := 0.90000000000000002; o[0] := 0.0
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 6.15384615384614886 is within 0.000000000001 of 6.15384615384615152 with message: n[0] := -0.29999999999999999; n[1] := 0.10000000000000001; n[2] := 0.90000000000000002; o[0] := 0.0
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 4.15384615384615241 is within 0.000000000001 of 4.15384615384615241 with message: n[0] := -0.29999999999999999; n[1] := 0.10000000000000001; n[2] := 0.90000000000000002; o[0] := 0.0
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => -1.88461538461538414 is within 0.000000000001 of -1.88461538461538458 with message: n[0] := -0.29999999999999999; n[1] := 0.10000000000000001; n[2] := 0.90000000000000002; o[0] := 0.0
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => -10.4615384615384599 is within 0.000000000001 of -10.4615384615384599 with message: n[0] := -0.29999999999999999; n[1] := 0.10000000000000001; n[2] := 0.90000000000000002; o[0] := 0.0
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: n[0] := -0.29999999999999999; n[1] := 0.10000000000000001; n[2] := 0.90000000000000002; o[0] := 0.0
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: n[0] := -0.29999999999999999; n[1] := 0.10000000000000001; n[2] := 0.90000000000000002; o[0] := 0.0
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: n[0] := -0.29999999999999999; n[1] := 0.10000000000000001; n[2] := 0.90000000000000002; o[0] := 0.0
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 0.70695970695970689 is within 0.000000000000001 of 0.70695970695970689 with message: n[0] := -0.29999999999999999; n[1] := 0.10000000000000001; n[2] := 0.90000000000000002; o[0] := 0.0
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 0.54212454212454209 is within 0.000000000000001 of 0.54212454212454209 with message: n[0] := -0.29999999999999999; n[1] := 0.10000000000000001; n[2] := 0.90000000000000002; o[0] := 0.0
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => -0.45421245421245415 is within 0.000000000000001 of -0.45421245421245404 with message: n[0] := -0.29999999999999999; n[1] := 0.10000000000000001; n[2] := 0.90000000000000002; o[0] := 0.0
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 29.54945054945055105 is within 0.000000000001 of 29.54945054945055105 with message: n[0] := -0.29999999999999999; n[1] := 0.10000000000000001; n[2] := 0.90000000000000002; o[0] := 12.5
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 13.4835164835164818 is within 0.000000000001 of 13.48351648351648358 with message: n[0] := -0.29999999999999999; n[1] := 0.10000000000000001; n[2] := 0.90000000000000002; o[0] := 12.5
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 51.35164835164834329 is within 0.000000000001 of 51.3516483516483504 with message: n[0] := -0.29999999999999999; n[1] := 0.10000000000000001; n[2] := 0.90000000000000002; o[0] := 12.5
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => -10.91208791208790707 is within 0.000000000001 of -10.9120879120879124 with message: n[0] := -0.29999999999999999; n[1] := 0.10000000000000001; n[2] := 0.90000000000000002; o[0] := 12.5
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 3.13736263736263599 is within 0.000000000001 of 3.13736263736263776 with message: n[0] := -0.29999999999999999; n[1] := 0.10000000000000001; n[2] := 0.90000000000000002; o[0] := 12.5
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 34.7362637362637372 is within 0.000000000001 of 34.7362637362637372 with message: n[0] := -0.29999999999999999; n[1] := 0.10000000000000001; n[2] := 0.90000000000000002; o[0] := 12.5
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => -15.06593406593406037 is within 0.000000000001 of -15.06593406593406392 with message: n[0] := -0.29999999999999999; n[1] := 0.10000000000000001; n[2] := 0.90000000000000002; o[0] := 12.5
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 5.02197802197802012 is within 0.000000000001 of 5.0219780219780219 with message: n[0] := -0.29999999999999999; n[1] := 0.10000000000000001; n[2] := 0.90000000000000002; o[0] := 12.5
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 45.19780219780218999 is within 0.000000000001 of 45.1978021978021971 with message: n[0] := -0.29999999999999999; n[1] := 0.10000000000000001; n[2] := 0.90000000000000002; o[0] := 12.5
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 0.70695970695970689 is within 0.000000000000001 of 0.70695970695970689 with message: n[0] := -0.29999999999999999; n[1] := 0.10000000000000001; n[2] := 0.90000000000000002; o[0] := 12.5
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => 0.54212454212454209 is within 0.000000000000001 of 0.54212454212454209 with message: n[0] := -0.29999999999999999; n[1] := 0.10000000000000001; n[2] := 0.90000000000000002; o[0] := 12.5
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => -0.45421245421245415 is within 0.000000000000001 of -0.45421245421245404 with message: n[0] := -0.29999999999999999; n[1] := 0.10000000000000001; n[2] := 0.90000000000000002; o[0] := 12.5
+
+== Transform_MirroredReferencesDescribeTheMirroredGeometry / edges
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 70.0 is within 0.000000001 of 70.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 25.0 is within 0.000000001 of 25.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 20.0 is within 0.000000001 of 20.0
+TransformTests.cpp:302  CHECK_THAT( image.direction.z(), WithinAbs(1.0, 1e-15) )
+        => 1.0 is within 0.000000000000001 of 1.0
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 70.0 is within 0.000000001 of 70.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0
+TransformTests.cpp:319  CHECK_THAT( ringImage.direction.x(), WithinAbs(1.0, 1e-15) )
+        => 1.0 is within 0.000000000000001 of 1.0
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 100.0 is within 0.000000001 of 100.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 20.0 is within 0.000000001 of 20.0
+TransformTests.cpp:323  CHECK_THAT( std::abs(line.direction.y()), WithinAbs(1.0, 1e-15) )
+        => 1.0 is within 0.000000000000001 of 1.0
+
+== Transform_MirroredReferencesDescribeTheMirroredGeometry / faces
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 20.0 is within 0.000000001 of 20.0
+TransformTests.cpp:331  CHECK_THAT( topImage.normal.z(), WithinAbs(1.0, 1e-15) )
+        => 1.0 is within 0.000000000000001 of 1.0
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 100.0 is within 0.000000001 of 100.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0
+TransformTests.cpp:335  CHECK_THAT( leftImage.normal.x(), WithinAbs(1.0, 1e-15) )
+        => 1.0 is within 0.000000000000001 of 1.0
+
+== Transform_MirroredReferencesDescribeTheMirroredGeometry / holes
+TransformTests.cpp:344  CHECK_THAT( image.center.x.in(units::mm), WithinAbs(70.0, kPositionToleranceMm) )
+        => 70.0 is within 0.000000001 of 70.0
+TransformTests.cpp:345  CHECK_THAT( image.center.y.in(units::mm), WithinAbs(25.0, kPositionToleranceMm) )
+        => 25.0 is within 0.000000001 of 25.0
+TransformTests.cpp:353  CHECK_THAT( above.center.x.in(units::mm), WithinAbs(30.0, kPositionToleranceMm) )
+        => 30.0 is within 0.000000001 of 30.0
+TransformTests.cpp:354  CHECK_THAT( above.center.y.in(units::mm), WithinAbs(25.0, kPositionToleranceMm) )
+        => 25.0 is within 0.000000001 of 25.0
+TransformTests.cpp:362  CHECK_THAT( requireProperties(*two).volume.in(units::mm3), WithinRel(100000.0 - 1000.0 * std::numbers::pi, kRelTight) )
+        => 96858.40734641018207185 and 96858.40734641021117568 are within 1e-10% of each other
+
+== MirrorFeature_ArbitraryPlaneMatchesAnalyticPointReflection / the reference point: (4, 1, 3) across (1, 0, 0), normal (1, 1, 0)
+MirrorFeatureTests.cpp:350  CHECK_THAT( expected[0], WithinAbs(0.0, 1e-14) )
+        => 0.0 is within 0.00000000000001 of 0.0
+MirrorFeatureTests.cpp:351  CHECK_THAT( expected[1], WithinAbs(-3.0, 1e-14) )
+        => -3.0 is within 0.00000000000001 of -3.0
+MirrorFeatureTests.cpp:352  CHECK_THAT( expected[2], WithinAbs(3.0, 1e-14) )
+        => 3.0 is within 0.00000000000001 of 3.0
+MirrorFeatureTests.cpp:357  CHECK( error < 1e-12 )
+        => 0.00000000000000124 < 0.000000000001 with message: error 1.24144e-15 mm
+
+== MirrorFeature_ArbitraryPlaneMatchesAnalyticPointReflection / pegs across the axis planes and skew planes
+MirrorFeatureTests.cpp:382  CHECK_THAT( volumeMm3(regenerator, image), WithinRel(pi * 9.0 * 6.0, kRel) )
+        => 169.64600329384884958 and 169.64600329384882116 are within 1e-10% of each other with message: p0[0] := 0.0; p0[1] := 0.0; p0[2] := 0.0; n[0] := 1.0; n[1] := 0.0; n[2] := 0.0
+MirrorFeatureTests.cpp:397  CHECK( worst < 1e-9 )
+        => 0.0 < 0.000000001 with message: p0[0] := 0.0; p0[1] := 0.0; p0[2] := 0.0; n[0] := 1.0; n[1] := 0.0; n[2] := 0.0; largest distance or position error of a rim: 0 mm
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -40.00000000000000711 is within 0.000000001 of -40.0 with message: p0[0] := 0.0; p0[1] := 0.0; p0[2] := 0.0; n[0] := 1.0; n[1] := 0.0; n[2] := 0.0; largest distance or position error of a rim: 0 mm
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 10.00000000000000178 is within 0.000000001 of 10.0 with message: p0[0] := 0.0; p0[1] := 0.0; p0[2] := 0.0; n[0] := 1.0; n[1] := 0.0; n[2] := 0.0; largest distance or position error of a rim: 0 mm
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 20.00000000000000355 is within 0.000000001 of 20.0 with message: p0[0] := 0.0; p0[1] := 0.0; p0[2] := 0.0; n[0] := 1.0; n[1] := 0.0; n[2] := 0.0; largest distance or position error of a rim: 0 mm
+MirrorFeatureTests.cpp:382  CHECK_THAT( volumeMm3(regenerator, image), WithinRel(pi * 9.0 * 6.0, kRel) )
+        => 169.64600329384884958 and 169.64600329384882116 are within 1e-10% of each other with message: p0[0] := 0.0; p0[1] := 0.0; p0[2] := 0.0; n[0] := 0.0; n[1] := 1.0; n[2] := 0.0
+MirrorFeatureTests.cpp:397  CHECK( worst < 1e-9 )
+        => 0.0 < 0.000000001 with message: p0[0] := 0.0; p0[1] := 0.0; p0[2] := 0.0; n[0] := 0.0; n[1] := 1.0; n[2] := 0.0; largest distance or position error of a rim: 0 mm
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 40.00000000000000711 is within 0.000000001 of 40.0 with message: p0[0] := 0.0; p0[1] := 0.0; p0[2] := 0.0; n[0] := 0.0; n[1] := 1.0; n[2] := 0.0; largest distance or position error of a rim: 0 mm
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -10.00000000000000178 is within 0.000000001 of -10.0 with message: p0[0] := 0.0; p0[1] := 0.0; p0[2] := 0.0; n[0] := 0.0; n[1] := 1.0; n[2] := 0.0; largest distance or position error of a rim: 0 mm
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 20.00000000000000355 is within 0.000000001 of 20.0 with message: p0[0] := 0.0; p0[1] := 0.0; p0[2] := 0.0; n[0] := 0.0; n[1] := 1.0; n[2] := 0.0; largest distance or position error of a rim: 0 mm
+MirrorFeatureTests.cpp:382  CHECK_THAT( volumeMm3(regenerator, image), WithinRel(pi * 9.0 * 6.0, kRel) )
+        => 169.64600329384884958 and 169.64600329384882116 are within 1e-10% of each other with message: p0[0] := 0.0; p0[1] := 0.0; p0[2] := 0.0; n[0] := 0.0; n[1] := 0.0; n[2] := 1.0
+MirrorFeatureTests.cpp:397  CHECK( worst < 1e-9 )
+        => 0.0 < 0.000000001 with message: p0[0] := 0.0; p0[1] := 0.0; p0[2] := 0.0; n[0] := 0.0; n[1] := 0.0; n[2] := 1.0; largest distance or position error of a rim: 0 mm
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 40.00000000000000711 is within 0.000000001 of 40.0 with message: p0[0] := 0.0; p0[1] := 0.0; p0[2] := 0.0; n[0] := 0.0; n[1] := 0.0; n[2] := 1.0; largest distance or position error of a rim: 0 mm
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 10.00000000000000178 is within 0.000000001 of 10.0 with message: p0[0] := 0.0; p0[1] := 0.0; p0[2] := 0.0; n[0] := 0.0; n[1] := 0.0; n[2] := 1.0; largest distance or position error of a rim: 0 mm
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => -20.00000000000000355 is within 0.000000001 of -20.0 with message: p0[0] := 0.0; p0[1] := 0.0; p0[2] := 0.0; n[0] := 0.0; n[1] := 0.0; n[2] := 1.0; largest distance or position error of a rim: 0 mm
+MirrorFeatureTests.cpp:382  CHECK_THAT( volumeMm3(regenerator, image), WithinRel(pi * 9.0 * 6.0, kRel) )
+        => 169.64600329384884958 and 169.64600329384882116 are within 1e-10% of each other with message: p0[0] := 0.0; p0[1] := 0.0; p0[2] := 0.0; n[0] := 1.0; n[1] := 1.0; n[2] := 0.0
+MirrorFeatureTests.cpp:397  CHECK( worst < 1e-9 )
+        => 0.00000000000001329 < 0.000000001 with message: p0[0] := 0.0; p0[1] := 0.0; p0[2] := 0.0; n[0] := 1.0; n[1] := 1.0; n[2] := 0.0; largest distance or position error of a rim: 1.3293e-14 mm
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -9.99999999999998934 is within 0.000000001 of -10.0 with message: p0[0] := 0.0; p0[1] := 0.0; p0[2] := 0.0; n[0] := 1.0; n[1] := 1.0; n[2] := 0.0; largest distance or position error of a rim: 1.3293e-14 mm
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -39.99999999999998579 is within 0.000000001 of -40.0 with message: p0[0] := 0.0; p0[1] := 0.0; p0[2] := 0.0; n[0] := 1.0; n[1] := 1.0; n[2] := 0.0; largest distance or position error of a rim: 1.3293e-14 mm
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 19.99999999999999289 is within 0.000000001 of 20.0 with message: p0[0] := 0.0; p0[1] := 0.0; p0[2] := 0.0; n[0] := 1.0; n[1] := 1.0; n[2] := 0.0; largest distance or position error of a rim: 1.3293e-14 mm
+MirrorFeatureTests.cpp:382  CHECK_THAT( volumeMm3(regenerator, image), WithinRel(pi * 9.0 * 6.0, kRel) )
+        => 169.64600329384884958 and 169.64600329384882116 are within 1e-10% of each other with message: p0[0] := 1.0; p0[1] := 0.0; p0[2] := 0.0; n[0] := 1.0; n[1] := 1.0; n[2] := 0.0
+MirrorFeatureTests.cpp:397  CHECK( worst < 1e-9 )
+        => 0.00000000000001421 < 0.000000001 with message: p0[0] := 1.0; p0[1] := 0.0; p0[2] := 0.0; n[0] := 1.0; n[1] := 1.0; n[2] := 0.0; largest distance or position error of a rim: 1.42109e-14 mm
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -8.99999999999998757 is within 0.000000001 of -9.0 with message: p0[0] := 1.0; p0[1] := 0.0; p0[2] := 0.0; n[0] := 1.0; n[1] := 1.0; n[2] := 0.0; largest distance or position error of a rim: 1.42109e-14 mm
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -38.99999999999999289 is within 0.000000001 of -39.0 with message: p0[0] := 1.0; p0[1] := 0.0; p0[2] := 0.0; n[0] := 1.0; n[1] := 1.0; n[2] := 0.0; largest distance or position error of a rim: 1.42109e-14 mm
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 19.99999999999999289 is within 0.000000001 of 20.0 with message: p0[0] := 1.0; p0[1] := 0.0; p0[2] := 0.0; n[0] := 1.0; n[1] := 1.0; n[2] := 0.0; largest distance or position error of a rim: 1.42109e-14 mm
+MirrorFeatureTests.cpp:382  CHECK_THAT( volumeMm3(regenerator, image), WithinRel(pi * 9.0 * 6.0, kRel) )
+        => 169.64600329384896327 and 169.64600329384882116 are within 1e-10% of each other with message: p0[0] := 5.0; p0[1] := -2.0; p0[2] := 1.0; n[0] := 1.0; n[1] := 1.0; n[2] := 1.0
+MirrorFeatureTests.cpp:397  CHECK( worst < 1e-9 )
+        => 0.0000000000000245 < 0.000000001 with message: p0[0] := 5.0; p0[1] := -2.0; p0[2] := 1.0; n[0] := 1.0; n[1] := 1.0; n[2] := 1.0; largest distance or position error of a rim: 2.45015e-14 mm
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -4.00000000000000977 is within 0.000000001 of -4.00000000000001421 with message: p0[0] := 5.0; p0[1] := -2.0; p0[2] := 1.0; n[0] := 1.0; n[1] := 1.0; n[2] := 1.0; largest distance or position error of a rim: 2.45015e-14 mm
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -34.00000000000000711 is within 0.000000001 of -34.00000000000001421 with message: p0[0] := 5.0; p0[1] := -2.0; p0[2] := 1.0; n[0] := 1.0; n[1] := 1.0; n[2] := 1.0; largest distance or position error of a rim: 2.45015e-14 mm
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => -24.0 is within 0.000000001 of -24.00000000000001421 with message: p0[0] := 5.0; p0[1] := -2.0; p0[2] := 1.0; n[0] := 1.0; n[1] := 1.0; n[2] := 1.0; largest distance or position error of a rim: 2.45015e-14 mm
+
+== MirrorFeature_ArbitraryPlaneMatchesAnalyticPointReflection / face normals mirror as vectors
+MirrorFeatureTests.cpp:411  CHECK_THAT( xNormal[1], WithinAbs(-1.0, 1e-15) )
+        => -1.0 is within 0.000000000000001 of -1.0
+
+== MirrorFeature_ReflectsCubeAcrossYZPlane
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -20.0 is within 0.000000001 of -20.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0
+MirrorFeatureTests.cpp:258  CHECK_THAT( props.volume.in(units::mm3), WithinRel(2000.0, kRel) )
+        => 2000.00000000000068212 and 2000.0 are within 1e-10% of each other with message: 
+MirrorFeatureTests.cpp:259  CHECK_THAT( props.surfaceArea.in(units::mm2), WithinRel(1200.0, kRel) )
+        => 1200.0 and 1200.0 are within 1e-10% of each other with message: 
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 0.00000000000000136 is within 0.000000001 of 0.0 with message: 
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 0.00000000000000114 is within 0.000000001 of 0.0 with message: 
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0 with message: 
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -25.0 is within 0.000000001 of -25.0 with message: 
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -5.00000000000000089 is within 0.000000001 of -5.0 with message: 
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => -5.0 is within 0.000000001 of -5.0 with message: 
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 25.0 is within 0.000000001 of 25.0 with message: 
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 5.00000000000000266 is within 0.000000001 of 5.0 with message: 
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 5.0 is within 0.000000001 of 5.0 with message: 
+MirrorFeatureTests.cpp:272  CHECK_THAT( volumeMm3(regenerator, m.cube), WithinRel(1000.0, kRel) )
+        => 1000.00000000000034106 and 1000.0 are within 1e-10% of each other with message: 
+MirrorFeatureTests.cpp:283  CHECK_THAT( volumeMm3(regenerator, m.mirror), WithinRel(1000.0, kRel) )
+        => 1000.00000000000034106 and 1000.0 are within 1e-10% of each other with message: 
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -20.00000000000000355 is within 0.000000001 of -20.0 with message: 
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 0.00000000000000114 is within 0.000000001 of 0.0 with message: 
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0 with message: 
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -25.0 is within 0.000000001 of -25.0 with message: 
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -5.00000000000000089 is within 0.000000001 of -5.0 with message: 
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => -5.0 is within 0.000000001 of -5.0 with message: 
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -15.0 is within 0.000000001 of -15.0 with message: 
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 5.00000000000000266 is within 0.000000001 of 5.0 with message: 
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 5.0 is within 0.000000001 of 5.0 with message: 
+
+== MirrorFeature_ExportsClosedStl / the block with a hole and its mirror image (binary)
+MirrorFileTests.cpp:521  CHECK( meshed > 0.0 )
+        => 96862.50642817928746808 > 0.0 with message: meshed 96862.5 mm^3, exact 96858.4 mm^3
+MirrorFileTests.cpp:522  CHECK( std::abs(meshed - exact) <= deflection.in(units::mm) * area )
+        => 4.0990817690762924 <= 169.42477796076940422 with message: meshed 96862.5 mm^3, exact 96858.4 mm^3
+
+== MirrorFeature_ExportsClosedStl / the block with a hole and its mirror image (ASCII)
+MirrorFileTests.cpp:521  CHECK( meshed > 0.0 )
+        => 96862.50642817928746808 > 0.0 with message: meshed 96862.5 mm^3, exact 96858.4 mm^3
+MirrorFileTests.cpp:522  CHECK( std::abs(meshed - exact) <= deflection.in(units::mm) * area )
+        => 4.0990817690762924 <= 169.42477796076940422 with message: meshed 96862.5 mm^3, exact 96858.4 mm^3
+
+== MirrorFeature_ExportsClosedStl / a cube and its mirror image: two closed shells in one file
+MirrorFileTests.cpp:531  CHECK_THAT( test::enclosedVolume(mesh.triangles), WithinRel(2000.0, 1e-12) )
+        => 2000.0 and 2000.0 are within 1e-10% of each other
+
+== MirrorFeature_ExportsClosedStl / the cube's mirror image alone, across x = 0 and across a skew plane
+MirrorFileTests.cpp:549  CHECK_THAT( test::enclosedVolume(yz.triangles), WithinRel(1000.0, 1e-12) )
+        => 1000.0 and 1000.0 are within 1e-10% of each other
+MirrorFileTests.cpp:564  CHECK( std::abs(meshed - 1000.0) <= rounding )
+        => 0.00005783858262021 <= 0.00198217484386697 with message: meshed 1000 mm^3; rounding bound 0.00198217 mm^3
+MirrorFileTests.cpp:506  CHECK( inward == 0 )
+        => 0 == 0 with message: meshed 1000 mm^3; rounding bound 0.00198217 mm^3
+MirrorFileTests.cpp:507  CHECK( disagreeing == 0 )
+        => 0 == 0 with message: meshed 1000 mm^3; rounding bound 0.00198217 mm^3
+
+== MirrorFeature_ExportsClosedStl / curved faces: the drilled block and the turned part, mirrored on their own
+MirrorFileTests.cpp:576  CHECK( blockMeshed > 0.0 )
+        => 98431.25332895079918671 > 0.0 with message: block: meshed 98431.3 mm^3, exact 98429.2 mm^3
+MirrorFileTests.cpp:577  CHECK( std::abs(blockMeshed - blockExact) <= deflection.in(units::mm) * (16000.0 + 150.0 * pi) )
+        => 2.04965574569359887 <= 164.71238898038467369 with message: block: meshed 98431.3 mm^3, exact 98429.2 mm^3
+MirrorFileTests.cpp:591  CHECK_THAT( regenerator.body(imageId)->massProperties()->surfaceArea.in(units::mm2), WithinRel(turnedArea, kRel) )
+        => 6572.21183130984172749 and 6572.21183130984718446 are within 1e-10% of each other with message: block: meshed 98431.3 mm^3, exact 98429.2 mm^3
+MirrorFileTests.cpp:485  REQUIRE( summary->bodies.size() == 1 )
+        => 1 == 1 with message: block: meshed 98431.3 mm^3, exact 98429.2 mm^3
+MirrorFileTests.cpp:597  CHECK( turnedMeshed > 0.0 )
+        => 24244.91500409890431911 > 0.0 with message: block: meshed 98431.3 mm^3, exact 98429.2 mm^3; turned part: meshed 24244.9 mm^3, exact 24253.1 mm^3
+MirrorFileTests.cpp:598  CHECK( std::abs(turnedMeshed - turnedExact) <= deflection.in(units::mm) * turnedArea )
+        => 8.18028161429901957 <= 65.72211831309847696 with message: block: meshed 98431.3 mm^3, exact 98429.2 mm^3; turned part: meshed 24244.9 mm^3, exact 24253.1 mm^3
+
+== Transform_MirroredBodyKeepsVolumeAndPointsOutward
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -25.0 is within 0.000000001 of -25.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -5.0 is within 0.000000001 of -5.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => -5.0 is within 0.000000001 of -5.0
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -15.0 is within 0.000000001 of -15.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 5.0 is within 0.000000001 of 5.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 5.0 is within 0.000000001 of 5.0
+TransformTests.cpp:230  CHECK_THAT( properties.volume.in(units::mm3), WithinRel(1000.0, kRelTight) )
+        => 1000.00000000000034106 and 1000.0 are within 1e-10% of each other
+TransformTests.cpp:231  CHECK_THAT( properties.surfaceArea.in(units::mm2), WithinRel(600.0, kRelTight) )
+        => 600.0 and 600.0 are within 1e-10% of each other
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -19.99999999999999645 is within 0.000000001 of -20.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -0.00000000000000007 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0
+TransformTests.cpp:263  CHECK_THAT( requireProperties(*drilled).volume.in(units::mm3), WithinRel(100000.0 - 500.0 * std::numbers::pi, kRelTight) )
+        => 98429.20367320509103592 and 98429.20367320510558784 are within 1e-10% of each other
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 0.00000000000000004 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -0.00000000000000007 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -5.0 is within 0.000000001 of -5.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -5.0 is within 0.000000001 of -5.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => -5.0 is within 0.000000001 of -5.0
+TransformTests.cpp:276  CHECK_THAT( requireProperties(*diagonal).volume.in(units::mm3), WithinRel(1000.0, kRelTight) )
+        => 999.99999999999954525 and 1000.0 are within 1e-10% of each other
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 0.00000000000000446 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -19.99999999999999645 is within 0.000000001 of -20.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0
+TransformTests.cpp:284  CHECK_THAT( requireProperties(*back).volume.in(units::mm3), WithinRel(1000.0, kRelTight) )
+        => 999.99999999999886313 and 1000.0 are within 1e-10% of each other
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 19.99999999999999289 is within 0.000000001 of 20.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -0.00000000000000004 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 14.99999999999999645 is within 0.000000001 of 15.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -4.99999999999999822 is within 0.000000001 of -5.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => -4.99999999999999822 is within 0.000000001 of -5.0
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 24.99999999999999289 is within 0.000000001 of 25.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 4.99999999999999822 is within 0.000000001 of 5.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 4.99999999999999822 is within 0.000000001 of 5.0
+
+== RigidTransform_ReflectionNegatesSignedDistanceToThePlane
+RigidTransformTests.cpp:239  CHECK( worst < 1e-12 )
+        => 0.00000000000002842 < 0.000000000001 with message: worst distance or direction error: 2.84217e-14 mm
+RigidTransformTests.cpp:90  CHECK_THAT( actual[0], WithinAbs(expected[0], toleranceMm) )
+        => 8.0 is within 0.0000000000001 of 8.0 with message: worst distance or direction error: 2.84217e-14 mm
+RigidTransformTests.cpp:91  CHECK_THAT( actual[1], WithinAbs(expected[1], toleranceMm) )
+        => -4.0 is within 0.0000000000001 of -4.0 with message: worst distance or direction error: 2.84217e-14 mm
+RigidTransformTests.cpp:92  CHECK_THAT( actual[2], WithinAbs(expected[2], toleranceMm) )
+        => 0.00000000000000043 is within 0.0000000000001 of 0.0 with message: worst distance or direction error: 2.84217e-14 mm
+
+== MirrorFeature_SaveLoadKeepsAnArbitraryPlane
+MirrorFileTests.cpp:237  CHECK_THAT( volumeMm3(before, image), WithinRel(exact, kRel) )
+        => 24253.09528571317787282 and 24253.09528571320333867 are within 1e-10% of each other
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -10.20765245117577003 is within 0.000000001 of -10.2076524511757718
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 3.40255081705858675 is within 0.000000001 of 3.40255081705858897
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => -10.53228377839776542 is within 0.000000001 of -10.53228377839777252
+MirrorFileTests.cpp:278  CHECK_THAT( volumeMm3(after, image), WithinRel(TurnedPartModel::expectedVolume(15, 40, 270, 5), kRel) )
+        => 18189.8214642848870426 and 18189.82146428490159451 are within 1e-10% of each other
+
+== MirrorFeature_PlaneThroughSourceGeometry / a plane through the cube: the source and its image fuse
+MirrorFeatureTests.cpp:965  CHECK_THAT( build(18), WithinRel(14.0 * 10.0 * 10.0, kRel) )
+        => 1400.00000000000045475 and 1400.0 are within 1e-10% of each other with message: toString(scope) := "feature"
+MirrorFeatureTests.cpp:966  CHECK_THAT( requireBody(regenerator, m.mirror).boundingBox()->min.x.in(units::mm), WithinAbs(11.0, kPositionToleranceMm) )
+        => 11.0 is within 0.000000001 of 11.0 with message: toString(scope) := "feature"
+MirrorFeatureTests.cpp:969  CHECK_THAT( build(15), WithinRel(2000.0, kRel) )
+        => 2000.00000000000068212 and 2000.0 are within 1e-10% of each other with message: toString(scope) := "feature"
+MirrorFeatureTests.cpp:973  CHECK_THAT( build(20), WithinRel(1000.0, kRel) )
+        => 1000.00000000000034106 and 1000.0 are within 1e-10% of each other with message: toString(scope) := "feature"
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 15.0 is within 0.000000001 of 15.0 with message: toString(scope) := "feature"
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -5.00000000000000089 is within 0.000000001 of -5.0 with message: toString(scope) := "feature"
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => -5.0 is within 0.000000001 of -5.0 with message: toString(scope) := "feature"
+MirrorFeatureTests.cpp:965  CHECK_THAT( build(18), WithinRel(14.0 * 10.0 * 10.0, kRel) )
+        => 1400.00000000000045475 and 1400.0 are within 1e-10% of each other with message: toString(scope) := "body"
+MirrorFeatureTests.cpp:966  CHECK_THAT( requireBody(regenerator, m.mirror).boundingBox()->min.x.in(units::mm), WithinAbs(11.0, kPositionToleranceMm) )
+        => 11.0 is within 0.000000001 of 11.0 with message: toString(scope) := "body"
+MirrorFeatureTests.cpp:969  CHECK_THAT( build(15), WithinRel(2000.0, kRel) )
+        => 2000.00000000000068212 and 2000.0 are within 1e-10% of each other with message: toString(scope) := "body"
+MirrorFeatureTests.cpp:973  CHECK_THAT( build(20), WithinRel(1000.0, kRel) )
+        => 1000.00000000000034106 and 1000.0 are within 1e-10% of each other with message: toString(scope) := "body"
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 15.0 is within 0.000000001 of 15.0 with message: toString(scope) := "body"
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -5.00000000000000089 is within 0.000000001 of -5.0 with message: toString(scope) := "body"
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => -5.0 is within 0.000000001 of -5.0 with message: toString(scope) := "body"
+
+== MirrorFeature_PlaneThroughSourceGeometry / a boss symmetric about the plane is its own image: the body is unchanged
+MirrorFeatureTests.cpp:983  CHECK_THAT( volumeMm3(regenerator, m.mirror), WithinRel(50000.0 + 500.0, kRel) )
+        => 50500.00000000002182787 and 50500.0 are within 1e-10% of each other
+
+== MirrorFeature_PlaneThroughSourceGeometry / a hole the plane maps onto itself is refused, not drilled twice
+MirrorFeatureTests.cpp:1000  CHECK_THAT( error.message, StartsWith("Mirror: mirror: the mirror image across the plane through (0, 0, 10) mm " "facing (0, 0, 1) is the hole 'Drill' itself") )
+        => "Mirror: mirror: the mirror image across the plane through (0, 0, 10) mm facing (0, 0, 1) is the hole 'Drill' itself: the plane maps the hole centred at (30, 25, 0) mm onto itself, so there is nothing to mirror" starts with: "Mirror: mirror: the mirror image across the plane through (0, 0, 10) mm facing (0, 0, 1) is the hole 'Drill' itself"
+
+== info and validate describe mirrors
+CliTests.cpp:534  CHECK_THAT( info.out, ContainsSubstring("\n object:11 mirror Mirror source Drill, feature mirror across the plane " "through (0, 0, 0) mm facing (1, 0, 0), offset mid\n") )
+        => "Document: Block File: C:\Users\uqhas\AppData\Local\Temp\bettercad-test-a3d4d8b5-7519-4b0f-8c58-8a3682768a4a\mirror.bcad ID: 363add85-b649-4b6c-9fc3-710cda983264 Parameters (7): width 100 mm length 50 mm height 20 mm diameter 10 mm hole_x 30 mm hole_y 25 mm mid 50 mm Objects (4): object:5 sketch Base 8 entities, 7 constraints, driven by width, length object:6 extrude Pad profile Base, depth height, normal, new body object:9 hole Drill target Pad, simple through hole, diameter diameter, centre (hole_x, hole_y) on plane through (0, 0, 0) mm facing (0, 0, -1) object:11 mirror Mirror source Drill, feature mirror across the plane through (0, 0, 0) mm facing (1, 0, 0), offset mid " contains: " object:11 mirror Mirror source Drill, feature mirror across the plane through (0, 0, 0) mm facing (1, 0, 0), offset mid "
+CliTests.cpp:540  CHECK_THAT( validate.out, ContainsSubstring("geometry ok, 1 result body\n" "Result bodies (1):\n" " Mirror (object:11): 1 solid, volume 96858.407 mm^3, area ") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-a3d4d8b5-7519-4b0f-8c58-8a3682768a4a\mirror.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 4 objects regenerated geometry ok, 1 result body Result bodies (1): Mirror (object:11): 1 solid, volume 96858.407 mm^3, area 16942.478 mm^2, bounds (0, 0, 0) to (100, 50, 20) mm Result: valid " contains: "geometry ok, 1 result body Result bodies (1): Mirror (object:11): 1 solid, volume 96858.407 mm^3, area "
+CliTests.cpp:543  CHECK_THAT( validate.out, EndsWith("bounds (0, 0, 0) to (100, 50, 20) mm\nResult: valid\n") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-a3d4d8b5-7519-4b0f-8c58-8a3682768a4a\mirror.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 4 objects regenerated geometry ok, 1 result body Result bodies (1): Mirror (object:11): 1 solid, volume 96858.407 mm^3, area 16942.478 mm^2, bounds (0, 0, 0) to (100, 50, 20) mm Result: valid " ends with: "bounds (0, 0, 0) to (100, 50, 20) mm Result: valid "
+CliTests.cpp:553  CHECK_THAT( runCli({"info", arg(path)}).out, ContainsSubstring("source Drill, body mirror across the plane through (0, 0, 0) mm facing (1, 0, 0), " "offset 12.5 mm, mirror image only\n") )
+        => "Document: Block File: C:\Users\uqhas\AppData\Local\Temp\bettercad-test-a3d4d8b5-7519-4b0f-8c58-8a3682768a4a\mirror.bcad ID: 363add85-b649-4b6c-9fc3-710cda983264 Parameters (7): width 100 mm length 50 mm height 20 mm diameter 10 mm hole_x 30 mm hole_y 25 mm mid 50 mm Objects (4): object:5 sketch Base 8 entities, 7 constraints, driven by width, length object:6 extrude Pad profile Base, depth height, normal, new body object:9 hole Drill target Pad, simple through hole, diameter diameter, centre (hole_x, hole_y) on plane through (0, 0, 0) mm facing (0, 0, -1) object:11 mirror Mirror source Drill, body mirror across the plane through (0, 0, 0) mm facing (1, 0, 0), offset 12.5 mm, mirror image only " contains: "source Drill, body mirror across the plane through (0, 0, 0) mm facing (1, 0, 0), offset 12.5 mm, mirror image only "
+CliTests.cpp:557  CHECK_THAT( runCli({"validate", arg(path)}).out, EndsWith("bounds (-75, 0, 0) to (25, 50, 20) mm\nResult: valid\n") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-a3d4d8b5-7519-4b0f-8c58-8a3682768a4a\mirror.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 4 objects regenerated geometry ok, 1 result body Result bodies (1): Mirror (object:11): 1 solid, volume 98429.204 mm^3, area 16471.239 mm^2, bounds (-75, 0, 0) to (25, 50, 20) mm Result: valid " ends with: "bounds (-75, 0, 0) to (25, 50, 20) mm Result: valid "
+CliTests.cpp:566  CHECK_THAT( broken.out, ContainsSubstring(" error: Mirror (object:11) failed to regenerate: Mirror: mirror: the " "mirror image across the plane through (64, 0, 0) mm facing (1, 0, 0): " "hole: the hole does not fit on its face") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-a3d4d8b5-7519-4b0f-8c58-8a3682768a4a\mirror.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration 1 error error: Mirror (object:11) failed to regenerate: Mirror: mirror: the mirror image across the plane through (64, 0, 0) mm facing (1, 0, 0): hole: the hole does not fit on its face: its entry is 10 mm across, but the centre (98, 25) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face) geometry ok, 0 result bodies Result: invalid (1 error) " contains: " error: Mirror (object:11) failed to regenerate: Mirror: mirror: the mirror image across the plane through (64, 0, 0) mm facing (1, 0, 0): hole: the hole does not fit on its face"
+CliTests.cpp:569  CHECK_THAT( broken.out, EndsWith("Result: invalid (1 error)\n") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-a3d4d8b5-7519-4b0f-8c58-8a3682768a4a\mirror.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration 1 error error: Mirror (object:11) failed to regenerate: Mirror: mirror: the mirror image across the plane through (64, 0, 0) mm facing (1, 0, 0): hole: the hole does not fit on its face: its entry is 10 mm across, but the centre (98, 25) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face) geometry ok, 0 result bodies Result: invalid (1 error) " ends with: "Result: invalid (1 error) "
+
+== MirrorFeature_PreservesVolume / an extruded cube across a skew plane
+MirrorFeatureTests.cpp:433  CHECK_THAT( image.volume.in(units::mm3), WithinRel(1000.0, kRel) )
+        => 1000.00000000000102318 and 1000.0 are within 1e-10% of each other
+MirrorFeatureTests.cpp:434  CHECK_THAT( image.volume.in(units::mm3), WithinRel(source.volume.in(units::mm3), kRel) )
+        => 1000.00000000000102318 and 1000.00000000000034106 are within 1e-10% of each other
+MirrorFeatureTests.cpp:435  CHECK_THAT( image.surfaceArea.in(units::mm2), WithinRel(source.surfaceArea.in(units::mm2), kRel) )
+        => 600.00000000000022737 and 600.0 are within 1e-10% of each other
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 15.77777777777777679 is within 0.000000001 of 15.77777777777777857
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -8.44444444444444464 is within 0.000000001 of -8.44444444444444287
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => -8.44444444444444464 is within 0.000000001 of -8.44444444444444287
+
+== MirrorFeature_PreservesVolume / a drilled block
+MirrorFeatureTests.cpp:445  CHECK_THAT( volumeMm3(regenerator, image), WithinRel(HoleBlockModel::expectedVolume(100, 50, 20, 10), kRel) )
+        => 98429.20367320522200316 and 98429.20367320510558784 are within 1e-10% of each other
+MirrorFeatureTests.cpp:446  CHECK_THAT( requireBody(regenerator, image).massProperties()->surfaceArea.in(units::mm2), WithinRel(requireBody(regenerator, m.drill).massProperties()->surfaceArea.in(units::mm2), kRel) )
+        => 16471.23889803847850999 and 16471.23889803847123403 are within 1e-10% of each other
+
+== RigidTransform_ReflectionIsAnInvolution
+RigidTransformTests.cpp:212  CHECK( worstIdentity < 1e-15 )
+        => 0.00000000000000067 < 0.000000000000001 with message: worst entry of A A - I: 6.66134e-16, det A = -1
+RigidTransformTests.cpp:213  CHECK_THAT( det, WithinAbs(-1.0, 1e-15) )
+        => -1.00000000000000044 is within 0.000000000000001 of -1.0 with message: worst entry of A A - I: 6.66134e-16, det A = -1
+RigidTransformTests.cpp:220  CHECK( worst < 1e-11 )
+        => 0.00000000000203449 < 0.00000000001 with message: worst entry of A A - I: 6.66134e-16, det A = -1; worst |M(M(p)) - p|: 2.03449e-12 mm
+
+== MirrorFeature_InvalidInputsFailWithStructuredDiagnostics / an offset parameter that is an angle
+MirrorFeatureTests.cpp:1267  CHECK_THAT( error.message, StartsWith("Mirror: mirror: ") )
+        => "Mirror: mirror: parameter 'tilt' has dimension angle, not length" starts with: "Mirror: mirror: "
+
+== MirrorFeature_ReflectsAcrossOffsetPlane / the plane through (10, 0, 0)
+MirrorFeatureTests.cpp:300  CHECK_THAT( volumeMm3(regenerator, m.mirror), WithinRel(1000.0, kRel) )
+        => 1000.00000000000034106 and 1000.0 are within 1e-10% of each other with message: 
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -10.00000000000000178 is within 0.000000001 of -10.0 with message: 
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 0.00000000000000114 is within 0.000000001 of 0.0 with message: 
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0 with message: 
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -15.0 is within 0.000000001 of -15.0 with message: 
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -5.00000000000000089 is within 0.000000001 of -5.0 with message: 
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => -5.0 is within 0.000000001 of -5.0 with message: 
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -5.0 is within 0.000000001 of -5.0 with message: 
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 5.00000000000000266 is within 0.000000001 of 5.0 with message: 
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 5.0 is within 0.000000001 of 5.0 with message: 
+MirrorFeatureTests.cpp:311  CHECK_THAT( volumeMm3(regenerator, m.mirror), WithinRel(2000.0, kRel) )
+        => 2000.00000000000068212 and 2000.0 are within 1e-10% of each other
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -15.0 is within 0.000000001 of -15.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -5.00000000000000089 is within 0.000000001 of -5.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => -5.0 is within 0.000000001 of -5.0
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 35.0 is within 0.000000001 of 35.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 5.00000000000000266 is within 0.000000001 of 5.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 5.0 is within 0.000000001 of 5.0
+
+== MirrorFeature_ReflectsAcrossOffsetPlane / the plane through the origin, offset 10 mm along its normal
+MirrorFeatureTests.cpp:300  CHECK_THAT( volumeMm3(regenerator, m.mirror), WithinRel(1000.0, kRel) )
+        => 1000.00000000000034106 and 1000.0 are within 1e-10% of each other with message: 
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -10.00000000000000178 is within 0.000000001 of -10.0 with message: 
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 0.00000000000000114 is within 0.000000001 of 0.0 with message: 
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0 with message: 
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -15.0 is within 0.000000001 of -15.0 with message: 
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -5.00000000000000089 is within 0.000000001 of -5.0 with message: 
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => -5.0 is within 0.000000001 of -5.0 with message: 
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -5.0 is within 0.000000001 of -5.0 with message: 
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 5.00000000000000266 is within 0.000000001 of 5.0 with message: 
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 5.0 is within 0.000000001 of 5.0 with message: 
+MirrorFeatureTests.cpp:300  CHECK_THAT( volumeMm3(regenerator, m.mirror), WithinRel(1000.0, kRel) )
+        => 1000.00000000000034106 and 1000.0 are within 1e-10% of each other with message: 
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -10.00000000000000178 is within 0.000000001 of -10.0 with message: 
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 0.00000000000000114 is within 0.000000001 of 0.0 with message: 
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0 with message: 
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -15.0 is within 0.000000001 of -15.0 with message: 
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -5.00000000000000089 is within 0.000000001 of -5.0 with message: 
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => -5.0 is within 0.000000001 of -5.0 with message: 
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -5.0 is within 0.000000001 of -5.0 with message: 
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 5.00000000000000266 is within 0.000000001 of 5.0 with message: 
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 5.0 is within 0.000000001 of 5.0 with message: 
+
+== MirrorFeature_ReflectsAcrossOffsetPlane / the offset driven by a parameter
+MirrorFeatureTests.cpp:300  CHECK_THAT( volumeMm3(regenerator, m.mirror), WithinRel(1000.0, kRel) )
+        => 1000.00000000000034106 and 1000.0 are within 1e-10% of each other with message: 
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -10.00000000000000178 is within 0.000000001 of -10.0 with message: 
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 0.00000000000000114 is within 0.000000001 of 0.0 with message: 
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0 with message: 
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -15.0 is within 0.000000001 of -15.0 with message: 
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -5.00000000000000089 is within 0.000000001 of -5.0 with message: 
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => -5.0 is within 0.000000001 of -5.0 with message: 
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -5.0 is within 0.000000001 of -5.0 with message: 
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 5.00000000000000266 is within 0.000000001 of 5.0 with message: 
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 5.0 is within 0.000000001 of 5.0 with message: 
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 10.0 is within 0.000000001 of 10.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 10.00000000000000178 is within 0.000000001 of 10.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 0.00000000000000114 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0
+
+== MirrorFeature_HoleMirrorMatchesAnalyticVolume
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 50.0 is within 0.000000001 of 50.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 70.0 is within 0.000000001 of 70.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 25.0 is within 0.000000001 of 25.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0
+MirrorFeatureTests.cpp:517  CHECK_THAT( expected, WithinRel(100000.0 - 1000.0 * pi, 1e-15) )
+        => 96858.40734641021117568 and 96858.40734641021117568 are within 1e-13% of each other with message: 
+MirrorFeatureTests.cpp:519  CHECK_THAT( props.volume.in(units::mm3), WithinRel(expected, kRel) )
+        => 96858.4073464102257276 and 96858.40734641021117568 are within 1e-10% of each other with message: 
+MirrorFeatureTests.cpp:521  CHECK_THAT( props.surfaceArea.in(units::mm2), WithinRel(16000.0 + 300.0 * pi, kRel) )
+        => 16942.47779607694246806 and 16942.47779607693883008 are within 1e-10% of each other with message: 
+MirrorFeatureTests.cpp:531  CHECK_THAT( volumeMm3(regenerator, m.drill), WithinRel(HoleMirrorModel::expectedVolume(100, 20, 10, 1), kRel) )
+        => 98429.20367320513469167 and 98429.20367320510558784 are within 1e-10% of each other with message: 
+
+== MirrorFeature_RegeneratesWhenPlaneMoves / the driving parameter: x = 50 -> 60 takes the image from 70 to 90
+MirrorFeatureTests.cpp:702  CHECK_THAT( volumeMm3(regenerator, m.mirror), WithinRel(HoleMirrorModel::expectedVolume(100, 20, 10), kRel) )
+        => 96858.4073464102257276 and 96858.40734641021117568 are within 1e-10% of each other
+
+== MirrorFeature_RegeneratesWhenPlaneMoves / the plane's normal: across y = 16 the image is at (30, 7)
+MirrorFeatureTests.cpp:718  CHECK_THAT( volumeMm3(regenerator, m.mirror), WithinRel(HoleMirrorModel::expectedVolume(100, 20, 10), kRel) )
+        => 96858.4073464102257276 and 96858.40734641021117568 are within 1e-10% of each other
+
+== MirrorFeature_FailedMirrorSavesAndLoadsUnchanged
+MirrorFileTests.cpp:296  CHECK_THAT( again.errors.at(m.mirror).message, StartsWith("Mirror: mirror: the mirror image across the plane through (64, 0, 0) mm facing (1, 0, 0): " "hole: ") )
+        => "Mirror: mirror: the mirror image across the plane through (64, 0, 0) mm facing (1, 0, 0): hole: the hole does not fit on its face: its entry is 10 mm across, but the centre (98, 25) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face)" starts with: "Mirror: mirror: the mirror image across the plane through (64, 0, 0) mm facing (1, 0, 0): hole: "
+MirrorFileTests.cpp:303  CHECK_THAT( volumeMm3(after, m.mirror), WithinRel(HoleMirrorModel::expectedVolume(100, 20, 10), kRel) )
+        => 96858.4073464102257276 and 96858.40734641021117568 are within 1e-10% of each other
+
+== MirrorFeature_SaveLoadPreservesDefinition
+MirrorFileTests.cpp:163  CHECK_THAT( volumeMm3(before, m.mirror), WithinRel(HoleMirrorModel::expectedVolume(100, 20, 10), kRel) )
+        => 96858.4073464102257276 and 96858.40734641021117568 are within 1e-10% of each other with message: 
+MirrorFileTests.cpp:202  CHECK_THAT( volumeMm3(after, m.mirror), WithinRel(HoleMirrorModel::expectedVolume(100, 20, 12), kRel) )
+        => 95476.10657883073145058 and 95476.10657883070234675 are within 1e-10% of each other with message: 
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 20.0 is within 0.000000001 of 20.0 with message: 
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0 with message: 
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0 with message: 
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 120.0 is within 0.000000001 of 120.0 with message: 
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 50.00000000000004263 is within 0.000000001 of 50.0 with message: 
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 20.0 is within 0.000000001 of 20.0 with message: 
+
+== MirrorFeature_ModelsAreValidatedLikeAnyOther / a sound model: the mirror is the one valid result body
+ValidationTests.cpp:638  CHECK_THAT( report.bodies[0].properties->volume.in(units::mm3), WithinRel(HoleMirrorModel::expectedVolume(100, 20, 10), 1e-12) )
+        => 96858.4073464102257276 and 96858.40734641021117568 are within 1e-10% of each other with message: 
+
+== MirrorFeature_ModelsAreValidatedLikeAnyOther / a mirror image that does not fit
+ValidationTests.cpp:667  REQUIRE( regeneration.size() == 1 )
+        => 1 == 1 with message: [feature regeneration] error: Mirror (object:11) failed to regenerate: Mirror: mirror: the mirror image across the plane through (64, 0, 0) mm facing (1, 0, 0): hole: the hole does not fit on its face: its entry is 10 mm across, but the centre (98, 25) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face)
+ValidationTests.cpp:668  CHECK( regeneration[0].item == m.mirror )
+        => {?} == object:11 with message: [feature regeneration] error: Mirror (object:11) failed to regenerate: Mirror: mirror: the mirror image across the plane through (64, 0, 0) mm facing (1, 0, 0): hole: the hole does not fit on its face: its entry is 10 mm across, but the centre (98, 25) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face)
+ValidationTests.cpp:669  CHECK_THAT( regeneration[0].message, StartsWith("Mirror (object:11) failed to regenerate: Mirror: mirror: the mirror image across the " "plane through (64, 0, 0) mm facing (1, 0, 0): hole: the hole does not fit on its face") )
+        => "Mirror (object:11) failed to regenerate: Mirror: mirror: the mirror image across the plane through (64, 0, 0) mm facing (1, 0, 0): hole: the hole does not fit on its face: its entry is 10 mm across, but the centre (98, 25) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face)" starts with: "Mirror (object:11) failed to regenerate: Mirror: mirror: the mirror image across the plane through (64, 0, 0) mm facing (1, 0, 0): hole: the hole does not fit on its face" with message: [feature regeneration] error: Mirror (object:11) failed to regenerate: Mirror: mirror: the mirror image across the plane through (64, 0, 0) mm facing (1, 0, 0): hole: the hole does not fit on its face: its entry is 10 mm across, but the centre (98, 25) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face)
+ValidationTests.cpp:672  CHECK_FALSE( !(report.valid()) )
+        => !false with message: [feature regeneration] error: Mirror (object:11) failed to regenerate: Mirror: mirror: the mirror image across the plane through (64, 0, 0) mm facing (1, 0, 0): hole: the hole does not fit on its face: its entry is 10 mm across, but the centre (98, 25) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face)
+
+== MirrorFeature_WorksWithExtrudedBody
+MirrorFeatureTests.cpp:942  CHECK_THAT( volumeMm3(regenerator, m.mirror), WithinRel(2.0 * size * size * size, kRel) )
+        => 432.0 and 432.0 are within 1e-10% of each other with message: size := 6.0
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -21.0 is within 0.000000001 of -21.0 with message: size := 6.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -5.00000000000000178 is within 0.000000001 of -5.0 with message: size := 6.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => -5.0 is within 0.000000001 of -5.0 with message: size := 6.0
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 21.0 is within 0.000000001 of 21.0 with message: size := 6.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 0.99999999999999911 is within 0.000000001 of 1.0 with message: size := 6.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 1.0 is within 0.000000001 of 1.0 with message: size := 6.0
+MirrorFeatureTests.cpp:942  CHECK_THAT( volumeMm3(regenerator, m.mirror), WithinRel(2.0 * size * size * size, kRel) )
+        => 5488.0 and 5488.0 are within 1e-10% of each other with message: size := 14.0
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -28.99999999999999645 is within 0.000000001 of -29.0 with message: size := 14.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -5.0 is within 0.000000001 of -5.0 with message: size := 14.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => -5.0 is within 0.000000001 of -5.0 with message: size := 14.0
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 28.99999999999999645 is within 0.000000001 of 29.0 with message: size := 14.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 9.00000000000000533 is within 0.000000001 of 9.0 with message: size := 14.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 9.0 is within 0.000000001 of 9.0 with message: size := 14.0
+
+== MirrorFeature_ExportsStep / the block with a hole and its mirror image
+MirrorFileTests.cpp:411  CHECK_THAT( contents->volumeMm3, WithinRel(HoleMirrorModel::expectedVolume(100, 20, 10), kRelStep) )
+        => 96858.40734641018207185 and 96858.40734641021117568 are within 1e-07% of each other
+MirrorFileTests.cpp:412  CHECK_THAT( contents->areaMm2, WithinRel(16000.0 + 300.0 * pi, kRelStep) )
+        => 16942.47779607693155413 and 16942.47779607693883008 are within 1e-07% of each other
+MirrorFileTests.cpp:415  CHECK_THAT( contents->minMm[axis], WithinAbs(0.0, 1e-6) )
+        => 0.0 is within 0.000001 of 0.0
+MirrorFileTests.cpp:416  CHECK_THAT( contents->maxMm[axis], WithinAbs(max[axis], 1e-6) )
+        => 100.00000000000002842 is within 0.000001 of 100.0
+MirrorFileTests.cpp:415  CHECK_THAT( contents->minMm[axis], WithinAbs(0.0, 1e-6) )
+        => 0.0 is within 0.000001 of 0.0
+MirrorFileTests.cpp:416  CHECK_THAT( contents->maxMm[axis], WithinAbs(max[axis], 1e-6) )
+        => 50.0 is within 0.000001 of 50.0
+MirrorFileTests.cpp:415  CHECK_THAT( contents->minMm[axis], WithinAbs(0.0, 1e-6) )
+        => 0.0 is within 0.000001 of 0.0
+MirrorFileTests.cpp:416  CHECK_THAT( contents->maxMm[axis], WithinAbs(max[axis], 1e-6) )
+        => 20.0 is within 0.000001 of 20.0
+
+== MirrorFeature_ExportsStep / a cube and its mirror image: one body of two solids
+MirrorFileTests.cpp:429  CHECK_THAT( contents->volumeMm3, WithinRel(2000.0, kRelStep) )
+        => 2000.00000000000068212 and 2000.0 are within 1e-07% of each other
+MirrorFileTests.cpp:430  CHECK_THAT( contents->areaMm2, WithinRel(1200.0, kRelStep) )
+        => 1200.0 and 1200.0 are within 1e-07% of each other
+MirrorFileTests.cpp:431  CHECK_THAT( contents->minMm[0], WithinAbs(-25.0, 1e-6) )
+        => -25.0 is within 0.000001 of -25.0
+MirrorFileTests.cpp:432  CHECK_THAT( contents->maxMm[0], WithinAbs(25.0, 1e-6) )
+        => 25.0 is within 0.000001 of 25.0
+MirrorFileTests.cpp:434  CHECK_THAT( contents->minMm[axis], WithinAbs(-5.0, 1e-6) )
+        => -5.0 is within 0.000001 of -5.0
+MirrorFileTests.cpp:435  CHECK_THAT( contents->maxMm[axis], WithinAbs(5.0, 1e-6) )
+        => 5.00000000000000089 is within 0.000001 of 5.0
+MirrorFileTests.cpp:434  CHECK_THAT( contents->minMm[axis], WithinAbs(-5.0, 1e-6) )
+        => -5.0 is within 0.000001 of -5.0
+MirrorFileTests.cpp:435  CHECK_THAT( contents->maxMm[axis], WithinAbs(5.0, 1e-6) )
+        => 5.0 is within 0.000001 of 5.0
+
+== MirrorFeature_ExportsStep / the cube's mirror image alone, across a skew plane
+MirrorFileTests.cpp:451  CHECK_THAT( contents->volumeMm3, WithinRel(1000.0, kRelStep) )
+        => 999.9999999998540261 and 1000.0 are within 1e-07% of each other
+MirrorFileTests.cpp:452  CHECK_THAT( contents->areaMm2, WithinRel(600.0, kRelStep) )
+        => 599.99999999983447196 and 600.0 are within 1e-07% of each other
+MirrorFileTests.cpp:468  CHECK_THAT( contents->minMm[axis], WithinAbs(lo[axis], 1e-6) )
+        => 7.44444444444321007 is within 0.000001 of 7.44444444444444553 with message: axis := 0
+MirrorFileTests.cpp:469  CHECK_THAT( contents->maxMm[axis], WithinAbs(hi[axis], 1e-6) )
+        => 24.11111111111524963 is within 0.000001 of 24.11111111111111072 with message: axis := 0
+MirrorFileTests.cpp:468  CHECK_THAT( contents->minMm[axis], WithinAbs(lo[axis], 1e-6) )
+        => -15.66666666666336027 is within 0.000001 of -15.66666666666666607 with message: axis := 1
+MirrorFileTests.cpp:469  CHECK_THAT( contents->maxMm[axis], WithinAbs(hi[axis], 1e-6) )
+        => -1.22222222222200005 is within 0.000001 of -1.22222222222222143 with message: axis := 1
+MirrorFileTests.cpp:468  CHECK_THAT( contents->minMm[axis], WithinAbs(lo[axis], 1e-6) )
+        => -15.66666666666336027 is within 0.000001 of -15.66666666666666607 with message: axis := 2
+MirrorFileTests.cpp:469  CHECK_THAT( contents->maxMm[axis], WithinAbs(hi[axis], 1e-6) )
+        => -1.22222222221960308 is within 0.000001 of -1.22222222222222143 with message: axis := 2
+
+Overall: 3954 assertions passed, 0 failed.
