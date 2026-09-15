@@ -490,5 +490,67 @@ int main() {
            sweep(circleLoop(0, 0, 2), yz, xy,
                  {line(0, 0, 50, 0), line(50, 0, 50, 50), line(50, 50, 0, 50), line(0, 50, 0, 0)}),
            800.0 * pi, 0.0);
+
+    std::printf("\nLofts (ruled, sections on parallel planes; closed forms, or V = h/6 (A0 + 4 Am + A1))\n");
+    const auto level = [](double z) {
+        return Frame3D::create(Point3D{0_mm, 0_mm, z * units::mm}, Direction3D::unitZ(), Direction3D::unitX()).value();
+    };
+    const auto loft = [&](std::vector<std::pair<ProfileLoop, double>> sections) {
+        std::vector<PlanarRegion> regions;
+        for (auto& [loop, z] : sections) {
+            regions.push_back(PlanarRegion{.plane = level(z), .outer = std::move(loop), .holes = {}});
+        }
+        return makeLoft(regions);
+    };
+    const auto regular = [](int n, double r, double a0) {
+        ProfileLoop loop;
+        for (int i = 0; i < n; ++i) {
+            const double t0 = a0 + 2.0 * pi * i / n;
+            const double t1 = a0 + 2.0 * pi * (i + 1) / n;
+            loop.segments.emplace_back(
+                LineSegment2D{mm(r * std::cos(t0), r * std::sin(t0)), mm(r * std::cos(t1), r * std::sin(t1))});
+        }
+        return loop;
+    };
+    const auto slot = [](double half, double r) {
+        return ProfileLoop{{ArcSegment2D{mm(half, 0), mm(half, -r), mm(half, r), true},
+                            LineSegment2D{mm(half, r), mm(-half, r)},
+                            ArcSegment2D{mm(-half, 0), mm(-half, r), mm(-half, -r), true},
+                            LineSegment2D{mm(-half, -r), mm(half, -r)}}};
+    };
+    const auto frustum = [](double r1, double r2, double h) { return pi * h / 3.0 * (r1 * r1 + r1 * r2 + r2 * r2); };
+    report("loft rectangle 10x20, z 0 to 100", loft({{rectangleLoop(0, 0, 10, 20), 0}, {rectangleLoop(0, 0, 10, 20), 100}}),
+           20000.0, 6400.0);
+    report("loft circle r=5, z 0 to 100", loft({{circleLoop(0, 0, 5), 0}, {circleLoop(0, 0, 5), 100}}), 2500.0 * pi,
+           1050.0 * pi);
+    report("loft circle r=10 to r=5 over 30 (frustum)", loft({{circleLoop(0, 0, 10), 0}, {circleLoop(0, 0, 5), 30}}),
+           frustum(10, 5, 30), pi * 15.0 * std::sqrt(925.0) + 125.0 * pi);
+    report("revolve trapezoid 10/5 x 30 (frustum)",
+           revolve(PlanarRegion{.plane = Frame3D::xz(), .outer = ProfileLoop{{line(0, 0, 10, 0), line(10, 0, 5, 30),
+                                                                              line(5, 30, 0, 30), line(0, 30, 0, 0)}},
+                                .holes = {}},
+                   360_deg),
+           frustum(10, 5, 30), pi * 15.0 * std::sqrt(925.0) + 125.0 * pi);
+    report("loft rectangle 20x10 to 10x5 over 30", loft({{rectangleLoop(0, 0, 20, 10), 0}, {rectangleLoop(0, 0, 10, 5), 30}}),
+           3500.0, 0.0);
+    report("loft rectangle 20x10 to 10x20 over 30", loft({{rectangleLoop(0, 0, 20, 10), 0}, {rectangleLoop(0, 0, 10, 20), 30}}),
+           5.0 * (200.0 + 4.0 * 225.0 + 200.0), 0.0);
+    const double hexagon = 1.5 * std::sqrt(3.0) * 100.0;
+    report("loft hexagon R=10 to R=5 over 30", loft({{regular(6, 10, 0), 0}, {regular(6, 5, 0), 30}}),
+           10.0 * (hexagon + hexagon / 4.0 + hexagon / 2.0), 0.0);
+    report("loft circles r=5, 10, 5 at z 0, 50, 100",
+           loft({{circleLoop(0, 0, 5), 0}, {circleLoop(0, 0, 10), 50}, {circleLoop(0, 0, 5), 100}}), 17500.0 * pi / 3.0,
+           0.0);
+    report("loft circles r=10, 6, 8, 4 at z 0, 20, 35, 60",
+           loft({{circleLoop(0, 0, 10), 0}, {circleLoop(0, 0, 6), 20}, {circleLoop(0, 0, 8), 35}, {circleLoop(0, 0, 4), 60}}),
+           2980.0 * pi, 0.0);
+    report("loft circle r=10 to r=5 moved (10, 0, 30)", loft({{circleLoop(0, 0, 10), 0}, {circleLoop(10, 0, 5), 30}}),
+           frustum(10, 5, 30), 0.0);
+    const double r = 10.0 * std::sqrt(2.0);
+    report("loft square 20 turned 30 deg over 30", loft({{regular(4, r, pi / 4.0), 0}, {regular(4, r, pi / 4.0 + pi / 6.0), 30}}),
+           30.0 * 400.0 * (2.0 + std::cos(pi / 6.0)) / 3.0, 0.0);
+    const double slotArea = 200.0 + 25.0 * pi;
+    report("loft slot 40x10 to 20x5 over 30", loft({{slot(10, 5), 0}, {slot(5, 2.5), 30}}),
+           10.0 * (slotArea + slotArea / 4.0 + slotArea / 2.0), 0.0);
     return 0;
 }

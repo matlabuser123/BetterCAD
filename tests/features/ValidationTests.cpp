@@ -3,6 +3,7 @@
 #include "support/ChamferBlockModel.hpp"
 #include "support/FilletModels.hpp"
 #include "support/HoleModels.hpp"
+#include "support/LoftModels.hpp"
 #include "support/MirrorModels.hpp"
 #include "support/PatternModels.hpp"
 #include "support/SweepModels.hpp"
@@ -13,6 +14,7 @@
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/features/FilletFeature.hpp>
 #include <bettercad/features/HoleFeature.hpp>
+#include <bettercad/features/LoftFeature.hpp>
 #include <bettercad/features/MirrorFeature.hpp>
 #include <bettercad/features/ResultBodies.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
@@ -44,6 +46,7 @@ using bettercad::test::HoleBlockModel;
 using bettercad::test::HoleMirrorModel;
 using bettercad::test::HoleRowModel;
 using bettercad::test::require;
+using bettercad::test::TaperedHoleModel;
 using bettercad::test::TurnedPartModel;
 using Catch::Matchers::ContainsSubstring;
 using Catch::Matchers::StartsWith;
@@ -734,6 +737,67 @@ TEST_CASE("SweepFeature_ModelsAreValidatedLikeAnyOther", "[validation][sweep]") 
         CHECK(regeneration[0].item == m.channel);
         CHECK(regeneration[0].message == "Channel (object:9) failed to regenerate: Channel: makeSweep: the path must "
                                          "start on the profile's plane, but it starts 10 mm from it");
+        CHECK_FALSE(report.valid());
+        CHECK(report.bodies.empty());
+    }
+}
+
+TEST_CASE("LoftFeature_ModelsAreValidatedLikeAnyOther", "[validation][loft]") {
+    TaperedHoleModel m;
+
+    SECTION("a sound model: the tapered block is the one valid result body") {
+        const ValidationReport report = validateDocument(m.doc);
+        INFO(describe(report));
+        CHECK(report.valid());
+        CHECK(report.issues.empty());
+        CHECK(report.regenerated == 5);
+        REQUIRE(report.bodies.size() == 1);
+        CHECK(report.bodies[0].feature == m.taper);
+        CHECK(report.bodies[0].valid);
+        CHECK(report.bodies[0].topology.solids == 1);
+        CHECK_THAT(report.bodies[0].properties->volume.in(units::mm3),
+                   WithinRel(TaperedHoleModel::expectedVolume(20, 15), 1e-12));
+    }
+    SECTION("a section that is not a sketch") {
+        LoftDefinition d = m.definitionOf<LoftFeature>(m.taper);
+        d.sections[1].sketch = SketchId::fromValue(m.pad.value());
+        m.setDefinition<LoftFeature>(m.taper, d);
+        const ValidationReport report = validateDocument(m.doc);
+        const auto issues = issuesOf(report, ValidationCheck::DocumentConsistency);
+        REQUIRE(issues.size() == 1);
+        CHECK(issues[0].message == "Taper (object:9): section 2 is Pad (object:6), which is an extrude, not a sketch");
+        CHECK(issuesOf(report, ValidationCheck::FeatureRegeneration).empty()); // reported once
+    }
+    SECTION("a section's offset driven by an angle") {
+        const ParameterId tilt = m.doc.createParameter("tilt", 30_deg, units::deg).value();
+        LoftDefinition d = m.definitionOf<LoftFeature>(m.taper);
+        d.sections[1].offsetParameter = tilt;
+        m.setDefinition<LoftFeature>(m.taper, d);
+        const auto issues = issuesOf(validateDocument(m.doc), ValidationCheck::DocumentConsistency);
+        REQUIRE(issues.size() == 1);
+        CHECK(issues[0].message ==
+              "Taper (object:9): section 2's offset is driven by tilt (object:10), which is an angle, not a length");
+    }
+    SECTION("a section's sketch that no longer exists") {
+        REQUIRE(m.doc.removeObject(m.tip).has_value());
+        const ValidationReport report = validateDocument(m.doc);
+        const auto issues = issuesOf(report, ValidationCheck::MissingReferences);
+        REQUIRE(issues.size() == 1);
+        CHECK(issues[0].message == "Taper (object:9) references object:8, which does not exist");
+        CHECK(issuesOf(report, ValidationCheck::FeatureRegeneration).empty());
+    }
+    SECTION("a loft that does not build") {
+        LoftDefinition d = m.definitionOf<LoftFeature>(m.taper);
+        d.sections[1] = {.sketch = SketchId::fromValue(m.base.value())}; // a rectangle against a circle
+        m.setDefinition<LoftFeature>(m.taper, d);
+        const ValidationReport report = validateDocument(m.doc);
+        INFO(describe(report));
+        const auto regeneration = issuesOf(report, ValidationCheck::FeatureRegeneration);
+        REQUIRE(regeneration.size() == 1);
+        CHECK(regeneration[0].item == m.taper);
+        CHECK(regeneration[0].message ==
+              "Taper (object:9) failed to regenerate: Taper: makeLoft: sections 1 and 2 cannot be matched: section 1 is "
+              "a circle and section 2 is 4 lines; lofts between different shapes are not supported");
         CHECK_FALSE(report.valid());
         CHECK(report.bodies.empty());
     }

@@ -9,6 +9,7 @@
 #include <bettercad/features/MirrorFeature.hpp>
 #include <bettercad/features/Regenerator.hpp>
 #include <bettercad/features/ResultBodies.hpp>
+#include <bettercad/features/LoftFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
 #include <bettercad/features/SweepFeature.hpp>
 #include <bettercad/features/Validation.hpp>
@@ -206,6 +207,19 @@ private:
                                 std::format("{}: the path edge {} is a point, not a line, arc or circle",
                                             label(document_, object.id()), edge));
                         }
+                    }
+                }
+            } else if (const auto* loft = dynamic_cast<const LoftFeature*>(&object)) {
+                const std::vector<LoftSection>& sections = loft->definition().sections;
+                for (std::size_t i = 0; i < sections.size(); ++i) {
+                    const ObjectId sketchId{sections[i].sketch};
+                    if (document_.contains(sketchId) && document_.findObjectAs<sketch::Sketch>(sketchId) == nullptr) {
+                        wrongKind(object.id(), std::format("section {} is", i + 1), sketchId,
+                                  kindOf(document_, sketchId), "a sketch");
+                    }
+                    if (sections[i].offsetParameter) {
+                        checkParameter(object.id(), *sections[i].offsetParameter, dimensions::length,
+                                       std::format("section {}'s offset is driven by", i + 1));
                     }
                 }
             }

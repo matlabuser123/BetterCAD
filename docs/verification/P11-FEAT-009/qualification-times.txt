@@ -1,0 +1,18 @@
+qualification started Tue 15/09/2026 23:04:35.23
+debug configure started Tue 15/09/2026 23:04:35.23
+debug configure exit 0 Tue 15/09/2026 23:04:41.33
+debug build exit 0 Tue 15/09/2026 23:08:43.63
+debug ctest exit 0 Tue 15/09/2026 23:11:58.30
+release configure started Tue 15/09/2026 23:11:58.31
+release configure exit 0 Tue 15/09/2026 23:12:02.12
+release build exit 0 Tue 15/09/2026 23:17:13.65
+release ctest exit 0 Tue 15/09/2026 23:20:02.28
+debug-shared configure started Tue 15/09/2026 23:20:02.29
+debug-shared configure exit 0 Tue 15/09/2026 23:20:06.24
+debug-shared build exit 0 Tue 15/09/2026 23:23:59.29
+debug-shared ctest exit 0 Tue 15/09/2026 23:27:44.50
+repeat release started Tue 15/09/2026 23:27:44.50
+repeat release exit 0 Tue 15/09/2026 23:37:58.11
+repeat debug started Tue 15/09/2026 23:37:58.12
+repeat debug exit 0 Tue 15/09/2026 23:49:04.93
+qualification finished Tue 15/09/2026 23:49:04.94

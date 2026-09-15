@@ -1,0 +1,46 @@
+Post-check proof for makeLoft (P11-FEAT-009): what happens when the adapter uses OCCT's default
+ThruSections settings (smooth interpolation, the kernel's own compatibility matching) instead of
+BetterCAD's (ruled, CheckCompatibility(false) on BetterCAD's matching).
+Captured 2026-09-15T22:25:15+10:00 on the Debug build with this two-line change in makeLoft():
+
+-        BRepOffsetAPI_ThruSections loft(/*isSolid=*/true, /*ruled=*/true);
++        BRepOffsetAPI_ThruSections loft(/*isSolid=*/true, /*ruled=*/false);
+-        loft.CheckCompatibility(false);
++        loft.CheckCompatibility(true);
+
+Command: build/debug/bin/bettercad_tests.exe "[loft]" --reporter compact
+Result: 13 of the 48 loft test cases fail; no wrong solid is committed:
+  - smooth interpolation through three or more sections: refused by the prismatoid volume check
+    (22514.7 against 18325.96 mm^3; 9965.9 against 9361.9 mm^3), so the features fail and export nothing;
+  - the kernel re-matching sections itself (CheckCompatibility(true)): refused by the same check
+    (6164.4 against 7717.8 mm^3), or by the self-interference check;
+  - the 45 deg square tie: with the kernel's own matching the twist flips under 1e-12 rad of noise
+    (Loft_BreaksTiesDeterministically), which BetterCAD's tie rule prevents.
+The change was then reverted; OcctSweeps.cpp was checked by SHA-256:
+58336d2c01a3c0e8ec3d4a65361147beec435debf3943f26cdffd193aa0a60ea
+
+Failed assertions (Catch2 compact output):
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/core/geometry/LoftTests.cpp:106: failed: explicitly with 1 message: 'makeLoft: the lofted solid would intersect itself: its sides pass through one another between the sections'
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/io/LoftFileTests.cpp:354: failed: io::exportStep(m.doc, path).has_value() for: false
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/features/LoftFeatureTests.cpp:392: failed: report.succeeded() for: false with 1 message: 'object:8: Loft: makeLoft: the kernel's solid encloses 22514.7473516 mm^3, but the sections' prismatoid volume is 18325.9571459 mm^3
+'
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/features/LoftFeatureTests.cpp:419: failed: requireReport(regenerator, doc).succeeded() for: false
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/features/LoftFeatureTests.cpp:1064: failed: a.succeeded() for: false with 1 message: 'oblique := false'
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/io/LoftFileTests.cpp:175: failed: requireReport(before, m.doc).succeeded() for: false
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/io/LoftFileTests.cpp:209: failed: requireReport(before, doc).succeeded() for: false
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/features/LoftFeatureTests.cpp:954: failed: requireReport(regenerator, m.doc).succeeded() for: false
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/features/LoftFeatureTests.cpp:873: failed: requireReport(regenerator, doc).succeeded() for: false
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/core/geometry/LoftTests.cpp:106: failed: explicitly with 1 message: 'makeLoft: the kernel's solid encloses 6164.44928706 mm^3, but the sections' prismatoid volume is 7717.84595232 mm^3'
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/features/LoftFeatureTests.cpp:253: failed: requireReport(regenerator, m.doc).regenerated == std::vector<ObjectId>{m.bottom, m.middle, m.top, m.loft} for: { object:5, object:6, object:7 }
+==
+{ object:5, object:6, object:7, object:8 }
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/features/LoftFeatureTests.cpp:539: failed: requireReport(regenerator, m.doc).succeeded() for: false
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/core/geometry/LoftTests.cpp:341: failed: edgesBetween(body, corner, Point3D{0_mm, r * units::mm, 30_mm}) == 1 for: 0 == 1 with 1 message: 'noise := 0.000000000001'
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/core/geometry/LoftTests.cpp:342: failed: edgesBetween(body, corner, Point3D{r * units::mm, 0_mm, 30_mm}) == 0 for: 1 == 0 with 1 message: 'noise := 0.000000000001'
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/core/geometry/LoftTests.cpp:106: failed: explicitly with 1 message: 'makeLoft: the kernel's solid encloses 22514.7473516 mm^3, but the sections' prismatoid volume is 18325.9571459 mm^3'
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/core/geometry/LoftTests.cpp:106: failed: explicitly with 1 message: 'makeLoft: the kernel's solid encloses 9965.93763474 mm^3, but the sections' prismatoid volume is 9361.9461077 mm^3'
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/features/LoftFeatureTests.cpp:665: failed: requireReport(threeRegenerator, three.doc).succeeded() for: false
+test cases:   48 |   35 passed | 13 failed
+assertions: 2454 | 2437 passed | 17 failed
+
+

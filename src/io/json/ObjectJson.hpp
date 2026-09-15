@@ -13,6 +13,7 @@
 #include <bettercad/features/FilletFeature.hpp>
 #include <bettercad/features/HoleFeature.hpp>
 #include <bettercad/features/LinearPatternFeature.hpp>
+#include <bettercad/features/LoftFeature.hpp>
 #include <bettercad/features/MirrorFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
 #include <bettercad/features/SweepFeature.hpp>
@@ -99,5 +100,12 @@ circularPatternFromJson(const Json& data, std::string name, std::string_view pat
 [[nodiscard]] Json mirrorToJson(const features::MirrorFeature& feature);
 [[nodiscard]] Result<std::unique_ptr<features::MirrorFeature>> mirrorFromJson(const Json& data, std::string name,
                                                                               std::string_view path);
+
+/// "sections" in the loft's order, each {"sketch": id, "offset": metres}
+/// with an optional "offset_parameter"; "interpolation": "ruled"; the
+/// operation; and an optional target.
+[[nodiscard]] Json loftToJson(const features::LoftFeature& feature);
+[[nodiscard]] Result<std::unique_ptr<features::LoftFeature>> loftFromJson(const Json& data, std::string name,
+                                                                          std::string_view path);
 
 } // namespace bettercad::io::detail

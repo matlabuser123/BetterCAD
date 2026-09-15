@@ -12,6 +12,7 @@
 #include <bettercad/features/FilletFeature.hpp>
 #include <bettercad/features/HoleFeature.hpp>
 #include <bettercad/features/LinearPatternFeature.hpp>
+#include <bettercad/features/LoftFeature.hpp>
 #include <bettercad/features/MirrorFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
 #include <bettercad/features/SweepFeature.hpp>
@@ -83,6 +84,26 @@ regenerateRevolve(const RevolveFeature& feature, const Document& document,
 /// with @p target for Join/Cut/Intersect.
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::Body>
 regenerateSweep(const SweepFeature& feature, const Document& document, const geometry::Body* target = nullptr);
+
+/// The sections of a loft, in order: each section sketch's one closed
+/// profile, its plane moved along its normal by the section's offset (the
+/// driving parameter's value if it has one). Fails with NotFound for a
+/// missing sketch or offset parameter, DimensionMismatch for an offset
+/// parameter that is not a length, and FailedPrecondition for a sketch
+/// without exactly one closed profile, or whose profile has a hole; messages
+/// name the section ("section 2 (sketch 'Top'): ...").
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<std::vector<geometry::PlanarRegion>>
+resolveLoftSections(const LoftDefinition& definition, const Document& document);
+
+/// The tool solid of a loft: its resolved sections lofted in order
+/// (geometry::makeLoft()), before it is combined with a target.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::Body> loftTool(const LoftFeature& feature,
+                                                                       const Document& document);
+
+/// Computes the body of a loft feature: its tool (loftTool()), combined with
+/// @p target for Join/Cut/Intersect.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::Body>
+regenerateLoft(const LoftFeature& feature, const Document& document, const geometry::Body* target = nullptr);
 
 /// Distance of a chamfer: the driving parameter's value if it has one
 /// (NotFound if missing, DimensionMismatch if not a length), otherwise the

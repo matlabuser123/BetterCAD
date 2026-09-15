@@ -15,7 +15,7 @@
 //     "document":   { "id": "<uuid>", "name": ..., "metadata": {...}, "last_allocated_id": N },
 //     "parameters": [ ... ],
 //     "objects":    [ { "id": N, "type": "sketch" | "extrude" | "revolve" | "chamfer" | "fillet" | "hole" |
-//                       "linear_pattern" | "circular_pattern" | "mirror" | "sweep", "name": ...,
+//                       "linear_pattern" | "circular_pattern" | "mirror" | "sweep" | "loft", "name": ...,
 //                       "data": {...} } ]
 //   }
 //

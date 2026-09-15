@@ -983,4 +983,97 @@ Result<std::unique_ptr<features::MirrorFeature>> mirrorFromJson(const Json& data
     return std::move(*feature);
 }
 
+namespace {
+
+using features::LoftInterpolation;
+
+constexpr std::array<std::pair<LoftInterpolation, std::string_view>, 1> kLoftInterpolations{{
+    {LoftInterpolation::Ruled, "ruled"},
+}};
+
+Result<features::LoftSection> loftSectionFromJson(const Json& value, std::string_view path) {
+    if (auto object = requireObject(value, path, {"sketch", "offset", "offset_parameter"}); !object) {
+        return std::unexpected(object.error());
+    }
+    auto sketch = readId(value, "sketch", path);
+    auto offset = readNumber(value, "offset", path);
+    auto offsetParameter = readOptionalId(value, "offset_parameter", path);
+    for (const Error* error : {!sketch ? &sketch.error() : nullptr, !offset ? &offset.error() : nullptr,
+                               !offsetParameter ? &offsetParameter.error() : nullptr}) {
+        if (error != nullptr) {
+            return std::unexpected(*error);
+        }
+    }
+    return features::LoftSection{
+        .sketch = SketchId::fromValue(*sketch),
+        .offset = Length::fromSi(*offset),
+        .offsetParameter = *offsetParameter ? std::optional<ParameterId>{ParameterId::fromValue(**offsetParameter)}
+                                            : std::nullopt,
+    };
+}
+
+} // namespace
+
+Json loftToJson(const features::LoftFeature& feature) {
+    const features::LoftDefinition& d = feature.definition();
+    Json json = Json::object();
+    Json sections = Json::array();
+    for (const features::LoftSection& section : d.sections) {
+        Json entry = Json::object();
+        entry["sketch"] = section.sketch.value();
+        entry["offset"] = section.offset.si();
+        if (section.offsetParameter) {
+            entry["offset_parameter"] = section.offsetParameter->value();
+        }
+        sections.push_back(std::move(entry));
+    }
+    json["sections"] = std::move(sections);
+    json["interpolation"] = std::string{nameOf(kLoftInterpolations, d.interpolation)};
+    json["operation"] = std::string{nameOf(kOperations, d.operation)};
+    if (d.target) {
+        json["target"] = d.target->value();
+    }
+    return json;
+}
+
+Result<std::unique_ptr<features::LoftFeature>> loftFromJson(const Json& data, std::string name,
+                                                            std::string_view path) {
+    if (auto object = requireObject(data, path, {"sections", "interpolation", "operation", "target"}); !object) {
+        return std::unexpected(object.error());
+    }
+    auto sectionsField = requireArray(data, "sections", path);
+    if (!sectionsField) {
+        return std::unexpected(sectionsField.error());
+    }
+    const std::string sectionsPath = childPath(path, "sections");
+    std::vector<features::LoftSection> sections;
+    for (std::size_t i = 0; i < (*sectionsField)->size(); ++i) {
+        auto section = loftSectionFromJson((**sectionsField)[i], indexPath(sectionsPath, i));
+        if (!section) {
+            return std::unexpected(section.error());
+        }
+        sections.push_back(*section);
+    }
+    auto interpolation = valueOf(kLoftInterpolations, data, "interpolation", path);
+    auto operation = valueOf(kOperations, data, "operation", path);
+    auto target = readOptionalId(data, "target", path);
+    for (const Error* error : {!interpolation ? &interpolation.error() : nullptr,
+                               !operation ? &operation.error() : nullptr, !target ? &target.error() : nullptr}) {
+        if (error != nullptr) {
+            return std::unexpected(*error);
+        }
+    }
+    const features::LoftDefinition definition{
+        .sections = std::move(sections),
+        .interpolation = *interpolation,
+        .operation = *operation,
+        .target = *target ? std::optional<FeatureId>{FeatureId::fromValue(**target)} : std::nullopt,
+    };
+    auto feature = features::LoftFeature::create(std::move(name), definition);
+    if (!feature) {
+        return atPath(path, feature.error());
+    }
+    return std::move(*feature);
+}
+
 } // namespace bettercad::io::detail

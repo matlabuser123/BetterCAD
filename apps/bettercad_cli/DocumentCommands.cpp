@@ -7,6 +7,7 @@
 #include <bettercad/features/FilletFeature.hpp>
 #include <bettercad/features/HoleFeature.hpp>
 #include <bettercad/features/LinearPatternFeature.hpp>
+#include <bettercad/features/LoftFeature.hpp>
 #include <bettercad/features/MirrorFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
 #include <bettercad/features/SweepFeature.hpp>
@@ -257,6 +258,20 @@ std::string describeObject(const Document& document, const DocumentObject& objec
         return std::format("profile {}, path {} ({}), {}, {}", nameOrId(document, ObjectId{d.profile}),
                            nameOrId(document, ObjectId{d.path.sketch}), plural(d.path.edges.size(), "edge", "edges"),
                            features::toString(d.orientation), describeOperation(document, d.operation, d.target));
+    }
+    if (const auto* loft = dynamic_cast<const features::LoftFeature*>(&object)) {
+        // "sections Bottom to Top (offset height), ruled, new body", in the loft's order.
+        const features::LoftDefinition& d = loft->definition();
+        std::string text = "sections ";
+        for (std::size_t i = 0; i < d.sections.size(); ++i) {
+            const features::LoftSection& section = d.sections[i];
+            text += (i == 0 ? "" : " to ") + nameOrId(document, ObjectId{section.sketch});
+            if (section.offsetParameter || section.offset != Length{}) {
+                text += std::format(" (offset {})", describeLength(document, section.offset, section.offsetParameter));
+            }
+        }
+        return std::format("{}, {}, {}", text, features::toString(d.interpolation),
+                           describeOperation(document, d.operation, d.target));
     }
     return {};
 }

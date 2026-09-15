@@ -1,0 +1,1328 @@
+Measured feature-level values (Release build of the qualified tree), captured 2026-09-15.
+Produced by: build/release/bin/bettercad_tests.exe "[loft]" -s --reporter xml --rng-seed 1, filtered by
+values.py (kept in this directory): every passed CHECK_THAT / REQUIRE_THAT (volumes, areas, bounds, positions,
+error messages), and every passed CHECK whose INFO/CAPTURE context reports a measured value (keywords: expected,
+error, meshed, "A L", lo[axis]). Each entry: file:line, the assertion, then Catch2's expansion (values printed
+exactly) and any CAPTURE/INFO context. GeometryTestSupport.hpp:35-37 is checkPoint(), which compares x, y and z
+of a point (a centre of mass or a bound) with 1e-9 mm. checkBox() (LoftTests.cpp:130-133,
+LoftFeatureTests.cpp:113-116) compares the bounds of lofted bodies one-sidedly: the kernel's box must contain
+the exact box and exceed it by at most 1e-7 mm (its confusion tolerance); lo[axis] and hi[axis] are the
+kernel's bounds.
+Checks on whole-file text (STEP text, JSON, CLI output; expansions over 1000 characters) are left out.
+
+
+== LoftFeature_CircularFrustumMatchesAnalyticVolume
+LoftFeatureTests.cpp:329  CHECK_THAT( expected, WithinRel(1750.0 * pi, 1e-15) )
+        => 5497.78714378213771852 and 5497.78714378213771852 are within 1e-13% of each other with message: 
+LoftFeatureTests.cpp:335  CHECK_THAT( actual, WithinRel(expected, kRel) )
+        => 5497.78714378213862801 and 5497.78714378213771852 are within 1e-10% of each other with message: ; r1 10 mm, r2 5 mm, h 30 mm: expected 5497.79 mm^3, actual 5497.79 mm^3, absolute error 9.09495e-13 mm^3, relative 1.65429e-16
+LoftFeatureTests.cpp:338  CHECK_THAT( props.surfaceArea.in(units::mm2), WithinRel(pi * 15.0 * slant + pi * 125.0, kRel) )
+        => 1825.91623760243419383 and 1825.91623760243510333 are within 1e-10% of each other with message: ; r1 10 mm, r2 5 mm, h 30 mm: expected 5497.79 mm^3, actual 5497.79 mm^3, absolute error 9.09495e-13 mm^3, relative 1.65429e-16
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -0.00000000000000014 is within 0.000000001 of 0.0 with message: ; r1 10 mm, r2 5 mm, h 30 mm: expected 5497.79 mm^3, actual 5497.79 mm^3, absolute error 9.09495e-13 mm^3, relative 1.65429e-16
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -0.00000000000000052 is within 0.000000001 of 0.0 with message: ; r1 10 mm, r2 5 mm, h 30 mm: expected 5497.79 mm^3, actual 5497.79 mm^3, absolute error 9.09495e-13 mm^3, relative 1.65429e-16
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 11.78571428571428648 is within 0.000000001 of 11.7857142857142847 with message: ; r1 10 mm, r2 5 mm, h 30 mm: expected 5497.79 mm^3, actual 5497.79 mm^3, absolute error 9.09495e-13 mm^3, relative 1.65429e-16
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000010000000117 <= -9.99999999899999992 with message: ; r1 10 mm, r2 5 mm, h 30 mm: expected 5497.79 mm^3, actual 5497.79 mm^3, absolute error 9.09495e-13 mm^3, relative 1.65429e-16; axis := 0; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000010000000117 >= -10.00000010099999947 with message: ; r1 10 mm, r2 5 mm, h 30 mm: expected 5497.79 mm^3, actual 5497.79 mm^3, absolute error 9.09495e-13 mm^3, relative 1.65429e-16; axis := 0; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000010000000117 >= 9.99999999899999992 with message: ; r1 10 mm, r2 5 mm, h 30 mm: expected 5497.79 mm^3, actual 5497.79 mm^3, absolute error 9.09495e-13 mm^3, relative 1.65429e-16; axis := 0; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000010000000117 <= 10.00000010099999947 with message: ; r1 10 mm, r2 5 mm, h 30 mm: expected 5497.79 mm^3, actual 5497.79 mm^3, absolute error 9.09495e-13 mm^3, relative 1.65429e-16; axis := 0; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000010000000117 <= -9.99999999899999992 with message: ; r1 10 mm, r2 5 mm, h 30 mm: expected 5497.79 mm^3, actual 5497.79 mm^3, absolute error 9.09495e-13 mm^3, relative 1.65429e-16; axis := 1; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000010000000117 >= -10.00000010099999947 with message: ; r1 10 mm, r2 5 mm, h 30 mm: expected 5497.79 mm^3, actual 5497.79 mm^3, absolute error 9.09495e-13 mm^3, relative 1.65429e-16; axis := 1; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000010000000117 >= 9.99999999899999992 with message: ; r1 10 mm, r2 5 mm, h 30 mm: expected 5497.79 mm^3, actual 5497.79 mm^3, absolute error 9.09495e-13 mm^3, relative 1.65429e-16; axis := 1; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000010000000117 <= 10.00000010099999947 with message: ; r1 10 mm, r2 5 mm, h 30 mm: expected 5497.79 mm^3, actual 5497.79 mm^3, absolute error 9.09495e-13 mm^3, relative 1.65429e-16; axis := 1; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -0.0000001 <= 0.000000001 with message: ; r1 10 mm, r2 5 mm, h 30 mm: expected 5497.79 mm^3, actual 5497.79 mm^3, absolute error 9.09495e-13 mm^3, relative 1.65429e-16; axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -0.0000001 >= -0.000000101 with message: ; r1 10 mm, r2 5 mm, h 30 mm: expected 5497.79 mm^3, actual 5497.79 mm^3, absolute error 9.09495e-13 mm^3, relative 1.65429e-16; axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 30.00000010000000117 >= 29.99999999899999992 with message: ; r1 10 mm, r2 5 mm, h 30 mm: expected 5497.79 mm^3, actual 5497.79 mm^3, absolute error 9.09495e-13 mm^3, relative 1.65429e-16; axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 30.00000010000000117 <= 30.00000010100000125 with message: ; r1 10 mm, r2 5 mm, h 30 mm: expected 5497.79 mm^3, actual 5497.79 mm^3, absolute error 9.09495e-13 mm^3, relative 1.65429e-16; axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftFeatureTests.cpp:341  CHECK_THAT( areaOn(body, {0, 0, 0}, {0, 0, -1}), WithinRel(100.0 * pi, kRel) )
+        => 314.15926535897932581 and 314.15926535897932581 are within 1e-10% of each other with message: ; r1 10 mm, r2 5 mm, h 30 mm: expected 5497.79 mm^3, actual 5497.79 mm^3, absolute error 9.09495e-13 mm^3, relative 1.65429e-16
+LoftFeatureTests.cpp:342  CHECK_THAT( areaOn(body, {0, 0, 30}, {0, 0, 1}), WithinRel(25.0 * pi, kRel) )
+        => 78.53981633974483145 and 78.53981633974483145 are within 1e-10% of each other with message: ; r1 10 mm, r2 5 mm, h 30 mm: expected 5497.79 mm^3, actual 5497.79 mm^3, absolute error 9.09495e-13 mm^3, relative 1.65429e-16
+
+== Loft_PolygonsMatchFrustumsAndPrismatoids / similar rectangles: h/3 (A1 + A2 + sqrt(A1 A2))
+LoftTests.cpp:196  CHECK_THAT( volumeMm3(body), WithinRel(10.0 * (200.0 + 50.0 + 100.0), kRelTight) )
+        => 3500.00000000000090949 and 3500.0 are within 1e-10% of each other
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -0.00000000000000015 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -0.00000000000000031 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 11.7857142857142847 is within 0.000000001 of 11.7857142857142847
+LoftTests.cpp:130  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000009999999939 <= -9.99999999899999992 with message: axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:131  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000009999999939 >= -10.00000010099999947 with message: axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:132  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000009999999939 >= 9.99999999899999992 with message: axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:133  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000009999999939 <= 10.00000010099999947 with message: axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:130  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -5.00000010000000028 <= -4.99999999899999992 with message: axis := 1; lo[axis] := -5.00000010000000028; hi[axis] := 5.00000010000000028
+LoftTests.cpp:131  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -5.00000010000000028 >= -5.00000010100000036 with message: axis := 1; lo[axis] := -5.00000010000000028; hi[axis] := 5.00000010000000028
+LoftTests.cpp:132  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 5.00000010000000028 >= 4.99999999899999992 with message: axis := 1; lo[axis] := -5.00000010000000028; hi[axis] := 5.00000010000000028
+LoftTests.cpp:133  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 5.00000010000000028 <= 5.00000010100000036 with message: axis := 1; lo[axis] := -5.00000010000000028; hi[axis] := 5.00000010000000028
+LoftTests.cpp:130  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -0.0000001 <= 0.000000001 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftTests.cpp:131  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -0.0000001 >= -0.000000101 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftTests.cpp:132  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 30.00000010000000117 >= 29.99999999899999992 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftTests.cpp:133  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 30.00000010000000117 <= 30.00000010100000125 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+
+== Loft_PolygonsMatchFrustumsAndPrismatoids / a rectangle to its transpose: h/6 (A0 + 4 Am + A1), Am = 15 x 15
+LoftTests.cpp:203  CHECK_THAT( volumeMm3(body), WithinRel(5.0 * (200.0 + 4.0 * 225.0 + 200.0), kRelTight) )
+        => 6500.0 and 6500.0 are within 1e-10% of each other
+LoftTests.cpp:130  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000009999999939 <= -9.99999999899999992 with message: axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:131  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000009999999939 >= -10.00000010099999947 with message: axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:132  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000009999999939 >= 9.99999999899999992 with message: axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:133  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000009999999939 <= 10.00000010099999947 with message: axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:130  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000009999999939 <= -9.99999999899999992 with message: axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:131  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000009999999939 >= -10.00000010099999947 with message: axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:132  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000009999999939 >= 9.99999999899999992 with message: axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:133  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000009999999939 <= 10.00000010099999947 with message: axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:130  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -0.0000001 <= 0.000000001 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftTests.cpp:131  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -0.0000001 >= -0.000000101 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftTests.cpp:132  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 30.00000010000000117 >= 29.99999999899999992 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftTests.cpp:133  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 30.00000010000000117 <= 30.00000010100000125 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+
+== Loft_PolygonsMatchFrustumsAndPrismatoids / regular hexagons R 10 -> R 5
+LoftTests.cpp:210  CHECK_THAT( volumeMm3(body), WithinRel(10.0 * (a1 + a2 + std::sqrt(a1 * a2)), kRelTight) )
+        => 4546.63336986830290698 and 4546.63336986830290698 are within 1e-10% of each other
+LoftTests.cpp:130  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000009999999939 <= -9.99999999899999992 with message: axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:131  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000009999999939 >= -10.00000010099999947 with message: axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:132  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000009999999939 >= 9.99999999899999992 with message: axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:133  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000009999999939 <= 10.00000010099999947 with message: axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:130  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -8.66025413784438491 <= -8.66025403684438544 with message: axis := 1; lo[axis] := -8.66025413784438491; hi[axis] := 8.66025413784438669
+LoftTests.cpp:131  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -8.66025413784438491 >= -8.660254138844385 with message: axis := 1; lo[axis] := -8.66025413784438491; hi[axis] := 8.66025413784438669
+LoftTests.cpp:132  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 8.66025413784438669 >= 8.66025403684438544 with message: axis := 1; lo[axis] := -8.66025413784438491; hi[axis] := 8.66025413784438669
+LoftTests.cpp:133  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 8.66025413784438669 <= 8.660254138844385 with message: axis := 1; lo[axis] := -8.66025413784438491; hi[axis] := 8.66025413784438669
+LoftTests.cpp:130  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -0.0000001 <= 0.000000001 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftTests.cpp:131  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -0.0000001 >= -0.000000101 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftTests.cpp:132  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 30.00000010000000117 >= 29.99999999899999992 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftTests.cpp:133  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 30.00000010000000117 <= 30.00000010100000125 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+
+== Loft_MatchesSectionsWithTheLeastTwist / a rectangle drawn from any corner, either way round, matches corner to corner
+LoftTests.cpp:292  CHECK_THAT( volumeMm3(body), WithinRel(6500.0, kRelTight) )
+        => 6500.0 and 6500.0 are within 1e-10% of each other with message: first := 0; clockwise := false
+LoftTests.cpp:292  CHECK_THAT( volumeMm3(body), WithinRel(6500.0, kRelTight) )
+        => 6500.0 and 6500.0 are within 1e-10% of each other with message: first := 0; clockwise := true
+LoftTests.cpp:292  CHECK_THAT( volumeMm3(body), WithinRel(6500.0, kRelTight) )
+        => 6500.0 and 6500.0 are within 1e-10% of each other with message: first := 1; clockwise := false
+LoftTests.cpp:292  CHECK_THAT( volumeMm3(body), WithinRel(6500.0, kRelTight) )
+        => 6500.0 and 6500.0 are within 1e-10% of each other with message: first := 1; clockwise := true
+LoftTests.cpp:292  CHECK_THAT( volumeMm3(body), WithinRel(6500.0, kRelTight) )
+        => 6500.0 and 6500.0 are within 1e-10% of each other with message: first := 2; clockwise := false
+LoftTests.cpp:292  CHECK_THAT( volumeMm3(body), WithinRel(6500.0, kRelTight) )
+        => 6500.0 and 6500.0 are within 1e-10% of each other with message: first := 2; clockwise := true
+LoftTests.cpp:292  CHECK_THAT( volumeMm3(body), WithinRel(6500.0, kRelTight) )
+        => 6500.0 and 6500.0 are within 1e-10% of each other with message: first := 3; clockwise := false
+LoftTests.cpp:292  CHECK_THAT( volumeMm3(body), WithinRel(6500.0, kRelTight) )
+        => 6500.0 and 6500.0 are within 1e-10% of each other with message: first := 3; clockwise := true
+
+== Loft_MatchesSectionsWithTheLeastTwist / a square turned by 30 deg twists by 30 deg, not 60
+LoftTests.cpp:301  CHECK_THAT( volumeMm3(body), WithinRel(5.0 * (400.0 + 4.0 * side * side + 400.0), kRelTight) )
+        => 11464.10161513775528874 and 11464.10161513775528874 are within 1e-10% of each other
+
+== Loft_MatchesSectionsWithTheLeastTwist / circles match angle for angle whatever their sketch axes and normals
+LoftTests.cpp:311  CHECK_THAT( volumeMm3(body), WithinRel(frustum(10, 5, 30), kRelTight) )
+        => 5497.78714378213680902 and 5497.78714378213771852 are within 1e-10% of each other
+LoftTests.cpp:311  CHECK_THAT( volumeMm3(body), WithinRel(frustum(10, 5, 30), kRelTight) )
+        => 5497.78714378213680902 and 5497.78714378213771852 are within 1e-10% of each other
+
+== LoftFeature_Add
+LoftFeatureTests.cpp:592  CHECK_THAT( volumeMm3(regenerator, m.boss), WithinRel(100000.0 + 10.0 * 1400.0, kRel) )
+        => 114000.00000000001455192 and 114000.0 are within 1e-10% of each other with message: 
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => 0.0 <= 0.000000001 with message: ; axis := 0; lo[axis] := 0.0; hi[axis] := 100.0
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => 0.0 >= -0.000000101 with message: ; axis := 0; lo[axis] := 0.0; hi[axis] := 100.0
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 100.0 >= 99.99999999899999636 with message: ; axis := 0; lo[axis] := 0.0; hi[axis] := 100.0
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 100.0 <= 100.0000001009999977 with message: ; axis := 0; lo[axis] := 0.0; hi[axis] := 100.0
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => 0.0 <= 0.000000001 with message: ; axis := 1; lo[axis] := 0.0; hi[axis] := 50.00000000000004263
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => 0.0 >= -0.000000101 with message: ; axis := 1; lo[axis] := 0.0; hi[axis] := 50.00000000000004263
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 50.00000000000004263 >= 49.99999999900000347 with message: ; axis := 1; lo[axis] := 0.0; hi[axis] := 50.00000000000004263
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 50.00000000000004263 <= 50.0000001009999977 with message: ; axis := 1; lo[axis] := 0.0; hi[axis] := 50.00000000000004263
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => 0.0 <= 0.000000001 with message: ; axis := 2; lo[axis] := 0.0; hi[axis] := 50.00000010000000117
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => 0.0 >= -0.000000101 with message: ; axis := 2; lo[axis] := 0.0; hi[axis] := 50.00000010000000117
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 50.00000010000000117 >= 49.99999999900000347 with message: ; axis := 2; lo[axis] := 0.0; hi[axis] := 50.00000010000000117
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 50.00000010000000117 <= 50.0000001009999977 with message: ; axis := 2; lo[axis] := 0.0; hi[axis] := 50.00000010000000117
+LoftFeatureTests.cpp:595  CHECK_THAT( areaOn(body, {0, 0, 50}, {0, 0, 1}), WithinRel(200.0, kRel) )
+        => 200.00000000000005684 and 200.0 are within 1e-10% of each other with message: 
+LoftFeatureTests.cpp:596  CHECK_THAT( areaOn(body, {0, 0, 20}, {0, 0, 1}), WithinRel(5000.0 - 800.0, kRel) )
+        => 4200.00000000000181899 and 4200.0 are within 1e-10% of each other with message: 
+
+== LoftFeature_EqualCirclesMatchCylinderVolume
+LoftFeatureTests.cpp:310  CHECK_THAT( props.volume.in(units::mm3), WithinRel(2500.0 * pi, kRel) )
+        => 7853.98163397447842726 and 7853.98163397448297474 are within 1e-10% of each other with message: loft 7853.98 mm^3, extrude 7853.98 mm^3
+LoftFeatureTests.cpp:311  CHECK_THAT( props.volume.in(units::mm3), WithinRel(extruded.volume.in(units::mm3), kRel) )
+        => 7853.98163397447842726 and 7853.98163397448024625 are within 1e-10% of each other with message: loft 7853.98 mm^3, extrude 7853.98 mm^3
+LoftFeatureTests.cpp:312  CHECK_THAT( props.surfaceArea.in(units::mm2), WithinRel(2.0 * pi * 5.0 * 100.0 + 2.0 * pi * 25.0, kRel) )
+        => 3298.67228626928272206 and 3298.67228626928272206 are within 1e-10% of each other with message: loft 7853.98 mm^3, extrude 7853.98 mm^3
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -0.00000000000000168 is within 0.000000001 of 0.0 with message: loft 7853.98 mm^3, extrude 7853.98 mm^3
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -0.00000000000000032 is within 0.000000001 of 0.0 with message: loft 7853.98 mm^3, extrude 7853.98 mm^3
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 50.0 is within 0.000000001 of 50.0 with message: loft 7853.98 mm^3, extrude 7853.98 mm^3
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -0.00000000000000017 is within 0.000000001 of 0.0 with message: loft 7853.98 mm^3, extrude 7853.98 mm^3
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -0.00000000000000033 is within 0.000000001 of 0.0 with message: loft 7853.98 mm^3, extrude 7853.98 mm^3
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 50.0 is within 0.000000001 of 50.0 with message: loft 7853.98 mm^3, extrude 7853.98 mm^3
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -5.00000010000000028 <= -4.99999999899999992 with message: loft 7853.98 mm^3, extrude 7853.98 mm^3; axis := 0; lo[axis] := -5.00000010000000028; hi[axis] := 5.00000010000000028
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -5.00000010000000028 >= -5.00000010100000036 with message: loft 7853.98 mm^3, extrude 7853.98 mm^3; axis := 0; lo[axis] := -5.00000010000000028; hi[axis] := 5.00000010000000028
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 5.00000010000000028 >= 4.99999999899999992 with message: loft 7853.98 mm^3, extrude 7853.98 mm^3; axis := 0; lo[axis] := -5.00000010000000028; hi[axis] := 5.00000010000000028
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 5.00000010000000028 <= 5.00000010100000036 with message: loft 7853.98 mm^3, extrude 7853.98 mm^3; axis := 0; lo[axis] := -5.00000010000000028; hi[axis] := 5.00000010000000028
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -5.00000010000000028 <= -4.99999999899999992 with message: loft 7853.98 mm^3, extrude 7853.98 mm^3; axis := 1; lo[axis] := -5.00000010000000028; hi[axis] := 5.00000010000000028
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -5.00000010000000028 >= -5.00000010100000036 with message: loft 7853.98 mm^3, extrude 7853.98 mm^3; axis := 1; lo[axis] := -5.00000010000000028; hi[axis] := 5.00000010000000028
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 5.00000010000000028 >= 4.99999999899999992 with message: loft 7853.98 mm^3, extrude 7853.98 mm^3; axis := 1; lo[axis] := -5.00000010000000028; hi[axis] := 5.00000010000000028
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 5.00000010000000028 <= 5.00000010100000036 with message: loft 7853.98 mm^3, extrude 7853.98 mm^3; axis := 1; lo[axis] := -5.00000010000000028; hi[axis] := 5.00000010000000028
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -0.0000001 <= 0.000000001 with message: loft 7853.98 mm^3, extrude 7853.98 mm^3; axis := 2; lo[axis] := -0.0000001; hi[axis] := 100.00000009999999406
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -0.0000001 >= -0.000000101 with message: loft 7853.98 mm^3, extrude 7853.98 mm^3; axis := 2; lo[axis] := -0.0000001; hi[axis] := 100.00000009999999406
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 100.00000009999999406 >= 99.99999999899999636 with message: loft 7853.98 mm^3, extrude 7853.98 mm^3; axis := 2; lo[axis] := -0.0000001; hi[axis] := 100.00000009999999406
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 100.00000009999999406 <= 100.0000001009999977 with message: loft 7853.98 mm^3, extrude 7853.98 mm^3; axis := 2; lo[axis] := -0.0000001; hi[axis] := 100.00000009999999406
+
+== LoftFeature_Intersect
+LoftFeatureTests.cpp:629  CHECK_THAT( volumeMm3(regenerator, m.taper), WithinRel(560.0 * pi, kRel) )
+        => 1759.29188601028363337 and 1759.29188601028408812 are within 1e-10% of each other
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => 41.99999989999999883 <= 42.00000000099999653 with message: axis := 0; lo[axis] := 41.99999989999999883; hi[axis] := 58.00000010000000117
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => 41.99999989999999883 >= 41.9999998990000023 with message: axis := 0; lo[axis] := 41.99999989999999883; hi[axis] := 58.00000010000000117
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 58.00000010000000117 >= 57.99999999900000347 with message: axis := 0; lo[axis] := 41.99999989999999883; hi[axis] := 58.00000010000000117
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 58.00000010000000117 <= 58.0000001009999977 with message: axis := 0; lo[axis] := 41.99999989999999883; hi[axis] := 58.00000010000000117
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => 16.99999989999999883 <= 17.00000000100000008 with message: axis := 1; lo[axis] := 16.99999989999999883; hi[axis] := 33.00000010000000117
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => 16.99999989999999883 >= 16.99999989899999875 with message: axis := 1; lo[axis] := 16.99999989999999883; hi[axis] := 33.00000010000000117
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 33.00000010000000117 >= 32.99999999900000347 with message: axis := 1; lo[axis] := 16.99999989999999883; hi[axis] := 33.00000010000000117
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 33.00000010000000117 <= 33.0000001009999977 with message: axis := 1; lo[axis] := 16.99999989999999883; hi[axis] := 33.00000010000000117
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => 4.99999989999999972 <= 5.00000000100000008 with message: axis := 2; lo[axis] := 4.99999989999999972; hi[axis] := 20.00000010000000117
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => 4.99999989999999972 >= 4.99999989899999964 with message: axis := 2; lo[axis] := 4.99999989999999972; hi[axis] := 20.00000010000000117
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 20.00000010000000117 >= 19.99999999899999992 with message: axis := 2; lo[axis] := 4.99999989999999972; hi[axis] := 20.00000010000000117
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 20.00000010000000117 <= 20.00000010100000125 with message: axis := 2; lo[axis] := 4.99999989999999972; hi[axis] := 20.00000010000000117
+
+== LoftFeature_ExportsClosedStl / the circular frustum (binary)
+LoftFileTests.cpp:403  CHECK( meshed > 0.0 )
+        => 5490.98759959937888198 > 0.0 with message: frustum.stl: meshed 5490.99 mm^3, exact 5497.79 mm^3, bound 18.2592 mm^3
+LoftFileTests.cpp:404  CHECK( std::abs(meshed - exact) <= deflection.in(units::mm) * area )
+        => 6.79954418275883654 <= 18.25916237602435288 with message: frustum.stl: meshed 5490.99 mm^3, exact 5497.79 mm^3, bound 18.2592 mm^3
+
+== LoftFeature_ExportsClosedStl / the circular frustum (ASCII)
+LoftFileTests.cpp:403  CHECK( meshed > 0.0 )
+        => 5490.98759959937888198 > 0.0 with message: frustum.stl: meshed 5490.99 mm^3, exact 5497.79 mm^3, bound 18.2592 mm^3
+LoftFileTests.cpp:404  CHECK( std::abs(meshed - exact) <= deflection.in(units::mm) * area )
+        => 6.79954418275883654 <= 18.25916237602435288 with message: frustum.stl: meshed 5490.99 mm^3, exact 5497.79 mm^3, bound 18.2592 mm^3
+
+== LoftFeature_ExportsClosedStl / the rectangular frustum and the leaning frustum
+LoftFileTests.cpp:403  CHECK( meshed > 0.0 )
+        => 3500.0 > 0.0 with message: taper.stl: meshed 3500 mm^3, exact 3500 mm^3, bound 16.0933 mm^3
+LoftFileTests.cpp:404  CHECK( std::abs(meshed - exact) <= deflection.in(units::mm) * area )
+        => 0.0 <= 16.09326783181788656 with message: taper.stl: meshed 3500 mm^3, exact 3500 mm^3, bound 16.0933 mm^3
+LoftFileTests.cpp:403  CHECK( meshed > 0.0 )
+        => 5493.54070562396827881 > 0.0 with message: lean.stl: meshed 5493.54 mm^3, exact 5497.79 mm^3, bound 18.6297 mm^3
+LoftFileTests.cpp:404  CHECK( std::abs(meshed - exact) <= deflection.in(units::mm) * area )
+        => 4.2464381581694397 <= 18.62965436265807995 with message: lean.stl: meshed 5493.54 mm^3, exact 5497.79 mm^3, bound 18.6297 mm^3
+
+== Loft_OffsetSectionsKeepTheirPositions
+LoftTests.cpp:238  CHECK_THAT( volumeMm3(body), WithinRel(frustum(10, 5, 30), kRelSpline) )
+        => 5497.78714391515131865 and 5497.78714378213771852 are within 1e-07% of each other
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 3.92857142877393883 is within 0.000000001 of 3.92857142857142838
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 0.00000000000000801 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 11.78571428576180224 is within 0.000000001 of 11.7857142857142847
+LoftTests.cpp:130  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000009999999939 <= -9.99999999899999992 with message: axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 15.0000001000000065
+LoftTests.cpp:131  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000009999999939 >= -10.00000010099999947 with message: axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 15.0000001000000065
+LoftTests.cpp:132  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 15.0000001000000065 >= 14.99999999899999992 with message: axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 15.0000001000000065
+LoftTests.cpp:133  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 15.0000001000000065 <= 15.00000010099999947 with message: axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 15.0000001000000065
+LoftTests.cpp:130  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000009999999939 <= -9.99999999899999992 with message: axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:131  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000009999999939 >= -10.00000010099999947 with message: axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:132  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000009999999939 >= 9.99999999899999992 with message: axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:133  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000009999999939 <= 10.00000010099999947 with message: axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:130  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -0.0000001 <= 0.000000001 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftTests.cpp:131  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -0.0000001 >= -0.000000101 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftTests.cpp:132  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 30.00000010000000117 >= 29.99999999899999992 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftTests.cpp:133  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 30.00000010000000117 <= 30.00000010100000125 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftTests.cpp:245  CHECK_THAT( volumeMm3(leaning), WithinRel(200.0 * 50.0, kRelTight) )
+        => 10000.0 and 10000.0 are within 1e-10% of each other
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 3.5 is within 0.000000001 of 3.5
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -1.50000000000000044 is within 0.000000001 of -1.5
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 25.00000000000000355 is within 0.000000001 of 25.0
+LoftTests.cpp:130  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -5.00000010000000028 <= -4.99999999899999992 with message: axis := 0; lo[axis] := -5.00000010000000028; hi[axis] := 12.00000009999999939
+LoftTests.cpp:131  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -5.00000010000000028 >= -5.00000010100000036 with message: axis := 0; lo[axis] := -5.00000010000000028; hi[axis] := 12.00000009999999939
+LoftTests.cpp:132  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 12.00000009999999939 >= 11.99999999899999992 with message: axis := 0; lo[axis] := -5.00000010000000028; hi[axis] := 12.00000009999999939
+LoftTests.cpp:133  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 12.00000009999999939 <= 12.00000010099999947 with message: axis := 0; lo[axis] := -5.00000010000000028; hi[axis] := 12.00000009999999939
+LoftTests.cpp:130  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -13.00000009999999939 <= -12.99999999899999992 with message: axis := 1; lo[axis] := -13.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:131  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -13.00000009999999939 >= -13.00000010099999947 with message: axis := 1; lo[axis] := -13.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:132  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000009999999939 >= 9.99999999899999992 with message: axis := 1; lo[axis] := -13.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:133  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000009999999939 <= 10.00000010099999947 with message: axis := 1; lo[axis] := -13.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:130  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -0.0000001 <= 0.000000001 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 50.00000010000000117
+LoftTests.cpp:131  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -0.0000001 >= -0.000000101 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 50.00000010000000117
+LoftTests.cpp:132  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 50.00000010000000117 >= 49.99999999900000347 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 50.00000010000000117
+LoftTests.cpp:133  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 50.00000010000000117 <= 50.0000001009999977 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 50.00000010000000117
+
+== LoftFeature_OffsetSectionsProduceValidSolid
+LoftFeatureTests.cpp:522  CHECK_THAT( volumeMm3(regenerator, m.loft), WithinRel(expected, kRel) )
+        => 5497.78714378213862801 and 5497.78714378213771852 are within 1e-10% of each other
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -0.00000000000000014 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -0.00000000000000052 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 11.78571428571428648 is within 0.000000001 of 11.7857142857142847
+LoftFeatureTests.cpp:529  CHECK_THAT( volumeMm3(regenerator, m.loft), WithinRel(expected, kRelSpline) )
+        => 5497.78714391515131865 and 5497.78714378213771852 are within 1e-07% of each other
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 3.92857142877393883 is within 0.000000001 of 3.92857142857142838
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 0.00000000000000266 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 11.78571428576180224 is within 0.000000001 of 11.7857142857142847
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000010000000117 <= -9.99999999899999992 with message: axis := 0; lo[axis] := -10.00000010000000117; hi[axis] := 15.0000001000000065
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000010000000117 >= -10.00000010099999947 with message: axis := 0; lo[axis] := -10.00000010000000117; hi[axis] := 15.0000001000000065
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 15.0000001000000065 >= 14.99999999899999992 with message: axis := 0; lo[axis] := -10.00000010000000117; hi[axis] := 15.0000001000000065
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 15.0000001000000065 <= 15.00000010099999947 with message: axis := 0; lo[axis] := -10.00000010000000117; hi[axis] := 15.0000001000000065
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000010000000117 <= -9.99999999899999992 with message: axis := 1; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000010000000117 >= -10.00000010099999947 with message: axis := 1; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000010000000117 >= 9.99999999899999992 with message: axis := 1; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000010000000117 <= 10.00000010099999947 with message: axis := 1; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -0.0000001 <= 0.000000001 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -0.0000001 >= -0.000000101 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 30.00000010000000117 >= 29.99999999899999992 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 30.00000010000000117 <= 30.00000010100000125 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftFeatureTests.cpp:535  CHECK_THAT( areaOn(body, {10, 0, 30}, {0, 0, 1}), WithinRel(25.0 * pi, kRel) )
+        => 78.53981633974483145 and 78.53981633974483145 are within 1e-10% of each other
+
+== info and validate describe lofts
+CliTests.cpp:613  CHECK_THAT( info.out, ContainsSubstring("\n object:9 loft Taper sections Mouth to Tip (offset depth), ruled, " "cut Pad\n") )
+        => "Document: Block File: C:\Users\uqhas\AppData\Local\Temp\bettercad-test-f63a87b3-c486-4828-b21a-2d187ff4cfdf\taper.bcad ID: 5c30f2c3-9c13-44cd-96f5-94b73b476ae6 Parameters (4): width 100 mm length 50 mm height 20 mm depth 15 mm Objects (5): object:5 sketch Base 8 entities, 7 constraints, driven by width, length object:6 extrude Pad profile Base, depth height, normal, new body object:7 sketch Mouth 2 entities, 2 constraints object:8 sketch Tip 2 entities, 2 constraints object:9 loft Taper sections Mouth to Tip (offset depth), ruled, cut Pad " contains: " object:9 loft Taper sections Mouth to Tip (offset depth), ruled, cut Pad "
+CliTests.cpp:619  CHECK_THAT( validate.out, ContainsSubstring("geometry ok, 1 result body\n" "Result bodies (1):\n" " Taper (object:9): 1 solid, volume 98240.708 mm^3, area ") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-f63a87b3-c486-4828-b21a-2d187ff4cfdf\taper.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 5 objects regenerated geometry ok, 1 result body Result bodies (1): Taper (object:9): 1 solid, volume 98240.708 mm^3, area 16434.451 mm^2, bounds (0, 0, 0) to (100, 50, 20) mm Result: valid " contains: "geometry ok, 1 result body Result bodies (1): Taper (object:9): 1 solid, volume 98240.708 mm^3, area "
+CliTests.cpp:622  CHECK_THAT( validate.out, EndsWith("bounds (0, 0, 0) to (100, 50, 20) mm\nResult: valid\n") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-f63a87b3-c486-4828-b21a-2d187ff4cfdf\taper.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 5 objects regenerated geometry ok, 1 result body Result bodies (1): Taper (object:9): 1 solid, volume 98240.708 mm^3, area 16434.451 mm^2, bounds (0, 0, 0) to (100, 50, 20) mm Result: valid " ends with: "bounds (0, 0, 0) to (100, 50, 20) mm Result: valid "
+CliTests.cpp:631  CHECK_THAT( broken.out, ContainsSubstring(" error: Taper (object:9) failed to regenerate: Taper: makeLoft: sections 1 " "and 2 cannot be matched: section 1 is a circle and section 2 is 4 lines") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-f63a87b3-c486-4828-b21a-2d187ff4cfdf\taper.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration 1 error error: Taper (object:9) failed to regenerate: Taper: makeLoft: sections 1 and 2 cannot be matched: section 1 is a circle and section 2 is 4 lines; lofts between different shapes are not supported geometry ok, 0 result bodies Result: invalid (1 error) " contains: " error: Taper (object:9) failed to regenerate: Taper: makeLoft: sections 1 and 2 cannot be matched: section 1 is a circle and section 2 is 4 lines"
+CliTests.cpp:633  CHECK_THAT( broken.out, EndsWith("Result: invalid (1 error)\n") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-f63a87b3-c486-4828-b21a-2d187ff4cfdf\taper.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration 1 error error: Taper (object:9) failed to regenerate: Taper: makeLoft: sections 1 and 2 cannot be matched: section 1 is a circle and section 2 is 4 lines; lofts between different shapes are not supported geometry ok, 0 result bodies Result: invalid (1 error) " ends with: "Result: invalid (1 error) "
+
+== LoftFeature_EqualSectionsMatchExtrude
+LoftFeatureTests.cpp:445  CHECK_THAT( lofted.volume.in(units::mm3), WithinRel(expected, kRel) )
+        => 19999.99999999999636202 and 20000.0 are within 1e-10% of each other with message: ; loft 20000 mm^3, extrude 20000 mm^3
+LoftFeatureTests.cpp:446  CHECK_THAT( lofted.volume.in(units::mm3), WithinRel(extruded.volume.in(units::mm3), kRel) )
+        => 19999.99999999999636202 and 19999.99999999999272404 are within 1e-10% of each other with message: ; loft 20000 mm^3, extrude 20000 mm^3
+LoftFeatureTests.cpp:447  CHECK_THAT( lofted.surfaceArea.in(units::mm2), WithinRel(extruded.surfaceArea.in(units::mm2), kRel) )
+        => 6400.0 and 6400.0 are within 1e-10% of each other with message: ; loft 20000 mm^3, extrude 20000 mm^3
+LoftFeatureTests.cpp:448  CHECK_THAT( (lofted.centerOfMass.x - extruded.centerOfMass.x).in(units::mm), WithinAbs(0.0, kPositionToleranceMm) )
+        => 0.00000000000000087 is within 0.000000001 of 0.0 with message: ; loft 20000 mm^3, extrude 20000 mm^3
+LoftFeatureTests.cpp:449  CHECK_THAT( (lofted.centerOfMass.y - extruded.centerOfMass.y).in(units::mm), WithinAbs(0.0, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0 with message: ; loft 20000 mm^3, extrude 20000 mm^3
+LoftFeatureTests.cpp:450  CHECK_THAT( (lofted.centerOfMass.z - extruded.centerOfMass.z).in(units::mm), WithinAbs(0.0, kPositionToleranceMm) )
+        => 0.00000000000000694 is within 0.000000001 of 0.0 with message: ; loft 20000 mm^3, extrude 20000 mm^3
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -0.0000001 <= 0.000000001 with message: ; loft 20000 mm^3, extrude 20000 mm^3; axis := 0; lo[axis] := -0.0000001; hi[axis] := 10.00000009999999762
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -0.0000001 >= -0.000000101 with message: ; loft 20000 mm^3, extrude 20000 mm^3; axis := 0; lo[axis] := -0.0000001; hi[axis] := 10.00000009999999762
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000009999999762 >= 9.99999999899999814 with message: ; loft 20000 mm^3, extrude 20000 mm^3; axis := 0; lo[axis] := -0.0000001; hi[axis] := 10.00000009999999762
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000009999999762 <= 10.0000001009999977 with message: ; loft 20000 mm^3, extrude 20000 mm^3; axis := 0; lo[axis] := -0.0000001; hi[axis] := 10.00000009999999762
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -0.0000001 <= 0.000000001 with message: ; loft 20000 mm^3, extrude 20000 mm^3; axis := 1; lo[axis] := -0.0000001; hi[axis] := 20.00000010000000117
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -0.0000001 >= -0.000000101 with message: ; loft 20000 mm^3, extrude 20000 mm^3; axis := 1; lo[axis] := -0.0000001; hi[axis] := 20.00000010000000117
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 20.00000010000000117 >= 19.99999999899999992 with message: ; loft 20000 mm^3, extrude 20000 mm^3; axis := 1; lo[axis] := -0.0000001; hi[axis] := 20.00000010000000117
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 20.00000010000000117 <= 20.00000010100000125 with message: ; loft 20000 mm^3, extrude 20000 mm^3; axis := 1; lo[axis] := -0.0000001; hi[axis] := 20.00000010000000117
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -0.0000001 <= 0.000000001 with message: ; loft 20000 mm^3, extrude 20000 mm^3; axis := 2; lo[axis] := -0.0000001; hi[axis] := 100.00000009999999406
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -0.0000001 >= -0.000000101 with message: ; loft 20000 mm^3, extrude 20000 mm^3; axis := 2; lo[axis] := -0.0000001; hi[axis] := 100.00000009999999406
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 100.00000009999999406 >= 99.99999999899999636 with message: ; loft 20000 mm^3, extrude 20000 mm^3; axis := 2; lo[axis] := -0.0000001; hi[axis] := 100.00000009999999406
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 100.00000009999999406 <= 100.0000001009999977 with message: ; loft 20000 mm^3, extrude 20000 mm^3; axis := 2; lo[axis] := -0.0000001; hi[axis] := 100.00000009999999406
+LoftFeatureTests.cpp:445  CHECK_THAT( lofted.volume.in(units::mm3), WithinRel(expected, kRel) )
+        => 18000.0 and 18000.0 are within 1e-10% of each other with message: ; loft 18000 mm^3, extrude 18000 mm^3
+LoftFeatureTests.cpp:446  CHECK_THAT( lofted.volume.in(units::mm3), WithinRel(extruded.volume.in(units::mm3), kRel) )
+        => 18000.0 and 18000.0 are within 1e-10% of each other with message: ; loft 18000 mm^3, extrude 18000 mm^3
+LoftFeatureTests.cpp:447  CHECK_THAT( lofted.surfaceArea.in(units::mm2), WithinRel(extruded.surfaceArea.in(units::mm2), kRel) )
+        => 4800.00000000000090949 and 4800.0 are within 1e-10% of each other with message: ; loft 18000 mm^3, extrude 18000 mm^3
+LoftFeatureTests.cpp:448  CHECK_THAT( (lofted.centerOfMass.x - extruded.centerOfMass.x).in(units::mm), WithinAbs(0.0, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0 with message: ; loft 18000 mm^3, extrude 18000 mm^3
+LoftFeatureTests.cpp:449  CHECK_THAT( (lofted.centerOfMass.y - extruded.centerOfMass.y).in(units::mm), WithinAbs(0.0, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0 with message: ; loft 18000 mm^3, extrude 18000 mm^3
+LoftFeatureTests.cpp:450  CHECK_THAT( (lofted.centerOfMass.z - extruded.centerOfMass.z).in(units::mm), WithinAbs(0.0, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0 with message: ; loft 18000 mm^3, extrude 18000 mm^3
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -0.0000001 <= 0.000000001 with message: ; loft 18000 mm^3, extrude 18000 mm^3; axis := 0; lo[axis] := -0.0000001; hi[axis] := 15.00000009999999939
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -0.0000001 >= -0.000000101 with message: ; loft 18000 mm^3, extrude 18000 mm^3; axis := 0; lo[axis] := -0.0000001; hi[axis] := 15.00000009999999939
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 15.00000009999999939 >= 14.99999999899999992 with message: ; loft 18000 mm^3, extrude 18000 mm^3; axis := 0; lo[axis] := -0.0000001; hi[axis] := 15.00000009999999939
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 15.00000009999999939 <= 15.00000010099999947 with message: ; loft 18000 mm^3, extrude 18000 mm^3; axis := 0; lo[axis] := -0.0000001; hi[axis] := 15.00000009999999939
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -0.0000001 <= 0.000000001 with message: ; loft 18000 mm^3, extrude 18000 mm^3; axis := 1; lo[axis] := -0.0000001; hi[axis] := 20.00000010000000117
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -0.0000001 >= -0.000000101 with message: ; loft 18000 mm^3, extrude 18000 mm^3; axis := 1; lo[axis] := -0.0000001; hi[axis] := 20.00000010000000117
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 20.00000010000000117 >= 19.99999999899999992 with message: ; loft 18000 mm^3, extrude 18000 mm^3; axis := 1; lo[axis] := -0.0000001; hi[axis] := 20.00000010000000117
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 20.00000010000000117 <= 20.00000010100000125 with message: ; loft 18000 mm^3, extrude 18000 mm^3; axis := 1; lo[axis] := -0.0000001; hi[axis] := 20.00000010000000117
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -0.0000001 <= 0.000000001 with message: ; loft 18000 mm^3, extrude 18000 mm^3; axis := 2; lo[axis] := -0.0000001; hi[axis] := 60.00000010000000117
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -0.0000001 >= -0.000000101 with message: ; loft 18000 mm^3, extrude 18000 mm^3; axis := 2; lo[axis] := -0.0000001; hi[axis] := 60.00000010000000117
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 60.00000010000000117 >= 59.99999999900000347 with message: ; loft 18000 mm^3, extrude 18000 mm^3; axis := 2; lo[axis] := -0.0000001; hi[axis] := 60.00000010000000117
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 60.00000010000000117 <= 60.0000001009999977 with message: ; loft 18000 mm^3, extrude 18000 mm^3; axis := 2; lo[axis] := -0.0000001; hi[axis] := 60.00000010000000117
+
+== LoftFeature_EqualRectanglesMatchPrismVolume
+LoftFeatureTests.cpp:286  CHECK_THAT( actual, WithinRel(expected, kRel) )
+        => 19999.99999999999636202 and 20000.0 are within 1e-10% of each other with message: ; expected 20000 mm^3, actual 20000 mm^3, absolute error 3.63798e-12 mm^3, relative 1.81899e-16
+LoftFeatureTests.cpp:287  CHECK_THAT( props.surfaceArea.in(units::mm2), WithinRel(2.0 * (200.0 + 1000.0 + 2000.0), kRel) )
+        => 6400.0 and 6400.0 are within 1e-10% of each other with message: ; expected 20000 mm^3, actual 20000 mm^3, absolute error 3.63798e-12 mm^3, relative 1.81899e-16
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 4.99999999999999911 is within 0.000000001 of 5.0 with message: ; expected 20000 mm^3, actual 20000 mm^3, absolute error 3.63798e-12 mm^3, relative 1.81899e-16
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 9.99999999999999822 is within 0.000000001 of 10.0 with message: ; expected 20000 mm^3, actual 20000 mm^3, absolute error 3.63798e-12 mm^3, relative 1.81899e-16
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 50.0 is within 0.000000001 of 50.0 with message: ; expected 20000 mm^3, actual 20000 mm^3, absolute error 3.63798e-12 mm^3, relative 1.81899e-16
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -0.0000001 <= 0.000000001 with message: ; expected 20000 mm^3, actual 20000 mm^3, absolute error 3.63798e-12 mm^3, relative 1.81899e-16; axis := 0; lo[axis] := -0.0000001; hi[axis] := 10.00000009999999762
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -0.0000001 >= -0.000000101 with message: ; expected 20000 mm^3, actual 20000 mm^3, absolute error 3.63798e-12 mm^3, relative 1.81899e-16; axis := 0; lo[axis] := -0.0000001; hi[axis] := 10.00000009999999762
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000009999999762 >= 9.99999999899999992 with message: ; expected 20000 mm^3, actual 20000 mm^3, absolute error 3.63798e-12 mm^3, relative 1.81899e-16; axis := 0; lo[axis] := -0.0000001; hi[axis] := 10.00000009999999762
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000009999999762 <= 10.00000010099999947 with message: ; expected 20000 mm^3, actual 20000 mm^3, absolute error 3.63798e-12 mm^3, relative 1.81899e-16; axis := 0; lo[axis] := -0.0000001; hi[axis] := 10.00000009999999762
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -0.0000001 <= 0.000000001 with message: ; expected 20000 mm^3, actual 20000 mm^3, absolute error 3.63798e-12 mm^3, relative 1.81899e-16; axis := 1; lo[axis] := -0.0000001; hi[axis] := 20.00000010000000117
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -0.0000001 >= -0.000000101 with message: ; expected 20000 mm^3, actual 20000 mm^3, absolute error 3.63798e-12 mm^3, relative 1.81899e-16; axis := 1; lo[axis] := -0.0000001; hi[axis] := 20.00000010000000117
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 20.00000010000000117 >= 19.99999999899999992 with message: ; expected 20000 mm^3, actual 20000 mm^3, absolute error 3.63798e-12 mm^3, relative 1.81899e-16; axis := 1; lo[axis] := -0.0000001; hi[axis] := 20.00000010000000117
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 20.00000010000000117 <= 20.00000010100000125 with message: ; expected 20000 mm^3, actual 20000 mm^3, absolute error 3.63798e-12 mm^3, relative 1.81899e-16; axis := 1; lo[axis] := -0.0000001; hi[axis] := 20.00000010000000117
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -0.0000001 <= 0.000000001 with message: ; expected 20000 mm^3, actual 20000 mm^3, absolute error 3.63798e-12 mm^3, relative 1.81899e-16; axis := 2; lo[axis] := -0.0000001; hi[axis] := 100.00000009999999406
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -0.0000001 >= -0.000000101 with message: ; expected 20000 mm^3, actual 20000 mm^3, absolute error 3.63798e-12 mm^3, relative 1.81899e-16; axis := 2; lo[axis] := -0.0000001; hi[axis] := 100.00000009999999406
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 100.00000009999999406 >= 99.99999999899999636 with message: ; expected 20000 mm^3, actual 20000 mm^3, absolute error 3.63798e-12 mm^3, relative 1.81899e-16; axis := 2; lo[axis] := -0.0000001; hi[axis] := 100.00000009999999406
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 100.00000009999999406 <= 100.0000001009999977 with message: ; expected 20000 mm^3, actual 20000 mm^3, absolute error 3.63798e-12 mm^3, relative 1.81899e-16; axis := 2; lo[axis] := -0.0000001; hi[axis] := 100.00000009999999406
+LoftFeatureTests.cpp:290  CHECK( resultFeatures(m.doc) == std::vector<ObjectId>{m.loft} )
+        => { object:6 } == { object:6 } with message: ; expected 20000 mm^3, actual 20000 mm^3, absolute error 3.63798e-12 mm^3, relative 1.81899e-16
+
+== Loft_CircularFrustumMatchesAnalyticVolumeAndRevolution
+LoftTests.cpp:181  CHECK_THAT( expected, WithinRel(1750.0 * pi, 1e-15) )
+        => 5497.78714378213771852 and 5497.78714378213771852 are within 1e-13% of each other
+LoftTests.cpp:184  CHECK_THAT( l.volume.in(units::mm3), WithinRel(expected, kRelTight) )
+        => 5497.78714378213680902 and 5497.78714378213771852 are within 1e-10% of each other
+LoftTests.cpp:185  CHECK_THAT( l.volume.in(units::mm3), WithinRel(r.volume.in(units::mm3), kRelTight) )
+        => 5497.78714378213680902 and 5497.78714378213862801 are within 1e-10% of each other
+LoftTests.cpp:186  CHECK_THAT( l.surfaceArea.in(units::mm2), WithinRel(r.surfaceArea.in(units::mm2), kRelTight) )
+        => 1825.91623760243419383 and 1825.91623760243555807 are within 1e-10% of each other
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -0.0000000000000007 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -0.0000000000000003 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 11.78571428571428825 is within 0.000000001 of 11.7857142857142847
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 0.00000000000000002 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -0.00000000000000023 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 11.7857142857142847 is within 0.000000001 of 11.7857142857142847
+LoftTests.cpp:130  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000009999999939 <= -9.99999999899999992 with message: axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:131  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000009999999939 >= -10.00000010099999947 with message: axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:132  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000009999999939 >= 9.99999999899999992 with message: axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:133  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000009999999939 <= 10.00000010099999947 with message: axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:130  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000009999999939 <= -9.99999999899999992 with message: axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:131  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000009999999939 >= -10.00000010099999947 with message: axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:132  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000009999999939 >= 9.99999999899999992 with message: axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:133  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000009999999939 <= 10.00000010099999947 with message: axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:130  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -0.0000001 <= 0.000000001 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftTests.cpp:131  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -0.0000001 >= -0.000000101 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftTests.cpp:132  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 30.00000010000000117 >= 29.99999999899999992 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftTests.cpp:133  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 30.00000010000000117 <= 30.00000010100000125 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+
+== Loft_MultipleSectionsArePiecewiseRuled / r 5, 10, 5 at z 0, 50, 100: two frustums, symmetric about z = 50
+LoftTests.cpp:219  CHECK_THAT( volumeMm3(body), WithinRel(2.0 * frustum(5, 10, 50), kRelTight) )
+        => 18325.95714594046148704 and 18325.95714594046148704 are within 1e-10% of each other
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -0.0000000000000006 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -0.00000000000000075 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 50.0 is within 0.000000001 of 50.0
+LoftTests.cpp:130  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000009999999939 <= -9.99999999899999992 with message: axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:131  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000009999999939 >= -10.00000010099999947 with message: axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:132  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000009999999939 >= 9.99999999899999992 with message: axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:133  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000009999999939 <= 10.00000010099999947 with message: axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:130  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000009999999939 <= -9.99999999899999992 with message: axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:131  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000009999999939 >= -10.00000010099999947 with message: axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:132  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000009999999939 >= 9.99999999899999992 with message: axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:133  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000009999999939 <= 10.00000010099999947 with message: axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:130  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -0.0000001 <= 0.000000001 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 100.00000009999999406
+LoftTests.cpp:131  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -0.0000001 >= -0.000000101 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 100.00000009999999406
+LoftTests.cpp:132  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 100.00000009999999406 >= 99.99999999899999636 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 100.00000009999999406
+LoftTests.cpp:133  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 100.00000009999999406 <= 100.0000001009999977 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 100.00000009999999406
+
+== Loft_MultipleSectionsArePiecewiseRuled / r 10, 6, 8, 4 at z 0, 20, 35, 60: three frustums
+LoftTests.cpp:226  CHECK_THAT( volumeMm3(body), WithinRel(frustum(10, 6, 20) + frustum(6, 8, 15) + frustum(8, 4, 25), kRelTight) )
+        => 9361.94610769758219249 and 9361.94610769758401148 are within 1e-10% of each other
+LoftTests.cpp:227  CHECK_THAT( volumeMm3(body), WithinRel(2980.0 * pi, kRelTight) )
+        => 9361.94610769758219249 and 9361.94610769758401148 are within 1e-10% of each other
+LoftTests.cpp:130  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000009999999939 <= -9.99999999899999992 with message: axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:131  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000009999999939 >= -10.00000010099999947 with message: axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:132  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000009999999939 >= 9.99999999899999992 with message: axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:133  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000009999999939 <= 10.00000010099999947 with message: axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:130  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000009999999939 <= -9.99999999899999992 with message: axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:131  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000009999999939 >= -10.00000010099999947 with message: axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:132  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000009999999939 >= 9.99999999899999992 with message: axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:133  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000009999999939 <= 10.00000010099999947 with message: axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:130  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -0.0000001 <= 0.000000001 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 60.00000010000000117
+LoftTests.cpp:131  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -0.0000001 >= -0.000000101 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 60.00000010000000117
+LoftTests.cpp:132  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 60.00000010000000117 >= 59.99999999900000347 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 60.00000010000000117
+LoftTests.cpp:133  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 60.00000010000000117 <= 60.0000001009999977 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 60.00000010000000117
+
+== Loft_TwistedSectionsFollowTheTwistLaw / a square turned by 30 deg
+LoftTests.cpp:423  CHECK_THAT( volumeMm3(body), WithinRel(law(30, 400, pi / 6.0), kRelTight) )
+        => 11464.10161513775528874 and 11464.10161513775528874 are within 1e-10% of each other
+
+== Loft_TwistedSectionsFollowTheTwistLaw / a half disc turned by 90 deg about its centre (coaxial arcs of other angles)
+LoftTests.cpp:433  CHECK_THAT( volumeMm3(body), WithinRel(law(30, 12.5 * pi, pi / 2.0), kRelSpline) )
+        => 785.3981638888674297 and 785.39816339744822926 are within 1e-07% of each other
+
+== LoftFeature_ExportsStep / the circular frustum
+LoftFileTests.cpp:342  CHECK_THAT( contents->volumeMm3, WithinRel(frustumVolume(10, 5, 30), kRelStep) )
+        => 5497.78714377671440161 and 5497.78714378213771852 are within 1e-07% of each other
+LoftFileTests.cpp:343  CHECK_THAT( contents->areaMm2, WithinRel(pi * 15.0 * std::sqrt(925.0) + pi * 125.0, kRelStep) )
+        => 1825.91623760133006726 and 1825.91623760243510333 are within 1e-07% of each other
+LoftFileTests.cpp:345  CHECK_THAT( contents->minMm[axis], WithinAbs(-10.0, 1e-6) )
+        => -10.00000009999999939 is within 0.000001 of -10.0
+LoftFileTests.cpp:346  CHECK_THAT( contents->maxMm[axis], WithinAbs(10.0, 1e-6) )
+        => 10.00000009999999939 is within 0.000001 of 10.0
+LoftFileTests.cpp:345  CHECK_THAT( contents->minMm[axis], WithinAbs(-10.0, 1e-6) )
+        => -10.00000009999999939 is within 0.000001 of -10.0
+LoftFileTests.cpp:346  CHECK_THAT( contents->maxMm[axis], WithinAbs(10.0, 1e-6) )
+        => 10.00000009999999939 is within 0.000001 of 10.0
+LoftFileTests.cpp:348  CHECK_THAT( contents->minMm[2], WithinAbs(0.0, 1e-6) )
+        => -0.0000001 is within 0.000001 of 0.0
+LoftFileTests.cpp:349  CHECK_THAT( contents->maxMm[2], WithinAbs(30.0, 1e-6) )
+        => 30.00000010000000117 is within 0.000001 of 30.0
+
+== LoftFeature_ExportsStep / the three-section loft
+LoftFileTests.cpp:359  CHECK_THAT( contents->volumeMm3, WithinRel(17500.0 * pi / 3.0, kRelStep) )
+        => 18325.95714594022501842 and 18325.95714594045784906 are within 1e-07% of each other
+LoftFileTests.cpp:360  CHECK_THAT( contents->minMm[2], WithinAbs(0.0, 1e-6) )
+        => -0.0000001 is within 0.000001 of 0.0
+LoftFileTests.cpp:361  CHECK_THAT( contents->maxMm[2], WithinAbs(100.0, 1e-6) )
+        => 100.00000009999999406 is within 0.000001 of 100.0
+LoftFileTests.cpp:362  CHECK_THAT( contents->maxMm[0], WithinAbs(10.0, 1e-6) )
+        => 10.00000009999999939 is within 0.000001 of 10.0
+
+== LoftFeature_ExportsStep / the block with the tapered hole
+LoftFileTests.cpp:372  CHECK_THAT( contents->volumeMm3, WithinRel(TaperedHoleModel::expectedVolume(20, 15), kRelStep) )
+        => 98240.70811398864316288 and 98240.70811398972000461 are within 1e-07% of each other
+
+== Loft_BreaksTiesDeterministically
+LoftTests.cpp:345  CHECK_THAT( volumes[0], WithinRel(5.0 * (400.0 + 4.0 * side * side + 400.0), kRelTight) )
+        => 10828.42712474619111163 and 10828.42712474619111163 are within 1e-10% of each other
+
+== LoftFeature_RejectsIncompatibleSections / an offset driven by an angle
+LoftFeatureTests.cpp:901  CHECK_THAT( error.message, StartsWith("Loft: section 2 (sketch 'Top'): ") )
+        => "Loft: section 2 (sketch 'Top'): parameter 'tilt' has dimension angle, not length" starts with: "Loft: section 2 (sketch 'Top'): "
+
+== LoftFeature_RegeneratesWhenSectionChanges / the top radius 5 -> 8 mm
+LoftFeatureTests.cpp:689  CHECK_THAT( volumeMm3(regenerator, m.loft), WithinRel(frustumVolume(10, 8, 30), kRel) )
+        => 7665.48607475909557252 and 7665.48607475909466302 are within 1e-10% of each other
+
+== LoftFeature_RegeneratesWhenSectionChanges / the bottom radius 10 -> 12 mm
+LoftFeatureTests.cpp:697  CHECK_THAT( volumeMm3(regenerator, m.loft), WithinRel(frustumVolume(12, 5, 30), kRel) )
+        => 7194.24717672062524798 and 7194.24717672062524798 are within 1e-10% of each other
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -12.00000009999999939 <= -11.99999999899999992 with message: axis := 0; lo[axis] := -12.00000009999999939; hi[axis] := 12.00000009999999939
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -12.00000009999999939 >= -12.00000010099999947 with message: axis := 0; lo[axis] := -12.00000009999999939; hi[axis] := 12.00000009999999939
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 12.00000009999999939 >= 11.99999999899999992 with message: axis := 0; lo[axis] := -12.00000009999999939; hi[axis] := 12.00000009999999939
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 12.00000009999999939 <= 12.00000010099999947 with message: axis := 0; lo[axis] := -12.00000009999999939; hi[axis] := 12.00000009999999939
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -12.00000009999999939 <= -11.99999999899999992 with message: axis := 1; lo[axis] := -12.00000009999999939; hi[axis] := 12.00000009999999939
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -12.00000009999999939 >= -12.00000010099999947 with message: axis := 1; lo[axis] := -12.00000009999999939; hi[axis] := 12.00000009999999939
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 12.00000009999999939 >= 11.99999999899999992 with message: axis := 1; lo[axis] := -12.00000009999999939; hi[axis] := 12.00000009999999939
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 12.00000009999999939 <= 12.00000010099999947 with message: axis := 1; lo[axis] := -12.00000009999999939; hi[axis] := 12.00000009999999939
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -0.0000001 <= 0.000000001 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -0.0000001 >= -0.000000101 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 30.00000010000000117 >= 29.99999999899999992 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 30.00000010000000117 <= 30.00000010100000125 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+
+== LoftFeature_ThreeCircularSectionsMatchPiecewiseFrustums / r 5, 10, 5 at z 0, 50, 100: two frustums, symmetric about z = 50
+LoftFeatureTests.cpp:399  CHECK_THAT( expected, WithinRel(17500.0 * pi / 3.0, 1e-15) )
+        => 18325.95714594046148704 and 18325.95714594045784906 are within 1e-13% of each other with message: 
+LoftFeatureTests.cpp:400  CHECK_THAT( volumeMm3(regenerator, m.loft), WithinRel(expected, kRel) )
+        => 18325.957145940468763 and 18325.95714594046148704 are within 1e-10% of each other with message: 
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -0.00000000000000139 is within 0.000000001 of 0.0 with message: 
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -0.00000000000000075 is within 0.000000001 of 0.0 with message: 
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 49.99999999999999289 is within 0.000000001 of 50.0 with message: 
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000010000000117 <= -9.99999999899999992 with message: ; axis := 0; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000010000000117 >= -10.00000010099999947 with message: ; axis := 0; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000010000000117 >= 9.99999999899999992 with message: ; axis := 0; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000010000000117 <= 10.00000010099999947 with message: ; axis := 0; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000010000000117 <= -9.99999999899999992 with message: ; axis := 1; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000010000000117 >= -10.00000010099999947 with message: ; axis := 1; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000010000000117 >= 9.99999999899999992 with message: ; axis := 1; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000010000000117 <= 10.00000010099999947 with message: ; axis := 1; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -0.0000001 <= 0.000000001 with message: ; axis := 2; lo[axis] := -0.0000001; hi[axis] := 100.00000009999999406
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -0.0000001 >= -0.000000101 with message: ; axis := 2; lo[axis] := -0.0000001; hi[axis] := 100.00000009999999406
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 100.00000009999999406 >= 99.99999999899999636 with message: ; axis := 2; lo[axis] := -0.0000001; hi[axis] := 100.00000009999999406
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 100.00000009999999406 <= 100.0000001009999977 with message: ; axis := 2; lo[axis] := -0.0000001; hi[axis] := 100.00000009999999406
+
+== LoftFeature_ThreeCircularSectionsMatchPiecewiseFrustums / r 10, 6, 8, 4 at z 0, 20, 35, 60 (literal offsets): three frustums
+LoftFeatureTests.cpp:423  CHECK_THAT( expected, WithinRel(2980.0 * pi, 1e-15) )
+        => 9361.94610769758401148 and 9361.94610769758401148 are within 1e-13% of each other
+LoftFeatureTests.cpp:424  CHECK_THAT( volumeMm3(regenerator, loft), WithinRel(expected, kRel) )
+        => 9361.94610769758219249 and 9361.94610769758401148 are within 1e-10% of each other
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000009999999939 <= -9.99999999899999992 with message: axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000009999999939 >= -10.00000010099999947 with message: axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000009999999939 >= 9.99999999899999992 with message: axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000009999999939 <= 10.00000010099999947 with message: axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000009999999939 <= -9.99999999899999992 with message: axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000009999999939 >= -10.00000010099999947 with message: axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000009999999939 >= 9.99999999899999992 with message: axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000009999999939 <= 10.00000010099999947 with message: axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -0.0000001 <= 0.000000001 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 60.00000010000000117
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -0.0000001 >= -0.000000101 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 60.00000010000000117
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 60.00000010000000117 >= 59.99999999900000347 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 60.00000010000000117
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 60.00000010000000117 <= 60.0000001009999977 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 60.00000010000000117
+
+== Loft_ArcsMatchArcsOfEqualSweep / a slot to a slot of half its size: h/3 (A1 + A2 + sqrt(A1 A2))
+LoftTests.cpp:354  CHECK_THAT( volumeMm3(body), WithinRel(10.0 * (a1 + a1 / 4.0 + a1 / 2.0), kRelSpline) )
+        => 4874.44678705122623796 and 4874.44678594553442963 are within 1e-07% of each other
+LoftTests.cpp:130  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -15.00000009999999939 <= -14.99999999899999992 with message: axis := 0; lo[axis] := -15.00000009999999939; hi[axis] := 15.00000009999999939
+LoftTests.cpp:131  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -15.00000009999999939 >= -15.00000010099999947 with message: axis := 0; lo[axis] := -15.00000009999999939; hi[axis] := 15.00000009999999939
+LoftTests.cpp:132  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 15.00000009999999939 >= 14.99999999899999992 with message: axis := 0; lo[axis] := -15.00000009999999939; hi[axis] := 15.00000009999999939
+LoftTests.cpp:133  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 15.00000009999999939 <= 15.00000010099999947 with message: axis := 0; lo[axis] := -15.00000009999999939; hi[axis] := 15.00000009999999939
+LoftTests.cpp:130  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -5.00000010000000294 <= -4.99999999899999992 with message: axis := 1; lo[axis] := -5.00000010000000294; hi[axis] := 5.00000010000000117
+LoftTests.cpp:131  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -5.00000010000000294 >= -5.00000010100000036 with message: axis := 1; lo[axis] := -5.00000010000000294; hi[axis] := 5.00000010000000117
+LoftTests.cpp:132  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 5.00000010000000117 >= 4.99999999899999992 with message: axis := 1; lo[axis] := -5.00000010000000294; hi[axis] := 5.00000010000000117
+LoftTests.cpp:133  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 5.00000010000000117 <= 5.00000010100000036 with message: axis := 1; lo[axis] := -5.00000010000000294; hi[axis] := 5.00000010000000117
+LoftTests.cpp:130  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -0.0000001 <= 0.000000001 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000001893
+LoftTests.cpp:131  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -0.0000001 >= -0.000000101 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000001893
+LoftTests.cpp:132  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 30.00000010000001893 >= 29.99999999899999992 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000001893
+LoftTests.cpp:133  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 30.00000010000001893 <= 30.00000010100000125 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000001893
+
+== Loft_ArcsMatchArcsOfEqualSweep / a pac-man (a 300 deg arc) to one of half its size about the arc's centre
+LoftTests.cpp:365  CHECK_THAT( volumeMm3(body), WithinRel(10.0 * (a1 + a1 / 4.0 + a1 / 2.0), kRelTight) )
+        => 4581.48928648511719075 and 4581.48928648511537176 are within 1e-10% of each other
+
+== LoftFeature_RejectsOpenProfile
+LoftFeatureTests.cpp:768  CHECK_THAT( error.message, StartsWith("Loft: section 2 (sketch 'Open'): the profile is open: an edge ends at ") )
+        => "Loft: section 2 (sketch 'Open'): the profile is open: an edge ends at (0, 0) mm without a neighbour" starts with: "Loft: section 2 (sketch 'Open'): the profile is open: an edge ends at "
+
+== Loft_KeepsTheOrderAndDirectionOfItsSections / listed from the top down, the loft runs down
+LoftTests.cpp:256  CHECK_THAT( volumeMm3(down), WithinRel(frustum(10, 5, 30), kRelTight) )
+        => 5497.78714378213771852 and 5497.78714378213771852 are within 1e-10% of each other
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -0.00000000000000066 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 0.00000000000000036 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 11.7857142857142847 is within 0.000000001 of 11.7857142857142847
+
+== Loft_KeepsTheOrderAndDirectionOfItsSections / sections that go back are refused, not sorted
+LoftTests.cpp:266  CHECK_THAT( volumeMm3(ordered), WithinRel(frustum(10, 5, 20) + frustum(5, 8, 30), kRelTight) )
+        => 7717.84595231892490119 and 7717.84595231892490119 are within 1e-10% of each other
+
+== LoftFeature_MalformedDataIsRejectedWithTheJsonPath
+LoftFileTests.cpp:294  CHECK( message(withSections(R"("sections": {"sketch": 7},)")) == "objects[4].data.sections: expected an array" )
+        => "objects[4].data.sections: expected an array" == "objects[4].data.sections: expected an array" with message: objects[4].data.sections: expected an array
+LoftFileTests.cpp:295  CHECK( message(withSections(R"("sections": [7, 8],)")) == "objects[4].data.sections[0]: expected an object" )
+        => "objects[4].data.sections[0]: expected an object" == "objects[4].data.sections[0]: expected an object" with message: objects[4].data.sections[0]: expected an object
+LoftFileTests.cpp:300  CHECK( message(withSections(R"("sections": [{"sketch": 7, "offset": "up"}, {"sketch": 8, "offset": 0.0}],)")) == "objects[4].data.sections[0].offset: expected a number" )
+        => "objects[4].data.sections[0].offset: expected a number" == "objects[4].data.sections[0].offset: expected a number" with message: objects[4].data.sections[0].offset: expected a number
+LoftFileTests.cpp:302  CHECK( message(withSections( R"("sections": [{"sketch": 7, "offset": 0.0}, {"sketch": 8, "offset": 0.0, "offset_parameter": -4}],)")) == "objects[4].data.sections[1].offset_parameter: expected an ID (a non-negative integer)" )
+        => "objects[4].data.sections[1].offset_parameter: expected an ID (a non-negative integer)" == "objects[4].data.sections[1].offset_parameter: expected an ID (a non-negative integer)" with message: objects[4].data.sections[1].offset_parameter: expected an ID (a non-negative integer)
+
+== LoftFeature_RectangularFrustumMatchesAnalyticVolume
+LoftFeatureTests.cpp:355  CHECK_THAT( volumeMm3(regenerator, m.loft), WithinRel(expected, kRel) )
+        => 3500.00000000000090949 and 3500.0 are within 1e-10% of each other
+LoftFeatureTests.cpp:361  CHECK_THAT( propertiesOf(regenerator, m.loft).surfaceArea.in(units::mm2), WithinRel(200.0 + 50.0 + sides, kRel) )
+        => 1609.32678318178841437 and 1609.32678318178864174 are within 1e-10% of each other
+LoftFeatureTests.cpp:362  CHECK_THAT( areaOn(body, {0, 0, 0}, {0, 0, -1}), WithinRel(200.0, kRel) )
+        => 200.00000000000005684 and 200.0 are within 1e-10% of each other
+LoftFeatureTests.cpp:363  CHECK_THAT( areaOn(body, {0, 0, 30}, {0, 0, 1}), WithinRel(50.0, kRel) )
+        => 50.00000000000001421 and 50.0 are within 1e-10% of each other
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 0.00000000000000015 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 0.00000000000000031 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 11.7857142857142847 is within 0.000000001 of 11.7857142857142847
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000009999999939 <= -9.99999999899999992 with message: axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000009999999939 >= -10.00000010099999947 with message: axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000009999999939 >= 9.99999999899999992 with message: axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000009999999939 <= 10.00000010099999947 with message: axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -5.00000010000000028 <= -4.99999999899999992 with message: axis := 1; lo[axis] := -5.00000010000000028; hi[axis] := 5.00000010000000028
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -5.00000010000000028 >= -5.00000010100000036 with message: axis := 1; lo[axis] := -5.00000010000000028; hi[axis] := 5.00000010000000028
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 5.00000010000000028 >= 4.99999999899999992 with message: axis := 1; lo[axis] := -5.00000010000000028; hi[axis] := 5.00000010000000028
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 5.00000010000000028 <= 5.00000010100000036 with message: axis := 1; lo[axis] := -5.00000010000000028; hi[axis] := 5.00000010000000028
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -0.0000001 <= 0.000000001 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -0.0000001 >= -0.000000101 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 30.00000010000000117 >= 29.99999999899999992 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 30.00000010000000117 <= 30.00000010100000125 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftFeatureTests.cpp:385  CHECK_THAT( volumeMm3(hexRegenerator, hexLoft), WithinRel(10.0 * (a1 + a2 + std::sqrt(a1 * a2)), kRel) )
+        => 4546.63336986830290698 and 4546.63336986830290698 are within 1e-10% of each other
+
+== LoftFeature_PreservesSectionOrder / listed top down: the loft runs down, through the same sections
+LoftFeatureTests.cpp:565  CHECK_THAT( volumeMm3(regenerator, m.loft), WithinRel(forwards, kRel) )
+        => 18325.957145940468763 and 18325.957145940468763 are within 1e-10% of each other
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -0.00000000000000139 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 0.00000000000000076 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 50.0 is within 0.000000001 of 50.0
+
+== LoftFeature_OperationsWithoutOverlapFollowTheSharedPolicy / a join that misses: the tool stays a separate solid
+LoftFeatureTests.cpp:678  CHECK_THAT( volumeMm3(regenerator, m.boss), WithinRel(100000.0 + 14000.0, kRel) )
+        => 114000.00000000004365575 and 114000.0 are within 1e-10% of each other
+
+== LoftFeature_RegeneratesWhenSpacingChanges
+LoftFeatureTests.cpp:710  CHECK_THAT( volumeMm3(regenerator, m.loft), WithinRel(frustumVolume(10, 5, 60), kRel) )
+        => 10995.57428756427725602 and 10995.57428756427543703 are within 1e-10% of each other
+LoftFeatureTests.cpp:711  CHECK_THAT( volumeMm3(regenerator, m.loft) / before, WithinRel(2.0, kRel) )
+        => 2.0 and 2.0 are within 1e-10% of each other
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000010000000117 <= -9.99999999899999992 with message: axis := 0; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000010000000117 >= -10.00000010099999947 with message: axis := 0; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000010000000117 >= 9.99999999899999992 with message: axis := 0; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000010000000117 <= 10.00000010099999947 with message: axis := 0; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000010000000117 <= -9.99999999899999992 with message: axis := 1; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000010000000117 >= -10.00000010099999947 with message: axis := 1; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000010000000117 >= 9.99999999899999992 with message: axis := 1; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000010000000117 <= 10.00000010099999947 with message: axis := 1; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -0.0000001 <= 0.000000001 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 60.00000010000000117
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -0.0000001 >= -0.000000101 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 60.00000010000000117
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 60.00000010000000117 >= 59.99999999900000347 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 60.00000010000000117
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 60.00000010000000117 <= 60.0000001009999977 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 60.00000010000000117
+LoftFeatureTests.cpp:719  CHECK_THAT( volumeMm3(threeRegenerator, three.loft), WithinRel(frustumVolume(5, 10, 40) + frustumVolume(10, 5, 60), kRel) )
+        => 18325.95714594046512502 and 18325.95714594046148704 are within 1e-10% of each other
+
+== LoftFeature_ModelsAreValidatedLikeAnyOther / a sound model: the tapered block is the one valid result body
+ValidationTests.cpp:758  CHECK_THAT( report.bodies[0].properties->volume.in(units::mm3), WithinRel(TaperedHoleModel::expectedVolume(20, 15), 1e-12) )
+        => 98240.70811398973455653 and 98240.70811398972000461 are within 1e-10% of each other with message: 
+
+== LoftFeature_ModelsAreValidatedLikeAnyOther / a loft that does not build
+ValidationTests.cpp:796  REQUIRE( regeneration.size() == 1 )
+        => 1 == 1 with message: [feature regeneration] error: Taper (object:9) failed to regenerate: Taper: makeLoft: sections 1 and 2 cannot be matched: section 1 is a circle and section 2 is 4 lines; lofts between different shapes are not supported
+ValidationTests.cpp:797  CHECK( regeneration[0].item == m.taper )
+        => {?} == object:9 with message: [feature regeneration] error: Taper (object:9) failed to regenerate: Taper: makeLoft: sections 1 and 2 cannot be matched: section 1 is a circle and section 2 is 4 lines; lofts between different shapes are not supported
+ValidationTests.cpp:798  CHECK( regeneration[0].message == "Taper (object:9) failed to regenerate: Taper: makeLoft: sections 1 and 2 cannot be matched: section 1 is " "a circle and section 2 is 4 lines; lofts between different shapes are not supported" )
+        => "Taper (object:9) failed to regenerate: Taper: makeLoft: sections 1 and 2 cannot be matched: section 1 is a circle and section 2 is 4 lines; lofts between different shapes are not supported" == "Taper (object:9) failed to regenerate: Taper: makeLoft: sections 1 and 2 cannot be matched: section 1 is a circle and section 2 is 4 lines; lofts between different shapes are not supported" with message: [feature regeneration] error: Taper (object:9) failed to regenerate: Taper: makeLoft: sections 1 and 2 cannot be matched: section 1 is a circle and section 2 is 4 lines; lofts between different shapes are not supported
+ValidationTests.cpp:801  CHECK_FALSE( !(report.valid()) )
+        => !false with message: [feature regeneration] error: Taper (object:9) failed to regenerate: Taper: makeLoft: sections 1 and 2 cannot be matched: section 1 is a circle and section 2 is 4 lines; lofts between different shapes are not supported
+
+== Loft_EqualSectionsMatchPrisms
+LoftTests.cpp:163  CHECK_THAT( l.volume.in(units::mm3), WithinRel(area * 100.0, kRelTight) )
+        => 20000.0 and 20000.0 are within 1e-10% of each other with message: name := "rectangle"
+LoftTests.cpp:164  CHECK_THAT( l.volume.in(units::mm3), WithinRel(p.volume.in(units::mm3), kRelTight) )
+        => 20000.0 and 20000.00000000000363798 are within 1e-10% of each other with message: name := "rectangle"
+LoftTests.cpp:165  CHECK_THAT( l.surfaceArea.in(units::mm2), WithinRel(p.surfaceArea.in(units::mm2), kRelTight) )
+        => 6400.0 and 6400.0 are within 1e-10% of each other with message: name := "rectangle"
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -0.00000000000000018 is within 0.000000001 of 0.0 with message: name := "rectangle"
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -0.00000000000000059 is within 0.000000001 of 0.0 with message: name := "rectangle"
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 50.00000000000000711 is within 0.000000001 of 50.0 with message: name := "rectangle"
+LoftTests.cpp:130  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -5.00000010000000028 <= -4.99999999899999992 with message: name := "rectangle"; axis := 0; lo[axis] := -5.00000010000000028; hi[axis] := 5.00000010000000028
+LoftTests.cpp:131  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -5.00000010000000028 >= -5.00000010100000036 with message: name := "rectangle"; axis := 0; lo[axis] := -5.00000010000000028; hi[axis] := 5.00000010000000028
+LoftTests.cpp:132  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 5.00000010000000028 >= 4.99999999899999992 with message: name := "rectangle"; axis := 0; lo[axis] := -5.00000010000000028; hi[axis] := 5.00000010000000028
+LoftTests.cpp:133  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 5.00000010000000028 <= 5.00000010100000036 with message: name := "rectangle"; axis := 0; lo[axis] := -5.00000010000000028; hi[axis] := 5.00000010000000028
+LoftTests.cpp:130  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000009999999939 <= -9.99999999899999992 with message: name := "rectangle"; axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:131  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000009999999939 >= -10.00000010099999947 with message: name := "rectangle"; axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:132  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000009999999939 >= 9.99999999899999992 with message: name := "rectangle"; axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:133  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000009999999939 <= 10.00000010099999947 with message: name := "rectangle"; axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftTests.cpp:130  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -0.0000001 <= 0.000000001 with message: name := "rectangle"; axis := 2; lo[axis] := -0.0000001; hi[axis] := 100.00000009999999406
+LoftTests.cpp:131  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -0.0000001 >= -0.000000101 with message: name := "rectangle"; axis := 2; lo[axis] := -0.0000001; hi[axis] := 100.00000009999999406
+LoftTests.cpp:132  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 100.00000009999999406 >= 99.99999999899999636 with message: name := "rectangle"; axis := 2; lo[axis] := -0.0000001; hi[axis] := 100.00000009999999406
+LoftTests.cpp:133  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 100.00000009999999406 <= 100.0000001009999977 with message: name := "rectangle"; axis := 2; lo[axis] := -0.0000001; hi[axis] := 100.00000009999999406
+LoftTests.cpp:163  CHECK_THAT( l.volume.in(units::mm3), WithinRel(area * 100.0, kRelTight) )
+        => 7853.98163397447842726 and 7853.98163397448297474 are within 1e-10% of each other with message: name := "circle"
+LoftTests.cpp:164  CHECK_THAT( l.volume.in(units::mm3), WithinRel(p.volume.in(units::mm3), kRelTight) )
+        => 7853.98163397447842726 and 7853.98163397448024625 are within 1e-10% of each other with message: name := "circle"
+LoftTests.cpp:165  CHECK_THAT( l.surfaceArea.in(units::mm2), WithinRel(p.surfaceArea.in(units::mm2), kRelTight) )
+        => 3298.67228626928272206 and 3298.67228626928135782 are within 1e-10% of each other with message: name := "circle"
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -0.00000000000000168 is within 0.000000001 of 0.0 with message: name := "circle"
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -0.00000000000000032 is within 0.000000001 of 0.0 with message: name := "circle"
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 50.0 is within 0.000000001 of 50.0 with message: name := "circle"
+LoftTests.cpp:130  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -5.00000010000000028 <= -4.99999999899999992 with message: name := "circle"; axis := 0; lo[axis] := -5.00000010000000028; hi[axis] := 5.00000010000000028
+LoftTests.cpp:131  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -5.00000010000000028 >= -5.00000010100000036 with message: name := "circle"; axis := 0; lo[axis] := -5.00000010000000028; hi[axis] := 5.00000010000000028
+LoftTests.cpp:132  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 5.00000010000000028 >= 4.99999999899999992 with message: name := "circle"; axis := 0; lo[axis] := -5.00000010000000028; hi[axis] := 5.00000010000000028
+LoftTests.cpp:133  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 5.00000010000000028 <= 5.00000010100000036 with message: name := "circle"; axis := 0; lo[axis] := -5.00000010000000028; hi[axis] := 5.00000010000000028
+LoftTests.cpp:130  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -5.00000010000000028 <= -4.99999999899999992 with message: name := "circle"; axis := 1; lo[axis] := -5.00000010000000028; hi[axis] := 5.00000010000000028
+LoftTests.cpp:131  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -5.00000010000000028 >= -5.00000010100000036 with message: name := "circle"; axis := 1; lo[axis] := -5.00000010000000028; hi[axis] := 5.00000010000000028
+LoftTests.cpp:132  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 5.00000010000000028 >= 4.99999999899999992 with message: name := "circle"; axis := 1; lo[axis] := -5.00000010000000028; hi[axis] := 5.00000010000000028
+LoftTests.cpp:133  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 5.00000010000000028 <= 5.00000010100000036 with message: name := "circle"; axis := 1; lo[axis] := -5.00000010000000028; hi[axis] := 5.00000010000000028
+LoftTests.cpp:130  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -0.0000001 <= 0.000000001 with message: name := "circle"; axis := 2; lo[axis] := -0.0000001; hi[axis] := 100.00000009999999406
+LoftTests.cpp:131  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -0.0000001 >= -0.000000101 with message: name := "circle"; axis := 2; lo[axis] := -0.0000001; hi[axis] := 100.00000009999999406
+LoftTests.cpp:132  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 100.00000009999999406 >= 99.99999999899999636 with message: name := "circle"; axis := 2; lo[axis] := -0.0000001; hi[axis] := 100.00000009999999406
+LoftTests.cpp:133  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 100.00000009999999406 <= 100.0000001009999977 with message: name := "circle"; axis := 2; lo[axis] := -0.0000001; hi[axis] := 100.00000009999999406
+
+== LoftFeature_FailsSafelyOnSelfIntersection / a half disc turned by 180 deg pinches to nothing halfway: refused before the kernel
+LoftFeatureTests.cpp:925  CHECK_THAT( volumeMm3(regenerator, loft), WithinRel(30.0 * 12.5 * pi * 2.0 / 3.0, kRelSpline) )
+        => 785.39816388886731602 and 785.39816339744822926 are within 1e-07% of each other
+
+== LoftFeature_FailedLoftSavesAndLoadsUnchanged
+LoftFileTests.cpp:233  CHECK_THAT( again.errors.at(m.loft).message, StartsWith("Loft: makeLoft: sections 1 and 2 lie on the same plane") )
+        => "Loft: makeLoft: sections 1 and 2 lie on the same plane: a loft needs its sections apart" starts with: "Loft: makeLoft: sections 1 and 2 lie on the same plane"
+LoftFileTests.cpp:238  CHECK_THAT( volumeMm3(after, m.loft), WithinRel(1750.0 * pi, kRel) )
+        => 5497.78714378213862801 and 5497.78714378213771852 are within 1e-10% of each other
+
+== LoftFeature_RegeneratesWhenTargetChanges
+LoftFeatureTests.cpp:732  CHECK_THAT( volumeMm3(regenerator, m.taper), WithinRel(TaperedHoleModel::expectedVolume(30, 15), kRel) )
+        => 148240.70811398979276419 and 148240.7081139897054527 are within 1e-10% of each other
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => 0.0 <= 0.000000001 with message: axis := 0; lo[axis] := 0.0; hi[axis] := 100.0
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => 0.0 >= -0.000000101 with message: axis := 0; lo[axis] := 0.0; hi[axis] := 100.0
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 100.0 >= 99.99999999899999636 with message: axis := 0; lo[axis] := 0.0; hi[axis] := 100.0
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 100.0 <= 100.0000001009999977 with message: axis := 0; lo[axis] := 0.0; hi[axis] := 100.0
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => 0.0 <= 0.000000001 with message: axis := 1; lo[axis] := 0.0; hi[axis] := 50.00000000000004263
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => 0.0 >= -0.000000101 with message: axis := 1; lo[axis] := 0.0; hi[axis] := 50.00000000000004263
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 50.00000000000004263 >= 49.99999999900000347 with message: axis := 1; lo[axis] := 0.0; hi[axis] := 50.00000000000004263
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 50.00000000000004263 <= 50.0000001009999977 with message: axis := 1; lo[axis] := 0.0; hi[axis] := 50.00000000000004263
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => 0.0 <= 0.000000001 with message: axis := 2; lo[axis] := 0.0; hi[axis] := 30.0
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => 0.0 >= -0.000000101 with message: axis := 2; lo[axis] := 0.0; hi[axis] := 30.0
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 30.0 >= 29.99999999899999992 with message: axis := 2; lo[axis] := 0.0; hi[axis] := 30.0
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 30.0 <= 30.00000010100000125 with message: axis := 2; lo[axis] := 0.0; hi[axis] := 30.0
+LoftFeatureTests.cpp:736  CHECK_THAT( volumeMm3(regenerator, m.taper), WithinRel(TaperedHoleModel::expectedVolume(30, 10), kRel) )
+        => 148827.13874265988124534 and 148827.13874265982303768 are within 1e-10% of each other
+
+== LoftFeature_SaveLoadPreservesSectionOrder / a cut from a target, a section facing down, driven offsets
+LoftFileTests.cpp:162  CHECK_THAT( volumeMm3(after, m.taper), WithinRel(TaperedHoleModel::expectedVolume(20, 10), kRel) )
+        => 98827.1387426598375896 and 98827.13874265980848577 are within 1e-10% of each other with message: 
+LoftFileTests.cpp:165  CHECK_THAT( volumeMm3(after, m.taper), WithinRel(TaperedHoleModel::expectedVolume(30, 10), kRel) )
+        => 148827.13874265988124534 and 148827.13874265982303768 are within 1e-10% of each other with message: 
+
+== LoftFeature_SaveLoadPreservesSectionOrder / literal offsets round-trip bit for bit
+LoftFileTests.cpp:215  CHECK_THAT( volumeMm3(after, loft), WithinRel(frustumVolume(10, 6, 20.3) + frustumVolume(6, 8, 15.4), kRel) )
+        => 6553.36227538830917183 and 6553.36227538830917183 are within 1e-10% of each other
+
+== LoftFeature_UndoRedoRestoresGeometry / commands on the loft re-solve nothing: undo and redo restore everything bit for bit
+LoftFeatureTests.cpp:1026  CHECK_THAT( created.volume, WithinRel(1750.0 * pi, kRel) )
+        => 5497.78714378213862801 and 5497.78714378213771852 are within 1e-10% of each other
+LoftFeatureTests.cpp:1035  CHECK_THAT( extended.volume, WithinRel(frustumVolume(10, 5, 30) + frustumVolume(5, 3, 15), kRel) )
+        => 6267.47734391163976397 and 6267.47734391163703549 are within 1e-10% of each other
+
+== LoftFeature_UndoRedoRestoresGeometry / parameter edits: the top radius 5 -> 8 mm, the height 30 -> 60 mm
+LoftFeatureTests.cpp:1071  CHECK_THAT( states.back().volume, WithinRel(frustumVolume(10, 8, 30), kRel) )
+        => 7665.48607475909557252 and 7665.48607475909466302 are within 1e-10% of each other
+LoftFeatureTests.cpp:1074  CHECK_THAT( states.back().volume, WithinRel(frustumVolume(10, 8, 60), kRel) )
+        => 15330.97214951819114503 and 15330.97214951818932605 are within 1e-10% of each other
+LoftFeatureTests.cpp:1079  CHECK_THAT( volumeMm3(regenerator, loft), WithinRel(expected.volume, kRel) )
+        => 7665.48607475909557252 and 7665.48607475909557252 are within 1e-10% of each other
+LoftFeatureTests.cpp:1080  CHECK_THAT( volumeMm3(regenerator, loft), WithinRel(analytic, kRel) )
+        => 7665.48607475909557252 and 7665.48607475909466302 are within 1e-10% of each other
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -0.0000000000000016 is within 0.000000001 of -0.0000000000000016
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -0.00000000000000076 is within 0.000000001 of -0.00000000000000076
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 13.89344262295081656 is within 0.000000001 of 13.89344262295081656
+LoftFeatureTests.cpp:1079  CHECK_THAT( volumeMm3(regenerator, loft), WithinRel(expected.volume, kRel) )
+        => 5497.78714378213862801 and 5497.78714378213862801 are within 1e-10% of each other
+LoftFeatureTests.cpp:1080  CHECK_THAT( volumeMm3(regenerator, loft), WithinRel(analytic, kRel) )
+        => 5497.78714378213862801 and 5497.78714378213771852 are within 1e-10% of each other
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -0.00000000000000014 is within 0.000000001 of -0.00000000000000014
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -0.00000000000000052 is within 0.000000001 of -0.00000000000000052
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 11.78571428571428648 is within 0.000000001 of 11.78571428571428648
+LoftFeatureTests.cpp:1079  CHECK_THAT( volumeMm3(regenerator, loft), WithinRel(expected.volume, kRel) )
+        => 7665.48607475909557252 and 7665.48607475909557252 are within 1e-10% of each other
+LoftFeatureTests.cpp:1080  CHECK_THAT( volumeMm3(regenerator, loft), WithinRel(analytic, kRel) )
+        => 7665.48607475909557252 and 7665.48607475909466302 are within 1e-10% of each other
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -0.0000000000000016 is within 0.000000001 of -0.0000000000000016
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -0.00000000000000076 is within 0.000000001 of -0.00000000000000076
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 13.89344262295081656 is within 0.000000001 of 13.89344262295081656
+LoftFeatureTests.cpp:1079  CHECK_THAT( volumeMm3(regenerator, loft), WithinRel(expected.volume, kRel) )
+        => 15330.97214951819114503 and 15330.97214951819114503 are within 1e-10% of each other
+LoftFeatureTests.cpp:1080  CHECK_THAT( volumeMm3(regenerator, loft), WithinRel(analytic, kRel) )
+        => 15330.97214951819114503 and 15330.97214951818932605 are within 1e-10% of each other
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -0.00000000000000065 is within 0.000000001 of -0.00000000000000065
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -0.00000000000000066 is within 0.000000001 of -0.00000000000000066
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 27.78688524590163667 is within 0.000000001 of 27.78688524590163667
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000010000000117 <= -9.99999999899999992 with message: axis := 0; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000010000000117 >= -10.00000010099999947 with message: axis := 0; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000010000000117 >= 9.99999999899999992 with message: axis := 0; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000010000000117 <= 10.00000010099999947 with message: axis := 0; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000010000000117 <= -9.99999999899999992 with message: axis := 1; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000010000000117 >= -10.00000010099999947 with message: axis := 1; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000010000000117 >= 9.99999999899999992 with message: axis := 1; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000010000000117 <= 10.00000010099999947 with message: axis := 1; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -0.0000001 <= 0.000000001 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 60.00000010000000117
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -0.0000001 >= -0.000000101 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 60.00000010000000117
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 60.00000010000000117 >= 59.99999999900000347 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 60.00000010000000117
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 60.00000010000000117 <= 60.0000001009999977 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 60.00000010000000117
+
+== LoftFeature_Remove
+LoftFeatureTests.cpp:611  CHECK_THAT( volumeMm3(regenerator, m.taper), WithinRel(TaperedHoleModel::expectedVolume(20, 15), kRel) )
+        => 98240.70811398973455653 and 98240.70811398972000461 are within 1e-10% of each other with message: 
+LoftFeatureTests.cpp:612  CHECK_THAT( volumeMm3(regenerator, m.taper), WithinRel(100000.0 - 560.0 * pi, kRel) )
+        => 98240.70811398973455653 and 98240.70811398972000461 are within 1e-10% of each other with message: 
+LoftFeatureTests.cpp:615  CHECK_THAT( areaOn(body, {0, 0, 5}, {0, 0, 1}), WithinRel(16.0 * pi, kRel) )
+        => 50.26548245743666854 and 50.26548245743668986 are within 1e-10% of each other with message: 
+LoftFeatureTests.cpp:616  CHECK_THAT( areaOn(body, {0, 0, 20}, {0, 0, 1}), WithinRel(5000.0 - 64.0 * pi, kRel) )
+        => 4798.93807017025574169 and 4798.9380701702530132 are within 1e-10% of each other with message: 
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => 0.0 <= 0.000000001 with message: ; axis := 0; lo[axis] := 0.0; hi[axis] := 100.0
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => 0.0 >= -0.000000101 with message: ; axis := 0; lo[axis] := 0.0; hi[axis] := 100.0
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 100.0 >= 99.99999999899999636 with message: ; axis := 0; lo[axis] := 0.0; hi[axis] := 100.0
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 100.0 <= 100.0000001009999977 with message: ; axis := 0; lo[axis] := 0.0; hi[axis] := 100.0
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => 0.0 <= 0.000000001 with message: ; axis := 1; lo[axis] := 0.0; hi[axis] := 50.00000000000004263
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => 0.0 >= -0.000000101 with message: ; axis := 1; lo[axis] := 0.0; hi[axis] := 50.00000000000004263
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 50.00000000000004263 >= 49.99999999900000347 with message: ; axis := 1; lo[axis] := 0.0; hi[axis] := 50.00000000000004263
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 50.00000000000004263 <= 50.0000001009999977 with message: ; axis := 1; lo[axis] := 0.0; hi[axis] := 50.00000000000004263
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => 0.0 <= 0.000000001 with message: ; axis := 2; lo[axis] := 0.0; hi[axis] := 20.00000010000000117
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => 0.0 >= -0.000000101 with message: ; axis := 2; lo[axis] := 0.0; hi[axis] := 20.00000010000000117
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 20.00000010000000117 >= 19.99999999899999992 with message: ; axis := 2; lo[axis] := 0.0; hi[axis] := 20.00000010000000117
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 20.00000010000000117 <= 20.00000010100000125 with message: ; axis := 2; lo[axis] := 0.0; hi[axis] := 20.00000010000000117
+
+== LoftFeature_NewBody
+LoftFeatureTests.cpp:577  CHECK_THAT( volumeMm3(regenerator, m.loft), WithinRel(1750.0 * pi, kRel) )
+        => 5497.78714378213862801 and 5497.78714378213771852 are within 1e-10% of each other
+
+== LoftFeature_CircularFrustumMatchesRevolve
+LoftFeatureTests.cpp:502  CHECK_THAT( lofted.volume.in(units::mm3), WithinRel(expected, kRel) )
+        => 5497.78714378213862801 and 5497.78714378213771852 are within 1e-10% of each other with message: r2 := 5.0; h := 30.0; ; loft 5497.79, revolve 5497.79, formula 5497.79 mm^3
+LoftFeatureTests.cpp:503  CHECK_THAT( revolved.volume.in(units::mm3), WithinRel(expected, kRel) )
+        => 5497.78714378213862801 and 5497.78714378213771852 are within 1e-10% of each other with message: r2 := 5.0; h := 30.0; ; loft 5497.79, revolve 5497.79, formula 5497.79 mm^3
+LoftFeatureTests.cpp:504  CHECK_THAT( lofted.volume.in(units::mm3), WithinRel(revolved.volume.in(units::mm3), kRel) )
+        => 5497.78714378213862801 and 5497.78714378213862801 are within 1e-10% of each other with message: r2 := 5.0; h := 30.0; ; loft 5497.79, revolve 5497.79, formula 5497.79 mm^3
+LoftFeatureTests.cpp:505  CHECK_THAT( lofted.surfaceArea.in(units::mm2), WithinRel(revolved.surfaceArea.in(units::mm2), kRel) )
+        => 1825.91623760243419383 and 1825.91623760243555807 are within 1e-10% of each other with message: r2 := 5.0; h := 30.0; ; loft 5497.79, revolve 5497.79, formula 5497.79 mm^3
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -0.00000000000000014 is within 0.000000001 of 0.0 with message: r2 := 5.0; h := 30.0; ; loft 5497.79, revolve 5497.79, formula 5497.79 mm^3
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -0.00000000000000052 is within 0.000000001 of 0.0 with message: r2 := 5.0; h := 30.0; ; loft 5497.79, revolve 5497.79, formula 5497.79 mm^3
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 11.78571428571428648 is within 0.000000001 of 11.7857142857142847 with message: r2 := 5.0; h := 30.0; ; loft 5497.79, revolve 5497.79, formula 5497.79 mm^3
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 0.00000000000000002 is within 0.000000001 of 0.0 with message: r2 := 5.0; h := 30.0; ; loft 5497.79, revolve 5497.79, formula 5497.79 mm^3
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -0.00000000000000023 is within 0.000000001 of 0.0 with message: r2 := 5.0; h := 30.0; ; loft 5497.79, revolve 5497.79, formula 5497.79 mm^3
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 11.7857142857142847 is within 0.000000001 of 11.7857142857142847 with message: r2 := 5.0; h := 30.0; ; loft 5497.79, revolve 5497.79, formula 5497.79 mm^3
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000010000000117 <= -9.99999999899999992 with message: r2 := 5.0; h := 30.0; ; loft 5497.79, revolve 5497.79, formula 5497.79 mm^3; axis := 0; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000010000000117 >= -10.00000010099999947 with message: r2 := 5.0; h := 30.0; ; loft 5497.79, revolve 5497.79, formula 5497.79 mm^3; axis := 0; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000010000000117 >= 9.99999999899999992 with message: r2 := 5.0; h := 30.0; ; loft 5497.79, revolve 5497.79, formula 5497.79 mm^3; axis := 0; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000010000000117 <= 10.00000010099999947 with message: r2 := 5.0; h := 30.0; ; loft 5497.79, revolve 5497.79, formula 5497.79 mm^3; axis := 0; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000010000000117 <= -9.99999999899999992 with message: r2 := 5.0; h := 30.0; ; loft 5497.79, revolve 5497.79, formula 5497.79 mm^3; axis := 1; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000010000000117 >= -10.00000010099999947 with message: r2 := 5.0; h := 30.0; ; loft 5497.79, revolve 5497.79, formula 5497.79 mm^3; axis := 1; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000010000000117 >= 9.99999999899999992 with message: r2 := 5.0; h := 30.0; ; loft 5497.79, revolve 5497.79, formula 5497.79 mm^3; axis := 1; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000010000000117 <= 10.00000010099999947 with message: r2 := 5.0; h := 30.0; ; loft 5497.79, revolve 5497.79, formula 5497.79 mm^3; axis := 1; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -0.0000001 <= 0.000000001 with message: r2 := 5.0; h := 30.0; ; loft 5497.79, revolve 5497.79, formula 5497.79 mm^3; axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -0.0000001 >= -0.000000101 with message: r2 := 5.0; h := 30.0; ; loft 5497.79, revolve 5497.79, formula 5497.79 mm^3; axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 30.00000010000000117 >= 29.99999999899999992 with message: r2 := 5.0; h := 30.0; ; loft 5497.79, revolve 5497.79, formula 5497.79 mm^3; axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 30.00000010000000117 <= 30.00000010100000125 with message: r2 := 5.0; h := 30.0; ; loft 5497.79, revolve 5497.79, formula 5497.79 mm^3; axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.0 <= -9.99999999899999992 with message: r2 := 5.0; h := 30.0; ; loft 5497.79, revolve 5497.79, formula 5497.79 mm^3; axis := 0; lo[axis] := -10.0; hi[axis] := 10.0
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.0 >= -10.00000010099999947 with message: r2 := 5.0; h := 30.0; ; loft 5497.79, revolve 5497.79, formula 5497.79 mm^3; axis := 0; lo[axis] := -10.0; hi[axis] := 10.0
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.0 >= 9.99999999899999992 with message: r2 := 5.0; h := 30.0; ; loft 5497.79, revolve 5497.79, formula 5497.79 mm^3; axis := 0; lo[axis] := -10.0; hi[axis] := 10.0
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.0 <= 10.00000010099999947 with message: r2 := 5.0; h := 30.0; ; loft 5497.79, revolve 5497.79, formula 5497.79 mm^3; axis := 0; lo[axis] := -10.0; hi[axis] := 10.0
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.0 <= -9.99999999899999992 with message: r2 := 5.0; h := 30.0; ; loft 5497.79, revolve 5497.79, formula 5497.79 mm^3; axis := 1; lo[axis] := -10.0; hi[axis] := 10.0
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.0 >= -10.00000010099999947 with message: r2 := 5.0; h := 30.0; ; loft 5497.79, revolve 5497.79, formula 5497.79 mm^3; axis := 1; lo[axis] := -10.0; hi[axis] := 10.0
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.0 >= 9.99999999899999992 with message: r2 := 5.0; h := 30.0; ; loft 5497.79, revolve 5497.79, formula 5497.79 mm^3; axis := 1; lo[axis] := -10.0; hi[axis] := 10.0
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.0 <= 10.00000010099999947 with message: r2 := 5.0; h := 30.0; ; loft 5497.79, revolve 5497.79, formula 5497.79 mm^3; axis := 1; lo[axis] := -10.0; hi[axis] := 10.0
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => 0.0 <= 0.000000001 with message: r2 := 5.0; h := 30.0; ; loft 5497.79, revolve 5497.79, formula 5497.79 mm^3; axis := 2; lo[axis] := 0.0; hi[axis] := 30.0
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => 0.0 >= -0.000000101 with message: r2 := 5.0; h := 30.0; ; loft 5497.79, revolve 5497.79, formula 5497.79 mm^3; axis := 2; lo[axis] := 0.0; hi[axis] := 30.0
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 30.0 >= 29.99999999899999992 with message: r2 := 5.0; h := 30.0; ; loft 5497.79, revolve 5497.79, formula 5497.79 mm^3; axis := 2; lo[axis] := 0.0; hi[axis] := 30.0
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 30.0 <= 30.00000010100000125 with message: r2 := 5.0; h := 30.0; ; loft 5497.79, revolve 5497.79, formula 5497.79 mm^3; axis := 2; lo[axis] := 0.0; hi[axis] := 30.0
+LoftFeatureTests.cpp:502  CHECK_THAT( lofted.volume.in(units::mm3), WithinRel(expected, kRel) )
+        => 15330.97214951819114503 and 15330.97214951818932605 are within 1e-10% of each other with message: r2 := 8.0; h := 60.0; ; loft 15331, revolve 15331, formula 15331 mm^3
+LoftFeatureTests.cpp:503  CHECK_THAT( revolved.volume.in(units::mm3), WithinRel(expected, kRel) )
+        => 15330.97214951820387796 and 15330.97214951818932605 are within 1e-10% of each other with message: r2 := 8.0; h := 60.0; ; loft 15331, revolve 15331, formula 15331 mm^3
+LoftFeatureTests.cpp:504  CHECK_THAT( lofted.volume.in(units::mm3), WithinRel(revolved.volume.in(units::mm3), kRel) )
+        => 15330.97214951819114503 and 15330.97214951820387796 are within 1e-10% of each other with message: r2 := 8.0; h := 60.0; ; loft 15331, revolve 15331, formula 15331 mm^3
+LoftFeatureTests.cpp:505  CHECK_THAT( lofted.surfaceArea.in(units::mm2), WithinRel(revolved.surfaceArea.in(units::mm2), kRel) )
+        => 3910.02569334976669779 and 3910.02569334976942628 are within 1e-10% of each other with message: r2 := 8.0; h := 60.0; ; loft 15331, revolve 15331, formula 15331 mm^3
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -0.00000000000000065 is within 0.000000001 of 0.0 with message: r2 := 8.0; h := 60.0; ; loft 15331, revolve 15331, formula 15331 mm^3
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -0.00000000000000066 is within 0.000000001 of 0.0 with message: r2 := 8.0; h := 60.0; ; loft 15331, revolve 15331, formula 15331 mm^3
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 27.78688524590163667 is within 0.000000001 of 27.78688524590164022 with message: r2 := 8.0; h := 60.0; ; loft 15331, revolve 15331, formula 15331 mm^3
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -0.00000000000000308 is within 0.000000001 of 0.0 with message: r2 := 8.0; h := 60.0; ; loft 15331, revolve 15331, formula 15331 mm^3
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -0.00000000000000059 is within 0.000000001 of 0.0 with message: r2 := 8.0; h := 60.0; ; loft 15331, revolve 15331, formula 15331 mm^3
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 27.78688524590164732 is within 0.000000001 of 27.78688524590164022 with message: r2 := 8.0; h := 60.0; ; loft 15331, revolve 15331, formula 15331 mm^3
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000010000000117 <= -9.99999999899999992 with message: r2 := 8.0; h := 60.0; ; loft 15331, revolve 15331, formula 15331 mm^3; axis := 0; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000010000000117 >= -10.00000010099999947 with message: r2 := 8.0; h := 60.0; ; loft 15331, revolve 15331, formula 15331 mm^3; axis := 0; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000010000000117 >= 9.99999999899999992 with message: r2 := 8.0; h := 60.0; ; loft 15331, revolve 15331, formula 15331 mm^3; axis := 0; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000010000000117 <= 10.00000010099999947 with message: r2 := 8.0; h := 60.0; ; loft 15331, revolve 15331, formula 15331 mm^3; axis := 0; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000010000000117 <= -9.99999999899999992 with message: r2 := 8.0; h := 60.0; ; loft 15331, revolve 15331, formula 15331 mm^3; axis := 1; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000010000000117 >= -10.00000010099999947 with message: r2 := 8.0; h := 60.0; ; loft 15331, revolve 15331, formula 15331 mm^3; axis := 1; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000010000000117 >= 9.99999999899999992 with message: r2 := 8.0; h := 60.0; ; loft 15331, revolve 15331, formula 15331 mm^3; axis := 1; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000010000000117 <= 10.00000010099999947 with message: r2 := 8.0; h := 60.0; ; loft 15331, revolve 15331, formula 15331 mm^3; axis := 1; lo[axis] := -10.00000010000000117; hi[axis] := 10.00000010000000117
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -0.0000001 <= 0.000000001 with message: r2 := 8.0; h := 60.0; ; loft 15331, revolve 15331, formula 15331 mm^3; axis := 2; lo[axis] := -0.0000001; hi[axis] := 60.00000010000000117
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -0.0000001 >= -0.000000101 with message: r2 := 8.0; h := 60.0; ; loft 15331, revolve 15331, formula 15331 mm^3; axis := 2; lo[axis] := -0.0000001; hi[axis] := 60.00000010000000117
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 60.00000010000000117 >= 59.99999999900000347 with message: r2 := 8.0; h := 60.0; ; loft 15331, revolve 15331, formula 15331 mm^3; axis := 2; lo[axis] := -0.0000001; hi[axis] := 60.00000010000000117
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 60.00000010000000117 <= 60.0000001009999977 with message: r2 := 8.0; h := 60.0; ; loft 15331, revolve 15331, formula 15331 mm^3; axis := 2; lo[axis] := -0.0000001; hi[axis] := 60.00000010000000117
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.0 <= -9.99999999899999992 with message: r2 := 8.0; h := 60.0; ; loft 15331, revolve 15331, formula 15331 mm^3; axis := 0; lo[axis] := -10.0; hi[axis] := 10.0
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.0 >= -10.00000010099999947 with message: r2 := 8.0; h := 60.0; ; loft 15331, revolve 15331, formula 15331 mm^3; axis := 0; lo[axis] := -10.0; hi[axis] := 10.0
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.0 >= 9.99999999899999992 with message: r2 := 8.0; h := 60.0; ; loft 15331, revolve 15331, formula 15331 mm^3; axis := 0; lo[axis] := -10.0; hi[axis] := 10.0
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.0 <= 10.00000010099999947 with message: r2 := 8.0; h := 60.0; ; loft 15331, revolve 15331, formula 15331 mm^3; axis := 0; lo[axis] := -10.0; hi[axis] := 10.0
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.0 <= -9.99999999899999992 with message: r2 := 8.0; h := 60.0; ; loft 15331, revolve 15331, formula 15331 mm^3; axis := 1; lo[axis] := -10.0; hi[axis] := 10.0
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.0 >= -10.00000010099999947 with message: r2 := 8.0; h := 60.0; ; loft 15331, revolve 15331, formula 15331 mm^3; axis := 1; lo[axis] := -10.0; hi[axis] := 10.0
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.0 >= 9.99999999899999992 with message: r2 := 8.0; h := 60.0; ; loft 15331, revolve 15331, formula 15331 mm^3; axis := 1; lo[axis] := -10.0; hi[axis] := 10.0
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.0 <= 10.00000010099999947 with message: r2 := 8.0; h := 60.0; ; loft 15331, revolve 15331, formula 15331 mm^3; axis := 1; lo[axis] := -10.0; hi[axis] := 10.0
+LoftFeatureTests.cpp:114  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => 0.00000000000000777 <= 0.000000001 with message: r2 := 8.0; h := 60.0; ; loft 15331, revolve 15331, formula 15331 mm^3; axis := 2; lo[axis] := 0.00000000000000777; hi[axis] := 60.0
+LoftFeatureTests.cpp:115  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => 0.00000000000000777 >= -0.000000101 with message: r2 := 8.0; h := 60.0; ; loft 15331, revolve 15331, formula 15331 mm^3; axis := 2; lo[axis] := 0.00000000000000777; hi[axis] := 60.0
+LoftFeatureTests.cpp:116  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 60.0 >= 59.99999999900000347 with message: r2 := 8.0; h := 60.0; ; loft 15331, revolve 15331, formula 15331 mm^3; axis := 2; lo[axis] := 0.00000000000000777; hi[axis] := 60.0
+LoftFeatureTests.cpp:117  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 60.0 <= 60.0000001009999977 with message: r2 := 8.0; h := 60.0; ; loft 15331, revolve 15331, formula 15331 mm^3; axis := 2; lo[axis] := 0.00000000000000777; hi[axis] := 60.0
+
+Overall: 2885 assertions passed, 0 failed.

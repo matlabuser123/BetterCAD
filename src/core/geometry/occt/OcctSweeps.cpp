@@ -1,6 +1,7 @@
 #include <bettercad/core/geometry/Sweeps.hpp>
 #include <bettercad/core/units/Format.hpp>
 
+#include "core/geometry/LoftPlan.hpp"
 #include "core/geometry/ProfileExtent.hpp"
 #include "core/geometry/SweepPlan.hpp"
 #include "core/geometry/occt/OcctBody.hpp"
@@ -17,6 +18,7 @@
 #include <BRepBuilderAPI_TransitionMode.hxx>
 #include <BRepCheck_Analyzer.hxx>
 #include <BRepOffsetAPI_MakePipeShell.hxx>
+#include <BRepOffsetAPI_ThruSections.hxx>
 #include <BRepPrimAPI_MakePrism.hxx>
 #include <BRepPrimAPI_MakeRevol.hxx>
 #include <Precision.hxx>
@@ -117,10 +119,12 @@ Result<void> checkLoop(const ProfileLoop& loop, std::string_view name) {
 
 // Builds OCCT wires for loops on a plane offset along its normal. Vertices are
 // created once per distinct 2D point so that consecutive edges share them.
+// With @p seamOnXAxis, full circles start (have their seam) on the plane's X
+// axis through their centre; otherwise the kernel chooses.
 class WireBuilder {
 public:
-    WireBuilder(const Frame3D& plane, double offset) : plane_(plane), offset_(offset),
-        normal_(occt::toModel(plane.normal())) {}
+    WireBuilder(const Frame3D& plane, double offset, bool seamOnXAxis = false) : plane_(plane), offset_(offset),
+        normal_(occt::toModel(plane.normal())), xAxis_(occt::toModel(plane.xAxis())), seamOnXAxis_(seamOnXAxis) {}
 
     Result<TopoDS_Wire> build(const ProfileLoop& loop) {
         BRepBuilderAPI_MakeWire wire;
@@ -157,6 +161,9 @@ private:
     [[nodiscard]] gp_Circ circle(const Point2D& center, double radius, bool counterClockwise) const {
         // Counter-clockwise about the plane normal is the circle's parametric direction.
         const gp_Dir axis = counterClockwise ? normal_ : normal_.Reversed();
+        if (seamOnXAxis_) {
+            return gp_Circ(gp_Ax2(point(center), axis, xAxis_), radius);
+        }
         return gp_Circ(gp_Ax2(point(center), axis), radius);
     }
 
@@ -176,6 +183,8 @@ private:
     Frame3D plane_;
     double offset_;
     gp_Dir normal_;
+    gp_Dir xAxis_;
+    bool seamOnXAxis_;
     std::map<std::pair<double, double>, TopoDS_Vertex> vertices_;
 };
 
@@ -484,6 +493,83 @@ Result<Body> makeSweep(const PlanarRegion& region, const PlanarPath& path) {
         return makeError(ErrorCode::Internal,
                          std::format("makeSweep: the kernel's solid encloses {:.12g} mm^3, but the profile's area "
                                      "times the length of its centroid's path is {:.12g} mm^3",
+                                     actual, expected));
+    }
+    return body;
+}
+
+Result<Body> makeLoft(std::span<const PlanarRegion> sections) {
+    for (std::size_t i = 0; i < sections.size(); ++i) {
+        if (auto valid = checkRegion(sections[i]); !valid) {
+            return makeError(valid.error().code, std::format("makeLoft: section {}: {}", i + 1, valid.error().message));
+        }
+    }
+    auto plan = detail::planLoft(sections);
+    if (!plan) {
+        return std::unexpected(plan.error());
+    }
+
+    auto lofted = occt::guardKernelCall("makeLoft", [&]() -> Result<Body> {
+        // Ruled: straight lines join matching points of consecutive sections.
+        BRepOffsetAPI_ThruSections loft(/*isSolid=*/true, /*ruled=*/true);
+        // BetterCAD matched the sections (planLoft()); the kernel must keep
+        // that matching rather than re-match them itself.
+        loft.CheckCompatibility(false);
+        for (std::size_t i = 0; i < plan->sections.size(); ++i) {
+            const PlanarRegion& section = plan->sections[i];
+            // The loop must bound a valid face, as for prisms and sweeps.
+            if (auto face = makeProfileFace(section, 0.0, std::format("makeLoft: section {}", i + 1)); !face) {
+                return std::unexpected(face.error());
+            }
+            WireBuilder builder(section.plane, 0.0, /*seamOnXAxis=*/true);
+            auto wire = builder.build(section.outer);
+            if (!wire) {
+                return std::unexpected(wire.error());
+            }
+            loft.AddWire(*wire);
+        }
+        loft.Build();
+        if (!loft.IsDone()) {
+            return makeError(ErrorCode::Internal, "makeLoft: the kernel could not loft the sections");
+        }
+        return occt::BodyAccess::makeBody(loft.Shape());
+    });
+    if (!lofted) {
+        return std::unexpected(lofted.error());
+    }
+    const Body& body = *lofted;
+    if (body.isEmpty() || body.topology().solids != 1 || !body.isValid()) {
+        return makeError(ErrorCode::Internal, "makeLoft: the kernel produced an invalid solid");
+    }
+    auto intersects = occt::guardKernelCall("makeLoft", [&]() -> Result<bool> {
+        BRepAlgoAPI_Check check(*occt::BodyAccess::shape(body), /*bTestSE=*/false, /*bTestSI=*/true);
+        return !check.IsValid();
+    });
+    if (!intersects) {
+        return std::unexpected(intersects.error());
+    }
+    if (*intersects) {
+        return makeError(ErrorCode::InvalidArgument,
+                         "makeLoft: the lofted solid would intersect itself: its sides pass through one another "
+                         "between the sections");
+    }
+    // Independent check of the kernel's result (prismatoid formula, see
+    // planLoft()). The kernel's volumes agree to rounding between lines and
+    // between coaxial circles and arcs, and within 6.3e-10 between arcs or
+    // circles that are not coaxial or are turned against each other (its
+    // B-spline ruled faces; measured, see docs/verification/P11-FEAT-009). A
+    // wrongly matched loft is off by more than 1e-1 in every case probed;
+    // 1e-8 keeps both apart.
+    const auto properties = body.massProperties();
+    if (!properties || !isFinite(properties->volume) || !(properties->volume > Volume{})) {
+        return makeError(ErrorCode::Internal, "makeLoft: the kernel produced a solid without a finite positive volume");
+    }
+    const double actual = properties->volume.in(units::mm3);
+    const double expected = plan->expectedVolume.in(units::mm3);
+    if (std::abs(actual - expected) > 1e-8 * expected) {
+        return makeError(ErrorCode::Internal,
+                         std::format("makeLoft: the kernel's solid encloses {:.12g} mm^3, but the sections' "
+                                     "prismatoid volume is {:.12g} mm^3",
                                      actual, expected));
     }
     return body;

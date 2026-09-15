@@ -8,6 +8,7 @@
 #include <bettercad/core/math/Frame.hpp>
 #include <bettercad/core/units/Units.hpp>
 
+#include <span>
 #include <vector>
 
 namespace bettercad::geometry {
@@ -82,5 +83,38 @@ struct PlanarPath {
 /// Pappus, which holds for every sweep that does not intersect itself) to
 /// 1e-9 relative. Kernel failures are Internal.
 [[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Result<Body> makeSweep(const PlanarRegion& region, const PlanarPath& path);
+
+/// Solid through @p sections, in the order given: a ruled loft, in which
+/// straight lines join matching points of consecutive sections.
+///
+/// Sections: at least two; each is one closed loop of lines and arcs, or a
+/// circle, without holes. Their planes must be parallel (to 1e-9 rad), and
+/// the sections must follow one another along them: the loft runs from the
+/// first section towards the second, and every section lies strictly beyond
+/// the one before (never on the same plane, never back). The list order is
+/// kept, never sorted.
+///
+/// Matching (correspondence): every loop is taken counter-clockwise about
+/// the loft direction, whatever its sketch's orientation. Consecutive
+/// sections must have the same shape: both circles, or the same lines and
+/// arcs in the same cyclic order, matched arcs turning by the same angle
+/// (to 1e-9 rad). A section's loop starts where its corners lie nearest to
+/// the previous section's corners, relative to each section's centroid (the
+/// least twist); starts whose costs tie within 1e-9 of the sections' size go
+/// to the loop's first. Circles match angle for angle, from the first
+/// section's X axis.
+///
+/// Preflight (InvalidArgument, before the kernel): fewer than two sections,
+/// holes, non-finite coordinates, non-parallel planes, coincident or
+/// out-of-order sections, sections of different shapes, and a loft whose
+/// cross-section would lose all its area between two sections (it folds).
+/// A lofted solid whose sides pass through one another elsewhere is found by
+/// the kernel's self-interference check afterwards, also InvalidArgument.
+///
+/// The result is checked: one valid solid whose volume equals the sum over
+/// consecutive sections of h/6 (A0 + 4 Am + A1) (the prismatoid formula, Am
+/// the area of the section halfway) to 1e-8 relative. Kernel failures are
+/// Internal.
+[[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Result<Body> makeLoft(std::span<const PlanarRegion> sections);
 
 } // namespace bettercad::geometry

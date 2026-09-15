@@ -18,6 +18,8 @@ bettercad_add_library(bettercad_features
         fillet/FilletRegeneration.cpp
         hole/HoleFeature.cpp
         hole/HoleRegeneration.cpp
+        loft/LoftFeature.cpp
+        loft/LoftRegeneration.cpp
         pattern/CircularPatternFeature.cpp
         pattern/CircularPatternRegeneration.cpp
         pattern/LinearPatternFeature.cpp

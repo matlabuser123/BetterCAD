@@ -433,25 +433,86 @@ one planar sketch; only straight segments may meet at a (mitred) corner, and
 arcs must join tangentially; the profile must sit on the path's start plane;
 feature-scope patterns and mirrors do not take a sweep as their source.
 
+#### P11-FEAT-009 — Loft — [evidence](docs/verification/P11-FEAT-009/README.md)
+
+- [x] Loft feature definition
+- [x] Stable ordered profile references (sketch IDs, each with an offset
+  along its plane's normal, literal or driven by a length parameter; the
+  order kept as given)
+- [x] Two-profile loft
+- [x] Multi-section loft (three or more sections, ruled piecewise)
+- [x] Different profile sizes
+- [x] Offset profile sections
+- [x] Differently oriented sketches on parallel planes (turned axes,
+  reversed normals, turned sections)
+- [x] Closed-profile solid loft (lines, arcs of equal sweep, circles; open
+  profiles refused)
+- [x] Deterministic section correspondence (least twist from the centroids,
+  ties to the first start, winding normalized)
+- [x] New-body operation
+- [x] Add/remove/intersect operation
+- [x] Geometry validity checks (fold preflight, self-interference check,
+  prismatoid volume check of every result)
+- [x] Parameter-driven regeneration (section geometry, spacing, offset,
+  target)
+- [x] Atomic failure diagnostics
+- [x] Save/load round-trip (section order preserved)
+- [x] Undo/redo regression
+- [x] STEP/STL export regression
+- [x] Analytic/geometric validation (Loft vs Extrude, Loft vs Revolve)
+- [x] Failure diagnostics
+- [x] Evidence under `docs/verification/P11-FEAT-009/`
+
+**Acceptance (met):**
+
+- Two 10 × 20 mm rectangles 100 mm apart loft to 20000 mm³, and two
+  circles r = 5 mm to 2500π; both equal the extrusion of the same profile.
+- Circles r 10 → r 5 over 30 mm give πh/3 (r1² + r1r2 + r2²) = 1750π, equal
+  to the revolve of the matching trapezoid, at r2 = 5, h = 30 and after
+  r2 = 8, h = 60. Similar rectangles and hexagons give
+  h/3 (A1 + A2 + √(A1A2)), three and four circular sections the sum of
+  their frustums, and an offset frustum the same volume (Cavalieri).
+- Sections match with the least twist, whatever corner a rectangle is drawn
+  from or which way round; ties go to a fixed start under rounding noise; a
+  section turned by θ follows V = hA (2 + cos θ)/3.
+- New body, join, cut and intersect match closed-form volumes (a tapered
+  boss, a tapered blind hole, its intersection with the block).
+- Changing a section's size, the spacing, a section's position or the
+  target regenerates the loft with no stale section; open, multiple or
+  holed profiles, sections of different shapes, non-parallel, coincident
+  or out-of-order sections, folding and self-intersecting lofts fail with
+  structured diagnostics, before the kernel where possible, and nothing is
+  committed.
+- Save → destroy → load → regenerate reproduces the definition, the section
+  order (also against the sketches' ID order) and the geometry bit for bit.
+  STEP read-back and closed STL meshes match.
+- The existing P0–P11-FEAT-008 regression suite remains green.
+
+**Not implemented:** sections of different shapes (circle to polygon,
+different corner counts), sections on non-parallel planes, smooth
+interpolation, guide curves, centreline lofts, tangency or curvature end
+conditions, sections with holes, thin-wall and surface lofts, closed lofts.
+**Known limitations:** a loft's sides are B-spline faces for the kernel, so
+plane references find only its end faces; ties in the matching go to the
+first start of the loop; a section's corners must match one to one (a side
+split in two is another shape); the volume check cannot see a wrong matching
+that keeps the volume (BetterCAD's matching never builds one).
+
 ## Current
 
 ### P11 — Production Part Modeling
 
-#### P11-FEAT-009 — Loft ← NEXT
-
-- [ ] Not started.
-
-## Next
-
-### P11 — Production Part Modeling (remaining)
-
-#### P11-REF-001 — Mechanical reference models
+#### P11-REF-001 — Mechanical reference models ← NEXT
 
 - [ ] Shaft
 - [ ] Flange
 - [ ] Pulley
 - [ ] Bearing housing
 - [ ] Mounting bracket
+
+## Next
+
+### P11 — Production Part Modeling (remaining)
 
 #### P11-QUAL-001 — Qualification
 

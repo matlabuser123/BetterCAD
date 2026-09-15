@@ -14,6 +14,8 @@ bettercad_add_library(bettercad_geometry
         FaceMatching.hpp
         Faces.cpp
         Holes.cpp
+        LoftPlan.cpp
+        LoftPlan.hpp
         Profile.cpp
         ProfileExtent.hpp
         SweepPlan.cpp

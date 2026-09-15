@@ -3,6 +3,7 @@
 #include "support/ChamferBlockModel.hpp"
 #include "support/FilletModels.hpp"
 #include "support/HoleModels.hpp"
+#include "support/LoftModels.hpp"
 #include "support/MeshAnalysis.hpp"
 #include "support/MirrorModels.hpp"
 #include "support/PatternModels.hpp"
@@ -598,6 +599,37 @@ TEST_CASE("info and validate describe sweeps", "[cli][sweep]") {
     CHECK(broken.exitCode == ExitCode::Failure);
     CHECK_THAT(broken.out, ContainsSubstring("    error: Channel (object:9) failed to regenerate: Channel: makeSweep: the "
                                              "path must start on the profile's plane, but it starts 10 mm from it"));
+    CHECK_THAT(broken.out, EndsWith("Result: invalid (1 error)\n"));
+}
+
+TEST_CASE("info and validate describe lofts", "[cli][loft]") {
+    TempDir dir;
+    test::TaperedHoleModel model;
+    const auto path = dir.path() / "taper.bcad";
+    REQUIRE(io::saveDocument(model.doc, path).has_value());
+
+    const auto info = runCli({"info", arg(path)});
+    CHECK(info.exitCode == ExitCode::Success);
+    CHECK_THAT(info.out, ContainsSubstring("\n  object:9  loft     Taper  sections Mouth to Tip (offset depth), ruled, "
+                                           "cut Pad\n"));
+
+    // V = 100 x 50 x 20 - pi 15/3 (64 + 32 + 16) = 98240.708 mm^3.
+    const auto validate = runCli({"validate", arg(path)});
+    CHECK(validate.exitCode == ExitCode::Success);
+    CHECK_THAT(validate.out, ContainsSubstring("geometry              ok, 1 result body\n"
+                                               "Result bodies (1):\n"
+                                               "  Taper (object:9): 1 solid, volume 98240.708 mm^3, area "));
+    CHECK_THAT(validate.out, EndsWith("bounds (0, 0, 0) to (100, 50, 20) mm\nResult: valid\n"));
+
+    // A rectangle against a circle: the document is invalid, with the reason.
+    features::LoftDefinition d = model.definitionOf<features::LoftFeature>(model.taper);
+    d.sections[1] = {.sketch = SketchId::fromValue(model.base.value())};
+    model.setDefinition<features::LoftFeature>(model.taper, d);
+    REQUIRE(io::saveDocument(model.doc, path).has_value());
+    const auto broken = runCli({"validate", arg(path)});
+    CHECK(broken.exitCode == ExitCode::Failure);
+    CHECK_THAT(broken.out, ContainsSubstring("    error: Taper (object:9) failed to regenerate: Taper: makeLoft: sections 1 "
+                                             "and 2 cannot be matched: section 1 is a circle and section 2 is 4 lines"));
     CHECK_THAT(broken.out, EndsWith("Result: invalid (1 error)\n"));
 }
 

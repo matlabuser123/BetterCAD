@@ -97,6 +97,7 @@ Regenerator::Regenerator() {
                     regenerateSolidFeature<CircularPatternFeature, &regenerateCircularPattern>);
     registerHandler(std::string{MirrorFeature::kTypeName}, regenerateSolidFeature<MirrorFeature, &regenerateMirror>);
     registerHandler(std::string{SweepFeature::kTypeName}, regenerateSolidFeature<SweepFeature, &regenerateSweep>);
+    registerHandler(std::string{LoftFeature::kTypeName}, regenerateSolidFeature<LoftFeature, &regenerateLoft>);
 }
 
 void Regenerator::registerHandler(std::string typeName, RegenerationHandler handler) {

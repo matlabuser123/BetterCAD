@@ -11,6 +11,7 @@
 #include <bettercad/features/FilletFeature.hpp>
 #include <bettercad/features/HoleFeature.hpp>
 #include <bettercad/features/LinearPatternFeature.hpp>
+#include <bettercad/features/LoftFeature.hpp>
 #include <bettercad/features/MirrorFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
 #include <bettercad/features/SweepFeature.hpp>
@@ -146,5 +147,7 @@ using CreateMirrorCommand = CreateFeatureCommand<MirrorFeature>;
 using ModifyMirrorCommand = ModifyFeatureCommand<MirrorFeature>;
 using CreateSweepCommand = CreateFeatureCommand<SweepFeature>;
 using ModifySweepCommand = ModifyFeatureCommand<SweepFeature>;
+using CreateLoftCommand = CreateFeatureCommand<LoftFeature>;
+using ModifyLoftCommand = ModifyFeatureCommand<LoftFeature>;
 
 } // namespace bettercad::features

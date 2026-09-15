@@ -11,7 +11,7 @@ underneath, hidden behind adapters.
             └───────┬──────────────────────┘
                     io              native .bcad, STEP/STL export
                     │
-                 features           extrude, revolve, chamfer, fillet, hole, linear and circular patterns, mirror, sweep (later: ...)
+                 features           extrude, revolve, chamfer, fillet, hole, linear and circular patterns, mirror, sweep, loft (later: ...)
                     │
                   sketch            entities, constraints, solver
                     │
@@ -231,6 +231,48 @@ milestones start; see `TODO.md`.
     region's area times the length of the path its centroid travels
     (`regionCentroid()`), to 1e-9 relative. That check caught every wrongly
     built corner when the default corner mode was tried.
+
+  `makeLoft(sections)` builds a ruled solid through two or more planar
+  regions, in the order given: straight lines join matching points of
+  consecutive sections. Again the rules are BetterCAD's:
+  - **Planning, before the kernel** (`LoftPlan.cpp`, kernel-independent).
+    - Each section is one closed loop (lines and arcs, or a circle) without
+      holes.
+    - The planes must be parallel (to 1e-9 rad). The loft runs from the
+      first section towards the second, and every section must lie strictly
+      beyond the one before (never on the same plane, never back). The list
+      is kept as given, never sorted.
+    - Every loop is re-expressed in a common frame (the loft direction as
+      normal, the first section's X axis) and taken counter-clockwise about
+      the loft direction, whatever its sketch's orientation.
+  - **Matching (correspondence).** Consecutive sections must have the same
+    shape: both circles, or the same lines and arcs in the same cyclic
+    order, matched arcs turning by equal angles. Each loop starts where its
+    corners lie nearest the previous section's corners, measured from each
+    section's centroid (the least twist). Costs within 1e-9 of the
+    sections' size tie and go to the loop's first start, so rounding noise
+    cannot flip a twist. Circles match angle for angle from the common X
+    axis (their seams are placed there).
+  - **Fold check and volume.** Between two sections the cross-section's
+    area is quadratic in the height, known from the two sections and the
+    section halfway (matching points averaged: lines to lines, arcs to
+    arcs). It must stay positive, or the loft folds, which is refused. Its
+    integral, h/6 (A0 + 4 Am + A1) (the prismatoid formula), is the expected
+    volume.
+  - **Kernel.** `BRepOffsetAPI_ThruSections` (solid, ruled) with
+    `CheckCompatibility(false)`, so the kernel keeps BetterCAD's matching.
+    The probe in `docs/verification/P11-FEAT-009/kernel-probe` shows that a
+    shifted matching, a reversed section or smooth interpolation give other
+    solids, which the kernel still calls valid, and that coincident or
+    backward sections give "valid" solids of no or wrong volume.
+  - **Checks afterwards.** One valid solid, no self-interference
+    (`BRepAlgoAPI_Check`), and a volume equal to the prismatoid volume to
+    1e-8 relative. The kernel makes cones and cylinders between coaxial
+    circles and arcs, and B-spline surfaces elsewhere (even where the side
+    is planar, as between parallel lines). Volumes agree to rounding, except
+    between arcs or circles that are not coaxial or are turned against each
+    other, where they agree within 6.3e-10 (measured). Plane references
+    therefore do not find a loft's sides (only its end faces).
 - **Edges and edge references** (`Edges.hpp`). `listEdges(body)` describes a
   body's edges by their geometry: curve kind, ends, length, number of faces,
   and `faceAngle`, the angle between the two faces' outward normals (0 where
@@ -451,6 +493,21 @@ milestones start; see `TODO.md`.
   InvalidArgument, naming the entities; nothing is substituted or repaired.
   The sweep depends on both sketches and its target, so a change to either
   sketch's parameters rebuilds it.
+- **Loft** (`LoftFeature.hpp`) passes through the closed profiles of two or
+  more sketches. A `LoftDefinition` holds:
+  - the sections (`LoftSection`), in the loft's order: each a sketch and an
+    offset along the sketch plane's normal, literal or driven by a length
+    parameter (so the sections' spacing can be a parameter);
+  - the interpolation, `Ruled`, the only mode (see `makeLoft()` under
+    Geometry);
+  - the operation and target, as for extrudes and revolves.
+
+  `resolveLoftSections()` takes each section sketch's one closed profile
+  (FailedPrecondition for none, several, or one with a hole) and moves its
+  plane by the offset. Errors name the section ("section 2 (sketch 'Top'):
+  ..."). The loft depends on every section's sketch, their offset
+  parameters and its target. A definition needs two sections or more, and
+  no section may repeat another (the same sketch at the same offset).
 - **Chamfer** (`ChamferFeature.hpp`) modifies another feature's body. A
   `ChamferDefinition` holds:
   - the target feature, which the chamfer consumes;
@@ -618,7 +675,8 @@ milestones start; see `TODO.md`.
      chamfer distances, fillet radii and hole dimensions and centres are
      lengths; pattern counts are dimensionless, spacings lengths, circular
      pattern angles angles and mirror plane offsets lengths; sweep paths
-     are in sketches, and their edges are not points);
+     are in sketches, and their edges are not points; loft sections are
+     sketches, and their offsets lengths);
   2. missing references (including revolve axis lines and sweep path edges
      in their sketches);
   3. dependency cycles;
@@ -682,7 +740,10 @@ milestones start; see `TODO.md`.
     `keep_original`;
   - a sweep stores `profile`; `path` as `{"sketch": id, "edges": [ids]}`
     (in the order of travel); `orientation` (`"follow_path"`); `operation`;
-    and an optional `target`.
+    and an optional `target`;
+  - a loft stores `sections` in the loft's order, each as `{"sketch": id,
+    "offset": metres}` with an optional `offset_parameter`;
+    `interpolation` (`"ruled"`); `operation`; and an optional `target`.
 
   The rules are:
   - **Only inputs are stored.** Geometry is derived and is regenerated after
@@ -731,7 +792,8 @@ milestones start; see `TODO.md`.
   - the P9 bracket model, the turned part (revolves), and the parametric
     block (`BlockModel`) with its chamfered, filleted, drilled
     (`HoleModels.hpp`), patterned (`PatternModels.hpp`) and mirrored
-    (`MirrorModels.hpp`) variants, and the swept models (`SweepModels.hpp`);
+    (`MirrorModels.hpp`) variants, the swept models (`SweepModels.hpp`) and
+    the lofted models (`LoftModels.hpp`);
   - temporary directories;
   - mesh and STL analysis written from first principles (divergence-theorem
     volume, edge-manifold watertightness).
