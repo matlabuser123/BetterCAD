@@ -40,6 +40,7 @@ bettercad_add_executable(bettercad_tests
         core/geometry/PrimitiveTests.cpp
         core/geometry/PropertyTests.cpp
         core/geometry/RevolutionTests.cpp
+        core/geometry/SweepTests.cpp
         core/geometry/TransformTests.cpp
         core/math/FrameTests.cpp
         core/math/RigidTransformTests.cpp
@@ -57,6 +58,7 @@ bettercad_add_executable(bettercad_tests
         features/LinearPatternFeatureTests.cpp
         features/MirrorFeatureTests.cpp
         features/ProfileTests.cpp
+        features/SweepFeatureTests.cpp
         features/RegenerationTests.cpp
         features/RegeneratorTests.cpp
         features/RevolveTests.cpp
@@ -70,6 +72,7 @@ bettercad_add_executable(bettercad_tests
         io/LinearPatternFileTests.cpp
         io/MirrorFileTests.cpp
         io/ParameterJsonTests.cpp
+        io/SweepFileTests.cpp
         io/RevolveFileTests.cpp
         io/StepExportTests.cpp
         io/StlTests.cpp
@@ -85,6 +88,7 @@ bettercad_add_executable(bettercad_tests
         support/MeshAnalysis.hpp
         support/MirrorModels.hpp
         support/PatternModels.hpp
+        support/SweepModels.hpp
         support/TestFiles.hpp
         support/TurnedPartModel.hpp
     LINK

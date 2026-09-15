@@ -1,0 +1,29 @@
+Post-check proof for makeSweep (P11-FEAT-008): what happens when the adapter uses OCCT's default
+corner mode (BRepBuilderAPI_Transformed), which the kernel probe showed builds wrong but 'valid'
+solids at sharp corners. Captured 2026-09-15T20:22:01+10:00 on the Debug build with this one-line change:
+
+@@ -279,7 +279,7 @@ Result<TopoDS_Wire> makePathWire(const PlanarPath& path, bool closed) {
+ Result<TopoDS_Shape> sweepLoop(const TopoDS_Wire& spine, const gp_Dir& binormal, const TopoDS_Wire& loop) {
+     BRepOffsetAPI_MakePipeShell pipe(spine);
+     pipe.SetMode(binormal);
+-    pipe.SetTransitionMode(BRepBuilderAPI_RightCorner);
++    pipe.SetTransitionMode(BRepBuilderAPI_Transformed);
+     pipe.Add(loop, /*WithContact=*/false, /*WithCorrection=*/false);
+     pipe.Build();
+     if (!pipe.IsDone()) {
+
+Command: build/debug/bin/bettercad_tests.exe "[sweep]" --reporter compact
+Result: every wrongly built solid is refused by a post-check; nothing wrong is committed:
+  - the L polyline (half the volume): the Pappus volume identity;
+  - the 135 deg corner: the kernel's self-interference check;
+  - the closed square (no volume): the positive-volume check;
+  - smooth paths (line + tangent arc + line) are unaffected.
+The change was then reverted (SHA-256 checked).
+
+Failed assertions:
+tests/io/SweepFileTests.cpp:360: failed: summary.has_value() for: false
+tests/features/SweepFeatureTests.cpp:444: failed: report.succeeded() for: false with 1 message: 'object:3: Sweep: makeSweep: the kernel's solid encloses 628.318530718 mm^3, but the profile's area times the length of its centroid's path is 1256.63706144 mm^3
+tests/core/geometry/SweepTests.cpp:85: failed: explicitly with 1 message: 'makeSweep: the kernel's solid encloses 628.318530718 mm^3, but the profile's area times the length of its centroid's path is 1256.63706144 mm^3'
+tests/core/geometry/SweepTests.cpp:85: failed: explicitly with 1 message: 'makeSweep: the swept solid would intersect itself: the path comes back within the profile's reach of itself'
+tests/core/geometry/SweepTests.cpp:85: failed: explicitly with 1 message: 'makeSweep: the kernel produced a solid without a finite positive volume'
+

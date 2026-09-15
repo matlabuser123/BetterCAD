@@ -11,7 +11,7 @@ underneath, hidden behind adapters.
             └───────┬──────────────────────┘
                     io              native .bcad, STEP/STL export
                     │
-                 features           extrude, revolve, chamfer, fillet, hole, linear and circular patterns, mirror (later: ...)
+                 features           extrude, revolve, chamfer, fillet, hole, linear and circular patterns, mirror, sweep (later: ...)
                     │
                   sketch            entities, constraints, solver
                     │
@@ -198,6 +198,39 @@ milestones start; see `TODO.md`.
 
   Afterwards it requires one or more valid solids with a finite, positive
   volume.
+
+  `makeSweep(region, path)` moves a region along a `PlanarPath`: line, arc
+  and circle segments (the profile segment types) in the local coordinates
+  of a plane, head to tail, in the order of travel. A full circle is a
+  closed path on its own, starting on the plane's X axis. The rules are
+  BetterCAD's; the kernel only builds:
+  - **Planning, before the kernel** (`SweepPlan.cpp`, kernel-independent).
+    The path must be non-empty, finite, non-degenerate and connected (to
+    1e-10 m, nothing is repaired). The path must start on the region's plane
+    and leave it at right angles. Segments must meet tangentially (to
+    1e-9 rad), except two straight segments, which may meet at a corner of
+    less than 180°; the corner is mitred, both segments ending on the plane
+    that bisects it. The region must not reach an arc's centre, and no
+    straight segment may be shorter than its mitres use. All of these are
+    InvalidArgument.
+  - **Orientation (follow path).** The region moves with the frame (T, N, B),
+    where T is the path's tangent, B the path plane's normal (fixed) and
+    N = B × T. Every point keeps its N and B coordinates, so the region turns
+    with the path and never twists: it translates along lines and turns
+    about each arc's axis as in a revolution. The region may sit anywhere in
+    its plane; its offset from the path is kept.
+  - **Kernel.** `occt/OcctSweeps.cpp` uses `BRepOffsetAPI_MakePipeShell`
+    (`TKOffset`) with a fixed binormal and right (mitred) corners. Each
+    loop is swept on its own and the holes' solids are subtracted. The
+    kernel probe in `docs/verification/P11-FEAT-008/kernel-probe` shows why:
+    the default corner modes return solids flagged valid but wrong (half the
+    volume, or none).
+  - **Checks afterwards.** The result must be one valid solid without
+    self-interference (`BRepAlgoAPI_Check`, which finds a path passing too
+    close to itself). By the theorem of Pappus, its volume must equal the
+    region's area times the length of the path its centroid travels
+    (`regionCentroid()`), to 1e-9 relative. That check caught every wrongly
+    built corner when the default corner mode was tried.
 - **Edges and edge references** (`Edges.hpp`). `listEdges(body)` describes a
   body's edges by their geometry: curve kind, ends, length, number of faces,
   and `faceAngle`, the angle between the two faces' outward normals (0 where
@@ -398,6 +431,26 @@ milestones start; see `TODO.md`.
   - an angle in (0, 360°], literal or driven by an angle parameter;
   - a direction (positive, negative or symmetric by the right-hand rule);
   - the operation and target.
+- **Sweep** (`SweepFeature.hpp`) moves a sketch's closed profiles along a
+  path. A `SweepDefinition` holds:
+  - the profile sketch;
+  - the path (`SweepPath`): another sketch and an ordered list of its line,
+    arc or circle entities, so the path follows that sketch's constraints
+    and parameters;
+  - the orientation, `FollowPath`, the only mode (see `makeSweep()` under
+    Geometry);
+  - the operation and target, as for extrudes and revolves.
+
+  `resolveSweepPath()` turns the entities into a `PlanarPath` in the path
+  sketch's plane. Each edge is oriented to start where the one before ends,
+  and the direction of travel is fixed by the edges: a single line or arc
+  runs from its start to its end, a circle counter-clockwise from its X
+  axis, and several edges from the first edge's end that does not meet the
+  second. Missing edges fail with NotFound. Points, circles joined with other
+  edges, zero-length edges and edges that do not meet fail with
+  InvalidArgument, naming the entities; nothing is substituted or repaired.
+  The sweep depends on both sketches and its target, so a change to either
+  sketch's parameters rebuilds it.
 - **Chamfer** (`ChamferFeature.hpp`) modifies another feature's body. A
   `ChamferDefinition` holds:
   - the target feature, which the chamfer consumes;
@@ -564,8 +617,10 @@ milestones start; see `TODO.md`.
      dimension, e.g. revolve axes are lines, revolve angles are angles, and
      chamfer distances, fillet radii and hole dimensions and centres are
      lengths; pattern counts are dimensionless, spacings lengths, circular
-     pattern angles angles and mirror plane offsets lengths);
-  2. missing references (including revolve axis lines in their sketches);
+     pattern angles angles and mirror plane offsets lengths; sweep paths
+     are in sketches, and their edges are not points);
+  2. missing references (including revolve axis lines and sweep path edges
+     in their sketches);
   3. dependency cycles;
   4. sketch constraints (each sketch solves with its driving parameters;
      not fully constrained is a warning);
@@ -624,7 +679,10 @@ milestones start; see `TODO.md`.
   - a mirror stores `source`; `plane` as `{"origin": [...], "normal":
     [x, y, z], "offset": metres}` (the normal as given) with an optional
     `offset_parameter`; `scope` (`"feature"`, `"body"`); and
-    `keep_original`.
+    `keep_original`;
+  - a sweep stores `profile`; `path` as `{"sketch": id, "edges": [ids]}`
+    (in the order of travel); `orientation` (`"follow_path"`); `operation`;
+    and an optional `target`.
 
   The rules are:
   - **Only inputs are stored.** Geometry is derived and is regenerated after
@@ -673,7 +731,7 @@ milestones start; see `TODO.md`.
   - the P9 bracket model, the turned part (revolves), and the parametric
     block (`BlockModel`) with its chamfered, filleted, drilled
     (`HoleModels.hpp`), patterned (`PatternModels.hpp`) and mirrored
-    (`MirrorModels.hpp`) variants;
+    (`MirrorModels.hpp`) variants, and the swept models (`SweepModels.hpp`);
   - temporary directories;
   - mesh and STL analysis written from first principles (divergence-theorem
     volume, edge-manifold watertightness).

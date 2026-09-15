@@ -5,6 +5,7 @@
 #include "support/HoleModels.hpp"
 #include "support/MirrorModels.hpp"
 #include "support/PatternModels.hpp"
+#include "support/SweepModels.hpp"
 #include "support/TurnedPartModel.hpp"
 
 #include <bettercad/core/document/Document.hpp>
@@ -15,6 +16,7 @@
 #include <bettercad/features/MirrorFeature.hpp>
 #include <bettercad/features/ResultBodies.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
+#include <bettercad/features/SweepFeature.hpp>
 #include <bettercad/features/Validation.hpp>
 #include <bettercad/sketch/Sketch.hpp>
 
@@ -23,6 +25,7 @@
 #include <catch2/matchers/catch_matchers_string.hpp>
 
 #include <algorithm>
+#include <format>
 #include <memory>
 #include <string>
 #include <vector>
@@ -34,6 +37,7 @@ using namespace bettercad::sketch;
 using bettercad::test::addRectangle;
 using bettercad::test::BoltCircleModel;
 using bettercad::test::BracketModel;
+using bettercad::test::ChannelModel;
 using bettercad::test::ChamferBlockModel;
 using bettercad::test::FilletBlockModel;
 using bettercad::test::HoleBlockModel;
@@ -669,6 +673,67 @@ TEST_CASE("MirrorFeature_ModelsAreValidatedLikeAnyOther", "[validation][mirror]"
         CHECK_THAT(regeneration[0].message,
                    StartsWith("Mirror (object:11) failed to regenerate: Mirror: mirror: the mirror image across the "
                               "plane through (64, 0, 0) mm facing (1, 0, 0): hole: the hole does not fit on its face"));
+        CHECK_FALSE(report.valid());
+        CHECK(report.bodies.empty());
+    }
+}
+
+TEST_CASE("SweepFeature_ModelsAreValidatedLikeAnyOther", "[validation][sweep]") {
+    ChannelModel m;
+
+    SECTION("a sound model: the channel is the one valid result body") {
+        const ValidationReport report = validateDocument(m.doc);
+        INFO(describe(report));
+        CHECK(report.valid());
+        CHECK(report.issues.empty());
+        CHECK(report.regenerated == 5);
+        REQUIRE(report.bodies.size() == 1);
+        CHECK(report.bodies[0].feature == m.channel);
+        CHECK(report.bodies[0].valid);
+        CHECK(report.bodies[0].topology.solids == 1);
+        CHECK_THAT(report.bodies[0].properties->volume.in(units::mm3),
+                   WithinRel(ChannelModel::expectedVolume(20, 5), 1e-12));
+    }
+    SECTION("a path that is not in a sketch") {
+        SweepDefinition d = m.definitionOf<SweepFeature>(m.channel);
+        d.path.sketch = SketchId::fromValue(m.pad.value());
+        m.setDefinition<SweepFeature>(m.channel, d);
+        const ValidationReport report = validateDocument(m.doc);
+        const auto issues = issuesOf(report, ValidationCheck::DocumentConsistency);
+        REQUIRE(issues.size() == 1);
+        CHECK(issues[0].message ==
+              "Channel (object:9): the path is in Pad (object:6), which is an extrude, not a sketch");
+        CHECK(issuesOf(report, ValidationCheck::FeatureRegeneration).empty()); // reported once
+    }
+    SECTION("a path edge that is a point, and one that does not exist") {
+        SweepDefinition d = m.definitionOf<SweepFeature>(m.channel);
+        const EntityId start =
+            std::get<LineEntity>(m.doc.findObjectAs<Sketch>(m.channelPath)->findEntity(m.channelLine)->geometry).start;
+        d.path.edges = {start};
+        m.setDefinition<SweepFeature>(m.channel, d);
+        auto issues = issuesOf(validateDocument(m.doc), ValidationCheck::DocumentConsistency);
+        REQUIRE(issues.size() == 1);
+        CHECK(issues[0].message ==
+              std::format("Channel (object:9): the path edge {} is a point, not a line, arc or circle", start));
+        d.path.edges = {EntityId::fromValue(99)};
+        m.setDefinition<SweepFeature>(m.channel, d);
+        const ValidationReport report = validateDocument(m.doc);
+        issues = issuesOf(report, ValidationCheck::MissingReferences);
+        REQUIRE(issues.size() == 1);
+        CHECK(issues[0].message == "Channel (object:9): the path edge entity:99 does not exist in ChannelPath (object:8)");
+        CHECK(issuesOf(report, ValidationCheck::FeatureRegeneration).empty());
+    }
+    SECTION("a sweep that does not build") {
+        SweepDefinition d = m.definitionOf<SweepFeature>(m.channel);
+        d.profile = SketchId::fromValue(m.base.value()); // not where the path starts
+        m.setDefinition<SweepFeature>(m.channel, d);
+        const ValidationReport report = validateDocument(m.doc);
+        INFO(describe(report));
+        const auto regeneration = issuesOf(report, ValidationCheck::FeatureRegeneration);
+        REQUIRE(regeneration.size() == 1);
+        CHECK(regeneration[0].item == m.channel);
+        CHECK(regeneration[0].message == "Channel (object:9) failed to regenerate: Channel: makeSweep: the path must "
+                                         "start on the profile's plane, but it starts 10 mm from it");
         CHECK_FALSE(report.valid());
         CHECK(report.bodies.empty());
     }

@@ -69,4 +69,9 @@ struct PlanarRegion {
 /// Area of the region: outer area minus hole areas (orientation-independent).
 [[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Area regionArea(const PlanarRegion& region);
 
+/// Centroid of the region's area (outer minus holes) in the plane's local
+/// coordinates, exact for lines, arcs and circles (Green's theorem). The
+/// region must enclose a positive area.
+[[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Point2D regionCentroid(const PlanarRegion& region);
+
 } // namespace bettercad::geometry

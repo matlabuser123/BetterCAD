@@ -15,6 +15,7 @@
 #include <bettercad/features/LinearPatternFeature.hpp>
 #include <bettercad/features/MirrorFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
+#include <bettercad/features/SweepFeature.hpp>
 #include <bettercad/sketch/Sketch.hpp>
 
 #include <memory>
@@ -48,6 +49,13 @@ extrudeFromJson(const Json& data, std::string name, std::string_view path);
 [[nodiscard]] Json revolveToJson(const features::RevolveFeature& feature);
 [[nodiscard]] Result<std::unique_ptr<features::RevolveFeature>>
 revolveFromJson(const Json& data, std::string name, std::string_view path);
+
+/// The profile's ID; the path as {"sketch": id, "edges": [ids]} (in the
+/// order of travel); "orientation": "follow_path"; the operation; and an
+/// optional target.
+[[nodiscard]] Json sweepToJson(const features::SweepFeature& feature);
+[[nodiscard]] Result<std::unique_ptr<features::SweepFeature>> sweepFromJson(const Json& data, std::string name,
+                                                                            std::string_view path);
 
 /// Distances in metres, the angle in radians. Each edge reference is
 /// {"curve": "line", "point": [...], "direction": [...]} or

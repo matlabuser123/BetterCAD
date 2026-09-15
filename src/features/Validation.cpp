@@ -10,6 +10,7 @@
 #include <bettercad/features/Regenerator.hpp>
 #include <bettercad/features/ResultBodies.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
+#include <bettercad/features/SweepFeature.hpp>
 #include <bettercad/features/Validation.hpp>
 #include <bettercad/sketch/Sketch.hpp>
 #include <bettercad/sketch/SketchRegeneration.hpp>
@@ -190,6 +191,23 @@ private:
                 if (const auto& offset = mirror->definition().plane.offsetParameter) {
                     checkParameter(object.id(), *offset, dimensions::length, "the plane's offset is driven by");
                 }
+            } else if (const auto* sweep = dynamic_cast<const SweepFeature*>(&object)) {
+                const SweepDefinition& definition = sweep->definition();
+                checkProfile(object.id(), definition.profile);
+                const ObjectId pathId{definition.path.sketch};
+                if (document_.contains(pathId) && document_.findObjectAs<sketch::Sketch>(pathId) == nullptr) {
+                    wrongKind(object.id(), "the path is in", pathId, kindOf(document_, pathId), "a sketch");
+                }
+                if (const sketch::Sketch* path = sweepPathSketch(*sweep)) {
+                    for (const EntityId edge : definition.path.edges) {
+                        const sketch::Entity* entity = path->findEntity(edge);
+                        if (entity != nullptr && entity->type() == sketch::EntityType::Point) {
+                            add(ValidationCheck::DocumentConsistency, Severity::Error, object.id(),
+                                std::format("{}: the path edge {} is a point, not a line, arc or circle",
+                                            label(document_, object.id()), edge));
+                        }
+                    }
+                }
             }
             if (const auto* feature = dynamic_cast<const SolidFeature*>(&object)) {
                 checkTarget(*feature);
@@ -209,6 +227,11 @@ private:
     [[nodiscard]] const sketch::Entity* revolveAxisEntity(const RevolveFeature& revolve) const {
         const sketch::Sketch* sketch = revolveAxisSketch(revolve);
         return sketch == nullptr ? nullptr : sketch->findEntity(revolve.definition().axis.line);
+    }
+
+    /// The path sketch of a sweep, if it exists.
+    [[nodiscard]] const sketch::Sketch* sweepPathSketch(const SweepFeature& sweep) const {
+        return document_.findObjectAs<sketch::Sketch>(ObjectId{sweep.definition().path.sketch});
     }
 
     /// A solid feature's target must be another feature that has a body.
@@ -234,17 +257,31 @@ private:
                 std::format("{} references {}, which does not exist", label(document_, reference.dependent),
                             reference.missing));
         }
-        // References into sketches are not graph edges: revolve axis lines.
+        // References into sketches are not graph edges: revolve axis lines
+        // and sweep path edges.
         for (const DocumentObject& object : document_.objects()) {
-            const auto* revolve = dynamic_cast<const RevolveFeature*>(&object);
-            if (revolve == nullptr || failedItems_.contains(object.id())) {
+            if (failedItems_.contains(object.id())) {
                 continue;
             }
-            const sketch::Sketch* sketch = revolveAxisSketch(*revolve);
-            if (sketch != nullptr && sketch->findEntity(revolve->definition().axis.line) == nullptr) {
-                add(ValidationCheck::MissingReferences, Severity::Error, object.id(),
-                    std::format("{}: the axis line {} does not exist in {}", label(document_, object.id()),
-                                revolve->definition().axis.line, label(document_, sketch->id())));
+            if (const auto* revolve = dynamic_cast<const RevolveFeature*>(&object)) {
+                const sketch::Sketch* sketch = revolveAxisSketch(*revolve);
+                if (sketch != nullptr && sketch->findEntity(revolve->definition().axis.line) == nullptr) {
+                    add(ValidationCheck::MissingReferences, Severity::Error, object.id(),
+                        std::format("{}: the axis line {} does not exist in {}", label(document_, object.id()),
+                                    revolve->definition().axis.line, label(document_, sketch->id())));
+                }
+            } else if (const auto* sweep = dynamic_cast<const SweepFeature*>(&object)) {
+                const sketch::Sketch* sketch = sweepPathSketch(*sweep);
+                if (sketch == nullptr) {
+                    continue;
+                }
+                for (const EntityId edge : sweep->definition().path.edges) {
+                    if (sketch->findEntity(edge) == nullptr) {
+                        add(ValidationCheck::MissingReferences, Severity::Error, object.id(),
+                            std::format("{}: the path edge {} does not exist in {}", label(document_, object.id()),
+                                        edge, label(document_, sketch->id())));
+                    }
+                }
             }
         }
     }

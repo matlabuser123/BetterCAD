@@ -15,6 +15,9 @@ bettercad_add_library(bettercad_geometry
         Faces.cpp
         Holes.cpp
         Profile.cpp
+        ProfileExtent.hpp
+        SweepPlan.cpp
+        SweepPlan.hpp
         occt/OcctBlend.cpp
         occt/OcctBlend.hpp
         occt/OcctBody.cpp
@@ -48,6 +51,7 @@ bettercad_add_library(bettercad_geometry
         TKBO
         TKBool
         TKFillet
+        TKOffset
         TKMesh
         TKLCAF
         TKXCAF

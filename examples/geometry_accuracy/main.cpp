@@ -416,5 +416,79 @@ int main() {
     compare("image vs source: countersunk block", sunkBlock, tilted);
     compare("image vs source: fillet 3 edges at a vertex", fillet({topFront, topLeft, frontLeft}, 5_mm), tilted);
     compare("image vs source: bicylinder (Steinmetz)", booleanIntersection(*cx, *cy), tilted);
+
+    std::printf("\nSweeps (V = A x the length of the path the profile's centroid travels)\n");
+    const auto circleLoop = [](double u, double v, double r) {
+        return ProfileLoop{{CircleSegment2D{mm(u, v), r * units::mm, true}}};
+    };
+    const auto rectangleLoop = [](double u, double v, double w, double h) {
+        const std::pair<double, double> c[] = {{u - w / 2, v - h / 2}, {u + w / 2, v - h / 2}, {u + w / 2, v + h / 2},
+                                               {u - w / 2, v + h / 2}};
+        ProfileLoop loop;
+        for (std::size_t i = 0; i < 4; ++i) {
+            loop.segments.emplace_back(LineSegment2D{mm(c[i].first, c[i].second),
+                                                     mm(c[(i + 1) % 4].first, c[(i + 1) % 4].second)});
+        }
+        return loop;
+    };
+    const auto line = [](double u0, double v0, double u1, double v1) {
+        return ProfileSegment{LineSegment2D{mm(u0, v0), mm(u1, v1)}};
+    };
+    const auto arc = [](double cu, double cv, double u0, double v0, double u1, double v1, bool ccw) {
+        return ProfileSegment{ArcSegment2D{mm(cu, cv), mm(u0, v0), mm(u1, v1), ccw}};
+    };
+    const auto sweep = [](const ProfileLoop& outer, const Frame3D& plane, const Frame3D& pathPlane,
+                          std::vector<ProfileSegment> segments, std::vector<ProfileLoop> holes = {}) {
+        return makeSweep(PlanarRegion{.plane = plane, .outer = outer, .holes = std::move(holes)},
+                         PlanarPath{.plane = pathPlane, .segments = std::move(segments)});
+    };
+    // Straight: a 10 x 20 rectangle and a circle r = 5 along 100 mm (the
+    // path leaves the XY plane up Z, drawn in the XZ plane).
+    report("sweep rectangle 10x20 along 100", sweep(rectangleLoop(0, 0, 10, 20), Frame3D::xy(), Frame3D::xz(),
+                                                    {line(0, 0, 0, 100)}),
+           20000.0, 2.0 * (200.0 + 1000.0 + 2000.0));
+    report("prism rectangle 10x20 by 100", makePrism(PlanarRegion{.plane = Frame3D::xy(),
+                                                                  .outer = rectangleLoop(0, 0, 10, 20), .holes = {}},
+                                                     0_mm, 100_mm),
+           20000.0, 6400.0);
+    report("sweep circle r=5 along 100", sweep(circleLoop(0, 0, 5), Frame3D::xy(), Frame3D::xz(), {line(0, 0, 0, 100)}),
+           2500.0 * pi, 1000.0 * pi + 50.0 * pi);
+    // Arcs about Z (profiles in the XZ plane at x = R, paths in the XY plane):
+    // pi r^2 R theta; the full circle is the torus 2 pi^2 R r^2.
+    const Frame3D xy = Frame3D::xy();
+    report("sweep circle r=2 quarter arc R=20", sweep(circleLoop(20, 0, 2), Frame3D::xz(), xy, {arc(0, 0, 20, 0, 0, 20, true)}),
+           40.0 * pi * pi, 40.0 * pi * pi + 8.0 * pi);
+    report("sweep circle r=2 270 deg, clockwise",
+           sweep(circleLoop(20, 0, 2), Frame3D::xz(), xy, {arc(0, 0, 20, 0, 0, 20, false)}), 120.0 * pi * pi,
+           120.0 * pi * pi + 8.0 * pi);
+    report("sweep circle r=2 full circle (torus)",
+           sweep(circleLoop(20, 0, 2), Frame3D::xz(), xy, {CircleSegment2D{mm(0, 0), 20_mm, true}}),
+           2.0 * pi * pi * 20.0 * 4.0, 4.0 * pi * pi * 20.0 * 2.0);
+    report("revolve circle r=2 about Z (torus)",
+           revolve(PlanarRegion{.plane = Frame3D::xz(), .outer = circleLoop(20, 0, 2), .holes = {}}, 360_deg),
+           2.0 * pi * pi * 20.0 * 4.0, 4.0 * pi * pi * 20.0 * 2.0);
+    report("sweep tube r=3/2 quarter arc R=20",
+           sweep(circleLoop(20, 0, 3), Frame3D::xz(), xy, {arc(0, 0, 20, 0, 0, 20, true)}, {circleLoop(20, 0, 2)}),
+           5.0 * pi * 20.0 * pi / 2.0, 0.0);
+    report("sweep circle 5 mm off a quarter arc",
+           sweep(circleLoop(25, 0, 2), Frame3D::xz(), xy, {arc(0, 0, 20, 0, 0, 20, true)}), 4.0 * pi * 25.0 * pi / 2.0,
+           0.0);
+    report("sweep rectangle 4x2 quarter arc R=50",
+           sweep(rectangleLoop(50, 0, 4, 2), Frame3D::xz(), xy, {arc(0, 0, 50, 0, 0, 50, true)}), 200.0 * pi, 0.0);
+    // Paths of several segments, profile r = 2 on the YZ plane: tangent
+    // joints, and mitred corners (V = A L for a centred profile).
+    const Frame3D yz = Frame3D::yz();
+    report("sweep line + tangent arc + line",
+           sweep(circleLoop(0, 0, 2), yz, xy, {line(0, 0, 50, 0), arc(50, 20, 50, 0, 70, 20, true), line(70, 20, 70, 70)}),
+           4.0 * pi * (100.0 + 10.0 * pi), 0.0);
+    report("sweep L polyline, mitred 90 deg", sweep(circleLoop(0, 0, 2), yz, xy, {line(0, 0, 50, 0), line(50, 0, 50, 50)}),
+           400.0 * pi, 0.0);
+    const double s = 50.0 / std::sqrt(2.0);
+    report("sweep polyline, mitred 135 deg",
+           sweep(circleLoop(0, 0, 2), yz, xy, {line(0, 0, 50, 0), line(50, 0, 50 - s, s)}), 400.0 * pi, 0.0);
+    report("sweep closed square, mitred",
+           sweep(circleLoop(0, 0, 2), yz, xy,
+                 {line(0, 0, 50, 0), line(50, 0, 50, 50), line(50, 50, 0, 50), line(0, 50, 0, 0)}),
+           800.0 * pi, 0.0);
     return 0;
 }

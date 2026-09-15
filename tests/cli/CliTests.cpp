@@ -6,6 +6,7 @@
 #include "support/MeshAnalysis.hpp"
 #include "support/MirrorModels.hpp"
 #include "support/PatternModels.hpp"
+#include "support/SweepModels.hpp"
 #include "support/TestFiles.hpp"
 #include "support/TurnedPartModel.hpp"
 #include "support/occt/StepReadBack.hpp"
@@ -566,6 +567,37 @@ TEST_CASE("info and validate describe mirrors", "[cli][mirror]") {
     CHECK_THAT(broken.out, ContainsSubstring("    error: Mirror (object:11) failed to regenerate: Mirror: mirror: the "
                                              "mirror image across the plane through (64, 0, 0) mm facing (1, 0, 0): "
                                              "hole: the hole does not fit on its face"));
+    CHECK_THAT(broken.out, EndsWith("Result: invalid (1 error)\n"));
+}
+
+TEST_CASE("info and validate describe sweeps", "[cli][sweep]") {
+    TempDir dir;
+    test::ChannelModel model;
+    const auto path = dir.path() / "channel.bcad";
+    REQUIRE(io::saveDocument(model.doc, path).has_value());
+
+    const auto info = runCli({"info", arg(path)});
+    CHECK(info.exitCode == ExitCode::Success);
+    CHECK_THAT(info.out, ContainsSubstring("\n  object:9  sweep    Channel         profile ChannelProfile, path "
+                                           "ChannelPath (1 edge), follow path, cut Pad\n"));
+
+    // V = 100 x 50 x 20 - pi 5^2 100 = 92146.018 mm^3.
+    const auto validate = runCli({"validate", arg(path)});
+    CHECK(validate.exitCode == ExitCode::Success);
+    CHECK_THAT(validate.out, ContainsSubstring("geometry              ok, 1 result body\n"
+                                               "Result bodies (1):\n"
+                                               "  Channel (object:9): 1 solid, volume 92146.018 mm^3, area "));
+    CHECK_THAT(validate.out, EndsWith("bounds (0, 0, 0) to (100, 50, 20) mm\nResult: valid\n"));
+
+    // A profile away from the path's start: the document is invalid, with the reason.
+    features::SweepDefinition d = model.definitionOf<features::SweepFeature>(model.channel);
+    d.profile = SketchId::fromValue(model.base.value());
+    model.setDefinition<features::SweepFeature>(model.channel, d);
+    REQUIRE(io::saveDocument(model.doc, path).has_value());
+    const auto broken = runCli({"validate", arg(path)});
+    CHECK(broken.exitCode == ExitCode::Failure);
+    CHECK_THAT(broken.out, ContainsSubstring("    error: Channel (object:9) failed to regenerate: Channel: makeSweep: the "
+                                             "path must start on the profile's plane, but it starts 10 mm from it"));
     CHECK_THAT(broken.out, EndsWith("Result: invalid (1 error)\n"));
 }
 

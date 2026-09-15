@@ -1,15 +1,22 @@
 #include <bettercad/core/geometry/Sweeps.hpp>
 #include <bettercad/core/units/Format.hpp>
 
+#include "core/geometry/ProfileExtent.hpp"
+#include "core/geometry/SweepPlan.hpp"
 #include "core/geometry/occt/OcctBody.hpp"
 #include "core/geometry/occt/OcctGuard.hpp"
 
+#include <bettercad/core/geometry/Booleans.hpp>
+
+#include <BRepAlgoAPI_Check.hxx>
 #include <BRepBuilderAPI_MakeEdge.hxx>
 #include <BRepBuilderAPI_MakeFace.hxx>
 #include <BRepBuilderAPI_MakeVertex.hxx>
 #include <BRepBuilderAPI_MakeWire.hxx>
 #include <BRepBuilderAPI_Transform.hxx>
+#include <BRepBuilderAPI_TransitionMode.hxx>
 #include <BRepCheck_Analyzer.hxx>
+#include <BRepOffsetAPI_MakePipeShell.hxx>
 #include <BRepPrimAPI_MakePrism.hxx>
 #include <BRepPrimAPI_MakeRevol.hxx>
 #include <Precision.hxx>
@@ -216,22 +223,77 @@ Result<TopoDS_Face> makeProfileFace(const PlanarRegion& region, double offset, s
     return profile;
 }
 
-/// A revolution axis in the region's plane coordinates (metres), with unit
-/// direction (dx, dy). side(p) is the signed distance of p from the axis,
-/// positive to the left of the direction.
-struct PlaneAxis {
-    double ox = 0.0;
-    double oy = 0.0;
-    double dx = 1.0;
-    double dy = 0.0;
-
-    [[nodiscard]] double side(const Point2D& p) const noexcept {
-        return dx * (p.y.si() - oy) - dy * (p.x.si() - ox);
+/// The sweep path as one connected wire: each segment starts at the vertex
+/// where the one before ends, and a closed path ends at its first vertex.
+/// Call inside guardKernelCall.
+Result<TopoDS_Wire> makePathWire(const PlanarPath& path, bool closed) {
+    const Frame3D& plane = path.plane;
+    const gp_Dir normal = occt::toModel(plane.normal());
+    const auto point = [&](const Point2D& p) { return occt::toModel(plane.toGlobal(p)); };
+    BRepBuilderAPI_MakeWire wire;
+    TopoDS_Vertex first;
+    TopoDS_Vertex previous;
+    for (std::size_t i = 0; i < path.segments.size(); ++i) {
+        const ProfileSegment& segment = path.segments[i];
+        if (const auto* circle = std::get_if<CircleSegment2D>(&segment)) {
+            // Starts on the plane's X axis through the centre (see PlanarPath).
+            const gp_Ax2 frame(point(circle->center), circle->counterClockwise ? normal : normal.Reversed(),
+                               occt::toModel(plane.xAxis()));
+            wire.Add(BRepBuilderAPI_MakeEdge(gp_Circ(frame, occt::toModel(circle->radius))).Edge());
+            continue;
+        }
+        const TopoDS_Vertex start =
+            i == 0 ? BRepBuilderAPI_MakeVertex(point(segmentStart(segment))).Vertex() : previous;
+        if (i == 0) {
+            first = start;
+        }
+        const bool last = i + 1 == path.segments.size();
+        const TopoDS_Vertex end =
+            last && closed ? first : BRepBuilderAPI_MakeVertex(point(segmentEnd(segment))).Vertex();
+        BRepBuilderAPI_MakeEdge edge = [&] {
+            if (std::holds_alternative<LineSegment2D>(segment)) {
+                return BRepBuilderAPI_MakeEdge(start, end);
+            }
+            const auto& arc = std::get<ArcSegment2D>(segment);
+            const gp_Pnt center = point(arc.center);
+            const gp_Ax2 frame(center, arc.counterClockwise ? normal : normal.Reversed(),
+                               gp_Dir(gp_Vec(center, point(arc.start))));
+            return BRepBuilderAPI_MakeEdge(gp_Circ(frame, occt::toModel(distance(arc.center, arc.start))), start, end);
+        }();
+        if (!edge.IsDone()) {
+            return makeError(ErrorCode::Internal,
+                             std::format("makeSweep: the kernel cannot make an edge of path segment {}", i + 1));
+        }
+        wire.Add(edge.Edge());
+        if (!wire.IsDone()) {
+            return makeError(ErrorCode::Internal, "makeSweep: the path's edges do not form a connected wire");
+        }
+        previous = end;
     }
-    /// Angle of the unit normal pointing to the positive side.
-    [[nodiscard]] double normalAngle() const noexcept { return std::atan2(dx, -dy); }
-};
+    return wire.Wire();
+}
 
+/// One profile loop swept along the path as a solid: the binormal stays the
+/// path plane's normal (no twist), and corners are mitred (right corners).
+/// Call inside guardKernelCall.
+Result<TopoDS_Shape> sweepLoop(const TopoDS_Wire& spine, const gp_Dir& binormal, const TopoDS_Wire& loop) {
+    BRepOffsetAPI_MakePipeShell pipe(spine);
+    pipe.SetMode(binormal);
+    pipe.SetTransitionMode(BRepBuilderAPI_RightCorner);
+    pipe.Add(loop, /*WithContact=*/false, /*WithCorrection=*/false);
+    pipe.Build();
+    if (!pipe.IsDone()) {
+        return makeError(ErrorCode::Internal, "makeSweep: the kernel could not sweep the profile along the path");
+    }
+    if (!pipe.MakeSolid()) {
+        return makeError(ErrorCode::Internal, "makeSweep: the kernel could not close the swept profile into a solid");
+    }
+    return pipe.Shape();
+}
+
+using detail::PlaneAxis;
+
+/// A revolution axis in the region's plane coordinates (metres).
 Result<PlaneAxis> axisInPlane(const Frame3D& plane, const Axis3D& axis) {
     // Directions are finite unit vectors by construction (Direction3D).
     if (!isFinite(axis.origin.x) || !isFinite(axis.origin.y) || !isFinite(axis.origin.z)) {
@@ -252,52 +314,6 @@ Result<PlaneAxis> axisInPlane(const Frame3D& plane, const Axis3D& axis) {
     const double dy = axis.direction.dot(plane.yAxis());
     const double length = std::hypot(dx, dy);
     return PlaneAxis{origin.x.si(), origin.y.si(), dx / length, dy / length};
-}
-
-/// Whether @p angle lies on the counter-clockwise sweep from @p start to @p end.
-bool onCounterClockwiseArc(double angle, double start, double end) {
-    const auto wrap = [](double a) {
-        a = std::fmod(a, kTwoPi);
-        return a < 0.0 ? a + kTwoPi : a;
-    };
-    return wrap(angle - start) <= wrap(end - start);
-}
-
-/// Extends [low, high] by the signed distances of every point of @p loop
-/// from the axis: segment ends, plus the points of arcs and circles that are
-/// farthest from the axis on either side.
-void extendSideRange(const ProfileLoop& loop, const PlaneAxis& axis, double& low, double& high) {
-    const auto include = [&](double s) {
-        low = std::min(low, s);
-        high = std::max(high, s);
-    };
-    const double towards = axis.normalAngle();
-    for (const ProfileSegment& segment : loop.segments) {
-        if (const auto* line = std::get_if<LineSegment2D>(&segment)) {
-            include(axis.side(line->start));
-            include(axis.side(line->end));
-        } else if (const auto* arc = std::get_if<ArcSegment2D>(&segment)) {
-            include(axis.side(arc->start));
-            include(axis.side(arc->end));
-            const double radius = distance(arc->center, arc->start).si();
-            const double centerSide = axis.side(arc->center);
-            // A clockwise arc from start to end covers the counter-clockwise arc from end to start.
-            const Point2D& first = arc->counterClockwise ? arc->start : arc->end;
-            const Point2D& last = arc->counterClockwise ? arc->end : arc->start;
-            const double a0 = std::atan2((first.y - arc->center.y).si(), (first.x - arc->center.x).si());
-            const double a1 = std::atan2((last.y - arc->center.y).si(), (last.x - arc->center.x).si());
-            if (onCounterClockwiseArc(towards, a0, a1)) {
-                include(centerSide + radius);
-            }
-            if (onCounterClockwiseArc(towards + std::numbers::pi, a0, a1)) {
-                include(centerSide - radius);
-            }
-        } else {
-            const auto& circle = std::get<CircleSegment2D>(segment);
-            include(axis.side(circle.center) + circle.radius.si());
-            include(axis.side(circle.center) - circle.radius.si());
-        }
-    }
 }
 
 } // namespace
@@ -344,9 +360,9 @@ Result<Body> makeRevolution(const PlanarRegion& region, const Axis3D& axis, Angl
     // The outer loop bounds the region, but checking the holes too costs nothing.
     double low = 0.0;
     double high = 0.0;
-    extendSideRange(region.outer, *planeAxis, low, high);
+    detail::extendSideRange(region.outer, *planeAxis, low, high);
     for (const ProfileLoop& hole : region.holes) {
-        extendSideRange(hole, *planeAxis, low, high);
+        detail::extendSideRange(hole, *planeAxis, low, high);
     }
     const double tolerance = kClosureTolerance.si();
     if (low < -tolerance && high > tolerance) {
@@ -388,6 +404,89 @@ Result<Body> makeRevolution(const PlanarRegion& region, const Axis3D& axis, Angl
         }
         return body;
     });
+}
+
+Result<Body> makeSweep(const PlanarRegion& region, const PlanarPath& path) {
+    if (auto valid = checkRegion(region); !valid) {
+        return std::unexpected(valid.error());
+    }
+    auto plan = detail::planSweep(region, path);
+    if (!plan) {
+        return std::unexpected(plan.error());
+    }
+
+    auto swept = occt::guardKernelCall("makeSweep", [&]() -> Result<Body> {
+        // The loops must bound a valid face (no self-intersecting or
+        // overlapping loops), exactly as for prisms and revolutions.
+        if (auto face = makeProfileFace(region, 0.0, "makeSweep"); !face) {
+            return std::unexpected(face.error());
+        }
+        auto spine = makePathWire(path, plan->closed);
+        if (!spine) {
+            return std::unexpected(spine.error());
+        }
+        const gp_Dir binormal = occt::toModel(path.plane.normal());
+        // Each loop is swept on its own; the holes' solids are subtracted.
+        WireBuilder loops(region.plane, 0.0);
+        const auto sweepOf = [&](const ProfileLoop& loop) -> Result<Body> {
+            auto wire = loops.build(signedArea(loop) < Area{} ? reversed(loop) : loop);
+            if (!wire) {
+                return std::unexpected(wire.error());
+            }
+            auto solid = sweepLoop(*spine, binormal, *wire);
+            if (!solid) {
+                return std::unexpected(solid.error());
+            }
+            return occt::BodyAccess::makeBody(*solid);
+        };
+        auto body = sweepOf(region.outer);
+        for (std::size_t i = 0; body && i < region.holes.size(); ++i) {
+            auto hole = sweepOf(region.holes[i]);
+            body = hole ? booleanDifference(*body, *hole) : hole;
+        }
+        return body;
+    });
+    if (!swept) {
+        return std::unexpected(swept.error());
+    }
+    const Body& body = *swept;
+    if (body.isEmpty() || body.topology().solids != 1 || !body.isValid()) {
+        return makeError(ErrorCode::Internal, "makeSweep: the kernel produced an invalid solid");
+    }
+    // A swept solid can pass through itself where the path comes back near
+    // itself: the kernel's validity check does not see that, its
+    // self-interference check does.
+    auto intersects = occt::guardKernelCall("makeSweep", [&]() -> Result<bool> {
+        BRepAlgoAPI_Check check(*occt::BodyAccess::shape(body), /*bTestSE=*/false, /*bTestSI=*/true);
+        return !check.IsValid();
+    });
+    if (!intersects) {
+        return std::unexpected(intersects.error());
+    }
+    if (*intersects) {
+        return makeError(ErrorCode::InvalidArgument,
+                         "makeSweep: the swept solid would intersect itself: the path comes back within the profile's "
+                         "reach of itself");
+    }
+    // Independent check of the kernel's result (Pappus): the volume is the
+    // region's area times the length of the path its centroid travels. The
+    // kernel's volumes agree to rounding along smooth paths and to a few
+    // 1e-12 where it trims mitred corners numerically (at its 1e-7 mm
+    // precision); 1e-9 tells that from a wrongly built solid.
+    const auto properties = body.massProperties();
+    if (!properties || !isFinite(properties->volume) || !(properties->volume > Volume{})) {
+        return makeError(ErrorCode::Internal,
+                         "makeSweep: the kernel produced a solid without a finite positive volume");
+    }
+    const double actual = properties->volume.in(units::mm3);
+    const double expected = plan->expectedVolume.in(units::mm3);
+    if (std::abs(actual - expected) > 1e-9 * expected) {
+        return makeError(ErrorCode::Internal,
+                         std::format("makeSweep: the kernel's solid encloses {:.12g} mm^3, but the profile's area "
+                                     "times the length of its centroid's path is {:.12g} mm^3",
+                                     actual, expected));
+    }
+    return body;
 }
 
 } // namespace bettercad::geometry

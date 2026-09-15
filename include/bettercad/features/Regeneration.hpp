@@ -3,6 +3,7 @@
 #include <bettercad/core/Error.hpp>
 #include <bettercad/core/document/Document.hpp>
 #include <bettercad/core/geometry/Body.hpp>
+#include <bettercad/core/geometry/Sweeps.hpp>
 #include <bettercad/core/math/Direction.hpp>
 #include <bettercad/features/ChamferFeature.hpp>
 #include <bettercad/features/CircularPatternFeature.hpp>
@@ -13,6 +14,7 @@
 #include <bettercad/features/LinearPatternFeature.hpp>
 #include <bettercad/features/MirrorFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
+#include <bettercad/features/SweepFeature.hpp>
 #include <bettercad/sketch/Sketch.hpp>
 
 #include <vector>
@@ -62,6 +64,25 @@ regenerateExtrude(const ExtrudeFeature& feature, const Document& document,
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::Body>
 regenerateRevolve(const RevolveFeature& feature, const Document& document,
                   const geometry::Body* target = nullptr);
+
+/// The path of a sweep in its sketch's plane: its edges' current geometry,
+/// each oriented to start where the one before ends, in the order of
+/// travel (see SweepPath). Fails with NotFound for a missing sketch or
+/// edge, and with InvalidArgument for a point, a circle joined with other
+/// edges, an edge of zero length, or consecutive edges that do not meet.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::PlanarPath> resolveSweepPath(const SweepPath& path,
+                                                                                     const Document& document);
+
+/// The tool solid of a sweep: the profile sketch's closed regions swept
+/// along the resolved path (geometry::makeSweep()), before it is combined
+/// with a target.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::Body> sweepTool(const SweepFeature& feature,
+                                                                        const Document& document);
+
+/// Computes the body of a sweep feature: its tool (sweepTool()), combined
+/// with @p target for Join/Cut/Intersect.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::Body>
+regenerateSweep(const SweepFeature& feature, const Document& document, const geometry::Body* target = nullptr);
 
 /// Distance of a chamfer: the driving parameter's value if it has one
 /// (NotFound if missing, DimensionMismatch if not a length), otherwise the

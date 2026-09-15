@@ -13,6 +13,7 @@
 #include <bettercad/features/LinearPatternFeature.hpp>
 #include <bettercad/features/MirrorFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
+#include <bettercad/features/SweepFeature.hpp>
 
 #include <format>
 #include <optional>
@@ -143,5 +144,7 @@ using CreateCircularPatternCommand = CreateFeatureCommand<CircularPatternFeature
 using ModifyCircularPatternCommand = ModifyFeatureCommand<CircularPatternFeature>;
 using CreateMirrorCommand = CreateFeatureCommand<MirrorFeature>;
 using ModifyMirrorCommand = ModifyFeatureCommand<MirrorFeature>;
+using CreateSweepCommand = CreateFeatureCommand<SweepFeature>;
+using ModifySweepCommand = ModifyFeatureCommand<SweepFeature>;
 
 } // namespace bettercad::features

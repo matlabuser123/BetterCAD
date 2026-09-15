@@ -15,7 +15,8 @@
 //     "document":   { "id": "<uuid>", "name": ..., "metadata": {...}, "last_allocated_id": N },
 //     "parameters": [ ... ],
 //     "objects":    [ { "id": N, "type": "sketch" | "extrude" | "revolve" | "chamfer" | "fillet" | "hole" |
-//                       "linear_pattern" | "circular_pattern" | "mirror", "name": ..., "data": {...} } ]
+//                       "linear_pattern" | "circular_pattern" | "mirror" | "sweep", "name": ...,
+//                       "data": {...} } ]
 //   }
 //
 // All lengths are metres and all stored numbers round-trip exactly. IDs are

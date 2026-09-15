@@ -9,6 +9,7 @@
 #include <bettercad/features/LinearPatternFeature.hpp>
 #include <bettercad/features/MirrorFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
+#include <bettercad/features/SweepFeature.hpp>
 #include <bettercad/features/Validation.hpp>
 #include <bettercad/io/DocumentFile.hpp>
 #include <bettercad/sketch/Sketch.hpp>
@@ -250,6 +251,12 @@ std::string describeObject(const Document& document, const DocumentObject& objec
     }
     if (const auto* mirror = dynamic_cast<const features::MirrorFeature*>(&object)) {
         return describeMirror(document, mirror->definition());
+    }
+    if (const auto* sweep = dynamic_cast<const features::SweepFeature*>(&object)) {
+        const features::SweepDefinition& d = sweep->definition();
+        return std::format("profile {}, path {} ({}), {}, {}", nameOrId(document, ObjectId{d.profile}),
+                           nameOrId(document, ObjectId{d.path.sketch}), plural(d.path.edges.size(), "edge", "edges"),
+                           features::toString(d.orientation), describeOperation(document, d.operation, d.target));
     }
     return {};
 }

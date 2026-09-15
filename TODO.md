@@ -374,21 +374,76 @@ body mirror of a pattern works). **Known limitation:** chamfer, fillet and
 hole images use geometric references reflected exactly, not semantic
 topology naming.
 
+#### P11-FEAT-008 — Sweep — [evidence](docs/verification/P11-FEAT-008/README.md)
+
+- [x] Sweep feature definition
+- [x] Stable profile reference (the profile sketch's ID; its closed regions)
+- [x] Stable path representation/reference (a sketch's ID and an ordered
+  list of its line, arc and circle entity IDs; no kernel wire is stored)
+- [x] Straight-path sweep
+- [x] Curved-path sweep (arcs; a full circle as a closed path)
+- [x] Connected multi-segment path (mitred line corners, tangent line/arc
+  joints; closed chains)
+- [x] Closed-profile solid sweep (profiles with holes; open profiles refused)
+- [x] Deterministic orientation policy (follow path: fixed path-plane
+  binormal, no twist)
+- [x] Profile/path compatibility validation (the path starts on the
+  profile's plane and leaves it at right angles)
+- [x] New-body operation
+- [x] Add/remove/intersect operation
+- [x] Geometry validity checks (preflight against folding and short mitre
+  legs; self-interference check; Pappus volume check of every result)
+- [x] Parameter-driven regeneration (profile, path and target)
+- [x] Atomic failure diagnostics
+- [x] Save/load round-trip
+- [x] Undo/redo regression
+- [x] STEP/STL export regression
+- [x] Analytic/geometric validation (Sweep vs Extrude, Sweep vs Revolve)
+- [x] Failure diagnostics
+- [x] Evidence under `docs/verification/P11-FEAT-008/`
+
+**Acceptance (met):**
+
+- A 10 × 20 mm rectangle swept along a straight 100 mm path gives
+  20000 mm³, and a circle r = 5 mm gives 2500π; both equal the extrusion of
+  the same profile, and a reversed path sweeps the other way.
+- A circle r = 2 mm swept a quarter turn of radius 20 mm gives 40π² with
+  its centroid where Pappus puts it; around a full circle it gives the torus
+  2π²Rr² = 160π², equal to the revolve of the same profile for R = 20 and
+  30 mm.
+- A mitred L polyline and a line–tangent arc–line path give A·L; the
+  profile keeps its orientation (no twist) along arcs.
+- New body, join, cut and intersect match closed-form volumes (a handle, a
+  boss, a through channel, a curved blind groove, a clipped rod).
+- Changing the profile, the path or the target regenerates the sweep with
+  no stale geometry; open profiles, disconnected or branching paths,
+  zero-length edges, corners at arcs, misplaced profiles, folding and
+  self-intersecting sweeps fail with structured diagnostics, before the
+  kernel where possible, and nothing is committed.
+- Save → destroy → load → regenerate reproduces the definition, the profile
+  and path IDs in order, and the geometry bit for bit. STEP read-back and
+  closed STL meshes match.
+- The existing P0–P11-FEAT-007 regression suite remains green.
+
+**Not implemented:** guide curves, twist, scale along the path, variable
+sections, multiple profiles, thin-wall and surface sweeps, corner
+transition controls, other orientation modes, and non-planar paths (helices,
+splines, 3D edge chains or model edges). **Known limitations:** the path is
+one planar sketch; only straight segments may meet at a (mitred) corner, and
+arcs must join tangentially; the profile must sit on the path's start plane;
+feature-scope patterns and mirrors do not take a sweep as their source.
+
 ## Current
 
 ### P11 — Production Part Modeling
 
-#### P11-FEAT-008 — Sweep ← NEXT
+#### P11-FEAT-009 — Loft ← NEXT
 
 - [ ] Not started.
 
 ## Next
 
 ### P11 — Production Part Modeling (remaining)
-
-#### P11-FEAT-009 — Loft
-
-- [ ] Not started.
 
 #### P11-REF-001 — Mechanical reference models
 
