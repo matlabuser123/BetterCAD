@@ -20,7 +20,7 @@ unless a log says so.
 | --- | --- |
 | Parametric part modeling | **Qualified** — `P11-QUAL-001` |
 | Current implementation | `P12` — Parametric CAD Completion, in progress ([TODO.md](TODO.md)) |
-| Next | `P12-SKETCH-003` — sketches on arbitrary planar faces |
+| Next | Awaiting a scope decision: `P12-SKETCH-003` (sketches on faces) is blocked on stable face references ([record](docs/verification/P12-SKETCH-003/README.md)) |
 | Released | `v0.1.0` (`P0`–`P10`); `P11` is qualified but not released |
 
 The qualification rebuilt the tree clean in Debug, Release and Debug-shared and

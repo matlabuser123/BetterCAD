@@ -13,8 +13,8 @@ authorized — never in advance.
 | | |
 | --- | --- |
 | Current | **`P12` — Parametric CAD Completion** |
-| Next | `P12-SKETCH-003` — Sketches on arbitrary planar faces |
-| Blocked / Manual | None |
+| Next | Awaiting explicit scope decision — `P12-SKETCH-003` is blocked (see below) |
+| Blocked / Manual | `P12-SKETCH-003` — needs stable face references |
 | Last qualified | `P11` Production Part Modeling — **QUALIFIED** |
 | Released | `v0.1.0` (`P0`–`P10`); `P11` qualified, not released |
 
@@ -52,7 +52,7 @@ Reference models → qualification
 | 2 | `P12-SKETCH-001` Constraints: angle, tangent, concentric, midpoint, symmetric, diameter | `PARAM-001` | **done** — [evidence](docs/verification/P12-SKETCH-001/README.md) |
 | 3 | `P12-SKETCH-002` Entities: ellipse, spline | `SKETCH-001` | **done** — [evidence](docs/verification/P12-SKETCH-002/README.md) |
 | 4 | `P12-DATUM-001` Datum planes, axes, coordinate systems | `PARAM-001` | **done** — [evidence](docs/verification/P12-DATUM-001/README.md) |
-| 5 | `P12-SKETCH-003` Sketches on arbitrary planar faces | `DATUM-001` | not started — see *Stable-reference risk* |
+| 5 | `P12-SKETCH-003` Sketches on arbitrary planar faces | `DATUM-001` | **blocked** — needs stable face references; [record](docs/verification/P12-SKETCH-003/README.md) |
 | 6 | `P12-FEAT-001` Through-all extrude | — | not started |
 | 7 | `P12-FEAT-002` Split body / combine | — | not started |
 | 8 | `P12-FEAT-003` Shell | `FEAT-002` | not started |
@@ -161,7 +161,7 @@ Deliverables:
 - [x] Mirror planes and circular pattern axes may refer to datum geometry
 - [x] Undoable creation and editing, validation diagnostics, CLI description
 - [x] Save/load round-trip
-- [x] Evidence under `docs/verification/P12-DATUM-001/`
+- [x] Evidence: [docs/verification/P12-DATUM-001/](docs/verification/P12-DATUM-001/README.md) — PASS, 869/869 tests in Debug, Release and Debug-shared, 0 warnings
 
 Acceptance:
 
@@ -170,15 +170,43 @@ Acceptance:
 - Missing, wrong-kind and cyclic references and degenerate geometry fail with structured diagnostics and block their dependents; nothing is substituted.
 - Save → load → regenerate gives bit-identical geometry; `P0`–`P12-SKETCH-002` stays green in all three presets.
 
+#### P12-SKETCH-003 — Sketches on arbitrary planar faces — BLOCKED
+
+A sketch on a model face must stay on that face when upstream parameters or
+features change, and must fail rather than move to another face. The only
+persistent face reference, `FaceSignature` (plane and outward side), matches
+nothing once the face moves. A face's identity across regenerations is known
+only to the feature that made it, and the reference architecture does not
+record it. A minimal reproducer shows a signature losing an extrude's top
+face after a height change, and a nearest-geometry guess choosing another
+feature's face instead
+([record](docs/verification/P12-SKETCH-003/README.md)).
+
+Prerequisite, not authorized within P12: stable face references. Features
+name the faces they generate by role, the names are carried through
+booleans and modifiers, and references are (feature, role) pairs resolved
+without geometric fallback. Nothing was implemented and no box is ticked.
+The next step is a scope decision:
+
+- authorize that prerequisite;
+- redefine this milestone to accept signature references with the P11
+  limitation; or
+- defer it.
+
+Per the P12 rules, work stops here and does not skip ahead to
+`P12-FEAT-001`.
+
 ## Next
 
-`P12-SKETCH-003` — Sketches on arbitrary planar faces. Not started; see the
-*Stable-reference risk* above.
+Awaiting explicit scope decision. `P12-SKETCH-003` is blocked on stable face
+references; see its section above. P12 does not continue past it until the
+decision is made.
 
 ## Blocked / Manual
 
 | Item | Why |
 | --- | --- |
+| `P12-SKETCH-003` | Blocked: sketches on faces need stable face references (semantic topology), which P12 does not authorize. [Record](docs/verification/P12-SKETCH-003/README.md). |
 | `LICENSE` | Not yet chosen. A decision, not an implementation. |
 | Release tagging | Manual, and only on request. `v0.1.0` is the only tag. |
 
@@ -282,7 +310,7 @@ Not started. Not authorized. Grouped to match
 
 | Milestone | Commit | Evidence |
 | --- | --- | --- |
-| `P12-DATUM-001` Datum planes, axes, coordinate systems | "BetterCAD: implement P12 datum geometry" | [P12-DATUM-001](docs/verification/P12-DATUM-001/README.md) |
+| `P12-DATUM-001` Datum planes, axes, coordinate systems | `fe20b0f` | [P12-DATUM-001](docs/verification/P12-DATUM-001/README.md) |
 | `P12-SKETCH-002` Sketch entities: ellipse, spline | `070b730` | [P12-SKETCH-002](docs/verification/P12-SKETCH-002/README.md) |
 | `P12-SKETCH-001` Sketch constraints | `efdc1cf` | [P12-SKETCH-001](docs/verification/P12-SKETCH-001/README.md) |
 | `P12-PARAM-001` Parameter expression evaluation | `2316127` | [P12-PARAM-001](docs/verification/P12-PARAM-001/README.md) |

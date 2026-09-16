@@ -1,0 +1,22 @@
+Built with GCC 16.1 (MinGW-w64 UCRT), -O2, against the P12-DATUM-001 Release libraries (fe20b0f) and OCCT 8.0.1; run 2026-09-17T04:19:53+10:00; exit code 0.
+P12-SKETCH-003 face reference reproducer
+
+1. height = 20 mm. Faces of the result facing +Z:
+    plane  area 3000.000 mm^2  centroid (125.000, 30.000, 35.000) mm  signature: plane through (0, 0, 35) mm facing (0, 0, 1)
+    plane  area 6000.000 mm^2  centroid (50.000, 30.000, 20.000) mm  signature: plane through (0, 0, 20) mm facing (0, 0, 1)
+   Reference to Base's top face: plane through (0, 0, 20) mm facing (0, 0, 1) -> 1 face(s)
+
+2. height = 40 mm. Faces of the result facing +Z:
+    plane  area 3000.000 mm^2  centroid (125.000, 30.000, 35.000) mm  signature: plane through (0, 0, 35) mm facing (0, 0, 1)
+    plane  area 6000.000 mm^2  centroid (50.000, 30.000, 40.000) mm  signature: plane through (0, 0, 40) mm facing (0, 0, 1)
+   The same reference now matches 0 face(s): a sketch on it would fail with NotFound.
+
+3. FaceInfo holds surface, area, centroid and signature only; nothing names the feature
+   that made a face or the face it was before. The nearest face parallel to the old
+   plane is at z = 35.000 mm (centroid x = 125.000 mm): Step's top face, not Base's.
+
+4. Base's definition puts its end face at z = 40.000 mm, which matches 1 face(s) (area
+   6000.000 mm^2). Only the feature knows that role; the reference architecture does not
+   record it.
+
+REPRODUCED: yes
