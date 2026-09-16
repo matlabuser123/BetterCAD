@@ -1,0 +1,24 @@
+P11-QUAL-001 results by category
+inventory: test-inventory.txt
+
+== debug-ctest.log
+   tests recorded in the log: 738
+   legacy        301/301 passed
+   P11           417/417 passed
+   additional    20/20 passed
+   no test reported anything but Passed
+
+== release-ctest.log
+   tests recorded in the log: 738
+   legacy        301/301 passed
+   P11           417/417 passed
+   additional    20/20 passed
+   no test reported anything but Passed
+
+== debug-shared-ctest.log
+   tests recorded in the log: 738
+   legacy        301/301 passed
+   P11           417/417 passed
+   additional    20/20 passed
+   no test reported anything but Passed
+

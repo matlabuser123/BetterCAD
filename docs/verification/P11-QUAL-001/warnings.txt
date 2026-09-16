@@ -1,0 +1,23 @@
+P11-QUAL-001 compiler warning audit
+Compiler diagnostics are counted as GCC prints them: <file>:<line>:<column>: warning|error:
+CMake warnings and any other mention of the word are counted separately.
+
+== debug-build.log
+   translation units compiled : 274
+   compiler warnings or errors: 0
+   CMake warnings or errors   : 0
+   other lines mentioning it  : 0
+
+== release-build.log
+   translation units compiled : 274
+   compiler warnings or errors: 0
+   CMake warnings or errors   : 0
+   other lines mentioning it  : 0
+
+== debug-shared-build.log
+   translation units compiled : 274
+   compiler warnings or errors: 0
+   CMake warnings or errors   : 0
+   other lines mentioning it  : 0
+
+Compiler warnings over all logs: 0

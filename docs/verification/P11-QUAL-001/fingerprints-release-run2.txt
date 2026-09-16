@@ -1,0 +1,179 @@
+== Shaft
+item 1 parameter r1
+item 2 parameter l1
+item 3 parameter r2
+item 4 parameter l2
+item 5 parameter r3
+item 6 parameter half_length
+item 7 parameter centre_drill_d
+item 8 parameter centre_drill_depth
+item 9 parameter shoulder_fillet_r
+item 10 parameter end_chamfer
+item 11 sketch Profile
+item 12 revolve Turn
+item 13 hole CentreDrill
+item 14 mirror TailCentreDrill
+item 15 fillet ShoulderFillets
+item 16 chamfer EndChamfers
+features 5
+bodies 1
+body 16 EndChamfers valid=1 solids=1 shells=1 faces=17 edges=27 vertices=16
+  volume_mm3 97773.098888601089
+  area_mm2 14480.00664833255
+  centroid_mm -3.2592217057246336e-15 -7.6367859192165183e-16 56.468754603587698
+  min_mm -20 -20 0
+  max_mm 20 20 120
+timing_ms build 0.287 first_regeneration 426.026 unchanged_regeneration 0.055 changed_r2_regeneration 382.968 save 2.358 load 13.757
+== Flange
+item 1 parameter outer_r
+item 2 parameter thickness
+item 3 parameter bore_d
+item 4 parameter bolt_circle_r
+item 5 parameter bolt_d
+item 6 parameter bolt_count
+item 7 parameter edge_chamfer
+item 8 parameter rim_fillet_r
+item 9 sketch DiscSketch
+item 10 extrude Disc
+item 11 hole Bore
+item 12 hole BoltHole
+item 13 circular_pattern BoltCircle
+item 14 chamfer EdgeChamfers
+item 15 fillet RimFillet
+features 6
+bodies 1
+body 15 RimFillet valid=1 solids=1 shells=1 faces=13 edges=30 vertices=19
+  volume_mm3 81674.894046699133
+  area_mm2 19890.807457351093
+  centroid_mm -3.4826426321024295e-15 -4.3740071733393697e-15 6.0039988479635928
+  min_mm -50 -50 0
+  max_mm 50 50 12
+timing_ms build 0.057 first_regeneration 511.000 unchanged_regeneration 0.051 changed_bolt_circle_r_regeneration 465.812 save 2.330 load 0.789
+== Pulley
+item 1 parameter outer_r
+item 2 parameter rim_inner_r
+item 3 parameter rim_width
+item 4 parameter hub_r
+item 5 parameter hub_length
+item 6 parameter web_z0
+item 7 parameter web_thickness
+item 8 parameter bore_d
+item 9 parameter groove_z
+item 10 parameter groove_depth
+item 11 parameter groove_width
+item 12 parameter groove_bottom_width
+item 13 parameter web_fillet_r
+item 14 parameter hub_chamfer
+item 15 sketch Section
+item 16 revolve Blank
+item 17 sketch GrooveSection
+item 18 revolve Groove
+item 19 hole Bore
+item 20 fillet WebFillets
+item 21 chamfer HubChamfers
+features 5
+bodies 1
+body 21 HubChamfers valid=1 solids=1 shells=1 faces=22 edges=38 vertices=22
+  volume_mm3 212874.6060572218
+  area_mm2 47408.018600234092
+  centroid_mm -7.5195003517238417e-15 7.792912944245277e-16 16.545944387329037
+  min_mm -60 -60 0
+  max_mm 60 60 40
+timing_ms build 0.100 first_regeneration 460.543 unchanged_regeneration 0.084 changed_outer_r_regeneration 438.818 save 2.613 load 18.983
+== BearingHousing
+item 1 parameter base_half_length
+item 2 parameter base_width
+item 3 parameter base_t
+item 4 parameter boss_r
+item 5 parameter axis_height
+item 6 parameter bore_r
+item 7 parameter mount_d
+item 8 parameter mount_x
+item 9 parameter mount_y
+item 10 parameter mount_pitch_x
+item 11 parameter mount_pitch_y
+item 12 parameter boss_fillet_r
+item 13 parameter base_chamfer
+item 14 sketch BaseSection
+item 15 extrude Base
+item 16 sketch BossSection
+item 17 extrude Boss
+item 18 mirror Housing
+item 19 sketch BoreSection
+item 20 extrude Bore
+item 21 hole MountHole
+item 22 linear_pattern MountHoles
+item 23 fillet BossFillets
+item 24 chamfer BaseChamfers
+features 8
+bodies 1
+body 24 BaseChamfers valid=1 solids=1 shells=1 faces=19 edges=51 vertices=34
+  volume_mm3 261382.1651324929
+  area_mm2 39195.260546925892
+  centroid_mm 2.6872217692694274e-12 1.2804777635948627e-15 30.471678752930575
+  min_mm -60 -30.000000000000007 0
+  max_mm 60 30 80
+timing_ms build 0.085 first_regeneration 351.437 unchanged_regeneration 0.084 changed_base_width_regeneration 341.057 save 6.902 load 18.210
+== MountingBracket
+item 1 parameter width
+item 2 parameter base_width
+item 3 parameter base_t
+item 4 parameter plate_height
+item 5 parameter plate_t
+item 6 parameter hole_d
+item 7 parameter hole_inset
+item 8 parameter hole_row
+item 9 parameter hole_pitch_x
+item 10 parameter hole_pitch_y
+item 11 parameter plate_hole_x
+item 12 parameter plate_hole_z
+item 13 parameter centre_x
+item 14 parameter gusset_back
+item 15 parameter gusset_embed
+item 16 parameter gusset_top
+item 17 parameter gusset_foot_t
+item 18 parameter gusset_foot_depth
+item 19 parameter gusset_tip_t
+item 20 parameter gusset_tip_depth
+item 21 parameter inner_fillet_r
+item 22 parameter outer_chamfer
+item 23 sketch BaseSection
+item 24 extrude BasePlate
+item 25 sketch PlateSection
+item 26 extrude BackPlate
+item 27 hole BaseHole
+item 28 linear_pattern BaseHoles
+item 29 hole PlateHole
+item 30 mirror PlateHoles
+item 31 fillet InnerFillet
+item 32 chamfer OuterChamfer
+item 33 sketch GussetFoot
+item 34 sketch GussetTip
+item 35 loft Gusset
+features 9
+bodies 1
+body 35 Gusset valid=1 solids=1 shells=1 faces=21 edges=57 vertices=38
+  volume_mm3 123546.71469101607
+  area_mm2 30268.485418480705
+  centroid_mm 50.000000000009649 17.56816899032799 22.617339008534753
+  min_mm -9.9999999999999995e-08 -3.3306690738754696e-16 -3.3306690738754696e-16
+  max_mm 100.00000009999999 60.000000100000001 70.000000099999994
+timing_ms build 0.125 first_regeneration 727.968 unchanged_regeneration 0.115 changed_plate_height_regeneration 703.530 save 2.641 load 14.631
+== UBolt
+item 1 parameter rod_r
+item 2 parameter leg
+item 3 parameter bend_r
+item 4 parameter end_chamfer
+item 5 sketch RodSection
+item 6 sketch Route
+item 7 sweep Rod
+item 8 chamfer EndChamfers
+features 2
+bodies 1
+body 8 EndChamfers valid=1 solids=1 shells=1 faces=7 edges=11 vertices=6
+  volume_mm3 15563.959180016738
+  area_mm2 6354.9832893100183
+  centroid_mm 24.99999999993284 7.348989661020982e-16 -48.316759567337741
+  min_mm -5.0000001000000003 -5.0000001000000003 -90.000000099999994
+  max_mm 55.000000100000001 5.0000001000000003 0
+timing_ms build 0.054 first_regeneration 171.626 unchanged_regeneration 0.029 changed_leg_regeneration 186.729 save 3.169 load 1.084

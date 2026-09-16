@@ -10,6 +10,17 @@ for status; an item is ticked only when it is implemented and covered by
 passing tests. Architecture and rules are in
 [docs/architecture.md](docs/architecture.md).
 
+**Current state.** The parametric part-modelling core is complete and
+qualified: parameters, sketches, constraints and a solver; extrude, revolve,
+chamfer, fillet, hole, linear and circular patterns, mirror, sweep and loft;
+a dependency graph with dirty propagation; undo/redo; save/load; and STEP and
+STL export. The last qualification rebuilt the tree clean in Debug, Release
+and Debug-shared and ran the whole suite in each — 738/738 tests and zero
+compiler warnings every time — and the six mechanical reference models come
+out bit-identical in all three
+([evidence](docs/verification/P11-QUAL-001/README.md)). Assemblies, drawings
+and simulation have not been started.
+
 ## Requirements
 
 - CMake 3.25 or newer, Ninja

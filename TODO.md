@@ -76,7 +76,7 @@ recorded under `docs/verification/`. `[ ]` means not complete.
 
 Release v0.1.0 (commit `2da8966`, tag `v0.1.0`) is P0–P10.
 
-### P11 — Production Part Modeling (completed items)
+### P11 — Production Part Modeling (complete and qualified)
 
 #### P11-FEAT-001 — Revolve — [evidence](docs/verification/P11-FEAT-001/README.md)
 
@@ -547,20 +547,47 @@ still not evaluated, so a derived dimension needs its own parameter or a
 sketch that builds the relation; an extrude has no through-all mode; a loft's
 B-spline sides cost about 6e-12 in volume and 3.4e-6 mm in the centroid.
 
+#### P11-QUAL-001 — Qualification — [evidence](docs/verification/P11-QUAL-001/README.md)
+
+- [x] Debug build — 274 translation units, 0 warnings, 738/738 tests
+- [x] Release build — 274 translation units, 0 warnings, 738/738 tests
+- [x] Debug-shared build — 274 translation units, 0 warnings, 738/738 tests
+- [x] Zero compiler warnings — 0 compiler, 0 CMake, 0 other, over all three
+      clean build logs, counted as GCC prints diagnostics; 22 warning flags
+      plus `-Werror`, and no `-Wno-` flag or diagnostic pragma anywhere
+- [x] All legacy tests pass — 301/301 in each configuration
+- [x] All P11 tests pass — 417/417 in each configuration, plus the 20 core
+      tests P11 added; 0 unclassified
+- [x] Reference models regenerate deterministically — 700 repeat executions,
+      six fresh processes across three builds giving one identical
+      fingerprint digest, 0 relative and 0 mm across configurations
+- [x] Evidence recorded — [docs/verification/P11-QUAL-001/](docs/verification/P11-QUAL-001/README.md)
+
+**Acceptance (met):** 20 gates, 20 passed, 0 failed, 0 blocked, against the
+frozen revision `79dab04`. Three clean rebuilds (Debug, Release,
+Debug-shared) each compiled all 274 translation units with zero diagnostics
+and ran the complete 738-test suite to 738 passes. The failure-path and
+atomic-regeneration gate passed 124/124, including 13 tests requiring that
+unit and identity misuse fails to compile. The CLI smoke ran 28 commands
+through the shipped executable: 27 succeeded and the intended failure was
+reported as a diagnostic, not a crash. All ten P11 milestones have complete
+committed evidence (171 files, no placeholders). No production code was
+changed during the run and no test failed at any point.
+
+**Known limitations:** unchanged by this run — geometric references do not
+follow moved geometry; a half cylinder on a mirror plane blocks the union;
+parameter expressions are not evaluated; no through-all extrude; loft sides
+stay B-splines. As evidence this qualification is one platform only
+(Windows, GCC 16.1, OCCT 8.0.1), with no CI, no sanitizers, no coverage, no
+enforced formatting check, and no GUI qualification.
+
 ## Current
 
-### P11 — Production Part Modeling
+### P12 — Next Phase
 
-#### P11-QUAL-001 — Qualification ← NEXT
-
-- [ ] Debug build
-- [ ] Release build
-- [ ] Debug-shared build
-- [ ] Zero compiler warnings
-- [ ] All legacy tests pass
-- [ ] All P11 tests pass
-- [ ] Reference models regenerate deterministically
-- [ ] Evidence recorded
+Nothing in progress. P11 Production Part Modeling is complete and qualified.
+The next phase has not been authorized yet; see `ROADMAP.md` and the list
+below.
 
 ## Later — Do Not Start Yet
 

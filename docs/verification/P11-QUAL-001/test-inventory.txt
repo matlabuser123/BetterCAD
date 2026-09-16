@@ -1,0 +1,788 @@
+P11-QUAL-001 test inventory
+revision 79dab04bd6e83a5a396b0e6a57199587f720c4eb
+
+registered tests          738
+  Catch2 unit tests       694
+  process and check tests 44
+legacy (present at v0.1.0, the P0-P10 release)  301
+P11 (feature or reference-model tags)           417
+added since v0.1.0 without a P11 tag            20
+
+P11 tests by milestone (a test may cover more than one):
+  P11-FEAT-001 Revolve               37
+  P11-FEAT-002 Chamfer               36
+  P11-FEAT-003 Fillet                36
+  P11-FEAT-004 Hole                  71
+  P11-FEAT-005 Linear pattern        39
+  P11-FEAT-006 Circular pattern      42
+  P11-FEAT-007 Mirror                41
+  P11-FEAT-008 Sweep                 48
+  P11-FEAT-009 Loft                  49
+  P11-REF-001 Reference models       53
+
+Added since v0.1.0 without a P11 feature tag. These are the core geometry, math and
+build checks the P11 milestones brought with them (edge and face references, rigid
+transforms, the boolean regression the reference models found, the examples layering
+check), listed so no test hides between the categories:
+  architecture.checker.examples-occt-leak
+      process test
+  unit.A half united with its mirror image: a planar seam merges, a cylindrical seam is refused
+      core/geometry/BooleanTests.cpp [booleans][geometry][regression]
+  unit.EdgeSignature_IsCanonicalWhateverPointAndOrientationDescribeTheCurve
+      core/geometry/ChamferTests.cpp [edges][geometry]
+  unit.Edges_BoxHasTwelveStraightEdgesBetweenTwoFaces
+      core/geometry/ChamferTests.cpp [edges][geometry]
+  unit.Edges_CylinderHasTwoCirclesAndASeam
+      core/geometry/ChamferTests.cpp [edges][geometry]
+  unit.Edges_FaceAngleTellsSharpFromSmoothEdges
+      core/geometry/FilletTests.cpp [edges][geometry]
+  unit.Edges_SignatureResolvesToExactlyOneEdge
+      core/geometry/ChamferTests.cpp [edges][geometry]
+  unit.FaceSignature_IsCanonicalAndHasModelAlignedCoordinates
+      core/geometry/HoleTests.cpp [faces][geometry]
+  unit.Faces_BoxHasSixPlanarFacesWithReferences
+      core/geometry/HoleTests.cpp [faces][geometry]
+  unit.RigidTransform_IdentityAndTranslation
+      core/math/RigidTransformTests.cpp [math][transform]
+  unit.RigidTransform_QuadrantRotationsAboutZ
+      core/math/RigidTransformTests.cpp [math][transform]
+  unit.RigidTransform_RotationMatchesRodrigues
+      core/math/RigidTransformTests.cpp [math][transform]
+  unit.RigidTransform_RotationPreservesDistanceToAxis
+      core/math/RigidTransformTests.cpp [math][transform]
+  unit.Transform_RejectsNonFiniteTranslationsAndEmptyBodies
+      core/geometry/TransformTests.cpp [geometry][transform]
+  unit.Transform_RotatedBodyMovesExactly
+      core/geometry/TransformTests.cpp [geometry][transform]
+  unit.Transform_RotatedReferencesDescribeTheMovedGeometry
+      core/geometry/TransformTests.cpp [geometry][transform]
+  unit.Transform_TranslatedBodyMovesExactly
+      core/geometry/TransformTests.cpp [geometry][transform]
+  unit.Transform_TranslatedCopiesCombineWithAnalyticVolumes
+      core/geometry/TransformTests.cpp [geometry][transform]
+  unit.Transform_TranslatedReferencesDescribeTheMovedGeometry
+      core/geometry/TransformTests.cpp [geometry][transform]
+  unit.Transform_TranslationIsComputedOnceNotAccumulated
+      core/geometry/TransformTests.cpp [geometry][transform]
+
+Legacy tests, in order:
+  architecture.checker.layer-violation
+  architecture.checker.occt-leak
+  architecture.checker.private-include
+  architecture.checker.qt-leak
+  architecture.checker.valid
+  architecture.layering
+  cli.export-step.example
+  cli.export-stl.ascii
+  cli.export-stl.bad-tolerance
+  cli.export-stl.example
+  cli.info.example
+  cli.launch.help
+  cli.launch.no-arguments
+  cli.launch.unknown-command
+  cli.launch.version
+  cli.launch.version-command
+  cli.new
+  cli.new.unicode-path
+  cli.validate.example
+  cli.validate.missing-file
+  compile_fail.ids.compare-different-kinds
+  compile_fail.ids.entity-id-as-object-id
+  compile_fail.ids.id-to-integer
+  compile_fail.ids.integer-to-id
+  compile_fail.ids.object-to-sketch-id
+  compile_fail.ids.sketch-id-as-feature-id
+  compile_fail.units.add-length-angle
+  compile_fail.units.assign-double-to-length
+  compile_fail.units.assign-mass-to-length
+  compile_fail.units.compare-length-time
+  compile_fail.units.force-per-length-as-pressure
+  compile_fail.units.length-to-double
+  compile_fail.units.sqrt-of-volume
+  gui.launch.smoke
+  unit.A box triangulates exactly into a closed, outward-facing surface
+  unit.A circle is a closed region on its own
+  unit.A default body is empty
+  unit.A document's graph comes from the objects' declared dependencies
+  unit.A fixed time stamp makes STEP output reproducible
+  unit.A general frame is orthonormal and round-trips points
+  unit.A history limit drops the oldest commands
+  unit.A history refuses to operate on another document
+  unit.A model saved before its first regeneration regenerates identically after loading
+  unit.A new document has an identity, a name and no content
+  unit.A new sketch lies on the global XY plane
+  unit.A rectangle of connected lines is one closed region
+  unit.A regenerator belongs to one document; regenerateAll starts over
+  unit.A sketch on another plane places its geometry in model space
+  unit.A sound model passes every check
+  unit.A written STEP file reads back as the same solid
+  unit.ASCII and binary STL hold the same 32-bit coordinates
+  unit.AddObjectCommand re-adds the same object with the same ID
+  unit.An empty document is valid
+  unit.An empty table round-trips
+  unit.An off-centre hole moves the centre of mass as predicted
+  unit.Analytic volume regression for extruded rectangles
+  unit.Assigning a value of another dimension fails and changes nothing
+  unit.Bodies are immutable values that share their shape
+  unit.Bodies without material are geometry errors
+  unit.Boolean operands must not be empty
+  unit.Boolean operations are deterministic and leave their inputs unchanged
+  unit.Bounding boxes of entities are exact
+  unit.Box minus a through cylinder is a valid solid with V = LWH - pi r^2 H
+  unit.Box properties match V = LWH and A = 2(LW + LH + WH)
+  unit.Build info identifies the compiler that built the core library
+  unit.Build info reports the active build configuration
+  unit.Build info reports the library linkage
+  unit.Build info reports the project version configured by CMake
+  unit.C++ standard names map __cplusplus values
+  unit.CLI --version prints program name and version
+  unit.CLI commands check their argument counts
+  unit.CLI commands reject unexpected arguments
+  unit.CLI help lists every command
+  unit.CLI rejects unknown commands
+  unit.CLI version command prints the full build report
+  unit.CLI without arguments prints usage to stderr and fails
+  unit.Changing the depth parameter from 20 mm to 40 mm regenerates the solid
+  unit.Changing the depth rebuilds only the extrude
+  unit.Changing the value updates it and increments the revision
+  unit.CommandHistory keeps undo and redo stacks
+  unit.Commands make the document dirty; undo after saving does too
+  unit.Compound assignment updates the quantity
+  unit.Constraint IDs are stable and never reused
+  unit.Constraints are part of the sketch content
+  unit.Constraints can be disabled, changed and driven by parameters
+  unit.Constraints cannot reference entities that do not exist
+  unit.Constraints check the kinds and number of referenced entities
+  unit.Constraints must reference distinct entities
+  unit.Construction geometry is not part of profiles
+  unit.Core library is compiled as C++23 or newer
+  unit.CreateParameterCommand executes, undoes and redoes with the same ID
+  unit.CreateSketchCommand creates a sketch that undo removes and redo restores
+  unit.Curved surfaces are approximated within the requested deflection
+  unit.Cycles are detected and block what depends on them
+  unit.Cylinder properties match V = pi r^2 h and A = 2 pi r (r + h)
+  unit.Default-constructed IDs are invalid
+  unit.Default-constructed and zero quantities are zero
+  unit.Degrees and radians convert to and from SI
+  unit.DeleteObjectCommand deletes and restores objects and parameters
+  unit.Dependency cycles are reported and block their dependents
+  unit.Dependency cycles are reported and block their dependents
+  unit.Direction products
+  unit.Directions are normalized and reject zero vectors
+  unit.Dirty propagation reaches exactly the downstream nodes
+  unit.Dirty state follows effective changes since markClean
+  unit.Disjoint bodies: union keeps both solids, intersection is empty
+  unit.Document STEP export reports failures without writing
+  unit.Document names are validated and renames are tracked
+  unit.Document object IDs widen to ObjectId
+  unit.Documents are saved to and loaded from files
+  unit.Documents get distinct IDs unless one is given
+  unit.Duplicate IDs and names are rejected
+  unit.Each constraint type records its references, value and enabled state
+  unit.Edit, undo and redo return the document to equivalent states
+  unit.Editing a feature rebuilds that feature and what depends on it
+  unit.Editing reports whether anything changed
+  unit.Endpoints of lines and arcs
+  unit.Entities referenced by constraints cannot be removed
+  unit.Equivalence ignores revision counters
+  unit.Every extrude direction and operation round-trips
+  unit.Exported STL files are closed surfaces of the model's result bodies
+  unit.Exporting a document writes its result bodies as named STEP products
+  unit.Exports of a document without bodies fail
+  unit.Exports report models that do not regenerate
+  unit.Expressions are stored and cleared
+  unit.Expressions that are not UTF-8 cannot be saved
+  unit.Extrude definitions are validated
+  unit.Extrude directions
+  unit.Extrude features are created and modified through commands
+  unit.Extruded regions with circles, holes and arcs
+  unit.Failed commands are not recorded
+  unit.Failures are reported and block dependents until fixed
+  unit.Features that fail to build are regeneration errors
+  unit.File names may contain any Unicode characters
+  unit.Formatted build info contains every field
+  unit.Formatted build info marks modified working trees
+  unit.Frame creation projects the X direction into the plane
+  unit.Generated UUIDs are version 4, RFC variant and distinct
+  unit.IDs are never reused and insertObject restores an ID
+  unit.IDs carry their value and compare by value
+  unit.IDs format as kind:value
+  unit.IDs work as ordered and hashed container keys
+  unit.IdAllocator can reserve IDs loaded from a document
+  unit.IdAllocator hands out increasing IDs starting at 1
+  unit.IdAllocator never reuses values
+  unit.IdAllocator reports exhaustion instead of wrapping
+  unit.Imperial lengths use their exact definitions
+  unit.Inclusion-exclusion holds: V(A u B) = V(A) + V(B) - V(A n B)
+  unit.Independent allocators produce independent ID spaces
+  unit.Integer and floating-point literals agree
+  unit.Integration error estimates are reported and small
+  unit.Invalid document files are rejected with the JSON path
+  unit.Invalid entities are rejected and leave the sketch unchanged
+  unit.Invalid frames are rejected
+  unit.Invalid parameters are rejected at creation
+  unit.Join, cut and intersect combine with a target body
+  unit.Lengths of lines, arcs and circles
+  unit.Like quantities add and subtract
+  unit.Like quantities compare by value regardless of the unit used
+  unit.Lines can share end points
+  unit.Lines closed by coincident constraints form a profile once solved
+  unit.Long dependency chains are handled without recursion
+  unit.Lookup by name and ID works across kinds
+  unit.Loop orientation is normalized to counter-clockwise
+  unit.Malformed UUID text is rejected
+  unit.Malformed parameter documents are rejected with a path
+  unit.Megapascals and pascals convert to and from SI
+  unit.Metadata changes are tracked
+  unit.Millimetres and metres convert to and from SI
+  unit.Missing references are reported as failures
+  unit.Missing references are reported once, under their own check
+  unit.ModifyParameterCommand is atomic
+  unit.ModifyParameterCommand round-trips every kind of change
+  unit.Names are unique across parameters and objects
+  unit.Names that need quoting or are not ASCII survive STEP export
+  unit.Nested loops become holes; loops inside holes become islands
+  unit.Non-finite values are rejected
+  unit.Objects are listed in ID order
+  unit.Objects can be added, found by ID and name, and removed
+  unit.Only distance and radius constraints carry values, and values are checked
+  unit.Open, branching and empty sketches have no valid profile
+  unit.Other engineering units convert to SI
+  unit.Overlapping boxes: union, difference and intersection volumes
+  unit.P9 acceptance: create, save, close, load and regenerate give the same geometry and IDs
+  unit.Parameter names must be identifiers
+  unit.Parameter tables round-trip through JSON
+  unit.Parameters and objects share one ID space
+  unit.Parameters are created with ID, name, value, unit and revision 1
+  unit.Parameters are found by ID and by name
+  unit.Parameters are listed in ID order
+  unit.Parameters can be created from a number and a runtime unit
+  unit.Parameters of other dimensions keep their dimension and unit
+  unit.Placement moves the centre of mass and bounds, not the volume
+  unit.Point-line distances are stored as (point, line)
+  unit.Points and bounding boxes
+  unit.Points, lines, circles and arcs have stable IDs and types
+  unit.Primitive sizes must be positive, finite and above kernel precision
+  unit.Primitives have the expected topology
+  unit.Products and quotients derive the correct quantity
+  unit.Profiles may contain arcs
+  unit.Quantities format with their unit
+  unit.Quantities scale by plain numbers
+  unit.Radius, centre and sweep of circles and arcs
+  unit.Random edit, undo and redo sequences stay consistent and deterministic
+  unit.Reading a parameter as the wrong quantity type fails
+  unit.Referenced points cannot be removed
+  unit.References to missing items are kept and reported by regeneration
+  unit.References to the wrong kind of item are consistency errors
+  unit.Regeneration reports broken references
+  unit.Regeneration results are deterministic
+  unit.Removing returns the parameter and frees its name
+  unit.RenameObjectCommand renames parameters and objects
+  unit.Renaming keeps names unique and the name index current
+  unit.Renaming validates the new name
+  unit.Renaming works for parameters and objects and keeps names unique
+  unit.Result features exclude bodies consumed by other features
+  unit.Round trip preserves IDs, names, dimensions, units and expressions
+  unit.SI unit symbols are derived from dimensions
+  unit.SI values round-trip bit for bit
+  unit.STEP output is an ISO 10303-21 AP214 file in millimetres
+  unit.STEP output rejects missing and empty bodies
+  unit.STL export fails cleanly when there is nothing valid to write
+  unit.STL output follows the binary and ASCII layouts
+  unit.STL output rejects what it cannot represent
+  unit.Saving is deterministic and loss-free
+  unit.Seeded generation is reproducible
+  unit.Setting an identical value is not a change
+  unit.Sketch changes flow into the extrude after solving
+  unit.Sketch edits inside a document are tracked
+  unit.Sketch entities may appear in any order in the file
+  unit.Sketches that do not solve are sketch-constraint errors
+  unit.Solver: a sketch inside a document is solved through modifyObject
+  unit.Solver: arcs keep both ends on their circle
+  unit.Solver: circle radius
+  unit.Solver: coincident, parallel and perpendicular
+  unit.Solver: conflicting lengths are reported, not applied
+  unit.Solver: empty and unconstrained sketches
+  unit.Solver: fixed distance
+  unit.Solver: geometry that would collapse is rejected
+  unit.Solver: horizontal line
+  unit.Solver: rectangle reaches 100 x 50 mm as a closed profile
+  unit.Solver: redundant constraints are over-constrained and not applied
+  unit.Solver: results are deterministic and analyze() does not modify
+  unit.Solver: running out of iterations is a solver failure
+  unit.Solver: separate lines are closed into a rectangle by coincident constraints
+  unit.Solver: status names
+  unit.Solver: vertical line
+  unit.Spec acceptance: 100 x 50 mm rectangle extruded 20 mm has V = 100000 mm^3
+  unit.Spec example: 100 x 50 x 20 mm box has V = 100000 mm^3
+  unit.Spec example: changing width rebuilds Sketch001 and Extrude001 only
+  unit.Spec examples: width, height and hole diameter
+  unit.Spec setup: rectangle with horizontal/vertical constraints, width and height
+  unit.Spec usage: literals construct typed quantities
+  unit.Spec usage: makeBox(100_mm, 50_mm, 20_mm)
+  unit.Spec usage: sketch.addLine(Point2D{0_mm, 0_mm}, Point2D{100_mm, 0_mm})
+  unit.Sphere intersected with an octant box is one eighth of the sphere
+  unit.Sphere properties match V = 4/3 pi r^3 and A = 4 pi r^2
+  unit.Square root of an area is a length
+  unit.Subtracting an enclosing body leaves nothing
+  unit.Table modifications are dimension-checked
+  unit.The JSON format is transparent
+  unit.The XZ and YZ planes are right-handed
+  unit.The default UUID is nil
+  unit.The display unit can change without changing the value
+  unit.The document format is transparent JSON
+  unit.The first pass builds everything in dependency order
+  unit.The geometry kernel is Open CASCADE 8.0
+  unit.The global XY plane maps sketch coordinates unchanged
+  unit.The hand-written example plate is a valid, canonical document
+  unit.The revision counts every effective change
+  unit.The same construction steps produce identical sketches
+  unit.The table revision tracks effective changes only
+  unit.Topological order puts dependencies first and breaks ties by ID
+  unit.Triangulation is deterministic and leaves the body unchanged
+  unit.Triangulation rejects empty bodies and invalid options
+  unit.Trigonometric functions take and return angles
+  unit.Two perpendicular cylinders intersect in a Steinmetz solid, V = 16 r^3 / 3
+  unit.Typed lookup checks the object kind
+  unit.UUID parsing accepts either case and formats lowercase
+  unit.UUIDs round-trip through their canonical text form
+  unit.Undo and redo report when there is nothing to do
+  unit.Unit catalog lists every unit with a unique symbol
+  unit.Units can be looked up by symbol at run time
+  unit.Units resolve by symbol, the empty symbol meaning unitless
+  unit.Unknown unit symbols are not found
+  unit.Validation works on a copy
+  unit.Without changes, nothing is regenerated
+  unit.abs, isFinite and approxEqual
+  unit.addObject needs a new object and insertObject an identified one
+  unit.clone produces an equivalent, independent document
+  unit.equivalent compares identity and content, not revisions
+  unit.export-step writes the result bodies
+  unit.export-stl validates its options
+  unit.export-stl writes a closed mesh with the requested accuracy
+  unit.info shows metadata, parameters and objects
+  unit.insertConstraint restores a constraint with its ID and validates it
+  unit.modifyObject tracks changes and checks the kind
+  unit.new creates an empty, valid document and refuses to overwrite
+  unit.restoreParameter makes a parameter equal to a stored state
+  unit.uniqueName finds the first free numbered name
+  unit.validate reports each check and the result bodies
+
+P11 tests, in order:
+  cli.export-step.reference.bracket  (P11-REF-001 Reference models)
+  cli.export-stl.reference.pulley  (P11-REF-001 Reference models)
+  cli.info.reference.shaft  (P11-REF-001 Reference models)
+  cli.validate.reference.bearing_housing  (P11-REF-001 Reference models)
+  cli.validate.reference.flange  (P11-REF-001 Reference models)
+  cli.validate.reference.mounting_bracket  (P11-REF-001 Reference models)
+  cli.validate.reference.pulley  (P11-REF-001 Reference models)
+  cli.validate.reference.shaft  (P11-REF-001 Reference models)
+  cli.validate.reference.u_bolt  (P11-REF-001 Reference models)
+  unit.A boolean with an empty target body fails instead of producing geometry  (P11-FEAT-001 Revolve)
+  unit.A revolve about a sketch line follows the line  (P11-FEAT-001 Revolve)
+  unit.A revolve declares its profile, angle parameter and target as dependencies  (P11-FEAT-001 Revolve)
+  unit.ChamferFeature_DataIsStoredAsTransparentJson  (P11-FEAT-002 Chamfer)
+  unit.ChamferFeature_DefinitionIsValidatedOnCreateAndEdit  (P11-FEAT-002 Chamfer)
+  unit.ChamferFeature_DependsOnItsTargetAndDistanceParameter  (P11-FEAT-002 Chamfer)
+  unit.ChamferFeature_DistanceAngleMeasuresTheAngleFromTheReferenceFace  (P11-FEAT-002 Chamfer)
+  unit.ChamferFeature_EdgeChangedUpstreamFailsInsteadOfSubstituting  (P11-FEAT-002 Chamfer)
+  unit.ChamferFeature_ExportsToStepAndStl  (P11-FEAT-002 Chamfer)
+  unit.ChamferFeature_FailedChamferSavesAndLoadsUnchanged  (P11-FEAT-002 Chamfer)
+  unit.ChamferFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact  (P11-FEAT-002 Chamfer)
+  unit.ChamferFeature_InvalidInputsFailWithStructuredDiagnostics  (P11-FEAT-002 Chamfer)
+  unit.ChamferFeature_MalformedDataIsRejectedWithTheJsonPath  (P11-FEAT-002 Chamfer)
+  unit.ChamferFeature_ModelsAreValidatedLikeAnyOther  (P11-FEAT-002 Chamfer)
+  unit.ChamferFeature_MultipleEdgesMatchAnalyticVolume  (P11-FEAT-002 Chamfer)
+  unit.ChamferFeature_OnRevolvedBodyMatchesPappusAndFollowsTheSweep  (P11-FEAT-001 Revolve, P11-FEAT-002 Chamfer)
+  unit.ChamferFeature_RegeneratesWhenTheUpstreamWidthChanges  (P11-FEAT-002 Chamfer)
+  unit.ChamferFeature_SaveLoadPreservesCircleReferences  (P11-FEAT-001 Revolve, P11-FEAT-002 Chamfer)
+  unit.ChamferFeature_SaveLoadPreservesDefinitionsAndGeometry  (P11-FEAT-002 Chamfer)
+  unit.ChamferFeature_SingleEdgeMatchesAnalyticVolume  (P11-FEAT-002 Chamfer)
+  unit.ChamferFeature_TwoDistancesPutTheFirstDistanceOnTheReferenceFace  (P11-FEAT-002 Chamfer)
+  unit.ChamferFeature_UndoRedoRestoresIdenticalGeometry  (P11-FEAT-002 Chamfer)
+  unit.Chamfer_AdjacentEdgesMeetInAMitredCorner  (P11-FEAT-002 Chamfer)
+  unit.Chamfer_CircularEdgeOfCylinderMatchesPappus  (P11-FEAT-002 Chamfer)
+  unit.Chamfer_DistanceAngleMeasuresTheAngleFromTheReferenceFace  (P11-FEAT-002 Chamfer)
+  unit.Chamfer_FollowsTangentEdgesAndRejectsTwoReferencesToOneChain  (P11-FEAT-002 Chamfer)
+  unit.Chamfer_IsDeterministic  (P11-FEAT-002 Chamfer)
+  unit.Chamfer_MultipleSeparateEdgesMatchAnalyticVolume  (P11-FEAT-002 Chamfer)
+  unit.Chamfer_RefusesChamfersThatDoNotFitBeforeTheKernel  (P11-FEAT-002 Chamfer)
+  unit.Chamfer_RejectsInvalidRequestsBeforeTheKernel  (P11-FEAT-002 Chamfer)
+  unit.Chamfer_RejectsOversizedDistance  (P11-FEAT-002 Chamfer)
+  unit.Chamfer_SingleEdgeMatchesAnalyticVolume  (P11-FEAT-002 Chamfer)
+  unit.Chamfer_TwoDistancesPutTheFirstDistanceOnTheReferenceFace  (P11-FEAT-002 Chamfer)
+  unit.Chamfer_UnresolvableReferencesAreReportedNotGuessed  (P11-FEAT-002 Chamfer)
+  unit.CircularPattern_AdditiveBossesMatchAnalyticVolume  (P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_AngleStepSpacing  (P11-FEAT-004 Hole, P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_ArbitraryAxisPreservesRadius  (P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_BodyPatternMatchesAnalyticVolume  (P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_CountIncludesOriginal  (P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_DataIsStoredAsTransparentJson  (P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_DefinitionIsValidatedOnCreateAndEdit  (P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_DependsOnItsSourceAndParameters  (P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_DoesNotAccumulateAngularDrift  (P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_ExportsClosedStl  (P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_ExportsStep  (P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_FailedPatternSavesAndLoadsUnchanged  (P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_FailsAtomicallyWhenInstanceInvalid  (P11-FEAT-004 Hole, P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_FailuresLeaveTheDocumentAndUpstreamBodiesIntact  (P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_FourInstancesAreAtQuadrants  (P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_FullCircleDoesNotDuplicate360Degrees  (P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_HoleBoltCircleMatchesAnalyticVolume  (P11-FEAT-004 Hole, P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_InvalidInputsFailWithStructuredDiagnostics  (P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_MalformedDataIsRejectedWithTheJsonPath  (P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_ModelsAreValidatedLikeAnyOther  (P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_NegativeDirectionReversesOrder  (P11-FEAT-004 Hole, P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_PartialAngleIncludesExpectedEndpoints  (P11-FEAT-004 Hole, P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_PatternsChamferAndFilletByRotatedReferences  (P11-FEAT-002 Chamfer, P11-FEAT-003 Fillet, P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_RefusesUnsupportedSources  (P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_RegeneratesWhenAngleChanges  (P11-FEAT-004 Hole, P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_RegeneratesWhenAxisChanges  (P11-FEAT-004 Hole, P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_RegeneratesWhenCountChanges  (P11-FEAT-004 Hole, P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_RegeneratesWhenDirectionChanges  (P11-FEAT-004 Hole, P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_RegeneratesWhenSourceChanges  (P11-FEAT-004 Hole, P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_RegenerationIsDeterministic  (P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_RejectsInvalidAngle  (P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_RejectsZeroAxis  (P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_RejectsZeroCount  (P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_ReusesStableSourceReference  (P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_SaveLoadKeepsAnArbitraryAxis  (P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_SaveLoadPreservesDefinition  (P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_SourceOnTheAxis  (P11-FEAT-004 Hole, P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_SubtractiveExtrudePatternMatchesAnalyticVolume  (P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_TouchingAndOverlappingInstancesFuse  (P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_UndoRedoRestoresGeometry  (P11-FEAT-006 Circular pattern)
+  unit.CircularPattern_WorksOnRevolvedSource  (P11-FEAT-001 Revolve, P11-FEAT-006 Circular pattern)
+  unit.FilletFeature_DataIsStoredAsTransparentJson  (P11-FEAT-003 Fillet)
+  unit.FilletFeature_DefinitionIsValidatedOnCreateAndEdit  (P11-FEAT-003 Fillet)
+  unit.FilletFeature_DependsOnItsTargetAndRadiusParameter  (P11-FEAT-003 Fillet)
+  unit.FilletFeature_ExportsClosedStl  (P11-FEAT-003 Fillet)
+  unit.FilletFeature_ExportsStep  (P11-FEAT-003 Fillet)
+  unit.FilletFeature_FailedFilletSavesAndLoadsUnchanged  (P11-FEAT-003 Fillet)
+  unit.FilletFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact  (P11-FEAT-003 Fillet)
+  unit.FilletFeature_InvalidInputsFailWithStructuredDiagnostics  (P11-FEAT-003 Fillet)
+  unit.FilletFeature_MalformedDataIsRejectedWithTheJsonPath  (P11-FEAT-003 Fillet)
+  unit.FilletFeature_ModelsAreValidatedLikeAnyOther  (P11-FEAT-003 Fillet)
+  unit.FilletFeature_MultipleAndAdjacentEdgesMatchAnalyticVolume  (P11-FEAT-003 Fillet)
+  unit.FilletFeature_RadiusParameterDrivesTheFillet  (P11-FEAT-003 Fillet)
+  unit.FilletFeature_RefusesSubstitutionAfterTopologyChange  (P11-FEAT-003 Fillet)
+  unit.FilletFeature_RegeneratesAfterUpstreamDimensionChange  (P11-FEAT-003 Fillet)
+  unit.FilletFeature_RegenerationIsDeterministic  (P11-FEAT-003 Fillet)
+  unit.FilletFeature_SaveLoadPreservesCircleReferences  (P11-FEAT-001 Revolve, P11-FEAT-003 Fillet)
+  unit.FilletFeature_SaveLoadPreservesReferencesAndRadius  (P11-FEAT-003 Fillet)
+  unit.FilletFeature_SingleStraightEdgeMatchesAnalyticVolume  (P11-FEAT-003 Fillet)
+  unit.FilletFeature_UndoRedoRestoresGeometry  (P11-FEAT-003 Fillet)
+  unit.FilletFeature_WorksOnRevolvedBody  (P11-FEAT-001 Revolve, P11-FEAT-003 Fillet)
+  unit.Fillet_AdjacentEdgesAreBlendedAtTheirCorner  (P11-FEAT-003 Fillet)
+  unit.Fillet_CircularEdgeMatchesPappus  (P11-FEAT-003 Fillet)
+  unit.Fillet_ConcaveEdgeAddsMaterial  (P11-FEAT-003 Fillet)
+  unit.Fillet_IsDeterministic  (P11-FEAT-003 Fillet)
+  unit.Fillet_MultipleIndependentEdgesMatchAnalyticVolume  (P11-FEAT-003 Fillet)
+  unit.Fillet_RefusesEdgesWhereFacesJoinSmoothly  (P11-FEAT-003 Fillet)
+  unit.Fillet_RefusesRadiiThatDoNotFitBeforeTheKernel  (P11-FEAT-003 Fillet)
+  unit.Fillet_RejectsInvalidRequestsBeforeTheKernel  (P11-FEAT-003 Fillet)
+  unit.Fillet_SingleStraightEdgeMatchesAnalyticVolume  (P11-FEAT-003 Fillet)
+  unit.Fillet_TangentChainIsRoundedAsAWhole  (P11-FEAT-003 Fillet)
+  unit.Fillet_UnresolvableReferencesAreReportedNotGuessed  (P11-FEAT-003 Fillet)
+  unit.Full revolutions match analytic solids of revolution  (P11-FEAT-001 Revolve)
+  unit.HoleFeature_BlindHoleKeepsItsDepthWhenTheBodyChanges  (P11-FEAT-004 Hole)
+  unit.HoleFeature_BlindHoleMatchesAnalyticVolume  (P11-FEAT-004 Hole)
+  unit.HoleFeature_ComposesWithChamferAndFillet  (P11-FEAT-002 Chamfer, P11-FEAT-003 Fillet, P11-FEAT-004 Hole)
+  unit.HoleFeature_CounterboreMatchesAnalyticVolume  (P11-FEAT-004 Hole)
+  unit.HoleFeature_CountersinkMatchesAnalyticVolume  (P11-FEAT-004 Hole)
+  unit.HoleFeature_DataIsStoredAsTransparentJson  (P11-FEAT-004 Hole)
+  unit.HoleFeature_DefinitionIsValidatedOnCreateAndEdit  (P11-FEAT-004 Hole)
+  unit.HoleFeature_DependsOnItsTargetAndParameters  (P11-FEAT-004 Hole)
+  unit.HoleFeature_DoesNotSubstituteFaceAfterTopologyChange  (P11-FEAT-004 Hole)
+  unit.HoleFeature_ExportsClosedStl  (P11-FEAT-004 Hole)
+  unit.HoleFeature_ExportsStep  (P11-FEAT-004 Hole)
+  unit.HoleFeature_FailedHoleSavesAndLoadsUnchanged  (P11-FEAT-004 Hole)
+  unit.HoleFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact  (P11-FEAT-004 Hole)
+  unit.HoleFeature_InvalidInputsFailWithStructuredDiagnostics  (P11-FEAT-004 Hole)
+  unit.HoleFeature_MalformedDataIsRejectedWithTheJsonPath  (P11-FEAT-004 Hole)
+  unit.HoleFeature_ModelsAreValidatedLikeAnyOther  (P11-FEAT-004 Hole)
+  unit.HoleFeature_RegeneratesAfterDiameterChange  (P11-FEAT-004 Hole)
+  unit.HoleFeature_RegeneratesAfterPositionChange  (P11-FEAT-004 Hole)
+  unit.HoleFeature_RegenerationIsDeterministic  (P11-FEAT-004 Hole)
+  unit.HoleFeature_RejectsAmbiguousFaceReference  (P11-FEAT-004 Hole)
+  unit.HoleFeature_RejectsInvalidBlindDepth  (P11-FEAT-004 Hole)
+  unit.HoleFeature_RejectsMissingFace  (P11-FEAT-004 Hole)
+  unit.HoleFeature_RejectsNegativeDiameter  (P11-FEAT-004 Hole)
+  unit.HoleFeature_RejectsNonFiniteDiameter  (P11-FEAT-004 Hole)
+  unit.HoleFeature_RejectsZeroDiameter  (P11-FEAT-004 Hole)
+  unit.HoleFeature_SaveLoadKeepsAThroughHoleThrough  (P11-FEAT-004 Hole)
+  unit.HoleFeature_SaveLoadPreservesEngineeringIntent  (P11-FEAT-004 Hole)
+  unit.HoleFeature_ThroughHoleMatchesAnalyticVolume  (P11-FEAT-004 Hole)
+  unit.HoleFeature_ThroughHoleRemainsThroughAfterThicknessChange  (P11-FEAT-004 Hole)
+  unit.HoleFeature_UndoRedoRestoresGeometry  (P11-FEAT-004 Hole)
+  unit.HoleFeature_WorksOnAnExtrudedChain  (P11-FEAT-004 Hole)
+  unit.HoleFeature_WorksOnRevolvedBody  (P11-FEAT-001 Revolve, P11-FEAT-004 Hole)
+  unit.Hole_BlindHoleMatchesAnalyticVolume  (P11-FEAT-004 Hole)
+  unit.Hole_BlindHoleMayNotReachTheFarSide  (P11-FEAT-004 Hole)
+  unit.Hole_BlindHoleThatBreaksIntoACavityIsRefused  (P11-FEAT-004 Hole)
+  unit.Hole_CounterboreMatchesAnalyticVolume  (P11-FEAT-004 Hole)
+  unit.Hole_CountersinkMatchesAnalyticVolume  (P11-FEAT-004 Hole)
+  unit.Hole_DrillsIntoTheMaterialFromEitherSide  (P11-FEAT-004 Hole)
+  unit.Hole_IsDeterministic  (P11-FEAT-004 Hole)
+  unit.Hole_OnRevolvedEndFace  (P11-FEAT-001 Revolve, P11-FEAT-004 Hole)
+  unit.Hole_PositionIsWhereTheFaceCoordinatesSay  (P11-FEAT-004 Hole)
+  unit.Hole_RefusesHolesThatDoNotFitTheFace  (P11-FEAT-004 Hole)
+  unit.Hole_RejectsInvalidRequestsBeforeTheKernel  (P11-FEAT-004 Hole)
+  unit.Hole_ThatRemovesNothingMeasurableIsRefused  (P11-FEAT-004 Hole)
+  unit.Hole_ThroughHoleMatchesAnalyticVolume  (P11-FEAT-004 Hole)
+  unit.Hole_UnresolvablePlacementIsReportedNotGuessed  (P11-FEAT-004 Hole)
+  unit.LinearPattern_AdditivePatternMatchesAnalyticVolume  (P11-FEAT-005 Linear pattern)
+  unit.LinearPattern_BoundingBoxMatchesAnalyticExtent  (P11-FEAT-005 Linear pattern)
+  unit.LinearPattern_CountIncludesOriginal  (P11-FEAT-005 Linear pattern)
+  unit.LinearPattern_DataIsStoredAsTransparentJson  (P11-FEAT-005 Linear pattern)
+  unit.LinearPattern_DefinitionIsValidatedOnCreateAndEdit  (P11-FEAT-005 Linear pattern)
+  unit.LinearPattern_DependsOnItsSourceAndParameters  (P11-FEAT-005 Linear pattern)
+  unit.LinearPattern_DoesNotAccumulateTransformDrift  (P11-FEAT-005 Linear pattern)
+  unit.LinearPattern_ExportsStep  (P11-FEAT-005 Linear pattern)
+  unit.LinearPattern_ExportsStl  (P11-FEAT-005 Linear pattern)
+  unit.LinearPattern_FailedPatternSavesAndLoadsUnchanged  (P11-FEAT-005 Linear pattern)
+  unit.LinearPattern_FailsAtomicallyWhenInstanceInvalid  (P11-FEAT-004 Hole, P11-FEAT-005 Linear pattern)
+  unit.LinearPattern_FailuresLeaveTheDocumentAndUpstreamBodiesIntact  (P11-FEAT-005 Linear pattern)
+  unit.LinearPattern_HolePatternMatchesAnalyticVolume  (P11-FEAT-004 Hole, P11-FEAT-005 Linear pattern)
+  unit.LinearPattern_InvalidInputsFailWithStructuredDiagnostics  (P11-FEAT-005 Linear pattern)
+  unit.LinearPattern_MalformedDataIsRejectedWithTheJsonPath  (P11-FEAT-005 Linear pattern)
+  unit.LinearPattern_ModelsAreValidatedLikeAnyOther  (P11-FEAT-005 Linear pattern)
+  unit.LinearPattern_NonOverlappingBodiesMatchesAnalyticVolume  (P11-FEAT-005 Linear pattern)
+  unit.LinearPattern_NormalizesDirection  (P11-FEAT-005 Linear pattern)
+  unit.LinearPattern_PatternsChamferAndFilletByTranslatedReferences  (P11-FEAT-002 Chamfer, P11-FEAT-003 Fillet, P11-FEAT-005 Linear pattern)
+  unit.LinearPattern_RefusesUnsupportedSources  (P11-FEAT-005 Linear pattern)
+  unit.LinearPattern_RegeneratesWhenCountChanges  (P11-FEAT-004 Hole, P11-FEAT-005 Linear pattern)
+  unit.LinearPattern_RegeneratesWhenSourceChanges  (P11-FEAT-004 Hole, P11-FEAT-005 Linear pattern)
+  unit.LinearPattern_RegeneratesWhenSpacingChanges  (P11-FEAT-005 Linear pattern)
+  unit.LinearPattern_RegenerationIsDeterministic  (P11-FEAT-005 Linear pattern)
+  unit.LinearPattern_RejectsInvalidSpacing  (P11-FEAT-005 Linear pattern)
+  unit.LinearPattern_RejectsTooManyInstances  (P11-FEAT-005 Linear pattern)
+  unit.LinearPattern_RejectsZeroCount  (P11-FEAT-005 Linear pattern)
+  unit.LinearPattern_RejectsZeroDirection  (P11-FEAT-005 Linear pattern)
+  unit.LinearPattern_ReusesStableSourceReference  (P11-FEAT-005 Linear pattern)
+  unit.LinearPattern_ReverseDirectionWorks  (P11-FEAT-005 Linear pattern)
+  unit.LinearPattern_SaveLoadKeepsTheDirectionAsGiven  (P11-FEAT-005 Linear pattern)
+  unit.LinearPattern_SaveLoadPreservesDefinition  (P11-FEAT-005 Linear pattern)
+  unit.LinearPattern_SingleDirectionPlacesInstancesExactly  (P11-FEAT-005 Linear pattern)
+  unit.LinearPattern_SubtractiveExtrudePatternMatchesAnalyticVolume  (P11-FEAT-005 Linear pattern)
+  unit.LinearPattern_TouchingAndOverlappingInstancesFuse  (P11-FEAT-005 Linear pattern)
+  unit.LinearPattern_TwoDirectionGridHasExpectedInstanceCount  (P11-FEAT-004 Hole, P11-FEAT-005 Linear pattern)
+  unit.LinearPattern_UndoRedoRestoresGeometry  (P11-FEAT-005 Linear pattern)
+  unit.LinearPattern_WorksOnRevolvedSource  (P11-FEAT-001 Revolve, P11-FEAT-005 Linear pattern)
+  unit.LoftFeature_Add  (P11-FEAT-009 Loft)
+  unit.LoftFeature_CircularFrustumMatchesAnalyticVolume  (P11-FEAT-009 Loft)
+  unit.LoftFeature_CircularFrustumMatchesRevolve  (P11-FEAT-001 Revolve, P11-FEAT-009 Loft)
+  unit.LoftFeature_DataIsStoredAsTransparentJson  (P11-FEAT-009 Loft)
+  unit.LoftFeature_DefinitionIsValidatedOnCreateAndEdit  (P11-FEAT-009 Loft)
+  unit.LoftFeature_DependsOnEverySectionAndTarget  (P11-FEAT-009 Loft)
+  unit.LoftFeature_EqualCirclesMatchCylinderVolume  (P11-FEAT-009 Loft)
+  unit.LoftFeature_EqualRectanglesMatchPrismVolume  (P11-FEAT-009 Loft)
+  unit.LoftFeature_EqualSectionsMatchExtrude  (P11-FEAT-009 Loft)
+  unit.LoftFeature_ExportsClosedStl  (P11-FEAT-009 Loft)
+  unit.LoftFeature_ExportsStep  (P11-FEAT-009 Loft)
+  unit.LoftFeature_FailedLoftSavesAndLoadsUnchanged  (P11-FEAT-009 Loft)
+  unit.LoftFeature_FailsSafelyOnSelfIntersection  (P11-FEAT-009 Loft)
+  unit.LoftFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact  (P11-FEAT-009 Loft)
+  unit.LoftFeature_Intersect  (P11-FEAT-009 Loft)
+  unit.LoftFeature_MalformedDataIsRejectedWithTheJsonPath  (P11-FEAT-009 Loft)
+  unit.LoftFeature_ModelsAreValidatedLikeAnyOther  (P11-FEAT-009 Loft)
+  unit.LoftFeature_NewBody  (P11-FEAT-009 Loft)
+  unit.LoftFeature_OffsetSectionsProduceValidSolid  (P11-FEAT-009 Loft)
+  unit.LoftFeature_OperationsWithoutOverlapFollowTheSharedPolicy  (P11-FEAT-009 Loft)
+  unit.LoftFeature_PreservesSectionOrder  (P11-FEAT-009 Loft)
+  unit.LoftFeature_RectangularFrustumMatchesAnalyticVolume  (P11-FEAT-009 Loft)
+  unit.LoftFeature_RegeneratesWhenSectionChanges  (P11-FEAT-009 Loft)
+  unit.LoftFeature_RegeneratesWhenSpacingChanges  (P11-FEAT-009 Loft)
+  unit.LoftFeature_RegeneratesWhenTargetChanges  (P11-FEAT-009 Loft)
+  unit.LoftFeature_RegenerationIsDeterministic  (P11-FEAT-009 Loft)
+  unit.LoftFeature_RejectsCoincidentSections  (P11-FEAT-009 Loft)
+  unit.LoftFeature_RejectsIncompatibleSections  (P11-FEAT-009 Loft)
+  unit.LoftFeature_RejectsInvalidProfile  (P11-FEAT-009 Loft)
+  unit.LoftFeature_RejectsMissingProfile  (P11-FEAT-009 Loft)
+  unit.LoftFeature_RejectsOpenProfile  (P11-FEAT-009 Loft)
+  unit.LoftFeature_RejectsTooFewProfiles  (P11-FEAT-009 Loft)
+  unit.LoftFeature_Remove  (P11-FEAT-009 Loft)
+  unit.LoftFeature_SaveLoadPreservesSectionOrder  (P11-FEAT-009 Loft)
+  unit.LoftFeature_ThreeCircularSectionsMatchPiecewiseFrustums  (P11-FEAT-009 Loft)
+  unit.LoftFeature_UndoRedoRestoresGeometry  (P11-FEAT-009 Loft)
+  unit.Loft_ArcsMatchArcsOfEqualSweep  (P11-FEAT-009 Loft)
+  unit.Loft_BreaksTiesDeterministically  (P11-FEAT-009 Loft)
+  unit.Loft_CircularFrustumMatchesAnalyticVolumeAndRevolution  (P11-FEAT-009 Loft)
+  unit.Loft_EqualSectionsMatchPrisms  (P11-FEAT-009 Loft)
+  unit.Loft_KeepsTheOrderAndDirectionOfItsSections  (P11-FEAT-009 Loft)
+  unit.Loft_MatchesSectionsWithTheLeastTwist  (P11-FEAT-009 Loft)
+  unit.Loft_MultipleSectionsArePiecewiseRuled  (P11-FEAT-009 Loft)
+  unit.Loft_OffsetSectionsKeepTheirPositions  (P11-FEAT-009 Loft)
+  unit.Loft_PolygonsMatchFrustumsAndPrismatoids  (P11-FEAT-009 Loft)
+  unit.Loft_RejectsLoftsThatFoldOrIntersect  (P11-FEAT-009 Loft)
+  unit.Loft_RejectsSectionsItCannotLoft  (P11-FEAT-009 Loft)
+  unit.Loft_TwistedSectionsFollowTheTwistLaw  (P11-FEAT-009 Loft)
+  unit.Malformed revolve data is rejected with the JSON path  (P11-FEAT-001 Revolve)
+  unit.MirrorFeature_AdditiveBossMirrorMatchesAnalyticVolume  (P11-FEAT-007 Mirror)
+  unit.MirrorFeature_ArbitraryPlaneMatchesAnalyticPointReflection  (P11-FEAT-007 Mirror)
+  unit.MirrorFeature_BodyScopeMirrorsTheWholeBody  (P11-FEAT-004 Hole, P11-FEAT-007 Mirror)
+  unit.MirrorFeature_DataIsStoredAsTransparentJson  (P11-FEAT-007 Mirror)
+  unit.MirrorFeature_DefinitionIsValidatedOnCreateAndEdit  (P11-FEAT-007 Mirror)
+  unit.MirrorFeature_DependsOnItsSourceAndOffsetParameter  (P11-FEAT-007 Mirror)
+  unit.MirrorFeature_DoubleMirrorReturnsOriginal  (P11-FEAT-007 Mirror)
+  unit.MirrorFeature_ExportsClosedStl  (P11-FEAT-007 Mirror)
+  unit.MirrorFeature_ExportsStep  (P11-FEAT-007 Mirror)
+  unit.MirrorFeature_FailedMirrorSavesAndLoadsUnchanged  (P11-FEAT-007 Mirror)
+  unit.MirrorFeature_FailsAtomicallyWhenMirroredFeatureInvalid  (P11-FEAT-004 Hole, P11-FEAT-007 Mirror)
+  unit.MirrorFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact  (P11-FEAT-007 Mirror)
+  unit.MirrorFeature_HoleMirrorMatchesAnalyticVolume  (P11-FEAT-004 Hole, P11-FEAT-007 Mirror)
+  unit.MirrorFeature_InvalidInputsFailWithStructuredDiagnostics  (P11-FEAT-007 Mirror)
+  unit.MirrorFeature_KeepOriginalDoublesNonOverlappingBodyVolume  (P11-FEAT-007 Mirror)
+  unit.MirrorFeature_MalformedDataIsRejectedWithTheJsonPath  (P11-FEAT-007 Mirror)
+  unit.MirrorFeature_MirrorsChamferAndFilletByMirroredReferences  (P11-FEAT-002 Chamfer, P11-FEAT-003 Fillet, P11-FEAT-007 Mirror)
+  unit.MirrorFeature_MirrorsHoleTypesAndExtents  (P11-FEAT-004 Hole, P11-FEAT-007 Mirror)
+  unit.MirrorFeature_ModelsAreValidatedLikeAnyOther  (P11-FEAT-007 Mirror)
+  unit.MirrorFeature_PlaneThroughSourceGeometry  (P11-FEAT-004 Hole, P11-FEAT-007 Mirror)
+  unit.MirrorFeature_PreservesVolume  (P11-FEAT-007 Mirror)
+  unit.MirrorFeature_ReflectsAcrossOffsetPlane  (P11-FEAT-007 Mirror)
+  unit.MirrorFeature_ReflectsCubeAcrossYZPlane  (P11-FEAT-007 Mirror)
+  unit.MirrorFeature_RefusesUnsupportedSources  (P11-FEAT-007 Mirror)
+  unit.MirrorFeature_RegeneratesWhenPlaneMoves  (P11-FEAT-004 Hole, P11-FEAT-007 Mirror)
+  unit.MirrorFeature_RegeneratesWhenSourceChanges  (P11-FEAT-004 Hole, P11-FEAT-007 Mirror)
+  unit.MirrorFeature_RegenerationIsDeterministic  (P11-FEAT-007 Mirror)
+  unit.MirrorFeature_RejectsNonFinitePlane  (P11-FEAT-007 Mirror)
+  unit.MirrorFeature_RejectsZeroNormal  (P11-FEAT-007 Mirror)
+  unit.MirrorFeature_ReusesStableSourceReference  (P11-FEAT-007 Mirror)
+  unit.MirrorFeature_SaveLoadKeepsAnArbitraryPlane  (P11-FEAT-001 Revolve, P11-FEAT-007 Mirror)
+  unit.MirrorFeature_SaveLoadPreservesDefinition  (P11-FEAT-007 Mirror)
+  unit.MirrorFeature_UndoRedoRestoresGeometry  (P11-FEAT-004 Hole, P11-FEAT-007 Mirror)
+  unit.MirrorFeature_WorksWithExtrudedBody  (P11-FEAT-007 Mirror)
+  unit.MirrorFeature_WorksWithRevolvedBody  (P11-FEAT-001 Revolve, P11-FEAT-007 Mirror)
+  unit.P11-FEAT-001 acceptance: a full revolve of a constrained profile matches the analytic solid  (P11-FEAT-001 Revolve)
+  unit.P11-FEAT-001 acceptance: changing the angle or the radius regenerates the revolve and its dependents  (P11-FEAT-001 Revolve)
+  unit.P11-FEAT-001 acceptance: invalid revolves fail with structured diagnostics  (P11-FEAT-001 Revolve)
+  unit.P11-FEAT-001 acceptance: revolves survive save, destroy, load and regenerate  (P11-FEAT-001 Revolve)
+  unit.Partial revolutions scale with the sweep angle (Pappus)  (P11-FEAT-001 Revolve)
+  unit.Partial revolves give proportional volumes in the chosen direction  (P11-FEAT-001 Revolve)
+  unit.Profiles that cross the axis are rejected  (P11-FEAT-001 Revolve)
+  unit.ReferenceModel_AllModelsBuildInOneProcess  (P11-REF-001 Reference models)
+  unit.ReferenceModel_AllModelsRegenerateAfterAChange  (P11-REF-001 Reference models)
+  unit.ReferenceModel_AllModelsStressRegression  (P11-REF-001 Reference models)
+  unit.ReferenceModel_AnalyticToolkit  (P11-REF-001 Reference models)
+  unit.ReferenceModel_BearingHousingBuildsValidGeometry  (P11-REF-001 Reference models)
+  unit.ReferenceModel_BearingHousingExports  (P11-REF-001 Reference models)
+  unit.ReferenceModel_BearingHousingFailsSafelyOnInvalidParameters  (P11-REF-001 Reference models)
+  unit.ReferenceModel_BearingHousingMatchesIndependentProperties  (P11-REF-001 Reference models)
+  unit.ReferenceModel_BearingHousingRegeneratesAfterParameterChanges  (P11-REF-001 Reference models)
+  unit.ReferenceModel_BearingHousingRegeneratesDeterministically  (P11-REF-001 Reference models)
+  unit.ReferenceModel_BearingHousingSaveLoad  (P11-REF-001 Reference models)
+  unit.ReferenceModel_BearingHousingUndoRedo  (P11-REF-001 Reference models)
+  unit.ReferenceModel_FeatureCoverage  (P11-REF-001 Reference models)
+  unit.ReferenceModel_FlangeBoltPatternPositionsCorrect  (P11-REF-001 Reference models)
+  unit.ReferenceModel_FlangeBuildsValidGeometry  (P11-REF-001 Reference models)
+  unit.ReferenceModel_FlangeExports  (P11-REF-001 Reference models)
+  unit.ReferenceModel_FlangeFailsSafelyOnInvalidParameters  (P11-REF-001 Reference models)
+  unit.ReferenceModel_FlangeMatchesAnalyticVolume  (P11-REF-001 Reference models)
+  unit.ReferenceModel_FlangeRegeneratesAfterParameterChanges  (P11-REF-001 Reference models)
+  unit.ReferenceModel_FlangeRegeneratesDeterministically  (P11-REF-001 Reference models)
+  unit.ReferenceModel_FlangeSaveLoad  (P11-REF-001 Reference models)
+  unit.ReferenceModel_FlangeUndoRedo  (P11-REF-001 Reference models)
+  unit.ReferenceModel_MountingBracketBuildsValidGeometry  (P11-REF-001 Reference models)
+  unit.ReferenceModel_MountingBracketExports  (P11-REF-001 Reference models)
+  unit.ReferenceModel_MountingBracketFailsSafelyOnInvalidParameters  (P11-REF-001 Reference models)
+  unit.ReferenceModel_MountingBracketMatchesIndependentProperties  (P11-REF-001 Reference models)
+  unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges  (P11-REF-001 Reference models)
+  unit.ReferenceModel_MountingBracketRegeneratesDeterministically  (P11-REF-001 Reference models)
+  unit.ReferenceModel_MountingBracketSaveLoad  (P11-REF-001 Reference models)
+  unit.ReferenceModel_MountingBracketUndoRedo  (P11-REF-001 Reference models)
+  unit.ReferenceModel_PulleyBuildsValidGeometry  (P11-REF-001 Reference models)
+  unit.ReferenceModel_PulleyExports  (P11-REF-001 Reference models)
+  unit.ReferenceModel_PulleyFailsSafelyOnInvalidParameters  (P11-REF-001 Reference models)
+  unit.ReferenceModel_PulleyMatchesIndependentProperties  (P11-REF-001 Reference models)
+  unit.ReferenceModel_PulleyRegeneratesAfterParameterChanges  (P11-REF-001 Reference models)
+  unit.ReferenceModel_PulleyRegeneratesDeterministically  (P11-REF-001 Reference models)
+  unit.ReferenceModel_PulleySaveLoad  (P11-REF-001 Reference models)
+  unit.ReferenceModel_PulleyUndoRedo  (P11-REF-001 Reference models)
+  unit.ReferenceModel_SavedModelsMatchTheBuilders  (P11-REF-001 Reference models)
+  unit.ReferenceModel_ShaftBuildsValidGeometry  (P11-REF-001 Reference models)
+  unit.ReferenceModel_ShaftExports  (P11-REF-001 Reference models)
+  unit.ReferenceModel_ShaftFailsSafelyOnInvalidParameters  (P11-REF-001 Reference models)
+  unit.ReferenceModel_ShaftMatchesAnalyticProperties  (P11-REF-001 Reference models)
+  unit.ReferenceModel_ShaftRegeneratesAfterParameterChanges  (P11-REF-001 Reference models)
+  unit.ReferenceModel_ShaftRegeneratesDeterministically  (P11-REF-001 Reference models)
+  unit.ReferenceModel_ShaftSaveLoad  (P11-REF-001 Reference models)
+  unit.ReferenceModel_ShaftUndoRedo  (P11-REF-001 Reference models)
+  unit.ReferenceModel_UBoltBuildsValidGeometry  (P11-REF-001 Reference models)
+  unit.ReferenceModel_UBoltMatchesIndependentProperties  (P11-REF-001 Reference models)
+  unit.ReferenceModel_UBoltRegeneratesAfterParameterChanges  (P11-REF-001 Reference models)
+  unit.ReferenceModel_UBoltRegeneratesDeterministically  (P11-REF-001 Reference models)
+  unit.ReferenceModel_UBoltSaveLoadAndExports  (P11-REF-001 Reference models)
+  unit.ReferenceModel_UBoltUndoRedoAndFailure  (P11-REF-001 Reference models)
+  unit.Revolution axes must be finite, with a real direction  (P11-FEAT-001 Revolve)
+  unit.Revolution rejects invalid axes and sweeps  (P11-FEAT-001 Revolve)
+  unit.Revolution works in any plane containing the axis  (P11-FEAT-001 Revolve)
+  unit.Revolve data is stored as transparent JSON  (P11-FEAT-001 Revolve)
+  unit.Revolve definitions are validated  (P11-FEAT-001 Revolve)
+  unit.Revolve models are validated like any other  (P11-FEAT-001 Revolve)
+  unit.Revolved bodies export to STEP and STL  (P11-FEAT-001 Revolve)
+  unit.Revolves join, cut and intersect with target bodies  (P11-FEAT-001 Revolve)
+  unit.Revolves with missing or unusable inputs fail with structured diagnostics  (P11-FEAT-001 Revolve)
+  unit.RigidTransform_ReflectionIsAnInvolution  (P11-FEAT-007 Mirror)
+  unit.RigidTransform_ReflectionMatchesPointFormula  (P11-FEAT-007 Mirror)
+  unit.RigidTransform_ReflectionNegatesSignedDistanceToThePlane  (P11-FEAT-007 Mirror)
+  unit.Self-intersecting profiles are rejected, not revolved  (P11-FEAT-001 Revolve)
+  unit.SweepFeature_Add  (P11-FEAT-008 Sweep)
+  unit.SweepFeature_ClosedCircularPathMatchesTorusVolume  (P11-FEAT-008 Sweep)
+  unit.SweepFeature_DataIsStoredAsTransparentJson  (P11-FEAT-008 Sweep)
+  unit.SweepFeature_DefinitionIsValidatedOnCreateAndEdit  (P11-FEAT-008 Sweep)
+  unit.SweepFeature_DependsOnProfilePathAndTarget  (P11-FEAT-008 Sweep)
+  unit.SweepFeature_ExportsClosedStl  (P11-FEAT-008 Sweep)
+  unit.SweepFeature_ExportsStep  (P11-FEAT-008 Sweep)
+  unit.SweepFeature_FailedSweepSavesAndLoadsUnchanged  (P11-FEAT-008 Sweep)
+  unit.SweepFeature_FailsSafelyOnSelfIntersection  (P11-FEAT-008 Sweep)
+  unit.SweepFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact  (P11-FEAT-008 Sweep)
+  unit.SweepFeature_Intersect  (P11-FEAT-008 Sweep)
+  unit.SweepFeature_MalformedDataIsRejectedWithTheJsonPath  (P11-FEAT-008 Sweep)
+  unit.SweepFeature_MixedLineArcPathProducesValidSolid  (P11-FEAT-008 Sweep)
+  unit.SweepFeature_ModelsAreValidatedLikeAnyOther  (P11-FEAT-008 Sweep)
+  unit.SweepFeature_NewBody  (P11-FEAT-008 Sweep)
+  unit.SweepFeature_PolylinePathProducesValidSolid  (P11-FEAT-008 Sweep)
+  unit.SweepFeature_QuarterCircleMatchesAnalyticVolume  (P11-FEAT-008 Sweep)
+  unit.SweepFeature_RegeneratesWhenPathChanges  (P11-FEAT-008 Sweep)
+  unit.SweepFeature_RegeneratesWhenProfileChanges  (P11-FEAT-008 Sweep)
+  unit.SweepFeature_RegeneratesWhenTargetChanges  (P11-FEAT-008 Sweep)
+  unit.SweepFeature_RegenerationIsDeterministic  (P11-FEAT-008 Sweep)
+  unit.SweepFeature_RejectsDisconnectedPath  (P11-FEAT-008 Sweep)
+  unit.SweepFeature_RejectsInvalidProfiles  (P11-FEAT-008 Sweep)
+  unit.SweepFeature_RejectsMisplacedProfile  (P11-FEAT-008 Sweep)
+  unit.SweepFeature_RejectsMissingPath  (P11-FEAT-008 Sweep)
+  unit.SweepFeature_RejectsMissingProfile  (P11-FEAT-008 Sweep)
+  unit.SweepFeature_RejectsNonFinitePath  (P11-FEAT-008 Sweep)
+  unit.SweepFeature_RejectsOpenProfile  (P11-FEAT-008 Sweep)
+  unit.SweepFeature_RejectsUnsupportedCorners  (P11-FEAT-008 Sweep)
+  unit.SweepFeature_RejectsZeroLengthSegment  (P11-FEAT-008 Sweep)
+  unit.SweepFeature_Remove  (P11-FEAT-008 Sweep)
+  unit.SweepFeature_ReversedPathSweepsTheOtherWay  (P11-FEAT-008 Sweep)
+  unit.SweepFeature_SaveLoadPreservesDefinition  (P11-FEAT-008 Sweep)
+  unit.SweepFeature_StraightCircleMatchesAnalyticVolume  (P11-FEAT-008 Sweep)
+  unit.SweepFeature_StraightPathMatchesExtrude  (P11-FEAT-008 Sweep)
+  unit.SweepFeature_StraightRectangleMatchesAnalyticVolume  (P11-FEAT-008 Sweep)
+  unit.SweepFeature_TorusMatchesRevolve  (P11-FEAT-001 Revolve, P11-FEAT-008 Sweep)
+  unit.SweepFeature_UndoRedoRestoresGeometry  (P11-FEAT-008 Sweep)
+  unit.Sweep_ArcsAndCirclesMatchPappus  (P11-FEAT-008 Sweep)
+  unit.Sweep_CornersAreMitred  (P11-FEAT-008 Sweep)
+  unit.Sweep_KeepsTheProfilesOrientation  (P11-FEAT-008 Sweep)
+  unit.Sweep_RegionCentroidIsExact  (P11-FEAT-008 Sweep)
+  unit.Sweep_RejectsCornersItCannotMitre  (P11-FEAT-008 Sweep)
+  unit.Sweep_RejectsMalformedPaths  (P11-FEAT-008 Sweep)
+  unit.Sweep_RejectsMisplacedProfiles  (P11-FEAT-008 Sweep)
+  unit.Sweep_RejectsSolidsThatFoldOrIntersect  (P11-FEAT-008 Sweep)
+  unit.Sweep_StraightPathsMatchPrisms  (P11-FEAT-008 Sweep)
+  unit.The sweep sense follows the right-hand rule about the axis  (P11-FEAT-001 Revolve)
+  unit.Transform_MirroredBodyKeepsVolumeAndPointsOutward  (P11-FEAT-007 Mirror)
+  unit.Transform_MirroredReferencesDescribeTheMirroredGeometry  (P11-FEAT-007 Mirror)
+  unit.Undo and redo of revolve commands restore identical geometry  (P11-FEAT-001 Revolve)
+  unit.info and validate describe chamfers  (P11-FEAT-002 Chamfer)
+  unit.info and validate describe circular patterns  (P11-FEAT-006 Circular pattern)
+  unit.info and validate describe fillets  (P11-FEAT-003 Fillet)
+  unit.info and validate describe holes  (P11-FEAT-004 Hole)
+  unit.info and validate describe linear patterns  (P11-FEAT-005 Linear pattern)
+  unit.info and validate describe lofts  (P11-FEAT-009 Loft)
+  unit.info and validate describe mirrors  (P11-FEAT-007 Mirror)
+  unit.info and validate describe revolves  (P11-FEAT-001 Revolve)
+  unit.info and validate describe sweeps  (P11-FEAT-008 Sweep)

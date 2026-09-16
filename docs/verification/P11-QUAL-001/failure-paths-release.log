@@ -1,0 +1,253 @@
+Test project C:/Users/uqhas/OneDrive/Desktop/CAD/build/release
+        Start   1: unit.A boolean with an empty target body fails instead of producing geometry
+  1/124 Test   #1: unit.A boolean with an empty target body fails instead of producing geometry ......   Passed    0.17 sec
+        Start  10: unit.A history refuses to operate on another document
+  2/124 Test  #10: unit.A history refuses to operate on another document .............................   Passed    0.10 sec
+        Start  27: unit.Assigning a value of another dimension fails and changes nothing
+  3/124 Test  #27: unit.Assigning a value of another dimension fails and changes nothing .............   Passed    0.10 sec
+        Start  44: unit.CLI rejects unknown commands
+  4/124 Test  #44: unit.CLI rejects unknown commands .................................................   Passed    0.10 sec
+        Start  46: unit.CLI without arguments prints usage to stderr and fails
+  5/124 Test  #46: unit.CLI without arguments prints usage to stderr and fails .......................   Passed    0.10 sec
+        Start  51: unit.ChamferFeature_EdgeChangedUpstreamFailsInsteadOfSubstituting
+  6/124 Test  #51: unit.ChamferFeature_EdgeChangedUpstreamFailsInsteadOfSubstituting .................   Passed    0.32 sec
+        Start  53: unit.ChamferFeature_FailedChamferSavesAndLoadsUnchanged
+  7/124 Test  #53: unit.ChamferFeature_FailedChamferSavesAndLoadsUnchanged ...........................   Passed    0.18 sec
+        Start  54: unit.ChamferFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact
+  8/124 Test  #54: unit.ChamferFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact ...............   Passed    0.19 sec
+        Start  55: unit.ChamferFeature_InvalidInputsFailWithStructuredDiagnostics
+  9/124 Test  #55: unit.ChamferFeature_InvalidInputsFailWithStructuredDiagnostics ....................   Passed    0.60 sec
+        Start  69: unit.Chamfer_FollowsTangentEdgesAndRejectsTwoReferencesToOneChain
+ 10/124 Test  #69: unit.Chamfer_FollowsTangentEdgesAndRejectsTwoReferencesToOneChain .................   Passed    0.25 sec
+        Start  72: unit.Chamfer_RefusesChamfersThatDoNotFitBeforeTheKernel
+ 11/124 Test  #72: unit.Chamfer_RefusesChamfersThatDoNotFitBeforeTheKernel ...........................   Passed    0.39 sec
+        Start  73: unit.Chamfer_RejectsInvalidRequestsBeforeTheKernel
+ 12/124 Test  #73: unit.Chamfer_RejectsInvalidRequestsBeforeTheKernel ................................   Passed    0.10 sec
+        Start  74: unit.Chamfer_RejectsOversizedDistance
+ 13/124 Test  #74: unit.Chamfer_RejectsOversizedDistance .............................................   Passed    0.11 sec
+        Start  92: unit.CircularPattern_FailedPatternSavesAndLoadsUnchanged
+ 14/124 Test  #92: unit.CircularPattern_FailedPatternSavesAndLoadsUnchanged ..........................   Passed    0.72 sec
+        Start  93: unit.CircularPattern_FailsAtomicallyWhenInstanceInvalid
+ 15/124 Test  #93: unit.CircularPattern_FailsAtomicallyWhenInstanceInvalid ...........................   Passed    0.52 sec
+        Start  94: unit.CircularPattern_FailuresLeaveTheDocumentAndUpstreamBodiesIntact
+ 16/124 Test  #94: unit.CircularPattern_FailuresLeaveTheDocumentAndUpstreamBodiesIntact ..............   Passed    1.03 sec
+        Start  98: unit.CircularPattern_InvalidInputsFailWithStructuredDiagnostics
+ 17/124 Test  #98: unit.CircularPattern_InvalidInputsFailWithStructuredDiagnostics ...................   Passed    0.53 sec
+        Start 104: unit.CircularPattern_RefusesUnsupportedSources
+ 18/124 Test #104: unit.CircularPattern_RefusesUnsupportedSources ....................................   Passed    1.03 sec
+        Start 111: unit.CircularPattern_RejectsInvalidAngle
+ 19/124 Test #111: unit.CircularPattern_RejectsInvalidAngle ..........................................   Passed    1.01 sec
+        Start 112: unit.CircularPattern_RejectsZeroAxis
+ 20/124 Test #112: unit.CircularPattern_RejectsZeroAxis ..............................................   Passed    0.13 sec
+        Start 113: unit.CircularPattern_RejectsZeroCount
+ 21/124 Test #113: unit.CircularPattern_RejectsZeroCount .............................................   Passed    0.21 sec
+        Start 138: unit.Default-constructed IDs are invalid
+ 22/124 Test #138: unit.Default-constructed IDs are invalid ..........................................   Passed    0.09 sec
+        Start 149: unit.Document STEP export reports failures without writing
+ 23/124 Test #149: unit.Document STEP export reports failures without writing ........................   Passed    0.26 sec
+        Start 170: unit.Exports of a document without bodies fail
+ 24/124 Test #170: unit.Exports of a document without bodies fail ....................................   Passed    0.11 sec
+        Start 180: unit.Failed commands are not recorded
+ 25/124 Test #180: unit.Failed commands are not recorded .............................................   Passed    0.20 sec
+        Start 181: unit.Failures are reported and block dependents until fixed
+ 26/124 Test #181: unit.Failures are reported and block dependents until fixed .......................   Passed    0.12 sec
+        Start 182: unit.Features that fail to build are regeneration errors
+ 27/124 Test #182: unit.Features that fail to build are regeneration errors ..........................   Passed    0.12 sec
+        Start 189: unit.FilletFeature_FailedFilletSavesAndLoadsUnchanged
+ 28/124 Test #189: unit.FilletFeature_FailedFilletSavesAndLoadsUnchanged .............................   Passed    0.16 sec
+        Start 190: unit.FilletFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact
+ 29/124 Test #190: unit.FilletFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact ................   Passed    0.18 sec
+        Start 191: unit.FilletFeature_InvalidInputsFailWithStructuredDiagnostics
+ 30/124 Test #191: unit.FilletFeature_InvalidInputsFailWithStructuredDiagnostics .....................   Passed    0.62 sec
+        Start 196: unit.FilletFeature_RefusesSubstitutionAfterTopologyChange
+ 31/124 Test #196: unit.FilletFeature_RefusesSubstitutionAfterTopologyChange .........................   Passed    0.43 sec
+        Start 209: unit.Fillet_RefusesEdgesWhereFacesJoinSmoothly
+ 32/124 Test #209: unit.Fillet_RefusesEdgesWhereFacesJoinSmoothly ....................................   Passed    0.10 sec
+        Start 210: unit.Fillet_RefusesRadiiThatDoNotFitBeforeTheKernel
+ 33/124 Test #210: unit.Fillet_RefusesRadiiThatDoNotFitBeforeTheKernel ...............................   Passed    0.51 sec
+        Start 211: unit.Fillet_RejectsInvalidRequestsBeforeTheKernel
+ 34/124 Test #211: unit.Fillet_RejectsInvalidRequestsBeforeTheKernel .................................   Passed    0.14 sec
+        Start 231: unit.HoleFeature_FailedHoleSavesAndLoadsUnchanged
+ 35/124 Test #231: unit.HoleFeature_FailedHoleSavesAndLoadsUnchanged .................................   Passed    0.19 sec
+        Start 232: unit.HoleFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact
+ 36/124 Test #232: unit.HoleFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact ..................   Passed    0.27 sec
+        Start 233: unit.HoleFeature_InvalidInputsFailWithStructuredDiagnostics
+ 37/124 Test #233: unit.HoleFeature_InvalidInputsFailWithStructuredDiagnostics .......................   Passed    0.60 sec
+        Start 239: unit.HoleFeature_RejectsAmbiguousFaceReference
+ 38/124 Test #239: unit.HoleFeature_RejectsAmbiguousFaceReference ....................................   Passed    0.16 sec
+        Start 240: unit.HoleFeature_RejectsInvalidBlindDepth
+ 39/124 Test #240: unit.HoleFeature_RejectsInvalidBlindDepth .........................................   Passed    0.25 sec
+        Start 241: unit.HoleFeature_RejectsMissingFace
+ 40/124 Test #241: unit.HoleFeature_RejectsMissingFace ...............................................   Passed    0.22 sec
+        Start 242: unit.HoleFeature_RejectsNegativeDiameter
+ 41/124 Test #242: unit.HoleFeature_RejectsNegativeDiameter ..........................................   Passed    0.14 sec
+        Start 243: unit.HoleFeature_RejectsNonFiniteDiameter
+ 42/124 Test #243: unit.HoleFeature_RejectsNonFiniteDiameter .........................................   Passed    0.14 sec
+        Start 244: unit.HoleFeature_RejectsZeroDiameter
+ 43/124 Test #244: unit.HoleFeature_RejectsZeroDiameter ..............................................   Passed    0.13 sec
+        Start 261: unit.Hole_RefusesHolesThatDoNotFitTheFace
+ 44/124 Test #261: unit.Hole_RefusesHolesThatDoNotFitTheFace .........................................   Passed    0.12 sec
+        Start 262: unit.Hole_RejectsInvalidRequestsBeforeTheKernel
+ 45/124 Test #262: unit.Hole_RejectsInvalidRequestsBeforeTheKernel ...................................   Passed    0.09 sec
+        Start 279: unit.Invalid document files are rejected with the JSON path
+ 46/124 Test #279: unit.Invalid document files are rejected with the JSON path .......................   Passed    0.10 sec
+        Start 280: unit.Invalid entities are rejected and leave the sketch unchanged
+ 47/124 Test #280: unit.Invalid entities are rejected and leave the sketch unchanged .................   Passed    0.09 sec
+        Start 281: unit.Invalid frames are rejected
+ 48/124 Test #281: unit.Invalid frames are rejected ..................................................   Passed    0.09 sec
+        Start 282: unit.Invalid parameters are rejected at creation
+ 49/124 Test #282: unit.Invalid parameters are rejected at creation ..................................   Passed    0.15 sec
+        Start 296: unit.LinearPattern_FailedPatternSavesAndLoadsUnchanged
+ 50/124 Test #296: unit.LinearPattern_FailedPatternSavesAndLoadsUnchanged ............................   Passed    1.06 sec
+        Start 297: unit.LinearPattern_FailsAtomicallyWhenInstanceInvalid
+ 51/124 Test #297: unit.LinearPattern_FailsAtomicallyWhenInstanceInvalid .............................   Passed    1.55 sec
+        Start 298: unit.LinearPattern_FailuresLeaveTheDocumentAndUpstreamBodiesIntact
+ 52/124 Test #298: unit.LinearPattern_FailuresLeaveTheDocumentAndUpstreamBodiesIntact ................   Passed    0.96 sec
+        Start 300: unit.LinearPattern_InvalidInputsFailWithStructuredDiagnostics
+ 53/124 Test #300: unit.LinearPattern_InvalidInputsFailWithStructuredDiagnostics .....................   Passed    0.49 sec
+        Start 306: unit.LinearPattern_RefusesUnsupportedSources
+ 54/124 Test #306: unit.LinearPattern_RefusesUnsupportedSources ......................................   Passed    0.22 sec
+        Start 311: unit.LinearPattern_RejectsInvalidSpacing
+ 55/124 Test #311: unit.LinearPattern_RejectsInvalidSpacing ..........................................   Passed    0.19 sec
+        Start 312: unit.LinearPattern_RejectsTooManyInstances
+ 56/124 Test #312: unit.LinearPattern_RejectsTooManyInstances ........................................   Passed    0.20 sec
+        Start 313: unit.LinearPattern_RejectsZeroCount
+ 57/124 Test #313: unit.LinearPattern_RejectsZeroCount ...............................................   Passed    0.18 sec
+        Start 314: unit.LinearPattern_RejectsZeroDirection
+ 58/124 Test #314: unit.LinearPattern_RejectsZeroDirection ...........................................   Passed    0.10 sec
+        Start 338: unit.LoftFeature_FailedLoftSavesAndLoadsUnchanged
+ 59/124 Test #338: unit.LoftFeature_FailedLoftSavesAndLoadsUnchanged .................................   Passed    0.14 sec
+        Start 339: unit.LoftFeature_FailsSafelyOnSelfIntersection
+ 60/124 Test #339: unit.LoftFeature_FailsSafelyOnSelfIntersection ....................................   Passed    0.81 sec
+        Start 340: unit.LoftFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact
+ 61/124 Test #340: unit.LoftFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact ..................   Passed    0.17 sec
+        Start 353: unit.LoftFeature_RejectsCoincidentSections
+ 62/124 Test #353: unit.LoftFeature_RejectsCoincidentSections ........................................   Passed    0.08 sec
+        Start 354: unit.LoftFeature_RejectsIncompatibleSections
+ 63/124 Test #354: unit.LoftFeature_RejectsIncompatibleSections ......................................   Passed    0.09 sec
+        Start 355: unit.LoftFeature_RejectsInvalidProfile
+ 64/124 Test #355: unit.LoftFeature_RejectsInvalidProfile ............................................   Passed    0.09 sec
+        Start 356: unit.LoftFeature_RejectsMissingProfile
+ 65/124 Test #356: unit.LoftFeature_RejectsMissingProfile ............................................   Passed    0.16 sec
+        Start 357: unit.LoftFeature_RejectsOpenProfile
+ 66/124 Test #357: unit.LoftFeature_RejectsOpenProfile ...............................................   Passed    0.08 sec
+        Start 358: unit.LoftFeature_RejectsTooFewProfiles
+ 67/124 Test #358: unit.LoftFeature_RejectsTooFewProfiles ............................................   Passed    0.10 sec
+        Start 372: unit.Loft_RejectsLoftsThatFoldOrIntersect
+ 68/124 Test #372: unit.Loft_RejectsLoftsThatFoldOrIntersect .........................................   Passed    1.16 sec
+        Start 373: unit.Loft_RejectsSectionsItCannotLoft
+ 69/124 Test #373: unit.Loft_RejectsSectionsItCannotLoft .............................................   Passed    0.09 sec
+        Start 393: unit.MirrorFeature_FailedMirrorSavesAndLoadsUnchanged
+ 70/124 Test #393: unit.MirrorFeature_FailedMirrorSavesAndLoadsUnchanged .............................   Passed    0.30 sec
+        Start 394: unit.MirrorFeature_FailsAtomicallyWhenMirroredFeatureInvalid
+ 71/124 Test #394: unit.MirrorFeature_FailsAtomicallyWhenMirroredFeatureInvalid ......................   Passed    0.44 sec
+        Start 395: unit.MirrorFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact
+ 72/124 Test #395: unit.MirrorFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact ................   Passed    0.31 sec
+        Start 397: unit.MirrorFeature_InvalidInputsFailWithStructuredDiagnostics
+ 73/124 Test #397: unit.MirrorFeature_InvalidInputsFailWithStructuredDiagnostics .....................   Passed    0.47 sec
+        Start 407: unit.MirrorFeature_RefusesUnsupportedSources
+ 74/124 Test #407: unit.MirrorFeature_RefusesUnsupportedSources ......................................   Passed    0.54 sec
+        Start 411: unit.MirrorFeature_RejectsNonFinitePlane
+ 75/124 Test #411: unit.MirrorFeature_RejectsNonFinitePlane ..........................................   Passed    0.09 sec
+        Start 412: unit.MirrorFeature_RejectsZeroNormal
+ 76/124 Test #412: unit.MirrorFeature_RejectsZeroNormal ..............................................   Passed    0.08 sec
+        Start 419: unit.Missing references are reported as failures
+ 77/124 Test #419: unit.Missing references are reported as failures ..................................   Passed    0.11 sec
+        Start 421: unit.ModifyParameterCommand is atomic
+ 78/124 Test #421: unit.ModifyParameterCommand is atomic .............................................   Passed    0.09 sec
+        Start 435: unit.P11-FEAT-001 acceptance: invalid revolves fail with structured diagnostics
+ 79/124 Test #435: unit.P11-FEAT-001 acceptance: invalid revolves fail with structured diagnostics ...   Passed    0.43 sec
+        Start 461: unit.Reading a parameter as the wrong quantity type fails
+ 80/124 Test #461: unit.Reading a parameter as the wrong quantity type fails .........................   Passed    0.09 sec
+        Start 468: unit.ReferenceModel_BearingHousingFailsSafelyOnInvalidParameters
+ 81/124 Test #468: unit.ReferenceModel_BearingHousingFailsSafelyOnInvalidParameters ..................   Passed    3.67 sec
+        Start 478: unit.ReferenceModel_FlangeFailsSafelyOnInvalidParameters
+ 82/124 Test #478: unit.ReferenceModel_FlangeFailsSafelyOnInvalidParameters ..........................   Passed    1.76 sec
+        Start 486: unit.ReferenceModel_MountingBracketFailsSafelyOnInvalidParameters
+ 83/124 Test #486: unit.ReferenceModel_MountingBracketFailsSafelyOnInvalidParameters .................   Passed    2.20 sec
+        Start 494: unit.ReferenceModel_PulleyFailsSafelyOnInvalidParameters
+ 84/124 Test #494: unit.ReferenceModel_PulleyFailsSafelyOnInvalidParameters ..........................   Passed    1.84 sec
+        Start 503: unit.ReferenceModel_ShaftFailsSafelyOnInvalidParameters
+ 85/124 Test #503: unit.ReferenceModel_ShaftFailsSafelyOnInvalidParameters ...........................   Passed    1.59 sec
+        Start 514: unit.ReferenceModel_UBoltUndoRedoAndFailure
+ 86/124 Test #514: unit.ReferenceModel_UBoltUndoRedoAndFailure .......................................   Passed    1.83 sec
+        Start 527: unit.Revolution rejects invalid axes and sweeps
+ 87/124 Test #527: unit.Revolution rejects invalid axes and sweeps ...................................   Passed    0.11 sec
+        Start 534: unit.Revolves with missing or unusable inputs fail with structured diagnostics
+ 88/124 Test #534: unit.Revolves with missing or unusable inputs fail with structured diagnostics ....   Passed    0.36 sec
+        Start 546: unit.STEP output rejects missing and empty bodies
+ 89/124 Test #546: unit.STEP output rejects missing and empty bodies .................................   Passed    0.10 sec
+        Start 547: unit.STL export fails cleanly when there is nothing valid to write
+ 90/124 Test #547: unit.STL export fails cleanly when there is nothing valid to write ................   Passed    0.18 sec
+        Start 549: unit.STL output rejects what it cannot represent
+ 91/124 Test #549: unit.STL output rejects what it cannot represent ..................................   Passed    0.10 sec
+        Start 570: unit.Solver: running out of iterations is a solver failure
+ 92/124 Test #570: unit.Solver: running out of iterations is a solver failure ........................   Passed    0.11 sec
+        Start 593: unit.SweepFeature_FailedSweepSavesAndLoadsUnchanged
+ 93/124 Test #593: unit.SweepFeature_FailedSweepSavesAndLoadsUnchanged ...............................   Passed    0.18 sec
+        Start 594: unit.SweepFeature_FailsSafelyOnSelfIntersection
+ 94/124 Test #594: unit.SweepFeature_FailsSafelyOnSelfIntersection ...................................   Passed    0.23 sec
+        Start 595: unit.SweepFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact
+ 95/124 Test #595: unit.SweepFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact .................   Passed    0.21 sec
+        Start 607: unit.SweepFeature_RejectsDisconnectedPath
+ 96/124 Test #607: unit.SweepFeature_RejectsDisconnectedPath .........................................   Passed    0.09 sec
+        Start 608: unit.SweepFeature_RejectsInvalidProfiles
+ 97/124 Test #608: unit.SweepFeature_RejectsInvalidProfiles ..........................................   Passed    0.10 sec
+        Start 609: unit.SweepFeature_RejectsMisplacedProfile
+ 98/124 Test #609: unit.SweepFeature_RejectsMisplacedProfile .........................................   Passed    0.09 sec
+        Start 610: unit.SweepFeature_RejectsMissingPath
+ 99/124 Test #610: unit.SweepFeature_RejectsMissingPath ..............................................   Passed    0.16 sec
+        Start 611: unit.SweepFeature_RejectsMissingProfile
+100/124 Test #611: unit.SweepFeature_RejectsMissingProfile ...........................................   Passed    0.13 sec
+        Start 612: unit.SweepFeature_RejectsNonFinitePath
+101/124 Test #612: unit.SweepFeature_RejectsNonFinitePath ............................................   Passed    0.10 sec
+        Start 613: unit.SweepFeature_RejectsOpenProfile
+102/124 Test #613: unit.SweepFeature_RejectsOpenProfile ..............................................   Passed    0.10 sec
+        Start 614: unit.SweepFeature_RejectsUnsupportedCorners
+103/124 Test #614: unit.SweepFeature_RejectsUnsupportedCorners .......................................   Passed    0.10 sec
+        Start 615: unit.SweepFeature_RejectsZeroLengthSegment
+104/124 Test #615: unit.SweepFeature_RejectsZeroLengthSegment ........................................   Passed    0.10 sec
+        Start 628: unit.Sweep_RejectsCornersItCannotMitre
+105/124 Test #628: unit.Sweep_RejectsCornersItCannotMitre ............................................   Passed    0.10 sec
+        Start 629: unit.Sweep_RejectsMalformedPaths
+106/124 Test #629: unit.Sweep_RejectsMalformedPaths ..................................................   Passed    0.11 sec
+        Start 630: unit.Sweep_RejectsMisplacedProfiles
+107/124 Test #630: unit.Sweep_RejectsMisplacedProfiles ...............................................   Passed    0.11 sec
+        Start 631: unit.Sweep_RejectsSolidsThatFoldOrIntersect
+108/124 Test #631: unit.Sweep_RejectsSolidsThatFoldOrIntersect .......................................   Passed    0.25 sec
+        Start 650: unit.Transform_RejectsNonFiniteTranslationsAndEmptyBodies
+109/124 Test #650: unit.Transform_RejectsNonFiniteTranslationsAndEmptyBodies .........................   Passed    0.10 sec
+        Start 658: unit.Triangulation rejects empty bodies and invalid options
+110/124 Test #658: unit.Triangulation rejects empty bodies and invalid options .......................   Passed    0.11 sec
+        Start 691: unit.new creates an empty, valid document and refuses to overwrite
+111/124 Test #691: unit.new creates an empty, valid document and refuses to overwrite ................   Passed    0.14 sec
+        Start 726: compile_fail.units.add-length-angle
+112/124 Test #726: compile_fail.units.add-length-angle ...............................................   Passed    6.53 sec
+        Start 727: compile_fail.units.assign-mass-to-length
+113/124 Test #727: compile_fail.units.assign-mass-to-length ..........................................   Passed    5.38 sec
+        Start 728: compile_fail.units.assign-double-to-length
+114/124 Test #728: compile_fail.units.assign-double-to-length ........................................   Passed    5.19 sec
+        Start 729: compile_fail.units.length-to-double
+115/124 Test #729: compile_fail.units.length-to-double ...............................................   Passed    5.16 sec
+        Start 730: compile_fail.units.force-per-length-as-pressure
+116/124 Test #730: compile_fail.units.force-per-length-as-pressure ...................................   Passed    4.61 sec
+        Start 731: compile_fail.units.compare-length-time
+117/124 Test #731: compile_fail.units.compare-length-time ............................................   Passed    4.76 sec
+        Start 732: compile_fail.units.sqrt-of-volume
+118/124 Test #732: compile_fail.units.sqrt-of-volume .................................................   Passed    4.62 sec
+        Start 733: compile_fail.ids.sketch-id-as-feature-id
+119/124 Test #733: compile_fail.ids.sketch-id-as-feature-id ..........................................   Passed    5.21 sec
+        Start 734: compile_fail.ids.integer-to-id
+120/124 Test #734: compile_fail.ids.integer-to-id ....................................................   Passed    6.41 sec
+        Start 735: compile_fail.ids.id-to-integer
+121/124 Test #735: compile_fail.ids.id-to-integer ....................................................   Passed    6.18 sec
+        Start 736: compile_fail.ids.compare-different-kinds
+122/124 Test #736: compile_fail.ids.compare-different-kinds ..........................................   Passed    6.26 sec
+        Start 737: compile_fail.ids.object-to-sketch-id
+123/124 Test #737: compile_fail.ids.object-to-sketch-id ..............................................   Passed    6.25 sec
+        Start 738: compile_fail.ids.entity-id-as-object-id
+124/124 Test #738: compile_fail.ids.entity-id-as-object-id ...........................................   Passed    5.38 sec
+
+100% tests passed out of 124
+
+Total Test time (real) = 113.39 sec

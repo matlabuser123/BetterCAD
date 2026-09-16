@@ -1,0 +1,705 @@
+Test project C:/Users/uqhas/OneDrive/Desktop/CAD/build/release
+      Start 128: unit.Constraints cannot reference entities that do not exist
+    Test #128: unit.Constraints cannot reference entities that do not exist ................   Passed    0.10 sec
+      Start 128: unit.Constraints cannot reference entities that do not exist
+    Test #128: unit.Constraints cannot reference entities that do not exist ................   Passed    0.17 sec
+      Start 128: unit.Constraints cannot reference entities that do not exist
+    Test #128: unit.Constraints cannot reference entities that do not exist ................   Passed    0.08 sec
+      Start 128: unit.Constraints cannot reference entities that do not exist
+    Test #128: unit.Constraints cannot reference entities that do not exist ................   Passed    0.07 sec
+      Start 128: unit.Constraints cannot reference entities that do not exist
+ 1/70 Test #128: unit.Constraints cannot reference entities that do not exist ................   Passed    0.07 sec
+      Start 129: unit.Constraints check the kinds and number of referenced entities
+    Test #129: unit.Constraints check the kinds and number of referenced entities ..........   Passed    0.13 sec
+      Start 129: unit.Constraints check the kinds and number of referenced entities
+    Test #129: unit.Constraints check the kinds and number of referenced entities ..........   Passed    0.08 sec
+      Start 129: unit.Constraints check the kinds and number of referenced entities
+    Test #129: unit.Constraints check the kinds and number of referenced entities ..........   Passed    0.08 sec
+      Start 129: unit.Constraints check the kinds and number of referenced entities
+    Test #129: unit.Constraints check the kinds and number of referenced entities ..........   Passed    0.09 sec
+      Start 129: unit.Constraints check the kinds and number of referenced entities
+ 2/70 Test #129: unit.Constraints check the kinds and number of referenced entities ..........   Passed    0.11 sec
+      Start 130: unit.Constraints must reference distinct entities
+    Test #130: unit.Constraints must reference distinct entities ...........................   Passed    0.12 sec
+      Start 130: unit.Constraints must reference distinct entities
+    Test #130: unit.Constraints must reference distinct entities ...........................   Passed    0.09 sec
+      Start 130: unit.Constraints must reference distinct entities
+    Test #130: unit.Constraints must reference distinct entities ...........................   Passed    0.09 sec
+      Start 130: unit.Constraints must reference distinct entities
+    Test #130: unit.Constraints must reference distinct entities ...........................   Passed    0.08 sec
+      Start 130: unit.Constraints must reference distinct entities
+ 3/70 Test #130: unit.Constraints must reference distinct entities ...........................   Passed    0.07 sec
+      Start 155: unit.Each constraint type records its references, value and enabled state
+    Test #155: unit.Each constraint type records its references, value and enabled state ...   Passed    0.09 sec
+      Start 155: unit.Each constraint type records its references, value and enabled state
+    Test #155: unit.Each constraint type records its references, value and enabled state ...   Passed    0.09 sec
+      Start 155: unit.Each constraint type records its references, value and enabled state
+    Test #155: unit.Each constraint type records its references, value and enabled state ...   Passed    0.09 sec
+      Start 155: unit.Each constraint type records its references, value and enabled state
+    Test #155: unit.Each constraint type records its references, value and enabled state ...   Passed    0.08 sec
+      Start 155: unit.Each constraint type records its references, value and enabled state
+ 4/70 Test #155: unit.Each constraint type records its references, value and enabled state ...   Passed    0.09 sec
+      Start 165: unit.Entities referenced by constraints cannot be removed
+    Test #165: unit.Entities referenced by constraints cannot be removed ...................   Passed    0.08 sec
+      Start 165: unit.Entities referenced by constraints cannot be removed
+    Test #165: unit.Entities referenced by constraints cannot be removed ...................   Passed    0.08 sec
+      Start 165: unit.Entities referenced by constraints cannot be removed
+    Test #165: unit.Entities referenced by constraints cannot be removed ...................   Passed    0.07 sec
+      Start 165: unit.Entities referenced by constraints cannot be removed
+    Test #165: unit.Entities referenced by constraints cannot be removed ...................   Passed    0.07 sec
+      Start 165: unit.Entities referenced by constraints cannot be removed
+ 5/70 Test #165: unit.Entities referenced by constraints cannot be removed ...................   Passed    0.09 sec
+      Start 419: unit.Missing references are reported as failures
+    Test #419: unit.Missing references are reported as failures ............................   Passed    0.12 sec
+      Start 419: unit.Missing references are reported as failures
+    Test #419: unit.Missing references are reported as failures ............................   Passed    0.10 sec
+      Start 419: unit.Missing references are reported as failures
+    Test #419: unit.Missing references are reported as failures ............................   Passed    0.09 sec
+      Start 419: unit.Missing references are reported as failures
+    Test #419: unit.Missing references are reported as failures ............................   Passed    0.11 sec
+      Start 419: unit.Missing references are reported as failures
+ 6/70 Test #419: unit.Missing references are reported as failures ............................   Passed    0.10 sec
+      Start 420: unit.Missing references are reported once, under their own check
+    Test #420: unit.Missing references are reported once, under their own check ............   Passed    0.15 sec
+      Start 420: unit.Missing references are reported once, under their own check
+    Test #420: unit.Missing references are reported once, under their own check ............   Passed    0.14 sec
+      Start 420: unit.Missing references are reported once, under their own check
+    Test #420: unit.Missing references are reported once, under their own check ............   Passed    0.13 sec
+      Start 420: unit.Missing references are reported once, under their own check
+    Test #420: unit.Missing references are reported once, under their own check ............   Passed    0.14 sec
+      Start 420: unit.Missing references are reported once, under their own check
+ 7/70 Test #420: unit.Missing references are reported once, under their own check ............   Passed    0.13 sec
+      Start 462: unit.ReferenceModel_AllModelsBuildInOneProcess
+    Test #462: unit.ReferenceModel_AllModelsBuildInOneProcess ..............................   Passed   13.10 sec
+      Start 462: unit.ReferenceModel_AllModelsBuildInOneProcess
+    Test #462: unit.ReferenceModel_AllModelsBuildInOneProcess ..............................   Passed   11.52 sec
+      Start 462: unit.ReferenceModel_AllModelsBuildInOneProcess
+    Test #462: unit.ReferenceModel_AllModelsBuildInOneProcess ..............................   Passed   12.20 sec
+      Start 462: unit.ReferenceModel_AllModelsBuildInOneProcess
+    Test #462: unit.ReferenceModel_AllModelsBuildInOneProcess ..............................   Passed   12.31 sec
+      Start 462: unit.ReferenceModel_AllModelsBuildInOneProcess
+ 8/70 Test #462: unit.ReferenceModel_AllModelsBuildInOneProcess ..............................   Passed   11.38 sec
+      Start 463: unit.ReferenceModel_AllModelsRegenerateAfterAChange
+    Test #463: unit.ReferenceModel_AllModelsRegenerateAfterAChange .........................   Passed   11.27 sec
+      Start 463: unit.ReferenceModel_AllModelsRegenerateAfterAChange
+    Test #463: unit.ReferenceModel_AllModelsRegenerateAfterAChange .........................   Passed   12.76 sec
+      Start 463: unit.ReferenceModel_AllModelsRegenerateAfterAChange
+    Test #463: unit.ReferenceModel_AllModelsRegenerateAfterAChange .........................   Passed   10.45 sec
+      Start 463: unit.ReferenceModel_AllModelsRegenerateAfterAChange
+    Test #463: unit.ReferenceModel_AllModelsRegenerateAfterAChange .........................   Passed   11.00 sec
+      Start 463: unit.ReferenceModel_AllModelsRegenerateAfterAChange
+ 9/70 Test #463: unit.ReferenceModel_AllModelsRegenerateAfterAChange .........................   Passed   11.22 sec
+      Start 464: unit.ReferenceModel_AllModelsStressRegression
+    Test #464: unit.ReferenceModel_AllModelsStressRegression ...............................   Passed   18.17 sec
+      Start 464: unit.ReferenceModel_AllModelsStressRegression
+    Test #464: unit.ReferenceModel_AllModelsStressRegression ...............................   Passed   19.11 sec
+      Start 464: unit.ReferenceModel_AllModelsStressRegression
+    Test #464: unit.ReferenceModel_AllModelsStressRegression ...............................   Passed   19.69 sec
+      Start 464: unit.ReferenceModel_AllModelsStressRegression
+    Test #464: unit.ReferenceModel_AllModelsStressRegression ...............................   Passed   21.23 sec
+      Start 464: unit.ReferenceModel_AllModelsStressRegression
+10/70 Test #464: unit.ReferenceModel_AllModelsStressRegression ...............................   Passed   21.48 sec
+      Start 465: unit.ReferenceModel_AnalyticToolkit
+    Test #465: unit.ReferenceModel_AnalyticToolkit .........................................   Passed    0.09 sec
+      Start 465: unit.ReferenceModel_AnalyticToolkit
+    Test #465: unit.ReferenceModel_AnalyticToolkit .........................................   Passed    0.09 sec
+      Start 465: unit.ReferenceModel_AnalyticToolkit
+    Test #465: unit.ReferenceModel_AnalyticToolkit .........................................   Passed    0.09 sec
+      Start 465: unit.ReferenceModel_AnalyticToolkit
+    Test #465: unit.ReferenceModel_AnalyticToolkit .........................................   Passed    0.09 sec
+      Start 465: unit.ReferenceModel_AnalyticToolkit
+11/70 Test #465: unit.ReferenceModel_AnalyticToolkit .........................................   Passed    0.10 sec
+      Start 466: unit.ReferenceModel_BearingHousingBuildsValidGeometry
+    Test #466: unit.ReferenceModel_BearingHousingBuildsValidGeometry .......................   Passed    1.73 sec
+      Start 466: unit.ReferenceModel_BearingHousingBuildsValidGeometry
+    Test #466: unit.ReferenceModel_BearingHousingBuildsValidGeometry .......................   Passed    1.80 sec
+      Start 466: unit.ReferenceModel_BearingHousingBuildsValidGeometry
+    Test #466: unit.ReferenceModel_BearingHousingBuildsValidGeometry .......................   Passed    1.53 sec
+      Start 466: unit.ReferenceModel_BearingHousingBuildsValidGeometry
+    Test #466: unit.ReferenceModel_BearingHousingBuildsValidGeometry .......................   Passed    1.58 sec
+      Start 466: unit.ReferenceModel_BearingHousingBuildsValidGeometry
+12/70 Test #466: unit.ReferenceModel_BearingHousingBuildsValidGeometry .......................   Passed    1.60 sec
+      Start 467: unit.ReferenceModel_BearingHousingExports
+    Test #467: unit.ReferenceModel_BearingHousingExports ...................................   Passed    1.66 sec
+      Start 467: unit.ReferenceModel_BearingHousingExports
+    Test #467: unit.ReferenceModel_BearingHousingExports ...................................   Passed    1.46 sec
+      Start 467: unit.ReferenceModel_BearingHousingExports
+    Test #467: unit.ReferenceModel_BearingHousingExports ...................................   Passed    1.58 sec
+      Start 467: unit.ReferenceModel_BearingHousingExports
+    Test #467: unit.ReferenceModel_BearingHousingExports ...................................   Passed    1.32 sec
+      Start 467: unit.ReferenceModel_BearingHousingExports
+13/70 Test #467: unit.ReferenceModel_BearingHousingExports ...................................   Passed    1.44 sec
+      Start 468: unit.ReferenceModel_BearingHousingFailsSafelyOnInvalidParameters
+    Test #468: unit.ReferenceModel_BearingHousingFailsSafelyOnInvalidParameters ............   Passed    3.74 sec
+      Start 468: unit.ReferenceModel_BearingHousingFailsSafelyOnInvalidParameters
+    Test #468: unit.ReferenceModel_BearingHousingFailsSafelyOnInvalidParameters ............   Passed    3.65 sec
+      Start 468: unit.ReferenceModel_BearingHousingFailsSafelyOnInvalidParameters
+    Test #468: unit.ReferenceModel_BearingHousingFailsSafelyOnInvalidParameters ............   Passed    3.31 sec
+      Start 468: unit.ReferenceModel_BearingHousingFailsSafelyOnInvalidParameters
+    Test #468: unit.ReferenceModel_BearingHousingFailsSafelyOnInvalidParameters ............   Passed    3.30 sec
+      Start 468: unit.ReferenceModel_BearingHousingFailsSafelyOnInvalidParameters
+14/70 Test #468: unit.ReferenceModel_BearingHousingFailsSafelyOnInvalidParameters ............   Passed    3.57 sec
+      Start 469: unit.ReferenceModel_BearingHousingMatchesIndependentProperties
+    Test #469: unit.ReferenceModel_BearingHousingMatchesIndependentProperties ..............   Passed    1.99 sec
+      Start 469: unit.ReferenceModel_BearingHousingMatchesIndependentProperties
+    Test #469: unit.ReferenceModel_BearingHousingMatchesIndependentProperties ..............   Passed    2.12 sec
+      Start 469: unit.ReferenceModel_BearingHousingMatchesIndependentProperties
+    Test #469: unit.ReferenceModel_BearingHousingMatchesIndependentProperties ..............   Passed    2.16 sec
+      Start 469: unit.ReferenceModel_BearingHousingMatchesIndependentProperties
+    Test #469: unit.ReferenceModel_BearingHousingMatchesIndependentProperties ..............   Passed    2.06 sec
+      Start 469: unit.ReferenceModel_BearingHousingMatchesIndependentProperties
+15/70 Test #469: unit.ReferenceModel_BearingHousingMatchesIndependentProperties ..............   Passed    2.07 sec
+      Start 470: unit.ReferenceModel_BearingHousingRegeneratesAfterParameterChanges
+    Test #470: unit.ReferenceModel_BearingHousingRegeneratesAfterParameterChanges ..........   Passed    3.53 sec
+      Start 470: unit.ReferenceModel_BearingHousingRegeneratesAfterParameterChanges
+    Test #470: unit.ReferenceModel_BearingHousingRegeneratesAfterParameterChanges ..........   Passed    3.23 sec
+      Start 470: unit.ReferenceModel_BearingHousingRegeneratesAfterParameterChanges
+    Test #470: unit.ReferenceModel_BearingHousingRegeneratesAfterParameterChanges ..........   Passed    3.14 sec
+      Start 470: unit.ReferenceModel_BearingHousingRegeneratesAfterParameterChanges
+    Test #470: unit.ReferenceModel_BearingHousingRegeneratesAfterParameterChanges ..........   Passed    3.24 sec
+      Start 470: unit.ReferenceModel_BearingHousingRegeneratesAfterParameterChanges
+16/70 Test #470: unit.ReferenceModel_BearingHousingRegeneratesAfterParameterChanges ..........   Passed    2.96 sec
+      Start 471: unit.ReferenceModel_BearingHousingRegeneratesDeterministically
+    Test #471: unit.ReferenceModel_BearingHousingRegeneratesDeterministically ..............   Passed    7.26 sec
+      Start 471: unit.ReferenceModel_BearingHousingRegeneratesDeterministically
+    Test #471: unit.ReferenceModel_BearingHousingRegeneratesDeterministically ..............   Passed    7.46 sec
+      Start 471: unit.ReferenceModel_BearingHousingRegeneratesDeterministically
+    Test #471: unit.ReferenceModel_BearingHousingRegeneratesDeterministically ..............   Passed    8.55 sec
+      Start 471: unit.ReferenceModel_BearingHousingRegeneratesDeterministically
+    Test #471: unit.ReferenceModel_BearingHousingRegeneratesDeterministically ..............   Passed    8.10 sec
+      Start 471: unit.ReferenceModel_BearingHousingRegeneratesDeterministically
+17/70 Test #471: unit.ReferenceModel_BearingHousingRegeneratesDeterministically ..............   Passed    7.48 sec
+      Start 472: unit.ReferenceModel_BearingHousingSaveLoad
+    Test #472: unit.ReferenceModel_BearingHousingSaveLoad ..................................   Passed    2.12 sec
+      Start 472: unit.ReferenceModel_BearingHousingSaveLoad
+    Test #472: unit.ReferenceModel_BearingHousingSaveLoad ..................................   Passed    2.08 sec
+      Start 472: unit.ReferenceModel_BearingHousingSaveLoad
+    Test #472: unit.ReferenceModel_BearingHousingSaveLoad ..................................   Passed    2.06 sec
+      Start 472: unit.ReferenceModel_BearingHousingSaveLoad
+    Test #472: unit.ReferenceModel_BearingHousingSaveLoad ..................................   Passed    2.02 sec
+      Start 472: unit.ReferenceModel_BearingHousingSaveLoad
+18/70 Test #472: unit.ReferenceModel_BearingHousingSaveLoad ..................................   Passed    2.12 sec
+      Start 473: unit.ReferenceModel_BearingHousingUndoRedo
+    Test #473: unit.ReferenceModel_BearingHousingUndoRedo ..................................   Passed    1.94 sec
+      Start 473: unit.ReferenceModel_BearingHousingUndoRedo
+    Test #473: unit.ReferenceModel_BearingHousingUndoRedo ..................................   Passed    1.93 sec
+      Start 473: unit.ReferenceModel_BearingHousingUndoRedo
+    Test #473: unit.ReferenceModel_BearingHousingUndoRedo ..................................   Passed    1.90 sec
+      Start 473: unit.ReferenceModel_BearingHousingUndoRedo
+    Test #473: unit.ReferenceModel_BearingHousingUndoRedo ..................................   Passed    2.17 sec
+      Start 473: unit.ReferenceModel_BearingHousingUndoRedo
+19/70 Test #473: unit.ReferenceModel_BearingHousingUndoRedo ..................................   Passed    2.40 sec
+      Start 474: unit.ReferenceModel_FeatureCoverage
+    Test #474: unit.ReferenceModel_FeatureCoverage .........................................   Passed    0.11 sec
+      Start 474: unit.ReferenceModel_FeatureCoverage
+    Test #474: unit.ReferenceModel_FeatureCoverage .........................................   Passed    0.09 sec
+      Start 474: unit.ReferenceModel_FeatureCoverage
+    Test #474: unit.ReferenceModel_FeatureCoverage .........................................   Passed    0.10 sec
+      Start 474: unit.ReferenceModel_FeatureCoverage
+    Test #474: unit.ReferenceModel_FeatureCoverage .........................................   Passed    0.10 sec
+      Start 474: unit.ReferenceModel_FeatureCoverage
+20/70 Test #474: unit.ReferenceModel_FeatureCoverage .........................................   Passed    0.10 sec
+      Start 475: unit.ReferenceModel_FlangeBoltPatternPositionsCorrect
+    Test #475: unit.ReferenceModel_FlangeBoltPatternPositionsCorrect .......................   Passed    4.09 sec
+      Start 475: unit.ReferenceModel_FlangeBoltPatternPositionsCorrect
+    Test #475: unit.ReferenceModel_FlangeBoltPatternPositionsCorrect .......................   Passed    3.69 sec
+      Start 475: unit.ReferenceModel_FlangeBoltPatternPositionsCorrect
+    Test #475: unit.ReferenceModel_FlangeBoltPatternPositionsCorrect .......................   Passed    3.30 sec
+      Start 475: unit.ReferenceModel_FlangeBoltPatternPositionsCorrect
+    Test #475: unit.ReferenceModel_FlangeBoltPatternPositionsCorrect .......................   Passed    3.22 sec
+      Start 475: unit.ReferenceModel_FlangeBoltPatternPositionsCorrect
+21/70 Test #475: unit.ReferenceModel_FlangeBoltPatternPositionsCorrect .......................   Passed    3.27 sec
+      Start 476: unit.ReferenceModel_FlangeBuildsValidGeometry
+    Test #476: unit.ReferenceModel_FlangeBuildsValidGeometry ...............................   Passed    2.08 sec
+      Start 476: unit.ReferenceModel_FlangeBuildsValidGeometry
+    Test #476: unit.ReferenceModel_FlangeBuildsValidGeometry ...............................   Passed    2.10 sec
+      Start 476: unit.ReferenceModel_FlangeBuildsValidGeometry
+    Test #476: unit.ReferenceModel_FlangeBuildsValidGeometry ...............................   Passed    1.89 sec
+      Start 476: unit.ReferenceModel_FlangeBuildsValidGeometry
+    Test #476: unit.ReferenceModel_FlangeBuildsValidGeometry ...............................   Passed    1.97 sec
+      Start 476: unit.ReferenceModel_FlangeBuildsValidGeometry
+22/70 Test #476: unit.ReferenceModel_FlangeBuildsValidGeometry ...............................   Passed    1.99 sec
+      Start 477: unit.ReferenceModel_FlangeExports
+    Test #477: unit.ReferenceModel_FlangeExports ...........................................   Passed    2.08 sec
+      Start 477: unit.ReferenceModel_FlangeExports
+    Test #477: unit.ReferenceModel_FlangeExports ...........................................   Passed    1.96 sec
+      Start 477: unit.ReferenceModel_FlangeExports
+    Test #477: unit.ReferenceModel_FlangeExports ...........................................   Passed    1.99 sec
+      Start 477: unit.ReferenceModel_FlangeExports
+    Test #477: unit.ReferenceModel_FlangeExports ...........................................   Passed    2.00 sec
+      Start 477: unit.ReferenceModel_FlangeExports
+23/70 Test #477: unit.ReferenceModel_FlangeExports ...........................................   Passed    1.99 sec
+      Start 478: unit.ReferenceModel_FlangeFailsSafelyOnInvalidParameters
+    Test #478: unit.ReferenceModel_FlangeFailsSafelyOnInvalidParameters ....................   Passed    2.00 sec
+      Start 478: unit.ReferenceModel_FlangeFailsSafelyOnInvalidParameters
+    Test #478: unit.ReferenceModel_FlangeFailsSafelyOnInvalidParameters ....................   Passed    2.14 sec
+      Start 478: unit.ReferenceModel_FlangeFailsSafelyOnInvalidParameters
+    Test #478: unit.ReferenceModel_FlangeFailsSafelyOnInvalidParameters ....................   Passed    2.20 sec
+      Start 478: unit.ReferenceModel_FlangeFailsSafelyOnInvalidParameters
+    Test #478: unit.ReferenceModel_FlangeFailsSafelyOnInvalidParameters ....................   Passed    2.07 sec
+      Start 478: unit.ReferenceModel_FlangeFailsSafelyOnInvalidParameters
+24/70 Test #478: unit.ReferenceModel_FlangeFailsSafelyOnInvalidParameters ....................   Passed    1.94 sec
+      Start 479: unit.ReferenceModel_FlangeMatchesAnalyticVolume
+    Test #479: unit.ReferenceModel_FlangeMatchesAnalyticVolume .............................   Passed    2.76 sec
+      Start 479: unit.ReferenceModel_FlangeMatchesAnalyticVolume
+    Test #479: unit.ReferenceModel_FlangeMatchesAnalyticVolume .............................   Passed    2.88 sec
+      Start 479: unit.ReferenceModel_FlangeMatchesAnalyticVolume
+    Test #479: unit.ReferenceModel_FlangeMatchesAnalyticVolume .............................   Passed    2.61 sec
+      Start 479: unit.ReferenceModel_FlangeMatchesAnalyticVolume
+    Test #479: unit.ReferenceModel_FlangeMatchesAnalyticVolume .............................   Passed    2.37 sec
+      Start 479: unit.ReferenceModel_FlangeMatchesAnalyticVolume
+25/70 Test #479: unit.ReferenceModel_FlangeMatchesAnalyticVolume .............................   Passed    2.74 sec
+      Start 480: unit.ReferenceModel_FlangeRegeneratesAfterParameterChanges
+    Test #480: unit.ReferenceModel_FlangeRegeneratesAfterParameterChanges ..................   Passed    4.93 sec
+      Start 480: unit.ReferenceModel_FlangeRegeneratesAfterParameterChanges
+    Test #480: unit.ReferenceModel_FlangeRegeneratesAfterParameterChanges ..................   Passed    4.69 sec
+      Start 480: unit.ReferenceModel_FlangeRegeneratesAfterParameterChanges
+    Test #480: unit.ReferenceModel_FlangeRegeneratesAfterParameterChanges ..................   Passed    4.82 sec
+      Start 480: unit.ReferenceModel_FlangeRegeneratesAfterParameterChanges
+    Test #480: unit.ReferenceModel_FlangeRegeneratesAfterParameterChanges ..................   Passed    5.19 sec
+      Start 480: unit.ReferenceModel_FlangeRegeneratesAfterParameterChanges
+26/70 Test #480: unit.ReferenceModel_FlangeRegeneratesAfterParameterChanges ..................   Passed    5.79 sec
+      Start 481: unit.ReferenceModel_FlangeRegeneratesDeterministically
+    Test #481: unit.ReferenceModel_FlangeRegeneratesDeterministically ......................   Passed   13.79 sec
+      Start 481: unit.ReferenceModel_FlangeRegeneratesDeterministically
+    Test #481: unit.ReferenceModel_FlangeRegeneratesDeterministically ......................   Passed   12.54 sec
+      Start 481: unit.ReferenceModel_FlangeRegeneratesDeterministically
+    Test #481: unit.ReferenceModel_FlangeRegeneratesDeterministically ......................   Passed   13.77 sec
+      Start 481: unit.ReferenceModel_FlangeRegeneratesDeterministically
+    Test #481: unit.ReferenceModel_FlangeRegeneratesDeterministically ......................   Passed   13.98 sec
+      Start 481: unit.ReferenceModel_FlangeRegeneratesDeterministically
+27/70 Test #481: unit.ReferenceModel_FlangeRegeneratesDeterministically ......................   Passed   12.83 sec
+      Start 482: unit.ReferenceModel_FlangeSaveLoad
+    Test #482: unit.ReferenceModel_FlangeSaveLoad ..........................................   Passed    3.43 sec
+      Start 482: unit.ReferenceModel_FlangeSaveLoad
+    Test #482: unit.ReferenceModel_FlangeSaveLoad ..........................................   Passed    3.55 sec
+      Start 482: unit.ReferenceModel_FlangeSaveLoad
+    Test #482: unit.ReferenceModel_FlangeSaveLoad ..........................................   Passed    4.13 sec
+      Start 482: unit.ReferenceModel_FlangeSaveLoad
+    Test #482: unit.ReferenceModel_FlangeSaveLoad ..........................................   Passed    3.90 sec
+      Start 482: unit.ReferenceModel_FlangeSaveLoad
+28/70 Test #482: unit.ReferenceModel_FlangeSaveLoad ..........................................   Passed    3.69 sec
+      Start 483: unit.ReferenceModel_FlangeUndoRedo
+    Test #483: unit.ReferenceModel_FlangeUndoRedo ..........................................   Passed    4.02 sec
+      Start 483: unit.ReferenceModel_FlangeUndoRedo
+    Test #483: unit.ReferenceModel_FlangeUndoRedo ..........................................   Passed    3.63 sec
+      Start 483: unit.ReferenceModel_FlangeUndoRedo
+    Test #483: unit.ReferenceModel_FlangeUndoRedo ..........................................   Passed    3.34 sec
+      Start 483: unit.ReferenceModel_FlangeUndoRedo
+    Test #483: unit.ReferenceModel_FlangeUndoRedo ..........................................   Passed    3.45 sec
+      Start 483: unit.ReferenceModel_FlangeUndoRedo
+29/70 Test #483: unit.ReferenceModel_FlangeUndoRedo ..........................................   Passed    3.48 sec
+      Start 484: unit.ReferenceModel_MountingBracketBuildsValidGeometry
+    Test #484: unit.ReferenceModel_MountingBracketBuildsValidGeometry ......................   Passed    2.59 sec
+      Start 484: unit.ReferenceModel_MountingBracketBuildsValidGeometry
+    Test #484: unit.ReferenceModel_MountingBracketBuildsValidGeometry ......................   Passed    2.52 sec
+      Start 484: unit.ReferenceModel_MountingBracketBuildsValidGeometry
+    Test #484: unit.ReferenceModel_MountingBracketBuildsValidGeometry ......................   Passed    2.50 sec
+      Start 484: unit.ReferenceModel_MountingBracketBuildsValidGeometry
+    Test #484: unit.ReferenceModel_MountingBracketBuildsValidGeometry ......................   Passed    2.67 sec
+      Start 484: unit.ReferenceModel_MountingBracketBuildsValidGeometry
+30/70 Test #484: unit.ReferenceModel_MountingBracketBuildsValidGeometry ......................   Passed    3.07 sec
+      Start 485: unit.ReferenceModel_MountingBracketExports
+    Test #485: unit.ReferenceModel_MountingBracketExports ..................................   Passed    4.47 sec
+      Start 485: unit.ReferenceModel_MountingBracketExports
+    Test #485: unit.ReferenceModel_MountingBracketExports ..................................   Passed    4.13 sec
+      Start 485: unit.ReferenceModel_MountingBracketExports
+    Test #485: unit.ReferenceModel_MountingBracketExports ..................................   Passed    3.75 sec
+      Start 485: unit.ReferenceModel_MountingBracketExports
+    Test #485: unit.ReferenceModel_MountingBracketExports ..................................   Passed    3.61 sec
+      Start 485: unit.ReferenceModel_MountingBracketExports
+31/70 Test #485: unit.ReferenceModel_MountingBracketExports ..................................   Passed    3.71 sec
+      Start 486: unit.ReferenceModel_MountingBracketFailsSafelyOnInvalidParameters
+    Test #486: unit.ReferenceModel_MountingBracketFailsSafelyOnInvalidParameters ...........   Passed    2.47 sec
+      Start 486: unit.ReferenceModel_MountingBracketFailsSafelyOnInvalidParameters
+    Test #486: unit.ReferenceModel_MountingBracketFailsSafelyOnInvalidParameters ...........   Passed    2.23 sec
+      Start 486: unit.ReferenceModel_MountingBracketFailsSafelyOnInvalidParameters
+    Test #486: unit.ReferenceModel_MountingBracketFailsSafelyOnInvalidParameters ...........   Passed    2.22 sec
+      Start 486: unit.ReferenceModel_MountingBracketFailsSafelyOnInvalidParameters
+    Test #486: unit.ReferenceModel_MountingBracketFailsSafelyOnInvalidParameters ...........   Passed    2.13 sec
+      Start 486: unit.ReferenceModel_MountingBracketFailsSafelyOnInvalidParameters
+32/70 Test #486: unit.ReferenceModel_MountingBracketFailsSafelyOnInvalidParameters ...........   Passed    2.09 sec
+      Start 487: unit.ReferenceModel_MountingBracketMatchesIndependentProperties
+    Test #487: unit.ReferenceModel_MountingBracketMatchesIndependentProperties .............   Passed    3.25 sec
+      Start 487: unit.ReferenceModel_MountingBracketMatchesIndependentProperties
+    Test #487: unit.ReferenceModel_MountingBracketMatchesIndependentProperties .............   Passed    3.19 sec
+      Start 487: unit.ReferenceModel_MountingBracketMatchesIndependentProperties
+    Test #487: unit.ReferenceModel_MountingBracketMatchesIndependentProperties .............   Passed    3.97 sec
+      Start 487: unit.ReferenceModel_MountingBracketMatchesIndependentProperties
+    Test #487: unit.ReferenceModel_MountingBracketMatchesIndependentProperties .............   Passed    4.28 sec
+      Start 487: unit.ReferenceModel_MountingBracketMatchesIndependentProperties
+33/70 Test #487: unit.ReferenceModel_MountingBracketMatchesIndependentProperties .............   Passed    3.82 sec
+      Start 488: unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges
+    Test #488: unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges .........   Passed    9.42 sec
+      Start 488: unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges
+    Test #488: unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges .........   Passed    8.70 sec
+      Start 488: unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges
+    Test #488: unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges .........   Passed    8.61 sec
+      Start 488: unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges
+    Test #488: unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges .........   Passed    9.72 sec
+      Start 488: unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges
+34/70 Test #488: unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges .........   Passed    9.74 sec
+      Start 489: unit.ReferenceModel_MountingBracketRegeneratesDeterministically
+    Test #489: unit.ReferenceModel_MountingBracketRegeneratesDeterministically .............   Passed   15.96 sec
+      Start 489: unit.ReferenceModel_MountingBracketRegeneratesDeterministically
+    Test #489: unit.ReferenceModel_MountingBracketRegeneratesDeterministically .............   Passed   15.74 sec
+      Start 489: unit.ReferenceModel_MountingBracketRegeneratesDeterministically
+    Test #489: unit.ReferenceModel_MountingBracketRegeneratesDeterministically .............   Passed   15.98 sec
+      Start 489: unit.ReferenceModel_MountingBracketRegeneratesDeterministically
+    Test #489: unit.ReferenceModel_MountingBracketRegeneratesDeterministically .............   Passed   15.04 sec
+      Start 489: unit.ReferenceModel_MountingBracketRegeneratesDeterministically
+35/70 Test #489: unit.ReferenceModel_MountingBracketRegeneratesDeterministically .............   Passed   16.78 sec
+      Start 490: unit.ReferenceModel_MountingBracketSaveLoad
+    Test #490: unit.ReferenceModel_MountingBracketSaveLoad .................................   Passed    4.67 sec
+      Start 490: unit.ReferenceModel_MountingBracketSaveLoad
+    Test #490: unit.ReferenceModel_MountingBracketSaveLoad .................................   Passed    4.09 sec
+      Start 490: unit.ReferenceModel_MountingBracketSaveLoad
+    Test #490: unit.ReferenceModel_MountingBracketSaveLoad .................................   Passed    4.01 sec
+      Start 490: unit.ReferenceModel_MountingBracketSaveLoad
+    Test #490: unit.ReferenceModel_MountingBracketSaveLoad .................................   Passed    4.02 sec
+      Start 490: unit.ReferenceModel_MountingBracketSaveLoad
+36/70 Test #490: unit.ReferenceModel_MountingBracketSaveLoad .................................   Passed    4.15 sec
+      Start 491: unit.ReferenceModel_MountingBracketUndoRedo
+    Test #491: unit.ReferenceModel_MountingBracketUndoRedo .................................   Passed    2.79 sec
+      Start 491: unit.ReferenceModel_MountingBracketUndoRedo
+    Test #491: unit.ReferenceModel_MountingBracketUndoRedo .................................   Passed    2.87 sec
+      Start 491: unit.ReferenceModel_MountingBracketUndoRedo
+    Test #491: unit.ReferenceModel_MountingBracketUndoRedo .................................   Passed    3.33 sec
+      Start 491: unit.ReferenceModel_MountingBracketUndoRedo
+    Test #491: unit.ReferenceModel_MountingBracketUndoRedo .................................   Passed    3.51 sec
+      Start 491: unit.ReferenceModel_MountingBracketUndoRedo
+37/70 Test #491: unit.ReferenceModel_MountingBracketUndoRedo .................................   Passed    3.22 sec
+      Start 492: unit.ReferenceModel_PulleyBuildsValidGeometry
+    Test #492: unit.ReferenceModel_PulleyBuildsValidGeometry ...............................   Passed    2.68 sec
+      Start 492: unit.ReferenceModel_PulleyBuildsValidGeometry
+    Test #492: unit.ReferenceModel_PulleyBuildsValidGeometry ...............................   Passed    2.21 sec
+      Start 492: unit.ReferenceModel_PulleyBuildsValidGeometry
+    Test #492: unit.ReferenceModel_PulleyBuildsValidGeometry ...............................   Passed    2.76 sec
+      Start 492: unit.ReferenceModel_PulleyBuildsValidGeometry
+    Test #492: unit.ReferenceModel_PulleyBuildsValidGeometry ...............................   Passed    2.63 sec
+      Start 492: unit.ReferenceModel_PulleyBuildsValidGeometry
+38/70 Test #492: unit.ReferenceModel_PulleyBuildsValidGeometry ...............................   Passed    2.14 sec
+      Start 493: unit.ReferenceModel_PulleyExports
+    Test #493: unit.ReferenceModel_PulleyExports ...........................................   Passed    2.34 sec
+      Start 493: unit.ReferenceModel_PulleyExports
+    Test #493: unit.ReferenceModel_PulleyExports ...........................................   Passed    2.24 sec
+      Start 493: unit.ReferenceModel_PulleyExports
+    Test #493: unit.ReferenceModel_PulleyExports ...........................................   Passed    2.50 sec
+      Start 493: unit.ReferenceModel_PulleyExports
+    Test #493: unit.ReferenceModel_PulleyExports ...........................................   Passed    2.46 sec
+      Start 493: unit.ReferenceModel_PulleyExports
+39/70 Test #493: unit.ReferenceModel_PulleyExports ...........................................   Passed    2.35 sec
+      Start 494: unit.ReferenceModel_PulleyFailsSafelyOnInvalidParameters
+    Test #494: unit.ReferenceModel_PulleyFailsSafelyOnInvalidParameters ....................   Passed    1.86 sec
+      Start 494: unit.ReferenceModel_PulleyFailsSafelyOnInvalidParameters
+    Test #494: unit.ReferenceModel_PulleyFailsSafelyOnInvalidParameters ....................   Passed    1.81 sec
+      Start 494: unit.ReferenceModel_PulleyFailsSafelyOnInvalidParameters
+    Test #494: unit.ReferenceModel_PulleyFailsSafelyOnInvalidParameters ....................   Passed    1.78 sec
+      Start 494: unit.ReferenceModel_PulleyFailsSafelyOnInvalidParameters
+    Test #494: unit.ReferenceModel_PulleyFailsSafelyOnInvalidParameters ....................   Passed    1.76 sec
+      Start 494: unit.ReferenceModel_PulleyFailsSafelyOnInvalidParameters
+40/70 Test #494: unit.ReferenceModel_PulleyFailsSafelyOnInvalidParameters ....................   Passed    2.07 sec
+      Start 495: unit.ReferenceModel_PulleyMatchesIndependentProperties
+    Test #495: unit.ReferenceModel_PulleyMatchesIndependentProperties ......................   Passed    4.02 sec
+      Start 495: unit.ReferenceModel_PulleyMatchesIndependentProperties
+    Test #495: unit.ReferenceModel_PulleyMatchesIndependentProperties ......................   Passed    4.00 sec
+      Start 495: unit.ReferenceModel_PulleyMatchesIndependentProperties
+    Test #495: unit.ReferenceModel_PulleyMatchesIndependentProperties ......................   Passed    3.56 sec
+      Start 495: unit.ReferenceModel_PulleyMatchesIndependentProperties
+    Test #495: unit.ReferenceModel_PulleyMatchesIndependentProperties ......................   Passed    3.44 sec
+      Start 495: unit.ReferenceModel_PulleyMatchesIndependentProperties
+41/70 Test #495: unit.ReferenceModel_PulleyMatchesIndependentProperties ......................   Passed    3.28 sec
+      Start 496: unit.ReferenceModel_PulleyRegeneratesAfterParameterChanges
+    Test #496: unit.ReferenceModel_PulleyRegeneratesAfterParameterChanges ..................   Passed    4.75 sec
+      Start 496: unit.ReferenceModel_PulleyRegeneratesAfterParameterChanges
+    Test #496: unit.ReferenceModel_PulleyRegeneratesAfterParameterChanges ..................   Passed    4.63 sec
+      Start 496: unit.ReferenceModel_PulleyRegeneratesAfterParameterChanges
+    Test #496: unit.ReferenceModel_PulleyRegeneratesAfterParameterChanges ..................   Passed    4.62 sec
+      Start 496: unit.ReferenceModel_PulleyRegeneratesAfterParameterChanges
+    Test #496: unit.ReferenceModel_PulleyRegeneratesAfterParameterChanges ..................   Passed    4.61 sec
+      Start 496: unit.ReferenceModel_PulleyRegeneratesAfterParameterChanges
+42/70 Test #496: unit.ReferenceModel_PulleyRegeneratesAfterParameterChanges ..................   Passed    5.39 sec
+      Start 497: unit.ReferenceModel_PulleyRegeneratesDeterministically
+    Test #497: unit.ReferenceModel_PulleyRegeneratesDeterministically ......................   Passed   12.85 sec
+      Start 497: unit.ReferenceModel_PulleyRegeneratesDeterministically
+    Test #497: unit.ReferenceModel_PulleyRegeneratesDeterministically ......................   Passed   11.48 sec
+      Start 497: unit.ReferenceModel_PulleyRegeneratesDeterministically
+    Test #497: unit.ReferenceModel_PulleyRegeneratesDeterministically ......................   Passed   11.27 sec
+      Start 497: unit.ReferenceModel_PulleyRegeneratesDeterministically
+    Test #497: unit.ReferenceModel_PulleyRegeneratesDeterministically ......................   Passed   12.50 sec
+      Start 497: unit.ReferenceModel_PulleyRegeneratesDeterministically
+43/70 Test #497: unit.ReferenceModel_PulleyRegeneratesDeterministically ......................   Passed   11.89 sec
+      Start 498: unit.ReferenceModel_PulleySaveLoad
+    Test #498: unit.ReferenceModel_PulleySaveLoad ..........................................   Passed    3.03 sec
+      Start 498: unit.ReferenceModel_PulleySaveLoad
+    Test #498: unit.ReferenceModel_PulleySaveLoad ..........................................   Passed    2.96 sec
+      Start 498: unit.ReferenceModel_PulleySaveLoad
+    Test #498: unit.ReferenceModel_PulleySaveLoad ..........................................   Passed    2.97 sec
+      Start 498: unit.ReferenceModel_PulleySaveLoad
+    Test #498: unit.ReferenceModel_PulleySaveLoad ..........................................   Passed    2.93 sec
+      Start 498: unit.ReferenceModel_PulleySaveLoad
+44/70 Test #498: unit.ReferenceModel_PulleySaveLoad ..........................................   Passed    3.03 sec
+      Start 499: unit.ReferenceModel_PulleyUndoRedo
+    Test #499: unit.ReferenceModel_PulleyUndoRedo ..........................................   Passed    3.45 sec
+      Start 499: unit.ReferenceModel_PulleyUndoRedo
+    Test #499: unit.ReferenceModel_PulleyUndoRedo ..........................................   Passed    3.70 sec
+      Start 499: unit.ReferenceModel_PulleyUndoRedo
+    Test #499: unit.ReferenceModel_PulleyUndoRedo ..........................................   Passed    3.71 sec
+      Start 499: unit.ReferenceModel_PulleyUndoRedo
+    Test #499: unit.ReferenceModel_PulleyUndoRedo ..........................................   Passed    3.45 sec
+      Start 499: unit.ReferenceModel_PulleyUndoRedo
+45/70 Test #499: unit.ReferenceModel_PulleyUndoRedo ..........................................   Passed    3.68 sec
+      Start 500: unit.ReferenceModel_SavedModelsMatchTheBuilders
+    Test #500: unit.ReferenceModel_SavedModelsMatchTheBuilders .............................   Passed    8.62 sec
+      Start 500: unit.ReferenceModel_SavedModelsMatchTheBuilders
+    Test #500: unit.ReferenceModel_SavedModelsMatchTheBuilders .............................   Passed    8.15 sec
+      Start 500: unit.ReferenceModel_SavedModelsMatchTheBuilders
+    Test #500: unit.ReferenceModel_SavedModelsMatchTheBuilders .............................   Passed    8.95 sec
+      Start 500: unit.ReferenceModel_SavedModelsMatchTheBuilders
+    Test #500: unit.ReferenceModel_SavedModelsMatchTheBuilders .............................   Passed    9.89 sec
+      Start 500: unit.ReferenceModel_SavedModelsMatchTheBuilders
+46/70 Test #500: unit.ReferenceModel_SavedModelsMatchTheBuilders .............................   Passed    9.47 sec
+      Start 501: unit.ReferenceModel_ShaftBuildsValidGeometry
+    Test #501: unit.ReferenceModel_ShaftBuildsValidGeometry ................................   Passed    1.95 sec
+      Start 501: unit.ReferenceModel_ShaftBuildsValidGeometry
+    Test #501: unit.ReferenceModel_ShaftBuildsValidGeometry ................................   Passed    1.93 sec
+      Start 501: unit.ReferenceModel_ShaftBuildsValidGeometry
+    Test #501: unit.ReferenceModel_ShaftBuildsValidGeometry ................................   Passed    1.68 sec
+      Start 501: unit.ReferenceModel_ShaftBuildsValidGeometry
+    Test #501: unit.ReferenceModel_ShaftBuildsValidGeometry ................................   Passed    1.68 sec
+      Start 501: unit.ReferenceModel_ShaftBuildsValidGeometry
+47/70 Test #501: unit.ReferenceModel_ShaftBuildsValidGeometry ................................   Passed    1.60 sec
+      Start 502: unit.ReferenceModel_ShaftExports
+    Test #502: unit.ReferenceModel_ShaftExports ............................................   Passed    1.67 sec
+      Start 502: unit.ReferenceModel_ShaftExports
+    Test #502: unit.ReferenceModel_ShaftExports ............................................   Passed    1.53 sec
+      Start 502: unit.ReferenceModel_ShaftExports
+    Test #502: unit.ReferenceModel_ShaftExports ............................................   Passed    1.53 sec
+      Start 502: unit.ReferenceModel_ShaftExports
+    Test #502: unit.ReferenceModel_ShaftExports ............................................   Passed    1.51 sec
+      Start 502: unit.ReferenceModel_ShaftExports
+48/70 Test #502: unit.ReferenceModel_ShaftExports ............................................   Passed    1.58 sec
+      Start 503: unit.ReferenceModel_ShaftFailsSafelyOnInvalidParameters
+    Test #503: unit.ReferenceModel_ShaftFailsSafelyOnInvalidParameters .....................   Passed    1.67 sec
+      Start 503: unit.ReferenceModel_ShaftFailsSafelyOnInvalidParameters
+    Test #503: unit.ReferenceModel_ShaftFailsSafelyOnInvalidParameters .....................   Passed    1.76 sec
+      Start 503: unit.ReferenceModel_ShaftFailsSafelyOnInvalidParameters
+    Test #503: unit.ReferenceModel_ShaftFailsSafelyOnInvalidParameters .....................   Passed    1.52 sec
+      Start 503: unit.ReferenceModel_ShaftFailsSafelyOnInvalidParameters
+    Test #503: unit.ReferenceModel_ShaftFailsSafelyOnInvalidParameters .....................   Passed    1.53 sec
+      Start 503: unit.ReferenceModel_ShaftFailsSafelyOnInvalidParameters
+49/70 Test #503: unit.ReferenceModel_ShaftFailsSafelyOnInvalidParameters .....................   Passed    1.51 sec
+      Start 504: unit.ReferenceModel_ShaftMatchesAnalyticProperties
+    Test #504: unit.ReferenceModel_ShaftMatchesAnalyticProperties ..........................   Passed    2.31 sec
+      Start 504: unit.ReferenceModel_ShaftMatchesAnalyticProperties
+    Test #504: unit.ReferenceModel_ShaftMatchesAnalyticProperties ..........................   Passed    2.31 sec
+      Start 504: unit.ReferenceModel_ShaftMatchesAnalyticProperties
+    Test #504: unit.ReferenceModel_ShaftMatchesAnalyticProperties ..........................   Passed    2.43 sec
+      Start 504: unit.ReferenceModel_ShaftMatchesAnalyticProperties
+    Test #504: unit.ReferenceModel_ShaftMatchesAnalyticProperties ..........................   Passed    2.44 sec
+      Start 504: unit.ReferenceModel_ShaftMatchesAnalyticProperties
+50/70 Test #504: unit.ReferenceModel_ShaftMatchesAnalyticProperties ..........................   Passed    2.27 sec
+      Start 505: unit.ReferenceModel_ShaftRegeneratesAfterParameterChanges
+    Test #505: unit.ReferenceModel_ShaftRegeneratesAfterParameterChanges ...................   Passed    4.37 sec
+      Start 505: unit.ReferenceModel_ShaftRegeneratesAfterParameterChanges
+    Test #505: unit.ReferenceModel_ShaftRegeneratesAfterParameterChanges ...................   Passed    4.04 sec
+      Start 505: unit.ReferenceModel_ShaftRegeneratesAfterParameterChanges
+    Test #505: unit.ReferenceModel_ShaftRegeneratesAfterParameterChanges ...................   Passed    4.16 sec
+      Start 505: unit.ReferenceModel_ShaftRegeneratesAfterParameterChanges
+    Test #505: unit.ReferenceModel_ShaftRegeneratesAfterParameterChanges ...................   Passed    3.79 sec
+      Start 505: unit.ReferenceModel_ShaftRegeneratesAfterParameterChanges
+51/70 Test #505: unit.ReferenceModel_ShaftRegeneratesAfterParameterChanges ...................   Passed    3.56 sec
+      Start 506: unit.ReferenceModel_ShaftRegeneratesDeterministically
+    Test #506: unit.ReferenceModel_ShaftRegeneratesDeterministically .......................   Passed    9.46 sec
+      Start 506: unit.ReferenceModel_ShaftRegeneratesDeterministically
+    Test #506: unit.ReferenceModel_ShaftRegeneratesDeterministically .......................   Passed   10.99 sec
+      Start 506: unit.ReferenceModel_ShaftRegeneratesDeterministically
+    Test #506: unit.ReferenceModel_ShaftRegeneratesDeterministically .......................   Passed   10.30 sec
+      Start 506: unit.ReferenceModel_ShaftRegeneratesDeterministically
+    Test #506: unit.ReferenceModel_ShaftRegeneratesDeterministically .......................   Passed    9.46 sec
+      Start 506: unit.ReferenceModel_ShaftRegeneratesDeterministically
+52/70 Test #506: unit.ReferenceModel_ShaftRegeneratesDeterministically .......................   Passed    9.83 sec
+      Start 507: unit.ReferenceModel_ShaftSaveLoad
+    Test #507: unit.ReferenceModel_ShaftSaveLoad ...........................................   Passed    3.05 sec
+      Start 507: unit.ReferenceModel_ShaftSaveLoad
+    Test #507: unit.ReferenceModel_ShaftSaveLoad ...........................................   Passed    2.90 sec
+      Start 507: unit.ReferenceModel_ShaftSaveLoad
+    Test #507: unit.ReferenceModel_ShaftSaveLoad ...........................................   Passed    2.75 sec
+      Start 507: unit.ReferenceModel_ShaftSaveLoad
+    Test #507: unit.ReferenceModel_ShaftSaveLoad ...........................................   Passed    2.77 sec
+      Start 507: unit.ReferenceModel_ShaftSaveLoad
+53/70 Test #507: unit.ReferenceModel_ShaftSaveLoad ...........................................   Passed    2.72 sec
+      Start 508: unit.ReferenceModel_ShaftUndoRedo
+    Test #508: unit.ReferenceModel_ShaftUndoRedo ...........................................   Passed    4.70 sec
+      Start 508: unit.ReferenceModel_ShaftUndoRedo
+    Test #508: unit.ReferenceModel_ShaftUndoRedo ...........................................   Passed    4.31 sec
+      Start 508: unit.ReferenceModel_ShaftUndoRedo
+    Test #508: unit.ReferenceModel_ShaftUndoRedo ...........................................   Passed    4.42 sec
+      Start 508: unit.ReferenceModel_ShaftUndoRedo
+    Test #508: unit.ReferenceModel_ShaftUndoRedo ...........................................   Passed    4.45 sec
+      Start 508: unit.ReferenceModel_ShaftUndoRedo
+54/70 Test #508: unit.ReferenceModel_ShaftUndoRedo ...........................................   Passed    4.54 sec
+      Start 509: unit.ReferenceModel_UBoltBuildsValidGeometry
+    Test #509: unit.ReferenceModel_UBoltBuildsValidGeometry ................................   Passed    0.77 sec
+      Start 509: unit.ReferenceModel_UBoltBuildsValidGeometry
+    Test #509: unit.ReferenceModel_UBoltBuildsValidGeometry ................................   Passed    0.93 sec
+      Start 509: unit.ReferenceModel_UBoltBuildsValidGeometry
+    Test #509: unit.ReferenceModel_UBoltBuildsValidGeometry ................................   Passed    0.98 sec
+      Start 509: unit.ReferenceModel_UBoltBuildsValidGeometry
+    Test #509: unit.ReferenceModel_UBoltBuildsValidGeometry ................................   Passed    0.94 sec
+      Start 509: unit.ReferenceModel_UBoltBuildsValidGeometry
+55/70 Test #509: unit.ReferenceModel_UBoltBuildsValidGeometry ................................   Passed    0.91 sec
+      Start 510: unit.ReferenceModel_UBoltMatchesIndependentProperties
+    Test #510: unit.ReferenceModel_UBoltMatchesIndependentProperties .......................   Passed    0.98 sec
+      Start 510: unit.ReferenceModel_UBoltMatchesIndependentProperties
+    Test #510: unit.ReferenceModel_UBoltMatchesIndependentProperties .......................   Passed    0.94 sec
+      Start 510: unit.ReferenceModel_UBoltMatchesIndependentProperties
+    Test #510: unit.ReferenceModel_UBoltMatchesIndependentProperties .......................   Passed    0.82 sec
+      Start 510: unit.ReferenceModel_UBoltMatchesIndependentProperties
+    Test #510: unit.ReferenceModel_UBoltMatchesIndependentProperties .......................   Passed    0.89 sec
+      Start 510: unit.ReferenceModel_UBoltMatchesIndependentProperties
+56/70 Test #510: unit.ReferenceModel_UBoltMatchesIndependentProperties .......................   Passed    0.81 sec
+      Start 511: unit.ReferenceModel_UBoltRegeneratesAfterParameterChanges
+    Test #511: unit.ReferenceModel_UBoltRegeneratesAfterParameterChanges ...................   Passed    1.23 sec
+      Start 511: unit.ReferenceModel_UBoltRegeneratesAfterParameterChanges
+    Test #511: unit.ReferenceModel_UBoltRegeneratesAfterParameterChanges ...................   Passed    1.04 sec
+      Start 511: unit.ReferenceModel_UBoltRegeneratesAfterParameterChanges
+    Test #511: unit.ReferenceModel_UBoltRegeneratesAfterParameterChanges ...................   Passed    1.09 sec
+      Start 511: unit.ReferenceModel_UBoltRegeneratesAfterParameterChanges
+    Test #511: unit.ReferenceModel_UBoltRegeneratesAfterParameterChanges ...................   Passed    1.16 sec
+      Start 511: unit.ReferenceModel_UBoltRegeneratesAfterParameterChanges
+57/70 Test #511: unit.ReferenceModel_UBoltRegeneratesAfterParameterChanges ...................   Passed    1.04 sec
+      Start 512: unit.ReferenceModel_UBoltRegeneratesDeterministically
+    Test #512: unit.ReferenceModel_UBoltRegeneratesDeterministically .......................   Passed    4.34 sec
+      Start 512: unit.ReferenceModel_UBoltRegeneratesDeterministically
+    Test #512: unit.ReferenceModel_UBoltRegeneratesDeterministically .......................   Passed    4.26 sec
+      Start 512: unit.ReferenceModel_UBoltRegeneratesDeterministically
+    Test #512: unit.ReferenceModel_UBoltRegeneratesDeterministically .......................   Passed    4.35 sec
+      Start 512: unit.ReferenceModel_UBoltRegeneratesDeterministically
+    Test #512: unit.ReferenceModel_UBoltRegeneratesDeterministically .......................   Passed    4.08 sec
+      Start 512: unit.ReferenceModel_UBoltRegeneratesDeterministically
+58/70 Test #512: unit.ReferenceModel_UBoltRegeneratesDeterministically .......................   Passed    3.72 sec
+      Start 513: unit.ReferenceModel_UBoltSaveLoadAndExports
+    Test #513: unit.ReferenceModel_UBoltSaveLoadAndExports .................................   Passed    1.42 sec
+      Start 513: unit.ReferenceModel_UBoltSaveLoadAndExports
+    Test #513: unit.ReferenceModel_UBoltSaveLoadAndExports .................................   Passed    1.33 sec
+      Start 513: unit.ReferenceModel_UBoltSaveLoadAndExports
+    Test #513: unit.ReferenceModel_UBoltSaveLoadAndExports .................................   Passed    1.41 sec
+      Start 513: unit.ReferenceModel_UBoltSaveLoadAndExports
+    Test #513: unit.ReferenceModel_UBoltSaveLoadAndExports .................................   Passed    1.35 sec
+      Start 513: unit.ReferenceModel_UBoltSaveLoadAndExports
+59/70 Test #513: unit.ReferenceModel_UBoltSaveLoadAndExports .................................   Passed    1.39 sec
+      Start 514: unit.ReferenceModel_UBoltUndoRedoAndFailure
+    Test #514: unit.ReferenceModel_UBoltUndoRedoAndFailure .................................   Passed    1.76 sec
+      Start 514: unit.ReferenceModel_UBoltUndoRedoAndFailure
+    Test #514: unit.ReferenceModel_UBoltUndoRedoAndFailure .................................   Passed    1.80 sec
+      Start 514: unit.ReferenceModel_UBoltUndoRedoAndFailure
+    Test #514: unit.ReferenceModel_UBoltUndoRedoAndFailure .................................   Passed    1.81 sec
+      Start 514: unit.ReferenceModel_UBoltUndoRedoAndFailure
+    Test #514: unit.ReferenceModel_UBoltUndoRedoAndFailure .................................   Passed    1.79 sec
+      Start 514: unit.ReferenceModel_UBoltUndoRedoAndFailure
+60/70 Test #514: unit.ReferenceModel_UBoltUndoRedoAndFailure .................................   Passed    1.85 sec
+      Start 518: unit.Regeneration reports broken references
+    Test #518: unit.Regeneration reports broken references .................................   Passed    0.12 sec
+      Start 518: unit.Regeneration reports broken references
+    Test #518: unit.Regeneration reports broken references .................................   Passed    0.09 sec
+      Start 518: unit.Regeneration reports broken references
+    Test #518: unit.Regeneration reports broken references .................................   Passed    0.08 sec
+      Start 518: unit.Regeneration reports broken references
+    Test #518: unit.Regeneration reports broken references .................................   Passed    0.08 sec
+      Start 518: unit.Regeneration reports broken references
+61/70 Test #518: unit.Regeneration reports broken references .................................   Passed    0.08 sec
+      Start 709: cli.validate.reference.shaft
+    Test #709: cli.validate.reference.shaft ................................................   Passed    1.04 sec
+      Start 709: cli.validate.reference.shaft
+    Test #709: cli.validate.reference.shaft ................................................   Passed    1.11 sec
+      Start 709: cli.validate.reference.shaft
+    Test #709: cli.validate.reference.shaft ................................................   Passed    1.13 sec
+      Start 709: cli.validate.reference.shaft
+    Test #709: cli.validate.reference.shaft ................................................   Passed    0.96 sec
+      Start 709: cli.validate.reference.shaft
+62/70 Test #709: cli.validate.reference.shaft ................................................   Passed    1.04 sec
+      Start 710: cli.validate.reference.flange
+    Test #710: cli.validate.reference.flange ...............................................   Passed    1.26 sec
+      Start 710: cli.validate.reference.flange
+    Test #710: cli.validate.reference.flange ...............................................   Passed    1.12 sec
+      Start 710: cli.validate.reference.flange
+    Test #710: cli.validate.reference.flange ...............................................   Passed    1.14 sec
+      Start 710: cli.validate.reference.flange
+    Test #710: cli.validate.reference.flange ...............................................   Passed    1.04 sec
+      Start 710: cli.validate.reference.flange
+63/70 Test #710: cli.validate.reference.flange ...............................................   Passed    1.09 sec
+      Start 711: cli.validate.reference.pulley
+    Test #711: cli.validate.reference.pulley ...............................................   Passed    1.24 sec
+      Start 711: cli.validate.reference.pulley
+    Test #711: cli.validate.reference.pulley ...............................................   Passed    1.21 sec
+      Start 711: cli.validate.reference.pulley
+    Test #711: cli.validate.reference.pulley ...............................................   Passed    1.17 sec
+      Start 711: cli.validate.reference.pulley
+    Test #711: cli.validate.reference.pulley ...............................................   Passed    1.19 sec
+      Start 711: cli.validate.reference.pulley
+64/70 Test #711: cli.validate.reference.pulley ...............................................   Passed    1.18 sec
+      Start 712: cli.validate.reference.bearing_housing
+    Test #712: cli.validate.reference.bearing_housing ......................................   Passed    0.90 sec
+      Start 712: cli.validate.reference.bearing_housing
+    Test #712: cli.validate.reference.bearing_housing ......................................   Passed    0.94 sec
+      Start 712: cli.validate.reference.bearing_housing
+    Test #712: cli.validate.reference.bearing_housing ......................................   Passed    0.86 sec
+      Start 712: cli.validate.reference.bearing_housing
+    Test #712: cli.validate.reference.bearing_housing ......................................   Passed    0.86 sec
+      Start 712: cli.validate.reference.bearing_housing
+65/70 Test #712: cli.validate.reference.bearing_housing ......................................   Passed    0.86 sec
+      Start 713: cli.validate.reference.mounting_bracket
+    Test #713: cli.validate.reference.mounting_bracket .....................................   Passed    1.51 sec
+      Start 713: cli.validate.reference.mounting_bracket
+    Test #713: cli.validate.reference.mounting_bracket .....................................   Passed    1.38 sec
+      Start 713: cli.validate.reference.mounting_bracket
+    Test #713: cli.validate.reference.mounting_bracket .....................................   Passed    1.37 sec
+      Start 713: cli.validate.reference.mounting_bracket
+    Test #713: cli.validate.reference.mounting_bracket .....................................   Passed    1.35 sec
+      Start 713: cli.validate.reference.mounting_bracket
+66/70 Test #713: cli.validate.reference.mounting_bracket .....................................   Passed    1.37 sec
+      Start 714: cli.validate.reference.u_bolt
+    Test #714: cli.validate.reference.u_bolt ...............................................   Passed    0.48 sec
+      Start 714: cli.validate.reference.u_bolt
+    Test #714: cli.validate.reference.u_bolt ...............................................   Passed    0.48 sec
+      Start 714: cli.validate.reference.u_bolt
+    Test #714: cli.validate.reference.u_bolt ...............................................   Passed    0.55 sec
+      Start 714: cli.validate.reference.u_bolt
+    Test #714: cli.validate.reference.u_bolt ...............................................   Passed    0.50 sec
+      Start 714: cli.validate.reference.u_bolt
+67/70 Test #714: cli.validate.reference.u_bolt ...............................................   Passed    0.50 sec
+      Start 715: cli.info.reference.shaft
+    Test #715: cli.info.reference.shaft ....................................................   Passed    0.26 sec
+      Start 715: cli.info.reference.shaft
+    Test #715: cli.info.reference.shaft ....................................................   Passed    0.26 sec
+      Start 715: cli.info.reference.shaft
+    Test #715: cli.info.reference.shaft ....................................................   Passed    0.20 sec
+      Start 715: cli.info.reference.shaft
+    Test #715: cli.info.reference.shaft ....................................................   Passed    0.20 sec
+      Start 715: cli.info.reference.shaft
+68/70 Test #715: cli.info.reference.shaft ....................................................   Passed    0.17 sec
+      Start 716: cli.export-step.reference.bracket
+    Test #716: cli.export-step.reference.bracket ...........................................   Passed    1.59 sec
+      Start 716: cli.export-step.reference.bracket
+    Test #716: cli.export-step.reference.bracket ...........................................   Passed    1.75 sec
+      Start 716: cli.export-step.reference.bracket
+    Test #716: cli.export-step.reference.bracket ...........................................   Passed    1.80 sec
+      Start 716: cli.export-step.reference.bracket
+    Test #716: cli.export-step.reference.bracket ...........................................   Passed    1.59 sec
+      Start 716: cli.export-step.reference.bracket
+69/70 Test #716: cli.export-step.reference.bracket ...........................................   Passed    1.65 sec
+      Start 717: cli.export-stl.reference.pulley
+    Test #717: cli.export-stl.reference.pulley .............................................   Passed    1.21 sec
+      Start 717: cli.export-stl.reference.pulley
+    Test #717: cli.export-stl.reference.pulley .............................................   Passed    1.28 sec
+      Start 717: cli.export-stl.reference.pulley
+    Test #717: cli.export-stl.reference.pulley .............................................   Passed    1.02 sec
+      Start 717: cli.export-stl.reference.pulley
+    Test #717: cli.export-stl.reference.pulley .............................................   Passed    1.14 sec
+      Start 717: cli.export-stl.reference.pulley
+70/70 Test #717: cli.export-stl.reference.pulley .............................................   Passed    1.11 sec
+
+100% tests passed out of 70
+
+Total Test time (real) = 1211.16 sec

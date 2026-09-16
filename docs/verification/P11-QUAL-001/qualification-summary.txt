@@ -1,0 +1,125 @@
+BetterCAD P11-QUAL-001 — Production Part Modeling Qualification
+================================================================
+
+RESULT: PASS
+Gates:  20 of 20 passed, 0 failed, 0 blocked.
+
+Qualified revision
+------------------
+  79dab04bd6e83a5a396b0e6a57199587f720c4eb
+  "BetterCAD: add and verify P11 mechanical reference models"
+  committed and pushed to origin/main before the run; working tree clean
+  (see qualified-revision.txt); no source file changed during the run.
+
+Environment
+-----------
+  Windows 11 Pro 26200, AMD64
+  GCC 16.1.0 (WinLibs MinGW-w64 POSIX UCRT), C++23
+  CMake 4.4.2 (Ninja), Catch2 3.16.0, Qt 6.11.2, Open CASCADE 8.0.1
+  Warnings as errors: ON in all three presets
+
+Run
+---
+  Started  2026-09-16 15:51:20
+  Finished 2026-09-16 17:08:35   (1 h 17 min)
+  21 steps, every one exit 0 (qualification-times.txt)
+
+Scope
+-----
+  P11-FEAT-001 Revolve            P11-FEAT-006 Circular pattern
+  P11-FEAT-002 Chamfer            P11-FEAT-007 Mirror
+  P11-FEAT-003 Fillet             P11-FEAT-008 Sweep
+  P11-FEAT-004 Hole               P11-FEAT-009 Loft
+  P11-FEAT-005 Linear pattern     P11-REF-001  Mechanical reference models
+  plus the P0-P10 core they are built on.
+
+Test inventory (fixed BEFORE the run; test-inventory.txt)
+---------------------------------------------------------
+  registered tests                                 738
+    Catch2 unit tests                              694
+    process and check tests                         44
+  legacy (present at v0.1.0, the P0-P10 release)   301
+  P11 (feature or reference-model tags)            417
+  added since v0.1.0 without a P11 tag              20
+  301 + 417 + 20 = 738; sets disjoint; every test classified.
+
+Builds and tests (each a clean rebuild, all 274 TUs compiled)
+--------------------------------------------------------------
+  preset          TUs  warnings  tests     test time
+  debug           274         0  738/738    386.64 s
+  release         274         0  738/738    354.44 s
+  debug-shared    274         0  738/738    454.70 s
+
+  By category, in every preset (results-by-category.txt):
+    legacy       301/301        P11          417/417
+    additional    20/20         unclassified       0
+  No test reported anything but Passed.
+
+Compiler warnings (warnings.txt)
+--------------------------------
+  0 compiler warnings, 0 CMake warnings, 0 other mentions, over all three
+  build logs. Counted as GCC prints diagnostics, not by searching for the
+  word. 22 warning flags plus -Werror; no -Wno- flag and no
+  "#pragma GCC diagnostic" exists anywhere in src/, include/, apps/,
+  tests/ or examples/. Nothing was silenced to reach zero.
+
+Determinism
+-----------
+  Repeat runs, reference models, 5 rounds (--repeat until-fail:5):
+    release  70 tests, 350 executions, 100% passed, 1211.16 s
+    debug    70 tests, 350 executions, 100% passed, 1232.54 s
+  Fresh processes: 2 per preset = 6 runs across 3 configurations.
+    All six fingerprints identical, MD5 95f874ced3eb07d1c2f5afff8d264f27
+    (excluding wall-clock timing lines).
+    P11-REF-001's separate earlier run produced the same digest.
+  Cross-configuration (cross-configuration.txt):
+    worst difference over all six models and all six runs:
+    0 relative in volume and area, 0 mm in position; no structural
+    difference.
+
+Other gates
+-----------
+  Failure paths and atomicity      124/124 passed (113.39 s)
+    includes 13 compile_fail tests requiring that unit and ID misuse
+    does not compile.
+  Persistence                      20 save/load, 22 undo/redo tests
+  STEP/STL                         43 export tests (read back and measured)
+  CLI smoke, real executable       28 invocations: 27 exit 0, plus the
+                                   intended failure reported as a
+                                   diagnostic with exit 1 (cli-smoke.log)
+  Evidence audit                   10 P11 milestones, 171 files, all
+                                   tracked in git, 0 placeholders, all PASS
+
+Bugs found during qualification
+-------------------------------
+  None. No test failed at any point; no retry was needed.
+
+Fixes made
+----------
+  None, and none were needed. No production code was modified during the
+  qualification.
+
+Known limitations (unchanged by this run; see README.md)
+--------------------------------------------------------
+  - Geometric references do not follow geometry a parameter moves; the
+    feature fails with NotFound rather than substituting an edge.
+  - Uniting a half body with its mirror image is refused when a half
+    cylinder lies on the mirror plane (pinned by a regression test).
+  - Parameter expressions are stored but not evaluated (P1-003).
+  - An extrude has no through-all mode.
+  - A loft's sides stay B-spline faces: 6.0e-12 relative, 3.4e-6 mm.
+  - No angle, tangent, midpoint or symmetry sketch constraints.
+
+Limits of this evidence
+-----------------------
+  One platform (Windows/GCC/OCCT 8.0.1); no CI; no sanitizers, coverage
+  or memory checking; .clang-format is not enforced by any check; the GUI
+  is a placeholder and is not qualified. 738 tests passing means 738 tests
+  passed, not that untested behaviour is correct.
+
+Conclusion
+----------
+  Revision 79dab04 is qualified as BetterCAD's production part modeling
+  system. Three clean builds, 738/738 tests three times over, 0 warnings,
+  and six mechanical reference models that come out bit-identical in every
+  build and every process that produced them.

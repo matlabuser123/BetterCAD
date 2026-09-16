@@ -1,0 +1,4 @@
+79dab04bd6e83a5a396b0e6a57199587f720c4eb
+?? docs/verification/P11-QUAL-001/README.md
+?? docs/verification/P11-QUAL-001/qualified-revision.txt
+?? docs/verification/P11-QUAL-001/test-inventory.txt

@@ -1,0 +1,348 @@
+P11-QUAL-001 CLI smoke, Wed 16/09/2026 17:10:25.14
+Command: build\release\bin\bettercad-cli.exe
+
+=== version
+bettercad-cli 0.1.0
+exit 0
+
+=== new
+Created C:\Users\uqhas\AppData\Local\Temp\p11-qual-cli\scratch.bcad (document 'QualificationScratch', ID ff3a58b7-09b2-4aad-aafd-10403ed71ff7)
+exit 0
+
+=== info.scratch
+Document: QualificationScratch
+File: C:\Users\uqhas\AppData\Local\Temp\p11-qual-cli\scratch.bcad
+ID: ff3a58b7-09b2-4aad-aafd-10403ed71ff7
+
+Parameters (0):
+
+Objects (0):
+exit 0
+
+=== info.shaft
+Document: Shaft
+File: examples\models\reference\shaft.bcad
+ID: 5eed0000-0000-4000-8000-000000000001
+
+Parameters (10):
+  r1                  15 mm
+  l1                  40 mm
+  r2                  20 mm
+  l2                  40 mm
+  r3                  12.5 mm
+  half_length         60 mm
+  centre_drill_d      4 mm
+  centre_drill_depth  10 mm
+  shoulder_fillet_r   1.5 mm
+  end_chamfer         1 mm
+
+Objects (6):
+  object:11  sketch   Profile          17 entities, 17 constraints, driven by r1, l1, r2, l2, r3, half_length
+  object:12  revolve  Turn             profile Profile, axis sketch Y axis, angle 360 deg, positive, new body
+  object:13  hole     CentreDrill      target Turn, countersink blind hole centre_drill_depth deep, diameter centre_drill_d, countersink 8.5 mm at 60 deg, centre (0 mm, 0 mm) on plane through (0, 0, 0) mm facing (0, 0, -1)
+  object:14  mirror   TailCentreDrill  source CentreDrill, feature mirror across the plane through (0, 0, 0) mm facing (0, 0, 1), offset half_length
+  object:15  fillet   ShoulderFillets  target TailCentreDrill, 2 edges, radius shoulder_fillet_r
+  object:16  chamfer  EndChamfers      target ShoulderFillets, 2 edges, equal distance end_chamfer
+exit 0
+
+=== validate.shaft
+Validating examples\models\reference\shaft.bcad
+  document consistency  ok
+  missing references    ok
+  dependency cycles     ok
+  sketch constraints    ok
+  feature regeneration  ok, 6 objects regenerated
+  geometry              ok, 1 result body
+Result bodies (1):
+  EndChamfers (object:16): 1 solid, volume 97773.099 mm^3, area 14480.007 mm^2, bounds (-20, -20, 0) to (20, 20, 120) mm
+Result: valid
+exit 0
+
+=== export-step.shaft
+Wrote C:\Users\uqhas\AppData\Local\Temp\p11-qual-cli\shaft.step: STEP AP214 (mm), 1 body (EndChamfers), 36902 bytes
+exit 0
+
+=== export-stl.shaft
+Wrote C:\Users\uqhas\AppData\Local\Temp\p11-qual-cli\shaft.stl: binary STL (mm), 1 body (EndChamfers: 3192 triangles), tolerance 0.1 mm and 20 deg, 159684 bytes
+exit 0
+
+=== info.flange
+Document: Flange
+File: examples\models\reference\flange.bcad
+ID: 5eed0000-0000-4000-8000-000000000002
+
+Parameters (8):
+  outer_r        50 mm
+  thickness      12 mm
+  bore_d         30 mm
+  bolt_circle_r  35 mm
+  bolt_d         8 mm
+  bolt_count     6
+  edge_chamfer   1 mm
+  rim_fillet_r   2 mm
+
+Objects (7):
+  object:9   sketch            DiscSketch    2 entities, 2 constraints, driven by outer_r
+  object:10  extrude           Disc          profile DiscSketch, depth thickness, normal, new body
+  object:11  hole              Bore          target Disc, simple through hole, diameter bore_d, centre (0 mm, 0 mm) on plane through (0, 0, 0) mm facing (0, 0, -1)
+  object:12  hole              BoltHole      target Bore, simple through hole, diameter bolt_d, centre (bolt_circle_r, 0 mm) on plane through (0, 0, 0) mm facing (0, 0, -1)
+  object:13  circular_pattern  BoltCircle    source BoltHole, bolt_count around the axis through (0, 0, 0) mm along (0, 0, 1), full circle
+  object:14  chamfer           EdgeChamfers  target BoltCircle, 2 edges, equal distance edge_chamfer
+  object:15  fillet            RimFillet     target EdgeChamfers, 1 edge, radius rim_fillet_r
+exit 0
+
+=== validate.flange
+Validating examples\models\reference\flange.bcad
+  document consistency  ok
+  missing references    ok
+  dependency cycles     ok
+  sketch constraints    ok
+  feature regeneration  ok, 7 objects regenerated
+  geometry              ok, 1 result body
+Result bodies (1):
+  RimFillet (object:15): 1 solid, volume 81674.894 mm^3, area 19890.807 mm^2, bounds (-50, -50, 0) to (50, 50, 12) mm
+Result: valid
+exit 0
+
+=== export-step.flange
+Wrote C:\Users\uqhas\AppData\Local\Temp\p11-qual-cli\flange.step: STEP AP214 (mm), 1 body (RimFillet), 39269 bytes
+exit 0
+
+=== export-stl.flange
+Wrote C:\Users\uqhas\AppData\Local\Temp\p11-qual-cli\flange.stl: binary STL (mm), 1 body (RimFillet: 3346 triangles), tolerance 0.1 mm and 20 deg, 167384 bytes
+exit 0
+
+=== info.pulley
+Document: Pulley
+File: examples\models\reference\pulley.bcad
+ID: 5eed0000-0000-4000-8000-000000000003
+
+Parameters (14):
+  outer_r              60 mm
+  rim_inner_r          50 mm
+  rim_width            30 mm
+  hub_r                25 mm
+  hub_length           40 mm
+  web_z0               10 mm
+  web_thickness        10 mm
+  bore_d               20 mm
+  groove_z             15 mm
+  groove_depth         6 mm
+  groove_width         12 mm
+  groove_bottom_width  4 mm
+  web_fillet_r         3 mm
+  hub_chamfer          1 mm
+
+Objects (7):
+  object:15  sketch   Section        24 entities, 23 constraints, driven by outer_r, rim_inner_r, rim_width, hub_r, hub_length, web_z0, web_thickness
+  object:16  revolve  Blank          profile Section, axis sketch Y axis, angle 360 deg, positive, new body
+  object:17  sketch   GrooveSection  24 entities, 21 constraints, driven by outer_r, groove_z, groove_depth, groove_width, groove_bottom_width
+  object:18  revolve  Groove         profile GrooveSection, axis line entity:4, angle 360 deg, positive, cut Blank
+  object:19  hole     Bore           target Groove, simple through hole, diameter bore_d, centre (0 mm, 0 mm) on plane through (0, 0, 0) mm facing (0, 0, -1)
+  object:20  fillet   WebFillets     target Bore, 4 edges, radius web_fillet_r
+  object:21  chamfer  HubChamfers    target WebFillets, 2 edges, equal distance hub_chamfer
+exit 0
+
+=== validate.pulley
+Validating examples\models\reference\pulley.bcad
+  document consistency  ok
+  missing references    ok
+  dependency cycles     ok
+  sketch constraints    ok
+  feature regeneration  ok, 7 objects regenerated
+  geometry              ok, 1 result body
+Result bodies (1):
+  HubChamfers (object:21): 1 solid, volume 212874.606 mm^3, area 47408.019 mm^2, bounds (-60, -60, 0) to (60, 60, 40) mm
+Result: valid
+exit 0
+
+=== export-step.pulley
+Wrote C:\Users\uqhas\AppData\Local\Temp\p11-qual-cli\pulley.step: STEP AP214 (mm), 1 body (HubChamfers), 50100 bytes
+exit 0
+
+=== export-stl.pulley
+Wrote C:\Users\uqhas\AppData\Local\Temp\p11-qual-cli\pulley.stl: binary STL (mm), 1 body (HubChamfers: 8760 triangles), tolerance 0.1 mm and 20 deg, 438084 bytes
+exit 0
+
+=== info.bearing_housing
+Document: BearingHousing
+File: examples\models\reference\bearing_housing.bcad
+ID: 5eed0000-0000-4000-8000-000000000004
+
+Parameters (13):
+  base_half_length  60 mm
+  base_width        60 mm
+  base_t            12 mm
+  boss_r            35 mm
+  axis_height       45 mm
+  bore_r            20 mm
+  mount_d           10 mm
+  mount_x           48 mm
+  mount_y           15 mm
+  mount_pitch_x     96 mm
+  mount_pitch_y     30 mm
+  boss_fillet_r     3 mm
+  base_chamfer      1.5 mm
+
+Objects (11):
+  object:14  sketch          BaseSection   8 entities, 7 constraints, driven by base_half_length, base_t
+  object:15  extrude         Base          profile BaseSection, depth base_width, symmetric, new body
+  object:16  sketch          BossSection   9 entities, 8 constraints, driven by boss_r, axis_height
+  object:17  extrude         Boss          profile BossSection, depth base_width, symmetric, join Base
+  object:18  mirror          Housing       source Boss, body mirror across the plane through (0, 0, 0) mm facing (1, 0, 0), original kept
+  object:19  sketch          BoreSection   3 entities, 4 constraints, driven by axis_height, bore_r
+  object:20  extrude         Bore          profile BoreSection, depth base_width, symmetric, cut Housing
+  object:21  hole            MountHole     target Bore, simple through hole, diameter mount_d, centre (mount_x, mount_y) on plane through (0, 0, 12) mm facing (0, 0, 1)
+  object:22  linear_pattern  MountHoles    source MountHole, 2 x mount_pitch_x along (-1, 0, 0) by 2 x mount_pitch_y along (0, -1, 0)
+  object:23  fillet          BossFillets   target MountHoles, 2 edges, radius boss_fillet_r
+  object:24  chamfer         BaseChamfers  target BossFillets, 2 edges, equal distance base_chamfer
+exit 0
+
+=== validate.bearing_housing
+Validating examples\models\reference\bearing_housing.bcad
+  document consistency  ok
+  missing references    ok
+  dependency cycles     ok
+  sketch constraints    ok
+  feature regeneration  ok, 11 objects regenerated
+  geometry              ok, 1 result body
+Result bodies (1):
+  BaseChamfers (object:24): 1 solid, volume 261382.165 mm^3, area 39195.261 mm^2, bounds (-60, -30, 0) to (60, 30, 80) mm
+Result: valid
+exit 0
+
+=== export-step.bearing_housing
+Wrote C:\Users\uqhas\AppData\Local\Temp\p11-qual-cli\bearing_housing.step: STEP AP214 (mm), 1 body (BaseChamfers), 66125 bytes
+exit 0
+
+=== export-stl.bearing_housing
+Wrote C:\Users\uqhas\AppData\Local\Temp\p11-qual-cli\bearing_housing.stl: binary STL (mm), 1 body (BaseChamfers: 1000 triangles), tolerance 0.1 mm and 20 deg, 50084 bytes
+exit 0
+
+=== info.mounting_bracket
+Document: MountingBracket
+File: examples\models\reference\mounting_bracket.bcad
+ID: 5eed0000-0000-4000-8000-000000000005
+
+Parameters (22):
+  width              100 mm
+  base_width         60 mm
+  base_t             10 mm
+  plate_height       70 mm
+  plate_t            10 mm
+  hole_d             8 mm
+  hole_inset         15 mm
+  hole_row           25 mm
+  hole_pitch_x       70 mm
+  hole_pitch_y       20 mm
+  plate_hole_x       20 mm
+  plate_hole_z       45 mm
+  centre_x           50 mm
+  gusset_back        5 mm
+  gusset_embed       5 mm
+  gusset_top         50 mm
+  gusset_foot_t      10 mm
+  gusset_foot_depth  45 mm
+  gusset_tip_t       6 mm
+  gusset_tip_depth   7 mm
+  inner_fillet_r     5 mm
+  outer_chamfer      2 mm
+
+Objects (13):
+  object:23  sketch          BaseSection   8 entities, 7 constraints, driven by width, base_width
+  object:24  extrude         BasePlate     profile BaseSection, depth base_t, normal, new body
+  object:25  sketch          PlateSection  8 entities, 7 constraints, driven by width, plate_height
+  object:26  extrude         BackPlate     profile PlateSection, depth plate_t, reversed, join BasePlate
+  object:27  hole            BaseHole      target BackPlate, simple through hole, diameter hole_d, centre (hole_inset, hole_row) on plane through (0, 0, 10) mm facing (0, 0, 1)
+  object:28  linear_pattern  BaseHoles     source BaseHole, 2 x hole_pitch_x along (1, 0, 0) by 2 x hole_pitch_y along (0, 1, 0)
+  object:29  hole            PlateHole     target BaseHoles, simple through hole, diameter hole_d, centre (plate_hole_x, plate_hole_z) on plane through (0, 10, 0) mm facing (0, 1, 0)
+  object:30  mirror          PlateHoles    source PlateHole, feature mirror across the plane through (0, 0, 0) mm facing (1, 0, 0), offset centre_x
+  object:31  fillet          InnerFillet   target PlateHoles, 1 edge, radius inner_fillet_r
+  object:32  chamfer         OuterChamfer  target InnerFillet, 1 edge, equal distance outer_chamfer
+  object:33  sketch          GussetFoot    14 entities, 12 constraints, driven by centre_x, gusset_back, gusset_foot_t, gusset_foot_depth
+  object:34  sketch          GussetTip     14 entities, 12 constraints, driven by centre_x, gusset_back, gusset_tip_t, gusset_tip_depth
+  object:35  loft            Gusset        sections GussetFoot (offset gusset_embed) to GussetTip (offset gusset_top), ruled, join OuterChamfer
+exit 0
+
+=== validate.mounting_bracket
+Validating examples\models\reference\mounting_bracket.bcad
+  document consistency  ok
+  missing references    ok
+  dependency cycles     ok
+  sketch constraints    ok
+  feature regeneration  ok, 13 objects regenerated
+  geometry              ok, 1 result body
+Result bodies (1):
+  Gusset (object:35): 1 solid, volume 123546.715 mm^3, area 30268.485 mm^2, bounds (0, 0, 0) to (100, 60, 70) mm
+Result: valid
+exit 0
+
+=== export-step.mounting_bracket
+Wrote C:\Users\uqhas\AppData\Local\Temp\p11-qual-cli\mounting_bracket.step: STEP AP214 (mm), 1 body (Gusset), 111203 bytes
+exit 0
+
+=== export-stl.mounting_bracket
+Wrote C:\Users\uqhas\AppData\Local\Temp\p11-qual-cli\mounting_bracket.stl: binary STL (mm), 1 body (Gusset: 1386 triangles), tolerance 0.1 mm and 20 deg, 69384 bytes
+exit 0
+
+=== info.u_bolt
+Document: UBolt
+File: examples\models\reference\u_bolt.bcad
+ID: 5eed0000-0000-4000-8000-000000000006
+
+Parameters (4):
+  rod_r        5 mm
+  leg          60 mm
+  bend_r       25 mm
+  end_chamfer  1 mm
+
+Objects (4):
+  object:5  sketch   RodSection   2 entities, 2 constraints, driven by rod_r
+  object:6  sketch   Route        8 entities, 8 constraints, driven by leg, bend_r
+  object:7  sweep    Rod          profile RodSection, path Route (3 edges), follow path, new body
+  object:8  chamfer  EndChamfers  target Rod, 2 edges, equal distance end_chamfer
+exit 0
+
+=== validate.u_bolt
+Validating examples\models\reference\u_bolt.bcad
+  document consistency  ok
+  missing references    ok
+  dependency cycles     ok
+  sketch constraints    ok
+  feature regeneration  ok, 4 objects regenerated
+  geometry              ok, 1 result body
+Result bodies (1):
+  EndChamfers (object:8): 1 solid, volume 15563.959 mm^3, area 6354.983 mm^2, bounds (-5, -5, -90) to (55, 5, 0) mm
+Result: valid
+exit 0
+
+=== export-step.u_bolt
+Wrote C:\Users\uqhas\AppData\Local\Temp\p11-qual-cli\u_bolt.step: STEP AP214 (mm), 1 body (EndChamfers), 17243 bytes
+exit 0
+
+=== export-stl.u_bolt
+Wrote C:\Users\uqhas\AppData\Local\Temp\p11-qual-cli\u_bolt.stl: binary STL (mm), 1 body (EndChamfers: 2012 triangles), tolerance 0.1 mm and 20 deg, 100684 bytes
+exit 0
+
+=== validate.missing
+Validating C:\Users\uqhas\AppData\Local\Temp\p11-qual-cli\does-not-exist.bcad
+  document consistency  1 error
+    error: 'C:\Users\uqhas\AppData\Local\Temp\p11-qual-cli\does-not-exist.bcad' does not exist or is not a file
+Result: invalid (1 error)
+exit 1
+
+
+Exported files (name, size in bytes):
+bearing_housing.step 66125
+bearing_housing.stl 50084
+flange.step 39269
+flange.stl 167384
+mounting_bracket.step 111203
+mounting_bracket.stl 69384
+pulley.step 50100
+pulley.stl 438084
+scratch.bcad 334
+shaft.step 36902
+shaft.stl 159684
+u_bolt.step 17243
+u_bolt.stl 100684
