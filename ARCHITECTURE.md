@@ -1,8 +1,29 @@
 # BetterCAD — Architecture
 
-This document defines the intended software architecture of BetterCAD.
-
 BetterCAD is a modular, headless-first, verification-driven mechanical CAD/CAE platform.
+
+**What this document is for.** It defines how BetterCAD must be *structured*:
+its layers, module boundaries, allowed and forbidden dependency directions, and
+the invariants every future milestone has to preserve. It describes technical
+boundaries, never schedule. What gets built, and when, is decided elsewhere:
+
+| Question | Authority |
+| --- | --- |
+| What is BetterCAD, and how do I build it? | [README.md](README.md) |
+| Where is BetterCAD going? | [ROADMAP.md](ROADMAP.md) |
+| What is actually complete, and what is next? | [TODO.md](TODO.md) |
+| How must the system be structured? | **this document** |
+| How must the work be executed and verified? | [CLAUDE.md](CLAUDE.md) |
+| What proves a milestone is complete? | [docs/verification/](docs/verification/) |
+
+**Intended architecture versus as-built.** This file is the *target*
+architecture, and much of it is still ahead of the code. For the architecture
+**as implemented today** — the real build targets, namespaces, layering checks
+and module contracts — see [docs/architecture.md](docs/architecture.md), which
+is kept in step with the source and is enforced by the `architecture.layering`
+test. Where the two differ, `docs/architecture.md` describes what exists and
+this document describes what it must be able to grow into without a rewrite.
+Neither file records project status.
 
 The architecture must support long-term growth into:
 
@@ -54,7 +75,75 @@ external integrations
 
 ---
 
+## 1.1 Architectural Invariants
+
+These are the rules every milestone must preserve. They are the shortest
+statement of this document; the rest of it explains and elaborates them. A
+change that breaks one of these is an architecture change, not an
+implementation detail, and needs an explicit decision — see
+[CLAUDE.md](CLAUDE.md).
+
+```text
+1.  The Document owns canonical engineering state.
+2.  Generated B-Reps are derived state, never the model itself.
+3.  Feature definitions are persistent engineering intent.
+4.  Open CASCADE lives behind BetterCAD-owned abstractions.
+5.  The GUI does not own CAD state.
+6.  The CLI uses the same public/core API as every other client.
+7.  Simulation must not depend on the GUI.
+8.  AI operates only through validated public APIs.
+9.  Stable typed IDs identify engineering objects; indices and addresses do not.
+10. Units are part of correctness, not a display concern.
+11. Regeneration is dependency-driven and transactional.
+12. Failures are explicit, structured and atomic.
+13. Dependencies flow downward only; module cycles are prohibited.
+14. The core depends on no GUI, no renderer and no kernel implementation type.
+```
+
+Invariants 1–4, 6 and 9–12 are exercised by the shipped system today; 5 is
+held by the layering check even though the desktop application is still a
+placeholder; 7 and 8 constrain subsystems that do not exist yet. See
+[TODO.md](TODO.md) for what is implemented and
+[docs/verification/](docs/verification/) for the evidence.
+
+---
+
 # 2. Top-Level Architecture
+
+```text
+Applications
+├── Desktop            Qt, placeholder shell today
+├── CLI                bettercad-cli
+├── Python  [future]
+└── AI      [future]
+       │
+       ▼
+Public BetterCAD API
+       │
+       ▼
+Document / Commands / Transactions
+       │
+       ├── Parameters
+       ├── Sketches
+       ├── Features
+       ├── Bodies
+       ├── Assemblies  [future]
+       └── Simulation  [future]
+       │
+       ▼
+Dependency / Regeneration Engine
+       │
+       ▼
+Geometry Services
+       │
+       ▼
+Geometry Backend Adapter
+       │
+       ▼
+OCCT
+```
+
+The same stack, drawn by subsystem rather than by layer:
 
 ```text
 ┌──────────────────────────────────────────────────────┐
@@ -101,6 +190,9 @@ Assembly        Simulation        Manufacturing
     ▼               ▼                  ▼
 Motion          Mesh/FEA/CFD          CAM
 ```
+
+Nothing marked `[future]` exists. The architecture reserves its place; it does
+not claim it.
 
 ---
 
@@ -151,7 +243,14 @@ future AI agent
 
 # 4. Repository Layout
 
-Recommended long-term layout:
+This is the **target** long-term layout. Directories appear here because the
+architecture reserves a place for them, not because they exist: `benchmarks/`,
+`results/`, `docs/adr/`, `src/assembly/`, `src/drawing/`, `src/simulation/` and
+`src/versioning/` are not in the repository yet, and `src/renderer/` and
+`src/scripting/` exist only as empty placeholders. For the directories that
+hold code today see
+*Repository structure* in [README.md](README.md); for the modules that exist
+today see [docs/architecture.md](docs/architecture.md).
 
 ```text
 BetterCAD/
@@ -2385,7 +2484,9 @@ simulation tied to viewport mesh
 
 # 85. Architectural Decision Records
 
-For major architectural choices, add:
+For major architectural choices, add (`docs/adr/` does not exist yet; the
+reasoning it would hold currently lives in the milestone evidence under
+[docs/verification/](docs/verification/)):
 
 ```text
 docs/adr/
@@ -2458,40 +2559,40 @@ Geometry / Numerics / Persistence Backends
 
 ---
 
-# 87. Immediate Priority
+# 87. Architecture vs Roadmap
 
-Implement this architecture in the smallest useful order:
-
-```text
-1. Core IDs and units
-2. Parameter model
-3. Document
-4. Commands/transactions
-5. Dependency graph
-6. Geometry abstraction
-7. OCCT backend
-8. Sketch model
-9. Constraint representation
-10. Minimal solver
-11. Extrude
-12. Regeneration
-13. Save/load
-14. CLI validation
-15. Minimal GUI
-```
-
-Do not prematurely build:
+Four documents govern the project, and they answer different questions. Keeping
+them separate is what stops any one of them from quietly becoming the others.
 
 ```text
-assembly solver
-FEA
-CFD
-CAM
-AI
-cloud services
+ARCHITECTURE.md   defines allowed structure.
+ROADMAP.md        defines intended direction.
+TODO.md           authorizes implementation.
+CLAUDE.md         defines execution rules.
 ```
 
-until the vertical parametric modeling slice is stable.
+Consequences worth stating plainly:
+
+* **This document never schedules anything.** It says how a subsystem must be
+  shaped if it is built, not when it is built and not that it will be. A
+  section here on assemblies, simulation or AI is a reserved shape, not a
+  commitment and not a claim of existence.
+* **Appearing in this document is not authorization.** Only
+  [TODO.md](TODO.md) authorizes work, and only its evidence links mark it
+  complete.
+* **This document does not record status.** No test counts, no milestone
+  history, no qualification results. Those belong to [TODO.md](TODO.md) and
+  [docs/verification/](docs/verification/).
+* **Architecture outranks convenience.** When a milestone's easiest
+  implementation would break an invariant in §1.1, the invariant wins or the
+  architecture is changed deliberately and written down here first.
+
+The order in which the architecture was built up — core IDs and units,
+parameters, document, commands, dependency graph, geometry abstraction, OCCT
+backend, sketch model, constraints, solver, extrude, regeneration, save/load,
+CLI validation — is recorded in [TODO.md](TODO.md) with its evidence. Each of
+those layers exists because the one below it was verified first, and future
+subsystems are expected to arrive the same way.
 
 ---
 
@@ -2516,3 +2617,15 @@ Engineering Model
 Geometry, render meshes, drawings, simulation meshes, and analysis results are derived representations of that engineering model.
 
 That distinction is the foundation of the entire BetterCAD architecture.
+
+---
+
+# Project Documents
+
+* [README.md](README.md) — project overview and getting started
+* [ROADMAP.md](ROADMAP.md) — long-term capability direction
+* [TODO.md](TODO.md) — authoritative implementation status and next work
+* [ARCHITECTURE.md](ARCHITECTURE.md) — system architecture and dependency rules (this document)
+* [CLAUDE.md](CLAUDE.md) — engineering workflow and verification rules
+* [docs/architecture.md](docs/architecture.md) — the architecture as built today
+* [docs/verification/](docs/verification/) — evidence for completed milestones

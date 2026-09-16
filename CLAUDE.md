@@ -8,7 +8,64 @@ The most important rule is:
 
 > Do not confuse implementation with completion.
 
-A task is complete only when it is implemented, tested, validated, and supported by real evidence.
+A milestone is complete only when there is:
+
+```text
+implementation
++ tests
++ independent validation where applicable
++ deterministic regression
++ evidence
+```
+
+---
+
+# 0. Read Before Working
+
+Read these, in this order, before touching anything:
+
+```text
+1. TODO.md                  what is complete, what is next, what is authorized
+2. CLAUDE.md                this file — how the work must be done
+3. ARCHITECTURE.md          the structure the work must preserve
+4. ROADMAP.md               why this capability exists and what it leads to
+5. the relevant evidence    docs/verification/<milestone>/
+```
+
+## 0.1 Which document decides what
+
+| Question | Authority |
+| --- | --- |
+| What is BetterCAD, and how do I build it? | [README.md](README.md) |
+| What are we building long-term? | [ROADMAP.md](ROADMAP.md) |
+| What is actually complete? | [TODO.md](TODO.md) + [docs/verification/](docs/verification/) |
+| What should be implemented next? | [TODO.md](TODO.md) |
+| How must the system be structured? | [ARCHITECTURE.md](ARCHITECTURE.md) |
+| How must the work be executed? | **this file** |
+| What proves completion? | [docs/verification/](docs/verification/) |
+
+Two rules follow from that table, and they are not negotiable.
+
+**Authorization comes only from `TODO.md`.**
+
+> If `TODO.md` says a capability is not authorized, do not begin it merely
+> because `ROADMAP.md` lists it next.
+
+Being listed in `ROADMAP.md`, being described in `ARCHITECTURE.md`, being the
+obvious next step, or being easy are all irrelevant. A capability is authorized
+when `TODO.md` records it as an open milestone with an ID and acceptance gates,
+and not before. If the next milestone is not recorded, the correct action is to
+stop and say so.
+
+**Documentation follows evidence.**
+
+> Never change `ROADMAP.md`, `TODO.md` or `ARCHITECTURE.md` to make an
+> implementation appear complete.
+
+Documentation work cannot produce engineering completion. Editing a document
+never ticks a checkbox, never advances a status, and never turns `PLANNED` into
+`COMPLETE`. When a document and the evidence disagree, the evidence is right
+and the document is corrected to match it — never the other way round.
 
 ---
 
@@ -116,21 +173,16 @@ Prefer minimal, well-justified changes.
 
 # 2. Project Priority
 
-Current priority is the parametric CAD foundation.
+The parametric CAD foundation — `P0`–`P11` — is complete and qualified. That
+does not promote anything else; see `TODO.md` for the current position, which
+is what this section defers to rather than restates.
 
-Work roughly in this order:
+Priority is therefore standing rather than sequential:
 
 ```text
-P0  Repository foundation
-P1  Engineering core
-P2  Document model
-P3  Geometry kernel
-P4  Sketch model
-P5  Constraint solver
-P6  Parametric features
-P7  Regeneration engine
-P8  Persistence
-P9  Minimal desktop CAD workflow
+1. Fix a failed gate or a regression in what already works.
+2. Complete the open milestone in TODO.md, if one is open.
+3. Otherwise: stop, and ask for the next scope decision.
 ```
 
 Do not start major work on:
@@ -138,6 +190,8 @@ Do not start major work on:
 ```text
 assemblies
 drawings
+semantic topology
+GUI development
 FEA
 CFD
 thermal
@@ -147,7 +201,8 @@ CAM
 cloud collaboration
 ```
 
-until explicitly authorized or the roadmap reaches those phases.
+until `TODO.md` records it as an authorized milestone. The roadmap "reaching a
+phase" is not authorization; only `TODO.md` authorizes.
 
 ---
 
@@ -877,31 +932,26 @@ Do not add dependencies only to save a few lines of code.
 
 # 22. File and Module Organization
 
-Keep subsystem boundaries clear.
+Keep subsystem boundaries clear, and put new code where the architecture says
+it goes. `ARCHITECTURE.md` owns the target layout and the dependency rules;
+`docs/architecture.md` records the modules and targets that exist today. Do not
+invent a third layout here.
 
-Suggested layout:
+The rules that matter while writing code:
 
 ```text
-src/
-├── core/
-│   ├── document/
-│   ├── geometry/
-│   ├── parameters/
-│   ├── topology/
-│   └── units/
-├── sketch/
-│   ├── entities/
-│   ├── constraints/
-│   └── solver/
-├── features/
-├── io/
-├── renderer/
-├── assembly/
-├── simulation/
-└── scripting/
+public headers    include/bettercad/<module>/, included as <bettercad/...>
+private headers   next to their sources in src/<module>/
+kernel code       only in an occt/ adapter directory under src/
+Qt code           only in apps/bettercad/ and src/renderer/
 ```
 
-Avoid circular dependencies between modules.
+A module may include the public headers of its own module or of a lower layer,
+and nothing else. Layers: `core` 0, `sketch` 1, `features` 2, `io` 3,
+`renderer`/`scripting` 4.
+
+Avoid circular dependencies between modules. The `architecture.layering` test
+enforces all of the above and fails the build; do not work around it.
 
 ---
 
@@ -950,19 +1000,19 @@ selection intent
 
 Maintain permanent test models.
 
-Recommended progression:
+The models that exist live in `examples/models/reference/`, are built by
+`examples/reference_models/` through the public API alone, and are validated
+against geometry computed independently from their parameters. `TODO.md` and
+`ROADMAP.md` record which exist and which are planned; do not restate the list
+here.
+
+Rules that apply to every reference model:
 
 ```text
-01_simple_block
-02_flanged_shaft
-03_bearing_housing
-04_mounting_bracket
-05_pulley
-06_motor_mount
-07_gearbox_housing
-08_four_bar_linkage
-09_small_assembly
-10_machine_frame
+built only through the public API
+validated against independently computed geometry
+regenerated deterministically, across processes and build configurations
+saved files kept byte-identical to what the builders produce
 ```
 
 Do not delete reference models merely because they reveal regressions.
@@ -995,35 +1045,32 @@ A benchmark that produces the wrong answer is not a valid performance result.
 
 When implementing a substantial subsystem, update relevant documentation.
 
-At minimum keep synchronized:
+Each document answers one question, and updating one is not updating another:
 
 ```text
-README.md
-ROADMAP.md
-TODO.md
-CLAUDE.md
-docs/
+README.md          What is BetterCAD, and what can it actually do today?
+ROADMAP.md         Where are we going?
+TODO.md            What is complete, and what exactly is next?
+ARCHITECTURE.md    How must the system be structured?
+CLAUDE.md          How must Claude work?
+docs/architecture.md   How is it structured today, as built?
+docs/verification/     What proves a milestone is complete?
 ```
 
-Do not duplicate volatile implementation details unnecessarily.
+Rules:
 
-`ROADMAP.md` answers:
+* Do not duplicate volatile implementation details across documents. Put a
+  fact in the document that owns it and link to it from the others.
+* Status belongs to `TODO.md` and the evidence. `ROADMAP.md` carries
+  capability-level status only; `ARCHITECTURE.md` and `CLAUDE.md` carry none.
+* Test counts, qualification results and milestone history belong to
+  `TODO.md` and `docs/verification/`. `README.md` may carry a short verified
+  summary. Nothing else scatters raw numbers.
+* Do not write documentation in the direction that flatters the code. See
+  §0.1: documentation follows evidence.
 
-```text
-Where are we going?
-```
-
-`TODO.md` answers:
-
-```text
-What exactly is next?
-```
-
-`CLAUDE.md` answers:
-
-```text
-How must Claude work?
-```
+Documentation-only changes are reported as documentation work. They never
+change a checkbox, a status or a milestone.
 
 ---
 
@@ -1065,17 +1112,25 @@ where useful.
 
 # 29. Evidence
 
-For significant tasks, preserve evidence where practical.
+For significant tasks, preserve evidence.
 
-Suggested structure:
+Evidence lives in one place, one directory per milestone, named for the
+milestone:
 
 ```text
-results/
-├── validation/
-├── benchmarks/
-├── regression/
-└── release/
+docs/verification/
+├── P0-001/
+├── P1-001/
+├── ...
+├── P11-FEAT-009/
+├── P11-REF-001/
+└── P11-QUAL-001/
 ```
+
+Each directory holds a `README.md` stating what was run, what was measured and
+the result, plus the raw logs it cites. Every `[x]` in `TODO.md` links to one
+of these. A milestone directory with an unfilled placeholder, or a claim with
+no log behind it, is a failed gate.
 
 Evidence may include:
 
@@ -1283,15 +1338,15 @@ A failing required gate blocks release.
 
 # 39. Current Definition of Success
 
-The immediate objective is not:
+The objective is not:
 
 > Build something bigger than SolidWorks.
 
-The immediate objective is:
+The objective is:
 
 > Build a small, extremely reliable parametric CAD system.
 
-The first important complete workflow is:
+The first important complete workflow was:
 
 ```text
 create document
@@ -1321,7 +1376,23 @@ validate
 export STEP/STL
 ```
 
-Until this works reliably, prioritize foundation work over advanced features.
+**That workflow works and is qualified**, for ten features rather than extrude
+alone, on six realistic mechanical parts, in three build configurations. See
+`TODO.md` for the evidence.
+
+Meeting it changes nothing about how the next capability is built. Success is
+now measured the same way, one milestone at a time:
+
+```text
+the new capability works on realistic input, not a demo case
+its failures are refused with a diagnostic, atomically
+everything that worked before still works, unchanged
+the result is deterministic across processes and configurations
+the evidence says so, and says where it cannot speak
+```
+
+A capability that cannot meet those five is not finished, however complete it
+looks.
 
 ---
 
@@ -1363,7 +1434,51 @@ The repository state at the end of the current session must accurately reflect t
 
 ---
 
-# 41. Final Rule
+# 41. Stop Conditions
+
+Stop, report, and wait rather than continuing, when any of these is true:
+
+```text
+TODO.md records no open milestone
+  → the next milestone is a scope decision, which is not Claude's to make
+
+a required gate fails
+  → diagnose and fix; never continue past it and never relax it to pass
+
+the work would break an architectural invariant (ARCHITECTURE.md §1.1)
+  → the invariant wins, or the architecture is changed deliberately first
+
+a claim cannot be verified in this environment
+  → report BLOCKED or UNVERIFIED, with the exact reason
+
+the task requires evidence that does not exist
+  → produce the evidence, or report that it is missing; never infer it
+
+completing the task would need work outside the authorized milestone
+  → finish what is authorized, and say exactly what was left out and why
+```
+
+Finishing a milestone is also a stop condition. Do not start the next one
+because it is obvious, small or next in `ROADMAP.md`.
+
+## 41.1 Commits
+
+Commit when a milestone passes its gates, not partway through one.
+
+```text
+one milestone per commit where practical
+message says what was done and verified
+production code and its evidence land together
+TODO.md updated in the same commit, only if PASS
+never force push
+```
+
+A commit whose message claims verification that the evidence does not contain
+is the same failure as a false checkbox.
+
+---
+
+# 42. Final Rule
 
 When choosing between:
 
@@ -1380,3 +1495,15 @@ better correctness, diagnostics, tests, architecture, and reproducibility
 choose the second unless explicitly directed otherwise.
 
 BetterCAD should become trustworthy first and impressive second.
+
+---
+
+# Project Documents
+
+* [README.md](README.md) — project overview and getting started
+* [ROADMAP.md](ROADMAP.md) — long-term capability direction
+* [TODO.md](TODO.md) — authoritative implementation status and next work
+* [ARCHITECTURE.md](ARCHITECTURE.md) — system architecture and dependency rules
+* [CLAUDE.md](CLAUDE.md) — engineering workflow and verification rules (this document)
+* [docs/architecture.md](docs/architecture.md) — the architecture as built today
+* [docs/verification/](docs/verification/) — evidence for every completed milestone

@@ -1,9 +1,106 @@
 # BetterCAD — TODO
 
-`[x]` means implemented **and** verified by passing tests, with evidence
-recorded under `docs/verification/`. `[ ]` means not complete.
+**This file is the authority for what is implemented and for what happens
+next.** A capability listed in [ROADMAP.md](ROADMAP.md) is not status. A
+subsystem described in [ARCHITECTURE.md](ARCHITECTURE.md) is not status. If any
+document disagrees with this one about what exists, this one is right — and if
+this one disagrees with the evidence under
+[docs/verification/](docs/verification/), the evidence is right and this file
+is wrong.
 
-## Done
+## Rules
+
+```text
+[x] = implemented
+    + tested
+    + validated
+    + deterministic regression
+    + evidence recorded
+```
+
+`[ ]` means not complete, for any reason. Nothing is ticked because code was
+written, a file exists, something compiles, a test was skipped or mocked, or a
+result looks correct. Every `[x]` below links to the evidence that earned it.
+Documentation work never ticks a box. Blocked items say so, with the reason.
+See [CLAUDE.md](CLAUDE.md) for how milestones are executed and recorded.
+
+Milestone IDs — `P11`, `P11-FEAT-003`, `P11-QUAL-001` — are allocated **here**,
+in sequence, at the moment work is authorized. [ROADMAP.md](ROADMAP.md) names
+capabilities but never numbers them and never allocates an ID.
+
+## Status
+
+```text
+Current:           None
+Next:              Awaiting explicit scope decision
+Blocked / Manual:  None
+```
+
+Last milestone: **P11 Production Part Modeling — QUALIFIED** at revision
+`79dab04` ([evidence](docs/verification/P11-QUAL-001/README.md)). 20 gates, 20
+passed, 0 failed, 0 blocked: 738/738 tests and 0 compiler warnings over 274
+translation units in each of Debug, Release and Debug-shared, each rebuilt
+clean; 301/301 legacy tests unchanged; six reference models bit-identical
+across all three configurations and six fresh processes.
+
+Released: `v0.1.0` covers `P0`–`P10`. `P11` is qualified but not released;
+there is no `v0.2.0`.
+
+## Current
+
+Nothing is in progress. No milestone is open, and no source file is being
+changed.
+
+## Next
+
+**Awaiting an explicit scope decision.** The next milestone is a decision about
+scope, not a feature. It must be recorded here — with its ID, its deliverables
+and its acceptance gates — before any implementation begins.
+
+[ROADMAP.md](ROADMAP.md) lists the candidate capabilities and the dependency
+order between them, including a note on whether a minimal stable-reference
+layer should be pulled forward ahead of assemblies and drawings. Being listed
+there, or being next in that order, does not authorize anything.
+
+## Planned / Not Authorized
+
+Not started, not authorized, in no fixed order. See [ROADMAP.md](ROADMAP.md)
+for what each of these means and what it depends on.
+
+- [ ] Desktop CAD application (the executable today is a placeholder shell)
+- [ ] Assemblies
+- [ ] Semantic topology naming
+- [ ] Technical drawings
+- [ ] STEP import
+- [ ] DXF
+- [ ] Datum geometry, configurations and design equations
+- [ ] Shell, draft and rib features
+- [ ] Parameter expression evaluation
+- [ ] Materials and engineering data
+- [ ] GPU renderer
+- [ ] Meshing
+- [ ] FEA
+- [ ] Thermal
+- [ ] CFD
+- [ ] Optimization
+- [ ] Python API
+- [ ] Collaboration / engineering version control
+- [ ] AI engineering agent
+- [ ] CAM / manufacturing
+
+## Recently Completed
+
+| Milestone | Commit | Date | Evidence |
+| --- | --- | --- | --- |
+| P11-QUAL-001 Qualification | `449d5fd` | 2026-09-16 | [evidence](docs/verification/P11-QUAL-001/README.md) |
+| P11-REF-001 Mechanical reference models | `79dab04` | 2026-09-16 | [evidence](docs/verification/P11-REF-001/README.md) |
+| P11-FEAT-009 Loft | `24a8134` | 2026-09-15 | [evidence](docs/verification/P11-FEAT-009/README.md) |
+| P11-FEAT-008 Sweep | `0a59e4c` | 2026-09-15 | [evidence](docs/verification/P11-FEAT-008/README.md) |
+| P11-FEAT-007 Mirror | `97d426f` | 2026-09-15 | [evidence](docs/verification/P11-FEAT-007/README.md) |
+
+Full detail for every milestone, including the ones above, is below.
+
+## Completed Milestones
 
 ### P0 — Repository Foundation
 
@@ -74,7 +171,9 @@ recorded under `docs/verification/`. `[ ]` means not complete.
 - [x] STEP export — [evidence](docs/verification/P10/README.md)
 - [x] STL export — [evidence](docs/verification/P10/README.md)
 
-Release v0.1.0 (commit `2da8966`, tag `v0.1.0`) is P0–P10.
+Release `v0.1.0` is `P0`–`P10`: the annotated tag `v0.1.0` (tag object
+`93d84f0`) points at commit `2da8966`. Evidence written before a milestone may
+cite either hash; they are the same release.
 
 ### P11 — Production Part Modeling (complete and qualified)
 
@@ -506,6 +605,12 @@ that keeps the volume (BetterCAD's matching never builds one).
 - [x] Bearing housing — [evidence](docs/verification/P11-REF-001/bearing_housing/values-release.txt)
 - [x] Mounting bracket — [evidence](docs/verification/P11-REF-001/mounting_bracket/values-release.txt)
 
+The five parts above are the milestone's deliverable. A swept U-bolt was built
+alongside them so the sweep feature has a natural use; it is validated,
+fingerprinted, exported and regression-tested exactly like the five
+([evidence](docs/verification/P11-REF-001/u_bolt/values-release.txt)), which is
+why six models appear throughout the qualification.
+
 **Acceptance (met):**
 
 - Five production parts, built only through the public document, parameter,
@@ -581,27 +686,75 @@ stay B-splines. As evidence this qualification is one platform only
 (Windows, GCC 16.1, OCCT 8.0.1), with no CI, no sanitizers, no coverage, no
 enforced formatting check, and no GUI qualification.
 
-## Current
+## Known Limitations
 
-### P12 — Next Phase
+Properties of the system as qualified, so the completed milestones above are
+not read as more than they are. Each modeling limitation is pinned by a
+regression test, so none can change silently. Full detail:
+[docs/verification/P11-QUAL-001/README.md](docs/verification/P11-QUAL-001/README.md).
 
-Nothing in progress. P11 Production Part Modeling is complete and qualified.
-The next phase has not been authorized yet; see `ROADMAP.md` and the list
-below.
+### Modeling
 
-## Later — Do Not Start Yet
+- **Geometric references do not follow moved geometry.** Edges and faces are
+  matched by their geometry — an edge's supporting line or circle, a face's
+  plane and outward side — not named semantically. When a parameter moves the
+  edge a chamfer or fillet was attached to, or the face a hole was placed on,
+  the feature fails with `NotFound` and keeps no body. No other entity is ever
+  substituted. The shaft's tail chamfer and the flange's rim chamfer
+  demonstrate both sides of this. Semantic topology naming is not authorized;
+  see the dependency note in [ROADMAP.md](ROADMAP.md).
+- **A half bore on a mirror plane.** Uniting a half body with its mirror image
+  is refused when a half cylinder lies on the mirror plane: the kernel's fuse
+  returns a shape its own checker rejects, so BetterCAD refuses it rather than
+  building it wrongly. The bearing housing therefore cuts its bore after
+  joining its halves. Pinned by a boolean regression test.
+- **Parameter expressions are not evaluated** (`P1-003`). Expressions are
+  stored but not computed, so a derived dimension needs its own parameter or a
+  sketch that builds the relation geometrically.
+- **No through-all extrude.** A cut is given a depth; the housing's bore is
+  driven by the same width parameter as the housing.
+- **Loft faces stay B-splines.** The kernel keeps a loft's sides as B-spline
+  surfaces even where they are flat, so the bracket agrees with exact geometry
+  to 6.0e-12 relative and 3.4e-6 mm rather than to rounding, and plane
+  references find only a loft's end faces.
+- **Sketch constraints** cover coincident, horizontal, vertical, parallel,
+  perpendicular, distance, radius, equal and fixed. There is no angle, tangent,
+  midpoint or symmetry constraint; symmetry is built with construction geometry
+  and equal constraints.
+- **Pattern size.** Building time grows with the square of the instance count,
+  which is capped at 500.
 
-- [ ] Assemblies
-- [ ] Drawings
-- [ ] Semantic topology naming
-- [ ] STEP import
-- [ ] DXF
-- [ ] GPU renderer
-- [ ] FEA
-- [ ] CFD
-- [ ] Thermal
-- [ ] Optimization
-- [ ] Python API
-- [ ] Collaboration/version control
-- [ ] AI engineering agent
-- [ ] CAM/manufacturing
+### Not implemented
+
+- **The desktop application is a placeholder shell.** `bettercad.exe` builds in
+  all three configurations; no GUI functionality is claimed and no GUI smoke
+  test exists. The parametric workflow is exercised through the core and the
+  CLI.
+- **STEP export only.** There is no STEP import. The kernel-based STEP reader
+  under `tests/support/occt/` is test-only tooling that reads exports back to
+  check them. DXF, IGES and OBJ do not exist in either direction.
+- Everything under *Planned / Not Authorized* above.
+
+### Limits of the evidence
+
+- **One platform.** Windows 11 AMD64, GCC 16.1.0 (MinGW-w64), Open CASCADE
+  8.0.1, Qt 6.11.2. No MSVC, Clang, Linux or macOS result is claimed.
+- **No CI.** There is no `.github/workflows`, so nothing re-runs the suite
+  automatically; qualification is a deliberate act, and a regression between
+  milestones would not be caught until the next one.
+- **No sanitizers, no coverage, no memory checking.** No ASan/UBSan preset, no
+  gcov/lcov, no valgrind or Dr. Memory configuration. Memory errors that do not
+  crash, and code no test reaches, would not be reported.
+- **`.clang-format` is not enforced.** The file defines the house style, but no
+  test, target or hook checks it.
+- **The suite defines the ceiling.** 738 tests passing means 738 tests passed.
+  Where a behaviour has no test, the evidence says nothing about it.
+
+## Project Documents
+
+- [README.md](README.md) — project overview and getting started
+- [ROADMAP.md](ROADMAP.md) — long-term capability direction
+- [TODO.md](TODO.md) — authoritative implementation status and next work (this document)
+- [ARCHITECTURE.md](ARCHITECTURE.md) — system architecture and dependency rules
+- [CLAUDE.md](CLAUDE.md) — engineering workflow and verification rules
+- [docs/verification/](docs/verification/) — evidence for every completed milestone

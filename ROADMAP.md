@@ -2,6 +2,28 @@
 
 > A modern, programmable, simulation-native, AI-ready mechanical CAD/CAE platform.
 
+**What this document is for.** It answers *where BetterCAD is going*: the major
+capabilities planned, the order their dependencies force, what each aims to
+accomplish, and the long-term release targets. It is strategic.
+
+**What it is not.** A capability appearing here is neither implemented nor
+authorized. This document never marks work complete; it has no checkboxes and
+no evidence links. [TODO.md](TODO.md) is the sole authority for what exists,
+and every completed item there links to the evidence that earned it.
+
+| Question | Authority |
+| --- | --- |
+| What is BetterCAD, and how do I build it? | [README.md](README.md) |
+| Where is BetterCAD going? | **this document** |
+| What is actually complete, and what is next? | [TODO.md](TODO.md) |
+| How must the system be structured? | [ARCHITECTURE.md](ARCHITECTURE.md) |
+| How must the work be executed and verified? | [CLAUDE.md](CLAUDE.md) |
+| What proves a milestone is complete? | [docs/verification/](docs/verification/) |
+
+---
+
+# Vision
+
 BetterCAD aims to combine:
 
 ```text
@@ -15,15 +37,10 @@ Parametric CAD
 + AI-assisted engineering
 ```
 
-The project must remain **verification-driven**.
+on one engineering document model that does not have to be replaced along the
+way.
 
-A phase is complete only when its implementation, tests, validation cases, and acceptance gates pass.
-
----
-
-# Vision
-
-BetterCAD should eventually support the complete engineering workflow:
+It should eventually support the complete engineering workflow:
 
 ```text
 Requirements
@@ -79,8 +96,6 @@ Every major subsystem requires:
 * failure diagnostics;
 * reproducible evidence.
 
----
-
 ## 2. Stable engineering data model
 
 Engineering intent must be stored explicitly.
@@ -105,8 +120,6 @@ results
 revision history
 ```
 
----
-
 ## 3. Native units
 
 Engineering values must retain their physical dimensions.
@@ -125,8 +138,6 @@ over:
 double width = 100.0;
 ```
 
----
-
 ## 4. Stable identity
 
 Persistent model objects require stable IDs.
@@ -142,13 +153,9 @@ object memory address
 
 for long-term identity.
 
----
-
 ## 5. Dependency-driven regeneration
 
 A parameter change should rebuild only affected objects.
-
-Example:
 
 ```text
 width
@@ -162,13 +169,9 @@ Fillet001
 Body001
 ```
 
----
-
 ## 6. Headless core
 
 The CAD engine must work without the GUI.
-
-Target architecture:
 
 ```text
                 ┌───────────────┐
@@ -189,611 +192,329 @@ Target architecture:
 ```
 
 CLI, GUI, Python, tests, and eventually AI should use the same core engine.
+See [ARCHITECTURE.md](ARCHITECTURE.md) for how this is enforced.
 
 ---
 
-# Phase Overview
+# Current Verified Foundation
+
+BetterCAD has a parametric part-modeling core that is complete and qualified.
+A user — or a script, or a test — can create a document, declare parameters,
+build a constrained sketch, apply any of ten parametric features, change a
+dimension, regenerate deterministically, undo and redo, save, close, load,
+regenerate again, validate, and export STEP and STL. Six realistic mechanical
+parts exercise that workflow end to end and reproduce bit-identically across
+three build configurations.
+
+That is the foundation this roadmap builds on. Its scope and evidence are in
+[TODO.md](TODO.md); a summary of what it can do is in
+[README.md](README.md).
+
+**No development phase is currently in progress, and the next capability has
+not been authorized.** Selecting one is an explicit scope decision, recorded in
+[TODO.md](TODO.md) before any work starts.
+
+---
+
+# Capability Roadmap
+
+## Roadmap capability versus implementation milestone
+
+These are two different things and this project has been bitten by confusing
+them.
 
 ```text
-P0   Repository / Build Foundation
-P1   Engineering Core
-P2   Document Architecture
-P3   Geometry Kernel
-P4   Sketch System
-P5   Constraint Solver
-P6   Parametric Features
-P7   Regeneration Engine
-P8   Persistence / File Formats
-P9   Desktop CAD Application
-P10  Production Part Modeling
-P11  Assemblies
-P12  Technical Drawings
-P13  Materials / Engineering Data
-P14  Meshing
-P15  Structural FEA
-P16  Thermal Analysis
-P17  CFD Integration
-P18  Design Optimization
-P19  Semantic Topology
-P20  Versioning / Collaboration
-P21  Automation / Python
-P22  AI Engineering Agent
-P23  Manufacturing / CAM Foundation
-P24  Performance / GPU / Scale
-P25  Production Hardening
-P26  BetterCAD 1.0
+Roadmap capability     a chapter of this document.
+                       Named, never numbered. Strategic.
+                       Planning it implies nothing about its existence.
+
+Implementation         an ID in TODO.md: P11, P11-FEAT-003, P11-QUAL-001.
+milestone              Authorizes work, tracks it, and links its evidence.
+                       The only thing that can be marked complete.
 ```
 
-## Milestone numbering
+**Milestone IDs are allocated by [TODO.md](TODO.md), in sequence, when a
+capability is authorized — never in advance and never by this document.** A new
+capability takes the next free `TODO.md` number at the moment it is authorized,
+whatever position it occupies here.
 
-`TODO.md` is the authority for milestone IDs such as `P11-FEAT-001`. The
-phase numbers above describe the long-term plan and were set before
-implementation began, so they do not all match the IDs used in `TODO.md`:
+Earlier revisions of this roadmap numbered its chapters `P0`–`P26`, which
+collided with `TODO.md`'s milestone IDs while meaning something else entirely:
+roadmap "P11" was Assemblies while milestone `P11` was Production Part
+Modeling. Those chapter numbers are retired. A bare `P<number>` anywhere in
+this repository now means a `TODO.md` milestone and nothing else.
 
-| Roadmap phase | `TODO.md` milestones | Status |
+## Status
+
+| Capability | Implementation milestone | Status |
 | --- | --- | --- |
-| P0–P4 | P0–P4 | done (v0.1.0) |
-| P5 Constraint Solver | P5 Constraints, P6 Sketch Solver | done (v0.1.0) |
-| P6 Parametric Features | P7 Extrude; the remaining features in P11 | P7 done; P11 in progress |
-| P7 Regeneration Engine | P8 Dependency Graph | done (v0.1.0) |
-| P8 Persistence / File Formats | P9 Persistence, P10 CLI (STEP/STL export) | done (v0.1.0) |
-| P9 Desktop CAD Application | not yet scheduled | — |
-| P10 Production Part Modeling | P11 Production Part Modeling | in progress |
-| P11 and later | not yet scheduled | — |
+| Repository and build foundation | `P0` | **COMPLETE** |
+| Engineering core — units, IDs, parameters | `P1` | **COMPLETE** |
+| Document model, commands, undo/redo | `P2` | **COMPLETE** |
+| Geometry kernel foundation | `P3` | **COMPLETE** |
+| Sketch system | `P4` | **COMPLETE** |
+| Constraints and sketch solver | `P5`, `P6` | **COMPLETE** |
+| Parametric feature engine — extrude | `P7` | **COMPLETE** |
+| Regeneration engine | `P8` | **COMPLETE** |
+| Persistence | `P9` | **COMPLETE** |
+| Interchange — STEP/STL export, CLI | `P10` | **COMPLETE** |
+| Production part modeling | `P11` | **QUALIFIED** |
+| Desktop CAD application | not authorized | PLANNED |
+| Assemblies | not authorized | PLANNED |
+| Semantic topology | not scheduled | PLANNED — see dependency note |
+| Technical drawings | not scheduled | PLANNED |
+| Materials and engineering data | not scheduled | PLANNED |
+| Meshing | not scheduled | PLANNED |
+| Structural FEA | not scheduled | PLANNED |
+| Thermal analysis | not scheduled | PLANNED |
+| CFD | not scheduled | PLANNED |
+| Design optimization | not scheduled | PLANNED |
+| Engineering version control | not scheduled | PLANNED |
+| Python automation | not scheduled | PLANNED |
+| AI engineering agent | not scheduled | PLANNED |
+| Manufacturing / CAM foundation | not scheduled | PLANNED |
+| Performance and GPU | not scheduled | PLANNED |
+| Production hardening | not scheduled | PLANNED |
+| BetterCAD 1.0 | not scheduled | PLANNED |
 
-New milestones take the next `TODO.md` number. When a later roadmap phase
-is scheduled, record its `TODO.md` number in this table.
+Status meanings:
+
+```text
+COMPLETE       implemented, tested, validated, evidence recorded in TODO.md
+QUALIFIED      COMPLETE, and separately re-verified end to end in every
+               supported build configuration against gates fixed in advance
+PLANNED        intended; not started, and not authorized by TODO.md
+NOT SCHEDULED  no position in the queue has been decided
+```
+
+`v0.1.0` — annotated tag `v0.1.0` (tag object `93d84f0`) on commit `2da8966` —
+released `P0`–`P10`. `P11` is qualified but not released; there is no `v0.2.0`
+tag.
+
+## Dependency order
+
+The order below is what the dependencies force, not a schedule. Nothing in it
+is authorized.
+
+```text
+                    qualified parametric part core
+                                 │
+        ┌────────────────────────┼────────────────────────┐
+        ▼                        ▼                        ▼
+  desktop application      stable references        materials and
+  (interactive workflow)   (semantic topology)      engineering data
+        │                        │                        │
+        │                        ▼                        │
+        │                   assemblies ◄──────────────────┘
+        │                        │
+        └────────────┬───────────┘
+                     ▼
+                  drawings
+                     │
+                     ▼
+              meshing ──► structural FEA ──► thermal ──► CFD
+                                 │
+                                 ▼
+                          design optimization
+                                 │
+                                 ▼
+             version control · Python · AI · CAM · GPU
+                                 │
+                                 ▼
+                        production hardening ──► 1.0
+```
+
+## Dependency note — semantic topology
+
+Semantic topology appears late in this roadmap, and the `P11` evidence
+suggests part of it may have to come earlier.
+
+BetterCAD currently identifies faces and edges by **geometric matching**: a
+reference stores the edge's supporting line or circle, or the face's plane and
+outward side, and resolves it against the current body. That is honest and it
+never substitutes the wrong entity — when the geometry a reference described
+moves, the feature fails with `NotFound` and keeps no body rather than
+silently attaching to something else. But it does mean a reference does not
+follow geometry that a parameter moves, and that limitation is recorded against
+every feature that uses references
+([evidence](docs/verification/P11-QUAL-001/README.md)).
+
+Capabilities that lean heavily on persistent references would inherit that
+limitation directly:
+
+```text
+assemblies                       mates attach to faces and edges
+drawings                         dimensions and annotations attach to edges
+simulation boundary conditions   loads and supports attach to faces
+manufacturing annotations        tolerances and finishes attach to faces
+```
+
+> Semantic Topology is currently a later roadmap capability, but a minimal
+> stable-reference layer may become a prerequisite for earlier phases. Any such
+> scope change requires an explicit milestone decision.
+
+This note records the dependency. It does not reorder the roadmap, authorize
+the work, or commit to a design. If the decision is made, it is made in
+[TODO.md](TODO.md) as a milestone with its own gates.
 
 ---
 
-# P0 — Repository Foundation
+# Delivered Foundation
 
-## Goal
+What `P0`–`P11` actually delivered, and what the original scope of each area
+still leaves outstanding. The outstanding column is the honest part: these
+items were planned under these headings and are **not** built. They remain
+future work, and the qualified scope is narrower than the original ambition.
 
-Create a clean, reproducible C++ engineering project.
+Full scope, acceptance criteria and evidence for the delivered column are in
+[TODO.md](TODO.md).
 
-## Deliverables
+## Repository and build foundation — `P0`
 
-* C++20/23 project;
-* CMake build system;
-* Debug and Release configurations;
-* core library;
-* CLI executable;
-* desktop executable;
-* test infrastructure;
-* CI;
-* formatting;
-* static analysis;
-* documentation skeleton.
+**Delivered.** C++23 project; CMake build system; Debug, Release and
+Debug-shared configurations; core libraries; CLI executable; desktop
+executable; Catch2 test infrastructure; strict warning set with warnings as
+errors; `.clang-format`; documentation skeleton.
 
-Suggested structure:
+**Outstanding.** CI (no `.github/workflows` exists, so nothing re-runs the
+suite automatically); enforced formatting check; static analysis; sanitizer,
+coverage and memory-checking configurations.
 
-```text
-BetterCAD/
-├── apps/
-├── cmake/
-├── data/
-├── docs/
-├── examples/
-├── include/
-├── src/
-├── tests/
-├── tools/
-├── CMakeLists.txt
-├── README.md
-├── ROADMAP.md
-└── TODO.md
-```
+## Engineering core — `P1`
 
-## Gate
+**Delivered.** Strongly typed quantities stored in coherent SI, with
+dimensional errors caught at compile time; strongly typed stable IDs
+(`DocumentId`, `ObjectId`, `ParameterId`, `SketchId`, `EntityId`,
+`ConstraintId`, `FeatureId`, `BodyId`, `FaceId`, `EdgeId`, `VertexId`) that are
+never container indices and are never reused; parameters with name, value,
+dimension, display unit, stable ID and revision.
 
-```text
-configure PASS
-build PASS
-tests PASS
-CLI smoke test PASS
-desktop smoke test PASS
-CI PASS
-```
+**Outstanding.** `ComponentId`, `MaterialId` and `SimulationId` (their
+subsystems do not exist). **Parameter expressions are stored but not
+evaluated**, so a derived dimension such as
+`housing_width = bearing_OD + 2 * wall_thickness` needs its own parameter or a
+sketch that builds the relation geometrically.
 
----
+## Document model — `P2`
 
-# P1 — Engineering Core
+**Delivered.** Document creation, object registry, name and ID lookup, dirty
+state, revisions, command architecture, undo and redo, all compared against
+deterministic document state rather than assumed.
 
-## Goal
+**Outstanding.** Configurations; material assignments; assembly and simulation
+containers.
 
-Create the fundamental types used everywhere else.
+## Geometry kernel foundation — `P3`
 
-## Scope
+**Delivered.** Open CASCADE behind BetterCAD's own interfaces, with the kernel
+confined to `occt/` adapter directories and the containment enforced by a
+build-failing layering test; primitives; volume, surface area, centroid,
+bounding box and mass properties; union, difference and intersection; all
+validated against closed-form analytic values.
 
-### Units
+**Outstanding.** Nothing from the original scope; alternative geometry backends
+remain a possibility the abstraction keeps open rather than a plan.
 
-Implement strongly typed:
+## Sketch system — `P4`
 
-```text
-Length
-Area
-Volume
-Angle
-Mass
-Time
-Velocity
-Acceleration
-Force
-Torque
-Pressure
-Stress
-Density
-Temperature
-Power
-Energy
-```
+**Delivered.** Sketch placement on a `Frame3D` (origin, axes, normal, plane
+transformation); points, lines, circles and arcs; length, radius, centre,
+endpoint, bounding-box, intersection and distance queries; deterministic under
+save/load.
 
-### Stable IDs
+**Outstanding.** Ellipses and splines; sketches on arbitrary planar faces
+(placement is explicit, and the global XY/XZ/YZ planes are the usual starting
+point).
 
-Implement:
+## Constraints and sketch solver — `P5`, `P6`
 
-```text
-DocumentId
-ObjectId
-ParameterId
-SketchId
-EntityId
-ConstraintId
-FeatureId
-BodyId
-FaceId
-EdgeId
-VertexId
-ComponentId
-MaterialId
-SimulationId
-```
+**Delivered.** Coincident, horizontal, vertical, parallel, perpendicular,
+distance, radius, equal and fixed constraints, represented separately from
+geometry and validated when added; a Gauss–Newton solver over free point
+coordinates and radii that distinguishes under-constrained, fully constrained,
+over-constrained, inconsistent and failed, and reports residual, iterations and
+degrees of freedom; validation cases including rectangles, bolt-circle layouts,
+conflicts and redundancy.
 
-### Parameters
+**Outstanding.** Tangent, concentric, horizontal-distance, vertical-distance,
+diameter, angle, symmetric and midpoint constraints. Symmetry is currently
+built with construction geometry and equal constraints.
 
-Support:
+## Parametric feature engine — `P7`, `P11`
 
-```text
-name
-value
-unit
-stable ID
-optional expression
-revision
-metadata
-```
+**Delivered.** Extrude (`P7`), then revolve, chamfer, fillet, hole, linear
+pattern, circular pattern, mirror, sweep and loft (`P11`). Each stores its
+definition rather than its result, operates as new body, join, cut or
+intersect, validates its geometry, regenerates from parameters, fails
+atomically with a structured diagnostic, round-trips through save/load, and is
+validated against independently computed volumes.
 
-## Gate
+**Outstanding.** Shell, draft and rib. Variable-radius fillets and
+setback/corner controls. Hole threads, drill points, spotfaces, standards
+databases and tolerance classes. Symmetric and total-length pattern modes,
+suppressed instances, patterns of patterns. Sweep guide curves, twist, scale,
+variable sections and non-planar paths. Loft sections of differing shapes,
+smooth interpolation, guide curves and end conditions. Mirror and pattern
+references to datum geometry rather than explicit model coordinates.
 
-* conversion tests pass;
-* invalid dimensional operations are prevented;
-* parameter serialization round-trip passes;
-* stable identity survives load/save.
+## Regeneration engine — `P8`
 
----
+**Delivered.** An explicit dependency graph, dirty propagation, topological
+ordering, partial regeneration, cycle detection, failure propagation and
+transactional rebuild. A failed downstream feature commits nothing and cannot
+corrupt the document — checked by a dedicated atomicity test per feature.
 
-# P2 — Document Architecture
+**Outstanding.** Parallel feature evaluation; incremental regeneration beyond
+the current dirty-subgraph rebuild.
 
-## Goal
+## Persistence and interchange — `P9`, `P10`
 
-Create the persistent engineering document model.
+**Delivered.** The native `.bcad` format: transparent, deterministic,
+pretty-printed JSON storing document metadata, stable IDs, parameters,
+sketches, constraints, features and dependencies — inputs only, since geometry
+is derived. Atomic saves. A round trip of create → save → destroy → load →
+regenerate that is compared as a full fingerprint. STEP (AP214) and STL export,
+each verified by reading the result back and measuring it. A CLI with `new`,
+`info`, `validate`, `export-step` and `export-stl` on the same public API.
 
-## Model
+**Outstanding.** **STEP import** — the only STEP reader in the repository is
+test-only tooling used to check exports. DXF, IGES and OBJ, in either
+direction. 3MF, glTF, Parasolid and JT. A ZIP-style container, a geometry
+cache, a preview image, and schema migration between format versions (the
+format carries a version, but nothing has needed migrating yet).
 
-```text
-Document
-├── Parameters
-├── Sketches
-├── Features
-├── Bodies
-├── Materials
-├── Assemblies
-├── Simulations
-└── Metadata
-```
+## Production part modeling — `P11`
 
-## Implement
+**Delivered.** The nine features above, plus six mechanical reference models —
+a stepped shaft, a bolted flange, a V-belt pulley, a pillow block, an L bracket
+and a U-bolt — built through the public API alone, with every dimension checked
+against geometry computed independently from its parameters, and a full
+qualification against twenty gates fixed before the run.
 
-* document creation;
-* object registry;
-* name lookup;
-* ID lookup;
-* dirty state;
-* revisions;
-* transactions;
-* command architecture;
-* undo;
-* redo.
+**Outstanding.** The original scope for this area also listed: datum planes,
+datum axes, coordinate systems and reference geometry; construction geometry as
+a first-class concept; split body and combine; direct measurement; materials
+and appearance; design equations; configurations. **None of these is built.**
+Multi-body parts and advanced patterns exist only to the extent the features
+above provide them.
 
-## Gate
-
-A sequence such as:
-
-```text
-create
-modify
-delete
-undo
-undo
-redo
-redo
-```
-
-must return deterministic equivalent document states.
+The qualified scope is the ten milestones in [TODO.md](TODO.md), not this
+paragraph's original list.
 
 ---
 
-# P3 — Geometry Kernel Foundation
+# Planned Capabilities
 
-## Goal
+Everything below is future work. Nothing here is started, and nothing here is
+authorized. Each section describes intent and scope, not commitment.
 
-Introduce robust solid geometry.
+## Desktop CAD application
 
-Initial kernel:
+The desktop executable currently builds as a placeholder shell; no GUI
+functionality exists or is claimed. The goal is the first practical interactive
+CAD environment, on Qt 6.
 
-```text
-Open CASCADE Technology
-```
-
-BetterCAD must wrap it behind its own geometry interfaces.
-
-Do not expose OCCT throughout the application.
-
-## Implement
-
-### Primitive geometry
-
-```text
-Box
-Cylinder
-Sphere
-Cone
-Torus
-```
-
-### Properties
-
-```text
-volume
-surface area
-centroid
-bounding box
-mass properties
-```
-
-### Boolean operations
-
-```text
-union
-difference
-intersection
-```
-
-## Validation
-
-Compare numerical geometry properties to analytical solutions.
-
-Example:
-
-$$
-V_\text{cylinder}=\pi r^2h
-$$
-
-## Gate
-
-All primitive and Boolean regression tests pass with valid B-Rep topology.
-
----
-
-# P4 — Sketch System
-
-## Goal
-
-Create robust 2D parametric sketches.
-
-## Geometry
-
-Implement:
-
-```text
-Point
-Line
-Circle
-Arc
-Ellipse
-Spline
-```
-
-## Sketch coordinate system
-
-Support:
-
-```text
-origin
-X axis
-Y axis
-normal
-plane transformation
-```
-
-Start with global planes:
-
-```text
-XY
-XZ
-YZ
-```
-
-Later support arbitrary planar faces.
-
-## Queries
-
-Provide:
-
-```text
-length
-radius
-center
-endpoints
-bounding box
-intersection
-distance
-```
-
-## Gate
-
-Sketch geometry must remain deterministic under save/load and transformations.
-
----
-
-# P5 — Constraint Solver
-
-## Goal
-
-Turn sketches into fully parametric geometric systems.
-
-## Constraints
-
-Implement:
-
-```text
-Coincident
-Horizontal
-Vertical
-Parallel
-Perpendicular
-Tangent
-Equal
-Concentric
-Distance
-HorizontalDistance
-VerticalDistance
-Radius
-Diameter
-Angle
-Fixed
-Symmetric
-Midpoint
-```
-
-## Solver states
-
-The solver must distinguish:
-
-```text
-UNDER_CONSTRAINED
-FULLY_CONSTRAINED
-OVER_CONSTRAINED
-INCONSISTENT
-SOLVER_FAILURE
-```
-
-## Diagnostics
-
-Do not simply report:
-
-```text
-"Sketch failed"
-```
-
-Report conflicting or redundant constraints where possible.
-
-## Validation cases
-
-At minimum:
-
-```text
-rectangle
-triangle
-bolt-circle layout
-tangent arc
-concentric circles
-fully constrained profile
-under-constrained profile
-conflicting dimensions
-redundant constraints
-```
-
-## Gate
-
-Deterministic solver regression suite passes.
-
----
-
-# P6 — Parametric Feature Engine
-
-## Goal
-
-Create feature-based solid modeling.
-
-Implement approximately in this order:
-
-```text
-Extrude
-Revolve
-Hole
-Chamfer
-Fillet
-Linear Pattern
-Circular Pattern
-Mirror
-Sweep
-Loft
-Shell
-Draft
-Rib
-```
-
-Feature structure:
-
-```text
-Feature
-├── stable ID
-├── type
-├── inputs
-├── parameters
-├── dependencies
-├── status
-└── output
-```
-
-## Gate
-
-Every feature gets:
-
-* nominal case;
-* parameter-change case;
-* failure case;
-* serialization case;
-* regeneration regression.
-
----
-
-# P7 — Regeneration Engine
-
-## Goal
-
-Build the engine that makes BetterCAD truly parametric.
-
-## Dependency graph
-
-Example:
-
-```text
-width
-   ↓
-Sketch001
-   ↓
-Extrude001
-   ↓
-Fillet001
-   ↓
-Pattern001
-```
-
-Implement:
-
-```text
-dependency graph
-dirty propagation
-topological ordering
-partial regeneration
-cycle detection
-failure propagation
-transactional rebuild
-```
-
-## Requirements
-
-A failed downstream feature must not silently corrupt the document.
-
-## Gate
-
-Changing one parameter regenerates only affected nodes and produces deterministic geometry.
-
----
-
-# P8 — Persistence and Interchange
-
-## Goal
-
-Create reliable native documents and industry-compatible exchange.
-
-## Native format
-
-Initial format:
-
-```text
-.bcad
-```
-
-Store:
-
-```text
-document metadata
-stable IDs
-parameters
-sketches
-constraints
-features
-dependencies
-materials
-configuration
-optional geometry cache
-```
-
-## Import/export
-
-Prioritize:
-
-```text
-STEP
-STL
-DXF
-IGES
-OBJ
-```
-
-Later:
-
-```text
-3MF
-glTF
-Parasolid where licensing permits
-JT
-```
-
-## Gate
-
-Round trip:
-
-```text
-create
-save
-close
-load
-regenerate
-export
-```
-
-must preserve engineering intent and geometry.
-
----
-
-# P9 — Desktop CAD Application
-
-## Goal
-
-Provide the first practical interactive CAD environment.
-
-Initial GUI technology:
-
-```text
-Qt 6
-```
-
-## Major UI areas
+Major UI areas:
 
 ```text
 Menu / command system
@@ -807,9 +528,7 @@ Command search
 Diagnostics panel
 ```
 
-## Navigation
-
-Implement:
+Navigation:
 
 ```text
 orbit
@@ -821,9 +540,7 @@ perspective
 orthographic
 ```
 
-## Selection
-
-Support:
+Selection:
 
 ```text
 body
@@ -834,69 +551,14 @@ sketch
 feature
 ```
 
-## Gate
+**Gate.** A user must be able to create a parametric mechanical part entirely
+from the GUI, with the GUI owning none of the engineering state.
 
-A user must be able to create a parametric mechanical part entirely from the GUI.
-
----
-
-# P10 — Production Part Modeling (`TODO.md` milestone P11)
-
-## Goal
-
-Move from a demonstration CAD tool to practical mechanical part design.
-
-Add:
-
-```text
-datum planes
-datum axes
-coordinate systems
-reference geometry
-multi-body parts
-construction geometry
-advanced patterns
-variable fillets
-draft
-shell
-split body
-combine
-direct measurement
-mass properties
-materials
-appearance
-design equations
-configurations
-```
-
-## Example acceptance parts
-
-Build real reference parts:
-
-```text
-shaft
-bearing housing
-mounting bracket
-pulley
-gear blank
-flange
-motor adapter
-machine frame component
-```
-
-These become permanent regression models.
-
----
-
-# P11 — Assemblies
-
-## Goal
+## Assemblies
 
 Support mechanical systems composed of multiple parts.
 
-## Component model
-
-Each component needs:
+Component model — each component needs:
 
 ```text
 part reference
@@ -907,9 +569,7 @@ visibility
 suppression state
 ```
 
-## Mates
-
-Implement:
+Mates:
 
 ```text
 Fixed
@@ -926,11 +586,8 @@ Rack-and-pinion
 Screw
 ```
 
-## Solver
-
-Assembly state should solve component degrees of freedom.
-
-## Additional capability
+Assembly state should solve component degrees of freedom, with the mate model
+separated from the solver exactly as the sketch model is.
 
 Eventually:
 
@@ -943,19 +600,56 @@ motion constraints
 assembly mass properties
 ```
 
-## Gate
+**Gate.** Reference assemblies must solve deterministically without unstable
+placement.
 
-Reference assemblies must solve deterministically without unstable placement.
+**Dependency.** Mates attach to faces and edges; see the semantic topology
+dependency note above.
 
----
+## Semantic topology
 
-# P12 — Technical Drawings
+Reduce one of the most important weaknesses of traditional parametric CAD:
+fragile topological references.
 
-## Goal
+Do not permanently identify model intent using only:
 
-Generate manufacturing-ready drawings from the parametric model.
+```text
+Face12
+Edge27
+```
 
-Implement:
+Develop semantic references:
+
+```text
+planar face
+generated by Extrude001
+normal approximately +Z
+largest area
+adjacent to Hole003
+```
+
+A semantic resolver attempts to recover intended entities after
+topology-changing edits.
+
+Research topics:
+
+```text
+persistent naming
+geometric signatures
+feature provenance
+adjacency graphs
+semantic matching
+confidence scores
+ambiguity detection
+```
+
+This is a major differentiating capability for BetterCAD, and the geometric
+signatures shipped in `P11` are the first layer of it — deliberately limited,
+with the limits documented and tested rather than hidden.
+
+## Technical drawings
+
+Generate manufacturing-ready drawings from the parametric model:
 
 ```text
 drawing sheets
@@ -983,19 +677,13 @@ DXF
 SVG
 ```
 
-## Gate
+Drawings must reference the model, never copy it.
 
-Model changes must propagate into drawing views and dimensions.
+**Gate.** Model changes must propagate into drawing views and dimensions.
 
----
+## Materials and engineering data
 
-# P13 — Materials and Engineering Data
-
-## Goal
-
-Make engineering properties part of the model.
-
-Material database should support:
+Make engineering properties part of the model:
 
 ```text
 density
@@ -1012,24 +700,16 @@ electrical conductivity
 
 Support custom materials.
 
-## Gate
+**Gate.** Material assignments persist through save/load and propagate into
+mass and simulation calculations.
 
-Material assignments persist through save/load and propagate into mass and simulation calculations.
+## Meshing
 
----
-
-# P14 — Meshing
-
-## Goal
-
-Create a common simulation mesh infrastructure.
-
-Support initially:
+A common simulation mesh infrastructure, separate from both exact geometry and
+display tessellation.
 
 ```text
-1D
-2D
-3D
+1D  2D  3D
 ```
 
 Element types:
@@ -1054,32 +734,14 @@ mesh validation
 mesh convergence tools
 ```
 
-Potential integration:
+Potential integration: Gmsh, behind BetterCAD-owned abstractions.
 
-```text
-Gmsh
-```
+## Structural FEA
 
-with BetterCAD-owned abstractions.
+Start with linear elasticity, small deformation, static analysis and isotropic
+materials.
 
----
-
-# P15 — Structural FEA
-
-## Goal
-
-Integrate structural analysis directly with the CAD model.
-
-Start with:
-
-```text
-linear elasticity
-small deformation
-static analysis
-isotropic materials
-```
-
-Support:
+Loads and supports:
 
 ```text
 fixed supports
@@ -1100,9 +762,7 @@ reaction forces
 factor of safety
 ```
 
-## Verification
-
-Use analytical benchmarks:
+Verification against analytical benchmarks:
 
 ```text
 uniaxial bar
@@ -1111,15 +771,10 @@ simply supported beam
 plate problems
 ```
 
-## Gate
+**Gate.** FEA must satisfy verification tolerances before optimization uses its
+results. Visually plausible contours are not evidence of accuracy.
 
-FEA must satisfy verification tolerances before optimization uses its results.
-
----
-
-# P16 — Thermal Analysis
-
-Implement:
+## Thermal analysis
 
 ```text
 steady conduction
@@ -1133,13 +788,7 @@ thermal contact later
 
 Couple temperature fields into structural analysis for thermal expansion.
 
----
-
-# P17 — CFD
-
-## Goal
-
-Integrate computational fluid dynamics into the same engineering model.
+## CFD
 
 Long-term scope:
 
@@ -1172,15 +821,11 @@ design parameters
 
 Simulation results should remain linked to the originating CAD revision.
 
----
-
-# P18 — Design Optimization
-
-## Goal
+## Design optimization
 
 Turn the CAD model into a design-space exploration platform.
 
-Design variables may include:
+Design variables:
 
 ```text
 dimensions
@@ -1213,69 +858,12 @@ factor of safety > target
 manufacturing limits
 ```
 
-Algorithms can eventually include:
+Algorithms may eventually include parameter sweeps, gradient methods, genetic
+algorithms, Bayesian optimization, surrogate models and topology optimization.
 
-```text
-parameter sweeps
-gradient methods
-genetic algorithms
-Bayesian optimization
-surrogate models
-topology optimization
-```
+## Engineering version control
 
----
-
-# P19 — Semantic Topology
-
-## Goal
-
-Reduce one of the most important weaknesses of traditional parametric CAD: fragile topological references.
-
-Do not permanently identify model intent using only:
-
-```text
-Face12
-Edge27
-```
-
-Develop semantic references.
-
-Example:
-
-```text
-planar face
-generated by Extrude001
-normal approximately +Z
-largest area
-adjacent to Hole003
-```
-
-A semantic resolver attempts to recover intended entities after topology-changing edits.
-
-## Research topics
-
-```text
-persistent naming
-geometric signatures
-feature provenance
-adjacency graphs
-semantic matching
-confidence scores
-ambiguity detection
-```
-
-This is a major differentiating capability for BetterCAD.
-
----
-
-# P20 — Engineering Version Control
-
-## Goal
-
-Create Git-like concepts for engineering models.
-
-Support:
+Git-like concepts for engineering models:
 
 ```text
 commit
@@ -1287,9 +875,7 @@ revision
 tag
 ```
 
-But diffs must be semantic.
-
-Example:
+But diffs must be semantic:
 
 ```text
 Sketch002.width
@@ -1302,17 +888,12 @@ Material
 Al 6061 → Al 7075
 ```
 
-Eventually enable branch comparison and controlled merging of independent mechanical changes.
+Eventually enable branch comparison and controlled merging of independent
+mechanical changes.
 
----
+## Python automation
 
-# P21 — Python Automation
-
-## Goal
-
-Make the entire platform programmable.
-
-Example:
+Make the entire platform programmable:
 
 ```python
 part = cad.new_part("Bracket")
@@ -1330,36 +911,17 @@ body.hole(
 body.fillet(radius="3 mm")
 ```
 
-Expose:
+Expose documents, parameters, sketches, constraints, features, assemblies,
+materials, simulation, optimization and export.
 
-```text
-documents
-parameters
-sketches
-constraints
-features
-assemblies
-materials
-simulation
-optimization
-export
-```
+The GUI should not have capabilities unavailable to the API without a strong
+reason.
 
-The GUI should not have capabilities unavailable to the API without a strong reason.
+## AI engineering agent
 
----
-
-# P22 — AI Engineering Agent
-
-## Goal
-
-Introduce AI only after the engineering APIs are reliable.
-
-AI must operate through structured, validated commands.
-
-Do not allow arbitrary modification of internal geometry.
-
-Architecture:
+Introduce AI only after the engineering APIs are reliable. AI must operate
+through structured, validated commands, and must never modify internal geometry
+directly.
 
 ```text
 Natural language
@@ -1379,16 +941,14 @@ Simulation / verification
 Result
 ```
 
-Example:
+A request such as:
 
 ```text
 "Create a 150 × 80 × 10 mm mounting plate
 with four M8 holes 15 mm from each corner."
 ```
 
-should compile into explicit modeling operations.
-
-Advanced request:
+should compile into explicit modeling operations. An advanced request:
 
 ```text
 "Reduce this bracket's mass by 20% while keeping
@@ -1396,7 +956,7 @@ maximum stress below 120 MPa and displacement
 below 0.5 mm."
 ```
 
-Pipeline:
+drives the pipeline:
 
 ```text
 requirement
@@ -1414,11 +974,7 @@ optimization
 verified model
 ```
 
----
-
-# P23 — Manufacturing / CAM Foundation
-
-## Goal
+## Manufacturing / CAM foundation
 
 Connect design intent to manufacturing.
 
@@ -1447,17 +1003,10 @@ sheet-metal unfolding
 additive manufacturing preparation
 ```
 
----
+## Performance and GPU
 
-# P24 — Performance and GPU
-
-## Goal
-
-Scale BetterCAD to large real-world engineering models.
-
-Profile first.
-
-Optimize based on evidence.
+Scale BetterCAD to large real-world engineering models. Profile first; optimize
+on evidence.
 
 Potential targets:
 
@@ -1475,28 +1024,13 @@ selection
 collision detection
 ```
 
-GPU usage may include:
+GPU usage may include rendering, large mesh visualization, selection
+acceleration, simulation kernels, matrix operations and post-processing.
 
-```text
-rendering
-large mesh visualization
-selection acceleration
-simulation kernels
-matrix operations
-post-processing
-```
+Never claim acceleration without measured before/after benchmark evidence, and
+never sacrifice correctness for a benchmark.
 
-Never claim acceleration without CPU/GPU benchmark evidence.
-
----
-
-# P25 — Production Hardening
-
-## Goal
-
-Prepare BetterCAD for serious engineering use.
-
-Focus on:
+## Production hardening
 
 ```text
 crash recovery
@@ -1532,9 +1066,7 @@ file compatibility
 GUI acceptance
 ```
 
----
-
-# P26 — BetterCAD 1.0
+## BetterCAD 1.0
 
 A 1.0 release should not mean:
 
@@ -1555,7 +1087,7 @@ Minimum expected 1.0 capabilities:
 * production feature modeling;
 * assemblies;
 * drawings;
-* STEP interoperability;
+* STEP interoperability, import as well as export;
 * deterministic save/load;
 * semantic engineering parameters;
 * materials;
@@ -1566,15 +1098,119 @@ Minimum expected 1.0 capabilities:
 * verified installers/releases;
 * comprehensive user documentation.
 
-Simulation and AI may be included in 1.0 only if sufficiently mature.
+Simulation and AI may be included in 1.0 only if sufficiently mature. Do not
+weaken CAD reliability merely to include them.
 
-Do not weaken CAD reliability merely to include them.
+---
+
+# Release Milestones
+
+Release targets, not a schedule. A target is proposed scope; a release happens
+only when its gates pass.
+
+| Release | Scope | Status |
+| --- | --- | --- |
+| **v0.1 — Modeling Foundation** | units, documents, parameters, Open CASCADE, sketch basics, basic constraints, extrude, save/load, CLI | **RELEASED** — tag `v0.1.0`, commit `2da8966` |
+| **v0.2 — Practical Part Modeling** | revolve, holes, fillets, chamfers, patterns, datum geometry, improved sketch solver, STEP import/export, desktop workflow | NOT RELEASED — revolve, holes, fillets, chamfers, patterns and STEP export delivered by `P11` and `P10`; datum geometry, further sketch-solver work, STEP import and the desktop workflow outstanding |
+| **v0.3 — Production Part Design** | multi-body parts, shell, draft, sweep, loft, equations, configurations, materials, mass properties, production GUI | NOT RELEASED — sweep and loft delivered by `P11`, mass properties by `P3`; multi-body parts only as far as the feature operations provide them; shell, draft, equations, configurations, materials and the GUI outstanding |
+| **v0.4 — Assemblies** | components, mates, assembly solver, interference, assembly tree, assembly mass properties | NOT STARTED |
+| **v0.5 — Drawings** | drawing sheets, views, sections, dimensions, BOM, PDF/DXF export | NOT STARTED |
+| **v0.6 — Simulation Foundation** | meshing, materials, linear structural FEA, thermal foundation, verified benchmarks | NOT STARTED |
+| **v0.7 — Multiphysics / Optimization** | CFD integration, thermal coupling, design studies, parameter optimization, simulation-linked CAD | NOT STARTED |
+| **v0.8 — Engineering Platform** | Python API, plugin system, engineering version control, semantic diff, automation | NOT STARTED |
+| **v0.9 — AI-Native Engineering** | natural-language modeling, model inspection, design modification, simulation orchestration, optimization agent, requirement checking | NOT STARTED |
+| **v1.0 — Production BetterCAD** | stable CAD, stable assemblies, stable drawings, interoperability, automation, release qualification, documentation, real engineering reference projects | NOT STARTED |
+
+`P11` delivered part of the v0.2 and v0.3 scope without cutting a release; the
+work is qualified, not shipped. Release scope will be re-cut when a release is
+actually prepared, against the gates below.
+
+---
+
+# Reference Projects
+
+Maintain permanent models that exercise BetterCAD functionality. They are
+regression assets, not disposable demos, and are not deleted because they
+reveal a regression — the regression is fixed.
+
+**In the repository today** (six parts, built through the public API, every
+dimension validated against independently computed geometry):
+
+```text
+shaft              stepped, turned
+flange             bolted, with a bolt circle
+pulley             V-belt
+bearing_housing    pillow block
+mounting_bracket   L bracket with a lofted gusset
+u_bolt             swept
+```
+
+**Planned as capabilities allow:**
+
+```text
+simple_block
+gearbox_housing
+motor_mount
+four_bar_linkage
+small_gearbox_assembly     needs assemblies
+machine_frame              needs assemblies
+```
+
+Later simulation references:
+
+```text
+cantilever_beam
+pressure_vessel_segment
+heat_sink
+pipe_flow
+lid_driven_cavity
+airfoil_flow
+```
+
+---
+
+# Quality Gates
+
+Every release candidate should verify:
+
+```text
+build
+unit tests
+integration tests
+regression models
+serialization
+import/export
+geometry validity
+solver determinism
+GUI smoke test
+CLI smoke test
+performance regression
+installer/package
+release artifact hashes
+```
+
+No checkbox is marked complete because code merely exists.
+
+Completion means:
+
+```text
+implemented
++
+tested
++
+validated
++
+evidence recorded
+```
+
+A failing required gate blocks the release. See [CLAUDE.md](CLAUDE.md) for how
+gates are run and recorded.
 
 ---
 
 # Beyond 1.0
 
-Possible future directions:
+Possible future directions.
 
 ## Generative engineering
 
@@ -1647,280 +1283,35 @@ collaboration
 
 ---
 
-# Proposed Release Milestones
+# What Happens Next
 
-## v0.1 — Modeling Foundation
+The parametric part-modeling foundation is qualified, so the original
+restriction — *do not start assemblies, FEA, CFD, AI, CAM or cloud
+collaboration until the foundation is reliable* — has been satisfied as
+written. It is replaced by a narrower and permanent one:
 
-Target:
+> **Listing a capability here does not authorize it.** No capability above may
+> be started until [TODO.md](TODO.md) records it as an authorized milestone
+> with its own gates. A capability being next in the dependency order is not
+> authorization either.
 
-```text
-units
-documents
-parameters
-Open CASCADE
-sketch basics
-basic constraints
-extrude
-save/load
-CLI
-```
+The first major objective has been met:
 
-A user should be able to create a simple parametric solid.
+> Create a small CAD system that can build, edit, regenerate, save, reload and
+> export a real parametric mechanical part without breaking.
 
----
-
-## v0.2 — Practical Part Modeling
-
-Target:
-
-```text
-revolve
-holes
-fillets
-chamfers
-patterns
-datum geometry
-improved sketch solver
-STEP import/export
-desktop workflow
-```
+The next objective is a decision, not a feature. The likely candidates are the
+desktop application, a minimal stable-reference layer, or assemblies — and the
+choice between them is exactly the kind of scope decision this document must
+not make on its own.
 
 ---
 
-## v0.3 — Production Part Design
+# Project Documents
 
-Target:
-
-```text
-multi-body parts
-shell
-draft
-sweep
-loft
-equations
-configurations
-materials
-mass properties
-production GUI
-```
-
----
-
-## v0.4 — Assemblies
-
-Target:
-
-```text
-components
-mates
-assembly solver
-interference
-assembly tree
-assembly mass properties
-```
-
----
-
-## v0.5 — Drawings
-
-Target:
-
-```text
-drawing sheets
-views
-sections
-dimensions
-BOM
-PDF/DXF export
-```
-
----
-
-## v0.6 — Simulation Foundation
-
-Target:
-
-```text
-meshing
-materials
-linear structural FEA
-thermal foundation
-verified benchmarks
-```
-
----
-
-## v0.7 — Multiphysics / Optimization
-
-Target:
-
-```text
-CFD integration
-thermal coupling
-design studies
-parameter optimization
-simulation-linked CAD
-```
-
----
-
-## v0.8 — Engineering Platform
-
-Target:
-
-```text
-Python API
-plugin system
-engineering version control
-semantic diff
-automation
-```
-
----
-
-## v0.9 — AI-Native Engineering
-
-Target:
-
-```text
-natural-language modeling
-model inspection
-design modification
-simulation orchestration
-optimization agent
-requirement checking
-```
-
----
-
-## v1.0 — Production BetterCAD
-
-Target:
-
-```text
-stable CAD
-stable assemblies
-stable drawings
-interoperability
-automation
-release qualification
-documentation
-real engineering reference projects
-```
-
----
-
-# Reference Models
-
-Maintain permanent models that exercise BetterCAD functionality.
-
-Examples:
-
-```text
-01_simple_block
-02_flanged_shaft
-03_bearing_housing
-04_mounting_bracket
-05_pulley
-06_gearbox_housing
-07_motor_mount
-08_four_bar_linkage
-09_small_gearbox_assembly
-10_machine_frame
-```
-
-Later simulation references:
-
-```text
-cantilever_beam
-pressure_vessel_segment
-heat_sink
-pipe_flow
-lid_driven_cavity
-airfoil_flow
-```
-
-These should become regression assets rather than disposable demos.
-
----
-
-# Quality Gates
-
-Every release candidate should verify:
-
-```text
-build
-unit tests
-integration tests
-regression models
-serialization
-import/export
-geometry validity
-solver determinism
-GUI smoke test
-CLI smoke test
-performance regression
-installer/package
-release artifact hashes
-```
-
-No checkbox should be marked complete because code merely exists.
-
-Completion means:
-
-```text
-implemented
-+
-tested
-+
-validated
-+
-evidence recorded
-```
-
----
-
-# Immediate Development Priority
-
-Current implementation order:
-
-```text
-P0 Repository Foundation
- ↓
-P1 Engineering Core
- ↓
-P2 Document Model
- ↓
-P3 Geometry Kernel
- ↓
-P4 Sketch Data Model
- ↓
-P5 Constraint Solver
- ↓
-P6 Extrude
- ↓
-P7 Dependency / Regeneration Engine
- ↓
-P8 Persistence
- ↓
-P9 Minimal Desktop CAD Workflow
-```
-
-Do **not** start:
-
-```text
-assemblies
-FEA
-CFD
-AI
-CAM
-cloud collaboration
-```
-
-until the parametric modeling foundation is reliable.
-
-The first major objective is simple:
-
-> **Create a small CAD system that can build, edit, regenerate, save, reload, and export a real parametric mechanical part without breaking.**
-
-Once that foundation is trustworthy, BetterCAD can grow into the larger engineering platform described in this roadmap.
+* [README.md](README.md) — project overview and getting started
+* [ROADMAP.md](ROADMAP.md) — long-term capability direction (this document)
+* [TODO.md](TODO.md) — authoritative implementation status and next work
+* [ARCHITECTURE.md](ARCHITECTURE.md) — system architecture and dependency rules
+* [CLAUDE.md](CLAUDE.md) — engineering workflow and verification rules
+* [docs/verification/](docs/verification/) — evidence for completed milestones
