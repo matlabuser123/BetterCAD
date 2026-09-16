@@ -1,0 +1,102 @@
+baseline ../P12-PARAM-001/ctest-release.log: 776 distinct names
+
+ctest-debug.log: 803 distinct names, 804 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 27
+    unit.SketchCommands_ModifySketchCommandUndoesAndRedoesEdits
+    unit.SketchConstraint_AngleAndDiameterValuesAreChecked
+    unit.SketchConstraint_DrivingParametersMustHaveTheRightDimension
+    unit.SketchConstraint_NewTypesValidateTheirReferences
+    unit.SketchDocument_DrivenDiameterAndAngleRegenerateGeometry
+    unit.SketchDocument_InvalidDrivenValuesFailTheSketch
+    unit.SketchDocument_ValidationSolvesTheNewConstraints
+    unit.SketchFile_MalformedNewConstraintsAreRejectedWithThePath
+    unit.SketchFile_NewConstraintsRoundTrip
+    unit.SketchSolver_AngleIsMeasuredBetweenLinesNotTheirDirections
+    unit.SketchSolver_AngleTurnsTheSecondLineCounterClockwiseFromTheFirst
+    unit.SketchSolver_ConcentricBringsTheCentresTogether
+    unit.SketchSolver_ConflictingNewConstraintsAreInconsistent
+    unit.SketchSolver_DiameterSetsTwiceTheRadius
+    unit.SketchSolver_EachNewConstraintRemovesItsDegreesOfFreedom
+    unit.SketchSolver_MidpointPlacesThePointHalfwayAlongTheLine
+    unit.SketchSolver_NewConstraintsSolveDeterministically
+    unit.SketchSolver_ObroundFromTangentArcsIsFullyConstrained
+    unit.SketchSolver_RedundantNewConstraintsAreOverConstrained
+    unit.SketchSolver_RegularHexagonFromEqualSidesAndAngles
+    unit.SketchSolver_SymmetricMirrorsPointsAcrossTheLine
+    unit.SketchSolver_TangentArcAndLineJoinSmoothly
+    unit.SketchSolver_TangentArcTouchesACircleWithoutAJoint
+    unit.SketchSolver_TangentArcsShareASmoothJoint
+    unit.SketchSolver_TangentAtACoincidentJointIsExact
+    unit.SketchSolver_TangentCirclesKeepTheirKindOfContact
+    unit.SketchSolver_TangentLineTouchesTheCircleOnItsOwnSide
+
+ctest-release.log: 803 distinct names, 804 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 27
+    unit.SketchCommands_ModifySketchCommandUndoesAndRedoesEdits
+    unit.SketchConstraint_AngleAndDiameterValuesAreChecked
+    unit.SketchConstraint_DrivingParametersMustHaveTheRightDimension
+    unit.SketchConstraint_NewTypesValidateTheirReferences
+    unit.SketchDocument_DrivenDiameterAndAngleRegenerateGeometry
+    unit.SketchDocument_InvalidDrivenValuesFailTheSketch
+    unit.SketchDocument_ValidationSolvesTheNewConstraints
+    unit.SketchFile_MalformedNewConstraintsAreRejectedWithThePath
+    unit.SketchFile_NewConstraintsRoundTrip
+    unit.SketchSolver_AngleIsMeasuredBetweenLinesNotTheirDirections
+    unit.SketchSolver_AngleTurnsTheSecondLineCounterClockwiseFromTheFirst
+    unit.SketchSolver_ConcentricBringsTheCentresTogether
+    unit.SketchSolver_ConflictingNewConstraintsAreInconsistent
+    unit.SketchSolver_DiameterSetsTwiceTheRadius
+    unit.SketchSolver_EachNewConstraintRemovesItsDegreesOfFreedom
+    unit.SketchSolver_MidpointPlacesThePointHalfwayAlongTheLine
+    unit.SketchSolver_NewConstraintsSolveDeterministically
+    unit.SketchSolver_ObroundFromTangentArcsIsFullyConstrained
+    unit.SketchSolver_RedundantNewConstraintsAreOverConstrained
+    unit.SketchSolver_RegularHexagonFromEqualSidesAndAngles
+    unit.SketchSolver_SymmetricMirrorsPointsAcrossTheLine
+    unit.SketchSolver_TangentArcAndLineJoinSmoothly
+    unit.SketchSolver_TangentArcTouchesACircleWithoutAJoint
+    unit.SketchSolver_TangentArcsShareASmoothJoint
+    unit.SketchSolver_TangentAtACoincidentJointIsExact
+    unit.SketchSolver_TangentCirclesKeepTheirKindOfContact
+    unit.SketchSolver_TangentLineTouchesTheCircleOnItsOwnSide
+
+ctest-debug-shared.log: 803 distinct names, 804 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 27
+    unit.SketchCommands_ModifySketchCommandUndoesAndRedoesEdits
+    unit.SketchConstraint_AngleAndDiameterValuesAreChecked
+    unit.SketchConstraint_DrivingParametersMustHaveTheRightDimension
+    unit.SketchConstraint_NewTypesValidateTheirReferences
+    unit.SketchDocument_DrivenDiameterAndAngleRegenerateGeometry
+    unit.SketchDocument_InvalidDrivenValuesFailTheSketch
+    unit.SketchDocument_ValidationSolvesTheNewConstraints
+    unit.SketchFile_MalformedNewConstraintsAreRejectedWithThePath
+    unit.SketchFile_NewConstraintsRoundTrip
+    unit.SketchSolver_AngleIsMeasuredBetweenLinesNotTheirDirections
+    unit.SketchSolver_AngleTurnsTheSecondLineCounterClockwiseFromTheFirst
+    unit.SketchSolver_ConcentricBringsTheCentresTogether
+    unit.SketchSolver_ConflictingNewConstraintsAreInconsistent
+    unit.SketchSolver_DiameterSetsTwiceTheRadius
+    unit.SketchSolver_EachNewConstraintRemovesItsDegreesOfFreedom
+    unit.SketchSolver_MidpointPlacesThePointHalfwayAlongTheLine
+    unit.SketchSolver_NewConstraintsSolveDeterministically
+    unit.SketchSolver_ObroundFromTangentArcsIsFullyConstrained
+    unit.SketchSolver_RedundantNewConstraintsAreOverConstrained
+    unit.SketchSolver_RegularHexagonFromEqualSidesAndAngles
+    unit.SketchSolver_SymmetricMirrorsPointsAcrossTheLine
+    unit.SketchSolver_TangentArcAndLineJoinSmoothly
+    unit.SketchSolver_TangentArcTouchesACircleWithoutAJoint
+    unit.SketchSolver_TangentArcsShareASmoothJoint
+    unit.SketchSolver_TangentAtACoincidentJointIsExact
+    unit.SketchSolver_TangentCirclesKeepTheirKindOfContact
+    unit.SketchSolver_TangentLineTouchesTheCircleOnItsOwnSide
+
+RESULT: PASS

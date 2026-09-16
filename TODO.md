@@ -13,7 +13,7 @@ authorized — never in advance.
 | | |
 | --- | --- |
 | Current | **`P12` — Parametric CAD Completion** |
-| Next | `P12-SKETCH-001` — Sketch constraints: angle, tangent, concentric, midpoint, symmetric, diameter |
+| Next | `P12-SKETCH-002` — Sketch entities: ellipse, spline |
 | Blocked / Manual | None |
 | Last qualified | `P11` Production Part Modeling — **QUALIFIED** |
 | Released | `v0.1.0` (`P0`–`P10`); `P11` qualified, not released |
@@ -49,8 +49,8 @@ Reference models → qualification
 | # | Milestone | Depends on | Status |
 | --- | --- | --- | --- |
 | 1 | `P12-PARAM-001` Parameter expression evaluation | — | **done** — [evidence](docs/verification/P12-PARAM-001/README.md) |
-| 2 | `P12-SKETCH-001` Constraints: angle, tangent, concentric, midpoint, symmetric, diameter | `PARAM-001` | **next** |
-| 3 | `P12-SKETCH-002` Entities: ellipse, spline | `SKETCH-001` | not started |
+| 2 | `P12-SKETCH-001` Constraints: angle, tangent, concentric, midpoint, symmetric, diameter | `PARAM-001` | **done** — [evidence](docs/verification/P12-SKETCH-001/README.md) |
+| 3 | `P12-SKETCH-002` Entities: ellipse, spline | `SKETCH-001` | **next** |
 | 4 | `P12-DATUM-001` Datum planes, axes, coordinate systems | `PARAM-001` | not started |
 | 5 | `P12-SKETCH-003` Sketches on arbitrary planar faces | `DATUM-001` | not started — see *Stable-reference risk* |
 | 6 | `P12-FEAT-001` Through-all extrude | — | not started |
@@ -104,10 +104,34 @@ Acceptance:
 - The unit-safe parameter system is not reduced to raw doubles anywhere.
 - The existing `P0`–`P11` regression suite stays green in all three presets.
 
+#### P12-SKETCH-001 — Sketch constraints: angle, tangent, concentric, midpoint, symmetric, diameter
+
+Deliverables:
+
+- [x] Angle: two lines, counter-clockwise from the first, in (0°, 180°), literal or driven by an angle parameter
+- [x] Tangent: a line and a circle or arc, or two circles or arcs (external or internal contact)
+- [x] Concentric: two circles or arcs
+- [x] Midpoint: a point halfway along a line
+- [x] Symmetric: two points mirrored across a line
+- [x] Diameter: a circle or arc, literal or driven by a length parameter
+- [x] Solver equations with analytic Jacobians; degrees of freedom, redundancy and conflicts diagnosed for the new types
+- [x] Reference validation and canonical entity order at creation; structured errors
+- [x] Driving parameters (angles for angle constraints), regeneration, validation
+- [x] Undoable sketch edits (`ModifySketchCommand`)
+- [x] Save/load round-trip of the new constraints
+- [x] Evidence: [docs/verification/P12-SKETCH-001/](docs/verification/P12-SKETCH-001/README.md) — PASS, 804/804 tests in Debug, Release and Debug-shared, 0 warnings
+
+Acceptance:
+
+- Each constraint holds after solving, checked with geometry computed independently from the solved points (atan2 angles, point-line distances, reflections), to the solver's tolerance.
+- Each constraint removes exactly its number of equations from the degrees of freedom; redundant and conflicting combinations are diagnosed with the constraint IDs and change nothing.
+- Profiles built from the new constraints (a regular hexagon, an obround slot, a wedge) have the analytic area, and driven angles and diameters rebuild features with the analytic volume.
+- `P0`–`P12-PARAM-001` stays green in all three presets.
+
 ## Next
 
-`P12-SKETCH-001` — Sketch constraints: angle, tangent, concentric, midpoint,
-symmetric, diameter. Its deliverables are added above when it starts.
+`P12-SKETCH-002` — Sketch entities: ellipse, spline. Its deliverables are
+added above when it starts.
 
 ## Blocked / Manual
 
@@ -216,10 +240,10 @@ Not started. Not authorized. Grouped to match
 
 | Milestone | Commit | Evidence |
 | --- | --- | --- |
-| `P12-PARAM-001` Parameter expression evaluation | "BetterCAD: implement P12 parameter expressions" | [P12-PARAM-001](docs/verification/P12-PARAM-001/README.md) |
+| `P12-SKETCH-001` Sketch constraints | "BetterCAD: implement P12 sketch constraints" | [P12-SKETCH-001](docs/verification/P12-SKETCH-001/README.md) |
+| `P12-PARAM-001` Parameter expression evaluation | `2316127` | [P12-PARAM-001](docs/verification/P12-PARAM-001/README.md) |
 | `P11-QUAL-001` Qualification | `449d5fd` | [P11-QUAL-001](docs/verification/P11-QUAL-001/README.md) |
 | `P11-REF-001` Mechanical reference models | `79dab04` | [P11-REF-001](docs/verification/P11-REF-001/README.md) |
-| `P11-FEAT-009` Loft | `24a8134` | [P11-FEAT-009](docs/verification/P11-FEAT-009/README.md) |
 
 ## Completed Milestones
 
@@ -257,8 +281,12 @@ regression test, so none can change silently. Detail:
 - **Uniting a half body with its mirror image** is refused when a half cylinder
   lies on the mirror plane: the kernel's fuse returns a shape its own checker
   rejects, so BetterCAD refuses it rather than building it wrongly.
-- **Sketch constraints** cover coincident, horizontal, vertical, parallel,
-  perpendicular, distance, radius, equal and fixed only.
+- **Sketch constraints** are coincident, horizontal, vertical, parallel,
+  perpendicular, distance, radius, equal, fixed, angle, tangent, concentric,
+  midpoint, symmetric and diameter. Tangency keeps the side or kind of
+  contact the sketch starts with, and is exact at a joint only where the
+  entities share a point or a coincident constraint
+  ([P12-SKETCH-001](docs/verification/P12-SKETCH-001/README.md)).
 - **Pattern cost** grows with the square of the instance count, capped at 500.
 
 ### Not implemented

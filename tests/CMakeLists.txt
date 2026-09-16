@@ -83,6 +83,8 @@ bettercad_add_executable(bettercad_tests
         io/RevolveFileTests.cpp
         io/StepExportTests.cpp
         io/StlTests.cpp
+        sketch/AdvancedConstraintDocumentTests.cpp
+        sketch/AdvancedConstraintSolverTests.cpp
         sketch/ConstraintTests.cpp
         sketch/SketchDocumentTests.cpp
         sketch/SketchTests.cpp

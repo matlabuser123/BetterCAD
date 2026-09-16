@@ -41,8 +41,26 @@ enum class EquationKind {
     PointLine,        ///< signed distance of p0 from line p1 -> p2, minus sign * target
     Parallel,         ///< cross(p1 - p0, p3 - p2) / |p3 - p2|
     Perpendicular,    ///< dot(p1 - p0, p3 - p2) / |p3 - p2|
+    // P12-SKETCH-001
+    /// (cross(d1, d2) cos t - dot(d1, d2) sin t) / |d2| = |d1| sin(angle - t),
+    /// d1 = p1 - p0, d2 = p3 - p2, t = target
+    Angle,
+    /// signed distance of p0 (a centre) from line p1 -> p2, minus sign * R0.
+    /// A tangent at a joint (a shared end point) is instead Perpendicular
+    /// (the line against the radius there), or Parallel for two arcs (their
+    /// radii there): this form is second order at a joint.
+    LineTangent,
+    /// |p1 - p0| - (k0 R0 + k1 R1), with p0 and p1 the centres
+    CircleTangent,
+    MidX,           ///< p0.x - (p1.x + p2.x) / 2
+    MidY,           ///< p0.y - (p1.y + p2.y) / 2
+    MidpointOnLine, ///< signed distance of (p0 + p1) / 2 from line p2 -> p3
 };
 
+/// An equation. Radius terms Ri (the tangents) are the radius variable r[i]
+/// of a circle, or, for an arc (arcRadius[i]), the distance from its centre to
+/// its start point: p[3] from p[0] for LineTangent, p[2 + i] from p[i] for
+/// CircleTangent.
 struct Equation {
     EquationKind kind = EquationKind::DiffX;
     /// Constraint the equation comes from; invalid for internal arc equations.
@@ -51,6 +69,10 @@ struct Equation {
     std::array<RadiusRef, 2> r{};
     double target = 0.0;
     double sign = 1.0;
+    std::array<bool, 2> arcRadius{};
+    /// k0 and k1 of CircleTangent: (1, 1) for external contact, (1, -1) or
+    /// (-1, 1) for internal contact.
+    std::array<double, 2> coefficient{1.0, 1.0};
 };
 
 class System {

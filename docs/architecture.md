@@ -496,12 +496,43 @@ milestones start; see `TODO.md`.
 - Validation happens when entities are created. Later point edits are free,
   because the solver moves points.
 - Constraints reference whole entities and are validated when added.
-  Distance and Radius values may be driven by a document parameter.
+  Distance, Radius and Diameter values may be driven by a length parameter,
+  Angle values by an angle parameter (`isDrivable()`).
 - The solver (`bettercad/sketch/Solver.hpp`, Eigen private) solves
   F(x) = 0 over free point coordinates and circle radii. It uses minimum-norm
   Gauss–Newton steps with length-scaled residuals, and diagnoses
   under/fully/over-constrained, inconsistent and failed solves. It writes
   geometry back only when the result is solved.
+- **Constraints added by P12-SKETCH-001**, each with an analytic Jacobian
+  and residuals in lengths:
+  - *Angle* (two lines, 0 < θ < 180°): |d1| sin(φ − θ), with φ the
+    counter-clockwise angle from the first line to the second. Lines have no
+    direction, so φ and φ + 180° are the same configuration.
+  - *Tangent*: a line and a circle or arc, as the centre's signed distance
+    from the line minus the radius, on the side where the centre starts; two
+    circles or arcs, as the centre distance minus r1 + r2 (external) or
+    |r1 − r2| (internal), whichever the start is nearer. **At a joint** (the
+    entities end at one point, or at points a coincident constraint joins)
+    tangency is instead the line perpendicular to the arc's radius there, or
+    the two radii parallel: the distance form is second order at a joint and
+    placed the joint only to √(2·r·tolerance) (4e-5 mm for r = 8 mm).
+  - *Concentric* (two circles or arcs with different centre points), the
+    centres' x and y.
+  - *Midpoint* (a point and a line, not one of its end points),
+    p − (a + b)/2.
+  - *Symmetric* (two points and a line): their midpoint on the line, and
+    their segment perpendicular to it.
+  - *Diameter*: the radius equation with half the value.
+
+  Entities are stored in a canonical order: (point, line) for midpoints and
+  point-line distances, (line, circle/arc) for tangents, (point, point, line)
+  for symmetric. Values out of range (an angle of 0 or 180°, a diameter of 0)
+  and degenerate references (a concentric pair sharing its centre point, a
+  line's own end point as its midpoint) are refused when the constraint is
+  added, and again when a driving parameter sets a value.
+- **Undoable sketch edits** (`ModifySketchCommand`). The edit runs on a copy;
+  on success the sketch's content before and after is kept, and undo/redo
+  restore it with `Sketch::restoreContent()`, IDs and ID counters included.
 
 ### Features (`bettercad/features/`, library `bettercad_features`)
 
@@ -761,7 +792,9 @@ milestones start; see `TODO.md`.
   - the objects, as `{id, type, name, data}` in ascending ID order.
 
   Sketch data holds the placement frame, the entities and constraints with
-  their own IDs, and the sketch's ID counters. Extrude, revolve and chamfer
+  their own IDs, and the sketch's ID counters. A constraint stores `value`
+  (metres) for distances, radii and diameters and `angle` (radians) for
+  angles, each only when its type has one. Extrude, revolve and chamfer
   data hold their definitions:
   - a revolve axis is stored as
     `{"type": "sketch_x" | "sketch_y" | "line", "line": id}` and its angle

@@ -47,10 +47,17 @@ public:
     /// Parameters that drive constraint values (ascending, unique).
     [[nodiscard]] std::vector<ObjectId> dependencies() const override;
 
-    /// Copies point positions, circle radii and constraint values from
-    /// @p solved, which must have the same entities and constraints (e.g. a
-    /// solved clone of this sketch). Returns whether anything changed.
+    /// Copies point positions, circle radii and constraint values (lengths
+    /// and angles) from @p solved, which must have the same entities and
+    /// constraints (e.g. a solved clone of this sketch). Returns whether
+    /// anything changed.
     Result<bool> adoptSolution(const Sketch& solved);
+
+    /// Makes the placement, entities, constraints and ID counters equal to
+    /// @p state's; the object's own identity (ID, name, revision) is kept.
+    /// Used by undoable sketch edits (ModifySketchCommand). Returns whether
+    /// anything changed.
+    Result<bool> restoreContent(const Sketch& state);
 
     /// Typed view of id(); invalid until the sketch is in a document.
     [[nodiscard]] SketchId sketchId() const noexcept { return SketchId::fromValue(id().value()); }
@@ -99,11 +106,12 @@ public:
     }
 
     // --- Constraints -----------------------------------------------------------
-    /// Adds a constraint after checking its references and value (see
-    /// Constraints.hpp for the accepted signatures). A (line, point) distance
-    /// is stored as (point, line).
+    /// Adds a constraint after checking its references and its value or
+    /// angle (see Constraints.hpp for the accepted signatures and the
+    /// canonical entity orders it stores).
     Result<ConstraintId> addConstraint(ConstraintType type, std::vector<EntityId> entities,
-                                       std::optional<Length> value = std::nullopt);
+                                       std::optional<Length> value = std::nullopt,
+                                       std::optional<Angle> angle = std::nullopt);
     Result<ConstraintId> addCoincident(EntityId pointA, EntityId pointB);
     Result<ConstraintId> addHorizontal(EntityId line);
     Result<ConstraintId> addHorizontal(EntityId pointA, EntityId pointB);
@@ -119,14 +127,27 @@ public:
     Result<ConstraintId> addEqual(EntityId a, EntityId b);
     /// Holds a point at its current position while solving.
     Result<ConstraintId> addFixed(EntityId point);
+    /// The angle from @p lineA counter-clockwise to @p lineB, in (0, 180°).
+    Result<ConstraintId> addAngle(EntityId lineA, EntityId lineB, Angle value);
+    /// A line and a circle or arc, or two circles or arcs, touching.
+    Result<ConstraintId> addTangent(EntityId a, EntityId b);
+    Result<ConstraintId> addConcentric(EntityId circleOrArcA, EntityId circleOrArcB);
+    /// A point halfway along a line (either order).
+    Result<ConstraintId> addMidpoint(EntityId a, EntityId b);
+    /// Two points mirrored across @p line.
+    Result<ConstraintId> addSymmetric(EntityId pointA, EntityId pointB, EntityId line);
+    Result<ConstraintId> addDiameter(EntityId circleOrArc, Length value);
     /// Inserts a constraint that already has an ID (loading, undo); it is
     /// checked like a new one.
     Result<void> insertConstraint(Constraint constraint);
     Result<Constraint> removeConstraint(ConstraintId id);
     Result<bool> setConstraintEnabled(ConstraintId id, bool enabled);
-    /// Changes the value of a Distance or Radius constraint.
+    /// Changes the value of a Distance, Radius or Diameter constraint.
     Result<bool> setConstraintValue(ConstraintId id, Length value);
-    /// Sets or clears the parameter driving a Distance or Radius constraint.
+    /// Changes the angle of an Angle constraint.
+    Result<bool> setConstraintAngle(ConstraintId id, Angle value);
+    /// Sets or clears the parameter driving a constraint's value or angle
+    /// (see isDrivable()).
     Result<bool> setConstraintParameter(ConstraintId id, std::optional<ParameterId> parameter);
 
     [[nodiscard]] const Constraint* findConstraint(ConstraintId id) const noexcept;
@@ -171,6 +192,8 @@ private:
     [[nodiscard]] Result<Point2D> requirePoint(EntityId id) const;
     EntityId insert(EntityGeometry geometry);
     [[nodiscard]] Result<void> checkConstraint(const Constraint& constraint) const;
+    [[nodiscard]] Result<void> checkReferences(const Constraint& constraint) const;
+    void canonicalize(Constraint& constraint) const;
     [[nodiscard]] Result<Constraint*> requireConstraint(ConstraintId id);
 
     Frame3D placement_;

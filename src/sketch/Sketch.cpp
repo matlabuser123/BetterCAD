@@ -128,10 +128,30 @@ Result<bool> Sketch::adoptSolution(const Sketch& solved) {
     }
     for (auto& [id, constraint] : constraints_) {
         const Constraint& source = *solved.findConstraint(id);
-        changed |= constraint.value != source.value;
+        changed |= constraint.value != source.value || constraint.angle != source.angle;
         constraint.value = source.value;
+        constraint.angle = source.angle;
     }
     return changed;
+}
+
+Result<bool> Sketch::restoreContent(const Sketch& state) {
+    const bool changed = placement_ != state.placement_ || entities_ != state.entities_ ||
+                         constraints_ != state.constraints_ ||
+                         entityIds_.lastValue() != state.entityIds_.lastValue() ||
+                         constraintIds_.lastValue() != state.constraintIds_.lastValue();
+    if (!changed) {
+        return false;
+    }
+    // Copy first, so a failed allocation leaves this sketch unchanged.
+    std::map<EntityId, Entity> entities = state.entities_;
+    std::map<ConstraintId, Constraint> constraints = state.constraints_;
+    placement_ = state.placement_;
+    entities_.swap(entities);
+    constraints_.swap(constraints);
+    entityIds_ = state.entityIds_;
+    constraintIds_ = state.constraintIds_;
+    return true;
 }
 
 Result<bool> Sketch::setPlacement(const Frame3D& placement) {

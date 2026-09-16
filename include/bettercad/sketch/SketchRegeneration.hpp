@@ -8,9 +8,11 @@
 
 namespace bettercad::sketch {
 
-/// Copies the values of driving parameters into the constraints they drive.
-/// Fails if a driving parameter is missing (NotFound), is not a length
-/// (DimensionMismatch) or gives an invalid value (InvalidArgument).
+/// Copies the values of driving parameters into the constraints they drive:
+/// angles into Angle constraints, lengths into the others. Fails if a
+/// driving parameter is missing (NotFound), has the wrong dimension (an
+/// angle for an Angle constraint, a length otherwise; DimensionMismatch) or
+/// gives an invalid value (InvalidArgument).
 BETTERCAD_SKETCH_EXPORT Result<bool> applyDrivingParameters(Sketch& sketch,
                                                             const ParameterTable& parameters);
 

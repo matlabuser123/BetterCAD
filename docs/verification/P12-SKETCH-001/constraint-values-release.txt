@@ -1,0 +1,599 @@
+Measured values of the P12-SKETCH-001 tests (Release build of the qualified tree).
+Produced by: build/release/bin/bettercad_tests.exe "[sketch][p12]" -s --reporter xml --rng-seed 1, filtered by
+values.py (kept in this directory): every passed CHECK_THAT and every passed CHECK whose expansion shows
+values, with the test case, section and INFO/CAPTURE context. Each entry: file:line, the assertion, then
+Catch2's expansion (values printed exactly). REQUIRE lines, repeats of an identical entry within a test case
+and expansions over 1000 characters (whole-file text) are left out.
+
+
+== SketchDocument_InvalidDrivenValuesFailTheSketch
+AdvancedConstraintDocumentTests.cpp:292  CHECK( report.failed == std::vector<ObjectId>{m.wedgeSketch} )
+        => { object:8 } == { object:8 }
+AdvancedConstraintDocumentTests.cpp:293  CHECK( report.errors.at(m.wedgeSketch).code == ErrorCode::InvalidArgument )
+        => 0 == 0
+AdvancedConstraintDocumentTests.cpp:294  CHECK_THAT( report.errors.at(m.wedgeSketch).message, ContainsSubstring("an angle constraint needs an angle between 0 and 180 deg (exclusive), got 190 deg") )
+        => "an angle constraint needs an angle between 0 and 180 deg (exclusive), got 190 deg" contains: "an angle constraint needs an angle between 0 and 180 deg (exclusive), got 190 deg"
+AdvancedConstraintDocumentTests.cpp:296  CHECK( report.blocked == std::vector<ObjectId>{m.wedge} )
+        => { object:9 } == { object:9 }
+AdvancedConstraintDocumentTests.cpp:297  CHECK( regenerator.body(m.slot) != nullptr )
+        => 0x000001c3d5a98e78 != nullptr
+AdvancedConstraintDocumentTests.cpp:312  CHECK_THAT( validation.issues[0].message, ContainsSubstring("is driven by half_opening (object:4), which is an angle, not a length") )
+        => "SlotSketch (object:6): constraint:4 is driven by half_opening (object:4), which is an angle, not a length" contains: "is driven by half_opening (object:4), which is an angle, not a length"
+AdvancedConstraintDocumentTests.cpp:326  CHECK_THAT( angle.issues[0].message, ContainsSubstring("which is a length, not an angle") )
+        => "WedgeSketch (object:8): constraint:5 is driven by depth (object:3), which is a length, not an angle" contains: "which is a length, not an angle"
+
+== SketchConstraint_AngleAndDiameterValuesAreChecked
+AdvancedConstraintDocumentTests.cpp:63  CHECK( result.error().code == ErrorCode::InvalidArgument )
+        => 0 == 0 with message: bad.in(units::deg) := 0.0
+AdvancedConstraintDocumentTests.cpp:190  CHECK_THAT( message(s.addAngle(f.lineA, f.lineB, bad)), ContainsSubstring("an angle constraint needs an angle between 0 and 180 deg (exclusive)") )
+        => "an angle constraint needs an angle between 0 and 180 deg (exclusive), got 0 deg" contains: "an angle constraint needs an angle between 0 and 180 deg (exclusive)" with message: bad.in(units::deg) := 0.0
+AdvancedConstraintDocumentTests.cpp:63  CHECK( result.error().code == ErrorCode::InvalidArgument )
+        => 0 == 0 with message: bad.in(units::deg) := 180.0
+AdvancedConstraintDocumentTests.cpp:190  CHECK_THAT( message(s.addAngle(f.lineA, f.lineB, bad)), ContainsSubstring("an angle constraint needs an angle between 0 and 180 deg (exclusive)") )
+        => "an angle constraint needs an angle between 0 and 180 deg (exclusive), got 180 deg" contains: "an angle constraint needs an angle between 0 and 180 deg (exclusive)" with message: bad.in(units::deg) := 180.0
+AdvancedConstraintDocumentTests.cpp:63  CHECK( result.error().code == ErrorCode::InvalidArgument )
+        => 0 == 0 with message: bad.in(units::deg) := -10.0
+AdvancedConstraintDocumentTests.cpp:190  CHECK_THAT( message(s.addAngle(f.lineA, f.lineB, bad)), ContainsSubstring("an angle constraint needs an angle between 0 and 180 deg (exclusive)") )
+        => "an angle constraint needs an angle between 0 and 180 deg (exclusive), got -10 deg" contains: "an angle constraint needs an angle between 0 and 180 deg (exclusive)" with message: bad.in(units::deg) := -10.0
+AdvancedConstraintDocumentTests.cpp:63  CHECK( result.error().code == ErrorCode::InvalidArgument )
+        => 0 == 0 with message: bad.in(units::deg) := 190.0
+AdvancedConstraintDocumentTests.cpp:190  CHECK_THAT( message(s.addAngle(f.lineA, f.lineB, bad)), ContainsSubstring("an angle constraint needs an angle between 0 and 180 deg (exclusive)") )
+        => "an angle constraint needs an angle between 0 and 180 deg (exclusive), got 190 deg" contains: "an angle constraint needs an angle between 0 and 180 deg (exclusive)" with message: bad.in(units::deg) := 190.0
+AdvancedConstraintDocumentTests.cpp:63  CHECK( result.error().code == ErrorCode::InvalidArgument )
+        => 0 == 0 with message: bad.in(units::deg) := nan
+AdvancedConstraintDocumentTests.cpp:190  CHECK_THAT( message(s.addAngle(f.lineA, f.lineB, bad)), ContainsSubstring("an angle constraint needs an angle between 0 and 180 deg (exclusive)") )
+        => "an angle constraint needs an angle between 0 and 180 deg (exclusive), got nan deg" contains: "an angle constraint needs an angle between 0 and 180 deg (exclusive)" with message: bad.in(units::deg) := nan
+AdvancedConstraintDocumentTests.cpp:63  CHECK( result.error().code == ErrorCode::InvalidArgument )
+        => 0 == 0
+AdvancedConstraintDocumentTests.cpp:193  CHECK( message(s.addDiameter(f.circle, 0_mm)) == "diameter 0 mm must be positive" )
+        => "diameter 0 mm must be positive" == "diameter 0 mm must be positive"
+AdvancedConstraintDocumentTests.cpp:194  CHECK( message(s.addConstraint(ConstraintType::Angle, {f.lineA, f.lineB}, 5_mm)) == "an angle constraint takes an angle, not a length" )
+        => "an angle constraint takes an angle, not a length" == "an angle constraint takes an angle, not a length"
+AdvancedConstraintDocumentTests.cpp:196  CHECK( message(s.addConstraint(ConstraintType::Distance, {f.lineA}, 5_mm, 10_deg)) == "a distance constraint does not take an angle" )
+        => "a distance constraint does not take an angle" == "a distance constraint does not take an angle"
+AdvancedConstraintDocumentTests.cpp:198  CHECK( message(s.addConstraint(ConstraintType::Tangent, {f.lineA, f.circle}, 5_mm)) == "a tangent constraint does not take a value" )
+        => "a tangent constraint does not take a value" == "a tangent constraint does not take a value"
+AdvancedConstraintDocumentTests.cpp:200  CHECK( message(s.addConstraint(ConstraintType::Angle, {f.lineA, f.lineB})) == "an angle constraint needs an angle between 0 and 180 deg (exclusive), got none" )
+        => "an angle constraint needs an angle between 0 and 180 deg (exclusive), got none" == "an angle constraint needs an angle between 0 and 180 deg (exclusive), got none"
+AdvancedConstraintDocumentTests.cpp:204  CHECK( s.findConstraint(angle)->angle == 45_deg )
+        => {?} == 0.7853981633974483 rad
+AdvancedConstraintDocumentTests.cpp:205  CHECK_FALSE( !(s.findConstraint(angle)->value.has_value()) )
+        => !false
+AdvancedConstraintDocumentTests.cpp:207  CHECK_FALSE( !(s.setConstraintAngle(angle, 60_deg).value()) )
+        => !false
+AdvancedConstraintDocumentTests.cpp:208  CHECK( errorCode(s.setConstraintAngle(angle, 180_deg)) == ErrorCode::InvalidArgument )
+        => {?} == 0
+AdvancedConstraintDocumentTests.cpp:209  CHECK( s.findConstraint(angle)->angle == 60_deg )
+        => {?} == 1.0471975511965976 rad
+AdvancedConstraintDocumentTests.cpp:210  CHECK( errorCode(s.setConstraintValue(angle, 5_mm)) == ErrorCode::InvalidArgument )
+        => {?} == 0
+AdvancedConstraintDocumentTests.cpp:212  CHECK( errorCode(s.setConstraintAngle(diameter, 5_deg)) == ErrorCode::InvalidArgument )
+        => {?} == 0
+AdvancedConstraintDocumentTests.cpp:218  CHECK( errorCode(s.setConstraintParameter(concentric, ParameterId::fromValue(1))) == ErrorCode::InvalidArgument )
+        => {?} == 0
+AdvancedConstraintDocumentTests.cpp:219  CHECK( toString(ConstraintType::Angle) == "angle" )
+        => "angle" == "angle"
+AdvancedConstraintDocumentTests.cpp:220  CHECK( toString(ConstraintType::Tangent) == "tangent" )
+        => "tangent" == "tangent"
+AdvancedConstraintDocumentTests.cpp:221  CHECK( toString(ConstraintType::Concentric) == "concentric" )
+        => "concentric" == "concentric"
+AdvancedConstraintDocumentTests.cpp:222  CHECK( toString(ConstraintType::Midpoint) == "midpoint" )
+        => "midpoint" == "midpoint"
+AdvancedConstraintDocumentTests.cpp:223  CHECK( toString(ConstraintType::Symmetric) == "symmetric" )
+        => "symmetric" == "symmetric"
+AdvancedConstraintDocumentTests.cpp:224  CHECK( toString(ConstraintType::Diameter) == "diameter" )
+        => "diameter" == "diameter"
+
+== SketchConstraint_DrivingParametersMustHaveTheRightDimension
+AdvancedConstraintDocumentTests.cpp:239  CHECK( s.findConstraint(angle)->angle == 30_deg )
+        => {?} == 0.5235987755982988 rad
+AdvancedConstraintDocumentTests.cpp:240  CHECK( s.findConstraint(diameter)->value == 24_mm )
+        => {?} == 0.024 m
+AdvancedConstraintDocumentTests.cpp:244  CHECK( errorCode(applyDrivingParameters(s, parameters)) == ErrorCode::DimensionMismatch )
+        => {?} == 3
+AdvancedConstraintDocumentTests.cpp:247  CHECK( errorCode(applyDrivingParameters(s, parameters)) == ErrorCode::DimensionMismatch )
+        => {?} == 3
+
+== SketchSolver_AngleTurnsTheSecondLineCounterClockwiseFromTheFirst
+AdvancedConstraintSolverTests.cpp:68  CHECK( result.status == expected )
+        => 1 == 1 with message: degrees := 15.0; solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:69  CHECK( result.degreesOfFreedom == dof )
+        => 0 == 0 with message: degrees := 15.0; solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:70  CHECK( result.maxResidual <= SolverOptions{}.tolerance )
+        => 4.336808689942018e-18 m <= 1e-10 m with message: degrees := 15.0; solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:110  CHECK_THAT( directionDeg(Point2D{}, p), WithinAbs(degrees, kTolDeg) )
+        => 14.99999999999999822 is within 0.0000001 of 15.0 with message: degrees := 15.0
+AdvancedConstraintSolverTests.cpp:111  CHECK_THAT( std::hypot(mm(p.x), mm(p.y)), WithinAbs(50.0, kTolMm) )
+        => 50.00000000000000711 is within 0.00000001 of 50.0 with message: degrees := 15.0
+AdvancedConstraintSolverTests.cpp:68  CHECK( result.status == expected )
+        => 1 == 1 with message: degrees := 30.0; solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:69  CHECK( result.degreesOfFreedom == dof )
+        => 0 == 0 with message: degrees := 30.0; solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:70  CHECK( result.maxResidual <= SolverOptions{}.tolerance )
+        => 0 m <= 1e-10 m with message: degrees := 30.0; solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:110  CHECK_THAT( directionDeg(Point2D{}, p), WithinAbs(degrees, kTolDeg) )
+        => 29.99999999999999289 is within 0.0000001 of 30.0 with message: degrees := 30.0
+AdvancedConstraintSolverTests.cpp:111  CHECK_THAT( std::hypot(mm(p.x), mm(p.y)), WithinAbs(50.0, kTolMm) )
+        => 50.0 is within 0.00000001 of 50.0 with message: degrees := 30.0
+AdvancedConstraintSolverTests.cpp:68  CHECK( result.status == expected )
+        => 1 == 1 with message: degrees := 60.0; solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:69  CHECK( result.degreesOfFreedom == dof )
+        => 0 == 0 with message: degrees := 60.0; solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:70  CHECK( result.maxResidual <= SolverOptions{}.tolerance )
+        => 8.673617379884035e-18 m <= 1e-10 m with message: degrees := 60.0; solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:110  CHECK_THAT( directionDeg(Point2D{}, p), WithinAbs(degrees, kTolDeg) )
+        => 60.00000000000000711 is within 0.0000001 of 60.0 with message: degrees := 60.0
+AdvancedConstraintSolverTests.cpp:111  CHECK_THAT( std::hypot(mm(p.x), mm(p.y)), WithinAbs(50.0, kTolMm) )
+        => 50.00000000000000711 is within 0.00000001 of 50.0 with message: degrees := 60.0
+AdvancedConstraintSolverTests.cpp:68  CHECK( result.status == expected )
+        => 1 == 1 with message: degrees := 90.0; solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:69  CHECK( result.degreesOfFreedom == dof )
+        => 0 == 0 with message: degrees := 90.0; solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:70  CHECK( result.maxResidual <= SolverOptions{}.tolerance )
+        => 3.3795558010657795e-19 m <= 1e-10 m with message: degrees := 90.0; solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:110  CHECK_THAT( directionDeg(Point2D{}, p), WithinAbs(degrees, kTolDeg) )
+        => 90.0 is within 0.0000001 of 90.0 with message: degrees := 90.0
+AdvancedConstraintSolverTests.cpp:111  CHECK_THAT( std::hypot(mm(p.x), mm(p.y)), WithinAbs(50.0, kTolMm) )
+        => 50.0 is within 0.00000001 of 50.0 with message: degrees := 90.0
+AdvancedConstraintSolverTests.cpp:68  CHECK( result.status == expected )
+        => 1 == 1 with message: degrees := 120.0; solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:69  CHECK( result.degreesOfFreedom == dof )
+        => 0 == 0 with message: degrees := 120.0; solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:70  CHECK( result.maxResidual <= SolverOptions{}.tolerance )
+        => 8.673617379884035e-18 m <= 1e-10 m with message: degrees := 120.0; solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:110  CHECK_THAT( directionDeg(Point2D{}, p), WithinAbs(degrees, kTolDeg) )
+        => 119.99999999999998579 is within 0.0000001 of 120.0 with message: degrees := 120.0
+AdvancedConstraintSolverTests.cpp:111  CHECK_THAT( std::hypot(mm(p.x), mm(p.y)), WithinAbs(50.0, kTolMm) )
+        => 49.99999999999999289 is within 0.00000001 of 50.0 with message: degrees := 120.0
+AdvancedConstraintSolverTests.cpp:68  CHECK( result.status == expected )
+        => 1 == 1 with message: degrees := 150.0; solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:69  CHECK( result.degreesOfFreedom == dof )
+        => 0 == 0 with message: degrees := 150.0; solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:70  CHECK( result.maxResidual <= SolverOptions{}.tolerance )
+        => 0 m <= 1e-10 m with message: degrees := 150.0; solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:110  CHECK_THAT( directionDeg(Point2D{}, p), WithinAbs(degrees, kTolDeg) )
+        => 150.00000000000002842 is within 0.0000001 of 150.0 with message: degrees := 150.0
+AdvancedConstraintSolverTests.cpp:111  CHECK_THAT( std::hypot(mm(p.x), mm(p.y)), WithinAbs(50.0, kTolMm) )
+        => 50.0 is within 0.00000001 of 50.0 with message: degrees := 150.0
+AdvancedConstraintSolverTests.cpp:68  CHECK( result.status == expected )
+        => 1 == 1 with message: degrees := 175.0; solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:69  CHECK( result.degreesOfFreedom == dof )
+        => 0 == 0 with message: degrees := 175.0; solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:70  CHECK( result.maxResidual <= SolverOptions{}.tolerance )
+        => 2.168404344971009e-18 m <= 1e-10 m with message: degrees := 175.0; solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:110  CHECK_THAT( directionDeg(Point2D{}, p), WithinAbs(degrees, kTolDeg) )
+        => 174.99999999999997158 is within 0.0000001 of 175.0 with message: degrees := 175.0
+AdvancedConstraintSolverTests.cpp:111  CHECK_THAT( std::hypot(mm(p.x), mm(p.y)), WithinAbs(50.0, kTolMm) )
+        => 50.0 is within 0.00000001 of 50.0 with message: degrees := 175.0
+
+== SketchSolver_AngleIsMeasuredBetweenLinesNotTheirDirections / the order of the lines sets the sense
+AdvancedConstraintSolverTests.cpp:68  CHECK( result.status == expected )
+        => 1 == 1 with message: solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:69  CHECK( result.degreesOfFreedom == dof )
+        => 0 == 0 with message: solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:70  CHECK( result.maxResidual <= SolverOptions{}.tolerance )
+        => 6.938893903907228e-18 m <= 1e-10 m with message: solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:130  CHECK_THAT( directionDeg(Point2D{}, at(s, tip)), WithinAbs(150.0, kTolDeg) )
+        => 150.00000000000002842 is within 0.0000001 of 150.0
+
+== SketchSolver_AngleIsMeasuredBetweenLinesNotTheirDirections / a line drawn the other way is the same line
+AdvancedConstraintSolverTests.cpp:68  CHECK( result.status == expected )
+        => 1 == 1 with message: solved in 4 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:69  CHECK( result.degreesOfFreedom == dof )
+        => 0 == 0 with message: solved in 4 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:70  CHECK( result.maxResidual <= SolverOptions{}.tolerance )
+        => 8.673617379884035e-18 m <= 1e-10 m with message: solved in 4 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:137  CHECK_THAT( directionDeg(Point2D{}, at(s, tip)), WithinAbs(150.0, kTolDeg) )
+        => 150.00000000000002842 is within 0.0000001 of 150.0
+
+== SketchSolver_AngleIsMeasuredBetweenLinesNotTheirDirections / without a length the arm keeps one freedom
+AdvancedConstraintSolverTests.cpp:68  CHECK( result.status == expected )
+        => 0 == 0 with message: solved in 1 iteration(s), 1 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:69  CHECK( result.degreesOfFreedom == dof )
+        => 1 == 1 with message: solved in 1 iteration(s), 1 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:70  CHECK( result.maxResidual <= SolverOptions{}.tolerance )
+        => 0 m <= 1e-10 m with message: solved in 1 iteration(s), 1 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:144  CHECK_THAT( directionDeg(Point2D{}, at(s, tip)), WithinAbs(150.0, kTolDeg) )
+        => 150.00000000000002842 is within 0.0000001 of 150.0
+
+== SketchConstraint_NewTypesValidateTheirReferences
+AdvancedConstraintDocumentTests.cpp:63  CHECK( result.error().code == ErrorCode::InvalidArgument )
+        => 0 == 0
+AdvancedConstraintDocumentTests.cpp:153  CHECK( message(s.addAngle(f.lineA, f.circle, 30_deg)) == "an angle constraint takes two lines, got line, circle" )
+        => "an angle constraint takes two lines, got line, circle" == "an angle constraint takes two lines, got line, circle"
+AdvancedConstraintDocumentTests.cpp:155  CHECK( message(s.addTangent(f.lineA, f.lineB)) == "a tangent constraint takes a line and a circle or arc, or two circles or arcs, got line, line" )
+        => "a tangent constraint takes a line and a circle or arc, or two circles or arcs, got line, line" == "a tangent constraint takes a line and a circle or arc, or two circles or arcs, got line, line"
+AdvancedConstraintDocumentTests.cpp:157  CHECK( message(s.addTangent(f.point, f.circle)) == "a tangent constraint takes a line and a circle or arc, or two circles or arcs, got point, circle" )
+        => "a tangent constraint takes a line and a circle or arc, or two circles or arcs, got point, circle" == "a tangent constraint takes a line and a circle or arc, or two circles or arcs, got point, circle"
+AdvancedConstraintDocumentTests.cpp:159  CHECK( message(s.addConcentric(f.circle, f.lineA)) == "a concentric constraint takes two circles or arcs, got circle, line" )
+        => "a concentric constraint takes two circles or arcs, got circle, line" == "a concentric constraint takes two circles or arcs, got circle, line"
+AdvancedConstraintDocumentTests.cpp:161  CHECK( message(s.addMidpoint(f.point, f.circle)) == "a midpoint constraint takes a point and a line, got point, circle" )
+        => "a midpoint constraint takes a point and a line, got point, circle" == "a midpoint constraint takes a point and a line, got point, circle"
+AdvancedConstraintDocumentTests.cpp:162  CHECK( message(s.addSymmetric(f.point, f.lineA, f.lineB)) == "a symmetric constraint takes two points and a line, got point, line, line" )
+        => "a symmetric constraint takes two points and a line, got point, line, line" == "a symmetric constraint takes two points and a line, got point, line, line"
+AdvancedConstraintDocumentTests.cpp:164  CHECK( message(s.addDiameter(f.lineA, 10_mm)) == "a diameter constraint takes a circle or an arc, got line" )
+        => "a diameter constraint takes a circle or an arc, got line" == "a diameter constraint takes a circle or an arc, got line"
+AdvancedConstraintDocumentTests.cpp:167  CHECK( message(s.addMidpoint(f.p1, f.lineA)) == std::format("{} is an end point of {}; it cannot also be its midpoint", f.p1, f.lineA) )
+        => "entity:1 is an end point of entity:3; it cannot also be its midpoint" == "entity:1 is an end point of entity:3; it cannot also be its midpoint"
+AdvancedConstraintDocumentTests.cpp:170  CHECK( message(s.addConcentric(f.arc, sharing)) == std::format("{} and {} already share their centre point {}", f.arc, sharing, f.arcCentre) )
+        => "entity:12 and entity:14 already share their centre point entity:9" == "entity:12 and entity:14 already share their centre point entity:9"
+AdvancedConstraintDocumentTests.cpp:175  CHECK( s.findConstraint(tangent)->entities == std::vector<EntityId>{f.lineB, f.circle} )
+        => { entity:6, entity:8 } == { entity:6, entity:8 }
+AdvancedConstraintDocumentTests.cpp:177  CHECK( s.findConstraint(middle)->entities == std::vector<EntityId>{f.point, f.lineB} )
+        => { entity:13, entity:6 } == { entity:13, entity:6 }
+AdvancedConstraintDocumentTests.cpp:179  CHECK( s.findConstraint(mirror)->entities == std::vector<EntityId>{f.p1, f.point, f.lineB} )
+        => { entity:1, entity:13, entity:6 } == { entity:1, entity:13, entity:6 }
+AdvancedConstraintDocumentTests.cpp:180  CHECK( errorCode(s.addTangent(f.circle, f.circle)) == ErrorCode::InvalidArgument )
+        => {?} == 0
+AdvancedConstraintDocumentTests.cpp:181  CHECK( errorCode(s.addAngle(f.lineA, EntityId::fromValue(999), 10_deg)) == ErrorCode::NotFound )
+        => {?} == 1
+
+== SketchSolver_SymmetricMirrorsPointsAcrossTheLine
+AdvancedConstraintSolverTests.cpp:68  CHECK( result.status == expected )
+        => 1 == 1 with message: axisDeg := 0.0; solved in 1 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:69  CHECK( result.degreesOfFreedom == dof )
+        => 0 == 0 with message: axisDeg := 0.0; solved in 1 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:70  CHECK( result.maxResidual <= SolverOptions{}.tolerance )
+        => 0 m <= 1e-10 m with message: axisDeg := 0.0; solved in 1 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:363  CHECK_THAT( mm(at(s, q).x), WithinAbs(qx, kTolMm) )
+        => 40.0 is within 0.00000001 of 40.0 with message: axisDeg := 0.0
+AdvancedConstraintSolverTests.cpp:364  CHECK_THAT( mm(at(s, q).y), WithinAbs(qy, kTolMm) )
+        => -5.0 is within 0.00000001 of -5.0 with message: axisDeg := 0.0
+AdvancedConstraintSolverTests.cpp:68  CHECK( result.status == expected )
+        => 1 == 1 with message: axisDeg := 30.0; solved in 1 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:69  CHECK( result.degreesOfFreedom == dof )
+        => 0 == 0 with message: axisDeg := 30.0; solved in 1 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:70  CHECK( result.maxResidual <= SolverOptions{}.tolerance )
+        => 2.168404344971009e-18 m <= 1e-10 m with message: axisDeg := 30.0; solved in 1 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:363  CHECK_THAT( mm(at(s, q).x), WithinAbs(qx, kTolMm) )
+        => 24.33012701892219809 is within 0.00000001 of 24.33012701892219809 with message: axisDeg := 30.0
+AdvancedConstraintSolverTests.cpp:364  CHECK_THAT( mm(at(s, q).y), WithinAbs(qy, kTolMm) )
+        => 32.14101615137754209 is within 0.00000001 of 32.14101615137754209 with message: axisDeg := 30.0
+AdvancedConstraintSolverTests.cpp:68  CHECK( result.status == expected )
+        => 1 == 1 with message: axisDeg := 90.0; solved in 1 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:69  CHECK( result.degreesOfFreedom == dof )
+        => 0 == 0 with message: axisDeg := 90.0; solved in 1 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:70  CHECK( result.maxResidual <= SolverOptions{}.tolerance )
+        => 5.617785066473958e-19 m <= 1e-10 m with message: axisDeg := 90.0; solved in 1 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:363  CHECK_THAT( mm(at(s, q).x), WithinAbs(qx, kTolMm) )
+        => -40.0 is within 0.00000001 of -40.0 with message: axisDeg := 90.0
+AdvancedConstraintSolverTests.cpp:364  CHECK_THAT( mm(at(s, q).y), WithinAbs(qy, kTolMm) )
+        => 5.00000000000000444 is within 0.00000001 of 5.00000000000000533 with message: axisDeg := 90.0
+AdvancedConstraintSolverTests.cpp:68  CHECK( result.status == expected )
+        => 1 == 1 with message: axisDeg := 135.0; solved in 1 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:69  CHECK( result.degreesOfFreedom == dof )
+        => 0 == 0 with message: axisDeg := 135.0; solved in 1 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:70  CHECK( result.maxResidual <= SolverOptions{}.tolerance )
+        => 4.336808689942018e-18 m <= 1e-10 m with message: axisDeg := 135.0; solved in 1 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:363  CHECK_THAT( mm(at(s, q).x), WithinAbs(qx, kTolMm) )
+        => -5.00000000000000266 is within 0.00000001 of -5.00000000000000711 with message: axisDeg := 135.0
+AdvancedConstraintSolverTests.cpp:364  CHECK_THAT( mm(at(s, q).y), WithinAbs(qy, kTolMm) )
+        => -40.0 is within 0.00000001 of -40.0 with message: axisDeg := 135.0
+
+== SketchSolver_RedundantNewConstraintsAreOverConstrained / an angle of 90 deg and a perpendicular
+AdvancedConstraintSolverTests.cpp:428  CHECK( result.status == SolveStatus::OverConstrained )
+        => 2 == 2
+AdvancedConstraintSolverTests.cpp:429  CHECK( result.redundant == std::vector<ConstraintId>{again} )
+        => { constraint:2 } == { constraint:2 }
+
+== SketchSolver_RedundantNewConstraintsAreOverConstrained / concentric circles whose centres are also coincident
+AdvancedConstraintSolverTests.cpp:439  CHECK( result.status == SolveStatus::OverConstrained )
+        => 2 == 2
+AdvancedConstraintSolverTests.cpp:440  CHECK( result.redundant == std::vector<ConstraintId>{coincident} )
+        => { constraint:2 } == { constraint:2 }
+
+== SketchSolver_RedundantNewConstraintsAreOverConstrained / a diameter and a matching radius
+AdvancedConstraintSolverTests.cpp:448  CHECK( result.status == SolveStatus::OverConstrained )
+        => 2 == 2
+AdvancedConstraintSolverTests.cpp:449  CHECK( result.redundant == std::vector<ConstraintId>{radius} )
+        => { constraint:2 } == { constraint:2 }
+
+== SketchSolver_RedundantNewConstraintsAreOverConstrained / a tangent and the matching centre distance
+AdvancedConstraintSolverTests.cpp:459  CHECK( result.status == SolveStatus::OverConstrained )
+        => 2 == 2
+AdvancedConstraintSolverTests.cpp:460  CHECK( result.redundant == std::vector<ConstraintId>{distance} )
+        => { constraint:3 } == { constraint:3 }
+
+== SketchSolver_TangentLineTouchesTheCircleOnItsOwnSide
+AdvancedConstraintSolverTests.cpp:68  CHECK( result.status == expected )
+        => 0 == 0 with message: side := 1.0; solved in 2 iteration(s), 2 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:69  CHECK( result.degreesOfFreedom == dof )
+        => 2 == 2 with message: side := 1.0; solved in 2 iteration(s), 2 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:70  CHECK( result.maxResidual <= SolverOptions{}.tolerance )
+        => 0 m <= 1e-10 m with message: side := 1.0; solved in 2 iteration(s), 2 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:163  CHECK_THAT( mm(ends.start.y), WithinAbs(side * 10.0, kTolMm) )
+        => 10.0 is within 0.00000001 of 10.0 with message: side := 1.0
+AdvancedConstraintSolverTests.cpp:164  CHECK_THAT( lineDistanceMm(Point2D{}, ends.start, ends.end), WithinAbs(10.0, kTolMm) )
+        => 10.0 is within 0.00000001 of 10.0 with message: side := 1.0
+AdvancedConstraintSolverTests.cpp:68  CHECK( result.status == expected )
+        => 0 == 0 with message: side := -1.0; solved in 2 iteration(s), 2 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:69  CHECK( result.degreesOfFreedom == dof )
+        => 2 == 2 with message: side := -1.0; solved in 2 iteration(s), 2 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:70  CHECK( result.maxResidual <= SolverOptions{}.tolerance )
+        => 0 m <= 1e-10 m with message: side := -1.0; solved in 2 iteration(s), 2 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:163  CHECK_THAT( mm(ends.start.y), WithinAbs(side * 10.0, kTolMm) )
+        => -10.0 is within 0.00000001 of -10.0 with message: side := -1.0
+AdvancedConstraintSolverTests.cpp:164  CHECK_THAT( lineDistanceMm(Point2D{}, ends.start, ends.end), WithinAbs(10.0, kTolMm) )
+        => 10.0 is within 0.00000001 of 10.0 with message: side := -1.0
+
+== SketchSolver_EachNewConstraintRemovesItsDegreesOfFreedom
+AdvancedConstraintSolverTests.cpp:403  CHECK( base == 8 + 3 + 3 + 2 + 2 )
+        => 18 == 18
+AdvancedConstraintSolverTests.cpp:409  CHECK( freedom(s) == expected )
+        => 17 == 17
+AdvancedConstraintSolverTests.cpp:409  CHECK( freedom(s) == expected )
+        => 16 == 16
+AdvancedConstraintSolverTests.cpp:409  CHECK( freedom(s) == expected )
+        => 14 == 14
+AdvancedConstraintSolverTests.cpp:409  CHECK( freedom(s) == expected )
+        => 12 == 12
+AdvancedConstraintSolverTests.cpp:409  CHECK( freedom(s) == expected )
+        => 10 == 10
+AdvancedConstraintSolverTests.cpp:409  CHECK( freedom(s) == expected )
+        => 9 == 9
+
+== SketchSolver_RegularHexagonFromEqualSidesAndAngles
+AdvancedConstraintSolverTests.cpp:68  CHECK( result.status == expected )
+        => 1 == 1 with message: solved in 5 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:69  CHECK( result.degreesOfFreedom == dof )
+        => 0 == 0 with message: solved in 5 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:70  CHECK( result.maxResidual <= SolverOptions{}.tolerance )
+        => 9.938068163543357e-15 m <= 1e-10 m with message: solved in 5 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:535  CHECK_THAT( mm(distance(e.start, e.end)), WithinAbs(20.0, kTolMm) )
+        => 20.0 is within 0.00000001 of 20.0 with message: i := 0
+AdvancedConstraintSolverTests.cpp:539  CHECK_THAT( turn, WithinAbs(60.0, kTolDeg) )
+        => 60.00000000000005684 is within 0.0000001 of 60.0 with message: i := 0
+AdvancedConstraintSolverTests.cpp:535  CHECK_THAT( mm(distance(e.start, e.end)), WithinAbs(20.0, kTolMm) )
+        => 20.00000000000008882 is within 0.00000001 of 20.0 with message: i := 1
+AdvancedConstraintSolverTests.cpp:539  CHECK_THAT( turn, WithinAbs(60.0, kTolDeg) )
+        => 59.99999999997154987 is within 0.0000001 of 60.0 with message: i := 1
+AdvancedConstraintSolverTests.cpp:535  CHECK_THAT( mm(distance(e.start, e.end)), WithinAbs(20.0, kTolMm) )
+        => 20.00000000000381917 is within 0.00000001 of 20.0 with message: i := 2
+AdvancedConstraintSolverTests.cpp:539  CHECK_THAT( turn, WithinAbs(60.0, kTolDeg) )
+        => 60.00000000002836487 is within 0.0000001 of 60.0 with message: i := 2
+AdvancedConstraintSolverTests.cpp:535  CHECK_THAT( mm(distance(e.start, e.end)), WithinAbs(20.0, kTolMm) )
+        => 20.00000000000384048 is within 0.00000001 of 20.0 with message: i := 3
+AdvancedConstraintSolverTests.cpp:539  CHECK_THAT( turn, WithinAbs(60.0, kTolDeg) )
+        => 59.99999999999909051 is within 0.0000001 of 60.0 with message: i := 3
+AdvancedConstraintSolverTests.cpp:535  CHECK_THAT( mm(distance(e.start, e.end)), WithinAbs(20.0, kTolMm) )
+        => 20.00000000000064659 is within 0.00000001 of 20.0 with message: i := 4
+AdvancedConstraintSolverTests.cpp:539  CHECK_THAT( turn, WithinAbs(60.0, kTolDeg) )
+        => 59.9999999999838991 is within 0.0000001 of 60.0 with message: i := 4
+AdvancedConstraintSolverTests.cpp:535  CHECK_THAT( mm(distance(e.start, e.end)), WithinAbs(20.0, kTolMm) )
+        => 20.00000000000576605 is within 0.00000001 of 20.0 with message: i := 5
+AdvancedConstraintSolverTests.cpp:539  CHECK_THAT( turn, WithinAbs(60.0, kTolDeg) )
+        => 60.00000000001703881 is within 0.0000001 of 60.0 with message: i := 5
+AdvancedConstraintSolverTests.cpp:545  CHECK_THAT( geometry::regionArea(regions->front()).in(units::mm2), WithinRel(1.5 * std::sqrt(3.0) * 400.0, 1e-12) )
+        => 1039.23048454157151355 and 1039.23048454132640472 are within 1e-10% of each other
+
+== SketchSolver_ConflictingNewConstraintsAreInconsistent / an angle and a parallel
+AdvancedConstraintSolverTests.cpp:478  CHECK( result.status == SolveStatus::Inconsistent )
+        => 3 == 3 with message: the constraints cannot all be satisfied (largest residual 12.940952255127192 mm at the best compromise)
+AdvancedConstraintSolverTests.cpp:479  CHECK( result.conflicting == std::vector<ConstraintId>{angle, parallel} )
+        => { constraint:3, constraint:4 } == { constraint:3, constraint:4 } with message: the constraints cannot all be satisfied (largest residual 12.940952255127192 mm at the best compromise)
+AdvancedConstraintSolverTests.cpp:480  CHECK_FALSE( !(result.geometryChanged) )
+        => !false with message: the constraints cannot all be satisfied (largest residual 12.940952255127192 mm at the best compromise)
+
+== SketchSolver_ConflictingNewConstraintsAreInconsistent / a diameter and a radius that disagree
+AdvancedConstraintSolverTests.cpp:489  CHECK( result.status == SolveStatus::Inconsistent )
+        => 3 == 3
+AdvancedConstraintSolverTests.cpp:490  CHECK( result.conflicting == std::vector<ConstraintId>{diameter, radius} )
+        => { constraint:1, constraint:2 } == { constraint:1, constraint:2 }
+
+== SketchSolver_ConflictingNewConstraintsAreInconsistent / a midpoint off a fixed line
+AdvancedConstraintSolverTests.cpp:501  CHECK( result.status == SolveStatus::Inconsistent )
+        => 3 == 3
+AdvancedConstraintSolverTests.cpp:502  CHECK( result.conflicting == std::vector<ConstraintId>{middle} )
+        => { constraint:4 } == { constraint:4 }
+
+== SketchDocument_DrivenDiameterAndAngleRegenerateGeometry
+AdvancedConstraintDocumentTests.cpp:257  CHECK_THAT( volumeMm3(regenerator, m.slot), WithinRel(DrivenSketches::slotVolume(16.0, 40.0, 10.0), kVolumeRel) )
+        => 8410.61929829746804899 and 8410.61929829746804899 are within 1e-10% of each other
+AdvancedConstraintDocumentTests.cpp:258  CHECK_THAT( volumeMm3(regenerator, m.wedge), WithinRel(DrivenSketches::wedgeVolume(40.0, 10.0), kVolumeRel) )
+        => 7713.45131623855195357 and 7713.45131623847100855 are within 1e-10% of each other
+AdvancedConstraintDocumentTests.cpp:270  CHECK( second.updatedParameters == std::vector<ParameterId>{m.opening} )
+        => { parameter:5 } == { parameter:5 }
+AdvancedConstraintDocumentTests.cpp:271  CHECK( second.regenerated == std::vector<ObjectId>{m.slotSketch, m.slot, m.wedgeSketch, m.wedge} )
+        => { object:6, object:7, object:8, object:9 } == { object:6, object:7, object:8, object:9 }
+AdvancedConstraintDocumentTests.cpp:272  CHECK_THAT( volumeMm3(regenerator, m.slot), WithinRel(DrivenSketches::slotVolume(22.0, 55.0, 10.0), kVolumeRel) )
+        => 15901.32711084364927956 and 15901.32711084364927956 are within 1e-10% of each other
+AdvancedConstraintDocumentTests.cpp:273  CHECK_THAT( volumeMm3(regenerator, m.wedge), WithinRel(DrivenSketches::wedgeVolume(70.0, 10.0), kVolumeRel) )
+        => 11276.31144943090112065 and 11276.31144943090112065 are within 1e-10% of each other
+AdvancedConstraintDocumentTests.cpp:280  CHECK_THAT( volumeMm3(regenerator, m.slot), WithinRel(DrivenSketches::slotVolume(16.0, 40.0, 10.0), kVolumeRel) )
+        => 8410.61929829747168696 and 8410.61929829746804899 are within 1e-10% of each other
+AdvancedConstraintDocumentTests.cpp:281  CHECK_THAT( volumeMm3(regenerator, m.wedge), WithinRel(DrivenSketches::wedgeVolume(40.0, 10.0), kVolumeRel) )
+        => 7713.45131623847282754 and 7713.45131623847100855 are within 1e-10% of each other
+
+== SketchFile_MalformedNewConstraintsAreRejectedWithThePath
+AdvancedConstraintDocumentTests.cpp:452  CHECK_THAT( noAngle.error().message, ContainsSubstring("an angle constraint needs an angle between 0 and 180 deg (exclusive), got none") )
+        => "objects[2].data.constraints[4]: an angle constraint needs an angle between 0 and 180 deg (exclusive), got none" contains: "an angle constraint needs an angle between 0 and 180 deg (exclusive), got none"
+AdvancedConstraintDocumentTests.cpp:456  CHECK_THAT( asText.error().message, ContainsSubstring(".angle: expected a number") )
+        => "objects[2].data.constraints[4].angle: expected a number" contains: ".angle: expected a number"
+AdvancedConstraintDocumentTests.cpp:459  CHECK_THAT( unknown.error().message, ContainsSubstring("unknown type 'kissing'") )
+        => "objects[0].data.constraints[5].type: unknown type 'kissing'" contains: "unknown type 'kissing'"
+
+== SketchSolver_MidpointPlacesThePointHalfwayAlongTheLine
+AdvancedConstraintSolverTests.cpp:68  CHECK( result.status == expected )
+        => 1 == 1 with message: solved in 1 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:69  CHECK( result.degreesOfFreedom == dof )
+        => 0 == 0 with message: solved in 1 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:70  CHECK( result.maxResidual <= SolverOptions{}.tolerance )
+        => 0 m <= 1e-10 m with message: solved in 1 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:327  CHECK_THAT( mm(at(s, point).x), WithinAbs(40.0, kTolMm) )
+        => 40.0 is within 0.00000001 of 40.0
+AdvancedConstraintSolverTests.cpp:328  CHECK_THAT( mm(at(s, point).y), WithinAbs(20.0, kTolMm) )
+        => 20.0 is within 0.00000001 of 20.0
+AdvancedConstraintSolverTests.cpp:68  CHECK( result.status == expected )
+        => 0 == 0 with message: solved in 1 iteration(s), 2 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:69  CHECK( result.degreesOfFreedom == dof )
+        => 2 == 2 with message: solved in 1 iteration(s), 2 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:70  CHECK( result.maxResidual <= SolverOptions{}.tolerance )
+        => 3.469446951953614e-18 m <= 1e-10 m with message: solved in 1 iteration(s), 2 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:338  CHECK_THAT( mm(midpoint(ends.start, ends.end).x), WithinAbs(20.0, kTolMm) )
+        => 20.00000000000000355 is within 0.00000001 of 20.0
+AdvancedConstraintSolverTests.cpp:339  CHECK_THAT( mm(midpoint(ends.start, ends.end).y), WithinAbs(5.0, kTolMm) )
+        => 4.99999999999999822 is within 0.00000001 of 5.0
+
+== SketchCommands_ModifySketchCommandUndoesAndRedoesEdits
+AdvancedConstraintDocumentTests.cpp:370  CHECK( history.undoDescription() == "Add angle" )
+        => {?} == "Add angle"
+AdvancedConstraintDocumentTests.cpp:372  CHECK( withAngle.findConstraint(angle) != nullptr )
+        => 0x000001c3d5aa9208 != nullptr
+AdvancedConstraintDocumentTests.cpp:379  CHECK( doc.findObjectAs<Sketch>(id)->lastAllocatedConstraintId() == angle.value() )
+        => 1 == 1
+AdvancedConstraintDocumentTests.cpp:388  CHECK( errorCode(failed) == ErrorCode::InvalidArgument )
+        => {?} == 0
+AdvancedConstraintDocumentTests.cpp:389  CHECK( doc.revision() == revision )
+        => 5 == 5
+AdvancedConstraintDocumentTests.cpp:390  CHECK( history.undoDescription() == "Add angle" )
+        => {?} == "Add angle"
+AdvancedConstraintDocumentTests.cpp:391  CHECK( errorCode(history.execute( doc, std::make_unique<ModifySketchCommand>(SketchId::fromValue(99), "Missing", [](Sketch&) -> Result<void> { return {}; }))) == ErrorCode::NotFound )
+        => {?} == 1
+AdvancedConstraintDocumentTests.cpp:400  CHECK( doc.objectCount() == 0 )
+        => 0 == 0
+
+== SketchSolver_TangentArcAndLineJoinSmoothly
+AdvancedConstraintSolverTests.cpp:178  CHECK( s.findConstraint(ConstraintId::fromValue(3))->entities == std::vector<EntityId>{line, arc} )
+        => { entity:6, entity:4 } == { entity:6, entity:4 }
+AdvancedConstraintSolverTests.cpp:68  CHECK( result.status == expected )
+        => 0 == 0 with message: solved in 4 iteration(s), 2 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:69  CHECK( result.degreesOfFreedom == dof )
+        => 2 == 2 with message: solved in 4 iteration(s), 2 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:70  CHECK( result.maxResidual <= SolverOptions{}.tolerance )
+        => 6.776263578034403e-19 m <= 1e-10 m with message: solved in 4 iteration(s), 2 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:189  CHECK_THAT( (rx * lx + ry * ly) / (std::hypot(rx, ry) * std::hypot(lx, ly)), WithinAbs(0.0, 1e-10) )
+        => 0.00000000000000002 is within 0.0000000001 of 0.0
+AdvancedConstraintSolverTests.cpp:190  CHECK_THAT( std::hypot(rx, ry), WithinAbs(10.0, kTolMm) )
+        => 10.0 is within 0.00000001 of 10.0
+
+== SketchSolver_ConcentricBringsTheCentresTogether
+AdvancedConstraintSolverTests.cpp:68  CHECK( result.status == expected )
+        => 0 == 0 with message: solved in 1 iteration(s), 3 degree(s) of freedom left; solved in 1 iteration(s), 3 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:69  CHECK( result.degreesOfFreedom == dof )
+        => 3 == 3 with message: solved in 1 iteration(s), 3 degree(s) of freedom left; solved in 1 iteration(s), 3 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:70  CHECK( result.maxResidual <= SolverOptions{}.tolerance )
+        => 8.673617379884035e-19 m <= 1e-10 m with message: solved in 1 iteration(s), 3 degree(s) of freedom left; solved in 1 iteration(s), 3 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:312  CHECK_THAT( mm(c.x), WithinAbs(10.0, kTolMm) )
+        => 10.0 is within 0.00000001 of 10.0 with message: solved in 1 iteration(s), 3 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:313  CHECK_THAT( mm(c.y), WithinAbs(20.0, kTolMm) )
+        => 20.0 is within 0.00000001 of 20.0 with message: solved in 1 iteration(s), 3 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:315  CHECK_THAT( mm(distance(c, at(s, arc.start))), WithinAbs(mm(distance(c, at(s, arc.end))), kTolMm) )
+        => 6.40312423743284853 is within 0.00000001 of 6.40312423743284942 with message: solved in 1 iteration(s), 3 degree(s) of freedom left
+
+== SketchSolver_DiameterSetsTwiceTheRadius
+AdvancedConstraintSolverTests.cpp:378  CHECK_THAT( mm(s.radius(circle).value()), WithinAbs(12.5, kTolMm) )
+        => 12.5 is within 0.00000001 of 12.5 with message: solved in 4 iteration(s), 6 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:379  CHECK_THAT( mm(s.radius(arc).value()), WithinAbs(15.0, kTolMm) )
+        => 15.00000000000000533 is within 0.00000001 of 15.0 with message: solved in 4 iteration(s), 6 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:381  CHECK_THAT( mm(distance(at(s, a.center), at(s, a.end))), WithinAbs(15.0, kTolMm) )
+        => 15.0 is within 0.00000001 of 15.0 with message: solved in 4 iteration(s), 6 degree(s) of freedom left
+
+== SketchSolver_NewConstraintsSolveDeterministically
+AdvancedConstraintSolverTests.cpp:604  CHECK( one.iterations == two.iterations )
+        => 3 == 3
+AdvancedConstraintSolverTests.cpp:608  CHECK_FALSE( !(again.geometryChanged) )
+        => !false
+
+== SketchSolver_ObroundFromTangentArcsIsFullyConstrained
+AdvancedConstraintSolverTests.cpp:68  CHECK( result.status == expected )
+        => 1 == 1 with message: solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:69  CHECK( result.degreesOfFreedom == dof )
+        => 0 == 0 with message: solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:70  CHECK( result.maxResidual <= SolverOptions{}.tolerance )
+        => 2.183814489269526e-19 m <= 1e-10 m with message: solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:574  CHECK_THAT( mm(at(s, b0).y), WithinAbs(-8.0, kTolMm) )
+        => -8.0 is within 0.00000001 of -8.0
+AdvancedConstraintSolverTests.cpp:575  CHECK_THAT( mm(at(s, t0).y), WithinAbs(8.0, kTolMm) )
+        => 8.0 is within 0.00000001 of 8.0
+AdvancedConstraintSolverTests.cpp:576  CHECK_THAT( mm(at(s, b1).x), WithinAbs(40.0, kTolMm) )
+        => 40.0 is within 0.00000001 of 40.0
+AdvancedConstraintSolverTests.cpp:577  CHECK_THAT( mm(at(s, t1).x), WithinAbs(0.0, kTolMm) )
+        => 0.00000000000000004 is within 0.00000001 of 0.0
+AdvancedConstraintSolverTests.cpp:581  CHECK_THAT( geometry::regionArea(regions->front()).in(units::mm2), WithinRel(40.0 * 16.0 + pi * 16.0 * 16.0 / 4.0, 1e-12) )
+        => 841.06192982974675942 and 841.06192982974675942 are within 1e-10% of each other
+
+== SketchSolver_TangentCirclesKeepTheirKindOfContact
+AdvancedConstraintSolverTests.cpp:68  CHECK( result.status == expected )
+        => 1 == 1 with message: c.startX := 30.0; solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:69  CHECK( result.degreesOfFreedom == dof )
+        => 0 == 0 with message: c.startX := 30.0; solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:70  CHECK( result.maxResidual <= SolverOptions{}.tolerance )
+        => 9.62964972193618e-35 m <= 1e-10 m with message: c.startX := 30.0; solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:256  CHECK_THAT( mm(distance(at(s, centreOf(s, big)), at(s, centreOf(s, small)))), WithinAbs(c.expectedDistance, kTolMm) )
+        => 25.0 is within 0.00000001 of 25.0 with message: c.startX := 30.0
+AdvancedConstraintSolverTests.cpp:258  CHECK_THAT( mm(at(s, centreOf(s, small)).y), WithinAbs(0.0, kTolMm) )
+        => 0.0 is within 0.00000001 of 0.0 with message: c.startX := 30.0
+AdvancedConstraintSolverTests.cpp:68  CHECK( result.status == expected )
+        => 1 == 1 with message: c.startX := 21.0; solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:69  CHECK( result.degreesOfFreedom == dof )
+        => 0 == 0 with message: c.startX := 21.0; solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:70  CHECK( result.maxResidual <= SolverOptions{}.tolerance )
+        => 4.81482486096809e-35 m <= 1e-10 m with message: c.startX := 21.0; solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:256  CHECK_THAT( mm(distance(at(s, centreOf(s, big)), at(s, centreOf(s, small)))), WithinAbs(c.expectedDistance, kTolMm) )
+        => 25.0 is within 0.00000001 of 25.0 with message: c.startX := 21.0
+AdvancedConstraintSolverTests.cpp:258  CHECK_THAT( mm(at(s, centreOf(s, small)).y), WithinAbs(0.0, kTolMm) )
+        => -0.0 is within 0.00000001 of 0.0 with message: c.startX := 21.0
+AdvancedConstraintSolverTests.cpp:68  CHECK( result.status == expected )
+        => 1 == 1 with message: c.startX := 12.0; solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:69  CHECK( result.degreesOfFreedom == dof )
+        => 0 == 0 with message: c.startX := 12.0; solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:70  CHECK( result.maxResidual <= SolverOptions{}.tolerance )
+        => 0 m <= 1e-10 m with message: c.startX := 12.0; solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:256  CHECK_THAT( mm(distance(at(s, centreOf(s, big)), at(s, centreOf(s, small)))), WithinAbs(c.expectedDistance, kTolMm) )
+        => 15.0 is within 0.00000001 of 15.0 with message: c.startX := 12.0
+AdvancedConstraintSolverTests.cpp:258  CHECK_THAT( mm(at(s, centreOf(s, small)).y), WithinAbs(0.0, kTolMm) )
+        => 0.0 is within 0.00000001 of 0.0 with message: c.startX := 12.0
+AdvancedConstraintSolverTests.cpp:68  CHECK( result.status == expected )
+        => 1 == 1 with message: c.startX := 17.0; solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:69  CHECK( result.degreesOfFreedom == dof )
+        => 0 == 0 with message: c.startX := 17.0; solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:70  CHECK( result.maxResidual <= SolverOptions{}.tolerance )
+        => 0 m <= 1e-10 m with message: c.startX := 17.0; solved in 2 iteration(s), 0 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:256  CHECK_THAT( mm(distance(at(s, centreOf(s, big)), at(s, centreOf(s, small)))), WithinAbs(c.expectedDistance, kTolMm) )
+        => 15.0 is within 0.00000001 of 15.0 with message: c.startX := 17.0
+AdvancedConstraintSolverTests.cpp:258  CHECK_THAT( mm(at(s, centreOf(s, small)).y), WithinAbs(0.0, kTolMm) )
+        => 0.0 is within 0.00000001 of 0.0 with message: c.startX := 17.0
+
+== SketchSolver_TangentArcTouchesACircleWithoutAJoint
+AdvancedConstraintSolverTests.cpp:68  CHECK( result.status == expected )
+        => 0 == 0 with message: solved in 3 iteration(s), 2 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:69  CHECK( result.degreesOfFreedom == dof )
+        => 2 == 2 with message: solved in 3 iteration(s), 2 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:70  CHECK( result.maxResidual <= SolverOptions{}.tolerance )
+        => 2.6020852139652106e-18 m <= 1e-10 m with message: solved in 3 iteration(s), 2 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:233  CHECK_THAT( mm(distance(at(s, centreOf(s, circle)), at(s, centreOf(s, arc)))), WithinAbs(15.0, kTolMm) )
+        => 15.00000000000000178 is within 0.00000001 of 15.0
+AdvancedConstraintSolverTests.cpp:234  CHECK_THAT( mm(s.radius(arc).value()), WithinAbs(5.0, kTolMm) )
+        => 5.00000000000000178 is within 0.00000001 of 5.0
+
+== SketchSolver_TangentAtACoincidentJointIsExact
+AdvancedConstraintSolverTests.cpp:68  CHECK( result.status == expected )
+        => 0 == 0 with message: solved in 3 iteration(s), 2 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:69  CHECK( result.degreesOfFreedom == dof )
+        => 2 == 2 with message: solved in 3 iteration(s), 2 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:70  CHECK( result.maxResidual <= SolverOptions{}.tolerance )
+        => 8.99074651533221e-15 m <= 1e-10 m with message: solved in 3 iteration(s), 2 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:211  CHECK_THAT( mm(distance(joint, at(s, start))), WithinAbs(0.0, kTolMm) )
+        => 0.0 is within 0.00000001 of 0.0
+AdvancedConstraintSolverTests.cpp:217  CHECK_THAT( (rx * lx + ry * ly) / (std::hypot(rx, ry) * std::hypot(lx, ly)), WithinAbs(0.0, 1e-10) )
+        => -0.00000000000028712 is within 0.0000000001 of 0.0
+AdvancedConstraintSolverTests.cpp:218  CHECK_THAT( lineDistanceMm(Point2D{}, joint, other), WithinAbs(10.0, kTolMm) )
+        => 10.00000000000426681 is within 0.00000001 of 10.0
+
+== SketchSolver_TangentArcsShareASmoothJoint
+AdvancedConstraintSolverTests.cpp:288  CHECK_THAT( mm(distance(c1, c2)), WithinAbs(20.0, kTolMm) )
+        => 19.99999999999999645 is within 0.00000001 of 20.0 with message: solved in 4 iteration(s), 2 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:291  CHECK_THAT( mm(distance(c1, p)), WithinAbs(30.0, kTolMm) )
+        => 30.0 is within 0.00000001 of 30.0 with message: solved in 4 iteration(s), 2 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:292  CHECK_THAT( mm(distance(c2, p)), WithinAbs(10.0, kTolMm) )
+        => 10.0 is within 0.00000001 of 10.0 with message: solved in 4 iteration(s), 2 degree(s) of freedom left
+AdvancedConstraintSolverTests.cpp:293  CHECK_THAT( lineDistanceMm(p, c1, c2), WithinAbs(0.0, kTolMm) )
+        => 0.0 is within 0.00000001 of 0.0 with message: solved in 4 iteration(s), 2 degree(s) of freedom left
+
+== SketchFile_NewConstraintsRoundTrip
+AdvancedConstraintDocumentTests.cpp:422  CHECK( std::bit_cast<std::uint64_t>(volumeMm3(after, m.slot)) == std::bit_cast<std::uint64_t>(volumeMm3(before, m.slot)) )
+        => 4665849401186101004 (0x40c06d4f452aa70c) == 4665849401186101004 (0x40c06d4f452aa70c)
+AdvancedConstraintDocumentTests.cpp:424  CHECK( std::bit_cast<std::uint64_t>(volumeMm3(after, m.wedge)) == std::bit_cast<std::uint64_t>(volumeMm3(before, m.wedge)) )
+        => 4665203044113581244 (0x40be2173897604bc) == 4665203044113581244 (0x40be2173897604bc)
+
+Overall: 715 assertions passed, 0 failed.

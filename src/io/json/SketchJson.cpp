@@ -20,7 +20,10 @@ constexpr std::array kConstraintTypes{
     sketch::ConstraintType::Vertical,   sketch::ConstraintType::Parallel,
     sketch::ConstraintType::Perpendicular, sketch::ConstraintType::Distance,
     sketch::ConstraintType::Radius,     sketch::ConstraintType::Equal,
-    sketch::ConstraintType::Fixed,
+    sketch::ConstraintType::Fixed,      sketch::ConstraintType::Angle,
+    sketch::ConstraintType::Tangent,    sketch::ConstraintType::Concentric,
+    sketch::ConstraintType::Midpoint,   sketch::ConstraintType::Symmetric,
+    sketch::ConstraintType::Diameter,
 };
 
 template <typename Enum, std::size_t N>
@@ -153,6 +156,9 @@ Json constraintToJson(const sketch::Constraint& constraint) {
     if (constraint.value) {
         json["value"] = constraint.value->si();
     }
+    if (constraint.angle) {
+        json["angle"] = constraint.angle->si();
+    }
     if (constraint.parameter) {
         json["parameter"] = constraint.parameter->value();
     }
@@ -161,7 +167,7 @@ Json constraintToJson(const sketch::Constraint& constraint) {
 }
 
 Result<sketch::Constraint> constraintFromJson(const Json& value, std::string_view path) {
-    if (auto object = requireObject(value, path, {"id", "type", "entities", "value", "parameter", "enabled"});
+    if (auto object = requireObject(value, path, {"id", "type", "entities", "value", "angle", "parameter", "enabled"});
         !object) {
         return std::unexpected(object.error());
     }
@@ -193,6 +199,13 @@ Result<sketch::Constraint> constraintFromJson(const Json& value, std::string_vie
             return std::unexpected(number.error());
         }
         constraint.value = Length::fromSi(*number);
+    }
+    if (value.contains("angle")) {
+        auto number = readNumber(value, "angle", path);
+        if (!number) {
+            return std::unexpected(number.error());
+        }
+        constraint.angle = Angle::fromSi(*number);
     }
     if (*parameter) {
         constraint.parameter = ParameterId::fromValue(**parameter);

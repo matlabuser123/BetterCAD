@@ -3,10 +3,13 @@
 #include <bettercad/core/units/Format.hpp>
 
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <format>
 #include <map>
+#include <optional>
 #include <set>
+#include <utility>
 
 namespace bettercad::sketch::detail {
 
@@ -69,6 +72,43 @@ double signedDistance(Vec2 p, Vec2 a, Vec2 b) {
     return (ux * (p.y - a.y) - uy * (p.x - a.x)) / length;
 }
 
+/// Signed distance of p from the line a -> b; with a Jacobian, adds
+/// @p scale times its gradient.
+double addSignedDistance(const PointRef& p, const PointRef& a, const PointRef& b, const Eigen::VectorXd& x,
+                         Eigen::MatrixXd* jacobian, Eigen::Index row, double scale) {
+    const Vec2 pv = valueOf(p, x);
+    const Vec2 av = valueOf(a, x);
+    const Vec2 bv = valueOf(b, x);
+    const double ux = bv.x - av.x;
+    const double uy = bv.y - av.y;
+    const double wx = pv.x - av.x;
+    const double wy = pv.y - av.y;
+    const double length = std::max(std::hypot(ux, uy), 1e-300);
+    const double s = (ux * wy - uy * wx) / length;
+    const double dLbx = ux / length;
+    const double dLby = uy / length;
+    addGradient(jacobian, row, p, scale * -uy / length, scale * ux / length);
+    addGradient(jacobian, row, b, scale * (wy / length - s * dLbx / length),
+                scale * (-wx / length - s * dLby / length));
+    addGradient(jacobian, row, a, scale * ((uy - wy) / length + s * dLbx / length),
+                scale * ((wx - ux) / length + s * dLby / length));
+    return s;
+}
+
+/// Radius term @p term of an equation (see Equation); with a Jacobian, adds
+/// @p scale times its gradient.
+double addRadiusTerm(const Equation& e, std::size_t term, const PointRef& centre, const PointRef& start,
+                     const Eigen::VectorXd& x, Eigen::MatrixXd* jacobian, Eigen::Index row, double scale) {
+    if (e.arcRadius[term]) {
+        const LengthTerm t = lengthOf(valueOf(centre, x), valueOf(start, x));
+        addGradient(jacobian, row, start, scale * t.unit.x, scale * t.unit.y);
+        addGradient(jacobian, row, centre, -scale * t.unit.x, -scale * t.unit.y);
+        return t.length;
+    }
+    addGradient(jacobian, row, e.r[term], scale);
+    return valueOf(e.r[term], x);
+}
+
 } // namespace
 
 Result<System> System::build(const Sketch& sketch) {
@@ -81,6 +121,29 @@ Result<System> System::build(const Sketch& sketch) {
     }
 
     // Unknowns: free point coordinates and circle radii, in entity ID order.
+    // Points that an enabled coincident constraint joins, as ordered pairs.
+    std::set<std::pair<EntityId, EntityId>> coincident;
+    for (const Constraint& constraint : sketch.constraints()) {
+        if (constraint.enabled && constraint.type == ConstraintType::Coincident) {
+            const auto [low, high] = std::minmax(constraint.entities[0], constraint.entities[1]);
+            coincident.emplace(low, high);
+        }
+    }
+    // The first pair (a, b) of end points, a from @p aEnds and b from
+    // @p bEnds, that are one point or joined by a coincident constraint.
+    const auto jointOf = [&](std::array<EntityId, 2> aEnds,
+                             std::array<EntityId, 2> bEnds) -> std::optional<std::pair<EntityId, EntityId>> {
+        for (const EntityId a : aEnds) {
+            for (const EntityId b : bEnds) {
+                const auto [low, high] = std::minmax(a, b);
+                if (a == b || coincident.contains({low, high})) {
+                    return std::pair{a, b};
+                }
+            }
+        }
+        return std::nullopt;
+    };
+
     std::map<EntityId, PointRef> points;
     std::map<EntityId, RadiusRef> radii;
     std::vector<double> initial;
@@ -132,7 +195,24 @@ Result<System> System::build(const Sketch& sketch) {
             return std::array<PointRef, 2>{point(line.start), point(line.end)};
         };
         const auto type = [&](std::size_t i) { return sketch.findEntity(c.entities[i])->type(); };
+        const auto centreOf = [&](EntityId id) -> const PointRef& {
+            const EntityGeometry& geometry = sketch.findEntity(id)->geometry;
+            if (const auto* circle = std::get_if<CircleEntity>(&geometry)) {
+                return point(circle->center);
+            }
+            return point(std::get<ArcEntity>(geometry).center);
+        };
         Equation e{.source = c.id};
+        // Radius term @p term of a circle (its variable) or an arc (|start - centre|).
+        const auto setRadiusTerm = [&](EntityId id, std::size_t term, std::size_t startSlot) {
+            const EntityGeometry& geometry = sketch.findEntity(id)->geometry;
+            if (const auto* arc = std::get_if<ArcEntity>(&geometry)) {
+                e.arcRadius[term] = true;
+                e.p[startSlot] = point(arc->start);
+            } else {
+                e.r[term] = radii.at(id);
+            }
+        };
         const auto push = [&](EquationKind kind) {
             e.kind = kind;
             system.equations_.push_back(e);
@@ -190,7 +270,8 @@ Result<System> System::build(const Sketch& sketch) {
             }
             break;
         case ConstraintType::Radius:
-            e.target = c.value->si();
+        case ConstraintType::Diameter:
+            e.target = c.type == ConstraintType::Diameter ? c.value->si() / 2.0 : c.value->si();
             if (type(0) == EntityType::Circle) {
                 e.r[0] = radii.at(c.entities[0]);
                 push(EquationKind::RadiusValue);
@@ -236,6 +317,94 @@ Result<System> System::build(const Sketch& sketch) {
         }
         case ConstraintType::Fixed:
             break;
+        case ConstraintType::Angle: {
+            const auto first = endpoints(c.entities[0]);
+            const auto second = endpoints(c.entities[1]);
+            e.p = {first[0], first[1], second[0], second[1]};
+            e.target = c.angle->si();
+            push(EquationKind::Angle);
+            break;
+        }
+        case ConstraintType::Tangent: {
+            // At a joint (the two entities end at one point, or at points a
+            // coincident constraint joins) tangency is the line perpendicular
+            // to the arc's radius there, or the two radii parallel. The
+            // distance form below is second order at a joint: it would place
+            // the joint only to the square root of the tolerance.
+            const Entity* first = sketch.findEntity(c.entities[0]);
+            const auto* secondArc = std::get_if<ArcEntity>(&sketch.findEntity(c.entities[1])->geometry);
+            if (secondArc != nullptr) {
+                if (const auto* line = std::get_if<LineEntity>(&first->geometry)) {
+                    if (const auto joint = jointOf({line->start, line->end}, {secondArc->start, secondArc->end})) {
+                        const auto ends = endpoints(c.entities[0]);
+                        e.p = {ends[0], ends[1], point(secondArc->center), point(joint->second)};
+                        push(EquationKind::Perpendicular);
+                        break;
+                    }
+                } else if (const auto* firstArc = std::get_if<ArcEntity>(&first->geometry)) {
+                    if (const auto joint = jointOf({firstArc->start, firstArc->end}, {secondArc->start, secondArc->end})) {
+                        e.p = {point(firstArc->center), point(joint->first), point(secondArc->center),
+                               point(joint->second)};
+                        push(EquationKind::Parallel);
+                        break;
+                    }
+                }
+            }
+            if (type(0) == EntityType::Line) {
+                const auto line = endpoints(c.entities[0]);
+                e.p[0] = centreOf(c.entities[1]);
+                e.p[1] = line[0];
+                e.p[2] = line[1];
+                setRadiusTerm(c.entities[1], 0, 3);
+                // Keep the centre on the side of the line where it starts.
+                e.sign = signedDistance(valueOf(e.p[0], x0), valueOf(e.p[1], x0), valueOf(e.p[2], x0)) < 0.0 ? -1.0
+                                                                                                             : 1.0;
+                push(EquationKind::LineTangent);
+            } else {
+                e.p[0] = centreOf(c.entities[0]);
+                e.p[1] = centreOf(c.entities[1]);
+                setRadiusTerm(c.entities[0], 0, 2);
+                setRadiusTerm(c.entities[1], 1, 3);
+                // External or internal contact, whichever the start is nearer
+                // (external on a tie).
+                const double d = lengthOf(valueOf(e.p[0], x0), valueOf(e.p[1], x0)).length;
+                const double r0 = addRadiusTerm(e, 0, e.p[0], e.p[2], x0, nullptr, 0, 0.0);
+                const double r1 = addRadiusTerm(e, 1, e.p[1], e.p[3], x0, nullptr, 0, 0.0);
+                if (std::abs(d - (r0 + r1)) <= std::abs(d - std::abs(r0 - r1))) {
+                    e.coefficient = {1.0, 1.0};
+                } else if (r0 >= r1) {
+                    e.coefficient = {1.0, -1.0};
+                } else {
+                    e.coefficient = {-1.0, 1.0};
+                }
+                push(EquationKind::CircleTangent);
+            }
+            break;
+        }
+        case ConstraintType::Concentric:
+            e.p[0] = centreOf(c.entities[0]);
+            e.p[1] = centreOf(c.entities[1]);
+            push(EquationKind::DiffX);
+            push(EquationKind::DiffY);
+            break;
+        case ConstraintType::Midpoint: {
+            const auto line = endpoints(c.entities[1]);
+            e.p[0] = point(c.entities[0]);
+            e.p[1] = line[0];
+            e.p[2] = line[1];
+            push(EquationKind::MidX);
+            push(EquationKind::MidY);
+            break;
+        }
+        case ConstraintType::Symmetric: {
+            // The midpoint lies on the axis, and the points' segment is
+            // perpendicular to it.
+            const auto axis = endpoints(c.entities[2]);
+            e.p = {point(c.entities[0]), point(c.entities[1]), axis[0], axis[1]};
+            push(EquationKind::MidpointOnLine);
+            push(EquationKind::Perpendicular);
+            break;
+        }
         }
     }
     return system;
@@ -355,6 +524,79 @@ void System::evaluate(const Eigen::VectorXd& x, Eigen::VectorXd& residuals,
             addGradient(jacobian, row, e.p[0], -g1x, -g1y);
             addGradient(jacobian, row, e.p[3], g2x, g2y);
             addGradient(jacobian, row, e.p[2], -g2x, -g2y);
+            break;
+        }
+        case EquationKind::Angle: {
+            const Vec2 p2 = valueOf(e.p[2], x);
+            const Vec2 p3 = valueOf(e.p[3], x);
+            const double d1x = p1.x - p0.x;
+            const double d1y = p1.y - p0.y;
+            const double d2x = p3.x - p2.x;
+            const double d2y = p3.y - p2.y;
+            const double l2 = std::max(std::hypot(d2x, d2y), 1e-300);
+            const double ct = std::cos(e.target);
+            const double st = std::sin(e.target);
+            const double cross = d1x * d2y - d1y * d2x;
+            const double dot = d1x * d2x + d1y * d2y;
+            const double f = (cross * ct - dot * st) / l2;
+            residuals[row] = f;
+            // dF/d(d1) = dN/d(d1) / L2; dF/d(d2) = (dN/d(d2) - F d2 / L2) / L2
+            const double g1x = (d2y * ct - d2x * st) / l2;
+            const double g1y = (-d2x * ct - d2y * st) / l2;
+            const double gcx = -d1y * ct - d1x * st;
+            const double gcy = d1x * ct - d1y * st;
+            const double g2x = (gcx - f * d2x / l2) / l2;
+            const double g2y = (gcy - f * d2y / l2) / l2;
+            addGradient(jacobian, row, e.p[1], g1x, g1y);
+            addGradient(jacobian, row, e.p[0], -g1x, -g1y);
+            addGradient(jacobian, row, e.p[3], g2x, g2y);
+            addGradient(jacobian, row, e.p[2], -g2x, -g2y);
+            break;
+        }
+        case EquationKind::LineTangent: {
+            const double s = addSignedDistance(e.p[0], e.p[1], e.p[2], x, jacobian, row, 1.0);
+            const double radius = addRadiusTerm(e, 0, e.p[0], e.p[3], x, jacobian, row, -e.sign);
+            residuals[row] = s - e.sign * radius;
+            break;
+        }
+        case EquationKind::CircleTangent: {
+            const LengthTerm t = lengthOf(p0, p1);
+            addGradient(jacobian, row, e.p[1], t.unit.x, t.unit.y);
+            addGradient(jacobian, row, e.p[0], -t.unit.x, -t.unit.y);
+            const double r0 = addRadiusTerm(e, 0, e.p[0], e.p[2], x, jacobian, row, -e.coefficient[0]);
+            const double r1 = addRadiusTerm(e, 1, e.p[1], e.p[3], x, jacobian, row, -e.coefficient[1]);
+            residuals[row] = t.length - (e.coefficient[0] * r0 + e.coefficient[1] * r1);
+            break;
+        }
+        case EquationKind::MidX:
+        case EquationKind::MidY: {
+            const bool alongX = e.kind == EquationKind::MidX;
+            const Vec2 p2 = valueOf(e.p[2], x);
+            residuals[row] = alongX ? p0.x - 0.5 * (p1.x + p2.x) : p0.y - 0.5 * (p1.y + p2.y);
+            addGradient(jacobian, row, e.p[0], alongX ? 1.0 : 0.0, alongX ? 0.0 : 1.0);
+            addGradient(jacobian, row, e.p[1], alongX ? -0.5 : 0.0, alongX ? 0.0 : -0.5);
+            addGradient(jacobian, row, e.p[2], alongX ? -0.5 : 0.0, alongX ? 0.0 : -0.5);
+            break;
+        }
+        case EquationKind::MidpointOnLine: {
+            // m = (p0 + p1) / 2 against the line p2 -> p3; the gradient with
+            // respect to m goes half to each point.
+            const Vec2 a = valueOf(e.p[2], x);
+            const Vec2 b = valueOf(e.p[3], x);
+            const double ux = b.x - a.x;
+            const double uy = b.y - a.y;
+            const double wx = 0.5 * (p0.x + p1.x) - a.x;
+            const double wy = 0.5 * (p0.y + p1.y) - a.y;
+            const double length = std::max(std::hypot(ux, uy), 1e-300);
+            const double s = (ux * wy - uy * wx) / length;
+            residuals[row] = s;
+            const double dLbx = ux / length;
+            const double dLby = uy / length;
+            addGradient(jacobian, row, e.p[0], -0.5 * uy / length, 0.5 * ux / length);
+            addGradient(jacobian, row, e.p[1], -0.5 * uy / length, 0.5 * ux / length);
+            addGradient(jacobian, row, e.p[3], wy / length - s * dLbx / length, -wx / length - s * dLby / length);
+            addGradient(jacobian, row, e.p[2], (uy - wy) / length + s * dLbx / length,
+                        (wx - ux) / length + s * dLby / length);
             break;
         }
         }

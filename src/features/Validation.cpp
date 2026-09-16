@@ -132,7 +132,10 @@ private:
             if (const auto* sketch = dynamic_cast<const sketch::Sketch*>(&object)) {
                 for (const sketch::Constraint& constraint : sketch->constraints()) {
                     if (constraint.parameter) {
-                        checkParameter(object.id(), *constraint.parameter, dimensions::length,
+                        // Angle constraints take angles; the others lengths.
+                        const Dimension expected =
+                            sketch::hasAngle(constraint.type) ? dimensions::angle : dimensions::length;
+                        checkParameter(object.id(), *constraint.parameter, expected,
                                        std::format("{} is driven by", constraint.id));
                     }
                 }

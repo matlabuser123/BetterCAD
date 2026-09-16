@@ -6,24 +6,38 @@
 namespace bettercad::sketch {
 
 Result<bool> applyDrivingParameters(Sketch& sketch, const ParameterTable& parameters) {
-    std::vector<std::pair<ConstraintId, ParameterId>> driven;
+    struct Driven {
+        ConstraintId constraint;
+        ParameterId parameter;
+        bool angle = false;
+    };
+    std::vector<Driven> driven;
     for (const Constraint& constraint : sketch.constraints()) {
         if (constraint.parameter) {
-            driven.emplace_back(constraint.id, *constraint.parameter);
+            driven.push_back({constraint.id, *constraint.parameter, hasAngle(constraint.type)});
         }
     }
     bool changed = false;
-    for (const auto& [constraintId, parameterId] : driven) {
-        const Parameter* parameter = parameters.find(parameterId);
+    for (const Driven& item : driven) {
+        const Parameter* parameter = parameters.find(item.parameter);
         if (parameter == nullptr) {
-            return makeError(ErrorCode::NotFound,
-                             std::format("{} is driven by {}, which does not exist", constraintId, parameterId));
+            return makeError(ErrorCode::NotFound, std::format("{} is driven by {}, which does not exist",
+                                                              item.constraint, item.parameter));
         }
-        auto value = parameter->as<Length>();
-        if (!value) {
-            return std::unexpected(value.error());
+        Result<bool> set = false;
+        if (item.angle) {
+            auto value = parameter->as<Angle>();
+            if (!value) {
+                return std::unexpected(value.error());
+            }
+            set = sketch.setConstraintAngle(item.constraint, *value);
+        } else {
+            auto value = parameter->as<Length>();
+            if (!value) {
+                return std::unexpected(value.error());
+            }
+            set = sketch.setConstraintValue(item.constraint, *value);
         }
-        auto set = sketch.setConstraintValue(constraintId, *value);
         if (!set) {
             return std::unexpected(set.error());
         }
