@@ -1,0 +1,320 @@
+{
+  "format": "bettercad-document",
+  "version": 1,
+  "units": "SI",
+  "document": {
+    "id": "5eed0000-0000-4000-8000-000000000002",
+    "name": "Flange",
+    "metadata": {
+      "description": "",
+      "author": "",
+      "properties": {}
+    },
+    "last_allocated_id": 15
+  },
+  "parameters": [
+    {
+      "id": 1,
+      "name": "outer_r",
+      "si_value": 0.05,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 2,
+      "name": "thickness",
+      "si_value": 0.012,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 3,
+      "name": "bore_d",
+      "si_value": 0.03,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 4,
+      "name": "bolt_circle_r",
+      "si_value": 0.035,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 5,
+      "name": "bolt_d",
+      "si_value": 0.008,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 6,
+      "name": "bolt_count",
+      "si_value": 6.0,
+      "unit": "",
+      "dimension": {}
+    },
+    {
+      "id": 7,
+      "name": "edge_chamfer",
+      "si_value": 0.001,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 8,
+      "name": "rim_fillet_r",
+      "si_value": 0.002,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    }
+  ],
+  "objects": [
+    {
+      "id": 9,
+      "type": "sketch",
+      "name": "DiscSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "circle",
+            "center": 1,
+            "radius": 0.05,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "radius",
+            "entities": [
+              2
+            ],
+            "value": 0.05,
+            "parameter": 1,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 2,
+        "last_constraint_id": 2
+      }
+    },
+    {
+      "id": 10,
+      "type": "extrude",
+      "name": "Disc",
+      "data": {
+        "profile": 9,
+        "depth": 0.012,
+        "depth_parameter": 2,
+        "direction": "normal",
+        "operation": "new_body"
+      }
+    },
+    {
+      "id": 11,
+      "type": "hole",
+      "name": "Bore",
+      "data": {
+        "target": 10,
+        "face": {
+          "surface": "plane",
+          "point": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        },
+        "center": [
+          0.0,
+          0.0
+        ],
+        "type": "simple",
+        "extent": "through",
+        "diameter": 0.03,
+        "diameter_parameter": 3
+      }
+    },
+    {
+      "id": 12,
+      "type": "hole",
+      "name": "BoltHole",
+      "data": {
+        "target": 11,
+        "face": {
+          "surface": "plane",
+          "point": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        },
+        "center": [
+          0.035,
+          0.0
+        ],
+        "center_u_parameter": 4,
+        "type": "simple",
+        "extent": "through",
+        "diameter": 0.008,
+        "diameter_parameter": 5
+      }
+    },
+    {
+      "id": 13,
+      "type": "circular_pattern",
+      "name": "BoltCircle",
+      "data": {
+        "source": 12,
+        "axis": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "count": 6,
+        "count_parameter": 6,
+        "spacing": "full_circle",
+        "rotation": "positive"
+      }
+    },
+    {
+      "id": 14,
+      "type": "chamfer",
+      "name": "EdgeChamfers",
+      "data": {
+        "target": 13,
+        "edges": [
+          {
+            "curve": "circle",
+            "center": [
+              0.0,
+              0.0,
+              0.012
+            ],
+            "axis": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "radius": 0.05
+          },
+          {
+            "curve": "circle",
+            "center": [
+              0.0,
+              0.0,
+              0.012
+            ],
+            "axis": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "radius": 0.015
+          }
+        ],
+        "mode": "equal_distance",
+        "distance": 0.001,
+        "distance_parameter": 7
+      }
+    },
+    {
+      "id": 15,
+      "type": "fillet",
+      "name": "RimFillet",
+      "data": {
+        "target": 14,
+        "edges": [
+          {
+            "curve": "circle",
+            "center": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "axis": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "radius": 0.05
+          }
+        ],
+        "radius": 0.002,
+        "radius_parameter": 8
+      }
+    }
+  ]
+}

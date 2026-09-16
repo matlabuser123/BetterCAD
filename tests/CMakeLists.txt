@@ -116,6 +116,22 @@ if(TARGET bettercad_cli_lib)
     target_sources(bettercad_tests PRIVATE cli/CliTests.cpp)
     target_link_libraries(bettercad_tests PRIVATE BetterCAD::cli_lib)
 endif()
+# The mechanical reference models (P11-REF-001) are built by the examples'
+# library, with the same public APIs as any client.
+if(TARGET bettercad_reference_models)
+    target_sources(bettercad_tests PRIVATE
+        reference/AllModelsTests.cpp
+        reference/Analytic.hpp
+        reference/ReferenceTestSupport.hpp
+        reference/FlangeTests.cpp
+        reference/BearingHousingTests.cpp
+        reference/MountingBracketTests.cpp
+        reference/PulleyTests.cpp
+        reference/ShaftTests.cpp
+        reference/UBoltTests.cpp
+    )
+    target_link_libraries(bettercad_tests PRIVATE BetterCAD::reference_models)
+endif()
 
 # PRE_TEST discovery runs at ctest time, so a missing runtime DLL shows up as a
 # failing test rather than a broken build.
@@ -205,6 +221,42 @@ if(TARGET bettercad_cli)
     bettercad_add_process_test(cli.export-stl.bad-tolerance
         COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "export-stl|${_example}|${_out}/bad.stl|--tolerance|1kg"
         EXIT_CODE 2 STDERR_REGEX "--tolerance: '1kg' has dimension mass; expected length")
+
+    # The mechanical reference models (P11-REF-001) through the real CLI:
+    # every part loads, validates and exports. The volumes are the ones the
+    # reference-model tests check against independent geometry.
+    set(_reference "${PROJECT_SOURCE_DIR}/examples/models/reference")
+    foreach(_model_volume
+        "shaft|Shaft|EndChamfers|97773\\.099"
+        "flange|Flange|RimFillet|81674\\.894"
+        "pulley|Pulley|HubChamfers|212874\\.606"
+        "bearing_housing|BearingHousing|BaseChamfers|261382\\.165"
+        "mounting_bracket|MountingBracket|Gusset|123546\\.715"
+        "u_bolt|UBolt|EndChamfers|15563\\.959")
+        string(REPLACE "|" ";" _parts "${_model_volume}")
+        list(GET _parts 0 _stem)
+        list(GET _parts 1 _name)
+        list(GET _parts 2 _result)
+        list(GET _parts 3 _volume)
+        bettercad_add_process_test(cli.validate.reference.${_stem}
+            COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "validate|${_reference}/${_stem}.bcad"
+            EXIT_CODE 0
+            STDOUT_REGEX "geometry              ok, 1 result body\nResult bodies \\(1\\):\n  ${_result} \\(object:[0-9]+\\): 1 solid, volume ${_volume} mm\\^3.*\nResult: valid$")
+    endforeach()
+    bettercad_add_process_test(cli.info.reference.shaft
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "info|${_reference}/shaft.bcad"
+        EXIT_CODE 0
+        STDOUT_REGEX "^Document: Shaft\n.*Parameters \\(10\\):\n  r1 +15 mm\n.*revolve  Turn .*mirror +TailCentreDrill.*chamfer  EndChamfers")
+    bettercad_add_process_test(cli.export-step.reference.bracket
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "export-step|${_reference}/mounting_bracket.bcad|${_out}/mounting_bracket.step"
+        EXIT_CODE 0 STDOUT_REGEX "^Wrote .*mounting_bracket\\.step: STEP AP214 \\(mm\\), 1 body \\(Gusset\\), [0-9]+ bytes$"
+        FILE "${_out}/mounting_bracket.step" FILE_REGEX "^ISO-10303-21;\nHEADER;")
+    bettercad_add_process_test(cli.export-stl.reference.pulley
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "export-stl|${_reference}/pulley.bcad|${_out}/pulley.stl"
+        EXIT_CODE 0 STDOUT_REGEX "binary STL \\(mm\\), 1 body \\(HubChamfers: [0-9]+ triangles\\)"
+        FILE "${_out}/pulley.stl" FILE_REGEX "^BetterCAD [^ ]+ binary STL, units mm: Pulley")
 endif()
 
 if(TARGET bettercad)

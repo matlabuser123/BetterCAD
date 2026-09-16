@@ -1,0 +1,1257 @@
+{
+  "format": "bettercad-document",
+  "version": 1,
+  "units": "SI",
+  "document": {
+    "id": "5eed0000-0000-4000-8000-000000000005",
+    "name": "MountingBracket",
+    "metadata": {
+      "description": "",
+      "author": "",
+      "properties": {}
+    },
+    "last_allocated_id": 35
+  },
+  "parameters": [
+    {
+      "id": 1,
+      "name": "width",
+      "si_value": 0.1,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 2,
+      "name": "base_width",
+      "si_value": 0.06,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 3,
+      "name": "base_t",
+      "si_value": 0.01,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 4,
+      "name": "plate_height",
+      "si_value": 0.07,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 5,
+      "name": "plate_t",
+      "si_value": 0.01,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 6,
+      "name": "hole_d",
+      "si_value": 0.008,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 7,
+      "name": "hole_inset",
+      "si_value": 0.015,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 8,
+      "name": "hole_row",
+      "si_value": 0.025,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 9,
+      "name": "hole_pitch_x",
+      "si_value": 0.07,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 10,
+      "name": "hole_pitch_y",
+      "si_value": 0.02,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 11,
+      "name": "plate_hole_x",
+      "si_value": 0.02,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 12,
+      "name": "plate_hole_z",
+      "si_value": 0.045,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 13,
+      "name": "centre_x",
+      "si_value": 0.05,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 14,
+      "name": "gusset_back",
+      "si_value": 0.005,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 15,
+      "name": "gusset_embed",
+      "si_value": 0.005,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 16,
+      "name": "gusset_top",
+      "si_value": 0.05,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 17,
+      "name": "gusset_foot_t",
+      "si_value": 0.01,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 18,
+      "name": "gusset_foot_depth",
+      "si_value": 0.045,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 19,
+      "name": "gusset_tip_t",
+      "si_value": 0.006,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 20,
+      "name": "gusset_tip_depth",
+      "si_value": 0.007,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 21,
+      "name": "inner_fillet_r",
+      "si_value": 0.005,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 22,
+      "name": "outer_chamfer",
+      "si_value": 0.002,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    }
+  ],
+  "objects": [
+    {
+      "id": 23,
+      "type": "sketch",
+      "name": "BaseSection",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.1,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.1,
+              0.06
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.0,
+              0.06
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "line",
+            "start": 2,
+            "end": 3,
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "line",
+            "start": 4,
+            "end": 1,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "horizontal",
+            "entities": [
+              5
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "vertical",
+            "entities": [
+              6
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "horizontal",
+            "entities": [
+              7
+            ],
+            "enabled": true
+          },
+          {
+            "id": 5,
+            "type": "vertical",
+            "entities": [
+              8
+            ],
+            "enabled": true
+          },
+          {
+            "id": 6,
+            "type": "distance",
+            "entities": [
+              5
+            ],
+            "value": 0.1,
+            "parameter": 1,
+            "enabled": true
+          },
+          {
+            "id": 7,
+            "type": "distance",
+            "entities": [
+              6
+            ],
+            "value": 0.06,
+            "parameter": 2,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 8,
+        "last_constraint_id": 7
+      }
+    },
+    {
+      "id": 24,
+      "type": "extrude",
+      "name": "BasePlate",
+      "data": {
+        "profile": 23,
+        "depth": 0.01,
+        "depth_parameter": 3,
+        "direction": "normal",
+        "operation": "new_body"
+      }
+    },
+    {
+      "id": 25,
+      "type": "sketch",
+      "name": "PlateSection",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "normal": [
+            -0.0,
+            -1.0,
+            -0.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.1,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.1,
+              0.07
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.0,
+              0.07
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "line",
+            "start": 2,
+            "end": 3,
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "line",
+            "start": 4,
+            "end": 1,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "horizontal",
+            "entities": [
+              5
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "vertical",
+            "entities": [
+              6
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "horizontal",
+            "entities": [
+              7
+            ],
+            "enabled": true
+          },
+          {
+            "id": 5,
+            "type": "vertical",
+            "entities": [
+              8
+            ],
+            "enabled": true
+          },
+          {
+            "id": 6,
+            "type": "distance",
+            "entities": [
+              5
+            ],
+            "value": 0.1,
+            "parameter": 1,
+            "enabled": true
+          },
+          {
+            "id": 7,
+            "type": "distance",
+            "entities": [
+              6
+            ],
+            "value": 0.07,
+            "parameter": 4,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 8,
+        "last_constraint_id": 7
+      }
+    },
+    {
+      "id": 26,
+      "type": "extrude",
+      "name": "BackPlate",
+      "data": {
+        "profile": 25,
+        "depth": 0.01,
+        "depth_parameter": 5,
+        "direction": "reversed",
+        "operation": "join",
+        "target": 24
+      }
+    },
+    {
+      "id": 27,
+      "type": "hole",
+      "name": "BaseHole",
+      "data": {
+        "target": 26,
+        "face": {
+          "surface": "plane",
+          "point": [
+            0.0,
+            0.0,
+            0.01
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "center": [
+          0.015,
+          0.025
+        ],
+        "center_u_parameter": 7,
+        "center_v_parameter": 8,
+        "type": "simple",
+        "extent": "through",
+        "diameter": 0.008,
+        "diameter_parameter": 6
+      }
+    },
+    {
+      "id": 28,
+      "type": "linear_pattern",
+      "name": "BaseHoles",
+      "data": {
+        "source": 27,
+        "first": {
+          "direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "count": 2,
+          "spacing": 0.07,
+          "spacing_parameter": 9
+        },
+        "second": {
+          "direction": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "count": 2,
+          "spacing": 0.02,
+          "spacing_parameter": 10
+        }
+      }
+    },
+    {
+      "id": 29,
+      "type": "hole",
+      "name": "PlateHole",
+      "data": {
+        "target": 28,
+        "face": {
+          "surface": "plane",
+          "point": [
+            0.0,
+            0.01,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        "center": [
+          0.02,
+          0.045
+        ],
+        "center_u_parameter": 11,
+        "center_v_parameter": 12,
+        "type": "simple",
+        "extent": "through",
+        "diameter": 0.008,
+        "diameter_parameter": 6
+      }
+    },
+    {
+      "id": 30,
+      "type": "mirror",
+      "name": "PlateHoles",
+      "data": {
+        "source": 29,
+        "plane": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "normal": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "offset": 0.05,
+          "offset_parameter": 13
+        },
+        "scope": "feature",
+        "keep_original": true
+      }
+    },
+    {
+      "id": 31,
+      "type": "fillet",
+      "name": "InnerFillet",
+      "data": {
+        "target": 30,
+        "edges": [
+          {
+            "curve": "line",
+            "point": [
+              0.0,
+              0.01,
+              0.01
+            ],
+            "direction": [
+              1.0,
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "radius": 0.005,
+        "radius_parameter": 21
+      }
+    },
+    {
+      "id": 32,
+      "type": "chamfer",
+      "name": "OuterChamfer",
+      "data": {
+        "target": 31,
+        "edges": [
+          {
+            "curve": "line",
+            "point": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "direction": [
+              1.0,
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "mode": "equal_distance",
+        "distance": 0.002,
+        "distance_parameter": 22
+      }
+    },
+    {
+      "id": 33,
+      "type": "sketch",
+      "name": "GussetFoot",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.01,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": true
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.05,
+              0.005
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "point",
+            "position": [
+              0.045,
+              0.005
+            ],
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "point",
+            "position": [
+              0.055,
+              0.005
+            ],
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "point",
+            "position": [
+              0.055,
+              0.05
+            ],
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "point",
+            "position": [
+              0.045,
+              0.05
+            ],
+            "construction": false
+          },
+          {
+            "id": 9,
+            "type": "line",
+            "start": 5,
+            "end": 6,
+            "construction": false
+          },
+          {
+            "id": 10,
+            "type": "line",
+            "start": 6,
+            "end": 7,
+            "construction": false
+          },
+          {
+            "id": 11,
+            "type": "line",
+            "start": 7,
+            "end": 8,
+            "construction": false
+          },
+          {
+            "id": 12,
+            "type": "line",
+            "start": 8,
+            "end": 5,
+            "construction": false
+          },
+          {
+            "id": 13,
+            "type": "line",
+            "start": 5,
+            "end": 4,
+            "construction": true
+          },
+          {
+            "id": 14,
+            "type": "line",
+            "start": 4,
+            "end": 6,
+            "construction": true
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "fixed",
+            "entities": [
+              2
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "horizontal",
+            "entities": [
+              1,
+              4
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "distance",
+            "entities": [
+              1,
+              4
+            ],
+            "value": 0.05,
+            "parameter": 13,
+            "enabled": true
+          },
+          {
+            "id": 5,
+            "type": "horizontal",
+            "entities": [
+              9
+            ],
+            "enabled": true
+          },
+          {
+            "id": 6,
+            "type": "vertical",
+            "entities": [
+              10
+            ],
+            "enabled": true
+          },
+          {
+            "id": 7,
+            "type": "horizontal",
+            "entities": [
+              11
+            ],
+            "enabled": true
+          },
+          {
+            "id": 8,
+            "type": "vertical",
+            "entities": [
+              12
+            ],
+            "enabled": true
+          },
+          {
+            "id": 9,
+            "type": "distance",
+            "entities": [
+              9
+            ],
+            "value": 0.01,
+            "parameter": 17,
+            "enabled": true
+          },
+          {
+            "id": 10,
+            "type": "distance",
+            "entities": [
+              10
+            ],
+            "value": 0.045,
+            "parameter": 18,
+            "enabled": true
+          },
+          {
+            "id": 11,
+            "type": "equal",
+            "entities": [
+              13,
+              14
+            ],
+            "enabled": true
+          },
+          {
+            "id": 12,
+            "type": "distance",
+            "entities": [
+              5,
+              3
+            ],
+            "value": 0.005,
+            "parameter": 14,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 14,
+        "last_constraint_id": 12
+      }
+    },
+    {
+      "id": 34,
+      "type": "sketch",
+      "name": "GussetTip",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.01,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": true
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.05,
+              0.005
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "point",
+            "position": [
+              0.047,
+              0.005
+            ],
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "point",
+            "position": [
+              0.053,
+              0.005
+            ],
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "point",
+            "position": [
+              0.053,
+              0.012
+            ],
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "point",
+            "position": [
+              0.047,
+              0.012
+            ],
+            "construction": false
+          },
+          {
+            "id": 9,
+            "type": "line",
+            "start": 5,
+            "end": 6,
+            "construction": false
+          },
+          {
+            "id": 10,
+            "type": "line",
+            "start": 6,
+            "end": 7,
+            "construction": false
+          },
+          {
+            "id": 11,
+            "type": "line",
+            "start": 7,
+            "end": 8,
+            "construction": false
+          },
+          {
+            "id": 12,
+            "type": "line",
+            "start": 8,
+            "end": 5,
+            "construction": false
+          },
+          {
+            "id": 13,
+            "type": "line",
+            "start": 5,
+            "end": 4,
+            "construction": true
+          },
+          {
+            "id": 14,
+            "type": "line",
+            "start": 4,
+            "end": 6,
+            "construction": true
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "fixed",
+            "entities": [
+              2
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "horizontal",
+            "entities": [
+              1,
+              4
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "distance",
+            "entities": [
+              1,
+              4
+            ],
+            "value": 0.05,
+            "parameter": 13,
+            "enabled": true
+          },
+          {
+            "id": 5,
+            "type": "horizontal",
+            "entities": [
+              9
+            ],
+            "enabled": true
+          },
+          {
+            "id": 6,
+            "type": "vertical",
+            "entities": [
+              10
+            ],
+            "enabled": true
+          },
+          {
+            "id": 7,
+            "type": "horizontal",
+            "entities": [
+              11
+            ],
+            "enabled": true
+          },
+          {
+            "id": 8,
+            "type": "vertical",
+            "entities": [
+              12
+            ],
+            "enabled": true
+          },
+          {
+            "id": 9,
+            "type": "distance",
+            "entities": [
+              9
+            ],
+            "value": 0.006,
+            "parameter": 19,
+            "enabled": true
+          },
+          {
+            "id": 10,
+            "type": "distance",
+            "entities": [
+              10
+            ],
+            "value": 0.007,
+            "parameter": 20,
+            "enabled": true
+          },
+          {
+            "id": 11,
+            "type": "equal",
+            "entities": [
+              13,
+              14
+            ],
+            "enabled": true
+          },
+          {
+            "id": 12,
+            "type": "distance",
+            "entities": [
+              5,
+              3
+            ],
+            "value": 0.005,
+            "parameter": 14,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 14,
+        "last_constraint_id": 12
+      }
+    },
+    {
+      "id": 35,
+      "type": "loft",
+      "name": "Gusset",
+      "data": {
+        "sections": [
+          {
+            "sketch": 33,
+            "offset": 0.005,
+            "offset_parameter": 15
+          },
+          {
+            "sketch": 34,
+            "offset": 0.05,
+            "offset_parameter": 16
+          }
+        ],
+        "interpolation": "ruled",
+        "operation": "join",
+        "target": 32
+      }
+    }
+  ]
+}

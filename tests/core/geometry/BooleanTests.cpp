@@ -3,6 +3,9 @@
 
 #include <bettercad/core/geometry/Booleans.hpp>
 #include <bettercad/core/geometry/Primitives.hpp>
+#include <bettercad/core/geometry/Profile.hpp>
+#include <bettercad/core/geometry/Sweeps.hpp>
+#include <bettercad/core/geometry/Transform.hpp>
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
@@ -181,6 +184,61 @@ TEST_CASE("Boolean operations are deterministic and leave their inputs unchanged
     CHECK(first.topology() == second.topology());
     CHECK(volumeMm3(box) == boxVolumeBefore);
     CHECK(box.topology().faces == 6);
+}
+
+// Half of a symmetric part united with its mirror image across the plane
+// they share: how far the kernel carries it. Found by the bearing housing
+// reference model (P11-REF-001), which is drawn as a half section and
+// mirrored. A planar seam is merged into the whole part; a half cylinder on
+// the seam (a bore split by the mirror plane) makes the kernel's fuse return
+// an invalid shape, which is refused rather than kept. The housing therefore
+// cuts its bore after the halves are joined.
+TEST_CASE("A half united with its mirror image: a planar seam merges, a cylindrical seam is refused",
+          "[geometry][booleans][regression]") {
+    const Point2D crown{0_mm, 45_mm};
+    const auto mirroredAcrossX = [](const Body& body) {
+        return transformed(body, RigidTransform3D::reflection(Point3D{}, Direction3D::unitX()));
+    };
+
+    SECTION("a planar seam") {
+        // The housing's arch, 35 mm wide and 45 mm to the crown of radius 35.
+        ProfileLoop arch;
+        arch.segments = {
+            LineSegment2D{Point2D{0_mm, 0_mm}, Point2D{35_mm, 0_mm}},
+            LineSegment2D{Point2D{35_mm, 0_mm}, Point2D{35_mm, 45_mm}},
+            ArcSegment2D{crown, Point2D{35_mm, 45_mm}, Point2D{0_mm, 80_mm}, true},
+            LineSegment2D{Point2D{0_mm, 80_mm}, Point2D{0_mm, 0_mm}},
+        };
+        const Body half = require(makePrism(PlanarRegion{.plane = Frame3D::xz(), .outer = arch}, -30_mm, 30_mm));
+        REQUIRE(half.isValid());
+        const Body whole = require(booleanUnion(half, require(mirroredAcrossX(half))));
+        CHECK(whole.isValid());
+        CHECK(whole.topology().solids == 1);
+        CHECK_THAT(volumeMm3(whole), WithinRel(2.0 * volumeMm3(half), kRelTight));
+        // The whole arch: 70 x 45 mm under a half disc of radius 35, 60 wide.
+        CHECK_THAT(volumeMm3(whole), WithinRel((70.0 * 45.0 + pi * 35.0 * 35.0 / 2.0) * 60.0, kRelTight));
+    }
+    SECTION("a half bore on the seam") {
+        ProfileLoop bored;
+        bored.segments = {
+            LineSegment2D{Point2D{0_mm, 0_mm}, Point2D{35_mm, 0_mm}},
+            LineSegment2D{Point2D{35_mm, 0_mm}, Point2D{35_mm, 45_mm}},
+            ArcSegment2D{crown, Point2D{35_mm, 45_mm}, Point2D{0_mm, 80_mm}, true},
+            LineSegment2D{Point2D{0_mm, 80_mm}, Point2D{0_mm, 65_mm}},
+            ArcSegment2D{crown, Point2D{0_mm, 65_mm}, Point2D{0_mm, 25_mm}, false},
+            LineSegment2D{Point2D{0_mm, 25_mm}, Point2D{0_mm, 0_mm}},
+        };
+        const Body half = require(makePrism(PlanarRegion{.plane = Frame3D::xz(), .outer = bored}, -30_mm, 30_mm));
+        REQUIRE(half.isValid());
+        const Body image = require(mirroredAcrossX(half));
+        REQUIRE(image.isValid());
+        CHECK_THAT(volumeMm3(image), WithinRel(volumeMm3(half), kRelTight));
+        // The two half cylinders of the bore meet on the mirror plane: the
+        // kernel's fuse returns a shape its own checker rejects, so the
+        // union fails instead of producing an invalid body.
+        const auto united = booleanUnion(half, image);
+        CHECK(errorCode(united) == ErrorCode::Internal);
+    }
 }
 
 TEST_CASE("Boolean operands must not be empty", "[geometry][booleans]") {

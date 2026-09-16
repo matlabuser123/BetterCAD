@@ -4,3 +4,5 @@ bettercad_add_executable(bettercad_example_geometry_accuracy
     LINK BetterCAD::geometry
 )
 bettercad_copy_runtime_dlls(bettercad_example_geometry_accuracy)
+
+add_subdirectory(reference_models)

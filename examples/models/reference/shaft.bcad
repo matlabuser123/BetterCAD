@@ -1,0 +1,587 @@
+{
+  "format": "bettercad-document",
+  "version": 1,
+  "units": "SI",
+  "document": {
+    "id": "5eed0000-0000-4000-8000-000000000001",
+    "name": "Shaft",
+    "metadata": {
+      "description": "",
+      "author": "",
+      "properties": {}
+    },
+    "last_allocated_id": 16
+  },
+  "parameters": [
+    {
+      "id": 1,
+      "name": "r1",
+      "si_value": 0.015,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 2,
+      "name": "l1",
+      "si_value": 0.04,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 3,
+      "name": "r2",
+      "si_value": 0.02,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 4,
+      "name": "l2",
+      "si_value": 0.04,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 5,
+      "name": "r3",
+      "si_value": 0.0125,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 6,
+      "name": "half_length",
+      "si_value": 0.06,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 7,
+      "name": "centre_drill_d",
+      "si_value": 0.004,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 8,
+      "name": "centre_drill_depth",
+      "si_value": 0.01,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 9,
+      "name": "shoulder_fillet_r",
+      "si_value": 0.0015,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 10,
+      "name": "end_chamfer",
+      "si_value": 0.001,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    }
+  ],
+  "objects": [
+    {
+      "id": 11,
+      "type": "sketch",
+      "name": "Profile",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "normal": [
+            -0.0,
+            -1.0,
+            -0.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.015,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.015,
+              0.04
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.02,
+              0.04
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "point",
+            "position": [
+              0.02,
+              0.08
+            ],
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "point",
+            "position": [
+              0.0125,
+              0.08
+            ],
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "point",
+            "position": [
+              0.0125,
+              0.12
+            ],
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "point",
+            "position": [
+              0.0,
+              0.12
+            ],
+            "construction": false
+          },
+          {
+            "id": 9,
+            "type": "point",
+            "position": [
+              0.0,
+              0.06
+            ],
+            "construction": false
+          },
+          {
+            "id": 10,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": false
+          },
+          {
+            "id": 11,
+            "type": "line",
+            "start": 2,
+            "end": 3,
+            "construction": false
+          },
+          {
+            "id": 12,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 13,
+            "type": "line",
+            "start": 4,
+            "end": 5,
+            "construction": false
+          },
+          {
+            "id": 14,
+            "type": "line",
+            "start": 5,
+            "end": 6,
+            "construction": false
+          },
+          {
+            "id": 15,
+            "type": "line",
+            "start": 6,
+            "end": 7,
+            "construction": false
+          },
+          {
+            "id": 16,
+            "type": "line",
+            "start": 7,
+            "end": 8,
+            "construction": false
+          },
+          {
+            "id": 17,
+            "type": "line",
+            "start": 8,
+            "end": 1,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "horizontal",
+            "entities": [
+              10
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "horizontal",
+            "entities": [
+              12
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "horizontal",
+            "entities": [
+              14
+            ],
+            "enabled": true
+          },
+          {
+            "id": 5,
+            "type": "horizontal",
+            "entities": [
+              16
+            ],
+            "enabled": true
+          },
+          {
+            "id": 6,
+            "type": "vertical",
+            "entities": [
+              11
+            ],
+            "enabled": true
+          },
+          {
+            "id": 7,
+            "type": "vertical",
+            "entities": [
+              13
+            ],
+            "enabled": true
+          },
+          {
+            "id": 8,
+            "type": "vertical",
+            "entities": [
+              15
+            ],
+            "enabled": true
+          },
+          {
+            "id": 9,
+            "type": "vertical",
+            "entities": [
+              17
+            ],
+            "enabled": true
+          },
+          {
+            "id": 10,
+            "type": "distance",
+            "entities": [
+              10
+            ],
+            "value": 0.015,
+            "parameter": 1,
+            "enabled": true
+          },
+          {
+            "id": 11,
+            "type": "distance",
+            "entities": [
+              11
+            ],
+            "value": 0.04,
+            "parameter": 2,
+            "enabled": true
+          },
+          {
+            "id": 12,
+            "type": "distance",
+            "entities": [
+              4,
+              17
+            ],
+            "value": 0.02,
+            "parameter": 3,
+            "enabled": true
+          },
+          {
+            "id": 13,
+            "type": "distance",
+            "entities": [
+              13
+            ],
+            "value": 0.04,
+            "parameter": 4,
+            "enabled": true
+          },
+          {
+            "id": 14,
+            "type": "distance",
+            "entities": [
+              16
+            ],
+            "value": 0.0125,
+            "parameter": 5,
+            "enabled": true
+          },
+          {
+            "id": 15,
+            "type": "vertical",
+            "entities": [
+              1,
+              9
+            ],
+            "enabled": true
+          },
+          {
+            "id": 16,
+            "type": "distance",
+            "entities": [
+              1,
+              9
+            ],
+            "value": 0.06,
+            "parameter": 6,
+            "enabled": true
+          },
+          {
+            "id": 17,
+            "type": "distance",
+            "entities": [
+              9,
+              8
+            ],
+            "value": 0.06,
+            "parameter": 6,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 17,
+        "last_constraint_id": 17
+      }
+    },
+    {
+      "id": 12,
+      "type": "revolve",
+      "name": "Turn",
+      "data": {
+        "profile": 11,
+        "axis": {
+          "type": "sketch_y"
+        },
+        "angle": 6.283185307179586,
+        "direction": "positive",
+        "operation": "new_body"
+      }
+    },
+    {
+      "id": 13,
+      "type": "hole",
+      "name": "CentreDrill",
+      "data": {
+        "target": 12,
+        "face": {
+          "surface": "plane",
+          "point": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        },
+        "center": [
+          0.0,
+          0.0
+        ],
+        "type": "countersink",
+        "extent": "blind",
+        "diameter": 0.004,
+        "diameter_parameter": 7,
+        "depth": 0.01,
+        "depth_parameter": 8,
+        "countersink_diameter": 0.0085,
+        "countersink_angle": 1.0471975511965976
+      }
+    },
+    {
+      "id": 14,
+      "type": "mirror",
+      "name": "TailCentreDrill",
+      "data": {
+        "source": 13,
+        "plane": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "offset": 0.06,
+          "offset_parameter": 6
+        },
+        "scope": "feature",
+        "keep_original": true
+      }
+    },
+    {
+      "id": 15,
+      "type": "fillet",
+      "name": "ShoulderFillets",
+      "data": {
+        "target": 14,
+        "edges": [
+          {
+            "curve": "circle",
+            "center": [
+              0.0,
+              0.0,
+              0.04
+            ],
+            "axis": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "radius": 0.015
+          },
+          {
+            "curve": "circle",
+            "center": [
+              0.0,
+              0.0,
+              0.08
+            ],
+            "axis": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "radius": 0.0125
+          }
+        ],
+        "radius": 0.0015,
+        "radius_parameter": 9
+      }
+    },
+    {
+      "id": 16,
+      "type": "chamfer",
+      "name": "EndChamfers",
+      "data": {
+        "target": 15,
+        "edges": [
+          {
+            "curve": "circle",
+            "center": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "axis": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "radius": 0.015
+          },
+          {
+            "curve": "circle",
+            "center": [
+              0.0,
+              0.0,
+              0.12
+            ],
+            "axis": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "radius": 0.0125
+          }
+        ],
+        "mode": "equal_distance",
+        "distance": 0.001,
+        "distance_parameter": 10
+      }
+    }
+  ]
+}

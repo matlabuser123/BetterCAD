@@ -1,0 +1,771 @@
+Measured values of the bolted flange (Release build), captured 2026-09-16.
+Produced by: build/release/bin/bettercad_tests.exe "[flange]" -s --reporter xml --rng-seed 1,
+filtered by ../values.py: every passed CHECK_THAT / REQUIRE_THAT (volumes, areas, centroids,
+bounds, messages) and every passed CHECK whose INFO context reports a measured value (keywords:
+expected, error, STL, STEP, restored, kernel). Each entry: file:line, the assertion, then Catch2's
+expansion (values printed exactly) and its INFO context. checkProperties() prints each volume,
+area and centroid with the expected value and the error; checkBounds() compares the kernel's box
+one-sidedly (it must contain the exact box and exceed it by at most 1e-7 mm).
+
+
+== ReferenceModel_FlangeUndoRedo
+ReferenceTestSupport.hpp:112  CHECK_THAT( body.volumeMm3, WithinRel(expected.volume, kRel) )
+        => 80468.52246772064245306 and 80468.52246772061334923 are within 1e-08% of each other with message: volume expected 80468.5 mm^3, actual 80468.5 mm^3, abs error 2.91038e-11, rel error 3.6168e-16
+ReferenceTestSupport.hpp:116  CHECK_THAT( body.areaMm2, WithinRel(expected.area, kRel) )
+        => 20292.93131701058518956 and 20292.93131701058882754 are within 1e-08% of each other with message: volume expected 80468.5 mm^3, actual 80468.5 mm^3, abs error 2.91038e-11, rel error 3.6168e-16; area expected 20292.9 mm^2, actual 20292.9 mm^2, rel error 1.79273e-16
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => -0.00000000000000761 is within 0.000000001 of 0.0 with message: volume expected 80468.5 mm^3, actual 80468.5 mm^3, abs error 2.91038e-11, rel error 3.6168e-16; centroid[0] expected 0 mm, actual -7.61223e-15 mm, difference 7.61223e-15 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => -0.00000000000000286 is within 0.000000001 of 0.0 with message: volume expected 80468.5 mm^3, actual 80468.5 mm^3, abs error 2.91038e-11, rel error 3.6168e-16; centroid[1] expected 0 mm, actual -2.86042e-15 mm, difference 2.86042e-15 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 6.00405879807059151 is within 0.000000001 of 6.00405879807059417 with message: volume expected 80468.5 mm^3, actual 80468.5 mm^3, abs error 2.91038e-11, rel error 3.6168e-16; centroid[2] expected 6.00406 mm, actual 6.00406 mm, difference 2.66454e-15 mm
+
+== ReferenceModel_FlangeRegeneratesAfterParameterChanges
+ReferenceTestSupport.hpp:112  CHECK_THAT( body.volumeMm3, WithinRel(expected.volume, kRel) )
+        => 80468.52246772064245306 and 80468.52246772061334923 are within 1e-08% of each other with message: volume expected 80468.5 mm^3, actual 80468.5 mm^3, abs error 2.91038e-11, rel error 3.6168e-16
+ReferenceTestSupport.hpp:116  CHECK_THAT( body.areaMm2, WithinRel(expected.area, kRel) )
+        => 20292.93131701058518956 and 20292.93131701058882754 are within 1e-08% of each other with message: volume expected 80468.5 mm^3, actual 80468.5 mm^3, abs error 2.91038e-11, rel error 3.6168e-16; area expected 20292.9 mm^2, actual 20292.9 mm^2, rel error 1.79273e-16
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => -0.0000000000000063 is within 0.000000001 of 0.0 with message: volume expected 80468.5 mm^3, actual 80468.5 mm^3, abs error 2.91038e-11, rel error 3.6168e-16; centroid[0] expected 0 mm, actual -6.30396e-15 mm, difference 6.30396e-15 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => -0.00000000000000326 is within 0.000000001 of 0.0 with message: volume expected 80468.5 mm^3, actual 80468.5 mm^3, abs error 2.91038e-11, rel error 3.6168e-16; centroid[1] expected 0 mm, actual -3.26457e-15 mm, difference 3.26457e-15 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 6.00405879807059151 is within 0.000000001 of 6.00405879807059417 with message: volume expected 80468.5 mm^3, actual 80468.5 mm^3, abs error 2.91038e-11, rel error 3.6168e-16; centroid[2] expected 6.00406 mm, actual 6.00406 mm, difference 2.66454e-15 mm
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 0 of 8 at 0 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 0 of 8 at 0 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 0 of 8 at 0 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 0 of 8 at 0 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 1 of 8 at 45 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 1 of 8 at 45 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 1 of 8 at 45 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 1 of 8 at 45 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 2 of 8 at 90 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 2 of 8 at 90 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 2 of 8 at 90 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 2 of 8 at 90 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 3 of 8 at 135 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 3 of 8 at 135 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 3 of 8 at 135 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 3 of 8 at 135 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 4 of 8 at 180 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 4 of 8 at 180 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 4 of 8 at 180 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 4 of 8 at 180 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 5 of 8 at 225 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 5 of 8 at 225 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 5 of 8 at 225 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 5 of 8 at 225 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 6 of 8 at 270 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 6 of 8 at 270 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 6 of 8 at 270 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 6 of 8 at 270 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 7 of 8 at 315 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 7 of 8 at 315 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 7 of 8 at 315 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 7 of 8 at 315 deg
+ReferenceTestSupport.hpp:112  CHECK_THAT( body.volumeMm3, WithinRel(expected.volume, kRel) )
+        => 80468.52246772064245306 and 80468.52246772061334923 are within 1e-08% of each other with message: volume expected 80468.5 mm^3, actual 80468.5 mm^3, abs error 2.91038e-11, rel error 3.6168e-16
+ReferenceTestSupport.hpp:116  CHECK_THAT( body.areaMm2, WithinRel(expected.area, kRel) )
+        => 20292.93131701058518956 and 20292.93131701058882754 are within 1e-08% of each other with message: volume expected 80468.5 mm^3, actual 80468.5 mm^3, abs error 2.91038e-11, rel error 3.6168e-16; area expected 20292.9 mm^2, actual 20292.9 mm^2, rel error 1.79273e-16
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => -0.00000000000000761 is within 0.000000001 of 0.0 with message: volume expected 80468.5 mm^3, actual 80468.5 mm^3, abs error 2.91038e-11, rel error 3.6168e-16; centroid[0] expected 0 mm, actual -7.61223e-15 mm, difference 7.61223e-15 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => -0.00000000000000286 is within 0.000000001 of 0.0 with message: volume expected 80468.5 mm^3, actual 80468.5 mm^3, abs error 2.91038e-11, rel error 3.6168e-16; centroid[1] expected 0 mm, actual -2.86042e-15 mm, difference 2.86042e-15 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 6.00405879807059151 is within 0.000000001 of 6.00405879807059417 with message: volume expected 80468.5 mm^3, actual 80468.5 mm^3, abs error 2.91038e-11, rel error 3.6168e-16; centroid[2] expected 6.00406 mm, actual 6.00406 mm, difference 2.66454e-15 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -50.0 <= -49.99999999900000347 with message: axis 0: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -50.0 >= -50.0000001009999977 with message: axis 0: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 50.0 >= 49.99999999900000347 with message: axis 0: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 50.0 <= 50.0000001009999977 with message: axis 0: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -50.0 <= -49.99999999900000347 with message: axis 1: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -50.0 >= -50.0000001009999977 with message: axis 1: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 50.0 >= 49.99999999900000347 with message: axis 1: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 50.0 <= 50.0000001009999977 with message: axis 1: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => 0.0 <= 0.000000001 with message: axis 2: kernel 0 .. 12 mm, exact 0 .. 12 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => 0.0 >= -0.000000101 with message: axis 2: kernel 0 .. 12 mm, exact 0 .. 12 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 12.0 >= 11.99999999899999992 with message: axis 2: kernel 0 .. 12 mm, exact 0 .. 12 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 12.0 <= 12.00000010099999947 with message: axis 2: kernel 0 .. 12 mm, exact 0 .. 12 mm
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 0 of 8 at 0 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 0 of 8 at 0 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 0 of 8 at 0 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 0 of 8 at 0 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 1 of 8 at 45 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 1 of 8 at 45 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 1 of 8 at 45 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 1 of 8 at 45 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 2 of 8 at 90 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 2 of 8 at 90 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 2 of 8 at 90 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 2 of 8 at 90 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 3 of 8 at 135 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 3 of 8 at 135 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 3 of 8 at 135 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 3 of 8 at 135 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 4 of 8 at 180 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 4 of 8 at 180 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 4 of 8 at 180 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 4 of 8 at 180 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 5 of 8 at 225 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 5 of 8 at 225 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 5 of 8 at 225 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 5 of 8 at 225 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 6 of 8 at 270 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 6 of 8 at 270 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 6 of 8 at 270 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 6 of 8 at 270 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 7 of 8 at 315 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 7 of 8 at 315 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 7 of 8 at 315 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 7 of 8 at 315 deg
+FlangeTests.cpp:280  CHECK_THAT( moved->errors.at(m.edgeChamfers).message, ContainsSubstring("matches no edge of the body") )
+        => "EdgeChamfers: chamfer: edge reference 1 (circle around (0, 0, 12) mm with axis (0, 0, 1) and radius 50 mm) matches no edge of the body" contains: "matches no edge of the body"
+ReferenceTestSupport.hpp:112  CHECK_THAT( body.volumeMm3, WithinRel(expected.volume, kRel) )
+        => 101938.39842368158861063 and 101938.39842368158861063 are within 1e-08% of each other with message: volume expected 101938 mm^3, actual 101938 mm^3, abs error 0, rel error 0
+ReferenceTestSupport.hpp:116  CHECK_THAT( body.areaMm2, WithinRel(expected.area, kRel) )
+        => 24077.1660971121636976 and 24077.16609711217461154 are within 1e-08% of each other with message: volume expected 101938 mm^3, actual 101938 mm^3, abs error 0, rel error 0; area expected 24077.2 mm^2, actual 24077.2 mm^2, rel error 4.5329e-16
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => -0.0000000000000059 is within 0.000000001 of 0.0 with message: volume expected 101938 mm^3, actual 101938 mm^3, abs error 0, rel error 0; centroid[0] expected 0 mm, actual -5.89744e-15 mm, difference 5.89744e-15 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => -0.00000000000000446 is within 0.000000001 of 0.0 with message: volume expected 101938 mm^3, actual 101938 mm^3, abs error 0, rel error 0; centroid[1] expected 0 mm, actual -4.461e-15 mm, difference 4.461e-15 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 5.99999999999999734 is within 0.000000001 of 5.99999999999999911 with message: volume expected 101938 mm^3, actual 101938 mm^3, abs error 0, rel error 0; centroid[2] expected 6 mm, actual 6 mm, difference 1.77636e-15 mm
+
+== ReferenceModel_FlangeMatchesAnalyticVolume / before the edge treatments: V = pi/4 (Do^2 - Dbore^2 - N Dhole^2) t
+FlangeTests.cpp:179  CHECK_THAT( patterned.volume, WithinRel(volume, 1e-14) )
+        => 82146.36470606589864474 and 82146.36470606591319665 are within 1e-12% of each other
+ReferenceTestSupport.hpp:112  CHECK_THAT( body.volumeMm3, WithinRel(expected.volume, kRel) )
+        => 82146.36470606592774857 and 82146.36470606589864474 are within 1e-08% of each other with message: volume expected 82146.4 mm^3, actual 82146.4 mm^3, abs error 2.91038e-11, rel error 3.54292e-16
+ReferenceTestSupport.hpp:116  CHECK_THAT( body.areaMm2, WithinRel(expected.area, kRel) )
+        => 20401.50269241210480686 and 20401.5026924121157208 are within 1e-08% of each other with message: volume expected 82146.4 mm^3, actual 82146.4 mm^3, abs error 2.91038e-11, rel error 3.54292e-16; area expected 20401.5 mm^2, actual 20401.5 mm^2, rel error 5.34957e-16
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 0.00000000000000028 is within 0.000000001 of 0.0 with message: volume expected 82146.4 mm^3, actual 82146.4 mm^3, abs error 2.91038e-11, rel error 3.54292e-16; centroid[0] expected 0 mm, actual 2.76791e-16 mm, difference 2.76791e-16 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => -0.00000000000000412 is within 0.000000001 of 0.0 with message: volume expected 82146.4 mm^3, actual 82146.4 mm^3, abs error 2.91038e-11, rel error 3.54292e-16; centroid[1] expected 0 mm, actual -4.11865e-15 mm, difference 4.11865e-15 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 5.99999999999999734 is within 0.000000001 of 6.0 with message: volume expected 82146.4 mm^3, actual 82146.4 mm^3, abs error 2.91038e-11, rel error 3.54292e-16; centroid[2] expected 6 mm, actual 6 mm, difference 2.66454e-15 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -50.0 <= -49.99999999900000347 with message: axis 0: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -50.0 >= -50.0000001009999977 with message: axis 0: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 50.0 >= 49.99999999900000347 with message: axis 0: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 50.0 <= 50.0000001009999977 with message: axis 0: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -50.0 <= -49.99999999900000347 with message: axis 1: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -50.0 >= -50.0000001009999977 with message: axis 1: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 50.0 >= 49.99999999900000347 with message: axis 1: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 50.0 <= 50.0000001009999977 with message: axis 1: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => 0.0 <= 0.000000001 with message: axis 2: kernel 0 .. 12 mm, exact 0 .. 12 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => 0.0 >= -0.000000101 with message: axis 2: kernel 0 .. 12 mm, exact 0 .. 12 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 12.0 >= 11.99999999899999992 with message: axis 2: kernel 0 .. 12 mm, exact 0 .. 12 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 12.0 <= 12.00000010099999947 with message: axis 2: kernel 0 .. 12 mm, exact 0 .. 12 mm
+
+== ReferenceModel_FlangeMatchesAnalyticVolume / each step of the chain
+ReferenceTestSupport.hpp:112  CHECK_THAT( body.volumeMm3, WithinRel(expected.volume, kRel) )
+        => 94247.77960769375204109 and 94247.77960769378114492 are within 1e-08% of each other with message: feature object:10; volume expected 94247.8 mm^3, actual 94247.8 mm^3, abs error 2.91038e-11, rel error 3.08801e-16
+ReferenceTestSupport.hpp:116  CHECK_THAT( body.areaMm2, WithinRel(expected.area, kRel) )
+        => 19477.87445225671035587 and 19477.87445225671763183 are within 1e-08% of each other with message: feature object:10; volume expected 94247.8 mm^3, actual 94247.8 mm^3, abs error 2.91038e-11, rel error 3.08801e-16; area expected 19477.9 mm^2, actual 19477.9 mm^2, rel error 3.7355e-16
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => -0.00000000000003582 is within 0.000000001 of 0.0 with message: feature object:10; volume expected 94247.8 mm^3, actual 94247.8 mm^3, abs error 2.91038e-11, rel error 3.08801e-16; centroid[0] expected 0 mm, actual -3.58209e-14 mm, difference 3.58209e-14 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => -0.00000000000000556 is within 0.000000001 of 0.0 with message: feature object:10; volume expected 94247.8 mm^3, actual 94247.8 mm^3, abs error 2.91038e-11, rel error 3.08801e-16; centroid[1] expected 0 mm, actual -5.55842e-15 mm, difference 5.55842e-15 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 5.99999999999999911 is within 0.000000001 of 6.00000000000000089 with message: feature object:10; volume expected 94247.8 mm^3, actual 94247.8 mm^3, abs error 2.91038e-11, rel error 3.08801e-16; centroid[2] expected 6 mm, actual 6 mm, difference 1.77636e-15 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -50.0 <= -49.99999999900000347 with message: feature object:10; axis 0: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -50.0 >= -50.0000001009999977 with message: feature object:10; axis 0: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 50.0 >= 49.99999999900000347 with message: feature object:10; axis 0: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 50.0 <= 50.0000001009999977 with message: feature object:10; axis 0: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -50.0 <= -49.99999999900000347 with message: feature object:10; axis 1: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -50.0 >= -50.0000001009999977 with message: feature object:10; axis 1: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 50.0 >= 49.99999999900000347 with message: feature object:10; axis 1: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 50.0 <= 50.0000001009999977 with message: feature object:10; axis 1: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => 0.0 <= 0.000000001 with message: feature object:10; axis 2: kernel 0 .. 12 mm, exact 0 .. 12 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => 0.0 >= -0.000000101 with message: feature object:10; axis 2: kernel 0 .. 12 mm, exact 0 .. 12 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 12.0 >= 11.99999999899999992 with message: feature object:10; axis 2: kernel 0 .. 12 mm, exact 0 .. 12 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 12.0 <= 12.00000010099999947 with message: feature object:10; axis 2: kernel 0 .. 12 mm, exact 0 .. 12 mm
+ReferenceTestSupport.hpp:112  CHECK_THAT( body.volumeMm3, WithinRel(expected.volume, kRel) )
+        => 85765.47944300135714002 and 85765.4794430013425881 are within 1e-08% of each other with message: feature object:11; volume expected 85765.5 mm^3, actual 85765.5 mm^3, abs error 1.45519e-11, rel error 1.69671e-16
+ReferenceTestSupport.hpp:116  CHECK_THAT( body.areaMm2, WithinRel(expected.area, kRel) )
+        => 19195.13111343362834305 and 19195.131113433635619 are within 1e-08% of each other with message: feature object:11; volume expected 85765.5 mm^3, actual 85765.5 mm^3, abs error 1.45519e-11, rel error 1.69671e-16; area expected 19195.1 mm^2, actual 19195.1 mm^2, rel error 3.79052e-16
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 0.00000000000001005 is within 0.000000001 of 0.0 with message: feature object:11; volume expected 85765.5 mm^3, actual 85765.5 mm^3, abs error 1.45519e-11, rel error 1.69671e-16; centroid[0] expected 0 mm, actual 1.0053e-14 mm, difference 1.0053e-14 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => -0.00000000000000392 is within 0.000000001 of 0.0 with message: feature object:11; volume expected 85765.5 mm^3, actual 85765.5 mm^3, abs error 1.45519e-11, rel error 1.69671e-16; centroid[1] expected 0 mm, actual -3.91569e-15 mm, difference 3.91569e-15 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 5.99999999999999822 is within 0.000000001 of 6.0 with message: feature object:11; volume expected 85765.5 mm^3, actual 85765.5 mm^3, abs error 1.45519e-11, rel error 1.69671e-16; centroid[2] expected 6 mm, actual 6 mm, difference 1.77636e-15 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -50.0 <= -49.99999999900000347 with message: feature object:11; axis 0: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -50.0 >= -50.0000001009999977 with message: feature object:11; axis 0: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 50.0 >= 49.99999999900000347 with message: feature object:11; axis 0: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 50.0 <= 50.0000001009999977 with message: feature object:11; axis 0: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -50.0 <= -49.99999999900000347 with message: feature object:11; axis 1: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -50.0 >= -50.0000001009999977 with message: feature object:11; axis 1: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 50.0 >= 49.99999999900000347 with message: feature object:11; axis 1: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 50.0 <= 50.0000001009999977 with message: feature object:11; axis 1: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => 0.0 <= 0.000000001 with message: feature object:11; axis 2: kernel 0 .. 12 mm, exact 0 .. 12 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => 0.0 >= -0.000000101 with message: feature object:11; axis 2: kernel 0 .. 12 mm, exact 0 .. 12 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 12.0 >= 11.99999999899999992 with message: feature object:11; axis 2: kernel 0 .. 12 mm, exact 0 .. 12 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 12.0 <= 12.00000010099999947 with message: feature object:11; axis 2: kernel 0 .. 12 mm, exact 0 .. 12 mm
+ReferenceTestSupport.hpp:112  CHECK_THAT( body.volumeMm3, WithinRel(expected.volume, kRel) )
+        => 85162.29365351206797641 and 85162.29365351209708024 are within 1e-08% of each other with message: feature object:12; volume expected 85162.3 mm^3, actual 85162.3 mm^3, abs error 2.91038e-11, rel error 3.41745e-16
+ReferenceTestSupport.hpp:116  CHECK_THAT( body.areaMm2, WithinRel(expected.area, kRel) )
+        => 19396.19304326337442035 and 19396.19304326338169631 are within 1e-08% of each other with message: feature object:12; volume expected 85162.3 mm^3, actual 85162.3 mm^3, abs error 2.91038e-11, rel error 3.41745e-16; area expected 19396.2 mm^2, actual 19396.2 mm^2, rel error 3.75123e-16
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => -0.24789729969015681 is within 0.000000001 of -0.24789729969012844 with message: feature object:12; volume expected 85162.3 mm^3, actual 85162.3 mm^3, abs error 2.91038e-11, rel error 3.41745e-16; centroid[0] expected -0.247897 mm, actual -0.247897 mm, difference 2.83662e-14 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => -0.00000000000000331 is within 0.000000001 of 0.0 with message: feature object:12; volume expected 85162.3 mm^3, actual 85162.3 mm^3, abs error 2.91038e-11, rel error 3.41745e-16; centroid[1] expected 0 mm, actual -3.30823e-15 mm, difference 3.30823e-15 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 6.0 is within 0.000000001 of 6.00000000000000089 with message: feature object:12; volume expected 85162.3 mm^3, actual 85162.3 mm^3, abs error 2.91038e-11, rel error 3.41745e-16; centroid[2] expected 6 mm, actual 6 mm, difference 8.88178e-16 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -50.0 <= -49.99999999900000347 with message: feature object:12; axis 0: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -50.0 >= -50.0000001009999977 with message: feature object:12; axis 0: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 50.0 >= 49.99999999900000347 with message: feature object:12; axis 0: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 50.0 <= 50.0000001009999977 with message: feature object:12; axis 0: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -50.0 <= -49.99999999900000347 with message: feature object:12; axis 1: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -50.0 >= -50.0000001009999977 with message: feature object:12; axis 1: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 50.0 >= 49.99999999900000347 with message: feature object:12; axis 1: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 50.0 <= 50.0000001009999977 with message: feature object:12; axis 1: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => 0.0 <= 0.000000001 with message: feature object:12; axis 2: kernel 0 .. 12 mm, exact 0 .. 12 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => 0.0 >= -0.000000101 with message: feature object:12; axis 2: kernel 0 .. 12 mm, exact 0 .. 12 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 12.0 >= 11.99999999899999992 with message: feature object:12; axis 2: kernel 0 .. 12 mm, exact 0 .. 12 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 12.0 <= 12.00000010099999947 with message: feature object:12; axis 2: kernel 0 .. 12 mm, exact 0 .. 12 mm
+ReferenceTestSupport.hpp:112  CHECK_THAT( body.volumeMm3, WithinRel(expected.volume, kRel) )
+        => 82146.36470606592774857 and 82146.36470606589864474 are within 1e-08% of each other with message: feature object:13; volume expected 82146.4 mm^3, actual 82146.4 mm^3, abs error 2.91038e-11, rel error 3.54292e-16
+ReferenceTestSupport.hpp:116  CHECK_THAT( body.areaMm2, WithinRel(expected.area, kRel) )
+        => 20401.50269241210480686 and 20401.5026924121157208 are within 1e-08% of each other with message: feature object:13; volume expected 82146.4 mm^3, actual 82146.4 mm^3, abs error 2.91038e-11, rel error 3.54292e-16; area expected 20401.5 mm^2, actual 20401.5 mm^2, rel error 5.34957e-16
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 0.00000000000000028 is within 0.000000001 of 0.0 with message: feature object:13; volume expected 82146.4 mm^3, actual 82146.4 mm^3, abs error 2.91038e-11, rel error 3.54292e-16; centroid[0] expected 0 mm, actual 2.76791e-16 mm, difference 2.76791e-16 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => -0.00000000000000412 is within 0.000000001 of 0.0 with message: feature object:13; volume expected 82146.4 mm^3, actual 82146.4 mm^3, abs error 2.91038e-11, rel error 3.54292e-16; centroid[1] expected 0 mm, actual -4.11865e-15 mm, difference 4.11865e-15 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 5.99999999999999734 is within 0.000000001 of 6.0 with message: feature object:13; volume expected 82146.4 mm^3, actual 82146.4 mm^3, abs error 2.91038e-11, rel error 3.54292e-16; centroid[2] expected 6 mm, actual 6 mm, difference 2.66454e-15 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -50.0 <= -49.99999999900000347 with message: feature object:13; axis 0: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -50.0 >= -50.0000001009999977 with message: feature object:13; axis 0: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 50.0 >= 49.99999999900000347 with message: feature object:13; axis 0: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 50.0 <= 50.0000001009999977 with message: feature object:13; axis 0: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -50.0 <= -49.99999999900000347 with message: feature object:13; axis 1: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -50.0 >= -50.0000001009999977 with message: feature object:13; axis 1: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 50.0 >= 49.99999999900000347 with message: feature object:13; axis 1: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 50.0 <= 50.0000001009999977 with message: feature object:13; axis 1: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => 0.0 <= 0.000000001 with message: feature object:13; axis 2: kernel 0 .. 12 mm, exact 0 .. 12 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => 0.0 >= -0.000000101 with message: feature object:13; axis 2: kernel 0 .. 12 mm, exact 0 .. 12 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 12.0 >= 11.99999999899999992 with message: feature object:13; axis 2: kernel 0 .. 12 mm, exact 0 .. 12 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 12.0 <= 12.00000010099999947 with message: feature object:13; axis 2: kernel 0 .. 12 mm, exact 0 .. 12 mm
+ReferenceTestSupport.hpp:112  CHECK_THAT( body.volumeMm3, WithinRel(expected.volume, kRel) )
+        => 81942.16118358258972876 and 81942.16118358257517684 are within 1e-08% of each other with message: feature object:14; volume expected 81942.2 mm^3, actual 81942.2 mm^3, abs error 1.45519e-11, rel error 1.77588e-16
+ReferenceTestSupport.hpp:116  CHECK_THAT( body.areaMm2, WithinRel(expected.area, kRel) )
+        => 20162.26338443934946554 and 20162.2633844393567415 are within 1e-08% of each other with message: feature object:14; volume expected 81942.2 mm^3, actual 81942.2 mm^3, abs error 1.45519e-11, rel error 1.77588e-16; area expected 20162.3 mm^2, actual 20162.3 mm^2, rel error 3.6087e-16
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => -0.00000000000000504 is within 0.000000001 of 0.0 with message: feature object:14; volume expected 81942.2 mm^3, actual 81942.2 mm^3, abs error 1.45519e-11, rel error 1.77588e-16; centroid[0] expected 0 mm, actual -5.0446e-15 mm, difference 5.0446e-15 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => -0.00000000000000367 is within 0.000000001 of 0.0 with message: feature object:14; volume expected 81942.2 mm^3, actual 81942.2 mm^3, abs error 1.45519e-11, rel error 1.77588e-16; centroid[1] expected 0 mm, actual -3.67148e-15 mm, difference 3.67148e-15 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 5.98587841378164409 is within 0.000000001 of 5.98587841378164498 with message: feature object:14; volume expected 81942.2 mm^3, actual 81942.2 mm^3, abs error 1.45519e-11, rel error 1.77588e-16; centroid[2] expected 5.98588 mm, actual 5.98588 mm, difference 8.88178e-16 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -50.0 <= -49.99999999900000347 with message: feature object:14; axis 0: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -50.0 >= -50.0000001009999977 with message: feature object:14; axis 0: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 50.0 >= 49.99999999900000347 with message: feature object:14; axis 0: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 50.0 <= 50.0000001009999977 with message: feature object:14; axis 0: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -50.0 <= -49.99999999900000347 with message: feature object:14; axis 1: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -50.0 >= -50.0000001009999977 with message: feature object:14; axis 1: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 50.0 >= 49.99999999900000347 with message: feature object:14; axis 1: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 50.0 <= 50.0000001009999977 with message: feature object:14; axis 1: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => 0.0 <= 0.000000001 with message: feature object:14; axis 2: kernel 0 .. 12 mm, exact 0 .. 12 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => 0.0 >= -0.000000101 with message: feature object:14; axis 2: kernel 0 .. 12 mm, exact 0 .. 12 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 12.0 >= 11.99999999899999992 with message: feature object:14; axis 2: kernel 0 .. 12 mm, exact 0 .. 12 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 12.0 <= 12.00000010099999947 with message: feature object:14; axis 2: kernel 0 .. 12 mm, exact 0 .. 12 mm
+ReferenceTestSupport.hpp:112  CHECK_THAT( body.volumeMm3, WithinRel(expected.volume, kRel) )
+        => 81674.89404669913346879 and 81674.89404669908981305 are within 1e-08% of each other with message: feature object:15; volume expected 81674.9 mm^3, actual 81674.9 mm^3, abs error 4.36557e-11, rel error 5.34506e-16
+ReferenceTestSupport.hpp:116  CHECK_THAT( body.areaMm2, WithinRel(expected.area, kRel) )
+        => 19890.80745735109303496 and 19890.80745735109667294 are within 1e-08% of each other with message: feature object:15; volume expected 81674.9 mm^3, actual 81674.9 mm^3, abs error 4.36557e-11, rel error 5.34506e-16; area expected 19890.8 mm^2, actual 19890.8 mm^2, rel error 1.82897e-16
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => -0.00000000000000348 is within 0.000000001 of 0.0 with message: feature object:15; volume expected 81674.9 mm^3, actual 81674.9 mm^3, abs error 4.36557e-11, rel error 5.34506e-16; centroid[0] expected 0 mm, actual -3.48264e-15 mm, difference 3.48264e-15 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => -0.00000000000000437 is within 0.000000001 of 0.0 with message: feature object:15; volume expected 81674.9 mm^3, actual 81674.9 mm^3, abs error 4.36557e-11, rel error 5.34506e-16; centroid[1] expected 0 mm, actual -4.37401e-15 mm, difference 4.37401e-15 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 6.00399884796359284 is within 0.000000001 of 6.0039988479635964 with message: feature object:15; volume expected 81674.9 mm^3, actual 81674.9 mm^3, abs error 4.36557e-11, rel error 5.34506e-16; centroid[2] expected 6.004 mm, actual 6.004 mm, difference 3.55271e-15 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -50.0 <= -49.99999999900000347 with message: feature object:15; axis 0: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -50.0 >= -50.0000001009999977 with message: feature object:15; axis 0: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 50.0 >= 49.99999999900000347 with message: feature object:15; axis 0: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 50.0 <= 50.0000001009999977 with message: feature object:15; axis 0: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -50.0 <= -49.99999999900000347 with message: feature object:15; axis 1: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -50.0 >= -50.0000001009999977 with message: feature object:15; axis 1: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 50.0 >= 49.99999999900000347 with message: feature object:15; axis 1: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 50.0 <= 50.0000001009999977 with message: feature object:15; axis 1: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => 0.0 <= 0.000000001 with message: feature object:15; axis 2: kernel 0 .. 12 mm, exact 0 .. 12 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => 0.0 >= -0.000000101 with message: feature object:15; axis 2: kernel 0 .. 12 mm, exact 0 .. 12 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 12.0 >= 11.99999999899999992 with message: feature object:15; axis 2: kernel 0 .. 12 mm, exact 0 .. 12 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 12.0 <= 12.00000010099999947 with message: feature object:15; axis 2: kernel 0 .. 12 mm, exact 0 .. 12 mm
+
+== ReferenceModel_FlangeMatchesAnalyticVolume / the finished flange
+ReferenceTestSupport.hpp:112  CHECK_THAT( body.volumeMm3, WithinRel(expected.volume, kRel) )
+        => 81674.89404669913346879 and 81674.89404669908981305 are within 1e-08% of each other with message: volume expected 81674.9 mm^3, actual 81674.9 mm^3, abs error 4.36557e-11, rel error 5.34506e-16
+ReferenceTestSupport.hpp:116  CHECK_THAT( body.areaMm2, WithinRel(expected.area, kRel) )
+        => 19890.80745735109303496 and 19890.80745735109667294 are within 1e-08% of each other with message: volume expected 81674.9 mm^3, actual 81674.9 mm^3, abs error 4.36557e-11, rel error 5.34506e-16; area expected 19890.8 mm^2, actual 19890.8 mm^2, rel error 1.82897e-16
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => -0.00000000000000348 is within 0.000000001 of 0.0 with message: volume expected 81674.9 mm^3, actual 81674.9 mm^3, abs error 4.36557e-11, rel error 5.34506e-16; centroid[0] expected 0 mm, actual -3.48264e-15 mm, difference 3.48264e-15 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => -0.00000000000000437 is within 0.000000001 of 0.0 with message: volume expected 81674.9 mm^3, actual 81674.9 mm^3, abs error 4.36557e-11, rel error 5.34506e-16; centroid[1] expected 0 mm, actual -4.37401e-15 mm, difference 4.37401e-15 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 6.00399884796359284 is within 0.000000001 of 6.0039988479635964 with message: volume expected 81674.9 mm^3, actual 81674.9 mm^3, abs error 4.36557e-11, rel error 5.34506e-16; centroid[2] expected 6.004 mm, actual 6.004 mm, difference 3.55271e-15 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -50.0 <= -49.99999999900000347 with message: axis 0: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -50.0 >= -50.0000001009999977 with message: axis 0: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 50.0 >= 49.99999999900000347 with message: axis 0: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 50.0 <= 50.0000001009999977 with message: axis 0: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -50.0 <= -49.99999999900000347 with message: axis 1: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -50.0 >= -50.0000001009999977 with message: axis 1: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 50.0 >= 49.99999999900000347 with message: axis 1: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 50.0 <= 50.0000001009999977 with message: axis 1: kernel -50 .. 50 mm, exact -50 .. 50 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => 0.0 <= 0.000000001 with message: axis 2: kernel 0 .. 12 mm, exact 0 .. 12 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => 0.0 >= -0.000000101 with message: axis 2: kernel 0 .. 12 mm, exact 0 .. 12 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 12.0 >= 11.99999999899999992 with message: axis 2: kernel 0 .. 12 mm, exact 0 .. 12 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 12.0 <= 12.00000010099999947 with message: axis 2: kernel 0 .. 12 mm, exact 0 .. 12 mm
+FlangeTests.cpp:211  CHECK_THAT( expected(s, Stage::Patterned).volume - chamfers - fillet, WithinRel(finished.volume, 1e-14) )
+        => 81674.89404669908981305 and 81674.89404669908981305 are within 1e-12% of each other
+
+== ReferenceModel_FlangeFailsSafelyOnInvalidParameters
+FlangeTests.cpp:385  CHECK( error.code == ErrorCode::FailedPrecondition )
+        => 5 == 5 with message: BoltHole: hole: the hole does not fit on its face: its entry is 8 mm across, but the centre (48, 0) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face)
+FlangeTests.cpp:386  CHECK_THAT( error.message, ContainsSubstring("BoltHole") )
+        => "BoltHole: hole: the hole does not fit on its face: its entry is 8 mm across, but the centre (48, 0) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face)" contains: "BoltHole" with message: BoltHole: hole: the hole does not fit on its face: its entry is 8 mm across, but the centre (48, 0) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face)
+FlangeTests.cpp:388  CHECK( regenerator.body(feature) == nullptr )
+        => nullptr == nullptr with message: BoltHole: hole: the hole does not fit on its face: its entry is 8 mm across, but the centre (48, 0) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face)
+FlangeTests.cpp:388  CHECK( regenerator.body(feature) == nullptr )
+        => nullptr == nullptr with message: BoltHole: hole: the hole does not fit on its face: its entry is 8 mm across, but the centre (48, 0) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face)
+FlangeTests.cpp:388  CHECK( regenerator.body(feature) == nullptr )
+        => nullptr == nullptr with message: BoltHole: hole: the hole does not fit on its face: its entry is 8 mm across, but the centre (48, 0) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face)
+FlangeTests.cpp:388  CHECK( regenerator.body(feature) == nullptr )
+        => nullptr == nullptr with message: BoltHole: hole: the hole does not fit on its face: its entry is 8 mm across, but the centre (48, 0) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face)
+FlangeTests.cpp:75  REQUIRE( an::largestGap(loop) < 1e-12 )
+        => 0.0 < 0.000000000001 with message: BoltHole: hole: the hole does not fit on its face: its entry is 8 mm across, but the centre (48, 0) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face)
+ReferenceTestSupport.hpp:70  REQUIRE( body != nullptr )
+        => 0x000002435360bdf8 != nullptr with message: BoltHole: hole: the hole does not fit on its face: its entry is 8 mm across, but the centre (48, 0) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face)
+ReferenceTestSupport.hpp:112  CHECK_THAT( body.volumeMm3, WithinRel(expected.volume, kRel) )
+        => 85765.47944300135714002 and 85765.4794430013425881 are within 1e-08% of each other with message: BoltHole: hole: the hole does not fit on its face: its entry is 8 mm across, but the centre (48, 0) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face); volume expected 85765.5 mm^3, actual 85765.5 mm^3, abs error 1.45519e-11, rel error 1.69671e-16
+ReferenceTestSupport.hpp:116  CHECK_THAT( body.areaMm2, WithinRel(expected.area, kRel) )
+        => 19195.13111343362834305 and 19195.131113433635619 are within 1e-08% of each other with message: BoltHole: hole: the hole does not fit on its face: its entry is 8 mm across, but the centre (48, 0) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face); volume expected 85765.5 mm^3, actual 85765.5 mm^3, abs error 1.45519e-11, rel error 1.69671e-16; area expected 19195.1 mm^2, actual 19195.1 mm^2, rel error 3.79052e-16
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 0.00000000000001005 is within 0.000000001 of 0.0 with message: BoltHole: hole: the hole does not fit on its face: its entry is 8 mm across, but the centre (48, 0) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face); volume expected 85765.5 mm^3, actual 85765.5 mm^3, abs error 1.45519e-11, rel error 1.69671e-16; centroid[0] expected 0 mm, actual 1.0053e-14 mm, difference 1.0053e-14 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => -0.00000000000000392 is within 0.000000001 of 0.0 with message: BoltHole: hole: the hole does not fit on its face: its entry is 8 mm across, but the centre (48, 0) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face); volume expected 85765.5 mm^3, actual 85765.5 mm^3, abs error 1.45519e-11, rel error 1.69671e-16; centroid[1] expected 0 mm, actual -3.91569e-15 mm, difference 3.91569e-15 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 5.99999999999999822 is within 0.000000001 of 6.0 with message: BoltHole: hole: the hole does not fit on its face: its entry is 8 mm across, but the centre (48, 0) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face); volume expected 85765.5 mm^3, actual 85765.5 mm^3, abs error 1.45519e-11, rel error 1.69671e-16; centroid[2] expected 6 mm, actual 6 mm, difference 1.77636e-15 mm
+FlangeTests.cpp:391  CHECK_FALSE( !(features::validateDocument(m.document).valid()) )
+        => !false with message: BoltHole: hole: the hole does not fit on its face: its entry is 8 mm across, but the centre (48, 0) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face)
+FlangeTests.cpp:395  CHECK( requireFingerprint(m.document, regenerator) == baseline )
+        => {?} == {?} with message: BoltHole: hole: the hole does not fit on its face: its entry is 8 mm across, but the centre (48, 0) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face)
+
+== ReferenceModel_FlangeBoltPatternPositionsCorrect
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 0 of 6 at 0 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 0 of 6 at 0 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 0 of 6 at 0 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 0 of 6 at 0 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 1 of 6 at 60 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 1 of 6 at 60 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 1 of 6 at 60 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 1 of 6 at 60 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 2 of 6 at 120 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 2 of 6 at 120 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 2 of 6 at 120 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 2 of 6 at 120 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 3 of 6 at 180 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 3 of 6 at 180 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 3 of 6 at 180 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 3 of 6 at 180 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 4 of 6 at 240 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 4 of 6 at 240 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 4 of 6 at 240 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 4 of 6 at 240 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 5 of 6 at 300 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 5 of 6 at 300 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 5 of 6 at 300 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 5 of 6 at 300 deg
+
+== ReferenceModel_FlangeBoltPatternPositionsCorrect / eight holes
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 0 of 8 at 0 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 0 of 8 at 0 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 0 of 8 at 0 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 0 of 8 at 0 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 1 of 8 at 45 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 1 of 8 at 45 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 1 of 8 at 45 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 1 of 8 at 45 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 2 of 8 at 90 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 2 of 8 at 90 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 2 of 8 at 90 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 2 of 8 at 90 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 3 of 8 at 135 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 3 of 8 at 135 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 3 of 8 at 135 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 3 of 8 at 135 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 4 of 8 at 180 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 4 of 8 at 180 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 4 of 8 at 180 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 4 of 8 at 180 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 5 of 8 at 225 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 5 of 8 at 225 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 5 of 8 at 225 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 5 of 8 at 225 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 6 of 8 at 270 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 6 of 8 at 270 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 6 of 8 at 270 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 6 of 8 at 270 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 7 of 8 at 315 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 7 of 8 at 315 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 7 of 8 at 315 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 7 of 8 at 315 deg
+
+== ReferenceModel_FlangeBoltPatternPositionsCorrect
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 0 of 6 at 0 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 0 of 6 at 0 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 0 of 6 at 0 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 0 of 6 at 0 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 1 of 6 at 60 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 1 of 6 at 60 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 1 of 6 at 60 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 1 of 6 at 60 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 2 of 6 at 120 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 2 of 6 at 120 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 2 of 6 at 120 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 2 of 6 at 120 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 3 of 6 at 180 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 3 of 6 at 180 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 3 of 6 at 180 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 3 of 6 at 180 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 4 of 6 at 240 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 4 of 6 at 240 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 4 of 6 at 240 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 4 of 6 at 240 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 5 of 6 at 300 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 5 of 6 at 300 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 5 of 6 at 300 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 5 of 6 at 300 deg
+
+== ReferenceModel_FlangeBoltPatternPositionsCorrect / on a Ø80 circle
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 0 of 6 at 0 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 0 of 6 at 0 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 0 of 6 at 0 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 0 of 6 at 0 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 1 of 6 at 60 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 1 of 6 at 60 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 1 of 6 at 60 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 1 of 6 at 60 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 2 of 6 at 120 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 2 of 6 at 120 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 2 of 6 at 120 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 2 of 6 at 120 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 3 of 6 at 180 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 3 of 6 at 180 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 3 of 6 at 180 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 3 of 6 at 180 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 4 of 6 at 240 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 4 of 6 at 240 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 4 of 6 at 240 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 4 of 6 at 240 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 5 of 6 at 300 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 5 of 6 at 300 deg
+FlangeTests.cpp:118  CHECK( circleEdges(body, {s.boltCircle * std::cos(angle), s.boltCircle * std::sin(angle), z}, Direction3D::unitZ(), rh) == 1 )
+        => 1 == 1 with message: hole 5 of 6 at 300 deg
+FlangeTests.cpp:120  CHECK( circleEdges(body, {s.boltCircle * std::cos(between), s.boltCircle * std::sin(between), z}, Direction3D::unitZ(), rh) == 0 )
+        => 0 == 0 with message: hole 5 of 6 at 300 deg
+
+== ReferenceModel_FlangeExports
+ReferenceTestSupport.hpp:216  CHECK_THAT( contents->volumeMm3, WithinRel(volume, kRelStep) )
+        => 81674.89404669860959984 and 81674.89404669908981305 are within 1e-07% of each other with message: STEP volume 81674.9 mm^3, expected 81674.9 mm^3, rel error 5.87957e-15
+ReferenceTestSupport.hpp:219  CHECK_THAT( contents->minMm[i], WithinAbs(min[i], 1e-6) )
+        => -50.0 is within 0.000001 of -50.0 with message: STEP volume 81674.9 mm^3, expected 81674.9 mm^3, rel error 5.87957e-15; STEP bounds axis 0: -50 .. 50
+ReferenceTestSupport.hpp:220  CHECK_THAT( contents->maxMm[i], WithinAbs(max[i], 1e-6) )
+        => 50.0 is within 0.000001 of 50.0 with message: STEP volume 81674.9 mm^3, expected 81674.9 mm^3, rel error 5.87957e-15; STEP bounds axis 0: -50 .. 50
+ReferenceTestSupport.hpp:219  CHECK_THAT( contents->minMm[i], WithinAbs(min[i], 1e-6) )
+        => -50.0 is within 0.000001 of -50.0 with message: STEP volume 81674.9 mm^3, expected 81674.9 mm^3, rel error 5.87957e-15; STEP bounds axis 1: -50 .. 50
+ReferenceTestSupport.hpp:220  CHECK_THAT( contents->maxMm[i], WithinAbs(max[i], 1e-6) )
+        => 50.00000010000000117 is within 0.000001 of 50.0 with message: STEP volume 81674.9 mm^3, expected 81674.9 mm^3, rel error 5.87957e-15; STEP bounds axis 1: -50 .. 50
+ReferenceTestSupport.hpp:219  CHECK_THAT( contents->minMm[i], WithinAbs(min[i], 1e-6) )
+        => 0.0 is within 0.000001 of 0.0 with message: STEP volume 81674.9 mm^3, expected 81674.9 mm^3, rel error 5.87957e-15; STEP bounds axis 2: 0 .. 12
+ReferenceTestSupport.hpp:220  CHECK_THAT( contents->maxMm[i], WithinAbs(max[i], 1e-6) )
+        => 12.0 is within 0.000001 of 12.0 with message: STEP volume 81674.9 mm^3, expected 81674.9 mm^3, rel error 5.87957e-15; STEP bounds axis 2: 0 .. 12
+ReferenceTestSupport.hpp:251  CHECK( meshed > 0.0 )
+        => 81670.03138392900291365 > 0.0 with message: STL: 11482 triangles, meshed 81670 mm^3, exact 81674.9 mm^3, difference 4.86266 mm^3, bound 198.908 mm^3
+ReferenceTestSupport.hpp:252  CHECK( std::abs(meshed - volume) <= deflectionMm * area )
+        => 4.8626627700868994 <= 198.90807457351095877 with message: STL: 11482 triangles, meshed 81670 mm^3, exact 81674.9 mm^3, difference 4.86266 mm^3, bound 198.908 mm^3
+
+== ReferenceModel_FlangeSaveLoad
+ReferenceTestSupport.hpp:112  CHECK_THAT( body.volumeMm3, WithinRel(expected.volume, kRel) )
+        => 80468.52246772064245306 and 80468.52246772061334923 are within 1e-08% of each other with message: volume expected 80468.5 mm^3, actual 80468.5 mm^3, abs error 2.91038e-11, rel error 3.6168e-16
+ReferenceTestSupport.hpp:116  CHECK_THAT( body.areaMm2, WithinRel(expected.area, kRel) )
+        => 20292.93131701058518956 and 20292.93131701058882754 are within 1e-08% of each other with message: volume expected 80468.5 mm^3, actual 80468.5 mm^3, abs error 2.91038e-11, rel error 3.6168e-16; area expected 20292.9 mm^2, actual 20292.9 mm^2, rel error 1.79273e-16
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => -0.0000000000000063 is within 0.000000001 of 0.0 with message: volume expected 80468.5 mm^3, actual 80468.5 mm^3, abs error 2.91038e-11, rel error 3.6168e-16; centroid[0] expected 0 mm, actual -6.30396e-15 mm, difference 6.30396e-15 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => -0.00000000000000326 is within 0.000000001 of 0.0 with message: volume expected 80468.5 mm^3, actual 80468.5 mm^3, abs error 2.91038e-11, rel error 3.6168e-16; centroid[1] expected 0 mm, actual -3.26457e-15 mm, difference 3.26457e-15 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 6.00405879807059151 is within 0.000000001 of 6.00405879807059417 with message: volume expected 80468.5 mm^3, actual 80468.5 mm^3, abs error 2.91038e-11, rel error 3.6168e-16; centroid[2] expected 6.00406 mm, actual 6.00406 mm, difference 2.66454e-15 mm
+
+Overall: 1171 assertions passed, 0 failed.

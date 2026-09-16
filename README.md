@@ -91,6 +91,13 @@ bettercad-cli export-stl examples/models/plate.bcad plate.stl --tolerance 0.05mm
 - `.bcad` files are transparent JSON; see
   [examples/models/plate.bcad](examples/models/plate.bcad), which was written
   by hand.
+- [examples/models/reference/](examples/models/reference/) holds six
+  mechanical parts — a stepped shaft, a bolted flange, a V-belt pulley, a
+  bearing housing, a mounting bracket and a U-bolt — built by
+  [examples/reference_models/](examples/reference_models/) through the public
+  API alone. Every dimension of each is checked against geometry computed
+  independently from its parameters
+  ([evidence](docs/verification/P11-REF-001/README.md)).
 - Exports regenerate the model first and write its result bodies in
   millimetres.
 - Exit status: 0 success, 1 failure, 2 invalid command line.

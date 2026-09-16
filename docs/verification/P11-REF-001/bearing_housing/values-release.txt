@@ -1,0 +1,517 @@
+Measured values of the bearing housing (pillow block) (Release build), captured 2026-09-16.
+Produced by: build/release/bin/bettercad_tests.exe "[housing]" -s --reporter xml --rng-seed 1,
+filtered by ../values.py: every passed CHECK_THAT / REQUIRE_THAT (volumes, areas, centroids,
+bounds, messages) and every passed CHECK whose INFO context reports a measured value (keywords:
+expected, error, STL, STEP, restored, kernel). Each entry: file:line, the assertion, then Catch2's
+expansion (values printed exactly) and its INFO context. checkProperties() prints each volume,
+area and centroid with the expected value and the error; checkBounds() compares the kernel's box
+one-sidedly (it must contain the exact box and exceed it by at most 1e-7 mm).
+
+
+== ReferenceModel_BearingHousingFailsSafelyOnInvalidParameters / a mounting hole off the end of the base
+BearingHousingTests.cpp:361  CHECK( error.code == ErrorCode::FailedPrecondition )
+        => 5 == 5 with message: MountHole: hole: the hole does not fit on its face: its entry is 10 mm across, but the centre (58, 15) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face)
+BearingHousingTests.cpp:362  CHECK_THAT( error.message, ContainsSubstring("MountHole") )
+        => "MountHole: hole: the hole does not fit on its face: its entry is 10 mm across, but the centre (58, 15) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face)" contains: "MountHole" with message: MountHole: hole: the hole does not fit on its face: its entry is 10 mm across, but the centre (58, 15) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face)
+BearingHousingTests.cpp:364  CHECK( regenerator.body(feature) == nullptr )
+        => nullptr == nullptr with message: MountHole: hole: the hole does not fit on its face: its entry is 10 mm across, but the centre (58, 15) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face)
+BearingHousingTests.cpp:364  CHECK( regenerator.body(feature) == nullptr )
+        => nullptr == nullptr with message: MountHole: hole: the hole does not fit on its face: its entry is 10 mm across, but the centre (58, 15) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face)
+BearingHousingTests.cpp:364  CHECK( regenerator.body(feature) == nullptr )
+        => nullptr == nullptr with message: MountHole: hole: the hole does not fit on its face: its entry is 10 mm across, but the centre (58, 15) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face)
+BearingHousingTests.cpp:364  CHECK( regenerator.body(feature) == nullptr )
+        => nullptr == nullptr with message: MountHole: hole: the hole does not fit on its face: its entry is 10 mm across, but the centre (58, 15) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face)
+BearingHousingTests.cpp:97  REQUIRE( an::largestGap(loop) < 1e-12 )
+        => 0.0 < 0.000000000001 with message: MountHole: hole: the hole does not fit on its face: its entry is 10 mm across, but the centre (58, 15) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face)
+BearingHousingTests.cpp:97  REQUIRE( an::largestGap(loop) < 1e-12 )
+        => 0.00000000000000711 < 0.000000000001 with message: MountHole: hole: the hole does not fit on its face: its entry is 10 mm across, but the centre (58, 15) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face)
+ReferenceTestSupport.hpp:70  REQUIRE( body != nullptr )
+        => 0x0000022d64777028 != nullptr with message: MountHole: hole: the hole does not fit on its face: its entry is 10 mm across, but the centre (58, 15) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face)
+ReferenceTestSupport.hpp:112  CHECK_THAT( body.volumeMm3, WithinRel(expected.volume, kRel) )
+        => 265055.30633326998213306 and 265055.30633326974930242 are within 1e-08% of each other with message: MountHole: hole: the hole does not fit on its face: its entry is 10 mm across, but the centre (58, 15) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face); volume expected 265055 mm^3, actual 265055 mm^3, abs error 2.32831e-10, rel error 8.78423e-16
+ReferenceTestSupport.hpp:116  CHECK_THAT( body.areaMm2, WithinRel(expected.area, kRel) )
+        => 38572.34381892973033246 and 38572.34381892973033246 are within 1e-08% of each other with message: MountHole: hole: the hole does not fit on its face: its entry is 10 mm across, but the centre (58, 15) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face); volume expected 265055 mm^3, actual 265055 mm^3, abs error 2.32831e-10, rel error 8.78423e-16; area expected 38572.3 mm^2, actual 38572.3 mm^2, rel error 0
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 0.00000000000000164 is within 0.000000001 of -0.00000000000000072 with message: MountHole: hole: the hole does not fit on its face: its entry is 10 mm across, but the centre (58, 15) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face); volume expected 265055 mm^3, actual 265055 mm^3, abs error 2.32831e-10, rel error 8.78423e-16; centroid[0] expected -7.20581e-16 mm, actual 1.63761e-15 mm, difference 2.35819e-15 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 0.00000000000000104 is within 0.000000001 of 0.0 with message: MountHole: hole: the hole does not fit on its face: its entry is 10 mm across, but the centre (58, 15) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face); volume expected 265055 mm^3, actual 265055 mm^3, abs error 2.32831e-10, rel error 8.78423e-16; centroid[1] expected 0 mm, actual 1.03626e-15 mm, difference 1.03626e-15 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 30.12951861062515846 is within 0.000000001 of 30.12951861056457048 with message: MountHole: hole: the hole does not fit on its face: its entry is 10 mm across, but the centre (58, 15) mm is only 2 mm from the face's edge (a hole must stay at least 0.001 mm inside its face); volume expected 265055 mm^3, actual 265055 mm^3, abs error 2.32831e-10, rel error 8.78423e-16; centroid[2] expected 30.1295 mm, actual 30.1295 mm, difference 6.0588e-11 mm
+
+== ReferenceModel_BearingHousingFailsSafelyOnInvalidParameters / a bore that eats the whole boss
+BearingHousingTests.cpp:381  CHECK_THAT( error.message, ContainsSubstring("BossFillets") )
+        => "BossFillets: fillet: edge reference 1 (line through (35, 0, 12) mm along (0, 1, 0)) matches no edge of the body" contains: "BossFillets" with message: BossFillets: fillet: edge reference 1 (line through (35, 0, 12) mm along (0, 1, 0)) matches no edge of the body
+BearingHousingTests.cpp:382  CHECK_THAT( error.message, ContainsSubstring("matches no edge of the body") )
+        => "BossFillets: fillet: edge reference 1 (line through (35, 0, 12) mm along (0, 1, 0)) matches no edge of the body" contains: "matches no edge of the body" with message: BossFillets: fillet: edge reference 1 (line through (35, 0, 12) mm along (0, 1, 0)) matches no edge of the body
+
+== ReferenceModel_BearingHousingUndoRedo
+ReferenceTestSupport.hpp:112  CHECK_THAT( body.volumeMm3, WithinRel(expected.volume, kRel) )
+        => 259723.40421139754471369 and 259723.40421139739919454 are within 1e-08% of each other with message: volume expected 259723 mm^3, actual 259723 mm^3, abs error 1.45519e-10, rel error 5.60285e-16
+ReferenceTestSupport.hpp:116  CHECK_THAT( body.areaMm2, WithinRel(expected.area, kRel) )
+        => 39220.39328815457702149 and 39220.39328815460612532 are within 1e-08% of each other with message: volume expected 259723 mm^3, actual 259723 mm^3, abs error 1.45519e-10, rel error 5.60285e-16; area expected 39220.4 mm^2, actual 39220.4 mm^2, rel error 7.42059e-16
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 0.00000000000324923 is within 0.000000001 of 0.00000000000000011 with message: volume expected 259723 mm^3, actual 259723 mm^3, abs error 1.45519e-10, rel error 5.60285e-16; centroid[0] expected 1.05053e-16 mm, actual 3.24923e-12 mm, difference 3.24913e-12 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 0.00000000000000221 is within 0.000000001 of 0.0 with message: volume expected 259723 mm^3, actual 259723 mm^3, abs error 1.45519e-10, rel error 5.60285e-16; centroid[1] expected 0 mm, actual 2.20612e-15 mm, difference 2.20612e-15 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 30.62797065320122414 is within 0.000000001 of 30.62797065312994604 with message: volume expected 259723 mm^3, actual 259723 mm^3, abs error 1.45519e-10, rel error 5.60285e-16; centroid[2] expected 30.628 mm, actual 30.628 mm, difference 7.12781e-11 mm
+
+== ReferenceModel_BearingHousingExports
+ReferenceTestSupport.hpp:216  CHECK_THAT( contents->volumeMm3, WithinRel(volume, kRelStep) )
+        => 261382.1651324987760745 and 261382.16513249280978926 are within 1e-07% of each other with message: STEP volume 261382 mm^3, expected 261382 mm^3, rel error 2.28259e-14
+ReferenceTestSupport.hpp:219  CHECK_THAT( contents->minMm[i], WithinAbs(min[i], 1e-6) )
+        => -60.0 is within 0.000001 of -60.0 with message: STEP volume 261382 mm^3, expected 261382 mm^3, rel error 2.28259e-14; STEP bounds axis 0: -60 .. 60
+ReferenceTestSupport.hpp:220  CHECK_THAT( contents->maxMm[i], WithinAbs(max[i], 1e-6) )
+        => 60.0 is within 0.000001 of 60.0 with message: STEP volume 261382 mm^3, expected 261382 mm^3, rel error 2.28259e-14; STEP bounds axis 0: -60 .. 60
+ReferenceTestSupport.hpp:219  CHECK_THAT( contents->minMm[i], WithinAbs(min[i], 1e-6) )
+        => -30.0 is within 0.000001 of -30.0 with message: STEP volume 261382 mm^3, expected 261382 mm^3, rel error 2.28259e-14; STEP bounds axis 1: -30 .. 30
+ReferenceTestSupport.hpp:220  CHECK_THAT( contents->maxMm[i], WithinAbs(max[i], 1e-6) )
+        => 30.0 is within 0.000001 of 30.0 with message: STEP volume 261382 mm^3, expected 261382 mm^3, rel error 2.28259e-14; STEP bounds axis 1: -30 .. 30
+ReferenceTestSupport.hpp:219  CHECK_THAT( contents->minMm[i], WithinAbs(min[i], 1e-6) )
+        => 0.0 is within 0.000001 of 0.0 with message: STEP volume 261382 mm^3, expected 261382 mm^3, rel error 2.28259e-14; STEP bounds axis 2: 0 .. 80
+ReferenceTestSupport.hpp:220  CHECK_THAT( contents->maxMm[i], WithinAbs(max[i], 1e-6) )
+        => 80.0 is within 0.000001 of 80.0 with message: STEP volume 261382 mm^3, expected 261382 mm^3, rel error 2.28259e-14; STEP bounds axis 2: 0 .. 80
+ReferenceTestSupport.hpp:251  CHECK( meshed > 0.0 )
+        => 261391.85637238822528161 > 0.0 with message: STL: 2236 triangles, meshed 261392 mm^3, exact 261382 mm^3, difference 9.69124 mm^3, bound 391.953 mm^3
+ReferenceTestSupport.hpp:252  CHECK( std::abs(meshed - volume) <= deflectionMm * area )
+        => 9.69123989541549236 <= 391.95260546925885592 with message: STL: 2236 triangles, meshed 261392 mm^3, exact 261382 mm^3, difference 9.69124 mm^3, bound 391.953 mm^3
+
+== ReferenceModel_BearingHousingRegeneratesAfterParameterChanges / bearing bore 40 -> 45 mm
+ReferenceTestSupport.hpp:112  CHECK_THAT( body.volumeMm3, WithinRel(expected.volume, kRel) )
+        => 241354.51196585816796869 and 241354.51196585787693039 are within 1e-08% of each other with message: volume expected 241355 mm^3, actual 241355 mm^3, abs error 2.91038e-10, rel error 1.20585e-15
+ReferenceTestSupport.hpp:116  CHECK_THAT( body.areaMm2, WithinRel(expected.area, kRel) )
+        => 39470.14990411500184564 and 39470.14990411499456968 are within 1e-08% of each other with message: volume expected 241355 mm^3, actual 241355 mm^3, abs error 2.91038e-10, rel error 1.20585e-15; area expected 39470.1 mm^2, actual 39470.1 mm^2, rel error 1.84341e-16
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 0.00000000000290864 is within 0.000000001 of 0.00000000000000034 with message: volume expected 241355 mm^3, actual 241355 mm^3, abs error 2.91038e-10, rel error 1.20585e-15; centroid[0] expected 3.39146e-16 mm, actual 2.90864e-12 mm, difference 2.9083e-12 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 0.00000000000000139 is within 0.000000001 of 0.0 with message: volume expected 241355 mm^3, actual 241355 mm^3, abs error 2.91038e-10, rel error 1.20585e-15; centroid[1] expected 0 mm, actual 1.38673e-15 mm, difference 1.38673e-15 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 29.26611529915585663 is within 0.000000001 of 29.26611529907876985 with message: volume expected 241355 mm^3, actual 241355 mm^3, abs error 2.91038e-10, rel error 1.20585e-15; centroid[2] expected 29.2661 mm, actual 29.2661 mm, difference 7.70868e-11 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -60.0 <= -59.99999999900000347 with message: axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -60.0 >= -60.0000001009999977 with message: axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 60.0 >= 59.99999999900000347 with message: axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 60.0 <= 60.0000001009999977 with message: axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -30.00000000000000711 <= -29.99999999899999992 with message: axis 1: kernel -30 .. 30 mm, exact -30 .. 30 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -30.00000000000000711 >= -30.00000010100000125 with message: axis 1: kernel -30 .. 30 mm, exact -30 .. 30 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 30.0 >= 29.99999999899999992 with message: axis 1: kernel -30 .. 30 mm, exact -30 .. 30 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 30.0 <= 30.00000010100000125 with message: axis 1: kernel -30 .. 30 mm, exact -30 .. 30 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => 0.0 <= 0.000000001 with message: axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => 0.0 >= -0.000000101 with message: axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 80.0 >= 79.99999999899999636 with message: axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 80.0 <= 80.0000001009999977 with message: axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+BearingHousingTests.cpp:141  CHECK( circleEdges(body, {x, y, s.thickness}, Direction3D::unitZ(), s.mountDiameter / 2.0) == 1 )
+        => 1 == 1 with message: hole at (-48, -15)
+BearingHousingTests.cpp:142  CHECK( circleEdges(body, {x, y, 0.0}, Direction3D::unitZ(), s.mountDiameter / 2.0) == 1 )
+        => 1 == 1 with message: hole at (-48, -15)
+BearingHousingTests.cpp:141  CHECK( circleEdges(body, {x, y, s.thickness}, Direction3D::unitZ(), s.mountDiameter / 2.0) == 1 )
+        => 1 == 1 with message: hole at (-48, 15)
+BearingHousingTests.cpp:142  CHECK( circleEdges(body, {x, y, 0.0}, Direction3D::unitZ(), s.mountDiameter / 2.0) == 1 )
+        => 1 == 1 with message: hole at (-48, 15)
+BearingHousingTests.cpp:141  CHECK( circleEdges(body, {x, y, s.thickness}, Direction3D::unitZ(), s.mountDiameter / 2.0) == 1 )
+        => 1 == 1 with message: hole at (48, -15)
+BearingHousingTests.cpp:142  CHECK( circleEdges(body, {x, y, 0.0}, Direction3D::unitZ(), s.mountDiameter / 2.0) == 1 )
+        => 1 == 1 with message: hole at (48, -15)
+BearingHousingTests.cpp:141  CHECK( circleEdges(body, {x, y, s.thickness}, Direction3D::unitZ(), s.mountDiameter / 2.0) == 1 )
+        => 1 == 1 with message: hole at (48, 15)
+BearingHousingTests.cpp:142  CHECK( circleEdges(body, {x, y, 0.0}, Direction3D::unitZ(), s.mountDiameter / 2.0) == 1 )
+        => 1 == 1 with message: hole at (48, 15)
+
+== ReferenceModel_BearingHousingRegeneratesAfterParameterChanges
+BearingHousingTests.cpp:280  CHECK( back.volumeAreaRelative <= 1e-12 )
+        => 0.0 <= 0.000000000001 with message: restored: volume and area 0 relative, positions 0 mm
+BearingHousingTests.cpp:281  CHECK( back.positionMm <= 1e-9 )
+        => 0.0 <= 0.000000001 with message: restored: volume and area 0 relative, positions 0 mm
+
+== ReferenceModel_BearingHousingRegeneratesAfterParameterChanges / base width 60 -> 70 mm: the part stays symmetric about its middle
+ReferenceTestSupport.hpp:112  CHECK_THAT( body.volumeMm3, WithinRel(expected.volume, kRel) )
+        => 305574.17785195965552703 and 305574.1778519595391117 are within 1e-08% of each other with message: volume expected 305574 mm^3, actual 305574 mm^3, abs error 1.16415e-10, rel error 3.80972e-16
+ReferenceTestSupport.hpp:116  CHECK_THAT( body.areaMm2, WithinRel(expected.area, kRel) )
+        => 44108.12922359712683829 and 44108.12922359711956233 are within 1e-08% of each other with message: volume expected 305574 mm^3, actual 305574 mm^3, abs error 1.16415e-10, rel error 3.80972e-16; area expected 44108.1 mm^2, actual 44108.1 mm^2, rel error 1.64957e-16
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 0.00000000000268224 is within 0.000000001 of 0.0000000000000001 with message: volume expected 305574 mm^3, actual 305574 mm^3, abs error 1.16415e-10, rel error 3.80972e-16; centroid[0] expected 1.04172e-16 mm, actual 2.68224e-12 mm, difference 2.68213e-12 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => -0.00000000000000157 is within 0.000000001 of 0.0 with message: volume expected 305574 mm^3, actual 305574 mm^3, abs error 1.16415e-10, rel error 3.80972e-16; centroid[1] expected 0 mm, actual -1.57151e-15 mm, difference 1.57151e-15 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 30.421360334841971 is within 0.000000001 of 30.42136033477126134 with message: volume expected 305574 mm^3, actual 305574 mm^3, abs error 1.16415e-10, rel error 3.80972e-16; centroid[2] expected 30.4214 mm, actual 30.4214 mm, difference 7.07097e-11 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -60.0 <= -59.99999999900000347 with message: axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -60.0 >= -60.0000001009999977 with message: axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 60.0 >= 59.99999999900000347 with message: axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 60.0 <= 60.0000001009999977 with message: axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -35.00000000000000711 <= -34.99999999900000347 with message: axis 1: kernel -35 .. 35 mm, exact -35 .. 35 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -35.00000000000000711 >= -35.0000001009999977 with message: axis 1: kernel -35 .. 35 mm, exact -35 .. 35 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 35.0 >= 34.99999999900000347 with message: axis 1: kernel -35 .. 35 mm, exact -35 .. 35 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 35.0 <= 35.0000001009999977 with message: axis 1: kernel -35 .. 35 mm, exact -35 .. 35 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => 0.0 <= 0.000000001 with message: axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => 0.0 >= -0.000000101 with message: axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 80.0 >= 79.99999999899999636 with message: axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 80.0 <= 80.0000001009999977 with message: axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+BearingHousingTests.cpp:141  CHECK( circleEdges(body, {x, y, s.thickness}, Direction3D::unitZ(), s.mountDiameter / 2.0) == 1 )
+        => 1 == 1 with message: hole at (-48, -15)
+BearingHousingTests.cpp:142  CHECK( circleEdges(body, {x, y, 0.0}, Direction3D::unitZ(), s.mountDiameter / 2.0) == 1 )
+        => 1 == 1 with message: hole at (-48, -15)
+BearingHousingTests.cpp:141  CHECK( circleEdges(body, {x, y, s.thickness}, Direction3D::unitZ(), s.mountDiameter / 2.0) == 1 )
+        => 1 == 1 with message: hole at (-48, 15)
+BearingHousingTests.cpp:142  CHECK( circleEdges(body, {x, y, 0.0}, Direction3D::unitZ(), s.mountDiameter / 2.0) == 1 )
+        => 1 == 1 with message: hole at (-48, 15)
+BearingHousingTests.cpp:141  CHECK( circleEdges(body, {x, y, s.thickness}, Direction3D::unitZ(), s.mountDiameter / 2.0) == 1 )
+        => 1 == 1 with message: hole at (48, -15)
+BearingHousingTests.cpp:142  CHECK( circleEdges(body, {x, y, 0.0}, Direction3D::unitZ(), s.mountDiameter / 2.0) == 1 )
+        => 1 == 1 with message: hole at (48, -15)
+BearingHousingTests.cpp:141  CHECK( circleEdges(body, {x, y, s.thickness}, Direction3D::unitZ(), s.mountDiameter / 2.0) == 1 )
+        => 1 == 1 with message: hole at (48, 15)
+BearingHousingTests.cpp:142  CHECK( circleEdges(body, {x, y, 0.0}, Direction3D::unitZ(), s.mountDiameter / 2.0) == 1 )
+        => 1 == 1 with message: hole at (48, 15)
+
+== ReferenceModel_BearingHousingRegeneratesAfterParameterChanges
+BearingHousingTests.cpp:280  CHECK( back.volumeAreaRelative <= 1e-12 )
+        => 0.0 <= 0.000000000001 with message: restored: volume and area 0 relative, positions 0 mm
+BearingHousingTests.cpp:281  CHECK( back.positionMm <= 1e-9 )
+        => 0.0 <= 0.000000001 with message: restored: volume and area 0 relative, positions 0 mm
+
+== ReferenceModel_BearingHousingMatchesIndependentProperties / the halves and the whole blank
+BearingHousingTests.cpp:188  CHECK_THAT( expected(s, Stage::Whole).volume, WithinRel(blank, 1e-14) )
+        => 340453.53001942485570908 and 340453.53001942485570908 are within 1e-12% of each other
+ReferenceTestSupport.hpp:112  CHECK_THAT( body.volumeMm3, WithinRel(expected.volume, kRel) )
+        => 170226.76500971245695837 and 170226.76500971239875071 are within 1e-08% of each other with message: volume expected 170227 mm^3, actual 170227 mm^3, abs error 5.82077e-11, rel error 3.41942e-16
+ReferenceTestSupport.hpp:116  CHECK_THAT( body.areaMm2, WithinRel(expected.area, kRel) )
+        => 21572.89778659302828601 and 21572.89778659302828601 are within 1e-08% of each other with message: volume expected 170227 mm^3, actual 170227 mm^3, abs error 5.82077e-11, rel error 3.41942e-16; area expected 21572.9 mm^2, actual 21572.9 mm^2, rel error 0
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 19.7750923587600127 is within 0.000000001 of 19.77509235876000915 with message: volume expected 170227 mm^3, actual 170227 mm^3, abs error 5.82077e-11, rel error 3.41942e-16; centroid[0] expected 19.7751 mm, actual 19.7751 mm, difference 3.55271e-15 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 0.0 is within 0.000000001 of 0.0 with message: volume expected 170227 mm^3, actual 170227 mm^3, abs error 5.82077e-11, rel error 3.41942e-16; centroid[1] expected 0 mm, actual 0 mm, difference 0 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 33.42279591057518218 is within 0.000000001 of 33.42279591057519639 with message: volume expected 170227 mm^3, actual 170227 mm^3, abs error 5.82077e-11, rel error 3.41942e-16; centroid[2] expected 33.4228 mm, actual 33.4228 mm, difference 1.42109e-14 mm
+ReferenceTestSupport.hpp:112  CHECK_THAT( body.volumeMm3, WithinRel(expected.volume, kRel) )
+        => 340453.5300194249721244 and 340453.53001942485570908 are within 1e-08% of each other with message: volume expected 340454 mm^3, actual 340454 mm^3, abs error 1.16415e-10, rel error 3.41942e-16
+ReferenceTestSupport.hpp:116  CHECK_THAT( body.areaMm2, WithinRel(expected.area, kRel) )
+        => 33545.79557318606384797 and 33545.79557318606384797 are within 1e-08% of each other with message: volume expected 340454 mm^3, actual 340454 mm^3, abs error 1.16415e-10, rel error 3.41942e-16; area expected 33545.8 mm^2, actual 33545.8 mm^2, rel error 0
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => -0.00000000000000137 is within 0.000000001 of -0.00000000000000064 with message: volume expected 340454 mm^3, actual 340454 mm^3, abs error 1.16415e-10, rel error 3.41942e-16; centroid[0] expected -6.41141e-16 mm, actual -1.36777e-15 mm, difference 7.26627e-16 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => -0.00000000000000068 is within 0.000000001 of 0.0 with message: volume expected 340454 mm^3, actual 340454 mm^3, abs error 1.16415e-10, rel error 3.41942e-16; centroid[1] expected 0 mm, actual -6.83884e-16 mm, difference 6.83884e-16 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 33.42279591062388988 is within 0.000000001 of 33.42279591057518928 with message: volume expected 340454 mm^3, actual 340454 mm^3, abs error 1.16415e-10, rel error 3.41942e-16; centroid[2] expected 33.4228 mm, actual 33.4228 mm, difference 4.87006e-11 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -60.0 <= -59.99999999900000347 with message: axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -60.0 >= -60.0000001009999977 with message: axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 60.0 >= 59.99999999900000347 with message: axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 60.0 <= 60.0000001009999977 with message: axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -30.0 <= -29.99999999899999992 with message: axis 1: kernel -30 .. 30 mm, exact -30 .. 30 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -30.0 >= -30.00000010100000125 with message: axis 1: kernel -30 .. 30 mm, exact -30 .. 30 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 30.0 >= 29.99999999899999992 with message: axis 1: kernel -30 .. 30 mm, exact -30 .. 30 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 30.0 <= 30.00000010100000125 with message: axis 1: kernel -30 .. 30 mm, exact -30 .. 30 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => 0.0 <= 0.000000001 with message: axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => 0.0 >= -0.000000101 with message: axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 80.0 >= 79.99999999899999636 with message: axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 80.0 <= 80.0000001009999977 with message: axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+BearingHousingTests.cpp:194  CHECK_THAT( whole.volumeMm3, WithinRel(2.0 * featureBody(regenerator, m.boss).volumeMm3, 1e-12) )
+        => 340453.5300194249721244 and 340453.53001942491391674 are within 1e-10% of each other
+
+== ReferenceModel_BearingHousingMatchesIndependentProperties / each step of the chain
+ReferenceTestSupport.hpp:112  CHECK_THAT( body.volumeMm3, WithinRel(expected.volume, kRel) )
+        => 340453.5300194249721244 and 340453.53001942485570908 are within 1e-08% of each other with message: feature object:18; volume expected 340454 mm^3, actual 340454 mm^3, abs error 1.16415e-10, rel error 3.41942e-16
+ReferenceTestSupport.hpp:116  CHECK_THAT( body.areaMm2, WithinRel(expected.area, kRel) )
+        => 33545.79557318606384797 and 33545.79557318606384797 are within 1e-08% of each other with message: feature object:18; volume expected 340454 mm^3, actual 340454 mm^3, abs error 1.16415e-10, rel error 3.41942e-16; area expected 33545.8 mm^2, actual 33545.8 mm^2, rel error 0
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => -0.00000000000000137 is within 0.000000001 of -0.00000000000000064 with message: feature object:18; volume expected 340454 mm^3, actual 340454 mm^3, abs error 1.16415e-10, rel error 3.41942e-16; centroid[0] expected -6.41141e-16 mm, actual -1.36777e-15 mm, difference 7.26627e-16 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => -0.00000000000000068 is within 0.000000001 of 0.0 with message: feature object:18; volume expected 340454 mm^3, actual 340454 mm^3, abs error 1.16415e-10, rel error 3.41942e-16; centroid[1] expected 0 mm, actual -6.83884e-16 mm, difference 6.83884e-16 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 33.42279591062388988 is within 0.000000001 of 33.42279591057518928 with message: feature object:18; volume expected 340454 mm^3, actual 340454 mm^3, abs error 1.16415e-10, rel error 3.41942e-16; centroid[2] expected 33.4228 mm, actual 33.4228 mm, difference 4.87006e-11 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -60.0 <= -59.99999999900000347 with message: feature object:18; axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -60.0 >= -60.0000001009999977 with message: feature object:18; axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 60.0 >= 59.99999999900000347 with message: feature object:18; axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 60.0 <= 60.0000001009999977 with message: feature object:18; axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -30.0 <= -29.99999999899999992 with message: feature object:18; axis 1: kernel -30 .. 30 mm, exact -30 .. 30 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -30.0 >= -30.00000010100000125 with message: feature object:18; axis 1: kernel -30 .. 30 mm, exact -30 .. 30 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 30.0 >= 29.99999999899999992 with message: feature object:18; axis 1: kernel -30 .. 30 mm, exact -30 .. 30 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 30.0 <= 30.00000010100000125 with message: feature object:18; axis 1: kernel -30 .. 30 mm, exact -30 .. 30 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => 0.0 <= 0.000000001 with message: feature object:18; axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => 0.0 >= -0.000000101 with message: feature object:18; axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 80.0 >= 79.99999999899999636 with message: feature object:18; axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 80.0 <= 80.0000001009999977 with message: feature object:18; axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+ReferenceTestSupport.hpp:112  CHECK_THAT( body.volumeMm3, WithinRel(expected.volume, kRel) )
+        => 265055.30633326998213306 and 265055.30633326974930242 are within 1e-08% of each other with message: feature object:20; volume expected 265055 mm^3, actual 265055 mm^3, abs error 2.32831e-10, rel error 8.78423e-16
+ReferenceTestSupport.hpp:116  CHECK_THAT( body.areaMm2, WithinRel(expected.area, kRel) )
+        => 38572.34381892973033246 and 38572.34381892973033246 are within 1e-08% of each other with message: feature object:20; volume expected 265055 mm^3, actual 265055 mm^3, abs error 2.32831e-10, rel error 8.78423e-16; area expected 38572.3 mm^2, actual 38572.3 mm^2, rel error 0
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 0.00000000000000164 is within 0.000000001 of -0.00000000000000072 with message: feature object:20; volume expected 265055 mm^3, actual 265055 mm^3, abs error 2.32831e-10, rel error 8.78423e-16; centroid[0] expected -7.20581e-16 mm, actual 1.63761e-15 mm, difference 2.35819e-15 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 0.00000000000000104 is within 0.000000001 of 0.0 with message: feature object:20; volume expected 265055 mm^3, actual 265055 mm^3, abs error 2.32831e-10, rel error 8.78423e-16; centroid[1] expected 0 mm, actual 1.03626e-15 mm, difference 1.03626e-15 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 30.12951861062515846 is within 0.000000001 of 30.12951861056457048 with message: feature object:20; volume expected 265055 mm^3, actual 265055 mm^3, abs error 2.32831e-10, rel error 8.78423e-16; centroid[2] expected 30.1295 mm, actual 30.1295 mm, difference 6.0588e-11 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -60.0 <= -59.99999999900000347 with message: feature object:20; axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -60.0 >= -60.0000001009999977 with message: feature object:20; axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 60.0 >= 59.99999999900000347 with message: feature object:20; axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 60.0 <= 60.0000001009999977 with message: feature object:20; axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -30.0 <= -29.99999999899999992 with message: feature object:20; axis 1: kernel -30 .. 30 mm, exact -30 .. 30 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -30.0 >= -30.00000010100000125 with message: feature object:20; axis 1: kernel -30 .. 30 mm, exact -30 .. 30 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 30.0 >= 29.99999999899999992 with message: feature object:20; axis 1: kernel -30 .. 30 mm, exact -30 .. 30 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 30.0 <= 30.00000010100000125 with message: feature object:20; axis 1: kernel -30 .. 30 mm, exact -30 .. 30 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => 0.0 <= 0.000000001 with message: feature object:20; axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => 0.0 >= -0.000000101 with message: feature object:20; axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 80.0 >= 79.99999999899999636 with message: feature object:20; axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 80.0 <= 80.0000001009999977 with message: feature object:20; axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+ReferenceTestSupport.hpp:112  CHECK_THAT( body.volumeMm3, WithinRel(expected.volume, kRel) )
+        => 264112.82853719295235351 and 264112.82853719283593819 are within 1e-08% of each other with message: feature object:21; volume expected 264113 mm^3, actual 264113 mm^3, abs error 1.16415e-10, rel error 4.40779e-16
+ReferenceTestSupport.hpp:116  CHECK_THAT( body.areaMm2, WithinRel(expected.area, kRel) )
+        => 38792.25530468100623693 and 38792.25530468102078885 are within 1e-08% of each other with message: feature object:21; volume expected 264113 mm^3, actual 264113 mm^3, abs error 1.16415e-10, rel error 4.40779e-16; area expected 38792.3 mm^2, actual 38792.3 mm^2, rel error 3.75124e-16
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => -0.17128639475441304 is within 0.000000001 of -0.17128639476640409 with message: feature object:21; volume expected 264113 mm^3, actual 264113 mm^3, abs error 1.16415e-10, rel error 4.40779e-16; centroid[0] expected -0.171286 mm, actual -0.171286 mm, difference 1.1991e-11 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => -0.05352699836449987 is within 0.000000001 of -0.05352699836450105 with message: feature object:21; volume expected 264113 mm^3, actual 264113 mm^3, abs error 1.16415e-10, rel error 4.40779e-16; centroid[1] expected -0.053527 mm, actual -0.053527 mm, difference 1.17961e-15 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 30.21562399084172412 is within 0.000000001 of 30.21562399077815897 with message: feature object:21; volume expected 264113 mm^3, actual 264113 mm^3, abs error 1.16415e-10, rel error 4.40779e-16; centroid[2] expected 30.2156 mm, actual 30.2156 mm, difference 6.35652e-11 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -60.0 <= -59.99999999900000347 with message: feature object:21; axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -60.0 >= -60.0000001009999977 with message: feature object:21; axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 60.0 >= 59.99999999900000347 with message: feature object:21; axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 60.0 <= 60.0000001009999977 with message: feature object:21; axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -30.0 <= -29.99999999899999992 with message: feature object:21; axis 1: kernel -30 .. 30 mm, exact -30 .. 30 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -30.0 >= -30.00000010100000125 with message: feature object:21; axis 1: kernel -30 .. 30 mm, exact -30 .. 30 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 30.0 >= 29.99999999899999992 with message: feature object:21; axis 1: kernel -30 .. 30 mm, exact -30 .. 30 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 30.0 <= 30.00000010100000125 with message: feature object:21; axis 1: kernel -30 .. 30 mm, exact -30 .. 30 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => 0.0 <= 0.000000001 with message: feature object:21; axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => 0.0 >= -0.000000101 with message: feature object:21; axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 80.0 >= 79.99999999899999636 with message: feature object:21; axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 80.0 <= 80.0000001009999977 with message: feature object:21; axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+ReferenceTestSupport.hpp:112  CHECK_THAT( body.volumeMm3, WithinRel(expected.volume, kRel) )
+        => 261285.39514896221226081 and 261285.395148962008534 are within 1e-08% of each other with message: feature object:22; volume expected 261285 mm^3, actual 261285 mm^3, abs error 2.03727e-10, rel error 7.7971e-16
+ReferenceTestSupport.hpp:116  CHECK_THAT( body.areaMm2, WithinRel(expected.area, kRel) )
+        => 39451.98976193487760611 and 39451.98976193487033015 are within 1e-08% of each other with message: feature object:22; volume expected 261285 mm^3, actual 261285 mm^3, abs error 2.03727e-10, rel error 7.7971e-16; area expected 39452 mm^2, actual 39452 mm^2, rel error 1.84426e-16
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 0.00000000000351623 is within 0.000000001 of -0.00000000000000073 with message: feature object:22; volume expected 261285 mm^3, actual 261285 mm^3, abs error 2.03727e-10, rel error 7.7971e-16; centroid[0] expected -7.30978e-16 mm, actual 3.51623e-12 mm, difference 3.51696e-12 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 0.00000000000000271 is within 0.000000001 of 0.0 with message: feature object:22; volume expected 261285 mm^3, actual 261285 mm^3, abs error 2.03727e-10, rel error 7.7971e-16; centroid[1] expected 0 mm, actual 2.70538e-15 mm, difference 2.70538e-15 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 30.47766720129754248 is within 0.000000001 of 30.47766720122753981 with message: feature object:22; volume expected 261285 mm^3, actual 261285 mm^3, abs error 2.03727e-10, rel error 7.7971e-16; centroid[2] expected 30.4777 mm, actual 30.4777 mm, difference 7.00027e-11 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -60.0 <= -59.99999999900000347 with message: feature object:22; axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -60.0 >= -60.0000001009999977 with message: feature object:22; axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 60.0 >= 59.99999999900000347 with message: feature object:22; axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 60.0 <= 60.0000001009999977 with message: feature object:22; axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -30.0 <= -29.99999999899999992 with message: feature object:22; axis 1: kernel -30 .. 30 mm, exact -30 .. 30 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -30.0 >= -30.00000010100000125 with message: feature object:22; axis 1: kernel -30 .. 30 mm, exact -30 .. 30 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 30.0 >= 29.99999999899999992 with message: feature object:22; axis 1: kernel -30 .. 30 mm, exact -30 .. 30 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 30.0 <= 30.00000010100000125 with message: feature object:22; axis 1: kernel -30 .. 30 mm, exact -30 .. 30 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => 0.0 <= 0.000000001 with message: feature object:22; axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => 0.0 >= -0.000000101 with message: feature object:22; axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 80.0 >= 79.99999999899999636 with message: feature object:22; axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 80.0 <= 80.0000001009999977 with message: feature object:22; axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+ReferenceTestSupport.hpp:112  CHECK_THAT( body.volumeMm3, WithinRel(expected.volume, kRel) )
+        => 261517.16513249292620458 and 261517.16513249280978926 are within 1e-08% of each other with message: feature object:23; volume expected 261517 mm^3, actual 261517 mm^3, abs error 1.16415e-10, rel error 4.45154e-16
+ReferenceTestSupport.hpp:116  CHECK_THAT( body.areaMm2, WithinRel(expected.area, kRel) )
+        => 39305.20210569873597706 and 39305.20210569872142514 are within 1e-08% of each other with message: feature object:23; volume expected 261517 mm^3, actual 261517 mm^3, abs error 1.16415e-10, rel error 4.45154e-16; area expected 39305.2 mm^2, actual 39305.2 mm^2, rel error 3.70229e-16
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 0.00000000000304608 is within 0.000000001 of 0.00000000000000094 with message: feature object:23; volume expected 261517 mm^3, actual 261517 mm^3, abs error 1.16415e-10, rel error 4.45154e-16; centroid[0] expected 9.38996e-16 mm, actual 3.04608e-12 mm, difference 3.04514e-12 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 0.00000000000000079 is within 0.000000001 of 0.0 with message: feature object:23; volume expected 261517 mm^3, actual 261517 mm^3, abs error 1.16415e-10, rel error 4.45154e-16; centroid[1] expected 0 mm, actual 7.9293e-16 mm, difference 7.9293e-16 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 30.46188522128753462 is within 0.000000001 of 30.46188522121780196 with message: feature object:23; volume expected 261517 mm^3, actual 261517 mm^3, abs error 1.16415e-10, rel error 4.45154e-16; centroid[2] expected 30.4619 mm, actual 30.4619 mm, difference 6.97327e-11 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -60.0 <= -59.99999999900000347 with message: feature object:23; axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -60.0 >= -60.0000001009999977 with message: feature object:23; axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 60.0 >= 59.99999999900000347 with message: feature object:23; axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 60.0 <= 60.0000001009999977 with message: feature object:23; axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -30.0 <= -29.99999999899999992 with message: feature object:23; axis 1: kernel -30 .. 30 mm, exact -30 .. 30 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -30.0 >= -30.00000010100000125 with message: feature object:23; axis 1: kernel -30 .. 30 mm, exact -30 .. 30 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 30.0 >= 29.99999999899999992 with message: feature object:23; axis 1: kernel -30 .. 30 mm, exact -30 .. 30 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 30.0 <= 30.00000010100000125 with message: feature object:23; axis 1: kernel -30 .. 30 mm, exact -30 .. 30 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => 0.0 <= 0.000000001 with message: feature object:23; axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => 0.0 >= -0.000000101 with message: feature object:23; axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 80.0 >= 79.99999999899999636 with message: feature object:23; axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 80.0 <= 80.0000001009999977 with message: feature object:23; axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+ReferenceTestSupport.hpp:112  CHECK_THAT( body.volumeMm3, WithinRel(expected.volume, kRel) )
+        => 261382.16513249289710075 and 261382.16513249280978926 are within 1e-08% of each other with message: feature object:24; volume expected 261382 mm^3, actual 261382 mm^3, abs error 8.73115e-11, rel error 3.34038e-16
+ReferenceTestSupport.hpp:116  CHECK_THAT( body.areaMm2, WithinRel(expected.area, kRel) )
+        => 39195.26054692589241313 and 39195.26054692588513717 are within 1e-08% of each other with message: feature object:24; volume expected 261382 mm^3, actual 261382 mm^3, abs error 8.73115e-11, rel error 3.34038e-16; area expected 39195.3 mm^2, actual 39195.3 mm^2, rel error 1.85634e-16
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 0.00000000000268722 is within 0.000000001 of 0.0000000000000001 with message: feature object:24; volume expected 261382 mm^3, actual 261382 mm^3, abs error 8.73115e-11, rel error 3.34038e-16; centroid[0] expected 1.04387e-16 mm, actual 2.68722e-12 mm, difference 2.68712e-12 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 0.00000000000000128 is within 0.000000001 of 0.0 with message: feature object:24; volume expected 261382 mm^3, actual 261382 mm^3, abs error 8.73115e-11, rel error 3.34038e-16; centroid[1] expected 0 mm, actual 1.28048e-15 mm, difference 1.28048e-15 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 30.47167875293057548 is within 0.000000001 of 30.47167875285974148 with message: feature object:24; volume expected 261382 mm^3, actual 261382 mm^3, abs error 8.73115e-11, rel error 3.34038e-16; centroid[2] expected 30.4717 mm, actual 30.4717 mm, difference 7.0834e-11 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -60.0 <= -59.99999999900000347 with message: feature object:24; axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -60.0 >= -60.0000001009999977 with message: feature object:24; axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 60.0 >= 59.99999999900000347 with message: feature object:24; axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 60.0 <= 60.0000001009999977 with message: feature object:24; axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -30.00000000000000711 <= -29.99999999899999992 with message: feature object:24; axis 1: kernel -30 .. 30 mm, exact -30 .. 30 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -30.00000000000000711 >= -30.00000010100000125 with message: feature object:24; axis 1: kernel -30 .. 30 mm, exact -30 .. 30 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 30.0 >= 29.99999999899999992 with message: feature object:24; axis 1: kernel -30 .. 30 mm, exact -30 .. 30 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 30.0 <= 30.00000010100000125 with message: feature object:24; axis 1: kernel -30 .. 30 mm, exact -30 .. 30 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => 0.0 <= 0.000000001 with message: feature object:24; axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => 0.0 >= -0.000000101 with message: feature object:24; axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 80.0 >= 79.99999999899999636 with message: feature object:24; axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 80.0 <= 80.0000001009999977 with message: feature object:24; axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+
+== ReferenceModel_BearingHousingMatchesIndependentProperties / the finished housing
+ReferenceTestSupport.hpp:112  CHECK_THAT( body.volumeMm3, WithinRel(expected.volume, kRel) )
+        => 261382.16513249289710075 and 261382.16513249280978926 are within 1e-08% of each other with message: volume expected 261382 mm^3, actual 261382 mm^3, abs error 8.73115e-11, rel error 3.34038e-16
+ReferenceTestSupport.hpp:116  CHECK_THAT( body.areaMm2, WithinRel(expected.area, kRel) )
+        => 39195.26054692589241313 and 39195.26054692588513717 are within 1e-08% of each other with message: volume expected 261382 mm^3, actual 261382 mm^3, abs error 8.73115e-11, rel error 3.34038e-16; area expected 39195.3 mm^2, actual 39195.3 mm^2, rel error 1.85634e-16
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 0.00000000000268722 is within 0.000000001 of 0.0000000000000001 with message: volume expected 261382 mm^3, actual 261382 mm^3, abs error 8.73115e-11, rel error 3.34038e-16; centroid[0] expected 1.04387e-16 mm, actual 2.68722e-12 mm, difference 2.68712e-12 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 0.00000000000000128 is within 0.000000001 of 0.0 with message: volume expected 261382 mm^3, actual 261382 mm^3, abs error 8.73115e-11, rel error 3.34038e-16; centroid[1] expected 0 mm, actual 1.28048e-15 mm, difference 1.28048e-15 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 30.47167875293057548 is within 0.000000001 of 30.47167875285974148 with message: volume expected 261382 mm^3, actual 261382 mm^3, abs error 8.73115e-11, rel error 3.34038e-16; centroid[2] expected 30.4717 mm, actual 30.4717 mm, difference 7.0834e-11 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -60.0 <= -59.99999999900000347 with message: axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -60.0 >= -60.0000001009999977 with message: axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 60.0 >= 59.99999999900000347 with message: axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 60.0 <= 60.0000001009999977 with message: axis 0: kernel -60 .. 60 mm, exact -60 .. 60 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => -30.00000000000000711 <= -29.99999999899999992 with message: axis 1: kernel -30 .. 30 mm, exact -30 .. 30 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => -30.00000000000000711 >= -30.00000010100000125 with message: axis 1: kernel -30 .. 30 mm, exact -30 .. 30 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 30.0 >= 29.99999999899999992 with message: axis 1: kernel -30 .. 30 mm, exact -30 .. 30 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 30.0 <= 30.00000010100000125 with message: axis 1: kernel -30 .. 30 mm, exact -30 .. 30 mm
+ReferenceTestSupport.hpp:132  CHECK( body.minMm[i] <= min[i] + 1e-9 )
+        => 0.0 <= 0.000000001 with message: axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+ReferenceTestSupport.hpp:133  CHECK( body.minMm[i] >= min[i] - kBoundsPaddingMm - 1e-9 )
+        => 0.0 >= -0.000000101 with message: axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+ReferenceTestSupport.hpp:134  CHECK( body.maxMm[i] >= max[i] - 1e-9 )
+        => 80.0 >= 79.99999999899999636 with message: axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+ReferenceTestSupport.hpp:135  CHECK( body.maxMm[i] <= max[i] + kBoundsPaddingMm + 1e-9 )
+        => 80.0 <= 80.0000001009999977 with message: axis 2: kernel 0 .. 80 mm, exact 0 .. 80 mm
+BearingHousingTests.cpp:141  CHECK( circleEdges(body, {x, y, s.thickness}, Direction3D::unitZ(), s.mountDiameter / 2.0) == 1 )
+        => 1 == 1 with message: hole at (-48, -15)
+BearingHousingTests.cpp:142  CHECK( circleEdges(body, {x, y, 0.0}, Direction3D::unitZ(), s.mountDiameter / 2.0) == 1 )
+        => 1 == 1 with message: hole at (-48, -15)
+BearingHousingTests.cpp:141  CHECK( circleEdges(body, {x, y, s.thickness}, Direction3D::unitZ(), s.mountDiameter / 2.0) == 1 )
+        => 1 == 1 with message: hole at (-48, 15)
+BearingHousingTests.cpp:142  CHECK( circleEdges(body, {x, y, 0.0}, Direction3D::unitZ(), s.mountDiameter / 2.0) == 1 )
+        => 1 == 1 with message: hole at (-48, 15)
+BearingHousingTests.cpp:141  CHECK( circleEdges(body, {x, y, s.thickness}, Direction3D::unitZ(), s.mountDiameter / 2.0) == 1 )
+        => 1 == 1 with message: hole at (48, -15)
+BearingHousingTests.cpp:142  CHECK( circleEdges(body, {x, y, 0.0}, Direction3D::unitZ(), s.mountDiameter / 2.0) == 1 )
+        => 1 == 1 with message: hole at (48, -15)
+BearingHousingTests.cpp:141  CHECK( circleEdges(body, {x, y, s.thickness}, Direction3D::unitZ(), s.mountDiameter / 2.0) == 1 )
+        => 1 == 1 with message: hole at (48, 15)
+BearingHousingTests.cpp:142  CHECK( circleEdges(body, {x, y, 0.0}, Direction3D::unitZ(), s.mountDiameter / 2.0) == 1 )
+        => 1 == 1 with message: hole at (48, 15)
+BearingHousingTests.cpp:223  CHECK_THAT( expected(s, Stage::Patterned).volume + fillets - chamfers, WithinRel(expected(s, Stage::Chamfered).volume, 1e-14) )
+        => 261382.16513249275158159 and 261382.16513249280978926 are within 1e-12% of each other
+
+== ReferenceModel_BearingHousingSaveLoad
+ReferenceTestSupport.hpp:112  CHECK_THAT( body.volumeMm3, WithinRel(expected.volume, kRel) )
+        => 305574.17785195965552703 and 305574.1778519595391117 are within 1e-08% of each other with message: volume expected 305574 mm^3, actual 305574 mm^3, abs error 1.16415e-10, rel error 3.80972e-16
+ReferenceTestSupport.hpp:116  CHECK_THAT( body.areaMm2, WithinRel(expected.area, kRel) )
+        => 44108.12922359712683829 and 44108.12922359711956233 are within 1e-08% of each other with message: volume expected 305574 mm^3, actual 305574 mm^3, abs error 1.16415e-10, rel error 3.80972e-16; area expected 44108.1 mm^2, actual 44108.1 mm^2, rel error 1.64957e-16
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 0.00000000000268224 is within 0.000000001 of 0.0000000000000001 with message: volume expected 305574 mm^3, actual 305574 mm^3, abs error 1.16415e-10, rel error 3.80972e-16; centroid[0] expected 1.04172e-16 mm, actual 2.68224e-12 mm, difference 2.68213e-12 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => -0.00000000000000157 is within 0.000000001 of 0.0 with message: volume expected 305574 mm^3, actual 305574 mm^3, abs error 1.16415e-10, rel error 3.80972e-16; centroid[1] expected 0 mm, actual -1.57151e-15 mm, difference 1.57151e-15 mm
+ReferenceTestSupport.hpp:121  CHECK_THAT( body.centroidMm[i], WithinAbs(expected.centroid[i], positionTolerance) )
+        => 30.421360334841971 is within 0.000000001 of 30.42136033477126134 with message: volume expected 305574 mm^3, actual 305574 mm^3, abs error 1.16415e-10, rel error 3.80972e-16; centroid[2] expected 30.4214 mm, actual 30.4214 mm, difference 7.07097e-11 mm
+
+Overall: 842 assertions passed, 0 failed.

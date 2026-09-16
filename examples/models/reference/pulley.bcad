@@ -1,0 +1,1170 @@
+{
+  "format": "bettercad-document",
+  "version": 1,
+  "units": "SI",
+  "document": {
+    "id": "5eed0000-0000-4000-8000-000000000003",
+    "name": "Pulley",
+    "metadata": {
+      "description": "",
+      "author": "",
+      "properties": {}
+    },
+    "last_allocated_id": 21
+  },
+  "parameters": [
+    {
+      "id": 1,
+      "name": "outer_r",
+      "si_value": 0.06,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 2,
+      "name": "rim_inner_r",
+      "si_value": 0.05,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 3,
+      "name": "rim_width",
+      "si_value": 0.03,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 4,
+      "name": "hub_r",
+      "si_value": 0.025,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 5,
+      "name": "hub_length",
+      "si_value": 0.04,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 6,
+      "name": "web_z0",
+      "si_value": 0.01,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 7,
+      "name": "web_thickness",
+      "si_value": 0.01,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 8,
+      "name": "bore_d",
+      "si_value": 0.02,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 9,
+      "name": "groove_z",
+      "si_value": 0.015,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 10,
+      "name": "groove_depth",
+      "si_value": 0.006,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 11,
+      "name": "groove_width",
+      "si_value": 0.012,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 12,
+      "name": "groove_bottom_width",
+      "si_value": 0.004,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 13,
+      "name": "web_fillet_r",
+      "si_value": 0.003,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 14,
+      "name": "hub_chamfer",
+      "si_value": 0.001,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    }
+  ],
+  "objects": [
+    {
+      "id": 15,
+      "type": "sketch",
+      "name": "Section",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "normal": [
+            -0.0,
+            -1.0,
+            -0.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.025,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.025,
+              0.01
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.05,
+              0.01
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "point",
+            "position": [
+              0.05,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "point",
+            "position": [
+              0.06,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "point",
+            "position": [
+              0.06,
+              0.03
+            ],
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "point",
+            "position": [
+              0.05,
+              0.03
+            ],
+            "construction": false
+          },
+          {
+            "id": 9,
+            "type": "point",
+            "position": [
+              0.05,
+              0.02
+            ],
+            "construction": false
+          },
+          {
+            "id": 10,
+            "type": "point",
+            "position": [
+              0.025,
+              0.02
+            ],
+            "construction": false
+          },
+          {
+            "id": 11,
+            "type": "point",
+            "position": [
+              0.025,
+              0.04
+            ],
+            "construction": false
+          },
+          {
+            "id": 12,
+            "type": "point",
+            "position": [
+              0.0,
+              0.04
+            ],
+            "construction": false
+          },
+          {
+            "id": 13,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": false
+          },
+          {
+            "id": 14,
+            "type": "line",
+            "start": 2,
+            "end": 3,
+            "construction": false
+          },
+          {
+            "id": 15,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 16,
+            "type": "line",
+            "start": 4,
+            "end": 5,
+            "construction": false
+          },
+          {
+            "id": 17,
+            "type": "line",
+            "start": 5,
+            "end": 6,
+            "construction": false
+          },
+          {
+            "id": 18,
+            "type": "line",
+            "start": 6,
+            "end": 7,
+            "construction": false
+          },
+          {
+            "id": 19,
+            "type": "line",
+            "start": 7,
+            "end": 8,
+            "construction": false
+          },
+          {
+            "id": 20,
+            "type": "line",
+            "start": 8,
+            "end": 9,
+            "construction": false
+          },
+          {
+            "id": 21,
+            "type": "line",
+            "start": 9,
+            "end": 10,
+            "construction": false
+          },
+          {
+            "id": 22,
+            "type": "line",
+            "start": 10,
+            "end": 11,
+            "construction": false
+          },
+          {
+            "id": 23,
+            "type": "line",
+            "start": 11,
+            "end": 12,
+            "construction": false
+          },
+          {
+            "id": 24,
+            "type": "line",
+            "start": 12,
+            "end": 1,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "horizontal",
+            "entities": [
+              13
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "horizontal",
+            "entities": [
+              15
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "horizontal",
+            "entities": [
+              17
+            ],
+            "enabled": true
+          },
+          {
+            "id": 5,
+            "type": "horizontal",
+            "entities": [
+              19
+            ],
+            "enabled": true
+          },
+          {
+            "id": 6,
+            "type": "horizontal",
+            "entities": [
+              21
+            ],
+            "enabled": true
+          },
+          {
+            "id": 7,
+            "type": "horizontal",
+            "entities": [
+              23
+            ],
+            "enabled": true
+          },
+          {
+            "id": 8,
+            "type": "vertical",
+            "entities": [
+              14
+            ],
+            "enabled": true
+          },
+          {
+            "id": 9,
+            "type": "vertical",
+            "entities": [
+              16
+            ],
+            "enabled": true
+          },
+          {
+            "id": 10,
+            "type": "vertical",
+            "entities": [
+              18
+            ],
+            "enabled": true
+          },
+          {
+            "id": 11,
+            "type": "vertical",
+            "entities": [
+              20
+            ],
+            "enabled": true
+          },
+          {
+            "id": 12,
+            "type": "vertical",
+            "entities": [
+              22
+            ],
+            "enabled": true
+          },
+          {
+            "id": 13,
+            "type": "vertical",
+            "entities": [
+              24
+            ],
+            "enabled": true
+          },
+          {
+            "id": 14,
+            "type": "distance",
+            "entities": [
+              13
+            ],
+            "value": 0.025,
+            "parameter": 4,
+            "enabled": true
+          },
+          {
+            "id": 15,
+            "type": "distance",
+            "entities": [
+              14
+            ],
+            "value": 0.01,
+            "parameter": 6,
+            "enabled": true
+          },
+          {
+            "id": 16,
+            "type": "distance",
+            "entities": [
+              4,
+              24
+            ],
+            "value": 0.05,
+            "parameter": 2,
+            "enabled": true
+          },
+          {
+            "id": 17,
+            "type": "horizontal",
+            "entities": [
+              1,
+              5
+            ],
+            "enabled": true
+          },
+          {
+            "id": 18,
+            "type": "distance",
+            "entities": [
+              6,
+              24
+            ],
+            "value": 0.06,
+            "parameter": 1,
+            "enabled": true
+          },
+          {
+            "id": 19,
+            "type": "distance",
+            "entities": [
+              18
+            ],
+            "value": 0.03,
+            "parameter": 3,
+            "enabled": true
+          },
+          {
+            "id": 20,
+            "type": "distance",
+            "entities": [
+              8,
+              24
+            ],
+            "value": 0.05,
+            "parameter": 2,
+            "enabled": true
+          },
+          {
+            "id": 21,
+            "type": "distance",
+            "entities": [
+              9,
+              15
+            ],
+            "value": 0.01,
+            "parameter": 7,
+            "enabled": true
+          },
+          {
+            "id": 22,
+            "type": "distance",
+            "entities": [
+              10,
+              24
+            ],
+            "value": 0.025,
+            "parameter": 4,
+            "enabled": true
+          },
+          {
+            "id": 23,
+            "type": "distance",
+            "entities": [
+              24
+            ],
+            "value": 0.04,
+            "parameter": 5,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 24,
+        "last_constraint_id": 23
+      }
+    },
+    {
+      "id": 16,
+      "type": "revolve",
+      "name": "Blank",
+      "data": {
+        "profile": 15,
+        "axis": {
+          "type": "sketch_y"
+        },
+        "angle": 6.283185307179586,
+        "direction": "positive",
+        "operation": "new_body"
+      }
+    },
+    {
+      "id": 17,
+      "type": "sketch",
+      "name": "GrooveSection",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "normal": [
+            -0.0,
+            -1.0,
+            -0.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.0,
+              0.01
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.01,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": true
+          },
+          {
+            "id": 5,
+            "type": "line",
+            "start": 1,
+            "end": 3,
+            "construction": true
+          },
+          {
+            "id": 6,
+            "type": "point",
+            "position": [
+              0.06,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "point",
+            "position": [
+              0.06,
+              0.01
+            ],
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "line",
+            "start": 6,
+            "end": 7,
+            "construction": true
+          },
+          {
+            "id": 9,
+            "type": "point",
+            "position": [
+              0.054,
+              0.013
+            ],
+            "construction": false
+          },
+          {
+            "id": 10,
+            "type": "point",
+            "position": [
+              0.054,
+              0.017
+            ],
+            "construction": false
+          },
+          {
+            "id": 11,
+            "type": "point",
+            "position": [
+              0.06,
+              0.021
+            ],
+            "construction": false
+          },
+          {
+            "id": 12,
+            "type": "point",
+            "position": [
+              0.063,
+              0.021
+            ],
+            "construction": false
+          },
+          {
+            "id": 13,
+            "type": "point",
+            "position": [
+              0.063,
+              0.009
+            ],
+            "construction": false
+          },
+          {
+            "id": 14,
+            "type": "point",
+            "position": [
+              0.06,
+              0.009
+            ],
+            "construction": false
+          },
+          {
+            "id": 15,
+            "type": "point",
+            "position": [
+              0.054,
+              0.015
+            ],
+            "construction": false
+          },
+          {
+            "id": 16,
+            "type": "line",
+            "start": 9,
+            "end": 10,
+            "construction": false
+          },
+          {
+            "id": 17,
+            "type": "line",
+            "start": 10,
+            "end": 11,
+            "construction": false
+          },
+          {
+            "id": 18,
+            "type": "line",
+            "start": 11,
+            "end": 12,
+            "construction": false
+          },
+          {
+            "id": 19,
+            "type": "line",
+            "start": 12,
+            "end": 13,
+            "construction": false
+          },
+          {
+            "id": 20,
+            "type": "line",
+            "start": 13,
+            "end": 14,
+            "construction": false
+          },
+          {
+            "id": 21,
+            "type": "line",
+            "start": 14,
+            "end": 9,
+            "construction": false
+          },
+          {
+            "id": 22,
+            "type": "line",
+            "start": 9,
+            "end": 15,
+            "construction": true
+          },
+          {
+            "id": 23,
+            "type": "line",
+            "start": 15,
+            "end": 10,
+            "construction": true
+          },
+          {
+            "id": 24,
+            "type": "line",
+            "start": 14,
+            "end": 11,
+            "construction": true
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "fixed",
+            "entities": [
+              2
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "fixed",
+            "entities": [
+              3
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "horizontal",
+            "entities": [
+              1,
+              6
+            ],
+            "enabled": true
+          },
+          {
+            "id": 5,
+            "type": "distance",
+            "entities": [
+              6,
+              4
+            ],
+            "value": 0.06,
+            "parameter": 1,
+            "enabled": true
+          },
+          {
+            "id": 6,
+            "type": "vertical",
+            "entities": [
+              8
+            ],
+            "enabled": true
+          },
+          {
+            "id": 7,
+            "type": "distance",
+            "entities": [
+              6,
+              7
+            ],
+            "value": 0.01,
+            "enabled": true
+          },
+          {
+            "id": 8,
+            "type": "distance",
+            "entities": [
+              9,
+              8
+            ],
+            "value": 0.006,
+            "parameter": 10,
+            "enabled": true
+          },
+          {
+            "id": 9,
+            "type": "vertical",
+            "entities": [
+              16
+            ],
+            "enabled": true
+          },
+          {
+            "id": 10,
+            "type": "distance",
+            "entities": [
+              16
+            ],
+            "value": 0.004,
+            "parameter": 12,
+            "enabled": true
+          },
+          {
+            "id": 11,
+            "type": "vertical",
+            "entities": [
+              15,
+              9
+            ],
+            "enabled": true
+          },
+          {
+            "id": 12,
+            "type": "equal",
+            "entities": [
+              22,
+              23
+            ],
+            "enabled": true
+          },
+          {
+            "id": 13,
+            "type": "distance",
+            "entities": [
+              15,
+              5
+            ],
+            "value": 0.015,
+            "parameter": 9,
+            "enabled": true
+          },
+          {
+            "id": 14,
+            "type": "distance",
+            "entities": [
+              11,
+              4
+            ],
+            "value": 0.06,
+            "parameter": 1,
+            "enabled": true
+          },
+          {
+            "id": 15,
+            "type": "distance",
+            "entities": [
+              14,
+              4
+            ],
+            "value": 0.06,
+            "parameter": 1,
+            "enabled": true
+          },
+          {
+            "id": 16,
+            "type": "distance",
+            "entities": [
+              24
+            ],
+            "value": 0.012,
+            "parameter": 11,
+            "enabled": true
+          },
+          {
+            "id": 17,
+            "type": "equal",
+            "entities": [
+              17,
+              21
+            ],
+            "enabled": true
+          },
+          {
+            "id": 18,
+            "type": "horizontal",
+            "entities": [
+              18
+            ],
+            "enabled": true
+          },
+          {
+            "id": 19,
+            "type": "horizontal",
+            "entities": [
+              20
+            ],
+            "enabled": true
+          },
+          {
+            "id": 20,
+            "type": "vertical",
+            "entities": [
+              19
+            ],
+            "enabled": true
+          },
+          {
+            "id": 21,
+            "type": "distance",
+            "entities": [
+              12,
+              8
+            ],
+            "value": 0.003,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 24,
+        "last_constraint_id": 21
+      }
+    },
+    {
+      "id": 18,
+      "type": "revolve",
+      "name": "Groove",
+      "data": {
+        "profile": 17,
+        "axis": {
+          "type": "line",
+          "line": 4
+        },
+        "angle": 6.283185307179586,
+        "direction": "positive",
+        "operation": "cut",
+        "target": 16
+      }
+    },
+    {
+      "id": 19,
+      "type": "hole",
+      "name": "Bore",
+      "data": {
+        "target": 18,
+        "face": {
+          "surface": "plane",
+          "point": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        },
+        "center": [
+          0.0,
+          0.0
+        ],
+        "type": "simple",
+        "extent": "through",
+        "diameter": 0.02,
+        "diameter_parameter": 8
+      }
+    },
+    {
+      "id": 20,
+      "type": "fillet",
+      "name": "WebFillets",
+      "data": {
+        "target": 19,
+        "edges": [
+          {
+            "curve": "circle",
+            "center": [
+              0.0,
+              0.0,
+              0.01
+            ],
+            "axis": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "radius": 0.025
+          },
+          {
+            "curve": "circle",
+            "center": [
+              0.0,
+              0.0,
+              0.01
+            ],
+            "axis": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "radius": 0.05
+          },
+          {
+            "curve": "circle",
+            "center": [
+              0.0,
+              0.0,
+              0.02
+            ],
+            "axis": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "radius": 0.025
+          },
+          {
+            "curve": "circle",
+            "center": [
+              0.0,
+              0.0,
+              0.02
+            ],
+            "axis": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "radius": 0.05
+          }
+        ],
+        "radius": 0.003,
+        "radius_parameter": 13
+      }
+    },
+    {
+      "id": 21,
+      "type": "chamfer",
+      "name": "HubChamfers",
+      "data": {
+        "target": 20,
+        "edges": [
+          {
+            "curve": "circle",
+            "center": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "axis": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "radius": 0.025
+          },
+          {
+            "curve": "circle",
+            "center": [
+              0.0,
+              0.0,
+              0.04
+            ],
+            "axis": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "radius": 0.025
+          }
+        ],
+        "mode": "equal_distance",
+        "distance": 0.001,
+        "distance_parameter": 14
+      }
+    }
+  ]
+}

@@ -12,6 +12,9 @@ bettercad_add_process_test(architecture.checker.valid
 bettercad_add_process_test(architecture.checker.occt-leak
     COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/occt-leak|-P|${_check_layering}"
     EXIT_CODE 1 STDERR_REGEX "1 violation.*OCCT header <TopoDS_Shape.hxx>")
+bettercad_add_process_test(architecture.checker.examples-occt-leak
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/examples-occt-leak|-P|${_check_layering}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*OCCT header <BRepPrimAPI_MakeBox.hxx>")
 bettercad_add_process_test(architecture.checker.qt-leak
     COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/qt-leak|-P|${_check_layering}"
     EXIT_CODE 1 STDERR_REGEX "1 violation.*Qt header <QString>")

@@ -1,0 +1,21 @@
+qualification started Wed 16/09/2026 14:04:15.78
+debug configure started Wed 16/09/2026 14:04:15.79
+debug configure exit 0 Wed 16/09/2026 14:04:20.42
+debug build exit 0 Wed 16/09/2026 14:09:12.03
+debug ctest exit 0 Wed 16/09/2026 14:15:12.62
+debug fingerprints exit 0 Wed 16/09/2026 14:15:19.82
+release configure started Wed 16/09/2026 14:15:19.84
+release configure exit 0 Wed 16/09/2026 14:15:24.86
+release build exit 0 Wed 16/09/2026 14:21:29.39
+release ctest exit 0 Wed 16/09/2026 14:28:01.52
+release fingerprints exit 0 Wed 16/09/2026 14:28:08.61
+debug-shared configure started Wed 16/09/2026 14:28:08.61
+debug-shared configure exit 0 Wed 16/09/2026 14:28:13.57
+debug-shared build exit 0 Wed 16/09/2026 14:32:30.37
+debug-shared ctest exit 0 Wed 16/09/2026 14:38:04.35
+debug-shared fingerprints exit 0 Wed 16/09/2026 14:38:12.06
+repeat release started Wed 16/09/2026 14:38:12.07
+repeat release exit 0 Wed 16/09/2026 15:04:11.84
+repeat debug started Wed 16/09/2026 15:04:11.84
+repeat debug exit 0 Wed 16/09/2026 15:30:50.01
+qualification finished Wed 16/09/2026 15:30:50.01

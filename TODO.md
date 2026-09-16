@@ -498,23 +498,60 @@ first start of the loop; a section's corners must match one to one (a side
 split in two is another shape); the volume check cannot see a wrong matching
 that keeps the volume (BetterCAD's matching never builds one).
 
+#### P11-REF-001 — Mechanical reference models — [evidence](docs/verification/P11-REF-001/README.md)
+
+- [x] Shaft — [evidence](docs/verification/P11-REF-001/shaft/values-release.txt)
+- [x] Flange — [evidence](docs/verification/P11-REF-001/flange/values-release.txt)
+- [x] Pulley — [evidence](docs/verification/P11-REF-001/pulley/values-release.txt)
+- [x] Bearing housing — [evidence](docs/verification/P11-REF-001/bearing_housing/values-release.txt)
+- [x] Mounting bracket — [evidence](docs/verification/P11-REF-001/mounting_bracket/values-release.txt)
+
+**Acceptance (met):**
+
+- Five production parts, built only through the public document, parameter,
+  sketch and feature APIs: a stepped shaft, a bolted flange, a V-belt pulley,
+  a pillow block and an L bracket, with a swept U-bolt alongside them so the
+  sweep feature has a natural use. Between them they use every P11 feature.
+- Each part's volume, area, centroid and bounds match geometry computed
+  independently from its dimensions (cross-sections of lines and arcs
+  integrated with Green's theorem, and Pappus' theorems), at every step of
+  its feature chain: within 1.2e-13 relative for the parts bounded by
+  planes, cylinders, cones and tori, and 6.0e-12 for the bracket, whose
+  lofted gusset the kernel keeps as B-spline faces.
+- Ten full regenerations and three fresh builds of every model give
+  bit-identical fingerprints (items, IDs, topology, volume, area, centroid,
+  bounds); building all six in one process gives the same models as building
+  each alone; five rounds of building and discarding them all leave nothing
+  behind.
+- Changing a main dimension of each model regenerates it to the expected new
+  geometry, and restoring the dimension restores the model to rounding.
+- Save → destroy → load → regenerate reproduces every model exactly, and
+  `examples/models/reference/*.bcad` stay byte-identical to what the builders
+  save.
+- STEP read-back and closed, outward-facing STL meshes agree with the exact
+  volumes; the CLI loads, validates and exports every model.
+- Invalid parameters (a fillet that does not fit, a hole off the edge, a bolt
+  circle through the rim, a bore wider than the hub, a bore that eats the
+  boss, a chamfer wider than the rod) fail with structured diagnostics,
+  commit nothing, and recover when the parameter is restored.
+- The existing P0–P11-FEAT-009 regression suite remains green: Debug, Release
+  and Debug-shared each rebuilt clean, 738/738 tests and 0 compiler warnings
+  over 274 translation units in each.
+
+**Known limitations:** geometric references do not follow geometry a
+parameter moves (the shaft's tail chamfer and the flange's rim chamfer show
+it, and say so instead of taking another edge); uniting a half body with its
+mirror image is refused when a half cylinder lies on the mirror plane, so the
+housing cuts its bore after joining its halves; parameter expressions are
+still not evaluated, so a derived dimension needs its own parameter or a
+sketch that builds the relation; an extrude has no through-all mode; a loft's
+B-spline sides cost about 6e-12 in volume and 3.4e-6 mm in the centroid.
+
 ## Current
 
 ### P11 — Production Part Modeling
 
-#### P11-REF-001 — Mechanical reference models ← NEXT
-
-- [ ] Shaft
-- [ ] Flange
-- [ ] Pulley
-- [ ] Bearing housing
-- [ ] Mounting bracket
-
-## Next
-
-### P11 — Production Part Modeling (remaining)
-
-#### P11-QUAL-001 — Qualification
+#### P11-QUAL-001 — Qualification ← NEXT
 
 - [ ] Debug build
 - [ ] Release build

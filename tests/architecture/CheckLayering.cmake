@@ -1,5 +1,9 @@
 # Script mode (cmake -P): enforce BetterCAD's architecture rules on #include
-# directives under include/, src/ and apps/ of SOURCE_DIR.
+# directives under include/, src/, apps/ and examples/ of SOURCE_DIR.
+#
+# The examples are checked like any client of the library: the reference
+# models (P11-REF-001) must build their parts through BetterCAD's public
+# APIs, never by reaching into Open CASCADE.
 #
 # Rules
 #   1. Open CASCADE headers (*.hxx) may only be included from an "occt"
@@ -30,6 +34,7 @@ file(GLOB_RECURSE files RELATIVE "${SOURCE_DIR}"
     "${SOURCE_DIR}/include/*"
     "${SOURCE_DIR}/src/*"
     "${SOURCE_DIR}/apps/*"
+    "${SOURCE_DIR}/examples/*"
 )
 list(FILTER files INCLUDE REGEX "\\.(h|hh|hpp|hxx|ipp|inl|c|cc|cpp|cxx)$")
 list(LENGTH files file_count)

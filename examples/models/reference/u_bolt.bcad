@@ -1,0 +1,356 @@
+{
+  "format": "bettercad-document",
+  "version": 1,
+  "units": "SI",
+  "document": {
+    "id": "5eed0000-0000-4000-8000-000000000006",
+    "name": "UBolt",
+    "metadata": {
+      "description": "",
+      "author": "",
+      "properties": {}
+    },
+    "last_allocated_id": 8
+  },
+  "parameters": [
+    {
+      "id": 1,
+      "name": "rod_r",
+      "si_value": 0.005,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 2,
+      "name": "leg",
+      "si_value": 0.06,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 3,
+      "name": "bend_r",
+      "si_value": 0.025,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 4,
+      "name": "end_chamfer",
+      "si_value": 0.001,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    }
+  ],
+  "objects": [
+    {
+      "id": 5,
+      "type": "sketch",
+      "name": "RodSection",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "circle",
+            "center": 1,
+            "radius": 0.005,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "radius",
+            "entities": [
+              2
+            ],
+            "value": 0.005,
+            "parameter": 1,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 2,
+        "last_constraint_id": 2
+      }
+    },
+    {
+      "id": 6,
+      "type": "sketch",
+      "name": "Route",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "normal": [
+            -0.0,
+            -1.0,
+            -0.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.0,
+              -0.06
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.025,
+              -0.06
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.05,
+              -0.06
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "point",
+            "position": [
+              0.05,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "arc",
+            "center": 3,
+            "start": 2,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "line",
+            "start": 4,
+            "end": 5,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "vertical",
+            "entities": [
+              6
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "distance",
+            "entities": [
+              6
+            ],
+            "value": 0.06,
+            "parameter": 2,
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "horizontal",
+            "entities": [
+              2,
+              3
+            ],
+            "enabled": true
+          },
+          {
+            "id": 5,
+            "type": "radius",
+            "entities": [
+              7
+            ],
+            "value": 0.025,
+            "parameter": 3,
+            "enabled": true
+          },
+          {
+            "id": 6,
+            "type": "horizontal",
+            "entities": [
+              3,
+              4
+            ],
+            "enabled": true
+          },
+          {
+            "id": 7,
+            "type": "vertical",
+            "entities": [
+              8
+            ],
+            "enabled": true
+          },
+          {
+            "id": 8,
+            "type": "horizontal",
+            "entities": [
+              1,
+              5
+            ],
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 8,
+        "last_constraint_id": 8
+      }
+    },
+    {
+      "id": 7,
+      "type": "sweep",
+      "name": "Rod",
+      "data": {
+        "profile": 5,
+        "path": {
+          "sketch": 6,
+          "edges": [
+            6,
+            7,
+            8
+          ]
+        },
+        "orientation": "follow_path",
+        "operation": "new_body"
+      }
+    },
+    {
+      "id": 8,
+      "type": "chamfer",
+      "name": "EndChamfers",
+      "data": {
+        "target": 7,
+        "edges": [
+          {
+            "curve": "circle",
+            "center": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "axis": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "radius": 0.005
+          },
+          {
+            "curve": "circle",
+            "center": [
+              0.05,
+              0.0,
+              0.0
+            ],
+            "axis": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "radius": 0.005
+          }
+        ],
+        "mode": "equal_distance",
+        "distance": 0.001,
+        "distance_parameter": 4
+      }
+    }
+  ]
+}

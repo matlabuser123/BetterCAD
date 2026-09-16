@@ -41,18 +41,19 @@ the `architecture.layering` test. Fixture trees under
 
 ## Targets
 
-| Target                | Alias                 | Kind        | Contents                                        |
-|-----------------------|-----------------------|-------------|-------------------------------------------------|
-| `bettercad_core`      | `BetterCAD::core`     | library     | Build info, units, IDs, parameters, document    |
-| `bettercad_geometry`  | `BetterCAD::geometry` | library     | Solid geometry, meshing, STEP over OCCT         |
-| `bettercad_sketch`    | `BetterCAD::sketch`   | library     | Sketches, constraints, solver (layer 1)         |
-| `bettercad_features`  | `BetterCAD::features` | library     | Features, regeneration, validation (layer 2)    |
-| `bettercad_io`        | `BetterCAD::io`       | library     | Native document files, STEP/STL export          |
-| `bettercad_cli_lib`   | `BetterCAD::cli_lib`  | static lib  | CLI commands (new, info, validate, export)      |
-| `bettercad_cli`       | —                     | executable  | `bettercad-cli`                                 |
-| `bettercad`           | —                     | executable  | Qt desktop application (placeholder)            |
-| `bettercad_tests`     | —                     | executable  | Catch2 unit tests                               |
-| `bettercad_test_occt` | —                     | static lib  | Test-only STEP read-back (OCCT)                 |
+| Target                       | Alias                         | Kind       | Contents                                      |
+|------------------------------|-------------------------------|------------|-----------------------------------------------|
+| `bettercad_core`             | `BetterCAD::core`             | library    | Build info, units, IDs, parameters, document  |
+| `bettercad_geometry`         | `BetterCAD::geometry`         | library    | Solid geometry, meshing, STEP over OCCT       |
+| `bettercad_sketch`           | `BetterCAD::sketch`           | library    | Sketches, constraints, solver (layer 1)       |
+| `bettercad_features`         | `BetterCAD::features`         | library    | Features, regeneration, validation (layer 2)  |
+| `bettercad_io`               | `BetterCAD::io`               | library    | Native document files, STEP/STL export        |
+| `bettercad_cli_lib`          | `BetterCAD::cli_lib`          | static lib | CLI commands (new, info, validate, export)    |
+| `bettercad_cli`              | —                             | executable | `bettercad-cli`                               |
+| `bettercad`                  | —                             | executable | Qt desktop application (placeholder)          |
+| `bettercad_tests`            | —                             | executable | Catch2 unit tests                             |
+| `bettercad_test_occt`        | —                             | static lib | Test-only STEP read-back (OCCT)               |
+| `bettercad_reference_models` | `BetterCAD::reference_models` | static lib | The mechanical reference models (P11-REF-001) |
 
 Further module libraries (renderer, scripting, ...) are added as their
 milestones start; see `TODO.md`.
@@ -785,6 +786,44 @@ milestones start; see `TODO.md`.
 - On Windows the entry point is `wmain`, which converts the UTF-16 command
   line to UTF-8, so non-ASCII file names work.
 - Options accept units, e.g. `--tolerance 0.05mm`.
+
+### Mechanical reference models (`examples/reference_models`)
+
+Five production parts and a swept U-bolt, built only through the public
+document, parameter, sketch and feature APIs — the same route a user, a
+script or the GUI takes. Nothing there creates geometry directly: every
+body comes from regenerating a document, and the architecture check (which
+covers `examples/` as well) keeps Open CASCADE out of them.
+
+- **The parts.** A stepped shaft (revolve, hole, mirror, fillet, chamfer),
+  a bolted flange (extrude, holes, circular pattern, chamfer, fillet), a
+  V-belt pulley (revolve, revolved cut, hole, fillets, chamfers), a pillow
+  block (extrudes joined, body mirror, extruded cut, hole, linear pattern,
+  fillet, chamfer), an L bracket (extrudes joined, holes, linear pattern,
+  mirror, fillet, chamfer, lofted gusset) and the U-bolt (sweep, chamfer).
+  Together they use every P11 feature.
+- **Builders.** `buildShaftReferenceModel()` and its siblings return a
+  document that has not been regenerated, plus the IDs of the parameters and
+  objects tests change. They are deterministic: the same builder always
+  gives the same items with the same IDs, under a fixed document ID, so a
+  saved model is reproducible byte for byte. `examples/models/reference/`
+  holds those files, and a test keeps them in step with the builders.
+- **Fingerprints.** `fingerprint(document, regenerator)` collects what
+  identifies a regenerated model: its items with their IDs, kinds and names,
+  how many features it has, and each result body's validity, topology,
+  volume, area, centroid and bounds. Tests compare fingerprints exactly for
+  a rebuild, a save and a load, and within a tolerance across a change and
+  back.
+- **Parameters.** Expressions are stored but not evaluated yet (P1-003), so
+  every dimension a feature follows is one parameter used directly. Where a
+  model needs a derived dimension, a sketch builds the relation
+  geometrically: the shaft is dimensioned by half its length, so the same
+  parameter sets the overall length and the mirror plane for the tail
+  centre hole.
+- **The example program** `bettercad_example_reference_models` builds every
+  model, prints its fingerprint and its build, regeneration, save and load
+  times, and with `--out <dir>` writes the models and their STEP and STL
+  exports.
 
 ### Test tooling
 

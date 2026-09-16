@@ -1,0 +1,21 @@
+Reference model fingerprints across builds, against fingerprints-debug.txt.
+Structure (items, IDs, names, feature and body counts, validity, topology) must be identical;
+volumes, areas, centroids and bounds are compared as numbers.
+
+== fingerprints-release.txt
+  BearingHousing   structure same, volume and area within 0 relative, positions within 0 mm
+  Flange           structure same, volume and area within 0 relative, positions within 0 mm
+  MountingBracket  structure same, volume and area within 0 relative, positions within 0 mm
+  Pulley           structure same, volume and area within 0 relative, positions within 0 mm
+  Shaft            structure same, volume and area within 0 relative, positions within 0 mm
+  UBolt            structure same, volume and area within 0 relative, positions within 0 mm
+== fingerprints-debug-shared.txt
+  BearingHousing   structure same, volume and area within 0 relative, positions within 0 mm
+  Flange           structure same, volume and area within 0 relative, positions within 0 mm
+  MountingBracket  structure same, volume and area within 0 relative, positions within 0 mm
+  Pulley           structure same, volume and area within 0 relative, positions within 0 mm
+  Shaft            structure same, volume and area within 0 relative, positions within 0 mm
+  UBolt            structure same, volume and area within 0 relative, positions within 0 mm
+
+Worst over all models and builds: 0 relative, 0 mm.
+No structural differences.

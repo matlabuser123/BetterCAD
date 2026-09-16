@@ -1,0 +1,770 @@
+{
+  "format": "bettercad-document",
+  "version": 1,
+  "units": "SI",
+  "document": {
+    "id": "5eed0000-0000-4000-8000-000000000004",
+    "name": "BearingHousing",
+    "metadata": {
+      "description": "",
+      "author": "",
+      "properties": {}
+    },
+    "last_allocated_id": 24
+  },
+  "parameters": [
+    {
+      "id": 1,
+      "name": "base_half_length",
+      "si_value": 0.06,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 2,
+      "name": "base_width",
+      "si_value": 0.06,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 3,
+      "name": "base_t",
+      "si_value": 0.012,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 4,
+      "name": "boss_r",
+      "si_value": 0.035,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 5,
+      "name": "axis_height",
+      "si_value": 0.045,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 6,
+      "name": "bore_r",
+      "si_value": 0.02,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 7,
+      "name": "mount_d",
+      "si_value": 0.01,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 8,
+      "name": "mount_x",
+      "si_value": 0.048,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 9,
+      "name": "mount_y",
+      "si_value": 0.015,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 10,
+      "name": "mount_pitch_x",
+      "si_value": 0.096,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 11,
+      "name": "mount_pitch_y",
+      "si_value": 0.03,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 12,
+      "name": "boss_fillet_r",
+      "si_value": 0.003,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 13,
+      "name": "base_chamfer",
+      "si_value": 0.0015,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    }
+  ],
+  "objects": [
+    {
+      "id": 14,
+      "type": "sketch",
+      "name": "BaseSection",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "normal": [
+            -0.0,
+            -1.0,
+            -0.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.06,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.06,
+              0.012
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.0,
+              0.012
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "line",
+            "start": 2,
+            "end": 3,
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "line",
+            "start": 4,
+            "end": 1,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "horizontal",
+            "entities": [
+              5
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "vertical",
+            "entities": [
+              6
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "horizontal",
+            "entities": [
+              7
+            ],
+            "enabled": true
+          },
+          {
+            "id": 5,
+            "type": "vertical",
+            "entities": [
+              8
+            ],
+            "enabled": true
+          },
+          {
+            "id": 6,
+            "type": "distance",
+            "entities": [
+              5
+            ],
+            "value": 0.06,
+            "parameter": 1,
+            "enabled": true
+          },
+          {
+            "id": 7,
+            "type": "distance",
+            "entities": [
+              6
+            ],
+            "value": 0.012,
+            "parameter": 3,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 8,
+        "last_constraint_id": 7
+      }
+    },
+    {
+      "id": 15,
+      "type": "extrude",
+      "name": "Base",
+      "data": {
+        "profile": 14,
+        "depth": 0.06,
+        "depth_parameter": 2,
+        "direction": "symmetric",
+        "operation": "new_body"
+      }
+    },
+    {
+      "id": 16,
+      "type": "sketch",
+      "name": "BossSection",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "normal": [
+            -0.0,
+            -1.0,
+            -0.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.035,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.035,
+              0.045
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.0,
+              0.08
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "point",
+            "position": [
+              0.0,
+              0.045
+            ],
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "line",
+            "start": 2,
+            "end": 3,
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "arc",
+            "center": 5,
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 9,
+            "type": "line",
+            "start": 4,
+            "end": 1,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "horizontal",
+            "entities": [
+              6
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "vertical",
+            "entities": [
+              7
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "vertical",
+            "entities": [
+              9
+            ],
+            "enabled": true
+          },
+          {
+            "id": 5,
+            "type": "vertical",
+            "entities": [
+              1,
+              5
+            ],
+            "enabled": true
+          },
+          {
+            "id": 6,
+            "type": "distance",
+            "entities": [
+              1,
+              5
+            ],
+            "value": 0.045,
+            "parameter": 5,
+            "enabled": true
+          },
+          {
+            "id": 7,
+            "type": "horizontal",
+            "entities": [
+              5,
+              3
+            ],
+            "enabled": true
+          },
+          {
+            "id": 8,
+            "type": "radius",
+            "entities": [
+              8
+            ],
+            "value": 0.035,
+            "parameter": 4,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 9,
+        "last_constraint_id": 8
+      }
+    },
+    {
+      "id": 17,
+      "type": "extrude",
+      "name": "Boss",
+      "data": {
+        "profile": 16,
+        "depth": 0.06,
+        "depth_parameter": 2,
+        "direction": "symmetric",
+        "operation": "join",
+        "target": 15
+      }
+    },
+    {
+      "id": 18,
+      "type": "mirror",
+      "name": "Housing",
+      "data": {
+        "source": 17,
+        "plane": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "normal": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "offset": 0.0
+        },
+        "scope": "body",
+        "keep_original": true
+      }
+    },
+    {
+      "id": 19,
+      "type": "sketch",
+      "name": "BoreSection",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "normal": [
+            -0.0,
+            -1.0,
+            -0.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.0,
+              0.045
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "circle",
+            "center": 2,
+            "radius": 0.02,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "vertical",
+            "entities": [
+              1,
+              2
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "distance",
+            "entities": [
+              1,
+              2
+            ],
+            "value": 0.045,
+            "parameter": 5,
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "radius",
+            "entities": [
+              3
+            ],
+            "value": 0.02,
+            "parameter": 6,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 3,
+        "last_constraint_id": 4
+      }
+    },
+    {
+      "id": 20,
+      "type": "extrude",
+      "name": "Bore",
+      "data": {
+        "profile": 19,
+        "depth": 0.06,
+        "depth_parameter": 2,
+        "direction": "symmetric",
+        "operation": "cut",
+        "target": 18
+      }
+    },
+    {
+      "id": 21,
+      "type": "hole",
+      "name": "MountHole",
+      "data": {
+        "target": 20,
+        "face": {
+          "surface": "plane",
+          "point": [
+            0.0,
+            0.0,
+            0.012
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "center": [
+          0.048,
+          0.015
+        ],
+        "center_u_parameter": 8,
+        "center_v_parameter": 9,
+        "type": "simple",
+        "extent": "through",
+        "diameter": 0.01,
+        "diameter_parameter": 7
+      }
+    },
+    {
+      "id": 22,
+      "type": "linear_pattern",
+      "name": "MountHoles",
+      "data": {
+        "source": 21,
+        "first": {
+          "direction": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "count": 2,
+          "spacing": 0.096,
+          "spacing_parameter": 10
+        },
+        "second": {
+          "direction": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "count": 2,
+          "spacing": 0.03,
+          "spacing_parameter": 11
+        }
+      }
+    },
+    {
+      "id": 23,
+      "type": "fillet",
+      "name": "BossFillets",
+      "data": {
+        "target": 22,
+        "edges": [
+          {
+            "curve": "line",
+            "point": [
+              0.035,
+              0.0,
+              0.012
+            ],
+            "direction": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "curve": "line",
+            "point": [
+              -0.035,
+              0.0,
+              0.012
+            ],
+            "direction": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          }
+        ],
+        "radius": 0.003,
+        "radius_parameter": 12
+      }
+    },
+    {
+      "id": 24,
+      "type": "chamfer",
+      "name": "BaseChamfers",
+      "data": {
+        "target": 23,
+        "edges": [
+          {
+            "curve": "line",
+            "point": [
+              0.06,
+              0.0,
+              0.012
+            ],
+            "direction": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "curve": "line",
+            "point": [
+              -0.06,
+              0.0,
+              0.012
+            ],
+            "direction": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          }
+        ],
+        "mode": "equal_distance",
+        "distance": 0.0015,
+        "distance_parameter": 13
+      }
+    }
+  ]
+}
