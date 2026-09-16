@@ -434,3 +434,79 @@ milestone changed state, and no checkbox moved.
 
 Documentation: **CONSISTENT**. Current implementation: **none**. Next:
 **awaiting explicit scope decision**.
+
+---
+
+# Second Pass — Streamlining (revision `931253c`)
+
+A second documentation-only pass followed immediately, reducing the five
+documents from 6510 to 1612 lines (75%) without removing an engineering rule.
+Everything above describes the first pass and remains true of it; this section
+records what changed afterwards, so the checkbox figures above are not read as a
+description of the repository today.
+
+## What changed
+
+| Document | Lines | Change |
+| --- | --- | --- |
+| `README.md` | 293 → 219 | Overview / Current Status / Capabilities / Architecture / Build and Test / Usage / Repository Structure / Project Documentation / Verification / Current Limitations. Capabilities became one table. |
+| `ROADMAP.md` | 1317 → 356 | Strategic document. Implementation-level detail dropped; per-capability sections cut to intent and gate. Now carries the completed-capability record with evidence links. |
+| `TODO.md` | 760 → 224 | Forward-looking work list. |
+| `CLAUDE.md` | 1509 → 294 | Compact rulebook under the 15 requested headings. |
+| `ARCHITECTURE.md` | 2631 → 519 | Technical blueprint; aspirational code sketches replaced by prose and tables. Invariants kept. |
+
+## Completed work moved out of TODO.md
+
+On the user's instruction, completed `[x]` items were **removed from
+`TODO.md`** and the capabilities they belong to are **marked done in
+`ROADMAP.md`**, which now carries two evidence tables — Foundation (`P0`–`P10`)
+and Parametric Part Modeling (`P11`) — one row per milestone, each linking its
+evidence directory.
+
+```text
+TODO.md checkboxes   215 checked, 20 unchecked   →   0 checked, 68 unchecked
+```
+
+The 68 open items are the planned capabilities from `ROADMAP.md`, expanded into
+actionable todos grouped under the same capability names.
+
+**Consequence for earlier evidence.** `P11-QUAL-001` states that "`TODO.md`
+records 171 checked P11 items with none unchecked". That was true of the
+revision it measured (`79dab04`) and remains true of it; it is no longer a
+description of `TODO.md` today. `P11-QUAL-001` was not edited — it is a frozen
+record — and the milestone-by-milestone evidence it audits is unchanged and
+still linked, now from `ROADMAP.md`. No milestone changed state, and nothing was
+marked complete that was not already complete.
+
+**Detail not carried forward.** Per-milestone acceptance criteria, measured
+values, analytic validation and per-feature "not implemented" notes were removed
+from `TODO.md`. They were summaries of the evidence; the originals remain in
+`docs/verification/<milestone>/`, which both documents link to. The
+still-outstanding scope those notes described is preserved as open todos in
+`TODO.md` and as the *Parametric CAD completion* capability in `ROADMAP.md`.
+
+## Validation
+
+```text
+git diff --check        no whitespace errors
+link and anchor audit   97 relative links, 0 broken
+claim audit             STEP import, production GUI, semantic topology, FEA,
+                        CFD and AI appear only as negations or as planned
+status consistency      README, ROADMAP and TODO agree: P11 Qualified,
+                        current none, next awaiting scope decision
+numbering               one hit for P12-P29: the historical note explaining
+                        why roadmap chapter numbers were retired
+markdown lint           editor markdownlint clean apart from spell-check
+                        informationals
+```
+
+No test or build was run: the changes touch no script, build file or metadata.
+
+## Result
+
+```text
+PASS
+```
+
+Documentation: **REFINED**. `P11`: **QUALIFIED**. Current implementation:
+**none**. Next: **awaiting explicit scope decision**.
