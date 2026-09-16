@@ -5,12 +5,15 @@
 #include <bettercad/core/units/Units.hpp>
 #include <bettercad/sketch/Export.hpp>
 
+#include <array>
+#include <optional>
 #include <string_view>
 #include <variant>
+#include <vector>
 
-// Sketch entities. Points are entities of their own; lines, circles and arcs
-// reference point entities. Connected geometry shares points, and constraints
-// (P5) reference whole entities only.
+// Sketch entities. Points are entities of their own; lines, circles, arcs,
+// ellipses and splines reference point entities. Connected geometry shares
+// points, and constraints (P5) reference whole entities only.
 namespace bettercad::sketch {
 
 enum class EntityType {
@@ -18,6 +21,8 @@ enum class EntityType {
     Line,
     Circle,
     Arc,
+    Ellipse, ///< P12-SKETCH-002
+    Spline,  ///< P12-SKETCH-002
 };
 
 [[nodiscard]] BETTERCAD_SKETCH_EXPORT std::string_view toString(EntityType type) noexcept;
@@ -55,8 +60,34 @@ struct ArcEntity {
     friend constexpr bool operator==(const ArcEntity&, const ArcEntity&) = default;
 };
 
+/// A full ellipse around a centre point entity. Its two semi-axes end at
+/// the point entities xVertex and yVertex, which lie on the ellipse; the
+/// solver keeps the axes perpendicular. Either axis may be the longer one.
+/// Distances from the centre to the vertices size the ellipse, and a
+/// horizontal or vertical constraint on (center, xVertex) orients it.
+struct EllipseEntity {
+    EntityId center{};
+    EntityId xVertex{};
+    EntityId yVertex{};
+
+    friend constexpr bool operator==(const EllipseEntity&, const EllipseEntity&) = default;
+};
+
+/// A non-rational B-spline with uniform knots, of degree 2 to 5, whose poles
+/// (control points) are point entities. An open spline starts at its first
+/// pole and ends at its last, so it joins other entities through them; a
+/// periodic spline is a closed, smooth curve on its own. The curve passes
+/// through no other pole (see geometry::SplineSegment2D).
+struct SplineEntity {
+    std::vector<EntityId> poles{};
+    int degree = 3;
+    bool periodic = false;
+
+    friend bool operator==(const SplineEntity&, const SplineEntity&) = default;
+};
+
 /// Alternatives are in EntityType order.
-using EntityGeometry = std::variant<PointEntity, LineEntity, CircleEntity, ArcEntity>;
+using EntityGeometry = std::variant<PointEntity, LineEntity, CircleEntity, ArcEntity, EllipseEntity, SplineEntity>;
 
 /// An entity stored in a sketch.
 struct Entity {
@@ -73,7 +104,11 @@ struct Entity {
     friend bool operator==(const Entity&, const Entity&) = default;
 };
 
-/// Start and end point of a line or arc.
+/// The point entities where a line, an arc or an open spline starts and
+/// ends; std::nullopt for points, circles, ellipses and periodic splines.
+[[nodiscard]] BETTERCAD_SKETCH_EXPORT std::optional<std::array<EntityId, 2>> endPointIds(const Entity& entity);
+
+/// Start and end point of a line, an arc or an open spline.
 struct Endpoints {
     Point2D start{};
     Point2D end{};

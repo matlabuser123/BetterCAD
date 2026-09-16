@@ -13,8 +13,9 @@ Json pointToJson(const Point2D& p) {
     return Json::array({p.x.si(), p.y.si()});
 }
 
-constexpr std::array kEntityTypes{sketch::EntityType::Point, sketch::EntityType::Line,
-                                  sketch::EntityType::Circle, sketch::EntityType::Arc};
+constexpr std::array kEntityTypes{sketch::EntityType::Point,   sketch::EntityType::Line,
+                                  sketch::EntityType::Circle,  sketch::EntityType::Arc,
+                                  sketch::EntityType::Ellipse, sketch::EntityType::Spline};
 constexpr std::array kConstraintTypes{
     sketch::ConstraintType::Coincident, sketch::ConstraintType::Horizontal,
     sketch::ConstraintType::Vertical,   sketch::ConstraintType::Parallel,
@@ -26,6 +27,18 @@ constexpr std::array kConstraintTypes{
     sketch::ConstraintType::Diameter,
 };
 
+/// The name of a type in files: toString(), except that a spline entity is a
+/// "bspline". The name says which curve the file holds (a uniform,
+/// non-rational B-spline), so other kinds of spline can have names of their
+/// own.
+std::string_view fileName(sketch::EntityType type) noexcept {
+    return type == sketch::EntityType::Spline ? std::string_view{"bspline"} : sketch::toString(type);
+}
+
+std::string_view fileName(sketch::ConstraintType type) noexcept {
+    return sketch::toString(type);
+}
+
 template <typename Enum, std::size_t N>
 Result<Enum> enumFromJson(const std::array<Enum, N>& values, const Json& object, std::string_view key,
                           std::string_view path) {
@@ -34,7 +47,7 @@ Result<Enum> enumFromJson(const std::array<Enum, N>& values, const Json& object,
         return std::unexpected(text.error());
     }
     for (const Enum value : values) {
-        if (sketch::toString(value) == *text) {
+        if (fileName(value) == *text) {
             return value;
         }
     }
@@ -44,7 +57,7 @@ Result<Enum> enumFromJson(const std::array<Enum, N>& values, const Json& object,
 Json entityToJson(const sketch::Entity& entity) {
     Json json = Json::object();
     json["id"] = entity.id.value();
-    json["type"] = std::string{sketch::toString(entity.type())};
+    json["type"] = std::string{fileName(entity.type())};
     if (const auto* point = std::get_if<sketch::PointEntity>(&entity.geometry)) {
         json["position"] = pointToJson(point->position);
     } else if (const auto* line = std::get_if<sketch::LineEntity>(&entity.geometry)) {
@@ -53,11 +66,23 @@ Json entityToJson(const sketch::Entity& entity) {
     } else if (const auto* circle = std::get_if<sketch::CircleEntity>(&entity.geometry)) {
         json["center"] = circle->center.value();
         json["radius"] = circle->radius.si();
+    } else if (const auto* arc = std::get_if<sketch::ArcEntity>(&entity.geometry)) {
+        json["center"] = arc->center.value();
+        json["start"] = arc->start.value();
+        json["end"] = arc->end.value();
+    } else if (const auto* ellipse = std::get_if<sketch::EllipseEntity>(&entity.geometry)) {
+        json["center"] = ellipse->center.value();
+        json["x_vertex"] = ellipse->xVertex.value();
+        json["y_vertex"] = ellipse->yVertex.value();
     } else {
-        const auto& arc = std::get<sketch::ArcEntity>(entity.geometry);
-        json["center"] = arc.center.value();
-        json["start"] = arc.start.value();
-        json["end"] = arc.end.value();
+        const auto& spline = std::get<sketch::SplineEntity>(entity.geometry);
+        Json poles = Json::array();
+        for (const EntityId pole : spline.poles) {
+            poles.push_back(pole.value());
+        }
+        json["poles"] = std::move(poles);
+        json["degree"] = spline.degree;
+        json["periodic"] = spline.periodic;
     }
     json["construction"] = entity.construction;
     return json;
@@ -84,6 +109,12 @@ Result<sketch::Entity> entityFromJson(const Json& value, std::string_view path) 
         break;
     case sketch::EntityType::Arc:
         fields = requireObject(value, path, {"id", "type", "center", "start", "end", "construction"});
+        break;
+    case sketch::EntityType::Ellipse:
+        fields = requireObject(value, path, {"id", "type", "center", "x_vertex", "y_vertex", "construction"});
+        break;
+    case sketch::EntityType::Spline:
+        fields = requireObject(value, path, {"id", "type", "poles", "degree", "periodic", "construction"});
         break;
     }
     if (!fields) {
@@ -138,6 +169,35 @@ Result<sketch::Entity> entityFromJson(const Json& value, std::string_view path) 
             return std::unexpected(!center ? center.error() : !start ? start.error() : end.error());
         }
         entity.geometry = sketch::ArcEntity{*center, *start, *end};
+        break;
+    }
+    case sketch::EntityType::Ellipse: {
+        auto center = reference("center");
+        auto xVertex = reference("x_vertex");
+        auto yVertex = reference("y_vertex");
+        if (!center || !xVertex || !yVertex) {
+            return std::unexpected(!center ? center.error() : !xVertex ? xVertex.error() : yVertex.error());
+        }
+        entity.geometry = sketch::EllipseEntity{*center, *xVertex, *yVertex};
+        break;
+    }
+    case sketch::EntityType::Spline: {
+        auto poles = requireArray(value, "poles", path);
+        auto degree = readInt(value, "degree", path);
+        auto periodic = readBool(value, "periodic", path);
+        if (!poles || !degree || !periodic) {
+            return std::unexpected(!poles ? poles.error() : !degree ? degree.error() : periodic.error());
+        }
+        sketch::SplineEntity spline{.poles = {}, .degree = *degree, .periodic = *periodic};
+        const std::string polesPath = childPath(path, "poles");
+        for (std::size_t i = 0; i < (*poles)->size(); ++i) {
+            auto pole = readId((**poles)[i], indexPath(polesPath, i));
+            if (!pole) {
+                return std::unexpected(pole.error());
+            }
+            spline.poles.push_back(EntityId::fromValue(*pole));
+        }
+        entity.geometry = std::move(spline);
         break;
     }
     }

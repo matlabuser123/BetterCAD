@@ -224,10 +224,14 @@ private:
                 if (const sketch::Sketch* path = sweepPathSketch(*sweep)) {
                     for (const EntityId edge : definition.path.edges) {
                         const sketch::Entity* entity = path->findEntity(edge);
-                        if (entity != nullptr && entity->type() == sketch::EntityType::Point) {
+                        const bool pathKind = entity == nullptr || entity->type() == sketch::EntityType::Line ||
+                                              entity->type() == sketch::EntityType::Arc ||
+                                              entity->type() == sketch::EntityType::Circle;
+                        if (!pathKind) {
                             add(ValidationCheck::DocumentConsistency, Severity::Error, object.id(),
-                                std::format("{}: the path edge {} is a point, not a line, arc or circle",
-                                            label(document_, object.id()), edge));
+                                std::format("{}: the path edge {} is {}, not a line, arc or circle",
+                                            label(document_, object.id()), edge,
+                                            withArticle(sketch::toString(entity->type()))));
                         }
                     }
                 }

@@ -153,11 +153,13 @@ TEST_CASE("SketchConstraint_NewTypesValidateTheirReferences", "[sketch][constrai
     CHECK(message(s.addAngle(f.lineA, f.circle, 30_deg)) ==
           "an angle constraint takes two lines, got line, circle");
     CHECK(message(s.addTangent(f.lineA, f.lineB)) ==
-          "a tangent constraint takes a line and a circle or arc, or two circles or arcs, got line, line");
+          "a tangent constraint takes a line and a circle or arc, two circles or arcs, or an open spline and a "
+          "line, an arc or an open spline, got line, line");
     CHECK(message(s.addTangent(f.point, f.circle)) ==
-          "a tangent constraint takes a line and a circle or arc, or two circles or arcs, got point, circle");
+          "a tangent constraint takes a line and a circle or arc, two circles or arcs, or an open spline and a "
+          "line, an arc or an open spline, got point, circle");
     CHECK(message(s.addConcentric(f.circle, f.lineA)) ==
-          "a concentric constraint takes two circles or arcs, got circle, line");
+          "a concentric constraint takes two circles, arcs or ellipses, got circle, line");
     CHECK(message(s.addMidpoint(f.point, f.circle)) == "a midpoint constraint takes a point and a line, got point, circle");
     CHECK(message(s.addSymmetric(f.point, f.lineA, f.lineB)) ==
           "a symmetric constraint takes two points and a line, got point, line, line");

@@ -17,6 +17,7 @@
 #include <memory>
 #include <optional>
 #include <ranges>
+#include <span>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -27,11 +28,11 @@ namespace bettercad::sketch {
 /// space. Sketches are document objects (type name "sketch").
 ///
 /// - Entity IDs are allocated per sketch, start at 1 and are never reused.
-/// - Entities that reference points (lines, circles, arcs) keep those points
-///   alive: a referenced point cannot be removed.
+/// - Entities that reference points (lines, circles, arcs, ellipses,
+///   splines) keep those points alive: a referenced point cannot be removed.
 /// - Geometry is validated when entities are created. Point positions can be
-///   edited freely afterwards (the solver moves them); arc consistency is
-///   then the solver's job.
+///   edited freely afterwards (the solver moves them); keeping arc ends on
+///   their circle and ellipse axes perpendicular is then the solver's job.
 /// - Inside a Document, mutate a sketch through Document::modifyObject so the
 ///   change is tracked.
 class BETTERCAD_SKETCH_EXPORT Sketch final : public DocumentObject {
@@ -86,6 +87,20 @@ public:
     /// Counter-clockwise arc between existing points, which must be equidistant
     /// from the centre (within kLengthTolerance).
     Result<EntityId> addArc(EntityId centerPoint, EntityId startPoint, EntityId endPoint);
+    /// Ellipse around @p center with the semi-axis @p radiusX in the direction
+    /// @p rotation and the semi-axis @p radiusY 90° counter-clockwise from it;
+    /// creates the centre and the two vertex points.
+    Result<EntityId> addEllipse(const Point2D& center, Length radiusX, Length radiusY, Angle rotation = Angle{});
+    /// Ellipse on existing points. Both vertices must be further than
+    /// kLengthTolerance from the centre, in perpendicular directions: neither
+    /// vertex may be further than kLengthTolerance from the perpendicular
+    /// through the centre to the other's axis.
+    Result<EntityId> addEllipse(EntityId centerPoint, EntityId xVertex, EntityId yVertex);
+    /// Spline on new pole points (see SplineEntity and UniformBSpline for the
+    /// accepted degrees and pole counts).
+    Result<EntityId> addSpline(const std::vector<Point2D>& poles, int degree = 3, bool periodic = false);
+    /// Spline on existing, distinct point entities.
+    Result<EntityId> addSpline(std::vector<EntityId> poles, int degree = 3, bool periodic = false);
 
     // --- Editing ---------------------------------------------------------------
     // Mutators return whether anything changed.
@@ -95,7 +110,8 @@ public:
     /// Removes an entity that no other entity and no constraint references.
     Result<void> removeEntity(EntityId entity);
     /// Inserts an entity that already has an ID (loading). Referenced points
-    /// must exist and coordinates must be finite. Geometric conditions such as
+    /// must exist and be distinct, coordinates must be finite, and a spline
+    /// needs a supported degree and enough poles. Geometric conditions such as
     /// non-zero length are not re-checked: editing may leave them violated
     /// until the next solve, and any such state must be loadable.
     Result<void> insertEntity(const Entity& entity);
@@ -174,15 +190,21 @@ public:
     }
 
     [[nodiscard]] Result<Point2D> position(EntityId point) const;
-    /// Start and end of a line or arc.
-    [[nodiscard]] Result<Endpoints> endpoints(EntityId lineOrArc) const;
-    /// Length of a line or arc, circumference of a circle.
+    /// Start and end of a line, an arc or an open spline.
+    [[nodiscard]] Result<Endpoints> endpoints(EntityId entity) const;
+    /// Length of a line or arc, circumference of a circle or ellipse, length
+    /// of a spline. Ellipses and splines are integrated numerically, to about
+    /// 1e-12 relative for the curves the sketch accepts (Gauss-Legendre on
+    /// 64 pieces per turn or per knot span).
     [[nodiscard]] Result<Length> length(EntityId entity) const;
     [[nodiscard]] Result<Length> radius(EntityId circleOrArc) const;
-    [[nodiscard]] Result<Point2D> center(EntityId circleOrArc) const;
+    /// Centre of a circle, an arc or an ellipse.
+    [[nodiscard]] Result<Point2D> center(EntityId entity) const;
     /// Counter-clockwise angle of an arc from its start to its end, in [0, 2 pi).
     [[nodiscard]] Result<Angle> sweep(EntityId arc) const;
-    /// Exact bounds of one entity (arcs include the extreme points they pass).
+    /// Bounds of one entity: exact for points, lines, circles, arcs (with the
+    /// extreme points they pass) and ellipses; for a spline, the bounds of its
+    /// poles, which contain the curve.
     [[nodiscard]] Result<BoundingBox2D> boundingBox(EntityId entity) const;
     /// Bounds of all entities; std::nullopt for an empty sketch.
     [[nodiscard]] std::optional<BoundingBox2D> boundingBox() const;
@@ -190,6 +212,8 @@ public:
 private:
     [[nodiscard]] Result<const Entity*> require(EntityId id) const;
     [[nodiscard]] Result<Point2D> requirePoint(EntityId id) const;
+    /// Positions of distinct, existing point entities, in order.
+    [[nodiscard]] Result<std::vector<Point2D>> requirePoints(std::span<const EntityId> ids) const;
     EntityId insert(EntityGeometry geometry);
     [[nodiscard]] Result<void> checkConstraint(const Constraint& constraint) const;
     [[nodiscard]] Result<void> checkReferences(const Constraint& constraint) const;

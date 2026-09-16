@@ -8,6 +8,7 @@
 #include "core/geometry/occt/OcctGuard.hpp"
 
 #include <bettercad/core/geometry/Booleans.hpp>
+#include <bettercad/core/math/BSpline.hpp>
 
 #include <BRepAlgoAPI_Check.hxx>
 #include <BRepBuilderAPI_MakeEdge.hxx>
@@ -21,6 +22,8 @@
 #include <BRepOffsetAPI_ThruSections.hxx>
 #include <BRepPrimAPI_MakePrism.hxx>
 #include <BRepPrimAPI_MakeRevol.hxx>
+#include <Geom_BSplineCurve.hxx>
+#include <NCollection_Array1.hxx>
 #include <Precision.hxx>
 #include <TopoDS.hxx>
 #include <TopoDS_Face.hxx>
@@ -30,6 +33,7 @@
 #include <gp_Ax2.hxx>
 #include <gp_Ax3.hxx>
 #include <gp_Circ.hxx>
+#include <gp_Elips.hxx>
 #include <gp_Pln.hxx>
 #include <gp_Trsf.hxx>
 #include <gp_Vec.hxx>
@@ -56,52 +60,70 @@ constexpr double kAxisParallelTolerance = 1e-9;
 constexpr double kFullTurnTolerance = 1e-12;
 constexpr double kTwoPi = 2.0 * std::numbers::pi;
 
-Point2D segmentStart(const ProfileSegment& segment) {
-    if (const auto* line = std::get_if<LineSegment2D>(&segment)) {
-        return line->start;
+bool finite(const Point2D& p) {
+    return isFinite(p.x) && isFinite(p.y);
+}
+
+/// Checks a segment that is a loop on its own (see isClosedSegment()).
+Result<void> checkClosedSegment(const ProfileSegment& segment, std::string_view name) {
+    if (const auto* circle = std::get_if<CircleSegment2D>(&segment)) {
+        if (!isFinite(circle->radius) || circle->radius <= kClosureTolerance) {
+            return makeError(ErrorCode::InvalidArgument, std::format("{} loop has an invalid circle", name));
+        }
+        return {};
     }
-    if (const auto* arc = std::get_if<ArcSegment2D>(&segment)) {
-        return arc->start;
+    if (const auto* ellipse = std::get_if<EllipseSegment2D>(&segment)) {
+        if (!finite(ellipse->center) || !finite(ellipse->xVertex) || !isFinite(ellipse->radiusY) ||
+            distance(ellipse->center, ellipse->xVertex) <= kClosureTolerance ||
+            ellipse->radiusY <= kClosureTolerance) {
+            return makeError(ErrorCode::InvalidArgument, std::format("{} loop has an invalid ellipse", name));
+        }
+        return {};
+    }
+    if (auto valid = validate(std::get<SplineSegment2D>(segment)); !valid) {
+        return makeError(ErrorCode::InvalidArgument,
+                         std::format("{} loop has an invalid spline: {}", name, valid.error().message));
     }
     return {};
 }
 
-Point2D segmentEnd(const ProfileSegment& segment) {
-    if (const auto* line = std::get_if<LineSegment2D>(&segment)) {
-        return line->end;
+std::string_view closedKind(const ProfileSegment& segment) {
+    if (std::holds_alternative<CircleSegment2D>(segment)) {
+        return "a full circle";
     }
-    if (const auto* arc = std::get_if<ArcSegment2D>(&segment)) {
-        return arc->end;
+    if (std::holds_alternative<EllipseSegment2D>(segment)) {
+        return "a full ellipse";
     }
-    return {};
+    return "a periodic spline";
 }
 
 Result<void> checkLoop(const ProfileLoop& loop, std::string_view name) {
     if (loop.segments.empty()) {
         return makeError(ErrorCode::InvalidArgument, std::format("{} loop is empty", name));
     }
-    const bool hasCircle = std::ranges::any_of(loop.segments, [](const ProfileSegment& s) {
-        return std::holds_alternative<CircleSegment2D>(s);
-    });
-    if (hasCircle) {
+    const auto closed = std::ranges::find_if(loop.segments, isClosedSegment);
+    if (closed != loop.segments.end()) {
         if (loop.segments.size() != 1) {
             return makeError(ErrorCode::InvalidArgument,
-                             std::format("{} loop mixes a full circle with other segments", name));
+                             std::format("{} loop mixes {} with other segments", name, closedKind(*closed)));
         }
-        const auto& circle = std::get<CircleSegment2D>(loop.segments.front());
-        if (!isFinite(circle.radius) || circle.radius <= kClosureTolerance) {
-            return makeError(ErrorCode::InvalidArgument, std::format("{} loop has an invalid circle", name));
-        }
-        return {};
+        return checkClosedSegment(*closed, name);
     }
     for (std::size_t i = 0; i < loop.segments.size(); ++i) {
         const ProfileSegment& segment = loop.segments[i];
         const ProfileSegment& next = loop.segments[(i + 1) % loop.segments.size()];
-        if (distance(segmentStart(segment), segmentEnd(segment)) <= kClosureTolerance) {
+        if (const auto* spline = std::get_if<SplineSegment2D>(&segment)) {
+            // An open spline may end where it starts (a loop with a corner);
+            // its control polygon must not vanish.
+            if (auto valid = validate(*spline); !valid) {
+                return makeError(ErrorCode::InvalidArgument,
+                                 std::format("{} loop has an invalid spline: {}", name, valid.error().message));
+            }
+        } else if (distance(firstPoint(segment), lastPoint(segment)) <= kClosureTolerance) {
             return makeError(ErrorCode::InvalidArgument,
                              std::format("{} loop has a degenerate segment", name));
         }
-        if (distance(segmentEnd(segment), segmentStart(next)) > kClosureTolerance) {
+        if (distance(lastPoint(segment), firstPoint(next)) > kClosureTolerance) {
             return makeError(ErrorCode::InvalidArgument,
                              std::format("{} loop is not closed: segment {} does not meet the next", name, i));
         }
@@ -167,6 +189,47 @@ private:
         return gp_Circ(gp_Ax2(point(center), axis), radius);
     }
 
+    /// The ellipse's first axis runs from the centre to xVertex, the second
+    /// 90 deg counter-clockwise from it (about the plane normal). The kernel
+    /// needs the major axis first: with a longer second axis, the frame turns
+    /// by 90 deg, which traces the same curve in the same sense.
+    [[nodiscard]] gp_Elips ellipse(const EllipseSegment2D& segment) const {
+        const gp_Pnt center = point(segment.center);
+        const gp_Vec first(center, point(segment.xVertex));
+        const double a = first.Magnitude();
+        const double b = occt::toModel(segment.radiusY);
+        const gp_Dir axis = segment.counterClockwise ? normal_ : normal_.Reversed();
+        const gp_Dir u(first);
+        if (a >= b) {
+            return gp_Elips(gp_Ax2(center, axis, u), a, b);
+        }
+        return gp_Elips(gp_Ax2(center, axis, normal_.Crossed(u)), b, a);
+    }
+
+    /// A B-spline edge with the spline's own poles, knots and degree. The
+    /// ends of an open spline are the loop's shared vertices.
+    [[nodiscard]] TopoDS_Edge splineEdge(const SplineSegment2D& segment) {
+        const UniformBSpline curve = *UniformBSpline::create(segment.poles, segment.degree, segment.periodic);
+        NCollection_Array1<gp_Pnt> poles(1, static_cast<int>(segment.poles.size()));
+        for (std::size_t i = 0; i < segment.poles.size(); ++i) {
+            poles.SetValue(static_cast<int>(i) + 1, point(segment.poles[i]));
+        }
+        const std::vector<double> knotValues = curve.knotValues();
+        const std::vector<int> multiplicities = curve.knotMultiplicities();
+        NCollection_Array1<double> knots(1, static_cast<int>(knotValues.size()));
+        NCollection_Array1<int> mults(1, static_cast<int>(multiplicities.size()));
+        for (std::size_t i = 0; i < knotValues.size(); ++i) {
+            knots.SetValue(static_cast<int>(i) + 1, knotValues[i]);
+            mults.SetValue(static_cast<int>(i) + 1, multiplicities[i]);
+        }
+        const occ::handle<Geom_BSplineCurve> geometry =
+            new Geom_BSplineCurve(poles, knots, mults, segment.degree, segment.periodic);
+        if (segment.periodic) {
+            return BRepBuilderAPI_MakeEdge(geometry);
+        }
+        return BRepBuilderAPI_MakeEdge(geometry, vertex(segment.poles.front()), vertex(segment.poles.back()));
+    }
+
     TopoDS_Edge makeEdge(const ProfileSegment& segment) {
         if (const auto* line = std::get_if<LineSegment2D>(&segment)) {
             return BRepBuilderAPI_MakeEdge(vertex(line->start), vertex(line->end));
@@ -176,8 +239,13 @@ private:
             return BRepBuilderAPI_MakeEdge(circle(arc->center, radius, arc->counterClockwise),
                                            vertex(arc->start), vertex(arc->end));
         }
-        const auto& full = std::get<CircleSegment2D>(segment);
-        return BRepBuilderAPI_MakeEdge(circle(full.center, occt::toModel(full.radius), full.counterClockwise));
+        if (const auto* full = std::get_if<CircleSegment2D>(&segment)) {
+            return BRepBuilderAPI_MakeEdge(circle(full->center, occt::toModel(full->radius), full->counterClockwise));
+        }
+        if (const auto* oval = std::get_if<EllipseSegment2D>(&segment)) {
+            return BRepBuilderAPI_MakeEdge(ellipse(*oval));
+        }
+        return splineEdge(std::get<SplineSegment2D>(segment));
     }
 
     Frame3D plane_;
@@ -252,13 +320,13 @@ Result<TopoDS_Wire> makePathWire(const PlanarPath& path, bool closed) {
             continue;
         }
         const TopoDS_Vertex start =
-            i == 0 ? BRepBuilderAPI_MakeVertex(point(segmentStart(segment))).Vertex() : previous;
+            i == 0 ? BRepBuilderAPI_MakeVertex(point(firstPoint(segment))).Vertex() : previous;
         if (i == 0) {
             first = start;
         }
         const bool last = i + 1 == path.segments.size();
         const TopoDS_Vertex end =
-            last && closed ? first : BRepBuilderAPI_MakeVertex(point(segmentEnd(segment))).Vertex();
+            last && closed ? first : BRepBuilderAPI_MakeVertex(point(lastPoint(segment))).Vertex();
         BRepBuilderAPI_MakeEdge edge = [&] {
             if (std::holds_alternative<LineSegment2D>(segment)) {
                 return BRepBuilderAPI_MakeEdge(start, end);

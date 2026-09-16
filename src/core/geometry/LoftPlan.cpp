@@ -177,6 +177,14 @@ Result<LoftPlan> planLoft(std::span<const PlanarRegion> sections) {
         if (!sections[i].holes.empty()) {
             return invalid(std::format("section {} has a hole: loft sections must be single closed loops", i + 1));
         }
+        for (const ProfileSegment& segment : sections[i].outer.segments) {
+            if (std::holds_alternative<EllipseSegment2D>(segment) || std::holds_alternative<SplineSegment2D>(segment)) {
+                return invalid(std::format("section {} has {}; loft sections are made of lines, arcs and circles",
+                                           i + 1,
+                                           std::holds_alternative<EllipseSegment2D>(segment) ? "an ellipse"
+                                                                                             : "a spline"));
+            }
+        }
         if (!finite(sections[i].plane.origin()) || !finite(sections[i].outer)) {
             return invalid(std::format("section {} is not finite", i + 1));
         }

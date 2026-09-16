@@ -1,0 +1,7 @@
+Cross-configuration comparison of the P12-SKETCH-002 measured values.
+Each configuration's bettercad_tests.exe ran the 41 new test cases (see values-header.txt) with -s --reporter xml
+--rng-seed 1; values.py filtered the report. No line holds a pointer value, so the whole files are compared.
+
+release: 2445 non-empty lines, MD5 83d3bdfb2a6ded1188f54045e81b1557
+debug: 2445 non-empty lines, MD5 83d3bdfb2a6ded1188f54045e81b1557
+debug-shared: 2445 non-empty lines, MD5 83d3bdfb2a6ded1188f54045e81b1557

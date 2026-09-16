@@ -32,8 +32,9 @@ struct PlaneAxis {
 [[nodiscard]] double arcSweep(const ArcSegment2D& arc);
 
 /// Extends [low, high] by the signed distances of every point of @p loop
-/// from the line: segment ends, plus the points of arcs and circles that are
-/// farthest from it on either side.
+/// from the line: segment ends, plus the points of arcs, circles and
+/// ellipses that are farthest from it on either side. For a spline it uses
+/// the poles, whose range contains the curve's and may be wider.
 void extendSideRange(const ProfileLoop& loop, const PlaneAxis& axis, double& low, double& high);
 
 } // namespace bettercad::geometry::detail

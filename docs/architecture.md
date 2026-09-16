@@ -198,6 +198,13 @@ milestones start; see `TODO.md`.
   user gives it before it is normalized. `Translation3D` is a displacement in
   lengths. `Translation3D::along(direction, distance)` is one product per
   component, so a pattern offset k·s·d is computed exactly once per instance.
+- `UniformBSpline` (`BSpline.hpp`, P12-SKETCH-002) is a planar,
+  non-rational B-spline with uniform integer knots, degree 2 to 5, open
+  (clamped) or periodic: de Boor evaluation with the derivative, the knots in
+  the kernel's form, and Bézier pieces by blossoming. It lives in core so
+  sketches and the geometry kernel share one curve. `gaussLegendreRule()`
+  gives 8 Newton-refined nodes on [0, 1], exact to degree 15: Green's-theorem
+  integrands of splines up to degree 5, first moments included.
 - `RigidTransform3D` (`RigidTransform.hpp`) is an orthogonal matrix plus a
   translation, applied as p' = A·p + t: a Euclidean isometry, which never
   scales. `RigidTransform3D::rotation(axis, angle)` builds A with Rodrigues'
@@ -225,7 +232,18 @@ milestones start; see `TODO.md`.
 - Kernel exceptions become `ErrorCode::Internal` results; boolean results
   are validated before they are returned.
 - Mass properties use adaptive integration (1e-10 relative target) and
-  report the kernel's error estimate.
+  report the error estimate. Bodies whose faces all lie on planes,
+  cylinders, cones, spheres or tori use the kernel's adaptive Gauss
+  integration, exact to rounding for them (P3, P11). Any other body uses the
+  kernel's Gauss–Kronrod volume integration over knot spans: the adaptive
+  Gauss integration missed an extruded spline's volume by 4.5e-2 and an
+  elliptic prism's by 5.5e-9 while reporting 2e-16 (P12-SKETCH-002 kernel
+  probe). Faces swept from ellipses and splines (surfaces of extrusion and
+  revolution) that cover their whole parameter rectangle get their area
+  from BetterCAD's own integration (8-point Gauss–Legendre on each knot span,
+  halved until the area changes by less than 1e-14); the kernel's
+  integration missed those areas by up to 1e-2. Other faces keep the
+  kernel's area.
 - **Triangulation** (`Mesh.hpp`). `triangulate(body, {linearDeflection,
   angularDeflection})` returns a neutral indexed `Mesh` with vertices per face
   and outward counter-clockwise triangles. It meshes a copy: the kernel caches
@@ -250,9 +268,11 @@ milestones start; see `TODO.md`.
   - that the axis origin is finite (directions are finite unit vectors by
     construction) and the axis lies in the plane;
   - that the region lies on one side of the axis (touching is allowed).
-    The check is exact: it uses segment ends and, for arcs and circles,
-    their extreme points, so an arc bulging across the axis is caught even
-    when its ends are not.
+    The check is exact for lines, arcs, circles and ellipses: it uses
+    segment ends and the extreme points of arcs, circles and ellipses, so an
+    arc bulging across the axis is caught even when its ends are not. For a
+    spline it uses the poles, which bound the curve: a spline whose poles
+    cross the axis is refused even if its curve does not.
 
   Afterwards it requires one or more valid solids with a finite, positive
   volume.
@@ -488,9 +508,25 @@ milestones start; see `TODO.md`.
 
 - `Sketch` is a `DocumentObject` holding entities in the local coordinates
   of its `Frame3D` placement.
-- Points are entities. Lines, circles and arcs reference point entities;
-  arcs are counter-clockwise from start to end. Connected geometry shares
-  points, and constraints reference whole entities.
+- Points are entities. Lines, circles, arcs, ellipses and splines reference
+  point entities; arcs are counter-clockwise from start to end. Connected
+  geometry shares points, and constraints reference whole entities.
+- **Ellipses and splines** (P12-SKETCH-002). An ellipse references its
+  centre and two vertex points; its first semi-axis runs to `xVertex`, its
+  second, |yVertex − centre| long, is perpendicular to it (either may be the
+  longer). An internal perpendicularity equation keeps the axes
+  perpendicular, so a free ellipse has 5 degrees of freedom; distances and
+  horizontal/vertical constraints on the vertices size and orient it. A
+  spline references its poles (a `UniformBSpline`, degree 2 to 5): an open
+  spline starts at its first pole and ends at its last, a periodic one is
+  closed and smooth. Poles are free points (2 degrees of freedom each).
+  Ellipse vertices and poles take every point constraint; concentric
+  accepts ellipses; tangency with an open spline applies at a joint with a
+  line, an arc or another spline (the spline's end leg parallel to the line,
+  perpendicular to the arc's radius, or parallel to the other leg), and the
+  joint must exist when the constraint is added. Length: ellipses by the
+  arithmetic-geometric mean, splines by 8-point Gauss–Legendre on 64 pieces
+  per span. Bounds: exact for ellipses, the poles' for splines.
 - Entity IDs are per sketch, deterministic and never reused. A point that
   other entities reference cannot be removed.
 - Validation happens when entities are created. Later point edits are free,
@@ -530,6 +566,18 @@ milestones start; see `TODO.md`.
   and degenerate references (a concentric pair sharing its centre point, a
   line's own end point as its midpoint) are refused when the constraint is
   added, and again when a driving parameter sets a value.
+- **Curved profiles** (P12-SKETCH-002, `features::extractRegions()`, see
+  Features). Circles, ellipses and periodic splines are loops on their own;
+  lines, arcs and open splines are edges, joined at coincident ends (an open
+  spline may end where it starts). A profile segment is one of `LineSegment2D`, `ArcSegment2D`,
+  `CircleSegment2D`, `EllipseSegment2D` and `SplineSegment2D`. Areas and
+  centroids are exact by Green's theorem (spline spans by the Gauss rule
+  above). Loop nesting is decided exactly: an ellipse by its implicit
+  equation, a spline by halving its Bézier pieces until each lies beside
+  the test ray. The kernel builds ellipse edges (major axis first) and
+  B-spline edges with the spline's own poles and knots. Prisms, revolutions
+  and sweep profiles take every segment type; loft sections and sweep paths
+  refuse ellipses and splines.
 - **Undoable sketch edits** (`ModifySketchCommand`). The edit runs on a copy;
   on success the sketch's content before and after is kept, and undo/redo
   restore it with `Sketch::restoreContent()`, IDs and ID counters included.
@@ -792,7 +840,10 @@ milestones start; see `TODO.md`.
   - the objects, as `{id, type, name, data}` in ascending ID order.
 
   Sketch data holds the placement frame, the entities and constraints with
-  their own IDs, and the sketch's ID counters. A constraint stores `value`
+  their own IDs, and the sketch's ID counters. An ellipse stores `center`,
+  `x_vertex` and `y_vertex`; a spline, whose type name in files is
+  `"bspline"` (the curve it is; `"spline"` stays unknown), stores `poles`,
+  `degree` and `periodic`. A constraint stores `value`
   (metres) for distances, radii and diameters and `angle` (radians) for
   angles, each only when its type has one. Extrude, revolve and chamfer
   data hold their definitions:

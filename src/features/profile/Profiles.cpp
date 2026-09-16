@@ -1,10 +1,14 @@
+#include <bettercad/core/math/BSpline.hpp>
 #include <bettercad/core/units/Format.hpp>
 #include <bettercad/features/Profiles.hpp>
 
+#include <algorithm>
+#include <array>
 #include <cmath>
 #include <cstddef>
 #include <format>
 #include <numbers>
+#include <utility>
 #include <vector>
 
 namespace bettercad::features {
@@ -13,10 +17,12 @@ namespace {
 
 using geometry::ArcSegment2D;
 using geometry::CircleSegment2D;
+using geometry::EllipseSegment2D;
 using geometry::LineSegment2D;
 using geometry::PlanarRegion;
 using geometry::ProfileLoop;
 using geometry::ProfileSegment;
+using geometry::SplineSegment2D;
 
 constexpr double kTwoPi = 2.0 * std::numbers::pi;
 
@@ -37,9 +43,15 @@ std::string describe(const Point2D& p) {
     return std::format("({}, {}) mm", p.x.in(units::mm), p.y.in(units::mm));
 }
 
+/// An edge (a line, an arc or an open spline) traversed the other way.
 ProfileSegment reverseSegment(const ProfileSegment& segment) {
     if (const auto* line = std::get_if<LineSegment2D>(&segment)) {
         return LineSegment2D{line->end, line->start};
+    }
+    if (const auto* spline = std::get_if<SplineSegment2D>(&segment)) {
+        SplineSegment2D reversed = *spline;
+        std::ranges::reverse(reversed.poles);
+        return reversed;
     }
     const auto& arc = std::get<ArcSegment2D>(segment);
     return ArcSegment2D{arc.center, arc.end, arc.start, !arc.counterClockwise};
@@ -76,8 +88,66 @@ bool arcContainsAngle(const ArcSegment2D& arc, double t) {
     return normalized(a0 - t) <= normalized(a0 - a1);
 }
 
-/// Even-odd test with a ray from @p p towards +x; arcs are intersected
-/// exactly. @p p is chosen away from vertices by the caller.
+/// Halvings of a Bezier piece before a crossing is decided from its ends: a
+/// piece still undecided is within 2^-60 of its size from the test point.
+constexpr int kMaxBezierDepth = 60;
+
+using Control = std::vector<std::array<double, 2>>;
+
+/// Crossings, modulo 2, of the ray from (px, py) towards +x with the Bezier
+/// piece @p control, counted like line crossings (an end strictly above the
+/// ray and the other not). A piece entirely beside the ray (all control
+/// points at or behind px, or all above, or all not above) crosses as its
+/// ends say or not at all; any other piece is halved (de Casteljau) until
+/// one of those holds. The convex hull of the control points contains the
+/// piece, so the count is exact.
+int bezierCrossings(const Control& control, double px, double py, int depth) {
+    const auto above = [py](const std::array<double, 2>& q) { return q[1] > py; };
+    const bool endsDiffer = above(control.front()) != above(control.back());
+    if (std::ranges::all_of(control, above) || std::ranges::none_of(control, above) ||
+        std::ranges::all_of(control, [px](const auto& q) { return q[0] <= px; })) {
+        return 0;
+    }
+    if (std::ranges::all_of(control, [px](const auto& q) { return q[0] > px; })) {
+        return endsDiffer ? 1 : 0;
+    }
+    if (depth >= kMaxBezierDepth) {
+        const double x = 0.5 * (control.front()[0] + control.back()[0]);
+        return endsDiffer && x > px ? 1 : 0;
+    }
+    // de Casteljau at 1/2: the left piece takes the first point of each
+    // level, the right piece the last.
+    const std::size_t n = control.size();
+    Control left(n);
+    Control right(n);
+    Control level = control;
+    for (std::size_t r = 0; r < n; ++r) {
+        left[r] = level.front();
+        right[n - 1 - r] = level.back();
+        for (std::size_t j = 0; j + 1 < level.size(); ++j) {
+            level[j] = {0.5 * (level[j][0] + level[j + 1][0]), 0.5 * (level[j][1] + level[j + 1][1])};
+        }
+        level.pop_back();
+    }
+    return (bezierCrossings(left, px, py, depth + 1) + bezierCrossings(right, px, py, depth + 1)) % 2;
+}
+
+/// Whether @p p lies inside the full ellipse @p ellipse.
+bool ellipseContains(const EllipseSegment2D& ellipse, const Point2D& p) {
+    const double ux = (ellipse.xVertex.x - ellipse.center.x).si();
+    const double uy = (ellipse.xVertex.y - ellipse.center.y).si();
+    const double a = std::hypot(ux, uy);
+    const double b = ellipse.radiusY.si();
+    const double dx = (p.x - ellipse.center.x).si();
+    const double dy = (p.y - ellipse.center.y).si();
+    // Coordinates along the first axis and the one 90 deg from it.
+    const double s = (dx * ux + dy * uy) / (a * a);
+    const double t = (-dx * uy + dy * ux) / (a * b);
+    return s * s + t * t < 1.0;
+}
+
+/// Even-odd test with a ray from @p p towards +x; arcs, ellipses and splines
+/// are intersected exactly. @p p is chosen away from vertices by the caller.
 bool loopContains(const ProfileLoop& loop, const Point2D& p) {
     const double px = p.x.si();
     const double py = p.y.si();
@@ -108,9 +178,18 @@ bool loopContains(const ProfileLoop& loop, const Point2D& p) {
         } else if (const auto* arc = std::get_if<ArcSegment2D>(&segment)) {
             circleCrossings(arc->center, distance(arc->center, arc->start).si(),
                             [&](double t) { return arcContainsAngle(*arc, t); });
+        } else if (const auto* circle = std::get_if<CircleSegment2D>(&segment)) {
+            circleCrossings(circle->center, circle->radius.si(), [](double) { return true; });
+        } else if (const auto* ellipse = std::get_if<EllipseSegment2D>(&segment)) {
+            // A closed convex curve: the ray leaves it once from inside, and
+            // crosses it twice or not at all from outside.
+            crossings += ellipseContains(*ellipse, p) ? 1 : 0;
         } else {
-            const auto& circle = std::get<CircleSegment2D>(segment);
-            circleCrossings(circle.center, circle.radius.si(), [](double) { return true; });
+            const auto& spline = std::get<SplineSegment2D>(segment);
+            const auto curve = UniformBSpline::create(spline.poles, spline.degree, spline.periodic);
+            for (const Control& piece : curve->bezierPieces()) {
+                crossings += bezierCrossings(piece, px, py, 0);
+            }
         }
     }
     return crossings % 2 == 1;
@@ -133,8 +212,10 @@ Point2D samplePoint(const ProfileLoop& loop) {
         const double t = a0 + fraction * sweep;
         return {arc->center.x + r * std::cos(t), arc->center.y + r * std::sin(t)};
     }
-    const auto& circle = std::get<CircleSegment2D>(first);
-    return {circle.center.x + circle.radius * std::cos(1.0), circle.center.y + circle.radius * std::sin(1.0)};
+    if (const auto* circle = std::get_if<CircleSegment2D>(&first)) {
+        return {circle->center.x + circle->radius * std::cos(1.0), circle->center.y + circle->radius * std::sin(1.0)};
+    }
+    return geometry::pointAt(first, fraction);
 }
 
 } // namespace
@@ -144,7 +225,8 @@ Result<std::vector<PlanarRegion>> extractRegions(const sketch::Sketch& sketch) {
     std::vector<Edge> edges;
     Vertices vertices;
 
-    // Collect profile edges; full circles are loops on their own.
+    // Collect profile edges; full circles, ellipses and periodic splines are
+    // loops on their own.
     for (const sketch::Entity& entity : sketch.entities()) {
         if (entity.construction) {
             continue;
@@ -155,6 +237,42 @@ Result<std::vector<PlanarRegion>> extractRegions(const sketch::Sketch& sketch) {
         case sketch::EntityType::Circle: {
             loops.push_back(ProfileLoop{{CircleSegment2D{sketch.center(entity.id).value(),
                                                           sketch.radius(entity.id).value(), true}}});
+            break;
+        }
+        case sketch::EntityType::Ellipse: {
+            const auto& ellipse = std::get<sketch::EllipseEntity>(entity.geometry);
+            const Point2D center = sketch.position(ellipse.center).value();
+            loops.push_back(ProfileLoop{{EllipseSegment2D{center, sketch.position(ellipse.xVertex).value(),
+                                                          distance(center, sketch.position(ellipse.yVertex).value()),
+                                                          true}}});
+            break;
+        }
+        case sketch::EntityType::Spline: {
+            const auto& geometry = std::get<sketch::SplineEntity>(entity.geometry);
+            SplineSegment2D spline{.poles = {}, .degree = geometry.degree, .periodic = geometry.periodic};
+            for (const EntityId pole : geometry.poles) {
+                spline.poles.push_back(sketch.position(pole).value());
+            }
+            std::size_t a = 0;
+            std::size_t b = 0;
+            if (!spline.periodic) {
+                // Snap the ends to the shared vertex positions. Unlike a line
+                // or an arc, an open spline may end where it starts: it is
+                // then a loop with a corner.
+                a = vertices.indexOf(spline.poles.front());
+                b = vertices.indexOf(spline.poles.back());
+                spline.poles.front() = vertices.points[a];
+                spline.poles.back() = vertices.points[b];
+            }
+            if (auto valid = geometry::validate(spline); !valid) {
+                return makeError(ErrorCode::InvalidArgument,
+                                 std::format("{} is not a valid spline: {}", entity.id, valid.error().message));
+            }
+            if (spline.periodic) {
+                loops.push_back(ProfileLoop{{std::move(spline)}});
+            } else {
+                edges.push_back({std::move(spline), a, b});
+            }
             break;
         }
         case sketch::EntityType::Line:
@@ -179,7 +297,8 @@ Result<std::vector<PlanarRegion>> extractRegions(const sketch::Sketch& sketch) {
         }
     }
 
-    // Every vertex must join exactly two edges.
+    // Every vertex must join exactly two edges (a spline that ends where it
+    // starts counts twice).
     std::vector<std::vector<std::size_t>> incident(vertices.points.size());
     for (std::size_t i = 0; i < edges.size(); ++i) {
         incident[edges[i].a].push_back(i);

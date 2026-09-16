@@ -30,6 +30,10 @@ struct PlanarPath {
 /// offsets @p from and @p to (to > from). For example [0, d] extrudes along
 /// the normal, [-d, 0] against it and [-d/2, d/2] symmetrically.
 ///
+/// Prisms, revolutions and sweeps take regions with any segments (lines,
+/// arcs, circles, ellipses, splines); lofts and paths take lines, arcs and
+/// circles only.
+///
 /// Loop orientation is normalized (outer counter-clockwise, holes
 /// clockwise). Fails with InvalidArgument for malformed loops or extents and
 /// with Internal if the kernel cannot build a valid solid (for example
@@ -71,7 +75,8 @@ struct PlanarPath {
 /// corner is mitred: both segments end on the plane that bisects it.
 ///
 /// Preflight (InvalidArgument, before the kernel): an empty, non-finite,
-/// degenerate or disconnected path; a corner at an arc; a path that turns
+/// degenerate or disconnected path; an ellipse or spline in the path; a
+/// corner at an arc; a path that turns
 /// back on itself; a misplaced region; a region reaching the centre of an
 /// arc (the solid would fold over itself); a straight segment too short for
 /// the mitres at its ends; malformed loops. A swept solid that intersects
@@ -105,7 +110,7 @@ struct PlanarPath {
 /// section's X axis.
 ///
 /// Preflight (InvalidArgument, before the kernel): fewer than two sections,
-/// holes, non-finite coordinates, non-parallel planes, coincident or
+/// holes, ellipses or splines, non-finite coordinates, non-parallel planes, coincident or
 /// out-of-order sections, sections of different shapes, and a loft whose
 /// cross-section would lose all its area between two sections (it folds).
 /// A lofted solid whose sides pass through one another elsewhere is found by

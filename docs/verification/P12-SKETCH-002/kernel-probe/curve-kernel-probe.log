@@ -1,0 +1,119 @@
+Built with GCC 16.1 (MinGW-w64 UCRT), -O2, against OCCT 8.0.1; run 2026-09-17T01:32:59+10:00.
+P12-SKETCH-002 curve kernel probe (OCCT 8.0.1)
+
+A periodic, knots 0..n, mults 1: domain [0, 4] periodic=1 closed=1
+  u=0      (30, 0)
+  u=0.5    (52.5, 7.5)
+  u=1      (60, 30)
+  u=1.5    (52.5, 52.5)
+  u=2      (30, 60)
+  u=2.5    (7.5, 52.5)
+  u=3      (0, 30)
+  u=3.5    (7.5, 7.5)
+  u=4      (30, 0)
+A periodic                         faceValid=1 prismValid=1
+  area   Gauss  2986.1761135799552 rel=4.61e-03 | eps 1e-10 3000 rel=0.00e+00 (reported 7.58e-17)  expected 3000
+  volume Gauss  29756.965346487035 rel=8.10e-03
+  volume 1e-10  31345.953715353069 rel=4.49e-02 (reported 2.13e-16)
+  volume 1e-13  29871.246243770096 rel=4.29e-03 (reported 1.82e-16)
+  volume GK spans=0 eps 1e-06  29999.999999999927 rel=2.44e-15 (reported 8.49e-16)
+  volume GK spans=0 eps 1e-10  29999.999999999927 rel=2.44e-15 (reported 8.49e-16)
+  volume GK spans=0 eps 1e-12  29999.999999999927 rel=2.44e-15 (reported 8.49e-16)
+  volume GK spans=1 eps 1e-06  29999.999999999978 rel=7.77e-16 (reported 7.28e-16)
+  volume GK spans=1 eps 1e-10  29999.999999999978 rel=7.77e-16 (reported 7.28e-16)
+  volume GK spans=1 eps 1e-12  29999.999999999978 rel=7.77e-16 (reported 7.28e-16)
+B unclamped, knots 0..8: domain [2, 6] periodic=0 closed=1
+  u=2      (30, 0)
+  u=2.5    (52.5, 7.5)
+  u=3      (60, 30)
+  u=3.5    (52.5, 52.5)
+  u=4      (30, 60)
+  u=4.5    (7.5, 52.5)
+  u=5      (0, 30)
+  u=5.5    (7.5, 7.5)
+  u=6      (30, 0)
+B unclamped                        faceValid=1 prismValid=1
+  area   Gauss  2996.506605031555 rel=1.16e-03 | eps 1e-10 3000 rel=0.00e+00 (reported 9.47e-17)  expected 3000
+  volume Gauss  29791.40031799236 rel=6.95e-03
+  volume 1e-10  31345.953715353069 rel=4.49e-02 (reported 2.13e-16)
+  volume 1e-13  29871.2462437701 rel=4.29e-03 (reported 3.43e-16)
+  volume GK spans=0 eps 1e-06  29999.999999999927 rel=2.44e-15 (reported 8.49e-16)
+  volume GK spans=0 eps 1e-10  29999.999999999927 rel=2.44e-15 (reported 8.49e-16)
+  volume GK spans=0 eps 1e-12  29999.999999999927 rel=2.44e-15 (reported 8.49e-16)
+  volume GK spans=1 eps 1e-06  29999.999999999978 rel=7.77e-16 (reported 7.28e-16)
+  volume GK spans=1 eps 1e-10  29999.999999999978 rel=7.77e-16 (reported 7.28e-16)
+  volume GK spans=1 eps 1e-12  29999.999999999978 rel=7.77e-16 (reported 7.28e-16)
+C Bezier pieces, knots 0..4, interior mults 2: domain [0, 4] periodic=0 closed=1
+  u=0      (30, 0)
+  u=0.5    (52.5, 7.5)
+  u=1      (60, 30)
+  u=1.5    (52.5, 52.5)
+  u=2      (30, 60)
+  u=2.5    (7.5, 52.5)
+  u=3      (0, 30)
+  u=3.5    (7.5, 7.5)
+  u=4      (30, 0)
+C Bezier pieces                    faceValid=1 prismValid=1
+  area   Gauss  2986.1761135799552 rel=4.61e-03 | eps 1e-10 3000 rel=0.00e+00 (reported 7.58e-17)  expected 3000
+  volume Gauss  29756.965346487035 rel=8.10e-03
+  volume 1e-10  31345.953715353069 rel=4.49e-02 (reported 2.13e-16)
+  volume 1e-13  29871.246243770096 rel=4.29e-03 (reported 1.82e-16)
+  volume GK spans=0 eps 1e-06  29999.999999999927 rel=2.44e-15 (reported 8.49e-16)
+  volume GK spans=0 eps 1e-10  29999.999999999927 rel=2.44e-15 (reported 8.49e-16)
+  volume GK spans=0 eps 1e-12  29999.999999999927 rel=2.44e-15 (reported 8.49e-16)
+  volume GK spans=1 eps 1e-06  29999.999999999978 rel=7.77e-16 (reported 7.28e-16)
+  volume GK spans=1 eps 1e-10  29999.999999999978 rel=7.77e-16 (reported 7.28e-16)
+  volume GK spans=1 eps 1e-12  29999.999999999978 rel=7.77e-16 (reported 7.28e-16)
+G revolved spline eps 1e-10: 104719.75540996582 rel=2.77e-09 (reported 1.04e-16)
+G revolved spline volume GK spans=0 eps 1e-06  104719.75511965956 rel=2.00e-15 (reported 8.40e-07)
+G revolved spline volume GK spans=0 eps 1e-10  104719.75511965956 rel=2.00e-15 (reported 7.08e-08)
+G revolved spline volume GK spans=0 eps 1e-12  104719.75511965956 rel=2.00e-15 (reported 7.08e-08)
+G revolved spline volume GK spans=1 eps 1e-06  104719.75511965956 rel=2.00e-15 (reported 8.40e-07)
+G revolved spline volume GK spans=1 eps 1e-10  104719.75511965956 rel=2.00e-15 (reported 7.08e-08)
+G revolved spline volume GK spans=1 eps 1e-12  104719.75511965956 rel=2.00e-15 (reported 7.08e-08)
+H ellipse prism area eps 1e-10: 4512.5515491018487 rel=9.96e-03 (reported 2.16e-16)
+H ellipse prism area eps 1e-12: 4584.3019427823674 rel=5.79e-03 (reported 1.26e-16)
+H ellipse prism area Gauss: 4558.7526031274474 rel=1.80e-04
+I spline prism area eps 1e-10: 8021.0002184305567 rel=9.20e-03 (reported 7.58e-17) expected 7947.8702881682766
+I spline prism area eps 1e-12: 7960.818206762634 rel=1.63e-03 (reported 1.52e-16) expected 7947.8702881682766
+I spline prism area Gauss: 7906.1841909049954 rel=5.24e-03
+K ellipse split 2 (5 faces): eps 1e-10 4557.6319864657326 rel=6.63e-05 (reported 1.89e-16) | Gauss 4557.9342921975003 rel=1.23e-08
+K spline split 2 (5 faces): eps 1e-10 7955.0140261489269 rel=8.99e-04 (reported 2.22e-16) | Gauss 7943.2520902392607 rel=5.81e-04
+K ellipse split 8 (11 faces): eps 1e-10 4557.9342167898722 rel=4.27e-09 (reported 2.23e-16) | Gauss 4557.9342362649277 rel=2.22e-16
+K spline split 8 (11 faces): eps 1e-10 7948.6595697808025 rel=9.93e-05 (reported 3.63e-16) | Gauss 7947.3573176629252 rel=6.45e-05
+K ellipse split 32 (35 faces): eps 1e-10 4557.9342362649268 rel=0.00e+00 (reported 3.27e-16) | Gauss 4557.9342362649268 rel=0.00e+00
+K spline split 32 (35 faces): eps 1e-10 7947.928958050019 rel=7.38e-06 (reported 3.41e-16) | Gauss 7947.8321347386609 rel=4.80e-06
+J spline prism GK centre (30.000000000000007, 30.000000000000018, 5)
+J spline prism GK without CGFlag centre (30.000000000000007, 0, 5.0000000000000009) mass 29999.999999999978
+D ellipse a=30 b=12                faceValid=1 prismValid=1
+  area   Gauss  1130.9733552923256 rel=0.00e+00 | eps 1e-10 1130.9733552923256 rel=0.00e+00 (reported 4.21e-16)  expected 1130.9733552923256
+  volume Gauss  28274.333882308143 rel=2.22e-16
+  volume 1e-10  28274.334039073401 rel=5.54e-09 (reported 4.04e-16)
+  volume 1e-13  28274.333880662201 rel=5.82e-11 (reported 6.06e-16)
+  volume GK spans=0 eps 1e-06  28274.333882308078 rel=2.22e-15 (reported 2.01e-09)
+  volume GK spans=0 eps 1e-10  28274.333882308074 rel=2.33e-15 (reported 1.62e-15)
+  volume GK spans=0 eps 1e-12  28274.333882308074 rel=2.33e-15 (reported 1.62e-15)
+  volume GK spans=1 eps 1e-06  28274.333882308078 rel=2.22e-15 (reported 2.01e-09)
+  volume GK spans=1 eps 1e-10  28274.333882308074 rel=2.33e-15 (reported 1.62e-15)
+  volume GK spans=1 eps 1e-12  28274.333882308074 rel=2.33e-15 (reported 1.62e-15)
+E ellipse a=b=10                   faceValid=1 prismValid=1
+  area   Gauss  314.15926535897933 rel=0.00e+00 | eps 1e-10 314.15926535897916 rel=5.55e-16 (reported 1.89e-16)  expected 314.15926535897933
+  volume Gauss  7853.981633974483 rel=0.00e+00
+  volume 1e-10  7853.9816775203872 rel=5.54e-09 (reported 1.82e-16)
+  volume 1e-13  7853.9816335172727 rel=5.82e-11 (reported 1.36e-16)
+  volume GK spans=0 eps 1e-06  7853.9816339744648 rel=2.33e-15 (reported 2.39e-09)
+  volume GK spans=0 eps 1e-10  7853.9816339744648 rel=2.33e-15 (reported 7.23e-16)
+  volume GK spans=0 eps 1e-12  7853.9816339744648 rel=2.33e-15 (reported 7.23e-16)
+  volume GK spans=1 eps 1e-06  7853.9816339744648 rel=2.33e-15 (reported 2.39e-09)
+  volume GK spans=1 eps 1e-10  7853.9816339744648 rel=2.33e-15 (reported 7.23e-16)
+  volume GK spans=1 eps 1e-12  7853.9816339744648 rel=2.33e-15 (reported 7.23e-16)
+F revolved ellipse eps 1e-10: 59217.62660353315 rel=3.33e-09 (reported 7.91e-15)
+F revolved ellipse eps 1e-12: 59217.626404467788 rel=3.49e-11 (reported 0.00e+00)
+F revolved ellipse eps 1e-13: 59217.626404467774 rel=3.49e-11 (reported 1.93e-16)
+F revolved ellipse volume GK spans=0 eps 1e-06  59217.626406513285 rel=3.86e-13 (reported 8.78e-07)
+F revolved ellipse volume GK spans=0 eps 1e-10  59217.626406536037 rel=1.89e-15 (reported 7.98e-09)
+F revolved ellipse volume GK spans=0 eps 1e-12  59217.626406536037 rel=1.89e-15 (reported 7.98e-09)
+F revolved ellipse volume GK spans=1 eps 1e-06  59217.626406513285 rel=3.86e-13 (reported 8.78e-07)
+F revolved ellipse volume GK spans=1 eps 1e-10  59217.626406536037 rel=1.89e-15 (reported 7.98e-09)
+F revolved ellipse volume GK spans=1 eps 1e-12  59217.626406536037 rel=1.89e-15 (reported 7.98e-09)
+F revolved ellipse Gauss: 59217.626406536125 rel=3.33e-16

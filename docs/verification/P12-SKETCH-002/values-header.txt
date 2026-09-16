@@ -1,0 +1,6 @@
+Measured values of the P12-SKETCH-002 tests (Release build of the qualified tree).
+Produced by: build/release/bin/bettercad_tests.exe "BSpline_*,CurvedProfile_*,SketchEllipse*,SketchSpline*,SketchProfiles_*,SketchFeatures_*,SketchDocument_ValidationAccepts*,SketchCommands_Ellipse*,SketchFile_Ellipses*,SketchFile_MalformedEllipses*,SketchExport_*"
+-s --reporter xml --rng-seed 1, filtered by values.py (kept in this directory): every passed CHECK_THAT and
+every passed CHECK whose expansion shows values, with the test case, section and INFO/CAPTURE context. Each
+entry: file:line, the assertion, then Catch2's expansion (values printed exactly). REQUIRE lines, repeats of an
+identical entry within a test case and expansions over 1000 characters (whole-file text) are left out.

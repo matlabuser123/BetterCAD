@@ -58,6 +58,10 @@ Result<ProfileSegment> edgeSegment(const sketch::Sketch& sketch, EntityId id, st
     switch (entity->type()) {
     case sketch::EntityType::Point:
         return invalid("is a point, not a line, arc or circle");
+    case sketch::EntityType::Ellipse:
+        return invalid("is an ellipse, not a line, arc or circle");
+    case sketch::EntityType::Spline:
+        return invalid("is a spline, not a line, arc or circle");
     case sketch::EntityType::Circle: {
         if (edgeCount != 1) {
             return invalid("is a circle, which is a closed path on its own and cannot be joined with other edges");

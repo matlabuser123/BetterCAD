@@ -41,8 +41,12 @@ std::optional<StepContents> readStepFile(const std::filesystem::path& path) {
         for (TopExp_Explorer solids(shape, TopAbs_SOLID); solids.More(); solids.Next()) {
             ++contents.solids;
         }
+        // Gauss-Kronrod over knot spans: the adaptive Gauss integration misses
+        // the volumes of solids with B-spline or elliptic faces (P12-SKETCH-002
+        // kernel probe). Areas are read as before; they are exact for the
+        // faces the export tests compare (planes and elementary surfaces).
         GProp_GProps volume;
-        BRepGProp::VolumeProperties(shape, volume, 1e-10, /*OnlyClosed=*/true);
+        BRepGProp::VolumePropertiesGK(shape, volume, 1e-10, /*OnlyClosed=*/true, /*IsUseSpan=*/true);
         GProp_GProps area;
         BRepGProp::SurfaceProperties(shape, area, 1e-10);
         contents.volumeMm3 = volume.Mass();

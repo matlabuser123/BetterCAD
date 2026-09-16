@@ -13,7 +13,7 @@ authorized — never in advance.
 | | |
 | --- | --- |
 | Current | **`P12` — Parametric CAD Completion** |
-| Next | `P12-SKETCH-002` — Sketch entities: ellipse, spline |
+| Next | `P12-DATUM-001` — Datum planes, axes, coordinate systems |
 | Blocked / Manual | None |
 | Last qualified | `P11` Production Part Modeling — **QUALIFIED** |
 | Released | `v0.1.0` (`P0`–`P10`); `P11` qualified, not released |
@@ -50,8 +50,8 @@ Reference models → qualification
 | --- | --- | --- | --- |
 | 1 | `P12-PARAM-001` Parameter expression evaluation | — | **done** — [evidence](docs/verification/P12-PARAM-001/README.md) |
 | 2 | `P12-SKETCH-001` Constraints: angle, tangent, concentric, midpoint, symmetric, diameter | `PARAM-001` | **done** — [evidence](docs/verification/P12-SKETCH-001/README.md) |
-| 3 | `P12-SKETCH-002` Entities: ellipse, spline | `SKETCH-001` | **next** |
-| 4 | `P12-DATUM-001` Datum planes, axes, coordinate systems | `PARAM-001` | not started |
+| 3 | `P12-SKETCH-002` Entities: ellipse, spline | `SKETCH-001` | **done** — [evidence](docs/verification/P12-SKETCH-002/README.md) |
+| 4 | `P12-DATUM-001` Datum planes, axes, coordinate systems | `PARAM-001` | **next** |
 | 5 | `P12-SKETCH-003` Sketches on arbitrary planar faces | `DATUM-001` | not started — see *Stable-reference risk* |
 | 6 | `P12-FEAT-001` Through-all extrude | — | not started |
 | 7 | `P12-FEAT-002` Split body / combine | — | not started |
@@ -128,9 +128,29 @@ Acceptance:
 - Profiles built from the new constraints (a regular hexagon, an obround slot, a wedge) have the analytic area, and driven angles and diameters rebuild features with the analytic volume.
 - `P0`–`P12-PARAM-001` stays green in all three presets.
 
+#### P12-SKETCH-002 — Sketch entities: ellipse, spline
+
+Deliverables:
+
+- [x] Ellipse: a centre and two vertex points on perpendicular axes; created from centre, semi-axes and rotation, or on existing points
+- [x] Spline: a non-rational B-spline with uniform knots, degree 2 to 5, on pole points; open (clamped) or periodic
+- [x] Solver: ellipse axes kept perpendicular; vertices and poles take point constraints; concentric with ellipses; tangency of open splines at joints with lines, arcs and splines; degeneracy checks
+- [x] Queries: end points, centre, length, bounds
+- [x] Profiles: ellipses and periodic splines as loops, open splines as edges; exact area, centroid and containment
+- [x] Kernel: exact ellipse and B-spline edges in extrude, revolve and sweep profiles; loft sections and sweep paths refuse them with a diagnostic
+- [x] Reference validation, structured errors, save/load round-trip
+- [x] Evidence: [docs/verification/P12-SKETCH-002/](docs/verification/P12-SKETCH-002/README.md) — PASS, 845/845 tests in Debug, Release and Debug-shared, 0 warnings
+
+Acceptance:
+
+- Extruded and revolved ellipses have the volumes π·a·b·h and 2π·R·π·a·b; spline profiles have the area of an independent computation (Archimedes' parabola quadrature, Bernstein polynomials) and extrude and revolve to the matching volumes.
+- A free ellipse has 5 degrees of freedom and a spline 2 per pole; constraints remove exactly their equations; redundancy and conflicts are diagnosed.
+- Ellipses and splines survive save → load → regenerate with bit-identical geometry, and STEP export reads back with the same volume.
+- `P0`–`P12-SKETCH-001` stays green in all three presets.
+
 ## Next
 
-`P12-SKETCH-002` — Sketch entities: ellipse, spline. Its deliverables are
+`P12-DATUM-001` — Datum planes, axes, coordinate systems. Its deliverables are
 added above when it starts.
 
 ## Blocked / Manual
@@ -240,10 +260,10 @@ Not started. Not authorized. Grouped to match
 
 | Milestone | Commit | Evidence |
 | --- | --- | --- |
-| `P12-SKETCH-001` Sketch constraints | "BetterCAD: implement P12 sketch constraints" | [P12-SKETCH-001](docs/verification/P12-SKETCH-001/README.md) |
+| `P12-SKETCH-002` Sketch entities: ellipse, spline | "BetterCAD: implement P12 sketch ellipses and splines" | [P12-SKETCH-002](docs/verification/P12-SKETCH-002/README.md) |
+| `P12-SKETCH-001` Sketch constraints | `efdc1cf` | [P12-SKETCH-001](docs/verification/P12-SKETCH-001/README.md) |
 | `P12-PARAM-001` Parameter expression evaluation | `2316127` | [P12-PARAM-001](docs/verification/P12-PARAM-001/README.md) |
 | `P11-QUAL-001` Qualification | `449d5fd` | [P11-QUAL-001](docs/verification/P11-QUAL-001/README.md) |
-| `P11-REF-001` Mechanical reference models | `79dab04` | [P11-REF-001](docs/verification/P11-REF-001/README.md) |
 
 ## Completed Milestones
 
@@ -287,6 +307,16 @@ regression test, so none can change silently. Detail:
   contact the sketch starts with, and is exact at a joint only where the
   entities share a point or a coincident constraint
   ([P12-SKETCH-001](docs/verification/P12-SKETCH-001/README.md)).
+- **Sketch entities** are points, lines, circles, arcs, ellipses and
+  uniform non-rational B-splines (degree 2 to 5). Splines are tangent only
+  where they meet a line, an arc or a spline; nothing is tangent to an
+  ellipse. Spline bounds and the revolution-axis check use the poles, which
+  bound the curve. Lofts and sweep paths take lines, arcs and circles only
+  ([P12-SKETCH-002](docs/verification/P12-SKETCH-002/README.md)).
+- **Mass properties**: volumes and centres are exact to rounding for every
+  body probed. Areas are exact for elementary faces and for full swept-curve
+  faces; trimmed swept-curve faces and B-spline faces keep the kernel's area
+  integration, unverified beyond the P11 loft cases.
 - **Pattern cost** grows with the square of the instance count, capped at 500.
 
 ### Not implemented

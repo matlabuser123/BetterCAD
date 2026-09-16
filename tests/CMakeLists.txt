@@ -34,6 +34,7 @@ bettercad_add_executable(bettercad_tests
         core/document/TestObjects.hpp
         core/geometry/BooleanTests.cpp
         core/geometry/ChamferTests.cpp
+        core/geometry/CurvedProfileTests.cpp
         core/geometry/FilletTests.cpp
         core/geometry/GeometryTestSupport.hpp
         core/geometry/HoleTests.cpp
@@ -44,6 +45,7 @@ bettercad_add_executable(bettercad_tests
         core/geometry/RevolutionTests.cpp
         core/geometry/SweepTests.cpp
         core/geometry/TransformTests.cpp
+        core/math/BSplineTests.cpp
         core/math/FrameTests.cpp
         core/math/RigidTransformTests.cpp
         core/parameters/ExpressionTests.cpp
@@ -86,6 +88,8 @@ bettercad_add_executable(bettercad_tests
         sketch/AdvancedConstraintDocumentTests.cpp
         sketch/AdvancedConstraintSolverTests.cpp
         sketch/ConstraintTests.cpp
+        sketch/EllipseSplineDocumentTests.cpp
+        sketch/EllipseSplineTests.cpp
         sketch/SketchDocumentTests.cpp
         sketch/SketchTests.cpp
         sketch/SolverTests.cpp

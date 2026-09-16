@@ -1,3 +1,4 @@
+#include <bettercad/core/math/BSpline.hpp>
 #include <bettercad/core/units/Format.hpp>
 #include <bettercad/sketch/Sketch.hpp>
 
@@ -58,6 +59,77 @@ Point2D onCircle(const Point2D& center, Length radius, Angle angle) {
     return {center.x + radius * cos(angle), center.y + radius * sin(angle)};
 }
 
+Result<void> requireSemiAxis(Length semiAxis) {
+    if (!isFinite(semiAxis) || semiAxis <= Sketch::kLengthTolerance) {
+        return makeError(ErrorCode::InvalidArgument,
+                         std::format("an ellipse's semi-axes must be finite and longer than {}, got {}",
+                                     toString(Sketch::kLengthTolerance, units::mm), toString(semiAxis, units::mm)));
+    }
+    return {};
+}
+
+/// Checks the vertices of an ellipse: both off the centre, on perpendicular
+/// axes (see Sketch::addEllipse).
+Result<void> checkEllipse(const Point2D& center, const Point2D& xVertex, const Point2D& yVertex) {
+    const Length a = distance(center, xVertex);
+    const Length b = distance(center, yVertex);
+    for (const Length semiAxis : {a, b}) {
+        if (auto valid = requireSemiAxis(semiAxis); !valid) {
+            return valid;
+        }
+    }
+    const double dot = (xVertex.x - center.x).si() * (yVertex.x - center.x).si() +
+                       (xVertex.y - center.y).si() * (yVertex.y - center.y).si();
+    // |dot| / a is the Y vertex's offset along the X axis, |dot| / b the X
+    // vertex's along the Y axis.
+    if (std::abs(dot) / std::min(a, b).si() > Sketch::kLengthTolerance.si()) {
+        const double apart = std::acos(std::clamp(dot / (a.si() * b.si()), -1.0, 1.0));
+        return makeError(ErrorCode::InvalidArgument,
+                         std::format("an ellipse's axes must be perpendicular, but they are {:.10g} deg apart",
+                                     apart * 180.0 / std::numbers::pi));
+    }
+    return {};
+}
+
+/// Circumference of the ellipse with semi-axes @p a and @p b, by the
+/// arithmetic-geometric mean: C = 2 pi / M(a, b) (a^2 - sum 2^(n-1) c_n^2)
+/// with c_0^2 = a^2 - b^2 and c_(n+1) = (a_n - b_n) / 2.
+double ellipseCircumference(double a, double b) {
+    double an = a;
+    double bn = b;
+    double weight = 0.5; // 2^(n-1)
+    double sum = weight * std::abs(a * a - b * b);
+    for (int n = 0; n < 64 && std::abs(an - bn) > 1e-15 * an; ++n) {
+        const double c = 0.5 * (an - bn);
+        const double next = std::sqrt(an * bn);
+        an = 0.5 * (an + bn);
+        bn = next;
+        weight *= 2.0;
+        sum += weight * c * c;
+    }
+    return 2.0 * std::numbers::pi / an * (std::max(a, b) * std::max(a, b) - sum);
+}
+
+/// Length of a spline: an 8-point Gauss-Legendre rule on 64 pieces of each
+/// knot span.
+double splineLength(const UniformBSpline& spline) {
+    constexpr int kPieces = 64;
+    const GaussLegendreRule& rule = gaussLegendreRule();
+    double length = 0.0;
+    const auto first = static_cast<int>(spline.first());
+    const auto last = static_cast<int>(spline.last());
+    for (int span = first; span < last; ++span) {
+        for (int piece = 0; piece < kPieces; ++piece) {
+            const double u0 = span + static_cast<double>(piece) / kPieces;
+            for (std::size_t k = 0; k < GaussLegendreRule::kPoints; ++k) {
+                const auto sample = spline.evaluate(u0 + rule.nodes[k] / kPieces);
+                length += rule.weights[k] / kPieces * std::hypot(sample.dx, sample.dy);
+            }
+        }
+    }
+    return length;
+}
+
 /// Calls @p fn for each point entity referenced by @p geometry.
 template <typename Fn>
 void forEachReferencedPoint(const EntityGeometry& geometry, Fn&& fn) {
@@ -70,6 +142,14 @@ void forEachReferencedPoint(const EntityGeometry& geometry, Fn&& fn) {
         fn(arc->center);
         fn(arc->start);
         fn(arc->end);
+    } else if (const auto* ellipse = std::get_if<EllipseEntity>(&geometry)) {
+        fn(ellipse->center);
+        fn(ellipse->xVertex);
+        fn(ellipse->yVertex);
+    } else if (const auto* spline = std::get_if<SplineEntity>(&geometry)) {
+        for (const EntityId pole : spline->poles) {
+            fn(pole);
+        }
     }
 }
 
@@ -182,6 +262,19 @@ Result<Point2D> Sketch::requirePoint(EntityId id) const {
         return wrongType(**entity, "a point");
     }
     return point->position;
+}
+
+Result<std::vector<Point2D>> Sketch::requirePoints(std::span<const EntityId> ids) const {
+    std::vector<Point2D> positions;
+    positions.reserve(ids.size());
+    for (const EntityId id : ids) {
+        auto position = requirePoint(id);
+        if (!position) {
+            return std::unexpected(position.error());
+        }
+        positions.push_back(*position);
+    }
+    return positions;
 }
 
 EntityId Sketch::insert(EntityGeometry geometry) {
@@ -309,6 +402,70 @@ Result<EntityId> Sketch::addArc(EntityId centerPoint, EntityId startPoint, Entit
     return insert(ArcEntity{centerPoint, startPoint, endPoint});
 }
 
+Result<EntityId> Sketch::addEllipse(const Point2D& center, Length radiusX, Length radiusY, Angle rotation) {
+    if (auto finite = requireFinite(center); !finite) {
+        return std::unexpected(finite.error());
+    }
+    for (const Length semiAxis : {radiusX, radiusY}) {
+        if (auto valid = requireSemiAxis(semiAxis); !valid) {
+            return std::unexpected(valid.error());
+        }
+    }
+    if (!isFinite(rotation)) {
+        return makeError(ErrorCode::InvalidArgument, "an ellipse's rotation must be finite");
+    }
+    // The Y axis is the X axis turned by exactly 90 degrees: (-sin, cos).
+    const Point2D xVertex{center.x + radiusX * cos(rotation), center.y + radiusX * sin(rotation)};
+    const Point2D yVertex{center.x - radiusY * sin(rotation), center.y + radiusY * cos(rotation)};
+    const EntityId centerPoint = insert(PointEntity{center});
+    const EntityId xPoint = insert(PointEntity{xVertex});
+    const EntityId yPoint = insert(PointEntity{yVertex});
+    return insert(EllipseEntity{centerPoint, xPoint, yPoint});
+}
+
+Result<EntityId> Sketch::addEllipse(EntityId centerPoint, EntityId xVertex, EntityId yVertex) {
+    if (centerPoint == xVertex || centerPoint == yVertex || xVertex == yVertex) {
+        return makeError(ErrorCode::InvalidArgument, "an ellipse needs three different points");
+    }
+    const std::array ids{centerPoint, xVertex, yVertex};
+    auto positions = requirePoints(ids);
+    if (!positions) {
+        return std::unexpected(positions.error());
+    }
+    if (auto valid = checkEllipse((*positions)[0], (*positions)[1], (*positions)[2]); !valid) {
+        return std::unexpected(valid.error());
+    }
+    return insert(EllipseEntity{centerPoint, xVertex, yVertex});
+}
+
+Result<EntityId> Sketch::addSpline(const std::vector<Point2D>& poles, int degree, bool periodic) {
+    if (auto valid = UniformBSpline::create(poles, degree, periodic); !valid) {
+        return std::unexpected(valid.error());
+    }
+    SplineEntity spline{.poles = {}, .degree = degree, .periodic = periodic};
+    spline.poles.reserve(poles.size());
+    for (const Point2D& pole : poles) {
+        spline.poles.push_back(insert(PointEntity{pole}));
+    }
+    return insert(std::move(spline));
+}
+
+Result<EntityId> Sketch::addSpline(std::vector<EntityId> poles, int degree, bool periodic) {
+    std::vector<EntityId> sorted = poles;
+    std::ranges::sort(sorted);
+    if (const auto repeated = std::ranges::adjacent_find(sorted); repeated != sorted.end()) {
+        return makeError(ErrorCode::InvalidArgument, std::format("a spline cannot use {} twice", *repeated));
+    }
+    auto positions = requirePoints(poles);
+    if (!positions) {
+        return std::unexpected(positions.error());
+    }
+    if (auto valid = UniformBSpline::create(*positions, degree, periodic); !valid) {
+        return std::unexpected(valid.error());
+    }
+    return insert(SplineEntity{std::move(poles), degree, periodic});
+}
+
 // --- Editing ------------------------------------------------------------------------------
 
 Result<bool> Sketch::setPointPosition(EntityId point, const Point2D& position) {
@@ -403,6 +560,10 @@ Result<void> Sketch::insertEntity(const Entity& entity) {
         if (auto valid = requireRadius(circle->radius); !valid) {
             return valid;
         }
+    } else if (const auto* spline = std::get_if<SplineEntity>(&entity.geometry)) {
+        if (auto valid = UniformBSpline::checkStructure(spline->poles.size(), spline->degree); !valid) {
+            return valid;
+        }
     }
     entities_.emplace(entity.id, entity);
     entityIds_.reserveThrough(entity.id.value());
@@ -437,8 +598,8 @@ Result<Point2D> Sketch::position(EntityId point) const {
     return requirePoint(point);
 }
 
-Result<Endpoints> Sketch::endpoints(EntityId lineOrArc) const {
-    auto entity = require(lineOrArc);
+Result<Endpoints> Sketch::endpoints(EntityId id) const {
+    auto entity = require(id);
     if (!entity) {
         return std::unexpected(entity.error());
     }
@@ -450,13 +611,20 @@ Result<Endpoints> Sketch::endpoints(EntityId lineOrArc) const {
     } else if (const auto* arc = std::get_if<ArcEntity>(&(*entity)->geometry)) {
         startId = arc->start;
         endId = arc->end;
+    } else if (const auto* spline = std::get_if<SplineEntity>(&(*entity)->geometry)) {
+        if (spline->periodic) {
+            return makeError(ErrorCode::InvalidArgument,
+                             std::format("{} is a periodic spline, which has no end points", id));
+        }
+        startId = spline->poles.front();
+        endId = spline->poles.back();
     } else {
-        return wrongType(**entity, "a line or an arc");
+        return wrongType(**entity, "a line, an arc or an open spline");
     }
     auto start = requirePoint(startId);
     auto end = requirePoint(endId);
     if (!start || !end) {
-        return makeError(ErrorCode::Internal, std::format("{} references a missing point", lineOrArc));
+        return makeError(ErrorCode::Internal, std::format("{} references a missing point", id));
     }
     return Endpoints{*start, *end};
 }
@@ -480,8 +648,8 @@ Result<Length> Sketch::radius(EntityId circleOrArc) const {
     return wrongType(**entity, "a circle or an arc");
 }
 
-Result<Point2D> Sketch::center(EntityId circleOrArc) const {
-    auto entity = require(circleOrArc);
+Result<Point2D> Sketch::center(EntityId id) const {
+    auto entity = require(id);
     if (!entity) {
         return std::unexpected(entity.error());
     }
@@ -491,7 +659,10 @@ Result<Point2D> Sketch::center(EntityId circleOrArc) const {
     if (const auto* arc = std::get_if<ArcEntity>(&(*entity)->geometry)) {
         return requirePoint(arc->center);
     }
-    return wrongType(**entity, "a circle or an arc");
+    if (const auto* ellipse = std::get_if<EllipseEntity>(&(*entity)->geometry)) {
+        return requirePoint(ellipse->center);
+    }
+    return wrongType(**entity, "a circle, an arc or an ellipse");
 }
 
 Result<Angle> Sketch::sweep(EntityId arc) const {
@@ -536,10 +707,33 @@ Result<Length> Sketch::length(EntityId entity) const {
         }
         return *r * angle->si();
     }
+    case EntityType::Ellipse: {
+        const auto& ellipse = std::get<EllipseEntity>(found->geometry);
+        const std::array ids{ellipse.center, ellipse.xVertex, ellipse.yVertex};
+        auto points = requirePoints(ids);
+        if (!points) {
+            return makeError(ErrorCode::Internal, std::format("{} references a missing point", entity));
+        }
+        return Length::fromSi(ellipseCircumference(distance((*points)[0], (*points)[1]).si(),
+                                                   distance((*points)[0], (*points)[2]).si()));
+    }
+    case EntityType::Spline: {
+        const auto& geometry = std::get<SplineEntity>(found->geometry);
+        auto poles = requirePoints(geometry.poles);
+        if (!poles) {
+            return makeError(ErrorCode::Internal, std::format("{} references a missing point", entity));
+        }
+        auto spline = UniformBSpline::create(*poles, geometry.degree, geometry.periodic);
+        if (!spline) {
+            return makeError(ErrorCode::FailedPrecondition,
+                             std::format("{} is not a valid spline: {}", entity, spline.error().message));
+        }
+        return Length::fromSi(splineLength(*spline));
+    }
     case EntityType::Point:
         break;
     }
-    return wrongType(*found, "a line, an arc or a circle");
+    return wrongType(*found, "a line, an arc, a circle, an ellipse or a spline");
 }
 
 Result<BoundingBox2D> Sketch::boundingBox(EntityId entity) const {
@@ -588,6 +782,33 @@ Result<BoundingBox2D> Sketch::boundingBox(EntityId entity) const {
             if (offset > 0.0 && offset < angle->si()) {
                 box.include(extremes[k]);
             }
+        }
+        return box;
+    }
+    case EntityType::Ellipse: {
+        const auto& ellipse = std::get<EllipseEntity>(found->geometry);
+        const std::array ids{ellipse.center, ellipse.xVertex, ellipse.yVertex};
+        auto points = requirePoints(ids);
+        if (!points) {
+            return makeError(ErrorCode::Internal, std::format("{} references a missing point", entity));
+        }
+        const Point2D& c = (*points)[0];
+        // Half extents of c + (X - c) cos t + (b / a) perp(X - c) sin t.
+        const double dx = ((*points)[1].x - c.x).si();
+        const double dy = ((*points)[1].y - c.y).si();
+        const double ratio = distance(c, (*points)[2]).si() / std::max(std::hypot(dx, dy), 1e-300);
+        const Length hx = Length::fromSi(std::hypot(dx, ratio * dy));
+        const Length hy = Length::fromSi(std::hypot(dy, ratio * dx));
+        return BoundingBox2D{{c.x - hx, c.y - hy}, {c.x + hx, c.y + hy}};
+    }
+    case EntityType::Spline: {
+        auto poles = requirePoints(std::get<SplineEntity>(found->geometry).poles);
+        if (!poles || poles->empty()) {
+            return makeError(ErrorCode::Internal, std::format("{} references a missing point", entity));
+        }
+        BoundingBox2D box = BoundingBox2D::around(poles->front());
+        for (const Point2D& pole : *poles) {
+            box.include(pole);
         }
         return box;
     }

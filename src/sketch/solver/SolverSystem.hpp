@@ -57,7 +57,8 @@ enum class EquationKind {
     MidpointOnLine, ///< signed distance of (p0 + p1) / 2 from line p2 -> p3
 };
 
-/// An equation. Radius terms Ri (the tangents) are the radius variable r[i]
+/// An equation (internal equations keep arc ends on their circle and
+/// ellipse axes perpendicular). Radius terms Ri (the tangents) are the radius variable r[i]
 /// of a circle, or, for an arc (arcRadius[i]), the distance from its centre to
 /// its start point: p[3] from p[0] for LineTangent, p[2 + i] from p[i] for
 /// CircleTangent.
@@ -91,7 +92,8 @@ public:
     void evaluate(const Eigen::VectorXd& x, Eigen::VectorXd& residuals,
                   Eigen::MatrixXd* jacobian) const;
 
-    /// Fails if a line, arc or circle of the solution has (near) zero size.
+    /// Fails if a line, arc, circle, ellipse or spline of the solution has
+    /// (near) zero size.
     [[nodiscard]] Result<void> checkNonDegenerate(const Eigen::VectorXd& x, double tolerance) const;
 
     /// Writes the solution into the sketch; returns whether anything changed.
@@ -104,11 +106,21 @@ private:
         PointRef b{};
     };
 
+    /// A spline's control polygon (closed for periodic splines).
+    struct Polygon {
+        EntityId entity{};
+        std::vector<PointRef> points{};
+        bool closed = false;
+    };
+
     std::vector<Equation> equations_;
     Eigen::VectorXd initial_;
     std::vector<PointRef> points_;
     std::vector<RadiusRef> radii_;
-    std::vector<Segment> segments_; ///< lines (start, end) and arc radii (centre, start)
+    /// Lines (start, end), arc radii (centre, start), ellipse semi-axes
+    /// (centre, vertex).
+    std::vector<Segment> segments_;
+    std::vector<Polygon> polygons_;
 };
 
 } // namespace bettercad::sketch::detail

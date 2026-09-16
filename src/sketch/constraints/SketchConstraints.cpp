@@ -3,6 +3,7 @@
 #include <bettercad/sketch/Sketch.hpp>
 
 #include <algorithm>
+#include <array>
 #include <format>
 #include <numbers>
 #include <string>
@@ -33,6 +34,40 @@ std::string describeTypes(const std::vector<EntityType>& types) {
 
 bool isRound(EntityType type) noexcept {
     return type == EntityType::Circle || type == EntityType::Arc;
+}
+
+bool hasCentre(EntityType type) noexcept {
+    return isRound(type) || type == EntityType::Ellipse;
+}
+
+/// Order of the entities of a tangent constraint: lines, then circles and
+/// arcs, then splines.
+int tangentRank(EntityType type) noexcept {
+    return type == EntityType::Line ? 0 : type == EntityType::Spline ? 2 : 1;
+}
+
+/// Whether the open ends of @p a and @p b meet: at one point entity, or at
+/// two that an enabled coincident constraint joins.
+bool shareEndPoint(const Sketch& sketch, const Entity& a, const Entity& b) {
+    const auto aEnds = endPointIds(a);
+    const auto bEnds = endPointIds(b);
+    if (!aEnds || !bEnds) {
+        return false;
+    }
+    for (const EntityId p : *aEnds) {
+        for (const EntityId q : *bEnds) {
+            if (p == q) {
+                return true;
+            }
+            for (const Constraint& constraint : sketch.constraints()) {
+                if (constraint.enabled && constraint.type == ConstraintType::Coincident &&
+                    std::ranges::is_permutation(constraint.entities, std::array{p, q})) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
 }
 
 /// "a distance constraint", "an angle constraint".
@@ -97,12 +132,18 @@ void Sketch::canonicalize(Constraint& constraint) const {
             std::swap(entities[0], entities[1]);
         }
         break;
-    case ConstraintType::Tangent:
-        // (circle/arc, line) -> (line, circle/arc)
-        if (entities.size() == 2 && round(0) && is(1, EntityType::Line)) {
+    case ConstraintType::Tangent: {
+        // (circle/arc, line) -> (line, circle/arc); a spline goes last.
+        const auto rank = [&](std::size_t i) {
+            const auto type = entityType(entities[i]);
+            return type ? tangentRank(*type) : -1;
+        };
+        if (entities.size() == 2 && ((round(0) && is(1, EntityType::Line)) ||
+                                     (is(0, EntityType::Spline) && rank(1) >= 0 && rank(1) < 2))) {
             std::swap(entities[0], entities[1]);
         }
         break;
+    }
     case ConstraintType::Symmetric: {
         // One line and two points: the line goes last, the points keep their order.
         if (entities.size() != 3) {
@@ -192,6 +233,9 @@ Result<void> Sketch::checkReferences(const Constraint& constraint) const {
         if (const auto* circle = std::get_if<CircleEntity>(&geometry)) {
             return circle->center;
         }
+        if (const auto* ellipse = std::get_if<EllipseEntity>(&geometry)) {
+            return ellipse->center;
+        }
         return std::get<ArcEntity>(geometry).center;
     };
     const Types point2{EntityType::Point, EntityType::Point};
@@ -257,14 +301,29 @@ Result<void> Sketch::checkReferences(const Constraint& constraint) const {
         break;
     case ConstraintType::Tangent: {
         const bool lineRound = types.size() == 2 && types[0] == EntityType::Line && isRound(types[1]);
-        if (!lineRound && !twoRound) {
-            return signatureError("a line and a circle or arc, or two circles or arcs");
+        const bool withSpline = types.size() == 2 && types[1] == EntityType::Spline &&
+                                (types[0] == EntityType::Line || types[0] == EntityType::Arc ||
+                                 types[0] == EntityType::Spline);
+        if (!lineRound && !twoRound && !withSpline) {
+            return signatureError("a line and a circle or arc, two circles or arcs, or an open spline and a line, "
+                                  "an arc or an open spline");
+        }
+        if (withSpline) {
+            for (const EntityId id : constraint.entities) {
+                const auto* spline = std::get_if<SplineEntity>(&findEntity(id)->geometry);
+                if (spline != nullptr && spline->periodic) {
+                    return makeError(ErrorCode::InvalidArgument,
+                                     std::format("{} takes an open spline, but {} is periodic and has no end points",
+                                                 noun, id));
+                }
+            }
         }
         break;
     }
     case ConstraintType::Concentric: {
-        if (!twoRound) {
-            return signatureError("two circles or arcs");
+        const bool twoCentred = types.size() == 2 && hasCentre(types[0]) && hasCentre(types[1]);
+        if (!twoCentred) {
+            return signatureError("two circles, arcs or ellipses");
         }
         const EntityId a = centreOf(constraint.entities[0]);
         if (a == centreOf(constraint.entities[1])) {
@@ -316,6 +375,17 @@ Result<ConstraintId> Sketch::addConstraint(ConstraintType type, std::vector<Enti
     canonicalize(constraint);
     if (auto valid = checkConstraint(constraint); !valid) {
         return std::unexpected(valid.error());
+    }
+    // A tangent with a spline needs its joint now. Loading does not check it
+    // (a file may list the joining coincident constraint later); the solver
+    // reports a missing joint.
+    if (constraint.type == ConstraintType::Tangent &&
+        entityType(constraint.entities[1]) == EntityType::Spline &&
+        !shareEndPoint(*this, *findEntity(constraint.entities[0]), *findEntity(constraint.entities[1]))) {
+        return makeError(ErrorCode::InvalidArgument,
+                         std::format("{} and {} share no end point: a tangent constraint with a spline applies "
+                                     "where the two meet (at one point, or at two a coincident constraint joins)",
+                                     constraint.entities[0], constraint.entities[1]));
     }
     constraint.id = constraintIds_.allocate<ConstraintId>();
     const ConstraintId id = constraint.id;

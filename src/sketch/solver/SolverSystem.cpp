@@ -173,7 +173,8 @@ Result<System> System::build(const Sketch& sketch) {
     const auto point = [&](EntityId id) -> const PointRef& { return points.at(id); };
     const Eigen::VectorXd& x0 = system.initial_;
 
-    // Internal arc equations, then segment bookkeeping for degeneracy checks.
+    // Internal arc and ellipse equations, then bookkeeping for degeneracy
+    // checks.
     for (const Entity& entity : sketch.entities()) {
         if (const auto* line = std::get_if<LineEntity>(&entity.geometry)) {
             system.segments_.push_back({entity.id, point(line->start), point(line->end)});
@@ -182,6 +183,19 @@ Result<System> System::build(const Sketch& sketch) {
             equation.p = {point(arc->center), point(arc->end), point(arc->center), point(arc->start)};
             system.equations_.push_back(equation);
             system.segments_.push_back({entity.id, point(arc->center), point(arc->start)});
+        } else if (const auto* ellipse = std::get_if<EllipseEntity>(&entity.geometry)) {
+            Equation equation{.kind = EquationKind::Perpendicular};
+            equation.p = {point(ellipse->center), point(ellipse->xVertex), point(ellipse->center),
+                          point(ellipse->yVertex)};
+            system.equations_.push_back(equation);
+            system.segments_.push_back({entity.id, point(ellipse->center), point(ellipse->xVertex)});
+            system.segments_.push_back({entity.id, point(ellipse->center), point(ellipse->yVertex)});
+        } else if (const auto* spline = std::get_if<SplineEntity>(&entity.geometry)) {
+            Polygon polygon{.entity = entity.id, .points = {}, .closed = spline->periodic};
+            for (const EntityId pole : spline->poles) {
+                polygon.points.push_back(point(pole));
+            }
+            system.polygons_.push_back(std::move(polygon));
         }
     }
 
@@ -199,6 +213,9 @@ Result<System> System::build(const Sketch& sketch) {
             const EntityGeometry& geometry = sketch.findEntity(id)->geometry;
             if (const auto* circle = std::get_if<CircleEntity>(&geometry)) {
                 return point(circle->center);
+            }
+            if (const auto* ellipse = std::get_if<EllipseEntity>(&geometry)) {
+                return point(ellipse->center);
             }
             return point(std::get<ArcEntity>(geometry).center);
         };
@@ -332,7 +349,40 @@ Result<System> System::build(const Sketch& sketch) {
             // distance form below is second order at a joint: it would place
             // the joint only to the square root of the tolerance.
             const Entity* first = sketch.findEntity(c.entities[0]);
-            const auto* secondArc = std::get_if<ArcEntity>(&sketch.findEntity(c.entities[1])->geometry);
+            const Entity* second = sketch.findEntity(c.entities[1]);
+            if (const auto* spline = std::get_if<SplineEntity>(&second->geometry)) {
+                // A spline is last (canonical order) and tangent only at a
+                // joint, where its tangent is its end leg.
+                const auto firstEnds = endPointIds(*first);
+                const auto secondEnds = endPointIds(*second);
+                const auto joint =
+                    firstEnds && secondEnds ? jointOf(*firstEnds, *secondEnds) : std::nullopt;
+                if (!joint) {
+                    return makeError(ErrorCode::FailedPrecondition,
+                                     std::format("{} needs {} and {} to share an end point", c.id, c.entities[0],
+                                                 c.entities[1]));
+                }
+                const auto legAt = [&](const SplineEntity& curve, EntityId end) {
+                    const std::size_t n = curve.poles.size();
+                    return end == curve.poles.front()
+                               ? std::array{point(curve.poles[0]), point(curve.poles[1])}
+                               : std::array{point(curve.poles[n - 2]), point(curve.poles[n - 1])};
+                };
+                const auto leg = legAt(*spline, joint->second);
+                if (const auto* line = std::get_if<LineEntity>(&first->geometry)) {
+                    e.p = {leg[0], leg[1], point(line->start), point(line->end)};
+                    push(EquationKind::Parallel);
+                } else if (const auto* arc = std::get_if<ArcEntity>(&first->geometry)) {
+                    e.p = {leg[0], leg[1], point(arc->center), point(joint->first)};
+                    push(EquationKind::Perpendicular);
+                } else {
+                    const auto other = legAt(std::get<SplineEntity>(first->geometry), joint->first);
+                    e.p = {other[0], other[1], leg[0], leg[1]};
+                    push(EquationKind::Parallel);
+                }
+                break;
+            }
+            const auto* secondArc = std::get_if<ArcEntity>(&second->geometry);
             if (secondArc != nullptr) {
                 if (const auto* line = std::get_if<LineEntity>(&first->geometry)) {
                     if (const auto joint = jointOf({line->start, line->end}, {secondArc->start, secondArc->end})) {
@@ -608,6 +658,17 @@ Result<void> System::checkNonDegenerate(const Eigen::VectorXd& x, double toleran
         if (lengthOf(valueOf(segment.a, x), valueOf(segment.b, x)).length <= tolerance) {
             return makeError(ErrorCode::FailedPrecondition,
                              std::format("the solution collapses {} to zero size", segment.entity));
+        }
+    }
+    for (const Polygon& polygon : polygons_) {
+        double length = 0.0;
+        const std::size_t n = polygon.points.size();
+        for (std::size_t i = 0; i + 1 < n + (polygon.closed ? 1 : 0); ++i) {
+            length += lengthOf(valueOf(polygon.points[i], x), valueOf(polygon.points[(i + 1) % n], x)).length;
+        }
+        if (length <= tolerance) {
+            return makeError(ErrorCode::FailedPrecondition,
+                             std::format("the solution collapses {} to zero size", polygon.entity));
         }
     }
     for (const RadiusRef& radius : radii_) {

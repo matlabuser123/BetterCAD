@@ -30,10 +30,17 @@
 //   Symmetric      point, point, line (the symmetry axis)
 //   Diameter       circle  |  arc                                      + value
 //
+// Extended by P12-SKETCH-002. Ellipse vertices and spline poles are point
+// entities and take every point constraint above; in addition:
+//
+//   Concentric     circle/arc/ellipse, circle/arc/ellipse
+//   Tangent        line/arc/open spline, open spline, where the two share an
+//                  end point (see ConstraintType::Tangent)
+//
 // Referenced entities must exist and be distinct. A (line, point) distance
 // or midpoint is stored as (point, line), a (circle/arc, line) tangent as
-// (line, circle/arc), and a symmetric constraint with its line first as
-// (point, point, line).
+// (line, circle/arc), a tangent with one spline with the spline last, and a
+// symmetric constraint with its line first as (point, point, line).
 namespace bettercad::sketch {
 
 enum class ConstraintType {
@@ -53,8 +60,16 @@ enum class ConstraintType {
     /// the radius, on the side where the centre starts), or two circles or
     /// arcs touch: externally or internally, whichever the geometry is
     /// nearer when solving starts.
+    ///
+    /// With an open spline, tangency applies where the two entities meet: at
+    /// an end point they share, or at two end points a coincident constraint
+    /// joins (the first such pair, taking the first entity's start before its
+    /// end). There the spline's end leg (its first or last two poles) is
+    /// parallel to the line, perpendicular to the arc's radius, or parallel to
+    /// the other spline's end leg. The joint is required when the constraint
+    /// is added; a solve fails if it has since gone.
     Tangent,
-    /// Two circles or arcs share a centre position.
+    /// Two circles, arcs or ellipses share a centre position.
     Concentric,
     /// A point lies halfway between a line's end points.
     Midpoint,

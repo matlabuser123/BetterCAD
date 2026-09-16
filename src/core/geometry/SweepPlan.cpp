@@ -150,6 +150,10 @@ Result<Segment> measure(const ProfileSegment& segment, std::size_t number) {
         s.length = s.radius * std::abs(s.sweep);
         return s;
     }
+    if (std::holds_alternative<EllipseSegment2D>(segment) || std::holds_alternative<SplineSegment2D>(segment)) {
+        return invalid(std::format("is {}; a path is made of lines, arcs and circles",
+                                   std::holds_alternative<EllipseSegment2D>(segment) ? "an ellipse" : "a spline"));
+    }
     const auto& circle = std::get<CircleSegment2D>(segment);
     if (!finite(circle.center) || !isFinite(circle.radius)) {
         return invalid("is not finite");
