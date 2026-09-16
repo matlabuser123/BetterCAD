@@ -96,6 +96,15 @@ Result<void> ModifyParameterCommand::execute(Document& document) {
             return std::unexpected(r.error());
         }
     }
+    // A driven parameter's value comes from its expression. A value may come
+    // with a new expression (its starting value until evaluation), but not
+    // on its own.
+    if (changes_.value && !changes_.expression && target.expression()) {
+        return makeError(ErrorCode::FailedPrecondition,
+                         std::format("parameter '{}' is driven by the expression '{}'; clear the expression to "
+                                     "set its value",
+                                     target.name(), *target.expression()));
+    }
 
     Parameter before = *current;
     // restoreParameter() is atomic and also checks name uniqueness.

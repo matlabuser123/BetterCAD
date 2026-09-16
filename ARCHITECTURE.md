@@ -137,10 +137,11 @@ change. Revisions drive dirty state, regeneration and cache invalidation.
 ## Parametric Model
 
 Parameters are first-class document objects: ID, name, physical dimension,
-value, display unit, optional expression, revision. Expressions
-(`housing_width = bearing_OD + 2 * wall_thickness`) are stored today but not
-evaluated; when they are, they must form dependencies in the same graph features
-use.
+value, display unit, optional expression, revision. An expression
+(`housing_width = bearing_OD + 2 * wall_thickness`) makes a parameter *driven*:
+its value is computed, with dimensional analysis, from the parameters the
+expression names. Those names are dependencies in the same graph features use,
+and driven values are evaluated first in every regeneration pass.
 
 **Features store inputs, not outputs.**
 

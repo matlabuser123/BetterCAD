@@ -1,5 +1,7 @@
 #include <bettercad/core/document/DependencyGraph.hpp>
 #include <bettercad/core/document/Document.hpp>
+#include <bettercad/core/document/ParameterExpressions.hpp>
+#include <bettercad/core/parameters/Expression.hpp>
 
 #include <algorithm>
 #include <deque>
@@ -171,6 +173,23 @@ DocumentGraph buildDependencyGraph(const Document& document) {
     DocumentGraph result;
     for (const ObjectId id : document.itemIds()) {
         result.graph.addNode(id);
+    }
+    for (const Parameter& parameter : document.parameters().all()) {
+        if (!parameter.expression()) {
+            continue;
+        }
+        const auto expression = Expression::parse(*parameter.expression());
+        if (!expression) {
+            result.unresolved.push_back({parameter.id(), expression.error()});
+            continue;
+        }
+        for (const Result<ParameterId>& input : resolveExpressionNames(document, *expression)) {
+            if (input) {
+                result.graph.addDependency(parameter.id(), *input);
+            } else {
+                result.unresolved.push_back({parameter.id(), input.error()});
+            }
+        }
     }
     for (const DocumentObject& object : document.objects()) {
         for (const ObjectId dependency : object.dependencies()) {

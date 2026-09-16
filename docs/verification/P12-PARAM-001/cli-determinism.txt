@@ -1,0 +1,19 @@
+Fresh-process determinism: bettercad-cli validate examples/models/driven_plate.bcad, run once by each
+configuration's executable after the qualification (build/<preset>/bin/bettercad-cli.exe).
+
+aad6706a5b9017b7bf07c435c0e2ee8a *validate-debug.txt
+aad6706a5b9017b7bf07c435c0e2ee8a *validate-release.txt
+aad6706a5b9017b7bf07c435c0e2ee8a *validate-debug-shared.txt
+
+All three outputs are byte-identical. The Release output:
+
+Validating examples/models/driven_plate.bcad
+  document consistency  ok
+  missing references    ok
+  dependency cycles     ok
+  sketch constraints    ok
+  feature regeneration  ok, 2 objects regenerated
+  geometry              ok, 1 result body
+Result bodies (1):
+  Plate (object:9): 1 solid, volume 48429.204 mm^3, area 13314.159 mm^2, bounds (0, 0, 0) to (100, 50, 10) mm
+Result: valid

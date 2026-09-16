@@ -30,6 +30,7 @@ bettercad_add_executable(bettercad_tests
         core/document/CommandTests.cpp
         core/document/DependencyGraphTests.cpp
         core/document/DocumentTests.cpp
+        core/document/ParameterExpressionTests.cpp
         core/document/TestObjects.hpp
         core/geometry/BooleanTests.cpp
         core/geometry/ChamferTests.cpp
@@ -45,6 +46,7 @@ bettercad_add_executable(bettercad_tests
         core/geometry/TransformTests.cpp
         core/math/FrameTests.cpp
         core/math/RigidTransformTests.cpp
+        core/parameters/ExpressionTests.cpp
         core/parameters/ParameterTableTests.cpp
         core/parameters/ParameterTests.cpp
         core/units/ConversionTests.cpp
@@ -52,6 +54,7 @@ bettercad_add_executable(bettercad_tests
         core/units/QuantityTests.cpp
         features/ChamferFeatureTests.cpp
         features/CircularPatternFeatureTests.cpp
+        features/ExpressionRegenerationTests.cpp
         features/ExtrudeTests.cpp
         features/FeatureTestSupport.hpp
         features/FilletFeatureTests.cpp
@@ -69,6 +72,7 @@ bettercad_add_executable(bettercad_tests
         io/CircularPatternFileTests.cpp
         io/DocumentFileTests.cpp
         io/ExampleModelTests.cpp
+        io/ExpressionFileTests.cpp
         io/FilletFileTests.cpp
         io/HoleFileTests.cpp
         io/LinearPatternFileTests.cpp
@@ -86,6 +90,7 @@ bettercad_add_executable(bettercad_tests
         support/BlockModel.hpp
         support/BracketModel.hpp
         support/ChamferBlockModel.hpp
+        support/DrivenPlateModel.hpp
         support/FilletModels.hpp
         support/HoleModels.hpp
         support/LoftModels.hpp
@@ -113,7 +118,11 @@ target_compile_definitions(bettercad_tests PRIVATE
     "BETTERCAD_EXAMPLE_MODELS_DIR=\"${PROJECT_SOURCE_DIR}/examples/models\""
 )
 if(TARGET bettercad_cli_lib)
-    target_sources(bettercad_tests PRIVATE cli/CliTests.cpp)
+    target_sources(bettercad_tests PRIVATE
+        cli/CliRunner.hpp
+        cli/CliTests.cpp
+        cli/ExpressionCliTests.cpp
+    )
     target_link_libraries(bettercad_tests PRIVATE BetterCAD::cli_lib)
 endif()
 # The mechanical reference models (P11-REF-001) are built by the examples'
@@ -252,6 +261,21 @@ if(TARGET bettercad_cli)
         ARGS "export-step|${_reference}/mounting_bracket.bcad|${_out}/mounting_bracket.step"
         EXIT_CODE 0 STDOUT_REGEX "^Wrote .*mounting_bracket\\.step: STEP AP214 \\(mm\\), 1 body \\(Gusset\\), [0-9]+ bytes$"
         FILE "${_out}/mounting_bracket.step" FILE_REGEX "^ISO-10303-21;\nHEADER;")
+    # P12-PARAM-001: a model driven by parameter expressions, through the
+    # real executable.
+    set(_driven "${PROJECT_SOURCE_DIR}/examples/models/driven_plate.bcad")
+    bettercad_add_process_test(cli.info.driven-plate
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "info|${_driven}"
+        EXIT_CODE 0
+        STDOUT_REGEX "^Document: DrivenPlate\n.*Parameters \\(7\\):\n  hole_y         25 mm  \\(expression: height / 2\\)\n  height         50 mm  \\(expression: width / 2\\)\n.*  width          100 mm\n")
+    bettercad_add_process_test(cli.validate.driven-plate
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "validate|${_driven}"
+        EXIT_CODE 0
+        STDOUT_REGEX "feature regeneration  ok, 2 objects regenerated\n  geometry              ok, 1 result body\nResult bodies \\(1\\):\n  Plate \\(object:9\\): 1 solid, volume 48429\\.204 mm\\^3.*bounds \\(0, 0, 0\\) to \\(100, 50, 10\\) mm\nResult: valid$")
+    bettercad_add_process_test(cli.export-step.driven-plate
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "export-step|${_driven}|${_out}/driven_plate.step"
+        EXIT_CODE 0 STDOUT_REGEX "^Wrote .*driven_plate\\.step: STEP AP214 \\(mm\\), 1 body \\(Plate\\), [0-9]+ bytes$"
+        FILE "${_out}/driven_plate.step" FILE_REGEX "^ISO-10303-21;\nHEADER;")
     bettercad_add_process_test(cli.export-stl.reference.pulley
         COMMAND "$<TARGET_FILE:bettercad_cli>"
         ARGS "export-stl|${_reference}/pulley.bcad|${_out}/pulley.stl"

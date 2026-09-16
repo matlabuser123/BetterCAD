@@ -13,8 +13,10 @@ bettercad_add_library(bettercad_core
         document/DependencyGraph.cpp
         document/Document.cpp
         document/DocumentObject.cpp
+        document/ParameterExpressions.cpp
         math/Direction.cpp
         math/Frame.cpp
+        parameters/Expression.cpp
         parameters/Parameter.cpp
         parameters/ParameterTable.cpp
         units/Format.cpp

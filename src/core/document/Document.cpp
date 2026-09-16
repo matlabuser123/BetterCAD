@@ -1,4 +1,5 @@
 #include <bettercad/core/document/Document.hpp>
+#include <bettercad/core/parameters/Expression.hpp>
 
 #include <algorithm>
 #include <format>
@@ -119,6 +120,9 @@ Result<void> Document::insertParameter(Parameter parameter) {
     if (auto available = requireNameAvailable(parameter.name()); !available) {
         return std::unexpected(available.error());
     }
+    if (auto valid = checkExpressionSyntax(parameter.name(), parameter.expression()); !valid) {
+        return std::unexpected(valid.error());
+    }
     if (auto added = parameters_.add(std::move(parameter)); !added) {
         return std::unexpected(added.error());
     }
@@ -135,11 +139,28 @@ Result<Parameter> Document::removeParameter(ParameterId id) {
     return removed;
 }
 
+Result<void> Document::requireNotDriven(ParameterId id) const {
+    const Parameter* parameter = parameters_.find(id);
+    if (parameter != nullptr && parameter->expression()) {
+        return makeError(ErrorCode::FailedPrecondition,
+                         std::format("parameter '{}' is driven by the expression '{}'; clear the expression to "
+                                     "set its value",
+                                     parameter->name(), *parameter->expression()));
+    }
+    return {};
+}
+
 Result<bool> Document::setParameterSiValue(ParameterId id, Dimension dimension, double siValue) {
+    if (auto free = requireNotDriven(id); !free) {
+        return std::unexpected(free.error());
+    }
     return bump(parameters_.setSiValue(id, dimension, siValue));
 }
 
 Result<bool> Document::setParameterValue(ParameterId id, double value, const UnitDescriptor& unit) {
+    if (auto free = requireNotDriven(id); !free) {
+        return std::unexpected(free.error());
+    }
     return bump(parameters_.setValue(id, value, unit));
 }
 
@@ -149,7 +170,35 @@ Result<bool> Document::setParameterDisplayUnit(ParameterId id, const UnitDescrip
 
 Result<bool> Document::setParameterExpression(ParameterId id,
                                               std::optional<std::string> expression) {
+    const Parameter* parameter = parameters_.find(id);
+    if (parameter != nullptr) {
+        if (auto valid = checkExpressionSyntax(parameter->name(), expression); !valid) {
+            return std::unexpected(valid.error());
+        }
+    }
     return bump(parameters_.setExpression(id, std::move(expression)));
+}
+
+Result<bool> Document::storeExpressionValue(ParameterId id, const DimensionedValue& value) {
+    const Parameter* parameter = parameters_.find(id);
+    if (parameter == nullptr || !parameter->expression()) {
+        return makeError(ErrorCode::Internal,
+                         std::format("{} is not a driven parameter; no expression value can be stored", id));
+    }
+    return bump(parameters_.setSiValue(id, value.dimension, value.siValue));
+}
+
+Result<void> Document::checkExpressionSyntax(std::string_view parameter,
+                                             const std::optional<std::string>& expression) {
+    if (!expression) {
+        return {};
+    }
+    if (auto parsed = Expression::parse(*expression); !parsed) {
+        return makeError(parsed.error().code,
+                         std::format("parameter '{}': expression '{}': {}", parameter, *expression,
+                                     parsed.error().message));
+    }
+    return {};
 }
 
 Result<bool> Document::restoreParameter(const Parameter& state) {
@@ -161,6 +210,9 @@ Result<bool> Document::restoreParameter(const Parameter& state) {
         return makeError(ErrorCode::DimensionMismatch,
                          std::format("cannot restore {}: the stored state has a different dimension",
                                      state.id()));
+    }
+    if (auto valid = checkExpressionSyntax(state.name(), state.expression()); !valid) {
+        return std::unexpected(valid.error());
     }
 
     // Renaming is the only step that can fail for a valid state (the name may

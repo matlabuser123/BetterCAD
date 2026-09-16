@@ -1,4 +1,5 @@
 #include <bettercad/core/document/DependencyGraph.hpp>
+#include <bettercad/core/document/ParameterExpressions.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/features/Regeneration.hpp>
 #include <bettercad/features/Regenerator.hpp>
@@ -134,9 +135,14 @@ Result<RegenerationReport> Regenerator::regenerate(Document& document) {
     }
     documentId_ = document.id();
 
+    // Driven parameters first: a new value advances the parameter's revision,
+    // which makes everything downstream of it dirty below.
+    const ParameterEvaluationReport evaluation = evaluateParameterExpressions(document);
+
     const DocumentGraph documentGraph = buildDependencyGraph(document);
     const DependencyGraph& graph = documentGraph.graph;
     RegenerationReport report;
+    report.updatedParameters = evaluation.changed;
 
     // Forget results of items that no longer exist.
     const auto forgetMissing = [&](auto& map) {
@@ -163,6 +169,11 @@ Result<RegenerationReport> Regenerator::regenerate(Document& document) {
     for (const MissingReference& reference : documentGraph.missing) {
         missing.try_emplace(reference.dependent, reference.missing);
         changed.insert(reference.dependent);
+    }
+    // A failed expression is a source of dirtiness even when its parameter did
+    // not change (e.g. a name it uses was deleted or renamed).
+    for (const auto& [parameter, error] : evaluation.failed) {
+        changed.insert(ObjectId{parameter});
     }
     report.changed.assign(changed.begin(), changed.end());
     const std::set<ObjectId> dirty = graph.downstreamOf(changed);
@@ -192,8 +203,16 @@ Result<RegenerationReport> Regenerator::regenerate(Document& document) {
                            std::format("dependency cycle: {}", describeCycle(document, cycle))});
         }
     }
+    // Parameters whose expression failed keep their last value; what depends
+    // on them is blocked below.
+    for (const auto& [parameter, error] : evaluation.failed) {
+        fail(ObjectId{parameter}, error);
+    }
 
     for (const ObjectId id : ordering.order) {
+        if (broken.contains(id)) {
+            continue; // a failed expression, handled above
+        }
         if (!dirty.contains(id)) {
             states_[id] = NodeState::UpToDate;
             continue;

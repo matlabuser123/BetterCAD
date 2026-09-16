@@ -1,5 +1,6 @@
 #pragma once
 
+#include <bettercad/core/Error.hpp>
 #include <bettercad/core/Export.hpp>
 #include <bettercad/core/Id.hpp>
 
@@ -62,12 +63,25 @@ struct MissingReference {
     friend bool operator==(const MissingReference&, const MissingReference&) = default;
 };
 
-/// Dependency graph of a document: every parameter and object is a node and
-/// edges come from DocumentObject::dependencies(). References to items that
-/// do not exist are not edges; they are listed in `missing`.
+/// A parameter expression that cannot be resolved: it uses a name that is not
+/// a parameter (NotFound for an unknown name, InvalidArgument for the name of
+/// an object), or its text does not parse. The error names the token.
+struct UnresolvedExpression {
+    ParameterId parameter{};
+    Error error{};
+
+    friend bool operator==(const UnresolvedExpression&, const UnresolvedExpression&) = default;
+};
+
+/// Dependency graph of a document: every parameter and object is a node.
+/// Edges come from DocumentObject::dependencies() and from the parameters a
+/// parameter's expression names. References to items that do not exist are
+/// not edges; they are listed in `missing`, and expression names that are not
+/// parameters in `unresolved` (one entry per name, in parameter order).
 struct DocumentGraph {
     DependencyGraph graph;
     std::vector<MissingReference> missing;
+    std::vector<UnresolvedExpression> unresolved{};
 };
 
 [[nodiscard]] BETTERCAD_CORE_EXPORT DocumentGraph buildDependencyGraph(const Document& document);

@@ -1,4 +1,5 @@
 #include <bettercad/core/document/DependencyGraph.hpp>
+#include <bettercad/core/document/ParameterExpressions.hpp>
 #include <bettercad/core/units/Format.hpp>
 #include <bettercad/features/ChamferFeature.hpp>
 #include <bettercad/features/CircularPatternFeature.hpp>
@@ -57,14 +58,16 @@ std::string describeQuantity(const Dimension& dimension) {
 
 class Checker {
 public:
-    explicit Checker(const Document& document) : document_(document) {}
+    explicit Checker(const Document& document)
+        : document_(document), evaluated_(document.clone()),
+          evaluation_(evaluateParameterExpressions(evaluated_)) {}
 
     ValidationReport run() {
-        checkConsistency();
         const DocumentGraph graph = buildDependencyGraph(document_);
+        checkConsistency(graph);
         checkMissingReferences(graph);
         checkCycles(graph);
-        checkSketches();
+        checkSketches(graph);
         checkRegenerationAndGeometry();
         return std::move(report_);
     }
@@ -108,7 +111,23 @@ private:
         }
     }
 
-    void checkConsistency() {
+    /// "Name (parameter:3): expression 'x + 1': <message>"
+    void expressionIssue(ValidationCheck check, const UnresolvedExpression& unresolved) {
+        const ObjectId id{unresolved.parameter};
+        const Parameter* parameter = document_.parameters().find(unresolved.parameter);
+        add(check, Severity::Error, id,
+            std::format("{}: expression '{}': {}", label(document_, id),
+                        parameter != nullptr ? parameter->expression().value_or(std::string{}) : std::string{},
+                        unresolved.error.message));
+    }
+
+    void checkConsistency(const DocumentGraph& graph) {
+        // Expressions that do not parse or use names of objects.
+        for (const UnresolvedExpression& unresolved : graph.unresolved) {
+            if (unresolved.error.code != ErrorCode::NotFound) {
+                expressionIssue(ValidationCheck::DocumentConsistency, unresolved);
+            }
+        }
         for (const DocumentObject& object : document_.objects()) {
             if (const auto* sketch = dynamic_cast<const sketch::Sketch*>(&object)) {
                 for (const sketch::Constraint& constraint : sketch->constraints()) {
@@ -271,6 +290,15 @@ private:
                 std::format("{} references {}, which does not exist", label(document_, reference.dependent),
                             reference.missing));
         }
+        // Unknown names in expressions (every one of them), unless the
+        // expression already failed the consistency check.
+        const std::set<ObjectId> inconsistent = failedItems_;
+        for (const UnresolvedExpression& unresolved : graph.unresolved) {
+            if (unresolved.error.code == ErrorCode::NotFound &&
+                !inconsistent.contains(ObjectId{unresolved.parameter})) {
+                expressionIssue(ValidationCheck::MissingReferences, unresolved);
+            }
+        }
         // References into sketches are not graph edges: revolve axis lines
         // and sweep path edges.
         for (const DocumentObject& object : document_.objects()) {
@@ -313,14 +341,38 @@ private:
         }
     }
 
-    void checkSketches() {
+    /// True if a parameter @p id depends on was not evaluated or failed, so
+    /// its value is not known.
+    [[nodiscard]] bool usesUnevaluatedParameter(const DocumentGraph& graph, ObjectId id) const {
+        const auto unevaluated = [&](ObjectId input) {
+            const auto parameter = document_.asParameter(input);
+            if (!parameter) {
+                return false;
+            }
+            const bool inCycle = std::ranges::any_of(evaluation_.cycles, [&](const auto& cycle) {
+                return std::ranges::contains(cycle, *parameter);
+            });
+            return inCycle || evaluation_.failed.contains(*parameter) ||
+                   std::ranges::contains(evaluation_.blocked, *parameter);
+        };
+        return std::ranges::any_of(graph.graph.dependenciesOf(id), unevaluated);
+    }
+
+    void checkSketches(const DocumentGraph& graph) {
         for (const DocumentObject& object : document_.objects()) {
             const auto* original = dynamic_cast<const sketch::Sketch*>(&object);
             if (original == nullptr || failedItems_.contains(object.id())) {
                 continue;
             }
+            // Regeneration reports a sketch whose driving values are unknown
+            // as blocked.
+            if (usesUnevaluatedParameter(graph, object.id())) {
+                continue;
+            }
             sketch::Sketch copy = *original;
-            if (auto applied = sketch::applyDrivingParameters(copy, document_.parameters()); !applied) {
+            // Driving values as regeneration computes them: with the
+            // parameter expressions evaluated.
+            if (auto applied = sketch::applyDrivingParameters(copy, evaluated_.parameters()); !applied) {
                 add(ValidationCheck::SketchConstraints, Severity::Error, object.id(),
                     std::format("{}: {}", label(document_, object.id()), applied.error().message));
                 continue;
@@ -392,15 +444,16 @@ private:
         // Failures already explained by an earlier check are not repeated.
         for (const auto& [id, error] : regeneration->errors) {
             if (!failedItems_.contains(id)) {
+                const std::string_view what = document_.asParameter(id) ? "evaluate" : "regenerate";
                 add(ValidationCheck::FeatureRegeneration, Severity::Error, id,
-                    std::format("{} failed to regenerate: {}", label(document_, id), error.message));
+                    std::format("{} failed to {}: {}", label(document_, id), what, error.message));
             }
         }
         for (const ObjectId id : regeneration->blocked) {
             if (!failedItems_.contains(id)) {
+                const std::string_view what = document_.asParameter(id) ? "evaluated" : "regenerated";
                 add(ValidationCheck::FeatureRegeneration, Severity::Error, id,
-                    std::format("{} was not regenerated because an item it depends on failed",
-                                label(document_, id)));
+                    std::format("{} was not {} because an item it depends on failed", label(document_, id), what));
             }
         }
 
@@ -421,6 +474,9 @@ private:
     }
 
     const Document& document_;
+    /// A copy with its parameter expressions evaluated.
+    Document evaluated_;
+    ParameterEvaluationReport evaluation_;
     ValidationReport report_;
     std::set<ObjectId> failedItems_;
 };

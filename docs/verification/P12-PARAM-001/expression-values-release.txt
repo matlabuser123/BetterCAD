@@ -1,0 +1,1070 @@
+Measured values of the P12-PARAM-001 tests (Release build of the qualified tree).
+Produced by: build/release/bin/bettercad_tests.exe "[p12]" -s --reporter xml --rng-seed 1, filtered by
+values.py (kept in this directory): every passed CHECK_THAT and every passed CHECK whose expansion shows
+values, with the test case, section and INFO/CAPTURE context. Each entry: file:line, the assertion, then
+Catch2's expansion (values printed exactly). REQUIRE lines, repeats of an identical entry within a test case
+and expansions over 1000 characters (whole-file text) are left out. bits(x) is the IEEE-754 bit pattern of x,
+so `bits(a) == bits(b)` compares two doubles exactly.
+
+
+== DocumentExpression_DimensionErrorsAreStructuredFailures
+ParameterExpressionTests.cpp:340  CHECK( errorCode(product) == ErrorCode::DimensionMismatch )
+        => {?} == 3
+ParameterExpressionTests.cpp:341  CHECK( product.error().message == "parameter 'height' = width * draft: the result has dimension " "quantity [m*rad], but the parameter has dimension length" )
+        => "parameter 'height' = width * draft: the result has dimension quantity [m*rad], but the parameter has dimension length" == "parameter 'height' = width * draft: the result has dimension quantity [m*rad], but the parameter has dimension length"
+ParameterExpressionTests.cpp:346  CHECK( errorCode(sum) == ErrorCode::DimensionMismatch )
+        => {?} == 3
+ParameterExpressionTests.cpp:347  CHECK( sum.error().message == "parameter 'height' = width + draft: cannot add 'width' (length) and 'draft' (angle) at offset 6" )
+        => "parameter 'height' = width + draft: cannot add 'width' (length) and 'draft' (angle) at offset 6" == "parameter 'height' = width + draft: cannot add 'width' (length) and 'draft' (angle) at offset 6"
+ParameterExpressionTests.cpp:351  CHECK( errorCode(evaluateParameterExpression(doc, height)) == ErrorCode::DimensionMismatch )
+        => {?} == 3
+ParameterExpressionTests.cpp:354  CHECK( report.failed.at(height).code == ErrorCode::DimensionMismatch )
+        => 3 == 3
+ParameterExpressionTests.cpp:355  CHECK( si(doc, height) == 0.007 )
+        => 0.007 == 0.007
+ParameterExpressionTests.cpp:360  CHECK( evaluateParameterExpression(doc, ratio).value() == DimensionedValue{dimensions::dimensionless, 1.0} )
+        => {?} == {?}
+ParameterExpressionTests.cpp:361  CHECK( evaluateParameterExpression(doc, width).error().code == ErrorCode::FailedPrecondition )
+        => 5 == 5
+ParameterExpressionTests.cpp:362  CHECK( evaluateParameterExpression(doc, ParameterId::fromValue(404)).error().code == ErrorCode::NotFound )
+        => 1 == 1
+
+== Expression_EvaluationFailuresNameTheOffendingToken
+ExpressionTests.cpp:307  CHECK( unknown.code == ErrorCode::NotFound )
+        => 1 == 1
+ExpressionTests.cpp:308  CHECK( unknown.message == "unknown parameter 'wdth' at offset 0" )
+        => "unknown parameter 'wdth' at offset 0" == "unknown parameter 'wdth' at offset 0"
+ExpressionTests.cpp:311  CHECK( failure("2 * width").message == "unknown parameter 'width' at offset 4" )
+        => "unknown parameter 'width' at offset 4" == "unknown parameter 'width' at offset 4"
+ExpressionTests.cpp:318  CHECK( refused.code == ErrorCode::InvalidArgument )
+        => 0 == 0
+ExpressionTests.cpp:319  CHECK( refused.message == "'Base' is a sketch at offset 7" )
+        => "'Base' is a sketch at offset 7" == "'Base' is a sketch at offset 7"
+ExpressionTests.cpp:322  CHECK( zero.code == ErrorCode::InvalidArgument )
+        => 0 == 0
+ExpressionTests.cpp:323  CHECK( zero.message == "division by zero at offset 6: '(a - a)' is zero" )
+        => "division by zero at offset 6: '(a - a)' is zero" == "division by zero at offset 6: '(a - a)' is zero"
+ExpressionTests.cpp:324  CHECK( failure("1 / 0").message == "division by zero at offset 2: '0' is zero" )
+        => "division by zero at offset 2: '0' is zero" == "division by zero at offset 2: '0' is zero"
+ExpressionTests.cpp:325  CHECK( failure("1 / -0").message == "division by zero at offset 2: '-0' is zero" )
+        => "division by zero at offset 2: '-0' is zero" == "division by zero at offset 2: '-0' is zero"
+ExpressionTests.cpp:328  CHECK( overflow.code == ErrorCode::InvalidArgument )
+        => 0 == 0
+ExpressionTests.cpp:329  CHECK( overflow.message == "'1e300 * 1e300' at offset 6 is not finite" )
+        => "'1e300 * 1e300' at offset 6 is not finite" == "'1e300 * 1e300' at offset 6 is not finite"
+ExpressionTests.cpp:330  CHECK( errorCode(evaluate("1e308 * 10 - 1")) == ErrorCode::InvalidArgument )
+        => {?} == 0
+
+== ExpressionCli_ValidateEvaluatesExpressionsAndReportsTheirErrors / a valid model saved before evaluation
+ExpressionCliTests.cpp:61  CHECK( result.exitCode == ExitCode::Success )
+        => 0 == 0
+ExpressionCliTests.cpp:62  CHECK_THAT( result.out, ContainsSubstring(" feature regeneration ok, 2 objects regenerated\n" " geometry ok, 1 result body\n" "Result bodies (1):\n" " Plate (object:9): 1 solid, volume 48429.204 mm^3") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-bec8722f-3cde-47e0-bca2-b10791cb5a7a\plate.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 2 objects regenerated geometry ok, 1 result body Result bodies (1): Plate (object:9): 1 solid, volume 48429.204 mm^3, area 13314.159 mm^2, bounds (0, 0, 0) to (100, 50, 10) mm Result: valid " contains: " feature regeneration ok, 2 objects regenerated geometry ok, 1 result body Result bodies (1): Plate (object:9): 1 solid, volume 48429.204 mm^3"
+ExpressionCliTests.cpp:66  CHECK_THAT( result.out, ContainsSubstring("bounds (0, 0, 0) to (100, 50, 10) mm\n") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-bec8722f-3cde-47e0-bca2-b10791cb5a7a\plate.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 2 objects regenerated geometry ok, 1 result body Result bodies (1): Plate (object:9): 1 solid, volume 48429.204 mm^3, area 13314.159 mm^2, bounds (0, 0, 0) to (100, 50, 10) mm Result: valid " contains: "bounds (0, 0, 0) to (100, 50, 10) mm "
+ExpressionCliTests.cpp:67  CHECK_THAT( result.out, EndsWith("Result: valid\n") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-bec8722f-3cde-47e0-bca2-b10791cb5a7a\plate.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 2 objects regenerated geometry ok, 1 result body Result bodies (1): Plate (object:9): 1 solid, volume 48429.204 mm^3, area 13314.159 mm^2, bounds (0, 0, 0) to (100, 50, 10) mm Result: valid " ends with: "Result: valid "
+
+== ExpressionCli_ValidateEvaluatesExpressionsAndReportsTheirErrors / an unknown name and a dimension error
+ExpressionCliTests.cpp:73  CHECK( result.exitCode == ExitCode::Failure )
+        => 1 == 1
+ExpressionCliTests.cpp:74  CHECK_THAT( result.out, ContainsSubstring(" missing references 1 error\n" " error: hole_y (object:1): expression 'hieght / 2': unknown parameter " "'hieght' at offset 0\n") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-79c91cd8-1156-4fb4-a991-911cb6bd6ba2\broken.bcad document consistency ok missing references 1 error error: hole_y (object:1): expression 'hieght / 2': unknown parameter 'hieght' at offset 0 dependency cycles ok sketch constraints ok feature regeneration 3 errors error: thickness (object:3) failed to evaluate: parameter 'thickness' = 0.1 * width / 1 s: the result has dimension velocity, but the parameter has dimension length error: PlateSketch (object:8) was not regenerated because an item it depends on failed error: Plate (object:9) was not regenerated because an item it depends on failed geometry ok, 0 result bodies Result: invalid (4 errors) " contains: " missing references 1 error error: hole_y (object:1): expression 'hieght / 2': unknown parameter 'hieght' at offset 0 "
+ExpressionCliTests.cpp:78  CHECK_THAT( result.out, ContainsSubstring(" error: thickness (object:3) failed to evaluate: parameter " "'thickness' = 0.1 * width / 1 s: the result has dimension " "velocity, but the parameter has dimension length\n") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-79c91cd8-1156-4fb4-a991-911cb6bd6ba2\broken.bcad document consistency ok missing references 1 error error: hole_y (object:1): expression 'hieght / 2': unknown parameter 'hieght' at offset 0 dependency cycles ok sketch constraints ok feature regeneration 3 errors error: thickness (object:3) failed to evaluate: parameter 'thickness' = 0.1 * width / 1 s: the result has dimension velocity, but the parameter has dimension length error: PlateSketch (object:8) was not regenerated because an item it depends on failed error: Plate (object:9) was not regenerated because an item it depends on failed geometry ok, 0 result bodies Result: invalid (4 errors) " contains: " error: thickness (object:3) failed to evaluate: parameter 'thickness' = 0.1 * width / 1 s: the result has dimension velocity, but the parameter has dimension length "
+ExpressionCliTests.cpp:81  CHECK_THAT( result.out, ContainsSubstring(" error: PlateSketch (object:8) was not regenerated") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-79c91cd8-1156-4fb4-a991-911cb6bd6ba2\broken.bcad document consistency ok missing references 1 error error: hole_y (object:1): expression 'hieght / 2': unknown parameter 'hieght' at offset 0 dependency cycles ok sketch constraints ok feature regeneration 3 errors error: thickness (object:3) failed to evaluate: parameter 'thickness' = 0.1 * width / 1 s: the result has dimension velocity, but the parameter has dimension length error: PlateSketch (object:8) was not regenerated because an item it depends on failed error: Plate (object:9) was not regenerated because an item it depends on failed geometry ok, 0 result bodies Result: invalid (4 errors) " contains: " error: PlateSketch (object:8) was not regenerated"
+ExpressionCliTests.cpp:82  CHECK_THAT( result.out, ContainsSubstring(" error: Plate (object:9) was not regenerated") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-79c91cd8-1156-4fb4-a991-911cb6bd6ba2\broken.bcad document consistency ok missing references 1 error error: hole_y (object:1): expression 'hieght / 2': unknown parameter 'hieght' at offset 0 dependency cycles ok sketch constraints ok feature regeneration 3 errors error: thickness (object:3) failed to evaluate: parameter 'thickness' = 0.1 * width / 1 s: the result has dimension velocity, but the parameter has dimension length error: PlateSketch (object:8) was not regenerated because an item it depends on failed error: Plate (object:9) was not regenerated because an item it depends on failed geometry ok, 0 result bodies Result: invalid (4 errors) " contains: " error: Plate (object:9) was not regenerated"
+ExpressionCliTests.cpp:83  CHECK_THAT( result.out, EndsWith("Result: invalid (4 errors)\n") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-79c91cd8-1156-4fb4-a991-911cb6bd6ba2\broken.bcad document consistency ok missing references 1 error error: hole_y (object:1): expression 'hieght / 2': unknown parameter 'hieght' at offset 0 dependency cycles ok sketch constraints ok feature regeneration 3 errors error: thickness (object:3) failed to evaluate: parameter 'thickness' = 0.1 * width / 1 s: the result has dimension velocity, but the parameter has dimension length error: PlateSketch (object:8) was not regenerated because an item it depends on failed error: Plate (object:9) was not regenerated because an item it depends on failed geometry ok, 0 result bodies Result: invalid (4 errors) " ends with: "Result: invalid (4 errors) "
+
+== ExpressionCli_ValidateEvaluatesExpressionsAndReportsTheirErrors / a cycle
+ExpressionCliTests.cpp:88  CHECK( result.exitCode == ExitCode::Failure )
+        => 1 == 1
+ExpressionCliTests.cpp:89  CHECK_THAT( result.out, ContainsSubstring(" dependency cycles 1 error\n" " error: dependency cycle: hole_y (object:1), height (object:2)\n") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-b717c121-2665-4bad-acc5-1740b4d4c08c\cycle.bcad document consistency ok missing references ok dependency cycles 1 error error: dependency cycle: hole_y (object:1), height (object:2) sketch constraints ok feature regeneration 2 errors error: PlateSketch (object:8) was not regenerated because an item it depends on failed error: Plate (object:9) was not regenerated because an item it depends on failed geometry ok, 0 result bodies Result: invalid (3 errors) " contains: " dependency cycles 1 error error: dependency cycle: hole_y (object:1), height (object:2) "
+
+== DocumentExpression_DrivenParameterRefusesDirectValues
+ParameterExpressionTests.cpp:117  CHECK( errorCode(direct) == ErrorCode::FailedPrecondition )
+        => {?} == 5
+ParameterExpressionTests.cpp:118  CHECK( direct.error().message == "parameter 'height' is driven by the expression 'width / 2'; clear the expression to set its value" )
+        => "parameter 'height' is driven by the expression 'width / 2'; clear the expression to set its value" == "parameter 'height' is driven by the expression 'width / 2'; clear the expression to set its value"
+ParameterExpressionTests.cpp:120  CHECK( errorCode(doc.setParameterValue(height, 60.0, describe(units::mm))) == ErrorCode::FailedPrecondition )
+        => {?} == 5
+ParameterExpressionTests.cpp:121  CHECK( errorCode(doc.setParameterSiValue(height, dimensions::length, 0.06)) == ErrorCode::FailedPrecondition )
+        => {?} == 5
+ParameterExpressionTests.cpp:124  CHECK( errorCode(history.execute(doc, ModifyParameterCommand::setValue(height, 60_mm))) == ErrorCode::FailedPrecondition )
+        => {?} == 5
+ParameterExpressionTests.cpp:126  CHECK_FALSE( !(history.canUndo()) )
+        => !false
+ParameterExpressionTests.cpp:139  CHECK_FALSE( !(doc.parameters().find(height)->expression().has_value()) )
+        => !false
+ParameterExpressionTests.cpp:140  CHECK( si(doc, height) == 0.06 )
+        => 0.06 == 0.06
+ParameterExpressionTests.cpp:142  CHECK( doc.parameters().find(height)->expression() == "width / 2" )
+        => {?} == "width / 2"
+ParameterExpressionTests.cpp:143  CHECK( si(doc, height) == 0.05 )
+        => 0.05 == 0.05
+
+== ParameterExpressions_Load_RejectsMalformedExpressionsWithThePath
+ExpressionFileTests.cpp:179  CHECK( broken.error().code == ErrorCode::ParseError )
+        => 4 == 4
+ExpressionFileTests.cpp:180  CHECK( broken.error().message == "parameters[1]: parameter 'height': expression 'width / ': expected a number, a name or '(' at offset 8, " "found the end of the expression" )
+        => "parameters[1]: parameter 'height': expression 'width / ': expected a number, a name or '(' at offset 8, found the end of the expression" == "parameters[1]: parameter 'height': expression 'width / ': expected a number, a name or '(' at offset 8, found the end of the expression"
+ExpressionFileTests.cpp:186  CHECK( implicit.error().code == ErrorCode::ParseError )
+        => 4 == 4
+ExpressionFileTests.cpp:187  CHECK_THAT( implicit.error().message, ContainsSubstring("parameters[2]: parameter 'thickness': " "expression '0.1 width': unknown unit 'width'") )
+        => "parameters[2]: parameter 'thickness': expression '0.1 width': unknown unit 'width' at offset 4 (a name directly after a number must be a unit; write '*' to multiply)" contains: "parameters[2]: parameter 'thickness': expression '0.1 width': unknown unit 'width'"
+ExpressionFileTests.cpp:192  CHECK_THAT( empty.error().message, ContainsSubstring("parameters[2]") )
+        => "parameters[2].expression: parameter 'thickness': an expression must not be empty" contains: "parameters[2]"
+
+== ParameterExpressions_DrivePlateAndReevaluateWhenWidthChanges
+ExpressionRegenerationTests.cpp:105  CHECK( first.updatedParameters == std::vector<ParameterId>{m.height, m.holeY, m.thickness, m.holeSpacing} )
+        => { parameter:2, parameter:1, parameter:3, parameter:4 } == { parameter:2, parameter:1, parameter:3, parameter:4 } with message: 
+ExpressionRegenerationTests.cpp:107  CHECK( first.regenerated == std::vector<ObjectId>{m.sketch, m.plate} )
+        => { object:8, object:9 } == { object:8, object:9 } with message: 
+ExpressionRegenerationTests.cpp:57  CHECK_THAT( m.si(m.width), WithinRel(widthMm / 1000.0, 1e-15) )
+        => 0.10000000000000001 and 0.10000000000000001 are within 1e-13% of each other with message: ; widthMm := 100.0
+ExpressionRegenerationTests.cpp:58  CHECK_THAT( m.si(m.height), WithinRel(widthMm / 2.0 / 1000.0, 1e-15) )
+        => 0.05 and 0.05 are within 1e-13% of each other with message: ; widthMm := 100.0
+ExpressionRegenerationTests.cpp:59  CHECK_THAT( m.si(m.thickness), WithinRel(0.1 * widthMm / 1000.0, 1e-15) )
+        => 0.01 and 0.01 are within 1e-13% of each other with message: ; widthMm := 100.0
+ExpressionRegenerationTests.cpp:60  CHECK_THAT( m.si(m.holeSpacing), WithinRel((widthMm - 30.0) / 1000.0, 1e-15) )
+        => 0.07000000000000001 and 0.07000000000000001 are within 1e-13% of each other with message: ; widthMm := 100.0
+ExpressionRegenerationTests.cpp:61  CHECK_THAT( m.si(m.holeY), WithinRel(widthMm / 4.0 / 1000.0, 1e-15) )
+        => 0.025 and 0.025 are within 1e-13% of each other with message: ; widthMm := 100.0
+ExpressionRegenerationTests.cpp:62  CHECK_THAT( volumeMm3(regenerator, m.plate), WithinRel(DrivenPlateModel::expectedVolumeMm3(widthMm), kVolumeRel) )
+        => 48429.20367320509831188 and 48429.20367320510558784 are within 1e-10% of each other with message: ; widthMm := 100.0
+ExpressionRegenerationTests.cpp:68  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: ; widthMm := 100.0
+ExpressionRegenerationTests.cpp:71  CHECK_THAT( box->max.x.in(units::mm), WithinAbs(widthMm, 1e-7) )
+        => 100.0 is within 0.0000001 of 100.0 with message: ; widthMm := 100.0
+ExpressionRegenerationTests.cpp:72  CHECK_THAT( box->max.y.in(units::mm), WithinAbs(widthMm / 2.0, 1e-7) )
+        => 49.99999999999999289 is within 0.0000001 of 50.0 with message: ; widthMm := 100.0
+ExpressionRegenerationTests.cpp:73  CHECK_THAT( box->max.z.in(units::mm), WithinAbs(widthMm / 10.0, 1e-7) )
+        => 10.00000000000000178 is within 0.0000001 of 10.0 with message: ; widthMm := 100.0
+ExpressionRegenerationTests.cpp:74  CHECK_THAT( box->min.x.in(units::mm), WithinAbs(0.0, 1e-7) )
+        => -0.0000000000000007 is within 0.0000001 of 0.0 with message: ; widthMm := 100.0
+ExpressionRegenerationTests.cpp:87  CHECK_THAT( centres[0].x.in(units::mm), WithinAbs(15.0, 1e-9) )
+        => 15.0 is within 0.000000001 of 15.0 with message: ; widthMm := 100.0
+ExpressionRegenerationTests.cpp:88  CHECK_THAT( centres[1].x.in(units::mm), WithinAbs(widthMm - 15.0, 1e-9) )
+        => 85.0 is within 0.000000001 of 85.0 with message: ; widthMm := 100.0
+ExpressionRegenerationTests.cpp:89  CHECK_THAT( centres[0].y.in(units::mm), WithinAbs(widthMm / 4.0, 1e-9) )
+        => 25.0 is within 0.000000001 of 25.0 with message: ; widthMm := 100.0
+ExpressionRegenerationTests.cpp:90  CHECK_THAT( centres[1].y.in(units::mm), WithinAbs(widthMm / 4.0, 1e-9) )
+        => 25.00000000000000355 is within 0.000000001 of 25.0 with message: ; widthMm := 100.0
+ExpressionRegenerationTests.cpp:115  CHECK( wider.updatedParameters == std::vector<ParameterId>{m.height, m.holeY, m.thickness, m.holeSpacing} )
+        => { parameter:2, parameter:1, parameter:3, parameter:4 } == { parameter:2, parameter:1, parameter:3, parameter:4 } with message: 
+ExpressionRegenerationTests.cpp:116  CHECK( wider.changed == std::vector<ObjectId>{m.holeY, m.height, m.thickness, m.holeSpacing, m.width} )
+        => { object:1, object:2, object:3, object:4, object:5 } == { object:1, object:2, object:3, object:4, object:5 } with message: 
+ExpressionRegenerationTests.cpp:117  CHECK( wider.regenerated == std::vector<ObjectId>{m.sketch, m.plate} )
+        => { object:8, object:9 } == { object:8, object:9 } with message: 
+ExpressionRegenerationTests.cpp:57  CHECK_THAT( m.si(m.width), WithinRel(widthMm / 1000.0, 1e-15) )
+        => 0.16 and 0.16 are within 1e-13% of each other with message: ; widthMm := 160.0
+ExpressionRegenerationTests.cpp:58  CHECK_THAT( m.si(m.height), WithinRel(widthMm / 2.0 / 1000.0, 1e-15) )
+        => 0.08 and 0.08 are within 1e-13% of each other with message: ; widthMm := 160.0
+ExpressionRegenerationTests.cpp:59  CHECK_THAT( m.si(m.thickness), WithinRel(0.1 * widthMm / 1000.0, 1e-15) )
+        => 0.016 and 0.016 are within 1e-13% of each other with message: ; widthMm := 160.0
+ExpressionRegenerationTests.cpp:60  CHECK_THAT( m.si(m.holeSpacing), WithinRel((widthMm - 30.0) / 1000.0, 1e-15) )
+        => 0.13 and 0.13 are within 1e-13% of each other with message: ; widthMm := 160.0
+ExpressionRegenerationTests.cpp:61  CHECK_THAT( m.si(m.holeY), WithinRel(widthMm / 4.0 / 1000.0, 1e-15) )
+        => 0.04 and 0.04 are within 1e-13% of each other with message: ; widthMm := 160.0
+ExpressionRegenerationTests.cpp:62  CHECK_THAT( volumeMm3(regenerator, m.plate), WithinRel(DrivenPlateModel::expectedVolumeMm3(widthMm), kVolumeRel) )
+        => 202286.72587712819222361 and 202286.72587712816311978 are within 1e-10% of each other with message: ; widthMm := 160.0
+ExpressionRegenerationTests.cpp:68  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: ; widthMm := 160.0
+ExpressionRegenerationTests.cpp:71  CHECK_THAT( box->max.x.in(units::mm), WithinAbs(widthMm, 1e-7) )
+        => 160.0 is within 0.0000001 of 160.0 with message: ; widthMm := 160.0
+ExpressionRegenerationTests.cpp:72  CHECK_THAT( box->max.y.in(units::mm), WithinAbs(widthMm / 2.0, 1e-7) )
+        => 80.00000000000002842 is within 0.0000001 of 80.0 with message: ; widthMm := 160.0
+ExpressionRegenerationTests.cpp:73  CHECK_THAT( box->max.z.in(units::mm), WithinAbs(widthMm / 10.0, 1e-7) )
+        => 16.0 is within 0.0000001 of 16.0 with message: ; widthMm := 160.0
+ExpressionRegenerationTests.cpp:74  CHECK_THAT( box->min.x.in(units::mm), WithinAbs(0.0, 1e-7) )
+        => -0.00000000000000155 is within 0.0000001 of 0.0 with message: ; widthMm := 160.0
+ExpressionRegenerationTests.cpp:87  CHECK_THAT( centres[0].x.in(units::mm), WithinAbs(15.0, 1e-9) )
+        => 14.99999999999999467 is within 0.000000001 of 15.0 with message: ; widthMm := 160.0
+ExpressionRegenerationTests.cpp:88  CHECK_THAT( centres[1].x.in(units::mm), WithinAbs(widthMm - 15.0, 1e-9) )
+        => 145.0 is within 0.000000001 of 145.0 with message: ; widthMm := 160.0
+ExpressionRegenerationTests.cpp:89  CHECK_THAT( centres[0].y.in(units::mm), WithinAbs(widthMm / 4.0, 1e-9) )
+        => 40.0 is within 0.000000001 of 40.0 with message: ; widthMm := 160.0
+ExpressionRegenerationTests.cpp:90  CHECK_THAT( centres[1].y.in(units::mm), WithinAbs(widthMm / 4.0, 1e-9) )
+        => 40.0 is within 0.000000001 of 40.0 with message: ; widthMm := 160.0
+ExpressionRegenerationTests.cpp:124  CHECK( edge.updatedParameters == std::vector<ParameterId>{m.holeSpacing} )
+        => { parameter:4 } == { parameter:4 } with message: 
+ExpressionRegenerationTests.cpp:125  CHECK_THAT( m.si(m.holeSpacing), WithinRel(0.120, 1e-15) )
+        => 0.12 and 0.12 are within 1e-13% of each other with message: 
+ExpressionRegenerationTests.cpp:126  CHECK_THAT( volumeMm3(regenerator, m.plate), WithinRel(DrivenPlateModel::expectedVolumeMm3(160.0), kVolumeRel) )
+        => 202286.72587712822132744 and 202286.72587712816311978 are within 1e-10% of each other with message: 
+ExpressionRegenerationTests.cpp:62  CHECK_THAT( volumeMm3(regenerator, m.plate), WithinRel(DrivenPlateModel::expectedVolumeMm3(widthMm), kVolumeRel) )
+        => 48429.20367320509103592 and 48429.20367320510558784 are within 1e-10% of each other with message: ; widthMm := 100.0
+ExpressionRegenerationTests.cpp:74  CHECK_THAT( box->min.x.in(units::mm), WithinAbs(0.0, 1e-7) )
+        => -0.00000000000000014 is within 0.0000001 of 0.0 with message: ; widthMm := 100.0
+ExpressionRegenerationTests.cpp:88  CHECK_THAT( centres[1].x.in(units::mm), WithinAbs(widthMm - 15.0, 1e-9) )
+        => 85.00000000000001421 is within 0.000000001 of 85.0 with message: ; widthMm := 100.0
+ExpressionRegenerationTests.cpp:89  CHECK_THAT( centres[0].y.in(units::mm), WithinAbs(widthMm / 4.0, 1e-9) )
+        => 25.00000000000000355 is within 0.000000001 of 25.0 with message: ; widthMm := 100.0
+ExpressionRegenerationTests.cpp:90  CHECK_THAT( centres[1].y.in(units::mm), WithinAbs(widthMm / 4.0, 1e-9) )
+        => 25.00000000000000711 is within 0.000000001 of 25.0 with message: ; widthMm := 100.0
+ExpressionRegenerationTests.cpp:134  CHECK( bits(m.si(m.height)) == bits(0.1 / 2.0) )
+        => 4587366580439587226 (0x3fa999999999999a) == 4587366580439587226 (0x3fa999999999999a) with message: 
+ExpressionRegenerationTests.cpp:135  CHECK( bits(m.si(m.thickness)) == bits(0.1 * 0.1) )
+        => 4576918229304087676 (0x3f847ae147ae147c) == 4576918229304087676 (0x3f847ae147ae147c) with message: 
+ExpressionRegenerationTests.cpp:136  CHECK( bits(m.si(m.holeSpacing)) == bits(0.1 - 2.0 * 0.015) )
+        => 4589708452245819884 (0x3fb1eb851eb851ec) == 4589708452245819884 (0x3fb1eb851eb851ec) with message: 
+ExpressionRegenerationTests.cpp:62  CHECK_THAT( volumeMm3(regenerator, m.plate), WithinRel(DrivenPlateModel::expectedVolumeMm3(widthMm), kVolumeRel) )
+        => 202286.7258771282795351 and 202286.72587712816311978 are within 1e-10% of each other with message: ; widthMm := 160.0
+ExpressionRegenerationTests.cpp:71  CHECK_THAT( box->max.x.in(units::mm), WithinAbs(widthMm, 1e-7) )
+        => 160.00000000000002842 is within 0.0000001 of 160.0 with message: ; widthMm := 160.0
+ExpressionRegenerationTests.cpp:72  CHECK_THAT( box->max.y.in(units::mm), WithinAbs(widthMm / 2.0, 1e-7) )
+        => 80.00000000000001421 is within 0.0000001 of 80.0 with message: ; widthMm := 160.0
+ExpressionRegenerationTests.cpp:74  CHECK_THAT( box->min.x.in(units::mm), WithinAbs(0.0, 1e-7) )
+        => -0.00000000000000098 is within 0.0000001 of 0.0 with message: ; widthMm := 160.0
+
+== DocumentExpression_EvaluatesEveryDimension
+ParameterExpressionTests.cpp:232  CHECK( graph.graph.dependenciesOf(area) == std::set<ObjectId>{width, height} )
+        => { object:1, object:2 } == { object:1, object:2 }
+ParameterExpressionTests.cpp:233  CHECK( graph.graph.dependenciesOf(count) == std::set<ObjectId>{width, pitch} )
+        => { object:1, object:7 } == { object:1, object:7 }
+ParameterExpressionTests.cpp:234  CHECK( graph.graph.dependenciesOf(angle) == std::set<ObjectId>{base} )
+        => { object:5 } == { object:5 }
+ParameterExpressionTests.cpp:238  CHECK_THAT( si(doc, area), WithinRel(0.1 * 0.04, 1e-15) )
+        => 0.004 and 0.004 are within 1e-13% of each other
+ParameterExpressionTests.cpp:239  CHECK_THAT( doc.parameters().find(angle)->as<Angle>()->in(units::deg), WithinRel(1.5, 1e-14) )
+        => 1.5 and 1.5 are within 1e-12% of each other
+ParameterExpressionTests.cpp:240  CHECK( si(doc, count) == 6.0 )
+        => 6.0 == 6.0
+ParameterExpressionTests.cpp:241  CHECK( doc.parameters().find(base)->expression() == std::nullopt )
+        => {?} == {?}
+
+== Expression_ReferencesAreSortedUniqueNames
+ExpressionTests.cpp:117  CHECK( expression->text() == "width - 2 * edge_distance + width / ratio" )
+        => "width - 2 * edge_distance + width / ratio" == "width - 2 * edge_distance + width / ratio"
+ExpressionTests.cpp:118  CHECK( expression->references() == std::vector<std::string>{"edge_distance", "ratio", "width"} )
+        => { "edge_distance", "ratio", "width" } == { "edge_distance", "ratio", "width" }
+ExpressionTests.cpp:119  CHECK( expression->offsetOf("width") == 0 )
+        => 0 == 0
+ExpressionTests.cpp:120  CHECK( expression->offsetOf("edge_distance") == 12 )
+        => 12 == 12
+ExpressionTests.cpp:121  CHECK( expression->offsetOf("ratio") == 36 )
+        => 36 == 36
+ExpressionTests.cpp:122  CHECK( expression->offsetOf("missing") == expression->text().size() )
+        => 41 == 41
+
+== Expression_EnforcesSizeAndNestingLimits
+ExpressionTests.cpp:278  CHECK( require(longest).siValue == 1.0 )
+        => 1.0 == 1.0
+ExpressionTests.cpp:280  CHECK( tooLong.code == ErrorCode::InvalidArgument )
+        => 0 == 0
+ExpressionTests.cpp:281  CHECK( tooLong.message == std::format("the expression is {} bytes long; the limit is {}", kMaxExpressionLength + 1, kMaxExpressionLength) )
+        => "the expression is 513 bytes long; the limit is 512" == "the expression is 513 bytes long; the limit is 512"
+ExpressionTests.cpp:288  CHECK( require(nested(kMaxExpressionDepth)).siValue == 1.0 )
+        => 1.0 == 1.0
+ExpressionTests.cpp:290  CHECK( deep.code == ErrorCode::InvalidArgument )
+        => 0 == 0
+ExpressionTests.cpp:291  CHECK_THAT( deep.message, ContainsSubstring("nested deeper than 32 levels") )
+        => "nested deeper than 32 levels at offset 33" contains: "nested deeper than 32 levels"
+ExpressionTests.cpp:294  CHECK( require(std::string(kMaxExpressionDepth, '-') + "1").siValue == 1.0 )
+        => 1.0 == 1.0
+ExpressionTests.cpp:295  CHECK( errorCode(evaluate(std::string(kMaxExpressionDepth + 1, '-') + "1")) == ErrorCode::InvalidArgument )
+        => {?} == 0
+ExpressionTests.cpp:301  CHECK( longName.code == ErrorCode::InvalidArgument )
+        => 0 == 0
+ExpressionTests.cpp:302  CHECK_THAT( longName.message, ContainsSubstring("is longer than 64 characters at offset 4") )
+        => "parameter name 'nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn' is longer than 64 characters at offset 4" contains: "is longer than 64 characters at offset 4"
+
+== ParameterExpressions_FailedExpressionBlocksGeometryAndKeepsLastValue
+ExpressionRegenerationTests.cpp:169  CHECK( report.failed == std::vector<ObjectId>{m.holeSpacing} )
+        => { object:4 } == { object:4 }
+ExpressionRegenerationTests.cpp:171  CHECK( error.code == ErrorCode::NotFound )
+        => 1 == 1
+ExpressionRegenerationTests.cpp:172  CHECK( error.message == "parameter 'hole_spacing' = width - 2 * edge_distance: unknown parameter 'edge_distance' at offset 12" )
+        => "parameter 'hole_spacing' = width - 2 * edge_distance: unknown parameter 'edge_distance' at offset 12" == "parameter 'hole_spacing' = width - 2 * edge_distance: unknown parameter 'edge_distance' at offset 12"
+ExpressionRegenerationTests.cpp:174  CHECK( report.blocked == std::vector<ObjectId>{m.sketch, m.plate} )
+        => { object:8, object:9 } == { object:8, object:9 }
+ExpressionRegenerationTests.cpp:175  CHECK( regenerator.state(ObjectId{m.holeSpacing}) == NodeState::Failed )
+        => {?} == 2
+ExpressionRegenerationTests.cpp:176  CHECK( regenerator.error(ObjectId{m.holeSpacing}) != nullptr )
+        => 0x000001ba8d7ce4e8 != nullptr
+ExpressionRegenerationTests.cpp:177  CHECK( regenerator.body(m.plate) == nullptr )
+        => nullptr == nullptr
+ExpressionRegenerationTests.cpp:178  CHECK( m.si(m.holeSpacing) == spacing )
+        => 0.07000000000000001 == 0.07000000000000001
+ExpressionRegenerationTests.cpp:179  CHECK( resultFeatures(m.doc).size() == 1 )
+        => 1 == 1
+ExpressionRegenerationTests.cpp:183  CHECK( again.failed == std::vector<ObjectId>{m.holeSpacing} )
+        => { object:4 } == { object:4 }
+ExpressionRegenerationTests.cpp:184  CHECK( again.blocked == std::vector<ObjectId>{m.sketch, m.plate} )
+        => { object:8, object:9 } == { object:8, object:9 }
+ExpressionRegenerationTests.cpp:190  CHECK( fixed.regenerated == std::vector<ObjectId>{m.sketch, m.plate} )
+        => { object:8, object:9 } == { object:8, object:9 }
+ExpressionRegenerationTests.cpp:191  CHECK( regenerator.state(ObjectId{m.holeSpacing}) == NodeState::UpToDate )
+        => {?} == 0
+ExpressionRegenerationTests.cpp:57  CHECK_THAT( m.si(m.width), WithinRel(widthMm / 1000.0, 1e-15) )
+        => 0.10000000000000001 and 0.10000000000000001 are within 1e-13% of each other with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:58  CHECK_THAT( m.si(m.height), WithinRel(widthMm / 2.0 / 1000.0, 1e-15) )
+        => 0.05 and 0.05 are within 1e-13% of each other with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:59  CHECK_THAT( m.si(m.thickness), WithinRel(0.1 * widthMm / 1000.0, 1e-15) )
+        => 0.01 and 0.01 are within 1e-13% of each other with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:60  CHECK_THAT( m.si(m.holeSpacing), WithinRel((widthMm - 30.0) / 1000.0, 1e-15) )
+        => 0.07000000000000001 and 0.07000000000000001 are within 1e-13% of each other with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:61  CHECK_THAT( m.si(m.holeY), WithinRel(widthMm / 4.0 / 1000.0, 1e-15) )
+        => 0.025 and 0.025 are within 1e-13% of each other with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:62  CHECK_THAT( volumeMm3(regenerator, m.plate), WithinRel(DrivenPlateModel::expectedVolumeMm3(widthMm), kVolumeRel) )
+        => 48429.20367320509831188 and 48429.20367320510558784 are within 1e-10% of each other with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:68  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:71  CHECK_THAT( box->max.x.in(units::mm), WithinAbs(widthMm, 1e-7) )
+        => 100.0 is within 0.0000001 of 100.0 with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:72  CHECK_THAT( box->max.y.in(units::mm), WithinAbs(widthMm / 2.0, 1e-7) )
+        => 49.99999999999999289 is within 0.0000001 of 50.0 with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:73  CHECK_THAT( box->max.z.in(units::mm), WithinAbs(widthMm / 10.0, 1e-7) )
+        => 10.00000000000000178 is within 0.0000001 of 10.0 with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:74  CHECK_THAT( box->min.x.in(units::mm), WithinAbs(0.0, 1e-7) )
+        => -0.0000000000000007 is within 0.0000001 of 0.0 with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:87  CHECK_THAT( centres[0].x.in(units::mm), WithinAbs(15.0, 1e-9) )
+        => 15.0 is within 0.000000001 of 15.0 with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:88  CHECK_THAT( centres[1].x.in(units::mm), WithinAbs(widthMm - 15.0, 1e-9) )
+        => 85.0 is within 0.000000001 of 85.0 with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:89  CHECK_THAT( centres[0].y.in(units::mm), WithinAbs(widthMm / 4.0, 1e-9) )
+        => 25.0 is within 0.000000001 of 25.0 with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:90  CHECK_THAT( centres[1].y.in(units::mm), WithinAbs(widthMm / 4.0, 1e-9) )
+        => 25.00000000000000355 is within 0.000000001 of 25.0 with message: widthMm := 100.0
+
+== ParameterExpressions_DimensionErrorFailsWithoutCoercion
+ExpressionRegenerationTests.cpp:207  CHECK( report.failed == std::vector<ObjectId>{m.thickness} )
+        => { object:3 } == { object:3 }
+ExpressionRegenerationTests.cpp:208  CHECK( report.errors.at(m.thickness).code == ErrorCode::DimensionMismatch )
+        => 3 == 3
+ExpressionRegenerationTests.cpp:209  CHECK_THAT( report.errors.at(m.thickness).message, ContainsSubstring("the result has dimension area, but the parameter has dimension length") )
+        => "parameter 'thickness' = 0.1 * width * width: the result has dimension area, but the parameter has dimension length" contains: "the result has dimension area, but the parameter has dimension length"
+ExpressionRegenerationTests.cpp:211  CHECK( report.blocked == std::vector<ObjectId>{m.plate} )
+        => { object:9 } == { object:9 }
+ExpressionRegenerationTests.cpp:212  CHECK( regenerator.body(m.plate) == nullptr )
+        => nullptr == nullptr
+ExpressionRegenerationTests.cpp:213  CHECK_THAT( m.si(m.thickness), WithinRel(0.01, 1e-15) )
+        => 0.01 and 0.01 are within 1e-13% of each other
+ExpressionRegenerationTests.cpp:216  CHECK_FALSE( !(validation.valid()) )
+        => !false
+ExpressionRegenerationTests.cpp:218  CHECK( validation.count(ValidationCheck::FeatureRegeneration, Severity::Error) == 2 )
+        => 2 == 2
+ExpressionRegenerationTests.cpp:219  CHECK_THAT( validation.issues[0].message, ContainsSubstring("thickness (object:3) failed to evaluate: parameter 'thickness' = ") )
+        => "thickness (object:3) failed to evaluate: parameter 'thickness' = 0.1 * width * width: the result has dimension area, but the parameter has dimension length" contains: "thickness (object:3) failed to evaluate: parameter 'thickness' = "
+ExpressionRegenerationTests.cpp:221  CHECK( validation.issues[1].message == "Plate (object:9) was not regenerated because an item it depends on failed" )
+        => "Plate (object:9) was not regenerated because an item it depends on failed" == "Plate (object:9) was not regenerated because an item it depends on failed"
+ExpressionRegenerationTests.cpp:57  CHECK_THAT( m.si(m.width), WithinRel(widthMm / 1000.0, 1e-15) )
+        => 0.10000000000000001 and 0.10000000000000001 are within 1e-13% of each other with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:58  CHECK_THAT( m.si(m.height), WithinRel(widthMm / 2.0 / 1000.0, 1e-15) )
+        => 0.05 and 0.05 are within 1e-13% of each other with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:59  CHECK_THAT( m.si(m.thickness), WithinRel(0.1 * widthMm / 1000.0, 1e-15) )
+        => 0.01 and 0.01 are within 1e-13% of each other with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:60  CHECK_THAT( m.si(m.holeSpacing), WithinRel((widthMm - 30.0) / 1000.0, 1e-15) )
+        => 0.07000000000000001 and 0.07000000000000001 are within 1e-13% of each other with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:61  CHECK_THAT( m.si(m.holeY), WithinRel(widthMm / 4.0 / 1000.0, 1e-15) )
+        => 0.025 and 0.025 are within 1e-13% of each other with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:62  CHECK_THAT( volumeMm3(regenerator, m.plate), WithinRel(DrivenPlateModel::expectedVolumeMm3(widthMm), kVolumeRel) )
+        => 48429.20367320509831188 and 48429.20367320510558784 are within 1e-10% of each other with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:68  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:71  CHECK_THAT( box->max.x.in(units::mm), WithinAbs(widthMm, 1e-7) )
+        => 100.0 is within 0.0000001 of 100.0 with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:72  CHECK_THAT( box->max.y.in(units::mm), WithinAbs(widthMm / 2.0, 1e-7) )
+        => 49.99999999999999289 is within 0.0000001 of 50.0 with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:73  CHECK_THAT( box->max.z.in(units::mm), WithinAbs(widthMm / 10.0, 1e-7) )
+        => 10.00000000000000178 is within 0.0000001 of 10.0 with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:74  CHECK_THAT( box->min.x.in(units::mm), WithinAbs(0.0, 1e-7) )
+        => -0.0000000000000007 is within 0.0000001 of 0.0 with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:87  CHECK_THAT( centres[0].x.in(units::mm), WithinAbs(15.0, 1e-9) )
+        => 15.0 is within 0.000000001 of 15.0 with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:88  CHECK_THAT( centres[1].x.in(units::mm), WithinAbs(widthMm - 15.0, 1e-9) )
+        => 85.0 is within 0.000000001 of 85.0 with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:89  CHECK_THAT( centres[0].y.in(units::mm), WithinAbs(widthMm / 4.0, 1e-9) )
+        => 25.0 is within 0.000000001 of 25.0 with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:90  CHECK_THAT( centres[1].y.in(units::mm), WithinAbs(widthMm / 4.0, 1e-9) )
+        => 25.00000000000000355 is within 0.000000001 of 25.0 with message: widthMm := 100.0
+
+== DocumentExpression_CyclesAreRefusedAndKeepTheirValues
+ParameterExpressionTests.cpp:258  CHECK( report.cycles.front() == std::vector<ParameterId>{a, b} )
+        => { parameter:1, parameter:2 } == { parameter:1, parameter:2 }
+ParameterExpressionTests.cpp:259  CHECK( report.blocked == std::vector<ParameterId>{c} )
+        => { parameter:3 } == { parameter:3 }
+ParameterExpressionTests.cpp:261  CHECK( report.evaluated == std::vector<ParameterId>{other} )
+        => { parameter:5 } == { parameter:5 }
+ParameterExpressionTests.cpp:262  CHECK_FALSE( !(report.succeeded()) )
+        => !false
+ParameterExpressionTests.cpp:263  CHECK( si(doc, a) == 0.001 )
+        => 0.001 == 0.001
+ParameterExpressionTests.cpp:264  CHECK( si(doc, b) == 0.002 )
+        => 0.002 == 0.002
+ParameterExpressionTests.cpp:265  CHECK( si(doc, c) == 0.003 )
+        => 0.003 == 0.003
+ParameterExpressionTests.cpp:266  CHECK( si(doc, free) == 0.004 )
+        => 0.004 == 0.004
+ParameterExpressionTests.cpp:267  CHECK_THAT( si(doc, other), WithinRel(0.012, 1e-15) )
+        => 0.012 and 0.012 are within 1e-13% of each other
+ParameterExpressionTests.cpp:272  CHECK( cycles.front() == std::vector<ObjectId>{a, b} )
+        => { object:1, object:2 } == { object:1, object:2 }
+ParameterExpressionTests.cpp:279  CHECK( self.cycles.front() == std::vector<ParameterId>{b} )
+        => { parameter:2 } == { parameter:2 }
+ParameterExpressionTests.cpp:280  CHECK( si(doc, a) == 0.003 )
+        => 0.003 == 0.003
+ParameterExpressionTests.cpp:282  CHECK( errorCode(direct) == ErrorCode::FailedPrecondition )
+        => {?} == 5
+ParameterExpressionTests.cpp:283  CHECK( direct.error().message == "parameter 'b' = b * 2: the expression uses the parameter 'b' itself at offset 0" )
+        => "parameter 'b' = b * 2: the expression uses the parameter 'b' itself at offset 0" == "parameter 'b' = b * 2: the expression uses the parameter 'b' itself at offset 0"
+ParameterExpressionTests.cpp:289  CHECK( si(doc, b) == 0.006 )
+        => 0.006 == 0.006
+ParameterExpressionTests.cpp:290  CHECK( si(doc, c) == 0.0015 )
+        => 0.0015 == 0.0015
+
+== ParameterExpressions_SaveLoad_PreservesExpressionsAndEvaluatedValues
+ExpressionFileTests.cpp:89  CHECK_FALSE( !(doc.isDirty()) )
+        => !false
+ExpressionFileTests.cpp:94  CHECK( restored->expression() == saved->expression() )
+        => {?} == {?}
+ExpressionFileTests.cpp:95  CHECK( bits(restored->siValue()) == bits(saved->siValue()) )
+        => 4587366580439587226 (0x3fa999999999999a) == 4587366580439587226 (0x3fa999999999999a)
+ExpressionFileTests.cpp:95  CHECK( bits(restored->siValue()) == bits(saved->siValue()) )
+        => 4576918229304087676 (0x3f847ae147ae147c) == 4576918229304087676 (0x3f847ae147ae147c)
+ExpressionFileTests.cpp:95  CHECK( bits(restored->siValue()) == bits(saved->siValue()) )
+        => 4589708452245819884 (0x3fb1eb851eb851ec) == 4589708452245819884 (0x3fb1eb851eb851ec)
+ExpressionFileTests.cpp:95  CHECK( bits(restored->siValue()) == bits(saved->siValue()) )
+        => 4582862980812216730 (0x3f9999999999999a) == 4582862980812216730 (0x3f9999999999999a)
+ExpressionFileTests.cpp:97  CHECK( doc.parameters().find(ids.holeSpacing)->expression() == "width - 2 * edge_distance" )
+        => {?} == "width - 2 * edge_distance"
+ExpressionFileTests.cpp:101  CHECK( graph.graph.dependenciesOf(ids.holeSpacing) == std::set<ObjectId>{ids.width, ids.edgeDistance} )
+        => { object:5, object:6 } == { object:5, object:6 }
+ExpressionFileTests.cpp:102  CHECK( graph.graph.dependenciesOf(ids.holeY) == std::set<ObjectId>{ids.height} )
+        => { object:2 } == { object:2 }
+ExpressionFileTests.cpp:57  CHECK( x->isValid() == y->isValid() )
+        => true == true
+ExpressionFileTests.cpp:58  CHECK( x->topology() == y->topology() )
+        => {?} == {?}
+ExpressionFileTests.cpp:63  CHECK( bits(px->volume.si()) == bits(py->volume.si()) )
+        => 4542271713768914824 (0x3f09640ec4803f88) == 4542271713768914824 (0x3f09640ec4803f88)
+ExpressionFileTests.cpp:64  CHECK( bits(px->surfaceArea.si()) == bits(py->surfaceArea.si()) )
+        => 4578828712047449869 (0x3f8b447434f2970d) == 4578828712047449869 (0x3f8b447434f2970d)
+ExpressionFileTests.cpp:65  CHECK( *x->boundingBox() == *y->boundingBox() )
+        => {?} == {?}
+ExpressionFileTests.cpp:112  CHECK_THAT( volumeMm3(after, ids.plate), WithinRel(DrivenPlateModel::expectedVolumeMm3(100.0), 1e-12) )
+        => 48429.20367320509831188 and 48429.20367320510558784 are within 1e-10% of each other
+ExpressionFileTests.cpp:118  CHECK( edited.updatedParameters == std::vector<ParameterId>{ids.height, ids.holeY, ids.thickness, ids.holeSpacing} )
+        => { parameter:2, parameter:1, parameter:3, parameter:4 } == { parameter:2, parameter:1, parameter:3, parameter:4 }
+ExpressionFileTests.cpp:119  CHECK_THAT( volumeMm3(after, ids.plate), WithinRel(DrivenPlateModel::expectedVolumeMm3(140.0), 1e-12) )
+        => 135000.88514248715364374 and 135000.88514248715364374 are within 1e-10% of each other
+ExpressionFileTests.cpp:120  CHECK_THAT( doc.parameters().find(ids.holeSpacing)->siValue(), WithinRel(0.110, 1e-15) )
+        => 0.11000000000000001 and 0.11 are within 1e-13% of each other
+
+== DocumentExpression_UnknownAndNonParameterNamesAreReported
+ParameterExpressionTests.cpp:372  CHECK( si(doc, height) == 0.05 )
+        => 0.05 == 0.05
+
+== DocumentExpression_UnknownAndNonParameterNamesAreReported / a deleted input
+ParameterExpressionTests.cpp:378  CHECK( report.failed.at(height).code == ErrorCode::NotFound )
+        => 1 == 1
+ParameterExpressionTests.cpp:379  CHECK( report.failed.at(height).message == "parameter 'height' = width / 2: unknown parameter 'width' at offset 0" )
+        => "parameter 'height' = width / 2: unknown parameter 'width' at offset 0" == "parameter 'height' = width / 2: unknown parameter 'width' at offset 0"
+ParameterExpressionTests.cpp:381  CHECK( si(doc, height) == 0.05 )
+        => 0.05 == 0.05
+
+== DocumentExpression_UnknownAndNonParameterNamesAreReported / a renamed input
+ParameterExpressionTests.cpp:389  CHECK( evaluateParameterExpressions(doc).failed.at(height).code == ErrorCode::NotFound )
+        => 1 == 1
+ParameterExpressionTests.cpp:392  CHECK( si(doc, height) == 0.05 )
+        => 0.05 == 0.05
+
+== DocumentExpression_UnknownAndNonParameterNamesAreReported / the name of an object
+ParameterExpressionTests.cpp:398  CHECK( report.failed.at(height).code == ErrorCode::InvalidArgument )
+        => 0 == 0
+ParameterExpressionTests.cpp:399  CHECK_THAT( report.failed.at(height).message, ContainsSubstring("'Sketch1' is not a parameter but a document object of type 'test_consumer' " "at offset 0") )
+        => "parameter 'height' = Sketch1 / 2: 'Sketch1' is not a parameter but a document object of type 'test_consumer' at offset 0" contains: "'Sketch1' is not a parameter but a document object of type 'test_consumer' at offset 0"
+
+== DocumentExpression_UnknownAndNonParameterNamesAreReported / a name that is later created
+ParameterExpressionTests.cpp:405  CHECK( evaluateParameterExpressions(doc).failed.at(height).code == ErrorCode::NotFound )
+        => 1 == 1
+ParameterExpressionTests.cpp:408  CHECK_THAT( si(doc, height), WithinRel(0.012, 1e-15) )
+        => 0.012 and 0.012 are within 1e-13% of each other
+
+== DocumentExpression_EvaluatesInDependencyOrderNotCreationOrder
+ParameterExpressionTests.cpp:192  CHECK( report.evaluated == std::vector<ParameterId>{b, c, d} )
+        => { parameter:2, parameter:1, parameter:4 } == { parameter:2, parameter:1, parameter:4 }
+ParameterExpressionTests.cpp:193  CHECK( report.changed == std::vector<ParameterId>{b, c, d} )
+        => { parameter:2, parameter:1, parameter:4 } == { parameter:2, parameter:1, parameter:4 }
+ParameterExpressionTests.cpp:198  CHECK( bits(si(doc, b)) == bits(bValue) )
+        => 4577494690056391098 (0x3f86872b020c49ba) == 4577494690056391098 (0x3f86872b020c49ba)
+ParameterExpressionTests.cpp:199  CHECK( bits(si(doc, c)) == bits(cValue) )
+        => 4581998289683761594 (0x3f96872b020c49ba) == 4581998289683761594 (0x3f96872b020c49ba)
+ParameterExpressionTests.cpp:200  CHECK( bits(si(doc, d)) == bits(dValue) )
+        => 4579224072313301368 (0x3f8cac083126e978) == 4579224072313301368 (0x3f8cac083126e978)
+ParameterExpressionTests.cpp:201  CHECK_THAT( si(doc, d), WithinRel(0.014, 1e-15) )
+        => 0.014 and 0.014 are within 1e-13% of each other
+ParameterExpressionTests.cpp:206  CHECK( again.evaluated == std::vector<ParameterId>{b, c, d} )
+        => { parameter:2, parameter:1, parameter:4 } == { parameter:2, parameter:1, parameter:4 }
+ParameterExpressionTests.cpp:208  CHECK( doc.revision() == revision )
+        => 10 == 10
+ParameterExpressionTests.cpp:213  CHECK( changed.changed == std::vector<ParameterId>{b, c, d} )
+        => { parameter:2, parameter:1, parameter:4 } == { parameter:2, parameter:1, parameter:4 }
+ParameterExpressionTests.cpp:214  CHECK_THAT( si(doc, c), WithinRel(0.062, 1e-15) )
+        => 0.062 and 0.062 are within 1e-13% of each other
+ParameterExpressionTests.cpp:215  CHECK_THAT( si(doc, d), WithinRel((0.062 - 0.030) / 4.0 + 0.031, 1e-15) )
+        => 0.039 and 0.039 are within 1e-13% of each other
+
+== DocumentExpression_SetRefusesMalformedTextAndChangesNothing
+ParameterExpressionTests.cpp:84  CHECK( set.error().code == ErrorCode::ParseError )
+        => 4 == 4 with message: text := "width /"
+ParameterExpressionTests.cpp:85  CHECK_THAT( set.error().message, ContainsSubstring("parameter 'height': expression '" + text + "': ") )
+        => "parameter 'height': expression 'width /': expected a number, a name or '(' at offset 7, found the end of the expression" contains: "parameter 'height': expression 'width /': " with message: text := "width /"
+ParameterExpressionTests.cpp:84  CHECK( set.error().code == ErrorCode::ParseError )
+        => 4 == 4 with message: text := "2 width"
+ParameterExpressionTests.cpp:85  CHECK_THAT( set.error().message, ContainsSubstring("parameter 'height': expression '" + text + "': ") )
+        => "parameter 'height': expression '2 width': unknown unit 'width' at offset 2 (a name directly after a number must be a unit; write '*' to multiply)" contains: "parameter 'height': expression '2 width': " with message: text := "2 width"
+ParameterExpressionTests.cpp:84  CHECK( set.error().code == ErrorCode::ParseError )
+        => 4 == 4 with message: text := "(width"
+ParameterExpressionTests.cpp:85  CHECK_THAT( set.error().message, ContainsSubstring("parameter 'height': expression '" + text + "': ") )
+        => "parameter 'height': expression '(width': expected ')' at offset 6 to close the '(' at offset 0, found the end of the expression" contains: "parameter 'height': expression '(width': " with message: text := "(width"
+ParameterExpressionTests.cpp:84  CHECK( set.error().code == ErrorCode::ParseError )
+        => 4 == 4 with message: text := ""
+ParameterExpressionTests.cpp:85  CHECK_THAT( set.error().message, ContainsSubstring("parameter 'height': expression '" + text + "': ") )
+        => "parameter 'height': expression '': the expression is empty" contains: "parameter 'height': expression '': " with message: text := ""
+ParameterExpressionTests.cpp:84  CHECK( set.error().code == ErrorCode::ParseError )
+        => 4 == 4 with message: text := "width $ 2"
+ParameterExpressionTests.cpp:85  CHECK_THAT( set.error().message, ContainsSubstring("parameter 'height': expression '" + text + "': ") )
+        => "parameter 'height': expression 'width $ 2': expected an operator or the end of the expression at offset 6, found '$'" contains: "parameter 'height': expression 'width $ 2': " with message: text := "width $ 2"
+ParameterExpressionTests.cpp:87  CHECK( doc.revision() == revision )
+        => 2 == 2
+ParameterExpressionTests.cpp:88  CHECK_FALSE( !(doc.parameters().find(height)->expression().has_value()) )
+        => !false
+ParameterExpressionTests.cpp:93  CHECK( doc.parameters().find(height)->expression() == "wdth / 2" )
+        => {?} == "wdth / 2"
+ParameterExpressionTests.cpp:94  CHECK( doc.revision() == revision + 1 )
+        => 3 == 3
+ParameterExpressionTests.cpp:95  CHECK( si(doc, height) == 0.05 )
+        => 0.05 == 0.05
+ParameterExpressionTests.cpp:100  CHECK( errorCode(doc.restoreParameter(bad)) == ErrorCode::ParseError )
+        => {?} == 4
+ParameterExpressionTests.cpp:101  CHECK_FALSE( !(doc.parameters().find(width)->expression().has_value()) )
+        => !false
+ParameterExpressionTests.cpp:105  CHECK( errorCode(doc.insertParameter(*loose)) == ErrorCode::ParseError )
+        => {?} == 4
+ParameterExpressionTests.cpp:106  CHECK_FALSE( !(doc.contains(ObjectId::fromValue(99))) )
+        => !false
+
+== DocumentExpression_FailedExpressionKeepsLastValueAndBlocksDependents
+ParameterExpressionTests.cpp:304  CHECK( buildDependencyGraph(doc).graph.downstreamOf({width}) == std::set<ObjectId>{width, ratio, scaled, unrelated} )
+        => { object:1, object:3, object:4, object:5 } == { object:1, object:3, object:4, object:5 }
+ParameterExpressionTests.cpp:307  CHECK( si(doc, ratio) == 4.0 )
+        => 4.0 == 4.0
+ParameterExpressionTests.cpp:308  CHECK( si(doc, scaled) == 8.0 )
+        => 8.0 == 8.0
+ParameterExpressionTests.cpp:314  CHECK( error.code == ErrorCode::InvalidArgument )
+        => 0 == 0
+ParameterExpressionTests.cpp:315  CHECK( error.message == "parameter 'ratio' = width / gap: division by zero at offset 6: 'gap' is zero" )
+        => "parameter 'ratio' = width / gap: division by zero at offset 6: 'gap' is zero" == "parameter 'ratio' = width / gap: division by zero at offset 6: 'gap' is zero"
+ParameterExpressionTests.cpp:316  CHECK( report.blocked == std::vector<ParameterId>{scaled} )
+        => { parameter:4 } == { parameter:4 }
+ParameterExpressionTests.cpp:317  CHECK( report.evaluated == std::vector<ParameterId>{unrelated} )
+        => { parameter:5 } == { parameter:5 }
+ParameterExpressionTests.cpp:319  CHECK( si(doc, ratio) == 4.0 )
+        => 4.0 == 4.0
+ParameterExpressionTests.cpp:320  CHECK( si(doc, scaled) == 8.0 )
+        => 8.0 == 8.0
+ParameterExpressionTests.cpp:327  CHECK( fixed.changed == std::vector<ParameterId>{ratio, scaled} )
+        => { parameter:3, parameter:4 } == { parameter:3, parameter:4 }
+ParameterExpressionTests.cpp:328  CHECK( si(doc, ratio) == 2.0 )
+        => 2.0 == 2.0
+ParameterExpressionTests.cpp:329  CHECK( si(doc, scaled) == 4.0 )
+        => 4.0 == 4.0
+
+== Expression_EvaluationIsDeterministic
+ExpressionTests.cpp:341  CHECK( bits(reference.siValue) == bits(expected) )
+        => 4583103172792343156 (0x3f9a740da740da74) == 4583103172792343156 (0x3f9a740da740da74)
+ExpressionTests.cpp:351  CHECK( bits(copy.evaluate(kPlate).value().siValue) == bits(reference.siValue) )
+        => 4583103172792343156 (0x3f9a740da740da74) == 4583103172792343156 (0x3f9a740da740da74)
+ExpressionTests.cpp:352  CHECK( copy.references() == first->references() )
+        => { "edge_distance", "ratio", "width" } == { "edge_distance", "ratio", "width" }
+
+== Expression_RejectsMalformedSyntaxNamingTheToken
+ExpressionTests.cpp:270  CHECK( error.code == c.code )
+        => 4 == 4 with message: c.text := ""
+ExpressionTests.cpp:271  CHECK_THAT( error.message, ContainsSubstring(std::string{c.message}) )
+        => "the expression is empty" contains: "the expression is empty" with message: c.text := ""
+ExpressionTests.cpp:270  CHECK( error.code == c.code )
+        => 4 == 4 with message: c.text := " "
+ExpressionTests.cpp:271  CHECK_THAT( error.message, ContainsSubstring(std::string{c.message}) )
+        => "the expression is empty" contains: "the expression is empty" with message: c.text := " "
+ExpressionTests.cpp:270  CHECK( error.code == c.code )
+        => 4 == 4 with message: c.text := "width +"
+ExpressionTests.cpp:271  CHECK_THAT( error.message, ContainsSubstring(std::string{c.message}) )
+        => "expected a number, a name or '(' at offset 7, found the end of the expression" contains: "expected a number, a name or '(' at offset 7, found the end of the expression" with message: c.text := "width +"
+ExpressionTests.cpp:270  CHECK( error.code == c.code )
+        => 4 == 4 with message: c.text := "* width"
+ExpressionTests.cpp:271  CHECK_THAT( error.message, ContainsSubstring(std::string{c.message}) )
+        => "expected a number, a name or '(' at offset 0, found '*'" contains: "expected a number, a name or '(' at offset 0, found '*'" with message: c.text := "* width"
+ExpressionTests.cpp:270  CHECK( error.code == c.code )
+        => 4 == 4 with message: c.text := "width * * 2"
+ExpressionTests.cpp:271  CHECK_THAT( error.message, ContainsSubstring(std::string{c.message}) )
+        => "expected a number, a name or '(' at offset 8, found '*'" contains: "expected a number, a name or '(' at offset 8, found '*'" with message: c.text := "width * * 2"
+ExpressionTests.cpp:270  CHECK( error.code == c.code )
+        => 4 == 4 with message: c.text := "(width"
+ExpressionTests.cpp:271  CHECK_THAT( error.message, ContainsSubstring(std::string{c.message}) )
+        => "expected ')' at offset 6 to close the '(' at offset 0, found the end of the expression" contains: "expected ')' at offset 6 to close the '(' at offset 0, found the end of the expression" with message: c.text := "(width"
+ExpressionTests.cpp:270  CHECK( error.code == c.code )
+        => 4 == 4 with message: c.text := "(width + 2 mm 3)"
+ExpressionTests.cpp:271  CHECK_THAT( error.message, ContainsSubstring(std::string{c.message}) )
+        => "expected ')' at offset 14 to close the '(' at offset 0, found '3'" contains: "expected ')' at offset 14 to close the '(' at offset 0, found '3'" with message: c.text := "(width + 2 mm 3)"
+ExpressionTests.cpp:270  CHECK( error.code == c.code )
+        => 4 == 4 with message: c.text := "width)"
+ExpressionTests.cpp:271  CHECK_THAT( error.message, ContainsSubstring(std::string{c.message}) )
+        => "expected an operator or the end of the expression at offset 5, found ')'" contains: "expected an operator or the end of the expression at offset 5, found ')'" with message: c.text := "width)"
+ExpressionTests.cpp:270  CHECK( error.code == c.code )
+        => 4 == 4 with message: c.text := "width 2"
+ExpressionTests.cpp:271  CHECK_THAT( error.message, ContainsSubstring(std::string{c.message}) )
+        => "expected an operator or the end of the expression at offset 6, found '2'" contains: "expected an operator or the end of the expression at offset 6, found '2'" with message: c.text := "width 2"
+ExpressionTests.cpp:270  CHECK( error.code == c.code )
+        => 4 == 4 with message: c.text := "width height"
+ExpressionTests.cpp:271  CHECK_THAT( error.message, ContainsSubstring(std::string{c.message}) )
+        => "expected an operator or the end of the expression at offset 6, found 'height'" contains: "expected an operator or the end of the expression at offset 6, found 'height'" with message: c.text := "width height"
+ExpressionTests.cpp:270  CHECK( error.code == c.code )
+        => 4 == 4 with message: c.text := "()"
+ExpressionTests.cpp:271  CHECK_THAT( error.message, ContainsSubstring(std::string{c.message}) )
+        => "expected a number, a name or '(' at offset 1, found ')'" contains: "expected a number, a name or '(' at offset 1, found ')'" with message: c.text := "()"
+ExpressionTests.cpp:270  CHECK( error.code == c.code )
+        => 4 == 4 with message: c.text := "2 ^ 3"
+ExpressionTests.cpp:271  CHECK_THAT( error.message, ContainsSubstring(std::string{c.message}) )
+        => "expected an operator or the end of the expression at offset 2, found '^'" contains: "expected an operator or the end of the expression at offset 2, found '^'" with message: c.text := "2 ^ 3"
+ExpressionTests.cpp:270  CHECK( error.code == c.code )
+        => 4 == 4 with message: c.text := "width % 2"
+ExpressionTests.cpp:271  CHECK_THAT( error.message, ContainsSubstring(std::string{c.message}) )
+        => "expected an operator or the end of the expression at offset 6, found '%'" contains: "expected an operator or the end of the expression at offset 6, found '%'" with message: c.text := "width % 2"
+ExpressionTests.cpp:270  CHECK( error.code == c.code )
+        => 4 == 4 with message: c.text := "2 width"
+ExpressionTests.cpp:271  CHECK_THAT( error.message, ContainsSubstring(std::string{c.message}) )
+        => "unknown unit 'width' at offset 2 (a name directly after a number must be a unit; write '*' to multiply)" contains: "unknown unit 'width' at offset 2 (a name directly after a number must be a unit; write '*' to multiply)" with message: c.text := "2 width"
+ExpressionTests.cpp:270  CHECK( error.code == c.code )
+        => 4 == 4 with message: c.text := "10 furlong"
+ExpressionTests.cpp:271  CHECK_THAT( error.message, ContainsSubstring(std::string{c.message}) )
+        => "unknown unit 'furlong' at offset 3 (a name directly after a number must be a unit; write '*' to multiply)" contains: "unknown unit 'furlong' at offset 3" with message: c.text := "10 furlong"
+ExpressionTests.cpp:270  CHECK( error.code == c.code )
+        => 4 == 4 with message: c.text := "1 mmx"
+ExpressionTests.cpp:271  CHECK_THAT( error.message, ContainsSubstring(std::string{c.message}) )
+        => "unknown unit 'mmx' at offset 2 (a name directly after a number must be a unit; write '*' to multiply)" contains: "unknown unit 'mmx' at offset 2" with message: c.text := "1 mmx"
+ExpressionTests.cpp:270  CHECK( error.code == c.code )
+        => 4 == 4 with message: c.text := "3mm2"
+ExpressionTests.cpp:271  CHECK_THAT( error.message, ContainsSubstring(std::string{c.message}) )
+        => "unknown unit 'mm2' at offset 1 (a name directly after a number must be a unit; write '*' to multiply)" contains: "unknown unit 'mm2' at offset 1" with message: c.text := "3mm2"
+ExpressionTests.cpp:270  CHECK( error.code == c.code )
+        => 4 == 4 with message: c.text := "."
+ExpressionTests.cpp:271  CHECK_THAT( error.message, ContainsSubstring(std::string{c.message}) )
+        => "'.' at offset 0 is not a number" contains: "'.' at offset 0 is not a number" with message: c.text := "."
+ExpressionTests.cpp:270  CHECK( error.code == c.code )
+        => 4 == 4 with message: c.text := "2 * .x"
+ExpressionTests.cpp:271  CHECK_THAT( error.message, ContainsSubstring(std::string{c.message}) )
+        => "'.x' at offset 4 is not a number" contains: "'.x' at offset 4 is not a number" with message: c.text := "2 * .x"
+ExpressionTests.cpp:270  CHECK( error.code == c.code )
+        => 4 == 4 with message: c.text := "1.5.2"
+ExpressionTests.cpp:271  CHECK_THAT( error.message, ContainsSubstring(std::string{c.message}) )
+        => "expected an operator or the end of the expression at offset 3, found '.'" contains: "expected an operator or the end of the expression at offset 3, found '.'" with message: c.text := "1.5.2"
+ExpressionTests.cpp:270  CHECK( error.code == c.code )
+        => 4 == 4 with message: c.text := "café"
+ExpressionTests.cpp:271  CHECK_THAT( error.message, ContainsSubstring(std::string{c.message}) )
+        => "expected an operator or the end of the expression at offset 3, found the byte 0xC3" contains: "expected an operator or the end of the expression at offset 3, found the byte 0xC3" with message: c.text := "café"
+ExpressionTests.cpp:270  CHECK( error.code == c.code )
+        => 0 == 0 with message: c.text := "1e999"
+ExpressionTests.cpp:271  CHECK_THAT( error.message, ContainsSubstring(std::string{c.message}) )
+        => "the number '1e999' at offset 0 is out of range" contains: "the number '1e999' at offset 0 is out of range" with message: c.text := "1e999"
+ExpressionTests.cpp:270  CHECK( error.code == c.code )
+        => 0 == 0 with message: c.text := "1e308 km"
+ExpressionTests.cpp:271  CHECK_THAT( error.message, ContainsSubstring(std::string{c.message}) )
+        => "'1e308 km' at offset 0 is out of range" contains: "'1e308 km' at offset 0 is out of range" with message: c.text := "1e308 km"
+
+== DocumentExpression_UndoRedoRestoresExpressionAndValue
+ParameterExpressionTests.cpp:424  CHECK( driven.siValue() == 0.05 )
+        => 0.05 == 0.05
+ParameterExpressionTests.cpp:427  CHECK_FALSE( !(doc.parameters().find(height)->expression().has_value()) )
+        => !false
+ParameterExpressionTests.cpp:428  CHECK( si(doc, height) == 0.03 )
+        => 0.03 == 0.03
+ParameterExpressionTests.cpp:439  CHECK( bits(si(doc, height)) == bits((123.4_mm).si() / 2.0) )
+        => 4589052728140074740 (0x3faf972474538ef4) == 4589052728140074740 (0x3faf972474538ef4)
+ParameterExpressionTests.cpp:442  CHECK( bits(si(doc, height)) == bits(driven.siValue()) )
+        => 4587366580439587226 (0x3fa999999999999a) == 4587366580439587226 (0x3fa999999999999a)
+
+== ExpressionCli_InfoShowsDrivenParametersAndTheirValues
+ExpressionCliTests.cpp:43  CHECK( result.exitCode == ExitCode::Success )
+        => 0 == 0
+ExpressionCliTests.cpp:45  CHECK_THAT( result.out, ContainsSubstring("Parameters (7):\n" " hole_y 25 mm (expression: height / 2)\n" " height 50 mm (expression: width / 2)\n" " thickness 10 mm (expression: 0.1 * width)\n" " hole_spacing 70 mm (expression: width - 2 * edge_distance)\n" " width 100 mm\n" " edge_distance 15 mm\n" " hole_radius 5 mm\n") )
+        => "Document: DrivenPlate File: C:\Users\uqhas\AppData\Local\Temp\bettercad-test-4581bb1e-5b20-4cab-8088-86fa9ee9bb67\plate.bcad ID: 6e0f2a64-4c1b-4d7a-9b8e-2f5d3c1a0b9e Parameters (7): hole_y 25 mm (expression: height / 2) height 50 mm (expression: width / 2) thickness 10 mm (expression: 0.1 * width) hole_spacing 70 mm (expression: width - 2 * edge_distance) width 100 mm edge_distance 15 mm hole_radius 5 mm Objects (2): object:8 sketch PlateSketch 12 entities, 13 constraints, driven by hole_y, height, hole_spacing, width, edge_distance, hole_radius object:9 extrude Plate profile PlateSketch, depth thickness, normal, new body " contains: "Parameters (7): hole_y 25 mm (expression: height / 2) height 50 mm (expression: width / 2) thickness 10 mm (expression: 0.1 * width) hole_spacing 70 mm (expression: width - 2 * edge_distance) width 100 mm edge_distance 15 mm hole_radius 5 mm "
+
+== ParameterExpressions_WithoutChangesNothingIsRegenerated
+ExpressionRegenerationTests.cpp:155  CHECK( m.doc.revision() == revision )
+        => 18 == 18
+ExpressionRegenerationTests.cpp:156  CHECK( regenerator.state(ObjectId{m.height}) == NodeState::UpToDate )
+        => {?} == 0
+
+== Expression_DimensionalAnalysisCombinesAndChecksDimensions
+ExpressionTests.cpp:182  CHECK( require("width / width", kPlate).dimension == dimensions::dimensionless )
+        => {?} == {?}
+ExpressionTests.cpp:183  CHECK( require("width / width", kPlate).siValue == 1.0 )
+        => 1.0 == 1.0
+ExpressionTests.cpp:184  CHECK( require("width * width", kPlate).dimension == dimensions::area )
+        => {?} == {?}
+ExpressionTests.cpp:185  CHECK( require("width * width * width", kPlate).dimension == dimensions::volume )
+        => {?} == {?}
+ExpressionTests.cpp:186  CHECK( require("1 / width", kPlate).dimension == dimensions::length.inverse() )
+        => {?} == {?}
+ExpressionTests.cpp:187  CHECK( require("width / 3 m/s", kPlate).dimension == dimensions::time )
+        => {?} == {?}
+ExpressionTests.cpp:188  CHECK( require("draft * 2", kPlate).dimension == dimensions::angle )
+        => {?} == {?}
+ExpressionTests.cpp:189  CHECK( require("width + 5 mm", kPlate).dimension == dimensions::length )
+        => {?} == {?}
+ExpressionTests.cpp:190  CHECK( require("width * ratio - 1 in", kPlate).dimension == dimensions::length )
+        => {?} == {?}
+ExpressionTests.cpp:191  CHECK_THAT( require("width * width + 1 cm^2", kPlate).siValue, WithinRel(0.0101, 1e-15) )
+        => 0.0101 and 0.0101 are within 1e-13% of each other
+ExpressionTests.cpp:195  CHECK( angle.code == ErrorCode::DimensionMismatch )
+        => 3 == 3
+ExpressionTests.cpp:196  CHECK( angle.message == "cannot add 'width' (length) and 'draft' (angle) at offset 6" )
+        => "cannot add 'width' (length) and 'draft' (angle) at offset 6" == "cannot add 'width' (length) and 'draft' (angle) at offset 6"
+ExpressionTests.cpp:198  CHECK( plain.code == ErrorCode::DimensionMismatch )
+        => 3 == 3
+ExpressionTests.cpp:199  CHECK( plain.message == "cannot subtract '1' (dimensionless) from 'width' (length) at offset 6" )
+        => "cannot subtract '1' (dimensionless) from 'width' (length) at offset 6" == "cannot subtract '1' (dimensionless) from 'width' (length) at offset 6"
+ExpressionTests.cpp:201  CHECK( nested.code == ErrorCode::DimensionMismatch )
+        => 3 == 3
+ExpressionTests.cpp:202  CHECK( nested.message == "cannot add 'width' (length) and '3 deg' (angle) at offset 11" )
+        => "cannot add 'width' (length) and '3 deg' (angle) at offset 11" == "cannot add 'width' (length) and '3 deg' (angle) at offset 11"
+ExpressionTests.cpp:203  CHECK( failure("width * width - width", kPlate).message == "cannot subtract 'width' (length) from 'width * width' (area) at offset 14" )
+        => "cannot subtract 'width' (length) from 'width * width' (area) at offset 14" == "cannot subtract 'width' (length) from 'width * width' (area) at offset 14"
+ExpressionTests.cpp:205  CHECK( errorCode(evaluate("1 mm + 1 s")) == ErrorCode::DimensionMismatch )
+        => {?} == 3
+ExpressionTests.cpp:206  CHECK( errorCode(evaluate("1 rad - 1")) == ErrorCode::DimensionMismatch )
+        => {?} == 3
+
+== ParameterExpressions_Load_StaleValueIsReevaluatedAndReported
+ExpressionFileTests.cpp:164  CHECK( loaded->parameters().find(m.height)->siValue() == 0.123 )
+        => 0.123 == 0.123
+ExpressionFileTests.cpp:168  CHECK( report.updatedParameters == std::vector<ParameterId>{m.height} )
+        => { parameter:2 } == { parameter:2 }
+ExpressionFileTests.cpp:169  CHECK( loaded->parameters().find(m.height)->siValue() == 0.05 )
+        => 0.05 == 0.05
+
+== ParameterExpressions_ValidationReportsEachExpressionProblemOnce / a valid model
+ExpressionRegenerationTests.cpp:268  CHECK_THAT( report.bodies[0].properties->volume.in(units::mm3), WithinRel(DrivenPlateModel::expectedVolumeMm3(100.0), kVolumeRel) )
+        => 48429.20367320509831188 and 48429.20367320510558784 are within 1e-10% of each other
+ExpressionRegenerationTests.cpp:271  CHECK( m.si(m.height) == 0.001 )
+        => 0.001 == 0.001
+
+== ParameterExpressions_ValidationReportsEachExpressionProblemOnce / an unknown name
+ExpressionRegenerationTests.cpp:276  CHECK_FALSE( !(report.valid()) )
+        => !false
+ExpressionRegenerationTests.cpp:278  CHECK( report.issues[0].check == ValidationCheck::MissingReferences )
+        => 1 == 1
+ExpressionRegenerationTests.cpp:279  CHECK( report.issues[0].item == ObjectId{m.height} )
+        => {?} == object:2
+ExpressionRegenerationTests.cpp:280  CHECK( report.issues[0].message == "height (object:2): expression 'wdth / 2': unknown parameter 'wdth' at offset 0" )
+        => "height (object:2): expression 'wdth / 2': unknown parameter 'wdth' at offset 0" == "height (object:2): expression 'wdth / 2': unknown parameter 'wdth' at offset 0"
+ExpressionRegenerationTests.cpp:284  CHECK( report.count(ValidationCheck::SketchConstraints, Severity::Error) == 0 )
+        => 0 == 0
+ExpressionRegenerationTests.cpp:286  CHECK( report.issues[1].message == "hole_y (object:1) was not evaluated because an item it depends on failed" )
+        => "hole_y (object:1) was not evaluated because an item it depends on failed" == "hole_y (object:1) was not evaluated because an item it depends on failed"
+ExpressionRegenerationTests.cpp:287  CHECK( report.issues[2].message == "PlateSketch (object:8) was not regenerated because an item it depends on failed" )
+        => "PlateSketch (object:8) was not regenerated because an item it depends on failed" == "PlateSketch (object:8) was not regenerated because an item it depends on failed"
+ExpressionRegenerationTests.cpp:289  CHECK( report.issues[3].message == "Plate (object:9) was not regenerated because an item it depends on failed" )
+        => "Plate (object:9) was not regenerated because an item it depends on failed" == "Plate (object:9) was not regenerated because an item it depends on failed"
+
+== ParameterExpressions_ValidationReportsEachExpressionProblemOnce / the name of an object
+ExpressionRegenerationTests.cpp:295  CHECK( report.issues[0].message == "height (object:2): expression 'PlateSketch / 2': 'PlateSketch' is not a parameter but a " "document object of type 'sketch' at offset 0" )
+        => "height (object:2): expression 'PlateSketch / 2': 'PlateSketch' is not a parameter but a document object of type 'sketch' at offset 0" == "height (object:2): expression 'PlateSketch / 2': 'PlateSketch' is not a parameter but a document object of type 'sketch' at offset 0"
+ExpressionRegenerationTests.cpp:298  CHECK( report.count(ValidationCheck::MissingReferences, Severity::Error) == 0 )
+        => 0 == 0
+
+== ParameterExpressions_ValidationReportsEachExpressionProblemOnce / a division by zero
+ExpressionRegenerationTests.cpp:304  CHECK( report.count(ValidationCheck::SketchConstraints, Severity::Error) == 0 )
+        => 0 == 0
+ExpressionRegenerationTests.cpp:306  CHECK( report.issues[0].message == "hole_y (object:1) failed to evaluate: parameter 'hole_y' = height / (width - 2 * " "edge_distance): division by zero at offset 7: '(width - 2 * edge_distance)' is zero" )
+        => "hole_y (object:1) failed to evaluate: parameter 'hole_y' = height / (width - 2 * edge_distance): division by zero at offset 7: '(width - 2 * edge_distance)' is zero" == "hole_y (object:1) failed to evaluate: parameter 'hole_y' = height / (width - 2 * edge_distance): division by zero at offset 7: '(width - 2 * edge_distance)' is zero"
+
+== Expression_UnitIsTheLongestSymbolEndingAtANameBoundary
+ExpressionTests.cpp:211  CHECK( require("3 mm/s").dimension == dimensions::velocity )
+        => {?} == {?}
+ExpressionTests.cpp:213  CHECK( divided.dimension == dimensions::time )
+        => {?} == {?}
+ExpressionTests.cpp:214  CHECK_THAT( divided.siValue, WithinRel(0.003 / 0.5, 1e-15) )
+        => 0.006 and 0.006 are within 1e-13% of each other
+ExpressionTests.cpp:215  CHECK( require("3 m/s2", kPlate).dimension == dimensions::length / dimensions::time )
+        => {?} == {?}
+ExpressionTests.cpp:216  CHECK( require("5 min").siValue == 300.0 )
+        => 300.0 == 300.0
+ExpressionTests.cpp:217  CHECK( require("5 m").siValue == 5.0 )
+        => 5.0 == 5.0
+ExpressionTests.cpp:218  CHECK( require("2 in").siValue == 2.0 * units::inch.scale.toSi(1.0) )
+        => 0.0508 == 0.0508
+ExpressionTests.cpp:221  CHECK( require("a / s", kPlate).dimension == dimensions::length )
+        => {?} == {?}
+ExpressionTests.cpp:222  CHECK( bits(require("a / s", kPlate).siValue) == bits(0.003 / 4.0) )
+        => 4560056752299212538 (0x3f489374bc6a7efa) == 4560056752299212538 (0x3f489374bc6a7efa)
+
+== Expression_AppliesPrecedenceAndLeftAssociativity
+ExpressionTests.cpp:150  CHECK( value.dimension == dimensions::dimensionless )
+        => {?} == {?} with message: c.text := "2 + 3 * 4"
+ExpressionTests.cpp:151  CHECK( value.siValue == c.expected )
+        => 14.0 == 14.0 with message: c.text := "2 + 3 * 4"
+ExpressionTests.cpp:150  CHECK( value.dimension == dimensions::dimensionless )
+        => {?} == {?} with message: c.text := "(2 + 3) * 4"
+ExpressionTests.cpp:151  CHECK( value.siValue == c.expected )
+        => 20.0 == 20.0 with message: c.text := "(2 + 3) * 4"
+ExpressionTests.cpp:150  CHECK( value.dimension == dimensions::dimensionless )
+        => {?} == {?} with message: c.text := "10 - 4 - 3"
+ExpressionTests.cpp:151  CHECK( value.siValue == c.expected )
+        => 3.0 == 3.0 with message: c.text := "10 - 4 - 3"
+ExpressionTests.cpp:150  CHECK( value.dimension == dimensions::dimensionless )
+        => {?} == {?} with message: c.text := "10 - (4 - 3)"
+ExpressionTests.cpp:151  CHECK( value.siValue == c.expected )
+        => 9.0 == 9.0 with message: c.text := "10 - (4 - 3)"
+ExpressionTests.cpp:150  CHECK( value.dimension == dimensions::dimensionless )
+        => {?} == {?} with message: c.text := "24 / 4 / 3"
+ExpressionTests.cpp:151  CHECK( value.siValue == c.expected )
+        => 2.0 == 2.0 with message: c.text := "24 / 4 / 3"
+ExpressionTests.cpp:150  CHECK( value.dimension == dimensions::dimensionless )
+        => {?} == {?} with message: c.text := "8 / 2 * 4"
+ExpressionTests.cpp:151  CHECK( value.siValue == c.expected )
+        => 16.0 == 16.0 with message: c.text := "8 / 2 * 4"
+ExpressionTests.cpp:150  CHECK( value.dimension == dimensions::dimensionless )
+        => {?} == {?} with message: c.text := "-2 * 3"
+ExpressionTests.cpp:151  CHECK( value.siValue == c.expected )
+        => -6.0 == -6.0 with message: c.text := "-2 * 3"
+ExpressionTests.cpp:150  CHECK( value.dimension == dimensions::dimensionless )
+        => {?} == {?} with message: c.text := "2 * -3"
+ExpressionTests.cpp:151  CHECK( value.siValue == c.expected )
+        => -6.0 == -6.0 with message: c.text := "2 * -3"
+ExpressionTests.cpp:150  CHECK( value.dimension == dimensions::dimensionless )
+        => {?} == {?} with message: c.text := "- -2"
+ExpressionTests.cpp:151  CHECK( value.siValue == c.expected )
+        => 2.0 == 2.0 with message: c.text := "- -2"
+ExpressionTests.cpp:150  CHECK( value.dimension == dimensions::dimensionless )
+        => {?} == {?} with message: c.text := "+5"
+ExpressionTests.cpp:151  CHECK( value.siValue == c.expected )
+        => 5.0 == 5.0 with message: c.text := "+5"
+ExpressionTests.cpp:150  CHECK( value.dimension == dimensions::dimensionless )
+        => {?} == {?} with message: c.text := "-(1 - 3)"
+ExpressionTests.cpp:151  CHECK( value.siValue == c.expected )
+        => 2.0 == 2.0 with message: c.text := "-(1 - 3)"
+ExpressionTests.cpp:150  CHECK( value.dimension == dimensions::dimensionless )
+        => {?} == {?} with message: c.text := "1 - -1"
+ExpressionTests.cpp:151  CHECK( value.siValue == c.expected )
+        => 2.0 == 2.0 with message: c.text := "1 - -1"
+ExpressionTests.cpp:150  CHECK( value.dimension == dimensions::dimensionless )
+        => {?} == {?} with message: c.text := "((((7))))"
+ExpressionTests.cpp:151  CHECK( value.siValue == c.expected )
+        => 7.0 == 7.0 with message: c.text := "((((7))))"
+ExpressionTests.cpp:150  CHECK( value.dimension == dimensions::dimensionless )
+        => {?} == {?} with message: c.text := " 2*(3+4) "
+ExpressionTests.cpp:151  CHECK( value.siValue == c.expected )
+        => 14.0 == 14.0 with message: c.text := " 2*(3+4) "
+ExpressionTests.cpp:150  CHECK( value.dimension == dimensions::dimensionless )
+        => {?} == {?} with message: c.text := "2 * (3 + 4)"
+ExpressionTests.cpp:151  CHECK( value.siValue == c.expected )
+        => 14.0 == 14.0 with message: c.text := "2 * (3 + 4)"
+
+== ExpressionCli_ExportFollowsTheEvaluatedValues
+ExpressionCliTests.cpp:102  CHECK( result.exitCode == ExitCode::Success )
+        => 0 == 0
+ExpressionCliTests.cpp:103  CHECK_THAT( result.out, ContainsSubstring("binary STL (mm), 1 body (Plate: ") )
+        => "Wrote C:\Users\uqhas\AppData\Local\Temp\bettercad-test-69d1a56a-6646-41ca-b14b-5996b285feaa\plate.stl: binary STL (mm), 1 body (Plate: 308 triangles), tolerance 0.1 mm and 20 deg, 15484 bytes " contains: "binary STL (mm), 1 body (Plate: "
+
+== Expression_LiteralsCarryTheirUnitsInSi
+ExpressionTests.cpp:109  CHECK( value.dimension == c.expected.dimension )
+        => {?} == {?} with message: c.text := "100 mm"
+ExpressionTests.cpp:110  CHECK( bits(value.siValue) == bits(c.expected.siValue) )
+        => 4591870180066957722 (0x3fb999999999999a) == 4591870180066957722 (0x3fb999999999999a) with message: c.text := "100 mm"
+ExpressionTests.cpp:109  CHECK( value.dimension == c.expected.dimension )
+        => {?} == {?} with message: c.text := "100mm"
+ExpressionTests.cpp:110  CHECK( bits(value.siValue) == bits(c.expected.siValue) )
+        => 4591870180066957722 (0x3fb999999999999a) == 4591870180066957722 (0x3fb999999999999a) with message: c.text := "100mm"
+ExpressionTests.cpp:109  CHECK( value.dimension == c.expected.dimension )
+        => {?} == {?} with message: c.text := "12.5 mm"
+ExpressionTests.cpp:110  CHECK( bits(value.siValue) == bits(c.expected.siValue) )
+        => 4578359381184846234 (0x3f8999999999999a) == 4578359381184846234 (0x3f8999999999999a) with message: c.text := "12.5 mm"
+ExpressionTests.cpp:109  CHECK( value.dimension == c.expected.dimension )
+        => {?} == {?} with message: c.text := "2.5e1 mm"
+ExpressionTests.cpp:110  CHECK( bits(value.siValue) == bits(c.expected.siValue) )
+        => 4582862980812216730 (0x3f9999999999999a) == 4582862980812216730 (0x3f9999999999999a) with message: c.text := "2.5e1 mm"
+ExpressionTests.cpp:109  CHECK( value.dimension == c.expected.dimension )
+        => {?} == {?} with message: c.text := ".5 in"
+ExpressionTests.cpp:110  CHECK( bits(value.siValue) == bits(c.expected.siValue) )
+        => 4578474673335306918 (0x3f8a027525460aa6) == 4578474673335306918 (0x3f8a027525460aa6) with message: c.text := ".5 in"
+ExpressionTests.cpp:109  CHECK( value.dimension == c.expected.dimension )
+        => {?} == {?} with message: c.text := "3 ft"
+ExpressionTests.cpp:110  CHECK( bits(value.siValue) == bits(c.expected.siValue) )
+        => 4606411402543811579 (0x3fed42c3c9eecbfb) == 4606411402543811579 (0x3fed42c3c9eecbfb) with message: c.text := "3 ft"
+ExpressionTests.cpp:109  CHECK( value.dimension == c.expected.dimension )
+        => {?} == {?} with message: c.text := "90 deg"
+ExpressionTests.cpp:110  CHECK( bits(value.siValue) == bits(c.expected.siValue) )
+        => 4609753056924675352 (0x3ff921fb54442d18) == 4609753056924675352 (0x3ff921fb54442d18) with message: c.text := "90 deg"
+ExpressionTests.cpp:109  CHECK( value.dimension == c.expected.dimension )
+        => {?} == {?} with message: c.text := "1.5 rad"
+ExpressionTests.cpp:110  CHECK( bits(value.siValue) == bits(c.expected.siValue) )
+        => 4609434218613702656 (0x3ff8000000000000) == 4609434218613702656 (0x3ff8000000000000) with message: c.text := "1.5 rad"
+ExpressionTests.cpp:109  CHECK( value.dimension == c.expected.dimension )
+        => {?} == {?} with message: c.text := "1 mm^2"
+ExpressionTests.cpp:110  CHECK( bits(value.siValue) == bits(c.expected.siValue) )
+        => 4517329193108106637 (0x3eb0c6f7a0b5ed8d) == 4517329193108106637 (0x3eb0c6f7a0b5ed8d) with message: c.text := "1 mm^2"
+ExpressionTests.cpp:109  CHECK( value.dimension == c.expected.dimension )
+        => {?} == {?} with message: c.text := "2 cm^3"
+ExpressionTests.cpp:110  CHECK( bits(value.siValue) == bits(c.expected.siValue) )
+        => 4521832792735477133 (0x3ec0c6f7a0b5ed8d) == 4521832792735477133 (0x3ec0c6f7a0b5ed8d) with message: c.text := "2 cm^3"
+ExpressionTests.cpp:109  CHECK( value.dimension == c.expected.dimension )
+        => {?} == {?} with message: c.text := "5 min"
+ExpressionTests.cpp:110  CHECK( bits(value.siValue) == bits(c.expected.siValue) )
+        => 4643985272004935680 (0x4072c00000000000) == 4643985272004935680 (0x4072c00000000000) with message: c.text := "5 min"
+ExpressionTests.cpp:109  CHECK( value.dimension == c.expected.dimension )
+        => {?} == {?} with message: c.text := "4 h"
+ExpressionTests.cpp:110  CHECK( bits(value.siValue) == bits(c.expected.siValue) )
+        => 4669142098048450560 (0x40cc200000000000) == 4669142098048450560 (0x40cc200000000000) with message: c.text := "4 h"
+ExpressionTests.cpp:109  CHECK( value.dimension == c.expected.dimension )
+        => {?} == {?} with message: c.text := "3 m/s"
+ExpressionTests.cpp:110  CHECK( bits(value.siValue) == bits(c.expected.siValue) )
+        => 4613937818241073152 (0x4008000000000000) == 4613937818241073152 (0x4008000000000000) with message: c.text := "3 m/s"
+ExpressionTests.cpp:109  CHECK( value.dimension == c.expected.dimension )
+        => {?} == {?} with message: c.text := "9.81 m/s^2"
+ExpressionTests.cpp:110  CHECK( bits(value.siValue) == bits(c.expected.siValue) )
+        => 4621712157097821471 (0x40239eb851eb851f) == 4621712157097821471 (0x40239eb851eb851f) with message: c.text := "9.81 m/s^2"
+ExpressionTests.cpp:109  CHECK( value.dimension == c.expected.dimension )
+        => {?} == {?} with message: c.text := "2.5 MPa"
+ExpressionTests.cpp:110  CHECK( bits(value.siValue) == bits(c.expected.siValue) )
+        => 4702623120467427328 (0x414312d000000000) == 4702623120467427328 (0x414312d000000000) with message: c.text := "2.5 MPa"
+ExpressionTests.cpp:109  CHECK( value.dimension == c.expected.dimension )
+        => {?} == {?} with message: c.text := "7.85 g/cm^3"
+ExpressionTests.cpp:110  CHECK( bits(value.siValue) == bits(c.expected.siValue) )
+        => 4665353180979134464 (0x40beaa0000000000) == 4665353180979134464 (0x40beaa0000000000) with message: c.text := "7.85 g/cm^3"
+ExpressionTests.cpp:109  CHECK( value.dimension == c.expected.dimension )
+        => {?} == {?} with message: c.text := "42"
+ExpressionTests.cpp:110  CHECK( bits(value.siValue) == bits(c.expected.siValue) )
+        => 4631107791820423168 (0x4045000000000000) == 4631107791820423168 (0x4045000000000000) with message: c.text := "42"
+ExpressionTests.cpp:109  CHECK( value.dimension == c.expected.dimension )
+        => {?} == {?} with message: c.text := "0.1"
+ExpressionTests.cpp:110  CHECK( bits(value.siValue) == bits(c.expected.siValue) )
+        => 4591870180066957722 (0x3fb999999999999a) == 4591870180066957722 (0x3fb999999999999a) with message: c.text := "0.1"
+
+== Expression_AcceptanceExamplesEvaluateFromTheirInputs
+ExpressionTests.cpp:163  CHECK( value.dimension == dimensions::length )
+        => {?} == {?}
+ExpressionTests.cpp:165  CHECK( bits(height.siValue) == bits(0.1 / 2.0) )
+        => 4587366580439587226 (0x3fa999999999999a) == 4587366580439587226 (0x3fa999999999999a)
+ExpressionTests.cpp:166  CHECK( bits(thickness.siValue) == bits(0.1 * 0.1) )
+        => 4576918229304087676 (0x3f847ae147ae147c) == 4576918229304087676 (0x3f847ae147ae147c)
+ExpressionTests.cpp:167  CHECK( bits(spacing.siValue) == bits(0.1 - 2.0 * 0.015) )
+        => 4589708452245819884 (0x3fb1eb851eb851ec) == 4589708452245819884 (0x3fb1eb851eb851ec)
+ExpressionTests.cpp:168  CHECK_THAT( height.siValue, WithinRel(0.050, 1e-15) )
+        => 0.05 and 0.05 are within 1e-13% of each other
+ExpressionTests.cpp:169  CHECK_THAT( thickness.siValue, WithinRel(0.010, 1e-15) )
+        => 0.01 and 0.01 are within 1e-13% of each other
+ExpressionTests.cpp:170  CHECK_THAT( spacing.siValue, WithinRel(0.070, 1e-15) )
+        => 0.07000000000000001 and 0.07000000000000001 are within 1e-13% of each other
+ExpressionTests.cpp:175  CHECK_THAT( require("width / 2", wider).siValue, WithinRel(0.080, 1e-15) )
+        => 0.08 and 0.08 are within 1e-13% of each other
+ExpressionTests.cpp:176  CHECK_THAT( require("0.1 * width", wider).siValue, WithinRel(0.016, 1e-15) )
+        => 0.016 and 0.016 are within 1e-13% of each other
+ExpressionTests.cpp:177  CHECK_THAT( require("width - 2 * edge_distance", wider).siValue, WithinRel(0.130, 1e-15) )
+        => 0.13 and 0.13 are within 1e-13% of each other
+
+== ParameterExpressions_RegenerationIsDeterministic
+ExpressionRegenerationTests.cpp:326  CHECK( bits(first.si(id)) == bits(second.si(id)) )
+        => 4589052728140074740 (0x3faf972474538ef4) == 4589052728140074740 (0x3faf972474538ef4)
+ExpressionRegenerationTests.cpp:326  CHECK( bits(first.si(id)) == bits(second.si(id)) )
+        => 4578267147464477687 (0x3f8945b6c3760bf7) == 4578267147464477687 (0x3f8945b6c3760bf7)
+ExpressionRegenerationTests.cpp:326  CHECK( bits(first.si(id)) == bits(second.si(id)) )
+        => 4591394599946307398 (0x3fb7e90ff9724746) == 4591394599946307398 (0x3fb7e90ff9724746)
+ExpressionRegenerationTests.cpp:326  CHECK( bits(first.si(id)) == bits(second.si(id)) )
+        => 4584549128512704244 (0x3f9f972474538ef4) == 4584549128512704244 (0x3f9f972474538ef4)
+ExpressionRegenerationTests.cpp:328  CHECK( bits(volumeMm3(a, first.plate)) == bits(volumeMm3(b, second.plate)) )
+        => 4681059682765730300 (0x40f676faeba771fc) == 4681059682765730300 (0x40f676faeba771fc)
+ExpressionRegenerationTests.cpp:336  CHECK( bits(volumeMm3(a, first.plate)) == bits(volume) )
+        => 4681059682765730300 (0x40f676faeba771fc) == 4681059682765730300 (0x40f676faeba771fc)
+
+== ParameterExpressions_CycleFailsParametersAndBlocksGeometry
+ExpressionRegenerationTests.cpp:242  CHECK( report.cycles.front() == std::vector<ObjectId>{m.holeSpacing, m.width} )
+        => { object:4, object:5 } == { object:4, object:5 }
+ExpressionRegenerationTests.cpp:243  CHECK( report.failed == std::vector<ObjectId>{m.holeSpacing, m.width} )
+        => { object:4, object:5 } == { object:4, object:5 }
+ExpressionRegenerationTests.cpp:244  CHECK_THAT( report.errors.at(m.width).message, ContainsSubstring("dependency cycle: hole_spacing, width") )
+        => "dependency cycle: hole_spacing, width" contains: "dependency cycle: hole_spacing, width"
+ExpressionRegenerationTests.cpp:245  CHECK( report.blocked == std::vector<ObjectId>{m.holeY, m.height, m.thickness, m.sketch, m.plate} )
+        => { object:1, object:2, object:3, object:8, object:9 } == { object:1, object:2, object:3, object:8, object:9 }
+ExpressionRegenerationTests.cpp:246  CHECK( regenerator.body(m.plate) == nullptr )
+        => nullptr == nullptr
+ExpressionRegenerationTests.cpp:247  CHECK_THAT( m.si(m.width), WithinRel(0.1, 1e-15) )
+        => 0.10000000000000001 and 0.10000000000000001 are within 1e-13% of each other
+ExpressionRegenerationTests.cpp:251  CHECK_THAT( validation.issues[0].message, ContainsSubstring("dependency cycle: hole_spacing (object:4), width (object:5)") )
+        => "dependency cycle: hole_spacing (object:4), width (object:5)" contains: "dependency cycle: hole_spacing (object:4), width (object:5)"
+ExpressionRegenerationTests.cpp:57  CHECK_THAT( m.si(m.width), WithinRel(widthMm / 1000.0, 1e-15) )
+        => 0.10000000000000001 and 0.10000000000000001 are within 1e-13% of each other with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:58  CHECK_THAT( m.si(m.height), WithinRel(widthMm / 2.0 / 1000.0, 1e-15) )
+        => 0.05 and 0.05 are within 1e-13% of each other with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:59  CHECK_THAT( m.si(m.thickness), WithinRel(0.1 * widthMm / 1000.0, 1e-15) )
+        => 0.01 and 0.01 are within 1e-13% of each other with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:60  CHECK_THAT( m.si(m.holeSpacing), WithinRel((widthMm - 30.0) / 1000.0, 1e-15) )
+        => 0.07000000000000001 and 0.07000000000000001 are within 1e-13% of each other with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:61  CHECK_THAT( m.si(m.holeY), WithinRel(widthMm / 4.0 / 1000.0, 1e-15) )
+        => 0.025 and 0.025 are within 1e-13% of each other with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:62  CHECK_THAT( volumeMm3(regenerator, m.plate), WithinRel(DrivenPlateModel::expectedVolumeMm3(widthMm), kVolumeRel) )
+        => 48429.20367320509831188 and 48429.20367320510558784 are within 1e-10% of each other with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:68  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:71  CHECK_THAT( box->max.x.in(units::mm), WithinAbs(widthMm, 1e-7) )
+        => 100.0 is within 0.0000001 of 100.0 with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:72  CHECK_THAT( box->max.y.in(units::mm), WithinAbs(widthMm / 2.0, 1e-7) )
+        => 49.99999999999999289 is within 0.0000001 of 50.0 with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:73  CHECK_THAT( box->max.z.in(units::mm), WithinAbs(widthMm / 10.0, 1e-7) )
+        => 10.00000000000000178 is within 0.0000001 of 10.0 with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:74  CHECK_THAT( box->min.x.in(units::mm), WithinAbs(0.0, 1e-7) )
+        => -0.0000000000000007 is within 0.0000001 of 0.0 with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:87  CHECK_THAT( centres[0].x.in(units::mm), WithinAbs(15.0, 1e-9) )
+        => 15.0 is within 0.000000001 of 15.0 with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:88  CHECK_THAT( centres[1].x.in(units::mm), WithinAbs(widthMm - 15.0, 1e-9) )
+        => 85.0 is within 0.000000001 of 85.0 with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:89  CHECK_THAT( centres[0].y.in(units::mm), WithinAbs(widthMm / 4.0, 1e-9) )
+        => 25.0 is within 0.000000001 of 25.0 with message: widthMm := 100.0
+ExpressionRegenerationTests.cpp:90  CHECK_THAT( centres[1].y.in(units::mm), WithinAbs(widthMm / 4.0, 1e-9) )
+        => 25.00000000000000355 is within 0.000000001 of 25.0 with message: widthMm := 100.0
+
+== ParameterExpressions_Load_KeepsUnknownNamesForRegenerationToReport
+ExpressionFileTests.cpp:203  CHECK( loaded->parameters().find(m.height)->expression() == "wdth / 2" )
+        => {?} == "wdth / 2"
+ExpressionFileTests.cpp:206  CHECK( report.failed == std::vector<ObjectId>{m.height} )
+        => { object:2 } == { object:2 }
+ExpressionFileTests.cpp:207  CHECK( report.errors.at(m.height).message == "parameter 'height' = wdth / 2: unknown parameter 'wdth' at offset 0" )
+        => "parameter 'height' = wdth / 2: unknown parameter 'wdth' at offset 0" == "parameter 'height' = wdth / 2: unknown parameter 'wdth' at offset 0"
+ExpressionFileTests.cpp:208  CHECK( report.blocked == std::vector<ObjectId>{m.holeY, m.sketch, m.plate} )
+        => { object:1, object:8, object:9 } == { object:1, object:8, object:9 }
+ExpressionFileTests.cpp:211  CHECK( validation.count(ValidationCheck::MissingReferences, Severity::Error) == 1 )
+        => 1 == 1
+ExpressionFileTests.cpp:219  CHECK( cycle.cycles.front() == std::vector<ObjectId>{m.holeY, m.height} )
+        => { object:1, object:2 } == { object:1, object:2 }
+
+== DocumentExpression_DependenciesAreGraphEdges
+ParameterExpressionTests.cpp:159  CHECK( built.graph.dependenciesOf(spacing) == std::set<ObjectId>{width, edge} )
+        => { object:1, object:2 } == { object:1, object:2 }
+ParameterExpressionTests.cpp:160  CHECK( built.graph.dependenciesOf(height) == std::set<ObjectId>{width} )
+        => { object:1 } == { object:1 }
+ParameterExpressionTests.cpp:161  CHECK( built.graph.dependenciesOf(odd) == std::set<ObjectId>{width} )
+        => { object:1 } == { object:1 }
+ParameterExpressionTests.cpp:164  CHECK( built.graph.downstreamOf({width}) == std::set<ObjectId>{width, spacing, height, odd, sketch} )
+        => { object:1, object:3, object:4, object:5, object:6 } == { object:1, object:3, object:4, object:5, object:6 }
+ParameterExpressionTests.cpp:165  CHECK( built.graph.downstreamOf({edge}) == std::set<ObjectId>{edge, spacing} )
+        => { object:2, object:3 } == { object:2, object:3 }
+ParameterExpressionTests.cpp:170  CHECK( built.unresolved[0].parameter == odd )
+        => parameter:5 == parameter:5
+ParameterExpressionTests.cpp:171  CHECK( built.unresolved[0].error.code == ErrorCode::InvalidArgument )
+        => 0 == 0
+ParameterExpressionTests.cpp:172  CHECK( built.unresolved[0].error.message == "'Base' is not a parameter but a document object of type 'test_consumer' at offset 0" )
+        => "'Base' is not a parameter but a document object of type 'test_consumer' at offset 0" == "'Base' is not a parameter but a document object of type 'test_consumer' at offset 0"
+ParameterExpressionTests.cpp:174  CHECK( built.unresolved[1].parameter == odd )
+        => parameter:5 == parameter:5
+ParameterExpressionTests.cpp:175  CHECK( built.unresolved[1].error.code == ErrorCode::NotFound )
+        => 1 == 1
+ParameterExpressionTests.cpp:176  CHECK( built.unresolved[1].error.message == "unknown parameter 'nothing' at offset 11" )
+        => "unknown parameter 'nothing' at offset 11" == "unknown parameter 'nothing' at offset 11"
+
+Overall: 4696 assertions passed, 0 failed.

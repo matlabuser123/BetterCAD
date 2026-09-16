@@ -27,8 +27,12 @@ enum class NodeState {
 
 struct RegenerationReport {
     /// Items whose own revision changed since the previous pass: the sources
-    /// of dirtiness (e.g. an edited parameter).
+    /// of dirtiness (e.g. an edited parameter, or a driven parameter whose
+    /// expression gave a new value).
     std::vector<ObjectId> changed{};
+    /// Driven parameters whose expression gave a new value in this pass, in
+    /// evaluation order.
+    std::vector<ParameterId> updatedParameters{};
     /// Objects rebuilt in this pass, in evaluation (dependency) order.
     std::vector<ObjectId> regenerated{};
     std::vector<ObjectId> failed{};
@@ -47,18 +51,21 @@ class Regenerator;
 using RegenerationHandler = std::function<Result<std::optional<geometry::Body>>(
     Document& document, ObjectId object, const Regenerator& regenerator)>;
 
-/// Keeps a document's derived results up to date: solved sketches and feature
-/// bodies.
+/// Keeps a document's derived results up to date: driven parameter values,
+/// solved sketches and feature bodies.
 ///
-/// Each pass builds the dependency graph from the document and finds the
-/// items whose revision changed since they were last built. It marks those
-/// items and everything downstream dirty, and rebuilds only the dirty items,
-/// dependencies first. Unaffected items keep their results. Failures are
-/// reported per item; items downstream of a failure, a missing reference or
-/// a dependency cycle are blocked.
+/// Each pass first evaluates the parameter expressions
+/// (evaluateParameterExpressions()), which changes the revision of every
+/// driven parameter whose value changes. It then builds the dependency graph
+/// from the document and finds the items whose revision changed since they
+/// were last built. It marks those items and everything downstream dirty,
+/// and rebuilds only the dirty items, dependencies first. Unaffected items
+/// keep their results. Failures are reported per item: a parameter whose
+/// expression fails is failed (and keeps its last value). Items downstream
+/// of a failure, a missing reference or a dependency cycle are blocked.
 ///
-/// Built-in handlers: "sketch" (apply driving parameters, solve) and
-/// "extrude". Objects of other kinds are treated as plain data.
+/// Built-in handlers: "sketch" (apply driving parameters, solve) and one per
+/// feature kind. Objects of other kinds are treated as plain data.
 class BETTERCAD_FEATURES_EXPORT Regenerator {
 public:
     Regenerator();

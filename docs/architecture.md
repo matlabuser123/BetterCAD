@@ -115,6 +115,63 @@ milestones start; see `TODO.md`.
 - Revision counters increment on effective changes only. This is the basis
   for dirty tracking and regeneration (P8).
 
+### Parameter expressions (P12-PARAM-001)
+
+- **Grammar** (`Expression.hpp`). `Expression::parse()` turns text such as
+  `width - 2 * edge_distance` into a postfix program:
+  `+ - * /`, unary `+`/`-`, parentheses, the usual precedence and left
+  associativity, decimal numbers with an optional unit, and parameter
+  names. It needs no document. Limits: 512 bytes, 32 levels of parentheses
+  and unary signs, 64-character names.
+  - A number without a unit is dimensionless; with one, it is converted with
+    the unit catalog's exact factor.
+  - A name directly after a number is always a unit, never a parameter:
+    there is no implicit multiplication (`2 width` is refused). The unit is
+    the longest catalog symbol that ends where a name would end, so `3 m/s`
+    is a velocity and `3 mm/speed` is 3 mm divided by `speed`.
+  - Malformed text fails with ParseError; oversized text, deep nesting and
+    numbers out of range with InvalidArgument. Messages quote the token and
+    give its byte offset; bytes that are not printable ASCII are shown as
+    `the byte 0xNN`, so no UTF-8 sequence is cut.
+- **Evaluation** is a loop over the postfix form on `DimensionedValue`s
+  (dimension + SI value; `units/DimensionedValue.hpp`, shared with
+  `ModifyParameterCommand`). `+`/`-` need equal dimensions (DimensionMismatch
+  otherwise, quoting both operands); `*`/`/` combine them. Division by zero
+  and non-finite values are InvalidArgument. Nothing is coerced.
+- **Parameters** keep the text; a `Parameter` or `ParameterTable` does not
+  interpret it. A `Document` checks its syntax whenever it stores one
+  (`setParameterExpression`, `insertParameter`, `restoreParameter`, and so
+  loading). A parameter with an expression is *driven*: setting its value
+  directly is FailedPrecondition, except together with a new expression in
+  one `ModifyParameterCommand`.
+- **Dependencies** (`ParameterExpressions.hpp`). `buildDependencyGraph()`
+  adds an edge from every parameter an expression names. A name that is not
+  a parameter is listed in `DocumentGraph::unresolved` (NotFound, or
+  InvalidArgument for an object's name), as is text that does not parse.
+- **Evaluation of a document.** `evaluateParameterExpressions()` evaluates
+  every driven parameter in the graph's topological order (ties by ID) and
+  stores the values that changed, through a private `Document` entry point.
+  A result must have the parameter's own dimension. A failing expression,
+  and every driven parameter that depends on it, keeps its last value and
+  is reported (`failed`, `blocked`). Parameters in a cycle are not
+  evaluated (`cycles`). A parameter that names itself is a cycle of one.
+- **Regeneration** runs that evaluation first in every pass. A value that
+  changes advances the parameter's revision, so its dependents are dirty.
+  Failed expressions are failures of the pass (their dependents are
+  blocked); `RegenerationReport::updatedParameters` lists the driven
+  parameters whose value changed. Parameters are never in `regenerated`.
+- **Validation** evaluates on its copy first, checks sketches with the
+  evaluated values, and reports unparsable expressions and object names as
+  document-consistency errors, unknown names as missing references, cycles
+  as dependency cycles, and evaluation failures as "failed to evaluate".
+- **Files.** The `expression` field keeps its format-version-1 form: the
+  text next to `si_value`, which holds the last evaluated value. A file thus
+  loads without evaluating anything, and an older reader, which ignores
+  expressions, still finds the values that were saved. A stored value that
+  disagrees with its expression is replaced at the next regeneration and
+  reported in `updatedParameters`. Unknown names load (a missing reference
+  is a valid document state); malformed text is refused with its JSON path.
+
 ### Document and commands (`bettercad/core/document/`)
 
 - `Document` owns parameters, polymorphic `DocumentObject`s and metadata.
@@ -657,7 +714,8 @@ milestones start; see `TODO.md`.
 
 - Objects declare their inputs through `DocumentObject::dependencies()`, and
   `buildDependencyGraph()` turns a document into a `DependencyGraph`
-  (`bettercad/core/document/DependencyGraph.hpp`).
+  (`bettercad/core/document/DependencyGraph.hpp`). Parameter expressions add
+  edges from the parameters they name (see Parameter expressions).
 - `features::Regenerator` rebuilds only what changed: items whose revision
   differs from the one recorded at their last build, plus everything
   downstream of them. It works in deterministic dependency order.
@@ -814,12 +872,12 @@ covers `examples/` as well) keeps Open CASCADE out of them.
   volume, area, centroid and bounds. Tests compare fingerprints exactly for
   a rebuild, a save and a load, and within a tolerance across a change and
   back.
-- **Parameters.** Expressions are stored but not evaluated yet (P1-003), so
-  every dimension a feature follows is one parameter used directly. Where a
-  model needs a derived dimension, a sketch builds the relation
-  geometrically: the shaft is dimensioned by half its length, so the same
-  parameter sets the overall length and the mirror plane for the tail
-  centre hole.
+- **Parameters.** The P11 models were built before parameter expressions
+  were evaluated (P12-PARAM-001), so every dimension a feature follows is
+  one parameter used directly. Where a model needs a derived dimension, a
+  sketch builds the relation geometrically: the shaft is dimensioned by half
+  its length, so the same parameter sets the overall length and the mirror
+  plane for the tail centre hole.
 - **The example program** `bettercad_example_reference_models` builds every
   model, prints its fingerprint and its build, regeneration, save and load
   times, and with `--out <dir>` writes the models and their STEP and STL

@@ -19,8 +19,8 @@ unless a log says so.
 | | |
 | --- | --- |
 | Parametric part modeling | **Qualified** — `P11-QUAL-001` |
-| Current implementation | None |
-| Next | Awaiting explicit scope decision |
+| Current implementation | `P12` — Parametric CAD Completion, in progress ([TODO.md](TODO.md)) |
+| Next | `P12-SKETCH-001` — further sketch constraints |
 | Released | `v0.1.0` (`P0`–`P10`); `P11` is qualified but not released |
 
 The qualification rebuilt the tree clean in Debug, Release and Debug-shared and
@@ -35,7 +35,7 @@ bit-identical across every build and process. 20 gates, 20 passed
 | Area | Verified today |
 | --- | --- |
 | Engineering types | Unit-safe quantities stored in SI; strongly typed stable IDs. Dimensional and ID misuse fail to compile. |
-| Parameters | Named, dimensioned, revision-tracked; drive sketches and features. |
+| Parameters | Named, dimensioned, revision-tracked; drive sketches and features. Expressions with units (`width - 2 * edge_distance`) are evaluated in dependency order with dimensional analysis; cycles and bad expressions are reported, never coerced ([evidence](docs/verification/P12-PARAM-001/README.md)). |
 | Document | Object registry, metadata, revisions, dirty state; every edit is a command, with undo/redo. |
 | Sketches | Points, lines, circles, arcs on a placed plane. Coincident, horizontal, vertical, parallel, perpendicular, distance, radius, equal and fixed constraints. A Gauss–Newton solver reporting under-, fully- and over-constrained, inconsistent and failed states with residual and DOF. |
 | Features | Ten. Extrude, revolve, sweep, loft (new body / join / cut / intersect); chamfer, fillet, hole (simple, counterbore, countersink; through, blind); linear pattern, circular pattern, mirror. |
@@ -188,8 +188,8 @@ for a user to find.
   matched by geometry, not named semantically. When a parameter moves the edge a
   chamfer was attached to, the feature fails with `NotFound` and keeps no body —
   no entity is ever substituted. Semantic topology is planned, not built.
-- **Parameter expressions are stored but not evaluated.** A derived dimension
-  needs its own parameter or a sketch that builds the relation geometrically.
+- **Parameter expressions** have arithmetic, units and parameter names only —
+  no functions, powers or constants — and only parameters take them.
 - No through-all extrude; a cut is given a depth.
 - No angle, tangent, midpoint or symmetry sketch constraint.
 - Uniting a half body with its mirror image is refused when a half cylinder lies

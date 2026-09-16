@@ -20,17 +20,21 @@ enum class ValidationCheck {
     /// References point at items of the right kind: profiles are sketches,
     /// targets are features with bodies, revolve axes are lines, and driving
     /// parameters have the right dimension (lengths for dimensions and
-    /// depths, angles for revolve angles).
+    /// depths, angles for revolve angles). Parameter expressions parse and
+    /// name only parameters.
     DocumentConsistency,
     /// Every referenced item exists, including revolve axis lines in their
-    /// profile sketches.
+    /// profile sketches and the names used by parameter expressions.
     MissingReferences,
-    /// No item depends on itself, directly or indirectly.
+    /// No item depends on itself, directly or indirectly (parameter
+    /// expressions included).
     DependencyCycles,
-    /// Every sketch solves with its driving parameters applied. Sketches that
-    /// are not fully constrained get a warning.
+    /// Every sketch solves with its driving parameters applied, after the
+    /// parameter expressions are evaluated. Sketches that are not fully
+    /// constrained get a warning.
     SketchConstraints,
-    /// Every object regenerates.
+    /// Every parameter expression evaluates (to the parameter's dimension)
+    /// and every object regenerates.
     FeatureRegeneration,
     /// Every body is a valid solid with positive volume.
     Geometry,

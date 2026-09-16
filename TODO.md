@@ -12,26 +12,102 @@ authorized — never in advance.
 
 | | |
 | --- | --- |
-| Current | **None** |
-| Next | **Awaiting explicit scope decision** |
+| Current | **`P12` — Parametric CAD Completion** |
+| Next | `P12-SKETCH-001` — Sketch constraints: angle, tangent, concentric, midpoint, symmetric, diameter |
 | Blocked / Manual | None |
-| Last milestone | `P11` Production Part Modeling — **QUALIFIED** |
+| Last qualified | `P11` Production Part Modeling — **QUALIFIED** |
 | Released | `v0.1.0` (`P0`–`P10`); `P11` qualified, not released |
 
 ## Current
 
-Nothing in progress. No milestone is open.
+### P12 — Parametric CAD Completion
+
+Authorized scope: the capabilities that complete parametric part modeling.
+Nothing else. Assemblies, drawings, desktop GUI, the full semantic-topology
+phase, STEP import, materials, meshing, FEA, thermal, CFD, optimization, Python,
+version control, AI and CAM all remain unauthorized.
+
+**Implementation order is dependency-driven, not the order the scope was
+listed.** The reasoning:
+
+```text
+Parameter expressions          core, layer 0, depends on nothing
+        ↓                      unblocks driven dimensions everywhere
+Sketch constraints/entities    layer 1; richer profiles
+        ↓
+Datum geometry                 first-class reference inputs
+        ↓
+Sketch on planar face          needs stable references — RISK, see below
+        ↓
+Feature work                   layer 2; consumes all of the above
+        ↓
+Design equations/configurations  needs expressions AND features
+        ↓
+Reference models → qualification
+```
+
+| # | Milestone | Depends on | Status |
+| --- | --- | --- | --- |
+| 1 | `P12-PARAM-001` Parameter expression evaluation | — | **done** — [evidence](docs/verification/P12-PARAM-001/README.md) |
+| 2 | `P12-SKETCH-001` Constraints: angle, tangent, concentric, midpoint, symmetric, diameter | `PARAM-001` | **next** |
+| 3 | `P12-SKETCH-002` Entities: ellipse, spline | `SKETCH-001` | not started |
+| 4 | `P12-DATUM-001` Datum planes, axes, coordinate systems | `PARAM-001` | not started |
+| 5 | `P12-SKETCH-003` Sketches on arbitrary planar faces | `DATUM-001` | not started — see *Stable-reference risk* |
+| 6 | `P12-FEAT-001` Through-all extrude | — | not started |
+| 7 | `P12-FEAT-002` Split body / combine | — | not started |
+| 8 | `P12-FEAT-003` Shell | `FEAT-002` | not started |
+| 9 | `P12-FEAT-004` Draft | `DATUM-001` | not started |
+| 10 | `P12-FEAT-005` Rib | `SKETCH-002`, `FEAT-001` | not started |
+| 11 | `P12-FEAT-006` Variable-radius fillet, setback, corner transitions | — | not started |
+| 12 | `P12-HOLE-001` Threads, spotface, standard sizes, tolerance classes | `PARAM-001` | not started |
+| 13 | `P12-PATTERN-001` Symmetric, total-length, suppressed instances, patterns of patterns | `PARAM-001` | not started |
+| 14 | `P12-SWEEP-001` Guide curves, twist, non-planar paths | `SKETCH-002` | not started |
+| 15 | `P12-LOFT-001` Differing section shapes, smooth interpolation, end conditions | `SKETCH-002` | not started |
+| 16 | `P12-PARAM-002` Design equations and configurations | `PARAM-001`, features | not started |
+| 17 | `P12-REF-001` Production reference models | all above | not started |
+| 18 | `P12-QUAL-001` Phase qualification | all above | not started |
+
+**Numbering note.** The proposed plan used `P12-REF-001` for datum geometry and
+`P12-REF-002` for reference models. In `P11`, `REF` means *reference models*
+(`P11-REF-001`). Datum geometry is therefore `P12-DATUM-001` and reference
+models keep `P12-REF-001`, so `REF` means one thing across phases. Feature
+milestones are numbered in dependency order rather than in the order the scope
+was listed. No historical milestone is renumbered.
+
+**Stable-reference risk.** `P12-SKETCH-003` (sketches on planar faces), and to a
+lesser degree shell, draft and variable fillets, lean on face and edge
+references that today are geometric signatures and do not follow geometry a
+parameter moves. Persisting transient kernel face indices is forbidden, and
+substituting a different face is forbidden. If a milestone cannot be completed
+safely within the current reference architecture, it stops, documents the exact
+failing requirement, and proposes a minimal prerequisite — it does not expand
+into the semantic-topology phase, which is not authorized.
+
+#### P12-PARAM-001 — Parameter expression evaluation
+
+Deliverables:
+
+- [x] Unit-aware expression grammar: literals with units, parameter references, `+ - * /`, unary minus, parentheses, precedence
+- [x] Dimensional analysis at evaluation: `Length + Angle` fails structurally; `Length / Length` is dimensionless
+- [x] Expression dependencies participate in the document dependency graph
+- [x] Cycle detection across expression references
+- [x] Unknown-symbol, malformed-syntax and dimension diagnostics naming the offending token
+- [x] Deterministic evaluation order
+- [x] Failure propagation: a parameter whose expression fails keeps its last value and is reported
+- [x] Save/load round-trip of expressions and evaluated values
+- [x] Evidence: [docs/verification/P12-PARAM-001/](docs/verification/P12-PARAM-001/README.md) — PASS, 777/777 tests in Debug, Release and Debug-shared, 0 warnings
+
+Acceptance:
+
+- `height = width / 2`, `thickness = 0.1 * width`, `hole_spacing = width - 2 * edge_distance` evaluate correctly and re-evaluate when `width` changes.
+- Dimensional errors, unknown symbols and cycles are refused with structured diagnostics; nothing is silently coerced.
+- The unit-safe parameter system is not reduced to raw doubles anywhere.
+- The existing `P0`–`P11` regression suite stays green in all three presets.
 
 ## Next
 
-Awaiting an explicit scope decision. The next milestone must be recorded here —
-ID, deliverables, acceptance gates — before any implementation begins.
-
-The candidates are in [ROADMAP.md](ROADMAP.md#capability-roadmap). The one
-dependency worth weighing first: a minimal stable-reference layer (semantic
-topology) may be a prerequisite for assemblies, drawings and simulation boundary
-conditions, because all three attach to faces and edges that geometric
-references cannot follow today.
+`P12-SKETCH-001` — Sketch constraints: angle, tangent, concentric, midpoint,
+symmetric, diameter. Its deliverables are added above when it starts.
 
 ## Blocked / Manual
 
@@ -45,24 +121,8 @@ references cannot follow today.
 Not started. Not authorized. Grouped to match
 [ROADMAP.md](ROADMAP.md#capability-roadmap).
 
-### Parametric CAD completion
-
-- [ ] Shell feature
-- [ ] Draft feature
-- [ ] Rib feature
-- [ ] Variable-radius fillets, setback and corner-transition controls
-- [ ] Datum planes, axes and coordinate systems
-- [ ] Parameter expression evaluation
-- [ ] Sketch constraints: angle, tangent, concentric, midpoint, symmetric, diameter
-- [ ] Sketch entities: ellipse, spline
-- [ ] Sketches on arbitrary planar faces
-- [ ] Through-all extrude
-- [ ] Split body and combine
-- [ ] Configurations and design equations
-- [ ] Hole threads, spotface, standards databases and tolerance classes
-- [ ] Pattern modes: symmetric, total-length, suppressed instances, patterns of patterns
-- [ ] Sweep guide curves, twist and non-planar paths
-- [ ] Loft sections of differing shapes, smooth interpolation, end conditions
+> Parametric CAD completion moved to [**Current**](#current) as `P12` and is no
+> longer listed here.
 
 ### Desktop application
 
@@ -156,6 +216,7 @@ Not started. Not authorized. Grouped to match
 
 | Milestone | Commit | Evidence |
 | --- | --- | --- |
+| `P12-PARAM-001` Parameter expression evaluation | "BetterCAD: implement P12 parameter expressions" | [P12-PARAM-001](docs/verification/P12-PARAM-001/README.md) |
 | `P11-QUAL-001` Qualification | `449d5fd` | [P11-QUAL-001](docs/verification/P11-QUAL-001/README.md) |
 | `P11-REF-001` Mechanical reference models | `79dab04` | [P11-REF-001](docs/verification/P11-REF-001/README.md) |
 | `P11-FEAT-009` Loft | `24a8134` | [P11-FEAT-009](docs/verification/P11-FEAT-009/README.md) |
@@ -183,8 +244,12 @@ regression test, so none can change silently. Detail:
   outward side — not named semantically. When a parameter moves the referenced
   geometry, the feature fails with `NotFound` and keeps no body. Nothing is ever
   substituted.
-- **Parameter expressions are stored but not evaluated.** A derived dimension
-  needs its own parameter, or a sketch that builds the relation geometrically.
+- **Parameter expressions** have `+ - * /`, unary signs, parentheses, units
+  and parameter names only: no functions, powers or constants. Only
+  parameters take expressions; a feature field takes a literal or one
+  parameter. Renaming a parameter does not rewrite expressions that use it.
+  Driven values are computed at regeneration
+  ([P12-PARAM-001](docs/verification/P12-PARAM-001/README.md)).
 - **No through-all extrude.** A cut is given a depth.
 - **Loft sides stay B-splines** even where flat, costing about 6e-12 relative
   volume and 3.4e-6 mm in the centroid; plane references find only a loft's end

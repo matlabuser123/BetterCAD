@@ -5,6 +5,7 @@
 #include <bettercad/core/document/Command.hpp>
 #include <bettercad/core/document/DocumentObject.hpp>
 #include <bettercad/core/parameters/Parameter.hpp>
+#include <bettercad/core/units/DimensionedValue.hpp>
 
 #include <memory>
 #include <optional>
@@ -39,20 +40,13 @@ private:
     std::optional<Parameter> created_;
 };
 
-/// A value with its dimension, so that value changes stay dimension-checked
-/// when the target parameter's dimension is only known at run time.
-struct DimensionedValue {
-    Dimension dimension{};
-    double siValue = 0.0;
-
-    template <Dimension D>
-    [[nodiscard]] static constexpr DimensionedValue of(const Quantity<D>& value) noexcept {
-        return {D, value.si()};
-    }
-};
-
 /// Requested changes to a parameter; unset fields stay as they are.
 /// Designed for designated initializers: ParameterChanges{.name = "w"}.
+///
+/// A value is a DimensionedValue, so the change stays dimension-checked when
+/// the parameter's dimension is only known at run time. The value of a
+/// parameter driven by an expression can only change together with its
+/// expression (see Document::setParameterSiValue()).
 struct ParameterChanges {
     std::optional<std::string> name{};
     std::optional<DimensionedValue> value{};

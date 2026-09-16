@@ -40,7 +40,9 @@ inline constexpr std::size_t kMaxParameterNameLength = kMaxNameLength;
 /// - Values must be finite.
 /// - revision() starts at 1 and increments on every effective change. Setting
 ///   an identical value is not a change.
-/// - The optional expression is stored but not evaluated yet.
+/// - The optional expression is stored as text. A Parameter or ParameterTable
+///   does not interpret it; a Document checks its syntax and evaluates it
+///   (see bettercad/core/document/ParameterExpressions.hpp).
 class BETTERCAD_CORE_EXPORT Parameter {
 public:
     [[nodiscard]] static Result<Parameter> create(ParameterId id, std::string name, double siValue,
@@ -88,7 +90,8 @@ public:
     Result<bool> setValue(double value, const UnitDescriptor& unit);
     Result<bool> setSiValue(Dimension dimension, double siValue);
     Result<bool> setDisplayUnit(const UnitDescriptor& unit);
-    /// Stores an expression (not evaluated yet); std::nullopt clears it.
+    /// Stores an expression's text; std::nullopt clears it. Only emptiness is
+    /// checked here (see the class notes).
     Result<bool> setExpression(std::optional<std::string> expression);
     /// Validates the name syntax only; uniqueness is the owning table's job.
     Result<bool> rename(std::string name);

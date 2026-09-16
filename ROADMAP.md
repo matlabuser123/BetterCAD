@@ -50,7 +50,8 @@ bit-identically across three build configurations.
 274 translation units in each of Debug, Release and Debug-shared, each rebuilt
 clean ([evidence](docs/verification/P11-QUAL-001/README.md)).
 
-**No capability below is in progress, and none is authorized.**
+**One capability is in progress:** Parametric CAD completion, authorized in
+[TODO.md](TODO.md) as `P12`. No other capability below is authorized.
 
 ## Capability Roadmap
 
@@ -58,7 +59,7 @@ clean ([evidence](docs/verification/P11-QUAL-001/README.md)).
 | --- | --- | --- |
 | Foundation | `P0`–`P10` | **Qualified** |
 | Parametric Part Modeling | `P11` | **Qualified** |
-| Parametric CAD completion | — | Planned |
+| Parametric CAD completion | `P12` | **In progress** |
 | Interchange | — | Planned |
 | Desktop Application | — | Planned |
 | Semantic Topology | — | Planned |
@@ -79,6 +80,7 @@ clean ([evidence](docs/verification/P11-QUAL-001/README.md)).
 ```text
 Qualified  implemented, tested, validated, evidence recorded, and
            re-verified end to end in every supported build configuration
+In progress authorized in TODO.md; milestones are being delivered
 Planned    intended; not started, and not authorized by TODO.md
 ```
 
@@ -133,15 +135,21 @@ independently computed volumes.
 | `P11-REF-001` | Six mechanical reference models | [P11-REF-001](docs/verification/P11-REF-001/README.md) |
 | `P11-QUAL-001` | Qualification — 20 gates, 20 passed | [P11-QUAL-001](docs/verification/P11-QUAL-001/README.md) |
 
-### Parametric CAD completion — Planned
+### Parametric CAD completion — In progress
 
 The part-modeling capability qualified above is narrower than the original
-ambition for it. Still outstanding: shell, draft and rib; variable-radius
-fillets and setback controls; datum planes, axes and coordinate systems;
-parameter expression evaluation; the remaining sketch constraints (angle,
-tangent, concentric, midpoint, symmetric, diameter) and entities (ellipse,
-spline); through-all extrude; split and combine; configurations and design
-equations; hole threads and standards databases; richer pattern modes.
+ambition for it. `P12` completes it: parameter expressions; the remaining
+sketch constraints (angle, tangent, concentric, midpoint, symmetric,
+diameter) and entities (ellipse, spline); datum planes, axes and coordinate
+systems; sketches on planar faces; through-all extrude; split and combine;
+shell, draft and rib; variable-radius fillets and setback controls; hole
+threads, standard sizes and tolerance classes; richer pattern, sweep and loft
+modes; configurations and design equations. [TODO.md](TODO.md) holds the plan
+and the order.
+
+| Milestone | Delivered | Evidence |
+| --- | --- | --- |
+| `P12-PARAM-001` | Parameter expressions — units, dimensional analysis, dependency-ordered evaluation, cycle and failure handling | [P12-PARAM-001](docs/verification/P12-PARAM-001/README.md) |
 
 ### Interchange — Planned
 

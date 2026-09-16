@@ -1,0 +1,351 @@
+{
+  "format": "bettercad-document",
+  "version": 1,
+  "units": "SI",
+  "document": {
+    "id": "6e0f2a64-4c1b-4d7a-9b8e-2f5d3c1a0b9e",
+    "name": "DrivenPlate",
+    "metadata": {
+      "description": "",
+      "author": "",
+      "properties": {}
+    },
+    "last_allocated_id": 9
+  },
+  "parameters": [
+    {
+      "id": 1,
+      "name": "hole_y",
+      "si_value": 0.025,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      },
+      "expression": "height / 2"
+    },
+    {
+      "id": 2,
+      "name": "height",
+      "si_value": 0.05,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      },
+      "expression": "width / 2"
+    },
+    {
+      "id": 3,
+      "name": "thickness",
+      "si_value": 0.010000000000000002,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      },
+      "expression": "0.1 * width"
+    },
+    {
+      "id": 4,
+      "name": "hole_spacing",
+      "si_value": 0.07,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      },
+      "expression": "width - 2 * edge_distance"
+    },
+    {
+      "id": 5,
+      "name": "width",
+      "si_value": 0.1,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 6,
+      "name": "edge_distance",
+      "si_value": 0.015,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 7,
+      "name": "hole_radius",
+      "si_value": 0.005,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    }
+  ],
+  "objects": [
+    {
+      "id": 8,
+      "type": "sketch",
+      "name": "PlateSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.1,
+              -1.7196556800353073e-18
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.1,
+              0.049999999999999996
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              -7.032705804521068e-19,
+              0.049999999999999996
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "line",
+            "start": 2,
+            "end": 3,
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "line",
+            "start": 4,
+            "end": 1,
+            "construction": false
+          },
+          {
+            "id": 9,
+            "type": "point",
+            "position": [
+              0.015,
+              0.025
+            ],
+            "construction": false
+          },
+          {
+            "id": 10,
+            "type": "circle",
+            "center": 9,
+            "radius": 0.005000000000000001,
+            "construction": false
+          },
+          {
+            "id": 11,
+            "type": "point",
+            "position": [
+              0.085,
+              0.025000000000000005
+            ],
+            "construction": false
+          },
+          {
+            "id": 12,
+            "type": "circle",
+            "center": 11,
+            "radius": 0.005,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "horizontal",
+            "entities": [
+              5
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "horizontal",
+            "entities": [
+              7
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "vertical",
+            "entities": [
+              6
+            ],
+            "enabled": true
+          },
+          {
+            "id": 5,
+            "type": "vertical",
+            "entities": [
+              8
+            ],
+            "enabled": true
+          },
+          {
+            "id": 6,
+            "type": "distance",
+            "entities": [
+              5
+            ],
+            "value": 0.1,
+            "parameter": 5,
+            "enabled": true
+          },
+          {
+            "id": 7,
+            "type": "distance",
+            "entities": [
+              6
+            ],
+            "value": 0.05,
+            "parameter": 2,
+            "enabled": true
+          },
+          {
+            "id": 8,
+            "type": "distance",
+            "entities": [
+              9,
+              8
+            ],
+            "value": 0.015,
+            "parameter": 6,
+            "enabled": true
+          },
+          {
+            "id": 9,
+            "type": "distance",
+            "entities": [
+              9,
+              5
+            ],
+            "value": 0.025,
+            "parameter": 1,
+            "enabled": true
+          },
+          {
+            "id": 10,
+            "type": "horizontal",
+            "entities": [
+              9,
+              11
+            ],
+            "enabled": true
+          },
+          {
+            "id": 11,
+            "type": "distance",
+            "entities": [
+              9,
+              11
+            ],
+            "value": 0.07,
+            "parameter": 4,
+            "enabled": true
+          },
+          {
+            "id": 12,
+            "type": "radius",
+            "entities": [
+              10
+            ],
+            "value": 0.005,
+            "parameter": 7,
+            "enabled": true
+          },
+          {
+            "id": 13,
+            "type": "radius",
+            "entities": [
+              12
+            ],
+            "value": 0.005,
+            "parameter": 7,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 12,
+        "last_constraint_id": 13
+      }
+    },
+    {
+      "id": 9,
+      "type": "extrude",
+      "name": "Plate",
+      "data": {
+        "profile": 8,
+        "depth": 0.0,
+        "depth_parameter": 3,
+        "direction": "normal",
+        "operation": "new_body"
+      }
+    }
+  ]
+}

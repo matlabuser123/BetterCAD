@@ -5,6 +5,7 @@
 #include <bettercad/core/Id.hpp>
 #include <bettercad/core/document/DocumentObject.hpp>
 #include <bettercad/core/parameters/ParameterTable.hpp>
+#include <bettercad/core/units/DimensionedValue.hpp>
 
 #include <cstddef>
 #include <cstdint>
@@ -76,10 +77,14 @@ public:
     }
     Result<ParameterId> createParameter(std::string name, double siValue,
                                         const UnitDescriptor& displayUnit);
-    /// Inserts a parameter that already has an ID (undo/redo, loading).
+    /// Inserts a parameter that already has an ID (undo/redo, loading). Its
+    /// expression, if any, must parse; its names need not exist yet.
     Result<void> insertParameter(Parameter parameter);
     Result<Parameter> removeParameter(ParameterId id);
 
+    /// Sets the value of a parameter. A driven parameter (one with an
+    /// expression) is refused with FailedPrecondition: its value comes from
+    /// its expression (see ParameterExpressions.hpp).
     template <Dimension D>
     Result<bool> setParameterValue(ParameterId id, const Quantity<D>& value) {
         return setParameterSiValue(id, D, value.si());
@@ -87,9 +92,15 @@ public:
     Result<bool> setParameterSiValue(ParameterId id, Dimension dimension, double siValue);
     Result<bool> setParameterValue(ParameterId id, double value, const UnitDescriptor& unit);
     Result<bool> setParameterDisplayUnit(ParameterId id, const UnitDescriptor& unit);
+    /// Sets or clears (std::nullopt) the expression that drives a parameter.
+    /// The text must parse (ParseError or InvalidArgument otherwise; see
+    /// Expression::parse()). Its names are resolved, and its value computed,
+    /// when expressions are evaluated: evaluateParameterExpressions(), which
+    /// regeneration runs. Until then the parameter keeps its value.
     Result<bool> setParameterExpression(ParameterId id, std::optional<std::string> expression);
     /// Makes the parameter's name, value, unit and expression equal to @p state
-    /// (same ID). Used by undo/redo; revisions keep increasing.
+    /// (same ID). Used by undo/redo; revisions keep increasing. The state's
+    /// expression must parse.
     Result<bool> restoreParameter(const Parameter& state);
 
     // --- Objects ----------------------------------------------------------
@@ -169,9 +180,17 @@ public:
     [[nodiscard]] std::vector<ObjectId> itemIds() const;
 
 private:
+    friend class ParameterExpressionWriter;
+
+    /// Stores the value a driven parameter's expression evaluated to.
+    Result<bool> storeExpressionValue(ParameterId id, const DimensionedValue& value);
+
     [[nodiscard]] DocumentObject* findMutableObject(ObjectId id) noexcept;
     [[nodiscard]] static std::unexpected<Error> objectNotFound(ObjectId id);
     [[nodiscard]] Result<void> requireNameAvailable(std::string_view name) const;
+    [[nodiscard]] Result<void> requireNotDriven(ParameterId id) const;
+    [[nodiscard]] static Result<void> checkExpressionSyntax(std::string_view parameter,
+                                                            const std::optional<std::string>& expression);
     Result<bool> bump(Result<bool> changed) noexcept;
 
     DocumentId id_;

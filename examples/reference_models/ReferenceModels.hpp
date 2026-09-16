@@ -23,10 +23,11 @@
 // IDs and the same values, and a fixed document ID, so a saved model is
 // reproducible byte for byte.
 //
-// Parameter expressions are stored but not evaluated yet (P1-003), so every
-// dimension a feature follows is one parameter, used directly. Where a model
-// needs a derived dimension (the shaft's mirror plane at half its length), a
-// sketch builds the relation geometrically from one parameter.
+// These models were built before parameter expressions were evaluated
+// (P12-PARAM-001), so every dimension a feature follows is one parameter,
+// used directly. Where a model needs a derived dimension (the shaft's mirror
+// plane at half its length), a sketch builds the relation geometrically from
+// one parameter.
 namespace bettercad::reference {
 
 /// A stepped shaft turned about the Z axis, from z = 0 to 2 × half_length:
