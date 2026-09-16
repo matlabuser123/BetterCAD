@@ -4,11 +4,13 @@
 
 #include "io/json/JsonReader.hpp"
 
+#include <bettercad/core/document/References.hpp>
 #include <bettercad/core/math/Direction.hpp>
 #include <bettercad/core/math/Frame.hpp>
 #include <bettercad/core/math/Point.hpp>
 #include <bettercad/features/ChamferFeature.hpp>
 #include <bettercad/features/CircularPatternFeature.hpp>
+#include <bettercad/features/Datums.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/features/FilletFeature.hpp>
 #include <bettercad/features/HoleFeature.hpp>
@@ -37,6 +39,31 @@ namespace bettercad::io::detail {
 /// Origin in metres; axes as unit vectors, restored bit for bit.
 [[nodiscard]] Json frameToJson(const Frame3D& frame);
 [[nodiscard]] Result<Frame3D> frameFromJson(const Json& value, std::string_view path);
+
+/// {"object": id, "plane": "xy" | "yz" | "xz"}, the object only when set.
+[[nodiscard]] Json planeReferenceToJson(const PlaneReference& reference);
+[[nodiscard]] Result<PlaneReference> planeReferenceFromJson(const Json& value, std::string_view path);
+/// {"object": id, "axis": "x" | "y" | "z"}, the object only when set.
+[[nodiscard]] Json axisReferenceToJson(const AxisReference& reference);
+[[nodiscard]] Result<AxisReference> axisReferenceFromJson(const Json& value, std::string_view path);
+
+/// "kind": "fixed" with "frame"; "offset" with "base", "offset" (metres) and
+/// an optional "offset_parameter"; "angled" with "base", "axis", "angle"
+/// (radians) and an optional "angle_parameter".
+[[nodiscard]] Json datumPlaneToJson(const features::DatumPlane& datum);
+[[nodiscard]] Result<std::unique_ptr<features::DatumPlane>> datumPlaneFromJson(const Json& data, std::string name,
+                                                                               std::string_view path);
+/// "kind": "fixed" with "axis" {"origin", "direction"}; "intersection" with
+/// "first" and "second".
+[[nodiscard]] Json datumAxisToJson(const features::DatumAxis& datum);
+[[nodiscard]] Result<std::unique_ptr<features::DatumAxis>> datumAxisFromJson(const Json& data, std::string name,
+                                                                             std::string_view path);
+/// "kind": "fixed" with "frame"; "offset" with an optional "base" (an ID),
+/// "x", "y", "z" (metres), "rx", "ry", "rz" (radians) and optional
+/// "<key>_parameter"s.
+[[nodiscard]] Json coordinateSystemToJson(const features::CoordinateSystem& system);
+[[nodiscard]] Result<std::unique_ptr<features::CoordinateSystem>>
+coordinateSystemFromJson(const Json& data, std::string name, std::string_view path);
 
 [[nodiscard]] Json sketchToJson(const sketch::Sketch& sketch);
 [[nodiscard]] Result<std::unique_ptr<sketch::Sketch>> sketchFromJson(const Json& data, std::string name,

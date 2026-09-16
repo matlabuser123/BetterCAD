@@ -3,6 +3,7 @@
 #include <bettercad/core/Error.hpp>
 #include <bettercad/core/Id.hpp>
 #include <bettercad/core/document/DocumentObject.hpp>
+#include <bettercad/core/document/References.hpp>
 #include <bettercad/core/math/Direction.hpp>
 #include <bettercad/core/math/Point.hpp>
 #include <bettercad/core/math/RigidTransform.hpp>
@@ -41,6 +42,11 @@ enum class MirrorScope {
 /// exactly what was entered; which way it points does not matter. The offset
 /// moves the plane along its normal, so a parameter can drive the plane's
 /// position, e.g. the plane x = half_length through the origin along X.
+///
+/// With a `reference` (P12-DATUM-001), the plane is the referenced plane
+/// (a datum plane, a coordinate system's or the model's principal plane)
+/// moved by the offset along its normal; origin and normal then keep their
+/// defaults.
 struct MirrorPlane {
     Point3D origin{};
     Vector3D normal{1.0, 0.0, 0.0};
@@ -48,6 +54,7 @@ struct MirrorPlane {
     Length offset{};
     /// A length parameter.
     std::optional<ParameterId> offsetParameter{};
+    std::optional<PlaneReference> reference{};
 
     friend bool operator==(const MirrorPlane&, const MirrorPlane&) = default;
 };
@@ -110,7 +117,7 @@ public:
     [[nodiscard]] std::string_view typeName() const noexcept override { return kTypeName; }
     [[nodiscard]] std::unique_ptr<DocumentObject> clone() const override;
     [[nodiscard]] bool contentEquals(const DocumentObject& other) const override;
-    /// The source feature, then the offset parameter.
+    /// The source feature, the offset parameter, then the referenced plane's object.
     [[nodiscard]] std::vector<ObjectId> dependencies() const override;
     /// The source, whose body the mirror consumes.
     [[nodiscard]] std::optional<FeatureId> target() const noexcept override { return definition_.source; }

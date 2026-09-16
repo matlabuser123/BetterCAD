@@ -2,6 +2,8 @@
 #include "TestHelpers.hpp"
 
 #include <bettercad/core/Units.hpp>
+#include <bettercad/core/geometry/Booleans.hpp>
+#include <bettercad/core/geometry/Primitives.hpp>
 #include <bettercad/core/geometry/Profile.hpp>
 #include <bettercad/core/geometry/Sweeps.hpp>
 #include <bettercad/core/math/BSpline.hpp>
@@ -10,6 +12,7 @@
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
 
+#include <algorithm>
 #include <array>
 #include <cmath>
 #include <numbers>
@@ -412,6 +415,114 @@ TEST_CASE("CurvedProfile_SweptCurveSidesHaveTheirAnalyticArea", "[core][geometry
         CHECK_THAT(p.surfaceArea.in(units::mm2), WithinRel(2.0 * pi * 50.0 * kummer(10.0, 6.0), 1e-12));
         CHECK_THAT(p.centerOfMass.x.in(units::mm), WithinAbs(0.0, 1e-9));
         CHECK_THAT(p.centerOfMass.z.in(units::mm), WithinAbs(0.0, 1e-9));
+    }
+}
+
+// P12-DATUM-001: the mass properties of these bodies are summed face by face
+// (docs/verification/P12-DATUM-001). The kernel's adaptive integration had put
+// the centre of an elliptic prism 6e-4 mm off; the centres here come from
+// exact rules and are checked to 1e-12 mm.
+TEST_CASE("CurvedProfile_CurvedBodiesHaveTheirAnalyticCentreOfMass", "[core][geometry][profile][p12]") {
+    SECTION("a tilted elliptic prism") {
+        const EllipseSegment2D ellipse{mm(5, -7), mm(5 + 30.0 * std::cos(pi / 6.0), -7 + 30.0 * std::sin(pi / 6.0)),
+                                       12_mm, true};
+        const MassProperties p = requireProperties(requireBody(makePrism(regionOf(loopOf(ellipse)), 0_mm, 25_mm)));
+        CHECK_THAT(p.volume.in(units::mm3), WithinRel(pi * 360.0 * 25.0, bettercad::test::kRelTight));
+        CHECK_THAT(p.centerOfMass.x.in(units::mm), WithinAbs(5.0, 1e-12));
+        CHECK_THAT(p.centerOfMass.y.in(units::mm), WithinAbs(-7.0, 1e-12));
+        CHECK_THAT(p.centerOfMass.z.in(units::mm), WithinAbs(12.5, 1e-12));
+    }
+    SECTION("a quadratic spline prism") {
+        // Boole's rule is exact for the quadratic pieces' area and moments.
+        const SplineSegment2D spline{
+            polygonMm({{0, 0}, {50, -10}, {70, 30}, {60, 50}, {25, 55}, {-15, 25}, {-5, 10}}), 2, true};
+        const auto [area, xMoment, yMoment] = booleIntegrals(piecesMm(spline), 1);
+        const MassProperties p = requireProperties(requireBody(makePrism(regionOf(loopOf(spline)), -5_mm, 15_mm)));
+        CHECK_THAT(p.volume.in(units::mm3), WithinRel(area * 20.0, bettercad::test::kRelTight));
+        CHECK_THAT(p.centerOfMass.x.in(units::mm), WithinAbs(xMoment / area, 1e-12));
+        CHECK_THAT(p.centerOfMass.y.in(units::mm), WithinAbs(yMoment / area, 1e-12));
+        CHECK_THAT(p.centerOfMass.z.in(units::mm), WithinAbs(5.0, 1e-12));
+    }
+    SECTION("a quarter turn of an ellipse") {
+        // Turned right-handed about +Y, +X goes to -Z: the centre lies on the
+        // bisector at d = sin(a/2) / (a/2) * (integral of r^2) / (integral of r),
+        // with the integrals A (r0^2 + a^2/4) and A r0 for the radial
+        // semi-axis a = 10 about r0 = 50.
+        const EllipseSegment2D ellipse{mm(50, 4), mm(60, 4), 6_mm, true};
+        const MassProperties p = requireProperties(requireBody(
+            makeRevolution(regionOf(loopOf(ellipse)), Axis3D{Point3D{}, Direction3D::unitY()}, 0_deg, 90_deg)));
+        const double d = std::sin(pi / 4.0) / (pi / 4.0) * (2500.0 + 25.0) / 50.0;
+        CHECK_THAT(p.volume.in(units::mm3), WithinRel(pi / 2.0 * 50.0 * pi * 60.0, bettercad::test::kRelTight));
+        CHECK_THAT(p.centerOfMass.x.in(units::mm), WithinAbs(d * std::cos(pi / 4.0), 1e-12));
+        CHECK_THAT(p.centerOfMass.y.in(units::mm), WithinAbs(4.0, 1e-12));
+        CHECK_THAT(p.centerOfMass.z.in(units::mm), WithinAbs(-d * std::sin(pi / 4.0), 1e-12));
+    }
+}
+
+// P12-DATUM-001: cut curved faces no longer cover their parameter
+// rectangle; they take the kernel's Gauss-Kronrod integration.
+TEST_CASE("CurvedProfile_CutCurvedBodiesKeepTheirProperties", "[core][geometry][profile][p12]") {
+    SECTION("an elliptic prism cut at x = 15") {
+        // The removed segment x > c of the ellipse a = 30, b = 10: area
+        // a b (acos(c/a) - (c/a) sqrt(1 - c^2/a^2)), moment about the y axis
+        // 2 b / (3 a) (a^2 - c^2)^(3/2).
+        const EllipseSegment2D ellipse{mm(0, 0), mm(30, 0), 10_mm, true};
+        const Body prism = requireBody(makePrism(regionOf(loopOf(ellipse)), 0_mm, 20_mm));
+        const Body slab = requireBody(makeBox(Point3D{15_mm, -20_mm, -1_mm}, 30_mm, 40_mm, 22_mm));
+        const MassProperties p = requireProperties(requireBody(booleanDifference(prism, slab)));
+        const double area = 300.0 * pi - 300.0 * (std::acos(0.5) - 0.5 * std::sqrt(0.75));
+        const double moment = -2.0 * 10.0 / (3.0 * 30.0) * std::pow(900.0 - 225.0, 1.5);
+        CHECK_THAT(p.volume.in(units::mm3), WithinRel(area * 20.0, bettercad::test::kRelTight));
+        CHECK_THAT(p.centerOfMass.x.in(units::mm), WithinAbs(moment / area, bettercad::test::kPositionToleranceMm));
+        CHECK_THAT(p.centerOfMass.y.in(units::mm), WithinAbs(0.0, bettercad::test::kPositionToleranceMm));
+        CHECK_THAT(p.centerOfMass.z.in(units::mm), WithinAbs(10.0, bettercad::test::kPositionToleranceMm));
+    }
+    SECTION("a spline prism cut at y = 30") {
+        // The lower half of the square spline: the two pieces below y = 30
+        // closed by the line from (60, 30) to (0, 30).
+        const SplineSegment2D square{polygonMm({{0, 0}, {60, 0}, {60, 60}, {0, 60}}), 2, true};
+        std::vector<std::vector<std::array<double, 2>>> lower;
+        for (const auto& piece : piecesMm(square)) {
+            if (std::ranges::all_of(piece, [](const auto& q) { return q[1] <= 30.0 + 1e-9; })) {
+                lower.push_back(piece);
+            }
+        }
+        REQUIRE(lower.size() == 2);
+        lower.push_back({{60.0, 30.0}, {0.0, 30.0}});
+        const auto [area, xMoment, yMoment] = booleIntegrals(lower, 1);
+        CHECK_THAT(area, WithinRel(1500.0, kRelArea));
+        const Body prism = requireBody(makePrism(regionOf(loopOf(square)), 0_mm, 10_mm));
+        const Body slab = requireBody(makeBox(Point3D{-1_mm, 30_mm, -1_mm}, 62_mm, 31_mm, 12_mm));
+        const MassProperties p = requireProperties(requireBody(booleanDifference(prism, slab)));
+        CHECK_THAT(p.volume.in(units::mm3), WithinRel(15000.0, bettercad::test::kRelTight));
+        CHECK_THAT(p.centerOfMass.x.in(units::mm), WithinAbs(xMoment / area, bettercad::test::kPositionToleranceMm));
+        CHECK_THAT(p.centerOfMass.y.in(units::mm), WithinAbs(yMoment / area, bettercad::test::kPositionToleranceMm));
+        CHECK_THAT(p.centerOfMass.z.in(units::mm), WithinAbs(5.0, bettercad::test::kPositionToleranceMm));
+    }
+    SECTION("a revolved ellipse cut at z = 30") {
+        // Each profile point at radius r > 30 loses the arc 2 acos(30 / r).
+        // With r = 50 + 10 cos t and the axial height 12 sin t, the removed
+        // volume is the integral over [0, pi] of 2 acos(30 / r) r 120 sin^2 t;
+        // the integrand is even about both ends, so the trapezoidal rule
+        // converges exponentially.
+        const int panels = 256;
+        double removed = 0.0;
+        for (int k = 0; k <= panels; ++k) {
+            const double t = pi * k / panels;
+            const double r = 50.0 + 10.0 * std::cos(t);
+            const double f = 2.0 * std::acos(30.0 / r) * r * 120.0 * std::sin(t) * std::sin(t);
+            removed += (k == 0 || k == panels ? 0.5 : 1.0) * f * pi / panels;
+        }
+        const EllipseSegment2D ellipse{mm(50, 0), mm(60, 0), 6_mm, true};
+        const Body ring = requireBody(
+            makeRevolution(regionOf(loopOf(ellipse)), Axis3D{Point3D{}, Direction3D::unitY()}, 0_deg, 360_deg));
+        const Body slab = requireBody(makeBox(Point3D{-70_mm, -10_mm, 30_mm}, 140_mm, 20_mm, 40_mm));
+        const MassProperties p = requireProperties(requireBody(booleanDifference(ring, slab)));
+        // The kernel approximates the cut on the surface of revolution.
+        CHECK_THAT(p.volume.in(units::mm3), WithinRel(2.0 * pi * 50.0 * pi * 60.0 - removed,
+                                                      bettercad::test::kRelApproximatedIntersection));
+        CHECK_THAT(p.centerOfMass.x.in(units::mm), WithinAbs(0.0, bettercad::test::kPositionToleranceMm));
+        CHECK_THAT(p.centerOfMass.y.in(units::mm), WithinAbs(0.0, bettercad::test::kPositionToleranceMm));
     }
 }
 

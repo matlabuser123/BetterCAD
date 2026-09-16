@@ -55,6 +55,14 @@ Result<void> validate(const CircularPatternDefinition& definition) {
     if (!validId(definition.countParameter) || !validId(definition.angleParameter)) {
         return invalid("the pattern's parameter IDs must be valid");
     }
+    if (const auto& reference = definition.axis.reference) {
+        if (definition.axis.origin != Point3D{} || definition.axis.direction != PatternAxis{}.direction) {
+            return invalid("a pattern axis given by a reference has no origin or direction of its own");
+        }
+        if (reference->object && !reference->object->isValid()) {
+            return invalid("the pattern axis' reference must name a valid object");
+        }
+    }
     const Point3D& origin = definition.axis.origin;
     if (!isFinite(origin.x) || !isFinite(origin.y) || !isFinite(origin.z)) {
         return invalid("the axis origin must be finite");
@@ -139,6 +147,9 @@ std::vector<ObjectId> CircularPatternFeature::dependencies() const {
         if (parameter) {
             result.push_back(ObjectId{*parameter});
         }
+    }
+    if (definition_.axis.reference && definition_.axis.reference->object) {
+        result.push_back(*definition_.axis.reference->object);
     }
     return result;
 }

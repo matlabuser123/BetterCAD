@@ -1,0 +1,613 @@
+{
+  "format": "bettercad-document",
+  "version": 1,
+  "units": "SI",
+  "document": {
+    "id": "0b6e3c52-7d1f-4a8e-9c3d-5f2a8b1e6d40",
+    "name": "DatumBlock",
+    "metadata": {
+      "description": "",
+      "author": "",
+      "properties": {}
+    },
+    "last_allocated_id": 19
+  },
+  "parameters": [
+    {
+      "id": 1,
+      "name": "height",
+      "si_value": 0.02,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 2,
+      "name": "half_length",
+      "si_value": 0.05,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 3,
+      "name": "tilt",
+      "si_value": 0.5235987755982988,
+      "unit": "deg",
+      "dimension": {
+        "angle": 1
+      }
+    },
+    {
+      "id": 4,
+      "name": "boss_radius",
+      "si_value": 0.008,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    }
+  ],
+  "objects": [
+    {
+      "id": 5,
+      "type": "sketch",
+      "name": "BlockSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.1,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.1,
+              0.06
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.0,
+              0.06
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "line",
+            "start": 2,
+            "end": 3,
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "line",
+            "start": 4,
+            "end": 1,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "fixed",
+            "entities": [
+              2
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "fixed",
+            "entities": [
+              3
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "fixed",
+            "entities": [
+              4
+            ],
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 8,
+        "last_constraint_id": 4
+      }
+    },
+    {
+      "id": 6,
+      "type": "extrude",
+      "name": "Block",
+      "data": {
+        "profile": 5,
+        "depth": 0.0,
+        "depth_parameter": 1,
+        "direction": "normal",
+        "operation": "new_body"
+      }
+    },
+    {
+      "id": 7,
+      "type": "datum_plane",
+      "name": "TopPlane",
+      "data": {
+        "kind": "offset",
+        "base": {
+          "plane": "xy"
+        },
+        "offset": 0.0,
+        "offset_parameter": 1
+      }
+    },
+    {
+      "id": 8,
+      "type": "sketch",
+      "name": "BossSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.02
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "attachment": {
+          "object": 7,
+          "plane": "xy"
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.03,
+              0.03
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "circle",
+            "center": 1,
+            "radius": 0.008,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "radius",
+            "entities": [
+              2
+            ],
+            "value": 0.008,
+            "parameter": 4,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 2,
+        "last_constraint_id": 2
+      }
+    },
+    {
+      "id": 9,
+      "type": "extrude",
+      "name": "Boss",
+      "data": {
+        "profile": 8,
+        "depth": 0.01,
+        "direction": "normal",
+        "operation": "join",
+        "target": 6
+      }
+    },
+    {
+      "id": 10,
+      "type": "datum_plane",
+      "name": "Middle",
+      "data": {
+        "kind": "offset",
+        "base": {
+          "plane": "yz"
+        },
+        "offset": 0.0,
+        "offset_parameter": 2
+      }
+    },
+    {
+      "id": 11,
+      "type": "datum_plane",
+      "name": "RearPlane",
+      "data": {
+        "kind": "offset",
+        "base": {
+          "plane": "xz"
+        },
+        "offset": -0.03
+      }
+    },
+    {
+      "id": 12,
+      "type": "datum_axis",
+      "name": "Spindle",
+      "data": {
+        "kind": "intersection",
+        "first": {
+          "object": 10,
+          "plane": "xy"
+        },
+        "second": {
+          "object": 11,
+          "plane": "xy"
+        }
+      }
+    },
+    {
+      "id": 13,
+      "type": "circular_pattern",
+      "name": "Pattern",
+      "data": {
+        "source": 9,
+        "axis": {
+          "reference": {
+            "object": 12,
+            "axis": "z"
+          }
+        },
+        "count": 3,
+        "spacing": "full_circle",
+        "rotation": "positive"
+      }
+    },
+    {
+      "id": 14,
+      "type": "coordinate_system",
+      "name": "Station",
+      "data": {
+        "kind": "offset",
+        "x": 0.15,
+        "y": 0.0,
+        "z": 0.0,
+        "rx": 0.0,
+        "ry": 0.0,
+        "rz": 1.5707963267948966
+      }
+    },
+    {
+      "id": 15,
+      "type": "sketch",
+      "name": "PegSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.15,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            6.123233995736766e-17,
+            1.0,
+            0.0
+          ],
+          "y_axis": [
+            -1.0,
+            6.123233995736766e-17,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "attachment": {
+          "object": 14,
+          "plane": "xy"
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.01,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "circle",
+            "center": 1,
+            "radius": 0.005,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "radius",
+            "entities": [
+              2
+            ],
+            "value": 0.005,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 2,
+        "last_constraint_id": 2
+      }
+    },
+    {
+      "id": 16,
+      "type": "extrude",
+      "name": "Peg",
+      "data": {
+        "profile": 15,
+        "depth": 0.01,
+        "direction": "normal",
+        "operation": "new_body"
+      }
+    },
+    {
+      "id": 17,
+      "type": "datum_plane",
+      "name": "TiltPlane",
+      "data": {
+        "kind": "angled",
+        "base": {
+          "plane": "xy"
+        },
+        "axis": {
+          "axis": "y"
+        },
+        "angle": 0.0,
+        "angle_parameter": 3
+      }
+    },
+    {
+      "id": 18,
+      "type": "sketch",
+      "name": "FinSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            0.8660254037844387,
+            0.0,
+            -0.49999999999999994
+          ],
+          "y_axis": [
+            -0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.49999999999999994,
+            0.0,
+            0.8660254037844387
+          ]
+        },
+        "attachment": {
+          "object": 17,
+          "plane": "xy"
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              -0.06,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              -0.039999999999999994,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              -0.039999999999999994,
+              0.02
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              -0.06,
+              0.02
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "line",
+            "start": 2,
+            "end": 3,
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "line",
+            "start": 4,
+            "end": 1,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "fixed",
+            "entities": [
+              2
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "fixed",
+            "entities": [
+              3
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "fixed",
+            "entities": [
+              4
+            ],
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 8,
+        "last_constraint_id": 4
+      }
+    },
+    {
+      "id": 19,
+      "type": "extrude",
+      "name": "Fin",
+      "data": {
+        "profile": 18,
+        "depth": 0.005,
+        "direction": "normal",
+        "operation": "new_body"
+      }
+    }
+  ]
+}

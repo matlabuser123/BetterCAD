@@ -55,6 +55,7 @@ bettercad_add_executable(bettercad_tests
         core/units/FormatAndCatalogTests.cpp
         core/units/QuantityTests.cpp
         features/ChamferFeatureTests.cpp
+        features/DatumTests.cpp
         features/CircularPatternFeatureTests.cpp
         features/ExpressionRegenerationTests.cpp
         features/ExtrudeTests.cpp
@@ -72,6 +73,7 @@ bettercad_add_executable(bettercad_tests
         features/ValidationTests.cpp
         io/ChamferFileTests.cpp
         io/CircularPatternFileTests.cpp
+        io/DatumFileTests.cpp
         io/DocumentFileTests.cpp
         io/ExampleModelTests.cpp
         io/ExpressionFileTests.cpp
@@ -96,6 +98,7 @@ bettercad_add_executable(bettercad_tests
         support/BlockModel.hpp
         support/BracketModel.hpp
         support/ChamferBlockModel.hpp
+        support/DatumModels.hpp
         support/DrivenPlateModel.hpp
         support/FilletModels.hpp
         support/HoleModels.hpp
@@ -127,6 +130,7 @@ if(TARGET bettercad_cli_lib)
     target_sources(bettercad_tests PRIVATE
         cli/CliRunner.hpp
         cli/CliTests.cpp
+        cli/DatumCliTests.cpp
         cli/ExpressionCliTests.cpp
     )
     target_link_libraries(bettercad_tests PRIVATE BetterCAD::cli_lib)
@@ -282,6 +286,20 @@ if(TARGET bettercad_cli)
         COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "export-step|${_driven}|${_out}/driven_plate.step"
         EXIT_CODE 0 STDOUT_REGEX "^Wrote .*driven_plate\\.step: STEP AP214 \\(mm\\), 1 body \\(Plate\\), [0-9]+ bytes$"
         FILE "${_out}/driven_plate.step" FILE_REGEX "^ISO-10303-21;\nHEADER;")
+    # P12-DATUM-001: reference geometry, through the real executable.
+    set(_datum "${PROJECT_SOURCE_DIR}/examples/models/datum_block.bcad")
+    bettercad_add_process_test(cli.info.datum-block
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "info|${_datum}"
+        EXIT_CODE 0
+        STDOUT_REGEX "^Document: DatumBlock\n.*  object:7   datum_plane        TopPlane     offset from the model's xy by height\n.*  object:12  datum_axis         Spindle      where Middle and RearPlane meet\n.*  object:14  coordinate_system  Station      from the model's: moved \\(150 mm, 0 mm, 0 mm\\), turned \\(0 deg, 0 deg, 90 deg\\)\n")
+    bettercad_add_process_test(cli.validate.datum-block
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "validate|${_datum}"
+        EXIT_CODE 0
+        STDOUT_REGEX "feature regeneration  ok, 15 objects regenerated\n  geometry              ok, 3 result bodies\nResult bodies \\(3\\):\n  Pattern \\(object:13\\): 1 solid, volume 126031\\.858 mm\\^3.*Fin \\(object:19\\): 1 solid, volume 2000\\.000 mm\\^3.*bounds \\(-51\\.962, 0, 20\\) to \\(-32\\.141, 20, 34\\.33\\) mm\nResult: valid$")
+    bettercad_add_process_test(cli.export-step.datum-block
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "export-step|${_datum}|${_out}/datum_block.step"
+        EXIT_CODE 0 STDOUT_REGEX "^Wrote .*datum_block\\.step: STEP AP214 \\(mm\\), 3 bodies \\(Pattern, Peg, Fin\\), [0-9]+ bytes$"
+        FILE "${_out}/datum_block.step" FILE_REGEX "^ISO-10303-21;\nHEADER;")
     bettercad_add_process_test(cli.export-stl.reference.pulley
         COMMAND "$<TARGET_FILE:bettercad_cli>"
         ARGS "export-stl|${_reference}/pulley.bcad|${_out}/pulley.stl"

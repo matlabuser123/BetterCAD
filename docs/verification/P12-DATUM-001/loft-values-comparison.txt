@@ -1,0 +1,29 @@
+[loft] measured values: P12-SKETCH-001 against P12-DATUM-001, both Release.
+sketch001-release: efdc1cf built in a temporary git worktree (release preset, target bettercad_tests);
+datum001-release: this milestone's qualified Release build. Each ran
+  bettercad_tests.exe "[loft]" -s --reporter xml --rng-seed 1
+and ../P12-SKETCH-001/values.py (with ../P12-SKETCH-001/values-header.txt) filtered the report
+(2885 assertions passed, 0 failed, in each); compare-values.py compared the results.
+
+The three differing lines are LoftFileTests.cpp:342, :359 and :372,
+CHECK_THAT(contents->volumeMm3, WithinRel(<analytic volume>, kRelStep)): the volume the test-only STEP
+reader (tests/support/occt/StepReadBack.cpp) measures on the exported file. That reader has used the
+kernel's Gauss-Kronrod integration since P12-SKETCH-002. Every value computed by Body::massProperties
+and every other value is identical.
+
+sketch001-release: 1919 non-empty lines after normalizing, MD5 9e6f3c55946882760bc35cfffec28690
+datum001-release: 1919 non-empty lines after normalizing, MD5 b107d66c14871f1132cbb511430441b2
+
+datum001-release against sketch001-release:
+  line 843 (MEASURED):
+    sketch001-release: => 5497.78714377671440161 and 5497.78714378213771852 are within 1e-07% of each other
+    datum001-release: => 5497.78714377670166868 and 5497.78714378213771852 are within 1e-07% of each other
+  line 859 (MEASURED):
+    sketch001-release: => 18325.95714594022501842 and 18325.95714594045784906 are within 1e-07% of each other
+    datum001-release: => 18325.95714594018500065 and 18325.95714594045784906 are within 1e-07% of each other
+  line 871 (MEASURED):
+    sketch001-release: => 98240.70811398864316288 and 98240.70811398972000461 are within 1e-07% of each other
+    datum001-release: => 98240.70811398857040331 and 98240.70811398972000461 are within 1e-07% of each other
+  differing lines: 0 expected only, 3 measured
+
+RESULT: MEASURED VALUES DIFFER

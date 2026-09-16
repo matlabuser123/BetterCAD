@@ -236,6 +236,7 @@ conditions and manufacturing annotations.
 ```text
 Sketch
 ├── placement (Frame3D)
+├── attachment (optional datum or coordinate-system plane)
 ├── entities
 ├── constraints
 ├── dimensions
@@ -243,6 +244,12 @@ Sketch
 ```
 
 A sketch owns no B-Rep solids. It produces profiles that features consume.
+
+**Reference geometry is a document object.** Datum planes, datum axes and
+coordinate systems store their definitions (a base reference, offsets and
+angles, literal or parameter-driven), take part in the dependency graph, and
+are resolved to frames at regeneration, never cached as truth. An attached
+sketch takes its placement from its resolved plane in each regeneration.
 
 **Entities and constraints are separate concepts.** Entities carry an
 `EntityId`, construction state, geometry and metadata; a variant is preferred to

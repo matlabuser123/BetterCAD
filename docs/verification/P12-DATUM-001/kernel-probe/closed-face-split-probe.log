@@ -1,0 +1,28 @@
+Built with GCC 16.1 (MinGW-w64 UCRT), -O2, against OCCT 8.0.1; run 2026-09-17T03:26:08+10:00.
+P12-DATUM-001 closed face split probe (OCCT 8.0.1)
+
+revolved ellipse       split 0 ( 1 faces)  eps 1e-06  rel 3.86e-13  reported 8.78e-07  0.017 s
+revolved ellipse       split 0 ( 1 faces)  eps 1e-10  rel 1.89e-15  reported 7.98e-09  9.638 s
+revolved ellipse       split 1 ( 4 faces)  eps 1e-06  rel 3.87e-13  reported 8.65e-07  36.407 s
+revolved ellipse       split 1 ( 4 faces)  eps 1e-10  rel 2.22e-15  reported 2.39e-09  36.882 s
+revolved ellipse       split 2 ( 9 faces)  eps 1e-06  rel 2.22e-16  reported 1.73e-06  46.885 s
+revolved ellipse       split 2 ( 9 faces)  eps 1e-10  rel 2.22e-15  reported 6.71e-10  47.882 s
+revolved ellipse       split 4 (25 faces)  eps 1e-06  rel 6.48e-14  reported 1.38e-06  68.735 s
+revolved ellipse       split 4 (25 faces)  eps 1e-10  rel 2.44e-15  reported 1.66e-10  73.520 s
+revolved spline        split 0 ( 1 faces)  eps 1e-06  rel 2.00e-15  reported 8.40e-07  3.124 s
+revolved spline        split 0 ( 1 faces)  eps 1e-10  rel 2.00e-15  reported 7.08e-08  9.863 s
+revolved spline        split 1 ( 4 faces)  eps 1e-06  rel 1.78e-15  reported 1.64e-06  32.420 s
+revolved spline        split 1 ( 4 faces)  eps 1e-10  rel 1.78e-15  reported 4.73e-09  33.315 s
+revolved spline        split 2 ( 9 faces)  eps 1e-06  rel 2.11e-15  reported 6.86e-07  43.694 s
+revolved spline        split 2 ( 9 faces)  eps 1e-10  rel 2.00e-15  reported 4.35e-10  46.695 s
+revolved spline        split 4 (25 faces)  eps 1e-06  rel 2.55e-15  reported 1.02e-06  62.482 s
+revolved spline        split 4 (25 faces)  eps 1e-10  rel 2.22e-15  reported 1.54e-10  68.490 s
+oblique circle loft    split 0 ( 3 faces)  eps 1e-06  rel 2.32e-11  reported 7.57e-10  6.922 s
+oblique circle loft    split 0 ( 3 faces)  eps 1e-10  rel 2.32e-11  reported 5.06e-13  7.256 s
+oblique circle loft    split 1 ( 4 faces)  eps 1e-06  rel 2.32e-11  reported 7.24e-10  0.013 s
+oblique circle loft    split 1 ( 4 faces)  eps 1e-10  rel 2.32e-11  reported 2.84e-15  0.019 s
+oblique circle loft    split 2 ( 5 faces)  eps 1e-06  rel 2.32e-11  reported 3.02e-13  9.763 s
+oblique circle loft    split 2 ( 5 faces)  eps 1e-10  rel 2.32e-11  reported 3.02e-13  11.806 s
+oblique circle loft    split 4 ( 7 faces)  eps 1e-06  rel 2.32e-11  reported 2.56e-15  8.690 s
+oblique circle loft    split 4 ( 7 faces)  eps 1e-10  rel 2.32e-11  reported 2.56e-15  9.237 s
+oblique circle loft, adaptive Gauss eps 1e-10: rel 2.32e-11  0.003 s

@@ -7,6 +7,7 @@
 #include <bettercad/core/geometry/Hole.hpp>
 #include <bettercad/core/geometry/Transform.hpp>
 #include <bettercad/features/ChamferFeature.hpp>
+#include <bettercad/features/Datums.hpp>
 #include <bettercad/features/CircularPatternFeature.hpp>
 #include <bettercad/features/FilletFeature.hpp>
 #include <bettercad/features/HoleFeature.hpp>
@@ -109,8 +110,17 @@ Result<void> checkEdgeImages(std::string_view kind, std::string_view done, std::
 
 Result<MirrorReflection> resolveMirrorReflection(const MirrorDefinition& definition, const Document& document) {
     const MirrorPlane& plane = definition.plane;
-    const auto normal = Direction3D::fromComponents(plane.normal.x, plane.normal.y, plane.normal.z);
-    if (!normal || !isFinite(plane.origin.x) || !isFinite(plane.origin.y) || !isFinite(plane.origin.z)) {
+    Point3D origin = plane.origin;
+    auto normal = Direction3D::fromComponents(plane.normal.x, plane.normal.y, plane.normal.z);
+    if (plane.reference) {
+        auto frame = resolvePlane(document, *plane.reference);
+        if (!frame) {
+            return std::unexpected(frame.error());
+        }
+        origin = frame->origin();
+        normal = frame->normal();
+    }
+    if (!normal || !isFinite(origin.x) || !isFinite(origin.y) || !isFinite(origin.z)) {
         return makeError(ErrorCode::InvalidArgument, "the plane needs a finite origin and a finite, non-zero normal");
     }
     Length offset = plane.offset;
@@ -124,7 +134,7 @@ Result<MirrorReflection> resolveMirrorReflection(const MirrorDefinition& definit
     if (!isFinite(offset)) {
         return makeError(ErrorCode::InvalidArgument, "the plane's offset must be finite");
     }
-    return mirrorReflection(plane.origin + Translation3D::along(*normal, offset), *normal);
+    return mirrorReflection(origin + Translation3D::along(*normal, offset), *normal);
 }
 
 Result<geometry::Body> regenerateMirror(const MirrorFeature& feature, const Document& document,

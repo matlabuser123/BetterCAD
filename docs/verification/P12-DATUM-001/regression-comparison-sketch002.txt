@@ -1,0 +1,93 @@
+baseline ../P12-SKETCH-002/ctest-release.log: 844 distinct names
+
+ctest-debug.log: 868 distinct names, 869 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 24
+    cli.export-step.datum-block
+    cli.info.datum-block
+    cli.validate.datum-block
+    unit.CurvedProfile_CurvedBodiesHaveTheirAnalyticCentreOfMass
+    unit.CurvedProfile_CutCurvedBodiesKeepTheirProperties
+    unit.DatumCli_InfoDescribesDatumsAndAttachments
+    unit.DatumCli_ValidateReportsDatumProblems
+    unit.DatumCommands_CreateAndModifyAreUndoable
+    unit.DatumFile_ExampleFileMatchesTheBuilder
+    unit.DatumFile_ExportedBodiesReadBackFromStep
+    unit.DatumFile_MalformedDatumsAreRejectedWithThePath
+    unit.DatumFile_SaveLoad_PreservesDatumsAndRebuildsTheSameGeometry
+    unit.DatumMirror_ReflectsAcrossADatumPlane
+    unit.DatumModel_DependenciesAreGraphEdges
+    unit.DatumModel_FailuresBlockDependentsAndRecover
+    unit.DatumModel_RegeneratesDeterministically
+    unit.DatumModel_RegeneratesWithAnalyticGeometry
+    unit.DatumValidation_ReportsWrongKindsAndDimensions
+    unit.Datum_AxisIsWhereTwoPlanesMeet
+    unit.Datum_CoordinateSystemsTurnAboutTheirBaseAxesThenMove
+    unit.Datum_DefinitionsAreCheckedForTheirKind
+    unit.Datum_KindAndReferenceNamesAreStable
+    unit.Datum_PlanesMatchIndependentGeometry
+    unit.Datum_ResolutionRefusesMissingWrongAndDegenerateReferences
+
+ctest-release.log: 868 distinct names, 869 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 24
+    cli.export-step.datum-block
+    cli.info.datum-block
+    cli.validate.datum-block
+    unit.CurvedProfile_CurvedBodiesHaveTheirAnalyticCentreOfMass
+    unit.CurvedProfile_CutCurvedBodiesKeepTheirProperties
+    unit.DatumCli_InfoDescribesDatumsAndAttachments
+    unit.DatumCli_ValidateReportsDatumProblems
+    unit.DatumCommands_CreateAndModifyAreUndoable
+    unit.DatumFile_ExampleFileMatchesTheBuilder
+    unit.DatumFile_ExportedBodiesReadBackFromStep
+    unit.DatumFile_MalformedDatumsAreRejectedWithThePath
+    unit.DatumFile_SaveLoad_PreservesDatumsAndRebuildsTheSameGeometry
+    unit.DatumMirror_ReflectsAcrossADatumPlane
+    unit.DatumModel_DependenciesAreGraphEdges
+    unit.DatumModel_FailuresBlockDependentsAndRecover
+    unit.DatumModel_RegeneratesDeterministically
+    unit.DatumModel_RegeneratesWithAnalyticGeometry
+    unit.DatumValidation_ReportsWrongKindsAndDimensions
+    unit.Datum_AxisIsWhereTwoPlanesMeet
+    unit.Datum_CoordinateSystemsTurnAboutTheirBaseAxesThenMove
+    unit.Datum_DefinitionsAreCheckedForTheirKind
+    unit.Datum_KindAndReferenceNamesAreStable
+    unit.Datum_PlanesMatchIndependentGeometry
+    unit.Datum_ResolutionRefusesMissingWrongAndDegenerateReferences
+
+ctest-debug-shared.log: 868 distinct names, 869 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 24
+    cli.export-step.datum-block
+    cli.info.datum-block
+    cli.validate.datum-block
+    unit.CurvedProfile_CurvedBodiesHaveTheirAnalyticCentreOfMass
+    unit.CurvedProfile_CutCurvedBodiesKeepTheirProperties
+    unit.DatumCli_InfoDescribesDatumsAndAttachments
+    unit.DatumCli_ValidateReportsDatumProblems
+    unit.DatumCommands_CreateAndModifyAreUndoable
+    unit.DatumFile_ExampleFileMatchesTheBuilder
+    unit.DatumFile_ExportedBodiesReadBackFromStep
+    unit.DatumFile_MalformedDatumsAreRejectedWithThePath
+    unit.DatumFile_SaveLoad_PreservesDatumsAndRebuildsTheSameGeometry
+    unit.DatumMirror_ReflectsAcrossADatumPlane
+    unit.DatumModel_DependenciesAreGraphEdges
+    unit.DatumModel_FailuresBlockDependentsAndRecover
+    unit.DatumModel_RegeneratesDeterministically
+    unit.DatumModel_RegeneratesWithAnalyticGeometry
+    unit.DatumValidation_ReportsWrongKindsAndDimensions
+    unit.Datum_AxisIsWhereTwoPlanesMeet
+    unit.Datum_CoordinateSystemsTurnAboutTheirBaseAxesThenMove
+    unit.Datum_DefinitionsAreCheckedForTheirKind
+    unit.Datum_KindAndReferenceNamesAreStable
+    unit.Datum_PlanesMatchIndependentGeometry
+    unit.Datum_ResolutionRefusesMissingWrongAndDegenerateReferences
+
+RESULT: PASS

@@ -1,0 +1,392 @@
+#include "io/json/ObjectJson.hpp"
+
+#include <array>
+#include <format>
+#include <utility>
+
+namespace bettercad::io::detail {
+
+namespace {
+
+using features::CoordinateSystemKind;
+using features::DatumAxisKind;
+using features::DatumPlaneKind;
+
+constexpr std::array<std::pair<PrincipalPlane, std::string_view>, 3> kPlanes{{
+    {PrincipalPlane::XY, "xy"},
+    {PrincipalPlane::YZ, "yz"},
+    {PrincipalPlane::XZ, "xz"},
+}};
+constexpr std::array<std::pair<PrincipalAxis, std::string_view>, 3> kAxes{{
+    {PrincipalAxis::X, "x"},
+    {PrincipalAxis::Y, "y"},
+    {PrincipalAxis::Z, "z"},
+}};
+constexpr std::array<std::pair<DatumPlaneKind, std::string_view>, 3> kPlaneKinds{{
+    {DatumPlaneKind::Fixed, "fixed"},
+    {DatumPlaneKind::Offset, "offset"},
+    {DatumPlaneKind::Angled, "angled"},
+}};
+constexpr std::array<std::pair<DatumAxisKind, std::string_view>, 2> kAxisKinds{{
+    {DatumAxisKind::Fixed, "fixed"},
+    {DatumAxisKind::Intersection, "intersection"},
+}};
+constexpr std::array<std::pair<CoordinateSystemKind, std::string_view>, 2> kSystemKinds{{
+    {CoordinateSystemKind::Fixed, "fixed"},
+    {CoordinateSystemKind::Offset, "offset"},
+}};
+
+template <typename Enum, std::size_t N>
+std::string_view nameIn(const std::array<std::pair<Enum, std::string_view>, N>& table, Enum value) {
+    for (const auto& [item, name] : table) {
+        if (item == value) {
+            return name;
+        }
+    }
+    return "unknown";
+}
+
+template <typename Enum, std::size_t N>
+Result<Enum> valueIn(const std::array<std::pair<Enum, std::string_view>, N>& table, const Json& object,
+                     std::string_view key, std::string_view path) {
+    auto text = readString(object, key, path);
+    if (!text) {
+        return std::unexpected(text.error());
+    }
+    for (const auto& [item, name] : table) {
+        if (name == *text) {
+            return item;
+        }
+    }
+    return parseError(childPath(path, key), std::format("unknown value '{}'", *text));
+}
+
+std::optional<ParameterId> parameterOf(const std::optional<std::uint64_t>& id) {
+    return id ? std::optional<ParameterId>{ParameterId::fromValue(*id)} : std::nullopt;
+}
+
+/// Adds "<key>": metres or radians and "<key>_parameter": id when set.
+template <QuantityType Q>
+void putValue(Json& json, std::string_view key, Q value, const std::optional<ParameterId>& parameter) {
+    json[std::string{key}] = value.si();
+    if (parameter) {
+        json[std::format("{}_parameter", key)] = parameter->value();
+    }
+}
+
+Json axisToJson(const Axis3D& axis) {
+    Json json = Json::object();
+    json["origin"] = pointToJson(axis.origin);
+    json["direction"] = directionToJson(axis.direction);
+    return json;
+}
+
+Result<Axis3D> axisFromJson(const Json& object, std::string_view key, std::string_view path) {
+    auto field = requireField(object, key, path);
+    if (!field) {
+        return std::unexpected(field.error());
+    }
+    const std::string axisPath = childPath(path, key);
+    if (auto valid = requireObject(**field, axisPath, {"origin", "direction"}); !valid) {
+        return std::unexpected(valid.error());
+    }
+    auto origin = pointFromJson(**field, "origin", axisPath);
+    auto direction = directionFromJson(**field, "direction", axisPath);
+    if (!origin || !direction) {
+        return std::unexpected(!origin ? origin.error() : direction.error());
+    }
+    return Axis3D{*origin, *direction};
+}
+
+Result<Frame3D> frameField(const Json& object, std::string_view key, std::string_view path) {
+    auto field = requireField(object, key, path);
+    if (!field) {
+        return std::unexpected(field.error());
+    }
+    return frameFromJson(**field, childPath(path, key));
+}
+
+Result<PlaneReference> planeField(const Json& object, std::string_view key, std::string_view path) {
+    auto field = requireField(object, key, path);
+    if (!field) {
+        return std::unexpected(field.error());
+    }
+    return planeReferenceFromJson(**field, childPath(path, key));
+}
+
+Result<AxisReference> axisField(const Json& object, std::string_view key, std::string_view path) {
+    auto field = requireField(object, key, path);
+    if (!field) {
+        return std::unexpected(field.error());
+    }
+    return axisReferenceFromJson(**field, childPath(path, key));
+}
+
+
+/// Returns the first error among @p results.
+const Error* firstError(std::initializer_list<const Error*> errors) {
+    for (const Error* error : errors) {
+        if (error != nullptr) {
+            return error;
+        }
+    }
+    return nullptr;
+}
+
+template <typename T>
+const Error* errorOf(const Result<T>& result) {
+    return result ? nullptr : &result.error();
+}
+
+} // namespace
+
+Json planeReferenceToJson(const PlaneReference& reference) {
+    Json json = Json::object();
+    if (reference.object) {
+        json["object"] = reference.object->value();
+    }
+    json["plane"] = std::string{nameIn(kPlanes, reference.plane)};
+    return json;
+}
+
+Result<PlaneReference> planeReferenceFromJson(const Json& value, std::string_view path) {
+    if (auto valid = requireObject(value, path, {"object", "plane"}); !valid) {
+        return std::unexpected(valid.error());
+    }
+    auto object = readOptionalId(value, "object", path);
+    auto plane = valueIn(kPlanes, value, "plane", path);
+    if (!object || !plane) {
+        return std::unexpected(!object ? object.error() : plane.error());
+    }
+    return PlaneReference{*object ? std::optional<ObjectId>{ObjectId::fromValue(**object)} : std::nullopt, *plane};
+}
+
+Json axisReferenceToJson(const AxisReference& reference) {
+    Json json = Json::object();
+    if (reference.object) {
+        json["object"] = reference.object->value();
+    }
+    json["axis"] = std::string{nameIn(kAxes, reference.axis)};
+    return json;
+}
+
+Result<AxisReference> axisReferenceFromJson(const Json& value, std::string_view path) {
+    if (auto valid = requireObject(value, path, {"object", "axis"}); !valid) {
+        return std::unexpected(valid.error());
+    }
+    auto object = readOptionalId(value, "object", path);
+    auto axis = valueIn(kAxes, value, "axis", path);
+    if (!object || !axis) {
+        return std::unexpected(!object ? object.error() : axis.error());
+    }
+    return AxisReference{*object ? std::optional<ObjectId>{ObjectId::fromValue(**object)} : std::nullopt, *axis};
+}
+
+// --- Datum planes ------------------------------------------------------------------------------------
+
+Json datumPlaneToJson(const features::DatumPlane& datum) {
+    const features::DatumPlaneDefinition& d = datum.definition();
+    Json json = Json::object();
+    json["kind"] = std::string{nameIn(kPlaneKinds, d.kind)};
+    switch (d.kind) {
+    case DatumPlaneKind::Fixed:
+        json["frame"] = frameToJson(d.frame);
+        break;
+    case DatumPlaneKind::Offset:
+        json["base"] = planeReferenceToJson(d.base);
+        putValue(json, "offset", d.offset, d.offsetParameter);
+        break;
+    case DatumPlaneKind::Angled:
+        json["base"] = planeReferenceToJson(d.base);
+        json["axis"] = axisReferenceToJson(d.axis);
+        putValue(json, "angle", d.angle, d.angleParameter);
+        break;
+    }
+    return json;
+}
+
+Result<std::unique_ptr<features::DatumPlane>> datumPlaneFromJson(const Json& data, std::string name,
+                                                                 std::string_view path) {
+    auto kind = valueIn(kPlaneKinds, data, "kind", path);
+    if (!kind) {
+        return std::unexpected(kind.error());
+    }
+    features::DatumPlaneDefinition d{.kind = *kind};
+    switch (*kind) {
+    case DatumPlaneKind::Fixed: {
+        if (auto valid = requireObject(data, path, {"kind", "frame"}); !valid) {
+            return std::unexpected(valid.error());
+        }
+        auto frame = frameField(data, "frame", path);
+        if (!frame) {
+            return std::unexpected(frame.error());
+        }
+        d.frame = *frame;
+        break;
+    }
+    case DatumPlaneKind::Offset: {
+        if (auto valid = requireObject(data, path, {"kind", "base", "offset", "offset_parameter"}); !valid) {
+            return std::unexpected(valid.error());
+        }
+        auto base = planeField(data, "base", path);
+        auto offset = readNumber(data, "offset", path);
+        auto parameter = readOptionalId(data, "offset_parameter", path);
+        if (const Error* error = firstError({errorOf(base), errorOf(offset), errorOf(parameter)})) {
+            return std::unexpected(*error);
+        }
+        d.base = *base;
+        d.offset = Length::fromSi(*offset);
+        d.offsetParameter = parameterOf(*parameter);
+        break;
+    }
+    case DatumPlaneKind::Angled: {
+        if (auto valid = requireObject(data, path, {"kind", "base", "axis", "angle", "angle_parameter"}); !valid) {
+            return std::unexpected(valid.error());
+        }
+        auto base = planeField(data, "base", path);
+        auto axis = axisField(data, "axis", path);
+        auto angle = readNumber(data, "angle", path);
+        auto parameter = readOptionalId(data, "angle_parameter", path);
+        if (const Error* error = firstError({errorOf(base), errorOf(axis), errorOf(angle), errorOf(parameter)})) {
+            return std::unexpected(*error);
+        }
+        d.base = *base;
+        d.axis = *axis;
+        d.angle = Angle::fromSi(*angle);
+        d.angleParameter = parameterOf(*parameter);
+        break;
+    }
+    }
+    auto datum = features::DatumPlane::create(std::move(name), d);
+    if (!datum) {
+        return atPath(path, datum.error());
+    }
+    return std::move(*datum);
+}
+
+// --- Datum axes -----------------------------------------------------------------------------------------
+
+Json datumAxisToJson(const features::DatumAxis& datum) {
+    const features::DatumAxisDefinition& d = datum.definition();
+    Json json = Json::object();
+    json["kind"] = std::string{nameIn(kAxisKinds, d.kind)};
+    if (d.kind == DatumAxisKind::Fixed) {
+        json["axis"] = axisToJson(d.axis);
+    } else {
+        json["first"] = planeReferenceToJson(d.first);
+        json["second"] = planeReferenceToJson(d.second);
+    }
+    return json;
+}
+
+Result<std::unique_ptr<features::DatumAxis>> datumAxisFromJson(const Json& data, std::string name,
+                                                               std::string_view path) {
+    auto kind = valueIn(kAxisKinds, data, "kind", path);
+    if (!kind) {
+        return std::unexpected(kind.error());
+    }
+    features::DatumAxisDefinition d{.kind = *kind};
+    if (*kind == DatumAxisKind::Fixed) {
+        if (auto valid = requireObject(data, path, {"kind", "axis"}); !valid) {
+            return std::unexpected(valid.error());
+        }
+        auto axis = axisFromJson(data, "axis", path);
+        if (!axis) {
+            return std::unexpected(axis.error());
+        }
+        d.axis = *axis;
+    } else {
+        if (auto valid = requireObject(data, path, {"kind", "first", "second"}); !valid) {
+            return std::unexpected(valid.error());
+        }
+        auto first = planeField(data, "first", path);
+        auto second = planeField(data, "second", path);
+        if (!first || !second) {
+            return std::unexpected(!first ? first.error() : second.error());
+        }
+        d.first = *first;
+        d.second = *second;
+    }
+    auto datum = features::DatumAxis::create(std::move(name), d);
+    if (!datum) {
+        return atPath(path, datum.error());
+    }
+    return std::move(*datum);
+}
+
+// --- Coordinate systems -------------------------------------------------------------------------------------
+
+Json coordinateSystemToJson(const features::CoordinateSystem& system) {
+    const features::CoordinateSystemDefinition& d = system.definition();
+    Json json = Json::object();
+    json["kind"] = std::string{nameIn(kSystemKinds, d.kind)};
+    if (d.kind == CoordinateSystemKind::Fixed) {
+        json["frame"] = frameToJson(d.frame);
+        return json;
+    }
+    if (d.base) {
+        json["base"] = d.base->value();
+    }
+    static constexpr std::array<std::string_view, 3> kTranslations{"x", "y", "z"};
+    static constexpr std::array<std::string_view, 3> kRotations{"rx", "ry", "rz"};
+    for (std::size_t i = 0; i < 3; ++i) {
+        putValue(json, kTranslations[i], d.translation[i], d.translationParameters[i]);
+    }
+    for (std::size_t i = 0; i < 3; ++i) {
+        putValue(json, kRotations[i], d.rotation[i], d.rotationParameters[i]);
+    }
+    return json;
+}
+
+Result<std::unique_ptr<features::CoordinateSystem>> coordinateSystemFromJson(const Json& data, std::string name,
+                                                                             std::string_view path) {
+    auto kind = valueIn(kSystemKinds, data, "kind", path);
+    if (!kind) {
+        return std::unexpected(kind.error());
+    }
+    features::CoordinateSystemDefinition d{.kind = *kind};
+    if (*kind == CoordinateSystemKind::Fixed) {
+        if (auto valid = requireObject(data, path, {"kind", "frame"}); !valid) {
+            return std::unexpected(valid.error());
+        }
+        auto frame = frameField(data, "frame", path);
+        if (!frame) {
+            return std::unexpected(frame.error());
+        }
+        d.frame = *frame;
+    } else {
+        if (auto valid = requireObject(data, path,
+                                       {"kind", "base", "x", "y", "z", "rx", "ry", "rz", "x_parameter", "y_parameter",
+                                        "z_parameter", "rx_parameter", "ry_parameter", "rz_parameter"});
+            !valid) {
+            return std::unexpected(valid.error());
+        }
+        auto base = readOptionalId(data, "base", path);
+        if (!base) {
+            return std::unexpected(base.error());
+        }
+        d.base = *base ? std::optional<ObjectId>{ObjectId::fromValue(**base)} : std::nullopt;
+        static constexpr std::array<std::string_view, 3> kTranslations{"x", "y", "z"};
+        static constexpr std::array<std::string_view, 3> kRotations{"rx", "ry", "rz"};
+        for (std::size_t i = 0; i < 3; ++i) {
+            auto t = readNumber(data, kTranslations[i], path);
+            auto tp = readOptionalId(data, std::format("{}_parameter", kTranslations[i]), path);
+            auto r = readNumber(data, kRotations[i], path);
+            auto rp = readOptionalId(data, std::format("{}_parameter", kRotations[i]), path);
+            if (const Error* error = firstError({errorOf(t), errorOf(tp), errorOf(r), errorOf(rp)})) {
+                return std::unexpected(*error);
+            }
+            d.translation[i] = Length::fromSi(*t);
+            d.translationParameters[i] = parameterOf(*tp);
+            d.rotation[i] = Angle::fromSi(*r);
+            d.rotationParameters[i] = parameterOf(*rp);
+        }
+    }
+    auto system = features::CoordinateSystem::create(std::move(name), d);
+    if (!system) {
+        return atPath(path, system.error());
+    }
+    return std::move(*system);
+}
+
+} // namespace bettercad::io::detail

@@ -3,6 +3,7 @@
 #include <bettercad/core/Error.hpp>
 #include <bettercad/core/Id.hpp>
 #include <bettercad/core/document/DocumentObject.hpp>
+#include <bettercad/core/document/References.hpp>
 #include <bettercad/core/math/BoundingBox.hpp>
 #include <bettercad/core/math/Frame.hpp>
 #include <bettercad/core/math/Point.hpp>
@@ -45,7 +46,8 @@ public:
     [[nodiscard]] std::string_view typeName() const noexcept override { return "sketch"; }
     [[nodiscard]] std::unique_ptr<DocumentObject> clone() const override;
     [[nodiscard]] bool contentEquals(const DocumentObject& other) const override;
-    /// Parameters that drive constraint values (ascending, unique).
+    /// Parameters that drive constraint values and the object the sketch is
+    /// attached to (ascending, unique).
     [[nodiscard]] std::vector<ObjectId> dependencies() const override;
 
     /// Copies point positions, circle radii and constraint values (lengths
@@ -54,7 +56,7 @@ public:
     /// anything changed.
     Result<bool> adoptSolution(const Sketch& solved);
 
-    /// Makes the placement, entities, constraints and ID counters equal to
+    /// Makes the placement, attachment, entities, constraints and ID counters equal to
     /// @p state's; the object's own identity (ID, name, revision) is kept.
     /// Used by undoable sketch edits (ModifySketchCommand). Returns whether
     /// anything changed.
@@ -66,6 +68,13 @@ public:
     // --- Placement (sketch coordinate system) ----------------------------------
     [[nodiscard]] const Frame3D& placement() const noexcept { return placement_; }
     Result<bool> setPlacement(const Frame3D& placement);
+    /// The plane the placement follows (P12-DATUM-001), if any: a datum
+    /// plane, a coordinate system's principal plane or one of the model's.
+    /// Regeneration resolves it and makes it the placement once the sketch
+    /// has solved; the placement is otherwise kept as set.
+    [[nodiscard]] const std::optional<PlaneReference>& attachment() const noexcept { return attachment_; }
+    /// Fails with InvalidArgument for an invalid object ID.
+    Result<bool> setAttachment(std::optional<PlaneReference> attachment);
     [[nodiscard]] Point3D toGlobal(const Point2D& local) const noexcept {
         return placement_.toGlobal(local);
     }
@@ -221,6 +230,7 @@ private:
     [[nodiscard]] Result<Constraint*> requireConstraint(ConstraintId id);
 
     Frame3D placement_;
+    std::optional<PlaneReference> attachment_;
     IdAllocator entityIds_;
     std::map<EntityId, Entity> entities_;
     IdAllocator constraintIds_;

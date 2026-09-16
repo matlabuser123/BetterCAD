@@ -232,18 +232,24 @@ milestones start; see `TODO.md`.
 - Kernel exceptions become `ErrorCode::Internal` results; boolean results
   are validated before they are returned.
 - Mass properties use adaptive integration (1e-10 relative target) and
-  report the error estimate. Bodies whose faces all lie on planes,
-  cylinders, cones, spheres or tori use the kernel's adaptive Gauss
-  integration, exact to rounding for them (P3, P11). Any other body uses the
-  kernel's Gauss–Kronrod volume integration over knot spans: the adaptive
-  Gauss integration missed an extruded spline's volume by 4.5e-2 and an
-  elliptic prism's by 5.5e-9 while reporting 2e-16 (P12-SKETCH-002 kernel
-  probe). Faces swept from ellipses and splines (surfaces of extrusion and
-  revolution) that cover their whole parameter rectangle get their area
-  from BetterCAD's own integration (8-point Gauss–Legendre on each knot span,
-  halved until the area changes by less than 1e-14); the kernel's
-  integration missed those areas by up to 1e-2. Other faces keep the
-  kernel's area.
+  report the error estimate. Bodies without faces on surfaces of extrusion
+  or revolution (planes, cylinders, cones, spheres, tori, loft B-splines)
+  use the kernel's adaptive Gauss integration of the whole shape, exact to
+  rounding for them (P3, P11, P12-DATUM-001 probes). On faces swept from
+  ellipses and splines that integration missed an extruded spline's volume
+  by 4.5e-2, an elliptic prism's by 5.5e-9 while reporting 2e-16, their
+  areas by up to 1e-2 (P12-SKETCH-002 kernel probe) and an elliptic prism's
+  centre by 6e-4 mm (P12-DATUM-001). Bodies with such faces are summed face
+  by face as cones from one apex (the mean of the vertices), which is how
+  the kernel integrates internally:
+  - a swept-curve face that covers its whole parameter rectangle is
+    integrated by BetterCAD (volume, first moment and area; 8-point
+    Gauss–Legendre on each knot span, halved until the results change by
+    less than 1e-14, with compensated sums);
+  - any other swept-curve face takes the kernel's Gauss–Kronrod integration
+    over knot spans. It is exact on them but took about 10 s on a full
+    revolution, so it is used only on trimmed faces;
+  - all other faces take the kernel's adaptive integration and area.
 - **Triangulation** (`Mesh.hpp`). `triangulate(body, {linearDeflection,
   angularDeflection})` returns a neutral indexed `Mesh` with vertices per face
   and outward counter-clockwise triangles. It meshes a copy: the kernel caches
@@ -582,6 +588,49 @@ milestones start; see `TODO.md`.
   on success the sketch's content before and after is kept, and undo/redo
   restore it with `Sketch::restoreContent()`, IDs and ID counters included.
 
+### Reference geometry (P12-DATUM-001)
+
+- `PlaneReference` and `AxisReference` (`bettercad/core/document/References.hpp`)
+  name reference geometry by object ID only: without an object, a principal
+  plane (`xy`, `yz`, `xz`, with the frames of `Frame3D::xy()`, `yz()`, `xz()`)
+  or axis of the model; with a datum plane or axis, that element; with a
+  coordinate system, its principal plane or axis. They are core value types,
+  so sketches (layer 1) can hold them.
+- `DatumPlane`, `DatumAxis` and `CoordinateSystem`
+  (`bettercad/features/Datums.hpp`, types `datum_plane`, `datum_axis`,
+  `coordinate_system`) are document objects that store only how they are
+  placed:
+  - a plane is fixed, offset from a plane along its normal, or turned about an
+    axis lying in a plane;
+  - an axis is fixed, or the line where two planes meet, through its point
+    nearest the model's origin;
+  - a coordinate system is fixed, or placed from another (or the model's) by
+    rotations about the base's X, Y and Z axes, in that order, then a
+    translation along the base's axes.
+
+  Offsets, angles, translations and rotations are literals or parameters.
+  Fields another kind does not use must keep their defaults.
+- **Resolution is a pure function of the document.** `resolvePlane()`,
+  `resolveAxis()` and `resolveCoordinateSystem()` compute model-space
+  geometry from the definitions, recursively, and nothing is cached in the
+  objects. Errors are structured and name the objects: NotFound, a wrong kind
+  (InvalidArgument), a wrong dimension (DimensionMismatch), parallel planes,
+  an axis off its base plane, and nesting beyond 64 (FailedPrecondition). The
+  dependency graph reports cycles first.
+- **Regeneration.** The regenerator checks that each datum object resolves;
+  a failure blocks what depends on it. A sketch with an `attachment` gets the
+  resolved plane as its placement, set only after the sketch has solved, so a
+  failure changes nothing. Its dependencies include the attached object, so
+  a parameter that moves a datum rebuilds the sketch and the features on it.
+- **References in features.** `MirrorPlane::reference` and
+  `PatternAxis::reference` replace the plane's origin and normal, or the
+  axis' origin and direction, which then keep their defaults. The mirror
+  offset still applies along the resolved normal.
+- `CreateDatumCommand<D>` and `ModifyDatumCommand<D>`
+  (`DatumCommands.hpp`) make creation and editing undoable. Validation
+  reports references of the wrong kind and driving parameters of the wrong
+  dimension; the CLI describes each object and each sketch's attachment.
+
 ### Features (`bettercad/features/`, library `bettercad_features`)
 
 - Features are `DocumentObject`s that store inputs only. For example,
@@ -839,7 +888,8 @@ milestones start; see `TODO.md`.
   - the parameters;
   - the objects, as `{id, type, name, data}` in ascending ID order.
 
-  Sketch data holds the placement frame, the entities and constraints with
+  Sketch data holds the placement frame, an optional `attachment`
+  (`{"object": id, "plane": "xy"}`), the entities and constraints with
   their own IDs, and the sketch's ID counters. An ellipse stores `center`,
   `x_vertex` and `y_vertex`; a spline, whose type name in files is
   `"bspline"` (the curve it is; `"spline"` stays unknown), stores `poles`,
@@ -876,17 +926,30 @@ milestones start; see `TODO.md`.
     optional `count_parameter`; `spacing` (`"full_circle"`,
     `"included_angle"`, `"angle_step"`); and `rotation` (`"positive"`,
     `"negative"`). Only the angle spacings store `angle` (radians) and an
-    optional `angle_parameter`;
+    optional `angle_parameter`. An axis given by a reference is stored as
+    `{"reference": {"object": id, "axis": "z"}}` instead;
   - a mirror stores `source`; `plane` as `{"origin": [...], "normal":
     [x, y, z], "offset": metres}` (the normal as given) with an optional
     `offset_parameter`; `scope` (`"feature"`, `"body"`); and
-    `keep_original`;
+    `keep_original`. A plane given by a reference stores `reference`
+    (`{"object": id, "plane": "xy"}`) in place of `origin` and `normal`;
   - a sweep stores `profile`; `path` as `{"sketch": id, "edges": [ids]}`
     (in the order of travel); `orientation` (`"follow_path"`); `operation`;
     and an optional `target`;
   - a loft stores `sections` in the loft's order, each as `{"sketch": id,
     "offset": metres}` with an optional `offset_parameter`;
-    `interpolation` (`"ruled"`); `operation`; and an optional `target`.
+    `interpolation` (`"ruled"`); `operation`; and an optional `target`;
+  - a datum plane stores `kind`: `"fixed"` with `frame`; `"offset"` with
+    `base` (a plane reference), `offset` (metres) and an optional
+    `offset_parameter`; `"angled"` with `base`, `axis` (an axis reference),
+    `angle` (radians) and an optional `angle_parameter`;
+  - a datum axis stores `kind`: `"fixed"` with `axis` (`{"origin": [...],
+    "direction": [...]}`), or `"intersection"` with `first` and `second`;
+  - a coordinate system stores `kind`: `"fixed"` with `frame`, or
+    `"offset"` with an optional `base` (an ID), `x`, `y`, `z` (metres), `rx`,
+    `ry`, `rz` (radians) and optional `<key>_parameter`s.
+
+  Files without these objects and fields are written exactly as before.
 
   The rules are:
   - **Only inputs are stored.** Geometry is derived and is regenerated after

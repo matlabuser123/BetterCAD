@@ -336,6 +336,9 @@ Result<Frame3D> frameFromJson(const Json& value, std::string_view path) {
 Json sketchToJson(const sketch::Sketch& sketch) {
     Json json = Json::object();
     json["placement"] = frameToJson(sketch.placement());
+    if (sketch.attachment()) {
+        json["attachment"] = planeReferenceToJson(*sketch.attachment());
+    }
     Json entities = Json::array();
     for (const sketch::Entity& entity : sketch.entities()) {
         entities.push_back(entityToJson(entity));
@@ -354,7 +357,8 @@ Json sketchToJson(const sketch::Sketch& sketch) {
 Result<std::unique_ptr<sketch::Sketch>> sketchFromJson(const Json& data, std::string name,
                                                       std::string_view path) {
     if (auto object = requireObject(
-            data, path, {"placement", "entities", "constraints", "last_entity_id", "last_constraint_id"});
+            data, path,
+            {"placement", "attachment", "entities", "constraints", "last_entity_id", "last_constraint_id"});
         !object) {
         return std::unexpected(object.error());
     }
@@ -377,6 +381,16 @@ Result<std::unique_ptr<sketch::Sketch>> sketchFromJson(const Json& data, std::st
     }
 
     auto sketch = std::make_unique<sketch::Sketch>(std::move(name), *placement);
+    if (data.contains("attachment")) {
+        const std::string attachmentPath = childPath(path, "attachment");
+        auto attachment = planeReferenceFromJson(data["attachment"], attachmentPath);
+        if (!attachment) {
+            return std::unexpected(attachment.error());
+        }
+        if (auto set = sketch->setAttachment(*attachment); !set) {
+            return atPath(attachmentPath, set.error());
+        }
+    }
     // Points first, so every reference resolves regardless of file order.
     const std::string entitiesPath = childPath(path, "entities");
     std::vector<std::pair<std::size_t, sketch::Entity>> parsed;

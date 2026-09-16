@@ -832,8 +832,12 @@ Json circularPatternToJson(const features::CircularPatternFeature& feature) {
     Json json = Json::object();
     json["source"] = d.source.value();
     Json axis = Json::object();
-    axis["origin"] = pointToJson(d.axis.origin);
-    axis["direction"] = Json::array({d.axis.direction.x, d.axis.direction.y, d.axis.direction.z});
+    if (d.axis.reference) {
+        axis["reference"] = axisReferenceToJson(*d.axis.reference);
+    } else {
+        axis["origin"] = pointToJson(d.axis.origin);
+        axis["direction"] = Json::array({d.axis.direction.x, d.axis.direction.y, d.axis.direction.z});
+    }
     json["axis"] = std::move(axis);
     json["count"] = d.count;
     if (d.countParameter) {
@@ -865,11 +869,26 @@ Result<std::unique_ptr<features::CircularPatternFeature>> circularPatternFromJso
         return std::unexpected(!source ? source.error() : axisField.error());
     }
     const std::string axisPath = childPath(path, "axis");
-    if (auto object = requireObject(**axisField, axisPath, {"origin", "direction"}); !object) {
+    if (auto object = requireObject(**axisField, axisPath, {"origin", "direction", "reference"}); !object) {
         return std::unexpected(object.error());
     }
-    auto origin = pointFromJson(**axisField, "origin", axisPath);
-    auto direction = readNumbers(**axisField, "direction", axisPath, 3);
+    // An axis is a reference (P12-DATUM-001) or a line of its own.
+    std::optional<AxisReference> reference;
+    Result<Point3D> origin = Point3D{};
+    Result<std::vector<double>> direction = std::vector<double>{0.0, 0.0, 1.0};
+    if ((*axisField)->contains("reference")) {
+        if ((*axisField)->contains("origin") || (*axisField)->contains("direction")) {
+            return parseError(axisPath, "a pattern axis given by a reference has no origin or direction");
+        }
+        auto parsed = axisReferenceFromJson((**axisField)["reference"], childPath(axisPath, "reference"));
+        if (!parsed) {
+            return std::unexpected(parsed.error());
+        }
+        reference = *parsed;
+    } else {
+        origin = pointFromJson(**axisField, "origin", axisPath);
+        direction = readNumbers(**axisField, "direction", axisPath, 3);
+    }
     auto count = readUnsigned(data, "count", path);
     auto countParameter = readOptionalId(data, "count_parameter", path);
     auto spacing = valueOf(kCircularSpacings, data, "spacing", path);
@@ -894,7 +913,9 @@ Result<std::unique_ptr<features::CircularPatternFeature>> circularPatternFromJso
     };
     const features::CircularPatternDefinition definition{
         .source = FeatureId::fromValue(*source),
-        .axis = {.origin = *origin, .direction = Vector3D{(*direction)[0], (*direction)[1], (*direction)[2]}},
+        .axis = {.origin = *origin,
+                 .direction = Vector3D{(*direction)[0], (*direction)[1], (*direction)[2]},
+                 .reference = reference},
         .count = static_cast<std::uint32_t>(*count),
         .countParameter = optionalParameter(*countParameter),
         .spacing = *spacing,
@@ -925,8 +946,12 @@ Json mirrorToJson(const features::MirrorFeature& feature) {
     Json json = Json::object();
     json["source"] = d.source.value();
     Json plane = Json::object();
-    plane["origin"] = pointToJson(d.plane.origin);
-    plane["normal"] = Json::array({d.plane.normal.x, d.plane.normal.y, d.plane.normal.z});
+    if (d.plane.reference) {
+        plane["reference"] = planeReferenceToJson(*d.plane.reference);
+    } else {
+        plane["origin"] = pointToJson(d.plane.origin);
+        plane["normal"] = Json::array({d.plane.normal.x, d.plane.normal.y, d.plane.normal.z});
+    }
     plane["offset"] = d.plane.offset.si();
     if (d.plane.offsetParameter) {
         plane["offset_parameter"] = d.plane.offsetParameter->value();
@@ -948,12 +973,28 @@ Result<std::unique_ptr<features::MirrorFeature>> mirrorFromJson(const Json& data
         return std::unexpected(!source ? source.error() : planeField.error());
     }
     const std::string planePath = childPath(path, "plane");
-    if (auto object = requireObject(**planeField, planePath, {"origin", "normal", "offset", "offset_parameter"});
+    if (auto object = requireObject(**planeField, planePath,
+                                    {"origin", "normal", "offset", "offset_parameter", "reference"});
         !object) {
         return std::unexpected(object.error());
     }
-    auto origin = pointFromJson(**planeField, "origin", planePath);
-    auto normal = readNumbers(**planeField, "normal", planePath, 3);
+    // A plane is a reference (P12-DATUM-001) or a plane of its own.
+    std::optional<PlaneReference> reference;
+    Result<Point3D> origin = Point3D{};
+    Result<std::vector<double>> normal = std::vector<double>{1.0, 0.0, 0.0};
+    if ((*planeField)->contains("reference")) {
+        if ((*planeField)->contains("origin") || (*planeField)->contains("normal")) {
+            return parseError(planePath, "a mirror plane given by a reference has no origin or normal");
+        }
+        auto parsed = planeReferenceFromJson((**planeField)["reference"], childPath(planePath, "reference"));
+        if (!parsed) {
+            return std::unexpected(parsed.error());
+        }
+        reference = *parsed;
+    } else {
+        origin = pointFromJson(**planeField, "origin", planePath);
+        normal = readNumbers(**planeField, "normal", planePath, 3);
+    }
     auto offset = readNumber(**planeField, "offset", planePath);
     auto offsetParameter = readOptionalId(**planeField, "offset_parameter", planePath);
     auto scope = valueOf(kMirrorScopes, data, "scope", path);
@@ -972,7 +1013,8 @@ Result<std::unique_ptr<features::MirrorFeature>> mirrorFromJson(const Json& data
                   .normal = Vector3D{(*normal)[0], (*normal)[1], (*normal)[2]},
                   .offset = Length::fromSi(*offset),
                   .offsetParameter = *offsetParameter ? std::optional<ParameterId>{ParameterId::fromValue(**offsetParameter)}
-                                                      : std::nullopt},
+                                                      : std::nullopt,
+                  .reference = reference},
         .scope = *scope,
         .keepOriginal = *keepOriginal,
     };

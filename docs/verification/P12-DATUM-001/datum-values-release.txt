@@ -1,0 +1,633 @@
+Measured values of the P12-DATUM-001 tests (Release build of the qualified tree).
+Produced by: build/release/bin/bettercad_tests.exe "[datum],CurvedProfile_CurvedBodiesHaveTheirAnalyticCentreOfMass,CurvedProfile_CutCurvedBodiesKeepTheirProperties"
+-s --reporter xml --rng-seed 1, filtered by values.py (kept in this directory): every passed CHECK_THAT and
+every passed CHECK whose expansion shows values, with the test case, section and INFO/CAPTURE context. Each
+entry: file:line, the assertion, then Catch2's expansion (values printed exactly). REQUIRE lines, repeats of an
+identical entry within a test case and expansions over 1000 characters (whole-file text) are left out.
+
+
+== Datum_ResolutionRefusesMissingWrongAndDegenerateReferences
+DatumTests.cpp:364  CHECK( e.code == ErrorCode::NotFound )
+        => 1 == 1
+DatumTests.cpp:365  CHECK( e.message == "object:99 does not exist" )
+        => "object:99 does not exist" == "object:99 does not exist"
+DatumTests.cpp:367  CHECK( e.code == ErrorCode::InvalidArgument )
+        => 0 == 0
+DatumTests.cpp:368  CHECK( e.message == "Sketch1 (object:2) is a sketch, not a datum plane or a coordinate system" )
+        => "Sketch1 (object:2) is a sketch, not a datum plane or a coordinate system" == "Sketch1 (object:2) is a sketch, not a datum plane or a coordinate system"
+DatumTests.cpp:370  CHECK( e.message == "Plane1 (object:3) is a datum plane, which has only one plane: refer to it as xy, not yz" )
+        => "Plane1 (object:3) is a datum plane, which has only one plane: refer to it as xy, not yz" == "Plane1 (object:3) is a datum plane, which has only one plane: refer to it as xy, not yz"
+DatumTests.cpp:373  CHECK( asX.error().message == "Axis1 (object:4) is a datum axis, which is one axis: refer to it as z, not x" )
+        => "Axis1 (object:4) is a datum axis, which is one axis: refer to it as z, not x" == "Axis1 (object:4) is a datum axis, which is one axis: refer to it as z, not x"
+DatumTests.cpp:376  CHECK( planeAsAxis.error().message == "Plane1 (object:3) is a datum plane, not a datum axis or a coordinate system" )
+        => "Plane1 (object:3) is a datum plane, not a datum axis or a coordinate system" == "Plane1 (object:3) is a datum plane, not a datum axis or a coordinate system"
+DatumTests.cpp:379  CHECK( e.message == "Axis1 (object:4) is a datum axis, not a coordinate system" )
+        => "Axis1 (object:4) is a datum axis, not a coordinate system" == "Axis1 (object:4) is a datum axis, not a coordinate system"
+DatumTests.cpp:387  CHECK( nowhere.error().code == ErrorCode::FailedPrecondition )
+        => 5 == 5
+DatumTests.cpp:388  CHECK( nowhere.error().message == "Nowhere (object:5): its planes are parallel and do not meet" )
+        => "Nowhere (object:5): its planes are parallel and do not meet" == "Nowhere (object:5): its planes are parallel and do not meet"
+DatumTests.cpp:395  CHECK( e.code == ErrorCode::DimensionMismatch )
+        => 3 == 3
+DatumTests.cpp:396  CHECK_THAT( e.message, ContainsSubstring("Wrong (object:6): ") )
+        => "Wrong (object:6): parameter 'angle' has dimension angle, not length" contains: "Wrong (object:6): "
+DatumTests.cpp:405  CHECK( e.code == ErrorCode::FailedPrecondition )
+        => 5 == 5
+DatumTests.cpp:406  CHECK_THAT( e.message, ContainsSubstring("its references nest more than 64 deep") )
+        => "B (object:8): its references nest more than 64 deep (a dependency cycle?)" contains: "its references nest more than 64 deep"
+
+== Datum_KindAndReferenceNamesAreStable
+DatumTests.cpp:156  CHECK( toString(PrincipalPlane::XY) == "xy" )
+        => "xy" == "xy"
+DatumTests.cpp:157  CHECK( toString(PrincipalPlane::YZ) == "yz" )
+        => "yz" == "yz"
+DatumTests.cpp:158  CHECK( toString(PrincipalPlane::XZ) == "xz" )
+        => "xz" == "xz"
+DatumTests.cpp:159  CHECK( toString(PrincipalAxis::X) == "x" )
+        => "x" == "x"
+DatumTests.cpp:160  CHECK( toString(PrincipalAxis::Z) == "z" )
+        => "z" == "z"
+DatumTests.cpp:161  CHECK( toString(DatumPlaneKind::Angled) == "angled" )
+        => "angled" == "angled"
+DatumTests.cpp:162  CHECK( toString(DatumAxisKind::Intersection) == "intersection" )
+        => "intersection" == "intersection"
+DatumTests.cpp:163  CHECK( toString(CoordinateSystemKind::Offset) == "offset" )
+        => "offset" == "offset"
+DatumTests.cpp:164  CHECK( DatumPlane::kTypeName == "datum_plane" )
+        => "datum_plane" == "datum_plane"
+DatumTests.cpp:165  CHECK( DatumAxis::kTypeName == "datum_axis" )
+        => "datum_axis" == "datum_axis"
+DatumTests.cpp:166  CHECK( CoordinateSystem::kTypeName == "coordinate_system" )
+        => "coordinate_system" == "coordinate_system"
+
+== DatumFile_SaveLoad_PreservesDatumsAndRebuildsTheSameGeometry
+DatumFileTests.cpp:66  CHECK( bits(volumeMm3(after, ids.pattern)) == bits(pattern) )
+        => 4683397256537177765 (0x40fec4fdb9effea5) == 4683397256537177765 (0x40fec4fdb9effea5)
+DatumFileTests.cpp:67  CHECK( bits(volumeMm3(after, ids.peg)) == bits(peg) )
+        => 4650119651123696651 (0x40888b2f704a940b) == 4650119651123696651 (0x40888b2f704a940b)
+DatumFileTests.cpp:68  CHECK( bits(volumeMm3(after, ids.fin)) == bits(fin) )
+        => 4656510908468559873 (0x409f400000000001) == 4656510908468559873 (0x409f400000000001)
+
+== DatumFile_MalformedDatumsAreRejectedWithThePath
+DatumFileTests.cpp:103  CHECK_THAT( loadError("\"kind\": \"offset\"", "\"kind\": \"sideways\""), ContainsSubstring(".data.kind: unknown value 'sideways'") )
+        => "objects[2].data.kind: unknown value 'sideways'" contains: ".data.kind: unknown value 'sideways'"
+DatumFileTests.cpp:105  CHECK_THAT( loadError("\"plane\": \"xy\"", "\"plane\": \"uv\""), ContainsSubstring(".plane: unknown value 'uv'") )
+        => "objects[2].data.base.plane: unknown value 'uv'" contains: ".plane: unknown value 'uv'"
+DatumFileTests.cpp:107  CHECK_THAT( loadError("\"kind\": \"intersection\"", "\"kind\": \"fixed\""), ContainsSubstring(".data.first: unknown field") )
+        => "objects[7].data.first: unknown field" contains: ".data.first: unknown field"
+DatumFileTests.cpp:109  CHECK_THAT( loadError("\"offset_parameter\": 1", "\"offset_parameter\": \"height\""), ContainsSubstring(".offset_parameter: expected an ID") )
+        => "objects[2].data.offset_parameter: expected an ID (a non-negative integer)" contains: ".offset_parameter: expected an ID"
+DatumFileTests.cpp:111  CHECK_THAT( loadError("\"rz\": ", "\"spin\": 1, \"rz\": "), ContainsSubstring(".data.spin: unknown field") )
+        => "objects[9].data.spin: unknown field" contains: ".data.spin: unknown field"
+DatumFileTests.cpp:112  CHECK_THAT( loadError("\"attachment\": {", "\"attachment\": {\"extra\": 1, "), ContainsSubstring(".attachment.extra: unknown field") )
+        => "objects[3].data.attachment.extra: unknown field" contains: ".attachment.extra: unknown field"
+DatumFileTests.cpp:115  CHECK_THAT( loadError("\"reference\": {", "\"origin\": [0, 0, 0], \"reference\": {"), ContainsSubstring("a pattern axis given by a reference has no origin or direction") )
+        => "objects[8].data.axis: a pattern axis given by a reference has no origin or direction" contains: "a pattern axis given by a reference has no origin or direction"
+
+== DatumFile_ExportedBodiesReadBackFromStep
+DatumFileTests.cpp:129  CHECK( summary->bodies.size() == 3 )
+        => 3 == 3
+DatumFileTests.cpp:133  CHECK( contents->solids == 3 )
+        => 3 == 3
+DatumFileTests.cpp:135  CHECK_THAT( contents->volumeMm3, WithinRel(total, 1e-9) )
+        => 128817.2560582894802792 and 128817.256058289858629 are within 1e-07% of each other
+DatumFileTests.cpp:136  CHECK_THAT( contents->maxMm[0], WithinRel(155.0, 1e-9) )
+        => 155.0 and 155.0 are within 1e-07% of each other
+
+== Datum_CoordinateSystemsTurnAboutTheirBaseAxesThenMove
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 93.0 is within 0.000000000001 of 93.0
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.0 is within 0.000000000001 of 30.0
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -2.0 is within 0.000000000001 of -2.0
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.61237243569579447 is within 0.00000000000001 of 0.61237243569579458
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.35355339059327373 is within 0.00000000000001 of 0.35355339059327379
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.70710678118654746 is within 0.00000000000001 of -0.70710678118654746
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.78033008588991071 is within 0.00000000000001 of 0.7803300858899106
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.12682648404432195 is within 0.00000000000001 of -0.12682648404432201
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.61237243569579458 is within 0.00000000000001 of 0.61237243569579458
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.12682648404432215 is within 0.00000000000001 of -0.12682648404432223
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.92677669529663698 is within 0.00000000000001 of 0.92677669529663687
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.35355339059327373 is within 0.00000000000001 of 0.35355339059327373
+
+== Datum_CoordinateSystemsTurnAboutTheirBaseAxesThenMove / principal planes and axes of a coordinate system
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 93.0 is within 0.000000000001 of 93.0
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.0 is within 0.000000000001 of 30.0
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -2.0 is within 0.000000000001 of -2.0
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.61237243569579447 is within 0.00000000000001 of 0.61237243569579458
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.35355339059327373 is within 0.00000000000001 of 0.35355339059327379
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.70710678118654746 is within 0.00000000000001 of -0.70710678118654746
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.78033008588991071 is within 0.00000000000001 of 0.7803300858899106
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.12682648404432195 is within 0.00000000000001 of -0.12682648404432201
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.61237243569579458 is within 0.00000000000001 of 0.61237243569579458
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.12682648404432215 is within 0.00000000000001 of -0.12682648404432223
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.92677669529663675 is within 0.00000000000001 of 0.92677669529663687
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.35355339059327373 is within 0.00000000000001 of 0.35355339059327373
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.61237243569579458 is within 0.00000000000001 of 0.61237243569579458
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.70710678118654757 is within 0.00000000000001 of -0.70710678118654746
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.12682648404432215 is within 0.00000000000001 of 0.12682648404432223
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.92677669529663698 is within 0.00000000000001 of -0.92677669529663687
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.35355339059327373 is within 0.00000000000001 of -0.35355339059327373
+
+== Datum_CoordinateSystemsTurnAboutTheirBaseAxesThenMove / the model's coordinate system
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0
+DatumTests.cpp:351  CHECK( requireFrame(resolveCoordinateSystem(doc, fixed)) == Frame3D::yz() )
+        => {?} == {?}
+
+== DatumModel_RegeneratesWithAnalyticGeometry
+DatumTests.cpp:424  CHECK_THAT( props->volume.in(units::mm3), WithinRel(DatumBlockModel::patternVolume(h, r), 1e-12) )
+        => 126031.85789489241142292 and 126031.857894892396871 are within 1e-10% of each other with message: ; h := 20.0; half := 50.0; tilt := 30.0; r := 8.0
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 50.0 is within 0.000000001 of 50.0 with message: ; h := 20.0; half := 50.0; tilt := 30.0; r := 8.0
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 29.99999999999999289 is within 0.000000001 of 30.0 with message: ; h := 20.0; half := 50.0; tilt := 30.0; r := 8.0
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 10.71789680747896689 is within 0.000000001 of 10.71789680747896689 with message: ; h := 20.0; half := 50.0; tilt := 30.0; r := 8.0
+DatumTests.cpp:430  CHECK_THAT( volumeMm3(regenerator, m.peg), WithinRel(pi * 25.0 * 10.0, 1e-12) )
+        => 785.39816339744845664 and 785.39816339744834295 are within 1e-10% of each other with message: ; h := 20.0; half := 50.0; tilt := 30.0; r := 8.0
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 145.0 is within 0.0000001 of 145.0 with message: ; h := 20.0; half := 50.0; tilt := 30.0; r := 8.0
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 5.0 is within 0.0000001 of 5.0 with message: ; h := 20.0; half := 50.0; tilt := 30.0; r := 8.0
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: ; h := 20.0; half := 50.0; tilt := 30.0; r := 8.0
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 155.0 is within 0.0000001 of 155.0 with message: ; h := 20.0; half := 50.0; tilt := 30.0; r := 8.0
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 15.0 is within 0.0000001 of 15.0 with message: ; h := 20.0; half := 50.0; tilt := 30.0; r := 8.0
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 10.0 is within 0.0000001 of 10.0 with message: ; h := 20.0; half := 50.0; tilt := 30.0; r := 8.0
+DatumTests.cpp:438  CHECK_THAT( volumeMm3(regenerator, m.fin), WithinRel(20.0 * 20.0 * 5.0, 1e-12) )
+        => 2000.00000000000022737 and 2000.0 are within 1e-10% of each other with message: ; h := 20.0; half := 50.0; tilt := 30.0; r := 8.0
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -51.96152422706632024 is within 0.0000001 of -51.96152422706632024 with message: ; h := 20.0; half := 50.0; tilt := 30.0; r := 8.0
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: ; h := 20.0; half := 50.0; tilt := 30.0; r := 8.0
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 19.99999999999999289 is within 0.0000001 of 19.99999999999999645 with message: ; h := 20.0; half := 50.0; tilt := 30.0; r := 8.0
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -32.14101615137754919 is within 0.0000001 of -32.14101615137754919 with message: ; h := 20.0; half := 50.0; tilt := 30.0; r := 8.0
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 20.0 is within 0.0000001 of 20.0 with message: ; h := 20.0; half := 50.0; tilt := 30.0; r := 8.0
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 34.33012701892219098 is within 0.0000001 of 34.33012701892219098 with message: ; h := 20.0; half := 50.0; tilt := 30.0; r := 8.0
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: ; h := 20.0; half := 50.0; tilt := 30.0; r := 8.0
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: ; h := 20.0; half := 50.0; tilt := 30.0; r := 8.0
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 20.0 is within 0.000000000001 of 20.0 with message: ; h := 20.0; half := 50.0; tilt := 30.0; r := 8.0
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: ; h := 20.0; half := 50.0; tilt := 30.0; r := 8.0
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: ; h := 20.0; half := 50.0; tilt := 30.0; r := 8.0
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: ; h := 20.0; half := 50.0; tilt := 30.0; r := 8.0
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: ; h := 20.0; half := 50.0; tilt := 30.0; r := 8.0
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: ; h := 20.0; half := 50.0; tilt := 30.0; r := 8.0
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 150.0 is within 0.000000000001 of 150.0 with message: ; h := 20.0; half := 50.0; tilt := 30.0; r := 8.0
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: ; h := 20.0; half := 50.0; tilt := 30.0; r := 8.0
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.00000000000000006 is within 0.00000000000001 of 0.0 with message: ; h := 20.0; half := 50.0; tilt := 30.0; r := 8.0
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: ; h := 20.0; half := 50.0; tilt := 30.0; r := 8.0
+DatumTests.cpp:459  CHECK( std::ranges::find(second.regenerated, m.topPlane) != second.regenerated.end() )
+        => {?} != {?} with message: 
+DatumTests.cpp:460  CHECK( std::ranges::find(second.regenerated, m.bossSketch) != second.regenerated.end() )
+        => {?} != {?} with message: 
+DatumTests.cpp:461  CHECK( std::ranges::find(second.regenerated, m.spindle) != second.regenerated.end() )
+        => {?} != {?} with message: 
+DatumTests.cpp:462  CHECK( std::ranges::find(second.regenerated, m.pegSketch) == second.regenerated.end() )
+        => {?} == {?} with message: 
+DatumTests.cpp:424  CHECK_THAT( props->volume.in(units::mm3), WithinRel(DatumBlockModel::patternVolume(h, r), 1e-12) )
+        => 156031.857894892396871 and 156031.857894892396871 are within 1e-10% of each other with message: ; h := 25.0; half := 45.0; tilt := 50.0; r := 8.0
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 49.80671069433283549 is within 0.000000001 of 49.80671069433283549 with message: ; h := 25.0; half := 45.0; tilt := 50.0; r := 8.0
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 29.99999999999999645 is within 0.000000001 of 30.0 with message: ; h := 25.0; half := 45.0; tilt := 50.0; r := 8.0
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 13.17651256983508823 is within 0.000000001 of 13.17651256983508823 with message: ; h := 25.0; half := 45.0; tilt := 50.0; r := 8.0
+DatumTests.cpp:430  CHECK_THAT( volumeMm3(regenerator, m.peg), WithinRel(pi * 25.0 * 10.0, 1e-12) )
+        => 785.39816339744845664 and 785.39816339744834295 are within 1e-10% of each other with message: ; h := 25.0; half := 45.0; tilt := 50.0; r := 8.0
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 145.0 is within 0.0000001 of 145.0 with message: ; h := 25.0; half := 45.0; tilt := 50.0; r := 8.0
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 5.0 is within 0.0000001 of 5.0 with message: ; h := 25.0; half := 45.0; tilt := 50.0; r := 8.0
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: ; h := 25.0; half := 45.0; tilt := 50.0; r := 8.0
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 155.0 is within 0.0000001 of 155.0 with message: ; h := 25.0; half := 45.0; tilt := 50.0; r := 8.0
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 15.0 is within 0.0000001 of 15.0 with message: ; h := 25.0; half := 45.0; tilt := 50.0; r := 8.0
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 10.0 is within 0.0000001 of 10.0 with message: ; h := 25.0; half := 45.0; tilt := 50.0; r := 8.0
+DatumTests.cpp:438  CHECK_THAT( volumeMm3(regenerator, m.fin), WithinRel(20.0 * 20.0 * 5.0, 1e-12) )
+        => 2000.00000000000113687 and 2000.0 are within 1e-10% of each other with message: ; h := 25.0; half := 45.0; tilt := 50.0; r := 8.0
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -38.56725658119236755 is within 0.0000001 of -38.56725658119236044 with message: ; h := 25.0; half := 45.0; tilt := 50.0; r := 8.0
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: ; h := 25.0; half := 45.0; tilt := 50.0; r := 8.0
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 30.64177772475911965 is within 0.0000001 of 30.64177772475911965 with message: ; h := 25.0; half := 45.0; tilt := 50.0; r := 8.0
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -21.88128217186668678 is within 0.0000001 of -21.88128217186668323 with message: ; h := 25.0; half := 45.0; tilt := 50.0; r := 8.0
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 20.0 is within 0.0000001 of 20.0 with message: ; h := 25.0; half := 45.0; tilt := 50.0; r := 8.0
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 49.17660463557137973 is within 0.0000001 of 49.17660463557137263 with message: ; h := 25.0; half := 45.0; tilt := 50.0; r := 8.0
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: ; h := 25.0; half := 45.0; tilt := 50.0; r := 8.0
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: ; h := 25.0; half := 45.0; tilt := 50.0; r := 8.0
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 25.0 is within 0.000000000001 of 25.0 with message: ; h := 25.0; half := 45.0; tilt := 50.0; r := 8.0
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: ; h := 25.0; half := 45.0; tilt := 50.0; r := 8.0
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: ; h := 25.0; half := 45.0; tilt := 50.0; r := 8.0
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: ; h := 25.0; half := 45.0; tilt := 50.0; r := 8.0
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: ; h := 25.0; half := 45.0; tilt := 50.0; r := 8.0
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: ; h := 25.0; half := 45.0; tilt := 50.0; r := 8.0
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 150.0 is within 0.000000000001 of 150.0 with message: ; h := 25.0; half := 45.0; tilt := 50.0; r := 8.0
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: ; h := 25.0; half := 45.0; tilt := 50.0; r := 8.0
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.00000000000000006 is within 0.00000000000001 of 0.0 with message: ; h := 25.0; half := 45.0; tilt := 50.0; r := 8.0
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: ; h := 25.0; half := 45.0; tilt := 50.0; r := 8.0
+DatumTests.cpp:471  CHECK( m.doc.findObjectAs<sketch::Sketch>(m.bossSketch)->placement() != before )
+        => {?} != {?} with message: 
+DatumTests.cpp:472  CHECK( m.doc.findObjectAs<sketch::Sketch>(m.bossSketch)->placement() == requireFrame(resolvePlane(m.doc, {.object = m.topPlane})) )
+        => {?} == {?} with message: 
+
+== DatumModel_FailuresBlockDependentsAndRecover / parallel planes
+DatumTests.cpp:491  CHECK( report.failed == std::vector<ObjectId>{m.spindle} )
+        => { object:12 } == { object:12 }
+DatumTests.cpp:492  CHECK( report.errors.at(m.spindle).message == "Spindle (object:12): its planes are parallel and do not meet" )
+        => "Spindle (object:12): its planes are parallel and do not meet" == "Spindle (object:12): its planes are parallel and do not meet"
+DatumTests.cpp:493  CHECK( report.blocked == std::vector<ObjectId>{m.pattern} )
+        => { object:13 } == { object:13 }
+DatumTests.cpp:494  CHECK( regenerator.body(m.pattern) == nullptr )
+        => nullptr == nullptr
+DatumTests.cpp:495  CHECK( regenerator.body(m.peg) != nullptr )
+        => 0x00000137d7592198 != nullptr
+DatumTests.cpp:498  CHECK( regenerator.body(m.pattern) != nullptr )
+        => 0x00000137d75944d8 != nullptr
+
+== DatumModel_FailuresBlockDependentsAndRecover / a sketch attached to an axis
+DatumTests.cpp:514  CHECK( report.failed == std::vector<ObjectId>{m.bossSketch} )
+        => { object:8 } == { object:8 }
+DatumTests.cpp:515  CHECK( report.errors.at(m.bossSketch).code == ErrorCode::InvalidArgument )
+        => 0 == 0
+DatumTests.cpp:516  CHECK( report.errors.at(m.bossSketch).message == "BossSketch (object:8): Spindle (object:12) is a datum axis, not a datum plane or a coordinate system" )
+        => "BossSketch (object:8): Spindle (object:12) is a datum axis, not a datum plane or a coordinate system" == "BossSketch (object:8): Spindle (object:12) is a datum axis, not a datum plane or a coordinate system"
+DatumTests.cpp:518  CHECK( report.blocked == std::vector<ObjectId>{m.boss, m.pattern} )
+        => { object:9, object:13 } == { object:9, object:13 }
+DatumTests.cpp:519  CHECK( m.doc.findObjectAs<sketch::Sketch>(m.bossSketch)->placement() == placement )
+        => {?} == {?}
+
+== DatumModel_FailuresBlockDependentsAndRecover / a cycle between two planes
+DatumTests.cpp:536  CHECK( report.errors.at(m.topPlane).message == "dependency cycle: TopPlane, Middle" )
+        => "dependency cycle: TopPlane, Middle" == "dependency cycle: TopPlane, Middle"
+DatumTests.cpp:537  CHECK( std::ranges::find(report.blocked, m.pattern) != report.blocked.end() )
+        => {?} != {?}
+
+== DatumCli_ValidateReportsDatumProblems / a valid model
+DatumCliTests.cpp:81  CHECK( result.exitCode == ExitCode::Success )
+        => 0 == 0
+DatumCliTests.cpp:82  CHECK_THAT( result.out, ContainsSubstring(" feature regeneration ok, 15 objects regenerated\n" " geometry ok, 3 result bodies\n") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-7632c624-77e7-47d1-af42-1732aed515d3\datums.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 15 objects regenerated geometry ok, 3 result bodies Result bodies (3): Pattern (object:13): 1 solid, volume 126031.858 mm^3, area 19907.964 mm^2, bounds (0, 0, 0) to (100, 60, 30) mm Peg (object:16): 1 solid, volume 785.398 mm^3, area 471.239 mm^2, bounds (145, 5, 0) to (155, 15, 10) mm Fin (object:19): 1 solid, volume 2000.000 mm^3, area 1200.000 mm^2, bounds (-51.962, 0, 20) to (-32.141, 20, 34.33) mm Result: valid " contains: " feature regeneration ok, 15 objects regenerated geometry ok, 3 result bodies "
+DatumCliTests.cpp:84  CHECK_THAT( result.out, ContainsSubstring("Peg (object:16): 1 solid, volume 785.398 mm^3") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-7632c624-77e7-47d1-af42-1732aed515d3\datums.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 15 objects regenerated geometry ok, 3 result bodies Result bodies (3): Pattern (object:13): 1 solid, volume 126031.858 mm^3, area 19907.964 mm^2, bounds (0, 0, 0) to (100, 60, 30) mm Peg (object:16): 1 solid, volume 785.398 mm^3, area 471.239 mm^2, bounds (145, 5, 0) to (155, 15, 10) mm Fin (object:19): 1 solid, volume 2000.000 mm^3, area 1200.000 mm^2, bounds (-51.962, 0, 20) to (-32.141, 20, 34.33) mm Result: valid " contains: "Peg (object:16): 1 solid, volume 785.398 mm^3"
+DatumCliTests.cpp:85  CHECK_THAT( result.out, ContainsSubstring("bounds (145, 5, 0) to (155, 15, 10) mm\n") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-7632c624-77e7-47d1-af42-1732aed515d3\datums.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 15 objects regenerated geometry ok, 3 result bodies Result bodies (3): Pattern (object:13): 1 solid, volume 126031.858 mm^3, area 19907.964 mm^2, bounds (0, 0, 0) to (100, 60, 30) mm Peg (object:16): 1 solid, volume 785.398 mm^3, area 471.239 mm^2, bounds (145, 5, 0) to (155, 15, 10) mm Fin (object:19): 1 solid, volume 2000.000 mm^3, area 1200.000 mm^2, bounds (-51.962, 0, 20) to (-32.141, 20, 34.33) mm Result: valid " contains: "bounds (145, 5, 0) to (155, 15, 10) mm "
+DatumCliTests.cpp:86  CHECK_THAT( result.out, EndsWith("Result: valid\n") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-7632c624-77e7-47d1-af42-1732aed515d3\datums.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 15 objects regenerated geometry ok, 3 result bodies Result bodies (3): Pattern (object:13): 1 solid, volume 126031.858 mm^3, area 19907.964 mm^2, bounds (0, 0, 0) to (100, 60, 30) mm Peg (object:16): 1 solid, volume 785.398 mm^3, area 471.239 mm^2, bounds (145, 5, 0) to (155, 15, 10) mm Fin (object:19): 1 solid, volume 2000.000 mm^3, area 1200.000 mm^2, bounds (-51.962, 0, 20) to (-32.141, 20, 34.33) mm Result: valid " ends with: "Result: valid "
+
+== DatumCli_ValidateReportsDatumProblems / parallel planes and a wrong kind
+DatumCliTests.cpp:98  CHECK( result.exitCode == ExitCode::Failure )
+        => 1 == 1
+DatumCliTests.cpp:99  CHECK_THAT( result.out, ContainsSubstring("FinSketch (object:18): the attachment is Peg (object:16), which is " "an extrude, not a datum plane or a coordinate system") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-32763d7a-0199-45d2-b388-65650ff5bfb9\broken.bcad document consistency 1 error error: FinSketch (object:18): the attachment is Peg (object:16), which is an extrude, not a datum plane or a coordinate system missing references ok dependency cycles ok sketch constraints ok feature regeneration 3 errors error: Spindle (object:12) failed to regenerate: Spindle (object:12): its planes are parallel and do not meet error: Pattern (object:13) was not regenerated because an item it depends on failed error: Fin (object:19) was not regenerated because an item it depends on failed geometry ok, 1 result body Result bodies (1): Peg (object:16): 1 solid, volume 785.398 mm^3, area 471.239 mm^2, bounds (145, 5, 0) to (155, 15, 10) mm Result: invalid (4 errors) " contains: "FinSketch (object:18): the attachment is Peg (object:16), which is an extrude, not a datum plane or a coordinate system"
+DatumCliTests.cpp:101  CHECK_THAT( result.out, ContainsSubstring("Spindle (object:12): its planes are parallel and do not meet") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-32763d7a-0199-45d2-b388-65650ff5bfb9\broken.bcad document consistency 1 error error: FinSketch (object:18): the attachment is Peg (object:16), which is an extrude, not a datum plane or a coordinate system missing references ok dependency cycles ok sketch constraints ok feature regeneration 3 errors error: Spindle (object:12) failed to regenerate: Spindle (object:12): its planes are parallel and do not meet error: Pattern (object:13) was not regenerated because an item it depends on failed error: Fin (object:19) was not regenerated because an item it depends on failed geometry ok, 1 result body Result bodies (1): Peg (object:16): 1 solid, volume 785.398 mm^3, area 471.239 mm^2, bounds (145, 5, 0) to (155, 15, 10) mm Result: invalid (4 errors) " contains: "Spindle (object:12): its planes are parallel and do not meet"
+DatumCliTests.cpp:102  CHECK_THAT( result.out, ContainsSubstring("Result: invalid") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-32763d7a-0199-45d2-b388-65650ff5bfb9\broken.bcad document consistency 1 error error: FinSketch (object:18): the attachment is Peg (object:16), which is an extrude, not a datum plane or a coordinate system missing references ok dependency cycles ok sketch constraints ok feature regeneration 3 errors error: Spindle (object:12) failed to regenerate: Spindle (object:12): its planes are parallel and do not meet error: Pattern (object:13) was not regenerated because an item it depends on failed error: Fin (object:19) was not regenerated because an item it depends on failed geometry ok, 1 result body Result bodies (1): Peg (object:16): 1 solid, volume 785.398 mm^3, area 471.239 mm^2, bounds (145, 5, 0) to (155, 15, 10) mm Result: invalid (4 errors) " contains: "Result: invalid"
+
+== Datum_DefinitionsAreCheckedForTheirKind
+DatumTests.cpp:172  CHECK( result.error().code == ErrorCode::InvalidArgument )
+        => 0 == 0
+DatumTests.cpp:176  CHECK( message(validate(DatumPlaneDefinition{.kind = DatumPlaneKind::Fixed, .base = {.object = other}})) == "a fixed datum plane has no base plane" )
+        => "a fixed datum plane has no base plane" == "a fixed datum plane has no base plane"
+DatumTests.cpp:178  CHECK( message(validate(DatumPlaneDefinition{.kind = DatumPlaneKind::Offset, .frame = Frame3D::yz()})) == "an offset datum plane is placed from its base plane and has no frame of its own" )
+        => "an offset datum plane is placed from its base plane and has no frame of its own" == "an offset datum plane is placed from its base plane and has no frame of its own"
+DatumTests.cpp:180  CHECK( message(validate(DatumPlaneDefinition{.kind = DatumPlaneKind::Offset, .angle = 10_deg})) == "an offset datum plane has no axis or angle" )
+        => "an offset datum plane has no axis or angle" == "an offset datum plane has no axis or angle"
+DatumTests.cpp:182  CHECK( message(validate(DatumPlaneDefinition{.kind = DatumPlaneKind::Angled, .offset = 1_mm})) == "an angled datum plane has no offset" )
+        => "an angled datum plane has no offset" == "an angled datum plane has no offset"
+DatumTests.cpp:184  CHECK( message(validate(DatumPlaneDefinition{ .kind = DatumPlaneKind::Offset, .offset = Length::fromSi(std::nan(""))})) == "the plane's offset and angle must be finite" )
+        => "the plane's offset and angle must be finite" == "the plane's offset and angle must be finite"
+DatumTests.cpp:187  CHECK( message(validate(DatumPlaneDefinition{.kind = DatumPlaneKind::Offset, .offsetParameter = ParameterId{}})) == "the offset parameter ID must be valid" )
+        => "the offset parameter ID must be valid" == "the offset parameter ID must be valid"
+DatumTests.cpp:190  CHECK( message(validate(DatumPlaneDefinition{.kind = DatumPlaneKind::Offset, .base = {.object = ObjectId{}}})) == "the base plane must be a valid object ID" )
+        => "the base plane must be a valid object ID" == "the base plane must be a valid object ID"
+DatumTests.cpp:193  CHECK( message(validate(DatumAxisDefinition{.kind = DatumAxisKind::Fixed, .first = {.object = other}})) == "a fixed datum axis has no planes" )
+        => "a fixed datum axis has no planes" == "a fixed datum axis has no planes"
+DatumTests.cpp:195  CHECK( message(validate(DatumAxisDefinition{.kind = DatumAxisKind::Intersection})) == "an intersection datum axis needs two different planes" )
+        => "an intersection datum axis needs two different planes" == "an intersection datum axis needs two different planes"
+DatumTests.cpp:197  CHECK( message(validate(DatumAxisDefinition{.kind = DatumAxisKind::Intersection, .axis = {Point3D{1_mm, 0_mm, 0_mm}, Direction3D::unitZ()}, .second = {.object = other}})) == "an intersection datum axis is where its planes meet and has no line of its own" )
+        => "an intersection datum axis is where its planes meet and has no line of its own" == "an intersection datum axis is where its planes meet and has no line of its own"
+DatumTests.cpp:201  CHECK( message(validate(CoordinateSystemDefinition{.kind = CoordinateSystemKind::Fixed, .translation = {1_mm, 0_mm, 0_mm}})) == "a fixed coordinate system has no base, translation or rotation" )
+        => "a fixed coordinate system has no base, translation or rotation" == "a fixed coordinate system has no base, translation or rotation"
+DatumTests.cpp:204  CHECK( message(validate(CoordinateSystemDefinition{.kind = CoordinateSystemKind::Offset, .frame = Frame3D::xz()})) == "an offset coordinate system is placed from its base and has no frame of its own" )
+        => "an offset coordinate system is placed from its base and has no frame of its own" == "an offset coordinate system is placed from its base and has no frame of its own"
+DatumTests.cpp:207  CHECK( errorCode(DatumPlane::create("Bad", {.kind = DatumPlaneKind::Fixed, .base = {.object = other}})) == ErrorCode::InvalidArgument )
+        => {?} == 0
+DatumTests.cpp:215  CHECK( (*plane)->dependencies() == std::vector<ObjectId>{ObjectId::fromValue(4), ObjectId::fromValue(5), ObjectId::fromValue(2)} )
+        => { object:4, object:5, object:2 } == { object:4, object:5, object:2 }
+
+== DatumCli_InfoDescribesDatumsAndAttachments
+DatumCliTests.cpp:55  CHECK( result.exitCode == ExitCode::Success )
+        => 0 == 0
+
+== DatumModel_DependenciesAreGraphEdges
+DatumTests.cpp:567  CHECK_FALSE( !(downstream.contains(m.peg)) )
+        => !false
+
+== CurvedProfile_CurvedBodiesHaveTheirAnalyticCentreOfMass / a tilted elliptic prism
+CurvedProfileTests.cpp:136  CHECK( body->topology().solids == 1 )
+        => 1 == 1
+CurvedProfileTests.cpp:430  CHECK_THAT( p.volume.in(units::mm3), WithinRel(pi * 360.0 * 25.0, bettercad::test::kRelTight) )
+        => 28274.33388230813943665 and 28274.33388230813943665 are within 1e-10% of each other
+CurvedProfileTests.cpp:431  CHECK_THAT( p.centerOfMass.x.in(units::mm), WithinAbs(5.0, 1e-12) )
+        => 5.0 is within 0.000000000001 of 5.0
+CurvedProfileTests.cpp:432  CHECK_THAT( p.centerOfMass.y.in(units::mm), WithinAbs(-7.0, 1e-12) )
+        => -7.00000000000000178 is within 0.000000000001 of -7.0
+CurvedProfileTests.cpp:433  CHECK_THAT( p.centerOfMass.z.in(units::mm), WithinAbs(12.5, 1e-12) )
+        => 12.5 is within 0.000000000001 of 12.5
+
+== CurvedProfile_CurvedBodiesHaveTheirAnalyticCentreOfMass / a quadratic spline prism
+CurvedProfileTests.cpp:136  CHECK( body->topology().solids == 1 )
+        => 1 == 1
+CurvedProfileTests.cpp:441  CHECK_THAT( p.volume.in(units::mm3), WithinRel(area * 20.0, bettercad::test::kRelTight) )
+        => 68562.5 and 68562.50000000001455192 are within 1e-10% of each other
+CurvedProfileTests.cpp:442  CHECK_THAT( p.centerOfMass.x.in(units::mm), WithinAbs(xMoment / area, 1e-12) )
+        => 30.1286842904892147 is within 0.000000000001 of 30.12868429048920049
+CurvedProfileTests.cpp:443  CHECK_THAT( p.centerOfMass.y.in(units::mm), WithinAbs(yMoment / area, 1e-12) )
+        => 23.22227286539045465 is within 0.000000000001 of 23.2222728653904511
+CurvedProfileTests.cpp:444  CHECK_THAT( p.centerOfMass.z.in(units::mm), WithinAbs(5.0, 1e-12) )
+        => 5.0 is within 0.000000000001 of 5.0
+
+== CurvedProfile_CurvedBodiesHaveTheirAnalyticCentreOfMass / a quarter turn of an ellipse
+CurvedProfileTests.cpp:136  CHECK( body->topology().solids == 1 )
+        => 1 == 1
+CurvedProfileTests.cpp:455  CHECK_THAT( p.volume.in(units::mm3), WithinRel(pi / 2.0 * 50.0 * pi * 60.0, bettercad::test::kRelTight) )
+        => 14804.40660163403299521 and 14804.40660163403663319 are within 1e-10% of each other
+CurvedProfileTests.cpp:456  CHECK_THAT( p.centerOfMass.x.in(units::mm), WithinAbs(d * std::cos(pi / 4.0), 1e-12) )
+        => 32.1492985045628572 is within 0.000000000001 of 32.1492985045628572
+CurvedProfileTests.cpp:457  CHECK_THAT( p.centerOfMass.y.in(units::mm), WithinAbs(4.0, 1e-12) )
+        => 4.0 is within 0.000000000001 of 4.0
+CurvedProfileTests.cpp:458  CHECK_THAT( p.centerOfMass.z.in(units::mm), WithinAbs(-d * std::sin(pi / 4.0), 1e-12) )
+        => -32.1492985045628572 is within 0.000000000001 of -32.1492985045628572
+
+== DatumValidation_ReportsWrongKindsAndDimensions
+DatumTests.cpp:646  CHECK( clean.count(ValidationCheck::DocumentConsistency, Severity::Error) == 0 )
+        => 0 == 0 with message: 
+DatumTests.cpp:664  CHECK_FALSE( !(report.valid()) )
+        => !false with message: 
+
+== Datum_PlanesMatchIndependentGeometry / principal planes of the model
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.0 is within 0.00000000000001 of 0.0
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -1.0 is within 0.00000000000001 of -1.0
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.0 is within 0.00000000000001 of 0.0
+
+== Datum_PlanesMatchIndependentGeometry / offsets along the base normal, chained
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 12.5 is within 0.000000000001 of 12.5
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 20.0 is within 0.000000000001 of 20.0
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -4.0 is within 0.000000000001 of -4.0
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.0 is within 0.00000000000001 of 0.0
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -1.0 is within 0.00000000000001 of -1.0
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.0 is within 0.00000000000001 of 0.0
+
+== Datum_PlanesMatchIndependentGeometry / an angled plane turns about its axis, right-handed
+DatumTests.cpp:253  CHECK( off.error().code == ErrorCode::FailedPrecondition )
+        => 5 == 5
+DatumTests.cpp:254  CHECK( off.error().message == "Hinged (object:6): its axis does not lie in its base plane (it is 0 deg and 20 mm off it)" )
+        => "Hinged (object:6): its axis does not lie in its base plane (it is 0 deg and 20 mm off it)" == "Hinged (object:6): its axis does not lie in its base plane (it is 0 deg and 20 mm off it)"
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.57357643635104605 is within 0.00000000000001 of -0.57357643635104605
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.8191520442889918 is within 0.00000000000001 of 0.8191520442889918
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.0 is within 0.00000000000001 of 0.0
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.8191520442889918 is within 0.00000000000001 of 0.8191520442889918
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.57357643635104605 is within 0.00000000000001 of 0.57357643635104605
+
+== DatumMirror_ReflectsAcrossADatumPlane
+DatumTests.cpp:582  CHECK( (*doc.findObjectAs<MirrorFeature>(mirror)).dependencies() == std::vector<ObjectId>{post, middle} )
+        => { object:2, object:3 } == { object:2, object:3 }
+DatumTests.cpp:592  CHECK_THAT( props->volume.in(units::mm3), WithinRel(2.0 * pi * 25.0 * 10.0, 1e-12) )
+        => 1570.79632679489623115 and 1570.7963267948966859 are within 1e-10% of each other with message: 
+DatumTests.cpp:593  CHECK_THAT( props->centerOfMass.x.in(units::mm), WithinAbs(60.0, 1e-9) )
+        => 59.99999999999999289 is within 0.000000001 of 60.0 with message: 
+DatumTests.cpp:599  CHECK( both.error().message == "a mirror plane given by a reference has no origin or normal of its own" )
+        => "a mirror plane given by a reference has no origin or normal of its own" == "a mirror plane given by a reference has no origin or normal of its own" with message: 
+
+== CurvedProfile_CutCurvedBodiesKeepTheirProperties / an elliptic prism cut at x = 15
+CurvedProfileTests.cpp:136  CHECK( body->topology().solids == 1 )
+        => 1 == 1
+CurvedProfileTests.cpp:475  CHECK_THAT( p.volume.in(units::mm3), WithinRel(area * 20.0, bettercad::test::kRelTight) )
+        => 15164.44682571248995373 and 15164.44682571248631575 are within 1e-10% of each other
+CurvedProfileTests.cpp:476  CHECK_THAT( p.centerOfMass.x.in(units::mm), WithinAbs(moment / area, bettercad::test::kPositionToleranceMm) )
+        => -5.13980412450273505 is within 0.000000001 of -5.13980412450273683
+CurvedProfileTests.cpp:477  CHECK_THAT( p.centerOfMass.y.in(units::mm), WithinAbs(0.0, bettercad::test::kPositionToleranceMm) )
+        => 0.00000000000000041 is within 0.000000001 of 0.0
+CurvedProfileTests.cpp:478  CHECK_THAT( p.centerOfMass.z.in(units::mm), WithinAbs(10.0, bettercad::test::kPositionToleranceMm) )
+        => 10.0 is within 0.000000001 of 10.0
+
+== CurvedProfile_CutCurvedBodiesKeepTheirProperties / a spline prism cut at y = 30
+CurvedProfileTests.cpp:493  CHECK_THAT( area, WithinRel(1500.0, kRelArea) )
+        => 1500.0 and 1500.0 are within 1e-10% of each other
+CurvedProfileTests.cpp:136  CHECK( body->topology().solids == 1 )
+        => 1 == 1
+CurvedProfileTests.cpp:497  CHECK_THAT( p.volume.in(units::mm3), WithinRel(15000.0, bettercad::test::kRelTight) )
+        => 15000.00000000000181899 and 15000.0 are within 1e-10% of each other
+CurvedProfileTests.cpp:498  CHECK_THAT( p.centerOfMass.x.in(units::mm), WithinAbs(xMoment / area, bettercad::test::kPositionToleranceMm) )
+        => 30.0 is within 0.000000001 of 30.0
+CurvedProfileTests.cpp:499  CHECK_THAT( p.centerOfMass.y.in(units::mm), WithinAbs(yMoment / area, bettercad::test::kPositionToleranceMm) )
+        => 16.79999999999999716 is within 0.000000001 of 16.80000000000000071
+CurvedProfileTests.cpp:500  CHECK_THAT( p.centerOfMass.z.in(units::mm), WithinAbs(5.0, bettercad::test::kPositionToleranceMm) )
+        => 5.00000000000000089 is within 0.000000001 of 5.0
+
+== CurvedProfile_CutCurvedBodiesKeepTheirProperties / a revolved ellipse cut at z = 30
+CurvedProfileTests.cpp:136  CHECK( body->topology().solids == 1 )
+        => 1 == 1
+CurvedProfileTests.cpp:522  CHECK_THAT( p.volume.in(units::mm3), WithinRel(2.0 * pi * 50.0 * pi * 60.0 - removed, bettercad::test::kRelApproximatedIntersection) )
+        => 41781.46960673335706815 and 41781.46960744003445143 are within 1e-07% of each other
+CurvedProfileTests.cpp:524  CHECK_THAT( p.centerOfMass.x.in(units::mm), WithinAbs(0.0, bettercad::test::kPositionToleranceMm) )
+        => 0.00000000016932944 is within 0.000000001 of 0.0
+CurvedProfileTests.cpp:525  CHECK_THAT( p.centerOfMass.y.in(units::mm), WithinAbs(0.0, bettercad::test::kPositionToleranceMm) )
+        => -0.00000000001879448 is within 0.000000001 of 0.0
+
+== Datum_AxisIsWhereTwoPlanesMeet
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.0 is within 0.00000000000001 of -0.0
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.76604444311897812 is within 0.00000000000001 of 0.76604444311897812
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.64278760968653936 is within 0.00000000000001 of 0.64278760968653936
+DatumTests.cpp:297  CHECK_THAT( n1[0] * p[0] + n1[1] * p[1] + n1[2] * (p[2] - 20.0), WithinAbs(0.0, kTolMm) )
+        => -0.00000000000000089 is within 0.000000000001 of 0.0
+DatumTests.cpp:298  CHECK_THAT( p[0] - 15.0, WithinAbs(0.0, kTolMm) )
+        => 0.0 is within 0.000000000001 of 0.0
+DatumTests.cpp:300  CHECK_THAT( (p[0] * d[0] + p[1] * d[1] + p[2] * d[2]) / length, WithinAbs(0.0, kTolMm) )
+        => 0.00000000000000089 is within 0.000000000001 of 0.0
+DatumTests.cpp:100  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.0 of 0.0
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 1.0 is within 0.0 of 1.0
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.0 of 0.0
+DatumTests.cpp:101  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.0 of 0.0
+DatumTests.cpp:102  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 20.0 is within 0.0 of 20.0
+
+== DatumModel_RegeneratesDeterministically
+DatumTests.cpp:690  CHECK( bits(volumeMm3(ra, id)) == bits(volumeMm3(rb, id)) )
+        => 4683397256537177765 (0x40fec4fdb9effea5) == 4683397256537177765 (0x40fec4fdb9effea5)
+DatumTests.cpp:690  CHECK( bits(volumeMm3(ra, id)) == bits(volumeMm3(rb, id)) )
+        => 4650119651123696651 (0x40888b2f704a940b) == 4650119651123696651 (0x40888b2f704a940b)
+DatumTests.cpp:690  CHECK( bits(volumeMm3(ra, id)) == bits(volumeMm3(rb, id)) )
+        => 4656510908468559873 (0x409f400000000001) == 4656510908468559873 (0x409f400000000001)
+
+== DatumCommands_CreateAndModifyAreUndoable
+DatumTests.cpp:610  CHECK( history.undoDescription() == "Create datum_plane 'Plane1'" )
+        => {?} == "Create datum_plane 'Plane1'"
+DatumTests.cpp:617  CHECK( doc.findObjectAs<DatumPlane>(id)->definition().offset == 9_mm )
+        => 0.009 m == 0.009 m
+DatumTests.cpp:619  CHECK( doc.findObjectAs<DatumPlane>(id)->definition().offset == 5_mm )
+        => 0.005 m == 0.005 m
+DatumTests.cpp:621  CHECK( doc.findObject(id) == nullptr )
+        => nullptr == nullptr
+DatumTests.cpp:623  CHECK( doc.findObjectAs<DatumPlane>(id) != nullptr )
+        => 0x00000137d73911d0 != nullptr
+DatumTests.cpp:625  CHECK( doc.findObjectAs<DatumPlane>(id)->definition().offset == 9_mm )
+        => 0.009 m == 0.009 m
+DatumTests.cpp:631  CHECK( doc.objectCount() == 3 )
+        => 3 == 3
+DatumTests.cpp:637  CHECK( errorCode(refused) == ErrorCode::InvalidArgument )
+        => {?} == 0
+DatumTests.cpp:638  CHECK( errorCode(history.execute(doc, std::make_unique<ModifyDatumAxisCommand>(id, DatumAxisDefinition{}))) == ErrorCode::NotFound )
+        => {?} == 1
+
+Overall: 1198 assertions passed, 0 failed.

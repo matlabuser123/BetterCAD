@@ -3,6 +3,7 @@
 #include <bettercad/core/Error.hpp>
 #include <bettercad/core/Id.hpp>
 #include <bettercad/core/document/DocumentObject.hpp>
+#include <bettercad/core/document/References.hpp>
 #include <bettercad/core/math/Direction.hpp>
 #include <bettercad/core/math/Point.hpp>
 #include <bettercad/core/math/RigidTransform.hpp>
@@ -50,9 +51,14 @@ enum class RotationDirection {
 /// `direction`. The same content as an Axis3D, with the direction kept as
 /// given (any finite, non-zero vector) and normalized when used, as for a
 /// linear pattern's direction.
+///
+/// With a `reference` (P12-DATUM-001), the axis is the referenced axis (a
+/// datum axis, a coordinate system's or the model's principal axis); origin
+/// and direction then keep their defaults.
 struct PatternAxis {
     Point3D origin{};
     Vector3D direction{0.0, 0.0, 1.0};
+    std::optional<AxisReference> reference{};
 
     friend bool operator==(const PatternAxis&, const PatternAxis&) = default;
 };

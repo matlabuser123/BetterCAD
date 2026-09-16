@@ -1,5 +1,6 @@
 #include <bettercad/core/document/DependencyGraph.hpp>
 #include <bettercad/core/document/ParameterExpressions.hpp>
+#include <bettercad/features/Datums.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/features/Regeneration.hpp>
 #include <bettercad/features/Regenerator.hpp>
@@ -15,8 +16,24 @@ namespace bettercad::features {
 
 namespace {
 
+/// "Name (object:7)".
+std::string label(const Document& document, ObjectId id) {
+    const auto name = document.nameOf(id);
+    return name ? std::format("{} ({})", *name, id) : std::format("{}", id);
+}
+
 Result<std::optional<geometry::Body>> regenerateSketchObject(Document& document, ObjectId id,
                                                              const Regenerator& /*regenerator*/) {
+    // An attached sketch lies on its plane: resolved first, set once the
+    // sketch has solved, so a failure leaves the sketch as it was.
+    std::optional<Frame3D> placement;
+    if (const auto* current = document.findObjectAs<sketch::Sketch>(id); current != nullptr && current->attachment()) {
+        auto frame = resolvePlane(document, *current->attachment());
+        if (!frame) {
+            return makeError(frame.error().code, std::format("{}: {}", label(document, id), frame.error().message));
+        }
+        placement = *frame;
+    }
     auto changed = document.modifyObject<sketch::Sketch>(id, [&](sketch::Sketch& sketch) -> Result<bool> {
         auto outcome = sketch::regenerateSketch(sketch, document.parameters());
         if (!outcome) {
@@ -27,10 +44,40 @@ Result<std::optional<geometry::Body>> regenerateSketchObject(Document& document,
                              std::format("sketch '{}' is {}: {}", sketch.name(),
                                          sketch::toString(outcome->status), outcome->message));
         }
-        return outcome->geometryChanged;
+        bool moved = false;
+        if (placement) {
+            auto set = sketch.setPlacement(*placement);
+            if (!set) {
+                return std::unexpected(set.error());
+            }
+            moved = *set;
+        }
+        return outcome->geometryChanged || moved;
     });
     if (!changed) {
         return std::unexpected(changed.error());
+    }
+    return std::optional<geometry::Body>{};
+}
+
+/// Datum objects build nothing: regeneration checks that they resolve.
+Result<std::optional<geometry::Body>> regenerateDatumObject(Document& document, ObjectId id,
+                                                            const Regenerator& /*regenerator*/) {
+    const DocumentObject* object = document.findObject(id);
+    Result<void> resolved;
+    if (dynamic_cast<const DatumPlane*>(object) != nullptr) {
+        if (auto frame = resolvePlane(document, PlaneReference{id}); !frame) {
+            resolved = std::unexpected(frame.error());
+        }
+    } else if (dynamic_cast<const DatumAxis*>(object) != nullptr) {
+        if (auto axis = resolveAxis(document, AxisReference{id}); !axis) {
+            resolved = std::unexpected(axis.error());
+        }
+    } else if (auto frame = resolveCoordinateSystem(document, id); !frame) {
+        resolved = std::unexpected(frame.error());
+    }
+    if (!resolved) {
+        return std::unexpected(resolved.error());
     }
     return std::optional<geometry::Body>{};
 }
@@ -84,6 +131,9 @@ std::string_view toString(NodeState state) noexcept {
 
 Regenerator::Regenerator() {
     registerHandler("sketch", regenerateSketchObject);
+    registerHandler(std::string{DatumPlane::kTypeName}, regenerateDatumObject);
+    registerHandler(std::string{DatumAxis::kTypeName}, regenerateDatumObject);
+    registerHandler(std::string{CoordinateSystem::kTypeName}, regenerateDatumObject);
     registerHandler(std::string{ExtrudeFeature::kTypeName},
                     regenerateSolidFeature<ExtrudeFeature, &regenerateExtrude>);
     registerHandler(std::string{RevolveFeature::kTypeName},

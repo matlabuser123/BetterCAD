@@ -37,6 +37,14 @@ Result<void> validate(const MirrorDefinition& definition) {
     if (plane.offsetParameter && !plane.offsetParameter->isValid()) {
         return invalid("the mirror's parameter IDs must be valid");
     }
+    if (plane.reference) {
+        if (plane.origin != Point3D{} || plane.normal != MirrorPlane{}.normal) {
+            return invalid("a mirror plane given by a reference has no origin or normal of its own");
+        }
+        if (plane.reference->object && !plane.reference->object->isValid()) {
+            return invalid("the mirror plane's reference must name a valid object");
+        }
+    }
     if (!isFinite(plane.origin.x) || !isFinite(plane.origin.y) || !isFinite(plane.origin.z)) {
         return invalid("the plane's origin must be finite");
     }
@@ -79,6 +87,9 @@ std::vector<ObjectId> MirrorFeature::dependencies() const {
     std::vector<ObjectId> result{ObjectId{definition_.source}};
     if (definition_.plane.offsetParameter) {
         result.push_back(ObjectId{*definition_.plane.offsetParameter});
+    }
+    if (definition_.plane.reference && definition_.plane.reference->object) {
+        result.push_back(*definition_.plane.reference->object);
     }
     return result;
 }

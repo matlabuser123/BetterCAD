@@ -13,7 +13,7 @@ authorized — never in advance.
 | | |
 | --- | --- |
 | Current | **`P12` — Parametric CAD Completion** |
-| Next | `P12-DATUM-001` — Datum planes, axes, coordinate systems |
+| Next | `P12-SKETCH-003` — Sketches on arbitrary planar faces |
 | Blocked / Manual | None |
 | Last qualified | `P11` Production Part Modeling — **QUALIFIED** |
 | Released | `v0.1.0` (`P0`–`P10`); `P11` qualified, not released |
@@ -51,7 +51,7 @@ Reference models → qualification
 | 1 | `P12-PARAM-001` Parameter expression evaluation | — | **done** — [evidence](docs/verification/P12-PARAM-001/README.md) |
 | 2 | `P12-SKETCH-001` Constraints: angle, tangent, concentric, midpoint, symmetric, diameter | `PARAM-001` | **done** — [evidence](docs/verification/P12-SKETCH-001/README.md) |
 | 3 | `P12-SKETCH-002` Entities: ellipse, spline | `SKETCH-001` | **done** — [evidence](docs/verification/P12-SKETCH-002/README.md) |
-| 4 | `P12-DATUM-001` Datum planes, axes, coordinate systems | `PARAM-001` | **next** |
+| 4 | `P12-DATUM-001` Datum planes, axes, coordinate systems | `PARAM-001` | **done** — [evidence](docs/verification/P12-DATUM-001/README.md) |
 | 5 | `P12-SKETCH-003` Sketches on arbitrary planar faces | `DATUM-001` | not started — see *Stable-reference risk* |
 | 6 | `P12-FEAT-001` Through-all extrude | — | not started |
 | 7 | `P12-FEAT-002` Split body / combine | — | not started |
@@ -148,10 +148,32 @@ Acceptance:
 - Ellipses and splines survive save → load → regenerate with bit-identical geometry, and STEP export reads back with the same volume.
 - `P0`–`P12-SKETCH-001` stays green in all three presets.
 
+#### P12-DATUM-001 — Datum planes, axes, coordinate systems
+
+Deliverables:
+
+- [x] Datum planes: fixed; offset from a plane; turned about an axis in a plane; offsets and angles literal or driven by parameters
+- [x] Datum axes: fixed; the intersection of two planes
+- [x] Coordinate systems: fixed; placed from another (or the model's) by rotations about its axes and a translation, literal or driven
+- [x] References to the principal planes and axes of the model and of coordinate systems
+- [x] Document objects with stable IDs, dependency-graph edges, regeneration and failure propagation (missing, wrong kind, degenerate geometry, cycles)
+- [x] Sketches attached to datum or coordinate-system planes follow them at regeneration
+- [x] Mirror planes and circular pattern axes may refer to datum geometry
+- [x] Undoable creation and editing, validation diagnostics, CLI description
+- [x] Save/load round-trip
+- [x] Evidence under `docs/verification/P12-DATUM-001/`
+
+Acceptance:
+
+- Resolved planes, axes and frames match geometry computed independently (rotation matrices written out, plane equations solved by hand) to 1e-12.
+- Changing a driving parameter moves the datum, the attached sketch and the features built on it; volumes, centres and bounds match analytic values; undo restores them.
+- Missing, wrong-kind and cyclic references and degenerate geometry fail with structured diagnostics and block their dependents; nothing is substituted.
+- Save → load → regenerate gives bit-identical geometry; `P0`–`P12-SKETCH-002` stays green in all three presets.
+
 ## Next
 
-`P12-DATUM-001` — Datum planes, axes, coordinate systems. Its deliverables are
-added above when it starts.
+`P12-SKETCH-003` — Sketches on arbitrary planar faces. Not started; see the
+*Stable-reference risk* above.
 
 ## Blocked / Manual
 
@@ -260,10 +282,10 @@ Not started. Not authorized. Grouped to match
 
 | Milestone | Commit | Evidence |
 | --- | --- | --- |
-| `P12-SKETCH-002` Sketch entities: ellipse, spline | "BetterCAD: implement P12 sketch ellipses and splines" | [P12-SKETCH-002](docs/verification/P12-SKETCH-002/README.md) |
+| `P12-DATUM-001` Datum planes, axes, coordinate systems | "BetterCAD: implement P12 datum geometry" | [P12-DATUM-001](docs/verification/P12-DATUM-001/README.md) |
+| `P12-SKETCH-002` Sketch entities: ellipse, spline | `070b730` | [P12-SKETCH-002](docs/verification/P12-SKETCH-002/README.md) |
 | `P12-SKETCH-001` Sketch constraints | `efdc1cf` | [P12-SKETCH-001](docs/verification/P12-SKETCH-001/README.md) |
 | `P12-PARAM-001` Parameter expression evaluation | `2316127` | [P12-PARAM-001](docs/verification/P12-PARAM-001/README.md) |
-| `P11-QUAL-001` Qualification | `449d5fd` | [P11-QUAL-001](docs/verification/P11-QUAL-001/README.md) |
 
 ## Completed Milestones
 
@@ -313,10 +335,19 @@ regression test, so none can change silently. Detail:
   ellipse. Spline bounds and the revolution-axis check use the poles, which
   bound the curve. Lofts and sweep paths take lines, arcs and circles only
   ([P12-SKETCH-002](docs/verification/P12-SKETCH-002/README.md)).
+- **Datum geometry** is fixed, offset, angled (planes), fixed or two-plane
+  intersections (axes) and fixed or offset (coordinate systems). Sketches
+  attach to datum planes and coordinate-system planes; mirror planes and
+  circular-pattern axes may refer to datums. Nothing else takes a datum
+  reference yet, and there are no point datums
+  ([P12-DATUM-001](docs/verification/P12-DATUM-001/README.md)).
 - **Mass properties**: volumes and centres are exact to rounding for every
-  body probed. Areas are exact for elementary faces and for full swept-curve
-  faces; trimmed swept-curve faces and B-spline faces keep the kernel's area
-  integration, unverified beyond the P11 loft cases.
+  body probed. Areas are exact for elementary faces and for swept-curve faces
+  that cover their parameter rectangle; cut (trimmed) swept-curve faces and
+  B-spline faces keep the kernel's area integration, unverified beyond the
+  P11 loft cases. Cut swept-curve faces take the kernel's Gauss–Kronrod
+  volume integration, measured at up to 0.25 s a face
+  ([P12-DATUM-001](docs/verification/P12-DATUM-001/README.md)).
 - **Pattern cost** grows with the square of the instance count, capped at 500.
 
 ### Not implemented

@@ -2,6 +2,7 @@
 #include <bettercad/core/document/ParameterExpressions.hpp>
 #include <bettercad/core/units/Format.hpp>
 #include <bettercad/features/ChamferFeature.hpp>
+#include <bettercad/features/Datums.hpp>
 #include <bettercad/features/CircularPatternFeature.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/features/FilletFeature.hpp>
@@ -19,6 +20,7 @@
 #include <bettercad/sketch/Solver.hpp>
 
 #include <algorithm>
+#include <array>
 #include <format>
 #include <set>
 #include <string_view>
@@ -103,6 +105,33 @@ private:
         }
     }
 
+    /// A plane reference that names an existing object must name a datum
+    /// plane or a coordinate system; an axis reference, a datum axis or a
+    /// coordinate system; a coordinate system reference, a coordinate system.
+    void checkPlaneReference(ObjectId owner, const PlaneReference& reference, std::string_view role) {
+        if (reference.object && document_.contains(*reference.object) &&
+            document_.findObjectAs<DatumPlane>(*reference.object) == nullptr &&
+            document_.findObjectAs<CoordinateSystem>(*reference.object) == nullptr) {
+            wrongKind(owner, role, *reference.object, kindOf(document_, *reference.object),
+                      "a datum plane or a coordinate system");
+        }
+    }
+
+    void checkAxisReference(ObjectId owner, const AxisReference& reference, std::string_view role) {
+        if (reference.object && document_.contains(*reference.object) &&
+            document_.findObjectAs<DatumAxis>(*reference.object) == nullptr &&
+            document_.findObjectAs<CoordinateSystem>(*reference.object) == nullptr) {
+            wrongKind(owner, role, *reference.object, kindOf(document_, *reference.object),
+                      "a datum axis or a coordinate system");
+        }
+    }
+
+    void checkSystemReference(ObjectId owner, const std::optional<ObjectId>& system, std::string_view role) {
+        if (system && document_.contains(*system) && document_.findObjectAs<CoordinateSystem>(*system) == nullptr) {
+            wrongKind(owner, role, *system, kindOf(document_, *system), "a coordinate system");
+        }
+    }
+
     /// A profile reference that exists must name a sketch.
     void checkProfile(ObjectId owner, SketchId profile) {
         const ObjectId id{profile};
@@ -130,6 +159,9 @@ private:
         }
         for (const DocumentObject& object : document_.objects()) {
             if (const auto* sketch = dynamic_cast<const sketch::Sketch*>(&object)) {
+                if (sketch->attachment()) {
+                    checkPlaneReference(object.id(), *sketch->attachment(), "the attachment is");
+                }
                 for (const sketch::Constraint& constraint : sketch->constraints()) {
                     if (constraint.parameter) {
                         // Angle constraints take angles; the others lengths.
@@ -137,6 +169,33 @@ private:
                             sketch::hasAngle(constraint.type) ? dimensions::angle : dimensions::length;
                         checkParameter(object.id(), *constraint.parameter, expected,
                                        std::format("{} is driven by", constraint.id));
+                    }
+                }
+            } else if (const auto* datumPlane = dynamic_cast<const DatumPlane*>(&object)) {
+                const DatumPlaneDefinition& d = datumPlane->definition();
+                checkPlaneReference(object.id(), d.base, "the base plane is");
+                checkAxisReference(object.id(), d.axis, "the axis is");
+                if (d.offsetParameter) {
+                    checkParameter(object.id(), *d.offsetParameter, dimensions::length, "the offset is driven by");
+                }
+                if (d.angleParameter) {
+                    checkParameter(object.id(), *d.angleParameter, dimensions::angle, "the angle is driven by");
+                }
+            } else if (const auto* datumAxis = dynamic_cast<const DatumAxis*>(&object)) {
+                checkPlaneReference(object.id(), datumAxis->definition().first, "the first plane is");
+                checkPlaneReference(object.id(), datumAxis->definition().second, "the second plane is");
+            } else if (const auto* system = dynamic_cast<const CoordinateSystem*>(&object)) {
+                const CoordinateSystemDefinition& d = system->definition();
+                checkSystemReference(object.id(), d.base, "the base is");
+                static constexpr std::array<std::string_view, 3> kAxes{"X", "Y", "Z"};
+                for (std::size_t i = 0; i < 3; ++i) {
+                    if (d.translationParameters[i]) {
+                        checkParameter(object.id(), *d.translationParameters[i], dimensions::length,
+                                       std::format("the {} translation is driven by", kAxes[i]));
+                    }
+                    if (d.rotationParameters[i]) {
+                        checkParameter(object.id(), *d.rotationParameters[i], dimensions::angle,
+                                       std::format("the {} rotation is driven by", kAxes[i]));
                     }
                 }
             } else if (const auto* extrude = dynamic_cast<const ExtrudeFeature*>(&object)) {
@@ -202,6 +261,9 @@ private:
                 }
             } else if (const auto* circular = dynamic_cast<const CircularPatternFeature*>(&object)) {
                 const CircularPatternDefinition& definition = circular->definition();
+                if (definition.axis.reference) {
+                    checkAxisReference(object.id(), *definition.axis.reference, "the axis is");
+                }
                 if (definition.countParameter) {
                     checkParameter(object.id(), *definition.countParameter, dimensions::dimensionless,
                                    "the count is driven by");
@@ -211,6 +273,9 @@ private:
                                    "the angle is driven by");
                 }
             } else if (const auto* mirror = dynamic_cast<const MirrorFeature*>(&object)) {
+                if (mirror->definition().plane.reference) {
+                    checkPlaneReference(object.id(), *mirror->definition().plane.reference, "the plane is");
+                }
                 if (const auto& offset = mirror->definition().plane.offsetParameter) {
                     checkParameter(object.id(), *offset, dimensions::length, "the plane's offset is driven by");
                 }

@@ -164,7 +164,7 @@ std::unique_ptr<DocumentObject> Sketch::clone() const {
 
 bool Sketch::contentEquals(const DocumentObject& other) const {
     const auto& sketch = static_cast<const Sketch&>(other);
-    return placement_ == sketch.placement_ && entities_ == sketch.entities_ &&
+    return placement_ == sketch.placement_ && attachment_ == sketch.attachment_ && entities_ == sketch.entities_ &&
            constraints_ == sketch.constraints_;
 }
 
@@ -174,6 +174,9 @@ std::vector<ObjectId> Sketch::dependencies() const {
         if (constraint.parameter) {
             parameters.push_back(ObjectId{*constraint.parameter});
         }
+    }
+    if (attachment_ && attachment_->object) {
+        parameters.push_back(*attachment_->object);
     }
     std::ranges::sort(parameters);
     const auto duplicates = std::ranges::unique(parameters);
@@ -216,7 +219,8 @@ Result<bool> Sketch::adoptSolution(const Sketch& solved) {
 }
 
 Result<bool> Sketch::restoreContent(const Sketch& state) {
-    const bool changed = placement_ != state.placement_ || entities_ != state.entities_ ||
+    const bool changed = placement_ != state.placement_ || attachment_ != state.attachment_ ||
+                         entities_ != state.entities_ ||
                          constraints_ != state.constraints_ ||
                          entityIds_.lastValue() != state.entityIds_.lastValue() ||
                          constraintIds_.lastValue() != state.constraintIds_.lastValue();
@@ -227,10 +231,22 @@ Result<bool> Sketch::restoreContent(const Sketch& state) {
     std::map<EntityId, Entity> entities = state.entities_;
     std::map<ConstraintId, Constraint> constraints = state.constraints_;
     placement_ = state.placement_;
+    attachment_ = state.attachment_;
     entities_.swap(entities);
     constraints_.swap(constraints);
     entityIds_ = state.entityIds_;
     constraintIds_ = state.constraintIds_;
+    return true;
+}
+
+Result<bool> Sketch::setAttachment(std::optional<PlaneReference> attachment) {
+    if (attachment && attachment->object && !attachment->object->isValid()) {
+        return makeError(ErrorCode::InvalidArgument, "a sketch's attachment must name a valid object");
+    }
+    if (attachment == attachment_) {
+        return false;
+    }
+    attachment_ = attachment;
     return true;
 }
 

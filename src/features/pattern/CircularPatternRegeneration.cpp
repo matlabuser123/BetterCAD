@@ -1,6 +1,7 @@
 #include "features/SolidSupport.hpp"
 #include "features/pattern/PatternSupport.hpp"
 
+#include <bettercad/features/Datums.hpp>
 #include <bettercad/features/Regeneration.hpp>
 
 #include <format>
@@ -20,8 +21,17 @@ double tidy(double value) {
 Result<std::vector<CircularPatternInstance>> resolveCircularPatternInstances(
     const CircularPatternDefinition& definition, const Document& document) {
     const PatternAxis& axis = definition.axis;
-    const auto direction = Direction3D::fromComponents(axis.direction.x, axis.direction.y, axis.direction.z);
-    if (!direction || !isFinite(axis.origin.x) || !isFinite(axis.origin.y) || !isFinite(axis.origin.z)) {
+    Point3D origin = axis.origin;
+    auto direction = Direction3D::fromComponents(axis.direction.x, axis.direction.y, axis.direction.z);
+    if (axis.reference) {
+        auto resolved = resolveAxis(document, *axis.reference);
+        if (!resolved) {
+            return std::unexpected(resolved.error());
+        }
+        origin = resolved->origin;
+        direction = resolved->direction;
+    }
+    if (!direction || !isFinite(origin.x) || !isFinite(origin.y) || !isFinite(origin.z)) {
         return makeError(ErrorCode::InvalidArgument,
                          "the axis needs a finite origin and a finite, non-zero direction");
     }
@@ -40,7 +50,7 @@ Result<std::vector<CircularPatternInstance>> resolveCircularPatternInstances(
     if (auto valid = detail::checkCircularAngle(definition.spacing, *count, angle); !valid) {
         return std::unexpected(valid.error());
     }
-    return circularPatternInstances(Axis3D{axis.origin, *direction}, *count,
+    return circularPatternInstances(Axis3D{origin, *direction}, *count,
                                     circularPatternStep(definition.spacing, *count, angle, definition.direction));
 }
 

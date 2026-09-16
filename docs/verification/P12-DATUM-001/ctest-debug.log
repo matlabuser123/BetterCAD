@@ -1,0 +1,1743 @@
+Test project C:/Users/uqhas/OneDrive/Desktop/CAD/build/debug
+        Start 152: unit.CurvedProfile_RevolvedEllipseAndSplineFollowPappus
+        Start 156: unit.CurvedProfile_SweptCurveSidesHaveTheirAnalyticArea
+        Start 651: unit.SketchFeatures_RevolvedAndSweptEllipsesFollowPappus
+        Start 427: unit.Loft_ArcsMatchArcsOfEqualSweep
+        Start 566: unit.ReferenceModel_MountingBracketRegeneratesDeterministically
+        Start 541: unit.ReferenceModel_AllModelsStressRegression
+        Start 400: unit.LoftFeature_ExportsClosedStl
+        Start 558: unit.ReferenceModel_FlangeRegeneratesDeterministically
+  1/869 Test #651: unit.SketchFeatures_RevolvedAndSweptEllipsesFollowPappus ....................................................   Passed    0.33 sec
+  2/869 Test #152: unit.CurvedProfile_RevolvedEllipseAndSplineFollowPappus .....................................................   Passed    0.36 sec
+        Start 540: unit.ReferenceModel_AllModelsRegenerateAfterAChange
+        Start 416: unit.LoftFeature_RegenerationIsDeterministic
+  3/869 Test #156: unit.CurvedProfile_SweptCurveSidesHaveTheirAnalyticArea .....................................................   Passed    0.52 sec
+        Start 409: unit.LoftFeature_OffsetSectionsProduceValidSolid
+  4/869 Test #427: unit.Loft_ArcsMatchArcsOfEqualSweep .........................................................................   Passed    0.51 sec
+        Start 574: unit.ReferenceModel_PulleyRegeneratesDeterministically
+  5/869 Test #409: unit.LoftFeature_OffsetSectionsProduceValidSolid ............................................................   Passed    0.26 sec
+  6/869 Test #416: unit.LoftFeature_RegenerationIsDeterministic ................................................................   Passed    0.42 sec
+        Start 434: unit.Loft_OffsetSectionsKeepTheirPositions
+        Start 583: unit.ReferenceModel_ShaftRegeneratesDeterministically
+  7/869 Test #434: unit.Loft_OffsetSectionsKeepTheirPositions ..................................................................   Passed    0.41 sec
+        Start 539: unit.ReferenceModel_AllModelsBuildInOneProcess
+  8/869 Test #400: unit.LoftFeature_ExportsClosedStl ...........................................................................   Passed    1.70 sec
+        Start 565: unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges
+  9/869 Test #565: unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges .........................................   Passed    8.65 sec
+        Start 435: unit.Loft_PolygonsMatchFrustumsAndPrismatoids
+ 10/869 Test #583: unit.ReferenceModel_ShaftRegeneratesDeterministically .......................................................   Passed    9.91 sec
+        Start 548: unit.ReferenceModel_BearingHousingRegeneratesDeterministically
+ 11/869 Test #435: unit.Loft_PolygonsMatchFrustumsAndPrismatoids ...............................................................   Passed    0.78 sec
+        Start 412: unit.LoftFeature_RectangularFrustumMatchesAnalyticVolume
+ 12/869 Test #412: unit.LoftFeature_RectangularFrustumMatchesAnalyticVolume ....................................................   Passed    0.65 sec
+        Start 403: unit.LoftFeature_FailsSafelyOnSelfIntersection
+ 13/869 Test #574: unit.ReferenceModel_PulleyRegeneratesDeterministically ......................................................   Passed   11.37 sec
+        Start 577: unit.ReferenceModel_SavedModelsMatchTheBuilders
+ 14/869 Test #540: unit.ReferenceModel_AllModelsRegenerateAfterAChange .........................................................   Passed   12.15 sec
+        Start 573: unit.ReferenceModel_PulleyRegeneratesAfterParameterChanges
+ 15/869 Test #403: unit.LoftFeature_FailsSafelyOnSelfIntersection ..............................................................   Passed    0.71 sec
+        Start 557: unit.ReferenceModel_FlangeRegeneratesAfterParameterChanges
+ 16/869 Test #558: unit.ReferenceModel_FlangeRegeneratesDeterministically ......................................................   Passed   13.04 sec
+        Start 357: unit.LinearPattern_DoesNotAccumulateTransformDrift
+ 17/869 Test #539: unit.ReferenceModel_AllModelsBuildInOneProcess ..............................................................   Passed   13.49 sec
+        Start 391: unit.LoftFeature_Add
+ 18/869 Test #566: unit.ReferenceModel_MountingBracketRegeneratesDeterministically .............................................   Passed   14.96 sec
+        Start 589: unit.ReferenceModel_UBoltRegeneratesDeterministically
+ 19/869 Test #391: unit.LoftFeature_Add ........................................................................................   Passed    0.36 sec
+        Start 582: unit.ReferenceModel_ShaftRegeneratesAfterParameterChanges
+ 20/869 Test #573: unit.ReferenceModel_PulleyRegeneratesAfterParameterChanges ..................................................   Passed    4.99 sec
+        Start 547: unit.ReferenceModel_BearingHousingRegeneratesAfterParameterChanges
+ 21/869 Test #557: unit.ReferenceModel_FlangeRegeneratesAfterParameterChanges ..................................................   Passed    5.16 sec
+        Start 585: unit.ReferenceModel_ShaftUndoRedo
+ 22/869 Test #548: unit.ReferenceModel_BearingHousingRegeneratesDeterministically ..............................................   Passed    7.47 sec
+        Start 545: unit.ReferenceModel_BearingHousingFailsSafelyOnInvalidParameters
+ 23/869 Test #589: unit.ReferenceModel_UBoltRegeneratesDeterministically .......................................................   Passed    3.95 sec
+ 24/869 Test #582: unit.ReferenceModel_ShaftRegeneratesAfterParameterChanges ...................................................   Passed    3.89 sec
+        Start 562: unit.ReferenceModel_MountingBracketExports
+        Start 567: unit.ReferenceModel_MountingBracketSaveLoad
+ 25/869 Test #541: unit.ReferenceModel_AllModelsStressRegression ...............................................................   Passed   20.29 sec
+        Start 564: unit.ReferenceModel_MountingBracketMatchesIndependentProperties
+ 26/869 Test #577: unit.ReferenceModel_SavedModelsMatchTheBuilders .............................................................   Passed    8.50 sec
+        Start 570: unit.ReferenceModel_PulleyExports
+ 27/869 Test #547: unit.ReferenceModel_BearingHousingRegeneratesAfterParameterChanges ..........................................   Passed    3.18 sec
+        Start 572: unit.ReferenceModel_PulleyMatchesIndependentProperties
+ 28/869 Test #545: unit.ReferenceModel_BearingHousingFailsSafelyOnInvalidParameters ............................................   Passed    3.75 sec
+        Start 560: unit.ReferenceModel_FlangeUndoRedo
+ 29/869 Test #585: unit.ReferenceModel_ShaftUndoRedo ...........................................................................   Passed    4.65 sec
+        Start 868: compile_fail.ids.object-to-sketch-id
+ 30/869 Test #562: unit.ReferenceModel_MountingBracketExports ..................................................................   Passed    3.83 sec
+        Start 126: unit.CircularPattern_TouchingAndOverlappingInstancesFuse
+ 31/869 Test #567: unit.ReferenceModel_MountingBracketSaveLoad .................................................................   Passed    4.75 sec
+        Start 559: unit.ReferenceModel_FlangeSaveLoad
+ 32/869 Test #564: unit.ReferenceModel_MountingBracketMatchesIndependentProperties .............................................   Passed    3.73 sec
+        Start 552: unit.ReferenceModel_FlangeBoltPatternPositionsCorrect
+ 33/869 Test #570: unit.ReferenceModel_PulleyExports ...........................................................................   Passed    3.69 sec
+        Start 575: unit.ReferenceModel_PulleySaveLoad
+ 34/869 Test #572: unit.ReferenceModel_PulleyMatchesIndependentProperties ......................................................   Passed    3.69 sec
+        Start 576: unit.ReferenceModel_PulleyUndoRedo
+ 35/869 Test #560: unit.ReferenceModel_FlangeUndoRedo ..........................................................................   Passed    4.18 sec
+        Start 650: unit.SketchFeatures_DrivenEllipseAndSplinesExtrudeToTheirVolumes
+ 36/869 Test #650: unit.SketchFeatures_DrivenEllipseAndSplinesExtrudeToTheirVolumes ............................................   Passed    0.96 sec
+        Start 568: unit.ReferenceModel_MountingBracketUndoRedo
+ 37/869 Test #559: unit.ReferenceModel_FlangeSaveLoad ..........................................................................   Passed    4.00 sec
+        Start 554: unit.ReferenceModel_FlangeExports
+ 38/869 Test #575: unit.ReferenceModel_PulleySaveLoad ..........................................................................   Passed    3.68 sec
+        Start 563: unit.ReferenceModel_MountingBracketFailsSafelyOnInvalidParameters
+ 39/869 Test #552: unit.ReferenceModel_FlangeBoltPatternPositionsCorrect .......................................................   Passed    3.72 sec
+        Start 561: unit.ReferenceModel_MountingBracketBuildsValidGeometry
+ 40/869 Test #576: unit.ReferenceModel_PulleyUndoRedo ..........................................................................   Passed    3.63 sec
+        Start 114: unit.CircularPattern_RegeneratesWhenCountChanges
+ 41/869 Test #868: compile_fail.ids.object-to-sketch-id ........................................................................   Passed    5.71 sec
+        Start 864: compile_fail.ids.sketch-id-as-feature-id
+ 42/869 Test #357: unit.LinearPattern_DoesNotAccumulateTransformDrift ..........................................................   Passed   16.50 sec
+        Start 584: unit.ReferenceModel_ShaftSaveLoad
+ 43/869 Test #126: unit.CircularPattern_TouchingAndOverlappingInstancesFuse ....................................................   Passed    7.34 sec
+        Start 581: unit.ReferenceModel_ShaftMatchesAnalyticProperties
+ 44/869 Test #554: unit.ReferenceModel_FlangeExports ...........................................................................   Passed    2.52 sec
+        Start 556: unit.ReferenceModel_FlangeMatchesAnalyticVolume
+ 45/869 Test #568: unit.ReferenceModel_MountingBracketUndoRedo .................................................................   Passed    3.21 sec
+        Start 838: cli.validate.reference.mounting_bracket
+ 46/869 Test #563: unit.ReferenceModel_MountingBracketFailsSafelyOnInvalidParameters ...........................................   Passed    2.65 sec
+        Start 569: unit.ReferenceModel_PulleyBuildsValidGeometry
+ 47/869 Test #561: unit.ReferenceModel_MountingBracketBuildsValidGeometry ......................................................   Passed    2.98 sec
+        Start 571: unit.ReferenceModel_PulleyFailsSafelyOnInvalidParameters
+ 48/869 Test #114: unit.CircularPattern_RegeneratesWhenCountChanges ............................................................   Passed    3.77 sec
+        Start 546: unit.ReferenceModel_BearingHousingMatchesIndependentProperties
+ 49/869 Test #838: cli.validate.reference.mounting_bracket .....................................................................   Passed    1.90 sec
+        Start 579: unit.ReferenceModel_ShaftExports
+ 50/869 Test #581: unit.ReferenceModel_ShaftMatchesAnalyticProperties ..........................................................   Passed    2.55 sec
+        Start 549: unit.ReferenceModel_BearingHousingSaveLoad
+ 51/869 Test #584: unit.ReferenceModel_ShaftSaveLoad ...........................................................................   Passed    3.08 sec
+        Start 590: unit.ReferenceModel_UBoltSaveLoadAndExports
+ 52/869 Test #571: unit.ReferenceModel_PulleyFailsSafelyOnInvalidParameters ....................................................   Passed    2.35 sec
+        Start 653: unit.SketchFile_EllipsesAndSplinesRoundTrip
+ 53/869 Test #569: unit.ReferenceModel_PulleyBuildsValidGeometry ...............................................................   Passed    2.98 sec
+        Start 555: unit.ReferenceModel_FlangeFailsSafelyOnInvalidParameters
+ 54/869 Test #556: unit.ReferenceModel_FlangeMatchesAnalyticVolume .............................................................   Passed    3.19 sec
+        Start 432: unit.Loft_MatchesSectionsWithTheLeastTwist
+ 55/869 Test #653: unit.SketchFile_EllipsesAndSplinesRoundTrip .................................................................   Passed    0.72 sec
+        Start 553: unit.ReferenceModel_FlangeBuildsValidGeometry
+ 56/869 Test #864: compile_fail.ids.sketch-id-as-feature-id ....................................................................   Passed    5.92 sec
+        Start 865: compile_fail.ids.integer-to-id
+ 57/869 Test #546: unit.ReferenceModel_BearingHousingMatchesIndependentProperties ..............................................   Passed    2.50 sec
+        Start 836: cli.validate.reference.pulley
+ 58/869 Test #579: unit.ReferenceModel_ShaftExports ............................................................................   Passed    2.31 sec
+        Start 550: unit.ReferenceModel_BearingHousingUndoRedo
+ 59/869 Test #590: unit.ReferenceModel_UBoltSaveLoadAndExports .................................................................   Passed    2.30 sec
+        Start 580: unit.ReferenceModel_ShaftFailsSafelyOnInvalidParameters
+ 60/869 Test #549: unit.ReferenceModel_BearingHousingSaveLoad ..................................................................   Passed    2.95 sec
+        Start 841: cli.export-step.reference.bracket
+ 61/869 Test #555: unit.ReferenceModel_FlangeFailsSafelyOnInvalidParameters ....................................................   Passed    2.30 sec
+        Start 116: unit.CircularPattern_RegeneratesWhenSourceChanges
+ 62/869 Test #432: unit.Loft_MatchesSectionsWithTheLeastTwist ..................................................................   Passed    2.52 sec
+        Start 716: unit.SweepFeature_ExportsClosedStl
+ 63/869 Test #836: cli.validate.reference.pulley ...............................................................................   Passed    1.79 sec
+        Start 835: cli.validate.reference.flange
+ 64/869 Test #553: unit.ReferenceModel_FlangeBuildsValidGeometry ...............................................................   Passed    2.46 sec
+        Start 578: unit.ReferenceModel_ShaftBuildsValidGeometry
+ 65/869 Test #580: unit.ReferenceModel_ShaftFailsSafelyOnInvalidParameters .....................................................   Passed    2.10 sec
+ 66/869 Test #550: unit.ReferenceModel_BearingHousingUndoRedo ..................................................................   Passed    2.60 sec
+        Start 544: unit.ReferenceModel_BearingHousingExports
+        Start 371: unit.LinearPattern_RegeneratesWhenCountChanges
+ 67/869 Test #841: cli.export-step.reference.bracket ...........................................................................   Passed    1.60 sec
+        Start 147: unit.CurvedProfile_ExtrudedSplinesHaveTheirAreaTimesDepth
+ 68/869 Test #835: cli.validate.reference.flange ...............................................................................   Passed    1.42 sec
+        Start 591: unit.ReferenceModel_UBoltUndoRedoAndFailure
+ 69/869 Test #147: unit.CurvedProfile_ExtrudedSplinesHaveTheirAreaTimesDepth ...................................................   Passed    0.26 sec
+        Start 382: unit.LinearPattern_SaveLoadPreservesDefinition
+ 70/869 Test #578: unit.ReferenceModel_ShaftBuildsValidGeometry ................................................................   Passed    2.10 sec
+        Start 834: cli.validate.reference.shaft
+ 71/869 Test #116: unit.CircularPattern_RegeneratesWhenSourceChanges ...........................................................   Passed    2.87 sec
+        Start 837: cli.validate.reference.bearing_housing
+ 72/869 Test #716: unit.SweepFeature_ExportsClosedStl ..........................................................................   Passed    2.65 sec
+        Start 848: cli.export-stl.reference.pulley
+ 73/869 Test #544: unit.ReferenceModel_BearingHousingExports ...................................................................   Passed    1.84 sec
+        Start 144: unit.CurvedProfile_CutCurvedBodiesKeepTheirProperties
+ 74/869 Test #591: unit.ReferenceModel_UBoltUndoRedoAndFailure .................................................................   Passed    1.96 sec
+        Start 543: unit.ReferenceModel_BearingHousingBuildsValidGeometry
+ 75/869 Test #834: cli.validate.reference.shaft ................................................................................   Passed    1.23 sec
+        Start 588: unit.ReferenceModel_UBoltRegeneratesAfterParameterChanges
+ 76/869 Test #865: compile_fail.ids.integer-to-id ..............................................................................   Passed    5.68 sec
+        Start 866: compile_fail.ids.id-to-integer
+ 77/869 Test #837: cli.validate.reference.bearing_housing ......................................................................   Passed    1.20 sec
+        Start 372: unit.LinearPattern_RegeneratesWhenSourceChanges
+ 78/869 Test #848: cli.export-stl.reference.pulley .............................................................................   Passed    1.28 sec
+        Start 436: unit.Loft_RejectsLoftsThatFoldOrIntersect
+ 79/869 Test #144: unit.CurvedProfile_CutCurvedBodiesKeepTheirProperties .......................................................   Passed    1.14 sec
+        Start 113: unit.CircularPattern_RegeneratesWhenAxisChanges
+ 80/869 Test #371: unit.LinearPattern_RegeneratesWhenCountChanges ..............................................................   Passed    3.04 sec
+        Start 428: unit.Loft_BreaksTiesDeterministically
+ 81/869 Test #588: unit.ReferenceModel_UBoltRegeneratesAfterParameterChanges ...................................................   Passed    1.09 sec
+        Start 641: unit.SketchDocument_ValidationAcceptsEllipsesAndSplines
+ 82/869 Test #641: unit.SketchDocument_ValidationAcceptsEllipsesAndSplines .....................................................   Passed    0.34 sec
+        Start 157: unit.CurvedProfile_SweptEllipseFollowsPappus
+ 83/869 Test #543: unit.ReferenceModel_BearingHousingBuildsValidGeometry .......................................................   Passed    1.79 sec
+        Start  96: unit.CircularPattern_DoesNotAccumulateAngularDrift
+ 84/869 Test #436: unit.Loft_RejectsLoftsThatFoldOrIntersect ...................................................................   Passed    1.63 sec
+ 85/869 Test #428: unit.Loft_BreaksTiesDeterministically .......................................................................   Passed    1.36 sec
+        Start 110: unit.CircularPattern_PatternsChamferAndFilletByRotatedReferences
+        Start 127: unit.CircularPattern_UndoRedoRestoresGeometry
+ 86/869 Test #157: unit.CurvedProfile_SweptEllipseFollowsPappus ................................................................   Passed    0.47 sec
+        Start  97: unit.CircularPattern_ExportsClosedStl
+ 87/869 Test #113: unit.CircularPattern_RegeneratesWhenAxisChanges .............................................................   Passed    1.93 sec
+        Start 369: unit.LinearPattern_PatternsChamferAndFilletByTranslatedReferences
+ 88/869 Test #372: unit.LinearPattern_RegeneratesWhenSourceChanges .............................................................   Passed    2.50 sec
+        Start 587: unit.ReferenceModel_UBoltMatchesIndependentProperties
+ 89/869 Test #382: unit.LinearPattern_SaveLoadPreservesDefinition ..............................................................   Passed    5.47 sec
+        Start 169: unit.DatumModel_FailuresBlockDependentsAndRecover
+ 90/869 Test #587: unit.ReferenceModel_UBoltMatchesIndependentProperties .......................................................   Passed    0.87 sec
+        Start 839: cli.validate.reference.u_bolt
+ 91/869 Test  #97: unit.CircularPattern_ExportsClosedStl .......................................................................   Passed    1.71 sec
+        Start 164: unit.DatumFile_ExportedBodiesReadBackFromStep
+ 92/869 Test #169: unit.DatumModel_FailuresBlockDependentsAndRecover ...........................................................   Passed    0.52 sec
+        Start 586: unit.ReferenceModel_UBoltBuildsValidGeometry
+ 93/869 Test #164: unit.DatumFile_ExportedBodiesReadBackFromStep ...............................................................   Passed    0.47 sec
+        Start 117: unit.CircularPattern_RegenerationIsDeterministic
+ 94/869 Test #839: cli.validate.reference.u_bolt ...............................................................................   Passed    0.65 sec
+        Start 473: unit.MirrorFeature_RegeneratesWhenSourceChanges
+ 95/869 Test  #96: unit.CircularPattern_DoesNotAccumulateAngularDrift ..........................................................   Passed    2.86 sec
+        Start 101: unit.CircularPattern_FailuresLeaveTheDocumentAndUpstreamBodiesIntact
+ 96/869 Test #127: unit.CircularPattern_UndoRedoRestoresGeometry ...............................................................   Passed    2.75 sec
+        Start 171: unit.DatumModel_RegeneratesWithAnalyticGeometry
+ 97/869 Test #110: unit.CircularPattern_PatternsChamferAndFilletByRotatedReferences ............................................   Passed    2.84 sec
+        Start 455: unit.MirrorFeature_ExportsClosedStl
+ 98/869 Test #586: unit.ReferenceModel_UBoltBuildsValidGeometry ................................................................   Passed    0.92 sec
+        Start 438: unit.Loft_TwistedSectionsFollowTheTwistLaw
+ 99/869 Test #171: unit.DatumModel_RegeneratesWithAnalyticGeometry .............................................................   Passed    0.51 sec
+        Start 161: unit.DatumCli_ValidateReportsDatumProblems
+100/869 Test #473: unit.MirrorFeature_RegeneratesWhenSourceChanges .............................................................   Passed    1.01 sec
+        Start 362: unit.LinearPattern_FailuresLeaveTheDocumentAndUpstreamBodiesIntact
+101/869 Test #117: unit.CircularPattern_RegenerationIsDeterministic ............................................................   Passed    1.10 sec
+        Start 143: unit.CurvedProfile_CurvedBodiesHaveTheirAnalyticCentreOfMass
+102/869 Test #101: unit.CircularPattern_FailuresLeaveTheDocumentAndUpstreamBodiesIntact ........................................   Passed    1.09 sec
+        Start 844: cli.export-step.driven-plate
+103/869 Test #369: unit.LinearPattern_PatternsChamferAndFilletByTranslatedReferences ...........................................   Passed    3.18 sec
+104/869 Test #161: unit.DatumCli_ValidateReportsDatumProblems ..................................................................   Passed    0.39 sec
+105/869 Test #438: unit.Loft_TwistedSectionsFollowTheTwistLaw ..................................................................   Passed    0.79 sec
+        Start 170: unit.DatumModel_RegeneratesDeterministically
+        Start 361: unit.LinearPattern_FailsAtomicallyWhenInstanceInvalid
+        Start 464: unit.MirrorFeature_MirrorsChamferAndFilletByMirroredReferences
+106/869 Test #143: unit.CurvedProfile_CurvedBodiesHaveTheirAnalyticCentreOfMass ................................................   Passed    0.44 sec
+        Start 366: unit.LinearPattern_ModelsAreValidatedLikeAnyOther
+107/869 Test #844: cli.export-step.driven-plate ................................................................................   Passed    0.22 sec
+        Start 513: unit.ParameterExpressions_SaveLoad_PreservesExpressionsAndEvaluatedValues
+108/869 Test #455: unit.MirrorFeature_ExportsClosedStl .........................................................................   Passed    1.15 sec
+        Start 805: unit.info and validate describe circular patterns
+109/869 Test #170: unit.DatumModel_RegeneratesDeterministically ................................................................   Passed    0.39 sec
+        Start 166: unit.DatumFile_SaveLoad_PreservesDatumsAndRebuildsTheSameGeometry
+110/869 Test #513: unit.ParameterExpressions_SaveLoad_PreservesExpressionsAndEvaluatedValues ...................................   Passed    0.25 sec
+        Start 808: unit.info and validate describe linear patterns
+111/869 Test #866: compile_fail.ids.id-to-integer ..............................................................................   Passed    6.11 sec
+        Start 857: compile_fail.units.add-length-angle
+112/869 Test #166: unit.DatumFile_SaveLoad_PreservesDatumsAndRebuildsTheSameGeometry ...........................................   Passed    0.41 sec
+113/869 Test #362: unit.LinearPattern_FailuresLeaveTheDocumentAndUpstreamBodiesIntact ..........................................   Passed    1.18 sec
+        Start 121: unit.CircularPattern_ReusesStableSourceReference
+        Start 107: unit.CircularPattern_ModelsAreValidatedLikeAnyOther
+114/869 Test #805: unit.info and validate describe circular patterns ...........................................................   Passed    0.80 sec
+        Start 301: unit.HoleFeature_RegeneratesAfterPositionChange
+115/869 Test #366: unit.LinearPattern_ModelsAreValidatedLikeAnyOther ...........................................................   Passed    1.03 sec
+        Start 472: unit.MirrorFeature_RegeneratesWhenPlaneMoves
+116/869 Test #808: unit.info and validate describe linear patterns .............................................................   Passed    0.90 sec
+        Start 743: unit.SweepFeature_SaveLoadPreservesDefinition
+117/869 Test #464: unit.MirrorFeature_MirrorsChamferAndFilletByMirroredReferences ..............................................   Passed    1.34 sec
+        Start 125: unit.CircularPattern_SubtractiveExtrudePatternMatchesAnalyticVolume
+118/869 Test #107: unit.CircularPattern_ModelsAreValidatedLikeAnyOther .........................................................   Passed    0.80 sec
+        Start 359: unit.LinearPattern_ExportsStl
+119/869 Test #472: unit.MirrorFeature_RegeneratesWhenPlaneMoves ................................................................   Passed    0.70 sec
+        Start 847: cli.export-step.datum-block
+120/869 Test #361: unit.LinearPattern_FailsAtomicallyWhenInstanceInvalid .......................................................   Passed    1.97 sec
+        Start 480: unit.MirrorFeature_UndoRedoRestoresGeometry
+121/869 Test #743: unit.SweepFeature_SaveLoadPreservesDefinition ...............................................................   Passed    0.66 sec
+        Start 373: unit.LinearPattern_RegeneratesWhenSpacingChanges
+122/869 Test #301: unit.HoleFeature_RegeneratesAfterPositionChange .............................................................   Passed    1.07 sec
+        Start 123: unit.CircularPattern_SaveLoadPreservesDefinition
+123/869 Test #847: cli.export-step.datum-block .................................................................................   Passed    0.41 sec
+        Start 424: unit.LoftFeature_SaveLoadPreservesSectionOrder
+124/869 Test #121: unit.CircularPattern_ReusesStableSourceReference ............................................................   Passed    1.47 sec
+        Start 750: unit.Sweep_CornersAreMitred
+125/869 Test #125: unit.CircularPattern_SubtractiveExtrudePatternMatchesAnalyticVolume .........................................   Passed    0.92 sec
+        Start 386: unit.LinearPattern_TwoDirectionGridHasExpectedInstanceCount
+126/869 Test #424: unit.LoftFeature_SaveLoadPreservesSectionOrder ..............................................................   Passed    0.51 sec
+        Start 374: unit.LinearPattern_RegenerationIsDeterministic
+127/869 Test #359: unit.LinearPattern_ExportsStl ...............................................................................   Passed    1.17 sec
+        Start 506: unit.ParameterExpressions_DrivePlateAndReevaluateWhenWidthChanges
+128/869 Test #750: unit.Sweep_CornersAreMitred .................................................................................   Passed    0.66 sec
+129/869 Test #373: unit.LinearPattern_RegeneratesWhenSpacingChanges ............................................................   Passed    0.91 sec
+        Start  98: unit.CircularPattern_ExportsStep
+        Start 426: unit.LoftFeature_UndoRedoRestoresGeometry
+130/869 Test #506: unit.ParameterExpressions_DrivePlateAndReevaluateWhenWidthChanges ...........................................   Passed    0.28 sec
+        Start 410: unit.LoftFeature_OperationsWithoutOverlapFollowTheSharedPolicy
+131/869 Test #480: unit.MirrorFeature_UndoRedoRestoresGeometry .................................................................   Passed    1.29 sec
+        Start 853: architecture.checker.examples-occt-leak
+132/869 Test #426: unit.LoftFeature_UndoRedoRestoresGeometry ...................................................................   Passed    0.62 sec
+133/869 Test #123: unit.CircularPattern_SaveLoadPreservesDefinition ............................................................   Passed    1.39 sec
+        Start 810: unit.info and validate describe mirrors
+        Start 843: cli.validate.driven-plate
+134/869 Test #410: unit.LoftFeature_OperationsWithoutOverlapFollowTheSharedPolicy ..............................................   Passed    0.54 sec
+        Start 146: unit.CurvedProfile_ExtrudedEllipseHasVolumePiABH
+135/869 Test #853: architecture.checker.examples-occt-leak .....................................................................   Passed    0.35 sec
+        Start 649: unit.SketchExport_EllipsesAndSplinesReadBackFromStep
+136/869 Test #374: unit.LinearPattern_RegenerationIsDeterministic ..............................................................   Passed    0.95 sec
+        Start 717: unit.SweepFeature_ExportsStep
+137/869 Test #843: cli.validate.driven-plate ...................................................................................   Passed    0.45 sec
+        Start 172: unit.DatumValidation_ReportsWrongKindsAndDimensions
+138/869 Test #386: unit.LinearPattern_TwoDirectionGridHasExpectedInstanceCount .................................................   Passed    1.76 sec
+139/869 Test #146: unit.CurvedProfile_ExtrudedEllipseHasVolumePiABH ............................................................   Passed    0.45 sec
+140/869 Test #649: unit.SketchExport_EllipsesAndSplinesReadBackFromStep ........................................................   Passed    0.43 sec
+141/869 Test  #98: unit.CircularPattern_ExportsStep ............................................................................   Passed    1.13 sec
+        Start 115: unit.CircularPattern_RegeneratesWhenDirectionChanges
+        Start 846: cli.validate.datum-block
+        Start 748: unit.SweepFeature_UndoRedoRestoresGeometry
+        Start 450: unit.MirrorFeature_BodyScopeMirrorsTheWholeBody
+142/869 Test #810: unit.info and validate describe mirrors .....................................................................   Passed    0.55 sec
+        Start 656: unit.SketchFile_NewConstraintsRoundTrip
+143/869 Test #172: unit.DatumValidation_ReportsWrongKindsAndDimensions .........................................................   Passed    0.36 sec
+        Start 401: unit.LoftFeature_ExportsStep
+144/869 Test #656: unit.SketchFile_NewConstraintsRoundTrip .....................................................................   Passed    0.29 sec
+145/869 Test #717: unit.SweepFeature_ExportsStep ...............................................................................   Passed    0.71 sec
+        Start 112: unit.CircularPattern_RegeneratesWhenAngleChanges
+        Start 482: unit.MirrorFeature_WorksWithRevolvedBody
+146/869 Test #846: cli.validate.datum-block ....................................................................................   Passed    0.39 sec
+        Start 512: unit.ParameterExpressions_RegenerationIsDeterministic
+147/869 Test #748: unit.SweepFeature_UndoRedoRestoresGeometry ..................................................................   Passed    0.58 sec
+        Start 466: unit.MirrorFeature_ModelsAreValidatedLikeAnyOther
+148/869 Test #115: unit.CircularPattern_RegeneratesWhenDirectionChanges ........................................................   Passed    0.63 sec
+149/869 Test #512: unit.ParameterExpressions_RegenerationIsDeterministic .......................................................   Passed    0.23 sec
+        Start 111: unit.CircularPattern_RefusesUnsupportedSources
+        Start 498: unit.P11-FEAT-001 acceptance: changing the angle or the radius regenerates the revolve and its dependents
+150/869 Test #401: unit.LoftFeature_ExportsStep ................................................................................   Passed    0.37 sec
+        Start 479: unit.MirrorFeature_SaveLoadPreservesDefinition
+151/869 Test #450: unit.MirrorFeature_BodyScopeMirrorsTheWholeBody .............................................................   Passed    0.96 sec
+        Start 731: unit.SweepFeature_RegenerationIsDeterministic
+152/869 Test #112: unit.CircularPattern_RegeneratesWhenAngleChanges ............................................................   Passed    0.66 sec
+        Start 643: unit.SketchEllipseSpline_BoundsContainTheCurves
+153/869 Test #482: unit.MirrorFeature_WorksWithRevolvedBody ....................................................................   Passed    0.76 sec
+        Start 639: unit.SketchDocument_DrivenDiameterAndAngleRegenerateGeometry
+154/869 Test #466: unit.MirrorFeature_ModelsAreValidatedLikeAnyOther ...........................................................   Passed    0.54 sec
+        Start 842: cli.info.driven-plate
+155/869 Test #643: unit.SketchEllipseSpline_BoundsContainTheCurves .............................................................   Passed    0.37 sec
+        Start 225: unit.ExpressionCli_ValidateEvaluatesExpressionsAndReportsTheirErrors
+156/869 Test #498: unit.P11-FEAT-001 acceptance: changing the angle or the radius regenerates the revolve and its dependents ...   Passed    0.75 sec
+157/869 Test #639: unit.SketchDocument_DrivenDiameterAndAngleRegenerateGeometry ................................................   Passed    0.27 sec
+158/869 Test #731: unit.SweepFeature_RegenerationIsDeterministic ...............................................................   Passed    0.40 sec
+        Start 302: unit.HoleFeature_RegenerationIsDeterministic
+        Start 456: unit.MirrorFeature_ExportsStep
+        Start 163: unit.DatumFile_ExampleFileMatchesTheBuilder
+159/869 Test #842: cli.info.driven-plate .......................................................................................   Passed    0.31 sec
+        Start 379: unit.LinearPattern_ReusesStableSourceReference
+160/869 Test #225: unit.ExpressionCli_ValidateEvaluatesExpressionsAndReportsTheirErrors ........................................   Passed    0.18 sec
+        Start 300: unit.HoleFeature_RegeneratesAfterDiameterChange
+161/869 Test #479: unit.MirrorFeature_SaveLoadPreservesDefinition ..............................................................   Passed    0.88 sec
+        Start 358: unit.LinearPattern_ExportsStep
+162/869 Test #111: unit.CircularPattern_RefusesUnsupportedSources ..............................................................   Passed    0.98 sec
+        Start   8: unit.A half united with its mirror image: a planar seam merges, a cylindrical seam is refused
+163/869 Test #163: unit.DatumFile_ExampleFileMatchesTheBuilder .................................................................   Passed    0.19 sec
+        Start  88: unit.CircularPattern_AdditiveBossesMatchAnalyticVolume
+164/869 Test   #8: unit.A half united with its mirror image: a planar seam merges, a cylindrical seam is refused ...............   Passed    0.38 sec
+        Start 640: unit.SketchDocument_InvalidDrivenValuesFailTheSketch
+165/869 Test #302: unit.HoleFeature_RegenerationIsDeterministic ................................................................   Passed    0.64 sec
+        Start 642: unit.SketchDocument_ValidationSolvesTheNewConstraints
+166/869 Test #456: unit.MirrorFeature_ExportsStep ..............................................................................   Passed    0.65 sec
+        Start 508: unit.ParameterExpressions_FailedExpressionBlocksGeometryAndKeepsLastValue
+167/869 Test #508: unit.ParameterExpressions_FailedExpressionBlocksGeometryAndKeepsLastValue ...................................   Passed    0.13 sec
+168/869 Test #642: unit.SketchDocument_ValidationSolvesTheNewConstraints .......................................................   Passed    0.15 sec
+        Start 360: unit.LinearPattern_FailedPatternSavesAndLoadsUnchanged
+        Start 223: unit.ExpressionCli_ExportFollowsTheEvaluatedValues
+169/869 Test #640: unit.SketchDocument_InvalidDrivenValuesFailTheSketch ........................................................   Passed    0.24 sec
+170/869 Test #300: unit.HoleFeature_RegeneratesAfterDiameterChange .............................................................   Passed    0.67 sec
+        Start 310: unit.HoleFeature_SaveLoadPreservesEngineeringIntent
+        Start 474: unit.MirrorFeature_RegenerationIsDeterministic
+171/869 Test #857: compile_fail.units.add-length-angle .........................................................................   Passed    5.80 sec
+        Start 859: compile_fail.units.assign-double-to-length
+172/869 Test #223: unit.ExpressionCli_ExportFollowsTheEvaluatedValues ..........................................................   Passed    0.16 sec
+        Start 515: unit.ParameterExpressions_ValidationReportsEachExpressionProblemOnce
+173/869 Test #358: unit.LinearPattern_ExportsStep ..............................................................................   Passed    0.89 sec
+        Start 478: unit.MirrorFeature_SaveLoadKeepsAnArbitraryPlane
+174/869 Test #515: unit.ParameterExpressions_ValidationReportsEachExpressionProblemOnce ........................................   Passed    0.20 sec
+        Start 501: unit.P9 acceptance: create, save, close, load and regenerate give the same geometry and IDs
+175/869 Test #474: unit.MirrorFeature_RegenerationIsDeterministic ..............................................................   Passed    0.42 sec
+        Start 293: unit.HoleFeature_ExportsClosedStl
+176/869 Test  #88: unit.CircularPattern_AdditiveBossesMatchAnalyticVolume ......................................................   Passed    1.06 sec
+        Start 439: unit.Long dependency chains are handled without recursion
+177/869 Test #379: unit.LinearPattern_ReusesStableSourceReference ..............................................................   Passed    1.35 sec
+        Start 387: unit.LinearPattern_UndoRedoRestoresGeometry
+178/869 Test #501: unit.P9 acceptance: create, save, close, load and regenerate give the same geometry and IDs .................   Passed    0.48 sec
+        Start 504: unit.ParameterExpressions_CycleFailsParametersAndBlocksGeometry
+179/869 Test #504: unit.ParameterExpressions_CycleFailsParametersAndBlocksGeometry .............................................   Passed    0.16 sec
+        Start 514: unit.ParameterExpressions_SavingIsDeterministicAndKeepsTheFormatVersion
+180/869 Test #478: unit.MirrorFeature_SaveLoadKeepsAnArbitraryPlane ............................................................   Passed    0.76 sec
+        Start 459: unit.MirrorFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact
+181/869 Test #439: unit.Long dependency chains are handled without recursion ...................................................   Passed    0.63 sec
+        Start 807: unit.info and validate describe holes
+182/869 Test #360: unit.LinearPattern_FailedPatternSavesAndLoadsUnchanged ......................................................   Passed    1.32 sec
+183/869 Test #514: unit.ParameterExpressions_SavingIsDeterministicAndKeepsTheFormatVersion .....................................   Passed    0.29 sec
+        Start 809: unit.info and validate describe lofts
+        Start 500: unit.P11-FEAT-001 acceptance: revolves survive save, destroy, load and regenerate
+184/869 Test #310: unit.HoleFeature_SaveLoadPreservesEngineeringIntent .........................................................   Passed    1.32 sec
+185/869 Test #293: unit.HoleFeature_ExportsClosedStl ...........................................................................   Passed    0.88 sec
+        Start 219: unit.Exported STL files are closed surfaces of the model's result bodies
+        Start 850: architecture.layering
+186/869 Test #459: unit.MirrorFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact ..........................................   Passed    0.39 sec
+        Start 167: unit.DatumMirror_ReflectsAcrossADatumPlane
+187/869 Test #807: unit.info and validate describe holes .......................................................................   Passed    0.55 sec
+        Start 505: unit.ParameterExpressions_DimensionErrorFailsWithoutCoercion
+188/869 Test #167: unit.DatumMirror_ReflectsAcrossADatumPlane ..................................................................   Passed    0.25 sec
+189/869 Test #809: unit.info and validate describe lofts .......................................................................   Passed    0.37 sec
+        Start 749: unit.Sweep_ArcsAndCirclesMatchPappus
+        Start 267: unit.FilletFeature_WorksOnRevolvedBody
+190/869 Test #387: unit.LinearPattern_UndoRedoRestoresGeometry .................................................................   Passed    1.19 sec
+        Start 220: unit.Exporting a document writes its result bodies as named STEP products
+191/869 Test #219: unit.Exported STL files are closed surfaces of the model's result bodies ....................................   Passed    0.46 sec
+192/869 Test #505: unit.ParameterExpressions_DimensionErrorFailsWithoutCoercion ................................................   Passed    0.15 sec
+193/869 Test #500: unit.P11-FEAT-001 acceptance: revolves survive save, destroy, load and regenerate ...........................   Passed    0.48 sec
+        Start 165: unit.DatumFile_MalformedDatumsAreRejectedWithThePath
+        Start 415: unit.LoftFeature_RegeneratesWhenTargetChanges
+        Start 654: unit.SketchFile_MalformedEllipsesAndSplinesAreRejectedWithThePath
+194/869 Test #850: architecture.layering .......................................................................................   Passed    0.62 sec
+        Start 231: unit.Expression_EvaluationIsDeterministic
+195/869 Test #165: unit.DatumFile_MalformedDatumsAreRejectedWithThePath ........................................................   Passed    0.19 sec
+196/869 Test #654: unit.SketchFile_MalformedEllipsesAndSplinesAreRejectedWithThePath ...........................................   Passed    0.15 sec
+        Start 812: unit.info and validate describe sweeps
+        Start 845: cli.info.datum-block
+197/869 Test #231: unit.Expression_EvaluationIsDeterministic ...................................................................   Passed    0.14 sec
+        Start 840: cli.info.reference.shaft
+198/869 Test #749: unit.Sweep_ArcsAndCirclesMatchPappus ........................................................................   Passed    0.46 sec
+199/869 Test #415: unit.LoftFeature_RegeneratesWhenTargetChanges ...............................................................   Passed    0.31 sec
+200/869 Test #220: unit.Exporting a document writes its result bodies as named STEP products ...................................   Passed    0.36 sec
+        Start 339: unit.Inclusion-exclusion holds: V(A u B) = V(A) + V(B) - V(A n B)
+        Start 315: unit.HoleFeature_WorksOnRevolvedBody
+        Start 465: unit.MirrorFeature_MirrorsHoleTypesAndExtents
+201/869 Test #845: cli.info.datum-block ........................................................................................   Passed    0.18 sec
+        Start 849: gui.launch.smoke
+202/869 Test #812: unit.info and validate describe sweeps ......................................................................   Passed    0.50 sec
+        Start 634: unit.SketchCommands_EllipseAndSplineEditsUndoAndRedo
+203/869 Test #840: cli.info.reference.shaft ....................................................................................   Passed    0.39 sec
+        Start 184: unit.Dependency cycles are reported and block their dependents
+204/869 Test #184: unit.Dependency cycles are reported and block their dependents ..............................................   Passed    0.18 sec
+205/869 Test #634: unit.SketchCommands_EllipseAndSplineEditsUndoAndRedo ........................................................   Passed    0.20 sec
+        Start 224: unit.ExpressionCli_InfoShowsDrivenParametersAndTheirValues
+        Start 407: unit.LoftFeature_ModelsAreValidatedLikeAnyOther
+206/869 Test #849: gui.launch.smoke ............................................................................................   Passed    0.54 sec
+207/869 Test #267: unit.FilletFeature_WorksOnRevolvedBody ......................................................................   Passed    1.04 sec
+        Start 674: unit.SketchSolver_TangentCirclesKeepTheirKindOfContact
+        Start 404: unit.LoftFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact
+208/869 Test #674: unit.SketchSolver_TangentCirclesKeepTheirKindOfContact ......................................................   Passed    0.17 sec
+        Start 471: unit.MirrorFeature_RefusesUnsupportedSources
+209/869 Test #224: unit.ExpressionCli_InfoShowsDrivenParametersAndTheirValues ..................................................   Passed    0.21 sec
+210/869 Test #465: unit.MirrorFeature_MirrorsHoleTypesAndExtents ...............................................................   Passed    0.74 sec
+        Start 150: unit.CurvedProfile_OpenSplineClosesALoopWithLines
+        Start 148: unit.CurvedProfile_LoftsAndPathsRefuseEllipsesAndSplines
+211/869 Test #407: unit.LoftFeature_ModelsAreValidatedLikeAnyOther .............................................................   Passed    0.26 sec
+212/869 Test #404: unit.LoftFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact ............................................   Passed    0.23 sec
+        Start 461: unit.MirrorFeature_InvalidInputsFailWithStructuredDiagnostics
+        Start 677: unit.SketchSpline_InvalidSplinesAreRefused
+213/869 Test #315: unit.HoleFeature_WorksOnRevolvedBody ........................................................................   Passed    0.85 sec
+214/869 Test #150: unit.CurvedProfile_OpenSplineClosesALoopWithLines ...........................................................   Passed    0.10 sec
+215/869 Test #339: unit.Inclusion-exclusion holds: V(A u B) = V(A) + V(B) - V(A n B) ...........................................   Passed    0.87 sec
+        Start 467: unit.MirrorFeature_PlaneThroughSourceGeometry
+        Start  34: unit.BSpline_PeriodicCubicMatchesTheUniformBasisMatrix
+        Start 227: unit.Expression_AppliesPrecedenceAndLeftAssociativity
+216/869 Test #148: unit.CurvedProfile_LoftsAndPathsRefuseEllipsesAndSplines ....................................................   Passed    0.13 sec
+        Start 659: unit.SketchSolver_AngleTurnsTheSecondLineCounterClockwiseFromTheFirst
+217/869 Test #677: unit.SketchSpline_InvalidSplinesAreRefused ..................................................................   Passed    0.10 sec
+        Start 729: unit.SweepFeature_RegeneratesWhenProfileChanges
+218/869 Test  #34: unit.BSpline_PeriodicCubicMatchesTheUniformBasisMatrix ......................................................   Passed    0.08 sec
+        Start 668: unit.SketchSolver_RegularHexagonFromEqualSidesAndAngles
+219/869 Test #668: unit.SketchSolver_RegularHexagonFromEqualSidesAndAngles .....................................................   Passed    0.08 sec
+        Start  99: unit.CircularPattern_FailedPatternSavesAndLoadsUnchanged
+220/869 Test #659: unit.SketchSolver_AngleTurnsTheSecondLineCounterClockwiseFromTheFirst .......................................   Passed    0.15 sec
+221/869 Test #227: unit.Expression_AppliesPrecedenceAndLeftAssociativity .......................................................   Passed    0.17 sec
+        Start  28: unit.BSpline_BezierPiecesReproduceTheCurve
+        Start 661: unit.SketchSolver_ConflictingNewConstraintsAreInconsistent
+222/869 Test  #28: unit.BSpline_BezierPiecesReproduceTheCurve ..................................................................   Passed    0.12 sec
+        Start  11: unit.A model saved before its first regeneration regenerates identically after loading
+223/869 Test #661: unit.SketchSolver_ConflictingNewConstraintsAreInconsistent ..................................................   Passed    0.13 sec
+224/869 Test #729: unit.SweepFeature_RegeneratesWhenProfileChanges .............................................................   Passed    0.26 sec
+        Start 637: unit.SketchConstraint_DrivingParametersMustHaveTheRightDimension
+        Start 155: unit.CurvedProfile_SplineAreaAndCentroidMatchBooleIntegration
+225/869 Test #637: unit.SketchConstraint_DrivingParametersMustHaveTheRightDimension ............................................   Passed    0.08 sec
+        Start 665: unit.SketchSolver_NewConstraintsSolveDeterministically
+226/869 Test #471: unit.MirrorFeature_RefusesUnsupportedSources ................................................................   Passed    0.58 sec
+        Start 819: unit.validate reports each check and the result bodies
+227/869 Test #155: unit.CurvedProfile_SplineAreaAndCentroidMatchBooleIntegration ...............................................   Passed    0.11 sec
+        Start 681: unit.SketchSpline_TangentToAnArcOrASplineAtAJoint
+228/869 Test #665: unit.SketchSolver_NewConstraintsSolveDeterministically ......................................................   Passed    0.13 sec
+        Start 199: unit.DocumentExpression_FailedExpressionKeepsLastValueAndBlocksDependents
+229/869 Test #681: unit.SketchSpline_TangentToAnArcOrASplineAtAJoint ...........................................................   Passed    0.09 sec
+230/869 Test #461: unit.MirrorFeature_InvalidInputsFailWithStructuredDiagnostics ...............................................   Passed    0.61 sec
+231/869 Test #467: unit.MirrorFeature_PlaneThroughSourceGeometry ...............................................................   Passed    0.57 sec
+        Start 663: unit.SketchSolver_EachNewConstraintRemovesItsDegreesOfFreedom
+        Start 396: unit.LoftFeature_DependsOnEverySectionAndTarget
+        Start 202: unit.DocumentExpression_UnknownAndNonParameterNamesAreReported
+232/869 Test  #11: unit.A model saved before its first regeneration regenerates identically after loading ......................   Passed    0.31 sec
+233/869 Test #199: unit.DocumentExpression_FailedExpressionKeepsLastValueAndBlocksDependents ...................................   Passed    0.08 sec
+        Start 647: unit.SketchEllipse_InvalidEllipsesAreRefused
+        Start 234: unit.Expression_RejectsMalformedSyntaxNamingTheToken
+234/869 Test #202: unit.DocumentExpression_UnknownAndNonParameterNamesAreReported ..............................................   Passed    0.09 sec
+        Start 724: unit.SweepFeature_ModelsAreValidatedLikeAnyOther
+235/869 Test #663: unit.SketchSolver_EachNewConstraintRemovesItsDegreesOfFreedom ...............................................   Passed    0.14 sec
+        Start 414: unit.LoftFeature_RegeneratesWhenSpacingChanges
+236/869 Test #819: unit.validate reports each check and the result bodies ......................................................   Passed    0.26 sec
+237/869 Test #647: unit.SketchEllipse_InvalidEllipsesAreRefused ................................................................   Passed    0.09 sec
+        Start 669: unit.SketchSolver_SymmetricMirrorsPointsAcrossTheLine
+        Start 675: unit.SketchSolver_TangentLineTouchesTheCircleOnItsOwnSide
+238/869 Test #669: unit.SketchSolver_SymmetricMirrorsPointsAcrossTheLine .......................................................   Passed    0.10 sec
+239/869 Test #675: unit.SketchSolver_TangentLineTouchesTheCircleOnItsOwnSide ...................................................   Passed    0.09 sec
+        Start 609: unit.Revolved bodies export to STEP and STL
+        Start 230: unit.Expression_EvaluationFailuresNameTheOffendingToken
+240/869 Test #234: unit.Expression_RejectsMalformedSyntaxNamingTheToken ........................................................   Passed    0.21 sec
+241/869 Test #396: unit.LoftFeature_DependsOnEverySectionAndTarget .............................................................   Passed    0.28 sec
+        Start 198: unit.DocumentExpression_EvaluatesInDependencyOrderNotCreationOrder
+        Start 648: unit.SketchEllipse_SolverKeepsTheAxesPerpendicular
+242/869 Test #414: unit.LoftFeature_RegeneratesWhenSpacingChanges ..............................................................   Passed    0.20 sec
+243/869 Test  #99: unit.CircularPattern_FailedPatternSavesAndLoadsUnchanged ....................................................   Passed    0.74 sec
+244/869 Test #724: unit.SweepFeature_ModelsAreValidatedLikeAnyOther ............................................................   Passed    0.22 sec
+        Start 664: unit.SketchSolver_MidpointPlacesThePointHalfwayAlongTheLine
+        Start 195: unit.DocumentExpression_DimensionErrorsAreStructuredFailures
+        Start 670: unit.SketchSolver_TangentArcAndLineJoinSmoothly
+245/869 Test #230: unit.Expression_EvaluationFailuresNameTheOffendingToken .....................................................   Passed    0.12 sec
+        Start 635: unit.SketchCommands_ModifySketchCommandUndoesAndRedoesEdits
+246/869 Test #198: unit.DocumentExpression_EvaluatesInDependencyOrderNotCreationOrder ..........................................   Passed    0.12 sec
+247/869 Test #648: unit.SketchEllipse_SolverKeepsTheAxesPerpendicular ..........................................................   Passed    0.10 sec
+        Start  66: unit.ChamferFeature_OnRevolvedBodyMatchesPappusAndFollowsTheSweep
+        Start  31: unit.BSpline_GaussRuleIntegratesPolynomialsUpToDegree15
+248/869 Test #664: unit.SketchSolver_MidpointPlacesThePointHalfwayAlongTheLine .................................................   Passed    0.10 sec
+        Start 145: unit.CurvedProfile_EllipseAreaIsPiAB
+249/869 Test #195: unit.DocumentExpression_DimensionErrorsAreStructuredFailures ................................................   Passed    0.10 sec
+        Start 666: unit.SketchSolver_ObroundFromTangentArcsIsFullyConstrained
+250/869 Test #635: unit.SketchCommands_ModifySketchCommandUndoesAndRedoesEdits .................................................   Passed    0.13 sec
+        Start 413: unit.LoftFeature_RegeneratesWhenSectionChanges
+251/869 Test #670: unit.SketchSolver_TangentArcAndLineJoinSmoothly .............................................................   Passed    0.17 sec
+252/869 Test  #31: unit.BSpline_GaussRuleIntegratesPolynomialsUpToDegree15 .....................................................   Passed    0.12 sec
+253/869 Test #145: unit.CurvedProfile_EllipseAreaIsPiAB ........................................................................   Passed    0.10 sec
+254/869 Test #666: unit.SketchSolver_ObroundFromTangentArcsIsFullyConstrained ..................................................   Passed    0.08 sec
+        Start 229: unit.Expression_EnforcesSizeAndNestingLimits
+        Start 511: unit.ParameterExpressions_Load_StaleValueIsReevaluatedAndReported
+        Start 728: unit.SweepFeature_RegeneratesWhenPathChanges
+        Start 509: unit.ParameterExpressions_Load_KeepsUnknownNamesForRegenerationToReport
+255/869 Test #509: unit.ParameterExpressions_Load_KeepsUnknownNamesForRegenerationToReport .....................................   Passed    0.13 sec
+        Start 801: unit.export-step writes the result bodies
+256/869 Test #511: unit.ParameterExpressions_Load_StaleValueIsReevaluatedAndReported ...........................................   Passed    0.18 sec
+257/869 Test #229: unit.Expression_EnforcesSizeAndNestingLimits ................................................................   Passed    0.20 sec
+258/869 Test #413: unit.LoftFeature_RegeneratesWhenSectionChanges ..............................................................   Passed    0.23 sec
+        Start 235: unit.Expression_UnitIsTheLongestSymbolEndingAtANameBoundary
+        Start 730: unit.SweepFeature_RegeneratesWhenTargetChanges
+        Start 644: unit.SketchEllipseSpline_LengthsMatchIndependentFormulas
+259/869 Test #609: unit.Revolved bodies export to STEP and STL .................................................................   Passed    0.55 sec
+260/869 Test #728: unit.SweepFeature_RegeneratesWhenPathChanges ................................................................   Passed    0.22 sec
+        Start 655: unit.SketchFile_MalformedNewConstraintsAreRejectedWithThePath
+        Start 233: unit.Expression_ReferencesAreSortedUniqueNames
+261/869 Test #235: unit.Expression_UnitIsTheLongestSymbolEndingAtANameBoundary .................................................   Passed    0.08 sec
+        Start 652: unit.SketchFeatures_SplinePathsAndEllipseLoftsAreRefused
+262/869 Test #233: unit.Expression_ReferencesAreSortedUniqueNames ..............................................................   Passed    0.21 sec
+        Start 458: unit.MirrorFeature_FailsAtomicallyWhenMirroredFeatureInvalid
+263/869 Test #652: unit.SketchFeatures_SplinePathsAndEllipseLoftsAreRefused ....................................................   Passed    0.21 sec
+264/869 Test #644: unit.SketchEllipseSpline_LengthsMatchIndependentFormulas ....................................................   Passed    0.27 sec
+265/869 Test #730: unit.SweepFeature_RegeneratesWhenTargetChanges ..............................................................   Passed    0.29 sec
+266/869 Test #655: unit.SketchFile_MalformedNewConstraintsAreRejectedWithThePath ...............................................   Passed    0.25 sec
+267/869 Test #801: unit.export-step writes the result bodies ...................................................................   Passed    0.32 sec
+        Start 507: unit.ParameterExpressions_ExampleFileMatchesTheBuilder
+        Start 662: unit.SketchSolver_DiameterSetsTwiceTheRadius
+        Start 200: unit.DocumentExpression_SetRefusesMalformedTextAndChangesNothing
+        Start 747: unit.SweepFeature_TorusMatchesRevolve
+        Start 672: unit.SketchSolver_TangentArcsShareASmoothJoint
+268/869 Test #662: unit.SketchSolver_DiameterSetsTwiceTheRadius ................................................................   Passed    0.08 sec
+        Start 715: unit.SweepFeature_DependsOnProfilePathAndTarget
+269/869 Test #507: unit.ParameterExpressions_ExampleFileMatchesTheBuilder ......................................................   Passed    0.11 sec
+        Start 153: unit.CurvedProfile_SegmentPointsFollowTheirCurves
+270/869 Test #200: unit.DocumentExpression_SetRefusesMalformedTextAndChangesNothing ............................................   Passed    0.10 sec
+        Start 830: cli.export-step.example
+271/869 Test #672: unit.SketchSolver_TangentArcsShareASmoothJoint ..............................................................   Passed    0.10 sec
+        Start 667: unit.SketchSolver_RedundantNewConstraintsAreOverConstrained
+272/869 Test #667: unit.SketchSolver_RedundantNewConstraintsAreOverConstrained .................................................   Passed    0.14 sec
+        Start 832: cli.export-stl.ascii
+273/869 Test  #66: unit.ChamferFeature_OnRevolvedBodyMatchesPappusAndFollowsTheSweep ...........................................   Passed    0.96 sec
+274/869 Test #153: unit.CurvedProfile_SegmentPointsFollowTheirCurves ...........................................................   Passed    0.20 sec
+275/869 Test #715: unit.SweepFeature_DependsOnProfilePathAndTarget .............................................................   Passed    0.22 sec
+        Start 368: unit.LinearPattern_NormalizesDirection
+        Start 128: unit.CircularPattern_WorksOnRevolvedSource
+        Start 671: unit.SketchSolver_TangentArcTouchesACircleWithoutAJoint
+276/869 Test #830: cli.export-step.example .....................................................................................   Passed    0.23 sec
+277/869 Test #747: unit.SweepFeature_TorusMatchesRevolve .......................................................................   Passed    0.32 sec
+        Start 516: unit.ParameterExpressions_WithoutChangesNothingIsRegenerated
+        Start 228: unit.Expression_DimensionalAnalysisCombinesAndChecksDimensions
+278/869 Test #516: unit.ParameterExpressions_WithoutChangesNothingIsRegenerated ................................................   Passed    0.09 sec
+279/869 Test #228: unit.Expression_DimensionalAnalysisCombinesAndChecksDimensions ..............................................   Passed    0.08 sec
+        Start 178: unit.Datum_ResolutionRefusesMissingWrongAndDegenerateReferences
+        Start 160: unit.DatumCli_InfoDescribesDatumsAndAttachments
+280/869 Test #671: unit.SketchSolver_TangentArcTouchesACircleWithoutAJoint .....................................................   Passed    0.15 sec
+        Start 660: unit.SketchSolver_ConcentricBringsTheCentresTogether
+281/869 Test #458: unit.MirrorFeature_FailsAtomicallyWhenMirroredFeatureInvalid ................................................   Passed    0.53 sec
+        Start  30: unit.BSpline_ClampedSplineWithDegreePlusOnePolesIsABezierCurve
+282/869 Test #832: cli.export-stl.ascii ........................................................................................   Passed    0.25 sec
+        Start 658: unit.SketchSolver_AngleIsMeasuredBetweenLinesNotTheirDirections
+283/869 Test #178: unit.Datum_ResolutionRefusesMissingWrongAndDegenerateReferences .............................................   Passed    0.10 sec
+        Start 201: unit.DocumentExpression_UndoRedoRestoresExpressionAndValue
+284/869 Test #660: unit.SketchSolver_ConcentricBringsTheCentresTogether ........................................................   Passed    0.09 sec
+        Start 678: unit.SketchSpline_PolesAreFreePoints
+285/869 Test #160: unit.DatumCli_InfoDescribesDatumsAndAttachments .............................................................   Passed    0.15 sec
+        Start 193: unit.DocumentExpression_CyclesAreRefusedAndKeepTheirValues
+286/869 Test  #30: unit.BSpline_ClampedSplineWithDegreePlusOnePolesIsABezierCurve ..............................................   Passed    0.14 sec
+287/869 Test #658: unit.SketchSolver_AngleIsMeasuredBetweenLinesNotTheirDirections .............................................   Passed    0.11 sec
+        Start 657: unit.SketchProfiles_EllipsesAndSplinesFormRegions
+        Start 676: unit.SketchSpline_CreatedOnNewOrExistingPoles
+288/869 Test #201: unit.DocumentExpression_UndoRedoRestoresExpressionAndValue ..................................................   Passed    0.14 sec
+        Start 645: unit.SketchEllipseSpline_SolveDeterministically
+289/869 Test #678: unit.SketchSpline_PolesAreFreePoints ........................................................................   Passed    0.14 sec
+        Start 197: unit.DocumentExpression_EvaluatesEveryDimension
+290/869 Test #193: unit.DocumentExpression_CyclesAreRefusedAndKeepTheirValues ..................................................   Passed    0.14 sec
+        Start 196: unit.DocumentExpression_DrivenParameterRefusesDirectValues
+291/869 Test #657: unit.SketchProfiles_EllipsesAndSplinesFormRegions ...........................................................   Passed    0.12 sec
+292/869 Test #859: compile_fail.units.assign-double-to-length ..................................................................   Passed    5.35 sec
+        Start 867: compile_fail.ids.compare-different-kinds
+        Start 828: cli.validate.example
+293/869 Test #676: unit.SketchSpline_CreatedOnNewOrExistingPoles ...............................................................   Passed    0.14 sec
+294/869 Test #128: unit.CircularPattern_WorksOnRevolvedSource ..................................................................   Passed    0.49 sec
+295/869 Test #645: unit.SketchEllipseSpline_SolveDeterministically .............................................................   Passed    0.11 sec
+        Start  29: unit.BSpline_ClampedSplineStartsAndEndsAtItsEndPoles
+        Start 510: unit.ParameterExpressions_Load_RejectsMalformedExpressionsWithThePath
+        Start 232: unit.Expression_LiteralsCarryTheirUnitsInSi
+296/869 Test #197: unit.DocumentExpression_EvaluatesEveryDimension .............................................................   Passed    0.14 sec
+        Start 477: unit.MirrorFeature_ReusesStableSourceReference
+297/869 Test  #29: unit.BSpline_ClampedSplineStartsAndEndsAtItsEndPoles ........................................................   Passed    0.13 sec
+        Start 679: unit.SketchSpline_TangentNeedsAJoint
+298/869 Test #196: unit.DocumentExpression_DrivenParameterRefusesDirectValues ..................................................   Passed    0.21 sec
+299/869 Test #232: unit.Expression_LiteralsCarryTheirUnitsInSi .................................................................   Passed    0.12 sec
+300/869 Test #510: unit.ParameterExpressions_Load_RejectsMalformedExpressionsWithThePath .......................................   Passed    0.13 sec
+        Start 149: unit.CurvedProfile_MalformedCurvedLoopsAreRefused
+        Start 433: unit.Loft_MultipleSectionsArePiecewiseRuled
+        Start 105: unit.CircularPattern_InvalidInputsFailWithStructuredDiagnostics
+301/869 Test #828: cli.validate.example ........................................................................................   Passed    0.22 sec
+        Start 194: unit.DocumentExpression_DependenciesAreGraphEdges
+302/869 Test #679: unit.SketchSpline_TangentNeedsAJoint ........................................................................   Passed    0.09 sec
+        Start 608: unit.Revolve models are validated like any other
+303/869 Test #149: unit.CurvedProfile_MalformedCurvedLoopsAreRefused ...........................................................   Passed    0.10 sec
+        Start 151: unit.CurvedProfile_QuadraticSplineAreaFollowsArchimedes
+304/869 Test #194: unit.DocumentExpression_DependenciesAreGraphEdges ...........................................................   Passed    0.12 sec
+        Start 104: unit.CircularPattern_HoleBoltCircleMatchesAnalyticVolume
+305/869 Test #151: unit.CurvedProfile_QuadraticSplineAreaFollowsArchimedes .....................................................   Passed    0.17 sec
+        Start 720: unit.SweepFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact
+306/869 Test #368: unit.LinearPattern_NormalizesDirection ......................................................................   Passed    0.95 sec
+307/869 Test #433: unit.Loft_MultipleSectionsArePiecewiseRuled .................................................................   Passed    0.27 sec
+        Start 411: unit.LoftFeature_PreservesSectionOrder
+        Start 103: unit.CircularPattern_FullCircleDoesNotDuplicate360Degrees
+308/869 Test #411: unit.LoftFeature_PreservesSectionOrder ......................................................................   Passed    0.16 sec
+        Start 673: unit.SketchSolver_TangentAtACoincidentJointIsExact
+309/869 Test #477: unit.MirrorFeature_ReusesStableSourceReference ..............................................................   Passed    0.57 sec
+310/869 Test #608: unit.Revolve models are validated like any other ............................................................   Passed    0.39 sec
+311/869 Test #720: unit.SweepFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact ...........................................   Passed    0.20 sec
+        Start 399: unit.LoftFeature_EqualSectionsMatchExtrude
+        Start 803: unit.export-stl writes a closed mesh with the requested accuracy
+        Start 313: unit.HoleFeature_UndoRedoRestoresGeometry
+312/869 Test #673: unit.SketchSolver_TangentAtACoincidentJointIsExact ..........................................................   Passed    0.09 sec
+        Start 638: unit.SketchConstraint_NewTypesValidateTheirReferences
+313/869 Test #105: unit.CircularPattern_InvalidInputsFailWithStructuredDiagnostics .............................................   Passed    0.54 sec
+        Start  32: unit.BSpline_InvalidSplinesAreRefused
+314/869 Test #638: unit.SketchConstraint_NewTypesValidateTheirReferences .......................................................   Passed    0.08 sec
+        Start 154: unit.CurvedProfile_SelfIntersectingSplineIsRefusedByTheKernelCheck
+315/869 Test  #32: unit.BSpline_InvalidSplinesAreRefused .......................................................................   Passed    0.14 sec
+        Start  90: unit.CircularPattern_ArbitraryAxisPreservesRadius
+316/869 Test #154: unit.CurvedProfile_SelfIntersectingSplineIsRefusedByTheKernelCheck ..........................................   Passed    0.10 sec
+317/869 Test #399: unit.LoftFeature_EqualSectionsMatchExtrude ..................................................................   Passed    0.25 sec
+318/869 Test #104: unit.CircularPattern_HoleBoltCircleMatchesAnalyticVolume ....................................................   Passed    0.56 sec
+        Start 314: unit.HoleFeature_WorksOnAnExtrudedChain
+        Start  33: unit.BSpline_KnotsInKernelFormHaveTheRightMultiplicities
+        Start 636: unit.SketchConstraint_AngleAndDiameterValuesAreChecked
+319/869 Test #803: unit.export-stl writes a closed mesh with the requested accuracy ............................................   Passed    0.32 sec
+        Start 726: unit.SweepFeature_PolylinePathProducesValidSolid
+320/869 Test #636: unit.SketchConstraint_AngleAndDiameterValuesAreChecked ......................................................   Passed    0.19 sec
+        Start 286: unit.HoleFeature_ComposesWithChamferAndFillet
+321/869 Test #103: unit.CircularPattern_FullCircleDoesNotDuplicate360Degrees ...................................................   Passed    0.66 sec
+322/869 Test  #33: unit.BSpline_KnotsInKernelFormHaveTheRightMultiplicities ....................................................   Passed    0.22 sec
+        Start 756: unit.Sweep_RejectsSolidsThatFoldOrIntersect
+        Start 646: unit.SketchEllipse_CreatedFromSemiAxesAndRotation
+323/869 Test #646: unit.SketchEllipse_CreatedFromSemiAxesAndRotation ...........................................................   Passed    0.07 sec
+        Start 288: unit.HoleFeature_CountersinkMatchesAnalyticVolume
+324/869 Test #726: unit.SweepFeature_PolylinePathProducesValidSolid ............................................................   Passed    0.26 sec
+        Start  89: unit.CircularPattern_AngleStepSpacing
+325/869 Test #756: unit.Sweep_RejectsSolidsThatFoldOrIntersect .................................................................   Passed    0.23 sec
+        Start 423: unit.LoftFeature_Remove
+326/869 Test  #90: unit.CircularPattern_ArbitraryAxisPreservesRadius ...........................................................   Passed    0.62 sec
+        Start 262: unit.FilletFeature_RegenerationIsDeterministic
+327/869 Test #314: unit.HoleFeature_WorksOnAnExtrudedChain .....................................................................   Passed    0.61 sec
+328/869 Test #313: unit.HoleFeature_UndoRedoRestoresGeometry ...................................................................   Passed    0.84 sec
+329/869 Test #423: unit.LoftFeature_Remove .....................................................................................   Passed    0.14 sec
+        Start 263: unit.FilletFeature_SaveLoadPreservesCircleReferences
+        Start 420: unit.LoftFeature_RejectsMissingProfile
+        Start 831: cli.export-stl.example
+330/869 Test  #89: unit.CircularPattern_AngleStepSpacing .......................................................................   Passed    0.39 sec
+        Start 829: cli.validate.missing-file
+331/869 Test #420: unit.LoftFeature_RejectsMissingProfile ......................................................................   Passed    0.15 sec
+        Start 741: unit.SweepFeature_Remove
+332/869 Test #831: cli.export-stl.example ......................................................................................   Passed    0.17 sec
+        Start 174: unit.Datum_CoordinateSystemsTurnAboutTheirBaseAxesThenMove
+333/869 Test #174: unit.Datum_CoordinateSystemsTurnAboutTheirBaseAxesThenMove ..................................................   Passed    0.11 sec
+        Start 680: unit.SketchSpline_TangentToALineAtASharedEnd
+334/869 Test #829: cli.validate.missing-file ...................................................................................   Passed    0.24 sec
+        Start 469: unit.MirrorFeature_ReflectsAcrossOffsetPlane
+335/869 Test #262: unit.FilletFeature_RegenerationIsDeterministic ..............................................................   Passed    0.40 sec
+336/869 Test #286: unit.HoleFeature_ComposesWithChamferAndFillet ...............................................................   Passed    0.79 sec
+337/869 Test #741: unit.SweepFeature_Remove ....................................................................................   Passed    0.22 sec
+        Start 100: unit.CircularPattern_FailsAtomicallyWhenInstanceInvalid
+        Start 806: unit.info and validate describe fillets
+        Start 168: unit.DatumModel_DependenciesAreGraphEdges
+338/869 Test #680: unit.SketchSpline_TangentToALineAtASharedEnd ................................................................   Passed    0.12 sec
+        Start 523: unit.Partial revolutions scale with the sweep angle (Pappus)
+339/869 Test #288: unit.HoleFeature_CountersinkMatchesAnalyticVolume ...........................................................   Passed    0.85 sec
+        Start 795: unit.Validation works on a copy
+340/869 Test #168: unit.DatumModel_DependenciesAreGraphEdges ...................................................................   Passed    0.16 sec
+        Start 457: unit.MirrorFeature_FailedMirrorSavesAndLoadsUnchanged
+341/869 Test #806: unit.info and validate describe fillets .....................................................................   Passed    0.30 sec
+        Start 430: unit.Loft_EqualSectionsMatchPrisms
+342/869 Test #795: unit.Validation works on a copy .............................................................................   Passed    0.23 sec
+        Start 190: unit.Document STEP export reports failures without writing
+343/869 Test #469: unit.MirrorFeature_ReflectsAcrossOffsetPlane ................................................................   Passed    0.44 sec
+        Start 425: unit.LoftFeature_ThreeCircularSectionsMatchPiecewiseFrustums
+344/869 Test #430: unit.Loft_EqualSectionsMatchPrisms ..........................................................................   Passed    0.16 sec
+345/869 Test #263: unit.FilletFeature_SaveLoadPreservesCircleReferences ........................................................   Passed    0.87 sec
+        Start 594: unit.References to the wrong kind of item are consistency errors
+        Start 499: unit.P11-FEAT-001 acceptance: invalid revolves fail with structured diagnostics
+346/869 Test #523: unit.Partial revolutions scale with the sweep angle (Pappus) ................................................   Passed    0.46 sec
+347/869 Test #100: unit.CircularPattern_FailsAtomicallyWhenInstanceInvalid .....................................................   Passed    0.52 sec
+        Start 833: cli.export-stl.bad-tolerance
+        Start 393: unit.LoftFeature_CircularFrustumMatchesRevolve
+348/869 Test #457: unit.MirrorFeature_FailedMirrorSavesAndLoadsUnchanged .......................................................   Passed    0.36 sec
+        Start 364: unit.LinearPattern_InvalidInputsFailWithStructuredDiagnostics
+349/869 Test #425: unit.LoftFeature_ThreeCircularSectionsMatchPiecewiseFrustums ................................................   Passed    0.30 sec
+        Start 827: cli.info.example
+350/869 Test #190: unit.Document STEP export reports failures without writing ..................................................   Passed    0.33 sec
+        Start 821: cli.launch.version-command
+351/869 Test #833: cli.export-stl.bad-tolerance ................................................................................   Passed    0.24 sec
+        Start 226: unit.Expression_AcceptanceExamplesEvaluateFromTheirInputs
+352/869 Test #393: unit.LoftFeature_CircularFrustumMatchesRevolve ..............................................................   Passed    0.25 sec
+        Start 711: unit.SweepFeature_Add
+353/869 Test #594: unit.References to the wrong kind of item are consistency errors ............................................   Passed    0.39 sec
+        Start 173: unit.Datum_AxisIsWhereTwoPlanesMeet
+354/869 Test #226: unit.Expression_AcceptanceExamplesEvaluateFromTheirInputs ...................................................   Passed    0.13 sec
+355/869 Test #827: cli.info.example ............................................................................................   Passed    0.18 sec
+356/869 Test #821: cli.launch.version-command ..................................................................................   Passed    0.16 sec
+        Start 294: unit.HoleFeature_ExportsStep
+        Start 757: unit.Sweep_StraightPathsMatchPrisms
+        Start 162: unit.DatumCommands_CreateAndModifyAreUndoable
+357/869 Test #499: unit.P11-FEAT-001 acceptance: invalid revolves fail with structured diagnostics .............................   Passed    0.46 sec
+        Start 524: unit.Partial revolves give proportional volumes in the chosen direction
+358/869 Test #173: unit.Datum_AxisIsWhereTwoPlanesMeet .........................................................................   Passed    0.10 sec
+        Start 203: unit.Documents are saved to and loaded from files
+359/869 Test #711: unit.SweepFeature_Add .......................................................................................   Passed    0.22 sec
+        Start 388: unit.LinearPattern_WorksOnRevolvedSource
+360/869 Test #162: unit.DatumCommands_CreateAndModifyAreUndoable ...............................................................   Passed    0.08 sec
+        Start 789: unit.Undo and redo of revolve commands restore identical geometry
+361/869 Test #203: unit.Documents are saved to and loaded from files ...........................................................   Passed    0.28 sec
+362/869 Test #789: unit.Undo and redo of revolve commands restore identical geometry ...........................................   Passed    0.25 sec
+        Start 402: unit.LoftFeature_FailedLoftSavesAndLoadsUnchanged
+        Start 259: unit.FilletFeature_RadiusParameterDrivesTheFillet
+363/869 Test #757: unit.Sweep_StraightPathsMatchPrisms .........................................................................   Passed    0.38 sec
+364/869 Test #364: unit.LinearPattern_InvalidInputsFailWithStructuredDiagnostics ...............................................   Passed    0.75 sec
+        Start 449: unit.MirrorFeature_ArbitraryPlaneMatchesAnalyticPointReflection
+        Start 297: unit.HoleFeature_InvalidInputsFailWithStructuredDiagnostics
+365/869 Test #388: unit.LinearPattern_WorksOnRevolvedSource ....................................................................   Passed    0.35 sec
+        Start 481: unit.MirrorFeature_WorksWithExtrudedBody
+366/869 Test #524: unit.Partial revolves give proportional volumes in the chosen direction .....................................   Passed    0.41 sec
+367/869 Test #294: unit.HoleFeature_ExportsStep ................................................................................   Passed    0.47 sec
+        Start 816: unit.new creates an empty, valid document and refuses to overwrite
+        Start 351: unit.LinearPattern_AdditivePatternMatchesAnalyticVolume
+368/869 Test #402: unit.LoftFeature_FailedLoftSavesAndLoadsUnchanged ...........................................................   Passed    0.14 sec
+        Start 431: unit.Loft_KeepsTheOrderAndDirectionOfItsSections
+369/869 Test #816: unit.new creates an empty, valid document and refuses to overwrite ..........................................   Passed    0.24 sec
+370/869 Test #481: unit.MirrorFeature_WorksWithExtrudedBody ....................................................................   Passed    0.26 sec
+        Start 811: unit.info and validate describe revolves
+        Start 109: unit.CircularPattern_PartialAngleIncludesExpectedEndpoints
+371/869 Test #431: unit.Loft_KeepsTheOrderAndDirectionOfItsSections ............................................................   Passed    0.23 sec
+        Start 266: unit.FilletFeature_UndoRedoRestoresGeometry
+372/869 Test #449: unit.MirrorFeature_ArbitraryPlaneMatchesAnalyticPointReflection .............................................   Passed    0.42 sec
+        Start 363: unit.LinearPattern_HolePatternMatchesAnalyticVolume
+373/869 Test #259: unit.FilletFeature_RadiusParameterDrivesTheFillet ...........................................................   Passed    0.50 sec
+        Start 419: unit.LoftFeature_RejectsInvalidProfile
+374/869 Test #811: unit.info and validate describe revolves ....................................................................   Passed    0.26 sec
+        Start 804: unit.info and validate describe chamfers
+375/869 Test #419: unit.LoftFeature_RejectsInvalidProfile ......................................................................   Passed    0.11 sec
+376/869 Test #297: unit.HoleFeature_InvalidInputsFailWithStructuredDiagnostics .................................................   Passed    0.58 sec
+377/869 Test #351: unit.LinearPattern_AdditivePatternMatchesAnalyticVolume .....................................................   Passed    0.50 sec
+        Start 222: unit.Exports report models that do not regenerate
+        Start 824: cli.launch.unknown-command
+        Start 246: unit.Features that fail to build are regeneration errors
+378/869 Test #109: unit.CircularPattern_PartialAngleIncludesExpectedEndpoints ..................................................   Passed    0.40 sec
+        Start  67: unit.ChamferFeature_RegeneratesWhenTheUpstreamWidthChanges
+379/869 Test #222: unit.Exports report models that do not regenerate ...........................................................   Passed    0.15 sec
+        Start 287: unit.HoleFeature_CounterboreMatchesAnalyticVolume
+380/869 Test #824: cli.launch.unknown-command ..................................................................................   Passed    0.15 sec
+        Start 767: unit.The hand-written example plate is a valid, canonical document
+381/869 Test #246: unit.Features that fail to build are regeneration errors ....................................................   Passed    0.15 sec
+        Start 398: unit.LoftFeature_EqualRectanglesMatchPrismVolume
+382/869 Test #398: unit.LoftFeature_EqualRectanglesMatchPrismVolume ............................................................   Passed    0.17 sec
+        Start 296: unit.HoleFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact
+383/869 Test #266: unit.FilletFeature_UndoRedoRestoresGeometry .................................................................   Passed    0.62 sec
+384/869 Test #804: unit.info and validate describe chamfers ....................................................................   Passed    0.39 sec
+385/869 Test #363: unit.LinearPattern_HolePatternMatchesAnalyticVolume .........................................................   Passed    0.55 sec
+386/869 Test #767: unit.The hand-written example plate is a valid, canonical document ..........................................   Passed    0.20 sec
+        Start 723: unit.SweepFeature_MixedLineArcPathProducesValidSolid
+        Start 299: unit.HoleFeature_ModelsAreValidatedLikeAnyOther
+        Start 108: unit.CircularPattern_NegativeDirectionReversesOrder
+        Start 825: cli.new
+387/869 Test  #67: unit.ChamferFeature_RegeneratesWhenTheUpstreamWidthChanges ..................................................   Passed    0.30 sec
+        Start 429: unit.Loft_CircularFrustumMatchesAnalyticVolumeAndRevolution
+388/869 Test #296: unit.HoleFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact ............................................   Passed    0.23 sec
+389/869 Test #429: unit.Loft_CircularFrustumMatchesAnalyticVolumeAndRevolution .................................................   Passed    0.15 sec
+        Start 719: unit.SweepFeature_FailsSafelyOnSelfIntersection
+        Start 406: unit.LoftFeature_MalformedDataIsRejectedWithTheJsonPath
+390/869 Test #723: unit.SweepFeature_MixedLineArcPathProducesValidSolid ........................................................   Passed    0.24 sec
+391/869 Test #825: cli.new .....................................................................................................   Passed    0.20 sec
+392/869 Test #299: unit.HoleFeature_ModelsAreValidatedLikeAnyOther .............................................................   Passed    0.23 sec
+        Start 395: unit.LoftFeature_DefinitionIsValidatedOnCreateAndEdit
+        Start 343: unit.Invalid document files are rejected with the JSON path
+        Start 175: unit.Datum_DefinitionsAreCheckedForTheirKind
+393/869 Test #287: unit.HoleFeature_CounterboreMatchesAnalyticVolume ...........................................................   Passed    0.53 sec
+        Start 462: unit.MirrorFeature_KeepOriginalDoublesNonOverlappingBodyVolume
+394/869 Test #395: unit.LoftFeature_DefinitionIsValidatedOnCreateAndEdit .......................................................   Passed    0.09 sec
+        Start 448: unit.MirrorFeature_AdditiveBossMirrorMatchesAnalyticVolume
+395/869 Test #175: unit.Datum_DefinitionsAreCheckedForTheirKind ................................................................   Passed    0.13 sec
+        Start 118: unit.CircularPattern_RejectsInvalidAngle
+396/869 Test #343: unit.Invalid document files are rejected with the JSON path .................................................   Passed    0.16 sec
+397/869 Test #108: unit.CircularPattern_NegativeDirectionReversesOrder .........................................................   Passed    0.39 sec
+398/869 Test #406: unit.LoftFeature_MalformedDataIsRejectedWithTheJsonPath .....................................................   Passed    0.20 sec
+399/869 Test #719: unit.SweepFeature_FailsSafelyOnSelfIntersection .............................................................   Passed    0.22 sec
+        Start 751: unit.Sweep_KeepsTheProfilesOrientation
+        Start 221: unit.Exports of a document without bodies fail
+        Start 533: unit.Profiles that cross the axis are rejected
+        Start 352: unit.LinearPattern_BoundingBoxMatchesAnalyticExtent
+400/869 Test #221: unit.Exports of a document without bodies fail ..............................................................   Passed    0.15 sec
+401/869 Test #751: unit.Sweep_KeepsTheProfilesOrientation ......................................................................   Passed    0.16 sec
+402/869 Test #462: unit.MirrorFeature_KeepOriginalDoublesNonOverlappingBodyVolume ..............................................   Passed    0.28 sec
+        Start 408: unit.LoftFeature_NewBody
+        Start 176: unit.Datum_KindAndReferenceNamesAreStable
+        Start 405: unit.LoftFeature_Intersect
+403/869 Test #533: unit.Profiles that cross the axis are rejected ..............................................................   Passed    0.18 sec
+        Start 255: unit.FilletFeature_InvalidInputsFailWithStructuredDiagnostics
+404/869 Test #448: unit.MirrorFeature_AdditiveBossMirrorMatchesAnalyticVolume ..................................................   Passed    0.34 sec
+        Start  68: unit.ChamferFeature_SaveLoadPreservesCircleReferences
+405/869 Test #408: unit.LoftFeature_NewBody ....................................................................................   Passed    0.10 sec
+        Start 421: unit.LoftFeature_RejectsOpenProfile
+406/869 Test #176: unit.Datum_KindAndReferenceNamesAreStable ...................................................................   Passed    0.10 sec
+        Start 736: unit.SweepFeature_RejectsMissingProfile
+407/869 Test #405: unit.LoftFeature_Intersect ..................................................................................   Passed    0.13 sec
+        Start 682: unit.Sketches that do not solve are sketch-constraint errors
+408/869 Test #118: unit.CircularPattern_RejectsInvalidAngle ....................................................................   Passed    0.36 sec
+        Start 596: unit.Regeneration results are deterministic
+409/869 Test #421: unit.LoftFeature_RejectsOpenProfile .........................................................................   Passed    0.19 sec
+410/869 Test #596: unit.Regeneration results are deterministic .................................................................   Passed    0.11 sec
+        Start 611: unit.Revolves with missing or unusable inputs fail with structured diagnostics
+        Start 392: unit.LoftFeature_CircularFrustumMatchesAnalyticVolume
+411/869 Test #352: unit.LinearPattern_BoundingBoxMatchesAnalyticExtent .........................................................   Passed    0.44 sec
+412/869 Test #736: unit.SweepFeature_RejectsMissingProfile .....................................................................   Passed    0.20 sec
+        Start 782: unit.Triangulation is deterministic and leaves the body unchanged
+        Start 745: unit.SweepFeature_StraightPathMatchesExtrude
+413/869 Test #682: unit.Sketches that do not solve are sketch-constraint errors ................................................   Passed    0.19 sec
+        Start 773: unit.Transform_MirroredBodyKeepsVolumeAndPointsOutward
+414/869 Test #745: unit.SweepFeature_StraightPathMatchesExtrude ................................................................   Passed    0.19 sec
+        Start 261: unit.FilletFeature_RegeneratesAfterUpstreamDimensionChange
+415/869 Test #392: unit.LoftFeature_CircularFrustumMatchesAnalyticVolume .......................................................   Passed    0.24 sec
+        Start 122: unit.CircularPattern_SaveLoadKeepsAnArbitraryAxis
+416/869 Test #611: unit.Revolves with missing or unusable inputs fail with structured diagnostics ..............................   Passed    0.32 sec
+        Start 397: unit.LoftFeature_EqualCirclesMatchCylinderVolume
+417/869 Test #773: unit.Transform_MirroredBodyKeepsVolumeAndPointsOutward ......................................................   Passed    0.27 sec
+418/869 Test #782: unit.Triangulation is deterministic and leaves the body unchanged ...........................................   Passed    0.30 sec
+419/869 Test #255: unit.FilletFeature_InvalidInputsFailWithStructuredDiagnostics ...............................................   Passed    0.59 sec
+        Start 725: unit.SweepFeature_NewBody
+        Start  85: unit.Changing the depth parameter from 20 mm to 40 mm regenerates the solid
+        Start 468: unit.MirrorFeature_PreservesVolume
+420/869 Test  #68: unit.ChamferFeature_SaveLoadPreservesCircleReferences .......................................................   Passed    0.64 sec
+        Start 422: unit.LoftFeature_RejectsTooFewProfiles
+421/869 Test #397: unit.LoftFeature_EqualCirclesMatchCylinderVolume ............................................................   Passed    0.12 sec
+        Start 142: unit.Curved surfaces are approximated within the requested deflection
+422/869 Test #261: unit.FilletFeature_RegeneratesAfterUpstreamDimensionChange ..................................................   Passed    0.22 sec
+        Start 292: unit.HoleFeature_DoesNotSubstituteFaceAfterTopologyChange
+423/869 Test  #85: unit.Changing the depth parameter from 20 mm to 40 mm regenerates the solid .................................   Passed    0.20 sec
+        Start 714: unit.SweepFeature_DefinitionIsValidatedOnCreateAndEdit
+424/869 Test #725: unit.SweepFeature_NewBody ...................................................................................   Passed    0.23 sec
+425/869 Test #422: unit.LoftFeature_RejectsTooFewProfiles ......................................................................   Passed    0.14 sec
+426/869 Test #122: unit.CircularPattern_SaveLoadKeepsAnArbitraryAxis ...........................................................   Passed    0.32 sec
+        Start 551: unit.ReferenceModel_FeatureCoverage
+        Start 488: unit.Names that need quoting or are not ASCII survive STEP export
+        Start 722: unit.SweepFeature_MalformedDataIsRejectedWithTheJsonPath
+427/869 Test #142: unit.Curved surfaces are approximated within the requested deflection .......................................   Passed    0.18 sec
+        Start 755: unit.Sweep_RejectsMisplacedProfiles
+428/869 Test #468: unit.MirrorFeature_PreservesVolume ..........................................................................   Passed    0.28 sec
+429/869 Test #714: unit.SweepFeature_DefinitionIsValidatedOnCreateAndEdit ......................................................   Passed    0.09 sec
+        Start 735: unit.SweepFeature_RejectsMissingPath
+        Start 384: unit.LinearPattern_SubtractiveExtrudePatternMatchesAnalyticVolume
+430/869 Test #551: unit.ReferenceModel_FeatureCoverage .........................................................................   Passed    0.11 sec
+        Start 177: unit.Datum_PlanesMatchIndependentGeometry
+431/869 Test #867: compile_fail.ids.compare-different-kinds ....................................................................   Passed    5.83 sec
+        Start 863: compile_fail.units.sqrt-of-volume
+432/869 Test #755: unit.Sweep_RejectsMisplacedProfiles .........................................................................   Passed    0.12 sec
+        Start 746: unit.SweepFeature_StraightRectangleMatchesAnalyticVolume
+433/869 Test #722: unit.SweepFeature_MalformedDataIsRejectedWithTheJsonPath ....................................................   Passed    0.15 sec
+        Start 727: unit.SweepFeature_QuarterCircleMatchesAnalyticVolume
+434/869 Test #177: unit.Datum_PlanesMatchIndependentGeometry ...................................................................   Passed    0.10 sec
+435/869 Test #488: unit.Names that need quoting or are not ASCII survive STEP export ...........................................   Passed    0.20 sec
+        Start 257: unit.FilletFeature_ModelsAreValidatedLikeAnyOther
+        Start 718: unit.SweepFeature_FailedSweepSavesAndLoadsUnchanged
+436/869 Test #735: unit.SweepFeature_RejectsMissingPath ........................................................................   Passed    0.18 sec
+        Start 738: unit.SweepFeature_RejectsOpenProfile
+437/869 Test #738: unit.SweepFeature_RejectsOpenProfile ........................................................................   Passed    0.08 sec
+        Start 417: unit.LoftFeature_RejectsCoincidentSections
+438/869 Test #746: unit.SweepFeature_StraightRectangleMatchesAnalyticVolume ....................................................   Passed    0.17 sec
+439/869 Test #727: unit.SweepFeature_QuarterCircleMatchesAnalyticVolume ........................................................   Passed    0.16 sec
+440/869 Test #292: unit.HoleFeature_DoesNotSubstituteFaceAfterTopologyChange ...................................................   Passed    0.46 sec
+        Start 796: unit.Without changes, nothing is regenerated
+        Start 282: unit.Full revolutions match analytic solids of revolution
+        Start  62: unit.ChamferFeature_InvalidInputsFailWithStructuredDiagnostics
+441/869 Test #384: unit.LinearPattern_SubtractiveExtrudePatternMatchesAnalyticVolume ...........................................   Passed    0.31 sec
+442/869 Test #718: unit.SweepFeature_FailedSweepSavesAndLoadsUnchanged .........................................................   Passed    0.16 sec
+        Start 254: unit.FilletFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact
+        Start 264: unit.FilletFeature_SaveLoadPreservesReferencesAndRadius
+443/869 Test #257: unit.FilletFeature_ModelsAreValidatedLikeAnyOther ...........................................................   Passed    0.22 sec
+444/869 Test #417: unit.LoftFeature_RejectsCoincidentSections ..................................................................   Passed    0.10 sec
+        Start 593: unit.References to missing items are kept and reported by regeneration
+        Start 721: unit.SweepFeature_Intersect
+445/869 Test #796: unit.Without changes, nothing is regenerated ................................................................   Passed    0.11 sec
+        Start  20: unit.A written STEP file reads back as the same solid
+446/869 Test #593: unit.References to missing items are kept and reported by regeneration ......................................   Passed    0.07 sec
+        Start 394: unit.LoftFeature_DataIsStoredAsTransparentJson
+447/869 Test #282: unit.Full revolutions match analytic solids of revolution ...................................................   Passed    0.16 sec
+        Start  15: unit.A regenerator belongs to one document; regenerateAll starts over
+448/869 Test #721: unit.SweepFeature_Intersect .................................................................................   Passed    0.13 sec
+        Start 733: unit.SweepFeature_RejectsInvalidProfiles
+449/869 Test #254: unit.FilletFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact ..........................................   Passed    0.22 sec
+450/869 Test  #15: unit.A regenerator belongs to one document; regenerateAll starts over .......................................   Passed    0.09 sec
+        Start 460: unit.MirrorFeature_HoleMirrorMatchesAnalyticVolume
+        Start 381: unit.LinearPattern_SaveLoadKeepsTheDirectionAsGiven
+451/869 Test #394: unit.LoftFeature_DataIsStoredAsTransparentJson ..............................................................   Passed    0.14 sec
+452/869 Test  #20: unit.A written STEP file reads back as the same solid .......................................................   Passed    0.18 sec
+        Start  23: unit.An empty document is valid
+        Start  92: unit.CircularPattern_CountIncludesOriginal
+453/869 Test #733: unit.SweepFeature_RejectsInvalidProfiles ....................................................................   Passed    0.10 sec
+        Start 470: unit.MirrorFeature_ReflectsCubeAcrossYZPlane
+454/869 Test  #23: unit.An empty document is valid .............................................................................   Passed    0.11 sec
+        Start 624: unit.STL export fails cleanly when there is nothing valid to write
+455/869 Test #460: unit.MirrorFeature_HoleMirrorMatchesAnalyticVolume ..........................................................   Passed    0.23 sec
+        Start 774: unit.Transform_MirroredReferencesDescribeTheMirroredGeometry
+456/869 Test #470: unit.MirrorFeature_ReflectsCubeAcrossYZPlane ................................................................   Passed    0.19 sec
+        Start 712: unit.SweepFeature_ClosedCircularPathMatchesTorusVolume
+457/869 Test #264: unit.FilletFeature_SaveLoadPreservesReferencesAndRadius .....................................................   Passed    0.54 sec
+        Start 353: unit.LinearPattern_CountIncludesOriginal
+458/869 Test #381: unit.LinearPattern_SaveLoadKeepsTheDirectionAsGiven .........................................................   Passed    0.34 sec
+459/869 Test #624: unit.STL export fails cleanly when there is nothing valid to write ..........................................   Passed    0.21 sec
+460/869 Test  #92: unit.CircularPattern_CountIncludesOriginal ..................................................................   Passed    0.31 sec
+461/869 Test  #62: unit.ChamferFeature_InvalidInputsFailWithStructuredDiagnostics ..............................................   Passed    0.59 sec
+462/869 Test #712: unit.SweepFeature_ClosedCircularPathMatchesTorusVolume ......................................................   Passed    0.10 sec
+        Start 822: cli.launch.help
+        Start 610: unit.Revolves join, cut and intersect with target bodies
+        Start 763: unit.The document format is transparent JSON
+        Start 274: unit.Fillet_RefusesRadiiThatDoNotFitBeforeTheKernel
+        Start 312: unit.HoleFeature_ThroughHoleRemainsThroughAfterThicknessChange
+463/869 Test #774: unit.Transform_MirroredReferencesDescribeTheMirroredGeometry ................................................   Passed    0.20 sec
+        Start 820: cli.launch.version
+464/869 Test #763: unit.The document format is transparent JSON ................................................................   Passed    0.16 sec
+        Start 742: unit.SweepFeature_ReversedPathSweepsTheOtherWay
+465/869 Test #820: cli.launch.version ..........................................................................................   Passed    0.16 sec
+        Start 802: unit.export-stl validates its options
+466/869 Test #822: cli.launch.help .............................................................................................   Passed    0.27 sec
+467/869 Test #353: unit.LinearPattern_CountIncludesOriginal ....................................................................   Passed    0.29 sec
+        Start  48: unit.CLI commands check their argument counts
+        Start 734: unit.SweepFeature_RejectsMisplacedProfile
+468/869 Test #610: unit.Revolves join, cut and intersect with target bodies ....................................................   Passed    0.29 sec
+        Start 418: unit.LoftFeature_RejectsIncompatibleSections
+469/869 Test #742: unit.SweepFeature_ReversedPathSweepsTheOtherWay .............................................................   Passed    0.13 sec
+        Start 542: unit.ReferenceModel_AnalyticToolkit
+470/869 Test #802: unit.export-stl validates its options .......................................................................   Passed    0.10 sec
+        Start  94: unit.CircularPattern_DefinitionIsValidatedOnCreateAndEdit
+471/869 Test  #48: unit.CLI commands check their argument counts ...............................................................   Passed    0.09 sec
+        Start 713: unit.SweepFeature_DataIsStoredAsTransparentJson
+472/869 Test #418: unit.LoftFeature_RejectsIncompatibleSections ................................................................   Passed    0.08 sec
+473/869 Test #734: unit.SweepFeature_RejectsMisplacedProfile ...................................................................   Passed    0.10 sec
+        Start 740: unit.SweepFeature_RejectsZeroLengthSegment
+        Start  69: unit.ChamferFeature_SaveLoadPreservesDefinitionsAndGeometry
+474/869 Test #542: unit.ReferenceModel_AnalyticToolkit .........................................................................   Passed    0.10 sec
+        Start 237: unit.Expressions that are not UTF-8 cannot be saved
+475/869 Test  #94: unit.CircularPattern_DefinitionIsValidatedOnCreateAndEdit ...................................................   Passed    0.10 sec
+476/869 Test #713: unit.SweepFeature_DataIsStoredAsTransparentJson .............................................................   Passed    0.08 sec
+        Start  59: unit.ChamferFeature_ExportsToStepAndStl
+        Start 452: unit.MirrorFeature_DefinitionIsValidatedOnCreateAndEdit
+477/869 Test #312: unit.HoleFeature_ThroughHoleRemainsThroughAfterThicknessChange ..............................................   Passed    0.42 sec
+        Start 744: unit.SweepFeature_StraightCircleMatchesAnalyticVolume
+478/869 Test #237: unit.Expressions that are not UTF-8 cannot be saved .........................................................   Passed    0.09 sec
+        Start 732: unit.SweepFeature_RejectsDisconnectedPath
+479/869 Test #740: unit.SweepFeature_RejectsZeroLengthSegment ..................................................................   Passed    0.14 sec
+480/869 Test #274: unit.Fillet_RefusesRadiiThatDoNotFitBeforeTheKernel .........................................................   Passed    0.49 sec
+        Start  64: unit.ChamferFeature_ModelsAreValidatedLikeAnyOther
+        Start 823: cli.launch.no-arguments
+481/869 Test #452: unit.MirrorFeature_DefinitionIsValidatedOnCreateAndEdit .....................................................   Passed    0.11 sec
+        Start 260: unit.FilletFeature_RefusesSubstitutionAfterTopologyChange
+482/869 Test #744: unit.SweepFeature_StraightCircleMatchesAnalyticVolume .......................................................   Passed    0.11 sec
+        Start 753: unit.Sweep_RejectsCornersItCannotMitre
+483/869 Test #732: unit.SweepFeature_RejectsDisconnectedPath ...................................................................   Passed    0.10 sec
+        Start 497: unit.P11-FEAT-001 acceptance: a full revolve of a constrained profile matches the analytic solid
+484/869 Test  #64: unit.ChamferFeature_ModelsAreValidatedLikeAnyOther ..........................................................   Passed    0.23 sec
+        Start 683: unit.Solver: a sketch inside a document is solved through modifyObject
+485/869 Test #497: unit.P11-FEAT-001 acceptance: a full revolve of a constrained profile matches the analytic solid ............   Passed    0.16 sec
+486/869 Test #753: unit.Sweep_RejectsCornersItCannotMitre ......................................................................   Passed    0.20 sec
+487/869 Test  #59: unit.ChamferFeature_ExportsToStepAndStl .....................................................................   Passed    0.34 sec
+        Start  61: unit.ChamferFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact
+        Start 605: unit.Revolution works in any plane containing the axis
+        Start 284: unit.HoleFeature_BlindHoleKeepsItsDepthWhenTheBodyChanges
+488/869 Test #823: cli.launch.no-arguments .....................................................................................   Passed    0.28 sec
+        Start 813: unit.info shows metadata, parameters and objects
+489/869 Test  #69: unit.ChamferFeature_SaveLoadPreservesDefinitionsAndGeometry .................................................   Passed    0.44 sec
+490/869 Test #683: unit.Solver: a sketch inside a document is solved through modifyObject ......................................   Passed    0.08 sec
+        Start 437: unit.Loft_RejectsSectionsItCannotLoft
+        Start  91: unit.CircularPattern_BodyPatternMatchesAnalyticVolume
+491/869 Test #605: unit.Revolution works in any plane containing the axis ......................................................   Passed    0.10 sec
+        Start  16: unit.A revolve about a sketch line follows the line
+492/869 Test #260: unit.FilletFeature_RefusesSubstitutionAfterTopologyChange ...................................................   Passed    0.35 sec
+        Start 463: unit.MirrorFeature_MalformedDataIsRejectedWithTheJsonPath
+493/869 Test  #61: unit.ChamferFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact .........................................   Passed    0.24 sec
+        Start 102: unit.CircularPattern_FourInstancesAreAtQuadrants
+494/869 Test #813: unit.info shows metadata, parameters and objects ............................................................   Passed    0.21 sec
+495/869 Test #437: unit.Loft_RejectsSectionsItCannotLoft .......................................................................   Passed    0.19 sec
+        Start 739: unit.SweepFeature_RejectsUnsupportedCorners
+        Start 320: unit.Hole_CountersinkMatchesAnalyticVolume
+496/869 Test  #91: unit.CircularPattern_BodyPatternMatchesAnalyticVolume .......................................................   Passed    0.21 sec
+497/869 Test #463: unit.MirrorFeature_MalformedDataIsRejectedWithTheJsonPath ...................................................   Passed    0.15 sec
+498/869 Test  #16: unit.A revolve about a sketch line follows the line .........................................................   Passed    0.17 sec
+        Start 770: unit.The sweep sense follows the right-hand rule about the axis
+        Start  19: unit.A sound model passes every check
+        Start 124: unit.CircularPattern_SourceOnTheAxis
+499/869 Test #284: unit.HoleFeature_BlindHoleKeepsItsDepthWhenTheBodyChanges ...................................................   Passed    0.34 sec
+        Start 754: unit.Sweep_RejectsMalformedPaths
+500/869 Test #739: unit.SweepFeature_RejectsUnsupportedCorners .................................................................   Passed    0.12 sec
+        Start 140: unit.CreateParameterCommand executes, undoes and redoes with the same ID
+501/869 Test #102: unit.CircularPattern_FourInstancesAreAtQuadrants ............................................................   Passed    0.24 sec
+502/869 Test #140: unit.CreateParameterCommand executes, undoes and redoes with the same ID ....................................   Passed    0.10 sec
+503/869 Test #770: unit.The sweep sense follows the right-hand rule about the axis .............................................   Passed    0.19 sec
+504/869 Test  #19: unit.A sound model passes every check .......................................................................   Passed    0.18 sec
+        Start 258: unit.FilletFeature_MultipleAndAdjacentEdgesMatchAnalyticVolume
+        Start 323: unit.Hole_OnRevolvedEndFace
+        Start   6: unit.A fixed time stamp makes STEP output reproducible
+        Start 309: unit.HoleFeature_SaveLoadKeepsAThroughHoleThrough
+505/869 Test #754: unit.Sweep_RejectsMalformedPaths ............................................................................   Passed    0.19 sec
+        Start 737: unit.SweepFeature_RejectsNonFinitePath
+506/869 Test #124: unit.CircularPattern_SourceOnTheAxis ........................................................................   Passed    0.25 sec
+        Start 252: unit.FilletFeature_ExportsStep
+507/869 Test #320: unit.Hole_CountersinkMatchesAnalyticVolume ..................................................................   Passed    0.36 sec
+        Start 485: unit.ModifyParameterCommand is atomic
+508/869 Test   #6: unit.A fixed time stamp makes STEP output reproducible ......................................................   Passed    0.12 sec
+509/869 Test #737: unit.SweepFeature_RejectsNonFinitePath ......................................................................   Passed    0.09 sec
+        Start 752: unit.Sweep_RegionCentroidIsExact
+        Start  50: unit.CLI help lists every command
+510/869 Test #485: unit.ModifyParameterCommand is atomic .......................................................................   Passed    0.09 sec
+        Start 318: unit.Hole_BlindHoleThatBreaksIntoACavityIsRefused
+511/869 Test #752: unit.Sweep_RegionCentroidIsExact ............................................................................   Passed    0.12 sec
+        Start 695: unit.Solver: running out of iterations is a solver failure
+512/869 Test #323: unit.Hole_OnRevolvedEndFace .................................................................................   Passed    0.28 sec
+513/869 Test  #50: unit.CLI help lists every command ...........................................................................   Passed    0.12 sec
+514/869 Test #252: unit.FilletFeature_ExportsStep ..............................................................................   Passed    0.22 sec
+        Start 129: unit.CommandHistory keeps undo and redo stacks
+        Start 443: unit.Malformed parameter documents are rejected with a path
+        Start 633: unit.Sketch entities may appear in any order in the file
+515/869 Test #129: unit.CommandHistory keeps undo and redo stacks ..............................................................   Passed    0.08 sec
+        Start 799: unit.clone produces an equivalent, independent document
+516/869 Test #309: unit.HoleFeature_SaveLoadKeepsAThroughHoleThrough ...........................................................   Passed    0.35 sec
+517/869 Test #695: unit.Solver: running out of iterations is a solver failure ..................................................   Passed    0.12 sec
+518/869 Test #258: unit.FilletFeature_MultipleAndAdjacentEdgesMatchAnalyticVolume ..............................................   Passed    0.40 sec
+519/869 Test #443: unit.Malformed parameter documents are rejected with a path .................................................   Passed    0.09 sec
+        Start 251: unit.FilletFeature_ExportsClosedStl
+        Start 689: unit.Solver: fixed distance
+        Start 684: unit.Solver: arcs keep both ends on their circle
+        Start   5: unit.A document's graph comes from the objects' declared dependencies
+520/869 Test #633: unit.Sketch entities may appear in any order in the file ....................................................   Passed    0.13 sec
+        Start 532: unit.Profiles may contain arcs
+521/869 Test #799: unit.clone produces an equivalent, independent document .....................................................   Passed    0.10 sec
+        Start 191: unit.Document names are validated and renames are tracked
+522/869 Test #318: unit.Hole_BlindHoleThatBreaksIntoACavityIsRefused ...........................................................   Passed    0.27 sec
+523/869 Test #689: unit.Solver: fixed distance .................................................................................   Passed    0.08 sec
+        Start 600: unit.Renaming validates the new name
+        Start 698: unit.Solver: vertical line
+524/869 Test #684: unit.Solver: arcs keep both ends on their circle ............................................................   Passed    0.10 sec
+        Start 130: unit.Commands make the document dirty; undo after saving does too
+525/869 Test   #5: unit.A document's graph comes from the objects' declared dependencies .......................................   Passed    0.10 sec
+        Start 814: unit.insertConstraint restores a constraint with its ID and validates it
+526/869 Test #532: unit.Profiles may contain arcs ..............................................................................   Passed    0.11 sec
+        Start 486: unit.ModifyParameterCommand round-trips every kind of change
+527/869 Test #191: unit.Document names are validated and renames are tracked ...................................................   Passed    0.11 sec
+528/869 Test #600: unit.Renaming validates the new name ........................................................................   Passed    0.09 sec
+529/869 Test #698: unit.Solver: vertical line ..................................................................................   Passed    0.08 sec
+        Start 134: unit.Constraints can be disabled, changed and driven by parameters
+        Start 324: unit.Hole_PositionIsWhereTheFaceCoordinatesSay
+        Start 304: unit.HoleFeature_RejectsInvalidBlindDepth
+530/869 Test #130: unit.Commands make the document dirty; undo after saving does too ...........................................   Passed    0.11 sec
+        Start 212: unit.Edit, undo and redo return the document to equivalent states
+531/869 Test #814: unit.insertConstraint restores a constraint with its ID and validates it ....................................   Passed    0.11 sec
+532/869 Test #251: unit.FilletFeature_ExportsClosedStl .........................................................................   Passed    0.26 sec
+533/869 Test #486: unit.ModifyParameterCommand round-trips every kind of change ................................................   Passed    0.08 sec
+        Start   9: unit.A history limit drops the oldest commands
+        Start  49: unit.CLI commands reject unexpected arguments
+        Start 204: unit.Documents get distinct IDs unless one is given
+534/869 Test #212: unit.Edit, undo and redo return the document to equivalent states ...........................................   Passed    0.10 sec
+        Start 692: unit.Solver: rectangle reaches 100 x 50 mm as a closed profile
+535/869 Test  #49: unit.CLI commands reject unexpected arguments ...............................................................   Passed    0.08 sec
+536/869 Test   #9: unit.A history limit drops the oldest commands ..............................................................   Passed    0.10 sec
+537/869 Test #134: unit.Constraints can be disabled, changed and driven by parameters ..........................................   Passed    0.16 sec
+        Start 852: architecture.checker.occt-leak
+        Start 132: unit.Constraint IDs are stable and never reused
+        Start 385: unit.LinearPattern_TouchingAndOverlappingInstancesFuse
+538/869 Test #204: unit.Documents get distinct IDs unless one is given .........................................................   Passed    0.12 sec
+        Start 141: unit.CreateSketchCommand creates a sketch that undo removes and redo restores
+539/869 Test #692: unit.Solver: rectangle reaches 100 x 50 mm as a closed profile ..............................................   Passed    0.10 sec
+        Start 632: unit.Sketch edits inside a document are tracked
+540/869 Test #132: unit.Constraint IDs are stable and never reused .............................................................   Passed    0.08 sec
+541/869 Test #324: unit.Hole_PositionIsWhereTheFaceCoordinatesSay ..............................................................   Passed    0.25 sec
+        Start  12: unit.A new document has an identity, a name and no content
+        Start 693: unit.Solver: redundant constraints are over-constrained and not applied
+542/869 Test #632: unit.Sketch edits inside a document are tracked .............................................................   Passed    0.07 sec
+        Start 622: unit.STEP output is an ISO 10303-21 AP214 file in millimetres
+543/869 Test #141: unit.CreateSketchCommand creates a sketch that undo removes and redo restores ...............................   Passed    0.13 sec
+544/869 Test #304: unit.HoleFeature_RejectsInvalidBlindDepth ...................................................................   Passed    0.31 sec
+545/869 Test #852: architecture.checker.occt-leak ..............................................................................   Passed    0.18 sec
+546/869 Test  #12: unit.A new document has an identity, a name and no content ..................................................   Passed    0.08 sec
+        Start  26: unit.Analytic volume regression for extruded rectangles
+        Start 856: architecture.checker.private-include
+        Start 133: unit.Constraints are part of the sketch content
+        Start  51: unit.CLI rejects unknown commands
+547/869 Test #693: unit.Solver: redundant constraints are over-constrained and not applied .....................................   Passed    0.12 sec
+        Start 344: unit.Invalid entities are rejected and leave the sketch unchanged
+548/869 Test #133: unit.Constraints are part of the sketch content .............................................................   Passed    0.07 sec
+        Start 607: unit.Revolve definitions are validated
+549/869 Test #385: unit.LinearPattern_TouchingAndOverlappingInstancesFuse ......................................................   Passed    0.27 sec
+550/869 Test #622: unit.STEP output is an ISO 10303-21 AP214 file in millimetres ...............................................   Passed    0.14 sec
+        Start 182: unit.DeleteObjectCommand deletes and restores objects and parameters
+        Start 764: unit.The first pass builds everything in dependency order
+551/869 Test  #51: unit.CLI rejects unknown commands ...........................................................................   Passed    0.10 sec
+        Start 240: unit.Extrude features are created and modified through commands
+552/869 Test #607: unit.Revolve definitions are validated ......................................................................   Passed    0.07 sec
+        Start 207: unit.EdgeSignature_IsCanonicalWhateverPointAndOrientationDescribeTheCurve
+553/869 Test #344: unit.Invalid entities are rejected and leave the sketch unchanged ...........................................   Passed    0.13 sec
+        Start 247: unit.File names may contain any Unicode characters
+554/869 Test #856: architecture.checker.private-include ........................................................................   Passed    0.19 sec
+        Start 690: unit.Solver: geometry that would collapse is rejected
+555/869 Test  #26: unit.Analytic volume regression for extruded rectangles .....................................................   Passed    0.22 sec
+556/869 Test #182: unit.DeleteObjectCommand deletes and restores objects and parameters ........................................   Passed    0.11 sec
+        Start 211: unit.Edges_SignatureResolvesToExactlyOneEdge
+        Start 454: unit.MirrorFeature_DoubleMirrorReturnsOriginal
+557/869 Test #764: unit.The first pass builds everything in dependency order ...................................................   Passed    0.12 sec
+        Start 697: unit.Solver: status names
+558/869 Test #697: unit.Solver: status names ...................................................................................   Passed    0.07 sec
+559/869 Test #240: unit.Extrude features are created and modified through commands .............................................   Passed    0.18 sec
+        Start  10: unit.A history refuses to operate on another document
+        Start 598: unit.RenameObjectCommand renames parameters and objects
+560/869 Test #211: unit.Edges_SignatureResolvesToExactlyOneEdge ................................................................   Passed    0.13 sec
+561/869 Test #690: unit.Solver: geometry that would collapse is rejected .......................................................   Passed    0.15 sec
+562/869 Test #247: unit.File names may contain any Unicode characters ..........................................................   Passed    0.17 sec
+563/869 Test #207: unit.EdgeSignature_IsCanonicalWhateverPointAndOrientationDescribeTheCurve ...................................   Passed    0.19 sec
+        Start  22: unit.AddObjectCommand re-adds the same object with the same ID
+        Start 347: unit.Join, cut and intersect combine with a target body
+        Start 367: unit.LinearPattern_NonOverlappingBodiesMatchesAnalyticVolume
+        Start 138: unit.Construction geometry is not part of profiles
+564/869 Test #454: unit.MirrorFeature_DoubleMirrorReturnsOriginal ..............................................................   Passed    0.18 sec
+565/869 Test  #10: unit.A history refuses to operate on another document .......................................................   Passed    0.09 sec
+566/869 Test #598: unit.RenameObjectCommand renames parameters and objects .....................................................   Passed    0.08 sec
+        Start 355: unit.LinearPattern_DefinitionIsValidatedOnCreateAndEdit
+        Start   1: unit.A boolean with an empty target body fails instead of producing geometry
+        Start 305: unit.HoleFeature_RejectsMissingFace
+567/869 Test  #22: unit.AddObjectCommand re-adds the same object with the same ID ..............................................   Passed    0.11 sec
+        Start 290: unit.HoleFeature_DefinitionIsValidatedOnCreateAndEdit
+568/869 Test #138: unit.Construction geometry is not part of profiles ..........................................................   Passed    0.16 sec
+        Start 210: unit.Edges_FaceAngleTellsSharpFromSmoothEdges
+569/869 Test #355: unit.LinearPattern_DefinitionIsValidatedOnCreateAndEdit .....................................................   Passed    0.15 sec
+570/869 Test #290: unit.HoleFeature_DefinitionIsValidatedOnCreateAndEdit .......................................................   Passed    0.11 sec
+571/869 Test #347: unit.Join, cut and intersect combine with a target body .....................................................   Passed    0.20 sec
+572/869 Test   #1: unit.A boolean with an empty target body fails instead of producing geometry ................................   Passed    0.14 sec
+573/869 Test #367: unit.LinearPattern_NonOverlappingBodiesMatchesAnalyticVolume ................................................   Passed    0.19 sec
+        Start 688: unit.Solver: empty and unconstrained sketches
+        Start 244: unit.Failed commands are not recorded
+        Start 687: unit.Solver: conflicting lengths are reported, not applied
+        Start 603: unit.Revolution axes must be finite, with a real direction
+        Start 120: unit.CircularPattern_RejectsZeroCount
+574/869 Test #210: unit.Edges_FaceAngleTellsSharpFromSmoothEdges ...............................................................   Passed    0.12 sec
+575/869 Test #688: unit.Solver: empty and unconstrained sketches ...............................................................   Passed    0.11 sec
+        Start  13: unit.A new sketch lies on the global XY plane
+        Start 686: unit.Solver: coincident, parallel and perpendicular
+576/869 Test #244: unit.Failed commands are not recorded .......................................................................   Passed    0.17 sec
+        Start  79: unit.Chamfer_RefusesChamfersThatDoNotFitBeforeTheKernel
+577/869 Test #687: unit.Solver: conflicting lengths are reported, not applied ..................................................   Passed    0.16 sec
+578/869 Test #603: unit.Revolution axes must be finite, with a real direction ..................................................   Passed    0.15 sec
+579/869 Test  #13: unit.A new sketch lies on the global XY plane ...............................................................   Passed    0.09 sec
+580/869 Test #305: unit.HoleFeature_RejectsMissingFace .........................................................................   Passed    0.33 sec
+        Start 245: unit.Failures are reported and block dependents until fixed
+        Start 453: unit.MirrorFeature_DependsOnItsSourceAndOffsetParameter
+        Start 595: unit.Regeneration reports broken references
+        Start 694: unit.Solver: results are deterministic and analyze() does not modify
+581/869 Test #686: unit.Solver: coincident, parallel and perpendicular .........................................................   Passed    0.14 sec
+        Start 785: unit.Two perpendicular cylinders intersect in a Steinmetz solid, V = 16 r^3 / 3
+582/869 Test #120: unit.CircularPattern_RejectsZeroCount .......................................................................   Passed    0.19 sec
+        Start 334: unit.IdAllocator can reserve IDs loaded from a document
+583/869 Test #453: unit.MirrorFeature_DependsOnItsSourceAndOffsetParameter .....................................................   Passed    0.08 sec
+        Start 616: unit.RigidTransform_ReflectionNegatesSignedDistanceToThePlane
+584/869 Test #595: unit.Regeneration reports broken references .................................................................   Passed    0.09 sec
+        Start 854: architecture.checker.qt-leak
+585/869 Test #334: unit.IdAllocator can reserve IDs loaded from a document .....................................................   Passed    0.10 sec
+586/869 Test #245: unit.Failures are reported and block dependents until fixed .................................................   Passed    0.19 sec
+587/869 Test #616: unit.RigidTransform_ReflectionNegatesSignedDistanceToThePlane ...............................................   Passed    0.09 sec
+        Start 766: unit.The global XY plane maps sketch coordinates unchanged
+        Start  17: unit.A revolve declares its profile, angle parameter and target as dependencies
+        Start 494: unit.Open, branching and empty sketches have no valid profile
+588/869 Test #694: unit.Solver: results are deterministic and analyze() does not modify ........................................   Passed    0.19 sec
+        Start 706: unit.Spec usage: sketch.addLine(Point2D{0_mm, 0_mm}, Point2D{100_mm, 0_mm})
+589/869 Test #766: unit.The global XY plane maps sketch coordinates unchanged ..................................................   Passed    0.07 sec
+        Start 691: unit.Solver: horizontal line
+590/869 Test #785: unit.Two perpendicular cylinders intersect in a Steinmetz solid, V = 16 r^3 / 3 .............................   Passed    0.22 sec
+591/869 Test #854: architecture.checker.qt-leak ................................................................................   Passed    0.16 sec
+        Start 390: unit.Lines closed by coincident constraints form a profile once solved
+        Start 703: unit.Spec setup: rectangle with horizontal/vertical constraints, width and height
+592/869 Test  #17: unit.A revolve declares its profile, angle parameter and target as dependencies .............................   Passed    0.12 sec
+593/869 Test #494: unit.Open, branching and empty sketches have no valid profile ...............................................   Passed    0.11 sec
+594/869 Test  #79: unit.Chamfer_RefusesChamfersThatDoNotFitBeforeTheKernel .....................................................   Passed    0.34 sec
+        Start 685: unit.Solver: circle radius
+        Start 192: unit.Document object IDs widen to ObjectId
+        Start 627: unit.Saving is deterministic and loss-free
+595/869 Test #691: unit.Solver: horizontal line ................................................................................   Passed    0.10 sec
+596/869 Test #706: unit.Spec usage: sketch.addLine(Point2D{0_mm, 0_mm}, Point2D{100_mm, 0_mm}) .................................   Passed    0.14 sec
+        Start 380: unit.LinearPattern_ReverseDirectionWorks
+        Start 319: unit.Hole_CounterboreMatchesAnalyticVolume
+597/869 Test #703: unit.Spec setup: rectangle with horizontal/vertical constraints, width and height ...........................   Passed    0.09 sec
+598/869 Test #390: unit.Lines closed by coincident constraints form a profile once solved ......................................   Passed    0.12 sec
+        Start 321: unit.Hole_DrillsIntoTheMaterialFromEitherSide
+        Start 855: architecture.checker.layer-violation
+599/869 Test #685: unit.Solver: circle radius ..................................................................................   Passed    0.10 sec
+        Start 370: unit.LinearPattern_RefusesUnsupportedSources
+600/869 Test #192: unit.Document object IDs widen to ObjectId ..................................................................   Passed    0.14 sec
+        Start 769: unit.The same construction steps produce identical sketches
+601/869 Test #627: unit.Saving is deterministic and loss-free ..................................................................   Passed    0.15 sec
+        Start 851: architecture.checker.valid
+602/869 Test #769: unit.The same construction steps produce identical sketches .................................................   Passed    0.08 sec
+        Start  52: unit.CLI version command prints the full build report
+603/869 Test #380: unit.LinearPattern_ReverseDirectionWorks ....................................................................   Passed    0.21 sec
+604/869 Test #855: architecture.checker.layer-violation ........................................................................   Passed    0.16 sec
+        Start 216: unit.Entities referenced by constraints cannot be removed
+        Start 496: unit.Overlapping boxes: union, difference and intersection volumes
+605/869 Test #321: unit.Hole_DrillsIntoTheMaterialFromEitherSide ...............................................................   Passed    0.22 sec
+        Start  72: unit.ChamferFeature_UndoRedoRestoresIdenticalGeometry
+606/869 Test #319: unit.Hole_CounterboreMatchesAnalyticVolume ..................................................................   Passed    0.25 sec
+        Start 696: unit.Solver: separate lines are closed into a rectangle by coincident constraints
+607/869 Test #216: unit.Entities referenced by constraints cannot be removed ...................................................   Passed    0.08 sec
+608/869 Test  #52: unit.CLI version command prints the full build report .......................................................   Passed    0.09 sec
+609/869 Test #370: unit.LinearPattern_RefusesUnsupportedSources ................................................................   Passed    0.23 sec
+        Start 383: unit.LinearPattern_SingleDirectionPlacesInstancesExactly
+        Start 376: unit.LinearPattern_RejectsTooManyInstances
+        Start 329: unit.Hole_UnresolvablePlacementIsReportedNotGuessed
+610/869 Test #851: architecture.checker.valid ..................................................................................   Passed    0.20 sec
+        Start 493: unit.Only distance and radius constraints carry values, and values are checked
+611/869 Test #696: unit.Solver: separate lines are closed into a rectangle by coincident constraints ...........................   Passed    0.09 sec
+        Start 776: unit.Transform_RotatedBodyMovesExactly
+612/869 Test #496: unit.Overlapping boxes: union, difference and intersection volumes ..........................................   Passed    0.18 sec
+        Start 322: unit.Hole_IsDeterministic
+613/869 Test #376: unit.LinearPattern_RejectsTooManyInstances ..................................................................   Passed    0.21 sec
+614/869 Test #493: unit.Only distance and radius constraints carry values, and values are checked ..............................   Passed    0.18 sec
+        Start 238: unit.Extrude definitions are validated
+        Start 243: unit.Faces_BoxHasSixPlanarFacesWithReferences
+615/869 Test #383: unit.LinearPattern_SingleDirectionPlacesInstancesExactly ....................................................   Passed    0.26 sec
+616/869 Test #329: unit.Hole_UnresolvablePlacementIsReportedNotGuessed .........................................................   Passed    0.23 sec
+617/869 Test #776: unit.Transform_RotatedBodyMovesExactly ......................................................................   Passed    0.19 sec
+618/869 Test  #72: unit.ChamferFeature_UndoRedoRestoresIdenticalGeometry .......................................................   Passed    0.30 sec
+        Start 701: unit.Spec example: changing width rebuilds Sketch001 and Extrude001 only
+        Start 295: unit.HoleFeature_FailedHoleSavesAndLoadsUnchanged
+        Start 623: unit.STEP output rejects missing and empty bodies
+        Start 619: unit.Round trip preserves IDs, names, dimensions, units and expressions
+619/869 Test #322: unit.Hole_IsDeterministic ...................................................................................   Passed    0.21 sec
+620/869 Test #238: unit.Extrude definitions are validated ......................................................................   Passed    0.09 sec
+621/869 Test #243: unit.Faces_BoxHasSixPlanarFacesWithReferences ...............................................................   Passed    0.08 sec
+        Start  41: unit.Box properties match V = LWH and A = 2(LW + LH + WH)
+        Start 285: unit.HoleFeature_BlindHoleMatchesAnalyticVolume
+        Start 242: unit.FaceSignature_IsCanonicalAndHasModelAlignedCoordinates
+622/869 Test #863: compile_fail.units.sqrt-of-volume ...........................................................................   Passed    4.89 sec
+        Start 869: compile_fail.ids.entity-id-as-object-id
+623/869 Test #701: unit.Spec example: changing width rebuilds Sketch001 and Extrude001 only ....................................   Passed    0.15 sec
+        Start 375: unit.LinearPattern_RejectsInvalidSpacing
+624/869 Test #623: unit.STEP output rejects missing and empty bodies ...........................................................   Passed    0.14 sec
+625/869 Test #619: unit.Round trip preserves IDs, names, dimensions, units and expressions .....................................   Passed    0.12 sec
+        Start 377: unit.LinearPattern_RejectsZeroCount
+        Start  36: unit.Bodies without material are geometry errors
+626/869 Test  #41: unit.Box properties match V = LWH and A = 2(LW + LH + WH) ...................................................   Passed    0.13 sec
+627/869 Test #242: unit.FaceSignature_IsCanonicalAndHasModelAlignedCoordinates .................................................   Passed    0.11 sec
+        Start 249: unit.FilletFeature_DefinitionIsValidatedOnCreateAndEdit
+        Start 779: unit.Transform_TranslatedCopiesCombineWithAnalyticVolumes
+628/869 Test #295: unit.HoleFeature_FailedHoleSavesAndLoadsUnchanged ...........................................................   Passed    0.22 sec
+        Start 772: unit.Topological order puts dependencies first and breaks ties by ID
+629/869 Test #249: unit.FilletFeature_DefinitionIsValidatedOnCreateAndEdit .....................................................   Passed    0.08 sec
+        Start 213: unit.Editing a feature rebuilds that feature and what depends on it
+630/869 Test  #36: unit.Bodies without material are geometry errors ............................................................   Passed    0.11 sec
+631/869 Test #285: unit.HoleFeature_BlindHoleMatchesAnalyticVolume .............................................................   Passed    0.22 sec
+        Start 487: unit.Names are unique across parameters and objects
+        Start  95: unit.CircularPattern_DependsOnItsSourceAndParameters
+632/869 Test #772: unit.Topological order puts dependencies first and breaks ties by ID ........................................   Passed    0.10 sec
+        Start  58: unit.ChamferFeature_EdgeChangedUpstreamFailsInsteadOfSubstituting
+633/869 Test #375: unit.LinearPattern_RejectsInvalidSpacing ....................................................................   Passed    0.20 sec
+634/869 Test #377: unit.LinearPattern_RejectsZeroCount .........................................................................   Passed    0.19 sec
+        Start 209: unit.Edges_CylinderHasTwoCirclesAndASeam
+        Start  18: unit.A sketch on another plane places its geometry in model space
+635/869 Test  #95: unit.CircularPattern_DependsOnItsSourceAndParameters ........................................................   Passed    0.09 sec
+        Start 208: unit.Edges_BoxHasTwelveStraightEdgesBetweenTwoFaces
+636/869 Test #779: unit.Transform_TranslatedCopiesCombineWithAnalyticVolumes ...................................................   Passed    0.21 sec
+637/869 Test #487: unit.Names are unique across parameters and objects .........................................................   Passed    0.12 sec
+638/869 Test #213: unit.Editing a feature rebuilds that feature and what depends on it .........................................   Passed    0.14 sec
+        Start 136: unit.Constraints check the kinds and number of referenced entities
+        Start 236: unit.Expressions are stored and cleared
+        Start 206: unit.Each constraint type records its references, value and enabled state
+639/869 Test  #18: unit.A sketch on another plane places its geometry in model space ...........................................   Passed    0.10 sec
+640/869 Test #209: unit.Edges_CylinderHasTwoCirclesAndASeam ....................................................................   Passed    0.12 sec
+        Start 106: unit.CircularPattern_MalformedDataIsRejectedWithTheJsonPath
+        Start 311: unit.HoleFeature_ThroughHoleMatchesAnalyticVolume
+641/869 Test #236: unit.Expressions are stored and cleared .....................................................................   Passed    0.08 sec
+        Start 783: unit.Triangulation rejects empty bodies and invalid options
+642/869 Test #136: unit.Constraints check the kinds and number of referenced entities ..........................................   Passed    0.11 sec
+643/869 Test #208: unit.Edges_BoxHasTwelveStraightEdgesBetweenTwoFaces .........................................................   Passed    0.13 sec
+        Start 135: unit.Constraints cannot reference entities that do not exist
+        Start 159: unit.Cylinder properties match V = pi r^2 h and A = 2 pi r (r + h)
+644/869 Test #206: unit.Each constraint type records its references, value and enabled state ...................................   Passed    0.11 sec
+        Start  40: unit.Box minus a through cylinder is a valid solid with V = LWH - pi r^2 H
+645/869 Test #106: unit.CircularPattern_MalformedDataIsRejectedWithTheJsonPath .................................................   Passed    0.12 sec
+        Start 614: unit.RigidTransform_ReflectionIsAnInvolution
+646/869 Test #783: unit.Triangulation rejects empty bodies and invalid options .................................................   Passed    0.09 sec
+        Start  65: unit.ChamferFeature_MultipleEdgesMatchAnalyticVolume
+647/869 Test  #58: unit.ChamferFeature_EdgeChangedUpstreamFailsInsteadOfSubstituting ...........................................   Passed    0.30 sec
+648/869 Test #135: unit.Constraints cannot reference entities that do not exist ................................................   Passed    0.10 sec
+        Start 241: unit.Extruded regions with circles, holes and arcs
+        Start 708: unit.Sphere properties match V = 4/3 pi r^3 and A = 4 pi r^2
+649/869 Test #159: unit.Cylinder properties match V = pi r^2 h and A = 2 pi r (r + h) ..........................................   Passed    0.11 sec
+650/869 Test #311: unit.HoleFeature_ThroughHoleMatchesAnalyticVolume ...........................................................   Passed    0.18 sec
+        Start 521: unit.Parameters can be created from a number and a runtime unit
+        Start 629: unit.Self-intersecting profiles are rejected, not revolved
+651/869 Test #614: unit.RigidTransform_ReflectionIsAnInvolution ................................................................   Passed    0.10 sec
+652/869 Test  #40: unit.Box minus a through cylinder is a valid solid with V = LWH - pi r^2 H ..................................   Passed    0.13 sec
+        Start 158: unit.Cycles are detected and block what depends on them
+        Start 604: unit.Revolution rejects invalid axes and sweeps
+653/869 Test #708: unit.Sphere properties match V = 4/3 pi r^3 and A = 4 pi r^2 ................................................   Passed    0.09 sec
+        Start   2: unit.A box triangulates exactly into a closed, outward-facing surface
+654/869 Test #521: unit.Parameters can be created from a number and a runtime unit .............................................   Passed    0.09 sec
+        Start 270: unit.Fillet_ConcaveEdgeAddsMaterial
+655/869 Test #629: unit.Self-intersecting profiles are rejected, not revolved ..................................................   Passed    0.09 sec
+        Start 269: unit.Fillet_CircularEdgeMatchesPappus
+656/869 Test #158: unit.Cycles are detected and block what depends on them .....................................................   Passed    0.09 sec
+        Start 137: unit.Constraints must reference distinct entities
+657/869 Test #604: unit.Revolution rejects invalid axes and sweeps .............................................................   Passed    0.09 sec
+        Start  21: unit.ASCII and binary STL hold the same 32-bit coordinates
+658/869 Test  #65: unit.ChamferFeature_MultipleEdgesMatchAnalyticVolume ........................................................   Passed    0.27 sec
+        Start 308: unit.HoleFeature_RejectsZeroDiameter
+659/869 Test   #2: unit.A box triangulates exactly into a closed, outward-facing surface .......................................   Passed    0.16 sec
+660/869 Test #241: unit.Extruded regions with circles, holes and arcs ..........................................................   Passed    0.27 sec
+661/869 Test #137: unit.Constraints must reference distinct entities ...........................................................   Passed    0.11 sec
+662/869 Test  #21: unit.ASCII and binary STL hold the same 32-bit coordinates ..................................................   Passed    0.09 sec
+        Start 615: unit.RigidTransform_ReflectionMatchesPointFormula
+        Start 519: unit.Parameters are found by ID and by name
+        Start 631: unit.Sketch changes flow into the extrude after solving
+        Start 444: unit.Malformed revolve data is rejected with the JSON path
+663/869 Test #270: unit.Fillet_ConcaveEdgeAddsMaterial .........................................................................   Passed    0.21 sec
+        Start  38: unit.Boolean operations are deterministic and leave their inputs unchanged
+664/869 Test #269: unit.Fillet_CircularEdgeMatchesPappus .......................................................................   Passed    0.21 sec
+        Start 346: unit.Invalid parameters are rejected at creation
+665/869 Test #615: unit.RigidTransform_ReflectionMatchesPointFormula ...........................................................   Passed    0.09 sec
+666/869 Test #519: unit.Parameters are found by ID and by name .................................................................   Passed    0.08 sec
+        Start 777: unit.Transform_RotatedReferencesDescribeTheMovedGeometry
+        Start 522: unit.Parameters of other dimensions keep their dimension and unit
+667/869 Test #631: unit.Sketch changes flow into the extrude after solving .....................................................   Passed    0.11 sec
+668/869 Test #308: unit.HoleFeature_RejectsZeroDiameter ........................................................................   Passed    0.16 sec
+        Start 303: unit.HoleFeature_RejectsAmbiguousFaceReference
+        Start 239: unit.Extrude directions
+669/869 Test #346: unit.Invalid parameters are rejected at creation ............................................................   Passed    0.09 sec
+670/869 Test #444: unit.Malformed revolve data is rejected with the JSON path ..................................................   Passed    0.13 sec
+        Start 517: unit.Parameters and objects share one ID space
+        Start 253: unit.FilletFeature_FailedFilletSavesAndLoadsUnchanged
+671/869 Test #777: unit.Transform_RotatedReferencesDescribeTheMovedGeometry ....................................................   Passed    0.11 sec
+        Start 484: unit.Missing references are reported once, under their own check
+672/869 Test #522: unit.Parameters of other dimensions keep their dimension and unit ...........................................   Passed    0.11 sec
+        Start 503: unit.Parameter tables round-trip through JSON
+673/869 Test #239: unit.Extrude directions .....................................................................................   Passed    0.13 sec
+        Start 618: unit.RigidTransform_RotationPreservesDistanceToAxis
+674/869 Test  #38: unit.Boolean operations are deterministic and leave their inputs unchanged ..................................   Passed    0.24 sec
+675/869 Test #517: unit.Parameters and objects share one ID space ..............................................................   Passed    0.12 sec
+        Start 451: unit.MirrorFeature_DataIsStoredAsTransparentJson
+        Start 277: unit.Fillet_TangentChainIsRoundedAsAWhole
+676/869 Test #503: unit.Parameter tables round-trip through JSON ...............................................................   Passed    0.10 sec
+677/869 Test #303: unit.HoleFeature_RejectsAmbiguousFaceReference ..............................................................   Passed    0.19 sec
+        Start 525: unit.Placement moves the centre of mass and bounds, not the volume
+        Start 317: unit.Hole_BlindHoleMayNotReachTheFarSide
+678/869 Test #484: unit.Missing references are reported once, under their own check ............................................   Passed    0.15 sec
+        Start 189: unit.Disjoint bodies: union keeps both solids, intersection is empty
+679/869 Test #618: unit.RigidTransform_RotationPreservesDistanceToAxis .........................................................   Passed    0.10 sec
+680/869 Test #253: unit.FilletFeature_FailedFilletSavesAndLoadsUnchanged .......................................................   Passed    0.19 sec
+681/869 Test #451: unit.MirrorFeature_DataIsStoredAsTransparentJson ............................................................   Passed    0.09 sec
+        Start 520: unit.Parameters are listed in ID order
+        Start 218: unit.Every extrude direction and operation round-trips
+        Start 817: unit.restoreParameter makes a parameter equal to a stored state
+682/869 Test #525: unit.Placement moves the centre of mass and bounds, not the volume ..........................................   Passed    0.11 sec
+        Start 518: unit.Parameters are created with ID, name, value, unit and revision 1
+683/869 Test #520: unit.Parameters are listed in ID order ......................................................................   Passed    0.11 sec
+        Start 538: unit.Reading a parameter as the wrong quantity type fails
+684/869 Test #189: unit.Disjoint bodies: union keeps both solids, intersection is empty ........................................   Passed    0.16 sec
+685/869 Test #277: unit.Fillet_TangentChainIsRoundedAsAWhole ...................................................................   Passed    0.21 sec
+686/869 Test #817: unit.restoreParameter makes a parameter equal to a stored state .............................................   Passed    0.10 sec
+        Start 626: unit.STL output rejects what it cannot represent
+        Start 328: unit.Hole_ThroughHoleMatchesAnalyticVolume
+        Start 597: unit.Removing returns the parameter and frees its name
+687/869 Test #218: unit.Every extrude direction and operation round-trips ......................................................   Passed    0.16 sec
+688/869 Test #317: unit.Hole_BlindHoleMayNotReachTheFarSide ....................................................................   Passed    0.22 sec
+689/869 Test #518: unit.Parameters are created with ID, name, value, unit and revision 1 .......................................   Passed    0.13 sec
+        Start 617: unit.RigidTransform_RotationMatchesRodrigues
+        Start 307: unit.HoleFeature_RejectsNonFiniteDiameter
+        Start 601: unit.Renaming works for parameters and objects and keeps names unique
+690/869 Test #538: unit.Reading a parameter as the wrong quantity type fails ...................................................   Passed    0.12 sec
+        Start 613: unit.RigidTransform_QuadrantRotationsAboutZ
+691/869 Test #626: unit.STL output rejects what it cannot represent ............................................................   Passed    0.10 sec
+        Start 699: unit.Spec acceptance: 100 x 50 mm rectangle extruded 20 mm has V = 100000 mm^3
+692/869 Test #597: unit.Removing returns the parameter and frees its name ......................................................   Passed    0.12 sec
+        Start 536: unit.Radius, centre and sweep of circles and arcs
+693/869 Test #617: unit.RigidTransform_RotationMatchesRodrigues ................................................................   Passed    0.12 sec
+694/869 Test #601: unit.Renaming works for parameters and objects and keeps names unique .......................................   Passed    0.09 sec
+695/869 Test #328: unit.Hole_ThroughHoleMatchesAnalyticVolume ..................................................................   Passed    0.15 sec
+        Start 502: unit.Parameter names must be identifiers
+        Start 625: unit.STL output follows the binary and ASCII layouts
+        Start 356: unit.LinearPattern_DependsOnItsSourceAndParameters
+696/869 Test #613: unit.RigidTransform_QuadrantRotationsAboutZ .................................................................   Passed    0.12 sec
+        Start 612: unit.RigidTransform_IdentityAndTranslation
+697/869 Test #699: unit.Spec acceptance: 100 x 50 mm rectangle extruded 20 mm has V = 100000 mm^3 ..............................   Passed    0.12 sec
+698/869 Test #307: unit.HoleFeature_RejectsNonFiniteDiameter ...................................................................   Passed    0.17 sec
+699/869 Test #536: unit.Radius, centre and sweep of circles and arcs ...........................................................   Passed    0.08 sec
+        Start 476: unit.MirrorFeature_RejectsZeroNormal
+        Start 306: unit.HoleFeature_RejectsNegativeDiameter
+        Start  14: unit.A rectangle of connected lines is one closed region
+700/869 Test #502: unit.Parameter names must be identifiers ....................................................................   Passed    0.11 sec
+        Start 602: unit.Result features exclude bodies consumed by other features
+701/869 Test #625: unit.STL output follows the binary and ASCII layouts ........................................................   Passed    0.11 sec
+702/869 Test #356: unit.LinearPattern_DependsOnItsSourceAndParameters ..........................................................   Passed    0.09 sec
+703/869 Test #612: unit.RigidTransform_IdentityAndTranslation ..................................................................   Passed    0.08 sec
+        Start 606: unit.Revolve data is stored as transparent JSON
+        Start 365: unit.LinearPattern_MalformedDataIsRejectedWithTheJsonPath
+        Start   3: unit.A circle is a closed region on its own
+704/869 Test #476: unit.MirrorFeature_RejectsZeroNormal ........................................................................   Passed    0.11 sec
+        Start 187: unit.Dirty propagation reaches exactly the downstream nodes
+705/869 Test  #14: unit.A rectangle of connected lines is one closed region ....................................................   Passed    0.11 sec
+        Start 348: unit.Lengths of lines, arcs and circles
+706/869 Test #602: unit.Result features exclude bodies consumed by other features ..............................................   Passed    0.11 sec
+707/869 Test #606: unit.Revolve data is stored as transparent JSON .............................................................   Passed    0.09 sec
+        Start 475: unit.MirrorFeature_RejectsNonFinitePlane
+        Start  86: unit.Changing the depth rebuilds only the extrude
+708/869 Test   #3: unit.A circle is a closed region on its own .................................................................   Passed    0.10 sec
+        Start 271: unit.Fillet_IsDeterministic
+709/869 Test #187: unit.Dirty propagation reaches exactly the downstream nodes .................................................   Passed    0.10 sec
+710/869 Test #365: unit.LinearPattern_MalformedDataIsRejectedWithTheJsonPath ...................................................   Passed    0.13 sec
+711/869 Test #306: unit.HoleFeature_RejectsNegativeDiameter ....................................................................   Passed    0.20 sec
+        Start 316: unit.Hole_BlindHoleMatchesAnalyticVolume
+        Start 710: unit.Subtracting an enclosing body leaves nothing
+        Start  74: unit.Chamfer_CircularEdgeOfCylinderMatchesPappus
+712/869 Test #348: unit.Lengths of lines, arcs and circles .....................................................................   Passed    0.12 sec
+        Start 778: unit.Transform_TranslatedBodyMovesExactly
+713/869 Test #475: unit.MirrorFeature_RejectsNonFinitePlane ....................................................................   Passed    0.12 sec
+        Start  60: unit.ChamferFeature_FailedChamferSavesAndLoadsUnchanged
+714/869 Test #710: unit.Subtracting an enclosing body leaves nothing ...........................................................   Passed    0.11 sec
+        Start  39: unit.Bounding boxes of entities are exact
+715/869 Test  #86: unit.Changing the depth rebuilds only the extrude ...........................................................   Passed    0.18 sec
+716/869 Test #316: unit.Hole_BlindHoleMatchesAnalyticVolume ....................................................................   Passed    0.14 sec
+        Start 441: unit.Loop orientation is normalized to counter-clockwise
+        Start 268: unit.Fillet_AdjacentEdgesAreBlendedAtTheirCorner
+717/869 Test #271: unit.Fillet_IsDeterministic .................................................................................   Passed    0.19 sec
+718/869 Test #778: unit.Transform_TranslatedBodyMovesExactly ...................................................................   Passed    0.12 sec
+        Start 780: unit.Transform_TranslatedReferencesDescribeTheMovedGeometry
+        Start  93: unit.CircularPattern_DataIsStoredAsTransparentJson
+719/869 Test  #60: unit.ChamferFeature_FailedChamferSavesAndLoadsUnchanged .....................................................   Passed    0.17 sec
+720/869 Test  #39: unit.Bounding boxes of entities are exact ...................................................................   Passed    0.11 sec
+        Start 707: unit.Sphere intersected with an octant box is one eighth of the sphere
+        Start 327: unit.Hole_ThatRemovesNothingMeasurableIsRefused
+721/869 Test #441: unit.Loop orientation is normalized to counter-clockwise ....................................................   Passed    0.13 sec
+722/869 Test  #74: unit.Chamfer_CircularEdgeOfCylinderMatchesPappus ............................................................   Passed    0.24 sec
+        Start 341: unit.Integer and floating-point literals agree
+        Start 537: unit.Random edit, undo and redo sequences stay consistent and deterministic
+723/869 Test  #93: unit.CircularPattern_DataIsStoredAsTransparentJson ..........................................................   Passed    0.11 sec
+724/869 Test #780: unit.Transform_TranslatedReferencesDescribeTheMovedGeometry .................................................   Passed    0.13 sec
+        Start 592: unit.Referenced points cannot be removed
+        Start 529: unit.Primitive sizes must be positive, finite and above kernel precision
+725/869 Test #341: unit.Integer and floating-point literals agree ..............................................................   Passed    0.09 sec
+        Start 256: unit.FilletFeature_MalformedDataIsRejectedWithTheJsonPath
+726/869 Test #268: unit.Fillet_AdjacentEdgesAreBlendedAtTheirCorner ............................................................   Passed    0.22 sec
+727/869 Test #707: unit.Sphere intersected with an octant box is one eighth of the sphere ......................................   Passed    0.14 sec
+728/869 Test #592: unit.Referenced points cannot be removed ....................................................................   Passed    0.08 sec
+        Start 185: unit.Direction products
+        Start 491: unit.Objects are listed in ID order
+        Start 345: unit.Invalid frames are rejected
+729/869 Test #327: unit.Hole_ThatRemovesNothingMeasurableIsRefused .............................................................   Passed    0.18 sec
+730/869 Test #537: unit.Random edit, undo and redo sequences stay consistent and deterministic .................................   Passed    0.14 sec
+731/869 Test #529: unit.Primitive sizes must be positive, finite and above kernel precision ....................................   Passed    0.11 sec
+        Start 298: unit.HoleFeature_MalformedDataIsRejectedWithTheJsonPath
+        Start 214: unit.Editing reports whether anything changed
+        Start 342: unit.Integration error estimates are reported and small
+732/869 Test #256: unit.FilletFeature_MalformedDataIsRejectedWithTheJsonPath ...................................................   Passed    0.11 sec
+733/869 Test #491: unit.Objects are listed in ID order .........................................................................   Passed    0.08 sec
+        Start 215: unit.Endpoints of lines and arcs
+        Start 389: unit.Lines can share end points
+734/869 Test #185: unit.Direction products .....................................................................................   Passed    0.13 sec
+735/869 Test #345: unit.Invalid frames are rejected ............................................................................   Passed    0.10 sec
+        Start 446: unit.Metadata changes are tracked
+        Start 705: unit.Spec usage: makeBox(100_mm, 50_mm, 20_mm)
+736/869 Test #214: unit.Editing reports whether anything changed ...............................................................   Passed    0.10 sec
+        Start 760: unit.The XZ and YZ planes are right-handed
+737/869 Test #342: unit.Integration error estimates are reported and small .....................................................   Passed    0.11 sec
+738/869 Test #215: unit.Endpoints of lines and arcs ............................................................................   Passed    0.09 sec
+        Start 530: unit.Primitives have the expected topology
+        Start 599: unit.Renaming keeps names unique and the name index current
+739/869 Test #298: unit.HoleFeature_MalformedDataIsRejectedWithTheJsonPath .....................................................   Passed    0.17 sec
+740/869 Test #389: unit.Lines can share end points .............................................................................   Passed    0.11 sec
+741/869 Test #446: unit.Metadata changes are tracked ...........................................................................   Passed    0.09 sec
+        Start 630: unit.Setting an identical value is not a change
+        Start  44: unit.Build info reports the library linkage
+        Start  55: unit.ChamferFeature_DefinitionIsValidatedOnCreateAndEdit
+742/869 Test #705: unit.Spec usage: makeBox(100_mm, 50_mm, 20_mm) ..............................................................   Passed    0.12 sec
+        Start 483: unit.Missing references are reported as failures
+743/869 Test #760: unit.The XZ and YZ planes are right-handed ..................................................................   Passed    0.12 sec
+744/869 Test #530: unit.Primitives have the expected topology ..................................................................   Passed    0.09 sec
+745/869 Test #599: unit.Renaming keeps names unique and the name index current .................................................   Passed    0.08 sec
+        Start 332: unit.IDs format as kind:value
+        Start  43: unit.Build info reports the active build configuration
+        Start 340: unit.Independent allocators produce independent ID spaces
+746/869 Test #630: unit.Setting an identical value is not a change .............................................................   Passed    0.11 sec
+        Start 119: unit.CircularPattern_RejectsZeroAxis
+747/869 Test  #44: unit.Build info reports the library linkage .................................................................   Passed    0.11 sec
+        Start 531: unit.Products and quotients derive the correct quantity
+748/869 Test  #55: unit.ChamferFeature_DefinitionIsValidatedOnCreateAndEdit ....................................................   Passed    0.13 sec
+        Start 775: unit.Transform_RejectsNonFiniteTranslationsAndEmptyBodies
+749/869 Test #483: unit.Missing references are reported as failures ............................................................   Passed    0.13 sec
+750/869 Test #340: unit.Independent allocators produce independent ID spaces ...................................................   Passed    0.08 sec
+751/869 Test #332: unit.IDs format as kind:value ...............................................................................   Passed    0.11 sec
+752/869 Test  #43: unit.Build info reports the active build configuration ......................................................   Passed    0.10 sec
+        Start 762: unit.The display unit can change without changing the value
+        Start 790: unit.Undo and redo report when there is nothing to do
+        Start 325: unit.Hole_RefusesHolesThatDoNotFitTheFace
+        Start 765: unit.The geometry kernel is Open CASCADE 8.0
+753/869 Test #119: unit.CircularPattern_RejectsZeroAxis ........................................................................   Passed    0.12 sec
+        Start 337: unit.IdAllocator reports exhaustion instead of wrapping
+754/869 Test #531: unit.Products and quotients derive the correct quantity .....................................................   Passed    0.12 sec
+755/869 Test #775: unit.Transform_RejectsNonFiniteTranslationsAndEmptyBodies ...................................................   Passed    0.09 sec
+756/869 Test #762: unit.The display unit can change without changing the value .................................................   Passed    0.07 sec
+        Start  35: unit.Bodies are immutable values that share their shape
+        Start 265: unit.FilletFeature_SingleStraightEdgeMatchesAnalyticVolume
+        Start 354: unit.LinearPattern_DataIsStoredAsTransparentJson
+757/869 Test #790: unit.Undo and redo report when there is nothing to do .......................................................   Passed    0.10 sec
+        Start 291: unit.HoleFeature_DependsOnItsTargetAndParameters
+758/869 Test #765: unit.The geometry kernel is Open CASCADE 8.0 ................................................................   Passed    0.09 sec
+        Start 798: unit.addObject needs a new object and insertObject an identified one
+759/869 Test  #35: unit.Bodies are immutable values that share their shape .....................................................   Passed    0.10 sec
+        Start 818: unit.uniqueName finds the first free numbered name
+760/869 Test #337: unit.IdAllocator reports exhaustion instead of wrapping .....................................................   Passed    0.13 sec
+761/869 Test #354: unit.LinearPattern_DataIsStoredAsTransparentJson ............................................................   Passed    0.09 sec
+762/869 Test #325: unit.Hole_RefusesHolesThatDoNotFitTheFace ...................................................................   Passed    0.16 sec
+        Start 272: unit.Fillet_MultipleIndependentEdgesMatchAnalyticVolume
+        Start 250: unit.FilletFeature_DependsOnItsTargetAndRadiusParameter
+        Start  47: unit.CLI --version prints program name and version
+763/869 Test #291: unit.HoleFeature_DependsOnItsTargetAndParameters ............................................................   Passed    0.12 sec
+764/869 Test #798: unit.addObject needs a new object and insertObject an identified one ........................................   Passed    0.10 sec
+        Start 526: unit.Point-line distances are stored as (point, line)
+        Start 281: unit.Frame creation projects the X direction into the plane
+765/869 Test #265: unit.FilletFeature_SingleStraightEdgeMatchesAnalyticVolume ..................................................   Passed    0.18 sec
+766/869 Test #818: unit.uniqueName finds the first free numbered name ..........................................................   Passed    0.10 sec
+        Start 186: unit.Directions are normalized and reject zero vectors
+        Start  71: unit.ChamferFeature_TwoDistancesPutTheFirstDistanceOnTheReferenceFace
+767/869 Test  #47: unit.CLI --version prints program name and version ..........................................................   Passed    0.08 sec
+        Start  27: unit.Assigning a value of another dimension fails and changes nothing
+768/869 Test #250: unit.FilletFeature_DependsOnItsTargetAndRadiusParameter .....................................................   Passed    0.11 sec
+769/869 Test #272: unit.Fillet_MultipleIndependentEdgesMatchAnalyticVolume .....................................................   Passed    0.13 sec
+        Start 280: unit.Formatted build info marks modified working trees
+        Start 492: unit.Objects can be added, found by ID and name, and removed
+770/869 Test #526: unit.Point-line distances are stored as (point, line) .......................................................   Passed    0.11 sec
+771/869 Test #281: unit.Frame creation projects the X direction into the plane .................................................   Passed    0.10 sec
+        Start 788: unit.UUIDs round-trip through their canonical text form
+        Start 283: unit.Generated UUIDs are version 4, RFC variant and distinct
+772/869 Test #186: unit.Directions are normalized and reject zero vectors ......................................................   Passed    0.11 sec
+        Start 787: unit.UUID parsing accepts either case and formats lowercase
+773/869 Test  #27: unit.Assigning a value of another dimension fails and changes nothing .......................................   Passed    0.10 sec
+        Start 335: unit.IdAllocator hands out increasing IDs starting at 1
+774/869 Test #492: unit.Objects can be added, found by ID and name, and removed ................................................   Passed    0.10 sec
+        Start 495: unit.Other engineering units convert to SI
+775/869 Test #788: unit.UUIDs round-trip through their canonical text form .....................................................   Passed    0.10 sec
+776/869 Test #280: unit.Formatted build info marks modified working trees ......................................................   Passed    0.13 sec
+777/869 Test  #71: unit.ChamferFeature_TwoDistancesPutTheFirstDistanceOnTheReferenceFace .......................................   Passed    0.17 sec
+778/869 Test #283: unit.Generated UUIDs are version 4, RFC variant and distinct ................................................   Passed    0.09 sec
+        Start 217: unit.Equivalence ignores revision counters
+        Start 815: unit.modifyObject tracks changes and checks the kind
+        Start 527: unit.Points and bounding boxes
+        Start 786: unit.Typed lookup checks the object kind
+779/869 Test #787: unit.UUID parsing accepts either case and formats lowercase .................................................   Passed    0.13 sec
+        Start  45: unit.Build info reports the project version configured by CMake
+780/869 Test #335: unit.IdAllocator hands out increasing IDs starting at 1 .....................................................   Passed    0.13 sec
+781/869 Test #495: unit.Other engineering units convert to SI ..................................................................   Passed    0.10 sec
+782/869 Test #217: unit.Equivalence ignores revision counters ..................................................................   Passed    0.08 sec
+        Start 528: unit.Points, lines, circles and arcs have stable IDs and types
+        Start 336: unit.IdAllocator never reuses values
+        Start   7: unit.A general frame is orthonormal and round-trips points
+783/869 Test #815: unit.modifyObject tracks changes and checks the kind ........................................................   Passed    0.11 sec
+        Start 188: unit.Dirty state follows effective changes since markClean
+784/869 Test #527: unit.Points and bounding boxes ..............................................................................   Passed    0.11 sec
+785/869 Test #786: unit.Typed lookup checks the object kind ....................................................................   Passed    0.09 sec
+        Start  42: unit.Build info identifies the compiler that built the core library
+        Start 350: unit.Like quantities compare by value regardless of the unit used
+786/869 Test  #45: unit.Build info reports the project version configured by CMake .............................................   Passed    0.11 sec
+        Start 800: unit.equivalent compares identity and content, not revisions
+787/869 Test #528: unit.Points, lines, circles and arcs have stable IDs and types ..............................................   Passed    0.11 sec
+788/869 Test #336: unit.IdAllocator never reuses values ........................................................................   Passed    0.09 sec
+789/869 Test   #7: unit.A general frame is orthonormal and round-trips points ..................................................   Passed    0.08 sec
+        Start 349: unit.Like quantities add and subtract
+        Start 784: unit.Trigonometric functions take and return angles
+        Start  46: unit.C++ standard names map __cplusplus values
+790/869 Test #188: unit.Dirty state follows effective changes since markClean ..................................................   Passed    0.11 sec
+        Start 440: unit.Lookup by name and ID works across kinds
+791/869 Test  #42: unit.Build info identifies the compiler that built the core library .........................................   Passed    0.11 sec
+792/869 Test #350: unit.Like quantities compare by value regardless of the unit used ...........................................   Passed    0.09 sec
+        Start  87: unit.Changing the value updates it and increments the revision
+        Start   4: unit.A default body is empty
+793/869 Test #800: unit.equivalent compares identity and content, not revisions ................................................   Passed    0.13 sec
+        Start 700: unit.Spec example: 100 x 50 x 20 mm box has V = 100000 mm^3
+794/869 Test #440: unit.Lookup by name and ID works across kinds ...............................................................   Passed    0.08 sec
+795/869 Test  #46: unit.C++ standard names map __cplusplus values ..............................................................   Passed    0.10 sec
+796/869 Test #784: unit.Trigonometric functions take and return angles .........................................................   Passed    0.11 sec
+797/869 Test #349: unit.Like quantities add and subtract .......................................................................   Passed    0.13 sec
+        Start 791: unit.Unit catalog lists every unit with a unique symbol
+        Start 378: unit.LinearPattern_RejectsZeroDirection
+        Start 768: unit.The revision counts every effective change
+        Start 445: unit.Megapascals and pascals convert to and from SI
+798/869 Test  #87: unit.Changing the value updates it and increments the revision ..............................................   Passed    0.14 sec
+799/869 Test   #4: unit.A default body is empty ................................................................................   Passed    0.12 sec
+        Start 179: unit.Default-constructed IDs are invalid
+        Start 794: unit.Unknown unit symbols are not found
+800/869 Test #700: unit.Spec example: 100 x 50 x 20 mm box has V = 100000 mm^3 .................................................   Passed    0.11 sec
+801/869 Test #791: unit.Unit catalog lists every unit with a unique symbol .....................................................   Passed    0.09 sec
+        Start 490: unit.Non-finite values are rejected
+        Start 139: unit.Core library is compiled as C++23 or newer
+802/869 Test #378: unit.LinearPattern_RejectsZeroDirection .....................................................................   Passed    0.10 sec
+803/869 Test #768: unit.The revision counts every effective change .............................................................   Passed    0.09 sec
+        Start 793: unit.Units resolve by symbol, the empty symbol meaning unitless
+        Start 330: unit.IDs are never reused and insertObject restores an ID
+804/869 Test #490: unit.Non-finite values are rejected .........................................................................   Passed    0.09 sec
+805/869 Test #139: unit.Core library is compiled as C++23 or newer .............................................................   Passed    0.08 sec
+        Start  76: unit.Chamfer_FollowsTangentEdgesAndRejectsTwoReferencesToOneChain
+        Start 442: unit.Malformed UUID text is rejected
+806/869 Test #179: unit.Default-constructed IDs are invalid ....................................................................   Passed    0.15 sec
+807/869 Test #445: unit.Megapascals and pascals convert to and from SI .........................................................   Passed    0.17 sec
+808/869 Test #794: unit.Unknown unit symbols are not found .....................................................................   Passed    0.14 sec
+        Start 326: unit.Hole_RejectsInvalidRequestsBeforeTheKernel
+        Start 338: unit.Imperial lengths use their exact definitions
+        Start 279: unit.Formatted build info contains every field
+809/869 Test #330: unit.IDs are never reused and insertObject restores an ID ...................................................   Passed    0.12 sec
+810/869 Test #793: unit.Units resolve by symbol, the empty symbol meaning unitless .............................................   Passed    0.14 sec
+        Start 180: unit.Default-constructed and zero quantities are zero
+        Start  24: unit.An empty table round-trips
+811/869 Test #442: unit.Malformed UUID text is rejected ........................................................................   Passed    0.10 sec
+        Start 761: unit.The default UUID is nil
+812/869 Test #326: unit.Hole_RejectsInvalidRequestsBeforeTheKernel .............................................................   Passed    0.11 sec
+813/869 Test #279: unit.Formatted build info contains every field ..............................................................   Passed    0.08 sec
+        Start 709: unit.Square root of an area is a length
+        Start  63: unit.ChamferFeature_MalformedDataIsRejectedWithTheJsonPath
+814/869 Test #338: unit.Imperial lengths use their exact definitions ...........................................................   Passed    0.12 sec
+815/869 Test #180: unit.Default-constructed and zero quantities are zero .......................................................   Passed    0.09 sec
+816/869 Test  #76: unit.Chamfer_FollowsTangentEdgesAndRejectsTwoReferencesToOneChain ...........................................   Passed    0.17 sec
+        Start 205: unit.Duplicate IDs and names are rejected
+        Start 771: unit.The table revision tracks effective changes only
+        Start 333: unit.IDs work as ordered and hashed container keys
+817/869 Test  #24: unit.An empty table round-trips .............................................................................   Passed    0.12 sec
+818/869 Test #761: unit.The default UUID is nil ................................................................................   Passed    0.11 sec
+        Start 447: unit.Millimetres and metres convert to and from SI
+        Start 289: unit.HoleFeature_DataIsStoredAsTransparentJson
+819/869 Test #709: unit.Square root of an area is a length .....................................................................   Passed    0.10 sec
+        Start 535: unit.Quantities scale by plain numbers
+820/869 Test #205: unit.Duplicate IDs and names are rejected ...................................................................   Passed    0.09 sec
+821/869 Test #771: unit.The table revision tracks effective changes only .......................................................   Passed    0.08 sec
+        Start 131: unit.Compound assignment updates the quantity
+        Start 278: unit.Fillet_UnresolvableReferencesAreReportedNotGuessed
+822/869 Test #333: unit.IDs work as ordered and hashed container keys ..........................................................   Passed    0.10 sec
+        Start 331: unit.IDs carry their value and compare by value
+823/869 Test #447: unit.Millimetres and metres convert to and from SI ..........................................................   Passed    0.10 sec
+        Start 758: unit.Table modifications are dimension-checked
+824/869 Test #535: unit.Quantities scale by plain numbers ......................................................................   Passed    0.09 sec
+825/869 Test #289: unit.HoleFeature_DataIsStoredAsTransparentJson ..............................................................   Passed    0.10 sec
+826/869 Test  #63: unit.ChamferFeature_MalformedDataIsRejectedWithTheJsonPath ..................................................   Passed    0.19 sec
+        Start 621: unit.SI values round-trip bit for bit
+        Start 781: unit.Transform_TranslationIsComputedOnceNotAccumulated
+        Start 276: unit.Fillet_SingleStraightEdgeMatchesAnalyticVolume
+827/869 Test #131: unit.Compound assignment updates the quantity ...............................................................   Passed    0.12 sec
+        Start 534: unit.Quantities format with their unit
+828/869 Test #331: unit.IDs carry their value and compare by value .............................................................   Passed    0.10 sec
+829/869 Test #278: unit.Fillet_UnresolvableReferencesAreReportedNotGuessed .....................................................   Passed    0.12 sec
+        Start 181: unit.Degrees and radians convert to and from SI
+        Start  25: unit.An off-centre hole moves the centre of mass as predicted
+830/869 Test #534: unit.Quantities format with their unit ......................................................................   Passed    0.07 sec
+        Start  37: unit.Boolean operands must not be empty
+831/869 Test #758: unit.Table modifications are dimension-checked ..............................................................   Passed    0.15 sec
+832/869 Test #621: unit.SI values round-trip bit for bit .......................................................................   Passed    0.13 sec
+833/869 Test #781: unit.Transform_TranslationIsComputedOnceNotAccumulated ......................................................   Passed    0.12 sec
+        Start 759: unit.The JSON format is transparent
+        Start  73: unit.Chamfer_AdjacentEdgesMeetInAMitredCorner
+        Start 797: unit.abs, isFinite and approxEqual
+834/869 Test #276: unit.Fillet_SingleStraightEdgeMatchesAnalyticVolume .........................................................   Passed    0.15 sec
+835/869 Test #181: unit.Degrees and radians convert to and from SI .............................................................   Passed    0.11 sec
+        Start 628: unit.Seeded generation is reproducible
+        Start 792: unit.Units can be looked up by symbol at run time
+836/869 Test  #37: unit.Boolean operands must not be empty .....................................................................   Passed    0.10 sec
+837/869 Test  #25: unit.An off-centre hole moves the centre of mass as predicted ...............................................   Passed    0.14 sec
+        Start  75: unit.Chamfer_DistanceAngleMeasuresTheAngleFromTheReferenceFace
+        Start 704: unit.Spec usage: literals construct typed quantities
+838/869 Test #759: unit.The JSON format is transparent .........................................................................   Passed    0.12 sec
+        Start  53: unit.CLI without arguments prints usage to stderr and fails
+839/869 Test #797: unit.abs, isFinite and approxEqual ..........................................................................   Passed    0.11 sec
+840/869 Test #628: unit.Seeded generation is reproducible ......................................................................   Passed    0.09 sec
+841/869 Test  #73: unit.Chamfer_AdjacentEdgesMeetInAMitredCorner ...............................................................   Passed    0.12 sec
+        Start  70: unit.ChamferFeature_SingleEdgeMatchesAnalyticVolume
+        Start  56: unit.ChamferFeature_DependsOnItsTargetAndDistanceParameter
+        Start 248: unit.FilletFeature_DataIsStoredAsTransparentJson
+842/869 Test #792: unit.Units can be looked up by symbol at run time ...........................................................   Passed    0.11 sec
+        Start  77: unit.Chamfer_IsDeterministic
+843/869 Test #704: unit.Spec usage: literals construct typed quantities ........................................................   Passed    0.10 sec
+844/869 Test  #75: unit.Chamfer_DistanceAngleMeasuresTheAngleFromTheReferenceFace ..............................................   Passed    0.12 sec
+845/869 Test  #53: unit.CLI without arguments prints usage to stderr and fails .................................................   Passed    0.08 sec
+        Start 620: unit.SI unit symbols are derived from dimensions
+        Start  78: unit.Chamfer_MultipleSeparateEdgesMatchAnalyticVolume
+        Start  57: unit.ChamferFeature_DistanceAngleMeasuresTheAngleFromTheReferenceFace
+846/869 Test  #56: unit.ChamferFeature_DependsOnItsTargetAndDistanceParameter ..................................................   Passed    0.09 sec
+        Start  82: unit.Chamfer_SingleEdgeMatchesAnalyticVolume
+847/869 Test  #70: unit.ChamferFeature_SingleEdgeMatchesAnalyticVolume .........................................................   Passed    0.18 sec
+848/869 Test #620: unit.SI unit symbols are derived from dimensions ............................................................   Passed    0.11 sec
+        Start  83: unit.Chamfer_TwoDistancesPutTheFirstDistanceOnTheReferenceFace
+        Start  81: unit.Chamfer_RejectsOversizedDistance
+849/869 Test #248: unit.FilletFeature_DataIsStoredAsTransparentJson ............................................................   Passed    0.18 sec
+850/869 Test  #77: unit.Chamfer_IsDeterministic ................................................................................   Passed    0.17 sec
+851/869 Test  #78: unit.Chamfer_MultipleSeparateEdgesMatchAnalyticVolume .......................................................   Passed    0.13 sec
+        Start  54: unit.ChamferFeature_DataIsStoredAsTransparentJson
+        Start 489: unit.Nested loops become holes; loops inside holes become islands
+        Start 273: unit.Fillet_RefusesEdgesWhereFacesJoinSmoothly
+852/869 Test  #82: unit.Chamfer_SingleEdgeMatchesAnalyticVolume ................................................................   Passed    0.16 sec
+853/869 Test  #57: unit.ChamferFeature_DistanceAngleMeasuresTheAngleFromTheReferenceFace .......................................   Passed    0.17 sec
+        Start  84: unit.Chamfer_UnresolvableReferencesAreReportedNotGuessed
+        Start 826: cli.new.unicode-path
+854/869 Test  #54: unit.ChamferFeature_DataIsStoredAsTransparentJson ...........................................................   Passed    0.09 sec
+        Start 275: unit.Fillet_RejectsInvalidRequestsBeforeTheKernel
+855/869 Test  #81: unit.Chamfer_RejectsOversizedDistance .......................................................................   Passed    0.12 sec
+856/869 Test  #83: unit.Chamfer_TwoDistancesPutTheFirstDistanceOnTheReferenceFace ..............................................   Passed    0.14 sec
+857/869 Test #489: unit.Nested loops become holes; loops inside holes become islands ...........................................   Passed    0.08 sec
+        Start  80: unit.Chamfer_RejectsInvalidRequestsBeforeTheKernel
+        Start 702: unit.Spec examples: width, height and hole diameter
+        Start 183: unit.Dependency cycles are reported and block their dependents
+858/869 Test #273: unit.Fillet_RefusesEdgesWhereFacesJoinSmoothly ..............................................................   Passed    0.11 sec
+859/869 Test #275: unit.Fillet_RejectsInvalidRequestsBeforeTheKernel ...........................................................   Passed    0.09 sec
+860/869 Test  #80: unit.Chamfer_RejectsInvalidRequestsBeforeTheKernel ..........................................................   Passed    0.07 sec
+861/869 Test  #84: unit.Chamfer_UnresolvableReferencesAreReportedNotGuessed ....................................................   Passed    0.13 sec
+862/869 Test #826: cli.new.unicode-path ........................................................................................   Passed    0.13 sec
+863/869 Test #702: unit.Spec examples: width, height and hole diameter .........................................................   Passed    0.08 sec
+864/869 Test #183: unit.Dependency cycles are reported and block their dependents ..............................................   Passed    0.10 sec
+865/869 Test #869: compile_fail.ids.entity-id-as-object-id .....................................................................   Passed    5.09 sec
+        Start 861: compile_fail.units.force-per-length-as-pressure
+866/869 Test #861: compile_fail.units.force-per-length-as-pressure .............................................................   Passed    3.49 sec
+        Start 862: compile_fail.units.compare-length-time
+867/869 Test #862: compile_fail.units.compare-length-time ......................................................................   Passed    3.11 sec
+        Start 860: compile_fail.units.length-to-double
+868/869 Test #860: compile_fail.units.length-to-double .........................................................................   Passed    3.25 sec
+        Start 858: compile_fail.units.assign-mass-to-length
+869/869 Test #858: compile_fail.units.assign-mass-to-length ....................................................................   Passed    3.18 sec
+
+100% tests passed out of 869
+
+Total Test time (real) =  86.94 sec

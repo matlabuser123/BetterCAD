@@ -12,6 +12,8 @@ bettercad_add_library(bettercad_features
         Validation.cpp
         chamfer/ChamferFeature.cpp
         chamfer/ChamferRegeneration.cpp
+        datum/DatumResolution.cpp
+        datum/Datums.cpp
         extrude/ExtrudeFeature.cpp
         extrude/ExtrudeRegeneration.cpp
         fillet/FilletFeature.cpp

@@ -22,9 +22,9 @@ struct MassProperties {
     Volume volume{};
     Area surfaceArea{};
     Point3D centerOfMass{};
-    /// Relative error estimates: the kernel's, from its adaptive integration,
-    /// and for faces swept from ellipses and splines, whose areas BetterCAD
-    /// integrates itself, the change of the last refinement.
+    /// Relative error estimates: the kernel's, from its integration, and for
+    /// faces swept from ellipses and splines that BetterCAD integrates
+    /// itself, the change of the last refinement.
     double volumeRelativeError = 0.0;
     double areaRelativeError = 0.0;
 };

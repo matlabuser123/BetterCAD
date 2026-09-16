@@ -1,0 +1,33 @@
+Built with GCC 16.1 (MinGW-w64 UCRT), -O2, against OCCT 8.0.1; run 2026-09-17T02:45:20+10:00.
+P12-DATUM-001 Gauss-Kronrod tolerance probe (OCCT 8.0.1)
+
+revolved ellipse           eps 1e-04  V 59217.62640583382  rel 1.19e-11  reported 7.86e-05  0.016 s
+revolved ellipse           eps 1e-05  V 59217.626406508047  rel 4.75e-13  reported 8.13e-06  0.018 s
+revolved ellipse           eps 1e-06  V 59217.626406513285  rel 3.86e-13  reported 8.78e-07  0.018 s
+revolved ellipse           eps 1e-07  V 59217.626406536096  rel 8.88e-16  reported 8.50e-08  7.762 s
+revolved ellipse           eps 1e-08  V 59217.626406536037  rel 1.89e-15  reported 9.04e-09  7.920 s
+revolved ellipse           eps 1e-10  V 59217.626406536037  rel 1.89e-15  reported 7.98e-09  9.493 s
+revolved ellipse 90 deg    eps 1e-04  V 14804.406600932936  rel 4.74e-11  reported 8.04e-05  0.016 s
+revolved ellipse 90 deg    eps 1e-05  V 14804.406602877349  rel 8.40e-11  reported 5.09e-06  0.019 s
+revolved ellipse 90 deg    eps 1e-06  V 14804.406601636556  rel 1.70e-13  reported 5.83e-07  0.027 s
+revolved ellipse 90 deg    eps 1e-07  V 14804.406601634011  rel 1.67e-15  reported 6.16e-08  0.031 s
+revolved ellipse 90 deg    eps 1e-08  V 14804.406601634  rel 2.44e-15  reported 6.98e-09  0.036 s
+revolved ellipse 90 deg    eps 1e-10  V 14804.406601634004  rel 2.22e-15  reported 2.80e-09  0.037 s
+revolved spline square     eps 1e-04  V 104719.75511965959  rel 1.67e-15  reported 5.56e-05  1.583 s
+revolved spline square     eps 1e-05  V 104719.75511965956  rel 2.00e-15  reported 3.49e-06  0.040 s
+revolved spline square     eps 1e-06  V 104719.75511965956  rel 2.00e-15  reported 8.40e-07  3.243 s
+revolved spline square     eps 1e-07  V 104719.75511965959  rel 1.67e-15  reported 1.03e-07  6.741 s
+revolved spline square     eps 1e-08  V 104719.75511965956  rel 2.00e-15  reported 7.12e-08  6.428 s
+revolved spline square     eps 1e-10  V 104719.75511965956  rel 2.00e-15  reported 7.08e-08  10.203 s
+elliptic prism             eps 1e-04  V 28274.333882308274  rel 4.66e-15  reported 1.42e-05  0.000 s
+elliptic prism             eps 1e-05  V 28274.333882308078  rel 2.22e-15  reported 2.01e-09  0.001 s
+elliptic prism             eps 1e-06  V 28274.333882308078  rel 2.22e-15  reported 2.01e-09  0.001 s
+elliptic prism             eps 1e-07  V 28274.333882308074  rel 2.33e-15  reported 2.27e-10  0.001 s
+elliptic prism             eps 1e-08  V 28274.333882308074  rel 2.33e-15  reported 2.27e-10  0.001 s
+elliptic prism             eps 1e-10  V 28274.333882308074  rel 2.33e-15  reported 1.62e-15  0.001 s
+spline square prism        eps 1e-04  V 29999.999999999978  rel 7.77e-16  reported 7.28e-16  0.002 s
+spline square prism        eps 1e-05  V 29999.999999999978  rel 7.77e-16  reported 7.28e-16  0.003 s
+spline square prism        eps 1e-06  V 29999.999999999978  rel 7.77e-16  reported 7.28e-16  0.004 s
+spline square prism        eps 1e-07  V 29999.999999999978  rel 7.77e-16  reported 7.28e-16  0.005 s
+spline square prism        eps 1e-08  V 29999.999999999978  rel 7.77e-16  reported 7.28e-16  0.005 s
+spline square prism        eps 1e-10  V 29999.999999999978  rel 7.77e-16  reported 7.28e-16  0.005 s

@@ -37,6 +37,12 @@ Result<Json> objectToJson(const DocumentObject& object) {
         data = detail::sweepToJson(*sweep);
     } else if (const auto* loft = dynamic_cast<const features::LoftFeature*>(&object)) {
         data = detail::loftToJson(*loft);
+    } else if (const auto* plane = dynamic_cast<const features::DatumPlane*>(&object)) {
+        data = detail::datumPlaneToJson(*plane);
+    } else if (const auto* axis = dynamic_cast<const features::DatumAxis*>(&object)) {
+        data = detail::datumAxisToJson(*axis);
+    } else if (const auto* system = dynamic_cast<const features::CoordinateSystem*>(&object)) {
+        data = detail::coordinateSystemToJson(*system);
     } else {
         return makeError(ErrorCode::InvalidArgument,
                          std::format("objects of type '{}' cannot be saved", object.typeName()));
@@ -136,6 +142,27 @@ Result<std::unique_ptr<DocumentObject>> objectFromJson(const Json& value, std::s
             return std::unexpected(loft.error());
         }
         return std::unique_ptr<DocumentObject>(std::move(*loft));
+    }
+    if (*type == features::DatumPlane::kTypeName) {
+        auto plane = detail::datumPlaneFromJson(**data, std::move(*name), dataPath);
+        if (!plane) {
+            return std::unexpected(plane.error());
+        }
+        return std::unique_ptr<DocumentObject>(std::move(*plane));
+    }
+    if (*type == features::DatumAxis::kTypeName) {
+        auto axis = detail::datumAxisFromJson(**data, std::move(*name), dataPath);
+        if (!axis) {
+            return std::unexpected(axis.error());
+        }
+        return std::unique_ptr<DocumentObject>(std::move(*axis));
+    }
+    if (*type == features::CoordinateSystem::kTypeName) {
+        auto system = detail::coordinateSystemFromJson(**data, std::move(*name), dataPath);
+        if (!system) {
+            return std::unexpected(system.error());
+        }
+        return std::unique_ptr<DocumentObject>(std::move(*system));
     }
     return detail::parseError(detail::childPath(path, "type"), std::format("unknown object type '{}'", *type));
 }

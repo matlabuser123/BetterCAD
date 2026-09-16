@@ -1,0 +1,76 @@
+Cross-configuration comparison of the P12-DATUM-001 measured values.
+Each configuration's bettercad_tests.exe ran the 21 test cases of values-header.txt with -s --reporter xml
+--rng-seed 1; values.py filtered the report; compare-values.py (in this directory) compared the results.
+3 lines hold pointer values (regenerator.body(...) != nullptr) and are left out.
+
+release: 597 non-empty lines after normalizing, MD5 eacdc7ad91d9035a93ed07a0488afe8a
+debug: 597 non-empty lines after normalizing, MD5 64a226375492f3ee9b6558a6f9f9ebb8
+debug-shared: 597 non-empty lines after normalizing, MD5 64a226375492f3ee9b6558a6f9f9ebb8
+
+debug against release:
+  line 109 (expected only):
+    release: => -0.70710678118654746 is within 0.00000000000001 of -0.70710678118654746
+    debug: => -0.70710678118654746 is within 0.00000000000001 of -0.70710678118654757
+  line 111 (expected only):
+    release: => 0.78033008588991071 is within 0.00000000000001 of 0.7803300858899106
+    debug: => 0.78033008588991071 is within 0.00000000000001 of 0.78033008588991071
+  line 113 (expected only):
+    release: => -0.12682648404432195 is within 0.00000000000001 of -0.12682648404432201
+    debug: => -0.12682648404432195 is within 0.00000000000001 of -0.12682648404432195
+  line 117 (expected only):
+    release: => -0.12682648404432215 is within 0.00000000000001 of -0.12682648404432223
+    debug: => -0.12682648404432215 is within 0.00000000000001 of -0.12682648404432217
+  line 135 (expected only):
+    release: => -0.70710678118654746 is within 0.00000000000001 of -0.70710678118654746
+    debug: => -0.70710678118654746 is within 0.00000000000001 of -0.70710678118654757
+  line 137 (expected only):
+    release: => 0.78033008588991071 is within 0.00000000000001 of 0.7803300858899106
+    debug: => 0.78033008588991071 is within 0.00000000000001 of 0.78033008588991071
+  line 139 (expected only):
+    release: => -0.12682648404432195 is within 0.00000000000001 of -0.12682648404432201
+    debug: => -0.12682648404432195 is within 0.00000000000001 of -0.12682648404432195
+  line 143 (expected only):
+    release: => -0.12682648404432215 is within 0.00000000000001 of -0.12682648404432223
+    debug: => -0.12682648404432215 is within 0.00000000000001 of -0.12682648404432217
+  line 151 (expected only):
+    release: => -0.70710678118654757 is within 0.00000000000001 of -0.70710678118654746
+    debug: => -0.70710678118654757 is within 0.00000000000001 of -0.70710678118654757
+  line 153 (expected only):
+    release: => 0.12682648404432215 is within 0.00000000000001 of 0.12682648404432223
+    debug: => 0.12682648404432215 is within 0.00000000000001 of 0.12682648404432217
+  differing lines: 10 expected only, 0 measured
+
+debug-shared against release:
+  line 109 (expected only):
+    release: => -0.70710678118654746 is within 0.00000000000001 of -0.70710678118654746
+    debug-shared: => -0.70710678118654746 is within 0.00000000000001 of -0.70710678118654757
+  line 111 (expected only):
+    release: => 0.78033008588991071 is within 0.00000000000001 of 0.7803300858899106
+    debug-shared: => 0.78033008588991071 is within 0.00000000000001 of 0.78033008588991071
+  line 113 (expected only):
+    release: => -0.12682648404432195 is within 0.00000000000001 of -0.12682648404432201
+    debug-shared: => -0.12682648404432195 is within 0.00000000000001 of -0.12682648404432195
+  line 117 (expected only):
+    release: => -0.12682648404432215 is within 0.00000000000001 of -0.12682648404432223
+    debug-shared: => -0.12682648404432215 is within 0.00000000000001 of -0.12682648404432217
+  line 135 (expected only):
+    release: => -0.70710678118654746 is within 0.00000000000001 of -0.70710678118654746
+    debug-shared: => -0.70710678118654746 is within 0.00000000000001 of -0.70710678118654757
+  line 137 (expected only):
+    release: => 0.78033008588991071 is within 0.00000000000001 of 0.7803300858899106
+    debug-shared: => 0.78033008588991071 is within 0.00000000000001 of 0.78033008588991071
+  line 139 (expected only):
+    release: => -0.12682648404432195 is within 0.00000000000001 of -0.12682648404432201
+    debug-shared: => -0.12682648404432195 is within 0.00000000000001 of -0.12682648404432195
+  line 143 (expected only):
+    release: => -0.12682648404432215 is within 0.00000000000001 of -0.12682648404432223
+    debug-shared: => -0.12682648404432215 is within 0.00000000000001 of -0.12682648404432217
+  line 151 (expected only):
+    release: => -0.70710678118654757 is within 0.00000000000001 of -0.70710678118654746
+    debug-shared: => -0.70710678118654757 is within 0.00000000000001 of -0.70710678118654757
+  line 153 (expected only):
+    release: => 0.12682648404432215 is within 0.00000000000001 of 0.12682648404432223
+    debug-shared: => 0.12682648404432215 is within 0.00000000000001 of 0.12682648404432217
+  differing lines: 10 expected only, 0 measured
+
+RESULT: measured values identical
