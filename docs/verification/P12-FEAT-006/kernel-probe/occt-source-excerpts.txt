@@ -1,0 +1,358 @@
+OCCT 8.0.1 source excerpts cited by docs/verification/P12-FEAT-006/README.md.
+Source: the OCCT tarball the BetterCAD dependency superbuild downloaded,
+%LOCALAPPDATA%\bettercad-deps\build-gnu-16-mingw-amd64\downloads\occt-V8_0_1.tar.gz,
+directory OCCT-8_0_1/src/ModelingAlgorithms. Line numbers are that tarball's.
+
+
+1. The header calls Add(R1, R2, E) a linear law.
+--- TKFillet/BRepFilletAPI/BRepFilletAPI_MakeFillet.hxx, lines 93-99
+   93  
+   94    //! Adds a fillet description in the builder
+   95    //! - builds a contour of tangent edges,
+   96    //! - sets a linear radius evolution law between
+   97    //! the first and last vertex of the spine.
+   98    Standard_EXPORT void Add(const double R1, const double R2, const TopoDS_Edge& E);
+   99  
+
+
+2. Add(R1, R2, E) sets two stations, (0, R1) and (1, R2).
+--- TKFillet/BRepFilletAPI/BRepFilletAPI_MakeFillet.cxx, lines 130-149
+  130  void BRepFilletAPI_MakeFillet::SetRadius(const double R1,
+  131                                           const double R2,
+  132                                           const int    IC,
+  133                                           const int    IinC)
+  134  {
+  135    double r1, r2;
+  136  
+  137    if (std::abs(R1 - R2) < Precision::Confusion())
+  138    {
+  139      r1 = r2 = (R1 + R2) * 0.5;
+  140    }
+  141    else
+  142    {
+  143      r1 = R1;
+  144      r2 = R2;
+  145    }
+  146    gp_XY FirstUandR(0., r1), LastUandR(1., r2);
+  147    myBuilder.SetRadius(FirstUandR, IC, IinC);
+  148    myBuilder.SetRadius(LastUandR, IC, IinC);
+  149  }
+
+
+3. Add(UandR, E) sets the given stations (u normalized over the given range).
+--- TKFillet/BRepFilletAPI/BRepFilletAPI_MakeFillet.cxx, lines 162-188
+  162  void BRepFilletAPI_MakeFillet::SetRadius(const NCollection_Array1<gp_Pnt2d>& UandR,
+  163                                           const int                           IC,
+  164                                           const int                           IinC)
+  165  {
+  166    if (UandR.Length() == 1)
+  167    {
+  168      SetRadius(UandR(UandR.Lower()).Y(), IC, IinC);
+  169    }
+  170    else if (UandR.Length() == 2)
+  171    {
+  172      SetRadius(UandR(UandR.Lower()).Y(), UandR(UandR.Upper()).Y(), IC, IinC);
+  173    }
+  174    else
+  175    {
+  176      double Uf = UandR(UandR.Lower()).X();
+  177      double Ul = UandR(UandR.Upper()).X();
+  178      for (int i = UandR.Lower(); i <= UandR.Upper(); i++)
+  179      {
+  180        double Ucur = UandR(i).X();
+  181        Ucur        = (Ucur - Uf) / (Ul - Uf);
+  182        gp_XY newUandR(Ucur, UandR(i).Y());
+  183        myBuilder.SetRadius(newUandR, IC, IinC);
+  184      }
+  185    }
+  186  }
+  187  
+  188  //=================================================================================================
+
+
+4. A Law_Function radius is put in a local Law_Composite that is then dropped;
+   the stations are cleared.
+--- TKFillet/ChFiDS/ChFiDS_FilSpine.cxx, lines 235-242
+  235  void ChFiDS_FilSpine::SetRadius(const occ::handle<Law_Function>& C, const int /*IinC*/)
+  236  {
+  237    splitdone                                          = false;
+  238    occ::handle<Law_Composite>                   prout = new Law_Composite();
+  239    NCollection_List<occ::handle<Law_Function>>& lst   = prout->ChangeLaws();
+  240    lst.Append(C);
+  241    parandrad.Clear();
+  242  }
+
+
+5a. When the spine is reset for a build, the first and last station radii are
+    added again as stations at the spine's (extended) first and last parameters.
+--- TKFillet/ChFiDS/ChFiDS_FilSpine.cxx, lines 50-81
+   50  void ChFiDS_FilSpine::Reset(const bool AllData)
+   51  {
+   52    ChFiDS_Spine::Reset(AllData);
+   53    laws.Clear();
+   54    if (AllData)
+   55    {
+   56      parandrad.Clear();
+   57    }
+   58    else // Complete parandrad
+   59    {
+   60      double spinedeb = FirstParameter();
+   61      double spinefin = LastParameter();
+   62  
+   63      gp_XY FirstUandR = parandrad.First();
+   64      gp_XY LastUandR  = parandrad.Last();
+   65      if (std::abs(spinedeb - FirstUandR.X()) > gp::Resolution())
+   66      {
+   67        FirstUandR.SetX(spinedeb);
+   68        parandrad.Prepend(FirstUandR);
+   69      }
+   70      if (std::abs(spinefin - LastUandR.X()) > gp::Resolution())
+   71      {
+   72        LastUandR.SetX(spinefin);
+   73        parandrad.Append(LastUandR);
+   74      }
+   75  
+   76      if (IsPeriodic())
+   77      {
+   78        parandrad(parandrad.Length()).SetY(parandrad(1).Y());
+   79      }
+   80    }
+   81  }
+
+
+5b. mklaw: stations at the ends of the law's range are taken as they are, so no
+    constant piece is added before or after them.
+--- TKFillet/ChFiDS/ChFiDS_FilSpine.cxx, lines 408-433
+  408        if (curdeb - tol3d <= wcur && wcur <= curfin + tol3d)
+  409        {
+  410          if (wcur - curdeb < tol3d)
+  411          {
+  412            yaunpointsurledeb = true;
+  413            gp_XY ncur        = cur;
+  414            if (Rdeb < 0.)
+  415            {
+  416              rad = cur.Y();
+  417            }
+  418            ncur.SetCoord(curdeb, rad);
+  419            npr.Append(ncur);
+  420          }
+  421          else if (curfin - wcur < tol3d)
+  422          {
+  423            yaunpointsurlefin = true;
+  424            gp_XY ncur        = cur;
+  425            if (Rfin < 0.)
+  426            {
+  427              raf = cur.Y();
+  428            }
+  429            ncur.SetCoord(curfin, raf);
+  430            npr.Append(ncur);
+  431          }
+  432          else
+  433          {
+
+
+5c. Between the stations: Law_Interpol through them with zero end derivatives.
+--- TKFillet/ChFiDS/ChFiDS_FilSpine.cxx, lines 499-525
+  499        fini = (i >= nbp);
+  500      }
+  501  
+  502      if (rad < 0.)
+  503      {
+  504        occ::handle<Law_Constant> loi = new Law_Constant();
+  505        loi->Set(npr.First().Y(), curdeb, npr.First().X());
+  506        res.Append(loi);
+  507      }
+  508      if (nbp > 1)
+  509      {
+  510        NCollection_Array1<gp_Pnt2d> tpr(1, nbp);
+  511        for (int l = 1; l <= nbp; l++)
+  512        {
+  513          tpr(l).SetXY(npr.Value(l));
+  514        }
+  515        occ::handle<Law_Interpol> curloi = new Law_Interpol();
+  516        curloi->Set(tpr, 0., 0., false);
+  517        res.Append(curloi);
+  518      }
+  519      if (raf < 0.)
+  520      {
+  521        occ::handle<Law_Constant> loi = new Law_Constant();
+  522        loi->Set(npr.Last().Y(), npr.Last().X(), curfin);
+  523        res.Append(loi);
+  524      }
+  525    }
+
+
+6. Load(Dd, Df) fixes only the two end derivatives.
+--- TKGeomAlgo/Law/Law_Interpolate.cxx, lines 234-242
+  234  void Law_Interpolate::Load(const double InitialTangent, const double FinalTangent)
+  235  {
+  236    // bool result;
+  237    myTangentRequest = true;
+  238    myTangentFlags->SetValue(1, true);
+  239    myTangents->SetValue(1, InitialTangent);
+  240    myTangentFlags->SetValue(myPoints->Length(), true);
+  241    myTangents->SetValue(myPoints->Length(), FinalTangent);
+  242  }
+
+
+7. With end derivatives given, BuildTangents sets nothing more and no interior
+   derivative is added: a cubic B-spline with knots at the stations, through them,
+   with the two end derivatives (the clamped cubic spline).
+--- TKGeomAlgo/Law/Law_Interpolate.cxx, lines 488-500
+  488        if (num_points >= 3)
+  489        {
+  490          //
+  491          // cannot build the tangents with degree 3 with only 2 points
+  492          // if those where not given in advance
+  493          //
+  494          BuildTangents(myPoints->Array1(),
+  495                        myTangents->ChangeArray1(),
+  496                        myTangentFlags->ChangeArray1(),
+  497                        myParameters->Array1());
+  498        }
+  499        contact_order_array.SetValue(2, 1);
+  500        parameters.SetValue(1, myParameters->Value(1));
+
+
+8. The spine extensions (the law bounds): a free end, 0.5 x the spine length
+   (1.0 at a free boundary); none at a tangent end.
+--- TKFillet/ChFi3d/ChFi3d_FilBuilder.cxx, lines 2440-2469
+ 2440  void ChFi3d_FilBuilder::ExtentOneCorner(const TopoDS_Vertex& V, const occ::handle<ChFiDS_Stripe>& S)
+ 2441  {
+ 2442    // review by using the data at end of fillets (point, radius, normal
+ 2443    // to the faces and tangents of the guideline).
+ 2444    int                       Sens  = 0;
+ 2445    double                    Coeff = 0.5;
+ 2446    occ::handle<ChFiDS_Spine> Spine = S->Spine();
+ 2447    ChFi3d_IndexOfSurfData(V, S, Sens);
+ 2448    double dU = Spine->LastParameter(Spine->NbEdges());
+ 2449    if (Spine->IsTangencyExtremity((Sens == 1)))
+ 2450    {
+ 2451      return; // No extension in the queue
+ 2452    }
+ 2453  
+ 2454    if (Spine->Status((Sens == 1)) == ChFiDS_FreeBoundary)
+ 2455    {
+ 2456      Coeff *= 2; // It is necessary to go to the end and to evaluate the length
+ 2457    }
+ 2458  
+ 2459    if (Sens == 1)
+ 2460    {
+ 2461      Spine->SetFirstParameter(-dU * Coeff);
+ 2462      Spine->SetFirstTgt(0.);
+ 2463    }
+ 2464    else
+ 2465    {
+ 2466      Spine->SetLastParameter(dU * (1. + Coeff));
+ 2467      Spine->SetLastTgt(dU);
+ 2468    }
+ 2469  }
+
+
+9. Two blends at a vertex: the largest of 0.3 x each spine length and 1.5 x its
+   largest radius, applied to both.
+--- TKFillet/ChFi3d/ChFi3d_FilBuilder.cxx, lines 2473-2507
+ 2473  void ChFi3d_FilBuilder::ExtentTwoCorner(const TopoDS_Vertex&                                V,
+ 2474                                          const NCollection_List<occ::handle<ChFiDS_Stripe>>& LS)
+ 2475  {
+ 2476    // Review by using the data at end of fillets (point, radius, normal
+ 2477    // to faces and tangents to the guideline.
+ 2478    int                                                    Sens;
+ 2479    double                                                 Coeff = 0.3, Eval = 0.0, dU, rad;
+ 2480    NCollection_List<occ::handle<ChFiDS_Stripe>>::Iterator itel(LS);
+ 2481    bool                                                   FF = true;
+ 2482    occ::handle<ChFiDS_Stripe>                             Stripe;
+ 2483    occ::handle<ChFiDS_Spine>                              Spine;
+ 2484  
+ 2485    // A value of symmetric extension is calculated
+ 2486    for (; itel.More(); itel.Next())
+ 2487    {
+ 2488      Stripe                           = itel.Value();
+ 2489      Spine                            = Stripe->Spine();
+ 2490      dU                               = Spine->LastParameter(Spine->NbEdges()) * Coeff;
+ 2491      occ::handle<ChFiDS_FilSpine> fsp = occ::down_cast<ChFiDS_FilSpine>(Spine);
+ 2492      if (fsp->IsConstant())
+ 2493      {
+ 2494        rad = fsp->Radius();
+ 2495      }
+ 2496      else
+ 2497      {
+ 2498        TopoDS_Edge E = ChFi3d_EdgeFromV1(V, itel.Value(), Sens);
+ 2499        rad           = MaxRad(fsp, E);
+ 2500        /*
+ 2501        IE = ChFi3d_IndexOfSurfData(V,itel.Value(),Sens);
+ 2502        rad = MaxRad(fsp, IE);
+ 2503        */
+ 2504      }
+ 2505      rad *= 1.5;
+ 2506      if (rad > dU)
+ 2507      {
+
+
+10. Three blends at a vertex: 0.1 x the spine length.
+--- TKFillet/ChFi3d/ChFi3d_FilBuilder.cxx, lines 2546-2581
+ 2546  void ChFi3d_FilBuilder::ExtentThreeCorner(const TopoDS_Vertex&                                V,
+ 2547                                            const NCollection_List<occ::handle<ChFiDS_Stripe>>& LS)
+ 2548  {
+ 2549    // Review by using the data at end of fillets (point, radius, normal
+ 2550    // to faces and tangents to the guideline.
+ 2551    int                                          Sens  = 0;
+ 2552    double                                       Coeff = 0.1;
+ 2553    NCollection_List<occ::handle<ChFiDS_Stripe>> check;
+ 2554    //  bool FF = true;
+ 2555    for (NCollection_List<occ::handle<ChFiDS_Stripe>>::Iterator itel(LS); itel.More(); itel.Next())
+ 2556    {
+ 2557      occ::handle<ChFiDS_Stripe> Stripe = itel.Value();
+ 2558      ChFi3d_IndexOfSurfData(V, Stripe, Sens);
+ 2559      for (NCollection_List<occ::handle<ChFiDS_Stripe>>::Iterator ich(check); ich.More(); ich.Next())
+ 2560      {
+ 2561        if (Stripe == ich.Value())
+ 2562        {
+ 2563          Sens = -Sens;
+ 2564          break;
+ 2565        }
+ 2566      }
+ 2567      occ::handle<ChFiDS_Spine> Spine = Stripe->Spine();
+ 2568      if (Spine->IsTangencyExtremity((Sens == 1)))
+ 2569      {
+ 2570        return; // No extension on queue
+ 2571      }
+ 2572      double dU = Spine->LastParameter(Spine->NbEdges());
+ 2573      if (Sens == 1)
+ 2574      {
+ 2575        if (Spine->GetTypeOfConcavity() != ChFiDS_Convex || Spine->FirstStatus() != ChFiDS_OnSame)
+ 2576        {
+ 2577          Spine->SetFirstParameter(-dU * Coeff);
+ 2578          Spine->SetFirstTgt(0.);
+ 2579        }
+ 2580      }
+ 2581      else
+
+
+11. Variable-radius sections lie in the plane normal to the spine, with the law's
+    radius.
+--- TKFillet/BlendFunc/BlendFunc_EvolRad.cxx, lines 241-246
+  241      {
+  242        case 0: {
+  243          tcurv->D1(T, ptgui, d1gui);
+  244          nplan = d1gui.Normalized();
+  245          ray   = tevol->Value(T);
+  246        }
+
+
+12. Default approximation tolerances.
+--- TKFillet/ChFi3d/ChFi3d_Builder_1.cxx, lines 341-354
+  341  ChFi3d_Builder::ChFi3d_Builder(const TopoDS_Shape& S, const double Ta)
+  342      : done(false),
+  343        myShape(S)
+  344  {
+  345    myDS   = new TopOpeBRepDS_HDataStructure();
+  346    myCoup = new TopOpeBRepBuild_HBuilder(mkbuildtool());
+  347    myEFMap.Fill(S, TopAbs_EDGE, TopAbs_FACE);
+  348    myESoMap.Fill(S, TopAbs_EDGE, TopAbs_SOLID);
+  349    myEShMap.Fill(S, TopAbs_EDGE, TopAbs_SHELL);
+  350    myVFMap.Fill(S, TopAbs_VERTEX, TopAbs_FACE);
+  351    myVEMap.Fill(S, TopAbs_VERTEX, TopAbs_EDGE);
+  352    SetParams(Ta, 1.0e-4, 1.e-5, 1.e-4, 1.e-5, 1.e-3);
+  353    SetContinuity(GeomAbs_C1, Ta);
+  354  }

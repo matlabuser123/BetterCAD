@@ -20,7 +20,7 @@ unless a log says so.
 | --- | --- |
 | Parametric part modeling | **Qualified** — `P11-QUAL-001` |
 | Current implementation | `P12` — Parametric CAD Completion, in progress ([TODO.md](TODO.md)) |
-| Next | `P12-FEAT-006` — variable-radius fillet, setback, corner transitions |
+| Next | Awaiting a scope decision: `P12-FEAT-006` (variable-radius fillet, setback, corner transitions) is blocked ([record](docs/verification/P12-FEAT-006/README.md)) |
 | Released | `v0.1.0` (`P0`–`P10`); `P11` is qualified but not released |
 
 The qualification rebuilt the tree clean in Debug, Release and Debug-shared and

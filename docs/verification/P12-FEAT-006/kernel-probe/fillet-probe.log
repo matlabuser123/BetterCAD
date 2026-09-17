@@ -1,0 +1,26 @@
+Compiler: g++ (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r4) 16.1.0
+Kernel: OCCT 8.0.1 from the BetterCAD dependency prefix
+        (%LOCALAPPDATA%\bettercad-deps\gnu-16-mingw-amd64), its bin directory on PATH.
+Built (from the repository root) with:
+  g++ -std=c++23 -O2 -D_USE_MATH_DEFINES -I<deps>\include\opencascade
+      docs\verification\P12-FEAT-006\kernel-probe\fillet_probe.cpp -L<deps>\lib
+      -lTKFillet -lTKBool -lTKBO -lTKShHealing -lTKPrim -lTKTopAlgo -lTKGeomAlgo -lTKBRep
+      -lTKGeomBase -lTKG2d -lTKG3d -lTKMath -lTKernel
+Run on 2026-09-18 (Windows 11, PowerShell); output as printed, with the process exit code.
+
+$ fillet_probe
+OCCT fillet probe
+
+A. one edge r 5: valid 1 self-intersects 0 surfaces 2 removed 536.504591506 reference 536.504591506 rel 5.09e-15, 0.005 s
+B. one edge r 3 to r 5.5 (linear): valid 1 self-intersects 0 surfaces 1 removed 401.565082854 reference 398.801746353 rel 6.93e-03, 0.023 s
+B. one edge r 3 to r 8.0 (linear): valid 1 self-intersects 0 surfaces 1 removed 704.932617932 reference 693.879271682 rel 1.59e-02, 0.020 s
+B. one edge r 3 to r 12.0 (linear): valid 1 self-intersects 0 surfaces 1 removed 1387.804407509 reference 1351.991570596 rel 2.65e-02, 0.020 s
+C. one edge r 3, 8, 3 at u = 0, 0.5, 1: valid 1 self-intersects 0 surfaces 1 removed 782.395807465, 0.024 s
+D. three edges at a vertex, r 5: valid 1 self-intersects 0 surfaces 7 removed 1052.083647337 reference 1052.083647337 rel 2.79e-14, 0.004 s
+E. three edges at a vertex, r 3, 5, 8: valid 1 self-intersects 0 surfaces 7 removed 1045.253687984, 0.009 s
+F. three edges at a vertex, r 3 at the vertex to 8: valid 1 self-intersects 0 surfaces 4 removed 1380.773131259, 0.040 s
+G. one edge r 5, rational: valid 1 self-intersects 0 surfaces 2 removed 536.504591506 reference 536.504591506 rel 5.09e-15, 0.002 s
+G. one edge r 5, quasi-angular: valid 1 self-intersects 0 surfaces 2 removed 536.504591506 reference 536.504591506 rel 5.09e-15, 0.002 s
+G. one edge r 5, polynomial: valid 1 self-intersects 0 surfaces 2 removed 536.504591506 reference 536.504591506 rel 5.09e-15, 0.002 s
+H. one edge r 3 to r 45 (too large for the 40 mm face): valid 1 self-intersects 0 surfaces 1 removed 16293.100846300, 0.027 s
+[exit code 0]

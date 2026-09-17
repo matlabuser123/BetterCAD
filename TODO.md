@@ -13,8 +13,8 @@ authorized — never in advance.
 | | |
 | --- | --- |
 | Current | **`P12` — Parametric CAD Completion** |
-| Next | `P12-FEAT-006` — Variable-radius fillet, setback, corner transitions |
-| Blocked / Manual | None |
+| Next | Awaiting explicit scope decision — `P12-FEAT-006` is blocked (see below) |
+| Blocked / Manual | `P12-FEAT-006` — setback and corner transitions need a surface-patch subsystem |
 | Last qualified | `P11` Production Part Modeling — **QUALIFIED** |
 | Released | `v0.1.0` (`P0`–`P10`); `P11` qualified, not released |
 
@@ -59,7 +59,7 @@ Reference models → qualification
 | 8 | `P12-FEAT-003` Shell | `FEAT-002` | **done** — [evidence](docs/verification/P12-FEAT-003/README.md) |
 | 9 | `P12-FEAT-004` Draft | `DATUM-001` | **done** — [evidence](docs/verification/P12-FEAT-004/README.md) |
 | 10 | `P12-FEAT-005` Rib | `SKETCH-002`, `FEAT-001` | **done** — [evidence](docs/verification/P12-FEAT-005/README.md) |
-| 11 | `P12-FEAT-006` Variable-radius fillet, setback, corner transitions | — | not started |
+| 11 | `P12-FEAT-006` Variable-radius fillet, setback, corner transitions | — | **blocked** — setback and corner transitions are not in the kernel; [record](docs/verification/P12-FEAT-006/README.md) |
 | 12 | `P12-HOLE-001` Threads, spotface, standard sizes, tolerance classes | `PARAM-001` | not started |
 | 13 | `P12-PATTERN-001` Symmetric, total-length, suppressed instances, patterns of patterns | `PARAM-001` | not started |
 | 14 | `P12-SWEEP-001` Guide curves, twist, non-planar paths | `SKETCH-002` | not started |
@@ -356,14 +356,56 @@ Acceptance:
 - A side that is not closed off, a profile inside the body or crossing itself once extended, closed or disconnected profiles and invalid thicknesses fail with structured diagnostics and keep no body; nothing is substituted.
 - Save → load → regenerate gives the same bodies bit for bit; every value the existing tests measure is unchanged; `P0`–`P12-FEAT-004` stays green in all three presets.
 
+#### P12-FEAT-006 — Variable-radius fillet, setback, corner transitions — BLOCKED
+
+The three capabilities were assessed separately against OCCT 8.0.1's
+public fillet interface, its sources and two kernel probes
+([record](docs/verification/P12-FEAT-006/README.md)):
+
+- **Variable radius: partially supported.** Radius stations give exact
+  rolling-ball sections of the kernel's own law (1.8e-14 mm). But:
+  - the law is a clamped cubic spline, not the documented linear one;
+  - its shape between stations depends on the blends meeting the edge's
+    ends;
+  - it can leave the station range, even to negative radii, with the
+    build reported done;
+  - radii too large for their faces give wrong solids reported valid;
+  - the law-function input ends the process, and `SetLaw` yields an
+    unfilleted body.
+- **Setback controls: unsupported.** There is no setback input; the
+  kernel ends blend strips at corners by its own rules.
+- **Corner-transition controls: unsupported.** The kernel computes every
+  corner in protected steps. The only shape option is the blend
+  cross-section.
+
+Setbacks and selectable corner transitions would need a BetterCAD-owned
+surface-patch subsystem (trimmed blends, N-sided tangent fills, sewing,
+validation), which P12 does not authorize. Offering variable radius from
+this kernel means adopting its interpolation, with guards, as BetterCAD's
+definition, which is also a decision. Nothing was implemented and no box
+is ticked. The next step is a scope decision:
+
+- narrow this milestone to verified variable-radius fillets;
+- authorize a separate surface-modeling prerequisite for setbacks and
+  corner transitions; or
+- defer setbacks and corner transitions, and decide separately about
+  variable radius.
+
+Per the P12 rules, work stops here and does not skip ahead to
+`P12-HOLE-001`.
+
 ## Next
 
-`P12-FEAT-006` — Variable-radius fillet, setback, corner transitions.
+Awaiting explicit scope decision. `P12-FEAT-006` is blocked: setbacks and
+corner transitions are not available from the kernel, and variable radius
+is only partially; see its section above. P12 does not continue past it
+until the decision is made.
 
 ## Blocked / Manual
 
 | Item | Why |
 | --- | --- |
+| `P12-FEAT-006` | Blocked: setback and corner-transition controls need a surface-patch subsystem P12 does not authorize; variable radius is only partially supported by the kernel. [Record](docs/verification/P12-FEAT-006/README.md). |
 | `LICENSE` | Not yet chosen. A decision, not an implementation. |
 | Release tagging | Manual, and only on request. `v0.1.0` is the only tag. |
 
@@ -467,7 +509,7 @@ Not started. Not authorized. Grouped to match
 
 | Milestone | Commit | Evidence |
 | --- | --- | --- |
-| `P12-FEAT-005` Rib | "BetterCAD: implement P12 rib" | [P12-FEAT-005](docs/verification/P12-FEAT-005/README.md) |
+| `P12-FEAT-005` Rib | `aa2d41a` | [P12-FEAT-005](docs/verification/P12-FEAT-005/README.md) |
 | `P12-FEAT-004` Draft | `80f1fec` | [P12-FEAT-004](docs/verification/P12-FEAT-004/README.md) |
 | `P12-FEAT-003` Shell | `eb3ad66` | [P12-FEAT-003](docs/verification/P12-FEAT-003/README.md) |
 | `P12-FEAT-002` Split body / combine | `77f1792` | [P12-FEAT-002](docs/verification/P12-FEAT-002/README.md) |

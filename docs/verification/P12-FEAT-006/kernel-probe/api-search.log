@@ -1,0 +1,133 @@
+Header search, OCCT 8.0.1 installed headers (%LOCALAPPDATA%\bettercad-deps\gnu-16-mingw-amd64\include\opencascade),
+6748 .hxx files.
+
+
+1. Files mentioning "setback", "set_back" or "vertex blend" (case-insensitive), with the matching lines:
+  Aspect_Window.hxx:76: Standard_EXPORT void SetBackground(const Aspect_Background& theBack);
+  Aspect_Window.hxx:79: Standard_EXPORT void SetBackground(const Quantity_Color& theColor);
+  Aspect_Window.hxx:82: Standard_EXPORT void SetBackground(const Aspect_GradientBackground& theBackground);
+  Aspect_Window.hxx:85: Standard_EXPORT void SetBackground(const Quantity_Color&           theFirstColor,
+  Graphic3d_Aspects.hxx:101: void SetBackInteriorColor(const Quantity_Color& theColor)
+  Graphic3d_Aspects.hxx:107: void SetBackInteriorColor(const Quantity_ColorRGBA& theColor) { myBackInteriorColor = theColor; }
+  Graphic3d_Aspects.hxx:128: void SetBackMaterial(const Graphic3d_MaterialAspect& theMaterial)
+  Graphic3d_CView.hxx:115: void SetBackfacingModel(const Graphic3d_TypeOfBackfacingModel theModel)
+  Graphic3d_CView.hxx:399: virtual void SetBackground(const Aspect_Background& theBackground)
+  Graphic3d_CView.hxx:424: virtual void SetBackgroundImage(const occ::handle<Graphic3d_TextureMap>& theTextureMap,
+  Graphic3d_CView.hxx:431: virtual void SetBackgroundImageStyle(const Aspect_FillMethod theFillStyle) = 0;
+  Graphic3d_CView.hxx:437: void SetBackgroundType(Graphic3d_TypeOfBackground theType) { myBackgroundType = theType; }
+  Graphic3d_CView.hxx:443: Standard_EXPORT void SetBackgroundSkydome(const Aspect_SkydomeBackground& theAspect,
+  StepVisual_ViewVolume.hxx:66: Standard_EXPORT void SetBackPlaneDistance(const double aBackPlaneDistance);
+  StepVisual_ViewVolume.hxx:70: Standard_EXPORT void SetBackPlaneClipping(const bool aBackPlaneClipping);
+  V3d_View.hxx:182: Standard_EXPORT void SetBackgroundColor(const Quantity_TypeOfColor theType,
+  V3d_View.hxx:188: Standard_EXPORT void SetBackgroundColor(const Quantity_Color& theColor);
+  V3d_View.hxx:205: Standard_EXPORT void SetBackgroundImage(const char* const       theFileName,
+  V3d_View.hxx:211: Standard_EXPORT void SetBackgroundImage(const occ::handle<Graphic3d_Texture2D>& theTexture,
+  V3d_View.hxx:223: Standard_EXPORT void SetBackgroundCubeMap(const occ::handle<Graphic3d_CubeMap>& theCubeMap,
+  V3d_View.hxx:233: Standard_EXPORT void SetBackgroundSkydome(const Aspect_SkydomeBackground& theAspect,
+  V3d_View.hxx:1012: Standard_EXPORT void SetBackFacingModel(
+  XCAFView_Object.hxx:89: void UnsetBackPlaneClipping() { myBackPlaneClipping = false; }
+  XCAFView_Object.hxx:93: void SetBackPlaneDistance(double theDistance)
+  (every match is a view or visualization setter, SetBack...; no modeling, fillet or blend header matches)
+
+2. The public interface of BRepFilletAPI_MakeFillet (Standard_EXPORT declarations before "protected:"):
+  Standard_EXPORT BRepFilletAPI_MakeFillet(const TopoDS_Shape& S, const ChFi3d_FilletShape FShape = ChFi3d_Rational)
+  Standard_EXPORT void SetParams(const double Tang, const double Tesp, const double T2d, const double TApp3d, const double TolApp2d, const double Fleche)
+  Standard_EXPORT void SetContinuity(const GeomAbs_Shape InternalContinuity, const double AngularTolerance)
+  Standard_EXPORT void Add(const TopoDS_Edge& E) override
+  Standard_EXPORT void Add(const double Radius, const TopoDS_Edge& E)
+  Standard_EXPORT void Add(const double R1, const double R2, const TopoDS_Edge& E)
+  Standard_EXPORT void Add(const occ::handle<Law_Function>& L, const TopoDS_Edge& E)
+  Standard_EXPORT void Add(const NCollection_Array1<gp_Pnt2d>& UandR, const TopoDS_Edge& E)
+  Standard_EXPORT void SetRadius(const double Radius, const int IC, const int IinC)
+  Standard_EXPORT void SetRadius(const double R1, const double R2, const int IC, const int IinC)
+  Standard_EXPORT void SetRadius(const occ::handle<Law_Function>& L, const int IC, const int IinC)
+  Standard_EXPORT void SetRadius(const NCollection_Array1<gp_Pnt2d>& UandR, const int IC, const int IinC)
+  Standard_EXPORT void ResetContour(const int IC) override
+  Standard_EXPORT bool IsConstant(const int IC)
+  Standard_EXPORT double Radius(const int IC)
+  Standard_EXPORT bool IsConstant(const int IC, const TopoDS_Edge& E)
+  Standard_EXPORT double Radius(const int IC, const TopoDS_Edge& E)
+  Standard_EXPORT void SetRadius(const double Radius, const int IC, const TopoDS_Edge& E)
+  Standard_EXPORT void SetRadius(const double Radius, const int IC, const TopoDS_Vertex& V)
+  Standard_EXPORT bool GetBounds(const int IC, const TopoDS_Edge& E, double& F, double& L)
+  Standard_EXPORT occ::handle<Law_Function> GetLaw(const int IC, const TopoDS_Edge& E)
+  Standard_EXPORT void SetLaw(const int IC, const TopoDS_Edge& E, const occ::handle<Law_Function>& L)
+  Standard_EXPORT void SetFilletShape(const ChFi3d_FilletShape FShape)
+  Standard_EXPORT ChFi3d_FilletShape GetFilletShape() const
+  Standard_EXPORT int NbContours() const override
+  Standard_EXPORT int Contour(const TopoDS_Edge& E) const override
+  Standard_EXPORT int NbEdges(const int I) const override
+  Standard_EXPORT const TopoDS_Edge& Edge(const int I, const int J) const override
+  Standard_EXPORT void Remove(const TopoDS_Edge& E) override
+  Standard_EXPORT double Length(const int IC) const override
+  Standard_EXPORT TopoDS_Vertex FirstVertex(const int IC) const override
+  Standard_EXPORT TopoDS_Vertex LastVertex(const int IC) const override
+  Standard_EXPORT double Abscissa(const int IC, const TopoDS_Vertex& V) const override
+  Standard_EXPORT double RelativeAbscissa(const int IC, const TopoDS_Vertex& V) const override
+  Standard_EXPORT bool ClosedAndTangent(const int IC) const override
+  Standard_EXPORT bool Closed(const int IC) const override
+  Standard_EXPORT void Build( const Message_ProgressRange& theRange = Message_ProgressRange()) override
+  Standard_EXPORT void Reset() override
+  Standard_EXPORT occ::handle<TopOpeBRepBuild_HBuilder> Builder() const
+  Standard_EXPORT const NCollection_List<TopoDS_Shape>& Generated( const TopoDS_Shape& EorV) override
+  Standard_EXPORT const NCollection_List<TopoDS_Shape>& Modified(const TopoDS_Shape& F) override
+  Standard_EXPORT bool IsDeleted(const TopoDS_Shape& F) override
+  Standard_EXPORT int NbSurfaces() const
+  Standard_EXPORT const NCollection_List<TopoDS_Shape>& NewFaces(const int I)
+  Standard_EXPORT void Simulate(const int IC) override
+  Standard_EXPORT int NbSurf(const int IC) const override
+  Standard_EXPORT occ::handle<NCollection_HArray1<ChFiDS_CircSection>> Sect( const int IC, const int IS) const override
+  Standard_EXPORT int NbFaultyContours() const
+  Standard_EXPORT int FaultyContour(const int I) const
+  Standard_EXPORT int NbComputedSurfaces(const int IC) const
+  Standard_EXPORT occ::handle<Geom_Surface> ComputedSurface(const int IC, const int IS) const
+  Standard_EXPORT int NbFaultyVertices() const
+  Standard_EXPORT TopoDS_Vertex FaultyVertex(const int IV) const
+  Standard_EXPORT bool HasResult() const
+  Standard_EXPORT TopoDS_Shape BadShape() const
+  Standard_EXPORT ChFiDS_ErrorStatus StripeStatus(const int IC) const
+
+3. Corner handling in ChFi3d_Builder.hxx, with its access level:
+  ChFi3d_Builder.hxx:196 [public] Standard_EXPORT bool PerformTwoCornerbyInter(const int Index);
+  ChFi3d_Builder.hxx:560 [protected] Standard_EXPORT virtual void PerformTwoCorner(const int Index) = 0;
+  ChFi3d_Builder.hxx:562 [protected] Standard_EXPORT virtual void PerformThreeCorner(const int Index) = 0;
+  ChFi3d_Builder.hxx:564 [protected] Standard_EXPORT void PerformMoreThreeCorner(const int Index, const int nbcourb);
+  ChFi3d_Builder.hxx:566 [protected] Standard_EXPORT virtual void ExtentOneCorner(const TopoDS_Vertex&              V,
+  ChFi3d_Builder.hxx:569 [protected] Standard_EXPORT virtual void ExtentTwoCorner(
+  ChFi3d_Builder.hxx:573 [protected] Standard_EXPORT virtual void ExtentThreeCorner(
+  ChFi3d_Builder.hxx:778 [private] Standard_EXPORT void PerformSingularCorner(const int Index);
+  ChFi3d_Builder.hxx:780 [private] Standard_EXPORT void PerformOneCorner(const int Index, const bool PrepareOnSame = false);
+  ChFi3d_Builder.hxx:782 [private] Standard_EXPORT void IntersectMoreCorner(const int Index);
+
+3. Corner handling in ChFi3d_FilBuilder.hxx, with its access level:
+  ChFi3d_FilBuilder.hxx:359 [protected] Standard_EXPORT void PerformTwoCorner(const int Index) override;
+  ChFi3d_FilBuilder.hxx:361 [protected] Standard_EXPORT void PerformThreeCorner(const int Index) override;
+  ChFi3d_FilBuilder.hxx:363 [protected] Standard_EXPORT void ExtentOneCorner(const TopoDS_Vertex&              V,
+  ChFi3d_FilBuilder.hxx:366 [protected] Standard_EXPORT void ExtentTwoCorner(
+  ChFi3d_FilBuilder.hxx:370 [protected] Standard_EXPORT void ExtentThreeCorner(
+  Notes: ChFi3d_Builder::PerformTwoCornerbyInter(Index) is public but is a step of the
+  builder's own corner computation (ChFi3d_FilBuilder_C2.cxx calls it from PerformTwoCorner
+  when the two strips intersect; Index is the builder's internal vertex index), not a choice of
+  corner. BRepFilletAPI_MakeFillet keeps its ChFi3d_FilBuilder private (its Builder() returns
+  the TopOpeBRepBuild_HBuilder), so none of these is reachable through the fillet API; changing
+  a corner means subclassing ChFi3d_FilBuilder and writing its corner surfaces.
+
+4. ChFi3d_FilletShape (the only shape option of MakeFillet):
+  //! Lists the types of fillet shapes. These include the following:
+  //! -   ChFi3d_Rational (default value), which is the
+  //! standard NURBS representation of circles,
+  //! -   ChFi3d_QuasiAngular, which is a NURBS
+  //! representation of circles where the parameters
+  //! match those of the circle,
+  //! -   ChFi3d_Polynomial, which corresponds to a
+  //! polynomial approximation of circles. This type
+  //! facilitates the implementation of the construction algorithm.
+    ChFi3d_Rational,
+    ChFi3d_QuasiAngular,
+    ChFi3d_Polynomial
+
+5. Surface-filling tools a custom corner or setback patch would have to be built from:
+  BRepFill_Filling.hxx: present
+  GeomPlate_BuildPlateSurface.hxx: present
+  GeomFill_ConstrainedFilling.hxx: present
+  FilletSurf_Builder.hxx: present

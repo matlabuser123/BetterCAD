@@ -1,0 +1,203 @@
+Compiler: g++ (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r4) 16.1.0
+Kernel: OCCT 8.0.1 from the BetterCAD dependency prefix
+        (%LOCALAPPDATA%\bettercad-deps\gnu-16-mingw-amd64), its bin directory on PATH.
+Built (from the repository root) with:
+  g++ -std=c++23 -O2 -Wall -D_USE_MATH_DEFINES -I<deps>\include\opencascade
+      docs\verification\P12-FEAT-006\kernel-probe\variable_radius_probe.cpp -L<deps>\lib
+      -lTKFillet -lTKBool -lTKBO -lTKShHealing -lTKPrim -lTKTopAlgo -lTKGeomAlgo -lTKBRep
+      -lTKGeomBase -lTKG2d -lTKG3d -lTKMath -lTKernel
+Run on 2026-09-18 (Windows 11, PowerShell); output as printed, with the process exit code.
+Each case ran in its own process (case 3 ends the process: exit code -1073741819 is
+0xC0000005, an access violation).
+
+$ variable_radius_probe 1a
+1. Add(3, 5.5, E), 100 mm edge
+  valid 1, self-intersects 0, bounds (-0.000000 -0.000000 -0.000000)-(100.000000 60.000000 40.000000), removed 401.565083703 (adaptive 1e-10)
+  law bounds [-50.000000000, 150.000000000]; r at 0, 1/4, 1/2, 3/4, 1 of the edge: 3.000000000000 3.491071428571 4.250000000000 5.008928571429 5.500000000000
+  max |law - reference spline| 2.665e-15 over the law's bounds; on the edge the reference runs from 3.000000 to 5.500000
+  removed: reference 401.565083899; measured rel 4.896e-10 (adaptive 1e-10), 2.603e-09 (default), 4.055e-10 (Gauss-Kronrod 1e-10)
+  1 fillet face(s); from the reference: sections 1.776e-15 mm, contact lines 2.665e-15 / 2.665e-15 mm
+  from the builder's own law: sections 1.776e-15 mm, contact lines 1.776e-15 / 1.776e-15 mm
+[exit code 0]
+
+$ variable_radius_probe 1b
+1. Add(3, 8.0, E), 100 mm edge
+  valid 1, self-intersects 0, bounds (-0.000000 -0.000000 -0.000000)-(100.000000 60.000000 40.000000), removed 704.932621791 (adaptive 1e-10)
+  law bounds [-50.000000000, 150.000000000]; r at 0, 1/4, 1/2, 3/4, 1 of the edge: 3.000000000000 3.982142857143 5.500000000000 7.017857142857 8.000000000000
+  max |law - reference spline| 2.665e-15 over the law's bounds; on the edge the reference runs from 3.000000 to 8.000000
+  removed: reference 704.932621866; measured rel 1.062e-10 (adaptive 1e-10), 5.582e-09 (default), 5.837e-11 (Gauss-Kronrod 1e-10)
+  1 fillet face(s); from the reference: sections 4.441e-15 mm, contact lines 3.553e-15 / 3.553e-15 mm
+  from the builder's own law: sections 4.441e-15 mm, contact lines 3.553e-15 / 3.553e-15 mm
+[exit code 0]
+
+$ variable_radius_probe 1c
+1. Add(3, 12.0, E), 100 mm edge
+  valid 1, self-intersects 0, bounds (-0.000000 -0.000000 -0.000000)-(100.000000 60.000000 40.000000), removed 1387.804425149 (adaptive 1e-10)
+  law bounds [-50.000000000, 150.000000000]; r at 0, 1/4, 1/2, 3/4, 1 of the edge: 3.000000000000 4.767857142857 7.500000000000 10.232142857143 12.000000000000
+  max |law - reference spline| 3.553e-15 over the law's bounds; on the edge the reference runs from 3.000000 to 12.000000
+  removed: reference 1387.804425194; measured rel 3.231e-11 (adaptive 1e-10), 1.274e-08 (default), 2.354e-11 (Gauss-Kronrod 1e-10)
+  1 fillet face(s); from the reference: sections 3.553e-15 mm, contact lines 4.441e-15 / 4.441e-15 mm
+  from the builder's own law: sections 3.553e-15 mm, contact lines 6.217e-15 / 6.217e-15 mm
+[exit code 0]
+
+$ variable_radius_probe 1t
+1t. Add(3, 8, E), 100 mm edge, approximation tolerance 1e-6
+  valid 1, self-intersects 0, bounds (-0.000000 -0.000000 -0.000000)-(100.000000 60.000000 40.000000), removed 704.932621791 (adaptive 1e-10)
+  law bounds [-50.000000000, 150.000000000]; r at 0, 1/4, 1/2, 3/4, 1 of the edge: 3.000000000000 3.982142857143 5.500000000000 7.017857142857 8.000000000000
+  max |law - reference spline| 2.665e-15 over the law's bounds; on the edge the reference runs from 3.000000 to 8.000000
+  removed: reference 704.932621866; measured rel 1.062e-10 (adaptive 1e-10), 5.582e-09 (default), 5.837e-11 (Gauss-Kronrod 1e-10)
+  1 fillet face(s); from the reference: sections 3.553e-15 mm, contact lines 1.776e-15 / 1.776e-15 mm
+  from the builder's own law: sections 3.553e-15 mm, contact lines 2.665e-15 / 2.665e-15 mm
+[exit code 0]
+
+$ variable_radius_probe 1l
+1l. Add(3, 8, E), 150 mm edge
+  valid 1, self-intersects 0, bounds (-0.000000 -0.000000 -0.000000)-(150.000000 60.000000 40.000000), removed 1057.398932694 (adaptive 1e-10)
+  law bounds [-75.000000000, 225.000000000]; r at 0, 1/4, 1/2, 3/4, 1 of the edge: 3.000000000000 3.982142857143 5.500000000000 7.017857142857 8.000000000000
+  max |law - reference spline| 2.665e-15 over the law's bounds; on the edge the reference runs from 3.000000 to 8.000000
+  removed: reference 1057.398932799; measured rel 9.965e-11 (adaptive 1e-10), 2.670e-09 (default), 1.915e-10 (Gauss-Kronrod 1e-10)
+  1 fillet face(s); from the reference: sections 4.441e-15 mm, contact lines 1.066e-14 / 1.066e-14 mm
+  from the builder's own law: sections 4.441e-15 mm, contact lines 1.066e-14 / 1.066e-14 mm
+[exit code 0]
+
+$ variable_radius_probe 1s
+1s. Add(3, 8, E), 30 mm edge
+  valid 1, self-intersects 0, bounds (-0.000000 -0.000000 -0.000000)-(30.000000 60.000000 40.000000), removed 211.479786505 (adaptive 1e-10)
+  law bounds [-15.000000000, 45.000000000]; r at 0, 1/4, 1/2, 3/4, 1 of the edge: 3.000000000000 3.982142857143 5.500000000000 7.017857142857 8.000000000000
+  max |law - reference spline| 3.553e-15 over the law's bounds; on the edge the reference runs from 3.000000 to 8.000000
+  removed: reference 211.479786560; measured rel 2.590e-10 (adaptive 1e-10), 1.540e-08 (default), 1.927e-10 (Gauss-Kronrod 1e-10)
+  1 fillet face(s); from the reference: sections 6.217e-15 mm, contact lines 1.155e-14 / 1.155e-14 mm
+  from the builder's own law: sections 5.329e-15 mm, contact lines 1.243e-14 / 1.243e-14 mm
+[exit code 0]
+
+$ variable_radius_probe 2
+2. Add(UandR, E), (0,3) (0.3,7) (0.5,5) (1,4), 100 mm edge
+  valid 1, self-intersects 0, bounds (-0.000000 -0.000000 -0.000000)-(100.000000 60.000000 40.000000), removed 527.207941823 (adaptive 1e-10)
+  law bounds [-50.000000000, 150.000000000]; r at 0, 1/4, 1/2, 3/4, 1 of the edge: 3.000000000000 6.789021164021 5.000000000000 3.672443977591 4.000000000000
+  max |law - reference spline| 2.665e-15 over the law's bounds; on the edge the reference runs from 3.000000 to 7.000000
+  removed: reference 527.207942288; measured rel 8.821e-10 (adaptive 1e-10), 1.003e-03 (default), 1.528e-10 (Gauss-Kronrod 1e-10)
+  1 fillet face(s); from the reference: sections 2.665e-15 mm, contact lines 5.329e-15 / 5.329e-15 mm
+  from the builder's own law: sections 2.665e-15 mm, contact lines 5.329e-15 / 5.329e-15 mm
+[exit code 0]
+
+$ variable_radius_probe 2t
+2t. the same, approximation tolerance 1e-6
+  valid 1, self-intersects 0, bounds (-0.000000 -0.000000 -0.000000)-(100.000000 60.000000 40.000000), removed 527.207941823 (adaptive 1e-10)
+  law bounds [-50.000000000, 150.000000000]; r at 0, 1/4, 1/2, 3/4, 1 of the edge: 3.000000000000 6.789021164021 5.000000000000 3.672443977591 4.000000000000
+  max |law - reference spline| 2.665e-15 over the law's bounds; on the edge the reference runs from 3.000000 to 7.000000
+  removed: reference 527.207942288; measured rel 8.821e-10 (adaptive 1e-10), 1.003e-03 (default), 1.528e-10 (Gauss-Kronrod 1e-10)
+  1 fillet face(s); from the reference: sections 2.665e-15 mm, contact lines 5.329e-15 / 5.329e-15 mm
+  from the builder's own law: sections 2.665e-15 mm, contact lines 5.329e-15 / 5.329e-15 mm
+[exit code 0]
+
+$ variable_radius_probe 2s
+2s. Add(UandR, E), (0,4) (0.5,6) (1,4), 100 mm edge
+  valid 1, self-intersects 0, bounds (-0.000000 -0.000000 -0.000000)-(100.000000 60.000000 40.000000), removed 572.833616531 (adaptive 1e-10)
+  law bounds [-50.000000000, 150.000000000]; r at 0, 1/4, 1/2, 3/4, 1 of the edge: 4.000000000000 5.187500000000 6.000000000000 5.187500000000 4.000000000000
+  max |law - reference spline| 2.665e-15 over the law's bounds; on the edge the reference runs from 4.000000 to 6.000000
+  removed: reference 572.833616703; measured rel 2.993e-10 (adaptive 1e-10), 4.042e-05 (default), 2.358e-10 (Gauss-Kronrod 1e-10)
+  1 fillet face(s); from the reference: sections 2.665e-15 mm, contact lines 1.776e-15 / 1.776e-15 mm
+  from the builder's own law: sections 2.665e-15 mm, contact lines 2.665e-15 / 2.665e-15 mm
+[exit code 0]
+
+$ variable_radius_probe 3
+3. Add(Law_Linear 3 -> 8, E)
+[exit code -1073741819]
+
+$ variable_radius_probe 4
+4. Add(3, 8, E), Build, SetLaw(Law_Linear), Build
+  SetLaw accepted; the law at 50 is now 5.500000000000
+  valid 1, self-intersects 0, bounds (0.000000 0.000000 0.000000)-(100.000000 60.000000 40.000000), removed 0.000000000 (adaptive 1e-10)
+  law bounds [-50.000000000, 150.000000000]; r at 0, 1/4, 1/2, 3/4, 1 of the edge: 3.000000000000 3.982142857143 5.500000000000 7.017857142857 8.000000000000
+  max |law - reference spline| 2.665e-15 over the law's bounds; on the edge the reference runs from 3.000000 to 8.000000
+  removed: reference 704.932621866; measured rel 1.000e+00 (adaptive 1e-10), 1.000e+00 (default), 1.000e+00 (Gauss-Kronrod 1e-10)
+  0 fillet face(s); from the reference: sections 0.000e+00 mm, contact lines 0.000e+00 / 0.000e+00 mm
+  from the builder's own law: sections 0.000e+00 mm, contact lines 0.000e+00 / 0.000e+00 mm
+[exit code 0]
+
+$ variable_radius_probe 5
+5. Add(3, 45, E): the radius passes the 40 mm face
+  valid 1, self-intersects 0, bounds (-0.000000 -0.000000 -0.000000)-(100.000000 60.000000 40.000000), removed 16293.099217924 (adaptive 1e-10)
+  law bounds [-50.000000000, 150.000000000]; r at 0, 1/4, 1/2, 3/4, 1 of the edge: 3.000000000000 11.250000000000 24.000000000000 36.750000000000 45.000000000000
+    face type 0 area 2398.068583 bounds (-0.000 -0.000 -0.000)-(0.000 60.000 40.000)
+    face type 0 area 1648.212810 bounds (-0.000 -0.000 3.000)-(82.753 0.000 40.000)
+    face type 6 area 3753.337595 bounds (-0.000 -0.000 -0.000)-(100.000 45.000 40.000)
+    face type 0 area 5998.044056 bounds (-0.000 -0.000 40.000)-(100.000 60.000 40.000)
+    face type 0 area 3600.000000 bounds (-0.000 3.000 -0.000)-(100.000 60.000 0.000)
+    face type 0 area 4000.000000 bounds (0.000 60.000 0.000)-(100.000 60.000 40.000)
+    face type 0 area 1965.895020 bounds (100.000 0.279 -0.000)-(100.000 60.000 40.000)
+[exit code 0]
+
+$ variable_radius_probe 6
+6. disc r 30 h 20, top rim, Add(UandR) (0,3) (0.5,6) (1,3)
+  done 1
+  valid 1, self-intersects 0, removed 831.778516379 (constant r 3 removes 355.931428795, r 6 1391.197675191)
+    face type 1 area 2921.479266 bounds (-30.000 -30.000 -0.000)-(30.000 30.000 17.000)
+    face type 6 area 1256.216882 bounds (-30.000 -30.000 14.000)-(30.000 30.000 20.000)
+    face type 0 area 2827.433388 bounds (-30.000 -30.000 0.000)-(30.000 30.000 0.000)
+    face type 0 area 2046.077460 bounds (-24.000 -25.539 20.000)-(27.000 25.539 20.000)
+[exit code 0]
+
+$ variable_radius_probe 7
+7. two edges at a box corner, each r 3 at the corner to r 8
+  done 1
+  valid 1, self-intersects 0, removed 1103.623115593 (adaptive 1e-10), 1103.623115658 (Gauss-Kronrod)
+  contour 1, edge of 100 mm: law bounds [-30.000000000, 150.000000000]
+  contour 2, edge of 60 mm: law bounds [-30.000000000, 90.000000000]
+    face type 0 area 2070.000000 bounds (-0.000 -0.000 3.000)-(0.000 60.000 40.000)
+    face type 0 area 3453.776724 bounds (-0.000 -0.000 3.028)-(100.000 0.000 40.000)
+    face type 6 area 509.887618 bounds (-0.000 -0.000 -0.000)-(7.864 60.000 8.000)
+    face type 0 area 6000.000000 bounds (0.000 0.000 40.000)-(100.000 60.000 40.000)
+    face type 0 area 3998.068583 bounds (-0.000 60.000 -0.000)-(100.000 60.000 40.000)
+    face type 0 area 2386.265483 bounds (100.000 -0.000 -0.000)-(100.000 60.000 40.000)
+    face type 6 area 832.429610 bounds (1.732 -0.000 -0.000)-(100.000 8.000 8.000)
+    face type 0 area 5150.962664 bounds (3.000 3.173 -0.000)-(100.000 60.000 0.000)
+[exit code 0]
+
+$ variable_radius_probe 8
+8. three edges at a box corner, each r 3 at the corner to r 8
+  done 1
+  valid 1, self-intersects 0, removed 1380.773137982 (adaptive 1e-10), 1380.773137966 (Gauss-Kronrod)
+  contour 1, edge of 100 mm: law bounds [-10.000000000, 150.000000000]
+  contour 2, edge of 60 mm: law bounds [-6.000000000, 90.000000000]
+  contour 3, edge of 40 mm: law bounds [-4.000000000, 60.000000000]
+    face type 0 area 1872.410016 bounds (-0.000 3.509 3.000)-(0.000 60.000 40.000)
+    face type 0 area 5986.265483 bounds (-0.000 -0.000 40.000)-(100.000 60.000 40.000)
+    face type 6 area 296.478165 bounds (-0.000 -0.000 7.929)-(8.000 8.000 40.000)
+    face type 0 area 3998.068583 bounds (-0.000 60.000 -0.000)-(100.000 60.000 40.000)
+    face type 6 area 491.787492 bounds (-0.000 3.110 -0.000)-(7.940 60.000 7.929)
+    face type 0 area 3254.718766 bounds (3.509 -0.000 3.114)-(100.000 0.000 40.000)
+    face type 0 area 2386.265483 bounds (100.000 -0.000 -0.000)-(100.000 60.000 40.000)
+    face type 6 area 54.654159 bounds (-0.000 -0.000 -0.000)-(7.940 3.509 7.929)
+    face type 0 area 5150.400741 bounds (3.000 3.114 -0.000)-(100.000 60.000 0.000)
+    face type 6 area 802.073826 bounds (7.940 -0.000 -0.000)-(100.000 8.000 8.000)
+[exit code 0]
+
+$ variable_radius_probe 9
+9. a tangent chain (line, arc, line), Add(3, 8, E) on its first line
+  contours 1, edges in contour 1: 3
+  done 1
+  valid 1, self-intersects 0
+  edge 1: law on [-77.853982, 90.000000]
+  EXCEPTION Standard_DomainError: ChFiDS_FilSpine::ChangeLaw : no law on constant edges
+[exit code 0]
+
+$ variable_radius_probe 10
+10. Add(UandR, E), (0,5) (0.4,5) (0.6,36) (1,36): the law leaves [5, 36]
+  valid 0, self-intersects 1, bounds (-0.000000 -0.000000 -0.000000)-(100.000000 60.000000 40.000000), removed 22.790204943 (adaptive 1e-10)
+  law bounds [-50.000000000, 150.000000000]; r at 0, 1/4, 1/2, 3/4, 1 of the edge: 5.000000000000 -3.232632643885 20.500000000000 44.232632643885 36.000000000000
+  max |law - reference spline| 1.421e-14 over the law's bounds; on the edge the reference runs from -3.234887 to 44.234887
+  removed: reference 16815.439975572; measured rel 9.986e-01 (adaptive 1e-10), 9.986e-01 (default), 9.986e-01 (Gauss-Kronrod 1e-10)
+  1 fillet face(s); from the reference: sections 1.684e-14 mm, contact lines 3.978e-14 / 3.819e-14 mm
+  from the builder's own law: sections 1.812e-14 mm, contact lines 4.245e-14 / 4.108e-14 mm
+[exit code 0]
+
+$ variable_radius_probe 11
+11. Add(UandR, E), (0,5) (0.4,5) (0.6,20) (1,20): the law leaves [5, 20]
+  valid 1, self-intersects 0, bounds (-0.000000 -0.000000 -0.000000)-(100.000000 60.000000 40.000000), removed 5178.626644979 (adaptive 1e-10)
+  law bounds [-50.000000000, 150.000000000]; r at 0, 1/4, 1/2, 3/4, 1 of the edge: 5.000000000000 1.016468075540 12.500000000000 23.983531924460 20.000000000000
+  max |law - reference spline| 1.066e-14 over the law's bounds; on the edge the reference runs from 1.015377 to 23.984623
+  removed: reference 5178.626645176; measured rel 3.792e-11 (adaptive 1e-10), 8.911e-04 (default), 1.019e-10 (Gauss-Kronrod 1e-10)
+  1 fillet face(s); from the reference: sections 1.776e-14 mm, contact lines 2.309e-14 / 2.309e-14 mm
+  from the builder's own law: sections 1.421e-14 mm, contact lines 2.132e-14 / 2.132e-14 mm
+[exit code 0]
