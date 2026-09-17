@@ -516,7 +516,7 @@ TEST_CASE("ShellFeature_FailuresAreStructuredAndAtomic", "[features][shell][p12]
                           block, base));
         CHECK(failureOf(report, regenerator, unnamed, ErrorCode::InvalidArgument) ==
               std::format("Unnamed: open face 1: Base ({}) is a split, whose faces are not named (extrudes, "
-                          "revolves, sweeps, lofts, holes and chamfers name theirs)",
+                          "revolves, sweeps, lofts, holes, chamfers and ribs name theirs)",
                           base));
         CHECK(failureOf(report, regenerator, onSketch, ErrorCode::InvalidArgument) ==
               std::format("OnSketch: open face 2: BlockSketch ({}) is a sketch, not a feature, and has no faces",
@@ -536,7 +536,8 @@ TEST_CASE("ShellFeature_FailuresAreStructuredAndAtomic", "[features][shell][p12]
             });
         };
         CHECK(has(std::format("Unnamed ({}): open face 1 is the end cap of Base ({}): Base ({}) is a split, whose "
-                              "faces are not named (extrudes, revolves, sweeps, lofts, holes and chamfers name theirs)",
+                              "faces are not named (extrudes, revolves, sweeps, lofts, holes, chamfers and ribs name "
+                              "theirs)",
                               unnamed, base, base)));
         CHECK(has(std::format("OnSketch ({}): open face 2 is the end cap of BlockSketch ({}): BlockSketch ({}) is a "
                               "sketch, not a feature, and has no faces",
@@ -587,7 +588,7 @@ TEST_CASE("ShellFeature_FailuresAreStructuredAndAtomic", "[features][shell][p12]
         REQUIRE(report.errors.contains(onCupId));
         CHECK(report.errors.at(onCupId).message ==
               std::format("OnCup ({}): Cup ({}) is a shell, whose faces are not named (extrudes, revolves, sweeps, "
-                          "lofts, holes and chamfers name theirs)",
+                          "lofts, holes, chamfers and ribs name theirs)",
                           onCupId, m.cup));
         CHECK(failureOf(report, regenerator, noBody, ErrorCode::FailedPrecondition) ==
               "NoBody: a shell needs the body of its target feature");

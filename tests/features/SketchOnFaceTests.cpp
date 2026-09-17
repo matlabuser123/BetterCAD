@@ -776,7 +776,7 @@ TEST_CASE("SketchOnFace_RolesAndCopiesAFeatureDoesNotHaveAreRefused", "[features
         refused(bevelHistory, bevelRegenerator, bevel.doc, bevel.backSketch,
                 BevelledBlockModel::faceOf(round, {.role = FaceRole::EndCap}), ErrorCode::InvalidArgument,
                 "BackSketch (object:7): Round (object:9) is a fillet, whose faces are not named (extrudes, revolves, "
-                "sweeps, lofts, holes and chamfers name theirs)");
+                "sweeps, lofts, holes, chamfers and ribs name theirs)");
         // Its body carries the chamfer's names, on the rounded faces.
         const auto back = geometry::findNamedFaces(*bevelRegenerator.body(round),
                                                    FaceName{bevel.chamfer, BevelledBlockModel::edgeFace(2)});

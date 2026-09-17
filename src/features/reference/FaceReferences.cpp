@@ -10,6 +10,7 @@
 #include <bettercad/features/LoftFeature.hpp>
 #include <bettercad/features/MirrorFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
+#include <bettercad/features/RibFeature.hpp>
 #include <bettercad/features/SweepFeature.hpp>
 #include <bettercad/sketch/Sketch.hpp>
 
@@ -205,6 +206,23 @@ Result<void> checkRole(const Document& document, const DocumentObject& object, c
         }
         return noSuchRole();
     }
+    if (const auto* rib = dynamic_cast<const RibFeature*>(&object)) {
+        if (cap) {
+            return {};
+        }
+        if (face.role != FaceRole::Side) {
+            return noSuchRole();
+        }
+        if (auto valid = noAlong(); !valid) {
+            return valid;
+        }
+        const auto& edges = rib->definition().edges;
+        if (std::ranges::find(edges, *face.entity) == edges.end()) {
+            return makeError(ErrorCode::NotFound,
+                             std::format("{}: {} is not an edge of its profile", who, *face.entity));
+        }
+        return {};
+    }
     if (const auto* hole = dynamic_cast<const HoleFeature*>(&object)) {
         const HoleDefinition& d = hole->definition();
         if (face.role == FaceRole::HoleBottom) {
@@ -242,7 +260,8 @@ Result<void> checkRole(const Document& document, const DocumentObject& object, c
 bool namesFaces(std::string_view typeName) noexcept {
     return typeName == ExtrudeFeature::kTypeName || typeName == RevolveFeature::kTypeName ||
            typeName == SweepFeature::kTypeName || typeName == LoftFeature::kTypeName ||
-           typeName == HoleFeature::kTypeName || typeName == ChamferFeature::kTypeName;
+           typeName == HoleFeature::kTypeName || typeName == ChamferFeature::kTypeName ||
+           typeName == RibFeature::kTypeName;
 }
 
 std::string describe(const Document& document, const FaceName& name) {
@@ -275,8 +294,8 @@ Result<void> checkFaceName(const Document& document, const FaceName& name) {
     }
     if (!namesFaces(object->typeName())) {
         return makeError(ErrorCode::InvalidArgument,
-                         std::format("{} is {}, whose faces are not named (extrudes, revolves, sweeps, lofts, holes "
-                                     "and chamfers name theirs)",
+                         std::format("{} is {}, whose faces are not named (extrudes, revolves, sweeps, lofts, holes, "
+                                     "chamfers and ribs name theirs)",
                                      who, article(kindName(object->typeName()))));
     }
     if (auto valid = validate(name.face); !valid) {

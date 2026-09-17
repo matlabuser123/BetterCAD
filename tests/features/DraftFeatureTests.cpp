@@ -494,7 +494,7 @@ TEST_CASE("DraftFeature_FailuresAreStructuredAndAtomic", "[features][draft][p12]
                           m.block, base));
         CHECK(failureOf(report, regenerator, unnamed, ErrorCode::InvalidArgument) ==
               std::format("Unnamed: face 1: Base ({}) is a split, whose faces are not named (extrudes, revolves, "
-                          "sweeps, lofts, holes and chamfers name theirs)",
+                          "sweeps, lofts, holes, chamfers and ribs name theirs)",
                           base));
         CHECK(failureOf(report, regenerator, twoSolids, ErrorCode::FailedPrecondition) ==
               "TwoSolids: draft: a draft turns faces of one solid; the body has 2");
@@ -514,7 +514,7 @@ TEST_CASE("DraftFeature_FailuresAreStructuredAndAtomic", "[features][draft][p12]
                                        [&](const ValidationIssue& issue) { return issue.message == text; });
         };
         CHECK(has(std::format("Unnamed ({}): face 1 is the end cap of Base ({}): Base ({}) is a split, whose faces "
-                              "are not named (extrudes, revolves, sweeps, lofts, holes and chamfers name theirs)",
+                              "are not named (extrudes, revolves, sweeps, lofts, holes, chamfers and ribs name theirs)",
                               unnamed, base, base)));
         CHECK(has(std::format("OnSketch ({}): the neutral plane is BlockSketch ({}), which is a sketch, not a datum "
                               "plane or a coordinate system",
@@ -557,7 +557,7 @@ TEST_CASE("DraftFeature_FailuresAreStructuredAndAtomic", "[features][draft][p12]
         REQUIRE(report.errors.contains(onDraftId));
         CHECK(report.errors.at(onDraftId).message ==
               std::format("OnDraft ({}): Tapered ({}) is a draft, whose faces are not named (extrudes, revolves, "
-                          "sweeps, lofts, holes and chamfers name theirs)",
+                          "sweeps, lofts, holes, chamfers and ribs name theirs)",
                           onDraftId, m.tapered));
     }
 }

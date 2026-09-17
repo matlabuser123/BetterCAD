@@ -13,6 +13,7 @@
 #include <bettercad/features/LoftFeature.hpp>
 #include <bettercad/features/MirrorFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
+#include <bettercad/features/RibFeature.hpp>
 #include <bettercad/features/ShellFeature.hpp>
 #include <bettercad/features/SplitFeature.hpp>
 #include <bettercad/features/SweepFeature.hpp>
@@ -379,6 +380,15 @@ std::string describeObject(const Document& document, const DocumentObject& objec
                                                      : std::format("{:.10g} mm", d.radius.in(units::mm));
         return std::format("target {}, {}, radius {}", nameOrId(document, ObjectId{d.target}),
                            plural(d.edges.size(), "edge", "edges"), radius);
+    }
+    if (const auto* rib = dynamic_cast<const features::RibFeature*>(&object)) {
+        // "target Bracket, profile RibSketch (2 edges), thickness wall, symmetric, left side"
+        const features::RibDefinition& d = rib->definition();
+        return std::format("target {}, profile {} ({}), thickness {}, {}, {} side",
+                           nameOrId(document, ObjectId{d.target}), nameOrId(document, ObjectId{d.profile}),
+                           plural(d.edges.size(), "edge", "edges"),
+                           describeLength(document, d.thickness, d.thicknessParameter),
+                           geometry::toString(d.placement), d.flipped ? "right" : "left");
     }
     if (const auto* draft = dynamic_cast<const features::DraftFeature*>(&object)) {
         // "target Block, faces the side from entity:4 of Block and ..., neutral

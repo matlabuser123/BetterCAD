@@ -11,7 +11,7 @@ underneath, hidden behind adapters.
             └───────┬──────────────────────┘
                     io              native .bcad, STEP/STL export
                     │
-                 features           extrude, revolve, chamfer, fillet, hole, linear and circular patterns, mirror, sweep, loft, split, combine, shell, draft (later: ...)
+                 features           extrude, revolve, chamfer, fillet, hole, linear and circular patterns, mirror, sweep, loft, split, combine, shell, draft, rib (later: ...)
                     │
                   sketch            entities, constraints, solver
                     │
@@ -591,6 +591,28 @@ milestones start; see `TODO.md`.
     (`carriedNames()`) would drop them.
   - `FaceNameList.hpp` holds the face-name list check shells and drafts
     share.
+- **Rib** (`Rib.hpp`, P12-FEAT-005). `addRib(body, request, namer)` joins
+  a wall to the body that fills the space between an open profile (lines,
+  arcs and open splines in a plane, head to tail) and the body, on one side
+  of the profile, with a thickness symmetric about the plane or on one side
+  of it. It uses only qualified operations:
+  - the profile is extended along its end tangents to a rectangle 1 mm
+    beyond the body's and the profile's extents in the plane, and closed
+    along the rectangle on the filled side (the left of the direction of
+    travel, or the right when flipped); `makePrism()` makes that region a
+    slab, its faces marked by internal names;
+  - the slab less the body (whose names are dropped for the purpose) falls
+    into pieces (`solidsOf()`, `Split.hpp`); the rib is every piece with a
+    face of the profile, and a piece that also has a face of the rectangle
+    means the side is not closed off (FailedPrecondition);
+  - the markers become the rib's own names, and the pieces are joined to the
+    body with `booleanUnion()`. The result must be valid, keep the body's
+    number of solids and add exactly the pieces' volume (1e-9 relative).
+
+  A profile that stops short of the body is thereby extended to it, and one
+  that reaches into the body is cut back by it. A region the kernel cannot
+  make a face of (the extended profile crosses itself) fails with
+  FailedPrecondition.
 - **Translation, rotation and reflection** (`Transform.hpp`).
   `translated(body, translation)` and `transformed(body, motion)` return a
   moved copy with its own geometry (`BRepBuilderAPI_Transform`, copying); the
@@ -745,9 +767,9 @@ milestones start; see `TODO.md`.
 
 ### Face references (P12-STREF-001, P12-SKETCH-003)
 
-- `features::FaceReferences.hpp` resolves face names. Six kinds name their
+- `features::FaceReferences.hpp` resolves face names. Seven kinds name their
   faces (`namesFaces()`), through `detail::sweptFaceNamer()`,
-  `holeFaceNamer()` and `chamferFaceNamer()`:
+  `holeFaceNamer()`, `chamferFaceNamer()` and the rib's namer:
   - extrudes and revolves: the start cap on the sketch plane (behind it when
     symmetric; for a reversed extrude or a negative revolve the caps swap,
     so the start cap stays on the sketch plane), the end cap at the depth or
@@ -757,7 +779,11 @@ milestones start; see `TODO.md`.
     segment i is `path.edges[i]`);
   - lofts: the caps at the first and last sections;
   - holes: the bottom (blind holes) and the counterbore floor;
-  - chamfers: the face of each edge reference.
+  - chamfers: the face of each edge reference;
+  - ribs (P12-FEAT-005): their two walls, the one at the lower offset from
+    the sketch plane as the start cap and the other as the end cap, and the
+    side each profile edge makes (its entity must be one of the rib's
+    edges).
 
   Linear and circular patterns and mirrors copy faces: each instance's tool
   (an extrude's or revolve's), hole or chamfer, or a body mirror's image, is
@@ -859,6 +885,20 @@ milestones start; see `TODO.md`.
   - A shell depends on its target, its thickness parameter and the features
     its open faces name (generators and copying features). It names no
     faces of its own, and cannot be a pattern's or feature mirror's source.
+- **Rib** (P12-FEAT-005, `RibFeature.hpp`, type `rib`). A `RibDefinition`
+  holds the target feature, the profile sketch, its ordered edges, the
+  thickness (literal, or a length parameter), the placement (symmetric,
+  along or against the sketch's normal) and whether the rib fills the right
+  of the profile instead of its left. The rib consumes its target.
+  - `resolveRibProfile()` takes the sketch's lines, arcs and open splines in
+    the given order, head to tail (the first edge turned to meet the second,
+    each later edge starting exactly where the one before ends), in the
+    sketch's placement. Construction geometry, points, circles, ellipses,
+    periodic splines, degenerate and disconnected edges are refused.
+  - `regenerateRib()` calls `addRib()` with names for the feature: segment
+    i's side is the side of `edges[i]`. A rib depends on its target, its
+    sketch and its thickness parameter; it cannot be a pattern's or feature
+    mirror's source.
 - **Draft** (P12-FEAT-004, `DraftFeature.hpp`, type `draft`). A
   `DraftDefinition` holds the target feature, the faces as face names, the
   neutral plane as a `PlaneReference` (a named face included, facing out of
@@ -1085,7 +1125,7 @@ milestones start; see `TODO.md`.
 - New object kinds plug in a regeneration handler by type name.
 - **Result bodies** (`ResultBodies.hpp`). A feature's body is a model result
   unless another feature consumes it (`SolidFeature::consumedFeatures()`):
-  the target of a Join/Cut/Intersect, the body a chamfer, shell or draft
+  the target of a Join/Cut/Intersect, the body a chamfer, shell, draft or rib
   modifies, a pattern's source, or a split's or combine's inputs.
   `regenerateResultBodies()` regenerates a copy of the document and returns
   those bodies. Exports use it.
@@ -1140,6 +1180,9 @@ milestones start; see `TODO.md`.
     attachments) and `keep` (`"front"`, `"back"`, `"both"`); a combine
     stores `target`, `tools` (feature IDs in order) and `operation`
     (`"join"`, `"cut"`, `"intersect"`);
+  - a rib stores `target`, `profile`, `edges` (entity IDs in order),
+    `thickness` and an optional `thickness_parameter`, `placement`
+    (`"symmetric"`, `"along_normal"`, `"against_normal"`) and `flipped`;
   - a draft stores `target`, `faces` (face names), `neutral_plane` (a plane
     reference), `angle` (radians) and an optional `angle_parameter`;
   - a shell stores `target`, `open_faces` (face names, each

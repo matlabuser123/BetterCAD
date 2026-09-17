@@ -45,6 +45,7 @@ bettercad_add_executable(bettercad_tests
         core/geometry/PrimitiveTests.cpp
         core/geometry/PropertyTests.cpp
         core/geometry/RevolutionTests.cpp
+        core/geometry/RibTests.cpp
         core/geometry/ShellTests.cpp
         core/geometry/SplitTests.cpp
         core/geometry/SweepTests.cpp
@@ -79,6 +80,7 @@ bettercad_add_executable(bettercad_tests
         features/RegenerationTests.cpp
         features/RegeneratorTests.cpp
         features/RevolveTests.cpp
+        features/RibFeatureTests.cpp
         features/ShellFeatureTests.cpp
         features/ValidationTests.cpp
         io/ChamferFileTests.cpp
@@ -100,6 +102,7 @@ bettercad_add_executable(bettercad_tests
         io/ParameterJsonTests.cpp
         io/SweepFileTests.cpp
         io/RevolveFileTests.cpp
+        io/RibFileTests.cpp
         io/ShellFileTests.cpp
         io/StepExportTests.cpp
         io/StlTests.cpp
@@ -125,6 +128,7 @@ bettercad_add_executable(bettercad_tests
         support/LoftModels.hpp
         support/MeshAnalysis.hpp
         support/MirrorModels.hpp
+        support/RibModels.hpp
         support/ShellModels.hpp
         support/PatternModels.hpp
         support/SweepModels.hpp
@@ -157,6 +161,7 @@ if(TARGET bettercad_cli_lib)
         cli/FaceReferenceCliTests.cpp
         cli/ThroughAllCliTests.cpp
         cli/BodyOpsCliTests.cpp
+        cli/RibCliTests.cpp
         cli/ShellCliTests.cpp
         cli/ExpressionCliTests.cpp
     )
@@ -412,6 +417,20 @@ if(TARGET bettercad_cli)
         COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "export-step|${_drafts}|${_out}/drafted_block.step"
         EXIT_CODE 0 STDOUT_REGEX "^Wrote .*drafted_block\\.step: STEP AP214 \\(mm\\), 5 bodies \\(Tapered, TaperedMid, Flared, OnTop, OnBottom\\), [0-9]+ bytes$"
         FILE "${_out}/drafted_block.step" FILE_REGEX "^ISO-10303-21;\nHEADER;")
+    # P12-FEAT-005: a rib across the inside corner of an L bracket.
+    set(_ribs "${PROJECT_SOURCE_DIR}/examples/models/ribbed_bracket.bcad")
+    bettercad_add_process_test(cli.info.ribbed-bracket
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "info|${_ribs}"
+        EXIT_CODE 0
+        STDOUT_REGEX "^Document: RibbedBracket\n.*  object:10  sketch       RibSketch    3 entities, 2 constraints, on Mid\n  object:11  rib          Rib          target Bracket, profile RibSketch \\(1 edge\\), thickness thickness, symmetric, left side$")
+    bettercad_add_process_test(cli.validate.ribbed-bracket
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "validate|${_ribs}"
+        EXIT_CODE 0
+        STDOUT_REGEX "feature regeneration  ok, 7 objects regenerated\n  geometry              ok, 1 result body\nResult bodies \\(1\\):\n  Rib \\(object:11\\): 1 solid, volume 53800\\.000 mm\\^3, area 14629\\.706 mm\\^2, bounds \\(0, 0, 0\\) to \\(80, 60, 40\\) mm\nResult: valid$")
+    bettercad_add_process_test(cli.export-step.ribbed-bracket
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "export-step|${_ribs}|${_out}/ribbed_bracket.step"
+        EXIT_CODE 0 STDOUT_REGEX "^Wrote .*ribbed_bracket\\.step: STEP AP214 \\(mm\\), 1 body \\(Rib\\), [0-9]+ bytes$"
+        FILE "${_out}/ribbed_bracket.step" FILE_REGEX "^ISO-10303-21;\nHEADER;")
     bettercad_add_process_test(cli.export-stl.reference.pulley
         COMMAND "$<TARGET_FILE:bettercad_cli>"
         ARGS "export-stl|${_reference}/pulley.bcad|${_out}/pulley.stl"

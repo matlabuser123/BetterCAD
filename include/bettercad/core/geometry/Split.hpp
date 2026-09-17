@@ -7,6 +7,7 @@
 
 #include <span>
 #include <string_view>
+#include <vector>
 
 // Splitting a body with a plane, and bodies of several separate solids
 // (P12-FEAT-002).
@@ -42,5 +43,10 @@ enum class SplitKeep {
 /// part is empty, and with Internal when the kernel's checker rejects the
 /// result.
 [[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Result<Body> gatherSolids(std::span<const Body> parts);
+
+/// The solids of @p body, each as a body with the names of its faces
+/// (P12-FEAT-005), in the kernel's order of the body's solids. An empty
+/// body has none.
+[[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Result<std::vector<Body>> solidsOf(const Body& body);
 
 } // namespace bettercad::geometry

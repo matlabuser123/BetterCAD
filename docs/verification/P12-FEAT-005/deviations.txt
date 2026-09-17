@@ -1,0 +1,50 @@
+file                             kind  tolerance  checks    largest
+GeometryTestSupport.hpp          abs     1.0e-09       3   1.42e-14
+RibFeatureTests.cpp              abs     1.0e-09      52   1.24e-13
+RibFeatureTests.cpp              abs     1.0e-07      61   5.68e-14
+RibFeatureTests.cpp              rel     1.0e-12      42   1.00e-15
+RibFeatureTests.cpp              rel     1.0e-05       1   4.33e-06
+RibFileTests.cpp                 rel     1.0e-09       3   2.70e-16
+RibTests.cpp                     abs     1.0e-09       2   7.11e-15
+RibTests.cpp                     rel     1.0e-12      12   4.06e-16
+RibTests.cpp                     rel     1.0e-09       1   1.37e-16
+
+GeometryTestSupport.hpp abs 1.0e-09: largest 3
+  1.421e-14  measured 26.319702602230496 expected 26.319702602230482  Rib_FillsTheCornerOfABracket  
+  1.066e-14  measured 16.654275092936796 expected 16.654275092936807  Rib_FillsTheCornerOfABracket  
+  3.553e-15  measured -20.000000000000004 expected -20.0  Rib_FillsTheCornerOfABracket  
+
+RibFeatureTests.cpp abs 1.0e-09: largest 3
+  1.243e-13  measured 26.394446090103937 expected 26.39444609010406  RibFeature_ArcsChainsSplinesAndShortProfiles  
+  1.066e-13  measured 16.540841587115256 expected 16.540841587115363  RibFeature_ArcsChainsSplinesAndShortProfiles  
+  8.527e-14  measured 249.99999999999991 expected 250.0  RibFeature_WallsCarrySketchesAndBodiesCarryRibs  
+
+RibFeatureTests.cpp abs 1.0e-07: largest 3
+  5.684e-14  measured 300.00000000000006 expected 300.0  RibFeature_WallsCarrySketchesAndBodiesCarryRibs  
+  7.105e-15  measured 60.00000000000001 expected 60.0  RibFeature_CreationAndEditsAreUndoable  
+  7.105e-15  measured 60.00000000000001 expected 60.0  RibFeature_ArcsChainsSplinesAndShortProfiles  
+
+RibFeatureTests.cpp rel 1.0e-12: largest 3
+  1.004e-15  measured 87000.00000000009 expected 87000.0  RibFeature_WallsCarrySketchesAndBodiesCarryRibs  
+  1.004e-15  measured 87000.00000000009 expected 87000.0  RibFeature_WallsCarrySketchesAndBodiesCarryRibs  
+  6.063e-16  measured 1500.000000000001 expected 1500.0  RibFeature_WallsCarrySketchesAndBodiesCarryRibs  
+
+RibFeatureTests.cpp rel 1.0e-05: largest 3
+  4.334e-06  measured 324.0014041328489 expected 323.99999999999994  RibFeature_ArcsChainsSplinesAndShortProfiles  
+
+RibFileTests.cpp rel 1.0e-09: largest 3
+  2.705e-16  measured 53799.999999999985 expected 53800.0  RibFile_ExportedRibsReadBackFromStep  
+  0.000e+00  measured 80.0 expected 80.0  RibFile_ExportedRibsReadBackFromStep  
+  0.000e+00  measured 60.0 expected 60.0  RibFile_ExportedRibsReadBackFromStep  
+
+RibTests.cpp abs 1.0e-09: largest 3
+  7.105e-15  measured -19.93308550185874 expected -19.933085501858734  Rib_FillsTheCornerOfABracket  
+  3.553e-15  measured -20.066914498141262 expected -20.066914498141266  Rib_FillsTheCornerOfABracket  
+
+RibTests.cpp rel 1.0e-12: largest 3
+  4.057e-16  measured 53799.99999999998 expected 53800.0  Rib_FillsTheCornerOfABracket  
+  2.757e-16  measured 52772.56661176917 expected 52772.56661176919  Rib_FillsTheCornerOfABracket  
+  2.735e-16  measured 53200.000000000015 expected 53200.0  Rib_FillsTheCornerOfABracket  
+
+RibTests.cpp rel 1.0e-09: largest 3
+  1.365e-16  measured 53295.99999999999 expected 53296.0  Rib_FillsTheCornerOfABracket  

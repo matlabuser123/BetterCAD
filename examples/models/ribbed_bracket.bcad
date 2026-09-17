@@ -1,0 +1,503 @@
+{
+  "format": "bettercad-document",
+  "version": 1,
+  "units": "SI",
+  "document": {
+    "id": "2b8e6c14-7a93-4d5f-9e01-c3a7f5b8d264",
+    "name": "RibbedBracket",
+    "metadata": {
+      "description": "",
+      "author": "",
+      "properties": {}
+    },
+    "last_allocated_id": 11
+  },
+  "parameters": [
+    {
+      "id": 1,
+      "name": "floor",
+      "si_value": 0.01,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 2,
+      "name": "wall",
+      "si_value": 0.01,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 3,
+      "name": "mid",
+      "si_value": 0.02,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 4,
+      "name": "thickness",
+      "si_value": 0.004,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    }
+  ],
+  "objects": [
+    {
+      "id": 5,
+      "type": "sketch",
+      "name": "FloorSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.08,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.08,
+              0.01
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.0,
+              0.01
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "line",
+            "start": 2,
+            "end": 3,
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "line",
+            "start": 4,
+            "end": 1,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "horizontal",
+            "entities": [
+              5
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "horizontal",
+            "entities": [
+              7
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "vertical",
+            "entities": [
+              6
+            ],
+            "enabled": true
+          },
+          {
+            "id": 5,
+            "type": "vertical",
+            "entities": [
+              8
+            ],
+            "enabled": true
+          },
+          {
+            "id": 6,
+            "type": "distance",
+            "entities": [
+              5
+            ],
+            "value": 0.08,
+            "enabled": true
+          },
+          {
+            "id": 7,
+            "type": "distance",
+            "entities": [
+              6
+            ],
+            "value": 0.01,
+            "parameter": 1,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 8,
+        "last_constraint_id": 7
+      }
+    },
+    {
+      "id": 6,
+      "type": "extrude",
+      "name": "Floor",
+      "data": {
+        "profile": 5,
+        "depth": 0.04,
+        "direction": "normal",
+        "operation": "new_body"
+      }
+    },
+    {
+      "id": 7,
+      "type": "sketch",
+      "name": "WallSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.01,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.01,
+              0.06
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.0,
+              0.06
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "line",
+            "start": 2,
+            "end": 3,
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "line",
+            "start": 4,
+            "end": 1,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "horizontal",
+            "entities": [
+              5
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "horizontal",
+            "entities": [
+              7
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "vertical",
+            "entities": [
+              6
+            ],
+            "enabled": true
+          },
+          {
+            "id": 5,
+            "type": "vertical",
+            "entities": [
+              8
+            ],
+            "enabled": true
+          },
+          {
+            "id": 6,
+            "type": "distance",
+            "entities": [
+              5
+            ],
+            "value": 0.01,
+            "parameter": 2,
+            "enabled": true
+          },
+          {
+            "id": 7,
+            "type": "distance",
+            "entities": [
+              6
+            ],
+            "value": 0.06,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 8,
+        "last_constraint_id": 7
+      }
+    },
+    {
+      "id": 8,
+      "type": "extrude",
+      "name": "Bracket",
+      "data": {
+        "profile": 7,
+        "depth": 0.04,
+        "direction": "normal",
+        "operation": "join",
+        "target": 6
+      }
+    },
+    {
+      "id": 9,
+      "type": "datum_plane",
+      "name": "Mid",
+      "data": {
+        "kind": "offset",
+        "base": {
+          "plane": "xy"
+        },
+        "offset": 0.0,
+        "offset_parameter": 3
+      }
+    },
+    {
+      "id": 10,
+      "type": "sketch",
+      "name": "RibSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.02
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "attachment": {
+          "object": 9,
+          "plane": "xy"
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.04,
+              0.01
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.01,
+              0.04
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "fixed",
+            "entities": [
+              2
+            ],
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 3,
+        "last_constraint_id": 2
+      }
+    },
+    {
+      "id": 11,
+      "type": "rib",
+      "name": "Rib",
+      "data": {
+        "target": 8,
+        "profile": 10,
+        "edges": [
+          3
+        ],
+        "thickness": 0.0,
+        "thickness_parameter": 4,
+        "placement": "symmetric",
+        "flipped": false
+      }
+    }
+  ]
+}

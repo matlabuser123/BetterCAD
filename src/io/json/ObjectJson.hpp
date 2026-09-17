@@ -20,6 +20,7 @@
 #include <bettercad/features/LoftFeature.hpp>
 #include <bettercad/features/MirrorFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
+#include <bettercad/features/RibFeature.hpp>
 #include <bettercad/features/ShellFeature.hpp>
 #include <bettercad/features/SplitFeature.hpp>
 #include <bettercad/features/SweepFeature.hpp>
@@ -149,6 +150,14 @@ circularPatternFromJson(const Json& data, std::string name, std::string_view pat
 /// reference (P12-FEAT-003). The selector is validated on reading.
 [[nodiscard]] Json faceNameToJson(const FaceName& name);
 [[nodiscard]] Result<FaceName> faceNameFromJson(const Json& value, std::string_view path);
+
+/// "target"; "profile" (the sketch's ID); "edges" (entity IDs in order);
+/// "thickness" in metres with an optional "thickness_parameter";
+/// "placement": "symmetric" | "along_normal" | "against_normal"; "flipped"
+/// (P12-FEAT-005).
+[[nodiscard]] Json ribToJson(const features::RibFeature& feature);
+[[nodiscard]] Result<std::unique_ptr<features::RibFeature>> ribFromJson(const Json& data, std::string name,
+                                                                        std::string_view path);
 
 /// "target"; "faces" as face names; "neutral_plane" as a plane reference;
 /// "angle" in radians with an optional "angle_parameter" (P12-FEAT-004).

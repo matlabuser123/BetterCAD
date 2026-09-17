@@ -5,6 +5,7 @@
 #include "core/geometry/occt/OcctGuard.hpp"
 
 #include <BRep_Builder.hxx>
+#include <TopExp.hxx>
 #include <TopExp_Explorer.hxx>
 #include <TopoDS_Compound.hxx>
 
@@ -39,6 +40,25 @@ Result<Body> gatherSolids(std::span<const Body> parts) {
             return makeError(ErrorCode::Internal, "gather solids: the kernel rejects the result");
         }
         return result;
+    });
+}
+
+Result<std::vector<Body>> solidsOf(const Body& body) {
+    const TopoDS_Shape* shape = occt::BodyAccess::shape(body);
+    if (shape == nullptr) {
+        return std::vector<Body>{};
+    }
+    return occt::guardKernelCall("solids of a body", [&]() -> Result<std::vector<Body>> {
+        std::vector<Body> solids;
+        occt::ShapeMap map;
+        TopExp::MapShapes(*shape, TopAbs_SOLID, map);
+        for (int i = 1; i <= map.Extent(); ++i) {
+            // The solid keeps its faces, so the body's names apply to it.
+            const TopoDS_Shape& solid = map(i);
+            solids.push_back(occt::BodyAccess::makeBody(
+                solid, occt::canonicalNames(solid, occt::BodyAccess::names(body))));
+        }
+        return solids;
     });
 }
 

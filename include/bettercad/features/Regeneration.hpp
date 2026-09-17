@@ -22,6 +22,7 @@
 #include <bettercad/features/LoftFeature.hpp>
 #include <bettercad/features/MirrorFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
+#include <bettercad/features/RibFeature.hpp>
 #include <bettercad/features/ShellFeature.hpp>
 #include <bettercad/features/SplitFeature.hpp>
 #include <bettercad/features/SweepFeature.hpp>
@@ -177,6 +178,30 @@ regenerateChamfer(const ChamferFeature& feature, const Document& document, const
 /// are errors, never guesses; see geometry::filletEdges().
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::Body>
 regenerateFillet(const FilletFeature& feature, const Document& document, const geometry::Body* target);
+
+/// Thickness of a rib: the driving parameter's value if it has one
+/// (NotFound if missing, DimensionMismatch if not a length), otherwise the
+/// literal thickness. Its range is checked by the rib itself.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<Length> resolveRibThickness(const RibDefinition& definition,
+                                                                          const Document& document);
+
+/// The profile of a rib (P12-FEAT-005): the definition's edges, in order,
+/// head to tail, in the profile sketch's plane. Lines, arcs and open splines
+/// are taken; each later edge starts exactly where the one before ends.
+/// Fails with NotFound for a missing sketch or edge, and with
+/// InvalidArgument for construction geometry, other kinds of entity,
+/// degenerate edges and edges that do not meet ("the profile is not
+/// connected: ...").
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::PlanarPath> resolveRibProfile(
+    const RibDefinition& definition, const Document& document);
+
+/// Computes the body of a rib feature: @p target (the target feature's body)
+/// with the rib joined (geometry::addRib()), its faces named for the
+/// feature. Fails with FailedPrecondition without a target body, with the
+/// profile's and the thickness's resolution errors, and with addRib()'s
+/// errors, each prefixed with the feature's name.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::Body>
+regenerateRib(const RibFeature& feature, const Document& document, const geometry::Body* target);
 
 /// Angle of a draft: the driving parameter's value if it has one (NotFound
 /// if missing, DimensionMismatch if not an angle), otherwise the literal

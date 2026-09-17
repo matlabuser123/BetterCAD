@@ -1,0 +1,81 @@
+baseline ../P12-FEAT-004/ctest-release.log: 996 distinct names
+
+ctest-debug.log: 1016 distinct names, 1017 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 20
+    cli.export-step.ribbed-bracket
+    cli.info.ribbed-bracket
+    cli.validate.ribbed-bracket
+    unit.RibCli_InfoDescribesRibs
+    unit.RibCli_ValidateReportsTheRib
+    unit.RibFeature_ArcsChainsSplinesAndShortProfiles
+    unit.RibFeature_CreationAndEditsAreUndoable
+    unit.RibFeature_DefinitionsAreValidated
+    unit.RibFeature_FailuresAreStructuredAndAtomic
+    unit.RibFeature_FollowsItsBracketAndThickness
+    unit.RibFeature_RegeneratesDeterministically
+    unit.RibFeature_WallsCarrySketchesAndBodiesCarryRibs
+    unit.RibFile_DefinitionsAreWrittenAsJson
+    unit.RibFile_ExampleFileMatchesTheBuilder
+    unit.RibFile_ExportedRibsReadBackFromStep
+    unit.RibFile_MalformedDefinitionsAreRejectedWithThePath
+    unit.RibFile_SaveLoad_RegeneratesTheSameBodies
+    unit.Rib_FailuresAreStructured
+    unit.Rib_FillsTheCornerOfABracket
+    unit.Rib_RequestsAreValidated
+
+ctest-release.log: 1016 distinct names, 1017 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 20
+    cli.export-step.ribbed-bracket
+    cli.info.ribbed-bracket
+    cli.validate.ribbed-bracket
+    unit.RibCli_InfoDescribesRibs
+    unit.RibCli_ValidateReportsTheRib
+    unit.RibFeature_ArcsChainsSplinesAndShortProfiles
+    unit.RibFeature_CreationAndEditsAreUndoable
+    unit.RibFeature_DefinitionsAreValidated
+    unit.RibFeature_FailuresAreStructuredAndAtomic
+    unit.RibFeature_FollowsItsBracketAndThickness
+    unit.RibFeature_RegeneratesDeterministically
+    unit.RibFeature_WallsCarrySketchesAndBodiesCarryRibs
+    unit.RibFile_DefinitionsAreWrittenAsJson
+    unit.RibFile_ExampleFileMatchesTheBuilder
+    unit.RibFile_ExportedRibsReadBackFromStep
+    unit.RibFile_MalformedDefinitionsAreRejectedWithThePath
+    unit.RibFile_SaveLoad_RegeneratesTheSameBodies
+    unit.Rib_FailuresAreStructured
+    unit.Rib_FillsTheCornerOfABracket
+    unit.Rib_RequestsAreValidated
+
+ctest-debug-shared.log: 1016 distinct names, 1017 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 20
+    cli.export-step.ribbed-bracket
+    cli.info.ribbed-bracket
+    cli.validate.ribbed-bracket
+    unit.RibCli_InfoDescribesRibs
+    unit.RibCli_ValidateReportsTheRib
+    unit.RibFeature_ArcsChainsSplinesAndShortProfiles
+    unit.RibFeature_CreationAndEditsAreUndoable
+    unit.RibFeature_DefinitionsAreValidated
+    unit.RibFeature_FailuresAreStructuredAndAtomic
+    unit.RibFeature_FollowsItsBracketAndThickness
+    unit.RibFeature_RegeneratesDeterministically
+    unit.RibFeature_WallsCarrySketchesAndBodiesCarryRibs
+    unit.RibFile_DefinitionsAreWrittenAsJson
+    unit.RibFile_ExampleFileMatchesTheBuilder
+    unit.RibFile_ExportedRibsReadBackFromStep
+    unit.RibFile_MalformedDefinitionsAreRejectedWithThePath
+    unit.RibFile_SaveLoad_RegeneratesTheSameBodies
+    unit.Rib_FailuresAreStructured
+    unit.Rib_FillsTheCornerOfABracket
+    unit.Rib_RequestsAreValidated
+
+RESULT: PASS

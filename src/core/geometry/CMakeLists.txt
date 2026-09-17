@@ -20,6 +20,7 @@ bettercad_add_library(bettercad_geometry
         LoftPlan.hpp
         Profile.cpp
         ProfileExtent.hpp
+        Rib.cpp
         Shell.cpp
         Split.cpp
         SweepPlan.cpp

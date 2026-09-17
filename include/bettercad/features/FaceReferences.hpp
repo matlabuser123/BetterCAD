@@ -16,10 +16,11 @@
 // A face is named by the feature that generates it and its role there
 // (FaceName): extrudes, revolves and sweeps name their start and end caps and
 // the side each profile entity sweeps (a sweep's also by its path edge),
-// lofts their caps, holes their bottom and counterbore floor, and chamfers
-// the face each edge reference cuts. The feature puts the names on the faces
-// of its body as it builds it, and its own booleans carry them through the
-// kernel's history. A pattern or mirror copies faces: each copy's name is the
+// lofts their caps, holes their bottom and counterbore floor, chamfers the
+// face each edge reference cuts, and ribs their two walls (as caps) and the
+// side each profile edge makes (P12-FEAT-005). The feature puts the names on
+// the faces of its body as it builds it, and its own booleans carry them
+// through the kernel's history. A pattern or mirror copies faces: each copy's name is the
 // original's with the copy step appended (FaceCopy), and it is found in the
 // body of the last feature that copied it. A reference is resolved in that
 // body, by name only: when no face carries the name, the reference fails,
@@ -35,7 +36,7 @@ namespace bettercad::features {
 using BodyLookup = std::function<const geometry::Body*(ObjectId object)>;
 
 /// Whether features of the type @p typeName name the faces they generate
-/// (extrudes, revolves, sweeps, lofts, holes and chamfers).
+/// (extrudes, revolves, sweeps, lofts, holes, chamfers and ribs).
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT bool namesFaces(std::string_view typeName) noexcept;
 
 /// "the end cap of Base (object:6)", "the side from entity:4 of Base (object:6)",
@@ -53,7 +54,8 @@ using BodyLookup = std::function<const geometry::Body*(ObjectId object)>;
 /// (InvalidArgument); a side's entity is a profile curve of the feature's
 /// sketch (NotFound if the sketch has no such entity, InvalidArgument for a
 /// point or construction geometry), a sweep's path edge is an edge of its
-/// path and a chamfer's edge reference one of its references (NotFound); and
+/// path, a chamfer's edge reference one of its references and a rib's side
+/// entity one of its profile edges (NotFound); and
 /// every copy names an existing (NotFound) pattern or mirror, a mirror only
 /// with instance 1 (InvalidArgument). A missing profile sketch is left to the
 /// feature's own regeneration.

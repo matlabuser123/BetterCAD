@@ -1,0 +1,81 @@
+Every measured value of the tests P12-FEAT-004 had, from its qualified Release build (80f1fec, run before
+this milestone's clean rebuild) and from this milestone's qualified Release build. Each ran
+bettercad_tests.exe -s --reporter xml --rng-seed 1 (all test cases; this build also ran the 17 new ones), and
+values.py (in this directory, with the same one-line header for both) filtered the report:
+  feat004-release: 929 test cases, 73734 assertions passed, 0 failed
+  feat005-release: 946 test cases, 75615 assertions passed, 0 failed
+compare-values.py dropped (--exclude) the 17 new test cases (no existing test case's name matches the
+pattern) and the pointer values, and normalized temporary paths, document UUIDs and the Git revision the
+version text reports. Source line numbers were replaced (--ignore-line-numbers): one assertion of
+ShellFeatureTests.cpp was re-wrapped onto an extra line, which moves the file's later lines.
+
+This milestone deliberately extended one message (the list of feature kinds that name their faces). It was
+replaced (--substitute) in the P12-FEAT-004 values by the new text; 14 value lines hold it there, and none
+in the P12-FEAT-005 values holds the old text. Every existing line was otherwise compared unchanged.
+
+1. With the message substituted:
+   python compare-values.py --exclude "(Rib_|RibFeature_|RibFile_|RibCli_)" --ignore-line-numbers --substitute "holes and chamfers name theirs)=holes, chamfers and ribs name theirs)" feat004-release=... feat005-release=...
+
+   substituted 'holes and chamfers name theirs)' -> 'holes, chamfers and ribs name theirs)':
+     feat004-release: 14 lines
+     feat005-release: 0 lines
+   feat004-release: 36895 non-empty lines after normalizing, MD5 ba2371a47dd89f1dbade97511629f673
+   feat005-release: 36895 non-empty lines after normalizing, MD5 ba2371a47dd89f1dbade97511629f673
+
+   feat005-release against feat004-release:
+     differing lines: 0 expected only, 0 measured
+
+   RESULT: measured values identical
+
+2. Without the substitution (the same command without --substitute), the differing lines are exactly the
+   14 that hold the message, each differing only in it (exit code 1, as expected):
+
+   feat004-release: 36895 non-empty lines after normalizing, MD5 b738f61540e574500ee94a7b422d404f
+   feat005-release: 36895 non-empty lines after normalizing, MD5 ba2371a47dd89f1dbade97511629f673
+
+   feat005-release against feat004-release:
+     line 14668 (MEASURED):
+       feat004-release: DraftFeatureTests.cpp:<line>  CHECK( failureOf(report, regenerator, unnamed, ErrorCode::InvalidArgument) == std::format("Unnamed: face 1: Base ({}) is a split, whose faces are not named (extrudes, revolves, " "sweeps, lofts, holes and chamfers name theirs)", base) )
+       feat005-release: DraftFeatureTests.cpp:<line>  CHECK( failureOf(report, regenerator, unnamed, ErrorCode::InvalidArgument) == std::format("Unnamed: face 1: Base ({}) is a split, whose faces are not named (extrudes, revolves, " "sweeps, lofts, holes, chamfers and ribs name theirs)", base) )
+     line 14669 (MEASURED):
+       feat004-release: => "Unnamed: face 1: Base (object:15) is a split, whose faces are not named (extrudes, revolves, sweeps, lofts, holes and chamfers name theirs)" == "Unnamed: face 1: Base (object:15) is a split, whose faces are not named (extrudes, revolves, sweeps, lofts, holes and chamfers name theirs)"
+       feat005-release: => "Unnamed: face 1: Base (object:15) is a split, whose faces are not named (extrudes, revolves, sweeps, lofts, holes, chamfers and ribs name theirs)" == "Unnamed: face 1: Base (object:15) is a split, whose faces are not named (extrudes, revolves, sweeps, lofts, holes, chamfers and ribs name theirs)"
+     line 14695 (MEASURED):
+       feat004-release: DraftFeatureTests.cpp:<line>  CHECK( report.errors.at(onDraftId).message == std::format("OnDraft ({}): Tapered ({}) is a draft, whose faces are not named (extrudes, revolves, " "sweeps, lofts, holes and chamfers name theirs)", onDraftId, m.tapered) )
+       feat005-release: DraftFeatureTests.cpp:<line>  CHECK( report.errors.at(onDraftId).message == std::format("OnDraft ({}): Tapered ({}) is a draft, whose faces are not named (extrudes, revolves, " "sweeps, lofts, holes, chamfers and ribs name theirs)", onDraftId, m.tapered) )
+     line 14696 (MEASURED):
+       feat004-release: => "OnDraft (object:13): Tapered (object:7) is a draft, whose faces are not named (extrudes, revolves, sweeps, lofts, holes and chamfers name theirs)" == "OnDraft (object:13): Tapered (object:7) is a draft, whose faces are not named (extrudes, revolves, sweeps, lofts, holes and chamfers name theirs)"
+       feat005-release: => "OnDraft (object:13): Tapered (object:7) is a draft, whose faces are not named (extrudes, revolves, sweeps, lofts, holes, chamfers and ribs name theirs)" == "OnDraft (object:13): Tapered (object:7) is a draft, whose faces are not named (extrudes, revolves, sweeps, lofts, holes, chamfers and ribs name theirs)"
+     line 17759 (MEASURED):
+       feat004-release: BodyOpsTests.cpp:<line>  CHECK( report.errors.at(onSplitId).message == std::format("OnSplit ({}): Halves (object:11) is a split, whose faces are not named (extrudes, " "revolves, sweeps, lofts, holes and chamfers name theirs)", onSplitId) )
+       feat005-release: BodyOpsTests.cpp:<line>  CHECK( report.errors.at(onSplitId).message == std::format("OnSplit ({}): Halves (object:11) is a split, whose faces are not named (extrudes, " "revolves, sweeps, lofts, holes, chamfers and ribs name theirs)", onSplitId) )
+     line 17760 (MEASURED):
+       feat004-release: => "OnSplit (object:13): Halves (object:11) is a split, whose faces are not named (extrudes, revolves, sweeps, lofts, holes and chamfers name theirs)" == "OnSplit (object:13): Halves (object:11) is a split, whose faces are not named (extrudes, revolves, sweeps, lofts, holes and chamfers name theirs)"
+       feat005-release: => "OnSplit (object:13): Halves (object:11) is a split, whose faces are not named (extrudes, revolves, sweeps, lofts, holes, chamfers and ribs name theirs)" == "OnSplit (object:13): Halves (object:11) is a split, whose faces are not named (extrudes, revolves, sweeps, lofts, holes, chamfers and ribs name theirs)"
+     line 19129 (MEASURED):
+       feat004-release: => {?} != {?} with message: message := "BackSketch (object:7): Round (object:9) is a fillet, whose faces are not named (extrudes, revolves, sweeps, lofts, holes and chamfers name theirs)"
+       feat005-release: => {?} != {?} with message: message := "BackSketch (object:7): Round (object:9) is a fillet, whose faces are not named (extrudes, revolves, sweeps, lofts, holes, chamfers and ribs name theirs)"
+     line 19131 (MEASURED):
+       feat004-release: => 0 == 0 with message: message := "BackSketch (object:7): Round (object:9) is a fillet, whose faces are not named (extrudes, revolves, sweeps, lofts, holes and chamfers name theirs)"
+       feat005-release: => 0 == 0 with message: message := "BackSketch (object:7): Round (object:9) is a fillet, whose faces are not named (extrudes, revolves, sweeps, lofts, holes, chamfers and ribs name theirs)"
+     line 19133 (MEASURED):
+       feat004-release: => "BackSketch (object:7): Round (object:9) is a fillet, whose faces are not named (extrudes, revolves, sweeps, lofts, holes and chamfers name theirs)" == "BackSketch (object:7): Round (object:9) is a fillet, whose faces are not named (extrudes, revolves, sweeps, lofts, holes and chamfers name theirs)" with message: message := "BackSketch (object:7): Round (object:9) is a fillet, whose faces are not named (extrudes, revolves, sweeps, lofts, holes and chamfers name theirs)"
+       feat005-release: => "BackSketch (object:7): Round (object:9) is a fillet, whose faces are not named (extrudes, revolves, sweeps, lofts, holes, chamfers and ribs name theirs)" == "BackSketch (object:7): Round (object:9) is a fillet, whose faces are not named (extrudes, revolves, sweeps, lofts, holes, chamfers and ribs name theirs)" with message: message := "BackSketch (object:7): Round (object:9) is a fillet, whose faces are not named (extrudes, revolves, sweeps, lofts, holes, chamfers and ribs name theirs)"
+     line 19135 (MEASURED):
+       feat004-release: => {?} == {?} with message: message := "BackSketch (object:7): Round (object:9) is a fillet, whose faces are not named (extrudes, revolves, sweeps, lofts, holes and chamfers name theirs)"
+       feat005-release: => {?} == {?} with message: message := "BackSketch (object:7): Round (object:9) is a fillet, whose faces are not named (extrudes, revolves, sweeps, lofts, holes, chamfers and ribs name theirs)"
+     line 22499 (MEASURED):
+       feat004-release: ShellFeatureTests.cpp:<line>  CHECK( failureOf(report, regenerator, unnamed, ErrorCode::InvalidArgument) == std::format("Unnamed: open face 1: Base ({}) is a split, whose faces are not named (extrudes, " "revolves, sweeps, lofts, holes and chamfers name theirs)", base) )
+       feat005-release: ShellFeatureTests.cpp:<line>  CHECK( failureOf(report, regenerator, unnamed, ErrorCode::InvalidArgument) == std::format("Unnamed: open face 1: Base ({}) is a split, whose faces are not named (extrudes, " "revolves, sweeps, lofts, holes, chamfers and ribs name theirs)", base) )
+     line 22500 (MEASURED):
+       feat004-release: => "Unnamed: open face 1: Base (object:6) is a split, whose faces are not named (extrudes, revolves, sweeps, lofts, holes and chamfers name theirs)" == "Unnamed: open face 1: Base (object:6) is a split, whose faces are not named (extrudes, revolves, sweeps, lofts, holes and chamfers name theirs)"
+       feat005-release: => "Unnamed: open face 1: Base (object:6) is a split, whose faces are not named (extrudes, revolves, sweeps, lofts, holes, chamfers and ribs name theirs)" == "Unnamed: open face 1: Base (object:6) is a split, whose faces are not named (extrudes, revolves, sweeps, lofts, holes, chamfers and ribs name theirs)"
+     line 22531 (MEASURED):
+       feat004-release: ShellFeatureTests.cpp:<line>  CHECK( report.errors.at(onCupId).message == std::format("OnCup ({}): Cup ({}) is a shell, whose faces are not named (extrudes, revolves, sweeps, " "lofts, holes and chamfers name theirs)", onCupId, m.cup) )
+       feat005-release: ShellFeatureTests.cpp:<line>  CHECK( report.errors.at(onCupId).message == std::format("OnCup ({}): Cup ({}) is a shell, whose faces are not named (extrudes, revolves, sweeps, " "lofts, holes, chamfers and ribs name theirs)", onCupId, m.cup) )
+     line 22532 (MEASURED):
+       feat004-release: => "OnCup (object:9): Cup (object:5) is a shell, whose faces are not named (extrudes, revolves, sweeps, lofts, holes and chamfers name theirs)" == "OnCup (object:9): Cup (object:5) is a shell, whose faces are not named (extrudes, revolves, sweeps, lofts, holes and chamfers name theirs)"
+       feat005-release: => "OnCup (object:9): Cup (object:5) is a shell, whose faces are not named (extrudes, revolves, sweeps, lofts, holes, chamfers and ribs name theirs)" == "OnCup (object:9): Cup (object:5) is a shell, whose faces are not named (extrudes, revolves, sweeps, lofts, holes, chamfers and ribs name theirs)"
+     differing lines: 0 expected only, 14 measured
+
+   RESULT: MEASURED VALUES DIFFER

@@ -477,7 +477,7 @@ TEST_CASE("SplitCombine_FailuresAreStructuredAndAtomic", "[features][split][comb
         REQUIRE(report.errors.contains(onSplitId));
         CHECK(report.errors.at(onSplitId).message ==
               std::format("OnSplit ({}): Halves (object:11) is a split, whose faces are not named (extrudes, "
-                          "revolves, sweeps, lofts, holes and chamfers name theirs)",
+                          "revolves, sweeps, lofts, holes, chamfers and ribs name theirs)",
                           onSplitId));
     }
 }

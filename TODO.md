@@ -13,7 +13,7 @@ authorized — never in advance.
 | | |
 | --- | --- |
 | Current | **`P12` — Parametric CAD Completion** |
-| Next | `P12-FEAT-005` — Rib |
+| Next | `P12-FEAT-006` — Variable-radius fillet, setback, corner transitions |
 | Blocked / Manual | None |
 | Last qualified | `P11` Production Part Modeling — **QUALIFIED** |
 | Released | `v0.1.0` (`P0`–`P10`); `P11` qualified, not released |
@@ -58,7 +58,7 @@ Reference models → qualification
 | 7 | `P12-FEAT-002` Split body / combine | — | **done** — [evidence](docs/verification/P12-FEAT-002/README.md) |
 | 8 | `P12-FEAT-003` Shell | `FEAT-002` | **done** — [evidence](docs/verification/P12-FEAT-003/README.md) |
 | 9 | `P12-FEAT-004` Draft | `DATUM-001` | **done** — [evidence](docs/verification/P12-FEAT-004/README.md) |
-| 10 | `P12-FEAT-005` Rib | `SKETCH-002`, `FEAT-001` | not started |
+| 10 | `P12-FEAT-005` Rib | `SKETCH-002`, `FEAT-001` | **done** — [evidence](docs/verification/P12-FEAT-005/README.md) |
 | 11 | `P12-FEAT-006` Variable-radius fillet, setback, corner transitions | — | not started |
 | 12 | `P12-HOLE-001` Threads, spotface, standard sizes, tolerance classes | `PARAM-001` | not started |
 | 13 | `P12-PATTERN-001` Symmetric, total-length, suppressed instances, patterns of patterns | `PARAM-001` | not started |
@@ -330,9 +330,35 @@ Acceptance:
 - Angles that make a face vanish, faces parallel to the neutral plane or tangent to such a face, faces that are not planes, cylinders or cones, names the body does not carry, a target of several solids and invalid angles fail with structured diagnostics and keep no body; nothing is substituted.
 - Save → load → regenerate gives the same bodies bit for bit; every value the existing tests measure is unchanged; `P0`–`P12-FEAT-003` stays green in all three presets.
 
+#### P12-FEAT-005 — Rib
+
+A rib fills the space between an open sketched profile and another
+feature's body with a wall of a given thickness, lying in the sketch plane.
+The profile is a chain of the sketch's lines, arcs and open splines, stored
+as sketch entities. It is extended along its end tangents, and the side of
+it that the rib fills (left of its direction of travel, or right) must be
+closed off by the body. That wall is joined to the body. The thickness
+lies on both sides of the sketch plane or on one. The rib is built only
+from prisms and the qualified booleans, and is refused when the side it
+fills is open.
+
+Deliverables:
+
+- [x] `geometry::addRib` (an open profile chain in a plane, a thickness, its placement: symmetric, along or against the normal, and the side): the prism of the profile's side, extended beyond the body, less the body; only the pieces the profile bounds are kept, and one that reaches the extended bounds fails (the side is not closed off)
+- [x] `RibFeature` (`target`, `profile` sketch and ordered `edges`, `thickness` literal or driven, `placement`, `flipped`); it consumes its target, carries its names and names its own faces: the side each profile edge makes and the two wall faces (start and end caps)
+- [x] Profile resolution: the edges head to tail (lines, arcs, open splines) and open; structured errors for missing, closed, disconnected or degenerate profiles
+- [x] Dependencies, validation, undo/redo, save/load, CLI description
+- [x] Evidence: [docs/verification/P12-FEAT-005/](docs/verification/P12-FEAT-005/README.md) — PASS, 1017/1017 tests in Debug, Release and Debug-shared, 0 warnings
+
+Acceptance:
+
+- Ribs across the inside corner of an L bracket (a line ending on the walls, inside them and short of them; an arc; a two-line chain; a spline) and inside a shelled box match analytic volumes (Green's theorem for curved profiles), centres and bounds while the thickness, the profile and the body change; they follow their sketch when it moves, and sketches can be placed on their wall faces.
+- A side that is not closed off, a profile inside the body or crossing itself once extended, closed or disconnected profiles and invalid thicknesses fail with structured diagnostics and keep no body; nothing is substituted.
+- Save → load → regenerate gives the same bodies bit for bit; every value the existing tests measure is unchanged; `P0`–`P12-FEAT-004` stays green in all three presets.
+
 ## Next
 
-`P12-FEAT-005` — Rib.
+`P12-FEAT-006` — Variable-radius fillet, setback, corner transitions.
 
 ## Blocked / Manual
 
@@ -441,10 +467,10 @@ Not started. Not authorized. Grouped to match
 
 | Milestone | Commit | Evidence |
 | --- | --- | --- |
-| `P12-FEAT-004` Draft | "BetterCAD: implement P12 draft" | [P12-FEAT-004](docs/verification/P12-FEAT-004/README.md) |
+| `P12-FEAT-005` Rib | "BetterCAD: implement P12 rib" | [P12-FEAT-005](docs/verification/P12-FEAT-005/README.md) |
+| `P12-FEAT-004` Draft | `80f1fec` | [P12-FEAT-004](docs/verification/P12-FEAT-004/README.md) |
 | `P12-FEAT-003` Shell | `eb3ad66` | [P12-FEAT-003](docs/verification/P12-FEAT-003/README.md) |
 | `P12-FEAT-002` Split body / combine | `77f1792` | [P12-FEAT-002](docs/verification/P12-FEAT-002/README.md) |
-| `P12-FEAT-001` Through-all extrude | `c976f9c` | [P12-FEAT-001](docs/verification/P12-FEAT-001/README.md) |
 
 ## Completed Milestones
 
@@ -506,6 +532,12 @@ regression test, so none can change silently. Detail:
   a side joined to the top by a round cannot be drafted (draft first, then
   round). Angles that make a face vanish are refused
   ([P12-FEAT-004](docs/verification/P12-FEAT-004/README.md)).
+- **Ribs lie along their sketch plane** and fill towards the body on one
+  side of an open chain of lines, arcs and open splines; a side the body
+  does not close off is refused. Face areas of planes bounded by splines
+  are the kernel's default integration (4.3e-6 relative off for a spline
+  rib's walls; its volume is within 1e-12)
+  ([P12-FEAT-005](docs/verification/P12-FEAT-005/README.md)).
 - **Loft sides stay B-splines** even where flat, costing about 6e-12 relative
   volume and 3.4e-6 mm in the centroid; plane references find only a loft's end
   faces.

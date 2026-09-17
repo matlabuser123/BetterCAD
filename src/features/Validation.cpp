@@ -15,6 +15,7 @@
 #include <bettercad/features/ResultBodies.hpp>
 #include <bettercad/features/LoftFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
+#include <bettercad/features/RibFeature.hpp>
 #include <bettercad/features/ShellFeature.hpp>
 #include <bettercad/features/SplitFeature.hpp>
 #include <bettercad/features/SweepFeature.hpp>
@@ -255,6 +256,13 @@ private:
                     checkParameter(object.id(), *definition.radiusParameter, dimensions::length,
                                    "the radius is driven by");
                 }
+            } else if (const auto* rib = dynamic_cast<const RibFeature*>(&object)) {
+                const RibDefinition& definition = rib->definition();
+                checkProfile(object.id(), definition.profile);
+                if (definition.thicknessParameter) {
+                    checkParameter(object.id(), *definition.thicknessParameter, dimensions::length,
+                                   "the thickness is driven by");
+                }
             } else if (const auto* draft = dynamic_cast<const DraftFeature*>(&object)) {
                 const DraftDefinition& definition = draft->definition();
                 if (definition.angleParameter) {
@@ -450,6 +458,18 @@ private:
                     if (sketch->findEntity(edge) == nullptr) {
                         add(ValidationCheck::MissingReferences, Severity::Error, object.id(),
                             std::format("{}: the path edge {} does not exist in {}", label(document_, object.id()),
+                                        edge, label(document_, sketch->id())));
+                    }
+                }
+            } else if (const auto* rib = dynamic_cast<const RibFeature*>(&object)) {
+                const auto* sketch = document_.findObjectAs<sketch::Sketch>(ObjectId{rib->definition().profile});
+                if (sketch == nullptr) {
+                    continue;
+                }
+                for (const EntityId edge : rib->definition().edges) {
+                    if (sketch->findEntity(edge) == nullptr) {
+                        add(ValidationCheck::MissingReferences, Severity::Error, object.id(),
+                            std::format("{}: the profile edge {} does not exist in {}", label(document_, object.id()),
                                         edge, label(document_, sketch->id())));
                     }
                 }

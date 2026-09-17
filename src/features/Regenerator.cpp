@@ -169,6 +169,7 @@ Regenerator::Regenerator() {
     registerHandler(std::string{FilletFeature::kTypeName}, regenerateSolidFeature<FilletFeature, &regenerateFillet>);
     registerHandler(std::string{HoleFeature::kTypeName}, regenerateSolidFeature<HoleFeature, &regenerateHole>);
     registerHandler(std::string{ShellFeature::kTypeName}, regenerateSolidFeature<ShellFeature, &regenerateShell>);
+    registerHandler(std::string{RibFeature::kTypeName}, regenerateSolidFeature<RibFeature, &regenerateRib>);
     registerHandler(std::string{LinearPatternFeature::kTypeName},
                     regenerateSolidFeature<LinearPatternFeature, &regenerateLinearPattern>);
     registerHandler(std::string{CircularPatternFeature::kTypeName},
