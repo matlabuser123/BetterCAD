@@ -44,6 +44,9 @@ Result<void> validate(const MirrorDefinition& definition) {
         if (plane.reference->object && !plane.reference->object->isValid()) {
             return invalid("the mirror plane's reference must name a valid object");
         }
+        if (plane.reference->face) {
+            return invalid("a mirror plane refers to a datum plane or a coordinate system, not to a face");
+        }
     }
     if (!isFinite(plane.origin.x) || !isFinite(plane.origin.y) || !isFinite(plane.origin.z)) {
         return invalid("the plane's origin must be finite");

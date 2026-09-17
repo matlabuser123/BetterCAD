@@ -1,0 +1,16 @@
+Every measured value of the tests P12-DATUM-001 had, from its qualified Release build (fe20b0f, run before
+this milestone's clean rebuild) and from this milestone's qualified Release build.
+Each ran bettercad_tests.exe -s --reporter xml --rng-seed 1 (all test cases; this build also ran the 20 new
+ones), and values.py (in this directory, with a one-line header) filtered the report:
+  datum001-release: 819 test cases, 56505 assertions passed, 0 failed
+  stref001-release: 839 test cases, 59170 assertions passed, 0 failed
+compare-values.py dropped the new test cases (--exclude) and the pointer values, normalized temporary paths,
+document UUIDs and the Git revision the version text reports, and compared the rest line by line.
+
+datum001-release: 27659 non-empty lines after normalizing, MD5 088b45f24c8e13374119962cb9339711
+stref001-release: 27659 non-empty lines after normalizing, MD5 088b45f24c8e13374119962cb9339711
+
+stref001-release against datum001-release:
+  differing lines: 0 expected only, 0 measured
+
+RESULT: measured values identical

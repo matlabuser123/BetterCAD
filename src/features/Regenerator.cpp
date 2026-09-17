@@ -22,13 +22,18 @@ std::string label(const Document& document, ObjectId id) {
     return name ? std::format("{} ({})", *name, id) : std::format("{}", id);
 }
 
+/// The bodies built so far in this pass, for face references.
+BodyLookup bodiesOf(const Regenerator& regenerator) {
+    return [&regenerator](ObjectId object) { return regenerator.body(object); };
+}
+
 Result<std::optional<geometry::Body>> regenerateSketchObject(Document& document, ObjectId id,
-                                                             const Regenerator& /*regenerator*/) {
+                                                             const Regenerator& regenerator) {
     // An attached sketch lies on its plane: resolved first, set once the
     // sketch has solved, so a failure leaves the sketch as it was.
     std::optional<Frame3D> placement;
     if (const auto* current = document.findObjectAs<sketch::Sketch>(id); current != nullptr && current->attachment()) {
-        auto frame = resolvePlane(document, *current->attachment());
+        auto frame = resolvePlane(document, *current->attachment(), bodiesOf(regenerator));
         if (!frame) {
             return makeError(frame.error().code, std::format("{}: {}", label(document, id), frame.error().message));
         }
@@ -62,15 +67,15 @@ Result<std::optional<geometry::Body>> regenerateSketchObject(Document& document,
 
 /// Datum objects build nothing: regeneration checks that they resolve.
 Result<std::optional<geometry::Body>> regenerateDatumObject(Document& document, ObjectId id,
-                                                            const Regenerator& /*regenerator*/) {
+                                                            const Regenerator& regenerator) {
     const DocumentObject* object = document.findObject(id);
     Result<void> resolved;
     if (dynamic_cast<const DatumPlane*>(object) != nullptr) {
-        if (auto frame = resolvePlane(document, PlaneReference{id}); !frame) {
+        if (auto frame = resolvePlane(document, PlaneReference{id}, bodiesOf(regenerator)); !frame) {
             resolved = std::unexpected(frame.error());
         }
     } else if (dynamic_cast<const DatumAxis*>(object) != nullptr) {
-        if (auto axis = resolveAxis(document, AxisReference{id}); !axis) {
+        if (auto axis = resolveAxis(document, AxisReference{id}, bodiesOf(regenerator)); !axis) {
             resolved = std::unexpected(axis.error());
         }
     } else if (auto frame = resolveCoordinateSystem(document, id); !frame) {

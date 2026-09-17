@@ -1,6 +1,7 @@
 #include <bettercad/core/geometry/Booleans.hpp>
 
 #include "core/geometry/occt/OcctBody.hpp"
+#include "core/geometry/occt/OcctFaceNames.hpp"
 #include "core/geometry/occt/OcctGuard.hpp"
 
 #include <BRepAlgoAPI_BooleanOperation.hxx>
@@ -92,9 +93,12 @@ Result<Body> booleanOperation(BooleanOperation op, const Body& a, const Body& b)
                              std::format("{} failed: {}", name, details.str()));
         }
         // Merge coplanar faces and collinear edges split by the operation.
+        // The kernel's history includes the merging.
         algorithm->SimplifyResult();
 
-        Body result = occt::BodyAccess::makeBody(collectSolids(algorithm->Shape()));
+        TopoDS_Shape solids = collectSolids(algorithm->Shape());
+        std::vector<occt::NamedFace> names = occt::carriedNames(*algorithm, solids, {&a, &b});
+        Body result = occt::BodyAccess::makeBody(std::move(solids), std::move(names));
         if (!result.isEmpty() && !result.isValid()) {
             return makeError(ErrorCode::Internal, std::format("{} produced an invalid shape", name));
         }

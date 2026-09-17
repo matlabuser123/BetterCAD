@@ -3,6 +3,7 @@
 // Private bridge between the BetterCAD geometry API and Open CASCADE. This is
 // the only place where BetterCAD types and OCCT types meet.
 
+#include <bettercad/core/document/References.hpp>
 #include <bettercad/core/geometry/Body.hpp>
 #include <bettercad/core/math/BoundingBox.hpp>
 #include <bettercad/core/math/Direction.hpp>
@@ -12,12 +13,14 @@
 #include <NCollection_IndexedMap.hxx>
 #include <NCollection_List.hxx>
 #include <TopTools_ShapeMapHasher.hxx>
+#include <TopoDS_Face.hxx>
 #include <TopoDS_Shape.hxx>
 #include <gp_Dir.hxx>
 #include <gp_Pnt.hxx>
 
 #include <memory>
 #include <utility>
+#include <vector>
 
 namespace bettercad::geometry::occt {
 
@@ -25,23 +28,40 @@ namespace bettercad::geometry::occt {
 using ShapeMap = NCollection_IndexedMap<TopoDS_Shape, TopTools_ShapeMapHasher>;
 using ShapeList = NCollection_List<TopoDS_Shape>;
 
+/// A name on one face of a body (P12-STREF-001).
+struct NamedFace {
+    TopoDS_Face face;
+    FaceName name;
+};
+
 struct BodyData {
     TopoDS_Shape shape;
+    /// Each (face, name) once, in canonicalNames() order. Only operations
+    /// that know where their faces come from fill it (see OcctFaceNames.hpp);
+    /// every other operation gives a body without names.
+    std::vector<NamedFace> names;
 };
 
 /// Access to Body internals for the adapter.
 struct BodyAccess {
-    /// Wraps a kernel shape; a null shape gives an empty body.
-    [[nodiscard]] static Body makeBody(TopoDS_Shape shape) {
+    /// Wraps a kernel shape; a null shape gives an empty body. @p names must
+    /// be canonical (canonicalNames()).
+    [[nodiscard]] static Body makeBody(TopoDS_Shape shape, std::vector<NamedFace> names = {}) {
         if (shape.IsNull()) {
             return Body{};
         }
-        return Body{std::make_shared<const BodyData>(BodyData{std::move(shape)})};
+        return Body{std::make_shared<const BodyData>(BodyData{std::move(shape), std::move(names)})};
     }
 
     /// The body's kernel shape, or nullptr for an empty body.
     [[nodiscard]] static const TopoDS_Shape* shape(const Body& body) noexcept {
         return body.isEmpty() ? nullptr : &body.data_->shape;
+    }
+
+    /// The body's face names (none for an empty body).
+    [[nodiscard]] static const std::vector<NamedFace>& names(const Body& body) noexcept {
+        static const std::vector<NamedFace> none;
+        return body.isEmpty() ? none : body.data_->names;
     }
 };
 

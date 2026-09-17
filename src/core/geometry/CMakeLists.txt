@@ -27,6 +27,8 @@ bettercad_add_library(bettercad_geometry
         occt/OcctBooleans.cpp
         occt/OcctChamfer.cpp
         occt/OcctEdges.cpp
+        occt/OcctFaceNames.cpp
+        occt/OcctFaceNames.hpp
         occt/OcctFaces.cpp
         occt/OcctFillet.cpp
         occt/OcctHole.cpp

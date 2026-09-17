@@ -1,0 +1,16 @@
+Cross-configuration comparison of the P12-STREF-001 measured values.
+Each configuration's bettercad_tests.exe ran the 20 test cases of values-header.txt with -s --reporter xml
+--rng-seed 1; values.py filtered the report; compare-values.py (in this directory) compared the results.
+Temporary paths and document UUIDs are normalized (no line holds a pointer value).
+
+release: 1305 non-empty lines after normalizing, MD5 666d069ce958092b4eb74176d2175ad2
+debug: 1305 non-empty lines after normalizing, MD5 666d069ce958092b4eb74176d2175ad2
+debug-shared: 1305 non-empty lines after normalizing, MD5 666d069ce958092b4eb74176d2175ad2
+
+debug against release:
+  differing lines: 0 expected only, 0 measured
+
+debug-shared against release:
+  differing lines: 0 expected only, 0 measured
+
+RESULT: measured values identical

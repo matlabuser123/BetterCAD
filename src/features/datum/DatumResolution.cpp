@@ -101,8 +101,10 @@ Axis3D principalAxis(const Frame3D& f, PrincipalAxis axis) {
 }
 
 Result<Frame3D> coordinateSystem(const Document& document, std::optional<ObjectId> object, int depth);
-Result<Frame3D> plane(const Document& document, const PlaneReference& reference, int depth);
-Result<Axis3D> axis(const Document& document, const AxisReference& reference, int depth);
+Result<Frame3D> plane(const Document& document, const PlaneReference& reference, const BodyLookup& bodies,
+                      int depth);
+Result<Axis3D> axis(const Document& document, const AxisReference& reference, const BodyLookup& bodies,
+                    int depth);
 
 Result<Frame3D> coordinateSystem(const Document& document, std::optional<ObjectId> object, int depth) {
     if (!object) {
@@ -168,7 +170,14 @@ Result<Frame3D> coordinateSystem(const Document& document, std::optional<ObjectI
     return frame;
 }
 
-Result<Frame3D> plane(const Document& document, const PlaneReference& reference, int depth) {
+Result<Frame3D> plane(const Document& document, const PlaneReference& reference, const BodyLookup& bodies,
+                      int depth) {
+    if (auto valid = validate(reference); !valid) {
+        return std::unexpected(valid.error());
+    }
+    if (reference.face) {
+        return resolveFacePlane(document, FaceName{*reference.object, *reference.face}, bodies);
+    }
     if (!reference.object) {
         switch (reference.plane) {
         case PrincipalPlane::XY:
@@ -208,7 +217,7 @@ Result<Frame3D> plane(const Document& document, const PlaneReference& reference,
     if (d.kind == DatumPlaneKind::Fixed) {
         return d.frame;
     }
-    auto base = plane(document, d.base, depth + 1);
+    auto base = plane(document, d.base, bodies, depth + 1);
     if (!base) {
         return std::unexpected(base.error());
     }
@@ -228,7 +237,7 @@ Result<Frame3D> plane(const Document& document, const PlaneReference& reference,
         }
         return frame;
     }
-    auto hinge = axis(document, d.axis, depth + 1);
+    auto hinge = axis(document, d.axis, bodies, depth + 1);
     if (!hinge) {
         return std::unexpected(hinge.error());
     }
@@ -256,7 +265,8 @@ Result<Frame3D> plane(const Document& document, const PlaneReference& reference,
     return frame;
 }
 
-Result<Axis3D> axis(const Document& document, const AxisReference& reference, int depth) {
+Result<Axis3D> axis(const Document& document, const AxisReference& reference, const BodyLookup& bodies,
+                    int depth) {
     if (!reference.object) {
         return principalAxis(Frame3D::xy(), reference.axis);
     }
@@ -288,11 +298,11 @@ Result<Axis3D> axis(const Document& document, const AxisReference& reference, in
     if (d.kind == DatumAxisKind::Fixed) {
         return d.axis;
     }
-    auto first = plane(document, d.first, depth + 1);
+    auto first = plane(document, d.first, bodies, depth + 1);
     if (!first) {
         return std::unexpected(first.error());
     }
-    auto second = plane(document, d.second, depth + 1);
+    auto second = plane(document, d.second, bodies, depth + 1);
     if (!second) {
         return std::unexpected(second.error());
     }
@@ -323,12 +333,12 @@ Result<Axis3D> axis(const Document& document, const AxisReference& reference, in
 
 } // namespace
 
-Result<Frame3D> resolvePlane(const Document& document, const PlaneReference& reference) {
-    return plane(document, reference, 0);
+Result<Frame3D> resolvePlane(const Document& document, const PlaneReference& reference, const BodyLookup& bodies) {
+    return plane(document, reference, bodies, 0);
 }
 
-Result<Axis3D> resolveAxis(const Document& document, const AxisReference& reference) {
-    return axis(document, reference, 0);
+Result<Axis3D> resolveAxis(const Document& document, const AxisReference& reference, const BodyLookup& bodies) {
+    return axis(document, reference, bodies, 0);
 }
 
 Result<Frame3D> resolveCoordinateSystem(const Document& document, std::optional<ObjectId> object) {

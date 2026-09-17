@@ -1,9 +1,11 @@
 #pragma once
 
 #include <bettercad/core/Error.hpp>
+#include <bettercad/core/document/References.hpp>
 #include <bettercad/core/geometry/Body.hpp>
 #include <bettercad/core/geometry/Export.hpp>
 #include <bettercad/core/math/Direction.hpp>
+#include <bettercad/core/math/Frame.hpp>
 #include <bettercad/core/math/Point.hpp>
 #include <bettercad/core/math/RigidTransform.hpp>
 #include <bettercad/core/math/Vector.hpp>
@@ -16,10 +18,13 @@
 
 // Face queries and face references, the counterpart of Edges.hpp.
 //
-// As for edges, there is no persistent topological naming yet: features
-// refer to a face by the geometry it lies on, never by the kernel's
-// enumeration order or object identity. Only planar faces can be referred to
-// so far.
+// A FaceSignature refers to a face by the geometry it lies on, never by the
+// kernel's enumeration order or object identity. Only planar faces can be
+// referred to that way.
+//
+// Faces a feature generates also carry persistent names (FaceName,
+// P12-STREF-001): the feature and the face's role. A name stays with its face
+// through the operations that report a history (see findNamedFaces()).
 namespace bettercad::geometry {
 
 enum class FaceSurface {
@@ -105,6 +110,8 @@ struct FaceInfo {
     Point3D centroid{};
     /// A reference to this face, for planar faces.
     std::optional<FaceSignature> signature{};
+    /// The face's names (P12-STREF-001), sorted.
+    std::vector<FaceName> names{};
 };
 
 /// The faces of @p body. The order is the kernel's and carries no meaning;
@@ -117,5 +124,24 @@ struct FaceInfo {
 /// the signature's point.
 [[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Result<std::vector<FaceInfo>> findFaces(const Body& body,
                                                                                 const FaceSignature& signature);
+
+/// The faces of @p body that carry @p name, in listFaces() order.
+///
+/// Names are given to faces by the operations that generate them (e.g.
+/// makePrism() with a namer) and carried by the boolean operations through
+/// the kernel's history: a face split in two carries its name on both parts,
+/// faces merged into one carry all their names, a face the operation removed
+/// carries none. Other operations give bodies without names. A name is never
+/// moved to a face because of its geometry. Fails with FailedPrecondition for
+/// an empty body.
+[[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Result<std::vector<FaceInfo>> findNamedFaces(const Body& body,
+                                                                                     const FaceName& name);
+
+/// A sketch frame on the signature's plane: the origin and X axis of the
+/// face-local coordinates (facePoint()), the outward normal as normal, and
+/// Y = normal x X. On a face facing +Z, (x, y) are the face's (u, v); on a
+/// face facing -Z, (x, -v). Fails with InvalidArgument for an invalid
+/// signature.
+[[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Result<Frame3D> faceFrame(const FaceSignature& signature);
 
 } // namespace bettercad::geometry

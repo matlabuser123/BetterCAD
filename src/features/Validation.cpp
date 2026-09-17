@@ -109,6 +109,18 @@ private:
     /// plane or a coordinate system; an axis reference, a datum axis or a
     /// coordinate system; a coordinate system reference, a coordinate system.
     void checkPlaneReference(ObjectId owner, const PlaneReference& reference, std::string_view role) {
+        if (reference.face) {
+            if (!reference.object || !document_.contains(*reference.object)) {
+                return; // a missing reference
+            }
+            if (auto valid = checkFaceName(document_, FaceName{*reference.object, *reference.face}); !valid) {
+                add(ValidationCheck::DocumentConsistency, Severity::Error, owner,
+                    std::format("{}: {} {}: {}", label(document_, owner), role,
+                                describe(document_, FaceName{*reference.object, *reference.face}),
+                                valid.error().message));
+            }
+            return;
+        }
         if (reference.object && document_.contains(*reference.object) &&
             document_.findObjectAs<DatumPlane>(*reference.object) == nullptr &&
             document_.findObjectAs<CoordinateSystem>(*reference.object) == nullptr) {

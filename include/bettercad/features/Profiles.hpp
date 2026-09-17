@@ -1,6 +1,7 @@
 #pragma once
 
 #include <bettercad/core/Error.hpp>
+#include <bettercad/core/Id.hpp>
 #include <bettercad/core/geometry/Profile.hpp>
 #include <bettercad/features/Export.hpp>
 #include <bettercad/sketch/Sketch.hpp>
@@ -25,5 +26,20 @@ namespace bettercad::features {
 /// for degenerate edges and invalid splines.
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<std::vector<geometry::PlanarRegion>>
 extractRegions(const sketch::Sketch& sketch);
+
+/// A region with the sketch entity of each of its segments.
+struct LabelledRegion {
+    geometry::PlanarRegion region;
+    /// outer[i] made region.outer.segments[i]; holes[h][i] made
+    /// region.holes[h].segments[i].
+    std::vector<EntityId> outer;
+    std::vector<std::vector<EntityId>> holes;
+};
+
+/// extractRegions() with the entity of every segment (P12-STREF-001), so
+/// that features can name the faces each entity generates. The regions are
+/// the ones extractRegions() returns.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<std::vector<LabelledRegion>>
+extractLabelledRegions(const sketch::Sketch& sketch);
 
 } // namespace bettercad::features

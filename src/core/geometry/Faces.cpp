@@ -166,6 +166,18 @@ Point3D facePoint(const FaceSignature& signature, const Point2D& local) {
     return point(Vec{axes.origin.x + along.x, axes.origin.y + along.y, axes.origin.z + along.z});
 }
 
+Result<Frame3D> faceFrame(const FaceSignature& signature) {
+    if (auto valid = validate(signature); !valid) {
+        return std::unexpected(valid.error());
+    }
+    const Axes axes = axesOf(signature);
+    const auto xAxis = Direction3D::fromComponents(axes.u.x, axes.u.y, axes.u.z);
+    if (!xAxis) {
+        return makeError(ErrorCode::InvalidArgument, "the face's plane has no direction in it");
+    }
+    return Frame3D::create(point(axes.origin), signature.normal, *xAxis);
+}
+
 Point2D faceCoordinates(const FaceSignature& signature, const Point3D& p) {
     const Axes axes = axesOf(signature);
     const Vec offset = minus(vec(p), axes.origin);

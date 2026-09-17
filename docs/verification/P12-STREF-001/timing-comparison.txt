@@ -1,0 +1,56 @@
+Per-test CTest times (CTest's own figures), summed and for the slowest tests. datum001 is the
+P12-DATUM-001 qualification, stref001 this one. All runs used -j 8 on the same machine.
+
+release:
+      datum001: 869 tests,    577.99 s summed
+      stref001: 892 tests,    602.85 s summed
+
+test                                                                        datum001      stref001
+unit.ReferenceModel_AllModelsStressRegression                                  19.54         21.27
+unit.LinearPattern_DoesNotAccumulateTransformDrift                             19.05         16.19
+unit.ReferenceModel_MountingBracketRegeneratesDeterministically                14.23         15.73
+unit.ReferenceModel_AllModelsBuildInOneProcess                                 12.94         14.31
+unit.ReferenceModel_FlangeRegeneratesDeterministically                         12.48         13.81
+unit.ReferenceModel_AllModelsRegenerateAfterAChange                            11.79         13.10
+unit.ReferenceModel_PulleyRegeneratesDeterministically                         10.91         11.99
+unit.ReferenceModel_ShaftRegeneratesDeterministically                           9.30         10.49
+unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges             8.02          9.31
+unit.ReferenceModel_SavedModelsMatchTheBuilders                                 8.42          8.18
+unit.CircularPattern_TouchingAndOverlappingInstancesFuse                        7.71          7.15
+unit.ReferenceModel_BearingHousingRegeneratesDeterministically                  7.26          7.17
+
+debug:
+      datum001: 869 tests,    582.43 s summed
+      stref001: 892 tests,    648.37 s summed
+
+test                                                                        datum001      stref001
+unit.ReferenceModel_AllModelsStressRegression                                  20.29         22.64
+unit.LinearPattern_DoesNotAccumulateTransformDrift                             16.50         18.15
+unit.ReferenceModel_MountingBracketRegeneratesDeterministically                14.96         16.57
+unit.ReferenceModel_AllModelsBuildInOneProcess                                 13.49         14.72
+unit.ReferenceModel_FlangeRegeneratesDeterministically                         13.04         14.12
+unit.ReferenceModel_AllModelsRegenerateAfterAChange                            12.15         13.29
+unit.ReferenceModel_PulleyRegeneratesDeterministically                         11.37         12.16
+unit.ReferenceModel_ShaftRegeneratesDeterministically                           9.91         10.47
+unit.ReferenceModel_SavedModelsMatchTheBuilders                                 8.50          9.51
+unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges             8.65          9.04
+unit.ReferenceModel_BearingHousingRegeneratesDeterministically                  7.47          8.55
+unit.CircularPattern_TouchingAndOverlappingInstancesFuse                        7.34          7.40
+
+debug-shared:
+      datum001: 869 tests,    606.18 s summed
+      stref001: 892 tests,    578.54 s summed
+
+test                                                                        datum001      stref001
+unit.ReferenceModel_AllModelsStressRegression                                  22.47         20.88
+unit.LinearPattern_DoesNotAccumulateTransformDrift                             16.66         16.84
+unit.ReferenceModel_MountingBracketRegeneratesDeterministically                16.53         15.00
+unit.ReferenceModel_AllModelsBuildInOneProcess                                 15.17         13.78
+unit.ReferenceModel_FlangeRegeneratesDeterministically                         14.55         13.06
+unit.ReferenceModel_AllModelsRegenerateAfterAChange                            13.65         12.54
+unit.ReferenceModel_PulleyRegeneratesDeterministically                         12.49         11.42
+unit.ReferenceModel_ShaftRegeneratesDeterministically                          10.89          9.89
+unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges             9.31          8.35
+unit.ReferenceModel_SavedModelsMatchTheBuilders                                 9.22          8.27
+unit.ReferenceModel_BearingHousingRegeneratesDeterministically                  8.00          7.73
+unit.CircularPattern_TouchingAndOverlappingInstancesFuse                        6.98          7.85

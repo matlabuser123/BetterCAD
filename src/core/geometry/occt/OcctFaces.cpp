@@ -14,6 +14,8 @@
 #include <TopoDS.hxx>
 #include <gp_Pln.hxx>
 
+#include <algorithm>
+
 namespace bettercad::geometry {
 
 namespace occt {
@@ -88,6 +90,20 @@ std::vector<KernelFace> kernelFaces(const TopoDS_Shape& shape) {
     return faces;
 }
 
+std::vector<KernelFace> kernelFaces(const Body& body) {
+    std::vector<KernelFace> faces = kernelFaces(*BodyAccess::shape(body));
+    const std::vector<NamedFace>& names = BodyAccess::names(body);
+    for (KernelFace& face : faces) {
+        for (const NamedFace& named : names) {
+            if (named.face.IsSame(face.face)) {
+                face.info.names.push_back(named.name);
+            }
+        }
+        std::ranges::sort(face.info.names);
+    }
+    return faces;
+}
+
 std::vector<const KernelFace*> matchingFaces(const std::vector<KernelFace>& faces, const FaceSignature& signature) {
     std::vector<const KernelFace*> matches;
     for (const KernelFace& face : faces) {
@@ -107,8 +123,23 @@ Result<std::vector<FaceInfo>> listFaces(const Body& body) {
     }
     return occt::guardKernelCall("listFaces", [&]() -> Result<std::vector<FaceInfo>> {
         std::vector<FaceInfo> result;
-        for (occt::KernelFace& face : occt::kernelFaces(*shape)) {
+        for (occt::KernelFace& face : occt::kernelFaces(body)) {
             result.push_back(std::move(face.info));
+        }
+        return result;
+    });
+}
+
+Result<std::vector<FaceInfo>> findNamedFaces(const Body& body, const FaceName& name) {
+    if (occt::BodyAccess::shape(body) == nullptr) {
+        return makeError(ErrorCode::FailedPrecondition, "an empty body has no faces");
+    }
+    return occt::guardKernelCall("findNamedFaces", [&]() -> Result<std::vector<FaceInfo>> {
+        std::vector<FaceInfo> result;
+        for (occt::KernelFace& face : occt::kernelFaces(body)) {
+            if (std::ranges::binary_search(face.info.names, name)) {
+                result.push_back(std::move(face.info));
+            }
         }
         return result;
     });
@@ -123,7 +154,7 @@ Result<std::vector<FaceInfo>> findFaces(const Body& body, const FaceSignature& s
         return makeError(ErrorCode::FailedPrecondition, "an empty body has no faces");
     }
     return occt::guardKernelCall("findFaces", [&]() -> Result<std::vector<FaceInfo>> {
-        const auto faces = occt::kernelFaces(*shape);
+        const auto faces = occt::kernelFaces(body);
         std::vector<FaceInfo> result;
         for (const occt::KernelFace* face : occt::matchingFaces(faces, signature)) {
             result.push_back(face->info);

@@ -5,6 +5,8 @@
 #include <bettercad/features/Regeneration.hpp>
 
 #include <format>
+#include <optional>
+#include <utility>
 
 namespace bettercad::features {
 
@@ -34,22 +36,46 @@ Result<geometry::Body> extrudeTool(const ExtrudeFeature& feature, const Document
     if (!depth) {
         return std::unexpected(depth.error());
     }
-    auto regions = detail::profileRegions(**profile, feature.name());
+    auto regions = detail::labelledProfileRegions(**profile, feature.name());
     if (!regions) {
         return std::unexpected(regions.error());
     }
 
     Length from{};
     Length to = *depth;
+    // The start cap lies on the sketch plane (behind it for a symmetric
+    // extrude), the end cap at the depth.
+    FaceRole first = FaceRole::StartCap;
+    FaceRole last = FaceRole::EndCap;
     if (definition.direction == ExtrudeDirection::Reversed) {
         from = -*depth;
         to = Length{};
+        std::swap(first, last);
     } else if (definition.direction == ExtrudeDirection::Symmetric) {
         from = -*depth / 2.0;
         to = *depth / 2.0;
     }
-    return detail::uniteRegionSolids(
-        *regions, [&](const geometry::PlanarRegion& region) { return geometry::makePrism(region, from, to); });
+    const ObjectId self = feature.id();
+    return detail::uniteRegionSolids(*regions, [&](const LabelledRegion& region) {
+        const auto namer = [&](const geometry::PrismFace& face) -> std::optional<FaceName> {
+            switch (face.kind) {
+            case geometry::PrismFace::Kind::First:
+                return FaceName{self, {first, std::nullopt}};
+            case geometry::PrismFace::Kind::Last:
+                return FaceName{self, {last, std::nullopt}};
+            case geometry::PrismFace::Kind::Side:
+                break;
+            }
+            const std::vector<EntityId>* entities =
+                face.loop == 0 ? &region.outer
+                               : (face.loop <= region.holes.size() ? &region.holes[face.loop - 1] : nullptr);
+            if (entities == nullptr || face.segment >= entities->size()) {
+                return std::nullopt;
+            }
+            return FaceName{self, {FaceRole::Side, (*entities)[face.segment]}};
+        };
+        return geometry::makePrism(region.region, from, to, namer);
+    });
 }
 
 Result<geometry::Body> regenerateExtrude(const ExtrudeFeature& feature, const Document& document,

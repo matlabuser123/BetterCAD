@@ -1,0 +1,119 @@
+Built with GCC 16.1 (MinGW-w64 UCRT), -O2, against OCCT 8.0.1; run 2026-09-17T15:15:59+10:00.
+P12-STREF-001 face history probe (OCCT 8.0.1)
+
+A. prism: 7 faces; first shape plane area 5685.84 centre (51.11, 30.00, 5.00) (in result 1); last shape plane area 5685.84 centre (51.11, 30.00, 25.00) (in result 1)
+   wire edge 0: a profile face edge 1; generates 1 shape(s): [plane area 2000.00 centre (50.00, 0.00, 15.00), result face 1]
+   wire edge 1: a profile face edge 1; generates 1 shape(s): [plane area 1200.00 centre (100.00, 30.00, 15.00), result face 2]
+   wire edge 2: a profile face edge 1; generates 1 shape(s): [plane area 2000.00 centre (50.00, 60.00, 15.00), result face 3]
+   wire edge 3: a profile face edge 1; generates 1 shape(s): [plane area 1200.00 centre (0.00, 30.00, 15.00), result face 4]
+   wire edge 4: a profile face edge 1; generates 1 shape(s): [curved area 1256.64 centre (30.00, 30.00, 15.00), result face 5]
+
+B1 fuse of side-by-side boxes: done, 6 faces in the result
+   result face 1: plane area 1200.00 centre (0.00, 30.00, 10.00)
+   result face 2: plane area 9000.00 centre (75.00, 30.00, 0.00)
+   result face 3: plane area 1200.00 centre (150.00, 30.00, 10.00)
+   result face 4: plane area 3000.00 centre (75.00, 60.00, 10.00)
+   result face 5: plane area 9000.00 centre (75.00, 30.00, 20.00)
+   result face 6: plane area 3000.00 centre (75.00, 0.00, 10.00)
+   operand 1 face 1 (plane area 1200.00 centre (0.00, 30.00, 10.00)): deleted 0, itself in result 1, modified into [ ]
+   operand 1 face 2 (plane area 1200.00 centre (100.00, 30.00, 10.00)): deleted 1, itself in result 0, modified into [ ]
+   operand 1 face 3 (plane area 2000.00 centre (50.00, 0.00, 10.00)): deleted 0, itself in result 0, modified into [ 6 ]
+   operand 1 face 4 (plane area 2000.00 centre (50.00, 60.00, 10.00)): deleted 0, itself in result 0, modified into [ 4 ]
+   operand 1 face 5 (plane area 6000.00 centre (50.00, 30.00, 0.00)): deleted 0, itself in result 0, modified into [ 2 ]
+   operand 1 face 6 (plane area 6000.00 centre (50.00, 30.00, 20.00)): deleted 0, itself in result 0, modified into [ 5 ]
+   operand 2 face 1 (plane area 1200.00 centre (100.00, 30.00, 10.00)): deleted 1, itself in result 0, modified into [ ]
+   operand 2 face 2 (plane area 1200.00 centre (150.00, 30.00, 10.00)): deleted 0, itself in result 1, modified into [ ]
+   operand 2 face 3 (plane area 1000.00 centre (125.00, 0.00, 10.00)): deleted 0, itself in result 0, modified into [ 6 ]
+   operand 2 face 4 (plane area 1000.00 centre (125.00, 60.00, 10.00)): deleted 0, itself in result 0, modified into [ 4 ]
+   operand 2 face 5 (plane area 3000.00 centre (125.00, 30.00, 0.00)): deleted 0, itself in result 0, modified into [ 2 ]
+   operand 2 face 6 (plane area 3000.00 centre (125.00, 30.00, 20.00)): deleted 0, itself in result 0, modified into [ 5 ]
+B2 fuse of a boss on a block: done, 11 faces in the result
+   result face 1: plane area 1200.00 centre (0.00, 30.00, 10.00)
+   result face 2: plane area 2000.00 centre (50.00, 0.00, 10.00)
+   result face 3: plane area 5600.00 centre (51.43, 30.00, 20.00)
+   result face 4: plane area 2000.00 centre (50.00, 60.00, 10.00)
+   result face 5: plane area 6000.00 centre (50.00, 30.00, 0.00)
+   result face 6: plane area 1200.00 centre (100.00, 30.00, 10.00)
+   result face 7: plane area 200.00 centre (20.00, 30.00, 25.00)
+   result face 8: plane area 200.00 centre (30.00, 20.00, 25.00)
+   result face 9: plane area 200.00 centre (40.00, 30.00, 25.00)
+   result face 10: plane area 200.00 centre (30.00, 40.00, 25.00)
+   result face 11: plane area 400.00 centre (30.00, 30.00, 30.00)
+   operand 1 face 1 (plane area 1200.00 centre (0.00, 30.00, 10.00)): deleted 0, itself in result 1, modified into [ ]
+   operand 1 face 2 (plane area 1200.00 centre (100.00, 30.00, 10.00)): deleted 0, itself in result 1, modified into [ ]
+   operand 1 face 3 (plane area 2000.00 centre (50.00, 0.00, 10.00)): deleted 0, itself in result 1, modified into [ ]
+   operand 1 face 4 (plane area 2000.00 centre (50.00, 60.00, 10.00)): deleted 0, itself in result 1, modified into [ ]
+   operand 1 face 5 (plane area 6000.00 centre (50.00, 30.00, 0.00)): deleted 0, itself in result 1, modified into [ ]
+   operand 1 face 6 (plane area 6000.00 centre (50.00, 30.00, 20.00)): deleted 0, itself in result 0, modified into [ 3 ]
+   operand 2 face 1 (plane area 200.00 centre (20.00, 30.00, 25.00)): deleted 0, itself in result 1, modified into [ ]
+   operand 2 face 2 (plane area 200.00 centre (40.00, 30.00, 25.00)): deleted 0, itself in result 1, modified into [ ]
+   operand 2 face 3 (plane area 200.00 centre (30.00, 20.00, 25.00)): deleted 0, itself in result 1, modified into [ ]
+   operand 2 face 4 (plane area 200.00 centre (30.00, 40.00, 25.00)): deleted 0, itself in result 1, modified into [ ]
+   operand 2 face 5 (plane area 400.00 centre (30.00, 30.00, 20.00)): deleted 1, itself in result 0, modified into [ ]
+   operand 2 face 6 (plane area 400.00 centre (30.00, 30.00, 30.00)): deleted 0, itself in result 1, modified into [ ]
+B3 cut of a through slot: done, 10 faces in the result
+   result face 1: plane area 1200.00 centre (0.00, 30.00, 10.00)
+   result face 2: plane area 1800.00 centre (50.00, 0.00, 9.44)
+   result face 3: plane area 2400.00 centre (20.00, 30.00, 20.00)
+   result face 4: plane area 1800.00 centre (50.00, 60.00, 9.44)
+   result face 5: plane area 6000.00 centre (50.00, 30.00, 0.00)
+   result face 6: plane area 1200.00 centre (100.00, 30.00, 10.00)
+   result face 7: plane area 2400.00 centre (80.00, 30.00, 20.00)
+   result face 8: plane area 600.00 centre (60.00, 30.00, 15.00)
+   result face 9: plane area 1200.00 centre (50.00, 30.00, 10.00)
+   result face 10: plane area 600.00 centre (40.00, 30.00, 15.00)
+   operand 1 face 1 (plane area 1200.00 centre (0.00, 30.00, 10.00)): deleted 0, itself in result 1, modified into [ ]
+   operand 1 face 2 (plane area 1200.00 centre (100.00, 30.00, 10.00)): deleted 0, itself in result 1, modified into [ ]
+   operand 1 face 3 (plane area 2000.00 centre (50.00, 0.00, 10.00)): deleted 0, itself in result 0, modified into [ 2 ]
+   operand 1 face 4 (plane area 2000.00 centre (50.00, 60.00, 10.00)): deleted 0, itself in result 0, modified into [ 4 ]
+   operand 1 face 5 (plane area 6000.00 centre (50.00, 30.00, 0.00)): deleted 0, itself in result 1, modified into [ ]
+   operand 1 face 6 (plane area 6000.00 centre (50.00, 30.00, 20.00)): deleted 0, itself in result 0, modified into [ 3 7 ]
+   operand 2 face 1 (plane area 682.00 centre (40.00, 30.00, 15.50)): deleted 0, itself in result 0, modified into [ 10 ]
+   operand 2 face 2 (plane area 682.00 centre (60.00, 30.00, 15.50)): deleted 0, itself in result 0, modified into [ 8 ]
+   operand 2 face 3 (plane area 220.00 centre (50.00, -1.00, 15.50)): deleted 1, itself in result 0, modified into [ ]
+   operand 2 face 4 (plane area 220.00 centre (50.00, 61.00, 15.50)): deleted 1, itself in result 0, modified into [ ]
+   operand 2 face 5 (plane area 1240.00 centre (50.00, 30.00, 10.00)): deleted 0, itself in result 0, modified into [ 9 ]
+   operand 2 face 6 (plane area 1240.00 centre (50.00, 30.00, 21.00)): deleted 1, itself in result 0, modified into [ ]
+B4 cut of a pocket: done, 11 faces in the result
+   result face 1: plane area 1200.00 centre (0.00, 30.00, 10.00)
+   result face 2: plane area 2000.00 centre (50.00, 0.00, 10.00)
+   result face 3: plane area 5400.00 centre (51.67, 30.00, 20.00)
+   result face 4: plane area 2000.00 centre (50.00, 60.00, 10.00)
+   result face 5: plane area 6000.00 centre (50.00, 30.00, 0.00)
+   result face 6: plane area 1200.00 centre (100.00, 30.00, 10.00)
+   result face 7: plane area 160.00 centre (20.00, 30.00, 16.00)
+   result face 8: plane area 240.00 centre (35.00, 20.00, 16.00)
+   result face 9: plane area 160.00 centre (50.00, 30.00, 16.00)
+   result face 10: plane area 240.00 centre (35.00, 40.00, 16.00)
+   result face 11: plane area 600.00 centre (35.00, 30.00, 12.00)
+   operand 1 face 1 (plane area 1200.00 centre (0.00, 30.00, 10.00)): deleted 0, itself in result 1, modified into [ ]
+   operand 1 face 2 (plane area 1200.00 centre (100.00, 30.00, 10.00)): deleted 0, itself in result 1, modified into [ ]
+   operand 1 face 3 (plane area 2000.00 centre (50.00, 0.00, 10.00)): deleted 0, itself in result 1, modified into [ ]
+   operand 1 face 4 (plane area 2000.00 centre (50.00, 60.00, 10.00)): deleted 0, itself in result 1, modified into [ ]
+   operand 1 face 5 (plane area 6000.00 centre (50.00, 30.00, 0.00)): deleted 0, itself in result 1, modified into [ ]
+   operand 1 face 6 (plane area 6000.00 centre (50.00, 30.00, 20.00)): deleted 0, itself in result 0, modified into [ 3 ]
+   operand 2 face 1 (plane area 160.00 centre (20.00, 30.00, 16.00)): deleted 0, itself in result 1, modified into [ ]
+   operand 2 face 2 (plane area 160.00 centre (50.00, 30.00, 16.00)): deleted 0, itself in result 1, modified into [ ]
+   operand 2 face 3 (plane area 240.00 centre (35.00, 20.00, 16.00)): deleted 0, itself in result 1, modified into [ ]
+   operand 2 face 4 (plane area 240.00 centre (35.00, 40.00, 16.00)): deleted 0, itself in result 1, modified into [ ]
+   operand 2 face 5 (plane area 600.00 centre (35.00, 30.00, 12.00)): deleted 0, itself in result 1, modified into [ ]
+   operand 2 face 6 (plane area 600.00 centre (35.00, 30.00, 20.00)): deleted 1, itself in result 0, modified into [ ]
+B5 common of overlapping boxes: done, 6 faces in the result
+   result face 1: plane area 1500.00 centre (75.00, 45.00, 20.00)
+   result face 2: plane area 500.00 centre (75.00, 60.00, 15.00)
+   result face 3: plane area 300.00 centre (100.00, 45.00, 15.00)
+   result face 4: plane area 500.00 centre (75.00, 30.00, 15.00)
+   result face 5: plane area 300.00 centre (50.00, 45.00, 15.00)
+   result face 6: plane area 1500.00 centre (75.00, 45.00, 10.00)
+   operand 1 face 1 (plane area 1200.00 centre (0.00, 30.00, 10.00)): deleted 1, itself in result 0, modified into [ ]
+   operand 1 face 2 (plane area 1200.00 centre (100.00, 30.00, 10.00)): deleted 0, itself in result 0, modified into [ 3 ]
+   operand 1 face 3 (plane area 2000.00 centre (50.00, 0.00, 10.00)): deleted 1, itself in result 0, modified into [ ]
+   operand 1 face 4 (plane area 2000.00 centre (50.00, 60.00, 10.00)): deleted 0, itself in result 0, modified into [ 2 ]
+   operand 1 face 5 (plane area 6000.00 centre (50.00, 30.00, 0.00)): deleted 1, itself in result 0, modified into [ ]
+   operand 1 face 6 (plane area 6000.00 centre (50.00, 30.00, 20.00)): deleted 0, itself in result 0, modified into [ 1 ]
+   operand 2 face 1 (plane area 1200.00 centre (50.00, 60.00, 20.00)): deleted 0, itself in result 0, modified into [ 5 ]
+   operand 2 face 2 (plane area 1200.00 centre (150.00, 60.00, 20.00)): deleted 1, itself in result 0, modified into [ ]
+   operand 2 face 3 (plane area 2000.00 centre (100.00, 30.00, 20.00)): deleted 0, itself in result 0, modified into [ 4 ]
+   operand 2 face 4 (plane area 2000.00 centre (100.00, 90.00, 20.00)): deleted 1, itself in result 0, modified into [ ]
+   operand 2 face 5 (plane area 6000.00 centre (100.00, 60.00, 10.00)): deleted 0, itself in result 0, modified into [ 6 ]
+   operand 2 face 6 (plane area 6000.00 centre (100.00, 60.00, 30.00)): deleted 1, itself in result 0, modified into [ ]

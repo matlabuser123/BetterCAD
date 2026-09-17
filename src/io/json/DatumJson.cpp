@@ -17,6 +17,11 @@ constexpr std::array<std::pair<PrincipalPlane, std::string_view>, 3> kPlanes{{
     {PrincipalPlane::YZ, "yz"},
     {PrincipalPlane::XZ, "xz"},
 }};
+constexpr std::array<std::pair<FaceRole, std::string_view>, 3> kFaceRoles{{
+    {FaceRole::StartCap, "start_cap"},
+    {FaceRole::EndCap, "end_cap"},
+    {FaceRole::Side, "side"},
+}};
 constexpr std::array<std::pair<PrincipalAxis, std::string_view>, 3> kAxes{{
     {PrincipalAxis::X, "x"},
     {PrincipalAxis::Y, "y"},
@@ -145,20 +150,56 @@ Json planeReferenceToJson(const PlaneReference& reference) {
     if (reference.object) {
         json["object"] = reference.object->value();
     }
-    json["plane"] = std::string{nameIn(kPlanes, reference.plane)};
+    if (reference.face) {
+        Json face = Json::object();
+        face["role"] = std::string{nameIn(kFaceRoles, reference.face->role)};
+        if (reference.face->entity) {
+            face["entity"] = reference.face->entity->value();
+        }
+        json["face"] = std::move(face);
+    } else {
+        json["plane"] = std::string{nameIn(kPlanes, reference.plane)};
+    }
     return json;
 }
 
 Result<PlaneReference> planeReferenceFromJson(const Json& value, std::string_view path) {
-    if (auto valid = requireObject(value, path, {"object", "plane"}); !valid) {
+    if (auto valid = requireObject(value, path, {"object", "plane", "face"}); !valid) {
         return std::unexpected(valid.error());
     }
     auto object = readOptionalId(value, "object", path);
-    auto plane = valueIn(kPlanes, value, "plane", path);
-    if (!object || !plane) {
-        return std::unexpected(!object ? object.error() : plane.error());
+    if (!object) {
+        return std::unexpected(object.error());
     }
-    return PlaneReference{*object ? std::optional<ObjectId>{ObjectId::fromValue(**object)} : std::nullopt, *plane};
+    PlaneReference reference{*object ? std::optional<ObjectId>{ObjectId::fromValue(**object)} : std::nullopt};
+    if (!value.contains("face")) {
+        auto plane = valueIn(kPlanes, value, "plane", path);
+        if (!plane) {
+            return std::unexpected(plane.error());
+        }
+        reference.plane = *plane;
+        return reference;
+    }
+    // A face of a feature (P12-STREF-001): {"role": ..., "entity": id}.
+    if (value.contains("plane")) {
+        return parseError(childPath(path, "plane"), "a face reference has no plane of its own");
+    }
+    const std::string facePath = childPath(path, "face");
+    const Json& face = value.at("face");
+    if (auto valid = requireObject(face, facePath, {"role", "entity"}); !valid) {
+        return std::unexpected(valid.error());
+    }
+    auto role = valueIn(kFaceRoles, face, "role", facePath);
+    auto entity = readOptionalId(face, "entity", facePath);
+    if (!role || !entity) {
+        return std::unexpected(!role ? role.error() : entity.error());
+    }
+    reference.face = FaceSelector{*role, *entity ? std::optional<EntityId>{EntityId::fromValue(**entity)}
+                                                 : std::nullopt};
+    if (auto valid = validate(reference); !valid) {
+        return parseError(path, valid.error().message);
+    }
+    return reference;
 }
 
 Json axisReferenceToJson(const AxisReference& reference) {

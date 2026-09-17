@@ -127,6 +127,19 @@ std::string describePlaneReference(const Document& document, const PlaneReferenc
     if (!reference.object) {
         return std::format("the model's {}", toString(reference.plane));
     }
+    if (reference.face) {
+        // "the end cap of Base", "the side from entity:4 of Base"
+        const std::string owner = nameOrId(document, *reference.object);
+        switch (reference.face->role) {
+        case FaceRole::StartCap:
+            return std::format("the start cap of {}", owner);
+        case FaceRole::EndCap:
+            return std::format("the end cap of {}", owner);
+        case FaceRole::Side:
+            return reference.face->entity ? std::format("the side from {} of {}", *reference.face->entity, owner)
+                                          : std::format("a side of {}", owner);
+        }
+    }
     if (document.findObjectAs<features::CoordinateSystem>(*reference.object) != nullptr) {
         return std::format("{}'s {}", nameOrId(document, *reference.object), toString(reference.plane));
     }

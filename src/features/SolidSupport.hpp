@@ -6,6 +6,7 @@
 #include <bettercad/core/geometry/Body.hpp>
 #include <bettercad/core/geometry/Profile.hpp>
 #include <bettercad/core/parameters/Parameter.hpp>
+#include <bettercad/features/Profiles.hpp>
 #include <bettercad/sketch/Sketch.hpp>
 
 #include <format>
@@ -35,11 +36,20 @@ namespace bettercad::features::detail {
 [[nodiscard]] Result<std::vector<geometry::PlanarRegion>> profileRegions(const sketch::Sketch& sketch,
                                                                          std::string_view featureName);
 
+/// profileRegions() with the entity of each segment; errors are prefixed
+/// with @p featureName.
+[[nodiscard]] Result<std::vector<LabelledRegion>> labelledProfileRegions(const sketch::Sketch& sketch,
+                                                                         std::string_view featureName);
+
 /// One solid per region, made by @p build, united into one body (disjoint
-/// regions give a body with several solids).
+/// regions give a body with several solids). Face names on the solids are
+/// carried into the body.
 [[nodiscard]] Result<geometry::Body> uniteRegionSolids(
     const std::vector<geometry::PlanarRegion>& regions,
     const std::function<Result<geometry::Body>(const geometry::PlanarRegion&)>& build);
+[[nodiscard]] Result<geometry::Body> uniteRegionSolids(
+    const std::vector<LabelledRegion>& regions,
+    const std::function<Result<geometry::Body>(const LabelledRegion&)>& build);
 
 /// Value of a driving parameter as quantity Q: NotFound if it does not
 /// exist, DimensionMismatch if it is not a Q. @p role names it in messages,

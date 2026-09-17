@@ -8,6 +8,7 @@
 #include <bettercad/core/math/Frame.hpp>
 #include <bettercad/core/units/Units.hpp>
 #include <bettercad/features/Export.hpp>
+#include <bettercad/features/FaceReferences.hpp>
 
 #include <array>
 #include <memory>
@@ -208,10 +209,16 @@ private:
 /// does not exist (parallel planes do not meet; an axis off its base plane)
 /// and for references nested more than 64 deep (a cycle). Messages name the
 /// objects involved.
+///
+/// A reference to a feature's face (P12-STREF-001) is resolved in the
+/// feature's body from @p bodies (see resolveFacePlane()); without
+/// @p bodies it fails with FailedPrecondition.
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<Frame3D> resolvePlane(const Document& document,
-                                                                     const PlaneReference& reference);
+                                                                     const PlaneReference& reference,
+                                                                     const BodyLookup& bodies = {});
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<Axis3D> resolveAxis(const Document& document,
-                                                                   const AxisReference& reference);
+                                                                   const AxisReference& reference,
+                                                                   const BodyLookup& bodies = {});
 /// The model's coordinate system (Frame3D::xy()) for an empty @p object.
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<Frame3D> resolveCoordinateSystem(const Document& document,
                                                                                 std::optional<ObjectId> object);

@@ -1,0 +1,90 @@
+baseline ../P12-DATUM-001/ctest-release.log: 868 distinct names
+
+ctest-debug.log: 891 distinct names, 892 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 23
+    cli.export-step.face-block
+    cli.info.face-block
+    cli.validate.face-block
+    unit.FaceFrame_UsesTheFaceCoordinatesAndTheOutwardNormal
+    unit.FaceNames_AreTheSameOnEveryBuild
+    unit.FaceNames_BooleansCarryNamesThroughTheKernelHistory
+    unit.FaceNames_PrismNamesItsCapsAndSides
+    unit.FaceReferenceCli_InfoDescribesFaceAttachments
+    unit.FaceReferenceCli_ValidateReportsFaceReferenceProblems
+    unit.FaceReferenceFile_ExampleFileMatchesTheBuilder
+    unit.FaceReferenceFile_ExportedModelReadsBackFromStep
+    unit.FaceReferenceFile_MalformedReferencesAreRejectedWithThePath
+    unit.FaceReferenceFile_SaveLoad_ResolvesTheSameFaces
+    unit.FaceReference_AttachingIsUndoable
+    unit.FaceReference_DatumsMayBePlacedFromFaces
+    unit.FaceReference_ExtrudesNameTheirCapsAndSides
+    unit.FaceReference_FailuresAreStructuredAndBlockDependents
+    unit.FaceReference_NeverTakesAnotherFeaturesFace
+    unit.FaceReference_ReferencesAreCheckedOnTheirOwn
+    unit.FaceReference_RegeneratesDeterministically
+    unit.FaceReference_SketchOnASideFollowsItsEntity
+    unit.FaceReference_SketchOnAnEndCapFollowsTheDepth
+    unit.FaceReference_ValidationReportsBadFaceReferences
+
+ctest-release.log: 891 distinct names, 892 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 23
+    cli.export-step.face-block
+    cli.info.face-block
+    cli.validate.face-block
+    unit.FaceFrame_UsesTheFaceCoordinatesAndTheOutwardNormal
+    unit.FaceNames_AreTheSameOnEveryBuild
+    unit.FaceNames_BooleansCarryNamesThroughTheKernelHistory
+    unit.FaceNames_PrismNamesItsCapsAndSides
+    unit.FaceReferenceCli_InfoDescribesFaceAttachments
+    unit.FaceReferenceCli_ValidateReportsFaceReferenceProblems
+    unit.FaceReferenceFile_ExampleFileMatchesTheBuilder
+    unit.FaceReferenceFile_ExportedModelReadsBackFromStep
+    unit.FaceReferenceFile_MalformedReferencesAreRejectedWithThePath
+    unit.FaceReferenceFile_SaveLoad_ResolvesTheSameFaces
+    unit.FaceReference_AttachingIsUndoable
+    unit.FaceReference_DatumsMayBePlacedFromFaces
+    unit.FaceReference_ExtrudesNameTheirCapsAndSides
+    unit.FaceReference_FailuresAreStructuredAndBlockDependents
+    unit.FaceReference_NeverTakesAnotherFeaturesFace
+    unit.FaceReference_ReferencesAreCheckedOnTheirOwn
+    unit.FaceReference_RegeneratesDeterministically
+    unit.FaceReference_SketchOnASideFollowsItsEntity
+    unit.FaceReference_SketchOnAnEndCapFollowsTheDepth
+    unit.FaceReference_ValidationReportsBadFaceReferences
+
+ctest-debug-shared.log: 891 distinct names, 892 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 23
+    cli.export-step.face-block
+    cli.info.face-block
+    cli.validate.face-block
+    unit.FaceFrame_UsesTheFaceCoordinatesAndTheOutwardNormal
+    unit.FaceNames_AreTheSameOnEveryBuild
+    unit.FaceNames_BooleansCarryNamesThroughTheKernelHistory
+    unit.FaceNames_PrismNamesItsCapsAndSides
+    unit.FaceReferenceCli_InfoDescribesFaceAttachments
+    unit.FaceReferenceCli_ValidateReportsFaceReferenceProblems
+    unit.FaceReferenceFile_ExampleFileMatchesTheBuilder
+    unit.FaceReferenceFile_ExportedModelReadsBackFromStep
+    unit.FaceReferenceFile_MalformedReferencesAreRejectedWithThePath
+    unit.FaceReferenceFile_SaveLoad_ResolvesTheSameFaces
+    unit.FaceReference_AttachingIsUndoable
+    unit.FaceReference_DatumsMayBePlacedFromFaces
+    unit.FaceReference_ExtrudesNameTheirCapsAndSides
+    unit.FaceReference_FailuresAreStructuredAndBlockDependents
+    unit.FaceReference_NeverTakesAnotherFeaturesFace
+    unit.FaceReference_ReferencesAreCheckedOnTheirOwn
+    unit.FaceReference_RegeneratesDeterministically
+    unit.FaceReference_SketchOnASideFollowsItsEntity
+    unit.FaceReference_SketchOnAnEndCapFollowsTheDepth
+    unit.FaceReference_ValidationReportsBadFaceReferences
+
+RESULT: PASS

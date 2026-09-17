@@ -243,6 +243,12 @@ Result<bool> Sketch::setAttachment(std::optional<PlaneReference> attachment) {
     if (attachment && attachment->object && !attachment->object->isValid()) {
         return makeError(ErrorCode::InvalidArgument, "a sketch's attachment must name a valid object");
     }
+    if (attachment) {
+        if (auto valid = validate(*attachment); !valid) {
+            return makeError(ErrorCode::InvalidArgument,
+                             std::format("a sketch's attachment: {}", valid.error().message));
+        }
+    }
     if (attachment == attachment_) {
         return false;
     }

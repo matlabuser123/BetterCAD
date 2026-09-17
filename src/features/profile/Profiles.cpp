@@ -76,7 +76,19 @@ struct Edge {
     ProfileSegment segment;
     std::size_t a = 0; ///< vertex at segment start
     std::size_t b = 0; ///< vertex at segment end
+    EntityId entity{};
 };
+
+/// A loop with the entity of each segment.
+struct Loop {
+    ProfileLoop loop;
+    std::vector<EntityId> entities;
+};
+
+Loop reversedLoop(const Loop& loop) {
+    std::vector<EntityId> entities(loop.entities.rbegin(), loop.entities.rend());
+    return {geometry::reversed(loop.loop), std::move(entities)};
+}
 
 /// True if the counter-clockwise or clockwise arc passes through angle @p t.
 bool arcContainsAngle(const ArcSegment2D& arc, double t) {
@@ -221,7 +233,20 @@ Point2D samplePoint(const ProfileLoop& loop) {
 } // namespace
 
 Result<std::vector<PlanarRegion>> extractRegions(const sketch::Sketch& sketch) {
-    std::vector<ProfileLoop> loops;
+    auto labelled = extractLabelledRegions(sketch);
+    if (!labelled) {
+        return std::unexpected(labelled.error());
+    }
+    std::vector<PlanarRegion> regions;
+    regions.reserve(labelled->size());
+    for (LabelledRegion& region : *labelled) {
+        regions.push_back(std::move(region.region));
+    }
+    return regions;
+}
+
+Result<std::vector<LabelledRegion>> extractLabelledRegions(const sketch::Sketch& sketch) {
+    std::vector<Loop> loops;
     std::vector<Edge> edges;
     Vertices vertices;
 
@@ -235,16 +260,18 @@ Result<std::vector<PlanarRegion>> extractRegions(const sketch::Sketch& sketch) {
         case sketch::EntityType::Point:
             break;
         case sketch::EntityType::Circle: {
-            loops.push_back(ProfileLoop{{CircleSegment2D{sketch.center(entity.id).value(),
-                                                          sketch.radius(entity.id).value(), true}}});
+            loops.push_back({ProfileLoop{{CircleSegment2D{sketch.center(entity.id).value(),
+                                                           sketch.radius(entity.id).value(), true}}},
+                             {entity.id}});
             break;
         }
         case sketch::EntityType::Ellipse: {
             const auto& ellipse = std::get<sketch::EllipseEntity>(entity.geometry);
             const Point2D center = sketch.position(ellipse.center).value();
-            loops.push_back(ProfileLoop{{EllipseSegment2D{center, sketch.position(ellipse.xVertex).value(),
-                                                          distance(center, sketch.position(ellipse.yVertex).value()),
-                                                          true}}});
+            loops.push_back({ProfileLoop{{EllipseSegment2D{center, sketch.position(ellipse.xVertex).value(),
+                                                           distance(center, sketch.position(ellipse.yVertex).value()),
+                                                           true}}},
+                             {entity.id}});
             break;
         }
         case sketch::EntityType::Spline: {
@@ -269,9 +296,9 @@ Result<std::vector<PlanarRegion>> extractRegions(const sketch::Sketch& sketch) {
                                  std::format("{} is not a valid spline: {}", entity.id, valid.error().message));
             }
             if (spline.periodic) {
-                loops.push_back(ProfileLoop{{std::move(spline)}});
+                loops.push_back({ProfileLoop{{std::move(spline)}}, {entity.id}});
             } else {
-                edges.push_back({std::move(spline), a, b});
+                edges.push_back({std::move(spline), a, b, entity.id});
             }
             break;
         }
@@ -288,9 +315,9 @@ Result<std::vector<PlanarRegion>> extractRegions(const sketch::Sketch& sketch) {
             const Point2D start = vertices.points[a];
             const Point2D end = vertices.points[b];
             if (entity.type() == sketch::EntityType::Line) {
-                edges.push_back({LineSegment2D{start, end}, a, b});
+                edges.push_back({LineSegment2D{start, end}, a, b, entity.id});
             } else {
-                edges.push_back({ArcSegment2D{sketch.center(entity.id).value(), start, end, true}, a, b});
+                edges.push_back({ArcSegment2D{sketch.center(entity.id).value(), start, end, true}, a, b, entity.id});
             }
             break;
         }
@@ -323,7 +350,7 @@ Result<std::vector<PlanarRegion>> extractRegions(const sketch::Sketch& sketch) {
         if (used[first]) {
             continue;
         }
-        ProfileLoop loop;
+        Loop loop;
         const std::size_t origin = edges[first].a;
         std::size_t current = first;
         std::size_t at = origin;
@@ -331,12 +358,13 @@ Result<std::vector<PlanarRegion>> extractRegions(const sketch::Sketch& sketch) {
             used[current] = true;
             const Edge& edge = edges[current];
             if (edge.a == at) {
-                loop.segments.push_back(edge.segment);
+                loop.loop.segments.push_back(edge.segment);
                 at = edge.b;
             } else {
-                loop.segments.push_back(reverseSegment(edge.segment));
+                loop.loop.segments.push_back(reverseSegment(edge.segment));
                 at = edge.a;
             }
+            loop.entities.push_back(edge.entity);
             if (at == origin) {
                 break;
             }
@@ -351,22 +379,22 @@ Result<std::vector<PlanarRegion>> extractRegions(const sketch::Sketch& sketch) {
     }
 
     // Orient all loops counter-clockwise and determine their nesting depth.
-    std::vector<ProfileLoop> ccw;
+    std::vector<Loop> ccw;
     std::vector<Point2D> samples;
-    for (const ProfileLoop& loop : loops) {
-        const Area area = geometry::signedArea(loop);
+    for (const Loop& loop : loops) {
+        const Area area = geometry::signedArea(loop.loop);
         if (abs(area).si() <= 0.0) {
             return makeError(ErrorCode::InvalidArgument, "a profile loop encloses no area");
         }
-        ccw.push_back(area < Area{} ? geometry::reversed(loop) : loop);
-        samples.push_back(samplePoint(ccw.back()));
+        ccw.push_back(area < Area{} ? reversedLoop(loop) : loop);
+        samples.push_back(samplePoint(ccw.back().loop));
     }
     const std::size_t count = ccw.size();
     std::vector<std::size_t> depth(count, 0);
     std::vector<std::vector<std::size_t>> containers(count);
     for (std::size_t i = 0; i < count; ++i) {
         for (std::size_t j = 0; j < count; ++j) {
-            if (i != j && loopContains(ccw[j], samples[i])) {
+            if (i != j && loopContains(ccw[j].loop, samples[i])) {
                 ++depth[i];
                 containers[i].push_back(j);
             }
@@ -374,19 +402,21 @@ Result<std::vector<PlanarRegion>> extractRegions(const sketch::Sketch& sketch) {
     }
 
     // Even depth: outer boundary; odd depth: hole of its innermost container.
-    std::vector<PlanarRegion> regions;
+    std::vector<LabelledRegion> regions;
     std::vector<std::size_t> regionOf(count, count);
     for (std::size_t i = 0; i < count; ++i) {
         if (depth[i] % 2 == 0) {
             regionOf[i] = regions.size();
-            regions.push_back(PlanarRegion{sketch.placement(), ccw[i], {}});
+            regions.push_back({PlanarRegion{sketch.placement(), ccw[i].loop, {}}, ccw[i].entities, {}});
         }
     }
     for (std::size_t i = 0; i < count; ++i) {
         if (depth[i] % 2 == 1) {
             for (const std::size_t j : containers[i]) {
                 if (depth[j] + 1 == depth[i]) {
-                    regions[regionOf[j]].holes.push_back(geometry::reversed(ccw[i]));
+                    Loop hole = reversedLoop(ccw[i]);
+                    regions[regionOf[j]].region.holes.push_back(std::move(hole.loop));
+                    regions[regionOf[j]].holes.push_back(std::move(hole.entities));
                     break;
                 }
             }

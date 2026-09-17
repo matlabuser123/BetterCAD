@@ -35,6 +35,7 @@ bettercad_add_executable(bettercad_tests
         core/geometry/BooleanTests.cpp
         core/geometry/ChamferTests.cpp
         core/geometry/CurvedProfileTests.cpp
+        core/geometry/FaceNameTests.cpp
         core/geometry/FilletTests.cpp
         core/geometry/GeometryTestSupport.hpp
         core/geometry/HoleTests.cpp
@@ -56,6 +57,7 @@ bettercad_add_executable(bettercad_tests
         core/units/QuantityTests.cpp
         features/ChamferFeatureTests.cpp
         features/DatumTests.cpp
+        features/FaceReferenceTests.cpp
         features/CircularPatternFeatureTests.cpp
         features/ExpressionRegenerationTests.cpp
         features/ExtrudeTests.cpp
@@ -74,6 +76,7 @@ bettercad_add_executable(bettercad_tests
         io/ChamferFileTests.cpp
         io/CircularPatternFileTests.cpp
         io/DatumFileTests.cpp
+        io/FaceReferenceFileTests.cpp
         io/DocumentFileTests.cpp
         io/ExampleModelTests.cpp
         io/ExpressionFileTests.cpp
@@ -99,6 +102,7 @@ bettercad_add_executable(bettercad_tests
         support/BracketModel.hpp
         support/ChamferBlockModel.hpp
         support/DatumModels.hpp
+        support/FaceModels.hpp
         support/DrivenPlateModel.hpp
         support/FilletModels.hpp
         support/HoleModels.hpp
@@ -131,6 +135,7 @@ if(TARGET bettercad_cli_lib)
         cli/CliRunner.hpp
         cli/CliTests.cpp
         cli/DatumCliTests.cpp
+        cli/FaceReferenceCliTests.cpp
         cli/ExpressionCliTests.cpp
     )
     target_link_libraries(bettercad_tests PRIVATE BetterCAD::cli_lib)
@@ -300,6 +305,20 @@ if(TARGET bettercad_cli)
         COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "export-step|${_datum}|${_out}/datum_block.step"
         EXIT_CODE 0 STDOUT_REGEX "^Wrote .*datum_block\\.step: STEP AP214 \\(mm\\), 3 bodies \\(Pattern, Peg, Fin\\), [0-9]+ bytes$"
         FILE "${_out}/datum_block.step" FILE_REGEX "^ISO-10303-21;\nHEADER;")
+    # P12-STREF-001: sketches on faces of features, through the real executable.
+    set(_faces "${PROJECT_SOURCE_DIR}/examples/models/face_block.bcad")
+    bettercad_add_process_test(cli.info.face-block
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "info|${_faces}"
+        EXIT_CODE 0
+        STDOUT_REGEX "^Document: FaceBlock\n.*  object:7   sketch   BossSketch  2 entities, 2 constraints, on the end cap of Base\n.*  object:9   sketch   SideSketch  8 entities, 4 constraints, on the side from entity:5 of Base\n")
+    bettercad_add_process_test(cli.validate.face-block
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "validate|${_faces}"
+        EXIT_CODE 0
+        STDOUT_REGEX "feature regeneration  ok, 8 objects regenerated\n  geometry              ok, 1 result body\nResult bodies \\(1\\):\n  Pocket \\(object:10\\): 1 solid, volume 226010\\.619 mm\\^3.*bounds \\(0, 0, 0\\) to \\(150, 60, 35\\) mm\nResult: valid$")
+    bettercad_add_process_test(cli.export-step.face-block
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "export-step|${_faces}|${_out}/face_block.step"
+        EXIT_CODE 0 STDOUT_REGEX "^Wrote .*face_block\\.step: STEP AP214 \\(mm\\), 1 body \\(Pocket\\), [0-9]+ bytes$"
+        FILE "${_out}/face_block.step" FILE_REGEX "^ISO-10303-21;\nHEADER;")
     bettercad_add_process_test(cli.export-stl.reference.pulley
         COMMAND "$<TARGET_FILE:bettercad_cli>"
         ARGS "export-stl|${_reference}/pulley.bcad|${_out}/pulley.stl"

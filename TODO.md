@@ -13,8 +13,8 @@ authorized — never in advance.
 | | |
 | --- | --- |
 | Current | **`P12` — Parametric CAD Completion** |
-| Next | Awaiting explicit scope decision — `P12-SKETCH-003` is blocked (see below) |
-| Blocked / Manual | `P12-SKETCH-003` — needs stable face references |
+| Next | `P12-SKETCH-003` — Sketches on arbitrary planar faces (resumed on `P12-STREF-001`) |
+| Blocked / Manual | None |
 | Last qualified | `P11` Production Part Modeling — **QUALIFIED** |
 | Released | `v0.1.0` (`P0`–`P10`); `P11` qualified, not released |
 
@@ -52,7 +52,8 @@ Reference models → qualification
 | 2 | `P12-SKETCH-001` Constraints: angle, tangent, concentric, midpoint, symmetric, diameter | `PARAM-001` | **done** — [evidence](docs/verification/P12-SKETCH-001/README.md) |
 | 3 | `P12-SKETCH-002` Entities: ellipse, spline | `SKETCH-001` | **done** — [evidence](docs/verification/P12-SKETCH-002/README.md) |
 | 4 | `P12-DATUM-001` Datum planes, axes, coordinate systems | `PARAM-001` | **done** — [evidence](docs/verification/P12-DATUM-001/README.md) |
-| 5 | `P12-SKETCH-003` Sketches on arbitrary planar faces | `DATUM-001` | **blocked** — needs stable face references; [record](docs/verification/P12-SKETCH-003/README.md) |
+| 4a | `P12-STREF-001` Stable feature face references (prerequisite, authorized 2026-09-17) | `DATUM-001` | **done** — [evidence](docs/verification/P12-STREF-001/README.md) |
+| 5 | `P12-SKETCH-003` Sketches on arbitrary planar faces | `DATUM-001`, `STREF-001` | **next** — was blocked until `STREF-001`; [record](docs/verification/P12-SKETCH-003/README.md) |
 | 6 | `P12-FEAT-001` Through-all extrude | — | not started |
 | 7 | `P12-FEAT-002` Split body / combine | — | not started |
 | 8 | `P12-FEAT-003` Shell | `FEAT-002` | not started |
@@ -170,7 +171,34 @@ Acceptance:
 - Missing, wrong-kind and cyclic references and degenerate geometry fail with structured diagnostics and block their dependents; nothing is substituted.
 - Save → load → regenerate gives bit-identical geometry; `P0`–`P12-SKETCH-002` stays green in all three presets.
 
-#### P12-SKETCH-003 — Sketches on arbitrary planar faces — BLOCKED
+#### P12-STREF-001 — Stable feature face references
+
+Authorized on 2026-09-17 as the minimal prerequisite of `P12-SKETCH-003`
+(its blocker record). It is not the semantic-topology phase: no general edge
+naming, adjacency matching, confidence scoring, topology reconciliation or
+references for assemblies, drawings or simulation. It is numbered `4a` so
+that no later milestone is renumbered.
+
+Deliverables:
+
+- [x] Persistent face names: the generating feature's ID and the face's role (start cap, end cap, or the side swept by one profile entity); never a kernel face, index or address
+- [x] Bodies carry the names of the faces their feature generated; extrudes name their caps and sides
+- [x] Names follow the feature's own booleans (join, cut, intersect, uniting regions) through the kernel's history: a split face keeps its name on every part, merged faces keep all their names, a deleted face loses its name
+- [x] Plane references may name a feature's face; resolution finds the named faces in the feature's body, with no geometric fallback, and gives the face's plane and outward side
+- [x] Structured failures: missing feature, wrong object kind, a kind that names no faces, a role or entity it does not generate, a name no face carries any more, a face that is not planar, faces on different planes
+- [x] Sketches attached to a feature's face follow it at regeneration; datum planes may be placed from one
+- [x] Dependency edges, validation diagnostics, CLI description, save/load round trip
+- [x] Evidence: [docs/verification/P12-STREF-001/](docs/verification/P12-STREF-001/README.md) — PASS, 892/892 tests in Debug, Release and Debug-shared, 0 warnings
+
+Acceptance:
+
+- A sketch on an extrude's end cap follows it when the depth (a literal, a parameter or an expression) changes; the features built on the sketch match analytic volumes, centres and bounds; undo restores them.
+- With another feature's face nearer the old position, the reference still resolves to its own face; when its face is gone, it fails with NotFound and nothing is substituted.
+- Save → load → regenerate resolves the same reference to the same plane, bit for bit; repeated builds and fresh documents agree.
+- Each failure case gives a structured diagnostic naming the reference and blocks what depends on it.
+- `P0`–`P12-DATUM-001` stays green in all three presets.
+
+#### P12-SKETCH-003 — Sketches on arbitrary planar faces
 
 A sketch on a model face must stay on that face when upstream parameters or
 features change, and must fail rather than move to another face. The only
@@ -182,31 +210,19 @@ face after a height change, and a nearest-geometry guess choosing another
 feature's face instead
 ([record](docs/verification/P12-SKETCH-003/README.md)).
 
-Prerequisite, not authorized within P12: stable face references. Features
-name the faces they generate by role, the names are carried through
-booleans and modifiers, and references are (feature, role) pairs resolved
-without geometric fallback. Nothing was implemented and no box is ticked.
-The next step is a scope decision:
-
-- authorize that prerequisite;
-- redefine this milestone to accept signature references with the P11
-  limitation; or
-- defer it.
-
-Per the P12 rules, work stops here and does not skip ahead to
-`P12-FEAT-001`.
+The prerequisite, stable face references, was authorized on 2026-09-17 as
+`P12-STREF-001` and has passed. This milestone resumes on it; its
+deliverables are added here when it starts.
 
 ## Next
 
-Awaiting explicit scope decision. `P12-SKETCH-003` is blocked on stable face
-references; see its section above. P12 does not continue past it until the
-decision is made.
+`P12-SKETCH-003` — Sketches on arbitrary planar faces, resumed now that
+`P12-STREF-001` has passed.
 
 ## Blocked / Manual
 
 | Item | Why |
 | --- | --- |
-| `P12-SKETCH-003` | Blocked: sketches on faces need stable face references (semantic topology), which P12 does not authorize. [Record](docs/verification/P12-SKETCH-003/README.md). |
 | `LICENSE` | Not yet chosen. A decision, not an implementation. |
 | Release tagging | Manual, and only on request. `v0.1.0` is the only tag. |
 
@@ -310,10 +326,10 @@ Not started. Not authorized. Grouped to match
 
 | Milestone | Commit | Evidence |
 | --- | --- | --- |
+| `P12-STREF-001` Stable feature face references | "BetterCAD: implement P12 stable feature face references" | [P12-STREF-001](docs/verification/P12-STREF-001/README.md) |
 | `P12-DATUM-001` Datum planes, axes, coordinate systems | `fe20b0f` | [P12-DATUM-001](docs/verification/P12-DATUM-001/README.md) |
 | `P12-SKETCH-002` Sketch entities: ellipse, spline | `070b730` | [P12-SKETCH-002](docs/verification/P12-SKETCH-002/README.md) |
 | `P12-SKETCH-001` Sketch constraints | `efdc1cf` | [P12-SKETCH-001](docs/verification/P12-SKETCH-001/README.md) |
-| `P12-PARAM-001` Parameter expression evaluation | `2316127` | [P12-PARAM-001](docs/verification/P12-PARAM-001/README.md) |
 
 ## Completed Milestones
 
@@ -333,11 +349,16 @@ regression test, so none can change silently. Detail:
 
 ### Modeling
 
-- **Geometric references do not follow moved geometry.** Edges and faces are
-  matched by geometry — an edge's supporting line or circle, a face's plane and
-  outward side — not named semantically. When a parameter moves the referenced
-  geometry, the feature fails with `NotFound` and keeps no body. Nothing is ever
-  substituted.
+- **Geometric references do not follow moved geometry.** Edges, and the faces
+  holes, chamfers and fillets refer to, are matched by geometry — an edge's
+  supporting line or circle, a face's plane and outward side — not named
+  semantically. When a parameter moves the referenced geometry, the feature
+  fails with `NotFound` and keeps no body. Nothing is ever substituted.
+- **Face references by name** (sketch attachments, datum planes and axes)
+  follow their faces, but only extrudes name their faces so far, and a name
+  is looked up in its feature's own body: later features do not move or
+  remove it. Mirror planes cannot refer to faces
+  ([P12-STREF-001](docs/verification/P12-STREF-001/README.md)).
 - **Parameter expressions** have `+ - * /`, unary signs, parentheses, units
   and parameter names only: no functions, powers or constants. Only
   parameters take expressions; a feature field takes a literal or one

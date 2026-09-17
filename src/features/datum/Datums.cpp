@@ -30,7 +30,13 @@ Result<void> checkObject(const std::optional<ObjectId>& id, std::string_view wha
 }
 
 Result<void> checkPlane(const PlaneReference& reference, std::string_view what) {
-    return checkObject(reference.object, what);
+    if (auto valid = checkObject(reference.object, what); !valid) {
+        return valid;
+    }
+    if (auto valid = validate(reference); !valid) {
+        return invalid(std::format("the {}: {}", what, valid.error().message));
+    }
+    return {};
 }
 
 Result<void> checkAxis(const AxisReference& reference, std::string_view what) {

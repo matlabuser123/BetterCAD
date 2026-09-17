@@ -1,6 +1,7 @@
 #pragma once
 
 #include <bettercad/core/Error.hpp>
+#include <bettercad/core/document/References.hpp>
 #include <bettercad/core/geometry/Body.hpp>
 #include <bettercad/core/geometry/Export.hpp>
 #include <bettercad/core/geometry/Profile.hpp>
@@ -8,6 +9,9 @@
 #include <bettercad/core/math/Frame.hpp>
 #include <bettercad/core/units/Units.hpp>
 
+#include <cstddef>
+#include <functional>
+#include <optional>
 #include <span>
 #include <vector>
 
@@ -40,6 +44,32 @@ struct PlanarPath {
 /// self-intersecting loops).
 [[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Result<Body> makePrism(const PlanarRegion& region,
                                                               Length from, Length to);
+
+/// Where a face of a prism comes from: the region at `from` (First) or at
+/// `to` (Last), or the side swept by one segment of one loop.
+struct PrismFace {
+    enum class Kind {
+        First,
+        Last,
+        Side,
+    };
+    Kind kind = Kind::First;
+    /// Side: the loop (0 the outer loop, i > 0 the hole i - 1) and the
+    /// segment's index in it, as given in the region.
+    std::size_t loop = 0;
+    std::size_t segment = 0;
+
+    friend bool operator==(const PrismFace&, const PrismFace&) = default;
+};
+
+/// The name a prism's face gets (P12-STREF-001), or none.
+using PrismFaceNamer = std::function<std::optional<FaceName>(const PrismFace&)>;
+
+/// makePrism() whose result carries the names @p namer gives its faces (see
+/// findNamedFaces()). Each segment sweeps one side face; @p namer is asked
+/// once per face.
+[[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Result<Body> makePrism(const PlanarRegion& region, Length from,
+                                                              Length to, const PrismFaceNamer& namer);
 
 /// Solid swept by rotating @p region about @p axis from angle @p from to
 /// angle @p to, right-handed about the axis direction, with

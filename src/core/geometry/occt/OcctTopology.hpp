@@ -59,6 +59,8 @@ struct KernelFace {
 
 /// The faces of @p shape with their geometry.
 [[nodiscard]] std::vector<KernelFace> kernelFaces(const TopoDS_Shape& shape);
+/// The faces of a non-empty body with their geometry and names.
+[[nodiscard]] std::vector<KernelFace> kernelFaces(const Body& body);
 
 /// The planar faces on the signature's plane, facing its way.
 [[nodiscard]] std::vector<const KernelFace*> matchingFaces(const std::vector<KernelFace>& faces,

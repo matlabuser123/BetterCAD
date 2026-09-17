@@ -5,6 +5,7 @@
 #include "core/geometry/ProfileExtent.hpp"
 #include "core/geometry/SweepPlan.hpp"
 #include "core/geometry/occt/OcctBody.hpp"
+#include "core/geometry/occt/OcctFaceNames.hpp"
 #include "core/geometry/occt/OcctGuard.hpp"
 
 #include <bettercad/core/geometry/Booleans.hpp>
@@ -148,10 +149,14 @@ public:
     WireBuilder(const Frame3D& plane, double offset, bool seamOnXAxis = false) : plane_(plane), offset_(offset),
         normal_(occt::toModel(plane.normal())), xAxis_(occt::toModel(plane.xAxis())), seamOnXAxis_(seamOnXAxis) {}
 
-    Result<TopoDS_Wire> build(const ProfileLoop& loop) {
+    /// The loop's wire; with @p edges, also its edges in the loop's order.
+    Result<TopoDS_Wire> build(const ProfileLoop& loop, std::vector<TopoDS_Edge>* edges = nullptr) {
         BRepBuilderAPI_MakeWire wire;
         for (const ProfileSegment& segment : loop.segments) {
             const TopoDS_Edge edge = makeEdge(segment);
+            if (edges != nullptr) {
+                edges->push_back(edge);
+            }
             wire.Add(edge);
             if (!wire.IsDone()) {
                 return makeError(ErrorCode::Internal, "makePrism: segments do not form a connected wire");
@@ -269,13 +274,31 @@ Result<void> checkRegion(const PlanarRegion& region) {
     return {};
 }
 
+/// The edges of a loop built from @p loop, or from its reversal, in @p loop's
+/// segment order.
+using LoopEdges = std::vector<TopoDS_Edge>;
+
 /// Planar face of a checked region, moved along the plane normal by
 /// @p offset (model units). Loop orientation is normalized: outer
-/// counter-clockwise, holes clockwise. Call inside guardKernelCall.
-Result<TopoDS_Face> makeProfileFace(const PlanarRegion& region, double offset, std::string_view operation) {
-    const ProfileLoop outer = signedArea(region.outer) < Area{} ? reversed(region.outer) : region.outer;
+/// counter-clockwise, holes clockwise. With @p edges, also the edges of each
+/// loop (the outer loop first, then the holes) in the region's segment order.
+/// Call inside guardKernelCall.
+Result<TopoDS_Face> makeProfileFace(const PlanarRegion& region, double offset, std::string_view operation,
+                                    std::vector<LoopEdges>* edges = nullptr) {
     WireBuilder builder(region.plane, offset);
-    auto outerWire = builder.build(outer);
+    // Builds a loop, oriented as asked, recording its edges in the given order.
+    const auto buildLoop = [&](const ProfileLoop& loop, bool reverse) -> Result<TopoDS_Wire> {
+        LoopEdges built;
+        auto wire = builder.build(reverse ? reversed(loop) : loop, edges != nullptr ? &built : nullptr);
+        if (wire && edges != nullptr) {
+            if (reverse) {
+                std::ranges::reverse(built);
+            }
+            edges->push_back(std::move(built));
+        }
+        return wire;
+    };
+    auto outerWire = buildLoop(region.outer, signedArea(region.outer) < Area{});
     if (!outerWire) {
         return std::unexpected(outerWire.error());
     }
@@ -285,7 +308,7 @@ Result<TopoDS_Face> makeProfileFace(const PlanarRegion& region, double offset, s
         return makeError(ErrorCode::Internal, std::format("{}: cannot build a face from the outer loop", operation));
     }
     for (const ProfileLoop& hole : region.holes) {
-        auto holeWire = builder.build(signedArea(hole) > Area{} ? reversed(hole) : hole);
+        auto holeWire = buildLoop(hole, signedArea(hole) > Area{});
         if (!holeWire) {
             return std::unexpected(holeWire.error());
         }
@@ -396,6 +419,10 @@ Result<PlaneAxis> axisInPlane(const Frame3D& plane, const Axis3D& axis) {
 } // namespace
 
 Result<Body> makePrism(const PlanarRegion& region, Length from, Length to) {
+    return makePrism(region, from, to, PrismFaceNamer{});
+}
+
+Result<Body> makePrism(const PlanarRegion& region, Length from, Length to, const PrismFaceNamer& namer) {
     if (!isFinite(from) || !isFinite(to) || occt::toModel(to - from) <= Precision::Confusion()) {
         return makeError(ErrorCode::InvalidArgument,
                          std::format("prism extent must be finite with to > from, got [{}, {}]",
@@ -406,13 +433,37 @@ Result<Body> makePrism(const PlanarRegion& region, Length from, Length to) {
     }
 
     return occt::guardKernelCall("makePrism", [&]() -> Result<Body> {
-        auto profile = makeProfileFace(region, occt::toModel(from), "makePrism");
+        std::vector<LoopEdges> edges;
+        auto profile = makeProfileFace(region, occt::toModel(from), "makePrism", namer ? &edges : nullptr);
         if (!profile) {
             return std::unexpected(profile.error());
         }
         const gp_Vec sweep = gp_Vec(occt::toModel(region.plane.normal())) * occt::toModel(to - from);
         BRepPrimAPI_MakePrism prism(*profile, sweep);
-        Body body = occt::BodyAccess::makeBody(prism.Shape());
+        std::vector<occt::NamedFace> names;
+        if (namer) {
+            // The caps are the profile at both ends; each profile edge sweeps
+            // one side face (docs/verification/P12-STREF-001/kernel-probe).
+            const auto name = [&](const TopoDS_Shape& face, const PrismFace& origin) {
+                if (face.IsNull() || face.ShapeType() != TopAbs_FACE) {
+                    return;
+                }
+                if (const auto given = namer(origin)) {
+                    names.push_back({TopoDS::Face(face), *given});
+                }
+            };
+            name(prism.FirstShape(), PrismFace{.kind = PrismFace::Kind::First});
+            name(prism.LastShape(), PrismFace{.kind = PrismFace::Kind::Last});
+            for (std::size_t loop = 0; loop < edges.size(); ++loop) {
+                for (std::size_t segment = 0; segment < edges[loop].size(); ++segment) {
+                    for (const TopoDS_Shape& side : prism.Generated(edges[loop][segment])) {
+                        name(side, PrismFace{.kind = PrismFace::Kind::Side, .loop = loop, .segment = segment});
+                    }
+                }
+            }
+        }
+        std::vector<occt::NamedFace> canonical = occt::canonicalNames(prism.Shape(), std::move(names));
+        Body body = occt::BodyAccess::makeBody(prism.Shape(), std::move(canonical));
         if (body.isEmpty() || !body.isValid()) {
             return makeError(ErrorCode::Internal, "makePrism: the kernel produced an invalid solid");
         }

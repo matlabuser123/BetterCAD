@@ -446,7 +446,34 @@ milestones start; see `TODO.md`.
   origin, and u and v are two model axes projected into the plane (X and Y
   for a plane facing ±Z, X and Z for ±Y, otherwise Y and Z). The rule does not
   depend on the side, so both faces of a plate share coordinates, and on a
-  box's faces (u, v) are model coordinates.
+  box's faces (u, v) are model coordinates. `faceFrame()` turns a signature
+  into a sketch frame: that origin and u axis, the outward normal, and
+  Y = normal x X (so on a face facing -Z, y is -v).
+- **Face names** (P12-STREF-001, `FaceName` in
+  `bettercad/core/document/References.hpp`). A name is the feature that
+  generated a face and the face's role: `start_cap`, `end_cap`, or `side`
+  with the profile entity that swept it. Names are persistent engineering
+  intent; kernel faces, their order and their addresses never are.
+  - A body carries names on its faces (`occt::BodyData::names`, each (face,
+    name) once, ordered by the face's position in the shape's face map).
+    `listFaces()` shows them; `findNamedFaces()` returns the faces that carry
+    a name.
+  - `makePrism()` with a `PrismFaceNamer` names what it generates: the
+    region at `from` and at `to`, and the side each segment of each loop
+    sweeps, identified through the kernel's history (`FirstShape()`,
+    `LastShape()`, `Generated(edge)`). The segment indices are the region's
+    as given, whatever orientation the adapter builds the loops in.
+  - Boolean operations carry the names of both operands through the
+    kernel's history, including the merging of coplanar faces
+    (`OcctFaceNames.cpp`). A face the operation deleted loses its names; a
+    modified face passes them to every face it became (a split face to each
+    part; merged faces all to the merged face); a kept face keeps them.
+    Faces the history does not account for lose their names. Nothing is
+    carried by geometric similarity
+    (`docs/verification/P12-STREF-001/kernel-probe`).
+  - Operations built on these booleans (holes, patterns) carry their
+    inputs' names the same way. Transforms, blends, revolutions, sweeps and
+    lofts name nothing and drop their inputs' names.
 - **Hole** (`Hole.hpp`). `cutHole(body, request)` drills a cylindrical hole
   into a planar face, perpendicular to it and always into the material (along
   the reversed outward normal). A `HoleRequest` is:
@@ -595,7 +622,9 @@ milestones start; see `TODO.md`.
   plane (`xy`, `yz`, `xz`, with the frames of `Frame3D::xy()`, `yz()`, `xz()`)
   or axis of the model; with a datum plane or axis, that element; with a
   coordinate system, its principal plane or axis. They are core value types,
-  so sketches (layer 1) can hold them.
+  so sketches (layer 1) can hold them. A plane reference to a feature with a
+  `FaceSelector` (P12-STREF-001) names one of the faces the feature
+  generates, and resolves to that face's plane.
 - `DatumPlane`, `DatumAxis` and `CoordinateSystem`
   (`bettercad/features/Datums.hpp`, types `datum_plane`, `datum_axis`,
   `coordinate_system`) are document objects that store only how they are
@@ -625,7 +654,36 @@ milestones start; see `TODO.md`.
 - **References in features.** `MirrorPlane::reference` and
   `PatternAxis::reference` replace the plane's origin and normal, or the
   axis' origin and direction, which then keep their defaults. The mirror
-  offset still applies along the resolved normal.
+  offset still applies along the resolved normal. A mirror plane may not
+  refer to a face: mirrors are regenerated without the other features'
+  bodies.
+
+### Face references (P12-STREF-001)
+
+- `features::FaceReferences.hpp` resolves face names. Extrudes name their
+  faces (`namesFaces()`): the start cap on the sketch plane (behind it for
+  a symmetric extrude), the end cap at the depth, and a side per profile
+  entity (`extractLabelledRegions()` keeps each segment's entity).
+- `checkFaceName()` checks a name against the document alone: the feature
+  exists (NotFound), is a feature of a kind that names faces, the selector
+  is valid, and a side's entity is a non-construction curve of the
+  feature's profile sketch.
+- `resolveFacePlane()` looks for the name in the **feature's own body**,
+  from the `BodyLookup` the regenerator provides. It fails when the feature
+  has no body (FailedPrecondition), when no face carries the name (NotFound:
+  the feature's own boolean removed it), when a named face is not a plane
+  (InvalidArgument), and when the named faces do not lie on one plane
+  facing one way (FailedPrecondition). Otherwise the result is the face's
+  frame (`faceFrame()`) with the normal pointing out of the material. There
+  is no fallback to faces that lie where the named face used to be.
+- `resolvePlane()` and `resolveAxis()` take the lookup, so sketch
+  attachments and datum planes and axes may refer to faces. A reference
+  depends on its feature, so a change that moves the face rebuilds what is
+  placed on it. A sketch attached to a face of the feature it profiles is a
+  dependency cycle.
+- Resolving in the producing feature's body means that later features
+  cannot move or remove the reference: a sketch on an extrude's end cap
+  stays on that plane even if a later cut removes the face.
 - `CreateDatumCommand<D>` and `ModifyDatumCommand<D>`
   (`DatumCommands.hpp`) make creation and editing undoable. Validation
   reports references of the wrong kind and driving parameters of the wrong
@@ -889,7 +947,10 @@ milestones start; see `TODO.md`.
   - the objects, as `{id, type, name, data}` in ascending ID order.
 
   Sketch data holds the placement frame, an optional `attachment`
-  (`{"object": id, "plane": "xy"}`), the entities and constraints with
+  (`{"object": id, "plane": "xy"}`, or for a feature's face
+  `{"object": id, "face": {"role": "end_cap"}}` and
+  `{"object": id, "face": {"role": "side", "entity": id}}`), the entities
+  and constraints with
   their own IDs, and the sketch's ID counters. An ellipse stores `center`,
   `x_vertex` and `y_vertex`; a spline, whose type name in files is
   `"bspline"` (the curve it is; `"spline"` stays unknown), stores `poles`,
