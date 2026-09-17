@@ -4,6 +4,7 @@
 #include <bettercad/core/units/Format.hpp>
 #include <bettercad/features/Regeneration.hpp>
 
+#include <algorithm>
 #include <format>
 #include <string>
 
@@ -34,16 +35,36 @@ Result<PatternStep> resolveStep(const PatternDirection& direction, const Documen
     if (!count) {
         return std::unexpected(count.error());
     }
-    PatternStep step{.direction = *unit, .count = *count, .spacing = direction.spacing};
+    const bool total = direction.distribution == PatternDistribution::TotalLength;
+    const std::string_view what = total ? "total length" : "spacing";
+    PatternStep step{.direction = *unit, .count = *count, .spacing = direction.spacing,
+                     .symmetric = direction.symmetric};
     if (direction.spacingParameter) {
-        auto value = detail::drivingValue<Length>(document, *direction.spacingParameter, "spacing parameter");
+        auto value = detail::drivingValue<Length>(document, *direction.spacingParameter,
+                                                  total ? "total length parameter" : "spacing parameter");
         if (!value) {
             return makeError(value.error().code, std::format("{}: {}", label, value.error().message));
         }
         step.spacing = *value;
     }
     if (!isFinite(step.spacing) || !(step.spacing > Length{})) {
-        return invalid(std::format("the spacing must be positive and finite, got {}", toString(step.spacing, units::mm)));
+        return invalid(std::format("the {} must be positive and finite, got {}", what,
+                                   toString(step.spacing, units::mm)));
+    }
+    // The count's own rules, which a driven count only settles here
+    // (P12-PATTERN-001).
+    if (total && *count < 2) {
+        return invalid(std::format("a total length needs at least 2 instances to divide it between, got {}", *count));
+    }
+    if (direction.symmetric && *count % 2 == 0) {
+        return invalid(std::format("a symmetric direction needs an odd count, so the source is its middle instance, "
+                                   "got {}",
+                                   *count));
+    }
+    if (total) {
+        // The whole row spans the length: the step divides it between the
+        // gaps, so no instance's offset depends on the ones before it.
+        step.spacing = step.spacing / static_cast<double>(*count - 1);
     }
     return step;
 }
@@ -72,7 +93,10 @@ Result<std::vector<PatternInstance>> resolvePatternInstances(const LinearPattern
                                 : std::format("a linear pattern may have at most {} instances, got {}",
                                               kMaxPatternInstances, total));
     }
-    return patternInstances(*first, second);
+    if (auto valid = checkSuppressedAgainstCount(definition.suppressed, total, "linear pattern"); !valid) {
+        return std::unexpected(valid.error());
+    }
+    return patternInstances(*first, second, definition.suppressed);
 }
 
 Result<geometry::Body> regenerateLinearPattern(const LinearPatternFeature& feature, const Document& document,
@@ -88,14 +112,20 @@ Result<geometry::Body> regenerateLinearPattern(const LinearPatternFeature& featu
             return makeError(ErrorCode::NotFound,
                              std::format("the source {} does not exist", ObjectId{definition.source}));
         }
-        auto apply = detail::instanceOperation(*source, document, "linear pattern",
-                                               "; use a second direction for a grid");
+        const auto active = static_cast<std::size_t>(
+            std::ranges::count_if(*instances, [](const PatternInstance& i) { return !i.suppressed; }));
+        if (auto valid = detail::checkNestedCount(*source, document, active, "linear pattern"); !valid) {
+            return std::unexpected(valid.error());
+        }
+        auto apply = detail::instanceOperation(*source, document, "linear pattern");
         if (!apply) {
             return std::unexpected(apply.error());
         }
         std::vector<detail::PatternPlacement> placements;
         for (const PatternInstance& instance : *instances) {
-            if (instance.index != 0) {
+            // Instance 0 is the source's own body; a suppressed instance
+            // keeps its index and makes no geometry (P12-PATTERN-001).
+            if (instance.index != 0 && !instance.suppressed) {
                 placements.push_back({.motion = RigidTransform3D::translation(instance.offset),
                                       .label = std::format("instance {} at {}", instance.index,
                                                            formatMm(instance.offset)),

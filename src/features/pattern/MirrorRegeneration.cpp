@@ -155,15 +155,15 @@ Result<geometry::Body> regenerateMirror(const MirrorFeature& feature, const Docu
 
         if (definition.scope == MirrorScope::Body) {
             const bool keep = definition.keepOriginal;
-            const detail::InstanceOperation mirrorBody = [&sourceBody, keep](
-                                                             const geometry::Body& body, const RigidTransform3D& motion,
-                                                             const FaceCopy& copy) -> Result<geometry::Body> {
+            const detail::InstanceOperation mirrorBody =
+                [&sourceBody, keep](const geometry::Body& body, const RigidTransform3D& motion,
+                                    const std::vector<FaceCopy>& copies) -> Result<geometry::Body> {
                 auto mirrored = geometry::transformed(sourceBody, motion);
                 if (!mirrored) {
                     return mirrored;
                 }
                 // The image's faces are copies of the source body's.
-                geometry::Body reflected = geometry::renameFaces(*mirrored, detail::appendCopy(copy));
+                geometry::Body reflected = geometry::renameFaces(*mirrored, detail::appendCopies(copies));
                 if (!keep) {
                     return reflected;
                 }
@@ -194,7 +194,7 @@ Result<geometry::Body> regenerateMirror(const MirrorFeature& feature, const Docu
         if (!distinct) {
             return std::unexpected(distinct.error());
         }
-        auto apply = detail::instanceOperation(*source, document, "mirror", "");
+        auto apply = detail::instanceOperation(*source, document, "mirror");
         if (!apply) {
             return std::unexpected(apply.error());
         }

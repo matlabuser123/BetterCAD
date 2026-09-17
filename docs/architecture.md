@@ -856,7 +856,11 @@ milestones start; see `TODO.md`.
 
   Linear and circular patterns and mirrors copy faces: each instance's tool
   (an extrude's or revolve's), hole or chamfer, or a body mirror's image, is
-  renamed or named with the copy step (`detail::appendCopy()`).
+  renamed or named with the copy step (`detail::appendCopies()`). A pattern
+  of a pattern appends the whole chain, in the order the copies were made:
+  the inner pattern's step first, then the outer's, so a nested copy names
+  the feature that made the face, the inner pattern and its instance, and
+  the outer pattern and its instance.
 - `checkFaceName()` checks a name against the document alone:
   - the feature exists (NotFound) and is a feature that names its faces; a
     pattern or mirror is refused with a hint to name the face it copies, a
@@ -1086,18 +1090,37 @@ milestones start; see `TODO.md`.
   `LinearPatternDefinition` holds:
   - the source feature, which the pattern consumes (its `target()`);
   - for each direction, a vector as given (any finite, non-zero vector,
-    normalized when used), a count and a spacing. The count may be driven by
-    a dimensionless parameter holding a whole number, the spacing by a
-    length parameter.
+    normalized when used), a count and a length. The count may be driven by
+    a dimensionless parameter holding a whole number, the length by a
+    length parameter;
+  - for each direction, what that length means (`PatternDistribution`):
+    `Spacing`, the step between neighbours, or `TotalLength`, the whole
+    row's span from the first instance to the last, where the step is
+    L/(N − 1) and the count must be at least 2;
+  - for each direction, whether it is `symmetric`: the copies sit on both
+    sides of the source, which is then the middle instance, so the count
+    must be odd;
+  - the instances that are `suppressed`: indices from 1, each below the
+    count, listed once in increasing order.
 
   The count includes the source, so 1 is the source alone. Instance (i, j)
-  is the source moved by i·s1·d1 + j·s2·d2, computed from the source for
-  every instance, never by adding to the previous one. Instances are
-  numbered i + j·count1, with 0 the source. They are not document objects:
-  an instance is identified by its pattern and index, and
-  `patternInstances()` lists them. There are at most `kMaxPatternInstances`
-  (500), a guard against runaway input: building time grows with the square
-  of the count.
+  is the source moved by m(i)·s1·d1 + m(j)·s2·d2, where s is each
+  direction's step and m is `patternStepMultiple()`: 0, 1, 2, … along a
+  plain direction and 0, +1, −1, +2, −2, … about a symmetric one, so that
+  raising the count leaves what an existing index means unchanged. Every
+  offset is that multiple times the step, computed from the source, never
+  by adding to the previous instance. Instances are numbered i + j·count1,
+  with 0 the source. They are not document objects: an instance is
+  identified by its pattern and index, and `patternInstances()` lists them,
+  each marked with whether the definition suppresses it. There are at most
+  `kMaxPatternInstances` (500), a guard against runaway input: building
+  time grows with the square of the count.
+
+  A suppressed instance makes no geometry and keeps its index: suppressing
+  one never renumbers another, a name that refers to it resolves to nothing
+  (`NotFound`, never the next surviving instance), and unsuppressing it
+  brings back the same index and the same geometry. Suppressing every copy
+  is refused, as is suppressing instance 0, which is the source itself.
 
   Regeneration (`regenerateLinearPattern()`) starts from the source's body
   (instance 0) and applies the source's own operation at every other
@@ -1112,10 +1135,22 @@ milestones start; see `TODO.md`.
     its face (so overlapping holes are refused); a moved edge must match
     exactly one edge.
 
+  - **A pattern.** Every instance of the source pattern is made again,
+    moved by the outer instance's motion composed with its own
+    (`RigidTransform3D::after()`), and the faces it makes carry the inner
+    pattern's copy step and then the outer's. The source's own suppressed
+    instances stay suppressed wherever the outer pattern puts them, and the
+    effective count — the product down the whole chain — must stay within
+    `kMaxPatternInstances`. Patterns nested more than
+    `kMaxPatternNesting` (8) deep are refused as a cycle, as is a pattern
+    that names itself; a genuine cycle is caught by the dependency graph
+    before regeneration.
+
   The first failing instance fails the whole pattern, with its index and
-  offset in the message ("instance 5 at (100, 0, 0) mm: hole: …"). The
-  pattern then keeps no body; partial patterns are never produced. Patterns
-  of patterns are refused (a second direction makes grids).
+  offset in the message ("instance 5 at (100, 0, 0) mm: hole: …"), and a
+  nested failure names both ("instance 1 at 180 deg: Holes instance 2:
+  hole: …"). The pattern then keeps no body; partial patterns are never
+  produced.
 - **Circular pattern** (`CircularPatternFeature.hpp`) repeats another
   feature's operation around an axis. A `CircularPatternDefinition` holds:
   - the source feature, which the pattern consumes (its `target()`);
@@ -1123,15 +1158,20 @@ milestones start; see `TODO.md`.
     vector, normalized when used);
   - a count, which includes the source and may be driven by a
     dimensionless parameter holding a whole number;
+  - whether the pattern is `symmetric`, turning its copies both ways about
+    the source, which is then its middle instance (an odd count; refused
+    for a full circle, whose instances already go all the way round), and
+    which of its instances are `suppressed`, exactly as for a linear
+    pattern;
   - the spacing: `FullCircle` (360°/count apart, no angle), `IncludedAngle`
     (the source to the last instance, angle/(count − 1) apart) or
     `AngleStep` (angle apart), the angle literal or driven by an angle
     parameter;
   - the direction: `Positive` (right-handed about the axis) or `Negative`.
 
-  Instance i is the source turned by i·step, computed from the source for
-  every instance (`circularPatternInstances()`), never by adding to the
-  previous one. A full circle never has an instance at 360°, which would be
+  Instance i is the source turned by m(i)·step, with m as for a linear
+  direction, computed from the source for every instance
+  (`circularPatternInstances()`), never by adding to the previous one. A full circle never has an instance at 360°, which would be
   the source again; for the same reason an included angle or the span
   (count − 1)·step of an angle step must stay below 360° (to within
   1e-9 rad). Angles are not normalized: 400° is refused, not taken as 40°.
@@ -1143,8 +1183,8 @@ milestones start; see `TODO.md`.
   source that the axis passes through turns onto itself: new-body instances
   coincide and fuse into the source, and a hole is refused by the hole's own
   placement check (the second instance would be drilled into the first).
-  Circular patterns of patterns, and linear patterns of circular ones, are
-  refused.
+  A circular pattern may repeat a pattern, and a linear pattern a circular
+  one, on the same terms as any other nesting.
 - **Mirror** (`MirrorFeature.hpp`) reflects another feature across a plane.
   A `MirrorDefinition` holds:
   - the source feature, which the mirror consumes (its `target()`);

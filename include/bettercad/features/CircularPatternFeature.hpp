@@ -92,6 +92,15 @@ struct CircularPatternDefinition {
     Angle angle{};
     std::optional<ParameterId> angleParameter{};
     RotationDirection direction = RotationDirection::Positive;
+    /// Whether the instances sit on both sides of the source, which is then
+    /// the middle one (P12-PATTERN-001): the span is centred on the source
+    /// and the count must be odd, as for a linear pattern. A full circle
+    /// takes no symmetry: its instances already go all the way round.
+    bool symmetric = false;
+    /// The instances that make no geometry (P12-PATTERN-001): indices from
+    /// 1 (0 is the source), each below the count, listed once. Suppressing
+    /// an instance never renumbers another.
+    std::vector<std::uint32_t> suppressed{};
 
     friend bool operator==(const CircularPatternDefinition&, const CircularPatternDefinition&) = default;
 };
@@ -105,6 +114,9 @@ struct CircularPatternDefinition {
 
 /// One instance of a circular pattern.
 struct CircularPatternInstance {
+    /// Whether the definition suppresses this instance, so that it makes no
+    /// geometry. Its index stays its own (P12-PATTERN-001).
+    bool suppressed = false;
     /// Position in the pattern, deterministic: 0 is the source, then one
     /// step further each, in the pattern's direction.
     std::size_t index = 0;
@@ -119,9 +131,12 @@ struct CircularPatternInstance {
 };
 
 /// The instances of a pattern of @p count instances, @p step apart (signed)
-/// about @p axis, in order.
+/// about @p axis, in order. A symmetric pattern turns its copies both ways
+/// (patternStepMultiple()); instances whose index is in @p suppressed are
+/// marked, not left out.
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT std::vector<CircularPatternInstance>
-circularPatternInstances(const Axis3D& axis, std::size_t count, Angle step);
+circularPatternInstances(const Axis3D& axis, std::size_t count, Angle step, bool symmetric = false,
+                         const std::vector<std::uint32_t>& suppressed = {});
 
 /// The signed angle between neighbouring instances: 360°/count, angle/(count
 /// - 1) or angle for the three spacings (0 for a single instance), negated

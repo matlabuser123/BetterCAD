@@ -108,9 +108,13 @@ Result<void> requireNamedFaces(const Document& document, std::span<const FaceNam
 }
 
 geometry::FaceRenamer appendCopy(const FaceCopy& copy) {
-    return [copy](const FaceName& name) -> std::optional<FaceName> {
+    return appendCopies({copy});
+}
+
+geometry::FaceRenamer appendCopies(std::vector<FaceCopy> copies) {
+    return [copies = std::move(copies)](const FaceName& name) -> std::optional<FaceName> {
         FaceName copied = name;
-        copied.face.copies.push_back(copy);
+        copied.face.copies.insert(copied.face.copies.end(), copies.begin(), copies.end());
         return copied;
     };
 }

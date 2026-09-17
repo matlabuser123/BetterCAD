@@ -1,0 +1,31 @@
+Linear pattern instance timing, Fri 18/09/2026  7:34:44.23
+Source: docs/verification/P12-PATTERN-001/performance/pattern_instances_timing.cpp
+Built with: c++ (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r4) 16.1.0, -O2, against build/release of the qualified tree (OCCT 8.0.1)
+CPU: AMD Ryzen 7 5800H with Radeon Graphics; single-threaded kernel calls.
+Each line: one full regeneration of a fresh document, wall-clock, with the result checked against the analytic volume.
+
+plain        N=  10  regenerate    0.229 s  solids   10  valid 1  V=1250.000000 expected 1250.000000 (rel err 0.0e+00)
+plain        N=  50  regenerate    3.463 s  solids   50  valid 1  V=6250.000000 expected 6250.000000 (rel err 3.1e-15)
+plain        N= 100  regenerate   14.806 s  solids  100  valid 1  V=12500.000000 expected 12500.000000 (rel err 6.3e-15)
+plain        N= 250  regenerate   95.955 s  solids  250  valid 1  V=31250.000000 expected 31250.000000 (rel err 2.1e-14)
+plain        N= 500  regenerate  344.655 s  solids  500  valid 1  V=62500.000000 expected 62500.000000 (rel err 4.3e-14)
+symmetric    N=   9  regenerate    0.158 s  solids    9  valid 1  V=1125.000000 expected 1125.000000 (rel err 4.0e-16)
+symmetric    N=  49  regenerate    3.013 s  solids   49  valid 1  V=6125.000000 expected 6125.000000 (rel err 2.8e-15)
+symmetric    N=  99  regenerate   12.980 s  solids   99  valid 1  V=12375.000000 expected 12375.000000 (rel err 6.0e-15)
+symmetric    N= 249  regenerate   80.725 s  solids  249  valid 1  V=31125.000000 expected 31125.000000 (rel err 2.1e-14)
+symmetric    N= 499  regenerate  325.067 s  solids  499  valid 1  V=62375.000000 expected 62375.000000 (rel err 4.3e-14)
+suppressed   N=  10  regenerate    0.066 s  solids    5  valid 1  V=625.000000 expected 625.000000 (rel err 1.8e-16)
+suppressed   N=  50  regenerate    0.893 s  solids   25  valid 1  V=3125.000000 expected 3125.000000 (rel err 1.6e-15)
+suppressed   N= 100  regenerate    3.334 s  solids   50  valid 1  V=6250.000000 expected 6250.000000 (rel err 3.1e-15)
+suppressed   N= 250  regenerate   19.997 s  solids  125  valid 1  V=15625.000000 expected 15625.000000 (rel err 1.1e-14)
+suppressed   N= 500  regenerate   79.020 s  solids  250  valid 1  V=31250.000000 expected 31250.000000 (rel err 2.1e-14)
+nested       N=  10  regenerate    0.186 s  solids   10  valid 1  V=1250.000000 expected 1250.000000 (rel err 0.0e+00)
+nested       N=  50  regenerate    3.353 s  solids   50  valid 1  V=6250.000000 expected 6250.000000 (rel err 3.1e-15)
+nested       N= 100  regenerate   12.795 s  solids  100  valid 1  V=12500.000000 expected 12500.000000 (rel err 6.3e-15)
+nested       N= 250  regenerate   79.756 s  solids  250  valid 1  V=31250.000000 expected 31250.000000 (rel err 2.1e-14)
+nested       N= 500  regenerate  326.762 s  solids  500  valid 1  V=62500.000000 expected 62500.000000 (rel err 4.3e-14)
+two-way      N=  10  regenerate    0.188 s  solids   10  valid 1  V=1250.000000 expected 1250.000000 (rel err 0.0e+00)
+two-way      N=  50  regenerate    3.329 s  solids   50  valid 1  V=6250.000000 expected 6250.000000 (rel err 3.1e-15)
+two-way      N= 100  regenerate   12.503 s  solids  100  valid 1  V=12500.000000 expected 12500.000000 (rel err 6.3e-15)
+two-way      N= 250  regenerate   79.489 s  solids  250  valid 1  V=31250.000000 expected 31250.000000 (rel err 2.1e-14)
+two-way      N= 500  regenerate  325.826 s  solids  500  valid 1  V=62500.000000 expected 62500.000000 (rel err 4.3e-14)

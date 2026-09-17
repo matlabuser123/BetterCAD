@@ -78,6 +78,8 @@ bettercad_add_executable(bettercad_tests
         features/LinearPatternFeatureTests.cpp
         features/LoftFeatureTests.cpp
         features/MirrorFeatureTests.cpp
+        features/PatternDistributionTests.cpp
+        features/PatternNestingTests.cpp
         features/ProfileTests.cpp
         features/SweepFeatureTests.cpp
         features/RegenerationTests.cpp
@@ -105,6 +107,7 @@ bettercad_add_executable(bettercad_tests
         io/LoftFileTests.cpp
         io/MirrorFileTests.cpp
         io/ParameterJsonTests.cpp
+        io/PatternInstanceFileTests.cpp
         io/SweepFileTests.cpp
         io/RevolveFileTests.cpp
         io/RibFileTests.cpp
@@ -169,6 +172,7 @@ if(TARGET bettercad_cli_lib)
         cli/DraftCliTests.cpp
         cli/FaceReferenceCliTests.cpp
         cli/HoleStandardCliTests.cpp
+        cli/PatternInstanceCliTests.cpp
         cli/ThroughAllCliTests.cpp
         cli/BodyOpsCliTests.cpp
         cli/RibCliTests.cpp

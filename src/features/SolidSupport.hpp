@@ -66,6 +66,11 @@ using PathEdgeOf = std::function<std::optional<EntityId>(std::size_t pathSegment
 /// The copy step @p copy appended to every face name (patterns and mirrors).
 [[nodiscard]] geometry::FaceRenamer appendCopy(const FaceCopy& copy);
 
+/// The copy steps @p copies appended to every face name, in order: a pattern
+/// of a pattern appends the inner pattern's step and then the outer one's
+/// (P12-PATTERN-001).
+[[nodiscard]] geometry::FaceRenamer appendCopies(std::vector<FaceCopy> copies);
+
 /// One solid per region, made by @p build, united into one body (disjoint
 /// regions give a body with several solids). Face names on the solids are
 /// carried into the body.

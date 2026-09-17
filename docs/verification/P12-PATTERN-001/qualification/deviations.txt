@@ -1,0 +1,132 @@
+﻿file                             kind  tolerance  checks    largest
+GeometryTestSupport.hpp          abs     1.0e-09      58   9.95e-14
+HoleStandardTests.cpp            rel     1.0e-12       2   3.30e-16
+PatternDistributionTests.cpp     abs     1.0e-09      75   7.11e-15
+PatternDistributionTests.cpp     rel     1.0e-12      12   6.50e-16
+PatternInstanceFileTests.cpp     rel     1.0e-12       3   6.06e-16
+PatternNestingTests.cpp          abs     1.0e-09      66   8.90e-16
+PatternNestingTests.cpp          rel     1.0e-12      11   7.96e-16
+RigidTransformTests.cpp          abs     1.0e-12      53   3.06e-15
+RigidTransformTests.cpp          abs     1.0e-09     118   7.11e-15
+SketchOnFaceTests.cpp            abs     1.0e-14      52   1.11e-16
+SketchOnFaceTests.cpp            abs     1.0e-12      28   2.66e-15
+SketchOnFaceTests.cpp            abs     1.0e-09      51   8.53e-14
+SketchOnFaceTests.cpp            abs     1.0e-07      87   7.11e-15
+SketchOnFaceTests.cpp            rel     1.0e-12      16   6.06e-16
+ThroughAllExtrudeTests.cpp       abs     1.0e-09      15   1.07e-14
+ThroughAllExtrudeTests.cpp       abs     1.0e-07      30   0.00e+00
+ThroughAllExtrudeTests.cpp       rel     1.0e-12      10   4.05e-16
+
+GeometryTestSupport.hpp abs 1.0e-09: largest 5
+  9.948e-14  measured 50.0000000000001 expected 50.0  LinearPattern_RepeatsAnotherLinearPattern  
+  1.421e-14  measured 25.000000000000014 expected 25.0  LinearPattern_RepeatsAnotherLinearPattern  
+  7.105e-15  measured 25.000000000000007 expected 25.0  LinearPattern_RepeatsAPatternOfAPattern  
+  6.217e-15  measured 5.000000000000006 expected 5.0  LinearPattern_RepeatsAnotherLinearPattern  
+  5.329e-15  measured 14.999999999999995 expected 15.0  LinearPattern_RepeatsAPatternOfAPattern  
+
+HoleStandardTests.cpp rel 1.0e-12: largest 5
+  3.300e-16  measured 44099.780707106846 expected 44099.78070710683  HoleStandards_PatternsAndMirrorsRepeatThreadedHoles / a mirror repeats the thread as it is: threads are not handed  
+  0.000e+00  measured 43683.39006223023 expected 43683.39006223023  HoleStandards_PatternsAndMirrorsRepeatThreadedHoles / a linear pattern drills the same tapped hole at each instance  
+
+PatternDistributionTests.cpp abs 1.0e-09: largest 5
+  7.105e-15  measured 59.99999999999999 expected 60.0  CircularPattern_SymmetricTurnsItsCopiesBothWays  instance 3
+  7.105e-15  measured -59.99999999999999 expected -60.0  CircularPattern_SymmetricTurnsItsCopiesBothWays  instance 4
+  3.553e-15  measured 29.999999999999996 expected 30.0  CircularPattern_SymmetricTurnsItsCopiesBothWays  instance 1
+  3.553e-15  measured -29.999999999999996 expected -30.0  CircularPattern_SymmetricTurnsItsCopiesBothWays  instance 2
+  0.000e+00  measured 0.0 expected 0.0  LinearPattern_TotalLengthDividesTheRowBetweenItsInstances  
+
+PatternDistributionTests.cpp rel 1.0e-12: largest 5
+  6.496e-16  measured 7000.000000000005 expected 7000.0  LinearPattern_SymmetricNeedsAnOddCount / a driven count is checked when it is resolved  
+  4.547e-16  measured 6000.000000000003 expected 6000.0  LinearPattern_ReEnablingAnInstanceRestoresTheSameIdentity  
+  4.547e-16  measured 6000.000000000003 expected 6000.0  LinearPattern_SuppressedInstancesMakeNoGeometry  
+  3.999e-16  measured 109170.34471224535 expected 109170.3447122453  CircularPattern_SymmetricTurnsItsCopiesBothWays  
+  3.498e-16  measured 2600.000000000001 expected 2600.0  LinearPattern_TouchingAndOverlappingSymmetricInstancesFuse / overlapping: 5 cubes 4 mm apart cover 26 mm, not 50  
+
+PatternInstanceFileTests.cpp rel 1.0e-12: largest 5
+  6.063e-16  measured 17999.99999999999 expected 18000.0  LinearPattern_SaveLoadPreservesDistributionSymmetryAndSuppression  
+  6.063e-16  measured 11999.999999999993 expected 12000.0  LinearPattern_SaveLoadPreservesANestedPattern  
+  5.294e-16  measured 109955.74287564281 expected 109955.74287564275  CircularPattern_SaveLoadPreservesSymmetryAndSuppression  
+
+PatternNestingTests.cpp abs 1.0e-09: largest 5
+  8.900e-16  measured 8.9e-16 expected 0.0  LinearPattern_NestedPatternsFollowTheirSourceParameters  ; cube 0
+  8.900e-16  measured 8.9e-16 expected 0.0  LinearPattern_NestedPatternsFollowTheirSourceParameters  ; cube 2
+  8.900e-16  measured 8.9e-16 expected 0.0  LinearPattern_NestedPatternsFollowTheirSourceParameters  ; cube 4
+  8.900e-16  measured 8.9e-16 expected 0.0  LinearPattern_RepeatsAnotherLinearPattern  ; cube 0
+  8.900e-16  measured 8.9e-16 expected 0.0  LinearPattern_RepeatsAnotherLinearPattern  ; cube 4
+
+PatternNestingTests.cpp rel 1.0e-12: largest 5
+  7.958e-16  measured 8000.000000000006 expected 8000.0  LinearPattern_NestedPatternsFollowTheirSourceParameters  
+  6.063e-16  measured 11999.999999999993 expected 12000.0  LinearPattern_NestedInstancesCountTowardsTheCap / suppressed instances of the source do not count  
+  6.063e-16  measured 11999.999999999993 expected 12000.0  LinearPattern_RepeatsAnotherLinearPattern  
+  5.684e-16  measured 8000.000000000005 expected 8000.0  LinearPattern_RepeatsAPatternOfAPattern  
+  4.547e-16  measured 6000.000000000003 expected 6000.0  LinearPattern_NestedPatternsFollowTheirSourceParameters  
+
+RigidTransformTests.cpp abs 1.0e-12: largest 5
+  3.060e-15  measured 3.06e-15 expected 0.0  RigidTransform_AfterAppliesTheInnerMotionFirst  
+  6.100e-16  measured 6.1e-16 expected 0.0  RigidTransform_AfterAppliesTheInnerMotionFirst  
+  0.000e+00  measured 1.0 expected 1.0  RigidTransform_AfterAppliesTheInnerMotionFirst  
+  0.000e+00  measured 0.0 expected 0.0  RigidTransform_AfterAppliesTheInnerMotionFirst  
+  0.000e+00  measured 0.0 expected 0.0  RigidTransform_AfterAppliesTheInnerMotionFirst  
+
+RigidTransformTests.cpp abs 1.0e-09: largest 5
+  7.105e-15  measured 45.0 expected 45.00000000000001  RigidTransform_AfterAppliesTheInnerMotionFirst  p[0] := -40.0; p[1] := 55.0; p[2] := 2.0
+  7.105e-15  measured 56.416607741076035 expected 56.41660774107603  RigidTransform_AfterAppliesTheInnerMotionFirst  p[0] := 12.0; p[1] := -3.0; p[2] := 7.5
+  7.105e-15  measured 40.12380789151987 expected 40.123807891519874  RigidTransform_AfterAppliesTheInnerMotionFirst  p[0] := -40.0; p[1] := 55.0; p[2] := 2.0
+  7.105e-15  measured 39.99999999999999 expected 40.0  RigidTransform_AfterAppliesTheInnerMotionFirst  p[0] := -40.0; p[1] := 55.0; p[2] := 2.0
+  7.105e-15  measured -55.00000000000001 expected -55.0  RigidTransform_AfterAppliesTheInnerMotionFirst  p[0] := -40.0; p[1] := 55.0; p[2] := 2.0
+
+SketchOnFaceTests.cpp abs 1.0e-14: largest 5
+  1.110e-16  measured -0.8660254037844386 expected -0.8660254037844387  SketchOnFace_CircularCopiesFollowTheCount  spokes := 3.0; SpokeSketch (object:7)
+  1.110e-16  measured -0.49999999999999967 expected -0.4999999999999998  SketchOnFace_CircularCopiesFollowTheCount  spokes := 3.0; SpokeSketch (object:7)
+  5.551e-17  measured -0.4999999999999997 expected -0.4999999999999998  SketchOnFace_CircularCopiesFollowTheCount  spokes := 3.0; SpokeSketch (object:7)
+  0.000e+00  measured 0.0 expected 0.0  SketchOnFace_ReferencesToCopiesDependOnTheCopyingFeatures  CopySketch (object:9)
+  0.000e+00  measured 1.0 expected 1.0  SketchOnFace_ReferencesToCopiesDependOnTheCopyingFeatures  CopySketch (object:9)
+
+SketchOnFaceTests.cpp abs 1.0e-12: largest 5
+  2.665e-15  measured -4.330127018922196 expected -4.330127018922194  SketchOnFace_CircularCopiesFollowTheCount  spokes := 3.0; SpokeSketch (object:7)
+  1.332e-15  measured -2.5000000000000004 expected -2.499999999999999  SketchOnFace_CircularCopiesFollowTheCount  spokes := 3.0; SpokeSketch (object:7)
+  0.000e+00  measured 80.0 expected 80.0  SketchOnFace_ReferencesToCopiesDependOnTheCopyingFeatures  CopySketch (object:9)
+  0.000e+00  measured 0.0 expected 0.0  SketchOnFace_ReferencesToCopiesDependOnTheCopyingFeatures  CopySketch (object:9)
+  0.000e+00  measured 0.0 expected 0.0  SketchOnFace_ReferencesToCopiesDependOnTheCopyingFeatures  CopySketch (object:9)
+
+SketchOnFaceTests.cpp abs 1.0e-09: largest 5
+  8.527e-14  measured 99.99999999999991 expected 100.0  SketchOnFace_PatternAndMirrorCopiesFollowTheirInstance  pitch := 35.0; posts := 3.0
+  8.527e-14  measured 99.99999999999991 expected 100.0  SketchOnFace_PatternAndMirrorCopiesFollowTheirInstance  pitch := 35.0; posts := 2.0
+  5.684e-14  measured 99.99999999999994 expected 100.0  SketchOnFace_PatternAndMirrorCopiesFollowTheirInstance  pitch := 30.0; posts := 3.0
+  1.421e-14  measured 117.99999999999999 expected 118.0  SketchOnFace_ReferencesToCopiesDependOnTheCopyingFeatures  ImageSketch (object:11)
+  1.421e-14  measured 117.99999999999999 expected 118.0  SketchOnFace_PatternAndMirrorCopiesFollowTheirInstance  ImageSketch (object:11)
+
+SketchOnFaceTests.cpp abs 1.0e-07: largest 5
+  7.105e-15  measured -21.794228634059948 expected -21.79422863405994  SketchOnFace_CircularCopiesFollowTheCount  spokes := 3.0; SpokeSketch (object:7)
+  3.553e-15  measured 14.552558883257657 expected 14.552558883257653  SketchOnFace_CircularCopiesFollowTheCount  spokes := 3.0; SpokeSketch (object:7)
+  3.553e-15  measured -15.330127018922191 expected -15.330127018922187  SketchOnFace_CircularCopiesFollowTheCount  spokes := 3.0; SpokeSketch (object:7)
+  3.553e-15  measured 21.74871130596429 expected 21.748711305964285  SketchOnFace_CircularCopiesFollowTheCount  spokes := 3.0; SpokeSketch (object:7)
+  0.000e+00  measured 80.0 expected 80.0  SketchOnFace_ReferencesToCopiesDependOnTheCopyingFeatures  CopySketch (object:9)
+
+SketchOnFaceTests.cpp rel 1.0e-12: largest 5
+  6.063e-16  measured 72000.00000000004 expected 72000.0  SketchOnFace_PatternAndMirrorCopiesFollowTheirInstance  pitch := 35.0; posts := 3.0
+  4.280e-16  measured 68000.00000000003 expected 68000.0  SketchOnFace_PatternAndMirrorCopiesFollowTheirInstance  pitch := 35.0; posts := 2.0
+  4.042e-16  measured 72000.00000000003 expected 72000.0  SketchOnFace_PatternAndMirrorCopiesFollowTheirInstance  pitch := 30.0; posts := 3.0
+  3.770e-16  measured 113.0973355292326 expected 113.09733552923255  SketchOnFace_ReferencesToCopiesDependOnTheCopyingFeatures  CopySketch (object:9)
+  3.770e-16  measured 113.0973355292326 expected 113.09733552923255  SketchOnFace_ReferencesToCopiesDependOnTheCopyingFeatures  ImageSketch (object:11)
+
+ThroughAllExtrudeTests.cpp abs 1.0e-09: largest 5
+  1.066e-14  measured 30.00000000000001 expected 30.0  ThroughAllExtrude_RepeatsThroughTheBodyAtEveryInstance / a circular pattern turns the hole onto each wall  
+  7.105e-15  measured 50.51561360795716 expected 50.51561360795715  ThroughAllExtrude_RepeatsThroughTheBodyAtEveryInstance / a row of holes through a plate of any thickness  t := 25.0; count := 3.0
+  3.553e-15  measured 30.655788119220006 expected 30.655788119220002  ThroughAllExtrude_RepeatsThroughTheBodyAtEveryInstance / a row of holes through a plate of any thickness  t := 10.0; count := 5.0
+  3.553e-15  measured 12.5 expected 12.499999999999996  ThroughAllExtrude_RepeatsThroughTheBodyAtEveryInstance / a row of holes through a plate of any thickness  t := 25.0; count := 3.0
+  2.449e-15  measured -0.02966210015828822 expected -0.02966210015828577  ThroughAllExtrude_RepeatsThroughTheBodyAtEveryInstance / a feature mirror in the plane x = z turns the hole onto the +X wall  
+
+ThroughAllExtrudeTests.cpp abs 1.0e-07: largest 5
+  0.000e+00  measured 0.0 expected 0.0  ThroughAllExtrude_RepeatsThroughTheBodyAtEveryInstance / a row of holes through a plate of any thickness  t := 10.0; count := 5.0
+  0.000e+00  measured 0.0 expected 0.0  ThroughAllExtrude_RepeatsThroughTheBodyAtEveryInstance / a row of holes through a plate of any thickness  t := 10.0; count := 5.0
+  0.000e+00  measured 0.0 expected 0.0  ThroughAllExtrude_RepeatsThroughTheBodyAtEveryInstance / a row of holes through a plate of any thickness  t := 10.0; count := 5.0
+  0.000e+00  measured 100.0 expected 100.0  ThroughAllExtrude_RepeatsThroughTheBodyAtEveryInstance / a row of holes through a plate of any thickness  t := 10.0; count := 5.0
+  0.000e+00  measured 60.0 expected 60.0  ThroughAllExtrude_RepeatsThroughTheBodyAtEveryInstance / a row of holes through a plate of any thickness  t := 10.0; count := 5.0
+
+ThroughAllExtrudeTests.cpp rel 1.0e-12: largest 5
+  4.050e-16  measured 143716.81469282048 expected 143716.81469282042  ThroughAllExtrude_RepeatsThroughTheBodyAtEveryInstance / a row of holes through a plate of any thickness  t := 25.0; count := 5.0
+  1.990e-16  measured 146230.0888156923 expected 146230.08881569226  ThroughAllExtrude_RepeatsThroughTheBodyAtEveryInstance / a row of holes through a plate of any thickness  t := 25.0; count := 3.0
+  1.508e-16  measured 188.49555921538754 expected 188.49555921538757  ThroughAllExtrude_RepeatsThroughTheBodyAtEveryInstance / a feature mirror in the plane x = z turns the hole onto the +X wall  
+  0.000e+00  measured 57486.72587712816 expected 57486.72587712816  ThroughAllExtrude_RepeatsThroughTheBodyAtEveryInstance / a row of holes through a plate of any thickness  t := 10.0; count := 5.0
+  0.000e+00  measured 59151.76998353076 expected 59151.76998353076  ThroughAllExtrude_RepeatsThroughTheBodyAtEveryInstance / a circular pattern turns the hole onto each wall  

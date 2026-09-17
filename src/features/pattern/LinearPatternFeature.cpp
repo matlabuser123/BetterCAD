@@ -2,7 +2,9 @@
 
 #include <bettercad/core/units/Format.hpp>
 
+#include <algorithm>
 #include <format>
+#include <string>
 #include <utility>
 
 namespace bettercad::features {
@@ -30,6 +32,8 @@ Result<void> validateDirection(const PatternDirection& direction, std::string_vi
     const auto invalid = [&](const std::string& message) {
         return makeError(ErrorCode::InvalidArgument, std::format("{}: {}", label, message));
     };
+    const bool total = direction.distribution == PatternDistribution::TotalLength;
+    const std::string_view what = total ? "total length" : "spacing";
     if (!normalized(direction.direction)) {
         return invalid(
             std::format("the direction must be a finite, non-zero vector, got {}", format(direction.direction)));
@@ -38,8 +42,21 @@ Result<void> validateDirection(const PatternDirection& direction, std::string_vi
         return invalid(std::format("the count must be at least 1, got {}", direction.count));
     }
     if (!direction.spacingParameter && (!isFinite(direction.spacing) || !(direction.spacing > Length{}))) {
-        return invalid(std::format("the spacing must be positive and finite, got {}",
+        return invalid(std::format("the {} must be positive and finite, got {}", what,
                                    toString(direction.spacing, units::mm)));
+    }
+    // The rules of the count that do not depend on a driven value
+    // (P12-PATTERN-001).
+    if (!direction.countParameter) {
+        if (total && direction.count < 2) {
+            return invalid(std::format("a total length needs at least 2 instances to divide it between, got {}",
+                                       direction.count));
+        }
+        if (direction.symmetric && direction.count % 2 == 0) {
+            return invalid(std::format("a symmetric direction needs an odd count, so the source is its middle "
+                                       "instance, got {}",
+                                       direction.count));
+        }
     }
     return {};
 }
@@ -49,6 +66,9 @@ Result<void> validateDirection(const PatternDirection& direction, std::string_vi
 Result<void> validate(const LinearPatternDefinition& definition) {
     if (!definition.source.isValid()) {
         return makeError(ErrorCode::InvalidArgument, "a linear pattern needs a source feature");
+    }
+    if (auto valid = validateSuppressed(definition.suppressed, "linear pattern"); !valid) {
+        return valid;
     }
     const auto directions = {&definition.first, definition.second ? &*definition.second : nullptr};
     for (const PatternDirection* direction : directions) {
@@ -85,18 +105,85 @@ Result<void> validate(const LinearPatternDefinition& definition) {
     return {};
 }
 
-std::vector<PatternInstance> patternInstances(const PatternStep& first, const std::optional<PatternStep>& second) {
+std::string_view toString(PatternDistribution distribution) noexcept {
+    switch (distribution) {
+    case PatternDistribution::Spacing:
+        return "spacing";
+    case PatternDistribution::TotalLength:
+        return "total_length";
+    }
+    return "unknown";
+}
+
+double patternStepMultiple(std::size_t step, bool symmetric) noexcept {
+    if (!symmetric || step == 0) {
+        // The source is where it is; +0, never -0, which would reach the
+        // file and the bit-for-bit comparisons as a different number.
+        return static_cast<double>(step);
+    }
+    // 0, +1, -1, +2, -2, ...: the copies are numbered outward, the positive
+    // side first, so raising the count keeps what an index means. A count of
+    // 2n + 1 reaches +n and -n, spanning 2 n s centred on the source.
+    const double away = static_cast<double>((step + 1) / 2);
+    return step % 2 == 1 ? away : -away;
+}
+
+Result<void> validateSuppressed(const std::vector<std::uint32_t>& suppressed, std::string_view pattern) {
+    for (std::size_t i = 0; i < suppressed.size(); ++i) {
+        if (suppressed[i] == 0) {
+            return makeError(ErrorCode::InvalidArgument,
+                             std::format("a {} cannot suppress instance 0: it is the source itself", pattern));
+        }
+        if (i > 0 && suppressed[i] <= suppressed[i - 1]) {
+            return makeError(ErrorCode::InvalidArgument,
+                             std::format("a {}'s suppressed instances are listed once, by increasing index, got {} "
+                                         "after {}",
+                                         pattern, suppressed[i], suppressed[i - 1]));
+        }
+    }
+    return {};
+}
+
+Result<void> checkSuppressedAgainstCount(const std::vector<std::uint32_t>& suppressed, std::size_t count,
+                                         std::string_view pattern) {
+    for (const std::uint32_t index : suppressed) {
+        if (index >= count) {
+            return makeError(ErrorCode::InvalidArgument,
+                             std::format("a {} of {} instances has no instance {} to suppress", pattern, count,
+                                         index));
+        }
+    }
+    if (count > 1 && suppressed.size() + 1 == count) {
+        return makeError(ErrorCode::InvalidArgument,
+                         std::format("a {} cannot suppress every copy: {} of {} instances leaves the source alone",
+                                     pattern, suppressed.size(), count));
+    }
+    return {};
+}
+
+std::vector<PatternInstance> patternInstances(const PatternStep& first, const std::optional<PatternStep>& second,
+                                              const std::vector<std::uint32_t>& suppressed) {
     const std::size_t rows = second ? second->count : 1;
     std::vector<PatternInstance> instances;
     instances.reserve(first.count * rows);
     for (std::size_t j = 0; j < rows; ++j) {
         for (std::size_t i = 0; i < first.count; ++i) {
-            // From the source: i s1 d1 (+ j s2 d2), each product rounded once.
-            Translation3D offset = Translation3D::along(first.direction, first.spacing * static_cast<double>(i));
+            // From the source: m(i) s1 d1 (+ m(j) s2 d2), each product
+            // rounded once, so no offset depends on the instances before it.
+            Translation3D offset = Translation3D::along(
+                first.direction, first.spacing * patternStepMultiple(i, first.symmetric));
             if (second) {
-                offset = offset + Translation3D::along(second->direction, second->spacing * static_cast<double>(j));
+                offset = offset + Translation3D::along(
+                                      second->direction,
+                                      second->spacing * patternStepMultiple(j, second->symmetric));
             }
-            instances.push_back({.index = instances.size(), .first = i, .second = j, .offset = offset});
+            const std::size_t index = instances.size();
+            instances.push_back({.suppressed = std::ranges::find(suppressed, static_cast<std::uint32_t>(index)) !=
+                                               suppressed.end(),
+                                 .index = index,
+                                 .first = i,
+                                 .second = j,
+                                 .offset = offset});
         }
     }
     return instances;

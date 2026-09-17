@@ -263,3 +263,46 @@ TEST_CASE("RigidTransform_RotationPreservesDistanceToAxis", "[math][transform]")
     CHECK(worstRadius < 1e-12);
     CHECK(worstPosition < 1e-11);
 }
+
+TEST_CASE("RigidTransform_AfterAppliesTheInnerMotionFirst", "[math][transform][p12]") {
+    // P12-PATTERN-001: a pattern of a pattern moves an instance of the inner
+    // pattern by an instance of the outer one. after() must be exactly the
+    // two motions in that order, for every point and direction.
+    const std::array<RigidTransform3D, 5> motions{
+        RigidTransform3D{},
+        RigidTransform3D::translation(Translation3D{20_mm, -5_mm, 3_mm}),
+        RigidTransform3D::rotation(axis({0, 0, 0}, {0, 0, 1}), 90_deg),
+        RigidTransform3D::rotation(axis({60, 25, 0}, {1, 2, 3}), 37_deg),
+        RigidTransform3D::reflection(point({10, 0, 0}), Direction3D::unitX()),
+    };
+    const V points[] = {{0, 0, 0}, {12, -3, 7.5}, {-40, 55, 2}};
+    for (const RigidTransform3D& outer : motions) {
+        for (const RigidTransform3D& inner : motions) {
+            const RigidTransform3D combined = outer.after(inner);
+            for (const V& p : points) {
+                CAPTURE(p[0], p[1], p[2]);
+                // The reference: apply the inner motion, then the outer one.
+                checkClose(mm(combined.apply(point(p))), mm(outer.apply(inner.apply(point(p)))), 1e-9);
+            }
+            for (const Direction3D& d : {Direction3D::unitX(), Direction3D::unitY(), Direction3D::unitZ()}) {
+                const Direction3D expected = outer.apply(inner.apply(d));
+                const Direction3D actual = combined.apply(d);
+                CHECK_THAT(actual.x(), WithinAbs(expected.x(), 1e-12));
+                CHECK_THAT(actual.y(), WithinAbs(expected.y(), 1e-12));
+                CHECK_THAT(actual.z(), WithinAbs(expected.z(), 1e-12));
+            }
+            // Composing two rigid motions is rigid: a reflection either side
+            // reverses orientation, both or neither keeps it.
+            CHECK(combined.reversesOrientation() ==
+                  (outer.reversesOrientation() != inner.reversesOrientation()));
+        }
+    }
+    // The order matters, and after() takes the inner motion as its argument.
+    const auto turn = RigidTransform3D::rotation(axis({0, 0, 0}, {0, 0, 1}), 90_deg);
+    const auto move = RigidTransform3D::translation(Translation3D{10_mm, 0_mm, 0_mm});
+    checkClose(mm(turn.after(move).apply(point({0, 0, 0}))), {0, 10, 0}, 1e-12);
+    checkClose(mm(move.after(turn).apply(point({0, 0, 0}))), {10, 0, 0}, 1e-12);
+    // The identity on either side changes nothing.
+    checkClose(mm(turn.after(RigidTransform3D{}).apply(point({50, 0, 0}))), {0, 50, 0}, 1e-12);
+    checkClose(mm(RigidTransform3D{}.after(turn).apply(point({50, 0, 0}))), {0, 50, 0}, 1e-12);
+}

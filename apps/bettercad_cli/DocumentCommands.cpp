@@ -279,12 +279,30 @@ std::string describeHole(const Document& document, const features::HoleDefinitio
 
 /// "5 x 20 mm along (1, 0, 0)": the count, the spacing and the direction as
 /// given; driven values show their parameter's name.
+/// The instances the suppressed ones among them make no geometry:
+/// ", suppressed 2, 5", by index, in the order the definition holds them
+/// (P12-PATTERN-001). Nothing when none is suppressed.
+std::string describeSuppressed(const std::vector<std::uint32_t>& suppressed) {
+    if (suppressed.empty()) {
+        return {};
+    }
+    std::string text = ", suppressed ";
+    for (std::size_t i = 0; i < suppressed.size(); ++i) {
+        text += (i == 0 ? "" : ", ") + std::format("{}", suppressed[i]);
+    }
+    return text;
+}
+
+/// "5 x 20 mm along (1, 0, 0)", or "5 over 80 mm along ..." when the length
+/// given is the whole row's rather than one step's, and "symmetric" when the
+/// instances sit on both sides of the source (P12-PATTERN-001).
 std::string describePatternDirection(const Document& document, const features::PatternDirection& d) {
     const std::string count =
         d.countParameter ? nameOrId(document, ObjectId{*d.countParameter}) : std::format("{}", d.count);
-    return std::format("{} x {} along ({:.6g}, {:.6g}, {:.6g})", count,
-                       describeLength(document, d.spacing, d.spacingParameter), tidy(d.direction.x),
-                       tidy(d.direction.y), tidy(d.direction.z));
+    const bool total = d.distribution == features::PatternDistribution::TotalLength;
+    return std::format("{} {} {}{} along ({:.6g}, {:.6g}, {:.6g})", count, total ? "over" : "x",
+                       describeLength(document, d.spacing, d.spacingParameter), d.symmetric ? " symmetric" : "",
+                       tidy(d.direction.x), tidy(d.direction.y), tidy(d.direction.z));
 }
 
 /// "source Bolt, 6 around the axis through (0, 0, 0) mm along (0, 0, 1),
@@ -320,6 +338,10 @@ std::string describeCircularPattern(const Document& document, const features::Ci
     if (d.direction == features::RotationDirection::Negative) {
         text += ", negative";
     }
+    if (d.symmetric) {
+        text += ", symmetric";
+    }
+    text += describeSuppressed(d.suppressed);
     return text;
 }
 
@@ -462,6 +484,7 @@ std::string describeObject(const Document& document, const DocumentObject& objec
         if (d.second) {
             text += std::format(" by {}", describePatternDirection(document, *d.second));
         }
+        text += describeSuppressed(d.suppressed);
         return text;
     }
     if (const auto* circular = dynamic_cast<const features::CircularPatternFeature*>(&object)) {

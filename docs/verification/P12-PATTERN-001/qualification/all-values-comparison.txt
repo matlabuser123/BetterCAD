@@ -1,0 +1,37 @@
+﻿Every measured value of the tests P12-HOLE-001 had, from a Release build of its commit (8ee2c28, built in a
+separate clean worktree of that exact revision), and from this milestone's qualified Release build. Each ran
+bettercad_tests.exe -s --reporter xml --rng-seed 1 (all test cases; this build also ran the 41 new ones), and
+values.py (in this directory, with the same header for both) filtered the report:
+  hole001-release:    958 test cases with measured values
+  pattern001-release: 999 test cases with measured values
+compare-values.py dropped (--exclude) the 41 new test cases, the two whose assertions this milestone
+deliberately changed, one case whose entries depend on a heap address (all explained below) and the pointer
+values, and normalized temporary paths, document UUIDs and the Git revision the version text reports. Source
+line numbers were ignored (--ignore-line-numbers): three existing test files gained lines, which moves the
+entries of the cases after them.
+
+Excluded, and why:
+  - the 41 test cases this milestone adds (they have no counterpart in the baseline);
+  - LinearPattern_RefusesUnsupportedSources and CircularPattern_RefusesUnsupportedSources: these asserted
+    that a pattern refuses a pattern source, which is what this milestone replaces. They now assert that a
+    mirror source is refused, which is still true, and nesting is covered by PatternNestingTests.cpp;
+  - "Failures are reported and block dependents until fixed": its entries are pointer comparisons
+    (regenerator.body(...) != nullptr). values.py drops an entry repeated verbatim within a test case, so
+    whether the second occurrence survives depends on whether the heap reused the same address. It did in
+    one run and not the other. The assertion passed in both; no engineering value is involved.
+
+Substituted (--substitute " (modified)="): the build-info string says "(modified)" when the build was made
+from a working tree with uncommitted changes, which this milestone's qualified build was (the commit follows
+the qualification). Seven lines of this build's version text carry it; two further lines in each file are a
+BuildInfoTests fixture that formats the literal "0123456789ab (modified)", and are identical on both sides.
+
+substituted ' (modified)' -> '':
+  hole001-release: 2 lines
+  pattern001-release: 9 lines
+hole001-release: 46919 non-empty lines after normalizing, MD5 4f1d21536de311c7510820b3fcf1a9f3
+pattern001-release: 46919 non-empty lines after normalizing, MD5 4f1d21536de311c7510820b3fcf1a9f3
+
+pattern001-release against hole001-release:
+  differing lines: 0 expected only, 0 measured
+
+RESULT: measured values identical

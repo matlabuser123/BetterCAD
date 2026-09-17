@@ -1,0 +1,23 @@
+﻿hole001-release: 1070 tests,   1330.94 s summed
+pattern001-release: 1111 tests,    827.46 s summed
+
+test                                                                  hole001-releasepattern001-release
+unit.ReferenceModel_AllModelsStressRegression                                  34.67         24.56
+unit.LinearPattern_DoesNotAccumulateTransformDrift                             25.38         19.28
+unit.ReferenceModel_MountingBracketRegeneratesDeterministically                25.00         18.19
+unit.ReferenceModel_AllModelsRegenerateAfterAChange                            22.91         14.89
+unit.ReferenceModel_FlangeRegeneratesDeterministically                         21.94         15.69
+unit.ReferenceModel_AllModelsBuildInOneProcess                                 21.92         16.32
+unit.ReferenceModel_PulleyRegeneratesDeterministically                         21.40         13.75
+compile_fail.ids.integer-to-id                                                 19.17          6.41
+compile_fail.ids.compare-different-kinds                                       16.59          5.56
+unit.ReferenceModel_ShaftRegeneratesDeterministically                          16.03         11.92
+compile_fail.ids.object-to-sketch-id                                           15.46          6.56
+unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges            13.66         10.60
+--- split ---
+  tests in both logs: 1070; only in the new log: 41; only in the old log: 0
+  new tests: 30.71 s summed
+  existing tests: -534.19 s summed change
+  existing tests under 0.5 s: 610, -82.35 s summed change
+  existing tests of 0.5 s or more: 460, median new/old ratio 0.542, 0.00 of them slower
+  largest move among the 12 slowest: -12.76 s (compile_fail.ids.integer-to-id)

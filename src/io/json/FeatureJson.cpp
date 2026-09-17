@@ -793,6 +793,51 @@ Result<std::unique_ptr<features::FilletFeature>> filletFromJson(const Json& data
 
 namespace {
 
+/// Absent key gives @p fallback; a present key must hold a boolean. The
+/// pattern fields added in P12-PATTERN-001 are written only when they are
+/// not their default, so a file written before them still reads as one.
+Result<bool> readOptionalBool(const Json& object, std::string_view key, std::string_view path, bool fallback) {
+    if (!object.contains(key)) {
+        return fallback;
+    }
+    return readBool(object, key, path);
+}
+
+/// Absent key gives an empty list; a present key must hold an array of
+/// instance indices. The definition checks the indices themselves.
+Result<std::vector<std::uint32_t>> readInstanceIndices(const Json& object, std::string_view key,
+                                                       std::string_view path) {
+    std::vector<std::uint32_t> indices;
+    if (!object.contains(key)) {
+        return indices;
+    }
+    auto array = requireArray(object, key, path);
+    if (!array) {
+        return std::unexpected(array.error());
+    }
+    const std::string arrayPath = childPath(path, key);
+    indices.reserve((*array)->size());
+    for (std::size_t i = 0; i < (*array)->size(); ++i) {
+        const Json& element = (**array)[i];
+        if (!element.is_number_unsigned()) {
+            return parseError(indexPath(arrayPath, i), "expected a non-negative integer");
+        }
+        const std::uint64_t value = element.get<std::uint64_t>();
+        if (value > std::numeric_limits<std::uint32_t>::max()) {
+            return parseError(indexPath(arrayPath, i),
+                              std::format("expected at most {}", std::numeric_limits<std::uint32_t>::max()));
+        }
+        indices.push_back(static_cast<std::uint32_t>(value));
+    }
+    return indices;
+}
+
+/// How a direction spreads its instances (P12-PATTERN-001).
+constexpr std::array<std::pair<features::PatternDistribution, std::string_view>, 2> kPatternDistributions{{
+    {features::PatternDistribution::Spacing, "spacing"},
+    {features::PatternDistribution::TotalLength, "total_length"},
+}};
+
 Json patternDirectionToJson(const features::PatternDirection& d) {
     Json json = Json::object();
     json["direction"] = Json::array({d.direction.x, d.direction.y, d.direction.z});
@@ -803,6 +848,14 @@ Json patternDirectionToJson(const features::PatternDirection& d) {
     json["spacing"] = d.spacing.si();
     if (d.spacingParameter) {
         json["spacing_parameter"] = d.spacingParameter->value();
+    }
+    // Written only when they are not the default, so that a pattern from
+    // before P12-PATTERN-001 is written back exactly as it was read.
+    if (d.distribution != features::PatternDistribution::Spacing) {
+        json["distribution"] = std::string{nameOf(kPatternDistributions, d.distribution)};
+    }
+    if (d.symmetric) {
+        json["symmetric"] = true;
     }
     return json;
 }
@@ -816,7 +869,8 @@ Result<features::PatternDirection> patternDirectionFromJson(const Json& data, st
     }
     const std::string directionPath = childPath(path, key);
     if (auto object = requireObject(**field, directionPath,
-                                    {"direction", "count", "count_parameter", "spacing", "spacing_parameter"});
+                                    {"direction", "count", "count_parameter", "spacing", "spacing_parameter",
+                                     "distribution", "symmetric"});
         !object) {
         return std::unexpected(object.error());
     }
@@ -825,12 +879,19 @@ Result<features::PatternDirection> patternDirectionFromJson(const Json& data, st
     auto countParameter = readOptionalId(**field, "count_parameter", directionPath);
     auto spacing = readNumber(**field, "spacing", directionPath);
     auto spacingParameter = readOptionalId(**field, "spacing_parameter", directionPath);
-    if (!vector || !count || !countParameter || !spacing || !spacingParameter) {
+    auto symmetric = readOptionalBool(**field, "symmetric", directionPath, false);
+    auto distribution = Result<features::PatternDistribution>{features::PatternDistribution::Spacing};
+    if ((*field)->contains("distribution")) {
+        distribution = valueOf(kPatternDistributions, **field, "distribution", directionPath);
+    }
+    if (!vector || !count || !countParameter || !spacing || !spacingParameter || !symmetric || !distribution) {
         const Error& error = !vector ? vector.error()
                            : !count ? count.error()
                            : !countParameter ? countParameter.error()
                            : !spacing ? spacing.error()
-                                      : spacingParameter.error();
+                           : !spacingParameter ? spacingParameter.error()
+                           : !symmetric ? symmetric.error()
+                                        : distribution.error();
         return std::unexpected(error);
     }
     if (*count > std::numeric_limits<std::uint32_t>::max()) {
@@ -843,6 +904,8 @@ Result<features::PatternDirection> patternDirectionFromJson(const Json& data, st
         .countParameter = std::nullopt,
         .spacing = Length::fromSi(*spacing),
         .spacingParameter = std::nullopt,
+        .distribution = *distribution,
+        .symmetric = *symmetric,
     };
     if (*countParameter) {
         direction.countParameter = ParameterId::fromValue(**countParameter);
@@ -863,12 +926,15 @@ Json linearPatternToJson(const features::LinearPatternFeature& feature) {
     if (d.second) {
         json["second"] = patternDirectionToJson(*d.second);
     }
+    if (!d.suppressed.empty()) {
+        json["suppressed"] = d.suppressed;
+    }
     return json;
 }
 
 Result<std::unique_ptr<features::LinearPatternFeature>> linearPatternFromJson(const Json& data, std::string name,
                                                                               std::string_view path) {
-    if (auto object = requireObject(data, path, {"source", "first", "second"}); !object) {
+    if (auto object = requireObject(data, path, {"source", "first", "second", "suppressed"}); !object) {
         return std::unexpected(object.error());
     }
     auto source = readId(data, "source", path);
@@ -879,8 +945,14 @@ Result<std::unique_ptr<features::LinearPatternFeature>> linearPatternFromJson(co
     if (!first) {
         return std::unexpected(first.error());
     }
-    features::LinearPatternDefinition definition{
-        .source = FeatureId::fromValue(*source), .first = *first, .second = std::nullopt};
+    auto suppressed = readInstanceIndices(data, "suppressed", path);
+    if (!suppressed) {
+        return std::unexpected(suppressed.error());
+    }
+    features::LinearPatternDefinition definition{.source = FeatureId::fromValue(*source),
+                                                 .first = *first,
+                                                 .second = std::nullopt,
+                                                 .suppressed = std::move(*suppressed)};
     if (data.contains("second")) {
         auto second = patternDirectionFromJson(data, "second", path);
         if (!second) {
@@ -938,6 +1010,13 @@ Json circularPatternToJson(const features::CircularPatternFeature& feature) {
         }
     }
     json["rotation"] = std::string{nameOf(kRotationDirections, d.direction)};
+    // Written only when they are not the default (P12-PATTERN-001).
+    if (d.symmetric) {
+        json["symmetric"] = true;
+    }
+    if (!d.suppressed.empty()) {
+        json["suppressed"] = d.suppressed;
+    }
     return json;
 }
 
@@ -945,7 +1024,7 @@ Result<std::unique_ptr<features::CircularPatternFeature>> circularPatternFromJso
                                                                                   std::string_view path) {
     if (auto object = requireObject(data, path,
                                     {"source", "axis", "count", "count_parameter", "spacing", "angle",
-                                     "angle_parameter", "rotation"});
+                                     "angle_parameter", "rotation", "symmetric", "suppressed"});
         !object) {
         return std::unexpected(object.error());
     }
@@ -981,11 +1060,14 @@ Result<std::unique_ptr<features::CircularPatternFeature>> circularPatternFromJso
     auto angle = readNumberOrZero(data, "angle", path);
     auto angleParameter = readOptionalId(data, "angle_parameter", path);
     auto rotation = valueOf(kRotationDirections, data, "rotation", path);
+    auto symmetric = readOptionalBool(data, "symmetric", path, false);
+    auto suppressed = readInstanceIndices(data, "suppressed", path);
     for (const Error* error :
          {!origin ? &origin.error() : nullptr, !direction ? &direction.error() : nullptr,
           !count ? &count.error() : nullptr, !countParameter ? &countParameter.error() : nullptr,
           !spacing ? &spacing.error() : nullptr, !angle ? &angle.error() : nullptr,
-          !angleParameter ? &angleParameter.error() : nullptr, !rotation ? &rotation.error() : nullptr}) {
+          !angleParameter ? &angleParameter.error() : nullptr, !rotation ? &rotation.error() : nullptr,
+          !symmetric ? &symmetric.error() : nullptr, !suppressed ? &suppressed.error() : nullptr}) {
         if (error != nullptr) {
             return std::unexpected(*error);
         }
@@ -1008,6 +1090,8 @@ Result<std::unique_ptr<features::CircularPatternFeature>> circularPatternFromJso
         .angle = Angle::fromSi(*angle),
         .angleParameter = optionalParameter(*angleParameter),
         .direction = *rotation,
+        .symmetric = *symmetric,
+        .suppressed = std::move(*suppressed),
     };
     auto feature = features::CircularPatternFeature::create(std::move(name), definition);
     if (!feature) {

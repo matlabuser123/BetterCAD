@@ -13,7 +13,7 @@ authorized — never in advance.
 | | |
 | --- | --- |
 | Current | **`P12` — Parametric CAD Completion** |
-| Next | `P12-PATTERN-001` — Symmetric, total-length, suppressed instances, patterns of patterns |
+| Next | `P12-SWEEP-001` — Guide curves, twist, non-planar paths |
 | Blocked / Manual | None |
 | Last qualified | `P11` Production Part Modeling — **QUALIFIED** |
 | Released | `v0.1.0` (`P0`–`P10`); `P11` qualified, not released |
@@ -61,7 +61,7 @@ Reference models → qualification
 | 10 | `P12-FEAT-005` Rib | `SKETCH-002`, `FEAT-001` | **done** — [evidence](docs/verification/P12-FEAT-005/README.md) |
 | 11 | `P12-FEAT-006` Variable-radius fillet; setback and corner transitions deferred (scope decided 2026-09-18) | — | **done** (variable radius) — [evidence](docs/verification/P12-FEAT-006/README.md); setback and corner transitions deferred |
 | 12 | `P12-HOLE-001` Threads, spotface, standard sizes, tolerance classes | `PARAM-001` | **done** — [evidence](docs/verification/P12-HOLE-001/README.md) |
-| 13 | `P12-PATTERN-001` Symmetric, total-length, suppressed instances, patterns of patterns | `PARAM-001` | not started |
+| 13 | `P12-PATTERN-001` Symmetric, total-length, suppressed instances, patterns of patterns | `PARAM-001` | **done** — [evidence](docs/verification/P12-PATTERN-001/README.md) |
 | 14 | `P12-SWEEP-001` Guide curves, twist, non-planar paths | `SKETCH-002` | not started |
 | 15 | `P12-LOFT-001` Differing section shapes, smooth interpolation, end conditions | `SKETCH-002` | not started |
 | 16 | `P12-PARAM-002` Design equations and configurations | `PARAM-001`, features | not started |
@@ -437,10 +437,52 @@ Acceptance:
 - A driven thread length and a driven bore rebuild the model; a thread longer than its blind hole, a head narrower than the thread, a class whose limits BetterCAD does not know and a size ISO 286 does not tabulate fail with structured diagnostics and keep no body; nothing is substituted.
 - Save → load → regenerate gives the same bodies bit for bit, from the designations alone; STEP exports read back with the same volume; files written before this milestone load and save unchanged; every value the existing tests measure is unchanged; `P0`–`P12-FEAT-006` stays green in all three presets.
 
+#### P12-PATTERN-001 — Symmetric, total-length, suppressed instances, patterns of patterns
+
+The four things `P11-FEAT-005` and `P11-FEAT-006` left out. Each is
+engineering intent the definition keeps, not a shape the regeneration
+guesses:
+
+- **Symmetric.** The instances sit on both sides of the source, which is the
+  middle one. The count includes the source, so it must be odd: (N - 1) / 2
+  copies each side. Every offset is computed from the source as a signed
+  multiple of the step, never by adding to the instance before it.
+- **Total length.** A direction gives either the spacing between
+  neighbours or the total length of the row, from the first instance to the
+  last: the step is then L / (N - 1), which needs N of at least 2.
+- **Suppressed instances.** A pattern of 8 with instances 2 and 5
+  suppressed still has 8 indexed positions: 2 and 5 make no geometry, and 3
+  is still 3. Suppression is persistent intent, so a reference to a
+  suppressed instance fails with `NotFound` — never another instance — and
+  unsuppressing it brings the same index back.
+- **Patterns of patterns.** A pattern may repeat another pattern: each of
+  its instances repeats every instance of the one below. A face keeps the
+  whole chain of copies that made it (the feature, then each pattern and
+  the instance of it), so the original and every copy stay distinguishable.
+
+Deliverables:
+
+- [x] `PatternDistribution` (`spacing`, `total_length`) and a `symmetric` flag on each direction of a linear pattern; the step and every offset derived in closed form, with the instance order fixed and documented (a symmetric direction numbers its copies outward, the positive side first, so that raising the count keeps what the existing indices mean)
+- [x] Symmetric circular patterns: the span centred on the source, with the same odd-count rule; refused for a full circle, which has no span
+- [x] `suppressed` instance indices on linear and circular patterns: persistent, never renumbering, refusing index 0 (the source), duplicates and indices the count does not reach, and refusing to suppress every copy
+- [x] Patterns of patterns: a linear or circular pattern may be the source of another; each outer instance repeats every instance of the inner pattern, its suppression included, and the effective instance count stays within the 500 cap
+- [x] Face names keep the full chain of copies (`FaceSelector::copies`), so a sketch or datum on a nested copy names the feature, the inner pattern and instance, and the outer pattern and instance
+- [x] Dependencies, validation, undo/redo, save/load (new fields; files written before this milestone keep their meaning: spacing, not symmetric, nothing suppressed), CLI description
+- [x] Independent validation: the transforms, instance counts, volumes, centres and bounds of the reference models computed without the pattern implementation
+- [x] Performance measured, not claimed: the cost of 10, 50, 100, 250 and 500 instances recorded against the `P11-FEAT-005` figures
+- [x] Evidence: [docs/verification/P12-PATTERN-001/](docs/verification/P12-PATTERN-001/README.md)
+
+Acceptance:
+
+- Symmetric, total-length and plain patterns place their instances where a closed-form calculation says, to rounding, in one direction, in a grid and about an axis; volumes, centres and bounds match the analytic values for non-overlapping, touching and overlapping instances.
+- Suppressing an instance removes its geometry and nothing else: the other instances keep their indices, their faces keep their names, a reference to a suppressed instance fails with `NotFound`, and unsuppressing restores the same index and the same geometry, bit for bit.
+- A pattern of a pattern builds every combination once, carries the copy chain on every face, and fails atomically with the failing instance named; a combination that exceeds the instance cap is refused before the kernel runs.
+- Invalid counts, spacings, total lengths, axes, suppression sets, missing sources, self-references and cycles fail with structured diagnostics and keep no body; no partial pattern ever becomes a result.
+- Save → load → regenerate gives the same bodies bit for bit; repeated and fresh-document builds agree; files written before this milestone regenerate unchanged; every value the existing tests measure is unchanged; `P0`–`P12-HOLE-001` stays green in all three presets.
+
 ## Next
 
-`P12-PATTERN-001` — Symmetric, total-length, suppressed instances, patterns
-of patterns.
+`P12-SWEEP-001` — Guide curves, twist, non-planar paths.
 
 ## Blocked / Manual
 

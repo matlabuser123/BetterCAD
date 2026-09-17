@@ -6,6 +6,7 @@
 #include <bettercad/core/units/Units.hpp>
 
 #include <array>
+#include <cstddef>
 #include <cmath>
 
 namespace bettercad {
@@ -77,6 +78,25 @@ public:
             return *unit;
         }
         return Direction3D::fromComponents(x, y, z).value_or(direction);
+    }
+
+    /// The motion that applies @p first and then this one: this(first(x))
+    /// for every point x (P12-PATTERN-001, where a pattern of a pattern
+    /// moves an instance of one by an instance of the other). The matrices
+    /// multiply and the translations follow the outer matrix.
+    [[nodiscard]] RigidTransform3D after(const RigidTransform3D& first) const noexcept {
+        RigidTransform3D combined;
+        const auto& a = matrix_;
+        const auto& b = first.matrix_;
+        for (std::size_t row = 0; row < 3; ++row) {
+            for (std::size_t column = 0; column < 3; ++column) {
+                combined.matrix_[3 * row + column] = a[3 * row] * b[column] + a[3 * row + 1] * b[3 + column] +
+                                                     a[3 * row + 2] * b[6 + column];
+            }
+        }
+        const Point3D moved = multiply(Point3D{first.translation_.x, first.translation_.y, first.translation_.z});
+        combined.translation_ = {moved.x + translation_.x, moved.y + translation_.y, moved.z + translation_.z};
+        return combined;
     }
 
     /// Whether the matrix is exactly the identity (a pure translation).

@@ -1,0 +1,17 @@
+﻿Cross-configuration comparison of the measured values of the P12-PATTERN-001 tests.
+Each configuration's bettercad_tests.exe ran the 46 test cases the selector of values-header.txt matches
+(this milestone's own, plus five earlier pattern tests that carry the same two tags) with
+-s --reporter xml --rng-seed 1; values.py filtered the report; compare-values.py (in this directory) compared
+the results. Temporary paths and document UUIDs are normalized; lines holding a pointer value are dropped.
+
+release: 2135 non-empty lines after normalizing, MD5 3f4d8a8fbb9c0a38424208510b3b6c68
+debug: 2135 non-empty lines after normalizing, MD5 3f4d8a8fbb9c0a38424208510b3b6c68
+debug-shared: 2135 non-empty lines after normalizing, MD5 3f4d8a8fbb9c0a38424208510b3b6c68
+
+debug against release:
+  differing lines: 0 expected only, 0 measured
+
+debug-shared against release:
+  differing lines: 0 expected only, 0 measured
+
+RESULT: measured values identical

@@ -18,6 +18,7 @@
 #include <bettercad/features/FilletFeature.hpp>
 #include <bettercad/features/HoleFeature.hpp>
 #include <bettercad/features/LinearPatternFeature.hpp>
+#include <bettercad/features/MirrorFeature.hpp>
 #include <bettercad/features/Regeneration.hpp>
 #include <bettercad/features/Regenerator.hpp>
 #include <bettercad/features/ResultBodies.hpp>
@@ -1071,39 +1072,22 @@ TEST_CASE("CircularPattern_PatternsChamferAndFilletByRotatedReferences",
 }
 
 TEST_CASE("CircularPattern_RefusesUnsupportedSources", "[pattern][circular][features]") {
-    SECTION("a circular pattern of a circular pattern") {
+    // A pattern of a pattern is supported since P12-PATTERN-001; see
+     // PatternNestingTests.cpp. A mirror is still not: its image is not a
+     // motion of the source's operation, so it has no instance to repeat.
+    SECTION("a mirror") {
         CubeRingModel m;
-        const ObjectId twice = m.addPattern("Twice", {.source = featureId(m.ring),
-                                                      .axis = {.origin = Point3D{}, .direction = {1.0, 0.0, 0.0}},
+        auto mirror = MirrorFeature::create(
+            "Across", {.source = featureId(m.cube), .plane = {.origin = Point3D{}, .normal = {0.0, 1.0, 0.0}}});
+        REQUIRE(mirror.has_value());
+        const ObjectId across = m.doc.addObject(std::move(*mirror)).value();
+        const ObjectId twice = m.addPattern("Twice", {.source = featureId(across),
+                                                      .axis = {.origin = Point3D{}, .direction = {0.0, 0.0, 1.0}},
                                                       .count = 2});
         Regenerator regenerator;
         const Error error = requireFailure(regenerator, m.doc, twice);
         CHECK(error.code == ErrorCode::FailedPrecondition);
-        CHECK(error.message == "Twice: circular pattern: a circular pattern cannot repeat another pattern");
-    }
-    SECTION("a circular pattern of a linear pattern, and the other way round") {
-        HoleRowModel m;
-        auto circular = CircularPatternFeature::create(
-            "Turned", {.source = featureId(m.holes),
-                       .axis = {.origin = Point3D{60_mm, 25_mm, 0_mm}, .direction = {0.0, 0.0, 1.0}},
-                       .count = 2});
-        REQUIRE(circular.has_value());
-        const ObjectId turned = m.doc.addObject(std::move(*circular)).value();
-        Regenerator regenerator;
-        CHECK(requireFailure(regenerator, m.doc, turned).message ==
-              "Turned: circular pattern: a circular pattern cannot repeat another pattern");
-
-        BoltCircleModel b;
-        const ObjectId row = b.doc.addObject(LinearPatternFeature::create(
-                                                  "Row", {.source = featureId(b.bolts),
-                                                          .first = {.direction = {1.0, 0.0, 0.0}, .count = 2,
-                                                                    .spacing = 5_mm}})
-                                                  .value())
-                                 .value();
-        Regenerator boltRegenerator;
-        CHECK(requireFailure(boltRegenerator, b.doc, row).message ==
-              "Row: linear pattern: a linear pattern cannot repeat another pattern; use a second direction for a "
-              "grid");
+        CHECK(error.message == "Twice: circular pattern: a circular pattern cannot repeat a mirror");
     }
     SECTION("a sketch, which has no body") {
         CubeRingModel m;

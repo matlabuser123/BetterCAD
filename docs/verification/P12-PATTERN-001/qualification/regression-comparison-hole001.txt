@@ -1,0 +1,144 @@
+﻿baseline ..\..\P12-HOLE-001\qualification\ctest-release.log: 1069 distinct names
+
+ctest-debug.log: 1110 distinct names, 1111 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 41
+    unit.CircularPattern_RejectsInvalidSuppression
+    unit.CircularPattern_RepeatsALinearPattern
+    unit.CircularPattern_RepeatsAnotherCircularPattern
+    unit.CircularPattern_SaveLoadPreservesSymmetryAndSuppression
+    unit.CircularPattern_SuppressedBoltsLeaveTheirHolesUndrilled
+    unit.CircularPattern_SymmetricIsNotAFullCircle
+    unit.CircularPattern_SymmetricTurnsItsCopiesBothWays
+    unit.LinearPattern_AFileWithoutTheNewFieldsIsAPlainPattern
+    unit.LinearPattern_DistributionAndSuppressionAreDeterministic
+    unit.LinearPattern_MalformedInstanceFieldsAreRejectedWithTheJsonPath
+    unit.LinearPattern_NestedCopiesKeepTheProvenanceOfBothPatterns
+    unit.LinearPattern_NestedFailurePropagatesAndCommitsNothing
+    unit.LinearPattern_NestedInstancesCountTowardsTheCap
+    unit.LinearPattern_NestedPatternsAreDeterministic
+    unit.LinearPattern_NestedPatternsFollowTheirSourceParameters
+    unit.LinearPattern_ReEnablingAnInstanceRestoresTheSameIdentity
+    unit.LinearPattern_RebuildsIdenticallyFromAFile
+    unit.LinearPattern_RefusesACycleOfTwoPatterns
+    unit.LinearPattern_RefusesToRepeatItself
+    unit.LinearPattern_RejectsInvalidSuppression
+    unit.LinearPattern_RepeatsACircularPattern
+    unit.LinearPattern_RepeatsAPatternOfAPattern
+    unit.LinearPattern_RepeatsAnotherLinearPattern
+    unit.LinearPattern_SaveLoadPreservesANestedPattern
+    unit.LinearPattern_SaveLoadPreservesDistributionSymmetryAndSuppression
+    unit.LinearPattern_SuppressedInstancesMakeNoGeometry
+    unit.LinearPattern_SuppressesTheFirstCopyTheLastAndOnesBetween
+    unit.LinearPattern_SuppressingAnInstanceDoesNotRenameTheOthers
+    unit.LinearPattern_SuppressionAndDistributionAreUndoable
+    unit.LinearPattern_SuppressionInsideANestedPatternLeavesEveryCopyOut
+    unit.LinearPattern_SymmetricInstancesSitEitherSideOfTheSource
+    unit.LinearPattern_SymmetricKeepsWhatAnIndexMeansWhenTheCountGrows
+    unit.LinearPattern_SymmetricNeedsAnOddCount
+    unit.LinearPattern_TotalLengthDividesTheRowBetweenItsInstances
+    unit.LinearPattern_TotalLengthNeedsSomethingToDivide
+    unit.LinearPattern_TouchingAndOverlappingSymmetricInstancesFuse
+    unit.PatternCli_InfoDescribesCircularSymmetryAndSuppression
+    unit.PatternCli_InfoDescribesDistributionAndSymmetry
+    unit.PatternCli_ValidateReportsAPatternOfAPattern
+    unit.PatternCli_ValidateReportsASuppressedInstanceThatIsNotThere
+    unit.RigidTransform_AfterAppliesTheInnerMotionFirst
+
+ctest-release.log: 1110 distinct names, 1111 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 41
+    unit.CircularPattern_RejectsInvalidSuppression
+    unit.CircularPattern_RepeatsALinearPattern
+    unit.CircularPattern_RepeatsAnotherCircularPattern
+    unit.CircularPattern_SaveLoadPreservesSymmetryAndSuppression
+    unit.CircularPattern_SuppressedBoltsLeaveTheirHolesUndrilled
+    unit.CircularPattern_SymmetricIsNotAFullCircle
+    unit.CircularPattern_SymmetricTurnsItsCopiesBothWays
+    unit.LinearPattern_AFileWithoutTheNewFieldsIsAPlainPattern
+    unit.LinearPattern_DistributionAndSuppressionAreDeterministic
+    unit.LinearPattern_MalformedInstanceFieldsAreRejectedWithTheJsonPath
+    unit.LinearPattern_NestedCopiesKeepTheProvenanceOfBothPatterns
+    unit.LinearPattern_NestedFailurePropagatesAndCommitsNothing
+    unit.LinearPattern_NestedInstancesCountTowardsTheCap
+    unit.LinearPattern_NestedPatternsAreDeterministic
+    unit.LinearPattern_NestedPatternsFollowTheirSourceParameters
+    unit.LinearPattern_ReEnablingAnInstanceRestoresTheSameIdentity
+    unit.LinearPattern_RebuildsIdenticallyFromAFile
+    unit.LinearPattern_RefusesACycleOfTwoPatterns
+    unit.LinearPattern_RefusesToRepeatItself
+    unit.LinearPattern_RejectsInvalidSuppression
+    unit.LinearPattern_RepeatsACircularPattern
+    unit.LinearPattern_RepeatsAPatternOfAPattern
+    unit.LinearPattern_RepeatsAnotherLinearPattern
+    unit.LinearPattern_SaveLoadPreservesANestedPattern
+    unit.LinearPattern_SaveLoadPreservesDistributionSymmetryAndSuppression
+    unit.LinearPattern_SuppressedInstancesMakeNoGeometry
+    unit.LinearPattern_SuppressesTheFirstCopyTheLastAndOnesBetween
+    unit.LinearPattern_SuppressingAnInstanceDoesNotRenameTheOthers
+    unit.LinearPattern_SuppressionAndDistributionAreUndoable
+    unit.LinearPattern_SuppressionInsideANestedPatternLeavesEveryCopyOut
+    unit.LinearPattern_SymmetricInstancesSitEitherSideOfTheSource
+    unit.LinearPattern_SymmetricKeepsWhatAnIndexMeansWhenTheCountGrows
+    unit.LinearPattern_SymmetricNeedsAnOddCount
+    unit.LinearPattern_TotalLengthDividesTheRowBetweenItsInstances
+    unit.LinearPattern_TotalLengthNeedsSomethingToDivide
+    unit.LinearPattern_TouchingAndOverlappingSymmetricInstancesFuse
+    unit.PatternCli_InfoDescribesCircularSymmetryAndSuppression
+    unit.PatternCli_InfoDescribesDistributionAndSymmetry
+    unit.PatternCli_ValidateReportsAPatternOfAPattern
+    unit.PatternCli_ValidateReportsASuppressedInstanceThatIsNotThere
+    unit.RigidTransform_AfterAppliesTheInnerMotionFirst
+
+ctest-debug-shared.log: 1110 distinct names, 1111 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 41
+    unit.CircularPattern_RejectsInvalidSuppression
+    unit.CircularPattern_RepeatsALinearPattern
+    unit.CircularPattern_RepeatsAnotherCircularPattern
+    unit.CircularPattern_SaveLoadPreservesSymmetryAndSuppression
+    unit.CircularPattern_SuppressedBoltsLeaveTheirHolesUndrilled
+    unit.CircularPattern_SymmetricIsNotAFullCircle
+    unit.CircularPattern_SymmetricTurnsItsCopiesBothWays
+    unit.LinearPattern_AFileWithoutTheNewFieldsIsAPlainPattern
+    unit.LinearPattern_DistributionAndSuppressionAreDeterministic
+    unit.LinearPattern_MalformedInstanceFieldsAreRejectedWithTheJsonPath
+    unit.LinearPattern_NestedCopiesKeepTheProvenanceOfBothPatterns
+    unit.LinearPattern_NestedFailurePropagatesAndCommitsNothing
+    unit.LinearPattern_NestedInstancesCountTowardsTheCap
+    unit.LinearPattern_NestedPatternsAreDeterministic
+    unit.LinearPattern_NestedPatternsFollowTheirSourceParameters
+    unit.LinearPattern_ReEnablingAnInstanceRestoresTheSameIdentity
+    unit.LinearPattern_RebuildsIdenticallyFromAFile
+    unit.LinearPattern_RefusesACycleOfTwoPatterns
+    unit.LinearPattern_RefusesToRepeatItself
+    unit.LinearPattern_RejectsInvalidSuppression
+    unit.LinearPattern_RepeatsACircularPattern
+    unit.LinearPattern_RepeatsAPatternOfAPattern
+    unit.LinearPattern_RepeatsAnotherLinearPattern
+    unit.LinearPattern_SaveLoadPreservesANestedPattern
+    unit.LinearPattern_SaveLoadPreservesDistributionSymmetryAndSuppression
+    unit.LinearPattern_SuppressedInstancesMakeNoGeometry
+    unit.LinearPattern_SuppressesTheFirstCopyTheLastAndOnesBetween
+    unit.LinearPattern_SuppressingAnInstanceDoesNotRenameTheOthers
+    unit.LinearPattern_SuppressionAndDistributionAreUndoable
+    unit.LinearPattern_SuppressionInsideANestedPatternLeavesEveryCopyOut
+    unit.LinearPattern_SymmetricInstancesSitEitherSideOfTheSource
+    unit.LinearPattern_SymmetricKeepsWhatAnIndexMeansWhenTheCountGrows
+    unit.LinearPattern_SymmetricNeedsAnOddCount
+    unit.LinearPattern_TotalLengthDividesTheRowBetweenItsInstances
+    unit.LinearPattern_TotalLengthNeedsSomethingToDivide
+    unit.LinearPattern_TouchingAndOverlappingSymmetricInstancesFuse
+    unit.PatternCli_InfoDescribesCircularSymmetryAndSuppression
+    unit.PatternCli_InfoDescribesDistributionAndSymmetry
+    unit.PatternCli_ValidateReportsAPatternOfAPattern
+    unit.PatternCli_ValidateReportsASuppressedInstanceThatIsNotThere
+    unit.RigidTransform_AfterAppliesTheInnerMotionFirst
+
+RESULT: PASS

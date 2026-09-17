@@ -17,6 +17,7 @@
 #include <bettercad/features/FilletFeature.hpp>
 #include <bettercad/features/HoleFeature.hpp>
 #include <bettercad/features/LinearPatternFeature.hpp>
+#include <bettercad/features/MirrorFeature.hpp>
 #include <bettercad/features/Regeneration.hpp>
 #include <bettercad/features/Regenerator.hpp>
 #include <bettercad/features/ResultBodies.hpp>
@@ -866,14 +867,20 @@ TEST_CASE("LinearPattern_TwoDirectionGridHasExpectedInstanceCount", "[pattern][f
 TEST_CASE("LinearPattern_RefusesUnsupportedSources", "[pattern][features]") {
     CubeRowModel m;
     Regenerator regenerator;
-    SECTION("a pattern of a pattern") {
-        const ObjectId twice = m.addPattern("Twice", {.source = featureId(m.row),
+    // A pattern of a pattern is supported since P12-PATTERN-001; see
+     // PatternNestingTests.cpp. A mirror is still not: its image is not a
+     // motion of the source's operation, so it has no instance to repeat.
+    SECTION("a mirror") {
+        auto mirror = MirrorFeature::create(
+            "Across", {.source = featureId(m.cube), .plane = {.origin = Point3D{}, .normal = {0.0, 1.0, 0.0}}});
+        REQUIRE(mirror.has_value());
+        const ObjectId across = m.doc.addObject(std::move(*mirror)).value();
+        const ObjectId twice = m.addPattern("Twice", {.source = featureId(across),
                                                       .first = {.direction = {0.0, 1.0, 0.0}, .count = 2, .spacing = 20_mm}});
         const Error error = requireFailure(regenerator, m.doc, twice);
         CHECK(error.code == ErrorCode::FailedPrecondition);
-        CHECK(error.message == "Twice: linear pattern: a linear pattern cannot repeat another pattern; use a second "
-                               "direction for a grid");
-        CHECK(regenerator.body(m.row) != nullptr);
+        CHECK(error.message == "Twice: linear pattern: a linear pattern cannot repeat a mirror");
+        CHECK(regenerator.body(across) != nullptr);
     }
     SECTION("an intersect extrude") {
         auto clip = ExtrudeFeature::create("Clip", {.profile = SketchId::fromValue(m.sketch.value()),

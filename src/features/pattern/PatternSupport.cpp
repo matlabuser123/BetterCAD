@@ -15,8 +15,12 @@
 #include <bettercad/features/Regeneration.hpp>
 
 #include <cmath>
+#include <cstdint>
 #include <format>
 #include <numbers>
+#include <string>
+#include <utility>
+#include <vector>
 
 namespace bettercad::features::detail {
 
@@ -38,12 +42,12 @@ Result<InstanceOperation> toolOperation(const Result<geometry::Body>& tool, Feat
     }
     const bool cut = operation == FeatureOperation::Cut;
     return InstanceOperation{[body = *tool, cut](const geometry::Body& target, const RigidTransform3D& motion,
-                                                 const FaceCopy& copy) -> Result<geometry::Body> {
+                                                 const std::vector<FaceCopy>& copies) -> Result<geometry::Body> {
         auto moved = geometry::transformed(body, motion);
         if (!moved) {
             return std::unexpected(moved.error());
         }
-        const geometry::Body copied = geometry::renameFaces(*moved, appendCopy(copy));
+        const geometry::Body copied = geometry::renameFaces(*moved, appendCopies(copies));
         return cut ? geometry::booleanDifference(target, copied) : geometry::booleanUnion(target, copied);
     }};
 }
@@ -54,7 +58,7 @@ Result<InstanceOperation> toolOperation(const Result<geometry::Body>& tool, Feat
 /// are alive (within the pattern's regeneration).
 InstanceOperation throughAllOperation(const ExtrudeFeature& extrude, const Document& document) {
     return [&extrude, &document](const geometry::Body& target, const RigidTransform3D& motion,
-                                 const FaceCopy& copy) -> Result<geometry::Body> {
+                                 const std::vector<FaceCopy>& copies) -> Result<geometry::Body> {
         auto tool = extrudeTool(extrude, document, &target, motion);
         if (!tool) {
             return std::unexpected(tool.error());
@@ -63,7 +67,7 @@ InstanceOperation throughAllOperation(const ExtrudeFeature& extrude, const Docum
         if (!moved) {
             return std::unexpected(moved.error());
         }
-        return geometry::booleanDifference(target, geometry::renameFaces(*moved, appendCopy(copy)));
+        return geometry::booleanDifference(target, geometry::renameFaces(*moved, appendCopies(copies)));
     };
 }
 
@@ -77,10 +81,164 @@ std::vector<geometry::EdgeSignature> movedEdges(const std::vector<geometry::Edge
     return moved;
 }
 
-} // namespace
+/// One instance of a pattern that is itself repeated by another: where it
+/// sits relative to its own source, and its own index, which stays its own
+/// however the outer pattern repeats it.
+struct NestedInstance {
+    RigidTransform3D motion{};
+    std::uint32_t index = 0;
+};
 
-Result<InstanceOperation> instanceOperation(const DocumentObject& source, const Document& document,
-                                            std::string_view pattern, std::string_view nestingAdvice) {
+/// The ID of the feature a pattern repeats, and the instances it makes with
+/// the suppressed ones left out (they make no geometry wherever the outer
+/// pattern puts them). Instance 0 is the source's own geometry, kept first.
+struct NestedPattern {
+    FeatureId source{};
+    std::vector<NestedInstance> instances{};
+};
+
+Result<NestedPattern> nestedPattern(const DocumentObject& object, const Document& document) {
+    NestedPattern nested;
+    if (const auto* linear = dynamic_cast<const LinearPatternFeature*>(&object)) {
+        auto instances = resolvePatternInstances(linear->definition(), document);
+        if (!instances) {
+            return std::unexpected(instances.error());
+        }
+        nested.source = linear->definition().source;
+        for (const PatternInstance& instance : *instances) {
+            if (!instance.suppressed) {
+                nested.instances.push_back({.motion = RigidTransform3D::translation(instance.offset),
+                                            .index = static_cast<std::uint32_t>(instance.index)});
+            }
+        }
+        return nested;
+    }
+    const auto& circular = dynamic_cast<const CircularPatternFeature&>(object);
+    auto instances = resolveCircularPatternInstances(circular.definition(), document);
+    if (!instances) {
+        return std::unexpected(instances.error());
+    }
+    nested.source = circular.definition().source;
+    for (const CircularPatternInstance& instance : *instances) {
+        if (!instance.suppressed) {
+            nested.instances.push_back(
+                {.motion = instance.motion, .index = static_cast<std::uint32_t>(instance.index)});
+        }
+    }
+    return nested;
+}
+
+/// Whether @p object is a pattern, and so repeats instances of its own.
+bool isPattern(const DocumentObject& object) {
+    return dynamic_cast<const LinearPatternFeature*>(&object) != nullptr ||
+           dynamic_cast<const CircularPatternFeature*>(&object) != nullptr;
+}
+
+// Patterns nested deeper than this are taken to be a cycle. The regenerator
+// reports dependency cycles and does not regenerate their members, so this
+// is a second line of defence against unbounded recursion; a chain this
+// deep would in any case pass the instance cap only if nearly every pattern
+// in it made a single instance.
+constexpr std::size_t kMaxPatternNesting = 8;
+
+/// The source a pattern repeats, or nullptr with the reason it cannot be
+/// used: missing, or the pattern itself.
+Result<const DocumentObject*> patternSource(const DocumentObject& object, const Document& document, FeatureId source) {
+    const DocumentObject* found = document.findObject(ObjectId{source});
+    if (found == nullptr) {
+        return makeError(ErrorCode::NotFound,
+                         std::format("the source {} of {} does not exist", ObjectId{source}, object.name()));
+    }
+    if (found->id() == object.id()) {
+        return makeError(ErrorCode::FailedPrecondition, std::format("{} repeats itself", object.name()));
+    }
+    return found;
+}
+
+/// How many instances @p object makes in all: its own, each of which makes
+/// every instance of its source again if that source is a pattern too. The
+/// suppressed instances at every level are already left out.
+Result<std::size_t> effectiveCount(const DocumentObject& object, const Document& document, std::size_t depth) {
+    if (!isPattern(object)) {
+        return std::size_t{1};
+    }
+    if (depth >= kMaxPatternNesting) {
+        return makeError(ErrorCode::FailedPrecondition,
+                         std::format("{}: patterns nest more than {} deep (a dependency cycle?)", object.name(),
+                                     kMaxPatternNesting));
+    }
+    auto nested = nestedPattern(object, document);
+    if (!nested) {
+        return std::unexpected(nested.error());
+    }
+    auto source = patternSource(object, document, nested->source);
+    if (!source) {
+        return std::unexpected(source.error());
+    }
+    auto inner = effectiveCount(**source, document, depth + 1);
+    if (!inner) {
+        return std::unexpected(inner.error());
+    }
+    return nested->instances.size() * *inner;
+}
+
+Result<InstanceOperation> operationAt(const DocumentObject& source, const Document& document,
+                                      std::string_view pattern, std::size_t depth);
+
+/// A pattern repeated by another pattern (P12-PATTERN-001): every instance
+/// of the inner pattern is made again, moved by the outer instance's motion,
+/// which composes with the inner instance's own. The faces each one makes
+/// carry the inner pattern's copy step and then the outer's, in the order
+/// they were made, so a nested copy names the feature that made the face,
+/// the inner pattern and its instance, and the outer pattern and its
+/// instance: no instance of either pattern is confused with another.
+Result<InstanceOperation> nestedPatternOperation(const DocumentObject& object, const Document& document,
+                                                 std::string_view pattern, std::size_t depth) {
+    if (depth >= kMaxPatternNesting) {
+        return makeError(ErrorCode::FailedPrecondition,
+                         std::format("{}: patterns nest more than {} deep (a dependency cycle?)", object.name(),
+                                     kMaxPatternNesting));
+    }
+    auto nested = nestedPattern(object, document);
+    if (!nested) {
+        return std::unexpected(nested.error());
+    }
+    auto source = patternSource(object, document, nested->source);
+    if (!source) {
+        return std::unexpected(source.error());
+    }
+    auto inner = operationAt(**source, document, pattern, depth + 1);
+    if (!inner) {
+        return std::unexpected(inner.error());
+    }
+    return InstanceOperation{[apply = *inner, instances = std::move(nested->instances), id = object.id(),
+                              name = std::string{object.name()}](
+                                 const geometry::Body& target, const RigidTransform3D& motion,
+                                 const std::vector<FaceCopy>& copies) -> Result<geometry::Body> {
+        geometry::Body body = target;
+        for (const NestedInstance& instance : instances) {
+            // Instance 0 of the inner pattern is its source's own geometry,
+            // which the outer pattern copies once: only its outer step names
+            // it. Every other instance is a copy of the inner pattern first.
+            std::vector<FaceCopy> chain;
+            chain.reserve(copies.size() + 1);
+            if (instance.index != 0) {
+                chain.push_back(FaceCopy{id, instance.index});
+            }
+            chain.insert(chain.end(), copies.begin(), copies.end());
+            auto next = apply(body, motion.after(instance.motion), chain);
+            if (!next) {
+                return makeError(next.error().code,
+                                 std::format("{} instance {}: {}", name, instance.index, next.error().message));
+            }
+            body = std::move(*next);
+        }
+        return body;
+    }};
+}
+
+Result<InstanceOperation> operationAt(const DocumentObject& source, const Document& document,
+                                      std::string_view pattern, std::size_t depth) {
     if (const auto* extrude = dynamic_cast<const ExtrudeFeature*>(&source)) {
         if (extrude->definition().termination == ExtrudeTermination::ThroughAll) {
             return throughAllOperation(*extrude, document);
@@ -97,8 +255,8 @@ Result<InstanceOperation> instanceOperation(const DocumentObject& source, const 
         }
         return InstanceOperation{[request = *request, id = hole->id()](
                                      const geometry::Body& target, const RigidTransform3D& motion,
-                                     const FaceCopy& copy) {
-            return geometry::cutHole(target, geometry::transformed(request, motion), holeFaceNamer(id, {copy}));
+                                     const std::vector<FaceCopy>& copies) {
+            return geometry::cutHole(target, geometry::transformed(request, motion), holeFaceNamer(id, copies));
         }};
     }
     if (const auto* chamfer = dynamic_cast<const ChamferFeature*>(&source)) {
@@ -108,13 +266,13 @@ Result<InstanceOperation> instanceOperation(const DocumentObject& source, const 
         }
         return InstanceOperation{[request = *request, id = chamfer->id()](
                                      const geometry::Body& target, const RigidTransform3D& motion,
-                                     const FaceCopy& copy) {
+                                     const std::vector<FaceCopy>& copies) {
             geometry::ChamferRequest moved = request;
             moved.edges = movedEdges(request.edges, motion);
             if (moved.referenceSide) {
                 moved.referenceSide = motion.apply(*moved.referenceSide);
             }
-            return geometry::chamferEdges(target, moved, chamferFaceNamer(id, {copy}));
+            return geometry::chamferEdges(target, moved, chamferFaceNamer(id, copies));
         }};
     }
     if (const auto* fillet = dynamic_cast<const FilletFeature*>(&source)) {
@@ -124,7 +282,7 @@ Result<InstanceOperation> instanceOperation(const DocumentObject& source, const 
         }
         return InstanceOperation{[edges = fillet->definition().edges, radius = *radius](
                                      const geometry::Body& target, const RigidTransform3D& motion,
-                                     const FaceCopy& /*copy: a fillet names no faces*/) {
+                                     const std::vector<FaceCopy>& /*a fillet names no faces*/) {
             return geometry::filletEdges(target, {.edges = movedEdges(edges, motion), .radius = radius});
         }};
     }
@@ -134,13 +292,40 @@ Result<InstanceOperation> instanceOperation(const DocumentObject& source, const 
         return makeError(ErrorCode::FailedPrecondition,
                          std::format("a {} cannot repeat a variable-radius fillet", pattern));
     }
-    if (dynamic_cast<const LinearPatternFeature*>(&source) != nullptr ||
-        dynamic_cast<const CircularPatternFeature*>(&source) != nullptr) {
-        return makeError(ErrorCode::FailedPrecondition,
-                         std::format("a {} cannot repeat another pattern{}", pattern, nestingAdvice));
+    if (isPattern(source)) {
+        return nestedPatternOperation(source, document, pattern, depth);
     }
     return makeError(ErrorCode::FailedPrecondition,
                      std::format("a {} cannot repeat a {}", pattern, source.typeName()));
+}
+
+} // namespace
+
+Result<InstanceOperation> instanceOperation(const DocumentObject& source, const Document& document,
+                                            std::string_view pattern) {
+    return operationAt(source, document, pattern, 0);
+}
+
+Result<std::size_t> instanceCountOf(const DocumentObject& source, const Document& document) {
+    return effectiveCount(source, document, 0);
+}
+
+Result<void> checkNestedCount(const DocumentObject& source, const Document& document, std::size_t instances,
+                              std::string_view pattern) {
+    auto inner = instanceCountOf(source, document);
+    if (!inner) {
+        return std::unexpected(inner.error());
+    }
+    if (*inner <= 1) {
+        return {};
+    }
+    const std::size_t effective = instances * *inner;
+    if (effective > kMaxPatternInstances) {
+        return makeError(ErrorCode::InvalidArgument,
+                         std::format("a {} may have at most {} instances, got {} ({} x the {} instances of {})",
+                                     pattern, kMaxPatternInstances, effective, instances, *inner, source.name()));
+    }
+    return {};
 }
 
 Result<geometry::Body> buildPattern(const geometry::Body& sourceBody, const InstanceOperation& apply,
@@ -150,7 +335,7 @@ Result<geometry::Body> buildPattern(const geometry::Body& sourceBody, const Inst
     // whole pattern, which then keeps no body (no partial patterns).
     geometry::Body body = sourceBody;
     for (const PatternPlacement& placement : placements) {
-        auto next = apply(body, placement.motion, FaceCopy{pattern, placement.instance});
+        auto next = apply(body, placement.motion, std::vector<FaceCopy>{FaceCopy{pattern, placement.instance}});
         if (!next) {
             return makeError(next.error().code, std::format("{}: {}", placement.label, next.error().message));
         }

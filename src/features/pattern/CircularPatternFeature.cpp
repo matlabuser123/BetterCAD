@@ -1,7 +1,9 @@
 #include <bettercad/features/CircularPatternFeature.hpp>
+#include <bettercad/features/LinearPatternFeature.hpp>
 
 #include "features/pattern/PatternSupport.hpp"
 
+#include <algorithm>
 #include <format>
 #include <numbers>
 #include <utility>
@@ -55,6 +57,17 @@ Result<void> validate(const CircularPatternDefinition& definition) {
     if (!validId(definition.countParameter) || !validId(definition.angleParameter)) {
         return invalid("the pattern's parameter IDs must be valid");
     }
+    if (auto valid = validateSuppressed(definition.suppressed, "circular pattern"); !valid) {
+        return valid;
+    }
+    if (definition.symmetric && definition.spacing == CircularSpacing::FullCircle) {
+        return invalid("a full-circle pattern takes no symmetry: its instances already go all the way round");
+    }
+    if (definition.symmetric && !definition.countParameter && definition.count % 2 == 0) {
+        return invalid(std::format("a symmetric pattern needs an odd count, so the source is its middle instance, "
+                                   "got {}",
+                                   definition.count));
+    }
     if (const auto& reference = definition.axis.reference) {
         if (definition.axis.origin != Point3D{} || definition.axis.direction != PatternAxis{}.direction) {
             return invalid("a pattern axis given by a reference has no origin or direction of its own");
@@ -95,13 +108,20 @@ Result<void> validate(const CircularPatternDefinition& definition) {
     return detail::checkCircularAngle(definition.spacing, count, definition.angle);
 }
 
-std::vector<CircularPatternInstance> circularPatternInstances(const Axis3D& axis, std::size_t count, Angle step) {
+std::vector<CircularPatternInstance> circularPatternInstances(const Axis3D& axis, std::size_t count, Angle step,
+                                                              bool symmetric,
+                                                              const std::vector<std::uint32_t>& suppressed) {
     std::vector<CircularPatternInstance> instances;
     instances.reserve(count);
     for (std::size_t i = 0; i < count; ++i) {
-        // From the source: i × step, rounded once, and its own rotation.
-        const Angle angle = step * static_cast<double>(i);
-        instances.push_back({.index = i, .angle = angle, .motion = RigidTransform3D::rotation(axis, angle)});
+        // From the source: m(i) × step, rounded once, and its own rotation;
+        // a symmetric pattern turns its copies both ways (P12-PATTERN-001).
+        const Angle angle = step * patternStepMultiple(i, symmetric);
+        instances.push_back({.suppressed = std::ranges::find(suppressed, static_cast<std::uint32_t>(i)) !=
+                                           suppressed.end(),
+                             .index = i,
+                             .angle = angle,
+                             .motion = RigidTransform3D::rotation(axis, angle)});
     }
     return instances;
 }

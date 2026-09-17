@@ -4,6 +4,7 @@
 #include <bettercad/features/Datums.hpp>
 #include <bettercad/features/Regeneration.hpp>
 
+#include <algorithm>
 #include <format>
 #include <string>
 
@@ -50,8 +51,18 @@ Result<std::vector<CircularPatternInstance>> resolveCircularPatternInstances(
     if (auto valid = detail::checkCircularAngle(definition.spacing, *count, angle); !valid) {
         return std::unexpected(valid.error());
     }
+    if (definition.symmetric && *count % 2 == 0) {
+        return makeError(ErrorCode::InvalidArgument,
+                         std::format("a symmetric pattern needs an odd count, so the source is its middle instance, "
+                                     "got {}",
+                                     *count));
+    }
+    if (auto valid = checkSuppressedAgainstCount(definition.suppressed, *count, "circular pattern"); !valid) {
+        return std::unexpected(valid.error());
+    }
     return circularPatternInstances(Axis3D{origin, *direction}, *count,
-                                    circularPatternStep(definition.spacing, *count, angle, definition.direction));
+                                    circularPatternStep(definition.spacing, *count, angle, definition.direction),
+                                    definition.symmetric, definition.suppressed);
 }
 
 Result<geometry::Body> regenerateCircularPattern(const CircularPatternFeature& feature, const Document& document,
@@ -67,13 +78,20 @@ Result<geometry::Body> regenerateCircularPattern(const CircularPatternFeature& f
             return makeError(ErrorCode::NotFound,
                              std::format("the source {} does not exist", ObjectId{definition.source}));
         }
-        auto apply = detail::instanceOperation(*source, document, "circular pattern", "");
+        const auto active = static_cast<std::size_t>(
+            std::ranges::count_if(*instances, [](const CircularPatternInstance& i) { return !i.suppressed; }));
+        if (auto valid = detail::checkNestedCount(*source, document, active, "circular pattern"); !valid) {
+            return std::unexpected(valid.error());
+        }
+        auto apply = detail::instanceOperation(*source, document, "circular pattern");
         if (!apply) {
             return std::unexpected(apply.error());
         }
         std::vector<detail::PatternPlacement> placements;
         for (const CircularPatternInstance& instance : *instances) {
-            if (instance.index != 0) {
+            // Instance 0 is the source's own body; a suppressed instance
+            // keeps its index and makes no geometry (P12-PATTERN-001).
+            if (instance.index != 0 && !instance.suppressed) {
                 placements.push_back({.motion = instance.motion,
                                       .label = std::format("instance {} at {:.6g} deg", instance.index,
                                                            tidy(instance.angle.in(units::deg))),
