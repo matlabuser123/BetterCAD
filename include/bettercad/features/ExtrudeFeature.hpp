@@ -24,12 +24,26 @@ enum class ExtrudeDirection {
 
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT std::string_view toString(ExtrudeDirection direction) noexcept;
 
+/// Where the extrusion ends (P12-FEAT-001).
+enum class ExtrudeTermination {
+    Blind,      ///< at its depth
+    ThroughAll, ///< through all the material of its target, however thick
+};
+
+/// "blind", "through all".
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT std::string_view toString(ExtrudeTermination termination) noexcept;
+
 /// Inputs of an extrude feature, e.g.
-/// `ExtrudeDefinition{.profile = sketchId, .depth = 20_mm}`.
+/// `ExtrudeDefinition{.profile = sketchId, .depth = 20_mm}`, or a cut through
+/// all of its target:
+/// `ExtrudeDefinition{.profile = sketchId, .direction = ExtrudeDirection::Reversed,
+/// .operation = FeatureOperation::Cut, .target = block,
+/// .termination = ExtrudeTermination::ThroughAll}`.
 struct ExtrudeDefinition {
     /// Sketch whose closed profiles are extruded.
     SketchId profile{};
-    /// Depth used when no parameter drives it.
+    /// Depth used when no parameter drives it. A through-all extrude has
+    /// none (zero, and no parameter).
     Length depth{};
     /// Document parameter (a length) that drives the depth, if any.
     std::optional<ParameterId> depthParameter{};
@@ -37,12 +51,18 @@ struct ExtrudeDefinition {
     FeatureOperation operation = FeatureOperation::NewBody;
     /// Feature whose body Join/Cut/Intersect combine with; empty for NewBody.
     std::optional<FeatureId> target{};
+    /// ThroughAll: a cut (the only operation it takes) whose tool reaches
+    /// through the target's whole body in `direction` (both ways when
+    /// symmetric). The tool's length is not stored: regeneration takes it
+    /// from the target body's bounds.
+    ExtrudeTermination termination = ExtrudeTermination::Blind;
 
     friend bool operator==(const ExtrudeDefinition&, const ExtrudeDefinition&) = default;
 };
 
 /// Checks that the definition is self-consistent (references are resolved
-/// only at regeneration).
+/// only at regeneration): a blind extrude has a positive depth or a depth
+/// parameter; a through-all extrude has neither and is a cut.
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<void> validate(const ExtrudeDefinition& definition);
 
 /// A linear extrusion of a sketch's closed profiles (type name "extrude").

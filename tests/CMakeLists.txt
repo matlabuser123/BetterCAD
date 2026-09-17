@@ -59,6 +59,7 @@ bettercad_add_executable(bettercad_tests
         features/DatumTests.cpp
         features/FaceReferenceTests.cpp
         features/SketchOnFaceTests.cpp
+        features/ThroughAllExtrudeTests.cpp
         features/CircularPatternFeatureTests.cpp
         features/ExpressionRegenerationTests.cpp
         features/ExtrudeTests.cpp
@@ -79,6 +80,7 @@ bettercad_add_executable(bettercad_tests
         io/DatumFileTests.cpp
         io/FaceReferenceFileTests.cpp
         io/FaceKindFileTests.cpp
+        io/ThroughAllFileTests.cpp
         io/DocumentFileTests.cpp
         io/ExampleModelTests.cpp
         io/ExpressionFileTests.cpp
@@ -104,6 +106,7 @@ bettercad_add_executable(bettercad_tests
         support/BracketModel.hpp
         support/ChamferBlockModel.hpp
         support/DatumModels.hpp
+        support/FaceKindModels.hpp
         support/FaceModels.hpp
         support/DrivenPlateModel.hpp
         support/FilletModels.hpp
@@ -114,6 +117,7 @@ bettercad_add_executable(bettercad_tests
         support/PatternModels.hpp
         support/SweepModels.hpp
         support/TestFiles.hpp
+        support/ThroughCutModels.hpp
         support/TurnedPartModel.hpp
     LINK
         BetterCAD::core
@@ -138,6 +142,7 @@ if(TARGET bettercad_cli_lib)
         cli/CliTests.cpp
         cli/DatumCliTests.cpp
         cli/FaceReferenceCliTests.cpp
+        cli/ThroughAllCliTests.cpp
         cli/ExpressionCliTests.cpp
     )
     target_link_libraries(bettercad_tests PRIVATE BetterCAD::cli_lib)
@@ -335,6 +340,20 @@ if(TARGET bettercad_cli)
         COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "export-step|${_rows}|${_out}/post_row.step"
         EXIT_CODE 0 STDOUT_REGEX "^Wrote .*post_row\\.step: STEP AP214 \\(mm\\), 4 bodies \\(Flip, CopyBoss, ImageBoss, GaugeBoss\\), [0-9]+ bytes$"
         FILE "${_out}/post_row.step" FILE_REGEX "^ISO-10303-21;\nHEADER;")
+    # P12-FEAT-001: cuts through all of their target.
+    set(_slab "${PROJECT_SOURCE_DIR}/examples/models/through_slab.bcad")
+    bettercad_add_process_test(cli.info.through-slab
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "info|${_slab}"
+        EXIT_CODE 0
+        STDOUT_REGEX "^Document: ThroughSlab\n.*  object:5  extrude  Cut          profile CutSketch, through all, reversed, cut Slab\n.*  object:7  extrude  Slant        profile SlantSketch, through all, symmetric, cut Cut\n")
+    bettercad_add_process_test(cli.validate.through-slab
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "validate|${_slab}"
+        EXIT_CODE 0
+        STDOUT_REGEX "feature regeneration  ok, 8 objects regenerated\n  geometry              ok, 2 result bodies\nResult bodies \\(2\\):\n  Slant \\(object:7\\): 1 solid, volume 102164\\.962 mm\\^3.*bounds \\(0, 0, 0\\) to \\(100, 60, 20\\) mm\n  Peg \\(object:9\\): 1 solid, volume 141\\.372 mm\\^3.*bounds \\(60, 27, 7\\) to \\(65, 33, 13\\) mm\nResult: valid$")
+    bettercad_add_process_test(cli.export-step.through-slab
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "export-step|${_slab}|${_out}/through_slab.step"
+        EXIT_CODE 0 STDOUT_REGEX "^Wrote .*through_slab\\.step: STEP AP214 \\(mm\\), 2 bodies \\(Slant, Peg\\), [0-9]+ bytes$"
+        FILE "${_out}/through_slab.step" FILE_REGEX "^ISO-10303-21;\nHEADER;")
     bettercad_add_process_test(cli.export-stl.reference.pulley
         COMMAND "$<TARGET_FILE:bettercad_cli>"
         ARGS "export-stl|${_reference}/pulley.bcad|${_out}/pulley.stl"

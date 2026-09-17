@@ -29,7 +29,10 @@ using InstanceOperation =
 
 /// The operation of @p source, resolved once and repeated at each instance:
 /// an extrude or revolve's tool is moved and united (new body, join) or
-/// subtracted (cut); a hole, chamfer or fillet is applied with its face or
+/// subtracted (cut), except that a through-all cut's tool is rebuilt at each
+/// instance to reach through the body there (P12-FEAT-001; the operation
+/// then refers to @p source and @p document, and is used while they live);
+/// a hole, chamfer or fillet is applied with its face or
 /// edge references moved exactly, with all of its own checks. Intersect
 /// sources and patterns are refused; @p pattern names the pattern kind in
 /// messages ("linear pattern") and @p nestingAdvice follows the refusal of a

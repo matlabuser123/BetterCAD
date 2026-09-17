@@ -20,7 +20,7 @@ unless a log says so.
 | --- | --- |
 | Parametric part modeling | **Qualified** — `P11-QUAL-001` |
 | Current implementation | `P12` — Parametric CAD Completion, in progress ([TODO.md](TODO.md)) |
-| Next | `P12-FEAT-001` — through-all extrude |
+| Next | `P12-FEAT-002` — split body / combine |
 | Released | `v0.1.0` (`P0`–`P10`); `P11` is qualified but not released |
 
 The qualification rebuilt the tree clean in Debug, Release and Debug-shared and
@@ -39,7 +39,7 @@ bit-identical across every build and process. 20 gates, 20 passed
 | Document | Object registry, metadata, revisions, dirty state; every edit is a command, with undo/redo. |
 | Datum geometry | Datum planes (fixed, offset, angled), datum axes (fixed, two-plane intersection) and coordinate systems (fixed, offset), literal or parameter-driven. Sketches attach to them and follow at regeneration; mirror planes and circular-pattern axes may refer to them ([evidence](docs/verification/P12-DATUM-001/README.md)). |
 | Sketches | Points, lines, circles, arcs, ellipses and B-splines on a placed plane, a datum plane or a planar face of an extrude, revolve, sweep, loft, hole or chamfer, or a pattern's or mirror's copy of one, which they follow when the model changes ([evidence](docs/verification/P12-SKETCH-003/README.md)); entities: [evidence](docs/verification/P12-SKETCH-002/README.md). Coincident, horizontal, vertical, parallel, perpendicular, distance, radius, equal, fixed, angle, tangent, concentric, midpoint, symmetric and diameter constraints ([evidence](docs/verification/P12-SKETCH-001/README.md)); edits are undoable. A Gauss–Newton solver reporting under-, fully- and over-constrained, inconsistent and failed states with residual and DOF. |
-| Features | Ten. Extrude, revolve, sweep, loft (new body / join / cut / intersect); chamfer, fillet, hole (simple, counterbore, countersink; through, blind); linear pattern, circular pattern, mirror. |
+| Features | Ten. Extrude (to a depth, or through all of its target: [evidence](docs/verification/P12-FEAT-001/README.md)), revolve, sweep, loft (new body / join / cut / intersect); chamfer, fillet, hole (simple, counterbore, countersink; through, blind); linear pattern, circular pattern, mirror. |
 | Regeneration | Dependency graph with dirty propagation, topological ordering, cycle detection and partial rebuild. A failed feature commits nothing. |
 | Validation | Every result checked for validity, solid count and positive volume, then compared against geometry computed independently from its parameters. |
 | Persistence | Native `.bcad` JSON storing engineering intent, not meshes. Create → save → destroy → load → regenerate reproduces the model bit for bit, IDs included. |
@@ -191,7 +191,6 @@ for a user to find.
   no entity is ever substituted. Semantic topology is planned, not built.
 - **Parameter expressions** have arithmetic, units and parameter names only —
   no functions, powers or constants — and only parameters take them.
-- No through-all extrude; a cut is given a depth.
 - Tangent sketch constraints keep the side or kind of contact the sketch
   starts with; splines are tangent only at joints, ellipses not at all.
 - Lofts and sweep paths take lines, arcs and circles only.

@@ -1,0 +1,603 @@
+Measured values of the P12-FEAT-001 tests (Release build of the qualified tree).
+Produced by: build/release/bin/bettercad_tests.exe "[extrude][p12]"
+-s --reporter xml --rng-seed 1, filtered by values.py (kept in this directory): every passed CHECK_THAT and
+every passed CHECK whose expansion shows values, with the test case, section and INFO/CAPTURE context. Each
+entry: file:line, the assertion, then Catch2's expansion (values printed exactly). REQUIRE lines, repeats of an
+identical entry within a test case and expansions over 1000 characters (whole-file text) are left out.
+
+
+== ThroughAllExtrude_RegeneratesDeterministically
+ThroughAllExtrudeTests.cpp:470  CHECK( snapshot(ra, a.doc) == snapshot(rb, b.doc) )
+        => {?} == {?}
+ThroughAllExtrudeTests.cpp:481  CHECK( namesOf(ra, a.slant) == namesOf(rb, b.slant) )
+        => { { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} } } == { { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} } }
+ThroughAllExtrudeTests.cpp:487  CHECK( snapshot(ra, a.doc) == before )
+        => {?} == {?}
+
+== ThroughAllCli_InfoDescribesTheTermination
+ThroughAllCliTests.cpp:40  CHECK( result.exitCode == ExitCode::Success )
+        => 0 == 0
+ThroughAllCliTests.cpp:42  CHECK_THAT( result.out, ContainsSubstring(" object:3 extrude Slab profile SlabSketch, depth thickness, " "normal, new body\n") )
+        => "Document: ThroughSlab File: C:\Users\uqhas\AppData\Local\Temp\bettercad-test-836d0f66-cde3-4dc1-887b-96cbad50acd8\slab.bcad ID: c41e7a92-3d5b-4f8a-9e26-7b1d4c8a5f03 Parameters (1): thickness 20 mm Objects (8): object:2 sketch SlabSketch 8 entities, 4 constraints object:3 extrude Slab profile SlabSketch, depth thickness, normal, new body object:4 sketch CutSketch 10 entities, 6 constraints, on the end cap of Slab object:5 extrude Cut profile CutSketch, through all, reversed, cut Slab object:6 sketch SlantSketch 2 entities, 2 constraints object:7 extrude Slant profile SlantSketch, through all, symmetric, cut Cut object:8 sketch WallSketch 2 entities, 2 constraints, on the side from entity:10 of Cut object:9 extrude Peg profile WallSketch, depth 5 mm, normal, new body " contains: " object:3 extrude Slab profile SlabSketch, depth thickness, normal, new body "
+ThroughAllCliTests.cpp:44  CHECK_THAT( result.out, ContainsSubstring(" object:5 extrude Cut profile CutSketch, through all, " "reversed, cut Slab\n") )
+        => "Document: ThroughSlab File: C:\Users\uqhas\AppData\Local\Temp\bettercad-test-836d0f66-cde3-4dc1-887b-96cbad50acd8\slab.bcad ID: c41e7a92-3d5b-4f8a-9e26-7b1d4c8a5f03 Parameters (1): thickness 20 mm Objects (8): object:2 sketch SlabSketch 8 entities, 4 constraints object:3 extrude Slab profile SlabSketch, depth thickness, normal, new body object:4 sketch CutSketch 10 entities, 6 constraints, on the end cap of Slab object:5 extrude Cut profile CutSketch, through all, reversed, cut Slab object:6 sketch SlantSketch 2 entities, 2 constraints object:7 extrude Slant profile SlantSketch, through all, symmetric, cut Cut object:8 sketch WallSketch 2 entities, 2 constraints, on the side from entity:10 of Cut object:9 extrude Peg profile WallSketch, depth 5 mm, normal, new body " contains: " object:5 extrude Cut profile CutSketch, through all, reversed, cut Slab "
+ThroughAllCliTests.cpp:46  CHECK_THAT( result.out, ContainsSubstring(" object:7 extrude Slant profile SlantSketch, through all, " "symmetric, cut Cut\n") )
+        => "Document: ThroughSlab File: C:\Users\uqhas\AppData\Local\Temp\bettercad-test-836d0f66-cde3-4dc1-887b-96cbad50acd8\slab.bcad ID: c41e7a92-3d5b-4f8a-9e26-7b1d4c8a5f03 Parameters (1): thickness 20 mm Objects (8): object:2 sketch SlabSketch 8 entities, 4 constraints object:3 extrude Slab profile SlabSketch, depth thickness, normal, new body object:4 sketch CutSketch 10 entities, 6 constraints, on the end cap of Slab object:5 extrude Cut profile CutSketch, through all, reversed, cut Slab object:6 sketch SlantSketch 2 entities, 2 constraints object:7 extrude Slant profile SlantSketch, through all, symmetric, cut Cut object:8 sketch WallSketch 2 entities, 2 constraints, on the side from entity:10 of Cut object:9 extrude Peg profile WallSketch, depth 5 mm, normal, new body " contains: " object:7 extrude Slant profile SlantSketch, through all, symmetric, cut Cut "
+ThroughAllCliTests.cpp:48  CHECK_THAT( result.out, ContainsSubstring(" object:9 extrude Peg profile WallSketch, depth 5 mm, " "normal, new body\n") )
+        => "Document: ThroughSlab File: C:\Users\uqhas\AppData\Local\Temp\bettercad-test-836d0f66-cde3-4dc1-887b-96cbad50acd8\slab.bcad ID: c41e7a92-3d5b-4f8a-9e26-7b1d4c8a5f03 Parameters (1): thickness 20 mm Objects (8): object:2 sketch SlabSketch 8 entities, 4 constraints object:3 extrude Slab profile SlabSketch, depth thickness, normal, new body object:4 sketch CutSketch 10 entities, 6 constraints, on the end cap of Slab object:5 extrude Cut profile CutSketch, through all, reversed, cut Slab object:6 sketch SlantSketch 2 entities, 2 constraints object:7 extrude Slant profile SlantSketch, through all, symmetric, cut Cut object:8 sketch WallSketch 2 entities, 2 constraints, on the side from entity:10 of Cut object:9 extrude Peg profile WallSketch, depth 5 mm, normal, new body " contains: " object:9 extrude Peg profile WallSketch, depth 5 mm, normal, new body "
+
+== ThroughAllCli_ValidateReportsTheCutAndItsFailures / a valid model
+ThroughAllCliTests.cpp:57  CHECK( result.exitCode == ExitCode::Success )
+        => 0 == 0
+ThroughAllCliTests.cpp:58  CHECK_THAT( result.out, ContainsSubstring(" feature regeneration ok, 8 objects regenerated\n" " geometry ok, 2 result bodies\n") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-382b9de3-2887-4beb-87b1-c686bdad88fb\slab.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 8 objects regenerated geometry ok, 2 result bodies Result bodies (2): Slant (object:7): 1 solid, volume 102164.962 mm^3, area 20347.326 mm^2, bounds (0, 0, 0) to (100, 60, 20) mm Peg (object:9): 1 solid, volume 141.372 mm^3, area 150.796 mm^2, bounds (60, 27, 7) to (65, 33, 13) mm Result: valid " contains: " feature regeneration ok, 8 objects regenerated geometry ok, 2 result bodies "
+ThroughAllCliTests.cpp:60  CHECK_THAT( result.out, ContainsSubstring("Slant (object:7): 1 solid, volume 102164.962 mm^3") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-382b9de3-2887-4beb-87b1-c686bdad88fb\slab.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 8 objects regenerated geometry ok, 2 result bodies Result bodies (2): Slant (object:7): 1 solid, volume 102164.962 mm^3, area 20347.326 mm^2, bounds (0, 0, 0) to (100, 60, 20) mm Peg (object:9): 1 solid, volume 141.372 mm^3, area 150.796 mm^2, bounds (60, 27, 7) to (65, 33, 13) mm Result: valid " contains: "Slant (object:7): 1 solid, volume 102164.962 mm^3"
+ThroughAllCliTests.cpp:61  CHECK_THAT( result.out, ContainsSubstring("bounds (0, 0, 0) to (100, 60, 20) mm\n") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-382b9de3-2887-4beb-87b1-c686bdad88fb\slab.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 8 objects regenerated geometry ok, 2 result bodies Result bodies (2): Slant (object:7): 1 solid, volume 102164.962 mm^3, area 20347.326 mm^2, bounds (0, 0, 0) to (100, 60, 20) mm Peg (object:9): 1 solid, volume 141.372 mm^3, area 150.796 mm^2, bounds (60, 27, 7) to (65, 33, 13) mm Result: valid " contains: "bounds (0, 0, 0) to (100, 60, 20) mm "
+ThroughAllCliTests.cpp:62  CHECK_THAT( result.out, ContainsSubstring("Peg (object:9): 1 solid, volume 141.372 mm^3") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-382b9de3-2887-4beb-87b1-c686bdad88fb\slab.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 8 objects regenerated geometry ok, 2 result bodies Result bodies (2): Slant (object:7): 1 solid, volume 102164.962 mm^3, area 20347.326 mm^2, bounds (0, 0, 0) to (100, 60, 20) mm Peg (object:9): 1 solid, volume 141.372 mm^3, area 150.796 mm^2, bounds (60, 27, 7) to (65, 33, 13) mm Result: valid " contains: "Peg (object:9): 1 solid, volume 141.372 mm^3"
+ThroughAllCliTests.cpp:63  CHECK_THAT( result.out, ContainsSubstring("bounds (60, 27, 7) to (65, 33, 13) mm\n") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-382b9de3-2887-4beb-87b1-c686bdad88fb\slab.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 8 objects regenerated geometry ok, 2 result bodies Result bodies (2): Slant (object:7): 1 solid, volume 102164.962 mm^3, area 20347.326 mm^2, bounds (0, 0, 0) to (100, 60, 20) mm Peg (object:9): 1 solid, volume 141.372 mm^3, area 150.796 mm^2, bounds (60, 27, 7) to (65, 33, 13) mm Result: valid " contains: "bounds (60, 27, 7) to (65, 33, 13) mm "
+ThroughAllCliTests.cpp:64  CHECK_THAT( result.out, EndsWith("Result: valid\n") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-382b9de3-2887-4beb-87b1-c686bdad88fb\slab.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 8 objects regenerated geometry ok, 2 result bodies Result bodies (2): Slant (object:7): 1 solid, volume 102164.962 mm^3, area 20347.326 mm^2, bounds (0, 0, 0) to (100, 60, 20) mm Peg (object:9): 1 solid, volume 141.372 mm^3, area 150.796 mm^2, bounds (60, 27, 7) to (65, 33, 13) mm Result: valid " ends with: "Result: valid "
+
+== ThroughAllCli_ValidateReportsTheCutAndItsFailures / a cut along the normal from the top face removes nothing
+ThroughAllCliTests.cpp:73  CHECK( result.exitCode == ExitCode::Failure )
+        => 1 == 1
+ThroughAllCliTests.cpp:74  CHECK_THAT( result.out, ContainsSubstring("Cut: the target lies wholly behind the sketch plane, so cutting " "through all along its normal removes nothing") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-1376ab91-3a48-4979-a251-78126de85eff\broken.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration 4 errors error: Cut (object:5) failed to regenerate: Cut: the target lies wholly behind the sketch plane, so cutting through all along its normal removes nothing error: Slant (object:7) was not regenerated because an item it depends on failed error: WallSketch (object:8) was not regenerated because an item it depends on failed error: Peg (object:9) was not regenerated because an item it depends on failed geometry ok, 0 result bodies Result: invalid (4 errors) " contains: "Cut: the target lies wholly behind the sketch plane, so cutting through all along its normal removes nothing"
+ThroughAllCliTests.cpp:76  CHECK_THAT( result.out, ContainsSubstring("Result: invalid") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-1376ab91-3a48-4979-a251-78126de85eff\broken.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration 4 errors error: Cut (object:5) failed to regenerate: Cut: the target lies wholly behind the sketch plane, so cutting through all along its normal removes nothing error: Slant (object:7) was not regenerated because an item it depends on failed error: WallSketch (object:8) was not regenerated because an item it depends on failed error: Peg (object:9) was not regenerated because an item it depends on failed geometry ok, 0 result bodies Result: invalid (4 errors) " contains: "Result: invalid"
+
+== ThroughAllExtrude_DefinitionIsValidated
+ThroughAllExtrudeTests.cpp:179  CHECK( toString(ExtrudeTermination::Blind) == "blind" )
+        => "blind" == "blind"
+ThroughAllExtrudeTests.cpp:180  CHECK( toString(ExtrudeTermination::ThroughAll) == "through all" )
+        => "through all" == "through all"
+ThroughAllExtrudeTests.cpp:189  CHECK( created.error().code == ErrorCode::InvalidArgument )
+        => 0 == 0
+ThroughAllExtrudeTests.cpp:194  CHECK( message(d) == "a through-all extrude has no depth: it reaches through its target" )
+        => "a through-all extrude has no depth: it reaches through its target" == "a through-all extrude has no depth: it reaches through its target"
+ThroughAllExtrudeTests.cpp:197  CHECK( message(d) == "a through-all extrude has no depth: it reaches through its target" )
+        => "a through-all extrude has no depth: it reaches through its target" == "a through-all extrude has no depth: it reaches through its target"
+ThroughAllExtrudeTests.cpp:204  CHECK( message(d) == std::format("a through-all extrude must be a cut, got {}", text) )
+        => "a through-all extrude must be a cut, got new body" == "a through-all extrude must be a cut, got new body"
+ThroughAllExtrudeTests.cpp:204  CHECK( message(d) == std::format("a through-all extrude must be a cut, got {}", text) )
+        => "a through-all extrude must be a cut, got join" == "a through-all extrude must be a cut, got join"
+ThroughAllExtrudeTests.cpp:204  CHECK( message(d) == std::format("a through-all extrude must be a cut, got {}", text) )
+        => "a through-all extrude must be a cut, got intersect" == "a through-all extrude must be a cut, got intersect"
+ThroughAllExtrudeTests.cpp:208  CHECK( message(d) == "a cut feature needs a target feature" )
+        => "a cut feature needs a target feature" == "a cut feature needs a target feature"
+ThroughAllExtrudeTests.cpp:212  CHECK( message(d) == "extrude depth must be positive, got 0 mm" )
+        => "extrude depth must be positive, got 0 mm" == "extrude depth must be positive, got 0 mm"
+ThroughAllExtrudeTests.cpp:214  CHECK_FALSE( !(good == d) )
+        => !({?} == {?})
+ThroughAllExtrudeTests.cpp:218  CHECK( (*feature)->dependencies() == std::vector<ObjectId>{ObjectId::fromValue(1), ObjectId::fromValue(2)} )
+        => { object:1, object:2 } == { object:1, object:2 }
+
+== ThroughAllExtrude_NamesItsSidesAndLosesItsCaps
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 60.0 is within 0.000000000001 of 60.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 90.0 is within 0.000000000001 of 90.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.0 is within 0.000000000001 of 0.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.0 is within 0.000000000001 of 0.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -1.0 is within 0.00000000000001 of -1.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -1.0 is within 0.00000000000001 of -1.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 20.0 is within 0.000000000001 of 20.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.0 is within 0.000000000001 of 0.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 40.0 is within 0.000000000001 of 40.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.0 is within 0.00000000000001 of 0.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -1.0 is within 0.00000000000001 of -1.0
+ThroughAllExtrudeTests.cpp:411  CHECK( wall.error().message == std::format("the side from {} of Cut (object:5) is a cylinder, not a plane", m.hole) )
+        => "the side from entity:2 of Cut (object:5) is a cylinder, not a plane" == "the side from entity:2 of Cut (object:5) is a cylinder, not a plane"
+ThroughAllExtrudeTests.cpp:416  CHECK( cap.error().code == ErrorCode::NotFound )
+        => 1 == 1
+ThroughAllExtrudeTests.cpp:417  CHECK( cap.error().message == std::format("the {} of Cut (object:5) is not a face of its body (the feature's " "operation left no such face)", text) )
+        => "the start cap of Cut (object:5) is not a face of its body (the feature's operation left no such face)" == "the start cap of Cut (object:5) is not a face of its body (the feature's operation left no such face)"
+ThroughAllExtrudeTests.cpp:417  CHECK( cap.error().message == std::format("the {} of Cut (object:5) is not a face of its body (the feature's " "operation left no such face)", text) )
+        => "the end cap of Cut (object:5) is not a face of its body (the feature's operation left no such face)" == "the end cap of Cut (object:5) is not a face of its body (the feature's operation left no such face)"
+
+== ThroughAllFile_ExportedSlabReadsBackFromStep
+ThroughAllFileTests.cpp:154  CHECK( summary->bodies.size() == 2 )
+        => 2 == 2
+ThroughAllFileTests.cpp:158  CHECK( contents->solids == 2 )
+        => 2 == 2
+ThroughAllFileTests.cpp:160  CHECK_THAT( contents->volumeMm3, WithinRel(ThroughSlabModel::volume(20.0) + std::numbers::pi * 9.0 * 5.0, 1e-9) )
+        => 102306.3337085829989519 and 102306.33370858238777146 are within 1e-07% of each other
+ThroughAllFileTests.cpp:162  CHECK_THAT( contents->maxMm[0], WithinRel(100.0, 1e-9) )
+        => 100.0 and 100.0 are within 1e-07% of each other
+ThroughAllFileTests.cpp:163  CHECK_THAT( contents->maxMm[2], WithinRel(20.0, 1e-9) )
+        => 20.0 and 20.0 are within 1e-07% of each other
+
+== ThroughAllFile_SaveLoad_RegeneratesTheSameBodies
+ThroughAllFileTests.cpp:79  CHECK( cut.termination == ExtrudeTermination::ThroughAll )
+        => 1 == 1
+ThroughAllFileTests.cpp:80  CHECK( cut.direction == ExtrudeDirection::Reversed )
+        => 1 == 1
+ThroughAllFileTests.cpp:81  CHECK( cut.depth == Length{} )
+        => 0 m == 0 m
+ThroughAllFileTests.cpp:82  CHECK_FALSE( !(cut.depthParameter.has_value()) )
+        => !false
+ThroughAllFileTests.cpp:83  CHECK( loaded->findObjectAs<ExtrudeFeature>(original.slab)->definition().termination == ExtrudeTermination::Blind )
+        => 0 == 0
+ThroughAllFileTests.cpp:89  CHECK( bits(volumeOf(after, id)) == bits(volumeOf(before, id)) )
+        => 4682982750418894848 (0x40fd4c0000000000) == 4682982750418894848 (0x40fd4c0000000000)
+ThroughAllFileTests.cpp:89  CHECK( bits(volumeOf(after, id)) == bits(volumeOf(before, id)) )
+        => 4681881779285874238 (0x40f962ac2eb5563e) == 4681881779285874238 (0x40f962ac2eb5563e)
+ThroughAllFileTests.cpp:89  CHECK( bits(volumeOf(after, id)) == bits(volumeOf(before, id)) )
+        => 4681757135942659996 (0x40f8f14f64832f9c) == 4681757135942659996 (0x40f8f14f64832f9c)
+ThroughAllFileTests.cpp:89  CHECK( bits(volumeOf(after, id)) == bits(volumeOf(before, id)) )
+        => 4639178089983635383 (0x4061abe4b73fefb7) == 4639178089983635383 (0x4061abe4b73fefb7)
+
+== ThroughAllExtrude_EditsAreUndoableAndAtomic
+ThroughAllExtrudeTests.cpp:435  CHECK_THAT( volumeOf(regenerator, m.row), WithinRel(60000.0 - 5.0 * 16.0 * pi * 4.0, kRel) )
+        => 58994.6903508512841654 and 58994.69035085126961349 are within 1e-10% of each other
+ThroughAllExtrudeTests.cpp:438  CHECK( bits(volumeOf(regenerator, m.row)) == bits(through) )
+        => 4678133729026288588 (0x40ec11d73a62abcc) == 4678133729026288588 (0x40ec11d73a62abcc)
+ThroughAllExtrudeTests.cpp:441  CHECK_THAT( volumeOf(regenerator, m.row), WithinRel(60000.0 - 5.0 * 16.0 * pi * 4.0, kRel) )
+        => 58994.6903508512841654 and 58994.69035085126961349 are within 1e-10% of each other
+ThroughAllExtrudeTests.cpp:451  CHECK( refused.error().message == "a through-all extrude must be a cut, got join" )
+        => "a through-all extrude must be a cut, got join" == "a through-all extrude must be a cut, got join"
+ThroughAllExtrudeTests.cpp:457  CHECK( tool.error().code == ErrorCode::FailedPrecondition )
+        => 5 == 5
+ThroughAllExtrudeTests.cpp:458  CHECK( tool.error().message == "Perf: a through-all extrude needs the body of its target feature" )
+        => "Perf: a through-all extrude needs the body of its target feature" == "Perf: a through-all extrude needs the body of its target feature"
+ThroughAllExtrudeTests.cpp:460  CHECK( bits(volumeOf(regenerator, m.row)) == bits(through) )
+        => 4678133729026288588 (0x40ec11d73a62abcc) == 4678133729026288588 (0x40ec11d73a62abcc)
+
+== ThroughAllExtrude_CutsThroughAtEveryThickness
+ThroughAllExtrudeTests.cpp:108  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: t := 20.0
+ThroughAllExtrudeTests.cpp:111  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, kRel) )
+        => 102164.96203917119419202 and 102164.96203917084494606 are within 1e-10% of each other with message: t := 20.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 47.85077756908563629 is within 0.000000001 of 47.85077756908563629 with message: t := 20.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 29.99999999999961275 is within 0.000000001 of 30.0 with message: t := 20.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 10.00000000000066613 is within 0.000000001 of 10.0 with message: t := 20.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: t := 20.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: t := 20.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: t := 20.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 100.0 is within 0.0000001 of 100.0 with message: t := 20.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 60.0 is within 0.0000001 of 60.0 with message: t := 20.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 20.00000000000001066 is within 0.0000001 of 20.0 with message: t := 20.0
+ThroughAllExtrudeTests.cpp:229  CHECK_THAT( volumeOf(regenerator, m.cut), WithinRel(ThroughSlabModel::cutVolume(t), kRel) )
+        => 103978.76140340507845394 and 103978.76140340506390203 are within 1e-10% of each other with message: t := 20.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: t := 20.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: t := 20.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 20.0 is within 0.000000000001 of 20.0 with message: t := 20.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: t := 20.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: t := 20.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: t := 20.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: t := 20.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: t := 20.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: t := 20.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 60.0 is within 0.000000000001 of 60.0 with message: t := 20.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: t := 20.0
+ThroughAllExtrudeTests.cpp:111  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, kRel) )
+        => 141.37166941154075062 and 141.37166941154069377 are within 1e-10% of each other with message: t := 20.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 62.50000000000001421 is within 0.000000001 of 62.5 with message: t := 20.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.00000000000000355 is within 0.000000001 of 30.0 with message: t := 20.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 10.00000000000000178 is within 0.000000001 of 10.0 with message: t := 20.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 60.0 is within 0.0000001 of 60.0 with message: t := 20.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 27.0 is within 0.0000001 of 27.0 with message: t := 20.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 7.0 is within 0.0000001 of 7.0 with message: t := 20.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 65.0 is within 0.0000001 of 65.0 with message: t := 20.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 33.0 is within 0.0000001 of 33.0 with message: t := 20.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 13.0 is within 0.0000001 of 13.0 with message: t := 20.0
+ThroughAllExtrudeTests.cpp:241  CHECK( std::ranges::find(thicker.regenerated, id) != thicker.regenerated.end() )
+        => {?} != {?}
+ThroughAllExtrudeTests.cpp:108  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: t := 30.0
+ThroughAllExtrudeTests.cpp:111  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, kRel) )
+        => 153247.44305875623831525 and 153247.44305875626741908 are within 1e-10% of each other with message: t := 30.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 47.85077756908559365 is within 0.000000001 of 47.85077756908562208 with message: t := 30.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.05125032742561686 is within 0.000000001 of 30.05125032742610358 with message: t := 30.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 15.00000000000081535 is within 0.000000001 of 15.0 with message: t := 30.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: t := 30.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: t := 30.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: t := 30.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 100.0 is within 0.0000001 of 100.0 with message: t := 30.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 60.0 is within 0.0000001 of 60.0 with message: t := 30.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 30.0 is within 0.0000001 of 30.0 with message: t := 30.0
+ThroughAllExtrudeTests.cpp:229  CHECK_THAT( volumeOf(regenerator, m.cut), WithinRel(ThroughSlabModel::cutVolume(t), kRel) )
+        => 155968.142105107603129 and 155968.142105107603129 are within 1e-10% of each other with message: t := 30.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: t := 30.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: t := 30.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 30.0 is within 0.000000000001 of 30.0 with message: t := 30.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: t := 30.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: t := 30.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: t := 30.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: t := 30.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: t := 30.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: t := 30.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 60.0 is within 0.000000000001 of 60.0 with message: t := 30.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: t := 30.0
+ThroughAllExtrudeTests.cpp:111  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, kRel) )
+        => 141.37166941154075062 and 141.37166941154069377 are within 1e-10% of each other with message: t := 30.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 62.50000000000001421 is within 0.000000001 of 62.5 with message: t := 30.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.00000000000000355 is within 0.000000001 of 30.0 with message: t := 30.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 10.00000000000000178 is within 0.000000001 of 10.0 with message: t := 30.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 60.0 is within 0.0000001 of 60.0 with message: t := 30.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 27.0 is within 0.0000001 of 27.0 with message: t := 30.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 7.0 is within 0.0000001 of 7.0 with message: t := 30.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 65.0 is within 0.0000001 of 65.0 with message: t := 30.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 33.0 is within 0.0000001 of 33.0 with message: t := 30.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 13.0 is within 0.0000001 of 13.0 with message: t := 30.0
+ThroughAllExtrudeTests.cpp:108  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: t := 12.0
+ThroughAllExtrudeTests.cpp:111  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, kRel) )
+        => 61298.97722350241383538 and 61298.97722350250114687 are within 1e-10% of each other with message: t := 12.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 47.85077756908560787 is within 0.000000001 of 47.85077756908563629 with message: t := 12.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 29.95899973805881444 is within 0.000000001 of 29.95899973805911998 with message: t := 12.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 6.00000000000049472 is within 0.000000001 of 6.00000000000000089 with message: t := 12.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: t := 12.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: t := 12.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: t := 12.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 100.0 is within 0.0000001 of 100.0 with message: t := 12.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 60.0 is within 0.0000001 of 60.0 with message: t := 12.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 12.0 is within 0.0000001 of 12.0 with message: t := 12.0
+ThroughAllExtrudeTests.cpp:229  CHECK_THAT( volumeOf(regenerator, m.cut), WithinRel(ThroughSlabModel::cutVolume(t), kRel) )
+        => 62387.25684204304707237 and 62387.25684204303252045 are within 1e-10% of each other with message: t := 12.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: t := 12.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: t := 12.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 12.0 is within 0.000000000001 of 12.0 with message: t := 12.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: t := 12.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: t := 12.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: t := 12.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: t := 12.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: t := 12.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: t := 12.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 60.0 is within 0.000000000001 of 60.0 with message: t := 12.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: t := 12.0
+ThroughAllExtrudeTests.cpp:111  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, kRel) )
+        => 141.37166941154075062 and 141.37166941154069377 are within 1e-10% of each other with message: t := 12.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 62.50000000000001421 is within 0.000000001 of 62.5 with message: t := 12.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.00000000000000355 is within 0.000000001 of 30.0 with message: t := 12.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 10.00000000000000178 is within 0.000000001 of 10.0 with message: t := 12.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 60.0 is within 0.0000001 of 60.0 with message: t := 12.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 27.0 is within 0.0000001 of 27.0 with message: t := 12.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 7.0 is within 0.0000001 of 7.0 with message: t := 12.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 65.0 is within 0.0000001 of 65.0 with message: t := 12.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 33.0 is within 0.0000001 of 33.0 with message: t := 12.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 13.0 is within 0.0000001 of 13.0 with message: t := 12.0
+ThroughAllExtrudeTests.cpp:249  CHECK( definitionOf(m.doc, m.cut).depth == Length{} )
+        => 0 m == 0 m
+ThroughAllExtrudeTests.cpp:250  CHECK_FALSE( !(definitionOf(m.doc, m.cut).depthParameter.has_value()) )
+        => !false
+ThroughAllExtrudeTests.cpp:256  CHECK( snapshot(regenerator, m.doc) == first )
+        => {?} == {?}
+
+== ThroughAllExtrude_GoesTheWayItsDirectionSays / from the top face: reversed and symmetric cut through; along the normal there is nothing
+ThroughAllExtrudeTests.cpp:270  CHECK_THAT( volumeOf(regenerator, m.slant), WithinRel(reversed, kRel) )
+        => 102164.96203917119419202 and 102164.96203917119419202 are within 1e-10% of each other
+ThroughAllExtrudeTests.cpp:108  CHECK( body->topology().solids == 1 )
+        => 1 == 1
+ThroughAllExtrudeTests.cpp:111  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, kRel) )
+        => 102164.96203917119419202 and 102164.96203917084494606 are within 1e-10% of each other
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 47.85077756908563629 is within 0.000000001 of 47.85077756908563629
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 29.99999999999961275 is within 0.000000001 of 30.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 10.00000000000066613 is within 0.000000001 of 10.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 100.0 is within 0.0000001 of 100.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 60.0 is within 0.0000001 of 60.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 20.00000000000001066 is within 0.0000001 of 20.0
+ThroughAllExtrudeTests.cpp:166  CHECK( report.failed == std::vector<ObjectId>{item} )
+        => { object:5 } == { object:5 }
+ThroughAllExtrudeTests.cpp:168  CHECK( report.errors.at(item).code == code )
+        => 5 == 5
+ThroughAllExtrudeTests.cpp:169  CHECK( report.errors.at(item).message == message )
+        => "Cut: the target lies wholly behind the sketch plane, so cutting through all along its normal removes nothing" == "Cut: the target lies wholly behind the sketch plane, so cutting through all along its normal removes nothing"
+ThroughAllExtrudeTests.cpp:170  CHECK( regenerator.body(item) == nullptr )
+        => nullptr == nullptr
+ThroughAllExtrudeTests.cpp:172  CHECK( std::ranges::find(report.blocked, id) != report.blocked.end() )
+        => {?} != {?}
+ThroughAllExtrudeTests.cpp:284  CHECK( bits(volumeOf(regenerator, m.slant)) == bits(reversed) )
+        => 4681757135942659996 (0x40f8f14f64832f9c) == 4681757135942659996 (0x40f8f14f64832f9c)
+
+== ThroughAllExtrude_GoesTheWayItsDirectionSays / from below the slab: along the normal cuts through; against it there is nothing
+ThroughAllExtrudeTests.cpp:108  CHECK( body->topology().solids == 1 )
+        => 1 == 1
+ThroughAllExtrudeTests.cpp:111  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, kRel) )
+        => 116000.0 and 116000.0 are within 1e-10% of each other
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 51.0344827586207046 is within 0.000000001 of 51.03448275862069039
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.5172413793103452 is within 0.000000001 of 30.5172413793103452
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 9.99999999999999822 is within 0.000000001 of 10.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 100.0 is within 0.0000001 of 100.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 60.0 is within 0.0000001 of 60.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 20.0 is within 0.0000001 of 20.0
+ThroughAllExtrudeTests.cpp:166  CHECK( report.failed == std::vector<ObjectId>{item} )
+        => { object:4 } == { object:4 }
+ThroughAllExtrudeTests.cpp:168  CHECK( report.errors.at(item).code == code )
+        => 5 == 5
+ThroughAllExtrudeTests.cpp:169  CHECK( report.errors.at(item).message == message )
+        => "Up: the target lies wholly in front of the sketch plane, so cutting through all against its normal removes nothing" == "Up: the target lies wholly in front of the sketch plane, so cutting through all against its normal removes nothing"
+ThroughAllExtrudeTests.cpp:170  CHECK( regenerator.body(item) == nullptr )
+        => nullptr == nullptr
+
+== ThroughAllFile_TheTerminationIsWrittenAndNoDepth
+ThroughAllFileTests.cpp:106  CHECK( text.find("\"termination\": \"blind\"") == std::string::npos )
+        => 18446744073709551615 (0xffffffffffffffff) == 18446744073709551615 (0xffffffffffffffff)
+
+== ThroughAllFile_MalformedTerminationsAreRejectedWithThePath
+ThroughAllFileTests.cpp:122  CHECK_THAT( loadError(good, termination, "\"termination\": \"up_to_next\""), ContainsSubstring("objects[3].data.termination: unknown value 'up_to_next'") )
+        => "objects[3].data.termination: unknown value 'up_to_next'" contains: "objects[3].data.termination: unknown value 'up_to_next'"
+ThroughAllFileTests.cpp:124  CHECK_THAT( loadError(good, termination, "\"termination\": 1"), ContainsSubstring("objects[3].data.termination: expected a string") )
+        => "objects[3].data.termination: expected a string" contains: "objects[3].data.termination: expected a string"
+ThroughAllFileTests.cpp:126  CHECK_THAT( loadError(good, termination, termination + ", \"depth\": 0.01"), ContainsSubstring("objects[3].data.depth: a through-all extrude has no depth") )
+        => "objects[3].data.depth: a through-all extrude has no depth" contains: "objects[3].data.depth: a through-all extrude has no depth"
+ThroughAllFileTests.cpp:128  CHECK_THAT( loadError(good, termination, termination + ", \"depth_parameter\": 1"), ContainsSubstring("objects[3].data.depth_parameter: a through-all extrude has no depth") )
+        => "objects[3].data.depth_parameter: a through-all extrude has no depth" contains: "objects[3].data.depth_parameter: a through-all extrude has no depth"
+ThroughAllFileTests.cpp:130  CHECK_THAT( loadError(good, "\"operation\": \"cut\",\n \"target\": 3", "\"operation\": \"join\",\n \"target\": 3"), ContainsSubstring("objects[3].data: a through-all extrude must be a cut, got join") )
+        => "objects[3].data: a through-all extrude must be a cut, got join" contains: "objects[3].data: a through-all extrude must be a cut, got join"
+ThroughAllFileTests.cpp:133  CHECK_THAT( loadError(good, termination, "\"termination\": \"blind\""), ContainsSubstring("objects[3].data.depth: missing required field") )
+        => "objects[3].data.depth: missing required field" contains: "objects[3].data.depth: missing required field"
+
+== ThroughAllExtrude_RepeatsThroughTheBodyAtEveryInstance / a row of holes through a plate of any thickness
+ThroughAllExtrudeTests.cpp:108  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: t := 10.0; count := 5.0
+ThroughAllExtrudeTests.cpp:111  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, kRel) )
+        => 57486.72587712816311978 and 57486.72587712816311978 are within 1e-10% of each other with message: t := 10.0; count := 5.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 50.0 is within 0.000000001 of 50.0 with message: t := 10.0; count := 5.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.65578811922000568 is within 0.000000001 of 30.65578811922000213 with message: t := 10.0; count := 5.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 5.00000000000000266 is within 0.000000001 of 5.00000000000000355 with message: t := 10.0; count := 5.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: t := 10.0; count := 5.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: t := 10.0; count := 5.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: t := 10.0; count := 5.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 100.0 is within 0.0000001 of 100.0 with message: t := 10.0; count := 5.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 60.0 is within 0.0000001 of 60.0 with message: t := 10.0; count := 5.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 10.0 is within 0.0000001 of 10.0 with message: t := 10.0; count := 5.0
+ThroughAllExtrudeTests.cpp:108  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: t := 25.0; count := 5.0
+ThroughAllExtrudeTests.cpp:111  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, kRel) )
+        => 143716.81469282048055902 and 143716.81469282042235136 are within 1e-10% of each other with message: t := 25.0; count := 5.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 49.99999999999997868 is within 0.000000001 of 49.99999999999997868 with message: t := 25.0; count := 5.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.65578811921998437 is within 0.000000001 of 30.65578811921998437 with message: t := 25.0; count := 5.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 12.49999999999999289 is within 0.000000001 of 12.49999999999999467 with message: t := 25.0; count := 5.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: t := 25.0; count := 5.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: t := 25.0; count := 5.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: t := 25.0; count := 5.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 100.0 is within 0.0000001 of 100.0 with message: t := 25.0; count := 5.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 60.0 is within 0.0000001 of 60.0 with message: t := 25.0; count := 5.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 25.0 is within 0.0000001 of 25.0 with message: t := 25.0; count := 5.0
+ThroughAllExtrudeTests.cpp:108  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: t := 25.0; count := 3.0
+ThroughAllExtrudeTests.cpp:111  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, kRel) )
+        => 146230.08881569228833541 and 146230.08881569225923158 are within 1e-10% of each other with message: t := 25.0; count := 3.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 50.51561360795715672 is within 0.000000001 of 50.51561360795714961 with message: t := 25.0; count := 3.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.38671020596786221 is within 0.000000001 of 30.38671020596786221 with message: t := 25.0; count := 3.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 12.5 is within 0.000000001 of 12.49999999999999645 with message: t := 25.0; count := 3.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: t := 25.0; count := 3.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: t := 25.0; count := 3.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: t := 25.0; count := 3.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 100.0 is within 0.0000001 of 100.0 with message: t := 25.0; count := 3.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 60.0 is within 0.0000001 of 60.0 with message: t := 25.0; count := 3.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 25.0 is within 0.0000001 of 25.0 with message: t := 25.0; count := 3.0
+
+== ThroughAllExtrude_RepeatsThroughTheBodyAtEveryInstance / a circular pattern turns the hole onto each wall
+ThroughAllExtrudeTests.cpp:108  CHECK( body->topology().solids == 1 )
+        => 1 == 1
+ThroughAllExtrudeTests.cpp:111  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, kRel) )
+        => 59151.76998353075759951 and 59151.76998353075759951 are within 1e-10% of each other
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.00000000000000016 is within 0.000000001 of 0.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.00000000000001066 is within 0.000000001 of 30.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.00000000000000071 is within 0.000000001 of 0.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -30.0 is within 0.0000001 of -30.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -15.0 is within 0.0000001 of -15.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 30.0 is within 0.0000001 of 30.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 60.0 is within 0.0000001 of 60.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 15.0 is within 0.0000001 of 15.0
+ThroughAllExtrudeTests.cpp:345  CHECK( faces->front().surface == geometry::FaceSurface::Cylinder )
+        => 1 == 1
+ThroughAllExtrudeTests.cpp:364  CHECK_THAT( wall({}), WithinRel(2.0 * pi * 3.0 * 5.0, kRel) )
+        => 94.24777960769378637 and 94.24777960769378637 are within 1e-10% of each other
+ThroughAllExtrudeTests.cpp:365  CHECK_THAT( wall({{ring, 1}}), WithinRel(2.0 * pi * 3.0 * 10.0, kRel) )
+        => 188.49555921538757275 and 188.49555921538757275 are within 1e-10% of each other
+ThroughAllExtrudeTests.cpp:366  CHECK_THAT( wall({{ring, 2}}), WithinRel(2.0 * pi * 3.0 * 5.0, kRel) )
+        => 94.24777960769378637 and 94.24777960769378637 are within 1e-10% of each other
+ThroughAllExtrudeTests.cpp:367  CHECK_THAT( wall({{ring, 3}}), WithinRel(2.0 * pi * 3.0 * 10.0, kRel) )
+        => 188.49555921538757275 and 188.49555921538757275 are within 1e-10% of each other
+
+== ThroughAllExtrude_RepeatsThroughTheBodyAtEveryInstance / a feature mirror in the plane x = z turns the hole onto the +X wall
+ThroughAllExtrudeTests.cpp:108  CHECK( body->topology().solids == 1 )
+        => 1 == 1
+ThroughAllExtrudeTests.cpp:111  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, kRel) )
+        => 59575.88499176537879976 and 59575.88499176537879976 are within 1e-10% of each other
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.11864840063314083 is within 0.000000001 of -0.11864840063314308
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.0 is within 0.000000001 of 30.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.02966210015828822 is within 0.000000001 of -0.02966210015828577
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -30.0 is within 0.0000001 of -30.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -15.0 is within 0.0000001 of -15.0
+ThroughAllExtrudeTests.cpp:63  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 30.0 is within 0.0000001 of 30.0
+ThroughAllExtrudeTests.cpp:64  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 60.0 is within 0.0000001 of 60.0
+ThroughAllExtrudeTests.cpp:65  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 15.0 is within 0.0000001 of 15.0
+ThroughAllExtrudeTests.cpp:345  CHECK( faces->front().surface == geometry::FaceSurface::Cylinder )
+        => 1 == 1
+ThroughAllExtrudeTests.cpp:383  CHECK_THAT( sideArea(regenerator, swap, FaceName{m.port, {.role = FaceRole::Side, .entity = m.portCircle, .copies = {{swap, 1}}}}), WithinRel(2.0 * pi * 3.0 * 10.0, kRel) )
+        => 188.49555921538754433 and 188.49555921538757275 are within 1e-10% of each other
+
+Overall: 1264 assertions passed, 0 failed.

@@ -1,0 +1,519 @@
+{
+  "format": "bettercad-document",
+  "version": 1,
+  "units": "SI",
+  "document": {
+    "id": "c41e7a92-3d5b-4f8a-9e26-7b1d4c8a5f03",
+    "name": "ThroughSlab",
+    "metadata": {
+      "description": "",
+      "author": "",
+      "properties": {}
+    },
+    "last_allocated_id": 9
+  },
+  "parameters": [
+    {
+      "id": 1,
+      "name": "thickness",
+      "si_value": 0.02,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    }
+  ],
+  "objects": [
+    {
+      "id": 2,
+      "type": "sketch",
+      "name": "SlabSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.1,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.1,
+              0.06
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.0,
+              0.06
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "line",
+            "start": 2,
+            "end": 3,
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "line",
+            "start": 4,
+            "end": 1,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "fixed",
+            "entities": [
+              2
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "fixed",
+            "entities": [
+              3
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "fixed",
+            "entities": [
+              4
+            ],
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 8,
+        "last_constraint_id": 4
+      }
+    },
+    {
+      "id": 3,
+      "type": "extrude",
+      "name": "Slab",
+      "data": {
+        "profile": 2,
+        "depth": 0.0,
+        "depth_parameter": 1,
+        "direction": "normal",
+        "operation": "new_body"
+      }
+    },
+    {
+      "id": 4,
+      "type": "sketch",
+      "name": "CutSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.02
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "attachment": {
+          "object": 3,
+          "face": {
+            "role": "end_cap"
+          }
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.03,
+              0.03
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "circle",
+            "center": 1,
+            "radius": 0.008,
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.06,
+              0.02
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.09,
+              0.02
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "point",
+            "position": [
+              0.09,
+              0.04
+            ],
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "point",
+            "position": [
+              0.06,
+              0.04
+            ],
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "line",
+            "start": 4,
+            "end": 5,
+            "construction": false
+          },
+          {
+            "id": 9,
+            "type": "line",
+            "start": 5,
+            "end": 6,
+            "construction": false
+          },
+          {
+            "id": 10,
+            "type": "line",
+            "start": 6,
+            "end": 3,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "radius",
+            "entities": [
+              2
+            ],
+            "value": 0.008,
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "fixed",
+            "entities": [
+              3
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "fixed",
+            "entities": [
+              4
+            ],
+            "enabled": true
+          },
+          {
+            "id": 5,
+            "type": "fixed",
+            "entities": [
+              5
+            ],
+            "enabled": true
+          },
+          {
+            "id": 6,
+            "type": "fixed",
+            "entities": [
+              6
+            ],
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 10,
+        "last_constraint_id": 6
+      }
+    },
+    {
+      "id": 5,
+      "type": "extrude",
+      "name": "Cut",
+      "data": {
+        "profile": 4,
+        "termination": "through_all",
+        "direction": "reversed",
+        "operation": "cut",
+        "target": 3
+      }
+    },
+    {
+      "id": 6,
+      "type": "sketch",
+      "name": "SlantSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.05,
+            0.03,
+            0.01
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            -0.0,
+            0.8660254037844387,
+            0.49999999999999994
+          ],
+          "normal": [
+            0.0,
+            -0.49999999999999994,
+            0.8660254037844387
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "circle",
+            "center": 1,
+            "radius": 0.005,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "radius",
+            "entities": [
+              2
+            ],
+            "value": 0.005,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 2,
+        "last_constraint_id": 2
+      }
+    },
+    {
+      "id": 7,
+      "type": "extrude",
+      "name": "Slant",
+      "data": {
+        "profile": 6,
+        "termination": "through_all",
+        "direction": "symmetric",
+        "operation": "cut",
+        "target": 5
+      }
+    },
+    {
+      "id": 8,
+      "type": "sketch",
+      "name": "WallSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.06,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "normal": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        "attachment": {
+          "object": 5,
+          "face": {
+            "role": "side",
+            "entity": 10
+          }
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.03,
+              0.01
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "circle",
+            "center": 1,
+            "radius": 0.003,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "radius",
+            "entities": [
+              2
+            ],
+            "value": 0.003,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 2,
+        "last_constraint_id": 2
+      }
+    },
+    {
+      "id": 9,
+      "type": "extrude",
+      "name": "Peg",
+      "data": {
+        "profile": 8,
+        "depth": 0.005,
+        "direction": "normal",
+        "operation": "new_body"
+      }
+    }
+  ]
+}

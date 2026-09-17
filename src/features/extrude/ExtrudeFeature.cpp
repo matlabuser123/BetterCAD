@@ -18,9 +18,34 @@ std::string_view toString(ExtrudeDirection direction) noexcept {
     return "unknown";
 }
 
+std::string_view toString(ExtrudeTermination termination) noexcept {
+    switch (termination) {
+    case ExtrudeTermination::Blind:
+        return "blind";
+    case ExtrudeTermination::ThroughAll:
+        return "through all";
+    }
+    return "unknown";
+}
+
 Result<void> validate(const ExtrudeDefinition& definition) {
     if (!definition.profile.isValid()) {
         return makeError(ErrorCode::InvalidArgument, "an extrude needs a profile sketch");
+    }
+    if (definition.termination == ExtrudeTermination::ThroughAll) {
+        if (definition.depthParameter || definition.depth != Length{}) {
+            return makeError(ErrorCode::InvalidArgument,
+                             "a through-all extrude has no depth: it reaches through its target");
+        }
+        if (definition.operation != FeatureOperation::Cut) {
+            return makeError(ErrorCode::InvalidArgument,
+                             std::format("a through-all extrude must be a cut, got {}",
+                                         toString(definition.operation)));
+        }
+        return validateOperation(definition.operation, definition.target);
+    }
+    if (definition.termination != ExtrudeTermination::Blind) {
+        return makeError(ErrorCode::InvalidArgument, "unknown extrude termination");
     }
     if (definition.depthParameter) {
         if (!definition.depthParameter->isValid()) {

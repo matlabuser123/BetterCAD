@@ -343,9 +343,11 @@ std::string describeObject(const Document& document, const DocumentObject& objec
     }
     if (const auto* extrude = dynamic_cast<const features::ExtrudeFeature*>(&object)) {
         const features::ExtrudeDefinition& d = extrude->definition();
-        const std::string depth = d.depthParameter ? nameOrId(document, ObjectId{*d.depthParameter})
-                                                   : std::format("{:.10g} mm", d.depth.in(units::mm));
-        return std::format("profile {}, depth {}, {}, {}", nameOrId(document, ObjectId{d.profile}), depth,
+        const std::string extent =
+            d.termination == features::ExtrudeTermination::ThroughAll ? std::string{"through all"}
+            : d.depthParameter ? std::format("depth {}", nameOrId(document, ObjectId{*d.depthParameter}))
+                               : std::format("depth {:.10g} mm", d.depth.in(units::mm));
+        return std::format("profile {}, {}, {}, {}", nameOrId(document, ObjectId{d.profile}), extent,
                            features::toString(d.direction), describeOperation(document, d.operation, d.target));
     }
     if (const auto* revolve = dynamic_cast<const features::RevolveFeature*>(&object)) {

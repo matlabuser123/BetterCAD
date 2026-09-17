@@ -13,7 +13,7 @@ authorized — never in advance.
 | | |
 | --- | --- |
 | Current | **`P12` — Parametric CAD Completion** |
-| Next | `P12-FEAT-001` — Through-all extrude |
+| Next | `P12-FEAT-002` — Split body / combine |
 | Blocked / Manual | None |
 | Last qualified | `P11` Production Part Modeling — **QUALIFIED** |
 | Released | `v0.1.0` (`P0`–`P10`); `P11` qualified, not released |
@@ -54,7 +54,7 @@ Reference models → qualification
 | 4 | `P12-DATUM-001` Datum planes, axes, coordinate systems | `PARAM-001` | **done** — [evidence](docs/verification/P12-DATUM-001/README.md) |
 | 4a | `P12-STREF-001` Stable feature face references (prerequisite, authorized 2026-09-17) | `DATUM-001` | **done** — [evidence](docs/verification/P12-STREF-001/README.md) |
 | 5 | `P12-SKETCH-003` Sketches on arbitrary planar faces | `DATUM-001`, `STREF-001` | **done** — [evidence](docs/verification/P12-SKETCH-003/README.md) |
-| 6 | `P12-FEAT-001` Through-all extrude | — | not started |
+| 6 | `P12-FEAT-001` Through-all extrude | — | **done** — [evidence](docs/verification/P12-FEAT-001/README.md) |
 | 7 | `P12-FEAT-002` Split body / combine | — | not started |
 | 8 | `P12-FEAT-003` Shell | `FEAT-002` | not started |
 | 9 | `P12-FEAT-004` Draft | `DATUM-001` | not started |
@@ -234,9 +234,31 @@ Acceptance:
 - Curved faces are refused as planes; faces the feature's own operation removed fail with NotFound; nothing is substituted.
 - Save → load → regenerate resolves every reference to the same plane, bit for bit; every value the existing tests measure is unchanged; `P0`–`P12-STREF-001` stays green in all three presets.
 
+#### P12-FEAT-001 — Through-all extrude
+
+A cut that goes through all the material of its target, however the target
+changes. The termination is part of the definition (`termination =
+through_all`), never a large depth: the tool's length is worked out at
+regeneration from the target body, in the sketch's direction.
+
+Deliverables:
+
+- [x] `ExtrudeTermination` (`blind`, `through_all`) in `ExtrudeDefinition`; a through-all extrude has no depth or depth parameter, and cuts (the only operation it takes)
+- [x] Through all along the sketch normal, against it (reversed) and both ways (symmetric), from the target body's exact bounds, with a clearance; a target wholly behind the sketch plane fails
+- [x] Patterns and mirrors repeat a through-all cut through the body at each instance
+- [x] Face names as for any extrude; the caps that lie outside the target are gone after the cut
+- [x] Save/load (`"termination": "through_all"`, no depth), validation and CLI description
+- [x] Evidence: [docs/verification/P12-FEAT-001/](docs/verification/P12-FEAT-001/README.md) — PASS, 936/936 tests in Debug, Release and Debug-shared, 0 warnings
+
+Acceptance:
+
+- A through-all cut removes profile area x thickness from a block whose height is driven by a parameter, at every height, and a slanted one area x thickness / cos(angle); volumes, centres and bounds match the analytic values.
+- A depth, a non-cut operation or a missing target is refused with a structured diagnostic; a target behind the sketch plane fails at regeneration, keeping no body.
+- Save → load → regenerate gives the same bodies bit for bit; files without `termination` load as blind extrudes, unchanged; `P0`–`P12-SKETCH-003` stays green in all three presets.
+
 ## Next
 
-`P12-FEAT-001` — Through-all extrude.
+`P12-FEAT-002` — Split body / combine.
 
 ## Blocked / Manual
 
@@ -345,11 +367,10 @@ Not started. Not authorized. Grouped to match
 
 | Milestone | Commit | Evidence |
 | --- | --- | --- |
-| `P12-SKETCH-003` Sketches on arbitrary planar faces | "BetterCAD: implement P12 sketches on arbitrary planar faces" | [P12-SKETCH-003](docs/verification/P12-SKETCH-003/README.md) |
+| `P12-FEAT-001` Through-all extrude | "BetterCAD: implement P12 through-all extrude" | [P12-FEAT-001](docs/verification/P12-FEAT-001/README.md) |
+| `P12-SKETCH-003` Sketches on arbitrary planar faces | `650acd6` | [P12-SKETCH-003](docs/verification/P12-SKETCH-003/README.md) |
 | `P12-STREF-001` Stable feature face references | `8dbb722` | [P12-STREF-001](docs/verification/P12-STREF-001/README.md) |
 | `P12-DATUM-001` Datum planes, axes, coordinate systems | `fe20b0f` | [P12-DATUM-001](docs/verification/P12-DATUM-001/README.md) |
-| `P12-SKETCH-002` Sketch entities: ellipse, spline | `070b730` | [P12-SKETCH-002](docs/verification/P12-SKETCH-002/README.md) |
-| `P12-SKETCH-001` Sketch constraints | `efdc1cf` | [P12-SKETCH-001](docs/verification/P12-SKETCH-001/README.md) |
 
 ## Completed Milestones
 
@@ -393,7 +414,10 @@ regression test, so none can change silently. Detail:
   parameter. Renaming a parameter does not rewrite expressions that use it.
   Driven values are computed at regeneration
   ([P12-PARAM-001](docs/verification/P12-PARAM-001/README.md)).
-- **No through-all extrude.** A cut is given a depth.
+- **Extrudes end at a depth or through all** of their target (cuts only);
+  there is no *up to next* or *up to a face*. A through-all tool is as long
+  as the target's bounding box along the sketch normal, plus 1 mm
+  ([P12-FEAT-001](docs/verification/P12-FEAT-001/README.md)).
 - **Loft sides stay B-splines** even where flat, costing about 6e-12 relative
   volume and 3.4e-6 mm in the centroid; plane references find only a loft's end
   faces.

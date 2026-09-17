@@ -1,0 +1,51 @@
+Largest deviations of the P12-FEAT-001 checks in reference-values-release.txt, by file and tolerance, with
+the 5 largest of each group.
+Produced by: python deviations.py --worst 5 reference-values-release.txt ThroughAll
+
+file                             kind  tolerance  checks    largest
+ThroughAllExtrudeTests.cpp       abs     1.0e-14      28   0.00e+00
+ThroughAllExtrudeTests.cpp       abs     1.0e-12      25   0.00e+00
+ThroughAllExtrudeTests.cpp       abs     1.0e-09      39   8.15e-13
+ThroughAllExtrudeTests.cpp       abs     1.0e-07      78   1.07e-14
+ThroughAllExtrudeTests.cpp       rel     1.0e-12      24   3.42e-15
+ThroughAllFileTests.cpp          rel     1.0e-09       3   5.97e-15
+
+ThroughAllExtrudeTests.cpp abs 1.0e-14: largest 5
+  0.000e+00  measured 0.0 expected 0.0  ThroughAllExtrude_NamesItsSidesAndLosesItsCaps  
+  0.000e+00  measured 1.0 expected 1.0  ThroughAllExtrude_NamesItsSidesAndLosesItsCaps  
+  0.000e+00  measured 0.0 expected 0.0  ThroughAllExtrude_NamesItsSidesAndLosesItsCaps  
+  0.000e+00  measured 0.0 expected 0.0  ThroughAllExtrude_NamesItsSidesAndLosesItsCaps  
+  0.000e+00  measured 1.0 expected 1.0  ThroughAllExtrude_NamesItsSidesAndLosesItsCaps  
+
+ThroughAllExtrudeTests.cpp abs 1.0e-12: largest 5
+  0.000e+00  measured 60.0 expected 60.0  ThroughAllExtrude_NamesItsSidesAndLosesItsCaps  
+  0.000e+00  measured 0.0 expected 0.0  ThroughAllExtrude_NamesItsSidesAndLosesItsCaps  
+  0.000e+00  measured 0.0 expected 0.0  ThroughAllExtrude_NamesItsSidesAndLosesItsCaps  
+  0.000e+00  measured 90.0 expected 90.0  ThroughAllExtrude_NamesItsSidesAndLosesItsCaps  
+  0.000e+00  measured -0.0 expected 0.0  ThroughAllExtrude_NamesItsSidesAndLosesItsCaps  
+
+ThroughAllExtrudeTests.cpp abs 1.0e-09: largest 5
+  8.153e-13  measured 15.000000000000815 expected 15.0  ThroughAllExtrude_CutsThroughAtEveryThickness  t := 30.0
+  6.661e-13  measured 10.000000000000666 expected 10.0  ThroughAllExtrude_CutsThroughAtEveryThickness  t := 20.0
+  6.661e-13  measured 10.000000000000666 expected 10.0  ThroughAllExtrude_GoesTheWayItsDirectionSays / from the top face: reversed and symmetric cut through; along the normal there is nothing  
+  4.938e-13  measured 6.000000000000495 expected 6.000000000000001  ThroughAllExtrude_CutsThroughAtEveryThickness  t := 12.0
+  4.867e-13  measured 30.051250327425617 expected 30.051250327426104  ThroughAllExtrude_CutsThroughAtEveryThickness  t := 30.0
+
+ThroughAllExtrudeTests.cpp abs 1.0e-07: largest 5
+  1.066e-14  measured 20.00000000000001 expected 20.0  ThroughAllExtrude_CutsThroughAtEveryThickness  t := 20.0
+  1.066e-14  measured 20.00000000000001 expected 20.0  ThroughAllExtrude_GoesTheWayItsDirectionSays / from the top face: reversed and symmetric cut through; along the normal there is nothing  
+  0.000e+00  measured 0.0 expected 0.0  ThroughAllExtrude_CutsThroughAtEveryThickness  t := 20.0
+  0.000e+00  measured 0.0 expected 0.0  ThroughAllExtrude_CutsThroughAtEveryThickness  t := 20.0
+  0.000e+00  measured 0.0 expected 0.0  ThroughAllExtrude_CutsThroughAtEveryThickness  t := 20.0
+
+ThroughAllExtrudeTests.cpp rel 1.0e-12: largest 5
+  3.418e-15  measured 102164.9620391712 expected 102164.96203917084  ThroughAllExtrude_CutsThroughAtEveryThickness  t := 20.0
+  3.418e-15  measured 102164.9620391712 expected 102164.96203917084  ThroughAllExtrude_GoesTheWayItsDirectionSays / from the top face: reversed and symmetric cut through; along the normal there is nothing  
+  1.424e-15  measured 61298.977223502414 expected 61298.9772235025  ThroughAllExtrude_CutsThroughAtEveryThickness  t := 12.0
+  4.050e-16  measured 143716.81469282048 expected 143716.81469282042  ThroughAllExtrude_RepeatsThroughTheBodyAtEveryInstance / a row of holes through a plate of any thickness  t := 25.0; count := 5.0
+  4.021e-16  measured 141.37166941154075 expected 141.3716694115407  ThroughAllExtrude_CutsThroughAtEveryThickness  t := 20.0
+
+ThroughAllFileTests.cpp rel 1.0e-09: largest 5
+  5.974e-15  measured 102306.333708583 expected 102306.33370858239  ThroughAllFile_ExportedSlabReadsBackFromStep  
+  0.000e+00  measured 100.0 expected 100.0  ThroughAllFile_ExportedSlabReadsBackFromStep  
+  0.000e+00  measured 20.0 expected 20.0  ThroughAllFile_ExportedSlabReadsBackFromStep  

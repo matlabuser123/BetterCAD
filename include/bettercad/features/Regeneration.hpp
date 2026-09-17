@@ -8,6 +8,7 @@
 #include <bettercad/core/geometry/Hole.hpp>
 #include <bettercad/core/geometry/Sweeps.hpp>
 #include <bettercad/core/math/Direction.hpp>
+#include <bettercad/core/math/RigidTransform.hpp>
 #include <bettercad/features/ChamferFeature.hpp>
 #include <bettercad/features/CircularPatternFeature.hpp>
 #include <bettercad/features/Export.hpp>
@@ -35,8 +36,17 @@ namespace bettercad::features {
 
 /// The tool solid of an extrude: the profile sketch's closed regions,
 /// extruded by the resolved depth, before it is combined with a target.
-[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::Body> extrudeTool(const ExtrudeFeature& feature,
-                                                                          const Document& document);
+///
+/// A through-all extrude (P12-FEAT-001) reaches through @p target, which it
+/// needs (FailedPrecondition without it): from the sketch plane to 1 mm
+/// beyond the target's bounds in its direction (both ways when symmetric).
+/// It fails with FailedPrecondition when the target lies wholly on the side
+/// it does not go to. @p placement is where the tool will be moved before it
+/// cuts (a pattern's or mirror's instance): the target is measured along the
+/// moved sketch normal, and the tool is returned unmoved.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::Body>
+extrudeTool(const ExtrudeFeature& feature, const Document& document, const geometry::Body* target = nullptr,
+            const RigidTransform3D& placement = {});
 
 /// Computes the body of an extrude feature: its tool (extrudeTool()),
 /// combined with @p target for Join/Cut/Intersect.

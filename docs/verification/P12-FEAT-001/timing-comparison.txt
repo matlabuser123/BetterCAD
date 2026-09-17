@@ -1,0 +1,78 @@
+Per-test CTest times (CTest's own figures), summed and for the slowest tests. sketch003 is the
+P12-SKETCH-003 qualification (its second run), feat001 this one. All runs used -j 8 on the same machine.
+Produced by: python compare-times.py sketch003=../P12-SKETCH-003/ctest-<preset>.log feat001=ctest-<preset>.log --top 12
+
+== release
+     sketch003: 919 tests,    630.34 s summed
+       feat001: 936 tests,    652.44 s summed
+
+test                                                                       sketch003       feat001
+unit.ReferenceModel_AllModelsStressRegression                                  21.63         20.11
+unit.LinearPattern_DoesNotAccumulateTransformDrift                             16.39         17.10
+unit.ReferenceModel_MountingBracketRegeneratesDeterministically                16.09         15.27
+unit.ReferenceModel_AllModelsBuildInOneProcess                                 14.66         13.75
+unit.ReferenceModel_FlangeRegeneratesDeterministically                         14.08         13.00
+unit.ReferenceModel_AllModelsRegenerateAfterAChange                            13.30         12.54
+unit.ReferenceModel_PulleyRegeneratesDeterministically                         12.18         11.71
+unit.ReferenceModel_ShaftRegeneratesDeterministically                          10.63         10.38
+unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges             9.41          9.05
+unit.ReferenceModel_SavedModelsMatchTheBuilders                                 8.81          8.12
+unit.ReferenceModel_BearingHousingRegeneratesDeterministically                  7.72          6.97
+unit.CircularPattern_TouchingAndOverlappingInstancesFuse                        6.67          7.71
+== debug
+     sketch003: 919 tests,    688.56 s summed
+       feat001: 936 tests,    625.20 s summed
+
+test                                                                       sketch003       feat001
+unit.ReferenceModel_AllModelsStressRegression                                  23.22         20.57
+unit.LinearPattern_DoesNotAccumulateTransformDrift                             17.76         19.82
+unit.ReferenceModel_MountingBracketRegeneratesDeterministically                17.13         14.58
+unit.ReferenceModel_AllModelsBuildInOneProcess                                 15.38         13.01
+unit.ReferenceModel_FlangeRegeneratesDeterministically                         14.73         12.23
+unit.ReferenceModel_AllModelsRegenerateAfterAChange                            13.97         11.62
+unit.ReferenceModel_PulleyRegeneratesDeterministically                         12.71         10.77
+unit.ReferenceModel_ShaftRegeneratesDeterministically                          11.26          9.15
+unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges             9.99          8.24
+unit.ReferenceModel_SavedModelsMatchTheBuilders                                 9.67          9.23
+unit.CircularPattern_TouchingAndOverlappingInstancesFuse                        7.65          8.60
+unit.ReferenceModel_BearingHousingRegeneratesDeterministically                  8.41          8.28
+== debug-shared
+     sketch003: 919 tests,    634.35 s summed
+       feat001: 936 tests,    636.02 s summed
+
+test                                                                       sketch003       feat001
+unit.ReferenceModel_AllModelsStressRegression                                  21.28         19.14
+unit.LinearPattern_DoesNotAccumulateTransformDrift                             16.36         16.93
+unit.ReferenceModel_MountingBracketRegeneratesDeterministically                15.92         14.11
+unit.ReferenceModel_AllModelsBuildInOneProcess                                 14.39         12.56
+unit.ReferenceModel_FlangeRegeneratesDeterministically                         13.78         11.84
+unit.ReferenceModel_AllModelsRegenerateAfterAChange                            13.15         11.46
+unit.ReferenceModel_PulleyRegeneratesDeterministically                         12.12         10.50
+unit.ReferenceModel_ShaftRegeneratesDeterministically                          10.44          9.16
+unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges             8.40          8.62
+unit.ReferenceModel_SavedModelsMatchTheBuilders                                 8.40          8.26
+unit.CircularPattern_TouchingAndOverlappingInstancesFuse                        6.46          7.55
+unit.ReferenceModel_BearingHousingRegeneratesDeterministically                  7.27          7.30
+
+The 17 tests this milestone adds, in the Release run
+(python compare-times.py feat001=ctest-release.log --match "ThroughAll|through-slab" --top 40):
+       feat001: 17 tests,      7.19 s summed
+
+test                                                                         feat001
+unit.ThroughAllExtrude_EditsAreUndoableAndAtomic                                0.95
+unit.ThroughAllExtrude_RepeatsThroughTheBodyAtEveryInstance                     0.86
+unit.ThroughAllExtrude_CutsThroughAtEveryThickness                              0.78
+unit.ThroughAllExtrude_RegeneratesDeterministically                             0.65
+unit.ThroughAllExtrude_GoesTheWayItsDirectionSays                               0.50
+unit.ThroughAllFile_SaveLoad_RegeneratesTheSameBodies                           0.43
+unit.ThroughAllCli_ValidateReportsTheCutAndItsFailures                          0.43
+unit.ThroughAllFile_ExportedSlabReadsBackFromStep                               0.42
+cli.validate.through-slab                                                       0.41
+cli.export-step.through-slab                                                    0.36
+cli.info.through-slab                                                           0.30
+unit.ThroughAllCli_InfoDescribesTheTermination                                  0.26
+unit.ThroughAllExtrude_DefinitionIsValidated                                    0.19
+unit.ThroughAllFile_ExampleFileMatchesTheBuilder                                0.19
+unit.ThroughAllExtrude_NamesItsSidesAndLosesItsCaps                             0.17
+unit.ThroughAllFile_TheTerminationIsWrittenAndNoDepth                           0.16
+unit.ThroughAllFile_MalformedTerminationsAreRejectedWithThePath                 0.13

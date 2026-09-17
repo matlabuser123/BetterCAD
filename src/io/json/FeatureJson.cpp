@@ -16,6 +16,10 @@ using features::FeatureOperation;
 using features::RevolveAxisKind;
 using features::RevolveDirection;
 
+constexpr std::array<std::pair<features::ExtrudeTermination, std::string_view>, 2> kTerminations{{
+    {features::ExtrudeTermination::Blind, "blind"},
+    {features::ExtrudeTermination::ThroughAll, "through_all"},
+}};
 constexpr std::array<std::pair<ExtrudeDirection, std::string_view>, 3> kDirections{{
     {ExtrudeDirection::Normal, "normal"},
     {ExtrudeDirection::Reversed, "reversed"},
@@ -72,9 +76,14 @@ Json extrudeToJson(const features::ExtrudeFeature& feature) {
     const features::ExtrudeDefinition& d = feature.definition();
     Json json = Json::object();
     json["profile"] = d.profile.value();
-    json["depth"] = d.depth.si();
-    if (d.depthParameter) {
-        json["depth_parameter"] = d.depthParameter->value();
+    if (d.termination == features::ExtrudeTermination::Blind) {
+        json["depth"] = d.depth.si();
+        if (d.depthParameter) {
+            json["depth_parameter"] = d.depthParameter->value();
+        }
+    } else {
+        // A through-all extrude has no depth (P12-FEAT-001).
+        json["termination"] = std::string{nameOf(kTerminations, d.termination)};
     }
     json["direction"] = std::string{nameOf(kDirections, d.direction)};
     json["operation"] = std::string{nameOf(kOperations, d.operation)};
@@ -86,13 +95,31 @@ Json extrudeToJson(const features::ExtrudeFeature& feature) {
 
 Result<std::unique_ptr<features::ExtrudeFeature>> extrudeFromJson(const Json& data, std::string name,
                                                                   std::string_view path) {
-    if (auto object = requireObject(data, path,
-                                    {"profile", "depth", "depth_parameter", "direction", "operation", "target"});
+    if (auto object = requireObject(
+            data, path, {"profile", "termination", "depth", "depth_parameter", "direction", "operation", "target"});
         !object) {
         return std::unexpected(object.error());
     }
+    features::ExtrudeTermination termination = features::ExtrudeTermination::Blind;
+    if (data.contains("termination")) {
+        auto read = valueOf(kTerminations, data, "termination", path);
+        if (!read) {
+            return std::unexpected(read.error());
+        }
+        termination = *read;
+    }
+    if (termination == features::ExtrudeTermination::ThroughAll) {
+        for (const std::string_view key : {"depth", "depth_parameter"}) {
+            if (data.contains(std::string{key})) {
+                return parseError(childPath(path, key), "a through-all extrude has no depth");
+            }
+        }
+    }
     auto profile = readId(data, "profile", path);
-    auto depth = readNumber(data, "depth", path);
+    Result<double> depth = 0.0;
+    if (termination == features::ExtrudeTermination::Blind) {
+        depth = readNumber(data, "depth", path);
+    }
     auto depthParameter = readOptionalId(data, "depth_parameter", path);
     auto direction = valueOf(kDirections, data, "direction", path);
     auto operation = valueOf(kOperations, data, "operation", path);
@@ -113,6 +140,7 @@ Result<std::unique_ptr<features::ExtrudeFeature>> extrudeFromJson(const Json& da
         .direction = *direction,
         .operation = *operation,
         .target = std::nullopt,
+        .termination = termination,
     };
     if (*depthParameter) {
         definition.depthParameter = ParameterId::fromValue(**depthParameter);

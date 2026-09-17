@@ -1,0 +1,72 @@
+baseline ../P12-SKETCH-003/ctest-release.log: 918 distinct names
+
+ctest-debug.log: 935 distinct names, 936 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 17
+    cli.export-step.through-slab
+    cli.info.through-slab
+    cli.validate.through-slab
+    unit.ThroughAllCli_InfoDescribesTheTermination
+    unit.ThroughAllCli_ValidateReportsTheCutAndItsFailures
+    unit.ThroughAllExtrude_CutsThroughAtEveryThickness
+    unit.ThroughAllExtrude_DefinitionIsValidated
+    unit.ThroughAllExtrude_EditsAreUndoableAndAtomic
+    unit.ThroughAllExtrude_GoesTheWayItsDirectionSays
+    unit.ThroughAllExtrude_NamesItsSidesAndLosesItsCaps
+    unit.ThroughAllExtrude_RegeneratesDeterministically
+    unit.ThroughAllExtrude_RepeatsThroughTheBodyAtEveryInstance
+    unit.ThroughAllFile_ExampleFileMatchesTheBuilder
+    unit.ThroughAllFile_ExportedSlabReadsBackFromStep
+    unit.ThroughAllFile_MalformedTerminationsAreRejectedWithThePath
+    unit.ThroughAllFile_SaveLoad_RegeneratesTheSameBodies
+    unit.ThroughAllFile_TheTerminationIsWrittenAndNoDepth
+
+ctest-release.log: 935 distinct names, 936 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 17
+    cli.export-step.through-slab
+    cli.info.through-slab
+    cli.validate.through-slab
+    unit.ThroughAllCli_InfoDescribesTheTermination
+    unit.ThroughAllCli_ValidateReportsTheCutAndItsFailures
+    unit.ThroughAllExtrude_CutsThroughAtEveryThickness
+    unit.ThroughAllExtrude_DefinitionIsValidated
+    unit.ThroughAllExtrude_EditsAreUndoableAndAtomic
+    unit.ThroughAllExtrude_GoesTheWayItsDirectionSays
+    unit.ThroughAllExtrude_NamesItsSidesAndLosesItsCaps
+    unit.ThroughAllExtrude_RegeneratesDeterministically
+    unit.ThroughAllExtrude_RepeatsThroughTheBodyAtEveryInstance
+    unit.ThroughAllFile_ExampleFileMatchesTheBuilder
+    unit.ThroughAllFile_ExportedSlabReadsBackFromStep
+    unit.ThroughAllFile_MalformedTerminationsAreRejectedWithThePath
+    unit.ThroughAllFile_SaveLoad_RegeneratesTheSameBodies
+    unit.ThroughAllFile_TheTerminationIsWrittenAndNoDepth
+
+ctest-debug-shared.log: 935 distinct names, 936 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 17
+    cli.export-step.through-slab
+    cli.info.through-slab
+    cli.validate.through-slab
+    unit.ThroughAllCli_InfoDescribesTheTermination
+    unit.ThroughAllCli_ValidateReportsTheCutAndItsFailures
+    unit.ThroughAllExtrude_CutsThroughAtEveryThickness
+    unit.ThroughAllExtrude_DefinitionIsValidated
+    unit.ThroughAllExtrude_EditsAreUndoableAndAtomic
+    unit.ThroughAllExtrude_GoesTheWayItsDirectionSays
+    unit.ThroughAllExtrude_NamesItsSidesAndLosesItsCaps
+    unit.ThroughAllExtrude_RegeneratesDeterministically
+    unit.ThroughAllExtrude_RepeatsThroughTheBodyAtEveryInstance
+    unit.ThroughAllFile_ExampleFileMatchesTheBuilder
+    unit.ThroughAllFile_ExportedSlabReadsBackFromStep
+    unit.ThroughAllFile_MalformedTerminationsAreRejectedWithThePath
+    unit.ThroughAllFile_SaveLoad_RegeneratesTheSameBodies
+    unit.ThroughAllFile_TheTerminationIsWrittenAndNoDepth
+
+RESULT: PASS

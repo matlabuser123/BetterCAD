@@ -749,7 +749,7 @@ milestones start; see `TODO.md`.
 
 - Features are `DocumentObject`s that store inputs only. For example,
   `ExtrudeFeature` holds an `ExtrudeDefinition` (profile sketch, depth or
-  driving depth parameter, direction, operation, target).
+  driving depth parameter, direction, operation, target, termination).
 - **Solid features** (`Feature.hpp`) derive from `SolidFeature`, which
   exposes the target feature whose body the feature consumes, if any.
   Extrude and Revolve also have a `FeatureOperation` (new body, join, cut,
@@ -766,7 +766,21 @@ milestones start; see `TODO.md`.
   Result bodies, validation and the CLI use `SolidFeature`, so a new kind
   plugs in without touching them.
 - **Extrude** (`ExtrudeFeature.hpp`) and **Revolve** (`RevolveFeature.hpp`)
-  are the solid features so far. A `RevolveDefinition` holds:
+  are the solid features so far.
+- **Through-all extrude** (P12-FEAT-001). An extrude's `termination` is
+  `Blind` (at its depth) or `ThroughAll`. A through-all extrude stores no
+  depth: it is a cut (the only operation it takes) through all of its
+  target, however thick that becomes.
+  - `extrudeTool()` takes the target's body and works out the tool's extent
+    at regeneration. It projects the corners of the body's exact bounding box
+    on the sketch normal and reaches 1 mm beyond them: from the sketch plane
+    along the normal, against it (reversed), or both ways (symmetric).
+  - A target that lies wholly on the side the cut does not go to fails with
+    FailedPrecondition; so does a missing target body.
+  - Patterns and mirrors rebuild the tool at each instance
+    (`throughAllOperation()`): the box is projected on the moved sketch
+    normal, so a copy turned onto a thicker wall still cuts through it.
+- A `RevolveDefinition` holds:
   - the profile sketch;
   - a `RevolveAxis`: the sketch's X or Y axis, or a line entity of the
     profile sketch, so the axis follows the sketch;
@@ -869,7 +883,8 @@ milestones start; see `TODO.md`.
   - **Extrude and revolve.** The tool (`extrudeTool()`, `revolveTool()`) is
     moved and united (new body, join) or subtracted (cut). New-body
     instances that touch or overlap fuse, like the regions of one extrude.
-    Intersect sources are refused.
+    Intersect sources are refused. A through-all cut's tool is rebuilt for
+    each instance, against the body at that instance.
   - **Hole, chamfer and fillet.** The feature's references are moved exactly
     and applied with all of the feature's own checks. A moved hole must fit
     its face (so overlapping holes are refused); a moved edge must match
@@ -1016,6 +1031,9 @@ milestones start; see `TODO.md`.
   (metres) for distances, radii and diameters and `angle` (radians) for
   angles, each only when its type has one. Extrude, revolve and chamfer
   data hold their definitions:
+  - an extrude stores `depth` and an optional `depth_parameter`, or, for a
+    through-all extrude, `"termination": "through_all"` and no depth (a
+    missing `termination` means `"blind"`);
   - a revolve axis is stored as
     `{"type": "sketch_x" | "sketch_y" | "line", "line": id}` and its angle
     in radians;

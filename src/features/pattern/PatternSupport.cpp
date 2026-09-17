@@ -48,6 +48,25 @@ Result<InstanceOperation> toolOperation(const Result<geometry::Body>& tool, Feat
     }};
 }
 
+/// A through-all cut, its tool rebuilt at each instance: the tool must reach
+/// through the body as it lies along the moved sketch normal
+/// (P12-FEAT-001). The operation is used while @p extrude and @p document
+/// are alive (within the pattern's regeneration).
+InstanceOperation throughAllOperation(const ExtrudeFeature& extrude, const Document& document) {
+    return [&extrude, &document](const geometry::Body& target, const RigidTransform3D& motion,
+                                 const FaceCopy& copy) -> Result<geometry::Body> {
+        auto tool = extrudeTool(extrude, document, &target, motion);
+        if (!tool) {
+            return std::unexpected(tool.error());
+        }
+        auto moved = geometry::transformed(*tool, motion);
+        if (!moved) {
+            return std::unexpected(moved.error());
+        }
+        return geometry::booleanDifference(target, geometry::renameFaces(*moved, appendCopy(copy)));
+    };
+}
+
 std::vector<geometry::EdgeSignature> movedEdges(const std::vector<geometry::EdgeSignature>& edges,
                                                 const RigidTransform3D& motion) {
     std::vector<geometry::EdgeSignature> moved;
@@ -63,6 +82,9 @@ std::vector<geometry::EdgeSignature> movedEdges(const std::vector<geometry::Edge
 Result<InstanceOperation> instanceOperation(const DocumentObject& source, const Document& document,
                                             std::string_view pattern, std::string_view nestingAdvice) {
     if (const auto* extrude = dynamic_cast<const ExtrudeFeature*>(&source)) {
+        if (extrude->definition().termination == ExtrudeTermination::ThroughAll) {
+            return throughAllOperation(*extrude, document);
+        }
         return toolOperation(extrudeTool(*extrude, document), extrude->definition().operation, "extrude");
     }
     if (const auto* revolve = dynamic_cast<const RevolveFeature*>(&source)) {
