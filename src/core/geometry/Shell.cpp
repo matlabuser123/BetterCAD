@@ -1,10 +1,10 @@
 // Validation of shell requests: everything that can be checked without a
 // body (P12-FEAT-003).
+#include "core/geometry/FaceNameList.hpp"
+
 #include <bettercad/core/geometry/Shell.hpp>
 #include <bettercad/core/units/Format.hpp>
 
-#include <algorithm>
-#include <cstddef>
 #include <format>
 
 namespace bettercad::geometry {
@@ -24,21 +24,8 @@ Result<void> validate(const ShellRequest& request) {
         return makeError(ErrorCode::InvalidArgument,
                          "a shell needs one or more open faces (a closed hollow is not built)");
     }
-    for (std::size_t i = 0; i < request.openFaces.size(); ++i) {
-        const FaceName& name = request.openFaces[i];
-        if (!name.feature.isValid()) {
-            return makeError(ErrorCode::InvalidArgument,
-                             std::format("open face {} must name a valid feature", i + 1));
-        }
-        if (auto valid = validate(name.face); !valid) {
-            return makeError(ErrorCode::InvalidArgument,
-                             std::format("open face {}: {}", i + 1, valid.error().message));
-        }
-        const auto earlier = request.openFaces.begin() + static_cast<std::ptrdiff_t>(i);
-        if (std::find(request.openFaces.begin(), earlier, name) != earlier) {
-            return makeError(ErrorCode::InvalidArgument,
-                             std::format("open face {} repeats an earlier open face", i + 1));
-        }
+    if (auto names = detail::validateFaceNames(request.openFaces, "open face"); !names) {
+        return names;
     }
     if (!isFinite(request.thickness) || !(request.thickness > Length{})) {
         return makeError(ErrorCode::InvalidArgument,

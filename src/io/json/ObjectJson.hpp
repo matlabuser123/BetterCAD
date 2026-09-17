@@ -12,6 +12,7 @@
 #include <bettercad/features/CircularPatternFeature.hpp>
 #include <bettercad/features/CombineFeature.hpp>
 #include <bettercad/features/Datums.hpp>
+#include <bettercad/features/DraftFeature.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/features/FilletFeature.hpp>
 #include <bettercad/features/HoleFeature.hpp>
@@ -148,6 +149,12 @@ circularPatternFromJson(const Json& data, std::string name, std::string_view pat
 /// reference (P12-FEAT-003). The selector is validated on reading.
 [[nodiscard]] Json faceNameToJson(const FaceName& name);
 [[nodiscard]] Result<FaceName> faceNameFromJson(const Json& value, std::string_view path);
+
+/// "target"; "faces" as face names; "neutral_plane" as a plane reference;
+/// "angle" in radians with an optional "angle_parameter" (P12-FEAT-004).
+[[nodiscard]] Json draftToJson(const features::DraftFeature& feature);
+[[nodiscard]] Result<std::unique_ptr<features::DraftFeature>> draftFromJson(const Json& data, std::string name,
+                                                                            std::string_view path);
 
 /// "target"; "open_faces" as face names; "thickness" in metres with an
 /// optional "thickness_parameter"; "side": "inward" | "outward"

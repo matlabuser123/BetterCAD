@@ -2,6 +2,7 @@
 
 #include <bettercad/core/geometry/Booleans.hpp>
 #include <bettercad/core/geometry/Faces.hpp>
+#include <bettercad/features/FaceReferences.hpp>
 #include <bettercad/features/Profiles.hpp>
 
 #include <optional>
@@ -80,6 +81,30 @@ geometry::SweptFaceNamer sweptFaceNamer(ObjectId feature, const LabelledRegion& 
         }
         return FaceName{feature, std::move(selector)};
     };
+}
+
+Result<void> requireNamedFaces(const Document& document, std::span<const FaceName> names,
+                               const geometry::Body& body, FeatureId target, std::string_view noun) {
+    for (std::size_t i = 0; i < names.size(); ++i) {
+        const FaceName& name = names[i];
+        if (auto valid = checkFaceName(document, name); !valid) {
+            return makeError(valid.error().code, std::format("{} {}: {}", noun, i + 1, valid.error().message));
+        }
+        auto faces = geometry::findNamedFaces(body, name);
+        if (!faces) {
+            return makeError(faces.error().code, std::format("{} {}: {}", noun, i + 1, faces.error().message));
+        }
+        if (faces->empty()) {
+            const ObjectId targetId{target};
+            const auto targetName = document.nameOf(targetId);
+            return makeError(ErrorCode::NotFound,
+                             std::format("{} {}, {}, is not a face of the body of {}", noun, i + 1,
+                                         describe(document, name),
+                                         targetName ? std::format("{} ({})", *targetName, targetId)
+                                                    : std::format("{}", targetId)));
+        }
+    }
+    return {};
 }
 
 geometry::FaceRenamer appendCopy(const FaceCopy& copy) {

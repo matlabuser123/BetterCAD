@@ -5,6 +5,7 @@
 #include <bettercad/features/CircularPatternFeature.hpp>
 #include <bettercad/features/CombineFeature.hpp>
 #include <bettercad/features/Datums.hpp>
+#include <bettercad/features/DraftFeature.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/features/FilletFeature.hpp>
 #include <bettercad/features/HoleFeature.hpp>
@@ -378,6 +379,18 @@ std::string describeObject(const Document& document, const DocumentObject& objec
                                                      : std::format("{:.10g} mm", d.radius.in(units::mm));
         return std::format("target {}, {}, radius {}", nameOrId(document, ObjectId{d.target}),
                            plural(d.edges.size(), "edge", "edges"), radius);
+    }
+    if (const auto* draft = dynamic_cast<const features::DraftFeature*>(&object)) {
+        // "target Block, faces the side from entity:4 of Block and ..., neutral
+        // plane the model's xy, angle taper"
+        const features::DraftDefinition& d = draft->definition();
+        std::string faces;
+        for (const FaceName& name : d.faces) {
+            faces += (faces.empty() ? "" : " and ") + describeFaceName(document, name);
+        }
+        return std::format("target {}, faces {}, neutral plane {}, angle {}", nameOrId(document, ObjectId{d.target}),
+                           faces, describePlaneReference(document, d.neutralPlane),
+                           describeAngle(document, d.angle, d.angleParameter));
     }
     if (const auto* shell = dynamic_cast<const features::ShellFeature*>(&object)) {
         // "target Block, open the end cap of Pad, thickness wall, inward"

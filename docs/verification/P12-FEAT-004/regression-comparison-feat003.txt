@@ -1,0 +1,78 @@
+baseline ../P12-FEAT-003/ctest-release.log: 977 distinct names
+
+ctest-debug.log: 996 distinct names, 997 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 19
+    cli.export-step.drafted-block
+    cli.info.drafted-block
+    cli.validate.drafted-block
+    unit.DraftCli_InfoDescribesDrafts
+    unit.DraftCli_ValidateReportsTheDrafts
+    unit.DraftFeature_BlockFollowsItsAngleAndHeight
+    unit.DraftFeature_CreationAndEditsAreUndoable
+    unit.DraftFeature_CurvedPocketedConcaveAndRoundedBodies
+    unit.DraftFeature_DefinitionsAreValidated
+    unit.DraftFeature_FailuresAreStructuredAndAtomic
+    unit.DraftFeature_RegeneratesDeterministically
+    unit.DraftFile_DefinitionsAreWrittenAsJson
+    unit.DraftFile_ExampleFileMatchesTheBuilder
+    unit.DraftFile_ExportedDraftsReadBackFromStep
+    unit.DraftFile_MalformedDefinitionsAreRejectedWithThePath
+    unit.DraftFile_SaveLoad_RegeneratesTheSameBodies
+    unit.Draft_FailuresAreStructured
+    unit.Draft_RequestsAreValidated
+    unit.Draft_TurnsFacesAndCarriesTheirNames
+
+ctest-release.log: 996 distinct names, 997 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 19
+    cli.export-step.drafted-block
+    cli.info.drafted-block
+    cli.validate.drafted-block
+    unit.DraftCli_InfoDescribesDrafts
+    unit.DraftCli_ValidateReportsTheDrafts
+    unit.DraftFeature_BlockFollowsItsAngleAndHeight
+    unit.DraftFeature_CreationAndEditsAreUndoable
+    unit.DraftFeature_CurvedPocketedConcaveAndRoundedBodies
+    unit.DraftFeature_DefinitionsAreValidated
+    unit.DraftFeature_FailuresAreStructuredAndAtomic
+    unit.DraftFeature_RegeneratesDeterministically
+    unit.DraftFile_DefinitionsAreWrittenAsJson
+    unit.DraftFile_ExampleFileMatchesTheBuilder
+    unit.DraftFile_ExportedDraftsReadBackFromStep
+    unit.DraftFile_MalformedDefinitionsAreRejectedWithThePath
+    unit.DraftFile_SaveLoad_RegeneratesTheSameBodies
+    unit.Draft_FailuresAreStructured
+    unit.Draft_RequestsAreValidated
+    unit.Draft_TurnsFacesAndCarriesTheirNames
+
+ctest-debug-shared.log: 996 distinct names, 997 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 19
+    cli.export-step.drafted-block
+    cli.info.drafted-block
+    cli.validate.drafted-block
+    unit.DraftCli_InfoDescribesDrafts
+    unit.DraftCli_ValidateReportsTheDrafts
+    unit.DraftFeature_BlockFollowsItsAngleAndHeight
+    unit.DraftFeature_CreationAndEditsAreUndoable
+    unit.DraftFeature_CurvedPocketedConcaveAndRoundedBodies
+    unit.DraftFeature_DefinitionsAreValidated
+    unit.DraftFeature_FailuresAreStructuredAndAtomic
+    unit.DraftFeature_RegeneratesDeterministically
+    unit.DraftFile_DefinitionsAreWrittenAsJson
+    unit.DraftFile_ExampleFileMatchesTheBuilder
+    unit.DraftFile_ExportedDraftsReadBackFromStep
+    unit.DraftFile_MalformedDefinitionsAreRejectedWithThePath
+    unit.DraftFile_SaveLoad_RegeneratesTheSameBodies
+    unit.Draft_FailuresAreStructured
+    unit.Draft_RequestsAreValidated
+    unit.Draft_TurnsFacesAndCarriesTheirNames
+
+RESULT: PASS

@@ -13,7 +13,7 @@ authorized — never in advance.
 | | |
 | --- | --- |
 | Current | **`P12` — Parametric CAD Completion** |
-| Next | `P12-FEAT-004` — Draft |
+| Next | `P12-FEAT-005` — Rib |
 | Blocked / Manual | None |
 | Last qualified | `P11` Production Part Modeling — **QUALIFIED** |
 | Released | `v0.1.0` (`P0`–`P10`); `P11` qualified, not released |
@@ -57,7 +57,7 @@ Reference models → qualification
 | 6 | `P12-FEAT-001` Through-all extrude | — | **done** — [evidence](docs/verification/P12-FEAT-001/README.md) |
 | 7 | `P12-FEAT-002` Split body / combine | — | **done** — [evidence](docs/verification/P12-FEAT-002/README.md) |
 | 8 | `P12-FEAT-003` Shell | `FEAT-002` | **done** — [evidence](docs/verification/P12-FEAT-003/README.md) |
-| 9 | `P12-FEAT-004` Draft | `DATUM-001` | not started |
+| 9 | `P12-FEAT-004` Draft | `DATUM-001` | **done** — [evidence](docs/verification/P12-FEAT-004/README.md) |
 | 10 | `P12-FEAT-005` Rib | `SKETCH-002`, `FEAT-001` | not started |
 | 11 | `P12-FEAT-006` Variable-radius fillet, setback, corner transitions | — | not started |
 | 12 | `P12-HOLE-001` Threads, spotface, standard sizes, tolerance classes | `PARAM-001` | not started |
@@ -305,9 +305,34 @@ Acceptance:
 - Walls too thick for the body, overall or locally, rounds smaller than an inward wall, an open face that is not in the target's body, a target of several solids and invalid thicknesses fail with structured diagnostics and keep no body; nothing is substituted.
 - Save → load → regenerate gives the same bodies bit for bit; every value the existing tests measure is unchanged; `P0`–`P12-FEAT-002` stays green in all three presets.
 
+#### P12-FEAT-004 — Draft
+
+Tapers faces of another feature's body for moulding: each named face turns
+by the draft angle about its line on a neutral plane. The faces are face
+names (P12-STREF-001) resolved in the target's body; the neutral plane is
+any plane reference, a named face included, and its normal is the pull
+direction. A kernel probe found the kernel exact on planes, cylinders and
+their tangent chains, and found it reporting an invalid, self-intersecting
+solid as a success when a face shrinks to nothing, so the result is
+checked.
+
+Deliverables:
+
+- [x] `geometry::draftFaces` (faces by name, neutral plane, signed angle in (-90, 90) deg): planes, cylinders and cones only; faces tangent to a drafted face are drafted with it; failing with a structured diagnostic when the kernel cannot turn a face or build the draft, or its result is not one valid, non-self-intersecting solid of the same topology with every face kept
+- [x] `DraftFeature` (`target`, `faces`, `neutral_plane`, `angle` literal or driven by an angle parameter); it consumes its target and carries the target's face names to the turned faces
+- [x] Faces resolved by name in the target's body (NotFound when no face carries a name); the neutral plane resolved like any plane reference
+- [x] Dependencies, validation, undo/redo, save/load, CLI description
+- [x] Evidence: [docs/verification/P12-FEAT-004/](docs/verification/P12-FEAT-004/README.md) — PASS, 997/997 tests in Debug, Release and Debug-shared, 0 warnings
+
+Acceptance:
+
+- Drafts of a block's sides about a datum plane, about a plane partway up and about the block's own top and bottom faces, of a cylinder, a hole, a pocket's walls, an L-shaped prism and a block with rounded vertical edges match analytic volumes (sections integrated exactly), centres and bounds while the angle and the body change; drafted faces keep their names, with their turned areas.
+- Angles that make a face vanish, faces parallel to the neutral plane or tangent to such a face, faces that are not planes, cylinders or cones, names the body does not carry, a target of several solids and invalid angles fail with structured diagnostics and keep no body; nothing is substituted.
+- Save → load → regenerate gives the same bodies bit for bit; every value the existing tests measure is unchanged; `P0`–`P12-FEAT-003` stays green in all three presets.
+
 ## Next
 
-`P12-FEAT-004` — Draft.
+`P12-FEAT-005` — Rib.
 
 ## Blocked / Manual
 
@@ -416,10 +441,10 @@ Not started. Not authorized. Grouped to match
 
 | Milestone | Commit | Evidence |
 | --- | --- | --- |
-| `P12-FEAT-003` Shell | "BetterCAD: implement P12 shell" | [P12-FEAT-003](docs/verification/P12-FEAT-003/README.md) |
+| `P12-FEAT-004` Draft | "BetterCAD: implement P12 draft" | [P12-FEAT-004](docs/verification/P12-FEAT-004/README.md) |
+| `P12-FEAT-003` Shell | `eb3ad66` | [P12-FEAT-003](docs/verification/P12-FEAT-003/README.md) |
 | `P12-FEAT-002` Split body / combine | `77f1792` | [P12-FEAT-002](docs/verification/P12-FEAT-002/README.md) |
 | `P12-FEAT-001` Through-all extrude | `c976f9c` | [P12-FEAT-001](docs/verification/P12-FEAT-001/README.md) |
-| `P12-SKETCH-003` Sketches on arbitrary planar faces | `650acd6` | [P12-SKETCH-003](docs/verification/P12-SKETCH-003/README.md) |
 
 ## Completed Milestones
 
@@ -476,6 +501,11 @@ regression test, so none can change silently. Detail:
   two walls, and inward walls at least as thick as a round they follow, are
   refused rather than thinned or merged. The walls are not named
   ([P12-FEAT-003](docs/verification/P12-FEAT-003/README.md)).
+- **Drafts pull along the neutral plane's normal**, one angle per feature,
+  on planes, cylinders and cones. The kernel turns whole tangent chains, so
+  a side joined to the top by a round cannot be drafted (draft first, then
+  round). Angles that make a face vanish are refused
+  ([P12-FEAT-004](docs/verification/P12-FEAT-004/README.md)).
 - **Loft sides stay B-splines** even where flat, costing about 6e-12 relative
   volume and 3.4e-6 mm in the centroid; plane references find only a loft's end
   faces.

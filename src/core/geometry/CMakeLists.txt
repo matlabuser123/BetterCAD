@@ -9,8 +9,10 @@ bettercad_add_library(bettercad_geometry
     EXPORT_HEADER bettercad/core/geometry/Export.hpp
     SOURCES
         Blends.cpp
+        Draft.cpp
         EdgeMatching.hpp
         Edges.cpp
+        FaceNameList.hpp
         FaceMatching.hpp
         Faces.cpp
         Holes.cpp
@@ -28,6 +30,7 @@ bettercad_add_library(bettercad_geometry
         occt/OcctBody.hpp
         occt/OcctBooleans.cpp
         occt/OcctChamfer.cpp
+        occt/OcctDraft.cpp
         occt/OcctEdges.cpp
         occt/OcctFaceNames.cpp
         occt/OcctFaceNames.hpp

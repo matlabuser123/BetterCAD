@@ -3,6 +3,7 @@
 #include <bettercad/core/units/Format.hpp>
 #include <bettercad/features/ChamferFeature.hpp>
 #include <bettercad/features/Datums.hpp>
+#include <bettercad/features/DraftFeature.hpp>
 #include <bettercad/features/CircularPatternFeature.hpp>
 #include <bettercad/features/CombineFeature.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
@@ -253,6 +254,16 @@ private:
                 if (definition.radiusParameter) {
                     checkParameter(object.id(), *definition.radiusParameter, dimensions::length,
                                    "the radius is driven by");
+                }
+            } else if (const auto* draft = dynamic_cast<const DraftFeature*>(&object)) {
+                const DraftDefinition& definition = draft->definition();
+                if (definition.angleParameter) {
+                    checkParameter(object.id(), *definition.angleParameter, dimensions::angle,
+                                   "the angle is driven by");
+                }
+                checkPlaneReference(object.id(), definition.neutralPlane, "the neutral plane is");
+                for (std::size_t i = 0; i < definition.faces.size(); ++i) {
+                    checkFaceNameReference(object.id(), definition.faces[i], std::format("face {} is", i + 1));
                 }
             } else if (const auto* shell = dynamic_cast<const ShellFeature*>(&object)) {
                 const ShellDefinition& definition = shell->definition();

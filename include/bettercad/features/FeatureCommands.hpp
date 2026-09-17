@@ -9,6 +9,7 @@
 #include <bettercad/features/CircularPatternFeature.hpp>
 #include <bettercad/features/CombineFeature.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
+#include <bettercad/features/DraftFeature.hpp>
 #include <bettercad/features/FilletFeature.hpp>
 #include <bettercad/features/HoleFeature.hpp>
 #include <bettercad/features/LinearPatternFeature.hpp>
@@ -144,6 +145,8 @@ using CreateChamferCommand = CreateFeatureCommand<ChamferFeature>;
 using ModifyChamferCommand = ModifyFeatureCommand<ChamferFeature>;
 using CreateFilletCommand = CreateFeatureCommand<FilletFeature>;
 using ModifyFilletCommand = ModifyFeatureCommand<FilletFeature>;
+using CreateDraftCommand = CreateFeatureCommand<DraftFeature>;
+using ModifyDraftCommand = ModifyFeatureCommand<DraftFeature>;
 using CreateShellCommand = CreateFeatureCommand<ShellFeature>;
 using ModifyShellCommand = ModifyFeatureCommand<ShellFeature>;
 using CreateHoleCommand = CreateFeatureCommand<HoleFeature>;

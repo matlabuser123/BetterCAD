@@ -13,6 +13,7 @@
 
 #include <format>
 #include <functional>
+#include <span>
 #include <string_view>
 #include <vector>
 
@@ -52,6 +53,15 @@ using PathEdgeOf = std::function<std::optional<EntityId>(std::size_t pathSegment
 /// @p along, by its path edge).
 [[nodiscard]] geometry::SweptFaceNamer sweptFaceNamer(ObjectId feature, const LabelledRegion& region, FaceRole first,
                                                       FaceRole last, PathEdgeOf along = {});
+
+/// Each of @p names passes checkFaceName() and is carried by a face of
+/// @p body, the body of @p target (shells and drafts, P12-FEAT-003/004).
+/// Errors name the entry as "<noun> <n>" from 1: checkFaceName()'s error as
+/// "open face 2: ...", and NotFound as "open face 1, the end cap of Boss
+/// (object:4), is not a face of the body of Block (object:2)".
+[[nodiscard]] Result<void> requireNamedFaces(const Document& document, std::span<const FaceName> names,
+                                             const geometry::Body& body, FeatureId target,
+                                             std::string_view noun);
 
 /// The copy step @p copy appended to every face name (patterns and mirrors).
 [[nodiscard]] geometry::FaceRenamer appendCopy(const FaceCopy& copy);

@@ -1,0 +1,422 @@
+{
+  "format": "bettercad-document",
+  "version": 1,
+  "units": "SI",
+  "document": {
+    "id": "c47d2a9e-8b15-4f36-a0d2-5e9b1c7f3a48",
+    "name": "DraftedBlock",
+    "metadata": {
+      "description": "",
+      "author": "",
+      "properties": {}
+    },
+    "last_allocated_id": 11
+  },
+  "parameters": [
+    {
+      "id": 1,
+      "name": "height",
+      "si_value": 0.04,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 2,
+      "name": "taper",
+      "si_value": 0.08726646259971647,
+      "unit": "deg",
+      "dimension": {
+        "angle": 1
+      }
+    },
+    {
+      "id": 3,
+      "name": "rise",
+      "si_value": 0.02,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    }
+  ],
+  "objects": [
+    {
+      "id": 4,
+      "type": "sketch",
+      "name": "BlockSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.1,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.1,
+              0.06
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.0,
+              0.06
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "line",
+            "start": 2,
+            "end": 3,
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "line",
+            "start": 4,
+            "end": 1,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "fixed",
+            "entities": [
+              2
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "fixed",
+            "entities": [
+              3
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "fixed",
+            "entities": [
+              4
+            ],
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 8,
+        "last_constraint_id": 4
+      }
+    },
+    {
+      "id": 5,
+      "type": "extrude",
+      "name": "Block",
+      "data": {
+        "profile": 4,
+        "depth": 0.0,
+        "depth_parameter": 1,
+        "direction": "normal",
+        "operation": "new_body"
+      }
+    },
+    {
+      "id": 6,
+      "type": "datum_plane",
+      "name": "Mid",
+      "data": {
+        "kind": "offset",
+        "base": {
+          "plane": "xy"
+        },
+        "offset": 0.0,
+        "offset_parameter": 3
+      }
+    },
+    {
+      "id": 7,
+      "type": "draft",
+      "name": "Tapered",
+      "data": {
+        "target": 5,
+        "faces": [
+          {
+            "feature": 5,
+            "face": {
+              "role": "side",
+              "entity": 5
+            }
+          },
+          {
+            "feature": 5,
+            "face": {
+              "role": "side",
+              "entity": 6
+            }
+          },
+          {
+            "feature": 5,
+            "face": {
+              "role": "side",
+              "entity": 7
+            }
+          },
+          {
+            "feature": 5,
+            "face": {
+              "role": "side",
+              "entity": 8
+            }
+          }
+        ],
+        "neutral_plane": {
+          "plane": "xy"
+        },
+        "angle": 0.0,
+        "angle_parameter": 2
+      }
+    },
+    {
+      "id": 8,
+      "type": "draft",
+      "name": "TaperedMid",
+      "data": {
+        "target": 5,
+        "faces": [
+          {
+            "feature": 5,
+            "face": {
+              "role": "side",
+              "entity": 5
+            }
+          },
+          {
+            "feature": 5,
+            "face": {
+              "role": "side",
+              "entity": 6
+            }
+          },
+          {
+            "feature": 5,
+            "face": {
+              "role": "side",
+              "entity": 7
+            }
+          },
+          {
+            "feature": 5,
+            "face": {
+              "role": "side",
+              "entity": 8
+            }
+          }
+        ],
+        "neutral_plane": {
+          "object": 6,
+          "plane": "xy"
+        },
+        "angle": 0.0,
+        "angle_parameter": 2
+      }
+    },
+    {
+      "id": 9,
+      "type": "draft",
+      "name": "Flared",
+      "data": {
+        "target": 5,
+        "faces": [
+          {
+            "feature": 5,
+            "face": {
+              "role": "side",
+              "entity": 5
+            }
+          },
+          {
+            "feature": 5,
+            "face": {
+              "role": "side",
+              "entity": 6
+            }
+          },
+          {
+            "feature": 5,
+            "face": {
+              "role": "side",
+              "entity": 7
+            }
+          },
+          {
+            "feature": 5,
+            "face": {
+              "role": "side",
+              "entity": 8
+            }
+          }
+        ],
+        "neutral_plane": {
+          "plane": "xy"
+        },
+        "angle": -0.08726646259971647
+      }
+    },
+    {
+      "id": 10,
+      "type": "draft",
+      "name": "OnTop",
+      "data": {
+        "target": 5,
+        "faces": [
+          {
+            "feature": 5,
+            "face": {
+              "role": "side",
+              "entity": 5
+            }
+          },
+          {
+            "feature": 5,
+            "face": {
+              "role": "side",
+              "entity": 6
+            }
+          },
+          {
+            "feature": 5,
+            "face": {
+              "role": "side",
+              "entity": 7
+            }
+          },
+          {
+            "feature": 5,
+            "face": {
+              "role": "side",
+              "entity": 8
+            }
+          }
+        ],
+        "neutral_plane": {
+          "object": 5,
+          "face": {
+            "role": "end_cap"
+          }
+        },
+        "angle": 0.0,
+        "angle_parameter": 2
+      }
+    },
+    {
+      "id": 11,
+      "type": "draft",
+      "name": "OnBottom",
+      "data": {
+        "target": 5,
+        "faces": [
+          {
+            "feature": 5,
+            "face": {
+              "role": "side",
+              "entity": 5
+            }
+          },
+          {
+            "feature": 5,
+            "face": {
+              "role": "side",
+              "entity": 6
+            }
+          },
+          {
+            "feature": 5,
+            "face": {
+              "role": "side",
+              "entity": 7
+            }
+          },
+          {
+            "feature": 5,
+            "face": {
+              "role": "side",
+              "entity": 8
+            }
+          }
+        ],
+        "neutral_plane": {
+          "object": 5,
+          "face": {
+            "role": "start_cap"
+          }
+        },
+        "angle": -0.08726646259971647
+      }
+    }
+  ]
+}

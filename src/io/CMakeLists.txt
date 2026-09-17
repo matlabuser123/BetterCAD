@@ -11,6 +11,7 @@ bettercad_add_library(bettercad_io
         json/BooleanJson.cpp
         json/DatumJson.cpp
         json/DocumentJson.cpp
+        json/DraftJson.cpp
         json/FeatureJson.cpp
         json/JsonReader.cpp
         json/JsonReader.hpp

@@ -11,7 +11,7 @@ underneath, hidden behind adapters.
             └───────┬──────────────────────┘
                     io              native .bcad, STEP/STL export
                     │
-                 features           extrude, revolve, chamfer, fillet, hole, linear and circular patterns, mirror, sweep, loft, split, combine, shell (later: ...)
+                 features           extrude, revolve, chamfer, fillet, hole, linear and circular patterns, mirror, sweep, loft, split, combine, shell, draft (later: ...)
                     │
                   sketch            entities, constraints, solver
                     │
@@ -573,6 +573,24 @@ milestones start; see `TODO.md`.
   - Names are carried through the kernel's history: remaining faces keep
     theirs, and an open face's names go to the rim the kernel makes of it
     (Modified). The walls are not named.
+- **Draft** (`Draft.hpp`, P12-FEAT-004). `draftFaces(body, request)` turns
+  the faces its names are on by a signed angle in (-90, 90) deg about their
+  lines on a neutral plane, whose normal is the pull direction: going along
+  it, a positive angle takes material away. Only planes, cylinders and
+  cones are drafted; the kernel (`BRepOffsetAPI_DraftAngle`) turns every
+  face tangent to a named face with it, and refuses (at `Add`) a face
+  parallel to the plane or a tangent chain that reaches one.
+  - The result is checked: one valid solid that does not intersect itself
+    (`BRepAlgoAPI_Check`), with the input's numbers of faces, edges and
+    vertices and an image (`ModifiedShape()`) of every face. A kernel probe
+    found that the kernel reports success for a draft that shrinks a face
+    to nothing, returning an invalid, self-intersecting solid; larger angles
+    fail in the kernel. Both end as FailedPrecondition.
+  - Names are carried through `ModifiedShape()`: the kernel reports the
+    turned faces as generated, not modified, so the boolean history
+    (`carriedNames()`) would drop them.
+  - `FaceNameList.hpp` holds the face-name list check shells and drafts
+    share.
 - **Translation, rotation and reflection** (`Transform.hpp`).
   `translated(body, translation)` and `transformed(body, motion)` return a
   moved copy with its own geometry (`BRepBuilderAPI_Transform`, copying); the
@@ -841,6 +859,18 @@ milestones start; see `TODO.md`.
   - A shell depends on its target, its thickness parameter and the features
     its open faces name (generators and copying features). It names no
     faces of its own, and cannot be a pattern's or feature mirror's source.
+- **Draft** (P12-FEAT-004, `DraftFeature.hpp`, type `draft`). A
+  `DraftDefinition` holds the target feature, the faces as face names, the
+  neutral plane as a `PlaneReference` (a named face included, facing out of
+  the material) and the angle (literal, or an angle parameter). The draft
+  consumes its target.
+  - `regenerateDraft()` resolves the plane with the regenerator's bodies
+    (`regenerateBodyFeature`), checks the faces like a shell's open faces
+    (`detail::requireNamedFaces()`: `checkFaceName()`, then a face of the
+    target's body must carry each name), and calls `draftFaces()`.
+  - A draft depends on its target, its angle parameter, the plane's objects
+    and the features its faces name. It names no faces of its own, and
+    cannot be a pattern's or feature mirror's source.
 - **Through-all extrude** (P12-FEAT-001). An extrude's `termination` is
   `Blind` (at its depth) or `ThroughAll`. A through-all extrude stores no
   depth: it is a cut (the only operation it takes) through all of its
@@ -1055,8 +1085,8 @@ milestones start; see `TODO.md`.
 - New object kinds plug in a regeneration handler by type name.
 - **Result bodies** (`ResultBodies.hpp`). A feature's body is a model result
   unless another feature consumes it (`SolidFeature::consumedFeatures()`):
-  the target of a Join/Cut/Intersect, the body a chamfer or shell modifies,
-  a pattern's source, or a split's or combine's inputs.
+  the target of a Join/Cut/Intersect, the body a chamfer, shell or draft
+  modifies, a pattern's source, or a split's or combine's inputs.
   `regenerateResultBodies()` regenerates a copy of the document and returns
   those bodies. Exports use it.
 - **Validation** (`Validation.hpp`). `validateDocument()` runs six checks on
@@ -1110,6 +1140,8 @@ milestones start; see `TODO.md`.
     attachments) and `keep` (`"front"`, `"back"`, `"both"`); a combine
     stores `target`, `tools` (feature IDs in order) and `operation`
     (`"join"`, `"cut"`, `"intersect"`);
+  - a draft stores `target`, `faces` (face names), `neutral_plane` (a plane
+    reference), `angle` (radians) and an optional `angle_parameter`;
   - a shell stores `target`, `open_faces` (face names, each
     `{"feature": id, "face": {...}}` with the face as in a plane reference),
     `thickness` and an optional `thickness_parameter`, and `side`

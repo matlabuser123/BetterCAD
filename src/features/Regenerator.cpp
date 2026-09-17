@@ -179,6 +179,7 @@ Regenerator::Regenerator() {
     registerHandler(std::string{SplitFeature::kTypeName}, regenerateBodyFeature<SplitFeature, &regenerateSplit>);
     registerHandler(std::string{CombineFeature::kTypeName},
                     regenerateBodyFeature<CombineFeature, &regenerateCombine>);
+    registerHandler(std::string{DraftFeature::kTypeName}, regenerateBodyFeature<DraftFeature, &regenerateDraft>);
 }
 
 void Regenerator::registerHandler(std::string typeName, RegenerationHandler handler) {

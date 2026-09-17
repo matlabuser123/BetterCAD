@@ -1,0 +1,40 @@
+OCCT draft probe
+
+A. box sides 5 deg about z = 0: valid 1 self-intersects 0 solids 1 faces 6/6 edges 12/12 vertices 8/8 volume 218256.066190317 expected 218256.066190317 rel 2.7e-16, 0.002 s
+  face at (0.0, 30.0, 20.0): deleted 0, in result 0, modified 0, generated 1, ModifiedShape: a shape, in result 1, same as input 0, centre (1.714, 30.000, 19.587)
+  face at (100.0, 30.0, 20.0): deleted 0, in result 0, modified 0, generated 1, ModifiedShape: a shape, in result 1, same as input 0, centre (98.286, 30.000, 19.587)
+  face at (50.0, 0.0, 20.0): deleted 0, in result 0, modified 0, generated 1, ModifiedShape: a shape, in result 1, same as input 0, centre (50.000, 1.729, 19.758)
+  face at (50.0, 60.0, 20.0): deleted 0, in result 0, modified 0, generated 1, ModifiedShape: a shape, in result 1, same as input 0, centre (50.000, 58.271, 19.758)
+  face at (50.0, 30.0, 0.0): deleted 0, in result 0, modified 1 (image in result 1), generated 0, ModifiedShape: a shape, in result 1, same as input 0, centre (50.000, 30.000, 0.000)
+  face at (50.0, 30.0, 40.0): deleted 0, in result 0, modified 1 (image in result 1), generated 0, ModifiedShape: a shape, in result 1, same as input 0, centre (50.000, 30.000, 40.000)
+B. box sides 5 deg about z = 20: valid 1 self-intersects 0 solids 1 faces 6/6 edges 12/12 vertices 8/8 volume 240163.291013238 expected 240163.291013238 rel 1.2e-16, 0.001 s
+C. box sides -5 deg about z = 0: valid 1 self-intersects 0 solids 1 faces 6/6 edges 12/12 vertices 8/8 volume 263050.261915590 expected 263050.261915590 rel 0.0e+00, 0.001 s
+C2. box sides 5 deg about z = 0, pulled down: valid 1 self-intersects 0 solids 1 faces 6/6 edges 12/12 vertices 8/8 volume 263050.261915590 expected 263050.261915590 rel 2.2e-16, 0.001 s
+D. side x = 100 at 10 deg: valid 1 self-intersects 0 solids 1 faces 6/6 edges 12/12 vertices 8/8 volume 231536.304925994 expected 231536.304925994 rel 0.0e+00, 0.000 s
+E. cylinder side 3 deg: valid 1 self-intersects 0 solids 1 faces 3/3 edges 3/3 vertices 2/2 volume 54959.184222356 expected 54959.184222356 rel 0.0e+00, 0.001 s
+F. hole 2 deg: valid 1 self-intersects 0 solids 1 faces 7/7 edges 15/15 vertices 10/10 volume 225596.591056193 expected 225596.591056193 rel 1.3e-16, 0.001 s
+G. rounded box, planar sides 5 deg (rounds follow): valid 1 self-intersects 0 solids 1 faces 10/10 edges 24/24 vertices 16/16 volume 215883.881183282 expected 215883.881183282 rel 1.3e-16, 0.001 s
+G2. rounded box, one side 5 deg (its rounds follow): valid 1 self-intersects 0 solids 1 faces 10/10 edges 24/24 vertices 16/16 volume 215883.881183282, 0.001 s
+H. box sides 45 deg (the top would be 20 x -20): BUILD FAILED (edge recomputation), 0.000 s
+H2. box sides 60 deg: BUILD FAILED (edge recomputation), 0.000 s
+H3. box sides 36.87 deg (top 40 x 0): valid 0 self-intersects 1 solids 1 faces 6/6 edges 12/12 vertices 8/8 volume 96000.000000000, 0.000 s
+H4. box sides 30 deg (top 53.8 x 13.8): valid 1 self-intersects 0 solids 1 faces 6/6 edges 12/12 vertices 8/8 volume 120642.775531900 expected 120642.775531900 rel 1.2e-16, 0.001 s
+H5. side x = 100 at 89 deg: BUILD FAILED (edge recomputation), 0.000 s
+H6. side x = 100 at 70 deg (reaches past x = 0): BUILD FAILED (edge recomputation), 0.000 s
+I. top face (parallel to the neutral plane): ADD FAILED (face recomputation)
+I2. side x = 100 pulled along +X: BUILD FAILED (edge recomputation), 0.000 s
+I3. side x = 100 about a neutral plane above the box (z = 60): valid 1 self-intersects 0 solids 1 faces 6/6 edges 12/12 vertices 8/8 volume 248398.911698489 expected 248398.911698489 rel 0.0e+00, 0.000 s
+J. zero angle: valid 1 self-intersects 0 solids 1 faces 6/6 edges 12/12 vertices 8/8 volume 240000.000000000 expected 240000.000000000 rel 0.0e+00, 0.000 s
+J2. cylinder, zero angle: valid 1 self-intersects 0 solids 1 faces 3/3 edges 3/3 vertices 2/2 volume 62831.853071796 expected 62831.853071796 rel 0.0e+00, 0.000 s
+H7. box sides 36.5 deg: valid 1 self-intersects 0 solids 1 faces 6/6 edges 12/12 vertices 8/8 volume 97293.582290931 expected 97293.582290931 rel 0.0e+00, 0.001 s
+H7. box sides 36.8 deg: valid 1 self-intersects 0 solids 1 faces 6/6 edges 12/12 vertices 8/8 volume 96244.075385842 expected 96244.075385842 rel 1.5e-16, 0.001 s
+H7. box sides 37.0 deg: BUILD FAILED (edge recomputation), 0.000 s
+H7. box sides 38.0 deg: BUILD FAILED (edge recomputation), 0.000 s
+H7. box sides 40.0 deg: BUILD FAILED (edge recomputation), 0.000 s
+H7. box sides 42.0 deg: BUILD FAILED (edge recomputation), 0.000 s
+H7. box sides 44.0 deg: BUILD FAILED (edge recomputation), 0.000 s
+   pocket walls found: 4
+K2. pocket walls 3 deg about the top: valid 1 self-intersects 0 solids 1 faces 11/11 edges 24/24 vertices 16/16 volume 197890.717265309 expected 197890.717265309 rel 1.5e-16, 0.001 s
+L. L prism, six sides 4 deg: valid 1 self-intersects 0 solids 1 faces 8/8 edges 18/18 vertices 12/12 volume 219347.894463518 expected 219347.894463517 rel 4.0e-16, 0.001 s
+M. top-rounded box, four sides 3 deg: ADD FAILED (face recomputation)
+M2. top-rounded box, one side 3 deg: ADD FAILED (face recomputation)

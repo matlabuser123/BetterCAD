@@ -35,6 +35,7 @@ bettercad_add_executable(bettercad_tests
         core/geometry/BooleanTests.cpp
         core/geometry/ChamferTests.cpp
         core/geometry/CurvedProfileTests.cpp
+        core/geometry/DraftTests.cpp
         core/geometry/FaceNameTests.cpp
         core/geometry/FilletTests.cpp
         core/geometry/GeometryTestSupport.hpp
@@ -59,6 +60,7 @@ bettercad_add_executable(bettercad_tests
         core/units/QuantityTests.cpp
         features/ChamferFeatureTests.cpp
         features/DatumTests.cpp
+        features/DraftFeatureTests.cpp
         features/FaceReferenceTests.cpp
         features/SketchOnFaceTests.cpp
         features/ThroughAllExtrudeTests.cpp
@@ -87,6 +89,7 @@ bettercad_add_executable(bettercad_tests
         io/ThroughAllFileTests.cpp
         io/BodyOpsFileTests.cpp
         io/DocumentFileTests.cpp
+        io/DraftFileTests.cpp
         io/ExampleModelTests.cpp
         io/ExpressionFileTests.cpp
         io/FilletFileTests.cpp
@@ -113,6 +116,7 @@ bettercad_add_executable(bettercad_tests
         support/BracketModel.hpp
         support/ChamferBlockModel.hpp
         support/DatumModels.hpp
+        support/DraftModels.hpp
         support/FaceKindModels.hpp
         support/FaceModels.hpp
         support/DrivenPlateModel.hpp
@@ -149,6 +153,7 @@ if(TARGET bettercad_cli_lib)
         cli/CliRunner.hpp
         cli/CliTests.cpp
         cli/DatumCliTests.cpp
+        cli/DraftCliTests.cpp
         cli/FaceReferenceCliTests.cpp
         cli/ThroughAllCliTests.cpp
         cli/BodyOpsCliTests.cpp
@@ -393,6 +398,20 @@ if(TARGET bettercad_cli)
         COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "export-step|${_shells}|${_out}/shelled_block.step"
         EXIT_CODE 0 STDOUT_REGEX "^Wrote .*shelled_block\\.step: STEP AP214 \\(mm\\), 3 bodies \\(Cup, Tube, Casing\\), [0-9]+ bytes$"
         FILE "${_out}/shelled_block.step" FILE_REGEX "^ISO-10303-21;\nHEADER;")
+    # P12-FEAT-004: a block drafted about planes and about its own faces.
+    set(_drafts "${PROJECT_SOURCE_DIR}/examples/models/drafted_block.bcad")
+    bettercad_add_process_test(cli.info.drafted-block
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "info|${_drafts}"
+        EXIT_CODE 0
+        STDOUT_REGEX "^Document: DraftedBlock\n.*  object:7   draft        Tapered      target Block, faces the side from entity:5 of Block and the side from entity:6 of Block and the side from entity:7 of Block and the side from entity:8 of Block, neutral plane the model's xy, angle taper\n.*  object:10  draft        OnTop        target Block, faces [^\n]*, neutral plane the end cap of Block, angle taper\n  object:11  draft        OnBottom     target Block, faces [^\n]*, neutral plane the start cap of Block, angle -5 deg$")
+    bettercad_add_process_test(cli.validate.drafted-block
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "validate|${_drafts}"
+        EXIT_CODE 0
+        STDOUT_REGEX "feature regeneration  ok, 8 objects regenerated\n  geometry              ok, 5 result bodies\nResult bodies \\(5\\):\n  Tapered \\(object:7\\): 1 solid, volume 218256\\.066 mm\\^3, area 23215\\.960 mm\\^2, bounds \\(0, 0, 0\\) to \\(100, 60, 40\\) mm\n  TaperedMid \\(object:8\\): 1 solid, volume 240163\\.291 mm\\^3, area 24873\\.388 mm\\^2, bounds \\(-1\\.75, -1\\.75, 0\\) to \\(101\\.75, 61\\.75, 40\\) mm\n  Flared \\(object:9\\): 1 solid, volume 263050\\.262 mm\\^3, area 26579\\.802 mm\\^2, bounds \\(-3\\.5, -3\\.5, 0\\) to \\(103\\.5, 63\\.5, 40\\) mm\n  OnTop \\(object:10\\): 1 solid, volume 263050\\.262 mm\\^3, area 26579\\.802 mm\\^2, bounds \\(-3\\.5, -3\\.5, 0\\) to \\(103\\.5, 63\\.5, 40\\) mm\n  OnBottom \\(object:11\\): 1 solid, volume 218256\\.066 mm\\^3, area 23215\\.960 mm\\^2, bounds \\(0, 0, 0\\) to \\(100, 60, 40\\) mm\nResult: valid$")
+    bettercad_add_process_test(cli.export-step.drafted-block
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "export-step|${_drafts}|${_out}/drafted_block.step"
+        EXIT_CODE 0 STDOUT_REGEX "^Wrote .*drafted_block\\.step: STEP AP214 \\(mm\\), 5 bodies \\(Tapered, TaperedMid, Flared, OnTop, OnBottom\\), [0-9]+ bytes$"
+        FILE "${_out}/drafted_block.step" FILE_REGEX "^ISO-10303-21;\nHEADER;")
     bettercad_add_process_test(cli.export-stl.reference.pulley
         COMMAND "$<TARGET_FILE:bettercad_cli>"
         ARGS "export-stl|${_reference}/pulley.bcad|${_out}/pulley.stl"

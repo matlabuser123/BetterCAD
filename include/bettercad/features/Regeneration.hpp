@@ -12,6 +12,7 @@
 #include <bettercad/features/ChamferFeature.hpp>
 #include <bettercad/features/CircularPatternFeature.hpp>
 #include <bettercad/features/CombineFeature.hpp>
+#include <bettercad/features/DraftFeature.hpp>
 #include <bettercad/features/Export.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/features/FaceReferences.hpp>
@@ -176,6 +177,24 @@ regenerateChamfer(const ChamferFeature& feature, const Document& document, const
 /// are errors, never guesses; see geometry::filletEdges().
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::Body>
 regenerateFillet(const FilletFeature& feature, const Document& document, const geometry::Body* target);
+
+/// Angle of a draft: the driving parameter's value if it has one (NotFound
+/// if missing, DimensionMismatch if not an angle), otherwise the literal
+/// angle. Its range is checked by the draft itself.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<Angle> resolveDraftAngle(const DraftDefinition& definition,
+                                                                       const Document& document);
+
+/// Computes the body of a draft feature (P12-FEAT-004): @p target (the
+/// target feature's body) with the named faces turned about the resolved
+/// neutral plane (geometry::draftFaces()). @p bodies resolves a plane on a
+/// named face. Fails with FailedPrecondition without a target body; with
+/// the plane's resolution errors ("the neutral plane: ..."); with the errors
+/// of checkFaceName() for a face ("face 2: ..."); with NotFound when no face
+/// of the target's body carries a face's name; and with draftFaces()'s
+/// errors, each prefixed with the feature's name.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::Body>
+regenerateDraft(const DraftFeature& feature, const Document& document, const geometry::Body* target,
+                const BodyLookup& bodies = {});
 
 /// Thickness of a shell: the driving parameter's value if it has one
 /// (NotFound if missing, DimensionMismatch if not a length), otherwise the

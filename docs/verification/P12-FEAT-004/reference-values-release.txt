@@ -1,0 +1,1325 @@
+Measured values of the P12-FEAT-004 tests (Release build of the qualified tree).
+Produced by: build/release/bin/bettercad_tests.exe "[draft]"
+-s --reporter xml --rng-seed 1, filtered by values.py (kept in this directory): every passed CHECK_THAT and
+every passed CHECK whose expansion shows values, with the test case, section and INFO/CAPTURE context. Each
+entry: file:line, the assertion, then Catch2's expansion (values printed exactly). REQUIRE lines, repeats of an
+identical entry within a test case and expansions over 1000 characters (whole-file text) are left out.
+
+
+== Draft_TurnsFacesAndCarriesTheirNames
+DraftTests.cpp:125  CHECK( drafted.topology() == box.topology() )
+        => {?} == {?}
+DraftTests.cpp:126  CHECK_THAT( volumeOf(drafted), WithinRel(tapered(5.0), kRel) )
+        => 218256.06619031730224378 and 218256.06619031724403612 are within 1e-10% of each other
+DraftTests.cpp:130  CHECK_THAT( namedArea(drafted, side(0)), WithinRel((200.0 - 80.0 * t) / 2.0 * 40.0 / std::cos(5.0 * pi / 180.0), kRel) )
+        => 3874.76278056142655259 and 3874.76278056142518835 are within 1e-10% of each other
+DraftTests.cpp:132  CHECK_THAT( namedArea(drafted, kTop), WithinRel((100.0 - 80.0 * t) * (60.0 - 80.0 * t), kRel) )
+        => 4929.13241083970933687 and 4929.13241083970751788 are within 1e-10% of each other
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -0.00000000000000716 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -0.00000000000000355 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 100.00000000000001421 is within 0.000000001 of 100.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 60.0 is within 0.000000001 of 60.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 40.0 is within 0.000000001 of 40.0
+DraftTests.cpp:138  CHECK_THAT( volumeOf(box), WithinRel(240000.0, kRel) )
+        => 240000.0 and 240000.0 are within 1e-10% of each other
+DraftTests.cpp:139  CHECK( volumeOf(require(draftFaces(box, sides(5_deg)))) == volumeOf(drafted) )
+        => 218256.06619031730224378 == 218256.06619031730224378
+DraftTests.cpp:142  CHECK_THAT( volumeOf(require(draftFaces(box, sides(-(5_deg))))), WithinRel(tapered(-5.0), kRel) )
+        => 263050.26191559043945745 and 263050.26191559038124979 are within 1e-10% of each other
+DraftTests.cpp:143  CHECK_THAT( volumeOf(require(draftFaces(box, sides(Angle{})))), WithinRel(240000.0, kRel) )
+        => 240000.0 and 240000.0 are within 1e-10% of each other
+DraftTests.cpp:146  CHECK_THAT( volumeOf(require(draftFaces(box, sides(5_deg, down)))), WithinRel(tapered(-5.0), kRel) )
+        => 263050.26191559032304212 and 263050.26191559038124979 are within 1e-10% of each other
+DraftTests.cpp:151  CHECK_THAT( volumeOf(one), WithinRel(240000.0 + 60.0 * 1600.0 * t, kRel) )
+        => 248398.91169848872232251 and 248398.91169848869321868 are within 1e-10% of each other
+
+== DraftFeature_CurvedPocketedConcaveAndRoundedBodies
+DraftFeatureTests.cpp:114  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:115  CHECK( body.topology() == bodyOf(regenerator, source).topology() )
+        => {?} == {?} with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:118  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 54959.18422235592151992 and 54959.18422235595062375 are within 1e-10% of each other with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.00000000000000331 is within 0.000000001 of 0.0 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.00000000000000179 is within 0.000000001 of 0.0 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 23.8335425608193674 is within 0.000000001 of 23.83354256081936029 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -20.0 is within 0.0000001 of -20.0 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -20.0 is within 0.0000001 of -20.0 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 20.0 is within 0.0000001 of 20.0 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 20.0 is within 0.0000001 of 20.0 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 50.0 is within 0.0000001 of 50.0 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:118  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 224615.24983007332775742 and 224615.24983007326954976 are within 1e-10% of each other with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 49.99999999999998579 is within 0.000000001 of 50.0 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 29.99999999999999645 is within 0.000000001 of 30.0 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 19.91361767346723255 is within 0.000000001 of 19.91361767346723965 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 100.0 is within 0.0000001 of 100.0 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 60.0 is within 0.0000001 of 60.0 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 40.0 is within 0.0000001 of 40.0 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:118  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 197890.71726530909654684 and 197890.71726530898013152 are within 1e-10% of each other with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 250.00000000000011369 is within 0.000000001 of 250.0 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.00000000000000355 is within 0.000000001 of 30.0 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 18.34380777778359217 is within 0.000000001 of 18.34380777778358507 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 200.0 is within 0.0000001 of 200.0 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 300.00000000000005684 is within 0.0000001 of 300.0 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:118  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 226874.26187752815894783 and 226874.26187752812984399 are within 1e-10% of each other with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 37.64306358734526725 is within 0.000000001 of 37.64306358734524594 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 130.94885946649557695 is within 0.000000001 of 130.94885946649557695 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 24.15897405551363875 is within 0.000000001 of 24.15897405551362809 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.00000000000000355 is within 0.0000001 of 0.0 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 100.0 is within 0.0000001 of 100.0 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.00000000000000067 is within 0.0000001 of 0.0 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 100.00000000000001421 is within 0.0000001 of 100.0 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 180.0 is within 0.0000001 of 180.0 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:118  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 224053.85192721290513873 and 224053.85192721299245022 are within 1e-10% of each other with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 450.00000000000011369 is within 0.000000001 of 450.0 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.00000000000001421 is within 0.000000001 of 30.0 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 19.63043170328266385 is within 0.000000001 of 19.63043170328266029 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 400.0 is within 0.0000001 of 400.0 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.00000000000000178 is within 0.0000001 of 0.0 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.0 is within 0.0000001 of 0.0 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 500.0 is within 0.0000001 of 500.0 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 60.00000000000000711 is within 0.0000001 of 60.0 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 40.00000000000000711 is within 0.0000001 of 40.0 with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:330  CHECK_THAT( namedArea(regenerator, m.canTaper, nameOf(m.can, FaceRole::Side, m.canCircle)), WithinRel(kPi * (20.0 + top) * 50.0 * slant, kRel) )
+        => 5879.63340444983805355 and 5879.63340444983805355 are within 1e-10% of each other with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:332  CHECK_THAT( namedArea(regenerator, m.canTaper, nameOf(m.can, FaceRole::EndCap)), WithinRel(kPi * top * top, kRel) )
+        => 948.92082485607988929 and 948.9208248560797756 are within 1e-10% of each other with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:336  CHECK_THAT( namedArea(regenerator, m.boreTaper, nameOf(m.bore, FaceRole::Side, m.boreCircle)), WithinRel(kPi * (10.0 + mouth) * h * slant, kRel) )
+        => 2780.51495299779753623 and 2780.51495299779753623 are within 1e-10% of each other with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:338  CHECK_THAT( namedArea(regenerator, m.boreTaper, nameOf(m.plate, FaceRole::EndCap)), WithinRel(6000.0 - kPi * mouth * mouth, kRel) )
+        => 5540.31982572807737597 and 5540.31982572807646648 are within 1e-10% of each other with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:344  CHECK_THAT( namedArea(regenerator, m.pocketTaper, nameOf(m.block, FaceRole::EndCap)), WithinRel(4200.0, kRel) )
+        => 4200.00000000000545697 and 4200.0 are within 1e-10% of each other with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:346  CHECK_THAT( namedArea(regenerator, m.pocketTaper, nameOf(m.pocket, FaceRole::StartCap)), WithinRel(shrunkRectangle(60, 30, inward).at(15.0), kRel) )
+        => 1571.03143154976419282 and 1571.0314315497644202 are within 1e-10% of each other with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:349  CHECK_THAT( namedArea(regenerator, m.pocketTaper, nameOf(m.pocket, FaceRole::Side, m.pocketLines[i])), WithinRel(turnedArea(sideWidth(i % 2 == 0 ? 60.0 : 30.0, inward), 15.0, h, a), kRel) )
+        => 1469.25870594112984691 and 1469.25870594113121115 are within 1e-10% of each other with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:349  CHECK_THAT( namedArea(regenerator, m.pocketTaper, nameOf(m.pocket, FaceRole::Side, m.pocketLines[i])), WithinRel(turnedArea(sideWidth(i % 2 == 0 ? 60.0 : 30.0, inward), 15.0, h, a), kRel) )
+        => 718.22944644269057335 and 718.22944644269057335 are within 1e-10% of each other with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:349  CHECK_THAT( namedArea(regenerator, m.pocketTaper, nameOf(m.pocket, FaceRole::Side, m.pocketLines[i])), WithinRel(turnedArea(sideWidth(i % 2 == 0 ? 60.0 : 30.0, inward), 15.0, h, a), kRel) )
+        => 1469.25870594113143852 and 1469.25870594113121115 are within 1e-10% of each other with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:349  CHECK_THAT( namedArea(regenerator, m.pocketTaper, nameOf(m.pocket, FaceRole::Side, m.pocketLines[i])), WithinRel(turnedArea(sideWidth(i % 2 == 0 ? 60.0 : 30.0, inward), 15.0, h, a), kRel) )
+        => 718.22944644269068704 and 718.22944644269057335 are within 1e-10% of each other with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:360  CHECK_THAT( namedArea(regenerator, m.ellTaper, nameOf(m.ell, FaceRole::EndCap)), WithinRel(ellTop.at(50.0), kRel) )
+        => 4084.12572619906086402 and 4084.12572619905813553 are within 1e-10% of each other with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:362  CHECK_THAT( namedArea(regenerator, m.ellTaper, nameOf(m.ell, FaceRole::StartCap)), WithinRel(5000.0, kRel) )
+        => 5000.0 and 5000.0 are within 1e-10% of each other with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:367  CHECK_THAT( namedArea(regenerator, id, nameOf(m.pad, FaceRole::Side, m.padLines[i])), WithinRel(width * h * slant, kRel) )
+        => 3204.39150719334611495 and 3204.39150719334702444 are within 1e-10% of each other with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:367  CHECK_THAT( namedArea(regenerator, id, nameOf(m.pad, FaceRole::Side, m.padLines[i])), WithinRel(width * h * slant, kRel) )
+        => 1602.19575359667305747 and 1602.19575359667351222 are within 1e-10% of each other with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:371  CHECK_THAT( namedArea(regenerator, m.padTaper, nameOf(m.pad, FaceRole::EndCap)), WithinRel(shrunkRectangle(100, 60, s, r).at(h), kRel) )
+        => 5293.13526213623663352 and 5293.13526213623572403 are within 1e-10% of each other with message: a := 3.0; h := 40.0; r := 10.0
+DraftFeatureTests.cpp:114  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:115  CHECK( body.topology() == bodyOf(regenerator, source).topology() )
+        => {?} == {?} with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:118  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 50091.10705009290541057 and 50091.10705009291268652 are within 1e-10% of each other with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.00000000000000145 is within 0.000000001 of 0.0 with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.00000000000000152 is within 0.000000001 of 0.0 with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 22.96374776079208146 is within 0.000000001 of 22.96374776079207791 with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -20.0 is within 0.0000001 of -20.0 with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -20.0 is within 0.0000001 of -20.0 with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 20.0 is within 0.0000001 of 20.0 with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 20.0 is within 0.0000001 of 20.0 with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 50.0 is within 0.0000001 of 50.0 with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:118  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 303073.33107593696331605 and 303073.33107593696331605 are within 1e-10% of each other with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 50.0 is within 0.000000001 of 49.99999999999999289 with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.00000000000000355 is within 0.000000001 of 29.99999999999999645 with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 27.18802458878794681 is within 0.000000001 of 27.18802458878794326 with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 100.0 is within 0.0000001 of 100.0 with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 60.0 is within 0.0000001 of 60.0 with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 55.0 is within 0.0000001 of 55.0 with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:118  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 269945.2034947793581523 and 269945.20349477924173698 are within 1e-10% of each other with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 250.00000000000011369 is within 0.000000001 of 250.0 with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 29.99999999999999645 is within 0.000000001 of 30.00000000000000355 with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 25.5445348040617688 is within 0.000000001 of 25.5445348040617688 with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 200.0 is within 0.0000001 of 200.0 with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 300.00000000000005684 is within 0.0000001 of 300.0 with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:118  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 211905.81245425957604311 and 211905.81245425957604311 are within 1e-10% of each other with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 37.39101357894784883 is within 0.000000001 of 37.39101357894783462 with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 130.93032187499511565 is within 0.000000001 of 130.93032187499511565 with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 23.52700548137147862 is within 0.000000001 of 23.52700548137148218 with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.00000000000000011 is within 0.0000001 of 0.0 with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 100.0 is within 0.0000001 of 100.0 with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.00000000000000089 is within 0.0000001 of 0.0 with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 100.00000000000001421 is within 0.0000001 of 100.0 with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 180.0 is within 0.0000001 of 180.0 with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:118  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 287784.91866785171441734 and 287784.91866785171441734 are within 1e-10% of each other with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 449.99999999999994316 is within 0.000000001 of 450.0 with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.00000000000000355 is within 0.000000001 of 30.0 with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 26.27282875501525794 is within 0.000000001 of 26.27282875501526505 with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 400.0 is within 0.0000001 of 400.0 with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.00000000000000178 is within 0.0000001 of 0.0 with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 500.0 is within 0.0000001 of 500.0 with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:330  CHECK_THAT( namedArea(regenerator, m.canTaper, nameOf(m.can, FaceRole::Side, m.canCircle)), WithinRel(kPi * (20.0 + top) * 50.0 * slant, kRel) )
+        => 5617.42695618184461637 and 5617.42695618184461637 are within 1e-10% of each other with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:332  CHECK_THAT( namedArea(regenerator, m.canTaper, nameOf(m.can, FaceRole::EndCap)), WithinRel(kPi * top * top, kRel) )
+        => 767.04604273917186674 and 767.04604273917186674 are within 1e-10% of each other with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:336  CHECK_THAT( namedArea(regenerator, m.boreTaper, nameOf(m.bore, FaceRole::Side, m.boreCircle)), WithinRel(kPi * (10.0 + mouth) * h * slant, kRel) )
+        => 4303.56083860162470955 and 4303.56083860162470955 are within 1e-10% of each other with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:338  CHECK_THAT( namedArea(regenerator, m.boreTaper, nameOf(m.plate, FaceRole::EndCap)), WithinRel(6000.0 - kPi * mouth * mouth, kRel) )
+        => 5310.76069329296115029 and 5310.76069329296115029 are within 1e-10% of each other with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:344  CHECK_THAT( namedArea(regenerator, m.pocketTaper, nameOf(m.block, FaceRole::EndCap)), WithinRel(4200.0, kRel) )
+        => 4200.00000000000454747 and 4200.0 are within 1e-10% of each other with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:346  CHECK_THAT( namedArea(regenerator, m.pocketTaper, nameOf(m.pocket, FaceRole::StartCap)), WithinRel(shrunkRectangle(60, 30, inward).at(15.0), kRel) )
+        => 1219.06892658488300185 and 1219.06892658488231973 are within 1e-10% of each other with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:349  CHECK_THAT( namedArea(regenerator, m.pocketTaper, nameOf(m.pocket, FaceRole::Side, m.pocketLines[i])), WithinRel(turnedArea(sideWidth(i % 2 == 0 ? 60.0 : 30.0, inward), 15.0, h, a), kRel) )
+        => 2268.6510404920709334 and 2268.65104049206956915 are within 1e-10% of each other with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:349  CHECK_THAT( namedArea(regenerator, m.pocketTaper, nameOf(m.pocket, FaceRole::Side, m.pocketLines[i])), WithinRel(turnedArea(sideWidth(i % 2 == 0 ? 60.0 : 30.0, inward), 15.0, h, a), kRel) )
+        => 1064.06723544005217263 and 1064.06723544005262738 are within 1e-10% of each other with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:349  CHECK_THAT( namedArea(regenerator, m.pocketTaper, nameOf(m.pocket, FaceRole::Side, m.pocketLines[i])), WithinRel(turnedArea(sideWidth(i % 2 == 0 ? 60.0 : 30.0, inward), 15.0, h, a), kRel) )
+        => 2268.65104049207047865 and 2268.65104049206956915 are within 1e-10% of each other with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:349  CHECK_THAT( namedArea(regenerator, m.pocketTaper, nameOf(m.pocket, FaceRole::Side, m.pocketLines[i])), WithinRel(turnedArea(sideWidth(i % 2 == 0 ? 60.0 : 30.0, inward), 15.0, h, a), kRel) )
+        => 1064.06723544005262738 and 1064.06723544005262738 are within 1e-10% of each other with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:360  CHECK_THAT( namedArea(regenerator, m.ellTaper, nameOf(m.ell, FaceRole::EndCap)), WithinRel(ellTop.at(50.0), kRel) )
+        => 3501.74671898889255317 and 3501.74671898889118893 are within 1e-10% of each other with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:362  CHECK_THAT( namedArea(regenerator, m.ellTaper, nameOf(m.ell, FaceRole::StartCap)), WithinRel(5000.0, kRel) )
+        => 5000.0 and 5000.0 are within 1e-10% of each other with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:367  CHECK_THAT( namedArea(regenerator, id, nameOf(m.pad, FaceRole::Side, m.padLines[i])), WithinRel(width * h * slant, kRel) )
+        => 4637.64764945026399801 and 4637.6476494502649075 are within 1e-10% of each other with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:367  CHECK_THAT( namedArea(regenerator, id, nameOf(m.pad, FaceRole::Side, m.padLines[i])), WithinRel(width * h * slant, kRel) )
+        => 2429.24400685490036267 and 2429.24400685490081742 are within 1e-10% of each other with message: a := 5.0; h := 55.0; r := 8.0
+DraftFeatureTests.cpp:371  CHECK_THAT( namedArea(regenerator, m.padTaper, nameOf(m.pad, FaceRole::EndCap)), WithinRel(shrunkRectangle(100, 60, s, r).at(h), kRel) )
+        => 4544.09117837403846352 and 4544.09117837404028251 are within 1e-10% of each other with message: a := 5.0; h := 55.0; r := 8.0
+
+== DraftFeature_CreationAndEditsAreUndoable
+DraftFeatureTests.cpp:609  CHECK_THAT( volumeOf(regenerator, *created), WithinRel(240000.0 - wedge, kRel) )
+        => 225893.84154332283651456 and 225893.84154332280741073 are within 1e-10% of each other
+DraftFeatureTests.cpp:614  CHECK_THAT( volumeOf(regenerator, *created), WithinRel(240000.0 + wedge, kRel) )
+        => 254106.1584566772216931 and 254106.15845667719258927 are within 1e-10% of each other
+DraftFeatureTests.cpp:621  CHECK( refused.error().message == "a draft needs one or more faces" )
+        => "a draft needs one or more faces" == "a draft needs one or more faces"
+DraftFeatureTests.cpp:626  CHECK_THAT( volumeOf(regenerator, *created), WithinRel(240000.0 - wedge, kRel) )
+        => 225893.84154332283651456 and 225893.84154332280741073 are within 1e-10% of each other
+DraftFeatureTests.cpp:632  CHECK_THAT( volumeOf(regenerator, *m.doc.findByName("Front")), WithinRel(240000.0 + wedge, kRel) )
+        => 254106.1584566772216931 and 254106.15845667719258927 are within 1e-10% of each other
+
+== DraftFile_MalformedDefinitionsAreRejectedWithThePath
+DraftFileTests.cpp:127  CHECK_THAT( loadError(good, plane, "\"neutral_plane\": {\"plane\": \"xw\"}, \"angle\": 0.0,"), ContainsSubstring("objects[3].data.neutral_plane.plane: unknown value 'xw'") )
+        => "objects[3].data.neutral_plane.plane: unknown value 'xw'" contains: "objects[3].data.neutral_plane.plane: unknown value 'xw'"
+DraftFileTests.cpp:129  CHECK_THAT( loadError(good, plane, "\"angle\": 0.0,"), ContainsSubstring("objects[3].data.neutral_plane: missing required field") )
+        => "objects[3].data.neutral_plane: missing required field" contains: "objects[3].data.neutral_plane: missing required field"
+DraftFileTests.cpp:131  CHECK_THAT( loadError(good, plane, "\"neutral_plane\": {\"object\": 0, \"plane\": \"xy\"}, \"angle\": 0.0,"), ContainsSubstring("objects[3].data: the neutral plane: a plane reference must name a valid object") )
+        => "objects[3].data: the neutral plane: a plane reference must name a valid object" contains: "objects[3].data: the neutral plane: a plane reference must name a valid object"
+DraftFileTests.cpp:133  CHECK_THAT( loadError(good, plane, plane + " \"pull\": 1,"), ContainsSubstring("objects[3].data.pull: unknown field") )
+        => "objects[3].data.pull: unknown field" contains: "objects[3].data.pull: unknown field"
+DraftFileTests.cpp:135  CHECK_THAT( loadError(good, "\"angle\": 0.0,\n \"angle_parameter\": 2\n", "\"angle\": 2.0\n"), ContainsSubstring("objects[3].data: the draft angle must be in (-90, 90) deg, got ") )
+        => "objects[3].data: the draft angle must be in (-90, 90) deg, got 114.59155902616465 deg" contains: "objects[3].data: the draft angle must be in (-90, 90) deg, got "
+DraftFileTests.cpp:138  CHECK_THAT( loadError(good, "\"angle\": 0.0,\n \"angle_parameter\": 2\n", "\"angle\": \"steep\"\n"), ContainsSubstring("objects[3].data.angle: expected a number") )
+        => "objects[3].data.angle: expected a number" contains: "objects[3].data.angle: expected a number"
+DraftFileTests.cpp:150  CHECK_THAT( loadError(good, faces, "\"faces\": [],"), ContainsSubstring("objects[3].data: a draft needs one or more faces") )
+        => "objects[3].data: a draft needs one or more faces" contains: "objects[3].data: a draft needs one or more faces"
+DraftFileTests.cpp:152  CHECK_THAT( loadError(good, faces, "\"faces\": 7,"), ContainsSubstring("objects[3].data.faces: expected an array") )
+        => "objects[3].data.faces: expected an array" contains: "objects[3].data.faces: expected an array"
+DraftFileTests.cpp:154  CHECK_THAT( loadError(good, faces, "\"faces\": [{\"feature\": 5, \"face\": {\"role\": \"edge\"}}],"), ContainsSubstring("objects[3].data.faces[0].face.role: unknown value 'edge'") )
+        => "objects[3].data.faces[0].face.role: unknown value 'edge'" contains: "objects[3].data.faces[0].face.role: unknown value 'edge'"
+DraftFileTests.cpp:156  CHECK_THAT( loadError(good, faces, "\"faces\": [{\"feature\": 5, \"face\": {\"role\": \"end_cap\", \"entity\": 1}}],"), ContainsSubstring("objects[3].data.faces[0]: an end cap is not named by an entity") )
+        => "objects[3].data.faces[0]: an end cap is not named by an entity" contains: "objects[3].data.faces[0]: an end cap is not named by an entity"
+DraftFileTests.cpp:158  CHECK_THAT( loadError(good, faces, "\"faces\": [{\"feature\": 5}],"), ContainsSubstring("objects[3].data.faces[0].face: missing required field") )
+        => "objects[3].data.faces[0].face: missing required field" contains: "objects[3].data.faces[0].face: missing required field"
+DraftFileTests.cpp:160  CHECK_THAT( loadError(good, faces, "\"faces\": [{\"feature\": 5, \"face\": {\"role\": \"end_cap\"}, \"id\": 1}],"), ContainsSubstring("objects[3].data.faces[0].id: unknown field") )
+        => "objects[3].data.faces[0].id: unknown field" contains: "objects[3].data.faces[0].id: unknown field"
+DraftFileTests.cpp:162  CHECK_THAT( loadError(good, "\"target\": 5,\n \"faces\"", "\"target\": 0,\n \"faces\""), ContainsSubstring("objects[3].data: a draft needs a target feature") )
+        => "objects[3].data: a draft needs a target feature" contains: "objects[3].data: a draft needs a target feature"
+
+== DraftCli_InfoDescribesDrafts
+DraftCliTests.cpp:40  CHECK( result.exitCode == ExitCode::Success )
+        => 0 == 0
+
+== Draft_FailuresAreStructured / empty and invalid inputs
+DraftTests.cpp:158  CHECK( result.error().code == code )
+        => 5 == 5
+DraftTests.cpp:162  CHECK( fails(draftFaces(Body{}, sides(3_deg)), ErrorCode::FailedPrecondition) == "draft: the body is empty" )
+        => "draft: the body is empty" == "draft: the body is empty"
+DraftTests.cpp:158  CHECK( result.error().code == code )
+        => 0 == 0
+DraftTests.cpp:163  CHECK( fails(draftFaces(box, sides(90_deg)), ErrorCode::InvalidArgument) == "draft: the draft angle must be in (-90, 90) deg, got 90 deg" )
+        => "draft: the draft angle must be in (-90, 90) deg, got 90 deg" == "draft: the draft angle must be in (-90, 90) deg, got 90 deg"
+
+== Draft_FailuresAreStructured / faces the body does not have, or cannot turn
+DraftTests.cpp:158  CHECK( result.error().code == code )
+        => 1 == 1
+DraftTests.cpp:169  CHECK( fails(draftFaces(box, request), ErrorCode::NotFound) == "draft: face 5 is not a face of the body" )
+        => "draft: face 5 is not a face of the body" == "draft: face 5 is not a face of the body"
+DraftTests.cpp:158  CHECK( result.error().code == code )
+        => 5 == 5
+DraftTests.cpp:171  CHECK( fails(draftFaces(box, {.faces = {side(0), kTop}, .angle = 3_deg}), ErrorCode::FailedPrecondition) == "draft: face 2 cannot be turned about the neutral plane (kernel: a face cannot be recomputed); a face " "parallel to the plane, or a chain of tangent faces that reaches one, cannot be drafted" )
+        => "draft: face 2 cannot be turned about the neutral plane (kernel: a face cannot be recomputed); a face parallel to the plane, or a chain of tangent faces that reaches one, cannot be drafted" == "draft: face 2 cannot be turned about the neutral plane (kernel: a face cannot be recomputed); a face parallel to the plane, or a chain of tangent faces that reaches one, cannot be drafted"
+
+== Draft_FailuresAreStructured / several solids
+DraftTests.cpp:158  CHECK( result.error().code == code )
+        => 5 == 5
+DraftTests.cpp:179  CHECK( fails(draftFaces(halves, sides(3_deg)), ErrorCode::FailedPrecondition) == "draft: a draft turns faces of one solid; the body has 2" )
+        => "draft: a draft turns faces of one solid; the body has 2" == "draft: a draft turns faces of one solid; the body has 2"
+
+== Draft_FailuresAreStructured / angles that make faces vanish
+DraftTests.cpp:158  CHECK( result.error().code == code )
+        => 5 == 5 with message: degrees := 37.0
+DraftTests.cpp:187  CHECK( fails(draftFaces(box, sides(degrees * units::deg)), ErrorCode::FailedPrecondition) == "draft: the kernel cannot build the draft: kernel: an edge cannot be recomputed; an angle this " "large may make faces vanish" )
+        => "draft: the kernel cannot build the draft: kernel: an edge cannot be recomputed; an angle this large may make faces vanish" == "draft: the kernel cannot build the draft: kernel: an edge cannot be recomputed; an angle this large may make faces vanish" with message: degrees := 37.0
+DraftTests.cpp:158  CHECK( result.error().code == code )
+        => 5 == 5 with message: degrees := 45.0
+DraftTests.cpp:187  CHECK( fails(draftFaces(box, sides(degrees * units::deg)), ErrorCode::FailedPrecondition) == "draft: the kernel cannot build the draft: kernel: an edge cannot be recomputed; an angle this " "large may make faces vanish" )
+        => "draft: the kernel cannot build the draft: kernel: an edge cannot be recomputed; an angle this large may make faces vanish" == "draft: the kernel cannot build the draft: kernel: an edge cannot be recomputed; an angle this large may make faces vanish" with message: degrees := 45.0
+DraftTests.cpp:158  CHECK( result.error().code == code )
+        => 5 == 5 with message: degrees := 60.0
+DraftTests.cpp:187  CHECK( fails(draftFaces(box, sides(degrees * units::deg)), ErrorCode::FailedPrecondition) == "draft: the kernel cannot build the draft: kernel: an edge cannot be recomputed; an angle this " "large may make faces vanish" )
+        => "draft: the kernel cannot build the draft: kernel: an edge cannot be recomputed; an angle this large may make faces vanish" == "draft: the kernel cannot build the draft: kernel: an edge cannot be recomputed; an angle this large may make faces vanish" with message: degrees := 60.0
+DraftTests.cpp:158  CHECK( result.error().code == code )
+        => 5 == 5
+DraftTests.cpp:191  CHECK_THAT( fails(draftFaces(box, sides(Angle::fromSi(std::atan(0.75)))), ErrorCode::FailedPrecondition), StartsWith("draft: the kernel cannot build the draft: ") )
+        => "draft: the kernel cannot build the draft: its result is not a draft of the body: it is not a valid solid; an angle this large may make faces vanish" starts with: "draft: the kernel cannot build the draft: "
+DraftTests.cpp:194  CHECK_THAT( volumeOf(require(draftFaces(box, sides(36.5_deg)))), WithinRel(tapered(36.5), kRel) )
+        => 97293.58229093143017963 and 97293.5822909314010758 are within 1e-10% of each other
+
+== DraftFeature_FailuresAreStructuredAndAtomic / angles that make faces vanish
+DraftFeatureTests.cpp:165  CHECK( std::ranges::find(report.failed, item) != report.failed.end() )
+        => {?} != {?}
+DraftFeatureTests.cpp:167  CHECK( report.errors.at(item).code == code )
+        => 5 == 5
+DraftFeatureTests.cpp:168  CHECK( regenerator.body(item) == nullptr )
+        => nullptr == nullptr
+DraftFeatureTests.cpp:401  CHECK( failureOf(report, regenerator, m.tapered, ErrorCode::FailedPrecondition) == "Tapered: draft: the kernel cannot build the draft: kernel: an edge cannot be recomputed; an angle " "this large may make faces vanish" )
+        => "Tapered: draft: the kernel cannot build the draft: kernel: an edge cannot be recomputed; an angle this large may make faces vanish" == "Tapered: draft: the kernel cannot build the draft: kernel: an edge cannot be recomputed; an angle this large may make faces vanish"
+DraftFeatureTests.cpp:404  CHECK( report.failed == std::vector<ObjectId>{m.tapered} )
+        => { object:7 } == { object:7 }
+DraftFeatureTests.cpp:114  CHECK( body.topology().solids == 1 )
+        => 1 == 1
+DraftFeatureTests.cpp:115  CHECK( body.topology() == bodyOf(regenerator, source).topology() )
+        => {?} == {?}
+DraftFeatureTests.cpp:118  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 252113.99907042825361714 and 252113.99907042825361714 are within 1e-10% of each other
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 49.99999999999997868 is within 0.000000001 of 50.0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 29.99999999999999645 is within 0.000000001 of 30.0
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 14.89887279729024705 is within 0.000000001 of 14.8988727972902506
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -15.07108100205587675 is within 0.0000001 of -15.07108100205588386
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -15.07108100205588386 is within 0.0000001 of -15.07108100205588386
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.00000000000000711 is within 0.0000001 of 0.0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 115.07108100205587675 is within 0.0000001 of 115.07108100205587675
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 75.07108100205587675 is within 0.0000001 of 75.07108100205587675
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 40.0 is within 0.0000001 of 40.0
+DraftFeatureTests.cpp:118  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 481365.83310802804771811 and 481365.83310802822234109 are within 1e-10% of each other
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 50.00000000000000711 is within 0.000000001 of 50.0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.0 is within 0.000000001 of 30.0
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 16.32166344207095676 is within 0.000000001 of 16.32166344207094966
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -30.1421620041117535 is within 0.0000001 of -30.14216200411176771
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -30.14216200411176061 is within 0.0000001 of -30.14216200411176771
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 130.1421620041117535 is within 0.0000001 of 130.1421620041117535
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 90.14216200411173929 is within 0.0000001 of 90.14216200411176771
+DraftFeatureTests.cpp:167  CHECK( report.errors.at(item).code == code )
+        => 0 == 0
+DraftFeatureTests.cpp:410  CHECK( failureOf(steep, regenerator, m.tapered, ErrorCode::InvalidArgument) == "Tapered: draft: the draft angle must be in (-90, 90) deg, got 95 deg" )
+        => "Tapered: draft: the draft angle must be in (-90, 90) deg, got 95 deg" == "Tapered: draft: the draft angle must be in (-90, 90) deg, got 95 deg"
+DraftFeatureTests.cpp:416  CHECK( volumes(regenerator, m.doc) == before )
+        => { 4687486350046265344 (0x410d4c0000000000), 4686739234169473537 (0x410aa480878eca01), 4687491960682758063 (0x410d511a53febfaf), 4688262781553842621 (0x41100e290c3399bd), 4688262781553842620 (0x41100e290c3399bc), 4686739234169473536 (0x410aa480878eca00) } == { 4687486350046265344 (0x410d4c0000000000), 4686739234169473537 (0x410aa480878eca01), 4687491960682758063 (0x410d511a53febfaf), 4688262781553842621 (0x41100e290c3399bd), 4688262781553842620 (0x41100e290c3399bc), 4686739234169473536 (0x410aa480878eca00) }
+
+== DraftFeature_FailuresAreStructuredAndAtomic / faces the draft cannot turn
+DraftFeatureTests.cpp:165  CHECK( std::ranges::find(report.failed, item) != report.failed.end() )
+        => {?} != {?}
+DraftFeatureTests.cpp:167  CHECK( report.errors.at(item).code == code )
+        => 5 == 5
+DraftFeatureTests.cpp:168  CHECK( regenerator.body(item) == nullptr )
+        => nullptr == nullptr
+DraftFeatureTests.cpp:454  CHECK( failureOf(report, regenerator, withTop, ErrorCode::FailedPrecondition) == std::format("WithTop: draft: face 2 {}", kCannotTurn) )
+        => "WithTop: draft: face 2 cannot be turned about the neutral plane (kernel: a face cannot be recomputed); a face parallel to the plane, or a chain of tangent faces that reaches one, cannot be drafted" == "WithTop: draft: face 2 cannot be turned about the neutral plane (kernel: a face cannot be recomputed); a face parallel to the plane, or a chain of tangent faces that reaches one, cannot be drafted"
+DraftFeatureTests.cpp:456  CHECK( failureOf(report, regenerator, chained, ErrorCode::FailedPrecondition) == std::format("Chained: draft: face 1 {}", kCannotTurn) )
+        => "Chained: draft: face 1 cannot be turned about the neutral plane (kernel: a face cannot be recomputed); a face parallel to the plane, or a chain of tangent faces that reaches one, cannot be drafted" == "Chained: draft: face 1 cannot be turned about the neutral plane (kernel: a face cannot be recomputed); a face parallel to the plane, or a chain of tangent faces that reaches one, cannot be drafted"
+DraftFeatureTests.cpp:458  CHECK( failureOf(report, regenerator, turnedRing, ErrorCode::FailedPrecondition) == "TurnedRing: draft: face 1 is a torus; only planes, cylinders and cones can be drafted" )
+        => "TurnedRing: draft: face 1 is a torus; only planes, cylinders and cones can be drafted" == "TurnedRing: draft: face 1 is a torus; only planes, cylinders and cones can be drafted"
+DraftFeatureTests.cpp:460  CHECK( report.failed.size() == 3 )
+        => 3 == 3
+DraftFeatureTests.cpp:461  CHECK( regenerator.body(domed) != nullptr )
+        => 0x00000185f9bd2f98 != nullptr
+DraftFeatureTests.cpp:462  CHECK( regenerator.body(torus) != nullptr )
+        => 0x00000185f9bd3018 != nullptr
+
+== DraftFeature_FailuresAreStructuredAndAtomic / faces the target's body does not have, and planes that are not planes
+DraftFeatureTests.cpp:165  CHECK( std::ranges::find(report.failed, item) != report.failed.end() )
+        => {?} != {?}
+DraftFeatureTests.cpp:167  CHECK( report.errors.at(item).code == code )
+        => 1 == 1
+DraftFeatureTests.cpp:168  CHECK( regenerator.body(item) == nullptr )
+        => nullptr == nullptr
+DraftFeatureTests.cpp:489  CHECK( failureOf(report, regenerator, wrongBody, ErrorCode::NotFound) == std::format("WrongBody: face 1, the end cap of Other ({}), is not a face of the body of Block ({})", other, m.block) )
+        => "WrongBody: face 1, the end cap of Other (object:13), is not a face of the body of Block (object:5)" == "WrongBody: face 1, the end cap of Other (object:13), is not a face of the body of Block (object:5)"
+DraftFeatureTests.cpp:492  CHECK( failureOf(report, regenerator, cutAway, ErrorCode::NotFound) == std::format("CutAway: face 1, the end cap of Block ({}), is not a face of the body of Base ({})", m.block, base) )
+        => "CutAway: face 1, the end cap of Block (object:5), is not a face of the body of Base (object:15)" == "CutAway: face 1, the end cap of Block (object:5), is not a face of the body of Base (object:15)"
+DraftFeatureTests.cpp:167  CHECK( report.errors.at(item).code == code )
+        => 0 == 0
+DraftFeatureTests.cpp:495  CHECK( failureOf(report, regenerator, unnamed, ErrorCode::InvalidArgument) == std::format("Unnamed: face 1: Base ({}) is a split, whose faces are not named (extrudes, revolves, " "sweeps, lofts, holes and chamfers name theirs)", base) )
+        => "Unnamed: face 1: Base (object:15) is a split, whose faces are not named (extrudes, revolves, sweeps, lofts, holes and chamfers name theirs)" == "Unnamed: face 1: Base (object:15) is a split, whose faces are not named (extrudes, revolves, sweeps, lofts, holes and chamfers name theirs)"
+DraftFeatureTests.cpp:167  CHECK( report.errors.at(item).code == code )
+        => 5 == 5
+DraftFeatureTests.cpp:499  CHECK( failureOf(report, regenerator, twoSolids, ErrorCode::FailedPrecondition) == "TwoSolids: draft: a draft turns faces of one solid; the body has 2" )
+        => "TwoSolids: draft: a draft turns faces of one solid; the body has 2" == "TwoSolids: draft: a draft turns faces of one solid; the body has 2"
+DraftFeatureTests.cpp:501  CHECK( failureOf(report, regenerator, onSketch, ErrorCode::InvalidArgument) == std::format("OnSketch: the neutral plane: BlockSketch ({}) is a sketch, not a datum plane or a " "coordinate system", m.blockSketch) )
+        => "OnSketch: the neutral plane: BlockSketch (object:4) is a sketch, not a datum plane or a coordinate system" == "OnSketch: the neutral plane: BlockSketch (object:4) is a sketch, not a datum plane or a coordinate system"
+DraftFeatureTests.cpp:505  CHECK( failureOf(report, regenerator, noBody, ErrorCode::FailedPrecondition) == "NoBody: a draft needs the body of its target feature" )
+        => "NoBody: a draft needs the body of its target feature" == "NoBody: a draft needs the body of its target feature"
+DraftFeatureTests.cpp:507  CHECK( regenerator.body(base) != nullptr )
+        => 0x00000185f9bd4b58 != nullptr
+DraftFeatureTests.cpp:511  CHECK_FALSE( !(validation.valid()) )
+        => !false
+DraftFeatureTests.cpp:527  CHECK( std::ranges::find(graph.graph.dependenciesOf(wrongBody), other) != graph.graph.dependenciesOf(wrongBody).end() )
+        => {?} != {?}
+DraftFeatureTests.cpp:529  CHECK( std::ranges::find(graph.graph.dependenciesOf(onSketch), m.blockSketch) != graph.graph.dependenciesOf(onSketch).end() )
+        => {?} != {?}
+
+== DraftFeature_FailuresAreStructuredAndAtomic / angles of the wrong kind
+DraftFeatureTests.cpp:165  CHECK( std::ranges::find(report.failed, item) != report.failed.end() )
+        => {?} != {?}
+DraftFeatureTests.cpp:167  CHECK( report.errors.at(item).code == code )
+        => 3 == 3
+DraftFeatureTests.cpp:168  CHECK( regenerator.body(item) == nullptr )
+        => nullptr == nullptr
+
+== DraftFeature_FailuresAreStructuredAndAtomic / drafts are not repeated and their faces are not named
+DraftFeatureTests.cpp:556  CHECK_THAT( report.errors.at(row).message, ContainsSubstring("a linear pattern cannot repeat a draft") )
+        => "Row: linear pattern: a linear pattern cannot repeat a draft" contains: "a linear pattern cannot repeat a draft"
+DraftFeatureTests.cpp:558  CHECK( report.errors.at(onDraftId).message == std::format("OnDraft ({}): Tapered ({}) is a draft, whose faces are not named (extrudes, revolves, " "sweeps, lofts, holes and chamfers name theirs)", onDraftId, m.tapered) )
+        => "OnDraft (object:13): Tapered (object:7) is a draft, whose faces are not named (extrudes, revolves, sweeps, lofts, holes and chamfers name theirs)" == "OnDraft (object:13): Tapered (object:7) is a draft, whose faces are not named (extrudes, revolves, sweeps, lofts, holes and chamfers name theirs)"
+
+== DraftFeature_RegeneratesDeterministically
+DraftFeatureTests.cpp:585  CHECK( namesOf(ra, id) == namesOf(rb, id) )
+        => { { {?} }, { {?} }, { {?} } } == { { {?} }, { {?} }, { {?} } } with message: id := object:6
+DraftFeatureTests.cpp:586  CHECK( bodyOf(ra, id).topology() == bodyOf(rb, id).topology() )
+        => {?} == {?} with message: id := object:6
+DraftFeatureTests.cpp:585  CHECK( namesOf(ra, id) == namesOf(rb, id) )
+        => { { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} } } == { { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} } } with message: id := object:11
+DraftFeatureTests.cpp:586  CHECK( bodyOf(ra, id).topology() == bodyOf(rb, id).topology() )
+        => {?} == {?} with message: id := object:11
+DraftFeatureTests.cpp:585  CHECK( namesOf(ra, id) == namesOf(rb, id) )
+        => { { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} } } == { { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} } } with message: id := object:17
+DraftFeatureTests.cpp:586  CHECK( bodyOf(ra, id).topology() == bodyOf(rb, id).topology() )
+        => {?} == {?} with message: id := object:17
+DraftFeatureTests.cpp:585  CHECK( namesOf(ra, id) == namesOf(rb, id) )
+        => { { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} } } == { { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} } } with message: id := object:20
+DraftFeatureTests.cpp:586  CHECK( bodyOf(ra, id).topology() == bodyOf(rb, id).topology() )
+        => {?} == {?} with message: id := object:20
+DraftFeatureTests.cpp:585  CHECK( namesOf(ra, id) == namesOf(rb, id) )
+        => { { {?} }, { {?} }, { }, { }, { {?} }, { {?} }, { {?} }, { }, { }, { {?} } } == { { {?} }, { {?} }, { }, { }, { {?} }, { {?} }, { {?} }, { }, { }, { {?} } } with message: id := object:24
+DraftFeatureTests.cpp:586  CHECK( bodyOf(ra, id).topology() == bodyOf(rb, id).topology() )
+        => {?} == {?} with message: id := object:24
+DraftFeatureTests.cpp:585  CHECK( namesOf(ra, id) == namesOf(rb, id) )
+        => { { {?} }, { {?} }, { }, { }, { {?} }, { {?} }, { {?} }, { }, { }, { {?} } } == { { {?} }, { {?} }, { }, { }, { {?} }, { {?} }, { {?} }, { }, { }, { {?} } } with message: id := object:25
+DraftFeatureTests.cpp:586  CHECK( bodyOf(ra, id).topology() == bodyOf(rb, id).topology() )
+        => {?} == {?} with message: id := object:25
+
+== DraftFile_ExportedDraftsReadBackFromStep
+DraftFileTests.cpp:183  CHECK( summary->bodies.size() == 5 )
+        => 5 == 5
+DraftFileTests.cpp:187  CHECK( contents->solids == 5 )
+        => 5 == 5
+DraftFileTests.cpp:194  CHECK_THAT( contents->volumeMm3, WithinRel(total, 1e-9) )
+        => 1202775.94722503027878702 and 1202775.94722505379468203 are within 1e-07% of each other
+DraftFileTests.cpp:196  CHECK_THAT( contents->minMm[0], WithinRel(-reach, 1e-9) )
+        => -3.49954654103726215 and -3.49954654103696017 are within 1e-07% of each other
+DraftFileTests.cpp:197  CHECK_THAT( contents->maxMm[1], WithinRel(60.0 + reach, 1e-9) )
+        => 63.4995465410372617 and 63.49954654103696328 are within 1e-07% of each other
+DraftFileTests.cpp:198  CHECK_THAT( contents->maxMm[2], WithinRel(40.0, 1e-9) )
+        => 40.00000000000006395 and 40.0 are within 1e-07% of each other
+
+== DraftFile_SaveLoad_RegeneratesTheSameBodies
+DraftFileTests.cpp:81  CHECK( draft->definition() == original.doc.template findObjectAs<DraftFeature>(id)->definition() )
+        => {?} == {?} with message: id := object:7
+DraftFileTests.cpp:82  CHECK( volumeBits(after, id) == volumeBits(before, id) )
+        => 4552184251607925255 (0x3f2c9b755537c207) == 4552184251607925255 (0x3f2c9b755537c207) with message: id := object:7
+DraftFileTests.cpp:81  CHECK( draft->definition() == original.doc.template findObjectAs<DraftFeature>(id)->definition() )
+        => {?} == {?} with message: id := object:8
+DraftFileTests.cpp:82  CHECK( volumeBits(after, id) == volumeBits(before, id) )
+        => 4552992485547272542 (0x3f2f7a8af611695e) == 4552992485547272542 (0x3f2f7a8af611695e) with message: id := object:8
+DraftFileTests.cpp:81  CHECK( draft->definition() == original.doc.template findObjectAs<DraftFeature>(id)->definition() )
+        => {?} == {?} with message: id := object:9
+DraftFileTests.cpp:82  CHECK( volumeBits(after, id) == volumeBits(before, id) )
+        => 4553488044504280123 (0x3f313d4045aa6c3b) == 4553488044504280123 (0x3f313d4045aa6c3b) with message: id := object:9
+DraftFileTests.cpp:81  CHECK( draft->definition() == original.doc.template findObjectAs<DraftFeature>(id)->definition() )
+        => {?} == {?} with message: id := object:10
+DraftFileTests.cpp:82  CHECK( volumeBits(after, id) == volumeBits(before, id) )
+        => 4553488044504280122 (0x3f313d4045aa6c3a) == 4553488044504280122 (0x3f313d4045aa6c3a) with message: id := object:10
+DraftFileTests.cpp:81  CHECK( draft->definition() == original.doc.template findObjectAs<DraftFeature>(id)->definition() )
+        => {?} == {?} with message: id := object:11
+DraftFileTests.cpp:82  CHECK( volumeBits(after, id) == volumeBits(before, id) )
+        => 4552184251607925254 (0x3f2c9b755537c206) == 4552184251607925254 (0x3f2c9b755537c206) with message: id := object:11
+DraftFileTests.cpp:81  CHECK( draft->definition() == original.doc.template findObjectAs<DraftFeature>(id)->definition() )
+        => {?} == {?} with message: id := object:6
+DraftFileTests.cpp:82  CHECK( volumeBits(after, id) == volumeBits(before, id) )
+        => 4543235368808886717 (0x3f0cd07f30d831bd) == 4543235368808886717 (0x3f0cd07f30d831bd) with message: id := object:6
+DraftFileTests.cpp:82  CHECK( volumeBits(after, id) == volumeBits(before, id) )
+        => 4552418864074165855 (0x3f2d70d64ded8e5f) == 4552418864074165855 (0x3f2d70d64ded8e5f) with message: id := object:11
+DraftFileTests.cpp:81  CHECK( draft->definition() == original.doc.template findObjectAs<DraftFeature>(id)->definition() )
+        => {?} == {?} with message: id := object:17
+DraftFileTests.cpp:82  CHECK( volumeBits(after, id) == volumeBits(before, id) )
+        => 4551432902848742410 (0x3f29f01c5153040a) == 4551432902848742410 (0x3f29f01c5153040a) with message: id := object:17
+DraftFileTests.cpp:81  CHECK( draft->definition() == original.doc.template findObjectAs<DraftFeature>(id)->definition() )
+        => {?} == {?} with message: id := object:20
+DraftFileTests.cpp:82  CHECK( volumeBits(after, id) == volumeBits(before, id) )
+        => 4552502206908363507 (0x3f2dbca311f472f3) == 4552502206908363507 (0x3f2dbca311f472f3) with message: id := object:20
+DraftFileTests.cpp:81  CHECK( draft->definition() == original.doc.template findObjectAs<DraftFeature>(id)->definition() )
+        => {?} == {?} with message: id := object:24
+DraftFileTests.cpp:82  CHECK( volumeBits(after, id) == volumeBits(before, id) )
+        => 4552398152147290688 (0x3f2d5dffeee24a40) == 4552398152147290688 (0x3f2d5dffeee24a40) with message: id := object:24
+DraftFileTests.cpp:81  CHECK( draft->definition() == original.doc.template findObjectAs<DraftFeature>(id)->definition() )
+        => {?} == {?} with message: id := object:25
+DraftFileTests.cpp:82  CHECK( volumeBits(after, id) == volumeBits(before, id) )
+        => 4552398152147290688 (0x3f2d5dffeee24a40) == 4552398152147290688 (0x3f2d5dffeee24a40) with message: id := object:25
+
+== Draft_RequestsAreValidated
+DraftTests.cpp:104  CHECK( valid.error().code == ErrorCode::InvalidArgument )
+        => 0 == 0
+DraftTests.cpp:110  CHECK( message({.angle = 3_deg}) == "a draft needs one or more faces" )
+        => "a draft needs one or more faces" == "a draft needs one or more faces"
+DraftTests.cpp:111  CHECK( message({.faces = {side(0), FaceName{}}, .angle = 3_deg}) == "face 2 must name a valid feature" )
+        => "face 2 must name a valid feature" == "face 2 must name a valid feature"
+DraftTests.cpp:112  CHECK( message({.faces = {side(0), side(0)}, .angle = 3_deg}) == "face 2 repeats an earlier face" )
+        => "face 2 repeats an earlier face" == "face 2 repeats an earlier face"
+DraftTests.cpp:113  CHECK( message({.faces = {FaceName{ObjectId::fromValue(1), {.role = FaceRole::Chamfer}}}, .angle = 3_deg}) == "face 1: a chamfer face is named by its edge reference, from 1" )
+        => "face 1: a chamfer face is named by its edge reference, from 1" == "face 1: a chamfer face is named by its edge reference, from 1"
+DraftTests.cpp:115  CHECK( message(sides(90_deg)) == "the draft angle must be in (-90, 90) deg, got 90 deg" )
+        => "the draft angle must be in (-90, 90) deg, got 90 deg" == "the draft angle must be in (-90, 90) deg, got 90 deg"
+DraftTests.cpp:116  CHECK( message(sides(-(180_deg))) == "the draft angle must be in (-90, 90) deg, got -180 deg" )
+        => "the draft angle must be in (-90, 90) deg, got -180 deg" == "the draft angle must be in (-90, 90) deg, got -180 deg"
+DraftTests.cpp:117  CHECK( message(sides(Angle::fromSi(std::numeric_limits<double>::quiet_NaN()))) == "the draft angle must be in (-90, 90) deg, got nan deg" )
+        => "the draft angle must be in (-90, 90) deg, got nan deg" == "the draft angle must be in (-90, 90) deg, got nan deg"
+
+== DraftCli_ValidateReportsTheDrafts / a valid model
+DraftCliTests.cpp:64  CHECK( result.exitCode == ExitCode::Success )
+        => 0 == 0
+DraftCliTests.cpp:65  CHECK_THAT( result.out, ContainsSubstring(" feature regeneration ok, 8 objects regenerated\n" " geometry ok, 5 result bodies\n") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-87b8a5c4-6f67-40fb-846b-b87871a0ab9f\drafts.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 8 objects regenerated geometry ok, 5 result bodies Result bodies (5): Tapered (object:7): 1 solid, volume 218256.066 mm^3, area 23215.960 mm^2, bounds (0, 0, 0) to (100, 60, 40) mm TaperedMid (object:8): 1 solid, volume 240163.291 mm^3, area 24873.388 mm^2, bounds (-1.75, -1.75, 0) to (101.75, 61.75, 40) mm Flared (object:9): 1 solid, volume 263050.262 mm^3, area 26579.802 mm^2, bounds (-3.5, -3.5, 0) to (103.5, 63.5, 40) mm OnTop (object:10): 1 solid, volume 263050.262 mm^3, area 26579.802 mm^2, bounds (-3.5, -3.5, 0) to (103.5, 63.5, 40) mm OnBottom (object:11): 1 solid, volume 218256.066 mm^3, area 23215.960 mm^2, bounds (0, 0, 0) to (100, 60, 40) mm Result: valid " contains: " feature regeneration ok, 8 objects regenerated geometry ok, 5 result bodies "
+DraftCliTests.cpp:67  CHECK_THAT( result.out, ContainsSubstring("Tapered (object:7): 1 solid, volume 218256.066 mm^3") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-87b8a5c4-6f67-40fb-846b-b87871a0ab9f\drafts.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 8 objects regenerated geometry ok, 5 result bodies Result bodies (5): Tapered (object:7): 1 solid, volume 218256.066 mm^3, area 23215.960 mm^2, bounds (0, 0, 0) to (100, 60, 40) mm TaperedMid (object:8): 1 solid, volume 240163.291 mm^3, area 24873.388 mm^2, bounds (-1.75, -1.75, 0) to (101.75, 61.75, 40) mm Flared (object:9): 1 solid, volume 263050.262 mm^3, area 26579.802 mm^2, bounds (-3.5, -3.5, 0) to (103.5, 63.5, 40) mm OnTop (object:10): 1 solid, volume 263050.262 mm^3, area 26579.802 mm^2, bounds (-3.5, -3.5, 0) to (103.5, 63.5, 40) mm OnBottom (object:11): 1 solid, volume 218256.066 mm^3, area 23215.960 mm^2, bounds (0, 0, 0) to (100, 60, 40) mm Result: valid " contains: "Tapered (object:7): 1 solid, volume 218256.066 mm^3"
+DraftCliTests.cpp:68  CHECK_THAT( result.out, ContainsSubstring("TaperedMid (object:8): 1 solid, volume 240163.291 mm^3") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-87b8a5c4-6f67-40fb-846b-b87871a0ab9f\drafts.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 8 objects regenerated geometry ok, 5 result bodies Result bodies (5): Tapered (object:7): 1 solid, volume 218256.066 mm^3, area 23215.960 mm^2, bounds (0, 0, 0) to (100, 60, 40) mm TaperedMid (object:8): 1 solid, volume 240163.291 mm^3, area 24873.388 mm^2, bounds (-1.75, -1.75, 0) to (101.75, 61.75, 40) mm Flared (object:9): 1 solid, volume 263050.262 mm^3, area 26579.802 mm^2, bounds (-3.5, -3.5, 0) to (103.5, 63.5, 40) mm OnTop (object:10): 1 solid, volume 263050.262 mm^3, area 26579.802 mm^2, bounds (-3.5, -3.5, 0) to (103.5, 63.5, 40) mm OnBottom (object:11): 1 solid, volume 218256.066 mm^3, area 23215.960 mm^2, bounds (0, 0, 0) to (100, 60, 40) mm Result: valid " contains: "TaperedMid (object:8): 1 solid, volume 240163.291 mm^3"
+DraftCliTests.cpp:69  CHECK_THAT( result.out, ContainsSubstring("Flared (object:9): 1 solid, volume 263050.262 mm^3") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-87b8a5c4-6f67-40fb-846b-b87871a0ab9f\drafts.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 8 objects regenerated geometry ok, 5 result bodies Result bodies (5): Tapered (object:7): 1 solid, volume 218256.066 mm^3, area 23215.960 mm^2, bounds (0, 0, 0) to (100, 60, 40) mm TaperedMid (object:8): 1 solid, volume 240163.291 mm^3, area 24873.388 mm^2, bounds (-1.75, -1.75, 0) to (101.75, 61.75, 40) mm Flared (object:9): 1 solid, volume 263050.262 mm^3, area 26579.802 mm^2, bounds (-3.5, -3.5, 0) to (103.5, 63.5, 40) mm OnTop (object:10): 1 solid, volume 263050.262 mm^3, area 26579.802 mm^2, bounds (-3.5, -3.5, 0) to (103.5, 63.5, 40) mm OnBottom (object:11): 1 solid, volume 218256.066 mm^3, area 23215.960 mm^2, bounds (0, 0, 0) to (100, 60, 40) mm Result: valid " contains: "Flared (object:9): 1 solid, volume 263050.262 mm^3"
+DraftCliTests.cpp:70  CHECK_THAT( result.out, ContainsSubstring("OnTop (object:10): 1 solid, volume 263050.262 mm^3") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-87b8a5c4-6f67-40fb-846b-b87871a0ab9f\drafts.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 8 objects regenerated geometry ok, 5 result bodies Result bodies (5): Tapered (object:7): 1 solid, volume 218256.066 mm^3, area 23215.960 mm^2, bounds (0, 0, 0) to (100, 60, 40) mm TaperedMid (object:8): 1 solid, volume 240163.291 mm^3, area 24873.388 mm^2, bounds (-1.75, -1.75, 0) to (101.75, 61.75, 40) mm Flared (object:9): 1 solid, volume 263050.262 mm^3, area 26579.802 mm^2, bounds (-3.5, -3.5, 0) to (103.5, 63.5, 40) mm OnTop (object:10): 1 solid, volume 263050.262 mm^3, area 26579.802 mm^2, bounds (-3.5, -3.5, 0) to (103.5, 63.5, 40) mm OnBottom (object:11): 1 solid, volume 218256.066 mm^3, area 23215.960 mm^2, bounds (0, 0, 0) to (100, 60, 40) mm Result: valid " contains: "OnTop (object:10): 1 solid, volume 263050.262 mm^3"
+DraftCliTests.cpp:71  CHECK_THAT( result.out, ContainsSubstring("OnBottom (object:11): 1 solid, volume 218256.066 mm^3") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-87b8a5c4-6f67-40fb-846b-b87871a0ab9f\drafts.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 8 objects regenerated geometry ok, 5 result bodies Result bodies (5): Tapered (object:7): 1 solid, volume 218256.066 mm^3, area 23215.960 mm^2, bounds (0, 0, 0) to (100, 60, 40) mm TaperedMid (object:8): 1 solid, volume 240163.291 mm^3, area 24873.388 mm^2, bounds (-1.75, -1.75, 0) to (101.75, 61.75, 40) mm Flared (object:9): 1 solid, volume 263050.262 mm^3, area 26579.802 mm^2, bounds (-3.5, -3.5, 0) to (103.5, 63.5, 40) mm OnTop (object:10): 1 solid, volume 263050.262 mm^3, area 26579.802 mm^2, bounds (-3.5, -3.5, 0) to (103.5, 63.5, 40) mm OnBottom (object:11): 1 solid, volume 218256.066 mm^3, area 23215.960 mm^2, bounds (0, 0, 0) to (100, 60, 40) mm Result: valid " contains: "OnBottom (object:11): 1 solid, volume 218256.066 mm^3"
+DraftCliTests.cpp:72  CHECK_THAT( result.out, EndsWith("Result: valid\n") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-87b8a5c4-6f67-40fb-846b-b87871a0ab9f\drafts.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 8 objects regenerated geometry ok, 5 result bodies Result bodies (5): Tapered (object:7): 1 solid, volume 218256.066 mm^3, area 23215.960 mm^2, bounds (0, 0, 0) to (100, 60, 40) mm TaperedMid (object:8): 1 solid, volume 240163.291 mm^3, area 24873.388 mm^2, bounds (-1.75, -1.75, 0) to (101.75, 61.75, 40) mm Flared (object:9): 1 solid, volume 263050.262 mm^3, area 26579.802 mm^2, bounds (-3.5, -3.5, 0) to (103.5, 63.5, 40) mm OnTop (object:10): 1 solid, volume 263050.262 mm^3, area 26579.802 mm^2, bounds (-3.5, -3.5, 0) to (103.5, 63.5, 40) mm OnBottom (object:11): 1 solid, volume 218256.066 mm^3, area 23215.960 mm^2, bounds (0, 0, 0) to (100, 60, 40) mm Result: valid " ends with: "Result: valid "
+
+== DraftCli_ValidateReportsTheDrafts / a taper too steep for the block
+DraftCliTests.cpp:77  CHECK( result.exitCode == ExitCode::Failure )
+        => 1 == 1
+
+== DraftFeature_BlockFollowsItsAngleAndHeight
+DraftFeatureTests.cpp:114  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: h := 40.0; a := 5.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:115  CHECK( body.topology() == bodyOf(regenerator, source).topology() )
+        => {?} == {?} with message: h := 40.0; a := 5.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:118  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 218256.06619031730224378 and 218256.06619031724403612 are within 1e-10% of each other with message: h := 40.0; a := 5.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 50.00000000000000711 is within 0.000000001 of 50.0 with message: h := 40.0; a := 5.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.0 is within 0.000000001 of 30.0 with message: h := 40.0; a := 5.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 19.34580354299583504 is within 0.000000001 of 19.34580354299583504 with message: h := 40.0; a := 5.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.00000000000000716 is within 0.0000001 of 0.0 with message: h := 40.0; a := 5.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.00000000000000355 is within 0.0000001 of 0.0 with message: h := 40.0; a := 5.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: h := 40.0; a := 5.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 100.00000000000001421 is within 0.0000001 of 100.0 with message: h := 40.0; a := 5.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 60.0 is within 0.0000001 of 60.0 with message: h := 40.0; a := 5.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 40.0 is within 0.0000001 of 40.0 with message: h := 40.0; a := 5.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 3874.76278056142655259 and 3874.76278056142518835 are within 1e-10% of each other with message: h := 40.0; a := 5.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 2268.6510404920700239 and 2268.65104049206911441 are within 1e-10% of each other with message: h := 40.0; a := 5.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:261  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::EndCap)), WithinRel(areas[4], kRel) )
+        => 4929.13241083970933687 and 4929.13241083970751788 are within 1e-10% of each other with message: h := 40.0; a := 5.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:262  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::StartCap)), WithinRel(areas[5], kRel) )
+        => 6000.0 and 6000.0 are within 1e-10% of each other with message: h := 40.0; a := 5.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:114  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: h := 40.0; a := 5.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:115  CHECK( body.topology() == bodyOf(regenerator, source).topology() )
+        => {?} == {?} with message: h := 40.0; a := 5.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:118  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 240163.29101323845679872 and 240163.29101323848590255 are within 1e-10% of each other with message: h := 40.0; a := 5.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 49.99999999999999289 is within 0.000000001 of 50.00000000000000711 with message: h := 40.0; a := 5.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.0 is within 0.000000001 of 30.0 with message: h := 40.0; a := 5.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 19.37828139712376085 is within 0.000000001 of 19.37828139712376085 with message: h := 40.0; a := 5.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -1.74977327051848874 is within 0.0000001 of -1.74977327051848008 with message: h := 40.0; a := 5.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -1.74977327051848164 is within 0.0000001 of -1.74977327051848008 with message: h := 40.0; a := 5.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: h := 40.0; a := 5.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 101.74977327051848874 is within 0.0000001 of 101.74977327051847453 with message: h := 40.0; a := 5.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 61.74977327051848164 is within 0.0000001 of 61.74977327051848164 with message: h := 40.0; a := 5.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 40.0 is within 0.0000001 of 40.0 with message: h := 40.0; a := 5.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 4015.27935017338950274 and 4015.27935017338950274 are within 1e-10% of each other with message: h := 40.0; a := 5.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 2409.1676101040334288 and 2409.16761010403388354 are within 1e-10% of each other with message: h := 40.0; a := 5.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:261  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::EndCap)), WithinRel(areas[4], kRel) )
+        => 5452.31937942697004473 and 5452.31937942697095423 are within 1e-10% of each other with message: h := 40.0; a := 5.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:262  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::StartCap)), WithinRel(areas[5], kRel) )
+        => 6572.1742725587946552 and 6572.17427255879829318 are within 1e-10% of each other with message: h := 40.0; a := 5.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:114  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: h := 40.0; a := 5.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:115  CHECK( body.topology() == bodyOf(regenerator, source).topology() )
+        => {?} == {?} with message: h := 40.0; a := 5.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:118  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 263050.26191559043945745 and 263050.26191559032304212 are within 1e-10% of each other with message: h := 40.0; a := 5.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 50.0 is within 0.000000001 of 50.0 with message: h := 40.0; a := 5.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 29.99999999999999645 is within 0.000000001 of 30.0 with message: h := 40.0; a := 5.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 20.5924556970426309 is within 0.000000001 of 20.59245569704263445 with message: h := 40.0; a := 5.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -3.49954654103697749 is within 0.0000001 of -3.49954654103696017 with message: h := 40.0; a := 5.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -3.49954654103697038 is within 0.0000001 of -3.49954654103696017 with message: h := 40.0; a := 5.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.00000000000000089 is within 0.0000001 of 0.0 with message: h := 40.0; a := 5.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 103.49954654103697749 is within 0.0000001 of 103.49954654103696328 with message: h := 40.0; a := 5.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 63.49954654103697038 is within 0.0000001 of 63.49954654103696328 with message: h := 40.0; a := 5.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 40.0 is within 0.0000001 of 40.0 with message: h := 40.0; a := 5.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 4155.79591978535336239 and 4155.79591978535427188 are within 1e-10% of each other with message: h := 40.0; a := 5.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 2549.68417971599774319 and 2549.68417971599819793 are within 1e-10% of each other with message: h := 40.0; a := 5.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:261  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::EndCap)), WithinRel(areas[4], kRel) )
+        => 7168.84219710336492426 and 7168.84219710336219578 are within 1e-10% of each other with message: h := 40.0; a := 5.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:262  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::StartCap)), WithinRel(areas[5], kRel) )
+        => 6000.00000000000090949 and 6000.0 are within 1e-10% of each other with message: h := 40.0; a := 5.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:114  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: h := 40.0; a := 5.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:115  CHECK( body.topology() == bodyOf(regenerator, source).topology() )
+        => {?} == {?} with message: h := 40.0; a := 5.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:118  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 263050.26191559038124979 and 263050.26191559038124979 are within 1e-10% of each other with message: h := 40.0; a := 5.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 50.0 is within 0.000000001 of 50.0 with message: h := 40.0; a := 5.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.0 is within 0.000000001 of 30.0 with message: h := 40.0; a := 5.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 19.40754430295736555 is within 0.000000001 of 19.40754430295736555 with message: h := 40.0; a := 5.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -3.49954654103696328 is within 0.0000001 of -3.49954654103696017 with message: h := 40.0; a := 5.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -3.49954654103696328 is within 0.0000001 of -3.49954654103696017 with message: h := 40.0; a := 5.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.00000000000000044 is within 0.0000001 of 0.0 with message: h := 40.0; a := 5.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 103.49954654103696328 is within 0.0000001 of 103.49954654103696328 with message: h := 40.0; a := 5.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 63.49954654103695617 is within 0.0000001 of 63.49954654103696328 with message: h := 40.0; a := 5.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 40.0 is within 0.0000001 of 40.0 with message: h := 40.0; a := 5.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 4155.79591978535336239 and 4155.79591978535427188 are within 1e-10% of each other with message: h := 40.0; a := 5.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 2549.68417971599728844 and 2549.68417971599819793 are within 1e-10% of each other with message: h := 40.0; a := 5.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 4155.79591978535518138 and 4155.79591978535427188 are within 1e-10% of each other with message: h := 40.0; a := 5.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 2549.68417971599819793 and 2549.68417971599819793 are within 1e-10% of each other with message: h := 40.0; a := 5.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:261  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::EndCap)), WithinRel(areas[4], kRel) )
+        => 6000.0 and 6000.00000000000090949 are within 1e-10% of each other with message: h := 40.0; a := 5.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:262  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::StartCap)), WithinRel(areas[5], kRel) )
+        => 7168.84219710336128628 and 7168.84219710336310527 are within 1e-10% of each other with message: h := 40.0; a := 5.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:114  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: h := 40.0; a := 5.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:115  CHECK( body.topology() == bodyOf(regenerator, source).topology() )
+        => {?} == {?} with message: h := 40.0; a := 5.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:118  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 218256.06619031727313995 and 218256.06619031724403612 are within 1e-10% of each other with message: h := 40.0; a := 5.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 50.0 is within 0.000000001 of 50.0 with message: h := 40.0; a := 5.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 29.99999999999999645 is within 0.000000001 of 30.0 with message: h := 40.0; a := 5.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 19.34580354299583504 is within 0.000000001 of 19.34580354299583504 with message: h := 40.0; a := 5.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.00000000000000894 is within 0.0000001 of 0.0 with message: h := 40.0; a := 5.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.00000000000000394 is within 0.0000001 of 0.0 with message: h := 40.0; a := 5.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: h := 40.0; a := 5.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 100.00000000000001421 is within 0.0000001 of 100.0 with message: h := 40.0; a := 5.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 60.00000000000000711 is within 0.0000001 of 60.0 with message: h := 40.0; a := 5.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 40.00000000000000711 is within 0.0000001 of 40.0 with message: h := 40.0; a := 5.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 3874.7627805614256431 and 3874.76278056142518835 are within 1e-10% of each other with message: h := 40.0; a := 5.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 2268.65104049206865966 and 2268.65104049206911441 are within 1e-10% of each other with message: h := 40.0; a := 5.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:261  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::EndCap)), WithinRel(areas[4], kRel) )
+        => 4929.13241083970751788 and 4929.13241083970751788 are within 1e-10% of each other with message: h := 40.0; a := 5.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:262  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::StartCap)), WithinRel(areas[5], kRel) )
+        => 6000.00000000000090949 and 6000.0 are within 1e-10% of each other with message: h := 40.0; a := 5.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:266  CHECK_THAT( volumeOf(regenerator, m.onBottom), WithinRel(volumeOf(regenerator, m.tapered), kRel) )
+        => 218256.06619031727313995 and 218256.06619031730224378 are within 1e-10% of each other with message: h := 40.0; a := 5.0; r := 20.0
+DraftFeatureTests.cpp:272  CHECK( resultFeatures(m.doc) == std::vector<ObjectId>{m.tapered, m.taperedMid, m.flared, m.onTop, m.onBottom} )
+        => { object:7, object:8, object:9, object:10, object:11 } == { object:7, object:8, object:9, object:10, object:11 }
+DraftFeatureTests.cpp:276  CHECK( std::ranges::find(deps, id) != deps.end() )
+        => {?} != {?}
+DraftFeatureTests.cpp:283  CHECK( std::ranges::find(steeper.regenerated, id) != steeper.regenerated.end() )
+        => {?} != {?}
+DraftFeatureTests.cpp:286  CHECK( std::ranges::find(steeper.regenerated, id) == steeper.regenerated.end() )
+        => {?} == {?}
+DraftFeatureTests.cpp:114  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: h := 40.0; a := 8.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:115  CHECK( body.topology() == bodyOf(regenerator, source).topology() )
+        => {?} == {?} with message: h := 40.0; a := 8.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:118  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 205707.02695352927548811 and 205707.02695352921728045 are within 1e-10% of each other with message: h := 40.0; a := 8.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 50.00000000000000711 is within 0.000000001 of 50.0 with message: h := 40.0; a := 8.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.0 is within 0.000000001 of 30.0 with message: h := 40.0; a := 8.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 18.91592642788500811 is within 0.000000001 of 18.91592642788501166 with message: h := 40.0; a := 8.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.00000000000000966 is within 0.0000001 of 0.0 with message: h := 40.0; a := 8.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.00000000000000711 is within 0.0000001 of 0.0 with message: h := 40.0; a := 8.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.00000000000000089 is within 0.0000001 of 0.0 with message: h := 40.0; a := 8.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 100.0 is within 0.0000001 of 100.0 with message: h := 40.0; a := 8.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 60.00000000000000711 is within 0.0000001 of 60.0 with message: h := 40.0; a := 8.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 40.0 is within 0.0000001 of 40.0 with message: h := 40.0; a := 8.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 3812.23507415886297167 and 3812.23507415886206218 are within 1e-10% of each other with message: h := 40.0; a := 8.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 2196.51095812907396976 and 2196.51095812907306026 are within 1e-10% of each other with message: h := 40.0; a := 8.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:261  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::EndCap)), WithinRel(areas[4], kRel) )
+        => 4327.48836360999757744 and 4327.48836360999666795 are within 1e-10% of each other with message: h := 40.0; a := 8.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:262  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::StartCap)), WithinRel(areas[5], kRel) )
+        => 6000.00000000000090949 and 6000.0 are within 1e-10% of each other with message: h := 40.0; a := 8.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:114  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: h := 40.0; a := 8.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:115  CHECK( body.topology() == bodyOf(regenerator, source).topology() )
+        => {?} == {?} with message: h := 40.0; a := 8.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:118  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 240421.37015933540533297 and 240421.37015933537622914 are within 1e-10% of each other with message: h := 40.0; a := 8.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 50.00000000000000711 is within 0.000000001 of 50.0 with message: h := 40.0; a := 8.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.0 is within 0.000000001 of 30.0 with message: h := 40.0; a := 8.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 19.00235009170308231 is within 0.000000001 of 19.00235009170307521 with message: h := 40.0; a := 8.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -2.81081669404784407 is within 0.0000001 of -2.81081669404782897 with message: h := 40.0; a := 8.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -2.81081669404782986 is within 0.0000001 of -2.81081669404782897 with message: h := 40.0; a := 8.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.00000000000000001 is within 0.0000001 of 0.0 with message: h := 40.0; a := 8.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 102.81081669404782986 is within 0.0000001 of 102.81081669404782986 with message: h := 40.0; a := 8.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 62.81081669404782275 is within 0.0000001 of 62.81081669404782986 with message: h := 40.0; a := 8.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 40.00000000000000711 is within 0.0000001 of 40.0 with message: h := 40.0; a := 8.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 4039.31029007447386903 and 4039.31029007447205004 are within 1e-10% of each other with message: h := 40.0; a := 8.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 2423.58617404468350287 and 2423.58617404468350287 are within 1e-10% of each other with message: h := 40.0; a := 8.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 4039.31029007447477852 and 4039.31029007447205004 are within 1e-10% of each other with message: h := 40.0; a := 8.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 2423.58617404468395762 and 2423.58617404468350287 are within 1e-10% of each other with message: h := 40.0; a := 8.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:261  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::EndCap)), WithinRel(areas[4], kRel) )
+        => 5132.14141985484639008 and 5132.14141985484639008 are within 1e-10% of each other with message: h := 40.0; a := 8.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:262  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::StartCap)), WithinRel(areas[5], kRel) )
+        => 6931.06410404545567872 and 6931.0641040454574977 are within 1e-10% of each other with message: h := 40.0; a := 8.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:114  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: h := 40.0; a := 8.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:115  CHECK( body.topology() == bodyOf(regenerator, source).topology() )
+        => {?} == {?} with message: h := 40.0; a := 8.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:118  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 263050.26191559043945745 and 263050.26191559032304212 are within 1e-10% of each other with message: h := 40.0; a := 8.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 50.0 is within 0.000000001 of 50.0 with message: h := 40.0; a := 8.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 29.99999999999999645 is within 0.000000001 of 30.0 with message: h := 40.0; a := 8.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 20.5924556970426309 is within 0.000000001 of 20.59245569704263445 with message: h := 40.0; a := 8.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -3.49954654103697749 is within 0.0000001 of -3.49954654103696017 with message: h := 40.0; a := 8.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -3.49954654103697038 is within 0.0000001 of -3.49954654103696017 with message: h := 40.0; a := 8.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.00000000000000089 is within 0.0000001 of 0.0 with message: h := 40.0; a := 8.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 103.49954654103697749 is within 0.0000001 of 103.49954654103696328 with message: h := 40.0; a := 8.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 63.49954654103697038 is within 0.0000001 of 63.49954654103696328 with message: h := 40.0; a := 8.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 40.0 is within 0.0000001 of 40.0 with message: h := 40.0; a := 8.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 4155.79591978535336239 and 4155.79591978535427188 are within 1e-10% of each other with message: h := 40.0; a := 8.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 2549.68417971599774319 and 2549.68417971599819793 are within 1e-10% of each other with message: h := 40.0; a := 8.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:261  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::EndCap)), WithinRel(areas[4], kRel) )
+        => 7168.84219710336492426 and 7168.84219710336219578 are within 1e-10% of each other with message: h := 40.0; a := 8.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:262  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::StartCap)), WithinRel(areas[5], kRel) )
+        => 6000.00000000000090949 and 6000.0 are within 1e-10% of each other with message: h := 40.0; a := 8.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:114  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: h := 40.0; a := 8.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:115  CHECK( body.topology() == bodyOf(regenerator, source).topology() )
+        => {?} == {?} with message: h := 40.0; a := 8.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:118  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 277663.93432115373434499 and 277663.93432115367613733 are within 1e-10% of each other with message: h := 40.0; a := 8.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 49.99999999999998579 is within 0.000000001 of 50.0 with message: h := 40.0; a := 8.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 29.99999999999999645 is within 0.000000001 of 30.0 with message: h := 40.0; a := 8.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 19.07546089882679397 is within 0.000000001 of 19.07546089882679397 with message: h := 40.0; a := 8.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -5.62163338809566682 is within 0.0000001 of -5.62163338809565793 with message: h := 40.0; a := 8.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -5.6216333880956606 is within 0.0000001 of -5.62163338809565793 with message: h := 40.0; a := 8.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.00000000000000089 is within 0.0000001 of 0.0 with message: h := 40.0; a := 8.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 105.62163338809567392 is within 0.0000001 of 105.62163338809565971 with message: h := 40.0; a := 8.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 65.62163338809567392 is within 0.0000001 of 65.62163338809565971 with message: h := 40.0; a := 8.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 40.0 is within 0.0000001 of 40.0 with message: h := 40.0; a := 8.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 4266.38550599008431163 and 4266.38550599008249264 are within 1e-10% of each other with message: h := 40.0; a := 8.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 2650.66138996029349073 and 2650.66138996029394548 are within 1e-10% of each other with message: h := 40.0; a := 8.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 4266.38550599008340214 and 4266.38550599008249264 are within 1e-10% of each other with message: h := 40.0; a := 8.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 2650.66138996029530972 and 2650.66138996029394548 are within 1e-10% of each other with message: h := 40.0; a := 8.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:261  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::EndCap)), WithinRel(areas[4], kRel) )
+        => 6000.0 and 6000.00000000000090949 are within 1e-10% of each other with message: h := 40.0; a := 8.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:262  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::StartCap)), WithinRel(areas[5], kRel) )
+        => 7925.33373199121524522 and 7925.33373199121888319 are within 1e-10% of each other with message: h := 40.0; a := 8.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:114  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: h := 40.0; a := 8.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:115  CHECK( body.topology() == bodyOf(regenerator, source).topology() )
+        => {?} == {?} with message: h := 40.0; a := 8.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:118  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 218256.06619031727313995 and 218256.06619031724403612 are within 1e-10% of each other with message: h := 40.0; a := 8.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 50.0 is within 0.000000001 of 50.0 with message: h := 40.0; a := 8.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 29.99999999999999645 is within 0.000000001 of 30.0 with message: h := 40.0; a := 8.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 19.34580354299583504 is within 0.000000001 of 19.34580354299583504 with message: h := 40.0; a := 8.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.00000000000000894 is within 0.0000001 of 0.0 with message: h := 40.0; a := 8.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.00000000000000394 is within 0.0000001 of 0.0 with message: h := 40.0; a := 8.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: h := 40.0; a := 8.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 100.00000000000001421 is within 0.0000001 of 100.0 with message: h := 40.0; a := 8.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 60.00000000000000711 is within 0.0000001 of 60.0 with message: h := 40.0; a := 8.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 40.00000000000000711 is within 0.0000001 of 40.0 with message: h := 40.0; a := 8.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 3874.7627805614256431 and 3874.76278056142518835 are within 1e-10% of each other with message: h := 40.0; a := 8.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 2268.65104049206865966 and 2268.65104049206911441 are within 1e-10% of each other with message: h := 40.0; a := 8.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:261  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::EndCap)), WithinRel(areas[4], kRel) )
+        => 4929.13241083970751788 and 4929.13241083970751788 are within 1e-10% of each other with message: h := 40.0; a := 8.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:262  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::StartCap)), WithinRel(areas[5], kRel) )
+        => 6000.00000000000090949 and 6000.0 are within 1e-10% of each other with message: h := 40.0; a := 8.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:114  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: h := 55.0; a := 8.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:115  CHECK( body.topology() == bodyOf(regenerator, source).topology() )
+        => {?} == {?} with message: h := 55.0; a := 8.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:118  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 266359.82727025635540485 and 266359.82727025629719719 are within 1e-10% of each other with message: h := 55.0; a := 8.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 50.0 is within 0.000000001 of 50.0 with message: h := 55.0; a := 8.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.00000000000000355 is within 0.000000001 of 30.0 with message: h := 55.0; a := 8.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 25.38524432347058024 is within 0.000000001 of 25.38524432347057669 with message: h := 55.0; a := 8.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.00000000000000966 is within 0.0000001 of 0.0 with message: h := 55.0; a := 8.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.00000000000000711 is within 0.0000001 of 0.0 with message: h := 55.0; a := 8.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.00000000000000089 is within 0.0000001 of 0.0 with message: h := 55.0; a := 8.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 100.0 is within 0.0000001 of 100.0 with message: h := 55.0; a := 8.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 60.00000000000000711 is within 0.0000001 of 60.0 with message: h := 55.0; a := 8.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 55.0 is within 0.0000001 of 55.0 with message: h := 55.0; a := 8.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 5124.73756876194966026 and 5124.73756876194875076 are within 1e-10% of each other with message: h := 55.0; a := 8.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 2903.11690922099069212 and 2903.11690922098932788 are within 1e-10% of each other with message: h := 55.0; a := 8.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:261  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::EndCap)), WithinRel(areas[4], kRel) )
+        => 3765.47719648593465536 and 3765.47719648593420061 are within 1e-10% of each other with message: h := 55.0; a := 8.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:262  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::StartCap)), WithinRel(areas[5], kRel) )
+        => 6000.00000000000090949 and 6000.0 are within 1e-10% of each other with message: h := 55.0; a := 8.0; r := 20.0; k := 0
+DraftFeatureTests.cpp:114  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: h := 55.0; a := 8.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:115  CHECK( body.topology() == bodyOf(regenerator, source).topology() )
+        => {?} == {?} with message: h := 55.0; a := 8.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:118  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 312788.43524779606377706 and 312788.4352477960055694 are within 1e-10% of each other with message: h := 55.0; a := 8.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 49.99999999999999289 is within 0.000000001 of 50.0 with message: h := 55.0; a := 8.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.00000000000000355 is within 0.000000001 of 30.00000000000000355 with message: h := 55.0; a := 8.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 25.5590654865473148 is within 0.000000001 of 25.55906548654731125 with message: h := 55.0; a := 8.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -2.81081669404784407 is within 0.0000001 of -2.81081669404782897 with message: h := 55.0; a := 8.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -2.81081669404782986 is within 0.0000001 of -2.81081669404782897 with message: h := 55.0; a := 8.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.00000000000000001 is within 0.0000001 of 0.0 with message: h := 55.0; a := 8.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 102.81081669404782986 is within 0.0000001 of 102.81081669404782986 with message: h := 55.0; a := 8.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 62.81081669404782275 is within 0.0000001 of 62.81081669404782986 with message: h := 55.0; a := 8.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 55.0 is within 0.0000001 of 55.0 with message: h := 55.0; a := 8.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 5436.96599064591464412 and 5436.96599064591282513 are within 1e-10% of each other with message: h := 55.0; a := 8.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 3215.34533110495385699 and 3215.3453311049529475 are within 1e-10% of each other with message: h := 55.0; a := 8.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:261  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::EndCap)), WithinRel(areas[4], kRel) )
+        => 4522.7261098055560069 and 4522.7261098055569164 are within 1e-10% of each other with message: h := 55.0; a := 8.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:262  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::StartCap)), WithinRel(areas[5], kRel) )
+        => 6931.06410404545567872 and 6931.0641040454574977 are within 1e-10% of each other with message: h := 55.0; a := 8.0; r := 20.0; k := 1
+DraftFeatureTests.cpp:114  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: h := 55.0; a := 8.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:115  CHECK( body.topology() == bodyOf(regenerator, source).topology() )
+        => {?} == {?} with message: h := 55.0; a := 8.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:118  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 374042.48454201908316463 and 374042.48454201890854165 are within 1e-10% of each other with message: h := 55.0; a := 8.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 50.0 is within 0.000000001 of 50.0 with message: h := 55.0; a := 8.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.00000000000000355 is within 0.000000001 of 30.0 with message: h := 55.0; a := 8.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 28.60015616105285119 is within 0.000000001 of 28.60015616105285474 with message: h := 55.0; a := 8.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -4.81187649392583694 is within 0.0000001 of -4.81187649392582006 with message: h := 55.0; a := 8.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -4.81187649392583072 is within 0.0000001 of -4.81187649392582006 with message: h := 55.0; a := 8.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.00000000000000089 is within 0.0000001 of 0.0 with message: h := 55.0; a := 8.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 104.81187649392583694 is within 0.0000001 of 104.81187649392582273 with message: h := 55.0; a := 8.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 64.81187649392583694 is within 0.0000001 of 64.81187649392582273 with message: h := 55.0; a := 8.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 55.0 is within 0.0000001 of 55.0 with message: h := 55.0; a := 8.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 5786.67324591103079001 and 5786.67324591103079001 are within 1e-10% of each other with message: h := 55.0; a := 8.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 3578.26960331566669993 and 3578.26960331566624518 are within 1e-10% of each other with message: h := 55.0; a := 8.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:261  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::EndCap)), WithinRel(areas[4], kRel) )
+        => 7632.41709962744971563 and 7632.41709962744607765 are within 1e-10% of each other with message: h := 55.0; a := 8.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:262  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::StartCap)), WithinRel(areas[5], kRel) )
+        => 6000.00000000000090949 and 6000.0 are within 1e-10% of each other with message: h := 55.0; a := 8.0; r := 20.0; k := 2
+DraftFeatureTests.cpp:114  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: h := 55.0; a := 8.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:115  CHECK( body.topology() == bodyOf(regenerator, source).topology() )
+        => {?} == {?} with message: h := 55.0; a := 8.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:118  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 402403.35526217130245641 and 402403.35526217118604109 are within 1e-10% of each other with message: h := 55.0; a := 8.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 50.0 is within 0.000000001 of 50.0 with message: h := 55.0; a := 8.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.00000000000000355 is within 0.000000001 of 30.0 with message: h := 55.0; a := 8.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 25.80076039973733515 is within 0.000000001 of 25.80076039973732804 with message: h := 55.0; a := 8.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -7.72974590863153743 is within 0.0000001 of -7.72974590863153033 with message: h := 55.0; a := 8.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -7.72974590863154276 is within 0.0000001 of -7.72974590863153033 with message: h := 55.0; a := 8.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: h := 55.0; a := 8.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 107.72974590863154276 is within 0.0000001 of 107.72974590863152855 with message: h := 55.0; a := 8.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 67.72974590863154276 is within 0.0000001 of 67.72974590863152855 with message: h := 55.0; a := 8.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 55.0 is within 0.0000001 of 55.0 with message: h := 55.0; a := 8.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 5983.36572894285200164 and 5983.36572894284927315 are within 1e-10% of each other with message: h := 55.0; a := 8.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 3761.74506940189166926 and 3761.74506940188985027 are within 1e-10% of each other with message: h := 55.0; a := 8.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:261  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::EndCap)), WithinRel(areas[4], kRel) )
+        => 6000.00000000000090949 and 5999.99999999999909051 are within 1e-10% of each other with message: h := 55.0; a := 8.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:262  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::StartCap)), WithinRel(areas[5], kRel) )
+        => 8712.51457801011383708 and 8712.51457801011201809 are within 1e-10% of each other with message: h := 55.0; a := 8.0; r := 20.0; k := 3
+DraftFeatureTests.cpp:114  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: h := 55.0; a := 8.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:115  CHECK( body.topology() == bodyOf(regenerator, source).topology() )
+        => {?} == {?} with message: h := 55.0; a := 8.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:118  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 289353.45824892452219501 and 289353.45824892446398735 are within 1e-10% of each other with message: h := 55.0; a := 8.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 50.0 is within 0.000000001 of 50.0 with message: h := 55.0; a := 8.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.0 is within 0.000000001 of 30.0 with message: h := 55.0; a := 8.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 26.23922042371061636 is within 0.000000001 of 26.23922042371061636 with message: h := 55.0; a := 8.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.00000000000000894 is within 0.0000001 of 0.0 with message: h := 55.0; a := 8.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.00000000000000394 is within 0.0000001 of 0.0 with message: h := 55.0; a := 8.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: h := 55.0; a := 8.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 100.00000000000001421 is within 0.0000001 of 100.0 with message: h := 55.0; a := 8.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 60.00000000000000711 is within 0.0000001 of 60.0 with message: h := 55.0; a := 8.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 55.00000000000000711 is within 0.0000001 of 55.0 with message: h := 55.0; a := 8.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 5255.34496706579102465 and 5255.34496706579102465 are within 1e-10% of each other with message: h := 55.0; a := 8.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 3046.94132447042693457 and 3046.94132447042647982 are within 1e-10% of each other with message: h := 55.0; a := 8.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:261  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::EndCap)), WithinRel(areas[4], kRel) )
+        => 4552.81614351492044079 and 4552.81614351492135029 are within 1e-10% of each other with message: h := 55.0; a := 8.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:262  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::StartCap)), WithinRel(areas[5], kRel) )
+        => 6000.00000000000090949 and 6000.0 are within 1e-10% of each other with message: h := 55.0; a := 8.0; r := 20.0; k := 4
+DraftFeatureTests.cpp:114  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: h := 55.0; a := -2.5; r := 35.0; k := 0
+DraftFeatureTests.cpp:115  CHECK( body.topology() == bodyOf(regenerator, source).topology() )
+        => {?} == {?} with message: h := 55.0; a := -2.5; r := 35.0; k := 0
+DraftFeatureTests.cpp:118  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 351554.77235644723987207 and 351554.77235644718166441 are within 1e-10% of each other with message: h := 55.0; a := -2.5; r := 35.0; k := 0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 49.99999999999999289 is within 0.000000001 of 50.0 with message: h := 55.0; a := -2.5; r := 35.0; k := 0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.00000000000000355 is within 0.000000001 of 30.00000000000000355 with message: h := 55.0; a := -2.5; r := 35.0; k := 0
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 28.0675462561496154 is within 0.000000001 of 28.06754625614962251 with message: h := 55.0; a := -2.5; r := 35.0; k := 0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -2.40135185996817357 is within 0.0000001 of -2.40135185996816336 with message: h := 55.0; a := -2.5; r := 35.0; k := 0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -2.40135185996816825 is within 0.0000001 of -2.40135185996816336 with message: h := 55.0; a := -2.5; r := 35.0; k := 0
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: h := 55.0; a := -2.5; r := 35.0; k := 0
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 102.40135185996817313 is within 0.0000001 of 102.40135185996815892 with message: h := 55.0; a := -2.5; r := 35.0; k := 0
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 62.40135185996817313 is within 0.0000001 of 62.40135185996816602 with message: h := 55.0; a := -2.5; r := 35.0; k := 0
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 55.00000000000000711 is within 0.0000001 of 55.0 with message: h := 55.0; a := -2.5; r := 35.0; k := 0
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 5637.43994597239816358 and 5637.43994597239725408 are within 1e-10% of each other with message: h := 55.0; a := -2.5; r := 35.0; k := 0
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 3435.3440386130960178 and 3435.34403861309465356 are within 1e-10% of each other with message: h := 55.0; a := -2.5; r := 35.0; k := 0
+DraftFeatureTests.cpp:261  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::EndCap)), WithinRel(areas[4], kRel) )
+        => 6791.49855821130313416 and 6791.49855821130222466 are within 1e-10% of each other with message: h := 55.0; a := -2.5; r := 35.0; k := 0
+DraftFeatureTests.cpp:262  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::StartCap)), WithinRel(areas[5], kRel) )
+        => 6000.0 and 6000.0 are within 1e-10% of each other with message: h := 55.0; a := -2.5; r := 35.0; k := 0
+DraftFeatureTests.cpp:114  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: h := 55.0; a := -2.5; r := 35.0; k := 1
+DraftFeatureTests.cpp:115  CHECK( body.topology() == bodyOf(regenerator, source).topology() )
+        => {?} == {?} with message: h := 55.0; a := -2.5; r := 35.0; k := 1
+DraftFeatureTests.cpp:118  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 324366.06472271209349856 and 324366.0647227120352909 are within 1e-10% of each other with message: h := 55.0; a := -2.5; r := 35.0; k := 1
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 50.00000000000000711 is within 0.000000001 of 50.0 with message: h := 55.0; a := -2.5; r := 35.0; k := 1
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.0 is within 0.000000001 of 30.0 with message: h := 55.0; a := -2.5; r := 35.0; k := 1
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 28.0923038380847423 is within 0.000000001 of 28.09230383808473519 with message: h := 55.0; a := -2.5; r := 35.0; k := 1
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.87321885817025446 is within 0.0000001 of -0.87321885817024136 with message: h := 55.0; a := -2.5; r := 35.0; k := 1
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.87321885817024492 is within 0.0000001 of -0.87321885817024136 with message: h := 55.0; a := -2.5; r := 35.0; k := 1
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.0 is within 0.0000001 of 0.0 with message: h := 55.0; a := -2.5; r := 35.0; k := 1
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 100.87321885817026157 is within 0.0000001 of 100.87321885817024736 with message: h := 55.0; a := -2.5; r := 35.0; k := 1
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 60.87321885817024736 is within 0.0000001 of 60.87321885817024025 with message: h := 55.0; a := -2.5; r := 35.0; k := 1
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 55.0 is within 0.0000001 of 55.0 with message: h := 55.0; a := -2.5; r := 35.0; k := 1
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 5469.1851745144049346 and 5469.18517451440311561 are within 1e-10% of each other with message: h := 55.0; a := -2.5; r := 35.0; k := 1
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 3267.08926715510096983 and 3267.08926715510006034 are within 1e-10% of each other with message: h := 55.0; a := -2.5; r := 35.0; k := 1
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 3267.08926715510006034 and 3267.08926715510006034 are within 1e-10% of each other with message: h := 55.0; a := -2.5; r := 35.0; k := 1
+DraftFeatureTests.cpp:261  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::EndCap)), WithinRel(areas[4], kRel) )
+        => 6282.48007931153370009 and 6282.48007931153370009 are within 1e-10% of each other with message: h := 55.0; a := -2.5; r := 35.0; k := 1
+DraftFeatureTests.cpp:262  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::StartCap)), WithinRel(areas[5], kRel) )
+        => 5520.33820130940239324 and 5520.33820130940057425 are within 1e-10% of each other with message: h := 55.0; a := -2.5; r := 35.0; k := 1
+DraftFeatureTests.cpp:114  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: h := 55.0; a := -2.5; r := 35.0; k := 2
+DraftFeatureTests.cpp:115  CHECK( body.topology() == bodyOf(regenerator, source).topology() )
+        => {?} == {?} with message: h := 55.0; a := -2.5; r := 35.0; k := 2
+DraftFeatureTests.cpp:118  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 374042.48454201908316463 and 374042.48454201890854165 are within 1e-10% of each other with message: h := 55.0; a := -2.5; r := 35.0; k := 2
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 50.0 is within 0.000000001 of 50.0 with message: h := 55.0; a := -2.5; r := 35.0; k := 2
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.00000000000000355 is within 0.000000001 of 30.0 with message: h := 55.0; a := -2.5; r := 35.0; k := 2
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 28.60015616105285119 is within 0.000000001 of 28.60015616105285474 with message: h := 55.0; a := -2.5; r := 35.0; k := 2
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -4.81187649392583694 is within 0.0000001 of -4.81187649392582006 with message: h := 55.0; a := -2.5; r := 35.0; k := 2
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -4.81187649392583072 is within 0.0000001 of -4.81187649392582006 with message: h := 55.0; a := -2.5; r := 35.0; k := 2
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.00000000000000089 is within 0.0000001 of 0.0 with message: h := 55.0; a := -2.5; r := 35.0; k := 2
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 104.81187649392583694 is within 0.0000001 of 104.81187649392582273 with message: h := 55.0; a := -2.5; r := 35.0; k := 2
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 64.81187649392583694 is within 0.0000001 of 64.81187649392582273 with message: h := 55.0; a := -2.5; r := 35.0; k := 2
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 55.0 is within 0.0000001 of 55.0 with message: h := 55.0; a := -2.5; r := 35.0; k := 2
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 5786.67324591103079001 and 5786.67324591103079001 are within 1e-10% of each other with message: h := 55.0; a := -2.5; r := 35.0; k := 2
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 3578.26960331566669993 and 3578.26960331566624518 are within 1e-10% of each other with message: h := 55.0; a := -2.5; r := 35.0; k := 2
+DraftFeatureTests.cpp:261  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::EndCap)), WithinRel(areas[4], kRel) )
+        => 7632.41709962744971563 and 7632.41709962744607765 are within 1e-10% of each other with message: h := 55.0; a := -2.5; r := 35.0; k := 2
+DraftFeatureTests.cpp:262  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::StartCap)), WithinRel(areas[5], kRel) )
+        => 6000.00000000000090949 and 6000.0 are within 1e-10% of each other with message: h := 55.0; a := -2.5; r := 35.0; k := 2
+DraftFeatureTests.cpp:114  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: h := 55.0; a := -2.5; r := 35.0; k := 3
+DraftFeatureTests.cpp:115  CHECK( body.topology() == bodyOf(regenerator, source).topology() )
+        => {?} == {?} with message: h := 55.0; a := -2.5; r := 35.0; k := 3
+DraftFeatureTests.cpp:118  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 309290.97962100757285953 and 309290.9796210074564442 are within 1e-10% of each other with message: h := 55.0; a := -2.5; r := 35.0; k := 3
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 49.99999999999999289 is within 0.000000001 of 50.0 with message: h := 55.0; a := -2.5; r := 35.0; k := 3
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 29.99999999999999645 is within 0.000000001 of 30.00000000000000355 with message: h := 55.0; a := -2.5; r := 35.0; k := 3
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 28.10750076003725795 is within 0.000000001 of 28.10750076003726505 with message: h := 55.0; a := -2.5; r := 35.0; k := 3
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.00000000000000711 is within 0.0000001 of 0.0 with message: h := 55.0; a := -2.5; r := 35.0; k := 3
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.00000000000000755 is within 0.0000001 of 0.0 with message: h := 55.0; a := -2.5; r := 35.0; k := 3
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.0 is within 0.0000001 of 0.0 with message: h := 55.0; a := -2.5; r := 35.0; k := 3
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 100.0 is within 0.0000001 of 100.0 with message: h := 55.0; a := -2.5; r := 35.0; k := 3
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 60.00000000000000711 is within 0.0000001 of 60.0 with message: h := 55.0; a := -2.5; r := 35.0; k := 3
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 55.00000000000000711 is within 0.0000001 of 55.0 with message: h := 55.0; a := -2.5; r := 35.0; k := 3
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 5373.03959082412256976 and 5373.03959082412075077 are within 1e-10% of each other with message: h := 55.0; a := -2.5; r := 35.0; k := 3
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 3170.94368346481815024 and 3170.94368346481724075 are within 1e-10% of each other with message: h := 55.0; a := -2.5; r := 35.0; k := 3
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 3170.94368346481769549 and 3170.94368346481724075 are within 1e-10% of each other with message: h := 55.0; a := -2.5; r := 35.0; k := 3
+DraftFeatureTests.cpp:261  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::EndCap)), WithinRel(areas[4], kRel) )
+        => 6000.00000000000090949 and 6000.0 are within 1e-10% of each other with message: h := 55.0; a := -2.5; r := 35.0; k := 3
+DraftFeatureTests.cpp:262  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::StartCap)), WithinRel(areas[5], kRel) )
+        => 5254.63336783167869726 and 5254.63336783167778776 are within 1e-10% of each other with message: h := 55.0; a := -2.5; r := 35.0; k := 3
+DraftFeatureTests.cpp:114  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: h := 55.0; a := -2.5; r := 35.0; k := 4
+DraftFeatureTests.cpp:115  CHECK( body.topology() == bodyOf(regenerator, source).topology() )
+        => {?} == {?} with message: h := 55.0; a := -2.5; r := 35.0; k := 4
+DraftFeatureTests.cpp:118  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 289353.45824892452219501 and 289353.45824892446398735 are within 1e-10% of each other with message: h := 55.0; a := -2.5; r := 35.0; k := 4
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 50.0 is within 0.000000001 of 50.0 with message: h := 55.0; a := -2.5; r := 35.0; k := 4
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.0 is within 0.000000001 of 30.0 with message: h := 55.0; a := -2.5; r := 35.0; k := 4
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 26.23922042371061636 is within 0.000000001 of 26.23922042371061636 with message: h := 55.0; a := -2.5; r := 35.0; k := 4
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.00000000000000894 is within 0.0000001 of 0.0 with message: h := 55.0; a := -2.5; r := 35.0; k := 4
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.00000000000000394 is within 0.0000001 of 0.0 with message: h := 55.0; a := -2.5; r := 35.0; k := 4
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: h := 55.0; a := -2.5; r := 35.0; k := 4
+DraftFeatureTests.cpp:79  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 100.00000000000001421 is within 0.0000001 of 100.0 with message: h := 55.0; a := -2.5; r := 35.0; k := 4
+DraftFeatureTests.cpp:80  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 60.00000000000000711 is within 0.0000001 of 60.0 with message: h := 55.0; a := -2.5; r := 35.0; k := 4
+DraftFeatureTests.cpp:81  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 55.00000000000000711 is within 0.0000001 of 55.0 with message: h := 55.0; a := -2.5; r := 35.0; k := 4
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 5255.34496706579102465 and 5255.34496706579102465 are within 1e-10% of each other with message: h := 55.0; a := -2.5; r := 35.0; k := 4
+DraftFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel(areas[i], kRel) )
+        => 3046.94132447042693457 and 3046.94132447042647982 are within 1e-10% of each other with message: h := 55.0; a := -2.5; r := 35.0; k := 4
+DraftFeatureTests.cpp:261  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::EndCap)), WithinRel(areas[4], kRel) )
+        => 4552.81614351492044079 and 4552.81614351492135029 are within 1e-10% of each other with message: h := 55.0; a := -2.5; r := 35.0; k := 4
+DraftFeatureTests.cpp:262  CHECK_THAT( namedArea(regenerator, id, nameOf(m.block, FaceRole::StartCap)), WithinRel(areas[5], kRel) )
+        => 6000.00000000000090949 and 6000.0 are within 1e-10% of each other with message: h := 55.0; a := -2.5; r := 35.0; k := 4
+DraftFeatureTests.cpp:304  CHECK( volumes(regenerator, m.doc) == first )
+        => { 4687486350046265344 (0x410d4c0000000000), 4686739234169473537 (0x410aa480878eca01), 4687491960682758063 (0x410d511a53febfaf), 4688262781553842621 (0x41100e290c3399bd), 4688262781553842620 (0x41100e290c3399bc), 4686739234169473536 (0x410aa480878eca00) } == { 4687486350046265344 (0x410d4c0000000000), 4686739234169473537 (0x410aa480878eca01), 4687491960682758063 (0x410d511a53febfaf), 4688262781553842621 (0x41100e290c3399bd), 4688262781553842620 (0x41100e290c3399bc), 4686739234169473536 (0x410aa480878eca00) }
+DraftFeatureTests.cpp:308  CHECK( volumes(again, copy) == first )
+        => { 4687486350046265344 (0x410d4c0000000000), 4686739234169473537 (0x410aa480878eca01), 4687491960682758063 (0x410d511a53febfaf), 4688262781553842621 (0x41100e290c3399bd), 4688262781553842620 (0x41100e290c3399bc), 4686739234169473536 (0x410aa480878eca00) } == { 4687486350046265344 (0x410d4c0000000000), 4686739234169473537 (0x410aa480878eca01), 4687491960682758063 (0x410d511a53febfaf), 4688262781553842621 (0x41100e290c3399bd), 4688262781553842620 (0x41100e290c3399bc), 4686739234169473536 (0x410aa480878eca00) }
+
+== DraftFeature_DefinitionsAreValidated
+DraftFeatureTests.cpp:188  CHECK( created.error().code == ErrorCode::InvalidArgument )
+        => 0 == 0
+DraftFeatureTests.cpp:193  CHECK( message({.faces = {side}, .angle = 3_deg}) == "a draft needs a target feature" )
+        => "a draft needs a target feature" == "a draft needs a target feature"
+DraftFeatureTests.cpp:194  CHECK( message({.target = target, .angle = 3_deg}) == "a draft needs one or more faces" )
+        => "a draft needs one or more faces" == "a draft needs one or more faces"
+DraftFeatureTests.cpp:195  CHECK( message({.target = target, .faces = {side, side}, .angle = 3_deg}) == "face 2 repeats an earlier face" )
+        => "face 2 repeats an earlier face" == "face 2 repeats an earlier face"
+DraftFeatureTests.cpp:196  CHECK( message({.target = target, .faces = {nameOf(ObjectId::fromValue(1), FaceRole::Side)}, .angle = 3_deg}) == "face 1: a side face is named by a valid profile entity" )
+        => "face 1: a side face is named by a valid profile entity" == "face 1: a side face is named by a valid profile entity"
+DraftFeatureTests.cpp:198  CHECK( message({.target = target, .faces = {side}, .neutralPlane = {.object = ObjectId{}}, .angle = 3_deg}) == "the neutral plane: a plane reference must name a valid object" )
+        => "the neutral plane: a plane reference must name a valid object" == "the neutral plane: a plane reference must name a valid object"
+DraftFeatureTests.cpp:200  CHECK( message({.target = target, .faces = {side}, .angle = 90_deg}) == "the draft angle must be in (-90, 90) deg, got 90 deg" )
+        => "the draft angle must be in (-90, 90) deg, got 90 deg" == "the draft angle must be in (-90, 90) deg, got 90 deg"
+DraftFeatureTests.cpp:202  CHECK( message({.target = target, .faces = {side}, .angle = Angle::fromSi(std::numeric_limits<double>::infinity())}) == "the draft angle must be in (-90, 90) deg, got inf deg" )
+        => "the draft angle must be in (-90, 90) deg, got inf deg" == "the draft angle must be in (-90, 90) deg, got inf deg"
+DraftFeatureTests.cpp:206  CHECK( message({.target = target, .faces = {side}, .angleParameter = ParameterId{}}) == "the angle parameter ID must be valid" )
+        => "the angle parameter ID must be valid" == "the angle parameter ID must be valid"
+DraftFeatureTests.cpp:226  CHECK( (*draft)->dependencies() == std::vector<ObjectId>{ObjectId::fromValue(7), ObjectId::fromValue(9), ObjectId::fromValue(8), ObjectId::fromValue(1), ObjectId::fromValue(4), ObjectId::fromValue(6)} )
+        => { object:7, object:9, object:8, object:1, object:4, object:6 } == { object:7, object:9, object:8, object:1, object:4, object:6 }
+DraftFeatureTests.cpp:229  CHECK( (*draft)->consumedFeatures() == std::vector<FeatureId>{FeatureId::fromValue(7)} )
+        => { feature:7 } == { feature:7 }
+DraftFeatureTests.cpp:230  CHECK( (*draft)->typeName() == "draft" )
+        => "draft" == "draft"
+DraftFeatureTests.cpp:233  CHECK( (*edited)->setDefinition({.target = target, .faces = {side}, .angle = 3_deg}) == false )
+        => {?} == false
+DraftFeatureTests.cpp:234  CHECK( (*edited)->setDefinition({.target = target, .faces = {side}, .angle = 4_deg}) == true )
+        => {?} == true
+
+Overall: 2474 assertions passed, 0 failed.

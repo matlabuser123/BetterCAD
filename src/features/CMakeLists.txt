@@ -17,6 +17,8 @@ bettercad_add_library(bettercad_features
         chamfer/ChamferRegeneration.cpp
         datum/DatumResolution.cpp
         datum/Datums.cpp
+        draft/DraftFeature.cpp
+        draft/DraftRegeneration.cpp
         reference/FaceReferences.cpp
         extrude/ExtrudeFeature.cpp
         extrude/ExtrudeRegeneration.cpp
