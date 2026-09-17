@@ -287,13 +287,14 @@ TEST_CASE("HoleFeature_MalformedDataIsRejectedWithTheJsonPath", "[hole][io]") {
           "objects[2].data.diameter: expected a number");
     CHECK(message(replaceOnce(good, kDrillDiameter, "\"diameter_parameter\": 4")) ==
           "objects[2].data.diameter: missing required field");
+    // Spotfaces and threads are known since P12-HOLE-001, and checked: a
+    // spotface needs its dimensions, and a thread is an object.
     CHECK(message(replaceOnce(good, "\"type\": \"simple\"", "\"type\": \"spotface\"")) ==
-          "objects[2].data.type: unknown value 'spotface'");
+          "objects[2].data: the spotface diameter must be positive and finite, got 0 mm");
     CHECK(message(replaceOnce(good, "\"extent\": \"through\"", "\"extent\": \"up_to_next\"")) ==
           "objects[2].data.extent: unknown value 'up_to_next'");
-    // Threads are not supported; an unknown field is refused rather than ignored.
     CHECK(message(replaceOnce(good, kDrillDiameter, diameter + ", \"thread\": \"M10\"")) ==
-          "objects[2].data.thread: unknown field");
+          "objects[2].data.thread: expected an object");
     CHECK(message(replaceOnce(good, kTopFace,
                               R"("face": {"surface": "cylinder", "point": [0, 0, 0.02], "normal": [0, 0, 1]})")) ==
           "objects[2].data.face.surface: unknown value 'cylinder'");

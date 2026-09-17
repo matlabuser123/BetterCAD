@@ -60,10 +60,12 @@ enum class FaceRole {
     CounterboreFloor,
     /// The face a chamfer cuts for one of its edge references.
     Chamfer,
+    /// A spotfaced hole's flat seat around the hole (P12-HOLE-001).
+    SpotfaceFloor,
 };
 
 /// "start_cap", "end_cap", "side", "hole_bottom", "counterbore_floor",
-/// "chamfer".
+/// "chamfer", "spotface_floor".
 [[nodiscard]] BETTERCAD_CORE_EXPORT std::string_view toString(FaceRole role) noexcept;
 
 /// One step of a face's copying (P12-SKETCH-003): the pattern or mirror that

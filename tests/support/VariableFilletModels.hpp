@@ -1,6 +1,7 @@
 #pragma once
 
 #include "features/FeatureTestSupport.hpp"
+#include "support/BodyPrint.hpp"
 #include "support/ShellModels.hpp"
 
 #include <bettercad/core/document/Document.hpp>
@@ -196,41 +197,6 @@ inline std::vector<geometry::RadiusStation> radiusStations(const Stations& stati
         result.push_back({.position = u, .radius = r * units::mm});
     }
     return result;
-}
-
-/// Every property of a body that must repeat exactly: validity, topology,
-/// volume, area, centre, bounds and the names of its faces.
-struct BodyPrint {
-    bool valid = false;
-    geometry::TopologySummary topology{};
-    double volume = 0.0;
-    double area = 0.0;
-    std::array<double, 3> centre{};
-    std::array<double, 3> lower{};
-    std::array<double, 3> upper{};
-    std::vector<std::vector<FaceName>> names{};
-
-    friend bool operator==(const BodyPrint&, const BodyPrint&) = default;
-};
-
-inline BodyPrint printOf(const geometry::Body& body) {
-    BodyPrint print{.valid = body.isValid(), .topology = body.topology()};
-    const auto properties = body.massProperties();
-    REQUIRE(properties.has_value());
-    print.volume = properties->volume.si();
-    print.area = properties->surfaceArea.si();
-    print.centre = {properties->centerOfMass.x.si(), properties->centerOfMass.y.si(),
-                    properties->centerOfMass.z.si()};
-    const auto box = body.boundingBox();
-    REQUIRE(box.has_value());
-    print.lower = {box->min.x.si(), box->min.y.si(), box->min.z.si()};
-    print.upper = {box->max.x.si(), box->max.y.si(), box->max.z.si()};
-    const auto faces = geometry::listFaces(body);
-    REQUIRE(faces.has_value());
-    for (const geometry::FaceInfo& face : *faces) {
-        print.names.push_back(face.names);
-    }
-    return print;
 }
 
 // A block with two top edges rounded with variable radii:

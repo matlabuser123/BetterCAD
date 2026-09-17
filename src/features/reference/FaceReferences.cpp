@@ -65,6 +65,8 @@ std::string faceText(const FaceSelector& face) {
         return "the counterbore floor";
     case FaceRole::Chamfer:
         return face.edge ? std::format("the face of edge reference {}", *face.edge) : "a chamfer face";
+    case FaceRole::SpotfaceFloor:
+        return "the spotface floor";
     }
     return "a face";
 }
@@ -84,6 +86,8 @@ std::string_view roleName(FaceRole role) {
         return "counterbore floor";
     case FaceRole::Chamfer:
         return "chamfer face";
+    case FaceRole::SpotfaceFloor:
+        return "spotface floor";
     }
     return "face";
 }
@@ -236,6 +240,13 @@ Result<void> checkRole(const Document& document, const DocumentObject& object, c
             if (d.type != geometry::HoleType::Counterbore) {
                 return makeError(ErrorCode::InvalidArgument,
                                  std::format("{} is not counterbored, so it has no counterbore floor", who));
+            }
+            return {};
+        }
+        if (face.role == FaceRole::SpotfaceFloor) {
+            if (d.type != geometry::HoleType::Spotface) {
+                return makeError(ErrorCode::InvalidArgument,
+                                 std::format("{} is not spotfaced, so it has no spotface floor", who));
             }
             return {};
         }

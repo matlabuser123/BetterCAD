@@ -488,7 +488,7 @@ milestones start; see `TODO.md`.
   - `start_cap` and `end_cap`;
   - `side`, with the profile entity that swept it and, for a sweep, the path
     edge it runs along (`along`);
-  - `hole_bottom` and `counterbore_floor`;
+  - `hole_bottom`, `counterbore_floor` and `spotface_floor`;
   - `chamfer`, with the edge reference (from 1) whose face it is.
 
   A face a pattern or mirror copies keeps the original's name with the copy
@@ -538,9 +538,11 @@ milestones start; see `TODO.md`.
   into a planar face, perpendicular to it and always into the material (along
   the reversed outward normal). A `HoleRequest` is:
   - the face reference and a centre in its (u, v) coordinates;
-  - a type (`Simple`, `Counterbore`, `Countersink`) and an extent
-    (`Through`, `Blind`);
-  - the diameter, a blind hole's depth, and the head's dimensions.
+  - a type (`Simple`, `Counterbore`, `Countersink`, `Spotface`) and an
+    extent (`Through`, `Blind`);
+  - the diameter, a blind hole's depth, and the head's dimensions;
+  - optionally a `CosmeticThread` (P12-HOLE-001): a thread's major diameter
+    and length, described and checked but not cut.
 
   Fields a type or extent does not use must be zero; in particular a through
   hole has no depth. Before the kernel runs:
@@ -569,6 +571,40 @@ milestones start; see `TODO.md`.
   The preflight is for these guarantees, not for crash avoidance: a
   kernel probe of degenerate holes found no crashes
   (`docs/verification/P11-FEAT-004/`).
+
+  A spotface is cut like a counterbore and names its floor `spotface_floor`:
+  the type records which the hole is, since a seat and a recess for a head
+  are different intent even where the geometry is the same. A cosmetic
+  thread cuts nothing at all — the bore is the thread's core — and is
+  checked against the hole it is in: wider than the bore, narrower than any
+  head, longer than the head, and no longer than a blind hole or than the
+  material under the face.
+- **Hole standards** (`bettercad/core/standards/`, P12-HOLE-001; layer 0, no
+  geometry and no kernel). Tabulated data from published standards, keyed by
+  the designations engineers write:
+  - `MetricThread` (ISO 68-1, ISO 262, ISO 965-2): the sizes ISO 965-2 gives
+    limits of size for, parsed from and printed as "M8" or "M8x1"; the basic
+    diameters follow from the profile (H = sqrt(3)/2 P, D2 = D - 3/4 H,
+    D1 = D - 5/4 H).
+  - `internalThreadLimits()` (ISO 965-1): the limits of size of an internal
+    thread, as the basic diameters plus the fundamental deviation of the
+    position (zero for H) and the tolerances TD1 and TD2 of the grade.
+    BetterCAD knows the grade ISO 965-2 gives each size (5 up to M1.4, 6
+    above), in position H or G, and refuses the rest.
+  - `clearanceHoleDiameter()` (ISO 273): the fine, medium and coarse
+    clearance holes of a bolt's nominal diameter, and the tolerance class
+    the standard gives each series for information (H12, H13, H14).
+  - `limitDeviations()` (ISO 286): the standard tolerances IT1 to IT18 and
+    the limit deviations of the classes ISO 286-2 tabulates for sizes up to
+    500 mm with the fundamental deviations D, E, F, G and H.
+
+  A feature stores the designation, never the dimensions it stands for: a
+  thread's size and class, a clearance hole's bolt and series, a bore's
+  tolerance class. Regeneration resolves them, so a file keeps its
+  engineering intent and a table correction reaches every model. Every value
+  is transcribed twice — for BetterCAD and for the tests — and both
+  transcriptions are checked against published copies of the standards
+  (`docs/verification/P12-HOLE-001/standards/`).
 - **Split** (`Split.hpp`, P12-FEAT-002). `splitBody(body, plane, keep)` cuts
   a body with a plane and keeps what lies in front of it (the side its
   normal points to), behind it, or both.

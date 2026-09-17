@@ -13,7 +13,7 @@ authorized — never in advance.
 | | |
 | --- | --- |
 | Current | **`P12` — Parametric CAD Completion** |
-| Next | `P12-HOLE-001` — Threads, spotface, standard sizes, tolerance classes |
+| Next | `P12-PATTERN-001` — Symmetric, total-length, suppressed instances, patterns of patterns |
 | Blocked / Manual | None |
 | Last qualified | `P11` Production Part Modeling — **QUALIFIED** |
 | Released | `v0.1.0` (`P0`–`P10`); `P11` qualified, not released |
@@ -60,7 +60,7 @@ Reference models → qualification
 | 9 | `P12-FEAT-004` Draft | `DATUM-001` | **done** — [evidence](docs/verification/P12-FEAT-004/README.md) |
 | 10 | `P12-FEAT-005` Rib | `SKETCH-002`, `FEAT-001` | **done** — [evidence](docs/verification/P12-FEAT-005/README.md) |
 | 11 | `P12-FEAT-006` Variable-radius fillet; setback and corner transitions deferred (scope decided 2026-09-18) | — | **done** (variable radius) — [evidence](docs/verification/P12-FEAT-006/README.md); setback and corner transitions deferred |
-| 12 | `P12-HOLE-001` Threads, spotface, standard sizes, tolerance classes | `PARAM-001` | not started |
+| 12 | `P12-HOLE-001` Threads, spotface, standard sizes, tolerance classes | `PARAM-001` | **done** — [evidence](docs/verification/P12-HOLE-001/README.md) |
 | 13 | `P12-PATTERN-001` Symmetric, total-length, suppressed instances, patterns of patterns | `PARAM-001` | not started |
 | 14 | `P12-SWEEP-001` Guide curves, twist, non-planar paths | `SKETCH-002` | not started |
 | 15 | `P12-LOFT-001` Differing section shapes, smooth interpolation, end conditions | `SKETCH-002` | not started |
@@ -402,9 +402,45 @@ Acceptance:
 - Invalid, unordered, duplicate and out-of-range stations; zero, negative and non-finite radii; laws that would leave their station range (the investigation's overshoot cases); radii too large for the faces; curved edges, edges between non-planar faces, edges continued smoothly and edges meeting another rounded edge fail with structured diagnostics and keep no body; nothing is substituted.
 - Repeated, fresh and save → load → regenerate builds give the same bodies bit for bit; STEP exports read back with the same volume; every value the existing tests measure is unchanged; `P0`–`P12-FEAT-005` stays green in all three presets.
 
+#### P12-HOLE-001 — Hole threads, spotface, standard sizes, tolerance classes
+
+What a hole is *for* — a bolt of a standard size, a tapped thread, a seat
+machined flat, a bore reamed to a fit — is engineering intent, and is kept
+as the standard's own designation ("M8", "6H", "H7", the ISO 273 medium
+series), never as the dimensions it stands for. The geometry is the hole the
+standard gives; a thread and a tolerance class are manufacturing data, and
+cost no geometry: no helix is cut, and nothing changes the nominal size.
+
+The data is tabulated, so it is transcribed twice — once for BetterCAD and
+once for the tests — from published copies of ISO 68-1, ISO 262, ISO 273,
+ISO 286 and ISO 965, and both transcriptions are checked against the sources
+([the sources and their cross-check](docs/verification/P12-HOLE-001/standards/SOURCES.md)).
+BetterCAD knows the part of each standard that two independent copies agree
+on, and refuses the rest rather than guessing it.
+
+Deliverables:
+
+- [x] `standards::MetricThread` (ISO 68-1, ISO 262, ISO 965-2): the sizes ISO 965-2 gives limits of size for (coarse M1 to M64, fine M8x1 to M64x4), parsed from and printed as their designations; the basic major, pitch and minor diameters of the profile
+- [x] `standards::internalThreadLimits` (ISO 965-1): the limits of size of an internal thread in the tolerance class of ISO 965-2 (5H up to M1.4, 6H above) in position H or G; any other grade refused
+- [x] `standards::clearanceHoleDiameter` (ISO 273): the fine, medium and coarse clearance holes of M1 to M64, and the tolerance class the standard gives each series for information
+- [x] `standards::limitDeviations` (ISO 286): the standard tolerances IT1 to IT18 and the limit deviations of the hole tolerance classes ISO 286-2 tabulates for sizes up to 500 mm with the deviations D, E, F, G and H; sizes and grades outside them refused
+- [x] `HoleType::Spotface`: a seat cut like a counterbore, naming its floor `spotface_floor` (a new face role); sketches and datums may be placed on it
+- [x] `geometry::CosmeticThread`: a thread described and checked against its hole — wider than the bore, narrower than any head, longer than the head, and no longer than a blind hole or than the material under the face — and cut as nothing
+- [x] `HoleDefinition`: a thread (with its length, literal or driven) or a standard clearance size, which gives the diameter; a tolerance class for a hole of its own diameter; `holeCallout()` resolves the designations, limits and deviations
+- [x] Dependencies, validation, undo/redo, save/load (designations, not dimensions; files without them unchanged), CLI description; patterns and mirrors repeat a threaded hole as it is
+- [x] Evidence: [docs/verification/P12-HOLE-001/](docs/verification/P12-HOLE-001/README.md) — PASS, 1070/1070 tests in Debug, Release and Debug-shared, 0 warnings; the standards data checked against published copies (21 checks, 0 failed)
+
+Acceptance:
+
+- Every value of every table matches published copies of its standard, checked by a script that reads the sources themselves; the limits BetterCAD computes for all 60 thread sizes match the ones ISO 965-2 tabulates, to the 0.001 mm they are rounded to.
+- A tapped hole is cut at its thread's basic minor diameter, a standard clearance hole at its ISO 273 diameter and a spotface like a counterbore; volumes, centres and bounds match the values computed from the standards' own definitions, and a thread changes no geometry at all.
+- A driven thread length and a driven bore rebuild the model; a thread longer than its blind hole, a head narrower than the thread, a class whose limits BetterCAD does not know and a size ISO 286 does not tabulate fail with structured diagnostics and keep no body; nothing is substituted.
+- Save → load → regenerate gives the same bodies bit for bit, from the designations alone; STEP exports read back with the same volume; files written before this milestone load and save unchanged; every value the existing tests measure is unchanged; `P0`–`P12-FEAT-006` stays green in all three presets.
+
 ## Next
 
-`P12-HOLE-001` — Threads, spotface, standard sizes, tolerance classes.
+`P12-PATTERN-001` — Symmetric, total-length, suppressed instances, patterns
+of patterns.
 
 ## Blocked / Manual
 
@@ -520,10 +556,10 @@ Deferred from `P12-FEAT-006` ([investigation](docs/verification/P12-FEAT-006/inv
 
 | Milestone | Commit | Evidence |
 | --- | --- | --- |
-| `P12-FEAT-006` Variable-radius fillet | "BetterCAD: implement P12 variable-radius fillet" | [P12-FEAT-006](docs/verification/P12-FEAT-006/README.md) |
+| `P12-HOLE-001` Hole threads, spotface, standard sizes, tolerance classes | "BetterCAD: implement P12 hole standards" | [P12-HOLE-001](docs/verification/P12-HOLE-001/README.md) |
+| `P12-FEAT-006` Variable-radius fillet | `74f5c9d` | [P12-FEAT-006](docs/verification/P12-FEAT-006/README.md) |
 | `P12-FEAT-005` Rib | `aa2d41a` | [P12-FEAT-005](docs/verification/P12-FEAT-005/README.md) |
 | `P12-FEAT-004` Draft | `80f1fec` | [P12-FEAT-004](docs/verification/P12-FEAT-004/README.md) |
-| `P12-FEAT-003` Shell | `eb3ad66` | [P12-FEAT-003](docs/verification/P12-FEAT-003/README.md) |
 
 ## Completed Milestones
 
@@ -599,6 +635,28 @@ regression test, so none can change silently. Detail:
   patterns or feature mirrors, and their volumes, bounds and adjacent face
   areas are measured to 1e-9, 1e-7 mm and 4.7e-6 relative
   ([P12-FEAT-006](docs/verification/P12-FEAT-006/README.md)).
+- **Hole standards are the part of each standard two published copies
+  agree on** ([the sources](docs/verification/P12-HOLE-001/standards/SOURCES.md)):
+  the metric thread sizes of ISO 965-2 (coarse M1 to M64, fine M8x1 to
+  M64x4) in the tolerance class ISO 965-2 gives each (5H up to M1.4, 6H
+  above) and its G counterpart; the clearance holes of ISO 273 for those
+  diameters; and the ISO 286 classes D6 to D13, E5 to E10, F3 to F10, G3 to
+  G10 and H1 to H18 for sizes up to 500 mm. JS is not among them: published
+  copies of ISO 286-2 disagree on whether its odd tolerances of grades 7 to
+  11 are rounded to whole micrometres. Anything else — another thread class,
+  a position from A to C or J to ZC, a larger size — is refused, not
+  computed ([P12-HOLE-001](docs/verification/P12-HOLE-001/README.md)).
+- **A thread is described, not cut.** A tapped hole is a bore at the
+  thread's basic minor diameter; no helix is modelled, and the thread's
+  length, class and limits are data the callout reports. A mirrored threaded
+  hole keeps its thread as it is (threads are not handed), and neither STEP
+  nor STL carries the thread
+  ([P12-HOLE-001](docs/verification/P12-HOLE-001/README.md)).
+- **A tolerance class does not change the geometry**: the hole is cut at its
+  nominal size, and the class gives the limit deviations its callout
+  reports. Tap drill sizes (ISO 2306), counterbore sizes for a fastener's
+  head (ISO 4762, DIN 974) and thread engagement lengths are not known
+  ([P12-HOLE-001](docs/verification/P12-HOLE-001/README.md)).
 - **Fillets have no setback or corner-transition controls.** Where rounded
   edges meet, the kernel shapes the corner itself; setbacks and selectable
   corner transitions were deferred from `P12-FEAT-006`, since they need a

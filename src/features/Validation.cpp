@@ -303,9 +303,11 @@ private:
                     {&definition.depthParameter, "the depth is driven by"},
                     {&definition.centerUParameter, "the centre's u coordinate is driven by"},
                     {&definition.centerVParameter, "the centre's v coordinate is driven by"},
+                    {definition.thread ? &definition.thread->lengthParameter : nullptr,
+                     "the thread length is driven by"},
                 };
                 for (const auto& [parameter, reference] : drivers) {
-                    if (*parameter) {
+                    if (parameter != nullptr && *parameter) {
                         checkParameter(object.id(), **parameter, dimensions::length, reference);
                     }
                 }

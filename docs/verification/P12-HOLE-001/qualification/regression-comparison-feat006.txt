@@ -1,0 +1,123 @@
+baseline ../../P12-FEAT-006/qualification/ctest-release.log: 1035 distinct names
+
+ctest-debug.log: 1069 distinct names, 1070 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 34
+    cli.export-step.tapped-plate
+    cli.info.tapped-plate
+    cli.validate.tapped-plate
+    unit.ClearanceHoles_MatchIso273
+    unit.HoleStandardsCli_InfoDescribesThreadsAndStandardSizes
+    unit.HoleStandardsCli_ValidateBuildsThePlate
+    unit.HoleStandards_CalloutsDescribeTheStandardsData
+    unit.HoleStandards_ClearanceSeriesChangesTheDiameter
+    unit.HoleStandards_EditingAStandardIsUndoable
+    unit.HoleStandards_ExampleFileMatchesTheBuilder
+    unit.HoleStandards_FileStoresDesignationsNotDimensions
+    unit.HoleStandards_FilesWithoutStandardsDataAreUnchanged
+    unit.HoleStandards_MalformedStandardsDataIsRejectedWithTheJsonPath
+    unit.HoleStandards_ParametersDriveThreadsAndBores
+    unit.HoleStandards_PatternsAndMirrorsRepeatThreadedHoles
+    unit.HoleStandards_RejectDefinitionsTheStandardsDoNotAllow
+    unit.HoleStandards_RepeatAndRebuildGiveTheSameBodies
+    unit.HoleStandards_SaveLoadPreservesTheStandardsData
+    unit.HoleStandards_TappedPlateHasTheVolumeOfItsStandardHoles
+    unit.HoleStandards_ValidationReportsTheThreadLengthParameter
+    unit.HoleTolerances_KnowOnlyTheTabulatedClasses
+    unit.HoleTolerances_LimitDeviationsMatchIso286
+    unit.HoleTolerances_RefuseSizesWithoutTabulatedDeviations
+    unit.HoleTolerances_StandardTolerancesMatchIso286
+    unit.Hole_CosmeticThreadCutsNoGeometry
+    unit.Hole_RefusesThreadsThatDoNotFitTheirHole
+    unit.Hole_SpotfaceIsCutLikeACounterbore
+    unit.MetricThreads_BasicDiametersFollowIso68
+    unit.MetricThreads_KnowTheSizesOfIso965Part2
+    unit.MetricThreads_LimitsMatchIso965Part2
+    unit.MetricThreads_ParseTheirDesignations
+    unit.MetricThreads_PositionGRaisesEveryLimitByItsDeviation
+    unit.MetricThreads_RefuseClassesWithoutKnownTolerances
+    unit.MetricThreads_TolerancesFollowTheIso965Part1Formulae
+
+ctest-release.log: 1069 distinct names, 1070 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 34
+    cli.export-step.tapped-plate
+    cli.info.tapped-plate
+    cli.validate.tapped-plate
+    unit.ClearanceHoles_MatchIso273
+    unit.HoleStandardsCli_InfoDescribesThreadsAndStandardSizes
+    unit.HoleStandardsCli_ValidateBuildsThePlate
+    unit.HoleStandards_CalloutsDescribeTheStandardsData
+    unit.HoleStandards_ClearanceSeriesChangesTheDiameter
+    unit.HoleStandards_EditingAStandardIsUndoable
+    unit.HoleStandards_ExampleFileMatchesTheBuilder
+    unit.HoleStandards_FileStoresDesignationsNotDimensions
+    unit.HoleStandards_FilesWithoutStandardsDataAreUnchanged
+    unit.HoleStandards_MalformedStandardsDataIsRejectedWithTheJsonPath
+    unit.HoleStandards_ParametersDriveThreadsAndBores
+    unit.HoleStandards_PatternsAndMirrorsRepeatThreadedHoles
+    unit.HoleStandards_RejectDefinitionsTheStandardsDoNotAllow
+    unit.HoleStandards_RepeatAndRebuildGiveTheSameBodies
+    unit.HoleStandards_SaveLoadPreservesTheStandardsData
+    unit.HoleStandards_TappedPlateHasTheVolumeOfItsStandardHoles
+    unit.HoleStandards_ValidationReportsTheThreadLengthParameter
+    unit.HoleTolerances_KnowOnlyTheTabulatedClasses
+    unit.HoleTolerances_LimitDeviationsMatchIso286
+    unit.HoleTolerances_RefuseSizesWithoutTabulatedDeviations
+    unit.HoleTolerances_StandardTolerancesMatchIso286
+    unit.Hole_CosmeticThreadCutsNoGeometry
+    unit.Hole_RefusesThreadsThatDoNotFitTheirHole
+    unit.Hole_SpotfaceIsCutLikeACounterbore
+    unit.MetricThreads_BasicDiametersFollowIso68
+    unit.MetricThreads_KnowTheSizesOfIso965Part2
+    unit.MetricThreads_LimitsMatchIso965Part2
+    unit.MetricThreads_ParseTheirDesignations
+    unit.MetricThreads_PositionGRaisesEveryLimitByItsDeviation
+    unit.MetricThreads_RefuseClassesWithoutKnownTolerances
+    unit.MetricThreads_TolerancesFollowTheIso965Part1Formulae
+
+ctest-debug-shared.log: 1069 distinct names, 1070 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 34
+    cli.export-step.tapped-plate
+    cli.info.tapped-plate
+    cli.validate.tapped-plate
+    unit.ClearanceHoles_MatchIso273
+    unit.HoleStandardsCli_InfoDescribesThreadsAndStandardSizes
+    unit.HoleStandardsCli_ValidateBuildsThePlate
+    unit.HoleStandards_CalloutsDescribeTheStandardsData
+    unit.HoleStandards_ClearanceSeriesChangesTheDiameter
+    unit.HoleStandards_EditingAStandardIsUndoable
+    unit.HoleStandards_ExampleFileMatchesTheBuilder
+    unit.HoleStandards_FileStoresDesignationsNotDimensions
+    unit.HoleStandards_FilesWithoutStandardsDataAreUnchanged
+    unit.HoleStandards_MalformedStandardsDataIsRejectedWithTheJsonPath
+    unit.HoleStandards_ParametersDriveThreadsAndBores
+    unit.HoleStandards_PatternsAndMirrorsRepeatThreadedHoles
+    unit.HoleStandards_RejectDefinitionsTheStandardsDoNotAllow
+    unit.HoleStandards_RepeatAndRebuildGiveTheSameBodies
+    unit.HoleStandards_SaveLoadPreservesTheStandardsData
+    unit.HoleStandards_TappedPlateHasTheVolumeOfItsStandardHoles
+    unit.HoleStandards_ValidationReportsTheThreadLengthParameter
+    unit.HoleTolerances_KnowOnlyTheTabulatedClasses
+    unit.HoleTolerances_LimitDeviationsMatchIso286
+    unit.HoleTolerances_RefuseSizesWithoutTabulatedDeviations
+    unit.HoleTolerances_StandardTolerancesMatchIso286
+    unit.Hole_CosmeticThreadCutsNoGeometry
+    unit.Hole_RefusesThreadsThatDoNotFitTheirHole
+    unit.Hole_SpotfaceIsCutLikeACounterbore
+    unit.MetricThreads_BasicDiametersFollowIso68
+    unit.MetricThreads_KnowTheSizesOfIso965Part2
+    unit.MetricThreads_LimitsMatchIso965Part2
+    unit.MetricThreads_ParseTheirDesignations
+    unit.MetricThreads_PositionGRaisesEveryLimitByItsDeviation
+    unit.MetricThreads_RefuseClassesWithoutKnownTolerances
+    unit.MetricThreads_TolerancesFollowTheIso965Part1Formulae
+
+RESULT: PASS

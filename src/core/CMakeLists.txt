@@ -21,6 +21,10 @@ bettercad_add_library(bettercad_core
         parameters/Expression.cpp
         parameters/Parameter.cpp
         parameters/ParameterTable.cpp
+        standards/ClearanceHoles.cpp
+        standards/Designations.hpp
+        standards/HoleTolerances.cpp
+        standards/MetricThreads.cpp
         units/Format.cpp
         units/UnitCatalog.cpp
 )

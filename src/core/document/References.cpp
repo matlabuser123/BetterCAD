@@ -33,6 +33,8 @@ std::string_view toString(FaceRole role) noexcept {
         return "counterbore_floor";
     case FaceRole::Chamfer:
         return "chamfer";
+    case FaceRole::SpotfaceFloor:
+        return "spotface_floor";
     }
     return "unknown";
 }
@@ -54,6 +56,8 @@ std::string_view roleWithArticle(FaceRole role) noexcept {
         return "a counterbore floor";
     case FaceRole::Chamfer:
         return "a chamfer face";
+    case FaceRole::SpotfaceFloor:
+        return "a spotface floor";
     }
     return "a face";
 }

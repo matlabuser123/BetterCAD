@@ -155,6 +155,9 @@ std::string describeFaceName(const Document& document, const FaceName& name) {
         text = face.edge ? std::format("the face of edge reference {}", *face.edge)
                          : std::string{"a chamfer face"};
         break;
+    case FaceRole::SpotfaceFloor:
+        text = "the spotface floor";
+        break;
     }
     text += std::format(" of {}", nameOrId(document, name.feature));
     for (const FaceCopy& copy : face.copies) {
@@ -234,20 +237,40 @@ std::string describeCoordinateSystem(const Document& document, const features::C
 
 /// "target Pad, simple through hole, diameter 10 mm, centre (50 mm, 25 mm)
 /// on plane through (0, 0, 20) mm facing (0, 0, 1)", with the depth of a
-/// blind hole and the head of a counterbore or countersink.
+/// blind hole and the head of a counterbore, countersink or spotface. A
+/// threaded hole shows its thread ("thread M8-6H 12 mm long") and a standard
+/// clearance hole its size ("clearance for M8 (medium)") in place of the
+/// diameter, followed by a tolerance class if there is one.
 std::string describeHole(const Document& document, const features::HoleDefinition& d) {
     std::string text = std::format("target {}, {} {} hole", nameOrId(document, ObjectId{d.target}),
                                    geometry::toString(d.type), geometry::toString(d.extent));
     if (d.extent == geometry::HoleExtent::Blind) {
         text += std::format(" {} deep", describeLength(document, d.depth, d.depthParameter));
     }
-    text += std::format(", diameter {}", describeLength(document, d.diameter, d.diameterParameter));
+    if (d.thread) {
+        const bool fullLength = d.thread->length == Length{} && !d.thread->lengthParameter;
+        text += std::format(", thread {} {}", standards::designation(d.thread->size, d.thread->tolerance),
+                            fullLength ? std::string{"full length"}
+                                       : describeLength(document, d.thread->length, d.thread->lengthParameter) +
+                                             " long");
+    } else if (d.clearance) {
+        text += std::format(", clearance for {} ({})", d.clearance->bolt.designation(),
+                            standards::toString(d.clearance->series));
+    } else {
+        text += std::format(", diameter {}", describeLength(document, d.diameter, d.diameterParameter));
+    }
+    if (d.tolerance) {
+        text += " " + standards::toString(*d.tolerance);
+    }
     if (d.type == geometry::HoleType::Counterbore) {
         text += std::format(", counterbore {:.10g} mm x {:.10g} mm deep", d.counterboreDiameter.in(units::mm),
                             d.counterboreDepth.in(units::mm));
     } else if (d.type == geometry::HoleType::Countersink) {
         text += std::format(", countersink {:.10g} mm at {:.10g} deg", d.countersinkDiameter.in(units::mm),
                             d.countersinkAngle.in(units::deg));
+    } else if (d.type == geometry::HoleType::Spotface) {
+        text += std::format(", spotface {:.10g} mm x {:.10g} mm deep", d.spotfaceDiameter.in(units::mm),
+                            d.spotfaceDepth.in(units::mm));
     }
     text += std::format(", centre ({}, {}) on {}", describeLength(document, d.center.x, d.centerUParameter),
                         describeLength(document, d.center.y, d.centerVParameter), geometry::describe(d.face));

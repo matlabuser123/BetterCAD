@@ -542,10 +542,11 @@ constexpr std::array<std::pair<FaceSurface, std::string_view>, 1> kFaceSurfaces{
     {FaceSurface::Plane, "plane"},
 }};
 
-constexpr std::array<std::pair<HoleType, std::string_view>, 3> kHoleTypes{{
+constexpr std::array<std::pair<HoleType, std::string_view>, 4> kHoleTypes{{
     {HoleType::Simple, "simple"},
     {HoleType::Counterbore, "counterbore"},
     {HoleType::Countersink, "countersink"},
+    {HoleType::Spotface, "spotface"},
 }};
 
 constexpr std::array<std::pair<HoleExtent, std::string_view>, 2> kHoleExtents{{
@@ -601,7 +602,11 @@ Json holeToJson(const features::HoleFeature& feature) {
     }
     json["type"] = std::string{nameOf(kHoleTypes, d.type)};
     json["extent"] = std::string{nameOf(kHoleExtents, d.extent)};
-    json["diameter"] = d.diameter.si();
+    // A threaded or standard clearance hole's diameter is its standard's
+    // (P12-HOLE-001).
+    if (!d.thread && !d.clearance) {
+        json["diameter"] = d.diameter.si();
+    }
     if (d.diameterParameter) {
         json["diameter_parameter"] = d.diameterParameter->value();
     }
@@ -620,6 +625,19 @@ Json holeToJson(const features::HoleFeature& feature) {
         json["countersink_diameter"] = d.countersinkDiameter.si();
         json["countersink_angle"] = d.countersinkAngle.si();
     }
+    if (d.type == HoleType::Spotface) {
+        json["spotface_diameter"] = d.spotfaceDiameter.si();
+        json["spotface_depth"] = d.spotfaceDepth.si();
+    }
+    if (d.thread) {
+        json["thread"] = holeThreadToJson(*d.thread);
+    }
+    if (d.clearance) {
+        json["clearance"] = holeClearanceToJson(*d.clearance);
+    }
+    if (d.tolerance) {
+        json["tolerance"] = standards::toString(*d.tolerance);
+    }
     return json;
 }
 
@@ -629,7 +647,8 @@ Result<std::unique_ptr<features::HoleFeature>> holeFromJson(const Json& data, st
                                     {"target", "face", "center", "center_u_parameter", "center_v_parameter", "type",
                                      "extent", "diameter", "diameter_parameter", "depth", "depth_parameter",
                                      "counterbore_diameter", "counterbore_depth", "countersink_diameter",
-                                     "countersink_angle"});
+                                     "countersink_angle", "spotface_diameter", "spotface_depth", "thread",
+                                     "clearance", "tolerance"});
         !object) {
         return std::unexpected(object.error());
     }
@@ -640,7 +659,9 @@ Result<std::unique_ptr<features::HoleFeature>> holeFromJson(const Json& data, st
     auto centerV = readOptionalId(data, "center_v_parameter", path);
     auto type = valueOf(kHoleTypes, data, "type", path);
     auto extent = valueOf(kHoleExtents, data, "extent", path);
-    auto diameter = readNumber(data, "diameter", path);
+    // A threaded or standard clearance hole has no diameter (P12-HOLE-001).
+    const bool standardDiameter = data.contains("thread") || data.contains("clearance");
+    auto diameter = standardDiameter ? readNumberOrZero(data, "diameter", path) : readNumber(data, "diameter", path);
     auto diameterParameter = readOptionalId(data, "diameter_parameter", path);
     auto depth = readNumberOrZero(data, "depth", path);
     auto depthParameter = readOptionalId(data, "depth_parameter", path);
@@ -648,6 +669,8 @@ Result<std::unique_ptr<features::HoleFeature>> holeFromJson(const Json& data, st
     auto counterboreDepth = readNumberOrZero(data, "counterbore_depth", path);
     auto countersinkDiameter = readNumberOrZero(data, "countersink_diameter", path);
     auto countersinkAngle = readNumberOrZero(data, "countersink_angle", path);
+    auto spotfaceDiameter = readNumberOrZero(data, "spotface_diameter", path);
+    auto spotfaceDepth = readNumberOrZero(data, "spotface_depth", path);
     for (const Error* error :
          {!target ? &target.error() : nullptr, !face ? &face.error() : nullptr, !center ? &center.error() : nullptr,
           !centerU ? &centerU.error() : nullptr, !centerV ? &centerV.error() : nullptr,
@@ -657,10 +680,36 @@ Result<std::unique_ptr<features::HoleFeature>> holeFromJson(const Json& data, st
           !counterboreDiameter ? &counterboreDiameter.error() : nullptr,
           !counterboreDepth ? &counterboreDepth.error() : nullptr,
           !countersinkDiameter ? &countersinkDiameter.error() : nullptr,
-          !countersinkAngle ? &countersinkAngle.error() : nullptr}) {
+          !countersinkAngle ? &countersinkAngle.error() : nullptr,
+          !spotfaceDiameter ? &spotfaceDiameter.error() : nullptr,
+          !spotfaceDepth ? &spotfaceDepth.error() : nullptr}) {
         if (error != nullptr) {
             return std::unexpected(*error);
         }
+    }
+    std::optional<features::HoleThread> thread;
+    if (data.contains("thread")) {
+        auto read = holeThreadFromJson(data.at("thread"), childPath(path, "thread"));
+        if (!read) {
+            return std::unexpected(read.error());
+        }
+        thread = *read;
+    }
+    std::optional<features::HoleClearance> clearance;
+    if (data.contains("clearance")) {
+        auto read = holeClearanceFromJson(data.at("clearance"), childPath(path, "clearance"));
+        if (!read) {
+            return std::unexpected(read.error());
+        }
+        clearance = *read;
+    }
+    std::optional<standards::HoleToleranceClass> tolerance;
+    if (data.contains("tolerance")) {
+        auto read = holeToleranceFromJson(data, "tolerance", path);
+        if (!read) {
+            return std::unexpected(read.error());
+        }
+        tolerance = *read;
     }
     const auto optionalParameter = [](const std::optional<std::uint64_t>& id) -> std::optional<ParameterId> {
         return id ? std::optional<ParameterId>{ParameterId::fromValue(*id)} : std::nullopt;
@@ -681,6 +730,11 @@ Result<std::unique_ptr<features::HoleFeature>> holeFromJson(const Json& data, st
         .counterboreDepth = Length::fromSi(*counterboreDepth),
         .countersinkDiameter = Length::fromSi(*countersinkDiameter),
         .countersinkAngle = Angle::fromSi(*countersinkAngle),
+        .spotfaceDiameter = Length::fromSi(*spotfaceDiameter),
+        .spotfaceDepth = Length::fromSi(*spotfaceDepth),
+        .thread = thread,
+        .clearance = clearance,
+        .tolerance = tolerance,
     };
     auto feature = features::HoleFeature::create(std::move(name), definition);
     if (!feature) {

@@ -254,15 +254,19 @@ regenerateDraft(const DraftFeature& feature, const Document& document, const geo
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::Body>
 regenerateShell(const ShellFeature& feature, const Document& document, const geometry::Body* target);
 
-/// The geometry request of a hole, with the driven diameter, depth and
-/// centre coordinates taken from their parameters (NotFound if missing,
-/// DimensionMismatch if not lengths). The values' ranges are checked by the
-/// hole itself.
+/// The geometry request of a hole, with the driven diameter, depth, centre
+/// coordinates and thread length taken from their parameters (NotFound if
+/// missing, DimensionMismatch if not lengths). A threaded hole's diameter is
+/// its thread's basic minor diameter and a standard clearance hole's the
+/// ISO 273 one (P12-HOLE-001). The values' ranges are checked by the hole
+/// itself, except that a tolerance class must be defined for a driven
+/// diameter (InvalidArgument).
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::HoleRequest>
 resolveHoleRequest(const HoleDefinition& definition, const Document& document);
 
 /// Names for the flat faces hole @p hole makes (P12-SKETCH-003): its
-/// `hole_bottom` and `counterbore_floor`, with @p copies appended.
+/// `hole_bottom`, `counterbore_floor` and `spotface_floor`, with @p copies
+/// appended.
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT geometry::HoleFaceNamer holeFaceNamer(ObjectId hole,
                                                                              std::vector<FaceCopy> copies);
 

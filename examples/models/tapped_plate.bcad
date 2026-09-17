@@ -1,0 +1,342 @@
+{
+  "format": "bettercad-document",
+  "version": 1,
+  "units": "SI",
+  "document": {
+    "id": "2f8b41d7-6c05-4a92-9e37-5b0c1d84a6f3",
+    "name": "Plate",
+    "metadata": {
+      "description": "",
+      "author": "",
+      "properties": {}
+    },
+    "last_allocated_id": 9
+  },
+  "parameters": [
+    {
+      "id": 1,
+      "name": "thread_length",
+      "si_value": 0.008,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 2,
+      "name": "bore",
+      "si_value": 0.01,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    }
+  ],
+  "objects": [
+    {
+      "id": 3,
+      "type": "sketch",
+      "name": "PlateSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.08,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.08,
+              0.05
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.0,
+              0.05
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "line",
+            "start": 2,
+            "end": 3,
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "line",
+            "start": 4,
+            "end": 1,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "fixed",
+            "entities": [
+              2
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "fixed",
+            "entities": [
+              3
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "fixed",
+            "entities": [
+              4
+            ],
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 8,
+        "last_constraint_id": 4
+      }
+    },
+    {
+      "id": 4,
+      "type": "extrude",
+      "name": "Plate",
+      "data": {
+        "profile": 3,
+        "depth": 0.012,
+        "direction": "normal",
+        "operation": "new_body"
+      }
+    },
+    {
+      "id": 5,
+      "type": "hole",
+      "name": "Tapped",
+      "data": {
+        "target": 4,
+        "face": {
+          "surface": "plane",
+          "point": [
+            0.0,
+            0.0,
+            0.012
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "center": [
+          0.015,
+          0.015
+        ],
+        "type": "simple",
+        "extent": "through",
+        "thread": {
+          "size": "M8",
+          "class": "6H"
+        }
+      }
+    },
+    {
+      "id": 6,
+      "type": "hole",
+      "name": "BlindTapped",
+      "data": {
+        "target": 5,
+        "face": {
+          "surface": "plane",
+          "point": [
+            0.0,
+            0.0,
+            0.012
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "center": [
+          0.015,
+          0.035
+        ],
+        "type": "simple",
+        "extent": "blind",
+        "depth": 0.01,
+        "thread": {
+          "size": "M6",
+          "class": "6H",
+          "length": 0.008,
+          "length_parameter": 1
+        }
+      }
+    },
+    {
+      "id": 7,
+      "type": "hole",
+      "name": "Seat",
+      "data": {
+        "target": 6,
+        "face": {
+          "surface": "plane",
+          "point": [
+            0.0,
+            0.0,
+            0.012
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "center": [
+          0.04,
+          0.025
+        ],
+        "type": "counterbore",
+        "extent": "through",
+        "counterbore_diameter": 0.015,
+        "counterbore_depth": 0.005,
+        "clearance": {
+          "size": "M8",
+          "series": "medium"
+        },
+        "tolerance": "H13"
+      }
+    },
+    {
+      "id": 8,
+      "type": "hole",
+      "name": "Boss",
+      "data": {
+        "target": 7,
+        "face": {
+          "surface": "plane",
+          "point": [
+            0.0,
+            0.0,
+            0.012
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "center": [
+          0.065,
+          0.032
+        ],
+        "type": "spotface",
+        "extent": "through",
+        "spotface_diameter": 0.02,
+        "spotface_depth": 0.001,
+        "thread": {
+          "size": "M10",
+          "class": "6H"
+        }
+      }
+    },
+    {
+      "id": 9,
+      "type": "hole",
+      "name": "Reamed",
+      "data": {
+        "target": 8,
+        "face": {
+          "surface": "plane",
+          "point": [
+            0.0,
+            0.0,
+            0.012
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "center": [
+          0.065,
+          0.008
+        ],
+        "type": "simple",
+        "extent": "blind",
+        "diameter": 0.01,
+        "diameter_parameter": 2,
+        "depth": 0.008,
+        "tolerance": "H7"
+      }
+    }
+  ]
+}

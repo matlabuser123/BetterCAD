@@ -13,6 +13,7 @@ bettercad_add_library(bettercad_io
         json/DocumentJson.cpp
         json/DraftJson.cpp
         json/FeatureJson.cpp
+        json/HoleStandardsJson.cpp
         json/JsonReader.cpp
         json/JsonReader.hpp
         json/ObjectJson.hpp

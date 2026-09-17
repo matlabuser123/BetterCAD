@@ -18,6 +18,7 @@ enum class HoleType {
     Simple,      ///< a plain cylinder
     Counterbore, ///< a wider cylinder at the entry, e.g. for a bolt head
     Countersink, ///< a cone at the entry, e.g. for a flat-head screw
+    Spotface,    ///< a shallow wider cylinder at the entry, machined as a seat (P12-HOLE-001)
 };
 
 /// How deep a hole goes.
@@ -26,10 +27,24 @@ enum class HoleExtent {
     Blind,   ///< to a given depth, with a flat bottom
 };
 
-/// "simple", "counterbore" or "countersink".
+/// "simple", "counterbore", "countersink" or "spotface".
 [[nodiscard]] BETTERCAD_GEOMETRY_EXPORT std::string_view toString(HoleType type) noexcept;
 /// "through" or "blind".
 [[nodiscard]] BETTERCAD_GEOMETRY_EXPORT std::string_view toString(HoleExtent extent) noexcept;
+
+/// A thread in a hole that is described and checked but not modelled
+/// (P12-HOLE-001): the hole is cut at the thread's minor diameter and no
+/// helix is cut, so the thread costs no geometry.
+struct CosmeticThread {
+    /// Larger than the hole's diameter and smaller than its head's.
+    Length majorDiameter{};
+    /// From the face into the material; zero for the whole hole. Longer than
+    /// the hole's head, and no longer than a blind hole or than the material
+    /// under the face a through hole crosses.
+    Length length{};
+
+    friend bool operator==(const CosmeticThread&, const CosmeticThread&) = default;
+};
 
 /// A cylindrical hole drilled into a planar face, perpendicular to it.
 ///
@@ -56,12 +71,27 @@ struct HoleRequest {
     /// hole diameter at depth (D - d) / 2 / tan(angle / 2).
     Length countersinkDiameter{};
     Angle countersinkAngle{};
+    /// Spotface only: the seat's diameter (wider than the hole) and depth (not
+    /// as deep as a blind hole). It is cut like a counterbore.
+    Length spotfaceDiameter{};
+    Length spotfaceDepth{};
+    /// A thread in the hole, if it has one.
+    std::optional<CosmeticThread> thread{};
 
     friend bool operator==(const HoleRequest&, const HoleRequest&) = default;
 };
 
 /// Depth of a countersink cone: (D - d) / 2 / tan(angle / 2).
 [[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Length countersinkDepth(const HoleRequest& request);
+
+/// The diameter of a hole at its face: its head's (counterbore, countersink or
+/// spotface), or its own for a simple hole.
+[[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Length entryDiameter(const HoleRequest& request);
+
+/// How deep a hole's head goes below the face: a counterbore's or spotface's
+/// depth, a countersink's cone depth (countersinkDepth()), zero for a simple
+/// hole.
+[[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Length headDepth(const HoleRequest& request);
 
 /// The same hole moved by @p translation (which must be finite): its face
 /// reference moves with it, and its centre is the moved centre in the moved
@@ -83,8 +113,8 @@ struct HoleRequest {
 /// InvalidArgument for a non-planar or non-finite face reference, a
 /// non-finite centre, a diameter or depth that is not positive and finite,
 /// head dimensions that do not exceed the hole (or reach a blind hole's
-/// bottom), an angle outside (0, 180°), or a field the type or extent does
-/// not use.
+/// bottom), an angle outside (0, 180°), a field the type or extent does
+/// not use, or a thread that does not fit the hole (see CosmeticThread).
 [[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Result<void> validate(const HoleRequest& request);
 
 /// Drills the hole into @p body; @p body is not modified. The cutter is a
@@ -104,9 +134,11 @@ struct HoleRequest {
 ///   there is one) must lie inside the face, at least 0.001 mm from all of
 ///   its edges. A hole that would break out of the face's side is refused,
 ///   not built.
-/// - Along the axis, a blind hole (and a counterbore or countersink) must
-///   end at least 0.001 mm before the material does. A blind hole that
-///   would reach the far side is refused: use a through hole.
+/// - Along the axis, a blind hole (and a counterbore, countersink or
+///   spotface) must end at least 0.001 mm before the material does. A blind
+///   hole that would reach the far side is refused: use a through hole.
+/// - A through hole's thread must not reach more than 0.001 mm beyond where
+///   the material under the face ends along the axis.
 ///
 /// After the kernel: the result must be valid, keep the number of solids,
 /// have a finite, positive volume smaller than the input's, and a blind
@@ -120,11 +152,12 @@ struct HoleRequest {
 /// (see above), Internal (the kernel failed or produced an invalid result).
 [[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Result<Body> cutHole(const Body& body, const HoleRequest& request);
 
-/// The flat faces a hole makes (P12-SKETCH-003): a blind hole's bottom and a
-/// counterbore's floor.
+/// The flat faces a hole makes (P12-SKETCH-003): a blind hole's bottom, a
+/// counterbore's floor and a spotface's floor (P12-HOLE-001).
 enum class HoleFace {
     Bottom,
     CounterboreFloor,
+    SpotfaceFloor,
 };
 
 /// The name a hole's flat face gets, or none.

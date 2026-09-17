@@ -57,6 +57,7 @@ bettercad_add_executable(bettercad_tests
         core/parameters/ExpressionTests.cpp
         core/parameters/ParameterTableTests.cpp
         core/parameters/ParameterTests.cpp
+        core/standards/HoleStandardsTests.cpp
         core/units/ConversionTests.cpp
         core/units/FormatAndCatalogTests.cpp
         core/units/QuantityTests.cpp
@@ -73,6 +74,7 @@ bettercad_add_executable(bettercad_tests
         features/FeatureTestSupport.hpp
         features/FilletFeatureTests.cpp
         features/HoleFeatureTests.cpp
+        features/HoleStandardTests.cpp
         features/LinearPatternFeatureTests.cpp
         features/LoftFeatureTests.cpp
         features/MirrorFeatureTests.cpp
@@ -98,6 +100,7 @@ bettercad_add_executable(bettercad_tests
         io/ExpressionFileTests.cpp
         io/FilletFileTests.cpp
         io/HoleFileTests.cpp
+        io/HoleStandardFileTests.cpp
         io/LinearPatternFileTests.cpp
         io/LoftFileTests.cpp
         io/MirrorFileTests.cpp
@@ -118,6 +121,7 @@ bettercad_add_executable(bettercad_tests
         sketch/SketchTests.cpp
         sketch/SolverTests.cpp
         support/BlockModel.hpp
+        support/BodyPrint.hpp
         support/BodyOpsModels.hpp
         support/BracketModel.hpp
         support/ChamferBlockModel.hpp
@@ -128,6 +132,7 @@ bettercad_add_executable(bettercad_tests
         support/DrivenPlateModel.hpp
         support/FilletModels.hpp
         support/HoleModels.hpp
+        support/HoleStandardModels.hpp
         support/LoftModels.hpp
         support/MeshAnalysis.hpp
         support/MirrorModels.hpp
@@ -163,6 +168,7 @@ if(TARGET bettercad_cli_lib)
         cli/DatumCliTests.cpp
         cli/DraftCliTests.cpp
         cli/FaceReferenceCliTests.cpp
+        cli/HoleStandardCliTests.cpp
         cli/ThroughAllCliTests.cpp
         cli/BodyOpsCliTests.cpp
         cli/RibCliTests.cpp
@@ -450,6 +456,20 @@ if(TARGET bettercad_cli)
         COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "export-step|${_tapers}|${_out}/tapered_block.step"
         EXIT_CODE 0 STDOUT_REGEX "^Wrote .*tapered_block\\.step: STEP AP214 \\(mm\\), 1 body \\(Taper\\), [0-9]+ bytes$"
         FILE "${_out}/tapered_block.step" FILE_REGEX "^ISO-10303-21;\nHEADER;")
+    # P12-HOLE-001: a plate of holes of standard sizes.
+    set(_tapped "${PROJECT_SOURCE_DIR}/examples/models/tapped_plate.bcad")
+    bettercad_add_process_test(cli.info.tapped-plate
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "info|${_tapped}"
+        EXIT_CODE 0
+        STDOUT_REGEX "^Document: Plate\n.*  object:5  hole     Tapped       target Plate, simple through hole, thread M8-6H full length, centre \\(15 mm, 15 mm\\) on plane through \\(0, 0, 12\\) mm facing \\(0, 0, 1\\)\n.*  object:7  hole     Seat         target BlindTapped, counterbore through hole, clearance for M8 \\(medium\\) H13, counterbore 15 mm x 5 mm deep, centre \\(40 mm, 25 mm\\) on plane through \\(0, 0, 12\\) mm facing \\(0, 0, 1\\)\n  object:8  hole     Boss         target Seat, spotface through hole, thread M10-6H full length, spotface 20 mm x 1 mm deep, centre \\(65 mm, 32 mm\\) on plane through \\(0, 0, 12\\) mm facing \\(0, 0, 1\\)\n  object:9  hole     Reamed       target Boss, simple blind hole 8 mm deep, diameter bore H7, centre \\(65 mm, 8 mm\\) on plane through \\(0, 0, 12\\) mm facing \\(0, 0, 1\\)$")
+    bettercad_add_process_test(cli.validate.tapped-plate
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "validate|${_tapped}"
+        EXIT_CODE 0
+        STDOUT_REGEX "feature regeneration  ok, 7 objects regenerated\n  geometry              ok, 1 result body\nResult bodies \\(1\\):\n  Reamed \\(object:9\\): 1 solid, volume 44516\\.171 mm\\^3, area 12255\\.385 mm\\^2, bounds \\(0, 0, 0\\) to \\(80, 50, 12\\) mm\nResult: valid$")
+    bettercad_add_process_test(cli.export-step.tapped-plate
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "export-step|${_tapped}|${_out}/tapped_plate.step"
+        EXIT_CODE 0 STDOUT_REGEX "^Wrote .*tapped_plate\\.step: STEP AP214 \\(mm\\), 1 body \\(Reamed\\), [0-9]+ bytes$"
+        FILE "${_out}/tapped_plate.step" FILE_REGEX "^ISO-10303-21;\nHEADER;")
     bettercad_add_process_test(cli.export-stl.reference.pulley
         COMMAND "$<TARGET_FILE:bettercad_cli>"
         ARGS "export-stl|${_reference}/pulley.bcad|${_out}/pulley.stl"

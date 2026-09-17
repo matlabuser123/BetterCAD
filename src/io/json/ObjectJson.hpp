@@ -118,10 +118,23 @@ variableFilletFromJson(const Json& data, std::string name, std::string_view path
 
 /// Lengths in metres, the angle in radians; the face as
 /// {"surface": "plane", "point": [...], "normal": [...]} and the centre as
-/// face-local [u, v]. Keys a type or extent does not use are left out.
+/// face-local [u, v]. Keys a type or extent does not use are left out. A
+/// threaded or standard clearance hole has "thread" or "clearance" and no
+/// "diameter"; a tolerance class is "tolerance": "H7" (P12-HOLE-001).
 [[nodiscard]] Json holeToJson(const features::HoleFeature& feature);
 [[nodiscard]] Result<std::unique_ptr<features::HoleFeature>>
 holeFromJson(const Json& data, std::string name, std::string_view path);
+
+/// {"size": "M8", "class": "6H"}, with "length" (metres) when it is not zero
+/// or has a parameter, and "length_parameter" when set (P12-HOLE-001).
+[[nodiscard]] Json holeThreadToJson(const features::HoleThread& thread);
+[[nodiscard]] Result<features::HoleThread> holeThreadFromJson(const Json& data, std::string_view path);
+/// {"size": "M8", "series": "fine" | "medium" | "coarse"}.
+[[nodiscard]] Json holeClearanceToJson(const features::HoleClearance& clearance);
+[[nodiscard]] Result<features::HoleClearance> holeClearanceFromJson(const Json& data, std::string_view path);
+/// A hole tolerance class designation, e.g. "H7".
+[[nodiscard]] Result<standards::HoleToleranceClass> holeToleranceFromJson(const Json& object, std::string_view key,
+                                                                         std::string_view path);
 
 /// The source's ID; each direction as {"direction": [x, y, z] (as given, not
 /// normalized), "count": n, "count_parameter": id, "spacing": metres,

@@ -54,11 +54,14 @@ std::vector<std::pair<double, double>> sectionOf(const HoleRequest& request, dou
     case HoleType::Simple:
         section.emplace_back(r, -kEntryLeadMm);
         break;
-    case HoleType::Counterbore: {
-        const double rb = mm(request.counterboreDiameter) / 2.0;
+    case HoleType::Counterbore:
+    case HoleType::Spotface: {
+        // A spotface is cut like a counterbore.
+        const double rb = mm(entryDiameter(request)) / 2.0;
+        const double depth = mm(headDepth(request));
         section.emplace_back(rb, -kEntryLeadMm);
-        section.emplace_back(rb, mm(request.counterboreDepth));
-        section.emplace_back(r, mm(request.counterboreDepth));
+        section.emplace_back(rb, depth);
+        section.emplace_back(r, depth);
         break;
     }
     case HoleType::Countersink: {
@@ -80,41 +83,15 @@ double cutterVolumeBelowFace(const HoleRequest& request) {
     const double pi = std::numbers::pi;
     const double r = mm(request.diameter) / 2.0;
     double volume = pi * r * r * mm(request.depth);
-    if (request.type == HoleType::Counterbore) {
-        const double rb = mm(request.counterboreDiameter) / 2.0;
-        volume += pi * (rb * rb - r * r) * mm(request.counterboreDepth);
+    if (request.type == HoleType::Counterbore || request.type == HoleType::Spotface) {
+        const double rb = mm(entryDiameter(request)) / 2.0;
+        volume += pi * (rb * rb - r * r) * mm(headDepth(request));
     } else if (request.type == HoleType::Countersink) {
         const double rs = mm(request.countersinkDiameter) / 2.0;
         const double h = mm(countersinkDepth(request));
         volume += pi * h * (rs * rs + rs * r + r * r) / 3.0 - pi * r * r * h; // frustum beyond the cylinder
     }
     return volume;
-}
-
-/// Radius of the hole's outline at the face: the head if it has one.
-double entryRadiusMm(const HoleRequest& request) {
-    switch (request.type) {
-    case HoleType::Counterbore:
-        return mm(request.counterboreDiameter) / 2.0;
-    case HoleType::Countersink:
-        return mm(request.countersinkDiameter) / 2.0;
-    case HoleType::Simple:
-        break;
-    }
-    return mm(request.diameter) / 2.0;
-}
-
-/// Depth of the hole's head below the face, in mm (0 for a simple hole).
-double headDepthMm(const HoleRequest& request) {
-    switch (request.type) {
-    case HoleType::Counterbore:
-        return mm(request.counterboreDepth);
-    case HoleType::Countersink:
-        return mm(countersinkDepth(request));
-    case HoleType::Simple:
-        break;
-    }
-    return 0.0;
 }
 
 } // namespace
@@ -176,7 +153,7 @@ Result<Body> cutHole(const Body& body, const HoleRequest& request, const HoleFac
         const TopoDS_Face& face = under.front()->face;
 
         // 2. The entry outline must lie inside the face.
-        const double entryRadius = entryRadiusMm(request);
+        const double entryRadius = mm(entryDiameter(request)) / 2.0;
         double clearance = std::numeric_limits<double>::infinity();
         for (TopExp_Explorer it(face, TopAbs_EDGE); it.More(); it.Next()) {
             const TopoDS_Edge& edge = TopoDS::Edge(it.Current());
@@ -216,11 +193,17 @@ Result<Body> cutHole(const Body& body, const HoleRequest& request, const HoleFac
                                          "{:.6g} mm of material along its axis; make it a through hole",
                                          mm(request.depth), exit));
         }
-        if (!blind && request.type != HoleType::Simple && headDepthMm(request) + kMarginMm > exit) {
+        if (!blind && request.type != HoleType::Simple && mm(headDepth(request)) + kMarginMm > exit) {
             return makeError(ErrorCode::FailedPrecondition,
                              std::format("hole: the {} ({:.6g} mm deep) is as deep as the material along the axis "
                                          "({:.6g} mm)",
-                                         toString(request.type), headDepthMm(request), exit));
+                                         toString(request.type), mm(headDepth(request)), exit));
+        }
+        if (!blind && request.thread && mm(request.thread->length) > exit + kMarginMm) {
+            return makeError(ErrorCode::FailedPrecondition,
+                             std::format("hole: the thread ({:.6g} mm long) is longer than the material along the "
+                                         "axis under the face ({:.6g} mm)",
+                                         mm(request.thread->length), exit));
         }
 
         // 4. The cutter: the section revolved about the axis. A through
@@ -259,7 +242,7 @@ Result<Body> cutHole(const Body& body, const HoleRequest& request, const HoleFac
                                                               Point2D{r1 * units::mm, t1 * units::mm}});
         }
         // The section's second-to-last segment is the bottom; a counterbore's
-        // third is its floor (see sectionOf()).
+        // or spotface's third is its floor (see sectionOf()).
         const std::size_t bottomSegment = points.size() - 2;
         const SweptFaceNamer cutterNames = [&](const SweptFace& swept) -> std::optional<FaceName> {
             if (!namer || swept.kind != SweptFace::Kind::Side) {
@@ -270,6 +253,9 @@ Result<Body> cutHole(const Body& body, const HoleRequest& request, const HoleFac
             }
             if (swept.segment == 2 && request.type == HoleType::Counterbore) {
                 return namer(HoleFace::CounterboreFloor);
+            }
+            if (swept.segment == 2 && request.type == HoleType::Spotface) {
+                return namer(HoleFace::SpotfaceFloor);
             }
             return std::nullopt;
         };

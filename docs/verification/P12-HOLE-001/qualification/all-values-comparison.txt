@@ -1,0 +1,30 @@
+Every measured value of the tests P12-FEAT-006 had, from its qualified Release build (74f5c9d, run before
+this milestone's clean rebuild) and from this milestone's qualified Release build. Each ran
+bettercad_tests.exe -s --reporter xml --rng-seed 1 (all test cases; this build also ran the 34 new ones), and
+values.py (in this directory, with the same one-line header for both) filtered the report:
+  feat006-release: 928 test cases with measured values, 77211 assertions passed, 0 failed
+  hole001-release: 958 test cases with measured values, 84672 assertions passed, 0 failed
+compare-values.py dropped (--exclude) the 31 new test cases and the pointer values, and normalized temporary
+paths, document UUIDs and the Git revision the version text reports. Source line numbers were ignored
+(--ignore-line-numbers): tests/io/HoleFileTests.cpp gained and lost lines, which moves the entries of the
+cases after them. Two messages this milestone deliberately changed were substituted (--substitute), since a
+spotface and a thread are known keys now: the file's own test still refuses both inputs, at the same path.
+
+   python compare-values.py --exclude "(HoleStandards_|HoleStandardsCli_|MetricThreads_|HoleTolerances_|ClearanceHoles_|Hole_SpotfaceIsCutLikeACounterbore|Hole_CosmeticThreadCutsNoGeometry|Hole_RefusesThreadsThatDoNotFitTheirHole)" --ignore-line-numbers \
+       --substitute "objects[2].data.type: unknown value 'spotface'=objects[2].data: the spotface diameter must be positive and finite, got 0 mm" \
+       --substitute "objects[2].data.thread: unknown field=objects[2].data.thread: expected an object" \
+       feat006-release=... hole001-release=...
+
+substituted 'objects[2].data.type: unknown value 'spotface'' -> 'objects[2].data: the spotface diameter must be positive and finite, got 0 mm':
+  feat006-release: 2 lines
+  hole001-release: 0 lines
+substituted 'objects[2].data.thread: unknown field' -> 'objects[2].data.thread: expected an object':
+  feat006-release: 2 lines
+  hole001-release: 0 lines
+feat006-release: 38698 non-empty lines after normalizing, MD5 d739c331dcdd48477742d1d2de28d713
+hole001-release: 38698 non-empty lines after normalizing, MD5 d739c331dcdd48477742d1d2de28d713
+
+hole001-release against feat006-release:
+  differing lines: 0 expected only, 0 measured
+
+RESULT: measured values identical

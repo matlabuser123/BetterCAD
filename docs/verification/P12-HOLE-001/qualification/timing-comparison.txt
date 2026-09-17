@@ -1,0 +1,58 @@
+Per-test CTest times (CTest's own figures), summed and for the slowest tests. feat006 is the
+P12-FEAT-006 qualification, hole001 this one. All runs used -j 8 on the same machine.
+Produced by: python compare-times.py feat006=../../P12-FEAT-006/qualification/ctest-<preset>.log hole001=ctest-<preset>.log --top 12
+
+== release
+       feat006: 1036 tests,    736.02 s summed
+       hole001: 1070 tests,   1330.94 s summed
+
+test                                                                         feat006       hole001
+unit.ReferenceModel_AllModelsStressRegression                                  24.67         34.67
+unit.LinearPattern_DoesNotAccumulateTransformDrift                             20.41         25.38
+unit.ReferenceModel_MountingBracketRegeneratesDeterministically                19.00         25.00
+unit.ReferenceModel_AllModelsRegenerateAfterAChange                            15.79         22.91
+unit.ReferenceModel_FlangeRegeneratesDeterministically                         16.56         21.94
+unit.ReferenceModel_AllModelsBuildInOneProcess                                 16.96         21.92
+unit.ReferenceModel_PulleyRegeneratesDeterministically                         14.16         21.40
+compile_fail.ids.integer-to-id                                                  6.52         19.17
+compile_fail.ids.compare-different-kinds                                        6.27         16.59
+unit.ReferenceModel_ShaftRegeneratesDeterministically                          12.48         16.03
+compile_fail.ids.object-to-sketch-id                                            7.14         15.46
+unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges            10.63         13.66
+
+== debug
+       feat006: 1036 tests,    757.24 s summed
+       hole001: 1070 tests,   1360.14 s summed
+
+test                                                                         feat006       hole001
+unit.ReferenceModel_AllModelsStressRegression                                  23.71         32.82
+unit.LinearPattern_DoesNotAccumulateTransformDrift                             18.55         26.68
+unit.ReferenceModel_MountingBracketRegeneratesDeterministically                17.22         24.63
+unit.ReferenceModel_AllModelsBuildInOneProcess                                 15.39         23.18
+unit.ReferenceModel_FlangeRegeneratesDeterministically                         14.74         21.46
+unit.ReferenceModel_AllModelsRegenerateAfterAChange                            14.05         20.27
+unit.ReferenceModel_PulleyRegeneratesDeterministically                         12.81         19.57
+unit.ReferenceModel_ShaftRegeneratesDeterministically                          10.94         16.34
+compile_fail.ids.integer-to-id                                                  6.50         14.86
+unit.ReferenceModel_SavedModelsMatchTheBuilders                                10.54         14.70
+unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges            10.81         14.23
+compile_fail.units.sqrt-of-volume                                               5.43         11.95
+
+== debug-shared
+       feat006: 1036 tests,    761.60 s summed
+       hole001: 1070 tests,   1018.50 s summed
+
+test                                                                         feat006       hole001
+unit.ReferenceModel_AllModelsStressRegression                                  23.76         26.53
+unit.LinearPattern_DoesNotAccumulateTransformDrift                             18.67         21.57
+unit.ReferenceModel_MountingBracketRegeneratesDeterministically                17.37         19.64
+unit.ReferenceModel_AllModelsBuildInOneProcess                                 15.69         17.55
+unit.ReferenceModel_FlangeRegeneratesDeterministically                         15.00         17.16
+unit.ReferenceModel_AllModelsRegenerateAfterAChange                            14.09         15.78
+unit.ReferenceModel_PulleyRegeneratesDeterministically                         13.06         14.27
+unit.ReferenceModel_ShaftRegeneratesDeterministically                          11.24         12.83
+unit.ReferenceModel_SavedModelsMatchTheBuilders                                 9.97         11.80
+unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges            10.31         11.59
+compile_fail.ids.entity-id-as-object-id                                         7.19         10.41
+unit.ReferenceModel_BearingHousingRegeneratesDeterministically                  8.76         10.07
+

@@ -1,0 +1,16 @@
+Cross-configuration comparison of the measured values of the P12-HOLE-001 tests.
+Each configuration's bettercad_tests.exe ran the 31 test cases of values-header.txt with -s --reporter xml
+--rng-seed 1; values.py filtered the report; compare-values.py (in this directory) compared the results.
+Temporary paths and document UUIDs are normalized; lines holding a pointer value are dropped.
+
+release: 8746 non-empty lines after normalizing, MD5 7aa30390cc96361efc735128226ded90
+debug: 8746 non-empty lines after normalizing, MD5 7aa30390cc96361efc735128226ded90
+debug-shared: 8746 non-empty lines after normalizing, MD5 7aa30390cc96361efc735128226ded90
+
+debug against release:
+  differing lines: 0 expected only, 0 measured
+
+debug-shared against release:
+  differing lines: 0 expected only, 0 measured
+
+RESULT: measured values identical

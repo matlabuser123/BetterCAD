@@ -1,0 +1,111 @@
+file                             kind  tolerance  checks    largest
+HoleStandardFileTests.cpp        rel     1.0e-12       1   0.00e+00
+HoleStandardFileTests.cpp        rel     1.0e-09       1   1.14e-15
+HoleStandardTests.cpp            abs     1.0e-12       6   0.00e+00
+HoleStandardTests.cpp            abs     1.0e-09      14   1.07e-14
+HoleStandardTests.cpp            abs     5.0e-04       6   1.65e-04
+HoleStandardTests.cpp            rel     1.0e-12      14   1.58e-13
+HoleStandardsTests.cpp           abs     1.0e-12     222   7.11e-15
+HoleStandardsTests.cpp           abs     1.0e-09    1766   6.93e-12
+HoleStandardsTests.cpp           abs     5.0e-04       4   2.79e-04
+HoleStandardsTests.cpp           abs     5.0e-01     240   4.81e-01
+HoleStandardsTests.cpp           rel     1.0e-15     120   2.17e-16
+HoleStandardsTests.cpp           rel     1.0e-12     103   0.00e+00
+HoleStandardsTests.cpp           rel     5.9e-02     120   4.88e-02
+HoleTests.cpp                    rel     1.0e-12       3   2.05e-15
+SketchOnFaceTests.cpp            abs     1.0e-14      54   0.00e+00
+SketchOnFaceTests.cpp            abs     1.0e-12      27   3.55e-15
+SketchOnFaceTests.cpp            abs     1.0e-09      36   1.07e-14
+SketchOnFaceTests.cpp            abs     1.0e-07      72   3.55e-15
+SketchOnFaceTests.cpp            rel     1.0e-12      12   6.30e-16
+
+HoleStandardFileTests.cpp rel 1.0e-12: largest 3
+  0.000e+00  measured 44239.711198467536 expected 44239.711198467536  HoleStandards_SaveLoadPreservesTheStandardsData / the loaded model is still driven by its parameters  
+
+HoleStandardFileTests.cpp rel 1.0e-09: largest 3
+  1.144e-15  measured 44516.17135198339 expected 44516.17135198344  HoleStandards_SaveLoadPreservesTheStandardsData / STEP export reads back with the same volume  
+
+HoleStandardTests.cpp abs 1.0e-12: largest 3
+  0.000e+00  measured 6.646835306586815 expected 6.646835306586815  HoleStandards_CalloutsDescribeTheStandardsData / a tapped hole's callout is its thread's designation and limits  
+  0.000e+00  measured 8.0 expected 8.0  HoleStandards_CalloutsDescribeTheStandardsData / a blind hole's thread is as long as its parameter says  
+  0.000e+00  measured 9.0 expected 9.0  HoleStandards_CalloutsDescribeTheStandardsData / a clearance hole's callout is its ISO 273 diameter and its class  
+
+HoleStandardTests.cpp abs 1.0e-09: largest 3
+  1.066e-14  measured 25.146103714354364 expected 25.146103714354375  HoleStandards_TappedPlateHasTheVolumeOfItsStandardHoles / the plate is the block less the hole each standard gives  
+  7.105e-15  measured 39.47080374471129 expected 39.47080374471128  HoleStandards_TappedPlateHasTheVolumeOfItsStandardHoles / the plate is the block less the hole each standard gives  
+  1.776e-15  measured 5.8910381440715085 expected 5.891038144071507  HoleStandards_TappedPlateHasTheVolumeOfItsStandardHoles / the plate is the block less the hole each standard gives  
+
+HoleStandardTests.cpp abs 5.0e-04: largest 3
+  1.647e-04  measured 6.646835306586815 expected 6.647  HoleStandards_CalloutsDescribeTheStandardsData / a tapped hole's callout is its thread's designation and limits  
+  1.647e-04  measured 6.646835306586815 expected 6.647  HoleStandards_CalloutsDescribeTheStandardsData / a tapped hole's callout is its thread's designation and limits  
+  1.647e-04  measured 6.9118353065868146 expected 6.912  HoleStandards_CalloutsDescribeTheStandardsData / a tapped hole's callout is its thread's designation and limits  
+
+HoleStandardTests.cpp rel 1.0e-12: largest 3
+  1.583e-13  measured 57.396897781094594 expected 57.39689778108551  HoleStandards_ClearanceSeriesChangesTheDiameter  
+  2.140e-14  measured 189.92100931221648 expected 189.92100931222055  HoleStandards_TappedPlateHasTheVolumeOfItsStandardHoles / each hole is cut at the diameter of its own standard  
+  1.248e-14  measured 628.3185307179665 expected 628.3185307179587  HoleStandards_TappedPlateHasTheVolumeOfItsStandardHoles / each hole is cut at the diameter of its own standard  
+
+HoleStandardsTests.cpp abs 1.0e-12: largest 3
+  7.105e-15  measured 48.75240473580835 expected 48.752404735808355  MetricThreads_BasicDiametersFollowIso68 / the diameters are the profile's, computed independently  size.designation() := "M52"
+  7.105e-15  measured 46.587341226347256 expected 46.58734122634726  MetricThreads_BasicDiametersFollowIso68 / the diameters are the profile's, computed independently  size.designation() := "M52"
+  7.105e-15  measured 52.4276452093892 expected 52.42764520938919  MetricThreads_BasicDiametersFollowIso68 / the diameters are the profile's, computed independently  size.designation() := "M56"
+
+HoleStandardsTests.cpp abs 1.0e-09: largest 3
+  6.935e-12  measured 70.99999999999469 expected 71.00000000000162  MetricThreads_PositionGRaisesEveryLimitByItsDeviation  size.designation() := "M48"
+  6.935e-12  measured 70.99999999999469 expected 71.00000000000162  MetricThreads_PositionGRaisesEveryLimitByItsDeviation  size.designation() := "M48"
+  6.935e-12  measured 70.99999999999469 expected 71.00000000000162  MetricThreads_PositionGRaisesEveryLimitByItsDeviation  size.designation() := "M52"
+
+HoleStandardsTests.cpp abs 5.0e-04: largest 3
+  2.786e-04  measured 9.025721420742506 expected 9.026  MetricThreads_BasicDiametersFollowIso68 / M8 and M10 have the dimensions the tables list  
+  2.024e-04  measured 8.37620236790418 expected 8.376  MetricThreads_BasicDiametersFollowIso68 / M8 and M10 have the dimensions the tables list  
+  1.647e-04  measured 6.646835306586815 expected 6.647  MetricThreads_BasicDiametersFollowIso68 / M8 and M10 have the dimensions the tables list  
+
+HoleStandardsTests.cpp abs 5.0e-01: largest 3
+  4.809e-01  measured 5500.480947161672 expected 5500.0  MetricThreads_LimitsMatchIso965Part2  row.size := "M6"
+  4.809e-01  measured 5350.480947161672 expected 5350.0  MetricThreads_LimitsMatchIso965Part2  row.size := "M6"
+  4.809e-01  measured 6500.480947161672 expected 6500.0  MetricThreads_LimitsMatchIso965Part2  row.size := "M7"
+
+HoleStandardsTests.cpp rel 1.0e-15: largest 3
+  2.169e-16  measured 16.376202367904174 expected 16.376202367904177  MetricThreads_BasicDiametersFollowIso68 / the diameters are the profile's, computed independently  size.designation() := "M18"
+  2.169e-16  measured 16.376202367904174 expected 16.376202367904177  MetricThreads_BasicDiametersFollowIso68 / the diameters are the profile's, computed independently  size.designation() := "M18x1.5"
+  2.169e-16  measured 32.75240473580835 expected 32.752404735808355  MetricThreads_BasicDiametersFollowIso68 / the diameters are the profile's, computed independently  size.designation() := "M36x3"
+
+HoleStandardsTests.cpp rel 1.0e-12: largest 3
+  0.000e+00  measured 100.0 expected 100.0  HoleTolerances_StandardTolerancesMatchIso286 / the grades grow by a factor of 10 every fifth step  row.upToMm := 3; grade := 7
+  0.000e+00  measured 140.0 expected 140.0  HoleTolerances_StandardTolerancesMatchIso286 / the grades grow by a factor of 10 every fifth step  row.upToMm := 3; grade := 8
+  0.000e+00  measured 250.0 expected 250.0  HoleTolerances_StandardTolerancesMatchIso286 / the grades grow by a factor of 10 every fifth step  row.upToMm := 3; grade := 9
+
+HoleStandardsTests.cpp rel 5.9e-02: largest 3
+  4.878e-02  measured 179.9999999999996 expected 171.21970635760783  MetricThreads_TolerancesFollowTheIso965Part1Formulae  size.designation() := "M12x1.25"
+  4.534e-02  measured 179.9999999999996 expected 171.83959749163478  MetricThreads_TolerancesFollowTheIso965Part1Formulae  size.designation() := "M10"
+  4.419e-02  measured 55.99999999999995 expected 58.58888487146908  MetricThreads_TolerancesFollowTheIso965Part1Formulae  size.designation() := "M1"
+
+HoleTests.cpp rel 1.0e-12: largest 3
+  2.051e-15  measured 235.61944901923496 expected 235.61944901923448  Hole_SpotfaceIsCutLikeACounterbore  
+  0.000e+00  measured 98193.58422418588 expected 98193.58422418588  Hole_SpotfaceIsCutLikeACounterbore  
+  0.000e+00  measured 98821.90275490383 expected 98821.90275490383  Hole_SpotfaceIsCutLikeACounterbore  
+
+SketchOnFaceTests.cpp abs 1.0e-14: largest 3
+  0.000e+00  measured 1.0 expected 1.0  SketchOnFace_HoleBottomsAndCounterboreFloorsFollowTheirDepths  bore := 12.0; counterbore := 5.0; PinSketch (object:6)
+  0.000e+00  measured 0.0 expected 0.0  SketchOnFace_HoleBottomsAndCounterboreFloorsFollowTheirDepths  bore := 12.0; counterbore := 5.0; PinSketch (object:6)
+  0.000e+00  measured 0.0 expected 0.0  SketchOnFace_HoleBottomsAndCounterboreFloorsFollowTheirDepths  bore := 12.0; counterbore := 5.0; PinSketch (object:6)
+
+SketchOnFaceTests.cpp abs 1.0e-12: largest 3
+  3.553e-15  measured 24.999999999999996 expected 25.0  SketchOnFace_HoleBottomsAndCounterboreFloorsFollowTheirDepths  bore := 12.0; counterbore := 5.0; CollarSketch (object:8)
+  3.553e-15  measured 24.999999999999996 expected 25.0  SketchOnFace_HoleBottomsAndCounterboreFloorsFollowTheirDepths  bore := 18.0; counterbore := 5.0; CollarSketch (object:8)
+  0.000e+00  measured 0.0 expected 0.0  SketchOnFace_HoleBottomsAndCounterboreFloorsFollowTheirDepths  bore := 12.0; counterbore := 5.0; PinSketch (object:6)
+
+SketchOnFaceTests.cpp abs 1.0e-09: largest 3
+  1.066e-14  measured 19.999999999999993 expected 20.000000000000004  SketchOnFace_HoleBottomsAndCounterboreFloorsFollowTheirDepths  bore := 12.0; counterbore := 5.0
+  7.105e-15  measured 29.823195898469667 expected 29.823195898469674  SketchOnFace_HoleBottomsAndCounterboreFloorsFollowTheirDepths  bore := 12.0; counterbore := 5.0
+  7.105e-15  measured 51.00000000000001 expected 51.0  SketchOnFace_HoleBottomsAndCounterboreFloorsFollowTheirDepths  bore := 12.0; counterbore := 5.0; CollarSketch (object:8)
+
+SketchOnFaceTests.cpp abs 1.0e-07: largest 3
+  3.553e-15  measured 24.999999999999996 expected 25.0  SketchOnFace_HoleBottomsAndCounterboreFloorsFollowTheirDepths  bore := 12.0; counterbore := 5.0; CollarSketch (object:8)
+  3.553e-15  measured 27.999999999999996 expected 28.0  SketchOnFace_HoleBottomsAndCounterboreFloorsFollowTheirDepths  bore := 12.0; counterbore := 5.0; CollarSketch (object:8)
+  3.553e-15  measured 24.999999999999996 expected 25.0  SketchOnFace_HoleBottomsAndCounterboreFloorsFollowTheirDepths  bore := 18.0; counterbore := 5.0; CollarSketch (object:8)
+
+SketchOnFaceTests.cpp rel 1.0e-12: largest 3
+  6.300e-16  measured 69298.2303179128 expected 69298.23031791276  SketchOnFace_HoleBottomsAndCounterboreFloorsFollowTheirDepths  bore := 12.0; counterbore := 5.0
+  3.351e-16  measured 21.20575041173111 expected 21.205750411731103  SketchOnFace_HoleBottomsAndCounterboreFloorsFollowTheirDepths  bore := 12.0; counterbore := 5.0; CollarSketch (object:8)
+  3.351e-16  measured 21.20575041173111 expected 21.205750411731103  SketchOnFace_HoleBottomsAndCounterboreFloorsFollowTheirDepths  bore := 18.0; counterbore := 5.0; CollarSketch (object:8)

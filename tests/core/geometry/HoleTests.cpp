@@ -430,3 +430,103 @@ TEST_CASE("Hole_IsDeterministic", "[geometry][hole]") {
 TEST_CASE("Hole_ThatRemovesNothingMeasurableIsRefused", "[geometry][hole]") {
     CHECK(refusal(block(), through(top(), at(50, 25), 1e-6_mm)) == "hole: the hole removes no material");
 }
+
+// P12-HOLE-001: spotfaces and cosmetic threads.
+
+TEST_CASE("Hole_SpotfaceIsCutLikeACounterbore", "[geometry][hole][p12]") {
+    // A 10 mm hole with a 20 mm spotface 1 mm deep, as a seat.
+    const HoleRequest seated{.face = top(), .center = at(50, 25), .type = HoleType::Spotface, .diameter = 10_mm,
+                             .spotfaceDiameter = 20_mm, .spotfaceDepth = 1_mm};
+    const Body holed = requireHole(block(), seated);
+    CHECK_THAT(requireProperties(holed).volume.in(units::mm3),
+               WithinRel(100000.0 - pi * 25.0 * 20.0 - pi * (100.0 - 25.0) * 1.0, kRelTight));
+    const auto floor = findFaces(holed, top(19));
+    REQUIRE(floor.has_value());
+    REQUIRE(floor->size() == 1);
+    CHECK_THAT(floor->front().area.in(units::mm2), WithinRel(pi * (100.0 - 25.0), kRelTight));
+
+    // The same dimensions as a counterbore give the same solid: the type
+    // records the intent, and names the floor differently.
+    const HoleRequest bored{.face = top(), .center = at(50, 25), .type = HoleType::Counterbore, .diameter = 10_mm,
+                            .counterboreDiameter = 20_mm, .counterboreDepth = 1_mm};
+    const MassProperties spotfaced = requireProperties(holed);
+    const MassProperties counterbored = requireProperties(requireHole(block(), bored));
+    CHECK(bits(spotfaced.volume.si()) == bits(counterbored.volume.si()));
+    CHECK(bits(spotfaced.surfaceArea.si()) == bits(counterbored.surfaceArea.si()));
+
+    HoleRequest blindSeat = seated;
+    blindSeat.extent = HoleExtent::Blind;
+    blindSeat.depth = 12_mm;
+    CHECK_THAT(requireProperties(requireHole(block(), blindSeat)).volume.in(units::mm3),
+               WithinRel(100000.0 - pi * 25.0 * 12.0 - pi * (100.0 - 25.0) * 1.0, kRelTight));
+}
+
+TEST_CASE("Hole_CosmeticThreadCutsNoGeometry", "[geometry][hole][p12]") {
+    // The hole is the thread's core: a threaded hole is the same solid as the
+    // same hole without a thread, bit for bit.
+    HoleRequest tapped = blind(top(), at(50, 25), 6.647_mm, 15_mm);
+    const MassProperties plain = requireProperties(requireHole(block(), tapped));
+    for (const Length length : {Length{}, 5_mm, 15_mm}) {
+        CAPTURE(length.in(units::mm));
+        tapped.thread = CosmeticThread{.majorDiameter = 8_mm, .length = length};
+        const MassProperties threaded = requireProperties(requireHole(block(), tapped));
+        CHECK(bits(threaded.volume.si()) == bits(plain.volume.si()));
+        CHECK(bits(threaded.surfaceArea.si()) == bits(plain.surfaceArea.si()));
+        CHECK(bits(threaded.centerOfMass.z.si()) == bits(plain.centerOfMass.z.si()));
+    }
+}
+
+TEST_CASE("Hole_RefusesThreadsThatDoNotFitTheirHole", "[geometry][hole][p12]") {
+    const auto invalid = [](const HoleRequest& request) {
+        const auto result = validate(request);
+        REQUIRE_FALSE(result.has_value());
+        CHECK(result.error().code == ErrorCode::InvalidArgument);
+        return result.error().message;
+    };
+    HoleRequest tapped = blind(top(), at(50, 25), 6.647_mm, 15_mm);
+    tapped.thread = CosmeticThread{.majorDiameter = 8_mm, .length = 10_mm};
+    CHECK(validate(tapped).has_value());
+
+    SECTION("the thread must be wider than the hole it is cut in") {
+        HoleRequest request = tapped;
+        request.thread->majorDiameter = 6_mm;
+        CHECK(invalid(request) ==
+              "the thread's major diameter must be larger than the hole diameter (6.647 mm), got 6 mm");
+        request.thread->majorDiameter = Length::fromSi(std::numeric_limits<double>::infinity());
+        CHECK_THAT(invalid(request), StartsWith("the thread's major diameter must be larger"));
+    }
+    SECTION("the thread's length must be positive and fit a blind hole") {
+        HoleRequest request = tapped;
+        request.thread->length = -1_mm;
+        CHECK(invalid(request) ==
+              "the thread length must be positive and finite, or zero for the whole hole, got -1 mm");
+        request.thread->length = 16_mm;
+        CHECK(invalid(request) == "the thread (16 mm long) must not be longer than the blind hole (15 mm deep)");
+        // Threaded to the bottom is allowed.
+        request.thread->length = 15_mm;
+        CHECK(validate(request).has_value());
+    }
+    SECTION("a head must clear the thread and be shorter than it") {
+        HoleRequest request = tapped;
+        request.type = HoleType::Counterbore;
+        request.counterboreDiameter = 7.5_mm;
+        request.counterboreDepth = 3_mm;
+        CHECK(invalid(request) ==
+              "the counterbore diameter (7.5 mm) must be larger than the thread's major diameter (8 mm)");
+        request.counterboreDiameter = 12_mm;
+        CHECK(validate(request).has_value());
+        request.thread->length = 3_mm;
+        CHECK(invalid(request) == "the thread (3 mm long) must be longer than the counterbore (3 mm deep)");
+        // A thread over the whole hole always outlasts the head.
+        request.thread->length = Length{};
+        CHECK(validate(request).has_value());
+    }
+    SECTION("a through hole's thread must stay in the material under its face") {
+        HoleRequest request = through(top(), at(50, 25), 6.647_mm);
+        request.thread = CosmeticThread{.majorDiameter = 8_mm, .length = 20_mm};
+        CHECK(cutHole(block(), request).has_value());
+        request.thread->length = 25_mm;
+        CHECK(refusal(block(), request) == "hole: the thread (25 mm long) is longer than the material along the "
+                                           "axis under the face (20 mm)");
+    }
+}

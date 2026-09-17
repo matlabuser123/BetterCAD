@@ -1,0 +1,23 @@
+PASS  IT grades: the Wikipedia table lists every range up to 500 mm: 13 ranges
+PASS  IT grades: BetterCAD's table against Wikipedia: 13/13 ranges, 234 values
+PASS  IT grades: the tests' table against Wikipedia: 13/13 ranges
+PASS  IT grades: BetterCAD's table against the ISO 286-2:2010 preview: 11 of the 11 rows its watermark leaves readable
+PASS  D and E limits: the tests' table against the ISO 286-2:2010 preview: 9 of the 9 rows its watermark leaves readable
+PASS  D and E fundamental deviations: BetterCAD's table against the same preview: 9 ranges
+PASS  F, G and H limits: MISUMI's excerpt has a row pair per range: 13 pairs
+PASS  D to H limits: the tests' table against MISUMI's excerpt of JIS B 0401: 13/13 ranges, 208 upper and 65 lower deviations
+PASS  thread limits: the tests' table against the ISO 965-2 previews: 56 of 60 sizes; the previews leave ['M18x1.5', 'M20x1.5', 'M20x2', 'M22x1.5'] unreadable
+PASS  thread limits: M18x1.5 against M16x1.5: (17216, 17026, 16676, 16376) against (17216, 17026, 16676, 16376)
+PASS  thread limits: M20x1.5 against M18x1.5: (19216, 19026, 18676, 18376) against (19216, 19026, 18676, 18376)
+PASS  thread limits: M20x2 against M18x2: (18913, 18701, 18210, 17835) against (18913, 18701, 18210, 17835)
+PASS  thread limits: M22x1.5 against M20x1.5: (21216, 21026, 20676, 20376) against (21216, 21026, 20676, 20376)
+PASS  thread sizes: BetterCAD's table against the tests' table: 60 sizes
+PASS  position G: BetterCAD's deviations against ISO 965-1:2013, Table 1: 22/22 pitches
+PASS  position g: the tests' table against the 6g threads of ISO 965-2: 17/17 pitches
+PASS  TD1: BetterCAD's tolerances against ISO 965-1:2013, Table 2: 18 of 22 pitches (its watermark crosses the others)
+PASS  TD2: BetterCAD's tolerances against the printed part of ISO 965-1:2013, Table 4: 5 of 27 entries (the preview prints the ranges up to 2.8 mm)
+PASS  TD2: BetterCAD's tolerances against the limits of ISO 965-2: 60/60 sizes
+PASS  clearance holes: the tests' table against two published charts: 34/34 sizes
+PASS  clearance holes: BetterCAD's table against the tests' table: 34 sizes
+
+21 checks, 0 failed

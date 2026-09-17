@@ -79,7 +79,7 @@ Python and a future agent. The GUI must never become the architecture.
 
 | Layer | Module | Contains |
 | --- | --- | --- |
-| 0 | `core` | IDs, units, parameters, document, commands, dependency graph, diagnostics, math value types, geometry abstraction |
+| 0 | `core` | IDs, units, parameters, document, commands, dependency graph, diagnostics, math value types, geometry abstraction, engineering standards data |
 | 1 | `sketch` | Entities, constraints, solver, profile extraction |
 | 2 | `features` | Feature definitions, regeneration, validation |
 | 3 | `io` | Native `.bcad`, STEP/STL export |

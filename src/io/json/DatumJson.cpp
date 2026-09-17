@@ -21,13 +21,14 @@ constexpr std::array<std::pair<PrincipalPlane, std::string_view>, 3> kPlanes{{
     {PrincipalPlane::YZ, "yz"},
     {PrincipalPlane::XZ, "xz"},
 }};
-constexpr std::array<std::pair<FaceRole, std::string_view>, 6> kFaceRoles{{
+constexpr std::array<std::pair<FaceRole, std::string_view>, 7> kFaceRoles{{
     {FaceRole::StartCap, "start_cap"},
     {FaceRole::EndCap, "end_cap"},
     {FaceRole::Side, "side"},
     {FaceRole::HoleBottom, "hole_bottom"},
     {FaceRole::CounterboreFloor, "counterbore_floor"},
     {FaceRole::Chamfer, "chamfer"},
+    {FaceRole::SpotfaceFloor, "spotface_floor"},
 }};
 constexpr std::array<std::pair<PrincipalAxis, std::string_view>, 3> kAxes{{
     {PrincipalAxis::X, "x"},
