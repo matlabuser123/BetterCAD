@@ -1,0 +1,69 @@
+OCCT shell probe
+
+A. box, top removed, 5 inward, arc: valid 1, solids 1, faces 11, volume 82500.000000000, expected 82500.000000000, rel 0.00e+00, 0.017 s
+B. box, top removed, 5 outward, arc: valid 1, solids 1, faces 23, volume 103686.577349797, expected 103686.577348569, rel 1.18e-11, 0.034 s
+A. box, top removed, 5 inward, intersection: valid 1, solids 1, faces 11, volume 82500.000000000, expected 82500.000000000, rel 0.00e+00, 0.020 s
+B. box, top removed, 5 outward, intersection: valid 1, solids 1, faces 11, volume 106500.000000000, expected 106500.000000000, rel 1.37e-16, 0.013 s
+C. cylinder, top removed, 3 inward, arc: valid 1, solids 1, faces 5, volume 20159.600058086, expected 20159.600058086, rel 1.80e-16, 0.007 s
+D. box, nothing removed, 5 inward, arc: valid 1, solids 1, faces 6, volume 135000.000000000, expected 105000.000000000, rel 2.86e-01, 0.027 s
+E. box, top removed, 35 inward, arc: valid 1, solids 1, faces 6, volume 240000.000000000, expected 1.000000000, rel 2.40e+05, 0.030 s
+E. box, top removed, 30 inward (half of 60), arc: valid 0, solids 1, faces 11, volume 240000.000000000, expected 1.000000000, rel 2.40e+05, 0.023 s
+E. box, top removed, 29 inward, arc: valid 1, solids 1, faces 11, volume 239076.000000000, expected 239076.000000000, rel 0.00e+00, 0.025 s
+F. drilled box, top removed, 5 inward, arc: valid 1, solids 1, faces 14, volume 94673.671532660, expected 94673.671532660, rel 1.54e-16, 0.037 s
+   L top face picked: plane area 5000.000 centre (38.000, 31.000, 50.000)
+H. L prism, top removed, 5 inward, arc: valid 1, solids 1, faces 16, volume 101258.572933822, expected 101258.572933822, rel 0.00e+00, 0.050 s
+H. L prism, top removed, 5 inward, intersection (sharp cavity): valid 1, solids 1, faces 15, volume 101500.000000000, expected 101500.000000000, rel 2.87e-16, 0.045 s
+H. L prism, top removed, 5 outward, arc: valid 0, solids 1, faces 8, volume 250000.000000000, expected 125971.237893227, rel 9.85e-01, 0.032 s
+I. box, top and bottom removed, 5 inward, arc: valid 1, solids 1, faces 10, volume 60000.000000000, expected 60000.000000000, rel 0.00e+00, 0.013 s
+J. cylinder, curved side removed, 3 inward, arc: FAILED (not done) in 0.000 s
+
+K. history and error of E (35 inward)
+  done 1, error 0, result is the input 0
+  face (plane area 2400.000 centre (0.000, 30.000, 20.000)): deleted 0, in result 1, modified 0, generated 0
+  face (plane area 2400.000 centre (100.000, 30.000, 20.000)): deleted 0, in result 1, modified 0, generated 0
+  face (plane area 4000.000 centre (50.000, 0.000, 20.000)): deleted 0, in result 1, modified 0, generated 0
+  face (plane area 4000.000 centre (50.000, 60.000, 20.000)): deleted 0, in result 1, modified 0, generated 0
+  face (plane area 6000.000 centre (50.000, 30.000, 0.000)): deleted 0, in result 1, modified 0, generated 0
+  face (plane area 6000.000 centre (50.000, 30.000, 40.000)): deleted 0, in result 0, modified 1, generated 0
+  30 inward: done 1, error 0
+
+L. history of B (outward, intersection): the removed top
+  top: deleted 0, in result 0
+    modified -> plane area 1700.000 centre (50.000, 30.000, 40.000), in result 1
+    result face 1: plane area 2400.000 centre (100.000, 30.000, 20.000)
+    result face 2: plane area 4000.000 centre (50.000, 0.000, 20.000)
+    result face 3: plane area 2400.000 centre (0.000, 30.000, 20.000)
+    result face 4: plane area 4000.000 centre (50.000, 60.000, 20.000)
+    result face 5: plane area 6000.000 centre (50.000, 30.000, 0.000)
+    result face 6: plane area 1700.000 centre (50.000, 30.000, 40.000)
+    result face 7: plane area 3150.000 centre (-5.000, 30.000, 17.500)
+    result face 8: plane area 3150.000 centre (105.000, 30.000, 17.500)
+    result face 9: plane area 4950.000 centre (50.000, -5.000, 17.500)
+    result face 10: plane area 4950.000 centre (50.000, 65.000, 17.500)
+    result face 11: plane area 7700.000 centre (50.000, 30.000, -5.000)
+
+G. history of A (inward, arc)
+  input face 1 (plane area 2400.000 centre (0.000, 30.000, 20.000)): deleted 0, itself in result 1
+    generated -> plane area 1750.000 centre (5.000, 30.000, 22.500), in result 1
+  input face 2 (plane area 2400.000 centre (100.000, 30.000, 20.000)): deleted 0, itself in result 1
+    generated -> plane area 1750.000 centre (95.000, 30.000, 22.500), in result 1
+  input face 3 (plane area 4000.000 centre (50.000, 0.000, 20.000)): deleted 0, itself in result 1
+    generated -> plane area 3150.000 centre (50.000, 5.000, 22.500), in result 1
+  input face 4 (plane area 4000.000 centre (50.000, 60.000, 20.000)): deleted 0, itself in result 1
+    generated -> plane area 3150.000 centre (50.000, 55.000, 22.500), in result 1
+  input face 5 (plane area 6000.000 centre (50.000, 30.000, 0.000)): deleted 0, itself in result 1
+    generated -> plane area 4500.000 centre (50.000, 30.000, 5.000), in result 1
+  input face 6 (plane area 6000.000 centre (50.000, 30.000, 40.000)): deleted 0, itself in result 0
+    modified -> plane area 1500.000 centre (50.000, 30.000, 40.000), in result 1
+  result faces:
+    1: plane area 2400.000 centre (100.000, 30.000, 20.000)
+    2: plane area 4000.000 centre (50.000, 0.000, 20.000)
+    3: plane area 2400.000 centre (0.000, 30.000, 20.000)
+    4: plane area 4000.000 centre (50.000, 60.000, 20.000)
+    5: plane area 6000.000 centre (50.000, 30.000, 0.000)
+    6: plane area 1500.000 centre (50.000, 30.000, 40.000)
+    7: plane area 1750.000 centre (5.000, 30.000, 22.500)
+    8: plane area 3150.000 centre (50.000, 55.000, 22.500)
+    9: plane area 1750.000 centre (95.000, 30.000, 22.500)
+    10: plane area 3150.000 centre (50.000, 5.000, 22.500)
+    11: plane area 4500.000 centre (50.000, 30.000, 5.000)

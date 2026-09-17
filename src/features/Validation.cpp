@@ -14,6 +14,7 @@
 #include <bettercad/features/ResultBodies.hpp>
 #include <bettercad/features/LoftFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
+#include <bettercad/features/ShellFeature.hpp>
 #include <bettercad/features/SplitFeature.hpp>
 #include <bettercad/features/SweepFeature.hpp>
 #include <bettercad/features/Validation.hpp>
@@ -107,21 +108,28 @@ private:
         }
     }
 
+    /// A face name whose features exist must be one checkFaceName() accepts.
+    /// @p role introduces it, e.g. "open face 1 is".
+    void checkFaceNameReference(ObjectId owner, const FaceName& name, std::string_view role) {
+        if (!document_.contains(name.feature) ||
+            std::ranges::any_of(name.face.copies,
+                                [this](const FaceCopy& copy) { return !document_.contains(copy.feature); })) {
+            return; // a missing reference
+        }
+        if (auto valid = checkFaceName(document_, name); !valid) {
+            add(ValidationCheck::DocumentConsistency, Severity::Error, owner,
+                std::format("{}: {} {}: {}", label(document_, owner), role, describe(document_, name),
+                            valid.error().message));
+        }
+    }
+
     /// A plane reference that names an existing object must name a datum
     /// plane or a coordinate system; an axis reference, a datum axis or a
     /// coordinate system; a coordinate system reference, a coordinate system.
     void checkPlaneReference(ObjectId owner, const PlaneReference& reference, std::string_view role) {
         if (reference.face) {
-            if (!reference.object || !document_.contains(*reference.object) ||
-                std::ranges::any_of(reference.face->copies,
-                                    [this](const FaceCopy& copy) { return !document_.contains(copy.feature); })) {
-                return; // a missing reference
-            }
-            if (auto valid = checkFaceName(document_, FaceName{*reference.object, *reference.face}); !valid) {
-                add(ValidationCheck::DocumentConsistency, Severity::Error, owner,
-                    std::format("{}: {} {}: {}", label(document_, owner), role,
-                                describe(document_, FaceName{*reference.object, *reference.face}),
-                                valid.error().message));
+            if (reference.object) {
+                checkFaceNameReference(owner, FaceName{*reference.object, *reference.face}, role);
             }
             return;
         }
@@ -245,6 +253,16 @@ private:
                 if (definition.radiusParameter) {
                     checkParameter(object.id(), *definition.radiusParameter, dimensions::length,
                                    "the radius is driven by");
+                }
+            } else if (const auto* shell = dynamic_cast<const ShellFeature*>(&object)) {
+                const ShellDefinition& definition = shell->definition();
+                if (definition.thicknessParameter) {
+                    checkParameter(object.id(), *definition.thicknessParameter, dimensions::length,
+                                   "the thickness is driven by");
+                }
+                for (std::size_t i = 0; i < definition.openFaces.size(); ++i) {
+                    checkFaceNameReference(object.id(), definition.openFaces[i],
+                                           std::format("open face {} is", i + 1));
                 }
             } else if (const auto* hole = dynamic_cast<const HoleFeature*>(&object)) {
                 const HoleDefinition& definition = hole->definition();

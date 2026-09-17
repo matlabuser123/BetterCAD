@@ -15,6 +15,7 @@
 #include <bettercad/features/LoftFeature.hpp>
 #include <bettercad/features/MirrorFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
+#include <bettercad/features/ShellFeature.hpp>
 #include <bettercad/features/SplitFeature.hpp>
 #include <bettercad/features/SweepFeature.hpp>
 
@@ -143,6 +144,8 @@ using CreateChamferCommand = CreateFeatureCommand<ChamferFeature>;
 using ModifyChamferCommand = ModifyFeatureCommand<ChamferFeature>;
 using CreateFilletCommand = CreateFeatureCommand<FilletFeature>;
 using ModifyFilletCommand = ModifyFeatureCommand<FilletFeature>;
+using CreateShellCommand = CreateFeatureCommand<ShellFeature>;
+using ModifyShellCommand = ModifyFeatureCommand<ShellFeature>;
 using CreateHoleCommand = CreateFeatureCommand<HoleFeature>;
 using ModifyHoleCommand = ModifyFeatureCommand<HoleFeature>;
 using CreateLinearPatternCommand = CreateFeatureCommand<LinearPatternFeature>;

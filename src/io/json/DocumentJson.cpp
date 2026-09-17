@@ -25,6 +25,8 @@ Result<Json> objectToJson(const DocumentObject& object) {
         data = detail::chamferToJson(*chamfer);
     } else if (const auto* fillet = dynamic_cast<const features::FilletFeature*>(&object)) {
         data = detail::filletToJson(*fillet);
+    } else if (const auto* shell = dynamic_cast<const features::ShellFeature*>(&object)) {
+        data = detail::shellToJson(*shell);
     } else if (const auto* hole = dynamic_cast<const features::HoleFeature*>(&object)) {
         data = detail::holeToJson(*hole);
     } else if (const auto* pattern = dynamic_cast<const features::LinearPatternFeature*>(&object)) {
@@ -118,6 +120,13 @@ Result<std::unique_ptr<DocumentObject>> objectFromJson(const Json& value, std::s
             return std::unexpected(fillet.error());
         }
         return std::unique_ptr<DocumentObject>(std::move(*fillet));
+    }
+    if (*type == features::ShellFeature::kTypeName) {
+        auto shell = detail::shellFromJson(**data, std::move(*name), dataPath);
+        if (!shell) {
+            return std::unexpected(shell.error());
+        }
+        return std::unique_ptr<DocumentObject>(std::move(*shell));
     }
     if (*type == features::HoleFeature::kTypeName) {
         auto hole = detail::holeFromJson(**data, std::move(*name), dataPath);

@@ -44,6 +44,7 @@ bettercad_add_executable(bettercad_tests
         core/geometry/PrimitiveTests.cpp
         core/geometry/PropertyTests.cpp
         core/geometry/RevolutionTests.cpp
+        core/geometry/ShellTests.cpp
         core/geometry/SplitTests.cpp
         core/geometry/SweepTests.cpp
         core/geometry/TransformTests.cpp
@@ -76,6 +77,7 @@ bettercad_add_executable(bettercad_tests
         features/RegenerationTests.cpp
         features/RegeneratorTests.cpp
         features/RevolveTests.cpp
+        features/ShellFeatureTests.cpp
         features/ValidationTests.cpp
         io/ChamferFileTests.cpp
         io/CircularPatternFileTests.cpp
@@ -95,6 +97,7 @@ bettercad_add_executable(bettercad_tests
         io/ParameterJsonTests.cpp
         io/SweepFileTests.cpp
         io/RevolveFileTests.cpp
+        io/ShellFileTests.cpp
         io/StepExportTests.cpp
         io/StlTests.cpp
         sketch/AdvancedConstraintDocumentTests.cpp
@@ -118,6 +121,7 @@ bettercad_add_executable(bettercad_tests
         support/LoftModels.hpp
         support/MeshAnalysis.hpp
         support/MirrorModels.hpp
+        support/ShellModels.hpp
         support/PatternModels.hpp
         support/SweepModels.hpp
         support/TestFiles.hpp
@@ -148,6 +152,7 @@ if(TARGET bettercad_cli_lib)
         cli/FaceReferenceCliTests.cpp
         cli/ThroughAllCliTests.cpp
         cli/BodyOpsCliTests.cpp
+        cli/ShellCliTests.cpp
         cli/ExpressionCliTests.cpp
     )
     target_link_libraries(bettercad_tests PRIVATE BetterCAD::cli_lib)
@@ -373,6 +378,21 @@ if(TARGET bettercad_cli)
         COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "export-step|${_ops}|${_out}/body_ops.step"
         EXIT_CODE 0 STDOUT_REGEX "^Wrote .*body_ops\\.step: STEP AP214 \\(mm\\), 1 body \\(Halves\\), [0-9]+ bytes$"
         FILE "${_out}/body_ops.step" FILE_REGEX "^ISO-10303-21;\nHEADER;")
+    # P12-FEAT-003: a block shelled inward (open at the top, and at both
+    # ends) and outward.
+    set(_shells "${PROJECT_SOURCE_DIR}/examples/models/shelled_block.bcad")
+    bettercad_add_process_test(cli.info.shelled-block
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "info|${_shells}"
+        EXIT_CODE 0
+        STDOUT_REGEX "^Document: ShelledBlock\n.*  object:5  shell    Cup          target Block, open the end cap of Block, thickness wall, inward\n  object:6  shell    Tube         target Block, open the end cap of Block and the start cap of Block, thickness wall, inward\n  object:7  shell    Casing       target Block, open the end cap of Block, thickness wall, outward$")
+    bettercad_add_process_test(cli.validate.shelled-block
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "validate|${_shells}"
+        EXIT_CODE 0
+        STDOUT_REGEX "feature regeneration  ok, 5 objects regenerated\n  geometry              ok, 3 result bodies\nResult bodies \\(3\\):\n  Cup \\(object:5\\): 1 solid, volume 82500\\.000 mm\\^3, area 34600\\.000 mm\\^2, bounds \\(0, 0, 0\\) to \\(100, 60, 40\\) mm\n  Tube \\(object:6\\): 1 solid, volume 60000\\.000 mm\\^3, area 27000\\.000 mm\\^2, bounds \\(0, 0, 0\\) to \\(100, 60, 40\\) mm\n  Casing \\(object:7\\): 1 solid, volume 106500\\.000 mm\\^3, area 44400\\.000 mm\\^2, bounds \\(-5, -5, -5\\) to \\(105, 65, 40\\) mm\nResult: valid$")
+    bettercad_add_process_test(cli.export-step.shelled-block
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "export-step|${_shells}|${_out}/shelled_block.step"
+        EXIT_CODE 0 STDOUT_REGEX "^Wrote .*shelled_block\\.step: STEP AP214 \\(mm\\), 3 bodies \\(Cup, Tube, Casing\\), [0-9]+ bytes$"
+        FILE "${_out}/shelled_block.step" FILE_REGEX "^ISO-10303-21;\nHEADER;")
     bettercad_add_process_test(cli.export-stl.reference.pulley
         COMMAND "$<TARGET_FILE:bettercad_cli>"
         ARGS "export-stl|${_reference}/pulley.bcad|${_out}/pulley.stl"

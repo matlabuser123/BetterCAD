@@ -1,0 +1,66 @@
+OCCT shell join probe
+
+box 100x60x40, top                           inward   arc          valid 1 solids 1 faces 11 history ok  volume 82500.000000000 expected 82500.000000000 rel 0.0e+00, 0.014 s
+box 100x60x40, top                           inward   intersection valid 1 solids 1 faces 11 history ok  volume 82500.000000000 expected 82500.000000000 rel 0.0e+00, 0.022 s
+box 100x60x40, top                           outward  arc          valid 1 solids 1 faces 23 history ok  volume 103686.577349797 expected 103686.577348569 rel 1.2e-11, 0.008 s
+box 100x60x40, top                           outward  intersection valid 1 solids 1 faces 11 history ok  volume 106500.000000000 expected 106500.000000000 rel 1.4e-16, 0.003 s
+box, top and bottom                          inward   arc          valid 1 solids 1 faces 10 history ok  volume 60000.000000000 expected 60000.000000000 rel 0.0e+00, 0.007 s
+box, top and bottom                          inward   intersection valid 1 solids 1 faces 10 history ok  volume 60000.000000000 expected 60000.000000000 rel 0.0e+00, 0.022 s
+box, top and bottom                          outward  arc          valid 1 solids 1 faces 14 history ok  volume 67141.592653590, 0.021 s
+box, top and bottom                          outward  intersection valid 1 solids 1 faces 10 history ok  volume 68000.000000000 expected 68000.000000000 rel 4.3e-16, 0.003 s
+box, top and front (y = 0)                   inward   arc          valid 1 solids 1 faces 10 history ok  volume 66750.000000000 expected 66750.000000000 rel 0.0e+00, 0.008 s
+box, top and front (y = 0)                   inward   intersection valid 1 solids 1 faces 10 history ok  volume 66750.000000000 expected 66750.000000000 rel 0.0e+00, 0.020 s
+box, top and front (y = 0)                   outward  arc          valid 1 solids 1 faces 17 history ok  volume 80021.385919944, 0.005 s
+box, top and front (y = 0)                   outward  intersection valid 1 solids 1 faces 10 history ok  volume 81750.000000000 expected 81750.000000000 rel 0.0e+00, 0.004 s
+box, top, 29 (cavity 42x2x11)                inward   arc          valid 1 solids 1 faces 11 history ok  volume 239076.000000000 expected 239076.000000000 rel 0.0e+00, 0.014 s
+box, top, 29 (cavity 42x2x11)                inward   intersection valid 1 solids 1 faces 11 history ok  volume 239076.000000000 expected 239076.000000000 rel 0.0e+00, 0.014 s
+box, top, 29 (cavity 42x2x11)                outward  arc          valid 1 solids 1 faces 23 history ok  volume 913329.732813962, 0.013 s
+box, top, 29 (cavity 42x2x11)                outward  intersection valid 1 solids 1 faces 11 history ok  volume 1046436.000000000, 0.004 s
+box, top, 30 (cavity closes)                 inward   arc          valid 0 solids 1 faces 11 history ok  volume 240000.000000000, 0.010 s
+box, top, 30 (cavity closes)                 inward   intersection valid 0 solids 1 faces 11 history ok  volume 240000.000000000, 0.019 s
+box, top, 30 (cavity closes)                 outward  arc          valid 1 solids 1 faces 23 history ok  volume 959840.674419017, 0.008 s
+box, top, 30 (cavity closes)                 outward  intersection valid 1 solids 1 faces 11 history ok  volume 1104000.000000000, 0.004 s
+box, top, 35 (walls overlap)                 inward   arc          valid 1 solids 1 faces  6 history BAD volume 240000.000000000 (5 kept faces without an offset, 0 removed faces left), 0.010 s
+box, top, 35 (walls overlap)                 inward   intersection valid 1 solids 1 faces  6 history BAD volume 240000.000000000 (5 kept faces without an offset, 0 removed faces left), 0.024 s
+box, top, 35 (walls overlap)                 outward  arc          valid 1 solids 1 faces 23 history ok  volume 1209611.310091422, 0.012 s
+box, top, 35 (walls overlap)                 outward  intersection valid 1 solids 1 faces 11 history ok  volume 1417500.000000000, 0.006 s
+L prism (reflex edge), top                   inward   arc          valid 1 solids 1 faces 16 history ok  volume 101258.572933822 expected 101258.572933822 rel 0.0e+00, 0.021 s
+L prism (reflex edge), top                   inward   intersection valid 1 solids 1 faces 15 history ok  volume 101500.000000000 expected 101500.000000000 rel 2.9e-16, 0.030 s
+L prism (reflex edge), top                   outward  arc          valid 0 solids 1 faces  8 history BAD volume 250000.000000000 expected 125971.237893227 rel 9.8e-01 (7 kept faces without an offset, 0 removed faces left), 0.021 s
+L prism (reflex edge), top                   outward  intersection valid 1 solids 1 faces 15 history ok  volume 129500.000000000 expected 129500.000000000 rel 3.4e-16, 0.007 s
+cylinder r20 h50, top                        inward   arc          valid 1 solids 1 faces  5 history ok  volume 20159.600058086 expected 20159.600058086 rel 0.0e+00, 0.004 s
+cylinder r20 h50, top                        inward   intersection valid 1 solids 1 faces  5 history ok  volume 20159.600058086 expected 20159.600058086 rel 0.0e+00, 0.008 s
+cylinder r20 h50, top                        outward  arc          valid 1 solids 1 faces  6 history ok  volume 24977.996863825 expected 24977.996863825 rel 2.9e-16, 0.002 s
+cylinder r20 h50, top                        outward  intersection valid 1 solids 1 faces  5 history ok  volume 25248.980156901 expected 25248.980156901 rel 2.9e-16, 0.003 s
+box with r10 through hole, top               inward   arc          valid 1 solids 1 faces 14 history ok  volume 94673.671532660 expected 94673.671532660 rel 1.5e-16, 0.013 s
+box with r10 through hole, top               inward   intersection valid 1 solids 1 faces 14 history ok  volume 94673.671532660 expected 94673.671532660 rel 1.5e-16, 0.028 s
+box with r10 through hole, top               outward  arc          valid 1 solids 1 faces 27 history ok  volume 112512.460146138, 0.016 s
+box with r10 through hole, top               outward  intersection valid 1 solids 1 faces 14 history ok  volume 115532.078879071 expected 115532.078879071 rel 1.3e-16, 0.007 s
+box, vertical edges r10, top                 inward   arc          valid 1 solids 1 faces 19 history ok  volume 79817.477042468 expected 79817.477042468 rel 3.6e-16, 0.024 s
+box, vertical edges r10, top                 inward   intersection valid 1 solids 1 faces 19 history ok  volume 79817.477042468 expected 79817.477042468 rel 3.6e-16, 0.055 s
+box, vertical edges r10, top                 outward  arc          valid 1 solids 1 faces 27 history ok  volume 99486.648513064, 0.012 s
+box, vertical edges r10, top                 outward  intersection valid 1 solids 1 faces 19 history ok  volume 101242.255003237 expected 101242.255003237 rel 0.0e+00, 0.029 s
+box, vertical edges r5 (= wall), top         inward   arc          FAILED exception  (error -1), 0.004 s
+box, vertical edges r5 (= wall), top         inward   intersection FAILED exception BRep_Tool:: no parameter on edge (error -1), 0.101 s
+box, vertical edges r5 (= wall), top         outward  arc          valid 1 solids 1 faces 27 history ok  volume 101693.913849117, 0.009 s
+box, vertical edges r5 (= wall), top         outward  intersection valid 1 solids 1 faces 19 history ok  volume 103495.574287564, 0.023 s
+box, vertical edges r3 (< wall), top         inward   arc          FAILED not done (error 1), 0.028 s
+box, vertical edges r3 (< wall), top         inward   intersection FAILED not done (error 1), 0.049 s
+box, vertical edges r3 (< wall), top         outward  arc          valid 1 solids 1 faces 27 history ok  volume 102516.731469290, 0.007 s
+box, vertical edges r3 (< wall), top         outward  intersection valid 1 solids 1 faces 19 history ok  volume 104336.813487046, 0.021 s
+stepped shaft (revolved), small end          inward   arc          valid 1 solids 1 faces 10 history ok  volume 33153.407927846, 0.006 s
+stepped shaft (revolved), small end          inward   intersection valid 1 solids 1 faces  9 history ok  volume 33307.165313359 expected 33307.165313359 rel 0.0e+00, 0.012 s
+stepped shaft (revolved), small end          outward  arc          valid 1 solids 1 faces 11 history ok  volume 41004.789932704, 0.005 s
+stepped shaft (revolved), small end          outward  intersection valid 1 solids 1 faces  9 history ok  volume 41789.465478051 expected 41789.465478051 rel 1.0e-15, 0.009 s
+dumbbell, bridge 8 < 2 walls, top            inward   arc          FAILED not done (error 1), 0.048 s
+dumbbell, bridge 8 < 2 walls, top            inward   intersection FAILED not done (error 1), 0.068 s
+dumbbell, bridge 8 < 2 walls, top            outward  arc          valid 0 solids 1 faces 14 history BAD volume 100800.000000000 (13 kept faces without an offset, 0 removed faces left), 0.042 s
+dumbbell, bridge 8 < 2 walls, top            outward  intersection valid 1 solids 1 faces 27 history ok  volume 80500.000000000, 0.017 s
+U channel, arm 4 < 2 walls, top              inward   arc          valid 1 solids 1 faces 10 history BAD volume 51000.000000000 (9 kept faces without an offset, 0 removed faces left), 0.034 s
+U channel, arm 4 < 2 walls, top              inward   intersection FAILED not done (error 1), 0.036 s
+U channel, arm 4 < 2 walls, top              outward  arc          valid 0 solids 1 faces 10 history BAD volume 51000.000000000 (9 kept faces without an offset, 0 removed faces left), 0.029 s
+U channel, arm 4 < 2 walls, top              outward  intersection valid 1 solids 1 faces 19 history ok  volume 46308.000000000, 0.010 s
+U channel, arm 4 < 2 walls, arm inner side   inward   arc          valid 1 solids 1 faces 10 history BAD volume 51000.000000000 (9 kept faces without an offset, 0 removed faces left), 0.038 s
+U channel, arm 4 < 2 walls, arm inner side   inward   intersection valid 1 solids 1 faces 10 history BAD volume 51000.000000000 (9 kept faces without an offset, 0 removed faces left), 0.027 s
+U channel, arm 4 < 2 walls, arm inner side   outward  arc          valid 0 solids 1 faces 48 history ok  volume -201318.442187200, 0.039 s
+U channel, arm 4 < 2 walls, arm inner side   outward  intersection valid 0 solids 1 faces 10 history BAD volume 51000.000000000 (9 kept faces without an offset, 0 removed faces left), 0.008 s

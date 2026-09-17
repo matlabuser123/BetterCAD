@@ -12,6 +12,7 @@
 #include <bettercad/features/LoftFeature.hpp>
 #include <bettercad/features/MirrorFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
+#include <bettercad/features/ShellFeature.hpp>
 #include <bettercad/features/SplitFeature.hpp>
 #include <bettercad/features/SweepFeature.hpp>
 #include <bettercad/features/Validation.hpp>
@@ -124,44 +125,48 @@ std::string describeDirection(const Direction3D& d) {
     return std::format("({:.6g}, {:.6g}, {:.6g})", tidy(d.x()), tidy(d.y()), tidy(d.z()));
 }
 
-/// "the model's xy", "TopPlane", "Station's yz".
+/// "the end cap of Base", "the side from entity:4 of Base",
+/// "the bottom of Bore, copy 2 of Row".
+std::string describeFaceName(const Document& document, const FaceName& name) {
+    const FaceSelector& face = name.face;
+    std::string text;
+    switch (face.role) {
+    case FaceRole::StartCap:
+        text = "the start cap";
+        break;
+    case FaceRole::EndCap:
+        text = "the end cap";
+        break;
+    case FaceRole::Side:
+        text = !face.entity ? std::string{"a side"}
+               : face.along ? std::format("the side from {} along {}", *face.entity, *face.along)
+                            : std::format("the side from {}", *face.entity);
+        break;
+    case FaceRole::HoleBottom:
+        text = "the bottom";
+        break;
+    case FaceRole::CounterboreFloor:
+        text = "the counterbore floor";
+        break;
+    case FaceRole::Chamfer:
+        text = face.edge ? std::format("the face of edge reference {}", *face.edge)
+                         : std::string{"a chamfer face"};
+        break;
+    }
+    text += std::format(" of {}", nameOrId(document, name.feature));
+    for (const FaceCopy& copy : face.copies) {
+        text += std::format(", copy {} of {}", copy.instance, nameOrId(document, copy.feature));
+    }
+    return text;
+}
+
+/// "the model's xy", "TopPlane", "Station's yz", or a face (describeFaceName()).
 std::string describePlaneReference(const Document& document, const PlaneReference& reference) {
     if (!reference.object) {
         return std::format("the model's {}", toString(reference.plane));
     }
     if (reference.face) {
-        // "the end cap of Base", "the side from entity:4 of Base",
-        // "the bottom of Bore, copy 2 of Row"
-        const FaceSelector& face = *reference.face;
-        std::string text;
-        switch (face.role) {
-        case FaceRole::StartCap:
-            text = "the start cap";
-            break;
-        case FaceRole::EndCap:
-            text = "the end cap";
-            break;
-        case FaceRole::Side:
-            text = !face.entity ? std::string{"a side"}
-                   : face.along ? std::format("the side from {} along {}", *face.entity, *face.along)
-                                : std::format("the side from {}", *face.entity);
-            break;
-        case FaceRole::HoleBottom:
-            text = "the bottom";
-            break;
-        case FaceRole::CounterboreFloor:
-            text = "the counterbore floor";
-            break;
-        case FaceRole::Chamfer:
-            text = face.edge ? std::format("the face of edge reference {}", *face.edge)
-                             : std::string{"a chamfer face"};
-            break;
-        }
-        text += std::format(" of {}", nameOrId(document, *reference.object));
-        for (const FaceCopy& copy : face.copies) {
-            text += std::format(", copy {} of {}", copy.instance, nameOrId(document, copy.feature));
-        }
-        return text;
+        return describeFaceName(document, FaceName{*reference.object, *reference.face});
     }
     if (document.findObjectAs<features::CoordinateSystem>(*reference.object) != nullptr) {
         return std::format("{}'s {}", nameOrId(document, *reference.object), toString(reference.plane));
@@ -373,6 +378,16 @@ std::string describeObject(const Document& document, const DocumentObject& objec
                                                      : std::format("{:.10g} mm", d.radius.in(units::mm));
         return std::format("target {}, {}, radius {}", nameOrId(document, ObjectId{d.target}),
                            plural(d.edges.size(), "edge", "edges"), radius);
+    }
+    if (const auto* shell = dynamic_cast<const features::ShellFeature*>(&object)) {
+        // "target Block, open the end cap of Pad, thickness wall, inward"
+        const features::ShellDefinition& d = shell->definition();
+        std::string faces;
+        for (const FaceName& name : d.openFaces) {
+            faces += (faces.empty() ? "" : " and ") + describeFaceName(document, name);
+        }
+        return std::format("target {}, open {}, thickness {}, {}", nameOrId(document, ObjectId{d.target}), faces,
+                           describeLength(document, d.thickness, d.thicknessParameter), geometry::toString(d.side));
     }
     if (const auto* hole = dynamic_cast<const features::HoleFeature*>(&object)) {
         return describeHole(document, hole->definition());

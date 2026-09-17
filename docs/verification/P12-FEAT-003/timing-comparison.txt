@@ -1,0 +1,83 @@
+Per-test CTest times (CTest's own figures), summed and for the slowest tests. feat002 is the
+P12-FEAT-002 qualification, feat003 this one. All runs used -j 8 on the same machine.
+Produced by: python compare-times.py feat002=../P12-FEAT-002/ctest-<preset>.log feat003=ctest-<preset>.log --top 12
+
+== release
+       feat002: 957 tests,    624.06 s summed
+       feat003: 978 tests,    642.81 s summed
+
+test                                                                         feat002       feat003
+unit.ReferenceModel_AllModelsStressRegression                                  20.04         21.72
+unit.LinearPattern_DoesNotAccumulateTransformDrift                             17.45         16.11
+unit.ReferenceModel_MountingBracketRegeneratesDeterministically                15.19         15.60
+unit.ReferenceModel_AllModelsBuildInOneProcess                                 13.74         14.32
+unit.ReferenceModel_FlangeRegeneratesDeterministically                         12.87         13.65
+unit.ReferenceModel_AllModelsRegenerateAfterAChange                            12.18         12.89
+unit.ReferenceModel_PulleyRegeneratesDeterministically                         11.58         11.69
+unit.ReferenceModel_ShaftRegeneratesDeterministically                          10.01         10.13
+unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges             8.78          9.70
+unit.ReferenceModel_SavedModelsMatchTheBuilders                                 8.17          9.44
+unit.ReferenceModel_BearingHousingRegeneratesDeterministically                  7.29          8.33
+unit.CircularPattern_TouchingAndOverlappingInstancesFuse                        7.26          7.60
+
+== debug
+       feat002: 957 tests,    695.63 s summed
+       feat003: 978 tests,    710.33 s summed
+
+test                                                                         feat002       feat003
+unit.ReferenceModel_AllModelsStressRegression                                  20.91         23.52
+unit.LinearPattern_DoesNotAccumulateTransformDrift                             18.06         20.00
+unit.ReferenceModel_MountingBracketRegeneratesDeterministically                15.74         17.87
+unit.ReferenceModel_AllModelsBuildInOneProcess                                 14.07         16.00
+unit.ReferenceModel_FlangeRegeneratesDeterministically                         13.46         14.39
+unit.ReferenceModel_AllModelsRegenerateAfterAChange                            12.79         14.15
+unit.ReferenceModel_PulleyRegeneratesDeterministically                         11.91         13.66
+unit.ReferenceModel_ShaftRegeneratesDeterministically                          10.30         11.24
+unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges             9.07         10.24
+unit.ReferenceModel_SavedModelsMatchTheBuilders                                 8.85          9.69
+compile_fail.ids.sketch-id-as-feature-id                                        6.08          8.79
+unit.ReferenceModel_BearingHousingRegeneratesDeterministically                  7.64          8.27
+
+== debug-shared
+       feat002: 957 tests,    679.36 s summed
+       feat003: 978 tests,    681.28 s summed
+
+test                                                                         feat002       feat003
+unit.ReferenceModel_AllModelsStressRegression                                  21.50         22.50
+unit.LinearPattern_DoesNotAccumulateTransformDrift                             18.53         17.17
+unit.ReferenceModel_MountingBracketRegeneratesDeterministically                15.88         16.55
+unit.ReferenceModel_AllModelsBuildInOneProcess                                 13.99         14.86
+unit.ReferenceModel_FlangeRegeneratesDeterministically                         12.94         14.20
+unit.ReferenceModel_AllModelsRegenerateAfterAChange                            12.60         13.25
+unit.ReferenceModel_PulleyRegeneratesDeterministically                         11.45         12.20
+unit.ReferenceModel_ShaftRegeneratesDeterministically                           9.60         10.62
+unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges             9.99          9.45
+unit.ReferenceModel_SavedModelsMatchTheBuilders                                 9.70          9.52
+unit.ReferenceModel_BearingHousingRegeneratesDeterministically                  8.19          8.43
+unit.CircularPattern_TouchingAndOverlappingInstancesFuse                        8.40          7.37
+
+The new tests (Release):
+       feat003: 21 tests,     13.17 s summed
+
+test                                                                         feat003
+unit.ShellFeature_FailuresAreStructuredAndAtomic                                1.93
+unit.ShellFeature_ConcaveDrilledAndRoundedBodies                                1.86
+unit.ShellFeature_RegeneratesDeterministically                                  1.83
+unit.ShellFile_SaveLoad_RegeneratesTheSameBodies                                1.49
+unit.ShellFeature_BlockFollowsItsWallAndHeight                                  1.08
+unit.ShellFeature_TurnedAndCurvedBodies                                         0.73
+unit.ShellCli_ValidateReportsTheShells                                          0.61
+unit.ShellFeature_CreationAndEditsAreUndoable                                   0.49
+unit.ShellFile_ExportedShellsReadBackFromStep                                   0.48
+cli.validate.shelled-block                                                      0.42
+cli.export-step.shelled-block                                                   0.41
+unit.Shell_HollowsABoxAndCarriesItsNames                                        0.29
+unit.Shell_OpensEveryFaceANameIsOn                                              0.28
+unit.Shell_FailuresAreStructured                                                0.24
+cli.info.shelled-block                                                          0.24
+unit.ShellFile_ExampleFileMatchesTheBuilder                                     0.17
+unit.ShellFile_DefinitionsAreWrittenAsJson                                      0.17
+unit.ShellCli_InfoDescribesShells                                               0.14
+unit.ShellFile_MalformedDefinitionsAreRejectedWithThePath                       0.14
+unit.Shell_RequestsAreValidated                                                 0.10
+unit.ShellFeature_DefinitionsAreValidated                                       0.07

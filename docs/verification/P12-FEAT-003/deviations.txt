@@ -1,0 +1,37 @@
+file                             kind  tolerance  checks    largest
+GeometryTestSupport.hpp          abs     1.0e-09      11   0.00e+00
+ShellFeatureTests.cpp            abs     1.0e-09     108   1.14e-13
+ShellFeatureTests.cpp            abs     1.0e-07     147   5.68e-14
+ShellFeatureTests.cpp            rel     1.0e-12      99   1.47e-15
+ShellFileTests.cpp               rel     1.0e-09       4   4.68e-16
+ShellTests.cpp                   rel     1.0e-12       7   5.35e-16
+
+GeometryTestSupport.hpp abs 1.0e-09: largest 3
+  0.000e+00  measured 0.0 expected 0.0  Shell_HollowsABoxAndCarriesItsNames  
+  0.000e+00  measured 0.0 expected 0.0  Shell_HollowsABoxAndCarriesItsNames  
+  0.000e+00  measured 0.0 expected 0.0  Shell_HollowsABoxAndCarriesItsNames  
+
+ShellFeatureTests.cpp abs 1.0e-09: largest 3
+  1.137e-13  measured 250.00000000000006 expected 249.99999999999994  ShellFeature_ConcaveDrilledAndRoundedBodies  h := 40.0; t := 5.0; r := 10.0
+  1.137e-13  measured 250.00000000000006 expected 249.99999999999994  ShellFeature_ConcaveDrilledAndRoundedBodies  h := 55.0; t := 3.0; r := 8.0
+  5.684e-14  measured 29.99999999999995 expected 30.000000000000007  ShellFeature_ConcaveDrilledAndRoundedBodies  h := 55.0; t := 3.0; r := 8.0
+
+ShellFeatureTests.cpp abs 1.0e-07: largest 3
+  5.684e-14  measured 300.00000000000006 expected 300.0  ShellFeature_ConcaveDrilledAndRoundedBodies  h := 40.0; t := 5.0; r := 10.0
+  5.684e-14  measured 305.00000000000006 expected 305.0  ShellFeature_ConcaveDrilledAndRoundedBodies  h := 40.0; t := 5.0; r := 10.0
+  5.684e-14  measured 300.00000000000006 expected 300.0  ShellFeature_ConcaveDrilledAndRoundedBodies  h := 55.0; t := 3.0; r := 8.0
+
+ShellFeatureTests.cpp rel 1.0e-12: largest 3
+  1.475e-15  measured 64142.335690969405 expected 64142.33569096931  ShellFeature_ConcaveDrilledAndRoundedBodies  h := 55.0; t := 3.0; r := 8.0
+  1.289e-15  measured 45160.394395353214 expected 45160.39439535327  ShellFeature_TurnedAndCurvedBodies  t := 5.0
+  1.174e-15  measured 775.0000000000009 expected 775.0  ShellFeature_BlockFollowsItsWallAndHeight  h := 60.0; t := 2.5
+
+ShellFileTests.cpp rel 1.0e-09: largest 3
+  4.675e-16  measured 248999.99999999988 expected 249000.0  ShellFile_ExportedShellsReadBackFromStep  
+  0.000e+00  measured -5.0 expected -5.0  ShellFile_ExportedShellsReadBackFromStep  
+  0.000e+00  measured 105.0 expected 105.0  ShellFile_ExportedShellsReadBackFromStep  
+
+ShellTests.cpp rel 1.0e-12: largest 3
+  5.350e-16  measured 1699.999999999999 expected 1700.0  Shell_HollowsABoxAndCarriesItsNames  
+  2.007e-16  measured 72499.99999999999 expected 72500.0  Shell_HollowsABoxAndCarriesItsNames  
+  1.366e-16  measured 26639.999999999996 expected 26640.0  Shell_OpensEveryFaceANameIsOn  

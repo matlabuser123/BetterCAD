@@ -17,6 +17,7 @@ bettercad_add_library(bettercad_io
         json/ObjectJson.hpp
         json/ParameterJson.cpp
         json/ParameterJsonDetail.hpp
+        json/ShellJson.cpp
         json/SketchJson.cpp
     PUBLIC_LINK
         BetterCAD::core

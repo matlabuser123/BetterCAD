@@ -1,0 +1,243 @@
+{
+  "format": "bettercad-document",
+  "version": 1,
+  "units": "SI",
+  "document": {
+    "id": "5d2e8b17-3c4a-4f96-b7e0-9a1c6d3f2e84",
+    "name": "ShelledBlock",
+    "metadata": {
+      "description": "",
+      "author": "",
+      "properties": {}
+    },
+    "last_allocated_id": 7
+  },
+  "parameters": [
+    {
+      "id": 1,
+      "name": "height",
+      "si_value": 0.04,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 2,
+      "name": "wall",
+      "si_value": 0.005,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    }
+  ],
+  "objects": [
+    {
+      "id": 3,
+      "type": "sketch",
+      "name": "BlockSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.1,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.1,
+              0.06
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.0,
+              0.06
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "line",
+            "start": 2,
+            "end": 3,
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "line",
+            "start": 4,
+            "end": 1,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "fixed",
+            "entities": [
+              2
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "fixed",
+            "entities": [
+              3
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "fixed",
+            "entities": [
+              4
+            ],
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 8,
+        "last_constraint_id": 4
+      }
+    },
+    {
+      "id": 4,
+      "type": "extrude",
+      "name": "Block",
+      "data": {
+        "profile": 3,
+        "depth": 0.0,
+        "depth_parameter": 1,
+        "direction": "normal",
+        "operation": "new_body"
+      }
+    },
+    {
+      "id": 5,
+      "type": "shell",
+      "name": "Cup",
+      "data": {
+        "target": 4,
+        "open_faces": [
+          {
+            "feature": 4,
+            "face": {
+              "role": "end_cap"
+            }
+          }
+        ],
+        "thickness": 0.0,
+        "thickness_parameter": 2,
+        "side": "inward"
+      }
+    },
+    {
+      "id": 6,
+      "type": "shell",
+      "name": "Tube",
+      "data": {
+        "target": 4,
+        "open_faces": [
+          {
+            "feature": 4,
+            "face": {
+              "role": "end_cap"
+            }
+          },
+          {
+            "feature": 4,
+            "face": {
+              "role": "start_cap"
+            }
+          }
+        ],
+        "thickness": 0.0,
+        "thickness_parameter": 2,
+        "side": "inward"
+      }
+    },
+    {
+      "id": 7,
+      "type": "shell",
+      "name": "Casing",
+      "data": {
+        "target": 4,
+        "open_faces": [
+          {
+            "feature": 4,
+            "face": {
+              "role": "end_cap"
+            }
+          }
+        ],
+        "thickness": 0.0,
+        "thickness_parameter": 2,
+        "side": "outward"
+      }
+    }
+  ]
+}

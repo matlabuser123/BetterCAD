@@ -11,7 +11,7 @@ underneath, hidden behind adapters.
             └───────┬──────────────────────┘
                     io              native .bcad, STEP/STL export
                     │
-                 features           extrude, revolve, chamfer, fillet, hole, linear and circular patterns, mirror, sweep, loft, split, combine (later: ...)
+                 features           extrude, revolve, chamfer, fillet, hole, linear and circular patterns, mirror, sweep, loft, split, combine, shell (later: ...)
                     │
                   sketch            entities, constraints, solver
                     │
@@ -549,6 +549,30 @@ milestones start; see `TODO.md`.
   - `gatherSolids(parts)` puts the solids of several bodies side by side in
     one body (a compound, not a union, so touching parts stay apart), with
     their names. It gives a both-sides split its two solids.
+- **Shell** (`Shell.hpp`, P12-FEAT-003). `shellBody(body, request)` hollows
+  one solid into walls of the request's thickness, opened where the faces
+  its names (`FaceName`) are on are removed; a name several faces carry
+  opens all of them. There must be at least one open face: a closed hollow
+  is not built.
+  - The kernel (`BRepOffsetAPI_MakeThickSolid::MakeThickSolidByJoin`) offsets
+    the remaining faces inward (the outside stays) or outward (the inside
+    stays). Offset faces that part at an edge are extended until they meet
+    (`GeomAbs_Intersection`), so wall corners are sharp. A kernel probe
+    found the rounded join (`GeomAbs_Arc`) invalid on an outward shell of a
+    body with a concave edge, and the intersection join valid and exact on
+    every body it tried (`docs/verification/P12-FEAT-003/kernel-probe/`).
+  - The kernel's success is not trusted. For walls too thick for the body
+    OCCT 8.0.1 reports success and returns the unchanged body (every
+    remaining face without its offset) or an invalid solid. A shell is
+    accepted only as one valid solid in which every remaining face has
+    generated a face of the result, no open face is left, the volume is
+    finite and positive, and (inward) smaller than the body's. Otherwise,
+    and when the kernel fails or throws, the result is FailedPrecondition
+    with the kernel's reason; walls that meet where the body is thin, and
+    inward walls at least as thick as a round they follow, end there.
+  - Names are carried through the kernel's history: remaining faces keep
+    theirs, and an open face's names go to the rim the kernel makes of it
+    (Modified). The walls are not named.
 - **Translation, rotation and reflection** (`Transform.hpp`).
   `translated(body, translation)` and `transformed(body, motion)` return a
   moved copy with its own geometry (`BRepBuilderAPI_Transform`, copying); the
@@ -802,6 +826,21 @@ milestones start; see `TODO.md`.
     through a `BodyLookup`. Splits and combines depend on their inputs
     (and a split on the objects its plane refers to). They cannot be a
     pattern's or feature mirror's source.
+- **Shell** (P12-FEAT-003, `ShellFeature.hpp`, type `shell`). A
+  `ShellDefinition` holds the target feature, the open faces as face names,
+  the thickness (literal, or a length parameter) and the side
+  (`geometry::ShellSide`: inward or outward). The shell consumes its
+  target.
+  - `regenerateShell()` checks each open face's name (`checkFaceName()`),
+    requires that a face of the target's body carries it (NotFound
+    otherwise: "open face 1, the end cap of Boss (object:4), is not a face of
+    the body of Block (object:2)"), and calls `shellBody()`. The name is
+    looked up in the target's body, where earlier features have carried it,
+    not in the generating feature's own body: a face a later feature
+    removed cannot be opened.
+  - A shell depends on its target, its thickness parameter and the features
+    its open faces name (generators and copying features). It names no
+    faces of its own, and cannot be a pattern's or feature mirror's source.
 - **Through-all extrude** (P12-FEAT-001). An extrude's `termination` is
   `Blind` (at its depth) or `ThroughAll`. A through-all extrude stores no
   depth: it is a cut (the only operation it takes) through all of its
@@ -1016,8 +1055,8 @@ milestones start; see `TODO.md`.
 - New object kinds plug in a regeneration handler by type name.
 - **Result bodies** (`ResultBodies.hpp`). A feature's body is a model result
   unless another feature consumes it (`SolidFeature::consumedFeatures()`):
-  the target of a Join/Cut/Intersect, the body a chamfer modifies, a
-  pattern's source, or a split's or combine's inputs.
+  the target of a Join/Cut/Intersect, the body a chamfer or shell modifies,
+  a pattern's source, or a split's or combine's inputs.
   `regenerateResultBodies()` regenerates a copy of the document and returns
   those bodies. Exports use it.
 - **Validation** (`Validation.hpp`). `validateDocument()` runs six checks on
@@ -1071,6 +1110,10 @@ milestones start; see `TODO.md`.
     attachments) and `keep` (`"front"`, `"back"`, `"both"`); a combine
     stores `target`, `tools` (feature IDs in order) and `operation`
     (`"join"`, `"cut"`, `"intersect"`);
+  - a shell stores `target`, `open_faces` (face names, each
+    `{"feature": id, "face": {...}}` with the face as in a plane reference),
+    `thickness` and an optional `thickness_parameter`, and `side`
+    (`"inward"`, `"outward"`);
   - an extrude stores `depth` and an optional `depth_parameter`, or, for a
     through-all extrude, `"termination": "through_all"` and no depth (a
     missing `termination` means `"blind"`);

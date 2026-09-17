@@ -18,6 +18,7 @@ bettercad_add_library(bettercad_geometry
         LoftPlan.hpp
         Profile.cpp
         ProfileExtent.hpp
+        Shell.cpp
         Split.cpp
         SweepPlan.cpp
         SweepPlan.hpp
@@ -38,6 +39,7 @@ bettercad_add_library(bettercad_geometry
         occt/OcctMesh.cpp
         occt/OcctPrimitives.cpp
         occt/OcctSession.hpp
+        occt/OcctShell.cpp
         occt/OcctStep.cpp
         occt/OcctSplit.cpp
         occt/OcctSweeps.cpp

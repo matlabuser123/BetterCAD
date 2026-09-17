@@ -1,0 +1,18 @@
+Every measured value of the tests P12-FEAT-002 had, from its qualified Release build (77f1792, run before
+this milestone's clean rebuild) and from this milestone's qualified Release build. Each ran
+bettercad_tests.exe -s --reporter xml --rng-seed 1 (all test cases; this build also ran the 18 new ones), and
+values.py (in this directory, with the same one-line header for both) filtered the report:
+  feat002-release: 895 test cases, 69000 assertions passed, 0 failed
+  feat003-release: 913 test cases, 71260 assertions passed, 0 failed
+compare-values.py dropped (--exclude) the 18 new test cases (no existing test case's name matches the
+pattern) and the pointer values, and normalized temporary paths, document UUIDs and the Git revision the
+version text reports. Source line numbers were kept: no existing test file changed.
+   python compare-values.py --exclude "(Shell_|ShellFeature_|ShellFile_|ShellCli_)" feat002-release=... feat003-release=...
+
+feat002-release: 34429 non-empty lines after normalizing, MD5 c1c733d7b833a31f6d45ca93a636109b
+feat003-release: 34429 non-empty lines after normalizing, MD5 c1c733d7b833a31f6d45ca93a636109b
+
+feat003-release against feat002-release:
+  differing lines: 0 expected only, 0 measured
+
+RESULT: measured values identical

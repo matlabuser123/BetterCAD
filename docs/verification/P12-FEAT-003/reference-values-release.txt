@@ -1,0 +1,1213 @@
+Measured values of the P12-FEAT-003 tests (Release build of the qualified tree).
+Produced by: build/release/bin/bettercad_tests.exe "[shell]"
+-s --reporter xml --rng-seed 1, filtered by values.py (kept in this directory): every passed CHECK_THAT and
+every passed CHECK whose expansion shows values, with the test case, section and INFO/CAPTURE context. Each
+entry: file:line, the assertion, then Catch2's expansion (values printed exactly). REQUIRE lines, repeats of an
+identical entry within a test case and expansions over 1000 characters (whole-file text) are left out.
+
+
+== ShellFile_MalformedDefinitionsAreRejectedWithThePath
+ShellFileTests.cpp:134  CHECK_THAT( loadError(good, "\"side\": \"inward\"", "\"side\": \"inside\""), ContainsSubstring("objects[2].data.side: unknown value 'inside'") )
+        => "objects[2].data.side: unknown value 'inside'" contains: "objects[2].data.side: unknown value 'inside'"
+ShellFileTests.cpp:136  CHECK_THAT( loadError(good, "\"side\": \"inward\"", "\"side\": \"inward\", \"depth\": 1"), ContainsSubstring("objects[2].data.depth: unknown field") )
+        => "objects[2].data.depth: unknown field" contains: "objects[2].data.depth: unknown field"
+ShellFileTests.cpp:138  CHECK_THAT( loadError(good, cup, "\"target\": 4, \"open_faces\": [],"), ContainsSubstring("objects[2].data: a shell needs one or more open faces (a closed hollow is not " "built)") )
+        => "objects[2].data: a shell needs one or more open faces (a closed hollow is not built)" contains: "objects[2].data: a shell needs one or more open faces (a closed hollow is not built)"
+ShellFileTests.cpp:141  CHECK_THAT( loadError(good, cup, "\"target\": 4,"), ContainsSubstring("objects[2].data.open_faces: missing required field") )
+        => "objects[2].data.open_faces: missing required field" contains: "objects[2].data.open_faces: missing required field"
+ShellFileTests.cpp:143  CHECK_THAT( loadError(good, cup, "\"target\": 4, \"open_faces\": {},"), ContainsSubstring("objects[2].data.open_faces: expected an array") )
+        => "objects[2].data.open_faces: expected an array" contains: "objects[2].data.open_faces: expected an array"
+ShellFileTests.cpp:145  CHECK_THAT( loadError(good, cup, "\"target\": 4, \"open_faces\": [{\"feature\": 4}],"), ContainsSubstring("objects[2].data.open_faces[0].face: missing required field") )
+        => "objects[2].data.open_faces[0].face: missing required field" contains: "objects[2].data.open_faces[0].face: missing required field"
+ShellFileTests.cpp:147  CHECK_THAT( loadError(good, cup, "\"target\": 4, \"open_faces\": [{\"face\": {\"role\": \"end_cap\"}}],"), ContainsSubstring("objects[2].data.open_faces[0].feature: missing required field") )
+        => "objects[2].data.open_faces[0].feature: missing required field" contains: "objects[2].data.open_faces[0].feature: missing required field"
+ShellFileTests.cpp:149  CHECK_THAT( loadError(good, cup, "\"target\": 4, \"open_faces\": [{\"feature\": 4, \"face\": {\"role\": \"top\"}}],"), ContainsSubstring("objects[2].data.open_faces[0].face.role: unknown value 'top'") )
+        => "objects[2].data.open_faces[0].face.role: unknown value 'top'" contains: "objects[2].data.open_faces[0].face.role: unknown value 'top'"
+ShellFileTests.cpp:152  CHECK_THAT( loadError(good, cup, "\"target\": 4, \"open_faces\": [{\"feature\": 4, \"face\": {\"role\": \"side\"}}],"), ContainsSubstring("objects[2].data.open_faces[0]: a side face is named by a valid profile entity") )
+        => "objects[2].data.open_faces[0]: a side face is named by a valid profile entity" contains: "objects[2].data.open_faces[0]: a side face is named by a valid profile entity"
+ShellFileTests.cpp:155  CHECK_THAT( loadError(good, cup, "\"target\": 4, \"open_faces\": [{\"feature\": 4, \"face\": {\"role\": \"end_cap\"}, " "\"name\": 1}],"), ContainsSubstring("objects[2].data.open_faces[0].name: unknown field") )
+        => "objects[2].data.open_faces[0].name: unknown field" contains: "objects[2].data.open_faces[0].name: unknown field"
+ShellFileTests.cpp:159  CHECK_THAT( loadError(good, cup, "\"target\": 4, \"open_faces\": [{\"feature\": 0, \"face\": {\"role\": \"end_cap\"}}],"), ContainsSubstring("objects[2].data: open face 1 must name a valid feature") )
+        => "objects[2].data: open face 1 must name a valid feature" contains: "objects[2].data: open face 1 must name a valid feature"
+ShellFileTests.cpp:162  CHECK_THAT( loadError(good, cup, "\"target\": 4, \"open_faces\": [{\"feature\": 4, \"face\": {\"role\": \"end_cap\"}}, " "{\"feature\": 4, \"face\": {\"role\": \"end_cap\"}}],"), ContainsSubstring("objects[2].data: open face 2 repeats an earlier open face") )
+        => "objects[2].data: open face 2 repeats an earlier open face" contains: "objects[2].data: open face 2 repeats an earlier open face"
+ShellFileTests.cpp:166  CHECK_THAT( loadError(good, "\"target\": 4,\n \"open_faces\"", "\"target\": 0,\n \"open_faces\""), ContainsSubstring("objects[2].data: a shell needs a target feature") )
+        => "objects[2].data: a shell needs a target feature" contains: "objects[2].data: a shell needs a target feature"
+ShellFileTests.cpp:168  CHECK_THAT( loadError(good, "\"thickness\": 0.0,\n \"thickness_parameter\": 2,\n \"side\": \"inward\"", "\"thickness\": 0.0,\n \"side\": \"inward\""), ContainsSubstring("objects[2].data: the shell thickness must be positive and finite, got 0 mm") )
+        => "objects[2].data: the shell thickness must be positive and finite, got 0 mm" contains: "objects[2].data: the shell thickness must be positive and finite, got 0 mm"
+ShellFileTests.cpp:171  CHECK_THAT( loadError(good, "\"thickness\": 0.0,", "\"thickness\": \"thin\","), ContainsSubstring("objects[2].data.thickness: expected a number") )
+        => "objects[2].data.thickness: expected a number" contains: "objects[2].data.thickness: expected a number"
+
+== ShellCli_InfoDescribesShells
+ShellCliTests.cpp:41  CHECK( result.exitCode == ExitCode::Success )
+        => 0 == 0
+ShellCliTests.cpp:43  CHECK_THAT( result.out, ContainsSubstring(" object:5 shell Cup target Block, open the end cap of " "Block, thickness wall, inward\n") )
+        => "Document: ShelledBlock File: C:\Users\uqhas\AppData\Local\Temp\bettercad-test-1823524a-ab6e-40d5-ae60-bcd54a67cd08\shells.bcad ID: 5d2e8b17-3c4a-4f96-b7e0-9a1c6d3f2e84 Parameters (2): height 40 mm wall 5 mm Objects (5): object:3 sketch BlockSketch 8 entities, 4 constraints object:4 extrude Block profile BlockSketch, depth height, normal, new body object:5 shell Cup target Block, open the end cap of Block, thickness wall, inward object:6 shell Tube target Block, open the end cap of Block and the start cap of Block, thickness wall, inward object:7 shell Casing target Block, open the end cap of Block, thickness wall, outward " contains: " object:5 shell Cup target Block, open the end cap of Block, thickness wall, inward "
+ShellCliTests.cpp:45  CHECK_THAT( result.out, ContainsSubstring(" object:6 shell Tube target Block, open the end cap of " "Block and the start cap of Block, thickness wall, inward\n") )
+        => "Document: ShelledBlock File: C:\Users\uqhas\AppData\Local\Temp\bettercad-test-1823524a-ab6e-40d5-ae60-bcd54a67cd08\shells.bcad ID: 5d2e8b17-3c4a-4f96-b7e0-9a1c6d3f2e84 Parameters (2): height 40 mm wall 5 mm Objects (5): object:3 sketch BlockSketch 8 entities, 4 constraints object:4 extrude Block profile BlockSketch, depth height, normal, new body object:5 shell Cup target Block, open the end cap of Block, thickness wall, inward object:6 shell Tube target Block, open the end cap of Block and the start cap of Block, thickness wall, inward object:7 shell Casing target Block, open the end cap of Block, thickness wall, outward " contains: " object:6 shell Tube target Block, open the end cap of Block and the start cap of Block, thickness wall, inward "
+ShellCliTests.cpp:47  CHECK_THAT( result.out, ContainsSubstring(" object:7 shell Casing target Block, open the end cap of " "Block, thickness wall, outward\n") )
+        => "Document: ShelledBlock File: C:\Users\uqhas\AppData\Local\Temp\bettercad-test-1823524a-ab6e-40d5-ae60-bcd54a67cd08\shells.bcad ID: 5d2e8b17-3c4a-4f96-b7e0-9a1c6d3f2e84 Parameters (2): height 40 mm wall 5 mm Objects (5): object:3 sketch BlockSketch 8 entities, 4 constraints object:4 extrude Block profile BlockSketch, depth height, normal, new body object:5 shell Cup target Block, open the end cap of Block, thickness wall, inward object:6 shell Tube target Block, open the end cap of Block and the start cap of Block, thickness wall, inward object:7 shell Casing target Block, open the end cap of Block, thickness wall, outward " contains: " object:7 shell Casing target Block, open the end cap of Block, thickness wall, outward "
+ShellCliTests.cpp:56  CHECK( described.exitCode == ExitCode::Success )
+        => 0 == 0
+
+== Shell_FailuresAreStructured / empty and invalid inputs
+ShellTests.cpp:184  CHECK( empty.error().code == ErrorCode::FailedPrecondition )
+        => 5 == 5
+ShellTests.cpp:185  CHECK( empty.error().message == "shell: the body is empty" )
+        => "shell: the body is empty" == "shell: the body is empty"
+ShellTests.cpp:188  CHECK( thin.error().code == ErrorCode::InvalidArgument )
+        => 0 == 0
+ShellTests.cpp:189  CHECK( thin.error().message == "shell: the shell thickness must be positive and finite, got 0 mm" )
+        => "shell: the shell thickness must be positive and finite, got 0 mm" == "shell: the shell thickness must be positive and finite, got 0 mm"
+
+== Shell_FailuresAreStructured / an open face the body does not have
+ShellTests.cpp:197  CHECK( shelled.error().code == ErrorCode::NotFound )
+        => 1 == 1
+ShellTests.cpp:198  CHECK( shelled.error().message == "shell: open face 2 is not a face of the body" )
+        => "shell: open face 2 is not a face of the body" == "shell: open face 2 is not a face of the body"
+ShellTests.cpp:202  CHECK( plain.error().message == "shell: open face 1 is not a face of the body" )
+        => "shell: open face 1 is not a face of the body" == "shell: open face 1 is not a face of the body"
+
+== Shell_FailuresAreStructured / several solids
+ShellTests.cpp:210  CHECK( shelled.error().code == ErrorCode::FailedPrecondition )
+        => 5 == 5
+ShellTests.cpp:211  CHECK( shelled.error().message == "shell: a shell hollows one solid; the body has 2" )
+        => "shell: a shell hollows one solid; the body has 2" == "shell: a shell hollows one solid; the body has 2"
+
+== Shell_FailuresAreStructured / walls too thick for the body
+ShellTests.cpp:220  CHECK( shelled.error().code == ErrorCode::FailedPrecondition )
+        => 5 == 5 with message: t := 30.0
+ShellTests.cpp:221  CHECK_THAT( shelled.error().message, ContainsSubstring(std::format("shell: the kernel cannot build walls {} mm thick inward on this " "body: ", t)) )
+        => "shell: the kernel cannot build walls 30 mm thick inward on this body: kernel: unknown error; walls thicker than half the body where it is thinnest, or an inward wall at least as thick as a round it follows, cannot be built" contains: "shell: the kernel cannot build walls 30 mm thick inward on this body: " with message: t := 30.0
+ShellTests.cpp:225  CHECK_THAT( shelled.error().message, ContainsSubstring("; walls thicker than half the body where it is thinnest, or an inward " "wall at least as thick as a round it follows, cannot be built") )
+        => "shell: the kernel cannot build walls 30 mm thick inward on this body: kernel: unknown error; walls thicker than half the body where it is thinnest, or an inward wall at least as thick as a round it follows, cannot be built" contains: "; walls thicker than half the body where it is thinnest, or an inward wall at least as thick as a round it follows, cannot be built" with message: t := 30.0
+ShellTests.cpp:220  CHECK( shelled.error().code == ErrorCode::FailedPrecondition )
+        => 5 == 5 with message: t := 35.0
+ShellTests.cpp:221  CHECK_THAT( shelled.error().message, ContainsSubstring(std::format("shell: the kernel cannot build walls {} mm thick inward on this " "body: ", t)) )
+        => "shell: the kernel cannot build walls 35 mm thick inward on this body: its result is not a shell of the body: 5 of the 5 remaining faces have no wall; walls thicker than half the body where it is thinnest, or an inward wall at least as thick as a round it follows, cannot be built" contains: "shell: the kernel cannot build walls 35 mm thick inward on this body: " with message: t := 35.0
+ShellTests.cpp:225  CHECK_THAT( shelled.error().message, ContainsSubstring("; walls thicker than half the body where it is thinnest, or an inward " "wall at least as thick as a round it follows, cannot be built") )
+        => "shell: the kernel cannot build walls 35 mm thick inward on this body: its result is not a shell of the body: 5 of the 5 remaining faces have no wall; walls thicker than half the body where it is thinnest, or an inward wall at least as thick as a round it follows, cannot be built" contains: "; walls thicker than half the body where it is thinnest, or an inward wall at least as thick as a round it follows, cannot be built" with message: t := 35.0
+ShellTests.cpp:220  CHECK( shelled.error().code == ErrorCode::FailedPrecondition )
+        => 5 == 5 with message: t := 60.0
+ShellTests.cpp:221  CHECK_THAT( shelled.error().message, ContainsSubstring(std::format("shell: the kernel cannot build walls {} mm thick inward on this " "body: ", t)) )
+        => "shell: the kernel cannot build walls 60 mm thick inward on this body: its result is not a shell of the body: 5 of the 5 remaining faces have no wall; walls thicker than half the body where it is thinnest, or an inward wall at least as thick as a round it follows, cannot be built" contains: "shell: the kernel cannot build walls 60 mm thick inward on this body: " with message: t := 60.0
+ShellTests.cpp:225  CHECK_THAT( shelled.error().message, ContainsSubstring("; walls thicker than half the body where it is thinnest, or an inward " "wall at least as thick as a round it follows, cannot be built") )
+        => "shell: the kernel cannot build walls 60 mm thick inward on this body: its result is not a shell of the body: 5 of the 5 remaining faces have no wall; walls thicker than half the body where it is thinnest, or an inward wall at least as thick as a round it follows, cannot be built" contains: "; walls thicker than half the body where it is thinnest, or an inward wall at least as thick as a round it follows, cannot be built" with message: t := 60.0
+
+== ShellFeature_TurnedAndCurvedBodies
+ShellFeatureTests.cpp:106  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: t := 3.0
+ShellFeatureTests.cpp:109  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 20159.60005808569621877 and 20159.60005808569985675 are within 1e-10% of each other with message: t := 3.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.00000000000000415 is within 0.000000001 of 0.0 with message: t := 3.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.00000000000000561 is within 0.000000001 of 0.0 with message: t := 3.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 21.82491818606823841 is within 0.000000001 of 21.82491818606824907 with message: t := 3.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -20.0 is within 0.0000001 of -20.0 with message: t := 3.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -20.0 is within 0.0000001 of -20.0 with message: t := 3.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: t := 3.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 20.0 is within 0.0000001 of 20.0 with message: t := 3.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 20.0 is within 0.0000001 of 20.0 with message: t := 3.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 50.0 is within 0.0000001 of 50.0 with message: t := 3.0
+ShellFeatureTests.cpp:109  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 25248.98015690116153564 and 25248.98015690116153564 are within 1e-10% of each other with message: t := 3.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.00000000000000403 is within 0.000000001 of 0.0 with message: t := 3.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.00000000000000362 is within 0.000000001 of 0.0 with message: t := 3.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 19.76726390444195403 is within 0.000000001 of 19.76726390444196113 with message: t := 3.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -23.0 is within 0.0000001 of -23.0 with message: t := 3.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -23.0 is within 0.0000001 of -23.0 with message: t := 3.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -3.0 is within 0.0000001 of -3.0 with message: t := 3.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 23.0 is within 0.0000001 of 23.0 with message: t := 3.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 23.0 is within 0.0000001 of 23.0 with message: t := 3.0
+ShellFeatureTests.cpp:109  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 33307.16531335898616817 and 33307.16531335898616817 are within 1e-10% of each other with message: t := 3.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.00000000000000022 is within 0.000000001 of 0.0 with message: t := 3.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 18.821731748726652 is within 0.000000001 of 18.821731748726652 with message: t := 3.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.00000000000000164 is within 0.000000001 of 0.0 with message: t := 3.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -30.0 is within 0.0000001 of -30.0 with message: t := 3.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: t := 3.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -30.0 is within 0.0000001 of -30.0 with message: t := 3.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 30.0 is within 0.0000001 of 30.0 with message: t := 3.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 60.0 is within 0.0000001 of 60.0 with message: t := 3.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 30.0 is within 0.0000001 of 30.0 with message: t := 3.0
+ShellFeatureTests.cpp:109  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 41789.46547805141744902 and 41789.46547805142472498 are within 1e-10% of each other with message: t := 3.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.00000000000001323 is within 0.000000001 of 0.0 with message: t := 3.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 18.09066305818673115 is within 0.000000001 of 18.09066305818673825 with message: t := 3.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.00000000000000145 is within 0.000000001 of 0.0 with message: t := 3.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -33.0 is within 0.0000001 of -33.0 with message: t := 3.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -3.0 is within 0.0000001 of -3.0 with message: t := 3.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -33.0 is within 0.0000001 of -33.0 with message: t := 3.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 33.0 is within 0.0000001 of 33.0 with message: t := 3.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 33.0 is within 0.0000001 of 33.0 with message: t := 3.0
+ShellFeatureTests.cpp:329  CHECK_THAT( namedArea(regenerator, m.canCup, canTop), WithinRel(kPi * (400.0 - (20 - t) * (20 - t)), kRel) )
+        => 348.71678454846721706 and 348.71678454846704653 are within 1e-10% of each other with message: t := 3.0
+ShellFeatureTests.cpp:330  CHECK_THAT( namedArea(regenerator, m.canCase, canTop), WithinRel(kPi * ((20 + t) * (20 + t) - 400.0), kRel) )
+        => 405.26545231308318762 and 405.26545231308330131 are within 1e-10% of each other with message: t := 3.0
+ShellFeatureTests.cpp:332  CHECK_THAT( namedArea(regenerator, m.shaftBore, smallEnd), WithinRel(kPi * (225.0 - (15 - t) * (15 - t)), kRel) )
+        => 254.469004940773317 and 254.46900494077323174 are within 1e-10% of each other with message: t := 3.0
+ShellFeatureTests.cpp:334  CHECK_THAT( namedArea(regenerator, m.shaftSleeve, smallEnd), WithinRel(kPi * ((15 + t) * (15 + t) - 225.0), kRel) )
+        => 311.0176727053896002 and 311.01767270538954335 are within 1e-10% of each other with message: t := 3.0
+ShellFeatureTests.cpp:338  CHECK_THAT( namedArea(regenerator, shell, nameOf(m.shaft, FaceRole::Side, m.shaftLines[0])), WithinRel(900.0 * kPi, kRel) )
+        => 2827.43338823081467126 and 2827.43338823081376177 are within 1e-10% of each other with message: t := 3.0
+ShellFeatureTests.cpp:340  CHECK_THAT( namedArea(regenerator, shell, nameOf(m.shaft, FaceRole::Side, m.shaftLines[1])), WithinRel(2.0 * kPi * 30.0 * 20.0, kRel) )
+        => 3769.9111843077521371 and 3769.91118430775168235 are within 1e-10% of each other with message: t := 3.0
+ShellFeatureTests.cpp:342  CHECK_THAT( namedArea(regenerator, shell, nameOf(m.shaft, FaceRole::Side, m.shaftLines[3])), WithinRel(2.0 * kPi * 15.0 * 40.0, kRel) )
+        => 3769.9111843077521371 and 3769.91118430775168235 are within 1e-10% of each other with message: t := 3.0
+ShellFeatureTests.cpp:106  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: t := 5.0
+ShellFeatureTests.cpp:109  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 31023.22745419920465793 and 31023.2274541992082959 are within 1e-10% of each other with message: t := 5.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0000000000000041 is within 0.000000001 of 0.0 with message: t := 5.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.00000000000000212 is within 0.000000001 of 0.0 with message: t := 5.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 22.43670886075950577 is within 0.000000001 of 22.43670886075949156 with message: t := 5.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -20.0 is within 0.0000001 of -20.0 with message: t := 5.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -20.0 is within 0.0000001 of -20.0 with message: t := 5.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: t := 5.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 20.0 is within 0.0000001 of 20.0 with message: t := 5.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 20.0 is within 0.0000001 of 20.0 with message: t := 5.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 50.0 is within 0.0000001 of 50.0 with message: t := 5.0
+ShellFeatureTests.cpp:109  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 45160.3943953532143496 and 45160.39439535327255726 are within 1e-10% of each other with message: t := 5.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.00000000000003319 is within 0.000000001 of 0.0 with message: t := 5.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.00000000000000139 is within 0.000000001 of 0.0 with message: t := 5.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 19.02173913043477782 is within 0.000000001 of 19.02173913043478137 with message: t := 5.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -25.0 is within 0.0000001 of -25.0 with message: t := 5.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -25.0 is within 0.0000001 of -25.0 with message: t := 5.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -5.0 is within 0.0000001 of -5.0 with message: t := 5.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 25.0 is within 0.0000001 of 25.0 with message: t := 5.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 25.0 is within 0.0000001 of 25.0 with message: t := 5.0
+ShellFeatureTests.cpp:109  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 51050.88062083414115477 and 51050.88062083413387882 are within 1e-10% of each other with message: t := 5.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.00000000000001062 is within 0.000000001 of 0.0 with message: t := 5.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 18.99999999999999289 is within 0.000000001 of 19.0 with message: t := 5.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.00000000000000215 is within 0.000000001 of 0.0 with message: t := 5.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -30.0 is within 0.0000001 of -30.0 with message: t := 5.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: t := 5.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -30.0 is within 0.0000001 of -30.0 with message: t := 5.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 30.0 is within 0.0000001 of 30.0 with message: t := 5.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 60.0 is within 0.0000001 of 60.0 with message: t := 5.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 30.0 is within 0.0000001 of 30.0 with message: t := 5.0
+ShellFeatureTests.cpp:109  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 74612.82552275754278526 and 74612.82552275760099292 are within 1e-10% of each other with message: t := 5.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.00000000000001014 is within 0.000000001 of 0.0 with message: t := 5.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 17.78947368421052744 is within 0.000000001 of 17.78947368421053099 with message: t := 5.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.00000000000000338 is within 0.000000001 of 0.0 with message: t := 5.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -35.0 is within 0.0000001 of -35.0 with message: t := 5.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -5.0 is within 0.0000001 of -5.0 with message: t := 5.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -35.0 is within 0.0000001 of -35.0 with message: t := 5.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 35.0 is within 0.0000001 of 35.0 with message: t := 5.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 35.0 is within 0.0000001 of 35.0 with message: t := 5.0
+ShellFeatureTests.cpp:329  CHECK_THAT( namedArea(regenerator, m.canCup, canTop), WithinRel(kPi * (400.0 - (20 - t) * (20 - t)), kRel) )
+        => 549.77871437821374911 and 549.77871437821374911 are within 1e-10% of each other with message: t := 5.0
+ShellFeatureTests.cpp:330  CHECK_THAT( namedArea(regenerator, m.canCase, canTop), WithinRel(kPi * ((20 + t) * (20 + t) - 400.0), kRel) )
+        => 706.85834705770366782 and 706.85834705770344044 are within 1e-10% of each other with message: t := 5.0
+ShellFeatureTests.cpp:332  CHECK_THAT( namedArea(regenerator, m.shaftBore, smallEnd), WithinRel(kPi * (225.0 - (15 - t) * (15 - t)), kRel) )
+        => 392.699081698724342 and 392.69908169872411463 are within 1e-10% of each other with message: t := 5.0
+ShellFeatureTests.cpp:334  CHECK_THAT( namedArea(regenerator, m.shaftSleeve, smallEnd), WithinRel(kPi * ((15 + t) * (15 + t) - 225.0), kRel) )
+        => 549.77871437821374911 and 549.77871437821374911 are within 1e-10% of each other with message: t := 5.0
+ShellFeatureTests.cpp:338  CHECK_THAT( namedArea(regenerator, shell, nameOf(m.shaft, FaceRole::Side, m.shaftLines[0])), WithinRel(900.0 * kPi, kRel) )
+        => 2827.43338823081467126 and 2827.43338823081376177 are within 1e-10% of each other with message: t := 5.0
+ShellFeatureTests.cpp:340  CHECK_THAT( namedArea(regenerator, shell, nameOf(m.shaft, FaceRole::Side, m.shaftLines[1])), WithinRel(2.0 * kPi * 30.0 * 20.0, kRel) )
+        => 3769.9111843077521371 and 3769.91118430775168235 are within 1e-10% of each other with message: t := 5.0
+ShellFeatureTests.cpp:342  CHECK_THAT( namedArea(regenerator, shell, nameOf(m.shaft, FaceRole::Side, m.shaftLines[3])), WithinRel(2.0 * kPi * 15.0 * 40.0, kRel) )
+        => 3769.9111843077521371 and 3769.91118430775168235 are within 1e-10% of each other with message: t := 5.0
+ShellFeatureTests.cpp:349  CHECK_THAT( volumeOf(regenerator, m.shaftBore), WithinRel(10602.0 * kPi, kRel) )
+        => 33307.16531335898616817 and 33307.16531335898616817 are within 1e-10% of each other
+ShellFeatureTests.cpp:350  CHECK_THAT( volumeOf(regenerator, m.shaftSleeve), WithinRel(13302.0 * kPi, kRel) )
+        => 41789.46547805141744902 and 41789.46547805142472498 are within 1e-10% of each other
+
+== Shell_HollowsABoxAndCarriesItsNames
+ShellTests.cpp:128  CHECK( cup.topology().solids == 1 )
+        => 1 == 1
+ShellTests.cpp:129  CHECK( cup.topology().faces == 11 )
+        => 11 == 11
+ShellTests.cpp:130  CHECK_THAT( volumeOf(cup), WithinRel(120000.0 - 90.0 * 50.0 * 15.0, kRel) )
+        => 52500.0 and 52500.0 are within 1e-10% of each other
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 100.0 is within 0.000000001 of 100.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 60.0 is within 0.000000001 of 60.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => 20.0 is within 0.000000001 of 20.0
+ShellTests.cpp:137  CHECK( names.named == 1 )
+        => 1 == 1
+ShellTests.cpp:138  CHECK_THAT( names.namedArea, WithinRel(6000.0 - 4500.0, kRel) )
+        => 1500.0 and 1500.0 are within 1e-10% of each other
+ShellTests.cpp:139  CHECK( names.unnamed == 10 )
+        => 10 == 10
+ShellTests.cpp:141  CHECK_THAT( volumeOf(box), WithinRel(120000.0, kRel) )
+        => 120000.0 and 120000.0 are within 1e-10% of each other
+ShellTests.cpp:145  CHECK( casing.topology().faces == 11 )
+        => 11 == 11
+ShellTests.cpp:146  CHECK_THAT( volumeOf(casing), WithinRel(110.0 * 70.0 * 25.0 - 120000.0, kRel) )
+        => 72499.99999999998544808 and 72500.0 are within 1e-10% of each other
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => -5.0 is within 0.000000001 of -5.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => -5.0 is within 0.000000001 of -5.0
+GeometryTestSupport.hpp:37  CHECK_THAT( actual.z.in(units::mm), WithinAbs(zMm, kPositionToleranceMm) )
+        => -5.0 is within 0.000000001 of -5.0
+GeometryTestSupport.hpp:35  CHECK_THAT( actual.x.in(units::mm), WithinAbs(xMm, kPositionToleranceMm) )
+        => 105.0 is within 0.000000001 of 105.0
+GeometryTestSupport.hpp:36  CHECK_THAT( actual.y.in(units::mm), WithinAbs(yMm, kPositionToleranceMm) )
+        => 65.0 is within 0.000000001 of 65.0
+ShellTests.cpp:152  CHECK( names.named == 1 )
+        => 1 == 1
+ShellTests.cpp:153  CHECK_THAT( names.namedArea, WithinRel(7700.0 - 6000.0, kRel) )
+        => 1699.99999999999909051 and 1700.0 are within 1e-10% of each other
+ShellTests.cpp:157  CHECK( volumeOf(again) == volumeOf(cup) )
+        => 52500.0 == 52500.0
+ShellTests.cpp:158  CHECK( again.topology() == cup.topology() )
+        => {?} == {?}
+
+== ShellFeature_CreationAndEditsAreUndoable
+ShellFeatureTests.cpp:651  CHECK_THAT( volumeOf(regenerator, *opened), WithinRel(240000.0 - 98.0 * 59.0 * 39.0, kRel) )
+        => 14502.00000000001455192 and 14502.0 are within 1e-10% of each other
+ShellFeatureTests.cpp:652  CHECK( resultFeatures(m.doc) == std::vector<ObjectId>{m.cup, m.tube, m.casing, *opened} )
+        => { object:5, object:6, object:7, object:8 } == { object:5, object:6, object:7, object:8 }
+ShellFeatureTests.cpp:657  CHECK_THAT( volumeOf(regenerator, *opened), WithinRel(102.0 * 61.0 * 41.0 - 240000.0, kRel) )
+        => 15102.00000000000727596 and 15102.0 are within 1e-10% of each other
+ShellFeatureTests.cpp:664  CHECK( refused.error().message == "a shell needs one or more open faces (a closed hollow is not built)" )
+        => "a shell needs one or more open faces (a closed hollow is not built)" == "a shell needs one or more open faces (a closed hollow is not built)"
+ShellFeatureTests.cpp:669  CHECK_THAT( volumeOf(regenerator, *opened), WithinRel(240000.0 - 98.0 * 59.0 * 39.0, kRel) )
+        => 14502.00000000001455192 and 14502.0 are within 1e-10% of each other
+ShellFeatureTests.cpp:675  CHECK_THAT( volumeOf(regenerator, *m.doc.findByName("Open")), WithinRel(102.0 * 61.0 * 41.0 - 240000.0, kRel) )
+        => 15102.00000000000727596 and 15102.0 are within 1e-10% of each other
+
+== Shell_OpensEveryFaceANameIsOn
+ShellTests.cpp:171  CHECK( shelled.topology().solids == 1 )
+        => 1 == 1
+ShellTests.cpp:173  CHECK_THAT( volumeOf(shelled), WithinRel(114000.0 - cavity, kRel) )
+        => 26639.99999999999636202 and 26640.0 are within 1e-10% of each other
+ShellTests.cpp:175  CHECK( names.named == 2 )
+        => 2 == 2
+ShellTests.cpp:176  CHECK_THAT( names.namedArea, WithinRel(2.0 * (45.0 * 60.0 - 41.0 * 56.0), kRel) )
+        => 808.0 and 808.0 are within 1e-10% of each other
+
+== ShellFeature_RegeneratesDeterministically
+ShellFeatureTests.cpp:619  CHECK( volumes(ra, a.doc) == volumes(rb, b.doc) )
+        => { 4687829947429945344 (0x410e848000000000), 4681711440099278850 (0x40f8c7c000000002), 4683635585447886845 (0x40ff9dbffffffffd), 4687486350046265344 (0x410d4c0000000000), 4687054572839720638 (0x410bc34d08fb56be), 4681242338378975214 (0x40f71d1abe9907ee), 4682675717217366864 (0x40fc34c14316b350), 4687486350046265348 (0x410d4c0000000004), 4687368371438922053 (0x410ce0b2f704a945), 4680221428467320954 (0x40f37c97a1f7487a), 4681693727997970006 (0x40f8b7a4147e4656) } == { 4687829947429945344 (0x410e848000000000), 4681711440099278850 (0x40f8c7c000000002), 4683635585447886845 (0x40ff9dbffffffffd), 4687486350046265344 (0x410d4c0000000000), 4687054572839720638 (0x410bc34d08fb56be), 4681242338378975214 (0x40f71d1abe9907ee), 4682675717217366864 (0x40fc34c14316b350), 4687486350046265348 (0x410d4c0000000004), 4687368371438922053 (0x410ce0b2f704a945), 4680221428467320954 (0x40f37c97a1f7487a), 4681693727997970006 (0x40f8b7a4147e4656) }
+ShellFeatureTests.cpp:623  CHECK( namesOf(ra, id) == namesOf(rb, id) )
+        => { { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { }, { }, { }, { }, { }, { }, { } } == { { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { }, { }, { }, { }, { }, { }, { } } with message: id := object:6
+ShellFeatureTests.cpp:624  CHECK( bodyOf(ra, id).topology() == bodyOf(rb, id).topology() )
+        => {?} == {?} with message: id := object:6
+ShellFeatureTests.cpp:623  CHECK( namesOf(ra, id) == namesOf(rb, id) )
+        => { { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { }, { }, { }, { }, { }, { }, { } } == { { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { }, { }, { }, { }, { }, { }, { } } with message: id := object:7
+ShellFeatureTests.cpp:624  CHECK( bodyOf(ra, id).topology() == bodyOf(rb, id).topology() )
+        => {?} == {?} with message: id := object:7
+ShellFeatureTests.cpp:623  CHECK( namesOf(ra, id) == namesOf(rb, id) )
+        => { { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { }, { {?} }, { }, { {?} }, { }, { }, { }, { }, { } } == { { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { }, { {?} }, { }, { {?} }, { }, { }, { }, { }, { } } with message: id := object:11
+ShellFeatureTests.cpp:624  CHECK( bodyOf(ra, id).topology() == bodyOf(rb, id).topology() )
+        => {?} == {?} with message: id := object:11
+ShellFeatureTests.cpp:623  CHECK( namesOf(ra, id) == namesOf(rb, id) )
+        => { { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { }, { {?} }, { }, { {?} }, { }, { }, { }, { }, { } } == { { {?} }, { {?} }, { {?} }, { {?} }, { {?} }, { }, { {?} }, { }, { {?} }, { }, { }, { }, { }, { } } with message: id := object:12
+ShellFeatureTests.cpp:624  CHECK( bodyOf(ra, id).topology() == bodyOf(rb, id).topology() )
+        => {?} == {?} with message: id := object:12
+ShellFeatureTests.cpp:623  CHECK( namesOf(ra, id) == namesOf(rb, id) )
+        => { { {?} }, { {?} }, { }, { }, { {?} }, { {?} }, { }, { }, { {?} }, { {?} }, { }, { }, { }, { }, { }, { }, { }, { }, { } } == { { {?} }, { {?} }, { }, { }, { {?} }, { {?} }, { }, { }, { {?} }, { {?} }, { }, { }, { }, { }, { }, { }, { }, { }, { } } with message: id := object:16
+ShellFeatureTests.cpp:624  CHECK( bodyOf(ra, id).topology() == bodyOf(rb, id).topology() )
+        => {?} == {?} with message: id := object:16
+ShellFeatureTests.cpp:623  CHECK( namesOf(ra, id) == namesOf(rb, id) )
+        => { { {?} }, { {?} }, { }, { }, { {?} }, { {?} }, { }, { }, { {?} }, { {?} }, { }, { }, { }, { }, { }, { }, { }, { }, { } } == { { {?} }, { {?} }, { }, { }, { {?} }, { {?} }, { }, { }, { {?} }, { {?} }, { }, { }, { }, { }, { }, { }, { }, { }, { } } with message: id := object:17
+ShellFeatureTests.cpp:624  CHECK( bodyOf(ra, id).topology() == bodyOf(rb, id).topology() )
+        => {?} == {?} with message: id := object:17
+ShellFeatureTests.cpp:632  CHECK( volumes(ra, a.doc) == before )
+        => { 4687829947429945344 (0x410e848000000000), 4681711440099278850 (0x40f8c7c000000002), 4683635585447886845 (0x40ff9dbffffffffd), 4687486350046265344 (0x410d4c0000000000), 4687054572839720638 (0x410bc34d08fb56be), 4681242338378975214 (0x40f71d1abe9907ee), 4682675717217366864 (0x40fc34c14316b350), 4687486350046265348 (0x410d4c0000000004), 4687368371438922053 (0x410ce0b2f704a945), 4680221428467320954 (0x40f37c97a1f7487a), 4681693727997970006 (0x40f8b7a4147e4656) } == { 4687829947429945344 (0x410e848000000000), 4681711440099278850 (0x40f8c7c000000002), 4683635585447886845 (0x40ff9dbffffffffd), 4687486350046265344 (0x410d4c0000000000), 4687054572839720638 (0x410bc34d08fb56be), 4681242338378975214 (0x40f71d1abe9907ee), 4682675717217366864 (0x40fc34c14316b350), 4687486350046265348 (0x410d4c0000000004), 4687368371438922053 (0x410ce0b2f704a945), 4680221428467320954 (0x40f37c97a1f7487a), 4681693727997970006 (0x40f8b7a4147e4656) }
+
+== ShellFeature_ConcaveDrilledAndRoundedBodies
+ShellFeatureTests.cpp:106  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:109  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 101500.00000000002910383 and 101500.0 are within 1e-10% of each other with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 40.394088669950726 is within 0.000000001 of 40.39408866995074021 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 31.13300492610837011 is within 0.000000001 of 31.13300492610837367 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 21.34236453201970463 is within 0.000000001 of 21.34236453201970463 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 100.0 is within 0.0000001 of 100.0 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 80.0 is within 0.0000001 of 80.0 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 50.0 is within 0.0000001 of 50.0 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:109  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 129499.99999999995634425 and 129500.0 are within 1e-10% of each other with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 41.31274131274131634 is within 0.000000001 of 41.31274131274130923 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 31.89189189189189122 is within 0.000000001 of 31.89189189189189122 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 17.6737451737451714 is within 0.000000001 of 17.67374517374517495 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -5.0 is within 0.0000001 of -5.0 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -5.0 is within 0.0000001 of -5.0 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -5.0 is within 0.0000001 of -5.0 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 105.0 is within 0.0000001 of 105.0 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 85.0 is within 0.0000001 of 85.0 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:109  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 94673.67153266046079807 and 94673.67153266043169424 are within 1e-10% of each other with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 49.99999999999997868 is within 0.000000001 of 50.00000000000001421 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 29.99999999999998579 is within 0.000000001 of 30.0 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 16.49427460391718725 is within 0.000000001 of 16.4942746039171837 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 60.0 is within 0.0000001 of 60.0 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 40.0 is within 0.0000001 of 40.0 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:109  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 115532.07887907070107758 and 115532.07887907067197375 are within 1e-10% of each other with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 49.99999999999997158 is within 0.000000001 of 49.99999999999998579 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 29.99999999999998934 is within 0.000000001 of 30.0 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 12.57856104572263867 is within 0.000000001 of 12.578561045722644 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 65.0 is within 0.0000001 of 65.0 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:109  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 79817.47704246817738749 and 79817.47704246811917983 are within 1e-10% of each other with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 250.00000000000005684 is within 0.000000001 of 249.99999999999994316 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 29.99999999999999645 is within 0.000000001 of 29.99999999999999645 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 15.09039563200892964 is within 0.000000001 of 15.0903956320089474 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 200.0 is within 0.0000001 of 200.0 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.00000000000000178 is within 0.0000001 of 0.0 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 300.00000000000005684 is within 0.0000001 of 300.0 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:109  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 101242.25500323748565279 and 101242.25500323748565279 are within 1e-10% of each other with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 250.00000000000011369 is within 0.000000001 of 250.00000000000008527 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.00000000000002487 is within 0.000000001 of 30.00000000000000711 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 11.65840820103240461 is within 0.000000001 of 11.65840820103240283 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 195.0 is within 0.0000001 of 195.0 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -5.00000000000000178 is within 0.0000001 of -5.0 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 305.00000000000005684 is within 0.0000001 of 305.0 with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:368  CHECK_THAT( namedArea(regenerator, m.ellCup, nameOf(m.ell, FaceRole::EndCap)), WithinRel(5000.0 - ellCavity, kRel) )
+        => 1700.0 and 1700.0 are within 1e-10% of each other with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:370  CHECK_THAT( namedArea(regenerator, m.drillCup, nameOf(m.plate, FaceRole::EndCap)), WithinRel(ConcaveShellModel::drillRim(t), kRel) )
+        => 1892.69908169872428516 and 1892.69908169872360304 are within 1e-10% of each other with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:374  CHECK_THAT( namedArea(regenerator, m.roundCup, nameOf(m.pad, FaceRole::EndCap)), WithinRel(padTop - padMouth, kRel) )
+        => 1435.61944901923561702 and 1435.61944901923470752 are within 1e-10% of each other with message: h := 40.0; t := 5.0; r := 10.0
+ShellFeatureTests.cpp:380  CHECK_THAT( volumeOf(regenerator, m.ellCup), WithinRel(101500.0, kRel) )
+        => 101500.00000000002910383 and 101500.0 are within 1e-10% of each other
+ShellFeatureTests.cpp:381  CHECK_THAT( volumeOf(regenerator, m.ellCase), WithinRel(129500.0, kRel) )
+        => 129499.99999999995634425 and 129500.0 are within 1e-10% of each other
+ShellFeatureTests.cpp:382  CHECK_THAT( volumeOf(regenerator, m.drillCup), WithinRel(82500.0 + 3875.0 * kPi, kRel) )
+        => 94673.67153266046079807 and 94673.67153266044624615 are within 1e-10% of each other
+ShellFeatureTests.cpp:383  CHECK_THAT( volumeOf(regenerator, m.drillCase), WithinRel(106500.0 + 2875.0 * kPi, kRel) )
+        => 115532.07887907070107758 and 115532.07887907065742183 are within 1e-10% of each other
+ShellFeatureTests.cpp:106  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:109  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 64067.99999999995634425 and 64068.0 are within 1e-10% of each other with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 40.58812511706312165 is within 0.000000001 of 40.58812511706312165 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 31.29050383967035742 is within 0.000000001 of 31.29050383967035032 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 20.64684397827306128 is within 0.000000001 of 20.64684397827308615 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 100.0 is within 0.0000001 of 100.0 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 80.0 is within 0.0000001 of 80.0 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 50.0 is within 0.0000001 of 50.0 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:109  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 74147.99999999997089617 and 74148.0 are within 1e-10% of each other with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 41.13934293575013612 is within 0.000000001 of 41.13934293575012191 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 31.74623725521929529 is within 0.000000001 of 31.74623725521929174 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 18.44254733775692756 is within 0.000000001 of 18.4425473377569169 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -3.0 is within 0.0000001 of -3.0 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -3.0 is within 0.0000001 of -3.0 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -3.0 is within 0.0000001 of -3.0 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 103.0 is within 0.0000001 of 103.0 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 83.0 is within 0.0000001 of 83.0 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:109  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 76377.55664500323473476 and 76377.55664500326383859 are within 1e-10% of each other with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 50.00000000000002132 is within 0.000000001 of 50.0 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.00000000000001421 is within 0.000000001 of 29.99999999999997868 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 22.858380901235968 is within 0.000000001 of 22.85838090123596444 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 60.0 is within 0.0000001 of 60.0 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 55.0 is within 0.0000001 of 55.0 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:109  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 84118.35327324166428298 and 84118.35327324164973106 are within 1e-10% of each other with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 50.00000000000004974 is within 0.000000001 of 50.0 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.00000000000001776 is within 0.000000001 of 30.00000000000001421 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 20.42354917381507562 is within 0.000000001 of 20.42354917381506851 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 63.0 is within 0.0000001 of 63.0 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:109  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 64142.33569096940482268 and 64142.33569096931023523 are within 1e-10% of each other with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 250.0 is within 0.000000001 of 250.00000000000002842 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 29.99999999999995026 is within 0.000000001 of 30.00000000000000711 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 21.35344949747429411 is within 0.000000001 of 21.35344949747427989 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 200.0 is within 0.0000001 of 200.0 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.00000000000000178 is within 0.0000001 of 0.0 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 300.00000000000005684 is within 0.0000001 of 300.0 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:109  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 72765.29110225714975968 and 72765.29110225709155202 are within 1e-10% of each other with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 250.00000000000005684 is within 0.000000001 of 249.99999999999994316 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 29.99999999999998934 is within 0.000000001 of 29.99999999999998579 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 19.2595939385207835 is within 0.000000001 of 19.25959393852077284 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 197.0 is within 0.0000001 of 197.0 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -3.00000000000000178 is within 0.0000001 of -3.0 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 303.00000000000005684 is within 0.0000001 of 303.0 with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:368  CHECK_THAT( namedArea(regenerator, m.ellCup, nameOf(m.ell, FaceRole::EndCap)), WithinRel(5000.0 - ellCavity, kRel) )
+        => 1044.0 and 1044.0 are within 1e-10% of each other with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:370  CHECK_THAT( namedArea(regenerator, m.drillCup, nameOf(m.plate, FaceRole::EndCap)), WithinRel(ConcaveShellModel::drillRim(t), kRel) )
+        => 1140.76989309769555803 and 1140.7698930976957854 are within 1e-10% of each other with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:374  CHECK_THAT( namedArea(regenerator, m.roundCup, nameOf(m.pad, FaceRole::EndCap)), WithinRel(padTop - padMouth, kRel) )
+        => 890.52211349000253904 and 890.52211349000208429 are within 1e-10% of each other with message: h := 55.0; t := 3.0; r := 8.0
+ShellFeatureTests.cpp:395  CHECK( volumes(regenerator, m.doc) == first )
+        => { 4687829947429945344 (0x410e848000000000), 4681711440099278850 (0x40f8c7c000000002), 4683635585447886845 (0x40ff9dbffffffffd), 4687486350046265344 (0x410d4c0000000000), 4687054572839720638 (0x410bc34d08fb56be), 4681242338378975214 (0x40f71d1abe9907ee), 4682675717217366864 (0x40fc34c14316b350), 4687486350046265348 (0x410d4c0000000004), 4687368371438922053 (0x410ce0b2f704a945), 4680221428467320954 (0x40f37c97a1f7487a), 4681693727997970006 (0x40f8b7a4147e4656) } == { 4687829947429945344 (0x410e848000000000), 4681711440099278850 (0x40f8c7c000000002), 4683635585447886845 (0x40ff9dbffffffffd), 4687486350046265344 (0x410d4c0000000000), 4687054572839720638 (0x410bc34d08fb56be), 4681242338378975214 (0x40f71d1abe9907ee), 4682675717217366864 (0x40fc34c14316b350), 4687486350046265348 (0x410d4c0000000004), 4687368371438922053 (0x410ce0b2f704a945), 4680221428467320954 (0x40f37c97a1f7487a), 4681693727997970006 (0x40f8b7a4147e4656) }
+
+== ShellFile_SaveLoad_RegeneratesTheSameBodies
+ShellFileTests.cpp:81  CHECK( shell->definition() == original.doc.template findObjectAs<ShellFeature>(id)->definition() )
+        => {?} == {?} with message: id := object:5
+ShellFileTests.cpp:82  CHECK( volumeBits(after, id) == volumeBits(before, id) )
+        => 4545715849933784120 (0x3f15a07b352a8438) == 4545715849933784120 (0x3f15a07b352a8438) with message: id := object:5
+ShellFileTests.cpp:81  CHECK( shell->definition() == original.doc.template findObjectAs<ShellFeature>(id)->definition() )
+        => {?} == {?} with message: id := object:6
+ShellFileTests.cpp:82  CHECK( volumeBits(after, id) == volumeBits(before, id) )
+        => 4543979261917470057 (0x3f0f75104d551d69) == 4543979261917470057 (0x3f0f75104d551d69) with message: id := object:6
+ShellFileTests.cpp:81  CHECK( shell->definition() == original.doc.template findObjectAs<ShellFeature>(id)->definition() )
+        => {?} == {?} with message: id := object:7
+ShellFileTests.cpp:82  CHECK( volumeBits(after, id) == volumeBits(before, id) )
+        => 4547486737364860236 (0x3f1beb18116ebd4c) == 4547486737364860236 (0x3f1beb18116ebd4c) with message: id := object:7
+ShellFileTests.cpp:81  CHECK( shell->definition() == original.doc.template findObjectAs<ShellFeature>(id)->definition() )
+        => {?} == {?} with message: id := object:4
+ShellFileTests.cpp:82  CHECK( volumeBits(after, id) == volumeBits(before, id) )
+        => 4536571288861116529 (0x3ef5238d2acd8871) == 4536571288861116529 (0x3ef5238d2acd8871) with message: id := object:4
+ShellFileTests.cpp:82  CHECK( volumeBits(after, id) == volumeBits(before, id) )
+        => 4538073408735943401 (0x3efa79b8b45a1ae9) == 4538073408735943401 (0x3efa79b8b45a1ae9) with message: id := object:5
+ShellFileTests.cpp:81  CHECK( shell->definition() == original.doc.template findObjectAs<ShellFeature>(id)->definition() )
+        => {?} == {?} with message: id := object:8
+ShellFileTests.cpp:82  CHECK( volumeBits(after, id) == volumeBits(before, id) )
+        => 4540040094796939626 (0x3f0176697c67016a) == 4540040094796939626 (0x3f0176697c67016a) with message: id := object:8
+ShellFileTests.cpp:81  CHECK( shell->definition() == original.doc.template findObjectAs<ShellFeature>(id)->definition() )
+        => {?} == {?} with message: id := object:9
+ShellFileTests.cpp:82  CHECK( volumeBits(after, id) == volumeBits(before, id) )
+        => 4541291861359295351 (0x3f05e8e319b17b77) == 4541291861359295351 (0x3f05e8e319b17b77) with message: id := object:9
+ShellFileTests.cpp:82  CHECK( volumeBits(after, id) == volumeBits(before, id) )
+        => 4547117802483386048 (0x3f1a9b8cb8e086c0) == 4547117802483386048 (0x3f1a9b8cb8e086c0) with message: id := object:6
+ShellFileTests.cpp:82  CHECK( volumeBits(after, id) == volumeBits(before, id) )
+        => 4548909730731921236 (0x3f20f94c87980f54) == 4548909730731921236 (0x3f20f94c87980f54) with message: id := object:7
+ShellFileTests.cpp:81  CHECK( shell->definition() == original.doc.template findObjectAs<ShellFeature>(id)->definition() )
+        => {?} == {?} with message: id := object:11
+ShellFileTests.cpp:82  CHECK( volumeBits(after, id) == volumeBits(before, id) )
+        => 4546614108346585684 (0x3f18d1714ac71254) == 4546614108346585684 (0x3f18d1714ac71254) with message: id := object:11
+ShellFileTests.cpp:81  CHECK( shell->definition() == original.doc.template findObjectAs<ShellFeature>(id)->definition() )
+        => {?} == {?} with message: id := object:12
+ShellFileTests.cpp:82  CHECK( volumeBits(after, id) == volumeBits(before, id) )
+        => 4548153187155003336 (0x3f1e493a006f47c8) == 4548153187155003336 (0x3f1e493a006f47c8) with message: id := object:12
+ShellFileTests.cpp:81  CHECK( shell->definition() == original.doc.template findObjectAs<ShellFeature>(id)->definition() )
+        => {?} == {?} with message: id := object:16
+ShellFileTests.cpp:82  CHECK( volumeBits(after, id) == volumeBits(before, id) )
+        => 4545517914675906360 (0x3f14ec75d06e8738) == 4545517914675906360 (0x3f14ec75d06e8738) with message: id := object:16
+ShellFileTests.cpp:81  CHECK( shell->definition() == original.doc.template findObjectAs<ShellFeature>(id)->definition() )
+        => {?} == {?} with message: id := object:17
+ShellFileTests.cpp:82  CHECK( volumeBits(after, id) == volumeBits(before, id) )
+        => 4547098784259419817 (0x3f1a8a40b264aea9) == 4547098784259419817 (0x3f1a8a40b264aea9) with message: id := object:17
+
+== ShellFeature_FailuresAreStructuredAndAtomic / walls too thick for the whole body
+ShellFeatureTests.cpp:165  CHECK( std::ranges::find(report.failed, item) != report.failed.end() )
+        => {?} != {?}
+ShellFeatureTests.cpp:167  CHECK( report.errors.at(item).code == code )
+        => 5 == 5
+ShellFeatureTests.cpp:168  CHECK( regenerator.body(item) == nullptr )
+        => nullptr == nullptr
+ShellFeatureTests.cpp:409  CHECK( failureOf(report, regenerator, m.cup, ErrorCode::FailedPrecondition) == cannotBuild("Cup", 35.0, "inward", "its result is not a shell of the body: 5 of the 5 remaining faces have no wall") )
+        => "Cup: shell: the kernel cannot build walls 35 mm thick inward on this body: its result is not a shell of the body: 5 of the 5 remaining faces have no wall; walls thicker than half the body where it is thinnest, or an inward wall at least as thick as a round it follows, cannot be built" == "Cup: shell: the kernel cannot build walls 35 mm thick inward on this body: its result is not a shell of the body: 5 of the 5 remaining faces have no wall; walls thicker than half the body where it is thinnest, or an inward wall at least as thick as a round it follows, cannot be built"
+ShellFeatureTests.cpp:412  CHECK_THAT( failureOf(report, regenerator, m.tube, ErrorCode::FailedPrecondition), StartsWith("Tube: shell: the kernel cannot build walls 35 mm thick inward on this body: ") )
+        => "Tube: shell: the kernel cannot build walls 35 mm thick inward on this body: its result is not a shell of the body: 4 of the 4 remaining faces have no wall; walls thicker than half the body where it is thinnest, or an inward wall at least as thick as a round it follows, cannot be built" starts with: "Tube: shell: the kernel cannot build walls 35 mm thick inward on this body: "
+ShellFeatureTests.cpp:415  CHECK( regenerator.body(m.casing) != nullptr )
+        => 0x000002436cacb328 != nullptr
+ShellFeatureTests.cpp:106  CHECK( body.topology().solids == 1 )
+        => 1 == 1
+ShellFeatureTests.cpp:109  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 1417500.0 and 1417500.0 are within 1e-10% of each other
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 50.0 is within 0.000000001 of 50.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.00000000000000355 is within 0.000000001 of 30.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.46296296296296297 is within 0.000000001 of -0.46296296296296297
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -35.0 is within 0.0000001 of -35.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -35.0 is within 0.0000001 of -35.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -35.0 is within 0.0000001 of -35.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 135.0 is within 0.0000001 of 135.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 95.0 is within 0.0000001 of 95.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 40.0 is within 0.0000001 of 40.0
+ShellFeatureTests.cpp:420  CHECK( failureOf(report, regenerator, m.cup, ErrorCode::FailedPrecondition) == cannotBuild("Cup", 30.0, "inward", "its result is not a shell of the body: it is not a valid solid") )
+        => "Cup: shell: the kernel cannot build walls 30 mm thick inward on this body: its result is not a shell of the body: it is not a valid solid; walls thicker than half the body where it is thinnest, or an inward wall at least as thick as a round it follows, cannot be built" == "Cup: shell: the kernel cannot build walls 30 mm thick inward on this body: its result is not a shell of the body: it is not a valid solid; walls thicker than half the body where it is thinnest, or an inward wall at least as thick as a round it follows, cannot be built"
+ShellFeatureTests.cpp:426  CHECK( volumes(regenerator, m.doc) == before )
+        => { 4687486350046265344 (0x410d4c0000000000), 4680405770041294848 (0x40f4244000000000), 4678479150791524352 (0x40ed4c0000000000), 4682055037482958847 (0x40fa003fffffffff) } == { 4687486350046265344 (0x410d4c0000000000), 4680405770041294848 (0x40f4244000000000), 4678479150791524352 (0x40ed4c0000000000), 4682055037482958847 (0x40fa003fffffffff) }
+
+== ShellFeature_FailuresAreStructuredAndAtomic / walls too thick where the body is thin
+ShellFeatureTests.cpp:106  CHECK( body.topology().solids == 1 )
+        => 1 == 1
+ShellFeatureTests.cpp:109  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 36972.0 and 36972.0 are within 1e-10% of each other
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 50.0 is within 0.000000001 of 50.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 20.0 is within 0.000000001 of 20.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 12.41041869522882202 is within 0.000000001 of 12.41041869522882202
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 100.0 is within 0.0000001 of 100.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 40.0 is within 0.0000001 of 40.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 30.0 is within 0.0000001 of 30.0
+ShellFeatureTests.cpp:453  CHECK_THAT( volumeOf(regenerator, hollow), WithinRel(100800.0 - 63828.0, kRel) )
+        => 36972.0 and 36972.0 are within 1e-10% of each other
+ShellFeatureTests.cpp:165  CHECK( std::ranges::find(report.failed, item) != report.failed.end() )
+        => {?} != {?}
+ShellFeatureTests.cpp:167  CHECK( report.errors.at(item).code == code )
+        => 5 == 5
+ShellFeatureTests.cpp:168  CHECK( regenerator.body(item) == nullptr )
+        => nullptr == nullptr
+ShellFeatureTests.cpp:457  CHECK( failureOf(report, regenerator, hollow, ErrorCode::FailedPrecondition) == cannotBuild("Hollow", 5.0, "inward", "kernel: unknown error") )
+        => "Hollow: shell: the kernel cannot build walls 5 mm thick inward on this body: kernel: unknown error; walls thicker than half the body where it is thinnest, or an inward wall at least as thick as a round it follows, cannot be built" == "Hollow: shell: the kernel cannot build walls 5 mm thick inward on this body: kernel: unknown error; walls thicker than half the body where it is thinnest, or an inward wall at least as thick as a round it follows, cannot be built"
+ShellFeatureTests.cpp:459  CHECK( report.failed == std::vector<ObjectId>{hollow} )
+        => { object:4 } == { object:4 }
+ShellFeatureTests.cpp:460  CHECK( regenerator.body(dumbbell) != nullptr )
+        => 0x000002436ca85c78 != nullptr
+
+== ShellFeature_FailuresAreStructuredAndAtomic / rounds no larger than an inward wall
+ShellFeatureTests.cpp:165  CHECK( std::ranges::find(report.failed, item) != report.failed.end() )
+        => {?} != {?}
+ShellFeatureTests.cpp:167  CHECK( report.errors.at(item).code == code )
+        => 5 == 5
+ShellFeatureTests.cpp:168  CHECK( regenerator.body(item) == nullptr )
+        => nullptr == nullptr
+ShellFeatureTests.cpp:468  CHECK( failureOf(report, regenerator, m.roundCup, ErrorCode::FailedPrecondition) == cannotBuild("RoundCup", 5.0, "inward", "kernel: unknown error") )
+        => "RoundCup: shell: the kernel cannot build walls 5 mm thick inward on this body: kernel: unknown error; walls thicker than half the body where it is thinnest, or an inward wall at least as thick as a round it follows, cannot be built" == "RoundCup: shell: the kernel cannot build walls 5 mm thick inward on this body: kernel: unknown error; walls thicker than half the body where it is thinnest, or an inward wall at least as thick as a round it follows, cannot be built"
+ShellFeatureTests.cpp:470  CHECK( report.failed == std::vector<ObjectId>{m.roundCup} )
+        => { object:16 } == { object:16 }
+ShellFeatureTests.cpp:106  CHECK( body.topology().solids == 1 )
+        => 1 == 1
+ShellFeatureTests.cpp:109  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 104336.81348704626725521 and 104336.81348704628180712 are within 1e-10% of each other
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 250.0 is within 0.000000001 of 249.99999999999997158
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.00000000000000355 is within 0.000000001 of 29.99999999999999645
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 11.75679764062733845 is within 0.000000001 of 11.75679764062732779
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 195.0 is within 0.0000001 of 195.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -5.0 is within 0.0000001 of -5.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -5.0 is within 0.0000001 of -5.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 305.00000000000005684 is within 0.0000001 of 305.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 65.0 is within 0.0000001 of 65.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 40.0 is within 0.0000001 of 40.0
+ShellFeatureTests.cpp:476  CHECK_THAT( failureOf(report, regenerator, m.roundCup, ErrorCode::FailedPrecondition), StartsWith("RoundCup: shell: the kernel cannot build walls 5 mm thick inward on this body: " "kernel: ") )
+        => "RoundCup: shell: the kernel cannot build walls 5 mm thick inward on this body: kernel: Standard_NoSuchObject: BRep_Tool:: no parameter on edge; walls thicker than half the body where it is thinnest, or an inward wall at least as thick as a round it follows, cannot be built" starts with: "RoundCup: shell: the kernel cannot build walls 5 mm thick inward on this body: kernel: "
+ShellFeatureTests.cpp:109  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 103495.57428756430454087 and 103495.57428756431909278 are within 1e-10% of each other
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 250.0 is within 0.000000001 of 250.00000000000005684
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.00000000000001421 is within 0.000000001 of 30.00000000000000711
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 11.7233860167505668 is within 0.000000001 of 11.72338601675056857
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -5.00000000000000089 is within 0.0000001 of -5.0
+
+== ShellFeature_FailuresAreStructuredAndAtomic / open faces that the target's body does not have
+ShellFeatureTests.cpp:165  CHECK( std::ranges::find(report.failed, item) != report.failed.end() )
+        => {?} != {?}
+ShellFeatureTests.cpp:167  CHECK( report.errors.at(item).code == code )
+        => 1 == 1
+ShellFeatureTests.cpp:168  CHECK( regenerator.body(item) == nullptr )
+        => nullptr == nullptr
+ShellFeatureTests.cpp:511  CHECK( failureOf(report, regenerator, wrongBody, ErrorCode::NotFound) == std::format("WrongBody: open face 1, the end cap of Boss ({}), is not a face of the body of Block ({})", boss, block) )
+        => "WrongBody: open face 1, the end cap of Boss (object:4), is not a face of the body of Block (object:2)" == "WrongBody: open face 1, the end cap of Boss (object:4), is not a face of the body of Block (object:2)"
+ShellFeatureTests.cpp:514  CHECK( failureOf(report, regenerator, cutAway, ErrorCode::NotFound) == std::format("CutAway: open face 1, the end cap of Block ({}), is not a face of the body of Base ({})", block, base) )
+        => "CutAway: open face 1, the end cap of Block (object:2), is not a face of the body of Base (object:6)" == "CutAway: open face 1, the end cap of Block (object:2), is not a face of the body of Base (object:6)"
+ShellFeatureTests.cpp:167  CHECK( report.errors.at(item).code == code )
+        => 0 == 0
+ShellFeatureTests.cpp:517  CHECK( failureOf(report, regenerator, unnamed, ErrorCode::InvalidArgument) == std::format("Unnamed: open face 1: Base ({}) is a split, whose faces are not named (extrudes, " "revolves, sweeps, lofts, holes and chamfers name theirs)", base) )
+        => "Unnamed: open face 1: Base (object:6) is a split, whose faces are not named (extrudes, revolves, sweeps, lofts, holes and chamfers name theirs)" == "Unnamed: open face 1: Base (object:6) is a split, whose faces are not named (extrudes, revolves, sweeps, lofts, holes and chamfers name theirs)"
+ShellFeatureTests.cpp:521  CHECK( failureOf(report, regenerator, onSketch, ErrorCode::InvalidArgument) == std::format("OnSketch: open face 2: BlockSketch ({}) is a sketch, not a feature, and has no faces", blockSketch) )
+        => "OnSketch: open face 2: BlockSketch (object:1) is a sketch, not a feature, and has no faces" == "OnSketch: open face 2: BlockSketch (object:1) is a sketch, not a feature, and has no faces"
+ShellFeatureTests.cpp:167  CHECK( report.errors.at(item).code == code )
+        => 5 == 5
+ShellFeatureTests.cpp:524  CHECK( failureOf(report, regenerator, twoSolids, ErrorCode::FailedPrecondition) == "TwoSolids: shell: a shell hollows one solid; the body has 2" )
+        => "TwoSolids: shell: a shell hollows one solid; the body has 2" == "TwoSolids: shell: a shell hollows one solid; the body has 2"
+ShellFeatureTests.cpp:527  CHECK( regenerator.body(base) != nullptr )
+        => 0x000002436e5481b8 != nullptr
+ShellFeatureTests.cpp:528  CHECK( regenerator.body(halves) != nullptr )
+        => 0x000002436e549cb8 != nullptr
+ShellFeatureTests.cpp:532  CHECK_FALSE( !(validation.valid()) )
+        => !false
+ShellFeatureTests.cpp:547  CHECK( std::ranges::find(deps, boss) != deps.end() )
+        => {?} != {?}
+
+== ShellFeature_FailuresAreStructuredAndAtomic / thicknesses of the wrong kind or value
+ShellFeatureTests.cpp:165  CHECK( std::ranges::find(report.failed, item) != report.failed.end() )
+        => {?} != {?}
+ShellFeatureTests.cpp:167  CHECK( report.errors.at(item).code == code )
+        => 3 == 3
+ShellFeatureTests.cpp:168  CHECK( regenerator.body(item) == nullptr )
+        => nullptr == nullptr
+ShellFeatureTests.cpp:167  CHECK( report.errors.at(item).code == code )
+        => 0 == 0
+ShellFeatureTests.cpp:569  CHECK( failureOf(report, regenerator, id, ErrorCode::InvalidArgument) == std::format("{}: shell: the shell thickness must be positive and finite, got -2 mm", name) )
+        => "Cup: shell: the shell thickness must be positive and finite, got -2 mm" == "Cup: shell: the shell thickness must be positive and finite, got -2 mm"
+ShellFeatureTests.cpp:569  CHECK( failureOf(report, regenerator, id, ErrorCode::InvalidArgument) == std::format("{}: shell: the shell thickness must be positive and finite, got -2 mm", name) )
+        => "Tube: shell: the shell thickness must be positive and finite, got -2 mm" == "Tube: shell: the shell thickness must be positive and finite, got -2 mm"
+ShellFeatureTests.cpp:569  CHECK( failureOf(report, regenerator, id, ErrorCode::InvalidArgument) == std::format("{}: shell: the shell thickness must be positive and finite, got -2 mm", name) )
+        => "Casing: shell: the shell thickness must be positive and finite, got -2 mm" == "Casing: shell: the shell thickness must be positive and finite, got -2 mm"
+
+== ShellFeature_FailuresAreStructuredAndAtomic / shells are not repeated, their faces are not named, and they need a body
+ShellFeatureTests.cpp:586  CHECK_THAT( report.errors.at(row).message, ContainsSubstring("a linear pattern cannot repeat a shell") )
+        => "Row: linear pattern: a linear pattern cannot repeat a shell" contains: "a linear pattern cannot repeat a shell"
+ShellFeatureTests.cpp:588  CHECK( report.errors.at(onCupId).message == std::format("OnCup ({}): Cup ({}) is a shell, whose faces are not named (extrudes, revolves, sweeps, " "lofts, holes and chamfers name theirs)", onCupId, m.cup) )
+        => "OnCup (object:9): Cup (object:5) is a shell, whose faces are not named (extrudes, revolves, sweeps, lofts, holes and chamfers name theirs)" == "OnCup (object:9): Cup (object:5) is a shell, whose faces are not named (extrudes, revolves, sweeps, lofts, holes and chamfers name theirs)"
+ShellFeatureTests.cpp:165  CHECK( std::ranges::find(report.failed, item) != report.failed.end() )
+        => {?} != {?}
+ShellFeatureTests.cpp:167  CHECK( report.errors.at(item).code == code )
+        => 5 == 5
+ShellFeatureTests.cpp:168  CHECK( regenerator.body(item) == nullptr )
+        => nullptr == nullptr
+ShellFeatureTests.cpp:592  CHECK( failureOf(report, regenerator, noBody, ErrorCode::FailedPrecondition) == "NoBody: a shell needs the body of its target feature" )
+        => "NoBody: a shell needs the body of its target feature" == "NoBody: a shell needs the body of its target feature"
+
+== Shell_RequestsAreValidated
+ShellTests.cpp:101  CHECK( toString(ShellSide::Inward) == "inward" )
+        => "inward" == "inward"
+ShellTests.cpp:102  CHECK( toString(ShellSide::Outward) == "outward" )
+        => "outward" == "outward"
+ShellTests.cpp:103  CHECK( toString(static_cast<ShellSide>(9)) == "unknown" )
+        => "unknown" == "unknown"
+ShellTests.cpp:107  CHECK( valid.error().code == ErrorCode::InvalidArgument )
+        => 0 == 0
+ShellTests.cpp:111  CHECK( message({.thickness = 2_mm}) == "a shell needs one or more open faces (a closed hollow is not built)" )
+        => "a shell needs one or more open faces (a closed hollow is not built)" == "a shell needs one or more open faces (a closed hollow is not built)"
+ShellTests.cpp:112  CHECK( message({.openFaces = {kTop, FaceName{}}, .thickness = 2_mm}) == "open face 2 must name a valid feature" )
+        => "open face 2 must name a valid feature" == "open face 2 must name a valid feature"
+ShellTests.cpp:113  CHECK( message({.openFaces = {FaceName{ObjectId::fromValue(1), {.role = FaceRole::Side}}}, .thickness = 2_mm}) == "open face 1: a side face is named by a valid profile entity" )
+        => "open face 1: a side face is named by a valid profile entity" == "open face 1: a side face is named by a valid profile entity"
+ShellTests.cpp:115  CHECK( message({.openFaces = {kTop, kTop}, .thickness = 2_mm}) == "open face 2 repeats an earlier open face" )
+        => "open face 2 repeats an earlier open face" == "open face 2 repeats an earlier open face"
+ShellTests.cpp:116  CHECK( message(openTop(0_mm)) == "the shell thickness must be positive and finite, got 0 mm" )
+        => "the shell thickness must be positive and finite, got 0 mm" == "the shell thickness must be positive and finite, got 0 mm"
+ShellTests.cpp:117  CHECK( message(openTop(-(2_mm))) == "the shell thickness must be positive and finite, got -2 mm" )
+        => "the shell thickness must be positive and finite, got -2 mm" == "the shell thickness must be positive and finite, got -2 mm"
+ShellTests.cpp:118  CHECK( message(openTop(Length::fromSi(std::numeric_limits<double>::infinity()))) == "the shell thickness must be positive and finite, got inf mm" )
+        => "the shell thickness must be positive and finite, got inf mm" == "the shell thickness must be positive and finite, got inf mm"
+ShellTests.cpp:120  CHECK( message(openTop(2_mm, static_cast<ShellSide>(9))) == "a shell's walls lie inward or outward" )
+        => "a shell's walls lie inward or outward" == "a shell's walls lie inward or outward"
+
+== ShellFile_ExportedShellsReadBackFromStep
+ShellFileTests.cpp:192  CHECK( summary->bodies.size() == 3 )
+        => 3 == 3
+ShellFileTests.cpp:196  CHECK( contents->solids == 3 )
+        => 3 == 3
+ShellFileTests.cpp:201  CHECK_THAT( contents->volumeMm3, WithinRel(total, 1e-9) )
+        => 248999.99999999988358468 and 249000.0 are within 1e-07% of each other
+ShellFileTests.cpp:202  CHECK_THAT( contents->minMm[0], WithinRel(-5.0, 1e-9) )
+        => -5.0 and -5.0 are within 1e-07% of each other
+ShellFileTests.cpp:203  CHECK_THAT( contents->maxMm[0], WithinRel(105.0, 1e-9) )
+        => 105.0 and 105.0 are within 1e-07% of each other
+ShellFileTests.cpp:204  CHECK_THAT( contents->maxMm[2], WithinRel(40.0, 1e-9) )
+        => 40.0 and 40.0 are within 1e-07% of each other
+
+== ShellCli_ValidateReportsTheShells / a valid model
+ShellCliTests.cpp:68  CHECK( result.exitCode == ExitCode::Success )
+        => 0 == 0
+ShellCliTests.cpp:69  CHECK_THAT( result.out, ContainsSubstring(" feature regeneration ok, 5 objects regenerated\n" " geometry ok, 3 result bodies\n") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-e7673215-47ec-4413-987c-274b1284ed69\shells.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 5 objects regenerated geometry ok, 3 result bodies Result bodies (3): Cup (object:5): 1 solid, volume 82500.000 mm^3, area 34600.000 mm^2, bounds (0, 0, 0) to (100, 60, 40) mm Tube (object:6): 1 solid, volume 60000.000 mm^3, area 27000.000 mm^2, bounds (0, 0, 0) to (100, 60, 40) mm Casing (object:7): 1 solid, volume 106500.000 mm^3, area 44400.000 mm^2, bounds (-5, -5, -5) to (105, 65, 40) mm Result: valid " contains: " feature regeneration ok, 5 objects regenerated geometry ok, 3 result bodies "
+ShellCliTests.cpp:71  CHECK_THAT( result.out, ContainsSubstring("Cup (object:5): 1 solid, volume 82500.000 mm^3") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-e7673215-47ec-4413-987c-274b1284ed69\shells.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 5 objects regenerated geometry ok, 3 result bodies Result bodies (3): Cup (object:5): 1 solid, volume 82500.000 mm^3, area 34600.000 mm^2, bounds (0, 0, 0) to (100, 60, 40) mm Tube (object:6): 1 solid, volume 60000.000 mm^3, area 27000.000 mm^2, bounds (0, 0, 0) to (100, 60, 40) mm Casing (object:7): 1 solid, volume 106500.000 mm^3, area 44400.000 mm^2, bounds (-5, -5, -5) to (105, 65, 40) mm Result: valid " contains: "Cup (object:5): 1 solid, volume 82500.000 mm^3"
+ShellCliTests.cpp:72  CHECK_THAT( result.out, ContainsSubstring("Tube (object:6): 1 solid, volume 60000.000 mm^3") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-e7673215-47ec-4413-987c-274b1284ed69\shells.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 5 objects regenerated geometry ok, 3 result bodies Result bodies (3): Cup (object:5): 1 solid, volume 82500.000 mm^3, area 34600.000 mm^2, bounds (0, 0, 0) to (100, 60, 40) mm Tube (object:6): 1 solid, volume 60000.000 mm^3, area 27000.000 mm^2, bounds (0, 0, 0) to (100, 60, 40) mm Casing (object:7): 1 solid, volume 106500.000 mm^3, area 44400.000 mm^2, bounds (-5, -5, -5) to (105, 65, 40) mm Result: valid " contains: "Tube (object:6): 1 solid, volume 60000.000 mm^3"
+ShellCliTests.cpp:73  CHECK_THAT( result.out, ContainsSubstring("Casing (object:7): 1 solid, volume 106500.000 mm^3") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-e7673215-47ec-4413-987c-274b1284ed69\shells.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 5 objects regenerated geometry ok, 3 result bodies Result bodies (3): Cup (object:5): 1 solid, volume 82500.000 mm^3, area 34600.000 mm^2, bounds (0, 0, 0) to (100, 60, 40) mm Tube (object:6): 1 solid, volume 60000.000 mm^3, area 27000.000 mm^2, bounds (0, 0, 0) to (100, 60, 40) mm Casing (object:7): 1 solid, volume 106500.000 mm^3, area 44400.000 mm^2, bounds (-5, -5, -5) to (105, 65, 40) mm Result: valid " contains: "Casing (object:7): 1 solid, volume 106500.000 mm^3"
+ShellCliTests.cpp:74  CHECK_THAT( result.out, ContainsSubstring("bounds (-5, -5, -5) to (105, 65, 40) mm\n") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-e7673215-47ec-4413-987c-274b1284ed69\shells.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 5 objects regenerated geometry ok, 3 result bodies Result bodies (3): Cup (object:5): 1 solid, volume 82500.000 mm^3, area 34600.000 mm^2, bounds (0, 0, 0) to (100, 60, 40) mm Tube (object:6): 1 solid, volume 60000.000 mm^3, area 27000.000 mm^2, bounds (0, 0, 0) to (100, 60, 40) mm Casing (object:7): 1 solid, volume 106500.000 mm^3, area 44400.000 mm^2, bounds (-5, -5, -5) to (105, 65, 40) mm Result: valid " contains: "bounds (-5, -5, -5) to (105, 65, 40) mm "
+ShellCliTests.cpp:75  CHECK_THAT( result.out, EndsWith("Result: valid\n") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-e7673215-47ec-4413-987c-274b1284ed69\shells.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 5 objects regenerated geometry ok, 3 result bodies Result bodies (3): Cup (object:5): 1 solid, volume 82500.000 mm^3, area 34600.000 mm^2, bounds (0, 0, 0) to (100, 60, 40) mm Tube (object:6): 1 solid, volume 60000.000 mm^3, area 27000.000 mm^2, bounds (0, 0, 0) to (100, 60, 40) mm Casing (object:7): 1 solid, volume 106500.000 mm^3, area 44400.000 mm^2, bounds (-5, -5, -5) to (105, 65, 40) mm Result: valid " ends with: "Result: valid "
+
+== ShellCli_ValidateReportsTheShells / walls too thick for the block
+ShellCliTests.cpp:80  CHECK( result.exitCode == ExitCode::Failure )
+        => 1 == 1
+
+== ShellFeature_BlockFollowsItsWallAndHeight
+ShellFeatureTests.cpp:106  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: h := 40.0; t := 5.0
+ShellFeatureTests.cpp:109  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 82500.0 and 82500.0 are within 1e-10% of each other with message: h := 40.0; t := 5.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 49.99999999999998579 is within 0.000000001 of 50.0 with message: h := 40.0; t := 5.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 29.99999999999997868 is within 0.000000001 of 30.0 with message: h := 40.0; t := 5.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 15.22727272727273906 is within 0.000000001 of 15.22727272727272663 with message: h := 40.0; t := 5.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: h := 40.0; t := 5.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: h := 40.0; t := 5.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: h := 40.0; t := 5.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 100.0 is within 0.0000001 of 100.0 with message: h := 40.0; t := 5.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 60.0 is within 0.0000001 of 60.0 with message: h := 40.0; t := 5.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 40.0 is within 0.0000001 of 40.0 with message: h := 40.0; t := 5.0
+ShellFeatureTests.cpp:109  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 60000.0 and 60000.0 are within 1e-10% of each other with message: h := 40.0; t := 5.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 50.0 is within 0.000000001 of 50.0 with message: h := 40.0; t := 5.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.0 is within 0.000000001 of 30.0 with message: h := 40.0; t := 5.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 20.0 is within 0.000000001 of 20.0 with message: h := 40.0; t := 5.0
+ShellFeatureTests.cpp:109  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 106499.99999999998544808 and 106500.0 are within 1e-10% of each other with message: h := 40.0; t := 5.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 49.99999999999999289 is within 0.000000001 of 50.0 with message: h := 40.0; t := 5.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.00000000000000355 is within 0.000000001 of 30.0 with message: h := 40.0; t := 5.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 11.86619718309859017 is within 0.000000001 of 11.86619718309859195 with message: h := 40.0; t := 5.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -5.0 is within 0.0000001 of -5.0 with message: h := 40.0; t := 5.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -5.0 is within 0.0000001 of -5.0 with message: h := 40.0; t := 5.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -5.0 is within 0.0000001 of -5.0 with message: h := 40.0; t := 5.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 105.0 is within 0.0000001 of 105.0 with message: h := 40.0; t := 5.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 65.0 is within 0.0000001 of 65.0 with message: h := 40.0; t := 5.0
+ShellFeatureTests.cpp:253  CHECK_THAT( namedArea(regenerator, m.cup, top), WithinRel(ShelledBlockModel::innerRim(t), kRel) )
+        => 1500.0 and 1500.0 are within 1e-10% of each other with message: h := 40.0; t := 5.0
+ShellFeatureTests.cpp:254  CHECK_THAT( namedArea(regenerator, m.cup, bottom), WithinRel(6000.0, kRel) )
+        => 6000.0 and 6000.0 are within 1e-10% of each other with message: h := 40.0; t := 5.0
+ShellFeatureTests.cpp:255  CHECK_THAT( namedArea(regenerator, m.tube, top), WithinRel(ShelledBlockModel::innerRim(t), kRel) )
+        => 1500.0 and 1500.0 are within 1e-10% of each other with message: h := 40.0; t := 5.0
+ShellFeatureTests.cpp:256  CHECK_THAT( namedArea(regenerator, m.tube, bottom), WithinRel(ShelledBlockModel::innerRim(t), kRel) )
+        => 1500.0 and 1500.0 are within 1e-10% of each other with message: h := 40.0; t := 5.0
+ShellFeatureTests.cpp:257  CHECK_THAT( namedArea(regenerator, m.casing, top), WithinRel(ShelledBlockModel::outerRim(t), kRel) )
+        => 1699.99999999999909051 and 1700.0 are within 1e-10% of each other with message: h := 40.0; t := 5.0
+ShellFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, m.casing, bottom), WithinRel(6000.0, kRel) )
+        => 6000.0 and 6000.0 are within 1e-10% of each other with message: h := 40.0; t := 5.0
+ShellFeatureTests.cpp:261  CHECK_THAT( namedArea(regenerator, shell, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel((i % 2 == 0 ? 100.0 : 60.0) * h, kRel) )
+        => 4000.0 and 4000.0 are within 1e-10% of each other with message: h := 40.0; t := 5.0
+ShellFeatureTests.cpp:261  CHECK_THAT( namedArea(regenerator, shell, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel((i % 2 == 0 ? 100.0 : 60.0) * h, kRel) )
+        => 2400.0 and 2400.0 are within 1e-10% of each other with message: h := 40.0; t := 5.0
+ShellFeatureTests.cpp:267  CHECK( unnamedFaces(regenerator, m.cup) == 5 )
+        => 5 == 5 with message: h := 40.0; t := 5.0
+ShellFeatureTests.cpp:268  CHECK( unnamedFaces(regenerator, m.tube) == 4 )
+        => 4 == 4 with message: h := 40.0; t := 5.0
+ShellFeatureTests.cpp:269  CHECK( unnamedFaces(regenerator, m.casing) == 5 )
+        => 5 == 5 with message: h := 40.0; t := 5.0
+ShellFeatureTests.cpp:275  CHECK( resultFeatures(m.doc) == std::vector<ObjectId>{m.cup, m.tube, m.casing} )
+        => { object:5, object:6, object:7 } == { object:5, object:6, object:7 }
+ShellFeatureTests.cpp:278  CHECK( std::ranges::find(deps, m.block) != deps.end() )
+        => {?} != {?}
+ShellFeatureTests.cpp:279  CHECK( std::ranges::find(deps, ObjectId{m.wall}) != deps.end() )
+        => {?} != {?}
+ShellFeatureTests.cpp:285  CHECK( std::ranges::find(thinner.regenerated, id) != thinner.regenerated.end() )
+        => {?} != {?}
+ShellFeatureTests.cpp:288  CHECK( std::ranges::find(thinner.regenerated, id) == thinner.regenerated.end() )
+        => {?} == {?}
+ShellFeatureTests.cpp:106  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: h := 40.0; t := 2.0
+ShellFeatureTests.cpp:109  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 35712.0 and 35712.0 are within 1e-10% of each other with message: h := 40.0; t := 2.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 49.99999999999997158 is within 0.000000001 of 50.0 with message: h := 40.0; t := 2.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.00000000000000711 is within 0.000000001 of 30.0 with message: h := 40.0; t := 2.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 14.27956989247311448 is within 0.000000001 of 14.27956989247311803 with message: h := 40.0; t := 2.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: h := 40.0; t := 2.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: h := 40.0; t := 2.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: h := 40.0; t := 2.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 100.0 is within 0.0000001 of 100.0 with message: h := 40.0; t := 2.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 60.0 is within 0.0000001 of 60.0 with message: h := 40.0; t := 2.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 40.0 is within 0.0000001 of 40.0 with message: h := 40.0; t := 2.0
+ShellFeatureTests.cpp:109  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 24959.99999999998544808 and 24960.0 are within 1e-10% of each other with message: h := 40.0; t := 2.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 50.0 is within 0.000000001 of 50.0 with message: h := 40.0; t := 2.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 29.99999999999998934 is within 0.000000001 of 30.0 with message: h := 40.0; t := 2.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 20.00000000000000711 is within 0.000000001 of 20.0 with message: h := 40.0; t := 2.0
+ShellFeatureTests.cpp:109  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 39552.00000000001455192 and 39552.0 are within 1e-10% of each other with message: h := 40.0; t := 2.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 50.00000000000003553 is within 0.000000001 of 50.0 with message: h := 40.0; t := 2.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.00000000000001421 is within 0.000000001 of 30.0 with message: h := 40.0; t := 2.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 12.93203883495147544 is within 0.000000001 of 12.9320388349514559 with message: h := 40.0; t := 2.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -2.0 is within 0.0000001 of -2.0 with message: h := 40.0; t := 2.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -2.0 is within 0.0000001 of -2.0 with message: h := 40.0; t := 2.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -2.0 is within 0.0000001 of -2.0 with message: h := 40.0; t := 2.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 102.0 is within 0.0000001 of 102.0 with message: h := 40.0; t := 2.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 62.0 is within 0.0000001 of 62.0 with message: h := 40.0; t := 2.0
+ShellFeatureTests.cpp:253  CHECK_THAT( namedArea(regenerator, m.cup, top), WithinRel(ShelledBlockModel::innerRim(t), kRel) )
+        => 624.0 and 624.0 are within 1e-10% of each other with message: h := 40.0; t := 2.0
+ShellFeatureTests.cpp:254  CHECK_THAT( namedArea(regenerator, m.cup, bottom), WithinRel(6000.0, kRel) )
+        => 6000.0 and 6000.0 are within 1e-10% of each other with message: h := 40.0; t := 2.0
+ShellFeatureTests.cpp:255  CHECK_THAT( namedArea(regenerator, m.tube, top), WithinRel(ShelledBlockModel::innerRim(t), kRel) )
+        => 624.0 and 624.0 are within 1e-10% of each other with message: h := 40.0; t := 2.0
+ShellFeatureTests.cpp:256  CHECK_THAT( namedArea(regenerator, m.tube, bottom), WithinRel(ShelledBlockModel::innerRim(t), kRel) )
+        => 624.0 and 624.0 are within 1e-10% of each other with message: h := 40.0; t := 2.0
+ShellFeatureTests.cpp:257  CHECK_THAT( namedArea(regenerator, m.casing, top), WithinRel(ShelledBlockModel::outerRim(t), kRel) )
+        => 656.0 and 656.0 are within 1e-10% of each other with message: h := 40.0; t := 2.0
+ShellFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, m.casing, bottom), WithinRel(6000.0, kRel) )
+        => 6000.0 and 6000.0 are within 1e-10% of each other with message: h := 40.0; t := 2.0
+ShellFeatureTests.cpp:261  CHECK_THAT( namedArea(regenerator, shell, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel((i % 2 == 0 ? 100.0 : 60.0) * h, kRel) )
+        => 4000.0 and 4000.0 are within 1e-10% of each other with message: h := 40.0; t := 2.0
+ShellFeatureTests.cpp:261  CHECK_THAT( namedArea(regenerator, shell, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel((i % 2 == 0 ? 100.0 : 60.0) * h, kRel) )
+        => 2400.0 and 2400.0 are within 1e-10% of each other with message: h := 40.0; t := 2.0
+ShellFeatureTests.cpp:267  CHECK( unnamedFaces(regenerator, m.cup) == 5 )
+        => 5 == 5 with message: h := 40.0; t := 2.0
+ShellFeatureTests.cpp:268  CHECK( unnamedFaces(regenerator, m.tube) == 4 )
+        => 4 == 4 with message: h := 40.0; t := 2.0
+ShellFeatureTests.cpp:269  CHECK( unnamedFaces(regenerator, m.casing) == 5 )
+        => 5 == 5 with message: h := 40.0; t := 2.0
+ShellFeatureTests.cpp:106  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: h := 60.0; t := 2.0
+ShellFeatureTests.cpp:109  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 48191.99999999998544808 and 48192.0 are within 1e-10% of each other with message: h := 60.0; t := 2.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 49.99999999999995737 is within 0.000000001 of 50.0 with message: h := 60.0; t := 2.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.0 is within 0.000000001 of 30.0 with message: h := 60.0; t := 2.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 23.52988047808763739 is within 0.000000001 of 23.52988047808764804 with message: h := 60.0; t := 2.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: h := 60.0; t := 2.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: h := 60.0; t := 2.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: h := 60.0; t := 2.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 100.0 is within 0.0000001 of 100.0 with message: h := 60.0; t := 2.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 60.0 is within 0.0000001 of 60.0 with message: h := 60.0; t := 2.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 60.0 is within 0.0000001 of 60.0 with message: h := 60.0; t := 2.0
+ShellFeatureTests.cpp:109  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 37439.99999999997089617 and 37440.0 are within 1e-10% of each other with message: h := 60.0; t := 2.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 49.99999999999996447 is within 0.000000001 of 50.0 with message: h := 60.0; t := 2.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 29.99999999999995026 is within 0.000000001 of 30.0 with message: h := 60.0; t := 2.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 30.0 is within 0.000000001 of 30.0 with message: h := 60.0; t := 2.0
+ShellFeatureTests.cpp:109  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 52672.00000000002910383 and 52672.0 are within 1e-10% of each other with message: h := 60.0; t := 2.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 50.00000000000001421 is within 0.000000001 of 50.0 with message: h := 60.0; t := 2.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 29.99999999999997868 is within 0.000000001 of 30.0 with message: h := 60.0; t := 2.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 22.16524908869987343 is within 0.000000001 of 22.16524908869987698 with message: h := 60.0; t := 2.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -2.0 is within 0.0000001 of -2.0 with message: h := 60.0; t := 2.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -2.0 is within 0.0000001 of -2.0 with message: h := 60.0; t := 2.0
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -2.0 is within 0.0000001 of -2.0 with message: h := 60.0; t := 2.0
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 102.0 is within 0.0000001 of 102.0 with message: h := 60.0; t := 2.0
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 62.0 is within 0.0000001 of 62.0 with message: h := 60.0; t := 2.0
+ShellFeatureTests.cpp:253  CHECK_THAT( namedArea(regenerator, m.cup, top), WithinRel(ShelledBlockModel::innerRim(t), kRel) )
+        => 624.0 and 624.0 are within 1e-10% of each other with message: h := 60.0; t := 2.0
+ShellFeatureTests.cpp:254  CHECK_THAT( namedArea(regenerator, m.cup, bottom), WithinRel(6000.0, kRel) )
+        => 6000.0 and 6000.0 are within 1e-10% of each other with message: h := 60.0; t := 2.0
+ShellFeatureTests.cpp:255  CHECK_THAT( namedArea(regenerator, m.tube, top), WithinRel(ShelledBlockModel::innerRim(t), kRel) )
+        => 624.0 and 624.0 are within 1e-10% of each other with message: h := 60.0; t := 2.0
+ShellFeatureTests.cpp:256  CHECK_THAT( namedArea(regenerator, m.tube, bottom), WithinRel(ShelledBlockModel::innerRim(t), kRel) )
+        => 624.0 and 624.0 are within 1e-10% of each other with message: h := 60.0; t := 2.0
+ShellFeatureTests.cpp:257  CHECK_THAT( namedArea(regenerator, m.casing, top), WithinRel(ShelledBlockModel::outerRim(t), kRel) )
+        => 656.0 and 656.0 are within 1e-10% of each other with message: h := 60.0; t := 2.0
+ShellFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, m.casing, bottom), WithinRel(6000.0, kRel) )
+        => 6000.0 and 6000.0 are within 1e-10% of each other with message: h := 60.0; t := 2.0
+ShellFeatureTests.cpp:261  CHECK_THAT( namedArea(regenerator, shell, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel((i % 2 == 0 ? 100.0 : 60.0) * h, kRel) )
+        => 6000.0 and 6000.0 are within 1e-10% of each other with message: h := 60.0; t := 2.0
+ShellFeatureTests.cpp:261  CHECK_THAT( namedArea(regenerator, shell, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel((i % 2 == 0 ? 100.0 : 60.0) * h, kRel) )
+        => 3600.0 and 3600.0 are within 1e-10% of each other with message: h := 60.0; t := 2.0
+ShellFeatureTests.cpp:267  CHECK( unnamedFaces(regenerator, m.cup) == 5 )
+        => 5 == 5 with message: h := 60.0; t := 2.0
+ShellFeatureTests.cpp:268  CHECK( unnamedFaces(regenerator, m.tube) == 4 )
+        => 4 == 4 with message: h := 60.0; t := 2.0
+ShellFeatureTests.cpp:269  CHECK( unnamedFaces(regenerator, m.casing) == 5 )
+        => 5 == 5 with message: h := 60.0; t := 2.0
+ShellFeatureTests.cpp:106  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: h := 60.0; t := 2.5
+ShellFeatureTests.cpp:109  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 59562.50000000005820766 and 59562.5 are within 1e-10% of each other with message: h := 60.0; t := 2.5
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 49.99999999999998579 is within 0.000000001 of 50.0 with message: h := 60.0; t := 2.5
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 29.99999999999997158 is within 0.000000001 of 30.0 with message: h := 60.0; t := 2.5
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 23.6949108079748072 is within 0.000000001 of 23.69491080797481786 with message: h := 60.0; t := 2.5
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: h := 60.0; t := 2.5
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: h := 60.0; t := 2.5
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: h := 60.0; t := 2.5
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 100.0 is within 0.0000001 of 100.0 with message: h := 60.0; t := 2.5
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 60.0 is within 0.0000001 of 60.0 with message: h := 60.0; t := 2.5
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 60.0 is within 0.0000001 of 60.0 with message: h := 60.0; t := 2.5
+ShellFeatureTests.cpp:109  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 46500.00000000002182787 and 46500.0 are within 1e-10% of each other with message: h := 60.0; t := 2.5
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 50.00000000000002842 is within 0.000000001 of 50.0 with message: h := 60.0; t := 2.5
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.00000000000001066 is within 0.000000001 of 30.0 with message: h := 60.0; t := 2.5
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 30.0 is within 0.000000001 of 30.0 with message: h := 60.0; t := 2.5
+ShellFeatureTests.cpp:109  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRel) )
+        => 66562.50000000002910383 and 66562.5 are within 1e-10% of each other with message: h := 60.0; t := 2.5
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 50.00000000000002132 is within 0.000000001 of 50.0 with message: h := 60.0; t := 2.5
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 30.00000000000004263 is within 0.000000001 of 30.0 with message: h := 60.0; t := 2.5
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 21.98943661971831887 is within 0.000000001 of 21.98943661971830821 with message: h := 60.0; t := 2.5
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -2.5 is within 0.0000001 of -2.5 with message: h := 60.0; t := 2.5
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -2.5 is within 0.0000001 of -2.5 with message: h := 60.0; t := 2.5
+ShellFeatureTests.cpp:73  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -2.5 is within 0.0000001 of -2.5 with message: h := 60.0; t := 2.5
+ShellFeatureTests.cpp:71  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 102.5 is within 0.0000001 of 102.5 with message: h := 60.0; t := 2.5
+ShellFeatureTests.cpp:72  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 62.5 is within 0.0000001 of 62.5 with message: h := 60.0; t := 2.5
+ShellFeatureTests.cpp:253  CHECK_THAT( namedArea(regenerator, m.cup, top), WithinRel(ShelledBlockModel::innerRim(t), kRel) )
+        => 775.00000000000090949 and 775.0 are within 1e-10% of each other with message: h := 60.0; t := 2.5
+ShellFeatureTests.cpp:254  CHECK_THAT( namedArea(regenerator, m.cup, bottom), WithinRel(6000.0, kRel) )
+        => 6000.0 and 6000.0 are within 1e-10% of each other with message: h := 60.0; t := 2.5
+ShellFeatureTests.cpp:255  CHECK_THAT( namedArea(regenerator, m.tube, top), WithinRel(ShelledBlockModel::innerRim(t), kRel) )
+        => 775.00000000000090949 and 775.0 are within 1e-10% of each other with message: h := 60.0; t := 2.5
+ShellFeatureTests.cpp:256  CHECK_THAT( namedArea(regenerator, m.tube, bottom), WithinRel(ShelledBlockModel::innerRim(t), kRel) )
+        => 775.00000000000090949 and 775.0 are within 1e-10% of each other with message: h := 60.0; t := 2.5
+ShellFeatureTests.cpp:257  CHECK_THAT( namedArea(regenerator, m.casing, top), WithinRel(ShelledBlockModel::outerRim(t), kRel) )
+        => 825.0 and 825.0 are within 1e-10% of each other with message: h := 60.0; t := 2.5
+ShellFeatureTests.cpp:258  CHECK_THAT( namedArea(regenerator, m.casing, bottom), WithinRel(6000.0, kRel) )
+        => 6000.0 and 6000.0 are within 1e-10% of each other with message: h := 60.0; t := 2.5
+ShellFeatureTests.cpp:261  CHECK_THAT( namedArea(regenerator, shell, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel((i % 2 == 0 ? 100.0 : 60.0) * h, kRel) )
+        => 6000.0 and 6000.0 are within 1e-10% of each other with message: h := 60.0; t := 2.5
+ShellFeatureTests.cpp:261  CHECK_THAT( namedArea(regenerator, shell, nameOf(m.block, FaceRole::Side, m.lines[i])), WithinRel((i % 2 == 0 ? 100.0 : 60.0) * h, kRel) )
+        => 3600.0 and 3600.0 are within 1e-10% of each other with message: h := 60.0; t := 2.5
+ShellFeatureTests.cpp:267  CHECK( unnamedFaces(regenerator, m.cup) == 5 )
+        => 5 == 5 with message: h := 60.0; t := 2.5
+ShellFeatureTests.cpp:268  CHECK( unnamedFaces(regenerator, m.tube) == 4 )
+        => 4 == 4 with message: h := 60.0; t := 2.5
+ShellFeatureTests.cpp:269  CHECK( unnamedFaces(regenerator, m.casing) == 5 )
+        => 5 == 5 with message: h := 60.0; t := 2.5
+ShellFeatureTests.cpp:305  CHECK( volumes(regenerator, m.doc) == first )
+        => { 4687486350046265344 (0x410d4c0000000000), 4680405770041294848 (0x40f4244000000000), 4678479150791524352 (0x40ed4c0000000000), 4682055037482958847 (0x40fa003fffffffff) } == { 4687486350046265344 (0x410d4c0000000000), 4680405770041294848 (0x40f4244000000000), 4678479150791524352 (0x40ed4c0000000000), 4682055037482958847 (0x40fa003fffffffff) }
+ShellFeatureTests.cpp:310  CHECK( volumes(again, copy) == first )
+        => { 4687486350046265344 (0x410d4c0000000000), 4680405770041294848 (0x40f4244000000000), 4678479150791524352 (0x40ed4c0000000000), 4682055037482958847 (0x40fa003fffffffff) } == { 4687486350046265344 (0x410d4c0000000000), 4680405770041294848 (0x40f4244000000000), 4678479150791524352 (0x40ed4c0000000000), 4682055037482958847 (0x40fa003fffffffff) }
+
+== ShellFeature_DefinitionsAreValidated
+ShellFeatureTests.cpp:192  CHECK( created.error().code == ErrorCode::InvalidArgument )
+        => 0 == 0
+ShellFeatureTests.cpp:196  CHECK( message({.openFaces = {top}, .thickness = 2_mm}) == "a shell needs a target feature" )
+        => "a shell needs a target feature" == "a shell needs a target feature"
+ShellFeatureTests.cpp:197  CHECK( message({.target = target, .thickness = 2_mm}) == "a shell needs one or more open faces (a closed hollow is not built)" )
+        => "a shell needs one or more open faces (a closed hollow is not built)" == "a shell needs one or more open faces (a closed hollow is not built)"
+ShellFeatureTests.cpp:199  CHECK( message({.target = target, .openFaces = {top, top}, .thickness = 2_mm}) == "open face 2 repeats an earlier open face" )
+        => "open face 2 repeats an earlier open face" == "open face 2 repeats an earlier open face"
+ShellFeatureTests.cpp:201  CHECK( message({.target = target, .openFaces = {nameOf(ObjectId::fromValue(1), FaceRole::EndCap, EntityId::fromValue(3))}, .thickness = 2_mm}) == "open face 1: an end cap is not named by an entity" )
+        => "open face 1: an end cap is not named by an entity" == "open face 1: an end cap is not named by an entity"
+ShellFeatureTests.cpp:204  CHECK( message({.target = target, .openFaces = {top}}) == "the shell thickness must be positive and finite, got 0 mm" )
+        => "the shell thickness must be positive and finite, got 0 mm" == "the shell thickness must be positive and finite, got 0 mm"
+ShellFeatureTests.cpp:206  CHECK( message({.target = target, .openFaces = {top}, .thickness = Length::fromSi(std::numeric_limits<double>::quiet_NaN())}) == "the shell thickness must be positive and finite, got nan mm" )
+        => "the shell thickness must be positive and finite, got nan mm" == "the shell thickness must be positive and finite, got nan mm"
+ShellFeatureTests.cpp:210  CHECK( message({.target = target, .openFaces = {top}, .thicknessParameter = ParameterId{}}) == "the thickness parameter ID must be valid" )
+        => "the thickness parameter ID must be valid" == "the thickness parameter ID must be valid"
+ShellFeatureTests.cpp:212  CHECK( message({.target = target, .openFaces = {top}, .thickness = 2_mm, .side = static_cast<ShellSide>(5)}) == "a shell's walls lie inward or outward" )
+        => "a shell's walls lie inward or outward" == "a shell's walls lie inward or outward"
+ShellFeatureTests.cpp:229  CHECK( (*shell)->dependencies() == std::vector<ObjectId>{ObjectId::fromValue(7), ObjectId::fromValue(9), ObjectId::fromValue(1), ObjectId::fromValue(4), ObjectId::fromValue(6)} )
+        => { object:7, object:9, object:1, object:4, object:6 } == { object:7, object:9, object:1, object:4, object:6 }
+ShellFeatureTests.cpp:232  CHECK( (*shell)->consumedFeatures() == std::vector<FeatureId>{FeatureId::fromValue(7)} )
+        => { feature:7 } == { feature:7 }
+ShellFeatureTests.cpp:233  CHECK( (*shell)->typeName() == "shell" )
+        => "shell" == "shell"
+ShellFeatureTests.cpp:237  CHECK( (*edited)->setDefinition({.target = target, .openFaces = {top}, .thickness = 2_mm}) == false )
+        => {?} == false
+ShellFeatureTests.cpp:238  CHECK( (*edited)->setDefinition({.target = target, .openFaces = {top}, .thickness = 3_mm}) == true )
+        => {?} == true
+
+Overall: 2260 assertions passed, 0 failed.

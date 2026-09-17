@@ -37,6 +37,8 @@ bettercad_add_library(bettercad_features
         profile/Profiles.cpp
         revolve/RevolveFeature.cpp
         revolve/RevolveRegeneration.cpp
+        shell/ShellFeature.cpp
+        shell/ShellRegeneration.cpp
         sweep/SweepFeature.cpp
         sweep/SweepRegeneration.cpp
     PUBLIC_LINK

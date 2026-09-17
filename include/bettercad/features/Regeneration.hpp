@@ -21,6 +21,7 @@
 #include <bettercad/features/LoftFeature.hpp>
 #include <bettercad/features/MirrorFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
+#include <bettercad/features/ShellFeature.hpp>
 #include <bettercad/features/SplitFeature.hpp>
 #include <bettercad/features/SweepFeature.hpp>
 #include <bettercad/sketch/Sketch.hpp>
@@ -175,6 +176,21 @@ regenerateChamfer(const ChamferFeature& feature, const Document& document, const
 /// are errors, never guesses; see geometry::filletEdges().
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::Body>
 regenerateFillet(const FilletFeature& feature, const Document& document, const geometry::Body* target);
+
+/// Thickness of a shell: the driving parameter's value if it has one
+/// (NotFound if missing, DimensionMismatch if not a length), otherwise the
+/// literal thickness. Its range is checked by the shell itself.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<Length> resolveShellThickness(const ShellDefinition& definition,
+                                                                            const Document& document);
+
+/// Computes the body of a shell feature (P12-FEAT-003): @p target (the
+/// target feature's body) hollowed as defined (geometry::shellBody()).
+/// Fails with FailedPrecondition without a target body; with the errors of
+/// checkFaceName() for an open face ("open face 2: ..."); with NotFound when
+/// no face of the target's body carries an open face's name; and with
+/// shellBody()'s errors, each prefixed with the feature's name.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::Body>
+regenerateShell(const ShellFeature& feature, const Document& document, const geometry::Body* target);
 
 /// The geometry request of a hole, with the driven diameter, depth and
 /// centre coordinates taken from their parameters (NotFound if missing,

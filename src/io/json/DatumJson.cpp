@@ -199,7 +199,87 @@ Result<std::vector<FaceCopy>> faceCopiesFromJson(const Json& face, std::string_v
     return copies;
 }
 
+/// {"role": ..., "entity": id, "along": id, "edge": n, "copies": [...]},
+/// keys a selector does not use left out.
+Json faceSelectorToJson(const FaceSelector& selector) {
+    Json face = Json::object();
+    face["role"] = std::string{nameIn(kFaceRoles, selector.role)};
+    if (selector.entity) {
+        face["entity"] = selector.entity->value();
+    }
+    if (selector.along) {
+        face["along"] = selector.along->value();
+    }
+    if (selector.edge) {
+        face["edge"] = *selector.edge;
+    }
+    if (!selector.copies.empty()) {
+        Json copies = Json::array();
+        for (const FaceCopy& copy : selector.copies) {
+            Json item = Json::object();
+            item["feature"] = copy.feature.value();
+            item["instance"] = copy.instance;
+            copies.push_back(std::move(item));
+        }
+        face["copies"] = std::move(copies);
+    }
+    return face;
+}
+
+/// The selector at @p path; not yet validated.
+Result<FaceSelector> faceSelectorFromJson(const Json& face, std::string_view path) {
+    if (auto valid = requireObject(face, path, {"role", "entity", "along", "edge", "copies"}); !valid) {
+        return std::unexpected(valid.error());
+    }
+    auto role = valueIn(kFaceRoles, face, "role", path);
+    auto entity = readOptionalId(face, "entity", path);
+    auto along = readOptionalId(face, "along", path);
+    auto edge = readOptionalCount(face, "edge", path);
+    auto copies = faceCopiesFromJson(face, path);
+    if (const Error* error =
+            firstError({errorOf(role), errorOf(entity), errorOf(along), errorOf(edge), errorOf(copies)})) {
+        return std::unexpected(*error);
+    }
+    const auto entityOf = [](const std::optional<std::uint64_t>& id) {
+        return id ? std::optional<EntityId>{EntityId::fromValue(*id)} : std::nullopt;
+    };
+    return FaceSelector{.role = *role,
+                        .entity = entityOf(*entity),
+                        .along = entityOf(*along),
+                        .edge = *edge,
+                        .copies = std::move(*copies)};
+}
+
 } // namespace
+
+Json faceNameToJson(const FaceName& name) {
+    Json json = Json::object();
+    json["feature"] = name.feature.value();
+    json["face"] = faceSelectorToJson(name.face);
+    return json;
+}
+
+Result<FaceName> faceNameFromJson(const Json& value, std::string_view path) {
+    if (auto valid = requireObject(value, path, {"feature", "face"}); !valid) {
+        return std::unexpected(valid.error());
+    }
+    auto feature = readId(value, "feature", path);
+    if (!feature) {
+        return std::unexpected(feature.error());
+    }
+    auto faceField = requireField(value, "face", path);
+    if (!faceField) {
+        return std::unexpected(faceField.error());
+    }
+    auto face = faceSelectorFromJson(**faceField, childPath(path, "face"));
+    if (!face) {
+        return std::unexpected(face.error());
+    }
+    if (auto valid = validate(*face); !valid) {
+        return parseError(path, valid.error().message);
+    }
+    return FaceName{ObjectId::fromValue(*feature), std::move(*face)};
+}
 
 Json planeReferenceToJson(const PlaneReference& reference) {
     Json json = Json::object();
@@ -207,28 +287,7 @@ Json planeReferenceToJson(const PlaneReference& reference) {
         json["object"] = reference.object->value();
     }
     if (reference.face) {
-        Json face = Json::object();
-        face["role"] = std::string{nameIn(kFaceRoles, reference.face->role)};
-        if (reference.face->entity) {
-            face["entity"] = reference.face->entity->value();
-        }
-        if (reference.face->along) {
-            face["along"] = reference.face->along->value();
-        }
-        if (reference.face->edge) {
-            face["edge"] = *reference.face->edge;
-        }
-        if (!reference.face->copies.empty()) {
-            Json copies = Json::array();
-            for (const FaceCopy& copy : reference.face->copies) {
-                Json item = Json::object();
-                item["feature"] = copy.feature.value();
-                item["instance"] = copy.instance;
-                copies.push_back(std::move(item));
-            }
-            face["copies"] = std::move(copies);
-        }
-        json["face"] = std::move(face);
+        json["face"] = faceSelectorToJson(*reference.face);
     } else {
         json["plane"] = std::string{nameIn(kPlanes, reference.plane)};
     }
@@ -257,28 +316,11 @@ Result<PlaneReference> planeReferenceFromJson(const Json& value, std::string_vie
     if (value.contains("plane")) {
         return parseError(childPath(path, "plane"), "a face reference has no plane of its own");
     }
-    const std::string facePath = childPath(path, "face");
-    const Json& face = value.at("face");
-    if (auto valid = requireObject(face, facePath, {"role", "entity", "along", "edge", "copies"}); !valid) {
-        return std::unexpected(valid.error());
+    auto face = faceSelectorFromJson(value.at("face"), childPath(path, "face"));
+    if (!face) {
+        return std::unexpected(face.error());
     }
-    auto role = valueIn(kFaceRoles, face, "role", facePath);
-    auto entity = readOptionalId(face, "entity", facePath);
-    auto along = readOptionalId(face, "along", facePath);
-    auto edge = readOptionalCount(face, "edge", facePath);
-    auto copies = faceCopiesFromJson(face, facePath);
-    if (const Error* error =
-            firstError({errorOf(role), errorOf(entity), errorOf(along), errorOf(edge), errorOf(copies)})) {
-        return std::unexpected(*error);
-    }
-    const auto entityOf = [](const std::optional<std::uint64_t>& id) {
-        return id ? std::optional<EntityId>{EntityId::fromValue(*id)} : std::nullopt;
-    };
-    reference.face = FaceSelector{.role = *role,
-                                  .entity = entityOf(*entity),
-                                  .along = entityOf(*along),
-                                  .edge = *edge,
-                                  .copies = std::move(*copies)};
+    reference.face = std::move(*face);
     if (auto valid = validate(reference); !valid) {
         return parseError(path, valid.error().message);
     }

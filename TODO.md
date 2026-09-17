@@ -13,7 +13,7 @@ authorized — never in advance.
 | | |
 | --- | --- |
 | Current | **`P12` — Parametric CAD Completion** |
-| Next | `P12-FEAT-003` — Shell |
+| Next | `P12-FEAT-004` — Draft |
 | Blocked / Manual | None |
 | Last qualified | `P11` Production Part Modeling — **QUALIFIED** |
 | Released | `v0.1.0` (`P0`–`P10`); `P11` qualified, not released |
@@ -56,7 +56,7 @@ Reference models → qualification
 | 5 | `P12-SKETCH-003` Sketches on arbitrary planar faces | `DATUM-001`, `STREF-001` | **done** — [evidence](docs/verification/P12-SKETCH-003/README.md) |
 | 6 | `P12-FEAT-001` Through-all extrude | — | **done** — [evidence](docs/verification/P12-FEAT-001/README.md) |
 | 7 | `P12-FEAT-002` Split body / combine | — | **done** — [evidence](docs/verification/P12-FEAT-002/README.md) |
-| 8 | `P12-FEAT-003` Shell | `FEAT-002` | not started |
+| 8 | `P12-FEAT-003` Shell | `FEAT-002` | **done** — [evidence](docs/verification/P12-FEAT-003/README.md) |
 | 9 | `P12-FEAT-004` Draft | `DATUM-001` | not started |
 | 10 | `P12-FEAT-005` Rib | `SKETCH-002`, `FEAT-001` | not started |
 | 11 | `P12-FEAT-006` Variable-radius fillet, setback, corner transitions | — | not started |
@@ -279,9 +279,35 @@ Acceptance:
 - Joins, cuts and intersections of overlapping blocks match the inclusion-exclusion volumes and centres while a parameter changes the overlap; the consumed features are no longer result bodies.
 - Failures are structured and atomic; save → load → regenerate gives the same bodies bit for bit; `P0`–`P12-FEAT-001` stays green in all three presets.
 
+#### P12-FEAT-003 — Shell
+
+Hollows another feature's body into walls of a given thickness, opened
+where named faces are removed. The open faces are face names
+(P12-STREF-001) resolved in the target's body, never positions or
+geometry. The walls are offsets of the remaining faces, inward (the body's
+outside stays) or outward (its inside stays). Where offset faces part at
+an edge they are extended until they meet, so corners stay sharp: a kernel
+probe found rounded joins invalid on bodies with concave edges, and the
+kernel's silent wrong results for walls that are too thick, which the
+shell must detect.
+
+Deliverables:
+
+- [x] `geometry::shellBody` (open faces by name, thickness, side), failing with a structured diagnostic when the kernel cannot build the walls or its result is not a shell of the body: not one valid solid, a remaining face without its wall, an open face still there, or (inward) nothing removed
+- [x] `ShellFeature` (`target`, `open_faces`, `thickness` literal or driven by a length parameter, `side`: inward or outward); it consumes its target, carries the target's face names (the rim the kernel makes of an open face keeps its name) and does not name the walls
+- [x] Open faces resolved by name in the target's body: a name no face there carries fails with NotFound; names that `checkFaceName` refuses are refused
+- [x] Dependencies (target, thickness parameter, the open faces' features and copies), validation, undo/redo, save/load, CLI description
+- [x] Evidence: [docs/verification/P12-FEAT-003/](docs/verification/P12-FEAT-003/README.md) — PASS, 978/978 tests in Debug, Release and Debug-shared, 0 warnings
+
+Acceptance:
+
+- Inward and outward shells of a box (open top; open top and bottom), a cylinder, an L-shaped prism, a drilled block, a block with rounded vertical edges and a revolved stepped shaft match their analytic volumes, centres and bounds while a parameter changes the wall or the body, and the open face follows its feature when the body grows.
+- Walls too thick for the body, overall or locally, rounds smaller than an inward wall, an open face that is not in the target's body, a target of several solids and invalid thicknesses fail with structured diagnostics and keep no body; nothing is substituted.
+- Save → load → regenerate gives the same bodies bit for bit; every value the existing tests measure is unchanged; `P0`–`P12-FEAT-002` stays green in all three presets.
+
 ## Next
 
-`P12-FEAT-003` — Shell.
+`P12-FEAT-004` — Draft.
 
 ## Blocked / Manual
 
@@ -390,10 +416,10 @@ Not started. Not authorized. Grouped to match
 
 | Milestone | Commit | Evidence |
 | --- | --- | --- |
-| `P12-FEAT-002` Split body / combine | "BetterCAD: implement P12 split body and combine" | [P12-FEAT-002](docs/verification/P12-FEAT-002/README.md) |
+| `P12-FEAT-003` Shell | "BetterCAD: implement P12 shell" | [P12-FEAT-003](docs/verification/P12-FEAT-003/README.md) |
+| `P12-FEAT-002` Split body / combine | `77f1792` | [P12-FEAT-002](docs/verification/P12-FEAT-002/README.md) |
 | `P12-FEAT-001` Through-all extrude | `c976f9c` | [P12-FEAT-001](docs/verification/P12-FEAT-001/README.md) |
 | `P12-SKETCH-003` Sketches on arbitrary planar faces | `650acd6` | [P12-SKETCH-003](docs/verification/P12-SKETCH-003/README.md) |
-| `P12-STREF-001` Stable feature face references | `8dbb722` | [P12-STREF-001](docs/verification/P12-STREF-001/README.md) |
 
 ## Completed Milestones
 
@@ -445,6 +471,11 @@ regression test, so none can change silently. Detail:
   one body of two solids, which later features take whole. A combine
   consumes its tools. The faces a split makes are not named
   ([P12-FEAT-002](docs/verification/P12-FEAT-002/README.md)).
+- **Shells need an open face** (no closed hollows) and hollow one solid.
+  Wall corners are sharp. Walls that meet where the body is thinner than
+  two walls, and inward walls at least as thick as a round they follow, are
+  refused rather than thinned or merged. The walls are not named
+  ([P12-FEAT-003](docs/verification/P12-FEAT-003/README.md)).
 - **Loft sides stay B-splines** even where flat, costing about 6e-12 relative
   volume and 3.4e-6 mm in the centroid; plane references find only a loft's end
   faces.

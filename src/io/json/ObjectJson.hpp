@@ -19,6 +19,7 @@
 #include <bettercad/features/LoftFeature.hpp>
 #include <bettercad/features/MirrorFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
+#include <bettercad/features/ShellFeature.hpp>
 #include <bettercad/features/SplitFeature.hpp>
 #include <bettercad/features/SweepFeature.hpp>
 #include <bettercad/sketch/Sketch.hpp>
@@ -141,6 +142,18 @@ circularPatternFromJson(const Json& data, std::string name, std::string_view pat
 /// "keep": "front" | "back" | "both" (P12-FEAT-002).
 [[nodiscard]] Json splitToJson(const features::SplitFeature& feature);
 [[nodiscard]] Result<std::unique_ptr<features::SplitFeature>> splitFromJson(const Json& data, std::string name,
+                                                                            std::string_view path);
+
+/// A face name as {"feature": id, "face": {...}}, the face as in a plane
+/// reference (P12-FEAT-003). The selector is validated on reading.
+[[nodiscard]] Json faceNameToJson(const FaceName& name);
+[[nodiscard]] Result<FaceName> faceNameFromJson(const Json& value, std::string_view path);
+
+/// "target"; "open_faces" as face names; "thickness" in metres with an
+/// optional "thickness_parameter"; "side": "inward" | "outward"
+/// (P12-FEAT-003).
+[[nodiscard]] Json shellToJson(const features::ShellFeature& feature);
+[[nodiscard]] Result<std::unique_ptr<features::ShellFeature>> shellFromJson(const Json& data, std::string name,
                                                                             std::string_view path);
 
 /// "target"; "tools" as feature IDs in order; "operation": "join" | "cut" |
