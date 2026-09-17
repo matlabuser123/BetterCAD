@@ -175,8 +175,10 @@ std::vector<ObjectId> Sketch::dependencies() const {
             parameters.push_back(ObjectId{*constraint.parameter});
         }
     }
-    if (attachment_ && attachment_->object) {
-        parameters.push_back(*attachment_->object);
+    if (attachment_) {
+        for (const ObjectId id : referencedObjects(*attachment_)) {
+            parameters.push_back(id);
+        }
     }
     std::ranges::sort(parameters);
     const auto duplicates = std::ranges::unique(parameters);

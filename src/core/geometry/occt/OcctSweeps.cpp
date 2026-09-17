@@ -23,9 +23,11 @@
 #include <BRepOffsetAPI_ThruSections.hxx>
 #include <BRepPrimAPI_MakePrism.hxx>
 #include <BRepPrimAPI_MakeRevol.hxx>
+#include <BRepSweep_Revol.hxx>
 #include <Geom_BSplineCurve.hxx>
 #include <NCollection_Array1.hxx>
 #include <Precision.hxx>
+#include <TopExp.hxx>
 #include <TopoDS.hxx>
 #include <TopoDS_Face.hxx>
 #include <TopoDS_Vertex.hxx>
@@ -373,14 +375,47 @@ Result<TopoDS_Wire> makePathWire(const PlanarPath& path, bool closed) {
     return wire.Wire();
 }
 
+/// Collects the names @p namer gives faces of @p shape; faces that are not
+/// faces of the shape are ignored.
+class FaceNaming {
+public:
+    FaceNaming(const TopoDS_Shape& shape, const SweptFaceNamer& namer) : namer_(namer) {
+        if (namer_) {
+            TopExp::MapShapes(shape, TopAbs_FACE, faces_);
+        }
+    }
+
+    void name(const TopoDS_Shape& face, const SweptFace& origin) {
+        if (!namer_ || face.IsNull() || face.ShapeType() != TopAbs_FACE || !faces_.Contains(face)) {
+            return;
+        }
+        if (const auto given = namer_(origin)) {
+            names_.push_back({TopoDS::Face(face), *given});
+        }
+    }
+
+    [[nodiscard]] std::vector<occt::NamedFace> take(const TopoDS_Shape& shape) {
+        return occt::canonicalNames(shape, std::move(names_));
+    }
+
+private:
+    const SweptFaceNamer& namer_;
+    occt::ShapeMap faces_;
+    std::vector<occt::NamedFace> names_;
+};
+
 /// One profile loop swept along the path as a solid: the binormal stays the
 /// path plane's normal (no twist), and corners are mitred (right corners).
-/// Call inside guardKernelCall.
-Result<TopoDS_Shape> sweepLoop(const TopoDS_Wire& spine, const gp_Dir& binormal, const TopoDS_Wire& loop) {
+/// With @p namer, the faces are named: the caps for the outer loop
+/// (@p loop 0), and the side of each edge of @p edges along each of the
+/// @p pathSegments segments. Call inside guardKernelCall.
+Result<Body> sweepLoop(const TopoDS_Wire& spine, const gp_Dir& binormal, const TopoDS_Wire& wire,
+                       const LoopEdges& edges, std::size_t loop, std::size_t pathSegments,
+                       const SweptFaceNamer& namer) {
     BRepOffsetAPI_MakePipeShell pipe(spine);
     pipe.SetMode(binormal);
     pipe.SetTransitionMode(BRepBuilderAPI_RightCorner);
-    pipe.Add(loop, /*WithContact=*/false, /*WithCorrection=*/false);
+    pipe.Add(wire, /*WithContact=*/false, /*WithCorrection=*/false);
     pipe.Build();
     if (!pipe.IsDone()) {
         return makeError(ErrorCode::Internal, "makeSweep: the kernel could not sweep the profile along the path");
@@ -388,7 +423,30 @@ Result<TopoDS_Shape> sweepLoop(const TopoDS_Wire& spine, const gp_Dir& binormal,
     if (!pipe.MakeSolid()) {
         return makeError(ErrorCode::Internal, "makeSweep: the kernel could not close the swept profile into a solid");
     }
-    return pipe.Shape();
+    const TopoDS_Shape shape = pipe.Shape();
+    FaceNaming naming(shape, namer);
+    if (namer) {
+        if (loop == 0) {
+            naming.name(pipe.FirstShape(), SweptFace{.kind = SweptFace::Kind::First});
+            naming.name(pipe.LastShape(), SweptFace{.kind = SweptFace::Kind::Last});
+        }
+        // The faces an edge sweeps come in path order
+        // (docs/verification/P12-SKETCH-003/kernel-probe).
+        for (std::size_t segment = 0; segment < edges.size(); ++segment) {
+            const occt::ShapeList& swept = pipe.Generated(edges[segment]);
+            if (static_cast<std::size_t>(swept.Extent()) != pathSegments) {
+                continue;
+            }
+            std::size_t along = 0;
+            for (const TopoDS_Shape& side : swept) {
+                naming.name(side, SweptFace{.kind = SweptFace::Kind::Side,
+                                            .loop = loop,
+                                            .segment = segment,
+                                            .pathSegment = along++});
+            }
+        }
+    }
+    return occt::BodyAccess::makeBody(shape, naming.take(shape));
 }
 
 using detail::PlaneAxis;
@@ -419,10 +477,10 @@ Result<PlaneAxis> axisInPlane(const Frame3D& plane, const Axis3D& axis) {
 } // namespace
 
 Result<Body> makePrism(const PlanarRegion& region, Length from, Length to) {
-    return makePrism(region, from, to, PrismFaceNamer{});
+    return makePrism(region, from, to, SweptFaceNamer{});
 }
 
-Result<Body> makePrism(const PlanarRegion& region, Length from, Length to, const PrismFaceNamer& namer) {
+Result<Body> makePrism(const PlanarRegion& region, Length from, Length to, const SweptFaceNamer& namer) {
     if (!isFinite(from) || !isFinite(to) || occt::toModel(to - from) <= Precision::Confusion()) {
         return makeError(ErrorCode::InvalidArgument,
                          std::format("prism extent must be finite with to > from, got [{}, {}]",
@@ -444,7 +502,7 @@ Result<Body> makePrism(const PlanarRegion& region, Length from, Length to, const
         if (namer) {
             // The caps are the profile at both ends; each profile edge sweeps
             // one side face (docs/verification/P12-STREF-001/kernel-probe).
-            const auto name = [&](const TopoDS_Shape& face, const PrismFace& origin) {
+            const auto name = [&](const TopoDS_Shape& face, const SweptFace& origin) {
                 if (face.IsNull() || face.ShapeType() != TopAbs_FACE) {
                     return;
                 }
@@ -452,12 +510,12 @@ Result<Body> makePrism(const PlanarRegion& region, Length from, Length to, const
                     names.push_back({TopoDS::Face(face), *given});
                 }
             };
-            name(prism.FirstShape(), PrismFace{.kind = PrismFace::Kind::First});
-            name(prism.LastShape(), PrismFace{.kind = PrismFace::Kind::Last});
+            name(prism.FirstShape(), SweptFace{.kind = SweptFace::Kind::First});
+            name(prism.LastShape(), SweptFace{.kind = SweptFace::Kind::Last});
             for (std::size_t loop = 0; loop < edges.size(); ++loop) {
                 for (std::size_t segment = 0; segment < edges[loop].size(); ++segment) {
                     for (const TopoDS_Shape& side : prism.Generated(edges[loop][segment])) {
-                        name(side, PrismFace{.kind = PrismFace::Kind::Side, .loop = loop, .segment = segment});
+                        name(side, SweptFace{.kind = SweptFace::Kind::Side, .loop = loop, .segment = segment});
                     }
                 }
             }
@@ -472,6 +530,11 @@ Result<Body> makePrism(const PlanarRegion& region, Length from, Length to, const
 }
 
 Result<Body> makeRevolution(const PlanarRegion& region, const Axis3D& axis, Angle from, Angle to) {
+    return makeRevolution(region, axis, from, to, SweptFaceNamer{});
+}
+
+Result<Body> makeRevolution(const PlanarRegion& region, const Axis3D& axis, Angle from, Angle to,
+                            const SweptFaceNamer& namer) {
     const double sweep = (to - from).si();
     if (!isFinite(from) || !isFinite(to) || sweep <= Precision::Angular() || sweep > kTwoPi + kFullTurnTolerance) {
         return makeError(ErrorCode::InvalidArgument,
@@ -502,7 +565,8 @@ Result<Body> makeRevolution(const PlanarRegion& region, const Axis3D& axis, Angl
     }
 
     return occt::guardKernelCall("makeRevolution", [&]() -> Result<Body> {
-        auto profile = makeProfileFace(region, 0.0, "makeRevolution");
+        std::vector<LoopEdges> edges;
+        auto profile = makeProfileFace(region, 0.0, "makeRevolution", namer ? &edges : nullptr);
         if (!profile) {
             return std::unexpected(profile.error());
         }
@@ -511,7 +575,13 @@ Result<Body> makeRevolution(const PlanarRegion& region, const Axis3D& axis, Angl
         if (from.si() != 0.0) {
             gp_Trsf rotation;
             rotation.SetRotation(kernelAxis, from.si());
-            start = BRepBuilderAPI_Transform(*profile, rotation, /*copy=*/true).Shape();
+            BRepBuilderAPI_Transform turn(*profile, rotation, /*copy=*/true);
+            start = turn.Shape();
+            for (LoopEdges& loop : edges) {
+                for (TopoDS_Edge& edge : loop) {
+                    edge = TopoDS::Edge(turn.ModifiedShape(edge));
+                }
+            }
         }
         const bool fullTurn = std::abs(sweep - kTwoPi) <= kFullTurnTolerance;
         BRepPrimAPI_MakeRevol revolution = fullTurn ? BRepPrimAPI_MakeRevol(start, kernelAxis)
@@ -519,7 +589,24 @@ Result<Body> makeRevolution(const PlanarRegion& region, const Axis3D& axis, Angl
         if (!revolution.IsDone()) {
             return makeError(ErrorCode::Internal, "makeRevolution: the kernel could not revolve the profile");
         }
-        Body body = occt::BodyAccess::makeBody(revolution.Shape());
+        const TopoDS_Shape shape = revolution.Shape();
+        FaceNaming naming(shape, namer);
+        if (namer) {
+            // A full turn's first and last shapes are the profile, which is
+            // not a face of the result. The sweep's own Shape(edge) gives the
+            // face each edge sweeps; Generated() misses planar ones on a full
+            // turn (docs/verification/P12-SKETCH-003/kernel-probe).
+            naming.name(revolution.FirstShape(), SweptFace{.kind = SweptFace::Kind::First});
+            naming.name(revolution.LastShape(), SweptFace{.kind = SweptFace::Kind::Last});
+            auto& sweeper = const_cast<BRepSweep_Revol&>(revolution.Revol());
+            for (std::size_t loop = 0; loop < edges.size(); ++loop) {
+                for (std::size_t segment = 0; segment < edges[loop].size(); ++segment) {
+                    naming.name(sweeper.Shape(edges[loop][segment]),
+                                SweptFace{.kind = SweptFace::Kind::Side, .loop = loop, .segment = segment});
+                }
+            }
+        }
+        Body body = occt::BodyAccess::makeBody(shape, naming.take(shape));
         if (body.isEmpty() || body.topology().solids == 0 || !body.isValid()) {
             return makeError(ErrorCode::Internal, "makeRevolution: the kernel produced an invalid solid");
         }
@@ -535,6 +622,10 @@ Result<Body> makeRevolution(const PlanarRegion& region, const Axis3D& axis, Angl
 }
 
 Result<Body> makeSweep(const PlanarRegion& region, const PlanarPath& path) {
+    return makeSweep(region, path, SweptFaceNamer{});
+}
+
+Result<Body> makeSweep(const PlanarRegion& region, const PlanarPath& path, const SweptFaceNamer& namer) {
     if (auto valid = checkRegion(region); !valid) {
         return std::unexpected(valid.error());
     }
@@ -556,20 +647,21 @@ Result<Body> makeSweep(const PlanarRegion& region, const PlanarPath& path) {
         const gp_Dir binormal = occt::toModel(path.plane.normal());
         // Each loop is swept on its own; the holes' solids are subtracted.
         WireBuilder loops(region.plane, 0.0);
-        const auto sweepOf = [&](const ProfileLoop& loop) -> Result<Body> {
-            auto wire = loops.build(signedArea(loop) < Area{} ? reversed(loop) : loop);
+        const auto sweepOf = [&](const ProfileLoop& loop, std::size_t index) -> Result<Body> {
+            const bool reverse = signedArea(loop) < Area{};
+            LoopEdges edges;
+            auto wire = loops.build(reverse ? reversed(loop) : loop, &edges);
             if (!wire) {
                 return std::unexpected(wire.error());
             }
-            auto solid = sweepLoop(*spine, binormal, *wire);
-            if (!solid) {
-                return std::unexpected(solid.error());
+            if (reverse) {
+                std::ranges::reverse(edges);
             }
-            return occt::BodyAccess::makeBody(*solid);
+            return sweepLoop(*spine, binormal, *wire, edges, index, path.segments.size(), namer);
         };
-        auto body = sweepOf(region.outer);
+        auto body = sweepOf(region.outer, 0);
         for (std::size_t i = 0; body && i < region.holes.size(); ++i) {
-            auto hole = sweepOf(region.holes[i]);
+            auto hole = sweepOf(region.holes[i], i + 1);
             body = hole ? booleanDifference(*body, *hole) : hole;
         }
         return body;
@@ -618,6 +710,10 @@ Result<Body> makeSweep(const PlanarRegion& region, const PlanarPath& path) {
 }
 
 Result<Body> makeLoft(std::span<const PlanarRegion> sections) {
+    return makeLoft(sections, SweptFaceNamer{});
+}
+
+Result<Body> makeLoft(std::span<const PlanarRegion> sections, const SweptFaceNamer& namer) {
     for (std::size_t i = 0; i < sections.size(); ++i) {
         if (auto valid = checkRegion(sections[i]); !valid) {
             return makeError(valid.error().code, std::format("makeLoft: section {}: {}", i + 1, valid.error().message));
@@ -651,7 +747,11 @@ Result<Body> makeLoft(std::span<const PlanarRegion> sections) {
         if (!loft.IsDone()) {
             return makeError(ErrorCode::Internal, "makeLoft: the kernel could not loft the sections");
         }
-        return occt::BodyAccess::makeBody(loft.Shape());
+        const TopoDS_Shape shape = loft.Shape();
+        FaceNaming naming(shape, namer);
+        naming.name(loft.FirstShape(), SweptFace{.kind = SweptFace::Kind::First});
+        naming.name(loft.LastShape(), SweptFace{.kind = SweptFace::Kind::Last});
+        return occt::BodyAccess::makeBody(shape, naming.take(shape));
     });
     if (!lofted) {
         return std::unexpected(lofted.error());

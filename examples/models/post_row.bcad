@@ -1,0 +1,661 @@
+{
+  "format": "bettercad-document",
+  "version": 1,
+  "units": "SI",
+  "document": {
+    "id": "6d2f8b45-1e9a-4c7d-b3f6-9a5e2c8d4b87",
+    "name": "PostRow",
+    "metadata": {
+      "description": "",
+      "author": "",
+      "properties": {}
+    },
+    "last_allocated_id": 15
+  },
+  "parameters": [
+    {
+      "id": 1,
+      "name": "pitch",
+      "si_value": 0.03,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 2,
+      "name": "posts",
+      "si_value": 3.0,
+      "unit": "",
+      "dimension": {}
+    }
+  ],
+  "objects": [
+    {
+      "id": 3,
+      "type": "sketch",
+      "name": "PlateSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.1,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.1,
+              0.03
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.0,
+              0.03
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "line",
+            "start": 2,
+            "end": 3,
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "line",
+            "start": 4,
+            "end": 1,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "fixed",
+            "entities": [
+              2
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "fixed",
+            "entities": [
+              3
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "fixed",
+            "entities": [
+              4
+            ],
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 8,
+        "last_constraint_id": 4
+      }
+    },
+    {
+      "id": 4,
+      "type": "extrude",
+      "name": "Plate",
+      "data": {
+        "profile": 3,
+        "depth": 0.01,
+        "direction": "normal",
+        "operation": "new_body"
+      }
+    },
+    {
+      "id": 5,
+      "type": "sketch",
+      "name": "PostSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.01
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "attachment": {
+          "object": 4,
+          "face": {
+            "role": "end_cap"
+          }
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.01,
+              0.01
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.02,
+              0.01
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.02,
+              0.02
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.01,
+              0.02
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "line",
+            "start": 2,
+            "end": 3,
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "line",
+            "start": 4,
+            "end": 1,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "fixed",
+            "entities": [
+              2
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "fixed",
+            "entities": [
+              3
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "fixed",
+            "entities": [
+              4
+            ],
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 8,
+        "last_constraint_id": 4
+      }
+    },
+    {
+      "id": 6,
+      "type": "extrude",
+      "name": "Post",
+      "data": {
+        "profile": 5,
+        "depth": 0.02,
+        "direction": "normal",
+        "operation": "join",
+        "target": 4
+      }
+    },
+    {
+      "id": 7,
+      "type": "linear_pattern",
+      "name": "Row",
+      "data": {
+        "source": 6,
+        "first": {
+          "direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "count": 1,
+          "count_parameter": 2,
+          "spacing": 0.0,
+          "spacing_parameter": 1
+        }
+      }
+    },
+    {
+      "id": 8,
+      "type": "mirror",
+      "name": "Flip",
+      "data": {
+        "source": 7,
+        "plane": {
+          "origin": [
+            0.1,
+            0.0,
+            0.0
+          ],
+          "normal": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "offset": 0.0
+        },
+        "scope": "body",
+        "keep_original": true
+      }
+    },
+    {
+      "id": 9,
+      "type": "sketch",
+      "name": "CopySketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.08,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "normal": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        "attachment": {
+          "object": 6,
+          "face": {
+            "role": "side",
+            "entity": 6,
+            "copies": [
+              {
+                "feature": 7,
+                "instance": 2
+              }
+            ]
+          }
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.015,
+              0.02
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "circle",
+            "center": 1,
+            "radius": 0.003,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "radius",
+            "entities": [
+              2
+            ],
+            "value": 0.003,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 2,
+        "last_constraint_id": 2
+      }
+    },
+    {
+      "id": 10,
+      "type": "extrude",
+      "name": "CopyBoss",
+      "data": {
+        "profile": 9,
+        "depth": 0.004,
+        "direction": "normal",
+        "operation": "new_body"
+      }
+    },
+    {
+      "id": 11,
+      "type": "sketch",
+      "name": "ImageSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.12,
+            -0.0,
+            -0.0
+          ],
+          "x_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "normal": [
+            -1.0,
+            0.0,
+            0.0
+          ]
+        },
+        "attachment": {
+          "object": 6,
+          "face": {
+            "role": "side",
+            "entity": 6,
+            "copies": [
+              {
+                "feature": 7,
+                "instance": 2
+              },
+              {
+                "feature": 8,
+                "instance": 1
+              }
+            ]
+          }
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.015,
+              -0.02
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "circle",
+            "center": 1,
+            "radius": 0.003,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "radius",
+            "entities": [
+              2
+            ],
+            "value": 0.003,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 2,
+        "last_constraint_id": 2
+      }
+    },
+    {
+      "id": 12,
+      "type": "extrude",
+      "name": "ImageBoss",
+      "data": {
+        "profile": 11,
+        "depth": 0.004,
+        "direction": "normal",
+        "operation": "new_body"
+      }
+    },
+    {
+      "id": 13,
+      "type": "datum_plane",
+      "name": "Gauge",
+      "data": {
+        "kind": "offset",
+        "base": {
+          "object": 6,
+          "face": {
+            "role": "side",
+            "entity": 6,
+            "copies": [
+              {
+                "feature": 7,
+                "instance": 1
+              }
+            ]
+          }
+        },
+        "offset": 0.005
+      }
+    },
+    {
+      "id": 14,
+      "type": "sketch",
+      "name": "GaugeSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.055,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "normal": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        "attachment": {
+          "object": 13,
+          "plane": "xy"
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.015,
+              0.02
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "circle",
+            "center": 1,
+            "radius": 0.002,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "radius",
+            "entities": [
+              2
+            ],
+            "value": 0.002,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 2,
+        "last_constraint_id": 2
+      }
+    },
+    {
+      "id": 15,
+      "type": "extrude",
+      "name": "GaugeBoss",
+      "data": {
+        "profile": 14,
+        "depth": 0.003,
+        "direction": "normal",
+        "operation": "new_body"
+      }
+    }
+  ]
+}

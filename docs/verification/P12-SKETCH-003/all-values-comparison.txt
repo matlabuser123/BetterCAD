@@ -1,0 +1,31 @@
+Every measured value of the tests P12-STREF-001 had, from its qualified Release build (8dbb722, run before
+this milestone's clean rebuilds) and from this milestone's qualified Release build (the second run).
+Each ran bettercad_tests.exe -s --reporter xml --rng-seed 1 (all test cases; this build also ran the 24 new
+ones), and values.py (in this directory, with the same one-line header for both) filtered the report:
+  stref001-release: 839 test cases, 59170 assertions passed, 0 failed
+  sketch003-release: 863 test cases, 66351 assertions passed, 0 failed
+compare-values.py dropped (--exclude) the 24 new test cases and the two P12-STREF-001 test cases this
+milestone changed by design (see changed-tests-values.txt), and the pointer values; it normalized
+temporary paths, document UUIDs and the Git revision the version text reports.
+
+1. With the source line numbers replaced (--ignore-line-numbers):
+   python compare-values.py --exclude "(SketchOnFace_|FaceKindFile_|FaceNames_(Revolutions|Sweeps|Lofts|HolesAnd)|FaceReferenceCli_(InfoDescribesFacesOf|ValidateReportsCopies)|FaceNames_PrismNamesItsCapsAndSides|FaceReference_FailuresAreStructuredAndBlockDependents)" --ignore-line-numbers stref001-release=... sketch003-release=...
+
+   stref001-release: 28523 non-empty lines after normalizing, MD5 914f10877ea243a182833b77a617246c
+   sketch003-release: 28523 non-empty lines after normalizing, MD5 914f10877ea243a182833b77a617246c
+   
+   sketch003-release against stref001-release:
+     differing lines: 0 expected only, 0 measured
+   
+   RESULT: measured values identical
+
+2. With the source line numbers kept: the same 28523 lines, of which 71 differ. Every one of them differs
+   only in the line number of its assertion, in the three test files this milestone edited:
+   FaceNameTests.cpp (+5 lines of includes; +39 after the section added to
+   FaceNames_PrismNamesItsCapsAndSides), FaceReferenceCliTests.cpp (+7, includes and using-declarations),
+   FaceReferenceTests.cpp (+1, a comment). Summary of that run:
+
+   stref001-release: 28523 non-empty lines after normalizing, MD5 3665f38c8c067ed274bc5a2450ee21b5
+   sketch003-release: 28523 non-empty lines after normalizing, MD5 88a416158db6c218ea75478ce2f34fa2
+     differing lines: 0 expected only, 71 measured
+   RESULT: MEASURED VALUES DIFFER

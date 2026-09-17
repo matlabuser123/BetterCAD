@@ -1,0 +1,102 @@
+baseline ../P12-STREF-001/ctest-release.log: 891 distinct names
+
+ctest-debug.log: 918 distinct names, 919 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 27
+    cli.export-step.post-row
+    cli.info.post-row
+    cli.validate.post-row
+    unit.FaceKindFile_ExampleFileMatchesTheBuilder
+    unit.FaceKindFile_ExportedCopiesReadBackFromStep
+    unit.FaceKindFile_MalformedRolesAndCopiesAreRejectedWithThePath
+    unit.FaceKindFile_RolesPathEdgesEdgeReferencesAndCopiesAreWrittenAsJson
+    unit.FaceKindFile_SaveLoad_ResolvesEveryFaceBitForBit
+    unit.FaceNames_HolesAndChamfersNameTheirFacesAndKeepTheirInputs
+    unit.FaceNames_LoftsNameTheirEndsOnly
+    unit.FaceNames_RevolutionsNameTheirCapsAndSides
+    unit.FaceNames_SweepsNameTheirSidesAlongEachPathSegment
+    unit.FaceReferenceCli_InfoDescribesFacesOfEveryKindAndCopies
+    unit.FaceReferenceCli_ValidateReportsCopiesAndRolesAFeatureDoesNotHave
+    unit.SketchOnFace_ChamferFacesFollowTheDistance
+    unit.SketchOnFace_CircularCopiesFollowTheCount
+    unit.SketchOnFace_CurvedAndRemovedFacesFailWithoutSubstitution
+    unit.SketchOnFace_HoleBottomsAndCounterboreFloorsFollowTheirDepths
+    unit.SketchOnFace_LoftCapsFollowTheSectionOffsets
+    unit.SketchOnFace_PatternAndMirrorCopiesFollowTheirInstance
+    unit.SketchOnFace_ReferencesToCopiesDependOnTheCopyingFeatures
+    unit.SketchOnFace_RegeneratesDeterministically
+    unit.SketchOnFace_RevolveCapsAndSidesFollowTheTurnAndLength
+    unit.SketchOnFace_RevolveStartCapStaysOnTheSketchPlaneInEveryDirection
+    unit.SketchOnFace_RolesAndCopiesAFeatureDoesNotHaveAreRefused
+    unit.SketchOnFace_SweepCapsAndSidesFollowTheirPathEdges
+    unit.SketchOnFace_ValidationReportsRolesAndCopiesTheFeatureDoesNotHave
+
+ctest-release.log: 918 distinct names, 919 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 27
+    cli.export-step.post-row
+    cli.info.post-row
+    cli.validate.post-row
+    unit.FaceKindFile_ExampleFileMatchesTheBuilder
+    unit.FaceKindFile_ExportedCopiesReadBackFromStep
+    unit.FaceKindFile_MalformedRolesAndCopiesAreRejectedWithThePath
+    unit.FaceKindFile_RolesPathEdgesEdgeReferencesAndCopiesAreWrittenAsJson
+    unit.FaceKindFile_SaveLoad_ResolvesEveryFaceBitForBit
+    unit.FaceNames_HolesAndChamfersNameTheirFacesAndKeepTheirInputs
+    unit.FaceNames_LoftsNameTheirEndsOnly
+    unit.FaceNames_RevolutionsNameTheirCapsAndSides
+    unit.FaceNames_SweepsNameTheirSidesAlongEachPathSegment
+    unit.FaceReferenceCli_InfoDescribesFacesOfEveryKindAndCopies
+    unit.FaceReferenceCli_ValidateReportsCopiesAndRolesAFeatureDoesNotHave
+    unit.SketchOnFace_ChamferFacesFollowTheDistance
+    unit.SketchOnFace_CircularCopiesFollowTheCount
+    unit.SketchOnFace_CurvedAndRemovedFacesFailWithoutSubstitution
+    unit.SketchOnFace_HoleBottomsAndCounterboreFloorsFollowTheirDepths
+    unit.SketchOnFace_LoftCapsFollowTheSectionOffsets
+    unit.SketchOnFace_PatternAndMirrorCopiesFollowTheirInstance
+    unit.SketchOnFace_ReferencesToCopiesDependOnTheCopyingFeatures
+    unit.SketchOnFace_RegeneratesDeterministically
+    unit.SketchOnFace_RevolveCapsAndSidesFollowTheTurnAndLength
+    unit.SketchOnFace_RevolveStartCapStaysOnTheSketchPlaneInEveryDirection
+    unit.SketchOnFace_RolesAndCopiesAFeatureDoesNotHaveAreRefused
+    unit.SketchOnFace_SweepCapsAndSidesFollowTheirPathEdges
+    unit.SketchOnFace_ValidationReportsRolesAndCopiesTheFeatureDoesNotHave
+
+ctest-debug-shared.log: 918 distinct names, 919 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 27
+    cli.export-step.post-row
+    cli.info.post-row
+    cli.validate.post-row
+    unit.FaceKindFile_ExampleFileMatchesTheBuilder
+    unit.FaceKindFile_ExportedCopiesReadBackFromStep
+    unit.FaceKindFile_MalformedRolesAndCopiesAreRejectedWithThePath
+    unit.FaceKindFile_RolesPathEdgesEdgeReferencesAndCopiesAreWrittenAsJson
+    unit.FaceKindFile_SaveLoad_ResolvesEveryFaceBitForBit
+    unit.FaceNames_HolesAndChamfersNameTheirFacesAndKeepTheirInputs
+    unit.FaceNames_LoftsNameTheirEndsOnly
+    unit.FaceNames_RevolutionsNameTheirCapsAndSides
+    unit.FaceNames_SweepsNameTheirSidesAlongEachPathSegment
+    unit.FaceReferenceCli_InfoDescribesFacesOfEveryKindAndCopies
+    unit.FaceReferenceCli_ValidateReportsCopiesAndRolesAFeatureDoesNotHave
+    unit.SketchOnFace_ChamferFacesFollowTheDistance
+    unit.SketchOnFace_CircularCopiesFollowTheCount
+    unit.SketchOnFace_CurvedAndRemovedFacesFailWithoutSubstitution
+    unit.SketchOnFace_HoleBottomsAndCounterboreFloorsFollowTheirDepths
+    unit.SketchOnFace_LoftCapsFollowTheSectionOffsets
+    unit.SketchOnFace_PatternAndMirrorCopiesFollowTheirInstance
+    unit.SketchOnFace_ReferencesToCopiesDependOnTheCopyingFeatures
+    unit.SketchOnFace_RegeneratesDeterministically
+    unit.SketchOnFace_RevolveCapsAndSidesFollowTheTurnAndLength
+    unit.SketchOnFace_RevolveStartCapStaysOnTheSketchPlaneInEveryDirection
+    unit.SketchOnFace_RolesAndCopiesAFeatureDoesNotHaveAreRefused
+    unit.SketchOnFace_SweepCapsAndSidesFollowTheirPathEdges
+    unit.SketchOnFace_ValidationReportsRolesAndCopiesTheFeatureDoesNotHave
+
+RESULT: PASS

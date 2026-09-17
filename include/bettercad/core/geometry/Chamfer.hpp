@@ -1,12 +1,15 @@
 #pragma once
 
 #include <bettercad/core/Error.hpp>
+#include <bettercad/core/document/References.hpp>
 #include <bettercad/core/geometry/Body.hpp>
 #include <bettercad/core/geometry/Edges.hpp>
 #include <bettercad/core/geometry/Export.hpp>
 #include <bettercad/core/math/Direction.hpp>
 #include <bettercad/core/units/Units.hpp>
 
+#include <cstddef>
+#include <functional>
 #include <optional>
 #include <string_view>
 #include <vector>
@@ -79,5 +82,15 @@ struct ChamferRequest {
 /// Messages name the reference by its position in the request and its
 /// curve.
 [[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Result<Body> chamferEdges(const Body& body, const ChamferRequest& request);
+
+/// The name the faces a chamfer cuts for edge reference @p reference (its
+/// position in the request, from 0) get, or none (P12-SKETCH-003).
+using ChamferFaceNamer = std::function<std::optional<FaceName>(std::size_t reference)>;
+
+/// chamferEdges() whose result carries the names @p namer gives the faces it
+/// cuts (for each reference, the faces along its whole chain), and the names
+/// of @p body's faces (see findNamedFaces()).
+[[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Result<Body> chamferEdges(const Body& body, const ChamferRequest& request,
+                                                                 const ChamferFaceNamer& namer);
 
 } // namespace bettercad::geometry

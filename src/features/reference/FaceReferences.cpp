@@ -1,8 +1,16 @@
 #include <bettercad/core/document/Document.hpp>
 #include <bettercad/core/geometry/Faces.hpp>
+#include <bettercad/features/ChamferFeature.hpp>
+#include <bettercad/features/CircularPatternFeature.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/features/FaceReferences.hpp>
 #include <bettercad/features/Feature.hpp>
+#include <bettercad/features/HoleFeature.hpp>
+#include <bettercad/features/LinearPatternFeature.hpp>
+#include <bettercad/features/LoftFeature.hpp>
+#include <bettercad/features/MirrorFeature.hpp>
+#include <bettercad/features/RevolveFeature.hpp>
+#include <bettercad/features/SweepFeature.hpp>
 #include <bettercad/sketch/Sketch.hpp>
 
 #include <algorithm>
@@ -37,16 +45,51 @@ std::string article(std::string_view word) {
                        word);
 }
 
-std::string_view roleText(FaceRole role) {
-    switch (role) {
+/// "the end cap", "the side from entity:4 along entity:9", "the face of edge reference 2".
+std::string faceText(const FaceSelector& face) {
+    switch (face.role) {
     case FaceRole::StartCap:
         return "the start cap";
     case FaceRole::EndCap:
         return "the end cap";
     case FaceRole::Side:
-        return "the side";
+        if (!face.entity) {
+            return "a side";
+        }
+        return face.along ? std::format("the side from {} along {}", *face.entity, *face.along)
+                          : std::format("the side from {}", *face.entity);
+    case FaceRole::HoleBottom:
+        return "the bottom";
+    case FaceRole::CounterboreFloor:
+        return "the counterbore floor";
+    case FaceRole::Chamfer:
+        return face.edge ? std::format("the face of edge reference {}", *face.edge) : "a chamfer face";
     }
-    return "the face";
+    return "a face";
+}
+
+/// "a hole bottom", for messages about roles a feature does not have.
+std::string_view roleName(FaceRole role) {
+    switch (role) {
+    case FaceRole::StartCap:
+        return "start cap";
+    case FaceRole::EndCap:
+        return "end cap";
+    case FaceRole::Side:
+        return "side face";
+    case FaceRole::HoleBottom:
+        return "hole bottom";
+    case FaceRole::CounterboreFloor:
+        return "counterbore floor";
+    case FaceRole::Chamfer:
+        return "chamfer face";
+    }
+    return "face";
+}
+
+bool copiesFaces(std::string_view typeName) noexcept {
+    return typeName == LinearPatternFeature::kTypeName || typeName == CircularPatternFeature::kTypeName ||
+           typeName == MirrorFeature::kTypeName;
 }
 
 bool onOnePlane(const geometry::FaceSignature& a, const geometry::FaceSignature& b) {
@@ -63,51 +106,20 @@ bool onOnePlane(const geometry::FaceSignature& a, const geometry::FaceSignature&
     return std::abs(offset) <= kLengthTolerance;
 }
 
-} // namespace
-
-bool namesFaces(std::string_view typeName) noexcept {
-    return typeName == ExtrudeFeature::kTypeName;
-}
-
-std::string describe(const Document& document, const FaceName& name) {
-    if (name.face.role == FaceRole::Side && name.face.entity) {
-        return std::format("the side from {} of {}", *name.face.entity, label(document, name.feature));
-    }
-    return std::format("{} of {}", roleText(name.face.role), label(document, name.feature));
-}
-
-Result<void> checkFaceName(const Document& document, const FaceName& name) {
-    const DocumentObject* object = document.findObject(name.feature);
-    if (object == nullptr) {
-        return makeError(ErrorCode::NotFound, std::format("{} does not exist", name.feature));
-    }
-    const std::string who = label(document, name.feature);
-    if (dynamic_cast<const SolidFeature*>(object) == nullptr) {
-        return makeError(ErrorCode::InvalidArgument,
-                         std::format("{} is {}, not a feature, and has no faces", who,
-                                     article(kindName(object->typeName()))));
-    }
-    if (!namesFaces(object->typeName())) {
-        return makeError(ErrorCode::InvalidArgument,
-                         std::format("{} is {}, whose faces cannot be referenced yet (extrudes name their faces)", who,
-                                     article(kindName(object->typeName()))));
-    }
-    if (auto valid = validate(name.face); !valid) {
-        return makeError(ErrorCode::InvalidArgument, std::format("{}: {}", who, valid.error().message));
-    }
-    if (name.face.role != FaceRole::Side) {
+/// A profile curve of @p sketchId: NotFound if the sketch has no such
+/// entity, InvalidArgument for a point or construction geometry. A missing
+/// sketch is left to the feature's own regeneration.
+Result<void> checkProfileEntity(const Document& document, const std::string& who, SketchId sketchId,
+                                EntityId entityId) {
+    const ObjectId id{sketchId};
+    const auto* sketch = document.findObjectAs<sketch::Sketch>(id);
+    if (sketch == nullptr) {
         return {};
     }
-    const auto* extrude = dynamic_cast<const ExtrudeFeature*>(object);
-    const ObjectId sketchId{extrude->definition().profile};
-    const auto* sketch = document.findObjectAs<sketch::Sketch>(sketchId);
-    if (sketch == nullptr) {
-        return {}; // the extrude itself fails
-    }
-    const sketch::Entity* entity = sketch->findEntity(*name.face.entity);
+    const sketch::Entity* entity = sketch->findEntity(entityId);
     if (entity == nullptr) {
-        return makeError(ErrorCode::NotFound, std::format("{}: {} is not an entity of its profile {}", who,
-                                                          *name.face.entity, label(document, sketchId)));
+        return makeError(ErrorCode::NotFound, std::format("{}: {} is not an entity of its profile {}", who, entityId,
+                                                          label(document, id)));
     }
     if (entity->type() == sketch::EntityType::Point) {
         return makeError(ErrorCode::InvalidArgument,
@@ -121,20 +133,192 @@ Result<void> checkFaceName(const Document& document, const FaceName& name) {
     return {};
 }
 
+/// The roles the feature @p object generates, checked against @p face.
+Result<void> checkRole(const Document& document, const DocumentObject& object, const FaceSelector& face) {
+    const std::string who = label(document, object.id());
+    const auto noSuchRole = [&] {
+        return makeError(ErrorCode::InvalidArgument, std::format("{} is {}, which has no {}", who,
+                                                                 article(kindName(object.typeName())),
+                                                                 roleName(face.role)));
+    };
+    const auto noAlong = [&]() -> Result<void> {
+        if (face.along) {
+            return makeError(ErrorCode::InvalidArgument,
+                             std::format("{} is {}, whose sides are not named by a path edge", who,
+                                         article(kindName(object.typeName()))));
+        }
+        return {};
+    };
+    const bool cap = face.role == FaceRole::StartCap || face.role == FaceRole::EndCap;
+    if (const auto* extrude = dynamic_cast<const ExtrudeFeature*>(&object)) {
+        if (cap) {
+            return {};
+        }
+        if (face.role != FaceRole::Side) {
+            return noSuchRole();
+        }
+        if (auto valid = noAlong(); !valid) {
+            return valid;
+        }
+        return checkProfileEntity(document, who, extrude->definition().profile, *face.entity);
+    }
+    if (const auto* revolve = dynamic_cast<const RevolveFeature*>(&object)) {
+        if (cap) {
+            return {};
+        }
+        if (face.role != FaceRole::Side) {
+            return noSuchRole();
+        }
+        if (auto valid = noAlong(); !valid) {
+            return valid;
+        }
+        return checkProfileEntity(document, who, revolve->definition().profile, *face.entity);
+    }
+    if (const auto* sweep = dynamic_cast<const SweepFeature*>(&object)) {
+        if (cap) {
+            return {};
+        }
+        if (face.role != FaceRole::Side) {
+            return noSuchRole();
+        }
+        if (!face.along) {
+            return makeError(ErrorCode::InvalidArgument,
+                             std::format("{} is a sweep, whose sides are named by a profile entity and a path edge",
+                                         who));
+        }
+        if (auto valid = checkProfileEntity(document, who, sweep->definition().profile, *face.entity); !valid) {
+            return valid;
+        }
+        const auto& edges = sweep->definition().path.edges;
+        if (std::ranges::find(edges, *face.along) == edges.end()) {
+            return makeError(ErrorCode::NotFound, std::format("{}: {} is not an edge of its path", who, *face.along));
+        }
+        return {};
+    }
+    if (dynamic_cast<const LoftFeature*>(&object) != nullptr) {
+        if (cap) {
+            return {};
+        }
+        if (face.role == FaceRole::Side) {
+            return makeError(ErrorCode::InvalidArgument,
+                             std::format("{} is a loft, whose sides are not planes and are not named", who));
+        }
+        return noSuchRole();
+    }
+    if (const auto* hole = dynamic_cast<const HoleFeature*>(&object)) {
+        const HoleDefinition& d = hole->definition();
+        if (face.role == FaceRole::HoleBottom) {
+            if (d.extent != geometry::HoleExtent::Blind) {
+                return makeError(ErrorCode::InvalidArgument,
+                                 std::format("{} is a through hole, which has no bottom", who));
+            }
+            return {};
+        }
+        if (face.role == FaceRole::CounterboreFloor) {
+            if (d.type != geometry::HoleType::Counterbore) {
+                return makeError(ErrorCode::InvalidArgument,
+                                 std::format("{} is not counterbored, so it has no counterbore floor", who));
+            }
+            return {};
+        }
+        return noSuchRole();
+    }
+    if (const auto* chamfer = dynamic_cast<const ChamferFeature*>(&object)) {
+        if (face.role != FaceRole::Chamfer) {
+            return noSuchRole();
+        }
+        const std::size_t count = chamfer->definition().edges.size();
+        if (*face.edge > count) {
+            return makeError(ErrorCode::NotFound, std::format("{} has {} edge reference{}, not {}", who, count,
+                                                              count == 1 ? "" : "s", *face.edge));
+        }
+        return {};
+    }
+    return makeError(ErrorCode::Internal, std::format("{}: no face roles are known for its kind", who));
+}
+
+} // namespace
+
+bool namesFaces(std::string_view typeName) noexcept {
+    return typeName == ExtrudeFeature::kTypeName || typeName == RevolveFeature::kTypeName ||
+           typeName == SweepFeature::kTypeName || typeName == LoftFeature::kTypeName ||
+           typeName == HoleFeature::kTypeName || typeName == ChamferFeature::kTypeName;
+}
+
+std::string describe(const Document& document, const FaceName& name) {
+    std::string text = std::format("{} of {}", faceText(name.face), label(document, name.feature));
+    for (const FaceCopy& copy : name.face.copies) {
+        text += std::format(", copy {} of {}", copy.instance, label(document, copy.feature));
+    }
+    return text;
+}
+
+ObjectId holderOf(const FaceName& name) noexcept {
+    return name.face.copies.empty() ? name.feature : name.face.copies.back().feature;
+}
+
+Result<void> checkFaceName(const Document& document, const FaceName& name) {
+    const DocumentObject* object = document.findObject(name.feature);
+    if (object == nullptr) {
+        return makeError(ErrorCode::NotFound, std::format("{} does not exist", name.feature));
+    }
+    const std::string who = label(document, name.feature);
+    if (dynamic_cast<const SolidFeature*>(object) == nullptr) {
+        return makeError(ErrorCode::InvalidArgument,
+                         std::format("{} is {}, not a feature, and has no faces", who,
+                                     article(kindName(object->typeName()))));
+    }
+    if (copiesFaces(object->typeName())) {
+        return makeError(ErrorCode::InvalidArgument,
+                         std::format("{} is {}, whose faces are copies: name the face it copies, and the copy", who,
+                                     article(kindName(object->typeName()))));
+    }
+    if (!namesFaces(object->typeName())) {
+        return makeError(ErrorCode::InvalidArgument,
+                         std::format("{} is {}, whose faces are not named (extrudes, revolves, sweeps, lofts, holes "
+                                     "and chamfers name theirs)",
+                                     who, article(kindName(object->typeName()))));
+    }
+    if (auto valid = validate(name.face); !valid) {
+        return makeError(ErrorCode::InvalidArgument, std::format("{}: {}", who, valid.error().message));
+    }
+    if (auto valid = checkRole(document, *object, name.face); !valid) {
+        return valid;
+    }
+    for (const FaceCopy& copy : name.face.copies) {
+        const DocumentObject* copier = document.findObject(copy.feature);
+        if (copier == nullptr) {
+            return makeError(ErrorCode::NotFound, std::format("{} does not exist", copy.feature));
+        }
+        if (!copiesFaces(copier->typeName())) {
+            return makeError(ErrorCode::InvalidArgument,
+                             std::format("{} is {}, which makes no copies (patterns and mirrors do)",
+                                         label(document, copy.feature), article(kindName(copier->typeName()))));
+        }
+        if (copier->typeName() == MirrorFeature::kTypeName && copy.instance != 1) {
+            return makeError(ErrorCode::InvalidArgument,
+                             std::format("{} is a mirror, whose only copy is instance 1, not {}",
+                                         label(document, copy.feature), copy.instance));
+        }
+    }
+    return {};
+}
+
 Result<Frame3D> resolveFacePlane(const Document& document, const FaceName& name, const BodyLookup& bodies) {
     if (auto valid = checkFaceName(document, name); !valid) {
         return std::unexpected(valid.error());
     }
     const std::string what = describe(document, name);
-    const geometry::Body* body = bodies ? bodies(name.feature) : nullptr;
     if (!bodies) {
         return makeError(ErrorCode::FailedPrecondition,
                          std::format("{} is found in its feature's regenerated body, which is not available here",
                                      what));
     }
+    const ObjectId holder = holderOf(name);
+    const geometry::Body* body = bodies(holder);
     if (body == nullptr || body->isEmpty()) {
         return makeError(ErrorCode::FailedPrecondition,
-                         std::format("{} cannot be found: {} has no body", what, label(document, name.feature)));
+                         std::format("{} cannot be found: {} has no body", what, label(document, holder)));
     }
     auto faces = geometry::findNamedFaces(*body, name);
     if (!faces) {

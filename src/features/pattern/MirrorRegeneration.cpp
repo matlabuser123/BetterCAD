@@ -155,15 +155,21 @@ Result<geometry::Body> regenerateMirror(const MirrorFeature& feature, const Docu
 
         if (definition.scope == MirrorScope::Body) {
             const bool keep = definition.keepOriginal;
-            const detail::InstanceOperation mirrorBody =
-                [&sourceBody, keep](const geometry::Body& body, const RigidTransform3D& motion) -> Result<geometry::Body> {
+            const detail::InstanceOperation mirrorBody = [&sourceBody, keep](
+                                                             const geometry::Body& body, const RigidTransform3D& motion,
+                                                             const FaceCopy& copy) -> Result<geometry::Body> {
                 auto mirrored = geometry::transformed(sourceBody, motion);
-                if (!mirrored || !keep) {
+                if (!mirrored) {
                     return mirrored;
                 }
-                return geometry::booleanUnion(body, *mirrored);
+                // The image's faces are copies of the source body's.
+                geometry::Body reflected = geometry::renameFaces(*mirrored, detail::appendCopy(copy));
+                if (!keep) {
+                    return reflected;
+                }
+                return geometry::booleanUnion(body, reflected);
             };
-            return detail::buildPattern(sourceBody, mirrorBody, image);
+            return detail::buildPattern(sourceBody, mirrorBody, image, feature.id());
         }
 
         // The feature scope repeats the source's own operation, as a pattern
@@ -192,7 +198,7 @@ Result<geometry::Body> regenerateMirror(const MirrorFeature& feature, const Docu
         if (!apply) {
             return std::unexpected(apply.error());
         }
-        return detail::buildPattern(sourceBody, *apply, image);
+        return detail::buildPattern(sourceBody, *apply, image, feature.id());
     };
     const auto mirror = [&](const geometry::Body& sourceBody) -> Result<geometry::Body> {
         auto body = build(sourceBody);

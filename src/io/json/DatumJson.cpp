@@ -1,8 +1,12 @@
 #include "io/json/ObjectJson.hpp"
 
 #include <array>
+#include <cstdint>
 #include <format>
+#include <limits>
+#include <optional>
 #include <utility>
+#include <vector>
 
 namespace bettercad::io::detail {
 
@@ -17,10 +21,13 @@ constexpr std::array<std::pair<PrincipalPlane, std::string_view>, 3> kPlanes{{
     {PrincipalPlane::YZ, "yz"},
     {PrincipalPlane::XZ, "xz"},
 }};
-constexpr std::array<std::pair<FaceRole, std::string_view>, 3> kFaceRoles{{
+constexpr std::array<std::pair<FaceRole, std::string_view>, 6> kFaceRoles{{
     {FaceRole::StartCap, "start_cap"},
     {FaceRole::EndCap, "end_cap"},
     {FaceRole::Side, "side"},
+    {FaceRole::HoleBottom, "hole_bottom"},
+    {FaceRole::CounterboreFloor, "counterbore_floor"},
+    {FaceRole::Chamfer, "chamfer"},
 }};
 constexpr std::array<std::pair<PrincipalAxis, std::string_view>, 3> kAxes{{
     {PrincipalAxis::X, "x"},
@@ -143,6 +150,55 @@ const Error* errorOf(const Result<T>& result) {
     return result ? nullptr : &result.error();
 }
 
+/// An absent key, or a non-negative integer that fits in 32 bits.
+Result<std::optional<std::uint32_t>> readOptionalCount(const Json& object, std::string_view key,
+                                                       std::string_view path) {
+    if (!object.contains(key)) {
+        return std::optional<std::uint32_t>{};
+    }
+    auto value = readUnsigned(object, key, path);
+    if (!value) {
+        return std::unexpected(value.error());
+    }
+    if (*value > std::numeric_limits<std::uint32_t>::max()) {
+        return parseError(childPath(path, key), "expected an integer below 2^32");
+    }
+    return std::optional<std::uint32_t>{static_cast<std::uint32_t>(*value)};
+}
+
+/// The copy steps of a face: [{"feature": id, "instance": n}, ...].
+Result<std::vector<FaceCopy>> faceCopiesFromJson(const Json& face, std::string_view path) {
+    std::vector<FaceCopy> copies;
+    if (!face.contains("copies")) {
+        return copies;
+    }
+    auto field = requireArray(face, "copies", path);
+    if (!field) {
+        return std::unexpected(field.error());
+    }
+    const std::string copiesPath = childPath(path, "copies");
+    for (std::size_t i = 0; i < (*field)->size(); ++i) {
+        const Json& item = (**field)[i];
+        const std::string itemPath = indexPath(copiesPath, i);
+        if (auto valid = requireObject(item, itemPath, {"feature", "instance"}); !valid) {
+            return std::unexpected(valid.error());
+        }
+        auto feature = readId(item, "feature", itemPath);
+        if (!feature) {
+            return std::unexpected(feature.error());
+        }
+        auto instance = readOptionalCount(item, "instance", itemPath);
+        if (!instance) {
+            return std::unexpected(instance.error());
+        }
+        if (!*instance) {
+            return parseError(childPath(itemPath, "instance"), "missing required field");
+        }
+        copies.push_back(FaceCopy{ObjectId::fromValue(*feature), **instance});
+    }
+    return copies;
+}
+
 } // namespace
 
 Json planeReferenceToJson(const PlaneReference& reference) {
@@ -155,6 +211,22 @@ Json planeReferenceToJson(const PlaneReference& reference) {
         face["role"] = std::string{nameIn(kFaceRoles, reference.face->role)};
         if (reference.face->entity) {
             face["entity"] = reference.face->entity->value();
+        }
+        if (reference.face->along) {
+            face["along"] = reference.face->along->value();
+        }
+        if (reference.face->edge) {
+            face["edge"] = *reference.face->edge;
+        }
+        if (!reference.face->copies.empty()) {
+            Json copies = Json::array();
+            for (const FaceCopy& copy : reference.face->copies) {
+                Json item = Json::object();
+                item["feature"] = copy.feature.value();
+                item["instance"] = copy.instance;
+                copies.push_back(std::move(item));
+            }
+            face["copies"] = std::move(copies);
         }
         json["face"] = std::move(face);
     } else {
@@ -180,22 +252,33 @@ Result<PlaneReference> planeReferenceFromJson(const Json& value, std::string_vie
         reference.plane = *plane;
         return reference;
     }
-    // A face of a feature (P12-STREF-001): {"role": ..., "entity": id}.
+    // A face of a feature (P12-STREF-001, P12-SKETCH-003): {"role": ...,
+    // "entity": id, "along": id, "edge": n, "copies": [...]}.
     if (value.contains("plane")) {
         return parseError(childPath(path, "plane"), "a face reference has no plane of its own");
     }
     const std::string facePath = childPath(path, "face");
     const Json& face = value.at("face");
-    if (auto valid = requireObject(face, facePath, {"role", "entity"}); !valid) {
+    if (auto valid = requireObject(face, facePath, {"role", "entity", "along", "edge", "copies"}); !valid) {
         return std::unexpected(valid.error());
     }
     auto role = valueIn(kFaceRoles, face, "role", facePath);
     auto entity = readOptionalId(face, "entity", facePath);
-    if (!role || !entity) {
-        return std::unexpected(!role ? role.error() : entity.error());
+    auto along = readOptionalId(face, "along", facePath);
+    auto edge = readOptionalCount(face, "edge", facePath);
+    auto copies = faceCopiesFromJson(face, facePath);
+    if (const Error* error =
+            firstError({errorOf(role), errorOf(entity), errorOf(along), errorOf(edge), errorOf(copies)})) {
+        return std::unexpected(*error);
     }
-    reference.face = FaceSelector{*role, *entity ? std::optional<EntityId>{EntityId::fromValue(**entity)}
-                                                 : std::nullopt};
+    const auto entityOf = [](const std::optional<std::uint64_t>& id) {
+        return id ? std::optional<EntityId>{EntityId::fromValue(*id)} : std::nullopt;
+    };
+    reference.face = FaceSelector{.role = *role,
+                                  .entity = entityOf(*entity),
+                                  .along = entityOf(*along),
+                                  .edge = *edge,
+                                  .copies = std::move(*copies)};
     if (auto valid = validate(reference); !valid) {
         return parseError(path, valid.error().message);
     }

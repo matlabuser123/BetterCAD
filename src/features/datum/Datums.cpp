@@ -49,6 +49,12 @@ void pushObject(std::vector<ObjectId>& out, const std::optional<ObjectId>& id) {
     }
 }
 
+void pushPlane(std::vector<ObjectId>& out, const PlaneReference& reference) {
+    for (const ObjectId id : referencedObjects(reference)) {
+        out.push_back(id);
+    }
+}
+
 void pushParameter(std::vector<ObjectId>& out, const std::optional<ParameterId>& id) {
     if (id) {
         out.push_back(ObjectId{*id});
@@ -132,7 +138,7 @@ bool DatumPlane::contentEquals(const DocumentObject& other) const {
 
 std::vector<ObjectId> DatumPlane::dependencies() const {
     std::vector<ObjectId> result;
-    pushObject(result, definition_.base.object);
+    pushPlane(result, definition_.base);
     pushParameter(result, definition_.offsetParameter);
     pushObject(result, definition_.axis.object);
     pushParameter(result, definition_.angleParameter);
@@ -207,8 +213,8 @@ bool DatumAxis::contentEquals(const DocumentObject& other) const {
 
 std::vector<ObjectId> DatumAxis::dependencies() const {
     std::vector<ObjectId> result;
-    pushObject(result, definition_.first.object);
-    pushObject(result, definition_.second.object);
+    pushPlane(result, definition_.first);
+    pushPlane(result, definition_.second);
     return result;
 }
 

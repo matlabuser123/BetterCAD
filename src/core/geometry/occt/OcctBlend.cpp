@@ -1,4 +1,5 @@
 #include "core/geometry/occt/OcctBlend.hpp"
+#include "core/geometry/occt/OcctFaceNames.hpp"
 
 #include "core/geometry/occt/OcctBody.hpp"
 
@@ -208,7 +209,8 @@ Result<void> checkRoom(const BlendNames& names, const std::vector<BlendStrip>& s
     return {};
 }
 
-Result<Body> buildBlend(const BlendNames& names, BRepFilletAPI_LocalOperation& maker, std::size_t solids) {
+Result<Body> buildBlend(const BlendNames& names, BRepFilletAPI_LocalOperation& maker, std::size_t solids,
+                        const Body& input, const std::vector<GeneratedName>& generated) {
     // After the room check the kernel should succeed; if it still fails or
     // throws, that is reported, never retried.
     try {
@@ -222,7 +224,18 @@ Result<Body> buildBlend(const BlendNames& names, BRepFilletAPI_LocalOperation& m
         return makeError(ErrorCode::FailedPrecondition,
                          std::format("{}: the kernel cannot build the {} on this geometry", names.noun, names.noun));
     }
-    Body result = BodyAccess::makeBody(maker.Shape());
+    const TopoDS_Shape shape = maker.Shape();
+    std::vector<NamedFace> faceNames = carriedNames(maker, shape, {&input});
+    ShapeMap faces;
+    TopExp::MapShapes(shape, TopAbs_FACE, faces);
+    for (const GeneratedName& entry : generated) {
+        for (const TopoDS_Shape& face : maker.Generated(entry.edge)) {
+            if (face.ShapeType() == TopAbs_FACE && faces.Contains(face)) {
+                faceNames.push_back({TopoDS::Face(face), entry.name});
+            }
+        }
+    }
+    Body result = BodyAccess::makeBody(shape, canonicalNames(shape, std::move(faceNames)));
     if (result.isEmpty() || !result.isValid() || result.topology().solids != solids) {
         return makeError(ErrorCode::Internal, std::format("{}: the kernel produced an invalid solid", names.noun));
     }

@@ -1,6 +1,9 @@
 #include <bettercad/core/document/References.hpp>
 
+#include <algorithm>
 #include <format>
+#include <string>
+#include <utility>
 
 namespace bettercad {
 
@@ -24,21 +27,87 @@ std::string_view toString(FaceRole role) noexcept {
         return "end_cap";
     case FaceRole::Side:
         return "side";
+    case FaceRole::HoleBottom:
+        return "hole_bottom";
+    case FaceRole::CounterboreFloor:
+        return "counterbore_floor";
+    case FaceRole::Chamfer:
+        return "chamfer";
     }
     return "unknown";
 }
 
+namespace {
+
+/// "a start cap", "a hole bottom", ...
+std::string_view roleWithArticle(FaceRole role) noexcept {
+    switch (role) {
+    case FaceRole::StartCap:
+        return "a start cap";
+    case FaceRole::EndCap:
+        return "an end cap";
+    case FaceRole::Side:
+        return "a side face";
+    case FaceRole::HoleBottom:
+        return "a hole bottom";
+    case FaceRole::CounterboreFloor:
+        return "a counterbore floor";
+    case FaceRole::Chamfer:
+        return "a chamfer face";
+    }
+    return "a face";
+}
+
+} // namespace
+
 Result<void> validate(const FaceSelector& selector) {
+    const auto invalid = [](std::string message) { return makeError(ErrorCode::InvalidArgument, std::move(message)); };
     if (selector.role == FaceRole::Side) {
         if (!selector.entity || !selector.entity->isValid()) {
-            return makeError(ErrorCode::InvalidArgument, "a side face is named by a valid profile entity");
+            return invalid("a side face is named by a valid profile entity");
+        }
+        if (selector.along && !selector.along->isValid()) {
+            return invalid("a side face's path edge must be a valid entity");
         }
     } else if (selector.entity) {
-        return makeError(ErrorCode::InvalidArgument,
-                         std::format("{} is not named by an entity",
-                                     selector.role == FaceRole::StartCap ? "a start cap" : "an end cap"));
+        return invalid(std::format("{} is not named by an entity", roleWithArticle(selector.role)));
+    } else if (selector.along) {
+        return invalid(std::format("{} is not named by a path edge", roleWithArticle(selector.role)));
+    }
+    if (selector.role == FaceRole::Chamfer) {
+        if (!selector.edge || *selector.edge == 0) {
+            return invalid("a chamfer face is named by its edge reference, from 1");
+        }
+    } else if (selector.edge) {
+        return invalid(std::format("{} is not named by an edge reference", roleWithArticle(selector.role)));
+    }
+    for (const FaceCopy& copy : selector.copies) {
+        if (!copy.feature.isValid()) {
+            return invalid("a copy must name a valid feature");
+        }
+        if (copy.instance == 0) {
+            return invalid("a copy is an instance from 1 (instance 0 is the original)");
+        }
     }
     return {};
+}
+
+std::vector<ObjectId> referencedObjects(const PlaneReference& reference) {
+    std::vector<ObjectId> objects;
+    const auto push = [&](ObjectId id) {
+        if (std::ranges::find(objects, id) == objects.end()) {
+            objects.push_back(id);
+        }
+    };
+    if (reference.object) {
+        push(*reference.object);
+    }
+    if (reference.face) {
+        for (const FaceCopy& copy : reference.face->copies) {
+            push(copy.feature);
+        }
+    }
+    return objects;
 }
 
 Result<void> validate(const PlaneReference& reference) {

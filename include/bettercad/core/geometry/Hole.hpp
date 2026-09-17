@@ -7,6 +7,8 @@
 #include <bettercad/core/math/Point.hpp>
 #include <bettercad/core/units/Units.hpp>
 
+#include <functional>
+#include <optional>
 #include <string_view>
 
 namespace bettercad::geometry {
@@ -117,5 +119,21 @@ struct HoleRequest {
 /// Errors: InvalidArgument (see validate()), NotFound, FailedPrecondition
 /// (see above), Internal (the kernel failed or produced an invalid result).
 [[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Result<Body> cutHole(const Body& body, const HoleRequest& request);
+
+/// The flat faces a hole makes (P12-SKETCH-003): a blind hole's bottom and a
+/// counterbore's floor.
+enum class HoleFace {
+    Bottom,
+    CounterboreFloor,
+};
+
+/// The name a hole's flat face gets, or none.
+using HoleFaceNamer = std::function<std::optional<FaceName>(HoleFace)>;
+
+/// cutHole() whose result carries the names @p namer gives the hole's flat
+/// faces, and the names of @p body's faces (see findNamedFaces()). A through
+/// hole has no bottom.
+[[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Result<Body> cutHole(const Body& body, const HoleRequest& request,
+                                                            const HoleFaceNamer& namer);
 
 } // namespace bettercad::geometry

@@ -3,7 +3,11 @@
 
 #include <bettercad/core/Units.hpp>
 #include <bettercad/core/geometry/Booleans.hpp>
+#include <bettercad/core/geometry/Chamfer.hpp>
+#include <bettercad/core/geometry/Edges.hpp>
 #include <bettercad/core/geometry/Faces.hpp>
+#include <bettercad/core/geometry/Fillet.hpp>
+#include <bettercad/core/geometry/Hole.hpp>
 #include <bettercad/core/geometry/Primitives.hpp>
 #include <bettercad/core/geometry/Profile.hpp>
 #include <bettercad/core/geometry/Sweeps.hpp>
@@ -15,6 +19,7 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
+#include <cstdint>
 #include <numbers>
 #include <optional>
 #include <vector>
@@ -61,14 +66,14 @@ ProfileLoop polygon(std::initializer_list<std::array<double, 2>> corners) {
 
 /// Names like a feature @p feature would: the caps by role, each side by an
 /// entity numbered 1 + segment + 100 * loop.
-PrismFaceNamer namer(ObjectId feature) {
-    return [feature](const PrismFace& face) -> std::optional<FaceName> {
+SweptFaceNamer namer(ObjectId feature) {
+    return [feature](const SweptFace& face) -> std::optional<FaceName> {
         switch (face.kind) {
-        case PrismFace::Kind::First:
+        case SweptFace::Kind::First:
             return FaceName{feature, {FaceRole::StartCap, std::nullopt}};
-        case PrismFace::Kind::Last:
+        case SweptFace::Kind::Last:
             return FaceName{feature, {FaceRole::EndCap, std::nullopt}};
-        case PrismFace::Kind::Side:
+        case SweptFace::Kind::Side:
             break;
         }
         return FaceName{feature,
@@ -186,15 +191,49 @@ TEST_CASE("FaceNames_PrismNamesItsCapsAndSides", "[core][geometry][names][p12]")
     }
     SECTION("without a namer, and from other operations, bodies carry no names") {
         const PlanarRegion region{.plane = Frame3D::xy(), .outer = polygon({{0, 0}, {10, 0}, {10, 10}}), .holes = {}};
-        for (const Body& body : {require(makePrism(region, 0_mm, 5_mm)), require(makeBox(10_mm, 10_mm, 10_mm)),
-                                 require(translated(box(feature, 0, 0, 0, 10, 10, 10),
-                                                    Translation3D{5_mm, 0_mm, 0_mm}))}) {
+        for (const Body& body : {require(makePrism(region, 0_mm, 5_mm)), require(makeBox(10_mm, 10_mm, 10_mm))}) {
             const auto faces = listFaces(body);
             REQUIRE(faces.has_value());
             for (const FaceInfo& face : *faces) {
                 CHECK(face.names.empty());
             }
         }
+    }
+    // P12-SKETCH-003: a moved copy keeps its faces' names, on the moved faces,
+    // until renameFaces() gives them the copy's names.
+    SECTION("a moved copy keeps the names, where the faces went; renaming changes only the names") {
+        const Body moved = require(translated(box(feature, 0, 0, 0, 10, 10, 10), Translation3D{5_mm, 0_mm, 0_mm}));
+        const auto right = named(moved, side(feature, 2));
+        REQUIRE(right.size() == 1);
+        REQUIRE(right[0].signature.has_value());
+        CHECK_THAT(right[0].signature->point.x.in(units::mm), WithinAbs(15.0, kTolMm));
+        const auto top = named(moved, cap(feature, FaceRole::EndCap));
+        REQUIRE(top.size() == 1);
+        CHECK_THAT(top[0].signature->point.z.in(units::mm), WithinAbs(10.0, kTolMm));
+
+        const ObjectId row = ObjectId::fromValue(20);
+        const Body renamed = renameFaces(moved, [row](const FaceName& name) -> std::optional<FaceName> {
+            if (name.face.role == FaceRole::StartCap) {
+                return std::nullopt; // dropped
+            }
+            FaceName copy = name;
+            copy.face.copies.push_back(FaceCopy{row, 3});
+            return copy;
+        });
+        CHECK(named(renamed, side(feature, 2)).empty());
+        CHECK(named(renamed, cap(feature, FaceRole::StartCap)).empty());
+        FaceName copied = side(feature, 2);
+        copied.face.copies.push_back(FaceCopy{row, 3});
+        const auto after = named(renamed, copied);
+        REQUIRE(after.size() == 1);
+        CHECK(after[0].signature->point.x == right[0].signature->point.x);
+        const auto faces = listFaces(renamed);
+        REQUIRE(faces.has_value());
+        // Only the bottom, whose name was dropped, is unnamed.
+        CHECK(std::ranges::count_if(*faces, [](const FaceInfo& face) { return face.names.empty(); }) == 1);
+        const auto properties = renamed.massProperties();
+        REQUIRE(properties.has_value());
+        CHECK_THAT(properties->volume.in(units::mm3), WithinRel(1000.0, 1e-12));
     }
 }
 
@@ -335,5 +374,278 @@ TEST_CASE("FaceFrame_UsesTheFaceCoordinatesAndTheOutwardNormal", "[core][geometr
     }
     SECTION("only planes have frames") {
         CHECK(errorCode(faceFrame(FaceSignature{.surface = FaceSurface::Cylinder})) == ErrorCode::InvalidArgument);
+    }
+}
+
+// --- P12-SKETCH-003: revolutions, sweeps, lofts, holes, chamfers, fillets -----------------------
+
+namespace {
+
+/// Names like a sweep would: each side also by its path segment (1, 2, ...).
+SweptFaceNamer pathNamer(ObjectId feature) {
+    return [feature](const SweptFace& face) -> std::optional<FaceName> {
+        if (face.kind != SweptFace::Kind::Side) {
+            return namer(feature)(face);
+        }
+        return FaceName{feature, {.role = FaceRole::Side,
+                                  .entity = EntityId::fromValue(1 + face.segment + 100 * face.loop),
+                                  .along = EntityId::fromValue(1 + face.pathSegment)}};
+    };
+}
+
+FaceName along(ObjectId feature, std::uint64_t entity, std::uint64_t pathSegment) {
+    return {feature, {.role = FaceRole::Side,
+                      .entity = EntityId::fromValue(entity),
+                      .along = EntityId::fromValue(pathSegment)}};
+}
+
+std::size_t unnamedCount(const Body& body) {
+    const auto faces = listFaces(body);
+    REQUIRE(faces.has_value());
+    return static_cast<std::size_t>(
+        std::ranges::count_if(*faces, [](const FaceInfo& face) { return face.names.empty(); }));
+}
+
+void checkEveryFaceNamedOnce(const Body& body, std::size_t faceCount) {
+    const auto faces = listFaces(body);
+    REQUIRE(faces.has_value());
+    CHECK(faces->size() == faceCount);
+    for (const FaceInfo& face : *faces) {
+        CHECK(face.names.size() == 1);
+    }
+}
+
+} // namespace
+
+TEST_CASE("FaceNames_RevolutionsNameTheirCapsAndSides", "[core][geometry][names][p12]") {
+    const ObjectId feature = ObjectId::fromValue(3);
+    const Axis3D yAxis{Point3D{}, Direction3D::unitY()};
+    const double s = std::numbers::sqrt2 / 2.0;
+    SECTION("a quarter turn, symmetric about the profile plane") {
+        // x 20..40, y 0..10: bottom (1), outer (2), top (3), inner (4).
+        const PlanarRegion region{.plane = Frame3D::xy(), .outer = polygon({{20, 0}, {40, 0}, {40, 10}, {20, 10}}),
+                                  .holes = {}};
+        const Body body = require(makeRevolution(region, yAxis, -45_deg, 45_deg, namer(feature)));
+        checkEveryFaceNamedOnce(body, 6);
+        // About +Y, angle a points along (cos a, 0, -sin a); the start (a =
+        // -45) faces back along the turn, the end (a = 45) forward.
+        const auto start = named(body, cap(feature, FaceRole::StartCap));
+        REQUIRE(start.size() == 1);
+        checkPlane(start[0], {0, 0, 0}, {-s, 0, s});
+        CHECK_THAT(areaMm2(start[0]), WithinRel(200.0, 1e-12));
+        const auto end = named(body, cap(feature, FaceRole::EndCap));
+        REQUIRE(end.size() == 1);
+        checkPlane(end[0], {0, 0, 0}, {-s, 0, -s});
+        const auto bottom = named(body, side(feature, 1));
+        REQUIRE(bottom.size() == 1);
+        checkPlane(bottom[0], {0, 0, 0}, {0, -1, 0});
+        const auto top = named(body, side(feature, 3));
+        REQUIRE(top.size() == 1);
+        checkPlane(top[0], {0, 10, 0}, {0, 1, 0});
+        CHECK_THAT(areaMm2(top[0]), WithinRel(pi / 4.0 * (1600.0 - 400.0), 1e-12));
+        for (const std::uint64_t curved : {2U, 4U}) {
+            const auto wall = named(body, side(feature, curved));
+            REQUIRE(wall.size() == 1);
+            CHECK(wall[0].surface == FaceSurface::Cylinder);
+        }
+    }
+    SECTION("a full turn has no caps, and a segment on the axis sweeps no face") {
+        // x 0..30, y 0..10: the inner segment (4) lies on the axis.
+        const PlanarRegion region{.plane = Frame3D::xy(), .outer = polygon({{0, 0}, {30, 0}, {30, 10}, {0, 10}}),
+                                  .holes = {}};
+        const Body body = require(makeRevolution(region, yAxis, 0_deg, 360_deg, namer(feature)));
+        checkEveryFaceNamedOnce(body, 3);
+        CHECK(named(body, cap(feature, FaceRole::StartCap)).empty());
+        CHECK(named(body, cap(feature, FaceRole::EndCap)).empty());
+        CHECK(named(body, side(feature, 4)).empty());
+        const auto bottom = named(body, side(feature, 1));
+        REQUIRE(bottom.size() == 1);
+        checkPlane(bottom[0], {0, 0, 0}, {0, -1, 0});
+        CHECK_THAT(areaMm2(bottom[0]), WithinRel(900.0 * pi, 1e-12));
+        const auto wall = named(body, side(feature, 2));
+        REQUIRE(wall.size() == 1);
+        CHECK_THAT(areaMm2(wall[0]), WithinRel(2.0 * pi * 30.0 * 10.0, 1e-12));
+    }
+}
+
+TEST_CASE("FaceNames_SweepsNameTheirSidesAlongEachPathSegment", "[core][geometry][names][p12]") {
+    const ObjectId feature = ObjectId::fromValue(4);
+    // A square x, y in -5..5 (sides y = -5 (1), x = 5 (2), y = 5 (3),
+    // x = -5 (4)) swept up Z by 20 (path segment 1), round a quarter bend of
+    // radius 30 towards -X (2) and 30 along -X (3). The bend turns the
+    // profile X axis to +Z; its Y axis stays.
+    const PlanarRegion region{.plane = Frame3D::xy(), .outer = polygon({{-5, -5}, {5, -5}, {5, 5}, {-5, 5}}),
+                              .holes = {}};
+    const PlanarPath path{.plane = Frame3D::xz(),
+                          .segments = {LineSegment2D{mm(0, 0), mm(0, 20)},
+                                       ArcSegment2D{mm(-30, 20), mm(0, 20), mm(-30, 50), true},
+                                       LineSegment2D{mm(-30, 50), mm(-60, 50)}}};
+    const Body body = require(makeSweep(region, path, pathNamer(feature)));
+    checkEveryFaceNamedOnce(body, 2 + 4 * 3);
+    const auto start = named(body, cap(feature, FaceRole::StartCap));
+    REQUIRE(start.size() == 1);
+    checkPlane(start[0], {0, 0, 0}, {0, 0, -1});
+    const auto end = named(body, cap(feature, FaceRole::EndCap));
+    REQUIRE(end.size() == 1);
+    checkPlane(end[0], {-60, 0, 0}, {-1, 0, 0});
+
+    const auto plane = [&](std::uint64_t entity, std::uint64_t segment) {
+        const auto faces = named(body, along(feature, entity, segment));
+        REQUIRE(faces.size() == 1);
+        return faces[0];
+    };
+    checkPlane(plane(2, 1), {5, 0, 0}, {1, 0, 0});
+    CHECK(plane(2, 2).surface == FaceSurface::Cylinder);
+    checkPlane(plane(2, 3), {0, 0, 55}, {0, 0, 1});
+    checkPlane(plane(4, 1), {-5, 0, 0}, {-1, 0, 0});
+    CHECK(plane(4, 2).surface == FaceSurface::Cylinder);
+    checkPlane(plane(4, 3), {0, 0, 45}, {0, 0, -1});
+    for (std::uint64_t segment = 1; segment <= 3; ++segment) {
+        checkPlane(plane(1, segment), {0, -5, 0}, {0, -1, 0});
+        checkPlane(plane(3, segment), {0, 5, 0}, {0, 1, 0});
+    }
+    CHECK_THAT(areaMm2(plane(1, 1)), WithinRel(200.0, 1e-12));
+    CHECK_THAT(areaMm2(plane(1, 2)), WithinRel(pi / 4.0 * (35.0 * 35.0 - 25.0 * 25.0), 1e-12));
+    CHECK_THAT(areaMm2(plane(1, 3)), WithinRel(300.0, 1e-12));
+    // A side is named by its entity and its path segment together.
+    CHECK(named(body, side(feature, 2)).empty());
+
+    SECTION("a profile given clockwise: the names follow its segments as given") {
+        // x = -5 (1), y = 5 (2), x = 5 (3), y = -5 (4); the adapter reverses
+        // the loop for the kernel.
+        const PlanarRegion clockwise{.plane = Frame3D::xy(),
+                                     .outer = polygon({{-5, -5}, {-5, 5}, {5, 5}, {5, -5}}),
+                                     .holes = {}};
+        const Body turned = require(makeSweep(clockwise, path, pathNamer(feature)));
+        checkEveryFaceNamedOnce(turned, 2 + 4 * 3);
+        const auto face = [&](std::uint64_t entity, std::uint64_t segment) {
+            const auto faces = named(turned, along(feature, entity, segment));
+            REQUIRE(faces.size() == 1);
+            return faces[0];
+        };
+        checkPlane(face(1, 1), {-5, 0, 0}, {-1, 0, 0});
+        checkPlane(face(3, 1), {5, 0, 0}, {1, 0, 0});
+        checkPlane(face(3, 3), {0, 0, 55}, {0, 0, 1});
+        checkPlane(face(1, 3), {0, 0, 45}, {0, 0, -1});
+        checkPlane(face(4, 2), {0, -5, 0}, {0, -1, 0});
+        checkPlane(face(2, 2), {0, 5, 0}, {0, 1, 0});
+    }
+    SECTION("a closed path has no caps") {
+        const PlanarRegion ring{.plane = Frame3D::xz(), .outer = polygon({{25, -5}, {35, -5}, {35, 5}, {25, 5}}),
+                                .holes = {}};
+        const PlanarPath circle{.plane = Frame3D::xy(), .segments = {CircleSegment2D{mm(0, 0), 30_mm, true}}};
+        const Body torus = require(makeSweep(ring, circle, pathNamer(feature)));
+        CHECK(named(torus, cap(feature, FaceRole::StartCap)).empty());
+        CHECK(named(torus, cap(feature, FaceRole::EndCap)).empty());
+        CHECK(unnamedCount(torus) == 0);
+    }
+}
+
+TEST_CASE("FaceNames_LoftsNameTheirEndsOnly", "[core][geometry][names][p12]") {
+    const ObjectId feature = ObjectId::fromValue(5);
+    const std::vector<PlanarRegion> sections{
+        {.plane = Frame3D::xy(), .outer = polygon({{-20, -20}, {20, -20}, {20, 20}, {-20, 20}}), .holes = {}},
+        {.plane = Frame3D::create(Point3D{0_mm, 0_mm, 30_mm}, Direction3D::unitZ(), Direction3D::unitX()).value(),
+         .outer = polygon({{-10, -10}, {10, -10}, {10, 10}, {-10, 10}}),
+         .holes = {}}};
+    const Body body = require(makeLoft(sections, namer(feature)));
+    const auto start = named(body, cap(feature, FaceRole::StartCap));
+    REQUIRE(start.size() == 1);
+    checkPlane(start[0], {0, 0, 0}, {0, 0, -1});
+    CHECK_THAT(areaMm2(start[0]), WithinRel(1600.0, 1e-12));
+    const auto end = named(body, cap(feature, FaceRole::EndCap));
+    REQUIRE(end.size() == 1);
+    checkPlane(end[0], {0, 0, 30}, {0, 0, 1});
+    CHECK_THAT(areaMm2(end[0]), WithinRel(400.0, 1e-12));
+    // The four ruled sides are not named.
+    CHECK(unnamedCount(body) == 4);
+}
+
+TEST_CASE("FaceNames_HolesAndChamfersNameTheirFacesAndKeepTheirInputs", "[core][geometry][names][p12]") {
+    const ObjectId block = ObjectId::fromValue(1);
+    const ObjectId cutter = ObjectId::fromValue(2);
+    const Body base = box(block, 0, 0, 0, 60, 40, 30);
+    const FaceSignature top = planeSignature(Point3D{0_mm, 0_mm, 30_mm}, Direction3D::unitZ());
+    const HoleFaceNamer holeNamer = [cutter](HoleFace face) -> std::optional<FaceName> {
+        return FaceName{cutter, {.role = face == HoleFace::Bottom ? FaceRole::HoleBottom
+                                                                  : FaceRole::CounterboreFloor}};
+    };
+    const auto holeFace = [&](const Body& body, FaceRole role) {
+        return named(body, FaceName{cutter, {.role = role}});
+    };
+
+    SECTION("a blind counterbore: its bottom and its floor") {
+        const Body body = require(cutHole(base,
+                                          {.face = top,
+                                           .center = mm(15, 20),
+                                           .type = HoleType::Counterbore,
+                                           .extent = HoleExtent::Blind,
+                                           .diameter = 8_mm,
+                                           .depth = 20_mm,
+                                           .counterboreDiameter = 16_mm,
+                                           .counterboreDepth = 5_mm},
+                                          holeNamer));
+        const auto bottom = holeFace(body, FaceRole::HoleBottom);
+        REQUIRE(bottom.size() == 1);
+        checkPlane(bottom[0], {0, 0, 10}, {0, 0, 1});
+        CHECK_THAT(areaMm2(bottom[0]), WithinRel(16.0 * pi, 1e-12));
+        const auto floor = holeFace(body, FaceRole::CounterboreFloor);
+        REQUIRE(floor.size() == 1);
+        checkPlane(floor[0], {0, 0, 25}, {0, 0, 1});
+        CHECK_THAT(areaMm2(floor[0]), WithinRel(48.0 * pi, 1e-12));
+        // The block top keeps its name, less the counterbore mouth.
+        const auto blockTop = named(body, cap(block, FaceRole::EndCap));
+        REQUIRE(blockTop.size() == 1);
+        CHECK_THAT(areaMm2(blockTop[0]), WithinRel(2400.0 - 64.0 * pi, 1e-12));
+        // The two walls are not named.
+        CHECK(unnamedCount(body) == 2);
+    }
+    SECTION("a simple through hole names nothing of its own") {
+        const Body body = require(cutHole(base, {.face = top, .center = mm(15, 20), .diameter = 8_mm}, holeNamer));
+        CHECK(holeFace(body, FaceRole::HoleBottom).empty());
+        CHECK(holeFace(body, FaceRole::CounterboreFloor).empty());
+        CHECK(named(body, cap(block, FaceRole::StartCap)).size() == 1);
+        CHECK(unnamedCount(body) == 1);
+    }
+    SECTION("a chamfer names the face each edge reference cuts") {
+        const double s = std::numbers::sqrt2 / 2.0;
+        const ChamferFaceNamer chamferNamer = [cutter](std::size_t reference) -> std::optional<FaceName> {
+            return FaceName{cutter, {.role = FaceRole::Chamfer, .edge = static_cast<std::uint32_t>(reference + 1)}};
+        };
+        const Body body = require(chamferEdges(base,
+                                               {.edges = {lineSignature(Point3D{0_mm, 0_mm, 30_mm},
+                                                                        Direction3D::unitX()),
+                                                          lineSignature(Point3D{0_mm, 40_mm, 30_mm},
+                                                                        Direction3D::unitX())},
+                                                .distance = 4_mm},
+                                               chamferNamer));
+        const auto face = [&](std::uint32_t reference) {
+            const auto faces = named(body, FaceName{cutter, {.role = FaceRole::Chamfer, .edge = reference}});
+            REQUIRE(faces.size() == 1);
+            return faces[0];
+        };
+        checkPlane(face(1), {0, 0, 26}, {0, -s, s});
+        checkPlane(face(2), {0, 40, 26}, {0, s, s});
+        CHECK_THAT(areaMm2(face(1)), WithinRel(60.0 * 4.0 * std::numbers::sqrt2, 1e-12));
+        // The block faces keep their names, trimmed: the top loses 4 mm on
+        // each side, the front 4 mm at the top.
+        const auto blockTop = named(body, cap(block, FaceRole::EndCap));
+        REQUIRE(blockTop.size() == 1);
+        CHECK_THAT(areaMm2(blockTop[0]), WithinRel(60.0 * 32.0, 1e-12));
+        const auto front = named(body, side(block, 1));
+        REQUIRE(front.size() == 1);
+        CHECK_THAT(areaMm2(front[0]), WithinRel(60.0 * 26.0, 1e-12));
+        checkEveryFaceNamedOnce(body, 8);
+    }
+    SECTION("a fillet keeps the names of its input and names nothing of its own") {
+        const Body body = require(
+            filletEdges(base, {.edges = {lineSignature(Point3D{}, Direction3D::unitX())}, .radius = 2_mm}));
+        const auto bottom = named(body, cap(block, FaceRole::StartCap));
+        REQUIRE(bottom.size() == 1);
+        CHECK_THAT(areaMm2(bottom[0]), WithinRel(60.0 * 38.0, 1e-12));
+        const auto front = named(body, side(block, 1));
+        REQUIRE(front.size() == 1);
+        CHECK_THAT(areaMm2(front[0]), WithinRel(60.0 * 28.0, 1e-12));
+        CHECK(unnamedCount(body) == 1);
     }
 }

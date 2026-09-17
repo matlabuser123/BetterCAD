@@ -45,9 +45,11 @@ struct PlanarPath {
 [[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Result<Body> makePrism(const PlanarRegion& region,
                                                               Length from, Length to);
 
-/// Where a face of a prism comes from: the region at `from` (First) or at
-/// `to` (Last), or the side swept by one segment of one loop.
-struct PrismFace {
+/// Where a face of a swept solid comes from: the region where the sweep
+/// starts (First: a prism's `from`, a revolution's `from` angle, the start
+/// of a sweep's path, a loft's first section) or ends (Last), or the side
+/// one segment of one loop sweeps.
+struct SweptFace {
     enum class Kind {
         First,
         Last,
@@ -58,18 +60,21 @@ struct PrismFace {
     /// segment's index in it, as given in the region.
     std::size_t loop = 0;
     std::size_t segment = 0;
+    /// Side of a sweep: the path segment it runs along, as given in the path.
+    std::size_t pathSegment = 0;
 
-    friend bool operator==(const PrismFace&, const PrismFace&) = default;
+    friend bool operator==(const SweptFace&, const SweptFace&) = default;
 };
 
-/// The name a prism's face gets (P12-STREF-001), or none.
-using PrismFaceNamer = std::function<std::optional<FaceName>(const PrismFace&)>;
+/// The name a face of a swept solid gets (P12-STREF-001, P12-SKETCH-003),
+/// or none.
+using SweptFaceNamer = std::function<std::optional<FaceName>(const SweptFace&)>;
 
 /// makePrism() whose result carries the names @p namer gives its faces (see
 /// findNamedFaces()). Each segment sweeps one side face; @p namer is asked
 /// once per face.
 [[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Result<Body> makePrism(const PlanarRegion& region, Length from,
-                                                              Length to, const PrismFaceNamer& namer);
+                                                              Length to, const SweptFaceNamer& namer);
 
 /// Solid swept by rotating @p region about @p axis from angle @p from to
 /// angle @p to, right-handed about the axis direction, with
@@ -85,6 +90,13 @@ using PrismFaceNamer = std::function<std::optional<FaceName>(const PrismFace&)>;
 /// Internal if the kernel cannot build a valid solid.
 [[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Result<Body> makeRevolution(const PlanarRegion& region,
                                                                    const Axis3D& axis, Angle from, Angle to);
+
+/// makeRevolution() whose result carries the names @p namer gives its faces:
+/// the region at `from` and at `to` (a full turn has no such faces) and the
+/// side each segment sweeps (a segment on the axis sweeps none).
+[[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Result<Body> makeRevolution(const PlanarRegion& region,
+                                                                   const Axis3D& axis, Angle from, Angle to,
+                                                                   const SweptFaceNamer& namer);
 
 /// Solid swept by moving @p region along @p path.
 ///
@@ -119,6 +131,14 @@ using PrismFaceNamer = std::function<std::optional<FaceName>(const PrismFace&)>;
 /// 1e-9 relative. Kernel failures are Internal.
 [[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Result<Body> makeSweep(const PlanarRegion& region, const PlanarPath& path);
 
+/// makeSweep() whose result carries the names @p namer gives its faces: the
+/// outer loop at the start and at the end of an open path, and the side each
+/// segment sweeps along each path segment. The kernel lists the faces a
+/// profile edge sweeps in path order; a side is named only when it lists
+/// one face per path segment.
+[[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Result<Body> makeSweep(const PlanarRegion& region, const PlanarPath& path,
+                                                              const SweptFaceNamer& namer);
+
 /// Solid through @p sections, in the order given: a ruled loft, in which
 /// straight lines join matching points of consecutive sections.
 ///
@@ -151,5 +171,11 @@ using PrismFaceNamer = std::function<std::optional<FaceName>(const PrismFace&)>;
 /// the area of the section halfway) to 1e-8 relative. Kernel failures are
 /// Internal.
 [[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Result<Body> makeLoft(std::span<const PlanarRegion> sections);
+
+/// makeLoft() whose result carries the names @p namer gives its end faces
+/// (the first section, First, and the last, Last). Its ruled sides are
+/// B-spline surfaces and are not named.
+[[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Result<Body> makeLoft(std::span<const PlanarRegion> sections,
+                                                             const SweptFaceNamer& namer);
 
 } // namespace bettercad::geometry

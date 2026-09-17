@@ -5,6 +5,7 @@
 #include <bettercad/features/Regeneration.hpp>
 
 #include <format>
+#include <utility>
 #include <variant>
 
 namespace bettercad::features {
@@ -77,22 +78,28 @@ Result<geometry::Body> revolveTool(const RevolveFeature& feature, const Document
     if (!axis) {
         return prefixed(axis.error());
     }
-    auto regions = detail::profileRegions(**profile, feature.name());
+    auto regions = detail::labelledProfileRegions(**profile, feature.name());
     if (!regions) {
         return std::unexpected(regions.error());
     }
 
     Angle from{};
     Angle to = *angle;
+    // The start cap lies on the sketch plane (behind it for a symmetric
+    // revolve), the end cap at the angle.
+    FaceRole first = FaceRole::StartCap;
+    FaceRole last = FaceRole::EndCap;
     if (definition.direction == RevolveDirection::Negative) {
         from = -*angle;
         to = Angle{};
+        std::swap(first, last);
     } else if (definition.direction == RevolveDirection::Symmetric) {
         from = -*angle / 2.0;
         to = *angle / 2.0;
     }
-    auto solid = detail::uniteRegionSolids(*regions, [&](const geometry::PlanarRegion& region) {
-        return geometry::makeRevolution(region, *axis, from, to);
+    auto solid = detail::uniteRegionSolids(*regions, [&](const LabelledRegion& region) {
+        return geometry::makeRevolution(region.region, *axis, from, to,
+                                        detail::sweptFaceNamer(feature.id(), region, first, last));
     });
     if (!solid) {
         return prefixed(solid.error());

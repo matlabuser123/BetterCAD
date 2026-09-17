@@ -55,26 +55,9 @@ Result<geometry::Body> extrudeTool(const ExtrudeFeature& feature, const Document
         from = -*depth / 2.0;
         to = *depth / 2.0;
     }
-    const ObjectId self = feature.id();
     return detail::uniteRegionSolids(*regions, [&](const LabelledRegion& region) {
-        const auto namer = [&](const geometry::PrismFace& face) -> std::optional<FaceName> {
-            switch (face.kind) {
-            case geometry::PrismFace::Kind::First:
-                return FaceName{self, {first, std::nullopt}};
-            case geometry::PrismFace::Kind::Last:
-                return FaceName{self, {last, std::nullopt}};
-            case geometry::PrismFace::Kind::Side:
-                break;
-            }
-            const std::vector<EntityId>* entities =
-                face.loop == 0 ? &region.outer
-                               : (face.loop <= region.holes.size() ? &region.holes[face.loop - 1] : nullptr);
-            if (entities == nullptr || face.segment >= entities->size()) {
-                return std::nullopt;
-            }
-            return FaceName{self, {FaceRole::Side, (*entities)[face.segment]}};
-        };
-        return geometry::makePrism(region.region, from, to, namer);
+        return geometry::makePrism(region.region, from, to,
+                                   detail::sweptFaceNamer(feature.id(), region, first, last));
     });
 }
 

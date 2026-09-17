@@ -1,0 +1,88 @@
+Per-test CTest times (CTest's own figures), summed and for the slowest tests. stref001 is the
+P12-STREF-001 qualification, sketch003 this one. All runs used -j 8 on the same machine.
+Produced by: python compare-times.py stref001=../P12-STREF-001/ctest-<preset>.log sketch003=ctest-<preset>.log --top 12
+
+== release
+      stref001: 892 tests,    602.85 s summed
+     sketch003: 919 tests,    630.34 s summed
+
+test                                                                        stref001     sketch003
+unit.ReferenceModel_AllModelsStressRegression                                  21.27         21.63
+unit.LinearPattern_DoesNotAccumulateTransformDrift                             16.19         16.39
+unit.ReferenceModel_MountingBracketRegeneratesDeterministically                15.73         16.09
+unit.ReferenceModel_AllModelsBuildInOneProcess                                 14.31         14.66
+unit.ReferenceModel_FlangeRegeneratesDeterministically                         13.81         14.08
+unit.ReferenceModel_AllModelsRegenerateAfterAChange                            13.10         13.30
+unit.ReferenceModel_PulleyRegeneratesDeterministically                         11.99         12.18
+unit.ReferenceModel_ShaftRegeneratesDeterministically                          10.49         10.63
+unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges             9.31          9.41
+unit.ReferenceModel_SavedModelsMatchTheBuilders                                 8.18          8.81
+unit.ReferenceModel_BearingHousingRegeneratesDeterministically                  7.17          7.72
+compile_fail.ids.id-to-integer                                                  7.23          6.32
+== debug
+      stref001: 892 tests,    648.37 s summed
+     sketch003: 919 tests,    688.56 s summed
+
+test                                                                        stref001     sketch003
+unit.ReferenceModel_AllModelsStressRegression                                  22.64         23.22
+unit.LinearPattern_DoesNotAccumulateTransformDrift                             18.15         17.76
+unit.ReferenceModel_MountingBracketRegeneratesDeterministically                16.57         17.13
+unit.ReferenceModel_AllModelsBuildInOneProcess                                 14.72         15.38
+unit.ReferenceModel_FlangeRegeneratesDeterministically                         14.12         14.73
+unit.ReferenceModel_AllModelsRegenerateAfterAChange                            13.29         13.97
+unit.ReferenceModel_PulleyRegeneratesDeterministically                         12.16         12.71
+unit.ReferenceModel_ShaftRegeneratesDeterministically                          10.47         11.26
+unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges             9.04          9.99
+unit.ReferenceModel_SavedModelsMatchTheBuilders                                 9.51          9.67
+unit.ReferenceModel_BearingHousingRegeneratesDeterministically                  8.55          8.41
+unit.CircularPattern_TouchingAndOverlappingInstancesFuse                        7.40          7.65
+== debug-shared
+      stref001: 892 tests,    578.54 s summed
+     sketch003: 919 tests,    634.35 s summed
+
+test                                                                        stref001     sketch003
+unit.ReferenceModel_AllModelsStressRegression                                  20.88         21.28
+unit.LinearPattern_DoesNotAccumulateTransformDrift                             16.84         16.36
+unit.ReferenceModel_MountingBracketRegeneratesDeterministically                15.00         15.92
+unit.ReferenceModel_AllModelsBuildInOneProcess                                 13.78         14.39
+unit.ReferenceModel_FlangeRegeneratesDeterministically                         13.06         13.78
+unit.ReferenceModel_AllModelsRegenerateAfterAChange                            12.54         13.15
+unit.ReferenceModel_PulleyRegeneratesDeterministically                         11.42         12.12
+unit.ReferenceModel_ShaftRegeneratesDeterministically                           9.89         10.44
+unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges             8.35          8.40
+unit.ReferenceModel_SavedModelsMatchTheBuilders                                 8.27          8.40
+unit.CircularPattern_TouchingAndOverlappingInstancesFuse                        7.85          6.46
+unit.ReferenceModel_BearingHousingRegeneratesDeterministically                  7.73          7.27
+
+The 27 tests this milestone adds, in the Release run
+(python compare-times.py sketch003=ctest-release.log --match "SketchOnFace_|FaceKindFile_|FaceNames_(Revolutions|Sweeps|Lofts|HolesAnd)|FaceReferenceCli_(InfoDescribesFacesOf|ValidateReportsCopies)|post-row" --top 40):
+     sketch003: 27 tests,     21.06 s summed
+
+test                                                                       sketch003
+unit.SketchOnFace_RegeneratesDeterministically                                  2.81
+unit.FaceKindFile_SaveLoad_ResolvesEveryFaceBitForBit                           2.18
+unit.SketchOnFace_PatternAndMirrorCopiesFollowTheirInstance                     1.41
+unit.SketchOnFace_ValidationReportsRolesAndCopiesTheFeatureDoesNotHave          1.40
+unit.SketchOnFace_RolesAndCopiesAFeatureDoesNotHaveAreRefused                   1.12
+unit.SketchOnFace_LoftCapsFollowTheSectionOffsets                               1.03
+unit.FaceKindFile_ExportedCopiesReadBackFromStep                                1.03
+unit.SketchOnFace_HoleBottomsAndCounterboreFloorsFollowTheirDepths              1.00
+unit.FaceReferenceCli_ValidateReportsCopiesAndRolesAFeatureDoesNotHave          0.97
+unit.SketchOnFace_SweepCapsAndSidesFollowTheirPathEdges                         0.93
+unit.SketchOnFace_CircularCopiesFollowTheCount                                  0.85
+cli.validate.post-row                                                           0.78
+cli.export-step.post-row                                                        0.65
+unit.SketchOnFace_ReferencesToCopiesDependOnTheCopyingFeatures                  0.58
+unit.SketchOnFace_CurvedAndRemovedFacesFailWithoutSubstitution                  0.58
+unit.FaceNames_SweepsNameTheirSidesAlongEachPathSegment                         0.58
+unit.SketchOnFace_RevolveCapsAndSidesFollowTheTurnAndLength                     0.47
+unit.FaceKindFile_ExampleFileMatchesTheBuilder                                  0.38
+unit.SketchOnFace_ChamferFacesFollowTheDistance                                 0.38
+unit.FaceNames_LoftsNameTheirEndsOnly                                           0.31
+unit.SketchOnFace_RevolveStartCapStaysOnTheSketchPlaneInEveryDirection          0.30
+unit.FaceNames_HolesAndChamfersNameTheirFacesAndKeepTheirInputs                 0.28
+unit.FaceReferenceCli_InfoDescribesFacesOfEveryKindAndCopies                    0.28
+cli.info.post-row                                                               0.26
+unit.FaceKindFile_RolesPathEdgesEdgeReferencesAndCopiesAreWrittenAsJson          0.19
+unit.FaceNames_RevolutionsNameTheirCapsAndSides                                 0.19
+unit.FaceKindFile_MalformedRolesAndCopiesAreRejectedWithThePath                 0.12

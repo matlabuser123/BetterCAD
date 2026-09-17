@@ -16,6 +16,8 @@ namespace bettercad::geometry {
 /// its own geometry, each coordinate moved by one addition. Fails with
 /// FailedPrecondition for an empty body, InvalidArgument for a non-finite
 /// translation, and Internal if the kernel fails.
+///
+/// The moved copy carries the body's face names (see findNamedFaces()).
 [[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Result<Body> translated(const Body& body, const Translation3D& translation);
 
 /// @p body moved by @p motion; @p body is not modified. A pure translation

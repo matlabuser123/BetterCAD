@@ -58,6 +58,7 @@ bettercad_add_executable(bettercad_tests
         features/ChamferFeatureTests.cpp
         features/DatumTests.cpp
         features/FaceReferenceTests.cpp
+        features/SketchOnFaceTests.cpp
         features/CircularPatternFeatureTests.cpp
         features/ExpressionRegenerationTests.cpp
         features/ExtrudeTests.cpp
@@ -77,6 +78,7 @@ bettercad_add_executable(bettercad_tests
         io/CircularPatternFileTests.cpp
         io/DatumFileTests.cpp
         io/FaceReferenceFileTests.cpp
+        io/FaceKindFileTests.cpp
         io/DocumentFileTests.cpp
         io/ExampleModelTests.cpp
         io/ExpressionFileTests.cpp
@@ -319,6 +321,20 @@ if(TARGET bettercad_cli)
         COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "export-step|${_faces}|${_out}/face_block.step"
         EXIT_CODE 0 STDOUT_REGEX "^Wrote .*face_block\\.step: STEP AP214 \\(mm\\), 1 body \\(Pocket\\), [0-9]+ bytes$"
         FILE "${_out}/face_block.step" FILE_REGEX "^ISO-10303-21;\nHEADER;")
+    # P12-SKETCH-003: sketches on the copies a pattern and a mirror make.
+    set(_rows "${PROJECT_SOURCE_DIR}/examples/models/post_row.bcad")
+    bettercad_add_process_test(cli.info.post-row
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "info|${_rows}"
+        EXIT_CODE 0
+        STDOUT_REGEX "^Document: PostRow\n.*  object:9   sketch          CopySketch   2 entities, 2 constraints, on the side from entity:6 of Post, copy 2 of Row\n.*  object:11  sketch          ImageSketch  2 entities, 2 constraints, on the side from entity:6 of Post, copy 2 of Row, copy 1 of Flip\n.*  object:13  datum_plane     Gauge        offset from the side from entity:6 of Post, copy 1 of Row by 5 mm\n")
+    bettercad_add_process_test(cli.validate.post-row
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "validate|${_rows}"
+        EXIT_CODE 0
+        STDOUT_REGEX "feature regeneration  ok, 13 objects regenerated\n  geometry              ok, 4 result bodies\nResult bodies \\(4\\):\n  Flip \\(object:8\\): 1 solid, volume 72000\\.000 mm\\^3.*bounds \\(0, 0, 0\\) to \\(200, 30, 30\\) mm\n  CopyBoss \\(object:10\\): 1 solid, volume 113\\.097 mm\\^3.*bounds \\(80, 12, 17\\) to \\(84, 18, 23\\) mm\n  ImageBoss \\(object:12\\): 1 solid, volume 113\\.097 mm\\^3.*bounds \\(116, 12, 17\\) to \\(120, 18, 23\\) mm\n  GaugeBoss \\(object:15\\): 1 solid, volume 37\\.699 mm\\^3.*bounds \\(55, 13, 18\\) to \\(58, 17, 22\\) mm\nResult: valid$")
+    bettercad_add_process_test(cli.export-step.post-row
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "export-step|${_rows}|${_out}/post_row.step"
+        EXIT_CODE 0 STDOUT_REGEX "^Wrote .*post_row\\.step: STEP AP214 \\(mm\\), 4 bodies \\(Flip, CopyBoss, ImageBoss, GaugeBoss\\), [0-9]+ bytes$"
+        FILE "${_out}/post_row.step" FILE_REGEX "^ISO-10303-21;\nHEADER;")
     bettercad_add_process_test(cli.export-stl.reference.pulley
         COMMAND "$<TARGET_FILE:bettercad_cli>"
         ARGS "export-stl|${_reference}/pulley.bcad|${_out}/pulley.stl"

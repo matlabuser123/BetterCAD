@@ -2,7 +2,10 @@
 
 #include <bettercad/core/Error.hpp>
 #include <bettercad/core/document/Document.hpp>
+#include <bettercad/core/document/References.hpp>
 #include <bettercad/core/geometry/Body.hpp>
+#include <bettercad/core/geometry/Chamfer.hpp>
+#include <bettercad/core/geometry/Hole.hpp>
 #include <bettercad/core/geometry/Sweeps.hpp>
 #include <bettercad/core/math/Direction.hpp>
 #include <bettercad/features/ChamferFeature.hpp>
@@ -115,6 +118,12 @@ regenerateLoft(const LoftFeature& feature, const Document& document, const geome
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::ChamferRequest>
 resolveChamferRequest(const ChamferDefinition& definition, const Document& document);
 
+/// Names for the faces chamfer @p chamfer cuts (P12-SKETCH-003): the face
+/// of edge reference i (from 0) is its `chamfer` face with `edge` i + 1,
+/// with @p copies (a pattern's or mirror's instance) appended.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT geometry::ChamferFaceNamer chamferFaceNamer(ObjectId chamfer,
+                                                                                   std::vector<FaceCopy> copies);
+
 /// Computes the body of a chamfer feature: @p target (the target feature's
 /// body) with the referenced edges chamfered. Fails with FailedPrecondition
 /// if there is no target body. Edge references that match no edge, or
@@ -141,6 +150,11 @@ regenerateFillet(const FilletFeature& feature, const Document& document, const g
 /// hole itself.
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::HoleRequest>
 resolveHoleRequest(const HoleDefinition& definition, const Document& document);
+
+/// Names for the flat faces hole @p hole makes (P12-SKETCH-003): its
+/// `hole_bottom` and `counterbore_floor`, with @p copies appended.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT geometry::HoleFaceNamer holeFaceNamer(ObjectId hole,
+                                                                             std::vector<FaceCopy> copies);
 
 /// Computes the body of a hole feature: @p target (the target feature's
 /// body) drilled as defined. Fails with FailedPrecondition if there is no

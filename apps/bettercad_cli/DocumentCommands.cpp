@@ -128,17 +128,38 @@ std::string describePlaneReference(const Document& document, const PlaneReferenc
         return std::format("the model's {}", toString(reference.plane));
     }
     if (reference.face) {
-        // "the end cap of Base", "the side from entity:4 of Base"
-        const std::string owner = nameOrId(document, *reference.object);
-        switch (reference.face->role) {
+        // "the end cap of Base", "the side from entity:4 of Base",
+        // "the bottom of Bore, copy 2 of Row"
+        const FaceSelector& face = *reference.face;
+        std::string text;
+        switch (face.role) {
         case FaceRole::StartCap:
-            return std::format("the start cap of {}", owner);
+            text = "the start cap";
+            break;
         case FaceRole::EndCap:
-            return std::format("the end cap of {}", owner);
+            text = "the end cap";
+            break;
         case FaceRole::Side:
-            return reference.face->entity ? std::format("the side from {} of {}", *reference.face->entity, owner)
-                                          : std::format("a side of {}", owner);
+            text = !face.entity ? std::string{"a side"}
+                   : face.along ? std::format("the side from {} along {}", *face.entity, *face.along)
+                                : std::format("the side from {}", *face.entity);
+            break;
+        case FaceRole::HoleBottom:
+            text = "the bottom";
+            break;
+        case FaceRole::CounterboreFloor:
+            text = "the counterbore floor";
+            break;
+        case FaceRole::Chamfer:
+            text = face.edge ? std::format("the face of edge reference {}", *face.edge)
+                             : std::string{"a chamfer face"};
+            break;
         }
+        text += std::format(" of {}", nameOrId(document, *reference.object));
+        for (const FaceCopy& copy : face.copies) {
+            text += std::format(", copy {} of {}", copy.instance, nameOrId(document, copy.feature));
+        }
+        return text;
     }
     if (document.findObjectAs<features::CoordinateSystem>(*reference.object) != nullptr) {
         return std::format("{}'s {}", nameOrId(document, *reference.object), toString(reference.plane));
@@ -302,8 +323,12 @@ std::string describeObject(const Document& document, const DocumentObject& objec
             text += std::format(" ({} disabled)", disabled);
         }
         std::vector<ObjectId> drivers = sketch->dependencies();
-        if (sketch->attachment() && sketch->attachment()->object) {
-            std::erase(drivers, *sketch->attachment()->object);
+        if (sketch->attachment()) {
+            // The attachment's objects (a face's feature and the features
+            // copying it) place the sketch; they do not drive it.
+            for (const ObjectId placedBy : referencedObjects(*sketch->attachment())) {
+                std::erase(drivers, placedBy);
+            }
         }
         if (!drivers.empty()) {
             text += ", driven by ";

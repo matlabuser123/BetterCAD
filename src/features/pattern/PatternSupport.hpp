@@ -2,6 +2,7 @@
 
 #include <bettercad/core/Error.hpp>
 #include <bettercad/core/Id.hpp>
+#include <bettercad/core/document/References.hpp>
 #include <bettercad/core/document/Document.hpp>
 #include <bettercad/core/geometry/Body.hpp>
 #include <bettercad/core/math/RigidTransform.hpp>
@@ -21,8 +22,10 @@
 // driven count is resolved.
 namespace bettercad::features::detail {
 
-/// Applies the source's operation, moved by a rigid motion, to a body.
-using InstanceOperation = std::function<Result<geometry::Body>(const geometry::Body&, const RigidTransform3D&)>;
+/// Applies the source's operation, moved by a rigid motion, to a body; the
+/// faces it makes are named as copies (P12-SKETCH-003) by the given step.
+using InstanceOperation =
+    std::function<Result<geometry::Body>(const geometry::Body&, const RigidTransform3D&, const FaceCopy&)>;
 
 /// The operation of @p source, resolved once and repeated at each instance:
 /// an extrude or revolve's tool is moved and united (new body, join) or
@@ -34,20 +37,21 @@ using InstanceOperation = std::function<Result<geometry::Body>(const geometry::B
 [[nodiscard]] Result<InstanceOperation> instanceOperation(const DocumentObject& source, const Document& document,
                                                           std::string_view pattern, std::string_view nestingAdvice);
 
-/// One instance to build: where it goes, and how messages name it (e.g.
-/// "instance 5 at (100, 0, 0) mm").
+/// One instance to build: where it goes, how messages name it (e.g.
+/// "instance 5 at (100, 0, 0) mm") and its index (from 1; the source is 0).
 struct PatternPlacement {
     RigidTransform3D motion{};
     std::string label;
+    std::uint32_t instance = 1;
 };
 
 /// The pattern body: @p sourceBody (instance 0) with @p apply repeated at
-/// every placement, in order. The first failure fails the whole pattern,
-/// with the placement's label in front of the reason; no partial result is
-/// ever returned. The result must be a valid body with a finite, positive
-/// volume.
+/// every placement, in order, each instance's faces named as copies by
+/// @p pattern. The first failure fails the whole pattern, with the
+/// placement's label in front of the reason; no partial result is ever
+/// returned. The result must be a valid body with a finite, positive volume.
 [[nodiscard]] Result<geometry::Body> buildPattern(const geometry::Body& sourceBody, const InstanceOperation& apply,
-                                                  const std::vector<PatternPlacement>& placements);
+                                                  const std::vector<PatternPlacement>& placements, ObjectId pattern);
 
 /// A pattern's count: @p literal, or the value of a dimensionless
 /// parameter, which must be a whole number from 1 to kMaxPatternInstances

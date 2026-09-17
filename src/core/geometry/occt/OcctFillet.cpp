@@ -82,7 +82,7 @@ Result<Body> filletEdges(const Body& body, const FilletRequest& request) {
         if (auto fits = occt::checkRoom(kNames, strips, request.edges); !fits) {
             return std::unexpected(fits.error());
         }
-        return occt::buildBlend(kNames, maker, solids);
+        return occt::buildBlend(kNames, maker, solids, body);
     });
 }
 

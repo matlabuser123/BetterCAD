@@ -5,6 +5,7 @@
 #include <bettercad/features/Regeneration.hpp>
 
 #include <format>
+#include <optional>
 #include <string>
 #include <utility>
 
@@ -70,7 +71,19 @@ Result<geometry::Body> loftTool(const LoftFeature& feature, const Document& docu
         return prefixed(sections.error());
     }
     // LoftInterpolation::Ruled is makeLoft's interpolation: the only mode.
-    auto solid = geometry::makeLoft(*sections);
+    const ObjectId self = feature.id();
+    const geometry::SweptFaceNamer namer = [self](const geometry::SweptFace& face) -> std::optional<FaceName> {
+        switch (face.kind) {
+        case geometry::SweptFace::Kind::First:
+            return FaceName{self, FaceSelector{.role = FaceRole::StartCap}};
+        case geometry::SweptFace::Kind::Last:
+            return FaceName{self, FaceSelector{.role = FaceRole::EndCap}};
+        case geometry::SweptFace::Kind::Side:
+            break;
+        }
+        return std::nullopt;
+    };
+    auto solid = geometry::makeLoft(*sections, namer);
     if (!solid) {
         return prefixed(solid.error());
     }

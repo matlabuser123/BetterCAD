@@ -5,8 +5,10 @@
 #include <bettercad/core/Id.hpp>
 
 #include <compare>
+#include <cstdint>
 #include <optional>
 #include <string_view>
+#include <vector>
 
 // References to reference geometry (P12-DATUM-001): the principal planes and
 // axes of the model's coordinate system, datum planes and axes, and the
@@ -49,29 +51,59 @@ enum class FaceRole {
     StartCap,
     /// Where it ends: an extrude's face at its depth.
     EndCap,
-    /// The face swept by one entity of the profile sketch.
+    /// The face swept by one entity of the profile sketch (for a sweep, along
+    /// one edge of its path).
     Side,
+    /// A blind hole's flat bottom (P12-SKETCH-003).
+    HoleBottom,
+    /// A counterbored hole's flat floor around the hole.
+    CounterboreFloor,
+    /// The face a chamfer cuts for one of its edge references.
+    Chamfer,
 };
 
-/// "start_cap", "end_cap", "side".
+/// "start_cap", "end_cap", "side", "hole_bottom", "counterbore_floor",
+/// "chamfer".
 [[nodiscard]] BETTERCAD_CORE_EXPORT std::string_view toString(FaceRole role) noexcept;
 
-/// One of the faces a feature generates: its role and, for a side face, the
-/// profile entity that sweeps it.
+/// One step of a face's copying (P12-SKETCH-003): the pattern or mirror that
+/// made the copy and the instance it belongs to (a pattern's instance index,
+/// 1 for a mirror image; instance 0 is the original, which is not a copy).
+struct FaceCopy {
+    ObjectId feature{};
+    std::uint32_t instance = 0;
+
+    friend constexpr bool operator==(const FaceCopy&, const FaceCopy&) = default;
+    friend constexpr auto operator<=>(const FaceCopy&, const FaceCopy&) = default;
+};
+
+/// One of the faces a feature generates, possibly as copied since:
+/// - `role`, and for a side face the profile `entity` that sweeps it and,
+///   for a sweep, the path edge it sweeps `along`;
+/// - for a chamfer's face, the position of its edge reference in the
+///   chamfer's list (`edge`, from 1);
+/// - the `copies` made of it, in the order they were made (the last copy's
+///   feature holds the face).
 struct FaceSelector {
     FaceRole role = FaceRole::EndCap;
     std::optional<EntityId> entity{};
+    std::optional<EntityId> along{};
+    std::optional<std::uint32_t> edge{};
+    std::vector<FaceCopy> copies{};
 
     friend constexpr bool operator==(const FaceSelector&, const FaceSelector&) = default;
     friend constexpr auto operator<=>(const FaceSelector&, const FaceSelector&) = default;
 };
 
-/// Checks a selector: a side face names a valid entity, a cap none.
-/// InvalidArgument otherwise.
+/// Checks a selector on its own: a side face names a valid entity (and may
+/// name a valid path edge); a chamfer face names an edge reference from 1;
+/// no other role takes an entity, a path edge or an edge reference; every
+/// copy names a valid feature and an instance from 1. InvalidArgument
+/// otherwise.
 [[nodiscard]] BETTERCAD_CORE_EXPORT Result<void> validate(const FaceSelector& selector);
 
 /// The persistent name of a face: the feature that generates it and the
-/// face's role there.
+/// face's role there (with the copies made of it).
 struct FaceName {
     ObjectId feature{};
     FaceSelector face{};
@@ -98,6 +130,10 @@ struct PlaneReference {
 /// otherwise. Whether the objects exist and are of the right kind is
 /// checked when the reference is resolved.
 [[nodiscard]] BETTERCAD_CORE_EXPORT Result<void> validate(const PlaneReference& reference);
+
+/// The objects a plane reference depends on: its object and, for a copied
+/// face, the copying features, in order and without repeats.
+[[nodiscard]] BETTERCAD_CORE_EXPORT std::vector<ObjectId> referencedObjects(const PlaneReference& reference);
 
 /// An axis: without an object, the principal axis `axis` of the model's
 /// coordinate system; with a datum axis, that axis (`axis` must then be Z);

@@ -229,13 +229,17 @@ fillets, are geometric signatures (an edge's supporting line or circle; a
 face's plane and outward side). They never substitute the wrong entity: when
 the geometry moves, resolution fails with `NotFound`.
 
-A minimal stable face-reference layer exists (P12-STREF-001): an extrude names
-the faces it generates by source feature and semantic role (start cap, end
-cap, the side swept by a profile entity), its booleans carry the names
-through the kernel's history, and a sketch or datum placed on such a face is
-resolved by name in the feature's body, with no geometric fallback. The rest
-of semantic topology (edge naming, adjacency signatures, matching and
-recovery) is planned, not built — see [ROADMAP.md](ROADMAP.md).
+A minimal stable face-reference layer exists (P12-STREF-001, P12-SKETCH-003).
+Extrudes, revolves, sweeps, lofts, holes and chamfers name the planar-capable
+faces they generate by source feature and semantic role: start and end cap,
+the side swept by a profile entity (and path edge), a hole's bottom or
+counterbore floor, the face of a chamfer's edge reference. Patterns and
+mirrors name their copies by the copied face, the copying feature and the
+instance. Booleans, blends and transforms carry the names through the
+kernel's history, and a sketch or datum placed on such a face is resolved by
+name in the body of the feature that made or copied it, with no geometric
+fallback. The rest of semantic topology (edge naming, adjacency signatures,
+matching and recovery) is planned, not built — see [ROADMAP.md](ROADMAP.md).
 
 ## Sketching and Constraints
 

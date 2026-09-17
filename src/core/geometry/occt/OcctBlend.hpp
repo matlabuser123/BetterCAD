@@ -79,11 +79,20 @@ using StripWidth = std::function<Result<double>(const KernelEdge& edge, const To
 [[nodiscard]] Result<void> checkRoom(const BlendNames& names, const std::vector<BlendStrip>& strips,
                                      const std::vector<EdgeSignature>& references);
 
+/// A name for the faces the kernel generates from an edge it blends.
+struct GeneratedName {
+    TopoDS_Edge edge;
+    FaceName name;
+};
+
 /// Runs the kernel and validates its result: one valid solid for each of
 /// the @p solids input solids, with finite, positive volume and finite area.
-/// Kernel failures and exceptions become FailedPrecondition, invalid
-/// results Internal.
+/// The result carries the names of @p input's faces through the kernel's
+/// history, and @p generated on the faces generated from each edge. Kernel
+/// failures and exceptions become FailedPrecondition, invalid results
+/// Internal.
 [[nodiscard]] Result<Body> buildBlend(const BlendNames& names, BRepFilletAPI_LocalOperation& maker,
-                                      std::size_t solids);
+                                      std::size_t solids, const Body& input,
+                                      const std::vector<GeneratedName>& generated = {});
 
 } // namespace bettercad::geometry::occt

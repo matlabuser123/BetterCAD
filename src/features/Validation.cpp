@@ -110,7 +110,9 @@ private:
     /// coordinate system; a coordinate system reference, a coordinate system.
     void checkPlaneReference(ObjectId owner, const PlaneReference& reference, std::string_view role) {
         if (reference.face) {
-            if (!reference.object || !document_.contains(*reference.object)) {
+            if (!reference.object || !document_.contains(*reference.object) ||
+                std::ranges::any_of(reference.face->copies,
+                                    [this](const FaceCopy& copy) { return !document_.contains(copy.feature); })) {
                 return; // a missing reference
             }
             if (auto valid = checkFaceName(document_, FaceName{*reference.object, *reference.face}); !valid) {

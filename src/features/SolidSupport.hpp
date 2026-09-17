@@ -4,7 +4,9 @@
 #include <bettercad/core/Id.hpp>
 #include <bettercad/core/document/Document.hpp>
 #include <bettercad/core/geometry/Body.hpp>
+#include <bettercad/core/geometry/Faces.hpp>
 #include <bettercad/core/geometry/Profile.hpp>
+#include <bettercad/core/geometry/Sweeps.hpp>
 #include <bettercad/core/parameters/Parameter.hpp>
 #include <bettercad/features/Profiles.hpp>
 #include <bettercad/sketch/Sketch.hpp>
@@ -40,6 +42,19 @@ namespace bettercad::features::detail {
 /// with @p featureName.
 [[nodiscard]] Result<std::vector<LabelledRegion>> labelledProfileRegions(const sketch::Sketch& sketch,
                                                                          std::string_view featureName);
+
+/// The path edge a sweep's path segment comes from, or none.
+using PathEdgeOf = std::function<std::optional<EntityId>(std::size_t pathSegment)>;
+
+/// Names for the faces @p feature sweeps from @p region (which must outlive
+/// the namer): the region where the sweep starts is @p first, where it ends
+/// @p last, and each segment's side is named by its entity (and, with
+/// @p along, by its path edge).
+[[nodiscard]] geometry::SweptFaceNamer sweptFaceNamer(ObjectId feature, const LabelledRegion& region, FaceRole first,
+                                                      FaceRole last, PathEdgeOf along = {});
+
+/// The copy step @p copy appended to every face name (patterns and mirrors).
+[[nodiscard]] geometry::FaceRenamer appendCopy(const FaceCopy& copy);
 
 /// One solid per region, made by @p build, united into one body (disjoint
 /// regions give a body with several solids). Face names on the solids are

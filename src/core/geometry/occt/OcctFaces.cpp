@@ -1,5 +1,6 @@
 #include "core/geometry/FaceMatching.hpp"
 #include "core/geometry/occt/OcctBody.hpp"
+#include "core/geometry/occt/OcctFaceNames.hpp"
 #include "core/geometry/occt/OcctGuard.hpp"
 #include "core/geometry/occt/OcctTopology.hpp"
 
@@ -128,6 +129,20 @@ Result<std::vector<FaceInfo>> listFaces(const Body& body) {
         }
         return result;
     });
+}
+
+Body renameFaces(const Body& body, const FaceRenamer& rename) {
+    const TopoDS_Shape* shape = occt::BodyAccess::shape(body);
+    if (shape == nullptr) {
+        return body;
+    }
+    std::vector<occt::NamedFace> names;
+    for (const occt::NamedFace& named : occt::BodyAccess::names(body)) {
+        if (auto renamed = rename(named.name)) {
+            names.push_back({named.face, std::move(*renamed)});
+        }
+    }
+    return occt::BodyAccess::makeBody(*shape, occt::canonicalNames(*shape, std::move(names)));
 }
 
 Result<std::vector<FaceInfo>> findNamedFaces(const Body& body, const FaceName& name) {

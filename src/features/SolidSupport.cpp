@@ -1,7 +1,11 @@
 #include "features/SolidSupport.hpp"
 
 #include <bettercad/core/geometry/Booleans.hpp>
+#include <bettercad/core/geometry/Faces.hpp>
 #include <bettercad/features/Profiles.hpp>
+
+#include <optional>
+#include <utility>
 
 namespace bettercad::features::detail {
 
@@ -46,6 +50,44 @@ Result<std::vector<LabelledRegion>> labelledProfileRegions(const sketch::Sketch&
         return makeError(regions.error().code, std::format("{}: {}", featureName, regions.error().message));
     }
     return regions;
+}
+
+geometry::SweptFaceNamer sweptFaceNamer(ObjectId feature, const LabelledRegion& region, FaceRole first,
+                                        FaceRole last, PathEdgeOf along) {
+    return [feature, &region, first, last, along = std::move(along)](
+               const geometry::SweptFace& face) -> std::optional<FaceName> {
+        switch (face.kind) {
+        case geometry::SweptFace::Kind::First:
+            return FaceName{feature, FaceSelector{.role = first}};
+        case geometry::SweptFace::Kind::Last:
+            return FaceName{feature, FaceSelector{.role = last}};
+        case geometry::SweptFace::Kind::Side:
+            break;
+        }
+        const std::vector<EntityId>* entities =
+            face.loop == 0 ? &region.outer
+                           : (face.loop <= region.holes.size() ? &region.holes[face.loop - 1] : nullptr);
+        if (entities == nullptr || face.segment >= entities->size()) {
+            return std::nullopt;
+        }
+        FaceSelector selector{.role = FaceRole::Side, .entity = (*entities)[face.segment]};
+        if (along) {
+            const auto edge = along(face.pathSegment);
+            if (!edge) {
+                return std::nullopt;
+            }
+            selector.along = *edge;
+        }
+        return FaceName{feature, std::move(selector)};
+    };
+}
+
+geometry::FaceRenamer appendCopy(const FaceCopy& copy) {
+    return [copy](const FaceName& name) -> std::optional<FaceName> {
+        FaceName copied = name;
+        copied.face.copies.push_back(copy);
+        return copied;
+    };
 }
 
 namespace {

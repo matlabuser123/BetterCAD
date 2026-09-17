@@ -46,8 +46,9 @@ public:
     [[nodiscard]] std::string_view typeName() const noexcept override { return "sketch"; }
     [[nodiscard]] std::unique_ptr<DocumentObject> clone() const override;
     [[nodiscard]] bool contentEquals(const DocumentObject& other) const override;
-    /// Parameters that drive constraint values and the object the sketch is
-    /// attached to (ascending, unique).
+    /// Parameters that drive constraint values and the objects the sketch's
+    /// attachment refers to: the attached object and, for a copied face, the
+    /// features that copy it (ascending, unique).
     [[nodiscard]] std::vector<ObjectId> dependencies() const override;
 
     /// Copies point positions, circle radii and constraint values (lengths

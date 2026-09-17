@@ -494,7 +494,8 @@ TEST_CASE("FaceReference_FailuresAreStructuredAndBlockDependents", "[features][r
         CHECK(sketchOf(m.doc, m.bossSketch).placement() == placement);
         recovers();
     }
-    SECTION("a feature kind that does not name its faces") {
+    // P12-SKETCH-003: a pattern's faces are named as copies of its source's.
+    SECTION("a pattern, whose faces are copies, named by the face they copy") {
         const ObjectId row = m.doc.addObject(*LinearPatternFeature::create(
                                                  "Row", {.source = FeatureId::fromValue(m.boss.value()),
                                                          .first = {.direction = {0.0, 1.0, 0.0},
@@ -503,8 +504,8 @@ TEST_CASE("FaceReference_FailuresAreStructuredAndBlockDependents", "[features][r
                                  .value();
         const ObjectId onRow = addSketch(m.doc, "OnRow", FaceBlockModel::faceOf(row, FaceRole::EndCap));
         failsWith(onRow, ErrorCode::InvalidArgument,
-                  "OnRow (object:12): Row (object:11) is a linear pattern, whose faces cannot be referenced yet "
-                  "(extrudes name their faces)");
+                  "OnRow (object:12): Row (object:11) is a linear pattern, whose faces are copies: name the face it "
+                  "copies, and the copy");
     }
     SECTION("an entity the profile does not have, a point, construction geometry") {
         REQUIRE(attach(history, m.doc, m.sideSketch,

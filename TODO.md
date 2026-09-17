@@ -13,7 +13,7 @@ authorized — never in advance.
 | | |
 | --- | --- |
 | Current | **`P12` — Parametric CAD Completion** |
-| Next | `P12-SKETCH-003` — Sketches on arbitrary planar faces (resumed on `P12-STREF-001`) |
+| Next | `P12-FEAT-001` — Through-all extrude |
 | Blocked / Manual | None |
 | Last qualified | `P11` Production Part Modeling — **QUALIFIED** |
 | Released | `v0.1.0` (`P0`–`P10`); `P11` qualified, not released |
@@ -53,7 +53,7 @@ Reference models → qualification
 | 3 | `P12-SKETCH-002` Entities: ellipse, spline | `SKETCH-001` | **done** — [evidence](docs/verification/P12-SKETCH-002/README.md) |
 | 4 | `P12-DATUM-001` Datum planes, axes, coordinate systems | `PARAM-001` | **done** — [evidence](docs/verification/P12-DATUM-001/README.md) |
 | 4a | `P12-STREF-001` Stable feature face references (prerequisite, authorized 2026-09-17) | `DATUM-001` | **done** — [evidence](docs/verification/P12-STREF-001/README.md) |
-| 5 | `P12-SKETCH-003` Sketches on arbitrary planar faces | `DATUM-001`, `STREF-001` | **next** — was blocked until `STREF-001`; [record](docs/verification/P12-SKETCH-003/README.md) |
+| 5 | `P12-SKETCH-003` Sketches on arbitrary planar faces | `DATUM-001`, `STREF-001` | **done** — [evidence](docs/verification/P12-SKETCH-003/README.md) |
 | 6 | `P12-FEAT-001` Through-all extrude | — | not started |
 | 7 | `P12-FEAT-002` Split body / combine | — | not started |
 | 8 | `P12-FEAT-003` Shell | `FEAT-002` | not started |
@@ -211,13 +211,32 @@ feature's face instead
 ([record](docs/verification/P12-SKETCH-003/README.md)).
 
 The prerequisite, stable face references, was authorized on 2026-09-17 as
-`P12-STREF-001` and has passed. This milestone resumes on it; its
-deliverables are added here when it starts.
+`P12-STREF-001` and has passed. This milestone extends the face names of
+`P12-STREF-001` from extrudes to every feature that generates planar faces,
+and to the copies patterns and mirrors make.
+
+Deliverables:
+
+- [x] Revolves name their caps (partial turns) and the side each profile entity sweeps
+- [x] Sweeps name their caps (open paths) and the side each profile entity sweeps along each path edge
+- [x] Lofts name their end caps (their sides are not planar)
+- [x] Holes name their flat faces: a blind hole's bottom and a counterbore's floor
+- [x] Chamfers name the face each edge reference cuts
+- [x] Patterns and mirrors name the copies they make (the copied face's name, the copying feature and the instance); transforms, fillets and chamfers carry their inputs' names
+- [x] Sketches and datums attach to any named planar face; references to copies depend on the copying features; failures as in `P12-STREF-001`, plus a role, entity, path edge, edge reference or copy that the feature does not have
+- [x] Validation, CLI description and save/load of the new roles and copies
+- [x] Evidence: [docs/verification/P12-SKETCH-003/](docs/verification/P12-SKETCH-003/README.md) — PASS, 919/919 tests in Debug, Release and Debug-shared, 0 warnings
+
+Acceptance:
+
+- For every kind of planar face each feature generates, a sketch on it follows the face when a driving parameter moves it; the features built on the sketch match analytic volumes, centres and bounds; undo restores them.
+- A sketch on a pattern instance's copy follows that instance when the spacing changes, and fails with NotFound when the count no longer makes it; no other instance is taken.
+- Curved faces are refused as planes; faces the feature's own operation removed fail with NotFound; nothing is substituted.
+- Save → load → regenerate resolves every reference to the same plane, bit for bit; every value the existing tests measure is unchanged; `P0`–`P12-STREF-001` stays green in all three presets.
 
 ## Next
 
-`P12-SKETCH-003` — Sketches on arbitrary planar faces, resumed now that
-`P12-STREF-001` has passed.
+`P12-FEAT-001` — Through-all extrude.
 
 ## Blocked / Manual
 
@@ -326,7 +345,8 @@ Not started. Not authorized. Grouped to match
 
 | Milestone | Commit | Evidence |
 | --- | --- | --- |
-| `P12-STREF-001` Stable feature face references | "BetterCAD: implement P12 stable feature face references" | [P12-STREF-001](docs/verification/P12-STREF-001/README.md) |
+| `P12-SKETCH-003` Sketches on arbitrary planar faces | "BetterCAD: implement P12 sketches on arbitrary planar faces" | [P12-SKETCH-003](docs/verification/P12-SKETCH-003/README.md) |
+| `P12-STREF-001` Stable feature face references | `8dbb722` | [P12-STREF-001](docs/verification/P12-STREF-001/README.md) |
 | `P12-DATUM-001` Datum planes, axes, coordinate systems | `fe20b0f` | [P12-DATUM-001](docs/verification/P12-DATUM-001/README.md) |
 | `P12-SKETCH-002` Sketch entities: ellipse, spline | `070b730` | [P12-SKETCH-002](docs/verification/P12-SKETCH-002/README.md) |
 | `P12-SKETCH-001` Sketch constraints | `efdc1cf` | [P12-SKETCH-001](docs/verification/P12-SKETCH-001/README.md) |
@@ -355,10 +375,18 @@ regression test, so none can change silently. Detail:
   semantically. When a parameter moves the referenced geometry, the feature
   fails with `NotFound` and keeps no body. Nothing is ever substituted.
 - **Face references by name** (sketch attachments, datum planes and axes)
-  follow their faces, but only extrudes name their faces so far, and a name
-  is looked up in its feature's own body: later features do not move or
-  remove it. Mirror planes cannot refer to faces
-  ([P12-STREF-001](docs/verification/P12-STREF-001/README.md)).
+  follow their faces. Extrudes, revolves, sweeps, lofts (end caps), holes
+  (bottoms, counterbore floors) and chamfers name their planar faces, and
+  patterns and mirrors name their copies by instance index. Fillets and
+  loft sides name nothing. A name is looked up in the body of the feature
+  that made or last copied the face: later features do not move or remove
+  it. A copy is named by its index, so a reference to an instance a pattern
+  no longer makes fails. Mirror planes cannot refer to faces
+  ([P12-STREF-001](docs/verification/P12-STREF-001/README.md),
+  [P12-SKETCH-003](docs/verification/P12-SKETCH-003/README.md)).
+- **Undo after a change to a sketch-driving parameter** restores the model
+  to rounding, not bit for bit: the solver re-solves the sketch from its
+  changed shape ([P12-SKETCH-003](docs/verification/P12-SKETCH-003/README.md)).
 - **Parameter expressions** have `+ - * /`, unary signs, parentheses, units
   and parameter names only: no functions, powers or constants. Only
   parameters take expressions; a feature field takes a literal or one

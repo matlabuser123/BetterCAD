@@ -449,20 +449,44 @@ milestones start; see `TODO.md`.
   box's faces (u, v) are model coordinates. `faceFrame()` turns a signature
   into a sketch frame: that origin and u axis, the outward normal, and
   Y = normal x X (so on a face facing -Z, y is -v).
-- **Face names** (P12-STREF-001, `FaceName` in
+- **Face names** (P12-STREF-001, P12-SKETCH-003; `FaceName` in
   `bettercad/core/document/References.hpp`). A name is the feature that
-  generated a face and the face's role: `start_cap`, `end_cap`, or `side`
-  with the profile entity that swept it. Names are persistent engineering
-  intent; kernel faces, their order and their addresses never are.
+  generated a face and the face's role (`FaceSelector`):
+  - `start_cap` and `end_cap`;
+  - `side`, with the profile entity that swept it and, for a sweep, the path
+    edge it runs along (`along`);
+  - `hole_bottom` and `counterbore_floor`;
+  - `chamfer`, with the edge reference (from 1) whose face it is.
+
+  A face a pattern or mirror copies keeps the original's name with the copy
+  step appended (`copies`: the copying feature and the instance, from 1; a
+  mirror's image is instance 1). Names are persistent engineering intent;
+  kernel faces, their order and their addresses never are.
   - A body carries names on its faces (`occt::BodyData::names`, each (face,
     name) once, ordered by the face's position in the shape's face map).
     `listFaces()` shows them; `findNamedFaces()` returns the faces that carry
     a name.
-  - `makePrism()` with a `PrismFaceNamer` names what it generates: the
-    region at `from` and at `to`, and the side each segment of each loop
-    sweeps, identified through the kernel's history (`FirstShape()`,
-    `LastShape()`, `Generated(edge)`). The segment indices are the region's
-    as given, whatever orientation the adapter builds the loops in.
+  - `makePrism()`, `makeRevolution()`, `makeSweep()` and `makeLoft()` with a
+    `SweptFaceNamer` name what they generate (`SweptFace`): the region at
+    the start and at the end, and the side each segment of each loop sweeps,
+    identified through the kernel's history. The segment indices are the
+    region's as given, whatever orientation the adapter builds the loops
+    in (`docs/verification/P12-SKETCH-003/kernel-probe`).
+    - Prisms: `FirstShape()`, `LastShape()`, `Generated(edge)`.
+    - Revolutions: `FirstShape()` and `LastShape()` (a full turn has
+      neither), and the swept shape of each edge (`BRepSweep_Revol::Shape()`;
+      `Generated()` misses the planar faces of a full turn). A segment on
+      the axis sweeps no face.
+    - Sweeps: `FirstShape()` and `LastShape()` for an open path, and one
+      face per path segment for each profile edge, in path order
+      (`BRepOffsetAPI_MakePipeShell::Generated()`); a side is named only
+      when the kernel lists exactly one face per path segment.
+    - Lofts: `FirstShape()` and `LastShape()`; the ruled sides are B-splines
+      and are not named.
+  - `cutHole()` with a `HoleFaceNamer` names a blind hole's flat bottom and a
+    counterbore's floor, the faces its cutter's bottom and step generate;
+    `chamferEdges()` with a `ChamferFaceNamer` names the faces each edge
+    reference's chain cuts (`BRepFilletAPI_MakeChamfer::Generated(edge)`).
   - Boolean operations carry the names of both operands through the
     kernel's history, including the merging of coplanar faces
     (`OcctFaceNames.cpp`). A face the operation deleted loses its names; a
@@ -472,8 +496,11 @@ milestones start; see `TODO.md`.
     carried by geometric similarity
     (`docs/verification/P12-STREF-001/kernel-probe`).
   - Operations built on these booleans (holes, patterns) carry their
-    inputs' names the same way. Transforms, blends, revolutions, sweeps and
-    lofts name nothing and drop their inputs' names.
+    inputs' names the same way; so do chamfers and fillets (from the
+    blend's `Modified()` and `IsDeleted()`) and transforms (the moved copy of
+    each face keeps its names). A fillet names nothing of its own.
+    `renameFaces()` maps a body's names (patterns and mirrors append their
+    copy step with it) and shares the shape.
 - **Hole** (`Hole.hpp`). `cutHole(body, request)` drills a cylindrical hole
   into a planar face, perpendicular to it and always into the material (along
   the reversed outward normal). A `HoleRequest` is:
@@ -623,8 +650,10 @@ milestones start; see `TODO.md`.
   or axis of the model; with a datum plane or axis, that element; with a
   coordinate system, its principal plane or axis. They are core value types,
   so sketches (layer 1) can hold them. A plane reference to a feature with a
-  `FaceSelector` (P12-STREF-001) names one of the faces the feature
-  generates, and resolves to that face's plane.
+  `FaceSelector` (P12-STREF-001, P12-SKETCH-003) names one of the faces the
+  feature generates, or a copy of it, and resolves to that face's plane.
+  `referencedObjects()` lists the objects a reference depends on: the
+  object and the copying features.
 - `DatumPlane`, `DatumAxis` and `CoordinateSystem`
   (`bettercad/features/Datums.hpp`, types `datum_plane`, `datum_axis`,
   `coordinate_system`) are document objects that store only how they are
@@ -649,8 +678,9 @@ milestones start; see `TODO.md`.
 - **Regeneration.** The regenerator checks that each datum object resolves;
   a failure blocks what depends on it. A sketch with an `attachment` gets the
   resolved plane as its placement, set only after the sketch has solved, so a
-  failure changes nothing. Its dependencies include the attached object, so
-  a parameter that moves a datum rebuilds the sketch and the features on it.
+  failure changes nothing. Its dependencies include the attached object (and
+  the features copying an attached face), so a parameter that moves a datum
+  or a face rebuilds the sketch and the features on it.
 - **References in features.** `MirrorPlane::reference` and
   `PatternAxis::reference` replace the plane's origin and normal, or the
   axis' origin and direction, which then keep their defaults. The mirror
@@ -658,32 +688,58 @@ milestones start; see `TODO.md`.
   refer to a face: mirrors are regenerated without the other features'
   bodies.
 
-### Face references (P12-STREF-001)
+### Face references (P12-STREF-001, P12-SKETCH-003)
 
-- `features::FaceReferences.hpp` resolves face names. Extrudes name their
-  faces (`namesFaces()`): the start cap on the sketch plane (behind it for
-  a symmetric extrude), the end cap at the depth, and a side per profile
-  entity (`extractLabelledRegions()` keeps each segment's entity).
-- `checkFaceName()` checks a name against the document alone: the feature
-  exists (NotFound), is a feature of a kind that names faces, the selector
-  is valid, and a side's entity is a non-construction curve of the
-  feature's profile sketch.
-- `resolveFacePlane()` looks for the name in the **feature's own body**,
-  from the `BodyLookup` the regenerator provides. It fails when the feature
-  has no body (FailedPrecondition), when no face carries the name (NotFound:
-  the feature's own boolean removed it), when a named face is not a plane
+- `features::FaceReferences.hpp` resolves face names. Six kinds name their
+  faces (`namesFaces()`), through `detail::sweptFaceNamer()`,
+  `holeFaceNamer()` and `chamferFaceNamer()`:
+  - extrudes and revolves: the start cap on the sketch plane (behind it when
+    symmetric; for a reversed extrude or a negative revolve the caps swap,
+    so the start cap stays on the sketch plane), the end cap at the depth or
+    angle, and a side per profile entity (`extractLabelledRegions()` keeps
+    each segment's entity);
+  - sweeps: the caps, and a side per profile entity and path edge (path
+    segment i is `path.edges[i]`);
+  - lofts: the caps at the first and last sections;
+  - holes: the bottom (blind holes) and the counterbore floor;
+  - chamfers: the face of each edge reference.
+
+  Linear and circular patterns and mirrors copy faces: each instance's tool
+  (an extrude's or revolve's), hole or chamfer, or a body mirror's image, is
+  renamed or named with the copy step (`detail::appendCopy()`).
+- `checkFaceName()` checks a name against the document alone:
+  - the feature exists (NotFound) and is a feature that names its faces; a
+    pattern or mirror is refused with a hint to name the face it copies, a
+    fillet as naming nothing (InvalidArgument);
+  - the selector is valid and the feature generates the role: a revolve's or
+    extrude's side has no path edge, a sweep's side has one, a loft has no
+    sides, a hole bottom needs a blind hole, a counterbore floor a
+    counterbored one (InvalidArgument);
+  - a side's entity is a non-construction curve of the feature's profile
+    sketch, a sweep's path edge an edge of its path, and a chamfer's edge
+    reference one of its references (NotFound);
+  - every copy names an existing (NotFound) pattern or mirror, a mirror only
+    with instance 1 (InvalidArgument).
+- `resolveFacePlane()` looks for the name in the body of the feature that
+  holds it (`holderOf()`): the generating feature's own body, or the body of
+  the last feature in `copies`. The regenerator provides the bodies through
+  a `BodyLookup`. It fails when that feature has no body
+  (FailedPrecondition), when no face carries the name (NotFound: the
+  feature's own operation removed the face, a full turn has no caps, a
+  pattern no longer makes the instance), when a named face is not a plane
   (InvalidArgument), and when the named faces do not lie on one plane
   facing one way (FailedPrecondition). Otherwise the result is the face's
   frame (`faceFrame()`) with the normal pointing out of the material. There
-  is no fallback to faces that lie where the named face used to be.
+  is no fallback to faces that lie where the named face used to be, and no
+  other instance is taken for a missing one.
 - `resolvePlane()` and `resolveAxis()` take the lookup, so sketch
   attachments and datum planes and axes may refer to faces. A reference
   depends on its feature, so a change that moves the face rebuilds what is
   placed on it. A sketch attached to a face of the feature it profiles is a
   dependency cycle.
-- Resolving in the producing feature's body means that later features
-  cannot move or remove the reference: a sketch on an extrude's end cap
-  stays on that plane even if a later cut removes the face.
+- Resolving in the producing (or copying) feature's body means that later
+  features cannot move or remove the reference: a sketch on an extrude's end
+  cap stays on that plane even if a later cut removes the face.
 - `CreateDatumCommand<D>` and `ModifyDatumCommand<D>`
   (`DatumCommands.hpp`) make creation and editing undoable. Validation
   reports references of the wrong kind and driving parameters of the wrong
@@ -948,9 +1004,11 @@ milestones start; see `TODO.md`.
 
   Sketch data holds the placement frame, an optional `attachment`
   (`{"object": id, "plane": "xy"}`, or for a feature's face
-  `{"object": id, "face": {"role": "end_cap"}}` and
-  `{"object": id, "face": {"role": "side", "entity": id}}`), the entities
-  and constraints with
+  `{"object": id, "face": {...}}` with `"role"` (`start_cap`, `end_cap`,
+  `side`, `hole_bottom`, `counterbore_floor`, `chamfer`) and, where the role
+  takes them, `"entity"` and `"along"` (IDs) and `"edge"` (from 1), and for a
+  copy `"copies": [{"feature": id, "instance": n}, ...]` in the order the
+  copies were made), the entities and constraints with
   their own IDs, and the sketch's ID counters. An ellipse stores `center`,
   `x_vertex` and `y_vertex`; a spline, whose type name in files is
   `"bspline"` (the curve it is; `"spline"` stays unknown), stores `poles`,

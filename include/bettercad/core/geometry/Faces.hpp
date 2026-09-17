@@ -11,6 +11,7 @@
 #include <bettercad/core/math/Vector.hpp>
 #include <bettercad/core/units/Units.hpp>
 
+#include <functional>
 #include <optional>
 #include <string>
 #include <string_view>
@@ -136,6 +137,14 @@ struct FaceInfo {
 /// an empty body.
 [[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Result<std::vector<FaceInfo>> findNamedFaces(const Body& body,
                                                                                      const FaceName& name);
+
+/// Maps a face name to the name it becomes, or to none (dropped).
+using FaceRenamer = std::function<std::optional<FaceName>(const FaceName&)>;
+
+/// The body with its face names mapped by @p rename (P12-SKETCH-003:
+/// patterns and mirrors mark their copies). The shape is shared, not
+/// copied: bodies are immutable. An empty body is returned as it is.
+[[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Body renameFaces(const Body& body, const FaceRenamer& rename);
 
 /// A sketch frame on the signature's plane: the origin and X axis of the
 /// face-local coordinates (facePoint()), the outward normal as normal, and

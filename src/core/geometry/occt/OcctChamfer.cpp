@@ -44,6 +44,10 @@ Result<TopoDS_Face> referenceFace(const occt::KernelEdge& edge, const Direction3
 } // namespace
 
 Result<Body> chamferEdges(const Body& body, const ChamferRequest& request) {
+    return chamferEdges(body, request, ChamferFaceNamer{});
+}
+
+Result<Body> chamferEdges(const Body& body, const ChamferRequest& request, const ChamferFaceNamer& namer) {
     const TopoDS_Shape* shape = occt::BodyAccess::shape(body);
     if (shape == nullptr) {
         return makeError(ErrorCode::FailedPrecondition, "chamfer: the body is empty");
@@ -104,7 +108,16 @@ Result<Body> chamferEdges(const Body& body, const ChamferRequest& request) {
         if (auto fits = occt::checkRoom(kNames, strips, request.edges); !fits) {
             return std::unexpected(fits.error());
         }
-        return occt::buildBlend(kNames, maker, solids);
+        // Each strip's edge generates its reference's face.
+        std::vector<occt::GeneratedName> generated;
+        if (namer) {
+            for (const occt::BlendStrip& strip : strips) {
+                if (const auto name = namer(strip.reference)) {
+                    generated.push_back({strip.edge, *name});
+                }
+            }
+        }
+        return occt::buildBlend(kNames, maker, solids, body, generated);
     });
 }
 

@@ -5,6 +5,14 @@
 
 namespace bettercad::features {
 
+geometry::HoleFaceNamer holeFaceNamer(ObjectId hole, std::vector<FaceCopy> copies) {
+    return [hole, copies = std::move(copies)](geometry::HoleFace face) -> std::optional<FaceName> {
+        const FaceRole role =
+            face == geometry::HoleFace::Bottom ? FaceRole::HoleBottom : FaceRole::CounterboreFloor;
+        return FaceName{hole, FaceSelector{.role = role, .copies = copies}};
+    };
+}
+
 Result<geometry::HoleRequest> resolveHoleRequest(const HoleDefinition& definition, const Document& document) {
     geometry::HoleRequest request{
         .face = definition.face,
@@ -48,7 +56,7 @@ Result<geometry::Body> regenerateHole(const HoleFeature& feature, const Document
         if (!request) {
             return std::unexpected(request.error());
         }
-        return geometry::cutHole(body, *request);
+        return geometry::cutHole(body, *request, holeFaceNamer(feature.id(), {}));
     };
     return detail::applyToTargetBody(feature.name(), "hole", target, drill);
 }

@@ -5,6 +5,7 @@
 #include <bettercad/core/geometry/Booleans.hpp>
 #include <bettercad/core/geometry/Chamfer.hpp>
 #include <bettercad/core/geometry/Edges.hpp>
+#include <bettercad/core/geometry/Faces.hpp>
 #include <bettercad/core/geometry/Fillet.hpp>
 #include <bettercad/core/geometry/Hole.hpp>
 #include <bettercad/core/geometry/Transform.hpp>
@@ -36,13 +37,14 @@ Result<InstanceOperation> toolOperation(const Result<geometry::Body>& tool, Feat
                                      kind));
     }
     const bool cut = operation == FeatureOperation::Cut;
-    return InstanceOperation{[body = *tool, cut](const geometry::Body& target,
-                                                 const RigidTransform3D& motion) -> Result<geometry::Body> {
+    return InstanceOperation{[body = *tool, cut](const geometry::Body& target, const RigidTransform3D& motion,
+                                                 const FaceCopy& copy) -> Result<geometry::Body> {
         auto moved = geometry::transformed(body, motion);
         if (!moved) {
             return std::unexpected(moved.error());
         }
-        return cut ? geometry::booleanDifference(target, *moved) : geometry::booleanUnion(target, *moved);
+        const geometry::Body copied = geometry::renameFaces(*moved, appendCopy(copy));
+        return cut ? geometry::booleanDifference(target, copied) : geometry::booleanUnion(target, copied);
     }};
 }
 
@@ -71,8 +73,10 @@ Result<InstanceOperation> instanceOperation(const DocumentObject& source, const 
         if (!request) {
             return std::unexpected(request.error());
         }
-        return InstanceOperation{[request = *request](const geometry::Body& target, const RigidTransform3D& motion) {
-            return geometry::cutHole(target, geometry::transformed(request, motion));
+        return InstanceOperation{[request = *request, id = hole->id()](
+                                     const geometry::Body& target, const RigidTransform3D& motion,
+                                     const FaceCopy& copy) {
+            return geometry::cutHole(target, geometry::transformed(request, motion), holeFaceNamer(id, {copy}));
         }};
     }
     if (const auto* chamfer = dynamic_cast<const ChamferFeature*>(&source)) {
@@ -80,13 +84,15 @@ Result<InstanceOperation> instanceOperation(const DocumentObject& source, const 
         if (!request) {
             return std::unexpected(request.error());
         }
-        return InstanceOperation{[request = *request](const geometry::Body& target, const RigidTransform3D& motion) {
+        return InstanceOperation{[request = *request, id = chamfer->id()](
+                                     const geometry::Body& target, const RigidTransform3D& motion,
+                                     const FaceCopy& copy) {
             geometry::ChamferRequest moved = request;
             moved.edges = movedEdges(request.edges, motion);
             if (moved.referenceSide) {
                 moved.referenceSide = motion.apply(*moved.referenceSide);
             }
-            return geometry::chamferEdges(target, moved);
+            return geometry::chamferEdges(target, moved, chamferFaceNamer(id, {copy}));
         }};
     }
     if (const auto* fillet = dynamic_cast<const FilletFeature*>(&source)) {
@@ -95,7 +101,8 @@ Result<InstanceOperation> instanceOperation(const DocumentObject& source, const 
             return std::unexpected(radius.error());
         }
         return InstanceOperation{[edges = fillet->definition().edges, radius = *radius](
-                                     const geometry::Body& target, const RigidTransform3D& motion) {
+                                     const geometry::Body& target, const RigidTransform3D& motion,
+                                     const FaceCopy& /*copy: a fillet names no faces*/) {
             return geometry::filletEdges(target, {.edges = movedEdges(edges, motion), .radius = radius});
         }};
     }
@@ -109,13 +116,13 @@ Result<InstanceOperation> instanceOperation(const DocumentObject& source, const 
 }
 
 Result<geometry::Body> buildPattern(const geometry::Body& sourceBody, const InstanceOperation& apply,
-                                    const std::vector<PatternPlacement>& placements) {
+                                    const std::vector<PatternPlacement>& placements, ObjectId pattern) {
     // Instance 0 is the source's own result. Every other instance applies the
     // source's operation to the body so far; the first failure fails the
     // whole pattern, which then keeps no body (no partial patterns).
     geometry::Body body = sourceBody;
     for (const PatternPlacement& placement : placements) {
-        auto next = apply(body, placement.motion);
+        auto next = apply(body, placement.motion, FaceCopy{pattern, placement.instance});
         if (!next) {
             return makeError(next.error().code, std::format("{}: {}", placement.label, next.error().message));
         }

@@ -120,6 +120,10 @@ double headDepthMm(const HoleRequest& request) {
 } // namespace
 
 Result<Body> cutHole(const Body& body, const HoleRequest& request) {
+    return cutHole(body, request, HoleFaceNamer{});
+}
+
+Result<Body> cutHole(const Body& body, const HoleRequest& request, const HoleFaceNamer& namer) {
     const TopoDS_Shape* shape = occt::BodyAccess::shape(body);
     if (shape == nullptr) {
         return makeError(ErrorCode::FailedPrecondition, "hole: the body is empty");
@@ -254,7 +258,23 @@ Result<Body> cutHole(const Body& body, const HoleRequest& request) {
             section.outer.segments.emplace_back(LineSegment2D{Point2D{r0 * units::mm, t0 * units::mm},
                                                               Point2D{r1 * units::mm, t1 * units::mm}});
         }
-        auto cutter = makeRevolution(section, Axis3D{centrePoint, inward}, Angle{}, Angle::fromSi(2.0 * std::numbers::pi));
+        // The section's second-to-last segment is the bottom; a counterbore's
+        // third is its floor (see sectionOf()).
+        const std::size_t bottomSegment = points.size() - 2;
+        const SweptFaceNamer cutterNames = [&](const SweptFace& swept) -> std::optional<FaceName> {
+            if (!namer || swept.kind != SweptFace::Kind::Side) {
+                return std::nullopt;
+            }
+            if (swept.segment == bottomSegment && blind) {
+                return namer(HoleFace::Bottom);
+            }
+            if (swept.segment == 2 && request.type == HoleType::Counterbore) {
+                return namer(HoleFace::CounterboreFloor);
+            }
+            return std::nullopt;
+        };
+        auto cutter = makeRevolution(section, Axis3D{centrePoint, inward}, Angle{},
+                                     Angle::fromSi(2.0 * std::numbers::pi), cutterNames);
         if (!cutter) {
             return makeError(cutter.error().code, std::format("hole: {}", cutter.error().message));
         }

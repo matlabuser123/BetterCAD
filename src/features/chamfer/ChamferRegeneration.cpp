@@ -5,6 +5,14 @@
 
 namespace bettercad::features {
 
+geometry::ChamferFaceNamer chamferFaceNamer(ObjectId chamfer, std::vector<FaceCopy> copies) {
+    return [chamfer, copies = std::move(copies)](std::size_t reference) -> std::optional<FaceName> {
+        return FaceName{chamfer, FaceSelector{.role = FaceRole::Chamfer,
+                                              .edge = static_cast<std::uint32_t>(reference + 1),
+                                              .copies = copies}};
+    };
+}
+
 Result<Length> resolveChamferDistance(const ChamferDefinition& definition, const Document& document) {
     if (!definition.distanceParameter) {
         return definition.distance;
@@ -34,7 +42,7 @@ Result<geometry::Body> regenerateChamfer(const ChamferFeature& feature, const Do
         if (!request) {
             return std::unexpected(request.error());
         }
-        return geometry::chamferEdges(body, *request);
+        return geometry::chamferEdges(body, *request, chamferFaceNamer(feature.id(), {}));
     };
     return detail::applyToTargetBody(feature.name(), "chamfer", target, chamfer);
 }

@@ -55,6 +55,9 @@ struct FilletRequest {
 ///   the geometry around an edge.
 ///
 /// Messages name the reference by its position in the request and its curve.
+///
+/// The result carries the names of @p body's faces (see findNamedFaces()).
+/// The fillet faces themselves are not named.
 [[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Result<Body> filletEdges(const Body& body, const FilletRequest& request);
 
 } // namespace bettercad::geometry

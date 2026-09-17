@@ -76,10 +76,11 @@ Result<geometry::Body> regenerateCircularPattern(const CircularPatternFeature& f
             if (instance.index != 0) {
                 placements.push_back({.motion = instance.motion,
                                       .label = std::format("instance {} at {:.6g} deg", instance.index,
-                                                           tidy(instance.angle.in(units::deg)))});
+                                                           tidy(instance.angle.in(units::deg))),
+                                      .instance = static_cast<std::uint32_t>(instance.index)});
             }
         }
-        return detail::buildPattern(sourceBody, *apply, placements);
+        return detail::buildPattern(sourceBody, *apply, placements, feature.id());
     };
     const auto pattern = [&](const geometry::Body& sourceBody) -> Result<geometry::Body> {
         auto body = build(sourceBody);

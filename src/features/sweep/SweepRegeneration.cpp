@@ -5,6 +5,7 @@
 
 #include <algorithm>
 #include <format>
+#include <optional>
 #include <variant>
 
 namespace bettercad::features {
@@ -155,7 +156,7 @@ Result<geometry::Body> sweepTool(const SweepFeature& feature, const Document& do
     if (!profile) {
         return std::unexpected(profile.error());
     }
-    auto regions = detail::profileRegions(**profile, feature.name());
+    auto regions = detail::labelledProfileRegions(**profile, feature.name());
     if (!regions) {
         return std::unexpected(regions.error());
     }
@@ -163,9 +164,17 @@ Result<geometry::Body> sweepTool(const SweepFeature& feature, const Document& do
     if (!path) {
         return prefixed(path.error());
     }
+    // Path segment i is the path's edge i (resolveSweepPath() keeps the order).
+    const std::vector<EntityId>& edges = definition.path.edges;
+    const detail::PathEdgeOf along = [&edges](std::size_t segment) -> std::optional<EntityId> {
+        return segment < edges.size() ? std::optional<EntityId>{edges[segment]} : std::nullopt;
+    };
     // SweepOrientation::FollowPath is makeSweep's frame: the only mode.
-    auto solid = detail::uniteRegionSolids(
-        *regions, [&](const geometry::PlanarRegion& region) { return geometry::makeSweep(region, *path); });
+    auto solid = detail::uniteRegionSolids(*regions, [&](const LabelledRegion& region) {
+        return geometry::makeSweep(region.region, *path,
+                                   detail::sweptFaceNamer(feature.id(), region, FaceRole::StartCap,
+                                                          FaceRole::EndCap, along));
+    });
     if (!solid) {
         return prefixed(solid.error());
     }

@@ -1,0 +1,41 @@
+The two P12-STREF-001 test cases this milestone changed by design, entry by entry: the
+P12-STREF-001 Release build against this milestone's (both from the runs in all-values-comparison.txt;
+line numbers and temporary paths normalized).
+
+- FaceNames_PrismNamesItsCapsAndSides: transforms now carry face names, so the moved box left the
+  section on bodies without names (its checks print no values), and a new section checks the names on
+  a moved copy and renaming.
+- FaceReference_FailuresAreStructuredAndBlockDependents: a linear pattern's faces are copies now; the
+  section is renamed and asserts the new message.
+
+FaceNames_PrismNamesItsCapsAndSides: 130 lines in stref001-release, 141 in sketch003-release
+  --- stref001-release
+  +++ sketch003-release
+  @@ -130 +130,12 @@
+           => 1884.95559215387606855 and 1884.95559215387584118 are within 1e-10% of each other
+  +== FaceNames_PrismNamesItsCapsAndSides / a moved copy keeps the names, where the faces went; renaming changes only the names
+  +FaceNameTests.cpp:<line>  CHECK_THAT( right[0].signature->point.x.in(units::mm), WithinAbs(15.0, kTolMm) )
+  +        => 15.0 is within 0.000000001 of 15.0
+  +FaceNameTests.cpp:<line>  CHECK_THAT( top[0].signature->point.z.in(units::mm), WithinAbs(10.0, kTolMm) )
+  +        => 10.0 is within 0.000000001 of 10.0
+  +FaceNameTests.cpp:<line>  CHECK( after[0].signature->point.x == right[0].signature->point.x )
+  +        => 0.015 m == 0.015 m
+  +FaceNameTests.cpp:<line>  CHECK( std::ranges::count_if(*faces, [](const FaceInfo& face) { return face.names.empty(); }) == 1 )
+  +        => 1 == 1
+  +FaceNameTests.cpp:<line>  CHECK_THAT( properties->volume.in(units::mm3), WithinRel(1000.0, 1e-12) )
+  +        => 1000.00000000000034106 and 1000.0 are within 1e-10% of each other
+
+FaceReference_FailuresAreStructuredAndBlockDependents: 304 lines in stref001-release, 304 in sketch003-release
+  --- stref001-release
+  +++ sketch003-release
+  @@ -116,3 +116,3 @@
+           => -1.0 is within 0.00000000000001 of -1.0 with message: heightMm := 20.0
+  -== FaceReference_FailuresAreStructuredAndBlockDependents / a feature kind that does not name its faces
+  +== FaceReference_FailuresAreStructuredAndBlockDependents / a pattern, whose faces are copies, named by the face they copy
+   FaceReferenceTests.cpp:<line>  CHECK( std::ranges::find(report.failed, item) != report.failed.end() )
+  @@ -122,3 +122,3 @@
+   FaceReferenceTests.cpp:<line>  CHECK( report.errors.at(item).message == message )
+  -        => "OnRow (object:12): Row (object:11) is a linear pattern, whose faces cannot be referenced yet (extrudes name their faces)" == "OnRow (object:12): Row (object:11) is a linear pattern, whose faces cannot be referenced yet (extrudes name their faces)"
+  +        => "OnRow (object:12): Row (object:11) is a linear pattern, whose faces are copies: name the face it copies, and the copy" == "OnRow (object:12): Row (object:11) is a linear pattern, whose faces are copies: name the face it copies, and the copy"
+   == FaceReference_FailuresAreStructuredAndBlockDependents / an entity the profile does not have, a point, construction geometry
+

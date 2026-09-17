@@ -98,10 +98,11 @@ Result<geometry::Body> regenerateLinearPattern(const LinearPatternFeature& featu
             if (instance.index != 0) {
                 placements.push_back({.motion = RigidTransform3D::translation(instance.offset),
                                       .label = std::format("instance {} at {}", instance.index,
-                                                           formatMm(instance.offset))});
+                                                           formatMm(instance.offset)),
+                                      .instance = static_cast<std::uint32_t>(instance.index)});
             }
         }
-        return detail::buildPattern(sourceBody, *apply, placements);
+        return detail::buildPattern(sourceBody, *apply, placements, feature.id());
     };
     const auto pattern = [&](const geometry::Body& sourceBody) -> Result<geometry::Body> {
         auto body = build(sourceBody);

@@ -1,0 +1,136 @@
+Built with GCC 16.1 (MinGW-w64 UCRT), -O2, against OCCT 8.0.1; run 2026-09-17T16:28:11+10:00.
+P12-SKETCH-003 generation history probe (OCCT 8.0.1)
+
+A. revolution by 90 deg
+   result: 6 faces
+      first shape: plane area 200.000 centre (45.000, 10.000, 0.000) (result face 5)
+      last shape: plane area 200.000 centre (0.000, 10.000, -45.000) (result face 6)
+      edge 0 generated: 1 shape(s)
+        [plane area 706.858 centre (28.766, 0.000, -28.766), result face 1]
+      edge 0 Revol().Shape: plane area 706.858 centre (28.766, 0.000, -28.766) (result face 1)
+      edge 1 generated: 1 shape(s)
+        [cylinder area 1570.796 centre (31.831, 10.000, -31.831), result face 2]
+      edge 1 Revol().Shape: cylinder area 1570.796 centre (31.831, 10.000, -31.831) (result face 2)
+      edge 2 generated: 1 shape(s)
+        [plane area 706.858 centre (28.766, 20.000, -28.766), result face 3]
+      edge 2 Revol().Shape: plane area 706.858 centre (28.766, 20.000, -28.766) (result face 3)
+      edge 3 generated: 1 shape(s)
+        [cylinder area 1256.637 centre (25.465, 10.000, -25.465), result face 4]
+      edge 3 Revol().Shape: cylinder area 1256.637 centre (25.465, 10.000, -25.465) (result face 4)
+A. revolution by 360 deg
+   result: 4 faces
+      first shape: plane area 200.000 centre (45.000, 10.000, 0.000) (result face 0)
+      last shape: plane area 200.000 centre (45.000, 10.000, 0.000) (result face 0)
+      edge 0 generated: 0 shape(s)
+      edge 0 Revol().Shape: plane area 2827.433 centre (-0.000, 0.000, 0.000) (result face 1)
+      edge 1 generated: 1 shape(s)
+        [cylinder area 6283.185 centre (-0.000, 10.000, 0.000), result face 2]
+      edge 1 Revol().Shape: cylinder area 6283.185 centre (-0.000, 10.000, 0.000) (result face 2)
+      edge 2 generated: 0 shape(s)
+      edge 2 Revol().Shape: plane area 2827.433 centre (0.000, 20.000, 0.000) (result face 3)
+      edge 3 generated: 1 shape(s)
+        [cylinder area 5026.548 centre (0.000, 10.000, 0.000), result face 4]
+      edge 3 Revol().Shape: cylinder area 5026.548 centre (0.000, 10.000, 0.000) (result face 4)
+
+B. pipe shell along a line, arc, line path: done
+   result: 14 faces
+      first shape: plane area 24.000 centre (-0.000, 0.000, 0.000) (result face 13)
+      last shape: plane area 24.000 centre (90.000, -0.000, 100.000) (result face 14)
+      profile edge 0 generated: 3 shape(s)
+        [plane area 240.000 centre (0.000, -2.000, 20.000), result face 1]
+        [plane area 565.487 centre (21.771, -2.000, 78.229), result face 5]
+        [plane area 180.000 centre (75.000, -2.000, 100.000), result face 9]
+      profile edge 1 generated: 3 shape(s)
+        [plane area 160.000 centre (3.000, 0.000, 20.000), result face 2]
+        [cylinder area 358.142 centre (23.713, 0.000, 76.287), result face 6]
+        [plane area 120.000 centre (75.000, 0.000, 97.000), result face 10]
+      profile edge 2 generated: 3 shape(s)
+        [plane area 240.000 centre (-0.000, 2.000, 20.000), result face 3]
+        [plane area 565.487 centre (21.771, 2.000, 78.229), result face 7]
+        [plane area 180.000 centre (75.000, 2.000, 100.000), result face 11]
+      profile edge 3 generated: 3 shape(s)
+        [plane area 160.000 centre (-3.000, -0.000, 20.000), result face 4]
+        [cylinder area 395.841 centre (19.893, 0.000, 80.107), result face 8]
+        [plane area 120.000 centre (75.000, -0.000, 103.000), result face 12]
+B. pipe shell along a closed (circle) path: done
+   result: 4 faces
+      first shape: not a face (type 5) (result face 0)
+      last shape: not a face (type 5) (result face 0)
+      profile edge 0 generated: 1 shape(s)
+        [revolution area 2261.947 centre (60.000, -2.000, -0.000), result face 1]
+      profile edge 1 generated: 1 shape(s)
+        [cylinder area 1432.566 centre (60.000, 0.000, 0.000), result face 2]
+      profile edge 2 generated: 1 shape(s)
+        [revolution area 2261.947 centre (60.000, 2.000, -0.000), result face 3]
+      profile edge 3 generated: 1 shape(s)
+        [cylinder area 1583.363 centre (60.000, -0.000, 0.000), result face 4]
+
+C. ruled loft: done
+   result: 6 faces
+      first shape: plane area 400.000 centre (0.000, 0.000, 0.000) (result face 5)
+      last shape: plane area 100.000 centre (0.000, 0.000, 30.000) (result face 6)
+      first-section edge 0: generated face bspline area 456.207 centre (-0.000, -7.778, 13.333) (result face 1)
+      first-section edge 1: generated face bspline area 456.207 centre (7.778, -0.000, 13.333) (result face 2)
+      first-section edge 2: generated face bspline area 456.207 centre (0.000, 7.778, 13.333) (result face 3)
+      first-section edge 3: generated face bspline area 456.207 centre (-7.778, 0.000, 13.333) (result face 4)
+
+D. counterbored cutter
+   cutter: 5 faces
+      section edge 0 generated: 0 shape(s)
+      section edge 0 Revol().Shape: plane area 201.062 centre (20.000, 20.000, 21.000) (cutter face 1)
+      section edge 1 generated: 1 shape(s)
+        [cylinder area 301.593 centre (20.000, 20.000, 18.000), result face 2]
+      section edge 1 Revol().Shape: cylinder area 301.593 centre (20.000, 20.000, 18.000) (cutter face 2)
+      section edge 2 generated: 0 shape(s)
+      section edge 2 Revol().Shape: plane area 150.796 centre (20.000, 20.000, 15.000) (cutter face 3)
+      section edge 3 generated: 1 shape(s)
+        [cylinder area 251.327 centre (20.000, 20.000, 10.000), result face 4]
+      section edge 3 Revol().Shape: cylinder area 251.327 centre (20.000, 20.000, 10.000) (cutter face 4)
+      section edge 4 generated: 0 shape(s)
+      section edge 4 Revol().Shape: plane area 50.265 centre (20.000, 20.000, 5.000) (cutter face 5)
+      section edge 5 generated: 0 shape(s)
+      section edge 5 Revol().Shape: null (cutter face 0)
+   drilled block: 10 faces
+      input face 1 (plane area 201.062 centre (20.000, 20.000, 21.000)): deleted 1, itself in result 0, modified into [ ]
+      input face 2 (cylinder area 301.593 centre (20.000, 20.000, 18.000)): deleted 0, itself in result 0, modified into [ 7 ]
+      input face 3 (plane area 150.796 centre (20.000, 20.000, 15.000)): deleted 0, itself in result 1, modified into [ ]
+      input face 4 (cylinder area 251.327 centre (20.000, 20.000, 10.000)): deleted 0, itself in result 1, modified into [ ]
+      input face 5 (plane area 50.265 centre (20.000, 20.000, 5.000)): deleted 0, itself in result 1, modified into [ ]
+
+E. chamfer: done
+   result: 7 faces
+      edge generated: 1 shape(s)
+        [plane area 169.706 centre (20.000, 1.500, 18.500), result face 3]
+      input face 1 (plane area 600.000 centre (0.000, 15.000, 10.000)): deleted 0, itself in result 0, modified into [ 1 ]
+      input face 2 (plane area 600.000 centre (40.000, 15.000, 10.000)): deleted 0, itself in result 0, modified into [ 7 ]
+      input face 3 (plane area 800.000 centre (20.000, 0.000, 10.000)): deleted 0, itself in result 0, modified into [ 2 ]
+      input face 4 (plane area 800.000 centre (20.000, 30.000, 10.000)): deleted 0, itself in result 1, modified into [ ]
+      input face 5 (plane area 1200.000 centre (20.000, 15.000, 0.000)): deleted 0, itself in result 1, modified into [ ]
+      input face 6 (plane area 1200.000 centre (20.000, 15.000, 20.000)): deleted 0, itself in result 0, modified into [ 5 ]
+F. fillet: done
+   result: 7 faces
+      edge generated: 1 shape(s)
+        [cylinder area 188.496 centre (20.000, 1.090, 18.910), result face 3]
+      input face 1 (plane area 600.000 centre (0.000, 15.000, 10.000)): deleted 0, itself in result 0, modified into [ 1 ]
+      input face 2 (plane area 600.000 centre (40.000, 15.000, 10.000)): deleted 0, itself in result 0, modified into [ 7 ]
+      input face 3 (plane area 800.000 centre (20.000, 0.000, 10.000)): deleted 0, itself in result 0, modified into [ 2 ]
+      input face 4 (plane area 800.000 centre (20.000, 30.000, 10.000)): deleted 0, itself in result 1, modified into [ ]
+      input face 5 (plane area 1200.000 centre (20.000, 15.000, 0.000)): deleted 0, itself in result 1, modified into [ ]
+      input face 6 (plane area 1200.000 centre (20.000, 15.000, 20.000)): deleted 0, itself in result 0, modified into [ 5 ]
+
+G. transformed copy (translation)
+   result: 6 faces
+      input face 1 (plane area 600.000 centre (0.000, 15.000, 10.000)): deleted 0, itself in result 0, modified into [ 1 ]
+      input face 2 (plane area 600.000 centre (40.000, 15.000, 10.000)): deleted 0, itself in result 0, modified into [ 2 ]
+      input face 3 (plane area 800.000 centre (20.000, 0.000, 10.000)): deleted 0, itself in result 0, modified into [ 3 ]
+      input face 4 (plane area 800.000 centre (20.000, 30.000, 10.000)): deleted 0, itself in result 0, modified into [ 4 ]
+      input face 5 (plane area 1200.000 centre (20.000, 15.000, 0.000)): deleted 0, itself in result 0, modified into [ 5 ]
+      input face 6 (plane area 1200.000 centre (20.000, 15.000, 20.000)): deleted 0, itself in result 0, modified into [ 6 ]
+G. transformed copy (reflection)
+   result: 6 faces
+      input face 1 (plane area 600.000 centre (0.000, 15.000, 10.000)): deleted 0, itself in result 0, modified into [ 1 ]
+      input face 2 (plane area 600.000 centre (40.000, 15.000, 10.000)): deleted 0, itself in result 0, modified into [ 2 ]
+      input face 3 (plane area 800.000 centre (20.000, 0.000, 10.000)): deleted 0, itself in result 0, modified into [ 3 ]
+      input face 4 (plane area 800.000 centre (20.000, 30.000, 10.000)): deleted 0, itself in result 0, modified into [ 4 ]
+      input face 5 (plane area 1200.000 centre (20.000, 15.000, 0.000)): deleted 0, itself in result 0, modified into [ 5 ]
+      input face 6 (plane area 1200.000 centre (20.000, 15.000, 20.000)): deleted 0, itself in result 0, modified into [ 6 ]

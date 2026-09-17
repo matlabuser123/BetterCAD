@@ -1,0 +1,81 @@
+Largest deviations of the P12-SKETCH-003 checks in reference-values-release.txt (the 24 new cases and the
+new section of FaceNames_PrismNamesItsCapsAndSides), by file and tolerance, with the 5 largest of each group.
+Produced by: python deviations.py --worst 5 reference-values-release.txt SketchOnFace_ FaceKindFile_
+  FaceNames_Revolutions FaceNames_Sweeps FaceNames_Lofts FaceNames_HolesAnd FaceNames_PrismNamesItsCapsAndSides
+(the last prefix also takes that case's STREF-001 sections, whose values are unchanged).
+
+file                             kind  tolerance  checks    largest
+FaceKindFileTests.cpp            rel     1.0e-09       2   0.00e+00
+FaceNameTests.cpp                abs     1.0e-12      65   1.11e-16
+FaceNameTests.cpp                abs     1.0e-09       2   0.00e+00
+FaceNameTests.cpp                rel     1.0e-12      20   1.57e-15
+GeometryTestSupport.hpp          abs     1.0e-09      73   3.55e-15
+SketchOnFaceTests.cpp            abs     1.0e-14     481   1.11e-16
+SketchOnFaceTests.cpp            abs     1.0e-12     226   1.42e-14
+SketchOnFaceTests.cpp            abs     1.0e-09     303   1.16e-10
+SketchOnFaceTests.cpp            abs     1.0e-07     554   1.42e-14
+SketchOnFaceTests.cpp            rel     1.0e-12      98   1.13e-15
+
+FaceKindFileTests.cpp rel 1.0e-09: largest 5
+  0.000e+00  measured 72263.89378290155 expected 72263.89378290155  FaceKindFile_ExportedCopiesReadBackFromStep  
+  0.000e+00  measured 200.0 expected 200.0  FaceKindFile_ExportedCopiesReadBackFromStep  
+
+FaceNameTests.cpp abs 1.0e-12: largest 5
+  1.110e-16  measured -0.7071067811865474 expected -0.7071067811865475  FaceNames_RevolutionsNameTheirCapsAndSides / a quarter turn, symmetric about the profile plane  
+  1.110e-16  measured -0.7071067811865476 expected -0.7071067811865475  FaceNames_RevolutionsNameTheirCapsAndSides / a quarter turn, symmetric about the profile plane  
+  0.000e+00  measured -0.7071067811865475 expected -0.7071067811865475  FaceNames_RevolutionsNameTheirCapsAndSides / a quarter turn, symmetric about the profile plane  
+  0.000e+00  measured 0.0 expected 0.0  FaceNames_RevolutionsNameTheirCapsAndSides / a quarter turn, symmetric about the profile plane  
+  0.000e+00  measured 0.7071067811865475 expected 0.7071067811865475  FaceNames_RevolutionsNameTheirCapsAndSides / a quarter turn, symmetric about the profile plane  
+
+FaceNameTests.cpp abs 1.0e-09: largest 5
+  0.000e+00  measured 15.0 expected 15.0  FaceNames_PrismNamesItsCapsAndSides / a moved copy keeps the names, where the faces went; renaming changes only the names  
+  0.000e+00  measured 10.0 expected 10.0  FaceNames_PrismNamesItsCapsAndSides / a moved copy keeps the names, where the faces went; renaming changes only the names  
+
+FaceNameTests.cpp rel 1.0e-12: largest 5
+  1.568e-15  measured 471.2388980384697 expected 471.23889803846896  FaceNames_SweepsNameTheirSidesAlongEachPathSegment  
+  4.241e-16  measured 50.26548245743667 expected 50.26548245743669  FaceNames_HolesAndChamfersNameTheirFacesAndKeepTheirInputs / a blind counterbore: its bottom and its floor  
+  3.770e-16  measured 150.79644737231 expected 150.79644737231007  FaceNames_HolesAndChamfersNameTheirFacesAndKeepTheirInputs / a blind counterbore: its bottom and its floor  
+  3.619e-16  measured 942.4777960769383 expected 942.4777960769379  FaceNames_RevolutionsNameTheirCapsAndSides / a quarter turn, symmetric about the profile plane  
+  3.411e-16  measured 1000.0000000000003 expected 1000.0  FaceNames_PrismNamesItsCapsAndSides / a moved copy keeps the names, where the faces went; renaming changes only the names  
+
+GeometryTestSupport.hpp abs 1.0e-09: largest 5
+  3.553e-15  measured 24.999999999999996 expected 25.0  FaceNames_HolesAndChamfersNameTheirFacesAndKeepTheirInputs / a blind counterbore: its bottom and its floor  
+  1.776e-15  measured -13.0 expected -12.999999999999998  FaceNames_HolesAndChamfersNameTheirFacesAndKeepTheirInputs / a chamfer names the face each edge reference cuts  
+  1.776e-15  measured 13.0 expected 12.999999999999998  FaceNames_HolesAndChamfersNameTheirFacesAndKeepTheirInputs / a chamfer names the face each edge reference cuts  
+  0.000e+00  measured 0.0 expected 0.0  FaceNames_RevolutionsNameTheirCapsAndSides / a quarter turn, symmetric about the profile plane  
+  0.000e+00  measured 0.0 expected 0.0  FaceNames_RevolutionsNameTheirCapsAndSides / a quarter turn, symmetric about the profile plane  
+
+SketchOnFaceTests.cpp abs 1.0e-14: largest 5
+  1.110e-16  measured 0.5 expected 0.5000000000000001  SketchOnFace_CurvedAndRemovedFacesFailWithoutSubstitution / a full turn has no caps; its flat side remains  EndSketch (object:5)
+  1.110e-16  measured -0.8660254037844385 expected -0.8660254037844386  SketchOnFace_CurvedAndRemovedFacesFailWithoutSubstitution / a full turn has no caps; its flat side remains  EndSketch (object:5)
+  1.110e-16  measured -0.8660254037844385 expected -0.8660254037844386  SketchOnFace_CurvedAndRemovedFacesFailWithoutSubstitution / a full turn has no caps; its flat side remains  EndSketch (object:5)
+  1.110e-16  measured -0.5 expected -0.5000000000000001  SketchOnFace_CurvedAndRemovedFacesFailWithoutSubstitution / a full turn has no caps; its flat side remains  EndSketch (object:5)
+  1.110e-16  measured -0.8660254037844386 expected -0.8660254037844387  SketchOnFace_CircularCopiesFollowTheCount  spokes := 3.0; SpokeSketch (object:7)
+
+SketchOnFaceTests.cpp abs 1.0e-12: largest 5
+  1.421e-14  measured 89.99999999999999 expected 90.0  SketchOnFace_SweepCapsAndSidesFollowTheirPathEdges  lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+  1.421e-14  measured -80.00000000000001 expected -80.0  SketchOnFace_SweepCapsAndSidesFollowTheirPathEdges  lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+  1.421e-14  measured 32.999999999999986 expected 33.0  SketchOnFace_ChamferFacesFollowTheDistance  bevel := 4.0; BackSketch (object:7)
+  1.421e-14  measured 32.999999999999986 expected 33.0  SketchOnFace_ChamferFacesFollowTheDistance  bevel := 4.0; BackSketch (object:7)
+  1.421e-14  measured 31.999999999999986 expected 32.0  SketchOnFace_ChamferFacesFollowTheDistance  bevel := 6.0; BackSketch (object:7)
+
+SketchOnFaceTests.cpp abs 1.0e-09: largest 5
+  1.164e-10  measured 25.728681786233942 expected 25.728681786350293  SketchOnFace_RevolveCapsAndSidesFollowTheTurnAndLength  turn := 120.0; length := 20.0
+  1.163e-10  measured 25.728681786233945 expected 25.728681786350293  SketchOnFace_RevolveCapsAndSidesFollowTheTurnAndLength  turn := 120.0; length := 20.0
+  1.008e-10  measured -22.281692032764578 expected -22.281692032865344  SketchOnFace_RevolveStartCapStaysOnTheSketchPlaneInEveryDirection / positive  
+  1.008e-10  measured 22.281692032764578 expected 22.281692032865344  SketchOnFace_RevolveStartCapStaysOnTheSketchPlaneInEveryDirection / negative  
+  5.818e-11  measured 12.864340893116973 expected 12.86434089317515  SketchOnFace_RevolveStartCapStaysOnTheSketchPlaneInEveryDirection / positive  
+
+SketchOnFaceTests.cpp abs 1.0e-07: largest 5
+  1.421e-14  measured 89.99999999999999 expected 90.0  SketchOnFace_SweepCapsAndSidesFollowTheirPathEdges  lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+  1.421e-14  measured 94.99999999999999 expected 95.0  SketchOnFace_SweepCapsAndSidesFollowTheirPathEdges  lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+  1.421e-14  measured -80.00000000000001 expected -80.0  SketchOnFace_SweepCapsAndSidesFollowTheirPathEdges  lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0
+  1.421e-14  measured -86.00000000000001 expected -86.0  SketchOnFace_SweepCapsAndSidesFollowTheirPathEdges  lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+  1.421e-14  measured -80.00000000000001 expected -80.0  SketchOnFace_SweepCapsAndSidesFollowTheirPathEdges  lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+
+SketchOnFaceTests.cpp rel 1.0e-12: largest 5
+  1.131e-15  measured 9.424777960769369 expected 9.42477796076938  SketchOnFace_ChamferFacesFollowTheDistance  bevel := 4.0; BackSketch (object:7)
+  1.131e-15  measured 9.424777960769369 expected 9.42477796076938  SketchOnFace_ChamferFacesFollowTheDistance  bevel := 6.0; BackSketch (object:7)
+  7.539e-16  measured 9.424777960769372 expected 9.42477796076938  SketchOnFace_ChamferFacesFollowTheDistance  bevel := 6.0; FrontSketch (object:5)
+  7.539e-16  measured 301.59289474462037 expected 301.59289474462014  SketchOnFace_RevolveCapsAndSidesFollowTheTurnAndLength  turn := 150.0; length := 20.0; StartSketch (object:7)
+  7.539e-16  measured 301.59289474462037 expected 301.59289474462014  SketchOnFace_RevolveCapsAndSidesFollowTheTurnAndLength  turn := 150.0; length := 30.0; StartSketch (object:7)
