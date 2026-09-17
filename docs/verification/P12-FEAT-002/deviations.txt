@@ -1,0 +1,48 @@
+Largest deviations of the P12-FEAT-002 checks in reference-values-release.txt, by file and tolerance, with
+the 5 largest of each group.
+Produced by: python deviations.py --worst 5 reference-values-release.txt Split_ SplitCombine_ Combine_ GatherSolids_ BodyOps
+
+file                             kind  tolerance  checks    largest
+BodyOpsFileTests.cpp             rel     1.0e-09       3   1.02e-15
+BodyOpsTests.cpp                 abs     1.0e-09      60   4.26e-14
+BodyOpsTests.cpp                 abs     1.0e-07      75   2.84e-14
+BodyOpsTests.cpp                 rel     1.0e-12      36   7.58e-16
+SplitTests.cpp                   abs     1.0e-09       2   0.00e+00
+SplitTests.cpp                   rel     1.0e-12      10   0.00e+00
+
+BodyOpsFileTests.cpp rel 1.0e-09: largest 5
+  1.020e-15  measured 171141.59265358996 expected 171141.5926535898  BodyOpsFile_ExportedHalvesReadBackFromStep  
+  0.000e+00  measured 150.0 expected 150.0  BodyOpsFile_ExportedHalvesReadBackFromStep  
+  0.000e+00  measured 40.0 expected 40.0  BodyOpsFile_ExportedHalvesReadBackFromStep  
+
+BodyOpsTests.cpp abs 1.0e-09: largest 5
+  4.263e-14  measured 99.58333333333337 expected 99.58333333333333  Split_KeepsEachSideAsTheCutMoves  h := 20.0; c := 60.0
+  2.842e-14  measured 69.2155747908726 expected 69.21557479087257  Split_KeepsEachSideAsTheCutMoves  h := 20.0; c := 60.0
+  1.421e-14  measured 104.52380952380953 expected 104.52380952380952  Split_KeepsEachSideAsTheCutMoves  h := 20.0; c := 70.0
+  1.421e-14  measured 66.31967930826612 expected 66.3196793082661  Split_KeepsEachSideAsTheCutMoves  h := 25.0; c := 70.0
+  1.421e-14  measured 102.91208791208793 expected 102.91208791208791  Split_KeepsEachSideAsTheCutMoves  h := 25.0; c := 70.0
+
+BodyOpsTests.cpp abs 1.0e-07: largest 5
+  2.842e-14  measured 150.00000000000003 expected 150.0  Split_KeepsEachSideAsTheCutMoves  h := 20.0; c := 60.0
+  2.842e-14  measured 150.00000000000003 expected 150.0  Split_KeepsEachSideAsTheCutMoves  h := 20.0; c := 70.0
+  2.842e-14  measured 150.00000000000003 expected 150.0  Split_KeepsEachSideAsTheCutMoves  h := 25.0; c := 70.0
+  2.842e-14  measured 150.00000000000003 expected 150.0  Combine_JoinsCutsAndIntersectsAsTheOverlapChanges  h := 20.0
+  2.842e-14  measured 150.00000000000003 expected 150.0  Combine_JoinsCutsAndIntersectsAsTheOverlapChanges  h := 30.0
+
+BodyOpsTests.cpp rel 1.0e-12: largest 5
+  7.579e-16  measured 7200.0000000000055 expected 7200.0  Split_FollowsANamedFace  z := 12.0
+  7.579e-16  measured 12000.00000000001 expected 12000.0  Split_FollowsANamedFace  z := 20.0
+  6.929e-16  measured 21000.000000000015 expected 21000.0  Split_FollowsANamedFace  z := 35.0
+  3.898e-16  measured 224000.0000000001 expected 224000.0  Combine_JoinsCutsAndIntersectsAsTheOverlapChanges  h := 30.0
+  3.465e-16  measured 84000.00000000003 expected 84000.0  Split_KeepsEachSideAsTheCutMoves  h := 20.0; c := 70.0
+
+SplitTests.cpp abs 1.0e-09: largest 5
+  0.000e+00  measured 30.0 expected 30.0  Split_KeepsTheSidesOfAPlane  
+  0.000e+00  measured 30.0 expected 30.0  Split_KeepsTheSidesOfAPlane  
+
+SplitTests.cpp rel 1.0e-12: largest 5
+  0.000e+00  measured 120000.0 expected 120000.0  Split_RefusesPlanesThatDoNotCrossTheBody  
+  0.000e+00  measured 84000.0 expected 84000.0  Split_KeepsTheSidesOfAPlane  
+  0.000e+00  measured 36000.0 expected 36000.0  Split_KeepsTheSidesOfAPlane  
+  0.000e+00  measured 120000.0 expected 120000.0  Split_KeepsTheSidesOfAPlane  
+  0.000e+00  measured 4200.0 expected 4200.0  Split_KeepsTheSidesOfAPlane  

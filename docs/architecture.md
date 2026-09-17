@@ -11,7 +11,7 @@ underneath, hidden behind adapters.
             └───────┬──────────────────────┘
                     io              native .bcad, STEP/STL export
                     │
-                 features           extrude, revolve, chamfer, fillet, hole, linear and circular patterns, mirror, sweep, loft (later: ...)
+                 features           extrude, revolve, chamfer, fillet, hole, linear and circular patterns, mirror, sweep, loft, split, combine (later: ...)
                     │
                   sketch            entities, constraints, solver
                     │
@@ -536,6 +536,19 @@ milestones start; see `TODO.md`.
   The preflight is for these guarantees, not for crash avoidance: a
   kernel probe of degenerate holes found no crashes
   (`docs/verification/P11-FEAT-004/`).
+- **Split** (`Split.hpp`, P12-FEAT-002). `splitBody(body, plane, keep)` cuts
+  a body with a plane and keeps what lies in front of it (the side its
+  normal points to), behind it, or both.
+  - The parts are the body's intersection with, and difference from, a box
+    on the plane's front side that encloses the body's bounds (1 mm beyond
+    them). The booleans carry the body's face names; the faces on the plane
+    get none.
+  - A plane that does not cross the body fails with FailedPrecondition:
+    either the bounds lie wholly on one side (within 1e-7 mm), or one side
+    of a body whose bounds cross the plane is empty.
+  - `gatherSolids(parts)` puts the solids of several bodies side by side in
+    one body (a compound, not a union, so touching parts stay apart), with
+    their names. It gives a both-sides split its two solids.
 - **Translation, rotation and reflection** (`Transform.hpp`).
   `translated(body, translation)` and `transformed(body, motion)` return a
   moved copy with its own geometry (`BRepBuilderAPI_Transform`, copying); the
@@ -751,7 +764,9 @@ milestones start; see `TODO.md`.
   `ExtrudeFeature` holds an `ExtrudeDefinition` (profile sketch, depth or
   driving depth parameter, direction, operation, target, termination).
 - **Solid features** (`Feature.hpp`) derive from `SolidFeature`, which
-  exposes the target feature whose body the feature consumes, if any.
+  exposes the target feature whose body the feature consumes, if any, and
+  `consumedFeatures()`: the target, or more for kinds that consume several
+  bodies (a combine).
   Extrude and Revolve also have a `FeatureOperation` (new body, join, cut,
   intersect). Shared infrastructure serves every kind:
   - `validateOperation()` checks the operation/target pairing;
@@ -767,6 +782,26 @@ milestones start; see `TODO.md`.
   plugs in without touching them.
 - **Extrude** (`ExtrudeFeature.hpp`) and **Revolve** (`RevolveFeature.hpp`)
   are the solid features so far.
+- **Split and combine** (P12-FEAT-002, `SplitFeature.hpp`,
+  `CombineFeature.hpp`, types `split` and `combine`).
+  - A `SplitDefinition` holds the target feature, the plane as a
+    `PlaneReference` (a principal plane, a datum plane, a coordinate system's
+    plane or a named face) and what to keep (`geometry::SplitKeep`). Both
+    parts make one body of two solids.
+  - A `CombineDefinition` holds the target feature, one or more tool
+    features (in order, none repeated, none the target) and an operation
+    (join, cut or intersect). The combine consumes the target and every
+    tool, so none of them remains a result body.
+  - `regenerateSplit()` resolves the plane with the regenerator's bodies,
+    then splits. `regenerateCombine()` applies the operation with each tool
+    body in turn, and fails with FailedPrecondition when a tool has no body
+    or a step leaves nothing ("nothing is left after cutting Big
+    (object:15)"). Both carry the input bodies' face names; neither names
+    faces of its own.
+  - Their handlers (`regenerateBodyFeature`) read other features' bodies
+    through a `BodyLookup`. Splits and combines depend on their inputs
+    (and a split on the objects its plane refers to). They cannot be a
+    pattern's or feature mirror's source.
 - **Through-all extrude** (P12-FEAT-001). An extrude's `termination` is
   `Blind` (at its depth) or `ThroughAll`. A through-all extrude stores no
   depth: it is a cut (the only operation it takes) through all of its
@@ -980,8 +1015,9 @@ milestones start; see `TODO.md`.
   references and cycles are blocked and keep no stale results.
 - New object kinds plug in a regeneration handler by type name.
 - **Result bodies** (`ResultBodies.hpp`). A feature's body is a model result
-  unless another feature consumes it as its target (the target of a
-  Join/Cut/Intersect, or the body a chamfer modifies).
+  unless another feature consumes it (`SolidFeature::consumedFeatures()`):
+  the target of a Join/Cut/Intersect, the body a chamfer modifies, a
+  pattern's source, or a split's or combine's inputs.
   `regenerateResultBodies()` regenerates a copy of the document and returns
   those bodies. Exports use it.
 - **Validation** (`Validation.hpp`). `validateDocument()` runs six checks on
@@ -1031,6 +1067,10 @@ milestones start; see `TODO.md`.
   (metres) for distances, radii and diameters and `angle` (radians) for
   angles, each only when its type has one. Extrude, revolve and chamfer
   data hold their definitions:
+  - a split stores `target`, `plane` (a plane reference, as for sketch
+    attachments) and `keep` (`"front"`, `"back"`, `"both"`); a combine
+    stores `target`, `tools` (feature IDs in order) and `operation`
+    (`"join"`, `"cut"`, `"intersect"`);
   - an extrude stores `depth` and an optional `depth_parameter`, or, for a
     through-all extrude, `"termination": "through_all"` and no depth (a
     missing `termination` means `"blind"`);

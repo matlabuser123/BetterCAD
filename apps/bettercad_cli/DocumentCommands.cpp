@@ -3,6 +3,7 @@
 #include <bettercad/core/document/Document.hpp>
 #include <bettercad/features/ChamferFeature.hpp>
 #include <bettercad/features/CircularPatternFeature.hpp>
+#include <bettercad/features/CombineFeature.hpp>
 #include <bettercad/features/Datums.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/features/FilletFeature.hpp>
@@ -11,6 +12,7 @@
 #include <bettercad/features/LoftFeature.hpp>
 #include <bettercad/features/MirrorFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
+#include <bettercad/features/SplitFeature.hpp>
 #include <bettercad/features/SweepFeature.hpp>
 #include <bettercad/features/Validation.hpp>
 #include <bettercad/io/DocumentFile.hpp>
@@ -395,6 +397,22 @@ std::string describeObject(const Document& document, const DocumentObject& objec
         return std::format("profile {}, path {} ({}), {}, {}", nameOrId(document, ObjectId{d.profile}),
                            nameOrId(document, ObjectId{d.path.sketch}), plural(d.path.edges.size(), "edge", "edges"),
                            features::toString(d.orientation), describeOperation(document, d.operation, d.target));
+    }
+    if (const auto* split = dynamic_cast<const features::SplitFeature*>(&object)) {
+        // "target Block, plane Middle, keep front"
+        const features::SplitDefinition& d = split->definition();
+        return std::format("target {}, plane {}, keep {}", nameOrId(document, ObjectId{d.target}),
+                           describePlaneReference(document, d.plane), geometry::toString(d.keep));
+    }
+    if (const auto* combine = dynamic_cast<const features::CombineFeature*>(&object)) {
+        // "join Block with Boss, Rib"
+        const features::CombineDefinition& d = combine->definition();
+        std::string tools;
+        for (const FeatureId tool : d.tools) {
+            tools += (tools.empty() ? "" : ", ") + nameOrId(document, ObjectId{tool});
+        }
+        return std::format("{} {} with {}", features::toString(d.operation), nameOrId(document, ObjectId{d.target}),
+                           tools);
     }
     if (const auto* plane = dynamic_cast<const features::DatumPlane*>(&object)) {
         return describeDatumPlane(document, plane->definition());

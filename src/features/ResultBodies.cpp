@@ -13,8 +13,8 @@ std::vector<ObjectId> resultFeatures(const Document& document) {
     for (const DocumentObject& object : document.objects()) {
         if (const auto* feature = dynamic_cast<const SolidFeature*>(&object)) {
             producers.push_back(object.id());
-            if (const auto target = feature->target()) {
-                consumed.insert(ObjectId{*target});
+            for (const FeatureId used : feature->consumedFeatures()) {
+                consumed.insert(ObjectId{used});
             }
         }
     }

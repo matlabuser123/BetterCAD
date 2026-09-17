@@ -37,6 +37,10 @@ Result<Json> objectToJson(const DocumentObject& object) {
         data = detail::sweepToJson(*sweep);
     } else if (const auto* loft = dynamic_cast<const features::LoftFeature*>(&object)) {
         data = detail::loftToJson(*loft);
+    } else if (const auto* split = dynamic_cast<const features::SplitFeature*>(&object)) {
+        data = detail::splitToJson(*split);
+    } else if (const auto* combine = dynamic_cast<const features::CombineFeature*>(&object)) {
+        data = detail::combineToJson(*combine);
     } else if (const auto* plane = dynamic_cast<const features::DatumPlane*>(&object)) {
         data = detail::datumPlaneToJson(*plane);
     } else if (const auto* axis = dynamic_cast<const features::DatumAxis*>(&object)) {
@@ -93,6 +97,20 @@ Result<std::unique_ptr<DocumentObject>> objectFromJson(const Json& value, std::s
             return std::unexpected(chamfer.error());
         }
         return std::unique_ptr<DocumentObject>(std::move(*chamfer));
+    }
+    if (*type == features::SplitFeature::kTypeName) {
+        auto split = detail::splitFromJson(**data, std::move(*name), dataPath);
+        if (!split) {
+            return std::unexpected(split.error());
+        }
+        return std::unique_ptr<DocumentObject>(std::move(*split));
+    }
+    if (*type == features::CombineFeature::kTypeName) {
+        auto combine = detail::combineFromJson(**data, std::move(*name), dataPath);
+        if (!combine) {
+            return std::unexpected(combine.error());
+        }
+        return std::unique_ptr<DocumentObject>(std::move(*combine));
     }
     if (*type == features::FilletFeature::kTypeName) {
         auto fillet = detail::filletFromJson(**data, std::move(*name), dataPath);

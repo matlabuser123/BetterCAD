@@ -7,6 +7,7 @@
 #include <bettercad/core/document/Document.hpp>
 #include <bettercad/features/ChamferFeature.hpp>
 #include <bettercad/features/CircularPatternFeature.hpp>
+#include <bettercad/features/CombineFeature.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/features/FilletFeature.hpp>
 #include <bettercad/features/HoleFeature.hpp>
@@ -14,6 +15,7 @@
 #include <bettercad/features/LoftFeature.hpp>
 #include <bettercad/features/MirrorFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
+#include <bettercad/features/SplitFeature.hpp>
 #include <bettercad/features/SweepFeature.hpp>
 
 #include <format>
@@ -129,6 +131,10 @@ private:
     std::optional<Definition> before_;
 };
 
+using CreateSplitCommand = CreateFeatureCommand<SplitFeature>;
+using ModifySplitCommand = ModifyFeatureCommand<SplitFeature>;
+using CreateCombineCommand = CreateFeatureCommand<CombineFeature>;
+using ModifyCombineCommand = ModifyFeatureCommand<CombineFeature>;
 using CreateExtrudeCommand = CreateFeatureCommand<ExtrudeFeature>;
 using ModifyExtrudeCommand = ModifyFeatureCommand<ExtrudeFeature>;
 using CreateRevolveCommand = CreateFeatureCommand<RevolveFeature>;

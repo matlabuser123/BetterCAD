@@ -13,7 +13,8 @@ namespace bettercad::features {
 
 /// Features whose bodies are results of the model, in ascending ID order:
 /// every feature that produces a body, except those whose body another
-/// feature consumes as its Join/Cut/Intersect target.
+/// feature consumes (SolidFeature::consumedFeatures(): a Join/Cut/Intersect
+/// target, a pattern's source, a combine's target and tools).
 ///
 /// Example: Pad, then Pocket cutting Pad, then a new-body Slot gives
 /// {Pocket, Slot}.

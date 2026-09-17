@@ -106,6 +106,27 @@ Result<std::optional<geometry::Body>> regenerateSolidFeature(Document& document,
     return std::optional<geometry::Body>{std::move(*body)};
 }
 
+/// Handler for a solid feature kind F that also reads other bodies (a split's
+/// face plane, a combine's tools).
+template <typename F,
+          Result<geometry::Body> (*Evaluate)(const F&, const Document&, const geometry::Body*, const BodyLookup&)>
+Result<std::optional<geometry::Body>> regenerateBodyFeature(Document& document, ObjectId id,
+                                                            const Regenerator& regenerator) {
+    const auto* feature = document.findObjectAs<F>(id);
+    if (feature == nullptr) {
+        return makeError(ErrorCode::Internal, std::format("{} is not a {} feature", id, F::kTypeName));
+    }
+    const geometry::Body* target = nullptr;
+    if (const auto targetId = feature->target()) {
+        target = regenerator.body(ObjectId{*targetId});
+    }
+    auto body = Evaluate(*feature, document, target, bodiesOf(regenerator));
+    if (!body) {
+        return std::unexpected(body.error());
+    }
+    return std::optional<geometry::Body>{std::move(*body)};
+}
+
 std::string describeCycle(const Document& document, const std::vector<ObjectId>& cycle) {
     std::string text;
     for (const ObjectId id : cycle) {
@@ -154,6 +175,9 @@ Regenerator::Regenerator() {
     registerHandler(std::string{MirrorFeature::kTypeName}, regenerateSolidFeature<MirrorFeature, &regenerateMirror>);
     registerHandler(std::string{SweepFeature::kTypeName}, regenerateSolidFeature<SweepFeature, &regenerateSweep>);
     registerHandler(std::string{LoftFeature::kTypeName}, regenerateSolidFeature<LoftFeature, &regenerateLoft>);
+    registerHandler(std::string{SplitFeature::kTypeName}, regenerateBodyFeature<SplitFeature, &regenerateSplit>);
+    registerHandler(std::string{CombineFeature::kTypeName},
+                    regenerateBodyFeature<CombineFeature, &regenerateCombine>);
 }
 
 void Regenerator::registerHandler(std::string typeName, RegenerationHandler handler) {

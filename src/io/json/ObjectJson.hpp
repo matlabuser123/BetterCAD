@@ -10,6 +10,7 @@
 #include <bettercad/core/math/Point.hpp>
 #include <bettercad/features/ChamferFeature.hpp>
 #include <bettercad/features/CircularPatternFeature.hpp>
+#include <bettercad/features/CombineFeature.hpp>
 #include <bettercad/features/Datums.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/features/FilletFeature.hpp>
@@ -18,6 +19,7 @@
 #include <bettercad/features/LoftFeature.hpp>
 #include <bettercad/features/MirrorFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
+#include <bettercad/features/SplitFeature.hpp>
 #include <bettercad/features/SweepFeature.hpp>
 #include <bettercad/sketch/Sketch.hpp>
 
@@ -134,5 +136,17 @@ circularPatternFromJson(const Json& data, std::string name, std::string_view pat
 [[nodiscard]] Json loftToJson(const features::LoftFeature& feature);
 [[nodiscard]] Result<std::unique_ptr<features::LoftFeature>> loftFromJson(const Json& data, std::string name,
                                                                           std::string_view path);
+
+/// "target"; "plane" as a plane reference (see planeReferenceToJson());
+/// "keep": "front" | "back" | "both" (P12-FEAT-002).
+[[nodiscard]] Json splitToJson(const features::SplitFeature& feature);
+[[nodiscard]] Result<std::unique_ptr<features::SplitFeature>> splitFromJson(const Json& data, std::string name,
+                                                                            std::string_view path);
+
+/// "target"; "tools" as feature IDs in order; "operation": "join" | "cut" |
+/// "intersect" (P12-FEAT-002).
+[[nodiscard]] Json combineToJson(const features::CombineFeature& feature);
+[[nodiscard]] Result<std::unique_ptr<features::CombineFeature>> combineFromJson(const Json& data, std::string name,
+                                                                                std::string_view path);
 
 } // namespace bettercad::io::detail

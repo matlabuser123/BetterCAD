@@ -31,6 +31,13 @@ Result<void> validateOperation(FeatureOperation operation, const std::optional<F
     return {};
 }
 
+std::vector<FeatureId> SolidFeature::consumedFeatures() const {
+    if (const auto consumed = target()) {
+        return {*consumed};
+    }
+    return {};
+}
+
 Result<geometry::Body> combineWithTarget(FeatureOperation operation, const geometry::Body& tool,
                                          const geometry::Body* target, std::string_view featureName) {
     if (operation == FeatureOperation::NewBody) {

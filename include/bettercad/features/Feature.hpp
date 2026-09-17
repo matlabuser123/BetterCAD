@@ -8,6 +8,7 @@
 
 #include <optional>
 #include <string_view>
+#include <vector>
 
 // What all solid-producing features share: how their tool solid combines
 // with an existing body, and which feature's body they consume.
@@ -37,6 +38,11 @@ class BETTERCAD_FEATURES_EXPORT SolidFeature : public DocumentObject {
 public:
     /// The feature whose body this one consumes; empty for a new body.
     [[nodiscard]] virtual std::optional<FeatureId> target() const noexcept = 0;
+
+    /// Every feature whose body this one consumes (and which is therefore no
+    /// longer a result body): the target, unless a kind consumes more
+    /// (a combine consumes its tools too).
+    [[nodiscard]] virtual std::vector<FeatureId> consumedFeatures() const;
 
     /// Typed view of id(); invalid until the feature is in a document.
     [[nodiscard]] FeatureId featureId() const noexcept { return FeatureId::fromValue(id().value()); }

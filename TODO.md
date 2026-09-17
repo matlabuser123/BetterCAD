@@ -13,7 +13,7 @@ authorized — never in advance.
 | | |
 | --- | --- |
 | Current | **`P12` — Parametric CAD Completion** |
-| Next | `P12-FEAT-002` — Split body / combine |
+| Next | `P12-FEAT-003` — Shell |
 | Blocked / Manual | None |
 | Last qualified | `P11` Production Part Modeling — **QUALIFIED** |
 | Released | `v0.1.0` (`P0`–`P10`); `P11` qualified, not released |
@@ -55,7 +55,7 @@ Reference models → qualification
 | 4a | `P12-STREF-001` Stable feature face references (prerequisite, authorized 2026-09-17) | `DATUM-001` | **done** — [evidence](docs/verification/P12-STREF-001/README.md) |
 | 5 | `P12-SKETCH-003` Sketches on arbitrary planar faces | `DATUM-001`, `STREF-001` | **done** — [evidence](docs/verification/P12-SKETCH-003/README.md) |
 | 6 | `P12-FEAT-001` Through-all extrude | — | **done** — [evidence](docs/verification/P12-FEAT-001/README.md) |
-| 7 | `P12-FEAT-002` Split body / combine | — | not started |
+| 7 | `P12-FEAT-002` Split body / combine | — | **done** — [evidence](docs/verification/P12-FEAT-002/README.md) |
 | 8 | `P12-FEAT-003` Shell | `FEAT-002` | not started |
 | 9 | `P12-FEAT-004` Draft | `DATUM-001` | not started |
 | 10 | `P12-FEAT-005` Rib | `SKETCH-002`, `FEAT-001` | not started |
@@ -256,9 +256,32 @@ Acceptance:
 - A depth, a non-cut operation or a missing target is refused with a structured diagnostic; a target behind the sketch plane fails at regeneration, keeping no body.
 - Save → load → regenerate gives the same bodies bit for bit; files without `termination` load as blind extrudes, unchanged; `P0`–`P12-SKETCH-003` stays green in all three presets.
 
+#### P12-FEAT-002 — Split body / combine
+
+Two body-level features. A split cuts another feature's body with a plane
+and keeps what lies in front of it, behind it, or both parts side by side. A
+combine joins, cuts or intersects another feature's body with the bodies of
+one or more further features, all of which it consumes. Both store only
+references (features, a plane reference) and their choice; the geometry is
+regenerated from the inputs.
+
+Deliverables:
+
+- [x] `SplitFeature` (`target`, `plane`: any plane reference, a named face included; `keep`: front, back or both); both parts are kept as one body of separate solids
+- [x] A split whose plane leaves nothing on a kept side fails; face names of the target are carried, the new faces on the plane are not named
+- [x] `CombineFeature` (`target`, `tools`, `operation`: join, cut or intersect); the target and every tool are consumed (result bodies); a combination that leaves no material fails
+- [x] Dependencies, validation (tool and plane kinds, duplicates, self-reference), undo/redo, save/load, CLI description
+- [x] Evidence: [docs/verification/P12-FEAT-002/](docs/verification/P12-FEAT-002/README.md) — PASS, 957/957 tests in Debug, Release and Debug-shared, 0 warnings
+
+Acceptance:
+
+- Splits of a box by a datum plane at a driven offset give the analytic volumes, centres and bounds of each part at every offset, and the two parts together give the whole; an oblique split through the centre gives two halves of equal volume whose centres are symmetric about it.
+- Joins, cuts and intersections of overlapping blocks match the inclusion-exclusion volumes and centres while a parameter changes the overlap; the consumed features are no longer result bodies.
+- Failures are structured and atomic; save → load → regenerate gives the same bodies bit for bit; `P0`–`P12-FEAT-001` stays green in all three presets.
+
 ## Next
 
-`P12-FEAT-002` — Split body / combine.
+`P12-FEAT-003` — Shell.
 
 ## Blocked / Manual
 
@@ -367,10 +390,10 @@ Not started. Not authorized. Grouped to match
 
 | Milestone | Commit | Evidence |
 | --- | --- | --- |
-| `P12-FEAT-001` Through-all extrude | "BetterCAD: implement P12 through-all extrude" | [P12-FEAT-001](docs/verification/P12-FEAT-001/README.md) |
+| `P12-FEAT-002` Split body / combine | "BetterCAD: implement P12 split body and combine" | [P12-FEAT-002](docs/verification/P12-FEAT-002/README.md) |
+| `P12-FEAT-001` Through-all extrude | `c976f9c` | [P12-FEAT-001](docs/verification/P12-FEAT-001/README.md) |
 | `P12-SKETCH-003` Sketches on arbitrary planar faces | `650acd6` | [P12-SKETCH-003](docs/verification/P12-SKETCH-003/README.md) |
 | `P12-STREF-001` Stable feature face references | `8dbb722` | [P12-STREF-001](docs/verification/P12-STREF-001/README.md) |
-| `P12-DATUM-001` Datum planes, axes, coordinate systems | `fe20b0f` | [P12-DATUM-001](docs/verification/P12-DATUM-001/README.md) |
 
 ## Completed Milestones
 
@@ -418,6 +441,10 @@ regression test, so none can change silently. Detail:
   there is no *up to next* or *up to a face*. A through-all tool is as long
   as the target's bounding box along the sketch normal, plus 1 mm
   ([P12-FEAT-001](docs/verification/P12-FEAT-001/README.md)).
+- **Splits cut with planes only**, and a split that keeps both sides gives
+  one body of two solids, which later features take whole. A combine
+  consumes its tools. The faces a split makes are not named
+  ([P12-FEAT-002](docs/verification/P12-FEAT-002/README.md)).
 - **Loft sides stay B-splines** even where flat, costing about 6e-12 relative
   volume and 3.4e-6 mm in the centroid; plane references find only a loft's end
   faces.

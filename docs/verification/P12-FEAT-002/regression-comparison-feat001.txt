@@ -1,0 +1,84 @@
+baseline ../P12-FEAT-001/ctest-release.log: 935 distinct names
+
+ctest-debug.log: 956 distinct names, 957 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 21
+    cli.export-step.body-ops
+    cli.info.body-ops
+    cli.validate.body-ops
+    unit.BodyOpsCli_InfoDescribesSplitsAndCombines
+    unit.BodyOpsCli_ValidateReportsTheSplitBody
+    unit.BodyOpsFile_DefinitionsAreWrittenAsJson
+    unit.BodyOpsFile_ExampleFileMatchesTheBuilder
+    unit.BodyOpsFile_ExportedHalvesReadBackFromStep
+    unit.BodyOpsFile_MalformedDefinitionsAreRejectedWithThePath
+    unit.BodyOpsFile_SaveLoad_RegeneratesTheSameBodies
+    unit.Combine_JoinsCutsAndIntersectsAsTheOverlapChanges
+    unit.GatherSolids_KeepsSolidsApart
+    unit.SplitCombine_CreationAndEditsAreUndoable
+    unit.SplitCombine_DefinitionsAreValidated
+    unit.SplitCombine_FailuresAreStructuredAndAtomic
+    unit.SplitCombine_RegenerateDeterministically
+    unit.Split_FollowsANamedFace
+    unit.Split_KeepsEachSideAsTheCutMoves
+    unit.Split_KeepsTheSidesOfAPlane
+    unit.Split_ObliqueThroughTheCentreGivesCongruentHalves
+    unit.Split_RefusesPlanesThatDoNotCrossTheBody
+
+ctest-release.log: 956 distinct names, 957 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 21
+    cli.export-step.body-ops
+    cli.info.body-ops
+    cli.validate.body-ops
+    unit.BodyOpsCli_InfoDescribesSplitsAndCombines
+    unit.BodyOpsCli_ValidateReportsTheSplitBody
+    unit.BodyOpsFile_DefinitionsAreWrittenAsJson
+    unit.BodyOpsFile_ExampleFileMatchesTheBuilder
+    unit.BodyOpsFile_ExportedHalvesReadBackFromStep
+    unit.BodyOpsFile_MalformedDefinitionsAreRejectedWithThePath
+    unit.BodyOpsFile_SaveLoad_RegeneratesTheSameBodies
+    unit.Combine_JoinsCutsAndIntersectsAsTheOverlapChanges
+    unit.GatherSolids_KeepsSolidsApart
+    unit.SplitCombine_CreationAndEditsAreUndoable
+    unit.SplitCombine_DefinitionsAreValidated
+    unit.SplitCombine_FailuresAreStructuredAndAtomic
+    unit.SplitCombine_RegenerateDeterministically
+    unit.Split_FollowsANamedFace
+    unit.Split_KeepsEachSideAsTheCutMoves
+    unit.Split_KeepsTheSidesOfAPlane
+    unit.Split_ObliqueThroughTheCentreGivesCongruentHalves
+    unit.Split_RefusesPlanesThatDoNotCrossTheBody
+
+ctest-debug-shared.log: 956 distinct names, 957 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 21
+    cli.export-step.body-ops
+    cli.info.body-ops
+    cli.validate.body-ops
+    unit.BodyOpsCli_InfoDescribesSplitsAndCombines
+    unit.BodyOpsCli_ValidateReportsTheSplitBody
+    unit.BodyOpsFile_DefinitionsAreWrittenAsJson
+    unit.BodyOpsFile_ExampleFileMatchesTheBuilder
+    unit.BodyOpsFile_ExportedHalvesReadBackFromStep
+    unit.BodyOpsFile_MalformedDefinitionsAreRejectedWithThePath
+    unit.BodyOpsFile_SaveLoad_RegeneratesTheSameBodies
+    unit.Combine_JoinsCutsAndIntersectsAsTheOverlapChanges
+    unit.GatherSolids_KeepsSolidsApart
+    unit.SplitCombine_CreationAndEditsAreUndoable
+    unit.SplitCombine_DefinitionsAreValidated
+    unit.SplitCombine_FailuresAreStructuredAndAtomic
+    unit.SplitCombine_RegenerateDeterministically
+    unit.Split_FollowsANamedFace
+    unit.Split_KeepsEachSideAsTheCutMoves
+    unit.Split_KeepsTheSidesOfAPlane
+    unit.Split_ObliqueThroughTheCentreGivesCongruentHalves
+    unit.Split_RefusesPlanesThatDoNotCrossTheBody
+
+RESULT: PASS

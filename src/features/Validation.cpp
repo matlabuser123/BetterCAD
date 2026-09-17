@@ -4,6 +4,7 @@
 #include <bettercad/features/ChamferFeature.hpp>
 #include <bettercad/features/Datums.hpp>
 #include <bettercad/features/CircularPatternFeature.hpp>
+#include <bettercad/features/CombineFeature.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/features/FilletFeature.hpp>
 #include <bettercad/features/HoleFeature.hpp>
@@ -13,6 +14,7 @@
 #include <bettercad/features/ResultBodies.hpp>
 #include <bettercad/features/LoftFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
+#include <bettercad/features/SplitFeature.hpp>
 #include <bettercad/features/SweepFeature.hpp>
 #include <bettercad/features/Validation.hpp>
 #include <bettercad/sketch/Sketch.hpp>
@@ -325,6 +327,18 @@ private:
                     if (sections[i].offsetParameter) {
                         checkParameter(object.id(), *sections[i].offsetParameter, dimensions::length,
                                        std::format("section {}'s offset is driven by", i + 1));
+                    }
+                }
+            }
+            if (const auto* split = dynamic_cast<const SplitFeature*>(&object)) {
+                checkPlaneReference(object.id(), split->definition().plane, "the split plane is");
+            } else if (const auto* combine = dynamic_cast<const CombineFeature*>(&object)) {
+                const auto& tools = combine->definition().tools;
+                for (std::size_t i = 0; i < tools.size(); ++i) {
+                    const ObjectId id{tools[i]};
+                    if (document_.contains(id) && document_.findObjectAs<SolidFeature>(id) == nullptr) {
+                        wrongKind(object.id(), std::format("tool {} is", i + 1), id, kindOf(document_, id),
+                                  "a feature with a body");
                     }
                 }
             }

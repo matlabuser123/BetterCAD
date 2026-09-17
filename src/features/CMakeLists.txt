@@ -10,6 +10,9 @@ bettercad_add_library(bettercad_features
         SolidSupport.cpp
         SolidSupport.hpp
         Validation.cpp
+        boolean/BooleanRegeneration.cpp
+        boolean/CombineFeature.cpp
+        boolean/SplitFeature.cpp
         chamfer/ChamferFeature.cpp
         chamfer/ChamferRegeneration.cpp
         datum/DatumResolution.cpp

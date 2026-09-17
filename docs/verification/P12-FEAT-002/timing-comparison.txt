@@ -1,0 +1,82 @@
+Per-test CTest times (CTest's own figures), summed and for the slowest tests. feat001 is the
+P12-FEAT-001 qualification, feat002 this one. All runs used -j 8 on the same machine.
+Produced by: python compare-times.py feat001=../P12-FEAT-001/ctest-<preset>.log feat002=ctest-<preset>.log --top 12
+
+== release
+       feat001: 936 tests,    652.44 s summed
+       feat002: 957 tests,    624.06 s summed
+
+test                                                                         feat001       feat002
+unit.ReferenceModel_AllModelsStressRegression                                  20.11         20.04
+unit.LinearPattern_DoesNotAccumulateTransformDrift                             17.10         17.45
+unit.ReferenceModel_MountingBracketRegeneratesDeterministically                15.27         15.19
+unit.ReferenceModel_AllModelsBuildInOneProcess                                 13.75         13.74
+unit.ReferenceModel_FlangeRegeneratesDeterministically                         13.00         12.87
+unit.ReferenceModel_AllModelsRegenerateAfterAChange                            12.54         12.18
+unit.ReferenceModel_PulleyRegeneratesDeterministically                         11.71         11.58
+unit.ReferenceModel_ShaftRegeneratesDeterministically                          10.38         10.01
+unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges             9.05          8.78
+unit.ReferenceModel_SavedModelsMatchTheBuilders                                 8.12          8.17
+unit.CircularPattern_TouchingAndOverlappingInstancesFuse                        7.71          7.26
+unit.ReferenceModel_BearingHousingRegeneratesDeterministically                  6.97          7.29
+== debug
+       feat001: 936 tests,    625.20 s summed
+       feat002: 957 tests,    695.63 s summed
+
+test                                                                         feat001       feat002
+unit.ReferenceModel_AllModelsStressRegression                                  20.57         20.91
+unit.LinearPattern_DoesNotAccumulateTransformDrift                             19.82         18.06
+unit.ReferenceModel_MountingBracketRegeneratesDeterministically                14.58         15.74
+unit.ReferenceModel_AllModelsBuildInOneProcess                                 13.01         14.07
+unit.ReferenceModel_FlangeRegeneratesDeterministically                         12.23         13.46
+unit.ReferenceModel_AllModelsRegenerateAfterAChange                            11.62         12.79
+unit.ReferenceModel_PulleyRegeneratesDeterministically                         10.77         11.91
+unit.ReferenceModel_ShaftRegeneratesDeterministically                           9.15         10.30
+unit.ReferenceModel_SavedModelsMatchTheBuilders                                 9.23          8.85
+unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges             8.24          9.07
+unit.CircularPattern_TouchingAndOverlappingInstancesFuse                        8.60          7.80
+unit.ReferenceModel_BearingHousingRegeneratesDeterministically                  8.28          7.64
+== debug-shared
+       feat001: 936 tests,    636.02 s summed
+       feat002: 957 tests,    679.36 s summed
+
+test                                                                         feat001       feat002
+unit.ReferenceModel_AllModelsStressRegression                                  19.14         21.50
+unit.LinearPattern_DoesNotAccumulateTransformDrift                             16.93         18.53
+unit.ReferenceModel_MountingBracketRegeneratesDeterministically                14.11         15.88
+unit.ReferenceModel_AllModelsBuildInOneProcess                                 12.56         13.99
+unit.ReferenceModel_FlangeRegeneratesDeterministically                         11.84         12.94
+unit.ReferenceModel_AllModelsRegenerateAfterAChange                            11.46         12.60
+unit.ReferenceModel_PulleyRegeneratesDeterministically                         10.50         11.45
+unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges             8.62          9.99
+unit.ReferenceModel_SavedModelsMatchTheBuilders                                 8.26          9.70
+unit.ReferenceModel_ShaftRegeneratesDeterministically                           9.16          9.60
+unit.CircularPattern_TouchingAndOverlappingInstancesFuse                        7.55          8.40
+unit.ReferenceModel_BearingHousingRegeneratesDeterministically                  7.30          8.19
+
+The 21 tests this milestone adds, in the Release run
+(python compare-times.py feat002=ctest-release.log --match "unit\.(Split_|SplitCombine_|Combine_|GatherSolids_|BodyOps)|body-ops" --top 40):
+       feat002: 21 tests,      8.03 s summed
+
+test                                                                         feat002
+unit.Split_KeepsEachSideAsTheCutMoves                                           0.97
+unit.Combine_JoinsCutsAndIntersectsAsTheOverlapChanges                          0.94
+unit.SplitCombine_FailuresAreStructuredAndAtomic                                0.70
+unit.SplitCombine_RegenerateDeterministically                                   0.62
+unit.BodyOpsCli_ValidateReportsTheSplitBody                                     0.49
+unit.BodyOpsFile_ExportedHalvesReadBackFromStep                                 0.48
+unit.BodyOpsFile_SaveLoad_RegeneratesTheSameBodies                              0.48
+unit.SplitCombine_CreationAndEditsAreUndoable                                   0.39
+cli.export-step.body-ops                                                        0.33
+cli.validate.body-ops                                                           0.33
+unit.Split_KeepsTheSidesOfAPlane                                                0.30
+unit.Split_FollowsANamedFace                                                    0.30
+unit.BodyOpsFile_ExampleFileMatchesTheBuilder                                   0.25
+unit.BodyOpsFile_MalformedDefinitionsAreRejectedWithThePath                     0.21
+unit.Split_ObliqueThroughTheCentreGivesCongruentHalves                          0.20
+cli.info.body-ops                                                               0.18
+unit.BodyOpsCli_InfoDescribesSplitsAndCombines                                  0.18
+unit.Split_RefusesPlanesThatDoNotCrossTheBody                                   0.18
+unit.GatherSolids_KeepsSolidsApart                                              0.18
+unit.SplitCombine_DefinitionsAreValidated                                       0.17
+unit.BodyOpsFile_DefinitionsAreWrittenAsJson                                    0.15

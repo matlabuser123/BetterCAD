@@ -44,6 +44,7 @@ bettercad_add_executable(bettercad_tests
         core/geometry/PrimitiveTests.cpp
         core/geometry/PropertyTests.cpp
         core/geometry/RevolutionTests.cpp
+        core/geometry/SplitTests.cpp
         core/geometry/SweepTests.cpp
         core/geometry/TransformTests.cpp
         core/math/BSplineTests.cpp
@@ -60,6 +61,7 @@ bettercad_add_executable(bettercad_tests
         features/FaceReferenceTests.cpp
         features/SketchOnFaceTests.cpp
         features/ThroughAllExtrudeTests.cpp
+        features/BodyOpsTests.cpp
         features/CircularPatternFeatureTests.cpp
         features/ExpressionRegenerationTests.cpp
         features/ExtrudeTests.cpp
@@ -81,6 +83,7 @@ bettercad_add_executable(bettercad_tests
         io/FaceReferenceFileTests.cpp
         io/FaceKindFileTests.cpp
         io/ThroughAllFileTests.cpp
+        io/BodyOpsFileTests.cpp
         io/DocumentFileTests.cpp
         io/ExampleModelTests.cpp
         io/ExpressionFileTests.cpp
@@ -103,6 +106,7 @@ bettercad_add_executable(bettercad_tests
         sketch/SketchTests.cpp
         sketch/SolverTests.cpp
         support/BlockModel.hpp
+        support/BodyOpsModels.hpp
         support/BracketModel.hpp
         support/ChamferBlockModel.hpp
         support/DatumModels.hpp
@@ -143,6 +147,7 @@ if(TARGET bettercad_cli_lib)
         cli/DatumCliTests.cpp
         cli/FaceReferenceCliTests.cpp
         cli/ThroughAllCliTests.cpp
+        cli/BodyOpsCliTests.cpp
         cli/ExpressionCliTests.cpp
     )
     target_link_libraries(bettercad_tests PRIVATE BetterCAD::cli_lib)
@@ -354,6 +359,20 @@ if(TARGET bettercad_cli)
         COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "export-step|${_slab}|${_out}/through_slab.step"
         EXIT_CODE 0 STDOUT_REGEX "^Wrote .*through_slab\\.step: STEP AP214 \\(mm\\), 2 bodies \\(Slant, Peg\\), [0-9]+ bytes$"
         FILE "${_out}/through_slab.step" FILE_REGEX "^ISO-10303-21;\nHEADER;")
+    # P12-FEAT-002: bodies combined, then split.
+    set(_ops "${PROJECT_SOURCE_DIR}/examples/models/body_ops.bcad")
+    bettercad_add_process_test(cli.info.body-ops
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "info|${_ops}"
+        EXIT_CODE 0
+        STDOUT_REGEX "^Document: BodyOps\n.*  object:9   combine      Joined   join A with B, C\n.*  object:11  split        Halves   target Joined, plane Middle, keep both$")
+    bettercad_add_process_test(cli.validate.body-ops
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "validate|${_ops}"
+        EXIT_CODE 0
+        STDOUT_REGEX "feature regeneration  ok, 9 objects regenerated\n  geometry              ok, 1 result body\nResult bodies \\(1\\):\n  Halves \\(object:11\\): 2 solids, volume 171141\\.593 mm\\^3.*bounds \\(0, 0, 0\\) to \\(150, 60, 40\\) mm\nResult: valid$")
+    bettercad_add_process_test(cli.export-step.body-ops
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "export-step|${_ops}|${_out}/body_ops.step"
+        EXIT_CODE 0 STDOUT_REGEX "^Wrote .*body_ops\\.step: STEP AP214 \\(mm\\), 1 body \\(Halves\\), [0-9]+ bytes$"
+        FILE "${_out}/body_ops.step" FILE_REGEX "^ISO-10303-21;\nHEADER;")
     bettercad_add_process_test(cli.export-stl.reference.pulley
         COMMAND "$<TARGET_FILE:bettercad_cli>"
         ARGS "export-stl|${_reference}/pulley.bcad|${_out}/pulley.stl"

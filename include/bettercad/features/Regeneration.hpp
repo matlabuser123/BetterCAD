@@ -11,14 +11,17 @@
 #include <bettercad/core/math/RigidTransform.hpp>
 #include <bettercad/features/ChamferFeature.hpp>
 #include <bettercad/features/CircularPatternFeature.hpp>
+#include <bettercad/features/CombineFeature.hpp>
 #include <bettercad/features/Export.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
+#include <bettercad/features/FaceReferences.hpp>
 #include <bettercad/features/FilletFeature.hpp>
 #include <bettercad/features/HoleFeature.hpp>
 #include <bettercad/features/LinearPatternFeature.hpp>
 #include <bettercad/features/LoftFeature.hpp>
 #include <bettercad/features/MirrorFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
+#include <bettercad/features/SplitFeature.hpp>
 #include <bettercad/features/SweepFeature.hpp>
 #include <bettercad/sketch/Sketch.hpp>
 
@@ -28,6 +31,25 @@
 // sketch geometry is used as it is; solving sketches first is the job of the
 // regeneration graph (Regenerator).
 namespace bettercad::features {
+
+/// Computes the body of a split feature (P12-FEAT-002): @p target (the target
+/// feature's body) cut by the resolved plane, keeping the chosen side(s)
+/// (geometry::splitBody()). @p bodies resolves a plane on a named face.
+/// Fails with FailedPrecondition without a target body, with the plane's
+/// resolution errors ("the split plane: ..."), and with splitBody()'s
+/// errors, each prefixed with the feature's name.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::Body>
+regenerateSplit(const SplitFeature& feature, const Document& document, const geometry::Body* target,
+                const BodyLookup& bodies = {});
+
+/// Computes the body of a combine feature (P12-FEAT-002): @p target joined
+/// with, cut by or intersected with each tool's body from @p bodies, in
+/// order. Fails with FailedPrecondition without a target body or a tool's
+/// body, and when a step leaves nothing ("nothing is left after cutting
+/// Pin (object:5)"), each prefixed with the feature's name.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::Body>
+regenerateCombine(const CombineFeature& feature, const Document& document, const geometry::Body* target,
+                  const BodyLookup& bodies);
 
 /// Depth of an extrude: the driving parameter's value if it has one,
 /// otherwise the literal depth. The result must be a positive length.
