@@ -11,6 +11,7 @@
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/features/DraftFeature.hpp>
 #include <bettercad/features/FilletFeature.hpp>
+#include <bettercad/features/VariableFilletFeature.hpp>
 #include <bettercad/features/HoleFeature.hpp>
 #include <bettercad/features/LinearPatternFeature.hpp>
 #include <bettercad/features/LoftFeature.hpp>
@@ -146,6 +147,8 @@ using CreateChamferCommand = CreateFeatureCommand<ChamferFeature>;
 using ModifyChamferCommand = ModifyFeatureCommand<ChamferFeature>;
 using CreateFilletCommand = CreateFeatureCommand<FilletFeature>;
 using ModifyFilletCommand = ModifyFeatureCommand<FilletFeature>;
+using CreateVariableFilletCommand = CreateFeatureCommand<VariableFilletFeature>;
+using ModifyVariableFilletCommand = ModifyFeatureCommand<VariableFilletFeature>;
 using CreateRibCommand = CreateFeatureCommand<RibFeature>;
 using ModifyRibCommand = ModifyFeatureCommand<RibFeature>;
 using CreateDraftCommand = CreateFeatureCommand<DraftFeature>;

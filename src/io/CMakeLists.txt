@@ -21,6 +21,7 @@ bettercad_add_library(bettercad_io
         json/RibJson.cpp
         json/ShellJson.cpp
         json/SketchJson.cpp
+        json/VariableFilletJson.cpp
     PUBLIC_LINK
         BetterCAD::core
         BetterCAD::geometry

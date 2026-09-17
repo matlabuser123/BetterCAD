@@ -1,0 +1,78 @@
+baseline ../../P12-FEAT-005/ctest-release.log: 1016 distinct names
+
+ctest-debug.log: 1035 distinct names, 1036 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 19
+    cli.export-step.tapered-block
+    cli.info.tapered-block
+    cli.validate.tapered-block
+    unit.VariableFilletCli_InfoDescribesVariableFillets
+    unit.VariableFilletCli_ValidateReportsTheFillet
+    unit.VariableFilletFeature_CreationAndEditsAreUndoable
+    unit.VariableFilletFeature_DefinitionsAreValidated
+    unit.VariableFilletFeature_FailuresAreStructuredAndAtomic
+    unit.VariableFilletFeature_FollowsItsBlockAndRadii
+    unit.VariableFilletFeature_RegeneratesDeterministically
+    unit.VariableFilletFile_ConstantFilletsAreWrittenAsBefore
+    unit.VariableFilletFile_DefinitionsAreWrittenAsJson
+    unit.VariableFilletFile_ExampleFileMatchesTheBuilder
+    unit.VariableFilletFile_ExportedFilletsReadBackFromStep
+    unit.VariableFilletFile_MalformedDefinitionsAreRejectedWithThePath
+    unit.VariableFilletFile_SaveLoad_RegeneratesTheSameBodies
+    unit.VariableFillet_RefusesEdgesItCannotVerify
+    unit.VariableFillet_RequestsAreValidated
+    unit.VariableFillet_RoundsIsolatedStraightEdges
+
+ctest-release.log: 1035 distinct names, 1036 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 19
+    cli.export-step.tapered-block
+    cli.info.tapered-block
+    cli.validate.tapered-block
+    unit.VariableFilletCli_InfoDescribesVariableFillets
+    unit.VariableFilletCli_ValidateReportsTheFillet
+    unit.VariableFilletFeature_CreationAndEditsAreUndoable
+    unit.VariableFilletFeature_DefinitionsAreValidated
+    unit.VariableFilletFeature_FailuresAreStructuredAndAtomic
+    unit.VariableFilletFeature_FollowsItsBlockAndRadii
+    unit.VariableFilletFeature_RegeneratesDeterministically
+    unit.VariableFilletFile_ConstantFilletsAreWrittenAsBefore
+    unit.VariableFilletFile_DefinitionsAreWrittenAsJson
+    unit.VariableFilletFile_ExampleFileMatchesTheBuilder
+    unit.VariableFilletFile_ExportedFilletsReadBackFromStep
+    unit.VariableFilletFile_MalformedDefinitionsAreRejectedWithThePath
+    unit.VariableFilletFile_SaveLoad_RegeneratesTheSameBodies
+    unit.VariableFillet_RefusesEdgesItCannotVerify
+    unit.VariableFillet_RequestsAreValidated
+    unit.VariableFillet_RoundsIsolatedStraightEdges
+
+ctest-debug-shared.log: 1035 distinct names, 1036 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 19
+    cli.export-step.tapered-block
+    cli.info.tapered-block
+    cli.validate.tapered-block
+    unit.VariableFilletCli_InfoDescribesVariableFillets
+    unit.VariableFilletCli_ValidateReportsTheFillet
+    unit.VariableFilletFeature_CreationAndEditsAreUndoable
+    unit.VariableFilletFeature_DefinitionsAreValidated
+    unit.VariableFilletFeature_FailuresAreStructuredAndAtomic
+    unit.VariableFilletFeature_FollowsItsBlockAndRadii
+    unit.VariableFilletFeature_RegeneratesDeterministically
+    unit.VariableFilletFile_ConstantFilletsAreWrittenAsBefore
+    unit.VariableFilletFile_DefinitionsAreWrittenAsJson
+    unit.VariableFilletFile_ExampleFileMatchesTheBuilder
+    unit.VariableFilletFile_ExportedFilletsReadBackFromStep
+    unit.VariableFilletFile_MalformedDefinitionsAreRejectedWithThePath
+    unit.VariableFilletFile_SaveLoad_RegeneratesTheSameBodies
+    unit.VariableFillet_RefusesEdgesItCannotVerify
+    unit.VariableFillet_RequestsAreValidated
+    unit.VariableFillet_RoundsIsolatedStraightEdges
+
+RESULT: PASS

@@ -61,6 +61,7 @@ clean ([evidence](docs/verification/P11-QUAL-001/README.md)).
 | Parametric Part Modeling | `P11` | **Qualified** |
 | Parametric CAD completion | `P12` | **In progress** |
 | Interchange | — | Planned |
+| Advanced Surface Modeling | — | Planned |
 | Desktop Application | — | Planned |
 | Semantic Topology | — | Planned |
 | Assemblies | — | Planned |
@@ -142,7 +143,9 @@ ambition for it. `P12` completes it: parameter expressions; the remaining
 sketch constraints (angle, tangent, concentric, midpoint, symmetric,
 diameter) and entities (ellipse, spline); datum planes, axes and coordinate
 systems; sketches on planar faces; through-all extrude; split and combine;
-shell, draft and rib; variable-radius fillets and setback controls; hole
+shell, draft and rib; variable-radius fillets (setback and corner-transition
+controls were deferred to *Advanced Surface Modeling* when `P12-FEAT-006` was
+scoped); hole
 threads, standard sizes and tolerance classes; richer pattern, sweep and loft
 modes; configurations and design equations. [TODO.md](TODO.md) holds the plan
 and the order.
@@ -160,6 +163,7 @@ and the order.
 | `P12-FEAT-003` | Shell — bodies hollowed inward or outward into walls of a driven thickness, opened at named faces, with the kernel's result checked rather than trusted | [P12-FEAT-003](docs/verification/P12-FEAT-003/README.md) |
 | `P12-FEAT-004` | Draft — named faces tapered by a driven angle about a neutral plane (a datum or a named face), tangent chains included, with the kernel's result checked | [P12-FEAT-004](docs/verification/P12-FEAT-004/README.md) |
 | `P12-FEAT-005` | Rib — walls filling from an open sketched profile (lines, arcs, splines) to the body, extended along their tangents, with open sides refused, naming their faces | [P12-FEAT-005](docs/verification/P12-FEAT-005/README.md) |
+| `P12-FEAT-006` | Variable-radius fillet — radius stations along straight edges, the kernel's law computed and checked, laws that leave their stations refused; setback and corner transitions deferred | [P12-FEAT-006](docs/verification/P12-FEAT-006/README.md) |
 
 ### Interchange — Planned
 
@@ -170,6 +174,16 @@ format lives behind an adapter — see [ARCHITECTURE.md](ARCHITECTURE.md).
 
 The only STEP reader in the repository today is test-only tooling that reads
 exports back to verify them. It is not an import path.
+
+### Advanced Surface Modeling — Planned
+
+Blend work the kernel does not offer and BetterCAD would build itself:
+fillet **setback** distances and **selectable corner transitions** where
+blended edges meet. OCCT 8.0.1 computes those corners internally and exposes
+no input for either, so both need a BetterCAD-owned surface-patch layer
+(trimmed blends, N-sided tangent fills, sewing, validation). Both were
+deferred from `P12-FEAT-006`
+([investigation](docs/verification/P12-FEAT-006/investigation/README.md)).
 
 ### Desktop Application — Planned
 

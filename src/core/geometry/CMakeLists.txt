@@ -20,11 +20,14 @@ bettercad_add_library(bettercad_geometry
         LoftPlan.hpp
         Profile.cpp
         ProfileExtent.hpp
+        RadiusLaw.cpp
+        RadiusLaw.hpp
         Rib.cpp
         Shell.cpp
         Split.cpp
         SweepPlan.cpp
         SweepPlan.hpp
+        VariableFillet.cpp
         occt/OcctBlend.cpp
         occt/OcctBlend.hpp
         occt/OcctBody.cpp
@@ -49,6 +52,7 @@ bettercad_add_library(bettercad_geometry
         occt/OcctSweeps.cpp
         occt/OcctTopology.hpp
         occt/OcctTransform.cpp
+        occt/OcctVariableFillet.cpp
     PUBLIC_LINK
         BetterCAD::core
     PRIVATE_LINK
@@ -57,6 +61,7 @@ bettercad_add_library(bettercad_geometry
         TKG3d
         TKG2d
         TKGeomBase
+        TKGeomAlgo
         TKBRep
         TKTopAlgo
         TKPrim

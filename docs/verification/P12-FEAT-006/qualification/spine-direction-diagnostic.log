@@ -1,0 +1,28 @@
+Which way the kernel runs along the edges the tests round (2026-09-18).
+
+A temporary diagnostic line, printed after the stations are handed to the kernel in
+geometry::variableFilletEdges(), and removed again before the qualification build:
+
+    std::fprintf(stderr, "DIAGNOSTIC %s: spine %s\n", name.c_str(), forward ? "forward" : "reversed");
+
+"forward": the kernel's spine starts at the end that comes first along the edge's canonical
+direction; "reversed": it starts at the other end, and the stations are handed over as
+1 - position, in reverse order. The Debug test executable ran the two test cases below;
+the lines are counted by text:
+
+  bettercad_tests.exe VariableFillet_RoundsIsolatedStraightEdges,VariableFilletFeature_FollowsItsBlockAndRadii
+
+Both directions occur (the back edges of counter-clockwise profiles run -x), and the
+uneven stations on the reversed edges pass the check of the kernel's law against
+BetterCAD's, which a wrong mapping would fail.
+
+ 10 x DIAGNOSTIC edge reference 1 (line through (0, 0, 20) mm along (1, 0, 0)): spine forward
+ 10 x DIAGNOSTIC edge reference 2 (line through (0, 50, 20) mm along (1, 0, 0)): spine reversed
+ 11 x DIAGNOSTIC edge reference 1 (line through (0, 0, 40) mm along (1, 0, 0)): spine forward
+  3 x DIAGNOSTIC edge reference 1 (line through (0, 60, 40) mm along (1, 0, 0)): spine reversed
+  4 x DIAGNOSTIC edge reference 2 (line through (0, 60, 40) mm along (1, 0, 0)): spine reversed
+  1 x DIAGNOSTIC edge reference 1 (line through (30, 0, 0) mm along (0, 0, 1)): spine forward
+  1 x DIAGNOSTIC edge reference 1 (line through (20, 20, 0) mm along (0, 0, 1)): spine forward
+All tests passed (473 assertions in 2 test cases)
+
+[exit code 0]

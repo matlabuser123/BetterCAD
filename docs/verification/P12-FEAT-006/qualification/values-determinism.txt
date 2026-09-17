@@ -1,0 +1,16 @@
+Cross-configuration comparison of the measured values of the P12-FEAT-006 tests.
+Each configuration's bettercad_tests.exe ran the 16 test cases of values-header.txt with -s --reporter xml
+--rng-seed 1; values.py filtered the report; compare-values.py (in this directory) compared the results.
+Temporary paths and document UUIDs are normalized; lines holding a pointer value are dropped.
+
+release: 1175 non-empty lines after normalizing, MD5 a954c1090c0267c45da1adaba736d1db
+debug: 1175 non-empty lines after normalizing, MD5 a954c1090c0267c45da1adaba736d1db
+debug-shared: 1175 non-empty lines after normalizing, MD5 a954c1090c0267c45da1adaba736d1db
+
+debug against release:
+  differing lines: 0 expected only, 0 measured
+
+debug-shared against release:
+  differing lines: 0 expected only, 0 measured
+
+RESULT: measured values identical

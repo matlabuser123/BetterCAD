@@ -1,0 +1,84 @@
+file                             kind  tolerance  checks    largest
+VariableFilletFeatureTests.cpp   abs     1.0e-07      29   1.76e-10
+VariableFilletFeatureTests.cpp   abs     2.0e-07      46   1.00e-07
+VariableFilletFeatureTests.cpp   rel     1.0e-09      10   6.69e-12
+VariableFilletFeatureTests.cpp   rel     1.0e-05       8   3.64e-06
+VariableFilletFileTests.cpp      abs     2.0e-07       3   1.00e-07
+VariableFilletFileTests.cpp      rel     1.0e-09       1   7.33e-11
+VariableFilletTests.cpp          abs     1.0e-15       1   0.00e+00
+VariableFilletTests.cpp          abs     1.0e-12     156   2.66e-15
+VariableFilletTests.cpp          abs     1.0e-09       5   1.07e-14
+VariableFilletTests.cpp          abs     1.0e-07      36   1.13e-10
+VariableFilletTests.cpp          abs     2.0e-07      78   1.00e-07
+VariableFilletTests.cpp          abs     1.0e-06       2   1.99e-09
+VariableFilletTests.cpp          rel     1.0e-12       1   1.21e-16
+VariableFilletTests.cpp          rel     1.0e-09      12   3.47e-12
+VariableFilletTests.cpp          rel     1.0e-05      10   4.69e-06
+
+VariableFilletFeatureTests.cpp abs 1.0e-07: largest 3
+  1.762e-10  measured 25.077729097395554 expected 25.077729097571762  VariableFilletFeature_CreationAndEditsAreUndoable  
+  1.319e-10  measured 49.77173062464372 expected 49.77173062451185  VariableFilletFeature_CreationAndEditsAreUndoable  
+  6.315e-11  measured 49.663971040881776 expected 49.66397104094493  VariableFilletFeature_FollowsItsBlockAndRadii  w := 100.0; d := 50.0; lo := 5.0; hi := 12.0
+
+VariableFilletFeatureTests.cpp abs 2.0e-07: largest 3
+  1.000e-07  measured 50.00000010000003 expected 50.0  VariableFilletFeature_FollowsItsBlockAndRadii  w := 100.0; d := 50.0; lo := 3.0; hi := 8.0
+  1.000e-07  measured 50.00000010000003 expected 50.0  VariableFilletFeature_FollowsItsBlockAndRadii  w := 150.0; d := 50.0; lo := 3.0; hi := 8.0
+  1.000e-07  measured -1.0000002887e-07 expected 0.0  VariableFilletFeature_FollowsItsBlockAndRadii  w := 60.0; d := 50.0; lo := 3.0; hi := 8.0
+
+VariableFilletFeatureTests.cpp rel 1.0e-09: largest 3
+  6.687e-12  measured 98507.8428850171 expected 98507.84288567584  VariableFilletFeature_CreationAndEditsAreUndoable  
+  3.078e-12  measured 59225.94388170292 expected 59225.943881520645  VariableFilletFeature_FollowsItsBlockAndRadii  w := 60.0; d := 50.0; lo := 3.0; hi := 8.0
+  2.781e-12  measured 98840.42431547686 expected 98840.42431520204  VariableFilletFeature_CreationAndEditsAreUndoable  
+
+VariableFilletFeatureTests.cpp rel 1.0e-05: largest 3
+  3.642e-06  measured 3652.1281997114133 expected 3652.114898989899  VariableFilletFeature_FollowsItsBlockAndRadii  w := 100.0; d := 50.0; lo := 15.0; hi := 2.0
+  3.642e-06  measured 3652.128199711413 expected 3652.114898989899  VariableFilletFeature_FollowsItsBlockAndRadii  w := 100.0; d := 50.0; lo := 5.0; hi := 12.0
+  3.453e-06  measured 3852.1281997114133 expected 3852.114898989899  VariableFilletFeature_FollowsItsBlockAndRadii  w := 100.0; d := 50.0; lo := 5.0; hi := 8.0
+
+VariableFilletFileTests.cpp abs 2.0e-07: largest 3
+  1.000e-07  measured 100.00000010000035 expected 100.0  VariableFilletFile_ExportedFilletsReadBackFromStep  
+  1.000e-07  measured 50.000000100000015 expected 50.0  VariableFilletFile_ExportedFilletsReadBackFromStep  
+  1.000e-07  measured 20.00000010000001 expected 20.0  VariableFilletFile_ExportedFilletsReadBackFromStep  
+
+VariableFilletFileTests.cpp rel 1.0e-09: largest 3
+  7.327e-11  measured 98709.90647643326 expected 98709.90646920109  VariableFilletFile_ExportedFilletsReadBackFromStep  
+
+VariableFilletTests.cpp abs 1.0e-15: largest 3
+  0.000e+00  measured 0.19642857142857142 expected 0.19642857142857142  VariableFillet_RequestsAreValidated / the radius law  
+
+VariableFilletTests.cpp abs 1.0e-12: largest 3
+  2.665e-15  measured 6.726339285714287 expected 6.7263392857142845  VariableFillet_RequestsAreValidated / the radius law  
+  1.776e-15  measured 9.468610491071429 expected 9.468610491071427  VariableFillet_RequestsAreValidated / the radius law  
+  1.776e-15  measured 10.735630580357144 expected 10.735630580357142  VariableFillet_RequestsAreValidated / the radius law  
+
+VariableFilletTests.cpp abs 1.0e-09: largest 3
+  1.066e-14  measured 19.972625528906146 expected 19.972625528906136  VariableFillet_RoundsIsolatedStraightEdges / increasing, decreasing and constant radii on one edge  
+  7.105e-15  measured 50.00000000000001 expected 50.0  VariableFillet_RoundsIsolatedStraightEdges / increasing, decreasing and constant radii on one edge  
+  7.105e-15  measured 30.04170175794785 expected 30.041701757947855  VariableFillet_RoundsIsolatedStraightEdges / increasing, decreasing and constant radii on one edge  
+
+VariableFilletTests.cpp abs 1.0e-07: largest 3
+  1.130e-10  measured 49.918696181340735 expected 49.91869618122774  VariableFillet_RoundsIsolatedStraightEdges / several stations, on edges the kernel runs either way  
+  9.717e-11  measured 29.9996477327476 expected 29.99964773284477  VariableFillet_RoundsIsolatedStraightEdges / several stations, on edges the kernel runs either way  
+  8.072e-11  measured 29.93020858848171 expected 29.930208588400994  VariableFillet_RoundsIsolatedStraightEdges / several stations, on edges the kernel runs either way  describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.4, 4 mm) (0.7, 6 mm) (1, 8 mm) "
+
+VariableFilletTests.cpp abs 2.0e-07: largest 3
+  1.000e-07  measured 60.00000010000004 expected 60.0  VariableFillet_RoundsIsolatedStraightEdges / several stations, on edges the kernel runs either way  describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 6 mm) (0.5, 4 mm) (1, 6 mm) "
+  1.000e-07  measured 40.00000010000002 expected 40.0  VariableFillet_RoundsIsolatedStraightEdges / several stations, on edges the kernel runs either way  describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 6 mm) (0.5, 4 mm) (1, 6 mm) "
+  1.000e-07  measured 40.000000100000015 expected 40.0  VariableFillet_RoundsIsolatedStraightEdges / several stations, on edges the kernel runs either way  describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 2 mm) (0.3, 4 mm) (1, 7 mm) "
+
+VariableFilletTests.cpp abs 1.0e-06: largest 3
+  1.995e-09  measured 0.7528874180004235 expected 0.7528874160058351  VariableFillet_RequestsAreValidated / laws that leave their stations' range, measured on the reference law  
+  4.085e-10  measured 0.24711258358565252 expected 0.24711258399416494  VariableFillet_RequestsAreValidated / laws that leave their stations' range, measured on the reference law  
+
+VariableFilletTests.cpp rel 1.0e-12: largest 3
+  1.214e-16  measured 239656.63706143593 expected 239656.6370614359  VariableFillet_RoundsIsolatedStraightEdges / increasing, decreasing and constant radii on one edge  
+
+VariableFilletTests.cpp rel 1.0e-09: largest 3
+  3.475e-12  measured 239414.8390902353 expected 239414.83909106723  VariableFillet_RoundsIsolatedStraightEdges / several stations, on edges the kernel runs either way  describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 2 mm) (0.3, 4 mm) (1, 7 mm) "
+  3.475e-12  measured 239414.8390902353 expected 239414.83909106723  VariableFillet_RoundsIsolatedStraightEdges / several stations, on edges the kernel runs either way  describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 2 mm) (0.3, 4 mm) (1, 7 mm) "
+  3.421e-12  measured 239417.0525152691 expected 239417.05251445004  VariableFillet_RoundsIsolatedStraightEdges / several stations, on edges the kernel runs either way  describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.4, 4 mm) (0.7, 6 mm) (1, 8 mm) "
+
+VariableFilletTests.cpp rel 1.0e-05: largest 3
+  4.689e-06  measured 5006.92447305796 expected 5006.900996462167  VariableFillet_RoundsIsolatedStraightEdges / several stations, on edges the kernel runs either way  
+  2.435e-06  measured 5573.877210277858 expected 5573.863636363636  VariableFillet_RoundsIsolatedStraightEdges / several stations, on edges the kernel runs either way  describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.25, 4 mm) (0.5, 6 mm) (0.75, 4 mm) (1, 3 mm) "
+  2.417e-06  measured 5502.128199711415 expected 5502.114898989899  VariableFillet_RoundsIsolatedStraightEdges / several stations, on edges the kernel runs either way  describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 2 mm) (0.3, 4 mm) (1, 7 mm) "

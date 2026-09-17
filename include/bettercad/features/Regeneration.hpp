@@ -7,6 +7,7 @@
 #include <bettercad/core/geometry/Chamfer.hpp>
 #include <bettercad/core/geometry/Hole.hpp>
 #include <bettercad/core/geometry/Sweeps.hpp>
+#include <bettercad/core/geometry/VariableFillet.hpp>
 #include <bettercad/core/math/Direction.hpp>
 #include <bettercad/core/math/RigidTransform.hpp>
 #include <bettercad/features/ChamferFeature.hpp>
@@ -26,6 +27,7 @@
 #include <bettercad/features/ShellFeature.hpp>
 #include <bettercad/features/SplitFeature.hpp>
 #include <bettercad/features/SweepFeature.hpp>
+#include <bettercad/features/VariableFilletFeature.hpp>
 #include <bettercad/sketch/Sketch.hpp>
 
 #include <vector>
@@ -178,6 +180,22 @@ regenerateChamfer(const ChamferFeature& feature, const Document& document, const
 /// are errors, never guesses; see geometry::filletEdges().
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::Body>
 regenerateFillet(const FilletFeature& feature, const Document& document, const geometry::Body* target);
+
+/// The geometry request of a variable-radius fillet: its edges and
+/// stations with every driven radius replaced by its parameter's value
+/// (NotFound if the parameter is missing, DimensionMismatch if it is not a
+/// length). The stations and the law are checked by the fillet itself.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::VariableFilletRequest>
+resolveVariableFilletRequest(const VariableFilletDefinition& definition, const Document& document);
+
+/// Computes the body of a variable-radius fillet feature (P12-FEAT-006):
+/// @p target (the target feature's body) with the referenced edges rounded
+/// and the result checked against the radius law (see
+/// geometry::variableFilletEdges()). Fails with FailedPrecondition if there
+/// is no target body; errors are prefixed with the feature's name.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::Body>
+regenerateVariableFillet(const VariableFilletFeature& feature, const Document& document,
+                         const geometry::Body* target);
 
 /// Thickness of a rib: the driving parameter's value if it has one
 /// (NotFound if missing, DimensionMismatch if not a length), otherwise the

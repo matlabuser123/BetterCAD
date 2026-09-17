@@ -365,6 +365,8 @@ constexpr std::array<std::pair<EdgeCurve, std::string_view>, 2> kEdgeCurves{{
     {EdgeCurve::Circle, "circle"},
 }};
 
+} // namespace
+
 Json edgeToJson(const geometry::EdgeSignature& edge) {
     Json json = Json::object();
     json["curve"] = std::string{nameOf(kEdgeCurves, edge.curve)};
@@ -418,6 +420,8 @@ Result<geometry::EdgeSignature> edgeFromJson(const Json& value, std::string_view
     }
     return edge;
 }
+
+namespace {
 
 Json edgeListToJson(const std::vector<geometry::EdgeSignature>& edges) {
     Json json = Json::array();

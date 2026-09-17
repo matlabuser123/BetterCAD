@@ -18,6 +18,7 @@
 #include <bettercad/features/SplitFeature.hpp>
 #include <bettercad/features/SweepFeature.hpp>
 #include <bettercad/features/Validation.hpp>
+#include <bettercad/features/VariableFilletFeature.hpp>
 #include <bettercad/io/DocumentFile.hpp>
 #include <bettercad/sketch/Sketch.hpp>
 
@@ -380,6 +381,22 @@ std::string describeObject(const Document& document, const DocumentObject& objec
                                                      : std::format("{:.10g} mm", d.radius.in(units::mm));
         return std::format("target {}, {}, radius {}", nameOrId(document, ObjectId{d.target}),
                            plural(d.edges.size(), "edge", "edges"), radius);
+    }
+    if (const auto* variable = dynamic_cast<const features::VariableFilletFeature*>(&object)) {
+        // "target Block, 2 edges: low at 0, high at 1; 6 mm at 0, 4 mm at 0.5, 6 mm at 1"
+        const features::VariableFilletDefinition& d = variable->definition();
+        std::string edges;
+        for (const features::VariableFilletEdgeDefinition& entry : d.edges) {
+            std::string stations;
+            for (const features::VariableFilletStation& station : entry.stations) {
+                stations += std::format("{}{} at {:.10g}", stations.empty() ? "" : ", ",
+                                        describeLength(document, station.radius, station.radiusParameter),
+                                        station.position);
+            }
+            edges += std::format("{}{}", edges.empty() ? "" : "; ", stations);
+        }
+        return std::format("target {}, {}: {}", nameOrId(document, ObjectId{d.target}),
+                           plural(d.edges.size(), "edge", "edges"), edges);
     }
     if (const auto* rib = dynamic_cast<const features::RibFeature*>(&object)) {
         // "target Bracket, profile RibSketch (2 edges), thickness wall, symmetric, left side"

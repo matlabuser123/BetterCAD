@@ -1,0 +1,97 @@
+Compiler: g++ (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r4) 16.1.0
+Kernel: OCCT 8.0.1 from the BetterCAD dependency prefix
+        (%LOCALAPPDATA%\bettercad-deps\gnu-16-mingw-amd64), its bin directory on PATH.
+Built (from the repository root) with:
+  g++ -std=c++23 -O2 -Wall -D_USE_MATH_DEFINES -I<deps>\include\opencascade
+      docs\verification\P12-FEAT-006\kernel-probe\station_contract_probe.cpp -L<deps>\lib
+      -lTKFillet -lTKBool -lTKBO -lTKShHealing -lTKPrim -lTKTopAlgo -lTKGeomAlgo -lTKBRep
+      -lTKGeomBase -lTKG2d -lTKG3d -lTKMath -lTKernel
+Run on 2026-09-18 (Windows 11, PowerShell), after the scope decision, each case in its own
+process; output as printed, with the process exit code.
+
+$ station_contract_probe box
+box: the spine direction of each edge
+  edge  1 from (0, 0, 0) along (0, 0, 1): spine along, convex
+  edge  2 from (0, 0, 40) along (0, 1, 0): spine along, convex
+  edge  3 from (0, 60, 0) along (0, 0, 1): spine along, convex
+  edge  4 from (0, 0, 0) along (0, 1, 0): spine along, convex
+  edge  5 from (100, 0, 0) along (0, 0, 1): spine along, convex
+  edge  6 from (100, 0, 40) along (0, 1, 0): spine along, convex
+  edge  7 from (100, 60, 0) along (0, 0, 1): spine along, convex
+  edge  8 from (100, 0, 0) along (0, 1, 0): spine along, convex
+  edge  9 from (0, 0, 0) along (1, 0, 0): spine along, convex
+  edge 10 from (0, 0, 40) along (1, 0, 0): spine along, convex
+  edge 11 from (0, 60, 0) along (1, 0, 0): spine along, convex
+  edge 12 from (0, 60, 40) along (1, 0, 0): spine along, convex
+[exit code 0]
+
+$ station_contract_probe reversed
+reversed: edge added as found: contour 1, first vertex (0, 0, 0)
+reversed: edge added reversed: contour 1, first vertex (0, 0, 0)
+[exit code 0]
+
+$ station_contract_probe hex
+hex: vertical edge at (30, 0), stations (0,3) (0.5,6) (1,4)
+  length 50.000000000, face angle 60.000000000 deg, convex (ChFi3d: convex), into faces - -
+  contour 1, 1 edge(s), spine along the canonical direction, abscissa of the start 0.000000000
+  valid 1, self-intersects 0
+  kernel law bounds [-25.000000000, 75.000000000] (predicted [-25.000000000, 75.000000000]); max |kernel - law| on the edge 1.776e-15
+  faces generated from the edge: 1
+  section model 1.066e-14 mm; contact 9.548e-15 mm (samples on face 1 35, face 2 35, elsewhere 62)
+  volume change 66.766813180, expected 66.766813452, rel 4.069e-09
+[exit code 0]
+
+$ station_contract_probe concave
+concave: the inside edge at (20, 20), stations (0,6) (1,2)
+  length 40.000000000, face angle 90.000000000 deg, concave (ChFi3d: concave), into faces + +
+  contour 1, 1 edge(s), spine along the canonical direction, abscissa of the start 0.000000000
+  valid 1, self-intersects 0
+  kernel law bounds [-20.000000000, 60.000000000] (predicted [-20.000000000, 60.000000000]); max |kernel - law| on the edge 2.665e-15
+  faces generated from the edge: 1
+  section model 1.776e-14 mm; contact 2.265e-14 mm (samples on face 1 35, face 2 35, elsewhere 62)
+  volume change -151.620264300, expected -151.620264358, rel 3.826e-10
+[exit code 0]
+
+$ station_contract_probe flat
+flat: box edge (0,0,0)-(100,0,0), stations (0,4) (0.4,4) (1,4)
+  length 100.000000000, face angle 90.000000000 deg, convex (ChFi3d: convex), into faces - -
+  contour 1, 1 edge(s), spine along the canonical direction, abscissa of the start 0.000000000
+  valid 1, self-intersects 0
+  kernel: constant radius 4.000000000000 (stations all equal)
+  faces generated from the edge: 1
+  section model 8.882e-16 mm; contact 8.882e-16 mm (samples on face 1 35, face 2 35, elsewhere 62)
+  volume change 343.362938564, expected 343.362938564, rel 3.973e-14
+[exit code 0]
+
+$ station_contract_probe down
+down: box edge (100,60,0)-(100,60,40), stations (0,2) (1,7)
+  length 40.000000000, face angle 90.000000000 deg, convex (ChFi3d: convex), into faces - -
+  contour 1, 1 edge(s), spine along the canonical direction, abscissa of the start 0.000000000
+  valid 1, self-intersects 0
+  kernel law bounds [-20.000000000, 60.000000000] (predicted [-20.000000000, 60.000000000]); max |kernel - law| on the edge 2.665e-15
+  faces generated from the edge: 1
+  section model 3.864e-14 mm; contact 4.174e-14 mm (samples on face 1 35, face 2 35, elsewhere 62)
+  volume change 196.132314016, expected 196.132314105, rel 4.561e-10
+[exit code 0]
+
+$ station_contract_probe against
+against: prism edge (100,60,0)-(100,0,0), stations (0,2) (0.3,4) (1,7)
+  length 60.000000000, face angle 90.000000000 deg, convex (ChFi3d: convex), into faces - -
+  contour 1, 1 edge(s), spine against the canonical direction, abscissa of the start 60.000000000
+  valid 1, self-intersects 0
+  kernel law bounds [-30.000000000, 90.000000000] (predicted [-30.000000000, 90.000000000]); max |kernel - law| on the edge 1.776e-15
+  faces generated from the edge: 1
+  section model 3.908e-14 mm; contact 2.043e-14 mm (samples on face 1 35, face 2 35, elsewhere 62)
+  volume change 351.096545769, expected 351.096545360, rel 1.166e-09
+[exit code 0]
+
+$ station_contract_probe all
+all: box edge (0,60,40)-(100,60,40), stations (0,2) (0.25,5) (0.75,3) (1,6)
+  length 100.000000000, face angle 90.000000000 deg, convex (ChFi3d: convex), into faces - -
+  contour 1, 1 edge(s), spine along the canonical direction, abscissa of the start 0.000000000
+  valid 1, self-intersects 0
+  kernel law bounds [-50.000000000, 150.000000000] (predicted [-50.000000000, 150.000000000]); max |kernel - law| on the edge 1.776e-15
+  faces generated from the edge: 1
+  section model 2.398e-14 mm; contact 1.421e-14 mm (samples on face 1 35, face 2 35, elsewhere 62)
+  volume change 362.607466342, expected 362.607466539, rel 5.426e-10
+[exit code 0]

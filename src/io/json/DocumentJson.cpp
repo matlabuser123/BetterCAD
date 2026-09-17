@@ -25,6 +25,8 @@ Result<Json> objectToJson(const DocumentObject& object) {
         data = detail::chamferToJson(*chamfer);
     } else if (const auto* fillet = dynamic_cast<const features::FilletFeature*>(&object)) {
         data = detail::filletToJson(*fillet);
+    } else if (const auto* variable = dynamic_cast<const features::VariableFilletFeature*>(&object)) {
+        data = detail::variableFilletToJson(*variable);
     } else if (const auto* rib = dynamic_cast<const features::RibFeature*>(&object)) {
         data = detail::ribToJson(*rib);
     } else if (const auto* draft = dynamic_cast<const features::DraftFeature*>(&object)) {
@@ -124,6 +126,13 @@ Result<std::unique_ptr<DocumentObject>> objectFromJson(const Json& value, std::s
             return std::unexpected(fillet.error());
         }
         return std::unique_ptr<DocumentObject>(std::move(*fillet));
+    }
+    if (*type == features::VariableFilletFeature::kTypeName) {
+        auto variable = detail::variableFilletFromJson(**data, std::move(*name), dataPath);
+        if (!variable) {
+            return std::unexpected(variable.error());
+        }
+        return std::unique_ptr<DocumentObject>(std::move(*variable));
     }
     if (*type == features::RibFeature::kTypeName) {
         auto rib = detail::ribFromJson(**data, std::move(*name), dataPath);

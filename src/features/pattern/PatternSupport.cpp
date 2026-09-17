@@ -128,6 +128,12 @@ Result<InstanceOperation> instanceOperation(const DocumentObject& source, const 
             return geometry::filletEdges(target, {.edges = movedEdges(edges, motion), .radius = radius});
         }};
     }
+    if (dynamic_cast<const VariableFilletFeature*>(&source) != nullptr) {
+        // Its stations run along each edge's canonical direction, which a
+        // copy's edge may reverse; copies are not supported (P12-FEAT-006).
+        return makeError(ErrorCode::FailedPrecondition,
+                         std::format("a {} cannot repeat a variable-radius fillet", pattern));
+    }
     if (dynamic_cast<const LinearPatternFeature*>(&source) != nullptr ||
         dynamic_cast<const CircularPatternFeature*>(&source) != nullptr) {
         return makeError(ErrorCode::FailedPrecondition,

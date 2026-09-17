@@ -24,6 +24,7 @@
 #include <bettercad/features/ShellFeature.hpp>
 #include <bettercad/features/SplitFeature.hpp>
 #include <bettercad/features/SweepFeature.hpp>
+#include <bettercad/features/VariableFilletFeature.hpp>
 #include <bettercad/sketch/Sketch.hpp>
 
 #include <memory>
@@ -101,6 +102,19 @@ chamferFromJson(const Json& data, std::string name, std::string_view path);
 [[nodiscard]] Json filletToJson(const features::FilletFeature& feature);
 [[nodiscard]] Result<std::unique_ptr<features::FilletFeature>>
 filletFromJson(const Json& data, std::string name, std::string_view path);
+
+/// An edge reference: {"curve": "line", "point": [...], "direction": [...]}
+/// or {"curve": "circle", "center": [...], "axis": [...], "radius": r}. The
+/// signature is kept as written and validated on reading.
+[[nodiscard]] Json edgeToJson(const geometry::EdgeSignature& edge);
+[[nodiscard]] Result<geometry::EdgeSignature> edgeFromJson(const Json& value, std::string_view path);
+
+/// "target"; "edges", each {"edge": an edge reference, "stations": [...]},
+/// each station {"position": u, "radius": metres} with an optional
+/// "radius_parameter" (P12-FEAT-006).
+[[nodiscard]] Json variableFilletToJson(const features::VariableFilletFeature& feature);
+[[nodiscard]] Result<std::unique_ptr<features::VariableFilletFeature>>
+variableFilletFromJson(const Json& data, std::string name, std::string_view path);
 
 /// Lengths in metres, the angle in radians; the face as
 /// {"surface": "plane", "point": [...], "normal": [...]} and the centre as

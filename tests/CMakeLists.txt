@@ -46,6 +46,7 @@ bettercad_add_executable(bettercad_tests
         core/geometry/PropertyTests.cpp
         core/geometry/RevolutionTests.cpp
         core/geometry/RibTests.cpp
+        core/geometry/VariableFilletTests.cpp
         core/geometry/ShellTests.cpp
         core/geometry/SplitTests.cpp
         core/geometry/SweepTests.cpp
@@ -81,6 +82,7 @@ bettercad_add_executable(bettercad_tests
         features/RegeneratorTests.cpp
         features/RevolveTests.cpp
         features/RibFeatureTests.cpp
+        features/VariableFilletFeatureTests.cpp
         features/ShellFeatureTests.cpp
         features/ValidationTests.cpp
         io/ChamferFileTests.cpp
@@ -103,6 +105,7 @@ bettercad_add_executable(bettercad_tests
         io/SweepFileTests.cpp
         io/RevolveFileTests.cpp
         io/RibFileTests.cpp
+        io/VariableFilletFileTests.cpp
         io/ShellFileTests.cpp
         io/StepExportTests.cpp
         io/StlTests.cpp
@@ -129,6 +132,7 @@ bettercad_add_executable(bettercad_tests
         support/MeshAnalysis.hpp
         support/MirrorModels.hpp
         support/RibModels.hpp
+        support/VariableFilletModels.hpp
         support/ShellModels.hpp
         support/PatternModels.hpp
         support/SweepModels.hpp
@@ -162,6 +166,7 @@ if(TARGET bettercad_cli_lib)
         cli/ThroughAllCliTests.cpp
         cli/BodyOpsCliTests.cpp
         cli/RibCliTests.cpp
+        cli/VariableFilletCliTests.cpp
         cli/ShellCliTests.cpp
         cli/ExpressionCliTests.cpp
     )
@@ -431,6 +436,20 @@ if(TARGET bettercad_cli)
         COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "export-step|${_ribs}|${_out}/ribbed_bracket.step"
         EXIT_CODE 0 STDOUT_REGEX "^Wrote .*ribbed_bracket\\.step: STEP AP214 \\(mm\\), 1 body \\(Rib\\), [0-9]+ bytes$"
         FILE "${_out}/ribbed_bracket.step" FILE_REGEX "^ISO-10303-21;\nHEADER;")
+    # P12-FEAT-006: a block with two top edges rounded with variable radii.
+    set(_tapers "${PROJECT_SOURCE_DIR}/examples/models/tapered_block.bcad")
+    bettercad_add_process_test(cli.info.tapered-block
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "info|${_tapers}"
+        EXIT_CODE 0
+        STDOUT_REGEX "^Document: TaperedBlock\n.*  object:6  extrude          Block        profile BlockSketch, depth 20 mm, normal, new body\n  object:7  variable_fillet  Taper        target Block, 2 edges: low at 0, high at 1; 2 mm at 0, 4 mm at 0\\.3, 7 mm at 1$")
+    bettercad_add_process_test(cli.validate.tapered-block
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "validate|${_tapers}"
+        EXIT_CODE 0
+        STDOUT_REGEX "feature regeneration  ok, 3 objects regenerated\n  geometry              ok, 1 result body\nResult bodies \\(1\\):\n  Taper \\(object:7\\): 1 solid, volume 98709\\.906 mm\\^3, area 15523\\.393 mm\\^2, bounds \\(0, 0, 0\\) to \\(100, 50, 20\\) mm\nResult: valid$")
+    bettercad_add_process_test(cli.export-step.tapered-block
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "export-step|${_tapers}|${_out}/tapered_block.step"
+        EXIT_CODE 0 STDOUT_REGEX "^Wrote .*tapered_block\\.step: STEP AP214 \\(mm\\), 1 body \\(Taper\\), [0-9]+ bytes$"
+        FILE "${_out}/tapered_block.step" FILE_REGEX "^ISO-10303-21;\nHEADER;")
     bettercad_add_process_test(cli.export-stl.reference.pulley
         COMMAND "$<TARGET_FILE:bettercad_cli>"
         ARGS "export-stl|${_reference}/pulley.bcad|${_out}/pulley.stl"

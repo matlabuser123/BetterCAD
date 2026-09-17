@@ -1,0 +1,1211 @@
+Measured values of the P12-FEAT-006 tests (Release build of the qualified tree).
+Produced by: build/release/bin/bettercad_tests.exe "[variable]"
+-s --reporter xml --rng-seed 1, filtered by values.py (kept in this directory): every passed CHECK_THAT and
+every passed CHECK whose expansion shows values, with the test case, section and INFO/CAPTURE context. Each
+entry: file:line, the assertion, then Catch2's expansion (values printed exactly). REQUIRE lines, repeats of an
+identical entry within a test case and expansions over 1000 characters (whole-file text) are left out.
+
+
+== VariableFillet_RefusesEdgesItCannotVerify / requests and bodies
+VariableFilletTests.cpp:456  CHECK( code(variableFilletEdges(Body{}, request(front, stations))) == ErrorCode::FailedPrecondition )
+        => 5 == 5
+VariableFilletTests.cpp:457  CHECK( failure(variableFilletEdges(Body{}, request(front, stations))) == "variable-radius fillet: the body is empty" )
+        => "variable-radius fillet: the body is empty" == "variable-radius fillet: the body is empty"
+VariableFilletTests.cpp:460  CHECK( code(bad) == ErrorCode::InvalidArgument )
+        => 0 == 0
+VariableFilletTests.cpp:463  CHECK( code(missing) == ErrorCode::NotFound )
+        => 1 == 1
+VariableFilletTests.cpp:464  CHECK( failure(missing) == "variable-radius fillet: edge reference 1 (line through (0, 0, 41) mm along " "(1, 0, 0)) matches no edge of the body" )
+        => "variable-radius fillet: edge reference 1 (line through (0, 0, 41) mm along (1, 0, 0)) matches no edge of the body" == "variable-radius fillet: edge reference 1 (line through (0, 0, 41) mm along (1, 0, 0)) matches no edge of the body"
+
+== VariableFillet_RefusesEdgesItCannotVerify / edges that meet, in one request
+VariableFilletTests.cpp:473  CHECK( code(corner) == ErrorCode::FailedPrecondition )
+        => 5 == 5
+VariableFilletTests.cpp:474  CHECK( failure(corner) == "variable-radius fillet: edge reference 2 (line through (100, 0, 0) mm along " "(0, 0, 1)) meets edge reference 1 (line through (0, 0, 40) mm along (1, 0, 0)) at " "a vertex; a variable-radius fillet rounds edges that meet no other edge it rounds" )
+        => "variable-radius fillet: edge reference 2 (line through (100, 0, 0) mm along (0, 0, 1)) meets edge reference 1 (line through (0, 0, 40) mm along (1, 0, 0)) at a vertex; a variable-radius fillet rounds edges that meet no other edge it rounds" == "variable-radius fillet: edge reference 2 (line through (100, 0, 0) mm along (0, 0, 1)) meets edge reference 1 (line through (0, 0, 40) mm along (1, 0, 0)) at a vertex; a variable-radius fillet rounds edges that meet no other edge it rounds"
+
+== VariableFillet_RefusesEdgesItCannotVerify / an edge that continues smoothly into another
+VariableFilletTests.cpp:485  CHECK( code(chained) == ErrorCode::FailedPrecondition )
+        => 5 == 5
+VariableFilletTests.cpp:486  CHECK( failure(chained) == "variable-radius fillet: edge reference 1 (line through (0, 0, 40) mm along " "(1, 0, 0)) continues smoothly into 2 other edge(s); a variable-radius fillet " "rounds single edges only" )
+        => "variable-radius fillet: edge reference 1 (line through (0, 0, 40) mm along (1, 0, 0)) continues smoothly into 2 other edge(s); a variable-radius fillet rounds single edges only" == "variable-radius fillet: edge reference 1 (line through (0, 0, 40) mm along (1, 0, 0)) continues smoothly into 2 other edge(s); a variable-radius fillet rounds single edges only"
+
+== VariableFillet_RefusesEdgesItCannotVerify / an edge that is not between two planes
+VariableFilletTests.cpp:499  CHECK( code(curved) == ErrorCode::FailedPrecondition )
+        => 5 == 5
+VariableFilletTests.cpp:500  CHECK( failure(curved) == "variable-radius fillet: edge reference 1 (line through (20, 0, 0) mm along " "(0, 0, 1)) is not between two planar faces; a variable-radius fillet rounds edges " "between planes only" )
+        => "variable-radius fillet: edge reference 1 (line through (20, 0, 0) mm along (0, 0, 1)) is not between two planar faces; a variable-radius fillet rounds edges between planes only" == "variable-radius fillet: edge reference 1 (line through (20, 0, 0) mm along (0, 0, 1)) is not between two planar faces; a variable-radius fillet rounds edges between planes only"
+
+== VariableFillet_RefusesEdgesItCannotVerify / radii too large for the faces, anywhere along the edge
+VariableFilletTests.cpp:508  CHECK( code(tooLarge) == ErrorCode::FailedPrecondition )
+        => 5 == 5
+VariableFilletTests.cpp:513  CHECK( code(middle) == ErrorCode::FailedPrecondition )
+        => 5 == 5
+
+== VariableFillet_RefusesEdgesItCannotVerify / stations too close on a short edge
+VariableFilletTests.cpp:526  CHECK( code(close) == ErrorCode::FailedPrecondition )
+        => 5 == 5
+VariableFilletTests.cpp:527  CHECK( failure(close) == "variable-radius fillet: edge reference 1 (line through (0, 0, 40) mm along " "(1, 0, 0)) has stations 2 and 3 only 5e-07 mm apart on it; they must be at least " "1e-06 mm apart" )
+        => "variable-radius fillet: edge reference 1 (line through (0, 0, 40) mm along (1, 0, 0)) has stations 2 and 3 only 5e-07 mm apart on it; they must be at least 1e-06 mm apart" == "variable-radius fillet: edge reference 1 (line through (0, 0, 40) mm along (1, 0, 0)) has stations 2 and 3 only 5e-07 mm apart on it; they must be at least 1e-06 mm apart"
+
+== VariableFilletFeature_FollowsItsBlockAndRadii
+VariableFilletFeatureTests.cpp:91  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: w := 100.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:94  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRelVolume) )
+        => 98709.90646931504306849 and 98709.90646920108702034 are within 1e-07% of each other with message: w := 100.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:68  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 49.79642320726077287 is within 0.0000001 of 49.79642320728354576 with message: w := 100.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:69  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 25.02788673456610624 is within 0.0000001 of 25.02788673457015989 with message: w := 100.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:70  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 9.88717993281576035 is within 0.0000001 of 9.88717993277505158 with message: w := 100.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:68  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.0000001 is within 0.0000002 of 0.0 with message: w := 100.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:69  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.0000001 is within 0.0000002 of 0.0 with message: w := 100.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:70  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.0000001 is within 0.0000002 of 0.0 with message: w := 100.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:68  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 100.00000009999999406 is within 0.0000002 of 100.0 with message: w := 100.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:69  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 50.00000010000002248 is within 0.0000002 of 50.0 with message: w := 100.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:70  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 20.00000010000000827 is within 0.0000002 of 20.0 with message: w := 100.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:218  CHECK_THAT( namedArea(regenerator, m.taper, blockTop(m)), WithinRel(TaperedBlockModel::topArea(w, d, lo, hi), kRelFaceArea) )
+        => 3952.12819971141334463 and 3952.1148989898988475 are within 0.001% of each other with message: w := 100.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:221  CHECK( bodyOf(regenerator, m.taper).topology().faces == 8 )
+        => 8 == 8 with message: w := 100.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:225  CHECK( resultFeatures(m.doc) == std::vector<ObjectId>{m.taper} )
+        => { object:7 } == { object:7 }
+VariableFilletFeatureTests.cpp:229  CHECK( std::ranges::find(deps, id) != deps.end() )
+        => {?} != {?}
+VariableFilletFeatureTests.cpp:237  CHECK( regenerate(regenerator, m.doc).regenerated == std::vector<ObjectId>{m.taper} )
+        => { object:7 } == { object:7 }
+VariableFilletFeatureTests.cpp:91  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: w := 100.0; d := 50.0; lo := 5.0; hi := 8.0
+VariableFilletFeatureTests.cpp:94  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRelVolume) )
+        => 98488.07198779318423476 and 98488.07198760983010288 are within 1e-07% of each other with message: w := 100.0; d := 50.0; lo := 5.0; hi := 8.0
+VariableFilletFeatureTests.cpp:68  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 49.82833783129133565 is within 0.0000001 of 49.82833783134004335 with message: w := 100.0; d := 50.0; lo := 5.0; hi := 8.0
+VariableFilletFeatureTests.cpp:69  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 25.0801897972527108 is within 0.0000001 of 25.08018979726987396 with message: w := 100.0; d := 50.0; lo := 5.0; hi := 8.0
+VariableFilletFeatureTests.cpp:70  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 9.8684715584494711 is within 0.0000001 of 9.86847155839928014 with message: w := 100.0; d := 50.0; lo := 5.0; hi := 8.0
+VariableFilletFeatureTests.cpp:68  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.0000001 is within 0.0000002 of 0.0 with message: w := 100.0; d := 50.0; lo := 5.0; hi := 8.0
+VariableFilletFeatureTests.cpp:69  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.00000010000000133 is within 0.0000002 of 0.0 with message: w := 100.0; d := 50.0; lo := 5.0; hi := 8.0
+VariableFilletFeatureTests.cpp:70  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.0000001 is within 0.0000002 of 0.0 with message: w := 100.0; d := 50.0; lo := 5.0; hi := 8.0
+VariableFilletFeatureTests.cpp:68  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 100.00000009999999406 is within 0.0000002 of 100.0 with message: w := 100.0; d := 50.0; lo := 5.0; hi := 8.0
+VariableFilletFeatureTests.cpp:69  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 50.00000010000002248 is within 0.0000002 of 50.0 with message: w := 100.0; d := 50.0; lo := 5.0; hi := 8.0
+VariableFilletFeatureTests.cpp:70  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 20.00000010000000827 is within 0.0000002 of 20.0 with message: w := 100.0; d := 50.0; lo := 5.0; hi := 8.0
+VariableFilletFeatureTests.cpp:218  CHECK_THAT( namedArea(regenerator, m.taper, blockTop(m)), WithinRel(TaperedBlockModel::topArea(w, d, lo, hi), kRelFaceArea) )
+        => 3852.12819971141334463 and 3852.1148989898988475 are within 0.001% of each other with message: w := 100.0; d := 50.0; lo := 5.0; hi := 8.0
+VariableFilletFeatureTests.cpp:221  CHECK( bodyOf(regenerator, m.taper).topology().faces == 8 )
+        => 8 == 8 with message: w := 100.0; d := 50.0; lo := 5.0; hi := 8.0
+VariableFilletFeatureTests.cpp:91  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: w := 100.0; d := 50.0; lo := 5.0; hi := 12.0
+VariableFilletFeatureTests.cpp:94  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRelVolume) )
+        => 97755.04717212032119278 and 97755.04717197264835704 are within 1e-07% of each other with message: w := 100.0; d := 50.0; lo := 5.0; hi := 12.0
+VariableFilletFeatureTests.cpp:68  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 49.66397104088177628 is within 0.0000001 of 49.66397104094492931 with message: w := 100.0; d := 50.0; lo := 5.0; hi := 12.0
+VariableFilletFeatureTests.cpp:69  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 25.24613433400023155 is within 0.0000001 of 25.24613433400514495 with message: w := 100.0; d := 50.0; lo := 5.0; hi := 12.0
+VariableFilletFeatureTests.cpp:70  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 9.81462087314955767 is within 0.0000001 of 9.81462087309436626 with message: w := 100.0; d := 50.0; lo := 5.0; hi := 12.0
+VariableFilletFeatureTests.cpp:68  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.0000001 is within 0.0000002 of 0.0 with message: w := 100.0; d := 50.0; lo := 5.0; hi := 12.0
+VariableFilletFeatureTests.cpp:69  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.00000010000000266 is within 0.0000002 of 0.0 with message: w := 100.0; d := 50.0; lo := 5.0; hi := 12.0
+VariableFilletFeatureTests.cpp:70  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.0000001 is within 0.0000002 of 0.0 with message: w := 100.0; d := 50.0; lo := 5.0; hi := 12.0
+VariableFilletFeatureTests.cpp:68  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 100.00000009999999406 is within 0.0000002 of 100.0 with message: w := 100.0; d := 50.0; lo := 5.0; hi := 12.0
+VariableFilletFeatureTests.cpp:69  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 50.00000010000002248 is within 0.0000002 of 50.0 with message: w := 100.0; d := 50.0; lo := 5.0; hi := 12.0
+VariableFilletFeatureTests.cpp:70  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 20.00000010000000827 is within 0.0000002 of 20.0 with message: w := 100.0; d := 50.0; lo := 5.0; hi := 12.0
+VariableFilletFeatureTests.cpp:218  CHECK_THAT( namedArea(regenerator, m.taper, blockTop(m)), WithinRel(TaperedBlockModel::topArea(w, d, lo, hi), kRelFaceArea) )
+        => 3652.12819971141288988 and 3652.1148989898988475 are within 0.001% of each other with message: w := 100.0; d := 50.0; lo := 5.0; hi := 12.0
+VariableFilletFeatureTests.cpp:221  CHECK( bodyOf(regenerator, m.taper).topology().faces == 8 )
+        => 8 == 8 with message: w := 100.0; d := 50.0; lo := 5.0; hi := 12.0
+VariableFilletFeatureTests.cpp:91  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: w := 100.0; d := 50.0; lo := 15.0; hi := 2.0
+VariableFilletFeatureTests.cpp:94  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRelVolume) )
+        => 97487.38925453058618587 and 97487.38925448410736863 are within 1e-07% of each other with message: w := 100.0; d := 50.0; lo := 15.0; hi := 2.0
+VariableFilletFeatureTests.cpp:68  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 50.35803952778825732 is within 0.0000001 of 50.35803952777169457 with message: w := 100.0; d := 50.0; lo := 15.0; hi := 2.0
+VariableFilletFeatureTests.cpp:69  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 25.29981081205024651 is within 0.0000001 of 25.29981081203484905 with message: w := 100.0; d := 50.0; lo := 15.0; hi := 2.0
+VariableFilletFeatureTests.cpp:70  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 9.80229467031916712 is within 0.0000001 of 9.80229467026809331 with message: w := 100.0; d := 50.0; lo := 15.0; hi := 2.0
+VariableFilletFeatureTests.cpp:68  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.0000001 is within 0.0000002 of 0.0 with message: w := 100.0; d := 50.0; lo := 15.0; hi := 2.0
+VariableFilletFeatureTests.cpp:69  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.00000010000000079 is within 0.0000002 of 0.0 with message: w := 100.0; d := 50.0; lo := 15.0; hi := 2.0
+VariableFilletFeatureTests.cpp:70  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.0000001 is within 0.0000002 of 0.0 with message: w := 100.0; d := 50.0; lo := 15.0; hi := 2.0
+VariableFilletFeatureTests.cpp:68  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 100.00000010000000827 is within 0.0000002 of 100.0 with message: w := 100.0; d := 50.0; lo := 15.0; hi := 2.0
+VariableFilletFeatureTests.cpp:69  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 50.00000010000002248 is within 0.0000002 of 50.0 with message: w := 100.0; d := 50.0; lo := 15.0; hi := 2.0
+VariableFilletFeatureTests.cpp:70  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 20.00000010000000827 is within 0.0000002 of 20.0 with message: w := 100.0; d := 50.0; lo := 15.0; hi := 2.0
+VariableFilletFeatureTests.cpp:218  CHECK_THAT( namedArea(regenerator, m.taper, blockTop(m)), WithinRel(TaperedBlockModel::topArea(w, d, lo, hi), kRelFaceArea) )
+        => 3652.12819971141334463 and 3652.1148989898988475 are within 0.001% of each other with message: w := 100.0; d := 50.0; lo := 15.0; hi := 2.0
+VariableFilletFeatureTests.cpp:221  CHECK( bodyOf(regenerator, m.taper).topology().faces == 8 )
+        => 8 == 8 with message: w := 100.0; d := 50.0; lo := 15.0; hi := 2.0
+VariableFilletFeatureTests.cpp:251  CHECK( printOf(bodyOf(regenerator, m.taper)) == first )
+        => {?} == {?}
+VariableFilletFeatureTests.cpp:91  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: w := 150.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:94  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRelVolume) )
+        => 148064.85970396079937927 and 148064.85970380160142668 are within 1e-07% of each other with message: w := 150.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:68  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 74.69463481088638446 is within 0.0000001 of 74.69463481092535062 with message: w := 150.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:69  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 25.02788673456633006 is within 0.0000001 of 25.02788673457017055 with message: w := 150.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:70  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 9.88717993281557028 is within 0.0000001 of 9.88717993277505336 with message: w := 150.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:68  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.0000001 is within 0.0000002 of 0.0 with message: w := 150.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:69  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.0000001 is within 0.0000002 of 0.0 with message: w := 150.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:70  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.0000001 is within 0.0000002 of 0.0 with message: w := 150.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:68  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 150.00000009999996564 is within 0.0000002 of 150.0 with message: w := 150.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:69  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 50.00000010000002248 is within 0.0000002 of 50.0 with message: w := 150.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:70  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 20.00000010000000827 is within 0.0000002 of 20.0 with message: w := 150.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:218  CHECK_THAT( namedArea(regenerator, m.taper, blockTop(m)), WithinRel(TaperedBlockModel::topArea(w, d, lo, hi), kRelFaceArea) )
+        => 5928.19229956711933482 and 5928.17234848484895338 are within 0.001% of each other with message: w := 150.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:221  CHECK( bodyOf(regenerator, m.taper).topology().faces == 8 )
+        => 8 == 8 with message: w := 150.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:91  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: w := 60.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:94  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRelVolume) )
+        => 59225.9438817029222264 and 59225.94388152064493624 are within 1e-07% of each other with message: w := 60.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:68  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 29.87785392440065024 is within 0.0000001 of 29.87785392437013243 with message: w := 60.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:69  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 25.02788673459739144 is within 0.0000001 of 25.02788673457016344 with message: w := 60.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:70  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 9.8871799328281007 is within 0.0000001 of 9.88717993277505336 with message: w := 60.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:68  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.0000001 is within 0.0000002 of 0.0 with message: w := 60.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:69  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.00000010000002887 is within 0.0000002 of 0.0 with message: w := 60.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:70  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.0000001 is within 0.0000002 of 0.0 with message: w := 60.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:68  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 60.00000010000001538 is within 0.0000002 of 60.0 with message: w := 60.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:69  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 50.00000009999999406 is within 0.0000002 of 50.0 with message: w := 60.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:70  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 20.00000010000000827 is within 0.0000002 of 20.0 with message: w := 60.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:218  CHECK_THAT( namedArea(regenerator, m.taper, blockTop(m)), WithinRel(TaperedBlockModel::topArea(w, d, lo, hi), kRelFaceArea) )
+        => 2371.27691982684746108 and 2371.2689393939394904 are within 0.001% of each other with message: w := 60.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:221  CHECK( bodyOf(regenerator, m.taper).topology().faces == 8 )
+        => 8 == 8 with message: w := 60.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:94  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRelVolume) )
+        => 98709.90646931505762041 and 98709.90646920108702034 are within 1e-07% of each other with message: w := 100.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:69  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 25.02788673456610979 is within 0.0000001 of 25.02788673457015989 with message: w := 100.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:70  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 9.8871799328157568 is within 0.0000001 of 9.88717993277505158 with message: w := 100.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:69  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 50.00000010000002959 is within 0.0000002 of 50.0 with message: w := 100.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:218  CHECK_THAT( namedArea(regenerator, m.taper, blockTop(m)), WithinRel(TaperedBlockModel::topArea(w, d, lo, hi), kRelFaceArea) )
+        => 3952.12819971141516362 and 3952.1148989898988475 are within 0.001% of each other with message: w := 100.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:271  CHECK( printOf(bodyOf(again, m.taper)) == printOf(bodyOf(regenerator, m.taper)) )
+        => {?} == {?}
+VariableFilletFeatureTests.cpp:94  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRelVolume) )
+        => 148064.85970396085758694 and 148064.85970380160142668 are within 1e-07% of each other with message: w := 150.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:68  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 74.69463481088635604 is within 0.0000001 of 74.69463481092535062 with message: w := 150.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:69  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 25.02788673456632651 is within 0.0000001 of 25.02788673457017055 with message: w := 150.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:70  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 9.88717993281556851 is within 0.0000001 of 9.88717993277505336 with message: w := 150.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:69  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 50.00000010000002959 is within 0.0000002 of 50.0 with message: w := 150.0; d := 50.0; lo := 3.0; hi := 8.0
+VariableFilletFeatureTests.cpp:218  CHECK_THAT( namedArea(regenerator, m.taper, blockTop(m)), WithinRel(TaperedBlockModel::topArea(w, d, lo, hi), kRelFaceArea) )
+        => 5928.19229956712024432 and 5928.17234848484895338 are within 0.001% of each other with message: w := 150.0; d := 50.0; lo := 3.0; hi := 8.0
+
+== VariableFilletFile_ExportedFilletsReadBackFromStep
+VariableFilletFileTests.cpp:282  CHECK( summary->bodies.size() == 1 )
+        => 1 == 1
+VariableFilletFileTests.cpp:286  CHECK( contents->solids == 1 )
+        => 1 == 1
+VariableFilletFileTests.cpp:290  CHECK_THAT( contents->volumeMm3, WithinRel(TaperedBlockModel::shape(100.0, 50.0, 3.0, 8.0).volume(), 1e-9) )
+        => 98709.9064764332579216 and 98709.90646920108702034 are within 1e-07% of each other
+VariableFilletFileTests.cpp:291  CHECK_THAT( contents->maxMm[0], WithinAbs(100.0, 2e-7) )
+        => 100.00000010000034933 is within 0.0000002 of 100.0
+VariableFilletFileTests.cpp:292  CHECK_THAT( contents->maxMm[1], WithinAbs(50.0, 2e-7) )
+        => 50.00000010000001538 is within 0.0000002 of 50.0
+VariableFilletFileTests.cpp:293  CHECK_THAT( contents->maxMm[2], WithinAbs(20.0, 2e-7) )
+        => 20.00000010000000827 is within 0.0000002 of 20.0
+
+== VariableFilletFile_ConstantFilletsAreWrittenAsBefore
+VariableFilletFileTests.cpp:174  CHECK( regenerator.body(taper) != nullptr )
+        => 0x0000022803d02cf8 != nullptr
+
+== VariableFilletFeature_DefinitionsAreValidated
+VariableFilletFeatureTests.cpp:159  CHECK( created.error().code == ErrorCode::InvalidArgument )
+        => 0 == 0
+VariableFilletFeatureTests.cpp:162  CHECK( message([](auto& d) { d.target = FeatureId{}; }) == "a variable-radius fillet needs a target feature" )
+        => "a variable-radius fillet needs a target feature" == "a variable-radius fillet needs a target feature"
+VariableFilletFeatureTests.cpp:163  CHECK( message([](auto& d) { d.edges.clear(); }) == "a variable-radius fillet needs at least one edge" )
+        => "a variable-radius fillet needs at least one edge" == "a variable-radius fillet needs at least one edge"
+VariableFilletFeatureTests.cpp:164  CHECK( message([](auto& d) { d.edges[0].stations.pop_back(); }) == "edge reference 1: a variable-radius fillet needs two or more radius stations on each edge, got 1" )
+        => "edge reference 1: a variable-radius fillet needs two or more radius stations on each edge, got 1" == "edge reference 1: a variable-radius fillet needs two or more radius stations on each edge, got 1"
+VariableFilletFeatureTests.cpp:166  CHECK( message([](auto& d) { d.edges[0].stations[1].position = 0.9; }) == "edge reference 1: the last station must be at position 1, got 0.9" )
+        => "edge reference 1: the last station must be at position 1, got 0.9" == "edge reference 1: the last station must be at position 1, got 0.9"
+VariableFilletFeatureTests.cpp:168  CHECK( message([](auto& d) { d.edges[0].stations[0].radius = -(1_mm); }) == "edge reference 1, station 1: the radius must be positive and finite, got -1 mm" )
+        => "edge reference 1, station 1: the radius must be positive and finite, got -1 mm" == "edge reference 1, station 1: the radius must be positive and finite, got -1 mm"
+VariableFilletFeatureTests.cpp:170  CHECK( message([](auto& d) { d.edges[0].stations[1].radiusParameter = ParameterId{}; }) == "edge reference 1, station 2: the radius parameter ID must be valid" )
+        => "edge reference 1, station 2: the radius parameter ID must be valid" == "edge reference 1, station 2: the radius parameter ID must be valid"
+VariableFilletFeatureTests.cpp:172  CHECK( message([](auto& d) { d.edges.push_back(d.edges[0]); }) == "edge references 1 and 2 refer to the same line through (0, 0, 20) mm along (1, 0, 0)" )
+        => "edge references 1 and 2 refer to the same line through (0, 0, 20) mm along (1, 0, 0)" == "edge references 1 and 2 refer to the same line through (0, 0, 20) mm along (1, 0, 0)"
+VariableFilletFeatureTests.cpp:175  CHECK_THAT( message([](auto& d) { d.edges[0].stations.insert(d.edges[0].stations.begin() + 1, {.position = 0.5, .radius = 8_mm}); }), StartsWith("edge reference 1: between stations 2 and 3 (8 mm at 0.5, 8 mm at 1) the radius would rise " "to ") )
+        => "edge reference 1: between stations 2 and 3 (8 mm at 0.5, 8 mm at 1) the radius would rise to 8.54148 mm at 0.68858; a variable radius must stay between the radii of the stations on either side" starts with: "edge reference 1: between stations 2 and 3 (8 mm at 0.5, 8 mm at 1) the radius would rise to "
+VariableFilletFeatureTests.cpp:192  CHECK( VariableFilletFeature::create("V", negative).error().message == "edge reference 1, station 3: the radius must be positive and finite, got 0 mm" )
+        => "edge reference 1, station 3: the radius must be positive and finite, got 0 mm" == "edge reference 1, station 3: the radius must be positive and finite, got 0 mm"
+VariableFilletFeatureTests.cpp:199  CHECK( (*both)->dependencies() == std::vector<ObjectId>{ObjectId::fromValue(1), ObjectId::fromValue(7), ObjectId::fromValue(9)} )
+        => { object:1, object:7, object:9 } == { object:1, object:7, object:9 }
+VariableFilletFeatureTests.cpp:201  CHECK( (*feature)->consumedFeatures() == std::vector<FeatureId>{FeatureId::fromValue(1)} )
+        => { feature:1 } == { feature:1 }
+VariableFilletFeatureTests.cpp:202  CHECK( (*feature)->typeName() == "variable_fillet" )
+        => "variable_fillet" == "variable_fillet"
+VariableFilletFeatureTests.cpp:203  CHECK( (*feature)->setDefinition(driven) == false )
+        => {?} == false
+VariableFilletFeatureTests.cpp:204  CHECK( (*feature)->setDefinition(twice) == true )
+        => {?} == true
+VariableFilletFeatureTests.cpp:205  CHECK( (*feature)->definition() == twice )
+        => {?} == {?}
+VariableFilletFeatureTests.cpp:206  CHECK_FALSE( !((*feature)->setDefinition(negative).has_value()) )
+        => !false
+VariableFilletFeatureTests.cpp:207  CHECK( (*feature)->definition() == twice )
+        => {?} == {?}
+
+== VariableFillet_RoundsIsolatedStraightEdges / increasing, decreasing and constant radii on one edge
+VariableFilletTests.cpp:117  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: text(s) := "(0, 3 mm) (1, 8 mm) "
+VariableFilletTests.cpp:118  CHECK_THAT( properties->volume.in(units::mm3), WithinRel(bettercad::test::volumeOf(parts), rel) )
+        => 239295.06737820868147537 and 239295.06737813382642344 are within 1e-07% of each other with message: text(s) := "(0, 3 mm) (1, 8 mm) "
+VariableFilletTests.cpp:119  CHECK_THAT( properties->centerOfMass.x.in(units::mm), WithinAbs(centre[0], centreTol) )
+        => 49.95419871169596604 is within 0.0000001 of 49.95419871170171433 with message: text(s) := "(0, 3 mm) (1, 8 mm) "
+VariableFilletTests.cpp:120  CHECK_THAT( properties->centerOfMass.y.in(units::mm), WithinAbs(centre[1], centreTol) )
+        => 30.08418452762324691 is within 0.0000001 of 30.08418452763540429 with message: text(s) := "(0, 3 mm) (1, 8 mm) "
+VariableFilletTests.cpp:121  CHECK_THAT( properties->centerOfMass.z.in(units::mm), WithinAbs(centre[2], centreTol) )
+        => 19.94527419167197024 is within 0.0000001 of 19.94527419165997628 with message: text(s) := "(0, 3 mm) (1, 8 mm) "
+VariableFilletTests.cpp:124  CHECK_THAT( box->min.x.in(units::mm), WithinAbs(lower[0], kTolBounds) )
+        => -0.0000001 is within 0.0000002 of 0.0 with message: text(s) := "(0, 3 mm) (1, 8 mm) "
+VariableFilletTests.cpp:125  CHECK_THAT( box->min.y.in(units::mm), WithinAbs(lower[1], kTolBounds) )
+        => -0.0000001 is within 0.0000002 of 0.0 with message: text(s) := "(0, 3 mm) (1, 8 mm) "
+VariableFilletTests.cpp:126  CHECK_THAT( box->min.z.in(units::mm), WithinAbs(lower[2], kTolBounds) )
+        => -0.0000001 is within 0.0000002 of 0.0 with message: text(s) := "(0, 3 mm) (1, 8 mm) "
+VariableFilletTests.cpp:127  CHECK_THAT( box->max.x.in(units::mm), WithinAbs(upper[0], kTolBounds) )
+        => 100.00000009999999406 is within 0.0000002 of 100.0 with message: text(s) := "(0, 3 mm) (1, 8 mm) "
+VariableFilletTests.cpp:128  CHECK_THAT( box->max.y.in(units::mm), WithinAbs(upper[1], kTolBounds) )
+        => 60.00000010000000117 is within 0.0000002 of 60.0 with message: text(s) := "(0, 3 mm) (1, 8 mm) "
+VariableFilletTests.cpp:129  CHECK_THAT( box->max.z.in(units::mm), WithinAbs(upper[2], kTolBounds) )
+        => 40.00000010000000827 is within 0.0000002 of 40.0 with message: text(s) := "(0, 3 mm) (1, 8 mm) "
+VariableFilletTests.cpp:359  CHECK( rounded.topology().faces == 7 )
+        => 7 == 7 with message: text(s) := "(0, 3 mm) (1, 8 mm) "
+VariableFilletTests.cpp:361  CHECK_THAT( topArea(rounded, top), WithinRel(6000.0 - e.strip(), kRelFaceArea) )
+        => 5450.0 and 5450.0 are within 0.001% of each other with message: text(s) := "(0, 3 mm) (1, 8 mm) "
+VariableFilletTests.cpp:117  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: text(s) := "(0, 8 mm) (1, 3 mm) "
+VariableFilletTests.cpp:118  CHECK_THAT( properties->volume.in(units::mm3), WithinRel(bettercad::test::volumeOf(parts), rel) )
+        => 239295.06737820868147537 and 239295.06737813382642344 are within 1e-07% of each other with message: text(s) := "(0, 8 mm) (1, 3 mm) "
+VariableFilletTests.cpp:119  CHECK_THAT( properties->centerOfMass.x.in(units::mm), WithinAbs(centre[0], centreTol) )
+        => 50.04580128830404817 is within 0.0000001 of 50.04580128829828567 with message: text(s) := "(0, 8 mm) (1, 3 mm) "
+VariableFilletTests.cpp:120  CHECK_THAT( properties->centerOfMass.y.in(units::mm), WithinAbs(centre[1], centreTol) )
+        => 30.0841845276232398 is within 0.0000001 of 30.08418452763540429 with message: text(s) := "(0, 8 mm) (1, 3 mm) "
+VariableFilletTests.cpp:121  CHECK_THAT( properties->centerOfMass.z.in(units::mm), WithinAbs(centre[2], centreTol) )
+        => 19.94527419167197024 is within 0.0000001 of 19.94527419165997628 with message: text(s) := "(0, 8 mm) (1, 3 mm) "
+VariableFilletTests.cpp:124  CHECK_THAT( box->min.x.in(units::mm), WithinAbs(lower[0], kTolBounds) )
+        => -0.0000001 is within 0.0000002 of 0.0 with message: text(s) := "(0, 8 mm) (1, 3 mm) "
+VariableFilletTests.cpp:125  CHECK_THAT( box->min.y.in(units::mm), WithinAbs(lower[1], kTolBounds) )
+        => -0.0000001 is within 0.0000002 of 0.0 with message: text(s) := "(0, 8 mm) (1, 3 mm) "
+VariableFilletTests.cpp:126  CHECK_THAT( box->min.z.in(units::mm), WithinAbs(lower[2], kTolBounds) )
+        => -0.0000001 is within 0.0000002 of 0.0 with message: text(s) := "(0, 8 mm) (1, 3 mm) "
+VariableFilletTests.cpp:127  CHECK_THAT( box->max.x.in(units::mm), WithinAbs(upper[0], kTolBounds) )
+        => 100.00000009999999406 is within 0.0000002 of 100.0 with message: text(s) := "(0, 8 mm) (1, 3 mm) "
+VariableFilletTests.cpp:128  CHECK_THAT( box->max.y.in(units::mm), WithinAbs(upper[1], kTolBounds) )
+        => 60.00000010000000117 is within 0.0000002 of 60.0 with message: text(s) := "(0, 8 mm) (1, 3 mm) "
+VariableFilletTests.cpp:129  CHECK_THAT( box->max.z.in(units::mm), WithinAbs(upper[2], kTolBounds) )
+        => 40.00000010000000827 is within 0.0000002 of 40.0 with message: text(s) := "(0, 8 mm) (1, 3 mm) "
+VariableFilletTests.cpp:359  CHECK( rounded.topology().faces == 7 )
+        => 7 == 7 with message: text(s) := "(0, 8 mm) (1, 3 mm) "
+VariableFilletTests.cpp:361  CHECK_THAT( topArea(rounded, top), WithinRel(6000.0 - e.strip(), kRelFaceArea) )
+        => 5450.0 and 5450.0 are within 0.001% of each other with message: text(s) := "(0, 8 mm) (1, 3 mm) "
+VariableFilletTests.cpp:117  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: text(s) := "(0, 2.5 mm) (1, 12 mm) "
+VariableFilletTests.cpp:118  CHECK_THAT( properties->volume.in(units::mm3), WithinRel(bettercad::test::volumeOf(parts), rel) )
+        => 238670.69803761204821058 and 238670.69803758000489324 are within 1e-07% of each other with message: text(s) := "(0, 2.5 mm) (1, 12 mm) "
+VariableFilletTests.cpp:119  CHECK_THAT( properties->centerOfMass.x.in(units::mm), WithinAbs(centre[0], centreTol) )
+        => 49.88498850326075029 is within 0.0000001 of 49.88498850327015788 with message: text(s) := "(0, 2.5 mm) (1, 12 mm) "
+VariableFilletTests.cpp:120  CHECK_THAT( properties->centerOfMass.y.in(units::mm), WithinAbs(centre[1], centreTol) )
+        => 30.155336969727351 is within 0.0000001 of 30.15533696973556133 with message: text(s) := "(0, 2.5 mm) (1, 12 mm) "
+VariableFilletTests.cpp:121  CHECK_THAT( properties->centerOfMass.z.in(units::mm), WithinAbs(centre[2], centreTol) )
+        => 19.90035909910029233 is within 0.0000001 of 19.90035909908854705 with message: text(s) := "(0, 2.5 mm) (1, 12 mm) "
+VariableFilletTests.cpp:124  CHECK_THAT( box->min.x.in(units::mm), WithinAbs(lower[0], kTolBounds) )
+        => -0.0000001 is within 0.0000002 of 0.0 with message: text(s) := "(0, 2.5 mm) (1, 12 mm) "
+VariableFilletTests.cpp:125  CHECK_THAT( box->min.y.in(units::mm), WithinAbs(lower[1], kTolBounds) )
+        => -0.00000010000000178 is within 0.0000002 of 0.0 with message: text(s) := "(0, 2.5 mm) (1, 12 mm) "
+VariableFilletTests.cpp:126  CHECK_THAT( box->min.z.in(units::mm), WithinAbs(lower[2], kTolBounds) )
+        => -0.0000001 is within 0.0000002 of 0.0 with message: text(s) := "(0, 2.5 mm) (1, 12 mm) "
+VariableFilletTests.cpp:127  CHECK_THAT( box->max.x.in(units::mm), WithinAbs(upper[0], kTolBounds) )
+        => 100.00000009999999406 is within 0.0000002 of 100.0 with message: text(s) := "(0, 2.5 mm) (1, 12 mm) "
+VariableFilletTests.cpp:128  CHECK_THAT( box->max.y.in(units::mm), WithinAbs(upper[1], kTolBounds) )
+        => 60.00000010000000117 is within 0.0000002 of 60.0 with message: text(s) := "(0, 2.5 mm) (1, 12 mm) "
+VariableFilletTests.cpp:129  CHECK_THAT( box->max.z.in(units::mm), WithinAbs(upper[2], kTolBounds) )
+        => 40.00000010000000827 is within 0.0000002 of 40.0 with message: text(s) := "(0, 2.5 mm) (1, 12 mm) "
+VariableFilletTests.cpp:359  CHECK( rounded.topology().faces == 7 )
+        => 7 == 7 with message: text(s) := "(0, 2.5 mm) (1, 12 mm) "
+VariableFilletTests.cpp:361  CHECK_THAT( topArea(rounded, top), WithinRel(6000.0 - e.strip(), kRelFaceArea) )
+        => 5274.99999999999909051 and 5275.0 are within 0.001% of each other with message: text(s) := "(0, 2.5 mm) (1, 12 mm) "
+VariableFilletTests.cpp:117  CHECK( body.topology().solids == 1 )
+        => 1 == 1
+VariableFilletTests.cpp:118  CHECK_THAT( properties->volume.in(units::mm3), WithinRel(bettercad::test::volumeOf(parts), rel) )
+        => 239656.63706143593299203 and 239656.6370614359038882 are within 1e-10% of each other
+VariableFilletTests.cpp:119  CHECK_THAT( properties->centerOfMass.x.in(units::mm), WithinAbs(centre[0], centreTol) )
+        => 50.00000000000000711 is within 0.000000001 of 50.0
+VariableFilletTests.cpp:120  CHECK_THAT( properties->centerOfMass.y.in(units::mm), WithinAbs(centre[1], centreTol) )
+        => 30.04170175794784825 is within 0.000000001 of 30.04170175794785536
+VariableFilletTests.cpp:121  CHECK_THAT( properties->centerOfMass.z.in(units::mm), WithinAbs(centre[2], centreTol) )
+        => 19.97262552890614629 is within 0.000000001 of 19.97262552890613563
+VariableFilletTests.cpp:124  CHECK_THAT( box->min.x.in(units::mm), WithinAbs(lower[0], kTolBounds) )
+        => 0.0 is within 0.0000002 of 0.0
+VariableFilletTests.cpp:125  CHECK_THAT( box->min.y.in(units::mm), WithinAbs(lower[1], kTolBounds) )
+        => -0.00000000000000089 is within 0.0000002 of 0.0
+VariableFilletTests.cpp:126  CHECK_THAT( box->min.z.in(units::mm), WithinAbs(lower[2], kTolBounds) )
+        => 0.0 is within 0.0000002 of 0.0
+VariableFilletTests.cpp:127  CHECK_THAT( box->max.x.in(units::mm), WithinAbs(upper[0], kTolBounds) )
+        => 100.0 is within 0.0000002 of 100.0
+VariableFilletTests.cpp:128  CHECK_THAT( box->max.y.in(units::mm), WithinAbs(upper[1], kTolBounds) )
+        => 60.0 is within 0.0000002 of 60.0
+VariableFilletTests.cpp:129  CHECK_THAT( box->max.z.in(units::mm), WithinAbs(upper[2], kTolBounds) )
+        => 40.0 is within 0.0000002 of 40.0
+VariableFilletTests.cpp:369  CHECK( printOf(rounded) == printOf(*constant) )
+        => {?} == {?}
+
+== VariableFillet_RoundsIsolatedStraightEdges / several stations, on edges the kernel runs either way
+VariableFilletTests.cpp:117  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.4, 4 mm) (0.7, 6 mm) (1, 8 mm) "
+VariableFilletTests.cpp:118  CHECK_THAT( properties->volume.in(units::mm3), WithinRel(bettercad::test::volumeOf(parts), rel) )
+        => 239417.05251526911160909 and 239417.05251445004250854 are within 1e-07% of each other with message: describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.4, 4 mm) (0.7, 6 mm) (1, 8 mm) "
+VariableFilletTests.cpp:119  CHECK_THAT( properties->centerOfMass.x.in(units::mm), WithinAbs(centre[0], centreTol) )
+        => 49.95705017284409877 is within 0.0000001 of 49.95705017280455706 with message: describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.4, 4 mm) (0.7, 6 mm) (1, 8 mm) "
+VariableFilletTests.cpp:120  CHECK_THAT( properties->centerOfMass.y.in(units::mm), WithinAbs(centre[1], centreTol) )
+        => 30.06979141151830603 is within 0.0000001 of 30.06979141159900948 with message: describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.4, 4 mm) (0.7, 6 mm) (1, 8 mm) "
+VariableFilletTests.cpp:121  CHECK_THAT( properties->centerOfMass.z.in(units::mm), WithinAbs(centre[2], centreTol) )
+        => 19.95455720854917914 is within 0.0000001 of 19.95455720849415471 with message: describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.4, 4 mm) (0.7, 6 mm) (1, 8 mm) "
+VariableFilletTests.cpp:124  CHECK_THAT( box->min.x.in(units::mm), WithinAbs(lower[0], kTolBounds) )
+        => -0.0000001 is within 0.0000002 of 0.0 with message: describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.4, 4 mm) (0.7, 6 mm) (1, 8 mm) "
+VariableFilletTests.cpp:125  CHECK_THAT( box->min.y.in(units::mm), WithinAbs(lower[1], kTolBounds) )
+        => -0.00000010000000044 is within 0.0000002 of 0.0 with message: describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.4, 4 mm) (0.7, 6 mm) (1, 8 mm) "
+VariableFilletTests.cpp:126  CHECK_THAT( box->min.z.in(units::mm), WithinAbs(lower[2], kTolBounds) )
+        => -0.0000001 is within 0.0000002 of 0.0 with message: describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.4, 4 mm) (0.7, 6 mm) (1, 8 mm) "
+VariableFilletTests.cpp:127  CHECK_THAT( box->max.x.in(units::mm), WithinAbs(upper[0], kTolBounds) )
+        => 100.00000009999999406 is within 0.0000002 of 100.0 with message: describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.4, 4 mm) (0.7, 6 mm) (1, 8 mm) "
+VariableFilletTests.cpp:128  CHECK_THAT( box->max.y.in(units::mm), WithinAbs(upper[1], kTolBounds) )
+        => 60.00000010000000117 is within 0.0000002 of 60.0 with message: describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.4, 4 mm) (0.7, 6 mm) (1, 8 mm) "
+VariableFilletTests.cpp:129  CHECK_THAT( box->max.z.in(units::mm), WithinAbs(upper[2], kTolBounds) )
+        => 40.00000010000000827 is within 0.0000002 of 40.0 with message: describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.4, 4 mm) (0.7, 6 mm) (1, 8 mm) "
+VariableFilletTests.cpp:384  CHECK_THAT( topArea(rounded, top), WithinRel(6000.0 - reference.strip(), kRelFaceArea) )
+        => 5504.79627334654651349 and 5504.78609747226801119 are within 0.001% of each other with message: describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.4, 4 mm) (0.7, 6 mm) (1, 8 mm) "
+VariableFilletTests.cpp:117  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 2 mm) (0.3, 4 mm) (1, 7 mm) "
+VariableFilletTests.cpp:118  CHECK_THAT( properties->volume.in(units::mm3), WithinRel(bettercad::test::volumeOf(parts), rel) )
+        => 239414.83909023529849946 and 239414.83909106723149307 are within 1e-07% of each other with message: describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 2 mm) (0.3, 4 mm) (1, 7 mm) "
+VariableFilletTests.cpp:119  CHECK_THAT( properties->centerOfMass.x.in(units::mm), WithinAbs(centre[0], centreTol) )
+        => 49.96184437096365372 is within 0.0000001 of 49.96184437091002906 with message: describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 2 mm) (0.3, 4 mm) (1, 7 mm) "
+VariableFilletTests.cpp:120  CHECK_THAT( properties->centerOfMass.y.in(units::mm), WithinAbs(centre[1], centreTol) )
+        => 30.07014346633071966 is within 0.0000001 of 30.07014346625567214 with message: describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 2 mm) (0.3, 4 mm) (1, 7 mm) "
+VariableFilletTests.cpp:121  CHECK_THAT( properties->centerOfMass.z.in(units::mm), WithinAbs(centre[2], centreTol) )
+        => 19.95429783028535553 is within 0.0000001 of 19.95429783033038262 with message: describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 2 mm) (0.3, 4 mm) (1, 7 mm) "
+VariableFilletTests.cpp:124  CHECK_THAT( box->min.x.in(units::mm), WithinAbs(lower[0], kTolBounds) )
+        => -0.0000001 is within 0.0000002 of 0.0 with message: describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 2 mm) (0.3, 4 mm) (1, 7 mm) "
+VariableFilletTests.cpp:125  CHECK_THAT( box->min.y.in(units::mm), WithinAbs(lower[1], kTolBounds) )
+        => -0.00000010000000111 is within 0.0000002 of 0.0 with message: describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 2 mm) (0.3, 4 mm) (1, 7 mm) "
+VariableFilletTests.cpp:126  CHECK_THAT( box->min.z.in(units::mm), WithinAbs(lower[2], kTolBounds) )
+        => -0.0000001 is within 0.0000002 of 0.0 with message: describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 2 mm) (0.3, 4 mm) (1, 7 mm) "
+VariableFilletTests.cpp:127  CHECK_THAT( box->max.x.in(units::mm), WithinAbs(upper[0], kTolBounds) )
+        => 100.00000009999999406 is within 0.0000002 of 100.0 with message: describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 2 mm) (0.3, 4 mm) (1, 7 mm) "
+VariableFilletTests.cpp:128  CHECK_THAT( box->max.y.in(units::mm), WithinAbs(upper[1], kTolBounds) )
+        => 60.00000010000000117 is within 0.0000002 of 60.0 with message: describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 2 mm) (0.3, 4 mm) (1, 7 mm) "
+VariableFilletTests.cpp:129  CHECK_THAT( box->max.z.in(units::mm), WithinAbs(upper[2], kTolBounds) )
+        => 40.00000010000001538 is within 0.0000002 of 40.0 with message: describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 2 mm) (0.3, 4 mm) (1, 7 mm) "
+VariableFilletTests.cpp:384  CHECK_THAT( topArea(rounded, top), WithinRel(6000.0 - reference.strip(), kRelFaceArea) )
+        => 5502.12819971141379938 and 5502.11489898989930225 are within 0.001% of each other with message: describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 2 mm) (0.3, 4 mm) (1, 7 mm) "
+VariableFilletTests.cpp:117  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 2 mm) (0.3, 4 mm) (1, 7 mm) "
+VariableFilletTests.cpp:118  CHECK_THAT( properties->volume.in(units::mm3), WithinRel(bettercad::test::volumeOf(parts), rel) )
+        => 239414.83909023529849946 and 239414.83909106723149307 are within 1e-07% of each other with message: describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 2 mm) (0.3, 4 mm) (1, 7 mm) "
+VariableFilletTests.cpp:119  CHECK_THAT( properties->centerOfMass.x.in(units::mm), WithinAbs(centre[0], centreTol) )
+        => 49.96184437096364661 is within 0.0000001 of 49.96184437091002906 with message: describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 2 mm) (0.3, 4 mm) (1, 7 mm) "
+VariableFilletTests.cpp:120  CHECK_THAT( properties->centerOfMass.y.in(units::mm), WithinAbs(centre[1], centreTol) )
+        => 29.92985653366928034 is within 0.0000001 of 29.92985653374432786 with message: describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 2 mm) (0.3, 4 mm) (1, 7 mm) "
+VariableFilletTests.cpp:121  CHECK_THAT( properties->centerOfMass.z.in(units::mm), WithinAbs(centre[2], centreTol) )
+        => 19.95429783028535908 is within 0.0000001 of 19.95429783033038262 with message: describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 2 mm) (0.3, 4 mm) (1, 7 mm) "
+VariableFilletTests.cpp:124  CHECK_THAT( box->min.x.in(units::mm), WithinAbs(lower[0], kTolBounds) )
+        => -0.0000001 is within 0.0000002 of 0.0 with message: describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 2 mm) (0.3, 4 mm) (1, 7 mm) "
+VariableFilletTests.cpp:125  CHECK_THAT( box->min.y.in(units::mm), WithinAbs(lower[1], kTolBounds) )
+        => -0.0000001 is within 0.0000002 of 0.0 with message: describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 2 mm) (0.3, 4 mm) (1, 7 mm) "
+VariableFilletTests.cpp:126  CHECK_THAT( box->min.z.in(units::mm), WithinAbs(lower[2], kTolBounds) )
+        => -0.0000001 is within 0.0000002 of 0.0 with message: describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 2 mm) (0.3, 4 mm) (1, 7 mm) "
+VariableFilletTests.cpp:127  CHECK_THAT( box->max.x.in(units::mm), WithinAbs(upper[0], kTolBounds) )
+        => 100.00000009999999406 is within 0.0000002 of 100.0 with message: describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 2 mm) (0.3, 4 mm) (1, 7 mm) "
+VariableFilletTests.cpp:128  CHECK_THAT( box->max.y.in(units::mm), WithinAbs(upper[1], kTolBounds) )
+        => 60.00000010000001538 is within 0.0000002 of 60.0 with message: describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 2 mm) (0.3, 4 mm) (1, 7 mm) "
+VariableFilletTests.cpp:129  CHECK_THAT( box->max.z.in(units::mm), WithinAbs(upper[2], kTolBounds) )
+        => 40.00000010000001538 is within 0.0000002 of 40.0 with message: describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 2 mm) (0.3, 4 mm) (1, 7 mm) "
+VariableFilletTests.cpp:384  CHECK_THAT( topArea(rounded, top), WithinRel(6000.0 - reference.strip(), kRelFaceArea) )
+        => 5502.12819971141470887 and 5502.11489898989930225 are within 0.001% of each other with message: describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 2 mm) (0.3, 4 mm) (1, 7 mm) "
+VariableFilletTests.cpp:117  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.4, 4 mm) (0.7, 6 mm) (1, 8 mm) "
+VariableFilletTests.cpp:118  CHECK_THAT( properties->volume.in(units::mm3), WithinRel(bettercad::test::volumeOf(parts), rel) )
+        => 239417.05251526908250526 and 239417.05251445004250854 are within 1e-07% of each other with message: describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.4, 4 mm) (0.7, 6 mm) (1, 8 mm) "
+VariableFilletTests.cpp:119  CHECK_THAT( properties->centerOfMass.x.in(units::mm), WithinAbs(centre[0], centreTol) )
+        => 49.95705017284408456 is within 0.0000001 of 49.95705017280455706 with message: describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.4, 4 mm) (0.7, 6 mm) (1, 8 mm) "
+VariableFilletTests.cpp:120  CHECK_THAT( properties->centerOfMass.y.in(units::mm), WithinAbs(centre[1], centreTol) )
+        => 29.93020858848171173 is within 0.0000001 of 29.93020858840099407 with message: describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.4, 4 mm) (0.7, 6 mm) (1, 8 mm) "
+VariableFilletTests.cpp:121  CHECK_THAT( properties->centerOfMass.z.in(units::mm), WithinAbs(centre[2], centreTol) )
+        => 19.95455720854917558 is within 0.0000001 of 19.95455720849415471 with message: describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.4, 4 mm) (0.7, 6 mm) (1, 8 mm) "
+VariableFilletTests.cpp:124  CHECK_THAT( box->min.x.in(units::mm), WithinAbs(lower[0], kTolBounds) )
+        => -0.0000001 is within 0.0000002 of 0.0 with message: describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.4, 4 mm) (0.7, 6 mm) (1, 8 mm) "
+VariableFilletTests.cpp:125  CHECK_THAT( box->min.y.in(units::mm), WithinAbs(lower[1], kTolBounds) )
+        => -0.0000001 is within 0.0000002 of 0.0 with message: describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.4, 4 mm) (0.7, 6 mm) (1, 8 mm) "
+VariableFilletTests.cpp:126  CHECK_THAT( box->min.z.in(units::mm), WithinAbs(lower[2], kTolBounds) )
+        => -0.0000001 is within 0.0000002 of 0.0 with message: describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.4, 4 mm) (0.7, 6 mm) (1, 8 mm) "
+VariableFilletTests.cpp:127  CHECK_THAT( box->max.x.in(units::mm), WithinAbs(upper[0], kTolBounds) )
+        => 100.00000009999999406 is within 0.0000002 of 100.0 with message: describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.4, 4 mm) (0.7, 6 mm) (1, 8 mm) "
+VariableFilletTests.cpp:128  CHECK_THAT( box->max.y.in(units::mm), WithinAbs(upper[1], kTolBounds) )
+        => 60.00000010000000827 is within 0.0000002 of 60.0 with message: describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.4, 4 mm) (0.7, 6 mm) (1, 8 mm) "
+VariableFilletTests.cpp:129  CHECK_THAT( box->max.z.in(units::mm), WithinAbs(upper[2], kTolBounds) )
+        => 40.00000010000000827 is within 0.0000002 of 40.0 with message: describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.4, 4 mm) (0.7, 6 mm) (1, 8 mm) "
+VariableFilletTests.cpp:384  CHECK_THAT( topArea(rounded, top), WithinRel(6000.0 - reference.strip(), kRelFaceArea) )
+        => 5504.796273346545604 and 5504.78609747226801119 are within 0.001% of each other with message: describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.4, 4 mm) (0.7, 6 mm) (1, 8 mm) "
+VariableFilletTests.cpp:117  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 6 mm) (0.5, 4 mm) (1, 6 mm) "
+VariableFilletTests.cpp:118  CHECK_THAT( properties->volume.in(units::mm3), WithinRel(bettercad::test::volumeOf(parts), rel) )
+        => 239480.81684278271859512 and 239480.8168424479663372 are within 1e-07% of each other with message: describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 6 mm) (0.5, 4 mm) (1, 6 mm) "
+VariableFilletTests.cpp:119  CHECK_THAT( properties->centerOfMass.x.in(units::mm), WithinAbs(centre[0], centreTol) )
+        => 50.00000000000000711 is within 0.0000001 of 50.0 with message: describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 6 mm) (0.5, 4 mm) (1, 6 mm) "
+VariableFilletTests.cpp:120  CHECK_THAT( properties->centerOfMass.y.in(units::mm), WithinAbs(centre[1], centreTol) )
+        => 29.93740660485600102 is within 0.0000001 of 29.93740660482000848 with message: describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 6 mm) (0.5, 4 mm) (1, 6 mm) "
+VariableFilletTests.cpp:121  CHECK_THAT( properties->centerOfMass.z.in(units::mm), WithinAbs(centre[2], centreTol) )
+        => 19.95908613493993755 is within 0.0000001 of 19.95908613491337746 with message: describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 6 mm) (0.5, 4 mm) (1, 6 mm) "
+VariableFilletTests.cpp:124  CHECK_THAT( box->min.x.in(units::mm), WithinAbs(lower[0], kTolBounds) )
+        => -0.00000010000000355 is within 0.0000002 of 0.0 with message: describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 6 mm) (0.5, 4 mm) (1, 6 mm) "
+VariableFilletTests.cpp:125  CHECK_THAT( box->min.y.in(units::mm), WithinAbs(lower[1], kTolBounds) )
+        => -0.0000001 is within 0.0000002 of 0.0 with message: describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 6 mm) (0.5, 4 mm) (1, 6 mm) "
+VariableFilletTests.cpp:126  CHECK_THAT( box->min.z.in(units::mm), WithinAbs(lower[2], kTolBounds) )
+        => -0.0000001 is within 0.0000002 of 0.0 with message: describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 6 mm) (0.5, 4 mm) (1, 6 mm) "
+VariableFilletTests.cpp:127  CHECK_THAT( box->max.x.in(units::mm), WithinAbs(upper[0], kTolBounds) )
+        => 100.00000009999999406 is within 0.0000002 of 100.0 with message: describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 6 mm) (0.5, 4 mm) (1, 6 mm) "
+VariableFilletTests.cpp:128  CHECK_THAT( box->max.y.in(units::mm), WithinAbs(upper[1], kTolBounds) )
+        => 60.0000001000000367 is within 0.0000002 of 60.0 with message: describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 6 mm) (0.5, 4 mm) (1, 6 mm) "
+VariableFilletTests.cpp:129  CHECK_THAT( box->max.z.in(units::mm), WithinAbs(upper[2], kTolBounds) )
+        => 40.00000010000002248 is within 0.0000002 of 40.0 with message: describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 6 mm) (0.5, 4 mm) (1, 6 mm) "
+VariableFilletTests.cpp:384  CHECK_THAT( topArea(rounded, top), WithinRel(6000.0 - reference.strip(), kRelFaceArea) )
+        => 5512.50731319192254887 and 5512.5 are within 0.001% of each other with message: describe(edge) := "line through (0, 60, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 6 mm) (0.5, 4 mm) (1, 6 mm) "
+VariableFilletTests.cpp:117  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.25, 4 mm) (0.5, 6 mm) (0.75, 4 mm) (1, 3 mm) "
+VariableFilletTests.cpp:118  CHECK_THAT( properties->volume.in(units::mm3), WithinRel(bettercad::test::volumeOf(parts), rel) )
+        => 239586.90793350161402486 and 239586.90793339413357899 are within 1e-07% of each other with message: describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.25, 4 mm) (0.5, 6 mm) (0.75, 4 mm) (1, 3 mm) "
+VariableFilletTests.cpp:119  CHECK_THAT( properties->centerOfMass.x.in(units::mm), WithinAbs(centre[0], centreTol) )
+        => 50.0 is within 0.0000001 of 50.0 with message: describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.25, 4 mm) (0.5, 6 mm) (0.75, 4 mm) (1, 3 mm) "
+VariableFilletTests.cpp:120  CHECK_THAT( properties->centerOfMass.y.in(units::mm), WithinAbs(centre[1], centreTol) )
+        => 30.04989019179663146 is within 0.0000001 of 30.04989019180895937 with message: describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.25, 4 mm) (0.5, 6 mm) (0.75, 4 mm) (1, 3 mm) "
+VariableFilletTests.cpp:121  CHECK_THAT( properties->centerOfMass.z.in(units::mm), WithinAbs(centre[2], centreTol) )
+        => 19.96735165460127703 is within 0.0000001 of 19.96735165459112338 with message: describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.25, 4 mm) (0.5, 6 mm) (0.75, 4 mm) (1, 3 mm) "
+VariableFilletTests.cpp:124  CHECK_THAT( box->min.x.in(units::mm), WithinAbs(lower[0], kTolBounds) )
+        => -0.0000001 is within 0.0000002 of 0.0 with message: describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.25, 4 mm) (0.5, 6 mm) (0.75, 4 mm) (1, 3 mm) "
+VariableFilletTests.cpp:125  CHECK_THAT( box->min.y.in(units::mm), WithinAbs(lower[1], kTolBounds) )
+        => -0.00000010000000026 is within 0.0000002 of 0.0 with message: describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.25, 4 mm) (0.5, 6 mm) (0.75, 4 mm) (1, 3 mm) "
+VariableFilletTests.cpp:126  CHECK_THAT( box->min.z.in(units::mm), WithinAbs(lower[2], kTolBounds) )
+        => -0.0000001 is within 0.0000002 of 0.0 with message: describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.25, 4 mm) (0.5, 6 mm) (0.75, 4 mm) (1, 3 mm) "
+VariableFilletTests.cpp:127  CHECK_THAT( box->max.x.in(units::mm), WithinAbs(upper[0], kTolBounds) )
+        => 100.00000009999999406 is within 0.0000002 of 100.0 with message: describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.25, 4 mm) (0.5, 6 mm) (0.75, 4 mm) (1, 3 mm) "
+VariableFilletTests.cpp:128  CHECK_THAT( box->max.y.in(units::mm), WithinAbs(upper[1], kTolBounds) )
+        => 60.00000010000000117 is within 0.0000002 of 60.0 with message: describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.25, 4 mm) (0.5, 6 mm) (0.75, 4 mm) (1, 3 mm) "
+VariableFilletTests.cpp:129  CHECK_THAT( box->max.z.in(units::mm), WithinAbs(upper[2], kTolBounds) )
+        => 40.00000010000001538 is within 0.0000002 of 40.0 with message: describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.25, 4 mm) (0.5, 6 mm) (0.75, 4 mm) (1, 3 mm) "
+VariableFilletTests.cpp:384  CHECK_THAT( topArea(rounded, top), WithinRel(6000.0 - reference.strip(), kRelFaceArea) )
+        => 5573.87721027785755723 and 5573.86363636363603291 are within 0.001% of each other with message: describe(edge) := "line through (0, 0, 40) mm along (1, 0, 0)"; text(reference.stations) := "(0, 3 mm) (0.25, 4 mm) (0.5, 6 mm) (0.75, 4 mm) (1, 3 mm) "
+VariableFilletTests.cpp:117  CHECK( body.topology().solids == 1 )
+        => 1 == 1
+VariableFilletTests.cpp:118  CHECK_THAT( properties->volume.in(units::mm3), WithinRel(bettercad::test::volumeOf(parts), rel) )
+        => 238831.89160493016242981 and 238831.89160551727400161 are within 1e-07% of each other
+VariableFilletTests.cpp:119  CHECK_THAT( properties->centerOfMass.x.in(units::mm), WithinAbs(centre[0], centreTol) )
+        => 49.91869618134073505 is within 0.0000001 of 49.91869618122773744
+VariableFilletTests.cpp:120  CHECK_THAT( properties->centerOfMass.y.in(units::mm), WithinAbs(centre[1], centreTol) )
+        => 29.99964773274760077 is within 0.0000001 of 29.99964773284477104
+VariableFilletTests.cpp:121  CHECK_THAT( properties->centerOfMass.z.in(units::mm), WithinAbs(centre[2], centreTol) )
+        => 19.90863214850927321 is within 0.0000001 of 19.90863214853247243
+VariableFilletTests.cpp:124  CHECK_THAT( box->min.x.in(units::mm), WithinAbs(lower[0], kTolBounds) )
+        => -0.0000001 is within 0.0000002 of 0.0
+VariableFilletTests.cpp:125  CHECK_THAT( box->min.y.in(units::mm), WithinAbs(lower[1], kTolBounds) )
+        => -0.00000010000000044 is within 0.0000002 of 0.0
+VariableFilletTests.cpp:126  CHECK_THAT( box->min.z.in(units::mm), WithinAbs(lower[2], kTolBounds) )
+        => -0.0000001 is within 0.0000002 of 0.0
+VariableFilletTests.cpp:127  CHECK_THAT( box->max.x.in(units::mm), WithinAbs(upper[0], kTolBounds) )
+        => 100.00000009999999406 is within 0.0000002 of 100.0
+VariableFilletTests.cpp:128  CHECK_THAT( box->max.y.in(units::mm), WithinAbs(upper[1], kTolBounds) )
+        => 60.00000010000001538 is within 0.0000002 of 60.0
+VariableFilletTests.cpp:129  CHECK_THAT( box->max.z.in(units::mm), WithinAbs(upper[2], kTolBounds) )
+        => 40.00000010000001538 is within 0.0000002 of 40.0
+VariableFilletTests.cpp:391  CHECK( both.topology().faces == 8 )
+        => 8 == 8
+VariableFilletTests.cpp:392  CHECK_THAT( topArea(both, top), WithinRel(6000.0 - frontEdge(rising).strip() - backEdge(uneven).strip(), kRelFaceArea) )
+        => 5006.92447305796031287 and 5006.90099646216731344 are within 0.001% of each other
+
+== VariableFillet_RoundsIsolatedStraightEdges / faces at 120 degrees, and a concave edge
+VariableFilletTests.cpp:117  CHECK( body.topology().solids == 1 )
+        => 1 == 1
+VariableFilletTests.cpp:118  CHECK_THAT( properties->volume.in(units::mm3), WithinRel(bettercad::test::volumeOf(parts), rel) )
+        => 116841.69046391875599511 and 116841.69046391680603847 are within 1e-07% of each other
+VariableFilletTests.cpp:119  CHECK_THAT( properties->centerOfMass.x.in(units::mm), WithinAbs(centre[0], centreTol) )
+        => -0.01802632033624737 is within 0.0000001 of -0.01802632033665478
+VariableFilletTests.cpp:120  CHECK_THAT( properties->centerOfMass.y.in(units::mm), WithinAbs(centre[1], centreTol) )
+        => 0.0 is within 0.0000001 of 0.0
+VariableFilletTests.cpp:121  CHECK_THAT( properties->centerOfMass.z.in(units::mm), WithinAbs(centre[2], centreTol) )
+        => 25.00000000000000711 is within 0.0000001 of 25.0
+VariableFilletTests.cpp:124  CHECK_THAT( box->min.x.in(units::mm), WithinAbs(lower[0], kTolBounds) )
+        => -30.00000010000000117 is within 0.0000002 of -30.0
+VariableFilletTests.cpp:125  CHECK_THAT( box->min.y.in(units::mm), WithinAbs(lower[1], kTolBounds) )
+        => -25.98076221353315773 is within 0.0000002 of -25.98076211353315657
+VariableFilletTests.cpp:126  CHECK_THAT( box->min.z.in(units::mm), WithinAbs(lower[2], kTolBounds) )
+        => -0.0000001 is within 0.0000002 of 0.0
+VariableFilletTests.cpp:127  CHECK_THAT( box->max.x.in(units::mm), WithinAbs(upper[0], kTolBounds) )
+        => 29.38119794648299532 is within 0.0000002 of 29.38119784648299415
+VariableFilletTests.cpp:128  CHECK_THAT( box->max.y.in(units::mm), WithinAbs(upper[1], kTolBounds) )
+        => 25.98076221353316129 is within 0.0000002 of 25.98076211353315657
+VariableFilletTests.cpp:129  CHECK_THAT( box->max.z.in(units::mm), WithinAbs(upper[2], kTolBounds) )
+        => 50.00000010000000117 is within 0.0000002 of 50.0
+VariableFilletTests.cpp:118  CHECK_THAT( properties->volume.in(units::mm3), WithinRel(bettercad::test::volumeOf(parts), rel) )
+        => 96151.62026430034893565 and 96151.62026435835286975 are within 1e-07% of each other
+VariableFilletTests.cpp:119  CHECK_THAT( properties->centerOfMass.x.in(units::mm), WithinAbs(centre[0], centreTol) )
+        => 29.98590532912432138 is within 0.0000001 of 29.98590532911974194
+VariableFilletTests.cpp:120  CHECK_THAT( properties->centerOfMass.y.in(units::mm), WithinAbs(centre[1], centreTol) )
+        => 20.00167420165094967 is within 0.0000001 of 20.0016742016505944
+VariableFilletTests.cpp:121  CHECK_THAT( properties->centerOfMass.z.in(units::mm), WithinAbs(centre[2], centreTol) )
+        => 19.98938885852788161 is within 0.0000001 of 19.98938885852142988
+VariableFilletTests.cpp:124  CHECK_THAT( box->min.x.in(units::mm), WithinAbs(lower[0], kTolBounds) )
+        => -0.0000001 is within 0.0000002 of 0.0
+VariableFilletTests.cpp:125  CHECK_THAT( box->min.y.in(units::mm), WithinAbs(lower[1], kTolBounds) )
+        => -0.0000001 is within 0.0000002 of 0.0
+VariableFilletTests.cpp:126  CHECK_THAT( box->min.z.in(units::mm), WithinAbs(lower[2], kTolBounds) )
+        => -0.00000010000000011 is within 0.0000002 of 0.0
+VariableFilletTests.cpp:127  CHECK_THAT( box->max.x.in(units::mm), WithinAbs(upper[0], kTolBounds) )
+        => 80.00000009999999406 is within 0.0000002 of 80.0
+VariableFilletTests.cpp:128  CHECK_THAT( box->max.y.in(units::mm), WithinAbs(upper[1], kTolBounds) )
+        => 60.00000010000000117 is within 0.0000002 of 60.0
+VariableFilletTests.cpp:129  CHECK_THAT( box->max.z.in(units::mm), WithinAbs(upper[2], kTolBounds) )
+        => 40.00000010000000117 is within 0.0000002 of 40.0
+VariableFilletTests.cpp:429  CHECK( inside.part().first > 0.0 )
+        => 151.62026435835548455 > 0.0
+
+== VariableFillet_RoundsIsolatedStraightEdges / the result is the same every time
+VariableFilletTests.cpp:439  CHECK( printOf(first) == printOf(second) )
+        => {?} == {?}
+VariableFilletTests.cpp:440  CHECK( printOf(first) == printOf(fresh) )
+        => {?} == {?}
+VariableFilletTests.cpp:442  CHECK( block.topology().faces == 6 )
+        => 6 == 6
+
+== VariableFilletFile_SaveLoad_RegeneratesTheSameBodies
+VariableFilletFileTests.cpp:136  CHECK( loaded->id() == copy.id() )
+        => document:7c3f9a52-1e84-4b6d-a0f2-5d9e8b3c1a67 == document:7c3f9a52-1e84-4b6d-a0f2-5d9e8b3c1a67
+VariableFilletFileTests.cpp:137  CHECK( loaded->itemIds() == copy.itemIds() )
+        => { object:1, object:2, object:3, object:4, object:5, object:6, object:7 } == { object:1, object:2, object:3, object:4, object:5, object:6, object:7 }
+VariableFilletFileTests.cpp:140  CHECK( taper->definition() == copy.findObjectAs<VariableFilletFeature>(m.taper)->definition() )
+        => {?} == {?}
+VariableFilletFileTests.cpp:143  CHECK( printOf(*after.body(m.taper)) == print )
+        => {?} == {?}
+VariableFilletFileTests.cpp:153  CHECK( again->findObjectAs<VariableFilletFeature>(m.taper)->definition() == odd )
+        => {?} == {?}
+
+== VariableFilletFeature_FailuresAreStructuredAndAtomic / radii the faces cannot take, laws that leave their stations, invalid radii
+VariableFilletFeatureTests.cpp:130  CHECK( std::ranges::find(report.failed, item) != report.failed.end() )
+        => {?} != {?}
+VariableFilletFeatureTests.cpp:132  CHECK( report.errors.at(item).code == code )
+        => 5 == 5
+VariableFilletFeatureTests.cpp:133  CHECK( regenerator.body(item) == nullptr )
+        => nullptr == nullptr
+VariableFilletFeatureTests.cpp:375  CHECK_THAT( failureOf(report, regenerator, m.taper, ErrorCode::FailedPrecondition), StartsWith("Taper: variable-radius fillet: edge reference 1 (line through (0, 0, 20) mm along " "(1, 0, 0)) does not fit: its variable-radius fillet needs 25 mm on a face next to the " "edge, which leaves only 20 mm") )
+        => "Taper: variable-radius fillet: edge reference 1 (line through (0, 0, 20) mm along (1, 0, 0)) does not fit: its variable-radius fillet needs 25 mm on a face next to the edge, which leaves only 20 mm (a variable-radius fillet must leave at least 0.001 mm)" starts with: "Taper: variable-radius fillet: edge reference 1 (line through (0, 0, 20) mm along (1, 0, 0)) does not fit: its variable-radius fillet needs 25 mm on a face next to the edge, which leaves only 20 mm"
+VariableFilletFeatureTests.cpp:379  CHECK( regenerator.body(m.block) != nullptr )
+        => 0x0000022803d03bf8 != nullptr
+VariableFilletFeatureTests.cpp:132  CHECK( report.errors.at(item).code == code )
+        => 0 == 0
+VariableFilletFeatureTests.cpp:384  CHECK( failureOf(report, regenerator, m.taper, ErrorCode::InvalidArgument) == "Taper: variable-radius fillet: edge reference 1, station 1: the radius must be positive and finite, " "got 0 mm" )
+        => "Taper: variable-radius fillet: edge reference 1, station 1: the radius must be positive and finite, got 0 mm" == "Taper: variable-radius fillet: edge reference 1, station 1: the radius must be positive and finite, got 0 mm"
+VariableFilletFeatureTests.cpp:397  CHECK_THAT( bulge, StartsWith("Taper: variable-radius fillet: edge reference 1: between stations 2 and 3 (5 mm " "at 0.5, 5 mm at 1) the radius would rise to 5.21659 mm at 0.68") )
+        => "Taper: variable-radius fillet: edge reference 1: between stations 2 and 3 (5 mm at 0.5, 5 mm at 1) the radius would rise to 5.21659 mm at 0.68858; a variable radius must stay between the radii of the stations on either side" starts with: "Taper: variable-radius fillet: edge reference 1: between stations 2 and 3 (5 mm at 0.5, 5 mm at 1) the radius would rise to 5.21659 mm at 0.68"
+VariableFilletFeatureTests.cpp:399  CHECK_THAT( bulge, EndsWith("; a variable radius must stay between the radii of the stations on either side") )
+        => "Taper: variable-radius fillet: edge reference 1: between stations 2 and 3 (5 mm at 0.5, 5 mm at 1) the radius would rise to 5.21659 mm at 0.68858; a variable radius must stay between the radii of the stations on either side" ends with: "; a variable radius must stay between the radii of the stations on either side"
+VariableFilletFeatureTests.cpp:404  CHECK( printOf(bodyOf(regenerator, m.taper)) == good )
+        => {?} == {?}
+
+== VariableFilletFeature_FailuresAreStructuredAndAtomic / edges that move, meet or continue
+VariableFilletFeatureTests.cpp:130  CHECK( std::ranges::find(report.failed, item) != report.failed.end() )
+        => {?} != {?}
+VariableFilletFeatureTests.cpp:132  CHECK( report.errors.at(item).code == code )
+        => 1 == 1
+VariableFilletFeatureTests.cpp:133  CHECK( regenerator.body(item) == nullptr )
+        => nullptr == nullptr
+VariableFilletFeatureTests.cpp:415  CHECK( failureOf(report, regenerator, m.taper, ErrorCode::NotFound) == "Taper: variable-radius fillet: edge reference 2 (line through (0, 50, 20) mm along (1, 0, 0)) matches " "no edge of the body" )
+        => "Taper: variable-radius fillet: edge reference 2 (line through (0, 50, 20) mm along (1, 0, 0)) matches no edge of the body" == "Taper: variable-radius fillet: edge reference 2 (line through (0, 50, 20) mm along (1, 0, 0)) matches no edge of the body"
+VariableFilletFeatureTests.cpp:132  CHECK( report.errors.at(item).code == code )
+        => 5 == 5
+VariableFilletFeatureTests.cpp:426  CHECK( failureOf(report, regenerator, m.taper, ErrorCode::FailedPrecondition) == "Taper: variable-radius fillet: edge reference 3 (line through (100, 0, 0) mm along (0, 0, 1)) meets " "edge reference 1 (line through (0, 0, 20) mm along (1, 0, 0)) at a vertex; a variable-radius fillet " "rounds edges that meet no other edge it rounds" )
+        => "Taper: variable-radius fillet: edge reference 3 (line through (100, 0, 0) mm along (0, 0, 1)) meets edge reference 1 (line through (0, 0, 20) mm along (1, 0, 0)) at a vertex; a variable-radius fillet rounds edges that meet no other edge it rounds" == "Taper: variable-radius fillet: edge reference 3 (line through (100, 0, 0) mm along (0, 0, 1)) meets edge reference 1 (line through (0, 0, 20) mm along (1, 0, 0)) at a vertex; a variable-radius fillet rounds edges that meet no other edge it rounds"
+VariableFilletFeatureTests.cpp:441  CHECK( failureOf(report, regenerator, m.taper, ErrorCode::FailedPrecondition) == "Taper: variable-radius fillet: edge reference 1 (line through (0, 0, 20) mm along (1, 0, 0)) continues " "smoothly into 2 other edge(s); a variable-radius fillet rounds single edges only" )
+        => "Taper: variable-radius fillet: edge reference 1 (line through (0, 0, 20) mm along (1, 0, 0)) continues smoothly into 2 other edge(s); a variable-radius fillet rounds single edges only" == "Taper: variable-radius fillet: edge reference 1 (line through (0, 0, 20) mm along (1, 0, 0)) continues smoothly into 2 other edge(s); a variable-radius fillet rounds single edges only"
+VariableFilletFeatureTests.cpp:444  CHECK( regenerator.body(round) != nullptr )
+        => 0x0000022803822188 != nullptr
+
+== VariableFilletFeature_FailuresAreStructuredAndAtomic / radii driven by parameters of the wrong kind
+VariableFilletFeatureTests.cpp:130  CHECK( std::ranges::find(report.failed, item) != report.failed.end() )
+        => {?} != {?}
+VariableFilletFeatureTests.cpp:132  CHECK( report.errors.at(item).code == code )
+        => 3 == 3
+VariableFilletFeatureTests.cpp:133  CHECK( regenerator.body(item) == nullptr )
+        => nullptr == nullptr
+VariableFilletFeatureTests.cpp:455  CHECK_THAT( failureOf(report, regenerator, m.taper, ErrorCode::DimensionMismatch), StartsWith("Taper: ") )
+        => "Taper: parameter 'tilt' has dimension angle, not length" starts with: "Taper: "
+
+== VariableFilletFeature_FailuresAreStructuredAndAtomic / no copies, no named faces
+VariableFilletFeatureTests.cpp:476  CHECK_THAT( report.errors.at(row).message, EndsWith("a linear pattern cannot repeat a variable-radius fillet") )
+        => "Row: linear pattern: a linear pattern cannot repeat a variable-radius fillet" ends with: "a linear pattern cannot repeat a variable-radius fillet"
+VariableFilletFeatureTests.cpp:478  CHECK_THAT( report.errors.at(image).message, EndsWith("a mirror cannot repeat a variable-radius fillet") )
+        => "Image: mirror: a mirror cannot repeat a variable-radius fillet" ends with: "a mirror cannot repeat a variable-radius fillet"
+VariableFilletFeatureTests.cpp:480  CHECK( report.errors.at(onFillet).message == std::format("OnFillet ({}): Taper ({}) is a variable fillet, whose faces are not named (extrudes, " "revolves, sweeps, lofts, holes, chamfers and ribs name theirs)", onFillet, m.taper) )
+        => "OnFillet (object:10): Taper (object:7) is a variable fillet, whose faces are not named (extrudes, revolves, sweeps, lofts, holes, chamfers and ribs name theirs)" == "OnFillet (object:10): Taper (object:7) is a variable fillet, whose faces are not named (extrudes, revolves, sweeps, lofts, holes, chamfers and ribs name theirs)"
+VariableFilletFeatureTests.cpp:484  CHECK( regenerator.body(m.taper) != nullptr )
+        => 0x0000022803d05038 != nullptr
+
+== VariableFilletFile_MalformedDefinitionsAreRejectedWithThePath
+VariableFilletFileTests.cpp:195  CHECK_THAT( loadError(good, "\"target\": 6,\n \"edges\": [", "\"target\": 6, \"order\": 1,\n \"edges\": ["), ContainsSubstring("objects[2].data.order: unknown field") )
+        => "objects[2].data.order: unknown field" contains: "objects[2].data.order: unknown field"
+VariableFilletFileTests.cpp:198  CHECK_THAT( loadError(good, "\"target\": 6,\n \"edges\": [", "\"target\": 0,\n \"edges\": ["), ContainsSubstring("objects[2].data: a variable-radius fillet needs a target feature") )
+        => "objects[2].data: a variable-radius fillet needs a target feature" contains: "objects[2].data: a variable-radius fillet needs a target feature"
+VariableFilletFileTests.cpp:200  CHECK_THAT( loadError(good, "\"target\": 6,\n \"edges\": [", "\"target\": 6,\n \"lines\": ["), ContainsSubstring("objects[2].data.lines: unknown field") )
+        => "objects[2].data.lines: unknown field" contains: "objects[2].data.lines: unknown field"
+VariableFilletFileTests.cpp:202  CHECK_THAT( withData(R"({"target": 6, "edges": 3})"), ContainsSubstring("objects[2].data.edges: expected an array") )
+        => "objects[2].data.edges: expected an array" contains: "objects[2].data.edges: expected an array"
+VariableFilletFileTests.cpp:203  CHECK_THAT( withData(R"({"target": 6})"), ContainsSubstring("objects[2].data.edges: missing required field") )
+        => "objects[2].data.edges: missing required field" contains: "objects[2].data.edges: missing required field"
+VariableFilletFileTests.cpp:204  CHECK_THAT( withData(R"({"target": 6, "edges": []})"), ContainsSubstring("objects[2].data: a variable-radius fillet needs at least one edge") )
+        => "objects[2].data: a variable-radius fillet needs at least one edge" contains: "objects[2].data: a variable-radius fillet needs at least one edge"
+VariableFilletFileTests.cpp:206  CHECK_THAT( withData(R"({"target": 6, "edges": [{"stations": []}]})"), ContainsSubstring("objects[2].data.edges[0].edge: missing required field") )
+        => "objects[2].data.edges[0].edge: missing required field" contains: "objects[2].data.edges[0].edge: missing required field"
+VariableFilletFileTests.cpp:208  CHECK_THAT( withData(R"({"target": 6, "edges": [7]})"), ContainsSubstring("objects[2].data.edges[0]: expected an object") )
+        => "objects[2].data.edges[0]: expected an object" contains: "objects[2].data.edges[0]: expected an object"
+VariableFilletFileTests.cpp:210  CHECK_THAT( loadError(good, R"("edge": { "curve": "line", "point": [ 0.0, 0.05,)", R"("line": { "curve": "line", "point": [ 0.0, 0.05,)"), ContainsSubstring("objects[2].data.edges[1].line: unknown field") )
+        => "objects[2].data.edges[1].line: unknown field" contains: "objects[2].data.edges[1].line: unknown field"
+VariableFilletFileTests.cpp:221  CHECK_THAT( loadError(good, "\"curve\": \"line" + backPoint, "\"curve\": \"spline" + backPoint), ContainsSubstring("objects[2].data.edges[1].edge.curve: unknown value 'spline'") )
+        => "objects[2].data.edges[1].edge.curve: unknown value 'spline'" contains: "objects[2].data.edges[1].edge.curve: unknown value 'spline'"
+VariableFilletFileTests.cpp:223  CHECK_THAT( loadError(good, lastStation, R"({ "position": 1.0, "radius": "7 mm" })"), ContainsSubstring("objects[2].data.edges[1].stations[2].radius: expected a number") )
+        => "objects[2].data.edges[1].stations[2].radius: expected a number" contains: "objects[2].data.edges[1].stations[2].radius: expected a number"
+VariableFilletFileTests.cpp:228  CHECK_THAT( loadError(good, lastStation, R"({ "radius": 0.007 })"), ContainsSubstring("objects[2].data.edges[1].stations[2].position: missing required field") )
+        => "objects[2].data.edges[1].stations[2].position: missing required field" contains: "objects[2].data.edges[1].stations[2].position: missing required field"
+VariableFilletFileTests.cpp:232  CHECK_THAT( loadError(good, lastStation, R"({ "position": 1.0, "radius": 0.007, "fixed": true })"), ContainsSubstring("objects[2].data.edges[1].stations[2].fixed: unknown field") )
+        => "objects[2].data.edges[1].stations[2].fixed: unknown field" contains: "objects[2].data.edges[1].stations[2].fixed: unknown field"
+VariableFilletFileTests.cpp:238  CHECK_THAT( loadError(good, lastStation, R"({ "position": 1.0, "radius": 0.007, "radius_parameter": "high" })"), ContainsSubstring("objects[2].data.edges[1].stations[2].radius_parameter: expected an ID") )
+        => "objects[2].data.edges[1].stations[2].radius_parameter: expected an ID (a non-negative integer)" contains: "objects[2].data.edges[1].stations[2].radius_parameter: expected an ID"
+VariableFilletFileTests.cpp:244  CHECK_THAT( loadError(good, lastStation, R"({ "position": 0.9, "radius": 0.007 })"), ContainsSubstring("objects[2].data: edge reference 2: the last station must be at position 1, got 0.9") )
+        => "objects[2].data: edge reference 2: the last station must be at position 1, got 0.9" contains: "objects[2].data: edge reference 2: the last station must be at position 1, got 0.9"
+VariableFilletFileTests.cpp:249  CHECK_THAT( loadError(good, lastStation, R"({ "position": 1.0, "radius": 0.004 })"), ContainsSubstring("objects[2].data: edge reference 2: between stations 2 and 3 (4 mm at 0.3, 4 mm at 1) " "the radius would rise to") )
+        => "objects[2].data: edge reference 2: between stations 2 and 3 (4 mm at 0.3, 4 mm at 1) the radius would rise to 4.6461 mm at 0.558733; a variable radius must stay between the radii of the stations on either side" contains: "objects[2].data: edge reference 2: between stations 2 and 3 (4 mm at 0.3, 4 mm at 1) the radius would rise to"
+VariableFilletFileTests.cpp:255  CHECK_THAT( withData(R"({"target": 6, "edges": [{"edge": {"curve": "line", "point": [0, 0, 0], "direction": [1, 0, 0]}, "stations": 7}]})"), ContainsSubstring("objects[2].data.edges[0].stations: expected an array") )
+        => "objects[2].data.edges[0].stations: expected an array" contains: "objects[2].data.edges[0].stations: expected an array"
+VariableFilletFileTests.cpp:259  CHECK_THAT( withData(R"({"target": 6, "edges": [{"edge": {"curve": "line", "point": [0, 0, 0], "direction": [1, 0, 0]}, "stations": [{"position": 0, "radius": 0.001}, 5]}]})"), ContainsSubstring("objects[2].data.edges[0].stations[1]: expected an object") )
+        => "objects[2].data.edges[0].stations[1]: expected an object" contains: "objects[2].data.edges[0].stations[1]: expected an object"
+
+== VariableFilletFeature_RegeneratesDeterministically
+VariableFilletFeatureTests.cpp:288  CHECK( printOf(bodyOf(rb, b.taper)) == print )
+        => {?} == {?}
+VariableFilletFeatureTests.cpp:296  CHECK( printOf(bodyOf(ra, a.taper)) == print )
+        => {?} == {?}
+VariableFilletFeatureTests.cpp:301  CHECK( printOf(bodyOf(rc, a.taper)) == print )
+        => {?} == {?}
+
+== VariableFilletCli_InfoDescribesVariableFillets
+VariableFilletCliTests.cpp:41  CHECK( result.exitCode == ExitCode::Success )
+        => 0 == 0
+VariableFilletCliTests.cpp:43  CHECK_THAT( result.out, ContainsSubstring(" object:7 variable_fillet Taper target Block, 2 edges: " "low at 0, high at 1; 2 mm at 0, 4 mm at 0.3, 7 mm at 1\n") )
+        => "Document: TaperedBlock File: C:\Users\uqhas\AppData\Local\Temp\bettercad-test-4f4f4036-c7df-42bc-85c6-a602b4d6b4bb\taper.bcad ID: 7c3f9a52-1e84-4b6d-a0f2-5d9e8b3c1a67 Parameters (4): width 100 mm depth 50 mm low 3 mm high 8 mm Objects (3): object:5 sketch BlockSketch 8 entities, 7 constraints, driven by width, depth object:6 extrude Block profile BlockSketch, depth 20 mm, normal, new body object:7 variable_fillet Taper target Block, 2 edges: low at 0, high at 1; 2 mm at 0, 4 mm at 0.3, 7 mm at 1 " contains: " object:7 variable_fillet Taper target Block, 2 edges: low at 0, high at 1; 2 mm at 0, 4 mm at 0.3, 7 mm at 1 "
+
+== VariableFilletCli_ValidateReportsTheFillet / a valid model
+VariableFilletCliTests.cpp:52  CHECK( result.exitCode == ExitCode::Success )
+        => 0 == 0
+VariableFilletCliTests.cpp:53  CHECK_THAT( result.out, ContainsSubstring(" feature regeneration ok, 3 objects regenerated\n" " geometry ok, 1 result body\n") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-889fea3b-c651-4d81-8ab1-3e8473aa69e2\taper.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 3 objects regenerated geometry ok, 1 result body Result bodies (1): Taper (object:7): 1 solid, volume 98709.906 mm^3, area 15523.393 mm^2, bounds (0, 0, 0) to (100, 50, 20) mm Result: valid " contains: " feature regeneration ok, 3 objects regenerated geometry ok, 1 result body "
+VariableFilletCliTests.cpp:57  CHECK_THAT( result.out, ContainsSubstring(std::format("Taper (object:7): 1 solid, volume {:.3f} mm^3", volume)) )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-889fea3b-c651-4d81-8ab1-3e8473aa69e2\taper.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 3 objects regenerated geometry ok, 1 result body Result bodies (1): Taper (object:7): 1 solid, volume 98709.906 mm^3, area 15523.393 mm^2, bounds (0, 0, 0) to (100, 50, 20) mm Result: valid " contains: "Taper (object:7): 1 solid, volume 98709.906 mm^3"
+VariableFilletCliTests.cpp:58  CHECK_THAT( result.out, EndsWith("Result: valid\n") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-889fea3b-c651-4d81-8ab1-3e8473aa69e2\taper.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 3 objects regenerated geometry ok, 1 result body Result bodies (1): Taper (object:7): 1 solid, volume 98709.906 mm^3, area 15523.393 mm^2, bounds (0, 0, 0) to (100, 50, 20) mm Result: valid " ends with: "Result: valid "
+
+== VariableFilletCli_ValidateReportsTheFillet / a fillet too large for its faces
+VariableFilletCliTests.cpp:63  CHECK( result.exitCode == ExitCode::Failure )
+        => 1 == 1
+VariableFilletCliTests.cpp:64  CHECK_THAT( result.out, ContainsSubstring("Taper: variable-radius fillet: edge reference 1 (line through " "(0, 0, 20) mm along (1, 0, 0)) does not fit") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-e539f0be-9415-4e2f-a0f5-e9e9dbfaf665\large.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration 1 error error: Taper (object:7) failed to regenerate: Taper: variable-radius fillet: edge reference 1 (line through (0, 0, 20) mm along (1, 0, 0)) does not fit: its variable-radius fillet needs 25 mm on a face next to the edge, which leaves only 20 mm (a variable-radius fillet must leave at least 0.001 mm) geometry ok, 0 result bodies Result: invalid (1 error) " contains: "Taper: variable-radius fillet: edge reference 1 (line through (0, 0, 20) mm along (1, 0, 0)) does not fit"
+VariableFilletCliTests.cpp:66  CHECK_THAT( result.out, ContainsSubstring("Result: invalid") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-e539f0be-9415-4e2f-a0f5-e9e9dbfaf665\large.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration 1 error error: Taper (object:7) failed to regenerate: Taper: variable-radius fillet: edge reference 1 (line through (0, 0, 20) mm along (1, 0, 0)) does not fit: its variable-radius fillet needs 25 mm on a face next to the edge, which leaves only 20 mm (a variable-radius fillet must leave at least 0.001 mm) geometry ok, 0 result bodies Result: invalid (1 error) " contains: "Result: invalid"
+
+== VariableFilletFeature_CreationAndEditsAreUndoable
+VariableFilletFeatureTests.cpp:321  CHECK( resultFeatures(m.doc) == std::vector<ObjectId>{sole} )
+        => { object:8 } == { object:8 }
+VariableFilletFeatureTests.cpp:91  CHECK( body.topology().solids == 1 )
+        => 1 == 1
+VariableFilletFeatureTests.cpp:94  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRelVolume) )
+        => 98507.84288501710398123 and 98507.84288567584007978 are within 1e-07% of each other
+VariableFilletFeatureTests.cpp:68  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 49.77173062464372322 is within 0.0000001 of 49.77173062451184649
+VariableFilletFeatureTests.cpp:69  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 25.07772909739555445 is within 0.0000001 of 25.07772909757176194
+VariableFilletFeatureTests.cpp:70  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 9.90596501762764525 is within 0.0000001 of 9.90596501765691784
+VariableFilletFeatureTests.cpp:68  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.0000001 is within 0.0000002 of 0.0
+VariableFilletFeatureTests.cpp:69  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.00000010000000056 is within 0.0000002 of 0.0
+VariableFilletFeatureTests.cpp:70  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.00000010000000078 is within 0.0000002 of 0.0
+VariableFilletFeatureTests.cpp:68  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 100.00000009999999406 is within 0.0000002 of 100.0
+VariableFilletFeatureTests.cpp:69  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 50.00000010000002248 is within 0.0000002 of 50.0
+VariableFilletFeatureTests.cpp:70  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 20.00000010000000827 is within 0.0000002 of 20.0
+VariableFilletFeatureTests.cpp:94  CHECK_THAT( props->volume.in(units::mm3), WithinRel(expected.volume(), kRelVolume) )
+        => 98840.42431547686283011 and 98840.42431520203535911 are within 1e-07% of each other
+VariableFilletFeatureTests.cpp:68  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 49.94354892954033431 is within 0.0000001 of 49.9435489295971351
+VariableFilletFeatureTests.cpp:69  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 25.05819021248834133 is within 0.0000001 of 25.05819021246431078
+VariableFilletFeatureTests.cpp:70  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 9.89786185451037603 is within 0.0000001 of 9.89786185446117095
+VariableFilletFeatureTests.cpp:69  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.0000001 is within 0.0000002 of 0.0
+VariableFilletFeatureTests.cpp:70  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.0000001 is within 0.0000002 of 0.0
+VariableFilletFeatureTests.cpp:347  CHECK( printOf(bodyOf(regenerator, m.taper)) == tapered )
+        => {?} == {?}
+VariableFilletFeatureTests.cpp:351  CHECK( resultFeatures(m.doc) == std::vector<ObjectId>{m.taper} )
+        => { object:7 } == { object:7 }
+VariableFilletFeatureTests.cpp:361  CHECK( refused.error().code == ErrorCode::InvalidArgument )
+        => 0 == 0
+
+== VariableFillet_RequestsAreValidated / edges
+VariableFilletTests.cpp:181  CHECK( valid.error().code == ErrorCode::InvalidArgument )
+        => 0 == 0
+VariableFilletTests.cpp:194  CHECK( message({}) == "a variable-radius fillet needs at least one edge" )
+        => "a variable-radius fillet needs at least one edge" == "a variable-radius fillet needs at least one edge"
+VariableFilletTests.cpp:195  CHECK( message({.edges = {{.edge = edge, .stations = radiusStations({{0.0, 3.0}, {1.0, 3.0}})}, {.edge = line({5, 0, 0}, Direction3D::unitX()), .stations = radiusStations({{0.0, 3.0}, {1.0, 3.0}})}}}) == "edge references 1 and 2 refer to the same line through (0, 0, 0) mm along (1, 0, 0)" )
+        => "edge references 1 and 2 refer to the same line through (0, 0, 0) mm along (1, 0, 0)" == "edge references 1 and 2 refer to the same line through (0, 0, 0) mm along (1, 0, 0)"
+VariableFilletTests.cpp:201  CHECK( message(request(*circle, {{0.0, 3.0}, {1.0, 3.0}})) == "edge reference 1 (circle around (0, 0, 0) mm with axis (0, 0, 1) and radius 10 mm) is not " "straight; a variable-radius fillet rounds straight edges only" )
+        => "edge reference 1 (circle around (0, 0, 0) mm with axis (0, 0, 1) and radius 10 mm) is not straight; a variable-radius fillet rounds straight edges only" == "edge reference 1 (circle around (0, 0, 0) mm with axis (0, 0, 1) and radius 10 mm) is not straight; a variable-radius fillet rounds straight edges only"
+
+== VariableFillet_RequestsAreValidated / stations
+VariableFilletTests.cpp:181  CHECK( valid.error().code == ErrorCode::InvalidArgument )
+        => 0 == 0
+VariableFilletTests.cpp:207  CHECK( message(request(edge, {{0.0, 3.0}})) == "edge reference 1: a variable-radius fillet needs two or more radius stations on each edge, got 1" )
+        => "edge reference 1: a variable-radius fillet needs two or more radius stations on each edge, got 1" == "edge reference 1: a variable-radius fillet needs two or more radius stations on each edge, got 1"
+VariableFilletTests.cpp:209  CHECK( message(request(edge, {})) == "edge reference 1: a variable-radius fillet needs two or more radius stations on each edge, got 0" )
+        => "edge reference 1: a variable-radius fillet needs two or more radius stations on each edge, got 0" == "edge reference 1: a variable-radius fillet needs two or more radius stations on each edge, got 0"
+VariableFilletTests.cpp:211  CHECK( message(request(edge, {{0.0, 3.0}, {std::numeric_limits<double>::quiet_NaN(), 4.0}, {1.0, 3.0}})) == "edge reference 1, station 2: the position must be finite, got nan" )
+        => "edge reference 1, station 2: the position must be finite, got nan" == "edge reference 1, station 2: the position must be finite, got nan"
+VariableFilletTests.cpp:213  CHECK( message(request(edge, {{0.1, 3.0}, {1.0, 3.0}})) == "edge reference 1: the first station must be at position 0, got 0.1" )
+        => "edge reference 1: the first station must be at position 0, got 0.1" == "edge reference 1: the first station must be at position 0, got 0.1"
+VariableFilletTests.cpp:215  CHECK( message(request(edge, {{0.0, 3.0}, {0.9, 3.0}})) == "edge reference 1: the last station must be at position 1, got 0.9" )
+        => "edge reference 1: the last station must be at position 1, got 0.9" == "edge reference 1: the last station must be at position 1, got 0.9"
+VariableFilletTests.cpp:217  CHECK( message(request(edge, {{0.0, 3.0}, {0.5, 4.0}, {0.4, 4.0}, {1.0, 3.0}})) == "edge reference 1: station 3 (at 0.4) does not follow station 2 (at 0.5); stations are listed by " "increasing position, at least 1e-06 apart" )
+        => "edge reference 1: station 3 (at 0.4) does not follow station 2 (at 0.5); stations are listed by increasing position, at least 1e-06 apart" == "edge reference 1: station 3 (at 0.4) does not follow station 2 (at 0.5); stations are listed by increasing position, at least 1e-06 apart"
+VariableFilletTests.cpp:220  CHECK( message(request(edge, {{0.0, 3.0}, {0.5, 4.0}, {0.5, 4.0}, {1.0, 3.0}})) == "edge reference 1: station 3 (at 0.5) does not follow station 2 (at 0.5); stations are listed by " "increasing position, at least 1e-06 apart" )
+        => "edge reference 1: station 3 (at 0.5) does not follow station 2 (at 0.5); stations are listed by increasing position, at least 1e-06 apart" == "edge reference 1: station 3 (at 0.5) does not follow station 2 (at 0.5); stations are listed by increasing position, at least 1e-06 apart"
+VariableFilletTests.cpp:223  CHECK( message(request(edge, {{0.0, 3.0}, {0.5, 4.0}, {0.5000005, 4.0}, {1.0, 3.0}})) == "edge reference 1: station 3 (at 0.5000005) does not follow station 2 (at 0.5); stations are listed " "by increasing position, at least 1e-06 apart" )
+        => "edge reference 1: station 3 (at 0.5000005) does not follow station 2 (at 0.5); stations are listed by increasing position, at least 1e-06 apart" == "edge reference 1: station 3 (at 0.5000005) does not follow station 2 (at 0.5); stations are listed by increasing position, at least 1e-06 apart"
+VariableFilletTests.cpp:226  CHECK( message(request(edge, {{0.0, 3.0}, {1.5, 4.0}, {1.0, 3.0}})) == "edge reference 1: station 3 (at 1) does not follow station 2 (at 1.5); stations are listed by " "increasing position, at least 1e-06 apart" )
+        => "edge reference 1: station 3 (at 1) does not follow station 2 (at 1.5); stations are listed by increasing position, at least 1e-06 apart" == "edge reference 1: station 3 (at 1) does not follow station 2 (at 1.5); stations are listed by increasing position, at least 1e-06 apart"
+VariableFilletTests.cpp:229  CHECK( message(request(edge, {{-0.5, 3.0}, {1.0, 3.0}})) == "edge reference 1: the first station must be at position 0, got -0.5" )
+        => "edge reference 1: the first station must be at position 0, got -0.5" == "edge reference 1: the first station must be at position 0, got -0.5"
+
+== VariableFillet_RequestsAreValidated / radii
+VariableFilletTests.cpp:181  CHECK( valid.error().code == ErrorCode::InvalidArgument )
+        => 0 == 0
+VariableFilletTests.cpp:234  CHECK( message(request(edge, {{0.0, 3.0}, {1.0, 0.0}})) == "edge reference 1, station 2: the radius must be positive and finite, got 0 mm" )
+        => "edge reference 1, station 2: the radius must be positive and finite, got 0 mm" == "edge reference 1, station 2: the radius must be positive and finite, got 0 mm"
+VariableFilletTests.cpp:236  CHECK( message(request(edge, {{0.0, -1.0}, {1.0, 3.0}})) == "edge reference 1, station 1: the radius must be positive and finite, got -1 mm" )
+        => "edge reference 1, station 1: the radius must be positive and finite, got -1 mm" == "edge reference 1, station 1: the radius must be positive and finite, got -1 mm"
+VariableFilletTests.cpp:238  CHECK( message(request(edge, {{0.0, 3.0}, {0.5, std::numeric_limits<double>::infinity()}, {1.0, 3.0}})) == "edge reference 1, station 2: the radius must be positive and finite, got inf mm" )
+        => "edge reference 1, station 2: the radius must be positive and finite, got inf mm" == "edge reference 1, station 2: the radius must be positive and finite, got inf mm"
+VariableFilletTests.cpp:240  CHECK( message(request(edge, {{0.0, 3.0}, {1.0, std::numeric_limits<double>::quiet_NaN()}})) == "edge reference 1, station 2: the radius must be positive and finite, got nan mm" )
+        => "edge reference 1, station 2: the radius must be positive and finite, got nan mm" == "edge reference 1, station 2: the radius must be positive and finite, got nan mm"
+VariableFilletTests.cpp:243  CHECK( message(request(edge, {{0.0, 3.0}, {1.0, 3.0000004}})) == "edge reference 1: the station radii differ by only 4e-07 mm; give them one radius, or radii at least " "1e-06 mm apart" )
+        => "edge reference 1: the station radii differ by only 4e-07 mm; give them one radius, or radii at least 1e-06 mm apart" == "edge reference 1: the station radii differ by only 4e-07 mm; give them one radius, or radii at least 1e-06 mm apart"
+
+== VariableFillet_RequestsAreValidated / laws that leave their stations' range, measured on the reference law
+VariableFilletTests.cpp:181  CHECK( valid.error().code == ErrorCode::InvalidArgument )
+        => 0 == 0 with message: at := 0.24711258358565252; radius := -3.23489000881442834
+VariableFilletTests.cpp:276  CHECK( message(request(edge, c.stations)) == expected )
+        => "edge reference 1: between stations 1 and 2 (5 mm at 0, 5 mm at 0.4) the radius would fall to -3.23489 mm at 0.247113; a variable radius must stay between the radii of the stations on either side" == "edge reference 1: between stations 1 and 2 (5 mm at 0, 5 mm at 0.4) the radius would fall to -3.23489 mm at 0.247113; a variable radius must stay between the radii of the stations on either side" with message: at := 0.24711258358565252; radius := -3.23489000881442834
+VariableFilletTests.cpp:181  CHECK( valid.error().code == ErrorCode::InvalidArgument )
+        => 0 == 0 with message: at := 0.24711258357739907; radius := 1.01537580218656576
+VariableFilletTests.cpp:276  CHECK( message(request(edge, c.stations)) == expected )
+        => "edge reference 1: between stations 1 and 2 (5 mm at 0, 5 mm at 0.4) the radius would fall to 1.01538 mm at 0.247113; a variable radius must stay between the radii of the stations on either side" == "edge reference 1: between stations 1 and 2 (5 mm at 0, 5 mm at 0.4) the radius would fall to 1.01538 mm at 0.247113; a variable radius must stay between the radii of the stations on either side" with message: at := 0.24711258357739907; radius := 1.01537580218656576
+VariableFilletTests.cpp:181  CHECK( valid.error().code == ErrorCode::InvalidArgument )
+        => 0 == 0 with message: at := 0.53000316319278951; radius := 6.01896557163162083
+VariableFilletTests.cpp:276  CHECK( message(request(edge, c.stations)) == expected )
+        => "edge reference 1: between stations 2 and 3 (6 mm at 0.5, 4 mm at 1) the radius would rise to 6.01897 mm at 0.530003; a variable radius must stay between the radii of the stations on either side" == "edge reference 1: between stations 2 and 3 (6 mm at 0.5, 4 mm at 1) the radius would rise to 6.01897 mm at 0.530003; a variable radius must stay between the radii of the stations on either side" with message: at := 0.53000316319278951; radius := 6.01896557163162083
+VariableFilletTests.cpp:181  CHECK( valid.error().code == ErrorCode::InvalidArgument )
+        => 0 == 0 with message: at := 0.30022072551396894; radius := 7.00000445050806519
+VariableFilletTests.cpp:276  CHECK( message(request(edge, c.stations)) == expected )
+        => "edge reference 1: between stations 2 and 3 (7 mm at 0.3, 5 mm at 0.5) the radius would rise to 7 mm at 0.300221; a variable radius must stay between the radii of the stations on either side" == "edge reference 1: between stations 2 and 3 (7 mm at 0.3, 5 mm at 0.5) the radius would rise to 7 mm at 0.300221; a variable radius must stay between the radii of the stations on either side" with message: at := 0.30022072551396894; radius := 7.00000445050806519
+VariableFilletTests.cpp:181  CHECK( valid.error().code == ErrorCode::InvalidArgument )
+        => 0 == 0 with message: at := 0.6885804847806436; radius := 8.54148258320788223
+VariableFilletTests.cpp:276  CHECK( message(request(edge, c.stations)) == expected )
+        => "edge reference 1: between stations 2 and 3 (8 mm at 0.5, 8 mm at 1) the radius would rise to 8.54148 mm at 0.68858; a variable radius must stay between the radii of the stations on either side" == "edge reference 1: between stations 2 and 3 (8 mm at 0.5, 8 mm at 1) the radius would rise to 8.54148 mm at 0.68858; a variable radius must stay between the radii of the stations on either side" with message: at := 0.6885804847806436; radius := 8.54148258320788223
+VariableFilletTests.cpp:288  CHECK_THAT( low.second, WithinAbs(-3.2348900088144264, 1e-9) )
+        => -3.23489000881442834 is within 0.000000001 of -3.23489000881442657
+VariableFilletTests.cpp:289  CHECK_THAT( low.first, WithinAbs(0.24711258399416494, 1e-6) )
+        => 0.24711258358565252 is within 0.000001 of 0.24711258399416494
+VariableFilletTests.cpp:290  CHECK_THAT( high.second, WithinAbs(44.234890008814426, 1e-9) )
+        => 44.23489000881442479 is within 0.000000001 of 44.23489000881442479
+VariableFilletTests.cpp:291  CHECK_THAT( high.first, WithinAbs(0.75288741600583506, 1e-6) )
+        => 0.75288741800042347 is within 0.000001 of 0.75288741600583509
+
+== VariableFillet_RequestsAreValidated / the radius law
+VariableFilletTests.cpp:296  CHECK_THAT( bettercad::test::twoStationShape(0.25), WithinAbs(11.0 / 56.0, 1e-15) )
+        => 0.19642857142857142 is within 0.000000000000001 of 0.19642857142857142
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 3.0 is within 0.000000000001 of 3.0
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 3.166015625 is within 0.000000000001 of 3.166015625
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 3.39062500000000044 is within 0.000000000001 of 3.390625
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 3.66545758928571441 is within 0.000000000001 of 3.66545758928571441
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 3.98214285714285765 is within 0.000000000001 of 3.98214285714285721
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 4.33231026785714324 is within 0.000000000001 of 4.33231026785714324
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 4.70758928571428559 is within 0.000000000001 of 4.70758928571428559
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 5.099609375 is within 0.000000000001 of 5.099609375
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 5.5 is within 0.000000000001 of 5.5
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 5.90039062500000089 is within 0.000000000001 of 5.900390625
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 6.29241071428571441 is within 0.000000000001 of 6.29241071428571352
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 6.66768973214285676 is within 0.000000000001 of 6.66768973214285676
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 7.01785714285714324 is within 0.000000000001 of 7.01785714285714324
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 7.33454241071428648 is within 0.000000000001 of 7.33454241071428559
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 7.60937500000000089 is within 0.000000000001 of 7.609375
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 7.833984375 is within 0.000000000001 of 7.833984375
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 8.0 is within 0.000000000001 of 8.0
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 7.01785714285714235 is within 0.000000000001 of 7.01785714285714324
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 6.29241071428571352 is within 0.000000000001 of 6.29241071428571441
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 4.70758928571428559 is within 0.000000000001 of 4.70758928571428648
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 3.98214285714285765 is within 0.000000000001 of 3.98214285714285676
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 3.390625 is within 0.000000000001 of 3.390625
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 2.5 is within 0.000000000001 of 2.5
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 2.8154296875 is within 0.000000000001 of 2.8154296875
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 3.24218750000000044 is within 0.000000000001 of 3.2421875
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 3.76436941964285721 is within 0.000000000001 of 3.76436941964285676
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 4.36607142857142794 is within 0.000000000001 of 4.36607142857142883
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 5.03138950892857117 is within 0.000000000001 of 5.03138950892857117
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 5.74441964285714324 is within 0.000000000001 of 5.74441964285714235
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 6.48925781250000089 is within 0.000000000001 of 6.4892578125
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 7.25 is within 0.000000000001 of 7.25
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 8.0107421875 is within 0.000000000001 of 8.0107421875
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 8.75558035714285765 is within 0.000000000001 of 8.75558035714285765
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 9.46861049107142883 is within 0.000000000001 of 9.46861049107142705
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 10.13392857142857295 is within 0.000000000001 of 10.13392857142857295
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 10.73563058035714413 is within 0.000000000001 of 10.73563058035714235
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 11.2578125 is within 0.000000000001 of 11.2578125
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 11.6845703125 is within 0.000000000001 of 11.6845703125
+VariableFilletTests.cpp:303  CHECK_THAT( r->in(units::mm), WithinAbs(a + (b - a) * bettercad::test::twoStationShape(u), 1e-12) )
+        => 12.0 is within 0.000000000001 of 12.0
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 3.0 is within 0.000000000001 of 3.0
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 3.01964724105681537 is within 0.000000000001 of 3.01964724105681537
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 3.04323513366066578 is within 0.000000000001 of 3.04323513366066578
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 3.07114361702127603 is within 0.000000000001 of 3.07114361702127647
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 3.10375263034837534 is within 0.000000000001 of 3.1037526303483749
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 3.14144211285168762 is within 0.000000000001 of 3.14144211285168762
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 3.18459200374093943 is within 0.000000000001 of 3.18459200374093943
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 3.23358224222585866 is within 0.000000000001 of 3.23358224222585955
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 3.28879276751617189 is within 0.000000000001 of 3.28879276751617189
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 3.35060351882160434 is within 0.000000000001 of 3.3506035188216039
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 3.41939443535188214 is within 0.000000000001 of 3.41939443535188214
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 3.49554545631673275 is within 0.000000000001 of 3.49554545631673319
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 3.57943652092588227 is within 0.000000000001 of 3.57943652092588227
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 3.67144756838905817 is within 0.000000000001 of 3.67144756838905773
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 3.77195853791598434 is within 0.000000000001 of 3.77195853791598434
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 3.88134936871639002 is within 0.000000000001 of 3.88134936871639002
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 4.0 is within 0.000000000001 of 4.0
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 4.12812580507061888 is within 0.000000000001 of 4.12812580507061888
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 4.26528389360836169 is within 0.000000000001 of 4.26528389360836169
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 4.41086680938742237 is within 0.000000000001 of 4.41086680938742148
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 4.56426709618198956 is within 0.000000000001 of 4.56426709618198867
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 4.72487729776626075 is within 0.000000000001 of 4.72487729776626164
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 4.89208995791442725 is within 0.000000000001 of 4.89208995791442636
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 5.06529762040067855 is within 0.000000000001 of 5.06529762040067855
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 5.24389282899921216 is within 0.000000000001 of 5.24389282899921216
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 5.42726812748421761 is within 0.000000000001 of 5.4272681274842185
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 5.61481605962988972 is within 0.000000000001 of 5.61481605962988972
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 5.80592916921042068 is within 0.000000000001 of 5.80592916921041891
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 6.0 is within 0.000000000001 of 6.0
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 6.19622524035755351 is within 0.000000000001 of 6.1962252403575544
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 6.39301815698092213 is within 0.000000000001 of 6.39301815698092391
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 6.58859616115267777 is within 0.000000000001 of 6.58859616115267777
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 6.78117666415538878 is within 0.000000000001 of 6.78117666415538789
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 6.9689770772716253 is within 0.000000000001 of 6.96897707727162441
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 7.15021481178396101 is within 0.000000000001 of 7.15021481178396012
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 7.32310727897496516 is within 0.000000000001 of 7.32310727897496516
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 7.48587189012720966 is within 0.000000000001 of 7.48587189012720877
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 7.63672605652326464 is within 0.000000000001 of 7.63672605652326375
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 7.77388718944570023 is within 0.000000000001 of 7.77388718944570023
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 7.89557270017709012 is within 0.000000000001 of 7.89557270017708834
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 8.0 is within 0.000000000001 of 8.0
+VariableFilletTests.cpp:319  CHECK_THAT( radiusAt(stations, u)->in(units::mm), WithinAbs(radius, 1e-12) )
+        => 3.0 is within 0.000000000001 of 3.0
+VariableFilletTests.cpp:319  CHECK_THAT( radiusAt(stations, u)->in(units::mm), WithinAbs(radius, 1e-12) )
+        => 4.0 is within 0.000000000001 of 4.0
+VariableFilletTests.cpp:319  CHECK_THAT( radiusAt(stations, u)->in(units::mm), WithinAbs(radius, 1e-12) )
+        => 6.0 is within 0.000000000001 of 6.0
+VariableFilletTests.cpp:319  CHECK_THAT( radiusAt(stations, u)->in(units::mm), WithinAbs(radius, 1e-12) )
+        => 8.0 is within 0.000000000001 of 8.0
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 2.0 is within 0.000000000001 of 2.0
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 2.1081328538359787 is within 0.000000000001 of 2.1081328538359787
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 2.23389399951900014 is within 0.000000000001 of 2.2338939995189997
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 2.37518770292207826 is within 0.000000000001 of 2.37518770292207781
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 2.52991822991823012 is within 0.000000000001 of 2.52991822991823012
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 2.69598984638047146 is within 0.000000000001 of 2.69598984638047146
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 2.87130681818181843 is within 0.000000000001 of 2.87130681818181799
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 3.05377341119528678 is within 0.000000000001 of 3.05377341119528634
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 3.24129389129389178 is within 0.000000000001 of 3.24129389129389134
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 3.43177252435064917 is within 0.000000000001 of 3.43177252435064961
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 3.62311357623857688 is within 0.000000000001 of 3.62311357623857599
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 3.81322131283068799 is within 0.000000000001 of 3.81322131283068844
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 4.18170150162337695 is within 0.000000000001 of 4.18170150162337695
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 4.35796807359307348 is within 0.000000000001 of 4.35796807359307348
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 4.52878956980519476 is within 0.000000000001 of 4.52878956980519387
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 4.69415584415584419 is within 0.000000000001 of 4.69415584415584419
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 4.85405675054112429 is within 0.000000000001 of 4.85405675054112518
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 5.00848214285714377 is within 0.000000000001 of 5.00848214285714288
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 5.15742187500000071 is within 0.000000000001 of 5.15742187500000071
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 5.30086580086580117 is within 0.000000000001 of 5.30086580086580117
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 5.43880377435065032 is within 0.000000000001 of 5.43880377435064943
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 5.57122564935065068 is within 0.000000000001 of 5.57122564935064979
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 5.69812127976190386 is within 0.000000000001 of 5.69812127976190474
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 5.81948051948051948 is within 0.000000000001 of 5.81948051948051948
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 5.93529322240259827 is within 0.000000000001 of 5.93529322240259738
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 6.04554924242424363 is within 0.000000000001 of 6.04554924242424363
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 6.15023843344155807 is within 0.000000000001 of 6.15023843344155896
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 6.24935064935065032 is within 0.000000000001 of 6.24935064935064943
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 6.34287574404762022 is within 0.000000000001 of 6.34287574404761845
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 6.43080357142857206 is within 0.000000000001 of 6.43080357142857117
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 6.51312398538961101 is within 0.000000000001 of 6.51312398538961101
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 6.58982683982683959 is within 0.000000000001 of 6.58982683982683959
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 6.66090198863636296 is within 0.000000000001 of 6.66090198863636296
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 6.72633928571428719 is within 0.000000000001 of 6.72633928571428452
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 6.78612858495670945 is within 0.000000000001 of 6.78612858495671123
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 6.84025974025974026 is within 0.000000000001 of 6.84025974025973937
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 6.88872260551948123 is within 0.000000000001 of 6.88872260551948035
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 6.93150703463203399 is within 0.000000000001 of 6.93150703463203399
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 6.96860288149350726 is within 0.000000000001 of 6.96860288149350637
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 7.0 is within 0.000000000001 of 7.0
+VariableFilletTests.cpp:319  CHECK_THAT( radiusAt(stations, u)->in(units::mm), WithinAbs(radius, 1e-12) )
+        => 2.0 is within 0.000000000001 of 2.0
+VariableFilletTests.cpp:319  CHECK_THAT( radiusAt(stations, u)->in(units::mm), WithinAbs(radius, 1e-12) )
+        => 7.0 is within 0.000000000001 of 7.0
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 5.91781250000000014 is within 0.000000000001 of 5.91781250000000014
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 5.82250000000000068 is within 0.000000000001 of 5.82249999999999979
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 5.71593750000000078 is within 0.000000000001 of 5.71593750000000078
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 5.60000000000000053 is within 0.000000000001 of 5.60000000000000053
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 5.47656250000000089 is within 0.000000000001 of 5.4765625
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 5.34750000000000014 is within 0.000000000001 of 5.34750000000000014
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 5.21468750000000014 is within 0.000000000001 of 5.21468749999999925
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 5.07999999999999918 is within 0.000000000001 of 5.08000000000000007
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 4.9453125 is within 0.000000000001 of 4.9453125
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 4.8125 is within 0.000000000001 of 4.8125
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 4.68343750000000014 is within 0.000000000001 of 4.68343750000000014
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 4.5600000000000005 is within 0.000000000001 of 4.55999999999999961
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 4.44406250000000025 is within 0.000000000001 of 4.44406250000000025
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 4.33750000000000036 is within 0.000000000001 of 4.33750000000000036
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 4.2421875 is within 0.000000000001 of 4.2421875
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 4.15999999999999925 is within 0.000000000001 of 4.16000000000000014
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 4.09281249999999996 is within 0.000000000001 of 4.09281250000000085
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 4.04250000000000131 is within 0.000000000001 of 4.04250000000000043
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 4.01093750000000071 is within 0.000000000001 of 4.01093749999999982
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 4.04250000000000043 is within 0.000000000001 of 4.04250000000000043
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 4.09281249999999996 is within 0.000000000001 of 4.09281249999999908
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 4.44406250000000114 is within 0.000000000001 of 4.44406250000000025
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 4.55999999999999961 is within 0.000000000001 of 4.55999999999999961
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 5.08000000000000007 is within 0.000000000001 of 5.08000000000000007
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 5.21468750000000014 is within 0.000000000001 of 5.21468750000000014
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 5.34750000000000014 is within 0.000000000001 of 5.34749999999999925
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 5.59999999999999964 is within 0.000000000001 of 5.60000000000000053
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 5.71593750000000078 is within 0.000000000001 of 5.71593749999999989
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 5.82249999999999979 is within 0.000000000001 of 5.82249999999999979
+VariableFilletTests.cpp:316  CHECK_THAT( r->in(units::mm), WithinAbs(law(u), 1e-12) )
+        => 5.91781250000000014 is within 0.000000000001 of 5.91781250000000103
+VariableFilletTests.cpp:323  CHECK( radiusAt(stations, 1.5).error().message == "the position must be between 0 and 1, got 1.5" )
+        => "the position must be between 0 and 1, got 1.5" == "the position must be between 0 and 1, got 1.5"
+VariableFilletTests.cpp:324  CHECK( radiusAt(radiusStations({{0.0, 3.0}}), 0.5).error().message == "the stations: a variable-radius fillet needs two or more radius stations on each edge, got 1" )
+        => "the stations: a variable-radius fillet needs two or more radius stations on each edge, got 1" == "the stations: a variable-radius fillet needs two or more radius stations on each edge, got 1"
+
+Overall: 1596 assertions passed, 0 failed.

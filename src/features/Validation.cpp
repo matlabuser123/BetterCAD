@@ -8,6 +8,7 @@
 #include <bettercad/features/CombineFeature.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/features/FilletFeature.hpp>
+#include <bettercad/features/VariableFilletFeature.hpp>
 #include <bettercad/features/HoleFeature.hpp>
 #include <bettercad/features/LinearPatternFeature.hpp>
 #include <bettercad/features/MirrorFeature.hpp>
@@ -255,6 +256,18 @@ private:
                 if (definition.radiusParameter) {
                     checkParameter(object.id(), *definition.radiusParameter, dimensions::length,
                                    "the radius is driven by");
+                }
+            } else if (const auto* variable = dynamic_cast<const VariableFilletFeature*>(&object)) {
+                const VariableFilletDefinition& definition = variable->definition();
+                for (std::size_t i = 0; i < definition.edges.size(); ++i) {
+                    const auto& stations = definition.edges[i].stations;
+                    for (std::size_t k = 0; k < stations.size(); ++k) {
+                        if (stations[k].radiusParameter) {
+                            checkParameter(object.id(), *stations[k].radiusParameter, dimensions::length,
+                                           std::format("the radius of edge reference {}, station {} is driven by",
+                                                       i + 1, k + 1));
+                        }
+                    }
                 }
             } else if (const auto* rib = dynamic_cast<const RibFeature*>(&object)) {
                 const RibDefinition& definition = rib->definition();

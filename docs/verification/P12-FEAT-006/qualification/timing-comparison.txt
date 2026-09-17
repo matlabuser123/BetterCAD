@@ -1,0 +1,115 @@
+Per-test CTest times (CTest's own figures), summed and for the slowest tests. feat005 is the
+P12-FEAT-005 qualification, feat006 this one. All runs used -j 8 on the same machine.
+Produced by: python compare-times.py feat005=../../P12-FEAT-005/ctest-<preset>.log feat006=ctest-<preset>.log --top 12
+
+== release
+       feat005: 1017 tests,    718.15 s summed
+       feat006: 1036 tests,    736.02 s summed
+
+test                                                                         feat005       feat006
+unit.ReferenceModel_AllModelsStressRegression                                  22.99         24.67
+unit.LinearPattern_DoesNotAccumulateTransformDrift                             17.72         20.41
+unit.ReferenceModel_MountingBracketRegeneratesDeterministically                17.10         19.00
+unit.ReferenceModel_AllModelsBuildInOneProcess                                 15.57         16.96
+unit.ReferenceModel_FlangeRegeneratesDeterministically                         15.07         16.56
+unit.ReferenceModel_AllModelsRegenerateAfterAChange                            14.14         15.79
+unit.ReferenceModel_PulleyRegeneratesDeterministically                         12.69         14.16
+unit.ReferenceModel_ShaftRegeneratesDeterministically                          11.24         12.48
+unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges             9.94         10.63
+unit.ReferenceModel_SavedModelsMatchTheBuilders                                 9.57          9.47
+unit.ReferenceModel_BearingHousingRegeneratesDeterministically                  8.40          8.30
+unit.CircularPattern_TouchingAndOverlappingInstancesFuse                        7.24          7.35
+
+== debug
+       feat005: 1017 tests,    741.36 s summed
+       feat006: 1036 tests,    757.24 s summed
+
+test                                                                         feat005       feat006
+unit.ReferenceModel_AllModelsStressRegression                                  23.20         23.71
+unit.LinearPattern_DoesNotAccumulateTransformDrift                             17.78         18.55
+unit.ReferenceModel_MountingBracketRegeneratesDeterministically                16.80         17.22
+unit.ReferenceModel_AllModelsBuildInOneProcess                                 14.92         15.39
+unit.ReferenceModel_FlangeRegeneratesDeterministically                         14.23         14.74
+unit.ReferenceModel_AllModelsRegenerateAfterAChange                            13.54         14.05
+unit.ReferenceModel_PulleyRegeneratesDeterministically                         12.56         12.81
+unit.ReferenceModel_ShaftRegeneratesDeterministically                          10.88         10.94
+unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges            10.04         10.81
+unit.ReferenceModel_SavedModelsMatchTheBuilders                                10.01         10.54
+unit.ReferenceModel_BearingHousingRegeneratesDeterministically                  8.93          9.27
+unit.CircularPattern_TouchingAndOverlappingInstancesFuse                        8.03          8.54
+
+== debug-shared
+       feat005: 1017 tests,    762.31 s summed
+       feat006: 1036 tests,    761.60 s summed
+
+test                                                                         feat005       feat006
+unit.ReferenceModel_AllModelsStressRegression                                  23.89         23.76
+unit.LinearPattern_DoesNotAccumulateTransformDrift                             18.80         18.67
+unit.ReferenceModel_MountingBracketRegeneratesDeterministically                17.52         17.37
+unit.ReferenceModel_AllModelsBuildInOneProcess                                 15.75         15.69
+unit.ReferenceModel_FlangeRegeneratesDeterministically                         15.09         15.00
+unit.ReferenceModel_AllModelsRegenerateAfterAChange                            14.25         14.09
+unit.ReferenceModel_PulleyRegeneratesDeterministically                         13.22         13.06
+unit.ReferenceModel_ShaftRegeneratesDeterministically                          11.28         11.24
+unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges            10.24         10.31
+unit.ReferenceModel_SavedModelsMatchTheBuilders                                 9.96          9.97
+unit.ReferenceModel_BearingHousingRegeneratesDeterministically                  8.96          8.76
+unit.CircularPattern_TouchingAndOverlappingInstancesFuse                        7.86          7.75
+
+== the change by test length
+Produced by: python timing-split.py ../../P12-FEAT-005/ctest-<preset>.log ctest-<preset>.log
+(short and long by the P12-FEAT-005 time)
+
+release
+  tests in both logs: 1017; only in the new log: 19; only in the old log: 0
+  new tests: 20.29 s summed
+  existing tests: -2.42 s summed change
+  existing tests under 0.5 s: 758, -27.91 s summed change
+  existing tests of 0.5 s or more: 259, median new/old ratio 1.017, 0.53 of them slower
+  largest move among the 12 slowest: +2.69 s (unit.LinearPattern_DoesNotAccumulateTransformDrift)
+
+debug
+  tests in both logs: 1017; only in the new log: 19; only in the old log: 0
+  new tests: 25.54 s summed
+  existing tests: -9.66 s summed change
+  existing tests under 0.5 s: 744, -5.63 s summed change
+  existing tests of 0.5 s or more: 273, median new/old ratio 0.952, 0.33 of them slower
+  largest move among the 12 slowest: +0.77 s (unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges)
+
+debug-shared
+  tests in both logs: 1017; only in the new log: 19; only in the old log: 0
+  new tests: 25.05 s summed
+  existing tests: -25.76 s summed change
+  existing tests under 0.5 s: 719, -6.55 s summed change
+  existing tests of 0.5 s or more: 298, median new/old ratio 0.952, 0.33 of them slower
+  largest move among the 12 slowest: -0.20 s (unit.ReferenceModel_BearingHousingRegeneratesDeterministically)
+
+== release, run again after the qualification (ctest-release-rerun.log: the same build, ctest --preset release -j 8,
+   with nothing else running)
+Produced by: python compare-times.py feat005=../../P12-FEAT-005/ctest-release.log feat006=ctest-release.log rerun=ctest-release-rerun.log --top 12
+
+       feat005: 1017 tests,    718.15 s summed
+       feat006: 1036 tests,    736.02 s summed
+         rerun: 1036 tests,    681.29 s summed
+
+test                                                                         feat005       feat006         rerun
+unit.ReferenceModel_AllModelsStressRegression                                  22.99         24.67         21.69
+unit.LinearPattern_DoesNotAccumulateTransformDrift                             17.72         20.41         16.16
+unit.ReferenceModel_MountingBracketRegeneratesDeterministically                17.10         19.00         15.50
+unit.ReferenceModel_AllModelsBuildInOneProcess                                 15.57         16.96         14.10
+unit.ReferenceModel_FlangeRegeneratesDeterministically                         15.07         16.56         13.42
+unit.ReferenceModel_AllModelsRegenerateAfterAChange                            14.14         15.79         12.63
+unit.ReferenceModel_PulleyRegeneratesDeterministically                         12.69         14.16         11.49
+unit.ReferenceModel_ShaftRegeneratesDeterministically                          11.24         12.48          9.92
+unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges             9.94         10.63          9.33
+unit.ReferenceModel_SavedModelsMatchTheBuilders                                 9.57          9.47          9.35
+unit.ReferenceModel_BearingHousingRegeneratesDeterministically                  8.40          8.30          8.28
+unit.CircularPattern_TouchingAndOverlappingInstancesFuse                        7.24          7.35          7.65
+
+Produced by: python timing-split.py ../../P12-FEAT-005/ctest-release.log ctest-release-rerun.log
+  tests in both logs: 1017; only in the new log: 19; only in the old log: 0
+  new tests: 23.09 s summed
+  existing tests: -59.95 s summed change
+  existing tests under 0.5 s: 758, -30.08 s summed change
+  existing tests of 0.5 s or more: 259, median new/old ratio 0.920, 0.28 of them slower
+  largest move among the 12 slowest: -1.65 s (unit.ReferenceModel_FlangeRegeneratesDeterministically)

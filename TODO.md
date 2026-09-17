@@ -13,8 +13,8 @@ authorized — never in advance.
 | | |
 | --- | --- |
 | Current | **`P12` — Parametric CAD Completion** |
-| Next | Awaiting explicit scope decision — `P12-FEAT-006` is blocked (see below) |
-| Blocked / Manual | `P12-FEAT-006` — setback and corner transitions need a surface-patch subsystem |
+| Next | `P12-HOLE-001` — Threads, spotface, standard sizes, tolerance classes |
+| Blocked / Manual | None |
 | Last qualified | `P11` Production Part Modeling — **QUALIFIED** |
 | Released | `v0.1.0` (`P0`–`P10`); `P11` qualified, not released |
 
@@ -59,7 +59,7 @@ Reference models → qualification
 | 8 | `P12-FEAT-003` Shell | `FEAT-002` | **done** — [evidence](docs/verification/P12-FEAT-003/README.md) |
 | 9 | `P12-FEAT-004` Draft | `DATUM-001` | **done** — [evidence](docs/verification/P12-FEAT-004/README.md) |
 | 10 | `P12-FEAT-005` Rib | `SKETCH-002`, `FEAT-001` | **done** — [evidence](docs/verification/P12-FEAT-005/README.md) |
-| 11 | `P12-FEAT-006` Variable-radius fillet, setback, corner transitions | — | **blocked** — setback and corner transitions are not in the kernel; [record](docs/verification/P12-FEAT-006/README.md) |
+| 11 | `P12-FEAT-006` Variable-radius fillet; setback and corner transitions deferred (scope decided 2026-09-18) | — | **done** (variable radius) — [evidence](docs/verification/P12-FEAT-006/README.md); setback and corner transitions deferred |
 | 12 | `P12-HOLE-001` Threads, spotface, standard sizes, tolerance classes | `PARAM-001` | not started |
 | 13 | `P12-PATTERN-001` Symmetric, total-length, suppressed instances, patterns of patterns | `PARAM-001` | not started |
 | 14 | `P12-SWEEP-001` Guide curves, twist, non-planar paths | `SKETCH-002` | not started |
@@ -356,56 +356,60 @@ Acceptance:
 - A side that is not closed off, a profile inside the body or crossing itself once extended, closed or disconnected profiles and invalid thicknesses fail with structured diagnostics and keep no body; nothing is substituted.
 - Save → load → regenerate gives the same bodies bit for bit; every value the existing tests measure is unchanged; `P0`–`P12-FEAT-004` stays green in all three presets.
 
-#### P12-FEAT-006 — Variable-radius fillet, setback, corner transitions — BLOCKED
+#### P12-FEAT-006 — Variable-radius fillet (setback and corner transitions deferred)
 
-The three capabilities were assessed separately against OCCT 8.0.1's
-public fillet interface, its sources and two kernel probes
-([record](docs/verification/P12-FEAT-006/README.md)):
+The first assessment blocked this milestone
+([investigation](docs/verification/P12-FEAT-006/investigation/README.md)). OCCT 8.0.1 has no setback or
+corner-transition input, and its variable-radius law is a clamped cubic
+spline whose shape depends on the blends meeting the edge; its law-function
+inputs crash or silently do nothing. On 2026-09-18 the scope was decided
+(options A and C):
 
-- **Variable radius: partially supported.** Radius stations give exact
-  rolling-ball sections of the kernel's own law (1.8e-14 mm). But:
-  - the law is a clamped cubic spline, not the documented linear one;
-  - its shape between stations depends on the blends meeting the edge's
-    ends;
-  - it can leave the station range, even to negative radii, with the
-    build reported done;
-  - radii too large for their faces give wrong solids reported valid;
-  - the law-function input ends the process, and `SetLaw` yields an
-    unfilleted body.
-- **Setback controls: unsupported.** There is no setback input; the
-  kernel ends blend strips at corners by its own rules.
-- **Corner-transition controls: unsupported.** The kernel computes every
-  corner in protected steps. The only shape option is the blend
-  cross-section.
+- implement the variable-radius fillets that can be verified;
+- defer setback and corner-transition controls, which would need a
+  surface-patch subsystem P12 does not authorize.
 
-Setbacks and selectable corner transitions would need a BetterCAD-owned
-surface-patch subsystem (trimmed blends, N-sided tangent fills, sewing,
-validation), which P12 does not authorize. Offering variable radius from
-this kernel means adopting its interpolation, with guards, as BetterCAD's
-definition, which is also a decision. Nothing was implemented and no box
-is ticked. The next step is a scope decision:
+A variable-radius fillet rounds straight edges between two planar faces,
+each edge on its own: it continues smoothly into no other edge and meets no
+other edge of the fillet, so the kernel's law depends on that edge's
+stations alone. Radius stations lie at normalized positions along the edge,
+0 at the end that comes first along the edge's canonical direction (see
+`geometry::EdgeSignature`), 1 at the other, so no regeneration can reverse
+them. Between stations the radius follows the kernel's law, which BetterCAD
+computes itself: stations whose law would leave the radii of the stations on
+either side are refused, and every result is checked against that law
+before it is kept.
 
-- narrow this milestone to verified variable-radius fillets;
-- authorize a separate surface-modeling prerequisite for setbacks and
-  corner transitions; or
-- defer setbacks and corner transitions, and decide separately about
-  variable radius.
+Deliverables:
 
-Per the P12 rules, work stops here and does not skip ahead to
-`P12-HOLE-001`.
+- [x] `geometry::variableFilletEdges`: stations (first at 0, last at 1, strictly increasing; positive finite radii), straight edges between two planar faces meeting at an angle; an edge that continues smoothly, or meets another edge of the request, is refused
+- [x] The radius law computed by BetterCAD (the clamped cubic spline through the stations and the end radii repeated at the kernel's spine extension); stations whose law leaves the range of the two stations around it are refused before the kernel runs; the room check uses the largest radius on the edge
+- [x] Result verification: the kernel reports completion; one valid solid per input solid without self-intersection; one fillet face generated from each edge; the kernel's law equals BetterCAD's; the fillet surface lies on the rolling-ball sections of that law and touches both faces at the law's contact lines; otherwise a structured failure and no body
+- [x] `VariableFilletFeature` (`target`, `edges`, each with its stations; station radii literal or driven by length parameters); it consumes its target and carries its names
+- [x] Dependencies, validation, undo/redo, save/load (a new object type; constant-radius fillet files unchanged), CLI description; patterns and mirrors refuse it
+- [x] Evidence: [docs/verification/P12-FEAT-006/](docs/verification/P12-FEAT-006/README.md) — PASS, 1036/1036 tests in Debug, Release and Debug-shared, 0 warnings
+
+Deferred, not part of this milestone (both need a surface-patch capability:
+trimmed blends, N-sided tangent fills, sewing and validation;
+[investigation](docs/verification/P12-FEAT-006/investigation/README.md)):
+
+- [ ] Setback controls — deferred
+- [ ] Selectable corner-transition controls — deferred
+
+Acceptance:
+
+- Variable-radius fillets of isolated straight edges (a block's convex edges, an edge between faces at 120°, a concave inside edge) with increasing, decreasing, constant and multi-station radii match the volumes, centres and bounds computed from an independent derivation of the law, while literal and driven station radii and the body change.
+- Invalid, unordered, duplicate and out-of-range stations; zero, negative and non-finite radii; laws that would leave their station range (the investigation's overshoot cases); radii too large for the faces; curved edges, edges between non-planar faces, edges continued smoothly and edges meeting another rounded edge fail with structured diagnostics and keep no body; nothing is substituted.
+- Repeated, fresh and save → load → regenerate builds give the same bodies bit for bit; STEP exports read back with the same volume; every value the existing tests measure is unchanged; `P0`–`P12-FEAT-005` stays green in all three presets.
 
 ## Next
 
-Awaiting explicit scope decision. `P12-FEAT-006` is blocked: setbacks and
-corner transitions are not available from the kernel, and variable radius
-is only partially; see its section above. P12 does not continue past it
-until the decision is made.
+`P12-HOLE-001` — Threads, spotface, standard sizes, tolerance classes.
 
 ## Blocked / Manual
 
 | Item | Why |
 | --- | --- |
-| `P12-FEAT-006` | Blocked: setback and corner-transition controls need a surface-patch subsystem P12 does not authorize; variable radius is only partially supported by the kernel. [Record](docs/verification/P12-FEAT-006/README.md). |
 | `LICENSE` | Not yet chosen. A decision, not an implementation. |
 | Release tagging | Manual, and only on request. `v0.1.0` is the only tag. |
 
@@ -425,6 +429,13 @@ Not started. Not authorized. Grouped to match
 - [ ] Sketch environment
 - [ ] Selection: body, face, edge, vertex, sketch, feature
 - [ ] GUI smoke tests
+
+### Advanced surface modeling
+
+Deferred from `P12-FEAT-006` ([investigation](docs/verification/P12-FEAT-006/investigation/README.md)).
+
+- [ ] Fillet setback controls
+- [ ] Selectable fillet corner transitions
 
 ### Semantic topology
 
@@ -509,10 +520,10 @@ Not started. Not authorized. Grouped to match
 
 | Milestone | Commit | Evidence |
 | --- | --- | --- |
+| `P12-FEAT-006` Variable-radius fillet | "BetterCAD: implement P12 variable-radius fillet" | [P12-FEAT-006](docs/verification/P12-FEAT-006/README.md) |
 | `P12-FEAT-005` Rib | `aa2d41a` | [P12-FEAT-005](docs/verification/P12-FEAT-005/README.md) |
 | `P12-FEAT-004` Draft | `80f1fec` | [P12-FEAT-004](docs/verification/P12-FEAT-004/README.md) |
 | `P12-FEAT-003` Shell | `eb3ad66` | [P12-FEAT-003](docs/verification/P12-FEAT-003/README.md) |
-| `P12-FEAT-002` Split body / combine | `77f1792` | [P12-FEAT-002](docs/verification/P12-FEAT-002/README.md) |
 
 ## Completed Milestones
 
@@ -580,6 +591,18 @@ regression test, so none can change silently. Detail:
   are the kernel's default integration (4.3e-6 relative off for a spline
   rib's walls; its volume is within 1e-12)
   ([P12-FEAT-005](docs/verification/P12-FEAT-005/README.md)).
+- **Variable-radius fillets round straight edges between two planes**,
+  each on its own (no tangent chains, no corners with other rounded edges of
+  the same fillet). Between stations the radius is the kernel's clamped
+  cubic spline, exact at the stations and kept between them; station sets
+  whose spline would leave that range are refused. They are not repeated by
+  patterns or feature mirrors, and their volumes, bounds and adjacent face
+  areas are measured to 1e-9, 1e-7 mm and 4.7e-6 relative
+  ([P12-FEAT-006](docs/verification/P12-FEAT-006/README.md)).
+- **Fillets have no setback or corner-transition controls.** Where rounded
+  edges meet, the kernel shapes the corner itself; setbacks and selectable
+  corner transitions were deferred from `P12-FEAT-006`, since they need a
+  surface-patch capability ([investigation](docs/verification/P12-FEAT-006/investigation/README.md)).
 - **Loft sides stay B-splines** even where flat, costing about 6e-12 relative
   volume and 3.4e-6 mm in the centroid; plane references find only a loft's end
   faces.

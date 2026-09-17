@@ -24,6 +24,8 @@ bettercad_add_library(bettercad_features
         extrude/ExtrudeRegeneration.cpp
         fillet/FilletFeature.cpp
         fillet/FilletRegeneration.cpp
+        fillet/VariableFilletFeature.cpp
+        fillet/VariableFilletRegeneration.cpp
         hole/HoleFeature.cpp
         hole/HoleRegeneration.cpp
         loft/LoftFeature.cpp

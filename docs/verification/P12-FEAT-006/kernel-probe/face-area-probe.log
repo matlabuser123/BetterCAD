@@ -1,0 +1,14 @@
+Compiler: g++ (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r4) 16.1.0
+Kernel: OCCT 8.0.1 from the BetterCAD dependency prefix
+        (%LOCALAPPDATA%\bettercad-deps\gnu-16-mingw-amd64), its bin directory on PATH.
+Built (from the repository root) with:
+  g++ -std=c++23 -O2 -Wall -D_USE_MATH_DEFINES -I<deps>\include\opencascade
+      docs\verification\P12-FEAT-006\kernel-probe\face_area_probe.cpp -L<deps>\lib
+      -lTKFillet -lTKBool -lTKBO -lTKShHealing -lTKPrim -lTKTopAlgo -lTKGeomAlgo -lTKBRep
+      -lTKGeomBase -lTKG2d -lTKG3d -lTKMath -lTKernel
+Run on 2026-09-18 (Windows 11, PowerShell); output as printed, with the process exit code.
+
+$ face_area_probe
+face area probe: the spine runs against +x; built 1
+top face: default 5504.796273347 (rel 1.849e-06), eps 1e-10 5504.786097472 (rel 1.652e-16, reported error 2.4e-18), exact 5504.786097472
+[exit code 0]

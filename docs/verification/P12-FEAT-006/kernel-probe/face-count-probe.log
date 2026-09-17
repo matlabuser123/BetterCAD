@@ -1,0 +1,28 @@
+Compiler: g++ (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r4) 16.1.0
+Kernel: OCCT 8.0.1 from the BetterCAD dependency prefix
+        (%LOCALAPPDATA%\bettercad-deps\gnu-16-mingw-amd64), its bin directory on PATH.
+Built (from the repository root) with:
+  g++ -std=c++23 -O2 -D_USE_MATH_DEFINES -I<deps>\include\opencascade
+      docs\verification\P12-FEAT-006\kernel-probe\face_count_probe.cpp -L<deps>\lib
+      -lTKFillet -lTKBool -lTKBO -lTKShHealing -lTKPrim -lTKTopAlgo -lTKGeomAlgo -lTKBRep
+      -lTKGeomBase -lTKG2d -lTKG3d -lTKMath -lTKernel
+Run on 2026-09-18 (Windows 11, PowerShell); output as printed, with the process exit code.
+
+$ face_count_probe
+length      1 stations  2: done 1 surfaces 1 generated faces 1 valid 1
+length      1 stations  5: done 1 surfaces 1 generated faces 1 valid 1
+length      1 stations 12: done 1 surfaces 1 generated faces 1 valid 1
+length      1 stations 25: done 1 surfaces 1 generated faces 1 valid 1
+length     10 stations  2: done 1 surfaces 1 generated faces 1 valid 1
+length     10 stations  5: done 1 surfaces 1 generated faces 1 valid 1
+length     10 stations 12: done 1 surfaces 1 generated faces 1 valid 1
+length     10 stations 25: done 1 surfaces 1 generated faces 1 valid 1
+length    100 stations  2: done 1 surfaces 1 generated faces 1 valid 1
+length    100 stations  5: done 1 surfaces 1 generated faces 1 valid 1
+length    100 stations 12: done 1 surfaces 1 generated faces 1 valid 1
+length    100 stations 25: done 1 surfaces 1 generated faces 1 valid 1
+length   2000 stations  2: done 1 surfaces 1 generated faces 1 valid 1
+length   2000 stations  5: done 1 surfaces 1 generated faces 1 valid 1
+length   2000 stations 12: done 1 surfaces 1 generated faces 1 valid 1
+length   2000 stations 25: done 1 surfaces 1 generated faces 1 valid 1
+[exit code 0]

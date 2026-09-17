@@ -1,0 +1,291 @@
+{
+  "format": "bettercad-document",
+  "version": 1,
+  "units": "SI",
+  "document": {
+    "id": "7c3f9a52-1e84-4b6d-a0f2-5d9e8b3c1a67",
+    "name": "TaperedBlock",
+    "metadata": {
+      "description": "",
+      "author": "",
+      "properties": {}
+    },
+    "last_allocated_id": 7
+  },
+  "parameters": [
+    {
+      "id": 1,
+      "name": "width",
+      "si_value": 0.1,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 2,
+      "name": "depth",
+      "si_value": 0.05,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 3,
+      "name": "low",
+      "si_value": 0.003,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 4,
+      "name": "high",
+      "si_value": 0.008,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    }
+  ],
+  "objects": [
+    {
+      "id": 5,
+      "type": "sketch",
+      "name": "BlockSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.1,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.1,
+              0.05
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.0,
+              0.05
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "line",
+            "start": 2,
+            "end": 3,
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "line",
+            "start": 4,
+            "end": 1,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "horizontal",
+            "entities": [
+              5
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "horizontal",
+            "entities": [
+              7
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "vertical",
+            "entities": [
+              6
+            ],
+            "enabled": true
+          },
+          {
+            "id": 5,
+            "type": "vertical",
+            "entities": [
+              8
+            ],
+            "enabled": true
+          },
+          {
+            "id": 6,
+            "type": "distance",
+            "entities": [
+              5
+            ],
+            "value": 0.1,
+            "parameter": 1,
+            "enabled": true
+          },
+          {
+            "id": 7,
+            "type": "distance",
+            "entities": [
+              6
+            ],
+            "value": 0.05,
+            "parameter": 2,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 8,
+        "last_constraint_id": 7
+      }
+    },
+    {
+      "id": 6,
+      "type": "extrude",
+      "name": "Block",
+      "data": {
+        "profile": 5,
+        "depth": 0.02,
+        "direction": "normal",
+        "operation": "new_body"
+      }
+    },
+    {
+      "id": 7,
+      "type": "variable_fillet",
+      "name": "Taper",
+      "data": {
+        "target": 6,
+        "edges": [
+          {
+            "edge": {
+              "curve": "line",
+              "point": [
+                0.0,
+                0.0,
+                0.02
+              ],
+              "direction": [
+                1.0,
+                0.0,
+                0.0
+              ]
+            },
+            "stations": [
+              {
+                "position": 0.0,
+                "radius": 0.003,
+                "radius_parameter": 3
+              },
+              {
+                "position": 1.0,
+                "radius": 0.008,
+                "radius_parameter": 4
+              }
+            ]
+          },
+          {
+            "edge": {
+              "curve": "line",
+              "point": [
+                0.0,
+                0.05,
+                0.02
+              ],
+              "direction": [
+                1.0,
+                0.0,
+                0.0
+              ]
+            },
+            "stations": [
+              {
+                "position": 0.0,
+                "radius": 0.002
+              },
+              {
+                "position": 0.3,
+                "radius": 0.004
+              },
+              {
+                "position": 1.0,
+                "radius": 0.007
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

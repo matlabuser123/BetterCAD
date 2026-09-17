@@ -11,7 +11,7 @@ underneath, hidden behind adapters.
             └───────┬──────────────────────┘
                     io              native .bcad, STEP/STL export
                     │
-                 features           extrude, revolve, chamfer, fillet, hole, linear and circular patterns, mirror, sweep, loft, split, combine, shell, draft, rib (later: ...)
+                 features           extrude, revolve, chamfer, fillet, variable-radius fillet, hole, linear and circular patterns, mirror, sweep, loft, split, combine, shell, draft, rib (later: ...)
                     │
                   sketch            entities, constraints, solver
                     │
@@ -418,8 +418,41 @@ milestones start; see `TODO.md`.
     cylinders of turned parts.
   - The same OCCT builder crashes on fillets that do not fit, including
     concave ones (`docs/verification/P11-FEAT-003/`).
+- **Variable-radius fillet** (`VariableFillet.hpp`, P12-FEAT-006).
+  `variableFilletEdges(body, request)` rounds straight edges with radii that
+  vary along them. A `VariableFilletRequest` is, per edge, a line signature
+  and radius stations: a position from 0 to 1 (0 at the end that comes first
+  along the line's canonical direction, so no regeneration can reverse them)
+  and a radius; the first at 0, the last at 1, positions increasing.
+  - **The law.** OCCT 8.0.1 (`BRepFilletAPI_MakeFillet::SetRadius` with
+    (u, r) pairs) builds the clamped cubic spline through the stations and
+    the end radii repeated at the ends of the spine's internal extension,
+    half the edge's length for an edge that meets no other blend.
+    `RadiusLaw` (private, kernel-free) computes that spline itself.
+    `validate()` refuses stations whose spline leaves the range of the two
+    stations around any point; `radiusAt()` exposes the law. Other kernel
+    inputs are never used: its law-function input ends the process, and
+    `SetLaw` yields an unfilleted body
+    (`docs/verification/P12-FEAT-006/investigation/`).
+  - **The edges.** Straight, between two planar faces meeting at an angle,
+    continuing smoothly into no other edge (the kernel's contour has that
+    edge alone) and sharing no vertex with another edge of the request. On
+    such edges the kernel's law depends on the edge's own stations only.
+  - **The build.** The edge is added with no radius, the contour's first
+    vertex tells which way the kernel runs along it, and the stations are
+    handed over in that direction. The shared fit check uses the law's
+    largest radius.
+  - **The result is checked, not trusted.** Beyond the shared validation:
+    no self-intersection; one fillet face generated from each edge; the
+    kernel's law (`GetBounds`, `GetLaw`, or `IsConstant`/`Radius` for equal
+    stations) equal to BetterCAD's within 1e-9 mm; and sampled points of
+    the fillet face on the rolling-ball arc of the law's radius, its boundary
+    on the edge's faces at r tan(g/2), within 1e-7 mm. Any failure is
+    `Internal`, and nothing is kept.
+  - Setback distances and selectable corner transitions are not offered:
+    the kernel has no input for either (deferred, see `TODO.md`).
 - **Shared blend machinery** (`occt/OcctBlend.{hpp,cpp}`). Chamfer and
-  fillet share:
+  fillet (both kinds) share:
   - edge resolution (exactly one edge between two faces, not already in
     another reference's chain);
   - the strips of each tangent chain;
@@ -988,6 +1021,15 @@ milestones start; see `TODO.md`.
 
   The private `SolidSupport` helper `applyToTargetBody()` gives chamfer,
   fillet and hole the same target-body handling and message prefix.
+- **Variable-radius fillet** (`VariableFilletFeature.hpp`, P12-FEAT-006, type
+  `variable_fillet`). A `VariableFilletDefinition` holds the target feature
+  and, per edge, a line signature and its stations, each radius literal or
+  driven by a length parameter. It consumes its target, carries its names
+  and names nothing of its own. It depends on its target and on each radius
+  parameter. `validate()` checks the law when every radius is a literal;
+  otherwise regeneration checks it once the values are known
+  (`resolveVariableFilletRequest()`). Patterns and mirrors refuse it (a
+  copy's edge may run the other way along its line).
 - **Hole** (`HoleFeature.hpp`) drills into another feature's body, which it
   consumes. A `HoleDefinition` holds:
   - the target feature and the placement face (`geometry::FaceSignature`);
@@ -1203,6 +1245,10 @@ milestones start; see `TODO.md`.
     `reference_side` only when its mode uses them;
   - a fillet stores `target`, `edges` (as for chamfers), `radius` in
     metres and an optional `radius_parameter`;
+  - a variable-radius fillet stores `target` and `edges`, each
+    `{"edge": ..., "stations": [...]}` with the edge reference as for
+    chamfers and each station `{"position": u, "radius": metres}` with an
+    optional `radius_parameter`;
   - a hole stores `target`; `face` as
     `{"surface": "plane", "point": [...], "normal": [...]}`; `center` as
     face `[u, v]` with optional `center_u_parameter` and
