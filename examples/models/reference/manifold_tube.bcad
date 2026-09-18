@@ -1,0 +1,825 @@
+{
+  "format": "bettercad-document",
+  "version": 1,
+  "units": "SI",
+  "document": {
+    "id": "5eed0000-0000-4000-8000-000000000103",
+    "name": "ManifoldTube",
+    "metadata": {
+      "description": "",
+      "author": "",
+      "properties": {}
+    },
+    "last_allocated_id": 17
+  },
+  "parameters": [
+    {
+      "id": 1,
+      "name": "side",
+      "si_value": 0.012,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 2,
+      "name": "flange_side",
+      "si_value": 0.04,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      },
+      "expression": "side * 10 / 3"
+    },
+    {
+      "id": 3,
+      "name": "flange_t",
+      "si_value": 0.012,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      },
+      "expression": "side"
+    },
+    {
+      "id": 4,
+      "name": "drop",
+      "si_value": 0.05,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 5,
+      "name": "bend1_r",
+      "si_value": 0.03,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 6,
+      "name": "bend2_r",
+      "si_value": 0.025,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      },
+      "expression": "bend1_r * 5 / 6"
+    },
+    {
+      "id": 7,
+      "name": "twist",
+      "si_value": 1.5707963267948966,
+      "unit": "deg",
+      "dimension": {
+        "angle": 1
+      }
+    },
+    {
+      "id": 8,
+      "name": "half_side",
+      "si_value": 0.006,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      },
+      "expression": "side / 2"
+    },
+    {
+      "id": 9,
+      "name": "half_flange",
+      "si_value": 0.02,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      },
+      "expression": "flange_side / 2"
+    },
+    {
+      "id": 12,
+      "name": "elbow_offset",
+      "si_value": -0.08,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      },
+      "expression": "0 mm - drop - bend1_r"
+    }
+  ],
+  "objects": [
+    {
+      "id": 10,
+      "type": "sketch",
+      "name": "BoreSection",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              -0.006,
+              -0.006
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.006,
+              -0.006
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.006,
+              0.006
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              -0.006,
+              0.006
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "line",
+            "start": 2,
+            "end": 3,
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "line",
+            "start": 4,
+            "end": 1,
+            "construction": false
+          },
+          {
+            "id": 9,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "horizontal",
+            "entities": [
+              5
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "horizontal",
+            "entities": [
+              7
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "vertical",
+            "entities": [
+              6
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "vertical",
+            "entities": [
+              8
+            ],
+            "enabled": true
+          },
+          {
+            "id": 5,
+            "type": "distance",
+            "entities": [
+              5
+            ],
+            "value": 0.012,
+            "parameter": 1,
+            "enabled": true
+          },
+          {
+            "id": 6,
+            "type": "equal",
+            "entities": [
+              5,
+              6
+            ],
+            "enabled": true
+          },
+          {
+            "id": 7,
+            "type": "fixed",
+            "entities": [
+              9
+            ],
+            "enabled": true
+          },
+          {
+            "id": 8,
+            "type": "distance",
+            "entities": [
+              9,
+              5
+            ],
+            "value": 0.006,
+            "parameter": 8,
+            "enabled": true
+          },
+          {
+            "id": 9,
+            "type": "distance",
+            "entities": [
+              9,
+              8
+            ],
+            "value": 0.006,
+            "parameter": 8,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 9,
+        "last_constraint_id": 9
+      }
+    },
+    {
+      "id": 11,
+      "type": "sketch",
+      "name": "DropRun",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "normal": [
+            -0.0,
+            -1.0,
+            -0.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.0,
+              -0.05
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.03,
+              -0.05
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.03,
+              -0.08
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "arc",
+            "center": 3,
+            "start": 2,
+            "end": 4,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "vertical",
+            "entities": [
+              5
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "distance",
+            "entities": [
+              5
+            ],
+            "value": 0.05,
+            "parameter": 4,
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "horizontal",
+            "entities": [
+              2,
+              3
+            ],
+            "enabled": true
+          },
+          {
+            "id": 5,
+            "type": "radius",
+            "entities": [
+              6
+            ],
+            "value": 0.03,
+            "parameter": 5,
+            "enabled": true
+          },
+          {
+            "id": 6,
+            "type": "vertical",
+            "entities": [
+              3,
+              4
+            ],
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 6,
+        "last_constraint_id": 6
+      }
+    },
+    {
+      "id": 13,
+      "type": "datum_plane",
+      "name": "ElbowPlane",
+      "data": {
+        "kind": "offset",
+        "base": {
+          "plane": "xy"
+        },
+        "offset": -0.08,
+        "offset_parameter": 12
+      }
+    },
+    {
+      "id": 14,
+      "type": "sketch",
+      "name": "SweepRun",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            -0.08
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "attachment": {
+          "object": 13,
+          "plane": "xy"
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.03,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.03,
+              0.025
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.055,
+              0.025
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "arc",
+            "center": 3,
+            "start": 2,
+            "end": 4,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "horizontal",
+            "entities": [
+              1,
+              2
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "distance",
+            "entities": [
+              1,
+              2
+            ],
+            "value": 0.03,
+            "parameter": 5,
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "vertical",
+            "entities": [
+              2,
+              3
+            ],
+            "enabled": true
+          },
+          {
+            "id": 5,
+            "type": "radius",
+            "entities": [
+              5
+            ],
+            "value": 0.025,
+            "parameter": 6,
+            "enabled": true
+          },
+          {
+            "id": 6,
+            "type": "horizontal",
+            "entities": [
+              3,
+              4
+            ],
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 5,
+        "last_constraint_id": 6
+      }
+    },
+    {
+      "id": 15,
+      "type": "sweep",
+      "name": "Tube",
+      "data": {
+        "profile": 10,
+        "path": {
+          "sketch": 11,
+          "edges": [
+            5,
+            6
+          ],
+          "runs": [
+            {
+              "sketch": 14,
+              "edges": [
+                5
+              ]
+            }
+          ]
+        },
+        "orientation": "follow_path",
+        "twist": 1.5707963267948966,
+        "twist_parameter": 7,
+        "operation": "new_body"
+      }
+    },
+    {
+      "id": 16,
+      "type": "sketch",
+      "name": "FlangeSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              -0.02,
+              -0.02
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.02,
+              -0.02
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.02,
+              0.02
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "point",
+            "position": [
+              -0.02,
+              0.02
+            ],
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "line",
+            "start": 2,
+            "end": 3,
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "line",
+            "start": 4,
+            "end": 5,
+            "construction": false
+          },
+          {
+            "id": 9,
+            "type": "line",
+            "start": 5,
+            "end": 2,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "horizontal",
+            "entities": [
+              6
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "horizontal",
+            "entities": [
+              8
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "vertical",
+            "entities": [
+              7
+            ],
+            "enabled": true
+          },
+          {
+            "id": 5,
+            "type": "vertical",
+            "entities": [
+              9
+            ],
+            "enabled": true
+          },
+          {
+            "id": 6,
+            "type": "distance",
+            "entities": [
+              6
+            ],
+            "value": 0.04,
+            "parameter": 2,
+            "enabled": true
+          },
+          {
+            "id": 7,
+            "type": "equal",
+            "entities": [
+              6,
+              7
+            ],
+            "enabled": true
+          },
+          {
+            "id": 8,
+            "type": "distance",
+            "entities": [
+              1,
+              6
+            ],
+            "value": 0.02,
+            "parameter": 9,
+            "enabled": true
+          },
+          {
+            "id": 9,
+            "type": "distance",
+            "entities": [
+              1,
+              9
+            ],
+            "value": 0.02,
+            "parameter": 9,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 9,
+        "last_constraint_id": 9
+      }
+    },
+    {
+      "id": 17,
+      "type": "extrude",
+      "name": "Flange",
+      "data": {
+        "profile": 16,
+        "depth": 0.012,
+        "depth_parameter": 3,
+        "direction": "normal",
+        "operation": "join",
+        "target": 15
+      }
+    }
+  ]
+}

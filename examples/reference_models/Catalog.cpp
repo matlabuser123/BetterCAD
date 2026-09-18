@@ -28,6 +28,18 @@ Result<Document> buildReferenceModel(ReferenceModelKind kind) {
         return documentOf(buildMountingBracketReferenceModel());
     case ReferenceModelKind::UBolt:
         return documentOf(buildUBoltReferenceModel());
+    case ReferenceModelKind::MotorMount:
+        return documentOf(buildMotorMountReferenceModel());
+    case ReferenceModelKind::GearboxCover:
+        return documentOf(buildGearboxCoverReferenceModel());
+    case ReferenceModelKind::ManifoldTube:
+        return documentOf(buildManifoldTubeReferenceModel());
+    case ReferenceModelKind::TransitionDuct:
+        return documentOf(buildTransitionDuctReferenceModel());
+    case ReferenceModelKind::IndexPlate:
+        return documentOf(buildIndexPlateReferenceModel());
+    case ReferenceModelKind::RibbedBracket:
+        return documentOf(buildRibbedBracketReferenceModel());
     }
     return makeError(ErrorCode::InvalidArgument, "unknown reference model");
 }

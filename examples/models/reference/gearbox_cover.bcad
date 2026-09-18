@@ -1,0 +1,422 @@
+{
+  "format": "bettercad-document",
+  "version": 1,
+  "units": "SI",
+  "document": {
+    "id": "5eed0000-0000-4000-8000-000000000102",
+    "name": "GearboxCover",
+    "metadata": {
+      "description": "",
+      "author": "",
+      "properties": {}
+    },
+    "last_allocated_id": 16
+  },
+  "parameters": [
+    {
+      "id": 1,
+      "name": "length",
+      "si_value": 0.12,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 2,
+      "name": "width",
+      "si_value": 0.08,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 3,
+      "name": "height",
+      "si_value": 0.04,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 4,
+      "name": "wall",
+      "si_value": 0.004,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      },
+      "expression": "width / 20"
+    },
+    {
+      "id": 5,
+      "name": "draft_angle",
+      "si_value": 0.05235987755982988,
+      "unit": "deg",
+      "dimension": {
+        "angle": 1
+      }
+    },
+    {
+      "id": 6,
+      "name": "port_d",
+      "si_value": 0.024,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      },
+      "expression": "width * 0.3"
+    },
+    {
+      "id": 7,
+      "name": "fixing_pitch",
+      "si_value": 0.04,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      },
+      "expression": "length / 3"
+    },
+    {
+      "id": 8,
+      "name": "parting_z",
+      "si_value": -0.04,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      },
+      "expression": "0 mm - height"
+    }
+  ],
+  "objects": [
+    {
+      "id": 9,
+      "type": "sketch",
+      "name": "BoxSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.12,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.12,
+              0.08
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.0,
+              0.08
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "line",
+            "start": 2,
+            "end": 3,
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "line",
+            "start": 4,
+            "end": 1,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "horizontal",
+            "entities": [
+              5
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "horizontal",
+            "entities": [
+              7
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "vertical",
+            "entities": [
+              6
+            ],
+            "enabled": true
+          },
+          {
+            "id": 5,
+            "type": "vertical",
+            "entities": [
+              8
+            ],
+            "enabled": true
+          },
+          {
+            "id": 6,
+            "type": "distance",
+            "entities": [
+              5
+            ],
+            "value": 0.12,
+            "parameter": 1,
+            "enabled": true
+          },
+          {
+            "id": 7,
+            "type": "distance",
+            "entities": [
+              6
+            ],
+            "value": 0.08,
+            "parameter": 2,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 8,
+        "last_constraint_id": 7
+      }
+    },
+    {
+      "id": 10,
+      "type": "extrude",
+      "name": "Block",
+      "data": {
+        "profile": 9,
+        "depth": 0.04,
+        "depth_parameter": 3,
+        "direction": "reversed",
+        "operation": "new_body"
+      }
+    },
+    {
+      "id": 11,
+      "type": "datum_plane",
+      "name": "PartingPlane",
+      "data": {
+        "kind": "offset",
+        "base": {
+          "plane": "xy"
+        },
+        "offset": -0.04,
+        "offset_parameter": 8
+      }
+    },
+    {
+      "id": 12,
+      "type": "draft",
+      "name": "SideDraft",
+      "data": {
+        "target": 10,
+        "faces": [
+          {
+            "feature": 10,
+            "face": {
+              "role": "side",
+              "entity": 5
+            }
+          },
+          {
+            "feature": 10,
+            "face": {
+              "role": "side",
+              "entity": 6
+            }
+          },
+          {
+            "feature": 10,
+            "face": {
+              "role": "side",
+              "entity": 7
+            }
+          },
+          {
+            "feature": 10,
+            "face": {
+              "role": "side",
+              "entity": 8
+            }
+          }
+        ],
+        "neutral_plane": {
+          "object": 11,
+          "plane": "xy"
+        },
+        "angle": 0.05235987755982988,
+        "angle_parameter": 5
+      }
+    },
+    {
+      "id": 13,
+      "type": "shell",
+      "name": "Hollow",
+      "data": {
+        "target": 12,
+        "open_faces": [
+          {
+            "feature": 10,
+            "face": {
+              "role": "end_cap"
+            }
+          }
+        ],
+        "thickness": 0.004,
+        "thickness_parameter": 4,
+        "side": "inward"
+      }
+    },
+    {
+      "id": 14,
+      "type": "hole",
+      "name": "InspectionPort",
+      "data": {
+        "target": 13,
+        "face": {
+          "surface": "plane",
+          "point": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "center": [
+          0.06,
+          0.04
+        ],
+        "type": "spotface",
+        "extent": "through",
+        "diameter": 0.024,
+        "diameter_parameter": 6,
+        "spotface_diameter": 0.036,
+        "spotface_depth": 0.0015
+      }
+    },
+    {
+      "id": 15,
+      "type": "hole",
+      "name": "FixingHole",
+      "data": {
+        "target": 14,
+        "face": {
+          "surface": "plane",
+          "point": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "center": [
+          0.02,
+          0.01
+        ],
+        "type": "simple",
+        "extent": "through",
+        "thread": {
+          "size": "M6",
+          "class": "6H"
+        }
+      }
+    },
+    {
+      "id": 16,
+      "type": "linear_pattern",
+      "name": "FixingHoles",
+      "data": {
+        "source": 15,
+        "first": {
+          "direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "count": 3,
+          "spacing": 0.0,
+          "spacing_parameter": 7
+        }
+      }
+    }
+  ]
+}

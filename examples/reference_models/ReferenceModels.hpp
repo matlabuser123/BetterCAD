@@ -8,6 +8,7 @@
 
 #include <array>
 #include <cstddef>
+#include <cstdint>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -143,8 +144,165 @@ struct UBoltModel {
 
 [[nodiscard]] Result<UBoltModel> buildUBoltReferenceModel();
 
-/// The six models: the five P11 reference parts and the swept U-bolt that
-/// puts the sweep feature to a natural use.
+// --- P12-REF-001 -----------------------------------------------------------
+//
+// Production parts that exercise the P12 capabilities together. Unlike the
+// P11 models above, these use parameter expressions for every derived
+// dimension, so each model has a small number of free parameters and the
+// rest follow.
+
+/// A configuration-driven motor mounting bracket: a plate width x width/2 x
+/// width/15 with two bolt holes whose size and spacing are equations, and a
+/// motor pilot boss on a sketch attached to the plate's end cap by name.
+///
+/// One free parameter, `width`; the configurations Small, Medium and Large
+/// set it to 90, 120 and 180 mm and nothing else. The pilot boss does not
+/// scale: it mates to a motor.
+///
+///   width -> height = width/2, thickness = width/15, bolt_d = thickness,
+///            edge = 2*thickness, bolt_span = width - 2*edge
+///
+/// PlateSketch -> Plate (extrude) -> BoltHole -> BoltHoles (linear pattern)
+/// -> PilotSketch (on Plate's end cap) -> Pilot (joined extrude).
+struct MotorMountModel {
+    Document document;
+    ParameterId width{}, height{}, thickness{}, boltDiameter{}, edge{}, boltSpan{}, halfWidth{}, halfHeight{};
+    ObjectId plateSketch{}, plate{}, boltHole{}, boltHoles{}, pilotSketch{}, pilot{};
+    ConfigurationId small{}, medium{}, large{};
+
+    /// The pilot boss, which is the same in every configuration.
+    static constexpr double kPilotRadiusMm = 16.0;
+    static constexpr double kPilotHeightMm = 10.0;
+};
+
+[[nodiscard]] Result<MotorMountModel> buildMotorMountReferenceModel();
+
+/// A cast gearbox cover: a drafted box hollowed to a wall, with a spotfaced
+/// inspection port and a row of tapped fixing holes.
+///
+///   width  -> wall = width/20, port_d = width*0.3
+///   length -> fixing_pitch = length/3
+///   height -> parting_z = -height
+///
+/// The cover hangs BELOW its outside face: z = 0 is the outside, z =
+/// -height the open rim. That way the plane the two holes are placed on
+/// never moves, and the faces that do move are reached by a driven datum
+/// and by named faces. See the comment in GearboxCover.cpp.
+///
+/// BoxSketch -> Block (extrude, reversed) -> PartingPlane (datum, driven) ->
+/// SideDraft (the four named sides, about the parting plane) -> Hollow
+/// (shell, opened at the named far cap) -> InspectionPort (spotface) ->
+/// FixingHole (M6 tapped, through) -> FixingHoles (linear pattern).
+struct GearboxCoverModel {
+    Document document;
+    ParameterId length{}, width{}, height{}, wall{}, draftAngle{}, portDiameter{}, fixingPitch{},
+        partingOffset{};
+    ObjectId boxSketch{}, block{}, partingPlane{}, draft{}, shell{}, port{}, fixingHole{}, fixingHoles{};
+};
+
+[[nodiscard]] Result<GearboxCoverModel> buildGearboxCoverReferenceModel();
+
+/// A square-section manifold leg swept along a path that leaves any one
+/// plane: straight down, a quarter turn into +X, then a quarter turn into
+/// +Y on another plane, with the section turning by `twist` along the way
+/// (P12-SWEEP-001).
+///
+///   bend1_r -> bend2_r = bend1_r * 5 / 6
+///
+/// BoreSection (the square, centred so its centroid rides the path),
+/// DropRun (XZ: line + arc), ElbowPlane (a datum at -(drop + bend1_r), so
+/// the second run follows the first), SweepRun (on it: arc) -> Tube (sweep).
+struct ManifoldTubeModel {
+    Document document;
+    ParameterId side{}, drop{}, firstBend{}, secondBend{}, twist{}, elbowOffset{}, flangeSide{},
+        flangeThickness{}, halfSide{}, halfFlange{};
+    ObjectId boreSection{}, dropRun{}, elbowPlane{}, sweepRun{}, tube{}, flangeSketch{}, flange{};
+};
+
+[[nodiscard]] Result<ManifoldTubeModel> buildManifoldTubeReferenceModel();
+
+/// A square-to-round transition duct carrying a smooth nozzle: both halves
+/// of P12-LOFT-001 in one part. The duct is RULED between sections of
+/// different shapes, so its volume is the prismatoid of the closed-form
+/// mixed area; the nozzle is SMOOTH through three equally spaced circles,
+/// the one smooth case with a closed form (the quadratic through them).
+///
+///   throat_r -> mid_r = throat_r*2/3, outlet_r = throat_r*5/6
+///   duct_h   -> nozzle_h = duct_h, mid_offset = duct_h + nozzle_h/2,
+///               outlet_offset = duct_h + nozzle_h
+///
+/// InletSketch (a centred square), ThroatSketch, MidSketch, OutletSketch
+/// (circles) -> Duct (ruled loft) -> Nozzle (smooth loft, joined).
+struct TransitionDuctModel {
+    Document document;
+    ParameterId inletSide{}, throatRadius{}, midRadius{}, outletRadius{}, ductHeight{}, nozzleHeight{},
+        midOffset{}, outletOffset{}, flangeSide{}, flangeThickness{}, halfInlet{}, halfFlange{};
+    ObjectId inletSketch{}, throatSketch{}, midSketch{}, outletSketch{}, duct{}, nozzle{}, flangeSketch{},
+        flange{};
+};
+
+[[nodiscard]] Result<TransitionDuctModel> buildTransitionDuctReferenceModel();
+
+/// An index plate lightened by a ring of elliptical pockets, one of them
+/// suppressed so the plate keeps solid metal for a keyway, carrying a hub
+/// joined to it as a separate body.
+///
+///   pocket_a -> pocket_b = pocket_a*7/13
+///   plate_r  -> pocket_circle_r = plate_r - pocket_a - 9 mm,
+///               hub_r = plate_r*13/45
+///   thickness-> hub_h = thickness*2
+///
+/// PlateSketch -> Plate (extrude) -> PlateAxis (datum axis) -> PocketSketch
+/// (an ellipse) -> Pocket (through-all cut) -> Pockets (circular pattern of
+/// 6 about the axis, instance 3 suppressed) -> HubSketch -> Hub (its own
+/// body) -> Assembly (combine, join).
+struct IndexPlateModel {
+    Document document;
+    ParameterId plateRadius{}, thickness{}, pocketSemiMajor{}, pocketSemiMinor{}, pocketCircle{}, hubRadius{},
+        hubHeight{}, pocketCount{};
+    ObjectId plateSketch{}, plate{}, axis{}, pocketSketch{}, pocket{}, pockets{}, hubSketch{}, hub{},
+        assembly{};
+
+    /// The instance the pattern leaves out, and how many it makes.
+    static constexpr std::uint32_t kSuppressedInstance = 3;
+    static constexpr std::uint32_t kPocketCount = 6;
+};
+
+[[nodiscard]] Result<IndexPlateModel> buildIndexPlateReferenceModel();
+
+/// An angle bracket stiffened by a rib: a base and an upright joined, a
+/// triangular gusset between them, a standard clearance hole, and one
+/// vertical corner rounded by a fillet whose radius grows up the edge.
+///
+///   thickness -> rib_t = thickness*3/5, corner_top_r = thickness*2/5
+///   wall_h    -> rib_reach = wall_h - 25 mm, and the fillet edge is
+///                wall_h - thickness long (the base fills the corner below)
+///
+/// MountFrame (a coordinate system) -> BaseSketch -> Base (extrude) ->
+/// WallSketch -> Wall (joined extrude) -> GussetSketch -> Rib (a straight
+/// profile, so the stiffener is a triangular prism) -> BoltHole (an ISO 273
+/// clearance hole for M8, medium series) -> CornerRound (variable-radius
+/// fillet, 2 mm at the bottom to `corner_top_r` at the top).
+
+/// MountFrame is the model's own coordinate system: the two sketches and the
+/// rib's datum are attached to its principal planes, so the solid geometry
+/// follows it. The bolt hole and the corner fillet are placed by geometric
+/// signatures, which name planes and edges in MODEL space, so they do not
+/// follow a moved frame -- they fail atomically and say so. Relocating a
+/// whole part by datum needs semantic face naming for holes and fillets,
+/// which P12 does not have.
+struct RibbedBracketModel {
+    Document document;
+    ParameterId width{}, baseDepth{}, thickness{}, wallHeight{}, ribThickness{}, ribReach{}, ribToe{},
+        cornerBottom{}, cornerTop{}, halfWidth{};
+    ObjectId frame{}, baseSketch{}, base{}, wallSketch{}, wall{}, ribPlane{}, gussetSketch{}, rib{},
+        boltHole{}, cornerRound{};
+};
+
+[[nodiscard]] Result<RibbedBracketModel> buildRibbedBracketReferenceModel();
+
+/// The models: the five P11 reference parts, the swept U-bolt, and the
+/// P12 production parts.
 enum class ReferenceModelKind {
     Shaft,
     Flange,
@@ -152,6 +310,13 @@ enum class ReferenceModelKind {
     BearingHousing,
     MountingBracket,
     UBolt,
+    // P12-REF-001.
+    MotorMount,
+    GearboxCover,
+    ManifoldTube,
+    TransitionDuct,
+    IndexPlate,
+    RibbedBracket,
 };
 
 struct ReferenceModelInfo {
@@ -174,6 +339,12 @@ inline constexpr std::array kReferenceModels{
     ReferenceModelInfo{ReferenceModelKind::MountingBracket, "MountingBracket", "mounting_bracket", "plate_height",
                        90.0},
     ReferenceModelInfo{ReferenceModelKind::UBolt, "UBolt", "u_bolt", "leg", 80.0},
+    ReferenceModelInfo{ReferenceModelKind::MotorMount, "MotorMount", "motor_mount", "width", 150.0},
+    ReferenceModelInfo{ReferenceModelKind::GearboxCover, "GearboxCover", "gearbox_cover", "width", 96.0},
+    ReferenceModelInfo{ReferenceModelKind::ManifoldTube, "ManifoldTube", "manifold_tube", "drop", 65.0},
+    ReferenceModelInfo{ReferenceModelKind::TransitionDuct, "TransitionDuct", "transition_duct", "throat_r", 33.0},
+    ReferenceModelInfo{ReferenceModelKind::IndexPlate, "IndexPlate", "index_plate", "plate_r", 99.0},
+    ReferenceModelInfo{ReferenceModelKind::RibbedBracket, "RibbedBracket", "ribbed_bracket", "wall_h", 75.0},
 };
 
 /// The model's document, from its builder.

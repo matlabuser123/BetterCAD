@@ -1,0 +1,781 @@
+{
+  "format": "bettercad-document",
+  "version": 1,
+  "units": "SI",
+  "document": {
+    "id": "5eed0000-0000-4000-8000-000000000104",
+    "name": "TransitionDuct",
+    "metadata": {
+      "description": "",
+      "author": "",
+      "properties": {}
+    },
+    "last_allocated_id": 20
+  },
+  "parameters": [
+    {
+      "id": 1,
+      "name": "inlet_side",
+      "si_value": 0.08,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 2,
+      "name": "flange_side",
+      "si_value": 0.11,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      },
+      "expression": "inlet_side + 30 mm"
+    },
+    {
+      "id": 3,
+      "name": "flange_t",
+      "si_value": 0.01,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      },
+      "expression": "inlet_side / 8"
+    },
+    {
+      "id": 4,
+      "name": "throat_r",
+      "si_value": 0.03,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 5,
+      "name": "mid_r",
+      "si_value": 0.02,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      },
+      "expression": "throat_r * 2 / 3"
+    },
+    {
+      "id": 6,
+      "name": "outlet_r",
+      "si_value": 0.025,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      },
+      "expression": "throat_r * 5 / 6"
+    },
+    {
+      "id": 7,
+      "name": "duct_h",
+      "si_value": 0.06,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 8,
+      "name": "nozzle_h",
+      "si_value": 0.06,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      },
+      "expression": "duct_h"
+    },
+    {
+      "id": 9,
+      "name": "mid_offset",
+      "si_value": 0.09,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      },
+      "expression": "duct_h + nozzle_h / 2"
+    },
+    {
+      "id": 10,
+      "name": "outlet_offset",
+      "si_value": 0.12,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      },
+      "expression": "duct_h + nozzle_h"
+    },
+    {
+      "id": 11,
+      "name": "half_inlet",
+      "si_value": 0.04,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      },
+      "expression": "inlet_side / 2"
+    },
+    {
+      "id": 12,
+      "name": "half_flange",
+      "si_value": 0.055,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      },
+      "expression": "flange_side / 2"
+    }
+  ],
+  "objects": [
+    {
+      "id": 13,
+      "type": "sketch",
+      "name": "InletSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              -0.04,
+              -0.04
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.04,
+              -0.04
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.04,
+              0.04
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "point",
+            "position": [
+              -0.04,
+              0.04
+            ],
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "line",
+            "start": 2,
+            "end": 3,
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "line",
+            "start": 4,
+            "end": 5,
+            "construction": false
+          },
+          {
+            "id": 9,
+            "type": "line",
+            "start": 5,
+            "end": 2,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "horizontal",
+            "entities": [
+              6
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "horizontal",
+            "entities": [
+              8
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "vertical",
+            "entities": [
+              7
+            ],
+            "enabled": true
+          },
+          {
+            "id": 5,
+            "type": "vertical",
+            "entities": [
+              9
+            ],
+            "enabled": true
+          },
+          {
+            "id": 6,
+            "type": "distance",
+            "entities": [
+              6
+            ],
+            "value": 0.08,
+            "parameter": 1,
+            "enabled": true
+          },
+          {
+            "id": 7,
+            "type": "equal",
+            "entities": [
+              6,
+              7
+            ],
+            "enabled": true
+          },
+          {
+            "id": 8,
+            "type": "distance",
+            "entities": [
+              1,
+              6
+            ],
+            "value": 0.04,
+            "parameter": 11,
+            "enabled": true
+          },
+          {
+            "id": 9,
+            "type": "distance",
+            "entities": [
+              1,
+              9
+            ],
+            "value": 0.04,
+            "parameter": 11,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 9,
+        "last_constraint_id": 9
+      }
+    },
+    {
+      "id": 14,
+      "type": "sketch",
+      "name": "ThroatSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "circle",
+            "center": 1,
+            "radius": 0.03,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "radius",
+            "entities": [
+              2
+            ],
+            "value": 0.03,
+            "parameter": 4,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 2,
+        "last_constraint_id": 2
+      }
+    },
+    {
+      "id": 15,
+      "type": "sketch",
+      "name": "MidSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "circle",
+            "center": 1,
+            "radius": 0.02,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "radius",
+            "entities": [
+              2
+            ],
+            "value": 0.02,
+            "parameter": 5,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 2,
+        "last_constraint_id": 2
+      }
+    },
+    {
+      "id": 16,
+      "type": "sketch",
+      "name": "OutletSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "circle",
+            "center": 1,
+            "radius": 0.025,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "radius",
+            "entities": [
+              2
+            ],
+            "value": 0.025,
+            "parameter": 6,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 2,
+        "last_constraint_id": 2
+      }
+    },
+    {
+      "id": 17,
+      "type": "loft",
+      "name": "Duct",
+      "data": {
+        "sections": [
+          {
+            "sketch": 13,
+            "offset": 0.0
+          },
+          {
+            "sketch": 14,
+            "offset": 0.0,
+            "offset_parameter": 7
+          }
+        ],
+        "interpolation": "ruled",
+        "operation": "new_body"
+      }
+    },
+    {
+      "id": 18,
+      "type": "loft",
+      "name": "Nozzle",
+      "data": {
+        "sections": [
+          {
+            "sketch": 14,
+            "offset": 0.0,
+            "offset_parameter": 7
+          },
+          {
+            "sketch": 15,
+            "offset": 0.0,
+            "offset_parameter": 9
+          },
+          {
+            "sketch": 16,
+            "offset": 0.0,
+            "offset_parameter": 10
+          }
+        ],
+        "interpolation": "smooth",
+        "operation": "join",
+        "target": 17
+      }
+    },
+    {
+      "id": 19,
+      "type": "sketch",
+      "name": "FlangeSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              -0.055,
+              -0.055
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.055,
+              -0.055
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.055,
+              0.055
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "point",
+            "position": [
+              -0.055,
+              0.055
+            ],
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "line",
+            "start": 2,
+            "end": 3,
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "line",
+            "start": 4,
+            "end": 5,
+            "construction": false
+          },
+          {
+            "id": 9,
+            "type": "line",
+            "start": 5,
+            "end": 2,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "horizontal",
+            "entities": [
+              6
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "horizontal",
+            "entities": [
+              8
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "vertical",
+            "entities": [
+              7
+            ],
+            "enabled": true
+          },
+          {
+            "id": 5,
+            "type": "vertical",
+            "entities": [
+              9
+            ],
+            "enabled": true
+          },
+          {
+            "id": 6,
+            "type": "distance",
+            "entities": [
+              6
+            ],
+            "value": 0.11,
+            "parameter": 2,
+            "enabled": true
+          },
+          {
+            "id": 7,
+            "type": "equal",
+            "entities": [
+              6,
+              7
+            ],
+            "enabled": true
+          },
+          {
+            "id": 8,
+            "type": "distance",
+            "entities": [
+              1,
+              6
+            ],
+            "value": 0.055,
+            "parameter": 12,
+            "enabled": true
+          },
+          {
+            "id": 9,
+            "type": "distance",
+            "entities": [
+              1,
+              9
+            ],
+            "value": 0.055,
+            "parameter": 12,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 9,
+        "last_constraint_id": 9
+      }
+    },
+    {
+      "id": 20,
+      "type": "extrude",
+      "name": "Flange",
+      "data": {
+        "profile": 19,
+        "depth": 0.01,
+        "depth_parameter": 3,
+        "direction": "reversed",
+        "operation": "join",
+        "target": 18
+      }
+    }
+  ]
+}

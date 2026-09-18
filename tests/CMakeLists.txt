@@ -201,10 +201,17 @@ if(TARGET bettercad_reference_models)
         reference/Analytic.hpp
         reference/ReferenceTestSupport.hpp
         reference/FlangeTests.cpp
+        reference/GearboxCoverTests.cpp
         reference/BearingHousingTests.cpp
+        reference/ManifoldTubeTests.cpp
+        reference/IndexPlateTests.cpp
+        reference/MotorMountTests.cpp
         reference/MountingBracketTests.cpp
+        reference/P12ModelsTests.cpp
         reference/PulleyTests.cpp
+        reference/RibbedBracketTests.cpp
         reference/ShaftTests.cpp
+        reference/TransitionDuctTests.cpp
         reference/UBoltTests.cpp
     )
     target_link_libraries(bettercad_tests PRIVATE BetterCAD::reference_models)
@@ -309,7 +316,14 @@ if(TARGET bettercad_cli)
         "pulley|Pulley|HubChamfers|212874\\.606"
         "bearing_housing|BearingHousing|BaseChamfers|261382\\.165"
         "mounting_bracket|MountingBracket|Gusset|123546\\.715"
-        "u_bolt|UBolt|EndChamfers|15563\\.959")
+        "u_bolt|UBolt|EndChamfers|15563\\.959"
+        # P12-REF-001: the production reference models.
+        "motor_mount|MotorMount|Pilot|64838\\.229"
+        "gearbox_cover|GearboxCover|FixingHoles|86671\\.930"
+        "manifold_tube|ManifoldTube|Flange|38840\\.706"
+        "transition_duct|TransitionDuct|Flange|488642\\.810"
+        "index_plate|IndexPlate|Assembly|262235\\.022"
+        "ribbed_bracket|RibbedBracket|CornerRound|125252\\.693")
         string(REPLACE "|" ";" _parts "${_model_volume}")
         list(GET _parts 0 _stem)
         list(GET _parts 1 _name)
@@ -329,6 +343,34 @@ if(TARGET bettercad_cli)
         ARGS "export-step|${_reference}/mounting_bracket.bcad|${_out}/mounting_bracket.step"
         EXIT_CODE 0 STDOUT_REGEX "^Wrote .*mounting_bracket\\.step: STEP AP214 \\(mm\\), 1 body \\(Gusset\\), [0-9]+ bytes$"
         FILE "${_out}/mounting_bracket.step" FILE_REGEX "^ISO-10303-21;\nHEADER;")
+    bettercad_add_process_test(cli.export-step.reference.transition_duct
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "export-step|${_reference}/transition_duct.bcad|${_out}/transition_duct.step"
+        EXIT_CODE 0 STDOUT_REGEX "^Wrote .*transition_duct\\.step: STEP AP214 \\(mm\\), 1 body \\(Flange\\), [0-9]+ bytes$"
+        FILE "${_out}/transition_duct.step" FILE_REGEX "^ISO-10303-21;\nHEADER;")
+    # P12-REF-001: the configuration-driven family through the real CLI. The
+    # volumes are W^3-scaled and checked against closed forms in
+    # MotorMountTests.cpp; here what matters is that the interface selects
+    # them and that an unknown name is a structured failure.
+    bettercad_add_process_test(cli.info.reference.motor_mount_configurations
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "info|${_reference}/motor_mount.bcad"
+        EXIT_CODE 0
+        STDOUT_REGEX "Configurations \\(3\\):\n  Small +1 override\n  Medium +1 override\n  Large +1 override")
+    bettercad_add_process_test(cli.validate.reference.motor_mount_large
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "validate|${_reference}/motor_mount.bcad|--configuration|Large"
+        EXIT_CODE 0
+        STDOUT_REGEX "Pilot \\(object:[0-9]+\\): 1 solid, volume 199728\\.141 mm\\^3.*\nResult: valid$")
+    bettercad_add_process_test(cli.validate.reference.motor_mount_small
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "validate|${_reference}/motor_mount.bcad|--configuration|Small"
+        EXIT_CODE 0
+        STDOUT_REGEX "Pilot \\(object:[0-9]+\\): 1 solid, volume 32003\\.185 mm\\^3.*\nResult: valid$")
+    bettercad_add_process_test(cli.validate.reference.motor_mount_unknown_configuration
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "validate|${_reference}/motor_mount.bcad|--configuration|Enormous"
+        EXIT_CODE 1 STDERR_REGEX "no configuration named 'Enormous' in this document")
+
     # P12-PARAM-001: a model driven by parameter expressions, through the
     # real executable.
     set(_driven "${PROJECT_SOURCE_DIR}/examples/models/driven_plate.bcad")

@@ -138,6 +138,10 @@ std::pair<EntityId, EntityId> SketchBuilder::ends(EntityId lineOrArc) const {
     return {};
 }
 
+void SketchBuilder::attach(const PlaneReference& reference) {
+    model_.need(sketch_->setAttachment(reference), name_);
+}
+
 ObjectId SketchBuilder::finish() {
     return model_.add(std::move(sketch_), name_);
 }

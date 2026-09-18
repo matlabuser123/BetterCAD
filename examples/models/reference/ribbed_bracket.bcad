@@ -1,0 +1,727 @@
+{
+  "format": "bettercad-document",
+  "version": 1,
+  "units": "SI",
+  "document": {
+    "id": "5eed0000-0000-4000-8000-000000000106",
+    "name": "RibbedBracket",
+    "metadata": {
+      "description": "",
+      "author": "",
+      "properties": {}
+    },
+    "last_allocated_id": 20
+  },
+  "parameters": [
+    {
+      "id": 1,
+      "name": "width",
+      "si_value": 0.09,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 2,
+      "name": "base_depth",
+      "si_value": 0.07,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 3,
+      "name": "thickness",
+      "si_value": 0.01,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 4,
+      "name": "wall_h",
+      "si_value": 0.065,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 5,
+      "name": "rib_t",
+      "si_value": 0.006,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      },
+      "expression": "thickness * 3 / 5"
+    },
+    {
+      "id": 6,
+      "name": "rib_reach",
+      "si_value": 0.04,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      },
+      "expression": "wall_h - 25 mm"
+    },
+    {
+      "id": 7,
+      "name": "rib_toe",
+      "si_value": 0.05,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      },
+      "expression": "base_depth - 20 mm"
+    },
+    {
+      "id": 8,
+      "name": "corner_bottom_r",
+      "si_value": 0.002,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 9,
+      "name": "corner_top_r",
+      "si_value": 0.004,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      },
+      "expression": "thickness * 2 / 5"
+    },
+    {
+      "id": 10,
+      "name": "half_width",
+      "si_value": 0.045,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      },
+      "expression": "width / 2"
+    }
+  ],
+  "objects": [
+    {
+      "id": 11,
+      "type": "coordinate_system",
+      "name": "MountFrame",
+      "data": {
+        "kind": "offset",
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "rx": 0.0,
+        "ry": 0.0,
+        "rz": 0.0
+      }
+    },
+    {
+      "id": 12,
+      "type": "sketch",
+      "name": "BaseSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "attachment": {
+          "object": 11,
+          "plane": "xy"
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.09,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.09,
+              0.07
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.0,
+              0.07
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "line",
+            "start": 2,
+            "end": 3,
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "line",
+            "start": 4,
+            "end": 1,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "horizontal",
+            "entities": [
+              5
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "horizontal",
+            "entities": [
+              7
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "vertical",
+            "entities": [
+              6
+            ],
+            "enabled": true
+          },
+          {
+            "id": 5,
+            "type": "vertical",
+            "entities": [
+              8
+            ],
+            "enabled": true
+          },
+          {
+            "id": 6,
+            "type": "distance",
+            "entities": [
+              5
+            ],
+            "value": 0.09,
+            "parameter": 1,
+            "enabled": true
+          },
+          {
+            "id": 7,
+            "type": "distance",
+            "entities": [
+              6
+            ],
+            "value": 0.07,
+            "parameter": 2,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 8,
+        "last_constraint_id": 7
+      }
+    },
+    {
+      "id": 13,
+      "type": "extrude",
+      "name": "Base",
+      "data": {
+        "profile": 12,
+        "depth": 0.01,
+        "depth_parameter": 3,
+        "direction": "normal",
+        "operation": "new_body"
+      }
+    },
+    {
+      "id": 14,
+      "type": "sketch",
+      "name": "WallSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "normal": [
+            -0.0,
+            -1.0,
+            -0.0
+          ]
+        },
+        "attachment": {
+          "object": 11,
+          "plane": "xz"
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.09,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.09,
+              0.065
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.0,
+              0.065
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "line",
+            "start": 2,
+            "end": 3,
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "line",
+            "start": 4,
+            "end": 1,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "horizontal",
+            "entities": [
+              5
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "horizontal",
+            "entities": [
+              7
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "vertical",
+            "entities": [
+              6
+            ],
+            "enabled": true
+          },
+          {
+            "id": 5,
+            "type": "vertical",
+            "entities": [
+              8
+            ],
+            "enabled": true
+          },
+          {
+            "id": 6,
+            "type": "distance",
+            "entities": [
+              5
+            ],
+            "value": 0.09,
+            "parameter": 1,
+            "enabled": true
+          },
+          {
+            "id": 7,
+            "type": "distance",
+            "entities": [
+              6
+            ],
+            "value": 0.065,
+            "parameter": 4,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 8,
+        "last_constraint_id": 7
+      }
+    },
+    {
+      "id": 15,
+      "type": "extrude",
+      "name": "Wall",
+      "data": {
+        "profile": 14,
+        "depth": 0.01,
+        "depth_parameter": 3,
+        "direction": "normal",
+        "operation": "join",
+        "target": 13
+      }
+    },
+    {
+      "id": 16,
+      "type": "datum_plane",
+      "name": "RibPlane",
+      "data": {
+        "kind": "offset",
+        "base": {
+          "object": 11,
+          "plane": "yz"
+        },
+        "offset": 0.045,
+        "offset_parameter": 10
+      }
+    },
+    {
+      "id": 17,
+      "type": "sketch",
+      "name": "GussetSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.045,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "normal": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        "attachment": {
+          "object": 16,
+          "plane": "xy"
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.0,
+              0.01
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.0,
+              0.04
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.05,
+              0.01
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "vertical",
+            "entities": [
+              1,
+              3
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "distance",
+            "entities": [
+              1,
+              3
+            ],
+            "value": 0.04,
+            "parameter": 6,
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "vertical",
+            "entities": [
+              1,
+              2
+            ],
+            "enabled": true
+          },
+          {
+            "id": 5,
+            "type": "distance",
+            "entities": [
+              1,
+              2
+            ],
+            "value": 0.01,
+            "parameter": 3,
+            "enabled": true
+          },
+          {
+            "id": 6,
+            "type": "horizontal",
+            "entities": [
+              2,
+              4
+            ],
+            "enabled": true
+          },
+          {
+            "id": 7,
+            "type": "distance",
+            "entities": [
+              2,
+              4
+            ],
+            "value": 0.05,
+            "parameter": 7,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 5,
+        "last_constraint_id": 7
+      }
+    },
+    {
+      "id": 18,
+      "type": "rib",
+      "name": "Rib",
+      "data": {
+        "target": 15,
+        "profile": 17,
+        "edges": [
+          5
+        ],
+        "thickness": 0.006,
+        "thickness_parameter": 5,
+        "placement": "symmetric",
+        "flipped": true
+      }
+    },
+    {
+      "id": 19,
+      "type": "hole",
+      "name": "BoltHole",
+      "data": {
+        "target": 18,
+        "face": {
+          "surface": "plane",
+          "point": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        },
+        "center": [
+          0.02,
+          0.02
+        ],
+        "type": "simple",
+        "extent": "through",
+        "clearance": {
+          "size": "M8",
+          "series": "medium"
+        }
+      }
+    },
+    {
+      "id": 20,
+      "type": "variable_fillet",
+      "name": "CornerRound",
+      "data": {
+        "target": 19,
+        "edges": [
+          {
+            "edge": {
+              "curve": "line",
+              "point": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "direction": [
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            "stations": [
+              {
+                "position": 0.0,
+                "radius": 0.002,
+                "radius_parameter": 8
+              },
+              {
+                "position": 1.0,
+                "radius": 0.004,
+                "radius_parameter": 9
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

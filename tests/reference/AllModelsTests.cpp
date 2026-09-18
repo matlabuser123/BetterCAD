@@ -153,8 +153,11 @@ TEST_CASE("ReferenceModel_FeatureCoverage", "[reference][all]") {
         INFO(model << ": " << line);
         CHECK_FALSE(kinds.empty());
     }
+    // P11's feature set, and the kinds P12 added (P12-REF-001): between them
+    // the reference models must use every one.
     for (const std::string_view feature : {"extrude", "revolve", "chamfer", "fillet", "hole", "linear_pattern",
-                                           "circular_pattern", "mirror", "sweep", "loft"}) {
+                                           "circular_pattern", "mirror", "sweep", "loft", "shell", "draft",
+                                           "rib", "variable_fillet", "combine"}) {
         INFO("feature " << feature);
         CHECK(all.contains(std::string{feature}));
     }
@@ -248,3 +251,4 @@ TEST_CASE("ReferenceModel_AnalyticToolkit", "[reference][all]") {
         CHECK_THAT(an::integrate([](double t) { return 2.0 * t + 1.0; }, 1.0, 4.0), WithinRel(18.0, 1e-14));
     }
 }
+

@@ -1,6 +1,9 @@
 # BetterCAD — TODO
 
-> `[x]` = implemented + tested + independently validated + evidence recorded.
+> `[x]` = implemented + tested + independently validated + adversarially
+> reviewed + regression clean + evidence recorded; a milestone with a
+> qualification gate also needs a qualified final tree. The full definition is
+> in [CLAUDE.md](CLAUDE.md#definition-of-done), which this line summarises.
 > `[ ]` = incomplete.
 > Work top-to-bottom. Stop at failed gates. Never fake evidence.
 
@@ -10,8 +13,8 @@
 
 ```text
 Current: P12 — Parametric CAD Completion
-Next:    P12-REF-001 — Production Reference Models
-Then:    P12-QUAL-001 — Phase Qualification
+Next:    P12-QUAL-001 — Phase Qualification
+Then:    awaiting explicit scope decision
 
 Released:       v0.1.0 — P0–P10
 Qualified:      P11
@@ -62,28 +65,30 @@ Deferred:
 
 ---
 
-# NEXT — P12-REF-001
+# DONE — P12-REF-001
 
 ## Production Reference Models
 
 Build realistic mechanical parts using the complete P12 feature set.
+Six parts, in `examples/reference_models/`; evidence in
+[docs/verification/P12-REF-001/](docs/verification/P12-REF-001/README.md).
 
-* [ ] Create production reference-model suite
-* [ ] Cover all applicable P12 capabilities
-* [ ] Include configuration-driven part family
-* [ ] Exercise cross-feature dependencies
-* [ ] Exercise stable face references
-* [ ] Validate geometry independently
-* [ ] Validate configuration changes
-* [ ] Validate parameter regeneration
-* [ ] Validate failure/recovery paths
-* [ ] Validate undo/redo
-* [ ] Validate save/load/regenerate
-* [ ] Validate deterministic rebuilds
-* [ ] Validate STEP read-back
-* [ ] Validate CLI workflows
-* [ ] Run full regression
-* [ ] Record evidence in `docs/verification/P12-REF-001/`
+* [x] Create production reference-model suite
+* [x] Cover all applicable P12 capabilities
+* [x] Include configuration-driven part family
+* [x] Exercise cross-feature dependencies
+* [x] Exercise stable face references
+* [x] Validate geometry independently
+* [x] Validate configuration changes
+* [x] Validate parameter regeneration
+* [x] Validate failure/recovery paths
+* [x] Validate undo/redo
+* [x] Validate save/load/regenerate
+* [x] Validate deterministic rebuilds
+* [x] Validate STEP read-back
+* [x] Validate CLI workflows
+* [x] Run full regression
+* [x] Record evidence in `docs/verification/P12-REF-001/`
 
 ### Gate
 
@@ -98,7 +103,9 @@ All reference models valid
 + 0 unexpected warnings
 ```
 
-Only then:
+Met: 1259/1259 on `debug`, `release` and `debug-shared` from clean, 0
+warnings; the adversarial review found and fixed 8 defects, each with a
+regression test; the qualified tree IDs match the committed tree.
 
 ```text
 P12-REF-001 → [x]
@@ -106,7 +113,7 @@ P12-REF-001 → [x]
 
 ---
 
-# THEN — P12-QUAL-001
+# NEXT — P12-QUAL-001
 
 ## P12 Phase Qualification
 
@@ -274,6 +281,7 @@ docs/verification/<milestone>/
 
 `ARCHITECTURE.md` tracks **how BetterCAD is built**.
 
-`CLAUDE.md` tracks **how development work is performed**.
+`CLAUDE.md` tracks **how development work is performed**, and
+`docs/engineering/` holds the templates it is worked through.
 
 `README.md` explains **what BetterCAD is**.

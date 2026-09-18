@@ -9,11 +9,17 @@ add_library(bettercad_reference_models STATIC
     BuildSupport.hpp
     Catalog.cpp
     Fingerprint.cpp
+    GearboxCover.cpp
+    IndexPlate.cpp
+    ManifoldTube.cpp
+    MotorMount.cpp
     MountingBracket.cpp
     Flange.cpp
     Pulley.cpp
+    RibbedBracket.cpp
     ReferenceModels.hpp
     Shaft.cpp
+    TransitionDuct.cpp
     UBolt.cpp
 )
 add_library(BetterCAD::reference_models ALIAS bettercad_reference_models)

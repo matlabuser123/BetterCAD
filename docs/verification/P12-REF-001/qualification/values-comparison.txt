@@ -1,0 +1,11 @@
+﻿release: 8695 non-empty lines after normalizing, MD5 4fe78930314c21eb9bb7808aee54620f
+debug: 8695 non-empty lines after normalizing, MD5 4fe78930314c21eb9bb7808aee54620f
+debug-shared: 8695 non-empty lines after normalizing, MD5 4fe78930314c21eb9bb7808aee54620f
+
+debug against release:
+  differing lines: 0 expected only, 0 measured
+
+debug-shared against release:
+  differing lines: 0 expected only, 0 measured
+
+RESULT: measured values identical

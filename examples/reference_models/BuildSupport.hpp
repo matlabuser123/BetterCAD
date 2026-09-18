@@ -4,6 +4,7 @@
 #include <bettercad/core/Id.hpp>
 #include <bettercad/core/Units.hpp>
 #include <bettercad/core/document/Document.hpp>
+#include <bettercad/core/document/References.hpp>
 #include <bettercad/core/math/Frame.hpp>
 #include <bettercad/sketch/Sketch.hpp>
 
@@ -100,6 +101,11 @@ public:
 
     /// The start and end points of a line or arc.
     [[nodiscard]] std::pair<EntityId, EntityId> ends(EntityId lineOrArc) const;
+
+    /// Places the sketch on @p reference -- a datum plane, or a named face
+    /// of a feature -- instead of the frame it was made with, so it follows
+    /// whatever moves that plane (P12-DATUM-001, P12-SKETCH-003).
+    void attach(const PlaneReference& reference);
 
     /// Adds the sketch to the document and returns its ID.
     ObjectId finish();
