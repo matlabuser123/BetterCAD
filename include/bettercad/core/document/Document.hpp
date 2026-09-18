@@ -3,6 +3,7 @@
 #include <bettercad/core/Error.hpp>
 #include <bettercad/core/Export.hpp>
 #include <bettercad/core/Id.hpp>
+#include <bettercad/core/document/Configurations.hpp>
 #include <bettercad/core/document/DocumentObject.hpp>
 #include <bettercad/core/parameters/ParameterTable.hpp>
 #include <bettercad/core/units/DimensionedValue.hpp>
@@ -97,11 +98,81 @@ public:
     /// Expression::parse()). Its names are resolved, and its value computed,
     /// when expressions are evaluated: evaluateParameterExpressions(), which
     /// regeneration runs. Until then the parameter keeps its value.
+    ///
+    /// Fails with FailedPrecondition if a configuration overrides the
+    /// parameter: a driven parameter's value comes from its expression, so
+    /// it cannot also be set by a configuration. Clear the overrides first
+    /// (P12-PARAM-002).
     Result<bool> setParameterExpression(ParameterId id, std::optional<std::string> expression);
     /// Makes the parameter's name, value, unit and expression equal to @p state
     /// (same ID). Used by undo/redo; revisions keep increasing. The state's
     /// expression must parse.
     Result<bool> restoreParameter(const Parameter& state);
+
+    // --- Configurations ---------------------------------------------------
+    // A configuration overrides the values of free parameters; the equations
+    // and features are shared (P12-PARAM-002, see Configurations.hpp).
+    //
+    // A parameter's own value is its *base* value and no configuration
+    // changes it, so setParameterValue() always edits the base. What the
+    // model is built from is effectiveParameterValue(), the base with the
+    // active configuration's override applied.
+
+    [[nodiscard]] const ConfigurationTable& configurations() const noexcept { return configurations_; }
+
+    /// New configuration with no overrides; its name must be free.
+    Result<ConfigurationId> createConfiguration(std::string name);
+    /// Inserts a configuration that already has an ID (undo/redo, loading).
+    /// Every parameter it overrides must exist, be free and have the
+    /// override's dimension.
+    Result<void> insertConfiguration(Configuration configuration);
+    Result<Configuration> removeConfiguration(ConfigurationId id);
+
+    /// Sets the value @p parameter takes in @p configuration. Fails with
+    /// NotFound if either does not exist, FailedPrecondition if the parameter
+    /// is driven by an expression, and DimensionMismatch if the value is not
+    /// of the parameter's dimension.
+    Result<bool> setConfigurationOverride(ConfigurationId configuration, ParameterId parameter,
+                                          const DimensionedValue& value);
+    template <Dimension D>
+    Result<bool> setConfigurationOverride(ConfigurationId configuration, ParameterId parameter,
+                                          const Quantity<D>& value) {
+        return setConfigurationOverride(configuration, parameter, DimensionedValue::of(value));
+    }
+    /// Removes an override, so the parameter takes its base value again.
+    Result<bool> clearConfigurationOverride(ConfigurationId configuration, ParameterId parameter);
+    Result<bool> renameConfiguration(ConfigurationId id, std::string name);
+    /// Makes the configuration with @p state's ID equal to it: same name and
+    /// same overrides. Used by undo/redo, and validated exactly as the
+    /// piecewise edits are.
+    Result<bool> restoreConfiguration(const Configuration& state);
+    /// Whether this document would accept @p value as an override of
+    /// @p parameter: it exists, is free, and the value has its dimension.
+    /// Lets a command check before it changes anything.
+    [[nodiscard]] Result<void> checkOverride(ParameterId parameter, const DimensionedValue& value) const {
+        return requireOverridable(parameter, value);
+    }
+
+    /// Selects the configuration whose overrides are in force; std::nullopt
+    /// is the base configuration. Fails with NotFound for an unknown ID.
+    Result<bool> setActiveConfiguration(std::optional<ConfigurationId> id);
+    [[nodiscard]] std::optional<ConfigurationId> activeConfiguration() const noexcept {
+        return configurations_.active();
+    }
+    /// The overrides in force; empty for the base configuration.
+    [[nodiscard]] const ParameterOverrides& activeOverrides() const noexcept {
+        return configurations_.activeOverrides();
+    }
+
+    /// The value @p id has under the active configuration: its override if
+    /// the configuration has one, otherwise the parameter's own value.
+    /// std::nullopt if the parameter does not exist.
+    ///
+    /// This is what the model is built from -- expressions, driven sketch
+    /// constraints and feature parameters all read it -- so that a
+    /// configuration reaches everything without any of them knowing that
+    /// configurations exist.
+    [[nodiscard]] std::optional<DimensionedValue> effectiveParameterValue(ParameterId id) const noexcept;
 
     // --- Objects ----------------------------------------------------------
     /// Adds a new object (whose ID must still be invalid) and assigns its ID.
@@ -189,6 +260,12 @@ private:
     [[nodiscard]] static std::unexpected<Error> objectNotFound(ObjectId id);
     [[nodiscard]] Result<void> requireNameAvailable(std::string_view name) const;
     [[nodiscard]] Result<void> requireNotDriven(ParameterId id) const;
+    /// The parameter exists, is free and has @p value's dimension: what an
+    /// override needs.
+    [[nodiscard]] Result<void> requireOverridable(ParameterId id, const DimensionedValue& value) const;
+    /// No configuration overrides the parameter: what it takes for it to be
+    /// allowed an expression.
+    [[nodiscard]] Result<void> requireNotOverridden(ParameterId id) const;
     [[nodiscard]] static Result<void> checkExpressionSyntax(std::string_view parameter,
                                                             const std::optional<std::string>& expression);
     Result<bool> bump(Result<bool> changed) noexcept;
@@ -198,15 +275,16 @@ private:
     DocumentMetadata metadata_;
     IdAllocator ids_;
     ParameterTable parameters_;
+    ConfigurationTable configurations_;
     std::map<ObjectId, std::unique_ptr<DocumentObject>> objects_;
     std::map<std::string, ObjectId, std::less<>> objectIdsByName_;
     std::uint64_t revision_ = 0;
     std::uint64_t cleanRevision_ = 0;
 };
 
-/// Same identity, name, metadata, parameters and objects. Revisions, dirty
-/// state and the ID allocator position are change-tracking details and are
-/// ignored.
+/// Same identity, name, metadata, parameters, configurations and objects.
+/// Revisions, dirty state and the ID allocator position are change-tracking
+/// details and are ignored.
 [[nodiscard]] BETTERCAD_CORE_EXPORT bool equivalent(const Document& a, const Document& b);
 
 } // namespace bettercad

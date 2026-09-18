@@ -1,0 +1,48 @@
+Every measured value of the tests P12-LOFT-001 had, from a Release build of its commit (230ceda, built in a
+separate detached worktree of that exact revision), and from this milestone's qualified Release build. Each ran
+bettercad_tests.exe -s --reporter xml --rng-seed 1 (all test cases; this build also ran the 37 new ones), and
+values.py (in this directory, with the same header for both) filtered the report.
+
+Every test case the baseline had is still present: comparing the two sets of test-case names, none is missing
+and the only additions are this milestone's own 34 cases that produce measured values (37 new CTest entries in
+all). compare-values.py dropped those (--exclude) and ignored source line numbers (--ignore-line-numbers),
+since existing test files gained lines.
+
+RESULT: three lines differ, all of them expected and all of them the same change.
+
+EXPECTED CHANGES (3 lines):
+
+  The usage text of `info` and `validate`, which now documents the option this milestone adds:
+
+      before:  Usage: bettercad-cli info <file.bcad>
+      after:   Usage: bettercad-cli info <file.bcad> [--configuration <name>]
+
+  The three entries are CLI tests that assert a usage error names its command; each still passes, because each
+  checks that the output contains "Usage: bettercad-cli info" (or "... validate"). The usage constants are
+  kInfoUsage and kValidateUsage in apps/bettercad_cli/Commands.hpp, and the CLI renders help and usage errors
+  from them, so extending one line documents the option everywhere it is shown.
+
+UNEXPECTED CHANGES: none.
+
+Not one volume, area, centroid, bounding box, topology count or diagnostic message of a pre-existing test
+moved. The comparison follows.
+
+substituted ' (modified)' -> '':
+  loft001-baseline: 2 lines
+  param002: 9 lines
+loft001-baseline: 49589 non-empty lines after normalizing, MD5 24e7e45b70c90e13d1b4eaf6d50374f5
+param002: 49589 non-empty lines after normalizing, MD5 23249a87c7b39af756e42321f320d74d
+
+param002 against loft001-baseline:
+  line 367 (MEASURED):
+    loft001-baseline: => "bettercad-cli info: expected one document file Usage: bettercad-cli info <file.bcad> " contains: "Usage: bettercad-cli info" with message: args := { "info" }
+    param002: => "bettercad-cli info: expected one document file Usage: bettercad-cli info <file.bcad> [--configuration <name>] " contains: "Usage: bettercad-cli info" with message: args := { "info" }
+  line 371 (MEASURED):
+    loft001-baseline: => "bettercad-cli validate: expected one document file Usage: bettercad-cli validate <file.bcad> " contains: "Usage: bettercad-cli validate" with message: args := { "validate", "a", "b" }
+    param002: => "bettercad-cli validate: expected one document file Usage: bettercad-cli validate <file.bcad> [--configuration <name>] " contains: "Usage: bettercad-cli validate" with message: args := { "validate", "a", "b" }
+  line 383 (MEASURED):
+    loft001-baseline: => "bettercad-cli info: unexpected argument '--frobnicate' Usage: bettercad-cli info <file.bcad> " contains: "Usage: bettercad-cli info" with message: args := { "info", "--frobnicate", "a.bcad" }
+    param002: => "bettercad-cli info: unexpected argument '--frobnicate' Usage: bettercad-cli info <file.bcad> [--configuration <name>] " contains: "Usage: bettercad-cli info" with message: args := { "info", "--frobnicate", "a.bcad" }
+  differing lines: 0 expected only, 3 measured
+
+RESULT: MEASURED VALUES DIFFER

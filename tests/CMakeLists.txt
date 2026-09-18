@@ -28,6 +28,7 @@ bettercad_add_executable(bettercad_tests
         core/IdTests.cpp
         core/UuidTests.cpp
         core/document/CommandTests.cpp
+        core/document/ConfigurationTests.cpp
         core/document/DependencyGraphTests.cpp
         core/document/DocumentTests.cpp
         core/document/ParameterExpressionTests.cpp
@@ -71,6 +72,7 @@ bettercad_add_executable(bettercad_tests
         features/ThroughAllExtrudeTests.cpp
         features/BodyOpsTests.cpp
         features/CircularPatternFeatureTests.cpp
+        features/ConfigurationFeatureTests.cpp
         features/ExpressionRegenerationTests.cpp
         features/ExtrudeTests.cpp
         features/FeatureTestSupport.hpp
@@ -95,6 +97,7 @@ bettercad_add_executable(bettercad_tests
         features/ValidationTests.cpp
         io/ChamferFileTests.cpp
         io/CircularPatternFileTests.cpp
+        io/ConfigurationFileTests.cpp
         io/DatumFileTests.cpp
         io/FaceReferenceFileTests.cpp
         io/FaceKindFileTests.cpp
@@ -129,6 +132,7 @@ bettercad_add_executable(bettercad_tests
         sketch/SketchTests.cpp
         sketch/SolverTests.cpp
         support/BlockModel.hpp
+        support/ConfigurationModels.hpp
         support/BodyPrint.hpp
         support/BodyOpsModels.hpp
         support/BracketModel.hpp
@@ -173,6 +177,7 @@ if(TARGET bettercad_cli_lib)
     target_sources(bettercad_tests PRIVATE
         cli/CliRunner.hpp
         cli/CliTests.cpp
+        cli/ConfigurationCliTests.cpp
         cli/DatumCliTests.cpp
         cli/DraftCliTests.cpp
         cli/FaceReferenceCliTests.cpp

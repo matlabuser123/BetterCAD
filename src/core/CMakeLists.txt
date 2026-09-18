@@ -10,6 +10,7 @@ bettercad_add_library(bettercad_core
         Uuid.cpp
         document/CommandHistory.cpp
         document/Commands.cpp
+        document/Configurations.cpp
         document/DependencyGraph.cpp
         document/Document.cpp
         document/DocumentObject.cpp

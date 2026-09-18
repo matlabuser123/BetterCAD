@@ -11,8 +11,8 @@
 namespace bettercad::cli {
 
 inline constexpr std::string_view kNewUsage = "new <file.bcad> [--name <name>] [--force]";
-inline constexpr std::string_view kInfoUsage = "info <file.bcad>";
-inline constexpr std::string_view kValidateUsage = "validate <file.bcad>";
+inline constexpr std::string_view kInfoUsage = "info <file.bcad> [--configuration <name>]";
+inline constexpr std::string_view kValidateUsage = "validate <file.bcad> [--configuration <name>]";
 inline constexpr std::string_view kExportStepUsage = "export-step <file.bcad> <file.step>";
 inline constexpr std::string_view kExportStlUsage =
     "export-stl <file.bcad> <file.stl> [--ascii] [--tolerance <length>] [--angle <angle>]";

@@ -40,7 +40,7 @@ Result<std::optional<geometry::Body>> regenerateSketchObject(Document& document,
         placement = *frame;
     }
     auto changed = document.modifyObject<sketch::Sketch>(id, [&](sketch::Sketch& sketch) -> Result<bool> {
-        auto outcome = sketch::regenerateSketch(sketch, document.parameters());
+        auto outcome = sketch::regenerateSketch(sketch, document.parameters(), {}, document.activeOverrides());
         if (!outcome) {
             return std::unexpected(outcome.error());
         }

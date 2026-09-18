@@ -5,7 +5,8 @@
 
 namespace bettercad::sketch {
 
-Result<bool> applyDrivingParameters(Sketch& sketch, const ParameterTable& parameters) {
+Result<bool> applyDrivingParameters(Sketch& sketch, const ParameterTable& parameters,
+                                    const ParameterOverrides& overrides) {
     struct Driven {
         ConstraintId constraint;
         ParameterId parameter;
@@ -24,19 +25,25 @@ Result<bool> applyDrivingParameters(Sketch& sketch, const ParameterTable& parame
             return makeError(ErrorCode::NotFound, std::format("{} is driven by {}, which does not exist",
                                                               item.constraint, item.parameter));
         }
+        // The value in force: the active configuration's override, if it
+        // has one, else the parameter's own. The dimension is the
+        // parameter's either way, since Document only accepts an override of
+        // the parameter's dimension.
+        const auto found = overrides.find(item.parameter);
+        const double si = found != overrides.end() ? found->second.siValue : parameter->siValue();
         Result<bool> set = false;
         if (item.angle) {
             auto value = parameter->as<Angle>();
             if (!value) {
                 return std::unexpected(value.error());
             }
-            set = sketch.setConstraintAngle(item.constraint, *value);
+            set = sketch.setConstraintAngle(item.constraint, Angle::fromSi(si));
         } else {
             auto value = parameter->as<Length>();
             if (!value) {
                 return std::unexpected(value.error());
             }
-            set = sketch.setConstraintValue(item.constraint, *value);
+            set = sketch.setConstraintValue(item.constraint, Length::fromSi(si));
         }
         if (!set) {
             return std::unexpected(set.error());
@@ -47,10 +54,10 @@ Result<bool> applyDrivingParameters(Sketch& sketch, const ParameterTable& parame
 }
 
 Result<SolveResult> regenerateSketch(Sketch& sketch, const ParameterTable& parameters,
-                                     const SolverOptions& options) {
+                                     const SolverOptions& options, const ParameterOverrides& overrides) {
     const auto copy = sketch.clone();
     auto& working = static_cast<Sketch&>(*copy);
-    if (auto applied = applyDrivingParameters(working, parameters); !applied) {
+    if (auto applied = applyDrivingParameters(working, parameters, overrides); !applied) {
         return std::unexpected(applied.error());
     }
     SolveResult result = solve(working, options);

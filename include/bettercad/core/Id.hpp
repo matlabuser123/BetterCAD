@@ -33,6 +33,9 @@ struct FeatureIdTag {
 struct ParameterIdTag {
     static constexpr std::string_view name = "parameter";
 };
+struct ConfigurationIdTag {
+    static constexpr std::string_view name = "configuration";
+};
 struct BodyIdTag {
     static constexpr std::string_view name = "body";
 };
@@ -115,6 +118,10 @@ using DocumentId = Id<DocumentIdTag, Uuid>;
 using SketchId = Id<SketchIdTag>;
 using FeatureId = Id<FeatureIdTag>;
 using ParameterId = Id<ParameterIdTag>;
+/// A configuration is document-level state, not a document object, so its ID
+/// does not widen to ObjectId; it comes from the document's one allocator so
+/// that no ID is ever reused (P12-PARAM-002).
+using ConfigurationId = Id<ConfigurationIdTag>;
 using BodyId = Id<BodyIdTag>;
 /// Sketch entity (point, line, arc, ...); unique within its sketch.
 using EntityId = Id<EntityIdTag>;

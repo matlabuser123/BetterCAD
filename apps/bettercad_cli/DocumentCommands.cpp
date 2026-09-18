@@ -19,6 +19,7 @@
 #include <bettercad/features/SweepFeature.hpp>
 #include <bettercad/features/Validation.hpp>
 #include <bettercad/features/VariableFilletFeature.hpp>
+#include <bettercad/core/document/ParameterExpressions.hpp>
 #include <bettercad/io/DocumentFile.hpp>
 #include <bettercad/sketch/Sketch.hpp>
 
@@ -68,12 +69,21 @@ std::string nameOrId(const Document& document, ObjectId id) {
     return name ? std::string{*name} : std::format("{} (missing)", id);
 }
 
-std::string describeParameter(const Parameter& parameter) {
+/// The parameter's value and how it gets it. With a configuration active,
+/// the value shown is the one in force: its override, if it has one, marked
+/// so that it is clear the base value is something else (P12-PARAM-002).
+/// With no configuration active this is what it always printed.
+std::string describeParameter(const Document& document, const Parameter& parameter) {
+    const auto effective = document.effectiveParameterValue(parameter.id());
+    const double value = parameter.displayUnit().scale.fromSi(effective ? effective->siValue
+                                                                       : parameter.siValue());
     std::string text = parameter.displayUnit().symbol.empty()
-                           ? std::format("{:.10g}", parameter.displayValue())
-                           : std::format("{:.10g} {}", parameter.displayValue(), parameter.displayUnit().symbol);
+                           ? std::format("{:.10g}", value)
+                           : std::format("{:.10g} {}", value, parameter.displayUnit().symbol);
     if (parameter.expression()) {
         text += std::format("  (expression: {})", *parameter.expression());
+    } else if (document.activeOverrides().contains(parameter.id())) {
+        text += std::format("  (configuration; base {:.10g})", parameter.displayValue());
     }
     return text;
 }
@@ -581,9 +591,21 @@ void printInfo(const Document& document, const std::filesystem::path& path, std:
     out << std::format("\nParameters ({}):\n", document.parameters().size());
     std::vector<Row> parameters;
     for (const Parameter& parameter : document.parameters().all()) {
-        parameters.push_back({parameter.name(), describeParameter(parameter)});
+        parameters.push_back({parameter.name(), describeParameter(document, parameter)});
     }
     printTable(out, parameters);
+
+    if (!document.configurations().empty()) {
+        out << std::format("\nConfigurations ({}):\n", document.configurations().size());
+        std::vector<Row> configurations;
+        for (const Configuration& configuration : document.configurations().all()) {
+            const std::size_t count = configuration.size();
+            configurations.push_back(
+                {configuration.name(), std::format("{} {}", count, count == 1 ? "override" : "overrides"),
+                 document.activeConfiguration() == configuration.id() ? "active" : ""});
+        }
+        printTable(out, configurations);
+    }
 
     out << std::format("\nObjects ({}):\n", document.objectCount());
     std::vector<Row> objects;
@@ -705,8 +727,26 @@ ExitCode runNew(Args args, std::ostream& out, std::ostream& err) {
     return ExitCode::Success;
 }
 
+namespace {
+
+/// Activates the configuration @p name names, so that what follows is
+/// reported for it. An unknown name is a failure rather than a silent
+/// fallback to the base configuration.
+Result<void> selectConfiguration(Document& document, std::string_view name) {
+    const Configuration* found = document.configurations().findByName(name);
+    if (found == nullptr) {
+        return makeError(ErrorCode::NotFound, std::format("no configuration named '{}' in this document", name));
+    }
+    if (auto set = document.setActiveConfiguration(found->id()); !set) {
+        return std::unexpected(set.error());
+    }
+    return {};
+}
+
+} // namespace
+
 ExitCode runInfo(Args args, std::ostream& out, std::ostream& err) {
-    auto parsed = parseArguments(args, {});
+    auto parsed = parseArguments(args, {{"--configuration", true}});
     if (!parsed) {
         return usageError("info", kInfoUsage, parsed.error().message, err);
     }
@@ -714,16 +754,24 @@ ExitCode runInfo(Args args, std::ostream& out, std::ostream& err) {
         return usageError("info", kInfoUsage, "expected one document file", err);
     }
     const std::filesystem::path path = pathFromArgument(parsed->positional().front());
-    const auto document = io::loadDocument(path);
+    auto document = io::loadDocument(path);
     if (!document) {
         return failure("info", document.error().message, err);
+    }
+    if (const auto name = parsed->value("--configuration")) {
+        if (auto selected = selectConfiguration(*document, *name); !selected) {
+            return failure("info", selected.error().message, err);
+        }
+        // Report the values the chosen configuration actually gives, which
+        // means evaluating the equations under it.
+        (void)evaluateParameterExpressions(*document);
     }
     printInfo(*document, path, out);
     return ExitCode::Success;
 }
 
 ExitCode runValidate(Args args, std::ostream& out, std::ostream& err) {
-    auto parsed = parseArguments(args, {});
+    auto parsed = parseArguments(args, {{"--configuration", true}});
     if (!parsed) {
         return usageError("validate", kValidateUsage, parsed.error().message, err);
     }
@@ -732,7 +780,7 @@ ExitCode runValidate(Args args, std::ostream& out, std::ostream& err) {
     }
     const std::filesystem::path path = pathFromArgument(parsed->positional().front());
     out << std::format("Validating {}\n", displayPath(path));
-    const auto document = io::loadDocument(path);
+    auto document = io::loadDocument(path);
     if (!document) {
         // A file that does not load is the most basic consistency failure.
         out << std::format("  {:<22}{}\n    error: {}\n",
@@ -740,6 +788,11 @@ ExitCode runValidate(Args args, std::ostream& out, std::ostream& err) {
                            document.error().message);
         out << resultLine(1, 0);
         return ExitCode::Failure;
+    }
+    if (const auto name = parsed->value("--configuration")) {
+        if (auto selected = selectConfiguration(*document, *name); !selected) {
+            return failure("validate", selected.error().message, err);
+        }
     }
     const features::ValidationReport report = features::validateDocument(*document);
     printValidation(report, out);

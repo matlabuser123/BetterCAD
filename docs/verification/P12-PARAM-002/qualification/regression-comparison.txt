@@ -1,0 +1,137 @@
+Every test P12-LOFT-001 ran, by name, against all three of this milestone's qualified CTest logs.
+Produced by: python compare-regression.py <P12-LOFT-001 Release ctest log> <this milestone's three logs>
+(compare-regression.py is in this directory). Every baseline test name must be present and must have
+passed; names that are new are listed.
+
+baseline docs/verification/P12-LOFT-001/qualification/ctest-release.log: 1173 distinct names
+
+docs/verification/P12-PARAM-002/qualification/ctest-debug.log: 1210 distinct names, 1211 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 37
+    unit.ConfigurationFamily_AttachedSketchesFollowTheFaceTheyName
+    unit.ConfigurationFamily_BuildsARealBracketAtEverySize
+    unit.ConfigurationFamily_SaveLoadKeepsTheWholeFamily
+    unit.Configuration_ADeletedParameterLeavesEveryConfiguration
+    unit.Configuration_ChainsOfEquationsFollowTheOverride
+    unit.Configuration_ClearingAnOverrideRestoresTheBaseValue
+    unit.Configuration_DrivesTheEquationsThatFollowFromIt
+    unit.Configuration_IdsComeFromTheDocumentsOneAllocator
+    unit.Configuration_OverridesTheValueInForceAndNotTheBase
+    unit.Configuration_RefusesWhatItCannotMean
+    unit.Configuration_TableKeepsNamesUniqueAndIdsStable
+    unit.Configurations_ACycleIsStillRefusedWhileAConfigurationIsActive
+    unit.Configurations_ADrivenParameterIsNeverAlsoOverridden
+    unit.Configurations_AFailingConfigurationChangesNothing
+    unit.Configurations_AWholeCycleThroughEverySizeReturnsToTheStart
+    unit.Configurations_AnOverrideThatBreaksAnEquationIsReported
+    unit.Configurations_AreStoredAsTransparentJson
+    unit.Configurations_BuildTheWholeFamilyFromOneParameter
+    unit.Configurations_DerivedParametersAreNeverDuplicated
+    unit.Configurations_FilesWrittenBeforeThisMilestoneLoadUnchanged
+    unit.Configurations_MalformedDataIsRejectedWithTheJsonPath
+    unit.Configurations_ReachDrivenSketchConstraintsAndFeatureParameters
+    unit.Configurations_RegenerationIsDeterministic
+    unit.Configurations_SaveLoadRegeneratesTheSameFamily
+    unit.Configurations_SavingIsDeterministic
+    unit.Configurations_SwitchingCostIsMeasured
+    unit.Configurations_SwitchingThereAndBackRestoresTheSameModel
+    unit.Configurations_TheBaseConfigurationSavesAndLoads
+    unit.Configurations_TheBaseValuesAreNeverTouched
+    unit.Configurations_TheValuesInForceAreExactlyReproducible
+    unit.Configurations_UndoAndRedoOfEveryOperation
+    unit.a configuration that does not exist is reported
+    unit.a document with no configurations prints no configurations section
+    unit.info lists a document's configurations
+    unit.info marks the active configuration
+    unit.info reports the values a chosen configuration gives
+    unit.validate checks a chosen configuration
+
+docs/verification/P12-PARAM-002/qualification/ctest-release.log: 1210 distinct names, 1211 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 37
+    unit.ConfigurationFamily_AttachedSketchesFollowTheFaceTheyName
+    unit.ConfigurationFamily_BuildsARealBracketAtEverySize
+    unit.ConfigurationFamily_SaveLoadKeepsTheWholeFamily
+    unit.Configuration_ADeletedParameterLeavesEveryConfiguration
+    unit.Configuration_ChainsOfEquationsFollowTheOverride
+    unit.Configuration_ClearingAnOverrideRestoresTheBaseValue
+    unit.Configuration_DrivesTheEquationsThatFollowFromIt
+    unit.Configuration_IdsComeFromTheDocumentsOneAllocator
+    unit.Configuration_OverridesTheValueInForceAndNotTheBase
+    unit.Configuration_RefusesWhatItCannotMean
+    unit.Configuration_TableKeepsNamesUniqueAndIdsStable
+    unit.Configurations_ACycleIsStillRefusedWhileAConfigurationIsActive
+    unit.Configurations_ADrivenParameterIsNeverAlsoOverridden
+    unit.Configurations_AFailingConfigurationChangesNothing
+    unit.Configurations_AWholeCycleThroughEverySizeReturnsToTheStart
+    unit.Configurations_AnOverrideThatBreaksAnEquationIsReported
+    unit.Configurations_AreStoredAsTransparentJson
+    unit.Configurations_BuildTheWholeFamilyFromOneParameter
+    unit.Configurations_DerivedParametersAreNeverDuplicated
+    unit.Configurations_FilesWrittenBeforeThisMilestoneLoadUnchanged
+    unit.Configurations_MalformedDataIsRejectedWithTheJsonPath
+    unit.Configurations_ReachDrivenSketchConstraintsAndFeatureParameters
+    unit.Configurations_RegenerationIsDeterministic
+    unit.Configurations_SaveLoadRegeneratesTheSameFamily
+    unit.Configurations_SavingIsDeterministic
+    unit.Configurations_SwitchingCostIsMeasured
+    unit.Configurations_SwitchingThereAndBackRestoresTheSameModel
+    unit.Configurations_TheBaseConfigurationSavesAndLoads
+    unit.Configurations_TheBaseValuesAreNeverTouched
+    unit.Configurations_TheValuesInForceAreExactlyReproducible
+    unit.Configurations_UndoAndRedoOfEveryOperation
+    unit.a configuration that does not exist is reported
+    unit.a document with no configurations prints no configurations section
+    unit.info lists a document's configurations
+    unit.info marks the active configuration
+    unit.info reports the values a chosen configuration gives
+    unit.validate checks a chosen configuration
+
+docs/verification/P12-PARAM-002/qualification/ctest-debug-shared.log: 1210 distinct names, 1211 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 37
+    unit.ConfigurationFamily_AttachedSketchesFollowTheFaceTheyName
+    unit.ConfigurationFamily_BuildsARealBracketAtEverySize
+    unit.ConfigurationFamily_SaveLoadKeepsTheWholeFamily
+    unit.Configuration_ADeletedParameterLeavesEveryConfiguration
+    unit.Configuration_ChainsOfEquationsFollowTheOverride
+    unit.Configuration_ClearingAnOverrideRestoresTheBaseValue
+    unit.Configuration_DrivesTheEquationsThatFollowFromIt
+    unit.Configuration_IdsComeFromTheDocumentsOneAllocator
+    unit.Configuration_OverridesTheValueInForceAndNotTheBase
+    unit.Configuration_RefusesWhatItCannotMean
+    unit.Configuration_TableKeepsNamesUniqueAndIdsStable
+    unit.Configurations_ACycleIsStillRefusedWhileAConfigurationIsActive
+    unit.Configurations_ADrivenParameterIsNeverAlsoOverridden
+    unit.Configurations_AFailingConfigurationChangesNothing
+    unit.Configurations_AWholeCycleThroughEverySizeReturnsToTheStart
+    unit.Configurations_AnOverrideThatBreaksAnEquationIsReported
+    unit.Configurations_AreStoredAsTransparentJson
+    unit.Configurations_BuildTheWholeFamilyFromOneParameter
+    unit.Configurations_DerivedParametersAreNeverDuplicated
+    unit.Configurations_FilesWrittenBeforeThisMilestoneLoadUnchanged
+    unit.Configurations_MalformedDataIsRejectedWithTheJsonPath
+    unit.Configurations_ReachDrivenSketchConstraintsAndFeatureParameters
+    unit.Configurations_RegenerationIsDeterministic
+    unit.Configurations_SaveLoadRegeneratesTheSameFamily
+    unit.Configurations_SavingIsDeterministic
+    unit.Configurations_SwitchingCostIsMeasured
+    unit.Configurations_SwitchingThereAndBackRestoresTheSameModel
+    unit.Configurations_TheBaseConfigurationSavesAndLoads
+    unit.Configurations_TheBaseValuesAreNeverTouched
+    unit.Configurations_TheValuesInForceAreExactlyReproducible
+    unit.Configurations_UndoAndRedoOfEveryOperation
+    unit.a configuration that does not exist is reported
+    unit.a document with no configurations prints no configurations section
+    unit.info lists a document's configurations
+    unit.info marks the active configuration
+    unit.info reports the values a chosen configuration gives
+    unit.validate checks a chosen configuration
+
+RESULT: PASS

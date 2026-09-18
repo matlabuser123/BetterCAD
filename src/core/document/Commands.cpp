@@ -280,4 +280,191 @@ Result<void> RenameObjectCommand::redo(Document& document) {
     return {};
 }
 
+
+// --- CreateConfigurationCommand --------------------------------------------------
+
+CreateConfigurationCommand::CreateConfigurationCommand(std::string name) : name_(std::move(name)) {}
+
+std::string CreateConfigurationCommand::description() const {
+    return std::format("Create configuration '{}'", name_);
+}
+
+ConfigurationId CreateConfigurationCommand::configurationId() const noexcept {
+    return created_ ? created_->id() : ConfigurationId{};
+}
+
+Result<void> CreateConfigurationCommand::execute(Document& document) {
+    auto id = document.createConfiguration(name_);
+    if (!id) {
+        return std::unexpected(id.error());
+    }
+    created_ = *document.configurations().find(*id);
+    return {};
+}
+
+Result<void> CreateConfigurationCommand::undo(Document& document) {
+    if (!created_) {
+        return notExecuted("undo");
+    }
+    auto removed = document.removeConfiguration(created_->id());
+    if (!removed) {
+        return std::unexpected(removed.error());
+    }
+    return {};
+}
+
+Result<void> CreateConfigurationCommand::redo(Document& document) {
+    if (!created_) {
+        return notExecuted("redo");
+    }
+    return document.insertConfiguration(*created_);
+}
+
+// --- ModifyConfigurationCommand --------------------------------------------------
+
+ModifyConfigurationCommand::ModifyConfigurationCommand(ConfigurationId id, ConfigurationChanges changes)
+    : id_(id), changes_(std::move(changes)) {}
+
+std::string ModifyConfigurationCommand::description() const {
+    return std::format("Modify configuration '{}'", before_ ? before_->name() : std::format("{}", id_));
+}
+
+Result<void> ModifyConfigurationCommand::execute(Document& document) {
+    const Configuration* current = document.configurations().find(id_);
+    if (current == nullptr) {
+        return makeError(ErrorCode::NotFound, std::format("{} does not exist", id_));
+    }
+    // Every override is checked against the document before anything is
+    // written, so a rejected edit leaves the configuration as it was.
+    for (const auto& [parameter, value] : changes_.overrides) {
+        if (auto ok = document.checkOverride(parameter, value); !ok) {
+            return std::unexpected(ok.error());
+        }
+    }
+    Configuration target = *current;
+    if (changes_.name) {
+        if (auto renamed = target.rename(*changes_.name); !renamed) {
+            return std::unexpected(renamed.error());
+        }
+    }
+    for (const ParameterId parameter : changes_.cleared) {
+        if (auto cleared = target.clearOverride(parameter); !cleared) {
+            return std::unexpected(cleared.error());
+        }
+    }
+    for (const auto& [parameter, value] : changes_.overrides) {
+        if (auto set = target.setOverride(parameter, value); !set) {
+            return std::unexpected(set.error());
+        }
+    }
+    Configuration previous = *current;
+    if (auto restored = document.restoreConfiguration(target); !restored) {
+        return std::unexpected(restored.error());
+    }
+    before_ = std::move(previous);
+    after_ = *document.configurations().find(id_);
+    return {};
+}
+
+Result<void> ModifyConfigurationCommand::undo(Document& document) {
+    if (!before_) {
+        return notExecuted("undo");
+    }
+    auto restored = document.restoreConfiguration(*before_);
+    if (!restored) {
+        return std::unexpected(restored.error());
+    }
+    return {};
+}
+
+Result<void> ModifyConfigurationCommand::redo(Document& document) {
+    if (!after_) {
+        return notExecuted("redo");
+    }
+    auto restored = document.restoreConfiguration(*after_);
+    if (!restored) {
+        return std::unexpected(restored.error());
+    }
+    return {};
+}
+
+// --- DeleteConfigurationCommand --------------------------------------------------
+
+std::string DeleteConfigurationCommand::description() const {
+    return std::format("Delete configuration '{}'", removed_ ? removed_->name() : std::format("{}", id_));
+}
+
+Result<void> DeleteConfigurationCommand::execute(Document& document) {
+    wasActive_ = document.activeConfiguration() == id_;
+    auto removed = document.removeConfiguration(id_);
+    if (!removed) {
+        return std::unexpected(removed.error());
+    }
+    removed_ = std::move(*removed);
+    return {};
+}
+
+Result<void> DeleteConfigurationCommand::undo(Document& document) {
+    if (!removed_) {
+        return notExecuted("undo");
+    }
+    if (auto inserted = document.insertConfiguration(*removed_); !inserted) {
+        return std::unexpected(inserted.error());
+    }
+    if (wasActive_) {
+        if (auto set = document.setActiveConfiguration(removed_->id()); !set) {
+            return std::unexpected(set.error());
+        }
+    }
+    return {};
+}
+
+Result<void> DeleteConfigurationCommand::redo(Document& document) {
+    if (!removed_) {
+        return notExecuted("redo");
+    }
+    auto removed = document.removeConfiguration(id_);
+    if (!removed) {
+        return std::unexpected(removed.error());
+    }
+    return {};
+}
+
+// --- SetActiveConfigurationCommand -----------------------------------------------
+
+std::string SetActiveConfigurationCommand::description() const {
+    return id_ ? std::format("Activate {}", *id_) : std::string{"Activate the base configuration"};
+}
+
+Result<void> SetActiveConfigurationCommand::execute(Document& document) {
+    const std::optional<ConfigurationId> previous = document.activeConfiguration();
+    if (auto set = document.setActiveConfiguration(id_); !set) {
+        return std::unexpected(set.error());
+    }
+    before_ = previous;
+    return {};
+}
+
+Result<void> SetActiveConfigurationCommand::undo(Document& document) {
+    if (!before_) {
+        return notExecuted("undo");
+    }
+    auto set = document.setActiveConfiguration(*before_);
+    if (!set) {
+        return std::unexpected(set.error());
+    }
+    return {};
+}
+
+Result<void> SetActiveConfigurationCommand::redo(Document& document) {
+    if (!before_) {
+        return notExecuted("redo");
+    }
+    auto set = document.setActiveConfiguration(id_);
+    if (!set) {
+        return std::unexpected(set.error());
+    }
+    return {};
+}
+
 } // namespace bettercad

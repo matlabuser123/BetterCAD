@@ -1,5 +1,6 @@
 #include <bettercad/core/document/Document.hpp>
 #include <bettercad/core/parameters/Expression.hpp>
+#include <bettercad/core/units/Format.hpp>
 
 #include <algorithm>
 #include <format>
@@ -45,6 +46,7 @@ Document Document::clone() const {
     copy.metadata_ = metadata_;
     copy.ids_ = ids_;
     copy.parameters_ = parameters_;
+    copy.configurations_ = configurations_;
     for (const auto& [id, object] : objects_) {
         copy.objects_.emplace(id, object->clone());
     }
@@ -134,6 +136,8 @@ Result<void> Document::insertParameter(Parameter parameter) {
 Result<Parameter> Document::removeParameter(ParameterId id) {
     auto removed = parameters_.remove(id);
     if (removed) {
+        // A configuration cannot override a parameter that is gone.
+        configurations_.forgetParameter(id);
         ++revision_;
     }
     return removed;
@@ -170,6 +174,13 @@ Result<bool> Document::setParameterDisplayUnit(ParameterId id, const UnitDescrip
 
 Result<bool> Document::setParameterExpression(ParameterId id,
                                               std::optional<std::string> expression) {
+    if (expression) {
+        // A driven parameter is never overridden; the override paths enforce
+        // that already, and so must this one (P12-PARAM-002).
+        if (auto free = requireNotOverridden(id); !free) {
+            return std::unexpected(free.error());
+        }
+    }
     const Parameter* parameter = parameters_.find(id);
     if (parameter != nullptr) {
         if (auto valid = checkExpressionSyntax(parameter->name(), expression); !valid) {
@@ -211,6 +222,13 @@ Result<bool> Document::restoreParameter(const Parameter& state) {
                          std::format("cannot restore {}: the stored state has a different dimension",
                                      state.id()));
     }
+    if (state.expression()) {
+        // The same invariant as setParameterExpression: a driven parameter
+        // is never overridden, however it came to be driven.
+        if (auto free = requireNotOverridden(state.id()); !free) {
+            return std::unexpected(free.error());
+        }
+    }
     if (auto valid = checkExpressionSyntax(state.name(), state.expression()); !valid) {
         return std::unexpected(valid.error());
     }
@@ -244,6 +262,167 @@ Result<bool> Document::restoreParameter(const Parameter& state) {
         return std::unexpected(r.error());
     }
     return changed;
+}
+
+// --- Configurations -----------------------------------------------------------
+
+Result<void> Document::requireNotOverridden(ParameterId id) const {
+    std::vector<std::string> names;
+    for (const Configuration& configuration : configurations_.all()) {
+        if (configuration.overrides(id)) {
+            names.push_back(std::format("'{}'", configuration.name()));
+        }
+    }
+    if (names.empty()) {
+        return {};
+    }
+    const Parameter* parameter = parameters_.find(id);
+    std::string list = names.front();
+    for (std::size_t i = 1; i < names.size(); ++i) {
+        list += (i + 1 == names.size() ? " and " : ", ") + names[i];
+    }
+    return makeError(ErrorCode::FailedPrecondition,
+                     std::format("parameter '{}' is overridden by configuration{} {}; clear the override{} "
+                                 "to drive it by an expression",
+                                 parameter != nullptr ? parameter->name() : std::format("{}", id),
+                                 names.size() == 1 ? "" : "s", list, names.size() == 1 ? "" : "s"));
+}
+
+Result<void> Document::requireOverridable(ParameterId id, const DimensionedValue& value) const {
+    const Parameter* parameter = parameters_.find(id);
+    if (parameter == nullptr) {
+        return makeError(ErrorCode::NotFound, std::format("{} does not exist", id));
+    }
+    if (auto free = requireNotDriven(id); !free) {
+        return std::unexpected(free.error());
+    }
+    if (parameter->dimension() != value.dimension) {
+        return makeError(ErrorCode::DimensionMismatch,
+                         std::format("parameter '{}' is {}, so a configuration cannot give it a value that is {}",
+                                     parameter->name(), describeDimension(parameter->dimension()),
+                                     describeDimension(value.dimension)));
+    }
+    return {};
+}
+
+Result<ConfigurationId> Document::createConfiguration(std::string name) {
+    // Reserve the ID only once the configuration is valid, so failed
+    // attempts do not consume IDs (as createParameter does).
+    const auto id = ConfigurationId::fromValue(ids_.lastValue() + 1);
+    auto configuration = Configuration::create(id, std::move(name));
+    if (!configuration) {
+        return std::unexpected(configuration.error());
+    }
+    if (auto added = configurations_.add(std::move(*configuration)); !added) {
+        return std::unexpected(added.error());
+    }
+    ids_.reserveThrough(id.value());
+    ++revision_;
+    return id;
+}
+
+Result<void> Document::insertConfiguration(Configuration configuration) {
+    // Every override must be one this document would have accepted, so a
+    // configuration that comes back from undo or from a file is as sound as
+    // one built here.
+    for (const auto& [parameter, value] : configuration.overrides()) {
+        if (auto ok = requireOverridable(parameter, value); !ok) {
+            return std::unexpected(ok.error());
+        }
+    }
+    if (auto added = configurations_.add(std::move(configuration)); !added) {
+        return std::unexpected(added.error());
+    }
+    ids_.reserveThrough(configurations_.highestIdValue());
+    ++revision_;
+    return {};
+}
+
+Result<Configuration> Document::removeConfiguration(ConfigurationId id) {
+    auto removed = configurations_.remove(id);
+    if (removed) {
+        ++revision_;
+    }
+    return removed;
+}
+
+Result<bool> Document::setConfigurationOverride(ConfigurationId configuration, ParameterId parameter,
+                                                const DimensionedValue& value) {
+    if (!configurations_.contains(configuration)) {
+        return makeError(ErrorCode::NotFound, std::format("{} does not exist", configuration));
+    }
+    if (auto ok = requireOverridable(parameter, value); !ok) {
+        return std::unexpected(ok.error());
+    }
+    return bump(configurations_.setOverride(configuration, parameter, value));
+}
+
+Result<bool> Document::clearConfigurationOverride(ConfigurationId configuration, ParameterId parameter) {
+    return bump(configurations_.clearOverride(configuration, parameter));
+}
+
+Result<bool> Document::renameConfiguration(ConfigurationId id, std::string name) {
+    return bump(configurations_.rename(id, std::move(name)));
+}
+
+Result<bool> Document::restoreConfiguration(const Configuration& state) {
+    if (!configurations_.contains(state.id())) {
+        return makeError(ErrorCode::NotFound, std::format("{} does not exist", state.id()));
+    }
+    for (const auto& [parameter, value] : state.overrides()) {
+        if (auto ok = requireOverridable(parameter, value); !ok) {
+            return std::unexpected(ok.error());
+        }
+    }
+    // Renaming is the only remaining step that can fail (the name may be
+    // taken), so it runs first and a failure leaves everything unchanged.
+    auto renamed = configurations_.rename(state.id(), state.name());
+    if (!renamed) {
+        return std::unexpected(renamed.error());
+    }
+    bool changed = *renamed;
+    const Configuration* current = configurations_.find(state.id());
+    std::vector<ParameterId> stale;
+    for (const auto& [parameter, value] : current->overrides()) {
+        if (!state.overrides().contains(parameter)) {
+            stale.push_back(parameter);
+        }
+    }
+    for (const ParameterId parameter : stale) {
+        auto cleared = configurations_.clearOverride(state.id(), parameter);
+        if (!cleared) {
+            return makeError(ErrorCode::Internal, cleared.error().message);
+        }
+        changed = changed || *cleared;
+    }
+    for (const auto& [parameter, value] : state.overrides()) {
+        auto set = configurations_.setOverride(state.id(), parameter, value);
+        if (!set) {
+            return makeError(ErrorCode::Internal, set.error().message);
+        }
+        changed = changed || *set;
+    }
+    if (changed) {
+        ++revision_;
+    }
+    return changed;
+}
+
+Result<bool> Document::setActiveConfiguration(std::optional<ConfigurationId> id) {
+    return bump(configurations_.setActive(id));
+}
+
+std::optional<DimensionedValue> Document::effectiveParameterValue(ParameterId id) const noexcept {
+    const Parameter* parameter = parameters_.find(id);
+    if (parameter == nullptr) {
+        return std::nullopt;
+    }
+    const ParameterOverrides& overrides = configurations_.activeOverrides();
+    const auto found = overrides.find(id);
+    if (found != overrides.end()) {
+        return found->second;
+    }
+    return DimensionedValue{parameter->dimension(), parameter->siValue()};
 }
 
 // --- Objects -----------------------------------------------------------------
@@ -438,6 +617,7 @@ std::string Document::uniqueName(std::string_view base) const {
 bool equivalent(const Document& a, const Document& b) {
     return a.id() == b.id() && a.name() == b.name() && a.metadata() == b.metadata() &&
            equivalent(a.parameters(), b.parameters()) &&
+           equivalent(a.configurations(), b.configurations()) &&
            std::ranges::equal(a.objects(), b.objects(),
                               [](const DocumentObject& x, const DocumentObject& y) {
                                   return equivalent(x, y);

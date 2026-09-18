@@ -221,6 +221,112 @@ Result<std::unique_ptr<DocumentObject>> objectFromJson(const Json& value, std::s
     return detail::parseError(detail::childPath(path, "type"), std::format("unknown object type '{}'", *type));
 }
 
+/// A configuration's overrides are keyed by parameter ID and hold SI values;
+/// the dimension and the display unit are the parameter's own, and loading
+/// checks the parameter is free and of that dimension (P12-PARAM-002).
+Json configurationsToJson(const ConfigurationTable& table) {
+    Json json = Json::object();
+    if (const Configuration* active = table.activeConfiguration()) {
+        json["active"] = active->name();
+    }
+    Json defined = Json::array();
+    for (const Configuration& configuration : table.all()) {
+        Json entry = Json::object();
+        entry["id"] = configuration.id().value();
+        entry["name"] = configuration.name();
+        Json overrides = Json::array();
+        for (const auto& [parameter, value] : configuration.overrides()) {
+            Json item = Json::object();
+            item["parameter"] = parameter.value();
+            item["si_value"] = value.siValue;
+            overrides.push_back(std::move(item));
+        }
+        entry["overrides"] = std::move(overrides);
+        defined.push_back(std::move(entry));
+    }
+    json["defined"] = std::move(defined);
+    return json;
+}
+
+/// Reads the configurations into @p document, which must already hold its
+/// parameters. The active configuration is named, not numbered, so that a
+/// file stays readable.
+Result<void> readConfigurations(const Json& value, Document& document) {
+    if (auto object = detail::requireObject(value, "configurations", {"active", "defined"}); !object) {
+        return std::unexpected(object.error());
+    }
+    auto definedField = detail::requireArray(value, "defined", "configurations");
+    if (!definedField) {
+        return std::unexpected(definedField.error());
+    }
+    const Json& defined = **definedField;
+    for (std::size_t i = 0; i < defined.size(); ++i) {
+        const std::string path = detail::indexPath("configurations.defined", i);
+        const Json& entry = defined[i];
+        if (auto object = detail::requireObject(entry, path, {"id", "name", "overrides"}); !object) {
+            return std::unexpected(object.error());
+        }
+        auto id = detail::readId(entry, "id", path);
+        auto name = detail::readString(entry, "name", path);
+        if (!id || !name) {
+            return std::unexpected(!id ? id.error() : name.error());
+        }
+        if (*id == 0) {
+            return detail::parseError(detail::childPath(path, "id"), "a configuration needs a valid ID");
+        }
+        auto configuration = Configuration::create(ConfigurationId::fromValue(*id), std::move(*name));
+        if (!configuration) {
+            return detail::atPath(path, configuration.error());
+        }
+        auto overridesField = detail::requireArray(entry, "overrides", path);
+        if (!overridesField) {
+            return std::unexpected(overridesField.error());
+        }
+        const Json& overrides = **overridesField;
+        for (std::size_t j = 0; j < overrides.size(); ++j) {
+            const std::string itemPath = detail::indexPath(detail::childPath(path, "overrides"), j);
+            const Json& item = overrides[j];
+            if (auto object = detail::requireObject(item, itemPath, {"parameter", "si_value"}); !object) {
+                return std::unexpected(object.error());
+            }
+            auto parameter = detail::readId(item, "parameter", itemPath);
+            auto siValue = detail::readNumber(item, "si_value", itemPath);
+            if (!parameter || !siValue) {
+                return std::unexpected(!parameter ? parameter.error() : siValue.error());
+            }
+            const ParameterId target = ParameterId::fromValue(*parameter);
+            const Parameter* found = document.parameters().find(target);
+            if (found == nullptr) {
+                return detail::parseError(detail::childPath(itemPath, "parameter"),
+                                          std::format("no parameter with ID {}", *parameter));
+            }
+            auto set = configuration->setOverride(target, DimensionedValue{found->dimension(), *siValue});
+            if (!set) {
+                return detail::atPath(itemPath, set.error());
+            }
+        }
+        if (auto inserted = document.insertConfiguration(std::move(*configuration)); !inserted) {
+            return detail::atPath(path, inserted.error());
+        }
+    }
+
+    auto active = detail::readOptionalString(value, "active", "configurations");
+    if (!active) {
+        return std::unexpected(active.error());
+    }
+    if (*active) {
+        const Configuration* found = document.configurations().findByName(**active);
+        if (found == nullptr) {
+            return detail::parseError("configurations.active",
+                                      std::format("no configuration named '{}'", **active));
+        }
+        if (auto set = document.setActiveConfiguration(found->id()); !set) {
+            return detail::atPath("configurations.active", set.error());
+        }
+    }
+    return {};
+}
+
 } // namespace
 
 Result<std::string> documentToJson(const Document& document) {
@@ -245,6 +351,11 @@ Result<std::string> documentToJson(const Document& document) {
     root["document"] = std::move(header);
 
     root["parameters"] = detail::parameterTableToJson(document.parameters());
+    // Written only when there are configurations, so a document from before
+    // P12-PARAM-002 is written back exactly as it was.
+    if (!document.configurations().empty()) {
+        root["configurations"] = configurationsToJson(document.configurations());
+    }
     Json objects = Json::array();
     for (const DocumentObject& object : document.objects()) {
         auto json = objectToJson(object);
@@ -263,8 +374,8 @@ Result<Document> documentFromJson(std::string_view text) {
         return std::unexpected(parsed.error());
     }
     const Json& root = *parsed;
-    if (auto object = detail::requireObject(root, "",
-                                            {"format", "version", "units", "document", "parameters", "objects"});
+    if (auto object = detail::requireObject(
+            root, "", {"format", "version", "units", "document", "parameters", "objects", "configurations"});
         !object) {
         return std::unexpected(object.error());
     }
@@ -359,6 +470,14 @@ Result<Document> documentFromJson(std::string_view text) {
             return detail::atPath(detail::indexPath("parameters", index), inserted.error());
         }
         ++index;
+    }
+    // Configurations override parameters, so they come after them. Absent is
+    // the base configuration, which is what every file written before
+    // P12-PARAM-002 means.
+    if (const auto configurations = root.find("configurations"); configurations != root.end()) {
+        if (auto read = readConfigurations(*configurations, document); !read) {
+            return std::unexpected(read.error());
+        }
     }
     auto objectsField = detail::requireArray(root, "objects", "");
     if (!objectsField) {

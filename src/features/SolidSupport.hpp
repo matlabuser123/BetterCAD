@@ -92,13 +92,21 @@ using PathEdgeOf = std::function<std::optional<PathEdge>(std::size_t pathSegment
 /// Value of a driving parameter as quantity Q: NotFound if it does not
 /// exist, DimensionMismatch if it is not a Q. @p role names it in messages,
 /// e.g. "depth parameter".
+///
+/// This is the value in force under the document's active configuration, not
+/// the parameter's base value, so every feature follows a configuration
+/// without knowing that configurations exist (P12-PARAM-002).
 template <QuantityType Q>
 [[nodiscard]] Result<Q> drivingValue(const Document& document, ParameterId parameter, std::string_view role) {
     const Parameter* found = document.parameters().find(parameter);
     if (found == nullptr) {
         return makeError(ErrorCode::NotFound, std::format("{} {} does not exist", role, parameter));
     }
-    return found->as<Q>();
+    if (Q::dimension != found->dimension()) {
+        // The parameter's own message names the dimensions.
+        return found->as<Q>();
+    }
+    return Q::fromSi(document.effectiveParameterValue(parameter)->siValue);
 }
 
 } // namespace bettercad::features::detail

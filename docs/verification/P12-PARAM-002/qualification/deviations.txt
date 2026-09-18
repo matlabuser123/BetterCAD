@@ -1,0 +1,35 @@
+Largest deviations of the P12-PARAM-002 tests, from the Release build of the qualified tree.
+Produced by: python deviations.py --worst 3 <values file> Configuration (deviations.py is in this
+directory; the values file is reference-values-release.txt).
+
+file                             kind  tolerance  checks    largest
+ConfigurationFeatureTests.cpp    abs     1.0e-09      43   1.42e-14
+ConfigurationFeatureTests.cpp    rel     1.0e-12      52   5.68e-16
+ConfigurationFeatureTests.cpp    rel     1.0e-09       4   1.86e-16
+ConfigurationFileTests.cpp       rel     1.0e-12       4   3.41e-16
+ConfigurationTests.cpp           rel     1.0e-12       9   1.16e-16
+
+ConfigurationFeatureTests.cpp abs 1.0e-09: largest 3
+  1.421e-14  measured 80.00000000000001 expected 80.0  Configurations_BuildTheWholeFamilyFromOneParameter / Medium  ; width 80 mm, expected 64000 mm^3
+  1.421e-14  measured 79.99999999999999 expected 80.0  Configurations_BuildTheWholeFamilyFromOneParameter / Large  ; width 160 mm, expected 512000 mm^3
+  1.421e-14  measured 80.00000000000001 expected 80.0  Configurations_BuildTheWholeFamilyFromOneParameter / Large  ; width 160 mm, expected 512000 mm^3
+
+ConfigurationFeatureTests.cpp rel 1.0e-12: largest 3
+  5.684e-16  measured 8000.000000000005 expected 8000.0  Configurations_SwitchingThereAndBackRestoresTheSameModel  first V=7.9999999999999996e-06 A=0.0028 c=(0.020000000000000007, 0.0099999999999999881, 0.0050000000000000001) back V=7.9999999999999996e-06 A=0.0028000000000000008 c=(0.020000000000000004, 0.0099999999999999863, 0.0050000000000000001); i := 0; trip.volume := 0.000008; first.volume := 0.000008
+  5.684e-16  measured 8000.000000000005 expected 8000.0  Configurations_SwitchingThereAndBackRestoresTheSameModel  first V=7.9999999999999996e-06 A=0.0028 c=(0.020000000000000007, 0.0099999999999999881, 0.0050000000000000001) back V=7.9999999999999996e-06 A=0.0028000000000000008 c=(0.020000000000000004, 0.0099999999999999863, 0.0050000000000000001); i := 1; trip.volume := 0.000008; first.volume := 0.000008
+  5.684e-16  measured 8000.000000000005 expected 8000.0  Configurations_SwitchingThereAndBackRestoresTheSameModel  first V=7.9999999999999996e-06 A=0.0028 c=(0.020000000000000007, 0.0099999999999999881, 0.0050000000000000001) back V=7.9999999999999996e-06 A=0.0028000000000000008 c=(0.020000000000000004, 0.0099999999999999863, 0.0050000000000000001); i := 3; trip.volume := 0.000008; first.volume := 0.000008
+
+ConfigurationFeatureTests.cpp rel 1.0e-09: largest 3
+  1.856e-16  measured 313566.0182454482 expected 313566.0182454481  ConfigurationFamily_SaveLoadKeepsTheWholeFamily  
+  1.856e-16  measured 4899.469035085128 expected 4899.469035085127  ConfigurationFamily_BuildsARealBracketAtEverySize / Small  ; width 50 mm, expected 4899.47
+  1.856e-16  measured 313566.0182454482 expected 313566.0182454481  ConfigurationFamily_BuildsARealBracketAtEverySize / Large  ; width 200 mm, expected 313566
+
+ConfigurationFileTests.cpp rel 1.0e-12: largest 3
+  3.411e-16  measured 512000.0000000002 expected 512000.0  Configurations_SaveLoadRegeneratesTheSameFamily / active: Small  
+  3.411e-16  measured 512000.0000000002 expected 512000.0  Configurations_SaveLoadRegeneratesTheSameFamily / active: Large  
+  2.328e-16  measured 125000.00000000003 expected 125000.0  Configurations_TheBaseConfigurationSavesAndLoads  
+
+ConfigurationTests.cpp rel 1.0e-12: largest 3
+  1.156e-16  measured 0.12000000000000001 expected 0.12  Configuration_ChainsOfEquationsFollowTheOverride  
+  0.000e+00  measured 0.05 expected 0.05  Configuration_DrivesTheEquationsThatFollowFromIt  
+  0.000e+00  measured 0.12 expected 0.12  Configuration_DrivesTheEquationsThatFollowFromIt  

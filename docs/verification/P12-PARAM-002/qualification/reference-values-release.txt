@@ -1,0 +1,718 @@
+Measured values of the P12-PARAM-002 tests (Release build of the qualified tree). Produced by: build/release/bin/bettercad_tests.exe "[configurations][p12]" -s --reporter xml --rng-seed 1, filtered by values.py (kept in this directory): every passed CHECK_THAT and every passed CHECK whose expansion shows values, with the test case, section and INFO/CAPTURE context. Each entry: file:line, the assertion, then Catch2's expansion (values printed exactly). REQUIRE lines, repeats of an identical entry within a test case and expansions over 1000 characters (whole-file text) are left out.
+
+
+== Configurations_DerivedParametersAreNeverDuplicated
+ConfigurationFeatureTests.cpp:142  CHECK( configuration->size() == 1 )
+        => 1 == 1 with message: configuration Small
+ConfigurationFeatureTests.cpp:144  CHECK_FALSE( !(configuration->overrides(m.height)) )
+        => !false with message: configuration Small
+ConfigurationFeatureTests.cpp:145  CHECK_FALSE( !(configuration->overrides(m.depth)) )
+        => !false with message: configuration Small
+ConfigurationFeatureTests.cpp:142  CHECK( configuration->size() == 1 )
+        => 1 == 1 with message: configuration Medium
+ConfigurationFeatureTests.cpp:144  CHECK_FALSE( !(configuration->overrides(m.height)) )
+        => !false with message: configuration Medium
+ConfigurationFeatureTests.cpp:145  CHECK_FALSE( !(configuration->overrides(m.depth)) )
+        => !false with message: configuration Medium
+ConfigurationFeatureTests.cpp:142  CHECK( configuration->size() == 1 )
+        => 1 == 1 with message: configuration Large
+ConfigurationFeatureTests.cpp:144  CHECK_FALSE( !(configuration->overrides(m.height)) )
+        => !false with message: configuration Large
+ConfigurationFeatureTests.cpp:145  CHECK_FALSE( !(configuration->overrides(m.depth)) )
+        => !false with message: configuration Large
+ConfigurationFeatureTests.cpp:153  CHECK_THAT( m.doc.parameters().find(m.height)->displayValue(), WithinRel(80.0, kRel) )
+        => 80.0 and 80.0 are within 1e-10% of each other
+ConfigurationFeatureTests.cpp:154  CHECK_THAT( m.doc.parameters().find(m.depth)->displayValue(), WithinRel(40.0, kRel) )
+        => 40.0 and 40.0 are within 1e-10% of each other
+
+== Configurations_TheBaseValuesAreNeverTouched
+ConfigurationFeatureTests.cpp:405  CHECK( m.doc.parameters().find(m.width)->siValue() == 0.1 )
+        => 0.10000000000000001 == 0.10000000000000001
+ConfigurationFeatureTests.cpp:410  CHECK( m.doc.parameters().find(m.width)->siValue() == 0.12 )
+        => 0.12 == 0.12
+ConfigurationFeatureTests.cpp:411  CHECK( m.doc.effectiveParameterValue(m.width)->siValue == 0.04 )
+        => 0.04 == 0.04
+ConfigurationFeatureTests.cpp:413  CHECK( m.doc.effectiveParameterValue(m.width)->siValue == 0.12 )
+        => 0.12 == 0.12
+
+== Configurations_FilesWrittenBeforeThisMilestoneLoadUnchanged
+ConfigurationFileTests.cpp:158  CHECK_THAT( *text, !ContainsSubstring("configurations") )
+        => "{ "format": "bettercad-document", "version": 1, "units": "SI", "document": { "id": "0d6aaab6-5c0c-406c-821a-f3b02b64f5f9", "name": "Plain", "metadata": { "description": "", "author": "", "properties": {} }, "last_allocated_id": 2 }, "parameters": [ { "id": 1, "name": "width", "si_value": 0.1, "unit": "mm", "dimension": { "length": 1 } }, { "id": 2, "name": "height", "si_value": 0.001, "unit": "mm", "dimension": { "length": 1 }, "expression": "width / 2" } ], "objects": [] } " not contains: "configurations"
+ConfigurationFileTests.cpp:163  CHECK( loaded->activeConfiguration() == std::nullopt )
+        => {?} == {?}
+ConfigurationFileTests.cpp:166  CHECK( bits(loaded->effectiveParameterValue(width)->siValue) == bits(0.1) )
+        => 4591870180066957722 (0x3fb999999999999a) == 4591870180066957722 (0x3fb999999999999a)
+ConfigurationFileTests.cpp:169  CHECK( *again == *text )
+        => "{ "format": "bettercad-document", "version": 1, "units": "SI", "document": { "id": "0d6aaab6-5c0c-406c-821a-f3b02b64f5f9", "name": "Plain", "metadata": { "description": "", "author": "", "properties": {} }, "last_allocated_id": 2 }, "parameters": [ { "id": 1, "name": "width", "si_value": 0.1, "unit": "mm", "dimension": { "length": 1 } }, { "id": 2, "name": "height", "si_value": 0.001, "unit": "mm", "dimension": { "length": 1 }, "expression": "width / 2" } ], "objects": [] } " == "{ "format": "bettercad-document", "version": 1, "units": "SI", "document": { "id": "0d6aaab6-5c0c-406c-821a-f3b02b64f5f9", "name": "Plain", "metadata": { "description": "", "author": "", "properties": {} }, "last_allocated_id": 2 }, "parameters": [ { "id": 1, "name": "width", "si_value": 0.1, "unit": "mm", "dimension": { "length": 1 } }, { "id": 2, "name": "height", "si_value": 0.001, "unit": "mm", "dimension": { "length": 1 }, "expression": "width / 2" } ], "objects": [] } "
+
+== Configurations_SaveLoadRegeneratesTheSameFamily / active: Small
+ConfigurationFileTests.cpp:81  CHECK( loaded->configurations().size() == 3 )
+        => 3 == 3
+ConfigurationFileTests.cpp:83  CHECK( loaded->configurations().find(*loaded->activeConfiguration())->name() == name )
+        => "Small" == "Small"
+ConfigurationFileTests.cpp:84  CHECK( bits(loaded->effectiveParameterValue(m.width)->siValue) == bits(expected.effectiveParameterValue(m.width)->siValue) )
+        => 4585925428558828667 (0x3fa47ae147ae147b) == 4585925428558828667 (0x3fa47ae147ae147b)
+ConfigurationFileTests.cpp:89  CHECK( bits(volumeMm3(after, m.box)) == bits(volume) )
+        => 4665518107723300864 (0x40bf400000000000) == 4665518107723300864 (0x40bf400000000000)
+ConfigurationFileTests.cpp:95  CHECK_THAT( volumeMm3(after, m.box), WithinRel(BoxFamilyModel::expectedVolumeMm3(160.0), kRel) )
+        => 512000.00000000017462298 and 512000.0 are within 1e-10% of each other
+
+== Configurations_SaveLoadRegeneratesTheSameFamily / active: Medium
+ConfigurationFileTests.cpp:81  CHECK( loaded->configurations().size() == 3 )
+        => 3 == 3
+ConfigurationFileTests.cpp:83  CHECK( loaded->configurations().find(*loaded->activeConfiguration())->name() == name )
+        => "Medium" == "Medium"
+ConfigurationFileTests.cpp:84  CHECK( bits(loaded->effectiveParameterValue(m.width)->siValue) == bits(expected.effectiveParameterValue(m.width)->siValue) )
+        => 4590429028186199163 (0x3fb47ae147ae147b) == 4590429028186199163 (0x3fb47ae147ae147b)
+ConfigurationFileTests.cpp:89  CHECK( bits(volumeMm3(after, m.box)) == bits(volume) )
+        => 4679028906605412355 (0x40ef400000000003) == 4679028906605412355 (0x40ef400000000003)
+ConfigurationFileTests.cpp:95  CHECK_THAT( volumeMm3(after, m.box), WithinRel(BoxFamilyModel::expectedVolumeMm3(160.0), kRel) )
+        => 512000.0 and 512000.0 are within 1e-10% of each other
+
+== Configurations_SaveLoadRegeneratesTheSameFamily / active: Large
+ConfigurationFileTests.cpp:81  CHECK( loaded->configurations().size() == 3 )
+        => 3 == 3
+ConfigurationFileTests.cpp:83  CHECK( loaded->configurations().find(*loaded->activeConfiguration())->name() == name )
+        => "Large" == "Large"
+ConfigurationFileTests.cpp:84  CHECK( bits(loaded->effectiveParameterValue(m.width)->siValue) == bits(expected.effectiveParameterValue(m.width)->siValue) )
+        => 4594932627813569659 (0x3fc47ae147ae147b) == 4594932627813569659 (0x3fc47ae147ae147b)
+ConfigurationFileTests.cpp:89  CHECK( bits(volumeMm3(after, m.box)) == bits(volume) )
+        => 4692539705487523843 (0x411f400000000003) == 4692539705487523843 (0x411f400000000003)
+ConfigurationFileTests.cpp:95  CHECK_THAT( volumeMm3(after, m.box), WithinRel(BoxFamilyModel::expectedVolumeMm3(160.0), kRel) )
+        => 512000.00000000017462298 and 512000.0 are within 1e-10% of each other
+
+== Configurations_RegenerationIsDeterministic
+ConfigurationFeatureTests.cpp:267  CHECK( fingerprint(regenerator, m->box) == once )
+        => V=6.4000000000000024e-05 A=0.0112 c=(0.040000000000000001, 0.019999999999999993, 0.01) == V=6.4000000000000024e-05 A=0.0112 c=(0.040000000000000001, 0.019999999999999993, 0.01)
+ConfigurationFeatureTests.cpp:270  CHECK( build(&BoxFamilyModel::medium) == build(&BoxFamilyModel::medium) )
+        => V=6.4000000000000024e-05 A=0.0112 c=(0.040000000000000001, 0.019999999999999993, 0.01) == V=6.4000000000000024e-05 A=0.0112 c=(0.040000000000000001, 0.019999999999999993, 0.01)
+ConfigurationFeatureTests.cpp:267  CHECK( fingerprint(regenerator, m->box) == once )
+        => V=0.00051200000000000019 A=0.0448 c=(0.079999999999999988, 0.040000000000000008, 0.019999999999999997) == V=0.00051200000000000019 A=0.0448 c=(0.079999999999999988, 0.040000000000000008, 0.019999999999999997)
+ConfigurationFeatureTests.cpp:267  CHECK( fingerprint(regenerator, m->box) == once )
+        => V=7.9999999999999996e-06 A=0.0028 c=(0.020000000000000007, 0.0099999999999999881, 0.0050000000000000001) == V=7.9999999999999996e-06 A=0.0028 c=(0.020000000000000007, 0.0099999999999999881, 0.0050000000000000001)
+ConfigurationFeatureTests.cpp:271  CHECK_FALSE( !(build(&BoxFamilyModel::small) == build(&BoxFamilyModel::large)) )
+        => !(V=7.9999999999999996e-06 A=0.0028 c=(0.020000000000000007, 0.0099999999999999881, 0.0050000000000000001) == V=0.00051200000000000019 A=0.0448 c=(0.079999999999999988, 0.040000000000000008, 0.019999999999999997))
+
+== Configurations_BuildTheWholeFamilyFromOneParameter / the base configuration
+ConfigurationFeatureTests.cpp:92  CHECK_THAT( volumeMm3(regenerator, m.box), WithinRel(expected, kRel) )
+        => 125000.00000000002910383 and 125000.0 are within 1e-10% of each other with message: ; width 100 mm, expected 125000 mm^3
+ConfigurationFeatureTests.cpp:98  CHECK_THAT( properties.centerOfMass.x.in(units::mm), WithinAbs(centroid[0], kPositionToleranceMm) )
+        => 49.99999999999999289 is within 0.000000001 of 50.0 with message: ; width 100 mm, expected 125000 mm^3
+ConfigurationFeatureTests.cpp:99  CHECK_THAT( properties.centerOfMass.y.in(units::mm), WithinAbs(centroid[1], kPositionToleranceMm) )
+        => 24.99999999999999645 is within 0.000000001 of 25.0 with message: ; width 100 mm, expected 125000 mm^3
+ConfigurationFeatureTests.cpp:100  CHECK_THAT( properties.centerOfMass.z.in(units::mm), WithinAbs(centroid[2], kPositionToleranceMm) )
+        => 12.49999999999999822 is within 0.000000001 of 12.5 with message: ; width 100 mm, expected 125000 mm^3
+ConfigurationFeatureTests.cpp:104  CHECK_THAT( box->max.x.in(units::mm), WithinAbs(widthMm, kPositionToleranceMm) )
+        => 100.0 is within 0.000000001 of 100.0 with message: ; width 100 mm, expected 125000 mm^3
+ConfigurationFeatureTests.cpp:105  CHECK_THAT( box->max.y.in(units::mm), WithinAbs(widthMm / 2.0, kPositionToleranceMm) )
+        => 50.0 is within 0.000000001 of 50.0 with message: ; width 100 mm, expected 125000 mm^3
+ConfigurationFeatureTests.cpp:106  CHECK_THAT( box->max.z.in(units::mm), WithinAbs(widthMm / 4.0, kPositionToleranceMm) )
+        => 25.0 is within 0.000000001 of 25.0 with message: ; width 100 mm, expected 125000 mm^3
+
+== Configurations_BuildTheWholeFamilyFromOneParameter / Small
+ConfigurationFeatureTests.cpp:92  CHECK_THAT( volumeMm3(regenerator, m.box), WithinRel(expected, kRel) )
+        => 8000.0 and 8000.0 are within 1e-10% of each other with message: ; width 40 mm, expected 8000 mm^3
+ConfigurationFeatureTests.cpp:98  CHECK_THAT( properties.centerOfMass.x.in(units::mm), WithinAbs(centroid[0], kPositionToleranceMm) )
+        => 20.00000000000000711 is within 0.000000001 of 20.0 with message: ; width 40 mm, expected 8000 mm^3
+ConfigurationFeatureTests.cpp:99  CHECK_THAT( properties.centerOfMass.y.in(units::mm), WithinAbs(centroid[1], kPositionToleranceMm) )
+        => 9.99999999999998757 is within 0.000000001 of 10.0 with message: ; width 40 mm, expected 8000 mm^3
+ConfigurationFeatureTests.cpp:100  CHECK_THAT( properties.centerOfMass.z.in(units::mm), WithinAbs(centroid[2], kPositionToleranceMm) )
+        => 5.0 is within 0.000000001 of 5.0 with message: ; width 40 mm, expected 8000 mm^3
+ConfigurationFeatureTests.cpp:104  CHECK_THAT( box->max.x.in(units::mm), WithinAbs(widthMm, kPositionToleranceMm) )
+        => 40.00000000000000711 is within 0.000000001 of 40.0 with message: ; width 40 mm, expected 8000 mm^3
+ConfigurationFeatureTests.cpp:105  CHECK_THAT( box->max.y.in(units::mm), WithinAbs(widthMm / 2.0, kPositionToleranceMm) )
+        => 19.99999999999998934 is within 0.000000001 of 20.0 with message: ; width 40 mm, expected 8000 mm^3
+ConfigurationFeatureTests.cpp:106  CHECK_THAT( box->max.z.in(units::mm), WithinAbs(widthMm / 4.0, kPositionToleranceMm) )
+        => 10.0 is within 0.000000001 of 10.0 with message: ; width 40 mm, expected 8000 mm^3
+
+== Configurations_BuildTheWholeFamilyFromOneParameter / Medium
+ConfigurationFeatureTests.cpp:92  CHECK_THAT( volumeMm3(regenerator, m.box), WithinRel(expected, kRel) )
+        => 64000.00000000002182787 and 64000.0 are within 1e-10% of each other with message: ; width 80 mm, expected 64000 mm^3
+ConfigurationFeatureTests.cpp:98  CHECK_THAT( properties.centerOfMass.x.in(units::mm), WithinAbs(centroid[0], kPositionToleranceMm) )
+        => 40.0 is within 0.000000001 of 40.0 with message: ; width 80 mm, expected 64000 mm^3
+ConfigurationFeatureTests.cpp:99  CHECK_THAT( properties.centerOfMass.y.in(units::mm), WithinAbs(centroid[1], kPositionToleranceMm) )
+        => 19.99999999999999289 is within 0.000000001 of 20.0 with message: ; width 80 mm, expected 64000 mm^3
+ConfigurationFeatureTests.cpp:100  CHECK_THAT( properties.centerOfMass.z.in(units::mm), WithinAbs(centroid[2], kPositionToleranceMm) )
+        => 10.0 is within 0.000000001 of 10.0 with message: ; width 80 mm, expected 64000 mm^3
+ConfigurationFeatureTests.cpp:104  CHECK_THAT( box->max.x.in(units::mm), WithinAbs(widthMm, kPositionToleranceMm) )
+        => 80.00000000000001421 is within 0.000000001 of 80.0 with message: ; width 80 mm, expected 64000 mm^3
+ConfigurationFeatureTests.cpp:105  CHECK_THAT( box->max.y.in(units::mm), WithinAbs(widthMm / 2.0, kPositionToleranceMm) )
+        => 40.0 is within 0.000000001 of 40.0 with message: ; width 80 mm, expected 64000 mm^3
+ConfigurationFeatureTests.cpp:106  CHECK_THAT( box->max.z.in(units::mm), WithinAbs(widthMm / 4.0, kPositionToleranceMm) )
+        => 20.0 is within 0.000000001 of 20.0 with message: ; width 80 mm, expected 64000 mm^3
+
+== Configurations_BuildTheWholeFamilyFromOneParameter / Large
+ConfigurationFeatureTests.cpp:92  CHECK_THAT( volumeMm3(regenerator, m.box), WithinRel(expected, kRel) )
+        => 512000.00000000017462298 and 512000.0 are within 1e-10% of each other with message: ; width 160 mm, expected 512000 mm^3
+ConfigurationFeatureTests.cpp:98  CHECK_THAT( properties.centerOfMass.x.in(units::mm), WithinAbs(centroid[0], kPositionToleranceMm) )
+        => 79.99999999999998579 is within 0.000000001 of 80.0 with message: ; width 160 mm, expected 512000 mm^3
+ConfigurationFeatureTests.cpp:99  CHECK_THAT( properties.centerOfMass.y.in(units::mm), WithinAbs(centroid[1], kPositionToleranceMm) )
+        => 40.00000000000000711 is within 0.000000001 of 40.0 with message: ; width 160 mm, expected 512000 mm^3
+ConfigurationFeatureTests.cpp:100  CHECK_THAT( properties.centerOfMass.z.in(units::mm), WithinAbs(centroid[2], kPositionToleranceMm) )
+        => 19.99999999999999645 is within 0.000000001 of 20.0 with message: ; width 160 mm, expected 512000 mm^3
+ConfigurationFeatureTests.cpp:104  CHECK_THAT( box->max.x.in(units::mm), WithinAbs(widthMm, kPositionToleranceMm) )
+        => 160.0 is within 0.000000001 of 160.0 with message: ; width 160 mm, expected 512000 mm^3
+ConfigurationFeatureTests.cpp:105  CHECK_THAT( box->max.y.in(units::mm), WithinAbs(widthMm / 2.0, kPositionToleranceMm) )
+        => 80.00000000000001421 is within 0.000000001 of 80.0 with message: ; width 160 mm, expected 512000 mm^3
+ConfigurationFeatureTests.cpp:106  CHECK_THAT( box->max.z.in(units::mm), WithinAbs(widthMm / 4.0, kPositionToleranceMm) )
+        => 40.0 is within 0.000000001 of 40.0 with message: ; width 160 mm, expected 512000 mm^3
+
+== Configurations_ADrivenParameterIsNeverAlsoOverridden
+ConfigurationFeatureTests.cpp:591  CHECK( driven.error().code == ErrorCode::FailedPrecondition )
+        => 5 == 5
+ConfigurationFeatureTests.cpp:592  CHECK( driven.error().message == "parameter 'width' is overridden by configurations 'Small', 'Medium' and 'Large'; clear the " "overrides to drive it by an expression" )
+        => "parameter 'width' is overridden by configurations 'Small', 'Medium' and 'Large'; clear the overrides to drive it by an expression" == "parameter 'width' is overridden by configurations 'Small', 'Medium' and 'Large'; clear the overrides to drive it by an expression"
+ConfigurationFeatureTests.cpp:595  CHECK_FALSE( !(m.doc.parameters().find(m.width)->expression().has_value()) )
+        => !false
+ConfigurationFeatureTests.cpp:607  CHECK( overridden.error().code == ErrorCode::FailedPrecondition )
+        => 5 == 5
+
+== Configuration_TableKeepsNamesUniqueAndIdsStable
+ConfigurationTests.cpp:199  CHECK( other != m.big )
+        => configuration:5 != configuration:4
+ConfigurationTests.cpp:200  CHECK( m.doc.configurations().findByName("Big")->id() == m.big )
+        => configuration:4 == configuration:4
+ConfigurationTests.cpp:201  CHECK( m.doc.configurations().findByName("Missing") == nullptr )
+        => nullptr == nullptr
+ConfigurationTests.cpp:204  CHECK_FALSE( !(m.doc.renameConfiguration(other, "Big").has_value()) )
+        => !false
+ConfigurationTests.cpp:206  CHECK( m.doc.configurations().findByName("Bigger")->id() == other )
+        => configuration:5 == configuration:5
+ConfigurationTests.cpp:208  CHECK( m.doc.renameConfiguration(other, "Bigger").value() == false )
+        => false == false
+ConfigurationTests.cpp:213  CHECK( m.doc.activeConfiguration() == std::nullopt )
+        => {?} == {?}
+ConfigurationTests.cpp:214  CHECK( m.doc.configurations().size() == 1 )
+        => 1 == 1
+
+== Configurations_ACycleIsStillRefusedWhileAConfigurationIsActive
+ConfigurationFeatureTests.cpp:730  CHECK_FALSE( !(report.succeeded()) )
+        => !false
+ConfigurationFeatureTests.cpp:732  CHECK( report.cycles.front() == std::vector<ParameterId>{a, b, c} )
+        => { parameter:2, parameter:3, parameter:4 } == { parameter:2, parameter:3, parameter:4 }
+ConfigurationFeatureTests.cpp:736  CHECK( doc.parameters().find(id)->siValue() == 0.001 )
+        => 0.001 == 0.001
+ConfigurationFeatureTests.cpp:739  CHECK( doc.effectiveParameterValue(seed)->siValue == 0.04 )
+        => 0.04 == 0.04
+ConfigurationFeatureTests.cpp:745  CHECK_THAT( doc.parameters().find(a)->siValue(), WithinRel(0.04, kRel) )
+        => 0.04 and 0.04 are within 1e-10% of each other
+ConfigurationFeatureTests.cpp:746  CHECK_THAT( doc.parameters().find(b)->siValue(), WithinRel(0.08, kRel) )
+        => 0.08 and 0.08 are within 1e-10% of each other
+ConfigurationFeatureTests.cpp:747  CHECK_THAT( doc.parameters().find(c)->siValue(), WithinRel(0.04, kRel) )
+        => 0.04 and 0.04 are within 1e-10% of each other
+
+== Configurations_UndoAndRedoOfEveryOperation / create
+ConfigurationFeatureTests.cpp:304  CHECK( m.doc.configurations().size() == before + 1 )
+        => 4 == 4
+ConfigurationFeatureTests.cpp:307  CHECK( m.doc.configurations().size() == before )
+        => 3 == 3
+ConfigurationFeatureTests.cpp:309  CHECK( m.doc.configurations().size() == before + 1 )
+        => 4 == 4
+ConfigurationFeatureTests.cpp:311  CHECK( m.doc.configurations().find(created) != nullptr )
+        => 0x000002ab21069218 != nullptr
+
+== Configurations_UndoAndRedoOfEveryOperation / modify an override
+ConfigurationFeatureTests.cpp:319  CHECK_THAT( volumeMm3(regenerator, m.box), WithinRel(BoxFamilyModel::expectedVolumeMm3(45.0), kRel) )
+        => 11390.62499999999818101 and 11390.625 are within 1e-10% of each other
+ConfigurationFeatureTests.cpp:326  CHECK_THAT( volumeMm3(regenerator, m.box), WithinRel(BoxFamilyModel::expectedVolumeMm3(100.0), kRel) )
+        => 125000.0 and 125000.0 are within 1e-10% of each other
+ConfigurationFeatureTests.cpp:332  CHECK_THAT( volumeMm3(regenerator, m.box), WithinRel(BoxFamilyModel::expectedVolumeMm3(45.0), kRel) )
+        => 11390.62499999999818101 and 11390.625 are within 1e-10% of each other
+
+== Configurations_UndoAndRedoOfEveryOperation / delete
+ConfigurationFeatureTests.cpp:338  CHECK( m.doc.configurations().size() == before - 1 )
+        => 2 == 2
+ConfigurationFeatureTests.cpp:340  CHECK( m.doc.activeConfiguration() == std::nullopt )
+        => {?} == {?}
+ConfigurationFeatureTests.cpp:343  CHECK( m.doc.configurations().size() == before )
+        => 3 == 3
+ConfigurationFeatureTests.cpp:345  CHECK( m.doc.activeConfiguration() == m.medium )
+        => {?} == configuration:7
+ConfigurationFeatureTests.cpp:346  CHECK( m.doc.effectiveParameterValue(m.width)->siValue == 0.08 )
+        => 0.08 == 0.08
+ConfigurationFeatureTests.cpp:349  CHECK( m.doc.configurations().size() == before - 1 )
+        => 2 == 2
+ConfigurationFeatureTests.cpp:350  CHECK( m.doc.activeConfiguration() == std::nullopt )
+        => {?} == {?}
+
+== Configurations_UndoAndRedoOfEveryOperation / switch
+ConfigurationFeatureTests.cpp:355  CHECK( m.doc.activeConfiguration() == m.large )
+        => {?} == configuration:8
+ConfigurationFeatureTests.cpp:357  CHECK( m.doc.activeConfiguration() == m.small )
+        => {?} == configuration:6
+ConfigurationFeatureTests.cpp:359  CHECK( m.doc.activeConfiguration() == std::nullopt )
+        => {?} == {?}
+ConfigurationFeatureTests.cpp:361  CHECK( m.doc.activeConfiguration() == m.small )
+        => {?} == configuration:6
+
+== validate checks a chosen configuration
+ConfigurationCliTests.cpp:126  CHECK( large.exitCode == ExitCode::Success )
+        => 0 == 0
+ConfigurationCliTests.cpp:127  CHECK_THAT( large.out, ContainsSubstring(" Box (object:5): 1 solid, volume 512000.000 mm^3, area ") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-e7dbe005-b3ed-45cd-bb61-7770895e39a2\family.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 2 objects regenerated geometry ok, 1 result body Result bodies (1): Box (object:5): 1 solid, volume 512000.000 mm^3, area 44800.000 mm^2, bounds (0, 0, 0) to (160, 80, 40) mm Result: valid " contains: " Box (object:5): 1 solid, volume 512000.000 mm^3, area "
+ConfigurationCliTests.cpp:128  CHECK_THAT( large.out, EndsWith("bounds (0, 0, 0) to (160, 80, 40) mm\nResult: valid\n") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-e7dbe005-b3ed-45cd-bb61-7770895e39a2\family.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 2 objects regenerated geometry ok, 1 result body Result bodies (1): Box (object:5): 1 solid, volume 512000.000 mm^3, area 44800.000 mm^2, bounds (0, 0, 0) to (160, 80, 40) mm Result: valid " ends with: "bounds (0, 0, 0) to (160, 80, 40) mm Result: valid "
+ConfigurationCliTests.cpp:132  CHECK( small.exitCode == ExitCode::Success )
+        => 0 == 0
+ConfigurationCliTests.cpp:133  CHECK_THAT( small.out, ContainsSubstring(" Box (object:5): 1 solid, volume 8000.000 mm^3, area ") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-e7dbe005-b3ed-45cd-bb61-7770895e39a2\family.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 2 objects regenerated geometry ok, 1 result body Result bodies (1): Box (object:5): 1 solid, volume 8000.000 mm^3, area 2800.000 mm^2, bounds (0, 0, 0) to (40, 20, 10) mm Result: valid " contains: " Box (object:5): 1 solid, volume 8000.000 mm^3, area "
+ConfigurationCliTests.cpp:134  CHECK_THAT( small.out, EndsWith("bounds (0, 0, 0) to (40, 20, 10) mm\nResult: valid\n") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-e7dbe005-b3ed-45cd-bb61-7770895e39a2\family.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 2 objects regenerated geometry ok, 1 result body Result bodies (1): Box (object:5): 1 solid, volume 8000.000 mm^3, area 2800.000 mm^2, bounds (0, 0, 0) to (40, 20, 10) mm Result: valid " ends with: "bounds (0, 0, 0) to (40, 20, 10) mm Result: valid "
+
+== Configurations_AFailingConfigurationChangesNothing
+ConfigurationFeatureTests.cpp:382  CHECK_FALSE( !(report.succeeded()) )
+        => !false with message: object:4: distance 0 mm is out of range object:5: blocked
+ConfigurationFeatureTests.cpp:383  CHECK( regenerator.body(m.box) == nullptr )
+        => nullptr == nullptr with message: object:4: distance 0 mm is out of range object:5: blocked
+ConfigurationFeatureTests.cpp:386  CHECK( m.doc.configurations().size() == before.configurations().size() )
+        => 4 == 4 with message: object:4: distance 0 mm is out of range object:5: blocked
+ConfigurationFeatureTests.cpp:387  CHECK( m.doc.parameters().find(m.width)->siValue() == 0.1 )
+        => 0.10000000000000001 == 0.10000000000000001 with message: object:4: distance 0 mm is out of range object:5: blocked
+ConfigurationFeatureTests.cpp:392  CHECK( fingerprint(regenerator, m.box) == good )
+        => V=7.9999999999999996e-06 A=0.0028 c=(0.020000000000000007, 0.0099999999999999881, 0.0050000000000000001) == V=7.9999999999999996e-06 A=0.0028 c=(0.020000000000000007, 0.0099999999999999881, 0.0050000000000000001) with message: object:4: distance 0 mm is out of range object:5: blocked
+
+== a document with no configurations prints no configurations section
+ConfigurationCliTests.cpp:168  CHECK( info.exitCode == ExitCode::Success )
+        => 0 == 0
+ConfigurationCliTests.cpp:169  CHECK_THAT( info.out, !ContainsSubstring("Configurations") )
+        => "Document: Plain File: C:\Users\uqhas\AppData\Local\Temp\bettercad-test-8a13498c-ecca-4a1a-a0da-e511daf6bbaf\plain.bcad ID: db3cd0f0-d11f-4858-8293-20609095e1ce Parameters (1): width 100 mm Objects (0): " not contains: "Configurations"
+ConfigurationCliTests.cpp:170  CHECK_THAT( info.out, ContainsSubstring("\nParameters (1):\n width 100 mm\n") )
+        => "Document: Plain File: C:\Users\uqhas\AppData\Local\Temp\bettercad-test-8a13498c-ecca-4a1a-a0da-e511daf6bbaf\plain.bcad ID: db3cd0f0-d11f-4858-8293-20609095e1ce Parameters (1): width 100 mm Objects (0): " contains: " Parameters (1): width 100 mm "
+
+== ConfigurationFamily_SaveLoadKeepsTheWholeFamily
+ConfigurationFeatureTests.cpp:535  CHECK( bits(after.body(m.holes)->massProperties()->volume.in(units::mm3)) == bits(volume) )
+        => 4689130635639320397 (0x4113237812aeef4d) == 4689130635639320397 (0x4113237812aeef4d)
+ConfigurationFeatureTests.cpp:536  CHECK_THAT( after.body(m.holes)->massProperties()->volume.in(units::mm3), WithinRel(BracketFamilyModel::expectedVolumeMm3(200.0), bettercad::test::kRelApproximatedIntersection) )
+        => 313566.01824544818373397 and 313566.01824544812552631 are within 1e-07% of each other
+
+== Configuration_ADeletedParameterLeavesEveryConfiguration
+ConfigurationTests.cpp:191  CHECK( m.doc.configurations().find(m.big)->overrides().size() == 1 )
+        => 1 == 1
+ConfigurationTests.cpp:193  CHECK( m.doc.configurations().find(other)->overrides().size() == 1 )
+        => 1 == 1
+
+== Configurations_AWholeCycleThroughEverySizeReturnsToTheStart
+ConfigurationFeatureTests.cpp:669  CHECK( valuesNow() == smallValues )
+        => { 4585925428558828667 (0x3fa47ae147ae147b), 4581421828931458171 (0x3f947ae147ae147b), 4576918229304087675 (0x3f847ae147ae147b) } == { 4585925428558828667 (0x3fa47ae147ae147b), 4581421828931458171 (0x3f947ae147ae147b), 4576918229304087675 (0x3f847ae147ae147b) }
+ConfigurationFeatureTests.cpp:670  CHECK( regenerator.body(m.box)->topology() == smallTopology )
+        => {?} == {?}
+ConfigurationFeatureTests.cpp:671  CHECK_THAT( fingerprint(regenerator, m.box).volume, WithinRel(smallFirst.volume, kRel) )
+        => 0.000008 and 0.000008 are within 1e-10% of each other
+ConfigurationFeatureTests.cpp:684  CHECK( valuesNow() == smallValues )
+        => { 4585925428558828667 (0x3fa47ae147ae147b), 4581421828931458171 (0x3f947ae147ae147b), 4576918229304087675 (0x3f847ae147ae147b) } == { 4585925428558828667 (0x3fa47ae147ae147b), 4581421828931458171 (0x3f947ae147ae147b), 4576918229304087675 (0x3f847ae147ae147b) } with message: lap := 0
+ConfigurationFeatureTests.cpp:685  CHECK( m.doc.activeConfiguration() == m.small )
+        => {?} == configuration:6 with message: lap := 0
+ConfigurationFeatureTests.cpp:686  CHECK( m.doc.parameters().find(m.width)->siValue() == 0.1 )
+        => 0.10000000000000001 == 0.10000000000000001 with message: lap := 0
+ConfigurationFeatureTests.cpp:688  CHECK( regenerator.body(m.box)->topology() == smallTopology )
+        => {?} == {?} with message: lap := 0
+ConfigurationFeatureTests.cpp:689  CHECK_THAT( now.volume, WithinRel(smallFirst.volume, kRel) )
+        => 0.000008 and 0.000008 are within 1e-10% of each other with message: lap := 0
+ConfigurationFeatureTests.cpp:684  CHECK( valuesNow() == smallValues )
+        => { 4585925428558828667 (0x3fa47ae147ae147b), 4581421828931458171 (0x3f947ae147ae147b), 4576918229304087675 (0x3f847ae147ae147b) } == { 4585925428558828667 (0x3fa47ae147ae147b), 4581421828931458171 (0x3f947ae147ae147b), 4576918229304087675 (0x3f847ae147ae147b) } with message: lap := 1
+ConfigurationFeatureTests.cpp:685  CHECK( m.doc.activeConfiguration() == m.small )
+        => {?} == configuration:6 with message: lap := 1
+ConfigurationFeatureTests.cpp:686  CHECK( m.doc.parameters().find(m.width)->siValue() == 0.1 )
+        => 0.10000000000000001 == 0.10000000000000001 with message: lap := 1
+ConfigurationFeatureTests.cpp:688  CHECK( regenerator.body(m.box)->topology() == smallTopology )
+        => {?} == {?} with message: lap := 1
+ConfigurationFeatureTests.cpp:689  CHECK_THAT( now.volume, WithinRel(smallFirst.volume, kRel) )
+        => 0.000008 and 0.000008 are within 1e-10% of each other with message: lap := 1
+ConfigurationFeatureTests.cpp:684  CHECK( valuesNow() == smallValues )
+        => { 4585925428558828667 (0x3fa47ae147ae147b), 4581421828931458171 (0x3f947ae147ae147b), 4576918229304087675 (0x3f847ae147ae147b) } == { 4585925428558828667 (0x3fa47ae147ae147b), 4581421828931458171 (0x3f947ae147ae147b), 4576918229304087675 (0x3f847ae147ae147b) } with message: lap := 2
+ConfigurationFeatureTests.cpp:685  CHECK( m.doc.activeConfiguration() == m.small )
+        => {?} == configuration:6 with message: lap := 2
+ConfigurationFeatureTests.cpp:686  CHECK( m.doc.parameters().find(m.width)->siValue() == 0.1 )
+        => 0.10000000000000001 == 0.10000000000000001 with message: lap := 2
+ConfigurationFeatureTests.cpp:688  CHECK( regenerator.body(m.box)->topology() == smallTopology )
+        => {?} == {?} with message: lap := 2
+ConfigurationFeatureTests.cpp:689  CHECK_THAT( now.volume, WithinRel(smallFirst.volume, kRel) )
+        => 0.000008 and 0.000008 are within 1e-10% of each other with message: lap := 2
+ConfigurationFeatureTests.cpp:684  CHECK( valuesNow() == smallValues )
+        => { 4585925428558828667 (0x3fa47ae147ae147b), 4581421828931458171 (0x3f947ae147ae147b), 4576918229304087675 (0x3f847ae147ae147b) } == { 4585925428558828667 (0x3fa47ae147ae147b), 4581421828931458171 (0x3f947ae147ae147b), 4576918229304087675 (0x3f847ae147ae147b) } with message: lap := 3
+ConfigurationFeatureTests.cpp:685  CHECK( m.doc.activeConfiguration() == m.small )
+        => {?} == configuration:6 with message: lap := 3
+ConfigurationFeatureTests.cpp:686  CHECK( m.doc.parameters().find(m.width)->siValue() == 0.1 )
+        => 0.10000000000000001 == 0.10000000000000001 with message: lap := 3
+ConfigurationFeatureTests.cpp:688  CHECK( regenerator.body(m.box)->topology() == smallTopology )
+        => {?} == {?} with message: lap := 3
+ConfigurationFeatureTests.cpp:689  CHECK_THAT( now.volume, WithinRel(smallFirst.volume, kRel) )
+        => 0.000008 and 0.000008 are within 1e-10% of each other with message: lap := 3
+ConfigurationFeatureTests.cpp:698  CHECK( std::vector<std::uint64_t>{bits(fresh.doc.effectiveParameterValue(fresh.width)->siValue), bits(fresh.doc.parameters().find(fresh.height)->siValue()), bits(fresh.doc.parameters().find(fresh.depth)->siValue())} == smallValues )
+        => { 4585925428558828667 (0x3fa47ae147ae147b), 4581421828931458171 (0x3f947ae147ae147b), 4576918229304087675 (0x3f847ae147ae147b) } == { 4585925428558828667 (0x3fa47ae147ae147b), 4581421828931458171 (0x3f947ae147ae147b), 4576918229304087675 (0x3f847ae147ae147b) }
+ConfigurationFeatureTests.cpp:706  CHECK( worst < kRel )
+        => 0.00000000000000127 < 0.000000000001 with message: largest relative volume difference over the whole cycle: 1.27055e-15
+ConfigurationFeatureTests.cpp:707  CHECK_THAT( freshSmall.volume * 1e9, WithinRel(BoxFamilyModel::expectedVolumeMm3(40.0), kRel) )
+        => 8000.0 and 8000.0 are within 1e-10% of each other with message: largest relative volume difference over the whole cycle: 1.27055e-15
+
+== Configuration_DrivesTheEquationsThatFollowFromIt
+ConfigurationTests.cpp:77  CHECK_THAT( m.stored(m.height), WithinRel(0.05, kRel) )
+        => 0.05 and 0.05 are within 1e-10% of each other
+ConfigurationTests.cpp:82  CHECK_THAT( m.stored(m.height), WithinRel(0.12, kRel) )
+        => 0.12 and 0.12 are within 1e-10% of each other
+ConfigurationTests.cpp:83  CHECK( big.changed == std::vector<ParameterId>{m.height} )
+        => { parameter:2 } == { parameter:2 }
+ConfigurationTests.cpp:88  CHECK_THAT( m.stored(m.height), WithinRel(0.05, kRel) )
+        => 0.05 and 0.05 are within 1e-10% of each other
+
+== Configuration_ChainsOfEquationsFollowTheOverride
+ConfigurationTests.cpp:106  CHECK_THAT( value(b), WithinRel(0.05, kRel) )
+        => 0.05 and 0.05 are within 1e-10% of each other
+ConfigurationTests.cpp:107  CHECK_THAT( value(c), WithinRel(0.06, kRel) )
+        => 0.06 and 0.06 are within 1e-10% of each other
+ConfigurationTests.cpp:108  CHECK_THAT( value(d), WithinRel(0.12, kRel) )
+        => 0.12000000000000001 and 0.12 are within 1e-10% of each other
+ConfigurationTests.cpp:115  CHECK_THAT( value(b), WithinRel(0.03, kRel) )
+        => 0.03 and 0.03 are within 1e-10% of each other
+ConfigurationTests.cpp:116  CHECK_THAT( value(c), WithinRel(0.04, kRel) )
+        => 0.04 and 0.04 are within 1e-10% of each other
+ConfigurationTests.cpp:117  CHECK_THAT( value(d), WithinRel(0.08, kRel) )
+        => 0.08 and 0.08 are within 1e-10% of each other
+ConfigurationTests.cpp:119  CHECK( report.evaluated == std::vector<ParameterId>{b, c, d} )
+        => { parameter:3, parameter:2, parameter:1 } == { parameter:3, parameter:2, parameter:1 }
+
+== Configurations_AnOverrideThatBreaksAnEquationIsReported
+ConfigurationFeatureTests.cpp:552  CHECK( doc.parameters().find(pitch)->siValue() == 0.025 )
+        => 0.025 == 0.025
+ConfigurationFeatureTests.cpp:560  CHECK_FALSE( !(report.succeeded()) )
+        => !false
+ConfigurationFeatureTests.cpp:563  CHECK_THAT( error.message, ContainsSubstring("parameter 'pitch' = span / count:") )
+        => "parameter 'pitch' = span / count: division by zero at offset 5: 'count' is zero" contains: "parameter 'pitch' = span / count:"
+ConfigurationFeatureTests.cpp:565  CHECK( doc.parameters().find(pitch)->siValue() == 0.025 )
+        => 0.025 == 0.025
+ConfigurationFeatureTests.cpp:569  CHECK_FALSE( !(validation.valid()) )
+        => !false
+
+== Configurations_ReachDrivenSketchConstraintsAndFeatureParameters
+ConfigurationFeatureTests.cpp:288  CHECK_THAT( box.max.x.in(units::mm), WithinAbs(160.0, kPositionToleranceMm) )
+        => 160.0 is within 0.000000001 of 160.0
+ConfigurationFeatureTests.cpp:289  CHECK_THAT( box.max.y.in(units::mm), WithinAbs(80.0, kPositionToleranceMm) )
+        => 80.00000000000001421 is within 0.000000001 of 80.0
+ConfigurationFeatureTests.cpp:291  CHECK_THAT( box.max.z.in(units::mm), WithinAbs(40.0, kPositionToleranceMm) )
+        => 40.0 is within 0.000000001 of 40.0
+
+== a configuration that does not exist is reported
+ConfigurationCliTests.cpp:147  CHECK( result.exitCode == ExitCode::Failure )
+        => 1 == 1 with message: command info
+ConfigurationCliTests.cpp:148  CHECK_THAT( result.err, ContainsSubstring("no configuration named 'Enormous' in this document") )
+        => "bettercad-cli info: no configuration named 'Enormous' in this document " contains: "no configuration named 'Enormous' in this document" with message: command info
+ConfigurationCliTests.cpp:147  CHECK( result.exitCode == ExitCode::Failure )
+        => 1 == 1 with message: command validate
+ConfigurationCliTests.cpp:148  CHECK_THAT( result.err, ContainsSubstring("no configuration named 'Enormous' in this document") )
+        => "bettercad-cli validate: no configuration named 'Enormous' in this document " contains: "no configuration named 'Enormous' in this document" with message: command validate
+ConfigurationCliTests.cpp:153  CHECK( missing.exitCode == ExitCode::UsageError )
+        => 2 == 2
+ConfigurationCliTests.cpp:154  CHECK_THAT( missing.err, ContainsSubstring("option '--configuration' needs a value") )
+        => "bettercad-cli info: option '--configuration' needs a value Usage: bettercad-cli info <file.bcad> [--configuration <name>] " contains: "option '--configuration' needs a value"
+ConfigurationCliTests.cpp:155  CHECK_THAT( missing.err, ContainsSubstring("info <file.bcad> [--configuration <name>]") )
+        => "bettercad-cli info: option '--configuration' needs a value Usage: bettercad-cli info <file.bcad> [--configuration <name>] " contains: "info <file.bcad> [--configuration <name>]"
+
+== Configurations_TheBaseConfigurationSavesAndLoads
+ConfigurationFileTests.cpp:116  CHECK( loaded->activeConfiguration() == std::nullopt )
+        => {?} == {?}
+ConfigurationFileTests.cpp:117  CHECK( loaded->configurations().size() == 3 )
+        => 3 == 3
+ConfigurationFileTests.cpp:120  CHECK_THAT( volumeMm3(regenerator, m.box), WithinRel(BoxFamilyModel::expectedVolumeMm3(100.0), kRel) )
+        => 125000.00000000002910383 and 125000.0 are within 1e-10% of each other
+
+== Configurations_SwitchingThereAndBackRestoresTheSameModel
+ConfigurationFeatureTests.cpp:188  CHECK( bits(there.doc.effectiveParameterValue(there.width)->siValue) == bits(0.04) )
+        => 4585925428558828667 (0x3fa47ae147ae147b) == 4585925428558828667 (0x3fa47ae147ae147b)
+ConfigurationFeatureTests.cpp:189  CHECK( bits(there.doc.parameters().find(there.height)->siValue()) == bits(0.02) )
+        => 4581421828931458171 (0x3f947ae147ae147b) == 4581421828931458171 (0x3f947ae147ae147b)
+ConfigurationFeatureTests.cpp:190  CHECK( bits(there.doc.parameters().find(there.depth)->siValue()) == bits(0.01) )
+        => 4576918229304087675 (0x3f847ae147ae147b) == 4576918229304087675 (0x3f847ae147ae147b)
+ConfigurationFeatureTests.cpp:191  CHECK( there.doc.activeConfiguration() == there.small )
+        => {?} == configuration:6
+ConfigurationFeatureTests.cpp:195  CHECK_THAT( back.volume, WithinRel(first.volume, kRel) )
+        => 0.000008 and 0.000008 are within 1e-10% of each other with message: first V=7.9999999999999996e-06 A=0.0028 c=(0.020000000000000007, 0.0099999999999999881, 0.0050000000000000001) back V=7.9999999999999996e-06 A=0.0028000000000000008 c=(0.020000000000000004, 0.0099999999999999863, 0.0050000000000000001)
+ConfigurationFeatureTests.cpp:196  CHECK_THAT( back.volume * 1e9, WithinRel(exact, kRel) )
+        => 8000.0 and 8000.0 are within 1e-10% of each other with message: first V=7.9999999999999996e-06 A=0.0028 c=(0.020000000000000007, 0.0099999999999999881, 0.0050000000000000001) back V=7.9999999999999996e-06 A=0.0028000000000000008 c=(0.020000000000000004, 0.0099999999999999863, 0.0050000000000000001)
+ConfigurationFeatureTests.cpp:197  CHECK_THAT( back.area, WithinRel(first.area, kRel) )
+        => 0.0028 and 0.0028 are within 1e-10% of each other with message: first V=7.9999999999999996e-06 A=0.0028 c=(0.020000000000000007, 0.0099999999999999881, 0.0050000000000000001) back V=7.9999999999999996e-06 A=0.0028000000000000008 c=(0.020000000000000004, 0.0099999999999999863, 0.0050000000000000001)
+ConfigurationFeatureTests.cpp:198  CHECK_THAT( back.x, WithinRel(first.x, kRel) )
+        => 0.02 and 0.02000000000000001 are within 1e-10% of each other with message: first V=7.9999999999999996e-06 A=0.0028 c=(0.020000000000000007, 0.0099999999999999881, 0.0050000000000000001) back V=7.9999999999999996e-06 A=0.0028000000000000008 c=(0.020000000000000004, 0.0099999999999999863, 0.0050000000000000001)
+ConfigurationFeatureTests.cpp:199  CHECK_THAT( back.y, WithinRel(first.y, kRel) )
+        => 0.00999999999999999 and 0.00999999999999999 are within 1e-10% of each other with message: first V=7.9999999999999996e-06 A=0.0028 c=(0.020000000000000007, 0.0099999999999999881, 0.0050000000000000001) back V=7.9999999999999996e-06 A=0.0028000000000000008 c=(0.020000000000000004, 0.0099999999999999863, 0.0050000000000000001)
+ConfigurationFeatureTests.cpp:200  CHECK_THAT( back.z, WithinRel(first.z, kRel) )
+        => 0.005 and 0.005 are within 1e-10% of each other with message: first V=7.9999999999999996e-06 A=0.0028 c=(0.020000000000000007, 0.0099999999999999881, 0.0050000000000000001) back V=7.9999999999999996e-06 A=0.0028000000000000008 c=(0.020000000000000004, 0.0099999999999999863, 0.0050000000000000001)
+ConfigurationFeatureTests.cpp:209  CHECK_THAT( clean.volume, WithinRel(back.volume, kRel) )
+        => 0.000008 and 0.000008 are within 1e-10% of each other with message: first V=7.9999999999999996e-06 A=0.0028 c=(0.020000000000000007, 0.0099999999999999881, 0.0050000000000000001) back V=7.9999999999999996e-06 A=0.0028000000000000008 c=(0.020000000000000004, 0.0099999999999999863, 0.0050000000000000001)
+ConfigurationFeatureTests.cpp:210  CHECK_THAT( clean.volume * 1e9, WithinRel(exact, kRel) )
+        => 8000.0 and 8000.0 are within 1e-10% of each other with message: first V=7.9999999999999996e-06 A=0.0028 c=(0.020000000000000007, 0.0099999999999999881, 0.0050000000000000001) back V=7.9999999999999996e-06 A=0.0028000000000000008 c=(0.020000000000000004, 0.0099999999999999863, 0.0050000000000000001)
+ConfigurationFeatureTests.cpp:221  CHECK_THAT( trip.volume, WithinRel(first.volume, kRel) )
+        => 0.000008 and 0.000008 are within 1e-10% of each other with message: first V=7.9999999999999996e-06 A=0.0028 c=(0.020000000000000007, 0.0099999999999999881, 0.0050000000000000001) back V=7.9999999999999996e-06 A=0.0028000000000000008 c=(0.020000000000000004, 0.0099999999999999863, 0.0050000000000000001); i := 0; trip.volume := 0.000008; first.volume := 0.000008
+ConfigurationFeatureTests.cpp:222  CHECK_THAT( trip.volume * 1e9, WithinRel(exact, kRel) )
+        => 8000.00000000000454747 and 8000.0 are within 1e-10% of each other with message: first V=7.9999999999999996e-06 A=0.0028 c=(0.020000000000000007, 0.0099999999999999881, 0.0050000000000000001) back V=7.9999999999999996e-06 A=0.0028000000000000008 c=(0.020000000000000004, 0.0099999999999999863, 0.0050000000000000001); i := 0; trip.volume := 0.000008; first.volume := 0.000008
+ConfigurationFeatureTests.cpp:224  CHECK( a.body(there.box)->topology() == b.body(fresh.box)->topology() )
+        => {?} == {?} with message: first V=7.9999999999999996e-06 A=0.0028 c=(0.020000000000000007, 0.0099999999999999881, 0.0050000000000000001) back V=7.9999999999999996e-06 A=0.0028000000000000008 c=(0.020000000000000004, 0.0099999999999999863, 0.0050000000000000001); i := 0; trip.volume := 0.000008; first.volume := 0.000008
+ConfigurationFeatureTests.cpp:221  CHECK_THAT( trip.volume, WithinRel(first.volume, kRel) )
+        => 0.000008 and 0.000008 are within 1e-10% of each other with message: first V=7.9999999999999996e-06 A=0.0028 c=(0.020000000000000007, 0.0099999999999999881, 0.0050000000000000001) back V=7.9999999999999996e-06 A=0.0028000000000000008 c=(0.020000000000000004, 0.0099999999999999863, 0.0050000000000000001); i := 1; trip.volume := 0.000008; first.volume := 0.000008
+ConfigurationFeatureTests.cpp:222  CHECK_THAT( trip.volume * 1e9, WithinRel(exact, kRel) )
+        => 8000.00000000000454747 and 8000.0 are within 1e-10% of each other with message: first V=7.9999999999999996e-06 A=0.0028 c=(0.020000000000000007, 0.0099999999999999881, 0.0050000000000000001) back V=7.9999999999999996e-06 A=0.0028000000000000008 c=(0.020000000000000004, 0.0099999999999999863, 0.0050000000000000001); i := 1; trip.volume := 0.000008; first.volume := 0.000008
+ConfigurationFeatureTests.cpp:224  CHECK( a.body(there.box)->topology() == b.body(fresh.box)->topology() )
+        => {?} == {?} with message: first V=7.9999999999999996e-06 A=0.0028 c=(0.020000000000000007, 0.0099999999999999881, 0.0050000000000000001) back V=7.9999999999999996e-06 A=0.0028000000000000008 c=(0.020000000000000004, 0.0099999999999999863, 0.0050000000000000001); i := 1; trip.volume := 0.000008; first.volume := 0.000008
+ConfigurationFeatureTests.cpp:221  CHECK_THAT( trip.volume, WithinRel(first.volume, kRel) )
+        => 0.000008 and 0.000008 are within 1e-10% of each other with message: first V=7.9999999999999996e-06 A=0.0028 c=(0.020000000000000007, 0.0099999999999999881, 0.0050000000000000001) back V=7.9999999999999996e-06 A=0.0028000000000000008 c=(0.020000000000000004, 0.0099999999999999863, 0.0050000000000000001); i := 2; trip.volume := 0.000008; first.volume := 0.000008
+ConfigurationFeatureTests.cpp:222  CHECK_THAT( trip.volume * 1e9, WithinRel(exact, kRel) )
+        => 8000.00000000000090949 and 8000.0 are within 1e-10% of each other with message: first V=7.9999999999999996e-06 A=0.0028 c=(0.020000000000000007, 0.0099999999999999881, 0.0050000000000000001) back V=7.9999999999999996e-06 A=0.0028000000000000008 c=(0.020000000000000004, 0.0099999999999999863, 0.0050000000000000001); i := 2; trip.volume := 0.000008; first.volume := 0.000008
+ConfigurationFeatureTests.cpp:224  CHECK( a.body(there.box)->topology() == b.body(fresh.box)->topology() )
+        => {?} == {?} with message: first V=7.9999999999999996e-06 A=0.0028 c=(0.020000000000000007, 0.0099999999999999881, 0.0050000000000000001) back V=7.9999999999999996e-06 A=0.0028000000000000008 c=(0.020000000000000004, 0.0099999999999999863, 0.0050000000000000001); i := 2; trip.volume := 0.000008; first.volume := 0.000008
+ConfigurationFeatureTests.cpp:221  CHECK_THAT( trip.volume, WithinRel(first.volume, kRel) )
+        => 0.000008 and 0.000008 are within 1e-10% of each other with message: first V=7.9999999999999996e-06 A=0.0028 c=(0.020000000000000007, 0.0099999999999999881, 0.0050000000000000001) back V=7.9999999999999996e-06 A=0.0028000000000000008 c=(0.020000000000000004, 0.0099999999999999863, 0.0050000000000000001); i := 3; trip.volume := 0.000008; first.volume := 0.000008
+ConfigurationFeatureTests.cpp:222  CHECK_THAT( trip.volume * 1e9, WithinRel(exact, kRel) )
+        => 8000.00000000000454747 and 8000.0 are within 1e-10% of each other with message: first V=7.9999999999999996e-06 A=0.0028 c=(0.020000000000000007, 0.0099999999999999881, 0.0050000000000000001) back V=7.9999999999999996e-06 A=0.0028000000000000008 c=(0.020000000000000004, 0.0099999999999999863, 0.0050000000000000001); i := 3; trip.volume := 0.000008; first.volume := 0.000008
+ConfigurationFeatureTests.cpp:224  CHECK( a.body(there.box)->topology() == b.body(fresh.box)->topology() )
+        => {?} == {?} with message: first V=7.9999999999999996e-06 A=0.0028 c=(0.020000000000000007, 0.0099999999999999881, 0.0050000000000000001) back V=7.9999999999999996e-06 A=0.0028000000000000008 c=(0.020000000000000004, 0.0099999999999999863, 0.0050000000000000001); i := 3; trip.volume := 0.000008; first.volume := 0.000008
+
+== Configuration_IdsComeFromTheDocumentsOneAllocator
+ConfigurationTests.cpp:235  CHECK( fresh.value() > beforeId.value() )
+        => 5 > 4
+ConfigurationTests.cpp:237  CHECK( after.value() > fresh.value() )
+        => 6 > 5
+ConfigurationTests.cpp:242  CHECK( std::ranges::find(items, ObjectId::fromValue(fresh.value())) == items.end() )
+        => {?} == {?}
+ConfigurationTests.cpp:243  CHECK( m.doc.findByName("Fresh") == std::nullopt )
+        => {?} == {?}
+
+== ConfigurationFamily_BuildsARealBracketAtEverySize / Small
+ConfigurationFeatureTests.cpp:447  CHECK_THAT( m.si(m.width) * 1000.0, WithinRel(w, kRel) )
+        => 50.0 and 50.0 are within 1e-10% of each other with message: 
+ConfigurationFeatureTests.cpp:448  CHECK_THAT( m.si(m.height) * 1000.0, WithinRel(w / 2.0, kRel) )
+        => 25.0 and 25.0 are within 1e-10% of each other with message: 
+ConfigurationFeatureTests.cpp:449  CHECK_THAT( m.si(m.thickness) * 1000.0, WithinRel(0.08 * w, kRel) )
+        => 4.0 and 4.0 are within 1e-10% of each other with message: 
+ConfigurationFeatureTests.cpp:450  CHECK_THAT( m.si(m.edge) * 1000.0, WithinRel(0.16 * w, kRel) )
+        => 8.0 and 8.0 are within 1e-10% of each other with message: 
+ConfigurationFeatureTests.cpp:451  CHECK_THAT( m.si(m.holeDiameter) * 1000.0, WithinRel(0.08 * w, kRel) )
+        => 4.0 and 4.0 are within 1e-10% of each other with message: 
+ConfigurationFeatureTests.cpp:452  CHECK_THAT( m.si(m.holeSpace) * 1000.0, WithinRel(0.68 * w, kRel) )
+        => 34.0 and 34.0 are within 1e-10% of each other with message: 
+ConfigurationFeatureTests.cpp:460  CHECK_THAT( volume, WithinRel(BracketFamilyModel::expectedVolumeMm3(w), bettercad::test::kRelApproximatedIntersection) )
+        => 4899.46903508512787084 and 4899.46903508512696135 are within 1e-07% of each other with message: ; width 50 mm, expected 4899.47
+ConfigurationFeatureTests.cpp:464  CHECK_THAT( box->max.x.in(units::mm), WithinAbs(w, kPositionToleranceMm) )
+        => 50.00000000000000711 is within 0.000000001 of 50.0 with message: ; width 50 mm, expected 4899.47
+ConfigurationFeatureTests.cpp:465  CHECK_THAT( box->max.y.in(units::mm), WithinAbs(w / 2.0, kPositionToleranceMm) )
+        => 24.99999999999999289 is within 0.000000001 of 25.0 with message: ; width 50 mm, expected 4899.47
+ConfigurationFeatureTests.cpp:466  CHECK_THAT( box->max.z.in(units::mm), WithinAbs(0.08 * w, kPositionToleranceMm) )
+        => 4.0 is within 0.000000001 of 4.0 with message: ; width 50 mm, expected 4899.47
+
+== ConfigurationFamily_BuildsARealBracketAtEverySize / Medium
+ConfigurationFeatureTests.cpp:447  CHECK_THAT( m.si(m.width) * 1000.0, WithinRel(w, kRel) )
+        => 100.0 and 100.0 are within 1e-10% of each other with message: 
+ConfigurationFeatureTests.cpp:448  CHECK_THAT( m.si(m.height) * 1000.0, WithinRel(w / 2.0, kRel) )
+        => 50.0 and 50.0 are within 1e-10% of each other with message: 
+ConfigurationFeatureTests.cpp:449  CHECK_THAT( m.si(m.thickness) * 1000.0, WithinRel(0.08 * w, kRel) )
+        => 8.0 and 8.0 are within 1e-10% of each other with message: 
+ConfigurationFeatureTests.cpp:450  CHECK_THAT( m.si(m.edge) * 1000.0, WithinRel(0.16 * w, kRel) )
+        => 16.0 and 16.0 are within 1e-10% of each other with message: 
+ConfigurationFeatureTests.cpp:451  CHECK_THAT( m.si(m.holeDiameter) * 1000.0, WithinRel(0.08 * w, kRel) )
+        => 8.0 and 8.0 are within 1e-10% of each other with message: 
+ConfigurationFeatureTests.cpp:452  CHECK_THAT( m.si(m.holeSpace) * 1000.0, WithinRel(0.68 * w, kRel) )
+        => 68.0 and 68.0 are within 1e-10% of each other with message: 
+ConfigurationFeatureTests.cpp:460  CHECK_THAT( volume, WithinRel(BracketFamilyModel::expectedVolumeMm3(w), bettercad::test::kRelApproximatedIntersection) )
+        => 39195.75228068101569079 and 39195.75228068101569079 are within 1e-07% of each other with message: ; width 100 mm, expected 39195.8
+ConfigurationFeatureTests.cpp:464  CHECK_THAT( box->max.x.in(units::mm), WithinAbs(w, kPositionToleranceMm) )
+        => 100.0 is within 0.000000001 of 100.0 with message: ; width 100 mm, expected 39195.8
+ConfigurationFeatureTests.cpp:465  CHECK_THAT( box->max.y.in(units::mm), WithinAbs(w / 2.0, kPositionToleranceMm) )
+        => 50.0 is within 0.000000001 of 50.0 with message: ; width 100 mm, expected 39195.8
+ConfigurationFeatureTests.cpp:466  CHECK_THAT( box->max.z.in(units::mm), WithinAbs(0.08 * w, kPositionToleranceMm) )
+        => 8.0 is within 0.000000001 of 8.0 with message: ; width 100 mm, expected 39195.8
+
+== ConfigurationFamily_BuildsARealBracketAtEverySize / Large
+ConfigurationFeatureTests.cpp:447  CHECK_THAT( m.si(m.width) * 1000.0, WithinRel(w, kRel) )
+        => 200.0 and 200.0 are within 1e-10% of each other with message: 
+ConfigurationFeatureTests.cpp:448  CHECK_THAT( m.si(m.height) * 1000.0, WithinRel(w / 2.0, kRel) )
+        => 100.0 and 100.0 are within 1e-10% of each other with message: 
+ConfigurationFeatureTests.cpp:449  CHECK_THAT( m.si(m.thickness) * 1000.0, WithinRel(0.08 * w, kRel) )
+        => 16.0 and 16.0 are within 1e-10% of each other with message: 
+ConfigurationFeatureTests.cpp:450  CHECK_THAT( m.si(m.edge) * 1000.0, WithinRel(0.16 * w, kRel) )
+        => 32.0 and 32.0 are within 1e-10% of each other with message: 
+ConfigurationFeatureTests.cpp:451  CHECK_THAT( m.si(m.holeDiameter) * 1000.0, WithinRel(0.08 * w, kRel) )
+        => 16.0 and 16.0 are within 1e-10% of each other with message: 
+ConfigurationFeatureTests.cpp:452  CHECK_THAT( m.si(m.holeSpace) * 1000.0, WithinRel(0.68 * w, kRel) )
+        => 136.0 and 136.0 are within 1e-10% of each other with message: 
+ConfigurationFeatureTests.cpp:460  CHECK_THAT( volume, WithinRel(BracketFamilyModel::expectedVolumeMm3(w), bettercad::test::kRelApproximatedIntersection) )
+        => 313566.01824544818373397 and 313566.01824544812552631 are within 1e-07% of each other with message: ; width 200 mm, expected 313566
+ConfigurationFeatureTests.cpp:464  CHECK_THAT( box->max.x.in(units::mm), WithinAbs(w, kPositionToleranceMm) )
+        => 200.0 is within 0.000000001 of 200.0 with message: ; width 200 mm, expected 313566
+ConfigurationFeatureTests.cpp:465  CHECK_THAT( box->max.y.in(units::mm), WithinAbs(w / 2.0, kPositionToleranceMm) )
+        => 100.00000000000001421 is within 0.000000001 of 100.0 with message: ; width 200 mm, expected 313566
+ConfigurationFeatureTests.cpp:466  CHECK_THAT( box->max.z.in(units::mm), WithinAbs(0.08 * w, kPositionToleranceMm) )
+        => 16.0 is within 0.000000001 of 16.0 with message: ; width 200 mm, expected 313566
+
+== Configurations_TheValuesInForceAreExactlyReproducible
+ConfigurationFeatureTests.cpp:250  CHECK( valuesUnder(which, false) == valuesUnder(which, true) )
+        => { 4585925428558828667 (0x3fa47ae147ae147b), 4581421828931458171 (0x3f947ae147ae147b), 4576918229304087675 (0x3f847ae147ae147b) } == { 4585925428558828667 (0x3fa47ae147ae147b), 4581421828931458171 (0x3f947ae147ae147b), 4576918229304087675 (0x3f847ae147ae147b) }
+ConfigurationFeatureTests.cpp:250  CHECK( valuesUnder(which, false) == valuesUnder(which, true) )
+        => { 4590429028186199163 (0x3fb47ae147ae147b), 4585925428558828667 (0x3fa47ae147ae147b), 4581421828931458171 (0x3f947ae147ae147b) } == { 4590429028186199163 (0x3fb47ae147ae147b), 4585925428558828667 (0x3fa47ae147ae147b), 4581421828931458171 (0x3f947ae147ae147b) }
+ConfigurationFeatureTests.cpp:250  CHECK( valuesUnder(which, false) == valuesUnder(which, true) )
+        => { 4594932627813569659 (0x3fc47ae147ae147b), 4590429028186199163 (0x3fb47ae147ae147b), 4585925428558828667 (0x3fa47ae147ae147b) } == { 4594932627813569659 (0x3fc47ae147ae147b), 4590429028186199163 (0x3fb47ae147ae147b), 4585925428558828667 (0x3fa47ae147ae147b) }
+ConfigurationFeatureTests.cpp:253  CHECK( valuesUnder(&BoxFamilyModel::small, false) == std::vector<std::uint64_t>{bits(0.04), bits(0.02), bits(0.01)} )
+        => { 4585925428558828667 (0x3fa47ae147ae147b), 4581421828931458171 (0x3f947ae147ae147b), 4576918229304087675 (0x3f847ae147ae147b) } == { 4585925428558828667 (0x3fa47ae147ae147b), 4581421828931458171 (0x3f947ae147ae147b), 4576918229304087675 (0x3f847ae147ae147b) }
+
+== Configuration_RefusesWhatItCannotMean / a driven parameter cannot be overridden
+ConfigurationTests.cpp:133  CHECK( error.code == ErrorCode::FailedPrecondition )
+        => 5 == 5
+ConfigurationTests.cpp:134  CHECK_THAT( error.message, ContainsSubstring("is driven by the expression 'width / 2'") )
+        => "parameter 'height' is driven by the expression 'width / 2'; clear the expression to set its value" contains: "is driven by the expression 'width / 2'"
+
+== Configuration_RefusesWhatItCannotMean
+ConfigurationTests.cpp:176  CHECK( m.doc.configurations().size() == 1 )
+        => 1 == 1
+
+== Configuration_RefusesWhatItCannotMean / an override must have the parameter's dimension
+ConfigurationTests.cpp:138  CHECK( error.code == ErrorCode::DimensionMismatch )
+        => 3 == 3
+ConfigurationTests.cpp:139  CHECK( error.message == "parameter 'width' is length, so a configuration cannot give it a value that is angle" )
+        => "parameter 'width' is length, so a configuration cannot give it a value that is angle" == "parameter 'width' is length, so a configuration cannot give it a value that is angle"
+
+== Configuration_RefusesWhatItCannotMean / an unknown parameter
+ConfigurationTests.cpp:145  CHECK( error.code == ErrorCode::NotFound )
+        => 1 == 1
+ConfigurationTests.cpp:146  CHECK( error.message == "parameter:999 does not exist" )
+        => "parameter:999 does not exist" == "parameter:999 does not exist"
+
+== Configuration_RefusesWhatItCannotMean / an unknown configuration
+ConfigurationTests.cpp:151  CHECK( error.code == ErrorCode::NotFound )
+        => 1 == 1
+ConfigurationTests.cpp:152  CHECK( error.message == "configuration:999 does not exist" )
+        => "configuration:999 does not exist" == "configuration:999 does not exist"
+
+== Configuration_RefusesWhatItCannotMean / a non-finite value
+ConfigurationTests.cpp:157  CHECK( error.code == ErrorCode::InvalidArgument )
+        => 0 == 0
+ConfigurationTests.cpp:158  CHECK_THAT( error.message, ContainsSubstring("must be finite") )
+        => "the value of parameter:1 in configuration 'Big' must be finite" contains: "must be finite"
+
+== Configuration_RefusesWhatItCannotMean / a duplicate name
+ConfigurationTests.cpp:162  CHECK( error.code == ErrorCode::AlreadyExists )
+        => 2 == 2
+ConfigurationTests.cpp:163  CHECK( error.message == "a configuration named 'Big' already exists" )
+        => "a configuration named 'Big' already exists" == "a configuration named 'Big' already exists"
+
+== Configuration_RefusesWhatItCannotMean / an empty or invalid name
+ConfigurationTests.cpp:166  CHECK( message(m.doc.createConfiguration("")).code == ErrorCode::InvalidArgument )
+        => 0 == 0
+ConfigurationTests.cpp:167  CHECK( message(m.doc.createConfiguration("2 sizes")).code == ErrorCode::InvalidArgument )
+        => 0 == 0
+ConfigurationTests.cpp:168  CHECK( message(m.doc.createConfiguration(" Big")).code == ErrorCode::InvalidArgument )
+        => 0 == 0
+
+== Configuration_RefusesWhatItCannotMean / activating a configuration that does not exist
+ConfigurationTests.cpp:172  CHECK( error.code == ErrorCode::NotFound )
+        => 1 == 1
+ConfigurationTests.cpp:173  CHECK( m.doc.activeConfiguration() == std::nullopt )
+        => {?} == {?}
+
+== info reports the values a chosen configuration gives
+ConfigurationCliTests.cpp:100  CHECK( large.exitCode == ExitCode::Success )
+        => 0 == 0
+ConfigurationCliTests.cpp:101  CHECK_THAT( large.out, ContainsSubstring("\nParameters (3):\n" " width 160 mm (configuration; base 100)\n" " height 80 mm (expression: width / 2)\n" " depth 40 mm (expression: width / 4)\n") )
+        => "Document: BoxFamily File: C:\Users\uqhas\AppData\Local\Temp\bettercad-test-b2d68dd2-585f-4038-a8e7-a1dd0d870d21\family.bcad ID: 2d9c4b17-8e63-4a05-9f2c-7b1d6a3e8c40 Parameters (3): width 160 mm (configuration; base 100) height 80 mm (expression: width / 2) depth 40 mm (expression: width / 4) Configurations (3): Small 1 override Medium 1 override Large 1 override active Objects (2): object:4 sketch BoxSketch 8 entities, 7 constraints, driven by width, height object:5 extrude Box profile BoxSketch, depth depth, normal, new body " contains: " Parameters (3): width 160 mm (configuration; base 100) height 80 mm (expression: width / 2) depth 40 mm (expression: width / 4) "
+ConfigurationCliTests.cpp:105  CHECK_THAT( large.out, ContainsSubstring(" Large 1 override active\n") )
+        => "Document: BoxFamily File: C:\Users\uqhas\AppData\Local\Temp\bettercad-test-b2d68dd2-585f-4038-a8e7-a1dd0d870d21\family.bcad ID: 2d9c4b17-8e63-4a05-9f2c-7b1d6a3e8c40 Parameters (3): width 160 mm (configuration; base 100) height 80 mm (expression: width / 2) depth 40 mm (expression: width / 4) Configurations (3): Small 1 override Medium 1 override Large 1 override active Objects (2): object:4 sketch BoxSketch 8 entities, 7 constraints, driven by width, height object:5 extrude Box profile BoxSketch, depth depth, normal, new body " contains: " Large 1 override active "
+ConfigurationCliTests.cpp:108  CHECK( small.exitCode == ExitCode::Success )
+        => 0 == 0
+ConfigurationCliTests.cpp:109  CHECK_THAT( small.out, ContainsSubstring(" width 40 mm (configuration; base 100)\n" " height 20 mm (expression: width / 2)\n" " depth 10 mm (expression: width / 4)\n") )
+        => "Document: BoxFamily File: C:\Users\uqhas\AppData\Local\Temp\bettercad-test-b2d68dd2-585f-4038-a8e7-a1dd0d870d21\family.bcad ID: 2d9c4b17-8e63-4a05-9f2c-7b1d6a3e8c40 Parameters (3): width 40 mm (configuration; base 100) height 20 mm (expression: width / 2) depth 10 mm (expression: width / 4) Configurations (3): Small 1 override active Medium 1 override Large 1 override Objects (2): object:4 sketch BoxSketch 8 entities, 7 constraints, driven by width, height object:5 extrude Box profile BoxSketch, depth depth, normal, new body " contains: " width 40 mm (configuration; base 100) height 20 mm (expression: width / 2) depth 10 mm (expression: width / 4) "
+ConfigurationCliTests.cpp:116  CHECK_THAT( again.out, ContainsSubstring(" width 100 mm\n") )
+        => "Document: BoxFamily File: C:\Users\uqhas\AppData\Local\Temp\bettercad-test-b2d68dd2-585f-4038-a8e7-a1dd0d870d21\family.bcad ID: 2d9c4b17-8e63-4a05-9f2c-7b1d6a3e8c40 Parameters (3): width 100 mm height 50 mm (expression: width / 2) depth 25 mm (expression: width / 4) Configurations (3): Small 1 override Medium 1 override Large 1 override Objects (2): object:4 sketch BoxSketch 8 entities, 7 constraints, driven by width, height object:5 extrude Box profile BoxSketch, depth depth, normal, new body " contains: " width 100 mm "
+
+== Configurations_MalformedDataIsRejectedWithTheJsonPath / an override of a parameter that is not there
+ConfigurationFileTests.cpp:180  CHECK( error.code == ErrorCode::ParseError )
+        => 4 == 4 with message: configurations.defined[0].overrides[0].parameter: no parameter with ID 987
+ConfigurationFileTests.cpp:181  CHECK( error.message == "configurations.defined[0].overrides[0].parameter: no parameter with ID 987" )
+        => "configurations.defined[0].overrides[0].parameter: no parameter with ID 987" == "configurations.defined[0].overrides[0].parameter: no parameter with ID 987"
+
+== Configurations_MalformedDataIsRejectedWithTheJsonPath / an override of a driven parameter
+ConfigurationFileTests.cpp:187  CHECK( error.code == ErrorCode::FailedPrecondition )
+        => 5 == 5 with message: configurations.defined[0]: parameter 'height' is driven by the expression 'width / 2'; clear the expression to set its value
+ConfigurationFileTests.cpp:188  CHECK_THAT( error.message, ContainsSubstring("is driven by the expression 'width / 2'") )
+        => "configurations.defined[0]: parameter 'height' is driven by the expression 'width / 2'; clear the expression to set its value" contains: "is driven by the expression 'width / 2'"
+
+== Configurations_MalformedDataIsRejectedWithTheJsonPath / an active configuration that does not exist
+ConfigurationFileTests.cpp:192  CHECK( error.code == ErrorCode::ParseError )
+        => 4 == 4 with message: configurations.active: no configuration named 'Gone'
+ConfigurationFileTests.cpp:193  CHECK( error.message == "configurations.active: no configuration named 'Gone'" )
+        => "configurations.active: no configuration named 'Gone'" == "configurations.active: no configuration named 'Gone'"
+
+== Configurations_MalformedDataIsRejectedWithTheJsonPath / a duplicate configuration name
+ConfigurationFileTests.cpp:197  CHECK( error.code == ErrorCode::AlreadyExists )
+        => 2 == 2 with message: configurations.defined[1]: a configuration named 'Small' already exists
+ConfigurationFileTests.cpp:198  CHECK_THAT( error.message, ContainsSubstring("a configuration named 'Small' already exists") )
+        => "configurations.defined[1]: a configuration named 'Small' already exists" contains: "a configuration named 'Small' already exists"
+
+== Configurations_MalformedDataIsRejectedWithTheJsonPath / an invalid configuration name
+ConfigurationFileTests.cpp:202  CHECK( error.code == ErrorCode::InvalidArgument )
+        => 0 == 0 with message: configurations.defined[0]: configuration name must not be empty
+ConfigurationFileTests.cpp:203  CHECK_THAT( error.message, ContainsSubstring("configurations.defined[0]") )
+        => "configurations.defined[0]: configuration name must not be empty" contains: "configurations.defined[0]"
+
+== Configurations_MalformedDataIsRejectedWithTheJsonPath / an unknown field
+ConfigurationFileTests.cpp:207  CHECK( error.code == ErrorCode::ParseError )
+        => 4 == 4 with message: configurations.defined[0].tag: unknown field
+ConfigurationFileTests.cpp:208  CHECK( error.message == "configurations.defined[0].tag: unknown field" )
+        => "configurations.defined[0].tag: unknown field" == "configurations.defined[0].tag: unknown field"
+
+== Configurations_MalformedDataIsRejectedWithTheJsonPath / a configuration ID of zero
+ConfigurationFileTests.cpp:212  CHECK( error.code == ErrorCode::ParseError )
+        => 4 == 4 with message: configurations.defined[0].id: a configuration needs a valid ID
+ConfigurationFileTests.cpp:213  CHECK( error.message == "configurations.defined[0].id: a configuration needs a valid ID" )
+        => "configurations.defined[0].id: a configuration needs a valid ID" == "configurations.defined[0].id: a configuration needs a valid ID"
+
+== Configurations_MalformedDataIsRejectedWithTheJsonPath / a non-finite override
+ConfigurationFileTests.cpp:217  CHECK_FALSE( !(error.message.empty()) )
+        => !false with message: invalid JSON: [json.exception.out_of_range.406] number overflow parsing '1e999'
+
+== Configuration_OverridesTheValueInForceAndNotTheBase
+ConfigurationTests.cpp:58  CHECK( m.effective(m.width) == 0.1 )
+        => 0.10000000000000001 == 0.10000000000000001
+ConfigurationTests.cpp:60  CHECK( m.effective(m.width) == 0.24 )
+        => 0.23999999999999999 == 0.23999999999999999
+ConfigurationTests.cpp:64  CHECK( m.stored(m.width) == 0.1 )
+        => 0.10000000000000001 == 0.10000000000000001
+ConfigurationTests.cpp:66  CHECK( m.effective(m.width) == 0.1 )
+        => 0.10000000000000001 == 0.10000000000000001
+
+== info lists a document's configurations
+ConfigurationCliTests.cpp:63  CHECK( info.exitCode == ExitCode::Success )
+        => 0 == 0
+ConfigurationCliTests.cpp:66  CHECK_THAT( info.out, ContainsSubstring("\nConfigurations (3):\n" " Small 1 override\n" " Medium 1 override\n" " Large 1 override\n") )
+        => "Document: BoxFamily File: C:\Users\uqhas\AppData\Local\Temp\bettercad-test-544c8fc8-e1e3-4b8a-8398-8fc2337873f9\family.bcad ID: 2d9c4b17-8e63-4a05-9f2c-7b1d6a3e8c40 Parameters (3): width 100 mm height 50 mm (expression: width / 2) depth 25 mm (expression: width / 4) Configurations (3): Small 1 override Medium 1 override Large 1 override Objects (2): object:4 sketch BoxSketch 8 entities, 7 constraints, driven by width, height object:5 extrude Box profile BoxSketch, depth depth, normal, new body " contains: " Configurations (3): Small 1 override Medium 1 override Large 1 override "
+ConfigurationCliTests.cpp:71  CHECK_THAT( info.out, ContainsSubstring("\nParameters (3):\n" " width 100 mm\n" " height 50 mm (expression: width / 2)\n" " depth 25 mm (expression: width / 4)\n") )
+        => "Document: BoxFamily File: C:\Users\uqhas\AppData\Local\Temp\bettercad-test-544c8fc8-e1e3-4b8a-8398-8fc2337873f9\family.bcad ID: 2d9c4b17-8e63-4a05-9f2c-7b1d6a3e8c40 Parameters (3): width 100 mm height 50 mm (expression: width / 2) depth 25 mm (expression: width / 4) Configurations (3): Small 1 override Medium 1 override Large 1 override Objects (2): object:4 sketch BoxSketch 8 entities, 7 constraints, driven by width, height object:5 extrude Box profile BoxSketch, depth depth, normal, new body " contains: " Parameters (3): width 100 mm height 50 mm (expression: width / 2) depth 25 mm (expression: width / 4) "
+
+== info marks the active configuration
+ConfigurationCliTests.cpp:84  CHECK( info.exitCode == ExitCode::Success )
+        => 0 == 0
+ConfigurationCliTests.cpp:85  CHECK_THAT( info.out, ContainsSubstring("\nConfigurations (3):\n" " Small 1 override\n" " Medium 1 override\n" " Large 1 override active\n") )
+        => "Document: BoxFamily File: C:\Users\uqhas\AppData\Local\Temp\bettercad-test-5a6cee74-cdb2-4ea8-b0b0-4a6200c08531\family.bcad ID: 2d9c4b17-8e63-4a05-9f2c-7b1d6a3e8c40 Parameters (3): width 160 mm (configuration; base 100) height 50 mm (expression: width / 2) depth 25 mm (expression: width / 4) Configurations (3): Small 1 override Medium 1 override Large 1 override active Objects (2): object:4 sketch BoxSketch 8 entities, 7 constraints, driven by width, height object:5 extrude Box profile BoxSketch, depth depth, normal, new body " contains: " Configurations (3): Small 1 override Medium 1 override Large 1 override active "
+
+== ConfigurationFamily_AttachedSketchesFollowTheFaceTheyName
+ConfigurationFeatureTests.cpp:500  CHECK_THAT( endCapZ(), WithinAbs(BracketFamilyModel::expectedThicknessMm(w), kPositionToleranceMm) )
+        => 4.0 is within 0.000000001 of 4.0 with message: width 50 mm
+ConfigurationFeatureTests.cpp:501  CHECK_THAT( placementZ(), WithinAbs(BracketFamilyModel::expectedThicknessMm(w), kPositionToleranceMm) )
+        => 4.0 is within 0.000000001 of 4.0 with message: width 50 mm
+ConfigurationFeatureTests.cpp:500  CHECK_THAT( endCapZ(), WithinAbs(BracketFamilyModel::expectedThicknessMm(w), kPositionToleranceMm) )
+        => 8.0 is within 0.000000001 of 8.0 with message: width 100 mm
+ConfigurationFeatureTests.cpp:501  CHECK_THAT( placementZ(), WithinAbs(BracketFamilyModel::expectedThicknessMm(w), kPositionToleranceMm) )
+        => 8.0 is within 0.000000001 of 8.0 with message: width 100 mm
+ConfigurationFeatureTests.cpp:500  CHECK_THAT( endCapZ(), WithinAbs(BracketFamilyModel::expectedThicknessMm(w), kPositionToleranceMm) )
+        => 16.0 is within 0.000000001 of 16.0 with message: width 200 mm
+ConfigurationFeatureTests.cpp:501  CHECK_THAT( placementZ(), WithinAbs(BracketFamilyModel::expectedThicknessMm(w), kPositionToleranceMm) )
+        => 16.0 is within 0.000000001 of 16.0 with message: width 200 mm
+ConfigurationFeatureTests.cpp:507  CHECK_THAT( placementZ(), WithinAbs(4.0, kPositionToleranceMm) )
+        => 4.0 is within 0.000000001 of 4.0
+
+== Configuration_ClearingAnOverrideRestoresTheBaseValue
+ConfigurationTests.cpp:221  CHECK( m.effective(m.width) == 0.24 )
+        => 0.23999999999999999 == 0.23999999999999999
+ConfigurationTests.cpp:223  CHECK( m.doc.clearConfigurationOverride(m.big, m.width).value() == true )
+        => true == true
+ConfigurationTests.cpp:224  CHECK( m.effective(m.width) == 0.1 )
+        => 0.10000000000000001 == 0.10000000000000001
+ConfigurationTests.cpp:226  CHECK( m.doc.clearConfigurationOverride(m.big, m.width).value() == false )
+        => false == false
+
+Overall: 2287 assertions passed, 0 failed.

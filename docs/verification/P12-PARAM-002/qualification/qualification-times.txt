@@ -1,0 +1,32 @@
+qualification started Fri 18/09/2026 22:47:18.35 
+HEAD before the milestone commit: 
+230ceda1136e3d1910f9cf96fc6617413513ee5d
+qualified source trees: 
+  apps 9b7b03a72ef1a773304a38dd02690818f66d50a3 
+  include 0347b09b01baf7ad55ec6a67d3a8e3256676e3a1 
+  src b5f9b6e92cc4ee1451f67fda6983f89c4b222435 
+  tests ba239110bc166901662ac3494ba2283d400a9a5d 
+  examples 07f6ea93fbb93e97a4e6e989ef7636a612d26848 
+  cmake a84e909339b24bc7ffca591888e10d48a3e5296c 
+  CMakeLists.txt a0adbb9c1d3583aab4e294fd41837537e53e4764 
+  CMakePresets.json 951b53d6b7412e6057c188dd41e40cb9e57c6aa3 
+debug configure started Fri 18/09/2026 22:47:19.98 
+debug configure exit 0 Fri 18/09/2026 22:47:25.93 
+debug clean attempt 1 exit 0 Fri 18/09/2026 22:47:26.85 
+debug build exit 0 Fri 18/09/2026 22:55:44.56 
+debug ctest exit 0 Fri 18/09/2026 22:57:50.21 
+release configure started Fri 18/09/2026 22:57:50.21 
+release configure exit 0 Fri 18/09/2026 22:57:55.90 
+release clean attempt 1 exit 0 Fri 18/09/2026 22:57:56.48 
+release build exit 0 Fri 18/09/2026 23:08:28.12 
+release ctest exit 0 Fri 18/09/2026 23:10:25.99 
+debug-shared configure started Fri 18/09/2026 23:10:25.99 
+debug-shared configure exit 0 Fri 18/09/2026 23:10:31.93 
+debug-shared clean attempt 1 exit 0 Fri 18/09/2026 23:10:32.64 
+debug-shared build exit 0 Fri 18/09/2026 23:18:20.89 
+debug-shared ctest exit 0 Fri 18/09/2026 23:20:22.52 
+repeat release started Fri 18/09/2026 23:20:22.52 
+repeat release exit 0 Fri 18/09/2026 23:27:55.62 
+repeat debug started Fri 18/09/2026 23:27:55.62 
+repeat debug exit 0 Fri 18/09/2026 23:36:03.61 
+qualification finished Fri 18/09/2026 23:36:03.61 

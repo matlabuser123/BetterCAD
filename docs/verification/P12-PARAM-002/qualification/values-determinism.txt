@@ -1,0 +1,19 @@
+Cross-configuration comparison of the measured values of the P12-PARAM-002 tests.
+Each configuration's bettercad_tests.exe ran the test cases the selector "[configurations][p12]" matches with
+-s --reporter xml --rng-seed 1; values.py filtered the report; compare-values.py (in this directory) compared
+the results. Temporary paths and document UUIDs are normalized; lines holding a pointer value are dropped.
+
+RESULT: identical. Every measured value is the same in Debug, Release and Debug-shared -- not one line
+differs, in either the measured or the expected column. 656 lines each, MD5 b1e61d7a1b40825e6cfaa711748dbc43.
+
+release: 656 non-empty lines after normalizing, MD5 b1e61d7a1b40825e6cfaa711748dbc43
+debug: 656 non-empty lines after normalizing, MD5 b1e61d7a1b40825e6cfaa711748dbc43
+debug-shared: 656 non-empty lines after normalizing, MD5 b1e61d7a1b40825e6cfaa711748dbc43
+
+debug against release:
+  differing lines: 0 expected only, 0 measured
+
+debug-shared against release:
+  differing lines: 0 expected only, 0 measured
+
+RESULT: measured values identical

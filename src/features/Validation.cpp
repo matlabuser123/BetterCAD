@@ -568,7 +568,9 @@ private:
             sketch::Sketch copy = *original;
             // Driving values as regeneration computes them: with the
             // parameter expressions evaluated.
-            if (auto applied = sketch::applyDrivingParameters(copy, evaluated_.parameters()); !applied) {
+            if (auto applied = sketch::applyDrivingParameters(copy, evaluated_.parameters(),
+                                                              evaluated_.activeOverrides());
+                !applied) {
                 add(ValidationCheck::SketchConstraints, Severity::Error, object.id(),
                     std::format("{}: {}", label(document_, object.id()), applied.error().message));
                 continue;

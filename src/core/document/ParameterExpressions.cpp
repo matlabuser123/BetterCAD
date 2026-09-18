@@ -90,8 +90,15 @@ Result<DimensionedValue> evaluateParameterExpression(const Document& document, P
             return makeError(ErrorCode::FailedPrecondition,
                              std::format("the expression uses the parameter '{}' itself", name));
         }
-        const Parameter* input = document.parameters().find(*target);
-        return DimensionedValue{input->dimension(), input->siValue()};
+        // The value in force, not the base value: an equation follows the
+        // active configuration's overrides, which is how a configuration
+        // that sets `width` moves `height = width / 2` with it
+        // (P12-PARAM-002).
+        const std::optional<DimensionedValue> input = document.effectiveParameterValue(*target);
+        if (!input) {
+            return makeError(ErrorCode::NotFound, std::format("unknown parameter '{}'", name));
+        }
+        return *input;
     };
     auto value = expression->evaluate(resolve);
     if (!value) {
