@@ -1,0 +1,5 @@
+  release         8693 lines  MD5 f02272f84a4f574e75caca2a94faae2e
+  debug           8693 lines  MD5 f02272f84a4f574e75caca2a94faae2e
+  debug-shared    8693 lines  MD5 f02272f84a4f574e75caca2a94faae2e
+
+  reference-model measured values identical across all presets: YES

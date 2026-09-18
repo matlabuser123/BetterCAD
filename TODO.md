@@ -12,13 +12,11 @@
 ## Status
 
 ```text
-Current: P12 — Parametric CAD Completion
-Next:    P12-QUAL-001 — Phase Qualification
-Then:    awaiting explicit scope decision
+Current: None — P12 qualified
+Next:    Explicit scope decision required
 
 Released:       v0.1.0 — P0–P10
-Qualified:      P11
-P12:            In progress
+Qualified:      P11, P12
 ```
 
 ---
@@ -113,34 +111,36 @@ P12-REF-001 → [x]
 
 ---
 
-# NEXT — P12-QUAL-001
+# DONE — P12-QUAL-001
 
 ## P12 Phase Qualification
 
 Freeze the final P12 implementation and qualify the entire phase.
+Qualified on `15d7f75`; evidence in
+[docs/verification/P12-QUAL-001/](docs/verification/P12-QUAL-001/README.md).
 
-* [ ] Freeze final source tree
-* [ ] Clean Debug build
-* [ ] Clean Release build
-* [ ] Clean Debug-shared build
-* [ ] Full test suite — Debug
-* [ ] Full test suite — Release
-* [ ] Full test suite — Debug-shared
-* [ ] 0 unexpected compiler warnings
-* [ ] P0–P11 regression unchanged
-* [ ] All P12 milestone tests PASS
-* [ ] Production reference models PASS
-* [ ] Independent geometry validation PASS
-* [ ] Failure-path validation PASS
-* [ ] Persistence validation PASS
-* [ ] Determinism validation PASS
-* [ ] Cross-preset comparison PASS
-* [ ] CLI smoke PASS
-* [ ] STEP export/read-back PASS
-* [ ] Documentation consistent with implementation
-* [ ] Final evidence in `docs/verification/P12-QUAL-001/`
-* [ ] Qualified tree == committed tree
-* [ ] Commit and push qualification closeout
+* [x] Freeze final source tree
+* [x] Clean Debug build
+* [x] Clean Release build
+* [x] Clean Debug-shared build
+* [x] Full test suite — Debug
+* [x] Full test suite — Release
+* [x] Full test suite — Debug-shared
+* [x] 0 unexpected compiler warnings
+* [x] P0–P11 regression unchanged
+* [x] All P12 milestone tests PASS
+* [x] Production reference models PASS
+* [x] Independent geometry validation PASS
+* [x] Failure-path validation PASS
+* [x] Persistence validation PASS
+* [x] Determinism validation PASS
+* [x] Cross-preset comparison PASS
+* [x] CLI smoke PASS
+* [x] STEP export/read-back PASS
+* [x] Documentation consistent with implementation
+* [x] Final evidence in `docs/verification/P12-QUAL-001/`
+* [x] Qualified tree == committed tree
+* [x] Commit and push qualification closeout
 
 ### Gate
 

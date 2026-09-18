@@ -1,0 +1,140 @@
+﻿P12-QUAL-001 CLI smoke -- the real production executable, build\release\bin\bettercad-cli.exe
+Run on the qualified tree 15d7f75, Release build.
+
+=== version ===
+$ bettercad-cli --version
+bettercad-cli 0.1.0
+exit 0 (expected 0)
+
+=== info motor_mount ===
+$ bettercad-cli info examples\models\reference\motor_mount.bcad
+Document: MotorMount
+File: examples\models\reference\motor_mount.bcad
+ID: 5eed0000-0000-4000-8000-000000000101
+
+Parameters (8):
+  width        120 mm
+  height       60 mm  (expression: width / 2)
+  thickness    8 mm  (expression: width / 15)
+  bolt_d       8 mm  (expression: thickness)
+  edge         16 mm  (expression: 2 * thickness)
+  bolt_span    88 mm  (expression: width - 2 * edge)
+  half_width   60 mm  (expression: width / 2)
+exit 0 (expected 0)
+
+=== validate gearbox_cover ===
+$ bettercad-cli validate examples\models\reference\gearbox_cover.bcad
+Validating examples\models\reference\gearbox_cover.bcad
+  document consistency  ok
+  missing references    ok
+  dependency cycles     ok
+  sketch constraints    ok
+  feature regeneration  ok, 8 objects regenerated
+  geometry              ok, 1 result body
+Result bodies (1):
+  FixingHoles (object:16): 1 solid, volume 86671.930 mm^3, area 45902.501 mm^2, bounds (0, 0, -40) to (120, 80, 0) mm
+Result: valid
+exit 0 (expected 0)
+
+=== validate manifold_tube ===
+$ bettercad-cli validate examples\models\reference\manifold_tube.bcad
+Validating examples\models\reference\manifold_tube.bcad
+  document consistency  ok
+  missing references    ok
+  dependency cycles     ok
+  sketch constraints    ok
+  feature regeneration  ok, 7 objects regenerated
+  geometry              ok, 1 result body
+Result bodies (1):
+  Flange (object:17): 1 solid, volume 38840.706 mm^3, area 11672.244 mm^2, bounds (-20, -20, -88.03) to (61.047, 25, 12) mm
+Result: valid
+exit 0 (expected 0)
+
+=== validate transition_duct ===
+$ bettercad-cli validate examples\models\reference\transition_duct.bcad
+Validating examples\models\reference\transition_duct.bcad
+  document consistency  ok
+  missing references    ok
+  dependency cycles     ok
+  sketch constraints    ok
+  feature regeneration  ok, 8 objects regenerated
+  geometry              ok, 1 result body
+Result bodies (1):
+  Flange (object:20): 1 solid, volume 488642.810 mm^3, area 48515.523 mm^2, bounds (-55, -55, -10) to (55, 55, 120) mm
+Result: valid
+exit 0 (expected 0)
+
+=== validate index_plate ===
+$ bettercad-cli validate examples\models\reference\index_plate.bcad
+Validating examples\models\reference\index_plate.bcad
+  document consistency  ok
+  missing references    ok
+  dependency cycles     ok
+  sketch constraints    ok
+  feature regeneration  ok, 9 objects regenerated
+  geometry              ok, 1 result body
+Result bodies (1):
+  Assembly (object:17): 1 solid, volume 262235.022 mm^3, area 55915.043 mm^2, bounds (-90, -90, 0) to (90, 90, 24) mm
+Result: valid
+exit 0 (expected 0)
+
+=== validate ribbed_bracket ===
+$ bettercad-cli validate examples\models\reference\ribbed_bracket.bcad
+Validating examples\models\reference\ribbed_bracket.bcad
+  document consistency  ok
+  missing references    ok
+  dependency cycles     ok
+  sketch constraints    ok
+  feature regeneration  ok, 10 objects regenerated
+  geometry              ok, 1 result body
+Result bodies (1):
+  CornerRound (object:20): 1 solid, volume 125252.693 mm^3, area 30251.989 mm^2, bounds (0, -10, 0) to (90, 70, 65) mm
+Result: valid
+exit 0 (expected 0)
+
+=== validate --configuration Large ===
+$ bettercad-cli validate examples\models\reference\motor_mount.bcad --configuration Large
+Validating examples\models\reference\motor_mount.bcad
+  document consistency  ok
+  missing references    ok
+  dependency cycles     ok
+  sketch constraints    ok
+  feature regeneration  ok, 6 objects regenerated
+  geometry              ok, 1 result body
+Result bodies (1):
+  Pilot (object:14): 1 solid, volume 199728.141 mm^3, area 40337.699 mm^2, bounds (0, 0, 0) to (180, 90, 22) mm
+Result: valid
+exit 0 (expected 0)
+
+=== validate --configuration Small ===
+$ bettercad-cli validate examples\models\reference\motor_mount.bcad --configuration Small
+Validating examples\models\reference\motor_mount.bcad
+  document consistency  ok
+  missing references    ok
+  dependency cycles     ok
+  sketch constraints    ok
+  feature regeneration  ok, 6 objects regenerated
+  geometry              ok, 1 result body
+Result bodies (1):
+  Pilot (object:14): 1 solid, volume 32003.185 mm^3, area 10838.407 mm^2, bounds (0, 0, 0) to (90, 45, 16) mm
+Result: valid
+exit 0 (expected 0)
+
+=== validate --configuration Enormous (invalid) ===
+$ bettercad-cli validate examples\models\reference\motor_mount.bcad --configuration Enormous
+Validating examples\models\reference\motor_mount.bcad
+bettercad-cli validate: no configuration named 'Enormous' in this document
+exit 1 (expected 1)
+
+=== export-step transition_duct ===
+$ bettercad-cli export-step examples\models\reference\transition_duct.bcad C:\Users\uqhas\AppData\Local\Temp\qual001-cli\duct.step
+Wrote C:\Users\uqhas\AppData\Local\Temp\qual001-cli\duct.step: STEP AP214 (mm), 1 body (Flange), 48554 bytes
+exit 0 (expected 0)
+
+=== validate missing file (invalid) ===
+$ bettercad-cli validate examples\models\reference\nope.bcad
+Validating examples\models\reference\nope.bcad
+  document consistency  1 error
+    error: 'examples\models\reference\nope.bcad' does not exist or is not a file
+Result: invalid (1 error)
+exit 1 (expected 1)

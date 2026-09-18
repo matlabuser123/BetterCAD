@@ -1,0 +1,42 @@
+P12-QUAL-001 test inventory and P0-P11 regression check
+revision 15d7f756adda8f676750ec5539b317a17c77c81e
+
+registered tests          1259
+  Catch2 unit tests       1171
+  process and check tests 88
+carrying [p12]            477
+
+P0-P10, the v0.1.0 release  (v0.1.0)
+  Catch2 cases then            266
+  process tests then           34
+  Catch2 cases now missing     0
+  process tests now missing    0
+
+P0-P11, the P11-QUAL-001 qualified tree  (79dab04bd6e8)
+  Catch2 cases then            693
+  process tests then           44
+  Catch2 cases now missing     0
+  process tests now missing    0
+
+P12 tests by milestone (a test may cover more than one):
+  P12-PARAM-001  Parameter expressions         36
+  P12-SKETCH-001 Advanced sketch constraints   27
+  P12-SKETCH-002 Ellipse and spline entities   43
+  P12-DATUM-001  Datums                        21
+  P12-STREF-001  Stable face references        54
+  P12-SKETCH-003 Sketches on planar faces      13
+  P12-FEAT-001   Through-all extrude           14
+  P12-FEAT-002   Split and combine             18
+  P12-FEAT-003   Shell                         18
+  P12-FEAT-004   Draft                         16
+  P12-FEAT-005   Rib                           17
+  P12-FEAT-006   Variable-radius fillet        16
+  P12-HOLE-001   Hole standards                31
+  P12-PATTERN-001 Advanced patterns            40
+  P12-SWEEP-001  Sweeps: paths, twist, guides  35
+  P12-LOFT-001   Lofts: shapes and smoothness  29
+  P12-PARAM-002  Design equations and configurations 44
+  P12-REF-001    Production reference models   37
+
+[p12] tests attributed to a milestone   477
+[p12] tests attributed to none          0

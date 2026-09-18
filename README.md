@@ -19,16 +19,22 @@ unless a log says so.
 | | |
 | --- | --- |
 | Parametric part modeling | **Qualified** — `P11-QUAL-001` |
-| Current implementation | `P12` — Parametric CAD Completion, in progress ([TODO.md](TODO.md)) |
-| Next | `P12-REF-001` — production reference models |
-| Released | `v0.1.0` (`P0`–`P10`); `P11` is qualified but not released |
+| Parametric CAD completion | **Qualified** — `P12-QUAL-001` |
+| Current implementation | none — the next phase is an explicit scope decision ([TODO.md](TODO.md)) |
+| Released | `v0.1.0` (`P0`–`P10`); `P11` and `P12` are qualified but not released |
 
-The qualification rebuilt the tree clean in Debug, Release and Debug-shared and
-ran the complete suite in each: **738/738 tests and 0 compiler warnings over 274
-translation units, three times over**, with 22 warning flags and `-Werror`. The
-301 tests that predate `P11` still pass unchanged. The six reference models are
-bit-identical across every build and process. 20 gates, 20 passed
-([evidence](docs/verification/P11-QUAL-001/README.md)).
+`P12-QUAL-001` rebuilt the tree clean in Debug, Release and Debug-shared and ran
+the complete suite in each: **1259/1259 tests and 0 compiler warnings, three
+times over**, with 22 warning flags and `-Werror`, then ran every test five more
+times in Release and in Debug. Nothing that predates `P12` was lost: all 693
+test cases and 44 process tests of the `P11`-qualified tree are still present and
+still pass, as are all 266 cases of the `v0.1.0` release. 477 tests carry `P12`
+tags, every one attributed to a milestone
+([evidence](docs/verification/P12-QUAL-001/README.md)).
+
+The earlier `P11-QUAL-001` qualification — 738/738 over 274 translation units,
+20 gates, 20 passed — remains recorded at
+[its evidence](docs/verification/P11-QUAL-001/README.md).
 
 ## Capabilities
 
@@ -46,7 +52,7 @@ bit-identical across every build and process. 20 gates, 20 passed
 | Persistence | Native `.bcad` JSON storing engineering intent, not meshes. Create → save → destroy → load → regenerate reproduces the model bit for bit, IDs included. |
 | Export | STEP (AP214) and STL, each verified by reading the result back and measuring it. |
 | CLI | `bettercad-cli`: `new`, `info`, `validate`, `export-step`, `export-stl`, `version`, `help`. |
-| Reference models | Six mechanical parts — stepped shaft, bolted flange, V-belt pulley, pillow block, L bracket, U-bolt — built through the public API alone ([evidence](docs/verification/P11-REF-001/README.md)). |
+| Reference models | Twelve mechanical parts, built through the public API alone. Six from `P11` — stepped shaft, bolted flange, V-belt pulley, pillow block, L bracket, U-bolt ([evidence](docs/verification/P11-REF-001/README.md)) — and six production parts that exercise the `P12` feature set together: motor mount, gearbox cover, manifold tube, transition duct, index plate, ribbed bracket ([evidence](docs/verification/P12-REF-001/README.md)). |
 
 STEP **export** only; there is no STEP import. See *Current Limitations*.
 
@@ -213,7 +219,7 @@ for a user to find.
 - One platform (Windows 11 AMD64, GCC 16.1.0, OCCT 8.0.1, Qt 6.11.2).
 - No CI, no sanitizers, no coverage, no memory checking; `.clang-format` is
   defined but not enforced.
-- 738 tests passing means 738 tests passed. Where a behaviour has no test, the
+- 1259 tests passing means 1259 tests passed. Where a behaviour has no test, the
   evidence says nothing about it.
 
 ## License

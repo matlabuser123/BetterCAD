@@ -1,0 +1,10 @@
+debug: 53536 non-empty lines after normalizing, MD5 2045fd49293ae2ba8f704b2caa3a4ae7
+debug-shared: 53536 non-empty lines after normalizing, MD5 bf052d2a443727c403f88124fd88a398
+
+debug-shared against debug:
+  line 24626 (MEASURED):
+    debug: => "BetterCAD 0.1.0 revision : <commit> build type : Debug compiler : GCC 16.1.0 language : C++23 (__cplusplus=202302) platform : Windows x86_64 libraries : static " == "BetterCAD 0.1.0 revision : <commit> build type : Debug compiler : GCC 16.1.0 language : C++23 (__cplusplus=202302) platform : Windows x86_64 libraries : static "
+    debug-shared: => "BetterCAD 0.1.0 revision : <commit> build type : Debug compiler : GCC 16.1.0 language : C++23 (__cplusplus=202302) platform : Windows x86_64 libraries : shared " == "BetterCAD 0.1.0 revision : <commit> build type : Debug compiler : GCC 16.1.0 language : C++23 (__cplusplus=202302) platform : Windows x86_64 libraries : shared "
+  differing lines: 0 expected only, 1 measured
+
+RESULT: MEASURED VALUES DIFFER

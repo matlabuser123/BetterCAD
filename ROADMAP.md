@@ -50,8 +50,13 @@ bit-identically across three build configurations.
 274 translation units in each of Debug, Release and Debug-shared, each rebuilt
 clean ([evidence](docs/verification/P11-QUAL-001/README.md)).
 
-**One capability is in progress:** Parametric CAD completion, authorized in
-[TODO.md](TODO.md) as `P12`. No other capability below is authorized.
+`P12-QUAL-001`: 22 gates, 22 passed. 1259/1259 tests and 0 compiler warnings in
+each of Debug, Release and Debug-shared, each rebuilt clean, then every test run
+five more times in Release and in Debug
+([evidence](docs/verification/P12-QUAL-001/README.md)).
+
+**No capability is in progress.** The next phase is an explicit scope decision;
+nothing below is authorized until [TODO.md](TODO.md) says so.
 
 ## Capability Roadmap
 
@@ -59,7 +64,7 @@ clean ([evidence](docs/verification/P11-QUAL-001/README.md)).
 | --- | --- | --- |
 | Foundation | `P0`–`P10` | **Qualified** |
 | Parametric Part Modeling | `P11` | **Qualified** |
-| Parametric CAD completion | `P12` | **In progress** |
+| Parametric CAD completion | `P12` | **Qualified** |
 | Interchange | — | Planned |
 | Advanced Surface Modeling | — | Planned |
 | Desktop Application | — | Planned |
@@ -136,7 +141,7 @@ independently computed volumes.
 | `P11-REF-001` | Six mechanical reference models | [P11-REF-001](docs/verification/P11-REF-001/README.md) |
 | `P11-QUAL-001` | Qualification — 20 gates, 20 passed | [P11-QUAL-001](docs/verification/P11-QUAL-001/README.md) |
 
-### Parametric CAD completion — In progress
+### Parametric CAD completion — Qualified
 
 The part-modeling capability qualified above is narrower than the original
 ambition for it. `P12` completes it: parameter expressions; the remaining
@@ -169,6 +174,8 @@ and the order.
 | `P12-SWEEP-001` | Advanced sweeps — paths that run through several sketches and so leave any one plane, a twist law the section follows, and guide curves that carry it, on a frame convention measured against the kernel rather than assumed | [P12-SWEEP-001](docs/verification/P12-SWEEP-001/README.md) |
 | `P12-PARAM-002` | Design configurations — named sets of overrides to a document's free parameters, with the equations, sketches and features shared rather than a model tree duplicated per configuration; the value in force is the base value with the active configuration's override applied, so a configuration reaches every feature without any of them knowing configurations exist | [P12-PARAM-002](docs/verification/P12-PARAM-002/README.md) |
 | `P12-LOFT-001` | Advanced lofts — sections of different shapes, matched by BetterCAD itself along normalized arc length and checked against a mixed-area prismatoid volume derived in closed form, and smooth interpolation running continuously across the intermediate sections; end conditions reported as unavailable on this kernel, with the measurement | [P12-LOFT-001](docs/verification/P12-LOFT-001/README.md) |
+| `P12-REF-001` | Production reference models — six realistic mechanical parts exercising the P12 feature set together, each validated against closed forms derived by hand; an adversarial review found and fixed eight defects, four of them parameters that destroyed their own model | [P12-REF-001](docs/verification/P12-REF-001/README.md) |
+| `P12-QUAL-001` | Phase qualification — 22 gates, 22 passed | [P12-QUAL-001](docs/verification/P12-QUAL-001/README.md) |
 
 ### Interchange — Planned
 

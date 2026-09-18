@@ -1,0 +1,12 @@
+  failure paths / diagnostics      24
+  persistence (io round trip)      183
+  determinism                      13
+  undo / redo                      46
+  STEP                             18
+  STL                              5
+  CLI (in-process)                 64
+  validation                       29
+  acceptance                       356
+  reference models                 90
+
+  failure-path cases by name       130

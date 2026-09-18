@@ -1,0 +1,131 @@
+release: 53536 non-empty lines after normalizing, MD5 7df42685929ba37e11575f5fcdc24397
+debug: 53536 non-empty lines after normalizing, MD5 2045fd49293ae2ba8f704b2caa3a4ae7
+debug-shared: 53536 non-empty lines after normalizing, MD5 bf052d2a443727c403f88124fd88a398
+
+debug against release:
+  line 581 (MEASURED):
+    release: => 254.64790894703247659 and 254.64790894703253343 are within 1e-13% of each other
+    debug: => 254.64790894703259028 and 254.64790894703253343 are within 1e-13% of each other
+  line 583 (MEASURED):
+    release: => 133.29693132169433056 and 133.29691099999999437 are within 0.0001% of each other
+    debug: => 133.29693132169435899 and 133.29691099999999437 are within 0.0001% of each other
+  line 585 (MEASURED):
+    release: => 133.29693132169433056 and 133.29693132169435899 are within 1e-12% of each other
+    debug: => 133.29693132169435899 and 133.29693132169435899 are within 1e-12% of each other
+  line 587 (MEASURED):
+    release: => 4058.63770813261044168 and 4058.63729999999986831 are within 0.0001% of each other
+    debug: => 4058.63770813261089643 and 4058.63729999999986831 are within 0.0001% of each other
+  line 591 (expected only):
+    release: => 4058.63770796589460588 and 4058.63770813261044168 are within 1e-07% of each other with message: expected 4058.64 mm^3, actual 4058.64 mm^3
+    debug: => 4058.63770796589460588 and 4058.63770813261089643 are within 1e-07% of each other with message: expected 4058.64 mm^3, actual 4058.64 mm^3
+  line 2085 (expected only):
+    release: => 3.53553400593273759 is within 0.002 of 3.53553390593273731
+    debug: => 3.53553400593273759 is within 0.002 of 3.53553390593273775
+  line 4100 (expected only):
+    release: => 6764.39617963917589805 and 6764.39618022101785755 are within 1e-07% of each other
+    debug: => 6764.39617963917589805 and 6764.39618022101876704 are within 1e-07% of each other
+  line 9320 (expected only):
+    release: => 4058.63770796589460588 and 4058.63770813261044168 are within 1e-07% of each other
+    debug: => 4058.63770796589460588 and 4058.63770813261089643 are within 1e-07% of each other
+  line 9322 (expected only):
+    release: => 4058.63770796589460588 and 4058.63770813261044168 are within 1e-07% of each other
+    debug: => 4058.63770796589460588 and 4058.63770813261089643 are within 1e-07% of each other
+  line 10458 (expected only):
+    release: => -0.70710678118654746 is within 0.00000000000001 of -0.70710678118654746
+    debug: => -0.70710678118654746 is within 0.00000000000001 of -0.70710678118654757
+  line 10460 (expected only):
+    release: => 0.78033008588991071 is within 0.00000000000001 of 0.7803300858899106
+    debug: => 0.78033008588991071 is within 0.00000000000001 of 0.78033008588991071
+  line 10462 (expected only):
+    release: => -0.12682648404432195 is within 0.00000000000001 of -0.12682648404432201
+    debug: => -0.12682648404432195 is within 0.00000000000001 of -0.12682648404432195
+  line 10466 (expected only):
+    release: => -0.12682648404432215 is within 0.00000000000001 of -0.12682648404432223
+    debug: => -0.12682648404432215 is within 0.00000000000001 of -0.12682648404432217
+  line 10483 (expected only):
+    release: => -0.70710678118654746 is within 0.00000000000001 of -0.70710678118654746
+    debug: => -0.70710678118654746 is within 0.00000000000001 of -0.70710678118654757
+  line 10485 (expected only):
+    release: => 0.78033008588991071 is within 0.00000000000001 of 0.7803300858899106
+    debug: => 0.78033008588991071 is within 0.00000000000001 of 0.78033008588991071
+  line 10487 (expected only):
+    release: => -0.12682648404432195 is within 0.00000000000001 of -0.12682648404432201
+    debug: => -0.12682648404432195 is within 0.00000000000001 of -0.12682648404432195
+  line 10491 (expected only):
+    release: => -0.12682648404432215 is within 0.00000000000001 of -0.12682648404432223
+    debug: => -0.12682648404432215 is within 0.00000000000001 of -0.12682648404432217
+  line 10499 (expected only):
+    release: => -0.70710678118654757 is within 0.00000000000001 of -0.70710678118654746
+    debug: => -0.70710678118654757 is within 0.00000000000001 of -0.70710678118654757
+  line 10501 (expected only):
+    release: => 0.12682648404432215 is within 0.00000000000001 of 0.12682648404432223
+    debug: => 0.12682648404432215 is within 0.00000000000001 of 0.12682648404432217
+  line 24626 (MEASURED):
+    release: => "BetterCAD 0.1.0 revision : <commit> build type : Release compiler : GCC 16.1.0 language : C++23 (__cplusplus=202302) platform : Windows x86_64 libraries : static " == "BetterCAD 0.1.0 revision : <commit> build type : Release compiler : GCC 16.1.0 language : C++23 (__cplusplus=202302) platform : Windows x86_64 libraries : static "
+    debug: => "BetterCAD 0.1.0 revision : <commit> build type : Debug compiler : GCC 16.1.0 language : C++23 (__cplusplus=202302) platform : Windows x86_64 libraries : static " == "BetterCAD 0.1.0 revision : <commit> build type : Debug compiler : GCC 16.1.0 language : C++23 (__cplusplus=202302) platform : Windows x86_64 libraries : static "
+  differing lines: 15 expected only, 5 measured
+
+debug-shared against release:
+  line 581 (MEASURED):
+    release: => 254.64790894703247659 and 254.64790894703253343 are within 1e-13% of each other
+    debug-shared: => 254.64790894703259028 and 254.64790894703253343 are within 1e-13% of each other
+  line 583 (MEASURED):
+    release: => 133.29693132169433056 and 133.29691099999999437 are within 0.0001% of each other
+    debug-shared: => 133.29693132169435899 and 133.29691099999999437 are within 0.0001% of each other
+  line 585 (MEASURED):
+    release: => 133.29693132169433056 and 133.29693132169435899 are within 1e-12% of each other
+    debug-shared: => 133.29693132169435899 and 133.29693132169435899 are within 1e-12% of each other
+  line 587 (MEASURED):
+    release: => 4058.63770813261044168 and 4058.63729999999986831 are within 0.0001% of each other
+    debug-shared: => 4058.63770813261089643 and 4058.63729999999986831 are within 0.0001% of each other
+  line 591 (expected only):
+    release: => 4058.63770796589460588 and 4058.63770813261044168 are within 1e-07% of each other with message: expected 4058.64 mm^3, actual 4058.64 mm^3
+    debug-shared: => 4058.63770796589460588 and 4058.63770813261089643 are within 1e-07% of each other with message: expected 4058.64 mm^3, actual 4058.64 mm^3
+  line 2085 (expected only):
+    release: => 3.53553400593273759 is within 0.002 of 3.53553390593273731
+    debug-shared: => 3.53553400593273759 is within 0.002 of 3.53553390593273775
+  line 4100 (expected only):
+    release: => 6764.39617963917589805 and 6764.39618022101785755 are within 1e-07% of each other
+    debug-shared: => 6764.39617963917589805 and 6764.39618022101876704 are within 1e-07% of each other
+  line 9320 (expected only):
+    release: => 4058.63770796589460588 and 4058.63770813261044168 are within 1e-07% of each other
+    debug-shared: => 4058.63770796589460588 and 4058.63770813261089643 are within 1e-07% of each other
+  line 9322 (expected only):
+    release: => 4058.63770796589460588 and 4058.63770813261044168 are within 1e-07% of each other
+    debug-shared: => 4058.63770796589460588 and 4058.63770813261089643 are within 1e-07% of each other
+  line 10458 (expected only):
+    release: => -0.70710678118654746 is within 0.00000000000001 of -0.70710678118654746
+    debug-shared: => -0.70710678118654746 is within 0.00000000000001 of -0.70710678118654757
+  line 10460 (expected only):
+    release: => 0.78033008588991071 is within 0.00000000000001 of 0.7803300858899106
+    debug-shared: => 0.78033008588991071 is within 0.00000000000001 of 0.78033008588991071
+  line 10462 (expected only):
+    release: => -0.12682648404432195 is within 0.00000000000001 of -0.12682648404432201
+    debug-shared: => -0.12682648404432195 is within 0.00000000000001 of -0.12682648404432195
+  line 10466 (expected only):
+    release: => -0.12682648404432215 is within 0.00000000000001 of -0.12682648404432223
+    debug-shared: => -0.12682648404432215 is within 0.00000000000001 of -0.12682648404432217
+  line 10483 (expected only):
+    release: => -0.70710678118654746 is within 0.00000000000001 of -0.70710678118654746
+    debug-shared: => -0.70710678118654746 is within 0.00000000000001 of -0.70710678118654757
+  line 10485 (expected only):
+    release: => 0.78033008588991071 is within 0.00000000000001 of 0.7803300858899106
+    debug-shared: => 0.78033008588991071 is within 0.00000000000001 of 0.78033008588991071
+  line 10487 (expected only):
+    release: => -0.12682648404432195 is within 0.00000000000001 of -0.12682648404432201
+    debug-shared: => -0.12682648404432195 is within 0.00000000000001 of -0.12682648404432195
+  line 10491 (expected only):
+    release: => -0.12682648404432215 is within 0.00000000000001 of -0.12682648404432223
+    debug-shared: => -0.12682648404432215 is within 0.00000000000001 of -0.12682648404432217
+  line 10499 (expected only):
+    release: => -0.70710678118654757 is within 0.00000000000001 of -0.70710678118654746
+    debug-shared: => -0.70710678118654757 is within 0.00000000000001 of -0.70710678118654757
+  line 10501 (expected only):
+    release: => 0.12682648404432215 is within 0.00000000000001 of 0.12682648404432223
+    debug-shared: => 0.12682648404432215 is within 0.00000000000001 of 0.12682648404432217
+  line 24626 (MEASURED):
+    release: => "BetterCAD 0.1.0 revision : <commit> build type : Release compiler : GCC 16.1.0 language : C++23 (__cplusplus=202302) platform : Windows x86_64 libraries : static " == "BetterCAD 0.1.0 revision : <commit> build type : Release compiler : GCC 16.1.0 language : C++23 (__cplusplus=202302) platform : Windows x86_64 libraries : static "
+    debug-shared: => "BetterCAD 0.1.0 revision : <commit> build type : Debug compiler : GCC 16.1.0 language : C++23 (__cplusplus=202302) platform : Windows x86_64 libraries : shared " == "BetterCAD 0.1.0 revision : <commit> build type : Debug compiler : GCC 16.1.0 language : C++23 (__cplusplus=202302) platform : Windows x86_64 libraries : shared "
+  differing lines: 15 expected only, 5 measured
+
+RESULT: MEASURED VALUES DIFFER
