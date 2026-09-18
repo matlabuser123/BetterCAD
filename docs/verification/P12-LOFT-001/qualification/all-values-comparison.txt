@@ -1,0 +1,45 @@
+Every measured value of the tests P12-SWEEP-001 had, from a Release build of its commit (abb9215, built in
+a separate detached worktree of that exact revision), and from this milestone's qualified Release build. Each
+ran bettercad_tests.exe -s --reporter xml --rng-seed 1 (all test cases; this build also ran the 28 new ones),
+and values.py (in this directory, with the same header for both) filtered the report:
+  sweep001-baseline: 1699 test cases with measured values
+  loft001:           1736 test cases with measured values
+
+compare-values.py dropped (--exclude) the 28 new test cases and the six whose assertions this milestone
+deliberately changed, and normalized temporary paths, document UUIDs and the Git revision the version text
+reports. Source line numbers were ignored (--ignore-line-numbers): several existing test files gained lines,
+which moves the entries after them.
+
+RESULT: identical. 48978 lines each, MD5 0faf68a485bcdfdb5eb4411dd8d91284 for both. Not one volume, area,
+centroid, bounding box or diagnostic of a pre-existing test moved.
+
+Excluded, and why:
+  - the 28 test cases this milestone adds (they have no counterpart in the baseline);
+  - Loft_RejectsSectionsItCannotLoft: it asserted four refusal messages -- a circle against 4 lines, 4 lines
+    against 6, arcs of unequal sweep, and lines and arcs in another order. All four are what this milestone
+    implements, so all four now build one valid solid and the test asserts that instead. Their volumes are
+    checked against closed forms in LoftShapeTests.cpp;
+  - LoftFeature_RejectsIncompatibleSections: its "a circle to a rectangle" section, for the same reason;
+  - LoftFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact, LoftFeature_ModelsAreValidatedLikeAnyOther
+    and "info and validate describe lofts": each needed an edit the geometry genuinely cannot take, and each
+    used "a rectangle against a circle" for it. They now move a section onto the other's own plane, which is
+    still refused. The tests are about atomic failure and about reporting, not about which input fails, so
+    each still tests what it was written to test;
+  - LoftFeature_MalformedDataIsRejectedWithTheJsonPath: it asserted that "smooth" was an unknown value of the
+    interpolation field, which this milestone adds. It now asserts that "smooth" loads and that "curved" is
+    still rejected with its JSON path.
+
+Substituted (--substitute " (modified)="): the build-info string says "(modified)" when the build was made
+from a working tree with uncommitted changes, which this milestone's qualified build was (the commit follows
+the qualification).
+
+substituted ' (modified)' -> '':
+  sweep001-baseline: 2 lines
+  loft001: 9 lines
+sweep001-baseline: 48978 non-empty lines after normalizing, MD5 0faf68a485bcdfdb5eb4411dd8d91284
+loft001: 48978 non-empty lines after normalizing, MD5 0faf68a485bcdfdb5eb4411dd8d91284
+
+loft001 against sweep001-baseline:
+  differing lines: 0 expected only, 0 measured
+
+RESULT: measured values identical

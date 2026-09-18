@@ -387,28 +387,32 @@ TEST_CASE("Loft_RejectsSectionsItCannotLoft", "[geometry][loft]") {
     CHECK(message({bottom, region(circleLoop(0, 0, 5), tilted)}) ==
           "makeLoft: section 2 is not parallel to section 1: their planes are 10 deg apart; only sections on parallel "
           "planes can be lofted");
-    // Different shapes are not matched.
-    CHECK(message({bottom, region(rectangleLoop(0, 0, 10, 10), levelAt(30))}) ==
-          "makeLoft: sections 1 and 2 cannot be matched: section 1 is a circle and section 2 is 4 lines; lofts between "
-          "different shapes are not supported");
-    CHECK(message({region(rectangleLoop(0, 0, 10, 10), levelAt(0)), region(regular(6, 5), levelAt(30))}) ==
-          "makeLoft: sections 1 and 2 cannot be matched: section 1 has 4 lines and section 2 has 6 lines; lofts "
-          "between different shapes are not supported");
+    // Sections of different shapes were refused here until
+    // P12-LOFT-001, which matches them by arc length instead. Each of the
+    // four kinds that used to be refused now builds one valid solid; the
+    // volumes are checked against closed forms in LoftShapeTests.cpp.
+    const auto builds = [](const std::vector<PlanarRegion>& sections) {
+        auto body = makeLoft(sections);
+        if (!body) {
+            FAIL(body.error().message);
+        }
+        CHECK(body->isValid());
+        return body->topology().solids;
+    };
+    CHECK(builds({bottom, region(rectangleLoop(0, 0, 10, 10), levelAt(30))}) == 1);        // a circle to 4 lines
+    CHECK(builds({region(rectangleLoop(0, 0, 10, 10), levelAt(0)),
+                  region(regular(6, 5), levelAt(30))}) == 1);                              // 4 lines to 6
     // A D (a line and a half circle) against a line and a 270 deg arc.
     const ProfileLoop half{{LineSegment2D{mm(0, -5), mm(0, 5)}, ArcSegment2D{mm(0, 0), mm(0, 5), mm(0, -5), true}}};
     const double s = 5.0 / std::sqrt(2.0);
     const ProfileLoop most{{LineSegment2D{mm(s, -s), mm(s, s)}, ArcSegment2D{mm(0, 0), mm(s, s), mm(s, -s), true}}};
-    CHECK(message({region(half, levelAt(0)), region(most, levelAt(30))}) ==
-          "makeLoft: sections 1 and 2 cannot be matched: an arc of section 1 turns by 180 deg where the matching arc of "
-          "section 2 turns by 270 deg; lofts between different shapes are not supported");
+    CHECK(builds({region(half, levelAt(0)), region(most, levelAt(30))}) == 1);              // arcs of unequal sweep
     // Lines and arcs in another order: a slot (arc, line, arc, line) against
     // line, line, arc, arc (two half circles on a square's corner).
     const ProfileLoop corner{{LineSegment2D{mm(0, 0), mm(10, 0)}, LineSegment2D{mm(10, 0), mm(10, 10)},
                               ArcSegment2D{mm(5, 10), mm(10, 10), mm(0, 10), true},
                               ArcSegment2D{mm(0, 5), mm(0, 10), mm(0, 0), true}}};
-    CHECK(message({region(slotLoop(10, 5), levelAt(0)), region(corner, levelAt(30))}) ==
-          "makeLoft: sections 1 and 2 cannot be matched: the lines and arcs of sections 1 and 2 do not follow one "
-          "another in the same order; lofts between different shapes are not supported");
+    CHECK(builds({region(slotLoop(10, 5), levelAt(0)), region(corner, levelAt(30))}) == 1); // another order
 }
 
 TEST_CASE("Loft_TwistedSectionsFollowTheTwistLaw", "[geometry][loft]") {

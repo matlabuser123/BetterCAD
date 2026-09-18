@@ -41,6 +41,7 @@ bettercad_add_executable(bettercad_tests
         core/geometry/GeometryTestSupport.hpp
         core/geometry/HoleTests.cpp
         core/geometry/LoftTests.cpp
+        core/geometry/LoftShapeTests.cpp
         core/geometry/MeshTests.cpp
         core/geometry/PrimitiveTests.cpp
         core/geometry/PropertyTests.cpp
@@ -78,6 +79,7 @@ bettercad_add_executable(bettercad_tests
         features/HoleStandardTests.cpp
         features/LinearPatternFeatureTests.cpp
         features/LoftFeatureTests.cpp
+        features/LoftShapeFeatureTests.cpp
         features/MirrorFeatureTests.cpp
         features/PatternDistributionTests.cpp
         features/PatternNestingTests.cpp

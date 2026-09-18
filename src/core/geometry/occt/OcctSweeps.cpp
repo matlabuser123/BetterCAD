@@ -970,8 +970,101 @@ Result<Body> makeSweep(const PlanarRegion& region, const PlanarPath& path, const
     return body;
 }
 
+std::string_view toString(LoftStyle style) noexcept {
+    switch (style) {
+    case LoftStyle::Ruled:
+        return "ruled";
+    case LoftStyle::Smooth:
+        return "smooth";
+    }
+    return "ruled";
+}
+
 Result<Body> makeLoft(std::span<const PlanarRegion> sections) {
     return makeLoft(sections, SweptFaceNamer{});
+}
+
+Result<Body> makeLoft(std::span<const PlanarRegion> sections, LoftStyle style, const SweptFaceNamer& namer) {
+    if (style == LoftStyle::Ruled) {
+        return makeLoft(sections, namer);
+    }
+    // The correspondence is what can be wrong, and the ruled loft of the
+    // same sections checks it exactly against the prismatoid volume. Build
+    // that first: if it is right, the matching is right.
+    auto guard = makeLoft(sections, SweptFaceNamer{});
+    if (!guard) {
+        return std::unexpected(guard.error());
+    }
+    const auto guardProperties = guard->massProperties();
+    if (!guardProperties) {
+        return makeError(ErrorCode::Internal, "makeLoft: the ruled loft that guards a smooth one has no volume");
+    }
+    auto plan = detail::planLoft(sections);
+    if (!plan) {
+        return std::unexpected(plan.error());
+    }
+
+    auto lofted = occt::guardKernelCall("makeLoft", [&]() -> Result<Body> {
+        BRepOffsetAPI_ThruSections loft(/*isSolid=*/true, /*ruled=*/false);
+        loft.CheckCompatibility(false);
+        for (std::size_t i = 0; i < plan->sections.size(); ++i) {
+            const PlanarRegion& section = plan->sections[i];
+            WireBuilder builder(section.plane, 0.0, /*seamOnXAxis=*/true);
+            auto wire = builder.build(section.outer);
+            if (!wire) {
+                return std::unexpected(wire.error());
+            }
+            loft.AddWire(*wire);
+        }
+        loft.Build();
+        if (!loft.IsDone()) {
+            return makeError(ErrorCode::Internal, "makeLoft: the kernel could not loft the sections smoothly");
+        }
+        const TopoDS_Shape shape = loft.Shape();
+        FaceNaming naming(shape, namer);
+        naming.name(loft.FirstShape(), SweptFace{.kind = SweptFace::Kind::First});
+        naming.name(loft.LastShape(), SweptFace{.kind = SweptFace::Kind::Last});
+        return occt::BodyAccess::makeBody(shape, naming.take(shape));
+    });
+    if (!lofted) {
+        return std::unexpected(lofted.error());
+    }
+    const Body& body = *lofted;
+    if (body.isEmpty() || body.topology().solids != 1 || !body.isValid()) {
+        return makeError(ErrorCode::Internal, "makeLoft: the kernel produced an invalid smooth solid");
+    }
+    auto intersects = occt::guardKernelCall("makeLoft", [&]() -> Result<bool> {
+        BRepAlgoAPI_Check check(*occt::BodyAccess::shape(body), /*bTestSE=*/false, /*bTestSI=*/true);
+        return !check.IsValid();
+    });
+    if (!intersects) {
+        return std::unexpected(intersects.error());
+    }
+    if (*intersects) {
+        return makeError(ErrorCode::InvalidArgument,
+                         "makeLoft: the smooth loft would intersect itself: its sides pass through one another "
+                         "between the sections");
+    }
+    const auto properties = body.massProperties();
+    if (!properties || !isFinite(properties->volume) || !(properties->volume > Volume{})) {
+        return makeError(ErrorCode::Internal,
+                         "makeLoft: the kernel produced a smooth solid without a finite positive volume");
+    }
+    // An envelope, not a law: a smooth loft bulges away from the ruled one
+    // by an amount the kernel's interpolation decides, and no closed form
+    // for it exists (see the header). Half to twice catches a solid built
+    // from the wrong sections while passing every shape measured
+    // (0.80 and 0.98 of the ruled volume in the kernel probe).
+    const double actual = properties->volume.in(units::mm3);
+    const double ruled = guardProperties->volume.in(units::mm3);
+    if (actual < 0.5 * ruled || actual > 2.0 * ruled) {
+        return makeError(ErrorCode::Internal,
+                         std::format("makeLoft: the smooth solid encloses {:.12g} mm^3 where the ruled loft of the "
+                                     "same sections encloses {:.12g} mm^3, which is too far apart to be the same "
+                                     "sections",
+                                     actual, ruled));
+    }
+    return body;
 }
 
 Result<Body> makeLoft(std::span<const PlanarRegion> sections, const SweptFaceNamer& namer) {

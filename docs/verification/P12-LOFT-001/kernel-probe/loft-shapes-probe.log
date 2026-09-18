@@ -1,0 +1,58 @@
+OCCT loft probe, Fri 18/09/2026 17:05:16.45
+Source: docs/verification/P12-LOFT-001/kernel-probe/loft_shapes_probe.cpp
+Built with: c++ (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r4) 16.1.0, -O2, against OCCT 8.0.1 in the dependency prefix.
+
+OCCT loft probe for P12-LOFT-001 (BRepOffsetAPI_ThruSections, OCCT 8.0.1)
+
+=== A. different shapes, CheckCompatibility(true) (the kernel matches) ===
+  square -> circle, ruled            valid 1  self-ok 1  faces   6  V=   4058.637708  prismatoid=   4038.712301  ratio 1.004933604  centroid z=12.755524
+  square from another corner         valid 1  self-ok 1  faces   6  V=   4058.637708  prismatoid=   4038.712301  ratio 1.004933604  centroid z=12.755524
+  triangle -> circle, ruled          valid 1  self-ok 1  faces   5  V=   3158.732135  centroid z=13.780429
+  square -> hexagon, ruled           valid 1  self-ok 1  faces  10  V=   3808.012702  centroid z=12.340186
+  square -> square (control)         valid 1  self-ok 1  faces   6  V=   3500.000000  prismatoid=   3500.000000  ratio 1.000000000  centroid z=11.785714
+
+=== B. different shapes, split to equal segment counts, CheckCompatibility(false) ===
+  (the averaged section's area, sampled: 133.296911 mm^2)
+  square -> split circle, ruled      valid 1  self-ok 1  faces   6  V=   4058.637708  prismatoid=   4058.637304  ratio 1.000000099  centroid z=12.755524
+  square -> circle split at 45 deg   valid 1  self-ok 1  faces   6  V=   3685.714479  prismatoid=   4058.637304  ratio 0.908116248  centroid z=12.528427
+  triangle -> split circle, ruled    valid 1  self-ok 1  faces   5  V=   3158.732135  centroid z=13.780429
+  square(12) -> hexagon(12), ruled   valid 1  self-ok 1  faces  14  V=   3810.202655  centroid z=12.341714
+
+=== C. smooth interpolation (ruled = false) ===
+  two coaxial circles r 10 -> r 5 over 30 mm: frustum 5497.787144 mm^3
+  two circles, ruled                 valid 1  self-ok 1  faces   3  V=   5497.787144  prismatoid=   5497.787144  ratio 1.000000000  centroid z=11.785714
+  two circles, smooth                valid 1  self-ok 1  faces   3  V=   5497.787144  prismatoid=   5497.787144  ratio 1.000000000  centroid z=11.785714
+  three circles, ruled               valid 1  self-ok 1  faces   4  V=   9162.978573  prismatoid=   9162.978573  ratio 1.000000000  centroid z=25.000000
+  three circles, smooth              valid 1  self-ok 1  faces   3  V=   7330.382866  prismatoid=   9162.978573  ratio 0.800000001  centroid z=25.000000
+  three squares, smooth              valid 1  self-ok 1  faces   6  V=   4666.666667  prismatoid=   5833.333333  ratio 0.800000000  centroid z=25.000000
+
+=== D. ThruSections settings (looking for an end condition) ===
+  smooth, default                    valid 1  self-ok 1  faces   3  V=   5497.787144  prismatoid=   5497.787144  ratio 1.000000000  centroid z=11.785714
+  smooth, Continuity C0              valid 1  self-ok 1  faces   3  V=   5497.787144  prismatoid=   5497.787144  ratio 1.000000000  centroid z=11.785714
+  smooth, Continuity C1              valid 1  self-ok 1  faces   3  V=   5497.787144  prismatoid=   5497.787144  ratio 1.000000000  centroid z=11.785714
+  smooth, Continuity C2              valid 1  self-ok 1  faces   3  V=   5497.787144  prismatoid=   5497.787144  ratio 1.000000000  centroid z=11.785714
+  smooth, ParType Centripetal        valid 1  self-ok 1  faces   3  V=   5497.787144  prismatoid=   5497.787144  ratio 1.000000000  centroid z=11.785714
+  smooth, ParType ChordLength        valid 1  self-ok 1  faces   3  V=   5497.787144  prismatoid=   5497.787144  ratio 1.000000000  centroid z=11.785714
+  smooth, ParType IsoParametric      valid 1  self-ok 1  faces   3  V=   5497.787144  prismatoid=   5497.787144  ratio 1.000000000  centroid z=11.785714
+  smooth, MaxDegree 3                valid 1  self-ok 1  faces   3  V=   5497.787144  prismatoid=   5497.787144  ratio 1.000000000  centroid z=11.785714
+  smooth, MaxDegree 8                valid 1  self-ok 1  faces   3  V=   5497.787144  prismatoid=   5497.787144  ratio 1.000000000  centroid z=11.785714
+  smooth, Smoothing on               valid 1  self-ok 1  faces   3  V=   5497.787144  prismatoid=   5497.787144  ratio 1.000000000  centroid z=11.785714
+  The class offers no tangent, normal or direction end condition: its settings choose how the
+  surface is approximated, not how it leaves a section.
+
+=== E. ghost section (a repeated section a little way along the normal) ===
+  smooth, ghost 0.010000 mm          valid 1  self-ok 1  faces   3  V=   6783.428691  prismatoid=   5497.787144  ratio 1.233847094  centroid z=12.230502
+  smooth, ghost 0.100000 mm          valid 1  self-ok 1  faces   3  V=   6787.533524  prismatoid=   5497.787144  ratio 1.234593728  centroid z=12.231765
+  smooth, ghost 1.000000 mm          valid 1  self-ok 1  faces   3  V=   6830.030956  prismatoid=   5497.787144  ratio 1.242323644  centroid z=12.244798
+  A ghost section changes the solid: it adds a straight collar of its own length and moves
+  the volume away from the frustum. Recorded as measured, not recommended.
+
+=== F. smooth, three circles at unequal heights (which parameter?) ===
+  laws: uniform-in-index 7330.382858   in-z 4458.770823   ruled 9162.978573
+  three circles unequal, smooth      valid 1  self-ok 1  faces   3  V=   5037.207036  prismatoid=   7330.382858  ratio 0.687168342  centroid z=26.346016
+  three circles unequal, ruled       valid 1  self-ok 1  faces   4  V=   9162.978573  prismatoid=   9162.978573  ratio 1.000000000  centroid z=28.214286
+
+=== G. smooth, four equally spaced circles (a cubic, if the law holds) ===
+  laws: cubic-in-index 8594.051103   ruled 8712.683626
+  four circles, smooth               valid 1  self-ok 1  faces   3  V=   8567.727065  prismatoid=   8594.051103  ratio 0.996936947  centroid z=31.134406
+  four circles, ruled                valid 1  self-ok 1  faces   5  V=   8712.683626  prismatoid=   8712.683626  ratio 1.000000000  centroid z=25.961538

@@ -1,0 +1,82 @@
+Largest deviations of the P12-LOFT-001 tests, from the Release build of the qualified tree.
+Produced by: python deviations.py --worst 3 <values file> LoftShapes LoftSmooth (deviations.py is in this
+directory; the values file is reference-values-release.txt).
+
+Every tolerance is met with headroom, and the tightest ones are met at rounding (about 2e-16):
+  1e-15, 1e-14, 1e-12  closed-form arithmetic and equal-shape lofts       <= 4.0e-16
+  1e-09                lofts whose sides the kernel approximates          <= 2.0e-10
+  1e-06                the probe's 4096-point sampling of the mid section    1.5e-07
+  1e-05                the smooth loft's cut section at the waist, once      6.0e-06
+
+No tolerance was widened for this milestone. The 1e-5 entry is the one measurement that needs it, and
+LoftSmooth_PassesThroughEverySection also asserts that an order tighter FAILS, so it cannot silently
+become a loose bound.
+
+file                             kind  tolerance  checks    largest
+LoftFileTests.cpp                abs     1.0e-06       5   1.00e-07
+LoftFileTests.cpp                rel     1.0e-12       1   1.65e-16
+LoftFileTests.cpp                rel     1.0e-09       5   3.76e-11
+LoftShapeFeatureTests.cpp        rel     1.0e-12       4   2.84e-16
+LoftShapeFeatureTests.cpp        rel     1.0e-09      10   4.23e-11
+LoftShapeFeatureTests.cpp        rel     1.0e-08       1   3.76e-11
+LoftShapeTests.cpp               rel     1.0e-15       4   2.23e-16
+LoftShapeTests.cpp               rel     1.0e-14       1   2.13e-16
+LoftShapeTests.cpp               rel     1.0e-12       7   3.97e-16
+LoftShapeTests.cpp               rel     1.0e-09      16   2.00e-10
+LoftShapeTests.cpp               rel     1.0e-08       1   3.76e-11
+LoftShapeTests.cpp               rel     1.0e-06       2   1.52e-07
+LoftShapeTests.cpp               rel     1.0e-05       1   6.02e-06
+
+LoftFileTests.cpp abs 1.0e-06: largest 3
+  1.000e-07  measured 50.00000010000067 expected 50.0  LoftShapes_ExportStep / a smooth loft  
+  1.000e-07  measured 10.000000100000056 expected 10.0  LoftShapes_ExportStep / a smooth loft  
+  1.000e-07  measured 30.0000001 expected 30.0  LoftShapes_ExportStep / a square lofted to a circle  
+
+LoftFileTests.cpp rel 1.0e-12: largest 3
+  1.654e-16  measured 5497.787143782139 expected 5497.787143782138  LoftShapes_FilesWrittenBeforeThisMilestoneStillLoadAsRuled  
+
+LoftFileTests.cpp rel 1.0e-09: largest 3
+  3.764e-11  measured 15707.96326854017 expected 15707.963267948964  LoftShapes_SaveLoadRegeneratesTheSameSolid / a smooth loft, and its parameters after loading  
+  3.763e-11  measured 7330.382858652061 expected 7330.382858376183  LoftShapes_SaveLoadRegeneratesTheSameSolid / a smooth loft, and its parameters after loading  
+  3.747e-11  measured 7330.382858650826 expected 7330.382858376183  LoftShapes_ExportStep / a smooth loft  
+
+LoftShapeFeatureTests.cpp rel 1.0e-12: largest 3
+  2.842e-16  measured 400.0000000000001 expected 400.0  LoftShapes_CapsStayNamedAcrossShapes  
+  1.985e-16  measured 9162.97857297023 expected 9162.978572970229  LoftSmooth_EditingTheInterpolationIsUndoable  
+  1.985e-16  measured 9162.97857297023 expected 9162.978572970229  LoftSmooth_IsADifferentSolidFromTheRuledOne  
+
+LoftShapeFeatureTests.cpp rel 1.0e-09: largest 3
+  4.235e-11  measured 8891.63150962369 expected 8891.631510000208  LoftShapes_FollowTheirParameters / a bigger circle  
+  3.763e-11  measured 7330.382858652061 expected 7330.382858376183  LoftSmooth_FollowsTheQuadraticThroughItsSections  ; smooth 7330.38 mm^3, law 7330.38
+  3.763e-11  measured 7330.382858652061 expected 7330.382858376183  LoftSmooth_EditingTheInterpolationIsUndoable  
+
+LoftShapeFeatureTests.cpp rel 1.0e-08: largest 3
+  3.763e-11  measured 0.8000000000301077 expected 0.8  LoftSmooth_IsADifferentSolidFromTheRuledOne  
+
+LoftShapeTests.cpp rel 1.0e-15: largest 3
+  2.232e-16  measured 254.64790894703248 expected 254.64790894703253  LoftShapes_SquareToCircleMatchesTheClosedForm  
+  1.985e-16  measured 9162.97857297023 expected 9162.978572970229  LoftSmooth_ThroughThreeSectionsFollowsTheQuadratic  
+  0.000e+00  measured 200.0 expected 200.0  LoftShapes_SquareToCircleMatchesTheClosedForm  
+
+LoftShapeTests.cpp rel 1.0e-14: largest 3
+  2.132e-16  measured 133.29693132169433 expected 133.29693132169436  LoftShapes_SquareToCircleMatchesTheClosedForm  
+
+LoftShapeTests.cpp rel 1.0e-12: largest 3
+  3.970e-16  measured 9162.978572970227 expected 9162.97857297023  LoftSmooth_ThroughThreeSectionsFollowsTheQuadratic  
+  3.619e-16  measured 78.5398163397448 expected 78.53981633974483  LoftShapes_SquareToCircleMatchesTheClosedForm  expected 4058.64 mm^3, actual 4058.64 mm^3
+  2.842e-16  measured 199.99999999999994 expected 200.0  LoftShapes_SquareToCircleMatchesTheClosedForm  expected 4058.64 mm^3, actual 4058.64 mm^3
+
+LoftShapeTests.cpp rel 1.0e-09: largest 3
+  1.997e-10  measured 6377.266862941225 expected 6377.2668642148565  LoftSmooth_WorksBetweenDifferingShapes  
+  1.997e-10  measured 6377.266862941225 expected 6377.2668642148565  LoftShapes_ChainsOfThreeDifferentShapesStayMatched  lower 3382.2 + upper 2995.07 = 6377.27 mm^3
+  1.989e-10  measured 4815.86886161993 expected 4815.868862577821  LoftShapes_TriangleAndHexagonToCircles / a hexagon to a circle  
+
+LoftShapeTests.cpp rel 1.0e-08: largest 3
+  3.764e-11  measured 0.8000000000301098 expected 0.8  LoftSmooth_ThroughThreeSectionsFollowsTheQuadratic  smooth 7330.38 mm^3, quadratic law 7330.38
+
+LoftShapeTests.cpp rel 1.0e-06: largest 3
+  1.525e-07  measured 133.29693132169433 expected 133.296911  LoftShapes_SquareToCircleMatchesTheClosedForm  
+  1.006e-07  measured 4058.6377081326104 expected 4058.6373  LoftShapes_SquareToCircleMatchesTheClosedForm  
+
+LoftShapeTests.cpp rel 1.0e-05: largest 3
+  6.023e-06  measured 78.54028940291627 expected 78.53981633974483  LoftSmooth_PassesThroughEverySection  waist 78.5403 mm^2, section 78.5398 mm^2

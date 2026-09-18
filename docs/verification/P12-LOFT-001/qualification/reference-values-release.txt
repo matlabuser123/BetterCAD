@@ -1,0 +1,740 @@
+Measured values of the P12-LOFT-001 tests (Release build of the qualified tree). Produced by: build/release/bin/bettercad_tests.exe "[loft][p12]" -s --reporter xml --rng-seed 1, filtered by values.py (kept in this directory): every passed CHECK_THAT and every passed CHECK whose expansion shows values, with the test case, section and INFO/CAPTURE context. Each entry: file:line, the assertion, then Catch2's expansion (values printed exactly). REQUIRE lines, repeats of an identical entry within a test case and expansions over 1000 characters (whole-file text) are left out.
+
+
+== LoftShapes_StillRefusesWhatItCannotMatch / a section of no area
+LoftShapeTests.cpp:291  CHECK( error.code == ErrorCode::InvalidArgument )
+        => 0 == 0
+LoftShapeTests.cpp:292  CHECK_THAT( error.message, ContainsSubstring("encloses no area") )
+        => "makeLoft: section 1 encloses no area" contains: "encloses no area"
+
+== LoftShapes_StillRefusesWhatItCannotMatch / sections on the same plane
+LoftShapeTests.cpp:296  CHECK_THAT( error.message, ContainsSubstring("lie on the same plane") )
+        => "makeLoft: sections 1 and 2 lie on the same plane: a loft needs its sections apart" contains: "lie on the same plane"
+
+== LoftShapes_StillRefusesWhatItCannotMatch / a section with a hole
+LoftShapeTests.cpp:302  CHECK_THAT( error.message, ContainsSubstring("has a hole") )
+        => "makeLoft: section 1 has a hole: loft sections must be single closed loops" contains: "has a hole"
+
+== LoftShapes_StillRefusesWhatItCannotMatch / a loft that folds
+LoftShapeTests.cpp:307  CHECK( error.code == ErrorCode::InvalidArgument )
+        => 0 == 0
+
+== LoftShapes_SquareToCircleMatchesTheClosedForm
+LoftShapeTests.cpp:171  CHECK_THAT( a0, WithinRel(200.0, 1e-15) )
+        => 200.0 and 200.0 are within 1e-13% of each other
+LoftShapeTests.cpp:172  CHECK_THAT( m, WithinRel(800.0 / pi, 1e-15) )
+        => 254.64790894703247659 and 254.64790894703253343 are within 1e-13% of each other
+LoftShapeTests.cpp:177  CHECK_THAT( 0.25 * (a0 + m + a1), WithinRel(133.296911, 1e-6) )
+        => 133.29693132169433056 and 133.29691099999999437 are within 0.0001% of each other
+LoftShapeTests.cpp:178  CHECK_THAT( 0.25 * (a0 + m + a1), WithinRel(133.29693132169436, 1e-14) )
+        => 133.29693132169433056 and 133.29693132169435899 are within 1e-12% of each other
+LoftShapeTests.cpp:180  CHECK_THAT( expected, WithinRel(4058.6373, 1e-6) )
+        => 4058.63770813261044168 and 4058.63729999999986831 are within 0.0001% of each other
+LoftShapeTests.cpp:119  CHECK( body->topology().solids == 1 )
+        => 1 == 1
+LoftShapeTests.cpp:184  CHECK_THAT( volumeMm3(body), WithinRel(expected, kRelSpline) )
+        => 4058.63770796589460588 and 4058.63770813261044168 are within 1e-07% of each other with message: expected 4058.64 mm^3, actual 4058.64 mm^3
+LoftShapeTests.cpp:155  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000009999999939 <= -9.99999999899999992 with message: expected 4058.64 mm^3, actual 4058.64 mm^3; axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftShapeTests.cpp:156  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000009999999939 >= -10.00000010099999947 with message: expected 4058.64 mm^3, actual 4058.64 mm^3; axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftShapeTests.cpp:157  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000009999999939 >= 9.99999999899999992 with message: expected 4058.64 mm^3, actual 4058.64 mm^3; axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftShapeTests.cpp:158  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000009999999939 <= 10.00000010099999947 with message: expected 4058.64 mm^3, actual 4058.64 mm^3; axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftShapeTests.cpp:155  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000009999999939 <= -9.99999999899999992 with message: expected 4058.64 mm^3, actual 4058.64 mm^3; axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftShapeTests.cpp:156  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000009999999939 >= -10.00000010099999947 with message: expected 4058.64 mm^3, actual 4058.64 mm^3; axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftShapeTests.cpp:157  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000009999999939 >= 9.99999999899999992 with message: expected 4058.64 mm^3, actual 4058.64 mm^3; axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftShapeTests.cpp:158  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000009999999939 <= 10.00000010099999947 with message: expected 4058.64 mm^3, actual 4058.64 mm^3; axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftShapeTests.cpp:155  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -0.0000001 <= 0.000000001 with message: expected 4058.64 mm^3, actual 4058.64 mm^3; axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftShapeTests.cpp:156  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -0.0000001 >= -0.000000101 with message: expected 4058.64 mm^3, actual 4058.64 mm^3; axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftShapeTests.cpp:157  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 30.00000010000000117 >= 29.99999999899999992 with message: expected 4058.64 mm^3, actual 4058.64 mm^3; axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftShapeTests.cpp:158  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 30.00000010000000117 <= 30.00000010100000125 with message: expected 4058.64 mm^3, actual 4058.64 mm^3; axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftShapeTests.cpp:190  CHECK_THAT( bottom->front().area.in(units::mm2), WithinRel(a0, kRelTight) )
+        => 199.99999999999994316 and 200.0 are within 1e-10% of each other with message: expected 4058.64 mm^3, actual 4058.64 mm^3
+LoftShapeTests.cpp:194  CHECK_THAT( top->front().area.in(units::mm2), WithinRel(a1, kRelTight) )
+        => 78.53981633974480303 and 78.53981633974483145 are within 1e-10% of each other with message: expected 4058.64 mm^3, actual 4058.64 mm^3
+
+== LoftShapes_ASideSplitInTwoStillMatches
+LoftShapeTests.cpp:119  CHECK( body->topology().solids == 1 )
+        => 1 == 1
+LoftShapeTests.cpp:282  CHECK_THAT( volumeMm3(body), WithinRel(7000.0, kRelSpline) )
+        => 7000.0 and 7000.0 are within 1e-07% of each other
+
+== LoftSmooth_ThroughThreeSectionsFollowsTheQuadratic
+LoftShapeTests.cpp:397  CHECK_THAT( ruledVolume, WithinRel(8750.0 * pi / 3.0, 1e-15) )
+        => 9162.97857297023074352 and 9162.97857297022892453 are within 1e-13% of each other
+LoftShapeTests.cpp:398  CHECK_THAT( volumeMm3(*ruled), WithinRel(ruledVolume, kRelTight) )
+        => 9162.97857297022710554 and 9162.97857297023074352 are within 1e-10% of each other
+LoftShapeTests.cpp:402  CHECK_THAT( volumeMm3(*smooth), WithinRel(smoothVolume, kRelSpline) )
+        => 7330.38285865207762981 and 7330.38285837618332152 are within 1e-07% of each other with message: smooth 7330.38 mm^3, quadratic law 7330.38
+LoftShapeTests.cpp:404  CHECK_THAT( volumeMm3(*smooth) / volumeMm3(*ruled), WithinRel(0.8, 1e-8) )
+        => 0.80000000003010985 and 0.80000000000000004 are within 1e-06% of each other with message: smooth 7330.38 mm^3, quadratic law 7330.38
+LoftShapeTests.cpp:408  CHECK( ruled->topology().faces == 4 )
+        => 4 == 4 with message: smooth 7330.38 mm^3, quadratic law 7330.38
+LoftShapeTests.cpp:409  CHECK( smooth->topology().faces == 3 )
+        => 3 == 3 with message: smooth 7330.38 mm^3, quadratic law 7330.38
+LoftShapeTests.cpp:411  CHECK( smooth->topology().solids == 1 )
+        => 1 == 1 with message: smooth 7330.38 mm^3, quadratic law 7330.38
+
+== LoftShapes_ASquareLoftsToACircle
+LoftShapeFeatureTests.cpp:106  CHECK_THAT( volumeMm3(regenerator, m.taper), WithinRel(expected, kRelSpline) )
+        => 6586.03079573130162316 and 6586.03079571166017558 are within 1e-07% of each other with message: ; expected 6586.03 mm^3, actual 6586.03 mm^3
+LoftShapeFeatureTests.cpp:109  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: ; expected 6586.03 mm^3, actual 6586.03 mm^3
+LoftShapeFeatureTests.cpp:75  CHECK( actualMm <= exactMm + kPositionToleranceMm )
+        => -10.00000009999999939 <= -9.99999999899999992 with message: ; expected 6586.03 mm^3, actual 6586.03 mm^3; actualMm := -10.00000009999999939; exactMm := -10.0
+LoftShapeFeatureTests.cpp:76  CHECK( actualMm >= exactMm - kSplineBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000009999999939 >= -10.00000010099999947 with message: ; expected 6586.03 mm^3, actual 6586.03 mm^3; actualMm := -10.00000009999999939; exactMm := -10.0
+LoftShapeFeatureTests.cpp:78  CHECK( actualMm >= exactMm - kPositionToleranceMm )
+        => 30.00000010000001183 >= 29.99999999899999992 with message: ; expected 6586.03 mm^3, actual 6586.03 mm^3; actualMm := 30.00000010000001183; exactMm := 30.0
+LoftShapeFeatureTests.cpp:79  CHECK( actualMm <= exactMm + kSplineBoundsPaddingMm + kPositionToleranceMm )
+        => 30.00000010000001183 <= 30.00000010100000125 with message: ; expected 6586.03 mm^3, actual 6586.03 mm^3; actualMm := 30.00000010000001183; exactMm := 30.0
+
+== LoftSmooth_PassesThroughEverySection
+LoftShapeTests.cpp:431  CHECK_THAT( bottom->front().area.in(units::mm2), WithinRel(pi * 100.0, kRelSpline) )
+        => 314.15926537080446224 and 314.15926535897932581 are within 1e-07% of each other
+LoftShapeTests.cpp:435  CHECK_THAT( top->front().area.in(units::mm2), WithinRel(pi * 100.0, kRelSpline) )
+        => 314.15926537080446224 and 314.15926535897932581 are within 1e-07% of each other
+LoftShapeTests.cpp:155  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000009867485673 <= -9.99999999899999992 with message: axis := 0; lo[axis] := -10.00000009867485673; hi[axis] := 10.00000010000016104
+LoftShapeTests.cpp:156  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000009867485673 >= -10.00000010099999947 with message: axis := 0; lo[axis] := -10.00000009867485673; hi[axis] := 10.00000010000016104
+LoftShapeTests.cpp:157  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000010000016104 >= 9.99999999899999992 with message: axis := 0; lo[axis] := -10.00000009867485673; hi[axis] := 10.00000010000016104
+LoftShapeTests.cpp:158  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000010000016104 <= 10.00000010099999947 with message: axis := 0; lo[axis] := -10.00000009867485673; hi[axis] := 10.00000010000016104
+LoftShapeTests.cpp:155  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000008512171057 <= -9.99999999899999992 with message: axis := 1; lo[axis] := -10.00000008512171057; hi[axis] := 10.00000008512168215
+LoftShapeTests.cpp:156  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000008512171057 >= -10.00000010099999947 with message: axis := 1; lo[axis] := -10.00000008512171057; hi[axis] := 10.00000008512168215
+LoftShapeTests.cpp:157  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000008512168215 >= 9.99999999899999992 with message: axis := 1; lo[axis] := -10.00000008512171057; hi[axis] := 10.00000008512168215
+LoftShapeTests.cpp:158  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000008512168215 <= 10.00000010099999947 with message: axis := 1; lo[axis] := -10.00000008512171057; hi[axis] := 10.00000008512168215
+LoftShapeTests.cpp:155  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -0.0000001 <= 0.000000001 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 50.00000010000073303
+LoftShapeTests.cpp:156  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -0.0000001 >= -0.000000101 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 50.00000010000073303
+LoftShapeTests.cpp:157  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 50.00000010000073303 >= 49.99999999900000347 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 50.00000010000073303
+LoftShapeTests.cpp:158  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 50.00000010000073303 <= 50.0000001009999977 with message: axis := 2; lo[axis] := -0.0000001; hi[axis] := 50.00000010000073303
+LoftShapeTests.cpp:457  CHECK_THAT( sectionAt(*ruled), WithinRel(pi * 25.0, 1e-15) )
+        => 78.53981633974483145 and 78.53981633974483145 are within 1e-13% of each other
+LoftShapeTests.cpp:472  CHECK_THAT( waist, WithinRel(pi * 25.0, kSectionThroughSmooth) )
+        => 78.54028940291627237 and 78.53981633974483145 are within 0.001% of each other with message: waist 78.5403 mm^2, section 78.5398 mm^2
+LoftShapeTests.cpp:475  CHECK_FALSE( !(std::abs(waist - pi * 25.0) <= 1e-7 * pi * 25.0) )
+        => !(0.00047306317144091 <= 0.00000785398163397) with message: waist 78.5403 mm^2, section 78.5398 mm^2
+LoftShapeTests.cpp:155  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000009867485673 <= -9.99999999899999992 with message: waist 78.5403 mm^2, section 78.5398 mm^2; axis := 0; lo[axis] := -10.00000009867485673; hi[axis] := 10.00000010000016104
+LoftShapeTests.cpp:156  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000009867485673 >= -10.00000010099999947 with message: waist 78.5403 mm^2, section 78.5398 mm^2; axis := 0; lo[axis] := -10.00000009867485673; hi[axis] := 10.00000010000016104
+LoftShapeTests.cpp:157  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000010000016104 >= 9.99999999899999992 with message: waist 78.5403 mm^2, section 78.5398 mm^2; axis := 0; lo[axis] := -10.00000009867485673; hi[axis] := 10.00000010000016104
+LoftShapeTests.cpp:158  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000010000016104 <= 10.00000010099999947 with message: waist 78.5403 mm^2, section 78.5398 mm^2; axis := 0; lo[axis] := -10.00000009867485673; hi[axis] := 10.00000010000016104
+LoftShapeTests.cpp:155  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000008512171057 <= -9.99999999899999992 with message: waist 78.5403 mm^2, section 78.5398 mm^2; axis := 1; lo[axis] := -10.00000008512171057; hi[axis] := 10.00000008512167859
+LoftShapeTests.cpp:156  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000008512171057 >= -10.00000010099999947 with message: waist 78.5403 mm^2, section 78.5398 mm^2; axis := 1; lo[axis] := -10.00000008512171057; hi[axis] := 10.00000008512167859
+LoftShapeTests.cpp:157  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000008512167859 >= 9.99999999899999992 with message: waist 78.5403 mm^2, section 78.5398 mm^2; axis := 1; lo[axis] := -10.00000008512171057; hi[axis] := 10.00000008512167859
+LoftShapeTests.cpp:158  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000008512167859 <= 10.00000010099999947 with message: waist 78.5403 mm^2, section 78.5398 mm^2; axis := 1; lo[axis] := -10.00000008512171057; hi[axis] := 10.00000008512167859
+LoftShapeTests.cpp:155  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -0.0000001 <= 0.000000001 with message: waist 78.5403 mm^2, section 78.5398 mm^2; axis := 2; lo[axis] := -0.0000001; hi[axis] := 25.00000010000000117
+LoftShapeTests.cpp:156  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -0.0000001 >= -0.000000101 with message: waist 78.5403 mm^2, section 78.5398 mm^2; axis := 2; lo[axis] := -0.0000001; hi[axis] := 25.00000010000000117
+LoftShapeTests.cpp:157  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 25.00000010000000117 >= 24.99999999899999992 with message: waist 78.5403 mm^2, section 78.5398 mm^2; axis := 2; lo[axis] := -0.0000001; hi[axis] := 25.00000010000000117
+LoftShapeTests.cpp:158  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 25.00000010000000117 <= 25.00000010100000125 with message: waist 78.5403 mm^2, section 78.5398 mm^2; axis := 2; lo[axis] := -0.0000001; hi[axis] := 25.00000010000000117
+
+== LoftSmooth_FollowsTheQuadraticThroughItsSections
+LoftShapeFeatureTests.cpp:212  CHECK_THAT( volumeMm3(regenerator, m.spool), WithinRel(SmoothLoftModel::smoothVolume(), kRelSpline) )
+        => 7330.38285865206125891 and 7330.38285837618332152 are within 1e-07% of each other with message: ; smooth 7330.38 mm^3, law 7330.38
+LoftShapeFeatureTests.cpp:214  CHECK( requireBody(regenerator, m.spool).topology().faces == 3 )
+        => 3 == 3 with message: ; smooth 7330.38 mm^3, law 7330.38
+
+== LoftSmooth_EditingTheInterpolationIsUndoable
+LoftShapeFeatureTests.cpp:254  CHECK_THAT( ruled, WithinRel(SmoothLoftModel::ruledVolume(), bettercad::test::kRelTight) )
+        => 9162.97857297023074352 and 9162.97857297022892453 are within 1e-10% of each other
+LoftShapeFeatureTests.cpp:262  CHECK_THAT( volumeMm3(regenerator, m.spool), WithinRel(SmoothLoftModel::smoothVolume(), kRelSpline) )
+        => 7330.38285865206125891 and 7330.38285837618332152 are within 1e-07% of each other
+LoftShapeFeatureTests.cpp:266  CHECK( m.definitionOf(m.spool).interpolation == LoftInterpolation::Ruled )
+        => 0 == 0
+LoftShapeFeatureTests.cpp:267  CHECK( bits(volumeMm3(regenerator, m.spool)) == bits(ruled) )
+        => 4666263015071484914 (0x40c1e57d41e10bf2) == 4666263015071484914 (0x40c1e57d41e10bf2)
+LoftShapeFeatureTests.cpp:271  CHECK( m.definitionOf(m.spool).interpolation == LoftInterpolation::Smooth )
+        => 1 == 1
+
+== LoftSmooth_TwoSectionFeatureMatchesTheRuledFeature
+LoftShapeFeatureTests.cpp:243  CHECK_THAT( volumeMm3(a, smooth.taper), WithinRel(expected, kRelSpline) )
+        => 6586.03079573130162316 and 6586.03079571166017558 are within 1e-07% of each other
+LoftShapeFeatureTests.cpp:244  CHECK_THAT( volumeMm3(b, ruled.taper), WithinRel(expected, kRelSpline) )
+        => 6586.03079573130162316 and 6586.03079571166017558 are within 1e-07% of each other
+LoftShapeFeatureTests.cpp:245  CHECK_THAT( volumeMm3(a, smooth.taper), WithinRel(volumeMm3(b, ruled.taper), kRelSpline) )
+        => 6586.03079573130162316 and 6586.03079573130162316 are within 1e-07% of each other
+
+== LoftSmooth_WorksBetweenDifferingShapes
+LoftShapeTests.cpp:500  CHECK( smooth->topology().solids == 1 )
+        => 1 == 1
+LoftShapeTests.cpp:505  CHECK_THAT( volumeMm3(*ruled), WithinRel(2.0 * prismatoid(25.0, a0, a1, m), kRelSpline) )
+        => 6764.39617963917589805 and 6764.39618022101785755 are within 1e-07% of each other
+LoftShapeTests.cpp:507  CHECK( volumeMm3(*smooth) < volumeMm3(*ruled) )
+        => 5792.04782775489729829 < 6764.39617963917589805
+LoftShapeTests.cpp:508  CHECK( volumeMm3(*smooth) > 0.5 * volumeMm3(*ruled) )
+        => 5792.04782775489729829 > 3382.19808981958794902
+LoftShapeTests.cpp:520  CHECK( unevenSmooth->topology().solids == 1 )
+        => 1 == 1
+LoftShapeTests.cpp:523  CHECK_THAT( volumeMm3(*unevenRuled), WithinRel(lower + upper, kRelSpline) )
+        => 6377.2668629412246446 and 6377.26686421485646861 are within 1e-07% of each other
+LoftShapeTests.cpp:524  CHECK( volumeMm3(*unevenSmooth) < volumeMm3(*unevenRuled) )
+        => 5529.82939667654682125 < 6377.2668629412246446
+LoftShapeTests.cpp:525  CHECK( volumeMm3(*unevenSmooth) > 0.5 * volumeMm3(*unevenRuled) )
+        => 5529.82939667654682125 > 3188.6334314706123223
+
+== LoftShapes_CircleToSquareIsTheSameSolidTheOtherWayUp
+LoftShapeTests.cpp:119  CHECK( body->topology().solids == 1 )
+        => 1 == 1
+LoftShapeTests.cpp:203  CHECK_THAT( volumeMm3(up), WithinRel(expected, kRelSpline) )
+        => 4058.63770796589460588 and 4058.63770813261044168 are within 1e-07% of each other
+LoftShapeTests.cpp:204  CHECK_THAT( volumeMm3(down), WithinRel(expected, kRelSpline) )
+        => 4058.63770796589460588 and 4058.63770813261044168 are within 1e-07% of each other
+LoftShapeTests.cpp:205  CHECK_THAT( volumeMm3(down), WithinRel(volumeMm3(up), kRelSpline) )
+        => 4058.63770796589460588 and 4058.63770796589460588 are within 1e-07% of each other
+
+== LoftShapes_EqualShapesAreMatchedAsBefore
+LoftShapeTests.cpp:119  CHECK( body->topology().solids == 1 )
+        => 1 == 1
+LoftShapeTests.cpp:319  CHECK_THAT( volumeMm3(squares), WithinRel(h / 3.0 * (a0 + a1 + std::sqrt(a0 * a1)), kRelTight) )
+        => 3500.0 and 3500.0 are within 1e-10% of each other
+LoftShapeTests.cpp:322  CHECK_THAT( volumeMm3(circles), WithinRel(pi * h / 3.0 * (100.0 + 50.0 + 25.0), kRelTight) )
+        => 5497.78714378213680902 and 5497.78714378213771852 are within 1e-10% of each other
+
+== LoftSmooth_IsADifferentSolidFromTheRuledOne
+LoftShapeFeatureTests.cpp:224  CHECK_THAT( volumeMm3(a, smooth.spool), WithinRel(SmoothLoftModel::smoothVolume(), kRelSpline) )
+        => 7330.38285865206125891 and 7330.38285837618332152 are within 1e-07% of each other
+LoftShapeFeatureTests.cpp:225  CHECK_THAT( volumeMm3(b, ruled.spool), WithinRel(SmoothLoftModel::ruledVolume(), bettercad::test::kRelTight) )
+        => 9162.97857297023074352 and 9162.97857297022892453 are within 1e-10% of each other
+LoftShapeFeatureTests.cpp:227  CHECK_THAT( volumeMm3(a, smooth.spool) / volumeMm3(b, ruled.spool), WithinRel(0.8, 1e-8) )
+        => 0.80000000003010774 and 0.80000000000000004 are within 1e-06% of each other
+LoftShapeFeatureTests.cpp:228  CHECK( requireBody(a, smooth.spool).topology().faces == 3 )
+        => 3 == 3
+LoftShapeFeatureTests.cpp:229  CHECK( requireBody(b, ruled.spool).topology().faces == 4 )
+        => 4 == 4
+
+== LoftShapes_PolygonsOfDifferentCornerCounts
+LoftShapeTests.cpp:119  CHECK( body->topology().solids == 1 )
+        => 1 == 1
+LoftShapeTests.cpp:241  CHECK( volumeMm3(body) > small )
+        => 3810.20265536128817985 > 1948.55715851498689517 with message: V 3810.2 mm^3, between 1948.56 and 6000
+LoftShapeTests.cpp:242  CHECK( volumeMm3(body) < large )
+        => 3810.20265536128817985 < 6000.0 with message: V 3810.2 mm^3, between 1948.56 and 6000
+LoftShapeTests.cpp:155  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000009999999939 <= -9.99999999899999992 with message: V 3810.2 mm^3, between 1948.56 and 6000; axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftShapeTests.cpp:156  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000009999999939 >= -10.00000010099999947 with message: V 3810.2 mm^3, between 1948.56 and 6000; axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftShapeTests.cpp:157  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000009999999939 >= 9.99999999899999992 with message: V 3810.2 mm^3, between 1948.56 and 6000; axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftShapeTests.cpp:158  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000009999999939 <= 10.00000010099999947 with message: V 3810.2 mm^3, between 1948.56 and 6000; axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftShapeTests.cpp:155  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000009999999939 <= -9.99999999899999992 with message: V 3810.2 mm^3, between 1948.56 and 6000; axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftShapeTests.cpp:156  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000009999999939 >= -10.00000010099999947 with message: V 3810.2 mm^3, between 1948.56 and 6000; axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftShapeTests.cpp:157  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000009999999939 >= 9.99999999899999992 with message: V 3810.2 mm^3, between 1948.56 and 6000; axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftShapeTests.cpp:158  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000009999999939 <= 10.00000010099999947 with message: V 3810.2 mm^3, between 1948.56 and 6000; axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftShapeTests.cpp:155  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -0.0000001 <= 0.000000001 with message: V 3810.2 mm^3, between 1948.56 and 6000; axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftShapeTests.cpp:156  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -0.0000001 >= -0.000000101 with message: V 3810.2 mm^3, between 1948.56 and 6000; axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftShapeTests.cpp:157  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 30.00000010000000117 >= 29.99999999899999992 with message: V 3810.2 mm^3, between 1948.56 and 6000; axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+LoftShapeTests.cpp:158  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 30.00000010000000117 <= 30.00000010100000125 with message: V 3810.2 mm^3, between 1948.56 and 6000; axis := 2; lo[axis] := -0.0000001; hi[axis] := 30.00000010000000117
+
+== SketchOnFace_LoftCapsFollowTheSectionOffsets
+SketchOnFaceTests.cpp:122  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: base := 5.0; top := 35.0
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 28000.00000000000727596 and 28000.0 are within 1e-10% of each other with message: base := 5.0; top := 35.0
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.00000000000000088 is within 0.000000001 of 0.0 with message: base := 5.0; top := 35.0
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.00000000000000074 is within 0.000000001 of 0.0 with message: base := 5.0; top := 35.0
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 16.78571428571428825 is within 0.000000001 of 16.7857142857142847 with message: base := 5.0; top := 35.0
+SketchOnFaceTests.cpp:146  CHECK( lo[axis] <= min[axis] + kTolCentreMm )
+        => -20.00000010000000117 <= -19.99999999899999992 with message: base := 5.0; top := 35.0; axis := 0; lo[axis] := -20.00000010000000117; hi[axis] := 20.00000010000000117
+SketchOnFaceTests.cpp:147  CHECK( lo[axis] >= min[axis] - padding - kTolCentreMm )
+        => -20.00000010000000117 >= -20.00000010100000125 with message: base := 5.0; top := 35.0; axis := 0; lo[axis] := -20.00000010000000117; hi[axis] := 20.00000010000000117
+SketchOnFaceTests.cpp:148  CHECK( hi[axis] >= max[axis] - kTolCentreMm )
+        => 20.00000010000000117 >= 19.99999999899999992 with message: base := 5.0; top := 35.0; axis := 0; lo[axis] := -20.00000010000000117; hi[axis] := 20.00000010000000117
+SketchOnFaceTests.cpp:149  CHECK( hi[axis] <= max[axis] + padding + kTolCentreMm )
+        => 20.00000010000000117 <= 20.00000010100000125 with message: base := 5.0; top := 35.0; axis := 0; lo[axis] := -20.00000010000000117; hi[axis] := 20.00000010000000117
+SketchOnFaceTests.cpp:146  CHECK( lo[axis] <= min[axis] + kTolCentreMm )
+        => -20.00000010000000117 <= -19.99999999899999992 with message: base := 5.0; top := 35.0; axis := 1; lo[axis] := -20.00000010000000117; hi[axis] := 20.00000010000000117
+SketchOnFaceTests.cpp:147  CHECK( lo[axis] >= min[axis] - padding - kTolCentreMm )
+        => -20.00000010000000117 >= -20.00000010100000125 with message: base := 5.0; top := 35.0; axis := 1; lo[axis] := -20.00000010000000117; hi[axis] := 20.00000010000000117
+SketchOnFaceTests.cpp:148  CHECK( hi[axis] >= max[axis] - kTolCentreMm )
+        => 20.00000010000000117 >= 19.99999999899999992 with message: base := 5.0; top := 35.0; axis := 1; lo[axis] := -20.00000010000000117; hi[axis] := 20.00000010000000117
+SketchOnFaceTests.cpp:149  CHECK( hi[axis] <= max[axis] + padding + kTolCentreMm )
+        => 20.00000010000000117 <= 20.00000010100000125 with message: base := 5.0; top := 35.0; axis := 1; lo[axis] := -20.00000010000000117; hi[axis] := 20.00000010000000117
+SketchOnFaceTests.cpp:146  CHECK( lo[axis] <= min[axis] + kTolCentreMm )
+        => 4.99999989999999972 <= 5.00000000100000008 with message: base := 5.0; top := 35.0; axis := 2; lo[axis] := 4.99999989999999972; hi[axis] := 35.00000010000000117
+SketchOnFaceTests.cpp:147  CHECK( lo[axis] >= min[axis] - padding - kTolCentreMm )
+        => 4.99999989999999972 >= 4.99999989899999964 with message: base := 5.0; top := 35.0; axis := 2; lo[axis] := 4.99999989999999972; hi[axis] := 35.00000010000000117
+SketchOnFaceTests.cpp:148  CHECK( hi[axis] >= max[axis] - kTolCentreMm )
+        => 35.00000010000000117 >= 34.99999999900000347 with message: base := 5.0; top := 35.0; axis := 2; lo[axis] := 4.99999989999999972; hi[axis] := 35.00000010000000117
+SketchOnFaceTests.cpp:149  CHECK( hi[axis] <= max[axis] + padding + kTolCentreMm )
+        => 35.00000010000000117 <= 35.0000001009999977 with message: base := 5.0; top := 35.0; axis := 2; lo[axis] := 4.99999989999999972; hi[axis] := 35.00000010000000117
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: base := 5.0; top := 35.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: base := 5.0; top := 35.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 35.0 is within 0.000000000001 of 35.0 with message: base := 5.0; top := 35.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: base := 5.0; top := 35.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: base := 5.0; top := 35.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: base := 5.0; top := 35.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: base := 5.0; top := 35.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: base := 5.0; top := 35.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: base := 5.0; top := 35.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:122  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: base := 5.0; top := 35.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 251.32741228718344928 and 251.32741228718344928 are within 1e-10% of each other with message: base := 5.0; top := 35.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -3.00000000000000044 is within 0.000000001 of -3.0 with message: base := 5.0; top := 35.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 3.99999999999999911 is within 0.000000001 of 4.0 with message: base := 5.0; top := 35.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 37.49999999999999289 is within 0.000000001 of 37.5 with message: base := 5.0; top := 35.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -7.0 is within 0.0000001 of -7.0 with message: base := 5.0; top := 35.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: base := 5.0; top := 35.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 35.0 is within 0.0000001 of 35.0 with message: base := 5.0; top := 35.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.0000001 of 1.0 with message: base := 5.0; top := 35.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 8.0 is within 0.0000001 of 8.0 with message: base := 5.0; top := 35.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 40.0 is within 0.0000001 of 40.0 with message: base := 5.0; top := 35.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.0 is within 0.000000000001 of 0.0 with message: base := 5.0; top := 35.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.0 is within 0.000000000001 of 0.0 with message: base := 5.0; top := 35.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 5.0 is within 0.000000000001 of 5.0 with message: base := 5.0; top := 35.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: base := 5.0; top := 35.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: base := 5.0; top := 35.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: base := 5.0; top := 35.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: base := 5.0; top := 35.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -1.0 is within 0.00000000000001 of -1.0 with message: base := 5.0; top := 35.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -1.0 is within 0.00000000000001 of -1.0 with message: base := 5.0; top := 35.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:122  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: base := 5.0; top := 35.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 150.79644737231006957 and 150.79644737231006957 are within 1e-10% of each other with message: base := 5.0; top := 35.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 5.00000000000000089 is within 0.000000001 of 5.0 with message: base := 5.0; top := 35.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -6.00000000000000178 is within 0.000000001 of -6.0 with message: base := 5.0; top := 35.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 3.5 is within 0.000000001 of 3.5 with message: base := 5.0; top := 35.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.0000001 of 1.0 with message: base := 5.0; top := 35.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -10.0 is within 0.0000001 of -10.0 with message: base := 5.0; top := 35.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 2.0 is within 0.0000001 of 2.0 with message: base := 5.0; top := 35.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 9.0 is within 0.0000001 of 9.0 with message: base := 5.0; top := 35.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -2.0 is within 0.0000001 of -2.0 with message: base := 5.0; top := 35.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 5.0 is within 0.0000001 of 5.0 with message: base := 5.0; top := 35.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:122  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: base := 8.0; top := 45.0
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 34533.33333333334303461 and 34533.33333333333575865 are within 1e-10% of each other with message: base := 8.0; top := 45.0
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.000000001 of 0.0 with message: base := 8.0; top := 45.0
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.00000000000000081 is within 0.000000001 of 0.0 with message: base := 8.0; top := 45.0
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 22.53571428571428825 is within 0.000000001 of 22.5357142857142847 with message: base := 8.0; top := 45.0
+SketchOnFaceTests.cpp:146  CHECK( lo[axis] <= min[axis] + kTolCentreMm )
+        => -20.00000010000000117 <= -19.99999999899999992 with message: base := 8.0; top := 45.0; axis := 0; lo[axis] := -20.00000010000000117; hi[axis] := 20.00000010000000117
+SketchOnFaceTests.cpp:147  CHECK( lo[axis] >= min[axis] - padding - kTolCentreMm )
+        => -20.00000010000000117 >= -20.00000010100000125 with message: base := 8.0; top := 45.0; axis := 0; lo[axis] := -20.00000010000000117; hi[axis] := 20.00000010000000117
+SketchOnFaceTests.cpp:148  CHECK( hi[axis] >= max[axis] - kTolCentreMm )
+        => 20.00000010000000117 >= 19.99999999899999992 with message: base := 8.0; top := 45.0; axis := 0; lo[axis] := -20.00000010000000117; hi[axis] := 20.00000010000000117
+SketchOnFaceTests.cpp:149  CHECK( hi[axis] <= max[axis] + padding + kTolCentreMm )
+        => 20.00000010000000117 <= 20.00000010100000125 with message: base := 8.0; top := 45.0; axis := 0; lo[axis] := -20.00000010000000117; hi[axis] := 20.00000010000000117
+SketchOnFaceTests.cpp:146  CHECK( lo[axis] <= min[axis] + kTolCentreMm )
+        => -20.00000010000000117 <= -19.99999999899999992 with message: base := 8.0; top := 45.0; axis := 1; lo[axis] := -20.00000010000000117; hi[axis] := 20.00000010000000117
+SketchOnFaceTests.cpp:147  CHECK( lo[axis] >= min[axis] - padding - kTolCentreMm )
+        => -20.00000010000000117 >= -20.00000010100000125 with message: base := 8.0; top := 45.0; axis := 1; lo[axis] := -20.00000010000000117; hi[axis] := 20.00000010000000117
+SketchOnFaceTests.cpp:148  CHECK( hi[axis] >= max[axis] - kTolCentreMm )
+        => 20.00000010000000117 >= 19.99999999899999992 with message: base := 8.0; top := 45.0; axis := 1; lo[axis] := -20.00000010000000117; hi[axis] := 20.00000010000000117
+SketchOnFaceTests.cpp:149  CHECK( hi[axis] <= max[axis] + padding + kTolCentreMm )
+        => 20.00000010000000117 <= 20.00000010100000125 with message: base := 8.0; top := 45.0; axis := 1; lo[axis] := -20.00000010000000117; hi[axis] := 20.00000010000000117
+SketchOnFaceTests.cpp:146  CHECK( lo[axis] <= min[axis] + kTolCentreMm )
+        => 7.99999990000000061 <= 8.00000000100000008 with message: base := 8.0; top := 45.0; axis := 2; lo[axis] := 7.99999990000000061; hi[axis] := 45.00000010000000117
+SketchOnFaceTests.cpp:147  CHECK( lo[axis] >= min[axis] - padding - kTolCentreMm )
+        => 7.99999990000000061 >= 7.99999989899999964 with message: base := 8.0; top := 45.0; axis := 2; lo[axis] := 7.99999990000000061; hi[axis] := 45.00000010000000117
+SketchOnFaceTests.cpp:148  CHECK( hi[axis] >= max[axis] - kTolCentreMm )
+        => 45.00000010000000117 >= 44.99999999900000347 with message: base := 8.0; top := 45.0; axis := 2; lo[axis] := 7.99999990000000061; hi[axis] := 45.00000010000000117
+SketchOnFaceTests.cpp:149  CHECK( hi[axis] <= max[axis] + padding + kTolCentreMm )
+        => 45.00000010000000117 <= 45.0000001009999977 with message: base := 8.0; top := 45.0; axis := 2; lo[axis] := 7.99999990000000061; hi[axis] := 45.00000010000000117
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: base := 8.0; top := 45.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: base := 8.0; top := 45.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 45.0 is within 0.000000000001 of 45.0 with message: base := 8.0; top := 45.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: base := 8.0; top := 45.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: base := 8.0; top := 45.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: base := 8.0; top := 45.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: base := 8.0; top := 45.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: base := 8.0; top := 45.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: base := 8.0; top := 45.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:122  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: base := 8.0; top := 45.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 251.32741228718344928 and 251.32741228718344928 are within 1e-10% of each other with message: base := 8.0; top := 45.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -3.00000000000000044 is within 0.000000001 of -3.0 with message: base := 8.0; top := 45.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 3.99999999999999911 is within 0.000000001 of 4.0 with message: base := 8.0; top := 45.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 47.49999999999999289 is within 0.000000001 of 47.5 with message: base := 8.0; top := 45.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -7.0 is within 0.0000001 of -7.0 with message: base := 8.0; top := 45.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.0000001 of 0.0 with message: base := 8.0; top := 45.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 45.0 is within 0.0000001 of 45.0 with message: base := 8.0; top := 45.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.0000001 of 1.0 with message: base := 8.0; top := 45.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 8.0 is within 0.0000001 of 8.0 with message: base := 8.0; top := 45.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 50.0 is within 0.0000001 of 50.0 with message: base := 8.0; top := 45.0; TopSketch (object:6)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.0 is within 0.000000000001 of 0.0 with message: base := 8.0; top := 45.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.0 is within 0.000000000001 of 0.0 with message: base := 8.0; top := 45.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 8.0 is within 0.000000000001 of 8.0 with message: base := 8.0; top := 45.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: base := 8.0; top := 45.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: base := 8.0; top := 45.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: base := 8.0; top := 45.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: base := 8.0; top := 45.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -1.0 is within 0.00000000000001 of -1.0 with message: base := 8.0; top := 45.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -1.0 is within 0.00000000000001 of -1.0 with message: base := 8.0; top := 45.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:122  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: base := 8.0; top := 45.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 150.79644737231006957 and 150.79644737231006957 are within 1e-10% of each other with message: base := 8.0; top := 45.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 5.00000000000000089 is within 0.000000001 of 5.0 with message: base := 8.0; top := 45.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -6.00000000000000178 is within 0.000000001 of -6.0 with message: base := 8.0; top := 45.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 6.50000000000000089 is within 0.000000001 of 6.5 with message: base := 8.0; top := 45.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.0000001 of 1.0 with message: base := 8.0; top := 45.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -10.0 is within 0.0000001 of -10.0 with message: base := 8.0; top := 45.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 5.0 is within 0.0000001 of 5.0 with message: base := 8.0; top := 45.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 9.0 is within 0.0000001 of 9.0 with message: base := 8.0; top := 45.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -2.0 is within 0.0000001 of -2.0 with message: base := 8.0; top := 45.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 8.0 is within 0.0000001 of 8.0 with message: base := 8.0; top := 45.0; BottomSketch (object:8)
+SketchOnFaceTests.cpp:401  CHECK( snapshot(regenerator, m.doc) == first )
+        => {?} == {?}
+
+== LoftShapes_ChainsAreIndependentOfTheirDirection
+LoftShapeTests.cpp:119  CHECK( body->topology().solids == 1 )
+        => 1 == 1
+LoftShapeTests.cpp:361  CHECK_THAT( volumeMm3(requireLoft(up)), WithinRel(volumeMm3(requireLoft(down)), kRelSpline) )
+        => 6377.2668629412246446 and 6377.26686294122646359 are within 1e-07% of each other
+
+== LoftShapes_TriangleAndHexagonToCircles / a triangle to a circle
+LoftShapeTests.cpp:119  CHECK( body->topology().solids == 1 )
+        => 1 == 1
+LoftShapeTests.cpp:217  CHECK_THAT( volumeMm3(body), WithinRel(expected, kRelSpline) )
+        => 3158.73213528618862256 and 3158.73213494440005888 are within 1e-07% of each other with message: expected 3158.73 mm^3, actual 3158.73 mm^3
+
+== LoftShapes_TriangleAndHexagonToCircles / a hexagon to a circle
+LoftShapeTests.cpp:119  CHECK( body->topology().solids == 1 )
+        => 1 == 1
+LoftShapeTests.cpp:225  CHECK_THAT( volumeMm3(body), WithinRel(expected, kRelSpline) )
+        => 4815.86886161992970301 and 4815.86886257782134635 are within 1e-07% of each other
+
+== LoftShapes_AreUnchangedByWhereASketchStarts
+LoftShapeTests.cpp:119  CHECK( body->topology().solids == 1 )
+        => 1 == 1
+LoftShapeTests.cpp:255  CHECK_THAT( volumeMm3(turned), WithinRel(expected, kRelSpline) )
+        => 4058.63770796589460588 and 4058.63770796589460588 are within 1e-07% of each other
+LoftShapeTests.cpp:259  CHECK_THAT( volumeMm3(flipped), WithinRel(expected, kRelSpline) )
+        => 4058.63770796589460588 and 4058.63770796589460588 are within 1e-07% of each other
+
+== LoftShapes_FollowTheirParameters
+LoftShapeFeatureTests.cpp:121  CHECK_THAT( volumeMm3(regenerator, m.taper), WithinRel(ShapeLoftModel::expectedVolume(10, 5, 30), kRelSpline) )
+        => 6586.03079573130162316 and 6586.03079571166017558 are within 1e-07% of each other
+
+== LoftShapes_FollowTheirParameters / a bigger circle
+LoftShapeFeatureTests.cpp:128  CHECK_THAT( volumeMm3(regenerator, m.taper), WithinRel(ShapeLoftModel::expectedVolume(10, 8, 30), kRelSpline) )
+        => 8891.63150962369036279 and 8891.6315100002084364 are within 1e-07% of each other with message: 
+
+== LoftShapes_FollowTheirParameters / a taller loft
+LoftShapeFeatureTests.cpp:133  CHECK_THAT( volumeMm3(regenerator, m.taper), WithinRel(ShapeLoftModel::expectedVolume(10, 5, 45), kRelSpline) )
+        => 9879.04619359695061576 and 9879.04619356749026338 are within 1e-07% of each other
+
+== info and validate describe lofts between different shapes / a square lofted to a circle
+CliTests.cpp:647  CHECK( info.exitCode == ExitCode::Success )
+        => 0 == 0
+CliTests.cpp:648  CHECK_THAT( info.out, ContainsSubstring("loft Taper sections Square to Round (offset height), ruled, new body\n") )
+        => "Document: Taper File: C:\Users\uqhas\AppData\Local\Temp\bettercad-test-be09c787-cb17-4418-8ed6-1e21e16fa516\taper.bcad ID: db1d9e17-5d15-400a-a9c5-93ac02c32115 Parameters (3): side 10 mm radius 5 mm height 30 mm Objects (3): object:4 sketch Square 8 entities, 4 constraints object:5 sketch Round 2 entities, 2 constraints, driven by radius object:6 loft Taper sections Square to Round (offset height), ruled, new body " contains: "loft Taper sections Square to Round (offset height), ruled, new body "
+CliTests.cpp:654  CHECK( validate.exitCode == ExitCode::Success )
+        => 0 == 0
+CliTests.cpp:655  CHECK_THAT( validate.out, ContainsSubstring(" Taper (object:6): 1 solid, volume 6586.031 mm^3, area ") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-be09c787-cb17-4418-8ed6-1e21e16fa516\taper.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 3 objects regenerated geometry ok, 1 result body Result bodies (1): Taper (object:6): 1 solid, volume 6586.031 mm^3, area 2157.640 mm^2, bounds (-10, -10, 0) to (10, 10, 30) mm Result: valid " contains: " Taper (object:6): 1 solid, volume 6586.031 mm^3, area "
+CliTests.cpp:656  CHECK_THAT( validate.out, ContainsSubstring("Result: valid\n") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-be09c787-cb17-4418-8ed6-1e21e16fa516\taper.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 3 objects regenerated geometry ok, 1 result body Result bodies (1): Taper (object:6): 1 solid, volume 6586.031 mm^3, area 2157.640 mm^2, bounds (-10, -10, 0) to (10, 10, 30) mm Result: valid " contains: "Result: valid "
+
+== info and validate describe lofts between different shapes / a smooth loft
+CliTests.cpp:665  CHECK( info.exitCode == ExitCode::Success )
+        => 0 == 0
+CliTests.cpp:666  CHECK_THAT( info.out, ContainsSubstring("loft Spool sections Bottom to Waist (offset mid) to Top (offset " "top), smooth, new body\n") )
+        => "Document: Spool File: C:\Users\uqhas\AppData\Local\Temp\bettercad-test-dcf32b8d-90c2-4ff7-bea1-506314885b07\spool.bcad ID: e4f21a95-8dd7-454f-baef-fef6d343e5db Parameters (4): rEnd 10 mm rMid 5 mm mid 25 mm top 50 mm Objects (4): object:5 sketch Bottom 2 entities, 2 constraints, driven by rEnd object:6 sketch Waist 2 entities, 2 constraints, driven by rMid object:7 sketch Top 2 entities, 2 constraints, driven by rEnd object:8 loft Spool sections Bottom to Waist (offset mid) to Top (offset top), smooth, new body " contains: "loft Spool sections Bottom to Waist (offset mid) to Top (offset top), smooth, new body "
+CliTests.cpp:671  CHECK( validate.exitCode == ExitCode::Success )
+        => 0 == 0
+CliTests.cpp:672  CHECK_THAT( validate.out, ContainsSubstring(" Spool (object:8): 1 solid, volume 7330.383 mm^3, area ") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-dcf32b8d-90c2-4ff7-bea1-506314885b07\spool.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 4 objects regenerated geometry ok, 1 result body Result bodies (1): Spool (object:8): 1 solid, volume 7330.383 mm^3, area 2788.106 mm^2, bounds (-10, -10, 0) to (10, 10, 50) mm Result: valid " contains: " Spool (object:8): 1 solid, volume 7330.383 mm^3, area "
+CliTests.cpp:673  CHECK_THAT( validate.out, ContainsSubstring("Result: valid\n") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-dcf32b8d-90c2-4ff7-bea1-506314885b07\spool.bcad document consistency ok missing references ok dependency cycles ok sketch constraints ok feature regeneration ok, 4 objects regenerated geometry ok, 1 result body Result bodies (1): Spool (object:8): 1 solid, volume 7330.383 mm^3, area 2788.106 mm^2, bounds (-10, -10, 0) to (10, 10, 50) mm Result: valid " contains: "Result: valid "
+
+== LoftSmooth_FailsAtomicallyLikeARuledLoft
+LoftShapeFeatureTests.cpp:87  CHECK( regenerator.body(feature) == nullptr )
+        => nullptr == nullptr with message: object:8: Spool: makeLoft: sections 1 and 2 lie on the same plane: a loft needs its sections apart
+LoftShapeFeatureTests.cpp:283  CHECK( error.code == ErrorCode::InvalidArgument )
+        => 0 == 0
+LoftShapeFeatureTests.cpp:284  CHECK_THAT( error.message, ContainsSubstring("lie on the same plane") )
+        => "Spool: makeLoft: sections 1 and 2 lie on the same plane: a loft needs its sections apart" contains: "lie on the same plane"
+LoftShapeFeatureTests.cpp:285  CHECK( regenerator.body(m.spool) == nullptr )
+        => nullptr == nullptr
+LoftShapeFeatureTests.cpp:289  CHECK( bits(volumeMm3(regenerator, m.spool)) == bits(before) )
+        => 4664781855890230680 (0x40bca26203064d98) == 4664781855890230680 (0x40bca26203064d98)
+
+== LoftShapes_FilesWrittenBeforeThisMilestoneStillLoadAsRuled
+LoftFileTests.cpp:510  CHECK( feature->definition().interpolation == LoftInterpolation::Ruled )
+        => 0 == 0
+LoftFileTests.cpp:73  CHECK( bits(pa.volume.si()) == bits(pb.volume.si()) )
+        => 4528104667314415087 (0x3ed70f34391065ef) == 4528104667314415087 (0x3ed70f34391065ef) with message: feature object:6
+LoftFileTests.cpp:74  CHECK( bits(pa.surfaceArea.si()) == bits(pb.surfaceArea.si()) )
+        => 4566063375282712638 (0x3f5dea72a1a5b03e) == 4566063375282712638 (0x3f5dea72a1a5b03e) with message: feature object:6
+LoftFileTests.cpp:75  CHECK( bits(pa.centerOfMass.x.si()) == bits(pb.centerOfMass.x.si()) )
+        => 13548336783253803010 (0xbc055c85af339002) == 13548336783253803010 (0xbc055c85af339002) with message: feature object:6
+LoftFileTests.cpp:76  CHECK( bits(pa.centerOfMass.y.si()) == bits(pb.centerOfMass.y.si()) )
+        => 13556699764249538123 (0xbc23129beeb72e4b) == 13556699764249538123 (0xbc23129beeb72e4b) with message: feature object:6
+LoftFileTests.cpp:77  CHECK( bits(pa.centerOfMass.z.si()) == bits(pb.centerOfMass.z.si()) )
+        => 4577947623504629503 (0x3f88231bcb564eff) == 4577947623504629503 (0x3f88231bcb564eff) with message: feature object:6
+LoftFileTests.cpp:78  CHECK( a->boundingBox().value() == b->boundingBox().value() )
+        => {?} == {?} with message: feature object:6
+LoftFileTests.cpp:79  CHECK( a->topology() == b->topology() )
+        => {?} == {?} with message: feature object:6
+LoftFileTests.cpp:514  CHECK_THAT( volumeMm3(after, m.loft), WithinRel(frustumVolume(10, 5, 30), kRel) )
+        => 5497.78714378213862801 and 5497.78714378213771852 are within 1e-10% of each other
+
+== LoftShapes_ChainsOfThreeDifferentShapesStayMatched
+LoftShapeTests.cpp:119  CHECK( body->topology().solids == 1 )
+        => 1 == 1
+LoftShapeTests.cpp:349  CHECK_THAT( volumeMm3(body), WithinRel(lower + upper, kRelSpline) )
+        => 6377.2668629412246446 and 6377.26686421485646861 are within 1e-07% of each other with message: lower 3382.2 + upper 2995.07 = 6377.27 mm^3
+LoftShapeTests.cpp:155  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000009999999939 <= -9.99999999899999992 with message: lower 3382.2 + upper 2995.07 = 6377.27 mm^3; axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftShapeTests.cpp:156  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000009999999939 >= -10.00000010099999947 with message: lower 3382.2 + upper 2995.07 = 6377.27 mm^3; axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftShapeTests.cpp:157  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000009999999939 >= 9.99999999899999992 with message: lower 3382.2 + upper 2995.07 = 6377.27 mm^3; axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftShapeTests.cpp:158  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000009999999939 <= 10.00000010099999947 with message: lower 3382.2 + upper 2995.07 = 6377.27 mm^3; axis := 0; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftShapeTests.cpp:155  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -10.00000009999999939 <= -9.99999999899999992 with message: lower 3382.2 + upper 2995.07 = 6377.27 mm^3; axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftShapeTests.cpp:156  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -10.00000009999999939 >= -10.00000010099999947 with message: lower 3382.2 + upper 2995.07 = 6377.27 mm^3; axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftShapeTests.cpp:157  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 10.00000009999999939 >= 9.99999999899999992 with message: lower 3382.2 + upper 2995.07 = 6377.27 mm^3; axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftShapeTests.cpp:158  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 10.00000009999999939 <= 10.00000010099999947 with message: lower 3382.2 + upper 2995.07 = 6377.27 mm^3; axis := 1; lo[axis] := -10.00000009999999939; hi[axis] := 10.00000009999999939
+LoftShapeTests.cpp:155  CHECK( lo[axis] <= min[axis] + kPositionToleranceMm )
+        => -0.0000001 <= 0.000000001 with message: lower 3382.2 + upper 2995.07 = 6377.27 mm^3; axis := 2; lo[axis] := -0.0000001; hi[axis] := 50.00000010000000117
+LoftShapeTests.cpp:156  CHECK( lo[axis] >= min[axis] - kBoundsPaddingMm - kPositionToleranceMm )
+        => -0.0000001 >= -0.000000101 with message: lower 3382.2 + upper 2995.07 = 6377.27 mm^3; axis := 2; lo[axis] := -0.0000001; hi[axis] := 50.00000010000000117
+LoftShapeTests.cpp:157  CHECK( hi[axis] >= max[axis] - kPositionToleranceMm )
+        => 50.00000010000000117 >= 49.99999999900000347 with message: lower 3382.2 + upper 2995.07 = 6377.27 mm^3; axis := 2; lo[axis] := -0.0000001; hi[axis] := 50.00000010000000117
+LoftShapeTests.cpp:158  CHECK( hi[axis] <= max[axis] + kBoundsPaddingMm + kPositionToleranceMm )
+        => 50.00000010000000117 <= 50.0000001009999977 with message: lower 3382.2 + upper 2995.07 = 6377.27 mm^3; axis := 2; lo[axis] := -0.0000001; hi[axis] := 50.00000010000000117
+
+== LoftShapes_ExportStep / a square lofted to a circle
+LoftFileTests.cpp:527  CHECK( contents->solids == 1 )
+        => 1 == 1
+LoftFileTests.cpp:529  CHECK_THAT( contents->volumeMm3, WithinRel(ShapeLoftModel::expectedVolume(10, 5, 30), kRelStep) )
+        => 6586.03079573131708457 and 6586.03079571166017558 are within 1e-07% of each other
+LoftFileTests.cpp:530  CHECK_THAT( contents->minMm[2], WithinAbs(0.0, 1e-6) )
+        => -0.0000001 is within 0.000001 of 0.0
+LoftFileTests.cpp:531  CHECK_THAT( contents->maxMm[2], WithinAbs(30.0, 1e-6) )
+        => 30.00000010000000117 is within 0.000001 of 30.0
+LoftFileTests.cpp:532  CHECK_THAT( contents->minMm[0], WithinAbs(-10.0, 1e-6) )
+        => -10.00000009999999939 is within 0.000001 of -10.0
+
+== LoftShapes_ExportStep / a smooth loft
+LoftFileTests.cpp:540  CHECK( contents->solids == 1 )
+        => 1 == 1
+LoftFileTests.cpp:542  CHECK_THAT( contents->volumeMm3, WithinRel(SmoothLoftModel::smoothVolume(), kRelStep) )
+        => 7330.3828586508261651 and 7330.38285837618332152 are within 1e-07% of each other
+LoftFileTests.cpp:543  CHECK_THAT( contents->maxMm[2], WithinAbs(50.0, 1e-6) )
+        => 50.00000010000066908 is within 0.000001 of 50.0
+LoftFileTests.cpp:546  CHECK_THAT( contents->maxMm[0], WithinAbs(10.0, 1e-6) )
+        => 10.00000010000005624 is within 0.000001 of 10.0
+
+== LoftSmooth_WithTwoSectionsIsTheRuledLoft
+LoftShapeTests.cpp:375  CHECK_THAT( volumeMm3(*ruled), WithinRel(frustum, kRelTight) )
+        => 5497.78714378213680902 and 5497.78714378213771852 are within 1e-10% of each other
+LoftShapeTests.cpp:376  CHECK_THAT( volumeMm3(*smooth), WithinRel(frustum, kRelTight) )
+        => 5497.78714378213680902 and 5497.78714378213771852 are within 1e-10% of each other
+LoftShapeTests.cpp:377  CHECK( smooth->topology() == ruled->topology() )
+        => {?} == {?}
+LoftShapeTests.cpp:378  CHECK( toString(LoftStyle::Ruled) == "ruled" )
+        => "ruled" == "ruled"
+LoftShapeTests.cpp:379  CHECK( toString(LoftStyle::Smooth) == "smooth" )
+        => "smooth" == "smooth"
+
+== LoftShapes_CapsStayNamedAcrossShapes
+LoftShapeFeatureTests.cpp:151  CHECK( found->size() == 1 )
+        => 1 == 1 with message: role start_cap
+LoftShapeFeatureTests.cpp:151  CHECK( found->size() == 1 )
+        => 1 == 1 with message: role end_cap
+LoftShapeFeatureTests.cpp:157  CHECK_THAT( start->front().area.in(units::mm2), WithinRel(400.0, bettercad::test::kRelTight) )
+        => 400.00000000000011369 and 400.0 are within 1e-10% of each other
+LoftShapeFeatureTests.cpp:160  CHECK_THAT( end->front().area.in(units::mm2), WithinRel(pi * 25.0, bettercad::test::kRelTight) )
+        => 78.53981633974481724 and 78.53981633974483145 are within 1e-10% of each other
+LoftShapeFeatureTests.cpp:166  CHECK_THAT( side.error().message, ContainsSubstring("is a loft, whose sides are not planes and are not named") )
+        => "Taper (object:6) is a loft, whose sides are not planes and are not named" contains: "is a loft, whose sides are not planes and are not named"
+
+== LoftShapes_SaveLoadRegeneratesTheSameSolid / a square lofted to a circle
+LoftFileTests.cpp:93  CHECK( loaded->itemIds() == expected.itemIds() )
+        => { object:1, object:2, object:3, object:4, object:5, object:6 } == { object:1, object:2, object:3, object:4, object:5, object:6 }
+LoftFileTests.cpp:98  CHECK( a.graph.dependenciesOf(node) == b.graph.dependenciesOf(node) )
+        => { } == { }
+LoftFileTests.cpp:98  CHECK( a.graph.dependenciesOf(node) == b.graph.dependenciesOf(node) )
+        => { object:2 } == { object:2 }
+LoftFileTests.cpp:98  CHECK( a.graph.dependenciesOf(node) == b.graph.dependenciesOf(node) )
+        => { object:3, object:4, object:5 } == { object:3, object:4, object:5 }
+LoftFileTests.cpp:73  CHECK( bits(pa.volume.si()) == bits(pb.volume.si()) )
+        => 4529389438651205183 (0x3edb9fb25c36063f) == 4529389438651205183 (0x3edb9fb25c36063f) with message: feature object:6
+LoftFileTests.cpp:74  CHECK( bits(pa.surfaceArea.si()) == bits(pb.surfaceArea.si()) )
+        => 4567121601938734701 (0x3f61ace639923e6d) == 4567121601938734701 (0x3f61ace639923e6d) with message: feature object:6
+LoftFileTests.cpp:75  CHECK( bits(pa.centerOfMass.x.si()) == bits(pb.centerOfMass.x.si()) )
+        => 4418474841096564773 (0x3d519375388fb025) == 4418474841096564773 (0x3d519375388fb025) with message: feature object:6
+LoftFileTests.cpp:76  CHECK( bits(pa.centerOfMass.y.si()) == bits(pb.centerOfMass.y.si()) )
+        => 4329649865004459056 (0x3c16019cdd68a430) == 4329649865004459056 (0x3c16019cdd68a430) with message: feature object:6
+LoftFileTests.cpp:77  CHECK( bits(pa.centerOfMass.z.si()) == bits(pb.centerOfMass.z.si()) )
+        => 4577690280490246809 (0x3f87390e74612299) == 4577690280490246809 (0x3f87390e74612299) with message: feature object:6
+LoftFileTests.cpp:78  CHECK( a->boundingBox().value() == b->boundingBox().value() )
+        => {?} == {?} with message: feature object:6
+LoftFileTests.cpp:79  CHECK( a->topology() == b->topology() )
+        => {?} == {?} with message: feature object:6
+LoftFileTests.cpp:447  CHECK_THAT( volumeMm3(after, m.taper), WithinRel(ShapeLoftModel::expectedVolume(10, 5, 30), test::kRelApproximatedIntersection) )
+        => 6586.03079573130162316 and 6586.03079571166017558 are within 1e-07% of each other
+
+== LoftShapes_SaveLoadRegeneratesTheSameSolid / a smooth loft, and its parameters after loading
+LoftFileTests.cpp:93  CHECK( loaded->itemIds() == expected.itemIds() )
+        => { object:1, object:2, object:3, object:4, object:5, object:6, object:7, object:8 } == { object:1, object:2, object:3, object:4, object:5, object:6, object:7, object:8 }
+LoftFileTests.cpp:98  CHECK( a.graph.dependenciesOf(node) == b.graph.dependenciesOf(node) )
+        => { } == { }
+LoftFileTests.cpp:98  CHECK( a.graph.dependenciesOf(node) == b.graph.dependenciesOf(node) )
+        => { object:1 } == { object:1 }
+LoftFileTests.cpp:98  CHECK( a.graph.dependenciesOf(node) == b.graph.dependenciesOf(node) )
+        => { object:2 } == { object:2 }
+LoftFileTests.cpp:98  CHECK( a.graph.dependenciesOf(node) == b.graph.dependenciesOf(node) )
+        => { object:3, object:4, object:5, object:6, object:7 } == { object:3, object:4, object:5, object:6, object:7 }
+LoftFileTests.cpp:73  CHECK( bits(pa.volume.si()) == bits(pb.volume.si()) )
+        => 4530268214459553152 (0x3edebef04c1ad580) == 4530268214459553152 (0x3edebef04c1ad580) with message: feature object:8
+LoftFileTests.cpp:74  CHECK( bits(pa.surfaceArea.si()) == bits(pb.surfaceArea.si()) )
+        => 4568575356280882585 (0x3f66d714c8b9c599) == 4568575356280882585 (0x3f66d714c8b9c599) with message: feature object:8
+LoftFileTests.cpp:75  CHECK( bits(pa.centerOfMass.x.si()) == bits(pb.centerOfMass.x.si()) )
+        => 4419008970244147107 (0x3d53793edaaac7a3) == 4419008970244147107 (0x3d53793edaaac7a3) with message: feature object:8
+LoftFileTests.cpp:76  CHECK( bits(pa.centerOfMass.y.si()) == bits(pb.centerOfMass.y.si()) )
+        => 4353353843267135311 (0x3c6a38416184e74f) == 4353353843267135311 (0x3c6a38416184e74f) with message: feature object:8
+LoftFileTests.cpp:77  CHECK( bits(pa.centerOfMass.z.si()) == bits(pb.centerOfMass.z.si()) )
+        => 4582862980812216727 (0x3f99999999999997) == 4582862980812216727 (0x3f99999999999997) with message: feature object:8
+LoftFileTests.cpp:78  CHECK( a->boundingBox().value() == b->boundingBox().value() )
+        => {?} == {?} with message: feature object:8
+LoftFileTests.cpp:79  CHECK( a->topology() == b->topology() )
+        => {?} == {?} with message: feature object:8
+LoftFileTests.cpp:458  CHECK_THAT( volumeMm3(after, m.spool), WithinRel(SmoothLoftModel::smoothVolume(), test::kRelApproximatedIntersection) )
+        => 7330.38285865206125891 and 7330.38285837618332152 are within 1e-07% of each other
+LoftFileTests.cpp:464  CHECK( feature->definition().interpolation == LoftInterpolation::Smooth )
+        => 1 == 1
+LoftFileTests.cpp:475  CHECK_THAT( volumeMm3(after, m.spool), WithinRel(1000.0 * pi * 5.0, test::kRelApproximatedIntersection) )
+        => 15707.96326854017024743 and 15707.96326794896413048 are within 1e-07% of each other
+
+== LoftShapes_AreDeterministic / differing shapes
+LoftShapeFeatureTests.cpp:184  CHECK( fingerprint(first->doc, first->taper, again) == once )
+        => { 0.00000658603079573, 0.00215764013098134, 0.00000000000024977, 0.0, 0.01133929531728599 } == { 0.00000658603079573, 0.00215764013098134, 0.00000000000024977, 0.0, 0.01133929531728599 }
+LoftShapeFeatureTests.cpp:187  CHECK( fingerprint(second->doc, second->taper, b) == once )
+        => { 0.00000658603079573, 0.00215764013098134, 0.00000000000024977, 0.0, 0.01133929531728599 } == { 0.00000658603079573, 0.00215764013098134, 0.00000000000024977, 0.0, 0.01133929531728599 }
+
+== LoftShapes_AreDeterministic / smooth interpolation
+LoftShapeFeatureTests.cpp:194  CHECK( fingerprint(first->doc, first->spool, again) == once )
+        => { 0.00000733038285865, 0.00278810557738813, 0.00000000000027674, 0.00000000000000001, 0.02499999999999999 } == { 0.00000733038285865, 0.00278810557738813, 0.00000000000027674, 0.00000000000000001, 0.02499999999999999 }
+LoftShapeFeatureTests.cpp:197  CHECK( fingerprint(second->doc, second->spool, b) == once )
+        => { 0.00000733038285865, 0.00278810557738813, 0.00000000000027674, 0.00000000000000001, 0.02499999999999999 } == { 0.00000733038285865, 0.00278810557738813, 0.00000000000027674, 0.00000000000000001, 0.02499999999999999 }
+
+Overall: 1177 assertions passed, 0 failed.

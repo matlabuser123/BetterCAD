@@ -221,6 +221,32 @@ using SweptFaceNamer = std::function<std::optional<FaceName>(const SweptFace&)>;
 [[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Result<Body> makeSweep(const PlanarRegion& region, const SweptPath& path,
                                                               const SweptFaceNamer& namer);
 
+/// How a loft passes from one section to the next (P12-LOFT-001).
+enum class LoftStyle {
+    /// Straight lines join matching points of consecutive sections, so the
+    /// sides are split into a band per interval with a crease at every
+    /// section between them (P11-FEAT-009).
+    Ruled,
+    /// The sides run continuously across the intermediate sections instead
+    /// of being split at them.
+    ///
+    /// The surface passes through the **end** sections exactly -- they are
+    /// the solid's caps -- and through the **intermediate** ones only as
+    /// closely as the kernel's single fitted surface allows. That is
+    /// measured, not assumed: cutting the three-circle spool on its middle
+    /// section's plane gives 78.54028940 mm^2 where the section itself is
+    /// 78.53981634, a radius of 5.0000150 mm against 5 (1.5e-5 mm out). The
+    /// same cut through the ruled loft is exact to rounding, so the miss
+    /// belongs to the surface and not to the cut.
+    ///
+    /// With exactly two sections there is nothing to run across, and a
+    /// smooth loft is the ruled one, to the last digit.
+    Smooth,
+};
+
+/// "ruled" or "smooth".
+[[nodiscard]] BETTERCAD_GEOMETRY_EXPORT std::string_view toString(LoftStyle style) noexcept;
+
 /// Solid through @p sections, in the order given: a ruled loft, in which
 /// straight lines join matching points of consecutive sections.
 ///
@@ -258,6 +284,23 @@ using SweptFaceNamer = std::function<std::optional<FaceName>(const SweptFace&)>;
 /// (the first section, First, and the last, Last). Its ruled sides are
 /// B-spline surfaces and are not named.
 [[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Result<Body> makeLoft(std::span<const PlanarRegion> sections,
+                                                             const SweptFaceNamer& namer);
+
+/// makeLoft() in the given style (P12-LOFT-001). `Ruled` is the loft above,
+/// unchanged.
+///
+/// A smooth loft cannot be checked against the prismatoid volume: the
+/// surface no longer moves each point in a straight line, and the kernel's
+/// own interpolation has no closed form BetterCAD can state (measured: it is
+/// the quadratic through three equally spaced sections, and neither that nor
+/// anything else at four sections or at unequal spacing -- see
+/// docs/verification/P12-LOFT-001/kernel-probe). What *can* go wrong and be
+/// caught is the correspondence, so a smooth loft is guarded by building the
+/// ruled loft of the same matched sections and checking that against the
+/// prismatoid volume exactly, as before. The smooth solid itself is then
+/// required to be one valid solid, free of self-interference, of finite
+/// positive volume, and within a stated envelope of the ruled one.
+[[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Result<Body> makeLoft(std::span<const PlanarRegion> sections, LoftStyle style,
                                                              const SweptFaceNamer& namer);
 
 } // namespace bettercad::geometry

@@ -788,7 +788,10 @@ TEST_CASE("LoftFeature_ModelsAreValidatedLikeAnyOther", "[validation][loft]") {
     }
     SECTION("a loft that does not build") {
         LoftDefinition d = m.definitionOf<LoftFeature>(m.taper);
-        d.sections[1] = {.sketch = SketchId::fromValue(m.base.value())}; // a rectangle against a circle
+        // The tip on the mouth's own plane: no loft to make. (A rectangle
+        // against a circle was this case until P12-LOFT-001, which matches
+        // different shapes by arc length and builds it.)
+        d.sections[1] = {.sketch = SketchId::fromValue(m.tip.value())};
         m.setDefinition<LoftFeature>(m.taper, d);
         const ValidationReport report = validateDocument(m.doc);
         INFO(describe(report));
@@ -796,8 +799,8 @@ TEST_CASE("LoftFeature_ModelsAreValidatedLikeAnyOther", "[validation][loft]") {
         REQUIRE(regeneration.size() == 1);
         CHECK(regeneration[0].item == m.taper);
         CHECK(regeneration[0].message ==
-              "Taper (object:9) failed to regenerate: Taper: makeLoft: sections 1 and 2 cannot be matched: section 1 is "
-              "a circle and section 2 is 4 lines; lofts between different shapes are not supported");
+              "Taper (object:9) failed to regenerate: Taper: makeLoft: sections 1 and 2 lie on the same plane: a loft "
+              "needs its sections apart");
         CHECK_FALSE(report.valid());
         CHECK(report.bodies.empty());
     }

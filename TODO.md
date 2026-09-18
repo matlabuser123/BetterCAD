@@ -13,7 +13,7 @@ authorized — never in advance.
 | | |
 | --- | --- |
 | Current | **`P12` — Parametric CAD Completion** |
-| Next | `P12-LOFT-001` — Differing section shapes, smooth interpolation, end conditions |
+| Next | `P12-PARAM-002` — Design equations and configurations |
 | Blocked / Manual | None |
 | Last qualified | `P11` Production Part Modeling — **QUALIFIED** |
 | Released | `v0.1.0` (`P0`–`P10`); `P11` qualified, not released |
@@ -63,7 +63,7 @@ Reference models → qualification
 | 12 | `P12-HOLE-001` Threads, spotface, standard sizes, tolerance classes | `PARAM-001` | **done** — [evidence](docs/verification/P12-HOLE-001/README.md) |
 | 13 | `P12-PATTERN-001` Symmetric, total-length, suppressed instances, patterns of patterns | `PARAM-001` | **done** — [evidence](docs/verification/P12-PATTERN-001/README.md) |
 | 14 | `P12-SWEEP-001` Guide curves, twist, non-planar paths | `SKETCH-002` | **done** — [evidence](docs/verification/P12-SWEEP-001/README.md) |
-| 15 | `P12-LOFT-001` Differing section shapes, smooth interpolation, end conditions | `SKETCH-002` | not started |
+| 15 | `P12-LOFT-001` Differing section shapes, smooth interpolation, end conditions | `SKETCH-002` | **done** (differing shapes, smooth interpolation) — [evidence](docs/verification/P12-LOFT-001/README.md); end conditions blocked: the kernel offers none |
 | 16 | `P12-PARAM-002` Design equations and configurations | `PARAM-001`, features | not started |
 | 17 | `P12-REF-001` Production reference models | all above | not started |
 | 18 | `P12-QUAL-001` Phase qualification | all above | not started |
@@ -526,10 +526,71 @@ Acceptance:
 - Missing, disconnected, degenerate, non-finite, self-referencing and cyclic inputs, an invalid twist, and a guide given with a twist all fail atomically with structured diagnostics and keep no body.
 - Save -> load -> regenerate gives the same bodies bit for bit; repeated and fresh-document builds agree; files written before this milestone regenerate unchanged; STEP exports read back with the same volume; every value the existing tests measure is unchanged; `P0`-`P12-PATTERN-001` stays green in all three presets.
 
+#### P12-LOFT-001 — Differing section shapes, smooth interpolation, end conditions
+
+The three things `P11-FEAT-009` left out. What each can be is settled by
+measurement, not by the kernel's defaults
+(`docs/verification/P12-LOFT-001/kernel-probe/`):
+
+- **Differing section shapes.** `P11-FEAT-009` refuses a circle against a
+  polygon, 4 corners against 6, or a side split in two. The probe shows
+  BetterCAD can match them itself, exactly as it already matches equal
+  shapes: split both loops at the same normalized arc lengths so that they
+  have the same number of segments, and hand the kernel the correspondence
+  with `CheckCompatibility(false)`. A square against a circle split into
+  four aligned quarter arcs gives the same solid the kernel's own matcher
+  gives, to the last digit, and meets the prismatoid volume of the averaged
+  section to 1e-7. Splitting the circle 45 degrees round instead gives a
+  different solid, so the alignment is engineering intent and BetterCAD must
+  choose it by the same least-twist rule it uses today.
+- **Smooth interpolation.** `LoftInterpolation::Smooth`: the sides run
+  continuously across every intermediate section instead of being split into
+  a band per interval. The surface passes through the **end** sections
+  exactly, since they are the caps, and through the **intermediate** ones
+  only as closely as the kernel's single fitted surface allows: cutting the
+  three-circle spool on its middle section's plane measures 78.54028940 mm^2
+  against an exact 78.53981634, a radius 1.5e-5 mm out, where the same cut
+  through the ruled loft is exact to rounding. BetterCAD says that rather
+  than claiming interpolation it cannot show.
+  The probe measured what can and cannot be predicted: with two sections a
+  smooth loft **is** the ruled one, to the last digit; with three equally
+  spaced sections it is the quadratic through them (7330.382866 measured
+  against 7330.382858 computed); with four, or with unequal spacing, it is
+  neither that nor any closed form BetterCAD can state (0.3 per cent and 31
+  per cent away). So the exact prismatoid check cannot guard a smooth loft,
+  and the correspondence is guarded instead by building the ruled loft from
+  the same matched sections and checking *that* against the prismatoid
+  volume, which is what catches a wrong matching.
+- **End conditions.** `BRepOffsetAPI_ThruSections` offers none. Every setting
+  it has -- `SetContinuity` C0/C1/C2, `SetParType`, `SetMaxDegree`,
+  `SetSmoothing` -- leaves the solid identical to the last digit, and the
+  ghost-section workaround is 23 per cent wrong in volume even at 0.01 mm.
+  Offering a tangent or normal end condition needs a different surface
+  builder, which is an unauthorized subsystem. **Not implemented; reported
+  with the measurement that shows why.**
+
+Deliverables:
+
+- [x] Section correspondence for differing shapes: both loops split at the same normalized arc lengths, the start chosen by the existing least-twist rule over the candidate alignments, ties broken as they are today; circles take part by being split, and are aligned by angle about the centroid since they have no corners of their own
+- [x] A chain matched in one go, not pair by pair: a section in the middle belongs to two pairs and both must split it the same way, or the kernel is handed sections with different numbers of edges and the first pair's correspondence is lost silently
+- [x] The prismatoid volume generalized to matched sections of different shapes: the halfway area comes from the closed-form mixed area `M` of the two loops, `Am = (A_p + M + A_q)/4`, computed exactly for every pair of lines and arcs without sampling and without the kernel
+- [x] `LoftInterpolation::Smooth`: sides continuous across intermediate sections; the surface passes through the end sections exactly and through the intermediate ones to within the kernel’s approximation, measured by cutting the solid on a section’s plane (1.5e-5 mm on a 5 mm radius, against an exact cut through the ruled loft as control); guarded by checking the ruled loft of the same matched sections against the prismatoid volume
+- [x] Dependencies, validation, undo/redo, save/load (the new interpolation value; files written before this milestone keep `ruled`), CLI description
+- [x] Independent validation: frustum and prismatoid volumes, centroids, bounds, cross-sectional areas at each section, and the two smooth cases the probe pins exactly (two sections, and three equally spaced)
+- [x] Stable references: a loft still names its end caps and not its sides. Arc-length matching gives BetterCAD a stable index of its own, but a matched segment generally spans part of one sketch entity in one section and part of another in the next, so there is no `EntityId` to record. The limitation is retained deliberately rather than replaced by a face numbering
+- [x] End conditions: **not implemented**, with the probe log showing the kernel offers none and the ghost-section cost measured
+- [x] Evidence: [docs/verification/P12-LOFT-001/](docs/verification/P12-LOFT-001/README.md)
+
+Acceptance:
+
+- A circle to a rectangle, a triangle to a circle and polygons of different corner counts loft into one valid solid whose volume, centroid and bounds match values computed without the loft implementation; reversing a sketch's winding or starting it from another corner gives the same solid.
+- A smooth loft passes through every section, its sides run continuously across the intermediate ones, and with two sections it is the ruled loft bit for bit; its correspondence is guarded by the ruled loft's exact prismatoid check.
+- Every failure of the list in the acceptance gate fails atomically with a structured diagnostic and keeps no body.
+- Save -> load -> regenerate gives the same bodies bit for bit; files written before this milestone regenerate unchanged; STEP exports read back with the same volume; every value the existing tests measure is unchanged; `P0`-`P12-SWEEP-001` stays green in all three presets.
+
 ## Next
 
-`P12-LOFT-001` — Differing section shapes, smooth interpolation, end
-conditions.
+`P12-PARAM-002` — Design equations and configurations.
 
 ## Blocked / Manual
 
@@ -759,7 +820,24 @@ regression test, so none can change silently. Detail:
   (`P12-SWEEP-001`).
 - **Loft sides stay B-splines** even where flat, costing about 6e-12 relative
   volume and 3.4e-6 mm in the centroid; plane references find only a loft's end
-  faces.
+  faces. Between sections of different shapes the cost is larger and measured:
+  a smooth loft through three equal circles is geometrically a cylinder and
+  reproduces `pi r^2 h` to 4e-11 relative, so those lofts are checked to 1e-9
+  rather than the 1e-12 equal-shape lofts still meet. The kernel also pads such
+  a face's bounding box outwards by 1e-7 mm (`P12-LOFT-001`).
+- **A loft has no end conditions**: `BRepOffsetAPI_ThruSections` offers none,
+  and every setting it does have leaves the solid identical to the last digit.
+  The usual ghost-section workaround moves the volume 23 per cent away from the
+  frustum even at 0.01 mm and does not converge, so it is not offered. A
+  tangent or normal end condition needs a surface builder that takes boundary
+  derivatives, which is a new subsystem
+  ([evidence](docs/verification/P12-LOFT-001/README.md)).
+- **A smooth loft has no closed-form volume** in general: measured, it is the
+  ruled loft at two sections and the quadratic through three equally spaced
+  ones, but neither that nor any other law at four sections or at unequal
+  spacing. Its correspondence is therefore guarded by the ruled loft of the
+  same matched sections, which is still checked exactly, plus a stated
+  envelope of 0.5x to 2.0x (`P12-LOFT-001`).
 - **Uniting a half body with its mirror image** is refused when a half cylinder
   lies on the mirror plane: the kernel's fuse returns a shape its own checker
   rejects, so BetterCAD refuses it rather than building it wrongly.

@@ -1,0 +1,89 @@
+Cross-configuration comparison of the measured values of the P12-LOFT-001 tests.
+Each configuration's bettercad_tests.exe ran the test cases the selector "[loft][p12]" matches with
+-s --reporter xml --rng-seed 1; values.py filtered the report; compare-values.py (in this directory) compared
+the results. Temporary paths and document UUIDs are normalized; lines holding a pointer value are dropped.
+
+RESULT: every value measured from the geometry kernel is identical in all three configurations.
+
+Debug and Debug-shared agree byte for byte. Release differs on eight lines, and on every one of them the
+number that differs is a constant the TEST computes, not a value read back from a solid. All eight are
+downstream of one expression in tests/core/geometry/LoftShapeTests.cpp:
+
+    double mixedPolygonCircle(int n, double radius, double circumradius) {
+        const double k = static_cast<double>(n);
+        return 2.0 * k * k * radius * circumradius / pi * std::pow(std::sin(pi / k), 2.0);
+    }
+
+which -O2 evaluates two units in the last place away from -g: 254.64790894703247659 in Release against
+254.64790894703259028 in Debug, either side of the exact 800/pi = 254.64790894703253343. The four entries
+compare that constant, or one derived from it (the halfway area, the prismatoid volume), against a value
+written out by hand, so the tool reports the differing number as the "measured" side; it is not. The other
+four entries are volumes read back from the kernel, and in those the measured number is IDENTICAL in all
+three configurations -- only the expectation beside it moves:
+
+    LoftShapeTests.cpp:171/177/178/180   m, 0.25 (a0 + m + a1) x2, prismatoid(h, a0, a1, m): test arithmetic
+    LoftShapeTests.cpp:505               measured 6764.39617963917589805 in all three
+    LoftShapeFeatureTests.cpp and        measured 4058.63770796589460588 in all three
+      LoftShapeTests.cpp (3 entries)
+
+No solid, volume, area, centroid or bounding box differs between configurations. The comparison follows.
+
+release: 700 non-empty lines after normalizing, MD5 a31379fee43e96b7f7242b7d351ac29e
+debug: 700 non-empty lines after normalizing, MD5 321a2214b01e873bed3b529da36a4bc3
+debug-shared: 700 non-empty lines after normalizing, MD5 321a2214b01e873bed3b529da36a4bc3
+
+debug against release:
+  line 20 (MEASURED):
+    release: => 254.64790894703247659 and 254.64790894703253343 are within 1e-13% of each other
+    debug: => 254.64790894703259028 and 254.64790894703253343 are within 1e-13% of each other
+  line 22 (MEASURED):
+    release: => 133.29693132169433056 and 133.29691099999999437 are within 0.0001% of each other
+    debug: => 133.29693132169435899 and 133.29691099999999437 are within 0.0001% of each other
+  line 24 (MEASURED):
+    release: => 133.29693132169433056 and 133.29693132169435899 are within 1e-12% of each other
+    debug: => 133.29693132169435899 and 133.29693132169435899 are within 1e-12% of each other
+  line 26 (MEASURED):
+    release: => 4058.63770813261044168 and 4058.63729999999986831 are within 0.0001% of each other
+    debug: => 4058.63770813261089643 and 4058.63729999999986831 are within 0.0001% of each other
+  line 30 (expected only):
+    release: => 4058.63770796589460588 and 4058.63770813261044168 are within 1e-07% of each other with message: expected 4058.64 mm^3, actual 4058.64 mm^3
+    debug: => 4058.63770796589460588 and 4058.63770813261089643 are within 1e-07% of each other with message: expected 4058.64 mm^3, actual 4058.64 mm^3
+  line 178 (expected only):
+    release: => 6764.39617963917589805 and 6764.39618022101785755 are within 1e-07% of each other
+    debug: => 6764.39617963917589805 and 6764.39618022101876704 are within 1e-07% of each other
+  line 195 (expected only):
+    release: => 4058.63770796589460588 and 4058.63770813261044168 are within 1e-07% of each other
+    debug: => 4058.63770796589460588 and 4058.63770813261089643 are within 1e-07% of each other
+  line 197 (expected only):
+    release: => 4058.63770796589460588 and 4058.63770813261044168 are within 1e-07% of each other
+    debug: => 4058.63770796589460588 and 4058.63770813261089643 are within 1e-07% of each other
+  differing lines: 4 expected only, 4 measured
+
+debug-shared against release:
+  line 20 (MEASURED):
+    release: => 254.64790894703247659 and 254.64790894703253343 are within 1e-13% of each other
+    debug-shared: => 254.64790894703259028 and 254.64790894703253343 are within 1e-13% of each other
+  line 22 (MEASURED):
+    release: => 133.29693132169433056 and 133.29691099999999437 are within 0.0001% of each other
+    debug-shared: => 133.29693132169435899 and 133.29691099999999437 are within 0.0001% of each other
+  line 24 (MEASURED):
+    release: => 133.29693132169433056 and 133.29693132169435899 are within 1e-12% of each other
+    debug-shared: => 133.29693132169435899 and 133.29693132169435899 are within 1e-12% of each other
+  line 26 (MEASURED):
+    release: => 4058.63770813261044168 and 4058.63729999999986831 are within 0.0001% of each other
+    debug-shared: => 4058.63770813261089643 and 4058.63729999999986831 are within 0.0001% of each other
+  line 30 (expected only):
+    release: => 4058.63770796589460588 and 4058.63770813261044168 are within 1e-07% of each other with message: expected 4058.64 mm^3, actual 4058.64 mm^3
+    debug-shared: => 4058.63770796589460588 and 4058.63770813261089643 are within 1e-07% of each other with message: expected 4058.64 mm^3, actual 4058.64 mm^3
+  line 178 (expected only):
+    release: => 6764.39617963917589805 and 6764.39618022101785755 are within 1e-07% of each other
+    debug-shared: => 6764.39617963917589805 and 6764.39618022101876704 are within 1e-07% of each other
+  line 195 (expected only):
+    release: => 4058.63770796589460588 and 4058.63770813261044168 are within 1e-07% of each other
+    debug-shared: => 4058.63770796589460588 and 4058.63770813261089643 are within 1e-07% of each other
+  line 197 (expected only):
+    release: => 4058.63770796589460588 and 4058.63770813261044168 are within 1e-07% of each other
+    debug-shared: => 4058.63770796589460588 and 4058.63770813261089643 are within 1e-07% of each other
+  differing lines: 4 expected only, 4 measured
+
+RESULT: MEASURED VALUES DIFFER

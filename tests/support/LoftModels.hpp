@@ -303,4 +303,80 @@ struct TaperedHoleModel : BlockModel {
     }
 };
 
+// A loft between sections of different shapes (P12-LOFT-001):
+//
+//   side -> Square (XY: a square of half-width side, centred on the origin)
+//   radius, height -> Round (XY at z = height: a circle of radius r)
+//   Square + Round -> Taper (loft)
+//
+// A square of half-width a lofted to a circle of radius r over h. Matched
+// corner to equal quarter arc, the mixed area is M = 16 r R / pi with
+// R = a sqrt(2) the square's circumradius, so
+//   V = h/6 (A0 + 4 Am + A1), Am = (A0 + M + A1)/4,
+//   A0 = 4 a^2, A1 = pi r^2.
+// IDs: side 1, radius 2, height 3, Square 4, Round 5, Taper 6.
+struct ShapeLoftModel : LoftModelBase {
+    ParameterId side, radius, height;
+    ObjectId square, round, taper;
+
+    /// In mm^3, from the closed forms above.
+    static double expectedVolume(double sideMm, double radiusMm, double heightMm) {
+        const double a0 = 4.0 * sideMm * sideMm;
+        const double a1 = std::numbers::pi * radiusMm * radiusMm;
+        const double m = 16.0 * radiusMm * (sideMm * std::numbers::sqrt2) / std::numbers::pi;
+        return heightMm / 6.0 * (a0 + (a0 + m + a1) + a1);
+    }
+
+    explicit ShapeLoftModel(features::LoftInterpolation interpolation = features::LoftInterpolation::Ruled)
+        : LoftModelBase("Taper") {
+        using namespace bettercad::literals;
+        using namespace bettercad::sketch;
+        side = doc.createParameter("side", 10_mm, units::mm).value();
+        radius = doc.createParameter("radius", 5_mm, units::mm).value();
+        height = doc.createParameter("height", 30_mm, units::mm).value();
+
+        // The square's corners are fixed, so its shape is its own.
+        square = addSketch(fixedPolygon("Square", Frame3D::xy(), {{-10, -10}, {10, -10}, {10, 10}, {-10, 10}}));
+        round = addSketch(drivenCircle("Round", Frame3D::xy(), 0, 0, radius));
+        taper = addLoft("Taper", {.sections = {{.sketch = sketchIdOf(square)},
+                                               {.sketch = sketchIdOf(round), .offsetParameter = height}},
+                                  .interpolation = interpolation});
+    }
+};
+
+// Three circular sections, r 10, 5, 10, equally spaced over 50 mm, lofted
+// smoothly (P12-LOFT-001):
+//
+//   Bottom (r 10 at z = 0), Waist (r 5 at z = 25), Top (r 10 at z = 50)
+//
+// Ruled it is two frustums, 8750 pi / 3; smooth it is the quadratic through
+// the three radii, 7000 pi / 3. Both are closed forms.
+// IDs: rEnd 1, rMid 2, mid 3, top 4, Bottom 5, Waist 6, Top 7, Spool 8.
+struct SmoothLoftModel : LoftModelBase {
+    ParameterId rEnd, rMid, mid, top;
+    ObjectId bottom, waist, upper, spool;
+
+    /// In mm^3: two frustums.
+    static double ruledVolume() { return 8750.0 * std::numbers::pi / 3.0; }
+    /// In mm^3: pi h times the integral of the quadratic through the radii.
+    static double smoothVolume() { return 7000.0 * std::numbers::pi / 3.0; }
+
+    explicit SmoothLoftModel(features::LoftInterpolation interpolation = features::LoftInterpolation::Smooth)
+        : LoftModelBase("Spool") {
+        using namespace bettercad::literals;
+        rEnd = doc.createParameter("rEnd", 10_mm, units::mm).value();
+        rMid = doc.createParameter("rMid", 5_mm, units::mm).value();
+        mid = doc.createParameter("mid", 25_mm, units::mm).value();
+        top = doc.createParameter("top", 50_mm, units::mm).value();
+
+        bottom = addSketch(drivenCircle("Bottom", Frame3D::xy(), 0, 0, rEnd));
+        waist = addSketch(drivenCircle("Waist", Frame3D::xy(), 0, 0, rMid));
+        upper = addSketch(drivenCircle("Top", Frame3D::xy(), 0, 0, rEnd));
+        spool = addLoft("Spool", {.sections = {{.sketch = sketchIdOf(bottom)},
+                                               {.sketch = sketchIdOf(waist), .offsetParameter = mid},
+                                               {.sketch = sketchIdOf(upper), .offsetParameter = top}},
+                                  .interpolation = interpolation});
+    }
+};
+
 } // namespace bettercad::test

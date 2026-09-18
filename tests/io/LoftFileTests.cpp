@@ -38,7 +38,9 @@ using bettercad::test::OffsetLoftModel;
 using bettercad::test::readFile;
 using bettercad::test::RectangularFrustumModel;
 using bettercad::test::requireReport;
+using bettercad::test::ShapeLoftModel;
 using bettercad::test::sketchIdOf;
+using bettercad::test::SmoothLoftModel;
 using bettercad::test::TaperedHoleModel;
 using bettercad::test::TempDir;
 using bettercad::test::ThreeSectionLoftModel;
@@ -304,7 +306,10 @@ TEST_CASE("LoftFeature_MalformedDataIsRejectedWithTheJsonPath", "[loft][io]") {
           "objects[4].data.sections[1].offset_parameter: expected an ID (a non-negative integer)");
     CHECK(message(withSections(R"("sections": [{"sketch": 7, "offset": 0.0, "twist": 0}, {"sketch": 8, "offset": 0.0}],)")) ==
           "objects[4].data.sections[0].twist: unknown field");
-    CHECK(message(replaceOnce(good, "\"ruled\"", "\"smooth\"")) == "objects[4].data.interpolation: unknown value 'smooth'");
+    // P12-LOFT-001 added "smooth"; before it, the reader knew only "ruled".
+    CHECK(io::documentFromJson(replaceOnce(good, "\"ruled\"", "\"smooth\"")).has_value());
+    CHECK(message(replaceOnce(good, "\"ruled\"", "\"curved\"")) ==
+          "objects[4].data.interpolation: unknown value 'curved'");
     CHECK(message(replaceOnce(good, "\"interpolation\": \"ruled\",", "")) ==
           "objects[4].data.interpolation: missing required field");
     CHECK(message(replaceOnce(good, "\"interpolation\": \"ruled\",", "\"interpolation\": \"ruled\", \"guides\": [],")) ==
@@ -420,5 +425,124 @@ TEST_CASE("LoftFeature_ExportsClosedStl", "[loft][io][export][acceptance]") {
         REQUIRE(requireReport(regenerator, lean.doc).succeeded());
         const double area = regenerator.body(lean.loft)->massProperties()->surfaceArea.in(units::mm2);
         check(lean.doc, "lean.stl", io::StlFormat::Binary, frustumVolume(10, 5, 30), area);
+    }
+}
+
+// ---------------------------------------------------------------------------
+// P12-LOFT-001: differing section shapes, and smooth interpolation
+// ---------------------------------------------------------------------------
+
+TEST_CASE("LoftShapes_SaveLoadRegeneratesTheSameSolid", "[loft][io][p12][acceptance]") {
+    // The real round trip for both new capabilities: create, save, destroy,
+    // load, regenerate, compare. Bit-for-bit, as the ruled lofts above.
+    TempDir dir;
+    SECTION("a square lofted to a circle") {
+        ShapeLoftModel m;
+        Regenerator before;
+        REQUIRE(requireReport(before, m.doc).succeeded());
+        Document loaded = saveDestroyLoad(m.doc, dir.path() / "taper.bcad");
+        Regenerator after;
+        REQUIRE(requireReport(after, loaded).succeeded());
+        checkSameGeometry(before, after, m.taper);
+        CHECK_THAT(volumeMm3(after, m.taper),
+                   WithinRel(ShapeLoftModel::expectedVolume(10, 5, 30), test::kRelApproximatedIntersection));
+    }
+    SECTION("a smooth loft, and its parameters after loading") {
+        SmoothLoftModel m;
+        Regenerator before;
+        REQUIRE(requireReport(before, m.doc).succeeded());
+        Document loaded = saveDestroyLoad(m.doc, dir.path() / "spool.bcad");
+        Regenerator after;
+        REQUIRE(requireReport(after, loaded).succeeded());
+        checkSameGeometry(before, after, m.spool);
+        CHECK_THAT(volumeMm3(after, m.spool),
+                   WithinRel(SmoothLoftModel::smoothVolume(), test::kRelApproximatedIntersection));
+
+        // The definition survived, not just the solid it produced.
+        const LoftFeature* feature = loaded.findObjectAs<LoftFeature>(m.spool);
+        REQUIRE(feature != nullptr);
+        CHECK(feature->definition().interpolation == LoftInterpolation::Smooth);
+        // And it still regenerates from its parameters after loading. With
+        // the waist opened to the ends' radius all three sections are the
+        // same r 10 circle, so the solid is a 50 mm cylinder: pi r^2 h.
+        // The sides remain B-spline surfaces rather than becoming an exact
+        // cylinder (the P11-FEAT-009 limitation this milestone does not
+        // lift), so the volume is the approximation's, not the exact one --
+        // measured 15707.96326854017 against 15707.963267948966, a relative
+        // error of 3.8e-11.
+        REQUIRE(loaded.setParameterValue(m.rMid, 10_mm).has_value());
+        REQUIRE(requireReport(after, loaded).succeeded());
+        CHECK_THAT(volumeMm3(after, m.spool),
+                   WithinRel(1000.0 * pi * 5.0, test::kRelApproximatedIntersection));
+    }
+}
+
+TEST_CASE("LoftShapes_InterpolationIsStoredAsTransparentJson", "[loft][io][p12]") {
+    SmoothLoftModel m;
+    const auto text = io::documentToJson(m.doc);
+    REQUIRE(text.has_value());
+    CHECK_THAT(*text, ContainsSubstring(R"("interpolation": "smooth",
+        "operation": "new_body")"));
+
+    // "ruled" is still what a ruled loft writes: files this milestone does
+    // not change must not change.
+    ShapeLoftModel ruled;
+    const auto ruledText = io::documentToJson(ruled.doc);
+    REQUIRE(ruledText.has_value());
+    CHECK_THAT(*ruledText, ContainsSubstring(R"("interpolation": "ruled",)"));
+}
+
+TEST_CASE("LoftShapes_FilesWrittenBeforeThisMilestoneStillLoadAsRuled", "[loft][io][p12][regression]") {
+    // Backward compatibility: every loft written before P12-LOFT-001 says
+    // "ruled", and must keep meaning exactly the ruled loft it did then --
+    // same definition, same solid, to the bit.
+    TempDir dir;
+    FrustumLoftModel m;
+    Regenerator before;
+    REQUIRE(requireReport(before, m.doc).succeeded());
+    const std::string text = io::documentToJson(m.doc).value();
+    REQUIRE_THAT(text, ContainsSubstring(R"("interpolation": "ruled")"));
+
+    auto loaded = io::documentFromJson(text);
+    REQUIRE(loaded.has_value());
+    const LoftFeature* feature = loaded->findObjectAs<LoftFeature>(m.loft);
+    REQUIRE(feature != nullptr);
+    CHECK(feature->definition().interpolation == LoftInterpolation::Ruled);
+    Regenerator after;
+    REQUIRE(requireReport(after, *loaded).succeeded());
+    checkSameGeometry(before, after, m.loft);
+    CHECK_THAT(volumeMm3(after, m.loft), WithinRel(frustumVolume(10, 5, 30), kRel));
+}
+
+TEST_CASE("LoftShapes_ExportStep", "[loft][io][export][p12][acceptance]") {
+    // Read back by the kernel's own STEP reader: an independent path to the
+    // solid, checked against the same closed forms.
+    TempDir dir;
+    SECTION("a square lofted to a circle") {
+        ShapeLoftModel m;
+        const auto path = dir.path() / "taper.step";
+        REQUIRE(io::exportStep(m.doc, path).has_value());
+        const auto contents = test::readStepFile(path);
+        REQUIRE(contents.has_value());
+        CHECK(contents->solids == 1);
+        CHECK(contents->valid);
+        CHECK_THAT(contents->volumeMm3, WithinRel(ShapeLoftModel::expectedVolume(10, 5, 30), kRelStep));
+        CHECK_THAT(contents->minMm[2], WithinAbs(0.0, 1e-6));
+        CHECK_THAT(contents->maxMm[2], WithinAbs(30.0, 1e-6));
+        CHECK_THAT(contents->minMm[0], WithinAbs(-10.0, 1e-6));
+    }
+    SECTION("a smooth loft") {
+        SmoothLoftModel m;
+        const auto path = dir.path() / "spool.step";
+        REQUIRE(io::exportStep(m.doc, path).has_value());
+        const auto contents = test::readStepFile(path);
+        REQUIRE(contents.has_value());
+        CHECK(contents->solids == 1);
+        CHECK(contents->valid);
+        CHECK_THAT(contents->volumeMm3, WithinRel(SmoothLoftModel::smoothVolume(), kRelStep));
+        CHECK_THAT(contents->maxMm[2], WithinAbs(50.0, 1e-6));
+        // The waist is r 5, but the smooth surface passes through it without
+        // a crease and never bulges past the r 10 ends.
+        CHECK_THAT(contents->maxMm[0], WithinAbs(10.0, 1e-6));
     }
 }

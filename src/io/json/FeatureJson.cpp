@@ -1293,8 +1293,9 @@ namespace {
 
 using features::LoftInterpolation;
 
-constexpr std::array<std::pair<LoftInterpolation, std::string_view>, 1> kLoftInterpolations{{
+constexpr std::array<std::pair<LoftInterpolation, std::string_view>, 2> kLoftInterpolations{{
     {LoftInterpolation::Ruled, "ruled"},
+    {LoftInterpolation::Smooth, "smooth"},
 }};
 
 Result<features::LoftSection> loftSectionFromJson(const Json& value, std::string_view path) {

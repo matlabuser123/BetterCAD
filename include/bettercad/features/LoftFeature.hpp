@@ -29,12 +29,20 @@ struct LoftSection {
 
 /// How a loft passes from one section to the next.
 enum class LoftInterpolation {
-    /// Straight lines join matching points of consecutive sections (see
-    /// geometry::makeLoft()).
+    /// Straight lines join matching points of consecutive sections, so the
+    /// sides are split into a band per interval with a crease at every
+    /// section between them (see geometry::makeLoft()).
     Ruled,
+    /// The sides run continuously across the intermediate sections instead
+    /// of being split at them (P12-LOFT-001). The surface passes through the
+    /// end sections exactly and through the intermediate ones to within the
+    /// kernel's approximation -- measured at 1.5e-5 mm on a 5 mm radius, see
+    /// geometry::LoftStyle. With exactly two sections there is nothing to
+    /// run across and a smooth loft is the ruled one.
+    Smooth,
 };
 
-/// "ruled".
+/// "ruled" or "smooth".
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT std::string_view toString(LoftInterpolation interpolation) noexcept;
 
 /// Inputs of a loft feature, e.g. the circle of sketch `bottom` lofted to

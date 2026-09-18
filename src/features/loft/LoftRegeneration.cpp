@@ -70,7 +70,6 @@ Result<geometry::Body> loftTool(const LoftFeature& feature, const Document& docu
     if (!sections) {
         return prefixed(sections.error());
     }
-    // LoftInterpolation::Ruled is makeLoft's interpolation: the only mode.
     const ObjectId self = feature.id();
     const geometry::SweptFaceNamer namer = [self](const geometry::SweptFace& face) -> std::optional<FaceName> {
         switch (face.kind) {
@@ -83,7 +82,10 @@ Result<geometry::Body> loftTool(const LoftFeature& feature, const Document& docu
         }
         return std::nullopt;
     };
-    auto solid = geometry::makeLoft(*sections, namer);
+    const geometry::LoftStyle style = feature.definition().interpolation == LoftInterpolation::Smooth
+                                          ? geometry::LoftStyle::Smooth
+                                          : geometry::LoftStyle::Ruled;
+    auto solid = geometry::makeLoft(*sections, style, namer);
     if (!solid) {
         return prefixed(solid.error());
     }

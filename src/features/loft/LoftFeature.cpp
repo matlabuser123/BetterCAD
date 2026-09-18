@@ -22,6 +22,8 @@ std::string_view toString(LoftInterpolation interpolation) noexcept {
     switch (interpolation) {
     case LoftInterpolation::Ruled:
         return "ruled";
+    case LoftInterpolation::Smooth:
+        return "smooth";
     }
     return "unknown";
 }

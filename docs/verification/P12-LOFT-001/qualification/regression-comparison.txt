@@ -1,0 +1,107 @@
+Every test P12-SWEEP-001 ran, by name, against all three of this milestone's qualified CTest logs.
+Produced by: python compare-regression.py <P12-SWEEP-001 Release ctest log> <this milestone's three logs>
+(compare-regression.py is in this directory). Every baseline test name must be present and must have
+passed; names that are new are listed.
+
+baseline docs/verification/P12-SWEEP-001/qualification/ctest-release.log: 1145 distinct names
+
+docs/verification/P12-LOFT-001/qualification/ctest-debug.log: 1172 distinct names, 1174 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 27
+    unit.LoftShapes_ASideSplitInTwoStillMatches
+    unit.LoftShapes_ASquareLoftsToACircle
+    unit.LoftShapes_AreDeterministic
+    unit.LoftShapes_AreUnchangedByWhereASketchStarts
+    unit.LoftShapes_CapsStayNamedAcrossShapes
+    unit.LoftShapes_ChainsAreIndependentOfTheirDirection
+    unit.LoftShapes_ChainsOfThreeDifferentShapesStayMatched
+    unit.LoftShapes_CircleToSquareIsTheSameSolidTheOtherWayUp
+    unit.LoftShapes_EqualShapesAreMatchedAsBefore
+    unit.LoftShapes_ExportStep
+    unit.LoftShapes_FilesWrittenBeforeThisMilestoneStillLoadAsRuled
+    unit.LoftShapes_FollowTheirParameters
+    unit.LoftShapes_InterpolationIsStoredAsTransparentJson
+    unit.LoftShapes_PolygonsOfDifferentCornerCounts
+    unit.LoftShapes_SaveLoadRegeneratesTheSameSolid
+    unit.LoftShapes_SquareToCircleMatchesTheClosedForm
+    unit.LoftShapes_StillRefusesWhatItCannotMatch
+    unit.LoftShapes_TriangleAndHexagonToCircles
+    unit.LoftSmooth_EditingTheInterpolationIsUndoable
+    unit.LoftSmooth_FailsAtomicallyLikeARuledLoft
+    unit.LoftSmooth_FollowsTheQuadraticThroughItsSections
+    unit.LoftSmooth_IsADifferentSolidFromTheRuledOne
+    unit.LoftSmooth_PassesThroughEverySection
+    unit.LoftSmooth_ThroughThreeSectionsFollowsTheQuadratic
+    unit.LoftSmooth_WithTwoSectionsIsTheRuledLoft
+    unit.LoftSmooth_WorksBetweenDifferingShapes
+    unit.info and validate describe lofts between different shapes
+
+docs/verification/P12-LOFT-001/qualification/ctest-release.log: 1172 distinct names, 1174 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 27
+    unit.LoftShapes_ASideSplitInTwoStillMatches
+    unit.LoftShapes_ASquareLoftsToACircle
+    unit.LoftShapes_AreDeterministic
+    unit.LoftShapes_AreUnchangedByWhereASketchStarts
+    unit.LoftShapes_CapsStayNamedAcrossShapes
+    unit.LoftShapes_ChainsAreIndependentOfTheirDirection
+    unit.LoftShapes_ChainsOfThreeDifferentShapesStayMatched
+    unit.LoftShapes_CircleToSquareIsTheSameSolidTheOtherWayUp
+    unit.LoftShapes_EqualShapesAreMatchedAsBefore
+    unit.LoftShapes_ExportStep
+    unit.LoftShapes_FilesWrittenBeforeThisMilestoneStillLoadAsRuled
+    unit.LoftShapes_FollowTheirParameters
+    unit.LoftShapes_InterpolationIsStoredAsTransparentJson
+    unit.LoftShapes_PolygonsOfDifferentCornerCounts
+    unit.LoftShapes_SaveLoadRegeneratesTheSameSolid
+    unit.LoftShapes_SquareToCircleMatchesTheClosedForm
+    unit.LoftShapes_StillRefusesWhatItCannotMatch
+    unit.LoftShapes_TriangleAndHexagonToCircles
+    unit.LoftSmooth_EditingTheInterpolationIsUndoable
+    unit.LoftSmooth_FailsAtomicallyLikeARuledLoft
+    unit.LoftSmooth_FollowsTheQuadraticThroughItsSections
+    unit.LoftSmooth_IsADifferentSolidFromTheRuledOne
+    unit.LoftSmooth_PassesThroughEverySection
+    unit.LoftSmooth_ThroughThreeSectionsFollowsTheQuadratic
+    unit.LoftSmooth_WithTwoSectionsIsTheRuledLoft
+    unit.LoftSmooth_WorksBetweenDifferingShapes
+    unit.info and validate describe lofts between different shapes
+
+docs/verification/P12-LOFT-001/qualification/ctest-debug-shared.log: 1172 distinct names, 1174 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 27
+    unit.LoftShapes_ASideSplitInTwoStillMatches
+    unit.LoftShapes_ASquareLoftsToACircle
+    unit.LoftShapes_AreDeterministic
+    unit.LoftShapes_AreUnchangedByWhereASketchStarts
+    unit.LoftShapes_CapsStayNamedAcrossShapes
+    unit.LoftShapes_ChainsAreIndependentOfTheirDirection
+    unit.LoftShapes_ChainsOfThreeDifferentShapesStayMatched
+    unit.LoftShapes_CircleToSquareIsTheSameSolidTheOtherWayUp
+    unit.LoftShapes_EqualShapesAreMatchedAsBefore
+    unit.LoftShapes_ExportStep
+    unit.LoftShapes_FilesWrittenBeforeThisMilestoneStillLoadAsRuled
+    unit.LoftShapes_FollowTheirParameters
+    unit.LoftShapes_InterpolationIsStoredAsTransparentJson
+    unit.LoftShapes_PolygonsOfDifferentCornerCounts
+    unit.LoftShapes_SaveLoadRegeneratesTheSameSolid
+    unit.LoftShapes_SquareToCircleMatchesTheClosedForm
+    unit.LoftShapes_StillRefusesWhatItCannotMatch
+    unit.LoftShapes_TriangleAndHexagonToCircles
+    unit.LoftSmooth_EditingTheInterpolationIsUndoable
+    unit.LoftSmooth_FailsAtomicallyLikeARuledLoft
+    unit.LoftSmooth_FollowsTheQuadraticThroughItsSections
+    unit.LoftSmooth_IsADifferentSolidFromTheRuledOne
+    unit.LoftSmooth_PassesThroughEverySection
+    unit.LoftSmooth_ThroughThreeSectionsFollowsTheQuadratic
+    unit.LoftSmooth_WithTwoSectionsIsTheRuledLoft
+    unit.LoftSmooth_WorksBetweenDifferingShapes
+    unit.info and validate describe lofts between different shapes
+
+RESULT: PASS

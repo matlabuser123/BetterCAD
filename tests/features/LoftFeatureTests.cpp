@@ -872,12 +872,18 @@ TEST_CASE("LoftFeature_RejectsInvalidProfile", "[loft][features][acceptance]") {
 TEST_CASE("LoftFeature_RejectsIncompatibleSections", "[loft][features][acceptance]") {
     FrustumLoftModel m;
     Regenerator regenerator;
-    SECTION("a circle to a rectangle (different topology)") {
+    SECTION("a circle to a rectangle now lofts (P12-LOFT-001)") {
+        // Until this milestone a circle against a rectangle was refused as
+        // unmatchable. It is matched by arc length now, so it builds; its
+        // volume is checked against the closed form in LoftShapeTests.cpp.
         useSection(m.doc, m.loft, 1, fixedPolygon("Box", levelPlane(30), {{-5, -5}, {5, -5}, {5, 5}, {-5, 5}}));
-        const Error error = requireFailure(regenerator, m.doc, m.loft);
-        CHECK(error.code == ErrorCode::InvalidArgument);
-        CHECK(error.message == "Loft: makeLoft: sections 1 and 2 cannot be matched: section 1 is a circle and section 2 "
-                               "is 4 lines; lofts between different shapes are not supported");
+        const RegenerationReport report = requireReport(regenerator, m.doc);
+        INFO(describe(report));
+        REQUIRE(report.succeeded());
+        const geometry::Body* body = regenerator.body(m.loft);
+        REQUIRE(body != nullptr);
+        CHECK(body->isValid());
+        CHECK(body->topology().solids == 1);
     }
     SECTION("a section on a tilted plane") {
         const double tilt = 10.0 * pi / 180.0;
@@ -964,15 +970,17 @@ TEST_CASE("LoftFeature_FailuresLeaveTheDocumentAndUpstreamBodiesIntact", "[loft]
     CHECK_FALSE(history.canUndo());
 
     // A valid edit the geometry cannot take fails at regeneration only: the
-    // tip's section replaced by the block's rectangle.
+    // tip moved onto the mouth's own plane, where there is no loft to make.
+    // (A rectangle against a circle was this case until P12-LOFT-001, which
+    // matches different shapes by arc length and builds it.)
     LoftDefinition impossible = m.definitionOf<LoftFeature>(m.taper);
-    impossible.sections[1] = {.sketch = sketchIdOf(m.base)};
+    impossible.sections[1] = {.sketch = sketchIdOf(m.tip)};
     REQUIRE(history.execute(m.doc, std::make_unique<ModifyLoftCommand>(featureIdOf(m.taper), impossible)).has_value());
     const Document edited = m.doc.clone();
     const Error error = requireFailure(regenerator, m.doc, m.taper);
     CHECK(error.code == ErrorCode::InvalidArgument);
-    CHECK(error.message == "Taper: makeLoft: sections 1 and 2 cannot be matched: section 1 is a circle and section 2 "
-                           "is 4 lines; lofts between different shapes are not supported");
+    CHECK(error.message == "Taper: makeLoft: sections 1 and 2 lie on the same plane: a loft needs its sections "
+                           "apart");
     CHECK(equivalent(m.doc, edited)); // regeneration does not change the model
     CHECK(regenerator.state(m.pad) == NodeState::UpToDate);
     CHECK(bits(volumeMm3(regenerator, m.pad)) == bits(padVolume));

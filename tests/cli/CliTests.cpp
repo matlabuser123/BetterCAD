@@ -621,16 +621,57 @@ TEST_CASE("info and validate describe lofts", "[cli][loft]") {
                                                "  Taper (object:9): 1 solid, volume 98240.708 mm^3, area "));
     CHECK_THAT(validate.out, EndsWith("bounds (0, 0, 0) to (100, 50, 20) mm\nResult: valid\n"));
 
-    // A rectangle against a circle: the document is invalid, with the reason.
+    // Two sections on one plane: the document is invalid, with the reason.
+    // (A rectangle against a circle was this case until P12-LOFT-001, which
+    // matches sections of different shapes by arc length and builds it.)
     features::LoftDefinition d = model.definitionOf<features::LoftFeature>(model.taper);
-    d.sections[1] = {.sketch = SketchId::fromValue(model.base.value())};
+    d.sections[1] = {.sketch = SketchId::fromValue(model.tip.value())};
     model.setDefinition<features::LoftFeature>(model.taper, d);
     REQUIRE(io::saveDocument(model.doc, path).has_value());
     const auto broken = runCli({"validate", arg(path)});
     CHECK(broken.exitCode == ExitCode::Failure);
-    CHECK_THAT(broken.out, ContainsSubstring("    error: Taper (object:9) failed to regenerate: Taper: makeLoft: sections 1 "
-                                             "and 2 cannot be matched: section 1 is a circle and section 2 is 4 lines"));
+    CHECK_THAT(broken.out, ContainsSubstring("    error: Taper (object:9) failed to regenerate: Taper: makeLoft: "
+                                             "sections 1 and 2 lie on the same plane"));
     CHECK_THAT(broken.out, EndsWith("Result: invalid (1 error)\n"));
+}
+
+TEST_CASE("info and validate describe lofts between different shapes", "[cli][loft][p12]") {
+    // P12-LOFT-001 through the same public CLI as everything else.
+    TempDir dir;
+    SECTION("a square lofted to a circle") {
+        test::ShapeLoftModel model;
+        const auto path = dir.path() / "taper.bcad";
+        REQUIRE(io::saveDocument(model.doc, path).has_value());
+
+        const auto info = runCli({"info", arg(path)});
+        CHECK(info.exitCode == ExitCode::Success);
+        CHECK_THAT(info.out,
+                   ContainsSubstring("loft    Taper   sections Square to Round (offset height), ruled, new body\n"));
+
+        // h/6 (2 A_square + M + 2 A_circle) = 6586.031 mm^3, computed in
+        // LoftShapeTests.cpp from the closed form, not read back from here.
+        const auto validate = runCli({"validate", arg(path)});
+        CHECK(validate.exitCode == ExitCode::Success);
+        CHECK_THAT(validate.out, ContainsSubstring("  Taper (object:6): 1 solid, volume 6586.031 mm^3, area "));
+        CHECK_THAT(validate.out, ContainsSubstring("Result: valid\n"));
+    }
+    SECTION("a smooth loft") {
+        test::SmoothLoftModel model;
+        const auto path = dir.path() / "spool.bcad";
+        REQUIRE(io::saveDocument(model.doc, path).has_value());
+
+        // The interpolation is part of what the CLI reports about a loft.
+        const auto info = runCli({"info", arg(path)});
+        CHECK(info.exitCode == ExitCode::Success);
+        CHECK_THAT(info.out, ContainsSubstring("loft    Spool   sections Bottom to Waist (offset mid) to Top (offset "
+                                               "top), smooth, new body\n"));
+
+        // 7000 pi / 3 = 7330.383 mm^3, the quadratic through the radii.
+        const auto validate = runCli({"validate", arg(path)});
+        CHECK(validate.exitCode == ExitCode::Success);
+        CHECK_THAT(validate.out, ContainsSubstring("  Spool (object:8): 1 solid, volume 7330.383 mm^3, area "));
+        CHECK_THAT(validate.out, ContainsSubstring("Result: valid\n"));
+    }
 }
 
 TEST_CASE("Exports of a document without bodies fail", "[cli][export]") {
