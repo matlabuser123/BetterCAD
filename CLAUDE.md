@@ -14,6 +14,12 @@ Before touching anything:
 3. [ARCHITECTURE.md](ARCHITECTURE.md) — the structure the work must preserve
 4. [ROADMAP.md](ROADMAP.md) — why the capability exists and what it leads to
 5. `docs/verification/<milestone>/` — the relevant evidence
+6. [docs/engineering/](docs/engineering/CHANGE_WORKFLOW.md) — the templates the
+   lifecycle is worked through
+
+The workflow is a way of working, not a dependency: BetterCAD builds, tests
+and qualifies with no tool beyond the ones its presets already name. Any
+agent tooling a developer installs is theirs, and optional.
 
 ## Source of Truth
 
@@ -23,7 +29,7 @@ Before touching anything:
 | What are we building long-term? | [ROADMAP.md](ROADMAP.md) |
 | What is complete, and what is next? | [TODO.md](TODO.md) |
 | How must the system be structured? | [ARCHITECTURE.md](ARCHITECTURE.md) |
-| How must the work be executed? | this file |
+| How must the work be executed? | this file, worked through [docs/engineering/](docs/engineering/CHANGE_WORKFLOW.md) |
 | What proves completion? | [docs/verification/](docs/verification/) |
 
 When documents conflict, the earlier entry wins:
@@ -64,12 +70,19 @@ a document and the evidence disagree, the evidence is right.
 [x] = implementation
     + tests
     + independent validation where applicable
+    + adversarial review
     + deterministic regression
     + evidence recorded
 ```
 
+A milestone that carries a qualification gate also needs a **qualified final
+tree**: the tree that was qualified must be the tree that is committed.
+
 Never mark `[x]` because code was written, a file exists, something compiles, a
 placeholder was added, a test was skipped or mocked, or a result looks correct.
+Nor because tests mostly pass, the implementation looks right, or the kernel
+accepted the operation: a kernel that returns a shape has not said the shape is
+correct.
 
 **Never invent** test results, benchmark numbers, compiler output, geometry
 validation, solver convergence, coverage, CI results or release artifacts. If
@@ -110,21 +123,125 @@ change:
 The `architecture.layering` test enforces containment and layering, and fails the
 build. Do not work around it.
 
-## Implementation Workflow
+## Engineering Lifecycle
+
+Substantial changes follow this order. Compilation is not completion;
+implementation is not completion; and for a geometric or numerical claim,
+tests alone are not sufficient.
+
+```text
+UNDERSTAND -> ARCHITECT -> BLAST RADIUS -> IMPLEMENT -> TARGETED TESTS
+    -> INDEPENDENT VALIDATION -> ADVERSARIAL REVIEW -> FULL REGRESSION
+    -> QUALIFICATION -> EVIDENCE -> [x] -> COMMIT / PUSH
+```
+
+Small, local changes do not need every phase. Anything that crosses a module
+boundary, touches shared infrastructure, or makes a numerical claim does.
+Templates: [docs/engineering/](docs/engineering/CHANGE_WORKFLOW.md).
+
+**The lifecycle governs how work is done, never what work is authorized.**
+Scope still comes from `TODO.md` alone: investigating a subsystem, designing
+an architecture or reviewing a diff grants no permission to build anything
+that is not authorized there.
+
+### 1. Understand
+
+Before changing a subsystem, trace how it works now. Read the public API, its
+callers, the data it owns, its IDs and units, how it reaches the dependency
+graph, regeneration, serialization, commands and undo, the CLI, its tests and
+its verification evidence.
+
+Answer, for yourself, before writing code: what owns this behaviour; what is
+its public API; what invariants does it hold; what depends on it; what
+persisted format depends on it; what tests define its current behaviour; and
+what previously qualified behaviour must not move. Never start from a
+filename and a guess.
+
+### 2. Architect
+
+For a change that crosses an architectural boundary, decide before
+implementing: the responsible module, the public interface, who owns the
+data, which way the dependencies point, the persistent representation, stable
+identity, unit semantics, the error model, regeneration and undo behaviour,
+and how it will be tested and validated. Check it against
+[ARCHITECTURE.md](ARCHITECTURE.md).
+
+Reject a design that introduces GUI-owned canonical state, OCCT outside its
+adapters, a second parameter system or document model, a unitless engineering
+API, identity by array index, hidden global state, behaviour that exists only
+for tests, or a back door for AI. Prefer extending an abstraction that is
+already there.
+
+For an architecturally significant decision, put up **two or three serious
+candidates** and compare them on correctness, architecture fit, complexity,
+persistence, determinism, performance, extensibility, failure modes,
+migration cost and testability. Record the choice, and what was rejected, as
+an ADR in [docs/architecture/decisions/](docs/architecture/decisions/). Do not
+do this for ordinary feature work, and do not generate ADR noise.
+
+### 3. Blast radius
+
+Before modifying shared infrastructure, work out what could break, and let
+that — not proximity to the edited file — decide the regression set. A change
+to a face selector reaches sketch-on-face, datums, holes, patterns, sweeps,
+lofts, persistence and the reference models.
+
+Record the direct callers, the indirect dependents, and the impact on
+serialization, regeneration, stable references, the CLI, the tests and the
+reference models.
+
+### 4. Implement
+
+The smallest correct change that fixes the root problem. A milestone is not
+permission to refactor the repository: no unrelated cleanup, no speculative
+abstraction, no public API change without a reason. If a larger architectural
+change really is needed, say why before making it.
 
 1. Confirm the milestone is authorized in `TODO.md`.
-2. Read the architecture constraints and the nearest existing implementation.
-3. Implement the smallest correct version.
-4. Write tests: nominal, parameter-change, failure, serialization, regeneration.
-5. Validate against an independent reference where one exists.
-6. Run targeted tests, then the affected subsystem, then the full suite.
-7. Record evidence.
-8. Update `TODO.md` only on PASS.
-9. Commit.
+2. Implement the smallest correct version.
+3. Write tests: nominal, parameter-change, failure, serialization, regeneration.
+4. Validate against an independent reference where one exists.
+5. Run targeted tests, then the affected subsystem, then the full suite.
+6. Record evidence.
+7. Update `TODO.md` only on PASS.
+8. Commit.
 
 Parametric features must store their definition, not their result, and must
 regenerate deterministically from parameters and upstream geometry. Do not
 implement a feature that mutates geometry without retaining its definition.
+
+### 5. Adversarial review
+
+Before calling a substantial milestone complete, try to disprove it. Read the
+final diff and ask: what did we assume; what case is missing; could this pass
+its tests and still be geometrically wrong; are the expected values really
+independent; did we weaken a test or move a tolerance; is there hidden global
+state; can save/load or undo/redo change the result; can a parameter change
+leave stale geometry; can a stable reference bind to the wrong face; could
+Debug and Release differ; could order of operations matter; can a failure
+leave partial state committed; did we cross an architectural boundary or
+widen the scope.
+
+This is a gate, not a formality. A credible defect found here is resolved
+before `[x]`. If nothing is found, record that.
+Template: [docs/engineering/ADVERSARIAL_REVIEW.md](docs/engineering/ADVERSARIAL_REVIEW.md).
+
+### 6. Qualification freeze
+
+Freeze the source and test tree and record its identity before qualifying.
+Run the presets the milestone requires (Debug, Release, Debug-shared for
+production milestones), then check that the qualified tree is the committed
+tree. If source or tests change after the freeze, the qualification is void
+and is run again from clean. Documentation that cannot affect the executable
+or the tests may follow the project's existing policy.
+
+## Parallel work
+
+Where several agents are available, give them independent concerns —
+architecture investigation, independent validation, test-gap analysis,
+profiling, adversarial review — and keep one authoritative implementation
+path. Do not set several agents editing the same subsystem at once; reviewers
+challenge the implementation, they do not race it.
 
 ## Testing and Validation
 
@@ -194,6 +311,12 @@ run, what was measured and the result, plus the raw logs it cites.
 
 Every `[x]` links to its evidence. A milestone directory with an unfilled
 placeholder, or a claim with no log behind it, is a failed gate.
+
+An evidence directory should answer, for the sections that apply to the
+change: TASK, SCOPE, BASELINE, ARCHITECTURE, BLAST RADIUS, IMPLEMENTATION,
+TESTS, INDEPENDENT VALIDATION, ADVERSARIAL REVIEW, FAILURE PATHS,
+PERSISTENCE, DETERMINISM, REGRESSION, PERFORMANCE, KNOWN LIMITATIONS, RESULT,
+REVISION. Not every task needs every section; never invent one.
 
 Acceptance gate template for substantial tasks:
 
@@ -291,4 +414,6 @@ become trustworthy first and impressive second.
 | [TODO.md](TODO.md) | Authoritative implementation status and next work |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Technical architecture and invariants |
 | [CLAUDE.md](CLAUDE.md) | Engineering workflow for coding agents |
+| [docs/engineering/](docs/engineering/CHANGE_WORKFLOW.md) | Working templates for the lifecycle: change, architecture review, adversarial review, validation |
+| [docs/architecture/decisions/](docs/architecture/decisions/) | ADRs: architecturally significant decisions and what they rejected |
 | [docs/verification/](docs/verification/) | Proof of completion |
