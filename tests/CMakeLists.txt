@@ -50,6 +50,7 @@ bettercad_add_executable(bettercad_tests
         core/geometry/ShellTests.cpp
         core/geometry/SplitTests.cpp
         core/geometry/SweepTests.cpp
+        core/geometry/SweptPathTests.cpp
         core/geometry/TransformTests.cpp
         core/math/BSplineTests.cpp
         core/math/FrameTests.cpp
@@ -81,6 +82,7 @@ bettercad_add_executable(bettercad_tests
         features/PatternDistributionTests.cpp
         features/PatternNestingTests.cpp
         features/ProfileTests.cpp
+        features/SpatialSweepTests.cpp
         features/SweepFeatureTests.cpp
         features/RegenerationTests.cpp
         features/RegeneratorTests.cpp
@@ -108,6 +110,7 @@ bettercad_add_executable(bettercad_tests
         io/MirrorFileTests.cpp
         io/ParameterJsonTests.cpp
         io/PatternInstanceFileTests.cpp
+        io/SpatialSweepFileTests.cpp
         io/SweepFileTests.cpp
         io/RevolveFileTests.cpp
         io/RibFileTests.cpp
@@ -178,6 +181,7 @@ if(TARGET bettercad_cli_lib)
         cli/RibCliTests.cpp
         cli/VariableFilletCliTests.cpp
         cli/ShellCliTests.cpp
+        cli/SpatialSweepCliTests.cpp
         cli/ExpressionCliTests.cpp
     )
     target_link_libraries(bettercad_tests PRIVATE BetterCAD::cli_lib)

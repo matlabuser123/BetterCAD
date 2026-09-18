@@ -10,6 +10,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 
+#include <cmath>
 #include <memory>
 #include <numbers>
 #include <string>
@@ -375,6 +376,202 @@ struct HandleModel : BlockModel {
                                               .path = {.sketch = sketchIdOf(handlePath), .edges = {handleArc}},
                                               .operation = features::FeatureOperation::Join,
                                               .target = featureId(pad)});
+    }
+};
+
+// A bar swept along a path that leaves every plane (P12-SWEEP-001):
+//
+//   BarProfile (XY: 4 x 4 mm square centred on the origin)
+//   Rise  (XZ: a line from the origin up +Z)          -> run 1
+//   Cross (plane z = 40 facing +Y: a line along +X)   -> run 2
+//   Turn  (plane x = 40 facing +Z: a line along +Y)   -> run 3
+//   BarProfile + Rise, Cross, Turn -> Bar (sweep)
+//
+// The path runs (0,0,0) -> (0,0,40) -> (40,0,40) -> (40,40,40): 120 mm in
+// all, with two right-angled corners, so V = 16 x 120 = 1920 mm^3. The
+// profile's centroid rides on the path, as a spatial sweep requires.
+// IDs: BarProfile 1, Rise 2, Cross 3, Turn 4, Bar 5.
+struct SpatialBarModel {
+    Document doc{"Bar"};
+    ObjectId profile, rise, cross, turn, bar;
+    EntityId riseLine, crossLine, turnLine;
+
+    /// In mm^3: the section's area times the path's length.
+    static double expectedVolume(double sideMm = 4.0, double lengthMm = 120.0) {
+        return sideMm * sideMm * lengthMm;
+    }
+
+    SpatialBarModel() {
+        using namespace bettercad::literals;
+        using namespace bettercad::sketch;
+        auto square = std::make_unique<Sketch>("BarProfile");
+        const auto lines = addRectangle(*square, -(2_mm), -(2_mm), 4_mm, 4_mm);
+        require(square->addFixed(std::get<LineEntity>(square->findEntity(lines[0])->geometry).start));
+        profile = doc.addObject(std::move(square)).value();
+
+        // Each run is drawn in its own sketch, on its own plane; they join
+        // in model space, which no one sketch could do.
+        const auto straight = [&](const std::string& name, const Frame3D& plane, Point2D from, Point2D to,
+                                  EntityId& edge) {
+            auto route = std::make_unique<Sketch>(name, plane);
+            edge = require(route->addLine(from, to));
+            require(route->addFixed(std::get<LineEntity>(route->findEntity(edge)->geometry).start));
+            require(route->addFixed(std::get<LineEntity>(route->findEntity(edge)->geometry).end));
+            return doc.addObject(std::move(route)).value();
+        };
+        rise = straight("Rise", Frame3D::xz(), Point2D{}, Point2D{0_mm, 40_mm}, riseLine);
+        cross = straight("Cross",
+                         Frame3D::create(Point3D{0_mm, 0_mm, 40_mm}, Direction3D::unitY(), Direction3D::unitX())
+                             .value(),
+                         Point2D{}, Point2D{40_mm, 0_mm}, crossLine);
+        turn = straight("Turn",
+                        Frame3D::create(Point3D{40_mm, 0_mm, 40_mm}, Direction3D::unitZ(), Direction3D::unitY())
+                            .value(),
+                        Point2D{}, Point2D{40_mm, 0_mm}, turnLine);
+
+        auto sweep = features::SweepFeature::create(
+            "Bar", {.profile = sketchIdOf(profile),
+                    .path = {.sketch = sketchIdOf(rise),
+                             .edges = {riseLine},
+                             .runs = {{.sketch = sketchIdOf(cross), .edges = {crossLine}},
+                                      {.sketch = sketchIdOf(turn), .edges = {turnLine}}}}});
+        REQUIRE(sweep.has_value());
+        bar = doc.addObject(std::move(*sweep)).value();
+    }
+
+    [[nodiscard]] features::SweepDefinition definition() const {
+        return doc.findObjectAs<features::SweepFeature>(bar)->definition();
+    }
+    void setDefinition(const features::SweepDefinition& definition) {
+        REQUIRE(doc.modifyObject<features::SweepFeature>(bar, [&](features::SweepFeature& f) {
+                       return f.setDefinition(definition);
+                   }).has_value());
+    }
+};
+
+// A twisted bar (P12-SWEEP-001):
+//
+//   twist (angle parameter, 90 deg)
+//   TwistProfile (XY: 8 x 2 mm rectangle centred on the origin)
+//   Rise (XZ: a line from the origin 100 mm up +Z, driven by length)
+//   -> Twisted (sweep, twist driven by the parameter)
+//
+// The section turns theta(u) = u x twist about the path, measured from the
+// profile sketch's X axis. V = 16 x 100 = 1600 mm^3 whatever the twist is.
+// IDs: twist 1, length 2, TwistProfile 3, Rise 4, Twisted 5.
+struct TwistedBarModel {
+    Document doc{"Twist"};
+    ParameterId twist, length;
+    ObjectId profile, rise, twisted;
+    EntityId riseLine;
+
+    /// The section's half-extents across the profile's X and Y axes when it
+    /// has turned by @p phi: a |cos| + b |sin| and a |sin| + b |cos|.
+    static double acrossX(double phi, double a = 4.0, double b = 1.0) {
+        return a * std::abs(std::cos(phi)) + b * std::abs(std::sin(phi));
+    }
+    static double acrossY(double phi, double a = 4.0, double b = 1.0) {
+        return a * std::abs(std::sin(phi)) + b * std::abs(std::cos(phi));
+    }
+    /// In mm^3: the area times the length, however it turns.
+    static double expectedVolume(double lengthMm = 100.0) { return 8.0 * 2.0 * lengthMm; }
+
+    TwistedBarModel() {
+        using namespace bettercad::literals;
+        using namespace bettercad::sketch;
+        twist = doc.createParameter("twist", 90_deg, units::deg).value();
+        length = doc.createParameter("length", 100_mm, units::mm).value();
+
+        auto rectangle = std::make_unique<Sketch>("TwistProfile");
+        const auto lines = addRectangle(*rectangle, -(4_mm), -(1_mm), 8_mm, 2_mm);
+        require(rectangle->addFixed(std::get<LineEntity>(rectangle->findEntity(lines[0])->geometry).start));
+        profile = doc.addObject(std::move(rectangle)).value();
+
+        auto route = std::make_unique<Sketch>("Rise", Frame3D::xz());
+        riseLine = require(route->addLine(Point2D{}, Point2D{0_mm, 100_mm}));
+        require(route->addFixed(std::get<LineEntity>(route->findEntity(riseLine)->geometry).start));
+        require(route->addVertical(riseLine));
+        const ConstraintId along = require(route->addDistance(riseLine, 100_mm));
+        REQUIRE(route->setConstraintParameter(along, length).has_value());
+        rise = doc.addObject(std::move(route)).value();
+
+        auto sweep = features::SweepFeature::create(
+            "Twisted", {.profile = sketchIdOf(profile),
+                        .path = {.sketch = sketchIdOf(rise), .edges = {riseLine}},
+                        .twistParameter = twist});
+        REQUIRE(sweep.has_value());
+        twisted = doc.addObject(std::move(*sweep)).value();
+    }
+
+    [[nodiscard]] features::SweepDefinition definition() const {
+        return doc.findObjectAs<features::SweepFeature>(twisted)->definition();
+    }
+    void setDefinition(const features::SweepDefinition& definition) {
+        REQUIRE(doc.modifyObject<features::SweepFeature>(twisted, [&](features::SweepFeature& f) {
+                       return f.setDefinition(definition);
+                   }).has_value());
+    }
+};
+
+// A bar carried by a guide curve (P12-SWEEP-001):
+//
+//   GuideProfile (XY: 8 x 2 mm rectangle centred on the origin)
+//   Rise  (XZ: a line from the origin 100 mm up +Z)
+//   Lead  (a plane containing the guide: a line from (10, 0, 0) to
+//          (0, 10, 100))
+//   -> Guided (sweep, carried by Lead)
+//
+// The guide's offset from the path turns from +X to +Y over the length: a
+// quarter turn, by the guide's own definition. IDs: GuideProfile 1, Rise 2,
+// Lead 3, Guided 4.
+struct GuidedBarModel {
+    Document doc{"Guide"};
+    ObjectId profile, rise, lead, guided;
+    EntityId riseLine, leadLine;
+
+    static double expectedVolume(double lengthMm = 100.0) { return 8.0 * 2.0 * lengthMm; }
+
+    GuidedBarModel() {
+        using namespace bettercad::literals;
+        using namespace bettercad::sketch;
+        auto rectangle = std::make_unique<Sketch>("GuideProfile");
+        const auto lines = addRectangle(*rectangle, -(4_mm), -(1_mm), 8_mm, 2_mm);
+        require(rectangle->addFixed(std::get<LineEntity>(rectangle->findEntity(lines[0])->geometry).start));
+        profile = doc.addObject(std::move(rectangle)).value();
+
+        auto route = std::make_unique<Sketch>("Rise", Frame3D::xz());
+        riseLine = require(route->addLine(Point2D{}, Point2D{0_mm, 100_mm}));
+        require(route->addFixed(std::get<LineEntity>(route->findEntity(riseLine)->geometry).start));
+        require(route->addFixed(std::get<LineEntity>(route->findEntity(riseLine)->geometry).end));
+        rise = doc.addObject(std::move(route)).value();
+
+        // The guide runs from (10, 0, 0) to (0, 10, 100); its plane holds
+        // both, with the line along the plane's own X axis.
+        const auto direction = Direction3D::fromComponents(-10.0, 10.0, 100.0).value();
+        const auto normal = direction.cross(Direction3D::unitX()).value();
+        const auto plane = Frame3D::create(Point3D{10_mm, 0_mm, 0_mm}, normal, direction).value();
+        const double span = std::sqrt(10.0 * 10.0 + 10.0 * 10.0 + 100.0 * 100.0);
+        auto guide = std::make_unique<Sketch>("Lead", plane);
+        leadLine = require(guide->addLine(Point2D{}, Point2D{span * units::mm, 0_mm}));
+        require(guide->addFixed(std::get<LineEntity>(guide->findEntity(leadLine)->geometry).start));
+        require(guide->addFixed(std::get<LineEntity>(guide->findEntity(leadLine)->geometry).end));
+        lead = doc.addObject(std::move(guide)).value();
+
+        auto sweep = features::SweepFeature::create(
+            "Guided", {.profile = sketchIdOf(profile),
+                       .path = {.sketch = sketchIdOf(rise), .edges = {riseLine}},
+                       .guide = features::SweepPath{.sketch = sketchIdOf(lead), .edges = {leadLine}}});
+        REQUIRE(sweep.has_value());
+        guided = doc.addObject(std::move(*sweep)).value();
+    }
+
+    [[nodiscard]] features::SweepDefinition definition() const {
+        return doc.findObjectAs<features::SweepFeature>(guided)->definition();
+    }
+    void setDefinition(const features::SweepDefinition& definition) {
+        REQUIRE(doc.modifyObject<features::SweepFeature>(guided, [&](features::SweepFeature& f) {
+                       return f.setDefinition(definition);
+                   }).has_value());
     }
 };
 

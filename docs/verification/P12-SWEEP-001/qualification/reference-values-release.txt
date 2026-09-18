@@ -1,0 +1,1908 @@
+Measured values of the P12-SWEEP-001 tests (Release build of the qualified tree). Produced by: build/release/bin/bettercad_tests.exe "[sweep][p12]" -s --reporter xml --rng-seed 1, filtered by values.py (kept in this directory): every passed CHECK_THAT and every passed CHECK whose expansion shows values, with the test case, section and INFO/CAPTURE context. Each entry: file:line, the assertion, then Catch2's expansion (values printed exactly). REQUIRE lines, repeats of an identical entry within a test case and expansions over 1000 characters (whole-file text) are left out.
+
+
+== SpatialSweep_DependsOnEveryRunsSketch
+SpatialSweepTests.cpp:131  CHECK( sweep->dependencies() == std::vector<ObjectId>{m.profile, m.rise, m.cross, m.turn} )
+        => { object:1, object:2, object:3, object:4 } == { object:1, object:2, object:3, object:4 }
+SpatialSweepTests.cpp:134  CHECK_FALSE( !(m.definition().guide.has_value()) )
+        => !false
+SpatialSweepTests.cpp:135  CHECK_FALSE( !(m.definition().twistParameter.has_value()) )
+        => !false
+
+== SpatialSweepCli_InfoDescribesTheTwist / driven by a parameter
+SpatialSweepCliTests.cpp:56  CHECK( result.exitCode == ExitCode::Success )
+        => 0 == 0
+SpatialSweepCliTests.cpp:57  CHECK_THAT( result.out, ContainsSubstring("profile TwistProfile, path Rise (1 edge), follow path, twisted twist, " "new body\n") )
+        => "Document: Twist File: C:\Users\uqhas\AppData\Local\Temp\bettercad-test-36d6a548-218c-436c-83c1-78f728ba9683\twist.bcad ID: ee57eb3f-9ec4-427f-ad2a-5f14de9496af Parameters (2): twist 90 deg length 100 mm Objects (3): object:3 sketch TwistProfile 8 entities, 1 constraints object:4 sketch Rise 3 entities, 3 constraints, driven by length object:5 sweep Twisted profile TwistProfile, path Rise (1 edge), follow path, twisted twist, new body " contains: "profile TwistProfile, path Rise (1 edge), follow path, twisted twist, new body "
+
+== SpatialSweepCli_InfoDescribesTheTwist / a literal angle
+SpatialSweepCliTests.cpp:67  CHECK( result.exitCode == ExitCode::Success )
+        => 0 == 0
+SpatialSweepCliTests.cpp:68  CHECK_THAT( result.out, ContainsSubstring("profile TwistProfile, path Rise (1 edge), follow path, twisted 180 deg, " "new body\n") )
+        => "Document: Twist File: C:\Users\uqhas\AppData\Local\Temp\bettercad-test-9e3509c7-d88f-4550-a64e-f93d35cfff87\twist.bcad ID: 9c26ea39-1f22-4c4c-bc97-ca1b3558e812 Parameters (2): twist 90 deg length 100 mm Objects (3): object:3 sketch TwistProfile 8 entities, 1 constraints object:4 sketch Rise 3 entities, 3 constraints, driven by length object:5 sweep Twisted profile TwistProfile, path Rise (1 edge), follow path, twisted 180 deg, new body " contains: "profile TwistProfile, path Rise (1 edge), follow path, twisted 180 deg, new body "
+
+== SpatialSweepCli_InfoDescribesTheTwist / no twist at all says nothing about one
+SpatialSweepCliTests.cpp:77  CHECK( result.exitCode == ExitCode::Success )
+        => 0 == 0
+SpatialSweepCliTests.cpp:78  CHECK_THAT( result.out, ContainsSubstring("profile TwistProfile, path Rise (1 edge), follow path, new body\n") )
+        => "Document: Twist File: C:\Users\uqhas\AppData\Local\Temp\bettercad-test-7244a36e-7c62-4833-b580-c7bcb8550c30\twist.bcad ID: 3888e95f-264b-4ff7-8da1-39a6412b2c77 Parameters (2): twist 90 deg length 100 mm Objects (3): object:3 sketch TwistProfile 8 entities, 1 constraints object:4 sketch Rise 3 entities, 3 constraints, driven by length object:5 sweep Twisted profile TwistProfile, path Rise (1 edge), follow path, new body " contains: "profile TwistProfile, path Rise (1 edge), follow path, new body "
+SpatialSweepCliTests.cpp:80  CHECK_THAT( result.out, !ContainsSubstring("twisted") )
+        => "Document: Twist File: C:\Users\uqhas\AppData\Local\Temp\bettercad-test-7244a36e-7c62-4833-b580-c7bcb8550c30\twist.bcad ID: 3888e95f-264b-4ff7-8da1-39a6412b2c77 Parameters (2): twist 90 deg length 100 mm Objects (3): object:3 sketch TwistProfile 8 entities, 1 constraints object:4 sketch Rise 3 entities, 3 constraints, driven by length object:5 sweep Twisted profile TwistProfile, path Rise (1 edge), follow path, new body " not contains: "twisted"
+
+== SpatialSweep_FailuresKeepNoBodyAndRecover
+SpatialSweepTests.cpp:430  CHECK_FALSE( !(failed.succeeded()) )
+        => !false with message: object:4: distance 0 mm is out of range object:5: blocked
+SpatialSweepTests.cpp:431  CHECK( regenerator.body(m.twisted) == nullptr )
+        => nullptr == nullptr with message: object:4: distance 0 mm is out of range object:5: blocked
+SpatialSweepTests.cpp:435  CHECK( bits(volumeMm3(regenerator, m.twisted)) == bits(before) )
+        => 4654751708973985398 (0x4099000473096e76) == 4654751708973985398 (0x4099000473096e76) with message: object:4: distance 0 mm is out of range object:5: blocked
+
+== SpatialSweepCli_ValidateReportsADisconnectedPath
+SpatialSweepCliTests.cpp:118  CHECK( result.exitCode == ExitCode::Failure )
+        => 1 == 1
+SpatialSweepCliTests.cpp:119  CHECK_THAT( result.out, ContainsSubstring("the path is not connected") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-0dfd4015-7101-4bd3-9b9f-3cc6feb6ddff\broken.bcad document consistency ok missing references ok dependency cycles ok sketch constraints 1 warning warning: BarProfile (object:1) is under-constrained: 6 degree(s) of freedom feature regeneration 1 error error: Bar (object:5) failed to regenerate: Bar: makeSweep: the path is not connected: segment 1 ends at (0, 0, 40) mm, but segment 2 starts at (40, 0, 40) mm, 40 mm away geometry ok, 0 result bodies Result: invalid (1 error, 1 warning) " contains: "the path is not connected"
+
+== SweptPath_RejectsANonFiniteTwist
+SweptPathTests.cpp:417  CHECK( error.code == ErrorCode::InvalidArgument )
+        => 0 == 0
+SweptPathTests.cpp:418  CHECK_THAT( error.message, ContainsSubstring("the twist must be finite") )
+        => "makeSweep: the twist must be finite" contains: "the twist must be finite"
+
+== SpatialSweep_TwistTurnsTheSectionByTheAngleGiven / no twist is the bar it always was
+SpatialSweepTests.cpp:268  CHECK_THAT( volumeMm3(regenerator, m.twisted), WithinRel(TwistedBarModel::expectedVolume(), kRel) )
+        => 1600.0 and 1600.0 are within 1e-10% of each other
+SpatialSweepTests.cpp:269  CHECK_THAT( box[3], WithinAbs(4.0, kPositionToleranceMm) )
+        => 4.0 is within 0.000000001 of 4.0
+SpatialSweepTests.cpp:270  CHECK_THAT( box[4], WithinAbs(1.0, kPositionToleranceMm) )
+        => 1.0 is within 0.000000001 of 1.0
+
+== SpatialSweep_TwistTurnsTheSectionByTheAngleGiven / a quarter turn
+SpatialSweepTests.cpp:274  CHECK_THAT( volumeMm3(regenerator, m.twisted), WithinRel(TwistedBarModel::expectedVolume(), kRelGuided) )
+        => 1600.00434508072567041 and 1600.0 are within 0.001% of each other
+SpatialSweepTests.cpp:276  CHECK_THAT( box[3], WithinAbs(std::hypot(4.0, 1.0), kGuidedPositionMm) )
+        => 4.12313198682790105 is within 0.002 of 4.12310562561766059
+SpatialSweepTests.cpp:277  CHECK_THAT( box[4], WithinAbs(std::hypot(4.0, 1.0), kGuidedPositionMm) )
+        => 4.12313198682790372 is within 0.002 of 4.12310562561766059
+
+== SpatialSweep_TwistTurnsTheSectionByTheAngleGiven / the other way round
+SpatialSweepTests.cpp:281  CHECK_THAT( volumeMm3(regenerator, m.twisted), WithinRel(TwistedBarModel::expectedVolume(), kRelGuided) )
+        => 1600.00434508072567041 and 1600.0 are within 0.001% of each other
+SpatialSweepTests.cpp:282  CHECK_THAT( box[1], WithinAbs(-std::hypot(4.0, 1.0), kGuidedPositionMm) )
+        => -4.12313198682790372 is within 0.002 of -4.12310562561766059
+
+== SpatialSweep_TwistTurnsTheSectionByTheAngleGiven / an eighth turn reaches the radius one way only
+SpatialSweepTests.cpp:286  CHECK_THAT( box[3], WithinAbs(std::hypot(4.0, 1.0), kGuidedPositionMm) )
+        => 4.12312382993856996 is within 0.002 of 4.12310562561766059
+SpatialSweepTests.cpp:287  CHECK_THAT( box[4], WithinAbs(TwistedBarModel::acrossY(pi / 4.0), kGuidedPositionMm) )
+        => 3.53553400593273759 is within 0.002 of 3.53553390593273731
+
+== SpatialSweep_TwistTurnsTheSectionByTheAngleGiven / a half turn
+SpatialSweepTests.cpp:291  CHECK_THAT( volumeMm3(regenerator, m.twisted), WithinRel(TwistedBarModel::expectedVolume(), kRelGuided) )
+        => 1599.99780956579570557 and 1600.0 are within 0.001% of each other
+SpatialSweepTests.cpp:292  CHECK_THAT( box[3], WithinAbs(std::hypot(4.0, 1.0), kGuidedPositionMm) )
+        => 4.12307818077185662 is within 0.002 of 4.12310562561766059
+
+== SpatialSweep_TwistTurnsTheSectionByTheAngleGiven / a full turn is a full turn, not none
+SpatialSweepTests.cpp:296  CHECK_THAT( volumeMm3(regenerator, m.twisted), WithinRel(TwistedBarModel::expectedVolume(), kRelGuided) )
+        => 1599.99792659100285164 and 1600.0 are within 0.001% of each other
+SpatialSweepTests.cpp:297  CHECK_THAT( box[4], WithinAbs(std::hypot(4.0, 1.0), kGuidedPositionMm) )
+        => 4.12311569944365974 is within 0.002 of 4.12310562561766059
+SpatialSweepTests.cpp:298  CHECK( box[4] > 2.0 )
+        => 4.12311569944365974 > 2.0
+
+== SpatialSweep_RejectsAGuideThatCannotBeUsed / a guide whose sketch is gone
+SpatialSweepTests.cpp:398  CHECK_FALSE( !(report.succeeded()) )
+        => !false with message: object:4: object:4 references object:3, which does not exist
+SpatialSweepTests.cpp:399  CHECK( regenerator.body(m.guided) == nullptr )
+        => nullptr == nullptr with message: object:4: object:4 references object:3, which does not exist
+
+== SpatialSweep_RejectsAGuideThatCannotBeUsed / a guide edge that is not in its sketch
+SpatialSweepTests.cpp:86  CHECK( regenerator.body(feature) == nullptr )
+        => nullptr == nullptr with message: object:4: Guided: the path edge entity:9999 does not exist in sketch 'Lead'
+SpatialSweepTests.cpp:406  CHECK( error.code == ErrorCode::NotFound )
+        => 1 == 1
+SpatialSweepTests.cpp:407  CHECK_THAT( error.message, ContainsSubstring("does not exist") )
+        => "Guided: the path edge entity:9999 does not exist in sketch 'Lead'" contains: "does not exist"
+
+== SpatialSweep_RejectsAGuideThatCannotBeUsed / a guide in the profile's own sketch
+SpatialSweepTests.cpp:94  CHECK( feature.error().code == ErrorCode::InvalidArgument )
+        => 0 == 0
+SpatialSweepTests.cpp:412  CHECK( refusal(d) == "the guide must be in another sketch than the profile" )
+        => "the guide must be in another sketch than the profile" == "the guide must be in another sketch than the profile"
+
+== SpatialSweep_SaveLoadPreservesTheGuide
+SpatialSweepFileTests.cpp:80  CHECK( loaded->itemIds() == expected.itemIds() )
+        => { object:1, object:2, object:3, object:4 } == { object:1, object:2, object:3, object:4 }
+SpatialSweepFileTests.cpp:85  CHECK( a.graph.dependenciesOf(node) == b.graph.dependenciesOf(node) )
+        => { } == { }
+SpatialSweepFileTests.cpp:85  CHECK( a.graph.dependenciesOf(node) == b.graph.dependenciesOf(node) )
+        => { object:1, object:2, object:3 } == { object:1, object:2, object:3 }
+SpatialSweepFileTests.cpp:183  CHECK( read.guide->sketch == SketchId::fromValue(m.lead.value()) )
+        => sketch:3 == sketch:3
+SpatialSweepFileTests.cpp:184  CHECK( read.guide->edges == std::vector<EntityId>{m.leadLine} )
+        => { entity:3 } == { entity:3 }
+SpatialSweepFileTests.cpp:185  CHECK( read == definition )
+        => {?} == {?}
+SpatialSweepFileTests.cpp:63  CHECK( bits(pa.volume.si()) == bits(pb.volume.si()) )
+        => 4520162626979711228 (0x3ebad7f5dc1f48fc) == 4520162626979711228 (0x3ebad7f5dc1f48fc) with message: feature object:4
+SpatialSweepFileTests.cpp:64  CHECK( bits(pa.surfaceArea.si()) == bits(pb.surfaceArea.si()) )
+        => 4566834466739724300 (0x3f60a7c05a08200c) == 4566834466739724300 (0x3f60a7c05a08200c) with message: feature object:4
+SpatialSweepFileTests.cpp:65  CHECK( bits(pa.centerOfMass.x.si()) == bits(pb.centerOfMass.x.si()) )
+        => 4326862585250852265 (0x3c0c1a98b9ce2da9) == 4326862585250852265 (0x3c0c1a98b9ce2da9) with message: feature object:4
+SpatialSweepFileTests.cpp:66  CHECK( bits(pa.centerOfMass.y.si()) == bits(pb.centerOfMass.y.si()) )
+        => 4311262205568951875 (0x3bd4ae2248812643) == 4311262205568951875 (0x3bd4ae2248812643) with message: feature object:4
+SpatialSweepFileTests.cpp:67  CHECK( bits(pa.centerOfMass.z.si()) == bits(pb.centerOfMass.z.si()) )
+        => 4587366580439587226 (0x3fa999999999999a) == 4587366580439587226 (0x3fa999999999999a) with message: feature object:4
+SpatialSweepFileTests.cpp:68  CHECK( a->boundingBox().value() == b->boundingBox().value() )
+        => {?} == {?} with message: feature object:4
+SpatialSweepFileTests.cpp:69  CHECK( a->topology() == b->topology() )
+        => {?} == {?} with message: feature object:4
+
+== SpatialSweep_AFileWithoutTheNewFieldsIsAPlanarSweep
+SpatialSweepFileTests.cpp:210  CHECK( read.twist == Angle{} )
+        => 0 rad == 0 rad
+SpatialSweepFileTests.cpp:211  CHECK_FALSE( !(read.twistParameter.has_value()) )
+        => !false
+SpatialSweepFileTests.cpp:212  CHECK_FALSE( !(read.guide.has_value()) )
+        => !false
+SpatialSweepFileTests.cpp:213  CHECK( read == m.doc.findObjectAs<SweepFeature>(m.channel)->definition() )
+        => {?} == {?}
+
+== SweptPath_TwistsAlongACurvedPath
+SweptPathTests.cpp:113  CHECK( body->topology().solids == 1 )
+        => 1 == 1
+SweptPathTests.cpp:402  CHECK_THAT( volumeMm3(body), WithinRel(2.0 * a * 2.0 * b * 40.0 * pi / 2.0, kRelGuided) )
+        => 1005.30972982145203787 and 1005.30964914873379712 are within 0.001% of each other
+SweptPathTests.cpp:406  CHECK( box[5] <= radius + kGuidedPositionMm )
+        => 4.12310312488133679 <= 4.12510562561766037
+SweptPathTests.cpp:407  CHECK( box[2] >= -radius - kGuidedPositionMm )
+        => -4.12310312488134745 >= -4.12510562561766037
+SweptPathTests.cpp:408  CHECK( box[3] <= 40.0 + radius + kGuidedPositionMm )
+        => 44.01042026924890394 <= 44.12510562561766392
+
+== SpatialSweep_SidesAreNamedByTheEdgeTheyRunAlong
+SpatialSweepTests.cpp:164  CHECK( found->size() == 1 )
+        => 1 == 1 with message: run object:2, edge entity:3
+SpatialSweepTests.cpp:164  CHECK( found->size() == 1 )
+        => 1 == 1 with message: run object:3, edge entity:3
+SpatialSweepTests.cpp:164  CHECK( found->size() == 1 )
+        => 1 == 1 with message: run object:4, edge entity:3
+SpatialSweepTests.cpp:171  CHECK( named == 12 )
+        => 12 == 12
+SpatialSweepTests.cpp:172  CHECK( m.riseLine == m.crossLine )
+        => entity:3 == entity:3
+SpatialSweepTests.cpp:192  CHECK( crossed->size() == 1 )
+        => 1 == 1
+
+== SpatialSweep_RunsFromSeveralSketchesMakeOnePath
+SpatialSweepTests.cpp:112  CHECK_THAT( volumeMm3(regenerator, m.bar), WithinRel(SpatialBarModel::expectedVolume(), kRel) )
+        => 1920.00000000000022737 and 1920.0 are within 1e-10% of each other with message: 
+SpatialSweepTests.cpp:115  CHECK( body.topology().solids == 1 )
+        => 1 == 1 with message: 
+SpatialSweepTests.cpp:118  CHECK_THAT( box[0], WithinAbs(-2.0, kPositionToleranceMm) )
+        => -2.0 is within 0.000000001 of -2.0 with message: 
+SpatialSweepTests.cpp:119  CHECK_THAT( box[1], WithinAbs(-2.0, kPositionToleranceMm) )
+        => -2.00000000000000044 is within 0.000000001 of -2.0 with message: 
+SpatialSweepTests.cpp:120  CHECK_THAT( box[2], WithinAbs(0.0, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0 with message: 
+SpatialSweepTests.cpp:121  CHECK_THAT( box[3], WithinAbs(42.0, kPositionToleranceMm) )
+        => 42.0 is within 0.000000001 of 42.0 with message: 
+SpatialSweepTests.cpp:122  CHECK_THAT( box[4], WithinAbs(40.0, kPositionToleranceMm) )
+        => 40.0 is within 0.000000001 of 40.0 with message: 
+SpatialSweepTests.cpp:123  CHECK_THAT( box[5], WithinAbs(42.0, kPositionToleranceMm) )
+        => 42.0 is within 0.000000001 of 42.0 with message: 
+
+== SketchOnFace_SweepCapsAndSidesFollowTheirPathEdges
+SketchOnFaceTests.cpp:122  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 10969.91118430775168235 and 10969.91118430775168235 are within 1e-10% of each other with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -23.74045372720157943 is within 0.000000001 of -23.74045372720127389 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.00000000000000032 is within 0.000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 61.7290527247585743 is within 0.000000001 of 61.72905272475878746 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -80.0 is within 0.0000001 of -80.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -4.0 is within 0.0000001 of -4.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 10.0 is within 0.0000001 of 10.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 5.0 is within 0.0000001 of 5.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 4.0 is within 0.0000001 of 4.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 85.0 is within 0.0000001 of 85.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.0 is within 0.000000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.0 is within 0.000000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 10.0 is within 0.000000000001 of 10.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -1.0 is within 0.00000000000001 of -1.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -1.0 is within 0.00000000000001 of -1.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:122  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 113.09733552923259481 and 113.09733552923255218 are within 1e-10% of each other with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.00000000000000057 is within 0.000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.00000000000000026 is within 0.000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 8.00000000000000178 is within 0.000000001 of 8.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -3.0 is within 0.0000001 of -3.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -3.0 is within 0.0000001 of -3.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 6.0 is within 0.0000001 of 6.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 3.0 is within 0.0000001 of 3.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 3.0 is within 0.0000001 of 3.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 10.0 is within 0.0000001 of 10.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -80.0 is within 0.000000000001 of -80.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -1.0 is within 0.00000000000001 of -1.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -1.0 is within 0.00000000000001 of -1.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:122  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 169.646003293848878 and 169.64600329384882116 are within 1e-10% of each other with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -82.99999999999998579 is within 0.000000001 of -83.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.00000000000000019 is within 0.000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 79.99999999999998579 is within 0.000000001 of 80.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -86.0 is within 0.0000001 of -86.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -3.0 is within 0.0000001 of -3.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 77.0 is within 0.0000001 of 77.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -80.0 is within 0.0000001 of -80.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 3.0 is within 0.0000001 of 3.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 83.0 is within 0.0000001 of 83.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 5.0 is within 0.000000000001 of 5.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:122  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 113.09733552923259481 and 113.09733552923255218 are within 1e-10% of each other with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 7.00000000000000178 is within 0.000000001 of 7.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.00000000000000003 is within 0.000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 30.00000000000000355 is within 0.000000001 of 30.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 5.0 is within 0.0000001 of 5.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -3.0 is within 0.0000001 of -3.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 27.0 is within 0.0000001 of 27.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 9.0 is within 0.0000001 of 9.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 3.0 is within 0.0000001 of 3.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 33.0 is within 0.0000001 of 33.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 85.0 is within 0.000000000001 of 85.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:122  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 141.37166941154072219 and 141.37166941154069377 are within 1e-10% of each other with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -54.99999999999999289 is within 0.000000001 of -55.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.0000000000000001 is within 0.000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 87.5 is within 0.000000001 of 87.5 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -58.0 is within 0.0000001 of -58.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -3.0 is within 0.0000001 of -3.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 85.0 is within 0.0000001 of 85.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -52.0 is within 0.0000001 of -52.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 3.0 is within 0.0000001 of 3.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 90.0 is within 0.0000001 of 90.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 4.0 is within 0.000000000001 of 4.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -1.0 is within 0.00000000000001 of -1.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:122  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 141.37166941154072219 and 141.37166941154069377 are within 1e-10% of each other with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -8.99999999999999822 is within 0.000000001 of -9.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 6.49999999999999822 is within 0.000000001 of 6.5 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 70.99999999999997158 is within 0.000000001 of 71.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -12.0 is within 0.0000001 of -12.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 4.0 is within 0.0000001 of 4.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 68.0 is within 0.0000001 of 68.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -6.0 is within 0.0000001 of -6.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 9.0 is within 0.0000001 of 9.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 74.0 is within 0.0000001 of 74.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:122  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 10969.91118430775532033 and 10969.91118430775168235 are within 1e-10% of each other with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -23.74045372720157587 is within 0.000000001 of -23.74045372720127389 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.00000000000000003 is within 0.000000001 of 0.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 66.72905272475854588 is within 0.000000001 of 66.72905272475878746 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -80.0 is within 0.0000001 of -80.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -4.0 is within 0.0000001 of -4.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 14.99999999999999822 is within 0.0000001 of 15.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 5.00000000000000355 is within 0.0000001 of 5.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 4.0 is within 0.0000001 of 4.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 90.0 is within 0.0000001 of 90.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.0 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.0 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 14.99999999999999645 is within 0.000000000001 of 15.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -1.0 is within 0.00000000000001 of -1.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -1.0 is within 0.00000000000001 of -1.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:122  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 113.09733552923259481 and 113.09733552923255218 are within 1e-10% of each other with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.00000000000000024 is within 0.000000001 of 0.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.0000000000000003 is within 0.000000001 of 0.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 12.99999999999999467 is within 0.000000001 of 13.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -3.0 is within 0.0000001 of -3.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -3.0 is within 0.0000001 of -3.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 10.99999999999999645 is within 0.0000001 of 11.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 3.0 is within 0.0000001 of 3.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 3.0 is within 0.0000001 of 3.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 14.99999999999999645 is within 0.0000001 of 15.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -80.0 is within 0.000000000001 of -80.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -1.0 is within 0.00000000000001 of -1.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -1.0 is within 0.00000000000001 of -1.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:122  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 169.646003293848878 and 169.64600329384882116 are within 1e-10% of each other with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -82.99999999999998579 is within 0.000000001 of -83.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.00000000000000019 is within 0.000000001 of 0.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 79.99999999999998579 is within 0.000000001 of 80.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -86.0 is within 0.0000001 of -86.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -3.0 is within 0.0000001 of -3.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 77.0 is within 0.0000001 of 77.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -80.0 is within 0.0000001 of -80.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 3.0 is within 0.0000001 of 3.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 83.0 is within 0.0000001 of 83.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 5.0 is within 0.000000000001 of 5.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.00000000000000004 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.00000000000000001 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.00000000000000001 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:122  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 113.09733552923259481 and 113.09733552923255218 are within 1e-10% of each other with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 7.00000000000000178 is within 0.000000001 of 7.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.00000000000000003 is within 0.000000001 of 0.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 30.00000000000000355 is within 0.000000001 of 30.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 5.0 is within 0.0000001 of 5.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -3.0 is within 0.0000001 of -3.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 27.0 is within 0.0000001 of 27.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 9.0 is within 0.0000001 of 9.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 3.0 is within 0.0000001 of 3.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 33.0 is within 0.0000001 of 33.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 89.99999999999998579 is within 0.000000000001 of 90.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:122  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 141.37166941154072219 and 141.37166941154069377 are within 1e-10% of each other with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -54.99999999999999289 is within 0.000000001 of -55.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.0000000000000001 is within 0.000000001 of 0.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 92.49999999999997158 is within 0.000000001 of 92.5 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -58.0 is within 0.0000001 of -58.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -3.0 is within 0.0000001 of -3.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 89.99999999999998579 is within 0.0000001 of 90.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -52.0 is within 0.0000001 of -52.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 3.0 is within 0.0000001 of 3.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 94.99999999999998579 is within 0.0000001 of 95.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 4.0 is within 0.000000000001 of 4.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -1.0 is within 0.00000000000001 of -1.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:122  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 141.37166941154072219 and 141.37166941154069377 are within 1e-10% of each other with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -8.99999999999999822 is within 0.000000001 of -9.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 6.49999999999999822 is within 0.000000001 of 6.5 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 70.99999999999997158 is within 0.000000001 of 71.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -12.0 is within 0.0000001 of -12.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 4.0 is within 0.0000001 of 4.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 68.0 is within 0.0000001 of 68.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -6.0 is within 0.0000001 of -6.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 9.0 is within 0.0000001 of 9.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 74.0 is within 0.0000001 of 74.0 with message: lift := 15.0; rise := 40.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:122  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 11769.91118430775532033 and 11769.91118430775168235 are within 1e-10% of each other with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -22.12681682847255615 is within 0.000000001 of -22.12681682847236786 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.00000000000000042 is within 0.000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 72.87318317152741542 is within 0.000000001 of 72.87318317152762859 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -80.0 is within 0.0000001 of -80.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -4.0 is within 0.0000001 of -4.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 15.0 is within 0.0000001 of 15.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 5.00000000000000355 is within 0.0000001 of 5.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 4.0 is within 0.0000001 of 4.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 100.0 is within 0.0000001 of 100.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.0 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.0 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 15.0 is within 0.000000000001 of 15.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -1.0 is within 0.00000000000001 of -1.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -1.0 is within 0.00000000000001 of -1.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:122  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 113.09733552923259481 and 113.09733552923255218 are within 1e-10% of each other with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.00000000000000057 is within 0.000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.00000000000000026 is within 0.000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 13.0 is within 0.000000001 of 13.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -3.0 is within 0.0000001 of -3.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -3.0 is within 0.0000001 of -3.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 11.0 is within 0.0000001 of 11.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 3.0 is within 0.0000001 of 3.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 3.0 is within 0.0000001 of 3.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 15.0 is within 0.0000001 of 15.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -80.0 is within 0.000000000001 of -80.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -1.0 is within 0.00000000000001 of -1.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -1.0 is within 0.00000000000001 of -1.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:122  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 169.646003293848878 and 169.64600329384882116 are within 1e-10% of each other with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -82.99999999999998579 is within 0.000000001 of -83.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.00000000000000019 is within 0.000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 79.99999999999998579 is within 0.000000001 of 80.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -86.0 is within 0.0000001 of -86.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -3.0 is within 0.0000001 of -3.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 77.0 is within 0.0000001 of 77.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -80.0 is within 0.0000001 of -80.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 3.0 is within 0.0000001 of 3.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 83.0 is within 0.0000001 of 83.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 5.0 is within 0.000000000001 of 5.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.00000000000000001 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:122  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 113.09733552923259481 and 113.09733552923255218 are within 1e-10% of each other with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 7.00000000000000178 is within 0.000000001 of 7.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.00000000000000003 is within 0.000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 30.00000000000000355 is within 0.000000001 of 30.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 5.0 is within 0.0000001 of 5.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -3.0 is within 0.0000001 of -3.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 27.0 is within 0.0000001 of 27.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 9.0 is within 0.0000001 of 9.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 3.0 is within 0.0000001 of 3.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 33.0 is within 0.0000001 of 33.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 100.0 is within 0.000000000001 of 100.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:122  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 141.37166941154072219 and 141.37166941154069377 are within 1e-10% of each other with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -54.99999999999999289 is within 0.000000001 of -55.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.0000000000000001 is within 0.000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 102.49999999999998579 is within 0.000000001 of 102.5 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -58.0 is within 0.0000001 of -58.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -3.0 is within 0.0000001 of -3.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 100.0 is within 0.0000001 of 100.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -52.0 is within 0.0000001 of -52.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 3.0 is within 0.0000001 of 3.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 105.0 is within 0.0000001 of 105.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 4.0 is within 0.000000000001 of 4.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -1.0 is within 0.00000000000001 of -1.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:122  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 141.37166941154072219 and 141.37166941154069377 are within 1e-10% of each other with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -8.99999999999999822 is within 0.000000001 of -9.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 6.49999999999999822 is within 0.000000001 of 6.5 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 70.99999999999997158 is within 0.000000001 of 71.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -12.0 is within 0.0000001 of -12.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 4.0 is within 0.0000001 of 4.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 68.0 is within 0.0000001 of 68.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -6.0 is within 0.0000001 of -6.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 9.0 is within 0.0000001 of 9.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 74.0 is within 0.0000001 of 74.0 with message: lift := 15.0; rise := 50.0; run := 50.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:122  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 12569.91118430775350134 and 12569.91118430775168235 are within 1e-10% of each other with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -26.12832056224711152 is within 0.000000001 of -26.12832056224693034 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.00000000000000046 is within 0.000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 74.28142330968192653 is within 0.000000001 of 74.28142330968201179 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -90.0 is within 0.0000001 of -90.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -4.0 is within 0.0000001 of -4.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 15.0 is within 0.0000001 of 15.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 5.0 is within 0.0000001 of 5.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 4.0 is within 0.0000001 of 4.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 100.0 is within 0.0000001 of 100.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.0 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.0 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 15.0 is within 0.000000000001 of 15.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -1.0 is within 0.00000000000001 of -1.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -1.0 is within 0.00000000000001 of -1.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:122  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 113.09733552923259481 and 113.09733552923255218 are within 1e-10% of each other with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.00000000000000057 is within 0.000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.00000000000000026 is within 0.000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 13.0 is within 0.000000001 of 13.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -3.0 is within 0.0000001 of -3.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -3.0 is within 0.0000001 of -3.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 11.0 is within 0.0000001 of 11.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 3.0 is within 0.0000001 of 3.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 3.0 is within 0.0000001 of 3.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 15.0 is within 0.0000001 of 15.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -90.0 is within 0.000000000001 of -90.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -1.0 is within 0.00000000000001 of -1.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -1.0 is within 0.00000000000001 of -1.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:122  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 169.646003293848878 and 169.64600329384882116 are within 1e-10% of each other with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -93.0 is within 0.000000001 of -93.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.00000000000000019 is within 0.000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 79.99999999999998579 is within 0.000000001 of 80.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -96.0 is within 0.0000001 of -96.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -3.0 is within 0.0000001 of -3.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 77.0 is within 0.0000001 of 77.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -90.0 is within 0.0000001 of -90.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 3.0 is within 0.0000001 of 3.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 83.0 is within 0.0000001 of 83.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 5.0 is within 0.000000000001 of 5.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.00000000000000001 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:122  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 113.09733552923259481 and 113.09733552923255218 are within 1e-10% of each other with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 7.00000000000000178 is within 0.000000001 of 7.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.00000000000000003 is within 0.000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 30.00000000000000355 is within 0.000000001 of 30.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 5.0 is within 0.0000001 of 5.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -3.0 is within 0.0000001 of -3.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 27.0 is within 0.0000001 of 27.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 9.0 is within 0.0000001 of 9.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 3.0 is within 0.0000001 of 3.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 33.0 is within 0.0000001 of 33.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 100.0 is within 0.000000000001 of 100.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:122  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 141.37166941154072219 and 141.37166941154069377 are within 1e-10% of each other with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -54.99999999999999289 is within 0.000000001 of -55.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.0000000000000001 is within 0.000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 102.49999999999998579 is within 0.000000001 of 102.5 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -58.0 is within 0.0000001 of -58.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -3.0 is within 0.0000001 of -3.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 100.0 is within 0.0000001 of 100.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -52.0 is within 0.0000001 of -52.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 3.0 is within 0.0000001 of 3.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 105.0 is within 0.0000001 of 105.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 4.0 is within 0.000000000001 of 4.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -1.0 is within 0.00000000000001 of -1.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:122  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 141.37166941154072219 and 141.37166941154069377 are within 1e-10% of each other with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -8.99999999999999822 is within 0.000000001 of -9.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 6.49999999999999822 is within 0.000000001 of 6.5 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 70.99999999999997158 is within 0.000000001 of 71.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -12.0 is within 0.0000001 of -12.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 4.0 is within 0.0000001 of 4.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 68.0 is within 0.0000001 of 68.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -6.0 is within 0.0000001 of -6.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 9.0 is within 0.0000001 of 9.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 74.0 is within 0.0000001 of 74.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 8.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:122  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 18854.8667764616329805 and 18854.86677646162934252 are within 1e-10% of each other with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -26.12832056224711508 is within 0.000000001 of -26.12832056224693389 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 1.99999999999999956 is within 0.000000001 of 2.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 74.28142330968192653 is within 0.000000001 of 74.281423309682026 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -90.0 is within 0.0000001 of -90.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -4.0 is within 0.0000001 of -4.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 15.0 is within 0.0000001 of 15.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 5.0 is within 0.0000001 of 5.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 8.0 is within 0.0000001 of 8.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 100.0 is within 0.0000001 of 100.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.0 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.0 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 15.0 is within 0.000000000001 of 15.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -1.0 is within 0.00000000000001 of -1.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -1.0 is within 0.00000000000001 of -1.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:122  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 113.09733552923259481 and 113.09733552923255218 are within 1e-10% of each other with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.00000000000000057 is within 0.000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.00000000000000026 is within 0.000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 13.0 is within 0.000000001 of 13.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -3.0 is within 0.0000001 of -3.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -3.0 is within 0.0000001 of -3.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 11.0 is within 0.0000001 of 11.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 3.0 is within 0.0000001 of 3.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 3.0 is within 0.0000001 of 3.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 15.0 is within 0.0000001 of 15.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -90.0 is within 0.000000000001 of -90.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -1.0 is within 0.00000000000001 of -1.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -1.0 is within 0.00000000000001 of -1.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:122  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 169.646003293848878 and 169.64600329384882116 are within 1e-10% of each other with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -93.0 is within 0.000000001 of -93.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.00000000000000019 is within 0.000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 79.99999999999998579 is within 0.000000001 of 80.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -96.0 is within 0.0000001 of -96.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -3.0 is within 0.0000001 of -3.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 77.0 is within 0.0000001 of 77.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -90.0 is within 0.0000001 of -90.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 3.0 is within 0.0000001 of 3.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 83.0 is within 0.0000001 of 83.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 5.0 is within 0.000000000001 of 5.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.00000000000000037 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.00000000000000001 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.00000000000000007 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.00000000000000007 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:122  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 113.09733552923256639 and 113.09733552923255218 are within 1e-10% of each other with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 6.99999999999999911 is within 0.000000001 of 7.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.00000000000000019 is within 0.000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 30.0 is within 0.000000001 of 30.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 5.0 is within 0.0000001 of 5.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -2.99999999999999956 is within 0.0000001 of -3.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 27.0 is within 0.0000001 of 27.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 9.0 is within 0.0000001 of 9.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 3.00000000000000089 is within 0.0000001 of 3.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 33.0 is within 0.0000001 of 33.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0000000000000074 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 100.0 is within 0.000000000001 of 100.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -0.00000000000000007 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.00000000000000007 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:122  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 141.37166941154075062 and 141.37166941154069377 are within 1e-10% of each other with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -55.00000000000000711 is within 0.000000001 of -55.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.00000000000000772 is within 0.000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 102.50000000000001421 is within 0.000000001 of 102.5 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -58.0 is within 0.0000001 of -58.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -2.99999999999999245 is within 0.0000001 of -3.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 100.0 is within 0.0000001 of 100.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -52.0 is within 0.0000001 of -52.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 3.00000000000000799 is within 0.0000001 of 3.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 105.0 is within 0.0000001 of 105.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; AcrossSketch (object:15)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 8.0 is within 0.000000000001 of 8.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 0.0 is within 0.00000000000001 of 0.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => -1.0 is within 0.00000000000001 of -1.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 1.0 is within 0.00000000000001 of 1.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:122  CHECK( body->topology().solids == 1 )
+        => 1 == 1 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 141.37166941154072219 and 141.37166941154069377 are within 1e-10% of each other with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -8.99999999999999822 is within 0.000000001 of -9.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 10.49999999999999822 is within 0.000000001 of 10.5 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 70.99999999999997158 is within 0.000000001 of 71.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -12.0 is within 0.0000001 of -12.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 8.0 is within 0.0000001 of 8.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 68.0 is within 0.0000001 of 68.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -6.0 is within 0.0000001 of -6.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 13.0 is within 0.0000001 of 13.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 74.0 is within 0.0000001 of 74.0 with message: lift := 15.0; rise := 50.0; run := 60.0; thick := 12.0; BendSketch (object:17)
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 10969.91118430775532033 and 10969.91118430775168235 are within 1e-10% of each other with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -23.74045372720159364 is within 0.000000001 of -23.74045372720127389 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.00000000000000037 is within 0.000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 61.72905272475856719 is within 0.000000001 of 61.72905272475878746 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -80.00000000000001421 is within 0.0000001 of -80.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 9.99999999999999822 is within 0.0000001 of 10.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 9.99999999999999822 is within 0.000000000001 of 10.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.00000000000000035 is within 0.000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => -0.00000000000000027 is within 0.000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 7.99999999999999822 is within 0.000000001 of 8.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 5.99999999999999822 is within 0.0000001 of 6.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 9.99999999999999822 is within 0.0000001 of 10.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; StartSketch (object:9)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -80.00000000000001421 is within 0.000000000001 of -80.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -83.00000000000001421 is within 0.000000001 of -83.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -86.00000000000001421 is within 0.0000001 of -86.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -80.00000000000001421 is within 0.0000001 of -80.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; EndSketch (object:11)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.00000000000000012 is within 0.000000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => -0.00000000000000002 is within 0.00000000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:83  CHECK_THAT( actual[2], WithinAbs(expected[2], tolerance) )
+        => 0.00000000000000002 is within 0.00000000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:125  CHECK_THAT( props->volume.in(units::mm3), WithinRel(volume, rel) )
+        => 113.0973355292325806 and 113.09733552923255218 are within 1e-10% of each other with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 7.00000000000000089 is within 0.000000001 of 7.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:82  CHECK_THAT( actual[1], WithinAbs(expected[1], tolerance) )
+        => 0.00000000000000002 is within 0.000000001 of 0.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+SketchOnFaceTests.cpp:81  CHECK_THAT( actual[0], WithinAbs(expected[0], tolerance) )
+        => 4.99999999999999911 is within 0.0000001 of 5.0 with message: lift := 10.0; rise := 40.0; run := 50.0; thick := 8.0; SideSketch (object:13)
+
+== SpatialSweep_SaveLoadPreservesEveryRun
+SpatialSweepFileTests.cpp:80  CHECK( loaded->itemIds() == expected.itemIds() )
+        => { object:1, object:2, object:3, object:4, object:5 } == { object:1, object:2, object:3, object:4, object:5 } with message: 
+SpatialSweepFileTests.cpp:85  CHECK( a.graph.dependenciesOf(node) == b.graph.dependenciesOf(node) )
+        => { } == { } with message: 
+SpatialSweepFileTests.cpp:85  CHECK( a.graph.dependenciesOf(node) == b.graph.dependenciesOf(node) )
+        => { object:1, object:2, object:3, object:4 } == { object:1, object:2, object:3, object:4 } with message: 
+SpatialSweepFileTests.cpp:107  CHECK( read == definition )
+        => {?} == {?} with message: 
+SpatialSweepFileTests.cpp:109  CHECK( read.path.runs[0].sketch == SketchId::fromValue(m.cross.value()) )
+        => sketch:3 == sketch:3 with message: 
+SpatialSweepFileTests.cpp:110  CHECK( read.path.runs[1].sketch == SketchId::fromValue(m.turn.value()) )
+        => sketch:4 == sketch:4 with message: 
+SpatialSweepFileTests.cpp:111  CHECK( read.path.runs[0].edges == std::vector<EntityId>{m.crossLine} )
+        => { entity:3 } == { entity:3 } with message: 
+SpatialSweepFileTests.cpp:113  CHECK( resolveSweptPath(read, loaded).value() == resolveSweptPath(definition, loaded).value() )
+        => {?} == {?} with message: 
+SpatialSweepFileTests.cpp:119  CHECK( rebuilt.regenerated == built.regenerated )
+        => { object:1, object:2, object:3, object:4, object:5 } == { object:1, object:2, object:3, object:4, object:5 } with message: ; 
+SpatialSweepFileTests.cpp:63  CHECK( bits(pa.volume.si()) == bits(pb.volume.si()) )
+        => 4521643898076162348 (0x3ec01b2b29a4692c) == 4521643898076162348 (0x3ec01b2b29a4692c) with message: ; ; feature object:5
+SpatialSweepFileTests.cpp:64  CHECK( bits(pa.surfaceArea.si()) == bits(pb.surfaceArea.si()) )
+        => 4566644834006912212 (0x3f5ffb480a5accd4) == 4566644834006912212 (0x3f5ffb480a5accd4) with message: ; ; feature object:5
+SpatialSweepFileTests.cpp:65  CHECK( bits(pa.centerOfMass.x.si()) == bits(pb.centerOfMass.x.si()) )
+        => 4581421828931458173 (0x3f947ae147ae147d) == 4581421828931458173 (0x3f947ae147ae147d) with message: ; ; feature object:5
+SpatialSweepFileTests.cpp:66  CHECK( bits(pa.centerOfMass.y.si()) == bits(pb.centerOfMass.y.si()) )
+        => 4574316950159318478 (0x3f7b3d07c84b5dce) == 4574316950159318478 (0x3f7b3d07c84b5dce) with message: ; ; feature object:5
+SpatialSweepFileTests.cpp:67  CHECK( bits(pa.centerOfMass.z.si()) == bits(pb.centerOfMass.z.si()) )
+        => 4584967062558124226 (0x3fa113404ea4a8c2) == 4584967062558124226 (0x3fa113404ea4a8c2) with message: ; ; feature object:5
+SpatialSweepFileTests.cpp:68  CHECK( a->boundingBox().value() == b->boundingBox().value() )
+        => {?} == {?} with message: ; ; feature object:5
+SpatialSweepFileTests.cpp:69  CHECK( a->topology() == b->topology() )
+        => {?} == {?} with message: ; ; feature object:5
+
+== SpatialSweep_RefusesAGuideAndATwistTogether
+SpatialSweepTests.cpp:94  CHECK( feature.error().code == ErrorCode::InvalidArgument )
+        => 0 == 0
+SpatialSweepTests.cpp:381  CHECK( refusal(d) == "a sweep takes a twist or a guide curve, not both: a guide already says how the section " "turns" )
+        => "a sweep takes a twist or a guide curve, not both: a guide already says how the section turns" == "a sweep takes a twist or a guide curve, not both: a guide already says how the section turns"
+SpatialSweepTests.cpp:385  CHECK( refusal(d) == "a sweep takes a twist or a guide curve, not both: a guide already says how the section " "turns" )
+        => "a sweep takes a twist or a guide curve, not both: a guide already says how the section turns" == "a sweep takes a twist or a guide curve, not both: a guide already says how the section turns"
+
+== SpatialSweep_TwistFollowsItsParameterAndItsPath
+SpatialSweepTests.cpp:306  CHECK_THAT( volumeMm3(regenerator, m.twisted), WithinRel(TwistedBarModel::expectedVolume(100.0), kRelGuided) )
+        => 1600.00434508072567041 and 1600.0 are within 0.001% of each other
+SpatialSweepTests.cpp:314  CHECK_THAT( volumeMm3(regenerator, m.twisted), WithinRel(TwistedBarModel::expectedVolume(150.0), kRelGuided) )
+        => 2400.00651762108918774 and 2400.0 are within 0.001% of each other with message: 
+SpatialSweepTests.cpp:316  CHECK_THAT( box[5], WithinAbs(150.0, kGuidedPositionMm) )
+        => 150.00000009999999406 is within 0.002 of 150.0 with message: 
+SpatialSweepTests.cpp:317  CHECK_THAT( box[3], WithinAbs(std::hypot(4.0, 1.0), kGuidedPositionMm) )
+        => 4.12313198682790283 is within 0.002 of 4.12310562561766059 with message: 
+SpatialSweepTests.cpp:323  CHECK( std::ranges::find(dependencies, ObjectId{m.twist}) != dependencies.end() )
+        => {?} != {?} with message: 
+
+== SweptPath_RunsOnDifferentPlanesMakeASpatialPath
+SweptPathTests.cpp:196  CHECK( frameOf(path) == SweepFrame::RotationMinimizing )
+        => 1 == 1
+SweptPathTests.cpp:113  CHECK( body->topology().solids == 1 )
+        => 1 == 1
+SweptPathTests.cpp:200  CHECK_THAT( volumeMm3(body), WithinRel(16.0 * 120.0, kRelTight) )
+        => 1920.00000000000022737 and 1920.0 are within 1e-10% of each other
+SweptPathTests.cpp:204  CHECK_THAT( box[0], WithinAbs(-2.0, kPositionToleranceMm) )
+        => -2.0 is within 0.000000001 of -2.0
+SweptPathTests.cpp:205  CHECK_THAT( box[1], WithinAbs(-2.0, kPositionToleranceMm) )
+        => -2.00000000000000044 is within 0.000000001 of -2.0
+SweptPathTests.cpp:206  CHECK_THAT( box[2], WithinAbs(0.0, kPositionToleranceMm) )
+        => 0.0 is within 0.000000001 of 0.0
+SweptPathTests.cpp:207  CHECK_THAT( box[3], WithinAbs(42.0, kPositionToleranceMm) )
+        => 42.0 is within 0.000000001 of 42.0
+SweptPathTests.cpp:208  CHECK_THAT( box[4], WithinAbs(40.0, kPositionToleranceMm) )
+        => 40.0 is within 0.000000001 of 40.0
+SweptPathTests.cpp:209  CHECK_THAT( box[5], WithinAbs(42.0, kPositionToleranceMm) )
+        => 42.0 is within 0.000000001 of 42.0
+
+== SpatialSweepCli_InfoNamesEveryRunOfThePath
+SpatialSweepCliTests.cpp:45  CHECK( result.exitCode == ExitCode::Success )
+        => 0 == 0
+SpatialSweepCliTests.cpp:47  CHECK_THAT( result.out, ContainsSubstring("profile BarProfile, path Rise (1 edge) then Cross (1 edge) then Turn " "(1 edge), follow path, new body\n") )
+        => "Document: Bar File: C:\Users\uqhas\AppData\Local\Temp\bettercad-test-e390a22e-8fdc-41a3-b60b-dfbc8c9c97cc\bar.bcad ID: 7ab627ca-ef26-46d6-a9e4-579a23df8b48 Parameters (0): Objects (5): object:1 sketch BarProfile 8 entities, 1 constraints object:2 sketch Rise 3 entities, 2 constraints object:3 sketch Cross 3 entities, 2 constraints object:4 sketch Turn 3 entities, 2 constraints object:5 sweep Bar profile BarProfile, path Rise (1 edge) then Cross (1 edge) then Turn (1 edge), follow path, new body " contains: "profile BarProfile, path Rise (1 edge) then Cross (1 edge) then Turn (1 edge), follow path, new body "
+
+== SpatialSweep_SaveLoadPreservesTheTwist / driven by a parameter
+SpatialSweepFileTests.cpp:80  CHECK( loaded->itemIds() == expected.itemIds() )
+        => { object:1, object:2, object:3, object:4, object:5 } == { object:1, object:2, object:3, object:4, object:5 }
+SpatialSweepFileTests.cpp:85  CHECK( a.graph.dependenciesOf(node) == b.graph.dependenciesOf(node) )
+        => { } == { }
+SpatialSweepFileTests.cpp:85  CHECK( a.graph.dependenciesOf(node) == b.graph.dependenciesOf(node) )
+        => { object:2 } == { object:2 }
+SpatialSweepFileTests.cpp:85  CHECK( a.graph.dependenciesOf(node) == b.graph.dependenciesOf(node) )
+        => { object:1, object:3, object:4 } == { object:1, object:3, object:4 }
+SpatialSweepFileTests.cpp:136  CHECK( read.twistParameter == m.twist )
+        => {?} == parameter:1
+SpatialSweepFileTests.cpp:137  CHECK( read.twist == Angle{} )
+        => 0 rad == 0 rad
+SpatialSweepFileTests.cpp:63  CHECK( bits(pa.volume.si()) == bits(pb.volume.si()) )
+        => 4520162633516892009 (0x3ebad7f761c4bf69) == 4520162633516892009 (0x3ebad7f761c4bf69) with message: feature object:5
+SpatialSweepFileTests.cpp:64  CHECK( bits(pa.surfaceArea.si()) == bits(pb.surfaceArea.si()) )
+        => 4566834365782363365 (0x3f60a7a8d8810ce5) == 4566834365782363365 (0x3f60a7a8d8810ce5) with message: feature object:5
+SpatialSweepFileTests.cpp:65  CHECK( bits(pa.centerOfMass.x.si()) == bits(pb.centerOfMass.x.si()) )
+        => 4323498822475053399 (0x3c002745ac71f957) == 4323498822475053399 (0x3c002745ac71f957) with message: feature object:5
+SpatialSweepFileTests.cpp:66  CHECK( bits(pa.centerOfMass.y.si()) == bits(pb.centerOfMass.y.si()) )
+        => 4315709435261838270 (0x3be47adda29563be) == 4315709435261838270 (0x3be47adda29563be) with message: feature object:5
+SpatialSweepFileTests.cpp:67  CHECK( bits(pa.centerOfMass.z.si()) == bits(pb.centerOfMass.z.si()) )
+        => 4587366580439587228 (0x3fa999999999999c) == 4587366580439587228 (0x3fa999999999999c) with message: feature object:5
+SpatialSweepFileTests.cpp:68  CHECK( a->boundingBox().value() == b->boundingBox().value() )
+        => {?} == {?} with message: feature object:5
+SpatialSweepFileTests.cpp:69  CHECK( a->topology() == b->topology() )
+        => {?} == {?} with message: feature object:5
+SpatialSweepFileTests.cpp:145  CHECK_THAT( volumeMm3(after, m.twisted), WithinRel(TwistedBarModel::expectedVolume(), kRelGuided) )
+        => 1599.99780956579570557 and 1600.0 are within 0.001% of each other
+
+== SpatialSweep_SaveLoadPreservesTheTwist / a literal angle
+SpatialSweepFileTests.cpp:80  CHECK( loaded->itemIds() == expected.itemIds() )
+        => { object:1, object:2, object:3, object:4, object:5 } == { object:1, object:2, object:3, object:4, object:5 }
+SpatialSweepFileTests.cpp:85  CHECK( a.graph.dependenciesOf(node) == b.graph.dependenciesOf(node) )
+        => { } == { }
+SpatialSweepFileTests.cpp:85  CHECK( a.graph.dependenciesOf(node) == b.graph.dependenciesOf(node) )
+        => { object:2 } == { object:2 }
+SpatialSweepFileTests.cpp:85  CHECK( a.graph.dependenciesOf(node) == b.graph.dependenciesOf(node) )
+        => { object:3, object:4 } == { object:3, object:4 }
+SpatialSweepFileTests.cpp:160  CHECK( read.twist == 180_deg )
+        => 3.141592653589793 rad == 3.141592653589793 rad
+SpatialSweepFileTests.cpp:161  CHECK_FALSE( !(read.twistParameter.has_value()) )
+        => !false
+SpatialSweepFileTests.cpp:63  CHECK( bits(pa.volume.si()) == bits(pb.volume.si()) )
+        => 4520162602653795355 (0x3ebad7f0322f441b) == 4520162602653795355 (0x3ebad7f0322f441b) with message: feature object:5
+SpatialSweepFileTests.cpp:64  CHECK( bits(pa.surfaceArea.si()) == bits(pb.surfaceArea.si()) )
+        => 4566841731145894460 (0x3f60ae5bba618a3c) == 4566841731145894460 (0x3f60ae5bba618a3c) with message: feature object:5
+SpatialSweepFileTests.cpp:65  CHECK( bits(pa.centerOfMass.x.si()) == bits(pb.centerOfMass.x.si()) )
+        => 13544194438440053767 (0xbbf6a514e00a6c07) == 13544194438440053767 (0xbbf6a514e00a6c07) with message: feature object:5
+SpatialSweepFileTests.cpp:66  CHECK( bits(pa.centerOfMass.y.si()) == bits(pb.centerOfMass.y.si()) )
+        => 4324290076522517854 (0x3c02f6e9dcdf155e) == 4324290076522517854 (0x3c02f6e9dcdf155e) with message: feature object:5
+SpatialSweepFileTests.cpp:67  CHECK( bits(pa.centerOfMass.z.si()) == bits(pb.centerOfMass.z.si()) )
+        => 4587366580439587220 (0x3fa9999999999994) == 4587366580439587220 (0x3fa9999999999994) with message: feature object:5
+SpatialSweepFileTests.cpp:68  CHECK( a->boundingBox().value() == b->boundingBox().value() )
+        => {?} == {?} with message: feature object:5
+SpatialSweepFileTests.cpp:69  CHECK( a->topology() == b->topology() )
+        => {?} == {?} with message: feature object:5
+
+== SpatialSweep_UndoRedoRestoresTheDefinitionAndTheBody
+SpatialSweepTests.cpp:454  CHECK( m.definition().twist == 180_deg )
+        => 3.141592653589793 rad == 3.141592653589793 rad
+SpatialSweepTests.cpp:455  CHECK_FALSE( !(m.definition().twistParameter.has_value()) )
+        => !false
+SpatialSweepTests.cpp:459  CHECK( m.definition() == original )
+        => {?} == {?}
+SpatialSweepTests.cpp:460  CHECK( bits(volumeMm3(regenerator, m.twisted)) == bits(quarter) )
+        => 4654751708973985398 (0x4099000473096e76) == 4654751708973985398 (0x4099000473096e76)
+SpatialSweepTests.cpp:464  CHECK( m.definition().twist == 180_deg )
+        => 3.141592653589793 rad == 3.141592653589793 rad
+
+== SpatialSweep_RejectsRunsThatDoNotMeet / a gap between two runs
+SpatialSweepTests.cpp:86  CHECK( regenerator.body(feature) == nullptr )
+        => nullptr == nullptr with message: object:5: Bar: makeSweep: the path is not connected: segment 1 ends at (0, 0, 40) mm, but segment 2 starts at (0, 0, 45) mm, 5 mm away
+SpatialSweepTests.cpp:219  CHECK( error.code == ErrorCode::InvalidArgument )
+        => 0 == 0
+SpatialSweepTests.cpp:220  CHECK_THAT( error.message, ContainsSubstring("the path is not connected") )
+        => "Bar: makeSweep: the path is not connected: segment 1 ends at (0, 0, 40) mm, but segment 2 starts at (0, 0, 45) mm, 5 mm away" contains: "the path is not connected"
+SpatialSweepTests.cpp:221  CHECK( regenerator.body(m.bar) == nullptr )
+        => nullptr == nullptr
+
+== SpatialSweep_RejectsRunsThatDoNotMeet / a run whose sketch is gone
+SpatialSweepTests.cpp:227  CHECK_FALSE( !(report.succeeded()) )
+        => !false with message: object:5: object:5 references object:4, which does not exist
+SpatialSweepTests.cpp:228  CHECK( regenerator.body(m.bar) == nullptr )
+        => nullptr == nullptr with message: object:5: object:5 references object:4, which does not exist
+
+== SpatialSweep_ExportsStep / a spatial path
+SpatialSweepFileTests.cpp:262  CHECK_THAT( volumeMm3(regenerator, feature), WithinRel(expected, tolerance) )
+        => 1920.00000000000022737 and 1920.0 are within 1e-10% of each other with message: 
+SpatialSweepFileTests.cpp:268  CHECK( read->solids == 1 )
+        => 1 == 1 with message: ; bar.step: exported 1920 mm^3, read back 1920
+SpatialSweepFileTests.cpp:270  CHECK_THAT( read->volumeMm3, WithinRel(volumeMm3(regenerator, feature), kRelStep) )
+        => 1919.99999999999909051 and 1920.00000000000022737 are within 1e-07% of each other with message: ; bar.step: exported 1920 mm^3, read back 1920
+
+== SpatialSweep_ExportsStep / a twisted sweep
+SpatialSweepFileTests.cpp:262  CHECK_THAT( volumeMm3(regenerator, feature), WithinRel(expected, tolerance) )
+        => 1600.00434508072567041 and 1600.0 are within 0.001% of each other with message: 
+SpatialSweepFileTests.cpp:268  CHECK( read->solids == 1 )
+        => 1 == 1 with message: ; twist.step: exported 1600 mm^3, read back 1600
+SpatialSweepFileTests.cpp:270  CHECK_THAT( read->volumeMm3, WithinRel(volumeMm3(regenerator, feature), kRelStep) )
+        => 1600.00434508070702577 and 1600.00434508072567041 are within 1e-07% of each other with message: ; twist.step: exported 1600 mm^3, read back 1600
+
+== SpatialSweep_ExportsStep / a guided sweep
+SpatialSweepFileTests.cpp:262  CHECK_THAT( volumeMm3(regenerator, feature), WithinRel(expected, tolerance) )
+        => 1600.00296077884991064 and 1600.0 are within 0.001% of each other with message: 
+SpatialSweepFileTests.cpp:268  CHECK( read->solids == 1 )
+        => 1 == 1 with message: ; guide.step: exported 1600 mm^3, read back 1600
+SpatialSweepFileTests.cpp:270  CHECK_THAT( read->volumeMm3, WithinRel(volumeMm3(regenerator, feature), kRelStep) )
+        => 1600.00296077875304945 and 1600.00296077884991064 are within 1e-07% of each other with message: ; guide.step: exported 1600 mm^3, read back 1600
+
+== SweptPath_RejectsMalformedSpatialPaths / a gap between the runs
+SweptPathTests.cpp:241  CHECK( error.code == ErrorCode::InvalidArgument )
+        => 0 == 0
+SweptPathTests.cpp:242  CHECK_THAT( error.message, ContainsSubstring("the path is not connected") )
+        => "makeSweep: the path is not connected: segment 1 ends at (0, 0, 40) mm, but segment 2 starts at (0, 0, 45) mm, 5 mm away" contains: "the path is not connected"
+SweptPathTests.cpp:243  CHECK_THAT( error.message, ContainsSubstring("5 mm away") )
+        => "makeSweep: the path is not connected: segment 1 ends at (0, 0, 40) mm, but segment 2 starts at (0, 0, 45) mm, 5 mm away" contains: "5 mm away"
+
+== SweptPath_RejectsMalformedSpatialPaths / a run that turns back on itself
+SweptPathTests.cpp:251  CHECK( error.code == ErrorCode::InvalidArgument )
+        => 0 == 0
+SweptPathTests.cpp:252  CHECK_THAT( error.message, ContainsSubstring("turns back on itself") )
+        => "makeSweep: the path turns back on itself where segments 1 and 2 meet" contains: "turns back on itself"
+
+== SweptPath_RejectsMalformedSpatialPaths / an empty run
+SweptPathTests.cpp:258  CHECK_THAT( sweepError(profile, path).message, ContainsSubstring("the path has an empty run 2") )
+        => "makeSweep: the path has an empty run 2" contains: "the path has an empty run 2"
+
+== SweptPath_RejectsMalformedSpatialPaths / no runs at all
+SweptPathTests.cpp:263  CHECK_THAT( sweepError(profile, path).message, ContainsSubstring("the path is empty") )
+        => "makeSweep: the path is empty" contains: "the path is empty"
+
+== SweptPath_RejectsMalformedSpatialPaths / a profile whose centroid is off the path
+SweptPathTests.cpp:272  CHECK( error.code == ErrorCode::InvalidArgument )
+        => 0 == 0
+SweptPathTests.cpp:273  CHECK_THAT( error.message, ContainsSubstring("the profile's centroid must lie on the path") )
+        => "makeSweep: the profile's centroid must lie on the path, but it lies 10 mm from where the path starts: a spatial or twisted sweep turns its section, which has no fixed offset from the path" contains: "the profile's centroid must lie on the path"
+SweptPathTests.cpp:274  CHECK_THAT( error.message, ContainsSubstring("10 mm") )
+        => "makeSweep: the profile's centroid must lie on the path, but it lies 10 mm from where the path starts: a spatial or twisted sweep turns its section, which has no fixed offset from the path" contains: "10 mm"
+
+== SpatialSweep_RegenerationIsDeterministic / a spatial path
+SpatialSweepTests.cpp:483  CHECK( fingerprint(first->doc, first->bar, again) == once )
+        => { 0.00000192, 0.001952, 0.02000000000000001, 0.00665, 0.03335 } == { 0.00000192, 0.001952, 0.02000000000000001, 0.00665, 0.03335 }
+SpatialSweepTests.cpp:486  CHECK( fingerprint(second->doc, second->bar, b) == once )
+        => { 0.00000192, 0.001952, 0.02000000000000001, 0.00665, 0.03335 } == { 0.00000192, 0.001952, 0.02000000000000001, 0.00665, 0.03335 }
+
+== SpatialSweep_RegenerationIsDeterministic / a twisted sweep
+SpatialSweepTests.cpp:493  CHECK( fingerprint(first->doc, first->twisted, again) == once )
+        => { 0.00000160000434508, 0.00203307130507967, 0.0, 0.0, 0.05000000000000002 } == { 0.00000160000434508, 0.00203307130507967, 0.0, 0.0, 0.05000000000000002 }
+SpatialSweepTests.cpp:496  CHECK( fingerprint(second->doc, second->twisted, b) == once )
+        => { 0.00000160000434508, 0.00203307130507967, 0.0, 0.0, 0.05000000000000002 } == { 0.00000160000434508, 0.00203307130507967, 0.0, 0.0, 0.05000000000000002 }
+
+== SpatialSweep_RegenerationIsDeterministic / a guided sweep
+SpatialSweepTests.cpp:503  CHECK( fingerprint(first->doc, first->guided, again) == once )
+        => { 0.00000160000296078, 0.00203311508835569, 0.0, 0.0, 0.05 } == { 0.00000160000296078, 0.00203311508835569, 0.0, 0.0, 0.05 }
+SpatialSweepTests.cpp:506  CHECK( fingerprint(second->doc, second->guided, b) == once )
+        => { 0.00000160000296078, 0.00203311508835569, 0.0, 0.0, 0.05 } == { 0.00000160000296078, 0.00203311508835569, 0.0, 0.0, 0.05 }
+
+== SpatialSweep_RebuildsIdenticallyFromAFile / a spatial path
+SpatialSweepFileTests.cpp:80  CHECK( loaded->itemIds() == expected.itemIds() )
+        => { object:1, object:2, object:3, object:4, object:5 } == { object:1, object:2, object:3, object:4, object:5 }
+SpatialSweepFileTests.cpp:85  CHECK( a.graph.dependenciesOf(node) == b.graph.dependenciesOf(node) )
+        => { } == { }
+SpatialSweepFileTests.cpp:85  CHECK( a.graph.dependenciesOf(node) == b.graph.dependenciesOf(node) )
+        => { object:1, object:2, object:3, object:4 } == { object:1, object:2, object:3, object:4 }
+SpatialSweepFileTests.cpp:63  CHECK( bits(pa.volume.si()) == bits(pb.volume.si()) )
+        => 4521643898076162348 (0x3ec01b2b29a4692c) == 4521643898076162348 (0x3ec01b2b29a4692c) with message: feature object:5
+SpatialSweepFileTests.cpp:64  CHECK( bits(pa.surfaceArea.si()) == bits(pb.surfaceArea.si()) )
+        => 4566644834006912212 (0x3f5ffb480a5accd4) == 4566644834006912212 (0x3f5ffb480a5accd4) with message: feature object:5
+SpatialSweepFileTests.cpp:65  CHECK( bits(pa.centerOfMass.x.si()) == bits(pb.centerOfMass.x.si()) )
+        => 4581421828931458173 (0x3f947ae147ae147d) == 4581421828931458173 (0x3f947ae147ae147d) with message: feature object:5
+SpatialSweepFileTests.cpp:66  CHECK( bits(pa.centerOfMass.y.si()) == bits(pb.centerOfMass.y.si()) )
+        => 4574316950159318478 (0x3f7b3d07c84b5dce) == 4574316950159318478 (0x3f7b3d07c84b5dce) with message: feature object:5
+SpatialSweepFileTests.cpp:67  CHECK( bits(pa.centerOfMass.z.si()) == bits(pb.centerOfMass.z.si()) )
+        => 4584967062558124226 (0x3fa113404ea4a8c2) == 4584967062558124226 (0x3fa113404ea4a8c2) with message: feature object:5
+SpatialSweepFileTests.cpp:68  CHECK( a->boundingBox().value() == b->boundingBox().value() )
+        => {?} == {?} with message: feature object:5
+SpatialSweepFileTests.cpp:69  CHECK( a->topology() == b->topology() )
+        => {?} == {?} with message: feature object:5
+
+== SpatialSweep_RebuildsIdenticallyFromAFile / a twisted sweep
+SpatialSweepFileTests.cpp:80  CHECK( loaded->itemIds() == expected.itemIds() )
+        => { object:1, object:2, object:3, object:4, object:5 } == { object:1, object:2, object:3, object:4, object:5 }
+SpatialSweepFileTests.cpp:85  CHECK( a.graph.dependenciesOf(node) == b.graph.dependenciesOf(node) )
+        => { } == { }
+SpatialSweepFileTests.cpp:85  CHECK( a.graph.dependenciesOf(node) == b.graph.dependenciesOf(node) )
+        => { object:2 } == { object:2 }
+SpatialSweepFileTests.cpp:85  CHECK( a.graph.dependenciesOf(node) == b.graph.dependenciesOf(node) )
+        => { object:1, object:3, object:4 } == { object:1, object:3, object:4 }
+SpatialSweepFileTests.cpp:63  CHECK( bits(pa.volume.si()) == bits(pb.volume.si()) )
+        => 4520162633516892009 (0x3ebad7f761c4bf69) == 4520162633516892009 (0x3ebad7f761c4bf69) with message: feature object:5
+SpatialSweepFileTests.cpp:64  CHECK( bits(pa.surfaceArea.si()) == bits(pb.surfaceArea.si()) )
+        => 4566834365782363365 (0x3f60a7a8d8810ce5) == 4566834365782363365 (0x3f60a7a8d8810ce5) with message: feature object:5
+SpatialSweepFileTests.cpp:65  CHECK( bits(pa.centerOfMass.x.si()) == bits(pb.centerOfMass.x.si()) )
+        => 4323498822475053399 (0x3c002745ac71f957) == 4323498822475053399 (0x3c002745ac71f957) with message: feature object:5
+SpatialSweepFileTests.cpp:66  CHECK( bits(pa.centerOfMass.y.si()) == bits(pb.centerOfMass.y.si()) )
+        => 4315709435261838270 (0x3be47adda29563be) == 4315709435261838270 (0x3be47adda29563be) with message: feature object:5
+SpatialSweepFileTests.cpp:67  CHECK( bits(pa.centerOfMass.z.si()) == bits(pb.centerOfMass.z.si()) )
+        => 4587366580439587228 (0x3fa999999999999c) == 4587366580439587228 (0x3fa999999999999c) with message: feature object:5
+SpatialSweepFileTests.cpp:68  CHECK( a->boundingBox().value() == b->boundingBox().value() )
+        => {?} == {?} with message: feature object:5
+SpatialSweepFileTests.cpp:69  CHECK( a->topology() == b->topology() )
+        => {?} == {?} with message: feature object:5
+
+== SpatialSweep_RebuildsIdenticallyFromAFile / a guided sweep
+SpatialSweepFileTests.cpp:80  CHECK( loaded->itemIds() == expected.itemIds() )
+        => { object:1, object:2, object:3, object:4 } == { object:1, object:2, object:3, object:4 }
+SpatialSweepFileTests.cpp:85  CHECK( a.graph.dependenciesOf(node) == b.graph.dependenciesOf(node) )
+        => { } == { }
+SpatialSweepFileTests.cpp:85  CHECK( a.graph.dependenciesOf(node) == b.graph.dependenciesOf(node) )
+        => { object:1, object:2, object:3 } == { object:1, object:2, object:3 }
+SpatialSweepFileTests.cpp:63  CHECK( bits(pa.volume.si()) == bits(pb.volume.si()) )
+        => 4520162626979711228 (0x3ebad7f5dc1f48fc) == 4520162626979711228 (0x3ebad7f5dc1f48fc) with message: feature object:4
+SpatialSweepFileTests.cpp:64  CHECK( bits(pa.surfaceArea.si()) == bits(pb.surfaceArea.si()) )
+        => 4566834466739724300 (0x3f60a7c05a08200c) == 4566834466739724300 (0x3f60a7c05a08200c) with message: feature object:4
+SpatialSweepFileTests.cpp:65  CHECK( bits(pa.centerOfMass.x.si()) == bits(pb.centerOfMass.x.si()) )
+        => 4326862585250852265 (0x3c0c1a98b9ce2da9) == 4326862585250852265 (0x3c0c1a98b9ce2da9) with message: feature object:4
+SpatialSweepFileTests.cpp:66  CHECK( bits(pa.centerOfMass.y.si()) == bits(pb.centerOfMass.y.si()) )
+        => 4311262205568951875 (0x3bd4ae2248812643) == 4311262205568951875 (0x3bd4ae2248812643) with message: feature object:4
+SpatialSweepFileTests.cpp:67  CHECK( bits(pa.centerOfMass.z.si()) == bits(pb.centerOfMass.z.si()) )
+        => 4587366580439587226 (0x3fa999999999999a) == 4587366580439587226 (0x3fa999999999999a) with message: feature object:4
+SpatialSweepFileTests.cpp:68  CHECK( a->boundingBox().value() == b->boundingBox().value() )
+        => {?} == {?} with message: feature object:4
+SpatialSweepFileTests.cpp:69  CHECK( a->topology() == b->topology() )
+        => {?} == {?} with message: feature object:4
+
+== SpatialSweep_RejectsAnInvalidTwist / a twist that is not a number
+SpatialSweepTests.cpp:94  CHECK( feature.error().code == ErrorCode::InvalidArgument )
+        => 0 == 0
+SpatialSweepTests.cpp:333  CHECK_THAT( refusal(d), ContainsSubstring("the twist must be finite") )
+        => "the twist must be finite, got nan deg" contains: "the twist must be finite"
+
+== SpatialSweep_RejectsAnInvalidTwist / a parameter of the wrong kind
+SpatialSweepTests.cpp:86  CHECK( regenerator.body(feature) == nullptr )
+        => nullptr == nullptr with message: object:5: Twisted: parameter 'length' has dimension length, not angle
+SpatialSweepTests.cpp:340  CHECK_THAT( error.message, ContainsSubstring("has dimension length, not angle") )
+        => "Twisted: parameter 'length' has dimension length, not angle" contains: "has dimension length, not angle"
+
+== SpatialSweep_RejectsAnInvalidTwist / a parameter that does not exist
+SpatialSweepTests.cpp:347  CHECK_FALSE( !(report.succeeded()) )
+        => !false with message: object:5: object:5 references object:1, which does not exist
+SpatialSweepTests.cpp:348  CHECK( regenerator.body(m.twisted) == nullptr )
+        => nullptr == nullptr with message: object:5: object:5 references object:1, which does not exist
+
+== SweptPath_RejectsAnUnusableGuide / a guide whose runs do not meet
+SweptPathTests.cpp:463  CHECK( error.code == ErrorCode::InvalidArgument )
+        => 0 == 0
+SweptPathTests.cpp:464  CHECK_THAT( error.message, ContainsSubstring("the guide is not connected") )
+        => "makeSweep: the guide is not connected: segment 1 ends at (10, 0, 40) mm, but segment 2 starts at (10, 0, 50) mm, 10 mm away" contains: "the guide is not connected"
+SweptPathTests.cpp:465  CHECK_THAT( error.message, ContainsSubstring("10 mm away") )
+        => "makeSweep: the guide is not connected: segment 1 ends at (10, 0, 40) mm, but segment 2 starts at (10, 0, 50) mm, 10 mm away" contains: "10 mm away"
+
+== SweptPath_RejectsAnUnusableGuide / a guide of no length
+SweptPathTests.cpp:470  CHECK( error.code == ErrorCode::InvalidArgument )
+        => 0 == 0
+SweptPathTests.cpp:471  CHECK_THAT( error.message, ContainsSubstring("the guide segment 1 is a point") )
+        => "makeSweep: the guide segment 1 is a point at (10, 0, 0) mm: a path segment needs a length" contains: "the guide segment 1 is a point"
+
+== SweptPath_ASpatialPathMayBendThroughAnArc
+SweptPathTests.cpp:113  CHECK( body->topology().solids == 1 )
+        => 1 == 1
+SweptPathTests.cpp:225  CHECK_THAT( volumeMm3(body), WithinRel(4.0 * pi * length, kRelTight) )
+        => 771.77529447434983467 and 771.77529447434949361 are within 1e-10% of each other
+
+== SpatialSweepCli_ValidateReportsASpatialSweep
+SpatialSweepCliTests.cpp:98  CHECK( result.exitCode == ExitCode::Success )
+        => 0 == 0
+SpatialSweepCliTests.cpp:100  CHECK_THAT( result.out, ContainsSubstring(" geometry ok, 1 result body\n") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-cbb721ca-d2d5-481a-97c6-95308d790498\bar.bcad document consistency ok missing references ok dependency cycles ok sketch constraints 1 warning warning: BarProfile (object:1) is under-constrained: 6 degree(s) of freedom feature regeneration ok, 5 objects regenerated geometry ok, 1 result body Result bodies (1): Bar (object:5): 1 solid, volume 1920.000 mm^3, area 1952.000 mm^2, bounds (-2, -2, 0) to (42, 40, 42) mm Result: valid (1 warning) " contains: " geometry ok, 1 result body "
+SpatialSweepCliTests.cpp:101  CHECK_THAT( result.out, ContainsSubstring("Bar (object:5): 1 solid, volume 1920.000 mm^3") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-cbb721ca-d2d5-481a-97c6-95308d790498\bar.bcad document consistency ok missing references ok dependency cycles ok sketch constraints 1 warning warning: BarProfile (object:1) is under-constrained: 6 degree(s) of freedom feature regeneration ok, 5 objects regenerated geometry ok, 1 result body Result bodies (1): Bar (object:5): 1 solid, volume 1920.000 mm^3, area 1952.000 mm^2, bounds (-2, -2, 0) to (42, 40, 42) mm Result: valid (1 warning) " contains: "Bar (object:5): 1 solid, volume 1920.000 mm^3"
+SpatialSweepCliTests.cpp:102  CHECK_THAT( result.out, ContainsSubstring("bounds (-2, -2, 0) to (42, 40, 42) mm\n") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-cbb721ca-d2d5-481a-97c6-95308d790498\bar.bcad document consistency ok missing references ok dependency cycles ok sketch constraints 1 warning warning: BarProfile (object:1) is under-constrained: 6 degree(s) of freedom feature regeneration ok, 5 objects regenerated geometry ok, 1 result body Result bodies (1): Bar (object:5): 1 solid, volume 1920.000 mm^3, area 1952.000 mm^2, bounds (-2, -2, 0) to (42, 40, 42) mm Result: valid (1 warning) " contains: "bounds (-2, -2, 0) to (42, 40, 42) mm "
+SpatialSweepCliTests.cpp:105  CHECK_THAT( result.out, EndsWith("Result: valid (1 warning)\n") )
+        => "Validating C:\Users\uqhas\AppData\Local\Temp\bettercad-test-cbb721ca-d2d5-481a-97c6-95308d790498\bar.bcad document consistency ok missing references ok dependency cycles ok sketch constraints 1 warning warning: BarProfile (object:1) is under-constrained: 6 degree(s) of freedom feature regeneration ok, 5 objects regenerated geometry ok, 1 result body Result bodies (1): Bar (object:5): 1 solid, volume 1920.000 mm^3, area 1952.000 mm^2, bounds (-2, -2, 0) to (42, 40, 42) mm Result: valid (1 warning) " ends with: "Result: valid (1 warning) "
+
+== SweptPath_AGuideCurveCarriesTheSection
+SweptPathTests.cpp:443  CHECK( frameOf(path) == SweepFrame::Guided )
+        => 2 == 2
+SweptPathTests.cpp:113  CHECK( body->topology().solids == 1 )
+        => 1 == 1
+SweptPathTests.cpp:445  CHECK_THAT( volumeMm3(body), WithinRel(2.0 * a * 2.0 * b * 100.0, kRelGuided) )
+        => 1600.00296077884991064 and 1600.0 are within 0.001% of each other
+SweptPathTests.cpp:448  CHECK_THAT( box[3], WithinAbs(std::hypot(a, b), kGuidedPositionMm) )
+        => 4.1231055489668913 is within 0.002 of 4.12310562561766059
+SweptPathTests.cpp:449  CHECK_THAT( box[4], WithinAbs(std::hypot(a, b), kGuidedPositionMm) )
+        => 4.12310554896688863 is within 0.002 of 4.12310562561766059
+SweptPathTests.cpp:451  CHECK( box[4] > 2.0 * b )
+        => 4.12310554896688863 > 2.0
+
+== SweptPath_TwistIsProportionalToTheDistanceAlongThePath
+SweptPathTests.cpp:113  CHECK( body->topology().solids == 1 )
+        => 1 == 1
+SweptPathTests.cpp:383  CHECK_THAT( box[3], WithinAbs(acrossX, 0.02) )
+        => 4.00156632700284565 is within 0.02 of 4.0 with message: u := 0.0
+SweptPathTests.cpp:384  CHECK_THAT( box[4], WithinAbs(acrossY, 0.02) )
+        => 1.00628357226017173 is within 0.02 of 1.0 with message: u := 0.0
+SweptPathTests.cpp:383  CHECK_THAT( box[3], WithinAbs(acrossX, 0.02) )
+        => 3.53890791082703249 is within 0.02 of 3.53553390593273775 with message: u := 0.25
+SweptPathTests.cpp:384  CHECK_THAT( box[4], WithinAbs(acrossY, 0.02) )
+        => 3.53880895968984444 is within 0.02 of 3.53553390593273775 with message: u := 0.25
+SweptPathTests.cpp:383  CHECK_THAT( box[3], WithinAbs(acrossX, 0.02) )
+        => 1.00628241736872415 is within 0.02 of 1.00000000000000022 with message: u := 0.5
+SweptPathTests.cpp:384  CHECK_THAT( box[4], WithinAbs(acrossY, 0.02) )
+        => 4.00157316073160985 is within 0.02 of 4.0 with message: u := 0.5
+SweptPathTests.cpp:383  CHECK_THAT( box[3], WithinAbs(acrossX, 0.02) )
+        => 3.53890791082702494 is within 0.02 of 3.53553390593273731 with message: u := 0.75
+SweptPathTests.cpp:384  CHECK_THAT( box[4], WithinAbs(acrossY, 0.02) )
+        => 3.53880895968984754 is within 0.02 of 3.53553390593273775 with message: u := 0.75
+SweptPathTests.cpp:383  CHECK_THAT( box[3], WithinAbs(acrossX, 0.02) )
+        => 4.00156632700284565 is within 0.02 of 4.0 with message: u := 1.0
+SweptPathTests.cpp:384  CHECK_THAT( box[4], WithinAbs(acrossY, 0.02) )
+        => 1.00628357226015974 is within 0.02 of 1.00000000000000044 with message: u := 1.0
+
+== SweptPath_TwistTurnsTheSectionAboutTheTangent / no twist is the sweep it always was
+SweptPathTests.cpp:295  CHECK( frameOf(path) == (twist == Angle{} ? SweepFrame::PlanarBinormal : SweepFrame::Guided) )
+        => 0 == 0
+SweptPathTests.cpp:113  CHECK( body->topology().solids == 1 )
+        => 1 == 1
+SweptPathTests.cpp:301  CHECK_THAT( volumeMm3(body), WithinRel(2.0 * a * 2.0 * b * 100.0, kRelTight) )
+        => 1600.0 and 1600.0 are within 1e-10% of each other
+SweptPathTests.cpp:303  CHECK_THAT( box[0], WithinAbs(-a, kPositionToleranceMm) )
+        => -4.0 is within 0.000000001 of -4.0
+SweptPathTests.cpp:304  CHECK_THAT( box[4], WithinAbs(b, kPositionToleranceMm) )
+        => 1.0 is within 0.000000001 of 1.0
+SweptPathTests.cpp:308  CHECK( side->size() == 1 )
+        => 1 == 1
+
+== SweptPath_TwistTurnsTheSectionAboutTheTangent / a quarter turn reaches the section's own radius both ways
+SweptPathTests.cpp:295  CHECK( frameOf(path) == (twist == Angle{} ? SweepFrame::PlanarBinormal : SweepFrame::Guided) )
+        => 2 == 2
+SweptPathTests.cpp:113  CHECK( body->topology().solids == 1 )
+        => 1 == 1
+SweptPathTests.cpp:314  CHECK_THAT( volumeMm3(body), WithinRel(2.0 * a * 2.0 * b * 100.0, kRelGuided) )
+        => 1600.00434508072567041 and 1600.0 are within 0.001% of each other
+SweptPathTests.cpp:317  CHECK_THAT( box[0], WithinAbs(-radius, kGuidedPositionMm) )
+        => -4.12313198682790105 is within 0.002 of -4.12310562561766059
+SweptPathTests.cpp:318  CHECK_THAT( box[3], WithinAbs(radius, kGuidedPositionMm) )
+        => 4.12313198682790105 is within 0.002 of 4.12310562561766059
+SweptPathTests.cpp:319  CHECK_THAT( box[1], WithinAbs(-radius, kGuidedPositionMm) )
+        => -4.12313198682790372 is within 0.002 of -4.12310562561766059
+SweptPathTests.cpp:320  CHECK_THAT( box[4], WithinAbs(radius, kGuidedPositionMm) )
+        => 4.12313198682790372 is within 0.002 of 4.12310562561766059
+SweptPathTests.cpp:321  CHECK_THAT( box[2], WithinAbs(0.0, kGuidedPositionMm) )
+        => -0.00000010000000711 is within 0.002 of 0.0
+SweptPathTests.cpp:322  CHECK_THAT( box[5], WithinAbs(100.0, kGuidedPositionMm) )
+        => 100.00000009999999406 is within 0.002 of 100.0
+
+== SweptPath_TwistTurnsTheSectionAboutTheTangent / an eighth turn reaches it one way only
+SweptPathTests.cpp:295  CHECK( frameOf(path) == (twist == Angle{} ? SweepFrame::PlanarBinormal : SweepFrame::Guided) )
+        => 2 == 2
+SweptPathTests.cpp:113  CHECK( body->topology().solids == 1 )
+        => 1 == 1
+SweptPathTests.cpp:331  CHECK_THAT( box[3], WithinAbs(radius, kGuidedPositionMm) )
+        => 4.12312382993856996 is within 0.002 of 4.12310562561766059
+SweptPathTests.cpp:332  CHECK_THAT( box[4], WithinAbs((a + b) / std::sqrt(2.0), kGuidedPositionMm) )
+        => 3.53553400593273759 is within 0.002 of 3.53553390593273731
+
+== SweptPath_TwistTurnsTheSectionAboutTheTangent / a half turn brings the section back onto itself
+SweptPathTests.cpp:295  CHECK( frameOf(path) == (twist == Angle{} ? SweepFrame::PlanarBinormal : SweepFrame::Guided) )
+        => 2 == 2
+SweptPathTests.cpp:113  CHECK( body->topology().solids == 1 )
+        => 1 == 1
+SweptPathTests.cpp:337  CHECK_THAT( volumeMm3(body), WithinRel(2.0 * a * 2.0 * b * 100.0, kRelGuided) )
+        => 1599.99780956579570557 and 1600.0 are within 0.001% of each other
+SweptPathTests.cpp:339  CHECK_THAT( box[3], WithinAbs(radius, kGuidedPositionMm) )
+        => 4.12307818077185662 is within 0.002 of 4.12310562561766059
+SweptPathTests.cpp:340  CHECK_THAT( box[4], WithinAbs(radius, kGuidedPositionMm) )
+        => 4.12310963676884601 is within 0.002 of 4.12310562561766059
+
+== SweptPath_TwistTurnsTheSectionAboutTheTangent / a full turn is a full turn, not no turn
+SweptPathTests.cpp:295  CHECK( frameOf(path) == (twist == Angle{} ? SweepFrame::PlanarBinormal : SweepFrame::Guided) )
+        => 2 == 2
+SweptPathTests.cpp:113  CHECK( body->topology().solids == 1 )
+        => 1 == 1
+SweptPathTests.cpp:345  CHECK_THAT( volumeMm3(body), WithinRel(2.0 * a * 2.0 * b * 100.0, kRelGuided) )
+        => 1599.99792659100285164 and 1600.0 are within 0.001% of each other
+SweptPathTests.cpp:347  CHECK_THAT( box[3], WithinAbs(radius, kGuidedPositionMm) )
+        => 4.12308270581422409 is within 0.002 of 4.12310562561766059
+SweptPathTests.cpp:348  CHECK_THAT( box[4], WithinAbs(radius, kGuidedPositionMm) )
+        => 4.12311569944365974 is within 0.002 of 4.12310562561766059
+SweptPathTests.cpp:350  CHECK( box[4] > 2.0 )
+        => 4.12311569944365974 > 2.0
+
+== SweptPath_TwistTurnsTheSectionAboutTheTangent / the other way round
+SweptPathTests.cpp:295  CHECK( frameOf(path) == (twist == Angle{} ? SweepFrame::PlanarBinormal : SweepFrame::Guided) )
+        => 2 == 2
+SweptPathTests.cpp:113  CHECK( body->topology().solids == 1 )
+        => 1 == 1
+SweptPathTests.cpp:355  CHECK_THAT( volumeMm3(body), WithinRel(2.0 * a * 2.0 * b * 100.0, kRelGuided) )
+        => 1600.00434508072567041 and 1600.0 are within 0.001% of each other
+SweptPathTests.cpp:357  CHECK_THAT( box[1], WithinAbs(-radius, kGuidedPositionMm) )
+        => -4.12313198682790372 is within 0.002 of -4.12310562561766059
+SweptPathTests.cpp:358  CHECK_THAT( box[4], WithinAbs(radius, kGuidedPositionMm) )
+        => 4.12313198682790372 is within 0.002 of 4.12310562561766059
+
+== SpatialSweepCli_InfoNamesTheGuide
+SpatialSweepCliTests.cpp:88  CHECK( result.exitCode == ExitCode::Success )
+        => 0 == 0
+SpatialSweepCliTests.cpp:90  CHECK_THAT( result.out, ContainsSubstring("profile GuideProfile, path Rise (1 edge), follow path, guided by Lead " "(1 edge), new body\n") )
+        => "Document: Guide File: C:\Users\uqhas\AppData\Local\Temp\bettercad-test-e482b567-2bfb-471e-b5d5-10a7d321a6a9\guide.bcad ID: dd212143-038a-4a87-a3e2-1e7edff3e25f Parameters (0): Objects (4): object:1 sketch GuideProfile 8 entities, 1 constraints object:2 sketch Rise 3 entities, 2 constraints object:3 sketch Lead 3 entities, 2 constraints object:4 sweep Guided profile GuideProfile, path Rise (1 edge), follow path, guided by Lead (1 edge), new body " contains: "profile GuideProfile, path Rise (1 edge), follow path, guided by Lead (1 edge), new body "
+
+== SpatialSweep_RefusesAnInvalidRunOutright / a run without a sketch
+SpatialSweepTests.cpp:94  CHECK( feature.error().code == ErrorCode::InvalidArgument )
+        => 0 == 0
+SpatialSweepTests.cpp:237  CHECK( refusal(d) == "path run 2 needs a sketch" )
+        => "path run 2 needs a sketch" == "path run 2 needs a sketch"
+
+== SpatialSweep_RefusesAnInvalidRunOutright / a run without edges
+SpatialSweepTests.cpp:94  CHECK( feature.error().code == ErrorCode::InvalidArgument )
+        => 0 == 0
+SpatialSweepTests.cpp:241  CHECK( refusal(d) == "path run 3 needs at least one edge" )
+        => "path run 3 needs at least one edge" == "path run 3 needs at least one edge"
+
+== SpatialSweep_RefusesAnInvalidRunOutright / an edge listed twice within one run
+SpatialSweepTests.cpp:94  CHECK( feature.error().code == ErrorCode::InvalidArgument )
+        => 0 == 0
+SpatialSweepTests.cpp:247  CHECK( refusal(d) == std::format("{} is listed twice in the path", m.turnLine) )
+        => "entity:3 is listed twice in the path" == "entity:3 is listed twice in the path"
+
+== SweptPath_OneRunIsThePlanarSweepItself
+SweptPathTests.cpp:170  CHECK( bits(volumeMm3(*direct)) == bits(volumeMm3(*viaSwept)) )
+        => 4671226772094713857 (0x40d3880000000001) == 4671226772094713857 (0x40d3880000000001)
+SweptPathTests.cpp:171  CHECK( bits(requireProperties(*direct).surfaceArea.si()) == bits(requireProperties(*viaSwept).surfaceArea.si()) )
+        => 4574028719783166765 (0x3f7a36e2eb1c432d) == 4574028719783166765 (0x3f7a36e2eb1c432d)
+SweptPathTests.cpp:172  CHECK( direct->boundingBox().value() == viaSwept->boundingBox().value() )
+        => {?} == {?}
+SweptPathTests.cpp:173  CHECK( direct->topology() == viaSwept->topology() )
+        => {?} == {?}
+SweptPathTests.cpp:174  CHECK_THAT( volumeMm3(*viaSwept), WithinRel(10.0 * 20.0 * 100.0, kRelTight) )
+        => 20000.00000000000363798 and 20000.0 are within 1e-10% of each other
+SweptPathTests.cpp:175  CHECK( frameOf(asSweptPath(planar)) == SweepFrame::PlanarBinormal )
+        => 0 == 0
+SweptPathTests.cpp:176  CHECK( toString(SweepFrame::PlanarBinormal) == "planar binormal" )
+        => "planar binormal" == "planar binormal"
+SweptPathTests.cpp:177  CHECK( toString(SweepFrame::RotationMinimizing) == "rotation minimizing" )
+        => "rotation minimizing" == "rotation minimizing"
+SweptPathTests.cpp:178  CHECK( toString(SweepFrame::Guided) == "guided" )
+        => "guided" == "guided"
+
+== SpatialSweep_AGuideCurveCarriesTheSection
+SpatialSweepTests.cpp:363  CHECK_THAT( volumeMm3(regenerator, m.guided), WithinRel(GuidedBarModel::expectedVolume(), kRelGuided) )
+        => 1600.00296077884991064 and 1600.0 are within 0.001% of each other with message: 
+SpatialSweepTests.cpp:367  CHECK_THAT( box[3], WithinAbs(std::hypot(4.0, 1.0), kGuidedPositionMm) )
+        => 4.1231055489668913 is within 0.002 of 4.12310562561766059 with message: 
+SpatialSweepTests.cpp:368  CHECK_THAT( box[4], WithinAbs(std::hypot(4.0, 1.0), kGuidedPositionMm) )
+        => 4.12310554896688863 is within 0.002 of 4.12310562561766059 with message: 
+SpatialSweepTests.cpp:369  CHECK( box[4] > 2.0 )
+        => 4.12310554896688863 > 2.0 with message: 
+SpatialSweepTests.cpp:374  CHECK( sweep->dependencies() == std::vector<ObjectId>{m.profile, m.rise, m.lead} )
+        => { object:1, object:2, object:3 } == { object:1, object:2, object:3 } with message: 
+
+Overall: 2521 assertions passed, 0 failed.

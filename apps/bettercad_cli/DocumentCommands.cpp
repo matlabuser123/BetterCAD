@@ -494,10 +494,32 @@ std::string describeObject(const Document& document, const DocumentObject& objec
         return describeMirror(document, mirror->definition());
     }
     if (const auto* sweep = dynamic_cast<const features::SweepFeature*>(&object)) {
+        // "profile Ring, path Route (2 edges) then Rise (1 edge), follow
+        // path, twisted 90 deg, cut Block": the runs in the order of travel,
+        // and the twist or the guide when there is one (P12-SWEEP-001).
         const features::SweepDefinition& d = sweep->definition();
-        return std::format("profile {}, path {} ({}), {}, {}", nameOrId(document, ObjectId{d.profile}),
-                           nameOrId(document, ObjectId{d.path.sketch}), plural(d.path.edges.size(), "edge", "edges"),
-                           features::toString(d.orientation), describeOperation(document, d.operation, d.target));
+        std::string path = std::format("{} ({})", nameOrId(document, ObjectId{d.path.sketch}),
+                                       plural(d.path.edges.size(), "edge", "edges"));
+        for (const features::SweepPathRun& run : d.path.runs) {
+            path += std::format(" then {} ({})", nameOrId(document, ObjectId{run.sketch}),
+                                plural(run.edges.size(), "edge", "edges"));
+        }
+        std::string carried;
+        if (d.guide) {
+            carried = std::format(", guided by {} ({})", nameOrId(document, ObjectId{d.guide->sketch}),
+                                  plural(d.guide->edges.size() + [&] {
+                                      std::size_t more = 0;
+                                      for (const features::SweepPathRun& run : d.guide->runs) {
+                                          more += run.edges.size();
+                                      }
+                                      return more;
+                                  }(), "edge", "edges"));
+        } else if (d.twistParameter || d.twist != Angle{}) {
+            carried = std::format(", twisted {}", describeAngle(document, d.twist, d.twistParameter));
+        }
+        return std::format("profile {}, path {}, {}{}, {}", nameOrId(document, ObjectId{d.profile}), path,
+                           features::toString(d.orientation), carried,
+                           describeOperation(document, d.operation, d.target));
     }
     if (const auto* split = dynamic_cast<const features::SplitFeature*>(&object)) {
         // "target Block, plane Middle, keep front"

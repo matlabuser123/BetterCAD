@@ -2,7 +2,10 @@
 
 #include <algorithm>
 #include <format>
+#include <string>
+#include <string_view>
 #include <utility>
+#include <vector>
 
 namespace bettercad::features {
 
@@ -13,6 +16,50 @@ std::string_view toString(SweepOrientation orientation) noexcept {
     }
     return "unknown";
 }
+
+namespace {
+
+/// The edges of one run: at least one, each valid, and none listed twice
+/// within the run. Entity IDs are numbered per sketch, so two runs on
+/// different sketches may hold the same ID and mean different edges; only
+/// repeats inside one run are a mistake. @p what names it in messages.
+Result<void> validateRun(const SketchId sketch, const std::vector<EntityId>& edges, std::string_view what) {
+    const auto invalid = [](const std::string& message) { return makeError(ErrorCode::InvalidArgument, message); };
+    if (!sketch.isValid()) {
+        return invalid(std::format("{} needs a sketch", what));
+    }
+    if (edges.empty()) {
+        return invalid(std::format("{} needs at least one edge", what));
+    }
+    std::vector<EntityId> seen;
+    for (const EntityId edge : edges) {
+        if (!edge.isValid()) {
+            return invalid(std::format("{}'s edge IDs must be valid", what));
+        }
+        // One edge of a run cannot be travelled twice.
+        if (std::ranges::find(seen, edge) != seen.end()) {
+            return invalid(std::format("{} is listed twice in the path", edge));
+        }
+        seen.push_back(edge);
+    }
+    return {};
+}
+
+/// A whole path: the first run, then each further one.
+Result<void> validatePath(const SweepPath& path, std::string_view what, std::string_view runsCalled) {
+    if (auto valid = validateRun(path.sketch, path.edges, what); !valid) {
+        return valid;
+    }
+    for (std::size_t i = 0; i < path.runs.size(); ++i) {
+        const std::string name = std::format("{} run {}", runsCalled, i + 2);
+        if (auto valid = validateRun(path.runs[i].sketch, path.runs[i].edges, name); !valid) {
+            return valid;
+        }
+    }
+    return {};
+}
+
+} // namespace
 
 Result<void> validate(const SweepDefinition& definition) {
     const auto invalid = [](const std::string& message) { return makeError(ErrorCode::InvalidArgument, message); };
@@ -26,17 +73,29 @@ Result<void> validate(const SweepDefinition& definition) {
         return invalid("the path must be in another sketch than the profile: it leaves the profile's plane at right "
                        "angles");
     }
-    const std::vector<EntityId>& edges = definition.path.edges;
-    if (edges.empty()) {
+    if (definition.path.edges.empty()) {
         return invalid("a sweep path needs at least one edge");
     }
-    for (std::size_t i = 0; i < edges.size(); ++i) {
-        if (!edges[i].isValid()) {
-            return invalid("the path's edge IDs must be valid");
+    if (auto valid = validatePath(definition.path, "the path", "path"); !valid) {
+        return valid;
+    }
+    if (!isFinite(definition.twist)) {
+        return invalid(std::format("the twist must be finite, got {}", toString(definition.twist, units::deg)));
+    }
+    if (definition.twistParameter && !definition.twistParameter->isValid()) {
+        return invalid("the twist parameter ID must be valid");
+    }
+    if (definition.guide) {
+        const bool twisted = definition.twist != Angle{} || definition.twistParameter.has_value();
+        if (twisted) {
+            return invalid("a sweep takes a twist or a guide curve, not both: a guide already says how the section "
+                           "turns");
         }
-        if (std::find(edges.begin(), edges.begin() + static_cast<std::ptrdiff_t>(i), edges[i]) !=
-            edges.begin() + static_cast<std::ptrdiff_t>(i)) {
-            return invalid(std::format("{} is listed twice in the path", edges[i]));
+        if (auto valid = validatePath(*definition.guide, "the guide", "guide"); !valid) {
+            return valid;
+        }
+        if (definition.guide->sketch == definition.profile) {
+            return invalid("the guide must be in another sketch than the profile");
         }
     }
     return validateOperation(definition.operation, definition.target);
@@ -62,8 +121,25 @@ bool SweepFeature::contentEquals(const DocumentObject& other) const {
 
 std::vector<ObjectId> SweepFeature::dependencies() const {
     std::vector<ObjectId> result{ObjectId{definition_.profile}, ObjectId{definition_.path.sketch}};
+    const auto add = [&result](ObjectId id) {
+        if (std::ranges::find(result, id) == result.end()) {
+            result.push_back(id);
+        }
+    };
+    for (const SweepPathRun& run : definition_.path.runs) {
+        add(ObjectId{run.sketch});
+    }
+    if (definition_.guide) {
+        add(ObjectId{definition_.guide->sketch});
+        for (const SweepPathRun& run : definition_.guide->runs) {
+            add(ObjectId{run.sketch});
+        }
+    }
+    if (definition_.twistParameter) {
+        add(ObjectId{*definition_.twistParameter});
+    }
     if (definition_.target) {
-        result.push_back(ObjectId{*definition_.target});
+        add(ObjectId{*definition_.target});
     }
     return result;
 }

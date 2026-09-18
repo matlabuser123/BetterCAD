@@ -316,6 +316,44 @@ milestones start; see `TODO.md`.
     (`regionCentroid()`), to 1e-9 relative. That check caught every wrongly
     built corner when the default corner mode was tried.
 
+  `makeSweep(region, SweptPath)` (P12-SWEEP-001) adds paths of several
+  planar runs joined in model space, a twist and a guide curve. A one-run
+  path with neither is handed to `makeSweep(region, PlanarPath)`, so
+  P11-FEAT-008's solids are built by the same code and are unchanged.
+  - **One frame convention, measured.** The kernel probe in
+    `docs/verification/P12-SWEEP-001/kernel-probe` sweeps the same planar
+    path with the fixed binormal, Frenet and corrected Frenet modes and gets
+    the same solid to the last digit (case G, ratio 1.000000000 for all
+    three). The convention is therefore the rotation-minimizing frame, of
+    which the fixed binormal is the closed-form planar case. On a spatial
+    path the fixed binormal throws as soon as a run runs parallel to it
+    (case B, `gp_VectorWithNullMagnitude`), so the kernel's corrected Frenet
+    mode (`SetMode(false)`) carries it there; it was exact on the spatial
+    polyline (ratio 1.000000000).
+  - **Twist.** BetterCAD builds the auxiliary spine itself, from its own
+    rotation-minimizing frame (`samplePath()`, double reflection), offsetting
+    each sample by the profile's own reach turned by theta(u) = u * twist,
+    and fits a B-spline through the samples. The law is therefore
+    BetterCAD's, not the kernel's, which offers a scaling law and no
+    rotation law at all (probe case F).
+  - **Guide curves.** A guide is a path of its own, passed as the auxiliary
+    spine with `BRepFill_NoContact` and no curvilinear equivalence: the two
+    the probe measured as building a valid solid that keeps the profile's
+    area (cases D and E). The other combinations fail, throw, or scale the
+    section by half a percent. The API takes one auxiliary spine, so a sweep
+    takes one guide.
+  - **Two rules a turning section adds.** The region's centroid must ride on
+    the path, so the section travels exactly the path's length whatever the
+    frame does and the Pappus check does not depend on the frame; and the
+    region's *reach*, the farthest any of its points lies from the path,
+    replaces the signed offset a planar sweep uses, since a turning section
+    has no constant offset. An arc's radius and a mitred corner's legs must
+    both exceed the reach.
+  - **Tolerance.** A guided sweep follows a curve fitted through samples, so
+    it meets Pappus to 1e-5 relative rather than 1e-9 (measured worst case
+    1.9e-6). A spatial path that is not guided keeps the 1e-9 of an exact
+    frame.
+
   `makeLoft(sections)` builds a ruled solid through two or more planar
   regions, in the order given: straight lines join matching points of
   consecutive sections. Again the rules are BetterCAD's:
@@ -1009,21 +1047,39 @@ milestones start; see `TODO.md`.
   - the profile sketch;
   - the path (`SweepPath`): another sketch and an ordered list of its line,
     arc or circle entities, so the path follows that sketch's constraints
-    and parameters;
+    and parameters, and `runs`, further sketch-and-edges pairs continuing
+    the path in model space (P12-SWEEP-001). One run is planar; several,
+    on different planes, make a spatial path, and no 3D-sketch subsystem is
+    introduced — every run is still a planar sketch, and the joins happen
+    between them;
   - the orientation, `FollowPath`, the only mode (see `makeSweep()` under
     Geometry);
+  - the `twist`, how far the section turns about the tangent from the start
+    to the end, literal or driven by an angle parameter
+    (`twistParameter`): theta(u) = u * twist, measured from the profile
+    sketch's X axis, positive right-handed about the direction of travel;
+  - the `guide`, a path of its own whose turning about the path carries the
+    section. A guide and a twist say the same thing two ways, so a
+    definition holds one or the other and both together are refused;
   - the operation and target, as for extrudes and revolves.
 
-  `resolveSweepPath()` turns the entities into a `PlanarPath` in the path
-  sketch's plane. Each edge is oriented to start where the one before ends,
-  and the direction of travel is fixed by the edges: a single line or arc
-  runs from its start to its end, a circle counter-clockwise from its X
-  axis, and several edges from the first edge's end that does not meet the
-  second. Missing edges fail with NotFound. Points, circles joined with other
-  edges, zero-length edges and edges that do not meet fail with
-  InvalidArgument, naming the entities; nothing is substituted or repaired.
-  The sweep depends on both sketches and its target, so a change to either
-  sketch's parameters rebuilds it.
+  `resolveSweepPath()` turns one run's entities into a `PlanarPath` in its
+  sketch's plane, and `resolveSweptPath()` assembles the runs, the guide and
+  the resolved twist into a `SweptPath`. Each edge is oriented to start where
+  the one before ends, and the direction of travel is fixed by the edges: a
+  single line or arc runs from its start to its end, a circle
+  counter-clockwise from its X axis, and several edges from the first edge's
+  end that does not meet the second. Missing edges fail with NotFound.
+  Points, circles joined with other edges, zero-length edges and edges that
+  do not meet fail with InvalidArgument, naming the entities; nothing is
+  substituted or repaired. The sweep depends on the profile sketch, every
+  run's sketch, the guide's sketches, the twist parameter and its target, so
+  a change to any of them rebuilds it.
+
+  An edge is named by its sketch as well as its ID when the path runs
+  through more than one sketch (`FaceSelector::alongSketch`): entity IDs are
+  numbered per sketch, so two runs' edges may share an ID and the ID alone
+  would not say which run a side face ran along.
 - **Loft** (`LoftFeature.hpp`) passes through the closed profiles of two or
   more sketches. A `LoftDefinition` holds:
   - the sections (`LoftSection`), in the loft's order: each a sketch and an
@@ -1351,8 +1407,13 @@ milestones start; see `TODO.md`.
     `keep_original`. A plane given by a reference stores `reference`
     (`{"object": id, "plane": "xy"}`) in place of `origin` and `normal`;
   - a sweep stores `profile`; `path` as `{"sketch": id, "edges": [ids]}`
-    (in the order of travel); `orientation` (`"follow_path"`); `operation`;
-    and an optional `target`;
+    (in the order of travel), with `runs` as `[{"sketch": id, "edges":
+    [ids]}]` when the path runs through more than one sketch;
+    `orientation` (`"follow_path"`); `twist` in radians and
+    `twist_parameter`, or a `guide` shaped as a path, when there is one;
+    `operation`; and an optional `target`. The fields P12-SWEEP-001 added
+    are written only when they are not their default, so a sweep saved
+    before it is written back byte for byte;
   - a loft stores `sections` in the loft's order, each as `{"sketch": id,
     "offset": metres}` with an optional `offset_parameter`;
     `interpolation` (`"ruled"`); `operation`; and an optional `target`;

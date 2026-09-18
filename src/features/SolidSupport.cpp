@@ -77,7 +77,8 @@ geometry::SweptFaceNamer sweptFaceNamer(ObjectId feature, const LabelledRegion& 
             if (!edge) {
                 return std::nullopt;
             }
-            selector.along = *edge;
+            selector.along = edge->edge;
+            selector.alongSketch = edge->sketch;
         }
         return FaceName{feature, std::move(selector)};
     };

@@ -1,0 +1,70 @@
+OCCT sweep frame probe, Fri 18/09/2026 14:34:55.28
+Source: docs/verification/P12-SWEEP-001/kernel-probe/sweep_frame_probe.cpp
+Built with: c++ (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r4) 16.1.0, -O2, against OCCT 8.0.1 in the dependency prefix.
+
+OCCT sweep frame probe for P12-SWEEP-001
+Profile: an 8 x 2 mm rectangle, so its long axis shows the section's rotation.
+
+=== A. spatial spine (a helix: radius 20, height 40, half a turn) ===
+  binormal +Z            valid 1  faces   6  V= 1191.744584  Pappus= 1191.741369  ratio 1.000002698
+                         start long axis (-1.0000, 0.0000, 0.0000)  end ( 1.0000, 0.0001, 0.0000)  between 179.9968 deg
+  Frenet                 valid 1  faces   6  V= 1191.739217  Pappus= 1191.741369  ratio 0.999998194
+                         start long axis (-1.0000, 0.0000, 0.0000)  end ( 1.0000,-0.0020,-0.0032)  between 179.7835 deg
+  corrected Frenet       valid 1  faces   6  V= 1191.741578  Pappus= 1191.741369  ratio 1.000000176
+                         start long axis (-1.0000, 0.0000,-0.0000)  end (-0.1259,-0.5326,-0.8369)  between  82.7670 deg
+  fixed trihedron        valid 1  faces   6  V=  343.698734  Pappus= 1191.741369  ratio 0.288400439
+                         start long axis (-1.0000, 0.0000, 0.0000)  end (-1.0000, 0.0000, 0.0000)  between   0.0000 deg
+
+=== B. spatial polyline (three runs, two right-angled corners) ===
+  binormal +Z            THREW 26gp_VectorWithNullMagnitude:  
+  binormal +Y            THREW 26gp_VectorWithNullMagnitude:  
+  Frenet                 valid 1  faces  14  V= 1920.000000  Pappus= 1920.000000  ratio 1.000000000
+                         start long axis ( 0.0000,-1.0000, 0.0000)  end ( 1.0000, 0.0000, 0.0000)  between  90.0000 deg
+  corrected Frenet       valid 1  faces  14  V= 1920.000000  Pappus= 1920.000000  ratio 1.000000000
+                         start long axis ( 0.0000,-1.0000, 0.0000)  end ( 1.0000, 0.0000, 0.0000)  between  90.0000 deg
+
+=== C. zero curvature (two collinear straight segments) ===
+  binormal +Z            valid 1  faces  10  V=  640.000000  Pappus=  640.000000  ratio 1.000000000
+                         start long axis (-1.0000, 0.0000, 0.0000)  end (-1.0000, 0.0000, 0.0000)  between   0.0000 deg
+  Frenet                 valid 1  faces  10  V=  640.000000  Pappus=  640.000000  ratio 1.000000000
+                         start long axis (-1.0000, 0.0000, 0.0000)  end (-1.0000, 0.0000, 0.0000)  between   0.0000 deg
+  corrected Frenet       valid 1  faces  10  V=  640.000000  Pappus=  640.000000  ratio 1.000000000
+                         start long axis (-1.0000, 0.0000, 0.0000)  end (-1.0000, 0.0000, 0.0000)  between   0.0000 deg
+
+=== D. guide curve, straight spine and straight guide 10 mm away ===
+  noequiv NoContact      valid 1  faces   6  V=  640.001184  Pappus=  640.000000  ratio 1.000001850
+                         start long axis (-1.0000, 0.0000, 0.0000)  end (-0.7071, 0.0000,-0.7071)  between  45.0000 deg
+  noequiv Contact        NOT DONE
+  noequiv ContactOnBorder THREW 26Standard_ConstructionError: gp_Trsf::SetScaleFactor
+  equiv NoContact        valid 1  faces   6  V=  643.204327  Pappus=  640.000000  ratio 1.005006761
+                         start long axis (-1.0000, 0.0000, 0.0000)  end (-0.7071, 0.0000,-0.7071)  between  45.0000 deg
+  equiv Contact          NOT DONE
+  equiv ContactOnBorder  NOT DONE
+
+=== E. helical guide (0.25 turn over 40 mm, radius 10) ===
+  helix 0.250000 turn    valid 1  faces   6  V=  640.000767  Pappus=  640.000000  ratio 1.000001199
+                         start long axis (-1.0000, 0.0000, 0.0000)  end (-0.0000,-1.0000, 0.0000)  between  90.0000 deg
+  helix 0.500000 turn    valid 1  faces   6  V=  639.999942  Pappus=  640.000000  ratio 0.999999909
+                         start long axis (-1.0000, 0.0000, 0.0000)  end ( 1.0000, 0.0000, 0.0000)  between 180.0000 deg
+  helix 1.000000 turn    valid 1  faces   6  V=  639.999706  Pappus=  640.000000  ratio 0.999999540
+                         start long axis (-1.0000,-0.0000, 0.0000)  end (-1.0000, 0.0000, 0.0000)  between   0.0000 deg
+
+=== G. planar path (line, tangent quarter arc, line) in the XY plane ===
+  binormal +Z            valid 1  faces  14  V= 1782.654825  Pappus= 1782.654825  ratio 1.000000000
+                         start long axis ( 0.0000, 0.0000,-1.0000)  end ( 0.0000, 0.0000,-1.0000)  between   0.0000 deg
+  corrected Frenet       valid 1  faces  14  V= 1782.654825  Pappus= 1782.654825  ratio 1.000000000
+                         start long axis ( 0.0000, 0.0000,-1.0000)  end ( 0.0000, 0.0000,-1.0000)  between   0.0000 deg
+  Frenet                 valid 1  faces  14  V= 1782.654825  Pappus= 1782.654825  ratio 1.000000000
+                         start long axis ( 0.0000, 0.0000,-1.0000)  end ( 0.0000, 0.0000,-1.0000)  between   0.0000 deg
+
+=== H. generated twist guide on a quarter arc (radius 40, in XY) ===
+  twist 90 deg           valid 1  faces   6  V= 1005.310220  Pappus= 1005.309649  ratio 1.000000567
+                         start long axis (-1.0000, 0.0000, 0.0000)  end ( 0.0000, 0.0000, 1.0000)  between  90.0000 deg
+  twist 180 deg          valid 1  faces   6  V= 1005.308795  Pappus= 1005.309649  ratio 0.999999150
+                         start long axis (-1.0000, 0.0000, 0.0000)  end ( 0.0000, 1.0000, 0.0000)  between  90.0000 deg
+  twist 360 deg          valid 1  faces   6  V= 1005.309328  Pappus= 1005.309649  ratio 0.999999681
+                         start long axis (-1.0000, 0.0000, 0.0000)  end ( 0.0000,-1.0000,-0.0000)  between  90.0000 deg
+
+=== F. rotation law ===
+  BRepOffsetAPI_MakePipeShell::Add(profile, Law_Function, ...) scales the section; the API
+  offers no rotation law. Recorded as a negative result: a twist must come from the frame.

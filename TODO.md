@@ -13,7 +13,7 @@ authorized — never in advance.
 | | |
 | --- | --- |
 | Current | **`P12` — Parametric CAD Completion** |
-| Next | `P12-SWEEP-001` — Guide curves, twist, non-planar paths |
+| Next | `P12-LOFT-001` — Differing section shapes, smooth interpolation, end conditions |
 | Blocked / Manual | None |
 | Last qualified | `P11` Production Part Modeling — **QUALIFIED** |
 | Released | `v0.1.0` (`P0`–`P10`); `P11` qualified, not released |
@@ -62,7 +62,7 @@ Reference models → qualification
 | 11 | `P12-FEAT-006` Variable-radius fillet; setback and corner transitions deferred (scope decided 2026-09-18) | — | **done** (variable radius) — [evidence](docs/verification/P12-FEAT-006/README.md); setback and corner transitions deferred |
 | 12 | `P12-HOLE-001` Threads, spotface, standard sizes, tolerance classes | `PARAM-001` | **done** — [evidence](docs/verification/P12-HOLE-001/README.md) |
 | 13 | `P12-PATTERN-001` Symmetric, total-length, suppressed instances, patterns of patterns | `PARAM-001` | **done** — [evidence](docs/verification/P12-PATTERN-001/README.md) |
-| 14 | `P12-SWEEP-001` Guide curves, twist, non-planar paths | `SKETCH-002` | not started |
+| 14 | `P12-SWEEP-001` Guide curves, twist, non-planar paths | `SKETCH-002` | **done** — [evidence](docs/verification/P12-SWEEP-001/README.md) |
 | 15 | `P12-LOFT-001` Differing section shapes, smooth interpolation, end conditions | `SKETCH-002` | not started |
 | 16 | `P12-PARAM-002` Design equations and configurations | `PARAM-001`, features | not started |
 | 17 | `P12-REF-001` Production reference models | all above | not started |
@@ -480,9 +480,56 @@ Acceptance:
 - Invalid counts, spacings, total lengths, axes, suppression sets, missing sources, self-references and cycles fail with structured diagnostics and keep no body; no partial pattern ever becomes a result.
 - Save → load → regenerate gives the same bodies bit for bit; repeated and fresh-document builds agree; files written before this milestone regenerate unchanged; every value the existing tests measure is unchanged; `P0`–`P12-HOLE-001` stays green in all three presets.
 
+#### P12-SWEEP-001 — Guide curves, twist, non-planar paths
+
+The three things `P11-FEAT-008` left out. Each is engineering intent the
+definition keeps, not geometry inferred after regeneration.
+
+The frame convention is settled by measurement, not by an OCCT default
+(`docs/verification/P12-SWEEP-001/kernel-probe/`): on a planar path the fixed
+binormal, Frenet and corrected Frenet frames give the same solid to the last
+digit, so BetterCAD has **one** convention — the rotation-minimizing frame —
+of which `P11-FEAT-008`'s fixed binormal is the closed-form planar case. On a
+spatial path the fixed binormal throws as soon as a run runs parallel to it,
+while corrected Frenet is exact.
+
+- **Non-planar paths.** A path is one or more *runs*, each the edges of one
+  sketch, joined end to end in model space. One run is the planar path of
+  `P11-FEAT-008`; several runs, on different planes, make a spatial path. No
+  3D-sketch subsystem is introduced: every run is still a planar sketch, and
+  the joins happen in model space.
+- **Twist.** The section turns about the path's tangent by
+  `theta(u) = u theta_total`, u the normalized path coordinate. The total is
+  literal or driven by an angle parameter. Zero twist must reproduce
+  `P11-FEAT-008`'s solids exactly.
+- **Guide curves.** A guide is a path of its own; the section turns to follow
+  it about the tangent. A guide and a twist are two ways to say the same
+  thing, so a definition carries one or the other, never both.
+
+Deliverables:
+
+- [x] `geometry::SweptPath`: a path of planar runs joined in model space, with the joint rules of `P11-FEAT-008` applied across runs (tangential, or two straight segments mitred at a corner), and the connectivity, degeneracy and finiteness checks applied in 3D
+- [x] The rotation-minimizing frame for spatial paths (corrected Frenet), with the planar case unchanged; the convention measured and recorded, not assumed
+- [x] `SweepPath::runs`: further runs on other sketches, each contributing its edges in order; dependencies, validation and the 3D connectivity diagnostics
+- [x] `SweepDefinition::twist` (literal or driven by an angle parameter): `theta(u) = u theta_total`, built from an auxiliary spine BetterCAD generates from its own frame, so the law is BetterCAD's and not the kernel's
+- [x] `SweepDefinition::guide`: a path of its own carrying the section; one guide (the kernel takes one auxiliary spine), `NoContact` without curvilinear equivalence, both chosen on measured evidence; a guide and a twist are mutually exclusive
+- [x] Face names extended to the new modes: a side names its profile entity and the path edge it runs along and, across runs, the sketch that edge belongs to (`FaceSelector::alongSketch`; entity IDs are numbered per sketch, so the edge alone would not say which run)
+- [x] Dependencies, validation, undo/redo, save/load (new fields; files written before this milestone keep their meaning: one run, no twist, no guide), CLI description
+- [x] Independent validation: Pappus volumes, analytic centroids and bounds, segment transforms and the measured twist angle at chosen u, all computed without the sweep implementation
+- [x] Evidence: [docs/verification/P12-SWEEP-001/](docs/verification/P12-SWEEP-001/README.md)
+
+Acceptance:
+
+- A spatial path of several runs sweeps a valid solid whose volume is the profile's area times its centroid's path length, to the tolerance the joints justify; the section's orientation at each run is the one the recorded frame convention predicts, checked segment by segment.
+- A twisted sweep turns its section by `u theta_total`: measured at chosen u against the definition, for 0, +90, -90, 180 and 360 degrees and for a driven angle. Zero twist reproduces `P11-FEAT-008`'s solids bit for bit.
+- A guide curve carries the section where the guide's own turning says, checked against the guide's mathematical form; a guide that cannot correspond to the path fails with a structured diagnostic.
+- Missing, disconnected, degenerate, non-finite, self-referencing and cyclic inputs, an invalid twist, and a guide given with a twist all fail atomically with structured diagnostics and keep no body.
+- Save -> load -> regenerate gives the same bodies bit for bit; repeated and fresh-document builds agree; files written before this milestone regenerate unchanged; STEP exports read back with the same volume; every value the existing tests measure is unchanged; `P0`-`P12-PATTERN-001` stays green in all three presets.
+
 ## Next
 
-`P12-SWEEP-001` — Guide curves, twist, non-planar paths.
+`P12-LOFT-001` — Differing section shapes, smooth interpolation, end
+conditions.
 
 ## Blocked / Manual
 
@@ -703,6 +750,13 @@ regression test, so none can change silently. Detail:
   edges meet, the kernel shapes the corner itself; setbacks and selectable
   corner transitions were deferred from `P12-FEAT-006`, since they need a
   surface-patch capability ([investigation](docs/verification/P12-FEAT-006/investigation/README.md)).
+- **A sweep takes one guide curve, or a twist, never both**: the kernel
+  offers one auxiliary spine, and the two say the same thing. A spatial or
+  twisted sweep also needs its profile centred on the path, and meets the
+  Pappus volume to 1e-5 rather than 1e-9 when a guide carries it (the
+  auxiliary spine is fitted through samples). A path's runs are planar
+  sketches: there is no 3D sketch, helix primitive or spline path
+  (`P12-SWEEP-001`).
 - **Loft sides stay B-splines** even where flat, costing about 6e-12 relative
   volume and 3.4e-6 mm in the centroid; plane references find only a loft's end
   faces.

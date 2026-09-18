@@ -81,7 +81,10 @@ struct FaceCopy {
 
 /// One of the faces a feature generates, possibly as copied since:
 /// - `role`, and for a side face the profile `entity` that sweeps it and,
-///   for a sweep, the path edge it sweeps `along`;
+///   for a sweep, the path edge it sweeps `along` and, when the path runs
+///   through more than one sketch, `alongSketch`, the sketch that edge
+///   belongs to (P12-SWEEP-001): entity IDs are numbered per sketch, so the
+///   edge alone would not say which run it is;
 /// - for a chamfer's face, the position of its edge reference in the
 ///   chamfer's list (`edge`, from 1);
 /// - the `copies` made of it, in the order they were made (the last copy's
@@ -90,6 +93,7 @@ struct FaceSelector {
     FaceRole role = FaceRole::EndCap;
     std::optional<EntityId> entity{};
     std::optional<EntityId> along{};
+    std::optional<SketchId> alongSketch{};
     std::optional<std::uint32_t> edge{};
     std::vector<FaceCopy> copies{};
 

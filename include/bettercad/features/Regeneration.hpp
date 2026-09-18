@@ -111,6 +111,13 @@ regenerateRevolve(const RevolveFeature& feature, const Document& document,
 /// travel (see SweepPath). Fails with NotFound for a missing sketch or
 /// edge, and with InvalidArgument for a point, a circle joined with other
 /// edges, an edge of zero length, or consecutive edges that do not meet.
+/// The whole path in model space (P12-SWEEP-001): the first run, then each
+/// further run, each resolved as resolveSweepPath() resolves one, with the
+/// twist resolved from @p definition. The runs are joined in the order
+/// given; makeSweep() checks that they meet.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::SweptPath>
+resolveSweptPath(const SweepDefinition& definition, const Document& document);
+
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::PlanarPath> resolveSweepPath(const SweepPath& path,
                                                                                      const Document& document);
 

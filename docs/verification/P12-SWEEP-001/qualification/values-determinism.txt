@@ -1,0 +1,23 @@
+﻿Cross-configuration comparison of the measured values of the P12-SWEEP-001 tests.
+Each configuration's bettercad_tests.exe ran the 36 test cases the selector of values-header.txt matches
+(this milestone's own, plus the earlier sweep tests that carry the same two tags) with
+-s --reporter xml --rng-seed 1; values.py filtered the report; compare-values.py (in this directory) compared
+the results. Temporary paths and document UUIDs are normalized; lines holding a pointer value are dropped.
+
+release: 1839 non-empty lines after normalizing, MD5 0e5fd4d86080d60737f176de6380efab
+debug: 1839 non-empty lines after normalizing, MD5 83d880903ac3b1613e3d0887a813f68d
+debug-shared: 1839 non-empty lines after normalizing, MD5 83d880903ac3b1613e3d0887a813f68d
+
+debug against release:
+  line 66 (expected only):
+    release: => 3.53553400593273759 is within 0.002 of 3.53553390593273731
+    debug: => 3.53553400593273759 is within 0.002 of 3.53553390593273775
+  differing lines: 1 expected only, 0 measured
+
+debug-shared against release:
+  line 66 (expected only):
+    release: => 3.53553400593273759 is within 0.002 of 3.53553390593273731
+    debug-shared: => 3.53553400593273759 is within 0.002 of 3.53553390593273775
+  differing lines: 1 expected only, 0 measured
+
+RESULT: measured values identical

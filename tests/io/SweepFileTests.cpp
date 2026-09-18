@@ -267,8 +267,23 @@ TEST_CASE("SweepFeature_MalformedDataIsRejectedWithTheJsonPath", "[sweep][io]") 
           "objects[4].data.orientation: unknown value 'frenet'");
     CHECK(message(replaceOnce(good, "\"orientation\": \"follow_path\",", "")) ==
           "objects[4].data.orientation: missing required field");
-    CHECK(message(replaceOnce(good, "\"profile\": 7,", "\"profile\": 7, \"twist\": 0,")) ==
-          "objects[4].data.twist: unknown field");
+    // P12-SWEEP-001 added "twist", "twist_parameter", "guide" and the
+    // path's "runs"; before it, every one of them was an unknown field.
+    CHECK(io::documentFromJson(replaceOnce(good, "\"profile\": 7,", "\"profile\": 7, \"twist\": 0,")).has_value());
+    CHECK(message(replaceOnce(good, "\"profile\": 7,", "\"profile\": 7, \"twist\": \"90 deg\",")) ==
+          "objects[4].data.twist: expected a number");
+    CHECK(message(replaceOnce(good, "\"profile\": 7,", "\"profile\": 7, \"twist_parameter\": -1,")) ==
+          "objects[4].data.twist_parameter: expected an ID (a non-negative integer)");
+    CHECK(message(replaceOnce(good, "\"profile\": 7,", "\"profile\": 7, \"spin\": 1,")) ==
+          "objects[4].data.spin: unknown field");
+    CHECK(message(withPath(R"("path": {"sketch": 8, "edges": [3], "runs": 4},)")) ==
+          "objects[4].data.path.runs: expected an array");
+    CHECK(message(withPath(R"("path": {"sketch": 8, "edges": [3], "runs": [{"edges": [4]}]},)")) ==
+          "objects[4].data.path.runs[0].sketch: missing required field");
+    CHECK(message(withPath(R"("path": {"sketch": 8, "edges": [3], "runs": [{"sketch": 9, "edges": [4], "x": 1}]},)")) ==
+          "objects[4].data.path.runs[0].x: unknown field");
+    CHECK(message(replaceOnce(good, "\"profile\": 7,", R"("profile": 7, "guide": {"sketch": 9},)")) ==
+          "objects[4].data.guide.edges: missing required field");
 
     // Content: the definition's own rules, reported at the sweep.
     const auto invalid = [&](const std::string& text) {
@@ -285,6 +300,19 @@ TEST_CASE("SweepFeature_MalformedDataIsRejectedWithTheJsonPath", "[sweep][io]") 
           "right angles");
     CHECK(invalid(replaceOnce(good, ",\n        \"target\": 6", "")) ==
           "objects[4].data: a cut feature needs a target feature");
+    CHECK(invalid(replaceOnce(good, "\"profile\": 7,",
+                              R"("profile": 7, "twist": 1.5, "guide": {"sketch": 9, "edges": [4]},)")) ==
+          "objects[4].data: a sweep takes a twist or a guide curve, not both: a guide already says how the section "
+          "turns");
+    // The same ID in another run is another sketch's edge, and legal; only
+    // a repeat inside one run is not (P12-SWEEP-001).
+    CHECK(io::documentFromJson(
+              withPath(R"("path": {"sketch": 8, "edges": [3], "runs": [{"sketch": 9, "edges": [3]}]},)"))
+              .has_value());
+    CHECK(invalid(withPath(R"("path": {"sketch": 8, "edges": [3], "runs": [{"sketch": 9, "edges": [3, 3]}]},)")) ==
+          "objects[4].data: entity:3 is listed twice in the path");
+    CHECK(invalid(withPath(R"("path": {"sketch": 8, "edges": [3], "runs": [{"sketch": 9, "edges": []}]},)")) ==
+          "objects[4].data: path run 2 needs at least one edge");
 }
 
 TEST_CASE("SweepFeature_ExportsStep", "[sweep][io][export][acceptance]") {

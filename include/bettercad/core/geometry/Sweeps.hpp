@@ -11,6 +11,7 @@
 
 #include <cstddef>
 #include <functional>
+#include <string_view>
 #include <optional>
 #include <span>
 #include <vector>
@@ -29,6 +30,57 @@ struct PlanarPath {
 
     friend bool operator==(const PlanarPath&, const PlanarPath&) = default;
 };
+
+/// The path of a sweep in model space (P12-SWEEP-001): one or more planar
+/// runs, joined end to end. One run is a planar path; several runs, on
+/// different planes, make a spatial path. The runs' own plane coordinates
+/// are local; the joins are in model space.
+///
+/// Every rule of a planar path holds across the runs: consecutive segments
+/// meet (to 1e-10 m), meet tangentially, or -- two straight segments -- meet
+/// at a mitred corner of less than 180 deg. A full circle is still a path on
+/// its own, and then the only segment of the only run.
+///
+/// `twist` turns the section about the path's tangent as it travels:
+/// theta(u) = u * twist, with u the normalized path coordinate (0 at the
+/// start, 1 at the end). `guide` carries the section instead, by its own
+/// turning about the path. They are two ways to say the same thing, so at
+/// most one may be given.
+struct SweptPath {
+    std::vector<PlanarPath> runs{};
+    Angle twist{};
+    /// A guide curve: runs of its own, joined as a path is. Empty for none.
+    std::vector<PlanarPath> guide{};
+
+    friend bool operator==(const SweptPath&, const SweptPath&) = default;
+};
+
+/// @p path as a one-run spatial path, for the planar sweeps of
+/// P11-FEAT-008.
+[[nodiscard]] BETTERCAD_GEOMETRY_EXPORT SweptPath asSweptPath(const PlanarPath& path);
+
+/// How a sweep carries its section along the path (P12-SWEEP-001), for the
+/// record and for diagnostics.
+enum class SweepFrame {
+    /// The path plane's normal, constant: the closed-form rotation-minimizing
+    /// frame of a planar path (P11-FEAT-008).
+    PlanarBinormal,
+    /// The kernel's corrected Frenet frame, which on a planar path gives the
+    /// same solid to the last digit (kernel-probe case G) and on a spatial
+    /// path is exact where a fixed binormal fails.
+    RotationMinimizing,
+    /// A guide curve carries the section: either the one the definition
+    /// gives, or the one BetterCAD generates from a twist.
+    Guided,
+};
+
+/// "planar binormal", "rotation minimizing" or "guided".
+[[nodiscard]] BETTERCAD_GEOMETRY_EXPORT std::string_view toString(SweepFrame frame) noexcept;
+
+/// The frame @p path is swept with, by its own contents: a guide or a twist
+/// makes it Guided, a single run PlanarBinormal, and more than one run
+/// RotationMinimizing.
+[[nodiscard]] BETTERCAD_GEOMETRY_EXPORT SweepFrame frameOf(const SweptPath& path);
 
 /// Solid swept by translating @p region along its plane normal between the
 /// offsets @p from and @p to (to > from). For example [0, d] extrudes along
@@ -137,6 +189,36 @@ using SweptFaceNamer = std::function<std::optional<FaceName>(const SweptFace&)>;
 /// profile edge sweeps in path order; a side is named only when it lists
 /// one face per path segment.
 [[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Result<Body> makeSweep(const PlanarRegion& region, const PlanarPath& path,
+                                                              const SweptFaceNamer& namer);
+
+/// Solid swept by moving @p region along a path of several runs, with a
+/// twist or a guide (P12-SWEEP-001). A one-run path without either is
+/// exactly makeSweep(region, path): the same solid, bit for bit.
+///
+/// Placement, joints, preflight and the Pappus check are as for a planar
+/// path, applied in model space across the runs, with two rules that a
+/// spatial or twisted sweep adds:
+/// - the region's centroid must lie on the path (to 1e-10 m). The section
+///   then travels exactly the path's length whatever the frame does, so the
+///   volume is the region's area times that length however the section
+///   turns, and the check does not depend on the frame;
+/// - the region's reach -- the farthest any of its points lies from the
+///   path -- takes the place of the signed offset used for a planar path,
+///   since a turning section has no constant offset. An arc's radius and a
+///   mitred corner's legs must both exceed it.
+///
+/// A twist is built from an auxiliary spine BetterCAD generates from its own
+/// rotation-minimizing frame, so theta(u) = u * twist is BetterCAD's law and
+/// not the kernel's. That spine is fitted through samples of the path, so a
+/// twisted or guided sweep meets Pappus to 1e-5 relative rather than the
+/// 1e-9 of an untwisted one (measured: kernel-probe cases E and H).
+[[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Result<Body> makeSweep(const PlanarRegion& region, const SweptPath& path);
+
+/// makeSweep() whose result carries the names @p namer gives its faces: the
+/// outer loop at the start and at the end of an open path, and the side each
+/// profile segment sweeps along each path segment, numbered across the runs
+/// in the order of travel.
+[[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Result<Body> makeSweep(const PlanarRegion& region, const SweptPath& path,
                                                               const SweptFaceNamer& namer);
 
 /// Solid through @p sections, in the order given: a ruled loft, in which

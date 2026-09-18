@@ -73,9 +73,15 @@ Result<void> validate(const FaceSelector& selector) {
         if (selector.along && !selector.along->isValid()) {
             return invalid("a side face's path edge must be a valid entity");
         }
+        if (selector.alongSketch && !selector.alongSketch->isValid()) {
+            return invalid("a side face's path sketch must be a valid sketch");
+        }
+        if (selector.alongSketch && !selector.along) {
+            return invalid("a side face's path sketch names no edge without one");
+        }
     } else if (selector.entity) {
         return invalid(std::format("{} is not named by an entity", roleWithArticle(selector.role)));
-    } else if (selector.along) {
+    } else if (selector.along || selector.alongSketch) {
         return invalid(std::format("{} is not named by a path edge", roleWithArticle(selector.role)));
     }
     if (selector.role == FaceRole::Chamfer) {

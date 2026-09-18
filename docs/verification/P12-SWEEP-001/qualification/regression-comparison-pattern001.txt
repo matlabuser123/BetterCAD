@@ -1,0 +1,126 @@
+﻿baseline ..\..\P12-PATTERN-001\qualification\ctest-release.log: 1110 distinct names
+
+ctest-debug.log: 1145 distinct names, 1146 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 35
+    unit.SpatialSweepCli_InfoDescribesTheTwist
+    unit.SpatialSweepCli_InfoNamesEveryRunOfThePath
+    unit.SpatialSweepCli_InfoNamesTheGuide
+    unit.SpatialSweepCli_ValidateReportsADisconnectedPath
+    unit.SpatialSweepCli_ValidateReportsASpatialSweep
+    unit.SpatialSweep_AFileWithoutTheNewFieldsIsAPlanarSweep
+    unit.SpatialSweep_AGuideCurveCarriesTheSection
+    unit.SpatialSweep_DependsOnEveryRunsSketch
+    unit.SpatialSweep_ExportsStep
+    unit.SpatialSweep_FailuresKeepNoBodyAndRecover
+    unit.SpatialSweep_RebuildsIdenticallyFromAFile
+    unit.SpatialSweep_RefusesAGuideAndATwistTogether
+    unit.SpatialSweep_RefusesAnInvalidRunOutright
+    unit.SpatialSweep_RegenerationIsDeterministic
+    unit.SpatialSweep_RejectsAGuideThatCannotBeUsed
+    unit.SpatialSweep_RejectsAnInvalidTwist
+    unit.SpatialSweep_RejectsRunsThatDoNotMeet
+    unit.SpatialSweep_RunsFromSeveralSketchesMakeOnePath
+    unit.SpatialSweep_SaveLoadPreservesEveryRun
+    unit.SpatialSweep_SaveLoadPreservesTheGuide
+    unit.SpatialSweep_SaveLoadPreservesTheTwist
+    unit.SpatialSweep_SidesAreNamedByTheEdgeTheyRunAlong
+    unit.SpatialSweep_TwistFollowsItsParameterAndItsPath
+    unit.SpatialSweep_TwistTurnsTheSectionByTheAngleGiven
+    unit.SpatialSweep_UndoRedoRestoresTheDefinitionAndTheBody
+    unit.SweptPath_AGuideCurveCarriesTheSection
+    unit.SweptPath_ASpatialPathMayBendThroughAnArc
+    unit.SweptPath_OneRunIsThePlanarSweepItself
+    unit.SweptPath_RejectsANonFiniteTwist
+    unit.SweptPath_RejectsAnUnusableGuide
+    unit.SweptPath_RejectsMalformedSpatialPaths
+    unit.SweptPath_RunsOnDifferentPlanesMakeASpatialPath
+    unit.SweptPath_TwistIsProportionalToTheDistanceAlongThePath
+    unit.SweptPath_TwistTurnsTheSectionAboutTheTangent
+    unit.SweptPath_TwistsAlongACurvedPath
+
+ctest-release.log: 1145 distinct names, 1146 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 35
+    unit.SpatialSweepCli_InfoDescribesTheTwist
+    unit.SpatialSweepCli_InfoNamesEveryRunOfThePath
+    unit.SpatialSweepCli_InfoNamesTheGuide
+    unit.SpatialSweepCli_ValidateReportsADisconnectedPath
+    unit.SpatialSweepCli_ValidateReportsASpatialSweep
+    unit.SpatialSweep_AFileWithoutTheNewFieldsIsAPlanarSweep
+    unit.SpatialSweep_AGuideCurveCarriesTheSection
+    unit.SpatialSweep_DependsOnEveryRunsSketch
+    unit.SpatialSweep_ExportsStep
+    unit.SpatialSweep_FailuresKeepNoBodyAndRecover
+    unit.SpatialSweep_RebuildsIdenticallyFromAFile
+    unit.SpatialSweep_RefusesAGuideAndATwistTogether
+    unit.SpatialSweep_RefusesAnInvalidRunOutright
+    unit.SpatialSweep_RegenerationIsDeterministic
+    unit.SpatialSweep_RejectsAGuideThatCannotBeUsed
+    unit.SpatialSweep_RejectsAnInvalidTwist
+    unit.SpatialSweep_RejectsRunsThatDoNotMeet
+    unit.SpatialSweep_RunsFromSeveralSketchesMakeOnePath
+    unit.SpatialSweep_SaveLoadPreservesEveryRun
+    unit.SpatialSweep_SaveLoadPreservesTheGuide
+    unit.SpatialSweep_SaveLoadPreservesTheTwist
+    unit.SpatialSweep_SidesAreNamedByTheEdgeTheyRunAlong
+    unit.SpatialSweep_TwistFollowsItsParameterAndItsPath
+    unit.SpatialSweep_TwistTurnsTheSectionByTheAngleGiven
+    unit.SpatialSweep_UndoRedoRestoresTheDefinitionAndTheBody
+    unit.SweptPath_AGuideCurveCarriesTheSection
+    unit.SweptPath_ASpatialPathMayBendThroughAnArc
+    unit.SweptPath_OneRunIsThePlanarSweepItself
+    unit.SweptPath_RejectsANonFiniteTwist
+    unit.SweptPath_RejectsAnUnusableGuide
+    unit.SweptPath_RejectsMalformedSpatialPaths
+    unit.SweptPath_RunsOnDifferentPlanesMakeASpatialPath
+    unit.SweptPath_TwistIsProportionalToTheDistanceAlongThePath
+    unit.SweptPath_TwistTurnsTheSectionAboutTheTangent
+    unit.SweptPath_TwistsAlongACurvedPath
+
+ctest-debug-shared.log: 1145 distinct names, 1146 entries
+  baseline names missing: 0
+  baseline names not passed: 0
+  entries not passed (any test): 0
+  new names: 35
+    unit.SpatialSweepCli_InfoDescribesTheTwist
+    unit.SpatialSweepCli_InfoNamesEveryRunOfThePath
+    unit.SpatialSweepCli_InfoNamesTheGuide
+    unit.SpatialSweepCli_ValidateReportsADisconnectedPath
+    unit.SpatialSweepCli_ValidateReportsASpatialSweep
+    unit.SpatialSweep_AFileWithoutTheNewFieldsIsAPlanarSweep
+    unit.SpatialSweep_AGuideCurveCarriesTheSection
+    unit.SpatialSweep_DependsOnEveryRunsSketch
+    unit.SpatialSweep_ExportsStep
+    unit.SpatialSweep_FailuresKeepNoBodyAndRecover
+    unit.SpatialSweep_RebuildsIdenticallyFromAFile
+    unit.SpatialSweep_RefusesAGuideAndATwistTogether
+    unit.SpatialSweep_RefusesAnInvalidRunOutright
+    unit.SpatialSweep_RegenerationIsDeterministic
+    unit.SpatialSweep_RejectsAGuideThatCannotBeUsed
+    unit.SpatialSweep_RejectsAnInvalidTwist
+    unit.SpatialSweep_RejectsRunsThatDoNotMeet
+    unit.SpatialSweep_RunsFromSeveralSketchesMakeOnePath
+    unit.SpatialSweep_SaveLoadPreservesEveryRun
+    unit.SpatialSweep_SaveLoadPreservesTheGuide
+    unit.SpatialSweep_SaveLoadPreservesTheTwist
+    unit.SpatialSweep_SidesAreNamedByTheEdgeTheyRunAlong
+    unit.SpatialSweep_TwistFollowsItsParameterAndItsPath
+    unit.SpatialSweep_TwistTurnsTheSectionByTheAngleGiven
+    unit.SpatialSweep_UndoRedoRestoresTheDefinitionAndTheBody
+    unit.SweptPath_AGuideCurveCarriesTheSection
+    unit.SweptPath_ASpatialPathMayBendThroughAnArc
+    unit.SweptPath_OneRunIsThePlanarSweepItself
+    unit.SweptPath_RejectsANonFiniteTwist
+    unit.SweptPath_RejectsAnUnusableGuide
+    unit.SweptPath_RejectsMalformedSpatialPaths
+    unit.SweptPath_RunsOnDifferentPlanesMakeASpatialPath
+    unit.SweptPath_TwistIsProportionalToTheDistanceAlongThePath
+    unit.SweptPath_TwistTurnsTheSectionAboutTheTangent
+    unit.SweptPath_TwistsAlongACurvedPath
+
+RESULT: PASS

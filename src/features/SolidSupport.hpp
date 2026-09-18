@@ -44,8 +44,16 @@ namespace bettercad::features::detail {
 [[nodiscard]] Result<std::vector<LabelledRegion>> labelledProfileRegions(const sketch::Sketch& sketch,
                                                                          std::string_view featureName);
 
+/// A sweep's path edge: the sketch it is drawn in and the edge itself. The
+/// sketch is carried only when the path runs through more than one of them
+/// (P12-SWEEP-001), so a path in one sketch is named as it always was.
+struct PathEdge {
+    std::optional<SketchId> sketch{};
+    EntityId edge{};
+};
+
 /// The path edge a sweep's path segment comes from, or none.
-using PathEdgeOf = std::function<std::optional<EntityId>(std::size_t pathSegment)>;
+using PathEdgeOf = std::function<std::optional<PathEdge>(std::size_t pathSegment)>;
 
 /// Names for the faces @p feature sweeps from @p region (which must outlive
 /// the namer): the region where the sweep starts is @p first, where it ends

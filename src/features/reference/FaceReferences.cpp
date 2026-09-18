@@ -57,8 +57,12 @@ std::string faceText(const FaceSelector& face) {
         if (!face.entity) {
             return "a side";
         }
-        return face.along ? std::format("the side from {} along {}", *face.entity, *face.along)
-                          : std::format("the side from {}", *face.entity);
+        if (!face.along) {
+            return std::format("the side from {}", *face.entity);
+        }
+        return face.alongSketch
+                   ? std::format("the side from {} along {} of {}", *face.entity, *face.along, *face.alongSketch)
+                   : std::format("the side from {} along {}", *face.entity, *face.along);
     case FaceRole::HoleBottom:
         return "the bottom";
     case FaceRole::CounterboreFloor:
@@ -194,9 +198,28 @@ Result<void> checkRole(const Document& document, const DocumentObject& object, c
         if (auto valid = checkProfileEntity(document, who, sweep->definition().profile, *face.entity); !valid) {
             return valid;
         }
-        const auto& edges = sweep->definition().path.edges;
-        if (std::ranges::find(edges, *face.along) == edges.end()) {
+        // The edge must belong to one of the path's runs. Entity IDs are
+        // numbered per sketch, so a path of several runs names the sketch
+        // too and the pair must match one run exactly (P12-SWEEP-001).
+        const SweepDefinition& definition = sweep->definition();
+        const auto holds = [&](SketchId sketch, const std::vector<EntityId>& edges) {
+            if (face.alongSketch && *face.alongSketch != sketch) {
+                return false;
+            }
+            return std::ranges::find(edges, *face.along) != edges.end();
+        };
+        bool found = holds(definition.path.sketch, definition.path.edges);
+        for (const SweepPathRun& run : definition.path.runs) {
+            found = found || holds(run.sketch, run.edges);
+        }
+        if (!found) {
             return makeError(ErrorCode::NotFound, std::format("{}: {} is not an edge of its path", who, *face.along));
+        }
+        if (!definition.path.runs.empty() && !face.alongSketch) {
+            return makeError(ErrorCode::InvalidArgument,
+                             std::format("{}: its path runs through several sketches, so a side names the sketch "
+                                         "its path edge is drawn in as well as the edge",
+                                         who));
         }
         return {};
     }

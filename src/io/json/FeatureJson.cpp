@@ -261,33 +261,104 @@ constexpr std::array<std::pair<SweepOrientation, std::string_view>, 1> kSweepOri
     {SweepOrientation::FollowPath, "follow_path"},
 }};
 
-Result<features::SweepPath> sweepPathFromJson(const Json& data, std::string_view path) {
-    auto field = requireField(data, "path", path);
-    if (!field) {
-        return std::unexpected(field.error());
-    }
-    const std::string pathPath = childPath(path, "path");
-    if (auto object = requireObject(**field, pathPath, {"sketch", "edges"}); !object) {
-        return std::unexpected(object.error());
-    }
-    auto sketch = readId(**field, "sketch", pathPath);
-    if (!sketch) {
-        return std::unexpected(sketch.error());
-    }
-    auto edges = requireArray(**field, "edges", pathPath);
+/// An absent key reads as 0; defined with the chamfer readers below.
+Result<double> readNumberOrZero(const Json& object, std::string_view key, std::string_view path);
+
+/// The edge IDs of one run.
+Result<std::vector<EntityId>> sweepEdgesFromJson(const Json& data, std::string_view path) {
+    auto edges = requireArray(data, "edges", path);
     if (!edges) {
         return std::unexpected(edges.error());
     }
-    features::SweepPath result{.sketch = SketchId::fromValue(*sketch), .edges = {}};
-    const std::string edgesPath = childPath(pathPath, "edges");
+    std::vector<EntityId> result;
+    const std::string edgesPath = childPath(path, "edges");
     for (std::size_t i = 0; i < (*edges)->size(); ++i) {
         auto edge = readId((**edges)[i], indexPath(edgesPath, i));
         if (!edge) {
             return std::unexpected(edge.error());
         }
-        result.edges.push_back(EntityId::fromValue(*edge));
+        result.push_back(EntityId::fromValue(*edge));
     }
     return result;
+}
+
+/// A path: its first run's sketch and edges, and the further runs a spatial
+/// path adds (P12-SWEEP-001), which are absent from a path written before
+/// that milestone and then read as a path of one run.
+Result<features::SweepPath> sweepPathValueFromJson(const Json& data, std::string_view path) {
+    if (auto object = requireObject(data, path, {"sketch", "edges", "runs"}); !object) {
+        return std::unexpected(object.error());
+    }
+    auto sketch = readId(data, "sketch", path);
+    if (!sketch) {
+        return std::unexpected(sketch.error());
+    }
+    auto edges = sweepEdgesFromJson(data, path);
+    if (!edges) {
+        return std::unexpected(edges.error());
+    }
+    features::SweepPath result{.sketch = SketchId::fromValue(*sketch), .edges = std::move(*edges)};
+    if (!data.contains("runs")) {
+        return result;
+    }
+    auto runs = requireArray(data, "runs", path);
+    if (!runs) {
+        return std::unexpected(runs.error());
+    }
+    const std::string runsPath = childPath(path, "runs");
+    for (std::size_t i = 0; i < (*runs)->size(); ++i) {
+        const std::string runPath = indexPath(runsPath, i);
+        const Json& entry = (**runs)[i];
+        if (auto object = requireObject(entry, runPath, {"sketch", "edges"}); !object) {
+            return std::unexpected(object.error());
+        }
+        auto runSketch = readId(entry, "sketch", runPath);
+        if (!runSketch) {
+            return std::unexpected(runSketch.error());
+        }
+        auto runEdges = sweepEdgesFromJson(entry, runPath);
+        if (!runEdges) {
+            return std::unexpected(runEdges.error());
+        }
+        result.runs.push_back(
+            features::SweepPathRun{.sketch = SketchId::fromValue(*runSketch), .edges = std::move(*runEdges)});
+    }
+    return result;
+}
+
+Result<features::SweepPath> sweepPathFromJson(const Json& data, std::string_view path) {
+    auto field = requireField(data, "path", path);
+    if (!field) {
+        return std::unexpected(field.error());
+    }
+    return sweepPathValueFromJson(**field, childPath(path, "path"));
+}
+
+/// A path as JSON. The further runs are written only when there are any, so
+/// a path of one run is written exactly as it was before P12-SWEEP-001.
+Json sweepPathToJson(const features::SweepPath& value) {
+    Json path = Json::object();
+    path["sketch"] = value.sketch.value();
+    Json edges = Json::array();
+    for (const EntityId edge : value.edges) {
+        edges.push_back(edge.value());
+    }
+    path["edges"] = std::move(edges);
+    if (!value.runs.empty()) {
+        Json runs = Json::array();
+        for (const features::SweepPathRun& run : value.runs) {
+            Json entry = Json::object();
+            entry["sketch"] = run.sketch.value();
+            Json runEdges = Json::array();
+            for (const EntityId edge : run.edges) {
+                runEdges.push_back(edge.value());
+            }
+            entry["edges"] = std::move(runEdges);
+            runs.push_back(std::move(entry));
+        }
+        path["runs"] = std::move(runs);
+    }
+    return path;
 }
 
 } // namespace
@@ -296,15 +367,19 @@ Json sweepToJson(const features::SweepFeature& feature) {
     const features::SweepDefinition& d = feature.definition();
     Json json = Json::object();
     json["profile"] = d.profile.value();
-    Json path = Json::object();
-    path["sketch"] = d.path.sketch.value();
-    Json edges = Json::array();
-    for (const EntityId edge : d.path.edges) {
-        edges.push_back(edge.value());
-    }
-    path["edges"] = std::move(edges);
-    json["path"] = std::move(path);
+    json["path"] = sweepPathToJson(d.path);
     json["orientation"] = std::string{nameOf(kSweepOrientations, d.orientation)};
+    // Written only when they are not the default, so a sweep from before
+    // P12-SWEEP-001 is written back exactly as it was read.
+    if (d.twist != Angle{}) {
+        json["twist"] = d.twist.si();
+    }
+    if (d.twistParameter) {
+        json["twist_parameter"] = d.twistParameter->value();
+    }
+    if (d.guide) {
+        json["guide"] = sweepPathToJson(*d.guide);
+    }
     json["operation"] = std::string{nameOf(kOperations, d.operation)};
     if (d.target) {
         json["target"] = d.target->value();
@@ -314,19 +389,25 @@ Json sweepToJson(const features::SweepFeature& feature) {
 
 Result<std::unique_ptr<features::SweepFeature>> sweepFromJson(const Json& data, std::string name,
                                                               std::string_view path) {
-    if (auto object = requireObject(data, path, {"profile", "path", "orientation", "operation", "target"});
+    if (auto object = requireObject(data, path,
+                                    {"profile", "path", "orientation", "twist", "twist_parameter", "guide",
+                                     "operation", "target"});
         !object) {
         return std::unexpected(object.error());
     }
     auto profile = readId(data, "profile", path);
     auto sweepPath = sweepPathFromJson(data, path);
     auto orientation = valueOf(kSweepOrientations, data, "orientation", path);
+    auto twist = readNumberOrZero(data, "twist", path);
+    auto twistParameter = readOptionalId(data, "twist_parameter", path);
     auto operation = valueOf(kOperations, data, "operation", path);
     auto target = readOptionalId(data, "target", path);
-    if (!profile || !sweepPath || !orientation || !operation || !target) {
+    if (!profile || !sweepPath || !orientation || !twist || !twistParameter || !operation || !target) {
         const Error& error = !profile ? profile.error()
                            : !sweepPath ? sweepPath.error()
                            : !orientation ? orientation.error()
+                           : !twist ? twist.error()
+                           : !twistParameter ? twistParameter.error()
                            : !operation ? operation.error()
                                         : target.error();
         return std::unexpected(error);
@@ -335,9 +416,22 @@ Result<std::unique_ptr<features::SweepFeature>> sweepFromJson(const Json& data, 
         .profile = SketchId::fromValue(*profile),
         .path = std::move(*sweepPath),
         .orientation = *orientation,
+        .twist = Angle::fromSi(*twist),
+        .twistParameter = std::nullopt,
+        .guide = std::nullopt,
         .operation = *operation,
         .target = std::nullopt,
     };
+    if (*twistParameter) {
+        definition.twistParameter = ParameterId::fromValue(**twistParameter);
+    }
+    if (data.contains("guide")) {
+        auto guide = sweepPathValueFromJson(data["guide"], childPath(path, "guide"));
+        if (!guide) {
+            return std::unexpected(guide.error());
+        }
+        definition.guide = std::move(*guide);
+    }
     if (*target) {
         definition.target = FeatureId::fromValue(**target);
     }

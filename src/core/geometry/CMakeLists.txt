@@ -26,6 +26,8 @@ bettercad_add_library(bettercad_geometry
         Shell.cpp
         Split.cpp
         SweepPlan.cpp
+        SweptPathPlan.cpp
+        SweptPathPlan.hpp
         SweepPlan.hpp
         VariableFillet.cpp
         occt/OcctBlend.cpp

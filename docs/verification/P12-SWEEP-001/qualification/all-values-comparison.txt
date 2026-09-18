@@ -1,0 +1,37 @@
+﻿Every measured value of the tests P12-PATTERN-001 had, from a Release build of its commit (236f8c9, built in a
+separate clean worktree of that exact revision), and from this milestone's qualified Release build. Each ran
+bettercad_tests.exe -s --reporter xml --rng-seed 1 (all test cases; this build also ran the 35 new ones), and
+values.py (in this directory, with the same header for both) filtered the report:
+  pattern001-release: 999 test cases with measured values
+  sweep001-release:   1034 test cases with measured values
+compare-values.py dropped (--exclude) the 35 new test cases, the one whose assertions this milestone
+deliberately changed, one case whose entries depend on a heap address, and the pointer values, and normalized
+temporary paths, document UUIDs and the Git revision the version text reports. Source line numbers were
+ignored (--ignore-line-numbers): several existing test files gained lines, which moves the entries after them.
+
+Excluded, and why:
+  - the 35 test cases this milestone adds (they have no counterpart in the baseline);
+  - SweepFeature_MalformedDataIsRejectedWithTheJsonPath: two of its assertions changed deliberately. It
+    asserted that "twist" was an unknown JSON field, which this milestone adds; and that an edge ID repeated
+    in another run was "listed twice in the path", which is wrong now that runs are separate sketches, since
+    entity IDs are numbered per sketch and the same ID in another sketch is another edge. Both are now
+    asserted the other way round, and a repeat within one run is still refused and still tested;
+  - "Failures are reported and block dependents until fixed": its entries are pointer comparisons
+    (regenerator.body(...) != nullptr). values.py drops an entry repeated verbatim within a test case, so
+    whether the second occurrence survives depends on whether the heap reused the same address. The
+    assertion passed in both runs; no engineering value is involved.
+
+Substituted (--substitute " (modified)="): the build-info string says "(modified)" when the build was made
+from a working tree with uncommitted changes, which this milestone's qualified build was (the commit follows
+the qualification).
+
+substituted ' (modified)' -> '':
+  pattern001-release: 2 lines
+  sweep001-release: 9 lines
+pattern001-release: 48381 non-empty lines after normalizing, MD5 f35c35f45ee7a5814e2244a96aeacd22
+sweep001-release: 48381 non-empty lines after normalizing, MD5 f35c35f45ee7a5814e2244a96aeacd22
+
+sweep001-release against pattern001-release:
+  differing lines: 0 expected only, 0 measured
+
+RESULT: measured values identical

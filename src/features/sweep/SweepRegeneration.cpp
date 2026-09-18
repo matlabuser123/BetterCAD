@@ -6,7 +6,10 @@
 #include <algorithm>
 #include <format>
 #include <optional>
+#include <string_view>
+#include <utility>
 #include <variant>
+#include <vector>
 
 namespace bettercad::features {
 
@@ -146,6 +149,55 @@ Result<geometry::PlanarPath> resolveSweepPath(const SweepPath& path, const Docum
     return geometry::PlanarPath{sketch->placement(), std::move(oriented)};
 }
 
+Result<geometry::SweptPath> resolveSweptPath(const SweepDefinition& definition, const Document& document) {
+    const auto runsOf = [&document](const SweepPath& path,
+                                    std::string_view what) -> Result<std::vector<geometry::PlanarPath>> {
+        std::vector<geometry::PlanarPath> runs;
+        auto firstRun = resolveSweepPath(SweepPath{.sketch = path.sketch, .edges = path.edges}, document);
+        if (!firstRun) {
+            return std::unexpected(firstRun.error());
+        }
+        runs.push_back(std::move(*firstRun));
+        for (std::size_t i = 0; i < path.runs.size(); ++i) {
+            auto run = resolveSweepPath(SweepPath{.sketch = path.runs[i].sketch, .edges = path.runs[i].edges},
+                                        document);
+            if (!run) {
+                return makeError(run.error().code,
+                                 std::format("{} run {}: {}", what, i + 2, run.error().message));
+            }
+            runs.push_back(std::move(*run));
+        }
+        return runs;
+    };
+
+    auto runs = runsOf(definition.path, "the path's");
+    if (!runs) {
+        return std::unexpected(runs.error());
+    }
+    geometry::SweptPath path{.runs = std::move(*runs)};
+    if (definition.guide) {
+        auto guide = runsOf(*definition.guide, "the guide's");
+        if (!guide) {
+            return std::unexpected(guide.error());
+        }
+        path.guide = std::move(*guide);
+    }
+    if (definition.twistParameter) {
+        auto value = detail::drivingValue<Angle>(document, *definition.twistParameter, "twist parameter");
+        if (!value) {
+            return std::unexpected(value.error());
+        }
+        path.twist = *value;
+    } else {
+        path.twist = definition.twist;
+    }
+    if (!isFinite(path.twist)) {
+        return makeError(ErrorCode::InvalidArgument,
+                         std::format("the twist must be finite, got {}", toString(path.twist, units::deg)));
+    }
+    return path;
+}
+
 Result<geometry::Body> sweepTool(const SweepFeature& feature, const Document& document) {
     const SweepDefinition& definition = feature.definition();
     const auto prefixed = [&](const Error& error) {
@@ -160,14 +212,29 @@ Result<geometry::Body> sweepTool(const SweepFeature& feature, const Document& do
     if (!regions) {
         return std::unexpected(regions.error());
     }
-    auto path = resolveSweepPath(definition.path, document);
+    auto path = resolveSweptPath(definition, document);
     if (!path) {
         return prefixed(path.error());
     }
-    // Path segment i is the path's edge i (resolveSweepPath() keeps the order).
-    const std::vector<EntityId>& edges = definition.path.edges;
-    const detail::PathEdgeOf along = [&edges](std::size_t segment) -> std::optional<EntityId> {
-        return segment < edges.size() ? std::optional<EntityId>{edges[segment]} : std::nullopt;
+    // Path segment i is the path's edge i, counted across the runs in the
+    // order of travel (resolveSweptPath() keeps that order), so a side face
+    // names the edge it actually runs along whichever sketch drew it.
+    // A path in one sketch names its edges as it always did; one that runs
+    // through several names the sketch too, since entity IDs repeat between
+    // sketches (P12-SWEEP-001).
+    const bool several = !definition.path.runs.empty();
+    std::vector<detail::PathEdge> edges;
+    for (const EntityId edge : definition.path.edges) {
+        edges.push_back({.sketch = several ? std::optional<SketchId>{definition.path.sketch} : std::nullopt,
+                         .edge = edge});
+    }
+    for (const SweepPathRun& run : definition.path.runs) {
+        for (const EntityId edge : run.edges) {
+            edges.push_back({.sketch = run.sketch, .edge = edge});
+        }
+    }
+    const detail::PathEdgeOf along = [edges = std::move(edges)](std::size_t segment) -> std::optional<detail::PathEdge> {
+        return segment < edges.size() ? std::optional<detail::PathEdge>{edges[segment]} : std::nullopt;
     };
     // SweepOrientation::FollowPath is makeSweep's frame: the only mode.
     auto solid = detail::uniteRegionSolids(*regions, [&](const LabelledRegion& region) {

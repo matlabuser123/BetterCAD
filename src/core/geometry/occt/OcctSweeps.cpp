@@ -4,6 +4,7 @@
 #include "core/geometry/LoftPlan.hpp"
 #include "core/geometry/ProfileExtent.hpp"
 #include "core/geometry/SweepPlan.hpp"
+#include "core/geometry/SweptPathPlan.hpp"
 #include "core/geometry/occt/OcctBody.hpp"
 #include "core/geometry/occt/OcctFaceNames.hpp"
 #include "core/geometry/occt/OcctGuard.hpp"
@@ -20,6 +21,8 @@
 #include <BRepBuilderAPI_TransitionMode.hxx>
 #include <BRepCheck_Analyzer.hxx>
 #include <BRepOffsetAPI_MakePipeShell.hxx>
+#include <GeomAPI_PointsToBSpline.hxx>
+#include <NCollection_Array1.hxx>
 #include <BRepOffsetAPI_ThruSections.hxx>
 #include <BRepPrimAPI_MakePrism.hxx>
 #include <BRepPrimAPI_MakeRevol.hxx>
@@ -619,6 +622,264 @@ Result<Body> makeRevolution(const PlanarRegion& region, const Axis3D& axis, Angl
         }
         return body;
     });
+}
+
+namespace {
+
+/// A path of measured model-space segments as one connected wire, with a
+/// shared vertex at every join and the first vertex again when it closes.
+/// Call inside guardKernelCall.
+Result<TopoDS_Wire> makeSpatialWire(const std::vector<detail::SpatialSegment>& segments, bool closed) {
+    BRepBuilderAPI_MakeWire wire;
+    TopoDS_Vertex first;
+    TopoDS_Vertex previous;
+    for (std::size_t i = 0; i < segments.size(); ++i) {
+        const detail::SpatialSegment& segment = segments[i];
+        if (segment.circle) {
+            const gp_Ax2 frame(occt::toModel(segment.center), occt::toModel(segment.axis),
+                               gp_Dir(gp_Vec(occt::toModel(segment.center), occt::toModel(segment.start))));
+            wire.Add(BRepBuilderAPI_MakeEdge(gp_Circ(frame, occt::toModel(segment.radius))).Edge());
+            continue;
+        }
+        const TopoDS_Vertex start =
+            i == 0 ? BRepBuilderAPI_MakeVertex(occt::toModel(segment.start)).Vertex() : previous;
+        if (i == 0) {
+            first = start;
+        }
+        const bool last = i + 1 == segments.size();
+        const TopoDS_Vertex end =
+            last && closed ? first : BRepBuilderAPI_MakeVertex(occt::toModel(segment.end)).Vertex();
+        BRepBuilderAPI_MakeEdge edge = [&] {
+            if (segment.straight) {
+                return BRepBuilderAPI_MakeEdge(start, end);
+            }
+            const gp_Pnt center = occt::toModel(segment.center);
+            const gp_Ax2 frame(center, occt::toModel(segment.axis),
+                               gp_Dir(gp_Vec(center, occt::toModel(segment.start))));
+            return BRepBuilderAPI_MakeEdge(gp_Circ(frame, occt::toModel(segment.radius)), start, end);
+        }();
+        if (!edge.IsDone()) {
+            return makeError(ErrorCode::Internal,
+                             std::format("makeSweep: the kernel cannot make an edge of path segment {}", i + 1));
+        }
+        wire.Add(edge.Edge());
+        if (!wire.IsDone()) {
+            return makeError(ErrorCode::Internal, "makeSweep: the path's edges do not form a connected wire");
+        }
+        previous = end;
+    }
+    return wire.Wire();
+}
+
+/// How many samples the auxiliary spine of a twist is fitted through: more
+/// for more turn, so that the fitted curve follows theta(u) = u theta_total
+/// closely whatever the total is. Fixed by the twist alone, so the same
+/// definition always gives the same curve.
+std::size_t twistSamples(Angle twist) {
+    constexpr double kQuarterTurn = std::numbers::pi / 2.0;
+    const double quarters = std::ceil(std::abs(twist.si()) / kQuarterTurn);
+    const double samples = 64.0 + 64.0 * quarters;
+    return static_cast<std::size_t>(std::min(samples, 512.0));
+}
+
+/// The auxiliary spine of a twist: the path offset by @p radius in the
+/// direction that BetterCAD's own rotation-minimizing frame gives, turned by
+/// theta(u) = u * twist about the tangent. The frame starts on @p start, the
+/// profile plane's X axis, so the twist is measured from the profile's own
+/// X axis. Call inside guardKernelCall.
+Result<TopoDS_Wire> makeTwistGuide(const detail::SweptPlan& plan, Angle twist, const Direction3D& start,
+                                   Length radius) {
+    const std::size_t count = twistSamples(twist);
+    const std::vector<detail::PathSample> samples = detail::samplePath(plan.segments, start, count);
+    if (samples.size() < 2) {
+        return makeError(ErrorCode::Internal, "makeSweep: the path cannot be sampled for its twist");
+    }
+    NCollection_Array1<gp_Pnt> points(1, static_cast<int>(samples.size()));
+    for (std::size_t i = 0; i < samples.size(); ++i) {
+        const detail::PathSample& sample = samples[i];
+        const auto across = sample.tangent.cross(sample.reference);
+        if (!across) {
+            return makeError(ErrorCode::Internal, "makeSweep: the path's frame is degenerate");
+        }
+        const double theta = sample.u * twist.si();
+        const Translation3D offset =
+            Translation3D::along(sample.reference, radius * std::cos(theta)) +
+            Translation3D::along(*across, radius * std::sin(theta));
+        points.SetValue(static_cast<int>(i + 1), occt::toModel(sample.point + offset));
+    }
+    GeomAPI_PointsToBSpline fit(points);
+    if (fit.Curve().IsNull()) {
+        return makeError(ErrorCode::Internal, "makeSweep: the kernel cannot fit the twist's guide curve");
+    }
+    return BRepBuilderAPI_MakeWire(BRepBuilderAPI_MakeEdge(fit.Curve()).Edge()).Wire();
+}
+
+/// One profile loop swept along a spatial, twisted or guided path. The frame
+/// is the one @p plan records: a guide carries the section where a guide or
+/// a twist is given, and the kernel's corrected Frenet frame otherwise,
+/// which on a planar path gives the same solid as the fixed binormal
+/// (kernel-probe case G). Call inside guardKernelCall.
+Result<Body> sweepLoopAlong(const TopoDS_Wire& spine, const TopoDS_Wire* guide, const TopoDS_Wire& wire,
+                            const LoopEdges& edges, std::size_t loop, std::size_t pathSegments,
+                            const SweptFaceNamer& namer) {
+    BRepOffsetAPI_MakePipeShell pipe(spine);
+    if (guide != nullptr) {
+        // NoContact without curvilinear equivalence: the two the probe
+        // measured as building a valid solid that keeps the profile's area
+        // (cases D and E). The other combinations fail or scale the section.
+        pipe.SetMode(*guide, false, BRepFill_NoContact);
+    } else {
+        pipe.SetMode(false); // corrected Frenet
+    }
+    pipe.SetTransitionMode(BRepBuilderAPI_RightCorner);
+    pipe.Add(wire, /*WithContact=*/false, /*WithCorrection=*/false);
+    pipe.Build();
+    if (!pipe.IsDone()) {
+        return makeError(ErrorCode::Internal, "makeSweep: the kernel could not sweep the profile along the path");
+    }
+    if (!pipe.MakeSolid()) {
+        return makeError(ErrorCode::Internal, "makeSweep: the kernel could not close the swept profile into a solid");
+    }
+    const TopoDS_Shape shape = pipe.Shape();
+    FaceNaming naming(shape, namer);
+    if (namer) {
+        if (loop == 0) {
+            naming.name(pipe.FirstShape(), SweptFace{.kind = SweptFace::Kind::First});
+            naming.name(pipe.LastShape(), SweptFace{.kind = SweptFace::Kind::Last});
+        }
+        for (std::size_t segment = 0; segment < edges.size(); ++segment) {
+            const occt::ShapeList& swept = pipe.Generated(edges[segment]);
+            if (static_cast<std::size_t>(swept.Extent()) != pathSegments) {
+                continue;
+            }
+            std::size_t along = 0;
+            for (occt::ShapeList::Iterator it(swept); it.More(); it.Next()) {
+                naming.name(it.Value(), SweptFace{.kind = SweptFace::Kind::Side,
+                                                  .loop = loop,
+                                                  .segment = segment,
+                                                  .pathSegment = along++});
+            }
+        }
+    }
+    return occt::BodyAccess::makeBody(shape, naming.take(shape));
+}
+
+} // namespace
+
+Result<Body> makeSweep(const PlanarRegion& region, const SweptPath& path) {
+    return makeSweep(region, path, SweptFaceNamer{});
+}
+
+Result<Body> makeSweep(const PlanarRegion& region, const SweptPath& path, const SweptFaceNamer& namer) {
+    // One planar run with neither a twist nor a guide is P11-FEAT-008's
+    // sweep, built exactly as it was: the same code, the same solid.
+    if (path.runs.size() == 1 && path.twist == Angle{} && path.guide.empty()) {
+        return makeSweep(region, path.runs.front(), namer);
+    }
+    if (auto valid = checkRegion(region); !valid) {
+        return std::unexpected(valid.error());
+    }
+    auto plan = detail::planSweptPath(region, path);
+    if (!plan) {
+        return std::unexpected(plan.error());
+    }
+    const bool guided = plan->frame == SweepFrame::Guided;
+    std::optional<detail::SweptPlan> guidePlan;
+    if (!path.guide.empty()) {
+        // The guide is checked as a curve: connected, non-degenerate and
+        // finite. Nothing sits on it -- it carries the section rather than
+        // supporting it -- so it has no profile and no placement rule.
+        SweptPath asPath;
+        asPath.runs = path.guide;
+        auto planned = detail::planPathCurve(asPath, "the guide ");
+        if (!planned) {
+            return std::unexpected(planned.error());
+        }
+        guidePlan = std::move(*planned);
+    }
+
+    auto swept = occt::guardKernelCall("makeSweep", [&]() -> Result<Body> {
+        if (auto face = makeProfileFace(region, 0.0, "makeSweep"); !face) {
+            return std::unexpected(face.error());
+        }
+        auto spine = makeSpatialWire(plan->segments, plan->closed);
+        if (!spine) {
+            return std::unexpected(spine.error());
+        }
+        std::optional<TopoDS_Wire> guide;
+        if (guidePlan) {
+            auto wire = makeSpatialWire(guidePlan->segments, guidePlan->closed);
+            if (!wire) {
+                return std::unexpected(wire.error());
+            }
+            guide = *wire;
+        } else if (path.twist != Angle{}) {
+            auto wire = makeTwistGuide(*plan, path.twist, region.plane.xAxis(), plan->reach);
+            if (!wire) {
+                return std::unexpected(wire.error());
+            }
+            guide = *wire;
+        }
+        WireBuilder loops(region.plane, 0.0);
+        const auto sweepOf = [&](const ProfileLoop& loop, std::size_t index) -> Result<Body> {
+            const bool reverse = signedArea(loop) < Area{};
+            LoopEdges edges;
+            auto wire = loops.build(reverse ? reversed(loop) : loop, &edges);
+            if (!wire) {
+                return std::unexpected(wire.error());
+            }
+            if (reverse) {
+                std::ranges::reverse(edges);
+            }
+            return sweepLoopAlong(*spine, guide ? &*guide : nullptr, *wire, edges, index, plan->segments.size(),
+                                  namer);
+        };
+        auto body = sweepOf(region.outer, 0);
+        for (std::size_t i = 0; body && i < region.holes.size(); ++i) {
+            auto hole = sweepOf(region.holes[i], i + 1);
+            body = hole ? booleanDifference(*body, *hole) : hole;
+        }
+        return body;
+    });
+    if (!swept) {
+        return std::unexpected(swept.error());
+    }
+    const Body& body = *swept;
+    if (body.isEmpty() || body.topology().solids != 1 || !body.isValid()) {
+        return makeError(ErrorCode::Internal, "makeSweep: the kernel produced an invalid solid");
+    }
+    auto intersects = occt::guardKernelCall("makeSweep", [&]() -> Result<bool> {
+        BRepAlgoAPI_Check check(*occt::BodyAccess::shape(body), /*bTestSE=*/false, /*bTestSI=*/true);
+        return !check.IsValid();
+    });
+    if (!intersects) {
+        return std::unexpected(intersects.error());
+    }
+    if (*intersects) {
+        return makeError(ErrorCode::InvalidArgument,
+                         "makeSweep: the swept solid would intersect itself: the path comes back within the profile's "
+                         "reach of itself");
+    }
+    const auto properties = body.massProperties();
+    if (!properties || !isFinite(properties->volume) || !(properties->volume > Volume{})) {
+        return makeError(ErrorCode::Internal,
+                         "makeSweep: the kernel produced a solid without a finite positive volume");
+    }
+    // Pappus, as for a planar path: the centroid rides on the path, so the
+    // volume is the region's area times the path's length however the
+    // section turns. A guided sweep follows a curve fitted through samples,
+    // so it meets that to 1e-5 rather than the 1e-9 an exact frame gives
+    // (measured: kernel-probe cases D, E and H, worst 1.9e-6).
+    const double tolerance = guided ? 1e-5 : 1e-9;
+    const double actual = properties->volume.in(units::mm3);
+    const double expected = plan->expectedVolume.in(units::mm3);
+    if (std::abs(actual - expected) > tolerance * expected) {
+        return makeError(ErrorCode::Internal,
+                         std::format("makeSweep: the kernel's solid encloses {:.12g} mm^3, but the profile's area "
+                                     "times the length of its centroid's path is {:.12g} mm^3",
+                                     actual, expected));
+    }
+    return body;
 }
 
 Result<Body> makeSweep(const PlanarRegion& region, const PlanarPath& path) {

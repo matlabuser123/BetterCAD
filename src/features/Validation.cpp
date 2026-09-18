@@ -350,13 +350,22 @@ private:
             } else if (const auto* sweep = dynamic_cast<const SweepFeature*>(&object)) {
                 const SweepDefinition& definition = sweep->definition();
                 checkProfile(object.id(), definition.profile);
-                const ObjectId pathId{definition.path.sketch};
-                if (document_.contains(pathId) && document_.findObjectAs<sketch::Sketch>(pathId) == nullptr) {
-                    wrongKind(object.id(), "the path is in", pathId, kindOf(document_, pathId), "a sketch");
-                }
-                if (const sketch::Sketch* path = sweepPathSketch(*sweep)) {
-                    for (const EntityId edge : definition.path.edges) {
-                        const sketch::Entity* entity = path->findEntity(edge);
+                // Every run of the path and of the guide, in the order of
+                // travel (P12-SWEEP-001): each must be a sketch, and each of
+                // its edges a line, arc or circle.
+                const auto checkRun = [&](SketchId sketchId, const std::vector<EntityId>& edges,
+                                          std::string_view reference) {
+                    const ObjectId id{sketchId};
+                    if (document_.contains(id) && document_.findObjectAs<sketch::Sketch>(id) == nullptr) {
+                        wrongKind(object.id(), reference, id, kindOf(document_, id), "a sketch");
+                        return;
+                    }
+                    const sketch::Sketch* run = document_.findObjectAs<sketch::Sketch>(id);
+                    if (run == nullptr) {
+                        return;
+                    }
+                    for (const EntityId edge : edges) {
+                        const sketch::Entity* entity = run->findEntity(edge);
                         const bool pathKind = entity == nullptr || entity->type() == sketch::EntityType::Line ||
                                               entity->type() == sketch::EntityType::Arc ||
                                               entity->type() == sketch::EntityType::Circle;
@@ -366,6 +375,16 @@ private:
                                             label(document_, object.id()), edge,
                                             withArticle(sketch::toString(entity->type()))));
                         }
+                    }
+                };
+                checkRun(definition.path.sketch, definition.path.edges, "the path is in");
+                for (const SweepPathRun& run : definition.path.runs) {
+                    checkRun(run.sketch, run.edges, "a run of the path is in");
+                }
+                if (definition.guide) {
+                    checkRun(definition.guide->sketch, definition.guide->edges, "the guide is in");
+                    for (const SweepPathRun& run : definition.guide->runs) {
+                        checkRun(run.sketch, run.edges, "a run of the guide is in");
                     }
                 }
             } else if (const auto* loft = dynamic_cast<const LoftFeature*>(&object)) {
@@ -465,15 +484,28 @@ private:
                                     revolve->definition().axis.line, label(document_, sketch->id())));
                 }
             } else if (const auto* sweep = dynamic_cast<const SweepFeature*>(&object)) {
-                const sketch::Sketch* sketch = sweepPathSketch(*sweep);
-                if (sketch == nullptr) {
-                    continue;
+                const auto missing = [&](SketchId sketchId, const std::vector<EntityId>& edges) {
+                    const sketch::Sketch* run = document_.findObjectAs<sketch::Sketch>(ObjectId{sketchId});
+                    if (run == nullptr) {
+                        return;
+                    }
+                    for (const EntityId edge : edges) {
+                        if (run->findEntity(edge) == nullptr) {
+                            add(ValidationCheck::MissingReferences, Severity::Error, object.id(),
+                                std::format("{}: the path edge {} does not exist in {}",
+                                            label(document_, object.id()), edge, label(document_, run->id())));
+                        }
+                    }
+                };
+                const SweepDefinition& definition = sweep->definition();
+                missing(definition.path.sketch, definition.path.edges);
+                for (const SweepPathRun& run : definition.path.runs) {
+                    missing(run.sketch, run.edges);
                 }
-                for (const EntityId edge : sweep->definition().path.edges) {
-                    if (sketch->findEntity(edge) == nullptr) {
-                        add(ValidationCheck::MissingReferences, Severity::Error, object.id(),
-                            std::format("{}: the path edge {} does not exist in {}", label(document_, object.id()),
-                                        edge, label(document_, sketch->id())));
+                if (definition.guide) {
+                    missing(definition.guide->sketch, definition.guide->edges);
+                    for (const SweepPathRun& run : definition.guide->runs) {
+                        missing(run.sketch, run.edges);
                     }
                 }
             } else if (const auto* rib = dynamic_cast<const RibFeature*>(&object)) {

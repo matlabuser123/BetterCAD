@@ -200,8 +200,10 @@ Result<std::vector<FaceCopy>> faceCopiesFromJson(const Json& face, std::string_v
     return copies;
 }
 
-/// {"role": ..., "entity": id, "along": id, "edge": n, "copies": [...]},
-/// keys a selector does not use left out.
+/// {"role": ..., "entity": id, "along": id, "along_sketch": id, "edge": n,
+/// "copies": [...]}, keys a selector does not use left out. A side named
+/// before P12-SWEEP-001 has no "along_sketch", and its path ran through one
+/// sketch, so it needs none.
 Json faceSelectorToJson(const FaceSelector& selector) {
     Json face = Json::object();
     face["role"] = std::string{nameIn(kFaceRoles, selector.role)};
@@ -210,6 +212,9 @@ Json faceSelectorToJson(const FaceSelector& selector) {
     }
     if (selector.along) {
         face["along"] = selector.along->value();
+    }
+    if (selector.alongSketch) {
+        face["along_sketch"] = selector.alongSketch->value();
     }
     if (selector.edge) {
         face["edge"] = *selector.edge;
@@ -229,24 +234,30 @@ Json faceSelectorToJson(const FaceSelector& selector) {
 
 /// The selector at @p path; not yet validated.
 Result<FaceSelector> faceSelectorFromJson(const Json& face, std::string_view path) {
-    if (auto valid = requireObject(face, path, {"role", "entity", "along", "edge", "copies"}); !valid) {
+    if (auto valid = requireObject(face, path, {"role", "entity", "along", "along_sketch", "edge", "copies"});
+        !valid) {
         return std::unexpected(valid.error());
     }
     auto role = valueIn(kFaceRoles, face, "role", path);
     auto entity = readOptionalId(face, "entity", path);
     auto along = readOptionalId(face, "along", path);
+    auto alongSketch = readOptionalId(face, "along_sketch", path);
     auto edge = readOptionalCount(face, "edge", path);
     auto copies = faceCopiesFromJson(face, path);
-    if (const Error* error =
-            firstError({errorOf(role), errorOf(entity), errorOf(along), errorOf(edge), errorOf(copies)})) {
+    if (const Error* error = firstError({errorOf(role), errorOf(entity), errorOf(along), errorOf(alongSketch),
+                                         errorOf(edge), errorOf(copies)})) {
         return std::unexpected(*error);
     }
     const auto entityOf = [](const std::optional<std::uint64_t>& id) {
         return id ? std::optional<EntityId>{EntityId::fromValue(*id)} : std::nullopt;
     };
+    const auto sketchOf = [](const std::optional<std::uint64_t>& id) {
+        return id ? std::optional<SketchId>{SketchId::fromValue(*id)} : std::nullopt;
+    };
     return FaceSelector{.role = *role,
                         .entity = entityOf(*entity),
                         .along = entityOf(*along),
+                        .alongSketch = sketchOf(*alongSketch),
                         .edge = *edge,
                         .copies = std::move(*copies)};
 }

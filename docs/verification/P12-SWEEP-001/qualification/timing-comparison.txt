@@ -1,0 +1,18 @@
+﻿pattern001-release: 1111 tests,    827.46 s summed
+sweep001-release: 1146 tests,    921.99 s summed
+
+test                                                                  pattern001-releasesweep001-release
+unit.ReferenceModel_AllModelsStressRegression                                  24.56         24.39
+unit.LinearPattern_DoesNotAccumulateTransformDrift                             19.28         19.01
+unit.ReferenceModel_MountingBracketRegeneratesDeterministically                18.19         17.55
+unit.ReferenceModel_AllModelsBuildInOneProcess                                 16.32         15.75
+unit.ReferenceModel_FlangeRegeneratesDeterministically                         15.69         14.97
+unit.ReferenceModel_AllModelsRegenerateAfterAChange                            14.89         14.19
+unit.ReferenceModel_PulleyRegeneratesDeterministically                         13.75         13.00
+unit.ReferenceModel_ShaftRegeneratesDeterministically                          11.92         11.17
+  tests in both logs: 1111; only in the new log: 35; only in the old log: 0
+  new tests: 39.93 s summed
+  existing tests: +54.60 s summed change
+  existing tests under 0.5 s: 816, -4.02 s summed change
+  existing tests of 0.5 s or more: 295, median new/old ratio 1.120, 0.79 of them slower
+  largest move among the 12 slowest: -0.75 s (unit.ReferenceModel_PulleyRegeneratesDeterministically)
