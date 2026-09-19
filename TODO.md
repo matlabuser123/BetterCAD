@@ -12,11 +12,13 @@
 ## Status
 
 ```text
-Current: None — P12 qualified
-Next:    Explicit scope decision required
+Current: P13 — Assemblies
+Next:    P13-ARCH-001 — Assembly Architecture and Contracts
+Then:    P13-COMP-001 — Component Definitions and Instances
 
 Released:       v0.1.0 — P0–P10
 Qualified:      P11, P12
+P13:            Authorized; architecture not yet decided
 ```
 
 ---
@@ -163,6 +165,88 @@ P12 → QUALIFIED
 
 ---
 
+# NEXT — P13-ARCH-001
+
+## P13 — Assemblies
+
+**Authorized.** P12 made BetterCAD a capable parametric *part* modeller.
+P13 moves it toward a mechanical *product* system: several parts placed
+relative to one another, held by constraints, regenerating as one.
+
+Assemblies touch nearly every invariant the platform already has — document
+ownership, stable identity, persistence, configurations, dependency-driven
+regeneration, undo/redo, the CLI — and are the foundation drawings, BOMs,
+motion and simulation would later build on. So the phase starts with
+architecture, not with mates.
+
+### Milestones
+
+Only `P13-ARCH-001` is open. The rest are the planned shape of the phase and
+are **not** authorized to be implemented: each becomes open when its
+predecessor passes its gate.
+
+```text
+P13-ARCH-001     Assembly architecture and contracts        <- OPEN
+P13-COMP-001     Component definitions and instances
+P13-XFORM-001    Component transforms
+P13-REF-001      External and internal part references
+P13-MATE-001     Basic constraints: fixed, coincident, concentric,
+                 parallel, perpendicular, distance, angle
+P13-SOLVE-001    Assembly constraint solver
+P13-MATE-002     Mechanical mates: revolute, slider, cylindrical, planar
+P13-CONF-001     Assembly configurations and suppression
+P13-STREF-001    Stable assembly references
+P13-REGEN-001    Assembly dependency and regeneration
+P13-CMD-001      Commands, undo and redo
+P13-PERSIST-001  Save and load assembly intent
+P13-CLI-001      Headless assembly workflows
+P13-STEP-001     Assembly STEP export and read-back
+P13-REFMOD-001   Production assembly reference models
+P13-QUAL-001     Full P13 qualification
+```
+
+## P13-ARCH-001 — Assembly Architecture and Contracts
+
+**This milestone designs; it does not implement.** Its output is decisions
+and contracts, recorded as ADRs and in `ARCHITECTURE.md`. No feature, no
+solver and no file-format change belongs to it. Writing a stub, a
+placeholder type or an unused header to "start" the implementation is a
+failure of this milestone, not progress in it.
+
+* [ ] Trace what assemblies touch in the existing architecture
+* [ ] Decide where an assembly lives relative to `Document`
+* [ ] Decide component instance identity and its stability contract
+* [ ] Decide how a component references a part, internal and external
+* [ ] Decide placement: transform representation and what drives it
+* [ ] Decide how mates are represented as document state
+* [ ] Decide how the assembly reaches the dependency graph and regeneration
+* [ ] Decide the failure model for unresolved references and over-constraint
+* [ ] Decide the persistent representation and its compatibility contract
+* [ ] Decide how configurations reach components and mates
+* [ ] Decide module, layer and OCCT containment for the new code
+* [ ] Compare two or three serious candidates for each significant decision
+* [ ] Record decisions and what was rejected as ADRs
+* [ ] Update `ARCHITECTURE.md` with the invariants the phase must hold
+* [ ] Record evidence in `docs/verification/P13-ARCH-001/`
+
+### Gate
+
+```text
+Every decision above made, with its alternatives and its reasons
++ each architecturally significant decision recorded as an ADR
++ ARCHITECTURE.md states the new invariants
++ no executable source or test changed by this milestone
++ evidence recorded
+```
+
+Only then:
+
+```text
+P13-ARCH-001 — [x]
+```
+
+---
+
 # Known Deferred Work
 
 Not part of P12:
@@ -210,7 +294,6 @@ These require explicit future scope authorization.
 Do not start without explicit authorization.
 
 ```text
-P13  Assemblies
 P14  Technical Drawings
 P15  Materials / Engineering Data
 P16  Meshing
