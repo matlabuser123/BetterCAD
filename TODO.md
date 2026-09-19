@@ -141,12 +141,76 @@ Next → P13-XFORM-001
 
 ---
 
+# NEXT — P13-XFORM-001
+
+## Component Transforms
+
+Give a component a position. `P13-COMP-001` deliberately left a component
+with no placement field at all, so this milestone introduces the first one.
+
+**The binding constraint is ADR-005: canonical placement intent and derived
+solved/world transforms stay separate.** A solved world transform must never
+become authoritative state, however convenient that is. Storing it would
+conflict with the assembly architecture and make mate solving, regeneration,
+persistence and undo/redo harder later.
+
+```text
+canonical state:
+ComponentInstance
+    └── local placement
+
+derived state:
+local placement
+    + parent/product context
+    + future mate solve
+    ↓
+world / solved transform
+```
+
+* [ ] Define canonical rigid-transform representation
+* [ ] Implement component local placement
+* [ ] Keep solved/world transforms derived, not canonical
+* [ ] Validate transform composition/order
+* [ ] Validate rotation convention and units
+* [ ] Multiple instances transform independently
+* [ ] Validate identity/default placement
+* [ ] Save/load preserves canonical placement
+* [ ] Invalid transforms fail atomically
+* [ ] Deterministic transform results
+* [ ] Adversarial review PASS
+* [ ] Debug / Release / Debug-shared regression PASS
+* [ ] Evidence in `docs/verification/P13-XFORM-001/`
+
+### Gate
+
+```text
+rigid-transform model correct
++ canonical/derived state separation correct
++ composition mathematically correct
++ multiple-instance behavior correct
++ persistence PASS
++ failure atomicity PASS
++ determinism PASS
++ adversarial review PASS
++ full regression PASS
++ 0 unexpected warnings
+```
+
+Only then:
+
+```text
+P13-XFORM-001 → [x]
+Next → P13-REF-001
+```
+
+---
+
 # Planned P13 Sequence
 
 ```text
 P13-ARCH-001     Assembly architecture and contracts          DONE
 P13-COMP-001     Component definitions and instances          DONE
-P13-XFORM-001    Component transforms
+P13-XFORM-001    Component transforms                         OPEN
 P13-REF-001      Internal / external reference infrastructure
 P13-MATE-001     Basic assembly constraints
 P13-SOLVE-001    Assembly constraint solver
