@@ -319,6 +319,116 @@ Next → P13-SOLVE-001
 
 ---
 
+# NEXT — P13-SOLVE-001
+
+## Assembly Constraint Solver
+
+Solve mate intent into component transforms.
+
+```text
+P13-MATE-001   stores assembly intent
+P13-SOLVE-001  solves that intent into derived component transforms
+```
+
+A solved transform is **derived state**: recomputed by regeneration, held
+beside the bodies keyed by `ComponentId`, dropped when a component's
+regeneration fails exactly as a body is, and **never written to `.bcad`**.
+
+### What ADR-005 already binds
+
+[ADR-005](docs/architecture/decisions/ADR-005-placement-is-intent-transforms-are-derived.md)
+decided this milestone's hardest constraints while rejecting the easier
+options, and says so in terms. They are not open questions:
+
+* **No seed, no warm start.** ADR-005 considered persisting the last solved
+  transform as a solver seed — what the sketch solver actually does — and
+  rejected it. The solver must converge **from placement intent alone**.
+  ADR-005 calls this "the honest cost" and "a real constraint on
+  `P13-SOLVE-001`": intent must be a good enough starting point, and the
+  solver must be robust from it.
+* **Why the seed was rejected**, so it is not quietly reintroduced: a seeded
+  solve depends on save history, so two documents with identical intent could
+  solve differently. `P12-PARAM-002` measured warm-starting's path-dependence
+  at **1.3e-15** per configuration cycle — bounded, but real enough to be a
+  recorded limitation. Repeating a known wart in a subsystem designed from
+  scratch would be choosing it deliberately.
+* **Deterministic start and deterministic iteration order.** The dependency
+  graph already breaks ties by ascending ID; ADR-005 requires "the assembly
+  solve must be equally order-free".
+* **Grounding is reported, never assumed.** At least one component must be
+  grounded or the assembly is free to translate and rotate as a whole —
+  "an under-constrained state the solver must *report*, not silently pin".
+  Grounding is the `Fixed` mate from `P13-MATE-001`; there is no component
+  flag and none is needed.
+
+### Five states, never a boolean
+
+`CLAUDE.md` requires sketch solving to distinguish under-constrained, fully
+constrained, over-constrained, inconsistent and solver failure, and to report
+conflicts, redundancy, unresolved DOF and residuals. The assembly solver is
+held to the same standard: a solve that failed and a solve that succeeded
+into an under-constrained assembly are different answers, and collapsing
+either into `false` loses the one thing the engineer needs.
+
+* [ ] Define solver input/output contracts
+* [ ] Convert mate intent into a constraint problem
+* [ ] Implement component DOF representation
+* [ ] Implement residual evaluation for all 7 basic mate types
+* [ ] Implement Jacobian / derivative path
+* [ ] Implement nonlinear solve loop
+* [ ] Apply solved transforms as derived state only
+* [ ] Preserve canonical component placement intent
+* [ ] Detect fully constrained assemblies
+* [ ] Detect under-constrained assemblies / remaining DOF
+* [ ] Detect inconsistent / over-constrained systems
+* [ ] Detect redundant constraints where feasible
+* [ ] Validate convergence criteria and tolerances
+* [ ] Validate deterministic solver results
+* [ ] Validate failure atomicity / no partial solved state
+* [ ] Independently validate analytic assembly cases
+* [ ] Validate unresolved mate/reference handling
+* [ ] Adversarial review PASS
+* [ ] Debug / Release / Debug-shared regression PASS
+* [ ] Evidence in `docs/verification/P13-SOLVE-001/`
+
+### Gate
+
+```text
+solver model correct
++ all 7 basic mate types solved
++ residuals/Jacobian validated
++ DOF classification correct
++ under/fully/over-constrained behavior correct
++ canonical/derived state separation preserved
++ convergence validated
++ independent analytical cases PASS
++ failure atomicity PASS
++ determinism PASS
++ adversarial review PASS
++ full regression PASS
++ 0 unexpected warnings
+```
+
+ADR-005 also states what verifying it looks like: a saved and reloaded
+assembly solves to the same transforms as one built in memory; no transform
+appears in the `.bcad` JSON; a parameter change moves a component and
+restoring the parameter restores the transform; solving twice gives
+identical transforms; and an assembly with no grounded component reports an
+under-constrained state rather than choosing one.
+
+Tolerances need a reason, and a Jacobian is not well-conditioned algebra:
+expect to justify the convergence tolerance against the conditioning of the
+system rather than inheriting `1e-12` from the transform tests.
+
+Only then:
+
+```text
+P13-SOLVE-001 → [x]
+Next → P13-MATE-002
+```
+
+---
+
 # Planned P13 Sequence
 
 ```text
