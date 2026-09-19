@@ -94,6 +94,24 @@ Target directories not yet created: `src/assembly/`, `src/drawing/`,
 `src/simulation/`, `src/versioning/`, `benchmarks/`.
 `src/renderer/` and `src/scripting/` exist but are empty.
 
+The table above is the table in force, mirrored from
+`tests/architecture/CheckLayering.cmake`, which is its source of truth. The
+rule is **strictly lower**: same-layer cross-module dependencies are
+violations, and an unknown module is itself a violation.
+
+`P13-ARCH-001` decided the table assemblies will need
+([ADR-006](docs/architecture/decisions/ADR-006-assembly-module-and-layer.md)).
+It is **not yet in force** and is applied by the milestone that creates
+`src/assembly/`:
+
+```text
+core 0, sketch 1, features 2, assembly 3, io 4, renderer/scripting 5
+```
+
+`assembly` must sit above `features`, which it uses, and below `io`, which
+must serialize it; with `io` at 3 there is no number between them, so the
+renumber is unavoidable rather than cosmetic.
+
 ## Document Model
 
 `Document` is the canonical engineering container and the single owner of
@@ -107,10 +125,18 @@ Document
 ├── features
 ├── bodies
 ├── dependencies
+├── configurations
+├── component instances       [P13: decided, not built]
+├── mate constraints          [P13: decided, not built]
 ├── material assignments      [future]
-├── configurations            [future]
 └── analysis definitions      [future]
 ```
+
+Component instances and mate constraints are not a separate container: they
+are `DocumentObject` kinds like sketches and features, so they inherit stable
+IDs, revisions, dependency edges, commands, undo and the existing JSON
+envelope
+([ADR-002](docs/architecture/decisions/ADR-002-assemblies-live-in-the-document.md)).
 
 **Objects.** Persistent objects share a minimal `DocumentObject` abstraction —
 `id()`, `name()`, `state()`, `type()` — defined in the module that owns the kind,
@@ -283,6 +309,66 @@ over-constrained, inconsistent, converged-with-warnings and failed.
 **Profile extraction** is its own pipeline — connectivity analysis, wire
 construction, closed-profile detection, `Profile` objects. Extrude is not
 responsible for understanding arbitrary raw sketch entities.
+
+## Assemblies
+
+**Decided by `P13-ARCH-001`; not built.** The decisions are recorded as
+ADR-002 to ADR-006 in
+[docs/architecture/decisions/](docs/architecture/decisions/); what follows is
+the shape they produce, so the rest of this document is coherent while the
+phase is implemented.
+
+```text
+assembly model — constraint problem — solver — transforms
+```
+
+The mate model stays separate from the solver, mirroring the sketch solver.
+
+**Where it lives.** Components and mates are `DocumentObject` kinds inside
+the ordinary `Document`. `ComponentId` and `MateId` widen to `ObjectId`,
+because they are nodes in the dependency graph — unlike `ConfigurationId`,
+which deliberately does not widen, because a configuration feeds the graph
+rather than participating in it. A document is not typed "part" or
+"assembly"; it is whatever objects it holds.
+
+**The file format does not change.** A component serializes through the
+existing `{id, type, name, data}` envelope into the existing `objects`
+array. No new top-level key, no version bump, and a document with no
+components is byte-identical to one written before `P13`.
+
+**What a component references.** For `P13`, a part **in the same document**,
+by `ObjectId`, so its edges are ordinary edges. External document references
+are specified in ADR-003 and built by a later milestone; nothing in `P13`
+adds a field, key or type for them. The dependency graph is structurally
+single-document — `dependencies()` returns `ObjectId`, which is meaningless
+elsewhere — so cross-document references are a change to the document
+model, not a feature that slots into it.
+
+**What a mate may reference.** Only geometry that moves with the model:
+datum planes and axes (`PlaneReference`, `AxisReference`) and semantic
+`FaceName` references. A `FaceSignature` is refused, because it names a
+plane in model space and stops matching when a parameter moves it — the
+defect class `P12-REF-001` measured in three of six production models. In an
+assembly that defect would break every assembly instancing the part, far from
+the parameter that caused it.
+
+**Placement and transforms.** A component persists **placement intent**
+— `Fixed` or `Offset`, literal or parameter-driven, modelled on
+`CoordinateSystemDefinition` — and whether it is grounded. The solved
+`RigidTransform3D` is **derived state**, recomputed every regeneration and
+never written to the file, exactly as a B-Rep is derived from a feature tree.
+No solver seed is persisted: seeding from a stored solution would make the
+answer depend on save history, and the sketch solver's warm start has
+already been measured costing 1.3e-15 of path dependence per configuration
+cycle.
+
+**Failure.** Assembly constraint states mirror the sketch solver's and are
+never collapsed to a boolean: under-constrained, fully constrained,
+over-constrained, inconsistent and solver failure, with degrees of freedom,
+conflicting constraints and redundant constraints reported. An assembly with
+no grounded component is under-constrained and says so rather than pinning
+one silently. Reference failures stay distinct from solve failures, and a
+reference kind a mate may not use is a third, distinct error.
 
 ## Persistence
 
@@ -477,7 +563,13 @@ an implementation detail, and needs a deliberate decision recorded here first.
 12. Core depends on no GUI, renderer or kernel implementation type.
 13. Simulation does not depend on GUI.
 14. AI operates through structured, validated public APIs.
+15. Solved assembly transforms are derived state, never persisted intent.
+16. A mate references only geometry that moves with the model.
+17. Assembly constraint states are reported, never reduced to a boolean.
 ```
+
+Invariants 15 to 17 bind the milestones that build assemblies; nothing
+implements them yet.
 
 **Anti-patterns.** Do not introduce a global mutable document, Qt widgets owning
 CAD state, raw OCCT types outside adapters, persistent array-index IDs, unitless
@@ -495,12 +587,9 @@ CLI can exercise the core. If any is false, fix the architecture first.
 
 Reserved shapes for subsystems that do not exist. None is authorized.
 
-**Assemblies.** An assembly references part documents or internal definitions and
-holds component instances, mate constraints, configurations and solved
-transforms. A component carries `ComponentId`, source document, configuration,
-placement, suppression state and metadata. The mate model stays separate from
-the solver, mirroring the sketch solver:
-`assembly model → constraint problem → solver → transforms`.
+**Assemblies** are no longer reserved: `P13` is authorized and
+`P13-ARCH-001` has decided their architecture. See
+[Assemblies](#assemblies) above and ADR-002 to ADR-006.
 
 **Drawings.** A drawing references the model rather than copying it: sheets,
 views, dimensions, annotations, BOM. A view references a document revision, a

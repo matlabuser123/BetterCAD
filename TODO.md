@@ -13,12 +13,12 @@
 
 ```text
 Current: P13 — Assemblies
-Next:    P13-ARCH-001 — Assembly Architecture and Contracts
-Then:    P13-COMP-001 — Component Definitions and Instances
+Next:    P13-COMP-001 — Component Definitions and Instances
+Then:    P13-XFORM-001 — Component Transforms
 
 Released:       v0.1.0 — P0–P10
 Qualified:      P11, P12
-P13:            Authorized; architecture not yet decided
+P13:            Authorized; architecture decided (ADR-002 to ADR-006)
 ```
 
 ---
@@ -165,7 +165,7 @@ P12 → QUALIFIED
 
 ---
 
-# NEXT — P13-ARCH-001
+# DONE — P13-ARCH-001
 
 ## P13 — Assemblies
 
@@ -181,13 +181,16 @@ architecture, not with mates.
 
 ### Milestones
 
-Only `P13-ARCH-001` is open. The rest are the planned shape of the phase and
-are **not** authorized to be implemented: each becomes open when its
-predecessor passes its gate.
+`P13-ARCH-001` is done and `P13-COMP-001` is open. The rest are the planned
+shape of the phase and are **not** authorized to be implemented: each becomes
+open when its predecessor passes its gate. `P13-COMP-001` implements
+[ADR-002](docs/architecture/decisions/ADR-002-assemblies-live-in-the-document.md)
+and is the first P13 milestone to write code; its acceptance checklist is
+written when it is started.
 
 ```text
-P13-ARCH-001     Assembly architecture and contracts        <- OPEN
-P13-COMP-001     Component definitions and instances
+P13-ARCH-001     Assembly architecture and contracts        DONE
+P13-COMP-001     Component definitions and instances        <- OPEN
 P13-XFORM-001    Component transforms
 P13-REF-001      External and internal part references
 P13-MATE-001     Basic constraints: fixed, coincident, concentric,
@@ -207,27 +210,31 @@ P13-QUAL-001     Full P13 qualification
 
 ## P13-ARCH-001 — Assembly Architecture and Contracts
 
+Decided. ADR-002 to ADR-006 in
+[docs/architecture/decisions/](docs/architecture/decisions/); evidence in
+[docs/verification/P13-ARCH-001/](docs/verification/P13-ARCH-001/README.md).
+
 **This milestone designs; it does not implement.** Its output is decisions
 and contracts, recorded as ADRs and in `ARCHITECTURE.md`. No feature, no
 solver and no file-format change belongs to it. Writing a stub, a
 placeholder type or an unused header to "start" the implementation is a
 failure of this milestone, not progress in it.
 
-* [ ] Trace what assemblies touch in the existing architecture
-* [ ] Decide where an assembly lives relative to `Document`
-* [ ] Decide component instance identity and its stability contract
-* [ ] Decide how a component references a part, internal and external
-* [ ] Decide placement: transform representation and what drives it
-* [ ] Decide how mates are represented as document state
-* [ ] Decide how the assembly reaches the dependency graph and regeneration
-* [ ] Decide the failure model for unresolved references and over-constraint
-* [ ] Decide the persistent representation and its compatibility contract
-* [ ] Decide how configurations reach components and mates
-* [ ] Decide module, layer and OCCT containment for the new code
-* [ ] Compare two or three serious candidates for each significant decision
-* [ ] Record decisions and what was rejected as ADRs
-* [ ] Update `ARCHITECTURE.md` with the invariants the phase must hold
-* [ ] Record evidence in `docs/verification/P13-ARCH-001/`
+* [x] Trace what assemblies touch in the existing architecture
+* [x] Decide where an assembly lives relative to `Document`
+* [x] Decide component instance identity and its stability contract
+* [x] Decide how a component references a part, internal and external
+* [x] Decide placement: transform representation and what drives it
+* [x] Decide how mates are represented as document state
+* [x] Decide how the assembly reaches the dependency graph and regeneration
+* [x] Decide the failure model for unresolved references and over-constraint
+* [x] Decide the persistent representation and its compatibility contract
+* [x] Decide how configurations reach components and mates
+* [x] Decide module, layer and OCCT containment for the new code
+* [x] Compare two or three serious candidates for each significant decision
+* [x] Record decisions and what was rejected as ADRs
+* [x] Update `ARCHITECTURE.md` with the invariants the phase must hold
+* [x] Record evidence in `docs/verification/P13-ARCH-001/`
 
 ### Gate
 
