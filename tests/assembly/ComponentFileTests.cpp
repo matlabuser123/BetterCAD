@@ -87,7 +87,7 @@ TEST_CASE("ComponentFile_RoundTripsEveryCanonicalRelationship", "[assembly][comp
         CHECK(after->definition() == before->definition());
         // The reference still names the part, by the same ID.
         CHECK(after->definition().part == p.part);
-        CHECK(loaded->findObject(after->definition().part) != nullptr);
+        CHECK(loaded->findObject(after->definition().part.object) != nullptr);
         // And the dependency edge came back with it.
         CHECK(after->dependencies() == std::vector<ObjectId>{p.part});
         CHECK(after->contentEquals(*before));

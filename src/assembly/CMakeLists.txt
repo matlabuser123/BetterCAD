@@ -9,6 +9,7 @@ bettercad_add_library(bettercad_assembly
         Component.cpp
         Components.cpp
         Placement.cpp
+        Resolution.cpp
     PUBLIC_LINK
         BetterCAD::core
         BetterCAD::features

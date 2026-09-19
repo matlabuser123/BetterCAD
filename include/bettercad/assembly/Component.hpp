@@ -4,6 +4,7 @@
 #include <bettercad/core/Error.hpp>
 #include <bettercad/core/Id.hpp>
 #include <bettercad/core/document/DocumentObject.hpp>
+#include <bettercad/core/document/ObjectReference.hpp>
 #include <bettercad/core/document/Placement.hpp>
 
 #include <memory>
@@ -30,25 +31,33 @@
 //   `placement`, which is INTENT: ADR-005 persists that and derives the
 //   RigidTransform3D from it every time, so there is still no transform
 //   field here and none in the file.
-// * It does not reference another document. ADR-003 scoped P13 to parts in
-//   the same document, because the dependency graph is single-document:
-//   dependencies() speaks in ObjectId, which means nothing elsewhere. No
-//   field anticipates the external form.
+// * It may now name a part in ANOTHER document (P13-REF-001), through an
+//   ObjectReference carrying that document's UUID. Such a reference is not a
+//   dependency edge: the graph speaks in ObjectId, which means nothing
+//   outside one document, so ADR-003 keeps external references out of
+//   regeneration until the graph has a wider node identity. What stops that
+//   being silent is the regeneration handler, which fails a component whose
+//   part does not resolve.
 namespace bettercad::assembly {
 
 /// What a component instance is made of: the part it places, whether it is
 /// suppressed, and where it sits.
 ///
-/// `part` is the ObjectId of an object in the SAME document -- the feature
-/// whose body is the part being placed. It and the parameters `placement` is
-/// driven by are the component's dependencies, so dirty propagation,
-/// ordering and blocking work with no new machinery (ADR-003).
+/// `part` names the feature whose body is the part being placed. An
+/// ObjectId converts to one implicitly, so an internal reference reads and
+/// writes exactly as it did before; an external one also carries the UUID of
+/// the document that owns the object.
+///
+/// An internal `part`, and the parameters `placement` is driven by, are the
+/// component's dependencies, so dirty propagation, ordering and blocking
+/// work with no new machinery. An external `part` contributes no edge
+/// (ADR-003), and is reported by the regeneration handler instead.
 ///
 /// A suppressed component stays in the document with its ID and its
 /// reference intact; suppression is engineering intent ("not in this
 /// build"), not deletion.
 struct ComponentDefinition {
-    ObjectId part{};
+    ObjectReference part{};
     bool suppressed = false;
     /// Where this instance sits, as intent (P13-XFORM-001). Two components
     /// of one part hold their own, which is what makes them instances

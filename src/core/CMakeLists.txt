@@ -14,6 +14,7 @@ bettercad_add_library(bettercad_core
         document/DependencyGraph.cpp
         document/Document.cpp
         document/DocumentObject.cpp
+        document/ObjectReference.cpp
         document/ParameterExpressions.cpp
         document/Placement.cpp
         document/References.cpp

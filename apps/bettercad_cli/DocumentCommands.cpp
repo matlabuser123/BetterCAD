@@ -1,6 +1,7 @@
 #include "Commands.hpp"
 
 #include <bettercad/assembly/Component.hpp>
+#include <bettercad/core/document/ObjectReference.hpp>
 #include <bettercad/core/document/Document.hpp>
 #include <bettercad/features/ChamferFeature.hpp>
 #include <bettercad/features/CircularPatternFeature.hpp>
@@ -382,10 +383,20 @@ std::string describeMirror(const Document& document, const features::MirrorDefin
 
 std::string describeObject(const Document& document, const DocumentObject& object) {
     if (const auto* component = dynamic_cast<const assembly::Component*>(&object)) {
-        const ObjectId part = component->definition().part;
-        const DocumentObject* placed = document.findObject(part);
-        std::string text = std::format("places {} ({})", part,
-                                       placed != nullptr ? placed->name() : "missing");
+        const ObjectReference& part = component->definition().part;
+        std::string text;
+        if (isInternal(part)) {
+            const DocumentObject* placed = document.findObject(part.object);
+            text = std::format("places {} ({})", part.object, placed != nullptr ? placed->name() : "missing");
+        } else {
+            // A part in another document. `info` reads one file and supplies
+            // no resolver, so it reports the identity rather than pretending
+            // to have looked: that is the unresolved state, not an error.
+            text = std::format("places {} of document {} (unresolved)", part.object, part.document->value());
+            if (!part.hint.empty()) {
+                text += std::format(", hint {}", part.hint);
+            }
+        }
         if (component->definition().suppressed) {
             text += ", suppressed";
         }

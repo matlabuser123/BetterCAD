@@ -4,7 +4,9 @@
 
 #include <bettercad/assembly/Components.hpp>
 #include <bettercad/core/Units.hpp>
+#include <bettercad/core/Uuid.hpp>
 #include <bettercad/core/document/Document.hpp>
+#include <bettercad/core/document/ObjectReference.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/io/DocumentFile.hpp>
 #include <bettercad/sketch/Sketch.hpp>
@@ -13,6 +15,7 @@
 #include <catch2/matchers/catch_matchers_string.hpp>
 
 #include <filesystem>
+#include <format>
 #include <memory>
 #include <string>
 #include <utility>
@@ -91,4 +94,26 @@ TEST_CASE("ComponentCli_InfoReportsAComponentWhosePartIsGone", "[cli][assembly][
     CHECK(result.exitCode == ExitCode::Success);
     CHECK(result.err.empty());
     CHECK_THAT(result.out, ContainsSubstring("places object:2 (missing)\n"));
+}
+
+TEST_CASE("ComponentCli_InfoReportsAPartInAnotherDocumentAsUnresolved", "[cli][assembly][component][p13]") {
+    // P13-REF-001. `info` reads one file and supplies no resolver, so a part
+    // in another document is reported by its identity and said to be
+    // unresolved -- which is the state, not a failure. The locator is shown
+    // as the hint it is, never as the thing that identifies the target.
+    TempDir dir;
+    PartDocument p = makePart();
+    PartDocument other = makePart();
+    const std::string uuid = other.document.id().value().toString();
+    REQUIRE(assembly::createComponent(p.document, "Away",
+                                      {.part = {other.document.id(), other.part, "parts/other.bcad"}})
+                .has_value());
+
+    const auto result = runCliCommand({"info", cliPath(save(dir, p.document, "external.bcad"))});
+
+    CHECK(result.exitCode == ExitCode::Success);
+    CHECK(result.err.empty());
+    CHECK_THAT(result.out, ContainsSubstring(std::format("places object:2 of document {} (unresolved), "
+                                                         "hint parts/other.bcad\n",
+                                                         uuid)));
 }

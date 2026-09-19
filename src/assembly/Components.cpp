@@ -13,11 +13,19 @@ Result<void> checkComponent(const Document& document, const ComponentDefinition&
     if (auto valid = validate(definition); !valid) {
         return valid;
     }
-    const DocumentObject* part = document.findObject(definition.part);
+    if (!isInternal(definition.part)) {
+        // An external part cannot be checked here. The document that owns it
+        // may not be available, and reaching for it behind the caller's back
+        // is exactly the implicit filesystem access ADR-003 forbids. It is
+        // checked when it is resolved, and a component whose part does not
+        // resolve fails regeneration rather than looking fine.
+        return {};
+    }
+    const DocumentObject* part = document.findObject(definition.part.object);
     if (part == nullptr) {
         return makeError(ErrorCode::NotFound,
                          std::format("a component cannot place {}, which is not an object of this document",
-                                     definition.part));
+                                     definition.part.object));
     }
     // A part is something that produces a body. Naming a sketch, a datum or
     // another component is a modelling mistake, so it is refused now rather
@@ -25,7 +33,7 @@ Result<void> checkComponent(const Document& document, const ComponentDefinition&
     if (dynamic_cast<const features::SolidFeature*>(part) == nullptr) {
         return makeError(ErrorCode::InvalidArgument,
                          std::format("a component cannot place {} ('{}'): a {} produces no body",
-                                     definition.part, part->name(), part->typeName()));
+                                     definition.part.object, part->name(), part->typeName()));
     }
     return {};
 }
@@ -53,7 +61,7 @@ Result<bool> setComponentDefinition(Document& document, ComponentId id, const Co
     }
     // A component may not place itself, and the graph's cycle detection is
     // too late to give a useful message.
-    if (definition.part == ObjectId{id}) {
+    if (localTarget(definition.part) == std::optional<ObjectId>{ObjectId{id}}) {
         return makeError(ErrorCode::InvalidArgument, std::format("{} cannot place itself", id));
     }
     if (auto valid = checkComponent(document, definition); !valid) {

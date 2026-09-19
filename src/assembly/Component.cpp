@@ -6,8 +6,11 @@
 namespace bettercad::assembly {
 
 Result<void> validate(const ComponentDefinition& definition) {
-    if (!definition.part.isValid()) {
+    if (!definition.part.object.isValid()) {
         return makeError(ErrorCode::InvalidArgument, "a component must name the part it places");
+    }
+    if (auto valid = validate(definition.part); !valid) {
+        return valid;
     }
     // Only the literals can be checked here. A component of the placement
     // driven by a parameter is checked when the parameter is read, by
@@ -42,7 +45,15 @@ std::vector<ObjectId> Component::dependencies() const {
     // editing one dirties this component and moves it. A suppressed
     // component keeps its edges: it still names its part, and unsuppressing
     // must not need a rebuild of the graph.
-    std::vector<ObjectId> result{definition_.part};
+    //
+    // An external part contributes no edge: an ObjectId cannot name a node in
+    // another document, and a graph that pretended otherwise would be wrong
+    // (ADR-003). Such a component is failed by the regeneration handler
+    // instead, so the absence of an edge is never mistaken for nothing to do.
+    std::vector<ObjectId> result;
+    if (const auto local = localTarget(definition_.part)) {
+        result.push_back(*local);
+    }
     for (const ParameterId parameter : referencedParameters(definition_.placement)) {
         result.push_back(ObjectId{parameter});
     }

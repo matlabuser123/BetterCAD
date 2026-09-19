@@ -380,8 +380,8 @@ TEST_CASE("Component_ForeignObjectIdsAreRejectedOnlyWhenTheyAreAbsent", "[assemb
         const assembly::Component* component = assembly::findComponent(here.document, *id);
         REQUIRE(component != nullptr);
         CHECK(component->definition().part == here.part);
-        CHECK(here.document.findObject(component->definition().part) != nullptr);
-        CHECK(here.document.nameOf(component->definition().part) == "Block");
+        CHECK(here.document.findObject(component->definition().part.object) != nullptr);
+        CHECK(here.document.nameOf(component->definition().part.object) == "Block");
     }
 }
 

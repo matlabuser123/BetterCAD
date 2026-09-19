@@ -10,8 +10,8 @@
 
 ```text
 Current:   P13 — Assemblies
-Next:      P13-REF-001 — Internal / external reference infrastructure
-Then:      P13-MATE-001 — Basic assembly constraints
+Next:      P13-MATE-001 — Basic assembly constraints
+Then:      P13-SOLVE-001 — Assembly constraint solver
 
 Released:  v0.1.0 — P0–P10
 Qualified: P11, P12
@@ -66,6 +66,7 @@ P12 qualified on `15d7f75`.
 * [x] `P13-ARCH-001` — Assembly architecture and contracts
 * [x] `P13-COMP-001` — Component definitions and instances
 * [x] `P13-XFORM-001` — Component transforms
+* [x] `P13-REF-001` — Internal / external reference infrastructure
 
 Decisions:
 
@@ -83,6 +84,7 @@ Evidence:
 docs/verification/P13-ARCH-001/
 docs/verification/P13-COMP-001/
 docs/verification/P13-XFORM-001/
+docs/verification/P13-REF-001/
 ```
 
 ---
@@ -191,54 +193,33 @@ Next → P13-REF-001
 
 ---
 
-# NEXT — P13-REF-001
+# DONE — P13-REF-001
 
 ## Internal / External Reference Infrastructure
 
-Give references an identity wider than `ObjectId`.
+Reference identity wider than `ObjectId`. Evidence in
+[docs/verification/P13-REF-001/](docs/verification/P13-REF-001/README.md).
 
-[ADR-003](docs/architecture/decisions/ADR-003-internal-part-references-first.md)
-deferred cross-document references to this milestone, and `P13-COMP-001`
-measured exactly why: an `ObjectId` carries no document identity, and every
-document allocates from 1, so an ID copied from another document either is
-absent (and is refused) or **collides with a local object and binds to it,
-undetectably**. That known limitation is this milestone's problem to solve.
-
-**The identity rule, which is not negotiable:**
-
-```text
-ObjectId = local document identity
-
-External reference =
-stable document identity
-+ stable object identity
-+ resolver
-```
-
-A filesystem path is **not** identity. Paths may become locator metadata --
-a hint about where to look -- but the canonical identity of an external
-reference must survive the file being moved, renamed or copied. Storing an
-absolute or relative path as the identity is the anti-pattern this milestone
-exists to avoid, and it is not an acceptable shortcut to a passing test.
-
-* [ ] Define canonical reference identity model
-* [ ] Implement same-document internal references
-* [ ] Define unresolved-reference state explicitly
-* [ ] Implement injectable resolver interface for future external references
-* [ ] Use stable UUID/document identity, never filesystem-path identity
-* [ ] Keep external-reference resolution separate from `ObjectId`
-* [ ] Reject accidental cross-document `ObjectId` binding
-* [ ] Validate reference type / target compatibility
-* [ ] Validate missing / deleted target behavior
-* [ ] Validate reference recovery after target becomes available again
-* [ ] Prevent silent rebinding to another object
-* [ ] Preserve references through save/load
-* [ ] Preserve pre-P13 file compatibility
-* [ ] Validate deterministic reference resolution
-* [ ] Validate failure atomicity
-* [ ] Adversarial review PASS
-* [ ] Debug / Release / Debug-shared regression PASS
-* [ ] Evidence in `docs/verification/P13-REF-001/`
+* [x] Define canonical reference identity model
+* [x] Implement same-document internal references
+* [x] Define unresolved-reference state explicitly
+* [x] Implement injectable resolver interface for future external references
+* [x] Use stable UUID/document identity, never filesystem-path identity
+* [x] Keep external-reference resolution separate from `ObjectId`
+* [x] Reject accidental cross-document `ObjectId` binding — for a reference
+  that carries a document identity. A *bare* `ObjectId` is still defined as
+  local and still binds locally; `P13-COMP-001`'s test of that is retained.
+* [x] Validate reference type / target compatibility
+* [x] Validate missing / deleted target behavior
+* [x] Validate reference recovery after target becomes available again
+* [x] Prevent silent rebinding to another object
+* [x] Preserve references through save/load
+* [x] Preserve pre-P13 file compatibility
+* [x] Validate deterministic reference resolution
+* [x] Validate failure atomicity
+* [x] Adversarial review PASS
+* [x] Debug / Release / Debug-shared regression PASS
+* [x] Evidence in `docs/verification/P13-REF-001/`
 
 ### Gate
 
@@ -257,7 +238,14 @@ reference model correct
 + 0 unexpected warnings
 ```
 
-Only then:
+Met: 1323/1323 on `debug`, `release` and `debug-shared` from clean, and
+730/730 five times over in `release` and `debug`; 0 compiler warnings; the
+adversarial review found 2 gaps and 0 production defects, closing both with
+regression tests; the qualified tree IDs match the committed tree.
+
+Carried forward: external references do not regenerate, because the
+dependency graph speaks in `ObjectId` (ADR-003). Such a component fails
+regeneration with the state that says why, rather than appearing to succeed.
 
 ```text
 P13-REF-001 → [x]
@@ -272,8 +260,8 @@ Next → P13-MATE-001
 P13-ARCH-001     Assembly architecture and contracts          DONE
 P13-COMP-001     Component definitions and instances          DONE
 P13-XFORM-001    Component transforms                         DONE
-P13-REF-001      Internal / external reference infrastructure OPEN
-P13-MATE-001     Basic assembly constraints
+P13-REF-001      Internal / external reference infrastructure DONE
+P13-MATE-001     Basic assembly constraints                   OPEN
 P13-SOLVE-001    Assembly constraint solver
 P13-MATE-002     Mechanical mates
 P13-CONF-001     Assembly configurations / suppression
