@@ -191,6 +191,81 @@ Next → P13-REF-001
 
 ---
 
+# NEXT — P13-REF-001
+
+## Internal / External Reference Infrastructure
+
+Give references an identity wider than `ObjectId`.
+
+[ADR-003](docs/architecture/decisions/ADR-003-internal-part-references-first.md)
+deferred cross-document references to this milestone, and `P13-COMP-001`
+measured exactly why: an `ObjectId` carries no document identity, and every
+document allocates from 1, so an ID copied from another document either is
+absent (and is refused) or **collides with a local object and binds to it,
+undetectably**. That known limitation is this milestone's problem to solve.
+
+**The identity rule, which is not negotiable:**
+
+```text
+ObjectId = local document identity
+
+External reference =
+stable document identity
++ stable object identity
++ resolver
+```
+
+A filesystem path is **not** identity. Paths may become locator metadata --
+a hint about where to look -- but the canonical identity of an external
+reference must survive the file being moved, renamed or copied. Storing an
+absolute or relative path as the identity is the anti-pattern this milestone
+exists to avoid, and it is not an acceptable shortcut to a passing test.
+
+* [ ] Define canonical reference identity model
+* [ ] Implement same-document internal references
+* [ ] Define unresolved-reference state explicitly
+* [ ] Implement injectable resolver interface for future external references
+* [ ] Use stable UUID/document identity, never filesystem-path identity
+* [ ] Keep external-reference resolution separate from `ObjectId`
+* [ ] Reject accidental cross-document `ObjectId` binding
+* [ ] Validate reference type / target compatibility
+* [ ] Validate missing / deleted target behavior
+* [ ] Validate reference recovery after target becomes available again
+* [ ] Prevent silent rebinding to another object
+* [ ] Preserve references through save/load
+* [ ] Preserve pre-P13 file compatibility
+* [ ] Validate deterministic reference resolution
+* [ ] Validate failure atomicity
+* [ ] Adversarial review PASS
+* [ ] Debug / Release / Debug-shared regression PASS
+* [ ] Evidence in `docs/verification/P13-REF-001/`
+
+### Gate
+
+```text
+reference model correct
++ internal references PASS
++ external-resolution contract correct
++ unresolved state explicit
++ no path-based identity
++ no silent rebinding
++ persistence PASS
++ determinism PASS
++ failure atomicity PASS
++ adversarial review PASS
++ full regression PASS
++ 0 unexpected warnings
+```
+
+Only then:
+
+```text
+P13-REF-001 → [x]
+Next → P13-MATE-001
+```
+
+---
+
 # Planned P13 Sequence
 
 ```text
