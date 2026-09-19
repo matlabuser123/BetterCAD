@@ -254,6 +254,100 @@ Next → P13-MATE-001
 
 ---
 
+# NEXT — P13-MATE-001
+
+## Basic Assembly Constraints
+
+Define and preserve mate intent. **Nothing moves.**
+
+```text
+P13-MATE-001   define and preserve mate intent
+P13-SOLVE-001  numerically solve that intent into transforms
+```
+
+A component is not repositioned to satisfy a mate in this milestone. The
+deliverable is a constraint model clean enough for the solver to consume,
+and the discipline `P13-XFORM-001` established applies again: the intent is
+canonical and persisted, and anything derived from it is computed, not
+stored.
+
+### What a mate may point at
+
+[ADR-004](docs/architecture/decisions/ADR-004-mates-reference-semantic-geometry-only.md)
+already decided this, precisely so that this milestone does not have to
+discover it after the code exists:
+
+```text
+allowed     PlaneReference   principal, datum, coordinate-system plane,
+                             or a named face of a feature
+            AxisReference    principal, datum, coordinate-system axis
+            FaceName         a face named by the feature that generated it
+
+forbidden   FaceSignature    refused by validation, not warned about
+```
+
+> A mate may reference anything that moves with the model, and nothing that
+> merely sits where the model used to be.
+
+Two consequences ADR-004 spells out, both binding here:
+
+* **Two distinct errors, never collapsed.** "This reference kind is not
+  allowed in a mate" is a modelling mistake; "this reference does not
+  resolve" is a regeneration failure. Reporting one as the other hides which
+  happened.
+* **A mate's `dependencies()` includes the objects its references name**, via
+  `referencedObjects()`, so a mate rebuilds when the datum it uses moves.
+* A hole's bore is not mateable, because holes accept only a
+  `FaceSignature`. Mating to a hole means mating to a datum axis published
+  for it. That is a modelling convention, not a defect to work around.
+
+* [ ] Implement strong `MateId`
+* [ ] Implement canonical `MateConstraint` as document state
+* [ ] Implement Fixed constraint
+* [ ] Implement Coincident constraint
+* [ ] Implement Concentric constraint
+* [ ] Implement Parallel constraint
+* [ ] Implement Perpendicular constraint
+* [ ] Implement Distance constraint
+* [ ] Implement Angle constraint
+* [ ] Mate targets obey ADR-004 reference rules
+* [ ] Reject invalid component/reference combinations
+* [ ] Validate dimensional values and units
+* [ ] Missing mate targets become unresolved, never silently rebound
+* [ ] Mate dependencies participate correctly in the document graph
+* [ ] Invalid mate creation/modification is atomic and recoverable
+* [ ] Save/load preserves mate engineering intent
+* [ ] Deterministic mate representation validated
+* [ ] Adversarial review PASS
+* [ ] Debug / Release / Debug-shared regression PASS
+* [ ] Evidence in `docs/verification/P13-MATE-001/`
+
+### Gate
+
+```text
+mate model correct
++ all 7 basic constraints represented
++ reference semantics correct
++ units/dimensions correct
++ unresolved-state behavior correct
++ dependencies correct
++ persistence PASS
++ determinism PASS
++ failure atomicity PASS
++ adversarial review PASS
++ full regression PASS
++ 0 unexpected warnings
+```
+
+Only then:
+
+```text
+P13-MATE-001 → [x]
+Next → P13-SOLVE-001
+```
+
+---
+
 # Planned P13 Sequence
 
 ```text
