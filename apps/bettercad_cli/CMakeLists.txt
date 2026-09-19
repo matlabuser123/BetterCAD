@@ -14,6 +14,7 @@ target_include_directories(bettercad_cli_lib PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}
 target_link_libraries(bettercad_cli_lib
     PUBLIC BetterCAD::core
     PRIVATE
+        BetterCAD::assembly
         BetterCAD::compiler_options
         BetterCAD::features
         BetterCAD::io

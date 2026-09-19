@@ -15,7 +15,9 @@ using detail::Json;
 
 Result<Json> objectToJson(const DocumentObject& object) {
     Json data;
-    if (const auto* sketch = dynamic_cast<const sketch::Sketch*>(&object)) {
+    if (const auto* component = dynamic_cast<const assembly::Component*>(&object)) {
+        data = detail::componentToJson(*component);
+    } else if (const auto* sketch = dynamic_cast<const sketch::Sketch*>(&object)) {
         data = detail::sketchToJson(*sketch);
     } else if (const auto* extrude = dynamic_cast<const features::ExtrudeFeature*>(&object)) {
         data = detail::extrudeToJson(*extrude);
@@ -78,6 +80,18 @@ Result<std::unique_ptr<DocumentObject>> objectFromJson(const Json& value, std::s
         return std::unexpected(!type ? type.error() : !name ? name.error() : data.error());
     }
     const std::string dataPath = detail::childPath(path, "data");
+    // The literal, not Component::kTypeName: binding a reference to a
+    // dll-imported constexpr static does not link in a shared build
+    // (found by the debug-shared preset). ComponentJson.cpp carries a
+    // static_assert that the two agree, so they cannot drift. The
+    // sketch branch below has always compared against its literal.
+    if (*type == "component") {
+        auto component = detail::componentFromJson(**data, std::move(*name), dataPath);
+        if (!component) {
+            return std::unexpected(component.error());
+        }
+        return std::unique_ptr<DocumentObject>(std::move(*component));
+    }
     if (*type == "sketch") {
         auto sketch = detail::sketchFromJson(**data, std::move(*name), dataPath);
         if (!sketch) {

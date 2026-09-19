@@ -64,4 +64,6 @@ bettercad_compile_fail_case(ids "${_ids}" INTEGER_TO_ID "conversion from [^ ]*in
 bettercad_compile_fail_case(ids "${_ids}" ID_TO_INTEGER "cannot convert .*SketchId.* in initialization")
 bettercad_compile_fail_case(ids "${_ids}" COMPARE_DIFFERENT_KINDS "no match for [^ ]*operator==")
 bettercad_compile_fail_case(ids "${_ids}" OBJECT_TO_SKETCH_ID "conversion from .*ObjectIdTag.* to non-scalar type")
+bettercad_compile_fail_case(ids "${_ids}" OBJECT_TO_COMPONENT_ID "conversion from .*ObjectIdTag.* to non-scalar type")
+bettercad_compile_fail_case(ids "${_ids}" COMPONENT_ID_AS_FEATURE_ID "conversion from .*ComponentIdTag.* to non-scalar type .*FeatureIdTag")
 bettercad_compile_fail_case(ids "${_ids}" ENTITY_ID_AS_OBJECT_ID "could not convert .*EntityId")

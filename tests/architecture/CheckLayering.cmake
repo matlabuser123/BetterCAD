@@ -23,9 +23,13 @@ endif()
 set(layer_core 0)
 set(layer_sketch 1)
 set(layer_features 2)
-set(layer_io 3)
-set(layer_renderer 4)
-set(layer_scripting 4)
+# assembly sits above features, which it uses, and below io, which must
+# serialize it. The rule below is strictly-lower, so there is no number
+# between them and io moves up with everything above it (ADR-006).
+set(layer_assembly 3)
+set(layer_io 4)
+set(layer_renderer 5)
+set(layer_scripting 5)
 
 set(qt_allowed_regex "^(apps/bettercad|src/renderer)/")
 set(occt_allowed_regex "^src/(.+/)?occt/")

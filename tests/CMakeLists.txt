@@ -24,6 +24,8 @@ target_link_libraries(bettercad_test_occt
 bettercad_add_executable(bettercad_tests
     SOURCES
         TestHelpers.hpp
+        assembly/ComponentFileTests.cpp
+        assembly/ComponentTests.cpp
         core/BuildInfoTests.cpp
         core/IdTests.cpp
         core/UuidTests.cpp
@@ -157,6 +159,7 @@ bettercad_add_executable(bettercad_tests
         support/ThroughCutModels.hpp
         support/TurnedPartModel.hpp
     LINK
+        BetterCAD::assembly
         BetterCAD::core
         BetterCAD::features
         BetterCAD::geometry
@@ -190,6 +193,7 @@ if(TARGET bettercad_cli_lib)
         cli/ShellCliTests.cpp
         cli/SpatialSweepCliTests.cpp
         cli/ExpressionCliTests.cpp
+        cli/ComponentCliTests.cpp
     )
     target_link_libraries(bettercad_tests PRIVATE BetterCAD::cli_lib)
 endif()

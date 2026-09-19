@@ -1,10 +1,7 @@
 # BetterCAD — TODO
 
-> `[x]` = implemented + tested + independently validated + adversarially
-> reviewed + regression clean + evidence recorded; a milestone with a
-> qualification gate also needs a qualified final tree. The full definition is
-> in [CLAUDE.md](CLAUDE.md#definition-of-done), which this line summarises.
-> `[ ]` = incomplete.
+> `[x]` = implemented + tested + independently validated + adversarially reviewed + regression clean + evidence recorded.
+> Qualification milestones also require the final qualified tree to match the committed tree.
 > Work top-to-bottom. Stop at failed gates. Never fake evidence.
 
 ---
@@ -12,293 +9,191 @@
 ## Status
 
 ```text
-Current: P13 — Assemblies
-Next:    P13-COMP-001 — Component Definitions and Instances
-Then:    P13-XFORM-001 — Component Transforms
+Current:   P13 — Assemblies
+Next:      P13-XFORM-001 — Component Transforms
+Then:      P13-REF-001 — Internal / external reference infrastructure
 
-Released:       v0.1.0 — P0–P10
-Qualified:      P11, P12
-P13:            Authorized; architecture decided (ADR-002 to ADR-006)
+Released:  v0.1.0 — P0–P10
+Qualified: P11, P12
+
+P13 architecture:
+ADR-002 → ADR-006
 ```
 
 ---
 
-# P12 — Parametric CAD Completion
+# Qualified Baseline
 
-## Completed
+## P12 — Parametric CAD Completion
 
 * [x] `P12-PARAM-001` — Parameter expressions
 * [x] `P12-SKETCH-001` — Advanced sketch constraints
 * [x] `P12-SKETCH-002` — Ellipse and spline entities
 * [x] `P12-DATUM-001` — Datum planes, axes and coordinate systems
 * [x] `P12-STREF-001` — Stable feature-face references
-* [x] `P12-SKETCH-003` — Sketches on planar feature faces
-
-### Features
-
+* [x] `P12-SKETCH-003` — Sketches on feature faces
 * [x] `P12-FEAT-001` — Through-all extrude
-* [x] `P12-FEAT-002` — Split body / combine
+* [x] `P12-FEAT-002` — Split / combine
 * [x] `P12-FEAT-003` — Shell
 * [x] `P12-FEAT-004` — Draft
 * [x] `P12-FEAT-005` — Rib
 * [x] `P12-FEAT-006` — Variable-radius fillet
-
-Deferred:
-
-* Fillet setback controls
-* Selectable fillet corner transitions
-
-### Production Modeling
-
-* [x] `P12-HOLE-001` — Threads, spotface, standard sizes and tolerance classes
+* [x] `P12-HOLE-001` — Advanced holes
 * [x] `P12-PATTERN-001` — Advanced patterns
-* [x] `P12-SWEEP-001` — Guide curves, twist and non-planar paths
-* [x] `P12-LOFT-001` — Differing section shapes and smooth interpolation
-
-Deferred:
-
-* Loft end conditions
-
-### Parametric Design
-
+* [x] `P12-SWEEP-001` — Advanced sweep
+* [x] `P12-LOFT-001` — Advanced loft
 * [x] `P12-PARAM-002` — Design equations and configurations
+* [x] `P12-REF-001` — Production reference models
+* [x] `P12-QUAL-001` — P12 qualification
+
+Evidence:
+
+```text
+docs/verification/P12-*/
+```
+
+P12 qualified on `15d7f75`.
 
 ---
 
-# DONE — P12-REF-001
+# P13 — Assemblies
 
-## Production Reference Models
+> Architecture is decided. Implement milestones sequentially.
+> Only the current milestone is authorized.
 
-Build realistic mechanical parts using the complete P12 feature set.
-Six parts, in `examples/reference_models/`; evidence in
-[docs/verification/P12-REF-001/](docs/verification/P12-REF-001/README.md).
+## Completed
 
-* [x] Create production reference-model suite
-* [x] Cover all applicable P12 capabilities
-* [x] Include configuration-driven part family
-* [x] Exercise cross-feature dependencies
-* [x] Exercise stable face references
-* [x] Validate geometry independently
-* [x] Validate configuration changes
-* [x] Validate parameter regeneration
-* [x] Validate failure/recovery paths
-* [x] Validate undo/redo
-* [x] Validate save/load/regenerate
-* [x] Validate deterministic rebuilds
-* [x] Validate STEP read-back
-* [x] Validate CLI workflows
-* [x] Run full regression
-* [x] Record evidence in `docs/verification/P12-REF-001/`
+* [x] `P13-ARCH-001` — Assembly architecture and contracts
+* [x] `P13-COMP-001` — Component definitions and instances
+
+Decisions:
+
+```text
+ADR-002 — assembly/document model
+ADR-003 — internal/external reference contract
+ADR-004 — mate-reference semantics
+ADR-005 — solve-state / transform policy
+ADR-006 — module layering
+```
+
+Evidence:
+
+```text
+docs/verification/P13-ARCH-001/
+docs/verification/P13-COMP-001/
+```
+
+---
+
+# DONE — P13-COMP-001
+
+## Component Definitions and Instances
+
+The canonical component-instance model. Evidence in
+[docs/verification/P13-COMP-001/](docs/verification/P13-COMP-001/README.md).
+
+* [x] `ComponentInstance` participates as a `DocumentObject`
+* [x] Strong `ComponentId` identity
+* [x] Component identity distinct from referenced part identity
+* [x] Multiple instances may reference one internal part
+* [x] Internal part references validated
+* [x] Foreign-document references rejected — a component's reference never
+  resolves outside its own document, and an ID this document does not have is
+  refused `NotFound`, changing nothing. A foreign ID that *collides* with a
+  local object is undetectable and binds locally: inherent to `ObjectId`,
+  tested, and the reason ADR-003 defers cross-document references to
+  `P13-REF-001`.
+* [x] Correct dependency-graph participation
+* [x] Invalid creation is atomic and recoverable
+* [x] Component deletion validated
+* [x] Save/load preserves canonical component state
+* [x] Pre-P13 files remain compatible
+* [x] No unnecessary `.bcad` schema/version change
+* [x] Deterministic behavior validated
+* [x] Adversarial review PASS
+* [x] Debug / Release / Debug-shared regression PASS
+* [x] Evidence recorded in `docs/verification/P13-COMP-001/`
 
 ### Gate
 
 ```text
-All reference models valid
-+ independent validation PASS
+component model correct
++ identity stable
++ document ownership correct
++ internal references correct
 + persistence PASS
++ legacy compatibility PASS
 + determinism PASS
-+ stable references PASS
-+ CLI/STEP PASS
++ adversarial review PASS
 + full regression PASS
 + 0 unexpected warnings
 ```
 
-Met: 1259/1259 on `debug`, `release` and `debug-shared` from clean, 0
-warnings; the adversarial review found and fixed 8 defects, each with a
-regression test; the qualified tree IDs match the committed tree.
+Met: 1282/1282 on `debug`, `release` and `debug-shared` from clean, and
+632/632 five times over in `release` and `debug`; 0 compiler warnings; the
+adversarial review found and fixed 4 defects, each with a regression test;
+the qualified tree IDs match the committed tree.
 
 ```text
-P12-REF-001 → [x]
+P13-COMP-001 → [x]
+Next → P13-XFORM-001
 ```
 
 ---
 
-# DONE — P12-QUAL-001
-
-## P12 Phase Qualification
-
-Freeze the final P12 implementation and qualify the entire phase.
-Qualified on `15d7f75`; evidence in
-[docs/verification/P12-QUAL-001/](docs/verification/P12-QUAL-001/README.md).
-
-* [x] Freeze final source tree
-* [x] Clean Debug build
-* [x] Clean Release build
-* [x] Clean Debug-shared build
-* [x] Full test suite — Debug
-* [x] Full test suite — Release
-* [x] Full test suite — Debug-shared
-* [x] 0 unexpected compiler warnings
-* [x] P0–P11 regression unchanged
-* [x] All P12 milestone tests PASS
-* [x] Production reference models PASS
-* [x] Independent geometry validation PASS
-* [x] Failure-path validation PASS
-* [x] Persistence validation PASS
-* [x] Determinism validation PASS
-* [x] Cross-preset comparison PASS
-* [x] CLI smoke PASS
-* [x] STEP export/read-back PASS
-* [x] Documentation consistent with implementation
-* [x] Final evidence in `docs/verification/P12-QUAL-001/`
-* [x] Qualified tree == committed tree
-* [x] Commit and push qualification closeout
-
-### Gate
+# Planned P13 Sequence
 
 ```text
-P12 = implemented
-    + integrated
-    + tested
-    + independently validated
-    + deterministic within documented contracts
-    + regression clean
-    + evidence recorded
-```
-
-Only then:
-
-```text
-P12-QUAL-001 → [x]
-P12 → QUALIFIED
-```
-
----
-
-# DONE — P13-ARCH-001
-
-## P13 — Assemblies
-
-**Authorized.** P12 made BetterCAD a capable parametric *part* modeller.
-P13 moves it toward a mechanical *product* system: several parts placed
-relative to one another, held by constraints, regenerating as one.
-
-Assemblies touch nearly every invariant the platform already has — document
-ownership, stable identity, persistence, configurations, dependency-driven
-regeneration, undo/redo, the CLI — and are the foundation drawings, BOMs,
-motion and simulation would later build on. So the phase starts with
-architecture, not with mates.
-
-### Milestones
-
-`P13-ARCH-001` is done and `P13-COMP-001` is open. The rest are the planned
-shape of the phase and are **not** authorized to be implemented: each becomes
-open when its predecessor passes its gate. `P13-COMP-001` implements
-[ADR-002](docs/architecture/decisions/ADR-002-assemblies-live-in-the-document.md)
-and is the first P13 milestone to write code; its acceptance checklist is
-written when it is started.
-
-```text
-P13-ARCH-001     Assembly architecture and contracts        DONE
-P13-COMP-001     Component definitions and instances        <- OPEN
+P13-ARCH-001     Assembly architecture and contracts          DONE
+P13-COMP-001     Component definitions and instances          DONE
 P13-XFORM-001    Component transforms
-P13-REF-001      External and internal part references
-P13-MATE-001     Basic constraints: fixed, coincident, concentric,
-                 parallel, perpendicular, distance, angle
+P13-REF-001      Internal / external reference infrastructure
+P13-MATE-001     Basic assembly constraints
 P13-SOLVE-001    Assembly constraint solver
-P13-MATE-002     Mechanical mates: revolute, slider, cylindrical, planar
-P13-CONF-001     Assembly configurations and suppression
+P13-MATE-002     Mechanical mates
+P13-CONF-001     Assembly configurations / suppression
 P13-STREF-001    Stable assembly references
-P13-REGEN-001    Assembly dependency and regeneration
-P13-CMD-001      Commands, undo and redo
-P13-PERSIST-001  Save and load assembly intent
+P13-REGEN-001    Dependency / regeneration
+P13-CMD-001      Commands / undo / redo
+P13-PERSIST-001  Save / load assembly intent
 P13-CLI-001      Headless assembly workflows
-P13-STEP-001     Assembly STEP export and read-back
+P13-STEP-001     Assembly STEP export / read-back
 P13-REFMOD-001   Production assembly reference models
 P13-QUAL-001     Full P13 qualification
 ```
 
-## P13-ARCH-001 — Assembly Architecture and Contracts
-
-Decided. ADR-002 to ADR-006 in
-[docs/architecture/decisions/](docs/architecture/decisions/); evidence in
-[docs/verification/P13-ARCH-001/](docs/verification/P13-ARCH-001/README.md).
-
-**This milestone designs; it does not implement.** Its output is decisions
-and contracts, recorded as ADRs and in `ARCHITECTURE.md`. No feature, no
-solver and no file-format change belongs to it. Writing a stub, a
-placeholder type or an unused header to "start" the implementation is a
-failure of this milestone, not progress in it.
-
-* [x] Trace what assemblies touch in the existing architecture
-* [x] Decide where an assembly lives relative to `Document`
-* [x] Decide component instance identity and its stability contract
-* [x] Decide how a component references a part, internal and external
-* [x] Decide placement: transform representation and what drives it
-* [x] Decide how mates are represented as document state
-* [x] Decide how the assembly reaches the dependency graph and regeneration
-* [x] Decide the failure model for unresolved references and over-constraint
-* [x] Decide the persistent representation and its compatibility contract
-* [x] Decide how configurations reach components and mates
-* [x] Decide module, layer and OCCT containment for the new code
-* [x] Compare two or three serious candidates for each significant decision
-* [x] Record decisions and what was rejected as ADRs
-* [x] Update `ARCHITECTURE.md` with the invariants the phase must hold
-* [x] Record evidence in `docs/verification/P13-ARCH-001/`
-
-### Gate
-
-```text
-Every decision above made, with its alternatives and its reasons
-+ each architecturally significant decision recorded as an ADR
-+ ARCHITECTURE.md states the new invariants
-+ no executable source or test changed by this milestone
-+ evidence recorded
-```
-
-Only then:
-
-```text
-P13-ARCH-001 — [x]
-```
+Do not implement a milestone until its predecessor passes.
 
 ---
 
-# Known Deferred Work
+# Accepted P13 Constraints
 
-Not part of P12:
-
-* [ ] Fillet setback controls
-* [ ] Fillet corner-transition controls
-* [ ] Loft end conditions
-* [ ] Full semantic topology
-* [ ] STEP import
-* [ ] DXF / IGES / OBJ interoperability
-* [ ] Assemblies
-* [ ] Technical drawings
-* [ ] Materials
-* [ ] Meshing
-* [ ] FEA
-* [ ] Thermal analysis
-* [ ] CFD integration
-* [ ] Optimization
-* [ ] Python API
-* [ ] Plugin system
-* [ ] Version control / collaboration
-* [ ] AI engineering agent
-* [ ] CAM
-* [ ] Production hardening
-
-These require explicit future scope authorization.
+* Assemblies currently operate inside one `Document`.
+* Cross-document dependencies are not implemented.
+* Future external references use stable identity/resolver concepts, not filesystem-path identity.
+* Component configuration remains document-global for now.
+* A component cannot independently select another part configuration yet.
+* Mate targets may only use reference types allowed by ADR-004.
+* Missing intended geometry must fail explicitly; never rebind to nearest geometry.
+* Solved assembly positions are derived state and are not authoritative persisted intent.
+* Opening/regenerating an assembly may therefore require a solve.
 
 ---
 
-# Known Limitations
+# Deferred CAD Work
 
-* Edge references are not yet full semantic-topology references.
-* Some geometry-moving edits may invalidate geometric edge references.
-* Missing semantic geometry fails rather than binding to another face.
-* Variable-radius fillets support only the independently verified safe subset.
-* Fillet setback/corner controls are deferred.
-* Loft end conditions are deferred.
-* Configuration switching restores parameter state exactly; geometry may show bounded last-bit variation from the existing sketch-solver warm start.
-* STEP is currently an export/validation path, not full import interoperability.
+Not currently authorized:
+
+* Fillet setback controls
+* Selectable fillet corner transitions
+* Loft end conditions
+* Full semantic topology
+* STEP import
+* DXF / IGES / OBJ interoperability
 
 ---
 
 # Future Phases
-
-Do not start without explicit authorization.
 
 ```text
 P14  Technical Drawings
@@ -318,28 +213,28 @@ P27  Production Hardening
 P28  BetterCAD 1.0
 ```
 
-Exact milestone IDs and scope are allocated only when authorized.
+Do not start without explicit authorization.
 
 ---
 
 # Workflow
 
-For every milestone:
-
 ```text
-Inspect
-→ Implement
-→ Targeted tests
-→ Independent validation
-→ Failure paths
-→ Persistence
-→ Determinism
-→ Full regression
-→ Evidence
+UNDERSTAND
+→ ARCHITECT
+→ BLAST RADIUS
+→ IMPLEMENT
+→ TARGETED TESTS
+→ INDEPENDENT VALIDATION
+→ FAILURE PATHS
+→ PERSISTENCE
+→ DETERMINISM
+→ ADVERSARIAL REVIEW
+→ FULL REGRESSION
+→ EVIDENCE
 → [x]
-→ Commit
-→ Push
-→ Next
+→ COMMIT
+→ PUSH
 ```
 
 If a gate fails:
@@ -347,8 +242,8 @@ If a gate fails:
 ```text
 STOP
 → reproduce
-→ root cause
 → regression test
+→ root cause
 → fix
 → revalidate
 ```
@@ -357,21 +252,27 @@ Never mark work complete because it merely compiles.
 
 ---
 
-# Evidence
-
-Detailed results belong in:
+# Project Authority
 
 ```text
+TODO.md
+→ authorized/current work
+
+ROADMAP.md
+→ long-term direction
+
+ARCHITECTURE.md
+→ system architecture and invariants
+
+CLAUDE.md
+→ engineering process and Definition of Done
+
+docs/architecture/decisions/
+→ durable architectural decisions
+
 docs/verification/<milestone>/
+→ implementation and qualification evidence
+
+docs/engineering/
+→ reusable engineering templates
 ```
-
-`TODO.md` tracks **what is next**.
-
-`ROADMAP.md` tracks **where BetterCAD is going**.
-
-`ARCHITECTURE.md` tracks **how BetterCAD is built**.
-
-`CLAUDE.md` tracks **how development work is performed**, and
-`docs/engineering/` holds the templates it is worked through.
-
-`README.md` explains **what BetterCAD is**.

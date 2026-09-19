@@ -9,6 +9,7 @@ bettercad_add_library(bettercad_io
         ModelExport.cpp
         StlWriter.cpp
         json/BooleanJson.cpp
+        json/ComponentJson.cpp
         json/DatumJson.cpp
         json/DocumentJson.cpp
         json/DraftJson.cpp
@@ -27,6 +28,7 @@ bettercad_add_library(bettercad_io
         BetterCAD::core
         BetterCAD::geometry
     PRIVATE_LINK
+        BetterCAD::assembly
         BetterCAD::features
         BetterCAD::sketch
         nlohmann_json::nlohmann_json

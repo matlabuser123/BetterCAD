@@ -1,5 +1,6 @@
 #include "Commands.hpp"
 
+#include <bettercad/assembly/Component.hpp>
 #include <bettercad/core/document/Document.hpp>
 #include <bettercad/features/ChamferFeature.hpp>
 #include <bettercad/features/CircularPatternFeature.hpp>
@@ -380,6 +381,16 @@ std::string describeMirror(const Document& document, const features::MirrorDefin
 }
 
 std::string describeObject(const Document& document, const DocumentObject& object) {
+    if (const auto* component = dynamic_cast<const assembly::Component*>(&object)) {
+        const ObjectId part = component->definition().part;
+        const DocumentObject* placed = document.findObject(part);
+        std::string text = std::format("places {} ({})", part,
+                                       placed != nullptr ? placed->name() : "missing");
+        if (component->definition().suppressed) {
+            text += ", suppressed";
+        }
+        return text;
+    }
     if (const auto* sketch = dynamic_cast<const sketch::Sketch*>(&object)) {
         const auto disabled = std::ranges::count_if(sketch->constraints(),
                                                     [](const sketch::Constraint& c) { return !c.enabled; });

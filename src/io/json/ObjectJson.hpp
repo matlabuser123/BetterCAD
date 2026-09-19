@@ -4,6 +4,7 @@
 
 #include "io/json/JsonReader.hpp"
 
+#include <bettercad/assembly/Component.hpp>
 #include <bettercad/core/document/References.hpp>
 #include <bettercad/core/math/Direction.hpp>
 #include <bettercad/core/math/Frame.hpp>
@@ -53,6 +54,11 @@ namespace bettercad::io::detail {
 [[nodiscard]] Json axisReferenceToJson(const AxisReference& reference);
 [[nodiscard]] Result<AxisReference> axisReferenceFromJson(const Json& value, std::string_view path);
 
+/// "part": the object ID of the part this component places, and
+/// "suppressed": true, written only when it is.
+[[nodiscard]] Json componentToJson(const assembly::Component& component);
+[[nodiscard]] Result<std::unique_ptr<assembly::Component>> componentFromJson(const Json& data, std::string name,
+                                                                             std::string_view path);
 /// "kind": "fixed" with "frame"; "offset" with "base", "offset" (metres) and
 /// an optional "offset_parameter"; "angled" with "base", "axis", "angle"
 /// (radians) and an optional "angle_parameter".

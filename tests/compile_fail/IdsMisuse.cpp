@@ -28,6 +28,13 @@ int main() {
     [[maybe_unused]] bool same = sketch == FeatureId::fromValue(1);
 #elif defined(BETTERCAD_CF_OBJECT_TO_SKETCH_ID)
     [[maybe_unused]] SketchId narrowed = ObjectId::fromValue(1);
+#elif defined(BETTERCAD_CF_OBJECT_TO_COMPONENT_ID)
+    // A ComponentId widens to ObjectId, never the other way: an object is
+    // not a component just because it has an ID (P13-COMP-001).
+    [[maybe_unused]] ComponentId narrowed = ObjectId::fromValue(1);
+#elif defined(BETTERCAD_CF_COMPONENT_ID_AS_FEATURE_ID)
+    // Nor is a component a feature, though both widen to ObjectId.
+    [[maybe_unused]] FeatureId asFeature = ComponentId::fromValue(1);
 #elif defined(BETTERCAD_CF_ENTITY_ID_AS_OBJECT_ID)
     takesObject(EntityId::fromValue(1));
 #endif

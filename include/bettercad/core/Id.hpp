@@ -39,6 +39,9 @@ struct ConfigurationIdTag {
 struct BodyIdTag {
     static constexpr std::string_view name = "body";
 };
+struct ComponentIdTag {
+    static constexpr std::string_view name = "component";
+};
 struct EntityIdTag {
     static constexpr std::string_view name = "entity";
 };
@@ -67,6 +70,8 @@ template <>
 inline constexpr bool isDocumentObjectTag<ParameterIdTag> = true;
 template <>
 inline constexpr bool isDocumentObjectTag<BodyIdTag> = true;
+template <>
+inline constexpr bool isDocumentObjectTag<ComponentIdTag> = true;
 
 template <typename Tag, typename Value = std::uint64_t>
 class Id;
@@ -123,6 +128,11 @@ using ParameterId = Id<ParameterIdTag>;
 /// that no ID is ever reused (P12-PARAM-002).
 using ConfigurationId = Id<ConfigurationIdTag>;
 using BodyId = Id<BodyIdTag>;
+/// One placement of a part in an assembly. A component is a document object
+/// and a node in the dependency graph, so its ID widens to ObjectId
+/// (ADR-002). Two components of the same part have different ComponentIds:
+/// this identifies the instance, never the part it instances.
+using ComponentId = Id<ComponentIdTag>;
 /// Sketch entity (point, line, arc, ...); unique within its sketch.
 using EntityId = Id<EntityIdTag>;
 /// Sketch constraint; unique within its sketch.
