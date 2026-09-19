@@ -57,6 +57,18 @@ namespace bettercad::assembly {
 [[nodiscard]] BETTERCAD_ASSEMBLY_EXPORT Result<bool> setComponentDefinition(Document& document, ComponentId id,
                                                                             const ComponentDefinition& definition);
 
+/// Moves the component with @p id to @p placement, leaving the rest of its
+/// definition alone. Returns whether anything changed.
+///
+/// This is the supported way to place a component. It runs the same checks
+/// as setComponentDefinition(), so a non-finite literal is refused and the
+/// component keeps the placement it had.
+///
+/// The placement is intent, not a transform: what it means is computed by
+/// placementOf(), and nothing stores the result (ADR-005).
+[[nodiscard]] BETTERCAD_ASSEMBLY_EXPORT Result<bool> setComponentPlacement(Document& document, ComponentId id,
+                                                                           const ComponentPlacement& placement);
+
 /// The component with @p id, or nullptr if there is none of that ID or the
 /// object of that ID is not a component.
 [[nodiscard]] BETTERCAD_ASSEMBLY_EXPORT const Component* findComponent(const Document& document,

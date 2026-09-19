@@ -9,6 +9,12 @@ Result<void> validate(const ComponentDefinition& definition) {
     if (!definition.part.isValid()) {
         return makeError(ErrorCode::InvalidArgument, "a component must name the part it places");
     }
+    // Only the literals can be checked here. A component of the placement
+    // driven by a parameter is checked when the parameter is read, by
+    // placementOf().
+    if (auto valid = validate(definition.placement); !valid) {
+        return valid;
+    }
     return {};
 }
 
@@ -32,10 +38,15 @@ bool Component::contentEquals(const DocumentObject& other) const {
 }
 
 std::vector<ObjectId> Component::dependencies() const {
-    // The part, and nothing else. A suppressed component keeps the edge: it
-    // still names its part, and unsuppressing must not need a rebuild of the
-    // graph.
-    return {definition_.part};
+    // The part, and every parameter the placement is driven by, so that
+    // editing one dirties this component and moves it. A suppressed
+    // component keeps its edges: it still names its part, and unsuppressing
+    // must not need a rebuild of the graph.
+    std::vector<ObjectId> result{definition_.part};
+    for (const ParameterId parameter : referencedParameters(definition_.placement)) {
+        result.push_back(ObjectId{parameter});
+    }
+    return result;
 }
 
 Result<bool> Component::setDefinition(const ComponentDefinition& definition) {

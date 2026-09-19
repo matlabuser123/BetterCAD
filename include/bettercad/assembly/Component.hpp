@@ -4,6 +4,7 @@
 #include <bettercad/core/Error.hpp>
 #include <bettercad/core/Id.hpp>
 #include <bettercad/core/document/DocumentObject.hpp>
+#include <bettercad/core/document/Placement.hpp>
 
 #include <memory>
 #include <string>
@@ -25,23 +26,23 @@
 //   geometry of its own. Three components of one part are one definition and
 //   three identities; the part's body is built once, by the part's own
 //   features, exactly as it is without any assembly.
-// * It is not a placement yet. Component transforms are P13-XFORM-001 and
-//   deliberately absent here: ADR-005 decided that placement INTENT is
-//   persisted and the solved transform is derived, and neither exists until
-//   that milestone. There is no transform field, not even an unused one.
+// * It is not a solved position. P13-XFORM-001 gives a component its
+//   `placement`, which is INTENT: ADR-005 persists that and derives the
+//   RigidTransform3D from it every time, so there is still no transform
+//   field here and none in the file.
 // * It does not reference another document. ADR-003 scoped P13 to parts in
 //   the same document, because the dependency graph is single-document:
 //   dependencies() speaks in ObjectId, which means nothing elsewhere. No
 //   field anticipates the external form.
 namespace bettercad::assembly {
 
-/// What a component instance is made of: the part it places, and whether it
-/// is suppressed.
+/// What a component instance is made of: the part it places, whether it is
+/// suppressed, and where it sits.
 ///
 /// `part` is the ObjectId of an object in the SAME document -- the feature
-/// whose body is the part being placed. It is the component's only
-/// dependency, so dirty propagation, ordering and blocking work with no new
-/// machinery (ADR-003).
+/// whose body is the part being placed. It and the parameters `placement` is
+/// driven by are the component's dependencies, so dirty propagation,
+/// ordering and blocking work with no new machinery (ADR-003).
 ///
 /// A suppressed component stays in the document with its ID and its
 /// reference intact; suppression is engineering intent ("not in this
@@ -49,13 +50,22 @@ namespace bettercad::assembly {
 struct ComponentDefinition {
     ObjectId part{};
     bool suppressed = false;
+    /// Where this instance sits, as intent (P13-XFORM-001). Two components
+    /// of one part hold their own, which is what makes them instances
+    /// rather than copies. The identity placement is the default, and the
+    /// transform it means is derived by assembly::placementOf(), never
+    /// stored here or in the file.
+    ComponentPlacement placement{};
 
     friend bool operator==(const ComponentDefinition&, const ComponentDefinition&) = default;
 };
 
-/// Checks the definition on its own: a valid part ID. Whether that object
-/// exists, and whether it is a kind that can be placed, is checked against
-/// the document by checkComponent(), because a definition alone cannot know.
+/// Checks the definition on its own: a valid part ID and a placement whose
+/// literals are finite. Whether that object exists, and whether it is a kind
+/// that can be placed, is checked against the document by checkComponent(),
+/// because a definition alone cannot know; whether a placement's parameters
+/// exist and are the right dimension is checked by placementOf(), because a
+/// definition cannot read them either.
 [[nodiscard]] BETTERCAD_ASSEMBLY_EXPORT Result<void> validate(const ComponentDefinition& definition);
 
 /// One placement of a part in an assembly (type name "component").
@@ -75,8 +85,9 @@ public:
     [[nodiscard]] std::string_view typeName() const noexcept override { return kTypeName; }
     [[nodiscard]] std::unique_ptr<DocumentObject> clone() const override;
     [[nodiscard]] bool contentEquals(const DocumentObject& other) const override;
-    /// The part this component places. Exactly one edge: a component is
-    /// blocked when its part fails, and fails when its part is gone.
+    /// The part this component places, and every parameter its placement
+    /// is driven by. A component is blocked when its part fails, fails when
+    /// its part is gone, and moves when a parameter it is placed by changes.
     [[nodiscard]] std::vector<ObjectId> dependencies() const override;
 
     /// This component's ID, narrowed. Valid once the document owns it.

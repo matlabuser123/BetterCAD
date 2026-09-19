@@ -15,6 +15,7 @@ bettercad_add_library(bettercad_core
         document/Document.cpp
         document/DocumentObject.cpp
         document/ParameterExpressions.cpp
+        document/Placement.cpp
         document/References.cpp
         math/BSpline.cpp
         math/Direction.cpp

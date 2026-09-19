@@ -10,8 +10,8 @@
 
 ```text
 Current:   P13 — Assemblies
-Next:      P13-XFORM-001 — Component Transforms
-Then:      P13-REF-001 — Internal / external reference infrastructure
+Next:      P13-REF-001 — Internal / external reference infrastructure
+Then:      P13-MATE-001 — Basic assembly constraints
 
 Released:  v0.1.0 — P0–P10
 Qualified: P11, P12
@@ -65,6 +65,7 @@ P12 qualified on `15d7f75`.
 
 * [x] `P13-ARCH-001` — Assembly architecture and contracts
 * [x] `P13-COMP-001` — Component definitions and instances
+* [x] `P13-XFORM-001` — Component transforms
 
 Decisions:
 
@@ -81,6 +82,7 @@ Evidence:
 ```text
 docs/verification/P13-ARCH-001/
 docs/verification/P13-COMP-001/
+docs/verification/P13-XFORM-001/
 ```
 
 ---
@@ -141,45 +143,26 @@ Next → P13-XFORM-001
 
 ---
 
-# NEXT — P13-XFORM-001
+# DONE — P13-XFORM-001
 
 ## Component Transforms
 
-Give a component a position. `P13-COMP-001` deliberately left a component
-with no placement field at all, so this milestone introduces the first one.
+A component's placement: canonical intent, derived transform. Evidence in
+[docs/verification/P13-XFORM-001/](docs/verification/P13-XFORM-001/README.md).
 
-**The binding constraint is ADR-005: canonical placement intent and derived
-solved/world transforms stay separate.** A solved world transform must never
-become authoritative state, however convenient that is. Storing it would
-conflict with the assembly architecture and make mate solving, regeneration,
-persistence and undo/redo harder later.
-
-```text
-canonical state:
-ComponentInstance
-    └── local placement
-
-derived state:
-local placement
-    + parent/product context
-    + future mate solve
-    ↓
-world / solved transform
-```
-
-* [ ] Define canonical rigid-transform representation
-* [ ] Implement component local placement
-* [ ] Keep solved/world transforms derived, not canonical
-* [ ] Validate transform composition/order
-* [ ] Validate rotation convention and units
-* [ ] Multiple instances transform independently
-* [ ] Validate identity/default placement
-* [ ] Save/load preserves canonical placement
-* [ ] Invalid transforms fail atomically
-* [ ] Deterministic transform results
-* [ ] Adversarial review PASS
-* [ ] Debug / Release / Debug-shared regression PASS
-* [ ] Evidence in `docs/verification/P13-XFORM-001/`
+* [x] Define canonical rigid-transform representation
+* [x] Implement component local placement
+* [x] Keep solved/world transforms derived, not canonical
+* [x] Validate transform composition/order
+* [x] Validate rotation convention and units
+* [x] Multiple instances transform independently
+* [x] Validate identity/default placement
+* [x] Save/load preserves canonical placement
+* [x] Invalid transforms fail atomically
+* [x] Deterministic transform results
+* [x] Adversarial review PASS
+* [x] Debug / Release / Debug-shared regression PASS
+* [x] Evidence in `docs/verification/P13-XFORM-001/`
 
 ### Gate
 
@@ -196,7 +179,10 @@ rigid-transform model correct
 + 0 unexpected warnings
 ```
 
-Only then:
+Met: 1301/1301 on `debug`, `release` and `debug-shared` from clean, and
+708/708 five times over in `release` and `debug`; 0 compiler warnings; the
+adversarial review found 3 gaps and 0 production defects, closing two of them
+with new regression tests; the qualified tree IDs match the committed tree.
 
 ```text
 P13-XFORM-001 → [x]
@@ -210,8 +196,8 @@ Next → P13-REF-001
 ```text
 P13-ARCH-001     Assembly architecture and contracts          DONE
 P13-COMP-001     Component definitions and instances          DONE
-P13-XFORM-001    Component transforms                         OPEN
-P13-REF-001      Internal / external reference infrastructure
+P13-XFORM-001    Component transforms                         DONE
+P13-REF-001      Internal / external reference infrastructure OPEN
 P13-MATE-001     Basic assembly constraints
 P13-SOLVE-001    Assembly constraint solver
 P13-MATE-002     Mechanical mates

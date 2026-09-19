@@ -67,6 +67,18 @@ Result<bool> setComponentDefinition(Document& document, ComponentId id, const Co
     return *changed;
 }
 
+Result<bool> setComponentPlacement(Document& document, ComponentId id, const ComponentPlacement& placement) {
+    const Component* component = findComponent(document, id);
+    if (component == nullptr) {
+        return makeError(ErrorCode::NotFound, std::format("there is no component {}", id));
+    }
+    ComponentDefinition definition = component->definition();
+    definition.placement = placement;
+    // Through the checked path, so moving a component runs exactly the
+    // checks that creating one does.
+    return setComponentDefinition(document, id, definition);
+}
+
 const Component* findComponent(const Document& document, ComponentId id) noexcept {
     return document.findObjectAs<Component>(id);
 }

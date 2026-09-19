@@ -8,6 +8,7 @@ bettercad_add_library(bettercad_assembly
     SOURCES
         Component.cpp
         Components.cpp
+        Placement.cpp
     PUBLIC_LINK
         BetterCAD::core
         BetterCAD::features

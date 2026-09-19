@@ -26,6 +26,8 @@ bettercad_add_executable(bettercad_tests
         TestHelpers.hpp
         assembly/ComponentFileTests.cpp
         assembly/ComponentTests.cpp
+        assembly/PlacementFileTests.cpp
+        assembly/PlacementTests.cpp
         core/BuildInfoTests.cpp
         core/IdTests.cpp
         core/UuidTests.cpp
