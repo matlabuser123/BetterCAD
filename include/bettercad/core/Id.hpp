@@ -42,6 +42,9 @@ struct BodyIdTag {
 struct ComponentIdTag {
     static constexpr std::string_view name = "component";
 };
+struct MateIdTag {
+    static constexpr std::string_view name = "mate";
+};
 struct EntityIdTag {
     static constexpr std::string_view name = "entity";
 };
@@ -72,6 +75,8 @@ template <>
 inline constexpr bool isDocumentObjectTag<BodyIdTag> = true;
 template <>
 inline constexpr bool isDocumentObjectTag<ComponentIdTag> = true;
+template <>
+inline constexpr bool isDocumentObjectTag<MateIdTag> = true;
 
 template <typename Tag, typename Value = std::uint64_t>
 class Id;
@@ -133,6 +138,10 @@ using BodyId = Id<BodyIdTag>;
 /// (ADR-002). Two components of the same part have different ComponentIds:
 /// this identifies the instance, never the part it instances.
 using ComponentId = Id<ComponentIdTag>;
+/// One assembly constraint. A mate is a document object and a node in the
+/// dependency graph, so its ID widens to ObjectId (ADR-002). It is not a
+/// ComponentId: a mate relates components, it is not one of them.
+using MateId = Id<MateIdTag>;
 /// Sketch entity (point, line, arc, ...); unique within its sketch.
 using EntityId = Id<EntityIdTag>;
 /// Sketch constraint; unique within its sketch.

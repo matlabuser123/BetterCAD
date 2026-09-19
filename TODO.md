@@ -10,8 +10,8 @@
 
 ```text
 Current:   P13 — Assemblies
-Next:      P13-MATE-001 — Basic assembly constraints
-Then:      P13-SOLVE-001 — Assembly constraint solver
+Next:      P13-SOLVE-001 — Assembly constraint solver
+Then:      P13-MATE-002 — Mechanical mates
 
 Released:  v0.1.0 — P0–P10
 Qualified: P11, P12
@@ -67,6 +67,7 @@ P12 qualified on `15d7f75`.
 * [x] `P13-COMP-001` — Component definitions and instances
 * [x] `P13-XFORM-001` — Component transforms
 * [x] `P13-REF-001` — Internal / external reference infrastructure
+* [x] `P13-MATE-001` — Basic assembly constraints
 
 Decisions:
 
@@ -85,6 +86,7 @@ docs/verification/P13-ARCH-001/
 docs/verification/P13-COMP-001/
 docs/verification/P13-XFORM-001/
 docs/verification/P13-REF-001/
+docs/verification/P13-MATE-001/
 ```
 
 ---
@@ -254,73 +256,35 @@ Next → P13-MATE-001
 
 ---
 
-# NEXT — P13-MATE-001
+# DONE — P13-MATE-001
 
 ## Basic Assembly Constraints
 
-Define and preserve mate intent. **Nothing moves.**
+The constraint model: seven kinds, what they may point at, and what they
+refuse. Nothing moves. Evidence in
+[docs/verification/P13-MATE-001/](docs/verification/P13-MATE-001/README.md).
 
-```text
-P13-MATE-001   define and preserve mate intent
-P13-SOLVE-001  numerically solve that intent into transforms
-```
-
-A component is not repositioned to satisfy a mate in this milestone. The
-deliverable is a constraint model clean enough for the solver to consume,
-and the discipline `P13-XFORM-001` established applies again: the intent is
-canonical and persisted, and anything derived from it is computed, not
-stored.
-
-### What a mate may point at
-
-[ADR-004](docs/architecture/decisions/ADR-004-mates-reference-semantic-geometry-only.md)
-already decided this, precisely so that this milestone does not have to
-discover it after the code exists:
-
-```text
-allowed     PlaneReference   principal, datum, coordinate-system plane,
-                             or a named face of a feature
-            AxisReference    principal, datum, coordinate-system axis
-            FaceName         a face named by the feature that generated it
-
-forbidden   FaceSignature    refused by validation, not warned about
-```
-
-> A mate may reference anything that moves with the model, and nothing that
-> merely sits where the model used to be.
-
-Two consequences ADR-004 spells out, both binding here:
-
-* **Two distinct errors, never collapsed.** "This reference kind is not
-  allowed in a mate" is a modelling mistake; "this reference does not
-  resolve" is a regeneration failure. Reporting one as the other hides which
-  happened.
-* **A mate's `dependencies()` includes the objects its references name**, via
-  `referencedObjects()`, so a mate rebuilds when the datum it uses moves.
-* A hole's bore is not mateable, because holes accept only a
-  `FaceSignature`. Mating to a hole means mating to a datum axis published
-  for it. That is a modelling convention, not a defect to work around.
-
-* [ ] Implement strong `MateId`
-* [ ] Implement canonical `MateConstraint` as document state
-* [ ] Implement Fixed constraint
-* [ ] Implement Coincident constraint
-* [ ] Implement Concentric constraint
-* [ ] Implement Parallel constraint
-* [ ] Implement Perpendicular constraint
-* [ ] Implement Distance constraint
-* [ ] Implement Angle constraint
-* [ ] Mate targets obey ADR-004 reference rules
-* [ ] Reject invalid component/reference combinations
-* [ ] Validate dimensional values and units
-* [ ] Missing mate targets become unresolved, never silently rebound
-* [ ] Mate dependencies participate correctly in the document graph
-* [ ] Invalid mate creation/modification is atomic and recoverable
-* [ ] Save/load preserves mate engineering intent
-* [ ] Deterministic mate representation validated
-* [ ] Adversarial review PASS
-* [ ] Debug / Release / Debug-shared regression PASS
-* [ ] Evidence in `docs/verification/P13-MATE-001/`
+* [x] Implement strong `MateId`
+* [x] Implement canonical `MateConstraint` as document state
+* [x] Implement Fixed constraint
+* [x] Implement Coincident constraint
+* [x] Implement Concentric constraint
+* [x] Implement Parallel constraint
+* [x] Implement Perpendicular constraint
+* [x] Implement Distance constraint
+* [x] Implement Angle constraint
+* [x] Mate targets obey ADR-004 reference rules — enforced by the type: a
+  `FaceSignature` has no field it could occupy in a `MateTarget`
+* [x] Reject invalid component/reference combinations
+* [x] Validate dimensional values and units
+* [x] Missing mate targets become unresolved, never silently rebound
+* [x] Mate dependencies participate correctly in the document graph
+* [x] Invalid mate creation/modification is atomic and recoverable
+* [x] Save/load preserves mate engineering intent
+* [x] Deterministic mate representation validated
+* [x] Adversarial review PASS
+* [x] Debug / Release / Debug-shared regression PASS
+* [x] Evidence in `docs/verification/P13-MATE-001/`
 
 ### Gate
 
@@ -339,7 +303,14 @@ mate model correct
 + 0 unexpected warnings
 ```
 
-Only then:
+Met: 1349/1349 on `debug`, `release` and `debug-shared` from clean, and
+771/771 five times over in `release` and `debug`; 0 compiler warnings; the
+adversarial review found 2 gaps and 0 production defects, closing both with
+regression tests; the qualified tree IDs match the committed tree.
+
+Carried forward: nothing is solved. A mate is intent, and no mate is checked
+for whether it can be satisfied — over-constraint, redundancy and degrees of
+freedom are `P13-SOLVE-001`.
 
 ```text
 P13-MATE-001 → [x]
@@ -355,8 +326,8 @@ P13-ARCH-001     Assembly architecture and contracts          DONE
 P13-COMP-001     Component definitions and instances          DONE
 P13-XFORM-001    Component transforms                         DONE
 P13-REF-001      Internal / external reference infrastructure DONE
-P13-MATE-001     Basic assembly constraints                   OPEN
-P13-SOLVE-001    Assembly constraint solver
+P13-MATE-001     Basic assembly constraints                   DONE
+P13-SOLVE-001    Assembly constraint solver                   OPEN
 P13-MATE-002     Mechanical mates
 P13-CONF-001     Assembly configurations / suppression
 P13-STREF-001    Stable assembly references

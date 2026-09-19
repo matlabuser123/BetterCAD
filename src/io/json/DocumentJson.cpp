@@ -17,6 +17,8 @@ Result<Json> objectToJson(const DocumentObject& object) {
     Json data;
     if (const auto* component = dynamic_cast<const assembly::Component*>(&object)) {
         data = detail::componentToJson(*component);
+    } else if (const auto* mate = dynamic_cast<const assembly::Mate*>(&object)) {
+        data = detail::mateToJson(*mate);
     } else if (const auto* sketch = dynamic_cast<const sketch::Sketch*>(&object)) {
         data = detail::sketchToJson(*sketch);
     } else if (const auto* extrude = dynamic_cast<const features::ExtrudeFeature*>(&object)) {
@@ -85,6 +87,13 @@ Result<std::unique_ptr<DocumentObject>> objectFromJson(const Json& value, std::s
     // (found by the debug-shared preset). ComponentJson.cpp carries a
     // static_assert that the two agree, so they cannot drift. The
     // sketch branch below has always compared against its literal.
+    if (*type == "mate") {
+        auto mate = detail::mateFromJson(**data, std::move(*name), dataPath);
+        if (!mate) {
+            return std::unexpected(mate.error());
+        }
+        return std::unique_ptr<DocumentObject>(std::move(*mate));
+    }
     if (*type == "component") {
         auto component = detail::componentFromJson(**data, std::move(*name), dataPath);
         if (!component) {

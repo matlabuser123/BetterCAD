@@ -3,6 +3,9 @@
 #include "support/TestFiles.hpp"
 
 #include <bettercad/assembly/Components.hpp>
+#include <bettercad/assembly/Mate.hpp>
+#include <bettercad/assembly/Mates.hpp>
+#include <bettercad/core/document/MateReference.hpp>
 #include <bettercad/core/Units.hpp>
 #include <bettercad/core/Uuid.hpp>
 #include <bettercad/core/document/Document.hpp>
@@ -116,4 +119,36 @@ TEST_CASE("ComponentCli_InfoReportsAPartInAnotherDocumentAsUnresolved", "[cli][a
     CHECK_THAT(result.out, ContainsSubstring(std::format("places object:2 of document {} (unresolved), "
                                                          "hint parts/other.bcad\n",
                                                          uuid)));
+}
+
+TEST_CASE("ComponentCli_InfoDescribesMatesAndWhatTheyRelate", "[cli][assembly][mate][p13]") {
+    // P13-MATE-001. ADR-002 warns that a new object kind missing from
+    // describeObject is silent -- the CLI prints an empty description -- so
+    // every kind that reaches the document reaches `info` too.
+    TempDir dir;
+    PartDocument p = makePart();
+    const ComponentId a = require(assembly::createComponent(p.document, "Block1", {.part = p.part}));
+    const ComponentId b = require(assembly::createComponent(p.document, "Block2", {.part = p.part}));
+    REQUIRE(assembly::createMate(p.document, "Ground",
+                                 {.type = assembly::MateType::Fixed, .component = a})
+                .has_value());
+    REQUIRE(assembly::createMate(p.document, "Touch",
+                                 {.type = assembly::MateType::Coincident,
+                                  .a = planeTarget(a, PlaneReference{}),
+                                  .b = planeTarget(b, PlaneReference{})})
+                .has_value());
+    REQUIRE(assembly::createMate(p.document, "Gap",
+                                 {.type = assembly::MateType::Distance,
+                                  .a = planeTarget(a, PlaneReference{}),
+                                  .b = planeTarget(b, PlaneReference{}),
+                                  .distance = 25_mm, .suppressed = true})
+                .has_value());
+
+    const auto result = runCliCommand({"info", cliPath(save(dir, p.document, "mates.bcad"))});
+
+    CHECK(result.exitCode == ExitCode::Success);
+    CHECK(result.err.empty());
+    CHECK_THAT(result.out, ContainsSubstring("fixed, holds Block1\n"));
+    CHECK_THAT(result.out, ContainsSubstring("coincident, Block1 plane to Block2 plane\n"));
+    CHECK_THAT(result.out, ContainsSubstring("distance 25 mm, Block1 plane to Block2 plane, suppressed\n"));
 }

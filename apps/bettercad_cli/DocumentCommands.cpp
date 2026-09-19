@@ -1,6 +1,8 @@
 #include "Commands.hpp"
 
 #include <bettercad/assembly/Component.hpp>
+#include <bettercad/assembly/Mate.hpp>
+#include <bettercad/core/document/MateReference.hpp>
 #include <bettercad/core/document/ObjectReference.hpp>
 #include <bettercad/core/document/Document.hpp>
 #include <bettercad/features/ChamferFeature.hpp>
@@ -381,7 +383,34 @@ std::string describeMirror(const Document& document, const features::MirrorDefin
     return text;
 }
 
+/// A mate target: which component, and what kind of geometry on it.
+std::string describeMateTarget(const Document& document, const MateTarget& target) {
+    return std::format("{} {}", nameOrId(document, ObjectId{target.component}), toString(target.kind));
+}
+
 std::string describeObject(const Document& document, const DocumentObject& object) {
+    if (const auto* mate = dynamic_cast<const assembly::Mate*>(&object)) {
+        const assembly::MateDefinition& d = mate->definition();
+        std::string text{assembly::toString(d.type)};
+        if (d.distance) {
+            text += std::format(" {}", describeLength(document, *d.distance, std::nullopt));
+        }
+        if (d.angle) {
+            text += std::format(" {}", describeAngle(document, *d.angle, std::nullopt));
+        }
+        if (d.component.isValid()) {
+            // A fixed mate holds a component rather than relating geometry.
+            text += std::format(", holds {}", nameOrId(document, ObjectId{d.component}));
+        } else if (d.a && d.b) {
+            text += std::format(", {} to {}", describeMateTarget(document, *d.a),
+                                describeMateTarget(document, *d.b));
+        }
+        if (d.suppressed) {
+            text += ", suppressed";
+        }
+        return text;
+    }
+
     if (const auto* component = dynamic_cast<const assembly::Component*>(&object)) {
         const ObjectReference& part = component->definition().part;
         std::string text;

@@ -35,6 +35,12 @@ int main() {
 #elif defined(BETTERCAD_CF_COMPONENT_ID_AS_FEATURE_ID)
     // Nor is a component a feature, though both widen to ObjectId.
     [[maybe_unused]] FeatureId asFeature = ComponentId::fromValue(1);
+#elif defined(BETTERCAD_CF_OBJECT_TO_MATE_ID)
+    // A MateId widens to ObjectId, never the other way (P13-MATE-001).
+    [[maybe_unused]] MateId narrowed = ObjectId::fromValue(1);
+#elif defined(BETTERCAD_CF_MATE_ID_AS_COMPONENT_ID)
+    // A mate relates components; it is not one of them.
+    [[maybe_unused]] ComponentId asComponent = MateId::fromValue(1);
 #elif defined(BETTERCAD_CF_ENTITY_ID_AS_OBJECT_ID)
     takesObject(EntityId::fromValue(1));
 #endif

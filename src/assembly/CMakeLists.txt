@@ -8,6 +8,8 @@ bettercad_add_library(bettercad_assembly
     SOURCES
         Component.cpp
         Components.cpp
+        Mate.cpp
+        Mates.cpp
         Placement.cpp
         Resolution.cpp
     PUBLIC_LINK

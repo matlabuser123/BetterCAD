@@ -5,6 +5,7 @@
 #include "io/json/JsonReader.hpp"
 
 #include <bettercad/assembly/Component.hpp>
+#include <bettercad/assembly/Mate.hpp>
 #include <bettercad/core/document/References.hpp>
 #include <bettercad/core/math/Direction.hpp>
 #include <bettercad/core/math/Frame.hpp>
@@ -53,6 +54,13 @@ namespace bettercad::io::detail {
 /// {"object": id, "axis": "x" | "y" | "z"}, the object only when set.
 [[nodiscard]] Json axisReferenceToJson(const AxisReference& reference);
 [[nodiscard]] Result<AxisReference> axisReferenceFromJson(const Json& value, std::string_view path);
+
+/// "type" and exactly the keys that kind of mate calls for: "component" for
+/// a fixed mate, "a" and "b" for the rest, "distance" or "angle" for the two
+/// that carry a value, and "suppressed": true only when it is.
+[[nodiscard]] Json mateToJson(const assembly::Mate& mate);
+[[nodiscard]] Result<std::unique_ptr<assembly::Mate>> mateFromJson(const Json& data, std::string name,
+                                                                    std::string_view path);
 
 /// "part": the object ID of the part this component places, and
 /// "suppressed": true, written only when it is.
