@@ -91,7 +91,7 @@ and nothing else. Public headers live in `include/bettercad/<module>/`; private
 headers beside their sources in `src/<module>/`.
 
 Target directories not yet created: `src/assembly/`, `src/drawing/`,
-`src/simulation/`, `src/versioning/`, `benchmarks/`, `docs/adr/`.
+`src/simulation/`, `src/versioning/`, `benchmarks/`.
 `src/renderer/` and `src/scripting/` exist but are empty.
 
 ## Document Model
@@ -514,10 +514,12 @@ document mutation carefully synchronized. Prefer immutable generated results —
 evaluating a definition yields a new shape rather than mutating a shared one,
 which simplifies undo, caching, thread safety and regression testing.
 
-**Architectural decision records.** Major choices belong in `docs/adr/`
-(not yet created) recording context, decision, alternatives and consequences.
-Until then that reasoning lives in the milestone evidence under
-[docs/verification/](docs/verification/).
+**Architectural decision records.** Major choices belong in
+[docs/architecture/decisions/](docs/architecture/decisions/), recording
+context, constraints, the candidates considered, the decision, its rationale,
+its consequences and how it is verified. Reasoning that is specific to one
+milestone rather than architecturally significant stays in that milestone's
+evidence under [docs/verification/](docs/verification/).
 
 **Success criterion.** The architecture succeeds if BetterCAD can grow from a
 simple parametric block to large mechanical assemblies with linked drawings,

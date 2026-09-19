@@ -509,6 +509,21 @@ Checked against the implementation, and corrected where they disagreed:
 Verified: no document claims `P13` is authorized. `TODO.md` lists it under
 "Future Phases — Do not start without explicit authorization".
 
+**Correction, recorded after this milestone was committed.** This audit
+missed one inconsistency, found while reading `ARCHITECTURE.md` at the start
+of `P13-ARCH-001`: two places still said architectural decision records
+belong in `docs/adr/` "(not yet created)", when the engineering-lifecycle
+commit `0753f73` had created `docs/architecture/decisions/` and `CLAUDE.md`
+already pointed there. The gate above should have caught it and did not,
+because the audit read `README.md`, `TODO.md`, `ROADMAP.md`, `CLAUDE.md` and
+`docs/engineering/` but not `ARCHITECTURE.md`.
+
+It is corrected in the commit that records this note. Nothing else changes:
+no executable source or test is involved, the qualified tree is untouched,
+and no other gate depends on it. The qualification stands; this entry is
+here so the audit's claim is not stronger than what the audit actually
+checked.
+
 ## Known limitations
 
 Carried forward, all accurate and all recorded in `TODO.md` and `README.md`:
