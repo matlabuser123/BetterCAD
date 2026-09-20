@@ -1053,6 +1053,148 @@ Next → P13-CMD-001
 
 ---
 
+# NEXT — P13-CMD-001
+
+## Commands / Undo / Redo
+
+Every assembly edit becomes an edit that can be taken back.
+
+```text
+P13-CONF-001    suppression, set through functions that bump a revision
+P13-REGEN-001   regeneration that re-solves when those inputs move
+P13-CMD-001     and all of it undoable
+```
+
+### What already exists, checked
+
+The command machinery is complete and qualified. This milestone is mostly
+about routing assembly edits through it, not about building it.
+
+| Capability | State today |
+| --- | --- |
+| The `Command` contract | **Built.** execute / undo / redo, with redo required to reproduce "the same state execute() produced, **including the same IDs**" |
+| `CommandHistory` | **Built.** Undo and redo stacks, bound to one document, with an optional depth limit |
+| Redo invalidation | **Built.** "Executing a new command clears the redo stack" — the divergent-edit rule, already there |
+| Generic object create/delete | **Built.** `AddObjectCommand` takes any `DocumentObject`, and a `Component` and a `Mate` are document objects, so both already flow through it with the same-ID guarantee |
+| Configuration commands | **Built** for parameters: create, modify, delete, set-active |
+| History persistence | **Not persisted, by construction.** Nothing in `DocumentJson.cpp` writes it, so the checklist item is already satisfied — say so rather than implying work |
+| Assembly-specific commands | **None.** No placement edit, no mate edit, no suppression command |
+
+`P13-CONF-001` recorded the gap this closes, in its own known limitations:
+suppression is set through `assembly::suppressComponent()` and
+`suppressMate()`, which bump the revision but are **not** undoable commands.
+
+### A defect to verify first, before building on it
+
+Reading `DeleteObjectCommand` alongside `P13-CONF-001`'s deletion rule
+suggests a real hole in "undo restores exact prior canonical intent".
+
+```text
+Document::removeObject()  ->  configurations_.forgetObject(id)
+Document::removeParameter() ->  configurations_.forgetParameter(id)
+```
+
+Both clear the configuration overrides that named the deleted object, which is
+right: a configuration must never name something that is gone. But
+`DeleteObjectCommand::undo()` stores **only the object** and re-inserts it —
+it does not appear to restore the overrides that deletion cleared.
+
+If that reading is correct, then:
+
+```text
+a configuration suppresses a component
+-> delete the component      (the override is cleared)
+-> undo                      (the component returns)
+-> the configuration no longer suppresses it
+```
+
+The canonical intent after undo is not the canonical intent before delete,
+which is precisely what this milestone's gate forbids.
+
+**Verify it before fixing it**, and note that the parameter half of it
+predates P13 entirely — `forgetParameter()` has been called on delete since
+`P12-PARAM-002`, so if the hole is real it is a pre-existing defect in a
+qualified milestone, and that should be said plainly in the evidence rather
+than quietly repaired.
+
+### Scope the command surface deliberately
+
+The checklist asks for component and mate create/delete commands, and the
+generic `AddObjectCommand` already provides them mechanically. What it does
+**not** provide is the document-level validation `assembly::createComponent()`
+and `createMate()` perform — that the part exists and is a part, that mate
+targets obey ADR-004, that a mate relates two different components. A raw add
+would bypass all of it.
+
+So the question to settle is whether assembly commands wrap the existing
+generic ones with validation, or replace them. Prefer wrapping: two ways to
+add a component, one validated and one not, is the kind of split that ends
+with the wrong one being used.
+
+### The failure this milestone exists to prevent
+
+**An undo that leaves the document subtly different from before.** Not
+visibly broken — an exception would be a kindness — but *almost* restored,
+with one override lost or one reference renumbered. The engineer carries on
+from a state they believe they recognise, and the divergence surfaces much
+later as geometry that cannot be explained.
+
+That is why the gate says *exactly* twice, and why the tests should compare
+whole canonical state before and after a round trip rather than spot-checking
+the thing the command obviously touched. The defect above is exactly this
+shape: everything looks restored except the one field nothing thought to
+check.
+
+- [ ] Define assembly command contract
+- [ ] Implement component create/delete commands
+- [ ] Implement component placement edit command
+- [ ] Implement mate create/delete/edit commands
+- [ ] Implement configuration/suppression commands
+- [ ] Preserve stable references through undo/redo
+- [ ] Regenerate/re-solve correctly after command execution
+- [ ] Undo restores exact prior canonical intent
+- [ ] Redo reapplies exact canonical intent
+- [ ] Validate multi-step command history
+- [ ] Validate failed commands are atomic and not added to history
+- [ ] Validate redo stack invalidation after divergent edit
+- [ ] Validate deterministic undo/redo results
+- [ ] Validate save/load does not persist transient command history unless architected
+- [ ] Adversarial review PASS
+- [ ] Debug / Release / Debug-shared regression PASS
+- [ ] Evidence in `docs/verification/P13-CMD-001/`
+
+### Gate
+
+```text
+command model correct
++ assembly edits fully command-driven
++ undo restores canonical state exactly
++ redo reapplies canonical state exactly
++ stable references preserved
++ regeneration/solve integration correct
++ history semantics correct
++ failure atomicity PASS
++ determinism PASS
++ adversarial review PASS
++ full regression PASS
++ 0 unexpected warnings
+```
+
+`P13-REGEN-001` makes the regeneration half checkable rather than a matter of
+faith: an edit, an undo and a redo each move the solve's inputs, so each must
+re-solve and land the components where the restored intent says — and
+`SolveTrigger` says whether it did. Assert the positions, not just that a
+solve happened.
+
+Only then:
+
+```text
+P13-CMD-001 → [x]
+Next → P13-PERSIST-001
+```
+
+---
+
 # Planned P13 Sequence
 
 ```text
