@@ -12,9 +12,14 @@ bettercad_add_library(bettercad_assembly
         Mates.cpp
         Placement.cpp
         Resolution.cpp
+        solver/Solver.cpp
+        solver/SolverSystem.cpp
+        solver/SolverSystem.hpp
     PUBLIC_LINK
         BetterCAD::core
         BetterCAD::features
+    PRIVATE_LINK
+        BetterCAD::eigen
 )
 
 install(TARGETS bettercad_assembly

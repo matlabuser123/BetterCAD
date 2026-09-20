@@ -10,8 +10,8 @@
 
 ```text
 Current:   P13 — Assemblies
-Next:      P13-SOLVE-001 — Assembly constraint solver
-Then:      P13-MATE-002 — Mechanical mates
+Next:      P13-MATE-002 — Mechanical mates
+Then:      P13-CONF-001 — Assembly configurations / suppression
 
 Released:  v0.1.0 — P0–P10
 Qualified: P11, P12
@@ -319,7 +319,7 @@ Next → P13-SOLVE-001
 
 ---
 
-# NEXT — P13-SOLVE-001
+# DONE — P13-SOLVE-001
 
 ## Assembly Constraint Solver
 
@@ -370,26 +370,26 @@ held to the same standard: a solve that failed and a solve that succeeded
 into an under-constrained assembly are different answers, and collapsing
 either into `false` loses the one thing the engineer needs.
 
-* [ ] Define solver input/output contracts
-* [ ] Convert mate intent into a constraint problem
-* [ ] Implement component DOF representation
-* [ ] Implement residual evaluation for all 7 basic mate types
-* [ ] Implement Jacobian / derivative path
-* [ ] Implement nonlinear solve loop
-* [ ] Apply solved transforms as derived state only
-* [ ] Preserve canonical component placement intent
-* [ ] Detect fully constrained assemblies
-* [ ] Detect under-constrained assemblies / remaining DOF
-* [ ] Detect inconsistent / over-constrained systems
-* [ ] Detect redundant constraints where feasible
-* [ ] Validate convergence criteria and tolerances
-* [ ] Validate deterministic solver results
-* [ ] Validate failure atomicity / no partial solved state
-* [ ] Independently validate analytic assembly cases
-* [ ] Validate unresolved mate/reference handling
-* [ ] Adversarial review PASS
-* [ ] Debug / Release / Debug-shared regression PASS
-* [ ] Evidence in `docs/verification/P13-SOLVE-001/`
+* [x] Define solver input/output contracts
+* [x] Convert mate intent into a constraint problem
+* [x] Implement component DOF representation
+* [x] Implement residual evaluation for all 7 basic mate types
+* [x] Implement Jacobian / derivative path
+* [x] Implement nonlinear solve loop
+* [x] Apply solved transforms as derived state only — returned by `solve()`, never written to the document or the file. Holding them beside the bodies and dropping them when a component's regeneration fails needs the assembly regeneration pipeline, which is `P13-REGEN-001`
+* [x] Preserve canonical component placement intent
+* [x] Detect fully constrained assemblies
+* [x] Detect under-constrained assemblies / remaining DOF
+* [x] Detect inconsistent / over-constrained systems
+* [x] Detect redundant constraints where feasible — linear dependence at the solution, by Gram-Schmidt in mate ID order; non-linear redundancy is not detected
+* [x] Validate convergence criteria and tolerances
+* [x] Validate deterministic solver results
+* [x] Validate failure atomicity / no partial solved state
+* [x] Independently validate analytic assembly cases
+* [x] Validate unresolved mate/reference handling
+* [x] Adversarial review PASS
+* [x] Debug / Release / Debug-shared regression PASS
+* [x] Evidence in `docs/verification/P13-SOLVE-001/`
 
 ### Gate
 
@@ -420,7 +420,22 @@ Tolerances need a reason, and a Jacobian is not well-conditioned algebra:
 expect to justify the convergence tolerance against the conditioning of the
 system rather than inheriting `1e-12` from the transform tests.
 
-Only then:
+Met: 1382/1382 on `debug`, `release` and `debug-shared` from clean, and
+873/873 five times over in `release` and `debug`; 0 compiler warnings; the
+Jacobian agrees with central differences to 3.7e-11 against a 1e-7 gate; every
+DOF count is hand-derived and matches; the solver takes a `const Document&`,
+so it cannot write back by type, and the `.bcad` file is byte-identical across
+a solve. The adversarial review found 3 findings and 0 production defects. The
+qualified tree IDs match the committed tree.
+
+All five of ADR-005's verification checks are measured, three of them
+bit-identical rather than to a tolerance.
+
+Carried forward: the solved transforms are returned, not applied. Nothing
+holds them beside the bodies, no regeneration calls the solver, and a mate's
+own value cannot be driven by a parameter. An exactly stationary start is
+reported `Inconsistent` when it is merely unreachable — shared with the sketch
+solver, recorded, and pinned by a test.
 
 ```text
 P13-SOLVE-001 → [x]
@@ -437,8 +452,8 @@ P13-COMP-001     Component definitions and instances          DONE
 P13-XFORM-001    Component transforms                         DONE
 P13-REF-001      Internal / external reference infrastructure DONE
 P13-MATE-001     Basic assembly constraints                   DONE
-P13-SOLVE-001    Assembly constraint solver                   OPEN
-P13-MATE-002     Mechanical mates
+P13-SOLVE-001    Assembly constraint solver                   DONE
+P13-MATE-002     Mechanical mates                             OPEN
 P13-CONF-001     Assembly configurations / suppression
 P13-STREF-001    Stable assembly references
 P13-REGEN-001    Dependency / regeneration

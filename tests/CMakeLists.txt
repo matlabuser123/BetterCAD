@@ -28,6 +28,8 @@ bettercad_add_executable(bettercad_tests
         assembly/ComponentTests.cpp
         assembly/MateFileTests.cpp
         assembly/MateTests.cpp
+        assembly/SolverDerivativeTests.cpp
+        assembly/SolverTests.cpp
         assembly/ReferenceFileTests.cpp
         assembly/ReferenceTests.cpp
         assembly/PlacementFileTests.cpp
@@ -175,7 +177,12 @@ bettercad_add_executable(bettercad_tests
         Catch2::Catch2WithMain
 )
 bettercad_copy_runtime_dlls(bettercad_tests)
-target_include_directories(bettercad_tests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
+# The solver's derivative tests compare its analytic Jacobian against finite
+# differences, which needs the solver's own System. That is the one place a
+# test reaches past a public API in this repository; see
+# docs/verification/P13-SOLVE-001/ for why it is a deliberate exception.
+target_include_directories(bettercad_tests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/src")
+target_link_libraries(bettercad_tests PRIVATE BetterCAD::eigen)
 target_compile_definitions(bettercad_tests PRIVATE
     "BETTERCAD_EXPECTED_VERSION=\"${PROJECT_VERSION}\""
     "BETTERCAD_EXPECTED_BUILD_CONFIG=\"$<CONFIG>\""
