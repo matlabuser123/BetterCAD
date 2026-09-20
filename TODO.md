@@ -592,6 +592,134 @@ Next → P13-CONF-001
 
 ---
 
+# NEXT — P13-CONF-001
+
+## Assembly Configurations / Suppression
+
+One assembly describing a family of builds: which components and which mates
+are in force, per configuration.
+
+```text
+P13-MATE-001   the constraints, stored as intent
+P13-SOLVE-001  solved into derived transforms
+P13-MATE-002   four mechanical joints through the same solver
+P13-CONF-001   which of all that is in force, per configuration
+```
+
+### What already exists, checked
+
+Three of the checklist items are not starting from nothing, and knowing which
+is which decides how big this milestone is:
+
+| Item | State today |
+| --- | --- |
+| Mate suppression | **Exists.** `MateDefinition::suppressed`, honoured by the solver — a suppressed mate contributes no equations, tested in `P13-SOLVE-001` and `P13-MATE-002` |
+| Component suppression | **The flag exists**, `ComponentDefinition::suppressed`, documented as "not in this build". **The solver ignores it** |
+| A configuration model | **Exists.** `ConfigurationId`, `Configuration`, `CreateConfigurationCommand`, `ModifyConfigurationCommand` — P12-PARAM-002, for parameter overrides |
+
+So the work is not "add suppression". It is **making suppression
+configuration-dependent**, and closing the one real gap below.
+
+### The gap that exists today
+
+`System::build()` skips suppressed *mates* and does not skip suppressed
+*components*: the loop over `components(document)` gives every component six
+unknowns whether or not it is suppressed. A suppressed component therefore
+still inflates the reported degrees of freedom.
+
+That is unimplemented scope rather than a defect — `P13-SOLVE-001` was not
+asked about suppression, and this milestone is where it belongs — but it is a
+behaviour change to an already-qualified solver, so it needs its own
+regression test and a note in the evidence saying what moved.
+
+### Settle this before implementing
+
+**Is an assembly configuration the existing `Configuration`, or a new one?**
+
+The checklist says "implement strong `AssemblyConfigurationId`", and there is
+already a `ConfigurationId`. Two configuration systems in one document would
+be the second-system mistake `CLAUDE.md` names outright, and would force every
+later question — which is active, what does switching mean, what does a file
+hold — to be answered twice and kept in step.
+
+The existing model is worth reading before deciding, because it already
+solves this milestone's hardest problem. P12-PARAM-002's configurations are
+**overrides on top of base values, never edits to them**:
+
+```text
+base values -> the active configuration's overrides -> what is in force
+```
+
+Its own header states the consequence: "switching Small -> Large -> Small
+restores Small exactly: the base values never moved." That is precisely what
+"switching configuration updates active assembly state deterministically" and
+"configuration switching is atomic and recoverable" require, and it is
+already qualified.
+
+The natural reading is that `suppressed` is a base value like a parameter's,
+a configuration carries an override for it, and what is in force is the base
+with the override applied — the same shape, extended to a second kind of
+overridable state. Put up the alternatives and compare them properly, but do
+not add a second configuration concept without showing why this one cannot
+carry it.
+
+* [ ] Define canonical assembly configuration model
+* [ ] Implement strong `AssemblyConfigurationId`
+* [ ] Add component suppression per configuration
+* [ ] Add mate suppression per configuration
+* [ ] Preserve default/base configuration behavior
+* [ ] Switching configuration updates active assembly state deterministically
+* [ ] Suppressed components are excluded from solve participation
+* [ ] Suppressed mates are excluded from solver equations
+* [ ] Dependencies remain valid across configuration changes
+* [ ] Unresolved references handled correctly when components are suppressed
+* [ ] Save/load preserves configurations and suppression state
+* [ ] Configuration switching is atomic and recoverable
+* [ ] Deterministic configuration results validated
+* [ ] Adversarial review PASS
+* [ ] Debug / Release / Debug-shared regression PASS
+* [ ] Evidence in `docs/verification/P13-CONF-001/`
+
+### Gate
+
+```text
+configuration model correct
++ component suppression correct
++ mate suppression correct
++ solver participation correct
++ dependency behavior correct
++ persistence PASS
++ switching atomicity PASS
++ determinism PASS
++ adversarial review PASS
++ full regression PASS
++ 0 unexpected warnings
+```
+
+### Keep the scope tight
+
+This milestone is **configuration and suppression state**: what is in force,
+and what switching means. Not stable assembly references, and not the
+regeneration pipeline — those are `P13-STREF-001` and `P13-REGEN-001`, and
+they come next.
+
+One thing to watch that suppression makes newly possible: a mate whose target
+sits on a suppressed component. That is not an unresolved reference — the
+component is still in the document with its ID and its geometry intact, which
+is what suppression means here. Deciding what the solve does with such a mate
+is this milestone's, and it is the case most likely to be got quietly wrong,
+because "suppressed" and "missing" look alike from inside the solver and mean
+entirely different things to the engineer.
+
+Only then:
+
+```text
+P13-CONF-001 → [x]
+Next → P13-STREF-001
+```
+
+---
+
 # Planned P13 Sequence
 
 ```text
