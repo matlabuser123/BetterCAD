@@ -120,6 +120,10 @@ private:
     std::string name_;
     std::optional<Parameter> parameter_;
     std::unique_ptr<DocumentObject> object_;
+    /// What the configurations said about this object before it went. The
+    /// deletion clears it; undo must put it back, or the object returns and
+    /// the intent about it does not (P13-CMD-001).
+    ObjectOverrides overrides_;
 };
 
 /// Renames a parameter or an object.

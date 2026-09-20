@@ -7,6 +7,7 @@ bettercad_add_library(bettercad_assembly
     EXPORT_HEADER bettercad/assembly/Export.hpp
     SOURCES
         Component.cpp
+        Commands.cpp
         Components.cpp
         Configurations.cpp
         Mate.cpp

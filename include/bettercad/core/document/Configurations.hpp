@@ -134,6 +134,24 @@ private:
 /// Same identity and content (ID, name, and all three kinds of override).
 [[nodiscard]] BETTERCAD_CORE_EXPORT bool equivalent(const Configuration& a, const Configuration& b) noexcept;
 
+/// Everything the configurations of a document say about one object: the
+/// parameter value each overrides it to, or the suppression each gives it.
+///
+/// Captured before a deletion so that undoing the deletion can put it back.
+/// A configuration must never name an object that is gone, so deleting one
+/// clears these -- and an undo that restored the object but not these would
+/// leave the document almost, but not exactly, as it was (P13-CMD-001).
+struct ObjectOverrides {
+    std::map<ConfigurationId, DimensionedValue> parameter{};
+    std::map<ConfigurationId, bool> component{};
+    std::map<ConfigurationId, bool> mate{};
+
+    [[nodiscard]] bool empty() const noexcept {
+        return parameter.empty() && component.empty() && mate.empty();
+    }
+    friend bool operator==(const ObjectOverrides&, const ObjectOverrides&) = default;
+};
+
 /// The configurations of a document, by ID, with unique names.
 ///
 /// One of them may be *active*: the one whose overrides are in force. None
@@ -192,6 +210,13 @@ public:
     /// objects and the table does not know which kind this was; both maps are
     /// cleared of that ID value.
     std::size_t forgetObject(ObjectId object);
+    /// Everything every configuration says about @p object, in a form
+    /// restoreOverridesFor() can put back. Empty when none mentions it.
+    [[nodiscard]] ObjectOverrides overridesFor(ObjectId object) const;
+    /// Puts back what forgetParameter() or forgetObject() cleared. Silently
+    /// skips configurations that no longer exist, so that undoing a deletion
+    /// after a configuration was itself deleted restores what it can.
+    void restoreOverridesFor(ObjectId object, const ObjectOverrides& overrides);
 
 private:
     [[nodiscard]] Configuration* findMutable(ConfigurationId id) noexcept;

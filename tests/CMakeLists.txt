@@ -24,6 +24,7 @@ target_link_libraries(bettercad_test_occt
 bettercad_add_executable(bettercad_tests
     SOURCES
         TestHelpers.hpp
+        assembly/CommandTests.cpp
         assembly/ComponentFileTests.cpp
         assembly/ComponentTests.cpp
         assembly/ConfigurationTests.cpp

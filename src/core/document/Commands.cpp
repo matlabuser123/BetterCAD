@@ -189,6 +189,8 @@ std::string DeleteObjectCommand::description() const {
 }
 
 Result<void> DeleteObjectCommand::execute(Document& document) {
+    // Captured BEFORE the removal, which is what clears them.
+    overrides_ = document.configurationOverridesFor(id_);
     if (const auto parameterId = document.asParameter(id_)) {
         auto removed = document.removeParameter(*parameterId);
         if (!removed) {
@@ -208,11 +210,14 @@ Result<void> DeleteObjectCommand::execute(Document& document) {
 }
 
 Result<void> DeleteObjectCommand::undo(Document& document) {
+    // The object first: a configuration override may only name an object the
+    // document holds, so putting the overrides back has to follow it.
     if (parameter_) {
         if (auto inserted = document.insertParameter(*parameter_); !inserted) {
             return inserted;
         }
         parameter_.reset();
+        document.restoreConfigurationOverrides(id_, overrides_);
         return {};
     }
     if (object_) {
@@ -220,6 +225,7 @@ Result<void> DeleteObjectCommand::undo(Document& document) {
             return inserted;
         }
         object_.reset();
+        document.restoreConfigurationOverrides(id_, overrides_);
         return {};
     }
     return notExecuted("undo");

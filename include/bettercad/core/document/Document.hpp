@@ -167,6 +167,22 @@ public:
         return requireOverridable(parameter, value);
     }
 
+    /// Everything the configurations say about @p object, and the means to
+    /// put it back (P13-CMD-001).
+    ///
+    /// Deleting an object clears the overrides naming it, because a
+    /// configuration must never name something that is gone. A command that
+    /// deletes therefore captures these first and restores them on undo --
+    /// without which the object would come back and the intent about it
+    /// would not.
+    [[nodiscard]] ObjectOverrides configurationOverridesFor(ObjectId object) const {
+        return configurations_.overridesFor(object);
+    }
+    void restoreConfigurationOverrides(ObjectId object, const ObjectOverrides& overrides) {
+        configurations_.restoreOverridesFor(object, overrides);
+        ++revision_;
+    }
+
     /// Selects the configuration whose overrides are in force; std::nullopt
     /// is the base configuration. Fails with NotFound for an unknown ID.
     Result<bool> setActiveConfiguration(std::optional<ConfigurationId> id);

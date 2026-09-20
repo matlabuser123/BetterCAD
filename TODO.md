@@ -10,8 +10,8 @@
 
 ```text
 Current:   P13 — Assemblies
-Next:      P13-CMD-001 — Commands / undo / redo
-Then:      P13-PERSIST-001 — Save / load assembly intent
+Next:      P13-PERSIST-001 — Save / load assembly intent
+Then:      P13-CLI-001 — Headless assembly workflows
 
 Released:  v0.1.0 — P0–P10
 Qualified: P11, P12
@@ -1053,7 +1053,7 @@ Next → P13-CMD-001
 
 ---
 
-# NEXT — P13-CMD-001
+# DONE — P13-CMD-001
 
 ## Commands / Undo / Redo
 
@@ -1145,23 +1145,23 @@ the thing the command obviously touched. The defect above is exactly this
 shape: everything looks restored except the one field nothing thought to
 check.
 
-- [ ] Define assembly command contract
-- [ ] Implement component create/delete commands
-- [ ] Implement component placement edit command
-- [ ] Implement mate create/delete/edit commands
-- [ ] Implement configuration/suppression commands
-- [ ] Preserve stable references through undo/redo
-- [ ] Regenerate/re-solve correctly after command execution
-- [ ] Undo restores exact prior canonical intent
-- [ ] Redo reapplies exact canonical intent
-- [ ] Validate multi-step command history
-- [ ] Validate failed commands are atomic and not added to history
-- [ ] Validate redo stack invalidation after divergent edit
-- [ ] Validate deterministic undo/redo results
-- [ ] Validate save/load does not persist transient command history unless architected
-- [ ] Adversarial review PASS
-- [ ] Debug / Release / Debug-shared regression PASS
-- [ ] Evidence in `docs/verification/P13-CMD-001/`
+- [x] Define assembly command contract — canonical intent only; derived state recomputed, never undo payload
+- [x] Implement component create/delete commands — wrapping `core`'s generic ones with the validation they bypass
+- [x] Implement component placement edit command
+- [x] Implement mate create/delete/edit commands — including a slider's roll reference
+- [x] Implement configuration/suppression commands — closing the gap `P13-CONF-001` recorded
+- [x] Preserve stable references through undo/redo
+- [x] Regenerate/re-solve correctly after command execution
+- [x] Undo restores exact prior canonical intent — **and this is where the defect was**
+- [x] Redo reapplies exact canonical intent
+- [x] Validate multi-step command history
+- [x] Validate failed commands are atomic and not added to history
+- [x] Validate redo stack invalidation after divergent edit
+- [x] Validate deterministic undo/redo results
+- [x] Validate save/load does not persist transient command history unless architected — transient by architecture, measured rather than assumed
+- [x] Adversarial review PASS
+- [x] Debug / Release / Debug-shared regression PASS
+- [x] Evidence in `docs/verification/P13-CMD-001/`
 
 ### Gate
 
@@ -1186,7 +1186,34 @@ re-solve and land the components where the restored intent says — and
 `SolveTrigger` says whether it did. Assert the positions, not just that a
 solve happened.
 
-Only then:
+Met: 1500/1500 on `debug`, `release` and `debug-shared` from clean, and
+1076/1076 five times over in `release` and `debug`; 0 compiler warnings; every
+undo and redo compared by whole-object equality rather than field
+spot-checks. The qualified tree IDs match the committed tree. **Zero lines
+were deleted anywhere in the milestone** — every change is additive.
+
+**The milestone's real result is the defect it found.** The suspicion
+recorded in this authorization was correct, and correct twice: undo restored
+a deleted object but not the configuration overrides the deletion had
+cleared. A configuration that suppressed a component lost the suppression;
+a configuration that overrode a parameter lost the override. The second half
+has been in `P12-PARAM-002` — a **qualified phase** — since it shipped.
+
+Reproduced by a failing test before anything was fixed, then fixed by four
+lines of capture-and-restore in `DeleteObjectCommand`, and both cases stay in
+the suite as regression guards. It existed because two correct changes met:
+`forgetObject()` is right, and `DeleteObjectCommand::undo()` was right when
+written for a document that had no configurations. Neither review would have
+caught it, because neither change was wrong — only reading them together did.
+
+P12's own evidence is deliberately **not** edited. It records what was
+measured at the time, and this was not among it.
+
+Carried forward: deleting a component leaves the mates naming it unresolved
+rather than removing them, which is `P13-STREF-001`'s contract but does mean a
+delete can leave an assembly that will not solve. History does not survive a
+save, by architecture. Consecutive edits do not coalesce, so a drag would
+produce one history entry per edit.
 
 ```text
 P13-CMD-001 → [x]
@@ -1208,8 +1235,8 @@ P13-MATE-002     Mechanical mates                             DONE
 P13-CONF-001     Assembly configurations / suppression        DONE
 P13-STREF-001    Stable assembly references                   DONE
 P13-REGEN-001    Dependency / regeneration                    DONE
-P13-CMD-001      Commands / undo / redo                       OPEN
-P13-PERSIST-001  Save / load assembly intent
+P13-CMD-001      Commands / undo / redo                       DONE
+P13-PERSIST-001  Save / load assembly intent                  OPEN
 P13-CLI-001      Headless assembly workflows
 P13-STEP-001     Assembly STEP export / read-back
 P13-REFMOD-001   Production assembly reference models

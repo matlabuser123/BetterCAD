@@ -304,6 +304,46 @@ std::size_t ConfigurationTable::forgetParameter(ParameterId parameter) {
     return changed;
 }
 
+ObjectOverrides ConfigurationTable::overridesFor(ObjectId object) const {
+    const auto parameter = ParameterId::fromValue(object.value());
+    const auto component = ComponentId::fromValue(object.value());
+    const auto mate = MateId::fromValue(object.value());
+    ObjectOverrides found;
+    for (const auto& [id, configuration] : configurations_) {
+        if (const auto value = configuration.overrideFor(parameter)) {
+            found.parameter.emplace(id, *value);
+        }
+        if (const auto suppressed = configuration.suppressionFor(component)) {
+            found.component.emplace(id, *suppressed);
+        }
+        if (const auto suppressed = configuration.suppressionFor(mate)) {
+            found.mate.emplace(id, *suppressed);
+        }
+    }
+    return found;
+}
+
+void ConfigurationTable::restoreOverridesFor(ObjectId object, const ObjectOverrides& overrides) {
+    const auto parameter = ParameterId::fromValue(object.value());
+    const auto component = ComponentId::fromValue(object.value());
+    const auto mate = MateId::fromValue(object.value());
+    for (const auto& [id, value] : overrides.parameter) {
+        if (Configuration* configuration = findMutable(id)) {
+            (void)configuration->setOverride(parameter, value);
+        }
+    }
+    for (const auto& [id, suppressed] : overrides.component) {
+        if (Configuration* configuration = findMutable(id)) {
+            (void)configuration->setSuppressed(component, suppressed);
+        }
+    }
+    for (const auto& [id, suppressed] : overrides.mate) {
+        if (Configuration* configuration = findMutable(id)) {
+            (void)configuration->setSuppressed(mate, suppressed);
+        }
+    }
+}
+
 bool equivalent(const ConfigurationTable& a, const ConfigurationTable& b) noexcept {
     if (a.size() != b.size() || a.active() != b.active()) {
         return false;
