@@ -2,11 +2,15 @@
 
 #include <bettercad/assembly/Component.hpp>
 #include <bettercad/assembly/Components.hpp>
+#include <bettercad/assembly/Configurations.hpp>
+#include <bettercad/assembly/Mate.hpp>
+#include <bettercad/assembly/Mates.hpp>
 #include <bettercad/core/document/Document.hpp>
 #include <bettercad/core/geometry/Body.hpp>
 #include <bettercad/features/Feature.hpp>
 #include <bettercad/features/Regenerator.hpp>
 
+#include <array>
 #include <format>
 #include <optional>
 #include <string>
@@ -89,6 +93,88 @@ void registerHandlers(features::Regenerator& regenerator, const ReferenceResolve
             // place it.
             return std::nullopt;
         });
+}
+
+// --- Mate targets (P13-STREF-001) --------------------------------------------------------------
+
+std::string_view toString(MateTargetSide side) noexcept {
+    switch (side) {
+    case MateTargetSide::A:
+        return "a";
+    case MateTargetSide::B:
+        return "b";
+    case MateTargetSide::RollA:
+        return "a2";
+    case MateTargetSide::RollB:
+        return "b2";
+    }
+    return "unknown";
+}
+
+Result<MateTargetGeometry> resolveMateTarget(const Document& document, const MateTarget& target,
+                                             const features::BodyLookup& bodies) {
+    if (findComponent(document, target.component) == nullptr) {
+        return makeError(ErrorCode::NotFound,
+                         std::format("{} is not a component of this document", target.component));
+    }
+    MateTargetGeometry geometry;
+    if (target.kind == MateTargetKind::Axis) {
+        auto axis = features::resolveAxis(document, *target.axis, bodies);
+        if (!axis) {
+            return std::unexpected(axis.error());
+        }
+        geometry.planar = false;
+        geometry.origin = axis->origin;
+        geometry.direction = axis->direction;
+        return geometry;
+    }
+    // A face is a plane reference naming that face of its feature, which is
+    // how P12-STREF-001 already resolves one -- by the role the feature gives
+    // it, never by a position in a topology array.
+    PlaneReference reference;
+    if (target.kind == MateTargetKind::Face) {
+        reference.object = target.face->feature;
+        reference.face = target.face->face;
+    } else {
+        reference = *target.plane;
+    }
+    auto plane = features::resolvePlane(document, reference, bodies);
+    if (!plane) {
+        return std::unexpected(plane.error());
+    }
+    geometry.planar = true;
+    geometry.origin = plane->origin();
+    geometry.direction = plane->normal();
+    return geometry;
+}
+
+std::vector<UnresolvedMateTarget> unresolvedMateTargets(const Document& document,
+                                                        const features::BodyLookup& bodies) {
+    std::vector<UnresolvedMateTarget> found;
+    for (const MateId id : mates(document)) {
+        const Mate* mate = findMate(document, id);
+        if (mate == nullptr || !isMateActive(document, id)) {
+            // Not in this build, so it says nothing about whether the model
+            // is broken. Inactive is not unresolved (P13-CONF-001).
+            continue;
+        }
+        const MateDefinition& d = mate->definition();
+        const std::array<std::pair<MateTargetSide, const std::optional<MateTarget>*>, 4> sides{{
+            {MateTargetSide::A, &d.a},
+            {MateTargetSide::B, &d.b},
+            {MateTargetSide::RollA, &d.a2},
+            {MateTargetSide::RollB, &d.b2},
+        }};
+        for (const auto& [side, target] : sides) {
+            if (!*target) {
+                continue;
+            }
+            if (auto geometry = resolveMateTarget(document, **target, bodies); !geometry) {
+                found.push_back({.mate = id, .side = side, .reason = geometry.error().code});
+            }
+        }
+    }
+    return found;
 }
 
 } // namespace bettercad::assembly

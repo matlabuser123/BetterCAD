@@ -10,8 +10,8 @@
 
 ```text
 Current:   P13 — Assemblies
-Next:      P13-STREF-001 — Stable assembly references
-Then:      P13-REGEN-001 — Dependency / regeneration
+Next:      P13-REGEN-001 — Dependency / regeneration
+Then:      P13-CMD-001 — Commands / undo / redo
 
 Released:  v0.1.0 — P0–P10
 Qualified: P11, P12
@@ -737,7 +737,7 @@ Next → P13-STREF-001
 
 ---
 
-# NEXT — P13-STREF-001
+# DONE — P13-STREF-001
 
 ## Stable Assembly References
 
@@ -805,22 +805,22 @@ cross-document dependencies are not implemented. So this is validation of the
 never identity — and not an end-to-end external reference. Anything more
 would be building `P13` external references ahead of their milestone.
 
-- [ ] Define stable assembly-reference model
-- [ ] Implement stable component references
-- [ ] Implement stable mate-target references
-- [ ] Preserve references across save/load
-- [ ] Preserve references across configuration switching
-- [ ] Preserve references across regeneration
-- [ ] Reject raw topology/index-based identity
-- [ ] Prevent silent rebinding after geometry changes
-- [ ] Missing intended target becomes explicit unresolved state
-- [ ] Validate reference recovery when intended target returns
-- [ ] Validate cross-document identity rules
-- [ ] Validate deterministic reference resolution
-- [ ] Validate failure atomicity
-- [ ] Adversarial review PASS
-- [ ] Debug / Release / Debug-shared regression PASS
-- [ ] Evidence in `docs/verification/P13-STREF-001/`
+- [x] Define stable assembly-reference model — three schemes, none index-based, all pre-existing
+- [x] Implement stable component references
+- [x] Implement stable mate-target references — one shared resolution path, which the solver now calls instead of its own
+- [x] Preserve references across save/load
+- [x] Preserve references across configuration switching — resolves to the *same* geometry after a round trip, compared exactly
+- [x] Preserve references across regeneration — of the part beneath a component; assembly regeneration is `P13-REGEN-001`
+- [x] Reject raw topology/index-based identity — enforced by the type, not by a check
+- [x] Prevent silent rebinding after geometry changes — measured against an identically-dimensioned replacement at the same plane
+- [x] Missing intended target becomes explicit unresolved state — new `unresolvedMateTargets()`, the mate counterpart of `unresolvedComponents()`
+- [x] Validate reference recovery when intended target returns
+- [x] Validate cross-document identity rules — the contract, per the accepted P13 constraints
+- [x] Validate deterministic reference resolution
+- [x] Validate failure atomicity
+- [x] Adversarial review PASS
+- [x] Debug / Release / Debug-shared regression PASS
+- [x] Evidence in `docs/verification/P13-STREF-001/`
 
 ### Gate
 
@@ -849,7 +849,26 @@ built to catch **that**, not to confirm that resolution returns something.
 Which means: an assertion that a reference "still resolves" is nearly
 worthless on its own. Assert **which geometry** it resolved to.
 
-Only then:
+Met: 1461/1461 on `debug`, `release` and `debug-shared` from clean, and
+1009/1009 five times over in `release` and `debug`; 0 compiler warnings; every
+expected geometry derived by hand from the sketch and the extrude depth rather
+than from the resolver under test. The adversarial review found 0 production
+defects; its two findings are about the tests. The qualified tree IDs match
+the committed tree.
+
+Most of this milestone was already built — by `P12-STREF-001`,
+`P13-REF-001` and `P13-MATE-001` — and the survey of what existed is in the
+evidence. What was missing was the mate half of the reporting: a document
+could report a broken *part* reference and open anyway, but a broken *mate
+target* could only be discovered by attempting a solve. The solver ended up
+17 lines shorter, because its inline resolution became the shared one rather
+than a second path beside it.
+
+Carried forward: a reference can be reported but not repaired — rebinding is
+a commands question, `P13-CMD-001`. A face target needs the current bodies and
+fails rather than guessing without them. External references remain a
+validated contract and not a capability. And assemblies themselves still do
+not regenerate, which is `P13-REGEN-001`.
 
 ```text
 P13-STREF-001 → [x]
@@ -869,8 +888,8 @@ P13-MATE-001     Basic assembly constraints                   DONE
 P13-SOLVE-001    Assembly constraint solver                   DONE
 P13-MATE-002     Mechanical mates                             DONE
 P13-CONF-001     Assembly configurations / suppression        DONE
-P13-STREF-001    Stable assembly references                   OPEN
-P13-REGEN-001    Dependency / regeneration
+P13-STREF-001    Stable assembly references                   DONE
+P13-REGEN-001    Dependency / regeneration                    OPEN
 P13-CMD-001      Commands / undo / redo
 P13-PERSIST-001  Save / load assembly intent
 P13-CLI-001      Headless assembly workflows

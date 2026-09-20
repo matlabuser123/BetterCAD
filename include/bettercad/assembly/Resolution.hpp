@@ -3,9 +3,14 @@
 #include <bettercad/assembly/Export.hpp>
 #include <bettercad/core/Error.hpp>
 #include <bettercad/core/Id.hpp>
+#include <bettercad/core/document/MateReference.hpp>
 #include <bettercad/core/document/ObjectReference.hpp>
 #include <bettercad/core/document/ReferenceResolver.hpp>
+#include <bettercad/core/math/Direction.hpp>
+#include <bettercad/core/math/Point.hpp>
+#include <bettercad/features/Datums.hpp>
 
+#include <string_view>
 #include <vector>
 
 // Resolving a component's part, and reporting the ones that do not resolve
@@ -58,6 +63,73 @@ struct UnresolvedComponent {
 /// internal part appears here only if that object is missing.
 [[nodiscard]] BETTERCAD_ASSEMBLY_EXPORT std::vector<UnresolvedComponent>
 unresolvedComponents(const Document& document, const ReferenceResolver* resolver = nullptr);
+
+// --- Mate targets (P13-STREF-001) --------------------------------------------------------------
+
+/// The model-space geometry a mate target names, in its own part's space.
+///
+/// A plane and a face both give a plane -- a face through the plane it lies
+/// in -- and an axis gives a line. `planar` says which, because the
+/// constraints mean different things by the two.
+struct MateTargetGeometry {
+    bool planar = false;
+    Point3D origin{};
+    Direction3D direction = Direction3D::unitZ();
+
+    friend bool operator==(const MateTargetGeometry&, const MateTargetGeometry&) = default;
+};
+
+/// The geometry @p target names.
+///
+/// NotFound when the target's component is not in this document, and
+/// whatever resolvePlane()/resolveAxis() report when the geometry itself
+/// does not resolve -- a missing object, an object of the wrong kind, or a
+/// face whose role its feature no longer produces.
+///
+/// **This is the one place a mate target is resolved.** The solver calls it
+/// to build its problem and unresolvedMateTargets() calls it to report, so
+/// the question "does this target resolve" is answered by the same code that
+/// answers "to what" -- there is no second path that could disagree with it.
+[[nodiscard]] BETTERCAD_ASSEMBLY_EXPORT Result<MateTargetGeometry>
+resolveMateTarget(const Document& document, const MateTarget& target,
+                  const features::BodyLookup& bodies = {});
+
+/// Which of a mate's targets this is. A slider carries a roll reference as
+/// well as its axis (P13-MATE-002), so a mate has up to four.
+enum class MateTargetSide {
+    A,
+    B,
+    RollA,
+    RollB,
+};
+
+/// "a", "b", "a2", "b2".
+[[nodiscard]] BETTERCAD_ASSEMBLY_EXPORT std::string_view toString(MateTargetSide side) noexcept;
+
+/// A mate target that does not resolve, and why.
+struct UnresolvedMateTarget {
+    MateId mate{};
+    MateTargetSide side = MateTargetSide::A;
+    ErrorCode reason = ErrorCode::NotFound;
+
+    friend bool operator==(const UnresolvedMateTarget&, const UnresolvedMateTarget&) = default;
+};
+
+/// Every mate target of @p document that does not resolve, in ascending mate
+/// ID order and then in target order.
+///
+/// The mate counterpart of unresolvedComponents(), and it exists for the same
+/// reason: a document reports what is broken rather than refusing to open, so
+/// a caller can load it, ask, and show the answer. Before this, the only way
+/// to discover an unresolved mate target was to attempt a solve and have the
+/// whole thing fail.
+///
+/// **Suppressed and inactive mates are skipped**, because a mate that is not
+/// in this build has nothing to say about whether the model is broken. That
+/// distinction is P13-CONF-001's: a target on a suppressed component is
+/// inactive, not unresolved.
+[[nodiscard]] BETTERCAD_ASSEMBLY_EXPORT std::vector<UnresolvedMateTarget>
+unresolvedMateTargets(const Document& document, const features::BodyLookup& bodies = {});
 
 /// Registers the assembly regeneration handlers on @p regenerator, capturing
 /// @p resolver for external references.

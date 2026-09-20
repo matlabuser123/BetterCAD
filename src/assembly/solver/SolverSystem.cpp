@@ -2,6 +2,7 @@
 
 #include <bettercad/assembly/Components.hpp>
 #include <bettercad/assembly/Configurations.hpp>
+#include <bettercad/assembly/Resolution.hpp>
 #include <bettercad/assembly/Mates.hpp>
 #include <bettercad/assembly/Placement.hpp>
 #include <bettercad/core/document/Document.hpp>
@@ -96,36 +97,18 @@ Result<System> System::build(const Document& document, const BodyLookup& bodies)
         }
     }
 
+    // One resolution path, shared with unresolvedMateTargets(): the question
+    // "does this target resolve" is answered by the same code that answers
+    // "to what", so a report and a solve can never disagree (P13-STREF-001).
     const auto addTarget = [&](const MateTarget& target) -> Result<std::size_t> {
-        TargetGeometry geometry;
-        geometry.component = target.component;
-        if (target.kind == MateTargetKind::Axis) {
-            auto axis = features::resolveAxis(document, *target.axis, bodies);
-            if (!axis) {
-                return std::unexpected(axis.error());
-            }
-            geometry.planar = false;
-            geometry.origin = axis->origin;
-            geometry.direction = axis->direction;
-        } else {
-            // A face is a plane reference naming that face of its feature,
-            // which is how P12-STREF-001 already resolves one.
-            PlaneReference reference;
-            if (target.kind == MateTargetKind::Face) {
-                reference.object = target.face->feature;
-                reference.face = target.face->face;
-            } else {
-                reference = *target.plane;
-            }
-            auto plane = features::resolvePlane(document, reference, bodies);
-            if (!plane) {
-                return std::unexpected(plane.error());
-            }
-            geometry.planar = true;
-            geometry.origin = plane->origin();
-            geometry.direction = plane->normal();
+        auto resolved = resolveMateTarget(document, target, bodies);
+        if (!resolved) {
+            return std::unexpected(resolved.error());
         }
-        system.targets_.push_back(geometry);
+        system.targets_.push_back({.component = target.component,
+                                   .planar = resolved->planar,
+                                   .origin = resolved->origin,
+                                   .direction = resolved->direction});
         return system.targets_.size() - 1;
     };
 
