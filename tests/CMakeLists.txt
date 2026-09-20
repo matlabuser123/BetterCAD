@@ -28,6 +28,8 @@ bettercad_add_executable(bettercad_tests
         assembly/ComponentTests.cpp
         assembly/MateFileTests.cpp
         assembly/MateTests.cpp
+        assembly/MechanicalMateTests.cpp
+        assembly/MechanicalSolveTests.cpp
         assembly/SolverDerivativeTests.cpp
         assembly/SolverTests.cpp
         assembly/ReferenceFileTests.cpp

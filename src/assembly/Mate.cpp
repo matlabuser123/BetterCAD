@@ -25,6 +25,13 @@ namespace {
     return (isPlanar(a) && isPlanar(b)) || (a.kind == MateTargetKind::Axis && b.kind == MateTargetKind::Axis);
 }
 
+/// Whether @p type relates two axes. The three joints built on a collinear
+/// pair of axes do; the planar joint relates two planes.
+[[nodiscard]] bool relatesAxes(MateType type) noexcept {
+    return type == MateType::Revolute || type == MateType::Slider || type == MateType::Cylindrical ||
+           type == MateType::Concentric;
+}
+
 [[nodiscard]] std::unexpected<Error> wrong(std::string message) {
     return makeError(ErrorCode::InvalidArgument, std::move(message));
 }
@@ -47,6 +54,14 @@ std::string_view toString(MateType type) noexcept {
         return "distance";
     case MateType::Angle:
         return "angle";
+    case MateType::Revolute:
+        return "revolute";
+    case MateType::Slider:
+        return "slider";
+    case MateType::Cylindrical:
+        return "cylindrical";
+    case MateType::Planar:
+        return "planar";
     }
     return "unknown";
 }
@@ -68,6 +83,36 @@ Result<void> validate(const MateDefinition& definition) {
         }
         if (!definition.a || !definition.b) {
             return wrong(std::format("a {} mate must name two pieces of geometry", name));
+        }
+    }
+
+    // --- the roll reference --------------------------------------------
+    // A slide must have one; nothing else may. A kind that carried a roll
+    // reference it ignored would be a field that means nothing, which is
+    // what this validation exists to prevent.
+    const bool wantsRoll = definition.type == MateType::Slider;
+    if (definition.a2.has_value() != wantsRoll || definition.b2.has_value() != wantsRoll) {
+        return wrong(wantsRoll ? "a slider mate must name a roll reference on each component"
+                               : std::format("a {} mate takes no roll reference", name));
+    }
+    if (wantsRoll) {
+        for (const MateTarget* target : {&*definition.a2, &*definition.b2}) {
+            if (auto valid = validate(*target); !valid) {
+                return std::unexpected(valid.error());
+            }
+            if (!hasDirection(*target)) {
+                return wrong("a slider mate's roll reference needs geometry with a direction");
+            }
+        }
+        // The roll reference fixes one component's turn against the other's,
+        // so each side's reference must be on that side's component.
+        if (definition.a2->component != definition.a->component ||
+            definition.b2->component != definition.b->component) {
+            return wrong("a slider mate's roll references must be on the same components as its axes");
+        }
+        if (*definition.a2 == *definition.a || *definition.b2 == *definition.b) {
+            // Rolling a direction against itself says nothing.
+            return wrong("a slider mate's roll reference must differ from its axis");
         }
     }
 
@@ -102,9 +147,13 @@ Result<void> validate(const MateDefinition& definition) {
     }
 
     // --- the kinds the constraint can relate ---------------------------
-    if (definition.type == MateType::Concentric) {
+    if (relatesAxes(definition.type)) {
         if (definition.a->kind != MateTargetKind::Axis || definition.b->kind != MateTargetKind::Axis) {
-            return wrong("a concentric mate relates two axes");
+            return wrong(std::format("a {} mate relates two axes", name));
+        }
+    } else if (definition.type == MateType::Planar) {
+        if (!isPlanar(*definition.a) || !isPlanar(*definition.b)) {
+            return wrong("a planar mate relates two planes");
         }
     } else if (!relatable(*definition.a, *definition.b)) {
         return wrong(std::format("a {} mate relates two planes or two axes, not a {} and a {}", name,
@@ -177,6 +226,12 @@ std::vector<ObjectId> Mate::dependencies() const {
     }
     if (definition_.b) {
         add(referencedObjects(*definition_.b));
+    }
+    if (definition_.a2) {
+        add(referencedObjects(*definition_.a2));
+    }
+    if (definition_.b2) {
+        add(referencedObjects(*definition_.b2));
     }
     return result;
 }

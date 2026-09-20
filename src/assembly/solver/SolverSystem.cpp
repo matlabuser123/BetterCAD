@@ -133,7 +133,12 @@ Result<System> System::build(const Document& document, const BodyLookup& bodies)
         if (d.type == MateType::Fixed) {
             continue; // grounding, not an equation
         }
-        for (const MateTarget* target : {&*d.a, &*d.b}) {
+        std::vector<const MateTarget*> named{&*d.a, &*d.b};
+        if (d.a2) {
+            named.push_back(&*d.a2);
+            named.push_back(&*d.b2);
+        }
+        for (const MateTarget* target : named) {
             if (findComponent(document, target->component) == nullptr) {
                 return makeError(ErrorCode::NotFound,
                                  std::format("{} names {}, which is not a component of this document", id,
@@ -157,6 +162,27 @@ Result<System> System::build(const Document& document, const BodyLookup& bodies)
                 equation.axis = axis;
                 system.equations_.push_back(equation);
             }
+        };
+        const auto offsetPerpendicular = [&] {
+            for (int axis = 0; axis < 2; ++axis) {
+                Equation equation = base;
+                equation.kind = EquationKind::OffsetPerpendicular;
+                equation.axis = axis;
+                system.equations_.push_back(equation);
+            }
+        };
+        const auto offsetAlong = [&] {
+            Equation equation = base;
+            equation.kind = EquationKind::OffsetAlong;
+            system.equations_.push_back(equation);
+        };
+        // Two axes on one line: parallel, and meeting. Four equations of
+        // rank four, leaving the slide along the axis and the turn about it
+        // -- which is a cylindrical joint exactly, and what a revolute and a
+        // slider each remove one of.
+        const auto axesCollinear = [&] {
+            parallel();
+            offsetPerpendicular();
         };
         switch (d.type) {
         case MateType::Fixed:
@@ -205,6 +231,55 @@ Result<System> System::build(const Document& document, const BodyLookup& bodies)
             system.equations_.push_back(equation);
             break;
         }
+
+        // --- the joints ------------------------------------------------
+        case MateType::Cylindrical:
+            axesCollinear(); // 4 equations -> 2 DOF
+            break;
+        case MateType::Revolute:
+            // 5 equations -> 1 rotational DOF. OffsetAlong on axis targets
+            // is the axial position: dot(Pb - Pa, Da), with Da the axis
+            // direction rather than a plane normal. Same equation, same
+            // gradient; only the geometry it is asked about differs.
+            axesCollinear();
+            offsetAlong();
+            break;
+        case MateType::Slider: {
+            // 5 equations -> 1 translational DOF. The slide keeps the axial
+            // freedom the cylindrical joint has and gives up the turn, which
+            // is the one thing the axis pair cannot express on its own.
+            axesCollinear();
+            auto a2 = addTarget(*d.a2);
+            if (!a2) {
+                return std::unexpected(a2.error());
+            }
+            auto b2 = addTarget(*d.b2);
+            if (!b2) {
+                return std::unexpected(b2.error());
+            }
+            // cross(Ra, Rb) . D, one row: the roll references and the slide
+            // axis are coplanar. Written as a Parallel row whose projection
+            // vector is the axis instead of a complement basis, so it is the
+            // Parallel gradient unchanged. Its derivative does not vanish
+            // where the references line up, which dot(Ra, Rb) - 1 would.
+            Equation roll;
+            roll.kind = EquationKind::Parallel;
+            roll.source = id;
+            roll.a = *a2;
+            roll.b = *b2;
+            roll.axis = 0;
+            roll.projectFrom = static_cast<int>(*a);
+            system.equations_.push_back(roll);
+            break;
+        }
+        case MateType::Planar:
+            // 3 equations -> 2 in-plane translations and the turn about the
+            // normal. The same set a plane-to-plane Coincident produces: the
+            // difference is what the engineer meant, which is what the model
+            // is for.
+            parallel();
+            offsetAlong();
+            break;
         }
     }
 
@@ -413,6 +488,14 @@ void System::rebase(const VectorXd& x) {
     for (Equation& equation : equations_) {
         Point3D origin;
         Direction3D direction = Direction3D::unitZ();
+        if (equation.projectFrom >= 0) {
+            // A slide's roll row: the projection vector is the slide axis
+            // itself, not a complement basis of the roll reference.
+            placeTarget(zero, static_cast<std::size_t>(equation.projectFrom), origin, direction);
+            equation.complement[0] = vec(direction);
+            equation.complement[1] = Eigen::Vector3d::Zero();
+            continue;
+        }
         placeTarget(zero, equation.a, origin, direction);
         equation.complement = complementBasis(vec(direction));
     }

@@ -48,6 +48,32 @@ enum class MateType {
     Distance,
     /// Two directions at a given angle.
     Angle,
+
+    // --- Mechanical mates (P13-MATE-002) -------------------------------
+    //
+    // Joints, named for the freedom they leave rather than the constraint
+    // they add. Each is built from the same equation forms the basic
+    // constraints use; what makes them worth their own kinds is that the
+    // engineer said "hinge", not "two axes that happen to be collinear".
+    //
+    //     Cylindrical  = axes collinear                  2 DOF
+    //     Revolute     = Cylindrical + axial position    1 rotational DOF
+    //     Slider       = Cylindrical + roll              1 translational DOF
+    //     Planar       = planes coincident               3 DOF
+
+    /// A hinge: two axes collinear and held against sliding, free to turn
+    /// about the axis. 1 rotational DOF.
+    Revolute,
+    /// A slide: two axes collinear and held against turning, free to move
+    /// along the axis. 1 translational DOF. The only kind that needs a
+    /// second pair of targets -- see `a2`/`b2`.
+    Slider,
+    /// A shaft that both turns and slides in its bore: two axes collinear.
+    /// 1 translational + 1 rotational DOF.
+    Cylindrical,
+    /// Two faces that stay in one plane and may slide and spin in it.
+    /// 2 in-plane translations + 1 rotation about the normal.
+    Planar,
 };
 
 /// "fixed", "coincident", "concentric", "parallel", "perpendicular",
@@ -85,6 +111,22 @@ struct MateDefinition {
     /// first target, and it is `a`'s normal that gives `Distance` its sign.
     std::optional<MateTarget> a{};
     std::optional<MateTarget> b{};
+    /// `Slider` only: the roll reference, one direction on each side, which
+    /// is what stops the slide turning about its own axis.
+    ///
+    /// It is a second *pair* rather than an inferred direction because there
+    /// is nothing to infer from. A target carries one direction, and a
+    /// condition written over a single direction pair fixes at most two of a
+    /// rotation's three degrees of freedom -- the turn about that direction
+    /// is exactly what such a condition cannot see. Every other mechanical
+    /// mate leaves that turn free and so needs no roll reference; a slide is
+    /// the one that must remove it.
+    ///
+    /// `a2` names geometry on `a`'s component and `b2` on `b`'s, and neither
+    /// may be parallel to the slide axis -- a roll reference along the axis
+    /// says nothing about the roll. Refused on every other kind.
+    std::optional<MateTarget> a2{};
+    std::optional<MateTarget> b2{};
     /// `Distance` only.
     std::optional<Length> distance{};
     /// `Angle` only.

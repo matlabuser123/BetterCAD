@@ -162,6 +162,22 @@ TEST_CASE("SolverDerivative_MatchesFiniteDifferencesForEveryMateKind", "[assembl
         {"distance between axes",
          {.type = MateType::Distance, .a = axis(a), .b = axis(b), .distance = 12_mm}},
         {"angle", {.type = MateType::Angle, .a = plane(a), .b = plane(b), .angle = 35_deg}},
+        // P13-MATE-002. Three of the joints reuse equation forms above, but
+        // they combine them differently and each combination is checked in
+        // its own right rather than assumed from its parts.
+        {"revolute", {.type = MateType::Revolute, .a = axis(a), .b = axis(b)}},
+        {"cylindrical", {.type = MateType::Cylindrical, .a = axis(a), .b = axis(b)}},
+        {"planar", {.type = MateType::Planar, .a = plane(a), .b = plane(b)}},
+        // The slider is the one with a row of its own: cross(Ra, Rb) . D,
+        // whose projection vector is the slide axis rather than a complement
+        // basis of Ra. If freezing the axis were wrong, or the row were
+        // written against the wrong target's columns, this is where it shows.
+        {"slider",
+         {.type = MateType::Slider,
+          .a = axis(a),
+          .b = axis(b),
+          .a2 = axisTarget(a, AxisReference{.axis = PrincipalAxis::X}),
+          .b2 = axisTarget(b, AxisReference{.axis = PrincipalAxis::X})}},
     };
 
     for (const auto& [name, definition] : cases) {

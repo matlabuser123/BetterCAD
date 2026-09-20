@@ -10,8 +10,8 @@
 
 ```text
 Current:   P13 — Assemblies
-Next:      P13-MATE-002 — Mechanical mates
-Then:      P13-CONF-001 — Assembly configurations / suppression
+Next:      P13-CONF-001 — Assembly configurations / suppression
+Then:      P13-STREF-001 — Stable assembly references
 
 Released:  v0.1.0 — P0–P10
 Qualified: P11, P12
@@ -445,7 +445,7 @@ Next → P13-MATE-002
 
 ---
 
-# NEXT — P13-MATE-002
+# DONE — P13-MATE-002
 
 ## Mechanical Mates
 
@@ -493,27 +493,27 @@ Verify it rather than assume it. `Revolute` and `Slider` both need 5
 independent equations against a free component's 6 unknowns, and neither is
 an existing set.
 
-* [ ] Implement Revolute mate
-* [ ] Implement Slider mate
-* [ ] Implement Cylindrical mate
-* [ ] Implement Planar mate
-* [ ] Define exact allowed DOF for each mate
-* [ ] Reuse existing `MateConstraint` / solver architecture
-* [ ] Validate mate target/reference compatibility
-* [ ] Convert each mechanical mate into solver constraints
-* [ ] Validate residuals for each mate type
-* [ ] Validate Jacobians / derivatives
-* [ ] Validate remaining DOF analytically
-* [ ] Validate solved transforms independently
-* [ ] Validate mate combinations with basic constraints
-* [ ] Detect contradictory mechanical mates
-* [ ] Validate unresolved-reference behavior
-* [ ] Validate failure atomicity
-* [ ] Save/load preserves mechanical-mate intent
-* [ ] Deterministic solver behavior validated
-* [ ] Adversarial review PASS
-* [ ] Debug / Release / Debug-shared regression PASS
-* [ ] Evidence in `docs/verification/P13-MATE-002/`
+* [x] Implement Revolute mate
+* [x] Implement Slider mate — the one that needed a roll reference
+* [x] Implement Cylindrical mate
+* [x] Implement Planar mate
+* [x] Define exact allowed DOF for each mate — 1/1/2/3, each predicted from rigid-body reasoning before it was measured
+* [x] Reuse existing `MateConstraint` / solver architecture — no new solver, status or entry point; the joints are rows in the same matrix
+* [x] Validate mate target/reference compatibility
+* [x] Convert each mechanical mate into solver constraints
+* [x] Validate residuals for each mate type
+* [x] Validate Jacobians / derivatives — worst new mate 5.41e-12 against a 1e-7 gate
+* [x] Validate remaining DOF analytically — and which motion survives, not only how many
+* [x] Validate solved transforms independently
+* [x] Validate mate combinations with basic constraints
+* [x] Detect contradictory mechanical mates
+* [x] Validate unresolved-reference behavior
+* [x] Validate failure atomicity
+* [x] Save/load preserves mechanical-mate intent — including the roll reference, without which a slider reloads as a sleeve
+* [x] Deterministic solver behavior validated
+* [x] Adversarial review PASS
+* [x] Debug / Release / Debug-shared regression PASS
+* [x] Evidence in `docs/verification/P13-MATE-002/`
 
 ### Expected DOF contract
 
@@ -566,7 +566,24 @@ Jacobian is verified against central differences before anything is built on
 it. A Gauss-Newton solver with a wrong Jacobian converges, reports success,
 and puts the parts somewhere plausible and wrong.
 
-Only then:
+Met: 1421/1421 on `debug`, `release` and `debug-shared` from clean, and
+914/914 five times over in `release` and `debug`; 0 compiler warnings; every
+joint's Jacobian agrees with central differences to 5.41e-12 or better against
+a 1e-7 gate; every DOF count hand-derived and matched; all 30 `P13-SOLVE-001`
+solver cases unchanged. The adversarial review found 3 findings and 0
+production defects. The qualified tree IDs match the committed tree.
+
+The architectural finding, since it shaped the result: a prismatic joint needs
+three rotational constraints and a single target pair affords at most two, so
+`Slider` carries a roll reference and the other three do not. Raised before
+implementing, three candidates weighed, recorded in the evidence.
+
+Carried forward: no joint distinguishes the sense of its axis or normal — they
+are built on `Parallel` rows, satisfied either way round. A slider whose roll
+reference lies along its own axis is reported `OverConstrained` with the mate
+named, rather than silently behaving as a sleeve. No joint carries a position
+or a limit; those come from a `Distance` or `Angle` mate beside it. And
+nothing consumes the solved transforms yet.
 
 ```text
 P13-MATE-002 → [x]
@@ -584,8 +601,8 @@ P13-XFORM-001    Component transforms                         DONE
 P13-REF-001      Internal / external reference infrastructure DONE
 P13-MATE-001     Basic assembly constraints                   DONE
 P13-SOLVE-001    Assembly constraint solver                   DONE
-P13-MATE-002     Mechanical mates                             OPEN
-P13-CONF-001     Assembly configurations / suppression
+P13-MATE-002     Mechanical mates                             DONE
+P13-CONF-001     Assembly configurations / suppression        OPEN
 P13-STREF-001    Stable assembly references
 P13-REGEN-001    Dependency / regeneration
 P13-CMD-001      Commands / undo / redo

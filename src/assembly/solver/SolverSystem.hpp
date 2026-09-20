@@ -83,6 +83,16 @@ struct Equation {
     /// The two directions perpendicular to a's direction, frozen at the base
     /// so that the equation is linear in them for one evaluation.
     std::array<Eigen::Vector3d, 2> complement{};
+    /// A Parallel row normally projects cross(Da, Db) onto a basis of Da's
+    /// complement. A slide's roll row projects it onto a third direction
+    /// instead -- the slide axis -- and this is the target that direction
+    /// comes from, or -1 for the usual complement basis.
+    ///
+    /// The mechanism is the same either way: the projection vector is frozen
+    /// at the base and refreshed on rebase, so the analytic derivative is
+    /// exact where it is taken. Nothing else about the row changes, which is
+    /// why the roll needs no equation kind and no gradient of its own.
+    int projectFrom = -1;
     /// Metres for OffsetAlong and SeparationPerpendicular, the cosine for
     /// Angle, unused otherwise.
     double target = 0.0;

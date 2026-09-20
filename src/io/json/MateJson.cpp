@@ -12,7 +12,7 @@ namespace {
 
 using assembly::MateType;
 
-constexpr std::array<std::pair<MateType, std::string_view>, 7> kMateTypes{{
+constexpr std::array<std::pair<MateType, std::string_view>, 11> kMateTypes{{
     {MateType::Fixed, "fixed"},
     {MateType::Coincident, "coincident"},
     {MateType::Concentric, "concentric"},
@@ -20,6 +20,10 @@ constexpr std::array<std::pair<MateType, std::string_view>, 7> kMateTypes{{
     {MateType::Perpendicular, "perpendicular"},
     {MateType::Distance, "distance"},
     {MateType::Angle, "angle"},
+    {MateType::Revolute, "revolute"},
+    {MateType::Slider, "slider"},
+    {MateType::Cylindrical, "cylindrical"},
+    {MateType::Planar, "planar"},
 }};
 
 constexpr std::array<std::pair<MateTargetKind, std::string_view>, 3> kTargetKinds{{
@@ -150,6 +154,12 @@ Json mateToJson(const assembly::Mate& mate) {
     if (d.b) {
         json["b"] = targetToJson(*d.b);
     }
+    if (d.a2) {
+        json["a2"] = targetToJson(*d.a2);
+    }
+    if (d.b2) {
+        json["b2"] = targetToJson(*d.b2);
+    }
     if (d.distance) {
         json["distance"] = d.distance->si();
     }
@@ -163,7 +173,8 @@ Json mateToJson(const assembly::Mate& mate) {
 }
 
 Result<std::unique_ptr<assembly::Mate>> mateFromJson(const Json& data, std::string name, std::string_view path) {
-    if (auto valid = requireObject(data, path, {"type", "component", "a", "b", "distance", "angle", "suppressed"});
+    if (auto valid = requireObject(
+            data, path, {"type", "component", "a", "b", "a2", "b2", "distance", "angle", "suppressed"});
         !valid) {
         return std::unexpected(valid.error());
     }
@@ -180,7 +191,8 @@ Result<std::unique_ptr<assembly::Mate>> mateFromJson(const Json& data, std::stri
         }
         d.component = ComponentId::fromValue(*component);
     }
-    for (const auto& [key, slot] : {std::pair{"a", &d.a}, std::pair{"b", &d.b}}) {
+    for (const auto& [key, slot] :
+         {std::pair{"a", &d.a}, std::pair{"b", &d.b}, std::pair{"a2", &d.a2}, std::pair{"b2", &d.b2}}) {
         if (const auto found = data.find(key); found != data.end()) {
             auto target = targetFromJson(*found, childPath(path, key));
             if (!target) {
