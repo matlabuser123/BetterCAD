@@ -8,8 +8,10 @@
 #include <bettercad/core/document/ReferenceResolver.hpp>
 #include <bettercad/core/math/Direction.hpp>
 #include <bettercad/core/math/Point.hpp>
+#include <bettercad/assembly/Solver.hpp>
 #include <bettercad/features/Datums.hpp>
 
+#include <optional>
 #include <string_view>
 #include <vector>
 
@@ -131,6 +133,46 @@ struct UnresolvedMateTarget {
 [[nodiscard]] BETTERCAD_ASSEMBLY_EXPORT std::vector<UnresolvedMateTarget>
 unresolvedMateTargets(const Document& document, const features::BodyLookup& bodies = {});
 
+// --- Regeneration (P13-REGEN-001) --------------------------------------------------------------
+
+/// Why an assembly re-solved, or did not, in a regeneration pass.
+///
+/// The trigger is derived from what the solve actually reads rather than from
+/// a revision proxy, which is what makes "it did not re-solve for an
+/// unrelated change" provable instead of hoped for (ADR-008).
+enum class SolveTrigger {
+    /// Nothing the solve consumes changed, so the previous transforms stand.
+    NotNeeded,
+    /// No solve has run for this document yet.
+    First,
+    /// A component or mate was rebuilt, failed or blocked in this pass.
+    ObjectChanged,
+    /// The set of components in force changed.
+    ComponentsInForceChanged,
+    /// The set of mates in force changed.
+    MatesInForceChanged,
+    /// A different configuration is active.
+    ConfigurationChanged,
+    /// A component's resolved placement moved -- which is how an override of
+    /// a free parameter is caught, since that changes no object's revision.
+    PlacementChanged,
+    /// Something the solve needs is broken, so no transforms were published.
+    Broken,
+};
+
+/// "not needed", "first", "object changed", ...
+[[nodiscard]] BETTERCAD_ASSEMBLY_EXPORT std::string_view toString(SolveTrigger trigger) noexcept;
+
+/// What the last regeneration pass did about the assembly.
+struct AssemblyRegeneration {
+    SolveTrigger trigger = SolveTrigger::NotNeeded;
+    /// Set when the solve ran; absent when it did not.
+    std::optional<SolveStatus> status{};
+    std::size_t degreesOfFreedom = 0;
+    /// Components whose transforms the pass published.
+    std::size_t transforms = 0;
+};
+
 /// Registers the assembly regeneration handlers on @p regenerator, capturing
 /// @p resolver for external references.
 ///
@@ -143,7 +185,12 @@ unresolvedMateTargets(const Document& document, const features::BodyLookup& bodi
 /// missing and a handler-less component would regenerate as if all were
 /// well. With the handler, a component whose part does not resolve **fails**,
 /// and its state says which of the four reasons it was.
+/// @p report, when given, is written on every pass with what the final pass
+/// did -- whether it re-solved and why. The caller owns it, so that
+/// observing the trigger needs no global state; it is the same shape as the
+/// resolver, which is also captured rather than looked up.
 BETTERCAD_ASSEMBLY_EXPORT void registerHandlers(features::Regenerator& regenerator,
-                                                const ReferenceResolver* resolver = nullptr);
+                                                const ReferenceResolver* resolver = nullptr,
+                                                AssemblyRegeneration* report = nullptr);
 
 } // namespace bettercad::assembly

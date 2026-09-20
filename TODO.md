@@ -10,8 +10,8 @@
 
 ```text
 Current:   P13 — Assemblies
-Next:      P13-REGEN-001 — Dependency / regeneration
-Then:      P13-CMD-001 — Commands / undo / redo
+Next:      P13-CMD-001 — Commands / undo / redo
+Then:      P13-PERSIST-001 — Save / load assembly intent
 
 Released:  v0.1.0 — P0–P10
 Qualified: P11, P12
@@ -877,7 +877,7 @@ Next → P13-REGEN-001
 
 ---
 
-# NEXT — P13-REGEN-001
+# DONE — P13-REGEN-001
 
 ## Dependency / Regeneration
 
@@ -970,22 +970,22 @@ does not resolve should make regeneration report it, the way the component
 handler already makes an unresolvable part report. A mate handler is the
 obvious shape, and mates currently have none.
 
-- [ ] Define assembly regeneration contract
-- [ ] Integrate component dependencies into regeneration
-- [ ] Integrate mate dependencies into regeneration
-- [ ] Regenerate only affected assembly state
-- [ ] Re-solve assemblies when required dependencies change
-- [ ] Preserve canonical intent; update derived solve state only
-- [ ] Handle suppressed components/mates correctly
-- [ ] Handle unresolved references explicitly
-- [ ] Detect dependency cycles / invalid dependency states
-- [ ] Validate regeneration ordering
-- [ ] Validate failure atomicity and recovery
-- [ ] Validate deterministic regeneration
-- [ ] Validate save/load + regenerate behavior
-- [ ] Adversarial review PASS
-- [ ] Debug / Release / Debug-shared regression PASS
-- [ ] Evidence in `docs/verification/P13-REGEN-001/`
+- [x] Define assembly regeneration contract — [ADR-008](docs/architecture/decisions/ADR-008-the-assembly-solve-is-a-final-pass.md): the solve is a document-level final pass, not any object's handler
+- [x] Integrate component dependencies into regeneration
+- [x] Integrate mate dependencies into regeneration — mates had no handler at all before, so an unresolvable target was silent
+- [x] Regenerate only affected assembly state — the existing machinery, validated for assembly objects
+- [x] Re-solve assemblies when required dependencies change — six triggers, each derived from what the solve reads
+- [x] Preserve canonical intent; update derived solve state only
+- [x] Handle suppressed components/mates correctly
+- [x] Handle unresolved references explicitly
+- [x] Detect dependency cycles / invalid dependency states
+- [x] Validate regeneration ordering
+- [x] Validate failure atomicity and recovery — publishing is all-or-nothing
+- [x] Validate deterministic regeneration
+- [x] Validate save/load + regenerate behavior
+- [x] Adversarial review PASS
+- [x] Debug / Release / Debug-shared regression PASS
+- [x] Evidence in `docs/verification/P13-REGEN-001/`
 
 ### Gate
 
@@ -1019,7 +1019,32 @@ The companion failure is its opposite: re-solving when nothing relevant
 moved, which is not wrong but is how a CAD system becomes unusable on a large
 assembly. Both need measuring.
 
-Only then:
+Met: 1483/1483 on `debug`, `release` and `debug-shared` from clean, and
+1052/1052 five times over in `release` and `debug`; 0 compiler warnings;
+every expected position derived by hand from the change made, and every
+trigger predicted before it was measured. The adversarial review found 0
+production defects. The qualified tree IDs match the committed tree.
+
+**The line four milestones carried forward is closed.** Regenerating a
+document now solves its assembly and publishes the transforms beside the
+bodies.
+
+The trigger is the part worth remembering: it is derived from what the solve
+actually reads — the active component and mate sets, the active
+configuration, whether any of them was rebuilt or broken, and the *resolved*
+placement of every active component. The last of those closes a gap a
+revision-based trigger would leave wide open, because a configuration
+overriding a **free** parameter changes no object's revision at all: the base
+value is untouched and only the value in force differs. Both forms are
+measured, including editing an override while its configuration is already
+active.
+
+Carried forward: the solve is all-or-nothing, so one broken mate costs every
+component its transform — deliberate, since a partial set renders as a
+plausible assembly with a part in the wrong place. Re-solve granularity is
+the whole assembly, because a constraint system is global. Nothing renders
+the transforms yet. And no assembly edit can be undone, which is
+`P13-CMD-001`.
 
 ```text
 P13-REGEN-001 → [x]
@@ -1040,8 +1065,8 @@ P13-SOLVE-001    Assembly constraint solver                   DONE
 P13-MATE-002     Mechanical mates                             DONE
 P13-CONF-001     Assembly configurations / suppression        DONE
 P13-STREF-001    Stable assembly references                   DONE
-P13-REGEN-001    Dependency / regeneration                    OPEN
-P13-CMD-001      Commands / undo / redo
+P13-REGEN-001    Dependency / regeneration                    DONE
+P13-CMD-001      Commands / undo / redo                       OPEN
 P13-PERSIST-001  Save / load assembly intent
 P13-CLI-001      Headless assembly workflows
 P13-STEP-001     Assembly STEP export / read-back

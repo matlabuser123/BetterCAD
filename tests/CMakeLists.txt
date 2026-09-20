@@ -34,6 +34,7 @@ bettercad_add_executable(bettercad_tests
         assembly/SolverDerivativeTests.cpp
         assembly/SolverTests.cpp
         assembly/StableReferenceTests.cpp
+        assembly/RegenerationTests.cpp
         assembly/ReferenceFileTests.cpp
         assembly/ReferenceTests.cpp
         assembly/PlacementFileTests.cpp

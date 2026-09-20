@@ -5,11 +5,13 @@
 #include <bettercad/assembly/Configurations.hpp>
 #include <bettercad/assembly/Mate.hpp>
 #include <bettercad/assembly/Mates.hpp>
+#include <bettercad/assembly/Placement.hpp>
 #include <bettercad/core/document/Document.hpp>
 #include <bettercad/core/geometry/Body.hpp>
 #include <bettercad/features/Feature.hpp>
 #include <bettercad/features/Regenerator.hpp>
 
+#include <algorithm>
 #include <array>
 #include <format>
 #include <optional>
@@ -73,7 +75,116 @@ std::vector<UnresolvedComponent> unresolvedComponents(const Document& document, 
     return found;
 }
 
-void registerHandlers(features::Regenerator& regenerator, const ReferenceResolver* resolver) {
+std::string_view toString(SolveTrigger trigger) noexcept {
+    switch (trigger) {
+    case SolveTrigger::NotNeeded:
+        return "not needed";
+    case SolveTrigger::First:
+        return "first";
+    case SolveTrigger::ObjectChanged:
+        return "object changed";
+    case SolveTrigger::ComponentsInForceChanged:
+        return "components in force changed";
+    case SolveTrigger::MatesInForceChanged:
+        return "mates in force changed";
+    case SolveTrigger::ConfigurationChanged:
+        return "configuration changed";
+    case SolveTrigger::PlacementChanged:
+        return "placement changed";
+    case SolveTrigger::Broken:
+        return "broken";
+    }
+    return "unknown";
+}
+
+namespace {
+
+/// What the last solve consumed. The trigger compares this against what the
+/// solve would consume now, so a re-solve happens exactly when one of its own
+/// inputs moved (ADR-008) -- rather than when some revision it is downstream
+/// of happened to change.
+struct SolveInputs {
+    bool solved = false;
+    std::optional<ConfigurationId> configuration{};
+    std::vector<ComponentId> components{};
+    std::vector<MateId> mates{};
+    std::map<ComponentId, RigidTransform3D> placements{};
+
+    friend bool operator==(const SolveInputs&, const SolveInputs&) = default;
+};
+
+/// The inputs as they stand now.
+///
+/// The placements are the RESOLVED ones, and that is deliberate: a
+/// configuration overriding a free parameter changes no object's revision --
+/// the base value is untouched and only the value in force differs -- so a
+/// revision-based trigger would miss it entirely. placementOf() reads the
+/// value in force, so comparing placements catches it.
+[[nodiscard]] SolveInputs currentInputs(const Document& document) {
+    SolveInputs inputs;
+    inputs.solved = true;
+    inputs.configuration = document.activeConfiguration();
+    inputs.components = activeComponents(document);
+    inputs.mates = activeMates(document);
+    for (const ComponentId id : inputs.components) {
+        if (auto placement = placementOf(document, id)) {
+            inputs.placements.emplace(id, *placement);
+        }
+    }
+    return inputs;
+}
+
+/// Whether @p id was rebuilt, failed or blocked in this pass.
+[[nodiscard]] bool touched(const features::RegenerationReport& report, ObjectId id) {
+    const auto in = [&id](const std::vector<ObjectId>& list) {
+        return std::ranges::find(list, id) != list.end();
+    };
+    return in(report.regenerated) || in(report.failed) || in(report.blocked);
+}
+
+/// Whether @p id failed or was blocked in this pass.
+[[nodiscard]] bool isBroken(const features::RegenerationReport& report, ObjectId id) {
+    const auto in = [&id](const std::vector<ObjectId>& list) {
+        return std::ranges::find(list, id) != list.end();
+    };
+    return in(report.failed) || in(report.blocked);
+}
+
+/// Why the assembly must re-solve, or NotNeeded.
+[[nodiscard]] SolveTrigger triggerFor(const SolveInputs& before, const SolveInputs& now,
+                                      const features::RegenerationReport& report) {
+    if (!before.solved) {
+        return SolveTrigger::First;
+    }
+    if (before.configuration != now.configuration) {
+        return SolveTrigger::ConfigurationChanged;
+    }
+    if (before.components != now.components) {
+        return SolveTrigger::ComponentsInForceChanged;
+    }
+    if (before.mates != now.mates) {
+        return SolveTrigger::MatesInForceChanged;
+    }
+    for (const ComponentId id : now.components) {
+        if (touched(report, ObjectId{id})) {
+            return SolveTrigger::ObjectChanged;
+        }
+    }
+    for (const MateId id : now.mates) {
+        if (touched(report, ObjectId{id})) {
+            return SolveTrigger::ObjectChanged;
+        }
+    }
+    if (before.placements != now.placements) {
+        return SolveTrigger::PlacementChanged;
+    }
+    return SolveTrigger::NotNeeded;
+}
+
+} // namespace
+
+void registerHandlers(features::Regenerator& regenerator, const ReferenceResolver* resolver,
+                      AssemblyRegeneration* report) {
     regenerator.registerHandler(
         std::string{Component::kTypeName},
         [resolver](Document& document, ObjectId object,
@@ -92,6 +203,96 @@ void registerHandlers(features::Regenerator& regenerator, const ReferenceResolve
             // part's own features, exactly once, however many components
             // place it.
             return std::nullopt;
+        });
+
+    // Mates had no handler before P13-REGEN-001, which made an unresolvable
+    // target silent during regeneration: a face is named through its
+    // feature's roles, so the graph reports nothing missing when the role
+    // stops existing, and a handler-less mate regenerated as if all were
+    // well. With this, a mate whose target does not resolve FAILS.
+    regenerator.registerHandler(
+        std::string{Mate::kTypeName},
+        [](Document& document, ObjectId object,
+           const features::Regenerator& current) -> Result<std::optional<geometry::Body>> {
+            const MateId id = MateId::fromValue(object.value());
+            const Mate* mate = findMate(document, id);
+            if (mate == nullptr) {
+                return makeError(ErrorCode::Internal, std::format("{} is not a mate", object));
+            }
+            if (!isMateActive(document, id)) {
+                // Not in this build. A suppressed mate, or one on a suppressed
+                // component, has nothing to resolve and nothing to say about
+                // whether the model is broken (P13-CONF-001).
+                return std::nullopt;
+            }
+            const features::BodyLookup bodies = [&current](ObjectId part) { return current.body(part); };
+            const MateDefinition& d = mate->definition();
+            for (const std::optional<MateTarget>& target : {d.a, d.b, d.a2, d.b2}) {
+                if (target) {
+                    if (auto geometry = resolveMateTarget(document, *target, bodies); !geometry) {
+                        return std::unexpected(geometry.error());
+                    }
+                }
+            }
+            // A mate owns no geometry either. What it contributes is
+            // equations, and those are the final pass's business.
+            return std::nullopt;
+        });
+
+    // The assembly solve: a document-level result, run after the objects
+    // because it spans all of them and needs the bodies a face target
+    // resolves against (ADR-008).
+    regenerator.registerFinalPass(
+        "assembly.solve",
+        [report, last = SolveInputs{}, cached = std::map<ComponentId, RigidTransform3D>{}](
+            Document& document, const features::Regenerator& current,
+            features::RegenerationReport& pass) mutable
+        -> Result<std::map<ComponentId, RigidTransform3D>> {
+            const auto note = [&report](SolveTrigger trigger, std::optional<SolveStatus> status,
+                                        std::size_t dof, std::size_t count) {
+                if (report != nullptr) {
+                    *report = AssemblyRegeneration{
+                        .trigger = trigger, .status = status, .degreesOfFreedom = dof, .transforms = count};
+                }
+            };
+
+            const SolveInputs now = currentInputs(document);
+
+            // Anything in force that is broken means the assembly is not
+            // solvable as described. Publish nothing -- not a partial set and
+            // not the previous one, because a transform that is one edit out
+            // of date still renders, which makes it worse than absent.
+            const auto anyBroken = [&pass](const auto& ids) {
+                return std::ranges::any_of(ids, [&pass](auto id) { return isBroken(pass, ObjectId{id}); });
+            };
+            if (anyBroken(now.components) || anyBroken(now.mates)) {
+                last = {};
+                cached.clear();
+                note(SolveTrigger::Broken, std::nullopt, 0, 0);
+                return cached;
+            }
+
+            const SolveTrigger trigger = triggerFor(last, now, pass);
+            if (trigger == SolveTrigger::NotNeeded) {
+                // Nothing the solve reads moved, so what it produced last time
+                // still stands.
+                note(trigger, report == nullptr ? std::nullopt : report->status,
+                     report == nullptr ? 0 : report->degreesOfFreedom, cached.size());
+                return cached;
+            }
+
+            const features::BodyLookup bodies = [&current](ObjectId part) { return current.body(part); };
+            auto result = solve(document, {}, bodies);
+            if (!result) {
+                last = {};
+                cached.clear();
+                note(SolveTrigger::Broken, std::nullopt, 0, 0);
+                return std::unexpected(result.error());
+            }
+            last = now;
+            cached = result->transforms;
+            note(trigger, result->status, result->degreesOfFreedom, cached.size());
+            return cached;
         });
 }
 

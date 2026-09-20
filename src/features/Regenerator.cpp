@@ -185,6 +185,15 @@ Regenerator::Regenerator() {
     registerHandler(std::string{DraftFeature::kTypeName}, regenerateBodyFeature<DraftFeature, &regenerateDraft>);
 }
 
+void Regenerator::registerFinalPass(std::string name, FinalPass pass) {
+    finalPasses_.insert_or_assign(std::move(name), std::move(pass));
+}
+
+const RigidTransform3D* Regenerator::transform(ComponentId component) const noexcept {
+    const auto it = transforms_.find(component);
+    return it == transforms_.end() ? nullptr : &it->second;
+}
+
 void Regenerator::registerHandler(std::string typeName, RegenerationHandler handler) {
     handlers_.insert_or_assign(std::move(typeName), std::move(handler));
 }
@@ -209,6 +218,7 @@ Result<RegenerationReport> Regenerator::regenerateAll(Document& document) {
     states_.clear();
     errors_.clear();
     bodies_.clear();
+    transforms_.clear();
     return regenerate(document);
 }
 
@@ -338,6 +348,24 @@ Result<RegenerationReport> Regenerator::regenerate(Document& document) {
     }
     for (const ObjectId id : ordering.blocked) {
         block(id);
+    }
+
+    // Document-level results, after every object has been built: the
+    // assembly solve is the one of these today, and it needs the bodies a
+    // face target resolves against (ADR-008). Name order, so that two
+    // passes cannot depend on the order they were registered in.
+    transforms_.clear();
+    for (const auto& [name, pass] : finalPasses_) {
+        auto derived = pass(document, *this, report);
+        if (!derived) {
+            // The pass has already said which objects are responsible; this
+            // is the failure of the pass itself.
+            report.errors.insert_or_assign(ObjectId{}, derived.error());
+            continue;
+        }
+        for (auto& [component, transform] : *derived) {
+            transforms_.insert_or_assign(component, transform);
+        }
     }
     return report;
 }
