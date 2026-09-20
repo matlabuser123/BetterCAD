@@ -737,6 +737,127 @@ Next → P13-STREF-001
 
 ---
 
+# NEXT — P13-STREF-001
+
+## Stable Assembly References
+
+A reference survives the model changing under it, or it is honestly broken.
+Never quietly attached to something else.
+
+```text
+P13-REF-001    the reference vocabulary and the resolver
+P13-MATE-001   mates reference semantic geometry only (ADR-004)
+P13-CONF-001   suppression, which a reference must now survive
+P13-STREF-001  and it must survive everything else too
+```
+
+### What already exists, checked
+
+Most of this checklist is not starting from nothing. Three earlier milestones
+built the machinery; knowing which parts are built decides what this one is
+actually for.
+
+| Item | State today |
+| --- | --- |
+| Stable face identity | **Built.** `FaceName` is a feature ID plus a role, not an index — "the persistent name of a face: the feature that generates it and the face's role there" (P12-STREF-001) |
+| No raw topology identity in mates | **Enforced by the type.** A `MateTarget` holds a `PlaneReference`, an `AxisReference` or a `FaceName`, and has no field a `geometry::FaceSignature` could occupy. `MateReference.hpp` says why it is refused: a signature matches a plane in model space, not a named face |
+| Stable component references | **Built.** `ComponentDefinition::part` is an `ObjectReference`: an `ObjectId`, never an index |
+| Cross-document identity | **Contract built.** `ObjectReference` carries an optional `DocumentId` plus a locator, and `ReferenceResolver` distinguishes Resolved, DocumentUnavailable, **DocumentMismatch** and ObjectMissing — with ADR-003's rule that a locator leading to the wrong document is a failed reference, never a match |
+| No silent rebinding | **Built and ticked** in `P13-MATE-001`: missing mate targets become unresolved, never rebound to nearest geometry |
+
+So the weight of this milestone is **validation of what exists across the
+changes that can now happen to it**, plus the specific gaps below. Do not
+rebuild any of the above; if something needs extending, extend it.
+
+### Where the real work is
+
+Three things have never been measured end to end, and one of them only became
+possible last milestone:
+
+* **Across configuration switching.** `P13-CONF-001` landed suppression, so a
+  mate target can now sit on a component that is suppressed in one build and
+  present in another. That mate is *inactive*, not *unresolved* — the
+  distinction is recorded in `docs/verification/P13-CONF-001/`. What is not
+  yet proven is that its target still resolves to the **same geometry** after
+  a switch there and back, rather than merely still resolving.
+* **Across regeneration of the part beneath a component.** A mate naming
+  `FaceName{feature, EndCap}` should follow that face when the feature
+  regenerates with different parameters, and should become unresolved — not
+  rebound — when the role stops existing. `P12-STREF-001` guarantees this for
+  features; that it holds through a component instance is the assembly claim,
+  and it is the heart of this milestone.
+* **Recovery when the intended target returns.** Unresolved must be a state,
+  not a death: restoring the geometry must restore the reference, with the
+  same binding it had before. A reference that stays broken after its target
+  comes back is as wrong as one that rebinds to a stranger.
+
+### Two checklist items that need scoping, not implementing
+
+**"Preserve references across regeneration"** — assembly regeneration is
+`P13-REGEN-001` and is not this milestone. What is in scope is regeneration
+of the *part* beneath a component, which exists today. Say which is meant in
+the evidence rather than implying the other was done.
+
+**"Validate cross-document identity rules"** — `TODO.md`'s accepted P13
+constraints state that assemblies operate inside one `Document` and
+cross-document dependencies are not implemented. So this is validation of the
+**contract** — that a mismatched `DocumentId` is refused, that a locator is
+never identity — and not an end-to-end external reference. Anything more
+would be building `P13` external references ahead of their milestone.
+
+- [ ] Define stable assembly-reference model
+- [ ] Implement stable component references
+- [ ] Implement stable mate-target references
+- [ ] Preserve references across save/load
+- [ ] Preserve references across configuration switching
+- [ ] Preserve references across regeneration
+- [ ] Reject raw topology/index-based identity
+- [ ] Prevent silent rebinding after geometry changes
+- [ ] Missing intended target becomes explicit unresolved state
+- [ ] Validate reference recovery when intended target returns
+- [ ] Validate cross-document identity rules
+- [ ] Validate deterministic reference resolution
+- [ ] Validate failure atomicity
+- [ ] Adversarial review PASS
+- [ ] Debug / Release / Debug-shared regression PASS
+- [ ] Evidence in `docs/verification/P13-STREF-001/`
+
+### Gate
+
+```text
+stable reference model correct
++ component/mate references stable
++ no raw topology identity
++ no silent rebinding
++ unresolved/recovery behavior correct
++ persistence PASS
++ configuration/regeneration stability PASS
++ determinism PASS
++ failure atomicity PASS
++ adversarial review PASS
++ full regression PASS
++ 0 unexpected warnings
+```
+
+### The failure this milestone exists to prevent
+
+A mate that still solves, on the wrong face. It is the worst failure in the
+system because nothing reports it: the solve succeeds, the assembly looks
+plausible, and the parts are in the wrong places. Every test here should be
+built to catch **that**, not to confirm that resolution returns something.
+
+Which means: an assertion that a reference "still resolves" is nearly
+worthless on its own. Assert **which geometry** it resolved to.
+
+Only then:
+
+```text
+P13-STREF-001 → [x]
+Next → P13-REGEN-001
+```
+
+---
+
 # Planned P13 Sequence
 
 ```text
