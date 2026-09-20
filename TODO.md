@@ -425,7 +425,8 @@ Met: 1382/1382 on `debug`, `release` and `debug-shared` from clean, and
 Jacobian agrees with central differences to 3.7e-11 against a 1e-7 gate; every
 DOF count is hand-derived and matches; the solver takes a `const Document&`,
 so it cannot write back by type, and the `.bcad` file is byte-identical across
-a solve. The adversarial review found 3 findings and 0 production defects. The
+a solve. The adversarial review found 4 findings and 0 production defects — the last
+of them a link failure that only the `debug-shared` preset could see. The
 qualified tree IDs match the committed tree.
 
 All five of ADR-005's verification checks are measured, three of them
@@ -440,6 +441,136 @@ solver, recorded, and pinned by a test.
 ```text
 P13-SOLVE-001 → [x]
 Next → P13-MATE-002
+```
+
+---
+
+# NEXT — P13-MATE-002
+
+## Mechanical Mates
+
+Four joints, each defined by the freedom it leaves rather than by the
+constraint it adds.
+
+```text
+P13-MATE-001   seven basic constraints, stored as intent
+P13-SOLVE-001  solves that intent into derived transforms
+P13-MATE-002   four mechanical mates, through that same model and that same solver
+```
+
+`P13-SOLVE-001` deferred these four explicitly. They are the milestone's
+stated scope boundary, not an oversight, and they arrive now with a solver
+that can already classify what they do to the degrees of freedom.
+
+### Keep the scope tight
+
+This extends an already-qualified constraint model and an already-qualified
+solver. It does not introduce a second one. Concretely, that means: no new
+`MateConstraint`; no new solver; no new residual kind where an existing one
+composes; no new reference vocabulary beyond ADR-004.
+
+The solver already has six residual kinds — `Parallel`, `Perpendicular`,
+`Angle`, `OffsetAlong`, `OffsetPerpendicular` and `SeparationPerpendicular` —
+and the rank-honest equation counts to go with them. A mechanical mate that
+needs a seventh needs a reason.
+
+### Two of the four may already be expressible
+
+`P13-SOLVE-001` measured what the existing equation sets leave free:
+
+```text
+Concentric            → 2 DOF   (slide along the axis, spin about it)
+Coincident (planes)   → 3 DOF   (two in-plane translations, spin about the normal)
+```
+
+Those are the DOF contracts below for `Cylindrical` and `Planar`, exactly.
+If that holds under scrutiny, the work for those two is intent, naming and
+validation rather than new equations — the same relationship `Concentric`
+already has with an axis-to-axis `Coincident`, which produces identical
+equations and differs only in what the engineer meant.
+
+Verify it rather than assume it. `Revolute` and `Slider` both need 5
+independent equations against a free component's 6 unknowns, and neither is
+an existing set.
+
+* [ ] Implement Revolute mate
+* [ ] Implement Slider mate
+* [ ] Implement Cylindrical mate
+* [ ] Implement Planar mate
+* [ ] Define exact allowed DOF for each mate
+* [ ] Reuse existing `MateConstraint` / solver architecture
+* [ ] Validate mate target/reference compatibility
+* [ ] Convert each mechanical mate into solver constraints
+* [ ] Validate residuals for each mate type
+* [ ] Validate Jacobians / derivatives
+* [ ] Validate remaining DOF analytically
+* [ ] Validate solved transforms independently
+* [ ] Validate mate combinations with basic constraints
+* [ ] Detect contradictory mechanical mates
+* [ ] Validate unresolved-reference behavior
+* [ ] Validate failure atomicity
+* [ ] Save/load preserves mechanical-mate intent
+* [ ] Deterministic solver behavior validated
+* [ ] Adversarial review PASS
+* [ ] Debug / Release / Debug-shared regression PASS
+* [ ] Evidence in `docs/verification/P13-MATE-002/`
+
+### Expected DOF contract
+
+```text
+Revolute
+→ 1 rotational DOF
+
+Slider
+→ 1 translational DOF
+
+Cylindrical
+→ 1 translational + 1 rotational DOF
+
+Planar
+→ 2 in-plane translation + 1 normal-axis rotation DOF
+```
+
+This contract is directly checkable: the solver reports
+`degreesOfFreedom = unknowns - rank(Jacobian)`, so each mate applied to one
+free component against a grounded one must leave exactly the count above —
+6 unknowns less 5, 5, 4 and 3 independent equations respectively. Derive the
+expected count from the geometry and assert the literal, as
+`P13-SOLVE-001` did; never read it back from the solver.
+
+Watch the rank-honesty trap that milestone hit: a constraint formulated as
+three rows of rank two makes its mate look permanently redundant and turns a
+correct assembly into `OverConstrained`. Every mechanical mate's equation
+count must equal its rank.
+
+### Gate
+
+```text
+all 4 mechanical mates correct
++ DOF semantics correct
++ solver integration correct
++ residual/Jacobian validation PASS
++ independent analytical validation PASS
++ contradictory systems handled correctly
++ unresolved references handled correctly
++ persistence PASS
++ failure atomicity PASS
++ determinism PASS
++ adversarial review PASS
++ full regression PASS
++ 0 unexpected warnings
+```
+
+The derivative gate applies unchanged: every new residual's analytic
+Jacobian is verified against central differences before anything is built on
+it. A Gauss-Newton solver with a wrong Jacobian converges, reports success,
+and puts the parts somewhere plausible and wrong.
+
+Only then:
+
+```text
+P13-MATE-002 → [x]
+Next → P13-CONF-001
 ```
 
 ---
