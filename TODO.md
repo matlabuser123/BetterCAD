@@ -877,6 +877,157 @@ Next → P13-REGEN-001
 
 ---
 
+# NEXT — P13-REGEN-001
+
+## Dependency / Regeneration
+
+The milestone that finally consumes the solver.
+
+```text
+P13-SOLVE-001   solves mate intent into derived transforms
+P13-MATE-002    four joints through that solver
+P13-CONF-001    which of it is in force
+P13-STREF-001   and the references hold
+P13-REGEN-001   and something finally calls it
+```
+
+Every one of those four carried the same line forward: *nothing consumes the
+solved transforms yet -- they are returned, not applied, and no regeneration
+calls the solver.* This is where that closes.
+
+### What already exists, checked
+
+`features::Regenerator` is not a stub. It already does the whole of
+dependency-driven regeneration, and its own header states it:
+
+| Capability | State today |
+| --- | --- |
+| Dirty tracking | **Built.** Items whose revision changed since they were last built are found, marked, and everything downstream with them |
+| Only what changed | **Built.** "rebuilds only the dirty items, dependencies first. Unaffected items keep their results" |
+| Ordering | **Built.** Evaluation in dependency order, reported in `rebuilt` |
+| Cycles | **Built.** Members of a cycle are `Failed`, and `cycles` reports the groups |
+| Blocked downstream | **Built.** Downstream of a failure, a missing reference or a cycle is `Blocked`, not silently skipped |
+| Per-item errors | **Built.** `state()` and `error()` per object |
+| A solver being called by regeneration | **Built, for sketches** — the "sketch" handler applies driving parameters and solves. That is the precedent to follow |
+| A component handler | **Built** (`P13-REF-001`) — it resolves the part so that an unresolvable one fails loudly instead of silently. It produces no body |
+| A mate handler | **Missing.** Mates are inert during regeneration |
+| An assembly solve | **Missing.** Nothing calls `assembly::solve()` |
+
+So four of the checklist's items — affected-state propagation, ordering,
+cycles, per-item failure — are largely *validating* machinery that exists and
+is qualified, for the assembly objects that now flow through it. Do not
+rebuild any of it.
+
+### Settle this before implementing
+
+**A sketch solves per object. An assembly does not.**
+
+The `Regenerator`'s unit of work is one object: a handler takes an `ObjectId`
+and returns that object's body. That fits a sketch, which owns its own solve,
+and it fits a feature. It does not obviously fit an assembly solve, which
+spans every component and mate at once and produces transforms keyed by
+`ComponentId` — there is no single object whose handler it is.
+
+And the layering constrains the answer: `features` is layer 2 and `assembly`
+is layer 3, so `Regenerator` cannot call `assembly::solve()` itself. Assembly
+injects itself through `registerHandlers()`, which is the ADR-006 pattern and
+the only door available today.
+
+Candidates to weigh, and none is obviously right:
+
+* **A handler on one designated object.** Which one? Picking a component makes
+  that component special for no modelling reason, and solving once per
+  component would solve the assembly N times.
+* **A post-pass hook** the assembly module registers, running after the
+  bodies are built. Fits the layering, but adds a second phase to a
+  pipeline whose contract today is one pass over a graph.
+* **Assembly owns its own derived store**, updated by whoever drives
+  regeneration. Keeps `features` ignorant, but then "regenerate" no longer
+  means one call, and every caller has to remember the second one.
+* **A document-level derived result** in the `Regenerator`, stored opaquely.
+  Generalises the machinery, and is the largest change.
+
+ADR-005 already fixes part of the answer and should be read first: the solved
+transform is derived state, "held beside the bodies keyed by `ComponentId`,
+dropped when a component's regeneration fails exactly as a body is". That
+says where the transforms live and how they die; it does not say who triggers
+the solve. Compare the candidates properly and record the choice as an ADR.
+
+### Two items that need scoping
+
+**"Regenerate only affected assembly state"** — the assembly solve is
+*global*. One mate's value changing moves the whole system, because that is
+what a constraint system is. So the honest granularity is "the assembly
+re-solves, or it doesn't", and the affected-state question is whether the
+solve is triggered at all, not which components it recomputes. Say that in
+the evidence rather than implying a per-component incrementality that the
+mathematics does not support.
+
+**"Handle unresolved references explicitly"** — `P13-STREF-001` built
+`unresolvedMateTargets()` and `P13-REF-001` built `unresolvedComponents()`.
+This milestone's job is that regeneration *uses* them: a mate whose target
+does not resolve should make regeneration report it, the way the component
+handler already makes an unresolvable part report. A mate handler is the
+obvious shape, and mates currently have none.
+
+- [ ] Define assembly regeneration contract
+- [ ] Integrate component dependencies into regeneration
+- [ ] Integrate mate dependencies into regeneration
+- [ ] Regenerate only affected assembly state
+- [ ] Re-solve assemblies when required dependencies change
+- [ ] Preserve canonical intent; update derived solve state only
+- [ ] Handle suppressed components/mates correctly
+- [ ] Handle unresolved references explicitly
+- [ ] Detect dependency cycles / invalid dependency states
+- [ ] Validate regeneration ordering
+- [ ] Validate failure atomicity and recovery
+- [ ] Validate deterministic regeneration
+- [ ] Validate save/load + regenerate behavior
+- [ ] Adversarial review PASS
+- [ ] Debug / Release / Debug-shared regression PASS
+- [ ] Evidence in `docs/verification/P13-REGEN-001/`
+
+### Gate
+
+```text
+dependency/regeneration model correct
++ affected-state propagation correct
++ solve triggering correct
++ canonical/derived separation preserved
++ suppression behavior correct
++ unresolved references handled explicitly
++ cycle/error handling correct
++ ordering correct
++ failure atomicity PASS
++ determinism PASS
++ persistence/regeneration PASS
++ adversarial review PASS
++ full regression PASS
++ 0 unexpected warnings
+```
+
+### The failure this milestone exists to prevent
+
+**Stale derived state that looks current.** A transform left over from before
+a mate changed is worse than no transform at all: the assembly renders, the
+positions are plausible, and they are answers to a question nobody asked any
+more. It is the same shape as `P13-STREF-001`'s wrong-face failure, and it
+wants the same discipline — assert *which* transforms are in force after a
+change, never merely that a solve happened.
+
+The companion failure is its opposite: re-solving when nothing relevant
+moved, which is not wrong but is how a CAD system becomes unusable on a large
+assembly. Both need measuring.
+
+Only then:
+
+```text
+P13-REGEN-001 → [x]
+Next → P13-CMD-001
+```
+
+---
+
 # Planned P13 Sequence
 
 ```text
