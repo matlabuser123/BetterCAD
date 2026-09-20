@@ -10,8 +10,8 @@
 
 ```text
 Current:   P13 — Assemblies
-Next:      P13-CONF-001 — Assembly configurations / suppression
-Then:      P13-STREF-001 — Stable assembly references
+Next:      P13-STREF-001 — Stable assembly references
+Then:      P13-REGEN-001 — Dependency / regeneration
 
 Released:  v0.1.0 — P0–P10
 Qualified: P11, P12
@@ -592,7 +592,7 @@ Next → P13-CONF-001
 
 ---
 
-# NEXT — P13-CONF-001
+# DONE — P13-CONF-001
 
 ## Assembly Configurations / Suppression
 
@@ -663,22 +663,22 @@ overridable state. Put up the alternatives and compare them properly, but do
 not add a second configuration concept without showing why this one cannot
 carry it.
 
-* [ ] Define canonical assembly configuration model
-* [ ] Implement strong `AssemblyConfigurationId`
-* [ ] Add component suppression per configuration
-* [ ] Add mate suppression per configuration
-* [ ] Preserve default/base configuration behavior
-* [ ] Switching configuration updates active assembly state deterministically
-* [ ] Suppressed components are excluded from solve participation
-* [ ] Suppressed mates are excluded from solver equations
-* [ ] Dependencies remain valid across configuration changes
-* [ ] Unresolved references handled correctly when components are suppressed
-* [ ] Save/load preserves configurations and suppression state
-* [ ] Configuration switching is atomic and recoverable
-* [ ] Deterministic configuration results validated
-* [ ] Adversarial review PASS
-* [ ] Debug / Release / Debug-shared regression PASS
-* [ ] Evidence in `docs/verification/P13-CONF-001/`
+* [x] Define canonical assembly configuration model — overrides on the existing `Configuration`, base state never edited
+* [x] Implement strong `AssemblyConfigurationId` — **delivered as `ConfigurationId`, not a second type.** A deliberate deviation, decided under CLAUDE.md's rule for architecturally significant choices and recorded in [ADR-007](docs/architecture/decisions/ADR-007-one-configuration-system.md): assembly configurations are the configurations this document already had, so a second identity type would identify nothing new
+* [x] Add component suppression per configuration
+* [x] Add mate suppression per configuration
+* [x] Preserve default/base configuration behavior — and a parameter-only file gains no new keys
+* [x] Switching configuration updates active assembly state deterministically — ten round trips, bit-identical
+* [x] Suppressed components are excluded from solve participation — closing a gap that existed before this milestone: the flag was there and the solver ignored it
+* [x] Suppressed mates are excluded from solver equations
+* [x] Dependencies remain valid across configuration changes
+* [x] Unresolved references handled correctly when components are suppressed — a mate on a suppressed component is **inactive**, not unresolved
+* [x] Save/load preserves configurations and suppression state
+* [x] Configuration switching is atomic and recoverable
+* [x] Deterministic configuration results validated
+* [x] Adversarial review PASS
+* [x] Debug / Release / Debug-shared regression PASS
+* [x] Evidence in `docs/verification/P13-CONF-001/`
 
 ### Gate
 
@@ -711,7 +711,24 @@ is this milestone's, and it is the case most likely to be got quietly wrong,
 because "suppressed" and "missing" look alike from inside the solver and mean
 entirely different things to the engineer.
 
-Only then:
+Met: 1446/1446 on `debug`, `release` and `debug-shared` from clean, and
+946/946 five times over in `release` and `debug`; 0 compiler warnings; every
+active set, DOF count and status hand-derived before it was measured; ten
+switching round trips bit-identical. All 42 of `P12-PARAM-002`'s
+configuration tests pass against the changed load order. The adversarial
+review found 1 finding — a real defect in this milestone's own code, found by
+its tests — and 0 others. The qualified tree IDs match the committed tree.
+
+The decision that shaped it: there is no `AssemblyConfigurationId`. One
+configuration system, so the `Large` build is wider **and** has the bracket,
+said once. ADR-007 records the two candidates rejected.
+
+Carried forward: suppression does not propagate beyond an object's own mates,
+so a component positioned only by a mate to a suppressed component becomes
+free rather than suppressed in turn. There are no undoable commands for
+suppression — that is `P13-CMD-001`. And nothing regenerates in response to a
+configuration change; switching changes what a *solve* returns, and
+`P13-REGEN-001` is what will react to it.
 
 ```text
 P13-CONF-001 → [x]
@@ -730,8 +747,8 @@ P13-REF-001      Internal / external reference infrastructure DONE
 P13-MATE-001     Basic assembly constraints                   DONE
 P13-SOLVE-001    Assembly constraint solver                   DONE
 P13-MATE-002     Mechanical mates                             DONE
-P13-CONF-001     Assembly configurations / suppression        OPEN
-P13-STREF-001    Stable assembly references
+P13-CONF-001     Assembly configurations / suppression        DONE
+P13-STREF-001    Stable assembly references                   OPEN
 P13-REGEN-001    Dependency / regeneration
 P13-CMD-001      Commands / undo / redo
 P13-PERSIST-001  Save / load assembly intent

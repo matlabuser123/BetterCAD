@@ -141,6 +141,20 @@ public:
     }
     /// Removes an override, so the parameter takes its base value again.
     Result<bool> clearConfigurationOverride(ConfigurationId configuration, ParameterId parameter);
+
+    /// Sets whether a component or a mate is suppressed while @p configuration
+    /// is active (P13-CONF-001, ADR-007). Fails with NotFound if the
+    /// configuration, or an object with that ID, does not exist.
+    ///
+    /// That the object is a *component*, or a *mate*, is checked by the
+    /// assembly module: a document knows its objects, not what a mate is.
+    /// Use assembly::suppressComponent() and assembly::suppressMate().
+    Result<bool> setConfigurationSuppression(ConfigurationId configuration, ComponentId component,
+                                             bool suppressed);
+    Result<bool> setConfigurationSuppression(ConfigurationId configuration, MateId mate, bool suppressed);
+    /// Removes the override, so the object takes its base state again.
+    Result<bool> clearConfigurationSuppression(ConfigurationId configuration, ComponentId component);
+    Result<bool> clearConfigurationSuppression(ConfigurationId configuration, MateId mate);
     Result<bool> renameConfiguration(ConfigurationId id, std::string name);
     /// Makes the configuration with @p state's ID equal to it: same name and
     /// same overrides. Used by undo/redo, and validated exactly as the

@@ -265,6 +265,25 @@ Json configurationsToJson(const ConfigurationTable& table) {
             overrides.push_back(std::move(item));
         }
         entry["overrides"] = std::move(overrides);
+        // Suppression overrides (P13-CONF-001). Written only when the
+        // configuration has any, so a parameter-only document's file is
+        // exactly what it was before this milestone.
+        const auto suppressionToJson = [](const auto& overridesById) {
+            Json array = Json::array();
+            for (const auto& [id, suppressed] : overridesById) {
+                Json item = Json::object();
+                item["object"] = id.value();
+                item["suppressed"] = suppressed;
+                array.push_back(std::move(item));
+            }
+            return array;
+        };
+        if (!configuration.componentSuppression().empty()) {
+            entry["components"] = suppressionToJson(configuration.componentSuppression());
+        }
+        if (!configuration.mateSuppression().empty()) {
+            entry["mates"] = suppressionToJson(configuration.mateSuppression());
+        }
         defined.push_back(std::move(entry));
     }
     json["defined"] = std::move(defined);
@@ -272,7 +291,9 @@ Json configurationsToJson(const ConfigurationTable& table) {
 }
 
 /// Reads the configurations into @p document, which must already hold its
-/// parameters. The active configuration is named, not numbered, so that a
+/// parameters and its objects -- a configuration overrides both parameter
+/// values and the suppression of components and mates, and refuses to name
+/// anything that is not there. The active configuration is named, not numbered, so that a
 /// file stays readable.
 Result<void> readConfigurations(const Json& value, Document& document) {
     if (auto object = detail::requireObject(value, "configurations", {"active", "defined"}); !object) {
@@ -286,7 +307,7 @@ Result<void> readConfigurations(const Json& value, Document& document) {
     for (std::size_t i = 0; i < defined.size(); ++i) {
         const std::string path = detail::indexPath("configurations.defined", i);
         const Json& entry = defined[i];
-        if (auto object = detail::requireObject(entry, path, {"id", "name", "overrides"}); !object) {
+        if (auto object = detail::requireObject(entry, path, {"id", "name", "overrides", "components", "mates"}); !object) {
             return std::unexpected(object.error());
         }
         auto id = detail::readId(entry, "id", path);
@@ -326,6 +347,47 @@ Result<void> readConfigurations(const Json& value, Document& document) {
             auto set = configuration->setOverride(target, DimensionedValue{found->dimension(), *siValue});
             if (!set) {
                 return detail::atPath(itemPath, set.error());
+            }
+        }
+        // Suppression overrides. Absent is the norm, and means a
+        // configuration that changes only parameters -- which is every file
+        // written before P13-CONF-001.
+        for (const std::string_view key : {"components", "mates"}) {
+            const auto field = entry.find(key);
+            if (field == entry.end()) {
+                continue;
+            }
+            const std::string listPath = detail::childPath(path, key);
+            auto listField = detail::requireArray(entry, key, path);
+            if (!listField) {
+                return std::unexpected(listField.error());
+            }
+            const Json& list = **listField;
+            for (std::size_t j = 0; j < list.size(); ++j) {
+                const std::string itemPath = detail::indexPath(listPath, j);
+                const Json& item = list[j];
+                if (auto object = detail::requireObject(item, itemPath, {"object", "suppressed"}); !object) {
+                    return std::unexpected(object.error());
+                }
+                auto objectId = detail::readId(item, "object", itemPath);
+                auto suppressed = detail::readBool(item, "suppressed", itemPath);
+                if (!objectId || !suppressed) {
+                    return std::unexpected(!objectId ? objectId.error() : suppressed.error());
+                }
+                // A configuration must never name an object that is gone, so
+                // the reader refuses a file in which one does rather than
+                // loading an override that can never apply.
+                if (document.findObject(ObjectId::fromValue(*objectId)) == nullptr) {
+                    return detail::parseError(detail::childPath(itemPath, "object"),
+                                              std::format("no object with ID {}", *objectId));
+                }
+                const Result<bool> set =
+                    key == "components"
+                        ? configuration->setSuppressed(ComponentId::fromValue(*objectId), *suppressed)
+                        : configuration->setSuppressed(MateId::fromValue(*objectId), *suppressed);
+                if (!set) {
+                    return detail::atPath(itemPath, set.error());
+                }
             }
         }
         if (auto inserted = document.insertConfiguration(std::move(*configuration)); !inserted) {
@@ -494,14 +556,6 @@ Result<Document> documentFromJson(std::string_view text) {
         }
         ++index;
     }
-    // Configurations override parameters, so they come after them. Absent is
-    // the base configuration, which is what every file written before
-    // P12-PARAM-002 means.
-    if (const auto configurations = root.find("configurations"); configurations != root.end()) {
-        if (auto read = readConfigurations(*configurations, document); !read) {
-            return std::unexpected(read.error());
-        }
-    }
     auto objectsField = detail::requireArray(root, "objects", "");
     if (!objectsField) {
         return std::unexpected(objectsField.error());
@@ -519,6 +573,16 @@ Result<Document> documentFromJson(std::string_view text) {
         }
         if (auto restored = document.restoreObject(ObjectId::fromValue(*id), std::move(*object)); !restored) {
             return detail::atPath(path, restored.error());
+        }
+    }
+    // Configurations override parameters, so they come after them; from
+    // P13-CONF-001 they also override the suppression of components and
+    // mates, so they come after the objects too. Absent is the base
+    // configuration, which is what every file written before P12-PARAM-002
+    // means.
+    if (const auto configurations = root.find("configurations"); configurations != root.end()) {
+        if (auto read = readConfigurations(*configurations, document); !read) {
+            return std::unexpected(read.error());
         }
     }
     // Deleted items keep their IDs reserved, so the counter is never below an

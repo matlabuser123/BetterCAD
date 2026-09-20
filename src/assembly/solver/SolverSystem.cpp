@@ -1,6 +1,7 @@
 #include "assembly/solver/SolverSystem.hpp"
 
 #include <bettercad/assembly/Components.hpp>
+#include <bettercad/assembly/Configurations.hpp>
 #include <bettercad/assembly/Mates.hpp>
 #include <bettercad/assembly/Placement.hpp>
 #include <bettercad/core/document/Document.hpp>
@@ -59,9 +60,9 @@ Result<System> System::build(const Document& document, const BodyLookup& bodies)
     // its own: P13-XFORM-001 deferred one as meaningless without a solver, and
     // P13-MATE-001 supplied the mate instead.
     std::set<ComponentId> grounded;
-    for (const MateId id : mates(document)) {
+    for (const MateId id : activeMates(document)) {
         const Mate* mate = findMate(document, id);
-        if (mate == nullptr || mate->definition().suppressed) {
+        if (mate == nullptr) {
             continue;
         }
         if (mate->definition().type == MateType::Fixed) {
@@ -77,7 +78,11 @@ Result<System> System::build(const Document& document, const BodyLookup& bodies)
     // The starting configuration is the placement intent and nothing else.
     // ADR-005 rejected seeding from a previous solution, so there is no other
     // state that could make two identical documents solve differently.
-    for (const ComponentId id : components(document)) {
+    // Only the components in force: a suppressed one is not in this build, so
+    // it contributes no unknowns and no degrees of freedom. The solver asks
+    // which are active and never learns that configurations exist -- the same
+    // way expressions read effectiveParameterValue() (ADR-007).
+    for (const ComponentId id : activeComponents(document)) {
         auto placement = placementOf(document, id);
         if (!placement) {
             return std::unexpected(placement.error());
@@ -124,9 +129,9 @@ Result<System> System::build(const Document& document, const BodyLookup& bodies)
         return system.targets_.size() - 1;
     };
 
-    for (const MateId id : mates(document)) {
+    for (const MateId id : activeMates(document)) {
         const Mate* mate = findMate(document, id);
-        if (mate == nullptr || mate->definition().suppressed) {
+        if (mate == nullptr) {
             continue;
         }
         const MateDefinition& d = mate->definition();

@@ -69,8 +69,49 @@ Result<bool> Configuration::rename(std::string name) {
     return true;
 }
 
+std::optional<bool> Configuration::suppressionFor(ComponentId component) const noexcept {
+    const auto found = components_.find(component);
+    return found == components_.end() ? std::nullopt : std::optional<bool>{found->second};
+}
+
+std::optional<bool> Configuration::suppressionFor(MateId mate) const noexcept {
+    const auto found = mates_.find(mate);
+    return found == mates_.end() ? std::nullopt : std::optional<bool>{found->second};
+}
+
+Result<bool> Configuration::setSuppressed(ComponentId component, bool suppressed) {
+    if (!component.isValid()) {
+        return makeError(ErrorCode::InvalidArgument, "a suppression override needs a valid component");
+    }
+    const auto found = components_.find(component);
+    if (found != components_.end() && found->second == suppressed) {
+        return false;
+    }
+    components_[component] = suppressed;
+    return true;
+}
+
+Result<bool> Configuration::setSuppressed(MateId mate, bool suppressed) {
+    if (!mate.isValid()) {
+        return makeError(ErrorCode::InvalidArgument, "a suppression override needs a valid mate");
+    }
+    const auto found = mates_.find(mate);
+    if (found != mates_.end() && found->second == suppressed) {
+        return false;
+    }
+    mates_[mate] = suppressed;
+    return true;
+}
+
+Result<bool> Configuration::clearSuppression(ComponentId component) {
+    return components_.erase(component) > 0;
+}
+
+Result<bool> Configuration::clearSuppression(MateId mate) { return mates_.erase(mate) > 0; }
+
 bool equivalent(const Configuration& a, const Configuration& b) noexcept {
-    return a.id() == b.id() && a.name() == b.name() && a.overrides() == b.overrides();
+    return a.id() == b.id() && a.name() == b.name() && a.overrides() == b.overrides() &&
+           a.componentSuppression() == b.componentSuppression() && a.mateSuppression() == b.mateSuppression();
 }
 
 // --- ConfigurationTable ----------------------------------------------------
@@ -179,6 +220,77 @@ Result<bool> ConfigurationTable::clearOverride(ConfigurationId id, ParameterId p
         return notFound(id);
     }
     return configuration->clearOverride(parameter);
+}
+
+const ComponentSuppression& ConfigurationTable::activeComponentSuppression() const noexcept {
+    static const ComponentSuppression kNone;
+    const Configuration* configuration = activeConfiguration();
+    return configuration == nullptr ? kNone : configuration->componentSuppression();
+}
+
+const MateSuppression& ConfigurationTable::activeMateSuppression() const noexcept {
+    static const MateSuppression kNone;
+    const Configuration* configuration = activeConfiguration();
+    return configuration == nullptr ? kNone : configuration->mateSuppression();
+}
+
+std::optional<bool> ConfigurationTable::activeSuppressionFor(ComponentId id) const noexcept {
+    const Configuration* configuration = activeConfiguration();
+    return configuration == nullptr ? std::nullopt : configuration->suppressionFor(id);
+}
+
+std::optional<bool> ConfigurationTable::activeSuppressionFor(MateId id) const noexcept {
+    const Configuration* configuration = activeConfiguration();
+    return configuration == nullptr ? std::nullopt : configuration->suppressionFor(id);
+}
+
+Result<bool> ConfigurationTable::setSuppressed(ConfigurationId id, ComponentId component, bool suppressed) {
+    Configuration* configuration = findMutable(id);
+    if (configuration == nullptr) {
+        return makeError(ErrorCode::NotFound, std::format("no configuration with ID {}", id));
+    }
+    return configuration->setSuppressed(component, suppressed);
+}
+
+Result<bool> ConfigurationTable::setSuppressed(ConfigurationId id, MateId mate, bool suppressed) {
+    Configuration* configuration = findMutable(id);
+    if (configuration == nullptr) {
+        return makeError(ErrorCode::NotFound, std::format("no configuration with ID {}", id));
+    }
+    return configuration->setSuppressed(mate, suppressed);
+}
+
+Result<bool> ConfigurationTable::clearSuppression(ConfigurationId id, ComponentId component) {
+    Configuration* configuration = findMutable(id);
+    if (configuration == nullptr) {
+        return makeError(ErrorCode::NotFound, std::format("no configuration with ID {}", id));
+    }
+    return configuration->clearSuppression(component);
+}
+
+Result<bool> ConfigurationTable::clearSuppression(ConfigurationId id, MateId mate) {
+    Configuration* configuration = findMutable(id);
+    if (configuration == nullptr) {
+        return makeError(ErrorCode::NotFound, std::format("no configuration with ID {}", id));
+    }
+    return configuration->clearSuppression(mate);
+}
+
+std::size_t ConfigurationTable::forgetObject(ObjectId object) {
+    // A component and a mate are both document objects, and the table does
+    // not know which kind this ID was. Clearing both by value is correct
+    // either way: an ID is one object, so at most one map can hold it.
+    const auto component = ComponentId::fromValue(object.value());
+    const auto mate = MateId::fromValue(object.value());
+    std::size_t changed = 0;
+    for (auto& [id, configuration] : configurations_) {
+        const Result<bool> forgotComponent = configuration.clearSuppression(component);
+        const Result<bool> forgotMate = configuration.clearSuppression(mate);
+        if ((forgotComponent && *forgotComponent) || (forgotMate && *forgotMate)) {
+            ++changed;
+        }
+    }
+    return changed;
 }
 
 std::size_t ConfigurationTable::forgetParameter(ParameterId parameter) {

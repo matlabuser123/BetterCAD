@@ -26,6 +26,7 @@ bettercad_add_executable(bettercad_tests
         TestHelpers.hpp
         assembly/ComponentFileTests.cpp
         assembly/ComponentTests.cpp
+        assembly/ConfigurationTests.cpp
         assembly/MateFileTests.cpp
         assembly/MateTests.cpp
         assembly/MechanicalMateTests.cpp

@@ -143,6 +143,56 @@ Result<Parameter> Document::removeParameter(ParameterId id) {
     return removed;
 }
 
+namespace {
+
+/// A component and a mate are document objects, so their IDs share the object
+/// ID space; this is the object a suppression override names.
+template <typename IdT>
+[[nodiscard]] ObjectId asObjectId(IdT id) noexcept {
+    return ObjectId::fromValue(id.value());
+}
+
+} // namespace
+
+Result<bool> Document::setConfigurationSuppression(ConfigurationId configuration, ComponentId component,
+                                                   bool suppressed) {
+    if (findObject(asObjectId(component)) == nullptr) {
+        return makeError(ErrorCode::NotFound, std::format("no object with ID {}", component));
+    }
+    auto changed = configurations_.setSuppressed(configuration, component, suppressed);
+    if (changed && *changed) {
+        ++revision_;
+    }
+    return changed;
+}
+
+Result<bool> Document::setConfigurationSuppression(ConfigurationId configuration, MateId mate, bool suppressed) {
+    if (findObject(asObjectId(mate)) == nullptr) {
+        return makeError(ErrorCode::NotFound, std::format("no object with ID {}", mate));
+    }
+    auto changed = configurations_.setSuppressed(configuration, mate, suppressed);
+    if (changed && *changed) {
+        ++revision_;
+    }
+    return changed;
+}
+
+Result<bool> Document::clearConfigurationSuppression(ConfigurationId configuration, ComponentId component) {
+    auto changed = configurations_.clearSuppression(configuration, component);
+    if (changed && *changed) {
+        ++revision_;
+    }
+    return changed;
+}
+
+Result<bool> Document::clearConfigurationSuppression(ConfigurationId configuration, MateId mate) {
+    auto changed = configurations_.clearSuppression(configuration, mate);
+    if (changed && *changed) {
+        ++revision_;
+    }
+    return changed;
+}
+
 Result<void> Document::requireNotDriven(ParameterId id) const {
     const Parameter* parameter = parameters_.find(id);
     if (parameter != nullptr && parameter->expression()) {
@@ -501,6 +551,9 @@ Result<std::unique_ptr<DocumentObject>> Document::removeObject(ObjectId id) {
         return objectNotFound(id);
     }
     objectIdsByName_.erase(node.mapped()->name());
+    // A configuration cannot suppress an object that is gone -- the same rule
+    // removeParameter() applies to parameter overrides.
+    configurations_.forgetObject(id);
     ++revision_;
     return std::move(node.mapped());
 }
