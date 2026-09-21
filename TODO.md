@@ -17,7 +17,7 @@ Released:  v0.1.0 — P0–P10
 Qualified: P11, P12
 
 P13 architecture:
-ADR-002 → ADR-006
+ADR-002 → ADR-008
 ```
 
 ---
@@ -29,7 +29,7 @@ ADR-002 → ADR-006
 * [x] `P12-PARAM-001` — Parameter expressions
 * [x] `P12-SKETCH-001` — Advanced sketch constraints
 * [x] `P12-SKETCH-002` — Ellipse and spline entities
-* [x] `P12-DATUM-001` — Datum planes, axes and coordinate systems
+* [x] `P12-DATUM-001` — Datum planes / axes / coordinate systems
 * [x] `P12-STREF-001` — Stable feature-face references
 * [x] `P12-SKETCH-003` — Sketches on feature faces
 * [x] `P12-FEAT-001` — Through-all extrude
@@ -42,24 +42,18 @@ ADR-002 → ADR-006
 * [x] `P12-PATTERN-001` — Advanced patterns
 * [x] `P12-SWEEP-001` — Advanced sweep
 * [x] `P12-LOFT-001` — Advanced loft
-* [x] `P12-PARAM-002` — Design equations and configurations
+* [x] `P12-PARAM-002` — Design equations / configurations
 * [x] `P12-REF-001` — Production reference models
-* [x] `P12-QUAL-001` — P12 qualification
-
-Evidence:
+* [x] `P12-QUAL-001` — Full P12 qualification
 
 ```text
-docs/verification/P12-*/
+Evidence: docs/verification/P12-*/
+Qualified commit: 15d7f75
 ```
-
-P12 qualified on `15d7f75`.
 
 ---
 
 # P13 — Assemblies
-
-> Architecture is decided. Implement milestones sequentially.
-> Only the current milestone is authorized.
 
 ## Completed
 
@@ -68,16 +62,15 @@ P12 qualified on `15d7f75`.
 * [x] `P13-XFORM-001` — Component transforms
 * [x] `P13-REF-001` — Internal / external reference infrastructure
 * [x] `P13-MATE-001` — Basic assembly constraints
-
-Decisions:
-
-```text
-ADR-002 — assembly/document model
-ADR-003 — internal/external reference contract
-ADR-004 — mate-reference semantics
-ADR-005 — solve-state / transform policy
-ADR-006 — module layering
-```
+* [x] `P13-SOLVE-001` — Assembly constraint solver
+* [x] `P13-MATE-002` — Mechanical mates
+* [x] `P13-CONF-001` — Assembly configurations / suppression
+* [x] `P13-STREF-001` — Stable assembly references
+* [x] `P13-REGEN-001` — Dependency / regeneration
+* [x] `P13-CMD-001` — Commands / undo / redo
+* [x] `P13-PERSIST-001` — Save / load assembly intent
+* [x] `P13-CLI-001` — Headless assembly workflows
+* [x] `P13-STEP-001` — Assembly STEP export / read-back
 
 Evidence:
 
@@ -87,1721 +80,103 @@ docs/verification/P13-COMP-001/
 docs/verification/P13-XFORM-001/
 docs/verification/P13-REF-001/
 docs/verification/P13-MATE-001/
+docs/verification/P13-SOLVE-001/
+docs/verification/P13-MATE-002/
+docs/verification/P13-CONF-001/
+docs/verification/P13-STREF-001/
+docs/verification/P13-REGEN-001/
+docs/verification/P13-CMD-001/
+docs/verification/P13-PERSIST-001/
+docs/verification/P13-CLI-001/
+docs/verification/P13-STEP-001/
 ```
 
 ---
 
-# DONE — P13-COMP-001
+# CURRENT — P13-REFMOD-001
 
-## Component Definitions and Instances
+## Production Assembly Reference Models
 
-The canonical component-instance model. Evidence in
-[docs/verification/P13-COMP-001/](docs/verification/P13-COMP-001/README.md).
-
-* [x] `ComponentInstance` participates as a `DocumentObject`
-* [x] Strong `ComponentId` identity
-* [x] Component identity distinct from referenced part identity
-* [x] Multiple instances may reference one internal part
-* [x] Internal part references validated
-* [x] Foreign-document references rejected — a component's reference never
-  resolves outside its own document, and an ID this document does not have is
-  refused `NotFound`, changing nothing. A foreign ID that *collides* with a
-  local object is undetectable and binds locally: inherent to `ObjectId`,
-  tested, and the reason ADR-003 defers cross-document references to
-  `P13-REF-001`.
-* [x] Correct dependency-graph participation
-* [x] Invalid creation is atomic and recoverable
-* [x] Component deletion validated
-* [x] Save/load preserves canonical component state
-* [x] Pre-P13 files remain compatible
-* [x] No unnecessary `.bcad` schema/version change
-* [x] Deterministic behavior validated
-* [x] Adversarial review PASS
-* [x] Debug / Release / Debug-shared regression PASS
-* [x] Evidence recorded in `docs/verification/P13-COMP-001/`
+* [ ] Define production reference-model suite
+* [ ] Add simple grounded two-component assembly
+* [ ] Add fully constrained multi-component assembly
+* [ ] Add under-constrained reference assembly
+* [ ] Add mechanical-mate reference assembly
+* [ ] Add configuration / suppression reference assembly
+* [ ] Add stable-reference / regeneration reference assembly
+* [ ] Add mixed production-scale assembly
+* [ ] Validate deterministic regenerate / solve results
+* [ ] Validate save → load → regenerate → solve
+* [ ] Validate CLI workflows on committed models
+* [ ] Validate STEP export / read-back on committed models
+* [ ] Validate expected DOF / placements independently
+* [ ] Validate failure/reference cases
+* [ ] Adversarial review PASS
+* [ ] Debug / Release / Debug-shared regression PASS
+* [ ] Evidence in `docs/verification/P13-REFMOD-001/`
 
 ### Gate
 
 ```text
-component model correct
-+ identity stable
-+ document ownership correct
-+ internal references correct
-+ persistence PASS
-+ legacy compatibility PASS
+representative assembly suite complete
++ basic mates covered
++ mechanical mates covered
++ configurations/suppression covered
++ stable references covered
++ regeneration covered
++ persistence covered
++ CLI covered
++ STEP read-back covered
++ expected geometry/DOF independently validated
 + determinism PASS
 + adversarial review PASS
 + full regression PASS
 + 0 unexpected warnings
 ```
 
-Met: 1282/1282 on `debug`, `release` and `debug-shared` from clean, and
-632/632 five times over in `release` and `debug`; 0 compiler warnings; the
-adversarial review found and fixed 4 defects, each with a regression test;
-the qualified tree IDs match the committed tree.
-
-```text
-P13-COMP-001 → [x]
-Next → P13-XFORM-001
-```
-
 ---
 
-# DONE — P13-XFORM-001
+# NEXT — P13-QUAL-001
 
-## Component Transforms
+## Full P13 Qualification
 
-A component's placement: canonical intent, derived transform. Evidence in
-[docs/verification/P13-XFORM-001/](docs/verification/P13-XFORM-001/README.md).
-
-* [x] Define canonical rigid-transform representation
-* [x] Implement component local placement
-* [x] Keep solved/world transforms derived, not canonical
-* [x] Validate transform composition/order
-* [x] Validate rotation convention and units
-* [x] Multiple instances transform independently
-* [x] Validate identity/default placement
-* [x] Save/load preserves canonical placement
-* [x] Invalid transforms fail atomically
-* [x] Deterministic transform results
-* [x] Adversarial review PASS
-* [x] Debug / Release / Debug-shared regression PASS
-* [x] Evidence in `docs/verification/P13-XFORM-001/`
+* [ ] Freeze final P13 source/test tree
+* [ ] Audit all P13 milestone evidence
+* [ ] Verify all P13 TODO items complete
+* [ ] Verify all ADR contracts satisfied
+* [ ] Run clean Debug qualification
+* [ ] Run clean Release qualification
+* [ ] Run clean Debug-shared qualification
+* [ ] Run repeated determinism qualification
+* [ ] Validate production reference models
+* [ ] Validate persistence round trips
+* [ ] Validate assembly solver / DOF classification
+* [ ] Validate configuration / suppression behavior
+* [ ] Validate stable references / recovery
+* [ ] Validate regeneration / failure propagation
+* [ ] Validate undo / redo workflows
+* [ ] Validate CLI end-to-end workflows
+* [ ] Validate STEP export / read-back
+* [ ] Run final adversarial review
+* [ ] Confirm 0 unexpected compiler warnings
+* [ ] Confirm qualified tree == committed tree
+* [ ] Record final evidence in `docs/verification/P13-QUAL-001/`
+* [ ] Mark P13 qualified
 
 ### Gate
 
 ```text
-rigid-transform model correct
-+ canonical/derived state separation correct
-+ composition mathematically correct
-+ multiple-instance behavior correct
-+ persistence PASS
-+ failure atomicity PASS
+all P13 milestones PASS
++ all evidence complete
++ all production reference models PASS
++ Debug PASS
++ Release PASS
++ Debug-shared PASS
 + determinism PASS
 + adversarial review PASS
-+ full regression PASS
 + 0 unexpected warnings
++ final qualified tree == committed tree
 ```
-
-Met: 1301/1301 on `debug`, `release` and `debug-shared` from clean, and
-708/708 five times over in `release` and `debug`; 0 compiler warnings; the
-adversarial review found 3 gaps and 0 production defects, closing two of them
-with new regression tests; the qualified tree IDs match the committed tree.
-
-```text
-P13-XFORM-001 → [x]
-Next → P13-REF-001
-```
-
----
-
-# DONE — P13-REF-001
-
-## Internal / External Reference Infrastructure
-
-Reference identity wider than `ObjectId`. Evidence in
-[docs/verification/P13-REF-001/](docs/verification/P13-REF-001/README.md).
-
-* [x] Define canonical reference identity model
-* [x] Implement same-document internal references
-* [x] Define unresolved-reference state explicitly
-* [x] Implement injectable resolver interface for future external references
-* [x] Use stable UUID/document identity, never filesystem-path identity
-* [x] Keep external-reference resolution separate from `ObjectId`
-* [x] Reject accidental cross-document `ObjectId` binding — for a reference
-  that carries a document identity. A *bare* `ObjectId` is still defined as
-  local and still binds locally; `P13-COMP-001`'s test of that is retained.
-* [x] Validate reference type / target compatibility
-* [x] Validate missing / deleted target behavior
-* [x] Validate reference recovery after target becomes available again
-* [x] Prevent silent rebinding to another object
-* [x] Preserve references through save/load
-* [x] Preserve pre-P13 file compatibility
-* [x] Validate deterministic reference resolution
-* [x] Validate failure atomicity
-* [x] Adversarial review PASS
-* [x] Debug / Release / Debug-shared regression PASS
-* [x] Evidence in `docs/verification/P13-REF-001/`
-
-### Gate
-
-```text
-reference model correct
-+ internal references PASS
-+ external-resolution contract correct
-+ unresolved state explicit
-+ no path-based identity
-+ no silent rebinding
-+ persistence PASS
-+ determinism PASS
-+ failure atomicity PASS
-+ adversarial review PASS
-+ full regression PASS
-+ 0 unexpected warnings
-```
-
-Met: 1323/1323 on `debug`, `release` and `debug-shared` from clean, and
-730/730 five times over in `release` and `debug`; 0 compiler warnings; the
-adversarial review found 2 gaps and 0 production defects, closing both with
-regression tests; the qualified tree IDs match the committed tree.
-
-Carried forward: external references do not regenerate, because the
-dependency graph speaks in `ObjectId` (ADR-003). Such a component fails
-regeneration with the state that says why, rather than appearing to succeed.
-
-```text
-P13-REF-001 → [x]
-Next → P13-MATE-001
-```
-
----
-
-# DONE — P13-MATE-001
-
-## Basic Assembly Constraints
-
-The constraint model: seven kinds, what they may point at, and what they
-refuse. Nothing moves. Evidence in
-[docs/verification/P13-MATE-001/](docs/verification/P13-MATE-001/README.md).
-
-* [x] Implement strong `MateId`
-* [x] Implement canonical `MateConstraint` as document state
-* [x] Implement Fixed constraint
-* [x] Implement Coincident constraint
-* [x] Implement Concentric constraint
-* [x] Implement Parallel constraint
-* [x] Implement Perpendicular constraint
-* [x] Implement Distance constraint
-* [x] Implement Angle constraint
-* [x] Mate targets obey ADR-004 reference rules — enforced by the type: a
-  `FaceSignature` has no field it could occupy in a `MateTarget`
-* [x] Reject invalid component/reference combinations
-* [x] Validate dimensional values and units
-* [x] Missing mate targets become unresolved, never silently rebound
-* [x] Mate dependencies participate correctly in the document graph
-* [x] Invalid mate creation/modification is atomic and recoverable
-* [x] Save/load preserves mate engineering intent
-* [x] Deterministic mate representation validated
-* [x] Adversarial review PASS
-* [x] Debug / Release / Debug-shared regression PASS
-* [x] Evidence in `docs/verification/P13-MATE-001/`
-
-### Gate
-
-```text
-mate model correct
-+ all 7 basic constraints represented
-+ reference semantics correct
-+ units/dimensions correct
-+ unresolved-state behavior correct
-+ dependencies correct
-+ persistence PASS
-+ determinism PASS
-+ failure atomicity PASS
-+ adversarial review PASS
-+ full regression PASS
-+ 0 unexpected warnings
-```
-
-Met: 1349/1349 on `debug`, `release` and `debug-shared` from clean, and
-771/771 five times over in `release` and `debug`; 0 compiler warnings; the
-adversarial review found 2 gaps and 0 production defects, closing both with
-regression tests; the qualified tree IDs match the committed tree.
-
-Carried forward: nothing is solved. A mate is intent, and no mate is checked
-for whether it can be satisfied — over-constraint, redundancy and degrees of
-freedom are `P13-SOLVE-001`.
-
-```text
-P13-MATE-001 → [x]
-Next → P13-SOLVE-001
-```
-
----
-
-# DONE — P13-SOLVE-001
-
-## Assembly Constraint Solver
-
-Solve mate intent into component transforms.
-
-```text
-P13-MATE-001   stores assembly intent
-P13-SOLVE-001  solves that intent into derived component transforms
-```
-
-A solved transform is **derived state**: recomputed by regeneration, held
-beside the bodies keyed by `ComponentId`, dropped when a component's
-regeneration fails exactly as a body is, and **never written to `.bcad`**.
-
-### What ADR-005 already binds
-
-[ADR-005](docs/architecture/decisions/ADR-005-placement-is-intent-transforms-are-derived.md)
-decided this milestone's hardest constraints while rejecting the easier
-options, and says so in terms. They are not open questions:
-
-* **No seed, no warm start.** ADR-005 considered persisting the last solved
-  transform as a solver seed — what the sketch solver actually does — and
-  rejected it. The solver must converge **from placement intent alone**.
-  ADR-005 calls this "the honest cost" and "a real constraint on
-  `P13-SOLVE-001`": intent must be a good enough starting point, and the
-  solver must be robust from it.
-* **Why the seed was rejected**, so it is not quietly reintroduced: a seeded
-  solve depends on save history, so two documents with identical intent could
-  solve differently. `P12-PARAM-002` measured warm-starting's path-dependence
-  at **1.3e-15** per configuration cycle — bounded, but real enough to be a
-  recorded limitation. Repeating a known wart in a subsystem designed from
-  scratch would be choosing it deliberately.
-* **Deterministic start and deterministic iteration order.** The dependency
-  graph already breaks ties by ascending ID; ADR-005 requires "the assembly
-  solve must be equally order-free".
-* **Grounding is reported, never assumed.** At least one component must be
-  grounded or the assembly is free to translate and rotate as a whole —
-  "an under-constrained state the solver must *report*, not silently pin".
-  Grounding is the `Fixed` mate from `P13-MATE-001`; there is no component
-  flag and none is needed.
-
-### Five states, never a boolean
-
-`CLAUDE.md` requires sketch solving to distinguish under-constrained, fully
-constrained, over-constrained, inconsistent and solver failure, and to report
-conflicts, redundancy, unresolved DOF and residuals. The assembly solver is
-held to the same standard: a solve that failed and a solve that succeeded
-into an under-constrained assembly are different answers, and collapsing
-either into `false` loses the one thing the engineer needs.
-
-* [x] Define solver input/output contracts
-* [x] Convert mate intent into a constraint problem
-* [x] Implement component DOF representation
-* [x] Implement residual evaluation for all 7 basic mate types
-* [x] Implement Jacobian / derivative path
-* [x] Implement nonlinear solve loop
-* [x] Apply solved transforms as derived state only — returned by `solve()`, never written to the document or the file. Holding them beside the bodies and dropping them when a component's regeneration fails needs the assembly regeneration pipeline, which is `P13-REGEN-001`
-* [x] Preserve canonical component placement intent
-* [x] Detect fully constrained assemblies
-* [x] Detect under-constrained assemblies / remaining DOF
-* [x] Detect inconsistent / over-constrained systems
-* [x] Detect redundant constraints where feasible — linear dependence at the solution, by Gram-Schmidt in mate ID order; non-linear redundancy is not detected
-* [x] Validate convergence criteria and tolerances
-* [x] Validate deterministic solver results
-* [x] Validate failure atomicity / no partial solved state
-* [x] Independently validate analytic assembly cases
-* [x] Validate unresolved mate/reference handling
-* [x] Adversarial review PASS
-* [x] Debug / Release / Debug-shared regression PASS
-* [x] Evidence in `docs/verification/P13-SOLVE-001/`
-
-### Gate
-
-```text
-solver model correct
-+ all 7 basic mate types solved
-+ residuals/Jacobian validated
-+ DOF classification correct
-+ under/fully/over-constrained behavior correct
-+ canonical/derived state separation preserved
-+ convergence validated
-+ independent analytical cases PASS
-+ failure atomicity PASS
-+ determinism PASS
-+ adversarial review PASS
-+ full regression PASS
-+ 0 unexpected warnings
-```
-
-ADR-005 also states what verifying it looks like: a saved and reloaded
-assembly solves to the same transforms as one built in memory; no transform
-appears in the `.bcad` JSON; a parameter change moves a component and
-restoring the parameter restores the transform; solving twice gives
-identical transforms; and an assembly with no grounded component reports an
-under-constrained state rather than choosing one.
-
-Tolerances need a reason, and a Jacobian is not well-conditioned algebra:
-expect to justify the convergence tolerance against the conditioning of the
-system rather than inheriting `1e-12` from the transform tests.
-
-Met: 1382/1382 on `debug`, `release` and `debug-shared` from clean, and
-873/873 five times over in `release` and `debug`; 0 compiler warnings; the
-Jacobian agrees with central differences to 3.7e-11 against a 1e-7 gate; every
-DOF count is hand-derived and matches; the solver takes a `const Document&`,
-so it cannot write back by type, and the `.bcad` file is byte-identical across
-a solve. The adversarial review found 4 findings and 0 production defects — the last
-of them a link failure that only the `debug-shared` preset could see. The
-qualified tree IDs match the committed tree.
-
-All five of ADR-005's verification checks are measured, three of them
-bit-identical rather than to a tolerance.
-
-Carried forward: the solved transforms are returned, not applied. Nothing
-holds them beside the bodies, no regeneration calls the solver, and a mate's
-own value cannot be driven by a parameter. An exactly stationary start is
-reported `Inconsistent` when it is merely unreachable — shared with the sketch
-solver, recorded, and pinned by a test.
-
-```text
-P13-SOLVE-001 → [x]
-Next → P13-MATE-002
-```
-
----
-
-# DONE — P13-MATE-002
-
-## Mechanical Mates
-
-Four joints, each defined by the freedom it leaves rather than by the
-constraint it adds.
-
-```text
-P13-MATE-001   seven basic constraints, stored as intent
-P13-SOLVE-001  solves that intent into derived transforms
-P13-MATE-002   four mechanical mates, through that same model and that same solver
-```
-
-`P13-SOLVE-001` deferred these four explicitly. They are the milestone's
-stated scope boundary, not an oversight, and they arrive now with a solver
-that can already classify what they do to the degrees of freedom.
-
-### Keep the scope tight
-
-This extends an already-qualified constraint model and an already-qualified
-solver. It does not introduce a second one. Concretely, that means: no new
-`MateConstraint`; no new solver; no new residual kind where an existing one
-composes; no new reference vocabulary beyond ADR-004.
-
-The solver already has six residual kinds — `Parallel`, `Perpendicular`,
-`Angle`, `OffsetAlong`, `OffsetPerpendicular` and `SeparationPerpendicular` —
-and the rank-honest equation counts to go with them. A mechanical mate that
-needs a seventh needs a reason.
-
-### Two of the four may already be expressible
-
-`P13-SOLVE-001` measured what the existing equation sets leave free:
-
-```text
-Concentric            → 2 DOF   (slide along the axis, spin about it)
-Coincident (planes)   → 3 DOF   (two in-plane translations, spin about the normal)
-```
-
-Those are the DOF contracts below for `Cylindrical` and `Planar`, exactly.
-If that holds under scrutiny, the work for those two is intent, naming and
-validation rather than new equations — the same relationship `Concentric`
-already has with an axis-to-axis `Coincident`, which produces identical
-equations and differs only in what the engineer meant.
-
-Verify it rather than assume it. `Revolute` and `Slider` both need 5
-independent equations against a free component's 6 unknowns, and neither is
-an existing set.
-
-* [x] Implement Revolute mate
-* [x] Implement Slider mate — the one that needed a roll reference
-* [x] Implement Cylindrical mate
-* [x] Implement Planar mate
-* [x] Define exact allowed DOF for each mate — 1/1/2/3, each predicted from rigid-body reasoning before it was measured
-* [x] Reuse existing `MateConstraint` / solver architecture — no new solver, status or entry point; the joints are rows in the same matrix
-* [x] Validate mate target/reference compatibility
-* [x] Convert each mechanical mate into solver constraints
-* [x] Validate residuals for each mate type
-* [x] Validate Jacobians / derivatives — worst new mate 5.41e-12 against a 1e-7 gate
-* [x] Validate remaining DOF analytically — and which motion survives, not only how many
-* [x] Validate solved transforms independently
-* [x] Validate mate combinations with basic constraints
-* [x] Detect contradictory mechanical mates
-* [x] Validate unresolved-reference behavior
-* [x] Validate failure atomicity
-* [x] Save/load preserves mechanical-mate intent — including the roll reference, without which a slider reloads as a sleeve
-* [x] Deterministic solver behavior validated
-* [x] Adversarial review PASS
-* [x] Debug / Release / Debug-shared regression PASS
-* [x] Evidence in `docs/verification/P13-MATE-002/`
-
-### Expected DOF contract
-
-```text
-Revolute
-→ 1 rotational DOF
-
-Slider
-→ 1 translational DOF
-
-Cylindrical
-→ 1 translational + 1 rotational DOF
-
-Planar
-→ 2 in-plane translation + 1 normal-axis rotation DOF
-```
-
-This contract is directly checkable: the solver reports
-`degreesOfFreedom = unknowns - rank(Jacobian)`, so each mate applied to one
-free component against a grounded one must leave exactly the count above —
-6 unknowns less 5, 5, 4 and 3 independent equations respectively. Derive the
-expected count from the geometry and assert the literal, as
-`P13-SOLVE-001` did; never read it back from the solver.
-
-Watch the rank-honesty trap that milestone hit: a constraint formulated as
-three rows of rank two makes its mate look permanently redundant and turns a
-correct assembly into `OverConstrained`. Every mechanical mate's equation
-count must equal its rank.
-
-### Gate
-
-```text
-all 4 mechanical mates correct
-+ DOF semantics correct
-+ solver integration correct
-+ residual/Jacobian validation PASS
-+ independent analytical validation PASS
-+ contradictory systems handled correctly
-+ unresolved references handled correctly
-+ persistence PASS
-+ failure atomicity PASS
-+ determinism PASS
-+ adversarial review PASS
-+ full regression PASS
-+ 0 unexpected warnings
-```
-
-The derivative gate applies unchanged: every new residual's analytic
-Jacobian is verified against central differences before anything is built on
-it. A Gauss-Newton solver with a wrong Jacobian converges, reports success,
-and puts the parts somewhere plausible and wrong.
-
-Met: 1421/1421 on `debug`, `release` and `debug-shared` from clean, and
-914/914 five times over in `release` and `debug`; 0 compiler warnings; every
-joint's Jacobian agrees with central differences to 5.41e-12 or better against
-a 1e-7 gate; every DOF count hand-derived and matched; all 30 `P13-SOLVE-001`
-solver cases unchanged. The adversarial review found 3 findings and 0
-production defects. The qualified tree IDs match the committed tree.
-
-The architectural finding, since it shaped the result: a prismatic joint needs
-three rotational constraints and a single target pair affords at most two, so
-`Slider` carries a roll reference and the other three do not. Raised before
-implementing, three candidates weighed, recorded in the evidence.
-
-Carried forward: no joint distinguishes the sense of its axis or normal — they
-are built on `Parallel` rows, satisfied either way round. A slider whose roll
-reference lies along its own axis is reported `OverConstrained` with the mate
-named, rather than silently behaving as a sleeve. No joint carries a position
-or a limit; those come from a `Distance` or `Angle` mate beside it. And
-nothing consumes the solved transforms yet.
-
-```text
-P13-MATE-002 → [x]
-Next → P13-CONF-001
-```
-
----
-
-# DONE — P13-CONF-001
-
-## Assembly Configurations / Suppression
-
-One assembly describing a family of builds: which components and which mates
-are in force, per configuration.
-
-```text
-P13-MATE-001   the constraints, stored as intent
-P13-SOLVE-001  solved into derived transforms
-P13-MATE-002   four mechanical joints through the same solver
-P13-CONF-001   which of all that is in force, per configuration
-```
-
-### What already exists, checked
-
-Three of the checklist items are not starting from nothing, and knowing which
-is which decides how big this milestone is:
-
-| Item | State today |
-| --- | --- |
-| Mate suppression | **Exists.** `MateDefinition::suppressed`, honoured by the solver — a suppressed mate contributes no equations, tested in `P13-SOLVE-001` and `P13-MATE-002` |
-| Component suppression | **The flag exists**, `ComponentDefinition::suppressed`, documented as "not in this build". **The solver ignores it** |
-| A configuration model | **Exists.** `ConfigurationId`, `Configuration`, `CreateConfigurationCommand`, `ModifyConfigurationCommand` — P12-PARAM-002, for parameter overrides |
-
-So the work is not "add suppression". It is **making suppression
-configuration-dependent**, and closing the one real gap below.
-
-### The gap that exists today
-
-`System::build()` skips suppressed *mates* and does not skip suppressed
-*components*: the loop over `components(document)` gives every component six
-unknowns whether or not it is suppressed. A suppressed component therefore
-still inflates the reported degrees of freedom.
-
-That is unimplemented scope rather than a defect — `P13-SOLVE-001` was not
-asked about suppression, and this milestone is where it belongs — but it is a
-behaviour change to an already-qualified solver, so it needs its own
-regression test and a note in the evidence saying what moved.
-
-### Settle this before implementing
-
-**Is an assembly configuration the existing `Configuration`, or a new one?**
-
-The checklist says "implement strong `AssemblyConfigurationId`", and there is
-already a `ConfigurationId`. Two configuration systems in one document would
-be the second-system mistake `CLAUDE.md` names outright, and would force every
-later question — which is active, what does switching mean, what does a file
-hold — to be answered twice and kept in step.
-
-The existing model is worth reading before deciding, because it already
-solves this milestone's hardest problem. P12-PARAM-002's configurations are
-**overrides on top of base values, never edits to them**:
-
-```text
-base values -> the active configuration's overrides -> what is in force
-```
-
-Its own header states the consequence: "switching Small -> Large -> Small
-restores Small exactly: the base values never moved." That is precisely what
-"switching configuration updates active assembly state deterministically" and
-"configuration switching is atomic and recoverable" require, and it is
-already qualified.
-
-The natural reading is that `suppressed` is a base value like a parameter's,
-a configuration carries an override for it, and what is in force is the base
-with the override applied — the same shape, extended to a second kind of
-overridable state. Put up the alternatives and compare them properly, but do
-not add a second configuration concept without showing why this one cannot
-carry it.
-
-* [x] Define canonical assembly configuration model — overrides on the existing `Configuration`, base state never edited
-* [x] Implement strong `AssemblyConfigurationId` — **delivered as `ConfigurationId`, not a second type.** A deliberate deviation, decided under CLAUDE.md's rule for architecturally significant choices and recorded in [ADR-007](docs/architecture/decisions/ADR-007-one-configuration-system.md): assembly configurations are the configurations this document already had, so a second identity type would identify nothing new
-* [x] Add component suppression per configuration
-* [x] Add mate suppression per configuration
-* [x] Preserve default/base configuration behavior — and a parameter-only file gains no new keys
-* [x] Switching configuration updates active assembly state deterministically — ten round trips, bit-identical
-* [x] Suppressed components are excluded from solve participation — closing a gap that existed before this milestone: the flag was there and the solver ignored it
-* [x] Suppressed mates are excluded from solver equations
-* [x] Dependencies remain valid across configuration changes
-* [x] Unresolved references handled correctly when components are suppressed — a mate on a suppressed component is **inactive**, not unresolved
-* [x] Save/load preserves configurations and suppression state
-* [x] Configuration switching is atomic and recoverable
-* [x] Deterministic configuration results validated
-* [x] Adversarial review PASS
-* [x] Debug / Release / Debug-shared regression PASS
-* [x] Evidence in `docs/verification/P13-CONF-001/`
-
-### Gate
-
-```text
-configuration model correct
-+ component suppression correct
-+ mate suppression correct
-+ solver participation correct
-+ dependency behavior correct
-+ persistence PASS
-+ switching atomicity PASS
-+ determinism PASS
-+ adversarial review PASS
-+ full regression PASS
-+ 0 unexpected warnings
-```
-
-### Keep the scope tight
-
-This milestone is **configuration and suppression state**: what is in force,
-and what switching means. Not stable assembly references, and not the
-regeneration pipeline — those are `P13-STREF-001` and `P13-REGEN-001`, and
-they come next.
-
-One thing to watch that suppression makes newly possible: a mate whose target
-sits on a suppressed component. That is not an unresolved reference — the
-component is still in the document with its ID and its geometry intact, which
-is what suppression means here. Deciding what the solve does with such a mate
-is this milestone's, and it is the case most likely to be got quietly wrong,
-because "suppressed" and "missing" look alike from inside the solver and mean
-entirely different things to the engineer.
-
-Met: 1446/1446 on `debug`, `release` and `debug-shared` from clean, and
-946/946 five times over in `release` and `debug`; 0 compiler warnings; every
-active set, DOF count and status hand-derived before it was measured; ten
-switching round trips bit-identical. All 42 of `P12-PARAM-002`'s
-configuration tests pass against the changed load order. The adversarial
-review found 1 finding — a real defect in this milestone's own code, found by
-its tests — and 0 others. The qualified tree IDs match the committed tree.
-
-The decision that shaped it: there is no `AssemblyConfigurationId`. One
-configuration system, so the `Large` build is wider **and** has the bracket,
-said once. ADR-007 records the two candidates rejected.
-
-Carried forward: suppression does not propagate beyond an object's own mates,
-so a component positioned only by a mate to a suppressed component becomes
-free rather than suppressed in turn. There are no undoable commands for
-suppression — that is `P13-CMD-001`. And nothing regenerates in response to a
-configuration change; switching changes what a *solve* returns, and
-`P13-REGEN-001` is what will react to it.
-
-```text
-P13-CONF-001 → [x]
-Next → P13-STREF-001
-```
-
----
-
-# DONE — P13-STREF-001
-
-## Stable Assembly References
-
-A reference survives the model changing under it, or it is honestly broken.
-Never quietly attached to something else.
-
-```text
-P13-REF-001    the reference vocabulary and the resolver
-P13-MATE-001   mates reference semantic geometry only (ADR-004)
-P13-CONF-001   suppression, which a reference must now survive
-P13-STREF-001  and it must survive everything else too
-```
-
-### What already exists, checked
-
-Most of this checklist is not starting from nothing. Three earlier milestones
-built the machinery; knowing which parts are built decides what this one is
-actually for.
-
-| Item | State today |
-| --- | --- |
-| Stable face identity | **Built.** `FaceName` is a feature ID plus a role, not an index — "the persistent name of a face: the feature that generates it and the face's role there" (P12-STREF-001) |
-| No raw topology identity in mates | **Enforced by the type.** A `MateTarget` holds a `PlaneReference`, an `AxisReference` or a `FaceName`, and has no field a `geometry::FaceSignature` could occupy. `MateReference.hpp` says why it is refused: a signature matches a plane in model space, not a named face |
-| Stable component references | **Built.** `ComponentDefinition::part` is an `ObjectReference`: an `ObjectId`, never an index |
-| Cross-document identity | **Contract built.** `ObjectReference` carries an optional `DocumentId` plus a locator, and `ReferenceResolver` distinguishes Resolved, DocumentUnavailable, **DocumentMismatch** and ObjectMissing — with ADR-003's rule that a locator leading to the wrong document is a failed reference, never a match |
-| No silent rebinding | **Built and ticked** in `P13-MATE-001`: missing mate targets become unresolved, never rebound to nearest geometry |
-
-So the weight of this milestone is **validation of what exists across the
-changes that can now happen to it**, plus the specific gaps below. Do not
-rebuild any of the above; if something needs extending, extend it.
-
-### Where the real work is
-
-Three things have never been measured end to end, and one of them only became
-possible last milestone:
-
-* **Across configuration switching.** `P13-CONF-001` landed suppression, so a
-  mate target can now sit on a component that is suppressed in one build and
-  present in another. That mate is *inactive*, not *unresolved* — the
-  distinction is recorded in `docs/verification/P13-CONF-001/`. What is not
-  yet proven is that its target still resolves to the **same geometry** after
-  a switch there and back, rather than merely still resolving.
-* **Across regeneration of the part beneath a component.** A mate naming
-  `FaceName{feature, EndCap}` should follow that face when the feature
-  regenerates with different parameters, and should become unresolved — not
-  rebound — when the role stops existing. `P12-STREF-001` guarantees this for
-  features; that it holds through a component instance is the assembly claim,
-  and it is the heart of this milestone.
-* **Recovery when the intended target returns.** Unresolved must be a state,
-  not a death: restoring the geometry must restore the reference, with the
-  same binding it had before. A reference that stays broken after its target
-  comes back is as wrong as one that rebinds to a stranger.
-
-### Two checklist items that need scoping, not implementing
-
-**"Preserve references across regeneration"** — assembly regeneration is
-`P13-REGEN-001` and is not this milestone. What is in scope is regeneration
-of the *part* beneath a component, which exists today. Say which is meant in
-the evidence rather than implying the other was done.
-
-**"Validate cross-document identity rules"** — `TODO.md`'s accepted P13
-constraints state that assemblies operate inside one `Document` and
-cross-document dependencies are not implemented. So this is validation of the
-**contract** — that a mismatched `DocumentId` is refused, that a locator is
-never identity — and not an end-to-end external reference. Anything more
-would be building `P13` external references ahead of their milestone.
-
-- [x] Define stable assembly-reference model — three schemes, none index-based, all pre-existing
-- [x] Implement stable component references
-- [x] Implement stable mate-target references — one shared resolution path, which the solver now calls instead of its own
-- [x] Preserve references across save/load
-- [x] Preserve references across configuration switching — resolves to the *same* geometry after a round trip, compared exactly
-- [x] Preserve references across regeneration — of the part beneath a component; assembly regeneration is `P13-REGEN-001`
-- [x] Reject raw topology/index-based identity — enforced by the type, not by a check
-- [x] Prevent silent rebinding after geometry changes — measured against an identically-dimensioned replacement at the same plane
-- [x] Missing intended target becomes explicit unresolved state — new `unresolvedMateTargets()`, the mate counterpart of `unresolvedComponents()`
-- [x] Validate reference recovery when intended target returns
-- [x] Validate cross-document identity rules — the contract, per the accepted P13 constraints
-- [x] Validate deterministic reference resolution
-- [x] Validate failure atomicity
-- [x] Adversarial review PASS
-- [x] Debug / Release / Debug-shared regression PASS
-- [x] Evidence in `docs/verification/P13-STREF-001/`
-
-### Gate
-
-```text
-stable reference model correct
-+ component/mate references stable
-+ no raw topology identity
-+ no silent rebinding
-+ unresolved/recovery behavior correct
-+ persistence PASS
-+ configuration/regeneration stability PASS
-+ determinism PASS
-+ failure atomicity PASS
-+ adversarial review PASS
-+ full regression PASS
-+ 0 unexpected warnings
-```
-
-### The failure this milestone exists to prevent
-
-A mate that still solves, on the wrong face. It is the worst failure in the
-system because nothing reports it: the solve succeeds, the assembly looks
-plausible, and the parts are in the wrong places. Every test here should be
-built to catch **that**, not to confirm that resolution returns something.
-
-Which means: an assertion that a reference "still resolves" is nearly
-worthless on its own. Assert **which geometry** it resolved to.
-
-Met: 1461/1461 on `debug`, `release` and `debug-shared` from clean, and
-1009/1009 five times over in `release` and `debug`; 0 compiler warnings; every
-expected geometry derived by hand from the sketch and the extrude depth rather
-than from the resolver under test. The adversarial review found 0 production
-defects; its two findings are about the tests. The qualified tree IDs match
-the committed tree.
-
-Most of this milestone was already built — by `P12-STREF-001`,
-`P13-REF-001` and `P13-MATE-001` — and the survey of what existed is in the
-evidence. What was missing was the mate half of the reporting: a document
-could report a broken *part* reference and open anyway, but a broken *mate
-target* could only be discovered by attempting a solve. The solver ended up
-17 lines shorter, because its inline resolution became the shared one rather
-than a second path beside it.
-
-Carried forward: a reference can be reported but not repaired — rebinding is
-a commands question, `P13-CMD-001`. A face target needs the current bodies and
-fails rather than guessing without them. External references remain a
-validated contract and not a capability. And assemblies themselves still do
-not regenerate, which is `P13-REGEN-001`.
-
-```text
-P13-STREF-001 → [x]
-Next → P13-REGEN-001
-```
-
----
-
-# DONE — P13-REGEN-001
-
-## Dependency / Regeneration
-
-The milestone that finally consumes the solver.
-
-```text
-P13-SOLVE-001   solves mate intent into derived transforms
-P13-MATE-002    four joints through that solver
-P13-CONF-001    which of it is in force
-P13-STREF-001   and the references hold
-P13-REGEN-001   and something finally calls it
-```
-
-Every one of those four carried the same line forward: *nothing consumes the
-solved transforms yet -- they are returned, not applied, and no regeneration
-calls the solver.* This is where that closes.
-
-### What already exists, checked
-
-`features::Regenerator` is not a stub. It already does the whole of
-dependency-driven regeneration, and its own header states it:
-
-| Capability | State today |
-| --- | --- |
-| Dirty tracking | **Built.** Items whose revision changed since they were last built are found, marked, and everything downstream with them |
-| Only what changed | **Built.** "rebuilds only the dirty items, dependencies first. Unaffected items keep their results" |
-| Ordering | **Built.** Evaluation in dependency order, reported in `rebuilt` |
-| Cycles | **Built.** Members of a cycle are `Failed`, and `cycles` reports the groups |
-| Blocked downstream | **Built.** Downstream of a failure, a missing reference or a cycle is `Blocked`, not silently skipped |
-| Per-item errors | **Built.** `state()` and `error()` per object |
-| A solver being called by regeneration | **Built, for sketches** — the "sketch" handler applies driving parameters and solves. That is the precedent to follow |
-| A component handler | **Built** (`P13-REF-001`) — it resolves the part so that an unresolvable one fails loudly instead of silently. It produces no body |
-| A mate handler | **Missing.** Mates are inert during regeneration |
-| An assembly solve | **Missing.** Nothing calls `assembly::solve()` |
-
-So four of the checklist's items — affected-state propagation, ordering,
-cycles, per-item failure — are largely *validating* machinery that exists and
-is qualified, for the assembly objects that now flow through it. Do not
-rebuild any of it.
-
-### Settle this before implementing
-
-**A sketch solves per object. An assembly does not.**
-
-The `Regenerator`'s unit of work is one object: a handler takes an `ObjectId`
-and returns that object's body. That fits a sketch, which owns its own solve,
-and it fits a feature. It does not obviously fit an assembly solve, which
-spans every component and mate at once and produces transforms keyed by
-`ComponentId` — there is no single object whose handler it is.
-
-And the layering constrains the answer: `features` is layer 2 and `assembly`
-is layer 3, so `Regenerator` cannot call `assembly::solve()` itself. Assembly
-injects itself through `registerHandlers()`, which is the ADR-006 pattern and
-the only door available today.
-
-Candidates to weigh, and none is obviously right:
-
-* **A handler on one designated object.** Which one? Picking a component makes
-  that component special for no modelling reason, and solving once per
-  component would solve the assembly N times.
-* **A post-pass hook** the assembly module registers, running after the
-  bodies are built. Fits the layering, but adds a second phase to a
-  pipeline whose contract today is one pass over a graph.
-* **Assembly owns its own derived store**, updated by whoever drives
-  regeneration. Keeps `features` ignorant, but then "regenerate" no longer
-  means one call, and every caller has to remember the second one.
-* **A document-level derived result** in the `Regenerator`, stored opaquely.
-  Generalises the machinery, and is the largest change.
-
-ADR-005 already fixes part of the answer and should be read first: the solved
-transform is derived state, "held beside the bodies keyed by `ComponentId`,
-dropped when a component's regeneration fails exactly as a body is". That
-says where the transforms live and how they die; it does not say who triggers
-the solve. Compare the candidates properly and record the choice as an ADR.
-
-### Two items that need scoping
-
-**"Regenerate only affected assembly state"** — the assembly solve is
-*global*. One mate's value changing moves the whole system, because that is
-what a constraint system is. So the honest granularity is "the assembly
-re-solves, or it doesn't", and the affected-state question is whether the
-solve is triggered at all, not which components it recomputes. Say that in
-the evidence rather than implying a per-component incrementality that the
-mathematics does not support.
-
-**"Handle unresolved references explicitly"** — `P13-STREF-001` built
-`unresolvedMateTargets()` and `P13-REF-001` built `unresolvedComponents()`.
-This milestone's job is that regeneration *uses* them: a mate whose target
-does not resolve should make regeneration report it, the way the component
-handler already makes an unresolvable part report. A mate handler is the
-obvious shape, and mates currently have none.
-
-- [x] Define assembly regeneration contract — [ADR-008](docs/architecture/decisions/ADR-008-the-assembly-solve-is-a-final-pass.md): the solve is a document-level final pass, not any object's handler
-- [x] Integrate component dependencies into regeneration
-- [x] Integrate mate dependencies into regeneration — mates had no handler at all before, so an unresolvable target was silent
-- [x] Regenerate only affected assembly state — the existing machinery, validated for assembly objects
-- [x] Re-solve assemblies when required dependencies change — six triggers, each derived from what the solve reads
-- [x] Preserve canonical intent; update derived solve state only
-- [x] Handle suppressed components/mates correctly
-- [x] Handle unresolved references explicitly
-- [x] Detect dependency cycles / invalid dependency states
-- [x] Validate regeneration ordering
-- [x] Validate failure atomicity and recovery — publishing is all-or-nothing
-- [x] Validate deterministic regeneration
-- [x] Validate save/load + regenerate behavior
-- [x] Adversarial review PASS
-- [x] Debug / Release / Debug-shared regression PASS
-- [x] Evidence in `docs/verification/P13-REGEN-001/`
-
-### Gate
-
-```text
-dependency/regeneration model correct
-+ affected-state propagation correct
-+ solve triggering correct
-+ canonical/derived separation preserved
-+ suppression behavior correct
-+ unresolved references handled explicitly
-+ cycle/error handling correct
-+ ordering correct
-+ failure atomicity PASS
-+ determinism PASS
-+ persistence/regeneration PASS
-+ adversarial review PASS
-+ full regression PASS
-+ 0 unexpected warnings
-```
-
-### The failure this milestone exists to prevent
-
-**Stale derived state that looks current.** A transform left over from before
-a mate changed is worse than no transform at all: the assembly renders, the
-positions are plausible, and they are answers to a question nobody asked any
-more. It is the same shape as `P13-STREF-001`'s wrong-face failure, and it
-wants the same discipline — assert *which* transforms are in force after a
-change, never merely that a solve happened.
-
-The companion failure is its opposite: re-solving when nothing relevant
-moved, which is not wrong but is how a CAD system becomes unusable on a large
-assembly. Both need measuring.
-
-Met: 1483/1483 on `debug`, `release` and `debug-shared` from clean, and
-1052/1052 five times over in `release` and `debug`; 0 compiler warnings;
-every expected position derived by hand from the change made, and every
-trigger predicted before it was measured. The adversarial review found 0
-production defects. The qualified tree IDs match the committed tree.
-
-**The line four milestones carried forward is closed.** Regenerating a
-document now solves its assembly and publishes the transforms beside the
-bodies.
-
-The trigger is the part worth remembering: it is derived from what the solve
-actually reads — the active component and mate sets, the active
-configuration, whether any of them was rebuilt or broken, and the *resolved*
-placement of every active component. The last of those closes a gap a
-revision-based trigger would leave wide open, because a configuration
-overriding a **free** parameter changes no object's revision at all: the base
-value is untouched and only the value in force differs. Both forms are
-measured, including editing an override while its configuration is already
-active.
-
-Carried forward: the solve is all-or-nothing, so one broken mate costs every
-component its transform — deliberate, since a partial set renders as a
-plausible assembly with a part in the wrong place. Re-solve granularity is
-the whole assembly, because a constraint system is global. Nothing renders
-the transforms yet. And no assembly edit can be undone, which is
-`P13-CMD-001`.
-
-```text
-P13-REGEN-001 → [x]
-Next → P13-CMD-001
-```
-
----
-
-# DONE — P13-CMD-001
-
-## Commands / Undo / Redo
-
-Every assembly edit becomes an edit that can be taken back.
-
-```text
-P13-CONF-001    suppression, set through functions that bump a revision
-P13-REGEN-001   regeneration that re-solves when those inputs move
-P13-CMD-001     and all of it undoable
-```
-
-### What already exists, checked
-
-The command machinery is complete and qualified. This milestone is mostly
-about routing assembly edits through it, not about building it.
-
-| Capability | State today |
-| --- | --- |
-| The `Command` contract | **Built.** execute / undo / redo, with redo required to reproduce "the same state execute() produced, **including the same IDs**" |
-| `CommandHistory` | **Built.** Undo and redo stacks, bound to one document, with an optional depth limit |
-| Redo invalidation | **Built.** "Executing a new command clears the redo stack" — the divergent-edit rule, already there |
-| Generic object create/delete | **Built.** `AddObjectCommand` takes any `DocumentObject`, and a `Component` and a `Mate` are document objects, so both already flow through it with the same-ID guarantee |
-| Configuration commands | **Built** for parameters: create, modify, delete, set-active |
-| History persistence | **Not persisted, by construction.** Nothing in `DocumentJson.cpp` writes it, so the checklist item is already satisfied — say so rather than implying work |
-| Assembly-specific commands | **None.** No placement edit, no mate edit, no suppression command |
-
-`P13-CONF-001` recorded the gap this closes, in its own known limitations:
-suppression is set through `assembly::suppressComponent()` and
-`suppressMate()`, which bump the revision but are **not** undoable commands.
-
-### A defect to verify first, before building on it
-
-Reading `DeleteObjectCommand` alongside `P13-CONF-001`'s deletion rule
-suggests a real hole in "undo restores exact prior canonical intent".
-
-```text
-Document::removeObject()  ->  configurations_.forgetObject(id)
-Document::removeParameter() ->  configurations_.forgetParameter(id)
-```
-
-Both clear the configuration overrides that named the deleted object, which is
-right: a configuration must never name something that is gone. But
-`DeleteObjectCommand::undo()` stores **only the object** and re-inserts it —
-it does not appear to restore the overrides that deletion cleared.
-
-If that reading is correct, then:
-
-```text
-a configuration suppresses a component
--> delete the component      (the override is cleared)
--> undo                      (the component returns)
--> the configuration no longer suppresses it
-```
-
-The canonical intent after undo is not the canonical intent before delete,
-which is precisely what this milestone's gate forbids.
-
-**Verify it before fixing it**, and note that the parameter half of it
-predates P13 entirely — `forgetParameter()` has been called on delete since
-`P12-PARAM-002`, so if the hole is real it is a pre-existing defect in a
-qualified milestone, and that should be said plainly in the evidence rather
-than quietly repaired.
-
-### Scope the command surface deliberately
-
-The checklist asks for component and mate create/delete commands, and the
-generic `AddObjectCommand` already provides them mechanically. What it does
-**not** provide is the document-level validation `assembly::createComponent()`
-and `createMate()` perform — that the part exists and is a part, that mate
-targets obey ADR-004, that a mate relates two different components. A raw add
-would bypass all of it.
-
-So the question to settle is whether assembly commands wrap the existing
-generic ones with validation, or replace them. Prefer wrapping: two ways to
-add a component, one validated and one not, is the kind of split that ends
-with the wrong one being used.
-
-### The failure this milestone exists to prevent
-
-**An undo that leaves the document subtly different from before.** Not
-visibly broken — an exception would be a kindness — but *almost* restored,
-with one override lost or one reference renumbered. The engineer carries on
-from a state they believe they recognise, and the divergence surfaces much
-later as geometry that cannot be explained.
-
-That is why the gate says *exactly* twice, and why the tests should compare
-whole canonical state before and after a round trip rather than spot-checking
-the thing the command obviously touched. The defect above is exactly this
-shape: everything looks restored except the one field nothing thought to
-check.
-
-- [x] Define assembly command contract — canonical intent only; derived state recomputed, never undo payload
-- [x] Implement component create/delete commands — wrapping `core`'s generic ones with the validation they bypass
-- [x] Implement component placement edit command
-- [x] Implement mate create/delete/edit commands — including a slider's roll reference
-- [x] Implement configuration/suppression commands — closing the gap `P13-CONF-001` recorded
-- [x] Preserve stable references through undo/redo
-- [x] Regenerate/re-solve correctly after command execution
-- [x] Undo restores exact prior canonical intent — **and this is where the defect was**
-- [x] Redo reapplies exact canonical intent
-- [x] Validate multi-step command history
-- [x] Validate failed commands are atomic and not added to history
-- [x] Validate redo stack invalidation after divergent edit
-- [x] Validate deterministic undo/redo results
-- [x] Validate save/load does not persist transient command history unless architected — transient by architecture, measured rather than assumed
-- [x] Adversarial review PASS
-- [x] Debug / Release / Debug-shared regression PASS
-- [x] Evidence in `docs/verification/P13-CMD-001/`
-
-### Gate
-
-```text
-command model correct
-+ assembly edits fully command-driven
-+ undo restores canonical state exactly
-+ redo reapplies canonical state exactly
-+ stable references preserved
-+ regeneration/solve integration correct
-+ history semantics correct
-+ failure atomicity PASS
-+ determinism PASS
-+ adversarial review PASS
-+ full regression PASS
-+ 0 unexpected warnings
-```
-
-`P13-REGEN-001` makes the regeneration half checkable rather than a matter of
-faith: an edit, an undo and a redo each move the solve's inputs, so each must
-re-solve and land the components where the restored intent says — and
-`SolveTrigger` says whether it did. Assert the positions, not just that a
-solve happened.
-
-Met: 1500/1500 on `debug`, `release` and `debug-shared` from clean, and
-1076/1076 five times over in `release` and `debug`; 0 compiler warnings; every
-undo and redo compared by whole-object equality rather than field
-spot-checks. The qualified tree IDs match the committed tree. **Zero lines
-were deleted anywhere in the milestone** — every change is additive.
-
-**The milestone's real result is the defect it found.** The suspicion
-recorded in this authorization was correct, and correct twice: undo restored
-a deleted object but not the configuration overrides the deletion had
-cleared. A configuration that suppressed a component lost the suppression;
-a configuration that overrode a parameter lost the override. The second half
-has been in `P12-PARAM-002` — a **qualified phase** — since it shipped.
-
-Reproduced by a failing test before anything was fixed, then fixed by four
-lines of capture-and-restore in `DeleteObjectCommand`, and both cases stay in
-the suite as regression guards. It existed because two correct changes met:
-`forgetObject()` is right, and `DeleteObjectCommand::undo()` was right when
-written for a document that had no configurations. Neither review would have
-caught it, because neither change was wrong — only reading them together did.
-
-P12's own evidence is deliberately **not** edited. It records what was
-measured at the time, and this was not among it.
-
-Carried forward: deleting a component leaves the mates naming it unresolved
-rather than removing them, which is `P13-STREF-001`'s contract but does mean a
-delete can leave an assembly that will not solve. History does not survive a
-save, by architecture. Consecutive edits do not coalesce, so a drag would
-produce one history entry per edit.
-
-```text
-P13-CMD-001 → [x]
-Next → P13-PERSIST-001
-```
-
----
-
-# DONE — P13-PERSIST-001
-
-## Save / Load Assembly Intent
-
-What a `.bcad` file says about an assembly, and what it must never say.
-
-```text
-P13-COMP-001 .. P13-CMD-001   built the assembly model, one piece at a time,
-                              each persisting its own piece as it went
-P13-PERSIST-001               states the whole schema, and proves the file
-                              round-trips as an assembly rather than as bytes
-```
-
-### What already exists, checked
-
-Assembly persistence was not deferred to this milestone — every P13 milestone
-persisted its own part as it landed, with tests. There are already **17
-assembly persistence cases** across four files.
-
-| Item | State today |
-| --- | --- |
-| Component instances and placements | **Built**, `ComponentJson.cpp` (P13-COMP-001, XFORM-001) |
-| Mates, basic and mechanical | **Built**, `MateJson.cpp` — including a slider's `a2`/`b2` roll reference (P13-MATE-002) |
-| Configurations and suppression | **Built**, `DocumentJson.cpp` (P13-CONF-001) |
-| Stable references | **Built**, `ObjectReference` with its document identity and locator (P13-REF-001) |
-| Derived state kept out of the file | **Measured repeatedly** — the file is byte-identical before and after a solve, in four milestones' evidence |
-| Save atomicity | **Built**, `writeFileAtomically()` writes a `.tmp` and renames |
-| Unresolved references surviving a file | **Built and measured** (P13-STREF-001) |
-
-So most of this checklist is validation of a schema that already exists, and
-the work is to state it, prove it whole, and close the specific gaps below.
-Do not rewrite the writers.
-
-### The thing to settle: the format version has never moved
-
-```cpp
-inline constexpr int kDocumentFormatVersion = 1;   // unchanged since P0-P10
-```
-
-It has not been bumped for parameters, configurations, components, mates,
-mechanical joints or suppression. The schema has grown a great deal and the
-number has not moved once. That is **not** obviously wrong, but it is
-currently an accident rather than a policy, and this milestone is where
-"define the canonical persisted schema" has to say which.
-
-What the behaviour actually is today, read from the code:
-
-```text
-new reader, old file   -> loads. The schema is additive, and an absent
-                          section means "none of those"
-old reader, new file   -> FAILS cleanly: an unrecognised object type is a
-                          parse error, "unknown object type 'component'",
-                          never a silent skip
-same version number    -> on both, so the number is doing no work
-```
-
-That is a coherent policy — *additive only, with a clean refusal when a
-reader meets something it does not know* — and it is defensible. But it has a
-trap in it: the day someone makes a genuinely **breaking** change without
-bumping the version, an old reader will not refuse the file, it will
-misread it. The version field is the guard against exactly that, and it is
-currently unused.
-
-Decide and write down: is the version bumped only on a breaking change, with
-additive growth left unversioned? If so, say so where the constant is
-declared, so the next person to change the schema knows which kind of change
-they are making. An ADR is warranted if the answer is anything more elaborate
-than that.
-
-### Two items that need scoping
-
-**"Validate legacy/pre-P13 compatibility"** means a file written before
-assemblies existed still loads and behaves as it did. It does not mean
-migration, because no version has ever been superseded. Check it with a real
-file — the reference models are the obvious source — rather than by reasoning
-that absent sections default to empty.
-
-**"Validate save → load → regenerate → solve equivalence"** is the one item
-that could not have been written before now. `P13-REGEN-001` made
-regeneration solve the assembly, so for the first time the full chain can be
-asserted end to end: a document, saved, destroyed, loaded, regenerated, and
-the **transforms compared against the ones the original produced**. Earlier
-milestones could only compare intent.
-
-- [x] Define canonical persisted assembly schema — and the format-version policy written where the constant is declared
-- [x] Persist component instances and canonical placements — including a parameter *binding*, not just its value
-- [x] Persist mate constraints and mechanical mates — all eleven kinds, including a slider's roll reference
-- [x] Persist assembly configurations and suppression state — three states, not two
-- [x] Persist stable assembly references
-- [x] Preserve unresolved-reference state safely
-- [x] Do not persist derived solver/regeneration state as authoritative intent — byte-identical across a solve, and fully rebuildable from the file alone
-- [x] Preserve strong IDs and reference identities across load
-- [x] Validate legacy/pre-P13 compatibility — all 24 real committed models, `plate.bcad` untouched since P0-P10
-- [x] Validate malformed/corrupt assembly data rejection — plausible corruption, not obvious mangling
-- [x] Validate save/load failure atomicity
-- [x] Validate deterministic/canonical serialization — byte-identical three ways, and ordered by identity rather than insertion
-- [x] Validate save → load → regenerate → solve equivalence — **bit-identical** transforms
-- [x] Adversarial review PASS
-- [x] Debug / Release / Debug-shared regression PASS
-- [x] Evidence in `docs/verification/P13-PERSIST-001/`
-
-### Gate
-
-```text
-assembly persistence correct
-+ canonical intent preserved
-+ IDs/references preserved
-+ configurations/mates/components preserved
-+ derived state not authoritative
-+ legacy compatibility PASS
-+ corrupt-input handling PASS
-+ failure atomicity PASS
-+ deterministic serialization PASS
-+ reload/regenerate/solve equivalence PASS
-+ adversarial review PASS
-+ full regression PASS
-+ 0 unexpected warnings
-```
-
-### The failure this milestone exists to prevent
-
-**A file that loads without error into a different assembly than was saved.**
-
-It is the same shape as the failures the last three milestones were built
-around — the wrong face, the stale transform, the almost-restored undo — and
-it is the worst of them, because a file outlives the session that wrote it.
-An exception on load is a good day. A document that opens, looks right, and
-has one mate pointing somewhere else is discovered weeks later, by which time
-the original is gone.
-
-So the tests should compare the **assembly**, not the bytes. A byte-identical
-rewrite proves the writer is deterministic; it does not prove the reader
-understood what it read. The equivalence to assert is that the loaded
-document *solves to the same transforms*, which is now possible and is the
-strongest statement available.
-
-Corrupt-input tests should be written the same way: not only that a mangled
-file is refused, but that a **plausibly** mangled one is — a mate whose
-target names a component that is not in the file, a suppression override for
-an object that was never written, a slider missing its roll reference. Those
-are the edits that produce a file which loads.
-
-Met: 1527/1527 on `debug`, `release` and `debug-shared` from clean, and
-1094/1094 five times over in `release` and `debug`; 0 compiler warnings; the
-assembly compared rather than the bytes. The adversarial review found 0
-production defects. The qualified tree IDs match the committed tree — and
-`src` is unchanged from `P13-CMD-001`, because **no source file was touched
-at all**.
-
-The milestone added **30 lines of comment and 961 lines of tests**. Assembly
-persistence was built incrementally by the six milestones before it; what was
-missing was not code but proof, and in particular the one claim that only
-became checkable when `P13-REGEN-001` made regeneration solve — that a file
-preserves an assembly well enough to reproduce its **solution** exactly, bit
-for bit, for fully constrained, under-constrained, inconsistent and large
-mixed assemblies alike.
-
-The format-version policy is now stated where the constant is declared: bump
-it only for a change an existing reader would get *wrong*, since additive
-growth is already safe in both directions — an old file loads because an
-absent section means "none of those", and a new file is *refused* by an old
-reader because an unrecognised object type is a parse error rather than a
-silent skip.
-
-Carried forward, and recorded rather than smoothed over: the reader's
-strictness is **not uniform**. A dangling mate target loads and is reported,
-because `P13-REF-001` chose "report, don't refuse" and a repairable file must
-open; a dangling suppression override is refused outright, because it is
-intent about nothing. Both are defensible, they were written in different
-milestones against different instincts, and the next person to touch the
-reader should know it is a decision. Also: no schema migration exists, no
-cross-build round trip is measured, and property testing is enumerated rather
-than generated.
-
-```text
-P13-PERSIST-001 → [x]
-Next → P13-CLI-001
-```
-
----
-
-# DONE — P13-CLI-001
-
-## Headless Assembly Workflows
-
-An assembly built, edited and solved without a window.
-
-### What already exists, checked
-
-| Capability | State today |
-| --- | --- |
-| `info` reporting components and mates | **Built.** It names the part each component places, reports one whose part is gone, reports an external part as unresolved with its locator, and describes mates and what they relate |
-| `validate`, `export-step`, `export-stl`, `new`, `help`, `version` | **Built** |
-| Any command that **edits** a document | **None.** The CLI's only `saveDocument()` call is in `new` |
-| Any command that regenerates or solves | **None** |
-
-So the reporting half of this milestone is largely there, and the editing
-half does not exist in any form — **for features either**. Every feature CLI
-test in the repository invokes only `info` and `validate`; documents are built
-in-process and the CLI is asked to describe them.
-
-### Be honest about the size of this
-
-This is the largest surface addition in several milestones. The CLI is 1343
-lines and is a **read, report and export tool**; this checklist turns it into
-an **editor**. Eight of its seventeen items are commands with no ancestor in
-the codebase.
-
-That is not an argument against doing it. It is an argument for expecting it
-to take longer than the last few milestones, and for not treating "the CLI
-already has commands" as meaning the hard part is done.
-
-### Reuse the command layer, for what it actually gives
-
-`P13-CMD-001` built `CreateComponentCommand`, `SetComponentPlacementCommand`,
-`CreateMateCommand`, `SetMateDefinitionCommand`, `SuppressComponentCommand`
-and `SuppressMateCommand`. A CLI edit should go through those rather than
-calling `assembly::createComponent()` directly — that is the gate's "core API
-reused", and it makes validation and failure atomicity the command layer's
-problem rather than the CLI's.
-
-What it does **not** give is undo. A CLI process is one-shot, so
-`CommandHistory` has nothing to offer across invocations. Use the commands
-for their validation and their all-or-nothing execution; do not build a
-persisted history to go with them, which `P13-CMD-001` measured as
-deliberately transient.
-
-### Two design questions to settle first
-
-**How does a script name a component?**
-
-This is the one with a trap in it. A scripted workflow has to refer to the
-component it created two lines ago, and the obvious answer — by name — would
-introduce **name-as-identity**, which this project has explicitly rejected:
-`P13-REF-001` has a qualified test called
-`Reference_IdentityDoesNotFollowNames`, and names are neither unique nor
-stable in the way IDs are.
-
-The alternatives are to print the assigned ID on creation and have scripts
-capture it, or to accept names at the CLI boundary while resolving them to
-IDs immediately and failing on ambiguity. Either can be made sound. What
-must not happen is names quietly becoming the identity the file relies on.
-Decide it, write it down, and test the ambiguous case.
-
-**One process per edit, or a batch?**
-
-Each invocation loading, editing and saving is simple and deterministic, but
-a twenty-step script rewrites the file twenty times. A batch mode does the
-work once and saves once, but needs its own small language and its own
-failure semantics.
-
-"Support deterministic scripted workflows" does not say which. Pick one,
-say why, and make the failure behaviour explicit either way — see below.
-
-### The failure this milestone exists to prevent
-
-**A script that half-succeeds.**
-
-Step seven of twenty fails, and the file on disk now holds the first six
-edits. It is not the document the script describes and not the one it
-started from, and nothing on disk says so. The engineer reruns the script,
-the first six edits apply again on top of themselves, and the result is
-neither idempotent nor recoverable.
-
-So the atomicity item is the sharp one here, and it is about the **file**,
-not just the in-memory document: a command that fails must leave the file as
-it was. `writeFileAtomically()` gives that for a single save; a batch of
-edits needs it stated as a contract — all the edits, or none of them.
-
-Exit codes are the other half of the same thing. A script driver can only
-react to what it is told, so a failed edit must be a non-zero exit and a
-diagnostic on stderr, never a warning on stdout and a zero.
-
-- [x] Define assembly CLI command contract — selectors, mate targets and placement values, each a grammar whose two halves cannot overlap
-- [x] Add CLI create/load/save assembly workflow — every edit a load/apply/save transaction
-- [x] Add component add/remove/placement commands — placement by literal **or** parameter binding; removal refused while mated
-- [x] Add mate create/edit/delete commands — all eleven kinds, edited in place
-- [x] Add configuration/suppression commands — three suppression states, and the base state distinct from them
-- [x] Add regenerate and solve commands — and neither writes the file, because a transform is derived
-- [x] Add assembly status / diagnostics output — components, mates, suppression, regeneration, unresolved references and the solve
-- [x] Support deterministic scripted workflows — `batch`, whose language is the CLI's own command lines and nothing else
-- [x] Validate non-interactive exit codes — on a rule: 2 if the CLI could not read the line, 1 if the document said no
-- [x] Validate structured error handling
-- [x] Validate CLI save → load → regenerate → solve workflow — bit-identical transforms
-- [x] Validate CLI results against core API behavior — `equivalent()` on the documents **and** the solved transforms compared bit for bit
-- [x] Validate malformed input / invalid command handling
-- [x] Validate failure atomicity — measured on the file's bytes, twice, one of them after a real process exited
-- [x] Adversarial review PASS — 5 findings, all fixed; 1 a real defect in this milestone's own new code, 2 in its test wiring
-- [x] Debug / Release / Debug-shared regression PASS
-- [x] Evidence in `docs/verification/P13-CLI-001/`
-
-### Gate
-
-```text
-headless workflow complete
-+ core API reused
-+ component/mate/config operations correct
-+ regenerate/solve correct
-+ deterministic scripted behavior
-+ exit codes correct
-+ diagnostics correct
-+ failure atomicity PASS
-+ CLI/core equivalence PASS
-+ adversarial review PASS
-+ full regression PASS
-+ 0 unexpected warnings
-```
-
-**"CLI/core equivalence" has a precise meaning available now**, and it should
-be used: build an assembly through the CLI, build the same one through the
-core API in-process, and compare the two documents — canonical intent, and
-the transforms they solve to. `P13-PERSIST-001` established that a file
-preserves an assembly well enough to reproduce its solution bit for bit, so
-the comparison can be exact rather than approximate. A CLI that produced a
-*nearly* identical document would be a real defect and this is what would
-catch it.
-
-Met: 1595/1595 on `debug`, `release` and `debug-shared` from clean, and
-1027/1027 five times over in `release` and `debug`; 0 compiler warnings;
-14/14 qualification stages exit 0; all 68 new tests confirmed by name in every
-ctest log. The adversarial review found 5 issues and fixed all of them — one a
-real defect in this milestone's own new code, two in its test wiring, two
-wrong expectations of mine. 0 defects in previously qualified code. The
-qualified tree IDs match the committed tree.
-
-The CLI went from **7 commands to 22**, and from a tool that only reads to one
-that edits. The shape of the change is worth stating: **`src/` and `include/`
-are byte-identical to `P13-PERSIST-001`** — not one library source file and not
-one public header was touched. Everything is in `apps/`, `tests/` and
-`examples/`, and the 152 lines added to existing files are wiring with nothing
-deleted. Every library the CLI drives is the one already qualified.
-
-The two design questions the authorization flagged were both settled before any
-command was written, and neither the way the obvious answer suggested.
-
-**Naming.** The trap was real but it dissolved on inspection rather than
-needing a workaround: a name is `[A-Za-z_][A-Za-z0-9_]*`, unique across objects
-*and* parameters, re-checked on every rename. So a decimal selector can only be
-an ID and an identifier can only be a name — disjoint **by construction**, with
-no sigil and no ambiguous case. Identity stays with the ID; a name is resolved
-at the moment of use and never stored. The guarantee is load-bearing, so it is
-pinned by its own test rather than assumed.
-
-**One process per edit, or a batch.** Both, through one mechanism — because
-per-invocation atomicity is *not* script atomicity, which is the failure the
-milestone exists to prevent. An edit is a function over an already-loaded
-document; the single-shot command is literally the batch of one. Nothing
-reaches the file until every edit has succeeded, and the one write that does
-happen is atomic at the filesystem level. A batch that fails at step seven
-saves nothing and names the line.
-
-Carried forward, recorded rather than smoothed over: there is no undo across
-processes and deliberately so; two processes editing one file is **last writer
-wins**, silently, as it always has been; a copied face has no spelling in the
-target grammar; `validate` still does not run the assembly final pass, because
-moving that registration into `features` would break the layering and giving it
-an injection point is a change to a qualified subsystem that is not authorized
-here.
-
-```text
-P13-CLI-001 → [x]
-Next → P13-STEP-001
-```
-
----
-
-# DONE — P13-STEP-001
-
-## Assembly STEP Export / Read-back
-
-An assembly leaving BetterCAD as a file another system can read, and coming
-back provably the same.
-
-### What already exists, checked
-
-| Capability | State today |
-| --- | --- |
-| `writeStep()` in `geometry` | **Built**, and on `STEPCAFControl_Writer` — the XDE writer, which *can* carry product structure, names and locations. Today it is handed a flat list and writes one product per body |
-| `io::exportStep()` | **Built**, and **assembly-blind**: it regenerates a copy and writes `features::resultFeatures()` |
-| Deterministic STEP output | **Half built.** `StepOptions::timeStamp` exists precisely so output is reproducible, but the default is the current time |
-| STEP read-back | **Built, and test-only.** `tests/support/occt/StepReadBack.cpp`, 50 call sites, reporting roots, solids, volume, area, validity and bounds |
-| Assembly-aware export | **None** |
-| Transforms in export | **None** |
-| Suppression in export | **None** |
-| Product structure for components | **None** |
-
-### The concrete defect this starts from
-
-`exportStep()` writes `resultFeatures()` — features whose bodies no other
-feature consumes. **A `Component` is not a `SolidFeature`**, so components are
-not result features and take no part in the export.
-
-The consequence is worth stating exactly, because it is the thing to fix:
-
-```text
-an assembly of two components of one part, exported today
-    -> ONE body, at the origin, once
-```
-
-Not two bodies. Not placed. The component placements, the solve, the mates and
-the configuration are all simply absent from the file. Nothing warns.
-
-### The layering is not in the way this time
-
-`P13-CLI-001` had to record that `validate` still cannot run the assembly final
-pass, because `features` is layer 2 and cannot see `assembly` at layer 3.
-
-**`io` is layer 4 and already links `BetterCAD::assembly`** (privately, for the
-component and mate JSON). So `exportStep()` may register the assembly handlers
-and consume `Regenerator::transforms()` directly. There is no boundary to work
-around and no ADR needed for that part.
-
-### Be honest about the blast radius
-
-`exportStep()` is one of the most heavily pinned functions in the repository:
-
-```text
-23 test files, 37 call sites
-28 export-step process tests
-24 committed example models, whose STEP volumes and bounds are checked
-   against closed-form geometry
-```
-
-Every one of those documents is a **part**, and **not one of the 24 contains a
-component**. So the existing behaviour — export the result features, unplaced —
-is the behaviour 24 models and dozens of tests depend on, and it must not move.
-Whatever assembly-awareness is added has to be a branch that a part-only
-document never takes.
-
-### Two design questions to settle first
-
-**Does read-back become a product feature, or stay test infrastructure?**
-
-This is the scope fork, and the checklist does not decide it. The existing
-helper's own header says: *"This is not a product feature (STEP import is a
-later milestone)."*
-
-Extending that helper to report names, transforms and product structure, and
-using it to verify exports, is proportionate and finishes this milestone. Adding
-`io::importStep()` — a real reader, building a Document — is a different and
-much larger milestone that nothing here authorizes. Pick the first unless there
-is a reason not to, and say so in the evidence either way.
-
-**What is a component in the file: an instance, or a copy?**
-
-`STEPCAFControl_Writer` can write one product definition referenced by several
-placements — a true assembly, where two components of one part share a part and
-differ only by location. It can also write two independent solids. The first is
-what "preserve component/product structure where supported" means, it is what a
-downstream system expects, and it is strictly harder.
-
-Decide which, decide what the product is *named* when a component named `Arm`
-instances a part named `Block`, and make the read-back check the answer rather
-than assuming it.
-
-### The failure this milestone exists to prevent
-
-**A file that looks right and is assembled wrong.**
-
-Every part present, every body valid, the volumes correct — and one component
-at the origin instead of 50 mm up, or a suppressed bracket quietly included, or
-two instances collapsed onto each other. A STEP file is what leaves the
-building; nobody re-derives it, and a wrong placement is invisible in a file
-listing and obvious only in a machine shop.
-
-So the read-back items are the sharp ones. Checking that the export *ran*, or
-that the body count is right, proves nothing about position. The comparison has
-to be **placement**: where each solid actually sits after a round trip, against
-where the solve said it should, derived independently.
-
-And "respect configuration and suppression" needs the negative test to be the
-real one — a suppressed component must be **absent**, proved by counting solids
-and by bounds that do not contain it, not by trusting the exporter's summary.
-
-- [x] Define assembly STEP export contract — active configuration, solved transforms, suppression, naming, ordering and every failure condition, stated in `ModelExport.hpp` and in the evidence
-- [x] Export active assembly component geometry — each part written once, placed by each active component
-- [x] Apply solved/component transforms correctly in export — nine placements against bounds derived on paper, to 1e-7 mm, plus centroids
-- [x] Respect configuration and suppression state — including a suppressed component hidden inside another, and a part whose only component is suppressed
-- [x] Preserve component/product structure where supported — AP214 products and usage occurrences; instancing proved by reading products and placements apart. **Not** AP242 semantic assembly, and the evidence says so
-- [x] Preserve deterministic component ordering/naming — instances by ascending `ComponentId`, products by first placement, names unique by construction
-- [x] Validate all exported geometry is present and correctly positioned — per instance, never in aggregate only
-- [x] Implement STEP read-back validation path — through `STEPCAFControl_Reader`, a different reader from the writer and from the existing helper; it stays test infrastructure, which is the scope fork the milestone named
-- [x] Compare read-back geometry against exported assembly
-- [x] Validate bounding boxes / transforms / part counts after read-back — parts counted apart from instances, on assemblies of two parts
-- [x] Validate suppressed components are absent from export — by name, by count and by measured volume
-- [x] Validate unresolved/invalid assembly state fails explicitly — and the failures land in **regeneration**, not the export's own guards; the first draft of the contract said otherwise and was wrong
-- [x] Validate export failure atomicity — the earlier file byte-identical after a failed overwrite, and a valid export succeeding afterwards
-- [x] Validate deterministic STEP output/read-back results — byte-identical below the header once OCCT's process-global occurrence counter is normalised. **Byte determinism is not claimed**: it is not achievable through this writer, and the measurement is recorded
-- [x] Adversarial review PASS — 9 findings, all resolved; 4 were untrue claims in the delivered code, 2 were tests that could not catch what they were named for
-- [x] Debug / Release / Debug-shared regression PASS
-- [x] Evidence in `docs/verification/P13-STEP-001/`
-
-### Gate
-
-```text
-STEP assembly export correct
-+ component transforms correct
-+ configuration/suppression respected
-+ geometry complete
-+ structure preserved where supported
-+ read-back validation PASS
-+ geometry/placement equivalence PASS
-+ invalid-state handling correct
-+ failure atomicity PASS
-+ determinism PASS
-+ adversarial review PASS
-+ full regression PASS
-+ 0 unexpected warnings
-```
-
-**On fixtures.** There is no committed assembly to export — all 24 example
-models are parts. This milestone can build its assemblies in-test, as every
-assembly milestone so far has, and should: **committing assembly models is
-`P13-REFMOD-001`, the milestone after this one.** Do not create reference
-models here. If a committed assembly would make a process test better, note it
-and leave it to `P13-REFMOD-001`.
-
-**On determinism.** `StepOptions::timeStamp` already exists for this. Two
-exports of the same assembly should be byte-identical, and that is checkable
-today rather than argued.
-
-Met: 1631/1631 on `debug`, `release` and `debug-shared`, each from clean,
-and 898/898 five times over in `release` and `debug`; 0 compiler warnings in
-all three builds; 14/14 qualification stages exit 0; all 36 new tests
-confirmed by name in every ctest log; the qualified source trees identical
-before and after the run.
-
-**The milestone's own expectation about determinism was wrong, and that is
-the most useful thing it produced.** Two exports of one assembly are not
-byte-identical: OCCT numbers assembly occurrences from a counter that lives
-for the life of the process. Nothing BetterCAD does causes it and no option
-turns it off. What is claimed instead is exact and tested — normalise that
-one field and the DATA section matches byte for byte, entity numbering,
-coordinates, names, units and product structure included.
-
-Two other claims in the delivered code were also untrue and are now
-measured rather than asserted: a missing part and a cross-document part
-fail in **regeneration**, not in the export's `NotFound` guards, which are
-unreachable and kept only as defence in depth; and products are emitted in
-first-placement order, not the ascending part-object order the comment
-claimed. Two tests could not have caught what they were named for — the
-mirror test, because OCCT keeps a reflected solid valid and positive, and
-the STL test, because counting instances cannot tell a placed assembly from
-two copies at the origin.
-
-Carried forward, recorded rather than smoothed over: a body no component
-places is not exported, which is right in principle and could surprise an
-engineer who models a base and never places it; read-back is test
-infrastructure, not `io::importStep()`; STL assemblies are flattened; and
-there is still no committed assembly model, which is the next milestone.
-
-```text
-P13-STEP-001 → [x]
-Next → P13-REFMOD-001
-```
-
----
-
-# Planned P13 Sequence
-
-```text
-P13-ARCH-001     Assembly architecture and contracts          DONE
-P13-COMP-001     Component definitions and instances          DONE
-P13-XFORM-001    Component transforms                         DONE
-P13-REF-001      Internal / external reference infrastructure DONE
-P13-MATE-001     Basic assembly constraints                   DONE
-P13-SOLVE-001    Assembly constraint solver                   DONE
-P13-MATE-002     Mechanical mates                             DONE
-P13-CONF-001     Assembly configurations / suppression        DONE
-P13-STREF-001    Stable assembly references                   DONE
-P13-REGEN-001    Dependency / regeneration                    DONE
-P13-CMD-001      Commands / undo / redo                       DONE
-P13-PERSIST-001  Save / load assembly intent                  DONE
-P13-CLI-001      Headless assembly workflows                  DONE
-P13-STEP-001     Assembly STEP export / read-back              DONE
-P13-REFMOD-001   Production assembly reference models
-P13-QUAL-001     Full P13 qualification
-```
-
-Do not implement a milestone until its predecessor passes.
 
 ---
 
@@ -1809,13 +184,30 @@ Do not implement a milestone until its predecessor passes.
 
 * Assemblies currently operate inside one `Document`.
 * Cross-document dependencies are not implemented.
-* Future external references use stable identity/resolver concepts, not filesystem-path identity.
-* Component configuration remains document-global for now.
-* A component cannot independently select another part configuration yet.
-* Mate targets may only use reference types allowed by ADR-004.
-* Missing intended geometry must fail explicitly; never rebind to nearest geometry.
-* Solved assembly positions are derived state and are not authoritative persisted intent.
-* Opening/regenerating an assembly may therefore require a solve.
+* External-reference identity uses stable identity/resolver concepts, not filesystem paths.
+* One document-global configuration system is used.
+* Components cannot independently select separate part configurations yet.
+* Mate targets use only ADR-004-qualified reference types.
+* Missing intended geometry fails explicitly; never silently rebind.
+* Solved component transforms are derived state, not canonical persisted intent.
+* Assembly regeneration may require a solve.
+* Assembly solving is document-level/global rather than per-component.
+* Derived assembly state is published atomically.
+* STEP read-back remains verification infrastructure, not general STEP import.
+
+---
+
+# P13 Architecture Decisions
+
+```text
+ADR-002 — Assembly/document model
+ADR-003 — Internal/external reference contract
+ADR-004 — Mate-reference semantics
+ADR-005 — Placement intent / derived transforms
+ADR-006 — Module layering
+ADR-007 — One configuration system
+ADR-008 — Assembly solve as regeneration final pass
+```
 
 ---
 
@@ -1827,7 +219,7 @@ Not currently authorized:
 * Selectable fillet corner transitions
 * Loft end conditions
 * Full semantic topology
-* STEP import
+* General STEP import
 * DXF / IGES / OBJ interoperability
 
 ---
@@ -1895,22 +287,22 @@ Never mark work complete because it merely compiles.
 
 ```text
 TODO.md
-→ authorized/current work
+→ current authorized work
 
 ROADMAP.md
 → long-term direction
 
 ARCHITECTURE.md
-→ system architecture and invariants
+→ system architecture / invariants
 
 CLAUDE.md
-→ engineering process and Definition of Done
+→ engineering process / Definition of Done
 
 docs/architecture/decisions/
-→ durable architectural decisions
+→ durable architecture decisions
 
 docs/verification/<milestone>/
-→ implementation and qualification evidence
+→ milestone evidence
 
 docs/engineering/
 → reusable engineering templates
