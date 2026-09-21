@@ -38,6 +38,7 @@ bettercad_add_executable(bettercad_tests
         assembly/RegenerationTests.cpp
         assembly/ReferenceFileTests.cpp
         assembly/ReferenceTests.cpp
+        assembly/PersistenceTests.cpp
         assembly/PlacementFileTests.cpp
         assembly/PlacementTests.cpp
         core/BuildInfoTests.cpp

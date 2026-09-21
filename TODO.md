@@ -10,8 +10,8 @@
 
 ```text
 Current:   P13 — Assemblies
-Next:      P13-PERSIST-001 — Save / load assembly intent
-Then:      P13-CLI-001 — Headless assembly workflows
+Next:      P13-CLI-001 — Headless assembly workflows
+Then:      P13-STEP-001 — Assembly STEP export / read-back
 
 Released:  v0.1.0 — P0–P10
 Qualified: P11, P12
@@ -1222,7 +1222,7 @@ Next → P13-PERSIST-001
 
 ---
 
-# NEXT — P13-PERSIST-001
+# DONE — P13-PERSIST-001
 
 ## Save / Load Assembly Intent
 
@@ -1306,22 +1306,22 @@ asserted end to end: a document, saved, destroyed, loaded, regenerated, and
 the **transforms compared against the ones the original produced**. Earlier
 milestones could only compare intent.
 
-- [ ] Define canonical persisted assembly schema
-- [ ] Persist component instances and canonical placements
-- [ ] Persist mate constraints and mechanical mates
-- [ ] Persist assembly configurations and suppression state
-- [ ] Persist stable assembly references
-- [ ] Preserve unresolved-reference state safely
-- [ ] Do not persist derived solver/regeneration state as authoritative intent
-- [ ] Preserve strong IDs and reference identities across load
-- [ ] Validate legacy/pre-P13 compatibility
-- [ ] Validate malformed/corrupt assembly data rejection
-- [ ] Validate save/load failure atomicity
-- [ ] Validate deterministic/canonical serialization
-- [ ] Validate save → load → regenerate → solve equivalence
-- [ ] Adversarial review PASS
-- [ ] Debug / Release / Debug-shared regression PASS
-- [ ] Evidence in `docs/verification/P13-PERSIST-001/`
+- [x] Define canonical persisted assembly schema — and the format-version policy written where the constant is declared
+- [x] Persist component instances and canonical placements — including a parameter *binding*, not just its value
+- [x] Persist mate constraints and mechanical mates — all eleven kinds, including a slider's roll reference
+- [x] Persist assembly configurations and suppression state — three states, not two
+- [x] Persist stable assembly references
+- [x] Preserve unresolved-reference state safely
+- [x] Do not persist derived solver/regeneration state as authoritative intent — byte-identical across a solve, and fully rebuildable from the file alone
+- [x] Preserve strong IDs and reference identities across load
+- [x] Validate legacy/pre-P13 compatibility — all 24 real committed models, `plate.bcad` untouched since P0-P10
+- [x] Validate malformed/corrupt assembly data rejection — plausible corruption, not obvious mangling
+- [x] Validate save/load failure atomicity
+- [x] Validate deterministic/canonical serialization — byte-identical three ways, and ordered by identity rather than insertion
+- [x] Validate save → load → regenerate → solve equivalence — **bit-identical** transforms
+- [x] Adversarial review PASS
+- [x] Debug / Release / Debug-shared regression PASS
+- [x] Evidence in `docs/verification/P13-PERSIST-001/`
 
 ### Gate
 
@@ -1364,7 +1364,37 @@ target names a component that is not in the file, a suppression override for
 an object that was never written, a slider missing its roll reference. Those
 are the edits that produce a file which loads.
 
-Only then:
+Met: 1527/1527 on `debug`, `release` and `debug-shared` from clean, and
+1094/1094 five times over in `release` and `debug`; 0 compiler warnings; the
+assembly compared rather than the bytes. The adversarial review found 0
+production defects. The qualified tree IDs match the committed tree — and
+`src` is unchanged from `P13-CMD-001`, because **no source file was touched
+at all**.
+
+The milestone added **30 lines of comment and 961 lines of tests**. Assembly
+persistence was built incrementally by the six milestones before it; what was
+missing was not code but proof, and in particular the one claim that only
+became checkable when `P13-REGEN-001` made regeneration solve — that a file
+preserves an assembly well enough to reproduce its **solution** exactly, bit
+for bit, for fully constrained, under-constrained, inconsistent and large
+mixed assemblies alike.
+
+The format-version policy is now stated where the constant is declared: bump
+it only for a change an existing reader would get *wrong*, since additive
+growth is already safe in both directions — an old file loads because an
+absent section means "none of those", and a new file is *refused* by an old
+reader because an unrecognised object type is a parse error rather than a
+silent skip.
+
+Carried forward, and recorded rather than smoothed over: the reader's
+strictness is **not uniform**. A dangling mate target loads and is reported,
+because `P13-REF-001` chose "report, don't refuse" and a repairable file must
+open; a dangling suppression override is refused outright, because it is
+intent about nothing. Both are defensible, they were written in different
+milestones against different instincts, and the next person to touch the
+reader should know it is a decision. Also: no schema migration exists, no
+cross-build round trip is measured, and property testing is enumerated rather
+than generated.
 
 ```text
 P13-PERSIST-001 → [x]
@@ -1387,8 +1417,8 @@ P13-CONF-001     Assembly configurations / suppression        DONE
 P13-STREF-001    Stable assembly references                   DONE
 P13-REGEN-001    Dependency / regeneration                    DONE
 P13-CMD-001      Commands / undo / redo                       DONE
-P13-PERSIST-001  Save / load assembly intent                  OPEN
-P13-CLI-001      Headless assembly workflows
+P13-PERSIST-001  Save / load assembly intent                  DONE
+P13-CLI-001      Headless assembly workflows                  OPEN
 P13-STEP-001     Assembly STEP export / read-back
 P13-REFMOD-001   Production assembly reference models
 P13-QUAL-001     Full P13 qualification
