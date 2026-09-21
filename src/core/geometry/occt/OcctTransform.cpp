@@ -76,10 +76,7 @@ Result<Body> transformed(const Body& body, const RigidTransform3D& motion) {
         // reflection (det -1) becomes a negative gp_Trsf, for which the copy
         // turns every face inside out, so faces keep pointing out of the
         // material.
-        gp_Trsf transformation;
-        transformation.SetValues(r[0], r[1], r[2], occt::toModel(t.x), r[3], r[4], r[5], occt::toModel(t.y), r[6],
-                                 r[7], r[8], occt::toModel(t.z));
-        return applyToCopy(body, transformation, "transform");
+        return applyToCopy(body, occt::toModel(motion), "transform");
     });
     if (!moved || !motion.reversesOrientation()) {
         return moved;

@@ -15,7 +15,7 @@ target_compile_definitions(bettercad_test_occt PRIVATE _USE_MATH_DEFINES)
 target_link_libraries(bettercad_test_occt
     PRIVATE
         BetterCAD::compiler_options
-        TKernel TKMath TKG3d TKGeomBase TKBRep TKTopAlgo TKXSBase TKDESTEP
+        TKernel TKMath TKG3d TKGeomBase TKBRep TKTopAlgo TKXSBase TKDESTEP TKLCAF TKXCAF
 )
 
 # ---------------------------------------------------------------------------
@@ -215,6 +215,7 @@ if(TARGET bettercad_cli_lib)
         cli/ExpressionCliTests.cpp
         cli/ComponentCliTests.cpp
         cli/AssemblyCliTests.cpp
+        io/AssemblyStepTests.cpp
     )
     target_link_libraries(bettercad_tests PRIVATE BetterCAD::cli_lib)
 endif()

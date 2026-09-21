@@ -15,6 +15,7 @@
 #include <catch2/matchers/catch_matchers_string.hpp>
 
 #include <format>
+#include <limits>
 #include <string>
 #include <vector>
 
@@ -155,4 +156,77 @@ TEST_CASE("Document STEP export reports failures without writing", "[io][step][e
         CHECK(errorCode(io::exportStep(model.doc, dir.path() / "missing" / "out.step")) == ErrorCode::IoError);
     }
     CHECK_FALSE(std::filesystem::exists(path));
+}
+
+// --- Assembly writer contract (P13-STEP-001) ----------------------------------
+//
+// writeStepAssembly() is public geometry API with a documented failure
+// contract. io::exportStep() cannot reach most of these -- it only ever hands
+// over a tree it just built -- so they are exercised where they live, rather
+// than left as guards nothing ever tries.
+
+TEST_CASE("Assembly STEP export refuses a shape tree it cannot honestly write", "[io][step][assembly][p13]") {
+    const auto box = geometry::makeBox(10_mm, 10_mm, 10_mm);
+    REQUIRE(box.has_value());
+    const geometry::NamedBody block{"Block", *box};
+
+    SECTION("no instances is no assembly") {
+        CHECK(errorCode(geometry::writeStepAssembly({.name = "A", .parts = {block}, .instances = {}})) ==
+              ErrorCode::InvalidArgument);
+    }
+    SECTION("an empty part has no geometry to place") {
+        CHECK(errorCode(geometry::writeStepAssembly({.name = "A",
+                                                     .parts = {{"Nothing", geometry::Body{}}},
+                                                     .instances = {{.name = "One", .part = 0}}})) ==
+              ErrorCode::InvalidArgument);
+    }
+    SECTION("an instance naming a part that is not there") {
+        CHECK(errorCode(geometry::writeStepAssembly(
+                  {.name = "A", .parts = {block}, .instances = {{.name = "One", .part = 7}}})) ==
+              ErrorCode::InvalidArgument);
+    }
+    SECTION("a part nobody places would be a product outside the assembly") {
+        // Writing it would show a reader a part that is not in the assembly,
+        // which is worse than refusing the file.
+        CHECK(errorCode(geometry::writeStepAssembly({.name = "A",
+                                                     .parts = {block, {"Spare", *box}},
+                                                     .instances = {{.name = "One", .part = 0}}})) ==
+              ErrorCode::InvalidArgument);
+    }
+    SECTION("a placement that is not finite") {
+        const Length nowhere = std::numeric_limits<double>::quiet_NaN() * units::mm;
+        CHECK(errorCode(geometry::writeStepAssembly(
+                  {.name = "A",
+                   .parts = {block},
+                   .instances = {{.name = "One",
+                                  .part = 0,
+                                  .placement = RigidTransform3D::translation({nowhere, 0_mm, 0_mm})}}})) ==
+              ErrorCode::InvalidArgument);
+    }
+}
+
+TEST_CASE("A fixed time stamp does not make assembly STEP output reproducible", "[io][step][assembly][p13]") {
+    // Stated as a test because it is a limitation worth pinning, not a bug to
+    // be surprised by later. OCCT numbers every assembly occurrence from a
+    // counter that lives for the life of the PROCESS, so two writes of one
+    // assembly differ even with the header fixed -- unlike writeStep(), whose
+    // reproducibility the test above pins. The difference is an identifier
+    // and carries no geometry; see AssemblyStep_RepeatedExportsAgreeByteFor
+    // ByteExceptTheKernelCounter, which holds everything else to byte
+    // equality.
+    const auto box = geometry::makeBox(10_mm, 10_mm, 10_mm);
+    REQUIRE(box.has_value());
+    const geometry::StepAssembly tree{
+        .name = "Rig", .parts = {{"Block", *box}}, .instances = {{.name = "One", .part = 0}}};
+    const geometry::StepOptions options{.timeStamp = "2026-01-01T00:00:00"};
+
+    auto first = geometry::writeStepAssembly(tree, options);
+    auto second = geometry::writeStepAssembly(tree, options);
+    REQUIRE(first.has_value());
+    REQUIRE(second.has_value());
+    CHECK_THAT(*first, ContainsSubstring("'2026-01-01T00:00:00'"));
+    // The two differ, and the counter is why. Their LENGTHS are not compared:
+    // a run in which the counter steps from 9 to 10 makes the second file a
+    // byte longer, which would be a failure about nothing.
+    CHECK(*first != *second);
 }

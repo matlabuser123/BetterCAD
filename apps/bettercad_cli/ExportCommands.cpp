@@ -24,6 +24,26 @@ std::string bodyCount(std::size_t count) {
     return std::format("{} {}", count, count == 1 ? "body" : "bodies");
 }
 
+/// What was written, said in the terms of the thing that was written.
+///
+/// An assembly's summary lists ONE body however many components place it,
+/// because the part's geometry is written once. Reporting only that would
+/// tell an engineer who exported a twelve-bracket frame that one body went
+/// out, so the instances are named too (P13-STEP-001).
+std::string describeContents(const io::ExportSummary& summary) {
+    if (summary.components.empty()) {
+        return std::format("{} ({})", bodyCount(summary.bodies.size()), listBodies(summary, false));
+    }
+    std::string instances;
+    for (const io::ExportedComponent& component : summary.components) {
+        instances += instances.empty() ? "" : ", ";
+        instances += component.name;
+    }
+    return std::format("assembly of {} {} ({}) from {} ({})", summary.components.size(),
+                       summary.components.size() == 1 ? "component" : "components", instances,
+                       bodyCount(summary.bodies.size()), listBodies(summary, false));
+}
+
 } // namespace
 
 ExitCode runExportStep(Args args, std::ostream& out, std::ostream& err) {
@@ -44,8 +64,8 @@ ExitCode runExportStep(Args args, std::ostream& out, std::ostream& err) {
     if (!summary) {
         return failure("export-step", summary.error().message, err);
     }
-    out << std::format("Wrote {}: STEP AP214 (mm), {} ({}), {} bytes\n", displayPath(output),
-                       bodyCount(summary->bodies.size()), listBodies(*summary, false), summary->bytes);
+    out << std::format("Wrote {}: STEP AP214 (mm), {}, {} bytes\n", displayPath(output),
+                       describeContents(*summary), summary->bytes);
     return ExitCode::Success;
 }
 

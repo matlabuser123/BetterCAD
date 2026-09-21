@@ -10,8 +10,8 @@
 
 ```text
 Current:   P13 — Assemblies
-Next:      P13-STEP-001 — Assembly STEP export / read-back
-Then:      P13-REFMOD-001 — Assembly reference models
+Next:      P13-REFMOD-001 — Production assembly reference models
+Then:      P13-QUAL-001 — Full P13 qualification
 
 Released:  v0.1.0 — P0–P10
 Qualified: P11, P12
@@ -1588,7 +1588,7 @@ Next → P13-STEP-001
 
 ---
 
-# NEXT — P13-STEP-001
+# DONE — P13-STEP-001
 
 ## Assembly STEP Export / Read-back
 
@@ -1696,23 +1696,23 @@ And "respect configuration and suppression" needs the negative test to be the
 real one — a suppressed component must be **absent**, proved by counting solids
 and by bounds that do not contain it, not by trusting the exporter's summary.
 
-- [ ] Define assembly STEP export contract
-- [ ] Export active assembly component geometry
-- [ ] Apply solved/component transforms correctly in export
-- [ ] Respect configuration and suppression state
-- [ ] Preserve component/product structure where supported
-- [ ] Preserve deterministic component ordering/naming
-- [ ] Validate all exported geometry is present and correctly positioned
-- [ ] Implement STEP read-back validation path
-- [ ] Compare read-back geometry against exported assembly
-- [ ] Validate bounding boxes / transforms / part counts after read-back
-- [ ] Validate suppressed components are absent from export
-- [ ] Validate unresolved/invalid assembly state fails explicitly
-- [ ] Validate export failure atomicity
-- [ ] Validate deterministic STEP output/read-back results
-- [ ] Adversarial review PASS
-- [ ] Debug / Release / Debug-shared regression PASS
-- [ ] Evidence in `docs/verification/P13-STEP-001/`
+- [x] Define assembly STEP export contract — active configuration, solved transforms, suppression, naming, ordering and every failure condition, stated in `ModelExport.hpp` and in the evidence
+- [x] Export active assembly component geometry — each part written once, placed by each active component
+- [x] Apply solved/component transforms correctly in export — nine placements against bounds derived on paper, to 1e-7 mm, plus centroids
+- [x] Respect configuration and suppression state — including a suppressed component hidden inside another, and a part whose only component is suppressed
+- [x] Preserve component/product structure where supported — AP214 products and usage occurrences; instancing proved by reading products and placements apart. **Not** AP242 semantic assembly, and the evidence says so
+- [x] Preserve deterministic component ordering/naming — instances by ascending `ComponentId`, products by first placement, names unique by construction
+- [x] Validate all exported geometry is present and correctly positioned — per instance, never in aggregate only
+- [x] Implement STEP read-back validation path — through `STEPCAFControl_Reader`, a different reader from the writer and from the existing helper; it stays test infrastructure, which is the scope fork the milestone named
+- [x] Compare read-back geometry against exported assembly
+- [x] Validate bounding boxes / transforms / part counts after read-back — parts counted apart from instances, on assemblies of two parts
+- [x] Validate suppressed components are absent from export — by name, by count and by measured volume
+- [x] Validate unresolved/invalid assembly state fails explicitly — and the failures land in **regeneration**, not the export's own guards; the first draft of the contract said otherwise and was wrong
+- [x] Validate export failure atomicity — the earlier file byte-identical after a failed overwrite, and a valid export succeeding afterwards
+- [x] Validate deterministic STEP output/read-back results — byte-identical below the header once OCCT's process-global occurrence counter is normalised. **Byte determinism is not claimed**: it is not achievable through this writer, and the measurement is recorded
+- [x] Adversarial review PASS — 9 findings, all resolved; 4 were untrue claims in the delivered code, 2 were tests that could not catch what they were named for
+- [x] Debug / Release / Debug-shared regression PASS
+- [x] Evidence in `docs/verification/P13-STEP-001/`
 
 ### Gate
 
@@ -1743,7 +1743,35 @@ and leave it to `P13-REFMOD-001`.
 exports of the same assembly should be byte-identical, and that is checkable
 today rather than argued.
 
-Only then:
+Met: 1631/1631 on `debug`, `release` and `debug-shared`, each from clean,
+and 898/898 five times over in `release` and `debug`; 0 compiler warnings in
+all three builds; 14/14 qualification stages exit 0; all 36 new tests
+confirmed by name in every ctest log; the qualified source trees identical
+before and after the run.
+
+**The milestone's own expectation about determinism was wrong, and that is
+the most useful thing it produced.** Two exports of one assembly are not
+byte-identical: OCCT numbers assembly occurrences from a counter that lives
+for the life of the process. Nothing BetterCAD does causes it and no option
+turns it off. What is claimed instead is exact and tested — normalise that
+one field and the DATA section matches byte for byte, entity numbering,
+coordinates, names, units and product structure included.
+
+Two other claims in the delivered code were also untrue and are now
+measured rather than asserted: a missing part and a cross-document part
+fail in **regeneration**, not in the export's `NotFound` guards, which are
+unreachable and kept only as defence in depth; and products are emitted in
+first-placement order, not the ascending part-object order the comment
+claimed. Two tests could not have caught what they were named for — the
+mirror test, because OCCT keeps a reflected solid valid and positive, and
+the STL test, because counting instances cannot tell a placed assembly from
+two copies at the origin.
+
+Carried forward, recorded rather than smoothed over: a body no component
+places is not exported, which is right in principle and could surprise an
+engineer who models a base and never places it; read-back is test
+infrastructure, not `io::importStep()`; STL assemblies are flattened; and
+there is still no committed assembly model, which is the next milestone.
 
 ```text
 P13-STEP-001 → [x]
@@ -1768,7 +1796,7 @@ P13-REGEN-001    Dependency / regeneration                    DONE
 P13-CMD-001      Commands / undo / redo                       DONE
 P13-PERSIST-001  Save / load assembly intent                  DONE
 P13-CLI-001      Headless assembly workflows                  DONE
-P13-STEP-001     Assembly STEP export / read-back              OPEN
+P13-STEP-001     Assembly STEP export / read-back              DONE
 P13-REFMOD-001   Production assembly reference models
 P13-QUAL-001     Full P13 qualification
 ```

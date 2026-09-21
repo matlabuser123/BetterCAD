@@ -8,6 +8,7 @@
 #include <bettercad/core/math/BoundingBox.hpp>
 #include <bettercad/core/math/Direction.hpp>
 #include <bettercad/core/math/Point.hpp>
+#include <bettercad/core/math/RigidTransform.hpp>
 #include <bettercad/core/units/Units.hpp>
 
 #include <NCollection_IndexedMap.hxx>
@@ -17,6 +18,7 @@
 #include <TopoDS_Shape.hxx>
 #include <gp_Dir.hxx>
 #include <gp_Pnt.hxx>
+#include <gp_Trsf.hxx>
 
 #include <memory>
 #include <utility>
@@ -90,6 +92,28 @@ inline constexpr Unit<dimensions::length> kModelLength = units::mm;
 }
 [[nodiscard]] inline gp_Dir toModel(const Direction3D& direction) {
     return gp_Dir(direction.x(), direction.y(), direction.z());
+}
+
+/// @p motion as a kernel transformation.
+///
+/// BetterCAD's own matrix is handed over element by element rather than being
+/// described to the kernel as an axis and an angle for it to rebuild: a body
+/// and the references moved with the same motion then agree exactly, and a
+/// reflection (determinant -1) becomes a negative gp_Trsf, which the kernel
+/// handles by turning faces inside out so they keep pointing out of the
+/// material.
+///
+/// This is the ONLY conversion from a RigidTransform3D into kernel space.
+/// A second one would be a second chance to get the row/column order or the
+/// unit wrong, and nothing would notice until a component came out mirrored
+/// or a metre from where it belonged (P13-STEP-001).
+[[nodiscard]] inline gp_Trsf toModel(const RigidTransform3D& motion) {
+    const std::array<double, 9>& r = motion.matrix();
+    const Translation3D& t = motion.translationPart();
+    gp_Trsf transformation;
+    transformation.SetValues(r[0], r[1], r[2], toModel(t.x), r[3], r[4], r[5], toModel(t.y), r[6], r[7], r[8],
+                             toModel(t.z));
+    return transformation;
 }
 
 } // namespace bettercad::geometry::occt
