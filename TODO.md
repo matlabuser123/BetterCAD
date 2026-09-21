@@ -1588,6 +1588,170 @@ Next → P13-STEP-001
 
 ---
 
+# NEXT — P13-STEP-001
+
+## Assembly STEP Export / Read-back
+
+An assembly leaving BetterCAD as a file another system can read, and coming
+back provably the same.
+
+### What already exists, checked
+
+| Capability | State today |
+| --- | --- |
+| `writeStep()` in `geometry` | **Built**, and on `STEPCAFControl_Writer` — the XDE writer, which *can* carry product structure, names and locations. Today it is handed a flat list and writes one product per body |
+| `io::exportStep()` | **Built**, and **assembly-blind**: it regenerates a copy and writes `features::resultFeatures()` |
+| Deterministic STEP output | **Half built.** `StepOptions::timeStamp` exists precisely so output is reproducible, but the default is the current time |
+| STEP read-back | **Built, and test-only.** `tests/support/occt/StepReadBack.cpp`, 50 call sites, reporting roots, solids, volume, area, validity and bounds |
+| Assembly-aware export | **None** |
+| Transforms in export | **None** |
+| Suppression in export | **None** |
+| Product structure for components | **None** |
+
+### The concrete defect this starts from
+
+`exportStep()` writes `resultFeatures()` — features whose bodies no other
+feature consumes. **A `Component` is not a `SolidFeature`**, so components are
+not result features and take no part in the export.
+
+The consequence is worth stating exactly, because it is the thing to fix:
+
+```text
+an assembly of two components of one part, exported today
+    -> ONE body, at the origin, once
+```
+
+Not two bodies. Not placed. The component placements, the solve, the mates and
+the configuration are all simply absent from the file. Nothing warns.
+
+### The layering is not in the way this time
+
+`P13-CLI-001` had to record that `validate` still cannot run the assembly final
+pass, because `features` is layer 2 and cannot see `assembly` at layer 3.
+
+**`io` is layer 4 and already links `BetterCAD::assembly`** (privately, for the
+component and mate JSON). So `exportStep()` may register the assembly handlers
+and consume `Regenerator::transforms()` directly. There is no boundary to work
+around and no ADR needed for that part.
+
+### Be honest about the blast radius
+
+`exportStep()` is one of the most heavily pinned functions in the repository:
+
+```text
+23 test files, 37 call sites
+28 export-step process tests
+24 committed example models, whose STEP volumes and bounds are checked
+   against closed-form geometry
+```
+
+Every one of those documents is a **part**, and **not one of the 24 contains a
+component**. So the existing behaviour — export the result features, unplaced —
+is the behaviour 24 models and dozens of tests depend on, and it must not move.
+Whatever assembly-awareness is added has to be a branch that a part-only
+document never takes.
+
+### Two design questions to settle first
+
+**Does read-back become a product feature, or stay test infrastructure?**
+
+This is the scope fork, and the checklist does not decide it. The existing
+helper's own header says: *"This is not a product feature (STEP import is a
+later milestone)."*
+
+Extending that helper to report names, transforms and product structure, and
+using it to verify exports, is proportionate and finishes this milestone. Adding
+`io::importStep()` — a real reader, building a Document — is a different and
+much larger milestone that nothing here authorizes. Pick the first unless there
+is a reason not to, and say so in the evidence either way.
+
+**What is a component in the file: an instance, or a copy?**
+
+`STEPCAFControl_Writer` can write one product definition referenced by several
+placements — a true assembly, where two components of one part share a part and
+differ only by location. It can also write two independent solids. The first is
+what "preserve component/product structure where supported" means, it is what a
+downstream system expects, and it is strictly harder.
+
+Decide which, decide what the product is *named* when a component named `Arm`
+instances a part named `Block`, and make the read-back check the answer rather
+than assuming it.
+
+### The failure this milestone exists to prevent
+
+**A file that looks right and is assembled wrong.**
+
+Every part present, every body valid, the volumes correct — and one component
+at the origin instead of 50 mm up, or a suppressed bracket quietly included, or
+two instances collapsed onto each other. A STEP file is what leaves the
+building; nobody re-derives it, and a wrong placement is invisible in a file
+listing and obvious only in a machine shop.
+
+So the read-back items are the sharp ones. Checking that the export *ran*, or
+that the body count is right, proves nothing about position. The comparison has
+to be **placement**: where each solid actually sits after a round trip, against
+where the solve said it should, derived independently.
+
+And "respect configuration and suppression" needs the negative test to be the
+real one — a suppressed component must be **absent**, proved by counting solids
+and by bounds that do not contain it, not by trusting the exporter's summary.
+
+- [ ] Define assembly STEP export contract
+- [ ] Export active assembly component geometry
+- [ ] Apply solved/component transforms correctly in export
+- [ ] Respect configuration and suppression state
+- [ ] Preserve component/product structure where supported
+- [ ] Preserve deterministic component ordering/naming
+- [ ] Validate all exported geometry is present and correctly positioned
+- [ ] Implement STEP read-back validation path
+- [ ] Compare read-back geometry against exported assembly
+- [ ] Validate bounding boxes / transforms / part counts after read-back
+- [ ] Validate suppressed components are absent from export
+- [ ] Validate unresolved/invalid assembly state fails explicitly
+- [ ] Validate export failure atomicity
+- [ ] Validate deterministic STEP output/read-back results
+- [ ] Adversarial review PASS
+- [ ] Debug / Release / Debug-shared regression PASS
+- [ ] Evidence in `docs/verification/P13-STEP-001/`
+
+### Gate
+
+```text
+STEP assembly export correct
++ component transforms correct
++ configuration/suppression respected
++ geometry complete
++ structure preserved where supported
++ read-back validation PASS
++ geometry/placement equivalence PASS
++ invalid-state handling correct
++ failure atomicity PASS
++ determinism PASS
++ adversarial review PASS
++ full regression PASS
++ 0 unexpected warnings
+```
+
+**On fixtures.** There is no committed assembly to export — all 24 example
+models are parts. This milestone can build its assemblies in-test, as every
+assembly milestone so far has, and should: **committing assembly models is
+`P13-REFMOD-001`, the milestone after this one.** Do not create reference
+models here. If a committed assembly would make a process test better, note it
+and leave it to `P13-REFMOD-001`.
+
+**On determinism.** `StepOptions::timeStamp` already exists for this. Two
+exports of the same assembly should be byte-identical, and that is checkable
+today rather than argued.
+
+Only then:
+
+```text
+P13-STEP-001 → [x]
+Next → P13-REFMOD-001
+```
+
+---
+
 # Planned P13 Sequence
 
 ```text
