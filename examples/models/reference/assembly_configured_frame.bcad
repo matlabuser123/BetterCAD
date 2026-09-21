@@ -1,0 +1,1049 @@
+{
+  "format": "bettercad-document",
+  "version": 1,
+  "units": "SI",
+  "document": {
+    "id": "a55e0000-0000-4000-8000-000000000005",
+    "name": "ConfiguredFrame",
+    "metadata": {
+      "description": "",
+      "author": "",
+      "properties": {}
+    },
+    "last_allocated_id": 38
+  },
+  "parameters": [
+    {
+      "id": 1,
+      "name": "bed_w",
+      "si_value": 0.1,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 2,
+      "name": "bed_d",
+      "si_value": 0.06,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 3,
+      "name": "bed_h",
+      "si_value": 0.014,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 6,
+      "name": "post_w",
+      "si_value": 0.015,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 7,
+      "name": "post_d",
+      "si_value": 0.015,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 8,
+      "name": "post_h",
+      "si_value": 0.05,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 11,
+      "name": "brace_w",
+      "si_value": 0.07,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 12,
+      "name": "brace_d",
+      "si_value": 0.01,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 13,
+      "name": "brace_h",
+      "si_value": 0.008,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    }
+  ],
+  "configurations": {
+    "active": "Full",
+    "defined": [
+      {
+        "id": 36,
+        "name": "Full",
+        "overrides": []
+      },
+      {
+        "id": 37,
+        "name": "NoBrace",
+        "overrides": [],
+        "components": [
+          {
+            "object": 19,
+            "suppressed": true
+          }
+        ]
+      },
+      {
+        "id": 38,
+        "name": "Loose",
+        "overrides": [],
+        "mates": [
+          {
+            "object": 35,
+            "suppressed": true
+          }
+        ]
+      }
+    ]
+  },
+  "objects": [
+    {
+      "id": 4,
+      "type": "sketch",
+      "name": "BedSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.1,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.1,
+              0.06
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.0,
+              0.06
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "line",
+            "start": 2,
+            "end": 3,
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "line",
+            "start": 4,
+            "end": 1,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "horizontal",
+            "entities": [
+              5
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "horizontal",
+            "entities": [
+              7
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "vertical",
+            "entities": [
+              6
+            ],
+            "enabled": true
+          },
+          {
+            "id": 5,
+            "type": "vertical",
+            "entities": [
+              8
+            ],
+            "enabled": true
+          },
+          {
+            "id": 6,
+            "type": "distance",
+            "entities": [
+              5
+            ],
+            "value": 0.1,
+            "parameter": 1,
+            "enabled": true
+          },
+          {
+            "id": 7,
+            "type": "distance",
+            "entities": [
+              6
+            ],
+            "value": 0.06,
+            "parameter": 2,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 8,
+        "last_constraint_id": 7
+      }
+    },
+    {
+      "id": 5,
+      "type": "extrude",
+      "name": "Bed",
+      "data": {
+        "profile": 4,
+        "depth": 0.014,
+        "depth_parameter": 3,
+        "direction": "normal",
+        "operation": "new_body"
+      }
+    },
+    {
+      "id": 9,
+      "type": "sketch",
+      "name": "PostSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.015,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.015,
+              0.015
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.0,
+              0.015
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "line",
+            "start": 2,
+            "end": 3,
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "line",
+            "start": 4,
+            "end": 1,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "horizontal",
+            "entities": [
+              5
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "horizontal",
+            "entities": [
+              7
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "vertical",
+            "entities": [
+              6
+            ],
+            "enabled": true
+          },
+          {
+            "id": 5,
+            "type": "vertical",
+            "entities": [
+              8
+            ],
+            "enabled": true
+          },
+          {
+            "id": 6,
+            "type": "distance",
+            "entities": [
+              5
+            ],
+            "value": 0.015,
+            "parameter": 6,
+            "enabled": true
+          },
+          {
+            "id": 7,
+            "type": "distance",
+            "entities": [
+              6
+            ],
+            "value": 0.015,
+            "parameter": 7,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 8,
+        "last_constraint_id": 7
+      }
+    },
+    {
+      "id": 10,
+      "type": "extrude",
+      "name": "Post",
+      "data": {
+        "profile": 9,
+        "depth": 0.05,
+        "depth_parameter": 8,
+        "direction": "normal",
+        "operation": "new_body"
+      }
+    },
+    {
+      "id": 14,
+      "type": "sketch",
+      "name": "BraceSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.07,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.07,
+              0.01
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.0,
+              0.01
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "line",
+            "start": 2,
+            "end": 3,
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "line",
+            "start": 4,
+            "end": 1,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "horizontal",
+            "entities": [
+              5
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "horizontal",
+            "entities": [
+              7
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "vertical",
+            "entities": [
+              6
+            ],
+            "enabled": true
+          },
+          {
+            "id": 5,
+            "type": "vertical",
+            "entities": [
+              8
+            ],
+            "enabled": true
+          },
+          {
+            "id": 6,
+            "type": "distance",
+            "entities": [
+              5
+            ],
+            "value": 0.07,
+            "parameter": 11,
+            "enabled": true
+          },
+          {
+            "id": 7,
+            "type": "distance",
+            "entities": [
+              6
+            ],
+            "value": 0.01,
+            "parameter": 12,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 8,
+        "last_constraint_id": 7
+      }
+    },
+    {
+      "id": 15,
+      "type": "extrude",
+      "name": "Brace",
+      "data": {
+        "profile": 14,
+        "depth": 0.008,
+        "depth_parameter": 13,
+        "direction": "normal",
+        "operation": "new_body"
+      }
+    },
+    {
+      "id": 16,
+      "type": "component",
+      "name": "Bed1",
+      "data": {
+        "part": 5
+      }
+    },
+    {
+      "id": 17,
+      "type": "component",
+      "name": "PostLeft",
+      "data": {
+        "part": 10,
+        "placement": {
+          "x": 0.002,
+          "y": 0.002,
+          "z": 0.04,
+          "rx": 0.0,
+          "ry": 0.0,
+          "rz": 0.13962634015954636
+        }
+      }
+    },
+    {
+      "id": 18,
+      "type": "component",
+      "name": "PostRight",
+      "data": {
+        "part": 10,
+        "placement": {
+          "x": 0.095,
+          "y": 0.05,
+          "z": 0.003,
+          "rx": 0.0,
+          "ry": 0.0,
+          "rz": -0.24434609527920614
+        }
+      }
+    },
+    {
+      "id": 19,
+      "type": "component",
+      "name": "Brace1",
+      "data": {
+        "part": 15,
+        "placement": {
+          "x": 0.01,
+          "y": 0.03,
+          "z": 0.07,
+          "rx": 0.0,
+          "ry": 0.0,
+          "rz": 0.08726646259971647
+        }
+      }
+    },
+    {
+      "id": 20,
+      "type": "mate",
+      "name": "HoldBed",
+      "data": {
+        "type": "fixed",
+        "component": 16
+      }
+    },
+    {
+      "id": 21,
+      "type": "mate",
+      "name": "PostLFlat",
+      "data": {
+        "type": "parallel",
+        "a": {
+          "component": 16,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        },
+        "b": {
+          "component": 17,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        }
+      }
+    },
+    {
+      "id": 22,
+      "type": "mate",
+      "name": "PostLLift",
+      "data": {
+        "type": "distance",
+        "a": {
+          "component": 16,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        },
+        "b": {
+          "component": 17,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        },
+        "distance": 0.014
+      }
+    },
+    {
+      "id": 23,
+      "type": "mate",
+      "name": "PostLAlongX",
+      "data": {
+        "type": "distance",
+        "a": {
+          "component": 16,
+          "kind": "plane",
+          "plane": {
+            "plane": "yz"
+          }
+        },
+        "b": {
+          "component": 17,
+          "kind": "plane",
+          "plane": {
+            "plane": "yz"
+          }
+        },
+        "distance": 0.015
+      }
+    },
+    {
+      "id": 24,
+      "type": "mate",
+      "name": "PostLAlongY",
+      "data": {
+        "type": "distance",
+        "a": {
+          "component": 16,
+          "kind": "plane",
+          "plane": {
+            "plane": "xz"
+          }
+        },
+        "b": {
+          "component": 17,
+          "kind": "plane",
+          "plane": {
+            "plane": "xz"
+          }
+        },
+        "distance": -0.02
+      }
+    },
+    {
+      "id": 25,
+      "type": "mate",
+      "name": "PostLSquare",
+      "data": {
+        "type": "perpendicular",
+        "a": {
+          "component": 16,
+          "kind": "plane",
+          "plane": {
+            "plane": "yz"
+          }
+        },
+        "b": {
+          "component": 17,
+          "kind": "plane",
+          "plane": {
+            "plane": "xz"
+          }
+        }
+      }
+    },
+    {
+      "id": 26,
+      "type": "mate",
+      "name": "PostRFlat",
+      "data": {
+        "type": "parallel",
+        "a": {
+          "component": 16,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        },
+        "b": {
+          "component": 18,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        }
+      }
+    },
+    {
+      "id": 27,
+      "type": "mate",
+      "name": "PostRLift",
+      "data": {
+        "type": "distance",
+        "a": {
+          "component": 16,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        },
+        "b": {
+          "component": 18,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        },
+        "distance": 0.014
+      }
+    },
+    {
+      "id": 28,
+      "type": "mate",
+      "name": "PostRAlongX",
+      "data": {
+        "type": "distance",
+        "a": {
+          "component": 16,
+          "kind": "plane",
+          "plane": {
+            "plane": "yz"
+          }
+        },
+        "b": {
+          "component": 18,
+          "kind": "plane",
+          "plane": {
+            "plane": "yz"
+          }
+        },
+        "distance": 0.085
+      }
+    },
+    {
+      "id": 29,
+      "type": "mate",
+      "name": "PostRAlongY",
+      "data": {
+        "type": "distance",
+        "a": {
+          "component": 16,
+          "kind": "plane",
+          "plane": {
+            "plane": "xz"
+          }
+        },
+        "b": {
+          "component": 18,
+          "kind": "plane",
+          "plane": {
+            "plane": "xz"
+          }
+        },
+        "distance": -0.02
+      }
+    },
+    {
+      "id": 30,
+      "type": "mate",
+      "name": "PostRSquare",
+      "data": {
+        "type": "perpendicular",
+        "a": {
+          "component": 16,
+          "kind": "plane",
+          "plane": {
+            "plane": "yz"
+          }
+        },
+        "b": {
+          "component": 18,
+          "kind": "plane",
+          "plane": {
+            "plane": "xz"
+          }
+        }
+      }
+    },
+    {
+      "id": 31,
+      "type": "mate",
+      "name": "BraceFlat",
+      "data": {
+        "type": "parallel",
+        "a": {
+          "component": 16,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        },
+        "b": {
+          "component": 19,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        }
+      }
+    },
+    {
+      "id": 32,
+      "type": "mate",
+      "name": "BraceLift",
+      "data": {
+        "type": "distance",
+        "a": {
+          "component": 16,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        },
+        "b": {
+          "component": 19,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        },
+        "distance": 0.062
+      }
+    },
+    {
+      "id": 33,
+      "type": "mate",
+      "name": "BraceAlongY",
+      "data": {
+        "type": "distance",
+        "a": {
+          "component": 16,
+          "kind": "plane",
+          "plane": {
+            "plane": "xz"
+          }
+        },
+        "b": {
+          "component": 19,
+          "kind": "plane",
+          "plane": {
+            "plane": "xz"
+          }
+        },
+        "distance": -0.025
+      }
+    },
+    {
+      "id": 34,
+      "type": "mate",
+      "name": "BraceSquare",
+      "data": {
+        "type": "perpendicular",
+        "a": {
+          "component": 16,
+          "kind": "plane",
+          "plane": {
+            "plane": "yz"
+          }
+        },
+        "b": {
+          "component": 19,
+          "kind": "plane",
+          "plane": {
+            "plane": "xz"
+          }
+        }
+      }
+    },
+    {
+      "id": 35,
+      "type": "mate",
+      "name": "BraceAlongX",
+      "data": {
+        "type": "distance",
+        "a": {
+          "component": 16,
+          "kind": "plane",
+          "plane": {
+            "plane": "yz"
+          }
+        },
+        "b": {
+          "component": 19,
+          "kind": "plane",
+          "plane": {
+            "plane": "yz"
+          }
+        },
+        "distance": 0.015
+      }
+    }
+  ]
+}

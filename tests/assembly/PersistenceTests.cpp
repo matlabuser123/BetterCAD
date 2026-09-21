@@ -517,24 +517,41 @@ TEST_CASE("Persist_APreAssemblyFileStillLoadsAndHasNoAssembly", "[assembly][pers
 }
 
 TEST_CASE("Persist_EveryCommittedLegacyModelStillLoads", "[assembly][persist][p13][io]") {
-    // The whole corpus, not one file: 24 models written across P0-P12, none
-    // of which contains an assembly. Any that stopped loading would be a
-    // compatibility regression.
+    // The whole corpus, not one file: every committed model must still load.
+    // Any that stopped would be a compatibility regression.
+    //
+    // Until P13-REFMOD-001 every committed model was a part, and this test
+    // said so by checking that none of them had components. That is no longer
+    // a property of the corpus -- the assembly reference models are committed
+    // beside the parts -- so the claim is split rather than dropped: the
+    // pre-assembly corpus is still there, still component-free and still at
+    // least twenty strong, and the models that DO carry components are
+    // exactly the assembly reference models. Which of those the builders
+    // claim is checked by AssemblyReference_NoCommittedAssemblyIsAStrayFile.
     const std::filesystem::path models{BETTERCAD_EXAMPLE_MODELS_DIR};
     REQUIRE(std::filesystem::exists(models));
-    std::size_t checked = 0;
+    std::size_t legacy = 0;
+    std::size_t assemblies = 0;
     for (const auto& entry : std::filesystem::recursive_directory_iterator(models)) {
         if (!entry.is_regular_file() || entry.path().extension() != ".bcad") {
             continue;
         }
-        INFO("file " << entry.path().filename().string());
+        const std::string name = entry.path().filename().string();
+        INFO("file " << name);
         auto loaded = io::loadDocument(entry.path());
         REQUIRE(loaded.has_value());
-        // Pre-assembly documents, all of them.
-        CHECK(assembly::components(*loaded).empty());
-        ++checked;
+        if (name.starts_with("assembly_")) {
+            // An assembly model with no components would be a model that had
+            // quietly lost its assembly.
+            CHECK_FALSE(assembly::components(*loaded).empty());
+            ++assemblies;
+        } else {
+            CHECK(assembly::components(*loaded).empty());
+            ++legacy;
+        }
     }
-    CHECK(checked >= 20);
+    CHECK(legacy >= 20);
+    CHECK(assemblies >= 8);
 }
 
 // --- K: corrupt input -------------------------------------------------------------------------------------

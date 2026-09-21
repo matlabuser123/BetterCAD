@@ -1,0 +1,1093 @@
+{
+  "format": "bettercad-document",
+  "version": 1,
+  "units": "SI",
+  "document": {
+    "id": "a55e0000-0000-4000-8000-000000000004",
+    "name": "JointSet",
+    "metadata": {
+      "description": "",
+      "author": "",
+      "properties": {}
+    },
+    "last_allocated_id": 34
+  },
+  "parameters": [
+    {
+      "id": 1,
+      "name": "frame_w",
+      "si_value": 0.12,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 2,
+      "name": "frame_d",
+      "si_value": 0.1,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 3,
+      "name": "frame_h",
+      "si_value": 0.012,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 6,
+      "name": "link_w",
+      "si_value": 0.05,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 7,
+      "name": "link_d",
+      "si_value": 0.012,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 8,
+      "name": "link_h",
+      "si_value": 0.008,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 11,
+      "name": "shoe_w",
+      "si_value": 0.03,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 12,
+      "name": "shoe_d",
+      "si_value": 0.02,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 13,
+      "name": "shoe_h",
+      "si_value": 0.01,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 16,
+      "name": "sleeve_r",
+      "si_value": 0.008,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 17,
+      "name": "sleeve_h",
+      "si_value": 0.04,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 20,
+      "name": "pad_w",
+      "si_value": 0.04,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 21,
+      "name": "pad_d",
+      "si_value": 0.04,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 22,
+      "name": "pad_h",
+      "si_value": 0.006,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    }
+  ],
+  "objects": [
+    {
+      "id": 4,
+      "type": "sketch",
+      "name": "FrameSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.12,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.12,
+              0.1
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.0,
+              0.1
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "line",
+            "start": 2,
+            "end": 3,
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "line",
+            "start": 4,
+            "end": 1,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "horizontal",
+            "entities": [
+              5
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "horizontal",
+            "entities": [
+              7
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "vertical",
+            "entities": [
+              6
+            ],
+            "enabled": true
+          },
+          {
+            "id": 5,
+            "type": "vertical",
+            "entities": [
+              8
+            ],
+            "enabled": true
+          },
+          {
+            "id": 6,
+            "type": "distance",
+            "entities": [
+              5
+            ],
+            "value": 0.12,
+            "parameter": 1,
+            "enabled": true
+          },
+          {
+            "id": 7,
+            "type": "distance",
+            "entities": [
+              6
+            ],
+            "value": 0.1,
+            "parameter": 2,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 8,
+        "last_constraint_id": 7
+      }
+    },
+    {
+      "id": 5,
+      "type": "extrude",
+      "name": "Frame",
+      "data": {
+        "profile": 4,
+        "depth": 0.012,
+        "depth_parameter": 3,
+        "direction": "normal",
+        "operation": "new_body"
+      }
+    },
+    {
+      "id": 9,
+      "type": "sketch",
+      "name": "LinkSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.05,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.05,
+              0.012
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.0,
+              0.012
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "line",
+            "start": 2,
+            "end": 3,
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "line",
+            "start": 4,
+            "end": 1,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "horizontal",
+            "entities": [
+              5
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "horizontal",
+            "entities": [
+              7
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "vertical",
+            "entities": [
+              6
+            ],
+            "enabled": true
+          },
+          {
+            "id": 5,
+            "type": "vertical",
+            "entities": [
+              8
+            ],
+            "enabled": true
+          },
+          {
+            "id": 6,
+            "type": "distance",
+            "entities": [
+              5
+            ],
+            "value": 0.05,
+            "parameter": 6,
+            "enabled": true
+          },
+          {
+            "id": 7,
+            "type": "distance",
+            "entities": [
+              6
+            ],
+            "value": 0.012,
+            "parameter": 7,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 8,
+        "last_constraint_id": 7
+      }
+    },
+    {
+      "id": 10,
+      "type": "extrude",
+      "name": "Link",
+      "data": {
+        "profile": 9,
+        "depth": 0.008,
+        "depth_parameter": 8,
+        "direction": "normal",
+        "operation": "new_body"
+      }
+    },
+    {
+      "id": 14,
+      "type": "sketch",
+      "name": "ShoeSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.03,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.03,
+              0.02
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.0,
+              0.02
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "line",
+            "start": 2,
+            "end": 3,
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "line",
+            "start": 4,
+            "end": 1,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "horizontal",
+            "entities": [
+              5
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "horizontal",
+            "entities": [
+              7
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "vertical",
+            "entities": [
+              6
+            ],
+            "enabled": true
+          },
+          {
+            "id": 5,
+            "type": "vertical",
+            "entities": [
+              8
+            ],
+            "enabled": true
+          },
+          {
+            "id": 6,
+            "type": "distance",
+            "entities": [
+              5
+            ],
+            "value": 0.03,
+            "parameter": 11,
+            "enabled": true
+          },
+          {
+            "id": 7,
+            "type": "distance",
+            "entities": [
+              6
+            ],
+            "value": 0.02,
+            "parameter": 12,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 8,
+        "last_constraint_id": 7
+      }
+    },
+    {
+      "id": 15,
+      "type": "extrude",
+      "name": "Shoe",
+      "data": {
+        "profile": 14,
+        "depth": 0.01,
+        "depth_parameter": 13,
+        "direction": "normal",
+        "operation": "new_body"
+      }
+    },
+    {
+      "id": 18,
+      "type": "sketch",
+      "name": "SleeveSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "circle",
+            "center": 1,
+            "radius": 0.008,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "radius",
+            "entities": [
+              2
+            ],
+            "value": 0.008,
+            "parameter": 16,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 2,
+        "last_constraint_id": 2
+      }
+    },
+    {
+      "id": 19,
+      "type": "extrude",
+      "name": "Sleeve",
+      "data": {
+        "profile": 18,
+        "depth": 0.04,
+        "depth_parameter": 17,
+        "direction": "normal",
+        "operation": "new_body"
+      }
+    },
+    {
+      "id": 23,
+      "type": "sketch",
+      "name": "PadSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.04,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.04,
+              0.04
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.0,
+              0.04
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "line",
+            "start": 2,
+            "end": 3,
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "line",
+            "start": 4,
+            "end": 1,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "horizontal",
+            "entities": [
+              5
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "horizontal",
+            "entities": [
+              7
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "vertical",
+            "entities": [
+              6
+            ],
+            "enabled": true
+          },
+          {
+            "id": 5,
+            "type": "vertical",
+            "entities": [
+              8
+            ],
+            "enabled": true
+          },
+          {
+            "id": 6,
+            "type": "distance",
+            "entities": [
+              5
+            ],
+            "value": 0.04,
+            "parameter": 20,
+            "enabled": true
+          },
+          {
+            "id": 7,
+            "type": "distance",
+            "entities": [
+              6
+            ],
+            "value": 0.04,
+            "parameter": 21,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 8,
+        "last_constraint_id": 7
+      }
+    },
+    {
+      "id": 24,
+      "type": "extrude",
+      "name": "Pad",
+      "data": {
+        "profile": 23,
+        "depth": 0.006,
+        "depth_parameter": 22,
+        "direction": "normal",
+        "operation": "new_body"
+      }
+    },
+    {
+      "id": 25,
+      "type": "component",
+      "name": "FrameBody",
+      "data": {
+        "part": 5
+      }
+    },
+    {
+      "id": 26,
+      "type": "component",
+      "name": "HingeArm",
+      "data": {
+        "part": 10,
+        "placement": {
+          "x": 0.015,
+          "y": 0.0,
+          "z": 0.0,
+          "rx": 0.0,
+          "ry": 0.0,
+          "rz": 0.5235987755982988
+        }
+      }
+    },
+    {
+      "id": 27,
+      "type": "component",
+      "name": "SlideShoe",
+      "data": {
+        "part": 15,
+        "placement": {
+          "x": 0.015,
+          "y": 0.0,
+          "z": 0.03,
+          "rx": 0.0,
+          "ry": 0.0,
+          "rz": 0.4363323129985824
+        }
+      }
+    },
+    {
+      "id": 28,
+      "type": "component",
+      "name": "SleeveRing",
+      "data": {
+        "part": 19,
+        "placement": {
+          "x": 0.015,
+          "y": 0.0,
+          "z": 0.04,
+          "rx": 0.0,
+          "ry": 0.0,
+          "rz": 0.6108652381980153
+        }
+      }
+    },
+    {
+      "id": 29,
+      "type": "component",
+      "name": "FacePad",
+      "data": {
+        "part": 24,
+        "placement": {
+          "x": 0.012,
+          "y": -0.008,
+          "z": 0.045,
+          "rx": 0.0,
+          "ry": 0.0,
+          "rz": 0.4886921905584123
+        }
+      }
+    },
+    {
+      "id": 30,
+      "type": "mate",
+      "name": "HoldFrame",
+      "data": {
+        "type": "fixed",
+        "component": 25
+      }
+    },
+    {
+      "id": 31,
+      "type": "mate",
+      "name": "Hinge",
+      "data": {
+        "type": "revolute",
+        "a": {
+          "component": 25,
+          "kind": "axis",
+          "axis": {
+            "axis": "z"
+          }
+        },
+        "b": {
+          "component": 26,
+          "kind": "axis",
+          "axis": {
+            "axis": "z"
+          }
+        }
+      }
+    },
+    {
+      "id": 32,
+      "type": "mate",
+      "name": "Slide",
+      "data": {
+        "type": "slider",
+        "a": {
+          "component": 25,
+          "kind": "axis",
+          "axis": {
+            "axis": "z"
+          }
+        },
+        "b": {
+          "component": 27,
+          "kind": "axis",
+          "axis": {
+            "axis": "z"
+          }
+        },
+        "a2": {
+          "component": 25,
+          "kind": "axis",
+          "axis": {
+            "axis": "x"
+          }
+        },
+        "b2": {
+          "component": 27,
+          "kind": "axis",
+          "axis": {
+            "axis": "x"
+          }
+        }
+      }
+    },
+    {
+      "id": 33,
+      "type": "mate",
+      "name": "SleeveJoint",
+      "data": {
+        "type": "cylindrical",
+        "a": {
+          "component": 25,
+          "kind": "axis",
+          "axis": {
+            "axis": "z"
+          }
+        },
+        "b": {
+          "component": 28,
+          "kind": "axis",
+          "axis": {
+            "axis": "z"
+          }
+        }
+      }
+    },
+    {
+      "id": 34,
+      "type": "mate",
+      "name": "PadFace",
+      "data": {
+        "type": "planar",
+        "a": {
+          "component": 25,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        },
+        "b": {
+          "component": 29,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,1561 @@
+{
+  "format": "bettercad-document",
+  "version": 1,
+  "units": "SI",
+  "document": {
+    "id": "a55e0000-0000-4000-8000-000000000007",
+    "name": "Machine",
+    "metadata": {
+      "description": "",
+      "author": "",
+      "properties": {}
+    },
+    "last_allocated_id": 60
+  },
+  "parameters": [
+    {
+      "id": 1,
+      "name": "housing_w",
+      "si_value": 0.16,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 2,
+      "name": "housing_d",
+      "si_value": 0.12,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 3,
+      "name": "housing_h",
+      "si_value": 0.04,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 6,
+      "name": "cover_w",
+      "si_value": 0.16,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 7,
+      "name": "cover_d",
+      "si_value": 0.12,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 8,
+      "name": "cover_h",
+      "si_value": 0.01,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 11,
+      "name": "shaft_r",
+      "si_value": 0.012,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 12,
+      "name": "shaft_h",
+      "si_value": 0.14,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 15,
+      "name": "foot_w",
+      "si_value": 0.024,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 16,
+      "name": "foot_d",
+      "si_value": 0.024,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 17,
+      "name": "foot_h",
+      "si_value": 0.01,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    }
+  ],
+  "configurations": {
+    "active": "Assembled",
+    "defined": [
+      {
+        "id": 59,
+        "name": "Assembled",
+        "overrides": []
+      },
+      {
+        "id": 60,
+        "name": "Bare",
+        "overrides": [],
+        "components": [
+          {
+            "object": 21,
+            "suppressed": true
+          },
+          {
+            "object": 24,
+            "suppressed": true
+          },
+          {
+            "object": 25,
+            "suppressed": true
+          },
+          {
+            "object": 26,
+            "suppressed": true
+          },
+          {
+            "object": 27,
+            "suppressed": true
+          }
+        ]
+      }
+    ]
+  },
+  "objects": [
+    {
+      "id": 4,
+      "type": "sketch",
+      "name": "HousingSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.16,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.16,
+              0.12
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.0,
+              0.12
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "line",
+            "start": 2,
+            "end": 3,
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "line",
+            "start": 4,
+            "end": 1,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "horizontal",
+            "entities": [
+              5
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "horizontal",
+            "entities": [
+              7
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "vertical",
+            "entities": [
+              6
+            ],
+            "enabled": true
+          },
+          {
+            "id": 5,
+            "type": "vertical",
+            "entities": [
+              8
+            ],
+            "enabled": true
+          },
+          {
+            "id": 6,
+            "type": "distance",
+            "entities": [
+              5
+            ],
+            "value": 0.16,
+            "parameter": 1,
+            "enabled": true
+          },
+          {
+            "id": 7,
+            "type": "distance",
+            "entities": [
+              6
+            ],
+            "value": 0.12,
+            "parameter": 2,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 8,
+        "last_constraint_id": 7
+      }
+    },
+    {
+      "id": 5,
+      "type": "extrude",
+      "name": "Housing",
+      "data": {
+        "profile": 4,
+        "depth": 0.04,
+        "depth_parameter": 3,
+        "direction": "normal",
+        "operation": "new_body"
+      }
+    },
+    {
+      "id": 9,
+      "type": "sketch",
+      "name": "CoverSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.16,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.16,
+              0.12
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.0,
+              0.12
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "line",
+            "start": 2,
+            "end": 3,
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "line",
+            "start": 4,
+            "end": 1,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "horizontal",
+            "entities": [
+              5
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "horizontal",
+            "entities": [
+              7
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "vertical",
+            "entities": [
+              6
+            ],
+            "enabled": true
+          },
+          {
+            "id": 5,
+            "type": "vertical",
+            "entities": [
+              8
+            ],
+            "enabled": true
+          },
+          {
+            "id": 6,
+            "type": "distance",
+            "entities": [
+              5
+            ],
+            "value": 0.16,
+            "parameter": 6,
+            "enabled": true
+          },
+          {
+            "id": 7,
+            "type": "distance",
+            "entities": [
+              6
+            ],
+            "value": 0.12,
+            "parameter": 7,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 8,
+        "last_constraint_id": 7
+      }
+    },
+    {
+      "id": 10,
+      "type": "extrude",
+      "name": "Cover",
+      "data": {
+        "profile": 9,
+        "depth": 0.01,
+        "depth_parameter": 8,
+        "direction": "normal",
+        "operation": "new_body"
+      }
+    },
+    {
+      "id": 13,
+      "type": "sketch",
+      "name": "ShaftSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "circle",
+            "center": 1,
+            "radius": 0.012,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "radius",
+            "entities": [
+              2
+            ],
+            "value": 0.012,
+            "parameter": 11,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 2,
+        "last_constraint_id": 2
+      }
+    },
+    {
+      "id": 14,
+      "type": "extrude",
+      "name": "Shaft",
+      "data": {
+        "profile": 13,
+        "depth": 0.14,
+        "depth_parameter": 12,
+        "direction": "normal",
+        "operation": "new_body"
+      }
+    },
+    {
+      "id": 18,
+      "type": "sketch",
+      "name": "FootSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.024,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.024,
+              0.024
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.0,
+              0.024
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "line",
+            "start": 2,
+            "end": 3,
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "line",
+            "start": 4,
+            "end": 1,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "horizontal",
+            "entities": [
+              5
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "horizontal",
+            "entities": [
+              7
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "vertical",
+            "entities": [
+              6
+            ],
+            "enabled": true
+          },
+          {
+            "id": 5,
+            "type": "vertical",
+            "entities": [
+              8
+            ],
+            "enabled": true
+          },
+          {
+            "id": 6,
+            "type": "distance",
+            "entities": [
+              5
+            ],
+            "value": 0.024,
+            "parameter": 15,
+            "enabled": true
+          },
+          {
+            "id": 7,
+            "type": "distance",
+            "entities": [
+              6
+            ],
+            "value": 0.024,
+            "parameter": 16,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 8,
+        "last_constraint_id": 7
+      }
+    },
+    {
+      "id": 19,
+      "type": "extrude",
+      "name": "Foot",
+      "data": {
+        "profile": 18,
+        "depth": 0.01,
+        "depth_parameter": 17,
+        "direction": "normal",
+        "operation": "new_body"
+      }
+    },
+    {
+      "id": 20,
+      "type": "component",
+      "name": "HousingBody",
+      "data": {
+        "part": 5
+      }
+    },
+    {
+      "id": 21,
+      "type": "component",
+      "name": "CoverPlate",
+      "data": {
+        "part": 10,
+        "placement": {
+          "x": 0.023,
+          "y": 0.014,
+          "z": 0.13,
+          "rx": 0.0,
+          "ry": 0.0,
+          "rz": 0.15707963267948966
+        }
+      }
+    },
+    {
+      "id": 22,
+      "type": "component",
+      "name": "ShaftFront",
+      "data": {
+        "part": 14,
+        "placement": {
+          "x": 0.03,
+          "y": 0.018,
+          "z": 0.012,
+          "rx": 0.0,
+          "ry": 0.0,
+          "rz": 0.29670597283903605
+        }
+      }
+    },
+    {
+      "id": 23,
+      "type": "component",
+      "name": "ShaftRear",
+      "data": {
+        "part": 14,
+        "placement": {
+          "x": 0.005,
+          "y": 0.005,
+          "z": 0.005,
+          "rx": 0.0,
+          "ry": 0.0,
+          "rz": -0.19198621771937624
+        }
+      }
+    },
+    {
+      "id": 24,
+      "type": "component",
+      "name": "Foot1",
+      "data": {
+        "part": 19,
+        "placement": {
+          "x": 0.0,
+          "y": 0.007,
+          "z": 0.06,
+          "rx": 0.0,
+          "ry": 0.0,
+          "rz": 0.0
+        }
+      }
+    },
+    {
+      "id": 25,
+      "type": "component",
+      "name": "Foot2",
+      "data": {
+        "part": 19,
+        "placement": {
+          "x": 0.003,
+          "y": 0.007,
+          "z": 0.06,
+          "rx": 0.0,
+          "ry": 0.0,
+          "rz": 0.0
+        }
+      }
+    },
+    {
+      "id": 26,
+      "type": "component",
+      "name": "Foot3",
+      "data": {
+        "part": 19,
+        "placement": {
+          "x": 0.006,
+          "y": 0.007,
+          "z": 0.06,
+          "rx": 0.0,
+          "ry": 0.0,
+          "rz": 0.0
+        }
+      }
+    },
+    {
+      "id": 27,
+      "type": "component",
+      "name": "Foot4",
+      "data": {
+        "part": 19,
+        "placement": {
+          "x": 0.009,
+          "y": 0.007,
+          "z": 0.06,
+          "rx": 0.0,
+          "ry": 0.0,
+          "rz": 0.0
+        }
+      }
+    },
+    {
+      "id": 28,
+      "type": "mate",
+      "name": "HoldHousing",
+      "data": {
+        "type": "fixed",
+        "component": 20
+      }
+    },
+    {
+      "id": 29,
+      "type": "mate",
+      "name": "CoverSeat",
+      "data": {
+        "type": "coincident",
+        "a": {
+          "component": 20,
+          "kind": "face",
+          "face": {
+            "feature": 5,
+            "face": {
+              "role": "end_cap"
+            }
+          }
+        },
+        "b": {
+          "component": 21,
+          "kind": "face",
+          "face": {
+            "feature": 10,
+            "face": {
+              "role": "start_cap"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": 30,
+      "type": "mate",
+      "name": "CoverAlongX",
+      "data": {
+        "type": "distance",
+        "a": {
+          "component": 20,
+          "kind": "plane",
+          "plane": {
+            "plane": "yz"
+          }
+        },
+        "b": {
+          "component": 21,
+          "kind": "plane",
+          "plane": {
+            "plane": "yz"
+          }
+        },
+        "distance": 0.0
+      }
+    },
+    {
+      "id": 31,
+      "type": "mate",
+      "name": "CoverAlongY",
+      "data": {
+        "type": "distance",
+        "a": {
+          "component": 20,
+          "kind": "plane",
+          "plane": {
+            "plane": "xz"
+          }
+        },
+        "b": {
+          "component": 21,
+          "kind": "plane",
+          "plane": {
+            "plane": "xz"
+          }
+        },
+        "distance": -0.0
+      }
+    },
+    {
+      "id": 32,
+      "type": "mate",
+      "name": "CoverSquare",
+      "data": {
+        "type": "perpendicular",
+        "a": {
+          "component": 20,
+          "kind": "plane",
+          "plane": {
+            "plane": "yz"
+          }
+        },
+        "b": {
+          "component": 21,
+          "kind": "plane",
+          "plane": {
+            "plane": "xz"
+          }
+        }
+      }
+    },
+    {
+      "id": 33,
+      "type": "mate",
+      "name": "OutputShaft",
+      "data": {
+        "type": "cylindrical",
+        "a": {
+          "component": 20,
+          "kind": "axis",
+          "axis": {
+            "axis": "z"
+          }
+        },
+        "b": {
+          "component": 22,
+          "kind": "axis",
+          "axis": {
+            "axis": "z"
+          }
+        }
+      }
+    },
+    {
+      "id": 34,
+      "type": "mate",
+      "name": "RearFlat",
+      "data": {
+        "type": "parallel",
+        "a": {
+          "component": 20,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        },
+        "b": {
+          "component": 23,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        }
+      }
+    },
+    {
+      "id": 35,
+      "type": "mate",
+      "name": "RearLift",
+      "data": {
+        "type": "distance",
+        "a": {
+          "component": 20,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        },
+        "b": {
+          "component": 23,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        },
+        "distance": 0.0
+      }
+    },
+    {
+      "id": 36,
+      "type": "mate",
+      "name": "RearAlongX",
+      "data": {
+        "type": "distance",
+        "a": {
+          "component": 20,
+          "kind": "plane",
+          "plane": {
+            "plane": "yz"
+          }
+        },
+        "b": {
+          "component": 23,
+          "kind": "plane",
+          "plane": {
+            "plane": "yz"
+          }
+        },
+        "distance": 0.115
+      }
+    },
+    {
+      "id": 37,
+      "type": "mate",
+      "name": "RearAlongY",
+      "data": {
+        "type": "distance",
+        "a": {
+          "component": 20,
+          "kind": "plane",
+          "plane": {
+            "plane": "xz"
+          }
+        },
+        "b": {
+          "component": 23,
+          "kind": "plane",
+          "plane": {
+            "plane": "xz"
+          }
+        },
+        "distance": -0.06
+      }
+    },
+    {
+      "id": 38,
+      "type": "mate",
+      "name": "RearSquare",
+      "data": {
+        "type": "perpendicular",
+        "a": {
+          "component": 20,
+          "kind": "plane",
+          "plane": {
+            "plane": "yz"
+          }
+        },
+        "b": {
+          "component": 23,
+          "kind": "plane",
+          "plane": {
+            "plane": "xz"
+          }
+        }
+      }
+    },
+    {
+      "id": 39,
+      "type": "mate",
+      "name": "Foot1Flat",
+      "data": {
+        "type": "parallel",
+        "a": {
+          "component": 20,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        },
+        "b": {
+          "component": 24,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        }
+      }
+    },
+    {
+      "id": 40,
+      "type": "mate",
+      "name": "Foot1Lift",
+      "data": {
+        "type": "distance",
+        "a": {
+          "component": 20,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        },
+        "b": {
+          "component": 24,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        },
+        "distance": -0.01
+      }
+    },
+    {
+      "id": 41,
+      "type": "mate",
+      "name": "Foot1AlongX",
+      "data": {
+        "type": "distance",
+        "a": {
+          "component": 20,
+          "kind": "plane",
+          "plane": {
+            "plane": "yz"
+          }
+        },
+        "b": {
+          "component": 24,
+          "kind": "plane",
+          "plane": {
+            "plane": "yz"
+          }
+        },
+        "distance": 0.012
+      }
+    },
+    {
+      "id": 42,
+      "type": "mate",
+      "name": "Foot1AlongY",
+      "data": {
+        "type": "distance",
+        "a": {
+          "component": 20,
+          "kind": "plane",
+          "plane": {
+            "plane": "xz"
+          }
+        },
+        "b": {
+          "component": 24,
+          "kind": "plane",
+          "plane": {
+            "plane": "xz"
+          }
+        },
+        "distance": -0.012
+      }
+    },
+    {
+      "id": 43,
+      "type": "mate",
+      "name": "Foot1Square",
+      "data": {
+        "type": "perpendicular",
+        "a": {
+          "component": 20,
+          "kind": "plane",
+          "plane": {
+            "plane": "yz"
+          }
+        },
+        "b": {
+          "component": 24,
+          "kind": "plane",
+          "plane": {
+            "plane": "xz"
+          }
+        }
+      }
+    },
+    {
+      "id": 44,
+      "type": "mate",
+      "name": "Foot2Flat",
+      "data": {
+        "type": "parallel",
+        "a": {
+          "component": 20,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        },
+        "b": {
+          "component": 25,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        }
+      }
+    },
+    {
+      "id": 45,
+      "type": "mate",
+      "name": "Foot2Lift",
+      "data": {
+        "type": "distance",
+        "a": {
+          "component": 20,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        },
+        "b": {
+          "component": 25,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        },
+        "distance": -0.01
+      }
+    },
+    {
+      "id": 46,
+      "type": "mate",
+      "name": "Foot2AlongX",
+      "data": {
+        "type": "distance",
+        "a": {
+          "component": 20,
+          "kind": "plane",
+          "plane": {
+            "plane": "yz"
+          }
+        },
+        "b": {
+          "component": 25,
+          "kind": "plane",
+          "plane": {
+            "plane": "yz"
+          }
+        },
+        "distance": 0.124
+      }
+    },
+    {
+      "id": 47,
+      "type": "mate",
+      "name": "Foot2AlongY",
+      "data": {
+        "type": "distance",
+        "a": {
+          "component": 20,
+          "kind": "plane",
+          "plane": {
+            "plane": "xz"
+          }
+        },
+        "b": {
+          "component": 25,
+          "kind": "plane",
+          "plane": {
+            "plane": "xz"
+          }
+        },
+        "distance": -0.012
+      }
+    },
+    {
+      "id": 48,
+      "type": "mate",
+      "name": "Foot2Square",
+      "data": {
+        "type": "perpendicular",
+        "a": {
+          "component": 20,
+          "kind": "plane",
+          "plane": {
+            "plane": "yz"
+          }
+        },
+        "b": {
+          "component": 25,
+          "kind": "plane",
+          "plane": {
+            "plane": "xz"
+          }
+        }
+      }
+    },
+    {
+      "id": 49,
+      "type": "mate",
+      "name": "Foot3Flat",
+      "data": {
+        "type": "parallel",
+        "a": {
+          "component": 20,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        },
+        "b": {
+          "component": 26,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        }
+      }
+    },
+    {
+      "id": 50,
+      "type": "mate",
+      "name": "Foot3Lift",
+      "data": {
+        "type": "distance",
+        "a": {
+          "component": 20,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        },
+        "b": {
+          "component": 26,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        },
+        "distance": -0.01
+      }
+    },
+    {
+      "id": 51,
+      "type": "mate",
+      "name": "Foot3AlongX",
+      "data": {
+        "type": "distance",
+        "a": {
+          "component": 20,
+          "kind": "plane",
+          "plane": {
+            "plane": "yz"
+          }
+        },
+        "b": {
+          "component": 26,
+          "kind": "plane",
+          "plane": {
+            "plane": "yz"
+          }
+        },
+        "distance": 0.012
+      }
+    },
+    {
+      "id": 52,
+      "type": "mate",
+      "name": "Foot3AlongY",
+      "data": {
+        "type": "distance",
+        "a": {
+          "component": 20,
+          "kind": "plane",
+          "plane": {
+            "plane": "xz"
+          }
+        },
+        "b": {
+          "component": 26,
+          "kind": "plane",
+          "plane": {
+            "plane": "xz"
+          }
+        },
+        "distance": -0.084
+      }
+    },
+    {
+      "id": 53,
+      "type": "mate",
+      "name": "Foot3Square",
+      "data": {
+        "type": "perpendicular",
+        "a": {
+          "component": 20,
+          "kind": "plane",
+          "plane": {
+            "plane": "yz"
+          }
+        },
+        "b": {
+          "component": 26,
+          "kind": "plane",
+          "plane": {
+            "plane": "xz"
+          }
+        }
+      }
+    },
+    {
+      "id": 54,
+      "type": "mate",
+      "name": "Foot4Flat",
+      "data": {
+        "type": "parallel",
+        "a": {
+          "component": 20,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        },
+        "b": {
+          "component": 27,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        }
+      }
+    },
+    {
+      "id": 55,
+      "type": "mate",
+      "name": "Foot4Lift",
+      "data": {
+        "type": "distance",
+        "a": {
+          "component": 20,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        },
+        "b": {
+          "component": 27,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        },
+        "distance": -0.01
+      }
+    },
+    {
+      "id": 56,
+      "type": "mate",
+      "name": "Foot4AlongX",
+      "data": {
+        "type": "distance",
+        "a": {
+          "component": 20,
+          "kind": "plane",
+          "plane": {
+            "plane": "yz"
+          }
+        },
+        "b": {
+          "component": 27,
+          "kind": "plane",
+          "plane": {
+            "plane": "yz"
+          }
+        },
+        "distance": 0.124
+      }
+    },
+    {
+      "id": 57,
+      "type": "mate",
+      "name": "Foot4AlongY",
+      "data": {
+        "type": "distance",
+        "a": {
+          "component": 20,
+          "kind": "plane",
+          "plane": {
+            "plane": "xz"
+          }
+        },
+        "b": {
+          "component": 27,
+          "kind": "plane",
+          "plane": {
+            "plane": "xz"
+          }
+        },
+        "distance": -0.084
+      }
+    },
+    {
+      "id": 58,
+      "type": "mate",
+      "name": "Foot4Square",
+      "data": {
+        "type": "perpendicular",
+        "a": {
+          "component": 20,
+          "kind": "plane",
+          "plane": {
+            "plane": "yz"
+          }
+        },
+        "b": {
+          "component": 27,
+          "kind": "plane",
+          "plane": {
+            "plane": "xz"
+          }
+        }
+      }
+    }
+  ]
+}

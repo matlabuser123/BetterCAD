@@ -215,6 +215,7 @@ if(TARGET bettercad_cli_lib)
         cli/ExpressionCliTests.cpp
         cli/ComponentCliTests.cpp
         cli/AssemblyCliTests.cpp
+        reference/AssemblyWorkflowTests.cpp
         io/AssemblyStepTests.cpp
     )
     target_link_libraries(bettercad_tests PRIVATE BetterCAD::cli_lib)
@@ -224,6 +225,7 @@ endif()
 if(TARGET bettercad_reference_models)
     target_sources(bettercad_tests PRIVATE
         reference/AllModelsTests.cpp
+        reference/AssemblyModelsTests.cpp
         reference/Analytic.hpp
         reference/ReferenceTestSupport.hpp
         reference/FlangeTests.cpp
@@ -366,6 +368,54 @@ if(TARGET bettercad_cli)
             EXIT_CODE 0
             STDOUT_REGEX "geometry              ok, 1 result body\nResult bodies \\(1\\):\n  ${_result} \\(object:[0-9]+\\): 1 solid, volume ${_volume} mm\\^3.*\nResult: valid$")
     endforeach()
+
+    # The assembly reference models (P13-REFMOD-001) through the real CLI, as
+    # a separate process: argv, exit codes and stdout as a script driver
+    # actually sees them. The solve status, DOF and equation counts are the
+    # ones AssemblyModelsTests.cpp derives by hand from the mate equation
+    # table, so a change to the solver shows up here as well as in the suite.
+    foreach(_assembly
+        "assembly_grounded_pair|GroundedPair|FULLY_CONSTRAINED|0|0"
+        "assembly_constrained_stack|ConstrainedStack|FULLY_CONSTRAINED|0|12"
+        "assembly_shaft_in_bore|ShaftInBore|UNDER_CONSTRAINED|2|4"
+        "assembly_joint_set|JointSet|UNDER_CONSTRAINED|7|17"
+        "assembly_configured_frame|ConfiguredFrame|FULLY_CONSTRAINED|0|18"
+        "assembly_driven_cover|DrivenCover|FULLY_CONSTRAINED|0|6"
+        "assembly_machine|Machine|UNDER_CONSTRAINED|2|40")
+        string(REPLACE "|" ";" _parts "${_assembly}")
+        list(GET _parts 0 _stem)
+        list(GET _parts 1 _name)
+        list(GET _parts 2 _status)
+        list(GET _parts 3 _dof)
+        list(GET _parts 4 _equations)
+        bettercad_add_process_test(cli.solve.reference.${_stem}
+            COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "solve|${_reference}/${_stem}.bcad"
+            EXIT_CODE 0
+            STDOUT_REGEX "^Solving .*${_stem}\\.bcad\nSolve: ${_status}, ${_dof} degrees of freedom, ${_equations} equations")
+        bettercad_add_process_test(cli.status.reference.${_stem}
+            COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "status|${_reference}/${_stem}.bcad"
+            EXIT_CODE 0
+            STDOUT_REGEX "^Assembly of ${_name}\n.*Regeneration: ok.*\nSolve: ${_status}, ${_dof} degrees of freedom")
+    endforeach()
+    # The one that is committed broken. A script driver must be told, by the
+    # exit code, that nothing usable came out -- and told which mates are at
+    # fault, rather than a boolean.
+    bettercad_add_process_test(cli.solve.reference.assembly_fault_cases
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "solve|${_reference}/assembly_fault_cases.bcad"
+        EXIT_CODE 1
+        STDOUT_REGEX "Solve: INCONSISTENT, 5 degrees of freedom, 2 equations.*\n.*cannot all be satisfied.*\n  conflicting  Near \\(object:[0-9]+\\)\n  conflicting  Far \\(object:[0-9]+\\)$")
+    bettercad_add_process_test(cli.export-step.reference.assembly_machine
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "export-step|${_reference}/assembly_machine.bcad|${_out}/assembly_machine.step"
+        EXIT_CODE 0
+        STDOUT_REGEX "^Wrote .*assembly_machine\\.step: STEP AP214 \\(mm\\), assembly of 8 components \\(HousingBody, CoverPlate, ShaftFront, ShaftRear, Foot1, Foot2, Foot3, Foot4\\) from 4 bodies \\(Housing, Cover, Shaft, Foot\\), [0-9]+ bytes$"
+        FILE "${_out}/assembly_machine.step" FILE_REGEX "^ISO-10303-21;\nHEADER;")
+    # An assembly that cannot be solved has no file to write, and must leave
+    # none behind.
+    bettercad_add_process_test(cli.export-step.reference.assembly_fault_cases
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "export-step|${_reference}/assembly_fault_cases.bcad|${_out}/assembly_fault_cases.step"
+        EXIT_CODE 1 STDERR_REGEX "solve")
     bettercad_add_process_test(cli.info.reference.shaft
         COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "info|${_reference}/shaft.bcad"
         EXIT_CODE 0

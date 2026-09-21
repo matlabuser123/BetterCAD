@@ -4,6 +4,14 @@
 # model, prints its fingerprint and timings, and can write the models and
 # their exports.
 add_library(bettercad_reference_models STATIC
+    AssemblyBasic.cpp
+    AssemblyCatalog.cpp
+    AssemblyConfigured.cpp
+    AssemblyDriven.cpp
+    AssemblyJoints.cpp
+    AssemblyParts.cpp
+    AssemblyParts.hpp
+    AssemblyReferenceModels.hpp
     BearingHousing.cpp
     BuildSupport.cpp
     BuildSupport.hpp
@@ -25,7 +33,7 @@ add_library(bettercad_reference_models STATIC
 add_library(BetterCAD::reference_models ALIAS bettercad_reference_models)
 target_include_directories(bettercad_reference_models PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 target_link_libraries(bettercad_reference_models
-    PUBLIC BetterCAD::core BetterCAD::features BetterCAD::geometry BetterCAD::sketch
+    PUBLIC BetterCAD::assembly BetterCAD::core BetterCAD::features BetterCAD::geometry BetterCAD::sketch
     PRIVATE BetterCAD::compiler_options
 )
 

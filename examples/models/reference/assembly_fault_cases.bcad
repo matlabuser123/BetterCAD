@@ -1,0 +1,311 @@
+{
+  "format": "bettercad-document",
+  "version": 1,
+  "units": "SI",
+  "document": {
+    "id": "a55e0000-0000-4000-8000-000000000008",
+    "name": "FaultCases",
+    "metadata": {
+      "description": "",
+      "author": "",
+      "properties": {}
+    },
+    "last_allocated_id": 11
+  },
+  "parameters": [
+    {
+      "id": 1,
+      "name": "block_w",
+      "si_value": 0.04,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 2,
+      "name": "block_d",
+      "si_value": 0.04,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 3,
+      "name": "block_h",
+      "si_value": 0.01,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    }
+  ],
+  "configurations": {
+    "defined": [
+      {
+        "id": 11,
+        "name": "Healthy",
+        "overrides": [],
+        "mates": [
+          {
+            "object": 10,
+            "suppressed": true
+          }
+        ]
+      }
+    ]
+  },
+  "objects": [
+    {
+      "id": 4,
+      "type": "sketch",
+      "name": "BlockSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.04,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.04,
+              0.04
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.0,
+              0.04
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "line",
+            "start": 2,
+            "end": 3,
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "line",
+            "start": 4,
+            "end": 1,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "horizontal",
+            "entities": [
+              5
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "horizontal",
+            "entities": [
+              7
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "vertical",
+            "entities": [
+              6
+            ],
+            "enabled": true
+          },
+          {
+            "id": 5,
+            "type": "vertical",
+            "entities": [
+              8
+            ],
+            "enabled": true
+          },
+          {
+            "id": 6,
+            "type": "distance",
+            "entities": [
+              5
+            ],
+            "value": 0.04,
+            "parameter": 1,
+            "enabled": true
+          },
+          {
+            "id": 7,
+            "type": "distance",
+            "entities": [
+              6
+            ],
+            "value": 0.04,
+            "parameter": 2,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 8,
+        "last_constraint_id": 7
+      }
+    },
+    {
+      "id": 5,
+      "type": "extrude",
+      "name": "Block",
+      "data": {
+        "profile": 4,
+        "depth": 0.01,
+        "depth_parameter": 3,
+        "direction": "normal",
+        "operation": "new_body"
+      }
+    },
+    {
+      "id": 6,
+      "type": "component",
+      "name": "Anchor",
+      "data": {
+        "part": 5
+      }
+    },
+    {
+      "id": 7,
+      "type": "component",
+      "name": "Floater",
+      "data": {
+        "part": 5,
+        "placement": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.05,
+          "rx": 0.0,
+          "ry": 0.0,
+          "rz": 0.0
+        }
+      }
+    },
+    {
+      "id": 8,
+      "type": "mate",
+      "name": "HoldAnchor",
+      "data": {
+        "type": "fixed",
+        "component": 6
+      }
+    },
+    {
+      "id": 9,
+      "type": "mate",
+      "name": "Near",
+      "data": {
+        "type": "distance",
+        "a": {
+          "component": 6,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        },
+        "b": {
+          "component": 7,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        },
+        "distance": 0.01
+      }
+    },
+    {
+      "id": 10,
+      "type": "mate",
+      "name": "Far",
+      "data": {
+        "type": "distance",
+        "a": {
+          "component": 6,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        },
+        "b": {
+          "component": 7,
+          "kind": "plane",
+          "plane": {
+            "plane": "xy"
+          }
+        },
+        "distance": 0.09
+      }
+    }
+  ]
+}

@@ -1,0 +1,381 @@
+{
+  "format": "bettercad-document",
+  "version": 1,
+  "units": "SI",
+  "document": {
+    "id": "a55e0000-0000-4000-8000-000000000003",
+    "name": "ShaftInBore",
+    "metadata": {
+      "description": "",
+      "author": "",
+      "properties": {}
+    },
+    "last_allocated_id": 14
+  },
+  "parameters": [
+    {
+      "id": 1,
+      "name": "housing_w",
+      "si_value": 0.06,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 2,
+      "name": "housing_d",
+      "si_value": 0.06,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 3,
+      "name": "housing_h",
+      "si_value": 0.04,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 6,
+      "name": "shaft_r",
+      "si_value": 0.01,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 7,
+      "name": "shaft_h",
+      "si_value": 0.08,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    },
+    {
+      "id": 11,
+      "name": "shaft_along_bore",
+      "si_value": 0.025,
+      "unit": "mm",
+      "dimension": {
+        "length": 1
+      }
+    }
+  ],
+  "objects": [
+    {
+      "id": 4,
+      "type": "sketch",
+      "name": "HousingSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "point",
+            "position": [
+              0.06,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 3,
+            "type": "point",
+            "position": [
+              0.06,
+              0.06
+            ],
+            "construction": false
+          },
+          {
+            "id": 4,
+            "type": "point",
+            "position": [
+              0.0,
+              0.06
+            ],
+            "construction": false
+          },
+          {
+            "id": 5,
+            "type": "line",
+            "start": 1,
+            "end": 2,
+            "construction": false
+          },
+          {
+            "id": 6,
+            "type": "line",
+            "start": 2,
+            "end": 3,
+            "construction": false
+          },
+          {
+            "id": 7,
+            "type": "line",
+            "start": 3,
+            "end": 4,
+            "construction": false
+          },
+          {
+            "id": 8,
+            "type": "line",
+            "start": 4,
+            "end": 1,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "horizontal",
+            "entities": [
+              5
+            ],
+            "enabled": true
+          },
+          {
+            "id": 3,
+            "type": "horizontal",
+            "entities": [
+              7
+            ],
+            "enabled": true
+          },
+          {
+            "id": 4,
+            "type": "vertical",
+            "entities": [
+              6
+            ],
+            "enabled": true
+          },
+          {
+            "id": 5,
+            "type": "vertical",
+            "entities": [
+              8
+            ],
+            "enabled": true
+          },
+          {
+            "id": 6,
+            "type": "distance",
+            "entities": [
+              5
+            ],
+            "value": 0.06,
+            "parameter": 1,
+            "enabled": true
+          },
+          {
+            "id": 7,
+            "type": "distance",
+            "entities": [
+              6
+            ],
+            "value": 0.06,
+            "parameter": 2,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 8,
+        "last_constraint_id": 7
+      }
+    },
+    {
+      "id": 5,
+      "type": "extrude",
+      "name": "Housing",
+      "data": {
+        "profile": 4,
+        "depth": 0.04,
+        "depth_parameter": 3,
+        "direction": "normal",
+        "operation": "new_body"
+      }
+    },
+    {
+      "id": 8,
+      "type": "sketch",
+      "name": "ShaftSketch",
+      "data": {
+        "placement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "x_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "y_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "normal": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        "entities": [
+          {
+            "id": 1,
+            "type": "point",
+            "position": [
+              0.0,
+              0.0
+            ],
+            "construction": false
+          },
+          {
+            "id": 2,
+            "type": "circle",
+            "center": 1,
+            "radius": 0.01,
+            "construction": false
+          }
+        ],
+        "constraints": [
+          {
+            "id": 1,
+            "type": "fixed",
+            "entities": [
+              1
+            ],
+            "enabled": true
+          },
+          {
+            "id": 2,
+            "type": "radius",
+            "entities": [
+              2
+            ],
+            "value": 0.01,
+            "parameter": 6,
+            "enabled": true
+          }
+        ],
+        "last_entity_id": 2,
+        "last_constraint_id": 2
+      }
+    },
+    {
+      "id": 9,
+      "type": "extrude",
+      "name": "Shaft",
+      "data": {
+        "profile": 8,
+        "depth": 0.08,
+        "depth_parameter": 7,
+        "direction": "normal",
+        "operation": "new_body"
+      }
+    },
+    {
+      "id": 10,
+      "type": "component",
+      "name": "HousingBody",
+      "data": {
+        "part": 5
+      }
+    },
+    {
+      "id": 12,
+      "type": "component",
+      "name": "ShaftPin",
+      "data": {
+        "part": 9,
+        "placement": {
+          "x": 0.018,
+          "y": -0.007,
+          "z": 0.025,
+          "z_parameter": 11,
+          "rx": 0.0,
+          "ry": 0.0,
+          "rz": 0.6981317007977318
+        }
+      }
+    },
+    {
+      "id": 13,
+      "type": "mate",
+      "name": "HoldHousing",
+      "data": {
+        "type": "fixed",
+        "component": 10
+      }
+    },
+    {
+      "id": 14,
+      "type": "mate",
+      "name": "Bore",
+      "data": {
+        "type": "concentric",
+        "a": {
+          "component": 10,
+          "kind": "axis",
+          "axis": {
+            "axis": "z"
+          }
+        },
+        "b": {
+          "component": 12,
+          "kind": "axis",
+          "axis": {
+            "axis": "z"
+          }
+        }
+      }
+    }
+  ]
+}
