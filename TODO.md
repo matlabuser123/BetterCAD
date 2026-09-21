@@ -10,8 +10,8 @@
 
 ```text
 Current:   P13 — Assemblies
-Next:      P13-CLI-001 — Headless assembly workflows
-Then:      P13-STEP-001 — Assembly STEP export / read-back
+Next:      P13-STEP-001 — Assembly STEP export / read-back
+Then:      P13-REFMOD-001 — Assembly reference models
 
 Released:  v0.1.0 — P0–P10
 Qualified: P11, P12
@@ -1403,7 +1403,7 @@ Next → P13-CLI-001
 
 ---
 
-# NEXT — P13-CLI-001
+# DONE — P13-CLI-001
 
 ## Headless Assembly Workflows
 
@@ -1495,23 +1495,23 @@ Exit codes are the other half of the same thing. A script driver can only
 react to what it is told, so a failed edit must be a non-zero exit and a
 diagnostic on stderr, never a warning on stdout and a zero.
 
-- [ ] Define assembly CLI command contract
-- [ ] Add CLI create/load/save assembly workflow
-- [ ] Add component add/remove/placement commands
-- [ ] Add mate create/edit/delete commands
-- [ ] Add configuration/suppression commands
-- [ ] Add regenerate and solve commands
-- [ ] Add assembly status / diagnostics output
-- [ ] Support deterministic scripted workflows
-- [ ] Validate non-interactive exit codes
-- [ ] Validate structured error handling
-- [ ] Validate CLI save → load → regenerate → solve workflow
-- [ ] Validate CLI results against core API behavior
-- [ ] Validate malformed input / invalid command handling
-- [ ] Validate failure atomicity
-- [ ] Adversarial review PASS
-- [ ] Debug / Release / Debug-shared regression PASS
-- [ ] Evidence in `docs/verification/P13-CLI-001/`
+- [x] Define assembly CLI command contract — selectors, mate targets and placement values, each a grammar whose two halves cannot overlap
+- [x] Add CLI create/load/save assembly workflow — every edit a load/apply/save transaction
+- [x] Add component add/remove/placement commands — placement by literal **or** parameter binding; removal refused while mated
+- [x] Add mate create/edit/delete commands — all eleven kinds, edited in place
+- [x] Add configuration/suppression commands — three suppression states, and the base state distinct from them
+- [x] Add regenerate and solve commands — and neither writes the file, because a transform is derived
+- [x] Add assembly status / diagnostics output — components, mates, suppression, regeneration, unresolved references and the solve
+- [x] Support deterministic scripted workflows — `batch`, whose language is the CLI's own command lines and nothing else
+- [x] Validate non-interactive exit codes — on a rule: 2 if the CLI could not read the line, 1 if the document said no
+- [x] Validate structured error handling
+- [x] Validate CLI save → load → regenerate → solve workflow — bit-identical transforms
+- [x] Validate CLI results against core API behavior — `equivalent()` on the documents **and** the solved transforms compared bit for bit
+- [x] Validate malformed input / invalid command handling
+- [x] Validate failure atomicity — measured on the file's bytes, twice, one of them after a real process exited
+- [x] Adversarial review PASS — 5 findings, all fixed; 1 a real defect in this milestone's own new code, 2 in its test wiring
+- [x] Debug / Release / Debug-shared regression PASS
+- [x] Evidence in `docs/verification/P13-CLI-001/`
 
 ### Gate
 
@@ -1539,7 +1539,47 @@ the comparison can be exact rather than approximate. A CLI that produced a
 *nearly* identical document would be a real defect and this is what would
 catch it.
 
-Only then:
+Met: 1595/1595 on `debug`, `release` and `debug-shared` from clean, and
+1027/1027 five times over in `release` and `debug`; 0 compiler warnings;
+14/14 qualification stages exit 0; all 68 new tests confirmed by name in every
+ctest log. The adversarial review found 5 issues and fixed all of them — one a
+real defect in this milestone's own new code, two in its test wiring, two
+wrong expectations of mine. 0 defects in previously qualified code. The
+qualified tree IDs match the committed tree.
+
+The CLI went from **7 commands to 22**, and from a tool that only reads to one
+that edits. The shape of the change is worth stating: **`src/` and `include/`
+are byte-identical to `P13-PERSIST-001`** — not one library source file and not
+one public header was touched. Everything is in `apps/`, `tests/` and
+`examples/`, and the 152 lines added to existing files are wiring with nothing
+deleted. Every library the CLI drives is the one already qualified.
+
+The two design questions the authorization flagged were both settled before any
+command was written, and neither the way the obvious answer suggested.
+
+**Naming.** The trap was real but it dissolved on inspection rather than
+needing a workaround: a name is `[A-Za-z_][A-Za-z0-9_]*`, unique across objects
+*and* parameters, re-checked on every rename. So a decimal selector can only be
+an ID and an identifier can only be a name — disjoint **by construction**, with
+no sigil and no ambiguous case. Identity stays with the ID; a name is resolved
+at the moment of use and never stored. The guarantee is load-bearing, so it is
+pinned by its own test rather than assumed.
+
+**One process per edit, or a batch.** Both, through one mechanism — because
+per-invocation atomicity is *not* script atomicity, which is the failure the
+milestone exists to prevent. An edit is a function over an already-loaded
+document; the single-shot command is literally the batch of one. Nothing
+reaches the file until every edit has succeeded, and the one write that does
+happen is atomic at the filesystem level. A batch that fails at step seven
+saves nothing and names the line.
+
+Carried forward, recorded rather than smoothed over: there is no undo across
+processes and deliberately so; two processes editing one file is **last writer
+wins**, silently, as it always has been; a copied face has no spelling in the
+target grammar; `validate` still does not run the assembly final pass, because
+moving that registration into `features` would break the layering and giving it
+an injection point is a change to a qualified subsystem that is not authorized
+here.
 
 ```text
 P13-CLI-001 → [x]
@@ -1563,8 +1603,8 @@ P13-STREF-001    Stable assembly references                   DONE
 P13-REGEN-001    Dependency / regeneration                    DONE
 P13-CMD-001      Commands / undo / redo                       DONE
 P13-PERSIST-001  Save / load assembly intent                  DONE
-P13-CLI-001      Headless assembly workflows                  OPEN
-P13-STEP-001     Assembly STEP export / read-back
+P13-CLI-001      Headless assembly workflows                  DONE
+P13-STEP-001     Assembly STEP export / read-back              OPEN
 P13-REFMOD-001   Production assembly reference models
 P13-QUAL-001     Full P13 qualification
 ```

@@ -214,6 +214,7 @@ if(TARGET bettercad_cli_lib)
         cli/SpatialSweepCliTests.cpp
         cli/ExpressionCliTests.cpp
         cli/ComponentCliTests.cpp
+        cli/AssemblyCliTests.cpp
     )
     target_link_libraries(bettercad_tests PRIVATE BetterCAD::cli_lib)
 endif()
@@ -255,10 +256,14 @@ set(_run_and_check "${CMAKE_CURRENT_SOURCE_DIR}/cmake/RunAndCheck.cmake")
 
 # bettercad_add_process_test(<name> COMMAND <exe> [ARGS a|b|c]
 #     EXIT_CODE <n> [STDOUT_REGEX <re>] [STDERR_REGEX <re>]
-#     [FILE <path> [FILE_REGEX <re>]])
+#     [FILE <path> [FILE_REGEX <re>]]
+#     [COPY_FROM <src> COPY_TO <dst>])
+#
+# COPY_FROM/COPY_TO copies a pristine input into place before the run, which
+# is what lets a test that EDITS a document survive `ctest --repeat`.
 function(bettercad_add_process_test name)
     cmake_parse_arguments(PARSE_ARGV 1 arg ""
-        "COMMAND;ARGS;EXIT_CODE;STDOUT_REGEX;STDERR_REGEX;FILE;FILE_REGEX" "")
+        "COMMAND;ARGS;EXIT_CODE;STDOUT_REGEX;STDERR_REGEX;FILE;FILE_REGEX;COPY_FROM;COPY_TO" "")
     add_test(NAME ${name}
         COMMAND "${CMAKE_COMMAND}"
             "-DCOMMAND=${arg_COMMAND}"
@@ -268,6 +273,8 @@ function(bettercad_add_process_test name)
             "-DEXPECTED_STDERR_REGEX=${arg_STDERR_REGEX}"
             "-DEXPECTED_FILE=${arg_FILE}"
             "-DEXPECTED_FILE_REGEX=${arg_FILE_REGEX}"
+            "-DCOPY_FROM=${arg_COPY_FROM}"
+            "-DCOPY_TO=${arg_COPY_TO}"
             -P "${_run_and_check}"
     )
 endfunction()
@@ -394,6 +401,129 @@ if(TARGET bettercad_cli)
         COMMAND "$<TARGET_FILE:bettercad_cli>"
         ARGS "validate|${_reference}/motor_mount.bcad|--configuration|Enormous"
         EXIT_CODE 1 STDERR_REGEX "no configuration named 'Enormous' in this document")
+
+    # P13-CLI-001: headless assembly workflows, through the real executable.
+    #
+    # These exist because the in-process cases check cli::run()'s return
+    # value, and a milestone whose whole subject is exit codes and files on
+    # disk should also be measured on a real process and a real file. Each
+    # one asserts the PROCESS exit status; the atomicity pair asserts it on
+    # the file as well, by asking the CLI afterwards what the document holds.
+    set(_scripts "${PROJECT_SOURCE_DIR}/examples/scripts")
+    set(_asm "${_out}/assembly")
+    file(MAKE_DIRECTORY "${_asm}")
+
+    # The committed example script builds a two-part assembly in one
+    # transaction. It copies a pristine plate.bcad first, so that nothing in
+    # the repository is edited AND so the test is repeatable: editing a
+    # document in place is not idempotent, and `ctest --repeat until-fail:5`
+    # would otherwise fail the second pass on a name the first pass took.
+    bettercad_add_process_test(cli.assembly.batch
+        COPY_FROM "${_example}" COPY_TO "${_asm}/built.bcad"
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "batch|${_asm}/built.bcad|${_scripts}/build_assembly.txt"
+        EXIT_CODE 0
+        STDOUT_REGEX "^Applied 6 edits from .*build_assembly\\.txt:\n +[0-9]+  Created Base \\(object:7\\) placing Extrude001 \\(object:6\\), at the origin\n +[0-9]+  Created Arm \\(object:8\\) placing Extrude001 \\(object:6\\), moved \\(0 mm, 0 mm, 50 mm\\), turned \\(0 deg, 0 deg, 0 deg\\)\n +[0-9]+  Created Ground \\(object:9\\): fixed, holding Base \\(object:7\\)\n +[0-9]+  Created Flush \\(object:10\\): coincident, relating Base:origin:xy to Arm:origin:xy\n +[0-9]+  Created configuration 'Loose'\n +[0-9]+  Suppressed Flush \\(object:10\\) in configuration 'Loose'\nWrote .*built\\.bcad$")
+
+    # The assembly it built solves, and to the answer hand-derived in
+    # AssemblyCliTests.cpp: a plane-to-plane coincidence removes one
+    # translation and two rotations, leaving three.
+    bettercad_add_process_test(cli.assembly.solve
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "solve|${_asm}/built.bcad"
+        EXIT_CODE 0
+        STDOUT_REGEX "Solve: UNDER_CONSTRAINED, 3 degrees of freedom, 3 equations, .*Transforms \\(2\\):\n  Base \\(object:7\\) +origin \\(0, 0, 0\\) mm, z \\(0, 0, 1\\)\n  Arm \\(object:8\\) +origin \\(0, 0, 0\\) mm, z \\(0, 0, 1\\)$")
+
+    # And in the configuration that suppresses the mate, the constraint is
+    # gone and Arm sits at the placement intent the solve never overwrote.
+    bettercad_add_process_test(cli.assembly.solve.configuration
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "solve|${_asm}/built.bcad|--configuration|Loose"
+        EXIT_CODE 0
+        STDOUT_REGEX "Solve: UNDER_CONSTRAINED, 6 degrees of freedom, 0 equations, .*Arm \\(object:8\\) +origin \\(0, 0, 50\\) mm")
+
+    bettercad_add_process_test(cli.assembly.status
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "status|${_asm}/built.bcad"
+        EXIT_CODE 0
+        STDOUT_REGEX "^Assembly of Plate\nConfiguration: none \\(base values\\)\nComponents \\(2\\):\n  Base \\(object:7\\) +places Extrude001 \\(object:6\\) +in force\n  Arm \\(object:8\\) +places Extrude001 \\(object:6\\) +in force\nMates \\(2\\):\n  Ground \\(object:9\\) +fixed Base \\(object:7\\) +in force\n  Flush \\(object:10\\) +coincident Base:origin:xy to Arm:origin:xy +in force\n")
+
+    # The script that fails partway: exit 1, the line named, and nothing
+    # written.
+    bettercad_add_process_test(cli.assembly.batch.fails
+        COPY_FROM "${_example}" COPY_TO "${_asm}/atomic.bcad"
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "batch|${_asm}/atomic.bcad|${_scripts}/broken_assembly.txt"
+        EXIT_CODE 1
+        STDERR_REGEX "broken_assembly\\.txt:10: this document has nothing named 'Nonexistent'\nNothing was written; .*atomic\\.bcad is unchanged\\.$")
+    # Proved on the file rather than on the message: three of that script's
+    # edits succeeded before the failure, and none of them reached the disk.
+    bettercad_add_process_test(cli.assembly.batch.fails.wrote-nothing
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "status|${_asm}/atomic.bcad"
+        EXIT_CODE 0
+        STDOUT_REGEX "Components \\(0\\):\nMates \\(0\\):")
+
+    # The two exit codes, on the rule they follow: 2 when the CLI's own
+    # parser could not read the line, 1 when the document or the model
+    # rejected what it asked for.
+    bettercad_add_process_test(cli.assembly.exit.bad-unit
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "component-place|${_asm}/built.bcad|Arm|--z|1kg"
+        EXIT_CODE 2 STDERR_REGEX "--z: '1kg' has dimension mass; expected length")
+    bettercad_add_process_test(cli.assembly.exit.unknown-mate-type
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "mate-add|${_asm}/built.bcad|--type|wobble"
+        EXIT_CODE 2 STDERR_REGEX "'wobble' is not a mate type")
+    bettercad_add_process_test(cli.assembly.exit.bad-selector
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "component-place|${_asm}/built.bcad|7abc|--z|1mm"
+        EXIT_CODE 2 STDERR_REGEX "neither an ID \\(digits\\) nor a name")
+    bettercad_add_process_test(cli.assembly.exit.no-such-component
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "component-place|${_asm}/built.bcad|Ghost|--z|1mm"
+        EXIT_CODE 1 STDERR_REGEX "this document has nothing named 'Ghost'")
+    bettercad_add_process_test(cli.assembly.exit.still-mated
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "component-remove|${_asm}/built.bcad|Base"
+        EXIT_CODE 1 STDERR_REGEX "is still mated by Ground \\(object:9\\), Flush \\(object:10\\)")
+    bettercad_add_process_test(cli.assembly.exit.missing-file
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "solve|${_asm}/not-here.bcad"
+        EXIT_CODE 1)
+
+    # Ordering.
+    #
+    # The two commands that PRODUCE a document other tests read -- the batch
+    # that builds one and the batch that fails against one -- are the fixture,
+    # not merely ordered before their readers. ctest pulls a required
+    # fixture's setup in even when the run is filtered (ctest -R), whereas a
+    # DEPENDS on an excluded test is simply dropped. With DEPENDS alone,
+    # `ctest -R cli.assembly.solve` would solve a document nothing ever built.
+    #
+    # Each of them copies its own pristine input (COPY_FROM), so they are
+    # idempotent and the whole set survives `ctest --repeat`. Everything that
+    # reads what they made is either read-only or an edit that is refused, so
+    # none of the readers changes anything either.
+    #
+    # They are still ordinary tests: their own exit codes and output are
+    # asserted and reported exactly as the others are.
+    set_tests_properties(
+        cli.assembly.batch cli.assembly.batch.fails
+        PROPERTIES FIXTURES_SETUP assembly_cli)
+    set_tests_properties(
+        cli.assembly.solve cli.assembly.solve.configuration cli.assembly.status
+        cli.assembly.batch.fails.wrote-nothing
+        cli.assembly.exit.bad-unit cli.assembly.exit.unknown-mate-type
+        cli.assembly.exit.bad-selector cli.assembly.exit.no-such-component
+        cli.assembly.exit.still-mated
+        PROPERTIES FIXTURES_REQUIRED assembly_cli)
+    # Among the readers: the ones that assert built.bcad's contents run before
+    # anything else touches it. None of the exit-code cases can change it --
+    # each is refused -- so they need no order among themselves.
+    set_tests_properties(cli.assembly.solve.configuration PROPERTIES DEPENDS cli.assembly.solve)
+    set_tests_properties(cli.assembly.status PROPERTIES DEPENDS cli.assembly.solve.configuration)
+    set_tests_properties(
+        cli.assembly.exit.bad-unit cli.assembly.exit.unknown-mate-type
+        cli.assembly.exit.bad-selector cli.assembly.exit.no-such-component
+        cli.assembly.exit.still-mated
+        PROPERTIES DEPENDS cli.assembly.status)
 
     # P12-PARAM-001: a model driven by parameter expressions, through the
     # real executable.

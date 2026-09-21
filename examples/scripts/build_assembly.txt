@@ -1,0 +1,25 @@
+# BetterCAD headless assembly workflow (P13-CLI-001).
+#
+# Run against a document that holds the part this places:
+#     bettercad-cli batch plate.bcad build_assembly.txt
+#
+# Every line is an ordinary bettercad-cli command with the document path
+# left out. The whole file is ONE transaction: if any line fails, nothing
+# is written and the document is exactly as it was.
+
+# Two instances of the same part. The second is placed 50 mm up as INTENT;
+# where it ends up is for the solver to say.
+component-add --part Extrude001 --name Base
+component-add --part Extrude001 --name Arm --z 50mm
+
+# Base is the datum the rest solve against.
+mate-add --type fixed --component Base --name Ground
+
+# Hold the two together face to face. This pulls Arm down onto Base,
+# leaving three degrees of freedom: two translations in the plane and a
+# turn about its normal.
+mate-add --type coincident --a Base:origin:xy --b Arm:origin:xy --name Flush
+
+# A build without the constraint, to compare against.
+configuration-add Loose
+suppress Flush --configuration Loose

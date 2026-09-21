@@ -1,0 +1,11 @@
+# A script that FAILS partway, used to prove that nothing is written when
+# one does (P13-CLI-001). Three edits succeed and the fourth names a
+# component that does not exist.
+#
+# Expected: exit status 1, a diagnostic naming line 10, and a document that
+# is byte-for-byte what it was before.
+component-add --part Extrude001 --name Base
+component-add --part Extrude001 --name Arm --z 50mm
+component-add --part Extrude001 --name Third
+mate-add --type fixed --component Nonexistent --name Ground
+component-add --part Extrude001 --name Fourth

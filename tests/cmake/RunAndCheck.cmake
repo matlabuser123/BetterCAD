@@ -9,6 +9,13 @@
 #   EXPECTED_FILE         file the command must create (optional); it is
 #                         deleted before the run, so a stale file cannot pass
 #   EXPECTED_FILE_REGEX   regex that the file's first 256 bytes must match
+#   COPY_FROM, COPY_TO    copy COPY_FROM to COPY_TO before running (optional)
+#
+# COPY_FROM/COPY_TO is what makes a test that EDITS a document repeatable. A
+# command that edits a file in place is not idempotent -- the second run sees
+# what the first one did -- so `ctest --repeat until-fail:N` would fail it on
+# the second pass for a reason that has nothing to do with the code. Copying a
+# pristine input first makes every run start from the same state.
 if(NOT DEFINED COMMAND OR NOT DEFINED EXPECTED_EXIT_CODE)
     message(FATAL_ERROR "RunAndCheck.cmake: COMMAND and EXPECTED_EXIT_CODE are required")
 endif()
@@ -19,6 +26,15 @@ if(NOT "${ARGS}" STREQUAL "")
 endif()
 if(NOT "${EXPECTED_FILE}" STREQUAL "")
     file(REMOVE "${EXPECTED_FILE}")
+endif()
+if(NOT "${COPY_FROM}" STREQUAL "")
+    if(NOT EXISTS "${COPY_FROM}")
+        message(FATAL_ERROR "RunAndCheck.cmake: COPY_FROM does not exist: ${COPY_FROM}")
+    endif()
+    file(COPY_FILE "${COPY_FROM}" "${COPY_TO}" RESULT copy_error)
+    if(copy_error)
+        message(FATAL_ERROR "RunAndCheck.cmake: cannot copy ${COPY_FROM} to ${COPY_TO}: ${copy_error}")
+    endif()
 endif()
 
 execute_process(
