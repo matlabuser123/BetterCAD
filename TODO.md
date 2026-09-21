@@ -1222,6 +1222,157 @@ Next → P13-PERSIST-001
 
 ---
 
+# NEXT — P13-PERSIST-001
+
+## Save / Load Assembly Intent
+
+What a `.bcad` file says about an assembly, and what it must never say.
+
+```text
+P13-COMP-001 .. P13-CMD-001   built the assembly model, one piece at a time,
+                              each persisting its own piece as it went
+P13-PERSIST-001               states the whole schema, and proves the file
+                              round-trips as an assembly rather than as bytes
+```
+
+### What already exists, checked
+
+Assembly persistence was not deferred to this milestone — every P13 milestone
+persisted its own part as it landed, with tests. There are already **17
+assembly persistence cases** across four files.
+
+| Item | State today |
+| --- | --- |
+| Component instances and placements | **Built**, `ComponentJson.cpp` (P13-COMP-001, XFORM-001) |
+| Mates, basic and mechanical | **Built**, `MateJson.cpp` — including a slider's `a2`/`b2` roll reference (P13-MATE-002) |
+| Configurations and suppression | **Built**, `DocumentJson.cpp` (P13-CONF-001) |
+| Stable references | **Built**, `ObjectReference` with its document identity and locator (P13-REF-001) |
+| Derived state kept out of the file | **Measured repeatedly** — the file is byte-identical before and after a solve, in four milestones' evidence |
+| Save atomicity | **Built**, `writeFileAtomically()` writes a `.tmp` and renames |
+| Unresolved references surviving a file | **Built and measured** (P13-STREF-001) |
+
+So most of this checklist is validation of a schema that already exists, and
+the work is to state it, prove it whole, and close the specific gaps below.
+Do not rewrite the writers.
+
+### The thing to settle: the format version has never moved
+
+```cpp
+inline constexpr int kDocumentFormatVersion = 1;   // unchanged since P0-P10
+```
+
+It has not been bumped for parameters, configurations, components, mates,
+mechanical joints or suppression. The schema has grown a great deal and the
+number has not moved once. That is **not** obviously wrong, but it is
+currently an accident rather than a policy, and this milestone is where
+"define the canonical persisted schema" has to say which.
+
+What the behaviour actually is today, read from the code:
+
+```text
+new reader, old file   -> loads. The schema is additive, and an absent
+                          section means "none of those"
+old reader, new file   -> FAILS cleanly: an unrecognised object type is a
+                          parse error, "unknown object type 'component'",
+                          never a silent skip
+same version number    -> on both, so the number is doing no work
+```
+
+That is a coherent policy — *additive only, with a clean refusal when a
+reader meets something it does not know* — and it is defensible. But it has a
+trap in it: the day someone makes a genuinely **breaking** change without
+bumping the version, an old reader will not refuse the file, it will
+misread it. The version field is the guard against exactly that, and it is
+currently unused.
+
+Decide and write down: is the version bumped only on a breaking change, with
+additive growth left unversioned? If so, say so where the constant is
+declared, so the next person to change the schema knows which kind of change
+they are making. An ADR is warranted if the answer is anything more elaborate
+than that.
+
+### Two items that need scoping
+
+**"Validate legacy/pre-P13 compatibility"** means a file written before
+assemblies existed still loads and behaves as it did. It does not mean
+migration, because no version has ever been superseded. Check it with a real
+file — the reference models are the obvious source — rather than by reasoning
+that absent sections default to empty.
+
+**"Validate save → load → regenerate → solve equivalence"** is the one item
+that could not have been written before now. `P13-REGEN-001` made
+regeneration solve the assembly, so for the first time the full chain can be
+asserted end to end: a document, saved, destroyed, loaded, regenerated, and
+the **transforms compared against the ones the original produced**. Earlier
+milestones could only compare intent.
+
+- [ ] Define canonical persisted assembly schema
+- [ ] Persist component instances and canonical placements
+- [ ] Persist mate constraints and mechanical mates
+- [ ] Persist assembly configurations and suppression state
+- [ ] Persist stable assembly references
+- [ ] Preserve unresolved-reference state safely
+- [ ] Do not persist derived solver/regeneration state as authoritative intent
+- [ ] Preserve strong IDs and reference identities across load
+- [ ] Validate legacy/pre-P13 compatibility
+- [ ] Validate malformed/corrupt assembly data rejection
+- [ ] Validate save/load failure atomicity
+- [ ] Validate deterministic/canonical serialization
+- [ ] Validate save → load → regenerate → solve equivalence
+- [ ] Adversarial review PASS
+- [ ] Debug / Release / Debug-shared regression PASS
+- [ ] Evidence in `docs/verification/P13-PERSIST-001/`
+
+### Gate
+
+```text
+assembly persistence correct
++ canonical intent preserved
++ IDs/references preserved
++ configurations/mates/components preserved
++ derived state not authoritative
++ legacy compatibility PASS
++ corrupt-input handling PASS
++ failure atomicity PASS
++ deterministic serialization PASS
++ reload/regenerate/solve equivalence PASS
++ adversarial review PASS
++ full regression PASS
++ 0 unexpected warnings
+```
+
+### The failure this milestone exists to prevent
+
+**A file that loads without error into a different assembly than was saved.**
+
+It is the same shape as the failures the last three milestones were built
+around — the wrong face, the stale transform, the almost-restored undo — and
+it is the worst of them, because a file outlives the session that wrote it.
+An exception on load is a good day. A document that opens, looks right, and
+has one mate pointing somewhere else is discovered weeks later, by which time
+the original is gone.
+
+So the tests should compare the **assembly**, not the bytes. A byte-identical
+rewrite proves the writer is deterministic; it does not prove the reader
+understood what it read. The equivalence to assert is that the loaded
+document *solves to the same transforms*, which is now possible and is the
+strongest statement available.
+
+Corrupt-input tests should be written the same way: not only that a mangled
+file is refused, but that a **plausibly** mangled one is — a mate whose
+target names a component that is not in the file, a suppression override for
+an object that was never written, a slider missing its roll reference. Those
+are the edits that produce a file which loads.
+
+Only then:
+
+```text
+P13-PERSIST-001 → [x]
+Next → P13-CLI-001
+```
+
+---
+
 # Planned P13 Sequence
 
 ```text
