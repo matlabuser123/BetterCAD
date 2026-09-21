@@ -1403,6 +1403,151 @@ Next → P13-CLI-001
 
 ---
 
+# NEXT — P13-CLI-001
+
+## Headless Assembly Workflows
+
+An assembly built, edited and solved without a window.
+
+### What already exists, checked
+
+| Capability | State today |
+| --- | --- |
+| `info` reporting components and mates | **Built.** It names the part each component places, reports one whose part is gone, reports an external part as unresolved with its locator, and describes mates and what they relate |
+| `validate`, `export-step`, `export-stl`, `new`, `help`, `version` | **Built** |
+| Any command that **edits** a document | **None.** The CLI's only `saveDocument()` call is in `new` |
+| Any command that regenerates or solves | **None** |
+
+So the reporting half of this milestone is largely there, and the editing
+half does not exist in any form — **for features either**. Every feature CLI
+test in the repository invokes only `info` and `validate`; documents are built
+in-process and the CLI is asked to describe them.
+
+### Be honest about the size of this
+
+This is the largest surface addition in several milestones. The CLI is 1343
+lines and is a **read, report and export tool**; this checklist turns it into
+an **editor**. Eight of its seventeen items are commands with no ancestor in
+the codebase.
+
+That is not an argument against doing it. It is an argument for expecting it
+to take longer than the last few milestones, and for not treating "the CLI
+already has commands" as meaning the hard part is done.
+
+### Reuse the command layer, for what it actually gives
+
+`P13-CMD-001` built `CreateComponentCommand`, `SetComponentPlacementCommand`,
+`CreateMateCommand`, `SetMateDefinitionCommand`, `SuppressComponentCommand`
+and `SuppressMateCommand`. A CLI edit should go through those rather than
+calling `assembly::createComponent()` directly — that is the gate's "core API
+reused", and it makes validation and failure atomicity the command layer's
+problem rather than the CLI's.
+
+What it does **not** give is undo. A CLI process is one-shot, so
+`CommandHistory` has nothing to offer across invocations. Use the commands
+for their validation and their all-or-nothing execution; do not build a
+persisted history to go with them, which `P13-CMD-001` measured as
+deliberately transient.
+
+### Two design questions to settle first
+
+**How does a script name a component?**
+
+This is the one with a trap in it. A scripted workflow has to refer to the
+component it created two lines ago, and the obvious answer — by name — would
+introduce **name-as-identity**, which this project has explicitly rejected:
+`P13-REF-001` has a qualified test called
+`Reference_IdentityDoesNotFollowNames`, and names are neither unique nor
+stable in the way IDs are.
+
+The alternatives are to print the assigned ID on creation and have scripts
+capture it, or to accept names at the CLI boundary while resolving them to
+IDs immediately and failing on ambiguity. Either can be made sound. What
+must not happen is names quietly becoming the identity the file relies on.
+Decide it, write it down, and test the ambiguous case.
+
+**One process per edit, or a batch?**
+
+Each invocation loading, editing and saving is simple and deterministic, but
+a twenty-step script rewrites the file twenty times. A batch mode does the
+work once and saves once, but needs its own small language and its own
+failure semantics.
+
+"Support deterministic scripted workflows" does not say which. Pick one,
+say why, and make the failure behaviour explicit either way — see below.
+
+### The failure this milestone exists to prevent
+
+**A script that half-succeeds.**
+
+Step seven of twenty fails, and the file on disk now holds the first six
+edits. It is not the document the script describes and not the one it
+started from, and nothing on disk says so. The engineer reruns the script,
+the first six edits apply again on top of themselves, and the result is
+neither idempotent nor recoverable.
+
+So the atomicity item is the sharp one here, and it is about the **file**,
+not just the in-memory document: a command that fails must leave the file as
+it was. `writeFileAtomically()` gives that for a single save; a batch of
+edits needs it stated as a contract — all the edits, or none of them.
+
+Exit codes are the other half of the same thing. A script driver can only
+react to what it is told, so a failed edit must be a non-zero exit and a
+diagnostic on stderr, never a warning on stdout and a zero.
+
+- [ ] Define assembly CLI command contract
+- [ ] Add CLI create/load/save assembly workflow
+- [ ] Add component add/remove/placement commands
+- [ ] Add mate create/edit/delete commands
+- [ ] Add configuration/suppression commands
+- [ ] Add regenerate and solve commands
+- [ ] Add assembly status / diagnostics output
+- [ ] Support deterministic scripted workflows
+- [ ] Validate non-interactive exit codes
+- [ ] Validate structured error handling
+- [ ] Validate CLI save → load → regenerate → solve workflow
+- [ ] Validate CLI results against core API behavior
+- [ ] Validate malformed input / invalid command handling
+- [ ] Validate failure atomicity
+- [ ] Adversarial review PASS
+- [ ] Debug / Release / Debug-shared regression PASS
+- [ ] Evidence in `docs/verification/P13-CLI-001/`
+
+### Gate
+
+```text
+headless workflow complete
++ core API reused
++ component/mate/config operations correct
++ regenerate/solve correct
++ deterministic scripted behavior
++ exit codes correct
++ diagnostics correct
++ failure atomicity PASS
++ CLI/core equivalence PASS
++ adversarial review PASS
++ full regression PASS
++ 0 unexpected warnings
+```
+
+**"CLI/core equivalence" has a precise meaning available now**, and it should
+be used: build an assembly through the CLI, build the same one through the
+core API in-process, and compare the two documents — canonical intent, and
+the transforms they solve to. `P13-PERSIST-001` established that a file
+preserves an assembly well enough to reproduce its solution bit for bit, so
+the comparison can be exact rather than approximate. A CLI that produced a
+*nearly* identical document would be a real defect and this is what would
+catch it.
+
+Only then:
+
+```text
+P13-CLI-001 → [x]
+Next → P13-STEP-001
+```
+
+---
+
 # Planned P13 Sequence
 
 ```text
