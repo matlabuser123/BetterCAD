@@ -5,6 +5,7 @@
 #include "core/geometry/occt/OcctTopology.hpp"
 
 #include <BRepAdaptor_Surface.hxx>
+#include <gp_Cylinder.hxx>
 #include <BRepBuilderAPI_MakeVertex.hxx>
 #include <BRepExtrema_DistShapeShape.hxx>
 #include <BRepGProp.hxx>
@@ -48,6 +49,17 @@ FaceInfo describeFace(const TopoDS_Face& face) {
     BRepGProp::SurfaceProperties(face, properties);
     info.area = areaFromModel(properties.Mass());
     info.centroid = pointFromModel(properties.CentreOfMass());
+    if (info.surface == FaceSurface::Cylinder) {
+        // Straight off the kernel's surface, so the radius is the one the
+        // model was built to rather than one recovered from a drawn curve.
+        const gp_Cylinder cylinder = surface.Cylinder();
+        const gp_Ax1 axis = cylinder.Axis();
+        info.cylinder = CylindricalFace{
+            Axis3D{pointFromModel(axis.Location()),
+                   *Direction3D::fromComponents(axis.Direction().X(), axis.Direction().Y(),
+                                                axis.Direction().Z())},
+            lengthFromModel(cylinder.Radius())};
+    }
     if (info.surface == FaceSurface::Plane) {
         const gp_Pln plane = surface.Plane();
         // The surface's own normal is XDirection x YDirection, which is the

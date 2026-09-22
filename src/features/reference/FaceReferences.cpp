@@ -357,6 +357,74 @@ Result<void> checkFaceName(const Document& document, const FaceName& name) {
     return {};
 }
 
+namespace {
+
+/// The named faces of a body, with the diagnostics resolveFacePlane gives.
+/// Shared so a cylinder and a plane fail the same way for the same reasons.
+[[nodiscard]] Result<std::vector<geometry::FaceInfo>> namedFacesOf(const Document& document,
+                                                                   const FaceName& name,
+                                                                   const BodyLookup& bodies,
+                                                                   const std::string& what) {
+    if (!bodies) {
+        return makeError(ErrorCode::FailedPrecondition,
+                         std::format("{} is found in its feature's regenerated body, which is not available here",
+                                     what));
+    }
+    const ObjectId holder = holderOf(name);
+    const geometry::Body* body = bodies(holder);
+    if (body == nullptr || body->isEmpty()) {
+        return makeError(ErrorCode::FailedPrecondition,
+                         std::format("{} cannot be found: {} has no body", what, label(document, holder)));
+    }
+    auto faces = geometry::findNamedFaces(*body, name);
+    if (!faces) {
+        return makeError(faces.error().code, std::format("{}: {}", what, faces.error().message));
+    }
+    if (faces->empty()) {
+        return makeError(ErrorCode::NotFound,
+                         std::format("{} is not a face of its body (the feature's operation left no such face)",
+                                     what));
+    }
+    return faces;
+}
+
+} // namespace
+
+Result<geometry::CylindricalFace> resolveFaceCylinder(const Document& document, const FaceName& name,
+                                                      const BodyLookup& bodies) {
+    if (auto valid = checkFaceName(document, name); !valid) {
+        return std::unexpected(valid.error());
+    }
+    const std::string what = describe(document, name);
+    auto faces = namedFacesOf(document, name, bodies, what);
+    if (!faces) {
+        return std::unexpected(faces.error());
+    }
+    for (const geometry::FaceInfo& face : *faces) {
+        if (!face.cylinder) {
+            return makeError(ErrorCode::InvalidArgument,
+                             std::format("{} is {}, not a cylinder", what,
+                                         article(toString(face.surface))));
+        }
+    }
+    // A name can carry several faces -- a cut can split one in two -- and
+    // the parts of one cylinder all share its axis and radius. Parts of
+    // DIFFERENT cylinders would leave a radius that has to be chosen between,
+    // and choosing is the silent wrong answer ADR-012 exists to prevent.
+    const geometry::CylindricalFace& first = *faces->front().cylinder;
+    for (const geometry::FaceInfo& face : *faces) {
+        const geometry::CylindricalFace& other = *face.cylinder;
+        const bool sameRadius = std::abs((other.radius - first.radius).si()) <= 1e-10;
+        const bool sameDirection = std::abs(std::abs(other.axis.direction.dot(first.axis.direction)) - 1.0) <= 1e-9;
+        if (!sameRadius || !sameDirection) {
+            return makeError(ErrorCode::FailedPrecondition,
+                             std::format("{} is {} faces that are not parts of one cylinder", what,
+                                         faces->size()));
+        }
+    }
+    return first;
+}
+
 Result<Frame3D> resolveFacePlane(const Document& document, const FaceName& name, const BodyLookup& bodies) {
     if (auto valid = checkFaceName(document, name); !valid) {
         return std::unexpected(valid.error());

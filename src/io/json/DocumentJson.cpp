@@ -15,7 +15,9 @@ using detail::Json;
 
 Result<Json> objectToJson(const DocumentObject& object) {
     Json data;
-    if (const auto* view = dynamic_cast<const drawing::View*>(&object)) {
+    if (const auto* dimension = dynamic_cast<const drawing::Dimension*>(&object)) {
+        data = detail::dimensionToJson(*dimension);
+    } else if (const auto* view = dynamic_cast<const drawing::View*>(&object)) {
         data = detail::viewToJson(*view);
     } else if (const auto* sheet = dynamic_cast<const drawing::Sheet*>(&object)) {
         data = detail::sheetToJson(*sheet);
@@ -91,6 +93,13 @@ Result<std::unique_ptr<DocumentObject>> objectFromJson(const Json& value, std::s
     // (found by the debug-shared preset). ComponentJson.cpp carries a
     // static_assert that the two agree, so they cannot drift. The
     // sketch branch below has always compared against its literal.
+    if (*type == "dimension") {
+        auto dimension = detail::dimensionFromJson(**data, std::move(*name), dataPath);
+        if (!dimension) {
+            return std::unexpected(dimension.error());
+        }
+        return std::move(*dimension);
+    }
     if (*type == "view") {
         auto view = detail::viewFromJson(**data, std::move(*name), dataPath);
         if (!view) {

@@ -51,6 +51,9 @@ struct SheetIdTag {
 struct ViewIdTag {
     static constexpr std::string_view name = "view";
 };
+struct DimensionIdTag {
+    static constexpr std::string_view name = "dimension";
+};
 struct EntityIdTag {
     static constexpr std::string_view name = "entity";
 };
@@ -87,6 +90,8 @@ template <>
 inline constexpr bool isDocumentObjectTag<SheetIdTag> = true;
 template <>
 inline constexpr bool isDocumentObjectTag<ViewIdTag> = true;
+template <>
+inline constexpr bool isDocumentObjectTag<DimensionIdTag> = true;
 
 template <typename Tag, typename Value = std::uint64_t>
 class Id;
@@ -163,6 +168,12 @@ using SheetId = Id<SheetIdTag>;
 /// parent -- so its ID widens to ObjectId (ADR-017). It is not a SheetId: a
 /// view sits on a sheet, it is not one.
 using ViewId = Id<ViewIdTag>;
+/// One dimension on a drawing view. A dimension is a document object and a
+/// node in the dependency graph -- it depends on its view and on the objects
+/// its references name -- so its ID widens to ObjectId (ADR-017). What it
+/// stores is what to measure and how to write it; the NUMBER is derived from
+/// the model every time it is asked for and is never this.
+using DimensionId = Id<DimensionIdTag>;
 /// Sketch entity (point, line, arc, ...); unique within its sketch.
 using EntityId = Id<EntityIdTag>;
 /// Sketch constraint; unique within its sketch.

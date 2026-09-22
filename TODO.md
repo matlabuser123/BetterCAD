@@ -10,9 +10,9 @@
 
 ```text
 Current:   P14 — Technical Drawings
-Next:      a scope decision — P14-HLR-001 is implemented and qualified with
-           one validation item open that only P14-ASM-001 can close
-Then:      P14-DIM-001 — Linear / angular / radial / diameter dimensions
+Next:      P14-ANNO-001 — Drawing Annotations
+Carried:   P14-HLR-001's assembly-to-assembly occlusion validation is still
+           open, blocked on P14-ASM-001, and was not touched by P14-DIM-001
 
 Released:  v0.1.0 — P0–P10
 Qualified: P11, P12, P13
@@ -413,21 +413,21 @@ Next → a scope decision: authorize P14-ASM-001 to close the open item,
 
 ## Dimensions
 
-* [ ] Implement linear dimensions
-* [ ] Implement horizontal / vertical dimensions
-* [ ] Implement aligned dimensions
-* [ ] Implement angular dimensions
-* [ ] Implement radius dimensions
-* [ ] Implement diameter dimensions
-* [ ] Implement ordinate dimension foundation
-* [ ] Implement dimension precision / formatting
-* [ ] Implement model-driven dimension values
-* [ ] Validate dimensions against 3D geometry
-* [ ] Preserve dimension references across regeneration
-* [ ] Missing reference fails explicitly
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Implement linear dimensions
+* [x] Implement horizontal / vertical dimensions
+* [x] Implement aligned dimensions
+* [x] Implement angular dimensions
+* [x] Implement radius dimensions
+* [x] Implement diameter dimensions
+* [x] Implement ordinate dimension foundation
+* [x] Implement dimension precision / formatting
+* [x] Implement model-driven dimension values
+* [x] Validate dimensions against 3D geometry
+* [x] Preserve dimension references across regeneration
+* [x] Missing reference fails explicitly
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded — [docs/verification/P14-DIM-001/](docs/verification/P14-DIM-001/README.md)
 
 ### Gate
 
@@ -438,6 +438,67 @@ dimension math correct
 + model values correct
 + references stable
 + no silent rebinding
+```
+
+Met: 34 new tests; 1881/1881 on `debug`, `release` and `debug-shared`, each
+from clean; 1880/1880 five times over in release and in debug; 0 compiler
+warnings; the no-op rebuild compiled 0 and linked 0 in every preset; the tree
+IDs before the first build, after the last test run and before the commit are
+identical.
+
+**The reference audit came first, and it decided everything.** ADR-012 permits
+a dimension to name a datum or principal plane, a datum or principal axis, or
+a NAMED face — nothing else. That supports every type on the list, and three
+things it does not support were recorded rather than faked: no dimension to a
+vertex, so no corner-to-corner diagonal; no dimension to an edge, which
+ADR-012 already answers by naming the two faces that meet there; and **no
+radius on a HOLE feature**, because hole features name their bottom and floors
+and not their bore. Closing that last one needs a new `FaceRole`, which is a
+change to P12's qualified face naming and not this milestone's to make.
+
+Two contracts were decided deliberately rather than left accidental, both
+because the brief asked for them to be stated. **Aligned is the distance AS
+DRAWN**, not the model distance — they differ exactly when the separation has
+a component along the view's normal, where a distance exists and cannot be
+drawn. **An angular dimension reads what a protractor reads**: 180° minus the
+angle between outward normals, so two faces of a slab read 0°, two coplanar
+faces read 180°, and a wedge reads its own included angle.
+
+The number is never stored. `dimensionToJson` writes no value, and a test
+greps the saved file to prove it; `measure()` resolves against the model every
+time, so there is nowhere for a stale number to live.
+
+Adversarial review found one defect: the formatter rounded through a final
+floating multiply and wrote `0.14` for 0.145. The cause is worth keeping — a
+value typed in millimetres is held in METRES, and the double nearest 0.145
+times 100 is 14.499999999999998, so even a value that *is* 0.145 rounds down
+if the last step is a multiply. Rounding now happens in exact integers at six
+decimals finer than shown.
+
+**Two defects were also found in the qualification tooling itself, and both
+are fixed.** `qualify.cmd` ended `exit /b 0` whatever happened, so a failed
+stage reached nobody — which is how the Debug determinism repeat failed
+without failing anything. It now counts failed stages and exits with the
+count, and `verify-harness.cmd` is the regression: it points the harness at a
+preset that does not exist and requires a non-zero exit. Separately, the
+harness file had grown 98 → 196 → 784 lines over three milestones because the
+script copying it round-tripped it through text mode; it is rebuilt from the
+one clean copy, and the version that actually ran this qualification is kept
+beside it.
+
+The Debug determinism repeat **failed on its first run** — `cli.assembly.batch`
+could not replace a file, "Permission denied", because the build tree lives
+under OneDrive. It did not reproduce: the test passed 5/5 twice afterwards and
+the gate passed 1880/1880 on one controlled rerun. The failure is kept in the
+evidence rather than erased, and the structural remediation — moving build
+output off the synchronised directory — is the next infrastructure decision,
+deliberately not taken here because the build directory lives in
+`CMakePresets.json`, inside the frozen qualified tree.
+
+```text
+P14-DIM-001 → [x]
+Next → P14-ANNO-001
+Carried open → P14-HLR-001 assembly-to-assembly occlusion, blocked on P14-ASM-001
 ```
 
 ---

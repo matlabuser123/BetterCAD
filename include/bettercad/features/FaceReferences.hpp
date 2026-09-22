@@ -4,6 +4,7 @@
 #include <bettercad/core/Id.hpp>
 #include <bettercad/core/document/References.hpp>
 #include <bettercad/core/geometry/Body.hpp>
+#include <bettercad/core/geometry/Faces.hpp>
 #include <bettercad/core/math/Frame.hpp>
 #include <bettercad/features/Export.hpp>
 
@@ -71,5 +72,13 @@ using BodyLookup = std::function<const geometry::Body*(ObjectId object)>;
 /// way.
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<Frame3D> resolveFacePlane(const Document& document, const FaceName& name,
                                                                         const BodyLookup& bodies);
+
+/// The axis and radius of the named CYLINDRICAL face, exactly as the kernel
+/// holds them, after checkFaceName(). The same failures as resolveFacePlane,
+/// with InvalidArgument when the named face is not a cylinder and
+/// FailedPrecondition when the named faces are parts of different cylinders
+/// -- a radius is one number, and two would have to be chosen between.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::CylindricalFace> resolveFaceCylinder(
+    const Document& document, const FaceName& name, const BodyLookup& bodies);
 
 } // namespace bettercad::features

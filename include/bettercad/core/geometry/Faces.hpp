@@ -105,12 +105,27 @@ struct FaceSignature {
                                                                 const Point3D& point);
 
 /// One face of a body, described by its geometry.
+/// The exact geometry of a cylindrical face: the axis it turns about and the
+/// radius it turns at, read from the kernel's own surface.
+///
+/// Exact, never measured off a tessellation: a radius dimension on a drawing
+/// is a number a part is made to, and a number sampled from a mesh is a
+/// number nobody can hold a gauge against.
+struct CylindricalFace {
+    Axis3D axis{};
+    Length radius{};
+
+    friend bool operator==(const CylindricalFace&, const CylindricalFace&) = default;
+};
+
 struct FaceInfo {
     FaceSurface surface = FaceSurface::Other;
     Area area{};
     Point3D centroid{};
     /// A reference to this face, for planar faces.
     std::optional<FaceSignature> signature{};
+    /// The axis and radius, for cylindrical faces only.
+    std::optional<CylindricalFace> cylinder{};
     /// The face's names (P12-STREF-001), sorted.
     std::vector<FaceName> names{};
 };

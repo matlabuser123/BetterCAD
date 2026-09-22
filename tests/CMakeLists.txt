@@ -25,6 +25,7 @@ bettercad_add_executable(bettercad_tests
     SOURCES
         TestHelpers.hpp
         assembly/CommandTests.cpp
+        drawing/DimensionTests.cpp
         drawing/HiddenLineViewTests.cpp
         drawing/Section2dTests.cpp
         drawing/SectionGeometryTests.cpp

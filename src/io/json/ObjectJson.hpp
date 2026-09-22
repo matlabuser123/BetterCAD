@@ -5,6 +5,7 @@
 #include "io/json/JsonReader.hpp"
 
 #include <bettercad/assembly/Component.hpp>
+#include <bettercad/drawing/Dimension.hpp>
 #include <bettercad/drawing/Sheet.hpp>
 #include <bettercad/drawing/View.hpp>
 #include <bettercad/assembly/Mate.hpp>
@@ -75,6 +76,14 @@ namespace bettercad::io::detail {
 /// a projected view adds "parent", "direction" and "spacing" instead, because
 /// its orientation and placement are derived from its parent (ADR-018).
 /// "scale" only when the view overrides its sheet's.
+/// "type", "view", "from", "format", "x" and "y" always; "to" for every
+/// type but radius and diameter; "ordinate" only for an ordinate. The
+/// measured value is NOT written: it is derived from the model (ADR-011).
+[[nodiscard]] Json dimensionToJson(const drawing::Dimension& dimension);
+[[nodiscard]] Result<std::unique_ptr<drawing::Dimension>> dimensionFromJson(const Json& data,
+                                                                            std::string name,
+                                                                            std::string_view path);
+
 [[nodiscard]] Json viewToJson(const drawing::View& view);
 [[nodiscard]] Result<std::unique_ptr<drawing::View>> viewFromJson(const Json& data, std::string name,
                                                                    std::string_view path);
