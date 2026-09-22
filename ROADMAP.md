@@ -65,11 +65,11 @@ nothing below is authorized until [TODO.md](TODO.md) says so.
 | Foundation | `P0`–`P10` | **Qualified** |
 | Parametric Part Modeling | `P11` | **Qualified** |
 | Parametric CAD completion | `P12` | **Qualified** |
+| Assemblies | `P13` | **Qualified** |
 | Interchange | — | Planned |
 | Advanced Surface Modeling | — | Planned |
 | Desktop Application | — | Planned |
 | Semantic Topology | — | Planned |
-| Assemblies | — | Planned |
 | Drawings | — | Planned |
 | Engineering Data | — | Planned |
 | Meshing | — | Planned |
@@ -176,6 +176,49 @@ and the order.
 | `P12-LOFT-001` | Advanced lofts — sections of different shapes, matched by BetterCAD itself along normalized arc length and checked against a mixed-area prismatoid volume derived in closed form, and smooth interpolation running continuously across the intermediate sections; end conditions reported as unavailable on this kernel, with the measurement | [P12-LOFT-001](docs/verification/P12-LOFT-001/README.md) |
 | `P12-REF-001` | Production reference models — six realistic mechanical parts exercising the P12 feature set together, each validated against closed forms derived by hand; an adversarial review found and fixed eight defects, four of them parameters that destroyed their own model | [P12-REF-001](docs/verification/P12-REF-001/README.md) |
 | `P12-QUAL-001` | Phase qualification — 22 gates, 22 passed | [P12-QUAL-001](docs/verification/P12-QUAL-001/README.md) |
+
+### Assemblies — Qualified
+
+Parts placed, constrained and solved together, inside one document. `P13`
+builds the whole stack: components as document objects instancing a part;
+placement as persisted **intent**, never a stored result; seven basic mates
+and four mechanical joints; a Gauss-Newton constraint solver with an analytic
+Jacobian and rank analysis, reporting five distinct states rather than a
+boolean; configurations and suppression on the one configuration system `P12`
+already had; assembly references that break honestly instead of rebinding to
+whatever geometry now sits where the target used to; a document-level solve
+run as the final pass of regeneration; undoable assembly commands; save and
+load of intent; a CLI that edits documents transactionally; STEP assembly
+export; and eight committed reference assemblies.
+
+The invariant the phase is built around is that a **solved transform is
+derived state**. It is returned, never persisted, never cached, and never
+published when anything it depends on is broken — because a transform one
+edit out of date still renders, which makes it worse than none at all.
+
+| Milestone | Delivered | Evidence |
+| --- | --- | --- |
+| `P13-ARCH-001` | Assembly architecture — ADR-002 to ADR-006, deciding where assemblies live, what a reference means, what is intent and what is derived, and the module layering, while writing no code | [P13-ARCH-001](docs/verification/P13-ARCH-001/README.md) |
+| `P13-COMP-001` | Components — a new `assembly` module at layer 3, components as document objects instancing a part in the same document, with their own identity, dependency edges and persistence | [P13-COMP-001](docs/verification/P13-COMP-001/README.md) |
+| `P13-XFORM-001` | Component transforms — placement as canonical intent, resolvable to a transform from parameters in force, with nothing cached so a stale transform cannot exist | [P13-XFORM-001](docs/verification/P13-XFORM-001/README.md) |
+| `P13-REF-001` | Reference infrastructure — references qualified by document UUID rather than path, an injectable resolver, and unresolved as a state rather than an error at load | [P13-REF-001](docs/verification/P13-REF-001/README.md) |
+| `P13-MATE-001` | Basic constraints — seven mate kinds, what each may point at and what it refuses, how they depend and how they persist; nothing moves yet | [P13-MATE-001](docs/verification/P13-MATE-001/README.md) |
+| `P13-SOLVE-001` | The constraint solver — an equation system with an analytic Jacobian, a Gauss-Newton loop with line search and damping, rank analysis for redundancy, and five distinct solve states; converging from intent alone, with no warm start, so the answer never depends on save history | [P13-SOLVE-001](docs/verification/P13-SOLVE-001/README.md) |
+| `P13-MATE-002` | Mechanical mates — revolute, slider, cylindrical and planar, each defined by the freedom it leaves rather than the constraint it adds, so a joint behaving like another is caught by what survived | [P13-MATE-002](docs/verification/P13-MATE-002/README.md) |
+| `P13-CONF-001` | Configurations and suppression — which components and mates are in force per configuration, on the existing configuration system rather than a second one | [P13-CONF-001](docs/verification/P13-CONF-001/README.md) |
+| `P13-STREF-001` | Stable assembly references — a mate target that survives the model changing under it, or is honestly broken; never a mate that still solves on the wrong face | [P13-STREF-001](docs/verification/P13-STREF-001/README.md) |
+| `P13-REGEN-001` | Dependency and regeneration — the assembly solve as a document-level final pass, re-run exactly when one of its own inputs moved, publishing all transforms or none | [P13-REGEN-001](docs/verification/P13-REGEN-001/README.md) |
+| `P13-CMD-001` | Commands, undo and redo — six assembly commands in the existing history, and a deletion-undo defect that predated the milestone: an object came back without the configuration overrides that named it | [P13-CMD-001](docs/verification/P13-CMD-001/README.md) |
+| `P13-PERSIST-001` | Save and load — what a `.bcad` file says about an assembly, proved whole: intent survives the round trip and no derived state reaches the file | [P13-PERSIST-001](docs/verification/P13-PERSIST-001/README.md) |
+| `P13-CLI-001` | Headless workflows — the CLI turned from a reporting tool into an editor, every edit a document transaction and a batch one transaction of many, so a script that fails part way writes nothing | [P13-CLI-001](docs/verification/P13-CLI-001/README.md) |
+| `P13-STEP-001` | Assembly STEP export — an AP214 product structure through XCAF, one product per part and one occurrence per placement, exporting the **solved** positions and refusing to write an assembly that did not solve | [P13-STEP-001](docs/verification/P13-STEP-001/README.md) |
+| `P13-REFMOD-001` | Production reference assemblies — eight committed models, RM-A to RM-H, every expected DOF and placement derived from the mate equation table before it was measured; RM-H is committed **broken**, so the fault paths are proved by a real artifact rather than by a test reaching in | [P13-REFMOD-001](docs/verification/P13-REFMOD-001/README.md) |
+| `P13-QUAL-001` | Phase qualification — 22 gates, 22 passed; 0 production defects, and the stale layer table `ADR-006` had ordered replaced fifteen milestones earlier | [P13-QUAL-001](docs/verification/P13-QUAL-001/README.md) |
+
+Not in `P13`, and recorded as such: assemblies live inside one `Document`, so
+cross-document dependencies do not execute; configurations are document-global,
+so a component cannot select a different configuration of its part; and an
+over-constrained assembly reports its redundant mates rather than positions.
 
 ### Interchange — Planned
 
@@ -333,15 +376,15 @@ none of which exists today.
 
 ## Release Direction
 
-`v0.1.0` released the Foundation. `P11` is qualified but not released; there is
-no `v0.2.0`.
+`v0.1.0` released the Foundation. `P11`, `P12` and `P13` are qualified but not
+released; there is no `v0.2.0`.
 
 | Release | Theme | Status |
 | --- | --- | --- |
 | v0.1 | Modeling foundation | **Released** — `v0.1.0` |
 | v0.2 | Practical part modeling — datum geometry, STEP import, desktop workflow | Not released; revolve, holes, fillets, chamfers and patterns already delivered |
 | v0.3 | Production part design — shell, draft, equations, configurations, materials, GUI | Not released; sweep and loft already delivered |
-| v0.4 | Assemblies | Not started |
+| v0.4 | Assemblies | Not released; the assembly capability is qualified (`P13`) |
 | v0.5 | Drawings | Not started |
 | v0.6 | Simulation foundation | Not started |
 | v0.7 | Multiphysics and optimization | Not started |

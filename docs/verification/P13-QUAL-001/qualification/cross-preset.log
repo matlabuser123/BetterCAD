@@ -1,0 +1,71 @@
+=== P13-QUAL-001 cross-preset agreement ===
+presets: debug, release, debug-shared
+PASS  the debug CLI is built
+PASS  the release CLI is built
+PASS  the debug-shared CLI is built
+PASS  assembly_configured_frame solve: debug and release return the same exit code
+PASS  assembly_configured_frame solve: debug and release agree byte for byte
+PASS  assembly_configured_frame solve: debug and debug-shared return the same exit code
+PASS  assembly_configured_frame solve: debug and debug-shared agree byte for byte
+PASS  assembly_configured_frame status: debug and release return the same exit code
+PASS  assembly_configured_frame status: debug and release agree byte for byte
+PASS  assembly_configured_frame status: debug and debug-shared return the same exit code
+PASS  assembly_configured_frame status: debug and debug-shared agree byte for byte
+PASS  assembly_constrained_stack solve: debug and release return the same exit code
+PASS  assembly_constrained_stack solve: debug and release agree byte for byte
+PASS  assembly_constrained_stack solve: debug and debug-shared return the same exit code
+PASS  assembly_constrained_stack solve: debug and debug-shared agree byte for byte
+PASS  assembly_constrained_stack status: debug and release return the same exit code
+PASS  assembly_constrained_stack status: debug and release agree byte for byte
+PASS  assembly_constrained_stack status: debug and debug-shared return the same exit code
+PASS  assembly_constrained_stack status: debug and debug-shared agree byte for byte
+PASS  assembly_driven_cover solve: debug and release return the same exit code
+PASS  assembly_driven_cover solve: debug and release agree byte for byte
+PASS  assembly_driven_cover solve: debug and debug-shared return the same exit code
+PASS  assembly_driven_cover solve: debug and debug-shared agree byte for byte
+PASS  assembly_driven_cover status: debug and release return the same exit code
+PASS  assembly_driven_cover status: debug and release agree byte for byte
+PASS  assembly_driven_cover status: debug and debug-shared return the same exit code
+PASS  assembly_driven_cover status: debug and debug-shared agree byte for byte
+PASS  assembly_fault_cases solve: debug and release return the same exit code
+PASS  assembly_fault_cases solve: debug and release agree byte for byte
+PASS  assembly_fault_cases solve: debug and debug-shared return the same exit code
+PASS  assembly_fault_cases solve: debug and debug-shared agree byte for byte
+PASS  assembly_fault_cases status: debug and release return the same exit code
+PASS  assembly_fault_cases status: debug and release agree byte for byte
+PASS  assembly_fault_cases status: debug and debug-shared return the same exit code
+PASS  assembly_fault_cases status: debug and debug-shared agree byte for byte
+PASS  assembly_grounded_pair solve: debug and release return the same exit code
+PASS  assembly_grounded_pair solve: debug and release agree byte for byte
+PASS  assembly_grounded_pair solve: debug and debug-shared return the same exit code
+PASS  assembly_grounded_pair solve: debug and debug-shared agree byte for byte
+PASS  assembly_grounded_pair status: debug and release return the same exit code
+PASS  assembly_grounded_pair status: debug and release agree byte for byte
+PASS  assembly_grounded_pair status: debug and debug-shared return the same exit code
+PASS  assembly_grounded_pair status: debug and debug-shared agree byte for byte
+PASS  assembly_joint_set solve: debug and release return the same exit code
+PASS  assembly_joint_set solve: debug and release agree byte for byte
+PASS  assembly_joint_set solve: debug and debug-shared return the same exit code
+PASS  assembly_joint_set solve: debug and debug-shared agree byte for byte
+PASS  assembly_joint_set status: debug and release return the same exit code
+PASS  assembly_joint_set status: debug and release agree byte for byte
+PASS  assembly_joint_set status: debug and debug-shared return the same exit code
+PASS  assembly_joint_set status: debug and debug-shared agree byte for byte
+PASS  assembly_machine solve: debug and release return the same exit code
+PASS  assembly_machine solve: debug and release agree byte for byte
+PASS  assembly_machine solve: debug and debug-shared return the same exit code
+PASS  assembly_machine solve: debug and debug-shared agree byte for byte
+PASS  assembly_machine status: debug and release return the same exit code
+PASS  assembly_machine status: debug and release agree byte for byte
+PASS  assembly_machine status: debug and debug-shared return the same exit code
+PASS  assembly_machine status: debug and debug-shared agree byte for byte
+PASS  assembly_shaft_in_bore solve: debug and release return the same exit code
+PASS  assembly_shaft_in_bore solve: debug and release agree byte for byte
+PASS  assembly_shaft_in_bore solve: debug and debug-shared return the same exit code
+PASS  assembly_shaft_in_bore solve: debug and debug-shared agree byte for byte
+PASS  assembly_shaft_in_bore status: debug and release return the same exit code
+PASS  assembly_shaft_in_bore status: debug and release agree byte for byte
+PASS  assembly_shaft_in_bore status: debug and debug-shared return the same exit code
+PASS  assembly_shaft_in_bore status: debug and debug-shared agree byte for byte
+
+=== 67/67 checks passed ===

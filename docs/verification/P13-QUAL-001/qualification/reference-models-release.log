@@ -1,0 +1,462 @@
+=== P13-QUAL-001 reference models, preset release ===
+PASS  the reference-model example program exists
+PASS  the example program exits 0
+== Shaft
+item 1 parameter r1
+item 2 parameter l1
+item 3 parameter r2
+item 4 parameter l2
+item 5 parameter r3
+item 6 parameter half_length
+item 7 parameter centre_drill_d
+item 8 parameter centre_drill_depth
+item 9 parameter shoulder_fillet_r
+item 10 parameter end_chamfer
+item 11 sketch Profile
+item 12 revolve Turn
+item 13 hole CentreDrill
+item 14 mirror TailCentreDrill
+item 15 fillet ShoulderFillets
+item 16 chamfer EndChamfers
+features 5
+bodies 1
+body 16 EndChamfers valid=1 solids=1 shells=1 faces=17 edges=27 vertices=16
+  volume_mm3 97773.098888601089
+  area_mm2 14480.00664833255
+  centroid_mm -3.2592217057246336e-15 -7.6367859192165183e-16 56.468754603587698
+  min_mm -20 -20 0
+  max_mm 20 20 120
+timing_ms build 0.999 first_regeneration 1833.303 unchanged_regeneration 0.126 changed_r2_regeneration 1112.088 save 6.174 load 79.480
+== Flange
+item 1 parameter outer_r
+item 2 parameter thickness
+item 3 parameter bore_d
+item 4 parameter bolt_circle_r
+item 5 parameter bolt_d
+item 6 parameter bolt_count
+item 7 parameter edge_chamfer
+item 8 parameter rim_fillet_r
+item 9 sketch DiscSketch
+item 10 extrude Disc
+item 11 hole Bore
+item 12 hole BoltHole
+item 13 circular_pattern BoltCircle
+item 14 chamfer EdgeChamfers
+item 15 fillet RimFillet
+features 6
+bodies 1
+body 15 RimFillet valid=1 solids=1 shells=1 faces=13 edges=30 vertices=19
+  volume_mm3 81674.894046699133
+  area_mm2 19890.807457351093
+  centroid_mm -3.4826426321024295e-15 -4.3740071733393697e-15 6.0039988479635928
+  min_mm -50 -50 0
+  max_mm 50 50 12
+timing_ms build 0.051 first_regeneration 1218.757 unchanged_regeneration 0.117 changed_bolt_circle_r_regeneration 2180.307 save 6.207 load 16.027
+== Pulley
+item 1 parameter outer_r
+item 2 parameter rim_inner_r
+item 3 parameter rim_width
+item 4 parameter hub_r
+item 5 parameter hub_length
+item 6 parameter web_z0
+item 7 parameter web_thickness
+item 8 parameter bore_d
+item 9 parameter groove_z
+item 10 parameter groove_depth
+item 11 parameter groove_width
+item 12 parameter groove_bottom_width
+item 13 parameter web_fillet_r
+item 14 parameter hub_chamfer
+item 15 sketch Section
+item 16 revolve Blank
+item 17 sketch GrooveSection
+item 18 revolve Groove
+item 19 hole Bore
+item 20 fillet WebFillets
+item 21 chamfer HubChamfers
+features 5
+bodies 1
+body 21 HubChamfers valid=1 solids=1 shells=1 faces=22 edges=38 vertices=22
+  volume_mm3 212874.6060572218
+  area_mm2 47408.018600234092
+  centroid_mm -7.5195003517238417e-15 7.792912944245277e-16 16.545944387329037
+  min_mm -60 -60 0
+  max_mm 60 60 40
+timing_ms build 0.194 first_regeneration 870.912 unchanged_regeneration 0.293 changed_outer_r_regeneration 795.918 save 4.250 load 25.504
+== BearingHousing
+item 1 parameter base_half_length
+item 2 parameter base_width
+item 3 parameter base_t
+item 4 parameter boss_r
+item 5 parameter axis_height
+item 6 parameter bore_r
+item 7 parameter mount_d
+item 8 parameter mount_x
+item 9 parameter mount_y
+item 10 parameter mount_pitch_x
+item 11 parameter mount_pitch_y
+item 12 parameter boss_fillet_r
+item 13 parameter base_chamfer
+item 14 sketch BaseSection
+item 15 extrude Base
+item 16 sketch BossSection
+item 17 extrude Boss
+item 18 mirror Housing
+item 19 sketch BoreSection
+item 20 extrude Bore
+item 21 hole MountHole
+item 22 linear_pattern MountHoles
+item 23 fillet BossFillets
+item 24 chamfer BaseChamfers
+features 8
+bodies 1
+body 24 BaseChamfers valid=1 solids=1 shells=1 faces=19 edges=51 vertices=34
+  volume_mm3 261382.1651324929
+  area_mm2 39195.260546925892
+  centroid_mm 2.6872217692694274e-12 1.2804777635948627e-15 30.471678752930575
+  min_mm -60 -30.000000000000007 0
+  max_mm 60 30 80
+timing_ms build 0.130 first_regeneration 1196.755 unchanged_regeneration 0.187 changed_base_width_regeneration 624.891 save 3.687 load 96.047
+== MountingBracket
+item 1 parameter width
+item 2 parameter base_width
+item 3 parameter base_t
+item 4 parameter plate_height
+item 5 parameter plate_t
+item 6 parameter hole_d
+item 7 parameter hole_inset
+item 8 parameter hole_row
+item 9 parameter hole_pitch_x
+item 10 parameter hole_pitch_y
+item 11 parameter plate_hole_x
+item 12 parameter plate_hole_z
+item 13 parameter centre_x
+item 14 parameter gusset_back
+item 15 parameter gusset_embed
+item 16 parameter gusset_top
+item 17 parameter gusset_foot_t
+item 18 parameter gusset_foot_depth
+item 19 parameter gusset_tip_t
+item 20 parameter gusset_tip_depth
+item 21 parameter inner_fillet_r
+item 22 parameter outer_chamfer
+item 23 sketch BaseSection
+item 24 extrude BasePlate
+item 25 sketch PlateSection
+item 26 extrude BackPlate
+item 27 hole BaseHole
+item 28 linear_pattern BaseHoles
+item 29 hole PlateHole
+item 30 mirror PlateHoles
+item 31 fillet InnerFillet
+item 32 chamfer OuterChamfer
+item 33 sketch GussetFoot
+item 34 sketch GussetTip
+item 35 loft Gusset
+features 9
+bodies 1
+body 35 Gusset valid=1 solids=1 shells=1 faces=21 edges=57 vertices=38
+  volume_mm3 123546.71469101607
+  area_mm2 30268.485418480705
+  centroid_mm 50.000000000009649 17.56816899032799 22.617339008534753
+  min_mm -9.9999999999999995e-08 -3.3306690738754696e-16 -3.3306690738754696e-16
+  max_mm 100.00000009999999 60.000000100000001 70.000000099999994
+timing_ms build 0.195 first_regeneration 2098.840 unchanged_regeneration 0.313 changed_plate_height_regeneration 1669.054 save 5.217 load 77.734
+== UBolt
+item 1 parameter rod_r
+item 2 parameter leg
+item 3 parameter bend_r
+item 4 parameter end_chamfer
+item 5 sketch RodSection
+item 6 sketch Route
+item 7 sweep Rod
+item 8 chamfer EndChamfers
+features 2
+bodies 1
+body 8 EndChamfers valid=1 solids=1 shells=1 faces=7 edges=11 vertices=6
+  volume_mm3 15563.959180016738
+  area_mm2 6354.9832893100183
+  centroid_mm 24.99999999993284 7.348989661020982e-16 -48.316759567337741
+  min_mm -5.0000001000000003 -5.0000001000000003 -90.000000099999994
+  max_mm 55.000000100000001 5.0000001000000003 0
+timing_ms build 0.065 first_regeneration 334.066 unchanged_regeneration 0.067 changed_leg_regeneration 373.114 save 11.301 load 1.160
+== MotorMount
+item 1 parameter width
+item 2 parameter height
+item 3 parameter thickness
+item 4 parameter bolt_d
+item 5 parameter edge
+item 6 parameter bolt_span
+item 7 parameter half_width
+item 8 parameter half_height
+item 9 sketch PlateSketch
+item 10 extrude Plate
+item 11 hole BoltHole
+item 12 linear_pattern BoltHoles
+item 13 sketch PilotSketch
+item 14 extrude Pilot
+features 4
+bodies 1
+body 14 Pilot valid=1 solids=1 shells=1 faces=10 edges=21 vertices=14
+  volume_mm3 64838.229473870873
+  area_mm2 18486.37157897848
+  centroid_mm 60.000000000000007 30.000000000000007 5.1163521170465982
+  min_mm 0 0 0
+  max_mm 120 60 18
+timing_ms build 0.192 first_regeneration 175.665 unchanged_regeneration 0.206 changed_width_regeneration 100.797 save 3.711 load 93.811
+== GearboxCover
+item 1 parameter length
+item 2 parameter width
+item 3 parameter height
+item 4 parameter wall
+item 5 parameter draft_angle
+item 6 parameter port_d
+item 7 parameter fixing_pitch
+item 8 parameter parting_z
+item 9 sketch BoxSketch
+item 10 extrude Block
+item 11 datum_plane PartingPlane
+item 12 draft SideDraft
+item 13 shell Hollow
+item 14 hole InspectionPort
+item 15 hole FixingHole
+item 16 linear_pattern FixingHoles
+features 6
+bodies 1
+body 16 FixingHoles valid=1 solids=1 shells=1 faces=17 edges=39 vertices=26
+  volume_mm3 86671.929835779345
+  area_mm2 45902.501320343552
+  centroid_mm 60.000000000000021 40.078885474780535 -14.614314150520732
+  min_mm -1.0269562977782698e-14 -7.1054273576010019e-15 -40
+  max_mm 120.00000000000001 80 3.5527136788005009e-15
+timing_ms build 0.107 first_regeneration 543.605 unchanged_regeneration 0.201 changed_width_regeneration 475.257 save 4.428 load 28.751
+== ManifoldTube
+item 1 parameter side
+item 2 parameter flange_side
+item 3 parameter flange_t
+item 4 parameter drop
+item 5 parameter bend1_r
+item 6 parameter bend2_r
+item 7 parameter twist
+item 8 parameter half_side
+item 9 parameter half_flange
+item 10 sketch BoreSection
+item 11 sketch DropRun
+item 12 parameter elbow_offset
+item 13 datum_plane ElbowPlane
+item 14 sketch SweepRun
+item 15 sweep Tube
+item 16 sketch FlangeSketch
+item 17 extrude Flange
+features 2
+bodies 1
+body 17 Flange valid=1 solids=1 shells=1 faces=19 edges=40 vertices=24
+  volume_mm3 38840.706121993739
+  area_mm2 11672.244114692121
+  centroid_mm 8.5894750834121965 1.2781355250499404 -25.432323019986388
+  min_mm -20.000000100000001 -20.000000100000001 -88.029924200187878
+  max_mm 61.047251826656868 25.000000100000001 12
+timing_ms build 0.238 first_regeneration 10062.059 unchanged_regeneration 0.232 changed_drop_regeneration 7176.175 save 63.915 load 178.841
+== TransitionDuct
+item 1 parameter inlet_side
+item 2 parameter flange_side
+item 3 parameter flange_t
+item 4 parameter throat_r
+item 5 parameter mid_r
+item 6 parameter outlet_r
+item 7 parameter duct_h
+item 8 parameter nozzle_h
+item 9 parameter mid_offset
+item 10 parameter outlet_offset
+item 11 parameter half_inlet
+item 12 parameter half_flange
+item 13 sketch InletSketch
+item 14 sketch ThroatSketch
+item 15 sketch MidSketch
+item 16 sketch OutletSketch
+item 17 loft Duct
+item 18 loft Nozzle
+item 19 sketch FlangeSketch
+item 20 extrude Flange
+features 3
+bodies 1
+body 20 Flange valid=1 solids=1 shells=1 faces=13 edges=29 vertices=19
+  volume_mm3 488642.81028104102
+  area_mm2 48515.523496939117
+  centroid_mm 3.6890355158698797e-10 4.6996531308803009e-15 30.569914238631277
+  min_mm -55 -55 -10
+  max_mm 55 55 120.00000010000167
+timing_ms build 0.213 first_regeneration 1329.498 unchanged_regeneration 0.288 changed_throat_r_regeneration 860.014 save 3.750 load 20.040
+== IndexPlate
+item 1 parameter plate_r
+item 2 parameter thickness
+item 3 parameter pocket_a
+item 4 parameter pocket_b
+item 5 parameter pocket_circle_r
+item 6 parameter hub_r
+item 7 parameter hub_h
+item 8 parameter pocket_count
+item 9 sketch PlateSketch
+item 10 extrude Plate
+item 11 datum_axis PlateAxis
+item 12 sketch PocketSketch
+item 13 extrude Pocket
+item 14 circular_pattern Pockets
+item 15 sketch HubSketch
+item 16 extrude Hub
+item 17 combine Assembly
+features 5
+bodies 1
+body 17 Assembly valid=1 solids=1 shells=1 faces=10 edges=21 vertices=14
+  volume_mm3 262235.02198023227
+  area_mm2 55915.04256798108
+  centroid_mm -2.878090856834369 3.9999042995533445e-13 7.1661874640614611
+  min_mm -90.000000099999994 -90.000000099999994 -9.9999999999999995e-08
+  max_mm 90.000000099999994 90.000000099999994 24
+timing_ms build 0.106 first_regeneration 1932.880 unchanged_regeneration 0.199 changed_plate_r_regeneration 1422.644 save 3.541 load 46.749
+== RibbedBracket
+item 1 parameter width
+item 2 parameter base_depth
+item 3 parameter thickness
+item 4 parameter wall_h
+item 5 parameter rib_t
+item 6 parameter rib_reach
+item 7 parameter rib_toe
+item 8 parameter corner_bottom_r
+item 9 parameter corner_top_r
+item 10 parameter half_width
+item 11 coordinate_system MountFrame
+item 12 sketch BaseSketch
+item 13 extrude Base
+item 14 sketch WallSketch
+item 15 extrude Wall
+item 16 datum_plane RibPlane
+item 17 sketch GussetSketch
+item 18 rib Rib
+item 19 hole BoltHole
+item 20 variable_fillet CornerRound
+features 5
+bodies 1
+body 20 CornerRound valid=1 solids=1 shells=1 faces=13 edges=34 vertices=23
+  volume_mm3 125252.69251677535
+  area_mm2 30251.98857624584
+  centroid_mm 45.166258605947426 15.766987188232006 18.348333823220262
+  min_mm -1.000000003330669e-07 -10.000000099999999 -9.9999999999999995e-08
+  max_mm 90.000000099999994 70.000000099999994 65.000000100000008
+timing_ms build 0.170 first_regeneration 852.281 unchanged_regeneration 0.272 changed_wall_h_regeneration 481.908 save 4.268 load 68.478
+== GroundedPair (RM-A)
+components 2 active 2 mates 2 active 2
+solve FULLY_CONSTRAINED unknowns 0 equations 0 dof 0 residual_mm 0
+timing_ms build 0.164 regeneration_and_solve 9.877
+== ConstrainedStack (RM-B)
+components 3 active 3 mates 11 active 11
+solve FULLY_CONSTRAINED unknowns 12 equations 12 dof 0 residual_mm 5.11381e-17
+timing_ms build 0.118 regeneration_and_solve 9.181
+== ShaftInBore (RM-C)
+components 2 active 2 mates 2 active 2
+solve UNDER_CONSTRAINED unknowns 6 equations 4 dof 2 residual_mm 0
+timing_ms build 0.098 regeneration_and_solve 5.912
+== JointSet (RM-D)
+components 5 active 5 mates 5 active 5
+solve UNDER_CONSTRAINED unknowns 24 equations 17 dof 7 residual_mm 1.14105e-14
+timing_ms build 0.171 regeneration_and_solve 16.914
+== ConfiguredFrame (RM-E)
+components 4 active 4 mates 16 active 16
+solve FULLY_CONSTRAINED unknowns 18 equations 18 dof 0 residual_mm 2.84276e-21
+timing_ms build 0.163 regeneration_and_solve 14.603
+== DrivenCover (RM-F)
+components 2 active 2 mates 5 active 5
+solve FULLY_CONSTRAINED unknowns 6 equations 6 dof 0 residual_mm 1.70093e-16
+timing_ms build 0.127 regeneration_and_solve 55.582
+== Machine (RM-G)
+components 8 active 8 mates 31 active 31
+solve UNDER_CONSTRAINED unknowns 42 equations 40 dof 2 residual_mm 0
+timing_ms build 0.272 regeneration_and_solve 58.523
+== FaultCases (RM-H)
+components 2 active 2 mates 3 active 3
+solve INCONSISTENT unknowns 6 equations 2 dof 5 residual_mm 40
+timing_ms build 0.087 regeneration_and_solve 4.195
+
+PASS  RM-A assembly_grounded_pair.bcad is committed
+PASS  RM-A the builder produced assembly_grounded_pair.bcad
+PASS  RM-A committed file is byte-identical to the builder's output
+PASS  RM-B assembly_constrained_stack.bcad is committed
+PASS  RM-B the builder produced assembly_constrained_stack.bcad
+PASS  RM-B committed file is byte-identical to the builder's output
+PASS  RM-C assembly_shaft_in_bore.bcad is committed
+PASS  RM-C the builder produced assembly_shaft_in_bore.bcad
+PASS  RM-C committed file is byte-identical to the builder's output
+PASS  RM-D assembly_joint_set.bcad is committed
+PASS  RM-D the builder produced assembly_joint_set.bcad
+PASS  RM-D committed file is byte-identical to the builder's output
+PASS  RM-E assembly_configured_frame.bcad is committed
+PASS  RM-E the builder produced assembly_configured_frame.bcad
+PASS  RM-E committed file is byte-identical to the builder's output
+PASS  RM-F assembly_driven_cover.bcad is committed
+PASS  RM-F the builder produced assembly_driven_cover.bcad
+PASS  RM-F committed file is byte-identical to the builder's output
+PASS  RM-G assembly_machine.bcad is committed
+PASS  RM-G the builder produced assembly_machine.bcad
+PASS  RM-G committed file is byte-identical to the builder's output
+PASS  RM-H assembly_fault_cases.bcad is committed
+PASS  RM-H the builder produced assembly_fault_cases.bcad
+PASS  RM-H committed file is byte-identical to the builder's output
+PASS  RM-A appears in the program's report
+PASS  RM-A reports a solve line
+PASS  RM-A solves FULLY_CONSTRAINED
+PASS  RM-A has 0 unknowns
+PASS  RM-A has 0 equations
+PASS  RM-A has 0 degrees of freedom
+PASS  RM-B appears in the program's report
+PASS  RM-B reports a solve line
+PASS  RM-B solves FULLY_CONSTRAINED
+PASS  RM-B has 12 unknowns
+PASS  RM-B has 12 equations
+PASS  RM-B has 0 degrees of freedom
+PASS  RM-C appears in the program's report
+PASS  RM-C reports a solve line
+PASS  RM-C solves UNDER_CONSTRAINED
+PASS  RM-C has 6 unknowns
+PASS  RM-C has 4 equations
+PASS  RM-C has 2 degrees of freedom
+PASS  RM-D appears in the program's report
+PASS  RM-D reports a solve line
+PASS  RM-D solves UNDER_CONSTRAINED
+PASS  RM-D has 24 unknowns
+PASS  RM-D has 17 equations
+PASS  RM-D has 7 degrees of freedom
+PASS  RM-E appears in the program's report
+PASS  RM-E reports a solve line
+PASS  RM-E solves FULLY_CONSTRAINED
+PASS  RM-E has 18 unknowns
+PASS  RM-E has 18 equations
+PASS  RM-E has 0 degrees of freedom
+PASS  RM-F appears in the program's report
+PASS  RM-F reports a solve line
+PASS  RM-F solves FULLY_CONSTRAINED
+PASS  RM-F has 6 unknowns
+PASS  RM-F has 6 equations
+PASS  RM-F has 0 degrees of freedom
+PASS  RM-G appears in the program's report
+PASS  RM-G reports a solve line
+PASS  RM-G solves UNDER_CONSTRAINED
+PASS  RM-G has 42 unknowns
+PASS  RM-G has 40 equations
+PASS  RM-G has 2 degrees of freedom
+PASS  RM-H appears in the program's report
+PASS  RM-H reports a solve line
+PASS  RM-H solves INCONSISTENT
+PASS  RM-H has 6 unknowns
+PASS  RM-H has 2 equations
+PASS  RM-H has 5 degrees of freedom
+PASS  a second run exits 0
+PASS  RM-A two runs of the builder agree byte for byte
+PASS  RM-B two runs of the builder agree byte for byte
+PASS  RM-C two runs of the builder agree byte for byte
+PASS  RM-D two runs of the builder agree byte for byte
+PASS  RM-E two runs of the builder agree byte for byte
+PASS  RM-F two runs of the builder agree byte for byte
+PASS  RM-G two runs of the builder agree byte for byte
+PASS  RM-H two runs of the builder agree byte for byte
+
+=== 83/83 checks passed ===

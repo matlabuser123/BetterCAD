@@ -9,12 +9,12 @@
 ## Status
 
 ```text
-Current:   P13 — Assemblies
-Next:      P13-QUAL-001 — Full P13 qualification
-Then:      —  P13 complete after qualification
+Current:   —  awaiting authorization for the next phase
+Next:      —  a scope decision, not Claude's to make
+Then:      —
 
 Released:  v0.1.0 — P0–P10
-Qualified: P11, P12
+Qualified: P11, P12, P13
 
 P13 architecture:
 ADR-002 → ADR-008
@@ -164,32 +164,34 @@ Next → P13-QUAL-001
 
 ---
 
-# NEXT — P13-QUAL-001
+---
+
+# DONE — P13-QUAL-001
 
 ## Full P13 Qualification
 
-* [ ] Freeze final P13 source/test tree
-* [ ] Audit all P13 milestone evidence
-* [ ] Verify all P13 TODO items complete
-* [ ] Verify all ADR contracts satisfied
-* [ ] Run clean Debug qualification
-* [ ] Run clean Release qualification
-* [ ] Run clean Debug-shared qualification
-* [ ] Run repeated determinism qualification
-* [ ] Validate production reference models
-* [ ] Validate persistence round trips
-* [ ] Validate assembly solver / DOF classification
-* [ ] Validate configuration / suppression behavior
-* [ ] Validate stable references / recovery
-* [ ] Validate regeneration / failure propagation
-* [ ] Validate undo / redo workflows
-* [ ] Validate CLI end-to-end workflows
-* [ ] Validate STEP export / read-back
-* [ ] Run final adversarial review
-* [ ] Confirm 0 unexpected compiler warnings
-* [ ] Confirm qualified tree == committed tree
-* [ ] Record final evidence in `docs/verification/P13-QUAL-001/`
-* [ ] Mark P13 qualified
+* [x] Freeze final P13 source/test tree — `9cd2330`, the tree `P13-REFMOD-001` qualified, byte for byte; recorded before the first build, after the last test run, and after the documentation
+* [x] Audit all P13 milestone evidence — 15/15 PASS; all 17 quoted commit hashes resolve and every recorded tree ID matches its implementation commit
+* [x] Verify all P13 TODO items complete — the only `[ ]` in the file were this milestone's own
+* [x] Verify all ADR contracts satisfied — ADR-002 … ADR-009, each with its implementation and the test that pins it. ADR-006's two mandated document updates had never been made; done here
+* [x] Run clean Debug qualification — 1674/1674, 0 warnings, 437 TUs from a 454-file clean
+* [x] Run clean Release qualification — 1674/1674, 0 warnings
+* [x] Run clean Debug-shared qualification — 1674/1674, 0 warnings, links clean
+* [x] Run repeated determinism qualification — the whole suite `--repeat until-fail:5` in release and debug, 1674/1674 each; the three presets agree byte for byte on every solve
+* [x] Validate production reference models — 83/83 per preset; all 8 byte-identical to their builders, every DOF re-derived on paper here before it was measured
+* [x] Validate persistence round trips — from the committed files; bytes equal on re-save, derived state recomputed identically; no `transform` or `solved` key in any model
+* [x] Validate assembly solver / DOF classification — all five states represented and distinguished; RM-H's rank-deficient DOF of 5 confirmed against the rank argument
+* [x] Validate configuration / suppression behavior — A → B → A byte-identical; suppressed components measurably absent from the export
+* [x] Validate stable references / recovery — including an identical face offered in the target's place and refused
+* [x] Validate regeneration / failure propagation — every trigger, and the all-or-nothing publication
+* [x] Validate undo / redo workflows — four edits unwound one at a time with canonical state checked at every position, then replayed
+* [x] Validate CLI end-to-end workflows — 121/121 per preset, real process per step; a failed edit and a half-failed batch both leave the file byte-identical
+* [x] Validate STEP export / read-back — occurrence counts from the file itself; RM-H writes nothing; `Bare` writes 3 of 8
+* [x] Run final adversarial review — 13 findings, **0 production defects**; 3 fixed, 10 recorded
+* [x] Confirm 0 unexpected compiler warnings — 0 literal occurrences in all three build logs
+* [x] Confirm qualified tree == committed tree — 8/8 tree IDs identical across three recordings
+* [x] Record final evidence in `docs/verification/P13-QUAL-001/`
+* [x] Mark P13 qualified
 
 ### Gate
 
@@ -204,6 +206,36 @@ all P13 milestones PASS
 + adversarial review PASS
 + 0 unexpected warnings
 + final qualified tree == committed tree
+```
+
+Met: 1674/1674 on `debug`, `release` and `debug-shared`, each from clean, and
+1674/1674 five times over in `release` and in `debug`; 0 compiler warnings in
+all three builds; 17/17 qualification stages exit 0; 271 further checks per
+preset against expectations derived on paper, identical in all three; the
+eight qualified tree IDs recorded three times and identical every time.
+
+The code came through clean: **0 production defects** in an adversarial
+review that worked through the integration-failure list one item at a time and
+probed each against the implementation rather than against a passing suite.
+Everything the review found was documentation, and the three worth fixing were
+fixed here — `ARCHITECTURE.md` and `docs/architecture.md` still published the
+layer table `ADR-006` replaced fifteen milestones ago, and both were named in
+that ADR's own Consequences as must-updates; `ADR-003` still said `P13` would
+build no external-reference field, which `P13-REF-001` then did under this
+file's authority.
+
+Worth carrying forward: the phase's hardest guarantee — that a solved
+transform never becomes persisted intent — is held by the type system rather
+than by care. `assembly::solve()` takes a `const Document&`, so it cannot
+write to the document even by mistake; the serializer whitelists three keys;
+and the resolved transform is a function with no store, so there is no cache
+to leak. Three tests pin it by grepping the saved bytes, but the reason it
+holds is the shape, not the tests.
+
+```text
+P13-QUAL-001 → [x]
+P13 → QUALIFIED
+Next → STOP; the next phase is a scope decision
 ```
 
 ---
@@ -235,6 +267,7 @@ ADR-005 — Placement intent / derived transforms
 ADR-006 — Module layering
 ADR-007 — One configuration system
 ADR-008 — Assembly solve as regeneration final pass
+ADR-009 — The CLI edit is a document transaction
 ```
 
 ---

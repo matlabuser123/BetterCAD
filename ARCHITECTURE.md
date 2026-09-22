@@ -56,7 +56,7 @@ Document / Commands / Transactions
        ├── Sketches
        ├── Features
        ├── Bodies
-       ├── Assemblies   [future]
+       ├── Assemblies
        └── Simulations  [future]
        │
        ▼
@@ -82,16 +82,17 @@ Python and a future agent. The GUI must never become the architecture.
 | 0 | `core` | IDs, units, parameters, document, commands, dependency graph, diagnostics, math value types, geometry abstraction, engineering standards data |
 | 1 | `sketch` | Entities, constraints, solver, profile extraction |
 | 2 | `features` | Feature definitions, regeneration, validation |
-| 3 | `io` | Native `.bcad`, STEP/STL export |
-| 4 | `renderer`, `scripting` | Display data, bindings |
+| 3 | `assembly` | Components, placements, mates, the constraint solver, reference resolution |
+| 4 | `io` | Native `.bcad`, STEP/STL export |
+| 5 | `renderer`, `scripting` | Display data, bindings |
 | — | `apps` | Desktop application, CLI |
 
 A module may include the public headers of its own module or of a lower layer,
 and nothing else. Public headers live in `include/bettercad/<module>/`; private
 headers beside their sources in `src/<module>/`.
 
-Target directories not yet created: `src/assembly/`, `src/drawing/`,
-`src/simulation/`, `src/versioning/`, `benchmarks/`.
+Target directories not yet created: `src/drawing/`, `src/simulation/`,
+`src/versioning/`, `benchmarks/`.
 `src/renderer/` and `src/scripting/` exist but are empty.
 
 The table above is the table in force, mirrored from
@@ -99,18 +100,18 @@ The table above is the table in force, mirrored from
 rule is **strictly lower**: same-layer cross-module dependencies are
 violations, and an unknown module is itself a violation.
 
-`P13-ARCH-001` decided the table assemblies will need
-([ADR-006](docs/architecture/decisions/ADR-006-assembly-module-and-layer.md)).
-It is **not yet in force** and is applied by the milestone that creates
-`src/assembly/`:
+`P13-ARCH-001` decided this table
+([ADR-006](docs/architecture/decisions/ADR-006-assembly-module-and-layer.md))
+and `P13-COMP-001` applied it when it created `src/assembly/`. It has been in
+force since:
 
 ```text
 core 0, sketch 1, features 2, assembly 3, io 4, renderer/scripting 5
 ```
 
-`assembly` must sit above `features`, which it uses, and below `io`, which
-must serialize it; with `io` at 3 there is no number between them, so the
-renumber is unavoidable rather than cosmetic.
+`assembly` sits above `features`, which it uses, and below `io`, which must
+serialize it; with `io` previously at 3 there was no number between them, so
+the renumber was unavoidable rather than cosmetic.
 
 ## Document Model
 
@@ -587,9 +588,9 @@ CLI can exercise the core. If any is false, fix the architecture first.
 
 Reserved shapes for subsystems that do not exist. None is authorized.
 
-**Assemblies** are no longer reserved: `P13` is authorized and
-`P13-ARCH-001` has decided their architecture. See
-[Assemblies](#assemblies) above and ADR-002 to ADR-006.
+**Assemblies** are no longer reserved: `P13` is authorized, delivered and
+qualified. See [Assemblies](#assemblies) above, ADR-002 to ADR-008, and
+ADR-009 for the CLI's edit transaction.
 
 **Drawings.** A drawing references the model rather than copying it: sheets,
 views, dimensions, annotations, BOM. A view references a document revision, a

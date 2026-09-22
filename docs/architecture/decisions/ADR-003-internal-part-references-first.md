@@ -1,7 +1,40 @@
 # ADR-003 — Part references are internal for P13; external references are specified, not built
 
-Status: Accepted
+Status: Accepted, with the deferral clause overtaken — see the amendment below
 Date: 2026-09-19
+
+## Amendment — 2026-09-22 (P13-QUAL-001)
+
+The decision below stands: a component names a part **within its own
+document**, and every committed model does exactly that. What did not stand is
+the scoping sentence attached to it.
+
+This ADR says of the external-reference contract that "nothing in `P13`
+implements it, and no placeholder type, field or key for it is added", and
+gives as a `P13` verification criterion that "no persisted field exists for an
+external source". `TODO.md` subsequently authorized
+`P13-REF-001 — Internal / external reference infrastructure`, which built the
+reference vocabulary and its resolver inside `P13`: `ObjectReference` carries
+an optional `document` and a `hint`, and both are written to and read from
+`.bcad` when a reference is external. The milestone honours every clause of
+the contract recorded below — its evidence maps them one by one — but it is
+not the "later milestone" this ADR imagined, and the ADR was never amended to
+say so.
+
+`TODO.md` authorizes implementation and outranks an ADR, so the work was
+authorized and is qualified; this note records the change rather than
+reversing it. Two things are worth keeping straight:
+
+- The fields are **implemented and tested**, not the unused placeholder this
+  ADR warned against. `P13-REF-001` added 22 Catch2 cases for them.
+- No production artifact uses them. All eight committed assembly models
+  reference their parts by bare local `ObjectId`, verified in
+  `docs/verification/P13-QUAL-001/`, so the decision below describes the
+  system as it actually ships.
+
+Cross-document **execution** — regeneration, circularity detection, a resolver
+supplied from the CLI — remains unimplemented, and is still correctly
+described as deferred throughout.
 
 ## Context
 

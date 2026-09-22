@@ -1,0 +1,144 @@
+=== P13-QUAL-001 end-to-end, preset debug-shared ===
+CLI  C:\Users\uqhas\OneDrive\Desktop\CAD\build\debug-shared\bin\bettercad-cli.exe
+PASS  the CLI executable exists
+PASS  version exits 0
+BetterCAD 0.1.0
+  revision   : 9cd2330f2c99
+  build type : Debug
+  compiler   : GCC 16.1.0
+  language   : C++23 (__cplusplus=202302)
+  platform   : Windows x86_64
+  libraries  : shared
+
+--- solve / status on every committed model ---
+PASS  RM-A assembly_grounded_pair.bcad is committed
+PASS  RM-A solve exits 0
+PASS  RM-A solve reports FULLY_CONSTRAINED
+PASS  RM-A reports 0 degrees of freedom
+PASS  RM-A status exits 0
+PASS  RM-A status lists 2 components
+PASS  RM-A status lists 2 mates
+PASS  RM-B assembly_constrained_stack.bcad is committed
+PASS  RM-B solve exits 0
+PASS  RM-B solve reports FULLY_CONSTRAINED
+PASS  RM-B reports 0 degrees of freedom
+PASS  RM-B status exits 0
+PASS  RM-B status lists 3 components
+PASS  RM-B status lists 11 mates
+PASS  RM-C assembly_shaft_in_bore.bcad is committed
+PASS  RM-C solve exits 0
+PASS  RM-C solve reports UNDER_CONSTRAINED
+PASS  RM-C reports 2 degrees of freedom
+PASS  RM-C status exits 0
+PASS  RM-C status lists 2 components
+PASS  RM-C status lists 2 mates
+PASS  RM-D assembly_joint_set.bcad is committed
+PASS  RM-D solve exits 0
+PASS  RM-D solve reports UNDER_CONSTRAINED
+PASS  RM-D reports 7 degrees of freedom
+PASS  RM-D status exits 0
+PASS  RM-D status lists 5 components
+PASS  RM-D status lists 5 mates
+PASS  RM-E assembly_configured_frame.bcad is committed
+PASS  RM-E solve exits 0
+PASS  RM-E solve reports FULLY_CONSTRAINED
+PASS  RM-E reports 0 degrees of freedom
+PASS  RM-E status exits 0
+PASS  RM-E status lists 4 components
+PASS  RM-E status lists 16 mates
+PASS  RM-F assembly_driven_cover.bcad is committed
+PASS  RM-F solve exits 0
+PASS  RM-F solve reports FULLY_CONSTRAINED
+PASS  RM-F reports 0 degrees of freedom
+PASS  RM-F status exits 0
+PASS  RM-F status lists 2 components
+PASS  RM-F status lists 5 mates
+PASS  RM-G assembly_machine.bcad is committed
+PASS  RM-G solve exits 0
+PASS  RM-G solve reports UNDER_CONSTRAINED
+PASS  RM-G reports 2 degrees of freedom
+PASS  RM-G status exits 0
+PASS  RM-G status lists 8 components
+PASS  RM-G status lists 31 mates
+PASS  RM-H assembly_fault_cases.bcad is committed
+PASS  RM-H solve exits 1
+PASS  RM-H solve reports INCONSISTENT
+PASS  RM-H reports 5 degrees of freedom
+PASS  RM-H names its conflicting mates
+PASS  RM-H status exits 1
+PASS  RM-H status lists 2 components
+PASS  RM-H status lists 3 mates
+
+--- edit / save / reload / solve, one process per step ---
+PASS  RM-C copy solves before the edit
+PASS  component-place succeeds
+PASS  component-place actually wrote the file
+PASS  the edited document still solves
+PASS  moving a component along a free axis leaves the DOF at 2
+PASS  an edit naming a missing component fails
+PASS  a failed edit leaves the file byte-identical
+PASS  a batch that fails part way exits non-zero
+PASS  a failed batch leaves the file byte-identical
+PASS  the saved document reloads in a fresh process
+
+--- configuration switching changes what is in force ---
+PASS  status runs in both configurations
+PASS  the Bare configuration puts fewer objects in force
+PASS  Bare suppresses its five components
+PASS  A -> B -> A gives the same exit code
+PASS  A -> B -> A gives byte-identical solve output
+
+--- STEP export, then read back what is in the file ---
+PASS  RM-A export-step exits 0
+PASS  RM-A wrote a STEP file
+PASS  RM-A STEP holds one occurrence per active component (2)
+PASS  RM-A STEP carries solid geometry
+PASS  RM-B export-step exits 0
+PASS  RM-B wrote a STEP file
+PASS  RM-B STEP holds one occurrence per active component (3)
+PASS  RM-B STEP carries solid geometry
+PASS  RM-C export-step exits 0
+PASS  RM-C wrote a STEP file
+PASS  RM-C STEP holds one occurrence per active component (2)
+PASS  RM-C STEP carries solid geometry
+PASS  RM-D export-step exits 0
+PASS  RM-D wrote a STEP file
+PASS  RM-D STEP holds one occurrence per active component (5)
+PASS  RM-D STEP carries solid geometry
+PASS  RM-E export-step exits 0
+PASS  RM-E wrote a STEP file
+PASS  RM-E STEP holds one occurrence per active component (4)
+PASS  RM-E STEP carries solid geometry
+PASS  RM-F export-step exits 0
+PASS  RM-F wrote a STEP file
+PASS  RM-F STEP holds one occurrence per active component (2)
+PASS  RM-F STEP carries solid geometry
+PASS  RM-G export-step exits 0
+PASS  RM-G wrote a STEP file
+PASS  RM-G STEP holds one occurrence per active component (8)
+PASS  RM-G STEP carries solid geometry
+PASS  RM-H export-step refuses an unsolvable assembly
+PASS  RM-H wrote no STEP file
+PASS  configuration-activate Bare succeeds
+PASS  export-step succeeds in the Bare configuration
+PASS  the Bare export holds only the 3 components in force (5 are suppressed)
+
+--- repeated CLI runs agree exactly ---
+PASS  assembly_machine: three runs agree on the exit code
+PASS  assembly_machine: three runs agree byte for byte on stdout
+PASS  assembly_joint_set: three runs agree on the exit code
+PASS  assembly_joint_set: three runs agree byte for byte on stdout
+PASS  assembly_fault_cases: three runs agree on the exit code
+PASS  assembly_fault_cases: three runs agree byte for byte on stdout
+
+--- the committed files hold intent, never a solved transform ---
+PASS  assembly_grounded_pair.bcad persists no solved transform
+PASS  assembly_constrained_stack.bcad persists no solved transform
+PASS  assembly_shaft_in_bore.bcad persists no solved transform
+PASS  assembly_joint_set.bcad persists no solved transform
+PASS  assembly_configured_frame.bcad persists no solved transform
+PASS  assembly_driven_cover.bcad persists no solved transform
+PASS  assembly_machine.bcad persists no solved transform
+PASS  assembly_fault_cases.bcad persists no solved transform
+
+=== 121/121 checks passed ===
