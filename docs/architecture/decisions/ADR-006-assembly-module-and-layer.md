@@ -1,6 +1,10 @@
 # ADR-006 — Assemblies are a new module at layer 3, and io moves up
 
-Status: Accepted
+Status: Accepted; the table below was extended by
+        [ADR-015](ADR-015-drawing-module-and-layer.md), which inserts
+        `drawing` at 4 and moves `io` to 5 and `renderer`/`scripting` to 6.
+        The decision here — `assembly` at 3, above `features` and below `io`
+        — is unchanged.
 Date: 2026-09-19
 
 ## Context

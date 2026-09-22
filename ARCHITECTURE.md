@@ -113,6 +113,23 @@ core 0, sketch 1, features 2, assembly 3, io 4, renderer/scripting 5
 serialize it; with `io` previously at 3 there was no number between them, so
 the renumber was unavoidable rather than cosmetic.
 
+**A further renumber is decided and not yet applied.**
+`P14-ARCH-001` found the same problem again — `drawing` must sit above
+`assembly` and below `io`, and there is no number between 3 and 4 — so
+[ADR-015](docs/architecture/decisions/ADR-015-drawing-module-and-layer.md)
+extends the table to:
+
+```text
+core 0, sketch 1, features 2, assembly 3, drawing 4, io 5, renderer/scripting 6
+```
+
+**`P14-SHEET-001` applies it**, when it creates `src/drawing/`, and updating
+this section and `docs/architecture.md` is on that milestone's checklist. Until
+then the table above the `##` heading is the one `CheckLayering.cmake` holds
+and the one in force. If you are reading this after `src/drawing/` exists, this
+paragraph is stale and the tables above are wrong — which is exactly what
+happened to ADR-006's renumber for fifteen milestones.
+
 ## Document Model
 
 `Document` is the canonical engineering container and the single owner of
@@ -371,6 +388,59 @@ no grounded component is under-constrained and says so rather than pinning
 one silently. Reference failures stay distinct from solve failures, and a
 reference kind a mate may not use is a third, distinct error.
 
+## Drawings
+
+`P14` is authorized; `P14-ARCH-001` decided the architecture
+([ADR-010](docs/architecture/decisions/ADR-010-drawings-live-in-the-document.md)
+to [ADR-017](docs/architecture/decisions/ADR-017-drawing-identity-model.md)).
+
+**Ownership.** Sheets, views, dimensions and annotations are `DocumentObject`s
+in the model's own `Document` — not a separate drawing document. A separate
+one needs cross-document dependency *execution*, which does not exist, and the
+dependency graph is single-document by construction. So a drawing serializes
+through the existing `{id, type, name, data}` envelope with no new top-level
+key and no format version bump.
+
+**Canonical and derived.** The same split assemblies use. Sheet definitions,
+view orientation, scale and placement, section definitions, dimension
+references and formatting, annotation intent, tolerances and BOM settings are
+**intent** and are persisted. Projected curves, visible/hidden/silhouette edge
+sets, section geometry, the dimension's measured **value**, computed BOM rows
+and the export scene are **derived** and are never written to the file.
+
+```text
+3D model                 authoritative engineering geometry
+drawing definition       authoritative drawing intent
+generated 2D geometry    derived
+```
+
+**Projection.** A view's orientation is a `Frame3D` whose normal points from
+the model toward the viewer, so the three principal frames are Front, Right
+and Top, and projection is `Frame3D::toLocal`. Scale is an exact rational
+`paper : model` pair, so `1:2` is a reduction and the label survives a round
+trip. A dimension shows the model value, never the drawn length.
+
+**References.** A drawing references only what a mate may reference: datum
+planes and axes, named faces, document objects and component occurrences.
+Never an `EdgeSignature`, a `FaceSignature` or a topology index — a reference
+that breaks when a parameter moves is not a reference a drawing can use. The
+consequence is accepted and recorded: a dimension to an edge that is not the
+intersection of two nameable faces has no spelling until semantic topology.
+
+**Regeneration.** Drawing objects have ordinary regeneration handlers, so an
+unresolvable reference fails loudly rather than being silently up to date.
+Drawing *geometry* is not published by the regenerator at all: it is built on
+demand from an already-regenerated document, so it cannot be stale, and a
+drawing of a broken model publishes nothing rather than its last good picture.
+
+**Export.** One neutral, self-validating drawing scene in sheet coordinates,
+consumed by PDF, SVG and DXF writers that transcribe and compute nothing, so
+the three formats cannot disagree about the same drawing.
+
+**Layering.** `drawing` sits at layer 4 above `assembly`, with projection and
+hidden-line removal in `core/geometry` behind the OCCT adapter and the format
+writers in `io`. A drawing subsystem is three places, not one. See "Layers".
+
 ## Persistence
 
 Serialize engineering definitions, not geometry.
@@ -567,10 +637,17 @@ an implementation detail, and needs a deliberate decision recorded here first.
 15. Solved assembly transforms are derived state, never persisted intent.
 16. A mate references only geometry that moves with the model.
 17. Assembly constraint states are reported, never reduced to a boolean.
+18. Projected drawing geometry is derived state, never persisted intent.
+19. A drawing references only geometry that moves with the model.
+20. A drawing's dimension shows the model value, never the drawn length.
 ```
 
-Invariants 15 to 17 bind the milestones that build assemblies; nothing
-implements them yet.
+Invariants 15 to 17 are implemented and qualified (`P13`). Invariants 18 to 20
+bind the milestones that build drawings
+([ADR-011](docs/architecture/decisions/ADR-011-drawing-intent-is-canonical-projection-is-derived.md),
+[ADR-012](docs/architecture/decisions/ADR-012-drawing-references-name-semantic-geometry-only.md),
+[ADR-013](docs/architecture/decisions/ADR-013-view-orientation-and-drawing-scale.md));
+`P14` is authorized and `P14-ARCH-001` has decided their architecture.
 
 **Anti-patterns.** Do not introduce a global mutable document, Qt widgets owning
 CAD state, raw OCCT types outside adapters, persistent array-index IDs, unitless
@@ -592,10 +669,9 @@ Reserved shapes for subsystems that do not exist. None is authorized.
 qualified. See [Assemblies](#assemblies) above, ADR-002 to ADR-008, and
 ADR-009 for the CLI's edit transaction.
 
-**Drawings.** A drawing references the model rather than copying it: sheets,
-views, dimensions, annotations, BOM. A view references a document revision, a
-body or component selection, a camera projection, a scale and a section
-definition.
+**Drawings** are no longer reserved: `P14` is authorized and `P14-ARCH-001`
+has decided their architecture. See [Drawings](#drawings) above and ADR-010 to
+ADR-017.
 
 **Threading.** Avoid concurrency until measurement justifies it. When added: a UI
 thread issuing document commands and scheduling tasks, worker tasks for

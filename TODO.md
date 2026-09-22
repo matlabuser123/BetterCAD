@@ -10,8 +10,8 @@
 
 ```text
 Current:   P14 — Technical Drawings
-Next:      P14-ARCH-001 — Drawing architecture and contracts
-Then:      P14-SHEET-001 — Drawing documents / sheets / formats
+Next:      P14-SHEET-001 — Drawing documents / sheets / formats
+Then:      P14-VIEW-001 — Base and projected drawing views
 
 Released:  v0.1.0 — P0–P10
 Qualified: P11, P12, P13
@@ -72,21 +72,21 @@ Do not implement a milestone until its predecessor passes.
 
 ---
 
-# CURRENT — P14-ARCH-001
+# DONE — P14-ARCH-001
 
 ## Drawing Architecture and Contracts
 
-* [ ] Define drawing document ownership model
-* [ ] Define canonical vs derived drawing state
-* [ ] Define sheet / view / annotation identity model
-* [ ] Define model-to-drawing stable-reference contract
-* [ ] Define units / scale / coordinate conventions
-* [ ] Define drawing regeneration contract
-* [ ] Define drawing module layering
-* [ ] Define export architecture
-* [ ] Record architecture decisions as ADRs
-* [ ] Architecture adversarial review PASS
-* [ ] Evidence in `docs/verification/P14-ARCH-001/`
+* [x] Define drawing document ownership model — ADR-010: drawing objects are `DocumentObject`s in the model's own document; a separate drawing document needs cross-document *execution*, which does not exist
+* [x] Define canonical vs derived drawing state — ADR-011: intent persisted, every projected curve and every measured value derived and never written
+* [x] Define sheet / view / annotation identity model — ADR-017: four `DocumentObject` kinds, because a dimension's dependency on model geometry must be a graph edge; tables and balloons deliberately not allocated yet
+* [x] Define model-to-drawing stable-reference contract — ADR-012: ADR-004's vocabulary only. There is **no stable edge name** in the codebase, and `EdgeSignature` breaks on the ordinary parametric edit
+* [x] Define units / scale / coordinate conventions — ADR-013: view normal faces the viewer, so the principal frames *are* Front/Right/Top; scale is an exact `paper:model` pair. 26/26 verified
+* [x] Define drawing regeneration contract — ADR-014: objects get handlers, geometry is built on demand. The final-pass mechanism cannot carry a drawing's result and its ordering is alphabetical coincidence
+* [x] Define drawing module layering — ADR-015: `drawing` 4, `io` → 5, renderer/scripting → 6; projection in `core/geometry`. Second forced renumber
+* [x] Define export architecture — ADR-016: one neutral self-validating scene; writers transcribe and compute nothing
+* [x] Record architecture decisions as ADRs — ADR-010 … ADR-017, plus a supersession note on ADR-006
+* [x] Architecture adversarial review PASS — 19 questions, 5 findings, 0 blocking
+* [x] Evidence in `docs/verification/P14-ARCH-001/`
 
 ### Gate
 
@@ -101,13 +101,44 @@ drawing architecture coherent
 + ADRs complete
 ```
 
+Met: eight ADRs, each against two or three serious candidates, and no
+executable source or test file changed — the eight qualified tree IDs are the
+ones `P13-QUAL-001` recorded.
+
+Four findings from reading the code changed what was designed rather than
+confirming it. **There is no stable edge reference in this codebase** —
+`EdgeSignature` matches a curve, and its own header says it breaks when the
+curve moves, which is the ordinary parametric edit a drawing exists to track.
+ADR-004 already refuses `FaceSignature` on that reasoning, so ADR-012 refuses
+`EdgeSignature` too and accepts a real capability gap instead of a silent wrong
+answer. **The final-pass mechanism cannot carry a drawing's result** — its
+return type is `std::map<ComponentId, RigidTransform3D>` and passes run in
+alphabetical name order, so a drawing pass would follow the assembly solve by
+coincidence; ADR-014 avoids the mechanism entirely. **The layer table has no
+room again**, for the second time. And **a drawing subsystem is three places,
+not one**: projection behind the OCCT adapter at layer 0, the domain at 4, the
+writers at 5.
+
+Worth carrying forward: the standard views are not a new convention. Under
+"the view frame's normal points at the viewer", `Frame3D::xz()`, `yz()` and
+`xy()` *are* Front, Right and Top — and that `xz()` faces **−Y**, the fact that
+put every component on the wrong side of its deck in `P13-REFMOD-001`, is the
+same fact that makes a Front view come out right here.
+
+```text
+P14-ARCH-001 → [x]
+Next → P14-SHEET-001
+```
+
 ---
 
 # P14-SHEET-001
 
 ## Drawing Documents / Sheets / Formats
 
-* [ ] Implement `DrawingDocument`
+* [ ] Apply the ADR-015 layer renumber — `drawing` 4, `io` 5, renderer/scripting 6 — in `CheckLayering.cmake` and `src/CMakeLists.txt`
+* [ ] Update `ARCHITECTURE.md` **and** `docs/architecture.md` with the new table (ADR-006's identical renumber went unrecorded in both for fifteen milestones; `P13-QUAL-001` found it)
+* [ ] Create the `drawing` module per ADR-015
 * [ ] Implement strong drawing/sheet IDs
 * [ ] Implement sheet creation/deletion
 * [ ] Implement standard sheet sizes
@@ -647,9 +678,18 @@ ADR-006 — Module layering
 ADR-007 — One configuration system
 ADR-008 — Assembly solve as regeneration final pass
 ADR-009 — The CLI edit is a document transaction
+ADR-010 — Drawings live in the document
+ADR-011 — Drawing intent is canonical, projection is derived
+ADR-012 — Drawing references name semantic geometry only
+ADR-013 — View orientation and drawing scale
+ADR-014 — Drawing geometry is built on demand
+ADR-015 — Drawing module and layer (supersedes ADR-006's table)
+ADR-016 — The drawing scene is the export boundary
+ADR-017 — Drawing identity model
 ```
 
-`P14-ARCH-001` allocates the next numbers.
+`P14-ARCH-001` allocated ADR-010 to ADR-017. The next milestone that needs
+one continues from ADR-018.
 
 ---
 
