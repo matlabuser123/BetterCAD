@@ -10,8 +10,8 @@
 
 ```text
 Current:   P14 — Technical Drawings
-Next:      P14-SHEET-001 — Drawing documents / sheets / formats
-Then:      P14-VIEW-001 — Base and projected drawing views
+Next:      P14-VIEW-001 — Base and projected drawing views
+Then:      P14-VIEW-002 — Section / detail / auxiliary views
 
 Released:  v0.1.0 — P0–P10
 Qualified: P11, P12, P13
@@ -132,26 +132,26 @@ Next → P14-SHEET-001
 
 ---
 
-# P14-SHEET-001
+# DONE — P14-SHEET-001
 
 ## Drawing Documents / Sheets / Formats
 
-* [ ] Apply the ADR-015 layer renumber — `drawing` 4, `io` 5, renderer/scripting 6 — in `CheckLayering.cmake` and `src/CMakeLists.txt`
-* [ ] Update `ARCHITECTURE.md` **and** `docs/architecture.md` with the new table (ADR-006's identical renumber went unrecorded in both for fifteen milestones; `P13-QUAL-001` found it)
-* [ ] Create the `drawing` module per ADR-015
-* [ ] Implement strong drawing/sheet IDs
-* [ ] Implement sheet creation/deletion
-* [ ] Implement standard sheet sizes
-* [ ] Implement portrait / landscape orientation
-* [ ] Implement drawing units and scale
-* [ ] Implement margins / borders
-* [ ] Implement title-block data model
-* [ ] Validate multiple sheets per drawing
-* [ ] Validate deterministic sheet geometry
-* [ ] Validate save/load
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Apply the ADR-015 layer renumber — `drawing` 4, `io` 5, renderer/scripting 6; no existing file's includes had to change
+* [x] Update `ARCHITECTURE.md` **and** `docs/architecture.md` with the new table — and `CLAUDE.md`, found stale by two renumbers
+* [x] Create the `drawing` module per ADR-015 — links `core` only, contains no OCCT; a new checker fixture fails the build if `drawing` ever includes `io`
+* [x] Implement strong sheet ID — `SheetId` widens to `ObjectId`; two compile-failure cases pin what it is not. **No `DrawingId`:** ADR-017 defines none
+* [x] Implement sheet creation/deletion — through the ordinary document object lifecycle; a rejected sheet consumes no ID
+* [x] Implement standard sheet sizes — ISO 216 A0–A4, the standard's own rounded values, checked against the halving property
+* [x] Implement portrait / landscape orientation — format and orientation stored, size derived, so a round trip cannot drift
+* [x] Implement drawing units and scale — an exact `paper:model` pair, so `1:3` survives and `2:4` stays distinct from `1:2`
+* [x] Implement margins / borders — four lengths; the usable region is derived and margins that leave no room are refused
+* [x] Implement title-block data model — eight semantic fields; the scale text, sheet number and count are derived, never stored
+* [x] Validate multiple sheets per drawing — deleting the middle sheet moves every number and no ID
+* [x] Validate deterministic sheet geometry — bit-identical across 5 formats × 2 orientations, and across a file round trip
+* [x] Validate save/load — existing envelope, no new key, no version bump; 11 malformed files refused; all 32 committed models still load
+* [x] Adversarial review PASS — 16 questions, 4 findings, 3 production defects, all fixed
+* [x] Regression PASS — 1720/1720 on three presets from clean, 0 warnings, 17/17 stages exit 0
+* [x] Evidence recorded — `docs/verification/P14-SHEET-001/`
 
 ### Gate
 
@@ -163,6 +163,36 @@ sheet model correct
 + multi-sheet behavior correct
 + persistence PASS
 + determinism PASS
+```
+
+Met: 46 new tests; 1720/1720 on `debug`, `release` and `debug-shared`, each
+from clean; 539/539 five times over in `release` and `debug`; 0 compiler
+warnings in all three builds; 17/17 stages exit 0; the no-op rebuild compiled
+0 and linked 0 in every preset.
+
+Three production defects, found three different ways. **The shared build did
+not link** — `DrawingScale::label()` was defined out-of-line on a struct with
+no export macro, so it was hidden under `-fvisibility=hidden`. Debug passed,
+Release passed, both their full suites passed; only `debug-shared` caught it,
+which is the entire argument for keeping it a hard gate. **`sheetNumber()` and
+`sheetCount()` were `noexcept` while calling a function that allocates**, so
+an allocation failure would have terminated the process rather than
+propagating — found by reading the diff, not by a test. And **`Sheet::size()`
+dereferenced an optional unchecked**, unreachable today and undefined
+behaviour the day a format is added without a size.
+
+A fourth was caught by a test doing its job: the writer dispatch arm was an
+early `return` instead of a branch in the chain, so a sheet's data replaced
+the `{id, type, name, data}` envelope rather than filling it.
+
+Worth carrying forward: what is stored is the **format and the orientation**,
+never a width and a height. That is why portrait → landscape → portrait is
+bit-identical rather than nearly so — there is nothing stored that could
+drift. The same reasoning made the scale an exact pair instead of a double.
+
+```text
+P14-SHEET-001 → [x]
+Next → P14-VIEW-001
 ```
 
 ---

@@ -34,7 +34,7 @@ the `architecture.layering` test. Fixture trees under
    and `src/renderer/`. The modelling libraries are GUI-free.
 3. **Layering.** A module may include public headers of its own module or of a
    lower layer only. Layers: `core` 0, `sketch` 1, `features` 2, `assembly` 3,
-   `io` 4, `renderer`/`scripting` 5.
+   `drawing` 4, `io` 5, `renderer`/`scripting` 6.
 4. **Public/private split.** Public headers live in `include/bettercad/<module>/`
    and use only `<bettercad/...>`-style includes. Private headers live next to
    their sources in `src/<module>/`.
@@ -48,6 +48,7 @@ the `architecture.layering` test. Fixture trees under
 | `bettercad_sketch`           | `BetterCAD::sketch`           | library    | Sketches, constraints, solver (layer 1)       |
 | `bettercad_features`         | `BetterCAD::features`         | library    | Features, regeneration, validation (layer 2)  |
 | `bettercad_assembly`         | `BetterCAD::assembly`         | library    | Components, mates, constraint solver (layer 3)|
+| `bettercad_drawing`          | `BetterCAD::drawing`          | library    | Drawing sheets and formats (layer 4)          |
 | `bettercad_io`               | `BetterCAD::io`               | library    | Native document files, STEP/STL export        |
 | `bettercad_cli_lib`          | `BetterCAD::cli_lib`          | static lib | CLI commands (new, info, validate, export)    |
 | `bettercad_cli`              | —                             | executable | `bettercad-cli`                               |

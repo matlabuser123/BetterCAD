@@ -5,6 +5,7 @@
 #include "io/json/JsonReader.hpp"
 
 #include <bettercad/assembly/Component.hpp>
+#include <bettercad/drawing/Sheet.hpp>
 #include <bettercad/assembly/Mate.hpp>
 #include <bettercad/core/document/References.hpp>
 #include <bettercad/core/math/Direction.hpp>
@@ -61,6 +62,13 @@ namespace bettercad::io::detail {
 [[nodiscard]] Json mateToJson(const assembly::Mate& mate);
 [[nodiscard]] Result<std::unique_ptr<assembly::Mate>> mateFromJson(const Json& data, std::string name,
                                                                     std::string_view path);
+
+/// "format", "orientation", "margins" and "scale" always; "width"/"height"
+/// only for a custom sheet, whose size is intent rather than derived from its
+/// format; "title_block" only when it says something.
+[[nodiscard]] Json sheetToJson(const drawing::Sheet& sheet);
+[[nodiscard]] Result<std::unique_ptr<drawing::Sheet>> sheetFromJson(const Json& data, std::string name,
+                                                                     std::string_view path);
 
 /// "part": the object ID of the part this component places, and
 /// "suppressed": true, written only when it is.

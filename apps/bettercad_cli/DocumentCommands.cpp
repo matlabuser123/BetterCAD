@@ -2,6 +2,7 @@
 
 #include <bettercad/assembly/Component.hpp>
 #include <bettercad/assembly/Mate.hpp>
+#include <bettercad/drawing/Sheets.hpp>
 #include <bettercad/core/document/MateReference.hpp>
 #include <bettercad/core/document/ObjectReference.hpp>
 #include <bettercad/core/document/Document.hpp>
@@ -389,6 +390,16 @@ std::string describeMateTarget(const Document& document, const MateTarget& targe
 }
 
 std::string describeObject(const Document& document, const DocumentObject& object) {
+    if (const auto* sheet = dynamic_cast<const drawing::Sheet*>(&object)) {
+        const drawing::SheetDefinition& d = sheet->definition();
+        const auto [width, height] = sheet->size();
+        // Sheet N of M is the sheet's POSITION, not its ID (ADR-017): it
+        // changes when an earlier sheet is deleted.
+        return std::format("{} {}, {} x {} mm, scale {}, sheet {} of {}", drawing::toString(d.format),
+                           drawing::toString(d.orientation), width.in(units::mm), height.in(units::mm),
+                           d.scale.label(), drawing::sheetNumber(document, sheet->sheetId()),
+                           drawing::sheetCount(document));
+    }
     if (const auto* mate = dynamic_cast<const assembly::Mate*>(&object)) {
         const assembly::MateDefinition& d = mate->definition();
         std::string text{assembly::toString(d.type)};

@@ -104,9 +104,10 @@ change:
   `occt/` adapter directory under `src/`. Qt only in `apps/bettercad/` and
   `src/renderer/`.
 - **Layering:** a module includes public headers of its own module or a lower
-  layer only. `core` 0, `sketch` 1, `features` 2, `io` 3,
-  `renderer`/`scripting` 4. Public headers in `include/bettercad/<module>/`,
-  private headers beside their sources.
+  layer only. `core` 0, `sketch` 1, `features` 2, `assembly` 3, `drawing` 4,
+  `io` 5, `renderer`/`scripting` 6. Public headers in
+  `include/bettercad/<module>/`, private headers beside their sources.
+  `tests/architecture/CheckLayering.cmake` holds the table in force.
 - **Stable typed IDs** for persistent identity — never indices, kernel handles or
   addresses.
 - **Units are part of correctness.** Engineering APIs take `Length`, `Angle`,

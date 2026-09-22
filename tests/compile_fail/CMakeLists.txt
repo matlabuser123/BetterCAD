@@ -68,4 +68,6 @@ bettercad_compile_fail_case(ids "${_ids}" OBJECT_TO_COMPONENT_ID "conversion fro
 bettercad_compile_fail_case(ids "${_ids}" COMPONENT_ID_AS_FEATURE_ID "conversion from .*ComponentIdTag.* to non-scalar type .*FeatureIdTag")
 bettercad_compile_fail_case(ids "${_ids}" OBJECT_TO_MATE_ID "conversion from .*ObjectIdTag.* to non-scalar type")
 bettercad_compile_fail_case(ids "${_ids}" MATE_ID_AS_COMPONENT_ID "conversion from .*MateIdTag.* to non-scalar type .*ComponentIdTag")
+bettercad_compile_fail_case(ids "${_ids}" OBJECT_TO_SHEET_ID "conversion from .*ObjectIdTag.* to non-scalar type")
+bettercad_compile_fail_case(ids "${_ids}" SHEET_ID_AS_COMPONENT_ID "conversion from .*SheetIdTag.* to non-scalar type .*ComponentIdTag")
 bettercad_compile_fail_case(ids "${_ids}" ENTITY_ID_AS_OBJECT_ID "could not convert .*EntityId")

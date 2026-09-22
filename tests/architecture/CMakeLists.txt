@@ -21,6 +21,9 @@ bettercad_add_process_test(architecture.checker.qt-leak
 bettercad_add_process_test(architecture.checker.layer-violation
     COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/layer-violation|-P|${_check_layering}"
     EXIT_CODE 1 STDERR_REGEX "1 violation.*'core' must not depend on 'sketch'")
+bettercad_add_process_test(architecture.checker.drawing-layer-violation
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/drawing-layer-violation|-P|${_check_layering}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*'drawing' must not depend on 'io'")
 bettercad_add_process_test(architecture.checker.private-include
     COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/private-include|-P|${_check_layering}"
     EXIT_CODE 1 STDERR_REGEX "1 violation.*quoted include")

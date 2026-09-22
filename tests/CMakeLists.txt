@@ -25,6 +25,8 @@ bettercad_add_executable(bettercad_tests
     SOURCES
         TestHelpers.hpp
         assembly/CommandTests.cpp
+        drawing/SheetFileTests.cpp
+        drawing/SheetTests.cpp
         assembly/ComponentFileTests.cpp
         assembly/ComponentTests.cpp
         assembly/ConfigurationTests.cpp
@@ -176,6 +178,7 @@ bettercad_add_executable(bettercad_tests
     LINK
         BetterCAD::assembly
         BetterCAD::core
+        BetterCAD::drawing
         BetterCAD::features
         BetterCAD::geometry
         BetterCAD::io
@@ -214,6 +217,7 @@ if(TARGET bettercad_cli_lib)
         cli/SpatialSweepCliTests.cpp
         cli/ExpressionCliTests.cpp
         cli/ComponentCliTests.cpp
+        cli/SheetCliTests.cpp
         cli/AssemblyCliTests.cpp
         reference/AssemblyWorkflowTests.cpp
         io/AssemblyStepTests.cpp

@@ -27,9 +27,15 @@ set(layer_features 2)
 # serialize it. The rule below is strictly-lower, so there is no number
 # between them and io moves up with everything above it (ADR-006).
 set(layer_assembly 3)
-set(layer_io 4)
-set(layer_renderer 5)
-set(layer_scripting 5)
+# drawing sits above assembly, whose solved placements an assembly drawing
+# projects, and below io, which must serialize its objects. Strictly-lower
+# again left no number between 3 and 4, so io moves up a second time
+# (ADR-015). Projection and hidden-line removal are NOT here: they are
+# kernel work and live in core/geometry behind the occt adapter.
+set(layer_drawing 4)
+set(layer_io 5)
+set(layer_renderer 6)
+set(layer_scripting 6)
 
 set(qt_allowed_regex "^(apps/bettercad|src/renderer)/")
 set(occt_allowed_regex "^src/(.+/)?occt/")

@@ -83,16 +83,17 @@ Python and a future agent. The GUI must never become the architecture.
 | 1 | `sketch` | Entities, constraints, solver, profile extraction |
 | 2 | `features` | Feature definitions, regeneration, validation |
 | 3 | `assembly` | Components, placements, mates, the constraint solver, reference resolution |
-| 4 | `io` | Native `.bcad`, STEP/STL export |
-| 5 | `renderer`, `scripting` | Display data, bindings |
+| 4 | `drawing` | Sheets, views, dimensions, annotations, the drawing scene |
+| 5 | `io` | Native `.bcad`, STEP/STL export |
+| 6 | `renderer`, `scripting` | Display data, bindings |
 | — | `apps` | Desktop application, CLI |
 
 A module may include the public headers of its own module or of a lower layer,
 and nothing else. Public headers live in `include/bettercad/<module>/`; private
 headers beside their sources in `src/<module>/`.
 
-Target directories not yet created: `src/drawing/`, `src/simulation/`,
-`src/versioning/`, `benchmarks/`.
+Target directories not yet created: `src/simulation/`, `src/versioning/`,
+`benchmarks/`.
 `src/renderer/` and `src/scripting/` exist but are empty.
 
 The table above is the table in force, mirrored from
@@ -113,22 +114,16 @@ core 0, sketch 1, features 2, assembly 3, io 4, renderer/scripting 5
 serialize it; with `io` previously at 3 there was no number between them, so
 the renumber was unavoidable rather than cosmetic.
 
-**A further renumber is decided and not yet applied.**
 `P14-ARCH-001` found the same problem again — `drawing` must sit above
 `assembly` and below `io`, and there is no number between 3 and 4 — so
 [ADR-015](docs/architecture/decisions/ADR-015-drawing-module-and-layer.md)
-extends the table to:
+moved `io` up a second time. `P14-SHEET-001` applied it when it created
+`src/drawing/`. The table above is in force.
 
-```text
-core 0, sketch 1, features 2, assembly 3, drawing 4, io 5, renderer/scripting 6
-```
-
-**`P14-SHEET-001` applies it**, when it creates `src/drawing/`, and updating
-this section and `docs/architecture.md` is on that milestone's checklist. Until
-then the table above the `##` heading is the one `CheckLayering.cmake` holds
-and the one in force. If you are reading this after `src/drawing/` exists, this
-paragraph is stale and the tables above are wrong — which is exactly what
-happened to ADR-006's renumber for fifteen milestones.
+Projection and hidden-line removal are **not** in `drawing`: they are kernel
+work, so they belong in `core/geometry` behind the OCCT adapter, below
+`assembly` rather than above it. A drawing subsystem is three places — the
+geometry primitive at 0, the domain module at 4, the format writers at 5.
 
 ## Document Model
 
@@ -144,17 +139,19 @@ Document
 ├── bodies
 ├── dependencies
 ├── configurations
-├── component instances       [P13: decided, not built]
-├── mate constraints          [P13: decided, not built]
+├── component instances
+├── mate constraints
+├── drawing sheets
 ├── material assignments      [future]
 └── analysis definitions      [future]
 ```
 
-Component instances and mate constraints are not a separate container: they
-are `DocumentObject` kinds like sketches and features, so they inherit stable
-IDs, revisions, dependency edges, commands, undo and the existing JSON
-envelope
-([ADR-002](docs/architecture/decisions/ADR-002-assemblies-live-in-the-document.md)).
+None of these is a separate container: component instances, mate constraints
+and drawing sheets are `DocumentObject` kinds like sketches and features, so
+they inherit stable IDs, revisions, dependency edges, commands, undo and the
+existing JSON envelope
+([ADR-002](docs/architecture/decisions/ADR-002-assemblies-live-in-the-document.md),
+[ADR-010](docs/architecture/decisions/ADR-010-drawings-live-in-the-document.md)).
 
 **Objects.** Persistent objects share a minimal `DocumentObject` abstraction —
 `id()`, `name()`, `state()`, `type()` — defined in the module that owns the kind,

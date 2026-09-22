@@ -10,6 +10,7 @@ bettercad_add_library(bettercad_io
         StlWriter.cpp
         json/BooleanJson.cpp
         json/ComponentJson.cpp
+        json/SheetJson.cpp
         json/MateJson.cpp
         json/DatumJson.cpp
         json/DocumentJson.cpp
@@ -30,6 +31,7 @@ bettercad_add_library(bettercad_io
         BetterCAD::geometry
     PRIVATE_LINK
         BetterCAD::assembly
+        BetterCAD::drawing
         BetterCAD::features
         BetterCAD::sketch
         nlohmann_json::nlohmann_json

@@ -22,6 +22,7 @@ target_link_libraries(bettercad_cli_lib
     PRIVATE
         BetterCAD::assembly
         BetterCAD::compiler_options
+        BetterCAD::drawing
         BetterCAD::features
         BetterCAD::io
         BetterCAD::sketch
