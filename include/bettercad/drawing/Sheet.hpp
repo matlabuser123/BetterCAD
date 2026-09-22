@@ -71,6 +71,24 @@ enum class SheetOrientation : std::uint8_t {
 [[nodiscard]] BETTERCAD_DRAWING_EXPORT std::optional<std::pair<Length, Length>> standardSize(
     SheetFormat format) noexcept;
 
+/// Where a projected view is placed relative to the view it derives from
+/// (ADR-018).
+///
+/// FirstAngle is ISO 128 -- used across Europe and Asia -- and places a Top
+/// view BELOW its parent and a Right view to its LEFT. ThirdAngle is
+/// ASME Y14.3 and places both on the opposite side. A drawing read in the
+/// wrong convention is mirrored, not slightly wrong, which is why the
+/// standard requires the convention to be shown on the sheet.
+enum class ProjectionConvention : std::uint8_t {
+    FirstAngle,
+    ThirdAngle,
+};
+
+/// "first_angle", "third_angle".
+[[nodiscard]] BETTERCAD_DRAWING_EXPORT std::string_view toString(ProjectionConvention convention) noexcept;
+[[nodiscard]] BETTERCAD_DRAWING_EXPORT std::optional<ProjectionConvention> projectionConventionFromString(
+    std::string_view text) noexcept;
+
 /// A drawing scale, as an exact ratio of paper to model (ADR-013).
 ///
 /// `1:2` is `{1, 2}` and halves; `2:1` is `{2, 1}` and doubles. The pair is
@@ -164,6 +182,9 @@ struct SheetDefinition {
     Length customHeight{};
     SheetMargins margins{};
     DrawingScale scale{};
+    /// Where projected views land relative to their parent (ADR-018).
+    /// First angle by default, because the rest of the project is ISO.
+    ProjectionConvention convention = ProjectionConvention::FirstAngle;
     TitleBlock titleBlock{};
 
     friend bool operator==(const SheetDefinition&, const SheetDefinition&) = default;

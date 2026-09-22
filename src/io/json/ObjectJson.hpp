@@ -6,6 +6,7 @@
 
 #include <bettercad/assembly/Component.hpp>
 #include <bettercad/drawing/Sheet.hpp>
+#include <bettercad/drawing/View.hpp>
 #include <bettercad/assembly/Mate.hpp>
 #include <bettercad/core/document/References.hpp>
 #include <bettercad/core/math/Direction.hpp>
@@ -69,6 +70,14 @@ namespace bettercad::io::detail {
 [[nodiscard]] Json sheetToJson(const drawing::Sheet& sheet);
 [[nodiscard]] Result<std::unique_ptr<drawing::Sheet>> sheetFromJson(const Json& data, std::string name,
                                                                      std::string_view path);
+
+/// "sheet" always; a base view adds "source", "orientation", "x" and "y";
+/// a projected view adds "parent", "direction" and "spacing" instead, because
+/// its orientation and placement are derived from its parent (ADR-018).
+/// "scale" only when the view overrides its sheet's.
+[[nodiscard]] Json viewToJson(const drawing::View& view);
+[[nodiscard]] Result<std::unique_ptr<drawing::View>> viewFromJson(const Json& data, std::string name,
+                                                                   std::string_view path);
 
 /// "part": the object ID of the part this component places, and
 /// "suppressed": true, written only when it is.

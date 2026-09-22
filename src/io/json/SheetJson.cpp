@@ -115,6 +115,11 @@ Json sheetToJson(const drawing::Sheet& sheet) {
         json["height"] = d.customHeight.si();
     }
     json["margins"] = marginsToJson(d.margins);
+    // Written only when it is not the default, so a sheet saved before
+    // ADR-018 and one saved now are byte-identical (ADR-018).
+    if (d.convention != drawing::ProjectionConvention::FirstAngle) {
+        json["convention"] = std::string{drawing::toString(d.convention)};
+    }
     // The exact pair, not the quotient: the label is intent and 1:3 has no
     // exact double (ADR-013).
     json["scale"] = Json::array({d.scale.paper, d.scale.model});
@@ -128,7 +133,7 @@ Result<std::unique_ptr<drawing::Sheet>> sheetFromJson(const Json& data, std::str
                                                       std::string_view path) {
     if (auto object = requireObject(data, path,
                                     {"format", "orientation", "width", "height", "margins", "scale",
-                                     "title_block"});
+                                     "convention", "title_block"});
         !object) {
         return std::unexpected(object.error());
     }
@@ -200,6 +205,19 @@ Result<std::unique_ptr<drawing::Sheet>> sheetFromJson(const Json& data, std::str
         }
     }
     definition.scale = DrawingScale{(*scale)[0].get<std::uint32_t>(), (*scale)[1].get<std::uint32_t>()};
+
+    if (const auto found = data.find("convention"); found != data.end()) {
+        if (!found->is_string()) {
+            return parseError(childPath(path, "convention"), "must be a string");
+        }
+        const auto convention = drawing::projectionConventionFromString(found->get<std::string>());
+        if (!convention) {
+            return parseError(childPath(path, "convention"),
+                              std::format("unknown projection convention '{}'",
+                                          found->get<std::string>()));
+        }
+        definition.convention = *convention;
+    }
 
     if (const auto block = data.find("title_block"); block != data.end()) {
         auto readBlock = titleBlockFromJson(*block, childPath(path, "title_block"));

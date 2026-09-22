@@ -10,8 +10,8 @@
 
 ```text
 Current:   P14 — Technical Drawings
-Next:      P14-VIEW-001 — Base and projected drawing views
-Then:      P14-VIEW-002 — Section / detail / auxiliary views
+Next:      P14-VIEW-002 — Section / detail / auxiliary views
+Then:      P14-HLR-001 — Hidden-line / visible-edge generation
 
 Released:  v0.1.0 — P0–P10
 Qualified: P11, P12, P13
@@ -197,24 +197,24 @@ Next → P14-VIEW-001
 
 ---
 
-# P14-VIEW-001
+# DONE — P14-VIEW-001
 
 ## Base / Projected Views
 
-* [ ] Implement base drawing view
-* [ ] Implement Front / Top / Right / Left / Bottom / Rear orientations
-* [ ] Implement projected views
-* [ ] Implement arbitrary isometric view
-* [ ] Implement per-view scale
-* [ ] Implement view placement on sheet
-* [ ] Preserve model-to-view identity
-* [ ] Validate orthographic projection mathematically
-* [ ] Validate projected-view alignment
-* [ ] Validate part and assembly geometry
-* [ ] Determinism PASS
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Implement base drawing view — names a source and an orientation; a projected view names a parent instead and inherits both
+* [x] Implement Front / Top / Right / Left / Bottom / Rear — each checked against a hand-written basis; no two share one, and opposite views have opposed normals
+* [x] Implement projected views — the basis is derived from the parent, so ADR-018 removes the possibility of contradicting it rather than testing for it
+* [x] Implement isometric — a preset, not a free camera; all three axes foreshorten to sqrt(2/3), +Z projects straight up
+* [x] Implement per-view scale — inherits the sheet's unless overridden; 1:1, 1:2 and 2:1 give exactly the drawn sizes
+* [x] Implement view placement on sheet — anchors the projected bounding-box **centre**, stated rather than left ambiguous
+* [x] Preserve model-to-view identity — `ObjectReference`, walked up the parent chain; never a pointer, handle, index or name
+* [x] Validate orthographic projection mathematically — expected coordinates computed in the test, max error < 1e-9 mm
+* [x] Validate projected-view alignment — **exact** equality, because the derivation gives the same number rather than keeping two in step
+* [x] Validate part and assembly geometry — an asymmetric box in all six views; components drawn at their **solved** transforms, rotation and repeated instances included
+* [x] Determinism PASS — bit-identical twice, and 1763/1763 across all three presets
+* [x] Adversarial review PASS — 18 questions, 1 production defect (a loop of projected views recursed until the stack ran out), fixed
+* [x] Regression PASS — 1763/1763 on three presets from clean, 0 warnings, 17/17 stages exit 0
+* [x] Evidence recorded — `docs/verification/P14-VIEW-001/`
 
 ### Gate
 
@@ -225,6 +225,35 @@ projection mathematically correct
 + view alignment correct
 + model references stable
 + deterministic output
+```
+
+Met: 43 new tests and 1504 assertions; 1763/1763 on `debug`, `release` and
+`debug-shared`, each from clean; 683/683 five times over; 0 compiler warnings;
+17/17 stages exit 0; the no-op rebuild compiled 0 in every preset.
+
+**The milestone could not start until an architecture gap was closed.** No P14
+ADR had chosen first-angle or third-angle projection, and that rule decides
+which side of its parent every projected view lands on. ADR-018 makes it
+per-sheet intent defaulting to first angle — ISO 128 requires the convention
+to be shown on the drawing, so it is intent by definition, and the project is
+already ISO everywhere else.
+
+The adversarial review found a crash rather than a cosmetic issue: only
+*self*-parenting was prevented, so A-from-B plus B-from-A was constructible,
+and the derivations walked the parent chain by direct recursion with no depth
+guard. Evaluating either would have exhausted the stack instead of
+diagnosing. Refused at the edit now, and both recursions are depth-limited as
+a second line for documents loaded from a file.
+
+Worth carrying forward: alignment is **exact** rather than approximate because
+a Top view's x *is* its parent's x — the derivation produces the same number
+instead of keeping two numbers in step. That is the difference between
+alignment that is derived and alignment that is maintained, and only the first
+cannot drift.
+
+```text
+P14-VIEW-001 → [x]
+Next → P14-VIEW-002
 ```
 
 ---
@@ -716,10 +745,11 @@ ADR-014 — Drawing geometry is built on demand
 ADR-015 — Drawing module and layer (supersedes ADR-006's table)
 ADR-016 — The drawing scene is the export boundary
 ADR-017 — Drawing identity model
+ADR-018 — Projection convention is sheet intent
 ```
 
-`P14-ARCH-001` allocated ADR-010 to ADR-017. The next milestone that needs
-one continues from ADR-018.
+`P14-ARCH-001` allocated ADR-010 to ADR-017 and `P14-VIEW-001` added
+ADR-018. The next milestone that needs one continues from ADR-019.
 
 ---
 

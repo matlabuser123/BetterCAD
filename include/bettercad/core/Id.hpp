@@ -48,6 +48,9 @@ struct MateIdTag {
 struct SheetIdTag {
     static constexpr std::string_view name = "sheet";
 };
+struct ViewIdTag {
+    static constexpr std::string_view name = "view";
+};
 struct EntityIdTag {
     static constexpr std::string_view name = "entity";
 };
@@ -82,6 +85,8 @@ template <>
 inline constexpr bool isDocumentObjectTag<MateIdTag> = true;
 template <>
 inline constexpr bool isDocumentObjectTag<SheetIdTag> = true;
+template <>
+inline constexpr bool isDocumentObjectTag<ViewIdTag> = true;
 
 template <typename Tag, typename Value = std::uint64_t>
 class Id;
@@ -153,6 +158,11 @@ using MateId = Id<MateIdTag>;
 /// block is its position among the sheets, which changes when another is
 /// deleted, and is never this.
 using SheetId = Id<SheetIdTag>;
+/// One view on a drawing sheet. A view is a document object and a node in
+/// the dependency graph -- it depends on its sheet, its source and its
+/// parent -- so its ID widens to ObjectId (ADR-017). It is not a SheetId: a
+/// view sits on a sheet, it is not one.
+using ViewId = Id<ViewIdTag>;
 /// Sketch entity (point, line, arc, ...); unique within its sketch.
 using EntityId = Id<EntityIdTag>;
 /// Sketch constraint; unique within its sketch.

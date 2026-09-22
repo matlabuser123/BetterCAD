@@ -3,6 +3,7 @@
 #include <bettercad/assembly/Component.hpp>
 #include <bettercad/assembly/Mate.hpp>
 #include <bettercad/drawing/Sheets.hpp>
+#include <bettercad/drawing/Views.hpp>
 #include <bettercad/core/document/MateReference.hpp>
 #include <bettercad/core/document/ObjectReference.hpp>
 #include <bettercad/core/document/Document.hpp>
@@ -390,6 +391,18 @@ std::string describeMateTarget(const Document& document, const MateTarget& targe
 }
 
 std::string describeObject(const Document& document, const DocumentObject& object) {
+    if (const auto* view = dynamic_cast<const drawing::View*>(&object)) {
+        const drawing::ViewDefinition& d = view->definition();
+        const auto scale = drawing::effectiveScale(document, view->viewId());
+        const std::string scaleText = scale ? scale->label() : std::string{"unknown"};
+        if (drawing::isBaseView(d)) {
+            return std::format("{} of {}, scale {}, on {}", drawing::toString(*d.orientation),
+                               nameOrId(document, d.source.object), scaleText, nameOrId(document, ObjectId{d.sheet}));
+        }
+        return std::format("{} projected from {}, scale {}, on {}", drawing::toString(*d.direction),
+                           nameOrId(document, ObjectId{*d.parent}), scaleText,
+                           nameOrId(document, ObjectId{d.sheet}));
+    }
     if (const auto* sheet = dynamic_cast<const drawing::Sheet*>(&object)) {
         const drawing::SheetDefinition& d = sheet->definition();
         const auto [width, height] = sheet->size();

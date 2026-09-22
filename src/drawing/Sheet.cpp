@@ -87,6 +87,26 @@ std::optional<SheetOrientation> sheetOrientationFromString(std::string_view text
     return std::nullopt;
 }
 
+std::string_view toString(ProjectionConvention convention) noexcept {
+    switch (convention) {
+    case ProjectionConvention::FirstAngle:
+        return "first_angle";
+    case ProjectionConvention::ThirdAngle:
+        return "third_angle";
+    }
+    return "unknown";
+}
+
+std::optional<ProjectionConvention> projectionConventionFromString(std::string_view text) noexcept {
+    if (text == "first_angle") {
+        return ProjectionConvention::FirstAngle;
+    }
+    if (text == "third_angle") {
+        return ProjectionConvention::ThirdAngle;
+    }
+    return std::nullopt;
+}
+
 std::optional<std::pair<Length, Length>> standardSize(SheetFormat format) noexcept {
     for (const StandardSize& size : kStandardSizes) {
         if (size.format == format) {
@@ -126,6 +146,9 @@ Result<void> validate(const SheetDefinition& definition) {
     }
     if (toString(definition.orientation) == "unknown") {
         return wrong("a sheet must have a known orientation");
+    }
+    if (toString(definition.convention) == "unknown") {
+        return wrong("a sheet must have a known projection convention");
     }
     if (auto valid = validate(definition.scale); !valid) {
         return std::unexpected(valid.error());

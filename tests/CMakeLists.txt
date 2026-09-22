@@ -27,6 +27,9 @@ bettercad_add_executable(bettercad_tests
         assembly/CommandTests.cpp
         drawing/SheetFileTests.cpp
         drawing/SheetTests.cpp
+        drawing/ViewAssemblyTests.cpp
+        drawing/ViewProjectionTests.cpp
+        drawing/ViewTests.cpp
         assembly/ComponentFileTests.cpp
         assembly/ComponentTests.cpp
         assembly/ConfigurationTests.cpp

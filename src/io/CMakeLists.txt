@@ -11,6 +11,7 @@ bettercad_add_library(bettercad_io
         json/BooleanJson.cpp
         json/ComponentJson.cpp
         json/SheetJson.cpp
+        json/ViewJson.cpp
         json/MateJson.cpp
         json/DatumJson.cpp
         json/DocumentJson.cpp

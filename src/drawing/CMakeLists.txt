@@ -12,8 +12,12 @@ bettercad_add_library(bettercad_drawing
     SOURCES
         Sheet.cpp
         Sheets.cpp
+        View.cpp
+        Views.cpp
     PUBLIC_LINK
         BetterCAD::core
+        BetterCAD::geometry
+        BetterCAD::assembly
 )
 
 install(TARGETS bettercad_drawing
