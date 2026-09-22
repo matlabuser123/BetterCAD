@@ -233,3 +233,46 @@ TEST_CASE("ViewAssembly_ProjectionIsDeterministicForAnAssembly",
     }
     CHECK(first->bounds == second->bounds);
 }
+
+TEST_CASE("SectionViewAssembly_CutsTheComponentWhereTheSolverPutIt",
+          "[drawing][view][assembly][section][p14]") {
+    // P14-VIEW-002. The same failure this file exists to prevent, for a cut
+    // rather than a projection -- and here it cannot pass by accident. The
+    // component's solved position spans x 250..350, so a plane at x = 300
+    // crosses it. Had the section been cut from the untransformed part, which
+    // spans x 0..100, that plane would have missed it entirely and the cut
+    // would have failed rather than come out wrong.
+    Assembly a = makeAssembly();
+    const ComponentId c = require(assembly::createComponent(
+        a.document, "BlockA",
+        {.part = a.part, .placement = ComponentPlacement{.translation = {250_mm, 0_mm, 0_mm}}}));
+    a.regenerate();
+
+    const ViewId front = viewOf(a, "Front", ObjectId{c}, StandardView::Front, {200_mm, 150_mm});
+
+    drawing::CuttingPlane plane;
+    plane.origin = Point3D{300_mm, 0_mm, 0_mm};
+    plane.normal = Direction3D::unitX();
+    plane.reference = Direction3D::unitZ();
+    const ViewId section = require(
+        drawing::createView(a.document, "SectionAA",
+                            ViewDefinition{.kind = drawing::ViewKind::Section,
+                                           .sheet = a.sheet,
+                                           .parent = front,
+                                           .section = plane,
+                                           .spacing = 80_mm}));
+
+    // The cut face is the block's depth by its height: 60 x 40 = 2400 mm^2.
+    const auto cut = drawing::sectionOf(a.document, section, a.bodies(), a.transforms());
+    REQUIRE(cut.has_value());
+    REQUIRE(cut->loops.size() == 1);
+    CHECK_THAT(cut->area.si() * 1e6, Catch::Matchers::WithinRel(2400.0, 1e-9));
+    CHECK_FALSE(cut->hatch.empty());
+
+    // Without the solved transform there is nothing to cut, and that is said
+    // rather than drawn as an empty section.
+    const auto unsolved = drawing::sectionOf(a.document, section, a.bodies());
+    REQUIRE_FALSE(unsolved.has_value());
+    CHECK(errorCode(unsolved) == ErrorCode::FailedPrecondition);
+    CHECK_THAT(unsolved.error().message, ContainsSubstring("did not solve"));
+}

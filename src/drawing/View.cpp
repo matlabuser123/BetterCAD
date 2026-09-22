@@ -183,52 +183,176 @@ std::pair<double, double> placementStep(ProjectedDirection direction,
     return {0.0, 0.0};
 }
 
+std::string_view toString(ViewKind kind) noexcept {
+    switch (kind) {
+    case ViewKind::Base:
+        return "base";
+    case ViewKind::Projected:
+        return "projected";
+    case ViewKind::Section:
+        return "section";
+    case ViewKind::Detail:
+        return "detail";
+    case ViewKind::Auxiliary:
+        return "auxiliary";
+    }
+    return "unknown";
+}
+
+std::optional<ViewKind> viewKindFromString(std::string_view text) noexcept {
+    for (const ViewKind kind : {ViewKind::Base, ViewKind::Projected, ViewKind::Section,
+                                ViewKind::Detail, ViewKind::Auxiliary}) {
+        if (toString(kind) == text) {
+            return kind;
+        }
+    }
+    return std::nullopt;
+}
+
+Result<void> validate(const DetailRegion& region) {
+    if (!std::isfinite(region.centre.x.si()) || !std::isfinite(region.centre.y.si())) {
+        return wrong("a detail region's centre must be finite");
+    }
+    if (!std::isfinite(region.radius.si()) || region.radius.si() <= 0.0) {
+        return wrong("a detail region's radius must be finite and greater than zero");
+    }
+    return {};
+}
+
+Result<void> validate(const ViewDirection& direction) {
+    const Direction3D& n = direction.normal;
+    const Direction3D& r = direction.reference;
+    for (const auto& [name, d] : std::array<std::pair<std::string_view, const Direction3D*>, 2>{
+             {{"normal", &n}, {"reference", &r}}}) {
+        if (!std::isfinite(d->x()) || !std::isfinite(d->y()) || !std::isfinite(d->z())) {
+            return wrong(std::format("an auxiliary view's {} must be finite", name));
+        }
+    }
+    // Frame3D::create projects the reference into the plane, which needs it
+    // not to be (nearly) parallel to the normal. Refused here so the message
+    // names the view's own field rather than a frame the caller never saw.
+    const double alignment = std::abs(n.dot(r));
+    if (alignment > 1.0 - 1e-9) {
+        return wrong("an auxiliary view's reference direction must not be parallel to its normal");
+    }
+    return {};
+}
+
+std::pair<double, double> sheetDisplacement(const std::pair<double, double>& normal,
+                                            ProjectionConvention convention) noexcept {
+    // The same rule placementStep states for the four orthogonal directions,
+    // written for an arbitrary direction: the view goes on the side of the
+    // sheet its own normal points to, reversed in first angle because first
+    // angle projects THROUGH the object onto a plane behind it (ADR-018).
+    const double length = std::hypot(normal.first, normal.second);
+    if (!(length > 0.0)) {
+        return {0.0, 0.0}; // looking the parent's way, or straight against it
+    }
+    const double sign = convention == ProjectionConvention::FirstAngle ? -1.0 : 1.0;
+    return {sign * normal.first / length, sign * normal.second / length};
+}
+
 bool isBaseView(const ViewDefinition& definition) noexcept {
-    return definition.orientation.has_value();
+    return definition.kind == ViewKind::Base;
 }
 
 Result<void> validate(const ViewDefinition& definition) {
     if (!definition.sheet.isValid()) {
         return wrong("a view must name the sheet it sits on");
     }
-
-    const bool base = definition.orientation.has_value();
-    const bool projected = definition.parent.has_value();
-    if (base == projected) {
-        return wrong(base ? "a view is either a base view or a projected view, not both"
-                          : "a view must have either an orientation or a parent");
+    if (toString(definition.kind) == "unknown") {
+        return wrong("a view must have a known kind");
     }
 
+    // Which fields belong to which kind, in one place. Everything below either
+    // requires one of these or refuses it, so a definition can never carry two
+    // kinds' worth of intent and leave the reader to guess which it meant.
+    const bool base = definition.kind == ViewKind::Base;
+    if (base != definition.orientation.has_value()) {
+        return wrong(base ? "a base view must have an orientation"
+                          : std::format("a {} view takes its orientation from its parent, not an "
+                                        "orientation of its own",
+                                        toString(definition.kind)));
+    }
+    if (base == definition.parent.has_value()) {
+        return wrong(base ? "a base view has no parent: it is the root of a chain"
+                          : std::format("a {} view must name its parent", toString(definition.kind)));
+    }
+    if ((definition.kind == ViewKind::Projected) != definition.direction.has_value()) {
+        return wrong(definition.kind == ViewKind::Projected
+                         ? "a projected view must say which direction it is from its parent"
+                         : std::format("a {} view takes no projected direction",
+                                       toString(definition.kind)));
+    }
+    if ((definition.kind == ViewKind::Section) != definition.section.has_value()) {
+        return wrong(definition.kind == ViewKind::Section
+                         ? "a section view must name the plane it cuts on"
+                         : std::format("a {} view takes no cutting plane", toString(definition.kind)));
+    }
+    if ((definition.kind == ViewKind::Detail) != definition.detail.has_value()) {
+        return wrong(definition.kind == ViewKind::Detail
+                         ? "a detail view must name the region of its parent it enlarges"
+                         : std::format("a {} view takes no detail region", toString(definition.kind)));
+    }
+    if ((definition.kind == ViewKind::Auxiliary) != definition.auxiliary.has_value()) {
+        return wrong(definition.kind == ViewKind::Auxiliary
+                         ? "an auxiliary view must name the direction it looks from"
+                         : std::format("a {} view takes no auxiliary direction",
+                                       toString(definition.kind)));
+    }
+
+    // A base view is the one that says what is being drawn; every other kind
+    // inherits it, so two views of one thing cannot disagree.
     if (base) {
         if (toString(*definition.orientation) == "unknown") {
             return wrong("a base view must have a known orientation");
         }
-        if (definition.direction) {
-            return wrong("a base view takes no projected direction");
-        }
-        // A base view is the one that says what is being drawn; a projected
-        // view inherits it, so two views of one thing cannot disagree.
         if (auto valid = validate(definition.source); !valid) {
             return std::unexpected(valid.error());
         }
+    } else if (definition.source.object.isValid()) {
+        return wrong(std::format("a {} view takes its source from its parent and names none of its own",
+                                 toString(definition.kind)));
+    }
+
+    if (definition.direction && toString(*definition.direction) == "unknown") {
+        return wrong("a projected view must have a known direction");
+    }
+    if (definition.section) {
+        if (auto valid = validate(*definition.section); !valid) {
+            return std::unexpected(valid.error());
+        }
+        if (auto valid = validate(definition.hatch); !valid) {
+            return std::unexpected(valid.error());
+        }
+    }
+    if (definition.detail) {
+        if (auto valid = validate(*definition.detail); !valid) {
+            return std::unexpected(valid.error());
+        }
+    }
+    if (definition.auxiliary) {
+        if (auto valid = validate(*definition.auxiliary); !valid) {
+            return std::unexpected(valid.error());
+        }
+    }
+
+    // Placement is intent for the kinds that are placed directly, and derived
+    // for the kinds that align to a parent. Spacing is the other way round.
+    const bool placedDirectly = base || definition.kind == ViewKind::Detail;
+    if (placedDirectly) {
         if (definition.spacing.si() != 0.0) {
-            return wrong("a base view takes no spacing: it is placed directly");
+            return wrong(std::format("a {} view takes no spacing: it is placed directly",
+                                     toString(definition.kind)));
         }
     } else {
-        if (!definition.direction) {
-            return wrong("a projected view must say which direction it is from its parent");
-        }
-        if (toString(*definition.direction) == "unknown") {
-            return wrong("a projected view must have a known direction");
-        }
-        if (definition.source.object.isValid()) {
-            return wrong("a projected view takes its source from its parent and names none of its own");
-        }
         if (!std::isfinite(definition.spacing.si()) || definition.spacing.si() <= 0.0) {
-            return wrong("a projected view's spacing must be finite and greater than zero");
+            return wrong(std::format("a {} view's spacing must be finite and greater than zero",
+                                     toString(definition.kind)));
         }
         if (definition.placement != Point2D{}) {
-            return wrong("a projected view's placement is derived from its parent's; it stores none");
+            return wrong(std::format("a {} view's placement is derived from its parent's; it stores none",
+                                     toString(definition.kind)));
         }
     }
 

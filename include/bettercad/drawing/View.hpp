@@ -9,6 +9,7 @@
 #include <bettercad/core/math/Point.hpp>
 #include <bettercad/core/units/Units.hpp>
 #include <bettercad/drawing/Export.hpp>
+#include <bettercad/drawing/Section.hpp>
 #include <bettercad/drawing/Sheet.hpp>
 
 #include <cstdint>
@@ -25,12 +26,22 @@
 // and WHERE ON THE SHEET. Everything it draws is derived from that and the
 // model, and none of it is persisted (ADR-011).
 //
-// A view is one of two things and never both:
+// A view is exactly one KIND, and never two:
 //
 //     base       names a source and a standard orientation
 //     projected  names a parent and a direction, and takes its orientation
 //                from the parent (ADR-018). It has no orientation of its own
 //                to contradict the parent with.
+//     section    names a parent and a cutting plane, and takes its
+//                orientation from the plane: the plane's own frame IS the
+//                basis it looks through, so the two cannot disagree.
+//     detail     names a parent and a region OF THE PARENT'S SHEET, and
+//                looks the same way the parent does, only closer.
+//     auxiliary  names a parent and a direction of its own, for a face that
+//                none of the six standard orientations faces squarely.
+//
+// Every kind but base derives its source from its parent, so no two views of
+// one thing can disagree about what that thing is (P14-VIEW-001).
 namespace bettercad::drawing {
 
 /// One of the six standard orthographic orientations, or the isometric.
@@ -70,6 +81,68 @@ enum class ProjectedDirection : std::uint8_t {
 [[nodiscard]] BETTERCAD_DRAWING_EXPORT std::optional<ProjectedDirection> projectedDirectionFromString(
     std::string_view text) noexcept;
 
+/// What kind of view this is. Exactly one, always.
+enum class ViewKind : std::uint8_t {
+    Base,
+    Projected,
+    Section,
+    Detail,
+    Auxiliary,
+};
+
+/// "base", "projected", "section", "detail", "auxiliary".
+[[nodiscard]] BETTERCAD_DRAWING_EXPORT std::string_view toString(ViewKind kind) noexcept;
+[[nodiscard]] BETTERCAD_DRAWING_EXPORT std::optional<ViewKind> viewKindFromString(
+    std::string_view text) noexcept;
+
+/// The part of a parent view a detail view enlarges.
+///
+/// The centre and radius are in the PARENT'S SHEET coordinates, because that
+/// is where the engineer draws the detail circle -- on the drawing, around
+/// something already visible -- and not in model space, where they would have
+/// to work out where the feature had landed.
+struct DetailRegion {
+    Point2D centre{};
+    Length radius{};
+    /// Whether the detail is cropped to the circle. A cropped detail shows
+    /// only what falls inside it; an uncropped one keeps whatever the circle
+    /// touched, which is what a "partial view" is.
+    bool cropped = true;
+
+    friend bool operator==(const DetailRegion&, const DetailRegion&) = default;
+};
+
+/// Finite centre, and a radius greater than zero.
+[[nodiscard]] BETTERCAD_DRAWING_EXPORT Result<void> validate(const DetailRegion& region);
+
+/// The direction an auxiliary view looks from.
+///
+/// The normal points from the model toward the viewer, as every view basis
+/// does (ADR-013); the reference fixes which way up the view sits and is
+/// projected into the view plane the way Frame3D::create does.
+struct ViewDirection {
+    Direction3D normal = Direction3D::unitY().reversed();
+    Direction3D reference = Direction3D::unitX();
+
+    friend bool operator==(const ViewDirection&, const ViewDirection&) = default;
+};
+
+/// The two directions usable and not parallel.
+[[nodiscard]] BETTERCAD_DRAWING_EXPORT Result<void> validate(const ViewDirection& direction);
+
+/// Which way, and how far, a view is displaced from its parent on the sheet.
+///
+/// @p normal is the child's view normal expressed in the PARENT'S sheet
+/// axes -- (right . n, up . n). The view is placed on the far side of the
+/// parent in first angle and the near side in third (ADR-018), which is the
+/// whole of the difference, exactly as placementStep says for the four
+/// orthogonal directions.
+///
+/// Returns (0, 0) when the child looks the same way as its parent, or exactly
+/// opposite: neither has a side of the sheet to be on.
+[[nodiscard]] BETTERCAD_DRAWING_EXPORT std::pair<double, double> sheetDisplacement(
+    const std::pair<double, double>& normal, ProjectionConvention convention) noexcept;
+
 /// The orthonormal basis a view looks through.
 ///
 /// Right and up are the sheet's axes; the normal points from the model toward
@@ -97,6 +170,9 @@ using ViewBasis = Frame3D;
 
 /// What a view is: the intent, and nothing derived.
 struct ViewDefinition {
+    /// Which kind of view this is. Every other field is either required by
+    /// that kind or must be left alone, and validate() says which.
+    ViewKind kind = ViewKind::Base;
     /// The sheet this view sits on.
     SheetId sheet{};
     /// What it looks at. A base view names it; a projected view leaves it
@@ -105,32 +181,49 @@ struct ViewDefinition {
     ObjectReference source{};
     /// A base view's orientation. Exactly one of this and `parent` is set.
     std::optional<StandardView> orientation{};
-    /// A projected view's parent.
+    /// The parent of every kind but base.
     std::optional<ViewId> parent{};
     /// A projected view's direction from its parent.
     std::optional<ProjectedDirection> direction{};
+    /// A section view's cutting plane. The plane's frame is also the basis
+    /// the section looks through, so a section cannot be oriented against
+    /// its own cut.
+    std::optional<CuttingPlane> section{};
+    /// How a section view is hatched. Ignored by every other kind.
+    HatchSettings hatch{};
+    /// A detail view's region of its parent's sheet.
+    std::optional<DetailRegion> detail{};
+    /// An auxiliary view's own direction.
+    std::optional<ViewDirection> auxiliary{};
     /// How far from the parent, along the alignment axis. Projected views
     /// only; the placement itself is derived from the parent's.
     Length spacing{};
     /// Absent means "the sheet's scale". A view may override it.
     std::optional<DrawingScale> scale{};
     /// Where the view's projected bounding-box CENTRE sits on the sheet, in
-    /// sheet coordinates. Base views only: a projected view's placement is
-    /// derived from its parent's and the convention.
+    /// sheet coordinates. Base and detail views only; every other kind
+    /// derives its placement from its parent and the convention, so storing
+    /// one would be storing derived state that could contradict it.
     Point2D placement{};
 
     friend bool operator==(const ViewDefinition&, const ViewDefinition&) = default;
 };
 
-/// Checks a definition on its own: a valid sheet, exactly one of orientation
-/// and parent, a direction iff there is a parent, a source iff there is not,
-/// a valid scale if one is given, and finite placement and spacing.
+/// Checks a definition on its own: a valid sheet, the fields the kind needs
+/// and none it does not, a valid scale if one is given, and finite numbers
+/// throughout.
+///
+/// A field belonging to another kind is an error rather than something
+/// quietly ignored: a definition carrying a cutting plane AND a detail region
+/// was built by something confused about which it was making, and the second
+/// one to be read would silently win.
 ///
 /// Whether the sheet, the source and the parent exist is checked against the
 /// document by checkView(), because a definition alone cannot know.
 [[nodiscard]] BETTERCAD_DRAWING_EXPORT Result<void> validate(const ViewDefinition& definition);
 
-/// Whether @p definition describes a base view (as opposed to a projected one).
+/// Whether @p definition describes a base view (as opposed to any kind that
+/// derives from a parent).
 [[nodiscard]] BETTERCAD_DRAWING_EXPORT bool isBaseView(const ViewDefinition& definition) noexcept;
 
 /// One view on a drawing sheet (type name "view").

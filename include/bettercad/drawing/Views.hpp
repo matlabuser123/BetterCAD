@@ -115,7 +115,20 @@ using TransformLookup = std::function<const RigidTransform3D*(ComponentId compon
 /// produced none, this fails rather than drawing an empty view.
 /// @p transforms supplies a component's solved transform, and is required
 /// only when the view's source is a component.
+/// A section view draws the CUT solid, so what it projects is what is left
+/// after its plane has removed the material between it and the viewer. A
+/// detail view draws its parent's projection, cropped to its region and
+/// enlarged about the region's centre.
 [[nodiscard]] BETTERCAD_DRAWING_EXPORT Result<ProjectedGeometry> projectedGeometry(
+    const Document& document, ViewId id, const BodyLookup& bodies,
+    const TransformLookup& transforms = {});
+
+/// The cut faces of a section view, hatched, in sheet coordinates.
+///
+/// Fails with InvalidArgument for a view that is not a section: a view with
+/// no cutting plane has no cut faces, and returning an empty set would make
+/// "nothing was cut" and "this is not a section" the same answer.
+[[nodiscard]] BETTERCAD_DRAWING_EXPORT Result<SectionGeometry> sectionOf(
     const Document& document, ViewId id, const BodyLookup& bodies,
     const TransformLookup& transforms = {});
 

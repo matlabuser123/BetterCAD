@@ -32,6 +32,7 @@ using drawing::ProjectionConvention;
 using drawing::SheetDefinition;
 using drawing::StandardView;
 using drawing::ViewDefinition;
+using drawing::ViewKind;
 
 // P14-VIEW-001: views on a sheet, and what they draw.
 //
@@ -85,8 +86,11 @@ ViewDefinition baseView(const Fixture& f, StandardView orientation, Point2D plac
 
 ViewDefinition projectedView(const Fixture& f, ViewId parent, ProjectedDirection direction,
                              Length spacing) {
-    return ViewDefinition{
-        .sheet = f.sheet, .parent = parent, .direction = direction, .spacing = spacing};
+    return ViewDefinition{.kind = ViewKind::Projected,
+                          .sheet = f.sheet,
+                          .parent = parent,
+                          .direction = direction,
+                          .spacing = spacing};
 }
 
 } // namespace
@@ -371,10 +375,10 @@ TEST_CASE("View_MalformedDefinitionsAreRefused", "[drawing][view][p14]") {
 
     d = baseView(f, StandardView::Front, {0_mm, 0_mm});
     d.parent = front;
-    refuse("both a base and a projected view", d, "not both");
+    refuse("a base view given a parent", d, "a base view has no parent");
 
     d = ViewDefinition{.sheet = f.sheet};
-    refuse("neither", d, "either an orientation or a parent");
+    refuse("a base view with no orientation", d, "must have an orientation");
 
     d = baseView(f, StandardView::Front, {0_mm, 0_mm});
     d.direction = ProjectedDirection::Top;

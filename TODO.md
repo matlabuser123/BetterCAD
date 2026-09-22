@@ -10,8 +10,8 @@
 
 ```text
 Current:   P14 — Technical Drawings
-Next:      P14-VIEW-002 — Section / detail / auxiliary views
-Then:      P14-HLR-001 — Hidden-line / visible-edge generation
+Next:      P14-HLR-001 — Hidden-line / visible-edge generation
+Then:      P14-DIM-001 — Linear / angular / radial / diameter dimensions
 
 Released:  v0.1.0 — P0–P10
 Qualified: P11, P12, P13
@@ -262,18 +262,18 @@ Next → P14-VIEW-002
 
 ## Section / Detail / Auxiliary Views
 
-* [ ] Implement full section view
-* [ ] Implement half section
-* [ ] Implement offset section foundation
-* [ ] Implement detail/cropped view
-* [ ] Implement auxiliary view
-* [ ] Implement cutting-plane representation
-* [ ] Implement section hatch generation
-* [ ] Validate section geometry independently
-* [ ] Validate stable source references
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Implement full section view
+* [x] Implement half section
+* [x] Implement offset section foundation
+* [x] Implement detail/cropped view
+* [x] Implement auxiliary view
+* [x] Implement cutting-plane representation
+* [x] Implement section hatch generation
+* [x] Validate section geometry independently
+* [x] Validate stable source references
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded — [docs/verification/P14-VIEW-002/](docs/verification/P14-VIEW-002/README.md)
 
 ### Gate
 
@@ -283,6 +283,48 @@ section geometry correct
 + detail extraction correct
 + hatch behavior correct
 + stable references preserved
+```
+
+Met: 55 new tests; 1818/1818 on `debug`, `release` and `debug-shared`, each
+from clean; 785/785 five times over in release and debug; 0 compiler warnings;
+every stage exit 0; the no-op rebuild compiled 0 and linked 0 in every preset;
+the tree IDs taken before the first build and after the last test run are
+identical.
+
+**The section geometry is validated against closed forms, never against
+itself.** Every fixture is built from boxes, so every cut face is a rectangle
+and every expected area is a product of two lengths computed in the test: a
+100 × 60 × 40 block sections to 4000 mm², the same block with a 20 × 20 duct
+to 3600 mm² with the duct as an inner loop, a half section to exactly half,
+and an offset section with one jog back to 4000 mm² in a single four-corner
+loop. Auxiliary views are validated on the one claim that defines them: an
+inclined face 40√2 = 56.5685 mm long draws at 56.5685 mm, where the front view
+foreshortens it to 40.
+
+**Offset sections needed no development step.** Parallel legs seen along their
+shared normal already project into one plane; what remains is the jog, where
+both legs' cut faces end and — seen along that normal — their two edges land
+on each other. An edge with material on both sides is not a boundary, so the
+pair cancels. That is exactly the rule that develops a stepped section, and
+why ISO 128 draws no line at the jog.
+
+The adversarial review found four defects, the serious one silent rather than
+loud: a **curved cut edge was being dropped**. A round hole through a
+sectioned wall would have vanished from the outline — the wall's own rectangle
+still closes into a loop, the hole is not there to be a void, and the section
+comes back *looking correct* with hatch drawn straight across material that is
+not there. It would have passed every test in this milestone, because every
+fixture is made of boxes. Curved cut faces are now refused by name until
+P14-HLR-001 adds the curve handling.
+
+Worth carrying forward: `sheetDisplacement` generalises `placementStep` to an
+arbitrary direction, and a test asserts the two agree on all four orthogonal
+directions in both conventions. The four-entry table and the general rule are
+therefore one rule, not two that have to be kept in step.
+
+```text
+P14-VIEW-002 → [x]
+Next → P14-HLR-001
 ```
 
 ---

@@ -57,16 +57,16 @@ Result<void> checkView(const Document& document, const ViewDefinition& definitio
     const View* parent = findView(document, *definition.parent);
     if (parent == nullptr) {
         return makeError(ErrorCode::NotFound,
-                         std::format("a view cannot be projected from {}, which is not a view of this "
-                                     "document",
-                                     *definition.parent));
+                         std::format("a {} view cannot be derived from {}, which is not a view of "
+                                     "this document",
+                                     toString(definition.kind), *definition.parent));
     }
     // Aligning against a view on another sheet would align against something
     // that is not on the page.
     if (parent->definition().sheet != definition.sheet) {
         return makeError(ErrorCode::InvalidArgument,
-                         std::format("a projected view and its parent {} must be on the same sheet",
-                                     *definition.parent));
+                         std::format("a {} view and its parent {} must be on the same sheet",
+                                     toString(definition.kind), *definition.parent));
     }
     return {};
 }
@@ -208,14 +208,29 @@ namespace {
         return notFound(id);
     }
     const ViewDefinition& d = view->definition();
-    if (isBaseView(d)) {
+    switch (d.kind) {
+    case ViewKind::Base:
         return basisOf(*d.orientation);
+    case ViewKind::Section:
+        // The cutting plane's own frame, at the model origin like every other
+        // view basis. A section view cannot be oriented against its own cut,
+        // because its orientation IS the cut (ADR-011, ADR-013).
+        return Frame3D::create(Point3D{}, d.section->normal, d.section->reference);
+    case ViewKind::Auxiliary:
+        return Frame3D::create(Point3D{}, d.auxiliary->normal, d.auxiliary->reference);
+    case ViewKind::Projected:
+    case ViewKind::Detail:
+        break;
     }
     // Derived from the parent's, every time. A projected view has no
-    // orientation of its own to contradict its parent with (ADR-018).
+    // orientation of its own to contradict its parent with (ADR-018), and a
+    // detail view looks exactly the way its parent does -- only closer.
     auto parent = basisAt(document, *d.parent, depth + 1);
     if (!parent) {
         return std::unexpected(parent.error());
+    }
+    if (d.kind == ViewKind::Detail) {
+        return *parent;
     }
     return projectedBasis(*parent, *d.direction);
 }
@@ -246,6 +261,10 @@ Result<DrawingScale> effectiveScale(const Document& document, ViewId id) {
 namespace {
 
 [[nodiscard]] Result<Point2D> placementAt(const Document& document, ViewId id, int depth);
+[[nodiscard]] Result<ProjectedGeometry> detailGeometry(const Document& document, ViewId id,
+                                                       const BodyLookup& bodies,
+                                                       const TransformLookup& transforms,
+                                                       int depth);
 
 } // namespace
 
@@ -254,6 +273,83 @@ Result<Point2D> effectivePlacement(const Document& document, ViewId id) {
 }
 
 namespace {
+
+/// The body a view draws, in model space.
+///
+/// A view of a COMPONENT draws that component's part, moved to where the
+/// solver put it -- never to where its canonical placement asks for it to go
+/// (ADR-005). A view of a feature draws the feature's own body.
+[[nodiscard]] Result<geometry::Body> bodyForView(const Document& document, ViewId id,
+                                                 const ObjectReference& source,
+                                                 const BodyLookup& bodies,
+                                                 const TransformLookup& transforms) {
+    const auto* component = document.findObjectAs<assembly::Component>(
+        ComponentId::fromValue(source.object.value()));
+    if (component != nullptr) {
+        const ObjectReference& part = component->definition().part;
+        if (!isInternal(part)) {
+            return makeError(ErrorCode::NotFound,
+                             std::format("{} draws {}, which places a part in another document", id,
+                                         source.object));
+        }
+        const geometry::Body* partBody = bodies ? bodies(part.object) : nullptr;
+        if (partBody == nullptr || partBody->isEmpty()) {
+            return makeError(ErrorCode::NotFound,
+                             std::format("{} draws {}, whose part produced no body", id,
+                                         source.object));
+        }
+        const RigidTransform3D* solved = transforms ? transforms(component->componentId()) : nullptr;
+        if (solved == nullptr) {
+            // No solved transform is not "draw it at the origin": the
+            // assembly did not solve, and a view drawn from an unsolved
+            // assembly would be a picture of a machine nobody assembled.
+            return makeError(ErrorCode::FailedPrecondition,
+                             std::format("{} draws {}, which has no solved transform; the assembly "
+                                         "did not solve",
+                                         id, source.object));
+        }
+        return geometry::transformed(*partBody, *solved);
+    }
+    const geometry::Body* body = bodies ? bodies(source.object) : nullptr;
+    if (body == nullptr || body->isEmpty()) {
+        return makeError(ErrorCode::NotFound,
+                         std::format("{} draws {}, which produced no body", id, source.object));
+    }
+    return *body;
+}
+
+/// Where the segment from @p a to @p b enters and leaves a circle, as the two
+/// parameters along it, or nothing when it misses.
+///
+/// Solving |a + t(b - a) - centre|^2 = r^2 rather than sampling, so a segment
+/// that crosses the region is clipped exactly at the boundary instead of at
+/// whichever sample happened to fall nearest it.
+[[nodiscard]] std::optional<std::pair<double, double>> circleSpan(const Point2D& a, const Point2D& b,
+                                                                  const Point2D& centre,
+                                                                  Length radius) noexcept {
+    const double dx = (b.x - a.x).si();
+    const double dy = (b.y - a.y).si();
+    const double fx = (a.x - centre.x).si();
+    const double fy = (a.y - centre.y).si();
+    const double r = radius.si();
+    const double qa = dx * dx + dy * dy;
+    const double qb = 2.0 * (fx * dx + fy * dy);
+    const double qc = fx * fx + fy * fy - r * r;
+    if (qa <= 0.0) {
+        return qc <= 0.0 ? std::optional<std::pair<double, double>>{{0.0, 0.0}} : std::nullopt;
+    }
+    const double discriminant = qb * qb - 4.0 * qa * qc;
+    if (discriminant < 0.0) {
+        return std::nullopt;
+    }
+    const double root = std::sqrt(discriminant);
+    const double t0 = std::max(0.0, (-qb - root) / (2.0 * qa));
+    const double t1 = std::min(1.0, (-qb + root) / (2.0 * qa));
+    if (t1 < t0) {
+        return std::nullopt;
+    }
+    return std::pair{t0, t1};
+}
 
 Result<Point2D> placementAt(const Document& document, ViewId id, int depth) {
     if (depth > kMaxChain) {
@@ -267,7 +363,9 @@ Result<Point2D> placementAt(const Document& document, ViewId id, int depth) {
         return notFound(id);
     }
     const ViewDefinition& d = view->definition();
-    if (isBaseView(d)) {
+    // Base and detail views are placed directly; every other kind aligns to
+    // its parent.
+    if (d.kind == ViewKind::Base || d.kind == ViewKind::Detail) {
         return d.placement;
     }
     const Sheet* sheet = findSheet(document, d.sheet);
@@ -282,7 +380,26 @@ Result<Point2D> placementAt(const Document& document, ViewId id, int depth) {
     }
     // The alignment is exact because it is the same number, not because
     // something keeps two numbers equal: a Top view's x IS its parent's x.
-    const auto [stepX, stepY] = placementStep(*d.direction, sheet->definition().convention);
+    const ProjectionConvention convention = sheet->definition().convention;
+    if (d.kind == ViewKind::Projected) {
+        const auto [stepX, stepY] = placementStep(*d.direction, convention);
+        return Point2D{parent->x + stepX * d.spacing, parent->y + stepY * d.spacing};
+    }
+    // A section or auxiliary view looks a way no ProjectedDirection names, so
+    // its side of the sheet is worked out from its own normal expressed in
+    // its parent's axes. For the four orthogonal directions this gives back
+    // exactly what placementStep says, which is what a test asserts.
+    auto own = basisAt(document, id, depth + 1);
+    if (!own) {
+        return std::unexpected(own.error());
+    }
+    auto parentBasis = basisAt(document, *d.parent, depth + 1);
+    if (!parentBasis) {
+        return std::unexpected(parentBasis.error());
+    }
+    const Direction3D& n = own->normal();
+    const auto [stepX, stepY] = sheetDisplacement(
+        {parentBasis->xAxis().dot(n), parentBasis->yAxis().dot(n)}, convention);
     return Point2D{parent->x + stepX * d.spacing, parent->y + stepY * d.spacing};
 }
 
@@ -291,6 +408,10 @@ Result<Point2D> placementAt(const Document& document, ViewId id, int depth) {
 Result<ProjectedGeometry> projectedGeometry(const Document& document, ViewId id,
                                             const BodyLookup& bodies,
                                             const TransformLookup& transforms) {
+    if (const View* view = findView(document, id);
+        view != nullptr && view->definition().kind == ViewKind::Detail) {
+        return detailGeometry(document, id, bodies, transforms, 0);
+    }
     auto source = effectiveSource(document, id);
     if (!source) {
         return std::unexpected(source.error());
@@ -314,50 +435,22 @@ Result<ProjectedGeometry> projectedGeometry(const Document& document, ViewId id,
         return std::unexpected(placement.error());
     }
 
-    // A view of a COMPONENT draws that component's part, moved to where the
-    // solver put it -- never to where its canonical placement asks for it to
-    // go (ADR-005). A view of a feature draws the feature's own body.
-    const auto* component = document.findObjectAs<assembly::Component>(
-        ComponentId::fromValue(source->object.value()));
-    std::optional<geometry::Body> placed;
-    const geometry::Body* body = nullptr;
-    if (component != nullptr) {
-        const ObjectReference& part = component->definition().part;
-        if (!isInternal(part)) {
-            return makeError(ErrorCode::NotFound,
-                             std::format("{} draws {}, which places a part in another document", id,
-                                         source->object));
-        }
-        const geometry::Body* partBody = bodies ? bodies(part.object) : nullptr;
-        if (partBody == nullptr || partBody->isEmpty()) {
-            return makeError(ErrorCode::NotFound,
-                             std::format("{} draws {}, whose part produced no body", id,
-                                         source->object));
-        }
-        const RigidTransform3D* solved =
-            transforms ? transforms(component->componentId()) : nullptr;
-        if (solved == nullptr) {
-            // No solved transform is not "draw it at the origin": the
-            // assembly did not solve, and a view drawn from an unsolved
-            // assembly would be a picture of a machine nobody assembled.
-            return makeError(ErrorCode::FailedPrecondition,
-                             std::format("{} draws {}, which has no solved transform; the assembly "
-                                         "did not solve",
-                                         id, source->object));
-        }
-        auto moved = geometry::transformed(*partBody, *solved);
-        if (!moved) {
-            return std::unexpected(moved.error());
-        }
-        placed = std::move(*moved);
-        body = &*placed;
-    } else {
-        body = bodies ? bodies(source->object) : nullptr;
+    auto resolved = bodyForView(document, id, *source, bodies, transforms);
+    if (!resolved) {
+        return std::unexpected(resolved.error());
     }
-    if (body == nullptr || body->isEmpty()) {
-        return makeError(ErrorCode::NotFound,
-                         std::format("{} draws {}, which produced no body", id, source->object));
+    // A section view draws the CUT solid. Doing it here, rather than in a
+    // second routine beside this one, is what keeps a section's outline and
+    // its cut faces from ever being drawn from different solids.
+    if (const View* view = findView(document, id);
+        view != nullptr && view->definition().kind == ViewKind::Section) {
+        auto cut = cutBody(*resolved, *view->definition().section, *basis);
+        if (!cut) {
+            return std::unexpected(cut.error());
+        }
+        resolved = std::move(*cut);
     }
+    const geometry::Body* body = &*resolved;
     auto edges = geometry::listEdges(*body);
     if (!edges) {
         return std::unexpected(edges.error());
@@ -434,6 +527,127 @@ Result<ProjectedGeometry> projectedGeometry(const Document& document, ViewId id,
         result.bounds.include(p);
     }
     return result;
+}
+
+namespace {
+
+Result<ProjectedGeometry> detailGeometry(const Document& document, ViewId id,
+                                         const BodyLookup& bodies,
+                                         const TransformLookup& transforms, int depth) {
+    if (depth > kMaxChain) {
+        return makeError(ErrorCode::FailedPrecondition,
+                         std::format("{} is detailed through more than {} views; the chain loops",
+                                     id, kMaxChain));
+    }
+    const View* view = findView(document, id);
+    if (view == nullptr) {
+        return notFound(id);
+    }
+    const ViewDefinition& d = view->definition();
+    const DetailRegion& region = *d.detail;
+
+    // A detail draws what its PARENT draws. Going back to the model instead
+    // would mean projecting twice and hoping the two agreed; this way the
+    // detail cannot show anything its parent does not.
+    auto parent = findView(document, *d.parent) != nullptr &&
+                          findView(document, *d.parent)->definition().kind == ViewKind::Detail
+                      ? detailGeometry(document, *d.parent, bodies, transforms, depth + 1)
+                      : projectedGeometry(document, *d.parent, bodies, transforms);
+    if (!parent) {
+        return std::unexpected(parent.error());
+    }
+    auto ownScale = effectiveScale(document, id);
+    if (!ownScale) {
+        return std::unexpected(ownScale.error());
+    }
+    auto parentScale = effectiveScale(document, *d.parent);
+    if (!parentScale) {
+        return std::unexpected(parentScale.error());
+    }
+
+    // The region is in the parent's sheet coordinates, so the enlargement is
+    // the RATIO of the two scales: a 2:1 detail of a 1:1 parent doubles.
+    const double factor = ownScale->factor() / parentScale->factor();
+    const auto toSheet = [&](const Point2D& p) {
+        return Point2D{d.placement.x + Length::fromSi((p.x - region.centre.x).si() * factor),
+                       d.placement.y + Length::fromSi((p.y - region.centre.y).si() * factor)};
+    };
+
+    ProjectedGeometry result;
+    for (const auto& [a, b] : parent->segments) {
+        if (!region.cropped) {
+            // An uncropped detail keeps whole any segment the circle touches,
+            // which is what a partial view is: enlarged, but not cut off.
+            if (circleSpan(a, b, region.centre, region.radius)) {
+                result.segments.emplace_back(toSheet(a), toSheet(b));
+            }
+            continue;
+        }
+        const auto span = circleSpan(a, b, region.centre, region.radius);
+        if (!span) {
+            continue;
+        }
+        const auto at = [&](double t) {
+            return Point2D{a.x + Length::fromSi(t * (b.x - a.x).si()),
+                           a.y + Length::fromSi(t * (b.y - a.y).si())};
+        };
+        result.segments.emplace_back(toSheet(at(span->first)), toSheet(at(span->second)));
+    }
+    for (const auto& [a, b] : result.segments) {
+        result.points.push_back(a);
+        result.points.push_back(b);
+    }
+    if (result.points.empty()) {
+        return makeError(ErrorCode::FailedPrecondition,
+                         std::format("{} details a region of its parent that nothing reaches", id));
+    }
+    result.bounds = BoundingBox2D::around(result.points.front());
+    for (const Point2D& p : result.points) {
+        result.bounds.include(p);
+    }
+    return result;
+}
+
+} // namespace
+
+Result<SectionGeometry> sectionOf(const Document& document, ViewId id, const BodyLookup& bodies,
+                                  const TransformLookup& transforms) {
+    const View* view = findView(document, id);
+    if (view == nullptr) {
+        return notFound(id);
+    }
+    const ViewDefinition& d = view->definition();
+    if (d.kind != ViewKind::Section) {
+        return makeError(ErrorCode::InvalidArgument,
+                         std::format("{} is a {} view and cuts nothing, so it has no cut faces", id,
+                                     toString(d.kind)));
+    }
+    auto source = effectiveSource(document, id);
+    if (!source) {
+        return std::unexpected(source.error());
+    }
+    if (!isInternal(*source)) {
+        return makeError(ErrorCode::NotFound,
+                         std::format("{} draws an object of another document, which cannot be cut",
+                                     id));
+    }
+    auto basis = effectiveBasis(document, id);
+    if (!basis) {
+        return std::unexpected(basis.error());
+    }
+    auto scale = effectiveScale(document, id);
+    if (!scale) {
+        return std::unexpected(scale.error());
+    }
+    auto placement = effectivePlacement(document, id);
+    if (!placement) {
+        return std::unexpected(placement.error());
+    }
+    auto body = bodyForView(document, id, *source, bodies, transforms);
+    if (!body) {
+        return std::unexpected(body.error());
+    }
+    return sectionGeometry(*body, *d.section, *basis, scale->factor(), *placement, d.hatch);
 }
 
 } // namespace bettercad::drawing
