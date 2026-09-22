@@ -505,21 +505,27 @@ TEST_CASE("View_TheSameViewProjectsIdenticallyEveryTime", "[drawing][view][p14][
             CHECK(a->points[i].y.si() == b->points[i].y.si());
         }
         CHECK(a->bounds == b->bounds);
-        CHECK(a->segments.size() == b->segments.size());
+        CHECK(a->edges.size() == b->edges.size());
     }
 }
 
 TEST_CASE("View_ABoxProjectsToTwelveStraightSegments", "[drawing][view][p14]") {
     // The scope boundary, stated as a number: a box has 12 straight edges and
     // every one becomes a segment. Curved edges contribute sampled points
-    // only -- drawing them, and deciding what is visible, is P14-HLR-001.
+    // P14-HLR-001 replaced the unclassified projection this once asserted.
+    // A box seen square-on IS a rectangle: its far face lands exactly on its
+    // near face, so four lines are drawn and four are merged away, and the
+    // four edges running along the line of sight project to points and are
+    // not lines at all.
     Fixture f = makeFixture();
     const ViewId id = require(
         drawing::createView(f.document, "Front", baseView(f, StandardView::Front, {200_mm, 150_mm})));
     const auto geometry = drawing::projectedGeometry(f.document, id, f.bodies());
     REQUIRE(geometry.has_value());
-    CHECK(geometry->segments.size() == 12);
-    CHECK(geometry->points.size() == 36); // start, end and midpoint of each
+    CHECK(geometry->edges.size() == 4);
+    CHECK(geometry->merged == 4);
+    CHECK(geometry->suppressed == 0);
+    CHECK(geometry->points.size() == 8); // two endpoints per straight line
 }
 
 // --- Persistence ---------------------------------------------------------------------

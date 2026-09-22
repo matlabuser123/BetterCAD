@@ -361,6 +361,11 @@ Result<void> validate(const ViewDefinition& definition) {
             return std::unexpected(valid.error());
         }
     }
+    // Every kind of view has hidden-line settings, so this is checked once
+    // for all of them rather than per kind.
+    if (auto valid = validate(definition.hiddenLine); !valid) {
+        return std::unexpected(valid.error());
+    }
     for (const auto& [name, value] : std::array<std::pair<std::string_view, Length>, 2>{
              {{"x", definition.placement.x}, {"y", definition.placement.y}}}) {
         if (!std::isfinite(value.si())) {

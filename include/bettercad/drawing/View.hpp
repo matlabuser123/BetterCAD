@@ -9,6 +9,7 @@
 #include <bettercad/core/math/Point.hpp>
 #include <bettercad/core/units/Units.hpp>
 #include <bettercad/drawing/Export.hpp>
+#include <bettercad/drawing/HiddenLine.hpp>
 #include <bettercad/drawing/Section.hpp>
 #include <bettercad/drawing/Sheet.hpp>
 
@@ -198,6 +199,10 @@ struct ViewDefinition {
     /// How far from the parent, along the alignment axis. Projected views
     /// only; the placement itself is derived from the parent's.
     Length spacing{};
+    /// What this view does with the lines the solid hides, and with the
+    /// lines where a blend runs into its face. Intent, so it is stored;
+    /// every kind of view has it.
+    HiddenLineSettings hiddenLine{};
     /// Absent means "the sheet's scale". A view may override it.
     std::optional<DrawingScale> scale{};
     /// Where the view's projected bounding-box CENTRE sits on the sheet, in
@@ -269,19 +274,27 @@ private:
 [[nodiscard]] BETTERCAD_DRAWING_EXPORT Length depthInView(const ViewBasis& basis,
                                                           const Point3D& point) noexcept;
 
-/// What a view draws: points in SHEET coordinates, and their bounds.
+/// What a view draws: classified lines in SHEET coordinates, and their
+/// bounds.
 ///
-/// Derived on every request and never stored. The segments are the straight
-/// edges of the source, projected; a curved edge contributes its sampled
-/// endpoints and midpoint only, because turning a curve into a drawn curve
-/// -- and deciding which parts of it are visible -- is P14-HLR-001.
+/// Derived on every request and never stored. Each edge says whether the
+/// solid hides it and what kind of line it is (P14-HLR-001), so a renderer
+/// can give it the right style without deciding the geometry again.
 struct ProjectedGeometry {
-    /// Projected straight edges, as pairs of sheet-space points.
-    std::vector<std::pair<Point2D, Point2D>> segments{};
-    /// Every projected point, including the sampled points of curved edges.
+    /// Every line the view draws, after coincident lines have been merged
+    /// and the view's own settings have dropped the classes it does not show.
+    std::vector<DrawnEdge> edges{};
+    /// Every drawn point, the sampled points of curves included.
     std::vector<Point2D> points{};
-    /// Bounds of `points`, in sheet coordinates.
+    /// Bounds of the view BEFORE its settings dropped anything, so that
+    /// turning hidden lines off does not move the drawing on the sheet.
     BoundingBox2D bounds{};
+    /// How many lines were dropped because another drew the same line. A
+    /// detail view reports its PARENT's count: the merge happened there, on
+    /// the whole view, before this one cropped it.
+    std::size_t merged = 0;
+    /// How many were dropped because this view does not show their class.
+    std::size_t suppressed = 0;
 };
 
 } // namespace bettercad::drawing

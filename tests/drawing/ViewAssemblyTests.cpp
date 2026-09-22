@@ -113,7 +113,7 @@ TEST_CASE("ViewAssembly_DrawsAComponentWhereTheSolverPutItNotWhereItsIntentAsked
     // own: 100 wide, 40 tall, centred on (200, 150).
     CHECK_THAT(geometry->bounds.width().in(units::mm), WithinAbs(100.0, kMm));
     CHECK_THAT(geometry->bounds.height().in(units::mm), WithinAbs(40.0, kMm));
-    CHECK(geometry->segments.size() == 12);
+    CHECK(geometry->edges.size() == 4); // a rectangle, after P14-HLR-001
 }
 
 TEST_CASE("ViewAssembly_TwoInstancesOfOnePartDrawSeparatelyAndDoNotCollapse",
@@ -275,4 +275,150 @@ TEST_CASE("SectionViewAssembly_CutsTheComponentWhereTheSolverPutIt",
     REQUIRE_FALSE(unsolved.has_value());
     CHECK(errorCode(unsolved) == ErrorCode::FailedPrecondition);
     CHECK_THAT(unsolved.error().message, ContainsSubstring("did not solve"));
+}
+
+namespace {
+
+/// The same 100 x 60 x 40 block, with a 20 x 20 pocket 10 deep cut into the
+/// face at y = 60. Seen from the front the pocket is behind solid material;
+/// turn the component around and it faces the viewer.
+Assembly makePocketedAssembly() {
+    Assembly a;
+    auto sketch = std::make_unique<sketch::Sketch>("Profile", Frame3D::xy());
+    addRectangle(*sketch, 0_mm, 0_mm, 100_mm, 60_mm);
+    const ObjectId sketchId = require(a.document.addObject(std::move(sketch)));
+    auto extrude = features::ExtrudeFeature::create(
+        "Block", {.profile = SketchId::fromValue(sketchId.value()), .depth = 40_mm});
+    REQUIRE(extrude.has_value());
+    const ObjectId block = require(a.document.addObject(std::move(*extrude)));
+
+    // Normal +Y so the cut runs into the rear face; X is +Z so the sketch's
+    // own Y comes out as +X, and the rectangle is written (z, x).
+    auto pocket = std::make_unique<sketch::Sketch>(
+        "Pocket", require(Frame3D::create(Point3D{0_mm, 50_mm, 0_mm}, Direction3D::unitY(),
+                                          Direction3D::unitZ())));
+    addRectangle(*pocket, 10_mm, 40_mm, 20_mm, 20_mm);
+    const ObjectId pocketId = require(a.document.addObject(std::move(pocket)));
+    auto cut = features::ExtrudeFeature::create(
+        "PocketCut", {.profile = SketchId::fromValue(pocketId.value()),
+                      .depth = 10_mm,
+                      .operation = features::FeatureOperation::Cut,
+                      .target = FeatureId::fromValue(block.value())});
+    REQUIRE(cut.has_value());
+    a.part = require(a.document.addObject(std::move(*cut)));
+
+    a.sheet = require(drawing::createSheet(
+        a.document, "Sheet1",
+        SheetDefinition{.format = drawing::SheetFormat::A3,
+                        .orientation = drawing::SheetOrientation::Landscape,
+                        .margins = drawing::SheetMargins{10_mm, 10_mm, 10_mm, 10_mm},
+                        .scale = DrawingScale{1, 1}}));
+    return a;
+}
+
+/// Drawn lines of the given visibility that fall strictly inside the block's
+/// outline -- which, for this part, means the pocket.
+std::ptrdiff_t insideOutline(const drawing::ProjectedGeometry& drawn,
+                             geometry::EdgeVisibility visibility, const Point2D& centre) {
+    return std::ranges::count_if(drawn.edges, [&](const drawing::DrawnEdge& e) {
+        const double x = (e.midpoint.x - centre.x).in(units::mm);
+        const double y = (e.midpoint.y - centre.y).in(units::mm);
+        return e.visibility == visibility && std::abs(x) < 49.0 && std::abs(y) < 19.0;
+    });
+}
+
+} // namespace
+
+TEST_CASE("HiddenLineAssembly_WhatOccludesWhatFollowsTheSolvedTransform",
+          "[drawing][view][assembly][hlr][p14]") {
+    // P14-HLR-001. Occlusion is decided in MODEL space, so it is decided by
+    // where the solver put the component -- not by where its placement asked
+    // for it to go (ADR-005).
+    //
+    // The same part is placed twice: once as authored, and once turned around
+    // by half a turn. Its pocket is in the face at y = 60, so upright it is
+    // behind the material and turned around it faces the viewer. If the
+    // canonical placement were used for the projection but the solved one for
+    // the cut -- or either were used for both by accident -- the two
+    // components would draw the same, and they must not.
+    Assembly a = makePocketedAssembly();
+    const ComponentId upright = require(assembly::createComponent(
+        a.document, "Upright", {.part = a.part, .placement = ComponentPlacement{}}));
+    const ComponentId turned = require(assembly::createComponent(
+        a.document, "Turned",
+        {.part = a.part,
+         .placement = ComponentPlacement{.rotation = {0_deg, 0_deg, 180_deg}}}));
+    a.regenerate();
+
+    // The solver really did put them differently.
+    const RigidTransform3D* uprightAt = a.regenerator.transform(upright);
+    const RigidTransform3D* turnedAt = a.regenerator.transform(turned);
+    REQUIRE(uprightAt != nullptr);
+    REQUIRE(turnedAt != nullptr);
+    CHECK_FALSE(*uprightAt == *turnedAt);
+
+    const Point2D centre{200_mm, 150_mm};
+    const ViewId a1 = viewOf(a, "FrontUpright", ObjectId{upright}, StandardView::Front, centre);
+    const ViewId a2 = viewOf(a, "FrontTurned", ObjectId{turned}, StandardView::Front, centre);
+
+    const auto asAuthored = drawing::projectedGeometry(a.document, a1, a.bodies(), a.transforms());
+    const auto asTurned = drawing::projectedGeometry(a.document, a2, a.bodies(), a.transforms());
+    REQUIRE(asAuthored.has_value());
+    REQUIRE(asTurned.has_value());
+
+    // Upright: the pocket is behind the material, so all four of its lines
+    // are hidden and none is visible.
+    CHECK(insideOutline(*asAuthored, geometry::EdgeVisibility::Hidden, centre) == 4);
+    CHECK(insideOutline(*asAuthored, geometry::EdgeVisibility::Visible, centre) == 0);
+
+    // Turned around: the same four lines, now facing the viewer.
+    CHECK(insideOutline(*asTurned, geometry::EdgeVisibility::Visible, centre) == 4);
+    CHECK(insideOutline(*asTurned, geometry::EdgeVisibility::Hidden, centre) == 0);
+
+    // The outline is the same either way -- the part did not change size --
+    // so the difference above is occlusion and not a different projection.
+    CHECK_THAT(asAuthored->bounds.width().in(units::mm),
+               WithinAbs(asTurned->bounds.width().in(units::mm), kMm));
+    CHECK_THAT(asAuthored->bounds.height().in(units::mm),
+               WithinAbs(asTurned->bounds.height().in(units::mm), kMm));
+}
+
+TEST_CASE("HiddenLineAssembly_AComponentWithNoSolvedTransformIsNotDrawnAtTheOrigin",
+          "[drawing][view][assembly][hlr][p14]") {
+    // Occlusion without a solved transform would be occlusion of a machine
+    // nobody assembled. Refused, as the unclassified projection already was.
+    Assembly a = makePocketedAssembly();
+    const ComponentId c = require(assembly::createComponent(
+        a.document, "BlockA", {.part = a.part, .placement = ComponentPlacement{}}));
+    a.regenerate();
+    const ViewId view = viewOf(a, "Front", ObjectId{c}, StandardView::Front, {200_mm, 150_mm});
+
+    const auto drawn = drawing::projectedGeometry(a.document, view, a.bodies());
+    REQUIRE_FALSE(drawn.has_value());
+    CHECK(errorCode(drawn) == ErrorCode::FailedPrecondition);
+    CHECK_THAT(drawn.error().message, ContainsSubstring("did not solve"));
+}
+
+TEST_CASE("HiddenLineAssembly_ASuppressedComponentIsNotDrawnAtAll",
+          "[drawing][view][assembly][hlr][p14]") {
+    // P14-VIEW-001 recorded that suppression was not consulted, and this
+    // pins what actually happens now that lines are classified: a suppressed
+    // component is "not in this configuration", so the solver gives it no
+    // transform, and a view of it is refused rather than drawn somewhere.
+    //
+    // That is the right outcome for the wrong-looking reason -- the refusal
+    // comes from the missing transform, not from a view that understands
+    // suppression -- so it is asserted rather than assumed, and the
+    // distinction is recorded with the milestone's limitations.
+    Assembly a = makePocketedAssembly();
+    const ComponentId c = require(assembly::createComponent(
+        a.document, "BlockA",
+        {.part = a.part, .suppressed = true, .placement = ComponentPlacement{}}));
+    a.regenerate();
+    const ViewId view = viewOf(a, "Front", ObjectId{c}, StandardView::Front, {200_mm, 150_mm});
+
+    const auto drawn = drawing::projectedGeometry(a.document, view, a.bodies(), a.transforms());
+    REQUIRE_FALSE(drawn.has_value());
+    CHECK(errorCode(drawn) == ErrorCode::FailedPrecondition);
+    CHECK_THAT(drawn.error().message, ContainsSubstring("did not solve"));
 }

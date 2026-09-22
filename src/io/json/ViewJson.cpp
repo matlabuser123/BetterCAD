@@ -189,6 +189,11 @@ Json viewToJson(const drawing::View& view) {
         json["spacing"] = d.spacing.si();
     }
 
+    // Every kind of view has these, so they are written for every kind.
+    json["hidden_line"] = Json{{"show_hidden", d.hiddenLine.showHidden},
+                               {"tangent_edges",
+                                std::string{drawing::toString(d.hiddenLine.tangentEdges)}}};
+
     // Absent means "the sheet's scale", which is not the same as writing the
     // sheet's scale here: a sheet whose scale changes must carry its views
     // with it unless they opted out.
@@ -203,7 +208,7 @@ Result<std::unique_ptr<drawing::View>> viewFromJson(const Json& data, std::strin
     if (auto object = requireObject(data, path,
                                     {"kind", "sheet", "source", "orientation", "x", "y", "parent",
                                      "direction", "spacing", "scale", "section", "hatch", "detail",
-                                     "auxiliary"});
+                                     "auxiliary", "hidden_line"});
         !object) {
         return std::unexpected(object.error());
     }
@@ -358,6 +363,32 @@ Result<std::unique_ptr<drawing::View>> viewFromJson(const Json& data, std::strin
             return std::unexpected(spacing.error());
         }
         definition.spacing = Length::fromSi(*spacing);
+    }
+
+    // Written for every kind since P14-HLR-001; a file from before that has
+    // none, and takes the defaults.
+    if (const auto hiddenLine = data.find("hidden_line"); hiddenLine != data.end()) {
+        const std::string hiddenLinePath{childPath(path, "hidden_line")};
+        if (auto object = requireObject(*hiddenLine, hiddenLinePath,
+                                        {"show_hidden", "tangent_edges"});
+            !object) {
+            return std::unexpected(object.error());
+        }
+        auto showHidden = readBool(*hiddenLine, "show_hidden", hiddenLinePath);
+        if (!showHidden) {
+            return std::unexpected(showHidden.error());
+        }
+        definition.hiddenLine.showHidden = *showHidden;
+        auto tangentText = readString(*hiddenLine, "tangent_edges", hiddenLinePath);
+        if (!tangentText) {
+            return std::unexpected(tangentText.error());
+        }
+        const auto tangent = drawing::tangentEdgePolicyFromString(*tangentText);
+        if (!tangent) {
+            return parseError(childPath(hiddenLinePath, "tangent_edges"),
+                              std::format("unknown tangent-edge policy '{}'", *tangentText));
+        }
+        definition.hiddenLine.tangentEdges = *tangent;
     }
 
     if (const auto scale = data.find("scale"); scale != data.end()) {

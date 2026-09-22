@@ -305,7 +305,7 @@ TEST_CASE("SectionView_DrawsTheCutSolidAndNotTheWholeOne", "[drawing][view][sect
     REQUIRE(bounds.has_value());
     CHECK_THAT(bounds->min.x.in(units::mm), WithinAbs(0.0, 1e-6));
     CHECK_THAT(bounds->max.x.in(units::mm), WithinAbs(50.0, 1e-6)); // half of 100
-    CHECK_FALSE(drawn->segments.empty());
+    CHECK_FALSE(drawn->edges.empty());
 }
 
 TEST_CASE("SectionView_HalfAndOffsetCutsReachTheDocumentUnchanged",
@@ -382,7 +382,7 @@ TEST_CASE("DetailView_EnlargesItsRegionByTheRatioOfTheTwoScales",
 
     const auto drawn = drawing::projectedGeometry(f.document, detail, f.bodies());
     REQUIRE(drawn.has_value());
-    REQUIRE_FALSE(drawn->segments.empty());
+    REQUIRE_FALSE(drawn->edges.empty());
 
     // Nothing is drawn further from the placement than the enlarged radius.
     for (const Point2D& p : drawn->points) {
@@ -398,8 +398,9 @@ TEST_CASE("DetailView_EnlargesItsRegionByTheRatioOfTheTwoScales",
 
     // The clipped top edge, exactly: (230,170)..(250,170) becomes
     // (260,100)..(300,100).
-    const bool hasTopEdge = std::ranges::any_of(drawn->segments, [](const auto& segment) {
-        const auto& [a, b] = segment;
+    const bool hasTopEdge = std::ranges::any_of(drawn->edges, [](const drawing::DrawnEdge& edge) {
+        const Point2D& a = edge.start;
+        const Point2D& b = edge.end;
         const Point2D left = a.x.si() <= b.x.si() ? a : b;
         const Point2D right = a.x.si() <= b.x.si() ? b : a;
         return std::abs(left.x.in(units::mm) - 260.0) < 1e-6 &&
@@ -429,8 +430,8 @@ TEST_CASE("DetailView_UncroppedKeepsWholeTheSegmentsItsCircleTouches",
     const auto drawn = drawing::projectedGeometry(f.document, detail, f.bodies());
     REQUIRE(drawn.has_value());
     double longest = 0.0;
-    for (const auto& [a, b] : drawn->segments) {
-        longest = std::max(longest, apart(a, b));
+    for (const drawing::DrawnEdge& edge : drawn->edges) {
+        longest = std::max(longest, apart(edge.start, edge.end));
     }
     CHECK_THAT(longest, WithinAbs(200.0, 1e-6));
 }

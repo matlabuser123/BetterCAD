@@ -1,5 +1,7 @@
 #include <bettercad/drawing/Views.hpp>
 
+#include <bettercad/core/geometry/HiddenLine.hpp>
+
 #include <bettercad/core/document/Document.hpp>
 #include <bettercad/assembly/Component.hpp>
 #include <bettercad/assembly/Components.hpp>
@@ -264,7 +266,13 @@ namespace {
 [[nodiscard]] Result<ProjectedGeometry> detailGeometry(const Document& document, ViewId id,
                                                        const BodyLookup& bodies,
                                                        const TransformLookup& transforms,
+                                                       const HiddenLineSettings& settings,
                                                        int depth);
+[[nodiscard]] Result<ProjectedGeometry> viewGeometry(const Document& document, ViewId id,
+                                                     const BodyLookup& bodies,
+                                                     const TransformLookup& transforms,
+                                                     const HiddenLineSettings& settings,
+                                                     int depth);
 
 } // namespace
 
@@ -408,9 +416,29 @@ Result<Point2D> placementAt(const Document& document, ViewId id, int depth) {
 Result<ProjectedGeometry> projectedGeometry(const Document& document, ViewId id,
                                             const BodyLookup& bodies,
                                             const TransformLookup& transforms) {
+    const View* view = findView(document, id);
+    if (view == nullptr) {
+        return notFound(id);
+    }
+    return viewGeometry(document, id, bodies, transforms, view->definition().hiddenLine, 0);
+}
+
+namespace {
+
+/// What a view draws, with @p settings standing in for its own.
+///
+/// The override exists for one caller: a detail view has to ask its parent
+/// for everything the parent COULD draw, so that its own hidden-line and
+/// tangent settings decide what the detail shows. Asking for the parent's
+/// already-filtered lines would make a detail unable to show anything its
+/// parent hid, which is a per-view toggle that is not per-view.
+Result<ProjectedGeometry> viewGeometry(const Document& document, ViewId id,
+                                       const BodyLookup& bodies,
+                                       const TransformLookup& transforms,
+                                       const HiddenLineSettings& settings, int depth) {
     if (const View* view = findView(document, id);
         view != nullptr && view->definition().kind == ViewKind::Detail) {
-        return detailGeometry(document, id, bodies, transforms, 0);
+        return detailGeometry(document, id, bodies, transforms, settings, depth);
     }
     auto source = effectiveSource(document, id);
     if (!source) {
@@ -450,22 +478,24 @@ Result<ProjectedGeometry> projectedGeometry(const Document& document, ViewId id,
         }
         resolved = std::move(*cut);
     }
-    const geometry::Body* body = &*resolved;
-    auto edges = geometry::listEdges(*body);
-    if (!edges) {
-        return std::unexpected(edges.error());
+    // Hidden-line removal, on the solid this view actually draws -- which for
+    // a section view is the CUT solid, cut just above. Classifying the uncut
+    // solid would hide the very faces a section exists to show (ADR-019).
+    auto drawing = geometry::hiddenLineDrawing(*resolved, *basis);
+    if (!drawing) {
+        return std::unexpected(drawing.error());
+    }
+    if (drawing->edges.empty()) {
+        return makeError(ErrorCode::FailedPrecondition,
+                         std::format("{} draws a body with no edges to project", id));
     }
 
-    // Project into view-plane coordinates first, so the centring below can be
-    // computed before anything is scaled or placed.
-    struct Flat {
-        Point2D start;
-        Point2D end;
-        Point2D mid;
-        bool straight;
-    };
-    std::vector<Flat> flat;
-    flat.reserve(edges->size());
+    HiddenLinePolicyResult classified = applyHiddenLinePolicy(*drawing, settings);
+
+    // The view is centred on what it COULD draw, not on what its settings
+    // leave: turning hidden lines off must not shift the drawing on the
+    // sheet. So the extent is taken from the merged set before anything is
+    // suppressed.
     double minX = 0.0, maxX = 0.0, minY = 0.0, maxY = 0.0;
     bool first = true;
     const auto see = [&](const Point2D& p) {
@@ -482,17 +512,10 @@ Result<ProjectedGeometry> projectedGeometry(const Document& document, ViewId id,
         minY = std::min(minY, y);
         maxY = std::max(maxY, y);
     };
-    for (const geometry::EdgeInfo& edge : *edges) {
-        Flat f{projectToViewPlane(*basis, edge.start), projectToViewPlane(*basis, edge.end),
-               projectToViewPlane(*basis, edge.midpoint), edge.curve == geometry::EdgeCurve::Line};
-        see(f.start);
-        see(f.end);
-        see(f.mid);
-        flat.push_back(f);
-    }
-    if (first) {
-        return makeError(ErrorCode::FailedPrecondition,
-                         std::format("{} draws a body with no edges to project", id));
+    for (const geometry::ProjectedEdge& edge : drawing->edges) {
+        for (const Point2D& p : edge.polyline) {
+            see(p);
+        }
     }
 
     // Placement anchors the projected bounding-box CENTRE, so a view sits
@@ -506,34 +529,36 @@ Result<ProjectedGeometry> projectedGeometry(const Document& document, ViewId id,
     };
 
     ProjectedGeometry result;
-    result.points.reserve(flat.size() * 3);
-    for (const Flat& f : flat) {
-        const Point2D a = toSheet(f.start);
-        const Point2D b = toSheet(f.end);
-        const Point2D m = toSheet(f.mid);
-        // A straight edge IS its two endpoints, so it becomes a segment. A
-        // curved one contributes its sampled points only: turning a curve
-        // into a drawn curve, and deciding which of it is visible, is
-        // P14-HLR-001.
-        if (f.straight) {
-            result.segments.emplace_back(a, b);
+    result.merged = classified.merged;
+    result.suppressed = classified.suppressed;
+    result.edges.reserve(classified.edges.size());
+    for (const geometry::ProjectedEdge& edge : classified.edges) {
+        DrawnEdge drawn;
+        drawn.curve = edge.curve;
+        drawn.start = toSheet(edge.start);
+        drawn.end = toSheet(edge.end);
+        drawn.midpoint = toSheet(edge.midpoint);
+        drawn.visibility = edge.visibility;
+        drawn.kind = edge.kind;
+        drawn.polyline.reserve(edge.polyline.size());
+        for (const Point2D& p : edge.polyline) {
+            drawn.polyline.push_back(toSheet(p));
+            result.points.push_back(drawn.polyline.back());
         }
-        result.points.push_back(a);
-        result.points.push_back(b);
-        result.points.push_back(m);
+        result.edges.push_back(std::move(drawn));
     }
-    result.bounds = BoundingBox2D::around(result.points.front());
-    for (const Point2D& p : result.points) {
-        result.bounds.include(p);
-    }
+
+    // Bounds come from the whole extent, not from the points that survived,
+    // for the same reason the centring does.
+    result.bounds = BoundingBox2D::around(toSheet(Point2D{Length::fromSi(minX), Length::fromSi(minY)}));
+    result.bounds.include(toSheet(Point2D{Length::fromSi(maxX), Length::fromSi(maxY)}));
     return result;
 }
 
-namespace {
-
 Result<ProjectedGeometry> detailGeometry(const Document& document, ViewId id,
                                          const BodyLookup& bodies,
-                                         const TransformLookup& transforms, int depth) {
+                                         const TransformLookup& transforms,
+                                         const HiddenLineSettings& settings, int depth) {
     if (depth > kMaxChain) {
         return makeError(ErrorCode::FailedPrecondition,
                          std::format("{} is detailed through more than {} views; the chain loops",
@@ -549,10 +574,14 @@ Result<ProjectedGeometry> detailGeometry(const Document& document, ViewId id,
     // A detail draws what its PARENT draws. Going back to the model instead
     // would mean projecting twice and hoping the two agreed; this way the
     // detail cannot show anything its parent does not.
-    auto parent = findView(document, *d.parent) != nullptr &&
-                          findView(document, *d.parent)->definition().kind == ViewKind::Detail
-                      ? detailGeometry(document, *d.parent, bodies, transforms, depth + 1)
-                      : projectedGeometry(document, *d.parent, bodies, transforms);
+    //
+    // The parent is asked for EVERYTHING -- hidden lines and tangent edges
+    // included -- so that this view's own settings decide what it shows. A
+    // detail that could only narrow its parent's choices would not have a
+    // toggle of its own.
+    const HiddenLineSettings everything{.showHidden = true,
+                                        .tangentEdges = TangentEdgePolicy::Show};
+    auto parent = viewGeometry(document, *d.parent, bodies, transforms, everything, depth + 1);
     if (!parent) {
         return std::unexpected(parent.error());
     }
@@ -573,29 +602,102 @@ Result<ProjectedGeometry> detailGeometry(const Document& document, ViewId id,
                        d.placement.y + Length::fromSi((p.y - region.centre.y).si() * factor)};
     };
 
+    // Crop each line's polyline piece by piece. A curve crosses the region's
+    // boundary wherever it likes, so the pieces that survive are kept as
+    // polylines; the curve KIND is carried over, but a cropped curve's
+    // midpoint is a sampled point on it rather than an exact one, which is
+    // recorded as a limitation rather than presented as exact.
     ProjectedGeometry result;
-    for (const auto& [a, b] : parent->segments) {
-        if (!region.cropped) {
-            // An uncropped detail keeps whole any segment the circle touches,
-            // which is what a partial view is: enlarged, but not cut off.
-            if (circleSpan(a, b, region.centre, region.radius)) {
-                result.segments.emplace_back(toSheet(a), toSheet(b));
+    for (const DrawnEdge& edge : parent->edges) {
+        std::vector<std::vector<Point2D>> pieces;
+        std::vector<Point2D> run;
+        for (std::size_t i = 0; i + 1 < edge.polyline.size(); ++i) {
+            const Point2D& a = edge.polyline[i];
+            const Point2D& b = edge.polyline[i + 1];
+            if (!region.cropped) {
+                // An uncropped detail keeps whole any line the circle
+                // touches, which is what a partial view is: enlarged, but not
+                // cut off.
+                if (circleSpan(a, b, region.centre, region.radius)) {
+                    run = edge.polyline;
+                    break;
+                }
+                continue;
             }
-            continue;
+            const auto span = circleSpan(a, b, region.centre, region.radius);
+            if (!span) {
+                if (!run.empty()) {
+                    pieces.push_back(std::exchange(run, {}));
+                }
+                continue;
+            }
+            const auto at = [&](double t) {
+                return Point2D{a.x + Length::fromSi(t * (b.x - a.x).si()),
+                               a.y + Length::fromSi(t * (b.y - a.y).si())};
+            };
+            // A piece that was not clipped keeps the ENDPOINT it already had.
+            // Recomputing it as a + 1.0 * (b - a) is the same number in
+            // arithmetic and not always the same double, and the difference
+            // would stop consecutive pieces joining -- so a curve lying wholly
+            // inside the region would come back as a fan of two-point
+            // fragments rather than one line.
+            const Point2D from = span->first <= 0.0 ? a : at(span->first);
+            const Point2D to = span->second >= 1.0 ? b : at(span->second);
+            if (from == to) {
+                continue; // a segment that only grazes the boundary
+            }
+            if (run.empty() || run.back() != from) {
+                if (!run.empty()) {
+                    pieces.push_back(std::exchange(run, {}));
+                }
+                run.push_back(from);
+            }
+            run.push_back(to);
         }
-        const auto span = circleSpan(a, b, region.centre, region.radius);
-        if (!span) {
-            continue;
+        if (!run.empty()) {
+            pieces.push_back(std::move(run));
         }
-        const auto at = [&](double t) {
-            return Point2D{a.x + Length::fromSi(t * (b.x - a.x).si()),
-                           a.y + Length::fromSi(t * (b.y - a.y).si())};
-        };
-        result.segments.emplace_back(toSheet(at(span->first)), toSheet(at(span->second)));
+        for (std::vector<Point2D>& piece : pieces) {
+            if (piece.size() < 2) {
+                continue;
+            }
+            DrawnEdge drawn;
+            drawn.curve = edge.curve;
+            drawn.visibility = edge.visibility;
+            drawn.kind = edge.kind;
+            drawn.polyline.reserve(piece.size());
+            for (const Point2D& p : piece) {
+                drawn.polyline.push_back(toSheet(p));
+            }
+            drawn.start = drawn.polyline.front();
+            drawn.end = drawn.polyline.back();
+            drawn.midpoint = drawn.polyline[drawn.polyline.size() / 2];
+            result.edges.push_back(std::move(drawn));
+        }
     }
-    for (const auto& [a, b] : result.segments) {
-        result.points.push_back(a);
-        result.points.push_back(b);
+
+    // This view's own settings, applied to what survived the crop. Merging
+    // has already happened in the parent, so only suppression is left.
+    std::vector<DrawnEdge> shown;
+    shown.reserve(result.edges.size());
+    for (DrawnEdge& edge : result.edges) {
+        const bool hiddenAndNotShown =
+            edge.visibility == geometry::EdgeVisibility::Hidden && !settings.showHidden;
+        const bool tangentAndNotShown = edge.kind == geometry::ProjectedEdgeKind::Smooth &&
+                                        settings.tangentEdges == TangentEdgePolicy::Hide;
+        if (hiddenAndNotShown || tangentAndNotShown) {
+            ++result.suppressed;
+            continue;
+        }
+        shown.push_back(std::move(edge));
+    }
+    result.edges = std::move(shown);
+    result.merged = parent->merged;
+
+    for (const DrawnEdge& edge : result.edges) {
+        for (const Point2D& p : edge.polyline) {
+            result.points.push_back(p);
+        }
     }
     if (result.points.empty()) {
         return makeError(ErrorCode::FailedPrecondition,

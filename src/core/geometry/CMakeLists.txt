@@ -44,6 +44,7 @@ bettercad_add_library(bettercad_geometry
         occt/OcctFaceNames.hpp
         occt/OcctFaces.cpp
         occt/OcctFillet.cpp
+        occt/OcctHiddenLine.cpp
         occt/OcctHole.cpp
         occt/OcctGuard.hpp
         occt/OcctKernel.cpp
@@ -74,6 +75,7 @@ bettercad_add_library(bettercad_geometry
         TKFillet
         TKOffset
         TKMesh
+        TKHLR
         TKLCAF
         TKXCAF
         TKXSBase

@@ -25,6 +25,7 @@ bettercad_add_executable(bettercad_tests
     SOURCES
         TestHelpers.hpp
         assembly/CommandTests.cpp
+        drawing/HiddenLineViewTests.cpp
         drawing/Section2dTests.cpp
         drawing/SectionGeometryTests.cpp
         drawing/SheetFileTests.cpp
@@ -65,6 +66,7 @@ bettercad_add_executable(bettercad_tests
         core/geometry/FaceNameTests.cpp
         core/geometry/FilletTests.cpp
         core/geometry/GeometryTestSupport.hpp
+        core/geometry/HiddenLineTests.cpp
         core/geometry/HoleTests.cpp
         core/geometry/LoftTests.cpp
         core/geometry/LoftShapeTests.cpp

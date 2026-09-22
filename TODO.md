@@ -10,7 +10,8 @@
 
 ```text
 Current:   P14 — Technical Drawings
-Next:      P14-HLR-001 — Hidden-line / visible-edge generation
+Next:      a scope decision — P14-HLR-001 is implemented and qualified with
+           one validation item open that only P14-ASM-001 can close
 Then:      P14-DIM-001 — Linear / angular / radial / diameter dimensions
 
 Released:  v0.1.0 — P0–P10
@@ -333,18 +334,18 @@ Next → P14-HLR-001
 
 ## Visible / Hidden Line Generation
 
-* [ ] Implement visible-edge extraction
-* [ ] Implement hidden-edge extraction
-* [ ] Implement silhouette edges
-* [ ] Implement tangent-edge policy
-* [ ] Implement per-view hidden-line toggle
-* [ ] Handle overlapping/projected edges
-* [ ] Validate against independent geometry cases
-* [ ] Validate assemblies with occlusion
-* [ ] Deterministic edge classification PASS
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Implement visible-edge extraction
+* [x] Implement hidden-edge extraction
+* [x] Implement silhouette edges
+* [x] Implement tangent-edge policy
+* [x] Implement per-view hidden-line toggle
+* [x] Handle overlapping/projected edges
+* [x] Validate against independent geometry cases
+* [ ] Validate assemblies with occlusion — **partially met; blocked on P14-ASM-001**
+* [x] Deterministic edge classification PASS
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded — [docs/verification/P14-HLR-001/](docs/verification/P14-HLR-001/README.md)
 
 ### Gate
 
@@ -354,6 +355,56 @@ visible edges correct
 + silhouettes correct
 + occlusion correct
 + deterministic classification
+```
+
+Met, except the one item above: 29 new tests; 1847/1847 on `debug`, `release`
+and `debug-shared`, each from clean; 877/877 five times over in release and
+debug; 0 compiler warnings; every stage exit 0; the no-op rebuild compiled 0
+and linked 0 in every preset; the tree IDs before the first build and after
+the last test run are identical.
+
+**The one open item, stated plainly.** Occlusion *between* components cannot
+be reached: a view draws one component, which is `P14-VIEW-001`'s recorded
+boundary and `P14-ASM-001`'s to lift. So "front component partially hides rear
+component", "one fully hides another" and "repeated instances at different
+depths" have no expressible fixture, and building one would be starting
+`P14-ASM-001`. What *is* validated is occlusion at the **solved** transform:
+the same part placed upright and turned half a turn gives 4 hidden versus 4
+visible pocket lines from the same view, and a component with no solved
+transform — including a suppressed one — is refused rather than drawn at the
+origin. The checkbox stays `[ ]` because the item as written is not fully
+done, not because the work that is authorized is unfinished.
+
+**Hidden-line removal is exact, not polygonal** (ADR-019). Polygonal HLR is
+faster and more forgiving, but its output is polylines whose shape depends on
+a mesh-deflection parameter: a drawn circle would not be a circle, and exact
+comparison between presets would be impossible by construction. Speed is the
+wrong thing to buy with that.
+
+**The unclassified projection is gone rather than duplicated.** `P14-VIEW-001`
+recorded "no visibility classification yet — that is the whole of
+`P14-HLR-001`", so lifting that boundary meant changing the one pipeline
+rather than adding a second beside it. A box front view now draws **4** lines
+instead of 12: its far face lands exactly on its near face, and its four depth
+edges point at the viewer and draw nothing.
+
+Two results worth carrying forward. **Coincident lines are not an edge case —
+they are every box in the system**, so ISO 128 line precedence had to be
+implemented, not deferred; without it every outline would be drawn twice, once
+solid and once dashed. And **a view must be centred on what it could draw,
+not on what survives its settings**, or turning hidden lines off silently
+shifts the drawing on the sheet.
+
+Adversarial review found one defect: a curve lying wholly inside a detail
+region came back as a fan of two-point fragments, because an unclipped piece
+had its endpoint recomputed as `a + 1.0 * (b - a)` — the same number in
+arithmetic, not always the same double, so consecutive pieces failed to join.
+
+```text
+P14-HLR-001 → implementation complete and qualified
+              1 validation item open, blocked on P14-ASM-001
+Next → a scope decision: authorize P14-ASM-001 to close the open item,
+       or accept it and move to P14-DIM-001
 ```
 
 ---
