@@ -8,6 +8,7 @@
 #include <bettercad/core/units/Units.hpp>
 #include <bettercad/drawing/Export.hpp>
 #include <bettercad/drawing/Scene.hpp>
+#include <bettercad/drawing/Tolerance.hpp>
 
 #include <cstdint>
 #include <memory>
@@ -66,9 +67,12 @@ enum class AnnotationType : std::uint8_t {
     HoleCallout,
     /// A roughness requirement against a face.
     SurfaceFinish,
-    /// A datum letter against a face or axis, for a later feature-control
-    /// frame to refer to.
+    /// A datum letter against a face or axis, for a feature-control frame to
+    /// cite.
     Datum,
+    /// A feature-control frame: what a feature must be held to, and against
+    /// which datums (P14-TOL-001).
+    FeatureControlFrame,
 };
 
 /// "note", "leader", "centreline", "centremark", "hole_callout",
@@ -171,6 +175,9 @@ struct AnnotationDefinition {
     Length armLength = Length::fromSi(0.0025);
     /// The surface-finish requirement. That kind only.
     std::optional<SurfaceFinish> finish{};
+    /// What the feature is held to. Feature-control frames only. The cells a
+    /// reader sees are derived from this; the frame stores the meaning.
+    std::optional<FeatureControlFrame> frame{};
 
     friend bool operator==(const AnnotationDefinition&, const AnnotationDefinition&) = default;
 };

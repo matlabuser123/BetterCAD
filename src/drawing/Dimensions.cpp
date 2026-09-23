@@ -420,6 +420,61 @@ Result<MeasuredDimension> measure(const Document& document, DimensionId id,
                                      text.error().message));
     }
     measured.text = std::move(*text);
+
+    // The tolerance, from the ONE interval. Both presentations are written
+    // from the same numbers, so "20 +/-0.05" and the pair "20.05 / 19.95"
+    // cannot come to describe different parts.
+    if (d.tolerance) {
+        // An angular dimension cannot carry one -- validate() refuses it
+        // whether the definition was built in memory or read from a file --
+        // so this holds. It is checked rather than assumed because the cost
+        // of being wrong is reading an empty optional.
+        if (!measured.length) {
+            return makeError(ErrorCode::Internal,
+                             std::format("{} ({}) carries a tolerance but measures no length",
+                                         dimension->name(), id));
+        }
+        auto interval = intervalOf(*measured.length, *d.tolerance);
+        if (!interval) {
+            return makeError(interval.error().code,
+                             std::format("{} ({}) cannot be written: {}", dimension->name(), id,
+                                         interval.error().message));
+        }
+        measured.interval = *interval;
+        if (d.tolerance->display == ToleranceDisplay::Limits) {
+            // The precision comes from the DEVIATIONS, not from the limits:
+            // the limits carry the measured length, which need not be a round
+            // number, and asking how many decimals 111.803399 needs would put
+            // six of them on the drawing. What must survive being written is
+            // the tolerance.
+            auto deviations = deviationsOf(*measured.length, *d.tolerance);
+            if (!deviations) {
+                return std::unexpected(deviations.error());
+            }
+            DimensionFormat precise = d.format;
+            precise.decimals =
+                std::max(decimalsWithoutRounding(deviations->lower, d.format.decimals),
+                         decimalsWithoutRounding(deviations->upper, d.format.decimals));
+            auto upper = formatLength(interval->upper, precise);
+            if (!upper) {
+                return std::unexpected(upper.error());
+            }
+            auto lower = formatLength(interval->lower, precise);
+            if (!lower) {
+                return std::unexpected(lower.error());
+            }
+            // Larger over smaller, as a drawing stacks them.
+            measured.text = std::move(*upper);
+            measured.lowerText = std::move(*lower);
+        } else {
+            auto suffix = formatTolerance(*d.tolerance, d.format);
+            if (!suffix) {
+                return std::unexpected(suffix.error());
+            }
+            measured.text += ' ';
+            measured.text += *suffix;
+        }
+    }
     return measured;
 }
 

@@ -32,6 +32,7 @@ bettercad_add_executable(bettercad_tests
         drawing/SectionGeometryTests.cpp
         drawing/SheetFileTests.cpp
         drawing/SheetTests.cpp
+        drawing/ToleranceTests.cpp
         drawing/ViewAssemblyTests.cpp
         drawing/ViewKindTests.cpp
         drawing/ViewProjectionTests.cpp

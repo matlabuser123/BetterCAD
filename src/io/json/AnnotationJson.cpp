@@ -59,6 +59,79 @@ Result<drawing::AnnotationTarget> targetFromJson(const Json& value, std::string_
     return target;
 }
 
+Json controlFrameToJson(const drawing::FeatureControlFrame& frame) {
+    Json datums = Json::array();
+    // An ARRAY, and in order: primary, secondary, tertiary. A|B|C is a
+    // different requirement from B|A|C, so the order is the meaning and a
+    // set would lose it.
+    for (const drawing::DatumReference& datum : frame.datums) {
+        datums.push_back(std::string(1, datum.letter));
+    }
+    return Json{{"characteristic", std::string{drawing::toString(frame.characteristic)}},
+                {"zone", std::string{drawing::toString(frame.zone)}},
+                {"tolerance", frame.tolerance.si()},
+                {"datums", std::move(datums)}};
+}
+
+Result<drawing::FeatureControlFrame> controlFrameFromJson(const Json& value,
+                                                          std::string_view path) {
+    if (auto object = requireObject(value, path,
+                                    {"characteristic", "zone", "tolerance", "datums"});
+        !object) {
+        return std::unexpected(object.error());
+    }
+    drawing::FeatureControlFrame frame;
+
+    auto characteristicText = readString(value, "characteristic", path);
+    if (!characteristicText) {
+        return std::unexpected(characteristicText.error());
+    }
+    const auto characteristic = drawing::geometricCharacteristicFromString(*characteristicText);
+    if (!characteristic) {
+        return parseError(childPath(path, "characteristic"),
+                          std::format("unknown geometric characteristic '{}'",
+                                      *characteristicText));
+    }
+    frame.characteristic = *characteristic;
+
+    auto zoneText = readString(value, "zone", path);
+    if (!zoneText) {
+        return std::unexpected(zoneText.error());
+    }
+    const auto zone = drawing::toleranceZoneFromString(*zoneText);
+    if (!zone) {
+        return parseError(childPath(path, "zone"),
+                          std::format("unknown tolerance zone '{}'", *zoneText));
+    }
+    frame.zone = *zone;
+
+    auto tolerance = readNumber(value, "tolerance", path);
+    if (!tolerance) {
+        return std::unexpected(tolerance.error());
+    }
+    frame.tolerance = Length::fromSi(*tolerance);
+
+    const auto datums = value.find("datums");
+    if (datums == value.end() || !datums->is_array()) {
+        return parseError(childPath(path, "datums"),
+                          "a frame lists the datums it cites, in order, even if the list is empty");
+    }
+    const std::string datumsPath{childPath(path, "datums")};
+    for (const Json& datum : *datums) {
+        if (!datum.is_string()) {
+            return parseError(datumsPath, "a datum is named by its letter");
+        }
+        const std::string letter = datum.get<std::string>();
+        if (letter.size() != 1) {
+            return parseError(datumsPath, "a datum is named by a single letter");
+        }
+        frame.datums.push_back(drawing::DatumReference{letter.front()});
+    }
+    // validate() is not called here: Annotation::create runs it on the whole
+    // definition, so a bad frame is refused once and with one message.
+    return frame;
+}
+
 } // namespace
 
 // DocumentJson.cpp dispatches on the literal "annotation"; this is what keeps
@@ -91,6 +164,9 @@ Json annotationToJson(const drawing::Annotation& annotation) {
     if (d.type == drawing::AnnotationType::Centremark) {
         json["arm_length"] = d.armLength.si();
     }
+    if (d.frame) {
+        json["frame"] = controlFrameToJson(*d.frame);
+    }
     if (d.finish) {
         json["finish"] = Json{{"roughness", d.finish->roughness.si()},
                               {"removal", std::string{drawing::toString(d.finish->removal)}}};
@@ -102,7 +178,7 @@ Result<std::unique_ptr<drawing::Annotation>> annotationFromJson(const Json& data
                                                                 std::string_view path) {
     if (auto object = requireObject(data, path,
                                     {"type", "view", "target", "text", "height", "x", "y",
-                                     "extension", "arm_length", "finish"});
+                                     "extension", "arm_length", "finish", "frame"});
         !object) {
         return std::unexpected(object.error());
     }
@@ -171,6 +247,14 @@ Result<std::unique_ptr<drawing::Annotation>> annotationFromJson(const Json& data
             return std::unexpected(arm.error());
         }
         definition.armLength = Length::fromSi(*arm);
+    }
+
+    if (const auto frame = data.find("frame"); frame != data.end()) {
+        auto resolved = controlFrameFromJson(*frame, childPath(path, "frame"));
+        if (!resolved) {
+            return std::unexpected(resolved.error());
+        }
+        definition.frame = std::move(*resolved);
     }
 
     if (const auto finish = data.find("finish"); finish != data.end()) {

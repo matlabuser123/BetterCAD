@@ -98,6 +98,83 @@ Result<drawing::DimensionFormat> formatFromJson(const Json& value, std::string_v
     return format;
 }
 
+
+Json toleranceToJson(const drawing::DimensionTolerance& tolerance) {
+    Json json = Json::object();
+    json["display"] = std::string{drawing::toString(tolerance.display)};
+    if (tolerance.fit) {
+        // A fit, or a deviation pair -- never both, so the file cannot say
+        // two things about one interval.
+        json["fit"] = Json{{"role", std::string{drawing::toString(tolerance.fit->role)}},
+                           {"letter", std::string(1, tolerance.fit->letter)},
+                           {"grade", tolerance.fit->grade}};
+    } else {
+        json["lower"] = tolerance.lower.si();
+        json["upper"] = tolerance.upper.si();
+    }
+    return json;
+}
+
+Result<drawing::DimensionTolerance> toleranceFromJson(const Json& value, std::string_view path) {
+    if (auto object = requireObject(value, path, {"display", "lower", "upper", "fit"}); !object) {
+        return std::unexpected(object.error());
+    }
+    drawing::DimensionTolerance tolerance;
+    auto displayText = readString(value, "display", path);
+    if (!displayText) {
+        return std::unexpected(displayText.error());
+    }
+    const auto display = drawing::toleranceDisplayFromString(*displayText);
+    if (!display) {
+        return parseError(childPath(path, "display"),
+                          std::format("unknown tolerance display '{}'", *displayText));
+    }
+    tolerance.display = *display;
+
+    if (const auto fit = value.find("fit"); fit != value.end()) {
+        const std::string fitPath{childPath(path, "fit")};
+        if (auto object = requireObject(*fit, fitPath, {"role", "letter", "grade"}); !object) {
+            return std::unexpected(object.error());
+        }
+        auto roleText = readString(*fit, "role", fitPath);
+        if (!roleText) {
+            return std::unexpected(roleText.error());
+        }
+        const auto role = drawing::fitRoleFromString(*roleText);
+        if (!role) {
+            return parseError(childPath(fitPath, "role"),
+                              std::format("unknown fit role '{}'", *roleText));
+        }
+        auto letter = readString(*fit, "letter", fitPath);
+        if (!letter) {
+            return std::unexpected(letter.error());
+        }
+        if (letter->size() != 1) {
+            return parseError(childPath(fitPath, "letter"),
+                              "a fundamental deviation is one letter");
+        }
+        auto grade = readNumber(*fit, "grade", fitPath);
+        if (!grade) {
+            return std::unexpected(grade.error());
+        }
+        tolerance.fit = drawing::FitDesignation{*role, letter->front(),
+                                                static_cast<int>(*grade)};
+        return tolerance;
+    }
+
+    auto lower = readNumber(value, "lower", path);
+    if (!lower) {
+        return std::unexpected(lower.error());
+    }
+    auto upper = readNumber(value, "upper", path);
+    if (!upper) {
+        return std::unexpected(upper.error());
+    }
+    tolerance.lower = Length::fromSi(*lower);
+    tolerance.upper = Length::fromSi(*upper);
+    return tolerance;
+}
+
 } // namespace
 
 // DocumentJson.cpp dispatches on the literal "dimension"; this is what keeps
@@ -122,6 +199,9 @@ Json dimensionToJson(const drawing::Dimension& dimension) {
         json["ordinate"] = std::string{drawing::toString(d.ordinate)};
     }
     json["format"] = formatToJson(d.format);
+    if (d.tolerance) {
+        json["tolerance"] = toleranceToJson(*d.tolerance);
+    }
     json["x"] = d.placement.x.si();
     json["y"] = d.placement.y.si();
     // The measured VALUE is not written, and there is nowhere in this format
@@ -133,7 +213,8 @@ Json dimensionToJson(const drawing::Dimension& dimension) {
 Result<std::unique_ptr<drawing::Dimension>> dimensionFromJson(const Json& data, std::string name,
                                                               std::string_view path) {
     if (auto object = requireObject(data, path,
-                                    {"type", "view", "from", "to", "ordinate", "format", "x", "y"});
+                                    {"type", "view", "from", "to", "ordinate", "format", "x", "y",
+                                     "tolerance"});
         !object) {
         return std::unexpected(object.error());
     }
@@ -197,6 +278,14 @@ Result<std::unique_ptr<drawing::Dimension>> dimensionFromJson(const Json& data, 
         return std::unexpected(resolvedFormat.error());
     }
     definition.format = std::move(*resolvedFormat);
+
+    if (const auto tolerance = data.find("tolerance"); tolerance != data.end()) {
+        auto resolved = toleranceFromJson(*tolerance, childPath(path, "tolerance"));
+        if (!resolved) {
+            return std::unexpected(resolved.error());
+        }
+        definition.tolerance = *resolved;
+    }
 
     auto x = readNumber(data, "x", path);
     if (!x) {

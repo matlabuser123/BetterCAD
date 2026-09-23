@@ -72,6 +72,22 @@ namespace bettercad::drawing {
     const Document& document, AnnotationId id, const BodyLookup& bodies,
     const TransformLookup& transforms = {});
 
+/// The datum letters the feature-control frame @p id cites that no datum
+/// feature symbol in @p document defines, in the order the frame cites them.
+///
+/// A REPORT, not a refusal. A frame is NOT rejected for citing a datum that
+/// has not been drawn yet, because that would make the order an engineer
+/// works in part of what is legal -- frames and datum symbols are placed in
+/// either order, and a drawing half finished is not a drawing that is wrong.
+/// What must not happen is that a drawing is issued claiming a datum nobody
+/// defined, and this is what says so.
+///
+/// Empty for an annotation that is not a feature-control frame, and for a
+/// frame whose datums are all defined. Fails only if there is no such
+/// annotation.
+[[nodiscard]] BETTERCAD_DRAWING_EXPORT Result<std::vector<char>> undefinedDatums(
+    const Document& document, AnnotationId id);
+
 /// What this annotation draws, in SHEET MILLIMETRES.
 ///
 /// Where it points is found through the view's own projection, so it moves

@@ -181,6 +181,15 @@ Result<void> validate(const DimensionDefinition& definition) {
     if (auto valid = validate(definition.format); !valid) {
         return std::unexpected(valid.error());
     }
+    if (definition.tolerance) {
+        if (isAngular(definition.type)) {
+            return wrong("an angular tolerance is not part of this foundation; the deviations "
+                         "here are lengths, and a length on an angle means nothing");
+        }
+        if (auto valid = validate(*definition.tolerance); !valid) {
+            return std::unexpected(valid.error());
+        }
+    }
     // The unit has to suit what is being measured. Writing an angle in
     // millimetres is not a formatting choice, it is a category error, and a
     // drawing that did it would read as a length.
@@ -376,6 +385,81 @@ Result<std::string> formatLength(Length value, const DimensionFormat& format) {
 
 Result<std::string> formatAngle(Angle value, const DimensionFormat& format) {
     return write(value.si(), format, dimensions::angle);
+}
+
+std::uint8_t decimalsWithoutRounding(Length value, std::uint8_t atLeast) noexcept {
+    constexpr std::uint8_t kMost = 6;
+    const double millimetres = std::abs(value.si()) * 1000.0;
+    if (!std::isfinite(millimetres)) {
+        return atLeast;
+    }
+    std::uint8_t decimals = std::min(atLeast, kMost);
+    double scale = 1.0;
+    for (std::uint8_t i = 0; i < decimals; ++i) {
+        scale *= 10.0;
+    }
+    // Enough decimals that the value survives being written. The slack is
+    // RELATIVE: it absorbs the representation error of a number that came
+    // through metres, and nothing else. An absolute slack would call every
+    // value below it zero -- and answer "no decimals" for the very values
+    // that most need them.
+    const auto rounds = [&]() {
+        const double ticks = millimetres * scale;
+        return std::abs(ticks - std::round(ticks)) > std::abs(ticks) * 1e-9;
+    };
+    while (decimals < kMost && rounds()) {
+        ++decimals;
+        scale *= 10.0;
+    }
+    return decimals;
+}
+
+Result<std::string> formatDeviation(Length value, const DimensionFormat& format) {
+    auto text = formatLength(value, format);
+    if (!text) {
+        return std::unexpected(text.error());
+    }
+    // A deviation is read as a signed offset from the nominal, so the sign is
+    // always written: "+0.10 -0.02" rather than "0.10 -0.02", which reads as
+    // a range.
+    if (!text->empty() && text->front() == '-') {
+        return *text;
+    }
+    return "+" + *text;
+}
+
+Result<std::string> formatTolerance(const DimensionTolerance& tolerance,
+                                    const DimensionFormat& format) {
+    if (auto valid = validate(tolerance); !valid) {
+        return std::unexpected(valid.error());
+    }
+    if (tolerance.fit) {
+        // The designation, not its numbers: a drawing that cites H7 means the
+        // standard, and the standard is read when the limits are wanted.
+        return toString(*tolerance.fit);
+    }
+    // The deviations are written to their own precision, never rounded to
+    // the nominal's: "+/-0" is not a looser way of saying +/-0.05, it is a
+    // requirement no part can meet.
+    DimensionFormat precise = format;
+    precise.decimals = std::max(decimalsWithoutRounding(tolerance.lower, format.decimals),
+                                decimalsWithoutRounding(tolerance.upper, format.decimals));
+    if (isSymmetric(tolerance)) {
+        auto magnitude = formatLength(tolerance.upper, precise);
+        if (!magnitude) {
+            return std::unexpected(magnitude.error());
+        }
+        return "±" + *magnitude;
+    }
+    auto upper = formatDeviation(tolerance.upper, precise);
+    if (!upper) {
+        return std::unexpected(upper.error());
+    }
+    auto lower = formatDeviation(tolerance.lower, precise);
+    if (!lower) {
+        return std::unexpected(lower.error());
+    }
+    return *upper + " " + *lower;
 }
 
 } // namespace bettercad::drawing

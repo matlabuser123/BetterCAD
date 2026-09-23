@@ -7,6 +7,8 @@
 #include <bettercad/core/math/Point.hpp>
 #include <bettercad/core/units/Units.hpp>
 #include <bettercad/drawing/Export.hpp>
+#include <bettercad/drawing/Tolerance.hpp>
+#include <bettercad/drawing/Tolerance.hpp>
 
 #include <cstdint>
 #include <memory>
@@ -148,6 +150,10 @@ struct DimensionDefinition {
     /// Which view axis an ordinate runs along. Ignored by every other type.
     OrdinateAxis ordinate = OrdinateAxis::X;
     DimensionFormat format{};
+    /// What the feature is made to, if anything. The interval is canonical
+    /// and the text is not: a fit resolves its deviations from the standard
+    /// every time it is asked for (P14-TOL-001).
+    std::optional<DimensionTolerance> tolerance{};
     /// Where the text sits, in sheet coordinates. Intent: the engineer puts
     /// it where it reads well, and nothing derives it.
     Point2D placement{};
@@ -206,8 +212,16 @@ private:
 struct MeasuredDimension {
     std::optional<Length> length{};
     std::optional<Angle> angle{};
-    /// The value written out under the dimension's format.
+    /// The value written out under the dimension's format. With a tolerance
+    /// shown as a deviation pair this carries the whole thing -- "20 +/-0.05";
+    /// shown as limits it carries the UPPER limit alone, and `lowerText`
+    /// carries the other.
     std::string text{};
+    /// The lower limit, for a tolerance shown as limits. Empty otherwise.
+    std::string lowerText{};
+    /// What the tolerance admits, in model units. Absent when the dimension
+    /// carries no tolerance.
+    std::optional<ToleranceInterval> interval{};
 };
 
 /// @p value written under @p format: rounded half away from zero to the
@@ -222,5 +236,35 @@ struct MeasuredDimension {
                                                                         const DimensionFormat& format);
 [[nodiscard]] BETTERCAD_DRAWING_EXPORT Result<std::string> formatAngle(Angle value,
                                                                        const DimensionFormat& format);
+
+/// How many decimals @p value needs to be written without being rounded,
+/// never fewer than @p atLeast and never more than six.
+///
+/// A dimension's `decimals` is a presentation choice about the NOMINAL. It is
+/// not a choice about what the part is made to, and applied to a tolerance it
+/// stops being one: +/-0.05 written to no decimals is "+/-0", and the two
+/// limits of an H7 hole written to two decimals are 20.02 and 20.00 -- an
+/// interval a fifth narrower than the standard's, on the face of the drawing.
+/// So the tolerance side of a dimension, and the magnitude in a
+/// feature-control frame, are written to at least what they need.
+///
+/// Six decimals is a nanometre, below any drawing; a value needing more is
+/// written to six.
+[[nodiscard]] BETTERCAD_DRAWING_EXPORT std::uint8_t decimalsWithoutRounding(
+    Length value, std::uint8_t atLeast = 0) noexcept;
+
+/// A length written with an explicit sign, as a deviation is: `+0.10`,
+/// `-0.02`.
+[[nodiscard]] BETTERCAD_DRAWING_EXPORT Result<std::string> formatDeviation(
+    Length value, const DimensionFormat& format);
+
+/// The tolerance part of a dimension's text, with no nominal in front of it:
+/// `+/-0.05`, `+0.10 -0.02`, or a fit's designation.
+///
+/// Shown as limits there is no single string, so this is not what builds one;
+/// measure() writes the two limits from the ONE interval instead, which is
+/// what stops the two presentations describing different parts.
+[[nodiscard]] BETTERCAD_DRAWING_EXPORT Result<std::string> formatTolerance(
+    const DimensionTolerance& tolerance, const DimensionFormat& format);
 
 } // namespace bettercad::drawing

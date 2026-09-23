@@ -10,13 +10,15 @@
 
 ```text
 Current:   P14 — Technical Drawings
-Next:      P14-TOL-001 — Tolerances / fits / GD&T foundation
+Next:      P14-ASM-001 — Assembly drawing views
 Carried:   P14-HLR-001's assembly-to-assembly occlusion validation is still
-           open, blocked on P14-ASM-001, and was touched by neither
-           P14-DIM-001 nor P14-ANNO-001
+           open, blocked on P14-ASM-001, and was touched by none of
+           P14-DIM-001, P14-ANNO-001 or P14-TOL-001
 Decision:  move build and test output off OneDrive. The filesystem fault that
            failed a determinism repeat in P14-DIM-001 recurred in
-           P14-ANNO-001, in a different preset. It needs its own decision
+           P14-ANNO-001, in a different preset. It did NOT recur in
+           P14-TOL-001, which does not close it: an intermittent fault looks
+           exactly like this between occurrences. It needs its own decision
            because the build directory lives in CMakePresets.json, inside the
            frozen qualified tree.
 
@@ -582,18 +584,18 @@ Open decision → move build output off OneDrive; the filesystem fault recurred
 
 ## Tolerances / Fits / GD&T Foundation
 
-* [ ] Implement dimensional ± tolerance
-* [ ] Implement limit dimensions
-* [ ] Implement fit notation foundation
-* [ ] Implement datum feature symbols
-* [ ] Implement feature-control-frame data model
-* [ ] Implement core geometric characteristic symbols
-* [ ] Associate tolerances with stable model references
-* [ ] Validate semantic persistence
-* [ ] Validate export representation
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Implement dimensional ± tolerance
+* [x] Implement limit dimensions
+* [x] Implement fit notation foundation
+* [x] Implement datum feature symbols
+* [x] Implement feature-control-frame data model
+* [x] Implement core geometric characteristic symbols
+* [x] Associate tolerances with stable model references
+* [x] Validate semantic persistence
+* [x] Validate export representation
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded — [docs/verification/P14-TOL-001/](docs/verification/P14-TOL-001/README.md)
 
 ### Gate
 
@@ -603,6 +605,58 @@ tolerance intent preserved
 + GD&T data model coherent
 + persistence correct
 + export representation correct
+```
+
+Met: 43 new tests; 1958/1958 on `debug`, `release` and `debug-shared`, each
+from clean; 1957/1957 five times over in release and debug; 0 compiler
+warnings; the no-op rebuild compiled 0 and linked 0 in every preset; the tree
+IDs before the first build, after the last test run and before the commit are
+identical.
+
+**A tolerance stores the engineering meaning, never the text.** `20 ±0.05` and
+the pair `20.05 / 19.95` are ONE interval with a display mode, so they cannot
+come to describe different parts — asserted bit for bit. A fit stores its
+designation and reads ISO 286 when the numbers are wanted, so the same `H7`
+gives 15 µm at 8 mm and 21 µm at 20 mm.
+
+**Where the tables do not reach, it fails by name.** Shaft fundamental
+deviations are not transcribed in this build, so `g6` keeps its notation and
+its tolerance *width* — IT is shared by holes and shafts — and its limits fail
+with "the designation is kept and no numbers are invented". A hole position
+outside D–H does the same. Nothing is estimated.
+
+**A datum reference is a letter** ([ADR-020](docs/architecture/decisions/ADR-020-a-datum-reference-is-a-letter.md)),
+held in an ordered vector, bound to nothing — which is what ISO 1101 defines,
+and which means a frame cannot silently rebind to the wrong feature because it
+binds to no feature. `A|B|C` and `B|A|C` compare unequal, serialize differently
+and draw differently. The cost — a frame can cite a datum nobody defined — is
+answered by `undefinedDatums()`, a live report rather than a refusal, so the
+order an engineer works in stays theirs. The datum-letter rule itself was
+*de-duplicated*: `validateDatumLetter` is now the one rule the datum feature
+symbol and every frame share, and both give the same message word for word.
+
+**Adversarial review found five defects, and three were the same failure in
+different places**: a number rounded on its way onto the drawing. A frame cell
+sized by UTF-8 *bytes* drew a one-character symbol three characters wide; the
+frame rounded a 0.005 mm zone to `0.01`; and a dimension wrote its tolerance at
+the *nominal's* precision, giving `±0` at zero decimals and an H7 hole's limits
+as 100.04/100.00 — neither the standard's width nor its position. All three now
+go through one `decimalsWithoutRounding`, so they cannot round differently. A
+fourth accepted a deviation pair of no width, which made `DimensionTolerance{}`
+read `±0`. The fifth was in the fix for the third: it used an *absolute* slack,
+which answers "no decimals" for exactly the small values it exists to protect,
+and was caught by a test written for the cap rather than by reading the code.
+
+The shared infrastructure this touched did not move: `[annotation]` is still
+1307 assertions in 34 cases and `[dimension]` still 931 in 34, identical to the
+milestones that qualified them.
+
+```text
+P14-TOL-001 → [x]
+Next → P14-ASM-001
+Carried open → P14-HLR-001 assembly-to-assembly occlusion, blocked on P14-ASM-001
+Open decision → move build output off OneDrive; the fault did not recur here,
+                which does not close it
 ```
 
 ---

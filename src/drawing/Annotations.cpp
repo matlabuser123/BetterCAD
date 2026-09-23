@@ -34,6 +34,14 @@ constexpr double kDatumBoxHalfHeight = 1.0;
 constexpr double kDatumBoxHalfWidth = 1.0;
 /// The datum triangle that sits on the surface.
 constexpr double kDatumTriangle = 1.0;
+/// A feature-control frame's cell: half its height, and the padding either
+/// side of a cell's text. ISO 1101 draws the frame twice the lettering high.
+constexpr double kFrameHalfHeight = 1.0;
+constexpr double kFramePadding = 0.6;
+/// How wide a character is taken to be when a cell is sized. Nothing here
+/// knows a font, so this is a stated proportion rather than a measurement,
+/// and it is recorded as a limitation.
+constexpr double kCharacterWidth = 0.7;
 /// The surface-finish tick: its short arm, its long arm, and the angle
 /// between them (ISO 1302 draws 60 degrees).
 constexpr double kFinishShortArm = 1.4;
@@ -42,6 +50,24 @@ constexpr double kFinishLongArm = 2.8;
 [[nodiscard]] std::unexpected<Error> notFound(AnnotationId id) {
     return makeError(ErrorCode::NotFound,
                      std::format("{} is not an annotation of this document", id));
+}
+
+/// How many CHARACTERS a cell's text is, not how many bytes it takes.
+///
+/// The GD&T symbols are outside ASCII -- U+2316 POSITION INDICATOR is three
+/// bytes of UTF-8 and the diameter sign is two -- so sizing a cell by its
+/// byte count would draw a one-character cell three characters wide, and
+/// would draw two cells of the same length differently depending on which
+/// symbols they held. A UTF-8 continuation byte is 10xxxxxx and starts no
+/// character.
+[[nodiscard]] std::size_t characterCount(std::string_view text) noexcept {
+    std::size_t count = 0;
+    for (const char byte : text) {
+        if ((static_cast<unsigned char>(byte) & 0xC0U) != 0x80U) {
+            ++count;
+        }
+    }
+    return count;
 }
 
 [[nodiscard]] Point2D offsetBy(const Point2D& from, double dx, double dy) {
@@ -445,6 +471,72 @@ Result<SceneItems> draw(const Document& document, AnnotationId id, const BodyLoo
         break;
     }
 
+    case AnnotationType::FeatureControlFrame: {
+        // The cells, in the order ISO 1101 reads them: the characteristic's
+        // symbol, then the zone and its size, then the datums in the order
+        // they were cited. The order is the meaning -- A|B|C is a different
+        // requirement from B|A|C -- so it comes from the stored vector and
+        // never from a set.
+        const FeatureControlFrame& frame = *d.frame;
+        std::vector<std::string> cells;
+        cells.emplace_back(symbolOf(frame.characteristic));
+        // Enough decimals that no zone is rounded into the frame: two would
+        // draw a 0.005 zone as "0.01", a figure twice what the model holds,
+        // on the face of the drawing. The same helper the dimension side
+        // uses, so the two cannot come to round differently.
+        auto magnitude = formatLength(
+            frame.tolerance,
+            DimensionFormat{.decimals = decimalsWithoutRounding(frame.tolerance, 1),
+                            .trailingZeros = false});
+        if (!magnitude) {
+            return std::unexpected(magnitude.error());
+        }
+        // A cylindrical zone is written with the diameter sign, which is what
+        // tells a reader the zone is a cylinder and not a width.
+        cells.push_back((frame.zone == ToleranceZone::Cylindrical ? "Ø" : "") + *magnitude);
+        for (const DatumReference& datum : frame.datums) {
+            cells.emplace_back(1, datum.letter);
+        }
+
+        const double halfHeight = kFrameHalfHeight * height;
+        const double padding = kFramePadding * height;
+        double x = d.placement.x.si();
+        const double y = d.placement.y.si();
+        std::vector<double> edges{x};
+        for (const std::string& cell : cells) {
+            const double width =
+                2.0 * padding +
+                static_cast<double>(characterCount(cell)) * kCharacterWidth * height;
+            x += width;
+            edges.push_back(x);
+        }
+        // The outer frame, then one divider per cell boundary, then the text
+        // centred in each cell.
+        items.lines.push_back(SceneLine{
+            .points = {Point2D{Length::fromSi(edges.front()), Length::fromSi(y - halfHeight)},
+                       Point2D{Length::fromSi(edges.back()), Length::fromSi(y - halfHeight)},
+                       Point2D{Length::fromSi(edges.back()), Length::fromSi(y + halfHeight)},
+                       Point2D{Length::fromSi(edges.front()), Length::fromSi(y + halfHeight)},
+                       Point2D{Length::fromSi(edges.front()), Length::fromSi(y - halfHeight)}},
+            .style = LineStyle::Continuous});
+        for (std::size_t i = 1; i + 1 < edges.size(); ++i) {
+            items.lines.push_back(SceneLine{
+                .points = {Point2D{Length::fromSi(edges[i]), Length::fromSi(y - halfHeight)},
+                           Point2D{Length::fromSi(edges[i]), Length::fromSi(y + halfHeight)}},
+                .style = LineStyle::Continuous});
+        }
+        for (std::size_t i = 0; i < cells.size(); ++i) {
+            items.texts.push_back(
+                SceneText{.at = Point2D{Length::fromSi(0.5 * (edges[i] + edges[i + 1])),
+                                        Length::fromSi(y)},
+                          .text = cells[i],
+                          .height = d.style.height,
+                          .anchor = TextAnchor::MiddleCentre});
+        }
+        items.append(leader(d.placement, target, height));
+        break;
+    }
+
     case AnnotationType::Datum: {
         // ISO 5459: the letter in a box, a line down to the surface, and a
         // filled triangle sitting on it. The triangle is drawn as an outline;
@@ -478,6 +570,37 @@ Result<SceneItems> draw(const Document& document, AnnotationId id, const BodyLoo
         return std::unexpected(valid.error());
     }
     return items;
+}
+
+Result<std::vector<char>> undefinedDatums(const Document& document, AnnotationId id) {
+    const Annotation* annotation = findAnnotation(document, id);
+    if (annotation == nullptr) {
+        return notFound(id);
+    }
+    const AnnotationDefinition& d = annotation->definition();
+    if (d.type != AnnotationType::FeatureControlFrame || !d.frame) {
+        return std::vector<char>{};
+    }
+    // Every letter a datum feature symbol gives, anywhere in the document: a
+    // datum is a property of the PART, and a frame on one view may cite a
+    // datum lettered on another.
+    std::string defined;
+    for (const AnnotationId other : annotations(document)) {
+        const Annotation* candidate = findAnnotation(document, other);
+        if (candidate != nullptr && candidate->definition().type == AnnotationType::Datum &&
+            candidate->definition().text.size() == 1) {
+            defined.push_back(candidate->definition().text.front());
+        }
+    }
+    std::vector<char> missing;
+    // In the order the frame cites them, because that order is the
+    // requirement and a report about it should read the same way.
+    for (const DatumReference& datum : d.frame->datums) {
+        if (defined.find(datum.letter) == std::string::npos) {
+            missing.push_back(datum.letter);
+        }
+    }
+    return missing;
 }
 
 Result<SceneItems> drawAnnotations(const Document& document, ViewId view, const BodyLookup& bodies,

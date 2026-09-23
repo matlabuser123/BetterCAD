@@ -31,6 +31,8 @@ std::string_view toString(AnnotationType type) noexcept {
         return "surface_finish";
     case AnnotationType::Datum:
         return "datum";
+    case AnnotationType::FeatureControlFrame:
+        return "feature_control_frame";
     }
     return "unknown";
 }
@@ -39,7 +41,7 @@ std::optional<AnnotationType> annotationTypeFromString(std::string_view text) no
     for (const AnnotationType type :
          {AnnotationType::Note, AnnotationType::Leader, AnnotationType::Centreline,
           AnnotationType::Centremark, AnnotationType::HoleCallout, AnnotationType::SurfaceFinish,
-          AnnotationType::Datum}) {
+          AnnotationType::Datum, AnnotationType::FeatureControlFrame}) {
         if (toString(type) == text) {
             return type;
         }
@@ -189,12 +191,10 @@ Result<void> validate(const AnnotationDefinition& definition) {
         if (definition.text.size() != 1) {
             return wrong("a datum is identified by a single letter");
         }
-        const char letter = definition.text.front();
-        if (letter < 'A' || letter > 'Z') {
-            return wrong("a datum's letter must be a capital A to Z");
-        }
-        if (letter == 'I' || letter == 'O' || letter == 'Q') {
-            return wrong("ISO 5459 does not use I, O or Q as datum letters: they read as 1 and 0");
+        // THE rule, shared with every datum a feature-control frame cites, so
+        // the two cannot come to disagree about what a datum may be called.
+        if (auto valid = validateDatumLetter(definition.text.front()); !valid) {
+            return std::unexpected(valid.error());
         }
     }
 
@@ -202,6 +202,17 @@ Result<void> validate(const AnnotationDefinition& definition) {
         return std::unexpected(valid.error());
     }
 
+    if ((definition.type == AnnotationType::FeatureControlFrame) != definition.frame.has_value()) {
+        return wrong(definition.type == AnnotationType::FeatureControlFrame
+                         ? "a feature-control frame must say what it controls"
+                         : std::format("a {} annotation carries no feature-control frame",
+                                       toString(definition.type)));
+    }
+    if (definition.frame) {
+        if (auto valid = validate(*definition.frame); !valid) {
+            return std::unexpected(valid.error());
+        }
+    }
     if ((definition.type == AnnotationType::SurfaceFinish) != definition.finish.has_value()) {
         return wrong(definition.type == AnnotationType::SurfaceFinish
                          ? "a surface-finish annotation must give a roughness"
