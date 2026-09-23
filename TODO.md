@@ -10,7 +10,16 @@
 
 ```text
 Current:   P14 — Technical Drawings
-Next:      P14-STREF-001 — Stable drawing-to-model references
+Next:      P14-STREF-001 — Stable drawing-to-model references. STILL OPEN:
+           its audit is done and 11 of its 12 checks pass, but one gate --
+           "no silent rebinding" -- is NOT met and the milestone is not [x].
+           A chamfer face is named by its edge reference's POSITION in the
+           chamfer's edge list, so reordering that list silently moves any
+           drawing reference to it. Demonstrated in
+           Reference_AChamferFaceIsNamedByItsPositionInTheChamfersEdgeList.
+           Closing it changes ChamferDefinition and its file format, and the
+           committed reference models with chamfers, so it needs its own
+           authorization.
 Carried:   nothing. P14-HLR-001's assembly-to-assembly occlusion validation,
            carried open since that milestone, is CLOSED by P14-ASM-001 with
            real multi-component fixtures
@@ -840,20 +849,26 @@ Open decision → move build output off OneDrive; NOW DUE, third occurrence
 
 ## Stable Drawing References
 
-* [ ] Stable drawing view → model reference
-* [ ] Stable dimension → model geometry reference
-* [ ] Stable annotation → model reference
-* [ ] Stable balloon → assembly occurrence reference
-* [ ] Preserve references across model regeneration
-* [ ] Preserve references across configuration switching
-* [ ] Preserve references across save/load
-* [ ] Missing geometry becomes unresolved
-* [ ] Prevent silent rebinding
-* [ ] Validate target recovery
-* [ ] Deterministic resolution PASS
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Stable drawing view → model reference
+* [x] Stable dimension → model geometry reference
+* [x] Stable annotation → model reference
+* [x] Stable balloon → assembly occurrence reference
+* [x] Preserve references across model regeneration
+* [x] Preserve references across configuration switching
+* [x] Preserve references across save/load
+* [x] Missing geometry becomes unresolved
+* [ ] Prevent silent rebinding — **NOT MET.** A chamfer face is named
+      `{role = Chamfer, edge = N}` where N is the POSITION of an edge
+      reference in `ChamferDefinition::edges`. Reordering that list leaves
+      the reference resolving — to different material. Measured in
+      `Reference_AChamferFaceIsNamedByItsPositionInTheChamfersEdgeList`;
+      every other reference path holds, including against identical
+      survivors deliberately left in place
+* [x] Validate target recovery
+* [x] Deterministic resolution PASS
+* [x] Adversarial review PASS
+* [x] Regression PASS — 2047/2047 on `debug`, `release` and `debug-shared`
+* [x] Evidence recorded — [docs/verification/P14-STREF-001/](docs/verification/P14-STREF-001/README.md)
 
 ### Gate
 
@@ -864,6 +879,54 @@ drawing references stable
 + unresolved/recovery correct
 + persistence PASS
 + determinism PASS
+```
+
+**NOT MET, on one gate.** Everything else passes: 32 new tests; 2047/2047 on
+`debug`, `release` and `debug-shared`, each from clean; 2046/2046 five times
+over in both repeat presets; 0 compiler warnings; the no-op rebuild compiled 0
+and linked 0 in every preset; the tree IDs before the first build, after the
+last test run and before the commit are identical.
+
+**The audit's finding.** Every face in this codebase is named semantically —
+an extrude's side face by the sketch entity that sweeps it — **except a
+chamfer's**, which is named by the POSITION of its edge reference in
+`ChamferDefinition::edges`. That list is ordinary stored intent a user may
+reorder, and the entries are `EdgeSignature`s, which `ChamferFeature.hpp`
+itself says "are not persistent topological names". So a drawing reference to
+a chamfer face is one stable link followed by one positional link — the shape
+this milestone exists to forbid.
+
+Measured rather than inferred: a block with two chamfers, a reference to the
+face of edge reference 2, then the edge list is **reordered**. The solid is
+identical and the reference is untouched; it still resolves, and it now names
+the face 60 mm away. Shortening the list is safe — the name of the last
+position stops matching and the reference becomes Unresolved, which is right.
+Only reordering is dangerous.
+
+**No production code was changed.** That is the audit's conclusion in the shape
+of a diff: the drawing layer's contract is already right everywhere it reaches.
+What was added is `drawing/Resolution.hpp` — Resolved / Unresolved / Invalid,
+read from the resolvers the drawing already uses so there is no second answer
+to "where is this" — and 32 tests.
+
+**Every no-rebind fixture is built so a rebinding implementation would
+succeed**: a second block of the same size beside the one removed, a second
+hole of the same diameter in the same face, a second occurrence of the same
+part still active and still item 1. None is adopted. Recovery and rebinding are
+asserted as one paired test so the two cannot be read as one behaviour.
+
+The remaining work is precise and is in the evidence: give each chamfer edge
+reference an id, name the face by the id, migrate the format, and re-qualify
+the reference models that contain chamfers. That last step changes committed
+artifacts three phases are qualified against, which is why it was not done
+here.
+
+```text
+P14-STREF-001 → [ ]  (11 of 12 checks pass; "no silent rebinding" does not)
+Next → P14-STREF-001, to close the chamfer gap — needs its own authorization
+Carried open → nothing
+Open decision → move build output off OneDrive; the fault did not recur here,
+                which does not close it
 ```
 
 ---
