@@ -33,6 +33,10 @@ std::string_view toString(AnnotationType type) noexcept {
         return "datum";
     case AnnotationType::FeatureControlFrame:
         return "feature_control_frame";
+    case AnnotationType::Balloon:
+        return "balloon";
+    case AnnotationType::BomTable:
+        return "bom_table";
     }
     return "unknown";
 }
@@ -41,7 +45,8 @@ std::optional<AnnotationType> annotationTypeFromString(std::string_view text) no
     for (const AnnotationType type :
          {AnnotationType::Note, AnnotationType::Leader, AnnotationType::Centreline,
           AnnotationType::Centremark, AnnotationType::HoleCallout, AnnotationType::SurfaceFinish,
-          AnnotationType::Datum, AnnotationType::FeatureControlFrame}) {
+          AnnotationType::Datum, AnnotationType::FeatureControlFrame, AnnotationType::Balloon,
+          AnnotationType::BomTable}) {
         if (toString(type) == text) {
             return type;
         }
@@ -72,10 +77,18 @@ std::optional<MaterialRemoval> materialRemovalFromString(std::string_view text) 
 }
 
 bool isModelDriven(AnnotationType type) noexcept {
-    return type == AnnotationType::HoleCallout;
+    // A balloon's number and a table's rows are read from the assembly every
+    // time they are drawn, so neither stores words of its own -- the same
+    // rule a hole callout follows, for the same reason (ADR-011, ADR-022).
+    return type == AnnotationType::HoleCallout || type == AnnotationType::Balloon ||
+           type == AnnotationType::BomTable;
 }
 
-bool needsTarget(AnnotationType type) noexcept { return type != AnnotationType::Note; }
+bool needsTarget(AnnotationType type) noexcept {
+    // A note is words on the paper and a BOM table is a table on the paper;
+    // neither points at anything. Everything else does.
+    return type != AnnotationType::Note && type != AnnotationType::BomTable;
+}
 
 bool isEmpty(const AnnotationTarget& target) noexcept {
     return !target.plane && !target.axis && !target.cylinder && !target.object;
@@ -125,6 +138,20 @@ std::vector<ObjectId> referencedObjects(const AnnotationTarget& target) {
     return {};
 }
 
+Result<void> validate(const BomTableStyle& style) {
+    for (const auto& [name, value] : std::array<std::pair<std::string_view, Length>, 4>{
+             {{"row height", style.rowHeight},
+              {"item column", style.itemWidth},
+              {"part column", style.partWidth},
+              {"quantity column", style.quantityWidth}}}) {
+        if (!std::isfinite(value.si()) || value.si() <= 0.0) {
+            return wrong(std::format("a BOM table's {} must be finite and greater than zero",
+                                     name));
+        }
+    }
+    return {};
+}
+
 Result<void> validate(const TextStyle& style) {
     if (!std::isfinite(style.height.si()) || style.height.si() <= 0.0) {
         return wrong("a text height must be finite and greater than zero");
@@ -158,7 +185,12 @@ Result<void> validate(const AnnotationDefinition& definition) {
                                  toString(definition.type)));
     }
     if (!wanted && !isEmpty(definition.target)) {
-        return wrong("a note is placed on the sheet and points at nothing; use a leader to point");
+        // Named, rather than assuming the reader made a note: two kinds point
+        // at nothing now, and a message that says "a note" when a table was
+        // made sends the reader looking in the wrong place.
+        return wrong(std::format("a {} annotation is placed on the sheet and points at nothing; "
+                                 "use a leader to point at something",
+                                 toString(definition.type)));
     }
     if (auto valid = validate(definition.target); !valid) {
         return std::unexpected(valid.error());
@@ -198,7 +230,19 @@ Result<void> validate(const AnnotationDefinition& definition) {
         }
     }
 
+    // A balloon labels an OCCURRENCE, so it names one: not a plane, not an
+    // axis, not a face. Its number is then a function of that occurrence
+    // (ADR-022), which is what stops it showing the right component's leader
+    // and another component's figure.
+    if (definition.type == AnnotationType::Balloon && !definition.target.object) {
+        return wrong("a balloon labels a component occurrence, so it must name one; a plane, an "
+                     "axis or a face is not an instance and has no item number");
+    }
+
     if (auto valid = validate(definition.style); !valid) {
+        return std::unexpected(valid.error());
+    }
+    if (auto valid = validate(definition.table); !valid) {
         return std::unexpected(valid.error());
     }
 

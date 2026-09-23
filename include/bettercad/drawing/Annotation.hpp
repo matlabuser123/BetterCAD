@@ -73,6 +73,20 @@ enum class AnnotationType : std::uint8_t {
     /// A feature-control frame: what a feature must be held to, and against
     /// which datums (P14-TOL-001).
     FeatureControlFrame,
+    /// An item balloon: a circle with a BOM item number in it, on a leader to
+    /// the OCCURRENCE it labels (P14-BOM-001).
+    ///
+    /// Its target is the occurrence and its number is derived from the bill
+    /// of materials, so it cannot point at the right component and show the
+    /// wrong figure -- the figure is a function of the component. It stores
+    /// no number (ADR-022).
+    Balloon,
+    /// The bill-of-materials table of what its view draws (P14-BOM-001).
+    ///
+    /// Points at nothing, like a note: it is a table on the paper. Its rows,
+    /// quantities and item numbers are computed from the assembly on every
+    /// call and none of them is stored.
+    BomTable,
 };
 
 /// "note", "leader", "centreline", "centremark", "hole_callout",
@@ -149,6 +163,27 @@ struct SurfaceFinish {
 /// A finite roughness greater than zero, and a known removal requirement.
 [[nodiscard]] BETTERCAD_DRAWING_EXPORT Result<void> validate(const SurfaceFinish& finish);
 
+/// How a BOM table is drawn, in PAPER millimetres.
+///
+/// A table is a sheet annotation, so nothing here meets a DrawingScale: a
+/// 1:2 view does not halve the table, exactly as it does not halve a note
+/// (P14-ANNO-001's invariant).
+struct BomTableStyle {
+    /// Height of every row, the header included.
+    Length rowHeight = Length::fromSi(0.008);
+    /// Width of each column, in the order they are drawn: ITEM, PART, QTY.
+    Length itemWidth = Length::fromSi(0.015);
+    Length partWidth = Length::fromSi(0.060);
+    Length quantityWidth = Length::fromSi(0.015);
+    /// Whether the header row is drawn.
+    bool header = true;
+
+    friend bool operator==(const BomTableStyle&, const BomTableStyle&) = default;
+};
+
+/// Finite row height and column widths, all greater than zero.
+[[nodiscard]] BETTERCAD_DRAWING_EXPORT Result<void> validate(const BomTableStyle& style);
+
 /// What an annotation is: the intent, and nothing drawn.
 struct AnnotationDefinition {
     /// The view it belongs to. Every annotation has one: a leader points at
@@ -178,6 +213,12 @@ struct AnnotationDefinition {
     /// What the feature is held to. Feature-control frames only. The cells a
     /// reader sees are derived from this; the frame stores the meaning.
     std::optional<FeatureControlFrame> frame{};
+    /// How a BOM table is laid out, in PAPER millimetres. That kind only.
+    ///
+    /// Sizes, not contents: what the table says is derived from the assembly
+    /// every time it is drawn (ADR-022), and what it looks like is the
+    /// engineer's choice, so only the second is stored.
+    BomTableStyle table{};
 
     friend bool operator==(const AnnotationDefinition&, const AnnotationDefinition&) = default;
 };

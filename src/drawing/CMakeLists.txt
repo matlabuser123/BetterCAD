@@ -19,6 +19,7 @@ bettercad_add_library(bettercad_drawing
         Section.cpp
         Sheet.cpp
         Sheets.cpp
+        Bom.cpp
         Tolerance.cpp
         View.cpp
         Views.cpp

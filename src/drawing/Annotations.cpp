@@ -1,5 +1,8 @@
 #include <bettercad/drawing/Annotations.hpp>
 
+#include <bettercad/assembly/Component.hpp>
+#include <bettercad/drawing/Bom.hpp>
+
 #include <bettercad/core/document/Document.hpp>
 #include <bettercad/drawing/Dimension.hpp>
 #include <bettercad/core/geometry/Faces.hpp>
@@ -9,6 +12,10 @@
 
 #include <algorithm>
 #include <cmath>
+#include <numbers>
+#include <string>
+#include <array>
+#include <vector>
 #include <format>
 #include <utility>
 
@@ -42,6 +49,13 @@ constexpr double kFramePadding = 0.6;
 /// knows a font, so this is a stated proportion rather than a measurement,
 /// and it is recorded as a limitation.
 constexpr double kCharacterWidth = 0.7;
+/// A balloon's circle, as a multiple of its text height. ISO 7573 draws the
+/// circle about twice the lettering across; this is its RADIUS.
+constexpr double kBalloonRadius = 1.1;
+/// How many straight pieces a balloon's circle is drawn with. The scene
+/// carries polylines, so a circle is sampled -- deterministically, and finely
+/// enough that it reads as a circle at drawing sizes.
+constexpr int kBalloonSegments = 48;
 /// The surface-finish tick: its short arm, its long arm, and the angle
 /// between them (ISO 1302 draws 60 degrees).
 constexpr double kFinishShortArm = 1.4;
@@ -81,6 +95,9 @@ struct Anchor {
     std::optional<Direction3D> axis{};
     /// Set for a hole, which knows its own callout.
     std::optional<features::HoleCallout> hole{};
+    /// Set when the target IS an occurrence, so the caller can move the point
+    /// into assembly space with that occurrence's solved transform.
+    std::optional<ComponentId> occurrence{};
 };
 
 [[nodiscard]] Result<Anchor> resolveTarget(const Document& document,
@@ -108,8 +125,31 @@ struct Anchor {
         return Anchor{.point = cylinder->axis.origin, .axis = cylinder->axis.direction};
     }
 
-    // A document object. A hole feature is the one that means something to an
-    // annotation: it knows where it is, which way it points, and what it is.
+    // A document object. Two kinds know where they are: a hole feature, and
+    // a component occurrence, which is what a balloon labels.
+    const ComponentId asComponent = ComponentId::fromValue(target.object->value());
+    if (const auto* component = document.findObjectAs<assembly::Component>(asComponent);
+        component != nullptr) {
+        const ObjectReference& part = component->definition().part;
+        const geometry::Body* body = (bodies && isInternal(part)) ? bodies(part.object) : nullptr;
+        if (body == nullptr || body->isEmpty()) {
+            return makeError(ErrorCode::NotFound,
+                             std::format("{} places a part that produced no body", asComponent));
+        }
+        auto box = body->boundingBox();
+        if (!box) {
+            return std::unexpected(box.error());
+        }
+        // The MIDDLE OF THE PART, in the part's own space. The caller turns it
+        // into assembly space with the occurrence's solved transform, which is
+        // what makes a leader land on the instance it labels rather than on
+        // whichever instance was drawn first.
+        const Point3D middle{Length::fromSi(0.5 * (box->min.x.si() + box->max.x.si())),
+                             Length::fromSi(0.5 * (box->min.y.si() + box->max.y.si())),
+                             Length::fromSi(0.5 * (box->min.z.si() + box->max.z.si()))};
+        return Anchor{.point = middle, .axis = Direction3D::unitZ(), .occurrence = asComponent};
+    }
+
     const auto* hole = document.findObjectAs<features::HoleFeature>(
         FeatureId::fromValue(target.object->value()));
     if (hole == nullptr) {
@@ -118,8 +158,8 @@ struct Anchor {
                              std::format("{} does not exist", *target.object));
         }
         return makeError(ErrorCode::InvalidArgument,
-                         std::format("{} is not a hole; an annotation can point at an object only "
-                                     "when the object knows where it is",
+                         std::format("{} is not a hole or a component; an annotation can point at "
+                                     "an object only when the object knows where it is",
                                      *target.object));
     }
     const features::HoleDefinition& definition = hole->definition();
@@ -185,6 +225,85 @@ struct Anchor {
         SceneLine{.points = {text, knee, target}, .style = LineStyle::Continuous});
     items.lines.push_back(
         arrowhead(target, (target.x - knee.x).si(), (target.y - knee.y).si(), height));
+    return items;
+}
+
+/// The table a bill of materials draws, in SHEET millimetres.
+///
+/// `placement` is the table's TOP-LEFT corner and the rows grow downward, so
+/// adding a part lengthens the table away from where it was put rather than
+/// moving it. Every length here is a paper length: a BOM table is a sheet
+/// annotation and meets no DrawingScale, exactly as a note does not
+/// (P14-ANNO-001's invariant).
+[[nodiscard]] SceneItems tableItems(const BillOfMaterials& bom, const AnnotationDefinition& d) {
+    const BomTableStyle& style = d.table;
+    const double left = d.placement.x.si();
+    const double top = d.placement.y.si();
+    const double rowHeight = style.rowHeight.si();
+    const std::array<double, 3> widths{style.itemWidth.si(), style.partWidth.si(),
+                                       style.quantityWidth.si()};
+    const double width = widths[0] + widths[1] + widths[2];
+    const std::size_t lines = bom.rows.size() + (style.header ? 1U : 0U);
+    const double height = rowHeight * static_cast<double>(lines);
+
+    SceneItems items;
+    if (lines == 0) {
+        // An empty assembly draws no table rather than an empty box. There is
+        // nothing to list, and a box with nothing in it says there is nothing
+        // to buy, which is a different claim.
+        return items;
+    }
+
+    const auto at = [&](double x, double y) {
+        return Point2D{Length::fromSi(x), Length::fromSi(y)};
+    };
+    // The outer boundary.
+    items.lines.push_back(SceneLine{.points = {at(left, top), at(left + width, top),
+                                               at(left + width, top - height),
+                                               at(left, top - height), at(left, top)},
+                                    .style = LineStyle::Continuous});
+    // One rule between each pair of rows.
+    for (std::size_t i = 1; i < lines; ++i) {
+        const double y = top - rowHeight * static_cast<double>(i);
+        items.lines.push_back(SceneLine{.points = {at(left, y), at(left + width, y)},
+                                        .style = LineStyle::Continuous});
+    }
+    // One rule between each pair of columns.
+    double x = left;
+    for (std::size_t i = 0; i + 1 < widths.size(); ++i) {
+        x += widths[i];
+        items.lines.push_back(SceneLine{.points = {at(x, top), at(x, top - height)},
+                                        .style = LineStyle::Continuous});
+    }
+
+    // The cells, row by row and column by column, so the order a reader gets
+    // them in is the order they are read in.
+    const double pad = 0.25 * rowHeight;
+    std::size_t line = 0;
+    const auto writeRow = [&](const std::array<std::string, 3>& cells) {
+        const double middle = top - rowHeight * (static_cast<double>(line) + 0.5);
+        double cellLeft = left;
+        for (std::size_t column = 0; column < cells.size(); ++column) {
+            // The part name reads from the left, as a name does; the numbers
+            // sit in the middle of their column, as numbers do.
+            const bool centred = column != 1;
+            items.texts.push_back(SceneText{
+                .at = centred ? at(cellLeft + 0.5 * widths[column], middle)
+                              : at(cellLeft + pad, middle),
+                .text = cells[column],
+                .height = d.style.height,
+                .anchor = centred ? TextAnchor::MiddleCentre : TextAnchor::MiddleLeft});
+            cellLeft += widths[column];
+        }
+        ++line;
+    };
+
+    if (style.header) {
+        writeRow({std::string{"ITEM"}, std::string{"PART"}, std::string{"QTY"}});
+    }
+    for (const BomRow& row : bom.rows) {
+        writeRow({std::to_string(row.item), row.name, std::to_string(row.quantity())});
+    }
     return items;
 }
 
@@ -325,13 +444,45 @@ Result<SceneItems> draw(const Document& document, AnnotationId id, const BodyLoo
         return items;
     }
 
+    // A BOM table reaches no geometry either: it is a table on the paper,
+    // and what it says comes from the assembly rather than from a point in
+    // it. Its rows are computed here, on every call, and none is stored.
+    if (d.type == AnnotationType::BomTable) {
+        auto bom = billOfMaterials(document, d.view);
+        if (!bom) {
+            return makeError(bom.error().code,
+                             std::format("{} ({}) cannot be drawn: {}", annotation->name(), id,
+                                         bom.error().message));
+        }
+        SceneItems items = tableItems(*bom, d);
+        if (auto valid = validate(items); !valid) {
+            return std::unexpected(valid.error());
+        }
+        return items;
+    }
+
     auto anchor = resolveTarget(document, d.target, bodies);
     if (!anchor) {
         return makeError(anchor.error().code,
                          std::format("{} ({}) cannot be drawn: {}", annotation->name(), id,
                                      anchor.error().message));
     }
-    auto at = toSheet(document, d.view, anchor->point, bodies, transforms);
+    // An occurrence's anchor comes back in its PART's space, because that is
+    // where its body is. Moving it with the occurrence's own solved transform
+    // is what makes a balloon land on the instance it names rather than on
+    // whichever instance shares the part (ADR-005).
+    Point3D anchorPoint = anchor->point;
+    if (anchor->occurrence) {
+        const RigidTransform3D* solved = transforms ? transforms(*anchor->occurrence) : nullptr;
+        if (solved == nullptr) {
+            return makeError(ErrorCode::FailedPrecondition,
+                             std::format("{} ({}) cannot be drawn: {} has no solved transform; the "
+                                         "assembly did not solve",
+                                         annotation->name(), id, *anchor->occurrence));
+        }
+        anchorPoint = solved->apply(anchorPoint);
+    }
+    auto at = toSheet(document, d.view, anchorPoint, bodies, transforms);
     if (!at) {
         return makeError(at.error().code,
                          std::format("{} ({}) cannot be drawn: {}", annotation->name(), id,
@@ -536,6 +687,39 @@ Result<SceneItems> draw(const Document& document, AnnotationId id, const BodyLoo
         items.append(leader(d.placement, target, height));
         break;
     }
+
+    case AnnotationType::Balloon: {
+        // The number is the OCCURRENCE's, resolved through the bill of
+        // materials now. Nothing about it is stored, so a balloon cannot show
+        // a figure the assembly has moved on from (ADR-022).
+        auto item = itemNumberOf(document, d.view, ComponentId::fromValue(d.target.object->value()));
+        if (!item) {
+            return makeError(item.error().code,
+                             std::format("{} ({}) cannot be drawn: {}", annotation->name(), id,
+                                         item.error().message));
+        }
+        const double radius = kBalloonRadius * height;
+        std::vector<Point2D> circle;
+        circle.reserve(static_cast<std::size_t>(kBalloonSegments) + 1);
+        for (int i = 0; i <= kBalloonSegments; ++i) {
+            const double angle = 2.0 * std::numbers::pi * static_cast<double>(i) /
+                                 static_cast<double>(kBalloonSegments);
+            circle.push_back(offsetBy(d.placement, radius * std::cos(angle),
+                                      radius * std::sin(angle)));
+        }
+        items.lines.push_back(SceneLine{.points = std::move(circle),
+                                        .style = LineStyle::Continuous});
+        items.texts.push_back(SceneText{.at = d.placement,
+                                        .text = std::to_string(*item),
+                                        .height = d.style.height,
+                                        .anchor = TextAnchor::MiddleCentre});
+        items.append(leader(d.placement, target, height));
+        break;
+    }
+
+    case AnnotationType::BomTable:
+        // Drawn above, before any target was resolved.
+        break;
 
     case AnnotationType::Datum: {
         // ISO 5459: the letter in a box, a line down to the surface, and a

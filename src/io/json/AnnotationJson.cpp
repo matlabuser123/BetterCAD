@@ -2,6 +2,7 @@
 
 #include "JsonReader.hpp"
 
+#include <array>
 #include <format>
 #include <string>
 #include <utility>
@@ -164,6 +165,17 @@ Json annotationToJson(const drawing::Annotation& annotation) {
     if (d.type == drawing::AnnotationType::Centremark) {
         json["arm_length"] = d.armLength.si();
     }
+    if (d.type == drawing::AnnotationType::BomTable) {
+        // SIZES, not contents. What the table says is computed from the
+        // assembly every time it is drawn, so there is nowhere here to put a
+        // row, a quantity or an item number -- which is what stops a file
+        // disagreeing with the assembly it describes (ADR-022).
+        json["table"] = Json{{"row_height", d.table.rowHeight.si()},
+                             {"item_width", d.table.itemWidth.si()},
+                             {"part_width", d.table.partWidth.si()},
+                             {"quantity_width", d.table.quantityWidth.si()},
+                             {"header", d.table.header}};
+    }
     if (d.frame) {
         json["frame"] = controlFrameToJson(*d.frame);
     }
@@ -178,7 +190,7 @@ Result<std::unique_ptr<drawing::Annotation>> annotationFromJson(const Json& data
                                                                 std::string_view path) {
     if (auto object = requireObject(data, path,
                                     {"type", "view", "target", "text", "height", "x", "y",
-                                     "extension", "arm_length", "finish", "frame"});
+                                     "extension", "arm_length", "finish", "frame", "table"});
         !object) {
         return std::unexpected(object.error());
     }
@@ -247,6 +259,32 @@ Result<std::unique_ptr<drawing::Annotation>> annotationFromJson(const Json& data
             return std::unexpected(arm.error());
         }
         definition.armLength = Length::fromSi(*arm);
+    }
+
+    if (const auto table = data.find("table"); table != data.end()) {
+        const std::string tablePath{childPath(path, "table")};
+        if (auto object = requireObject(*table, tablePath,
+                                        {"row_height", "item_width", "part_width",
+                                         "quantity_width", "header"});
+            !object) {
+            return std::unexpected(object.error());
+        }
+        for (const auto& [key, field] : std::array<std::pair<std::string_view, Length*>, 4>{
+                 {{"row_height", &definition.table.rowHeight},
+                  {"item_width", &definition.table.itemWidth},
+                  {"part_width", &definition.table.partWidth},
+                  {"quantity_width", &definition.table.quantityWidth}}}) {
+            auto value = readNumber(*table, std::string{key}, tablePath);
+            if (!value) {
+                return std::unexpected(value.error());
+            }
+            *field = Length::fromSi(*value);
+        }
+        auto header = readBool(*table, "header", tablePath);
+        if (!header) {
+            return std::unexpected(header.error());
+        }
+        definition.table.header = *header;
     }
 
     if (const auto frame = data.find("frame"); frame != data.end()) {

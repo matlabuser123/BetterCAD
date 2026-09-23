@@ -10,18 +10,18 @@
 
 ```text
 Current:   P14 — Technical Drawings
-Next:      P14-BOM-001 — BOM tables / item balloons
+Next:      P14-STREF-001 — Stable drawing-to-model references
 Carried:   nothing. P14-HLR-001's assembly-to-assembly occlusion validation,
            carried open since that milestone, is CLOSED by P14-ASM-001 with
            real multi-component fixtures
-Decision:  move build and test output off OneDrive. The filesystem fault that
-           failed a determinism repeat in P14-DIM-001 recurred in
-           P14-ANNO-001, in a different preset. It did NOT recur in
-           P14-TOL-001 or P14-ASM-001, which does not close it: an
-           intermittent fault looks exactly like this between occurrences.
-           It needs its own decision
-           because the build directory lives in CMakePresets.json, inside the
-           frozen qualified tree.
+Decision:  move build and test output off OneDrive. NOW DUE. The filesystem
+           fault failed a determinism repeat in P14-DIM-001 (debug),
+           P14-ANNO-001 (release) and now P14-BOM-001 (debug) — three
+           milestones, both repeat presets. In P14-BOM-001 the same test
+           passed three times in one run before failing on the fourth
+           repeat. Each time one controlled rerun passed. It needs its own
+           decision because the build directory lives in CMakePresets.json,
+           inside the frozen qualified tree.
 
 Released:  v0.1.0 — P0–P10
 Qualified: P11, P12, P13
@@ -745,20 +745,20 @@ Open decision → move build output off OneDrive; the fault did not recur here,
 
 ## BOM / Balloons
 
-* [ ] Implement assembly BOM model
-* [ ] Implement unique item numbering
-* [ ] Group identical part definitions correctly
-* [ ] Preserve separate component occurrences
-* [ ] Implement quantity calculation
-* [ ] Implement BOM table
-* [ ] Implement item balloons
-* [ ] Link balloons to BOM rows
-* [ ] Respect configurations / suppression
-* [ ] Validate deterministic numbering
-* [ ] Validate save/load
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Implement assembly BOM model
+* [x] Implement unique item numbering
+* [x] Group identical part definitions correctly
+* [x] Preserve separate component occurrences
+* [x] Implement quantity calculation
+* [x] Implement BOM table
+* [x] Implement item balloons
+* [x] Link balloons to BOM rows
+* [x] Respect configurations / suppression
+* [x] Validate deterministic numbering
+* [x] Validate save/load
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded — [docs/verification/P14-BOM-001/](docs/verification/P14-BOM-001/README.md)
 
 ### Gate
 
@@ -769,6 +769,69 @@ BOM contents correct
 + balloon mapping correct
 + configuration behavior correct
 + deterministic numbering
+```
+
+Met: 31 new tests; 2030/2030 on `debug`, `release` and `debug-shared`, each
+from clean; 2029/2029 five times over in release, and in debug on one
+controlled rerun after an environmental failure; 0 compiler warnings; the
+no-op rebuild compiled 0 and linked 0 in every preset; the tree IDs before the
+first build, after the last test run and before the commit are identical.
+
+**A QUANTITY IS NOT INTENT**
+([ADR-022](docs/architecture/decisions/ADR-022-a-bom-is-derived-and-has-no-identity.md)).
+Nobody decides that there are four brackets; there are four because four
+occurrences of the bracket are active. So nothing here is stored: no row, no
+quantity, no item number. ADR-017 had deferred to this milestone whether a BOM
+or a balloon needs identity of its own, and the answer is neither — a BOM table
+and a balloon are annotation KINDS, and the bill is computed on every call.
+The regression that proves it saves a document at quantity 4, changes the
+model to 3, reloads and requires 3; the file is asserted to contain no
+`"quantity"`, no `"item"` and no `"rows"`.
+
+**A balloon points at the OCCURRENCE, not at a table row.** The chain runs
+balloon → occurrence → part definition → row → item number, which is the order
+the information actually flows in, and every link is an identity that already
+existed. It cannot point at the right bolt and show the wrong figure, because
+the figure is a function of the bolt. Suppress or delete the occurrence and the
+balloon is UNRESOLVED — tested in the case where a rebinding balloon would have
+succeeded, because another occurrence of the same part is still active and the
+row is still item 1.
+
+**Grouping is by part-definition identity and by nothing else.** Two separately
+defined 20 mm cubes are two rows, and the test asserts their bounding boxes are
+equal so it is about identity rather than about the parts differing. A part
+renamed to resemble another does not merge, and the printed name follows the
+rename because it was never copied into the BOM.
+
+**Numbering is compact, not retained**, and that is stated rather than left
+accidental: rows sort by ascending part ObjectId and are numbered 1..N, so
+removing the last occurrence of item 2 makes the old item 3 into item 2. With
+nothing persisted there is nowhere a retained number could live. Building the
+same assembly with the components created in the opposite order gives the same
+rows, quantities and numbers.
+
+A deliberate split worth carrying forward: **a BOM survives a failed solve.** A
+parts list says what is in the assembly, which does not depend on where the
+solver put anything — so the table is not stale, it is the current active set.
+A balloon is the opposite and fails, because it needs a transform to put its
+leader on an instance. Both halves are asserted together.
+
+Adversarial review found one production defect: a BOM table that pointed at
+something was refused with *"a note is placed on the sheet"*, whatever kind had
+been made. Until now a note was the only kind that points at nothing; the
+message now names the kind.
+
+**The repeat gate FAILED and the harness said so** — `repeat debug` exit 8,
+`1 stage(s) failed`. Neither failure was in this work: `cli.assembly.batch` hit
+`Permission denied` on `built.bcad` after passing three times in the same run,
+and a `compile_fail` test was killed by a 64-second timeout under eight-way
+parallel load. One controlled rerun passed 2029/2029. Both logs are kept.
+
+```text
+P14-BOM-001 → [x]
+Next → P14-STREF-001
+Carried open → nothing
+Open decision → move build output off OneDrive; NOW DUE, third occurrence
 ```
 
 ---
