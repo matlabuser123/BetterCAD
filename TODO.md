@@ -10,15 +10,16 @@
 
 ```text
 Current:   P14 — Technical Drawings
-Next:      P14-ASM-001 — Assembly drawing views
-Carried:   P14-HLR-001's assembly-to-assembly occlusion validation is still
-           open, blocked on P14-ASM-001, and was touched by none of
-           P14-DIM-001, P14-ANNO-001 or P14-TOL-001
+Next:      P14-BOM-001 — BOM tables / item balloons
+Carried:   nothing. P14-HLR-001's assembly-to-assembly occlusion validation,
+           carried open since that milestone, is CLOSED by P14-ASM-001 with
+           real multi-component fixtures
 Decision:  move build and test output off OneDrive. The filesystem fault that
            failed a determinism repeat in P14-DIM-001 recurred in
            P14-ANNO-001, in a different preset. It did NOT recur in
-           P14-TOL-001, which does not close it: an intermittent fault looks
-           exactly like this between occurrences. It needs its own decision
+           P14-TOL-001 or P14-ASM-001, which does not close it: an
+           intermittent fault looks exactly like this between occurrences.
+           It needs its own decision
            because the build directory lives in CMakePresets.json, inside the
            frozen qualified tree.
 
@@ -349,7 +350,7 @@ Next → P14-HLR-001
 * [x] Implement per-view hidden-line toggle
 * [x] Handle overlapping/projected edges
 * [x] Validate against independent geometry cases
-* [ ] Validate assemblies with occlusion — **partially met; blocked on P14-ASM-001**
+* [x] Validate assemblies with occlusion — closed by [P14-ASM-001](docs/verification/P14-ASM-001/README.md): partial, complete and repeated-instance inter-component occlusion, and a suppressed occurrence excluded
 * [x] Deterministic edge classification PASS
 * [x] Adversarial review PASS
 * [x] Regression PASS
@@ -665,17 +666,78 @@ Open decision → move build output off OneDrive; the fault did not recur here,
 
 ## Assembly Drawing Views
 
-* [ ] Generate views from solved assembly state
-* [ ] Respect active configuration
-* [ ] Respect component suppression
-* [ ] Preserve occurrence identity
-* [ ] Validate multiple instances of one part
-* [ ] Validate assembly hidden-line behavior
-* [ ] Validate sectioned assemblies
-* [ ] Validate regeneration after assembly changes
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Generate views from solved assembly state
+* [x] Respect active configuration
+* [x] Respect component suppression
+* [x] Preserve occurrence identity
+* [x] Validate multiple instances of one part
+* [x] Validate assembly hidden-line behavior
+* [x] Validate sectioned assemblies
+* [x] Validate regeneration after assembly changes
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded — [docs/verification/P14-ASM-001/](docs/verification/P14-ASM-001/README.md)
+
+Met: 41 new tests; 1999/1999 on `debug`, `release` and `debug-shared`, each
+from clean; 1998/1998 five times over in release and debug; 0 compiler
+warnings; the no-op rebuild compiled 0 and linked 0 in every preset; the tree
+IDs before the first build, after the last test run and before the commit are
+identical.
+
+**An assembly view is ONE hidden-line problem, not one per component**
+([ADR-021](docs/architecture/decisions/ADR-021-an-assembly-view-is-one-hidden-line-problem.md)).
+Run one problem each, every occurrence would be classified against itself
+alone, and a component standing wholly behind another would come back fully
+visible — a drawing that looks entirely plausible and is wrong. Fusing them
+instead answers the occlusion question and destroys the identity one, so it
+was rejected too. Every occurrence goes into one `HLRBRep_Algo` and each one's
+lines are extracted separately, which is what keeps both answers.
+
+**Occlusion is asserted by comparison, because a box hides its own back
+face.** "This body has hidden edges" says nothing about occlusion BETWEEN
+bodies — every box has them alone. Three of the first assertions written here
+claimed otherwise and passed for the wrong reason. Every occlusion test now
+compares against the same geometry drawn by itself: a rear plate that shows
+lines from x = 0 alone shows none left of x = 50 once a front plate is there,
+and the kernel splits its edges exactly at 50.
+
+**P14-HLR-001's carried-open item is closed**, with the four cases it asked
+for: partial and complete inter-component occlusion, repeated instances at
+different depths, and a suppressed occurrence excluded. It is ticked because
+those fixtures exist and pass, not because assembly projection exists.
+
+**Which occurrences are drawn is never stored.** It is
+`assembly::activeComponents()` at the moment of drawing, so configuration and
+suppression have one implementation and a drawing cannot disagree with the
+solver about what is in the assembly — a component added after a view was made
+appears in it with no edit to the view.
+
+**A missing solved transform fails the whole view.** Not the identity
+transform, not a partial drawing: one missing a component looks exactly like a
+complete drawing of a smaller machine.
+
+Adversarial review found two defects. A detail view's crop rebuilds each line
+field by field and **dropped the occurrence**, so a detail of an assembly drew
+perfectly and said every line belonged to nobody — the kind of loss that
+surfaces two milestones later. And two bodies CAN draw the same line, so the
+canonical edge order gained `source` as its last tiebreaker; without it, two
+plates meeting face to face sorted against each other by whatever the kernel
+returned first.
+
+One regression run reported `cli.new.unicode-path` failing. It was run under
+the wrong console code page: `qualify.cmd` sets 65001 for exactly that test,
+and the same binary passes it there. Recorded in the evidence rather than
+dropped, because "one test failed and I decided it did not count" is the shape
+of a real failure being waved through.
+
+```text
+P14-ASM-001 → [x]
+P14-HLR-001 "Validate assemblies with occlusion" → [x]
+Next → P14-BOM-001
+Carried open → nothing
+Open decision → move build output off OneDrive; the fault did not recur here,
+                which does not close it
+```
 
 ---
 

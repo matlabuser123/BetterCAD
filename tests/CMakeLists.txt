@@ -26,6 +26,7 @@ bettercad_add_executable(bettercad_tests
         TestHelpers.hpp
         assembly/CommandTests.cpp
         drawing/AnnotationTests.cpp
+        drawing/AssemblyDrawingTests.cpp
         drawing/DimensionTests.cpp
         drawing/HiddenLineViewTests.cpp
         drawing/Section2dTests.cpp

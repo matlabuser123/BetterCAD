@@ -1,6 +1,7 @@
 #pragma once
 
 #include <bettercad/core/Error.hpp>
+#include <bettercad/core/Id.hpp>
 #include <bettercad/core/geometry/HiddenLine.hpp>
 #include <bettercad/core/math/Point.hpp>
 #include <bettercad/core/units/Units.hpp>
@@ -80,6 +81,20 @@ struct DrawnEdge {
     Point2D midpoint{};
     geometry::EdgeVisibility visibility = geometry::EdgeVisibility::Visible;
     geometry::ProjectedEdgeKind kind = geometry::ProjectedEdgeKind::Sharp;
+    /// WHICH OCCURRENCE drew this line (P14-ASM-001, ADR-021).
+    ///
+    /// Set for every line of an assembly view and of a view of one component;
+    /// empty for a view of a feature, which has no occurrence to name. It
+    /// survives the coincident-line merge: where a front component's visible
+    /// edge and a rear one's hidden edge draw the same line, the line that
+    /// wins under ISO 128 keeps ITS occurrence, and the loser's is not
+    /// silently inherited.
+    ///
+    /// This is occurrence identity, not edge identity. There is still no
+    /// stable edge name in this codebase (ADR-012), and this does not invent
+    /// one -- but it is what lets a later dimension, balloon or BOM row be
+    /// attached to the right instance of a repeated part.
+    std::optional<ComponentId> occurrence{};
 
     friend bool operator==(const DrawnEdge&, const DrawnEdge&) = default;
 };

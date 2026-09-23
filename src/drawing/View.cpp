@@ -256,6 +256,25 @@ bool isBaseView(const ViewDefinition& definition) noexcept {
     return definition.kind == ViewKind::Base;
 }
 
+std::string_view toString(ViewSubject subject) noexcept {
+    switch (subject) {
+    case ViewSubject::Object:
+        return "object";
+    case ViewSubject::Assembly:
+        return "assembly";
+    }
+    return "unknown";
+}
+
+std::optional<ViewSubject> viewSubjectFromString(std::string_view text) noexcept {
+    for (const ViewSubject subject : {ViewSubject::Object, ViewSubject::Assembly}) {
+        if (toString(subject) == text) {
+            return subject;
+        }
+    }
+    return std::nullopt;
+}
+
 Result<void> validate(const ViewDefinition& definition) {
     if (!definition.sheet.isValid()) {
         return wrong("a view must name the sheet it sits on");
@@ -303,15 +322,34 @@ Result<void> validate(const ViewDefinition& definition) {
 
     // A base view is the one that says what is being drawn; every other kind
     // inherits it, so two views of one thing cannot disagree.
+    if (toString(definition.subject) == "unknown") {
+        return wrong("a view must say whether it draws an object or the assembly");
+    }
+    const bool assembly = definition.subject == ViewSubject::Assembly;
     if (base) {
         if (toString(*definition.orientation) == "unknown") {
             return wrong("a base view must have a known orientation");
         }
-        if (auto valid = validate(definition.source); !valid) {
+        // An assembly view draws every ACTIVE occurrence, which is the
+        // document's answer and not a stored list, so it names no object. One
+        // that also named an object would be saying two things about what it
+        // draws (ADR-021).
+        if (assembly) {
+            if (definition.source.object.isValid()) {
+                return wrong("an assembly view draws every active component and names no single "
+                             "object; use an object view to draw one of them");
+            }
+        } else if (auto valid = validate(definition.source); !valid) {
             return std::unexpected(valid.error());
         }
     } else if (definition.source.object.isValid()) {
         return wrong(std::format("a {} view takes its source from its parent and names none of its own",
+                                 toString(definition.kind)));
+    } else if (assembly) {
+        // Every other kind inherits the subject with the source. Storing one
+        // of its own would let a section of an assembly view claim to be a
+        // section of something else.
+        return wrong(std::format("a {} view takes its subject from its parent, not one of its own",
                                  toString(definition.kind)));
     }
 

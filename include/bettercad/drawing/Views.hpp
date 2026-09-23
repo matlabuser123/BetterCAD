@@ -85,6 +85,23 @@ using TransformLookup = std::function<const RigidTransform3D*(ComponentId compon
 /// Walks up the chain, so a view projected from a projected view still
 /// resolves to the one source the chain is rooted in. Fails on a chain that
 /// does not terminate in a base view.
+/// What @p id draws: its own subject, or its parent's.
+///
+/// Every kind but base takes this from its parent along with the source, so
+/// a section of an assembly view is a section OF THE ASSEMBLY and cannot be
+/// made to mean something else.
+[[nodiscard]] BETTERCAD_DRAWING_EXPORT Result<ViewSubject> effectiveSubject(const Document& document,
+                                                                            ViewId id);
+
+/// The active occurrences an assembly view draws, in ascending ComponentId
+/// order, as assembly::activeComponents() gives them.
+///
+/// Fails for a view whose subject is a single object -- ask effectiveSource()
+/// for that -- and for an assembly with no active components, because a
+/// drawing of nothing is not a drawing.
+[[nodiscard]] BETTERCAD_DRAWING_EXPORT Result<std::vector<ComponentId>> drawnOccurrences(
+    const Document& document, ViewId id);
+
 [[nodiscard]] BETTERCAD_DRAWING_EXPORT Result<ObjectReference> effectiveSource(const Document& document,
                                                                                ViewId id);
 

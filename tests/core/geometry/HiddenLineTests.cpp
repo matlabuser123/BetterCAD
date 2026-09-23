@@ -14,6 +14,9 @@
 #include <algorithm>
 #include <cmath>
 #include <numbers>
+#include <iterator>
+#include <limits>
+#include <span>
 #include <vector>
 
 using namespace bettercad;
@@ -53,6 +56,31 @@ geometry::HiddenLineDrawing drawingOf(const geometry::Body& body, const Frame3D&
     auto drawing = geometry::hiddenLineDrawing(body, basis);
     REQUIRE(drawing.has_value());
     return std::move(*drawing);
+}
+
+geometry::HiddenLineDrawing drawingOf(std::span<const geometry::Body> bodies,
+                                      const Frame3D& basis) {
+    auto drawing = geometry::hiddenLineDrawing(bodies, basis);
+    REQUIRE(drawing.has_value());
+    return std::move(*drawing);
+}
+
+/// The edges of one member of a set, by the index it was given at.
+std::vector<ProjectedEdge> edgesOf(const geometry::HiddenLineDrawing& drawing,
+                                   std::size_t source) {
+    std::vector<ProjectedEdge> mine;
+    std::ranges::copy_if(drawing.edges, std::back_inserter(mine),
+                         [&](const ProjectedEdge& e) { return e.source == source; });
+    return mine;
+}
+
+/// How many edges of one member are of a visibility.
+std::size_t countOf(const geometry::HiddenLineDrawing& drawing, std::size_t source,
+                    EdgeVisibility visibility) {
+    return static_cast<std::size_t>(
+        std::ranges::count_if(drawing.edges, [&](const ProjectedEdge& e) {
+            return e.source == source && e.visibility == visibility;
+        }));
 }
 
 /// A 100 x 60 x 40 block, asymmetric in all three axes so a swapped or
@@ -487,4 +515,196 @@ TEST_CASE("HiddenLine_AStraightEdgeIsItsTwoEndpointsAndNoMore", "[geometry][hlr]
         CHECK(e.polyline.front() == e.start);
         CHECK(e.polyline.back() == e.end);
     }
+}
+
+
+// --- Occlusion BETWEEN bodies (P14-ASM-001, closing P14-HLR-001's open item)
+//
+// Every fixture here is two boxes whose projected overlap is written down by
+// hand. The front view looks along +Y from -Y (ADR-013: Frame3D::xz()'s normal
+// is -Y), so SMALLER y is nearer the viewer and hides larger y.
+
+TEST_CASE("HiddenLine_ABodyBehindAnotherIsHiddenWhereItIsCoveredAndVisibleWhereItIsNot",
+          "[geometry][hiddenline][assembly][p14]") {
+    // WHY THIS IS COMPARED AGAINST THE SAME BODY DRAWN ALONE. A box hides its
+    // own back face, so every box has hidden edges whatever else is in the
+    // scene -- "it has hidden edges" says nothing about occlusion BETWEEN
+    // bodies. What does say something is that a line visible when the body is
+    // drawn alone stops being visible when another body is put in front of
+    // it.
+    //
+    // The front plate spans x in [0, 50] and z in [-10, 70]; the rear plate
+    // spans x in [0, 100] and z in [0, 60]. So the front plate's shadow
+    // covers the rear plate's left half OUTRIGHT, top and bottom edges
+    // included, and reaches past it in z so that no two boundaries graze.
+    auto front_ = geometry::makeBox(Point3D{0_mm, 0_mm, -10_mm}, 50_mm, 10_mm, 80_mm);
+    auto rear = geometry::makeBox(Point3D{0_mm, 20_mm, 0_mm}, 100_mm, 10_mm, 60_mm);
+    REQUIRE(front_.has_value());
+    REQUIRE(rear.has_value());
+    const std::vector<geometry::Body> bodies{*front_, *rear};
+
+    const geometry::HiddenLineDrawing together = drawingOf(bodies, front());
+    const geometry::HiddenLineDrawing rearAlone = drawingOf(*rear, front());
+
+    // Drawn alone, the rear plate shows lines across its whole width.
+    const auto leftmostVisible = [](const std::vector<ProjectedEdge>& edges) {
+        double least = std::numeric_limits<double>::max();
+        for (const ProjectedEdge& edge : edges) {
+            if (edge.visibility == EdgeVisibility::Visible) {
+                least = std::min({least, edge.start.x.in(units::mm), edge.end.x.in(units::mm)});
+            }
+        }
+        return least;
+    };
+    CHECK_THAT(leftmostVisible(rearAlone.edges), WithinAbs(0.0, kKernelMm));
+
+    // With the front plate there, nothing of the rear plate is visible left
+    // of x = 50 -- which is the front plate's own right-hand edge.
+    CHECK(countOf(together, 1, EdgeVisibility::Visible) > 0); // it is not simply gone
+    CHECK(leftmostVisible(edgesOf(together, 1)) >= 50.0 - kKernelMm);
+
+    // And the kernel SPLIT the rear plate's horizontal edges at x = 50 rather
+    // than dropping or keeping them whole: there is a visible piece starting
+    // exactly there.
+    const std::vector<ProjectedEdge> rear1 = edgesOf(together, 1);
+    CHECK(std::ranges::any_of(rear1, [](const ProjectedEdge& e) {
+        return e.visibility == EdgeVisibility::Visible &&
+               std::abs(std::min(e.start.x.in(units::mm), e.end.x.in(units::mm)) - 50.0) <
+                   kKernelMm;
+    }));
+
+    // The front plate is in front of everything, so nothing else hides it:
+    // its visible lines still span its full width.
+    CHECK_THAT(leftmostVisible(edgesOf(together, 0)), WithinAbs(0.0, kKernelMm));
+}
+
+TEST_CASE("HiddenLine_ABodyEntirelyBehindAnotherDrawsNothingVisible",
+          "[geometry][hiddenline][assembly][p14]") {
+    // The rear box is strictly smaller in both drawn axes and strictly
+    // further away, so nothing of it can be seen. A body classified on its
+    // own would report every one of its edges visible.
+    auto near = geometry::makeBox(Point3D{0_mm, 0_mm, 0_mm}, 100_mm, 10_mm, 60_mm);
+    auto far = geometry::makeBox(Point3D{20_mm, 30_mm, 10_mm}, 40_mm, 10_mm, 30_mm);
+    REQUIRE(near.has_value());
+    REQUIRE(far.has_value());
+    const std::vector<geometry::Body> bodies{*near, *far};
+
+    const geometry::HiddenLineDrawing drawing = drawingOf(bodies, front());
+    // (The near box has hidden edges of its own -- it hides its own back
+    // face -- which is why the assertion below is about the FAR one.)
+    CHECK(countOf(drawing, 0, EdgeVisibility::Visible) > 0);
+    CHECK(countOf(drawing, 1, EdgeVisibility::Visible) == 0); // the whole point
+    CHECK(countOf(drawing, 1, EdgeVisibility::Hidden) > 0);   // and it IS there
+
+    // Run alone, the same box DOES show visible lines -- which is what makes
+    // the assertion above a statement about occlusion rather than about the
+    // box. (It has hidden lines alone too: a box hides its own back face.)
+    const geometry::HiddenLineDrawing alone = drawingOf(*far, front());
+    CHECK(alone.count(EdgeVisibility::Visible) > 0);
+}
+
+TEST_CASE("HiddenLine_SwappingWhichBodyIsInFrontSwapsWhatIsHidden",
+          "[geometry][hiddenline][assembly][p14]") {
+    // The same two shapes at swapped depths. If depth were ignored, or the
+    // order of the bodies decided the answer, this would come out the same
+    // way twice.
+    auto small = [](Length y) {
+        auto b = geometry::makeBox(Point3D{20_mm, y, 10_mm}, 40_mm, 10_mm, 30_mm);
+        REQUIRE(b.has_value());
+        return *b;
+    };
+    auto large = [](Length y) {
+        auto b = geometry::makeBox(Point3D{0_mm, y, 0_mm}, 100_mm, 10_mm, 60_mm);
+        REQUIRE(b.has_value());
+        return *b;
+    };
+
+    // Large in front, small behind.
+    const std::vector<geometry::Body> largeFirst{large(0_mm), small(30_mm)};
+    const geometry::HiddenLineDrawing a = drawingOf(largeFirst, front());
+    CHECK(countOf(a, 1, EdgeVisibility::Visible) == 0);
+
+    // Small in front, large behind -- and the ORDER in the span is unchanged,
+    // so only the depth differs.
+    const std::vector<geometry::Body> smallInFront{large(30_mm), small(0_mm)};
+    const geometry::HiddenLineDrawing b = drawingOf(smallInFront, front());
+    CHECK(countOf(b, 1, EdgeVisibility::Visible) > 0);  // the small one now shows
+    CHECK(countOf(b, 0, EdgeVisibility::Hidden) > 0);   // and hides part of the large one
+}
+
+TEST_CASE("HiddenLine_TwoBodiesRunTogetherAreNotTwoBodiesRunApart",
+          "[geometry][hiddenline][assembly][p14]") {
+    // The failure mode this whole design exists to prevent, stated as a test:
+    // classifying each body on its own and concatenating gives a DIFFERENT
+    // and wrong answer, and this asserts the two really do differ.
+    auto near = geometry::makeBox(Point3D{0_mm, 0_mm, 0_mm}, 100_mm, 10_mm, 60_mm);
+    auto far = geometry::makeBox(Point3D{20_mm, 30_mm, 10_mm}, 40_mm, 10_mm, 30_mm);
+    REQUIRE(near.has_value());
+    REQUIRE(far.has_value());
+
+    const std::vector<geometry::Body> bodies{*near, *far};
+    const geometry::HiddenLineDrawing together = drawingOf(bodies, front());
+    const geometry::HiddenLineDrawing apartNear = drawingOf(*near, front());
+    const geometry::HiddenLineDrawing apartFar = drawingOf(*far, front());
+
+    const std::size_t visibleTogether = together.count(EdgeVisibility::Visible);
+    const std::size_t visibleApart =
+        apartNear.count(EdgeVisibility::Visible) + apartFar.count(EdgeVisibility::Visible);
+    CHECK(visibleTogether < visibleApart);
+}
+
+TEST_CASE("HiddenLine_ASetSaysWhichBodyEachLineCameFrom",
+          "[geometry][hiddenline][assembly][p14]") {
+    // Provenance. Two boxes side by side, neither hiding the other, so every
+    // line of each is visible -- and each line must still say which box it
+    // belongs to.
+    auto left = geometry::makeBox(Point3D{0_mm, 0_mm, 0_mm}, 40_mm, 10_mm, 40_mm);
+    auto right = geometry::makeBox(Point3D{60_mm, 0_mm, 0_mm}, 40_mm, 10_mm, 40_mm);
+    REQUIRE(left.has_value());
+    REQUIRE(right.has_value());
+    const std::vector<geometry::Body> bodies{*left, *right};
+
+    const geometry::HiddenLineDrawing drawing = drawingOf(bodies, front());
+    const std::vector<ProjectedEdge> zero = edgesOf(drawing, 0);
+    const std::vector<ProjectedEdge> one = edgesOf(drawing, 1);
+    REQUIRE_FALSE(zero.empty());
+    REQUIRE_FALSE(one.empty());
+    CHECK(zero.size() + one.size() == drawing.edges.size()); // nothing unattributed
+
+    // Each box is a 40 x 40 square seen square-on, and they are 60 apart in x.
+    for (const ProjectedEdge& edge : zero) {
+        CHECK(edge.start.x.in(units::mm) <= 40.0 + kKernelMm);
+    }
+    for (const ProjectedEdge& edge : one) {
+        CHECK(edge.start.x.in(units::mm) >= 60.0 - kKernelMm);
+    }
+}
+
+TEST_CASE("HiddenLine_ASetWithAMissingMemberIsRefused",
+          "[geometry][hiddenline][assembly][p14]") {
+    auto box = geometry::makeBox(100_mm, 60_mm, 40_mm);
+    REQUIRE(box.has_value());
+    const std::vector<geometry::Body> withEmpty{*box, geometry::Body{}};
+    const auto refused = geometry::hiddenLineDrawing(withEmpty, front());
+    REQUIRE_FALSE(refused.has_value());
+    CHECK(errorCode(refused) == ErrorCode::FailedPrecondition);
+    CHECK_THAT(refused.error().message, ContainsSubstring("draws a different thing"));
+
+    const std::vector<geometry::Body> none{};
+    const auto empty = geometry::hiddenLineDrawing(none, front());
+    REQUIRE_FALSE(empty.has_value());
+    CHECK_THAT(empty.error().message, ContainsSubstring("no bodies"));
+}
+
+TEST_CASE("HiddenLine_OneBodyThroughTheSetPathIsTheSingleBodyAnswer",
+          "[geometry][hiddenline][assembly][p14]") {
+    // There is one implementation, so a set of one must be exactly what the
+    // single-body call gives -- otherwise the part path and the assembly path
+    // could drift apart without anything noticing.
+    auto box = geometry::makeBox(100_mm, 60_mm, 40_mm);
+    REQUIRE(box.has_value());
+    const std::vector<geometry::Body> one{*box};
+    const geometry::HiddenLineDrawing viaSet = drawingOf(one, front());
+    const geometry::HiddenLineDrawing viaBody = drawingOf(*box, front());
+    CHECK(viaSet.edges == viaBody.edges);
 }

@@ -19,7 +19,11 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
+#include <format>
+#include <span>
+#include <string>
 #include <utility>
+#include <vector>
 
 namespace bettercad::geometry {
 namespace {
@@ -67,7 +71,7 @@ constexpr double kDeflectionSi = 1e-5;
 
 /// Appends every edge of one of the kernel's result compounds.
 void collect(const TopoDS_Shape& compound, EdgeVisibility visibility, ProjectedEdgeKind kind,
-             std::vector<ProjectedEdge>& into) {
+             std::size_t source, std::vector<ProjectedEdge>& into) {
     if (compound.IsNull()) {
         return;
     }
@@ -88,6 +92,7 @@ void collect(const TopoDS_Shape& compound, EdgeVisibility visibility, ProjectedE
         drawn.length = occt::lengthFromModel(length);
         drawn.visibility = visibility;
         drawn.kind = kind;
+        drawn.source = source;
         if (drawn.curve == EdgeCurve::Line) {
             // A straight edge IS its two endpoints; sampling it would only
             // add points that say nothing.
@@ -162,9 +167,28 @@ std::size_t HiddenLineDrawing::count(EdgeVisibility visibility, ProjectedEdgeKin
 }
 
 Result<HiddenLineDrawing> hiddenLineDrawing(const Body& body, const Frame3D& viewBasis) {
-    if (body.isEmpty()) {
+    // The single body IS a set of one, so there is one implementation and the
+    // part path cannot drift from the assembly path (ADR-021).
+    return hiddenLineDrawing(std::span<const Body>(&body, 1), viewBasis);
+}
+
+Result<HiddenLineDrawing> hiddenLineDrawing(std::span<const Body> bodies, const Frame3D& viewBasis) {
+    if (bodies.empty()) {
         return makeError(ErrorCode::FailedPrecondition,
-                         "hidden line removal: the body is empty, so there is nothing to draw");
+                         "hidden line removal: there are no bodies, so there is nothing to draw");
+    }
+    for (std::size_t i = 0; i < bodies.size(); ++i) {
+        if (bodies[i].isEmpty()) {
+            // Not "skip it": a set with a member missing draws a different
+            // assembly, and it would look like a complete drawing of one.
+            return makeError(ErrorCode::FailedPrecondition,
+                             bodies.size() == 1
+                                 ? std::string("hidden line removal: the body is empty, so there "
+                                               "is nothing to draw")
+                                 : std::format("hidden line removal: body {} of {} is empty, and a "
+                                               "set with a member missing draws a different thing",
+                                               i, bodies.size()));
+        }
     }
     return occt::guardKernelCall("hidden line removal", [&]() -> Result<HiddenLineDrawing> {
         // The projector's Z is the direction the viewer is on, and its X is
@@ -174,8 +198,18 @@ Result<HiddenLineDrawing> hiddenLineDrawing(const Body& body, const Frame3D& vie
         const gp_Ax2 axes(occt::toModel(viewBasis.origin()), occt::toModel(viewBasis.normal()),
                           occt::toModel(viewBasis.xAxis()));
 
+        // EVERY body goes into ONE algorithm, which is what makes the
+        // occlusion between them the kernel's answer rather than something
+        // assembled afterwards (ADR-021). Run one problem each, and every
+        // body would be classified against itself alone: a body standing
+        // wholly behind another would come back fully visible.
         Handle(HLRBRep_Algo) algorithm = new HLRBRep_Algo();
-        algorithm->Add(*occt::BodyAccess::shape(body));
+        std::vector<TopoDS_Shape> shapes;
+        shapes.reserve(bodies.size());
+        for (const Body& body : bodies) {
+            shapes.push_back(*occt::BodyAccess::shape(body));
+            algorithm->Add(shapes.back());
+        }
         algorithm->Projector(HLRAlgo_Projector(axes));
         algorithm->Update();
         algorithm->Hide();
@@ -187,23 +221,29 @@ Result<HiddenLineDrawing> hiddenLineDrawing(const Body& body, const Frame3D& vie
         // the two independent facts BetterCAD keeps: is it hidden, and what
         // kind of line is it. Iso-parametric lines are deliberately not
         // collected -- they are a surface-display aid, not a drawing.
+        // Extracted PER SHAPE, so each line comes back already attributed to
+        // the body it belongs to. Asking for the whole answer at once would
+        // give the same lines with nothing to say which occurrence drew them.
         struct Set {
             TopoDS_Shape shape;
             EdgeVisibility visibility;
             ProjectedEdgeKind kind;
         };
-        const std::array<Set, 8> sets{{
-            {toShape.VCompound(), EdgeVisibility::Visible, ProjectedEdgeKind::Sharp},
-            {toShape.Rg1LineVCompound(), EdgeVisibility::Visible, ProjectedEdgeKind::Smooth},
-            {toShape.RgNLineVCompound(), EdgeVisibility::Visible, ProjectedEdgeKind::Sewn},
-            {toShape.OutLineVCompound(), EdgeVisibility::Visible, ProjectedEdgeKind::Outline},
-            {toShape.HCompound(), EdgeVisibility::Hidden, ProjectedEdgeKind::Sharp},
-            {toShape.Rg1LineHCompound(), EdgeVisibility::Hidden, ProjectedEdgeKind::Smooth},
-            {toShape.RgNLineHCompound(), EdgeVisibility::Hidden, ProjectedEdgeKind::Sewn},
-            {toShape.OutLineHCompound(), EdgeVisibility::Hidden, ProjectedEdgeKind::Outline},
-        }};
-        for (const Set& set : sets) {
-            collect(set.shape, set.visibility, set.kind, drawing.edges);
+        for (std::size_t i = 0; i < shapes.size(); ++i) {
+            const TopoDS_Shape& of = shapes[i];
+            const std::array<Set, 8> sets{{
+                {toShape.VCompound(of), EdgeVisibility::Visible, ProjectedEdgeKind::Sharp},
+                {toShape.Rg1LineVCompound(of), EdgeVisibility::Visible, ProjectedEdgeKind::Smooth},
+                {toShape.RgNLineVCompound(of), EdgeVisibility::Visible, ProjectedEdgeKind::Sewn},
+                {toShape.OutLineVCompound(of), EdgeVisibility::Visible, ProjectedEdgeKind::Outline},
+                {toShape.HCompound(of), EdgeVisibility::Hidden, ProjectedEdgeKind::Sharp},
+                {toShape.Rg1LineHCompound(of), EdgeVisibility::Hidden, ProjectedEdgeKind::Smooth},
+                {toShape.RgNLineHCompound(of), EdgeVisibility::Hidden, ProjectedEdgeKind::Sewn},
+                {toShape.OutLineHCompound(of), EdgeVisibility::Hidden, ProjectedEdgeKind::Outline},
+            }};
+            for (const Set& set : sets) {
+                collect(set.shape, set.visibility, set.kind, i, drawing.edges);
+            }
         }
 
         // Canonical order. The kernel's traversal order carries no meaning
@@ -222,7 +262,14 @@ Result<HiddenLineDrawing> hiddenLineDrawing(const Body& body, const Frame3D& vie
             if (before(a.end, b.end) || before(b.end, a.end)) {
                 return before(a.end, b.end);
             }
-            return a.length.si() < b.length.si();
+            if (a.length.si() != b.length.si()) {
+                return a.length.si() < b.length.si();
+            }
+            // Two bodies can draw the same line -- two plates meeting face to
+            // face do exactly that -- so the source is part of the order.
+            // Without it the two would sort against each other by whatever
+            // the kernel happened to return first.
+            return a.source < b.source;
         });
         return drawing;
     });

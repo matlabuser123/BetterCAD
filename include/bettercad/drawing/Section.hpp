@@ -151,6 +151,14 @@ struct HatchSettings {
 struct SectionLoop {
     std::vector<Point2D> points{};
     bool outer = true;
+    /// WHICH OCCURRENCE's material this loop bounds (P14-ASM-001).
+    ///
+    /// Empty for a section of a feature. Set for every loop of an assembly
+    /// section, so that adjacent components' cut faces remain distinguishable
+    /// -- which is what a later hatch policy needs to give two touching
+    /// components different angles, and what stops one component's hatch
+    /// being drawn across another's material.
+    std::optional<ComponentId> occurrence{};
 };
 
 /// What a section draws, in sheet coordinates.

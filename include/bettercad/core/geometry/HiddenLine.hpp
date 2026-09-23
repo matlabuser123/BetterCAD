@@ -10,6 +10,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <span>
 #include <string_view>
 #include <vector>
 
@@ -105,6 +106,16 @@ struct ProjectedEdge {
     std::vector<Point2D> polyline{};
     EdgeVisibility visibility = EdgeVisibility::Visible;
     ProjectedEdgeKind kind = ProjectedEdgeKind::Sharp;
+    /// WHICH of the bodies given to hiddenLineDrawing() this came from, as an
+    /// index into them. Zero for the single-body call, where there is nothing
+    /// to distinguish.
+    ///
+    /// This is the one piece of identity the kernel's answer can carry
+    /// (ADR-021). It is not a stable edge name -- the note above still holds,
+    /// and there is none in this codebase -- but it says which OCCURRENCE
+    /// drew the line, which is what an assembly drawing needs so that a
+    /// dimension, a balloon or a BOM row can be attached to the right one.
+    std::size_t source = 0;
 
     friend bool operator==(const ProjectedEdge&, const ProjectedEdge&) = default;
 };
@@ -140,5 +151,25 @@ struct HiddenLineDrawing {
 /// like a drawing of a simpler part.
 [[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Result<HiddenLineDrawing> hiddenLineDrawing(
     const Body& body, const Frame3D& viewBasis);
+
+/// What @p bodies look like TOGETHER, seen through @p viewBasis.
+///
+/// One hidden-line problem containing all of them, never one problem each
+/// (ADR-021). That is the whole difference: run separately, every body is
+/// classified against itself alone, so a body standing entirely behind
+/// another comes back fully visible and a drawing shows the rear one in solid
+/// lines over the front one. Run together, the algorithm decides which body
+/// is in front, because that is the same question it already answers about a
+/// single body hiding itself.
+///
+/// Every returned edge carries `source`, the index in @p bodies of the body
+/// it came from, so occlusion is computed across the set without losing which
+/// member each line belongs to.
+///
+/// Fails with FailedPrecondition when @p bodies is empty or any member is
+/// empty -- a set with a missing member would be a picture of a different
+/// assembly -- and with Internal when the kernel raises.
+[[nodiscard]] BETTERCAD_GEOMETRY_EXPORT Result<HiddenLineDrawing> hiddenLineDrawing(
+    std::span<const Body> bodies, const Frame3D& viewBasis);
 
 } // namespace bettercad::geometry

@@ -45,6 +45,31 @@
 // one thing can disagree about what that thing is (P14-VIEW-001).
 namespace bettercad::drawing {
 
+/// What a view looks at: one object, or the whole assembly.
+///
+/// There is no assembly OBJECT to name -- ADR-002 puts the assembly in the
+/// document itself -- so "the whole assembly" cannot be said with an
+/// ObjectReference. It is said here instead, explicitly, rather than by
+/// leaving the reference invalid and hoping every reader agrees what that
+/// meant (ADR-021).
+///
+/// WHICH occurrences an assembly view draws is not stored: it is
+/// assembly::activeComponents() at the moment the view is drawn, so the
+/// document's active configuration and both layers of suppression have one
+/// implementation and a drawing cannot come to disagree with the solver about
+/// what is in the assembly.
+enum class ViewSubject : std::uint8_t {
+    /// The object `source` names: a feature, or one component occurrence.
+    Object,
+    /// Every active component occurrence of this document.
+    Assembly,
+};
+
+/// "object", "assembly".
+[[nodiscard]] BETTERCAD_DRAWING_EXPORT std::string_view toString(ViewSubject subject) noexcept;
+[[nodiscard]] BETTERCAD_DRAWING_EXPORT std::optional<ViewSubject> viewSubjectFromString(
+    std::string_view text) noexcept;
+
 /// One of the six standard orthographic orientations, or the isometric.
 ///
 /// Under ADR-013 a view frame's normal points from the model toward the
@@ -176,9 +201,15 @@ struct ViewDefinition {
     ViewKind kind = ViewKind::Base;
     /// The sheet this view sits on.
     SheetId sheet{};
-    /// What it looks at. A base view names it; a projected view leaves it
-    /// invalid and inherits its parent's, so two views of one thing cannot
-    /// disagree about what that thing is.
+    /// Whether this view draws one object or the whole assembly. A base
+    /// view says; every other kind inherits its parent's, for the same reason
+    /// it inherits the source.
+    ViewSubject subject = ViewSubject::Object;
+    /// What it looks at, when `subject` is Object. A base view names it; a
+    /// projected view leaves it invalid and inherits its parent's, so two
+    /// views of one thing cannot disagree about what that thing is. An
+    /// assembly view leaves it invalid and must: there is no one object it
+    /// draws.
     ObjectReference source{};
     /// A base view's orientation. Exactly one of this and `parent` is set.
     std::optional<StandardView> orientation{};

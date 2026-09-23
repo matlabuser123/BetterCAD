@@ -9,10 +9,15 @@
 #include <bettercad/core/geometry/Transform.hpp>
 #include <bettercad/drawing/Sheets.hpp>
 
+#include <bettercad/assembly/Configurations.hpp>
+#include <bettercad/core/geometry/Split.hpp>
+
 #include <algorithm>
 #include <optional>
 #include <format>
+#include <span>
 #include <utility>
+#include <vector>
 
 namespace bettercad::drawing {
 namespace {
@@ -41,6 +46,14 @@ Result<void> checkView(const Document& document, const ViewDefinition& definitio
     }
 
     if (isBaseView(definition)) {
+        if (definition.subject == ViewSubject::Assembly) {
+            // There is no object to find: the occurrences are the document's
+            // answer when the view is drawn, and an assembly with nothing in
+            // it yet is a drawing not finished rather than one that is wrong
+            // (ADR-021). projectedGeometry() is where an empty one is
+            // refused.
+            return {};
+        }
         if (!isInternal(definition.source)) {
             // Cannot be checked here: the owning document may not be
             // available, and reaching for it behind the caller's back is the
@@ -192,6 +205,47 @@ Result<ObjectReference> effectiveSource(const Document& document, ViewId id) {
                                  id, kMaxChain));
 }
 
+Result<ViewSubject> effectiveSubject(const Document& document, ViewId id) {
+    ViewId current = id;
+    for (int step = 0; step < kMaxChain; ++step) {
+        const View* view = findView(document, current);
+        if (view == nullptr) {
+            return notFound(current);
+        }
+        if (isBaseView(view->definition())) {
+            return view->definition().subject;
+        }
+        current = *view->definition().parent;
+    }
+    return makeError(ErrorCode::FailedPrecondition,
+                     std::format("{} is projected through more than {} views; the chain does not "
+                                 "reach a base view",
+                                 id, kMaxChain));
+}
+
+Result<std::vector<ComponentId>> drawnOccurrences(const Document& document, ViewId id) {
+    auto subject = effectiveSubject(document, id);
+    if (!subject) {
+        return std::unexpected(subject.error());
+    }
+    if (*subject != ViewSubject::Assembly) {
+        return makeError(ErrorCode::InvalidArgument,
+                         std::format("{} draws one object rather than the assembly; ask what it "
+                                     "draws with effectiveSource",
+                                     id));
+    }
+    // The document's answer, asked now -- not a list stored when the view was
+    // made, which could disagree with the active configuration (ADR-021).
+    std::vector<ComponentId> active = assembly::activeComponents(document);
+    if (active.empty()) {
+        return makeError(ErrorCode::FailedPrecondition,
+                         std::format("{} draws the assembly, which has no active components; a "
+                                     "drawing of nothing is not a drawing",
+                                     id));
+    }
+    return active;
+}
+
 namespace {
 
 /// Depth-limited so a chain that loops gives a diagnostic rather than
@@ -282,48 +336,135 @@ Result<Point2D> effectivePlacement(const Document& document, ViewId id) {
 
 namespace {
 
-/// The body a view draws, in model space.
+/// One thing a view draws, and which occurrence it is if it is one.
+struct OccurrenceBody {
+    /// Empty for a feature, which has no occurrence to name.
+    std::optional<ComponentId> occurrence{};
+    geometry::Body body{};
+};
+
+/// One component occurrence's body, in ASSEMBLY space.
 ///
-/// A view of a COMPONENT draws that component's part, moved to where the
-/// solver put it -- never to where its canonical placement asks for it to go
-/// (ADR-005). A view of a feature draws the feature's own body.
-[[nodiscard]] Result<geometry::Body> bodyForView(const Document& document, ViewId id,
-                                                 const ObjectReference& source,
-                                                 const BodyLookup& bodies,
-                                                 const TransformLookup& transforms) {
+/// Its part's body moved to where the solver put it -- never to where its
+/// canonical placement asks for it to go (ADR-005).
+[[nodiscard]] Result<geometry::Body> occurrenceBody(ViewId id,
+                                                    const assembly::Component& component,
+                                                    const BodyLookup& bodies,
+                                                    const TransformLookup& transforms) {
+    const ObjectReference& part = component.definition().part;
+    const ComponentId self = component.componentId();
+    if (!isInternal(part)) {
+        return makeError(ErrorCode::NotFound,
+                         std::format("{} draws {}, which places a part in another document", id,
+                                     self));
+    }
+    const geometry::Body* partBody = bodies ? bodies(part.object) : nullptr;
+    if (partBody == nullptr || partBody->isEmpty()) {
+        return makeError(ErrorCode::NotFound,
+                         std::format("{} draws {}, whose part produced no body", id, self));
+    }
+    const RigidTransform3D* solved = transforms ? transforms(self) : nullptr;
+    if (solved == nullptr) {
+        // No solved transform is not "draw it at the origin": the assembly
+        // did not solve, and a view drawn from an unsolved assembly would be
+        // a picture of a machine nobody assembled.
+        return makeError(ErrorCode::FailedPrecondition,
+                         std::format("{} draws {}, which has no solved transform; the assembly "
+                                     "did not solve",
+                                     id, self));
+    }
+    return geometry::transformed(*partBody, *solved);
+}
+
+/// Everything a view draws, in model space, each piece knowing its occurrence.
+///
+/// One entry for an object view; one per ACTIVE occurrence for an assembly
+/// view, in ascending ComponentId order. Which occurrences are active is
+/// assembly::activeComponents()'s answer, so configuration and suppression
+/// have one implementation (ADR-021).
+///
+/// It fails as a whole if any active occurrence cannot be drawn. There is no
+/// partial assembly drawing: one missing a component looks exactly like a
+/// complete drawing of a smaller machine.
+[[nodiscard]] Result<std::vector<OccurrenceBody>> bodiesForView(const Document& document, ViewId id,
+                                                                ViewSubject subject,
+                                                                const ObjectReference& source,
+                                                                const BodyLookup& bodies,
+                                                                const TransformLookup& transforms) {
+    std::vector<OccurrenceBody> drawn;
+    if (subject == ViewSubject::Assembly) {
+        const std::vector<ComponentId> active = assembly::activeComponents(document);
+        if (active.empty()) {
+            return makeError(ErrorCode::FailedPrecondition,
+                             std::format("{} draws the assembly, which has no active components; a "
+                                         "drawing of nothing is not a drawing",
+                                         id));
+        }
+        drawn.reserve(active.size());
+        for (const ComponentId component : active) {
+            const auto* object = document.findObjectAs<assembly::Component>(component);
+            if (object == nullptr) {
+                return makeError(ErrorCode::NotFound,
+                                 std::format("{} draws the assembly, which lists {}, and it is not "
+                                             "a component of this document",
+                                             id, component));
+            }
+            auto body = occurrenceBody(id, *object, bodies, transforms);
+            if (!body) {
+                return std::unexpected(body.error());
+            }
+            drawn.push_back(OccurrenceBody{component, std::move(*body)});
+        }
+        return drawn;
+    }
+
     const auto* component = document.findObjectAs<assembly::Component>(
         ComponentId::fromValue(source.object.value()));
     if (component != nullptr) {
-        const ObjectReference& part = component->definition().part;
-        if (!isInternal(part)) {
-            return makeError(ErrorCode::NotFound,
-                             std::format("{} draws {}, which places a part in another document", id,
-                                         source.object));
+        auto body = occurrenceBody(id, *component, bodies, transforms);
+        if (!body) {
+            return std::unexpected(body.error());
         }
-        const geometry::Body* partBody = bodies ? bodies(part.object) : nullptr;
-        if (partBody == nullptr || partBody->isEmpty()) {
-            return makeError(ErrorCode::NotFound,
-                             std::format("{} draws {}, whose part produced no body", id,
-                                         source.object));
-        }
-        const RigidTransform3D* solved = transforms ? transforms(component->componentId()) : nullptr;
-        if (solved == nullptr) {
-            // No solved transform is not "draw it at the origin": the
-            // assembly did not solve, and a view drawn from an unsolved
-            // assembly would be a picture of a machine nobody assembled.
-            return makeError(ErrorCode::FailedPrecondition,
-                             std::format("{} draws {}, which has no solved transform; the assembly "
-                                         "did not solve",
-                                         id, source.object));
-        }
-        return geometry::transformed(*partBody, *solved);
+        drawn.push_back(OccurrenceBody{component->componentId(), std::move(*body)});
+        return drawn;
     }
     const geometry::Body* body = bodies ? bodies(source.object) : nullptr;
     if (body == nullptr || body->isEmpty()) {
         return makeError(ErrorCode::NotFound,
                          std::format("{} draws {}, which produced no body", id, source.object));
     }
-    return *body;
+    drawn.push_back(OccurrenceBody{std::nullopt, *body});
+    return drawn;
+}
+
+/// Which side of @p plane the whole of @p body lies on, or nothing when it
+/// crosses.
+///
+/// Decided from the body's BOUNDS, which is exact for the two answers it
+/// gives: a body whose every corner is on one side is wholly on that side.
+/// A bounding box that crosses does not prove the material does, which is why
+/// the caller attempts the cut and reports what the cut says.
+[[nodiscard]] std::optional<geometry::SplitKeep> wholeSideOf(const geometry::Body& body,
+                                                             const Frame3D& plane) {
+    auto box = body.boundingBox();
+    if (!box) {
+        return std::nullopt;
+    }
+    constexpr double kOn = 1e-10; // 1e-7 mm, the figure splitBody uses
+    bool anyFront = false;
+    bool anyBack = false;
+    for (int corner = 0; corner < 8; ++corner) {
+        const Point3D p{(corner & 1) ? box->max.x : box->min.x,
+                        (corner & 2) ? box->max.y : box->min.y,
+                        (corner & 4) ? box->max.z : box->min.z};
+        const double d = plane.signedDistance(p).si();
+        anyFront = anyFront || d > kOn;
+        anyBack = anyBack || d < -kOn;
+    }
+    if (anyFront && anyBack) {
+        return std::nullopt;
+    }
+    return anyFront ? geometry::SplitKeep::Front : geometry::SplitKeep::Back;
 }
 
 /// Where the segment from @p a to @p b enters and leaves a circle, as the two
@@ -440,15 +581,23 @@ Result<ProjectedGeometry> viewGeometry(const Document& document, ViewId id,
         view != nullptr && view->definition().kind == ViewKind::Detail) {
         return detailGeometry(document, id, bodies, transforms, settings, depth);
     }
-    auto source = effectiveSource(document, id);
-    if (!source) {
-        return std::unexpected(source.error());
+    auto subject = effectiveSubject(document, id);
+    if (!subject) {
+        return std::unexpected(subject.error());
     }
-    if (!isInternal(*source)) {
-        return makeError(ErrorCode::NotFound,
-                         std::format("{} draws an object of another document, which cannot be "
-                                     "projected",
-                                     id));
+    ObjectReference drawnSource;
+    if (*subject == ViewSubject::Object) {
+        auto source = effectiveSource(document, id);
+        if (!source) {
+            return std::unexpected(source.error());
+        }
+        if (!isInternal(*source)) {
+            return makeError(ErrorCode::NotFound,
+                             std::format("{} draws an object of another document, which cannot be "
+                                         "projected",
+                                         id));
+        }
+        drawnSource = *source;
     }
     auto basis = effectiveBasis(document, id);
     if (!basis) {
@@ -463,25 +612,67 @@ Result<ProjectedGeometry> viewGeometry(const Document& document, ViewId id,
         return std::unexpected(placement.error());
     }
 
-    auto resolved = bodyForView(document, id, *source, bodies, transforms);
+    auto resolved = bodiesForView(document, id, *subject, drawnSource, bodies, transforms);
     if (!resolved) {
         return std::unexpected(resolved.error());
     }
     // A section view draws the CUT solid. Doing it here, rather than in a
     // second routine beside this one, is what keeps a section's outline and
     // its cut faces from ever being drawn from different solids.
+    //
+    // Across an assembly the plane cuts each occurrence in ITS OWN assembly
+    // position, which is why the transform is applied above and not after: a
+    // rotated component sectioned in part-local coordinates would be cut on
+    // the wrong plane and still produce a plausible drawing.
     if (const View* view = findView(document, id);
         view != nullptr && view->definition().kind == ViewKind::Section) {
-        auto cut = cutBody(*resolved, *view->definition().section, *basis);
-        if (!cut) {
-            return std::unexpected(cut.error());
+        auto cutFrames = legFrames(*view->definition().section);
+        if (!cutFrames) {
+            return std::unexpected(cutFrames.error());
         }
-        resolved = std::move(*cut);
+        const Frame3D& cutPlane = cutFrames->front();
+        const geometry::SplitKeep keep = keptSide(cutPlane, *basis);
+        std::vector<OccurrenceBody> sectioned;
+        for (OccurrenceBody& piece : *resolved) {
+            // An occurrence the plane misses is not an error. It is either
+            // wholly kept -- drawn uncut, as a component behind the plane is
+            // -- or wholly removed, and drawing it either way round would be
+            // wrong.
+            if (const std::optional<geometry::SplitKeep> side = wholeSideOf(piece.body, cutPlane)) {
+                if (*side == keep) {
+                    sectioned.push_back(std::move(piece));
+                }
+                continue; // wholly on the removed side: it is not in this view
+            }
+            auto cut = cutBody(piece.body, *view->definition().section, *basis);
+            if (!cut) {
+                return std::unexpected(cut.error());
+            }
+            piece.body = std::move(*cut);
+            sectioned.push_back(std::move(piece));
+        }
+        if (sectioned.empty()) {
+            return makeError(ErrorCode::FailedPrecondition,
+                             std::format("{} cuts away every component it draws, leaving nothing to "
+                                         "show",
+                                         id));
+        }
+        *resolved = std::move(sectioned);
     }
-    // Hidden-line removal, on the solid this view actually draws -- which for
-    // a section view is the CUT solid, cut just above. Classifying the uncut
-    // solid would hide the very faces a section exists to show (ADR-019).
-    auto drawing = geometry::hiddenLineDrawing(*resolved, *basis);
+    // Hidden-line removal, on the solids this view actually draws -- which
+    // for a section view are the CUT solids, cut just above. Classifying the
+    // uncut solid would hide the very faces a section exists to show
+    // (ADR-019).
+    //
+    // ONE problem over all of them, so a component in front hides the one
+    // behind it (ADR-021). Run one problem each, and every occurrence would
+    // be classified against itself alone.
+    std::vector<geometry::Body> solids;
+    solids.reserve(resolved->size());
+    for (const OccurrenceBody& piece : *resolved) {
+        solids.push_back(piece.body);
+    }
+    auto drawing = geometry::hiddenLineDrawing(std::span<const geometry::Body>(solids), *basis);
     if (!drawing) {
         return std::unexpected(drawing.error());
     }
@@ -540,6 +731,11 @@ Result<ProjectedGeometry> viewGeometry(const Document& document, ViewId id,
         drawn.midpoint = toSheet(edge.midpoint);
         drawn.visibility = edge.visibility;
         drawn.kind = edge.kind;
+        // Which occurrence drew it. The index is the kernel's own answer for
+        // the body it came from, so a merged line keeps the occurrence that
+        // won rather than inheriting the loser's (ADR-021).
+        drawn.occurrence = edge.source < resolved->size() ? (*resolved)[edge.source].occurrence
+                                                          : std::nullopt;
         drawn.polyline.reserve(edge.polyline.size());
         for (const Point2D& p : edge.polyline) {
             drawn.polyline.push_back(toSheet(p));
@@ -665,6 +861,9 @@ Result<ProjectedGeometry> detailGeometry(const Document& document, ViewId id,
             drawn.curve = edge.curve;
             drawn.visibility = edge.visibility;
             drawn.kind = edge.kind;
+            // A cropped piece is still the same component's line. Rebuilding
+            // the edge field by field is how this was lost once already.
+            drawn.occurrence = edge.occurrence;
             drawn.polyline.reserve(piece.size());
             for (const Point2D& p : piece) {
                 drawn.polyline.push_back(toSheet(p));
@@ -714,13 +913,21 @@ Result<ProjectedGeometry> detailGeometry(const Document& document, ViewId id,
 
 Result<Point2D> toSheet(const Document& document, ViewId id, const Point3D& point,
                         const BodyLookup& bodies, const TransformLookup& transforms) {
-    auto source = effectiveSource(document, id);
-    if (!source) {
-        return std::unexpected(source.error());
+    auto subject = effectiveSubject(document, id);
+    if (!subject) {
+        return std::unexpected(subject.error());
     }
-    if (!isInternal(*source)) {
-        return makeError(ErrorCode::NotFound,
-                         std::format("{} draws an object of another document", id));
+    ObjectReference pointSource;
+    if (*subject == ViewSubject::Object) {
+        auto source = effectiveSource(document, id);
+        if (!source) {
+            return std::unexpected(source.error());
+        }
+        if (!isInternal(*source)) {
+            return makeError(ErrorCode::NotFound,
+                             std::format("{} draws an object of another document", id));
+        }
+        pointSource = *source;
     }
     auto basis = effectiveBasis(document, id);
     if (!basis) {
@@ -734,22 +941,51 @@ Result<Point2D> toSheet(const Document& document, ViewId id, const Point3D& poin
     if (!placement) {
         return std::unexpected(placement.error());
     }
-    auto body = bodyForView(document, id, *source, bodies, transforms);
-    if (!body) {
-        return std::unexpected(body.error());
+    auto resolved = bodiesForView(document, id, *subject, pointSource, bodies, transforms);
+    if (!resolved) {
+        return std::unexpected(resolved.error());
     }
     // A section view draws the cut solid, and its extent is what it is
     // centred on, so a point is placed against that and not against the whole
-    // one it was cut from.
+    // one it was cut from. Across an assembly that is every occurrence the
+    // plane leaves, by the same rule the projection uses.
     if (const View* view = findView(document, id);
         view != nullptr && view->definition().kind == ViewKind::Section) {
-        auto cut = cutBody(*body, *view->definition().section, *basis);
-        if (!cut) {
-            return std::unexpected(cut.error());
+        auto cutFrames = legFrames(*view->definition().section);
+        if (!cutFrames) {
+            return std::unexpected(cutFrames.error());
         }
-        body = std::move(*cut);
+        const Frame3D& cutPlane = cutFrames->front();
+        const geometry::SplitKeep keep = keptSide(cutPlane, *basis);
+        std::vector<OccurrenceBody> sectioned;
+        for (OccurrenceBody& piece : *resolved) {
+            if (const std::optional<geometry::SplitKeep> side = wholeSideOf(piece.body, cutPlane)) {
+                if (*side == keep) {
+                    sectioned.push_back(std::move(piece));
+                }
+                continue;
+            }
+            auto cut = cutBody(piece.body, *view->definition().section, *basis);
+            if (!cut) {
+                return std::unexpected(cut.error());
+            }
+            piece.body = std::move(*cut);
+            sectioned.push_back(std::move(piece));
+        }
+        if (sectioned.empty()) {
+            return makeError(ErrorCode::FailedPrecondition,
+                             std::format("{} cuts away every component it draws, leaving nothing to "
+                                         "show",
+                                         id));
+        }
+        *resolved = std::move(sectioned);
     }
-    auto drawing = geometry::hiddenLineDrawing(*body, *basis);
+    std::vector<geometry::Body> solids;
+    solids.reserve(resolved->size());
+    for (const OccurrenceBody& piece : *resolved) {
+        solids.push_back(piece.body);
+    }
+    auto drawing = geometry::hiddenLineDrawing(std::span<const geometry::Body>(solids), *basis);
     if (!drawing) {
         return std::unexpected(drawing.error());
     }
@@ -793,14 +1029,23 @@ Result<SectionGeometry> sectionOf(const Document& document, ViewId id, const Bod
                          std::format("{} is a {} view and cuts nothing, so it has no cut faces", id,
                                      toString(d.kind)));
     }
-    auto source = effectiveSource(document, id);
-    if (!source) {
-        return std::unexpected(source.error());
+    auto subject = effectiveSubject(document, id);
+    if (!subject) {
+        return std::unexpected(subject.error());
     }
-    if (!isInternal(*source)) {
-        return makeError(ErrorCode::NotFound,
-                         std::format("{} draws an object of another document, which cannot be cut",
-                                     id));
+    ObjectReference cutSource;
+    if (*subject == ViewSubject::Object) {
+        auto source = effectiveSource(document, id);
+        if (!source) {
+            return std::unexpected(source.error());
+        }
+        if (!isInternal(*source)) {
+            return makeError(ErrorCode::NotFound,
+                             std::format("{} draws an object of another document, which cannot be "
+                                         "cut",
+                                         id));
+        }
+        cutSource = *source;
     }
     auto basis = effectiveBasis(document, id);
     if (!basis) {
@@ -814,11 +1059,45 @@ Result<SectionGeometry> sectionOf(const Document& document, ViewId id, const Bod
     if (!placement) {
         return std::unexpected(placement.error());
     }
-    auto body = bodyForView(document, id, *source, bodies, transforms);
-    if (!body) {
-        return std::unexpected(body.error());
+    auto resolved = bodiesForView(document, id, *subject, cutSource, bodies, transforms);
+    if (!resolved) {
+        return std::unexpected(resolved.error());
     }
-    return sectionGeometry(*body, *d.section, *basis, scale->factor(), *placement, d.hatch);
+
+    auto cutFrames = legFrames(*d.section);
+    if (!cutFrames) {
+        return std::unexpected(cutFrames.error());
+    }
+    const Frame3D& cutPlane = cutFrames->front();
+
+    // Each occurrence is cut in its own assembly position and contributes its
+    // own loops, which keep its identity. An occurrence the plane misses
+    // contributes NO cut face -- it is uncut material, not a void -- and one
+    // the plane removes entirely contributes nothing either.
+    SectionGeometry combined;
+    for (const OccurrenceBody& piece : *resolved) {
+        if (wholeSideOf(piece.body, cutPlane)) {
+            continue;
+        }
+        auto part = sectionGeometry(piece.body, *d.section, *basis, scale->factor(), *placement,
+                                    d.hatch);
+        if (!part) {
+            return std::unexpected(part.error());
+        }
+        for (SectionLoop& loop : part->loops) {
+            loop.occurrence = piece.occurrence;
+            combined.loops.push_back(std::move(loop));
+        }
+        combined.hatch.insert(combined.hatch.end(), part->hatch.begin(), part->hatch.end());
+        combined.area = combined.area + part->area;
+    }
+    if (combined.loops.empty()) {
+        return makeError(ErrorCode::FailedPrecondition,
+                         std::format("{} cuts nothing: its plane passes through no material it "
+                                     "draws",
+                                     id));
+    }
+    return combined;
 }
 
 } // namespace bettercad::drawing

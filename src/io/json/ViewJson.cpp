@@ -149,8 +149,14 @@ Json viewToJson(const drawing::View& view) {
     json["sheet"] = d.sheet.value();
 
     if (d.kind == drawing::ViewKind::Base) {
-        // A base view says what it draws and which way it looks.
-        json["source"] = d.source.object.value();
+        // A base view says what it draws and which way it looks. WHAT it
+        // draws is a subject and, for an object, a source; an assembly view
+        // writes the subject and no source, because the occurrences it draws
+        // are the document's answer and not a stored list (ADR-021).
+        json["subject"] = std::string{drawing::toString(d.subject)};
+        if (d.subject == drawing::ViewSubject::Object) {
+            json["source"] = d.source.object.value();
+        }
         json["orientation"] = std::string{drawing::toString(*d.orientation)};
     } else {
         json["parent"] = d.parent->value();
@@ -206,9 +212,9 @@ Json viewToJson(const drawing::View& view) {
 Result<std::unique_ptr<drawing::View>> viewFromJson(const Json& data, std::string name,
                                                     std::string_view path) {
     if (auto object = requireObject(data, path,
-                                    {"kind", "sheet", "source", "orientation", "x", "y", "parent",
-                                     "direction", "spacing", "scale", "section", "hatch", "detail",
-                                     "auxiliary", "hidden_line"});
+                                    {"kind", "sheet", "subject", "source", "orientation", "x",
+                                     "y", "parent", "direction", "spacing", "scale", "section",
+                                     "hatch", "detail", "auxiliary", "hidden_line"});
         !object) {
         return std::unexpected(object.error());
     }
@@ -243,11 +249,32 @@ Result<std::unique_ptr<drawing::View>> viewFromJson(const Json& data, std::strin
         }
         definition.orientation = *orientation;
 
-        auto source = readId(data, "source", path);
-        if (!source) {
-            return std::unexpected(source.error());
+        // A file written before assembly views has no subject and drew one
+        // object, which is exactly what Object means -- so its absence reads
+        // as what the file meant rather than as an error.
+        if (data.contains("subject")) {
+            auto subjectText = readString(data, "subject", path);
+            if (!subjectText) {
+                return std::unexpected(subjectText.error());
+            }
+            const auto subject = drawing::viewSubjectFromString(*subjectText);
+            if (!subject) {
+                return parseError(childPath(path, "subject"),
+                                  std::format("unknown view subject '{}'", *subjectText));
+            }
+            definition.subject = *subject;
         }
-        definition.source = ObjectReference{ObjectId::fromValue(*source)};
+
+        if (definition.subject == drawing::ViewSubject::Object) {
+            auto source = readId(data, "source", path);
+            if (!source) {
+                return std::unexpected(source.error());
+            }
+            definition.source = ObjectReference{ObjectId::fromValue(*source)};
+        } else if (data.contains("source")) {
+            return parseError(path, "an assembly view draws every active component and names no "
+                                    "single object");
+        }
     } else {
         auto parent = readId(data, "parent", path);
         if (!parent) {
