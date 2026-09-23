@@ -81,4 +81,23 @@ namespace bettercad::drawing {
     const Document& document, DimensionId id, const BodyLookup& bodies,
     const TransformLookup& transforms = {});
 
+/// Resolves what the dimension NAMES, without measuring it (ADR-023).
+///
+/// This is measure()'s own first step and nothing more: the same resolver, on
+/// the same two targets, stopping before any geometry is worked out. It exists
+/// because regeneration has to answer "does this still point at something"
+/// during the object phase, when the assembly solve has not run yet and the
+/// transforms measure() would need are the previous pass's.
+///
+/// It therefore answers less than measure() does. A dimension whose targets
+/// both resolve but which cannot be measured -- an angle between parallel
+/// faces -- passes here and fails there, and that is the intended split:
+/// this asks about references, measure() asks about geometry.
+///
+/// Fails with the resolver's own code: NotFound or FailedPrecondition when the
+/// target is not there now, InvalidArgument when the reference could not be
+/// right whatever the model does.
+[[nodiscard]] BETTERCAD_DRAWING_EXPORT Result<void> resolveDimensionTargets(
+    const Document& document, DimensionId id, const BodyLookup& bodies);
+
 } // namespace bettercad::drawing

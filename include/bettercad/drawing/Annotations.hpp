@@ -100,6 +100,31 @@ namespace bettercad::drawing {
     const Document& document, AnnotationId id, const BodyLookup& bodies,
     const TransformLookup& transforms = {});
 
+/// Resolves what the annotation NAMES, without drawing it (ADR-023).
+///
+/// This is draw()'s own first step and nothing more: the same resolver, on the
+/// same target, stopping before the anchor is moved into assembly space or any
+/// item is built. It exists because regeneration has to answer "does this still
+/// point at something" during the object phase, when the assembly solve has not
+/// run yet -- and draw() moves a balloon's anchor by its occurrence's solved
+/// transform, so calling draw() there would report "the assembly did not solve"
+/// on every pass of a perfectly good document.
+///
+/// It therefore answers less than draw() does. An annotation whose target
+/// resolves but which cannot be drawn -- a centreline whose axis points at the
+/// viewer -- passes here and fails there.
+///
+/// An annotation that names nothing (a plain note) resolves: there is nothing
+/// to fail on, which is not the same as having failed to check.
+///
+/// A balloon is the one case where the prefix has to ask a second question.
+/// An occurrence resolves through its PART, which a configuration does not
+/// touch, so the anchor is found even for a component this configuration
+/// suppresses; whether it is IN FORCE is asked of activeComponents(), which
+/// reads the configuration rather than the solver.
+[[nodiscard]] BETTERCAD_DRAWING_EXPORT Result<void> resolveAnnotationTarget(
+    const Document& document, AnnotationId id, const BodyLookup& bodies);
+
 /// Everything the annotations of @p view draw, in ascending annotation ID
 /// order so that two runs of one drawing give one sequence.
 ///

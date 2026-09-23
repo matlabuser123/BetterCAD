@@ -1,6 +1,7 @@
 #include <bettercad/drawing/Annotations.hpp>
 
 #include <bettercad/assembly/Component.hpp>
+#include <bettercad/assembly/Configurations.hpp>
 #include <bettercad/drawing/Bom.hpp>
 
 #include <bettercad/core/document/Document.hpp>
@@ -798,6 +799,60 @@ Result<SceneItems> drawAnnotations(const Document& document, ViewId view, const 
         items.append(*drawn);
     }
     return items;
+}
+
+Result<void> resolveAnnotationTarget(const Document& document, AnnotationId id,
+                                     const BodyLookup& bodies) {
+    const Annotation* annotation = findAnnotation(document, id);
+    if (annotation == nullptr) {
+        return notFound(id);
+    }
+    const AnnotationDefinition& d = annotation->definition();
+
+    // draw()'s own branches, in its order, stopping at the point where each
+    // one stops naming and starts building (ADR-023).
+    if (d.type == AnnotationType::Note) {
+        // Words on paper: it reaches no geometry, so there is nothing that
+        // could have stopped resolving.
+        return {};
+    }
+    if (d.type == AnnotationType::BomTable) {
+        // A table names no point either, but it does name the assembly its
+        // view draws -- and that can stop resolving.
+        auto bom = billOfMaterials(document, d.view);
+        if (!bom) {
+            return makeError(bom.error().code,
+                             std::format("{} ({}) cannot be drawn: {}", annotation->name(), id,
+                                         bom.error().message));
+        }
+        return {};
+    }
+    auto anchor = resolveTarget(document, d.target, bodies);
+    if (!anchor) {
+        return makeError(anchor.error().code,
+                         std::format("{} ({}) cannot be drawn: {}", annotation->name(), id,
+                                     anchor.error().message));
+    }
+    if (anchor->occurrence) {
+        // An occurrence resolves through its PART, which a configuration does
+        // not touch -- so resolveTarget() happily anchors a balloon on a
+        // component this configuration suppresses. draw() catches that one
+        // step later, by finding no solved transform for it, and that step is
+        // out of reach here (ADR-023).
+        //
+        // Asking whether the occurrence is IN FORCE gets the same answer
+        // without the solve, because activeComponents() reads the
+        // configuration rather than the solver -- and it is the same call
+        // drawnOccurrences() makes.
+        const std::vector<ComponentId> active = assembly::activeComponents(document);
+        if (std::ranges::find(active, *anchor->occurrence) == active.end()) {
+            return makeError(ErrorCode::FailedPrecondition,
+                             std::format("{} ({}) points at {}, which the active configuration "
+                                         "does not place",
+                                         annotation->name(), id, *anchor->occurrence));
+        }
+    }
+    return {};
 }
 
 } // namespace bettercad::drawing

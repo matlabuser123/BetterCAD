@@ -10,7 +10,8 @@
 
 ```text
 Current:   P14 — Technical Drawings
-Next:      P14-STREF-001 — Stable drawing-to-model references. STILL OPEN:
+Next:      P14-CMD-001 — drawing commands. P14-STREF-001 is STILL OPEN and
+           comes first if it is authorized:
            its audit is done and 11 of its 12 checks pass, but one gate --
            "no silent rebinding" -- is NOT met and the milestone is not [x].
            A chamfer face is named by its edge reference's POSITION in the
@@ -935,19 +936,20 @@ Open decision → move build output off OneDrive; the fault did not recur here,
 
 ## Drawing Regeneration
 
-* [ ] Define dirty-propagation triggers
-* [ ] Rebuild views after model changes
-* [ ] Update dimensions after model changes
-* [ ] Update annotations/BOM where required
-* [ ] React to configuration changes
-* [ ] Regenerate only affected drawing state where feasible
-* [ ] Preserve canonical drawing intent
-* [ ] Handle unresolved references explicitly
-* [ ] Validate failure atomicity
-* [ ] Validate deterministic regeneration
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Define dirty-propagation triggers — drawing objects now carry the
+      `RegenerationHandler`s `ADR-014` mandated and nobody built
+* [x] Rebuild views after model changes
+* [x] Update dimensions after model changes
+* [x] Update annotations/BOM where required
+* [x] React to configuration changes
+* [x] Regenerate only affected drawing state where feasible
+* [x] Preserve canonical drawing intent — a handler is a pure read
+* [x] Handle unresolved references explicitly
+* [x] Validate failure atomicity
+* [x] Validate deterministic regeneration
+* [x] Adversarial review PASS
+* [x] Regression PASS — 2070/2070 on `debug`, `release` and `debug-shared`
+* [x] Evidence recorded — [docs/verification/P14-REGEN-001/](docs/verification/P14-REGEN-001/README.md)
 
 ### Gate
 
@@ -958,6 +960,56 @@ model changes propagate correctly
 + stale geometry impossible
 + failures atomic
 + determinism PASS
+```
+
+**MET.** 23 new tests; 2070/2070 on `debug`, `release` and `debug-shared`,
+each from clean; 2069/2069 five times over in both repeat presets; 0 compiler
+warnings; the no-op rebuild compiled 0 and linked 0 in every preset; the tree
+IDs before the first build and after the last test run are identical.
+
+**The milestone's subject was a gap between an ADR and the code.** `ADR-014`
+decided that `Sheet`, `View`, `Dimension` and `Annotation` each get a
+`RegenerationHandler`, and warned in as many words that "an object with no
+handler is silently marked `UpToDate` and never validated". **They were never
+implemented.** So a dimension whose face had stopped existing regenerated as a
+success — the defect `P13-REGEN-001` fixed for mates, still open for drawings.
+Measured in one process, on one document:
+
+```text
+bare regenerator          UpToDate, no error, nothing in report.failed
+drawing handlers          Failed, NotFound, "Width ... cannot be measured"
+```
+
+**A second defect, found while testing the first.** `View::dependencies()`
+pushed `ObjectId{0}` for an assembly view, which names no source: `localTarget()`
+returns a reference's object without checking validity, and `Dimension` and
+`Annotation` guard with `isValid()` while `View` did not. The graph's
+missing-reference check has therefore failed **every assembly view since
+P14-ASM-001**. Nothing caught it because the drawing fixtures required
+`regenerateAll()` to RETURN a report — which it does even when objects in it
+failed — and never asserted `succeeded()`. Fixed, with a regression that runs
+with no drawing handlers registered at all.
+
+**Stale drawing geometry is impossible by construction, and is tested as
+such.** Nothing in the drawing layer stores derived state, so there is no
+cache to invalidate: a view's scale can be halved with NO regeneration pass
+and the next projection comes back at the new scale.
+
+**What a handler may look at is forced, not chosen** (`ADR-023`). The assembly
+solve is a final pass, so during the object phase `Regenerator::transforms()`
+holds the PREVIOUS pass's map — and `draw()` moves a balloon's anchor by its
+occurrence's solved transform. A handler calling the full resolvers would read
+a stale transform, or report "the assembly did not solve" on every pass of a
+healthy document. So a handler resolves what its object NAMES and never
+computes what it DRAWS.
+
+```text
+P14-REGEN-001 → [x]
+Next → P14-CMD-001. P14-STREF-001 is still open on its chamfer gap and comes
+       first if authorized
+Carried open → nothing
+Open decision → move build output off OneDrive; the fault did not recur here,
+                which does not close it
 ```
 
 ---

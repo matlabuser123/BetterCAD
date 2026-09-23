@@ -15,6 +15,7 @@ bettercad_add_library(bettercad_drawing
         Dimension.cpp
         Dimensions.cpp
         HiddenLine.cpp
+        Regeneration.cpp
         Scene.cpp
         Section.cpp
         Sheet.cpp
@@ -28,6 +29,7 @@ bettercad_add_library(bettercad_drawing
         BetterCAD::core
         BetterCAD::geometry
         BetterCAD::assembly
+        BetterCAD::features
 )
 
 install(TARGETS bettercad_drawing

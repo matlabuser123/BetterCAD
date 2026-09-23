@@ -441,7 +441,14 @@ std::vector<ObjectId> View::dependencies() const {
     // An external source contributes no edge: an ObjectId means nothing
     // outside its document, and a graph that pretended otherwise would be
     // wrong (ADR-003). Such a view is failed by its handler instead.
-    if (const auto local = localTarget(definition_.source)) {
+    //
+    // Nor does an ABSENT one. An assembly view names no source at all
+    // (ADR-021), and localTarget() hands back the reference's object either
+    // way -- so without the validity check this pushed ObjectId{0} and the
+    // graph failed every assembly view with "references object:0, which does
+    // not exist". Dimension::dependencies() and Annotation::dependencies()
+    // have always made this check; this one had not (P14-REGEN-001).
+    if (const auto local = localTarget(definition_.source); local && local->isValid()) {
         result.push_back(*local);
     }
     if (definition_.parent) {

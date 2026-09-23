@@ -478,4 +478,31 @@ Result<MeasuredDimension> measure(const Document& document, DimensionId id,
     return measured;
 }
 
+Result<void> resolveDimensionTargets(const Document& document, DimensionId id,
+                                     const BodyLookup& bodies) {
+    const Dimension* dimension = findDimension(document, id);
+    if (dimension == nullptr) {
+        return notFound(id);
+    }
+    const DimensionDefinition& d = dimension->definition();
+
+    // measure()'s own opening, to the line -- the same resolver on the same
+    // targets, with the same wording, stopping before the geometry (ADR-023).
+    auto from = resolveTarget(document, d.from, bodies);
+    if (!from) {
+        return makeError(from.error().code,
+                         std::format("{} ({}) cannot be measured: {}", dimension->name(), id,
+                                     from.error().message));
+    }
+    if (!isSingleTarget(d.type)) {
+        auto to = resolveTarget(document, d.to, bodies);
+        if (!to) {
+            return makeError(to.error().code,
+                             std::format("{} ({}) cannot be measured: {}", dimension->name(), id,
+                                         to.error().message));
+        }
+    }
+    return {};
+}
+
 } // namespace bettercad::drawing
