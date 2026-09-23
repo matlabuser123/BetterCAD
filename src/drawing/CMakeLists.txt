@@ -10,9 +10,12 @@ bettercad_add_library(bettercad_drawing
     EXPORT_BASE BETTERCAD_DRAWING
     EXPORT_HEADER bettercad/drawing/Export.hpp
     SOURCES
+        Annotation.cpp
+        Annotations.cpp
         Dimension.cpp
         Dimensions.cpp
         HiddenLine.cpp
+        Scene.cpp
         Section.cpp
         Sheet.cpp
         Sheets.cpp

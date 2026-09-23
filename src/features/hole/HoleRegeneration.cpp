@@ -88,7 +88,11 @@ Result<HoleCallout> holeCallout(const HoleDefinition& definition, const Document
     if (!request) {
         return std::unexpected(request.error());
     }
-    HoleCallout callout{.diameter = request->diameter, .tolerance = definition.tolerance};
+    HoleCallout callout{.diameter = request->diameter,
+                        .extent = request->extent,
+                        .depth = request->extent == geometry::HoleExtent::Blind ? request->depth
+                                                                                : Length{},
+                        .tolerance = definition.tolerance};
     if (definition.tolerance) {
         auto deviations = standards::limitDeviations(request->diameter, *definition.tolerance);
         if (!deviations) {

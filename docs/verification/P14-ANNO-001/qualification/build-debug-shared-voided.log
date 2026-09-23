@@ -1,0 +1,367 @@
+[1/485] Checking git revision
+[2/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/generators/catch_generator_exception.cpp.obj
+[3/485] Building CXX object src/core/CMakeFiles/bettercad_core.dir/Error.cpp.obj
+[4/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/generators/catch_generators_throw.cpp.obj
+[5/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/benchmark/detail/catch_analyse.cpp.obj
+[6/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/benchmark/detail/catch_benchmark_function.cpp.obj
+[7/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/generators/catch_generators.cpp.obj
+[8/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/reporters/catch_reporter_event_listener.cpp.obj
+[9/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/reporters/catch_reporter_common_base.cpp.obj
+[10/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/generators/catch_generators_random.cpp.obj
+[11/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/benchmark/detail/catch_run_for_at_least.cpp.obj
+[12/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/reporters/catch_reporter_automake.cpp.obj
+[13/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/benchmark/detail/catch_stats.cpp.obj
+[14/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/reporters/catch_reporter_compact.cpp.obj
+[15/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/benchmark/catch_chronometer.cpp.obj
+[16/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/benchmark/catch_benchmark.cpp.obj
+[17/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/reporters/catch_reporter_cumulative_base.cpp.obj
+[18/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/reporters/catch_reporter_console.cpp.obj
+[19/485] Building CXX object src/core/CMakeFiles/bettercad_core.dir/BuildInfo.cpp.obj
+[20/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/reporters/catch_reporter_helpers.cpp.obj
+[21/485] Building CXX object src/core/CMakeFiles/bettercad_core.dir/math/Direction.cpp.obj
+[22/485] Building CXX object src/core/CMakeFiles/bettercad_core.dir/math/Frame.cpp.obj
+[23/485] Building CXX object src/core/CMakeFiles/bettercad_core.dir/Naming.cpp.obj
+[24/485] Building CXX object src/core/CMakeFiles/bettercad_core.dir/Uuid.cpp.obj
+[25/485] Building CXX object src/core/CMakeFiles/bettercad_core.dir/document/DocumentObject.cpp.obj
+[26/485] Building CXX object src/core/CMakeFiles/bettercad_core.dir/standards/ClearanceHoles.cpp.obj
+[27/485] Building CXX object src/core/CMakeFiles/bettercad_core.dir/document/Placement.cpp.obj
+[28/485] Building CXX object src/core/CMakeFiles/bettercad_core.dir/document/ObjectReference.cpp.obj
+[29/485] Building CXX object src/core/CMakeFiles/bettercad_core.dir/document/MateReference.cpp.obj
+[30/485] Building CXX object src/core/CMakeFiles/bettercad_core.dir/document/References.cpp.obj
+[31/485] Building CXX object src/core/CMakeFiles/bettercad_core.dir/document/CommandHistory.cpp.obj
+[32/485] Building CXX object src/core/CMakeFiles/bettercad_core.dir/units/UnitCatalog.cpp.obj
+[33/485] Building CXX object src/core/CMakeFiles/bettercad_core.dir/__/__/generated/src/core/GitRevision.cpp.obj
+[34/485] Building CXX object src/core/CMakeFiles/bettercad_core.dir/math/BSpline.cpp.obj
+[35/485] Building CXX object src/core/CMakeFiles/bettercad_core.dir/document/DependencyGraph.cpp.obj
+[36/485] Building CXX object src/core/CMakeFiles/bettercad_core.dir/document/Configurations.cpp.obj
+[37/485] Building CXX object src/core/CMakeFiles/bettercad_core.dir/standards/HoleTolerances.cpp.obj
+[38/485] Building CXX object src/core/CMakeFiles/bettercad_core.dir/document/Commands.cpp.obj
+[39/485] Building CXX object src/core/CMakeFiles/bettercad_core.dir/parameters/Parameter.cpp.obj
+[40/485] Building CXX object src/core/CMakeFiles/bettercad_core.dir/units/Format.cpp.obj
+[41/485] Building CXX object src/core/CMakeFiles/bettercad_core.dir/standards/MetricThreads.cpp.obj
+[42/485] Building CXX object src/core/CMakeFiles/bettercad_core.dir/parameters/Expression.cpp.obj
+[43/485] Building CXX object src/core/CMakeFiles/bettercad_core.dir/parameters/ParameterTable.cpp.obj
+[44/485] Building CXX object src/core/CMakeFiles/bettercad_core.dir/document/ParameterExpressions.cpp.obj
+[45/485] Building CXX object src/core/CMakeFiles/bettercad_core.dir/document/Document.cpp.obj
+[46/485] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/RadiusLaw.cpp.obj
+[47/485] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/Draft.cpp.obj
+[48/485] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/Edges.cpp.obj
+[49/485] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/Blends.cpp.obj
+[50/485] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/Faces.cpp.obj
+[51/485] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/Profile.cpp.obj
+[52/485] Linking CXX shared library bin\libbettercad_core.dll
+[53/485] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/Holes.cpp.obj
+[54/485] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/LoftMatching.cpp.obj
+[55/485] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/Shell.cpp.obj
+[56/485] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/LoftPlan.cpp.obj
+[57/485] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/Rib.cpp.obj
+[58/485] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/Split.cpp.obj
+[59/485] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/SweepPlan.cpp.obj
+[60/485] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/VariableFillet.cpp.obj
+[61/485] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/SweptPathPlan.cpp.obj
+[62/485] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctFaceNames.cpp.obj
+[63/485] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctBooleans.cpp.obj
+[64/485] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctKernel.cpp.obj
+[65/485] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctBody.cpp.obj
+[66/485] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctChamfer.cpp.obj
+[67/485] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctDraft.cpp.obj
+[68/485] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctEdges.cpp.obj
+[69/485] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctBlend.cpp.obj
+[70/485] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctHiddenLine.cpp.obj
+[71/485] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctFaces.cpp.obj
+[72/485] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctFillet.cpp.obj
+[73/485] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctHole.cpp.obj
+[74/485] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctStep.cpp.obj
+[75/485] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctPrimitives.cpp.obj
+[76/485] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctSplit.cpp.obj
+[77/485] Building CXX object src/sketch/CMakeFiles/bettercad_sketch.dir/entities/Entities.cpp.obj
+[78/485] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctMesh.cpp.obj
+[79/485] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctShell.cpp.obj
+[80/485] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctTransform.cpp.obj
+[81/485] Building CXX object src/sketch/CMakeFiles/bettercad_sketch.dir/SketchRegeneration.cpp.obj
+[82/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/Feature.cpp.obj
+[83/485] Building CXX object src/sketch/CMakeFiles/bettercad_sketch.dir/constraints/SketchConstraints.cpp.obj
+[84/485] Building CXX object src/sketch/CMakeFiles/bettercad_sketch.dir/SketchCommands.cpp.obj
+[85/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/chamfer/ChamferFeature.cpp.obj
+[86/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/boolean/SplitFeature.cpp.obj
+[87/485] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctSweeps.cpp.obj
+[88/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/SolidSupport.cpp.obj
+[89/485] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctVariableFillet.cpp.obj
+[90/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/boolean/BooleanRegeneration.cpp.obj
+[91/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/ResultBodies.cpp.obj
+[92/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/boolean/CombineFeature.cpp.obj
+[93/485] Building CXX object src/sketch/CMakeFiles/bettercad_sketch.dir/Sketch.cpp.obj
+[94/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/datum/Datums.cpp.obj
+[95/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/datum/DatumResolution.cpp.obj
+[96/485] Building CXX object src/sketch/CMakeFiles/bettercad_sketch.dir/solver/SolverSystem.cpp.obj
+[97/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/chamfer/ChamferRegeneration.cpp.obj
+[98/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/draft/DraftFeature.cpp.obj
+[99/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/Validation.cpp.obj
+[100/485] Linking CXX shared library bin\libbettercad_geometry.dll
+[101/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/Regenerator.cpp.obj
+[102/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/draft/DraftRegeneration.cpp.obj
+[103/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/extrude/ExtrudeFeature.cpp.obj
+[104/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/reference/FaceReferences.cpp.obj
+[105/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/fillet/FilletFeature.cpp.obj
+[106/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/extrude/ExtrudeRegeneration.cpp.obj
+[107/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/loft/LoftFeature.cpp.obj
+[108/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/hole/HoleFeature.cpp.obj
+[109/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/fillet/VariableFilletFeature.cpp.obj
+[110/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/hole/HoleRegeneration.cpp.obj
+[111/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/pattern/MirrorFeature.cpp.obj
+[112/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/fillet/VariableFilletRegeneration.cpp.obj
+[113/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/fillet/FilletRegeneration.cpp.obj
+[114/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/pattern/LinearPatternFeature.cpp.obj
+[115/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/pattern/CircularPatternRegeneration.cpp.obj
+[116/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/pattern/LinearPatternRegeneration.cpp.obj
+[117/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/loft/LoftRegeneration.cpp.obj
+[118/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/pattern/CircularPatternFeature.cpp.obj
+[119/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/pattern/MirrorRegeneration.cpp.obj
+[120/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/revolve/RevolveFeature.cpp.obj
+[121/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/pattern/PatternSupport.cpp.obj
+[122/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/shell/ShellFeature.cpp.obj
+[123/485] Building CXX object src/assembly/CMakeFiles/bettercad_assembly.dir/Component.cpp.obj
+[124/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/profile/Profiles.cpp.obj
+[125/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/rib/RibFeature.cpp.obj
+[126/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/revolve/RevolveRegeneration.cpp.obj
+[127/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/sweep/SweepFeature.cpp.obj
+[128/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/shell/ShellRegeneration.cpp.obj
+[129/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/rib/RibRegeneration.cpp.obj
+[130/485] Building CXX object src/assembly/CMakeFiles/bettercad_assembly.dir/Commands.cpp.obj
+[131/485] Building CXX object src/assembly/CMakeFiles/bettercad_assembly.dir/Placement.cpp.obj
+[132/485] Building CXX object src/assembly/CMakeFiles/bettercad_assembly.dir/Components.cpp.obj
+[133/485] Building CXX object src/assembly/CMakeFiles/bettercad_assembly.dir/Configurations.cpp.obj
+[134/485] Building CXX object src/assembly/CMakeFiles/bettercad_assembly.dir/Mates.cpp.obj
+[135/485] Building CXX object src/assembly/CMakeFiles/bettercad_assembly.dir/Mate.cpp.obj
+[136/485] Building CXX object src/features/CMakeFiles/bettercad_features.dir/sweep/SweepRegeneration.cpp.obj
+[137/485] Building CXX object src/assembly/CMakeFiles/bettercad_assembly.dir/Resolution.cpp.obj
+[138/485] Building CXX object src/drawing/CMakeFiles/bettercad_drawing.dir/Annotation.cpp.obj
+[139/485] Building CXX object src/drawing/CMakeFiles/bettercad_drawing.dir/Scene.cpp.obj
+[140/485] Building CXX object src/drawing/CMakeFiles/bettercad_drawing.dir/Dimension.cpp.obj
+[141/485] Building CXX object src/drawing/CMakeFiles/bettercad_drawing.dir/HiddenLine.cpp.obj
+[142/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/reporters/catch_reporter_registrars.cpp.obj
+[143/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/reporters/catch_reporter_junit.cpp.obj
+[144/485] Building CXX object src/drawing/CMakeFiles/bettercad_drawing.dir/Annotations.cpp.obj
+[145/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/reporters/catch_reporter_json.cpp.obj
+[146/485] Building CXX object src/drawing/CMakeFiles/bettercad_drawing.dir/Sheet.cpp.obj
+[147/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/reporters/catch_reporter_multi.cpp.obj
+[148/485] Building CXX object src/assembly/CMakeFiles/bettercad_assembly.dir/solver/SolverSystem.cpp.obj
+[149/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/reporters/catch_reporter_streaming_base.cpp.obj
+[150/485] Building CXX object src/drawing/CMakeFiles/bettercad_drawing.dir/Dimensions.cpp.obj
+[151/485] Building CXX object src/drawing/CMakeFiles/bettercad_drawing.dir/View.cpp.obj
+[152/485] Building CXX object src/drawing/CMakeFiles/bettercad_drawing.dir/Sheets.cpp.obj
+[153/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/reporters/catch_reporter_sonarqube.cpp.obj
+[154/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/interfaces/catch_interfaces_registry_hub.cpp.obj
+[155/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/interfaces/catch_interfaces_exception.cpp.obj
+[156/485] Building CXX object src/drawing/CMakeFiles/bettercad_drawing.dir/Section.cpp.obj
+[157/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/reporters/catch_reporter_tap.cpp.obj
+[158/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/reporters/catch_reporter_teamcity.cpp.obj
+[159/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/interfaces/catch_interfaces_testcase.cpp.obj
+[160/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/interfaces/catch_interfaces_reporter_factory.cpp.obj
+[161/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/interfaces/catch_interfaces_capture.cpp.obj
+[162/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/interfaces/catch_interfaces_config.cpp.obj
+[163/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/interfaces/catch_interfaces_generatortracker.cpp.obj
+[164/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/reporters/catch_reporter_xml.cpp.obj
+[165/485] Building CXX object src/sketch/CMakeFiles/bettercad_sketch.dir/solver/Solver.cpp.obj
+[166/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/catch_tag_alias_autoregistrar.cpp.obj
+[167/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/catch_totals.cpp.obj
+[168/485] Building CXX object src/drawing/CMakeFiles/bettercad_drawing.dir/Views.cpp.obj
+[169/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/catch_assertion_result.cpp.obj
+[170/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/catch_approx.cpp.obj
+[171/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/catch_translate_exception.cpp.obj
+[172/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/catch_get_random_seed.cpp.obj
+[173/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/catch_message.cpp.obj
+[174/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/interfaces/catch_interfaces_reporter.cpp.obj
+[175/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/catch_registry_hub.cpp.obj
+[176/485] Linking CXX shared library bin\libbettercad_sketch.dll
+[177/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/catch_version.cpp.obj
+[178/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/catch_test_spec.cpp.obj
+[179/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_case_insensitive_comparisons.cpp.obj
+[180/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_context.cpp.obj
+[181/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/catch_config.cpp.obj
+[182/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_debugger.cpp.obj
+[183/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/catch_timer.cpp.obj
+[184/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/catch_test_case_info.cpp.obj
+[185/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_errno_guard.cpp.obj
+[186/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_getenv.cpp.obj
+[187/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/catch_tostring.cpp.obj
+[188/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_floating_point_helpers.cpp.obj
+[189/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_enum_info.cpp.obj
+[190/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_assertion_handler.cpp.obj
+[191/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_leak_detector.cpp.obj
+[192/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_enforce.cpp.obj
+[193/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_exception_translator_registry.cpp.obj
+[194/485] Linking CXX shared library bin\libbettercad_features.dll
+[195/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_random_number_generator.cpp.obj
+[196/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_message_info.cpp.obj
+[197/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_istream.cpp.obj
+[198/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_lazy_expr.cpp.obj
+[199/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_jsonwriter.cpp.obj
+[200/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_decomposer.cpp.obj
+[201/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_polyfills.cpp.obj
+[202/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_parse_numbers.cpp.obj
+[203/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_clara.cpp.obj
+[204/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_section.cpp.obj
+[205/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_singletons.cpp.obj
+[206/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_debug_console.cpp.obj
+[207/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_fatal_condition_handler.cpp.obj
+[208/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/catch_session.cpp.obj
+[209/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_output_redirect.cpp.obj
+[210/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_startup_exception_registry.cpp.obj
+[211/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_console_colour.cpp.obj
+[212/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_list.cpp.obj
+[213/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_test_case_info_hasher.cpp.obj
+[214/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_source_line_info.cpp.obj
+[215/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_test_registry.cpp.obj
+[216/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_random_seed_generation.cpp.obj
+[217/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_reusable_string_stream.cpp.obj
+[218/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_uncaught_exceptions.cpp.obj
+[219/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_stdstreams.cpp.obj
+[220/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_stringref.cpp.obj
+[221/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_reporter_spec_parser.cpp.obj
+[222/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_commandline.cpp.obj
+[223/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_test_failure_exception.cpp.obj
+[224/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_tag_alias_registry.cpp.obj
+[225/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_test_spec_parser.cpp.obj
+[226/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_string_manip.cpp.obj
+[227/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_run_context.cpp.obj
+[228/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_test_case_tracker.cpp.obj
+[229/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_reporter_registry.cpp.obj
+[230/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_wildcard_pattern.cpp.obj
+[231/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_textflow.cpp.obj
+[232/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_test_case_registry_impl.cpp.obj
+[233/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/internal/catch_xmlwriter.cpp.obj
+[234/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/matchers/catch_matchers.cpp.obj
+[235/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/matchers/catch_matchers_container_properties.cpp.obj
+[236/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/matchers/catch_matchers_predicate.cpp.obj
+[237/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/matchers/catch_matchers_quantifiers.cpp.obj
+[238/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/matchers/catch_matchers_exception.cpp.obj
+[239/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/matchers/catch_matchers_floating_point.cpp.obj
+[240/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/matchers/internal/catch_matchers_impl.cpp.obj
+[241/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/matchers/catch_matchers_templated.cpp.obj
+[242/485] Building CXX object src/io/CMakeFiles/bettercad_io.dir/FileIo.cpp.obj
+[243/485] Building CXX object src/io/CMakeFiles/bettercad_io.dir/StlWriter.cpp.obj
+[244/485] Building CXX object src/io/CMakeFiles/bettercad_io.dir/DocumentFile.cpp.obj
+[245/485] Building CXX object src/io/CMakeFiles/bettercad_io.dir/json/BooleanJson.cpp.obj
+FAILED: [code=1] src/io/CMakeFiles/bettercad_io.dir/json/BooleanJson.cpp.obj 
+C:\Users\uqhas\AppData\Local\Microsoft\WinGet\Packages\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\mingw64\bin\c++.exe -Dbettercad_io_EXPORTS -IC:/Users/uqhas/OneDrive/Desktop/CAD/include -IC:/Users/uqhas/OneDrive/Desktop/CAD/build/debug-shared/generated/include -IC:/Users/uqhas/OneDrive/Desktop/CAD/src -isystem C:/Users/uqhas/OneDrive/Desktop/CAD/build/debug-shared/_deps/nlohmann_json-src/include -g -std=c++23 -fvisibility=hidden -fno-keep-inline-dllexport -Wall -Wextra -Wpedantic -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wconversion -Wsign-conversion -Wdouble-promotion -Wformat=2 -Wimplicit-fallthrough -Wextra-semi -Wundef -Wmissing-declarations -Wsuggest-override -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Werror -Wa,-mbig-obj -MD -MT src/io/CMakeFiles/bettercad_io.dir/json/BooleanJson.cpp.obj -MF src\io\CMakeFiles\bettercad_io.dir\json\BooleanJson.cpp.obj.d -o src/io/CMakeFiles/bettercad_io.dir/json/BooleanJson.cpp.obj -c C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/BooleanJson.cpp
+In file included from C:/Users/uqhas/OneDrive/Desktop/CAD/include/bettercad/drawing/Annotation.hpp:10,
+                 from C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/ObjectJson.hpp:8,
+                 from C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/BooleanJson.cpp:1:
+C:/Users/uqhas/OneDrive/Desktop/CAD/include/bettercad/drawing/Scene.hpp:110:49: error: function 'bool bettercad::drawing::SceneItems::isEmpty() const' definition is marked dllimport
+  110 |     [[nodiscard]] BETTERCAD_DRAWING_EXPORT bool isEmpty() const noexcept {
+      |                                                 ^~~~~~~
+[246/485] Building CXX object src/io/CMakeFiles/bettercad_io.dir/json/ComponentJson.cpp.obj
+FAILED: [code=1] src/io/CMakeFiles/bettercad_io.dir/json/ComponentJson.cpp.obj 
+C:\Users\uqhas\AppData\Local\Microsoft\WinGet\Packages\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\mingw64\bin\c++.exe -Dbettercad_io_EXPORTS -IC:/Users/uqhas/OneDrive/Desktop/CAD/include -IC:/Users/uqhas/OneDrive/Desktop/CAD/build/debug-shared/generated/include -IC:/Users/uqhas/OneDrive/Desktop/CAD/src -isystem C:/Users/uqhas/OneDrive/Desktop/CAD/build/debug-shared/_deps/nlohmann_json-src/include -g -std=c++23 -fvisibility=hidden -fno-keep-inline-dllexport -Wall -Wextra -Wpedantic -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wconversion -Wsign-conversion -Wdouble-promotion -Wformat=2 -Wimplicit-fallthrough -Wextra-semi -Wundef -Wmissing-declarations -Wsuggest-override -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Werror -Wa,-mbig-obj -MD -MT src/io/CMakeFiles/bettercad_io.dir/json/ComponentJson.cpp.obj -MF src\io\CMakeFiles\bettercad_io.dir\json\ComponentJson.cpp.obj.d -o src/io/CMakeFiles/bettercad_io.dir/json/ComponentJson.cpp.obj -c C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/ComponentJson.cpp
+In file included from C:/Users/uqhas/OneDrive/Desktop/CAD/include/bettercad/drawing/Annotation.hpp:10,
+                 from C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/ObjectJson.hpp:8,
+                 from C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/ComponentJson.cpp:1:
+C:/Users/uqhas/OneDrive/Desktop/CAD/include/bettercad/drawing/Scene.hpp:110:49: error: function 'bool bettercad::drawing::SceneItems::isEmpty() const' definition is marked dllimport
+  110 |     [[nodiscard]] BETTERCAD_DRAWING_EXPORT bool isEmpty() const noexcept {
+      |                                                 ^~~~~~~
+[247/485] Building CXX object src/io/CMakeFiles/bettercad_io.dir/json/DraftJson.cpp.obj
+FAILED: [code=1] src/io/CMakeFiles/bettercad_io.dir/json/DraftJson.cpp.obj 
+C:\Users\uqhas\AppData\Local\Microsoft\WinGet\Packages\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\mingw64\bin\c++.exe -Dbettercad_io_EXPORTS -IC:/Users/uqhas/OneDrive/Desktop/CAD/include -IC:/Users/uqhas/OneDrive/Desktop/CAD/build/debug-shared/generated/include -IC:/Users/uqhas/OneDrive/Desktop/CAD/src -isystem C:/Users/uqhas/OneDrive/Desktop/CAD/build/debug-shared/_deps/nlohmann_json-src/include -g -std=c++23 -fvisibility=hidden -fno-keep-inline-dllexport -Wall -Wextra -Wpedantic -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wconversion -Wsign-conversion -Wdouble-promotion -Wformat=2 -Wimplicit-fallthrough -Wextra-semi -Wundef -Wmissing-declarations -Wsuggest-override -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Werror -Wa,-mbig-obj -MD -MT src/io/CMakeFiles/bettercad_io.dir/json/DraftJson.cpp.obj -MF src\io\CMakeFiles\bettercad_io.dir\json\DraftJson.cpp.obj.d -o src/io/CMakeFiles/bettercad_io.dir/json/DraftJson.cpp.obj -c C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/DraftJson.cpp
+In file included from C:/Users/uqhas/OneDrive/Desktop/CAD/include/bettercad/drawing/Annotation.hpp:10,
+                 from C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/ObjectJson.hpp:8,
+                 from C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/DraftJson.cpp:1:
+C:/Users/uqhas/OneDrive/Desktop/CAD/include/bettercad/drawing/Scene.hpp:110:49: error: function 'bool bettercad::drawing::SceneItems::isEmpty() const' definition is marked dllimport
+  110 |     [[nodiscard]] BETTERCAD_DRAWING_EXPORT bool isEmpty() const noexcept {
+      |                                                 ^~~~~~~
+[248/485] Building CXX object src/io/CMakeFiles/bettercad_io.dir/json/SheetJson.cpp.obj
+FAILED: [code=1] src/io/CMakeFiles/bettercad_io.dir/json/SheetJson.cpp.obj 
+C:\Users\uqhas\AppData\Local\Microsoft\WinGet\Packages\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\mingw64\bin\c++.exe -Dbettercad_io_EXPORTS -IC:/Users/uqhas/OneDrive/Desktop/CAD/include -IC:/Users/uqhas/OneDrive/Desktop/CAD/build/debug-shared/generated/include -IC:/Users/uqhas/OneDrive/Desktop/CAD/src -isystem C:/Users/uqhas/OneDrive/Desktop/CAD/build/debug-shared/_deps/nlohmann_json-src/include -g -std=c++23 -fvisibility=hidden -fno-keep-inline-dllexport -Wall -Wextra -Wpedantic -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wconversion -Wsign-conversion -Wdouble-promotion -Wformat=2 -Wimplicit-fallthrough -Wextra-semi -Wundef -Wmissing-declarations -Wsuggest-override -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Werror -Wa,-mbig-obj -MD -MT src/io/CMakeFiles/bettercad_io.dir/json/SheetJson.cpp.obj -MF src\io\CMakeFiles\bettercad_io.dir\json\SheetJson.cpp.obj.d -o src/io/CMakeFiles/bettercad_io.dir/json/SheetJson.cpp.obj -c C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/SheetJson.cpp
+In file included from C:/Users/uqhas/OneDrive/Desktop/CAD/include/bettercad/drawing/Annotation.hpp:10,
+                 from C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/ObjectJson.hpp:8,
+                 from C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/SheetJson.cpp:1:
+C:/Users/uqhas/OneDrive/Desktop/CAD/include/bettercad/drawing/Scene.hpp:110:49: error: function 'bool bettercad::drawing::SceneItems::isEmpty() const' definition is marked dllimport
+  110 |     [[nodiscard]] BETTERCAD_DRAWING_EXPORT bool isEmpty() const noexcept {
+      |                                                 ^~~~~~~
+[249/485] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/matchers/catch_matchers_string.cpp.obj
+[250/485] Building CXX object src/io/CMakeFiles/bettercad_io.dir/json/HoleStandardsJson.cpp.obj
+FAILED: [code=1] src/io/CMakeFiles/bettercad_io.dir/json/HoleStandardsJson.cpp.obj 
+C:\Users\uqhas\AppData\Local\Microsoft\WinGet\Packages\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\mingw64\bin\c++.exe -Dbettercad_io_EXPORTS -IC:/Users/uqhas/OneDrive/Desktop/CAD/include -IC:/Users/uqhas/OneDrive/Desktop/CAD/build/debug-shared/generated/include -IC:/Users/uqhas/OneDrive/Desktop/CAD/src -isystem C:/Users/uqhas/OneDrive/Desktop/CAD/build/debug-shared/_deps/nlohmann_json-src/include -g -std=c++23 -fvisibility=hidden -fno-keep-inline-dllexport -Wall -Wextra -Wpedantic -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wconversion -Wsign-conversion -Wdouble-promotion -Wformat=2 -Wimplicit-fallthrough -Wextra-semi -Wundef -Wmissing-declarations -Wsuggest-override -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Werror -Wa,-mbig-obj -MD -MT src/io/CMakeFiles/bettercad_io.dir/json/HoleStandardsJson.cpp.obj -MF src\io\CMakeFiles\bettercad_io.dir\json\HoleStandardsJson.cpp.obj.d -o src/io/CMakeFiles/bettercad_io.dir/json/HoleStandardsJson.cpp.obj -c C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/HoleStandardsJson.cpp
+In file included from C:/Users/uqhas/OneDrive/Desktop/CAD/include/bettercad/drawing/Annotation.hpp:10,
+                 from C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/ObjectJson.hpp:8,
+                 from C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/HoleStandardsJson.cpp:1:
+C:/Users/uqhas/OneDrive/Desktop/CAD/include/bettercad/drawing/Scene.hpp:110:49: error: function 'bool bettercad::drawing::SceneItems::isEmpty() const' definition is marked dllimport
+  110 |     [[nodiscard]] BETTERCAD_DRAWING_EXPORT bool isEmpty() const noexcept {
+      |                                                 ^~~~~~~
+[251/485] Building CXX object src/io/CMakeFiles/bettercad_io.dir/json/MateJson.cpp.obj
+FAILED: [code=1] src/io/CMakeFiles/bettercad_io.dir/json/MateJson.cpp.obj 
+C:\Users\uqhas\AppData\Local\Microsoft\WinGet\Packages\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\mingw64\bin\c++.exe -Dbettercad_io_EXPORTS -IC:/Users/uqhas/OneDrive/Desktop/CAD/include -IC:/Users/uqhas/OneDrive/Desktop/CAD/build/debug-shared/generated/include -IC:/Users/uqhas/OneDrive/Desktop/CAD/src -isystem C:/Users/uqhas/OneDrive/Desktop/CAD/build/debug-shared/_deps/nlohmann_json-src/include -g -std=c++23 -fvisibility=hidden -fno-keep-inline-dllexport -Wall -Wextra -Wpedantic -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wconversion -Wsign-conversion -Wdouble-promotion -Wformat=2 -Wimplicit-fallthrough -Wextra-semi -Wundef -Wmissing-declarations -Wsuggest-override -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Werror -Wa,-mbig-obj -MD -MT src/io/CMakeFiles/bettercad_io.dir/json/MateJson.cpp.obj -MF src\io\CMakeFiles\bettercad_io.dir\json\MateJson.cpp.obj.d -o src/io/CMakeFiles/bettercad_io.dir/json/MateJson.cpp.obj -c C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/MateJson.cpp
+In file included from C:/Users/uqhas/OneDrive/Desktop/CAD/include/bettercad/drawing/Annotation.hpp:10,
+                 from C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/ObjectJson.hpp:8,
+                 from C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/MateJson.cpp:1:
+C:/Users/uqhas/OneDrive/Desktop/CAD/include/bettercad/drawing/Scene.hpp:110:49: error: function 'bool bettercad::drawing::SceneItems::isEmpty() const' definition is marked dllimport
+  110 |     [[nodiscard]] BETTERCAD_DRAWING_EXPORT bool isEmpty() const noexcept {
+      |                                                 ^~~~~~~
+[252/485] Building CXX object src/io/CMakeFiles/bettercad_io.dir/json/AnnotationJson.cpp.obj
+FAILED: [code=1] src/io/CMakeFiles/bettercad_io.dir/json/AnnotationJson.cpp.obj 
+C:\Users\uqhas\AppData\Local\Microsoft\WinGet\Packages\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\mingw64\bin\c++.exe -Dbettercad_io_EXPORTS -IC:/Users/uqhas/OneDrive/Desktop/CAD/include -IC:/Users/uqhas/OneDrive/Desktop/CAD/build/debug-shared/generated/include -IC:/Users/uqhas/OneDrive/Desktop/CAD/src -isystem C:/Users/uqhas/OneDrive/Desktop/CAD/build/debug-shared/_deps/nlohmann_json-src/include -g -std=c++23 -fvisibility=hidden -fno-keep-inline-dllexport -Wall -Wextra -Wpedantic -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wconversion -Wsign-conversion -Wdouble-promotion -Wformat=2 -Wimplicit-fallthrough -Wextra-semi -Wundef -Wmissing-declarations -Wsuggest-override -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Werror -Wa,-mbig-obj -MD -MT src/io/CMakeFiles/bettercad_io.dir/json/AnnotationJson.cpp.obj -MF src\io\CMakeFiles\bettercad_io.dir\json\AnnotationJson.cpp.obj.d -o src/io/CMakeFiles/bettercad_io.dir/json/AnnotationJson.cpp.obj -c C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/AnnotationJson.cpp
+In file included from C:/Users/uqhas/OneDrive/Desktop/CAD/include/bettercad/drawing/Annotation.hpp:10,
+                 from C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/ObjectJson.hpp:8,
+                 from C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/AnnotationJson.cpp:1:
+C:/Users/uqhas/OneDrive/Desktop/CAD/include/bettercad/drawing/Scene.hpp:110:49: error: function 'bool bettercad::drawing::SceneItems::isEmpty() const' definition is marked dllimport
+  110 |     [[nodiscard]] BETTERCAD_DRAWING_EXPORT bool isEmpty() const noexcept {
+      |                                                 ^~~~~~~
+[253/485] Building CXX object src/io/CMakeFiles/bettercad_io.dir/json/DatumJson.cpp.obj
+FAILED: [code=1] src/io/CMakeFiles/bettercad_io.dir/json/DatumJson.cpp.obj 
+C:\Users\uqhas\AppData\Local\Microsoft\WinGet\Packages\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\mingw64\bin\c++.exe -Dbettercad_io_EXPORTS -IC:/Users/uqhas/OneDrive/Desktop/CAD/include -IC:/Users/uqhas/OneDrive/Desktop/CAD/build/debug-shared/generated/include -IC:/Users/uqhas/OneDrive/Desktop/CAD/src -isystem C:/Users/uqhas/OneDrive/Desktop/CAD/build/debug-shared/_deps/nlohmann_json-src/include -g -std=c++23 -fvisibility=hidden -fno-keep-inline-dllexport -Wall -Wextra -Wpedantic -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wconversion -Wsign-conversion -Wdouble-promotion -Wformat=2 -Wimplicit-fallthrough -Wextra-semi -Wundef -Wmissing-declarations -Wsuggest-override -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Werror -Wa,-mbig-obj -MD -MT src/io/CMakeFiles/bettercad_io.dir/json/DatumJson.cpp.obj -MF src\io\CMakeFiles\bettercad_io.dir\json\DatumJson.cpp.obj.d -o src/io/CMakeFiles/bettercad_io.dir/json/DatumJson.cpp.obj -c C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/DatumJson.cpp
+In file included from C:/Users/uqhas/OneDrive/Desktop/CAD/include/bettercad/drawing/Annotation.hpp:10,
+                 from C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/ObjectJson.hpp:8,
+                 from C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/DatumJson.cpp:1:
+C:/Users/uqhas/OneDrive/Desktop/CAD/include/bettercad/drawing/Scene.hpp:110:49: error: function 'bool bettercad::drawing::SceneItems::isEmpty() const' definition is marked dllimport
+  110 |     [[nodiscard]] BETTERCAD_DRAWING_EXPORT bool isEmpty() const noexcept {
+      |                                                 ^~~~~~~
+[254/485] Building CXX object src/io/CMakeFiles/bettercad_io.dir/json/DimensionJson.cpp.obj
+FAILED: [code=1] src/io/CMakeFiles/bettercad_io.dir/json/DimensionJson.cpp.obj 
+C:\Users\uqhas\AppData\Local\Microsoft\WinGet\Packages\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\mingw64\bin\c++.exe -Dbettercad_io_EXPORTS -IC:/Users/uqhas/OneDrive/Desktop/CAD/include -IC:/Users/uqhas/OneDrive/Desktop/CAD/build/debug-shared/generated/include -IC:/Users/uqhas/OneDrive/Desktop/CAD/src -isystem C:/Users/uqhas/OneDrive/Desktop/CAD/build/debug-shared/_deps/nlohmann_json-src/include -g -std=c++23 -fvisibility=hidden -fno-keep-inline-dllexport -Wall -Wextra -Wpedantic -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wconversion -Wsign-conversion -Wdouble-promotion -Wformat=2 -Wimplicit-fallthrough -Wextra-semi -Wundef -Wmissing-declarations -Wsuggest-override -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Werror -Wa,-mbig-obj -MD -MT src/io/CMakeFiles/bettercad_io.dir/json/DimensionJson.cpp.obj -MF src\io\CMakeFiles\bettercad_io.dir\json\DimensionJson.cpp.obj.d -o src/io/CMakeFiles/bettercad_io.dir/json/DimensionJson.cpp.obj -c C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/DimensionJson.cpp
+In file included from C:/Users/uqhas/OneDrive/Desktop/CAD/include/bettercad/drawing/Annotation.hpp:10,
+                 from C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/ObjectJson.hpp:8,
+                 from C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/DimensionJson.cpp:1:
+C:/Users/uqhas/OneDrive/Desktop/CAD/include/bettercad/drawing/Scene.hpp:110:49: error: function 'bool bettercad::drawing::SceneItems::isEmpty() const' definition is marked dllimport
+  110 |     [[nodiscard]] BETTERCAD_DRAWING_EXPORT bool isEmpty() const noexcept {
+      |                                                 ^~~~~~~
+[255/485] Building CXX object src/io/CMakeFiles/bettercad_io.dir/json/DocumentJson.cpp.obj
+FAILED: [code=1] src/io/CMakeFiles/bettercad_io.dir/json/DocumentJson.cpp.obj 
+C:\Users\uqhas\AppData\Local\Microsoft\WinGet\Packages\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\mingw64\bin\c++.exe -Dbettercad_io_EXPORTS -IC:/Users/uqhas/OneDrive/Desktop/CAD/include -IC:/Users/uqhas/OneDrive/Desktop/CAD/build/debug-shared/generated/include -IC:/Users/uqhas/OneDrive/Desktop/CAD/src -isystem C:/Users/uqhas/OneDrive/Desktop/CAD/build/debug-shared/_deps/nlohmann_json-src/include -g -std=c++23 -fvisibility=hidden -fno-keep-inline-dllexport -Wall -Wextra -Wpedantic -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wconversion -Wsign-conversion -Wdouble-promotion -Wformat=2 -Wimplicit-fallthrough -Wextra-semi -Wundef -Wmissing-declarations -Wsuggest-override -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Werror -Wa,-mbig-obj -MD -MT src/io/CMakeFiles/bettercad_io.dir/json/DocumentJson.cpp.obj -MF src\io\CMakeFiles\bettercad_io.dir\json\DocumentJson.cpp.obj.d -o src/io/CMakeFiles/bettercad_io.dir/json/DocumentJson.cpp.obj -c C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/DocumentJson.cpp
+In file included from C:/Users/uqhas/OneDrive/Desktop/CAD/include/bettercad/drawing/Annotation.hpp:10,
+                 from C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/ObjectJson.hpp:8,
+                 from C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/DocumentJson.cpp:3:
+C:/Users/uqhas/OneDrive/Desktop/CAD/include/bettercad/drawing/Scene.hpp:110:49: error: function 'bool bettercad::drawing::SceneItems::isEmpty() const' definition is marked dllimport
+  110 |     [[nodiscard]] BETTERCAD_DRAWING_EXPORT bool isEmpty() const noexcept {
+      |                                                 ^~~~~~~
+[256/485] Building CXX object src/io/CMakeFiles/bettercad_io.dir/ModelExport.cpp.obj
+[257/485] Building CXX object src/io/CMakeFiles/bettercad_io.dir/json/ViewJson.cpp.obj
+FAILED: [code=1] src/io/CMakeFiles/bettercad_io.dir/json/ViewJson.cpp.obj 
+C:\Users\uqhas\AppData\Local\Microsoft\WinGet\Packages\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\mingw64\bin\c++.exe -Dbettercad_io_EXPORTS -IC:/Users/uqhas/OneDrive/Desktop/CAD/include -IC:/Users/uqhas/OneDrive/Desktop/CAD/build/debug-shared/generated/include -IC:/Users/uqhas/OneDrive/Desktop/CAD/src -isystem C:/Users/uqhas/OneDrive/Desktop/CAD/build/debug-shared/_deps/nlohmann_json-src/include -g -std=c++23 -fvisibility=hidden -fno-keep-inline-dllexport -Wall -Wextra -Wpedantic -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wconversion -Wsign-conversion -Wdouble-promotion -Wformat=2 -Wimplicit-fallthrough -Wextra-semi -Wundef -Wmissing-declarations -Wsuggest-override -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Werror -Wa,-mbig-obj -MD -MT src/io/CMakeFiles/bettercad_io.dir/json/ViewJson.cpp.obj -MF src\io\CMakeFiles\bettercad_io.dir\json\ViewJson.cpp.obj.d -o src/io/CMakeFiles/bettercad_io.dir/json/ViewJson.cpp.obj -c C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/ViewJson.cpp
+In file included from C:/Users/uqhas/OneDrive/Desktop/CAD/include/bettercad/drawing/Annotation.hpp:10,
+                 from C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/ObjectJson.hpp:8,
+                 from C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/ViewJson.cpp:1:
+C:/Users/uqhas/OneDrive/Desktop/CAD/include/bettercad/drawing/Scene.hpp:110:49: error: function 'bool bettercad::drawing::SceneItems::isEmpty() const' definition is marked dllimport
+  110 |     [[nodiscard]] BETTERCAD_DRAWING_EXPORT bool isEmpty() const noexcept {
+      |                                                 ^~~~~~~
+[258/485] Building CXX object src/assembly/CMakeFiles/bettercad_assembly.dir/solver/Solver.cpp.obj
+[259/485] Building CXX object src/io/CMakeFiles/bettercad_io.dir/json/FeatureJson.cpp.obj
+FAILED: [code=1] src/io/CMakeFiles/bettercad_io.dir/json/FeatureJson.cpp.obj 
+C:\Users\uqhas\AppData\Local\Microsoft\WinGet\Packages\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\mingw64\bin\c++.exe -Dbettercad_io_EXPORTS -IC:/Users/uqhas/OneDrive/Desktop/CAD/include -IC:/Users/uqhas/OneDrive/Desktop/CAD/build/debug-shared/generated/include -IC:/Users/uqhas/OneDrive/Desktop/CAD/src -isystem C:/Users/uqhas/OneDrive/Desktop/CAD/build/debug-shared/_deps/nlohmann_json-src/include -g -std=c++23 -fvisibility=hidden -fno-keep-inline-dllexport -Wall -Wextra -Wpedantic -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wconversion -Wsign-conversion -Wdouble-promotion -Wformat=2 -Wimplicit-fallthrough -Wextra-semi -Wundef -Wmissing-declarations -Wsuggest-override -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Werror -Wa,-mbig-obj -MD -MT src/io/CMakeFiles/bettercad_io.dir/json/FeatureJson.cpp.obj -MF src\io\CMakeFiles\bettercad_io.dir\json\FeatureJson.cpp.obj.d -o src/io/CMakeFiles/bettercad_io.dir/json/FeatureJson.cpp.obj -c C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/FeatureJson.cpp
+In file included from C:/Users/uqhas/OneDrive/Desktop/CAD/include/bettercad/drawing/Annotation.hpp:10,
+                 from C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/ObjectJson.hpp:8,
+                 from C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/FeatureJson.cpp:1:
+C:/Users/uqhas/OneDrive/Desktop/CAD/include/bettercad/drawing/Scene.hpp:110:49: error: function 'bool bettercad::drawing::SceneItems::isEmpty() const' definition is marked dllimport
+  110 |     [[nodiscard]] BETTERCAD_DRAWING_EXPORT bool isEmpty() const noexcept {
+      |                                                 ^~~~~~~
+[260/485] Building CXX object src/io/CMakeFiles/bettercad_io.dir/json/RibJson.cpp.obj
+FAILED: [code=1] src/io/CMakeFiles/bettercad_io.dir/json/RibJson.cpp.obj 
+C:\Users\uqhas\AppData\Local\Microsoft\WinGet\Packages\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\mingw64\bin\c++.exe -Dbettercad_io_EXPORTS -IC:/Users/uqhas/OneDrive/Desktop/CAD/include -IC:/Users/uqhas/OneDrive/Desktop/CAD/build/debug-shared/generated/include -IC:/Users/uqhas/OneDrive/Desktop/CAD/src -isystem C:/Users/uqhas/OneDrive/Desktop/CAD/build/debug-shared/_deps/nlohmann_json-src/include -g -std=c++23 -fvisibility=hidden -fno-keep-inline-dllexport -Wall -Wextra -Wpedantic -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wconversion -Wsign-conversion -Wdouble-promotion -Wformat=2 -Wimplicit-fallthrough -Wextra-semi -Wundef -Wmissing-declarations -Wsuggest-override -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Werror -Wa,-mbig-obj -MD -MT src/io/CMakeFiles/bettercad_io.dir/json/RibJson.cpp.obj -MF src\io\CMakeFiles\bettercad_io.dir\json\RibJson.cpp.obj.d -o src/io/CMakeFiles/bettercad_io.dir/json/RibJson.cpp.obj -c C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/RibJson.cpp
+In file included from C:/Users/uqhas/OneDrive/Desktop/CAD/include/bettercad/drawing/Annotation.hpp:10,
+                 from C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/ObjectJson.hpp:8,
+                 from C:/Users/uqhas/OneDrive/Desktop/CAD/src/io/json/RibJson.cpp:1:
+C:/Users/uqhas/OneDrive/Desktop/CAD/include/bettercad/drawing/Scene.hpp:110:49: error: function 'bool bettercad::drawing::SceneItems::isEmpty() const' definition is marked dllimport
+  110 |     [[nodiscard]] BETTERCAD_DRAWING_EXPORT bool isEmpty() const noexcept {
+      |                                                 ^~~~~~~
+[261/485] Building CXX object src/io/CMakeFiles/bettercad_io.dir/json/ParameterJson.cpp.obj
+[262/485] Building CXX object src/io/CMakeFiles/bettercad_io.dir/json/JsonReader.cpp.obj
+ninja: build stopped: subcommand failed.

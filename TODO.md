@@ -10,9 +10,15 @@
 
 ```text
 Current:   P14 — Technical Drawings
-Next:      P14-ANNO-001 — Drawing Annotations
+Next:      P14-TOL-001 — Tolerances / fits / GD&T foundation
 Carried:   P14-HLR-001's assembly-to-assembly occlusion validation is still
-           open, blocked on P14-ASM-001, and was not touched by P14-DIM-001
+           open, blocked on P14-ASM-001, and was touched by neither
+           P14-DIM-001 nor P14-ANNO-001
+Decision:  move build and test output off OneDrive. The filesystem fault that
+           failed a determinism repeat in P14-DIM-001 recurred in
+           P14-ANNO-001, in a different preset. It needs its own decision
+           because the build directory lives in CMakePresets.json, inside the
+           frozen qualified tree.
 
 Released:  v0.1.0 — P0–P10
 Qualified: P11, P12, P13
@@ -507,19 +513,68 @@ Carried open → P14-HLR-001 assembly-to-assembly occlusion, blocked on P14-ASM-
 
 ## Drawing Annotations
 
-* [ ] Implement text notes
-* [ ] Implement leaders
-* [ ] Implement centerlines
-* [ ] Implement centermarks
-* [ ] Implement hole callouts
-* [ ] Implement surface-finish symbol foundation
-* [ ] Implement datum symbol foundation
-* [ ] Implement annotation placement
-* [ ] Validate scale-independent text sizing
-* [ ] Validate deterministic annotation layout
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Implement text notes
+* [x] Implement leaders
+* [x] Implement centerlines
+* [x] Implement centermarks
+* [x] Implement hole callouts
+* [x] Implement surface-finish symbol foundation
+* [x] Implement datum symbol foundation
+* [x] Implement annotation placement
+* [x] Validate scale-independent text sizing
+* [x] Validate deterministic annotation layout
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded — [docs/verification/P14-ANNO-001/](docs/verification/P14-ANNO-001/README.md)
+
+Met on the SECOND qualification: 34 new tests; 1915/1915 on `debug`, `release`
+and `debug-shared`, each from clean; 1914/1914 five times over in release and
+debug; 0 compiler warnings; the no-op rebuild compiled 0 and linked 0 in every
+preset; the tree IDs before the first build, after the last test run and
+before the commit are identical.
+
+**The first qualification failed, and the harness said so.** The exit-code fix
+P14-DIM-001 made earned its keep on its first real use: `QUALIFICATION FAILED:
+2 stage(s) failed`, non-zero exit. Under the old harness this would have
+exited 0 with a broken shared build sitting in a log. Both runs are in the
+evidence; the failed one is not erased.
+
+One of the two failures was **mine**: `SceneItems::isEmpty()` was marked for
+export AND defined inline in the header, which makes it `dllimport` in a
+shared build, and a dllimport function may not have a definition. Debug and
+Release compiled it happily; only `debug-shared` failed. That is the second
+time that preset has caught a real defect in P14 — the first was
+`DrawingScale::label()` in P14-SHEET-001, the mirror-image mistake.
+
+**The invariant the milestone turns on**: where an annotation points follows
+the model through the view's projection and moves with the scale; how big it
+is drawn is paper millimetres and meets no scale. The centre-mark test asserts
+both halves at once — arms 5.0 mm at 1:1, 1:2, 2:1, 1:10 and 5:1 while the
+crossing point moves 30, 15, 60, 3 and 150 mm — because a mark that never
+moved would also never change size.
+
+A hole callout stores **which hole**, never a number: `Ø10 THRU` becomes
+`Ø12 DEEP 8` when the hole is edited, with the same annotation and no drawing
+edit. It points at the hole FEATURE rather than its bore, because P12 names a
+hole's bottom and floors and not its wall — the gap P14-DIM-001 found — and
+because `features::holeCallout()` already resolves diameter, tolerance and
+thread from the document.
+
+Adversarial review found one further defect: a centreline's span was measured
+from the view's policy-filtered edges, so turning hidden lines off shortened
+it — a display setting silently changing an annotation's geometry, and
+invisibly. It now measures from the view's pre-suppression bounds.
+
+Only the part of ADR-016's drawing scene that annotations need was built —
+lines, text, styles, anchors, and the self-validation ADR-016 requires. The
+sheet frame, layers, hatch and line weights are P14-EXPORT-001's.
+
+```text
+P14-ANNO-001 → [x]
+Next → P14-TOL-001
+Carried open → P14-HLR-001 assembly-to-assembly occlusion, blocked on P14-ASM-001
+Open decision → move build output off OneDrive; the filesystem fault recurred
+```
 
 ---
 

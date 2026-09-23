@@ -123,6 +123,21 @@ using TransformLookup = std::function<const RigidTransform3D*(ComponentId compon
     const Document& document, ViewId id, const BodyLookup& bodies,
     const TransformLookup& transforms = {});
 
+/// Where a model point lands on this view's sheet, in sheet millimetres.
+///
+/// The SAME mapping the view draws its own geometry with -- the basis, the
+/// centring on the projected bounds, the scale and the placement -- so that
+/// anything put on the sheet by this lands on the geometry it belongs to
+/// rather than near it. An annotation pointing at a hole is only pointing at
+/// the hole if it uses the projection the hole was drawn with.
+///
+/// Needs @p bodies because the centring is the projected bounding box of what
+/// the view draws, and that cannot be known without the body.
+[[nodiscard]] BETTERCAD_DRAWING_EXPORT Result<Point2D> toSheet(const Document& document, ViewId id,
+                                                               const Point3D& point,
+                                                               const BodyLookup& bodies,
+                                                               const TransformLookup& transforms = {});
+
 /// The cut faces of a section view, hatched, in sheet coordinates.
 ///
 /// Fails with InvalidArgument for a view that is not a section: a view with

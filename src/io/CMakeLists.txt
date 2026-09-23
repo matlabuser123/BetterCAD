@@ -10,6 +10,7 @@ bettercad_add_library(bettercad_io
         StlWriter.cpp
         json/BooleanJson.cpp
         json/ComponentJson.cpp
+        json/AnnotationJson.cpp
         json/DimensionJson.cpp
         json/SheetJson.cpp
         json/ViewJson.cpp

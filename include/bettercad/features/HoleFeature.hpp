@@ -158,6 +158,15 @@ struct HoleThreadCallout {
 /// diameter with its limit deviations, and its thread.
 struct HoleCallout {
     Length diameter{};
+    /// How deep the hole goes, and how deep a BLIND one is -- both resolved,
+    /// so a depth driven by a parameter reads the parameter's current value.
+    ///
+    /// A callout that could not say THRU or DEEP 20 would not be a callout,
+    /// and working the depth out again outside this function would mean a
+    /// second copy of the parameter resolution to disagree with the first.
+    geometry::HoleExtent extent = geometry::HoleExtent::Through;
+    /// Blind only; zero for a through hole, which has no depth.
+    Length depth{};
     std::optional<standards::HoleToleranceClass> tolerance{};
     std::optional<standards::LimitDeviations> deviations{};
     std::optional<HoleThreadCallout> thread{};

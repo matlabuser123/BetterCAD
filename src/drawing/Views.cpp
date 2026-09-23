@@ -712,6 +712,75 @@ Result<ProjectedGeometry> detailGeometry(const Document& document, ViewId id,
 
 } // namespace
 
+Result<Point2D> toSheet(const Document& document, ViewId id, const Point3D& point,
+                        const BodyLookup& bodies, const TransformLookup& transforms) {
+    auto source = effectiveSource(document, id);
+    if (!source) {
+        return std::unexpected(source.error());
+    }
+    if (!isInternal(*source)) {
+        return makeError(ErrorCode::NotFound,
+                         std::format("{} draws an object of another document", id));
+    }
+    auto basis = effectiveBasis(document, id);
+    if (!basis) {
+        return std::unexpected(basis.error());
+    }
+    auto scale = effectiveScale(document, id);
+    if (!scale) {
+        return std::unexpected(scale.error());
+    }
+    auto placement = effectivePlacement(document, id);
+    if (!placement) {
+        return std::unexpected(placement.error());
+    }
+    auto body = bodyForView(document, id, *source, bodies, transforms);
+    if (!body) {
+        return std::unexpected(body.error());
+    }
+    // A section view draws the cut solid, and its extent is what it is
+    // centred on, so a point is placed against that and not against the whole
+    // one it was cut from.
+    if (const View* view = findView(document, id);
+        view != nullptr && view->definition().kind == ViewKind::Section) {
+        auto cut = cutBody(*body, *view->definition().section, *basis);
+        if (!cut) {
+            return std::unexpected(cut.error());
+        }
+        body = std::move(*cut);
+    }
+    auto drawing = geometry::hiddenLineDrawing(*body, *basis);
+    if (!drawing) {
+        return std::unexpected(drawing.error());
+    }
+    if (drawing->edges.empty()) {
+        return makeError(ErrorCode::FailedPrecondition,
+                         std::format("{} draws a body with no edges to project", id));
+    }
+
+    double minX = 0.0, maxX = 0.0, minY = 0.0, maxY = 0.0;
+    bool first = true;
+    for (const geometry::ProjectedEdge& edge : drawing->edges) {
+        for (const Point2D& p : edge.polyline) {
+            if (first) {
+                minX = maxX = p.x.si();
+                minY = maxY = p.y.si();
+                first = false;
+                continue;
+            }
+            minX = std::min(minX, p.x.si());
+            maxX = std::max(maxX, p.x.si());
+            minY = std::min(minY, p.y.si());
+            maxY = std::max(maxY, p.y.si());
+        }
+    }
+    const Point2D flat = projectToViewPlane(*basis, point);
+    const double factor = scale->factor();
+    return Point2D{
+        placement->x + Length::fromSi((flat.x.si() - 0.5 * (minX + maxX)) * factor),
+        placement->y + Length::fromSi((flat.y.si() - 0.5 * (minY + maxY)) * factor)};
+}
+
 Result<SectionGeometry> sectionOf(const Document& document, ViewId id, const BodyLookup& bodies,
                                   const TransformLookup& transforms) {
     const View* view = findView(document, id);

@@ -5,6 +5,7 @@
 #include "io/json/JsonReader.hpp"
 
 #include <bettercad/assembly/Component.hpp>
+#include <bettercad/drawing/Annotation.hpp>
 #include <bettercad/drawing/Dimension.hpp>
 #include <bettercad/drawing/Sheet.hpp>
 #include <bettercad/drawing/View.hpp>
@@ -79,6 +80,13 @@ namespace bettercad::io::detail {
 /// "type", "view", "from", "format", "x" and "y" always; "to" for every
 /// type but radius and diameter; "ordinate" only for an ordinate. The
 /// measured value is NOT written: it is derived from the model (ADR-011).
+/// "type", "view", "height", "x" and "y" always; "target" when it points at
+/// something; "text" only for the kinds whose words are an engineer's choice.
+/// A hole callout's text is derived and is NOT written (ADR-011).
+[[nodiscard]] Json annotationToJson(const drawing::Annotation& annotation);
+[[nodiscard]] Result<std::unique_ptr<drawing::Annotation>> annotationFromJson(
+    const Json& data, std::string name, std::string_view path);
+
 [[nodiscard]] Json dimensionToJson(const drawing::Dimension& dimension);
 [[nodiscard]] Result<std::unique_ptr<drawing::Dimension>> dimensionFromJson(const Json& data,
                                                                             std::string name,

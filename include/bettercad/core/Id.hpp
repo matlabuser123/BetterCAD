@@ -54,6 +54,9 @@ struct ViewIdTag {
 struct DimensionIdTag {
     static constexpr std::string_view name = "dimension";
 };
+struct AnnotationIdTag {
+    static constexpr std::string_view name = "annotation";
+};
 struct EntityIdTag {
     static constexpr std::string_view name = "entity";
 };
@@ -92,6 +95,8 @@ template <>
 inline constexpr bool isDocumentObjectTag<ViewIdTag> = true;
 template <>
 inline constexpr bool isDocumentObjectTag<DimensionIdTag> = true;
+template <>
+inline constexpr bool isDocumentObjectTag<AnnotationIdTag> = true;
 
 template <typename Tag, typename Value = std::uint64_t>
 class Id;
@@ -174,6 +179,12 @@ using ViewId = Id<ViewIdTag>;
 /// stores is what to measure and how to write it; the NUMBER is derived from
 /// the model every time it is asked for and is never this.
 using DimensionId = Id<DimensionIdTag>;
+/// One annotation on a drawing view: a note, a leader, a centreline, a centre
+/// mark, a hole callout, a surface-finish symbol or a datum. A document
+/// object and a node in the dependency graph, so its ID widens to ObjectId
+/// (ADR-017). What it stores is what to say and what to point at; the lines
+/// and the text of anything model-driven are derived every time.
+using AnnotationId = Id<AnnotationIdTag>;
 /// Sketch entity (point, line, arc, ...); unique within its sketch.
 using EntityId = Id<EntityIdTag>;
 /// Sketch constraint; unique within its sketch.
