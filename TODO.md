@@ -10,8 +10,8 @@
 
 ```text
 Current:   P14 — Technical Drawings
-Next:      P14-CMD-001 — drawing commands. P14-STREF-001 is STILL OPEN and
-           comes first if it is authorized:
+Next:      P14-PERSIST-001 — drawing persistence. P14-STREF-001 is STILL
+           OPEN and comes first if it is authorized:
            its audit is done and 11 of its 12 checks pass, but one gate --
            "no silent rebinding" -- is NOT met and the milestone is not [x].
            A chamfer face is named by its edge reference's POSITION in the
@@ -1018,20 +1018,74 @@ Open decision → move build output off OneDrive; the fault did not recur here,
 
 ## Commands / Undo / Redo
 
-* [ ] Sheet commands
-* [ ] View create/delete/move commands
-* [ ] Dimension commands
-* [ ] Annotation commands
-* [ ] BOM / balloon commands
-* [ ] Undo restores exact drawing intent
-* [ ] Redo restores exact post-command state
-* [ ] Failed commands are atomic
-* [ ] Redo invalidation correct
-* [ ] Regeneration integrates correctly
-* [ ] Determinism PASS
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Sheet commands
+* [x] View create/delete/move commands
+* [x] Dimension commands
+* [x] Annotation commands
+* [x] BOM / balloon commands — the annotation commands ARE these (ADR-022);
+      no row, quantity or item number is command-owned, because none is stored
+* [x] Undo restores exact drawing intent
+* [x] Redo restores exact post-command state
+* [x] Failed commands are atomic
+* [x] Redo invalidation correct
+* [x] Regeneration integrates correctly
+* [x] Determinism PASS
+* [x] Adversarial review PASS
+* [x] Regression PASS — 2097/2097 on `debug`, `release` and `debug-shared`
+* [x] Evidence recorded — [docs/verification/P14-CMD-001/](docs/verification/P14-CMD-001/README.md)
+
+### Gate
+
+```text
+commands mutate canonical intent
++ undo/redo exact
++ no derived state in history
++ failures atomic
++ regeneration correct
++ determinism PASS
+```
+
+**MET.** 27 new tests; 2097/2097 on `debug`, `release` and `debug-shared`, each
+from clean; 2096/2096 five times over in both repeat presets; 0 compiler
+warnings; the no-op rebuild compiled 0 and linked 0 in every preset; the tree
+IDs before the first build, after the last test run and at the commit are
+identical.
+
+**Nothing new was built for history.** There is one command system and it
+already worked, so these are fifteen commands in it — no second history, no
+transaction mechanism, and no persistent history (`CommandHistory` is session
+state; the file has no place for one and a test asserts it).
+
+**Why drawing commands exist at all is validation, and for views it is not
+theoretical.** `removeView()` refuses while another view is projected from it;
+core's generic `DeleteObjectCommand` calls `Document::removeObject()` directly
+and walks straight past that. The test does not argue this — it runs the
+generic command on a clone of the same document and asserts it SUCCEEDS and
+leaves the child orphaned, beside the drawing command that refuses.
+
+**Undo is compared as the document's own serialization**, which is precisely
+canonical intent because ADR-011 keeps derived state out of the file. Two
+states that draw the same but serialize differently fail. Two exclusions are
+asserted separately instead: `last_allocated_id` (which must NOT rewind — a
+redo is holding an ID and will put it back) and the per-document UUID.
+
+**Nothing derived is ever undo payload**, and the two tests that prove it
+change the MODEL between a command and its redo: a dimension created at 100 mm
+and redone after the model moved to 137.5 must read 137.5, and a balloon that
+was item 2 must draw "1" once the occurrences ahead of it are gone.
+
+**The only change to existing production code is nine lines** — extracting
+`checkRemoveView()` from `removeView()` so the command and the free function
+share one policy rather than two copies that could drift.
+
+```text
+P14-CMD-001 → [x]
+Next → P14-PERSIST-001. P14-STREF-001 is still open on its chamfer gap and
+       comes first if authorized
+Carried open → nothing
+Open decision → move build output off OneDrive; the fault has not recurred in
+                the last two milestones, which does not close it
+```
 
 ---
 

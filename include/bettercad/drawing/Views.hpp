@@ -78,6 +78,16 @@ using TransformLookup = std::function<const RigidTransform3D*(ComponentId compon
 /// smaller one.
 [[nodiscard]] BETTERCAD_DRAWING_EXPORT Result<void> removeView(Document& document, ViewId id);
 
+/// Whether removeView() would allow removing @p id, without removing it.
+///
+/// It is removeView()'s own precondition, and removeView() is its only other
+/// caller, so the policy has one implementation. DeleteViewCommand needs to
+/// ask separately because it must keep the removed object for undo, which
+/// removeView() discards -- and asking any other way would be a second copy of
+/// a rule that must not drift (P14-CMD-001).
+[[nodiscard]] BETTERCAD_DRAWING_EXPORT Result<void> checkRemoveView(const Document& document,
+                                                                    ViewId id);
+
 // --- Derived (ADR-011). Computed on every call, never stored. ---
 
 /// What the view actually looks at: its own source, or its parent's.

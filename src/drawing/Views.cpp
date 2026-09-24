@@ -168,7 +168,7 @@ std::vector<ViewId> viewsOn(const Document& document, SheetId sheet) {
     return found;
 }
 
-Result<void> removeView(Document& document, ViewId id) {
+Result<void> checkRemoveView(const Document& document, ViewId id) {
     if (findView(document, id) == nullptr) {
         return notFound(id);
     }
@@ -179,6 +179,13 @@ Result<void> removeView(Document& document, ViewId id) {
                              std::format("{} cannot be removed while {} is projected from it", id,
                                          other));
         }
+    }
+    return {};
+}
+
+Result<void> removeView(Document& document, ViewId id) {
+    if (auto allowed = checkRemoveView(document, id); !allowed) {
+        return allowed;
     }
     auto removed = document.removeObject(id);
     if (!removed) {
