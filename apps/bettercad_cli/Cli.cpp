@@ -50,6 +50,11 @@ constexpr std::array kCommands{
     Command{"status", kStatusUsage,
             "Show the components, mates, suppression, regeneration and solve of an assembly. Writes nothing.",
             &runStatus},
+    Command{"drawing", kDrawingUsage,
+            "Show the sheets, views, dimensions, annotations and bill of materials of a drawing, with "
+            "what each one resolves to now. Writes nothing. Exit status 1 if the drawing does not "
+            "regenerate.",
+            &runDrawing},
     Command{"batch", kBatchUsage,
             "Apply a script of edits as one transaction: the file is written only if every edit succeeded. "
             "One edit per line, without the document path; # comments. --dry-run checks without writing.",

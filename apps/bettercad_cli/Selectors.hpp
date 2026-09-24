@@ -3,6 +3,8 @@
 #include <bettercad/core/Error.hpp>
 #include <bettercad/core/Id.hpp>
 #include <bettercad/core/document/MateReference.hpp>
+#include <bettercad/drawing/Annotation.hpp>
+#include <bettercad/drawing/Dimension.hpp>
 
 #include <string>
 #include <string_view>
@@ -80,6 +82,47 @@ namespace bettercad::cli {
 /// rendered with a trailing `:...` marker rather than as something that would
 /// parse back to a different target.
 [[nodiscard]] std::string formatMateTarget(const Document& document, const MateTarget& target);
+
+/// What a DRAWING references, in ADR-012's vocabulary (P14-CLI-001):
+///
+/// ```text
+/// origin:<xy|yz|xz|x|y|z>        a principal plane or axis of the model
+/// datum:<selector>               a datum plane or datum axis object
+/// csys:<selector>:<xy|..|z>      a plane or axis of a coordinate system
+/// face:<selector>:<role>[:<entity>]      a NAMED PLANAR face
+/// cylinder:<selector>:<role>[:<entity>]  a NAMED CYLINDRICAL face
+/// ```
+///
+/// The first three are spelled exactly as parseMateTarget() spells them, and
+/// are parsed by the same code, because a datum is a datum whichever
+/// subsystem names it. The last two are NOT the same as a mate's `face`, and
+/// the difference is the model's rather than this parser's: a mate names a
+/// face as a FaceName whatever its surface, while a drawing distinguishes a
+/// planar face (a PlaneReference it can measure to) from a cylindrical one (a
+/// FaceName it can take a radius of). Spelling them apart is what stops
+/// `face:Block:side` quietly meaning a cylinder.
+///
+/// A drawing target names NO component: a drawing dimensions the part, and a
+/// view places it (ADR-012, and P14-STREF-001's finding that a dimension
+/// cannot measure a component's faces because a component has none of its own).
+///
+/// The geometry is not resolved here -- whether the named face exists is
+/// drawing::measure()'s to report, and it does. This builds the target and
+/// validates its shape.
+[[nodiscard]] Result<drawing::DimensionTarget> parseDimensionTarget(const Document& document,
+                                                                    std::string_view text);
+
+/// The same grammar, plus the one form only an annotation has:
+///
+/// ```text
+/// object:<selector>              a hole feature, or a component occurrence
+/// ```
+///
+/// which is how a hole callout names its hole and a balloon names the
+/// occurrence it labels (ADR-012 allows a document object; ADR-022 makes a
+/// balloon's target the occurrence and never the item number).
+[[nodiscard]] Result<drawing::AnnotationTarget> parseAnnotationTarget(const Document& document,
+                                                                      std::string_view text);
 
 /// "Base (object:7)", for diagnostics that should name a thing the way the
 /// engineer wrote it and the way the document knows it.

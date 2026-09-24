@@ -1,0 +1,34 @@
+# BetterCAD headless drawing workflow (P14-CLI-001).
+#
+# Run against a document that holds the part it draws:
+#     bettercad-cli batch plate.bcad build_drawing.txt
+#     bettercad-cli drawing plate.bcad
+#
+# Every line is an ordinary bettercad-cli command with the document path left
+# out. The whole file is ONE transaction: if any line fails, nothing is
+# written and the document is exactly as it was.
+#
+# Nothing here says what anything MEASURES or how it is drawn. A dimension
+# names two faces and a view names an object; the numbers and the lines are
+# derived, and `bettercad-cli drawing` computes them on demand from the model
+# as it is at the moment you ask (ADR-011, ADR-014).
+
+# The page. A3 at 1:1, first angle by default, as the rest of the project is
+# ISO.
+sheet-add --name Sheet1 --format A3 --scale 1:1
+
+# A front view of the part, placed on the sheet in paper millimetres.
+view-add --name Front --sheet Sheet1 --source Extrude001 --x 150mm --y 150mm
+
+# A top view PROJECTED from it. It stores no placement of its own: where it
+# lands is derived from its parent, its spacing and the sheet's projection
+# convention, so the two cannot drift apart (ADR-018).
+view-add --name Top --sheet Sheet1 --parent Front --direction top --spacing 90mm
+
+# The plate's thickness, between the two faces the extrude gives its caps.
+# The reference is semantic -- a feature and the ROLE of a face in it -- so it
+# survives the model changing around it (ADR-012).
+dimension-add --name Thickness --view Front --type linear --from face:Extrude001:start_cap --to face:Extrude001:end_cap --decimals 2
+
+# Words on paper.
+annotation-add --name GeneralNote --view Front --type note --text BREAK_SHARP_EDGES --x 40mm --y 40mm

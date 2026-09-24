@@ -10,6 +10,10 @@ add_library(bettercad_cli_lib STATIC
     Cli.hpp
     Commands.hpp
     DocumentCommands.cpp
+    DrawingEdits.cpp
+    DrawingReports.cpp
+    EditRegistry.cpp
+    EditSupport.hpp
     Edits.hpp
     ExportCommands.cpp
     Selectors.cpp

@@ -10,7 +10,7 @@
 
 ```text
 Current:   P14 — Technical Drawings
-Next:      P14-CLI-001 — headless drawing workflows. P14-STREF-001 is STILL
+Next:      P14-EXPORT-001 — PDF / SVG / DXF export. P14-STREF-001 is STILL
            OPEN and comes first if it is authorized:
            its audit is done and 11 of its 12 checks pass, but one gate --
            "no silent rebinding" -- is NOT met and the milestone is not [x].
@@ -1175,21 +1175,86 @@ Open decision → move build output off OneDrive; the fault has not recurred in
 
 ## Headless Drawing Workflows
 
-* [ ] CLI create/load/save drawing
-* [ ] CLI add/remove sheets
-* [ ] CLI create/edit views
-* [ ] CLI add/edit dimensions
-* [ ] CLI annotations
-* [ ] CLI regenerate
-* [ ] CLI BOM generation
-* [ ] CLI export
-* [ ] Structured diagnostics
-* [ ] Correct process exit codes
-* [ ] Validate CLI/core equivalence
-* [ ] End-to-end scripted workflow PASS
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] CLI create/load/save drawing — every edit is load-apply-save through
+      P13-CLI-001's spine, so a one-line command is the batch of one
+* [x] CLI add/remove sheets — `sheet-add`, `sheet-set`, `sheet-remove`
+* [x] CLI create/edit views — `view-add` (object, assembly, projected),
+      `view-set`, `view-move`, `view-remove`
+* [x] CLI add/edit dimensions — `dimension-add`, `dimension-set`,
+      `dimension-remove`
+* [x] CLI annotations — `annotation-add`, `annotation-set`,
+      `annotation-remove`
+* [x] CLI regenerate — and this is where `drawing::registerHandlers` finally
+      reaches production, which `P14-REGEN-001` recorded as missing
+* [x] CLI BOM generation — the annotation verbs ARE the BOM and balloon verbs
+      (ADR-022); `bettercad-cli drawing` reports the rows, and computes none
+* [x] CLI export — the BOUNDARY, stated and tested: there is no drawing
+      exporter and no command pretends there is (P14-EXPORT-001 owns it)
+* [x] Structured diagnostics
+* [x] Correct process exit codes — 0 / 1 / 2, on 21 in-process cases and 6
+      process tests
+* [x] Validate CLI/core equivalence
+* [x] End-to-end scripted workflow PASS
+* [x] Adversarial review PASS
+* [x] Regression PASS — 2142/2142 on `debug`, `release` and `debug-shared`
+* [x] Evidence recorded — [docs/verification/P14-CLI-001/](docs/verification/P14-CLI-001/README.md)
+
+### Gate
+
+```text
+CLI reaches the qualified core
++ no drawing semantics reimplemented
++ exit codes correct
++ batch failures propagate
++ CLI/core equivalence PASS
++ end-to-end workflow PASS
++ determinism PASS
+```
+
+**MET, and no library code was changed to meet it.** Every API the command
+line needed already existed: `include` and `src` are **byte-identical to the
+trees `P14-PERSIST-001` and `P14-CMD-001` qualified**. Three milestones now
+share those hashes. That is the strongest available statement that the CLI is
+an adapter — it could not have reimplemented a drawing semantic even by
+accident, because it added nowhere to put one.
+
+13 edit verbs and one report, added to `P13-CLI-001`'s existing spine rather
+than to a second mechanism. Each verb is one `P14-CMD-001` command object, so
+the CLI inherits that milestone's validation and its all-or-nothing execution
+instead of restating either.
+
+27 new ctest entries — 17 in-process and **10 driving the built executable**,
+which is what answers "can the workflow pass only because state survived in
+one process": the batch writes a file and a separate invocation reads it.
+
+**This is where `P14-REGEN-001` reaches production.** That milestone built the
+drawing regeneration handlers and recorded that nothing registered them;
+`regenerate`, `solve`, `status` and `drawing` now all do, so a broken drawing
+is reported instead of passed over.
+
+**The target grammar has no positional form at all** — `face:3`, `index:3`,
+`edge:7`, `nearest:…` and `screen:…` are unreadable targets rather than
+fragile ones. A drawing target names no component, because a dimension
+measures the part.
+
+**No BOM or balloon verbs, deliberately** (ADR-022): both are annotation
+kinds, and there is no verb for a row, a quantity or an item number because
+none is stored.
+
+One adversarial finding corrected a TEST rather than the code: a balloon aimed
+at a part definition is accepted and then diagnosed at regeneration as
+**Invalid**, because `checkAnnotation()` validates that the named object
+exists and leaves what it IS to the resolver. Same diagnose-rather-than-reject
+pattern as a view cycle in a file (`P14-PERSIST-001`).
+
+```text
+P14-CLI-001 → [x]
+Next → P14-EXPORT-001. P14-STREF-001 is still open on its chamfer gap and
+       comes first if authorized
+Carried open → nothing
+Open decision → move build output off OneDrive; the fault has not recurred in
+                the last four milestones, which does not close it
+```
 
 ---
 

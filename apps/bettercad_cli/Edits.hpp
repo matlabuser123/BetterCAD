@@ -61,7 +61,15 @@ struct EditCommand {
     EditApply apply;
 };
 
-/// Every edit, in the order help lists them.
+/// The assembly and configuration edits (P13-CLI-001).
+[[nodiscard]] std::span<const EditCommand> assemblyEditCommands() noexcept;
+/// The drawing edits (P14-CLI-001).
+[[nodiscard]] std::span<const EditCommand> drawingEditCommands() noexcept;
+
+/// Every edit, in the order help lists them: the assembly ones, then the
+/// drawing ones. Two tables rather than one because a file that owns the
+/// assembly verbs should not have to be opened to add a sheet verb; one
+/// listing because a script does not care which file a verb came from.
 [[nodiscard]] std::span<const EditCommand> editCommands() noexcept;
 
 /// The edit called @p name, or nullptr.

@@ -236,6 +236,7 @@ if(TARGET bettercad_cli_lib)
         cli/ComponentCliTests.cpp
         cli/SheetCliTests.cpp
         cli/AssemblyCliTests.cpp
+        cli/DrawingCliTests.cpp
         reference/AssemblyWorkflowTests.cpp
         io/AssemblyStepTests.cpp
     )
@@ -589,6 +590,96 @@ if(TARGET bettercad_cli)
     # Among the readers: the ones that assert built.bcad's contents run before
     # anything else touches it. None of the exit-code cases can change it --
     # each is refused -- so they need no order among themselves.
+    # --- P14-CLI-001: a drawing built and reported by the real executable ---
+    #
+    # In-process tests (DrawingCliTests.cpp) drive cli::run directly. These
+    # drive the PROCESS, which is what proves the workflow survives leaving
+    # one: the batch writes a file and a separate invocation reads it, with
+    # nothing shared but the bytes on disk.
+    set(_drw "${_out}/drawing")
+    file(MAKE_DIRECTORY "${_drw}")
+
+    # The committed workflow script, applied as one transaction to a pristine
+    # copy (so the test is repeatable under --repeat until-fail).
+    bettercad_add_process_test(cli.drawing.batch
+        COPY_FROM "${_example}" COPY_TO "${_drw}/drawn.bcad"
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "batch|${_drw}/drawn.bcad|${_scripts}/build_drawing.txt"
+        EXIT_CODE 0
+        STDOUT_REGEX "^Applied 5 edits from .*build_drawing\\.txt:\n +[0-9]+  Created Sheet1 \\(object:7\\) \\(A3 landscape, scale 1:1\\)\n +[0-9]+  Created Front \\(object:8\\) on Sheet1 \\(object:7\\)\n +[0-9]+  Created Top \\(object:9\\) on Sheet1 \\(object:7\\)\n +[0-9]+  Created Thickness \\(object:10\\) on Front \\(object:8\\)\n +[0-9]+  Created GeneralNote \\(object:11\\) \\(note\\) on Front \\(object:8\\)\nWrote .*drawn\\.bcad$")
+
+    # A SEPARATE process reads what that one wrote. The plate is 20 mm thick
+    # (its `thickness` parameter), so the dimension between the extrude's two
+    # caps reads 20.00 -- a number this command derives from the model on
+    # demand and never reads out of the file.
+    bettercad_add_process_test(cli.drawing.report
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "drawing|${_drw}/drawn.bcad"
+        EXIT_CODE 0
+        STDOUT_REGEX "^Drawing of Plate\nConfiguration: none \\(base values\\)\nSheets \\(1\\):\n  Sheet1 \\(object:7\\) +A3 landscape, scale 1:1\nViews \\(2\\):\n  Front \\(object:8\\) +base +on Sheet1 \\(object:7\\) +scale 1:1 +resolved\n  Top \\(object:9\\) +projected on Sheet1 \\(object:7\\) +scale 1:1 +resolved\nDimensions \\(1\\):\n  Thickness \\(object:10\\) +linear +on Front \\(object:8\\) +20\\.00\nAnnotations \\(1\\):\n  GeneralNote \\(object:11\\) +note +on Front \\(object:8\\) +resolved\nRegeneration: ok, 7 objects regenerated")
+
+    # The script that fails partway: exit 1, the line named, nothing written.
+    bettercad_add_process_test(cli.drawing.batch.fails
+        COPY_FROM "${_example}" COPY_TO "${_drw}/atomic.bcad"
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "batch|${_drw}/atomic.bcad|${_scripts}/broken_drawing.txt"
+        EXIT_CODE 1
+        STDERR_REGEX "broken_drawing\\.txt:16: this document has nothing named 'Elevation'\nNothing was written; .*atomic\\.bcad is unchanged\\.$")
+    # Proved on the FILE: three of that script's edits succeeded before the
+    # failure, and none of them reached the disk.
+    bettercad_add_process_test(cli.drawing.batch.fails.wrote-nothing
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "drawing|${_drw}/atomic.bcad"
+        EXIT_CODE 0
+        STDOUT_REGEX "Sheets \\(0\\):\nViews \\(0\\):\nDimensions \\(0\\):\nAnnotations \\(0\\):")
+
+    # The two exit codes on the drawing verbs, following the same rule as the
+    # rest of the CLI: 2 when the parser could not read the line, 1 when the
+    # model rejected what it asked for.
+    bettercad_add_process_test(cli.drawing.exit.bad-target
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "dimension-add|${_drw}/drawn.bcad|--view|Front|--type|linear|--from|somewhere"
+        EXIT_CODE 2 STDERR_REGEX "not a drawing geometry kind")
+    bettercad_add_process_test(cli.drawing.exit.bad-scale
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "sheet-add|${_drw}/drawn.bcad|--scale|1:0"
+        EXIT_CODE 2 STDERR_REGEX "--scale")
+    bettercad_add_process_test(cli.drawing.exit.no-such-view
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "view-move|${_drw}/drawn.bcad|Elevation|--x|1mm|--y|1mm"
+        EXIT_CODE 1 STDERR_REGEX "nothing named 'Elevation'")
+    bettercad_add_process_test(cli.drawing.exit.wrong-kind
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "view-move|${_drw}/drawn.bcad|Sheet1|--x|1mm|--y|1mm"
+        EXIT_CODE 1 STDERR_REGEX "expected a view")
+    # A projected view derives its place from its parent and stores none, so
+    # moving one is refused by the qualified validator rather than by a rule
+    # the CLI invented.
+    bettercad_add_process_test(cli.drawing.exit.projected-view-has-no-placement
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "view-move|${_drw}/drawn.bcad|Top|--x|1mm|--y|1mm"
+        EXIT_CODE 1 STDERR_REGEX "derived from its parent")
+    # There is no drawing exporter yet -- that is P14-EXPORT-001 -- and
+    # nothing pretends otherwise.
+    bettercad_add_process_test(cli.drawing.exit.no-drawing-exporter
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "export-pdf|${_drw}/drawn.bcad|${_drw}/out.pdf"
+        EXIT_CODE 2 STDERR_REGEX "unknown command 'export-pdf'")
+
+    set_tests_properties(cli.drawing.batch cli.drawing.batch.fails
+        PROPERTIES FIXTURES_SETUP drawing_cli)
+    set_tests_properties(
+        cli.drawing.report cli.drawing.batch.fails.wrote-nothing
+        cli.drawing.exit.bad-target cli.drawing.exit.bad-scale
+        cli.drawing.exit.no-such-view cli.drawing.exit.wrong-kind
+        cli.drawing.exit.projected-view-has-no-placement
+        cli.drawing.exit.no-drawing-exporter
+        PROPERTIES FIXTURES_REQUIRED drawing_cli)
+    # The reader that asserts drawn.bcad's contents runs before anything else
+    # touches it. Every exit-code case is REFUSED and so changes nothing, which
+    # is why they need no order among themselves.
+    set_tests_properties(
+        cli.drawing.exit.bad-target cli.drawing.exit.bad-scale
+        cli.drawing.exit.no-such-view cli.drawing.exit.wrong-kind
+        cli.drawing.exit.projected-view-has-no-placement
+        PROPERTIES DEPENDS cli.drawing.report)
+
     set_tests_properties(cli.assembly.solve.configuration PROPERTIES DEPENDS cli.assembly.solve)
     set_tests_properties(cli.assembly.status PROPERTIES DEPENDS cli.assembly.solve.configuration)
     set_tests_properties(

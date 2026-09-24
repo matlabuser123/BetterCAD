@@ -1,3 +1,4 @@
+#include "EditSupport.hpp"
 #include "Edits.hpp"
 
 #include "Commands.hpp"
@@ -32,82 +33,11 @@ namespace bettercad::cli {
 
 namespace {
 
-EditFailure rejected(std::string message) {
-    return EditFailure{.usage = false, .message = std::move(message)};
-}
 
-EditFailure rejected(const Error& error) {
-    return EditFailure{.usage = false, .message = error.message};
-}
 
-EditFailure malformed(std::string message) {
-    return EditFailure{.usage = true, .message = std::move(message)};
-}
-
-/// An error raised while the CLI was reading the command line, classified by
-/// WHO rejected it -- which is the rule the two failing exit codes follow:
-///
-///     2  the CLI's own parser could not read the line: an unknown word, a
-///        value that is not a quantity, a selector that is neither an ID nor
-///        a name, a unit of the wrong dimension
-///     1  the line read fine and the DOCUMENT or the MODEL rejected what it
-///        asked for: no object of that name, the wrong kind of object, a
-///        constraint the mate type does not take
-///
-/// The CLI's parsing failures are exactly the InvalidArgument and
-/// DimensionMismatch ones; resolution against the document answers NotFound
-/// or FailedPrecondition. Core validation never reaches here -- those results
-/// go through rejected(), which is always a failure rather than a usage
-/// error, because the engineer's command line was well formed.
-EditFailure fromParse(const Error& error) {
-    const bool cliCouldNotRead =
-        error.code == ErrorCode::InvalidArgument || error.code == ErrorCode::DimensionMismatch;
-    return EditFailure{.usage = cliCouldNotRead, .message = error.message};
-}
-
-/// The same, with the option that carried the value named.
-EditFailure fromParse(std::string_view option, const Error& error) {
-    EditFailure failure = fromParse(error);
-    failure.message = std::format("{}: {}", option, failure.message);
-    return failure;
-}
-
-/// Runs @p command against @p document, reporting its own failure.
-///
-/// Every edit that has a P13-CMD-001 command goes through one, so the CLI
-/// inherits that milestone's validation and its all-or-nothing execution
-/// instead of restating either (ADR-009).
-std::optional<EditFailure> execute(Document& document, Command& command) {
-    if (auto done = command.execute(document); !done) {
-        return rejected(done.error());
-    }
-    return std::nullopt;
-}
-
-/// The first free `<stem><n>`, n from 1. Deterministic, so a script that
-/// names nothing still produces the same document every time.
-std::string freeName(const Document& document, std::string_view stem) {
-    for (int n = 1;; ++n) {
-        std::string candidate = std::format("{}{}", stem, n);
-        if (document.findObjectByName(candidate) == nullptr &&
-            document.parameters().findByName(candidate) == nullptr) {
-            return candidate;
-        }
-    }
-}
 
 /// A name the engineer gave, checked only for being a name at all -- whether
 /// it is free is the document's question and is left to it.
-Result<std::string> namedOr(const ParsedArguments& parsed, const Document& document, std::string_view stem) {
-    const auto given = parsed.value("--name");
-    if (!given) {
-        return freeName(document, stem);
-    }
-    if (auto valid = validateIdentifier(*given, "object"); !valid) {
-        return std::unexpected(valid.error());
-    }
-    return std::string{*given};
-}
 
 // --- placement ----------------------------------------------------------
 
@@ -677,12 +607,8 @@ constexpr std::array kEdits{
 
 } // namespace
 
-std::span<const EditCommand> editCommands() noexcept { return kEdits; }
+std::span<const EditCommand> assemblyEditCommands() noexcept { return kEdits; }
 
-const EditCommand* findEditCommand(std::string_view name) noexcept {
-    const auto found = std::ranges::find(kEdits, name, &EditCommand::name);
-    return found == kEdits.end() ? nullptr : &*found;
-}
 
 ExitCode runEdit(const EditCommand& command, Args args, std::ostream& out, std::ostream& err) {
     if (args.empty()) {

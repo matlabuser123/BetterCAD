@@ -390,4 +390,141 @@ std::string label(const Document& document, ObjectId id) {
     return std::format("{} ({})", found->name(), id);
 }
 
+namespace {
+
+/// What a drawing target can hold, before it is put into the struct that
+/// holds it. Parsed once here so a dimension and an annotation cannot come to
+/// disagree about what `face:Block:side:5` means.
+struct DrawingGeometry {
+    std::optional<PlaneReference> plane{};
+    std::optional<AxisReference> axis{};
+    std::optional<FaceName> cylinder{};
+    std::optional<ObjectId> object{};
+};
+
+/// Reads a `<feature>:<role>[:<entity>]` tail into a selector.
+Result<FaceName> parseNamedFace(const Document& document, std::span<const std::string_view> rest,
+                                std::string_view kind, std::string_view whole) {
+    if (rest.size() < 2 || rest.size() > 3) {
+        return makeError(ErrorCode::InvalidArgument,
+                         std::format("'{}': {} takes a feature and a role, and a side face an entity, "
+                                     "e.g. {}:Block:end_cap or {}:Block:side:5",
+                                     whole, kind, kind, kind));
+    }
+    auto feature = resolveObject(document, rest[0]);
+    if (!feature) {
+        return std::unexpected(feature.error());
+    }
+    auto role = parseFaceRole(rest[1]);
+    if (!role) {
+        return std::unexpected(role.error());
+    }
+    FaceSelector selector{.role = *role};
+    if (rest.size() == 3) {
+        if (*role != FaceRole::Side) {
+            return makeError(ErrorCode::InvalidArgument,
+                             std::format("'{}': only a side face is named by a profile entity", whole));
+        }
+        auto entity = parseIdValue(rest[2], "entity");
+        if (!entity) {
+            return std::unexpected(entity.error());
+        }
+        selector.entity = EntityId::fromValue(*entity);
+    }
+    return FaceName{.feature = *feature, .face = selector};
+}
+
+/// The drawing grammar. `object` is accepted only where the caller allows it,
+/// so a DIMENSION cannot be pointed at a hole feature -- which it could not
+/// measure (P14-DIM-001: a hole feature names its floors, never its bore).
+Result<DrawingGeometry> parseDrawingGeometry(const Document& document, std::string_view text,
+                                             bool allowObject) {
+    const std::vector<std::string_view> fields = split(text, ':');
+    const std::string_view kind = fields.front();
+    const std::span<const std::string_view> rest = std::span{fields}.subspan(1);
+
+    // The three that a mate spells identically go through the mate parser's
+    // own geometry half, so the two cannot drift: a datum is a datum whichever
+    // subsystem names it.
+    if (kind == "origin" || kind == "datum" || kind == "csys") {
+        auto target = parseGeometry(document, ComponentId{}, fields, text);
+        if (!target) {
+            return std::unexpected(target.error());
+        }
+        return DrawingGeometry{.plane = target->plane, .axis = target->axis};
+    }
+
+    if (kind == "face") {
+        auto face = parseNamedFace(document, rest, "face", text);
+        if (!face) {
+            return std::unexpected(face.error());
+        }
+        // A PLANAR named face, which is what a drawing measures to.
+        return DrawingGeometry{.plane = PlaneReference{.object = face->feature,
+                                                       .plane = PrincipalPlane::XY,
+                                                       .face = face->face}};
+    }
+
+    if (kind == "cylinder") {
+        auto face = parseNamedFace(document, rest, "cylinder", text);
+        if (!face) {
+            return std::unexpected(face.error());
+        }
+        return DrawingGeometry{.cylinder = *face};
+    }
+
+    if (kind == "object") {
+        if (!allowObject) {
+            return makeError(ErrorCode::InvalidArgument,
+                             std::format("'{}': a dimension measures geometry, not an object; expected "
+                                         "origin, datum, csys, face or cylinder",
+                                         text));
+        }
+        if (rest.size() != 1) {
+            return makeError(ErrorCode::InvalidArgument,
+                             std::format("'{}': object takes one selector, e.g. object:Hole1", text));
+        }
+        auto object = resolveObject(document, rest[0]);
+        if (!object) {
+            return std::unexpected(object.error());
+        }
+        return DrawingGeometry{.object = *object};
+    }
+
+    return makeError(ErrorCode::InvalidArgument,
+                     std::format("'{}': '{}' is not a drawing geometry kind; expected origin, datum, "
+                                 "csys, face, cylinder{}",
+                                 text, kind, allowObject ? " or object" : ""));
+}
+
+} // namespace
+
+Result<drawing::DimensionTarget> parseDimensionTarget(const Document& document, std::string_view text) {
+    auto geometry = parseDrawingGeometry(document, text, false);
+    if (!geometry) {
+        return std::unexpected(geometry.error());
+    }
+    drawing::DimensionTarget target{
+        .plane = geometry->plane, .axis = geometry->axis, .cylinder = geometry->cylinder};
+    if (auto valid = validate(target); !valid) {
+        return std::unexpected(valid.error());
+    }
+    return target;
+}
+
+Result<drawing::AnnotationTarget> parseAnnotationTarget(const Document& document, std::string_view text) {
+    auto geometry = parseDrawingGeometry(document, text, true);
+    if (!geometry) {
+        return std::unexpected(geometry.error());
+    }
+    drawing::AnnotationTarget target{.plane = geometry->plane,
+                                     .axis = geometry->axis,
+                                     .cylinder = geometry->cylinder,
+                                     .object = geometry->object};
+    if (auto valid = validate(target); !valid) {
+        return std::unexpected(valid.error());
+    }
+    return target;
+}
+
 } // namespace bettercad::cli

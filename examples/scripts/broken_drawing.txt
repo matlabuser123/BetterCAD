@@ -1,0 +1,18 @@
+# A drawing script that cannot finish (P14-CLI-001).
+#
+# The companion to build_drawing.txt, and the one that matters: the first
+# three lines are perfectly good, the fourth names a view that does not
+# exist, and the fifth would have worked.
+#
+# A batch is ONE transaction. So the right outcome is not "three of five
+# applied" -- it is that NOTHING is written, the failing line is named, and
+# the document is exactly as it was. Fix the line, run it again.
+
+sheet-add --name Sheet1 --format A3 --scale 1:1
+view-add --name Front --sheet Sheet1 --source Extrude001 --x 150mm --y 150mm
+dimension-add --name Thickness --view Front --type linear --from face:Extrude001:start_cap --to face:Extrude001:end_cap --decimals 2
+
+# There is no view called Elevation.
+annotation-add --name Callout --view Elevation --type note --text NOPE --x 40mm --y 40mm
+
+annotation-add --name GeneralNote --view Front --type note --text NEVER_REACHED --x 40mm --y 60mm

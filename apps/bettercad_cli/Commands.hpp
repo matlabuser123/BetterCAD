@@ -3,7 +3,9 @@
 #include "Arguments.hpp"
 #include "Cli.hpp"
 
+#include <format>
 #include <iosfwd>
+#include <string>
 #include <string_view>
 
 // Command implementations of bettercad-cli. Each takes the arguments after
@@ -20,6 +22,7 @@ inline constexpr std::string_view kRegenerateUsage = "regenerate <file.bcad> [--
 inline constexpr std::string_view kSolveUsage = "solve <file.bcad> [--configuration <name>]";
 inline constexpr std::string_view kStatusUsage = "status <file.bcad> [--configuration <name>]";
 inline constexpr std::string_view kBatchUsage = "batch <file.bcad> <script> [--dry-run]";
+inline constexpr std::string_view kDrawingUsage = "drawing <file.bcad> [--configuration <name>]";
 
 [[nodiscard]] ExitCode runNew(Args args, std::ostream& out, std::ostream& err);
 [[nodiscard]] ExitCode runInfo(Args args, std::ostream& out, std::ostream& err);
@@ -34,6 +37,17 @@ inline constexpr std::string_view kBatchUsage = "batch <file.bcad> <script> [--d
 [[nodiscard]] ExitCode runStatus(Args args, std::ostream& out, std::ostream& err);
 /// Applies a script of edits as ONE transaction: all of them, or none.
 [[nodiscard]] ExitCode runBatch(Args args, std::ostream& out, std::ostream& err);
+
+/// P14-CLI-001. Reports a drawing -- its sheets, views, dimensions with the
+/// values they measure NOW, annotations with their resolution state, and a
+/// bill of materials per assembly view. Writes nothing, because everything it
+/// prints is derived. Exit status 1 if the drawing does not regenerate.
+[[nodiscard]] ExitCode runDrawing(Args args, std::ostream& out, std::ostream& err);
+
+/// "3 objects", "1 object".
+inline std::string plural(std::size_t count, std::string_view singular, std::string_view many) {
+    return std::format("{} {}", count, count == 1 ? singular : many);
+}
 
 /// Prints "bettercad-cli <command>: <problem>" and the command's usage;
 /// returns UsageError.

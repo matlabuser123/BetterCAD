@@ -7,6 +7,7 @@
 #include <bettercad/assembly/Mate.hpp>
 #include <bettercad/assembly/Mates.hpp>
 #include <bettercad/assembly/Resolution.hpp>
+#include <bettercad/drawing/Regeneration.hpp>
 #include <bettercad/assembly/Solver.hpp>
 #include <bettercad/core/document/Document.hpp>
 #include <bettercad/core/document/ParameterExpressions.hpp>
@@ -35,10 +36,6 @@
 namespace bettercad::cli {
 
 namespace {
-
-std::string plural(std::size_t count, std::string_view singular, std::string_view many) {
-    return std::format("{} {}", count, count == 1 ? singular : many);
-}
 
 /// Negative zero as 0, matching what info already prints.
 double tidy(double value) { return value == 0.0 ? 0.0 : value; }
@@ -85,6 +82,13 @@ Result<std::unique_ptr<Assembly>> openAndRegenerate(const std::filesystem::path&
         (void)evaluateParameterExpressions(*assemblyDocument->document);
     }
     assembly::registerHandlers(assemblyDocument->regenerator, nullptr, &assemblyDocument->pass);
+    // The drawing handlers too (P14-CLI-001). Without them every sheet, view,
+    // dimension and annotation is silently marked UpToDate and never
+    // validated, which is the defect ADR-014 named and P14-REGEN-001 built
+    // the handlers to close -- but nothing in production registered them
+    // until here. This is the line that makes a broken drawing reportable by
+    // `regenerate`, `status` and `validate`.
+    drawing::registerHandlers(assemblyDocument->regenerator);
     auto report = assemblyDocument->regenerator.regenerateAll(*assemblyDocument->document);
     if (!report) {
         return std::unexpected(report.error());
