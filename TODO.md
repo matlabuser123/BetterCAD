@@ -10,7 +10,7 @@
 
 ```text
 Current:   P14 — Technical Drawings
-Next:      P14-PERSIST-001 — drawing persistence. P14-STREF-001 is STILL
+Next:      P14-CLI-001 — headless drawing workflows. P14-STREF-001 is STILL
            OPEN and comes first if it is authorized:
            its audit is done and 11 of its 12 checks pass, but one gate --
            "no silent rebinding" -- is NOT met and the milestone is not [x].
@@ -1093,21 +1093,81 @@ Open decision → move build output off OneDrive; the fault has not recurred in
 
 ## Drawing Persistence
 
-* [ ] Define canonical drawing schema
-* [ ] Persist sheets
-* [ ] Persist views / scales / placements
-* [ ] Persist dimensions
-* [ ] Persist annotations
-* [ ] Persist tolerances / GD&T
-* [ ] Persist BOM / balloon intent
-* [ ] Persist stable references
-* [ ] Keep generated drawing geometry derived
-* [ ] Validate malformed-file rejection
-* [ ] Validate deterministic serialization
-* [ ] Validate full round trip
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Define canonical drawing schema — inventoried key by key from the
+      serializers; no new format, no new top-level section, no version bump
+* [x] Persist sheets
+* [x] Persist views / scales / placements
+* [x] Persist dimensions
+* [x] Persist annotations
+* [x] Persist tolerances / GD&T — an ISO 286 fit stores its DESIGNATION, and
+      a frame's datums an ORDERED array of single capitals
+* [x] Persist BOM / balloon intent — table LAYOUT only; a balloon stores the
+      occurrence, never the number it draws
+* [x] Persist stable references
+* [x] Keep generated drawing geometry derived
+* [x] Validate malformed-file rejection
+* [x] Validate deterministic serialization
+* [x] Validate full round trip
+* [x] Adversarial review PASS
+* [x] Regression PASS — 2115/2115 on `debug`, `release` and `debug-shared`
+* [x] Evidence recorded — [docs/verification/P14-PERSIST-001/](docs/verification/P14-PERSIST-001/README.md)
+
+### Gate
+
+```text
+drawing intent persists
++ derived geometry excluded
++ references stable
++ malformed rejected
++ round trip exact
++ determinism PASS
+```
+
+**MET, and no production code was changed to meet it.** That is the finding
+rather than a shortfall: drawing persistence was already correct, because each
+P14 milestone shipped its serializer, its deserializer and its own persistence
+tests as it introduced its object kind. This milestone is the audit no
+per-type milestone could do — **one document holding every P14 object kind at
+once** — and the contract held.
+
+**Proven by tree ID, not by prose.** The qualified `include` and `src` trees
+are byte-identical to the ones `P14-CMD-001` qualified (`494a2654…`,
+`ecb00650…`); only `tests` differs. The same hash, independently computed,
+before and after.
+
+18 new tests; 2115/2115 on all three presets from clean; 2114/2114 five times
+over in both repeat presets; 0 warnings; no-op rebuild compiled 0 and linked 0.
+
+**Three decisions recorded rather than assumed.**
+
+1. **No schema version bump.** The loader refuses any version but the current
+   one — there is no forward compatibility by design — so a bump would have
+   broken all 32 committed models and needed a migration for nothing. Drawing
+   objects are new object KINDS in an extensible array; a pre-P14 file loads
+   because it contains none of them. Proven per file.
+2. **A view cycle in a file LOADS, and is then diagnosed.** It must: objects
+   are read one at a time, so a view whose parent appears later in the file
+   would be refused for a legal forward reference. The diagnosis comes from
+   the DEPENDENCY GRAPH (`dependency cycle: Top`), which only reaches drawing
+   objects because `P14-REGEN-001` put them in it.
+3. **Unresolved is not malformed, through the file.** A balloon whose
+   occurrence this configuration suppresses saves, loads, stays unresolved,
+   and recovers — naming the same occurrence throughout, with an identical
+   sibling present for a rebinding implementation to take.
+
+Two defects were found in my own tests and fixed: the derived-state search
+flagged `row_height` and `quantity_width`, which are table LAYOUT and
+therefore intent, and two malformed anchors depended on the pretty-printer's
+indentation. Neither reached production code.
+
+```text
+P14-PERSIST-001 → [x]
+Next → P14-CLI-001. P14-STREF-001 is still open on its chamfer gap and comes
+       first if authorized
+Carried open → nothing
+Open decision → move build output off OneDrive; the fault has not recurred in
+                the last three milestones, which does not close it
+```
 
 ---
 
