@@ -139,6 +139,7 @@ bettercad_add_executable(bettercad_tests
         io/FaceKindFileTests.cpp
         io/ThroughAllFileTests.cpp
         io/BodyOpsFileTests.cpp
+        io/DrawingExportTests.cpp
         io/DocumentFileTests.cpp
         io/DraftFileTests.cpp
         io/ExampleModelTests.cpp
@@ -656,11 +657,41 @@ if(TARGET bettercad_cli)
         COMMAND "$<TARGET_FILE:bettercad_cli>"
         ARGS "view-move|${_drw}/drawn.bcad|Top|--x|1mm|--y|1mm"
         EXIT_CODE 1 STDERR_REGEX "derived from its parent")
-    # There is no drawing exporter yet -- that is P14-EXPORT-001 -- and
-    # nothing pretends otherwise.
-    bettercad_add_process_test(cli.drawing.exit.no-drawing-exporter
-        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "export-pdf|${_drw}/drawn.bcad|${_drw}/out.pdf"
-        EXIT_CODE 2 STDERR_REGEX "unknown command 'export-pdf'")
+    # --- P14-EXPORT-001: the three writers, on the real executable ---
+    #
+    # The drawing built above, written out and checked at its first bytes and
+    # its physical size. A file that opens is not a pass; these assert what is
+    # IN it.
+    bettercad_add_process_test(cli.drawing.export.svg
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "export-svg|${_drw}/drawn.bcad|${_drw}/drawn.svg"
+        EXIT_CODE 0
+        STDOUT_REGEX "^Wrote .*drawn\\.svg: SVG of Sheet1 \\(object:7\\), 420 x 297 mm, [0-9]+ items$"
+        FILE "${_drw}/drawn.svg"
+        FILE_REGEX "width=\"420\\.0000mm\" height=\"297\\.0000mm\" viewBox=\"0 0 420\\.0000 297\\.0000\"")
+    bettercad_add_process_test(cli.drawing.export.dxf
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "export-dxf|${_drw}/drawn.bcad|${_drw}/drawn.dxf"
+        EXIT_CODE 0
+        STDOUT_REGEX "^Wrote .*drawn\\.dxf: DXF \\(R12\\) of Sheet1 \\(object:7\\), 420 x 297 mm, [0-9]+ items$"
+        FILE "${_drw}/drawn.dxf" FILE_REGEX "\\$INSUNITS\n70\n4")
+    bettercad_add_process_test(cli.drawing.export.pdf
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "export-pdf|${_drw}/drawn.bcad|${_drw}/drawn.pdf"
+        EXIT_CODE 0
+        STDOUT_REGEX "^Wrote .*drawn\\.pdf: PDF of Sheet1 \\(object:7\\), 420 x 297 mm, [0-9]+ items$"
+        FILE "${_drw}/drawn.pdf" FILE_REGEX "^%PDF-1\\.4")
+
+    # No false success: a path that cannot be written, and a sheet that is not
+    # there, each exit non-zero.
+    bettercad_add_process_test(cli.drawing.export.bad-path
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "export-svg|${_drw}/drawn.bcad|${_drw}/no/such/place/out.svg"
+        EXIT_CODE 1 STDERR_REGEX "export-svg")
+    bettercad_add_process_test(cli.drawing.export.no-such-sheet
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "export-svg|${_drw}/drawn.bcad|${_drw}/out.svg|--sheet|Elevation"
+        EXIT_CODE 1 STDERR_REGEX "nothing named 'Elevation'")
 
     set_tests_properties(cli.drawing.batch cli.drawing.batch.fails
         PROPERTIES FIXTURES_SETUP drawing_cli)
@@ -669,7 +700,8 @@ if(TARGET bettercad_cli)
         cli.drawing.exit.bad-target cli.drawing.exit.bad-scale
         cli.drawing.exit.no-such-view cli.drawing.exit.wrong-kind
         cli.drawing.exit.projected-view-has-no-placement
-        cli.drawing.exit.no-drawing-exporter
+        cli.drawing.export.svg cli.drawing.export.dxf cli.drawing.export.pdf
+        cli.drawing.export.bad-path cli.drawing.export.no-such-sheet
         PROPERTIES FIXTURES_REQUIRED drawing_cli)
     # The reader that asserts drawn.bcad's contents runs before anything else
     # touches it. Every exit-code case is REFUSED and so changes nothing, which
@@ -678,6 +710,8 @@ if(TARGET bettercad_cli)
         cli.drawing.exit.bad-target cli.drawing.exit.bad-scale
         cli.drawing.exit.no-such-view cli.drawing.exit.wrong-kind
         cli.drawing.exit.projected-view-has-no-placement
+        cli.drawing.export.svg cli.drawing.export.dxf cli.drawing.export.pdf
+        cli.drawing.export.bad-path cli.drawing.export.no-such-sheet
         PROPERTIES DEPENDS cli.drawing.report)
 
     set_tests_properties(cli.assembly.solve.configuration PROPERTIES DEPENDS cli.assembly.solve)

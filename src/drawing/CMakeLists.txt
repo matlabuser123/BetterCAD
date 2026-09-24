@@ -20,6 +20,7 @@ bettercad_add_library(bettercad_drawing
         Section.cpp
         Sheet.cpp
         Sheets.cpp
+        SheetScene.cpp
         Bom.cpp
         Commands.cpp
         Resolution.cpp

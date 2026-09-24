@@ -8,6 +8,11 @@ bettercad_add_library(bettercad_io
         FileIo.hpp
         ModelExport.cpp
         StlWriter.cpp
+        DxfWriter.cpp
+        PdfWriter.cpp
+        SvgWriter.cpp
+        SceneNumbers.hpp
+        TextEncoding.hpp
         json/BooleanJson.cpp
         json/ComponentJson.cpp
         json/AnnotationJson.cpp

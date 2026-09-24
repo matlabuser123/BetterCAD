@@ -50,6 +50,13 @@ constexpr std::array kCommands{
     Command{"status", kStatusUsage,
             "Show the components, mates, suppression, regeneration and solve of an assembly. Writes nothing.",
             &runStatus},
+    Command{"export-pdf", kExportPdfUsage,
+            "Write one drawing sheet as a vector PDF, at its true physical size.",
+            &runExportPdf},
+    Command{"export-svg", kExportSvgUsage,
+            "Write one drawing sheet as SVG, sized in millimetres.", &runExportSvg},
+    Command{"export-dxf", kExportDxfUsage,
+            "Write one drawing sheet as DXF (AutoCAD R12), in millimetres.", &runExportDxf},
     Command{"drawing", kDrawingUsage,
             "Show the sheets, views, dimensions, annotations and bill of materials of a drawing, with "
             "what each one resolves to now. Writes nothing. Exit status 1 if the drawing does not "

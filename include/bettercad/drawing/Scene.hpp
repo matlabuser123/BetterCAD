@@ -68,17 +68,55 @@ enum class TextAnchor : std::uint8_t {
 [[nodiscard]] BETTERCAD_DRAWING_EXPORT std::optional<TextAnchor> textAnchorFromString(
     std::string_view text) noexcept;
 
+/// How wide a line is drawn, ON PAPER, in sheet millimetres.
+///
+/// ISO 128 draws a technical drawing with two widths in a fixed 2:1 ratio --
+/// a line group. `0.5` is the usual group for A3: visible edges and the
+/// border at 0.5 mm, everything else at 0.25.
+///
+/// It is a LENGTH and not a class, because a writer must not decide what
+/// "thick" means; and it never meets a view's scale, for the same reason a
+/// 3.5 mm note does not.
+namespace weights {
+inline constexpr Length kThick = Length::fromSi(0.0005);  ///< 0.5 mm
+inline constexpr Length kThin = Length::fromSi(0.00025);  ///< 0.25 mm
+} // namespace weights
+
 /// A polyline in sheet millimetres.
 ///
 /// Two points for a leader segment, five for a box, however many a centre
-/// mark's arms need. Arcs are not here: nothing an annotation draws is
-/// curved, and inventing a curve primitive nothing uses would be inventing
-/// the export boundary's decisions for it.
+/// mark's arms need.
 struct SceneLine {
     std::vector<Point2D> points{};
     LineStyle style = LineStyle::Continuous;
+    /// On paper, never scaled. Thin by default: an annotation's leaders and
+    /// frames are thin, and the thick lines are the ones a view draws.
+    Length width = weights::kThin;
 
     friend bool operator==(const SceneLine&, const SceneLine&) = default;
+};
+
+/// A circular arc in sheet millimetres, kept EXACT.
+///
+/// A projected circle arrives from hidden-line removal as both a polyline and
+/// its exact curve (`DrawnEdge::curve`), and this is what carries the second
+/// one to a writer that can use it: DXF has CIRCLE and ARC, SVG has `A`, and
+/// PDF has Béziers that approximate a circle to far better than a plotter
+/// resolves. Flattening every circle into short segments at the boundary
+/// would throw that away for every format at once, which is precisely the
+/// decision ADR-016 says the boundary must not make on a writer's behalf.
+///
+/// Angles are anticlockwise from the sheet's +X axis. `sweep` is signed and
+/// may be a full turn, which is how a whole circle is written.
+struct SceneArc {
+    Point2D centre{};
+    Length radius{};
+    Angle start{};
+    Angle sweep{};
+    LineStyle style = LineStyle::Continuous;
+    Length width = weights::kThin;
+
+    friend bool operator==(const SceneArc&, const SceneArc&) = default;
 };
 
 /// A run of text in sheet millimetres.
@@ -105,6 +143,7 @@ struct SceneText {
 /// intent give the same sequence and a comparison means something.
 struct SceneItems {
     std::vector<SceneLine> lines{};
+    std::vector<SceneArc> arcs{};
     std::vector<SceneText> texts{};
 
     /// No export macro: this is DEFINED here, so every translation unit
@@ -112,16 +151,55 @@ struct SceneItems {
     /// inline definition for export makes it `dllimport` in a shared build,
     /// and a dllimport function may not have a definition -- which only the
     /// debug-shared preset finds.
-    [[nodiscard]] bool isEmpty() const noexcept { return lines.empty() && texts.empty(); }
-    /// Appends @p other's lines and text, keeping both orders.
+    [[nodiscard]] bool isEmpty() const noexcept {
+        return lines.empty() && arcs.empty() && texts.empty();
+    }
+    /// Appends @p other's lines, arcs and text, keeping every order.
     BETTERCAD_DRAWING_EXPORT void append(const SceneItems& other);
 };
 
 /// Finite coordinates, a positive text height, no empty polyline, no text
-/// with nothing in it.
+/// with nothing in it, a positive radius and a positive line width.
 ///
 /// Checked in `drawing`, once, so that every writer inherits the guarantee
 /// rather than re-deriving it or trusting (ADR-016).
 [[nodiscard]] BETTERCAD_DRAWING_EXPORT Result<void> validate(const SceneItems& items);
+
+/// ONE FINISHED SHEET, ready to be written out and nothing else (ADR-016).
+///
+/// This is the export boundary. A writer is handed one of these and needs
+/// nothing else: no Document, no model, no solver, no resolver, no scale. If
+/// a writer ever has to reach past it to work something out, the scene is
+/// incomplete and the scene is what gets fixed.
+///
+/// THE COORDINATE SYSTEM, stated once so three writers cannot each decide:
+///
+///     millimetres, on the page
+///     origin at the sheet's BOTTOM-LEFT corner
+///     +X to the right, +Y UP
+///     the page occupies [0, width] x [0, height]
+///
+/// +Y up is the drawing convention and the model's, and it is NOT what every
+/// format uses: SVG's y grows downward, so its writer flips once, in one
+/// place, and says so. PDF and DXF already agree with this.
+struct DrawingScene {
+    /// The page, on paper. Landscape A3 is 420 x 297.
+    Length width{};
+    Length height{};
+    /// What is drawn, in the order it is drawn. Deterministic: sheets before
+    /// views, views in ascending ID order, and within a view its edges in the
+    /// order hidden-line removal canonicalised them.
+    SceneItems items{};
+
+    friend bool operator==(const DrawingScene&, const DrawingScene&) = default;
+};
+
+/// A positive page, and items that validate, and every item on the page.
+///
+/// "On the page" is a real check and not a nicety: a primitive at negative y
+/// is a coordinate-system mistake -- almost always a forgotten flip -- and
+/// catching it here is what stops three writers each producing a differently
+/// wrong picture from it.
+[[nodiscard]] BETTERCAD_DRAWING_EXPORT Result<void> validate(const DrawingScene& scene);
 
 } // namespace bettercad::drawing

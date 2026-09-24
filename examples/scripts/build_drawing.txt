@@ -28,7 +28,10 @@ view-add --name Top --sheet Sheet1 --parent Front --direction top --spacing 90mm
 # The plate's thickness, between the two faces the extrude gives its caps.
 # The reference is semantic -- a feature and the ROLE of a face in it -- so it
 # survives the model changing around it (ADR-012).
-dimension-add --name Thickness --view Front --type linear --from face:Extrude001:start_cap --to face:Extrude001:end_cap --decimals 2
+# --x and --y are where its TEXT sits on the page. A dimension with none
+# defaults to the sheet's corner, and its extension lines then run off the
+# page -- which the scene refuses rather than exporting.
+dimension-add --name Thickness --view Front --type linear --from face:Extrude001:start_cap --to face:Extrude001:end_cap --decimals 2 --x 150mm --y 100mm
 
 # Words on paper.
 annotation-add --name GeneralNote --view Front --type note --text BREAK_SHARP_EDGES --x 40mm --y 40mm

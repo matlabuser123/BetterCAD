@@ -3,6 +3,7 @@
 #include <bettercad/core/Error.hpp>
 #include <bettercad/core/Id.hpp>
 #include <bettercad/drawing/Dimension.hpp>
+#include <bettercad/drawing/Scene.hpp>
 #include <bettercad/drawing/Views.hpp>
 
 #include <string>
@@ -79,6 +80,42 @@ namespace bettercad::drawing {
 /// out.
 [[nodiscard]] BETTERCAD_DRAWING_EXPORT Result<MeasuredDimension> measure(
     const Document& document, DimensionId id, const BodyLookup& bodies,
+    const TransformLookup& transforms = {});
+
+/// What this dimension DRAWS, in sheet millimetres (P14-EXPORT-001).
+///
+/// Extension lines from what is measured, a dimension line between them
+/// through the point the dimension is placed at, an arrowhead at each end, and
+/// the value as text. ISO 129's shape, built here rather than in a writer:
+/// three writers transcribing a scene cannot disagree about where an arrowhead
+/// goes, and three writers each constructing one certainly would (ADR-016).
+///
+/// The VALUE is measure()'s and is not recomputed: this asks for it and lays
+/// it out. So a dimension drawn after the model moved shows the new number for
+/// the same reason it always did.
+///
+/// EVERY SIZE HERE IS PAPER SIZE. Arrowheads, text height and the gap an
+/// extension line leaves are millimetres on the sheet and never meet the
+/// view's scale -- only the measured POINTS are scaled, because only they are
+/// geometry.
+///
+/// The linear family (Linear, Horizontal, Vertical, Aligned) is drawn in full.
+/// Radius, Diameter and Ordinate are drawn as a leader to the text, which is
+/// what those need and no more. Angular draws its text on a leader and NOT an
+/// arc between the two faces: the vertex two planes meet at is not something
+/// the measurement returns, and inventing one in this layer would be guessing
+/// at geometry rather than transcribing it. Recorded as a limitation.
+[[nodiscard]] BETTERCAD_DRAWING_EXPORT Result<SceneItems> drawDimension(
+    const Document& document, DimensionId id, const BodyLookup& bodies,
+    const TransformLookup& transforms = {});
+
+/// Everything the dimensions of @p view draw, in ascending ID order.
+///
+/// Fails if any of them fails, for the reason drawAnnotations() does: a sheet
+/// that quietly dropped the dimension it could not resolve would be a drawing
+/// that looked complete and was not.
+[[nodiscard]] BETTERCAD_DRAWING_EXPORT Result<SceneItems> drawDimensions(
+    const Document& document, ViewId view, const BodyLookup& bodies,
     const TransformLookup& transforms = {});
 
 /// Resolves what the dimension NAMES, without measuring it (ADR-023).

@@ -505,4 +505,236 @@ Result<void> resolveDimensionTargets(const Document& document, DimensionId id,
     return {};
 }
 
+// --- What a dimension DRAWS (P14-EXPORT-001) ---------------------------------------------------
+//
+// ISO 129's shape, in sheet millimetres, built once here so that three writers
+// transcribe it instead of three writers each constructing it (ADR-016).
+//
+// Every size below is PAPER size and none of them meets a view's scale. Only
+// the measured points are scaled, because only they are geometry.
+
+namespace {
+
+/// An arrowhead's length on paper, and its half-width. ISO 128 draws the head
+/// long and narrow; these are the proportions Annotations.cpp already uses, so
+/// a dimension's arrow and a leader's arrow are the same arrow.
+constexpr double kArrowLength = 0.0035;    // 3.5 mm
+constexpr double kArrowHalfWidth = 0.0009; // 0.9 mm
+
+/// The gap an extension line leaves at the geometry, and how far it runs past
+/// the dimension line.
+constexpr double kExtensionGap = 0.001;      // 1 mm
+constexpr double kExtensionBeyond = 0.002;   // 2 mm
+/// How far a leader's elbow runs before the text.
+constexpr double kElbow = 0.005;             // 5 mm
+/// Default lettering, when the dimension does not say.
+constexpr double kTextHeight = 0.0035;       // 3.5 mm
+
+struct Vector2 {
+    double x = 0.0;
+    double y = 0.0;
+};
+
+[[nodiscard]] Vector2 minus(const Point2D& a, const Point2D& b) {
+    return Vector2{a.x.si() - b.x.si(), a.y.si() - b.y.si()};
+}
+[[nodiscard]] double length(const Vector2& v) { return std::hypot(v.x, v.y); }
+[[nodiscard]] Point2D offsetBy(const Point2D& from, double dx, double dy) {
+    return Point2D{from.x + Length::fromSi(dx), from.y + Length::fromSi(dy)};
+}
+
+/// A solid arrowhead at @p tip pointing along (@p ux, @p uy), as a closed
+/// triangle. A polyline rather than a filled region, because the scene has no
+/// fill and a drawn triangle reads identically at drawing line widths.
+[[nodiscard]] SceneLine arrowhead(const Point2D& tip, double ux, double uy) {
+    const Point2D back = offsetBy(tip, -ux * kArrowLength, -uy * kArrowLength);
+    // The perpendicular, for the two barbs.
+    const Point2D left = offsetBy(back, -uy * kArrowHalfWidth, ux * kArrowHalfWidth);
+    const Point2D right = offsetBy(back, uy * kArrowHalfWidth, -ux * kArrowHalfWidth);
+    return SceneLine{.points = {tip, left, right, tip}, .style = LineStyle::Continuous};
+}
+
+/// A leader from @p at to @p to, with an elbow, an arrowhead at the geometry,
+/// and the text sitting on the elbow.
+[[nodiscard]] SceneItems leaderTo(const Point2D& at, const Point2D& to, const std::string& text,
+                                  Length height) {
+    SceneItems items;
+    const Vector2 along = minus(to, at);
+    const double span = length(along);
+    if (span > 1e-12) {
+        items.lines.push_back(arrowhead(at, along.x / span, along.y / span));
+    }
+    const bool leftward = to.x.si() < at.x.si();
+    const Point2D elbow = offsetBy(to, leftward ? -kElbow : kElbow, 0.0);
+    items.lines.push_back(SceneLine{.points = {at, to, elbow}, .style = LineStyle::Thin});
+    items.texts.push_back(SceneText{.at = offsetBy(elbow, leftward ? -0.0005 : 0.0005, 0.0005),
+                                    .text = text,
+                                    .height = height,
+                                    .anchor = leftward ? TextAnchor::BaselineRight
+                                                       : TextAnchor::BaselineLeft});
+    return items;
+}
+
+} // namespace
+
+Result<SceneItems> drawDimension(const Document& document, DimensionId id, const BodyLookup& bodies,
+                                 const TransformLookup& transforms) {
+    const Dimension* dimension = findDimension(document, id);
+    if (dimension == nullptr) {
+        return notFound(id);
+    }
+    const DimensionDefinition& d = dimension->definition();
+
+    // The VALUE is measure()'s. This lays it out and never works it out, so a
+    // dimension drawn after the model moved shows the new number for exactly
+    // the reason it always did.
+    auto measured = measure(document, id, bodies, transforms);
+    if (!measured) {
+        return std::unexpected(measured.error());
+    }
+    // A dimension carries no lettering style of its own -- ISO 3098 makes it
+    // a drawing-wide choice rather than a per-dimension one -- so the sheet's
+    // figure is used.
+    const Length height = Length::fromSi(kTextHeight);
+
+    // Where the measured geometry lands on the page.
+    auto from = resolveTarget(document, d.from, bodies);
+    if (!from) {
+        return makeError(from.error().code,
+                         std::format("{} ({}) cannot be drawn: {}", dimension->name(), id,
+                                     from.error().message));
+    }
+    auto fromSheet = toSheet(document, d.view, from->origin(), bodies, transforms);
+    if (!fromSheet) {
+        return std::unexpected(fromSheet.error());
+    }
+
+    const bool linearFamily = d.type == DimensionType::Linear || d.type == DimensionType::Horizontal ||
+                              d.type == DimensionType::Vertical || d.type == DimensionType::Aligned;
+    if (!linearFamily) {
+        // A radius, a diameter, an ordinate or an angle: a leader to the text.
+        // That is what those need, and it is all this layer can honestly draw
+        // for an angle -- see the header.
+        SceneItems items = leaderTo(*fromSheet, d.placement, measured->text, height);
+        if (auto valid = validate(items); !valid) {
+            return std::unexpected(valid.error());
+        }
+        return items;
+    }
+
+    auto to = resolveTarget(document, d.to, bodies);
+    if (!to) {
+        return makeError(to.error().code,
+                         std::format("{} ({}) cannot be drawn: {}", dimension->name(), id,
+                                     to.error().message));
+    }
+    auto toSheetPoint = toSheet(document, d.view, to->origin(), bodies, transforms);
+    if (!toSheetPoint) {
+        return std::unexpected(toSheetPoint.error());
+    }
+    const Point2D a = *fromSheet;
+    const Point2D b = *toSheetPoint;
+
+    // Which way the dimension line runs. Horizontal and Vertical are the
+    // sheet's own axes; Linear and Aligned run along what is measured.
+    Vector2 along{1.0, 0.0};
+    if (d.type == DimensionType::Vertical) {
+        along = Vector2{0.0, 1.0};
+    } else if (d.type != DimensionType::Horizontal) {
+        const Vector2 span = minus(b, a);
+        const double size = length(span);
+        if (size < 1e-12) {
+            return makeError(ErrorCode::FailedPrecondition,
+                             std::format("{} ({}) measures between two points that draw at the same "
+                                         "place, so it has no direction to run along",
+                                         dimension->name(), id));
+        }
+        along = Vector2{span.x / size, span.y / size};
+    }
+    // The normal the dimension line is offset along.
+    const Vector2 normal{-along.y, along.x};
+    const Vector2 toPlacement = minus(d.placement, a);
+    const double offset = toPlacement.x * normal.x + toPlacement.y * normal.y;
+
+    // The two ends of the dimension line: each measured point, moved onto the
+    // line the placement chose.
+    const auto onLine = [&](const Point2D& p) {
+        const Vector2 fromA = minus(p, a);
+        const double runs = fromA.x * along.x + fromA.y * along.y;
+        return offsetBy(a, along.x * runs + normal.x * offset, along.y * runs + normal.y * offset);
+    };
+    const Point2D a1 = onLine(a);
+    const Point2D b1 = onLine(b);
+
+    SceneItems items;
+    // Extension lines: from just off the geometry to just past the dimension
+    // line, so the drawing does not touch the part.
+    const auto extension = [&](const Point2D& at, const Point2D& end) {
+        const Vector2 out = minus(end, at);
+        const double span = length(out);
+        if (span < kExtensionGap) {
+            return; // the dimension line sits on the geometry; no extension to draw
+        }
+        const double ux = out.x / span;
+        const double uy = out.y / span;
+        items.lines.push_back(
+            SceneLine{.points = {offsetBy(at, ux * kExtensionGap, uy * kExtensionGap),
+                                 offsetBy(end, ux * kExtensionBeyond, uy * kExtensionBeyond)},
+                      .style = LineStyle::Thin});
+    };
+    extension(a, a1);
+    extension(b, b1);
+
+    // The dimension line, and an arrowhead at each end pointing OUTWARD.
+    items.lines.push_back(SceneLine{.points = {a1, b1}, .style = LineStyle::Thin});
+    const Vector2 run = minus(b1, a1);
+    const double runLength = length(run);
+    if (runLength > 1e-12) {
+        const double ux = run.x / runLength;
+        const double uy = run.y / runLength;
+        items.lines.push_back(arrowhead(a1, -ux, -uy));
+        items.lines.push_back(arrowhead(b1, ux, uy));
+    }
+
+    // The value, on the dimension line, reading along it.
+    const double radians = std::atan2(along.y, along.x);
+    // ISO 129 reads a dimension from the bottom or the right, never upside
+    // down, so a line running leftward is lettered the other way up.
+    const double quarter = std::numbers::pi / 2.0;
+    const double readable = radians > quarter ? radians - std::numbers::pi
+                                              : (radians <= -quarter ? radians + std::numbers::pi : radians);
+    items.texts.push_back(SceneText{.at = d.placement,
+                                    .text = measured->text,
+                                    .height = height,
+                                    .rotation = Angle::fromSi(readable),
+                                    .anchor = TextAnchor::MiddleCentre});
+    if (!measured->lowerText.empty()) {
+        // Limits: the upper is the value, the lower goes under it.
+        items.texts.push_back(
+            SceneText{.at = offsetBy(d.placement, 0.0, -height.si() * 1.2),
+                      .text = measured->lowerText,
+                      .height = height,
+                      .rotation = Angle::fromSi(readable),
+                      .anchor = TextAnchor::MiddleCentre});
+    }
+
+    if (auto valid = validate(items); !valid) {
+        return std::unexpected(valid.error());
+    }
+    return items;
+}
+
+Result<SceneItems> drawDimensions(const Document& document, ViewId view, const BodyLookup& bodies,
+                                  const TransformLookup& transforms) {
+    SceneItems items;
+    for (const DimensionId id : dimensionsOn(document, view)) {
+        auto drawn = drawDimension(document, id, bodies, transforms);
+        if (!drawn) {
+            return std::unexpected(drawn.error());
+        }
+        items.append(*drawn);
+    }
+    return items;
+}
+
 } // namespace bettercad::drawing

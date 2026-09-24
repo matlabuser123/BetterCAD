@@ -23,6 +23,12 @@ inline constexpr std::string_view kSolveUsage = "solve <file.bcad> [--configurat
 inline constexpr std::string_view kStatusUsage = "status <file.bcad> [--configuration <name>]";
 inline constexpr std::string_view kBatchUsage = "batch <file.bcad> <script> [--dry-run]";
 inline constexpr std::string_view kDrawingUsage = "drawing <file.bcad> [--configuration <name>]";
+inline constexpr std::string_view kExportPdfUsage =
+    "export-pdf <file.bcad> <file.pdf> [--sheet <selector>] [--configuration <name>]";
+inline constexpr std::string_view kExportSvgUsage =
+    "export-svg <file.bcad> <file.svg> [--sheet <selector>] [--configuration <name>]";
+inline constexpr std::string_view kExportDxfUsage =
+    "export-dxf <file.bcad> <file.dxf> [--sheet <selector>] [--configuration <name>]";
 
 [[nodiscard]] ExitCode runNew(Args args, std::ostream& out, std::ostream& err);
 [[nodiscard]] ExitCode runInfo(Args args, std::ostream& out, std::ostream& err);
@@ -43,6 +49,15 @@ inline constexpr std::string_view kDrawingUsage = "drawing <file.bcad> [--config
 /// bill of materials per assembly view. Writes nothing, because everything it
 /// prints is derived. Exit status 1 if the drawing does not regenerate.
 [[nodiscard]] ExitCode runDrawing(Args args, std::ostream& out, std::ostream& err);
+
+/// P14-EXPORT-001. Writes one sheet out. Each loads, regenerates, assembles
+/// the sheet's scene and hands it to a writer; the CLI chooses the writer and
+/// builds nothing. Exit status 1 if the drawing does not regenerate or the
+/// file cannot be written -- no drawing is written from a sheet that does not
+/// resolve.
+[[nodiscard]] ExitCode runExportPdf(Args args, std::ostream& out, std::ostream& err);
+[[nodiscard]] ExitCode runExportSvg(Args args, std::ostream& out, std::ostream& err);
+[[nodiscard]] ExitCode runExportDxf(Args args, std::ostream& out, std::ostream& err);
 
 /// "3 objects", "1 object".
 inline std::string plural(std::size_t count, std::string_view singular, std::string_view many) {

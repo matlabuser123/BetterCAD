@@ -10,8 +10,8 @@
 
 ```text
 Current:   P14 — Technical Drawings
-Next:      P14-EXPORT-001 — PDF / SVG / DXF export. P14-STREF-001 is STILL
-           OPEN and comes first if it is authorized:
+Next:      P14-REFMOD-001 — production drawing reference models.
+           P14-STREF-001 is STILL OPEN and comes first if it is authorized:
            its audit is done and 11 of its 12 checks pass, but one gate --
            "no silent rebinding" -- is NOT met and the milestone is not [x].
            A chamfer face is named by its edge reference's POSITION in the
@@ -1262,21 +1262,32 @@ Open decision → move build output off OneDrive; the fault has not recurred in
 
 ## PDF / SVG / DXF Export
 
-* [ ] Implement vector drawing scene representation
-* [ ] Implement PDF export
-* [ ] Implement SVG export
-* [ ] Implement DXF drawing export
-* [ ] Preserve sheet size / scale
-* [ ] Preserve line types / weights
-* [ ] Preserve dimensions / text / symbols
-* [ ] Preserve hidden-line representation
-* [ ] Validate PDF dimensions independently
-* [ ] Validate SVG geometry structurally
-* [ ] Validate DXF entities/read-back
-* [ ] Validate deterministic geometric output
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Implement vector drawing scene representation — `SceneArc` (an exact
+      arc, not a sampled polyline), a line width on every primitive,
+      `DrawingScene`, `validate()`, `sheetScene()`, and `drawDimension()`:
+      what a dimension DRAWS, which did not exist at all
+* [x] Implement PDF export — uncompressed PDF 1.4, five objects, no dependency
+* [x] Implement SVG export — SVG 1.1; the only writer that flips y, once
+* [x] Implement DXF drawing export — R12 ASCII; `$INSUNITS` 4 and
+      `$DWGCODEPAGE ANSI_1252` both DECLARED rather than left to be guessed
+* [x] Preserve sheet size / scale — the page checked in all three formats; a
+      1:2 view drawn at half size with its pen and lettering unchanged
+* [x] Preserve line types / weights — style to layer/linetype/dash per format,
+      weights in paper millimetres, never meeting a view's scale
+* [x] Preserve dimensions / text / symbols — and the text ENCODING per format,
+      which is where the adversarial review found this milestone's defect
+* [x] Preserve hidden-line representation — dashed in, dashed out; turned off,
+      gone, and every visible line identical
+* [x] Validate PDF dimensions independently — the page box read back from the
+      file against 841.8898 x 595.2756 pt computed in the test
+* [x] Validate SVG geometry structurally — parsed as elements and attributes
+* [x] Validate DXF entities/read-back — parsed as group codes, every entity
+* [x] Validate deterministic geometric output — byte-identical, five times,
+      in all three formats, and under a comma-decimal locale
+* [x] Adversarial review PASS — **one credible defect found and fixed**; see
+      below
+* [x] Regression PASS — 2168/2168 on `debug`, `release` and `debug-shared`
+* [x] Evidence recorded — [docs/verification/P14-EXPORT-001/](docs/verification/P14-EXPORT-001/README.md)
 
 ### Gate
 
@@ -1288,6 +1299,55 @@ PDF PASS
 + scale correct
 + drawing entities complete
 + independent read-back PASS
+```
+
+**MET.** ADR-016's export boundary is complete, and the signatures are what
+hold it: `Result<std::string> svgDocument(const DrawingScene&)`, and the same
+for DXF and PDF. A writer takes a scene and nothing else — no `Document`, no
+`Body`, no regenerator, no resolver. It is not that the writers are careful
+not to reach the model; **there is nothing in their signatures to reach it
+through.** No new dependency: an uncompressed PDF 1.4 is 250 lines, DXF R12 is
+a list of group codes, SVG is XML, and writing them here keeps byte
+determinism ours rather than a library's.
+
+26 new ctest entries — 20 export cases, 3 CLI export cases and 5 driving the
+built executable. Every check reads the generated file with a parser written
+in the test; no writer is asked what it thinks it wrote.
+
+**THE ADVERSARIAL REVIEW FOUND A REAL DEFECT, AND THIS WAS QUALIFIED TWICE.**
+PDF and DXF are single-byte formats and both were copying the scene's UTF-8
+bytes through. `Ø` is `C3 98`; escaped byte-wise and read under
+`/WinAnsiEncoding` it renders as two glyphs, so a diameter callout said
+`Ã˜20`. The DXF named no code page at all, so the same file read differently
+on two machines. `Ø` and `±` are on nearly every dimensioned drawing BetterCAD
+can produce. Nothing caught it because **no test had put a non-ASCII character
+through a writer** — every text assertion used `"TEST"`, a part name or a
+number.
+
+`src/io/TextEncoding.hpp` transcodes instead of copying. Three regression
+tests were run against the pre-fix writers first: all three failed there, and
+45 assertions pass now. The first qualification had already reached
+2165/2165 in debug and built release clean; it was **discarded**, because a
+writer changed after the freeze and the trees it qualified
+(`src b6cadeed…`, `tests 7545d1d3…`) are not the trees committed
+(`src 5bd82f3d…`, `tests 3d83b52f…`).
+
+**A GD&T symbol still reaches SVG only.** No single-byte encoding and none of
+PDF's fourteen standard fonts has a glyph for position, cylindricity,
+straightness, flatness or runout, so they are written as `?` in PDF and DXF —
+visibly missing, because nobody reads `?` as a tolerance. An ASCII substitute
+like `PERP` would have been an exporter inventing GD&T semantics. Closing it
+means embedding a font, which is a subsystem of its own and not authorized
+here.
+
+```text
+P14-EXPORT-001 → [x]
+Next → P14-REFMOD-001. P14-STREF-001 is still open on its chamfer gap and
+       comes first if authorized
+Carried open → GD&T symbols in PDF and DXF need an embedded font; SVG carries
+               them correctly today
+Open decision → move build output off OneDrive; the fault has not recurred in
+                the last five milestones, which does not close it
 ```
 
 ---

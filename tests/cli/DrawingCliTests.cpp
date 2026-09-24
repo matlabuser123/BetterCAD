@@ -841,31 +841,139 @@ TEST_CASE("DrawingCli_APathWithSpacesAndNonAsciiWorks", "[cli][drawing][p14]") {
 
 // --- The export boundary -----------------------------------------------------------------------------------------
 
-TEST_CASE("DrawingCli_ThereIsNoDrawingExporterYetAndNothingPretendsOtherwise",
+TEST_CASE("DrawingCli_EachDrawingFormatIsWrittenAndSaysWhatItWrote",
           "[cli][drawing][p14][export]") {
-    // P14-EXPORT-001's scope, stated here rather than faked. The CLI exports
-    // the MODEL (STEP, STL) and there is no drawing writer behind any command,
-    // so no command offers one: asking for a drawing format is an unknown
-    // command rather than a file full of nothing.
+    // P14-EXPORT-001's commands, through the CLI. The CLI chooses the writer
+    // and builds nothing: the geometry is the scene's and the file is the
+    // writer's.
+    TempDir dir;
+    const auto path = dir.path() / "part.bcad";
+    writePart(path);
+    const std::string file = cliPath(path);
+    cliOk({"sheet-add", file, "--format", "A3", "--scale", "1:1"});
+    cliOk({"view-add", file, "--sheet", "Sheet1", "--source", "Block", "--x", "150mm", "--y", "150mm"});
+    cliOk({"annotation-add", file, "--view", "View1", "--type", "note", "--text", "NOTE", "--x",
+           "40mm", "--y", "40mm"});
+
+    for (const auto& [command, extension, says] :
+         std::vector<std::tuple<std::string, std::string, std::string>>{
+             {"export-svg", "svg", "SVG"},
+             {"export-dxf", "dxf", "DXF"},
+             {"export-pdf", "pdf", "PDF"}}) {
+        INFO(command);
+        const auto out = dir.path() / ("drawing." + extension);
+        const auto run = runCliCommand({command, file, cliPath(out)});
+        INFO(run.err);
+        CHECK(run.exitCode == ExitCode::Success);
+        CHECK_THAT(run.out, ContainsSubstring(says));
+        CHECK_THAT(run.out, ContainsSubstring("420 x 297 mm"));
+        REQUIRE(std::filesystem::exists(out));
+        CHECK(std::filesystem::file_size(out) > 100);
+    }
+
+    // Each file really is its own format, checked at its first bytes.
+    const auto head = [&](const std::string& extension, std::size_t count) {
+        std::ifstream stream{dir.path() / ("drawing." + extension), std::ios::binary};
+        std::string text(count, '\0');
+        stream.read(text.data(), static_cast<std::streamsize>(count));
+        return text;
+    };
+    CHECK_THAT(head("svg", 40), ContainsSubstring("<?xml"));
+    CHECK_THAT(head("pdf", 8), ContainsSubstring("%PDF-1.4"));
+    CHECK_THAT(head("dxf", 12), ContainsSubstring("SECTION"));
+}
+
+TEST_CASE("DrawingCli_AnExportThatCannotBeTrustedIsRefusedRatherThanWritten",
+          "[cli][drawing][p14][export]") {
+    // "No false success." Every one of these exits non-zero and leaves no
+    // file, because a drawing written from a sheet that does not resolve is
+    // worse than no drawing.
+    TempDir dir;
+    const auto path = dir.path() / "part.bcad";
+    const Part part = writePart(path);
+    const std::string file = cliPath(path);
+    cliOk({"sheet-add", file, "--format", "A3"});
+    // Placed on the page: a view with no --x/--y sits at the sheet's corner,
+    // where half of it hangs off, and the scene refuses to export that.
+    cliOk({"view-add", file, "--sheet", "Sheet1", "--source", "Block", "--x", "150mm", "--y",
+           "150mm"});
+
+    const auto out = dir.path() / "drawing.svg";
+    const auto refuse = [&](const std::string& what, const std::vector<std::string>& args,
+                            const std::filesystem::path& expected) {
+        INFO(what);
+        const auto run = runCliCommand(args);
+        CHECK(run.exitCode != ExitCode::Success);
+        CHECK(run.out.empty());
+        CHECK_FALSE(std::filesystem::exists(expected));
+    };
+
+    refuse("a path that cannot be written",
+           {"export-svg", file, cliPath(dir.path() / "no" / "such" / "x.svg")},
+           dir.path() / "no" / "such" / "x.svg");
+    refuse("a sheet that is not there", {"export-svg", file, cliPath(out), "--sheet", "Sheet404"}, out);
+    refuse("a selector naming a view", {"export-svg", file, cliPath(out), "--sheet", "View1"}, out);
+    refuse("one path instead of two", {"export-svg", file}, out);
+
+    // A document with no sheets has no drawing to write.
+    const auto bare = dir.path() / "bare.bcad";
+    writePart(bare, "Bare");
+    refuse("a document with no sheets", {"export-svg", cliPath(bare), cliPath(out)}, out);
+
+    // Two sheets and no --sheet: refused rather than guessed at, because
+    // writing the wrong page silently is worse than being asked which.
+    cliOk({"sheet-add", file, "--format", "A3", "--name", "Sheet2"});
+    refuse("two sheets and no --sheet", {"export-svg", file, cliPath(out)}, out);
+    // Naming one works.
+    cliOk({"export-svg", file, cliPath(out), "--sheet", "Sheet1"});
+    CHECK(std::filesystem::exists(out));
+
+    // A BROKEN drawing: the dimension's face stops existing, so the sheet does
+    // not regenerate and nothing is written.
+    const auto broken = dir.path() / "broken.svg";
+    cliOk({"dimension-add", file, "--view", "View1", "--type", "linear", "--from",
+           "face:Block:side:" + std::to_string(part.lines[3].value()), "--to",
+           "face:Block:side:" + std::to_string(part.lines[1].value()), "--x", "150mm", "--y",
+           "100mm"});
+    {
+        auto loaded = io::loadDocument(path);
+        REQUIRE(loaded.has_value());
+        Document document = std::move(*loaded);
+        REQUIRE(document
+                    .modifyObject<sketch::Sketch>(
+                        part.sketch,
+                        [&, corners = part.corners](sketch::Sketch& sk) {
+                            REQUIRE(sk.removeEntity(part.lines[1]).has_value());
+                            REQUIRE(sk.removeEntity(part.lines[2]).has_value());
+                            REQUIRE(sk.addLine(corners[1], corners[3]).has_value());
+                            return true;
+                        })
+                    .has_value());
+        REQUIRE(io::saveDocument(document, path).has_value());
+    }
+    const auto run = runCliCommand({"export-svg", file, cliPath(broken), "--sheet", "Sheet1"});
+    CHECK(run.exitCode == ExitCode::Failure);
+    CHECK_THAT(run.err, ContainsSubstring("does not regenerate"));
+    CHECK_FALSE(std::filesystem::exists(broken));
+}
+
+TEST_CASE("DrawingCli_ExportingTwiceGivesTheSameBytes", "[cli][drawing][p14][export]") {
     TempDir dir;
     const auto path = dir.path() / "part.bcad";
     writePart(path);
     const std::string file = cliPath(path);
     cliOk({"sheet-add", file, "--format", "A3"});
-    cliOk({"view-add", file, "--sheet", "Sheet1", "--source", "Block"});
+    cliOk({"view-add", file, "--sheet", "Sheet1", "--source", "Block", "--x", "150mm", "--y",
+           "150mm"});
 
-    for (const std::string command : {"export-pdf", "export-svg", "export-dxf", "export-drawing"}) {
+    for (const auto& [command, extension] : std::vector<std::pair<std::string, std::string>>{
+             {"export-svg", "svg"}, {"export-dxf", "dxf"}, {"export-pdf", "pdf"}}) {
         INFO(command);
-        const auto run = runCliCommand({command, file, cliPath(dir.path() / "out")});
-        CHECK(run.exitCode == ExitCode::UsageError);
-        CHECK_THAT(run.err, ContainsSubstring("unknown command"));
-        CHECK_FALSE(std::filesystem::exists(dir.path() / "out"));
+        const auto first = dir.path() / ("first." + extension);
+        const auto second = dir.path() / ("second." + extension);
+        cliOk({command, file, cliPath(first)});
+        cliOk({command, file, cliPath(second)});
+        CHECK(bytesOf(first) == bytesOf(second));
+        CHECK_FALSE(bytesOf(first).empty());
     }
-
-    // The model exporters still work on a document that HAS a drawing, which
-    // is the part of "CLI export" that exists today.
-    const auto step = runCliCommand({"export-step", file, cliPath(dir.path() / "part.step")});
-    INFO(step.err);
-    CHECK(step.exitCode == ExitCode::Success);
-    CHECK(std::filesystem::exists(dir.path() / "part.step"));
 }
