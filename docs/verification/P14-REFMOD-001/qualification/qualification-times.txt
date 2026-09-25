@@ -1,0 +1,44 @@
+qualification started Fri 25/09/2026 19:59:23.16 
+qualification candidate: 
+772d965d33766d57ae18864d9f625772574ce473
+qualified source trees before the first build: 
+  apps 81dbb23207c5365f98d2596d9474f37f21d10827 
+  include 4285ad422f7d739a219596bdc13071b36e12dacb 
+  src e5446fb33825a1b20f23d9bb558b615b9cffca50 
+  tests baee164dd9cc9819a6847cb85eca1463523eb916 
+  examples 273eeda0dc706f7c4506d75c93bcdfc809909c84 
+  cmake a84e909339b24bc7ffca591888e10d48a3e5296c 
+  CMakeLists.txt a0adbb9c1d3583aab4e294fd41837537e53e4764 
+  CMakePresets.json 951b53d6b7412e6057c188dd41e40cb9e57c6aa3 
+debug configure started Fri 25/09/2026 19:59:25.80 
+debug configure exit 0 Fri 25/09/2026 19:59:43.89 
+debug clean attempt 1 exit 0 Fri 25/09/2026 19:59:46.17 
+debug build exit 0 Fri 25/09/2026 20:24:37.23 
+debug no-op rebuild exit 0 Fri 25/09/2026 20:24:39.12 
+debug ctest exit 0 Fri 25/09/2026 20:31:05.94 
+release configure started Fri 25/09/2026 20:31:05.94 
+release configure exit 0 Fri 25/09/2026 20:31:14.11 
+release clean attempt 1 exit 0 Fri 25/09/2026 20:31:15.42 
+release build exit 0 Fri 25/09/2026 20:59:45.83 
+release no-op rebuild exit 0 Fri 25/09/2026 20:59:47.64 
+release ctest exit 0 Fri 25/09/2026 21:05:33.06 
+debug-shared configure started Fri 25/09/2026 21:05:33.06 
+debug-shared configure exit 0 Fri 25/09/2026 21:05:40.95 
+debug-shared clean attempt 1 exit 0 Fri 25/09/2026 21:05:42.27 
+debug-shared build exit 0 Fri 25/09/2026 21:29:06.50 
+debug-shared no-op rebuild exit 0 Fri 25/09/2026 21:29:08.50 
+debug-shared ctest exit 0 Fri 25/09/2026 21:35:15.64 
+repeat release started Fri 25/09/2026 21:35:15.64 
+repeat release exit 8 Fri 25/09/2026 21:59:08.45 
+repeat debug started Fri 25/09/2026 21:59:08.45 
+repeat debug exit 8 Fri 25/09/2026 22:16:55.30 
+qualified source trees after the last test run: 
+  apps 81dbb23207c5365f98d2596d9474f37f21d10827 
+  include 4285ad422f7d739a219596bdc13071b36e12dacb 
+  src e5446fb33825a1b20f23d9bb558b615b9cffca50 
+  tests baee164dd9cc9819a6847cb85eca1463523eb916 
+  examples 273eeda0dc706f7c4506d75c93bcdfc809909c84 
+  cmake a84e909339b24bc7ffca591888e10d48a3e5296c 
+  CMakeLists.txt a0adbb9c1d3583aab4e294fd41837537e53e4764 
+  CMakePresets.json 951b53d6b7412e6057c188dd41e40cb9e57c6aa3 
+qualification finished Fri 25/09/2026 22:16:57.14, 2 stage(s) failed 

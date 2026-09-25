@@ -14,6 +14,7 @@
 #include <bettercad/features/Regenerator.hpp>
 #include <bettercad/io/DocumentFile.hpp>
 
+#include <cstddef>
 #include <format>
 #include <optional>
 #include <ostream>
@@ -99,6 +100,19 @@ std::string_view stateWord(const drawing::Resolution& resolution) {
     return drawing::toString(resolution.state);
 }
 
+/// @p text padded to @p width, and ALWAYS followed by at least one space.
+///
+/// `{:<28}` pads to 28 and stops, so a label of exactly 28 characters runs
+/// straight into the next column and a longer one swallows it --
+/// `ClearanceCallout (object:21)hole_callout`, which P14-REFMOD-001 produced
+/// the moment a reference model used a name of a realistic length. A report
+/// whose columns can merge is a report that cannot be read, so the separator
+/// is guaranteed here rather than assumed to fall out of the width.
+std::string column(std::string text, std::size_t width) {
+    text.append(text.size() >= width ? 1 : width - text.size(), ' ');
+    return text;
+}
+
 } // namespace
 
 ExitCode runDrawing(Args args, std::ostream& out, std::ostream& err) {
@@ -131,7 +145,7 @@ ExitCode runDrawing(Args args, std::ostream& out, std::ostream& err) {
     out << std::format("Sheets ({}):\n", allSheets.size());
     for (const SheetId id : allSheets) {
         const drawing::SheetDefinition& d = drawing::findSheet(document, id)->definition();
-        out << std::format("  {:<28}{} {}, scale {}\n", label(document, ObjectId{id}),
+        out << std::format("  {}{} {}, scale {}\n", column(label(document, ObjectId{id}), 28),
                            drawing::toString(d.format), drawing::toString(d.orientation),
                            d.scale.label());
     }
@@ -145,8 +159,9 @@ ExitCode runDrawing(Args args, std::ostream& out, std::ostream& err) {
         if (const auto effective = drawing::effectiveScale(document, id)) {
             scale = effective->label();
         }
-        out << std::format("  {:<28}{:<10}on {:<20}scale {:<8}{}\n", label(document, ObjectId{id}),
-                           drawing::toString(d.kind), label(document, ObjectId{d.sheet}), scale,
+        out << std::format("  {}{}on {}scale {}{}\n", column(label(document, ObjectId{id}), 28),
+                           column(std::string{drawing::toString(d.kind)}, 10),
+                           column(label(document, ObjectId{d.sheet}), 20), column(scale, 8),
                            stateWord(state));
         if (!state.resolved()) {
             out << std::format("      {}\n", state.diagnostic);
@@ -161,8 +176,9 @@ ExitCode runDrawing(Args args, std::ostream& out, std::ostream& err) {
         // it is now. Nothing here computes it.
         auto measured = drawing::measure(document, id, bodies, transforms);
         const std::string value = measured ? measured->text : std::string{"--"};
-        out << std::format("  {:<28}{:<12}on {:<20}{}\n", label(document, ObjectId{id}),
-                           drawing::toString(d.type), label(document, ObjectId{d.view}), value);
+        out << std::format("  {}{}on {}{}\n", column(label(document, ObjectId{id}), 28),
+                           column(std::string{drawing::toString(d.type)}, 12),
+                           column(label(document, ObjectId{d.view}), 20), value);
         if (!measured) {
             out << std::format("      {}\n", measured.error().message);
         }
@@ -174,9 +190,9 @@ ExitCode runDrawing(Args args, std::ostream& out, std::ostream& err) {
         const drawing::AnnotationDefinition& d = drawing::findAnnotation(document, id)->definition();
         const drawing::Resolution state =
             drawing::annotationResolution(document, id, bodies, transforms);
-        out << std::format("  {:<28}{:<22}on {:<20}{}\n", label(document, ObjectId{id}),
-                           drawing::toString(d.type), label(document, ObjectId{d.view}),
-                           stateWord(state));
+        out << std::format("  {}{}on {}{}\n", column(label(document, ObjectId{id}), 28),
+                           column(std::string{drawing::toString(d.type)}, 22),
+                           column(label(document, ObjectId{d.view}), 20), stateWord(state));
         if (!state.resolved()) {
             out << std::format("      {}\n", state.diagnostic);
         }
@@ -199,7 +215,7 @@ ExitCode runDrawing(Args args, std::ostream& out, std::ostream& err) {
         out << std::format("Bill of materials for {} ({}):\n", label(document, ObjectId{id}),
                            plural(bom->totalOccurrences(), "occurrence", "occurrences"));
         for (const drawing::BomRow& row : bom->rows) {
-            out << std::format("  {:>4}  {:<28}x{}\n", row.item, row.name, row.quantity());
+            out << std::format("  {:>4}  {}x{}\n", row.item, column(row.name, 28), row.quantity());
         }
     }
 

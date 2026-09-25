@@ -2,6 +2,7 @@
 #include "features/FeatureTestSupport.hpp"
 #include "support/TestFiles.hpp"
 
+#include <bettercad/assembly/Component.hpp>
 #include <bettercad/assembly/Components.hpp>
 #include <bettercad/assembly/Configurations.hpp>
 #include <bettercad/assembly/Resolution.hpp>
@@ -23,6 +24,7 @@
 #include <algorithm>
 #include <memory>
 #include <string>
+#include <tuple>
 #include <utility>
 #include <vector>
 
@@ -1114,4 +1116,146 @@ TEST_CASE("Bom_ATableAndABalloonAreCheckedWhenTheyAreMade", "[drawing][bom][p14]
                              .table = BomTableStyle{.rowHeight = 0_mm}});
     REQUIRE_FALSE(zeroRow.has_value());
     CHECK_THAT(zeroRow.error().message, ContainsSubstring("greater than zero"));
+}
+
+// --- annotationText() over the model-driven kinds ---------------------------------------------
+//
+// P14-REFMOD-001 found these. `isModelDriven()` admits three kinds -- a hole
+// callout, a balloon and a BOM table -- because none of the three stores
+// words of its own. `annotationText()` handled only the first, and answered
+// for the other two by reporting that they were hole callouts pointing at
+// something that is not a hole. A false statement about the document, on a
+// public API, with no production caller yet to notice it.
+
+TEST_CASE("Balloon_AnnotationTextIsTheNumberTheBalloonDraws",
+          "[drawing][bom][p14][balloon]") {
+    // The two routes to a balloon's number must give the same answer, because
+    // there is only supposed to be one: the item number of the occurrence,
+    // resolved through the bill of materials now (ADR-022).
+    Assembly a = makeAssembly();
+    const ObjectId part = addPart(a, "Bolt");
+    const ComponentId first = place(a, "Bolt1", part, 0_mm);
+    const ComponentId second = place(a, "Bolt2", part, 40_mm);
+    a.regenerate();
+
+    const AnnotationId onFirst = balloon(a, "BalloonA", first, {60_mm, 60_mm});
+    const AnnotationId onSecond = balloon(a, "BalloonB", second, {90_mm, 60_mm});
+
+    auto textA = drawing::annotationText(a.document, onFirst, a.bodies(), a.transforms());
+    auto textB = drawing::annotationText(a.document, onSecond, a.bodies(), a.transforms());
+    const std::string whyA = textA.has_value() ? std::string{} : textA.error().message;
+    const std::string whyB = textB.has_value() ? std::string{} : textB.error().message;
+    INFO(whyA);
+    REQUIRE(textA.has_value());
+    INFO(whyB);
+    REQUIRE(textB.has_value());
+    CHECK(*textA == balloonText(a, onFirst));
+    CHECK(*textB == balloonText(a, onSecond));
+    // Two occurrences of one part: one row, one number.
+    CHECK(*textA == "1");
+    CHECK(*textA == *textB);
+}
+
+TEST_CASE("Balloon_AnnotationTextFollowsTheAssemblyLikeTheDrawnNumberDoes",
+          "[drawing][bom][p14][balloon]") {
+    // Nothing is stored, so removing the part above a balloon's own row has
+    // to move its number -- by both routes, together.
+    Assembly a = makeAssembly();
+    const ObjectId first = addPart(a, "Cover");
+    const ObjectId second = addPart(a, "Pin");
+    const ComponentId cover = place(a, "Cover1", first, 0_mm);
+    const ComponentId pin = place(a, "Pin1", second, 40_mm);
+    a.regenerate();
+    const AnnotationId onPin = balloon(a, "PinBalloon", pin, {60_mm, 60_mm});
+
+    auto before = drawing::annotationText(a.document, onPin, a.bodies(), a.transforms());
+    REQUIRE(before.has_value());
+    CHECK(*before == "2");
+    CHECK(*before == balloonText(a, onPin));
+
+    REQUIRE(assembly::removeComponent(a.document, cover).has_value());
+    a.regenerate();
+    auto after = drawing::annotationText(a.document, onPin, a.bodies(), a.transforms());
+    REQUIRE(after.has_value());
+    CHECK(*after == "1");
+    CHECK(*after == balloonText(a, onPin));
+}
+
+TEST_CASE("Balloon_AnnotationTextOfAnOccurrenceThatIsNotDrawnFailsAsItself",
+          "[drawing][bom][p14][balloon]") {
+    // A balloon on an occurrence the view does not draw has no number. It
+    // must say so as a BALLOON: the old message called it a hole callout,
+    // which is a diagnostic an engineer cannot act on.
+    Assembly a = makeAssembly();
+    const ObjectId part = addPart(a, "Spacer");
+    const ComponentId spacer = place(a, "Spacer1", part, 0_mm);
+    a.regenerate();
+    const AnnotationId onSpacer = balloon(a, "SpacerBalloon", spacer, {60_mm, 60_mm});
+
+    const auto* component = a.document.findObjectAs<assembly::Component>(spacer);
+    REQUIRE(component != nullptr);
+    assembly::ComponentDefinition definition = component->definition();
+    definition.suppressed = true;
+    REQUIRE(assembly::setComponentDefinition(a.document, spacer, definition).has_value());
+    a.regenerate();
+
+    const auto text = drawing::annotationText(a.document, onSpacer, a.bodies(), a.transforms());
+    REQUIRE_FALSE(text.has_value());
+    CHECK_THAT(text.error().message, ContainsSubstring("SpacerBalloon"));
+    CHECK_THAT(text.error().message, !ContainsSubstring("hole"));
+}
+
+TEST_CASE("BomTable_AnnotationTextSaysATableHasNoOneRunOfText",
+          "[drawing][bom][p14]") {
+    // A table's words are its ROWS, and there is no single string that is
+    // "what the table says". Refusing is right; refusing while claiming the
+    // table is a hole callout is not.
+    Assembly a = makeAssembly();
+    const ObjectId part = addPart(a, "Frame");
+    (void)place(a, "Frame1", part, 0_mm);
+    a.regenerate();
+    const AnnotationId table = require(drawing::createAnnotation(
+        a.document, "Table",
+        AnnotationDefinition{
+            .view = a.view, .type = AnnotationType::BomTable, .placement = {300_mm, 250_mm}}));
+
+    const auto text = drawing::annotationText(a.document, table, a.bodies(), a.transforms());
+    REQUIRE_FALSE(text.has_value());
+    CHECK_THAT(text.error().message, ContainsSubstring("Table"));
+    CHECK_THAT(text.error().message, ContainsSubstring("rows"));
+    CHECK_THAT(text.error().message, !ContainsSubstring("hole"));
+}
+
+TEST_CASE("Annotation_EveryModelDrivenKindIsAnsweredByAnnotationText",
+          "[drawing][bom][p14]") {
+    // THE CONTRACT, as one case. `isModelDriven()` is public, and the natural
+    // way to use it is "if the words are derived, ask what they are". Every
+    // kind it admits must therefore be answered -- with its text, or with a
+    // refusal that names that kind. None of them may be reported as some
+    // other kind of annotation.
+    Assembly a = makeAssembly();
+    const ObjectId part = addPart(a, "Block");
+    const ComponentId block = place(a, "Block1", part, 0_mm);
+    a.regenerate();
+
+    const AnnotationId item = balloon(a, "ItemBalloon", block, {60_mm, 60_mm});
+    const AnnotationId table = require(drawing::createAnnotation(
+        a.document, "ItemTable",
+        AnnotationDefinition{
+            .view = a.view, .type = AnnotationType::BomTable, .placement = {300_mm, 250_mm}}));
+
+    for (const auto& [id, name, type] :
+         std::vector<std::tuple<AnnotationId, std::string, AnnotationType>>{
+             {item, "ItemBalloon", AnnotationType::Balloon},
+             {table, "ItemTable", AnnotationType::BomTable}}) {
+        INFO(name << " (" << drawing::toString(type) << ")");
+        REQUIRE(drawing::isModelDriven(type));
+        const auto text = drawing::annotationText(a.document, id, a.bodies(), a.transforms());
+        if (text.has_value()) {
+            CHECK_FALSE(text->empty());
+        } else {
+            CHECK_THAT(text.error().message, ContainsSubstring(name));
+            CHECK_THAT(text.error().message, !ContainsSubstring("hole callout"));
+        }
+    }
 }

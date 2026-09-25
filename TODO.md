@@ -10,8 +10,8 @@
 
 ```text
 Current:   P14 — Technical Drawings
-Next:      P14-REFMOD-001 — production drawing reference models.
-           P14-STREF-001 is STILL OPEN and comes first if it is authorized:
+Next:      P14-QUAL-001 — full P14 qualification.
+           P14-STREF-001 is STILL OPEN and is a scope decision of its own:
            its audit is done and 11 of its 12 checks pass, but one gate --
            "no silent rebinding" -- is NOT met and the milestone is not [x].
            A chamfer face is named by its edge reference's POSITION in the
@@ -20,18 +20,29 @@ Next:      P14-REFMOD-001 — production drawing reference models.
            Reference_AChamferFaceIsNamedByItsPositionInTheChamfersEdgeList.
            Closing it changes ChamferDefinition and its file format, and the
            committed reference models with chamfers, so it needs its own
-           authorization.
-Carried:   nothing. P14-HLR-001's assembly-to-assembly occlusion validation,
-           carried open since that milestone, is CLOSED by P14-ASM-001 with
-           real multi-component fixtures
-Decision:  move build and test output off OneDrive. NOW DUE. The filesystem
-           fault failed a determinism repeat in P14-DIM-001 (debug),
-           P14-ANNO-001 (release) and now P14-BOM-001 (debug) — three
-           milestones, both repeat presets. In P14-BOM-001 the same test
-           passed three times in one run before failing on the fourth
-           repeat. Each time one controlled rerun passed. It needs its own
-           decision because the build directory lives in CMakePresets.json,
-           inside the frozen qualified tree.
+           authorization. No model in P14-REFMOD-001's suite uses a chamfer,
+           so that suite neither closes the gap nor depends on it.
+Carried:   a hole's POSITION cannot be dimensioned. A cylindrical face may be
+           the target of a radius or a diameter and of nothing else
+           (P14-DIM-001), and a bore's axis has no semantic name (ADR-012),
+           so the commonest dimension on a machining drawing has no spelling
+           in this build. P14-REFMOD-001 found it and worked around it by
+           dimensioning between datum edges. Closing it means widening
+           P14-DIM-001's target rules or naming a hole's axis — either is a
+           scope decision.
+           GD&T symbols reach SVG only; PDF and DXF need an embedded font.
+Decision:  move build and test output off OneDrive. OVERDUE. The filesystem
+           fault has now failed a determinism repeat in P14-DIM-001 (debug),
+           P14-ANNO-001 (release), P14-BOM-001 (debug) and P14-REFMOD-001 —
+           where it failed BOTH repeat presets in one run, two of that
+           qualification's seventeen stages. The signature is always the
+           same: a Windows sharing violation on REPLACING a file the same
+           test had already written successfully in the same run, inside the
+           synced build tree. Every time, one controlled rerun has passed.
+           It needs its own decision because the build directory lives in
+           CMakePresets.json, inside the tree that gets frozen — and it must
+           be taken before P14-QUAL-001, whose whole purpose is a clean
+           qualification.
 
 Released:  v0.1.0 — P0–P10
 Qualified: P11, P12, P13
@@ -1352,27 +1363,138 @@ Open decision → move build output off OneDrive; the fault has not recurred in
 
 ---
 
-# P14-REFMOD-001
+# DONE — P14-REFMOD-001
 
 ## Production Drawing Reference Models
 
-* [ ] Define production drawing suite
-* [ ] Add simple machined-part drawing
-* [ ] Add multi-view dimensioned part
-* [ ] Add section/detail drawing
-* [ ] Add hole / pattern drawing
-* [ ] Add toleranced / GD&T drawing
-* [ ] Add assembly drawing
-* [ ] Add BOM / balloon drawing
-* [ ] Add configuration-dependent drawing
-* [ ] Validate model-change regeneration
-* [ ] Validate save/load
-* [ ] Validate CLI workflows
-* [ ] Validate PDF / SVG / DXF output
-* [ ] Independently validate dimensions / scale / geometry
-* [ ] Adversarial review PASS
-* [ ] Three-preset regression PASS
-* [ ] Evidence recorded
+* [x] Define production drawing suite — eight models, each owning a capability
+      no other one owns, and a coverage matrix that is an ASSERTION rather
+      than a table: `DrawingReference_TheSuiteCoversEveryQualifiedDrawingCapability`
+      fails naming any qualified capability with no reference-model owner
+* [x] Add simple machined-part drawing — RM-DWG-01 `DrawnStepPlate`
+* [x] Add multi-view dimensioned part — RM-DWG-02 `DrawnAngleBracket`: three
+      views that disagree, a 45 degree corner, a 1:2 view on a 1:1 sheet, and
+      a SECOND SHEET in A4 portrait carrying the auxiliary view no standard
+      direction gives
+* [x] Add section/detail drawing — RM-DWG-03 `DrawnPocketBlock`: the cut area
+      against a closed form, 1760 mm², which hatching across the voids would
+      report as 2400
+* [x] Add hole / pattern drawing — RM-DWG-04 `DrawnHolePlate`: four identical
+      bores, each with a semantic name of its own, and four centre marks that
+      land in four different places
+* [x] Add toleranced / GD&T drawing — RM-DWG-05 `DrawnToleranceBlock`: a
+      deviation pair, a pair of limits, an ISO 286 fit resolved from the
+      standard, two datums and a feature-control frame held to A then B
+* [x] Add assembly drawing — RM-DWG-06 `DrawnClampSet`: a repeated part, a
+      rotated part, and occlusion BY ANOTHER COMPONENT
+* [x] Add BOM / balloon drawing — RM-DWG-07 `DrawnBoltedStack`: 1, 4 and 2 of
+      three parts, and two balloons on two of four identical bolts
+* [x] Add configuration-dependent drawing — RM-DWG-08 `DrawnGuardedFrame`: the
+      bolt's item number goes 3 to 2 because item numbers are recomputed over
+      the parts that are there, and the guard's balloon unresolves rather than
+      moving
+* [x] Validate model-change regeneration — one driven mutation per model,
+      through the production path, checked on the SHEET; then reversed, with
+      the restored drawing identical to 1e-12 mm (worst observed 2.8e-14)
+* [x] Validate save/load — create, save, DESTROY, load, regenerate, compare
+      the canonical intent and then the drawn sheet, for all eight
+* [x] Validate CLI workflows — 15 process tests on the real executables, in
+      two processes with nothing shared but the bytes on disk; plus CLI/core
+      equivalence, which requires identical canonical JSON, identical IDs and
+      byte-identical SVG, DXF and PDF
+* [x] Validate PDF / SVG / DXF output — read back with P14-EXPORT-001's own
+      parsers; and entity count == scene item count in both DXF and SVG for
+      every model, so nothing is silently dropped
+* [x] Independently validate dimensions / scale / geometry — every expected
+      value derived here or in the tests from the dimensions each model is
+      defined by; tolerances stated with their reasons
+* [x] Adversarial review PASS — **three production defects found and fixed**,
+      one fixture weakness and six coverage gaps closed; see below
+* [x] Three-preset regression PASS — see the gate
+* [x] Evidence recorded — [docs/verification/P14-REFMOD-001/](docs/verification/P14-REFMOD-001/README.md)
+
+### Gate
+
+```text
+production reference suite defined
++ eight drawings PASS
++ model-change regeneration PASS
++ stable-reference stress PASS
++ unresolved/recovery PASS
++ save/load PASS
++ fresh-process CLI workflow PASS
++ PDF / SVG / DXF read-back PASS
++ dimensions, scale and geometry independently correct
++ deterministic rebuilds PASS
++ adversarial review PASS
++ Debug, Release and Debug-shared PASS
++ 0 unexpected warnings
++ evidence complete
+```
+
+**MET.**
+
+**THE MODELS FOUND THREE PRODUCTION DEFECTS**, which is what a reference suite
+is for and is the reason this milestone is not merely bookkeeping.
+
+**Every hole on every drawing was exported as a polyline.** `SheetScene.cpp`
+recovers a circle from a projected edge's start, midpoint and end; a CLOSED
+circular edge has start == end, so only two of the three points were ever
+distinct, the circumcircle determinant was identically zero, and the recovery
+always failed. Every full circle in the system — every hole — was written as
+its sampled polyline: over a thousand points where a DXF `CIRCLE`, an SVG
+`<circle>` or four Béziers belong. Arcs worked, which is why P14-EXPORT-001
+did not see it, and the drawing looked right either way.
+
+**`annotationText()` reported a balloon as a hole callout**, and on a BOM table
+it dereferenced a disengaged `std::optional` — undefined behaviour in Release,
+caught here only because the Debug build has libstdc++ assertions on.
+`isModelDriven()` admits three kinds; `annotationText()` handled one. P14-BOM-001
+widened the predicate and extended `draw()` and `resolveAnnotationTarget()`
+with guards, but not this. No test had ever asked `annotationText()` about a
+balloon: the same blind-spot shape as P14-EXPORT-001's UTF-8 defect.
+
+**The CLI drawing report merged its columns.** `{:<28}` pads to 28 and stops,
+so a 28-character label ran into the next column —
+`ClearanceCallout (object:21)hole_callout` — produced by an ordinary name on
+an ordinary model. Fixed for every column, not the one that collided.
+
+All three fixes are general, and every regression test was shown failing
+against the pre-fix code first.
+
+**AND A FIXTURE THAT WOULD HAVE PASSED ON A WRONG PICTURE.** RM-DWG-04's
+pattern began at (20, 20) on a 120 x 80 plate with the clearance hole at its
+centre — symmetric about BOTH axes, so a mirrored or reflected top view would
+have drawn every circle exactly where the test expected one. Moved off both
+axes.
+
+**AND SIX QUALIFIED CAPABILITIES WITH NO OWNER**, behind an aggregate PASS:
+auxiliary views, horizontal, vertical, aligned, radius and ordinate
+dimensions, leader annotations and a second sheet format. All are now owned,
+and the coverage matrix asserts each by name so the next gap fails a test
+rather than hiding.
+
+```text
+P14-REFMOD-001 → [x]
+Next → P14-QUAL-001. P14-STREF-001 is still open on its chamfer gap and is a
+       scope decision of its own; no model in this suite uses a chamfer, so
+       none of them depends on the one reference path that is still positional
+Carried open → GD&T symbols in PDF and DXF need an embedded font (SVG carries
+               them); a hole's POSITION cannot be dimensioned -- a cylindrical
+               face may be the target of a radius or a diameter and of nothing
+               else (P14-DIM-001) and a bore's axis has no semantic name
+               (ADR-012), so the commonest dimension on a machining drawing
+               has no spelling in this build
+Not established → cross-preset byte identity of exported files. Each preset
+               writes the same bytes as the core API within its own run, but
+               no test compares a Release-written file with a Debug-written
+               one
+Open decision → move build and test output off OneDrive. OVERDUE. BOTH repeat
+               stages of this qualification failed on it -- two of seventeen
+               stages -- and one controlled rerun passed both, 2244/2244 five
+               times over in each preset. Fourth milestone, fifth stage
+               failure, first time both presets in one run
+```
 
 ---
 

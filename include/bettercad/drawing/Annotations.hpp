@@ -61,13 +61,23 @@ namespace bettercad::drawing {
 
 /// The words this annotation shows, now.
 ///
-/// A note, a leader and a datum give back what was stored. A hole callout
-/// reads the hole: its diameter comes from the feature's own resolution, so a
-/// diameter driven by a parameter, set by a thread standard or taken from an
-/// ISO 273 clearance reads the value in force. `Ø10 THRU`, `Ø8 DEEP 20`.
+/// A note, a leader and a datum give back what was stored. The three kinds
+/// `isModelDriven()` admits are worked out instead, each by the path that
+/// DRAWS it, so the text and the drawing cannot come to disagree:
+///
+///     hole callout   reads the hole: its diameter comes from the feature's
+///                    own resolution, so a diameter driven by a parameter,
+///                    set by a thread standard or taken from an ISO 273
+///                    clearance reads the value in force. `Ø10 THRU`,
+///                    `Ø8 DEEP 20`
+///     balloon        the item number of the occurrence it labels, through
+///                    `itemNumberOf()` (ADR-022)
+///     BOM table      REFUSED, naming itself: a table's words are its ROWS,
+///                    and `billOfMaterials()` is what gives them
 ///
 /// Fails, naming the annotation, when the target cannot be resolved. It never
-/// gives back the last text it managed to build.
+/// gives back the last text it managed to build, and it never reports an
+/// annotation as a kind it is not.
 [[nodiscard]] BETTERCAD_DRAWING_EXPORT Result<std::string> annotationText(
     const Document& document, AnnotationId id, const BodyLookup& bodies,
     const TransformLookup& transforms = {});

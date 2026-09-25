@@ -45,6 +45,10 @@ struct EdgeStyle {
 /// back into a centre and a radius, so a writer that has a circle primitive
 /// can use one. The polyline is always available as a fallback, so failing
 /// here costs fidelity and never correctness.
+///
+/// TWO cases, because a circular edge comes in two shapes: an ARC, whose
+/// three points are distinct, and a CLOSED circle, whose start and end are
+/// the same point. The second is the common one -- it is what a hole is.
 struct Circle {
     Point2D centre;
     double radius;
@@ -58,6 +62,19 @@ struct Circle {
     const double by = b.y.si();
     const double cx = c.x.si();
     const double cy = c.y.si();
+    // A CLOSED edge -- every hole on every drawing -- has start == end, so
+    // only two of the three points are distinct and the determinant below is
+    // identically zero. Those two are half a turn apart, which is a DIAMETER,
+    // and that defines the circle exactly. Without this a full circle was
+    // never recovered and was drawn as its sampled polyline: over a thousand
+    // points where a DXF CIRCLE, an SVG <circle> or four Beziers belong.
+    const double diameter = std::hypot(bx - ax, by - ay);
+    const double gap = std::hypot(cx - ax, cy - ay);
+    if (diameter > 0.0 && gap <= 1e-9 * diameter) {
+        return Circle{Point2D{Length::fromSi((ax + bx) / 2.0), Length::fromSi((ay + by) / 2.0)},
+                      diameter / 2.0};
+    }
+
     const double d = 2.0 * (ax * (by - cy) + bx * (cy - ay) + cx * (ay - by));
     if (std::abs(d) < 1e-15) {
         return std::nullopt; // collinear: no circle through them

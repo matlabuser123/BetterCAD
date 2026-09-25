@@ -139,6 +139,7 @@ bettercad_add_executable(bettercad_tests
         io/FaceKindFileTests.cpp
         io/ThroughAllFileTests.cpp
         io/BodyOpsFileTests.cpp
+        io/DrawingExportSupport.hpp
         io/DrawingExportTests.cpp
         io/DocumentFileTests.cpp
         io/DraftFileTests.cpp
@@ -250,6 +251,16 @@ if(TARGET bettercad_reference_models)
         reference/AllModelsTests.cpp
         reference/AssemblyModelsTests.cpp
         reference/Analytic.hpp
+        reference/DrawingTestSupport.hpp
+        reference/DrawingStepPlateTests.cpp
+        reference/DrawingModelsTests.cpp
+        reference/DrawingAngleBracketTests.cpp
+        reference/DrawingPocketBlockTests.cpp
+        reference/DrawingHolePlateTests.cpp
+        reference/DrawingToleranceBlockTests.cpp
+        reference/DrawingClampSetTests.cpp
+        reference/DrawingBomTests.cpp
+        reference/DrawingEquivalenceTests.cpp
         reference/ReferenceTestSupport.hpp
         reference/FlangeTests.cpp
         reference/GearboxCoverTests.cpp
@@ -713,6 +724,171 @@ if(TARGET bettercad_cli)
         cli.drawing.export.svg cli.drawing.export.dxf cli.drawing.export.pdf
         cli.drawing.export.bad-path cli.drawing.export.no-such-sheet
         PROPERTIES DEPENDS cli.drawing.report)
+
+    # --- P14-REFMOD-001: the production drawing suite, through the real
+    # executables ---
+    #
+    # TWO PROCESSES, and nothing shared between them but the bytes on disk.
+    # The example program builds every drawing reference model, saves it and
+    # exports it; separate bettercad-cli invocations then LOAD what it wrote,
+    # regenerate from the intent in the file and report what they find. An
+    # in-process test cannot prove that, because it never leaves the process
+    # that built the model.
+    #
+    # `--drawings` runs the drawing suite alone. The full example program also
+    # builds twelve parts and eight assemblies with their STEP and STL
+    # exports, which is a minute of work this fixture has no use for.
+    if(TARGET bettercad_example_reference_models)
+        set(_ref "${_out}/refmod")
+        file(MAKE_DIRECTORY "${_ref}")
+
+        # PROCESS A: create, regenerate, save, export. Its own exit code is
+        # the first assertion -- the program fails if any model does not
+        # build, does not regenerate, draws off the page or cannot be written.
+        bettercad_add_process_test(cli.refmod.build
+            COMMAND "$<TARGET_FILE:bettercad_example_reference_models>"
+            ARGS "--drawings|--out|${_ref}"
+            EXIT_CODE 0
+            STDOUT_REGEX "== DrawnStepPlate \\(RM-DWG-01\\).*== DrawnGuardedFrame \\(RM-DWG-08\\)"
+            FILE "${_ref}/drawing_step_plate.bcad"
+            FILE_REGEX "\"name\": \"DrawnStepPlate\"")
+
+        # PROCESS B, from here down. Every one of these opens a file it did
+        # not write.
+        bettercad_add_process_test(cli.refmod.validate
+            COMMAND "$<TARGET_FILE:bettercad_cli>"
+            ARGS "validate|${_ref}/drawing_tolerance_block.bcad"
+            EXIT_CODE 0
+            STDOUT_REGEX "missing references +ok.*dependency cycles +ok.*feature regeneration +ok")
+
+        # The hole pattern, reported by name, with every kind of dimension it
+        # carries: the plate's 120 and 80 along the view's own axes, an
+        # ORDINATE that is negative because its datum is the far edge, a
+        # diameter on the source bore and on a patterned copy of it, the same
+        # cylinder as a radius reading exactly half, and four centre marks on
+        # four identical bores.
+        #
+        # The negative ordinate is the one worth having here: a horizontal or
+        # a vertical dimension reports a magnitude and could not produce it.
+        bettercad_add_process_test(cli.refmod.drawing.pattern
+            COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "drawing|${_ref}/drawing_hole_plate.bcad"
+            EXIT_CODE 0
+            STDOUT_REGEX "^Drawing of DrawnHolePlate.*Length \\(object:[0-9]+\\) +horizontal +on Top \\(object:[0-9]+\\) +120\\.00.*Width \\(object:[0-9]+\\) +vertical +on Top \\(object:[0-9]+\\) +80\\.00.*AcrossFromLeft \\(object:[0-9]+\\) +ordinate +on Top \\(object:[0-9]+\\) +120\\.00.*DownFromTop \\(object:[0-9]+\\) +ordinate +on Top \\(object:[0-9]+\\) +-80\\.00.*BoreDiameter \\(object:[0-9]+\\) +diameter +on Top \\(object:[0-9]+\\) +10\\.00.*FarBoreDiameter \\(object:[0-9]+\\) +diameter +on Top \\(object:[0-9]+\\) +10\\.00.*BoreRadius \\(object:[0-9]+\\) +radius +on Top \\(object:[0-9]+\\) +5\\.00.*BoreMark0 .*BoreMark3 .*Regeneration: ok")
+
+        # Two sheets, two formats, two orientations -- and the auxiliary view
+        # that no standard direction gives, on the second of them.
+        bettercad_add_process_test(cli.refmod.drawing.sheets
+            COMMAND "$<TARGET_FILE:bettercad_cli>"
+            ARGS "drawing|${_ref}/drawing_angle_bracket.bcad"
+            EXIT_CODE 0
+            STDOUT_REGEX "Sheets \\(2\\):\n +Sheet1 \\(object:[0-9]+\\) +A3 landscape, scale 1:1\n +Sheet2 \\(object:[0-9]+\\) +A4 portrait, scale 1:2\nViews \\(5\\):.*SlantAuxiliary \\(object:[0-9]+\\) +auxiliary on Sheet2 \\(object:[0-9]+\\).*AcrossSlant \\(object:[0-9]+\\) +aligned +on SlantAuxiliary \\(object:[0-9]+\\) +50\\.00.*Regeneration: ok")
+        # Each sheet is written out as a page of its own size, by name.
+        bettercad_add_process_test(cli.refmod.export.second-sheet
+            COMMAND "$<TARGET_FILE:bettercad_cli>"
+            ARGS "export-svg|${_ref}/drawing_angle_bracket.bcad|${_ref}/bracket_sheet2.svg|--sheet|Sheet2"
+            EXIT_CODE 0
+            STDOUT_REGEX "SVG of Sheet2 \\(object:[0-9]+\\), 210 x 297 mm, [0-9]+ items$"
+            FILE "${_ref}/bracket_sheet2.svg"
+            FILE_REGEX "width=\"210\\.0000mm\" height=\"297\\.0000mm\"")
+
+        # Tolerances and GD&T as the drawing writes them: a deviation pair, a
+        # limit, and a fit designation that is resolved rather than stored.
+        #
+        # The plus/minus sign is NOT matched literally. It is UTF-8 in the
+        # CLI's output and what a CMake regex sees depends on the console code
+        # page; cli.new.unicode-path tests that on purpose and this case has
+        # no business also depending on it. The nominal and its deviation are
+        # still both asserted, on one line, which is the thing under test.
+        bettercad_add_process_test(cli.refmod.drawing.tolerances
+            COMMAND "$<TARGET_FILE:bettercad_cli>"
+            ARGS "drawing|${_ref}/drawing_tolerance_block.bcad"
+            EXIT_CODE 0
+            STDOUT_REGEX "Length \\(object:[0-9]+\\) +linear +on Front \\(object:[0-9]+\\) +80\\.00 [^\n]*0\\.10.*Width \\(object:[0-9]+\\) +linear +on Top \\(object:[0-9]+\\) +50\\.15.*BoreSize \\(object:[0-9]+\\) +diameter +on Top \\(object:[0-9]+\\) +20\\.000 H7.*feature_control_frame.*surface_finish.*Regeneration: ok")
+
+        # The bill of materials, computed from the assembly by the process
+        # that read the file: three rows, quantities 1, 4 and 2, seven
+        # occurrences. None of those numbers is in the file.
+        bettercad_add_process_test(cli.refmod.drawing.bom
+            COMMAND "$<TARGET_FILE:bettercad_cli>"
+            ARGS "drawing|${_ref}/drawing_bolted_stack.bcad"
+            EXIT_CODE 0
+            STDOUT_REGEX "Bill of materials for Front \\(object:[0-9]+\\) \\(7 occurrences\\):\n +1 +Bracket +x1\n +2 +Bolt +x4\n +3 +Spacer +x2\nRegeneration: ok")
+
+        # The same drawing in its other configuration. Two components fewer,
+        # the bolt renumbered from item 3 to item 2, and the guard's balloon
+        # UNRESOLVED -- reported by name, with a non-zero exit, rather than
+        # quietly labelling something else.
+        bettercad_add_process_test(cli.refmod.drawing.configuration
+            COMMAND "$<TARGET_FILE:bettercad_cli>"
+            ARGS "drawing|${_ref}/drawing_guarded_frame.bcad|--configuration|Open"
+            EXIT_CODE 1
+            STDOUT_REGEX "Configuration: Open.*GuardBalloon \\(object:[0-9]+\\) +balloon +on Front \\(object:[0-9]+\\) +unresolved.*Bill of materials for Front \\(object:[0-9]+\\) \\(3 occurrences\\):\n +1 +Frame +x1\n +2 +Bolt +x2\nRegeneration: FAILED")
+        # And in its committed state it regenerates, with all three rows.
+        bettercad_add_process_test(cli.refmod.drawing.configuration.base
+            COMMAND "$<TARGET_FILE:bettercad_cli>"
+            ARGS "drawing|${_ref}/drawing_guarded_frame.bcad"
+            EXIT_CODE 0
+            STDOUT_REGEX "Configuration: none \\(base values\\).*GuardBalloon \\(object:[0-9]+\\) +balloon +on Front \\(object:[0-9]+\\) +resolved.*\\(6 occurrences\\):\n +1 +Frame +x1\n +2 +Guard +x1\n +3 +Bolt +x4\nRegeneration: ok")
+
+        # An assembly drawing costs a solve, and this one is fully
+        # constrained: five occurrences, no freedom left.
+        bettercad_add_process_test(cli.refmod.solve
+            COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "solve|${_ref}/drawing_clamp_set.bcad"
+            EXIT_CODE 0
+            STDOUT_REGEX "Solve: FULLY_CONSTRAINED, 0 degrees of freedom.*Transforms \\(5\\):")
+
+        # A model change applied by one process and read by the next: the
+        # regenerate command rebuilds from the file alone.
+        bettercad_add_process_test(cli.refmod.regenerate
+            COMMAND "$<TARGET_FILE:bettercad_cli>"
+            ARGS "regenerate|${_ref}/drawing_pocket_block.bcad"
+            EXIT_CODE 0 STDOUT_REGEX "regenerated")
+
+        # --- The three writers, driven over a reference model by a process
+        # that loaded it from disk. Each file is checked at its own first
+        # bytes and at something only that format has.
+        bettercad_add_process_test(cli.refmod.export.svg
+            COMMAND "$<TARGET_FILE:bettercad_cli>"
+            ARGS "export-svg|${_ref}/drawing_hole_plate.bcad|${_ref}/hole_plate.svg"
+            EXIT_CODE 0
+            STDOUT_REGEX "SVG of Sheet1 \\(object:[0-9]+\\), 420 x 297 mm, [0-9]+ items$"
+            FILE "${_ref}/hole_plate.svg"
+            FILE_REGEX "width=\"420\\.0000mm\" height=\"297\\.0000mm\"")
+        bettercad_add_process_test(cli.refmod.export.dxf
+            COMMAND "$<TARGET_FILE:bettercad_cli>"
+            ARGS "export-dxf|${_ref}/drawing_hole_plate.bcad|${_ref}/hole_plate.dxf"
+            EXIT_CODE 0
+            STDOUT_REGEX "DXF \\(R12\\) of Sheet1 \\(object:[0-9]+\\), 420 x 297 mm, [0-9]+ items$"
+            FILE "${_ref}/hole_plate.dxf" FILE_REGEX "\\$INSUNITS\n70\n4")
+        bettercad_add_process_test(cli.refmod.export.pdf
+            COMMAND "$<TARGET_FILE:bettercad_cli>"
+            ARGS "export-pdf|${_ref}/drawing_tolerance_block.bcad|${_ref}/tolerance_block.pdf"
+            EXIT_CODE 0
+            STDOUT_REGEX "PDF of Sheet1 \\(object:[0-9]+\\), 420 x 297 mm, [0-9]+ items$"
+            FILE "${_ref}/tolerance_block.pdf" FILE_REGEX "^%PDF-1\\.4")
+
+        # The model that draws a section and a detail, exported whole.
+        bettercad_add_process_test(cli.refmod.export.section
+            COMMAND "$<TARGET_FILE:bettercad_cli>"
+            ARGS "export-svg|${_ref}/drawing_pocket_block.bcad|${_ref}/pocket_block.svg"
+            EXIT_CODE 0 STDOUT_REGEX "SVG of Sheet1"
+            FILE "${_ref}/pocket_block.svg" FILE_REGEX "<svg xmlns=")
+
+        # The build is a FIXTURE and not merely ordered first: ctest pulls a
+        # required fixture's setup in even when the run is filtered, whereas a
+        # DEPENDS on an excluded test is dropped. Without it,
+        # `ctest -R cli.refmod.drawing` would report drawings nothing built.
+        # It rewrites its whole output directory, so it is idempotent under
+        # --repeat, and every reader is read-only.
+        set_tests_properties(cli.refmod.build PROPERTIES FIXTURES_SETUP refmod_cli)
+        set_tests_properties(
+            cli.refmod.validate cli.refmod.drawing.pattern cli.refmod.drawing.tolerances
+            cli.refmod.drawing.sheets cli.refmod.drawing.bom cli.refmod.drawing.configuration
+            cli.refmod.drawing.configuration.base cli.refmod.solve cli.refmod.regenerate
+            cli.refmod.export.svg cli.refmod.export.dxf cli.refmod.export.pdf
+            cli.refmod.export.section cli.refmod.export.second-sheet
+            PROPERTIES FIXTURES_REQUIRED refmod_cli)
+    endif()
 
     set_tests_properties(cli.assembly.solve.configuration PROPERTIES DEPENDS cli.assembly.solve)
     set_tests_properties(cli.assembly.status PROPERTIES DEPENDS cli.assembly.solve.configuration)

@@ -4,6 +4,7 @@
 //
 //   bettercad_example_reference_models [--out <dir>]
 #include "AssemblyReferenceModels.hpp"
+#include "DrawingReferenceModels.hpp"
 #include "ReferenceModels.hpp"
 
 #include <bettercad/assembly/Components.hpp>
@@ -12,16 +13,24 @@
 #include <bettercad/assembly/Resolution.hpp>
 #include <bettercad/assembly/Solver.hpp>
 #include <bettercad/core/Units.hpp>
+#include <bettercad/drawing/Regeneration.hpp>
+#include <bettercad/drawing/SheetScene.hpp>
+#include <bettercad/drawing/Sheets.hpp>
+#include <bettercad/drawing/Views.hpp>
 #include <bettercad/features/Regenerator.hpp>
 #include <bettercad/io/DocumentFile.hpp>
+#include <bettercad/io/DrawingExport.hpp>
 #include <bettercad/io/ModelExport.hpp>
 
 #include <chrono>
+#include <cstddef>
 #include <cstdio>
+#include <span>
 #include <filesystem>
 #include <string>
 #include <string_view>
 #include <system_error>
+#include <vector>
 
 using namespace bettercad;
 
@@ -43,12 +52,22 @@ int fail(std::string_view model, std::string_view step, const Error& error) {
 
 int main(int argc, char** argv) {
     std::filesystem::path out;
+    // Which suites to run. All three by default; --drawings runs the drawing
+    // suite alone, which is what the CLI reference tests need and is seconds
+    // rather than a minute, because it skips twelve parts' STEP and STL
+    // exports and eight assembly solves.
+    bool parts = true;
+    bool assemblies = true;
+    const bool drawings = true;
     for (int i = 1; i < argc; ++i) {
         const std::string_view arg = argv[i];
         if (arg == "--out" && i + 1 < argc) {
             out = argv[++i];
+        } else if (arg == "--drawings") {
+            parts = false;
+            assemblies = false;
         } else {
-            std::fprintf(stderr, "usage: %s [--out <dir>]\n", argv[0]);
+            std::fprintf(stderr, "usage: %s [--out <dir>] [--drawings]\n", argv[0]);
             return 2;
         }
     }
@@ -56,7 +75,9 @@ int main(int argc, char** argv) {
         std::filesystem::create_directories(out);
     }
 
-    for (const reference::ReferenceModelInfo& info : reference::kReferenceModels) {
+    for (const reference::ReferenceModelInfo& info :
+         parts ? std::span{reference::kReferenceModels}
+               : std::span<const reference::ReferenceModelInfo>{}) {
         const auto buildStart = Clock::now();
         auto document = reference::buildReferenceModel(info.kind);
         const double buildMs = millisecondsSince(buildStart);
@@ -156,7 +177,9 @@ int main(int argc, char** argv) {
     // assembly handlers registered and is reported by its solve rather than
     // by result bodies -- and because one of them is committed in a state
     // that deliberately does not solve.
-    for (const reference::AssemblyReferenceModelInfo& info : reference::kAssemblyReferenceModels) {
+    for (const reference::AssemblyReferenceModelInfo& info :
+         assemblies ? std::span{reference::kAssemblyReferenceModels}
+                    : std::span<const reference::AssemblyReferenceModelInfo>{}) {
         const auto buildStart = Clock::now();
         auto document = reference::buildAssemblyReferenceModel(info.kind);
         const double buildMs = millisecondsSince(buildStart);
@@ -217,6 +240,92 @@ int main(int argc, char** argv) {
             }
         }
         std::printf("timing_ms build %.3f regeneration_and_solve %.3f\n", buildMs, regenMs);
+    }
+
+    // The drawing reference models (P14-REFMOD-001). A third loop, because a
+    // drawing is regenerated with the DRAWING handlers registered as well as
+    // the assembly ones, and because what it produces is a sheet rather than
+    // a body: the scene is built here, in a FRESH PROCESS, and written out in
+    // all three formats.
+    for (const reference::DrawingReferenceModelInfo& info :
+         drawings ? std::span{reference::kDrawingReferenceModels}
+                  : std::span<const reference::DrawingReferenceModelInfo>{}) {
+        const auto buildStart = Clock::now();
+        auto document = reference::buildDrawingReferenceModel(info.kind);
+        const double buildMs = millisecondsSince(buildStart);
+        if (!document) {
+            return fail(info.name, "build", document.error());
+        }
+        if (!out.empty()) {
+            const auto path = out / (std::string{info.fileStem} + ".bcad");
+            if (auto saved = io::saveDocument(*document, path); !saved) {
+                return fail(info.name, "save", saved.error());
+            }
+        }
+
+        features::Regenerator regenerator;
+        assembly::registerHandlers(regenerator, nullptr, nullptr);
+        drawing::registerHandlers(regenerator);
+        const auto regenStart = Clock::now();
+        auto report = regenerator.regenerateAll(*document);
+        const double regenMs = millisecondsSince(regenStart);
+        if (!report) {
+            return fail(info.name, "regenerate", report.error());
+        }
+        if (!report->succeeded()) {
+            for (const auto& [id, error] : report->errors) {
+                std::fprintf(stderr, "%.*s: %s\n", static_cast<int>(info.name.size()),
+                             info.name.data(), error.message.c_str());
+            }
+            return 1;
+        }
+
+        const drawing::BodyLookup bodies = [&](ObjectId object) { return regenerator.body(object); };
+        const drawing::TransformLookup transforms = [&](ComponentId component) {
+            return regenerator.transform(component);
+        };
+
+        const std::vector<SheetId> sheets = drawing::sheets(*document);
+        if (sheets.empty()) {
+            std::fprintf(stderr, "%.*s: has no sheet\n", static_cast<int>(info.name.size()),
+                         info.name.data());
+            return 1;
+        }
+        const auto sceneStart = Clock::now();
+        std::size_t items = 0;
+        std::size_t views = 0;
+        for (const SheetId sheet : sheets) {
+            views += drawing::viewsOn(*document, sheet).size();
+            auto scene = drawing::sheetScene(*document, sheet, bodies, transforms);
+            if (!scene) {
+                return fail(info.name, "sheet scene", scene.error());
+            }
+            if (auto valid = drawing::validate(*scene); !valid) {
+                return fail(info.name, "scene validation", valid.error());
+            }
+            items +=
+                scene->items.lines.size() + scene->items.arcs.size() + scene->items.texts.size();
+            if (!out.empty() && sheet == sheets.front()) {
+                const auto stem = out / std::string{info.fileStem};
+                if (auto pdf = io::exportPdf(*scene, stem.string() + ".pdf"); !pdf) {
+                    return fail(info.name, "PDF export", pdf.error());
+                }
+                if (auto svg = io::exportSvg(*scene, stem.string() + ".svg"); !svg) {
+                    return fail(info.name, "SVG export", svg.error());
+                }
+                if (auto dxf = io::exportDxf(*scene, stem.string() + ".dxf"); !dxf) {
+                    return fail(info.name, "DXF export", dxf.error());
+                }
+            }
+        }
+        const double sceneMs = millisecondsSince(sceneStart);
+
+        std::printf("== %.*s (%.*s)\nsheets %zu views %zu scene_items %zu\n",
+                    static_cast<int>(info.name.size()), info.name.data(),
+                    static_cast<int>(info.label.size()), info.label.data(), sheets.size(), views,
+                    items);
+        std::printf("timing_ms build %.3f regeneration %.3f scene_and_export %.3f\n", buildMs,
+                    regenMs, sceneMs);
     }
     return 0;
 }

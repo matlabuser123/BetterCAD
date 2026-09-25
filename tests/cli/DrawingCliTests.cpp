@@ -24,10 +24,12 @@
 #include <catch2/matchers/catch_matchers_string.hpp>
 
 #include <array>
+#include <cstddef>
 #include <filesystem>
 #include <format>
 #include <fstream>
 #include <memory>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -976,4 +978,59 @@ TEST_CASE("DrawingCli_ExportingTwiceGivesTheSameBytes", "[cli][drawing][p14][exp
         CHECK(bytesOf(first) == bytesOf(second));
         CHECK_FALSE(bytesOf(first).empty());
     }
+}
+
+TEST_CASE("DrawingCli_TheReportKeepsItsColumnsApartWhateverAnObjectIsCalled",
+          "[cli][drawing][p14][report]") {
+    // P14-REFMOD-001 found this: the report padded each column to a fixed
+    // width and stopped, so a label of exactly that width ran straight into
+    // the next one -- `ClearanceCallout (object:21)hole_callout`. A report
+    // whose columns can merge cannot be read by a person or split by a
+    // script, and the name that does it is an ordinary one.
+    //
+    // A label is "<name> (object:N)", so the test sweeps NAME LENGTHS across
+    // the boundary rather than guessing which one lands on it.
+    TempDir dir;
+    const auto path = dir.path() / "part.bcad";
+    writePart(path);
+    const std::string file = cliPath(path);
+    cliOk({"sheet-add", file, "--format", "A3"});
+    cliOk({"view-add", file, "--sheet", "Sheet1", "--source", "Block"});
+
+    for (std::size_t length = 12; length <= 34; ++length) {
+        const std::string name = "N" + std::string(length - 1, 'o');
+        cliOk({"annotation-add", file, "--view", "View1", "--type", "note", "--text", "X", "--name",
+               name, "--x", "40mm", "--y", "40mm"});
+    }
+
+    const auto report = runCliCommand({"drawing", file});
+    INFO(report.err);
+    REQUIRE(report.exitCode == ExitCode::Success);
+    INFO(report.out);
+
+    // Every annotation line must have whitespace between the label and the
+    // kind that follows it. `note` is the kind here, so a merged column shows
+    // as a ')' immediately before it.
+    CHECK_THAT(report.out, !ContainsSubstring(")note"));
+    CHECK_THAT(report.out, !ContainsSubstring(")bom_table"));
+
+    // And the same columns hold for the kinds with the longest names, which
+    // is the other side of the boundary.
+    std::size_t noteLines = 0;
+    std::istringstream lines{report.out};
+    for (std::string line; std::getline(lines, line);) {
+        const std::size_t at = line.find(" note ");
+        if (at == std::string::npos) {
+            continue;
+        }
+        ++noteLines;
+        INFO(line);
+        // The label ends at its closing bracket, and at least one space
+        // separates it from the kind.
+        const std::size_t bracket = line.rfind(')', at);
+        REQUIRE(bracket != std::string::npos);
+        CHECK(at > bracket);
+        CHECK(line[bracket + 1] == ' ');
+    }
+    CHECK(noteLines == 23);
 }

@@ -128,6 +128,16 @@ struct Anchor {
 
     // A document object. Two kinds know where they are: a hole feature, and
     // a component occurrence, which is what a balloon labels.
+    //
+    // An EMPTY target reaches here only from a caller that should have
+    // handled its own kind first -- a note and a BOM table point at nothing.
+    // Saying so is a diagnostic; dereferencing the optional to find out was
+    // undefined behaviour, and in a release build it read whatever was there
+    // (P14-REFMOD-001).
+    if (!target.object) {
+        return makeError(ErrorCode::InvalidArgument,
+                         "this annotation points at nothing, so there is no place to resolve");
+    }
     const ComponentId asComponent = ComponentId::fromValue(target.object->value());
     if (const auto* component = document.findObjectAs<assembly::Component>(asComponent);
         component != nullptr) {
@@ -408,6 +418,45 @@ Result<std::string> annotationText(const Document& document, AnnotationId id,
         return d.text;
     }
     (void)transforms;
+
+    // The three kinds whose words are derived, each answered by the path that
+    // DRAWS it, so the two can never disagree about what an annotation says.
+    //
+    // This dispatch is the fix P14-REFMOD-001 found the need for. Until then
+    // every model-driven kind was sent down the hole-callout path, which
+    // `isModelDriven()` had meant when it was written and had not meant since
+    // P14-BOM-001 added balloons and tables to it. A balloon was reported as
+    // "a hole callout, and what it points at is not a hole" -- a false
+    // statement about the document -- and a table, which points at nothing,
+    // reached resolveTarget() with an empty target.
+    if (d.type == AnnotationType::Balloon) {
+        // The item number of the OCCURRENCE, through the bill of materials
+        // now. itemNumberOf() is the one path, shared with draw() (ADR-022).
+        if (!d.target.object) {
+            return makeError(ErrorCode::InvalidArgument,
+                             std::format("{} ({}) is a balloon that points at no occurrence",
+                                         annotation->name(), id));
+        }
+        auto item = itemNumberOf(document, d.view,
+                                 ComponentId::fromValue(d.target.object->value()));
+        if (!item) {
+            return makeError(item.error().code,
+                             std::format("{} ({}) has no item number: {}", annotation->name(), id,
+                                         item.error().message));
+        }
+        return std::to_string(*item);
+    }
+    if (d.type == AnnotationType::BomTable) {
+        // A table's words are its ROWS, and there is no one string that is
+        // what it says. Refusing is right; billOfMaterials() is what a caller
+        // wanting the contents should ask.
+        return makeError(ErrorCode::InvalidArgument,
+                         std::format("{} ({}) is a bill-of-materials table: its words are its "
+                                     "rows, so ask billOfMaterials() for them rather than for one "
+                                     "run of text",
+                                     annotation->name(), id));
+    }
+
     auto anchor = resolveTarget(document, d.target, bodies);
     if (!anchor) {
         return makeError(anchor.error().code,
