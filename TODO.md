@@ -10,8 +10,13 @@
 
 ```text
 Current:   P14 — Technical Drawings
-Next:      P14-QUAL-001 — full P14 qualification.
-           P14-STREF-001 is STILL OPEN and is a scope decision of its own:
+Next:      A SCOPE DECISION, not an implementation task. P14-QUAL-001 was
+           attempted on 2026-09-25 at 56f5a34 and is BLOCKED at its
+           precondition by P14-STREF-001; see that milestone's section and
+           docs/verification/P14-QUAL-001/. P14 CANNOT be qualified until the
+           chamfer gap is either closed or accepted in writing with the gate
+           text changed to match.
+           P14-STREF-001 is the blocker, and is a scope decision of its own:
            its audit is done and 11 of its 12 checks pass, but one gate --
            "no silent rebinding" -- is NOT met and the milestone is not [x].
            A chamfer face is named by its edge reference's POSITION in the
@@ -1502,6 +1507,36 @@ Open decision → move build and test output off OneDrive. OVERDUE. BOTH repeat
 
 ## Full P14 Qualification
 
+**BLOCKED — attempted 2026-09-25 at 56f5a34 and stopped at the precondition.**
+A required predecessor is incomplete: `P14-STREF-001`'s gate "no silent
+rebinding" is NOT MET, and `no silent rebinding` is also a hard gate of this
+milestone, so no build could make this tree PASS. Nothing was built, no preset
+was run and no gate below was marked. The audit that established it is
+[docs/verification/P14-QUAL-001/](docs/verification/P14-QUAL-001/README.md),
+and it found the chamfer gap still present at this commit:
+`References.hpp:97` names a chamfer face by `edge`, a POSITION in the
+user-reorderable `ChamferDefinition::edges`.
+
+That audit also established two things that were not written down before, both
+of which matter when the gap is closed:
+
+* **A name-based search cannot find this defect.** `faceIndex`, `edgeIndex`,
+  `shapeIndex`, `topologyIndex`, `bestMatch`, `firstMatch` and
+  `reinterpret_cast` all return 0 across `src/` and `include/`. The field is
+  called `edge`.
+* **`Reference_NoPersistedReferenceCarriesAnIndexIntoTheKernel` cannot find it
+  either.** The persisted key is `"edge": n`, which is not in that test's
+  forbidden list, and its fixture builds no chamfer. Closing the gap must
+  extend both, or the blind spot outlives the fix.
+
+Unblocking it is a scope decision: close the chamfer gap (which changes
+`ChamferDefinition`, its file format, and committed reference models that P11,
+P12 and P13 are qualified against), or record the positional chamfer reference
+as a documented P14 limitation AND change this milestone's gate text to match.
+Marking the gate met while the defect stands is the false checkbox this project
+forbids.
+
+
 * [ ] Freeze final P14 tree
 * [ ] Audit all P14 milestone evidence
 * [ ] Verify all TODO items complete
@@ -1552,6 +1587,10 @@ all P14 milestones PASS
 + 0 unexpected warnings
 + qualified tree == committed tree
 ```
+
+**NOT MET.** `all P14 milestones PASS` fails on `P14-STREF-001`, and
+`stable drawing references PASS` fails with it. Every other line was NOT RUN,
+not passed — see the audit's gate matrix.
 
 ---
 
