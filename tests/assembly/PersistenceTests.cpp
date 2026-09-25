@@ -591,8 +591,12 @@ TEST_CASE("Persist_RefusesPlausiblyCorruptAssemblyData", "[assembly][persist][p1
     refuses("an unknown object type", replaced("\"component\"", "\"wormhole\""));
     refuses("a suppression override for an object never written",
             replaced(std::format("\"object\": {}", rig.arm.value()), "\"object\": 987654"));
-    refuses("an unsupported format version", replaced("\"version\": 1", "\"version\": 99"));
-    refuses("a wrong JSON type for a number", replaced("\"version\": 1", "\"version\": \"one\""));
+    // Written against whatever version this build writes, so a future bump
+    // does not quietly stop exercising the version gate.
+    const std::string version = std::format("\"version\": {}", io::kDocumentFormatVersion);
+    refuses("an unsupported format version", replaced(version, "\"version\": 99"));
+    refuses("a version below the oldest readable", replaced(version, "\"version\": 0"));
+    refuses("a wrong JSON type for a number", replaced(version, "\"version\": \"one\""));
     refuses("a truncated file", original.substr(0, original.size() / 2));
     refuses("an empty file", std::string{});
     refuses("not JSON at all", std::string{"this is not a document"});

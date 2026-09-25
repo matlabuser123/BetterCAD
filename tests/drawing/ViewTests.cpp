@@ -581,7 +581,7 @@ TEST_CASE("View_TheFileHoldsIntentAndNoProjectedGeometry", "[drawing][view][p14]
     CHECK_THAT(text, !ContainsSubstring("bounds"));
     // A base view writes its placement; the file has exactly one "x".
     CHECK(std::ranges::count(text, 'x') > 0);
-    CHECK_THAT(text, ContainsSubstring("\"version\": 1")); // no bump
+    CHECK_THAT(text, ContainsSubstring("\"version\": 2")); // no bump
 
     // Saving twice is byte-identical.
     const auto again = dir.path() / "again.bcad";

@@ -1100,7 +1100,7 @@ TEST_CASE("HoleFeature_ComposesWithChamferAndFillet", "[hole][features][chamfer]
 
     SECTION("a hole in a chamfered block") {
         const ObjectId bevel = m.add<ChamferFeature>(
-            "Bevel", {.target = featureId(m.pad), .edges = {BlockModel::alongX(0, 20)}, .distance = 2_mm});
+            "Bevel", {.target = featureId(m.pad), .edges = { ChamferEdge{BlockModel::alongX(0, 20)}}, .distance = 2_mm});
         HoleDefinition d = m.definitionOf(m.drill);
         d.target = featureId(bevel);
         m.setDefinition(m.drill, d);
@@ -1126,7 +1126,7 @@ TEST_CASE("HoleFeature_ComposesWithChamferAndFillet", "[hole][features][chamfer]
         // Each rim loses a ring whose section is the triangle with legs c,
         // centroid c/3 outside the bore: pi c^2 (r + c/3) by Pappus.
         const ObjectId ease = m.add<ChamferFeature>(
-            "Ease", {.target = featureId(m.drill), .edges = {rim(50, 25, 20, 5), rim(50, 25, 0, 5)}, .distance = 1_mm});
+            "Ease", {.target = featureId(m.drill), .edges = { ChamferEdge{rim(50, 25, 20, 5)}, ChamferEdge{rim(50, 25, 0, 5)}}, .distance = 1_mm});
         const RegenerationReport report = requireReport(regenerator, m.doc);
         INFO(describe(report));
         REQUIRE(report.succeeded());

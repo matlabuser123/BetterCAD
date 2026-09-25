@@ -2,8 +2,13 @@
 
 ```text
 TASK:      P14-STREF-001
-STATUS:    BLOCKED on one gate -- no silent rebinding. Everything else PASS.
+STATUS:    PASS. The gate that blocked it -- no silent rebinding -- was CLOSED
+           on 2026-09-26; see CLOSURE at the end of this document. Everything
+           above CLOSURE is the original audit, at its own baseline, and is
+           left exactly as it was written: it is the record that found the
+           defect, and the defect was real.
 BASELINE:  dca2e61 (P14-BOM-001), clean tree, HEAD == origin/main
+CLOSURE:   d1d7c7d (P14-QUAL-001 audit), ADR-024
 ```
 
 ## TASK
@@ -506,3 +511,523 @@ qualification/rebuild-*.log             the fresh-binary proof
 qualification/ctest-*.log               2047/2047 in each preset
 qualification/ctest-repeat-*.log        2046/2046 five times over, debug and release
 ```
+
+---
+
+# CLOSURE — 2026-09-26
+
+Everything above this line is the original audit, at baseline `dca2e61`, and is
+unchanged. It found a real defect and recorded it accurately; rewriting it to
+look tidier would destroy the only record of how the defect was found. What
+follows is the separate work that closed it.
+
+```text
+TASK:      close "no silent rebinding"
+BASELINE:  d1d7c7d, clean tree, HEAD == origin/main
+DECISION:  ADR-024 — A chamfer's edge selection has an identity of its own
+RESULT:    PASS
+```
+
+## THE GAP, RESTATED
+
+A chamfer face was named `{role = Chamfer, edge = N}`, where `N` was the
+**position** of an edge selection in `ChamferDefinition::edges` — a vector of
+ordinary stored intent that a user may reorder. Reordering it left every stored
+reference resolving, to different material, with the solid unchanged and the
+reference untouched.
+
+Confirmed present in production code before any change was made, rather than
+taken from this document:
+
+```text
+include/bettercad/core/document/References.hpp:97
+    std::optional<std::uint32_t> edge{};
+    "a chamfer face names an edge reference from 1"
+
+src/features/chamfer/ChamferRegeneration.cpp
+    .edge = static_cast<std::uint32_t>(reference + 1)   // the position
+```
+
+## THE FIX
+
+A chamfer's edge selection is now a thing with an identity.
+
+```cpp
+struct ChamferEdge {
+    ChamferEdgeId id{};            // allocated, never reused
+    geometry::EdgeSignature curve{};
+};
+struct FaceSelector {
+    std::optional<ChamferEdgeId> edge{};   // the SELECTION, not its position
+};
+```
+
+`ChamferFeature` owns an `IdAllocator`, whose existing contract is exactly the
+property needed and was already written down: *"Values start at 1 and are never
+reused, even after the identified item is deleted, so a stale reference can
+never silently resolve to a newer item."*
+
+`chamferFaceNamer` turns the kernel's request-edge index into that selection's
+id, and is the only place the translation happens. Order now carries no meaning:
+reordering, inserting into or shortening the list changes no reference, because
+the id travels with the selection.
+
+**`FaceSelector::edge` changed TYPE, not just meaning.** That was deliberate: it
+made the compiler enumerate every consumer, so nothing could keep treating the
+field as a position by accident. Every site it found is in FILES below.
+
+Why an allocated id rather than the `EdgeSignature` already stored, and the
+three alternatives rejected, are in
+[ADR-024](../../architecture/decisions/ADR-024-a-chamfer-edge-selection-has-an-identity.md).
+
+## EDIT SEMANTICS
+
+Each row is a test, and each test fails against the pre-fix code.
+
+```text
+edit                                   reference            test
+reorder the selections                 follows its own      ...KeepsItsMeaningWhenTheEdgeListIsReordered
+insert another selection first         unchanged            ...IsUnmovedWhenAnotherEdgeIsInsertedBeforeIt
+delete an unrelated selection          unchanged            ...SurvivesTheDeletionOfAnUnrelatedEdge
+delete the referenced selection        Unresolved           ...WhoseEdgeIsDeletedBecomesUnresolved
+add back an IDENTICAL curve            stays Unresolved     ...DoesNotRebindToAnIdenticalReplacementEdge
+restore the same selection             recovers             ...AChamferEdgeIdIsRestorableButNotForgeable
+undo / redo through the command        recovers / goes      ...UndoingAChamferEditRestoresItsReferences
+save -> load                           same selection       ...RoundTripsThroughSaveAndLoad
+reorder -> save -> load                same selection       ...AReorderedChamferStillResolvesAfterSaveAndLoad
+resolve repeatedly, and after regen    one answer, exactly  ...ResolvesToTheSamePlaceEveryTime
+```
+
+The save/load pair matters more than it looks. A file records the list in its
+current order, so under a positional scheme reordering and then saving would
+write a file whose positions disagree with the references stored in it, and the
+next load would resolve them to the wrong faces with nothing in the file to show
+anything had gone wrong.
+
+## TWO DEFECTS THE TESTS FOUND IN MY OWN DESIGN
+
+Both were found by running the suite, not by reading the diff, and both are
+recorded because the first draft of this fix was wrong in ways that looked
+right.
+
+**THE FIRST RULE WAS TOO STRONG, AND IT BROKE UNDO.** The obvious rule is "an
+edit may only name ids the chamfer currently has", which stops a deleted
+selection being revived under its old identity. `ReferenceModel_ShaftRegenerates`
+failed against it: `ModifyFeatureCommand::undo` replays `setDefinition` with the
+previous definition, so undoing a deletion restores exactly that — a selection
+with the id it used to have. The rule made undo impossible, and it also
+contradicted this milestone's own requirement that restoring the same semantic
+target is *target recovery*.
+
+The rule is now: an edit may name any id this chamfer has **ever** allocated;
+an id above the high-water mark is refused, because nothing can be referring to
+one that was never handed out and granting it would reserve a value a later
+selection would also be given. Silent rebinding is prevented earlier — a new
+selection carries no identity at all — so nothing is lost.
+
+**THE IMPLICIT CONVERSION WAS A TRAP.** `ChamferEdge` first converted from a
+bare `EdgeSignature`, which kept `.edges = {a, b}` compiling everywhere and
+looked harmless. It is not, and the project's own reference test showed why:
+
+```cpp
+moved.edges[1] = geometry::circleSignature(...);   // ShaftTests, before
+```
+
+That is a user **repairing** a chamfer whose edge moved. The conversion silently
+discarded the identity the selection had and minted a new one, so every drawing
+reference to that face would have been stranded — by the one workflow whose
+whole purpose is to put a broken reference back. The constructor is now
+`explicit`, which does not compile, and the 25 call sites each say what they
+mean:
+
+```cpp
+edges[1].curve = someCurve;          // re-select: same selection, references follow
+edges[1] = ChamferEdge{someCurve};   // replace: a new selection, old references unresolve
+```
+
+## PERSISTENCE AND MIGRATION
+
+The document format moves to **version 2**, and the reader accepts 1 and 2. The
+version exists for a field that changes meaning, and this is one.
+
+```text
+version 2    "edges": [{"id": n, "edge": <curve>}], "last_edge_id": n
+             face selector: "chamfer_edge": id
+version 1    "edges": [<curve>, ...]
+             face selector: "edge": n   -- a POSITION
+```
+
+**A version-1 document loads, and its references migrate exactly.** Its
+selections arrive without ids and are identified 1..N in the file's own order,
+so position n is the selection now identified n. The conversion preserves
+precisely the face the file named. It is not a guess, and it is not silent: the
+two keys are distinct, a file carrying both is refused rather than one being
+preferred, and re-saving writes version 2.
+
+The migration cannot recover intent from *before* a reorder. If the old scheme
+had already moved a reference onto the wrong face by the time the file was
+saved, the file means the wrong face and the migration faithfully preserves
+that. The information is gone; nothing can do better.
+
+Tested by `ChamferFeature_AVersionOneFileMigratesToIdentifiedSelections` and
+`ChamferFeature_AVersionOneChamferFaceReferenceMeansTheSameFace`, which build
+the version-1 form out of the version-2 writer's own output — so every byte fed
+to the reader is a byte the old writer would have produced — and require the
+migrated document to be byte-identical to one that never left version 2.
+
+## COMMITTED ARTIFACTS
+
+**No committed artifact carried a positional chamfer reference.** All 32
+committed `.bcad` models were searched: six contain chamfers, and none names a
+chamfer *face*. So no historical reference needed migrating, and the earlier
+estimate that closing this gap would disturb the reference models P11, P12 and
+P13 are qualified against was wrong — it was based on those models containing
+chamfers, which is not the same thing.
+
+All 32 were nevertheless regenerated, because the version field changed and,
+in the six chamfered ones, the selection shape did. **The regeneration was
+proved faithful rather than assumed**: before replacing anything, the byte
+comparisons were run against the old files and
+
+```text
+readFile(built) == readFile(committed)    FAILED  20 of 20   (bytes changed)
+equivalent(loaded, built)                 FAILED   0 of 20   (meaning did not)
+```
+
+Every committed version-1 file still loaded to a model equivalent to its
+builder. The bytes moved; no model did.
+
+## THE AUDIT BLIND SPOT, CLOSED STRUCTURALLY
+
+`P14-QUAL-001`'s audit found that neither of the checks meant to catch this
+could: a prohibited-name search returns **0** for every term because the field
+is called `edge`, and
+`Reference_NoPersistedReferenceCarriesAnIndexIntoTheKernel` has no chamfer in
+its fixture and could not simply add `"edge"` to its forbidden list, because
+`"edge"` legitimately names a curve elsewhere in the same file — a variable
+fillet's selection is `{"edge": <curve>, "radii": [...]}`.
+
+`Reference_NoChamferReferenceIsStoredAsAPositionInTheFile` closes it without
+banning a word:
+
+```text
+1. the reference is stored as an identity, and the file really does contain
+   a chamfer face reference -- checked, not assumed
+2. no face selector anywhere carries "edge" followed by a NUMBER; the
+   legitimate uses are always "edge" followed by an OBJECT, so the structure
+   is what is checked and the word stays free to mean what it means
+3. the selections are REORDERED, the file is written again, and the stored
+   reference is byte-identical while the array order has changed
+```
+
+The third is the one no word list can fake: under a positional scheme the file
+would have to say something different to keep meaning the same face, and it did
+not — which is exactly how the defect survived a save and a load.
+
+## THREE-PRESET REGRESSION
+
+Run by `closure/run-qualification.cmd`, on `closure/qualify.cmd`, which is
+byte-identical to the harness `P14-REFMOD-001` qualified with.
+`closure/verify-harness.cmd` was run first and passed: pointed at a preset that
+does not exist, the harness fails real stages and exits 3, so a failed stage
+cannot reach nobody.
+
+### The frozen tree
+
+```text
+qualification candidate   d1d7c7d + the working tree of this closure
+apps                      d8b08545dbc80be58b4827977dcceaadeb60c82d
+include                   0dec3a71f8a7334f8c03241d97fcbf27bf636bf4
+src                       a552f8b5364c413e8cfd9f417e4a1dd8f760ac99
+tests                     454eb29c62e8d40693ab8dee46a40ac70868dd0b
+examples                  2e1ef60bb5e67fa3589e1246613261cd746ddce2
+cmake                     a84e909339b24bc7ffca591888e10d48a3e5296c
+CMakeLists.txt            a0adbb9c1d3583aab4e294fd41837537e53e4764
+CMakePresets.json         951b53d6b7412e6057c188dd41e40cb9e57c6aa3
+```
+
+Recorded before the first build and again after the last test run, identical
+both times. `CMakePresets.json` is unchanged from the baseline — see THE BUILD
+LOCATION below for why that is worth stating.
+
+### The stages
+
+```text
+stage                        exit   wall clock
+debug configure                 0   03:58:29 -> 03:58:46
+debug clean (attempt 1)         0   03:58:47
+debug build                     0   03:58:47 -> 04:11:47
+debug no-op rebuild             0   04:11:48      compiled 0, linked 0
+debug ctest                     0   04:11:48 -> 04:15:49   2256/2256
+release configure               0   04:15:49 -> 04:15:54
+release clean (attempt 1)       0   04:15:55
+release build                   0   04:15:55 -> 04:31:12
+release no-op rebuild           0   04:31:12      compiled 0, linked 0
+release ctest                   0   04:31:12 -> 04:34:25   2256/2256
+debug-shared configure          0   04:34:25 -> 04:34:30
+debug-shared clean (attempt 1)  0   04:34:31
+debug-shared build              0   04:34:31 -> 04:46:43
+debug-shared no-op rebuild      0   04:46:44      compiled 0, linked 0
+debug-shared ctest              0   04:46:44 -> 04:50:11   2256/2256
+repeat release (5x)             0   04:50:11 -> 05:04:24
+repeat debug (5x)               0   05:04:24 -> 05:19:22
+```
+
+**0 stages failed**, and every clean was first-attempt.
+
+```text
+Debug          2256 / 2256     0 warnings
+Release        2256 / 2256     0 warnings
+Debug-shared   2256 / 2256     0 warnings
+```
+
+`grep -ci warning` returns 0 over all six logs — the three builds and the three
+no-op rebuilds — under the 22 warning flags `BetterCADCompilerOptions.cmake`
+sets, `-Werror` among them.
+
+### Fresh binaries
+
+Each build was followed immediately by a second build of the same preset. All
+three had exactly one edge to run, `Checking git revision`, which is always
+dirty by design and produced no recompile and no relink. The binaries CTest ran
+are the binaries the build produced.
+
+`ctest -N` lists **2256** tests, 11 more than `P14-REFMOD-001`'s 2245, and the
+11 are accounted for exactly:
+
+```text
+  8   net new cases in tests/drawing/StableReferenceTests.cpp
+      (10 chamfer cases replacing the 2 that recorded the gap)
+  1   Reference_NoChamferReferenceIsStoredAsAPositionInTheFile
+  2   the two version-1 migration cases in tests/io/ChamferFileTests.cpp
+ ---
+ 11   = 2256 - 2245
+```
+
+A new SECTION was also added to `ChamferFeature_DefinitionIsValidatedOnCreateAndEdit`
+— re-applying an unidentified definition is a new selection, not a no-op — and
+sections do not add ctest entries, which is why the arithmetic still closes.
+
+### Determinism
+
+```text
+repeat release   11275 "Passed" lines = 2255 x 5, exactly
+repeat debug     11275 "Passed" lines = 2255 x 5, exactly
+                 0 occurrences of ***Failed, "Not Run" or "Permission denied"
+```
+
+Counted from the logs rather than read off ctest's summary line, which reports
+tests and not runs. The filter is broad on purpose: this change reaches `core`
+(`FaceSelector`), `features` (the chamfer, regeneration, patterns, mirrors),
+`io` (both serializers and the format version) and every committed model, so
+repeating only the chamfer tests would repeat the new work and none of what it
+could have disturbed.
+
+**The OneDrive replace fault did not recur.** It has failed a repeat stage in
+four earlier milestones; it did not here. That is one clean run, and it does not
+close the decision.
+
+## THE BUILD LOCATION — INVESTIGATED, AND BLOCKED BY A SEPARATE DEFECT
+
+Moving build output out of the synchronised checkout was attempted first,
+because `binaryDir` lives in `CMakePresets.json`, inside the fingerprint, so the
+decision had to be taken before this tree was frozen rather than after.
+
+A `-local` preset family was written and its mechanics validated: inheriting
+`debug`/`release`/`debug-shared` unchanged, building at
+`$BETTERCAD_BUILD_ROOT/<preset>`, with no absolute path committed — where a
+build belongs is a property of the checkout, not of the project — and with the
+presets disabled and CMake saying so when the variable is unset.
+
+**The full three-preset qualification was then run on them, and all three failed
+to link the GUI target.**
+
+```text
+windeployqt failed (1):
+  Unable to find dependent libraries of
+  <BETTERCAD_BUILD_ROOT>\gnu-16-mingw-amd64\bin\Qt6Core.dll
+```
+
+`windeployqt` resolves the Qt runtime **relative to the executable it is
+deploying**, as `<exe dir>/../../<toolchain key>/bin`. That names the real Qt
+only when the build tree happens to sit inside the source tree. With the build
+elsewhere it looked under the build root — the right parent directory, the wrong
+name — while `bettercad-deps` sat where it always had. The deps prefix itself is
+correct and build-independent: `BETTERCAD_WINDEPLOYQT` resolves to the same
+`bettercad-deps` path in both build trees.
+
+Three fixes were tried and none changed it: Qt's `bin` on `PATH` for the deploy,
+running `windeployqt` from Qt's own `bin`, and pre-placing `Qt6Core.dll` beside
+the executable.
+
+**So the `-local` presets and the attempted deploy fix were both reverted rather
+than committed.** Committing presets that do not work, or a fix that fixes
+nothing, is worse than leaving the decision open. This qualification ran on the
+standard presets, which every prior milestone used.
+
+What the attempt established, and it is new:
+
+```text
+the Qt deploy step has been depending on the build tree living inside the
+source tree. A clean build anywhere else fails the GUI target, and that is
+true independently of OneDrive.
+
+so the build-location decision is NOT a configuration change. It needs the Qt
+deployment made location-independent first, and that is its own piece of work,
+outside what this milestone was authorized to do.
+```
+
+## ADVERSARIAL REVIEW
+
+```text
+Can a chamfer face reference still move under a reorder?
+    No. Measured: the reorder test asserts both faces by position in mm, 30 mm
+    apart, and the file-level test reorders, re-saves and shows the stored
+    reference byte-identical.
+
+Can an identical replacement capture the old reference?
+    No, by the ordinary route: a new selection carries no identity, because
+    ChamferEdge will not convert from a bare curve. Tested with a
+    byte-identical curve.
+
+Can a retired id be revived to capture references?
+    Only by restoring the selection it identified, which is target recovery and
+    is required. Forging an id above the high-water mark is refused. This is
+    the weaker of the two rules I wrote, and it is weaker on purpose -- see the
+    undo defect above.
+
+Can a stale reference reach a DIFFERENT chamfer's selection?
+    No. A FaceName is {feature ObjectId, selector}, ObjectIds are never reused,
+    so a reference stored against one chamfer cannot name another whatever its
+    selection ids are. This is why create() and restore() may take ids
+    verbatim.
+
+Does a pattern or mirror of a chamfer still name its copies correctly?
+    Yes. A copy's faces carry the SAME selection ids as the original's; the
+    instance is named by `copies`. PatternSupport captures the ids BY VALUE
+    beside the request, because the operation outlives the scope that found the
+    feature -- it must not hold a pointer to it.
+
+Is FaceCopy::instance the same defect?
+    No, and it was checked rather than assumed. A pattern instance ordinal is
+    determined by the pattern's count and spacing, not a user-orderable list,
+    so no edit reorders instances while leaving the solid identical; and
+    LinearPatternFeature guarantees suppressing an instance never renumbers
+    another.
+
+Are fillets affected?
+    No. FilletDefinition has the identical shape, but there is no
+    FaceRole::Fillet -- a fillet face cannot be referenced at all, so its
+    selections need no identity. If one ever becomes referenceable it needs
+    this treatment first.
+
+Could a rejected edit leave the allocator advanced?
+    No. identify() validates in a first pass that allocates nothing, then
+    allocates in a second that cannot fail.
+
+Could {unset, id 1} collide?
+    It could have. Every id a definition already carries is reserved BEFORE
+    anything is allocated; reserving as it went would have handed the first
+    edge id 1 and collided with the second. Found by reading the code, fixed
+    before it ran.
+
+Did any test get weakened to pass?
+    No test was deleted or loosened. Two were REPLACED -- the pair that recorded
+    the gap, one of which was written to fail if the gap closed, and it did.
+    Expectations changed where the file format or a message deliberately
+    changed, and each is listed in FILES.
+
+Is the version bump honest?
+    Yes. A version-2 file is genuinely unreadable by a version-1 reader, and the
+    version says so rather than leaving it to a field that happens not to be
+    recognised.
+```
+
+No credible defect was left unresolved. The two found in my own design are above,
+with the tests that found them.
+
+## KNOWN LIMITATIONS
+
+**The build-location decision is still open**, now with a named blocker. See
+above.
+
+**The parameters file format is untouched** and stays at version 1. It is a
+separate format with its own version and nothing in this change reaches it.
+
+**Two of the migration paths are synthesised, not archived.** No committed file
+carries a version-1 chamfer face reference, so the migration tests build the
+version-1 form from the version-2 writer's output. That is faithful — every byte
+is one the old writer would have produced — but it is not the same as a file
+that has actually sat on disk since before the change. There is no such file to
+archive: the corpus never had one.
+
+## FILES
+
+```text
+include/bettercad/core/Id.hpp                      ChamferEdgeId
+include/bettercad/core/document/References.hpp     FaceSelector::edge is an ID
+include/bettercad/features/ChamferFeature.hpp      ChamferEdge, restore, lastEdgeId
+include/bettercad/features/Regeneration.hpp        the namer takes ids
+include/bettercad/io/DocumentFile.hpp              version 2, oldest readable 1
+src/features/chamfer/ChamferFeature.cpp            identify(): allocate, keep, refuse
+src/features/chamfer/ChamferRegeneration.cpp       index -> id, the only translation
+src/features/reference/FaceReferences.cpp          resolve by identity, not by count
+src/features/pattern/PatternSupport.cpp            ids captured by value
+src/features/pattern/MirrorRegeneration.cpp        curves for the image check
+src/core/document/References.cpp                   selector validation
+src/io/json/FeatureJson.cpp                        chamfer selections, both shapes
+src/io/json/DatumJson.cpp                          chamfer_edge, and the legacy edge
+src/io/json/DocumentJson.cpp                       the version gate is a range
+apps/bettercad_cli/DocumentCommands.cpp            "the face of chamfer edge 2"
+
+tests/drawing/StableReferenceTests.cpp             the edit-semantics suite
+tests/io/ChamferFileTests.cpp                      the two migration cases
+tests/features/ChamferFeatureTests.cpp             identity on create and edit
+tests/reference/ShaftTests.cpp                     re-select keeps identity
+tests/core/geometry/FaceNameTests.cpp              the namer stand-in
+tests/support/ChamferBlockModel.hpp                call sites
+tests/support/FaceKindModels.hpp                   call sites
+tests/io/FaceKindFileTests.cpp                     both keys, and both at once
+tests/io/DocumentFileTests.cpp                     the version range
+tests/assembly/PersistenceTests.cpp                version-agnostic gate test
+tests/features/SketchOnFaceTests.cpp               message
+tests/cli/FaceReferenceCliTests.cpp                message
+tests/core/geometry/DraftTests.cpp                 message
+examples/reference_models/*.cpp                    6 chamfered builders
+examples/models/**/*.bcad                          32 models regenerated
+
+docs/architecture/decisions/ADR-024-*.md           the decision and what it rejected
+docs/verification/P14-STREF-001/closure/           this qualification's logs
+```
+
+## RESULT
+
+```text
+TASK:            close "no silent rebinding"
+IMPLEMENTATION:  a chamfer edge selection has an allocated, persistent
+                 identity, and a chamfer face is named by it (ADR-024).
+                 Document format version 2, reading 1 and 2.
+TESTS:           11 new ctest entries, reconciled exactly against 2256 - 2245.
+                 2256/2256 in Debug, Release and Debug-shared, each from
+                 clean, 0 warnings, fresh binaries. 2255/2255 five times over
+                 in Release and in Debug -- 11275 = 2255 x 5 passes counted in
+                 each log.
+VALIDATION:      every edit shape in the table above asserted against the
+                 drawn/resolved face, not against the definition alone; the
+                 persisted form checked structurally, including by reordering
+                 and re-saving; version-1 migration proved byte-identical to a
+                 document that never left version 2; all 32 committed models
+                 shown to load equivalent to their builders before being
+                 regenerated.
+ADVERSARIAL:     2 defects found in MY OWN design by the test suite -- a rule
+                 that broke undo, and an implicit conversion that silently
+                 retired identities in a repair workflow. Both fixed, both
+                 recorded. 0 defects left open.
+RESULT:          PASS
+EVIDENCE:        this section and closure/
+TODO:            "Prevent silent rebinding" -> [x]; P14-STREF-001 -> [x].
+                 The build-location decision stays OPEN, with a named blocker.
+```
+
+**P14-STREF-001 is complete.** P14 is not yet qualified: that is `P14-QUAL-001`,
+which this unblocks.

@@ -163,7 +163,7 @@ TEST_CASE("SheetFile_UsesTheExistingObjectEnvelopeAndNoNewKey", "[drawing][sheet
     CHECK_THAT(text, !ContainsSubstring("\"sheets\""));
     CHECK_THAT(text, !ContainsSubstring("\"drawings\""));
     // And no version bump.
-    CHECK_THAT(text, ContainsSubstring("\"version\": 1"));
+    CHECK_THAT(text, ContainsSubstring("\"version\": 2"));
 }
 
 TEST_CASE("SheetFile_HoldsIntentAndNeverDerivedGeometry", "[drawing][sheet][p14][io]") {
@@ -278,7 +278,7 @@ TEST_CASE("SheetFile_ADocumentWithoutSheetsIsUnchanged", "[drawing][sheet][p14][
     REQUIRE(io::saveDocument(document, path).has_value());
     const std::string text = readFile(path);
     CHECK_THAT(text, !ContainsSubstring("sheet"));
-    CHECK_THAT(text, ContainsSubstring("\"version\": 1"));
+    CHECK_THAT(text, ContainsSubstring("\"version\": 2"));
 }
 
 TEST_CASE("SheetFile_EveryCommittedModelStillLoadsAndHasNoSheet", "[drawing][sheet][p14][io]") {
@@ -308,7 +308,7 @@ TEST_CASE("SheetFile_MalformedSheetsAreRefusedAndNothingPartiallyLoads",
     const auto path = dir.path() / "broken.bcad";
 
     const std::string prefix =
-        R"({"format":"bettercad-document","version":1,"units":"SI",)"
+        R"({"format":"bettercad-document","version":2,"units":"SI",)"
         R"("document":{"id":"a55e0000-0000-4000-8000-00000000f14e","name":"Drawing",)"
         R"("metadata":{"description":"","author":"","properties":{}},"last_allocated_id":1},)"
         R"("parameters":[],"objects":[{"id":1,"type":"sheet","name":"Sheet1","data":)";

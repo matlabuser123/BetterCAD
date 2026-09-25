@@ -110,7 +110,7 @@ Result<ShaftModel> buildShaftReferenceModel() {
                             .radiusParameter = m.filletRadius});
     m.endChamfers = b.feature<features::ChamferFeature>(
         "EndChamfers", {.target = featureId(m.shoulderFillets),
-                        .edges = {rim(0.0, 15.0, "drive end"), rim(120.0, 12.5, "tail end")},
+                        .edges = { features::ChamferEdge{rim(0.0, 15.0, "drive end")}, features::ChamferEdge{rim(120.0, 12.5, "tail end")}},
                         .distance = 1_mm,
                         .distanceParameter = m.chamferSize});
 

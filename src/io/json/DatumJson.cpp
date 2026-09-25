@@ -200,10 +200,15 @@ Result<std::vector<FaceCopy>> faceCopiesFromJson(const Json& face, std::string_v
     return copies;
 }
 
-/// {"role": ..., "entity": id, "along": id, "along_sketch": id, "edge": n,
-/// "copies": [...]}, keys a selector does not use left out. A side named
-/// before P12-SWEEP-001 has no "along_sketch", and its path ran through one
-/// sketch, so it needs none.
+/// {"role": ..., "entity": id, "along": id, "along_sketch": id,
+/// "chamfer_edge": id, "copies": [...]}, keys a selector does not use left
+/// out. A side named before P12-SWEEP-001 has no "along_sketch", and its path
+/// ran through one sketch, so it needs none.
+///
+/// "chamfer_edge" is a chamfer edge's stable ID. A file written before
+/// ADR-024 has "edge" instead, which was the selection's POSITION; see
+/// faceSelectorFromJson for why the two are never confused and how the old
+/// form converts.
 Json faceSelectorToJson(const FaceSelector& selector) {
     Json face = Json::object();
     face["role"] = std::string{nameIn(kFaceRoles, selector.role)};
@@ -217,7 +222,7 @@ Json faceSelectorToJson(const FaceSelector& selector) {
         face["along_sketch"] = selector.alongSketch->value();
     }
     if (selector.edge) {
-        face["edge"] = *selector.edge;
+        face["chamfer_edge"] = selector.edge->value();
     }
     if (!selector.copies.empty()) {
         Json copies = Json::array();
@@ -233,16 +238,36 @@ Json faceSelectorToJson(const FaceSelector& selector) {
 }
 
 /// The selector at @p path; not yet validated.
+///
+/// LEGACY CHAMFER REFERENCES. Before ADR-024 a chamfer face was named by
+/// "edge": n, the 1-based POSITION of the selection in the chamfer's list.
+/// That is read here and converted to the id n, which is exact rather than a
+/// guess: a chamfer loaded from a file that carries no edge ids has ids
+/// allocated 1..N in the file's own list order (ChamferFeature::restore), so
+/// position n is the selection now identified by n. The conversion preserves
+/// exactly what the file meant -- including, unavoidably, a reference that the
+/// old positional scheme had already moved onto the wrong face before the file
+/// was written. Nothing can recover the intent from before such a reorder.
+///
+/// The two forms cannot be confused: "edge" and "chamfer_edge" are different
+/// keys, and a file carrying both is rejected rather than one being preferred.
 Result<FaceSelector> faceSelectorFromJson(const Json& face, std::string_view path) {
-    if (auto valid = requireObject(face, path, {"role", "entity", "along", "along_sketch", "edge", "copies"});
+    if (auto valid = requireObject(
+            face, path, {"role", "entity", "along", "along_sketch", "edge", "chamfer_edge", "copies"});
         !valid) {
         return std::unexpected(valid.error());
+    }
+    if (face.contains("edge") && face.contains("chamfer_edge")) {
+        return parseError(path, "names a chamfer edge twice, as \"edge\" and as \"chamfer_edge\"");
     }
     auto role = valueIn(kFaceRoles, face, "role", path);
     auto entity = readOptionalId(face, "entity", path);
     auto along = readOptionalId(face, "along", path);
     auto alongSketch = readOptionalId(face, "along_sketch", path);
-    auto edge = readOptionalCount(face, "edge", path);
+    // Either key reads as the same thing: an id. For "edge" that id IS the old
+    // position, as the note above explains.
+    auto edge = face.contains("edge") ? readOptionalCount(face, "edge", path)
+                                      : readOptionalCount(face, "chamfer_edge", path);
     auto copies = faceCopiesFromJson(face, path);
     if (const Error* error = firstError({errorOf(role), errorOf(entity), errorOf(along), errorOf(alongSketch),
                                          errorOf(edge), errorOf(copies)})) {
@@ -258,7 +283,8 @@ Result<FaceSelector> faceSelectorFromJson(const Json& face, std::string_view pat
                         .entity = entityOf(*entity),
                         .along = entityOf(*along),
                         .alongSketch = sketchOf(*alongSketch),
-                        .edge = *edge,
+                        .edge = *edge ? std::optional<ChamferEdgeId>{ChamferEdgeId::fromValue(**edge)}
+                                      : std::nullopt,
                         .copies = std::move(*copies)};
 }
 

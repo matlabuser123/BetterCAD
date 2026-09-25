@@ -166,7 +166,7 @@ Result<PulleyModel> buildPulleyReferenceModel() {
                        .radiusParameter = m.filletRadius});
     m.hubChamfers = b.feature<features::ChamferFeature>(
         "HubChamfers", {.target = featureId(m.webFillets),
-                        .edges = {circle(0.0, 25.0, "hub end"), circle(40.0, 25.0, "hub top")},
+                        .edges = { features::ChamferEdge{circle(0.0, 25.0, "hub end")}, features::ChamferEdge{circle(40.0, 25.0, "hub top")}},
                         .distance = 1_mm,
                         .distanceParameter = m.chamferSize});
 

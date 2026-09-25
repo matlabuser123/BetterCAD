@@ -46,7 +46,7 @@ std::string article(std::string_view word) {
                        word);
 }
 
-/// "the end cap", "the side from entity:4 along entity:9", "the face of edge reference 2".
+/// "the end cap", "the side from entity:4 along entity:9", "the face of chamfer edge 2".
 std::string faceText(const FaceSelector& face) {
     switch (face.role) {
     case FaceRole::StartCap:
@@ -68,7 +68,7 @@ std::string faceText(const FaceSelector& face) {
     case FaceRole::CounterboreFloor:
         return "the counterbore floor";
     case FaceRole::Chamfer:
-        return face.edge ? std::format("the face of edge reference {}", *face.edge) : "a chamfer face";
+        return face.edge ? std::format("the face of chamfer edge {}", face.edge->value()) : "a chamfer face";
     case FaceRole::SpotfaceFloor:
         return "the spotface floor";
     }
@@ -279,10 +279,17 @@ Result<void> checkRole(const Document& document, const DocumentObject& object, c
         if (face.role != FaceRole::Chamfer) {
             return noSuchRole();
         }
-        const std::size_t count = chamfer->definition().edges.size();
-        if (*face.edge > count) {
-            return makeError(ErrorCode::NotFound, std::format("{} has {} edge reference{}, not {}", who, count,
-                                                              count == 1 ? "" : "s", *face.edge));
+        // BY IDENTITY, not by position: the selection this reference names
+        // either is still among the chamfer's edges or it is gone, and its
+        // place in the list is not part of the question. A count check -- what
+        // this was -- called a reference valid whenever the list was merely
+        // long enough, which is how a reorder used to resolve to another face.
+        const auto& edges = chamfer->definition().edges;
+        const bool present =
+            std::ranges::any_of(edges, [&](const ChamferEdge& edge) { return edge.id == *face.edge; });
+        if (!present) {
+            return makeError(ErrorCode::NotFound,
+                             std::format("{} has no chamfer edge {}", who, face.edge->value()));
         }
         return {};
     }

@@ -149,7 +149,7 @@ Result<BearingHousingModel> buildBearingHousingReferenceModel() {
                                                                        .radiusParameter = m.filletRadius});
     m.baseChamfers = b.feature<features::ChamferFeature>("BaseChamfers",
                                                          {.target = featureId(m.bossFillets),
-                                                          .edges = {alongWidth(60.0), alongWidth(-60.0)},
+                                                          .edges = { features::ChamferEdge{alongWidth(60.0)}, features::ChamferEdge{alongWidth(-60.0)}},
                                                           .distance = 1.5_mm,
                                                           .distanceParameter = m.chamferSize});
 

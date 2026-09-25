@@ -111,7 +111,7 @@ TEST_CASE("Draft_RequestsAreValidated", "[core][geometry][draft][p12]") {
     CHECK(message({.faces = {side(0), FaceName{}}, .angle = 3_deg}) == "face 2 must name a valid feature");
     CHECK(message({.faces = {side(0), side(0)}, .angle = 3_deg}) == "face 2 repeats an earlier face");
     CHECK(message({.faces = {FaceName{ObjectId::fromValue(1), {.role = FaceRole::Chamfer}}}, .angle = 3_deg}) ==
-          "face 1: a chamfer face is named by its edge reference, from 1");
+          "face 1: a chamfer face is named by its chamfer edge's ID");
     CHECK(message(sides(90_deg)) == "the draft angle must be in (-90, 90) deg, got 90 deg");
     CHECK(message(sides(-(180_deg))) == "the draft angle must be in (-90, 90) deg, got -180 deg");
     CHECK(message(sides(Angle::fromSi(std::numeric_limits<double>::quiet_NaN()))) ==

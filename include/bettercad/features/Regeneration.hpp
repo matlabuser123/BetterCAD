@@ -162,11 +162,19 @@ regenerateLoft(const LoftFeature& feature, const Document& document, const geome
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<geometry::ChamferRequest>
 resolveChamferRequest(const ChamferDefinition& definition, const Document& document);
 
-/// Names for the faces chamfer @p chamfer cuts (P12-SKETCH-003): the face
-/// of edge reference i (from 0) is its `chamfer` face with `edge` i + 1,
-/// with @p copies (a pattern's or mirror's instance) appended.
-[[nodiscard]] BETTERCAD_FEATURES_EXPORT geometry::ChamferFaceNamer chamferFaceNamer(ObjectId chamfer,
-                                                                                   std::vector<FaceCopy> copies);
+/// Names for the faces chamfer @p chamfer cuts (P12-SKETCH-003): the face the
+/// kernel cut for request edge i (from 0) is its `chamfer` face with `edge` set
+/// to `ids[i]`, the STABLE ID of that selection, with @p copies (a pattern's or
+/// mirror's instance) appended.
+///
+/// @p ids comes from chamferEdgeIds() and is parallel to the request's edges,
+/// which is the only place the kernel's positional view is translated back into
+/// identity. Naming the face i + 1 instead -- the position -- is what ADR-024
+/// replaced: reordering the selections then renamed every face under any
+/// reference already stored against them. An index with no id is named nothing,
+/// which fails loudly rather than guessing.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT geometry::ChamferFaceNamer chamferFaceNamer(
+    ObjectId chamfer, std::vector<ChamferEdgeId> ids, std::vector<FaceCopy> copies);
 
 /// Computes the body of a chamfer feature: @p target (the target feature's
 /// body) with the referenced edges chamfered. Fails with FailedPrecondition

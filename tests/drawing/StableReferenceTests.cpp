@@ -13,7 +13,9 @@
 #include <bettercad/drawing/Resolution.hpp>
 #include <bettercad/drawing/Sheets.hpp>
 #include <bettercad/drawing/Views.hpp>
+#include <bettercad/core/document/Command.hpp>
 #include <bettercad/features/ChamferFeature.hpp>
+#include <bettercad/features/FeatureCommands.hpp>
 #include <bettercad/features/Datums.hpp>
 #include <cmath>
 #include <bettercad/features/ExtrudeFeature.hpp>
@@ -28,6 +30,8 @@
 
 #include <algorithm>
 #include <array>
+#include <filesystem>
+#include <format>
 #include <memory>
 #include <string>
 #include <utility>
@@ -748,7 +752,13 @@ TEST_CASE("Reference_NoPersistedReferenceCarriesAnIndexIntoTheKernel",
     CHECK_THAT(text, ContainsSubstring(R"("role": "side")"));
     CHECK_THAT(text, ContainsSubstring(R"("entity":)"));
     CHECK_THAT(text, ContainsSubstring(R"("type": "balloon")"));
+
+    // THIS FIXTURE HAS NO CHAMFER, AND THAT IS THE POINT OF THE TEST BELOW.
+    // The companion covers the one reference class this one cannot: a chamfer
+    // face. See Reference_NoChamferReferenceIsStoredAsAPositionInTheFile.
+    CHECK_THAT(text, !ContainsSubstring(R"("role": "chamfer")"));
 }
+
 
 // --- Determinism ---------------------------------------------------------------------------------
 
@@ -790,134 +800,516 @@ TEST_CASE("Reference_ResolvesToTheSameStateAndTargetEveryTime",
 
 // --- The audit's one finding: a chamfer face is named by LIST POSITION -------------------------
 
-TEST_CASE("Reference_AChamferFaceIsNamedByItsPositionInTheChamfersEdgeList",
-          "[drawing][stref][p14][audit]") {
-    // THIS TEST RECORDS A CAPABILITY GAP, and it is written to fail if the
-    // gap is ever closed, so the evidence cannot quietly go stale.
-    //
-    // Every other face in this codebase is named semantically: an extrude's
-    // side face is named by the SKETCH ENTITY that sweeps it, so moving,
-    // renaming or reordering anything else leaves the name meaning what it
-    // meant. A CHAMFER's face is different. It is named
-    // {role = Chamfer, edge = N}, where N is the POSITION of an edge
-    // reference in ChamferDefinition::edges -- and that list is ordinary
-    // stored intent that a user may reorder.
-    //
-    // So the chain a drawing reference to a chamfer face runs down is:
-    //
-    //     PlaneReference -> chamfer feature      stable (an ObjectId)
-    //     -> edge = N                            A POSITION IN A LIST
-    //     -> the Nth EdgeSignature               and ADR-012 already records
-    //                                            that an EdgeSignature is not
-    //                                            a persistent name
-    //
-    // What follows measures what actually happens when that list is
-    // reordered, rather than assuming it.
-    Model m;
-    const Block block = addBlock(m, "Block", 100_mm, 60_mm, 40_mm);
+namespace {
 
-    // Two chamfers on edges at DIFFERENT places, so the faces they cut are
-    // easy to tell apart: the top front edge (y = 0) and the top back edge
-    // (y = 60).
-    const geometry::EdgeSignature front =
-        geometry::lineSignature(Point3D{0_mm, 0_mm, 40_mm}, Direction3D::unitX());
-    const geometry::EdgeSignature back =
-        geometry::lineSignature(Point3D{0_mm, 60_mm, 40_mm}, Direction3D::unitX());
-    auto chamfer = features::ChamferFeature::create(
-        "Edges", {.target = FeatureId::fromValue(block.pad.value()),
-                  .edges = {front, back},
-                  .distance = 5_mm});
-    REQUIRE(chamfer.has_value());
-    const ObjectId edges = require(m.document.addObject(std::move(*chamfer)));
-    m.regenerate();
+/// Space, tab, CR and LF: the whitespace a JSON writer may put between a
+/// key and its value.
+constexpr std::string_view kSpace = " \t\r\n";
 
-    // A reference to the face of edge reference 2 -- the BACK chamfer.
-    const PlaneReference second{.object = edges,
-                                .face = FaceSelector{.role = FaceRole::Chamfer, .edge = 2}};
-    const auto whereIsIt = [&]() {
-        auto plane = features::resolvePlane(m.document, second, m.bodies());
-        REQUIRE(plane.has_value());
-        return plane->origin().y.in(units::mm);
-    };
-    const double before = whereIsIt();
-    // The back chamfer's face lies toward y = 60; the front one toward y = 0.
-    CHECK(before > 30.0);
-
-    // Now REORDER the chamfer's edge list. Nothing about the model's shape
-    // changes -- the same two edges are chamfered by the same amount -- and
-    // nothing about the stored drawing reference changes either.
-    const auto* feature = m.document.findObjectAs<features::ChamferFeature>(edges);
-    REQUIRE(feature != nullptr);
-    auto definition = feature->definition();
-    std::swap(definition.edges[0], definition.edges[1]);
-    REQUIRE(m.document
-                .modifyObject<features::ChamferFeature>(
-                    edges,
-                    [&](features::ChamferFeature& c) { return c.setDefinition(definition); })
-                .has_value());
-    m.regenerate();
-
-    const double after = whereIsIt();
-
-    // THE FINDING. The reference still says "edge reference 2" and still
-    // resolves -- to the OTHER face. The solid is identical, the reference is
-    // untouched, and it now names different material. That is a silent
-    // rebind, and it is what the positional name makes possible.
-    CHECK(after < 30.0);
-    CHECK(std::abs(after - before) > 30.0);
-
-    // For contrast, on the SAME body: a side face named by its sketch entity
-    // is immune, because its name is the entity rather than a position.
-    auto side = features::resolvePlane(m.document, sideOf(block, 0), m.bodies());
-    REQUIRE(side.has_value());
-    const double sideBefore = side->origin().y.in(units::mm);
-    std::swap(definition.edges[0], definition.edges[1]);
-    REQUIRE(m.document
-                .modifyObject<features::ChamferFeature>(
-                    edges,
-                    [&](features::ChamferFeature& c) { return c.setDefinition(definition); })
-                .has_value());
-    m.regenerate();
-    auto sideAgain = features::resolvePlane(m.document, sideOf(block, 0), m.bodies());
-    REQUIRE(sideAgain.has_value());
-    CHECK_THAT(sideAgain->origin().y.in(units::mm), WithinAbs(sideBefore, kMm));
+/// The diagnostic of a failed result, or "" when it succeeded. Safe to call
+/// either way, so an INFO() never has to guess.
+template <typename T>
+std::string whyNot(const Result<T>& result) {
+    return result.has_value() ? std::string{} : result.error().message;
 }
 
-TEST_CASE("Reference_RemovingAChamferEdgeLeavesTheLastNameUnresolved",
-          "[drawing][stref][p14][audit]") {
-    // The other half of the same gap, and the half that behaves WELL.
-    // Shortening the list does not silently move a reference: the name of the
-    // last position stops matching anything and becomes unresolved, which is
-    // the right answer. Only REORDERING is dangerous, and the test above
-    // records that.
+/// A block with two chamfered edges at opposite sides of its top face, and the
+/// chamfer's selections in a known order.
+///
+/// The two edges are 60 mm apart along Y, so the face a reference resolves to
+/// says which selection it found without any tolerance argument: the front
+/// chamfer's face lies toward y = 0 and the back one's toward y = 60.
+struct Chamfered {
+    ObjectId feature{};
+    ChamferEdgeId front{};
+    ChamferEdgeId back{};
+};
+
+geometry::EdgeSignature topEdgeAt(double yMm) {
+    return geometry::lineSignature(Point3D{0_mm, yMm * units::mm, 40_mm}, Direction3D::unitX());
+}
+
+Chamfered addChamfer(Model& m, const Block& block) {
+    auto chamfer = features::ChamferFeature::create(
+        "Edges", {.target = FeatureId::fromValue(block.pad.value()),
+                  .edges = { features::ChamferEdge{topEdgeAt(0.0)}, features::ChamferEdge{topEdgeAt(60.0)}},
+                  .distance = 5_mm});
+    REQUIRE(chamfer.has_value());
+    // The ids the feature allocated, read back rather than assumed to be 1
+    // and 2: what the test asserts is that a reference to an id keeps meaning
+    // one selection, not that ids happen to start at 1.
+    const auto& edges = (*chamfer)->definition().edges;
+    REQUIRE(edges.size() == 2);
+    Chamfered result{.feature = {}, .front = edges[0].id, .back = edges[1].id};
+    REQUIRE(result.front.isValid());
+    REQUIRE(result.back.isValid());
+    REQUIRE(result.front != result.back);
+    result.feature = require(m.document.addObject(std::move(*chamfer)));
+    m.regenerate();
+    return result;
+}
+
+PlaneReference chamferFace(const Chamfered& c, ChamferEdgeId edge) {
+    return PlaneReference{.object = c.feature,
+                          .face = FaceSelector{.role = FaceRole::Chamfer, .edge = edge}};
+}
+
+features::ChamferDefinition definitionOf(Model& m, ObjectId feature) {
+    const auto* found = m.document.findObjectAs<features::ChamferFeature>(feature);
+    REQUIRE(found != nullptr);
+    return found->definition();
+}
+
+/// Applies @p definition through the production API and regenerates.
+Result<bool> reshape(Model& m, ObjectId feature, const features::ChamferDefinition& definition) {
+    auto changed = m.document.modifyObject<features::ChamferFeature>(
+        feature, [&](features::ChamferFeature& c) { return c.setDefinition(definition); });
+    if (changed) {
+        m.regenerate();
+    }
+    return changed;
+}
+
+/// Where the face a reference names sits along Y, in mm.
+double faceYMm(Model& m, const PlaneReference& reference) {
+    auto plane = features::resolvePlane(m.document, reference, m.bodies());
+    INFO(whyNot(plane));
+    REQUIRE(plane.has_value());
+    return plane->origin().y.in(units::mm);
+}
+
+} // namespace
+
+TEST_CASE("Reference_AChamferFaceKeepsItsMeaningWhenTheEdgeListIsReordered",
+          "[drawing][stref][p14][chamfer]") {
+    // TEST A, AND THE REASON ADR-024 EXISTS. Before it, a chamfer face was
+    // named {role = Chamfer, edge = N} where N was the POSITION of the
+    // selection in ChamferDefinition::edges -- a vector of ordinary stored
+    // intent that a user may reorder. Reordering it left every stored
+    // reference resolving, to different material, with the solid unchanged
+    // and the reference untouched. That is a silent rebind, and this test
+    // measured it happening.
+    //
+    // Now the name is the selection's own id, and the id travels with the
+    // selection, so a reorder moves the pairs and changes nothing.
     Model m;
     const Block block = addBlock(m, "Block", 100_mm, 60_mm, 40_mm);
-    auto chamfer = features::ChamferFeature::create(
-        "Edges",
-        {.target = FeatureId::fromValue(block.pad.value()),
-         .edges = {geometry::lineSignature(Point3D{0_mm, 0_mm, 40_mm}, Direction3D::unitX()),
-                   geometry::lineSignature(Point3D{0_mm, 60_mm, 40_mm}, Direction3D::unitX())},
-         .distance = 5_mm});
-    REQUIRE(chamfer.has_value());
-    const ObjectId edges = require(m.document.addObject(std::move(*chamfer)));
-    m.regenerate();
+    const Chamfered c = addChamfer(m, block);
 
-    const PlaneReference second{.object = edges,
-                                .face = FaceSelector{.role = FaceRole::Chamfer, .edge = 2}};
-    REQUIRE(features::resolvePlane(m.document, second, m.bodies()).has_value());
+    const double frontBefore = faceYMm(m, chamferFace(c, c.front));
+    const double backBefore = faceYMm(m, chamferFace(c, c.back));
+    // The two are genuinely different faces, so a reference that moved between
+    // them could not hide inside a tolerance.
+    CHECK(frontBefore < 30.0);
+    CHECK(backBefore > 30.0);
+    CHECK(std::abs(backBefore - frontBefore) > 30.0);
 
-    const auto* feature = m.document.findObjectAs<features::ChamferFeature>(edges);
-    REQUIRE(feature != nullptr);
-    auto definition = feature->definition();
-    definition.edges.pop_back();
-    REQUIRE(m.document
-                .modifyObject<features::ChamferFeature>(
-                    edges,
-                    [&](features::ChamferFeature& c) { return c.setDefinition(definition); })
-                .has_value());
-    m.regenerate();
+    // REORDER: the same two selections, the same distance, the opposite order.
+    // The pairs move, so the ids move with the curves they identify.
+    features::ChamferDefinition reordered = definitionOf(m, c.feature);
+    std::swap(reordered.edges[0], reordered.edges[1]);
+    REQUIRE(reshape(m, c.feature, reordered).has_value());
+    REQUIRE(definitionOf(m, c.feature).edges[0].id == c.back);
 
-    const auto gone = features::resolvePlane(m.document, second, m.bodies());
+    // THE ASSERTION. Each reference still names the face it named before.
+    CHECK_THAT(faceYMm(m, chamferFace(c, c.front)), WithinAbs(frontBefore, kMm));
+    CHECK_THAT(faceYMm(m, chamferFace(c, c.back)), WithinAbs(backBefore, kMm));
+
+    // And the solid did not change either, which is what made the old
+    // behaviour so easy to miss: nothing visible moved.
+    auto side = features::resolvePlane(m.document, sideOf(block, 0), m.bodies());
+    REQUIRE(side.has_value());
+}
+
+TEST_CASE("Reference_AChamferFaceIsUnmovedWhenAnotherEdgeIsInsertedBeforeIt",
+          "[drawing][stref][p14][chamfer]") {
+    // TEST B. Inserting a selection ahead of the referenced one shifts every
+    // later POSITION by one. Under the old scheme that moved the reference;
+    // under an id it cannot, and the new selection gets an identity of its own
+    // rather than inheriting anybody's.
+    Model m;
+    const Block block = addBlock(m, "Block", 100_mm, 60_mm, 40_mm);
+    const Chamfered c = addChamfer(m, block);
+    const double backBefore = faceYMm(m, chamferFace(c, c.back));
+
+    features::ChamferDefinition grown = definitionOf(m, c.feature);
+    // A third edge, inserted FIRST: the back selection moves from index 1 to 2.
+    // It is a BOTTOM edge -- the block is 100 x 60 x 40, so its top face has
+    // edges at y = 0 and y = 60 and nothing between them. Chamfering a curve
+    // that is not an edge of the body fails the whole feature, which would
+    // test the wrong thing.
+    grown.edges.insert(grown.edges.begin(),
+                       features::ChamferEdge{geometry::lineSignature(
+                           Point3D{0_mm, 0_mm, 0_mm}, Direction3D::unitX())});
+    // It carries no identity of its own yet, which is what makes it new.
+    CHECK_FALSE(grown.edges.front().id.isValid());
+    REQUIRE(reshape(m, c.feature, grown).has_value());
+
+    const features::ChamferDefinition after = definitionOf(m, c.feature);
+    REQUIRE(after.edges.size() == 3);
+    CHECK(after.edges[2].id == c.back);
+    // The fresh selection was given an id that is nobody else's, and one that
+    // was never handed out before.
+    const ChamferEdgeId inserted = after.edges[0].id;
+    CHECK(inserted.isValid());
+    CHECK(inserted != c.front);
+    CHECK(inserted != c.back);
+    CHECK(inserted.value() > c.back.value());
+
+    CHECK_THAT(faceYMm(m, chamferFace(c, c.back)), WithinAbs(backBefore, kMm));
+}
+
+TEST_CASE("Reference_AChamferFaceSurvivesTheDeletionOfAnUnrelatedEdge",
+          "[drawing][stref][p14][chamfer]") {
+    // TEST C. Deleting a selection the reference does not name leaves it
+    // alone. Under the old scheme deleting an EARLIER one renumbered the rest.
+    Model m;
+    const Block block = addBlock(m, "Block", 100_mm, 60_mm, 40_mm);
+    const Chamfered c = addChamfer(m, block);
+    const double backBefore = faceYMm(m, chamferFace(c, c.back));
+
+    features::ChamferDefinition shortened = definitionOf(m, c.feature);
+    shortened.edges.erase(shortened.edges.begin()); // drop the FRONT selection
+    REQUIRE(reshape(m, c.feature, shortened).has_value());
+
+    const features::ChamferDefinition after = definitionOf(m, c.feature);
+    REQUIRE(after.edges.size() == 1);
+    CHECK(after.edges[0].id == c.back);
+    CHECK_THAT(faceYMm(m, chamferFace(c, c.back)), WithinAbs(backBefore, kMm));
+
+    // And the reference to the one that went is now unresolved, by name.
+    const auto gone = features::resolvePlane(m.document, chamferFace(c, c.front), m.bodies());
     REQUIRE_FALSE(gone.has_value());
     CHECK(errorCode(gone) == ErrorCode::NotFound);
+}
+
+TEST_CASE("Reference_AChamferFaceWhoseEdgeIsDeletedBecomesUnresolved",
+          "[drawing][stref][p14][chamfer]") {
+    // TEST D. The referenced selection itself goes. The right answer is
+    // Unresolved -- reported, not guessed at, and never the other chamfer face
+    // that is still there.
+    Model m;
+    const Block block = addBlock(m, "Block", 100_mm, 60_mm, 40_mm);
+    const Chamfered c = addChamfer(m, block);
+    const double frontBefore = faceYMm(m, chamferFace(c, c.front));
+
+    features::ChamferDefinition shortened = definitionOf(m, c.feature);
+    shortened.edges.pop_back(); // drop the BACK selection, which is referenced
+    REQUIRE(reshape(m, c.feature, shortened).has_value());
+
+    const auto gone = features::resolvePlane(m.document, chamferFace(c, c.back), m.bodies());
+    REQUIRE_FALSE(gone.has_value());
+    CHECK(errorCode(gone) == ErrorCode::NotFound);
+    // The survivor is untouched: the lost reference did not land on it.
+    CHECK_THAT(faceYMm(m, chamferFace(c, c.front)), WithinAbs(frontBefore, kMm));
+}
+
+TEST_CASE("Reference_AChamferFaceDoesNotRebindToAnIdenticalReplacementEdge",
+          "[drawing][stref][p14][chamfer]") {
+    // TEST E, AND THE ONE THAT DECIDES THE DESIGN. Delete the referenced
+    // selection and add one back with EXACTLY the same supporting curve. The
+    // solid is identical to what it was, and the reference must still be
+    // unresolved.
+    //
+    // This is why the identity is an allocated id and not the EdgeSignature.
+    // A signature is content: the replacement's signature is byte-identical to
+    // the original's, so a signature-named face would resolve and the user
+    // would never learn that the thing they dimensioned was deleted. It is the
+    // same rule a side face already follows -- it is named by the sketch
+    // entity's id, so redrawing an identical line does not adopt its
+    // references.
+    Model m;
+    const Block block = addBlock(m, "Block", 100_mm, 60_mm, 40_mm);
+    const Chamfered c = addChamfer(m, block);
+    const geometry::EdgeSignature backCurve = definitionOf(m, c.feature).edges[1].curve;
+
+    features::ChamferDefinition without = definitionOf(m, c.feature);
+    without.edges.pop_back();
+    REQUIRE(reshape(m, c.feature, without).has_value());
+
+    features::ChamferDefinition again = definitionOf(m, c.feature);
+    again.edges.push_back(features::ChamferEdge{backCurve});
+    REQUIRE(reshape(m, c.feature, again).has_value());
+
+    const features::ChamferDefinition after = definitionOf(m, c.feature);
+    REQUIRE(after.edges.size() == 2);
+    // Same curve, different identity -- and an identity above every one used
+    // before, because a retired id is never handed out again.
+    CHECK(after.edges[1].curve == backCurve);
+    CHECK(after.edges[1].id != c.back);
+    CHECK(after.edges[1].id.value() > c.back.value());
+
+    // THE ASSERTION. The old reference stays unresolved, though the geometry
+    // it described is back.
+    const auto stale = features::resolvePlane(m.document, chamferFace(c, c.back), m.bodies());
+    REQUIRE_FALSE(stale.has_value());
+    CHECK(errorCode(stale) == ErrorCode::NotFound);
+
+    // The replacement is referenceable in its own right.
+    CHECK(faceYMm(m, chamferFace(c, after.edges[1].id)) > 30.0);
+}
+
+TEST_CASE("Reference_AChamferEdgeIdIsRestorableButNotForgeable", "[drawing][stref][p14][chamfer]") {
+    // WHERE THE LINE ACTUALLY FALLS, and it is not where it first appears to.
+    //
+    // The tempting rule is "an edit may only name ids the chamfer currently
+    // has", which would stop a deleted selection being revived under its old
+    // identity. It is too strong, and the reference models caught it: UNDO of a
+    // deletion restores exactly that -- a selection with the id it used to have
+    // -- and so does the target recovery this milestone requires. A rule that
+    // forbade it would make undoing a chamfer edit impossible.
+    //
+    // So restoring a RETIRED id is allowed, and that is target recovery. What
+    // is refused is an id this chamfer has never allocated: nothing can be
+    // referring to it, and granting it would reserve a value a later selection
+    // would be given too.
+    //
+    // Silent rebinding is prevented before this rule is reached: a new
+    // selection carries no identity, because ChamferEdge does not convert from
+    // a bare curve implicitly, so ordinary editing can only allocate a fresh
+    // one. Test E covers that route.
+    Model m;
+    const Block block = addBlock(m, "Block", 100_mm, 60_mm, 40_mm);
+    const Chamfered c = addChamfer(m, block);
+    const double backBefore = faceYMm(m, chamferFace(c, c.back));
+
+    features::ChamferDefinition without = definitionOf(m, c.feature);
+    const features::ChamferEdge removed = without.edges.back();
+    without.edges.pop_back();
+    REQUIRE(reshape(m, c.feature, without).has_value());
+    REQUIRE_FALSE(features::resolvePlane(m.document, chamferFace(c, c.back), m.bodies()).has_value());
+
+    // FORGING is refused: an identity above everything this chamfer has ever
+    // handed out.
+    features::ChamferDefinition forged = definitionOf(m, c.feature);
+    forged.edges.push_back(features::ChamferEdge{ChamferEdgeId::fromValue(4096), topEdgeAt(60.0)});
+    const auto refused = m.document.modifyObject<features::ChamferFeature>(
+        c.feature, [&](features::ChamferFeature& f) { return f.setDefinition(forged); });
+    REQUIRE_FALSE(refused.has_value());
+    CHECK(errorCode(refused) == ErrorCode::InvalidArgument);
+    CHECK_THAT(whyNot(refused), ContainsSubstring("never had an edge"));
+    // The refusal left the feature exactly as it was.
+    REQUIRE(definitionOf(m, c.feature).edges.size() == 1);
+    CHECK(definitionOf(m, c.feature).edges[0].id == c.front);
+
+    // RESTORING the selection that was removed, exactly as it was, brings the
+    // reference back to the same face. This is target recovery, and it is what
+    // undo does.
+    features::ChamferDefinition restored = definitionOf(m, c.feature);
+    restored.edges.push_back(removed);
+    REQUIRE(reshape(m, c.feature, restored).has_value());
+    CHECK(definitionOf(m, c.feature).edges[1].id == c.back);
+    CHECK_THAT(faceYMm(m, chamferFace(c, c.back)), WithinAbs(backBefore, kMm));
+}
+
+TEST_CASE("Reference_UndoingAChamferEditRestoresItsReferences", "[drawing][stref][p14][chamfer][undo]") {
+    // The same thing through the published command, which is how a user
+    // reaches it. Delete a selection, undo, and the reference that went
+    // unresolved must resolve again to the face it always meant.
+    Model m;
+    const Block block = addBlock(m, "Block", 100_mm, 60_mm, 40_mm);
+    const Chamfered c = addChamfer(m, block);
+    const double backBefore = faceYMm(m, chamferFace(c, c.back));
+
+    features::ChamferDefinition without = definitionOf(m, c.feature);
+    without.edges.pop_back();
+
+    CommandHistory history;
+    REQUIRE(history
+                .execute(m.document, std::make_unique<features::ModifyChamferCommand>(
+                                         FeatureId::fromValue(c.feature.value()), without))
+                .has_value());
+    m.regenerate();
+    REQUIRE_FALSE(features::resolvePlane(m.document, chamferFace(c, c.back), m.bodies()).has_value());
+
+    REQUIRE(history.undo(m.document).has_value());
+    m.regenerate();
+    CHECK(definitionOf(m, c.feature).edges.size() == 2);
+    CHECK(definitionOf(m, c.feature).edges[1].id == c.back);
+    CHECK_THAT(faceYMm(m, chamferFace(c, c.back)), WithinAbs(backBefore, kMm));
+
+    // And redo takes it away again, still by identity.
+    REQUIRE(history.redo(m.document).has_value());
+    m.regenerate();
+    CHECK_FALSE(features::resolvePlane(m.document, chamferFace(c, c.back), m.bodies()).has_value());
+}
+
+TEST_CASE("Reference_AChamferFaceRoundTripsThroughSaveAndLoad", "[drawing][stref][p14][chamfer][io]") {
+    // TEST F. The identity is persistent or it is nothing: a reference that
+    // only holds within one session does not survive the thing drawings are
+    // for.
+    Model m;
+    const Block block = addBlock(m, "Block", 100_mm, 60_mm, 40_mm);
+    const Chamfered c = addChamfer(m, block);
+    const double backBefore = faceYMm(m, chamferFace(c, c.back));
+
+    const TempDir directory;
+    const std::filesystem::path path = directory.path() / "chamfer.bcad";
+    REQUIRE(io::saveDocument(m.document, path).has_value());
+
+    // A separate parse, into a document that shares nothing with the first.
+    Model loaded;
+    auto read = io::loadDocument(path);
+    INFO(whyNot(read));
+    REQUIRE(read.has_value());
+    loaded.document = std::move(*read);
+    loaded.regenerate();
+
+    const features::ChamferDefinition after = definitionOf(loaded, c.feature);
+    REQUIRE(after.edges.size() == 2);
+    CHECK(after.edges[0].id == c.front);
+    CHECK(after.edges[1].id == c.back);
+    CHECK_THAT(faceYMm(loaded, chamferFace(c, c.back)), WithinAbs(backBefore, kMm));
+}
+
+TEST_CASE("Reference_AReorderedChamferStillResolvesAfterSaveAndLoad",
+          "[drawing][stref][p14][chamfer][io]") {
+    // TEST G, and the one a position-based scheme cannot fake its way through.
+    // A file records the list in its CURRENT order. If identity came from
+    // position, reordering and then saving would write a file whose positions
+    // disagree with the references stored in it, and the next load would
+    // resolve them to the wrong faces -- with nothing in the file to show
+    // anything had gone wrong.
+    Model m;
+    const Block block = addBlock(m, "Block", 100_mm, 60_mm, 40_mm);
+    const Chamfered c = addChamfer(m, block);
+    const double backBefore = faceYMm(m, chamferFace(c, c.back));
+
+    features::ChamferDefinition reordered = definitionOf(m, c.feature);
+    std::swap(reordered.edges[0], reordered.edges[1]);
+    REQUIRE(reshape(m, c.feature, reordered).has_value());
+
+    const TempDir directory;
+    const std::filesystem::path path = directory.path() / "reordered.bcad";
+    REQUIRE(io::saveDocument(m.document, path).has_value());
+
+    Model loaded;
+    auto read = io::loadDocument(path);
+    INFO(whyNot(read));
+    REQUIRE(read.has_value());
+    loaded.document = std::move(*read);
+    loaded.regenerate();
+
+    // The saved order is the reordered one -- so the file really does exercise
+    // the case -- and the reference still names the same face.
+    const features::ChamferDefinition after = definitionOf(loaded, c.feature);
+    REQUIRE(after.edges.size() == 2);
+    CHECK(after.edges[0].id == c.back);
+    CHECK(after.edges[1].id == c.front);
+    CHECK_THAT(faceYMm(loaded, chamferFace(c, c.back)), WithinAbs(backBefore, kMm));
+}
+
+TEST_CASE("Reference_AChamferFaceResolvesToTheSamePlaceEveryTime",
+          "[drawing][stref][p14][chamfer]") {
+    // TEST H. Resolution is a pure question about stored state, so asking it
+    // repeatedly must give one answer. Run across the three presets by the
+    // qualification, and repeated here within one run so a resolver that
+    // depended on iteration order or on a cache would show up.
+    Model m;
+    const Block block = addBlock(m, "Block", 100_mm, 60_mm, 40_mm);
+    const Chamfered c = addChamfer(m, block);
+
+    const double front = faceYMm(m, chamferFace(c, c.front));
+    const double back = faceYMm(m, chamferFace(c, c.back));
+    for (int pass = 0; pass < 8; ++pass) {
+        INFO("pass " << pass);
+        CHECK_THAT(faceYMm(m, chamferFace(c, c.front)), WithinAbs(front, 0.0));
+        CHECK_THAT(faceYMm(m, chamferFace(c, c.back)), WithinAbs(back, 0.0));
+    }
+    // And across a regeneration, which rebuilds the faces from scratch.
+    m.regenerate();
+    CHECK_THAT(faceYMm(m, chamferFace(c, c.front)), WithinAbs(front, 0.0));
+    CHECK_THAT(faceYMm(m, chamferFace(c, c.back)), WithinAbs(back, 0.0));
+}
+
+TEST_CASE("Reference_NoChamferReferenceIsStoredAsAPositionInTheFile",
+          "[drawing][stref][p14][chamfer][persistence]") {
+    // THE COMPANION THE AUDIT ASKED FOR, and the reason it is written this way.
+    //
+    // The schema audit above missed the positional chamfer reference for two
+    // independent reasons, either of which was enough on its own:
+    //
+    //   its fixture builds no chamfer, so no chamfer reference was in the
+    //   text it searched;
+    //   the persisted key was "edge", which is not in its forbidden list --
+    //   and could not simply be ADDED to it, because "edge" is a legitimate
+    //   key elsewhere in the same file. A chamfer's own selection is
+    //   {"id": n, "edge": <curve>} and a variable fillet's is
+    //   {"edge": <curve>, "radii": [...]}. Banning the word would ban those.
+    //
+    // So this test does not ban a word. It checks the STRUCTURE two ways: the
+    // shape a positional reference would have, and -- the part no string list
+    // can fake -- what happens to the stored reference when the list is
+    // reordered under it.
+    Model m;
+    const Block block = addBlock(m, "Block", 100_mm, 60_mm, 40_mm);
+    const Chamfered c = addChamfer(m, block);
+    const SheetId sheet = require(drawing::createSheet(
+        m.document, "Sheet1",
+        drawing::SheetDefinition{.format = drawing::SheetFormat::A3, .scale = {1, 1}}));
+    const ViewId view = require(drawing::createView(
+        m.document, "Front",
+        drawing::ViewDefinition{.sheet = sheet,
+                                .source = c.feature,
+                                .orientation = drawing::StandardView::Front,
+                                .placement = Point2D{120_mm, 150_mm}}));
+    // A datum annotation on the SECOND chamfer face: a stored reference to a
+    // chamfer face, which is the thing being audited.
+    (void)require(drawing::createAnnotation(
+        m.document, "Datum",
+        drawing::AnnotationDefinition{.view = view,
+                                      .type = drawing::AnnotationType::Datum,
+                                      .target = drawing::AnnotationTarget{.plane = chamferFace(c, c.back)},
+                                      .text = "A",
+                                      .placement = Point2D{60_mm, 40_mm}}));
+    m.regenerate();
+
+    const TempDir directory;
+    const auto save = [&](const std::string& name) {
+        const std::filesystem::path path = directory.path() / name;
+        REQUIRE(io::saveDocument(m.document, path).has_value());
+        return readFile(path);
+    };
+    const std::string before = save("chamfer-before.bcad");
+
+    // ONE: the reference is stored as an identity, and the file really does
+    // contain the case.
+    CHECK_THAT(before, ContainsSubstring(R"("role": "chamfer")"));
+    CHECK_THAT(before, ContainsSubstring(std::format(R"("chamfer_edge": {})", c.back.value())));
+
+    // TWO: no face selector anywhere carries a POSITION. A positional
+    // reference is "edge" followed by a number; the legitimate uses of the key
+    // -- a chamfer's own selection and a variable fillet's -- are always
+    // "edge" followed by an object. So the structure is what is checked, not
+    // the word, and the word is left free to mean what it means elsewhere.
+    for (std::size_t at = before.find("\"edge\":"); at != std::string::npos;
+         at = before.find("\"edge\":", at + 1)) {
+        const std::size_t value = before.find_first_not_of(kSpace, at + 7);
+        REQUIRE(value != std::string::npos);
+        INFO("at byte " << at << ": " << before.substr(at, 40));
+        CHECK(before[value] == '{');
+    }
+
+    // THREE, AND THE ONE A FORBIDDEN-WORD LIST COULD NEVER GIVE. Reorder the
+    // selections and save again. If the stored reference were a position, the
+    // file would now have to say something different to keep meaning the same
+    // face -- and under the old scheme it did not, which is exactly how the
+    // defect survived a save and a load. Here the reference is untouched while
+    // the array it points into is written in the opposite order.
+    features::ChamferDefinition reordered = definitionOf(m, c.feature);
+    std::swap(reordered.edges[0], reordered.edges[1]);
+    REQUIRE(reshape(m, c.feature, reordered).has_value());
+    const std::string after = save("chamfer-after.bcad");
+
+    CHECK_THAT(after, ContainsSubstring(std::format(R"("chamfer_edge": {})", c.back.value())));
+    // The file's own selection order really did change, so the check above is
+    // not passing because nothing moved.
+    const auto firstEdgeId = [](const std::string& text) {
+        const std::size_t chamfer = text.find(R"("type": "chamfer")");
+        REQUIRE(chamfer != std::string::npos);
+        const std::size_t id = text.find(R"("id": )", chamfer);
+        REQUIRE(id != std::string::npos);
+        return text.substr(id, 20);
+    };
+    CHECK(firstEdgeId(before) != firstEdgeId(after));
 }

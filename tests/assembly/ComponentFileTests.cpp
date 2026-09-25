@@ -113,7 +113,7 @@ TEST_CASE("ComponentFile_UsesTheExistingObjectEnvelopeAndNoNewKey", "[assembly][
     INFO(text);
 
     // The format version is untouched...
-    CHECK_THAT(text, ContainsSubstring("\"version\": 1"));
+    CHECK_THAT(text, ContainsSubstring("\"version\": 2"));
     CHECK_THAT(text, ContainsSubstring("\"format\": \"bettercad-document\""));
     // ...there is no new top-level key for assemblies...
     CHECK_THAT(text, !ContainsSubstring("\"assembly\""));

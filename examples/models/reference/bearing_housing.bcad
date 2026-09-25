@@ -1,6 +1,6 @@
 {
   "format": "bettercad-document",
-  "version": 1,
+  "version": 2,
   "units": "SI",
   "document": {
     "id": "5eed0000-0000-4000-8000-000000000004",
@@ -735,32 +735,39 @@
         "target": 23,
         "edges": [
           {
-            "curve": "line",
-            "point": [
-              0.06,
-              0.0,
-              0.012
-            ],
-            "direction": [
-              0.0,
-              1.0,
-              0.0
-            ]
+            "id": 1,
+            "edge": {
+              "curve": "line",
+              "point": [
+                0.06,
+                0.0,
+                0.012
+              ],
+              "direction": [
+                0.0,
+                1.0,
+                0.0
+              ]
+            }
           },
           {
-            "curve": "line",
-            "point": [
-              -0.06,
-              0.0,
-              0.012
-            ],
-            "direction": [
-              0.0,
-              1.0,
-              0.0
-            ]
+            "id": 2,
+            "edge": {
+              "curve": "line",
+              "point": [
+                -0.06,
+                0.0,
+                0.012
+              ],
+              "direction": [
+                0.0,
+                1.0,
+                0.0
+              ]
+            }
           }
         ],
+        "last_edge_id": 2,
         "mode": "equal_distance",
         "distance": 0.0015,
         "distance_parameter": 13

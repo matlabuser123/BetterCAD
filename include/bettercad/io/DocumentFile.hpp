@@ -56,7 +56,21 @@ inline constexpr std::string_view kDocumentFormat = "bettercad-document";
 /// So: adding a kind, an object type or an optional field needs no bump.
 /// Changing what an existing field means needs one, and needs the reader to
 /// say which versions it accepts.
-inline constexpr int kDocumentFormatVersion = 1;
+///
+/// VERSION 2 (ADR-024) names a chamfer face by its selection's stable ID
+/// rather than by the selection's position. A version-2 document writes
+/// `"chamfer_edge": id` in a face selector and `{"id": n, "edge": <signature>}`
+/// plus `"last_edge_id"` in a chamfer, none of which a version-1 reader
+/// accepts -- so the version says so rather than leaving it to a field it
+/// happens not to recognise.
+///
+/// A version-1 document still loads. Its chamfer selections arrive without
+/// ids and are given 1..N in the file's own order, and its `"edge": n` face
+/// references convert to the id n, which is the same face the file named; see
+/// faceSelectorFromJson. A version-1 document is never written again.
+inline constexpr int kDocumentFormatVersion = 2;
+/// The oldest document version this build reads.
+inline constexpr int kOldestReadableDocumentVersion = 1;
 inline constexpr std::string_view kDocumentExtension = ".bcad";
 
 /// Serializes a document. Fails with InvalidArgument if it contains an

@@ -185,7 +185,7 @@ Result<MountingBracketModel> buildMountingBracketReferenceModel() {
                         .radiusParameter = m.filletRadius});
     m.outerChamfer = b.feature<features::ChamferFeature>(
         "OuterChamfer", {.target = featureId(m.innerFillet),
-                         .edges = {geometry::lineSignature(pointMm(0.0, 0.0, 0.0), Direction3D::unitX())},
+                         .edges = { features::ChamferEdge{geometry::lineSignature(pointMm(0.0, 0.0, 0.0), Direction3D::unitX())}},
                          .distance = 2_mm,
                          .distanceParameter = m.chamferSize});
 

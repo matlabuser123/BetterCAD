@@ -644,7 +644,7 @@ struct BevelledBlockModel : FaceKindModel {
         blockSketch = addFixedRectangle("BlockSketch", 0.0, 0.0, 60.0, 40.0);
         block = add(ExtrudeFeature::create("Block", {.profile = sketchOf(blockSketch), .depth = 30_mm}));
         chamfer = add(ChamferFeature::create("Bevel", {.target = featureOf(block),
-                                                      .edges = {topEdge(0.0), topEdge(40.0)},
+                                                      .edges = { features::ChamferEdge{topEdge(0.0)}, features::ChamferEdge{topEdge(40.0)}},
                                                       .distanceParameter = bevel}));
         frontSketch = addCircleSketch("FrontSketch", faceOf(chamfer, edgeFace(1)), 30.0, 21.0, 1.0);
         frontBoss = addBoss("FrontBoss", frontSketch, 3.0);
@@ -652,8 +652,13 @@ struct BevelledBlockModel : FaceKindModel {
         backBoss = addBoss("BackBoss", backSketch, 3.0);
     }
 
-    static FaceSelector edgeFace(std::uint32_t reference) {
-        return {.role = FaceRole::Chamfer, .edge = reference};
+    /// The bevel's two selections are identified 1 and 2: this model builds
+    /// the chamfer in one place with both edges unidentified, and
+    /// ChamferFeature::create allocates them in list order. What the id means
+    /// is a selection, not a position, and nothing here depends on the two
+    /// coinciding beyond this fixture (ADR-024).
+    static FaceSelector edgeFace(std::uint64_t selection) {
+        return {.role = FaceRole::Chamfer, .edge = ChamferEdgeId::fromValue(selection)};
     }
 
     /// Two triangular prisms (d^2 / 2 x 60) off the block.

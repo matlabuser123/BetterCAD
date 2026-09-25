@@ -609,8 +609,14 @@ TEST_CASE("FaceNames_HolesAndChamfersNameTheirFacesAndKeepTheirInputs", "[core][
     }
     SECTION("a chamfer names the face each edge reference cuts") {
         const double s = std::numbers::sqrt2 / 2.0;
+        // A stand-in for features::chamferFaceNamer: what this section checks
+        // is that chamferEdges() asks the namer about the request edge it cut
+        // each face for. Turning that index into an identity is the feature
+        // layer's job (ADR-024), and here any 1-based id will do.
         const ChamferFaceNamer chamferNamer = [cutter](std::size_t reference) -> std::optional<FaceName> {
-            return FaceName{cutter, {.role = FaceRole::Chamfer, .edge = static_cast<std::uint32_t>(reference + 1)}};
+            return FaceName{cutter,
+                            {.role = FaceRole::Chamfer,
+                             .edge = ChamferEdgeId::fromValue(reference + 1)}};
         };
         const Body body = require(chamferEdges(base,
                                                {.edges = {lineSignature(Point3D{0_mm, 0_mm, 30_mm},
@@ -619,8 +625,10 @@ TEST_CASE("FaceNames_HolesAndChamfersNameTheirFacesAndKeepTheirInputs", "[core][
                                                                         Direction3D::unitX())},
                                                 .distance = 4_mm},
                                                chamferNamer));
-        const auto face = [&](std::uint32_t reference) {
-            const auto faces = named(body, FaceName{cutter, {.role = FaceRole::Chamfer, .edge = reference}});
+        const auto face = [&](std::uint64_t reference) {
+            const auto faces = named(
+                body, FaceName{cutter,
+                               {.role = FaceRole::Chamfer, .edge = ChamferEdgeId::fromValue(reference)}});
             REQUIRE(faces.size() == 1);
             return faces[0];
         };

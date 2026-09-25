@@ -509,9 +509,14 @@ Result<Document> documentFromJson(std::string_view text) {
     if (*format != kDocumentFormat) {
         return detail::parseError("format", std::format("expected '{}', got '{}'", kDocumentFormat, *format));
     }
-    if (*version != static_cast<std::uint64_t>(kDocumentFormatVersion)) {
-        return detail::parseError("version", std::format("unsupported version {} (supported: {})", *version,
-                                                         kDocumentFormatVersion));
+    // A RANGE, not one value: this build reads every version it knows how to,
+    // and writes only the newest. Version 1 differs from 2 in how a chamfer
+    // face is named, and the reader handles both (ADR-024).
+    if (*version < static_cast<std::uint64_t>(kOldestReadableDocumentVersion) ||
+        *version > static_cast<std::uint64_t>(kDocumentFormatVersion)) {
+        return detail::parseError("version",
+                                 std::format("unsupported version {} (supported: {}-{})", *version,
+                                             kOldestReadableDocumentVersion, kDocumentFormatVersion));
     }
     if (*units != "SI") {
         return detail::parseError("units", std::format("unsupported unit system '{}'", *units));

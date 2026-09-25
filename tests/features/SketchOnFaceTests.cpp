@@ -714,7 +714,9 @@ TEST_CASE("SketchOnFace_RolesAndCopiesAFeatureDoesNotHaveAreRefused", "[features
                 "SideSketch (object:13): Bar (object:8): entity:99 is not an entity of its profile BarProfile "
                 "(object:6)");
         refused(barHistory, barRegenerator, bar.doc, bar.sideSketch,
-                SweptBarModel::faceOf(bar.bar, {.role = FaceRole::Chamfer, .edge = 1}), ErrorCode::InvalidArgument,
+                SweptBarModel::faceOf(bar.bar,
+                                      {.role = FaceRole::Chamfer, .edge = ChamferEdgeId::fromValue(1)}),
+                ErrorCode::InvalidArgument,
                 "SideSketch (object:13): Bar (object:8) is a sweep, which has no chamfer face");
 
         LoftedFrustumModel loft;
@@ -763,7 +765,7 @@ TEST_CASE("SketchOnFace_RolesAndCopiesAFeatureDoesNotHaveAreRefused", "[features
         CommandHistory bevelHistory;
         refused(bevelHistory, bevelRegenerator, bevel.doc, bevel.backSketch,
                 BevelledBlockModel::faceOf(bevel.chamfer, BevelledBlockModel::edgeFace(3)), ErrorCode::NotFound,
-                "BackSketch (object:7): Bevel (object:4) has 2 edge references, not 3");
+                "BackSketch (object:7): Bevel (object:4) has no chamfer edge 3");
         refused(bevelHistory, bevelRegenerator, bevel.doc, bevel.backSketch,
                 BevelledBlockModel::faceOf(bevel.chamfer, {.role = FaceRole::EndCap}), ErrorCode::InvalidArgument,
                 "BackSketch (object:7): Bevel (object:4) is a chamfer, which has no end cap");

@@ -23,6 +23,7 @@
 #include <cstdint>
 #include <memory>
 #include <numbers>
+#include <regex>
 #include <string>
 #include <vector>
 
@@ -63,7 +64,7 @@ struct ChamferedShaft : TurnedPartModel {
         REQUIRE(outer.has_value());
         REQUIRE(inner.has_value());
         auto feature = ChamferFeature::create(
-            "Rims", {.target = featureId(groove), .edges = {*outer, *inner}, .distance = 2_mm});
+            "Rims", {.target = featureId(groove), .edges = { ChamferEdge{*outer}, ChamferEdge{*inner}}, .distance = 2_mm});
         REQUIRE(feature.has_value());
         rims = doc.addObject(std::move(*feature)).value();
     }
@@ -117,22 +118,30 @@ std::string replaceOnce(std::string text, std::string_view from, std::string_vie
     return text;
 }
 
-// The Edge chamfer's reference as the file stores it.
+// The Edge chamfer's selection as the file stores it: an IDENTITY and the
+// curve it selects (ADR-024). The id is what a drawing reference to this
+// chamfer's face names, so it has to be in the file and it has to be stable;
+// before ADR-024 the array held bare curves and the reference named a
+// position in it.
 constexpr std::string_view kEdgeReference = R"("edges": [
           {
-            "curve": "line",
-            "point": [
-              0.0,
-              0.0,
-              0.02
-            ],
-            "direction": [
-              1.0,
-              0.0,
-              0.0
-            ]
+            "id": 1,
+            "edge": {
+              "curve": "line",
+              "point": [
+                0.0,
+                0.0,
+                0.02
+              ],
+              "direction": [
+                1.0,
+                0.0,
+                0.0
+              ]
+            }
           }
-        ])";
+        ],
+        "last_edge_id": 1)";
 
 } // namespace
 
@@ -227,19 +236,23 @@ TEST_CASE("ChamferFeature_DataIsStoredAsTransparentJson", "[chamfer][io]") {
         "target": 7,
         "edges": [
           {
-            "curve": "line",
-            "point": [
-              0.0,
-              0.05,
-              0.02
-            ],
-            "direction": [
-              1.0,
-              0.0,
-              0.0
-            ]
+            "id": 1,
+            "edge": {
+              "curve": "line",
+              "point": [
+                0.0,
+                0.05,
+                0.02
+              ],
+              "direction": [
+                1.0,
+                0.0,
+                0.0
+              ]
+            }
           }
         ],
+        "last_edge_id": 1,
         "mode": "two_distance",
         "distance": 0.004,
         "distance2": 0.002,
@@ -263,19 +276,158 @@ TEST_CASE("ChamferFeature_DataIsStoredAsTransparentJson", "[chamfer][io]") {
     const auto shaftText = io::documentToJson(shaft.doc);
     REQUIRE(shaftText.has_value());
     CHECK_THAT(*shaftText, ContainsSubstring(R"({
-            "curve": "circle",
-            "center": [
-              0.0,
-              0.0,
-              0.04
-            ],
-            "axis": [
-              0.0,
-              0.0,
-              1.0
-            ],
-            "radius": 0.015
+              "curve": "circle",
+              "center": [
+                0.0,
+                0.0,
+                0.04
+              ],
+              "axis": [
+                0.0,
+                0.0,
+                1.0
+              ],
+              "radius": 0.015
+            }
           })"));
+}
+
+TEST_CASE("ChamferFeature_AVersionOneFileMigratesToIdentifiedSelections", "[chamfer][io][legacy]") {
+    // THE MIGRATION, tested on the shape no committed model has. Six committed
+    // models contain chamfers, but none of them names a chamfer FACE, so the
+    // corpus does not exercise the reference half of the migration at all.
+    // This builds the version-1 form by hand from the version-2 writer's own
+    // output, which keeps it honest: every byte it feeds the reader is a byte
+    // the old writer would have produced.
+    //
+    // Version 1 wrote a chamfer's selections as bare curves and named a
+    // chamfer face by "edge": n, the 1-based POSITION of the selection. The
+    // contract is that position n is now the selection identified n, because a
+    // file with no ids has them allocated 1..N in its own array order.
+    ChamferBlockModel m;
+    const std::string current = io::documentToJson(m.doc).value();
+    REQUIRE_THAT(current, ContainsSubstring(R"("version": 2)"));
+    REQUIRE_THAT(current, ContainsSubstring(std::string{kEdgeReference}));
+
+    // Back to the version-1 form: the version, and the selection as a bare
+    // curve with no id and no high-water mark beside it.
+    const std::string legacy = replaceOnce(
+        replaceOnce(current, R"("version": 2)", R"("version": 1)"), kEdgeReference,
+        R"("edges": [
+          {
+            "curve": "line",
+            "point": [
+              0.0,
+              0.0,
+              0.02
+            ],
+            "direction": [
+              1.0,
+              0.0,
+              0.0
+            ]
+          }
+        ])");
+    // "last_edge_id" is the chamfer's high-water mark and appears nowhere
+    // else, so its absence says the selection carries no identity. ("id" on
+    // its own would not: every object in the file has one.)
+    REQUIRE_THAT(legacy, !ContainsSubstring(R"("last_edge_id")"));
+
+    // IT LOADS, and the selection it had is now identified 1 -- the position it
+    // occupied. That is what makes a version-1 "edge": 1 reference name this
+    // selection and no other.
+    auto loaded = io::documentFromJson(legacy);
+    const std::string loadedWhy = loaded.has_value() ? std::string{} : loaded.error().message;
+    INFO(loadedWhy);
+    REQUIRE(loaded.has_value());
+    const auto* chamfer = loaded->findObjectAs<features::ChamferFeature>(m.edge);
+    REQUIRE(chamfer != nullptr);
+    REQUIRE(chamfer->definition().edges.size() == 1);
+    CHECK(chamfer->definition().edges[0].id == ChamferEdgeId::fromValue(1));
+    CHECK(chamfer->lastEdgeId() == 1);
+
+    // And re-saving writes the version-2 form: a migrated document is a
+    // version-2 document, and version 1 is never written again.
+    const auto rewritten = io::documentToJson(*loaded);
+    REQUIRE(rewritten.has_value());
+    CHECK_THAT(*rewritten, ContainsSubstring(R"("version": 2)"));
+    CHECK_THAT(*rewritten, ContainsSubstring(std::string{kEdgeReference}));
+    // The migrated document and the one that never left version 2 are the same
+    // document, byte for byte. The round trip through the old form loses
+    // nothing.
+    CHECK(*rewritten == current);
+}
+
+TEST_CASE("ChamferFeature_AVersionOneChamferFaceReferenceMeansTheSameFace", "[chamfer][io][legacy]") {
+    // The other half: a version-1 face reference is a POSITION, and it has to
+    // come back meaning the face that position named.
+    //
+    // A file carrying both spellings is refused rather than one being
+    // preferred, because there is no way to know which the writer meant.
+    ChamferBlockModel m;
+    const std::string current = io::documentToJson(m.doc).value();
+
+    // This model has no chamfer-face reference of its own, so one is put in
+    // the file directly, in each of the two spellings, and the two are
+    // required to resolve identically.
+    // The hand-added object uses id 900, so the document's allocator has to
+    // have reached it: a file whose last_allocated_id is below an id in use is
+    // refused, and rightly.
+    const std::string raised =
+        std::regex_replace(current, std::regex{R"("last_allocated_id": [0-9]+)"},
+                           "\"last_allocated_id\": 900");
+    const auto withSelector = [&](std::string_view selector) {
+        // A datum plane whose face is the chamfer's, appended as a new object.
+        return replaceOnce(raised, R"(  "objects": [)",
+                           std::string{R"(  "objects": [
+    {
+      "id": 900,
+      "type": "datum_plane",
+      "name": "OnTheBevel",
+      "data": {
+        "kind": "offset",
+        "base": {
+          "object": )"} + std::to_string(m.edge.value()) + R"(,
+          "face": {
+            "role": "chamfer",
+            )" + std::string{selector} + R"(
+          }
+        },
+        "offset": 0.0
+      }
+    },)");
+    };
+
+    auto modern = io::documentFromJson(withSelector(R"("chamfer_edge": 1)"));
+    const std::string modernWhy = modern.has_value() ? std::string{} : modern.error().message;
+    INFO(modernWhy);
+    REQUIRE(modern.has_value());
+    auto legacy = io::documentFromJson(withSelector(R"("edge": 1)"));
+    const std::string legacyWhy = legacy.has_value() ? std::string{} : legacy.error().message;
+    INFO(legacyWhy);
+    REQUIRE(legacy.has_value());
+
+    // Both documents say the same thing, and saying it the old way is not
+    // preserved: what comes back out is the new spelling.
+    const auto modernText = io::documentToJson(*modern);
+    const auto legacyText = io::documentToJson(*legacy);
+    REQUIRE(modernText.has_value());
+    REQUIRE(legacyText.has_value());
+    CHECK(*legacyText == *modernText);
+    CHECK_THAT(*legacyText, ContainsSubstring(R"("chamfer_edge": 1)"));
+    CHECK_THAT(*legacyText, !ContainsSubstring(R"("edge": 1)"));
+
+    // BOTH SPELLINGS AT ONCE IS REFUSED. Preferring one would be a guess about
+    // what a file means, on the one question this ADR exists to make
+    // unambiguous.
+    const auto both = io::documentFromJson(
+        withSelector(R"("chamfer_edge": 1,
+            "edge": 1)"));
+    REQUIRE_FALSE(both.has_value());
+    // ParseError, like every other structural complaint about a file: this is
+    // a document that does not say one thing, not an argument a caller passed.
+    CHECK(both.error().code == ErrorCode::ParseError);
+    CHECK_THAT(both.error().message, ContainsSubstring("names a chamfer edge twice"));
 }
 
 TEST_CASE("ChamferFeature_MalformedDataIsRejectedWithTheJsonPath", "[chamfer][io]") {

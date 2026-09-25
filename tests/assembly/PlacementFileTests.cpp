@@ -180,7 +180,7 @@ TEST_CASE("PlacementFile_HoldsIntentAndNeverASolvedTransform", "[assembly][place
         CHECK_THAT(entry, !ContainsSubstring(std::string{forbidden}));
     }
     // No format change either: still version 1, still the objects[] envelope.
-    CHECK_THAT(text, ContainsSubstring("\"version\": 1"));
+    CHECK_THAT(text, ContainsSubstring("\"version\": 2"));
     CHECK_THAT(text, !ContainsSubstring("\"assembly\""));
 }
 

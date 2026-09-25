@@ -1,6 +1,6 @@
 {
   "format": "bettercad-document",
-  "version": 1,
+  "version": 2,
   "units": "SI",
   "document": {
     "id": "5eed0000-0000-4000-8000-000000000005",
@@ -703,19 +703,23 @@
         "target": 31,
         "edges": [
           {
-            "curve": "line",
-            "point": [
-              0.0,
-              0.0,
-              0.0
-            ],
-            "direction": [
-              1.0,
-              0.0,
-              0.0
-            ]
+            "id": 1,
+            "edge": {
+              "curve": "line",
+              "point": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "direction": [
+                1.0,
+                0.0,
+                0.0
+              ]
+            }
           }
         ],
+        "last_edge_id": 1,
         "mode": "equal_distance",
         "distance": 0.002,
         "distance_parameter": 22

@@ -119,7 +119,7 @@ Document makeGoldenDocument() {
 
 constexpr std::string_view kGoldenText = R"({
   "format": "bettercad-document",
-  "version": 1,
+  "version": 2,
   "units": "SI",
   "document": {
     "id": "0f8fad5b-d9cb-469f-a165-70867728950e",
@@ -483,8 +483,16 @@ TEST_CASE("Invalid document files are rejected with the JSON path", "[io][docume
     SECTION("format, version and units") {
         CHECK(loadError(replaceOnce(good, "bettercad-document", "bettercad-parameters")).message ==
               "format: expected 'bettercad-document', got 'bettercad-parameters'");
-        CHECK(loadError(replaceOnce(good, "\"version\": 1", "\"version\": 2")).message ==
-              "version: unsupported version 2 (supported: 1)");
+        // The gate is a RANGE now: this build writes version 2 and reads 1 and
+        // 2, because version 1 differs only in how a chamfer face is named and
+        // the reader migrates that (ADR-024). So the rejected cases are the
+        // ones outside the range, on both sides.
+        CHECK(loadError(replaceOnce(good, "\"version\": 2", "\"version\": 3")).message ==
+              "version: unsupported version 3 (supported: 1-2)");
+        CHECK(loadError(replaceOnce(good, "\"version\": 2", "\"version\": 0")).message ==
+              "version: unsupported version 0 (supported: 1-2)");
+        // And a version-1 document still loads, which is the other half.
+        CHECK(io::documentFromJson(replaceOnce(good, "\"version\": 2", "\"version\": 1")).has_value());
         CHECK(loadError(replaceOnce(good, "\"SI\"", "\"imperial\"")).code == ErrorCode::ParseError);
     }
     SECTION("missing, unknown and mistyped fields") {

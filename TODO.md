@@ -10,23 +10,13 @@
 
 ```text
 Current:   P14 — Technical Drawings
-Next:      A SCOPE DECISION, not an implementation task. P14-QUAL-001 was
-           attempted on 2026-09-25 at 56f5a34 and is BLOCKED at its
-           precondition by P14-STREF-001; see that milestone's section and
-           docs/verification/P14-QUAL-001/. P14 CANNOT be qualified until the
-           chamfer gap is either closed or accepted in writing with the gate
-           text changed to match.
-           P14-STREF-001 is the blocker, and is a scope decision of its own:
-           its audit is done and 11 of its 12 checks pass, but one gate --
-           "no silent rebinding" -- is NOT met and the milestone is not [x].
-           A chamfer face is named by its edge reference's POSITION in the
-           chamfer's edge list, so reordering that list silently moves any
-           drawing reference to it. Demonstrated in
-           Reference_AChamferFaceIsNamedByItsPositionInTheChamfersEdgeList.
-           Closing it changes ChamferDefinition and its file format, and the
-           committed reference models with chamfers, so it needs its own
-           authorization. No model in P14-REFMOD-001's suite uses a chamfer,
-           so that suite neither closes the gap nor depends on it.
+Next:      P14-QUAL-001 — full P14 qualification. Its precondition is now MET:
+           P14-STREF-001 was the blocker and is closed (ADR-024, 2026-09-26).
+           The earlier BLOCKED audit at 56f5a34 stands as history in
+           docs/verification/P14-QUAL-001/ and must be RE-RUN from the
+           beginning, not continued: it stopped before the tree freeze and
+           before any build.
+           All 17 P14 milestones before it are now complete.
 Carried:   a hole's POSITION cannot be dimensioned. A cylindrical face may be
            the target of a radius or a diameter and of nothing else
            (P14-DIM-001), and a bore's axis has no semantic name (ADR-012),
@@ -36,18 +26,26 @@ Carried:   a hole's POSITION cannot be dimensioned. A cylindrical face may be
            P14-DIM-001's target rules or naming a hole's axis — either is a
            scope decision.
            GD&T symbols reach SVG only; PDF and DXF need an embedded font.
-Decision:  move build and test output off OneDrive. OVERDUE. The filesystem
-           fault has now failed a determinism repeat in P14-DIM-001 (debug),
-           P14-ANNO-001 (release), P14-BOM-001 (debug) and P14-REFMOD-001 —
-           where it failed BOTH repeat presets in one run, two of that
-           qualification's seventeen stages. The signature is always the
-           same: a Windows sharing violation on REPLACING a file the same
-           test had already written successfully in the same run, inside the
-           synced build tree. Every time, one controlled rerun has passed.
-           It needs its own decision because the build directory lives in
-           CMakePresets.json, inside the tree that gets frozen — and it must
-           be taken before P14-QUAL-001, whose whole purpose is a clean
-           qualification.
+Decision:  move build and test output off OneDrive. OPEN, and it is now
+           BLOCKED BY A DEFECT rather than waiting on a preference.
+           Attempted 2026-09-26: a -local preset family building at
+           $BETTERCAD_BUILD_ROOT was written and its mechanics validated, and
+           the full three-preset qualification on it FAILED to link the GUI
+           target in all three, because windeployqt resolves the Qt runtime
+           relative to the executable it is deploying — <exe>/../../<toolchain
+           key>/bin — which names the real Qt only when the build tree sits
+           inside the source tree. Qt's bin on PATH, running windeployqt from
+           Qt's bin, and pre-placing Qt6Core.dll beside the executable were
+           each tried; none changed it. The presets were REVERTED rather than
+           committed unvalidated. Making the Qt deployment
+           location-independent is its own piece of work and comes first.
+           Note this is true independently of OneDrive: the deploy step has
+           been depending on the build living inside the source tree.
+           The filesystem fault itself has failed a determinism repeat in
+           P14-DIM-001 (debug), P14-ANNO-001 (release), P14-BOM-001 (debug)
+           and P14-REFMOD-001 (BOTH presets). It did NOT recur in
+           P14-STREF-001's closure, which is one clean run and closes
+           nothing.
 
 Released:  v0.1.0 — P0–P10
 Qualified: P11, P12, P13
@@ -862,7 +860,7 @@ Open decision → move build output off OneDrive; NOW DUE, third occurrence
 
 ---
 
-# P14-STREF-001
+# DONE — P14-STREF-001
 
 ## Stable Drawing References
 
@@ -874,13 +872,15 @@ Open decision → move build output off OneDrive; NOW DUE, third occurrence
 * [x] Preserve references across configuration switching
 * [x] Preserve references across save/load
 * [x] Missing geometry becomes unresolved
-* [ ] Prevent silent rebinding — **NOT MET.** A chamfer face is named
-      `{role = Chamfer, edge = N}` where N is the POSITION of an edge
-      reference in `ChamferDefinition::edges`. Reordering that list leaves
-      the reference resolving — to different material. Measured in
-      `Reference_AChamferFaceIsNamedByItsPositionInTheChamfersEdgeList`;
-      every other reference path holds, including against identical
-      survivors deliberately left in place
+* [x] Prevent silent rebinding — **CLOSED 2026-09-26 by ADR-024.** A chamfer
+      face was named `{role = Chamfer, edge = N}` where N was the POSITION of
+      an edge reference in `ChamferDefinition::edges`, so reordering that list
+      left the reference resolving to different material. A chamfer edge
+      SELECTION now has an allocated identity that travels with it, and the
+      face is named by that. Ten edit-shape tests, each failing against the
+      pre-fix code: reorder, insert, unrelated delete, target delete,
+      identical replacement, restore, undo/redo, save/load, reorder+save/load
+      and repeated resolution
 * [x] Validate target recovery
 * [x] Deterministic resolution PASS
 * [x] Adversarial review PASS
@@ -898,7 +898,11 @@ drawing references stable
 + determinism PASS
 ```
 
-**NOT MET, on one gate.** Everything else passes: 32 new tests; 2047/2047 on
+**MET, as of 2026-09-26.** It was NOT met when this milestone was first
+written, and everything from "The audit's finding" down to CLOSED below is
+that record, left as it was: it found a real defect.
+
+The audit itself passed everything else: 32 new tests; 2047/2047 on
 `debug`, `release` and `debug-shared`, each from clean; 2046/2046 five times
 over in both repeat presets; 0 compiler warnings; the no-op rebuild compiled 0
 and linked 0 in every preset; the tree IDs before the first build, after the
@@ -932,18 +936,52 @@ hole of the same diameter in the same face, a second occurrence of the same
 part still active and still item 1. None is adopted. Recovery and rebinding are
 asserted as one paired test so the two cannot be read as one behaviour.
 
-The remaining work is precise and is in the evidence: give each chamfer edge
-reference an id, name the face by the id, migrate the format, and re-qualify
-the reference models that contain chamfers. That last step changes committed
-artifacts three phases are qualified against, which is why it was not done
-here.
+**CLOSED — ADR-024, 2026-09-26.** A chamfer edge SELECTION now has an
+allocated identity that travels with it, and a chamfer face is named by that
+rather than by a position. `FaceSelector::edge` changed TYPE, so the compiler
+enumerated every consumer instead of letting anything keep treating it as a
+position. Ten edit-shape tests, each failing against the pre-fix code:
+reorder, insert, unrelated delete, target delete, identical replacement,
+restore, undo/redo, save/load, reorder+save/load, repeated resolution.
+
+**The cost estimate above was wrong in one respect, and it is worth
+recording.** Closing this did NOT disturb the reference models P11, P12 and
+P13 are qualified against. Six committed models contain chamfers, but **none
+names a chamfer FACE**, so no historical reference needed migrating. All 32
+models were regenerated for the format version bump, and the regeneration was
+proved faithful before anything was replaced: the byte comparison failed 20 of
+20 while `equivalent(loaded, built)` failed 0 of 20. The bytes moved; no model
+did.
+
+**Two defects were found in the FIX by the test suite, not by review.** A rule
+that made undo impossible — restoring a deleted selection under its own id is
+target recovery, which this milestone requires — and an implicit conversion
+that silently retired a selection's identity in the one workflow meant to
+repair a broken reference. Both are in the evidence with the tests that caught
+them.
+
+Qualification: 2256/2256 on `debug`, `release` and `debug-shared`, each from
+clean; 0 warnings in all six build and rebuild logs; fresh binaries; 2255/2255
+five times over in both repeat presets, counted as 11275 = 2255 x 5 passes in
+each log. The OneDrive fault did not recur, which is one clean run and does
+not close that decision.
 
 ```text
-P14-STREF-001 → [ ]  (11 of 12 checks pass; "no silent rebinding" does not)
-Next → P14-STREF-001, to close the chamfer gap — needs its own authorization
+P14-STREF-001 → [x]  (all 12 checks pass; ADR-024 closed the twelfth)
+Next → P14-QUAL-001, which this unblocks
 Carried open → nothing
-Open decision → move build output off OneDrive; the fault did not recur here,
-                which does not close it
+Open decision → move build output off OneDrive. STILL OPEN, and now with a
+                NAMED BLOCKER rather than a preference: building outside the
+                source tree fails the GUI target in all three presets, because
+                windeployqt resolves the Qt runtime relative to the executable
+                it is deploying, as <exe>/../../<toolchain key>/bin. That names
+                the real Qt only when the build sits inside the source tree.
+                Qt's bin on PATH, running windeployqt from Qt's bin, and
+                pre-placing Qt6Core.dll beside the executable were each tried
+                and none changed it. The -local presets written for this were
+                REVERTED rather than committed unvalidated. Making the Qt
+                deployment location-independent is its own piece of work and
+                comes first
 ```
 
 ---

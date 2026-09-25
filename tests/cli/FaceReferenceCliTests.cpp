@@ -157,7 +157,7 @@ TEST_CASE("FaceReferenceCli_InfoDescribesFacesOfEveryKindAndCopies", "[cli][refe
                    EndsWith("2 entities, 2 constraints, on the counterbore floor of Seat"));
         const BevelledBlockModel bevel;
         CHECK_THAT(objectLine(info(bevel.doc), "BackSketch"),
-                   EndsWith("2 entities, 2 constraints, on the face of edge reference 2 of Bevel"));
+                   EndsWith("2 entities, 2 constraints, on the face of chamfer edge 2 of Bevel"));
     }
 }
 

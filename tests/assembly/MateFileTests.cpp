@@ -205,7 +205,7 @@ TEST_CASE("MateFile_WritesOnlyTheKeysItsKindCallsFor", "[assembly][mate][p13][io
         CHECK_THAT(text, !ContainsSubstring(std::string{forbidden}));
     }
     // And no format change.
-    CHECK_THAT(text, ContainsSubstring("\"version\": 1"));
+    CHECK_THAT(text, ContainsSubstring("\"version\": 2"));
 }
 
 TEST_CASE("MateFile_ADocumentWithoutMatesIsUnchanged", "[assembly][mate][p13][io]") {

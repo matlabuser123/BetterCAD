@@ -744,7 +744,7 @@ TEST_CASE("LinearPattern_PatternsChamferAndFilletByTranslatedReferences", "[patt
     SECTION("chamfers: pi c^2 (r + c/3) per rim, by Pappus") {
         const ParameterId ease = m.doc.createParameter("ease", 1_mm, units::mm).value();
         const ObjectId chamfer = m.add<ChamferFeature>(
-            "Ease", {.target = featureId(m.holes), .edges = {rim(20, 25, 20, 5)}, .distanceParameter = ease});
+            "Ease", {.target = featureId(m.holes), .edges = { ChamferEdge{rim(20, 25, 20, 5)}}, .distanceParameter = ease});
         const ObjectId eases = m.add<LinearPatternFeature>(
             "Eases", {.source = featureId(chamfer), .first = {.direction = {1.0, 0.0, 0.0}, .count = 5, .spacing = 20_mm}});
         const RegenerationReport report = requireReport(regenerator, m.doc);

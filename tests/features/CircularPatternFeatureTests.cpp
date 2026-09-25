@@ -1020,7 +1020,7 @@ TEST_CASE("CircularPattern_PatternsChamferAndFilletByRotatedReferences",
 
     SECTION("chamfers: pi c^2 (r + c/3) per rim, by Pappus") {
         const ParameterId ease = m.doc.createParameter("ease", 1_mm, units::mm).value();
-        auto chamfer = ChamferFeature::create("Ease", {.target = featureId(m.bolts), .edges = {*rim},
+        auto chamfer = ChamferFeature::create("Ease", {.target = featureId(m.bolts), .edges = { ChamferEdge{*rim}},
                                                        .distanceParameter = ease});
         REQUIRE(chamfer.has_value());
         const ObjectId easeId = m.doc.addObject(std::move(*chamfer)).value();

@@ -538,6 +538,59 @@ Result<std::vector<geometry::EdgeSignature>> edgeListFromJson(const Json& array,
     return edges;
 }
 
+/// A chamfer's selections: [{"id": n, "edge": <signature>}, ...].
+///
+/// The id is the selection's persistent identity (ADR-024) and is why a
+/// chamfer cannot share edgeListToJson() with a fillet: a fillet's edges are
+/// bare signatures because no face of a fillet can be referenced -- there is no
+/// FaceRole::Fillet -- so its selections need no identity.
+Json chamferEdgeListToJson(const std::vector<features::ChamferEdge>& edges) {
+    Json json = Json::array();
+    for (const features::ChamferEdge& edge : edges) {
+        Json item = Json::object();
+        item["id"] = edge.id.value();
+        item["edge"] = edgeToJson(edge.curve);
+        json.push_back(std::move(item));
+    }
+    return json;
+}
+
+/// The selections in @p array (already known to be an array) at @p path.
+///
+/// TWO SHAPES, and they are told apart by structure rather than by guessing.
+/// An object with an "id" key is a selection written after ADR-024 and its id
+/// is read. Anything else is a bare edge signature, which is how chamfers were
+/// written before, and its id is left unset: ChamferFeature::restore then
+/// allocates 1..N in this array's order, which is exactly what a legacy
+/// "edge": n face reference meant by position n.
+Result<std::vector<features::ChamferEdge>> chamferEdgeListFromJson(const Json& array, std::string_view path) {
+    std::vector<features::ChamferEdge> edges;
+    for (std::size_t i = 0; i < array.size(); ++i) {
+        const std::string itemPath = indexPath(path, i);
+        if (array[i].is_object() && array[i].contains("id")) {
+            if (auto valid = requireObject(array[i], itemPath, {"id", "edge"}); !valid) {
+                return std::unexpected(valid.error());
+            }
+            auto id = readId(array[i], "id", itemPath);
+            if (!id) {
+                return std::unexpected(id.error());
+            }
+            auto curve = edgeFromJson(array[i].at("edge"), childPath(itemPath, "edge"));
+            if (!curve) {
+                return std::unexpected(curve.error());
+            }
+            edges.push_back(features::ChamferEdge{ChamferEdgeId::fromValue(*id), *curve});
+            continue;
+        }
+        auto curve = edgeFromJson(array[i], itemPath);
+        if (!curve) {
+            return std::unexpected(curve.error());
+        }
+        edges.push_back(features::ChamferEdge{*curve});
+    }
+    return edges;
+}
+
 /// An absent key reads as 0.
 Result<double> readNumberOrZero(const Json& object, std::string_view key, std::string_view path) {
     return object.contains(key) ? readNumber(object, key, path) : Result<double>{0.0};
@@ -549,7 +602,8 @@ Json chamferToJson(const features::ChamferFeature& feature) {
     const features::ChamferDefinition& d = feature.definition();
     Json json = Json::object();
     json["target"] = d.target.value();
-    json["edges"] = edgeListToJson(d.edges);
+    json["edges"] = chamferEdgeListToJson(d.edges);
+    json["last_edge_id"] = feature.lastEdgeId();
     json["mode"] = std::string{nameOf(kChamferModes, d.mode)};
     json["distance"] = d.distance.si();
     if (d.distanceParameter) {
@@ -571,8 +625,8 @@ Json chamferToJson(const features::ChamferFeature& feature) {
 Result<std::unique_ptr<features::ChamferFeature>> chamferFromJson(const Json& data, std::string name,
                                                                   std::string_view path) {
     if (auto object = requireObject(data, path,
-                                    {"target", "edges", "mode", "distance", "distance_parameter", "distance2",
-                                     "angle", "reference_side"});
+                                    {"target", "edges", "last_edge_id", "mode", "distance",
+                                     "distance_parameter", "distance2", "angle", "reference_side"});
         !object) {
         return std::unexpected(object.error());
     }
@@ -603,7 +657,7 @@ Result<std::unique_ptr<features::ChamferFeature>> chamferFromJson(const Json& da
         .angle = Angle::fromSi(*angle),
         .referenceSide = std::nullopt,
     };
-    auto edges = edgeListFromJson(**edgesField, childPath(path, "edges"));
+    auto edges = chamferEdgeListFromJson(**edgesField, childPath(path, "edges"));
     if (!edges) {
         return std::unexpected(edges.error());
     }
@@ -618,7 +672,18 @@ Result<std::unique_ptr<features::ChamferFeature>> chamferFromJson(const Json& da
         }
         definition.referenceSide = *side;
     }
-    auto feature = features::ChamferFeature::create(std::move(name), definition);
+    // restore(), not create(): the ids in the file are kept as they are, and
+    // the allocator continues from where the file left off so a selection
+    // deleted before the save can never have its id handed out again. A file
+    // written before ADR-024 has no "last_edge_id" and no ids, and restore()
+    // then allocates 1..N in the array's order -- see
+    // chamferEdgeListFromJson.
+    auto lastEdgeId = data.contains("last_edge_id") ? readId(data, "last_edge_id", path)
+                                                    : Result<std::uint64_t>{0};
+    if (!lastEdgeId) {
+        return std::unexpected(lastEdgeId.error());
+    }
+    auto feature = features::ChamferFeature::restore(std::move(name), definition, *lastEdgeId);
     if (!feature) {
         return atPath(path, feature.error());
     }

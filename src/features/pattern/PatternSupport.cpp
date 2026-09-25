@@ -264,7 +264,10 @@ Result<InstanceOperation> operationAt(const DocumentObject& source, const Docume
         if (!request) {
             return std::unexpected(request.error());
         }
-        return InstanceOperation{[request = *request, id = chamfer->id()](
+        // Captured BY VALUE, beside the request: this operation outlives the
+        // scope that found the feature, so it must not hold a pointer to it.
+        return InstanceOperation{[request = *request, id = chamfer->id(),
+                                  ids = chamferEdgeIds(chamfer->definition())](
                                      const geometry::Body& target, const RigidTransform3D& motion,
                                      const std::vector<FaceCopy>& copies) {
             geometry::ChamferRequest moved = request;
@@ -272,7 +275,10 @@ Result<InstanceOperation> operationAt(const DocumentObject& source, const Docume
             if (moved.referenceSide) {
                 moved.referenceSide = motion.apply(*moved.referenceSide);
             }
-            return geometry::chamferEdges(target, moved, chamferFaceNamer(id, copies));
+            // A copy's faces carry the SAME selection ids as the original's:
+            // an instance is named by `copies`, and the selection it came from
+            // is named by its id. Nothing here depends on list order.
+            return geometry::chamferEdges(target, moved, chamferFaceNamer(id, ids, copies));
         }};
     }
     if (const auto* fillet = dynamic_cast<const FilletFeature*>(&source)) {

@@ -85,11 +85,11 @@ Result<void> validate(const FaceSelector& selector) {
         return invalid(std::format("{} is not named by a path edge", roleWithArticle(selector.role)));
     }
     if (selector.role == FaceRole::Chamfer) {
-        if (!selector.edge || *selector.edge == 0) {
-            return invalid("a chamfer face is named by its edge reference, from 1");
+        if (!selector.edge || !selector.edge->isValid()) {
+            return invalid("a chamfer face is named by its chamfer edge's ID");
         }
     } else if (selector.edge) {
-        return invalid(std::format("{} is not named by an edge reference", roleWithArticle(selector.role)));
+        return invalid(std::format("{} is not named by a chamfer edge ID", roleWithArticle(selector.role)));
     }
     for (const FaceCopy& copy : selector.copies) {
         if (!copy.feature.isValid()) {

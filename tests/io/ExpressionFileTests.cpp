@@ -140,7 +140,7 @@ TEST_CASE("ParameterExpressions_SavingIsDeterministicAndKeepsTheFormatVersion", 
     CHECK(*first == *second);
     // The expression field keeps its format-version-1 form: the text next to
     // the value it evaluated to.
-    CHECK_THAT(*first, ContainsSubstring("\"version\": 1,"));
+    CHECK_THAT(*first, ContainsSubstring("\"version\": 2,"));
     CHECK_THAT(*first, ContainsSubstring("      \"name\": \"height\",\n"
                                          "      \"si_value\": 0.05,\n"
                                          "      \"unit\": \"mm\",\n"

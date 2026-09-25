@@ -168,7 +168,7 @@ std::string describeFaceName(const Document& document, const FaceName& name) {
         text = "the counterbore floor";
         break;
     case FaceRole::Chamfer:
-        text = face.edge ? std::format("the face of edge reference {}", *face.edge)
+        text = face.edge ? std::format("the face of chamfer edge {}", face.edge->value())
                          : std::string{"a chamfer face"};
         break;
     case FaceRole::SpotfaceFloor:

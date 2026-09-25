@@ -64,7 +64,7 @@ Result<UBoltModel> buildUBoltReferenceModel() {
     };
     m.endChamfers = b.feature<features::ChamferFeature>(
         "EndChamfers", {.target = featureId(m.rod),
-                        .edges = {end(0.0, "first end"), end(2.0 * b.millimetres(m.bendRadius), "second end")},
+                        .edges = { features::ChamferEdge{end(0.0, "first end")}, features::ChamferEdge{end(2.0 * b.millimetres(m.bendRadius), "second end")}},
                         .distance = 1_mm,
                         .distanceParameter = m.chamferSize});
 

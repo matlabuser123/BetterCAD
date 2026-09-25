@@ -58,7 +58,7 @@ enum class FaceRole {
     HoleBottom,
     /// A counterbored hole's flat floor around the hole.
     CounterboreFloor,
-    /// The face a chamfer cuts for one of its edge references.
+    /// The face a chamfer cuts for one of its edge selections.
     Chamfer,
     /// A spotfaced hole's flat seat around the hole (P12-HOLE-001).
     SpotfaceFloor,
@@ -85,8 +85,9 @@ struct FaceCopy {
 ///   through more than one sketch, `alongSketch`, the sketch that edge
 ///   belongs to (P12-SWEEP-001): entity IDs are numbered per sketch, so the
 ///   edge alone would not say which run it is;
-/// - for a chamfer's face, the position of its edge reference in the
-///   chamfer's list (`edge`, from 1);
+/// - for a chamfer's face, the stable ID of the chamfer's edge SELECTION
+///   (`edge`) -- not its position in the chamfer's list, which reordering
+///   would change under a stored reference (ADR-024);
 /// - the `copies` made of it, in the order they were made (the last copy's
 ///   feature holds the face).
 struct FaceSelector {
@@ -94,7 +95,10 @@ struct FaceSelector {
     std::optional<EntityId> entity{};
     std::optional<EntityId> along{};
     std::optional<SketchId> alongSketch{};
-    std::optional<std::uint32_t> edge{};
+    /// Chamfer only: the chamfer's edge SELECTION, by its own stable ID.
+    /// Never its position in `ChamferDefinition::edges` -- see ChamferEdgeId
+    /// and ADR-024.
+    std::optional<ChamferEdgeId> edge{};
     std::vector<FaceCopy> copies{};
 
     friend constexpr bool operator==(const FaceSelector&, const FaceSelector&) = default;
@@ -102,8 +106,8 @@ struct FaceSelector {
 };
 
 /// Checks a selector on its own: a side face names a valid entity (and may
-/// name a valid path edge); a chamfer face names an edge reference from 1;
-/// no other role takes an entity, a path edge or an edge reference; every
+/// name a valid path edge); a chamfer face names a valid chamfer edge ID;
+/// no other role takes an entity, a path edge or an edge ID; every
 /// copy names a valid feature and an instance from 1. InvalidArgument
 /// otherwise.
 [[nodiscard]] BETTERCAD_CORE_EXPORT Result<void> validate(const FaceSelector& selector);

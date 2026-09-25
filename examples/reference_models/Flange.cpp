@@ -67,7 +67,7 @@ Result<FlangeModel> buildFlangeReferenceModel() {
     };
     m.edgeChamfers = b.feature<features::ChamferFeature>(
         "EdgeChamfers", {.target = featureId(m.boltCircle),
-                         .edges = {circle(12.0, 50.0, "top rim"), circle(12.0, 15.0, "bore edge")},
+                         .edges = { features::ChamferEdge{circle(12.0, 50.0, "top rim")}, features::ChamferEdge{circle(12.0, 15.0, "bore edge")}},
                          .distance = 1_mm,
                          .distanceParameter = m.chamferSize});
     m.rimFillet = b.feature<features::FilletFeature>("RimFillet", {.target = featureId(m.edgeChamfers),

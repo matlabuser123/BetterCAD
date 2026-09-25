@@ -276,7 +276,14 @@ TEST_CASE("ReferenceModel_ShaftRegeneratesAfterParameterChanges", "[reference][s
         CommandHistory history;
         features::ChamferDefinition moved =
             m.document.findObjectAs<features::ChamferFeature>(m.endChamfers)->definition();
-        moved.edges[1] = geometry::circleSignature(Point3D{0_mm, 0_mm, 130_mm}, Direction3D::unitZ(), 12.5_mm).value();
+        // RE-SELECT, not replace: the user is pointing this same chamfer input
+        // at the edge in its new place, so the selection keeps its identity and
+        // any drawing reference to the face it cuts follows it. Assigning a
+        // whole ChamferEdge here would mint a new identity and strand those
+        // references -- which is why ChamferEdge will not convert from a bare
+        // curve implicitly (ADR-024).
+        moved.edges[1].curve =
+            geometry::circleSignature(Point3D{0_mm, 0_mm, 130_mm}, Direction3D::unitZ(), 12.5_mm).value();
         execute(history, m.document,
                 std::make_unique<features::ModifyChamferCommand>(FeatureId::fromValue(m.endChamfers.value()), moved));
         requireRegenerated(regenerator, m.document);

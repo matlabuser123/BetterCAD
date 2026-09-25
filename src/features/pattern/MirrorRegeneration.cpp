@@ -186,8 +186,8 @@ Result<geometry::Body> regenerateMirror(const MirrorFeature& feature, const Docu
         if (const auto* hole = dynamic_cast<const HoleFeature*>(source)) {
             distinct = checkHoleImage(*hole, document, *reflection);
         } else if (const auto* chamfer = dynamic_cast<const ChamferFeature*>(source)) {
-            distinct = checkEdgeImages("chamfer", "chamfered", chamfer->name(), chamfer->definition().edges,
-                                       *reflection);
+            distinct = checkEdgeImages("chamfer", "chamfered", chamfer->name(),
+                                       chamferCurves(chamfer->definition()), *reflection);
         } else if (const auto* fillet = dynamic_cast<const FilletFeature*>(source)) {
             distinct = checkEdgeImages("fillet", "filleted", fillet->name(), fillet->definition().edges, *reflection);
         }

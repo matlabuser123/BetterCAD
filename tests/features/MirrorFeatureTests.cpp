@@ -1022,7 +1022,7 @@ TEST_CASE("MirrorFeature_MirrorsChamferAndFilletByMirroredReferences", "[mirror]
         // as the reference side would leave 100 - 5 - 3).
         BlockModel m{"spare", 1_mm};
         const ObjectId bevel = m.add<ChamferFeature>("Bevel", {.target = featureId(m.pad),
-                                                               .edges = {BlockModel::alongY(0, 20)},
+                                                               .edges = { ChamferEdge{BlockModel::alongY(0, 20)}},
                                                                .mode = geometry::ChamferMode::TwoDistance,
                                                                .distance = 3_mm,
                                                                .distance2 = 5_mm,
@@ -1043,7 +1043,7 @@ TEST_CASE("MirrorFeature_MirrorsChamferAndFilletByMirroredReferences", "[mirror]
         const double holes = HoleMirrorModel::expectedVolume(100, 20, 10);
         const auto rim = geometry::circleSignature(Point3D{30_mm, 25_mm, 20_mm}, Direction3D::unitZ(), 5_mm);
         REQUIRE(rim.has_value());
-        const ObjectId ease = m.add<ChamferFeature>("Ease", {.target = featureId(m.mirror), .edges = {*rim}, .distance = 1_mm});
+        const ObjectId ease = m.add<ChamferFeature>("Ease", {.target = featureId(m.mirror), .edges = { ChamferEdge{*rim}}, .distance = 1_mm});
         const ObjectId eases = m.add<MirrorFeature>("Eases", across(featureId(ease), {50, 0, 0}, {1, 0, 0}));
         Regenerator regenerator;
         const RegenerationReport report = requireReport(regenerator, m.doc);
@@ -1100,7 +1100,7 @@ TEST_CASE("MirrorFeature_MirrorsChamferAndFilletByMirroredReferences", "[mirror]
         BlockModel m{"spare", 1_mm};
         const ObjectId bevel = m.add<ChamferFeature>(
             "Bevel", {.target = featureId(m.pad),
-                      .edges = {BlockModel::alongY(0, 20), BlockModel::alongY(100, 20)},
+                      .edges = { ChamferEdge{BlockModel::alongY(0, 20)}, ChamferEdge{BlockModel::alongY(100, 20)}},
                       .distance = 2_mm});
         const ObjectId mirror = m.add<MirrorFeature>("Mirror", across(featureId(bevel), {50, 0, 0}, {1, 0, 0}));
         Regenerator regenerator;

@@ -92,7 +92,7 @@ ChamferDefinition withMode(ChamferDefinition d, ChamferMode mode, Length distanc
 
 TEST_CASE("ChamferFeature_DefinitionIsValidatedOnCreateAndEdit", "[chamfer][features]") {
     const ChamferDefinition good{
-        .target = FeatureId::fromValue(2), .edges = {ChamferBlockModel::alongX(0, 20)}, .distance = 5_mm};
+        .target = FeatureId::fromValue(2), .edges = { ChamferEdge{ChamferBlockModel::alongX(0, 20)}}, .distance = 5_mm};
     REQUIRE(ChamferFeature::create("C", good).has_value());
     CHECK(good.mode == ChamferMode::EqualDistance);
 
@@ -130,16 +130,17 @@ TEST_CASE("ChamferFeature_DefinitionIsValidatedOnCreateAndEdit", "[chamfer][feat
     }
     SECTION("edge references") {
         // The same line again, described from another point and the other way round.
-        d.edges.push_back(geometry::lineSignature(Point3D{42_mm, 0_mm, 20_mm}, Direction3D::unitX().reversed()));
+        d.edges.push_back(ChamferEdge{geometry::lineSignature(Point3D{42_mm, 0_mm, 20_mm}, Direction3D::unitX().reversed())});
+
         CHECK(message(d) == "edge references 1 and 2 refer to the same line through (0, 0, 20) mm along (1, 0, 0)");
-        d.edges = {EdgeSignature{.curve = EdgeCurve::Circle, .radius = 0_mm}};
+        d.edges = {ChamferEdge{EdgeSignature{.curve = EdgeCurve::Circle, .radius = 0_mm}}};
         CHECK(message(d) == "edge reference 1: a circle edge reference needs a positive radius");
-        d.edges = {EdgeSignature{.curve = EdgeCurve::Other}};
+        d.edges = {ChamferEdge{EdgeSignature{.curve = EdgeCurve::Other}}};
         CHECK(message(d) == "edge reference 1: only line and circle edges can be referenced");
-        d.edges = {EdgeSignature{.point = Point3D{Length::fromSi(std::nan("")), 0_mm, 0_mm}}};
+        d.edges = {ChamferEdge{EdgeSignature{.point = Point3D{Length::fromSi(std::nan("")), 0_mm, 0_mm}}}};
         CHECK(message(d) == "edge reference 1: an edge reference needs a finite point");
         // Parallel lines are different edges.
-        d.edges = {ChamferBlockModel::alongX(0, 20), ChamferBlockModel::alongX(50, 20)};
+        d.edges = {ChamferEdge{ChamferBlockModel::alongX(0, 20)}, ChamferEdge{ChamferBlockModel::alongX(50, 20)}};
         CHECK(accepted(d));
     }
     SECTION("each mode takes exactly the values it uses") {
@@ -169,12 +170,41 @@ TEST_CASE("ChamferFeature_DefinitionIsValidatedOnCreateAndEdit", "[chamfer][feat
     SECTION("an invalid edit leaves the feature unchanged") {
         auto feature = ChamferFeature::create("C", good);
         REQUIRE(feature.has_value());
+        // The feature's own definition, which is `good` with its selection
+        // identified (ADR-024). That is what "unchanged" has to mean now.
+        const ChamferDefinition identified = (*feature)->definition();
+        REQUIRE(identified.edges.size() == 1);
+        CHECK(identified.edges[0].id.isValid());
+        CHECK(identified.edges[0].curve == good.edges[0].curve);
+
         d.distance = -(5_mm);
         CHECK(errorCode((*feature)->setDefinition(d)) == ErrorCode::InvalidArgument);
-        CHECK((*feature)->definition() == good);
-        const auto unchanged = (*feature)->setDefinition(good);
+        CHECK((*feature)->definition() == identified);
+
+        // Re-applying the feature's OWN definition changes nothing, ids and
+        // all.
+        const auto unchanged = (*feature)->setDefinition(identified);
         REQUIRE(unchanged.has_value());
         CHECK_FALSE(*unchanged);
+        CHECK((*feature)->definition() == identified);
+    }
+    SECTION("re-applying an UNIDENTIFIED definition is a new selection, not a no-op") {
+        // `good` names a curve and no identity, and a curve without an
+        // identity is a NEW selection -- the same rule that stops a deleted
+        // selection being replaced by an identical one and capturing its
+        // references. So this is a real change, and the new selection gets an
+        // id of its own rather than inheriting the one already there.
+        auto feature = ChamferFeature::create("C", good);
+        REQUIRE(feature.has_value());
+        const ChamferEdgeId first = (*feature)->definition().edges[0].id;
+
+        const auto changed = (*feature)->setDefinition(good);
+        REQUIRE(changed.has_value());
+        CHECK(*changed);
+        const ChamferEdgeId second = (*feature)->definition().edges[0].id;
+        CHECK(second.isValid());
+        CHECK(second != first);
+        CHECK(second.value() > first.value());
     }
     CHECK(geometry::toString(ChamferMode::DistanceAngle) == "distance and angle");
 }
@@ -244,14 +274,14 @@ TEST_CASE("ChamferFeature_MultipleEdgesMatchAnalyticVolume", "[chamfer][features
     const double corner = 5.0 * 5.0 * 5.0 / 3.0; // where two chamfers meet at a right-angled corner
 
     SECTION("two edges that do not touch") {
-        d.edges.push_back(ChamferBlockModel::alongX(50, 0)); // the bottom back edge
+        d.edges.push_back(ChamferEdge{ChamferBlockModel::alongX(50, 0)}); // the bottom back edge
         m.setDefinition(m.edge, d);
         REQUIRE(requireReport(regenerator, m.doc).succeeded());
         CHECK_THAT(volumeMm3(regenerator, m.edge), WithinRel(100000.0 - 2 * (d2 / 2) * 100, kRel));
         CHECK(regenerator.body(m.edge)->topology().faces == 8);
     }
     SECTION("two edges that meet at a corner") {
-        d.edges.push_back(ChamferBlockModel::alongY(0, 20)); // the top left edge
+        d.edges.push_back(ChamferEdge{ChamferBlockModel::alongY(0, 20)}); // the top left edge
         m.setDefinition(m.edge, d);
         REQUIRE(requireReport(regenerator, m.doc).succeeded());
         // Two prisms of cross-section d^2 / 2 that overlap in a corner of volume d^3 / 3.
@@ -259,9 +289,9 @@ TEST_CASE("ChamferFeature_MultipleEdgesMatchAnalyticVolume", "[chamfer][features
         CHECK(regenerator.body(m.edge)->isValid());
     }
     SECTION("the four edges around the top face") {
-        d.edges.push_back(ChamferBlockModel::alongY(100, 20));
-        d.edges.push_back(ChamferBlockModel::alongX(50, 20));
-        d.edges.push_back(ChamferBlockModel::alongY(0, 20));
+        d.edges.push_back(ChamferEdge{ChamferBlockModel::alongY(100, 20)});
+        d.edges.push_back(ChamferEdge{ChamferBlockModel::alongX(50, 20)});
+        d.edges.push_back(ChamferEdge{ChamferBlockModel::alongY(0, 20)});
         m.setDefinition(m.edge, d);
         REQUIRE(requireReport(regenerator, m.doc).succeeded());
         CHECK_THAT(volumeMm3(regenerator, m.edge),
@@ -314,7 +344,7 @@ TEST_CASE("ChamferFeature_OnRevolvedBodyMatchesPappusAndFollowsTheSweep", "[cham
     REQUIRE(outer.has_value());
     REQUIRE(inner.has_value());
     auto feature = ChamferFeature::create(
-        "Rims", {.target = featureId(m.groove), .edges = {*outer, *inner}, .distance = 2_mm});
+        "Rims", {.target = featureId(m.groove), .edges = { ChamferEdge{*outer}, ChamferEdge{*inner}}, .distance = 2_mm});
     REQUIRE(feature.has_value());
     const ObjectId rims = m.doc.addObject(std::move(*feature)).value();
 
@@ -524,7 +554,7 @@ TEST_CASE("ChamferFeature_InvalidInputsFailWithStructuredDiagnostics", "[chamfer
     }
     SECTION("an edge that is not on the body") {
         ChamferDefinition d = m.definitionOf(m.edge);
-        d.edges.push_back(ChamferBlockModel::alongX(0, 21));
+        d.edges.push_back(ChamferEdge{ChamferBlockModel::alongX(0, 21)});
         m.setDefinition(m.edge, d);
         const Error error = requireFailure(regenerator, m.doc, m.edge);
         CHECK(error.code == ErrorCode::NotFound);
@@ -533,7 +563,7 @@ TEST_CASE("ChamferFeature_InvalidInputsFailWithStructuredDiagnostics", "[chamfer
     }
     SECTION("an edge that an earlier chamfer removed") {
         const ObjectId again = m.addChamfer("Again", {.target = featureId(m.edge),
-                                                      .edges = {ChamferBlockModel::alongX(0, 20)},
+                                                      .edges = { ChamferEdge{ChamferBlockModel::alongX(0, 20)}},
                                                       .distance = 1_mm});
         const Error error = requireFailure(regenerator, m.doc, again);
         CHECK(error.code == ErrorCode::NotFound);
@@ -545,7 +575,7 @@ TEST_CASE("ChamferFeature_InvalidInputsFailWithStructuredDiagnostics", "[chamfer
         TurnedPartModel turned;
         auto feature = ChamferFeature::create(
             "Seam", {.target = featureId(turned.turn),
-                     .edges = {geometry::lineSignature(Point3D{15_mm, 0_mm, 0_mm}, Direction3D::unitZ())},
+                     .edges = { ChamferEdge{geometry::lineSignature(Point3D{15_mm, 0_mm, 0_mm}, Direction3D::unitZ())}},
                      .distance = 1_mm});
         REQUIRE(feature.has_value());
         const ObjectId seam = turned.doc.addObject(std::move(*feature)).value();
@@ -605,7 +635,7 @@ TEST_CASE("ChamferFeature_UndoRedoRestoresIdenticalGeometry", "[chamfer][feature
     // A second chamfer, on the bottom back edge of the first one's result.
     auto create = std::make_unique<CreateChamferCommand>(
         "Bevel",
-        ChamferDefinition{.target = featureId(m.edge), .edges = {ChamferBlockModel::alongX(50, 0)}, .distance = 4_mm});
+        ChamferDefinition{.target = featureId(m.edge), .edges = { ChamferEdge{ChamferBlockModel::alongX(50, 0)}}, .distance = 4_mm});
     CreateChamferCommand* createRaw = create.get();
     CHECK(create->description() == "Create chamfer 'Bevel'");
     REQUIRE(history.execute(m.doc, std::move(create)).has_value());

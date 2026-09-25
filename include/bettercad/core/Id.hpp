@@ -63,6 +63,9 @@ struct EntityIdTag {
 struct ConstraintIdTag {
     static constexpr std::string_view name = "constraint";
 };
+struct ChamferEdgeIdTag {
+    static constexpr std::string_view name = "chamfer_edge";
+};
 struct FaceIdTag {
     static constexpr std::string_view name = "face";
 };
@@ -189,6 +192,14 @@ using AnnotationId = Id<AnnotationIdTag>;
 using EntityId = Id<EntityIdTag>;
 /// Sketch constraint; unique within its sketch.
 using ConstraintId = Id<ConstraintIdTag>;
+/// One edge selection of a chamfer feature; unique within that feature, and
+/// its persistent identity. It is deliberately NOT the selection's position
+/// in `ChamferDefinition::edges`: that vector is stored intent a user may
+/// reorder, so a position names different material after a reorder while a
+/// stored reference is untouched -- a silent rebind, which ADR-024 forbids.
+/// Allocated by the chamfer's own IdAllocator, so a deleted selection's ID is
+/// never handed out again and a stale reference to it stays unresolved.
+using ChamferEdgeId = Id<ChamferEdgeIdTag>;
 /// Topology IDs; unique within their body. Persistent naming across
 /// regenerations is future work (semantic topology naming).
 using FaceId = Id<FaceIdTag>;

@@ -28,7 +28,7 @@ struct ChamferBlockModel : BlockModel {
 
     ChamferBlockModel() : BlockModel("size", Length::fromSi(0.005)), size(extra) {
         using namespace bettercad::literals;
-        edge = addChamfer("Edge", {.target = featureId(pad), .edges = {alongX(0, 20)}, .distance = 5_mm,
+        edge = addChamfer("Edge", {.target = featureId(pad), .edges = { features::ChamferEdge{alongX(0, 20)}}, .distance = 5_mm,
                                    .distanceParameter = size});
     }
 
@@ -57,13 +57,13 @@ struct ChamferVariants : ChamferBlockModel {
         using namespace bettercad::literals;
         using geometry::ChamferMode;
         bevel = addChamfer("Bevel", {.target = featureId(edge),
-                                     .edges = {alongX(50, 20)},
+                                     .edges = { features::ChamferEdge{alongX(50, 20)}},
                                      .mode = ChamferMode::TwoDistance,
                                      .distance = 4_mm,
                                      .distance2 = 2_mm,
                                      .referenceSide = Direction3D::unitZ()});
         slope = addChamfer("Slope", {.target = featureId(bevel),
-                                     .edges = {alongY(0, 0)},
+                                     .edges = { features::ChamferEdge{alongY(0, 0)}},
                                      .mode = ChamferMode::DistanceAngle,
                                      .distance = 3_mm,
                                      .angle = 30_deg,

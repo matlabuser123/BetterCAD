@@ -1,6 +1,6 @@
 {
   "format": "bettercad-document",
-  "version": 1,
+  "version": 2,
   "units": "SI",
   "document": {
     "id": "5eed0000-0000-4000-8000-000000000006",
@@ -319,34 +319,41 @@
         "target": 7,
         "edges": [
           {
-            "curve": "circle",
-            "center": [
-              0.0,
-              0.0,
-              0.0
-            ],
-            "axis": [
-              0.0,
-              0.0,
-              1.0
-            ],
-            "radius": 0.005
+            "id": 1,
+            "edge": {
+              "curve": "circle",
+              "center": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "axis": [
+                0.0,
+                0.0,
+                1.0
+              ],
+              "radius": 0.005
+            }
           },
           {
-            "curve": "circle",
-            "center": [
-              0.05,
-              0.0,
-              0.0
-            ],
-            "axis": [
-              0.0,
-              0.0,
-              1.0
-            ],
-            "radius": 0.005
+            "id": 2,
+            "edge": {
+              "curve": "circle",
+              "center": [
+                0.05,
+                0.0,
+                0.0
+              ],
+              "axis": [
+                0.0,
+                0.0,
+                1.0
+              ],
+              "radius": 0.005
+            }
           }
         ],
+        "last_edge_id": 2,
         "mode": "equal_distance",
         "distance": 0.001,
         "distance_parameter": 4

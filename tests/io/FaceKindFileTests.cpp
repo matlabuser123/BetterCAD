@@ -141,7 +141,7 @@ TEST_CASE("FaceKindFile_RolesPathEdgesEdgeReferencesAndCopiesAreWrittenAsJson", 
 
     const BevelledBlockModel bevel;
     CHECK_THAT(io::documentToJson(bevel.doc).value(),
-               ContainsSubstring("\"face\": {\n            \"role\": \"chamfer\",\n            \"edge\": 2\n"));
+               ContainsSubstring("\"face\": {\n            \"role\": \"chamfer\",\n            \"chamfer_edge\": 2\n"));
 
     const SweptBarModel bar;
     CHECK_THAT(io::documentToJson(bar.doc).value(),
@@ -199,15 +199,25 @@ TEST_CASE("FaceKindFile_MalformedRolesAndCopiesAreRejectedWithThePath", "[io][re
     CHECK_THAT(loadError(good, "\"role\": \"side\",", "\"role\": \"side\", \"along\": \"up\","),
                ContainsSubstring(".attachment.face.along: expected an ID"));
     CHECK_THAT(loadError(good, "\"role\": \"side\",", "\"role\": \"side\", \"edge\": 1,"),
-               ContainsSubstring(".attachment: a side face is not named by an edge reference"));
+               ContainsSubstring(".attachment: a side face is not named by a chamfer edge ID"));
     CHECK_THAT(loadError(good, "\"role\": \"end_cap\"", "\"role\": \"chamfer\""),
-               ContainsSubstring(".attachment: a chamfer face is named by its edge reference, from 1"));
+               ContainsSubstring(".attachment: a chamfer face is named by its chamfer edge's ID"));
     CHECK_THAT(loadError(good, "\"role\": \"end_cap\"", "\"role\": \"chamfer\", \"edge\": 0"),
-               ContainsSubstring(".attachment: a chamfer face is named by its edge reference, from 1"));
+               ContainsSubstring(".attachment: a chamfer face is named by its chamfer edge's ID"));
     CHECK_THAT(loadError(good, "\"role\": \"end_cap\"", "\"role\": \"chamfer\", \"edge\": \"one\""),
                ContainsSubstring(".attachment.face.edge: expected a non-negative integer"));
     CHECK_THAT(loadError(good, "\"role\": \"end_cap\"", "\"role\": \"chamfer\", \"edge\": 4294967296"),
                ContainsSubstring(".attachment.face.edge: expected an integer below 2^32"));
+    // The CURRENT key is reported under its own name, and a selector naming an
+    // edge both ways at once is refused rather than one being preferred
+    // (ADR-024). The legacy cases above still load, which is the migration.
+    CHECK_THAT(loadError(good, "\"role\": \"end_cap\"", "\"role\": \"chamfer\", \"chamfer_edge\": 0"),
+               ContainsSubstring(".attachment: a chamfer face is named by its chamfer edge's ID"));
+    CHECK_THAT(loadError(good, "\"role\": \"end_cap\"", "\"role\": \"chamfer\", \"chamfer_edge\": \"one\""),
+               ContainsSubstring(".attachment.face.chamfer_edge: expected a non-negative integer"));
+    CHECK_THAT(loadError(good, "\"role\": \"end_cap\"",
+                         "\"role\": \"chamfer\", \"chamfer_edge\": 2, \"edge\": 2"),
+               ContainsSubstring("names a chamfer edge twice"));
     CHECK_THAT(loadError(good, "\"role\": \"end_cap\"", "\"role\": \"hole_bottom\", \"entity\": 3"),
                ContainsSubstring(".attachment: a hole bottom is not named by an entity"));
     CHECK_THAT(loadError(good, "\"role\": \"end_cap\"", "\"role\": \"bottom\""),
