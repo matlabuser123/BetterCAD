@@ -124,7 +124,7 @@ Qualified but not yet separately released: `P11`, `P12`, `P13`.
 | Semantic Topology | `P21` | Planned |
 | Versioning / Collaboration | `P22` | Planned |
 | Python / Automation | `P23` | Planned |
-| AI Engineering Agent | `P24` | Planned |
+| AI Engineering Agent | `P24` | **In Progress** |
 | Manufacturing / CAM | `P25` | Planned |
 | Performance / GPU / Scale | `P26` | Planned |
 | Production Hardening | `P27` | Planned |
@@ -333,7 +333,7 @@ Full list with evidence:
 
 ---
 
-## Technical Drawings — In Progress
+## Technical Drawings — Qualified
 
 `P14` turns BetterCAD's qualified model and assembly engine into engineering
 drawing output.
@@ -474,7 +474,7 @@ validation rather than only checking that a file exists.
 
 ---
 
-## Materials / Engineering Data — Planned
+## Materials / Engineering Data — In Progress
 
 A material system: density, elastic modulus, Poisson ratio, yield and ultimate
 strength, thermal conductivity, specific heat, coefficient of thermal
@@ -609,7 +609,7 @@ through the public API.
 
 ---
 
-## AI Engineering Agent — Planned
+## AI Engineering Agent — In Progress
 
 Only after production APIs are reliable.
 
