@@ -1,0 +1,101 @@
+Test project C:/Users/uqhas/AppData/Local/bc-build/debug-ext
+    Start 2185: cli.drawing.batch
+    Test #2185: cli.drawing.batch .......................   Passed    0.13 sec
+    Start 2185: cli.drawing.batch
+    Test #2185: cli.drawing.batch .......................   Passed    0.18 sec
+    Start 2185: cli.drawing.batch
+    Test #2185: cli.drawing.batch .......................   Passed    0.14 sec
+    Start 2185: cli.drawing.batch
+    Test #2185: cli.drawing.batch .......................   Passed    0.13 sec
+    Start 2185: cli.drawing.batch
+    Test #2185: cli.drawing.batch .......................   Passed    0.12 sec
+    Start 2185: cli.drawing.batch
+    Test #2185: cli.drawing.batch .......................   Passed    0.12 sec
+    Start 2185: cli.drawing.batch
+    Test #2185: cli.drawing.batch .......................   Passed    0.12 sec
+    Start 2185: cli.drawing.batch
+    Test #2185: cli.drawing.batch .......................   Passed    0.14 sec
+    Start 2185: cli.drawing.batch
+    Test #2185: cli.drawing.batch .......................   Passed    0.25 sec
+    Start 2185: cli.drawing.batch
+    Test #2185: cli.drawing.batch .......................   Passed    0.16 sec
+    Start 2185: cli.drawing.batch
+    Test #2185: cli.drawing.batch .......................   Passed    0.14 sec
+    Start 2185: cli.drawing.batch
+1/4 Test #2185: cli.drawing.batch .......................   Passed    0.12 sec
+    Start 2187: cli.drawing.batch.fails
+    Test #2187: cli.drawing.batch.fails .................   Passed    0.11 sec
+    Start 2187: cli.drawing.batch.fails
+    Test #2187: cli.drawing.batch.fails .................   Passed    0.10 sec
+    Start 2187: cli.drawing.batch.fails
+    Test #2187: cli.drawing.batch.fails .................   Passed    0.13 sec
+    Start 2187: cli.drawing.batch.fails
+    Test #2187: cli.drawing.batch.fails .................   Passed    0.12 sec
+    Start 2187: cli.drawing.batch.fails
+    Test #2187: cli.drawing.batch.fails .................   Passed    0.12 sec
+    Start 2187: cli.drawing.batch.fails
+    Test #2187: cli.drawing.batch.fails .................   Passed    0.13 sec
+    Start 2187: cli.drawing.batch.fails
+    Test #2187: cli.drawing.batch.fails .................   Passed    0.14 sec
+    Start 2187: cli.drawing.batch.fails
+    Test #2187: cli.drawing.batch.fails .................   Passed    0.12 sec
+    Start 2187: cli.drawing.batch.fails
+    Test #2187: cli.drawing.batch.fails .................   Passed    0.11 sec
+    Start 2187: cli.drawing.batch.fails
+    Test #2187: cli.drawing.batch.fails .................   Passed    0.10 sec
+    Start 2187: cli.drawing.batch.fails
+    Test #2187: cli.drawing.batch.fails .................   Passed    0.11 sec
+    Start 2187: cli.drawing.batch.fails
+2/4 Test #2187: cli.drawing.batch.fails .................   Passed    0.11 sec
+    Start 2188: cli.drawing.batch.fails.wrote-nothing
+    Test #2188: cli.drawing.batch.fails.wrote-nothing ...   Passed    0.11 sec
+    Start 2188: cli.drawing.batch.fails.wrote-nothing
+    Test #2188: cli.drawing.batch.fails.wrote-nothing ...   Passed    0.11 sec
+    Start 2188: cli.drawing.batch.fails.wrote-nothing
+    Test #2188: cli.drawing.batch.fails.wrote-nothing ...   Passed    0.12 sec
+    Start 2188: cli.drawing.batch.fails.wrote-nothing
+    Test #2188: cli.drawing.batch.fails.wrote-nothing ...   Passed    0.11 sec
+    Start 2188: cli.drawing.batch.fails.wrote-nothing
+    Test #2188: cli.drawing.batch.fails.wrote-nothing ...   Passed    0.11 sec
+    Start 2188: cli.drawing.batch.fails.wrote-nothing
+    Test #2188: cli.drawing.batch.fails.wrote-nothing ...   Passed    0.11 sec
+    Start 2188: cli.drawing.batch.fails.wrote-nothing
+    Test #2188: cli.drawing.batch.fails.wrote-nothing ...   Passed    0.10 sec
+    Start 2188: cli.drawing.batch.fails.wrote-nothing
+    Test #2188: cli.drawing.batch.fails.wrote-nothing ...   Passed    0.11 sec
+    Start 2188: cli.drawing.batch.fails.wrote-nothing
+    Test #2188: cli.drawing.batch.fails.wrote-nothing ...   Passed    0.11 sec
+    Start 2188: cli.drawing.batch.fails.wrote-nothing
+    Test #2188: cli.drawing.batch.fails.wrote-nothing ...   Passed    0.10 sec
+    Start 2188: cli.drawing.batch.fails.wrote-nothing
+    Test #2188: cli.drawing.batch.fails.wrote-nothing ...   Passed    0.10 sec
+    Start 2188: cli.drawing.batch.fails.wrote-nothing
+3/4 Test #2188: cli.drawing.batch.fails.wrote-nothing ...   Passed    0.11 sec
+    Start 2199: cli.refmod.build
+    Test #2199: cli.refmod.build ........................   Passed    1.20 sec
+    Start 2199: cli.refmod.build
+    Test #2199: cli.refmod.build ........................   Passed    1.19 sec
+    Start 2199: cli.refmod.build
+    Test #2199: cli.refmod.build ........................   Passed    1.21 sec
+    Start 2199: cli.refmod.build
+    Test #2199: cli.refmod.build ........................   Passed    1.20 sec
+    Start 2199: cli.refmod.build
+    Test #2199: cli.refmod.build ........................   Passed    1.21 sec
+    Start 2199: cli.refmod.build
+    Test #2199: cli.refmod.build ........................   Passed    1.22 sec
+    Start 2199: cli.refmod.build
+    Test #2199: cli.refmod.build ........................   Passed    1.22 sec
+    Start 2199: cli.refmod.build
+    Test #2199: cli.refmod.build ........................   Passed    1.19 sec
+    Start 2199: cli.refmod.build
+    Test #2199: cli.refmod.build ........................   Passed    1.21 sec
+    Start 2199: cli.refmod.build
+    Test #2199: cli.refmod.build ........................   Passed    1.26 sec
+    Start 2199: cli.refmod.build
+    Test #2199: cli.refmod.build ........................   Passed    1.25 sec
+    Start 2199: cli.refmod.build
+4/4 Test #2199: cli.refmod.build ........................   Passed    1.25 sec
+
+100% tests passed out of 4
+
+Total Test time (real) =  19.25 sec

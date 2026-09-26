@@ -1,0 +1,48 @@
+INFRA-QT-DEPLOY-001 -- both guards made to fail on the real defect
+generated 2026-09-26 20:17:53
+
+A guard that cannot fire proves nothing, so the collision is recreated:
+one empty directory, %LOCALAPPDATA%\bettercad-aaa, nothing else changed.
+
+--- configure, with the collision present ---
+  CMake Error at cmake/BetterCADBuildLocation.cmake:192 (message):
+    The dependency prefix is not what its own 8.3 short name leads to, so the
+    Qt runtime cannot be deployed: 'bettercad-aaa' is reached instead of
+    'bettercad-deps'.
+  
+      dependencies:      C:/Users/uqhas/AppData/Local/bettercad-deps
+      reached instead:   C:/Users/uqhas/AppData/Local/bettercad-aaa
+      short name of the dependency prefix: C:/Users/uqhas/AppData/Local/BETTER~1
+  
+    The first six characters of these two names are the same once the
+    characters illegal in an 8.3 name are removed, so both answer to that short
+    name, and a lookup that enumerates the parent takes the first of them in
+    name order.  windeployqt resolves the Qt binary directory that way, and
+    then reports that it cannot find Qt6Core.dll under a path nobody
+    configured.
+
+--- the regression test, with the collision present ---
+  1/1 Test #2262: infra.deploy.location-independent ...***Failed    1.01 sec
+  0% tests passed, 1 tests failed out of 1
+
+--- the case an earlier version of this guard MISSED ---
+  With BetterCAD-build also present, bettercad-aaa's own short name is
+  BETTER~2, not BETTER~1. A guard that required an equal short name would
+  have passed this configure, and the build would then have failed at
+  deployment. The guard keys on name order instead.
+    Qt runtime cannot be deployed: 'bettercad-aaa' is reached instead of
+      reached instead:   C:/Users/uqhas/AppData/Local/bettercad-aaa
+
+--- collision removed: configure ---
+  -- Generating done (1.3s)
+  -- Build files have been written to: C:/Users/uqhas/OneDrive/Desktop/CAD/build/debug
+
+--- collision removed: the regression test ---
+  1/1 Test #2262: infra.deploy.location-independent ...   Passed    4.72 sec
+  100% tests passed out of 1
+
+--- a same-basis sibling that sorts AFTER the prefix is left alone ---
+  error and warning lines: 0
+  It was measured not to break deployment, so it is not reported.
+
+Configure restored to a clean state.

@@ -16,6 +16,12 @@ set_target_properties(bettercad PROPERTIES
 # (platform integration, styles) next to the executable. The compiler runtime
 # is provided by cmake/BetterCADRuntime.cmake.
 if(WIN32)
+    # windeployqt resolves the Qt binary directory through its 8.3 short name,
+    # so a prefix whose short name is ambiguous deploys the wrong files or
+    # none. Refuse that here rather than at the end of a GUI build
+    # (INFRA-QT-DEPLOY-001).
+    bettercad_check_deps_prefix_resolvable("${BETTERCAD_DEPS_PREFIX}")
+
     find_program(BETTERCAD_WINDEPLOYQT windeployqt
         HINTS "${QT6_INSTALL_PREFIX}/${QT6_INSTALL_BINS}"
         NO_DEFAULT_PATH
@@ -25,6 +31,7 @@ if(WIN32)
             COMMAND "${CMAKE_COMMAND}"
                 "-DWINDEPLOYQT=${BETTERCAD_WINDEPLOYQT}"
                 "-DEXECUTABLE=$<TARGET_FILE:bettercad>"
+                "-DQT_BIN_DIR=${QT6_INSTALL_PREFIX}/${QT6_INSTALL_BINS}"
                 -P "${PROJECT_SOURCE_DIR}/cmake/DeployQtRuntime.cmake"
             COMMENT "Deploying Qt runtime for bettercad"
             VERBATIM

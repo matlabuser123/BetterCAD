@@ -1,0 +1,48 @@
+INFRA-QT-DEPLOY-001 -- reproduction, and the disproof of the recorded diagnosis
+generated 2026-09-26 20:17:27
+commit be3d2884eeacb9085c33ab709216d6d28c0ab8dc
+
+The recorded diagnosis (TODO.md, P14-STREF-001) was that windeployqt
+resolves Qt as <exe dir>/../../<toolchain key>/bin, so that it only works
+when the build tree is inside the source tree. If that were true, the path
+windeployqt reports would MOVE when the executable moves.
+
+With %LOCALAPPDATA%\BetterCAD-build present, the same executable is
+deployed from three unrelated directories:
+
+executable in: C:\Users\uqhas\AppData\Local\BetterCAD-build\debug\bin
+  exit=1  Qt DLLs deployed=0
+  Unable to find dependent libraries of C:\Users\uqhas\AppData\Local\BetterCAD-build\gnu-16-mingw-amd64\bin\Qt6Core.dll
+
+executable in: C:\bc-x\BetterCAD-build\debug\bin
+  exit=1  Qt DLLs deployed=0
+  Unable to find dependent libraries of C:\Users\uqhas\AppData\Local\BetterCAD-build\gnu-16-mingw-amd64\bin\Qt6Core.dll
+
+executable in: C:\Users\uqhas\AppData\Local\zzz-build\debug\bin
+  exit=1  Qt DLLs deployed=0
+  Unable to find dependent libraries of C:\Users\uqhas\AppData\Local\BetterCAD-build\gnu-16-mingw-amd64\bin\Qt6Core.dll
+
+The reported path is identical in all three, and in two of them it has no
+relation to where the executable is. It is not derived from the executable.
+
+--- also ruled out, each by measurement ---
+
+$ qtpaths -query   (the prefix it reports is correct)
+  QT_INSTALL_PREFIX:C:/Users/uqhas/AppData/Local/bettercad-deps/gnu-16-mingw-amd64
+  QT_INSTALL_BINS:C:/Users/uqhas/AppData/Local/bettercad-deps/gnu-16-mingw-amd64/bin
+
+$ command -v qtpaths   (not on PATH at all, yet windeployqt runs it)
+    not found on PATH
+
+$ windeployqt --qtpaths <correct qtpaths.exe>   (changes nothing)
+  exit=1  Qt DLLs deployed=0
+  Unable to find dependent libraries of C:\Users\uqhas\AppData\Local\BetterCAD-build\gnu-16-mingw-amd64\bin\Qt6Core.dll
+
+$ find <Qt prefix> -name 'qt*.conf'   (there is none)
+  (no output above means no qt.conf exists)
+
+$ grep -rl BetterCAD-build <Qt prefix>   (the string is not in Qt's files)
+  (no output above means no file under the Qt prefix contains it)
+
+$ env | grep -iE 'bettercad|qt'   (nor in the environment)
+  (no output above means no environment variable contains it)

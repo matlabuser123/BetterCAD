@@ -11,42 +11,51 @@
 ```text
 Current:   P15 — Materials / Engineering Data
 Current milestone:
-           P15-UNITS-001 — Engineering Quantity / Property Contracts
-           (NOT STARTED. P15-ARCH-001 is complete; see ADR-025..028.)
+           NONE. INFRA-QT-DEPLOY-001 is complete.
+
+           P15-UNITS-001 — Engineering Quantity / Property Contracts:
+           19 of 20 items pass. The work is done and verified; the debug
+           determinism repeat is the one gate outstanding. It failed twice on
+           the environment rather than on the product, and the environment has
+           now changed, so it can be re-run rather than repeated.
 
 Qualified:
            P11
            P12
            P13
            P14 — Technical Drawings
+           P15-ARCH-001, INFRA-QT-DEPLOY-001
 
 Next:
-           P15-UNITS-001, then P15-MAT-001. P15-ARCH-001 decided the contracts
-           they must implement; do not re-litigate them there.
+           Close P15-UNITS-001's determinism gate from the moved build tree,
+           then P15-MAT-001 — awaiting explicit scope decision.
+
+           Also awaiting a decision, and arguably ahead of it: the carried
+           FileIo replace defect below. A user saving a document into a
+           synchronised folder can still lose the save.
 
 Carried:
+           A document save can still lose to a file synchroniser — see below.
            Hole POSITION dimensions remain unsupported.
            GD&T symbols are not fully embedded in PDF/DXF.
            Cross-preset export byte identity is not guaranteed.
 
 Infrastructure:
-           MOVING BUILD OUTPUT OFF ONEDRIVE IS NOW THE TOP PRIORITY, ahead of
-           any P15 milestone. It has stopped being an annoyance and is now
-           PREVENTING A GATE FROM PASSING: P15-UNITS-001's debug determinism
-           repeat failed twice on an unchanged tree, in two different tests,
-           with 0 test-logic assertions failing. Through P14 it cost one
-           controlled rerun per milestone; it now costs the gate.
-           OneDrive's accumulated CPU has grown from 20,633 s (P14-REFMOD-001)
-           to 99,264 s, 726 MB resident -- the mechanism is under five times
-           the pressure it was.
-           It is blocked, in turn, by a real defect: building outside the
-           source tree fails the GUI target in all three presets, because
-           windeployqt resolves the Qt runtime relative to the executable it is
-           deploying (<exe>/../../<toolchain key>/bin), which names the real Qt
-           only when the build sits inside the source tree. Qt's bin on PATH,
-           running windeployqt from Qt's bin, and pre-placing Qt6Core.dll were
-           each tried; none worked. So the order is: fix the Qt deployment,
-           then move the build, then re-run P15-UNITS-001's determinism gate.
+           RESOLVED by INFRA-QT-DEPLOY-001. Build output can now be put outside
+           OneDrive with the -ext presets, so P15-UNITS-001's determinism gate
+           can be re-run in a changed environment.
+           The recorded reason the move was blocked was WRONG: windeployqt does
+           not resolve Qt relative to the executable it is deploying. It
+           resolves the Qt directory through its 8.3 SHORT NAME and reaches the
+           first same-basis sibling in name order; the build root chosen for the
+           first attempt, %LOCALAPPDATA%\BetterCAD-build, was that sibling for
+           %LOCALAPPDATA%\bettercad-deps. The build's location was never the
+           cause -- the same failure reproduces from any location with that
+           name, and none occurs from any location without it. Corrected in
+           docs/verification/INFRA-QT-DEPLOY-001/README.md, which supersedes
+           the diagnosis carried here and in P14-STREF-001's harness comments.
+           The replace fault itself is AVOIDED, not fixed: see the carried
+           FileIo item.
 ```
 
 ---
@@ -362,7 +371,10 @@ decision below is no longer deferrable: it is now preventing a gate from passing
       then `cli.drawing.batch`, each passing twice and failing on an atomic
       replace of a file it had just written. 0 test-logic assertions failed in
       either attempt. No third attempt was made: running until green is
-      selecting a favourable result
+      selecting a favourable result. INFRA-QT-DEPLOY-001 has now moved the build
+      tree out of the synchronised folder, so the gate can be re-run in a
+      changed environment rather than repeated in the same one
+
 * [x] Adversarial review PASS
 * [x] Regression PASS
 * [x] Evidence recorded
@@ -1066,13 +1078,14 @@ Do not let P15 become a solver phase.
 
 ---
 
-# Carried Infrastructure Decision
+# INFRA-QT-DEPLOY-001
 
 ## Build output outside OneDrive
 
-Still open.
+Evidence:
+[docs/verification/INFRA-QT-DEPLOY-001/](docs/verification/INFRA-QT-DEPLOY-001/README.md).
 
-Observed problem:
+The problem recorded against this decision was:
 
 ```text
 out-of-source-tree GUI build
@@ -1080,9 +1093,70 @@ out-of-source-tree GUI build
 → deployment fails
 ```
 
-Do not mix this fix into a P15 material milestone unless it blocks P15 qualification.
+**The second line is wrong, and it is the reason this sat blocked for two
+milestones.** windeployqt resolves the Qt binary directory through that
+directory's 8.3 short name, not from the executable. Copying the same executable
+to three unrelated directories produced the *same* reported Qt path, twice with
+no relation to where the executable was. The build root used for the first
+attempt, `%LOCALAPPDATA%\BetterCAD-build`, shared an 8.3 short name with
+`%LOCALAPPDATA%\bettercad-deps` and sorted before it, so the short name resolved
+to the build root. Creating one empty directory beside the dependency prefix
+reproduces it from any build location; removing it fixes it; a name that sorts
+after the dependency prefix, or shares no short name with it, never fails.
 
-Treat it as a separate infrastructure task with its own regression evidence.
+The fix does not pretend to repair windeployqt. It refuses the collision at
+configure time with a diagnostic that names both directories, refuses a
+deployment that reported success without producing a Qt runtime, and adds
+`-ext` presets that build into `BETTERCAD_BUILD_ROOT` and fail rather than
+quietly building back inside the synchronised folder.
+
+* [x] Root cause established, and the recorded diagnosis corrected
+* [x] Qt deployment works from a build tree in any location
+* [x] `-ext` presets: configure, build and test resolve to one external tree
+* [x] `BETTERCAD_BUILD_ROOT` unset or pointing inside the source tree is refused
+* [x] Regression tests, each made to fail on the real defect — 14 tests
+* [x] Three-preset qualification from an external build root — 2300/2300 each,
+      0 warnings, fresh binaries, 0 stages failed
+* [x] File-replacement stress: 48 runs (4 tests x 12), 0 failures
+* [x] Evidence recorded
+
+## Carried: a document save can still lose to a file synchroniser
+
+**Not fixed by INFRA-QT-DEPLOY-001, and not a test problem.** That milestone
+moved BetterCAD's *build output* out of the synchronised folder. It did nothing
+for a user whose *documents* are in one, and the fault they would hit is the same
+one that cost six milestones a determinism rerun.
+
+`writeFileAtomically` in `src/io/FileIo.cpp` writes a temporary file and then:
+
+```text
+std::filesystem::rename(temporary, path, error);
+if (error) { remove(temporary); return makeError(IoError, "cannot replace ..."); }
+```
+
+One attempt, no retry, and the temporary is discarded. On Windows a rename over
+a file another process holds open -- a synchroniser, an indexer, antivirus, a
+backup agent -- fails with a sharing violation from that single attempt, and the
+holder releases it milliseconds later. So an ordinary save into a OneDrive or
+Dropbox folder can fail with `cannot replace '...': Permission denied` and throw
+the new bytes away. The old file survives, so nothing is corrupted, but the save
+did not happen.
+
+Scope, when it is authorized:
+
+```text
+bounded retry with backoff on a TRANSIENT replace failure, distinguished from a
+permanent one (no such directory, read-only volume, access denied on the
+directory itself) -- which must still fail immediately rather than retry
+```
+
+Tests must include a regression that holds a handle open on the target and
+proves the retry succeeds, and one proving a permanent failure still fails
+rather than retrying to a timeout. Do not widen this into a general I/O layer
+rewrite.
+
+**Awaiting explicit scope decision.** It is a product defect, not infrastructure,
+and it is not part of any authorized P15 milestone.
 
 ---
 

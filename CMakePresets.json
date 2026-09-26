@@ -32,12 +32,37 @@
         "CMAKE_BUILD_TYPE": "Debug",
         "BUILD_SHARED_LIBS": "ON"
       }
+    },
+    {
+      "name": "external",
+      "hidden": true,
+      "description": "Builds into BETTERCAD_BUILD_ROOT instead of the source tree, for a source tree that lives in a synchronised folder. Configuring fails if BETTERCAD_BUILD_ROOT is unset, rather than quietly building back inside it.",
+      "binaryDir": "$penv{BETTERCAD_BUILD_ROOT}/${presetName}",
+      "cacheVariables": { "BETTERCAD_REQUIRE_EXTERNAL_BUILD_ROOT": "ON" }
+    },
+    {
+      "name": "debug-ext",
+      "displayName": "Debug (build tree outside the source tree)",
+      "inherits": ["external", "debug"]
+    },
+    {
+      "name": "release-ext",
+      "displayName": "Release (build tree outside the source tree)",
+      "inherits": ["external", "release"]
+    },
+    {
+      "name": "debug-shared-ext",
+      "displayName": "Debug, shared libraries (build tree outside the source tree)",
+      "inherits": ["external", "debug-shared"]
     }
   ],
   "buildPresets": [
     { "name": "debug", "configurePreset": "debug" },
     { "name": "release", "configurePreset": "release" },
-    { "name": "debug-shared", "configurePreset": "debug-shared" }
+    { "name": "debug-shared", "configurePreset": "debug-shared" },
+    { "name": "debug-ext", "configurePreset": "debug-ext" },
+    { "name": "release-ext", "configurePreset": "release-ext" },
+    { "name": "debug-shared-ext", "configurePreset": "debug-shared-ext" }
   ],
   "testPresets": [
     {
@@ -48,6 +73,9 @@
     },
     { "name": "debug", "inherits": "base", "configurePreset": "debug" },
     { "name": "release", "inherits": "base", "configurePreset": "release" },
-    { "name": "debug-shared", "inherits": "base", "configurePreset": "debug-shared" }
+    { "name": "debug-shared", "inherits": "base", "configurePreset": "debug-shared" },
+    { "name": "debug-ext", "inherits": "base", "configurePreset": "debug-ext" },
+    { "name": "release-ext", "inherits": "base", "configurePreset": "release-ext" },
+    { "name": "debug-shared-ext", "inherits": "base", "configurePreset": "debug-shared-ext" }
   ]
 }

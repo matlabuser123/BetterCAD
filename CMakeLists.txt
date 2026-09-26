@@ -26,6 +26,12 @@ set_property(CACHE BETTERCAD_BUILD_GUI PROPERTY STRINGS AUTO ON OFF)
 option(BETTERCAD_WARNINGS_AS_ERRORS "Treat compiler warnings in BetterCAD code as errors" OFF)
 option(BUILD_SHARED_LIBS "Build BetterCAD libraries as shared libraries" OFF)
 
+option(BETTERCAD_REQUIRE_EXTERNAL_BUILD_ROOT
+    "Refuse to configure unless the build tree is outside the source tree (set by the *-ext presets)" OFF)
+
+include(BetterCADBuildLocation)
+bettercad_check_build_root("${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}")
+
 include(BetterCADDepsPrefix)
 bettercad_default_deps_prefix(_bettercad_default_deps_prefix)
 set(BETTERCAD_DEPS_PREFIX "${_bettercad_default_deps_prefix}" CACHE PATH

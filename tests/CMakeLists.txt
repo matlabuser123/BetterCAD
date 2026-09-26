@@ -1070,6 +1070,11 @@ if(TARGET bettercad)
 endif()
 
 # ---------------------------------------------------------------------------
+# Build infrastructure (build location, Qt deployment)
+# ---------------------------------------------------------------------------
+add_subdirectory(infra)
+
+# ---------------------------------------------------------------------------
 # Architecture rules (layering, third-party containment)
 # ---------------------------------------------------------------------------
 add_subdirectory(architecture)

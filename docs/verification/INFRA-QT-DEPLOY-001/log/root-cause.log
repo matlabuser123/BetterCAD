@@ -1,0 +1,68 @@
+INFRA-QT-DEPLOY-001 -- root cause: an ambiguous 8.3 short name
+generated 2026-09-26 20:17:44
+
+--- windeployqt's own verbose trace: right directory, wrong file ---
+  Qt binaries in C:\Users\uqhas\AppData\Local\bettercad-deps\gnu-16-mingw-amd64\bin
+  readPeExecutableDependencies: C:\Users\uqhas\AppData\Local\BetterCAD-build\debug\bin\bettercad.exe, dependent libraries: Qt6Core.dll Qt6Gui.dll Qt6Widgets.dll libgcc_s_seh-1.dll libstdc++-6.dll KERNEL32.dll api-ms-win-crt-convert-l1-1-0.dll api-ms-win-crt-environment-l1-1-0.dll api-ms-win-crt-filesystem-l1-1-0.dll api-ms-win-crt-heap-l1-1-0.dll api-ms-win-crt-locale-l1-1-0.dll api-ms-win-crt-math-l1-1-0.dll api-ms-win-crt-private-l1-1-0.dll api-ms-win-crt-runtime-l1-1-0.dll api-ms-win-crt-stdio-l1-1-0.dll api-ms-win-crt-string-l1-1-0.dll api-ms-win-crt-utility-l1-1-0.dll SHELL32.dll
+  Unable to find dependent libraries of C:\Users\uqhas\AppData\Local\BetterCAD-build\gnu-16-mingw-amd64\bin\Qt6Core.dll :Cannot open 'C:/Users/uqhas/AppData/Local/BetterCAD-build/gnu-16-mingw-amd64/bin/Qt6Core.dll': The system cannot find the path specified.
+
+--- the short names the filesystem reports for those directories ---
+$ dir /x /ad %LOCALAPPDATA%
+  26/09/2026  08:17 PM    <DIR>          BETTER~2     bettercad-aaa
+  26/09/2026  08:17 PM    <DIR>          BETTER~1     BetterCAD-build
+  14/09/2026  02:42 AM    <DIR>          BETTER~1     bettercad-deps
+  26/09/2026  08:17 PM    <DIR>          BETTER~3     bettercad-zzz
+
+$ Scripting.FileSystemObject.ShortPath
+  bettercad-deps   -> C:\Users\uqhas\AppData\Local\BETTER~1
+  BetterCAD-build  -> C:\Users\uqhas\AppData\Local\BETTER~1
+  bettercad-aaa    -> C:\Users\uqhas\AppData\Local\BETTER~2
+  bettercad-zzz    -> C:\Users\uqhas\AppData\Local\BETTER~3
+
+--- enumeration order of that shared short name's candidates ---
+  C:\Users\uqhas\AppData\Local\bettercad-aaa
+  C:\Users\uqhas\AppData\Local\BetterCAD-build
+  C:\Users\uqhas\AppData\Local\bettercad-deps
+  C:\Users\uqhas\AppData\Local\bettercad-zzz
+
+--- control: a freshly created colliding pair in another parent ---
+  aaaaaa-one -> AAAAAA~1
+  aaaaaa-two -> AAAAAA~2
+
+  Distinct names (~1, ~2) there. So the duplicate in %LOCALAPPDATA% is a
+  property of that directory's short-name index, not of the naming rule.
+  Why it is duplicated is UNVERIFIED; the consequence below is measured.
+
+--- five deploy trials: one empty directory beside the dependency prefix ---
+  (the dependency prefix is never touched; only siblings are created)
+
+trial 1: no colliding sibling
+  exit=0  Qt DLLs deployed=4
+trial: BetterCAD-build  (shares its short name, sorts BEFORE bettercad-deps)
+  exit=1  Qt DLLs deployed=0
+  Unable to find dependent libraries of C:\Users\uqhas\AppData\Local\BetterCAD-build\gnu-16-mingw-amd64\bin\Qt6Core.dll
+trial: bettercad-aaa  (shares its short name, sorts BEFORE bettercad-deps)
+  exit=1  Qt DLLs deployed=0
+  Unable to find dependent libraries of C:\Users\uqhas\AppData\Local\bettercad-aaa\gnu-16-mingw-amd64\bin\Qt6Core.dll
+trial: bettercad-zzz  (shares its short name, sorts AFTER bettercad-deps)
+  exit=0  Qt DLLs deployed=4
+trial: bc-build-probe  (shares no short name with bettercad-deps)
+  exit=0  Qt DLLs deployed=4
+
+--- which of several siblings is reached, and what counts as 'same' ---
+
+two same-basis siblings, both sorting before bettercad-deps:
+  exit=1  Qt DLLs deployed=0
+  Unable to find dependent libraries of C:\Users\uqhas\AppData\Local\bettercad-aaa\gnu-16-mingw-amd64\bin\Qt6Core.dll
+  -> the FIRST in name order is reached, not the one holding BETTER~1.
+     (with both present, bettercad-aaa's own short name is BETTER~2)
+
+a sibling sorting before bettercad-deps whose basis is BETTE- not BETTER:
+  exit=0  Qt DLLs deployed=4
+  -> harmless. Membership is the six-character 8.3 basis, not similarity.
+
+So the predicate is: among the dependency prefix's siblings that share its
+six-character 8.3 basis, one sorts before it by case-insensitive name.
+Equal '~N' short names are NOT required -- bettercad-aaa took the lookup
+while holding a distinct number. Removing the sibling fixes it; recreating
+it breaks it again.

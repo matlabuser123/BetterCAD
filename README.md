@@ -112,6 +112,23 @@ All three presets are supported and expected to pass the complete suite.
 `debug-shared` links modules as separate DLLs, exercising export macros and
 cross-module linkage a static build cannot check.
 
+Each has an `-ext` counterpart — `debug-ext`, `release-ext`,
+`debug-shared-ext` — that builds into `$BETTERCAD_BUILD_ROOT/<preset>` instead
+of `build/<preset>`, for a checkout that lives in a folder a file
+synchroniser watches. A synchroniser can hold a file open just long enough to
+lose a test that replaces one. Set the variable to a directory on a local,
+non-synchronised volume; configuring fails if it is unset or points back inside
+the source tree, rather than quietly building where the preset exists to avoid.
+
+```sh
+BETTERCAD_BUILD_ROOT=/c/Users/you/AppData/Local/bc-build cmake --preset debug-ext
+```
+
+On Windows, keep that directory's name from beginning with the same six
+characters as the dependency prefix's (`bettercad-deps` by default): the two
+would share one 8.3 short name, and `windeployqt` resolves the Qt runtime
+through it. Configuring refuses that too, and says which directories collided.
+
 | Option | Default | Meaning |
 | --- | --- | --- |
 | `BETTERCAD_BUILD_GUI` | `AUTO` | `ON` requires Qt 6; `AUTO` builds the desktop app if Qt 6 is found |
