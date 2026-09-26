@@ -11,24 +11,20 @@
 ```text
 Current:   P15 — Materials / Engineering Data
 Current milestone:
-           NONE. INFRA-QT-DEPLOY-001 is complete.
-
-           P15-UNITS-001 — Engineering Quantity / Property Contracts:
-           19 of 20 items pass. The work is done and verified; the debug
-           determinism repeat is the one gate outstanding. It failed twice on
-           the environment rather than on the product, and the environment has
-           now changed, so it can be re-run rather than repeated.
+           NONE. P15-UNITS-001 and INFRA-QT-DEPLOY-001 are both complete.
+           The next milestone is a scope decision, not Claude's to make.
 
 Qualified:
            P11
            P12
            P13
            P14 — Technical Drawings
-           P15-ARCH-001, INFRA-QT-DEPLOY-001
+           P15-ARCH-001, P15-UNITS-001, INFRA-QT-DEPLOY-001
 
 Next:
-           Close P15-UNITS-001's determinism gate from the moved build tree,
-           then P15-MAT-001 — awaiting explicit scope decision.
+           P15-MAT-001 — material definition / identity / library, per
+           P15-ARCH-001's ADR-025..028; do not re-litigate them there.
+           Awaiting explicit scope decision.
 
            Also awaiting a decision, and arguably ahead of it: the carried
            FileIo replace defect below. A user saving a document into a
@@ -42,8 +38,8 @@ Carried:
 
 Infrastructure:
            RESOLVED by INFRA-QT-DEPLOY-001. Build output can now be put outside
-           OneDrive with the -ext presets, so P15-UNITS-001's determinism gate
-           can be re-run in a changed environment.
+           OneDrive with the -ext presets, and the determinism gate that had
+           failed twice passed from there at 11500 = 2300 x 5.
            The recorded reason the move was blocked was WRONG: windeployqt does
            not resolve Qt relative to the executable it is deploying. It
            resolves the Qt directory through its 8.3 SHORT NAME and reaches the
@@ -365,16 +361,19 @@ decision below is no longer deferrable: it is now preventing a gate from passing
 * [x] Validate numeric round trips
 * [x] Validate NaN / infinity rejection
 * [x] Compile-fail unit-safety tests
-* [ ] Determinism PASS — **BLOCKED BY THE ENVIRONMENT, not by the product.**
-      Release determinism PASSES: 11430 = 2286 x 5, counted. The DEBUG repeat
-      failed twice on the recorded OneDrive replace fault -- `cli.refmod.build`
-      then `cli.drawing.batch`, each passing twice and failing on an atomic
-      replace of a file it had just written. 0 test-logic assertions failed in
-      either attempt. No third attempt was made: running until green is
-      selecting a favourable result. INFRA-QT-DEPLOY-001 has now moved the build
-      tree out of the synchronised folder, so the gate can be re-run in a
-      changed environment rather than repeated in the same one
-
+* [x] Determinism PASS — from a build tree OUTSIDE the synchronised folder
+      (preset `debug-ext`): **11500 = 2300 x 5, counted, exit 0**. Release had
+      already passed at 11430 = 2286 x 5.
+      The two DEBUG failures are NOT retracted -- `cli.refmod.build` then
+      `cli.drawing.batch`, each passing twice and failing on an atomic replace
+      of a file it had just written, 0 test-logic assertions in either. This is
+      not a third attempt at the same thing: the cause was removed
+      (INFRA-QT-DEPLOY-001), not the dice re-rolled. The evidence that it was
+      the right cause is 48 consecutive runs of the four file-replacing CLI
+      tests with 0 failures, not this single pass.
+      NOT CLAIMED: that the gate passes from inside the synchronised folder, or
+      that the replace fault is fixed. It is AVOIDED, for build output only --
+      see the carried `FileIo` item
 * [x] Adversarial review PASS
 * [x] Regression PASS
 * [x] Evidence recorded

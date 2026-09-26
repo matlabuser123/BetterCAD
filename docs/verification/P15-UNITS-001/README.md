@@ -1,8 +1,10 @@
 # P15-UNITS-001 — Engineering Quantity / Property Contracts
 
 ```text
-STATUS:    NOT COMPLETE -- 19 of 20 gates PASS; "Determinism PASS" is
-           BLOCKED by the environment, not by the product
+STATUS:    COMPLETE -- 20 of 20 gates PASS. The determinism gate was BLOCKED
+           by the environment and was closed after the environment changed,
+           NOT by repeating it under the same conditions -- see
+           "DETERMINISM CLOSED" below. The two failures stand.
 MILESTONE: P15-UNITS-001
 DATE:      2026-09-26
 BASELINE:  dbda62e, clean tree, HEAD == origin/main
@@ -713,7 +715,7 @@ or fail, at 17 minutes a time. Running until green is selecting a favourable
 result, which is the discipline this project exists to refuse. The gate is
 recorded as BLOCKED instead.
 
-**What is therefore claimed, and what is not:**
+**What was therefore claimed at that point, and what was not:**
 
 ```text
 CLAIMED      the quantity contracts are correct and complete, verified by 2286
@@ -722,6 +724,59 @@ CLAIMED      the quantity contracts are correct and complete, verified by 2286
              and relationship checks
 NOT CLAIMED  that the DEBUG determinism gate passes. It did not, twice, and this
              document does not average that away.
+```
+
+## DETERMINISM CLOSED — after the environment changed
+
+Everything above stands as written. Nothing in it is retracted: the two failures
+happened, and this section does not turn them into passes.
+
+What changed is the environment they were blamed on. INFRA-QT-DEPLOY-001 found
+why the build tree could not be moved out of the synchronised folder — the
+recorded reason was wrong — and moved it. The gate was then run once, from the
+moved tree, with **the same filter as the stage it replaces**: `[A-Za-z]`, every
+test, five times over.
+
+```text
+ctest --preset debug-ext -j 8 -R "[A-Za-z]" --repeat until-fail:5
+build root  C:\Users\uqhas\AppData\Local\bc-build   (outside OneDrive)
+commit      be3d288
+
+exit 0        21:10:10 -> 21:30:36
+11500 = 2300 x 5 result lines counted, 0 failures
+```
+
+`qualification/ctest-repeat-debug-ext.log`,
+`qualification/rerun-external-times.txt`,
+harness `qualification/rerun-debug-determinism-external.cmd`.
+
+2300 rather than 2286: INFRA-QT-DEPLOY-001 added 14 build-infrastructure tests.
+No test of this milestone's subject changed.
+
+**Why this is not the third attempt that was refused.** The refusal was of a
+third run *under the same conditions*, because that only selects a favourable
+result. Here a cause was removed first, and the evidence that it was the right
+cause is not this single pass — it is 48 consecutive runs of the four
+file-replacing CLI tests from the moved tree with 0 failures, where both
+recorded failures had come on the 3rd repeat
+(`docs/verification/INFRA-QT-DEPLOY-001/`). `cli.refmod.build` also lost the
+variance that preceded its failure: 3.77 s, 1.96 s, fail in the synchronised
+tree; 1.19–1.80 s across twelve consecutive runs here.
+
+**What is claimed now, and what is still not:**
+
+```text
+CLAIMED      the quantity contracts are deterministic: 11500 = 2300 x 5 in
+             DEBUG from a build tree outside the synchronised folder, and
+             11430 = 2286 x 5 in RELEASE earlier
+NOT CLAIMED  that the DEBUG gate passes from a build tree inside the
+             synchronised folder. It was not re-run there, and on the evidence
+             it would still be at risk.
+NOT CLAIMED  that the replace fault is fixed. It is AVOIDED, for build output
+             only. src/io/FileIo.cpp performs one std::filesystem::rename with
+             no retry and discards the temporary on failure, so a user saving
+             into a synchronised folder can still hit it. Carried in TODO.md as
+             a product defect in its own right.
 ```
 
 ## KNOWN LIMITATIONS
@@ -752,8 +807,11 @@ Finiteness is checked at boundaries, not in the Quantity constructor, which keep
 
 ```text
 TASK:            P15-UNITS-001 -- Engineering Quantity / Property Contracts
-RESULT:          NOT COMPLETE. Every gate passes except the debug
-                 determinism repeat, which is BLOCKED -- see below.
+RESULT:          PASS. The debug determinism repeat was BLOCKED by the
+                 environment and was closed from a build tree outside the
+                 synchronised folder -- 11500 = 2300 x 5, exit 0 -- after
+                 INFRA-QT-DEPLOY-001 made that move possible. The two earlier
+                 failures stand; see DETERMINISM CLOSED.
 REUSE:           the existing Quantity<Dimension> system was kept unchanged.
                  Density and Pressure, with every unit P15 needs, already
                  existed. UnitScale was already an exact rational, so the
@@ -771,8 +829,11 @@ VALIDATION:      9 dimensions checked against hand-written SI exponents in a
 DEFECT:          1 found and fixed -- quantity formatting printed "-0", against
                  a project convention stated in five other places
 ADVERSARIAL:     20 questions, 1 finding, 0 remaining, 2 deferred
-TODO:            P15-UNITS-001 stays [ ]. 19 items ticked, "Determinism
-                 PASS" left open with its reason. P15-MAT-001 NOT started.
+TODO:            P15-UNITS-001 complete, 20 of 20 ticked. "Determinism
+                 PASS" ticked against the moved build tree, with what is and
+                 is not claimed recorded on the item. P15-MAT-001 NOT started.
+NOT CLAIMED:     that the replace fault is fixed -- it is avoided, for build
+                 output only. src/io/FileIo.cpp is carried in TODO.md.
 ```
 
 ## REVISION
@@ -783,4 +844,12 @@ TODO:            P15-UNITS-001 stays [ ]. 19 items ticked, "Determinism
             a pre-existing test corrected after it failed the first regression.
             The debug determinism stage needed one controlled rerun on the
             recorded OneDrive replace fault -- the sixth milestone to hit it.
+2026-09-26  Determinism gate closed. The build tree was moved out of the
+            synchronised folder by INFRA-QT-DEPLOY-001, whose investigation also
+            showed that the reason this move had been blocked for two milestones
+            was misdiagnosed. The gate then ran once from the moved tree, same
+            [A-Za-z] filter, 11500 = 2300 x 5, exit 0. The two earlier failures
+            are not retracted, and the atomic-replace fault they exposed is
+            avoided rather than fixed -- it is carried in TODO.md as a product
+            defect in src/io/FileIo.cpp.
 ```

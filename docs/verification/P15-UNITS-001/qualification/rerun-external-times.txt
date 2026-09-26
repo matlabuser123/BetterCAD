@@ -1,0 +1,4 @@
+debug determinism from a build tree outside OneDrive Sat 26/09/2026 21:10:10.92 
+build root: C:\Users\uqhas\AppData\Local\bc-build 
+be3d2884eeacb9085c33ab709216d6d28c0ab8dc
+repeat debug-ext exit 0 Sat 26/09/2026 21:30:36.38 
