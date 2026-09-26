@@ -99,6 +99,7 @@ bettercad_add_executable(bettercad_tests
         core/standards/HoleStandardsTests.cpp
         core/units/ConversionTests.cpp
         core/units/FormatAndCatalogTests.cpp
+        core/units/EngineeringQuantityTests.cpp
         core/units/QuantityTests.cpp
         features/ChamferFeatureTests.cpp
         features/DatumTests.cpp

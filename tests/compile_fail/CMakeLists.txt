@@ -56,6 +56,19 @@ bettercad_compile_fail_case(units "${_units}" FORCE_PER_LENGTH_AS_PRESSURE "conv
 bettercad_compile_fail_case(units "${_units}" COMPARE_LENGTH_TIME "no match for [^ ]*operator<")
 bettercad_compile_fail_case(units "${_units}" SQRT_OF_VOLUME "no matching function for call to [^ ]*sqrt")
 
+# P15-UNITS-001: the engineering-data quantities.
+bettercad_compile_fail_case(units "${_units}" ADD_DENSITY_PRESSURE "no match for [^ ]*operator\+")
+bettercad_compile_fail_case(units "${_units}" MODULUS_AS_CONDUCTIVITY "could not convert")
+bettercad_compile_fail_case(units "${_units}" LENGTH_AS_DENSITY "could not convert")
+bettercad_compile_fail_case(units "${_units}" SPECIFIC_HEAT_AS_EXPANSION "conversion from .* to non-scalar type")
+bettercad_compile_fail_case(units "${_units}" MASS_PER_AREA_AS_DENSITY "conversion from .* to non-scalar type")
+bettercad_compile_fail_case(units "${_units}" TEMPERATURE_AS_EXPANSION "could not convert")
+bettercad_compile_fail_case(units "${_units}" POISSON_FROM_DOUBLE "conversion from [^ ]*double[^ ]* to non-scalar type")
+bettercad_compile_fail_case(units "${_units}" POISSON_TO_DOUBLE "cannot convert")
+bettercad_compile_fail_case(units "${_units}" POISSON_AS_KINEMATIC_VISCOSITY "could not convert")
+bettercad_compile_fail_case(units "${_units}" DYNAMIC_AS_KINEMATIC_VISCOSITY "could not convert")
+bettercad_compile_fail_case(units "${_units}" CONDUCTIVITY_AS_SPECIFIC_HEAT "conversion from .* to non-scalar type")
+
 # --- Strong IDs (P1-002) ----------------------------------------------------
 set(_ids "${CMAKE_CURRENT_SOURCE_DIR}/IdsMisuse.cpp")
 bettercad_compile_fail_group(ids "${_ids}")

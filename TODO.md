@@ -30,8 +30,23 @@ Carried:
            Cross-preset export byte identity is not guaranteed.
 
 Infrastructure:
-           Moving build output outside the source tree remains blocked by
-           location-dependent windeployqt behaviour.
+           MOVING BUILD OUTPUT OFF ONEDRIVE IS NOW THE TOP PRIORITY, ahead of
+           any P15 milestone. It has stopped being an annoyance and is now
+           PREVENTING A GATE FROM PASSING: P15-UNITS-001's debug determinism
+           repeat failed twice on an unchanged tree, in two different tests,
+           with 0 test-logic assertions failing. Through P14 it cost one
+           controlled rerun per milestone; it now costs the gate.
+           OneDrive's accumulated CPU has grown from 20,633 s (P14-REFMOD-001)
+           to 99,264 s, 726 MB resident -- the mechanism is under five times
+           the pressure it was.
+           It is blocked, in turn, by a real defect: building outside the
+           source tree fails the GUI target in all three presets, because
+           windeployqt resolves the Qt runtime relative to the executable it is
+           deploying (<exe>/../../<toolchain key>/bin), which names the real Qt
+           only when the build sits inside the source tree. Qt's bin on PATH,
+           running windeployqt from Qt's bin, and pre-placing Qt6Core.dll were
+           each tried; none worked. So the order is: fix the Qt deployment,
+           then move the build, then re-run P15-UNITS-001's determinism gate.
 ```
 
 ---
@@ -296,26 +311,61 @@ Do not start `P15-UNITS-001` until every architecture item above passes.
 
 ## Engineering Quantity / Property Contracts
 
-* [ ] Audit existing strong quantity types
-* [ ] Reuse existing unit infrastructure where possible
-* [ ] Define density quantity
-* [ ] Define stress / pressure quantity
-* [ ] Define elastic modulus quantity
-* [ ] Define thermal conductivity quantity
-* [ ] Define specific heat capacity quantity
-* [ ] Define thermal-expansion quantity
-* [ ] Define viscosity quantities only if required by P15 scope
-* [ ] Define dimensionless Poisson ratio
-* [ ] Reject incompatible dimensions at compile time where practical
-* [ ] Define canonical internal units
-* [ ] Define display-unit conversion
-* [ ] Validate numeric round trips
-* [ ] Validate NaN / infinity rejection
-* [ ] Compile-fail unit-safety tests
-* [ ] Determinism PASS
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+**NOT COMPLETE — 19 of 20 items pass; the determinism gate is BLOCKED by the
+machine.** Evidence:
+[docs/verification/P15-UNITS-001/](docs/verification/P15-UNITS-001/README.md).
+
+The work itself is done and verified: 7 dimensions, 7 quantity types, 13 units,
+26 literals, a distinct `PoissonRatio`, 27 new tests, **2286/2286 in all three
+presets** with 0 warnings and fresh binaries, and **release determinism clean at
+11430 = 2286 x 5**. Density and pressure already existed and were reused
+untouched; `UnitScale` was already an exact rational, so the exactness
+requirement was met by audit rather than by code.
+
+**One production defect found and fixed:** quantity formatting printed `-0`,
+against a convention the project states in five other places — `PdfWriter.cpp`
+says it follows "the same rules as everywhere else". Fixed in `Format.hpp`
+through the existing formatter, so no second formatting rule exists.
+
+**One pre-existing test was stale:** `catalog.size() == 37` became 50. It failed
+the first regression across all five stages. Worth noting that it is a test this
+milestone did not write — a repeat filter narrowed to the new tests would have
+missed it, which is the argument for keeping it total.
+
+**THE BLOCKER IS THE ONEDRIVE BUILD LOCATION, and it has stopped being an
+annoyance.** It failed a determinism repeat once per milestone through P14; here
+it failed twice in a row on an unchanged tree, in two different tests, with zero
+test-logic assertions failing. OneDrive's accumulated CPU is **99,264 s (27.6 h),
+726 MB resident** — five times the 20,633 s recorded in P14-REFMOD-001. The
+decision below is no longer deferrable: it is now preventing a gate from passing.
+
+
+* [x] Audit existing strong quantity types
+* [x] Reuse existing unit infrastructure where possible
+* [x] Define density quantity
+* [x] Define stress / pressure quantity
+* [x] Define elastic modulus quantity
+* [x] Define thermal conductivity quantity
+* [x] Define specific heat capacity quantity
+* [x] Define thermal-expansion quantity
+* [x] Define viscosity quantities only if required by P15 scope
+* [x] Define dimensionless Poisson ratio
+* [x] Reject incompatible dimensions at compile time where practical
+* [x] Define canonical internal units
+* [x] Define display-unit conversion
+* [x] Validate numeric round trips
+* [x] Validate NaN / infinity rejection
+* [x] Compile-fail unit-safety tests
+* [ ] Determinism PASS — **BLOCKED BY THE ENVIRONMENT, not by the product.**
+      Release determinism PASSES: 11430 = 2286 x 5, counted. The DEBUG repeat
+      failed twice on the recorded OneDrive replace fault -- `cli.refmod.build`
+      then `cli.drawing.batch`, each passing twice and failing on an atomic
+      replace of a file it had just written. 0 test-logic assertions failed in
+      either attempt. No third attempt was made: running until green is
+      selecting a favourable result
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded
 
 ### Core relationships
 

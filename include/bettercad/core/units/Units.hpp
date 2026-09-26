@@ -4,6 +4,7 @@
 #include <bettercad/core/units/Quantity.hpp>
 
 #include <cmath>
+#include <limits>
 #include <numbers>
 
 namespace bettercad {
@@ -20,6 +21,77 @@ using Acceleration = Quantity<dimensions::acceleration>;
 using Force = Quantity<dimensions::force>;
 using Pressure = Quantity<dimensions::pressure>;
 using Density = Quantity<dimensions::density>;
+
+// Engineering-data quantities (P15-UNITS-001).
+using Energy = Quantity<dimensions::energy>;
+using Power = Quantity<dimensions::power>;
+using ThermalConductivity = Quantity<dimensions::thermalConductivity>;
+using SpecificHeatCapacity = Quantity<dimensions::specificHeatCapacity>;
+using ThermalExpansionCoefficient = Quantity<dimensions::thermalExpansion>;
+using DynamicViscosity = Quantity<dimensions::dynamicViscosity>;
+using KinematicViscosity = Quantity<dimensions::kinematicViscosity>;
+
+/// Stress and elastic moduli, which are pressures dimensionally.
+///
+/// THESE ARE ALIASES AND NOT DISTINCT TYPES, and saying so is the point. A
+/// Quantity is keyed on its dimension alone, so `ElasticModulus` and `Pressure`
+/// are the same type: an elastic modulus added to a pressure compiles, while an
+/// elastic modulus added to a density does not. The alias buys readability in a
+/// signature, never a second layer of safety, and a reader who assumed otherwise
+/// would be wrong in a way that matters.
+///
+/// Separating them by type was considered and rejected for P15: it would need a
+/// distinct type with its own arithmetic, and `sigma = E * strain` — where the
+/// result IS a stress and the operand IS a modulus — would then need conversions
+/// at every step, for a confusion nobody has made. If a real defect ever turns
+/// on it, ADR-027's canonical set is the place to revisit.
+using Stress = Pressure;
+using ElasticModulus = Pressure;
+
+/// Poisson's ratio: dimensionless, and a distinct type all the same.
+///
+/// It is NOT `Quantity<dimensions::dimensionless>`, because this system returns
+/// a plain `double` for any dimension that cancels completely (see
+/// detail::quantityOrScalar) — a dimensionless Quantity is not how BetterCAD
+/// spells "a pure number".
+///
+/// So why a type at all? Because `double` would let Poisson's ratio be passed
+/// wherever a strain, a factor or a count is wanted, and in particular wherever
+/// a KINEMATIC VISCOSITY is wanted — both are written `nu`, and mistaking one
+/// for the other is a mistake a compiler should catch rather than a reader. A
+/// dimensionless property crossing a public engineering boundary gets a name.
+///
+/// It carries NO range check. `-1 < nu < 0.5` is physical validity for ordinary
+/// isotropic elasticity, not dimensional validity, and P15-ARCH-001 keeps the
+/// two apart: the range belongs to the material property layer (P15-MECH-001),
+/// which can also decide what to do about auxetic and anisotropic cases.
+class PoissonRatio {
+public:
+    PoissonRatio() = default;
+
+    /// Explicit, like Quantity::fromSi: a pure number becomes a Poisson ratio
+    /// only where someone says so.
+    [[nodiscard]] static constexpr PoissonRatio of(double value) noexcept {
+        return PoissonRatio{value};
+    }
+
+    [[nodiscard]] constexpr double value() const noexcept { return value_; }
+
+    friend constexpr bool operator==(const PoissonRatio&, const PoissonRatio&) noexcept = default;
+    friend constexpr auto operator<=>(const PoissonRatio&, const PoissonRatio&) noexcept = default;
+
+private:
+    constexpr explicit PoissonRatio(double value) noexcept : value_(value) {}
+
+    double value_ = 0.0;
+};
+
+/// Whether @p ratio is a finite number. The same question isFinite(Quantity)
+/// answers, and the same answer: a non-finite ratio is not engineering data.
+[[nodiscard]] constexpr bool isFinite(PoissonRatio ratio) noexcept {
+    return ratio.value() == ratio.value() && ratio.value() != std::numeric_limits<double>::infinity()
+           && ratio.value() != -std::numeric_limits<double>::infinity();
+}
 
 /// Units of measurement. Every unit here is also listed in unitCatalog().
 namespace units {
@@ -85,6 +157,32 @@ inline constexpr Unit<dimensions::pressure> bar{"bar", {1.0e5, 1.0}};
 // Density
 inline constexpr Unit<dimensions::density> kg_per_m3{"kg/m^3", {1.0, 1.0}};
 inline constexpr Unit<dimensions::density> g_per_cm3{"g/cm^3", {1000.0, 1.0}};
+
+// Energy
+inline constexpr Unit<dimensions::energy> J{"J", {1.0, 1.0}};
+inline constexpr Unit<dimensions::energy> kJ{"kJ", {1000.0, 1.0}};
+
+// Power
+inline constexpr Unit<dimensions::power> W{"W", {1.0, 1.0}};
+inline constexpr Unit<dimensions::power> kW{"kW", {1000.0, 1.0}};
+
+// Thermal conductivity
+inline constexpr Unit<dimensions::thermalConductivity> W_per_m_K{"W/(m K)", {1.0, 1.0}};
+
+// Specific heat capacity
+inline constexpr Unit<dimensions::specificHeatCapacity> J_per_kg_K{"J/(kg K)", {1.0, 1.0}};
+inline constexpr Unit<dimensions::specificHeatCapacity> kJ_per_kg_K{"kJ/(kg K)", {1000.0, 1.0}};
+
+// Thermal expansion. 1 um/(m K) is 1e-6 strain per kelvin, which is how
+// datasheets usually give it, so the scale is a ratio and not 1e-6 written out.
+inline constexpr Unit<dimensions::thermalExpansion> per_K{"1/K", {1.0, 1.0}};
+inline constexpr Unit<dimensions::thermalExpansion> um_per_m_K{"um/(m K)", {1.0, 1.0e6}};
+
+// Viscosity
+inline constexpr Unit<dimensions::dynamicViscosity> Pa_s{"Pa s", {1.0, 1.0}};
+inline constexpr Unit<dimensions::dynamicViscosity> mPa_s{"mPa s", {1.0, 1000.0}};
+inline constexpr Unit<dimensions::kinematicViscosity> m2_per_s{"m^2/s", {1.0, 1.0}};
+inline constexpr Unit<dimensions::kinematicViscosity> mm2_per_s{"mm^2/s", {1.0, 1.0e6}};
 
 } // namespace units
 

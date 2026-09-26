@@ -123,6 +123,41 @@ constexpr Density operator""_kg_per_m3(long double v) noexcept { return detail::
 constexpr Density operator""_kg_per_m3(unsigned long long v) noexcept { return detail::quantityFromLiteral(v, units::kg_per_m3); }
 constexpr Density operator""_g_per_cm3(long double v) noexcept { return detail::quantityFromLiteral(v, units::g_per_cm3); }
 constexpr Density operator""_g_per_cm3(unsigned long long v) noexcept { return detail::quantityFromLiteral(v, units::g_per_cm3); }
+
+// Engineering-data quantities (P15-UNITS-001)
+// Energy
+constexpr Energy operator""_J(long double v) noexcept { return detail::quantityFromLiteral(v, units::J); }
+constexpr Energy operator""_J(unsigned long long v) noexcept { return detail::quantityFromLiteral(v, units::J); }
+constexpr Energy operator""_kJ(long double v) noexcept { return detail::quantityFromLiteral(v, units::kJ); }
+constexpr Energy operator""_kJ(unsigned long long v) noexcept { return detail::quantityFromLiteral(v, units::kJ); }
+// Power
+constexpr Power operator""_W(long double v) noexcept { return detail::quantityFromLiteral(v, units::W); }
+constexpr Power operator""_W(unsigned long long v) noexcept { return detail::quantityFromLiteral(v, units::W); }
+constexpr Power operator""_kW(long double v) noexcept { return detail::quantityFromLiteral(v, units::kW); }
+constexpr Power operator""_kW(unsigned long long v) noexcept { return detail::quantityFromLiteral(v, units::kW); }
+// ThermalConductivity
+constexpr ThermalConductivity operator""_W_per_m_K(long double v) noexcept { return detail::quantityFromLiteral(v, units::W_per_m_K); }
+constexpr ThermalConductivity operator""_W_per_m_K(unsigned long long v) noexcept { return detail::quantityFromLiteral(v, units::W_per_m_K); }
+// SpecificHeatCapacity
+constexpr SpecificHeatCapacity operator""_J_per_kg_K(long double v) noexcept { return detail::quantityFromLiteral(v, units::J_per_kg_K); }
+constexpr SpecificHeatCapacity operator""_J_per_kg_K(unsigned long long v) noexcept { return detail::quantityFromLiteral(v, units::J_per_kg_K); }
+constexpr SpecificHeatCapacity operator""_kJ_per_kg_K(long double v) noexcept { return detail::quantityFromLiteral(v, units::kJ_per_kg_K); }
+constexpr SpecificHeatCapacity operator""_kJ_per_kg_K(unsigned long long v) noexcept { return detail::quantityFromLiteral(v, units::kJ_per_kg_K); }
+// ThermalExpansionCoefficient
+constexpr ThermalExpansionCoefficient operator""_per_K(long double v) noexcept { return detail::quantityFromLiteral(v, units::per_K); }
+constexpr ThermalExpansionCoefficient operator""_per_K(unsigned long long v) noexcept { return detail::quantityFromLiteral(v, units::per_K); }
+constexpr ThermalExpansionCoefficient operator""_um_per_m_K(long double v) noexcept { return detail::quantityFromLiteral(v, units::um_per_m_K); }
+constexpr ThermalExpansionCoefficient operator""_um_per_m_K(unsigned long long v) noexcept { return detail::quantityFromLiteral(v, units::um_per_m_K); }
+// DynamicViscosity
+constexpr DynamicViscosity operator""_Pa_s(long double v) noexcept { return detail::quantityFromLiteral(v, units::Pa_s); }
+constexpr DynamicViscosity operator""_Pa_s(unsigned long long v) noexcept { return detail::quantityFromLiteral(v, units::Pa_s); }
+constexpr DynamicViscosity operator""_mPa_s(long double v) noexcept { return detail::quantityFromLiteral(v, units::mPa_s); }
+constexpr DynamicViscosity operator""_mPa_s(unsigned long long v) noexcept { return detail::quantityFromLiteral(v, units::mPa_s); }
+// KinematicViscosity
+constexpr KinematicViscosity operator""_m2_per_s(long double v) noexcept { return detail::quantityFromLiteral(v, units::m2_per_s); }
+constexpr KinematicViscosity operator""_m2_per_s(unsigned long long v) noexcept { return detail::quantityFromLiteral(v, units::m2_per_s); }
+constexpr KinematicViscosity operator""_mm2_per_s(long double v) noexcept { return detail::quantityFromLiteral(v, units::mm2_per_s); }
+constexpr KinematicViscosity operator""_mm2_per_s(unsigned long long v) noexcept { return detail::quantityFromLiteral(v, units::mm2_per_s); }
 // clang-format on
 
 } // namespace literals

@@ -22,7 +22,11 @@ constexpr std::array kCatalog{
     describe(units::m_per_s2), describe(units::N),         describe(units::kN),
     describe(units::Pa),       describe(units::kPa),       describe(units::MPa),
     describe(units::GPa),      describe(units::bar),       describe(units::kg_per_m3),
-    describe(units::g_per_cm3),
+    describe(units::g_per_cm3), describe(units::J),          describe(units::kJ),
+    describe(units::W),         describe(units::kW),         describe(units::W_per_m_K),
+    describe(units::J_per_kg_K), describe(units::kJ_per_kg_K), describe(units::per_K),
+    describe(units::um_per_m_K), describe(units::Pa_s),      describe(units::mPa_s),
+    describe(units::m2_per_s),  describe(units::mm2_per_s),
 };
 
 consteval bool symbolsAreUnique() {

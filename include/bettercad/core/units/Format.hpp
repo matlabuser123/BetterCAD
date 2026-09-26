@@ -18,17 +18,36 @@ namespace bettercad {
 /// or "quantity [kg/s^2]" for dimensions without a common name.
 [[nodiscard]] BETTERCAD_CORE_EXPORT std::string describeDimension(const Dimension& dimension);
 
+namespace detail {
+
+/// Zero, with the sign taken off (P15-UNITS-001).
+///
+/// A negative zero is an artefact of arithmetic -- reversing an axis, or
+/// subtracting a number from itself -- and never engineering information, so
+/// BetterCAD canonicalises it wherever a number is written down: parameter
+/// values ("never store a negative zero"), edge and face signatures, the
+/// drawing exporters, and the PDF writer, whose comment says it follows "the
+/// same rules as everywhere else". Quantity formatting was the one place that
+/// did not, and printed "-0 kg/m^3".
+[[nodiscard]] inline constexpr double withoutNegativeZero(double value) noexcept {
+    return value == 0.0 ? 0.0 : value;
+}
+
+} // namespace detail
+
 /// Quantity in coherent SI units, e.g. "0.1 m".
 template <Dimension D>
 [[nodiscard]] std::string toString(const Quantity<D>& q) {
-    return std::format("{}", q);
+    // Through the existing formatter, on a value whose zero has no sign, so the
+    // SI suffix logic stays in one place.
+    return std::format("{}", Quantity<D>::fromSi(detail::withoutNegativeZero(q.si())));
 }
 
 /// Quantity in a chosen unit, e.g. "100 mm". Uses the shortest decimal
 /// representation that round-trips.
 template <Dimension D>
 [[nodiscard]] std::string toString(const Quantity<D>& q, const Unit<D>& unit) {
-    return std::format("{} {}", q.in(unit), unit.symbol);
+    return std::format("{} {}", detail::withoutNegativeZero(q.in(unit)), unit.symbol);
 }
 
 template <Dimension D>

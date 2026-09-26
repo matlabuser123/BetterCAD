@@ -49,7 +49,12 @@ TEST_CASE("Quantities format with their unit", "[units][format]") {
 
 TEST_CASE("Unit catalog lists every unit with a unique symbol", "[units][catalog]") {
     const auto catalog = unitCatalog();
-    CHECK(catalog.size() == 37);
+    // 37 through P14, plus the 13 engineering-data units P15-UNITS-001 added
+    // (J kJ W kW, W/(m K), J/(kg K), kJ/(kg K), 1/K, um/(m K), Pa s, mPa s,
+    // m^2/s, mm^2/s). A bare count is a tripwire for a unit REMOVED by
+    // accident; the checks that matter are in the loop below, and they apply to
+    // every entry.
+    CHECK(catalog.size() == 50);
 
     std::set<std::string_view> symbols;
     for (const UnitDescriptor& unit : catalog) {

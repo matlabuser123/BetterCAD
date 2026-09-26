@@ -67,6 +67,31 @@ inline constexpr Dimension force = mass * acceleration;
 inline constexpr Dimension pressure = force / area;
 inline constexpr Dimension density = mass / volume;
 
+// Engineering-data dimensions (P15-UNITS-001). Each is composed from the ones
+// above rather than written as exponents, so the composition IS the proof: if
+// `energy` were wrong, every dimension built on it would be wrong too, and the
+// relationship tests would not close.
+//
+// None of these needs a new base dimension. Temperature was already one, and
+// Dimension.hpp says why: "Temperature is included so that thermal quantities
+// can [be expressed]". What P15 does need and does NOT have is electric
+// current, so electrical resistivity and conductivity remain inexpressible
+// (P15-ARCH-001 recorded this; it is a base-dimension change, not an alias).
+inline constexpr Dimension energy = force * length;                 // M L^2 T^-2
+inline constexpr Dimension power = energy / time;                   // M L^2 T^-3
+/// W/(m K).
+inline constexpr Dimension thermalConductivity = power / (length * temperature);
+/// J/(kg K). Mass and energy's mass cancel, leaving L^2 T^-2 Theta^-1.
+inline constexpr Dimension specificHeatCapacity = energy / (mass * temperature);
+/// 1/K. Strain per kelvin: strain is dimensionless, so only the inverse
+/// temperature remains. NOT dimensionless itself, which is the mistake this
+/// exists to make impossible.
+inline constexpr Dimension thermalExpansion = temperature.inverse();
+/// Pa s.
+inline constexpr Dimension dynamicViscosity = pressure * time;
+/// m^2/s, which is dynamic viscosity over density.
+inline constexpr Dimension kinematicViscosity = area / time;
+
 } // namespace dimensions
 
 } // namespace bettercad

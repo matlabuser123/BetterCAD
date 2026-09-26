@@ -609,7 +609,7 @@ through the public API.
 
 ---
 
-## AI Engineering Agent — In Progress
+## AI Engineering Agent — Planned
 
 Only after production APIs are reliable.
 
