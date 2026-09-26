@@ -114,8 +114,8 @@ Qualified but not yet separately released: `P11`, `P12`, `P13`.
 | Parametric Part Modeling | `P11` | **Qualified** |
 | Parametric CAD Completion | `P12` | **Qualified** |
 | Assemblies | `P13` | **Qualified** |
-| Technical Drawings | `P14` | **In Progress** |
-| Materials / Engineering Data | `P15` | Planned |
+| Technical Drawings | `P14` | **Qualified** |
+| Materials / Engineering Data | `P15` | **In Progress** |
 | Meshing | `P16` | Planned |
 | Structural FEA | `P17` | Planned |
 | Thermal Analysis | `P18` | Planned |
@@ -693,7 +693,7 @@ reliability.
 | `v0.2` | Practical parametric modeling | Qualified capability exists; release not cut |
 | `v0.3` | Production parametric CAD | Qualified capability exists; release not cut |
 | `v0.4` | Assemblies | `P13` **Qualified**; release not cut |
-| `v0.5` | Technical Drawings | **In Progress — `P14`** |
+| `v0.5` | Technical Drawings | `P14` **Qualified**; release not cut |
 | `v0.6` | Simulation foundation | Planned |
 | `v0.7` | Multiphysics / optimization | Planned |
 | `v0.8` | Engineering platform | Planned |

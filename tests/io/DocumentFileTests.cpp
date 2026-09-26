@@ -639,3 +639,57 @@ TEST_CASE("Documents are saved to and loaded from files", "[io][document][file]"
         CHECK_FALSE(std::filesystem::exists(path));
     }
 }
+
+TEST_CASE("DocumentFile_NoDerivedGeometryIsPersisted", "[io][document][p15][architecture]") {
+    // THE CANONICAL / DERIVED SERIALIZATION BOUNDARY, as a guard rather than a
+    // habit (P15-ARCH-001, ADR-026).
+    //
+    // The document stores INTENT. Volume, surface area and centre of mass are
+    // computed from the intent by regeneration, and nothing computed belongs in
+    // the file: a stored derived value is a cache with a correctness obligation,
+    // and it goes stale the moment a parameter moves.
+    //
+    // P15 is about to lean on this. Mass = density x volume, and the whole
+    // reason mass cannot go stale is that neither factor is persisted -- the
+    // density is canonical material data and the volume is recomputed. So the
+    // rule is worth a test before a milestone depends on it. It was honoured in
+    // practice and guarded by nothing.
+    //
+    // This does not test materials, and adds no material type: it pins a
+    // property of the EXISTING serializer that ADR-026 cites.
+    TempDir dir;
+    const std::filesystem::path path = dir.path() / "derived.bcad";
+
+    Model ids;
+    Regenerator regenerator;
+    const RegenerationReport built = requireReport(regenerator, ids.doc);
+    INFO(describe(built));
+    REQUIRE(built.succeeded());
+
+    // The model really does have derived geometry to leak -- otherwise the
+    // assertions below would pass on an empty document and mean nothing.
+    const geometry::Body* body = regenerator.body(ids.slot);
+    REQUIRE(body != nullptr);
+    const auto properties = body->massProperties();
+    const std::string whyNot = properties.has_value() ? std::string{} : properties.error().message;
+    INFO(whyNot);
+    REQUIRE(properties.has_value());
+    REQUIRE(properties->volume.si() > 0.0);
+    REQUIRE(properties->surfaceArea.si() > 0.0);
+
+    REQUIRE(io::saveDocument(ids.doc, path).has_value());
+    const std::string text = readFile(path);
+
+    // None of the derived quantities appears anywhere in the file, by the name
+    // the writers would give it.
+    for (const std::string_view derived : {"volume", "surface_area", "surfaceArea", "centre_of_mass",
+                                           "center_of_mass", "centerOfMass", "centroid", "mass",
+                                           "inertia", "moment_of_inertia"}) {
+        INFO(derived);
+        CHECK_THAT(text, !ContainsSubstring(std::string{derived}));
+    }
+
+    // And what IS there is intent: the features and their parameters.
+    CHECK_THAT(text, ContainsSubstring(R"("type": "extrude")"));
+    CHECK_THAT(text, ContainsSubstring(R"("objects")"));
+}
