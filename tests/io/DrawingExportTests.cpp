@@ -3,6 +3,9 @@
 #include "io/DrawingExportSupport.hpp"
 #include "support/TestFiles.hpp"
 
+#include <array>
+#include <sstream>
+#include <utility>
 #include <bettercad/core/Units.hpp>
 #include <bettercad/drawing/Scene.hpp>
 #include <bettercad/assembly/Components.hpp>
@@ -1125,4 +1128,270 @@ TEST_CASE("Export_AViewAtOneToTwoDrawsHalfTheSizeAndKeepsItsPenAndItsLettering",
     REQUIRE(svgHalf.has_value());
     CHECK_THAT(*svgFull, ContainsSubstring("stroke-width=\"0.5000\""));
     CHECK_THAT(*svgHalf, ContainsSubstring("stroke-width=\"0.5000\""));
+}
+
+TEST_CASE("Export_OneKnownLengthMeasuresItsScaleOnPaperInAllThreeFormats",
+          "[io][export][p14][scale][qual]") {
+    // THE CROSS-FORMAT PHYSICAL SCALE GATE (P14-QUAL-001).
+    //
+    // Every other scale test in the suite checks one half of this. The
+    // DrawingScale arithmetic is checked on its own; a 1:2 view's paper length
+    // is read back out of all three files by RM-DWG-02; a 2:1 detail is checked
+    // for having the factor 2 and for drawing something. None of them takes ONE
+    // known model length and shows it measuring 100, 50 and 200 mm of paper at
+    // 1:1, 1:2 and 2:1 -- which is what a plotter will produce, and is the
+    // thing a drawing is for.
+    //
+    // So: one 100 mm model edge, three views of it at the three scales on one
+    // sheet, the paper distance taken through the production projection, and
+    // then the same three lengths found in the DXF, the SVG and the PDF with
+    // parsers that share no code with the writers.
+    constexpr double kEdgeMm = 100.0;
+    Drawn d{};
+    const ObjectId block = addBlock(d, "Block", kEdgeMm * units::mm);
+
+    const SheetId sheet = made("the sheet", drawing::createSheet(
+        d.document, "Sheet1",
+        drawing::SheetDefinition{.format = drawing::SheetFormat::A1, .scale = {1, 1}}));
+
+    struct Case {
+        const char* name;
+        drawing::DrawingScale scale;
+        double paperMm;
+        double xMm;
+        ViewId view{};
+    };
+    // Placed far enough apart that three drawings of a 100 mm block at up to
+    // 2:1 cannot overlap on an A1 sheet.
+    std::array<Case, 3> cases{{
+        {"OneToOne", {1, 1}, kEdgeMm, 150.0},
+        {"HalfSize", {1, 2}, kEdgeMm / 2.0, 400.0},
+        {"TwiceSize", {2, 1}, kEdgeMm * 2.0, 620.0},
+    }};
+    for (Case& c : cases) {
+        c.view = made(c.name, drawing::createView(
+            d.document, c.name,
+            drawing::ViewDefinition{.sheet = sheet,
+                                    .source = block,
+                                    .orientation = drawing::StandardView::Front,
+                                    .scale = c.scale,
+                                    .placement = Point2D{c.xMm * units::mm, 300_mm}}));
+    }
+    d.regenerate();
+
+    // --- the paper length, through the production projection -----------------
+    //
+    // The two ends of the block's bottom edge are MODEL points. Where they land
+    // on the sheet is the view's own answer; what they should be apart is
+    // computed here from the model length and the scale, and never asked of the
+    // view.
+    for (const Case& c : cases) {
+        INFO(c.name);
+        const auto at = [&](double xMm) {
+            auto p = drawing::toSheet(d.document, c.view, Point3D{xMm * units::mm, 0_mm, 0_mm},
+                                      d.bodies(), d.transforms());
+            INFO(why(p));
+            REQUIRE(p.has_value());
+            return std::pair<double, double>{p->x.in(units::mm), p->y.in(units::mm)};
+        };
+        const auto [x0, y0] = at(0.0);
+        const auto [x1, y1] = at(kEdgeMm);
+        CHECK_THAT(std::hypot(x1 - x0, y1 - y0), WithinAbs(c.paperMm, kMm));
+    }
+
+    // --- and the same three lengths, read back out of the files --------------
+    const auto drawn = drawing::sheetScene(d.document, sheet, d.bodies(), d.transforms());
+    INFO(why(drawn));
+    REQUIRE(drawn.has_value());
+    const drawing::DrawingScene& scene = *drawn;
+    const auto svg = io::svgDocument(scene);
+    const auto dxf = io::dxfDocument(scene);
+    const auto pdf = io::pdfDocument(scene);
+    INFO(why(svg) << why(dxf) << why(pdf));
+    REQUIRE(svg.has_value());
+    REQUIRE(dxf.has_value());
+    REQUIRE(pdf.has_value());
+
+    // The widest horizontal run among a format's line segments, per view band.
+    // A band is picked by the view's own x placement, so the three drawings are
+    // told apart without asking the scene which line belongs to which view.
+    // A run belongs to a view when it lies WHOLLY within that view's
+    // neighbourhood -- both ends, not just its midpoint. The sheet border is a
+    // horizontal run 841 mm wide whose centre falls inside a band, so a
+    // midpoint test picks up the frame instead of the drawing.
+    struct Run {
+        double length;
+        double left;
+        double right;
+    };
+    const auto widestRunNear = [](const std::vector<Run>& runs, double centreMm) {
+        double widest = 0.0;
+        for (const Run& run : runs) {
+            if (run.left > centreMm - 120.0 && run.right < centreMm + 120.0) {
+                widest = std::max(widest, run.length);
+            }
+        }
+        return widest;
+    };
+    const auto run = [](double a, double b) {
+        return Run{std::abs(b - a), std::min(a, b), std::max(a, b)};
+    };
+
+    // DXF: LINE entities carry their endpoints as group codes 10/20 and 11/21.
+    std::vector<Run> dxfRuns;
+    for (const DxfEntity& entity : dxfEntities(*dxf)) {
+        if (entity.type != "LINE") {
+            continue;
+        }
+        if (!entity.value(10) || !entity.value(20) || !entity.value(11) || !entity.value(21)) {
+            continue;
+        }
+        const double x1 = entity.number(10);
+        const double y1 = entity.number(20);
+        const double x2 = entity.number(11);
+        const double y2 = entity.number(21);
+        if (std::abs(y1 - y2) < kMm) { // a horizontal run
+            dxfRuns.push_back(run(x1, x2));
+        }
+    }
+    REQUIRE_FALSE(dxfRuns.empty());
+    for (const Case& c : cases) {
+        INFO("DXF " << c.name);
+        CHECK_THAT(widestRunNear(dxfRuns, c.xMm), WithinAbs(c.paperMm, kMm));
+    }
+
+    // SVG: the same, from <line> elements, whose y grows downward -- which does
+    // not matter to a horizontal run's length.
+    // SVG draws each polyline as a "points" attribute of "x,y x,y ..." pairs,
+    // with y counted from the TOP of the page. A horizontal run's length does
+    // not care which way y points, so the flip is irrelevant here -- and it is
+    // asserted directly by Export_SvgIsAPhysicallySizedDocument.
+    std::vector<Run> svgRuns;
+    for (const SvgElement* poly : allSvg(readSvg(*svg), "polyline")) {
+        const auto found = poly->attributes.find("points");
+        if (found == poly->attributes.end()) {
+            continue;
+        }
+        std::vector<std::pair<double, double>> points;
+        std::istringstream pairs{found->second};
+        std::string pair;
+        while (pairs >> pair) {
+            const std::size_t comma = pair.find(',');
+            if (comma == std::string::npos) {
+                continue;
+            }
+            points.emplace_back(std::stod(pair.substr(0, comma)), std::stod(pair.substr(comma + 1)));
+        }
+        for (std::size_t i = 1; i < points.size(); ++i) {
+            const auto& [x1, y1] = points[i - 1];
+            const auto& [x2, y2] = points[i];
+            if (std::abs(y1 - y2) < kMm) {
+                svgRuns.push_back(run(x1, x2));
+            }
+        }
+    }
+    REQUIRE_FALSE(svgRuns.empty());
+    for (const Case& c : cases) {
+        INFO("SVG " << c.name);
+        CHECK_THAT(widestRunNear(svgRuns, c.xMm), WithinAbs(c.paperMm, kMm));
+    }
+
+    // PDF: the page is in points, 72 to the inch, so a millimetre of paper is
+    // 72/25.4 units. The content stream's "x y m" / "x y l" pairs are the
+    // drawing, and converting them back to millimetres is the independent check
+    // that the page is physically the size it claims.
+    const std::string content = pdfContentStream(*pdf);
+    REQUIRE_FALSE(content.empty());
+    constexpr double kPointsPerMm = 72.0 / 25.4;
+    std::vector<Run> pdfRuns;
+    {
+        std::istringstream stream{content};
+        std::string token;
+        double x = 0.0;
+        double y = 0.0;
+        bool have = false;
+        std::vector<double> numbers;
+        while (stream >> token) {
+            if (token == "m" || token == "l") {
+                if (numbers.size() >= 2) {
+                    const double nx = numbers[numbers.size() - 2] / kPointsPerMm;
+                    const double ny = numbers[numbers.size() - 1] / kPointsPerMm;
+                    if (token == "l" && have && std::abs(ny - y) < 1e-3) {
+                        pdfRuns.push_back(run(x, nx));
+                    }
+                    x = nx;
+                    y = ny;
+                    have = true;
+                }
+                numbers.clear();
+                continue;
+            }
+            try {
+                numbers.push_back(std::stod(token));
+            } catch (const std::exception&) {
+                numbers.clear();
+                have = false;
+            }
+        }
+    }
+    REQUIRE_FALSE(pdfRuns.empty());
+    for (const Case& c : cases) {
+        INFO("PDF " << c.name);
+        // 1e-3 mm, not a nanometre: the PDF writer prints points to four
+        // decimals, and a millimetre is 2.8346 points, so one printed step is
+        // 3.5e-5 mm and the round trip through points loses a little more.
+        CHECK_THAT(widestRunNear(pdfRuns, c.xMm), WithinAbs(c.paperMm, 1e-3));
+    }
+}
+
+TEST_CASE("Export_AnUnwritableDestinationFailsAndLeavesNothingBehind",
+          "[io][export][p14][failure][qual]") {
+    // A FAILURE CONTROL (P14-QUAL-001 §25). Writing is the last thing a drawing
+    // does, and it is the step most likely to fail for reasons nothing in the
+    // document can predict: a directory that is not there, a path that is a
+    // directory, a name the filesystem will not take. All three writers must
+    // say so, with a diagnostic naming the path, and must not leave a partial
+    // file where a reader would later find it and believe it.
+    const DrawingScene scene = analyticScene();
+    REQUIRE(drawing::validate(scene).has_value());
+
+    const TempDir dir;
+    const std::filesystem::path missing = dir.path() / "no-such-directory" / "drawing";
+    REQUIRE_FALSE(std::filesystem::exists(missing.parent_path()));
+
+    struct Writer {
+        const char* name;
+        Result<void> (*write)(const DrawingScene&, const std::filesystem::path&);
+        const char* extension;
+    };
+    const std::array<Writer, 3> writers{{
+        {"svg", &io::exportSvg, ".svg"},
+        {"dxf", &io::exportDxf, ".dxf"},
+        {"pdf", &io::exportPdf, ".pdf"},
+    }};
+
+    for (const Writer& writer : writers) {
+        INFO(writer.name);
+        const std::filesystem::path path = std::filesystem::path{missing}.concat(writer.extension);
+        const auto written = writer.write(scene, path);
+        REQUIRE_FALSE(written.has_value());
+        // IoError, not a parse error or an invalid argument: the scene was
+        // fine and the destination was not.
+        CHECK(written.error().code == ErrorCode::IoError);
+        // And it names the path, because "it failed" is not a diagnostic.
+        CHECK_THAT(written.error().message, ContainsSubstring("drawing"));
+        // NOTHING was left behind -- not the file, and not the temporary the
+        // writer writes through.
+        CHECK_FALSE(std::filesystem::exists(path));
+        CHECK_FALSE(std::filesystem::exists(missing.parent_path()));
+    }
+
+    // The same scene writes perfectly well to a destination that exists, so the
+    // refusals above are about the path and not about the drawing.
+    for (const Writer& writer : writers) {
+        INFO(writer.name);
+        const auto path = dir.path() / (std::string{"good"} + writer.extension);
+        REQUIRE(writer.write(scene, path).has_value());
+        CHECK(std::filesystem::file_size(path) > 0);
+    }
 }

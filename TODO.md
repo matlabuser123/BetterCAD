@@ -9,46 +9,44 @@
 ## Status
 
 ```text
-Current:   P14 — Technical Drawings
-Next:      P14-QUAL-001 — full P14 qualification. Its precondition is now MET:
-           P14-STREF-001 was the blocker and is closed (ADR-024, 2026-09-26).
-           The earlier BLOCKED audit at 56f5a34 stands as history in
-           docs/verification/P14-QUAL-001/ and must be RE-RUN from the
-           beginning, not continued: it stopped before the tree freeze and
-           before any build.
-           All 17 P14 milestones before it are now complete.
+Current:   nothing in progress. P14 — Technical Drawings is QUALIFIED
+           (2026-09-26), and no later phase is authorized.
+Next:      A SCOPE DECISION, not an implementation task. P14 is closed; what
+           follows it is ROADMAP.md's business and needs authorizing here first.
+           Two pieces of work are named and ready if you want them:
+           (1) make the Qt deployment location-independent, which unblocks
+               moving build output off OneDrive -- see the decision below;
+           (2) let a hole's POSITION be dimensioned, which is the commonest
+               dimension on a machining drawing and has no spelling in this
+               build.
 Carried:   a hole's POSITION cannot be dimensioned. A cylindrical face may be
            the target of a radius or a diameter and of nothing else
-           (P14-DIM-001), and a bore's axis has no semantic name (ADR-012),
-           so the commonest dimension on a machining drawing has no spelling
-           in this build. P14-REFMOD-001 found it and worked around it by
-           dimensioning between datum edges. Closing it means widening
-           P14-DIM-001's target rules or naming a hole's axis — either is a
-           scope decision.
+           (P14-DIM-001), and a bore's axis has no semantic name (ADR-012).
            GD&T symbols reach SVG only; PDF and DXF need an embedded font.
-Decision:  move build and test output off OneDrive. OPEN, and it is now
-           BLOCKED BY A DEFECT rather than waiting on a preference.
-           Attempted 2026-09-26: a -local preset family building at
-           $BETTERCAD_BUILD_ROOT was written and its mechanics validated, and
-           the full three-preset qualification on it FAILED to link the GUI
-           target in all three, because windeployqt resolves the Qt runtime
-           relative to the executable it is deploying — <exe>/../../<toolchain
-           key>/bin — which names the real Qt only when the build tree sits
-           inside the source tree. Qt's bin on PATH, running windeployqt from
-           Qt's bin, and pre-placing Qt6Core.dll beside the executable were
-           each tried; none changed it. The presets were REVERTED rather than
-           committed unvalidated. Making the Qt deployment
-           location-independent is its own piece of work and comes first.
-           Note this is true independently of OneDrive: the deploy step has
-           been depending on the build living inside the source tree.
-           The filesystem fault itself has failed a determinism repeat in
-           P14-DIM-001 (debug), P14-ANNO-001 (release), P14-BOM-001 (debug)
-           and P14-REFMOD-001 (BOTH presets). It did NOT recur in
-           P14-STREF-001's closure, which is one clean run and closes
-           nothing.
+           Cross-preset byte identity of exported files is not asserted by any
+           test -- each preset is self-consistent, and none is compared to
+           another.
+Decision:  move build and test output off OneDrive. OPEN, and BLOCKED BY A
+           DEFECT rather than waiting on a preference. Building outside the
+           source tree fails the GUI target in all three presets, because
+           windeployqt resolves the Qt runtime relative to the executable it is
+           deploying -- <exe>/../../<toolchain key>/bin -- which names the real
+           Qt only when the build sits inside the source tree. Qt's bin on
+           PATH, running windeployqt from Qt's bin, and pre-placing Qt6Core.dll
+           beside the executable were each tried; none changed it. The -local
+           presets written for it were REVERTED, not committed unvalidated.
+           THE COST IS NOT HYPOTHETICAL: the filesystem fault has now failed a
+           determinism repeat in P14-DIM-001, P14-ANNO-001, P14-BOM-001,
+           P14-REFMOD-001 (both presets) and P14-QUAL-001 -- the final
+           qualification gate itself. Each time one controlled rerun passed.
+           P14 is qualified on a configuration known to inject a spurious
+           failure about once per milestone. Making the Qt deployment
+           location-independent comes first, and it is true independently of
+           OneDrive: the deploy step has been depending on the build living
+           inside the source tree all along.
 
 Released:  v0.1.0 — P0–P10
-Qualified: P11, P12, P13
+Qualified: P11, P12, P13, P14
 ```
 
 Completed milestones and their evidence live in [ROADMAP.md](ROADMAP.md).
@@ -1541,62 +1539,91 @@ Open decision → move build and test output off OneDrive. OVERDUE. BOTH repeat
 
 ---
 
-# P14-QUAL-001
+# DONE — P14-QUAL-001
 
 ## Full P14 Qualification
 
-**BLOCKED — attempted 2026-09-25 at 56f5a34 and stopped at the precondition.**
-A required predecessor is incomplete: `P14-STREF-001`'s gate "no silent
-rebinding" is NOT MET, and `no silent rebinding` is also a hard gate of this
-milestone, so no build could make this tree PASS. Nothing was built, no preset
-was run and no gate below was marked. The audit that established it is
-[docs/verification/P14-QUAL-001/](docs/verification/P14-QUAL-001/README.md),
-and it found the chamfer gap still present at this commit:
-`References.hpp:97` names a chamfer face by `edge`, a POSITION in the
-user-reorderable `ChamferDefinition::edges`.
+**QUALIFIED 2026-09-26.** Evidence:
+[docs/verification/P14-QUAL-001/](docs/verification/P14-QUAL-001/README.md).
 
-That audit also established two things that were not written down before, both
-of which matter when the gap is closed:
+2258/2258 in `debug`, `release` and `debug-shared`, each from clean; 0 warnings
+in all six build and no-op-rebuild logs; fresh binaries in all three; 11290 =
+2258 x 5 in both determinism presets. 15 of 15 P14 ADRs PASS with production AND
+test evidence; all 17 predecessor milestones complete; every invariant and every
+adversarial question answered by a named test that ran in the final binaries.
 
-* **A name-based search cannot find this defect.** `faceIndex`, `edgeIndex`,
-  `shapeIndex`, `topologyIndex`, `bestMatch`, `firstMatch` and
-  `reinterpret_cast` all return 0 across `src/` and `include/`. The field is
-  called `edge`.
-* **`Reference_NoPersistedReferenceCarriesAnIndexIntoTheKernel` cannot find it
-  either.** The persisted key is `"edge": n`, which is not in that test's
-  forbidden list, and its fixture builds no chamfer. Closing the gap must
-  extend both, or the blind spot outlives the fix.
+**IT TOOK FOUR ATTEMPTS, AND ONLY THE LAST ONE QUALIFIES.** The evidence keeps
+them separate rather than presenting four green-ish runs as one result:
 
-Unblocking it is a scope decision: close the chamfer gap (which changes
-`ChamferDefinition`, its file format, and committed reference models that P11,
-P12 and P13 are qualified against), or record the positional chamfer reference
-as a documented P14 limitation AND change this milestone's gate text to match.
-Marking the gate met while the defect stands is the false checkbox this project
-forbids.
+```text
+run 0  BLOCKED at the precondition on P14-STREF-001's open gate. NO BUILD.
+run 1  2256 tests, all stages 0 -- INVALIDATED: the physical-scale gate had no
+       test, and adding one changed tests/
+run 2  2257 tests, all stages 0 -- INVALIDATED again: the unwritable-export
+       control had no test either
+run 3  2258 tests. THE FINAL RUN, and the only one cited
+```
 
+**THE RELEASE DETERMINISM STAGE FAILED ONCE** in the final run, on the recorded
+OneDrive replace fault: `cli.refmod.build` passed on repeats 1, 2 and 3 and
+failed on the 4th with `cannot replace '...drawing_angle_bracket.dxf':
+Permission denied`. One controlled rerun of the SAME stage with the SAME filter
+passed, 11290 = 2258 x 5. The gate was not clean first time and the evidence
+says so.
 
-* [ ] Freeze final P14 tree
-* [ ] Audit all P14 milestone evidence
-* [ ] Verify all TODO items complete
-* [ ] Verify all P14 ADR contracts
-* [ ] Clean Debug qualification
-* [ ] Clean Release qualification
-* [ ] Clean Debug-shared qualification
-* [ ] Repeated determinism qualification
-* [ ] Validate production drawing reference suite
-* [ ] Validate dimensions / annotations
-* [ ] Validate stable drawing references
-* [ ] Validate drawing regeneration
-* [ ] Validate persistence
-* [ ] Validate undo / redo
-* [ ] Validate BOM / balloons
-* [ ] Validate CLI workflows
-* [ ] Validate PDF / SVG / DXF exports
-* [ ] Final adversarial review
-* [ ] Confirm 0 unexpected warnings
-* [ ] Confirm qualified tree == committed tree
-* [ ] Evidence in `docs/verification/P14-QUAL-001/`
-* [ ] Mark P14 qualified
+**TWO GATES HAD NO TEST AT ALL**, which is what run 0's audit could not reach
+and what runs 1 and 2 were spent closing:
+
+* **physical scale across formats.** The suite checked `DrawingScale`
+  arithmetic, a 1:2 view read back from all three files, and that a 2:1 detail
+  had factor 2 — but nothing took ONE known length and showed it measuring 100,
+  50 and 200 mm of paper at 1:1, 1:2 and 2:1.
+  `Export_OneKnownLengthMeasuresItsScaleOnPaperInAllThreeFormats` now does.
+  Projection 5.7e-14 mm, DXF and SVG exact, PDF 2.36e-05 mm — inside one
+  4-decimal point-serialisation step of 3.5e-05 mm.
+* **an unwritable export destination.** No test existed.
+  `Export_AnUnwritableDestinationFailsAndLeavesNothingBehind` requires all three
+  writers to fail with `IoError`, name the path, and leave neither the file nor
+  the temporary they write through — then exports the same scene successfully to
+  a real directory, so the refusals are about the destination and not the scene.
+
+Two findings from run 0's audit are worth keeping, because they outlive the
+block:
+
+* **A name-based search cannot find a positional reference.** `faceIndex`,
+  `edgeIndex`, `shapeIndex`, `topologyIndex`, `bestMatch`, `firstMatch` and
+  `reinterpret_cast` all returned 0 on a tree that HAD one, because the field
+  was called `edge`. The structural replacement is
+  `Reference_NoChamferReferenceIsStoredAsAPositionInTheFile`, which reorders a
+  chamfer's selections, re-saves, and requires the stored reference to be
+  byte-identical while the array order changed.
+* **The two evidence inconsistencies it found are fixed**, and neither was
+  papered over: `P14-REFMOD-001` had a stale `PENDING QUALIFICATION` header
+  contradicting its own PASS, and `P14-STREF-001` read BLOCKED, which was true
+  then and now reads PASS with its original audit preserved below CLOSURE.
+
+* [x] Freeze final P14 tree
+* [x] Audit all P14 milestone evidence
+* [x] Verify all TODO items complete
+* [x] Verify all P14 ADR contracts
+* [x] Clean Debug qualification
+* [x] Clean Release qualification
+* [x] Clean Debug-shared qualification
+* [x] Repeated determinism qualification
+* [x] Validate production drawing reference suite
+* [x] Validate dimensions / annotations
+* [x] Validate stable drawing references
+* [x] Validate drawing regeneration
+* [x] Validate persistence
+* [x] Validate undo / redo
+* [x] Validate BOM / balloons
+* [x] Validate CLI workflows
+* [x] Validate PDF / SVG / DXF exports
+* [x] Final adversarial review
+* [x] Confirm 0 unexpected warnings
+* [x] Confirm qualified tree == committed tree
+* [x] Evidence in `docs/verification/P14-QUAL-001/`
+* [x] Mark P14 qualified
 
 ### Final Gate
 
@@ -1626,9 +1653,25 @@ all P14 milestones PASS
 + qualified tree == committed tree
 ```
 
-**NOT MET.** `all P14 milestones PASS` fails on `P14-STREF-001`, and
-`stable drawing references PASS` fails with it. Every other line was NOT RUN,
-not passed — see the audit's gate matrix.
+**MET.** Every line, on the final run, on the tree that is committed.
+
+```text
+P14-QUAL-001 → [x]
+P14 → QUALIFIED
+Next → a scope decision. P15 is not authorized by this milestone.
+Carried → a hole's POSITION cannot be dimensioned; GD&T symbols reach SVG only;
+          cross-preset byte identity of exported files is not asserted
+Open decision → move build output off OneDrive. BLOCKED BY A DEFECT, not
+                waiting on a preference: building outside the source tree fails
+                the GUI target in all three presets, because windeployqt
+                resolves the Qt runtime relative to the executable it is
+                deploying. P14 is therefore qualified on a configuration known
+                to inject a spurious failure about once per milestone -- it did
+                so on this very gate. Making the Qt deployment
+                location-independent comes first
+```
+
+
 
 ---
 
