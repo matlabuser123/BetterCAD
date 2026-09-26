@@ -17,6 +17,9 @@ int main() {
     const SketchId sketch = SketchId::fromValue(1);
     takesObject(sketch); // document object IDs widen to ObjectId
     takesFeature(FeatureId::fromValue(2));
+    // A material is a document object (ADR-025), so this widening is intended
+    // and must keep compiling; the cases below are what must not.
+    takesObject(MaterialId::fromValue(3));
 
 #if defined(BETTERCAD_CF_SKETCH_ID_AS_FEATURE_ID)
     takesFeature(sketch);
@@ -48,6 +51,23 @@ int main() {
     // A sheet is not a component, though both widen to ObjectId. This is the
     // ADR-017 property that a drawing's identities are its own.
     [[maybe_unused]] ComponentId asComponent = SheetId::fromValue(1);
+#elif defined(BETTERCAD_CF_OBJECT_TO_MATERIAL_ID)
+    // A MaterialId widens to ObjectId, never the other way: an object is not a
+    // material just because it has an ID (P15-MAT-001).
+    [[maybe_unused]] MaterialId narrowed = ObjectId::fromValue(1);
+#elif defined(BETTERCAD_CF_MATERIAL_ID_AS_FEATURE_ID)
+    // Nor is a material a feature, though both widen to ObjectId. A material
+    // describes what a part is made of; it builds no geometry.
+    [[maybe_unused]] FeatureId asFeature = MaterialId::fromValue(1);
+#elif defined(BETTERCAD_CF_SHEET_ID_AS_MATERIAL_ID)
+    // Two unrelated document-object kinds do not convert to each other.
+    [[maybe_unused]] MaterialId asMaterial = SheetId::fromValue(1);
+#elif defined(BETTERCAD_CF_INTEGER_TO_MATERIAL_ID)
+    // Identity never comes from a bare number, so a row index or a loop counter
+    // cannot become a MaterialId by accident.
+    [[maybe_unused]] MaterialId fromInteger = 7;
+#elif defined(BETTERCAD_CF_MATERIAL_ID_TO_INTEGER)
+    [[maybe_unused]] std::uint64_t value = MaterialId::fromValue(1);
 #elif defined(BETTERCAD_CF_ENTITY_ID_AS_OBJECT_ID)
     takesObject(EntityId::fromValue(1));
 #endif

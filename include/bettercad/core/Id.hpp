@@ -57,6 +57,9 @@ struct DimensionIdTag {
 struct AnnotationIdTag {
     static constexpr std::string_view name = "annotation";
 };
+struct MaterialIdTag {
+    static constexpr std::string_view name = "material";
+};
 struct EntityIdTag {
     static constexpr std::string_view name = "entity";
 };
@@ -100,6 +103,8 @@ template <>
 inline constexpr bool isDocumentObjectTag<DimensionIdTag> = true;
 template <>
 inline constexpr bool isDocumentObjectTag<AnnotationIdTag> = true;
+template <>
+inline constexpr bool isDocumentObjectTag<MaterialIdTag> = true;
 
 template <typename Tag, typename Value = std::uint64_t>
 class Id;
@@ -188,6 +193,18 @@ using DimensionId = Id<DimensionIdTag>;
 /// (ADR-017). What it stores is what to say and what to point at; the lines
 /// and the text of anything model-driven are derived every time.
 using AnnotationId = Id<AnnotationIdTag>;
+/// One material definition owned by a document. A material is a document
+/// object and a node in the dependency graph -- changing a density must be able
+/// to invalidate a derived mass -- so its ID widens to ObjectId (ADR-025).
+///
+/// This is a material's identity, and a material has nothing else that is.
+/// Neither its object name nor its designation is identity: a material may be
+/// renamed and redesignated and is still the same material, and two materials
+/// may carry the designation "Steel", hold different values, and stay distinct
+/// because their MaterialIds differ. A library entry is NOT one of these: it is
+/// reference data with no ObjectId, named by a materials::MaterialLibraryKey,
+/// so a library key and a MaterialId cannot be confused for one another.
+using MaterialId = Id<MaterialIdTag>;
 /// Sketch entity (point, line, arc, ...); unique within its sketch.
 using EntityId = Id<EntityIdTag>;
 /// Sketch constraint; unique within its sketch.

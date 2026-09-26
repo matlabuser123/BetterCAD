@@ -8,6 +8,7 @@
 #include <bettercad/core/document/DependencyGraph.hpp>
 #include <bettercad/core/document/Document.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
+#include <bettercad/features/Materials.hpp>
 #include <bettercad/features/Regenerator.hpp>
 #include <bettercad/io/DocumentFile.hpp>
 #include <bettercad/sketch/Sketch.hpp>
@@ -692,4 +693,31 @@ TEST_CASE("DocumentFile_NoDerivedGeometryIsPersisted", "[io][document][p15][arch
     // And what IS there is intent: the features and their parameters.
     CHECK_THAT(text, ContainsSubstring(R"("type": "extrude")"));
     CHECK_THAT(text, ContainsSubstring(R"("objects")"));
+}
+
+TEST_CASE("A material cannot be saved yet, and saving refuses rather than dropping it",
+          "[io][document][material]") {
+    // P15-MAT-001 adds the material document object; its file representation is
+    // P15-PERSIST-001. Until then a document holding a material cannot be
+    // written, and this test exists to keep that LOUD. The dangerous version of
+    // this gap is a serializer that skips an object it does not recognise and
+    // reports success, which would lose a material silently on every save. The
+    // document writer rejects an unknown object type instead, and this pins that
+    // behaviour so it cannot regress into data loss.
+    TempDir dir;
+    const std::filesystem::path path = dir.path() / "with-material.bcad";
+
+    Document doc{"Part"};
+    const Result<MaterialId> material = features::createMaterial(doc, "Steel");
+    REQUIRE(material);
+
+    const Result<void> saved = io::saveDocument(doc, path);
+    REQUIRE_FALSE(saved);
+    // The diagnostic has to name the type, or the user cannot tell what stopped
+    // the save.
+    REQUIRE_THAT(saved.error().message, ContainsSubstring("material"));
+    REQUIRE_THAT(saved.error().message, ContainsSubstring("cannot be saved"));
+    // And nothing is left behind: no half-written document, no temporary.
+    REQUIRE(std::distance(std::filesystem::directory_iterator(dir.path()),
+                          std::filesystem::directory_iterator{}) == 0);
 }

@@ -11,7 +11,7 @@
 ```text
 Current:   P15 — Materials / Engineering Data
 Current milestone:
-           NONE. P15-UNITS-001 and INFRA-QT-DEPLOY-001 are both complete.
+           NONE. P15-MAT-001 is complete.
            The next milestone is a scope decision, not Claude's to make.
 
 Qualified:
@@ -19,12 +19,17 @@ Qualified:
            P12
            P13
            P14 — Technical Drawings
-           P15-ARCH-001, P15-UNITS-001, INFRA-QT-DEPLOY-001
+           P15-ARCH-001, P15-UNITS-001, INFRA-QT-DEPLOY-001, P15-MAT-001
 
 Next:
-           P15-MAT-001 — material definition / identity / library, per
-           P15-ARCH-001's ADR-025..028; do not re-litigate them there.
+           P15-MECH-001 — mechanical properties. It is what needs ADR-027's
+           Known / Unknown / Derivable property type, which does not exist yet.
            Awaiting explicit scope decision.
+
+           A material cannot be SAVED until P15-PERSIST-001. Saving a document
+           that holds one fails loudly and is tested to; nothing is dropped. But
+           materials are not usable end to end until then, which may be reason
+           to bring that milestone forward.
 
            Also awaiting a decision, and arguably ahead of it: the carried
            FileIo replace defect below. A user saving a document into a
@@ -432,32 +437,65 @@ engineering dimensions correct
 
 ## Material Definition / Identity / Library
 
-* [ ] Implement stable `MaterialId`
-* [ ] Implement material definition object
-* [ ] Implement material name
-* [ ] Implement optional designation / standard
-* [ ] Implement category/family foundation
-* [ ] Implement material description / notes
-* [ ] Implement built-in material-library foundation
-* [ ] Implement document-local material definitions
-* [ ] Allow duplicate display names with distinct identity
-* [ ] Prevent identity from depending on name
-* [ ] Define immutable vs editable library behaviour
-* [ ] Validate material lookup
-* [ ] Validate deletion rules
-* [ ] Validate duplicate/collision behaviour
-* [ ] Determinism PASS
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+Evidence:
+[docs/verification/P15-MAT-001/](docs/verification/P15-MAT-001/README.md).
+
+Built to ADR-025: a material is a **document object**, so it gets an ObjectId, a
+name, a revision, the dependency graph and undo from machinery that already
+exists; the built-in library is **reference data** in `core/materials/` on the
+`core/standards/` pattern, with no ObjectId, named by a structured key. Using a
+library entry **imports** it -- the values become the document's own and the key
+is kept as provenance -- so no library lookup happens at load or solve time and a
+library change cannot alter what a saved document says.
+
+A material carries TWO names, because the repository forces it: the object name
+is an identifier (letters, digits, `_`), unique per document; the designation is
+free engineering text that may duplicate. Neither is identity.
+
+* [x] Implement stable `MaterialId` — `Id<MaterialIdTag>`, widens to ObjectId
+      (ADR-025); the document's one allocator, monotonic, never reused
+* [x] Implement material definition object — `features::Material`, a
+      DocumentObject with `kTypeName == "material"`
+* [x] Implement material name — the existing identifier rule, unchanged
+* [x] Implement optional designation / standard — free text, may duplicate
+* [x] Implement category/family foundation — free text, extensible; a family no
+      built-in entry uses is accepted
+* [x] Implement material description / notes
+* [x] Implement built-in material-library foundation — `core/materials/`, the
+      `core/standards/` pattern, 4 METADATA-ONLY entries
+* [x] Implement document-local material definitions
+* [x] Allow duplicate display names with distinct identity — duplicate
+      DESIGNATIONS; object names stay unique, which is the document's rule
+* [x] Prevent identity from depending on name — rename and every metadata edit
+      tested separately
+* [x] Define immutable vs editable library behaviour — entries are `constexpr`,
+      so there is nothing to mutate; editing means editing the document's copy
+* [x] Validate material lookup — by ID, and by designation returning ALL matches
+* [x] Validate deletion rules — plus the invariant a later assignment needs: a
+      deleted ID never rebinds, tested against an otherwise identical material
+* [x] Validate duplicate/collision behaviour — a taken ID and a taken name are
+      both rejected, nothing overwritten; a rejected create consumes no ID
+* [x] Determinism PASS — 11765 = 2353 x 5 in release-ext AND in debug-ext, 0
+      failures, from the external build tree, no controlled rerun
+* [x] Adversarial review PASS — 4 findings, 4 fixed; one was found by the
+      debug-shared gate and voided a complete qualification run
+* [x] Regression PASS — 3 presets from an external build root, 2353/2353 each,
+      0 warnings, fresh binaries, 0 stages failed
+* [x] Evidence recorded
 
 ### Example
 
+As built. Note that "Aluminium 6061-T6" is the DESIGNATION, not the object name:
+an object name is an identifier and may not contain a space or a hyphen, which is
+the reason a material has two names (ADR-025).
+
 ```text
-MaterialId: 42
-Name:       Aluminium 6061-T6
-Standard:   ASTM / AMS designation where supplied
-Family:     Aluminium Alloy
+MaterialId:   42
+Object name:  Al6061T6
+Designation:  Aluminium 6061-T6
+Standard:     ASTM B221
+Family:       Aluminium Alloy
+Origin:       bettercad/al-6061-t6 rev 1   (provenance of an import)
 ```
 
 Identity must remain:
@@ -466,11 +504,12 @@ Identity must remain:
 MaterialId = 42
 ```
 
-even if:
+after any of:
 
 ```text
-"Aluminium 6061-T6"
-→ renamed for display
+object name  → renamed
+designation  → reworded
+standard, family, notes, origin → edited
 ```
 
 ### Gate

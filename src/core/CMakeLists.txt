@@ -25,6 +25,7 @@ bettercad_add_library(bettercad_core
         parameters/Expression.cpp
         parameters/Parameter.cpp
         parameters/ParameterTable.cpp
+        materials/MaterialLibrary.cpp
         standards/ClearanceHoles.cpp
         standards/Designations.hpp
         standards/HoleTolerances.cpp

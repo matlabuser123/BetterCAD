@@ -97,11 +97,13 @@ bettercad_add_executable(bettercad_tests
         core/parameters/ParameterTableTests.cpp
         core/parameters/ParameterTests.cpp
         core/standards/HoleStandardsTests.cpp
+        core/materials/MaterialLibraryTests.cpp
         core/units/ConversionTests.cpp
         core/units/FormatAndCatalogTests.cpp
         core/units/EngineeringQuantityTests.cpp
         core/units/QuantityTests.cpp
         features/ChamferFeatureTests.cpp
+        features/MaterialTests.cpp
         features/DatumTests.cpp
         features/DraftFeatureTests.cpp
         features/FaceReferenceTests.cpp
