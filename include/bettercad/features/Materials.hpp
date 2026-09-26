@@ -3,6 +3,7 @@
 #include <bettercad/core/Error.hpp>
 #include <bettercad/core/Id.hpp>
 #include <bettercad/core/materials/MaterialLibrary.hpp>
+#include <bettercad/core/materials/MechanicalProperties.hpp>
 #include <bettercad/features/Export.hpp>
 #include <bettercad/features/Material.hpp>
 
@@ -110,6 +111,45 @@ setMaterialDefinition(Document& document, MaterialId id, const MaterialDefinitio
 /// to keep apart.
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT std::vector<MaterialId>
 findMaterialsByDesignation(const Document& document, std::string_view designation);
+
+/// Replaces only the mechanical properties of the material with @p id, leaving
+/// its name, designation, standard, family, notes and origin alone. Returns
+/// whether anything changed.
+///
+/// Fails, changing nothing, if a property is outside its physical range or is
+/// not finite; the diagnostic lists every problem, not the first. Properties
+/// that are Unknown are never a reason to fail.
+///
+/// It cannot change identity. @p id names the material and is not part of what
+/// is replaced, so editing a Young's modulus leaves the MaterialId exactly as it
+/// was.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<bool>
+setMaterialMechanical(Document& document, MaterialId id,
+                      const materials::MechanicalProperties& properties);
+
+/// The four isotropic elastic constants of the material with @p id, all
+/// concrete: E and nu as supplied, G and K derived from them (ADR-027).
+///
+/// This is the boundary a structural solver consumes (P17). It hands over a
+/// complete set or it fails -- never a partial one, and never a fabricated
+/// default. There is no `nu = 0.3` fallback anywhere behind it.
+///
+/// The diagnostic names the material, then EVERY input that is missing or out of
+/// range, so a run fails once with the whole list rather than at the first gap.
+/// It names the missing INPUT, not the derived constant: told that the shear
+/// modulus is unavailable, a user has nothing to do about it; told that the
+/// Poisson ratio is unknown, they do.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<materials::LinearElasticConstants>
+requireLinearElasticConstants(const Document& document, MaterialId id);
+
+/// The density of the material with @p id.
+///
+/// Separate from requireLinearElasticConstants() because the consumers are
+/// different: a linear-elastic stiffness needs E and nu and not density, while a
+/// mass needs density and neither of the others. One combined requirement would
+/// fail a stiffness calculation over a missing density it never uses.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<Density> requireDensity(const Document& document,
+                                                                      MaterialId id);
 
 /// Removes the material with @p id. Fails if there is no such material.
 ///

@@ -69,6 +69,19 @@ bettercad_compile_fail_case(units "${_units}" POISSON_AS_KINEMATIC_VISCOSITY "co
 bettercad_compile_fail_case(units "${_units}" DYNAMIC_AS_KINEMATIC_VISCOSITY "could not convert")
 bettercad_compile_fail_case(units "${_units}" CONDUCTIVITY_AS_SPECIFIC_HEAT "conversion from .* to non-scalar type")
 
+# --- Mechanical material properties (P15-MECH-001) --------------------------
+set(_mech "${CMAKE_CURRENT_SOURCE_DIR}/MechanicalMisuse.cpp")
+bettercad_compile_fail_group(mech "${_mech}")
+bettercad_compile_fail_case(mech "${_mech}" DENSITY_AS_YOUNGS_MODULUS "cannot convert .Quantity<.*>. to .Quantity<.*>.")
+bettercad_compile_fail_case(mech "${_mech}" CONDUCTIVITY_AS_YIELD_STRENGTH "cannot convert .Quantity<.*>. to .Quantity<.*>.")
+bettercad_compile_fail_case(mech "${_mech}" SPECIFIC_HEAT_AS_SHEAR_MODULUS "conversion from|could not convert")
+bettercad_compile_fail_case(mech "${_mech}" POISSON_FROM_DOUBLE "cannot convert .double. to .*PoissonRatio")
+bettercad_compile_fail_case(mech "${_mech}" ELONGATION_FROM_DOUBLE "cannot convert .double. to .*Elongation")
+bettercad_compile_fail_case(mech "${_mech}" HARDNESS_WITHOUT_SCALE "too few arguments|no matching function")
+bettercad_compile_fail_case(mech "${_mech}" HARDNESS_AS_STRESS "conversion from|could not convert")
+bettercad_compile_fail_case(mech "${_mech}" PROPERTY_TO_VALUE "conversion from|could not convert")
+bettercad_compile_fail_case(mech "${_mech}" MUTATE_LIBRARY_ENTRY "const bettercad::materials::LibraryMaterial.*discards qualifiers")
+
 # --- Strong IDs (P1-002) ----------------------------------------------------
 set(_ids "${CMAKE_CURRENT_SOURCE_DIR}/IdsMisuse.cpp")
 bettercad_compile_fail_group(ids "${_ids}")

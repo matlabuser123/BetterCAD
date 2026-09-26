@@ -4,6 +4,7 @@
 #include <bettercad/core/Id.hpp>
 #include <bettercad/core/document/DocumentObject.hpp>
 #include <bettercad/core/materials/MaterialLibrary.hpp>
+#include <bettercad/core/materials/MechanicalProperties.hpp>
 #include <bettercad/features/Export.hpp>
 
 #include <memory>
@@ -19,9 +20,10 @@
 // because that is where document objects describing a part already live
 // (ADR-028).
 //
-// This milestone is identity and metadata. Property VALUES -- density, modulus,
-// conductivity -- are later milestones, and a material carrying none is not a
-// broken material: ADR-027 makes Unknown a legitimate state.
+// P15-MAT-001 built identity and metadata. P15-MECH-001 added the mechanical
+// properties. Thermal properties are P15-THERM-001, and a material carrying
+// none of any of them is not a broken material: ADR-027 makes Unknown a
+// legitimate state.
 namespace bettercad::features {
 
 /// What a material is, apart from its identity and its object name.
@@ -58,6 +60,12 @@ struct MaterialDefinition {
     /// and leave the decision to the user. std::nullopt for a material the user
     /// created.
     std::optional<materials::MaterialLibraryKey> origin;
+    /// What the material is mechanically (P15-MECH-001). Every property defaults
+    /// to Unknown, so this costs a material nothing until someone fills it in.
+    ///
+    /// It is part of the definition, so editing it goes through the same
+    /// setDefinition() path as a designation and cannot touch the MaterialId.
+    materials::MechanicalProperties mechanical;
 
     friend bool operator==(const MaterialDefinition&, const MaterialDefinition&) = default;
 };
@@ -75,6 +83,10 @@ struct MaterialDefinition {
 /// the repository's existing convention for descriptive text. Case-folding in
 /// particular would be a way for "Steel" and "steel" to become one thing, and
 /// nothing in this module compares designations case-insensitively.
+///
+/// The mechanical properties ARE range-checked, by materials::validate(): a
+/// known Young's modulus of zero is not engineering data, whereas an empty
+/// designation is. Properties that are Unknown are never a reason to refuse.
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<void>
 validateMaterialDefinition(const MaterialDefinition& definition);
 

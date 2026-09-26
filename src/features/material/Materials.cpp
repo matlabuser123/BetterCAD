@@ -1,6 +1,11 @@
 #include <bettercad/features/Materials.hpp>
 
 #include <bettercad/core/document/Document.hpp>
+#include <bettercad/core/units/Format.hpp>
+
+#include <optional>
+#include <string>
+#include <vector>
 
 #include <format>
 #include <utility>
@@ -84,6 +89,101 @@ std::vector<MaterialId> findMaterialsByDesignation(const Document& document,
         }
     }
     return found;
+}
+
+Result<bool> setMaterialMechanical(Document& document, MaterialId id,
+                                   const materials::MechanicalProperties& properties) {
+    const Material* material = findMaterial(document, id);
+    if (material == nullptr) {
+        return makeError(ErrorCode::NotFound, std::format("there is no material {}", id));
+    }
+    // Only the mechanical part is replaced; everything else is carried over, so
+    // there is no way for this to disturb a designation or an origin.
+    MaterialDefinition definition = material->definition();
+    definition.mechanical = properties;
+    return setMaterialDefinition(document, id, definition);
+}
+
+namespace {
+
+/// "Al6061T6 (object:12)" -- how a diagnostic names a material, following the
+/// drawing layer's style of naming the object a failure is about.
+std::string describe(const Material& material) {
+    return std::format("{} ({})", material.name(), material.id());
+}
+
+} // namespace
+
+Result<materials::LinearElasticConstants> requireLinearElasticConstants(const Document& document,
+                                                                       MaterialId id) {
+    const Material* material = findMaterial(document, id);
+    if (material == nullptr) {
+        return makeError(ErrorCode::NotFound, std::format("there is no material {}", id));
+    }
+    const materials::MechanicalProperties& properties = material->definition().mechanical;
+
+    // Every gap at once. A solver that fails at the first one makes the user
+    // discover the rest one run at a time.
+    std::vector<std::string> missing;
+    const std::optional<ElasticModulus> modulus = properties.youngsModulus.value();
+    if (!modulus) {
+        missing.emplace_back("no Young's modulus");
+    } else if (!isFinite(*modulus) || modulus->si() <= 0.0) {
+        missing.emplace_back(
+            std::format("a Young's modulus of {}, which is not a usable value", toString(*modulus)));
+    }
+    const std::optional<PoissonRatio> ratio = properties.poissonRatio.value();
+    if (!ratio) {
+        missing.emplace_back("no Poisson's ratio");
+    } else if (!isFinite(*ratio) || ratio->value() <= materials::limits::minPoissonRatio
+               || ratio->value() >= materials::limits::maxPoissonRatio) {
+        missing.emplace_back(std::format(
+            "a Poisson's ratio of {}, which is outside {} < nu < {}", ratio->value(),
+            materials::limits::minPoissonRatio, materials::limits::maxPoissonRatio));
+    }
+
+    if (!missing.empty()) {
+        std::string joined;
+        for (const std::string& item : missing) {
+            if (!joined.empty()) {
+                joined += " and ";
+            }
+            joined += item;
+        }
+        // The missing INPUTS are named, never the derived constants: "the shear
+        // modulus is unavailable" tells a user nothing they can act on.
+        return makeError(ErrorCode::FailedPrecondition,
+                         std::format("{} has {}, which linear elasticity needs",
+                                     describe(*material), joined));
+    }
+
+    // Both derivations are available exactly when the pair above is valid, so
+    // these cannot be empty here.
+    materials::LinearElasticConstants constants;
+    constants.youngsModulus = *modulus;
+    constants.poissonRatio = *ratio;
+    constants.shearModulus = *materials::derivedShearModulus(properties).value();
+    constants.bulkModulus = *materials::derivedBulkModulus(properties).value();
+    return constants;
+}
+
+Result<Density> requireDensity(const Document& document, MaterialId id) {
+    const Material* material = findMaterial(document, id);
+    if (material == nullptr) {
+        return makeError(ErrorCode::NotFound, std::format("there is no material {}", id));
+    }
+    const materials::MechanicalProperties& properties = material->definition().mechanical;
+    const std::optional<Density> density = properties.density.value();
+    if (!density) {
+        return makeError(ErrorCode::FailedPrecondition,
+                         std::format("{} has no density", describe(*material)));
+    }
+    if (!isFinite(*density) || density->si() <= 0.0) {
+        return makeError(ErrorCode::FailedPrecondition,
+                         std::format("{} has a density of {}, which is not a usable value",
+                                     describe(*material), toString(*density)));
+    }
+    return *density;
 }
 
 Result<void> removeMaterial(Document& document, MaterialId id) {

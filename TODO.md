@@ -11,7 +11,7 @@
 ```text
 Current:   P15 — Materials / Engineering Data
 Current milestone:
-           NONE. P15-MAT-001 is complete.
+           NONE. P15-MECH-001 is complete.
            The next milestone is a scope decision, not Claude's to make.
 
 Qualified:
@@ -19,11 +19,14 @@ Qualified:
            P12
            P13
            P14 — Technical Drawings
-           P15-ARCH-001, P15-UNITS-001, INFRA-QT-DEPLOY-001, P15-MAT-001
+           P15-ARCH-001, P15-UNITS-001, INFRA-QT-DEPLOY-001, P15-MAT-001,
+           P15-MECH-001
 
 Next:
-           P15-MECH-001 — mechanical properties. It is what needs ADR-027's
-           Known / Unknown / Derivable property type, which does not exist yet.
+           P15-THERM-001 — thermal / physical properties. ADR-027's canonical
+           set already names what it needs (cp, k, alpha), and P15-UNITS-001
+           added those dimensions, so it reuses the property type P15-MECH-001
+           built rather than adding a second one.
            Awaiting explicit scope decision.
 
            A material cannot be SAVED until P15-PERSIST-001. Saving a document
@@ -528,24 +531,47 @@ material identity stable
 
 ## Mechanical Properties
 
-* [ ] Density available to mechanical consumers
-* [ ] Young's modulus
-* [ ] Poisson ratio
-* [ ] Shear modulus foundation
-* [ ] Bulk modulus foundation
-* [ ] Yield strength
-* [ ] Ultimate tensile strength
-* [ ] Ultimate compressive strength foundation
-* [ ] Shear strength foundation
-* [ ] Elongation foundation
-* [ ] Hardness metadata foundation
-* [ ] Isotropic-material model
-* [ ] Validate property ranges
-* [ ] Validate optional / unknown properties
-* [ ] Validate derived modulus relationships
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+Evidence:
+[docs/verification/P15-MECH-001/](docs/verification/P15-MECH-001/README.md).
+
+This milestone finally spells ADR-027's property type, which did not exist: the
+ADR deferred it to P15-UNITS-001, and P15-UNITS-001 added the quantities and left
+the property type alone. `MaterialProperty<Value>` carries Known / Unknown /
+Derived, returns an optional and offers no conversion to its value, so an Unknown
+property cannot become a number somewhere else.
+
+**There is no slot for a supplied shear or bulk modulus, by ADR-027**, which says
+"the schema does not offer a slot for a canonical G, so the conflict ... cannot be
+represented". So G and K are derived on request and never stored, and there is no
+supplied-versus-derived reconciliation to get wrong. `-1 < nu < 0.5` lives here
+because `PoissonRatio` says so by name.
+
+* [x] Density available to mechanical consumers — the qualified `Density`, reused;
+      reachable through `requireDensity()`, separate from the elastic constants
+* [x] Young's modulus — `ElasticModulus`, validated > 0 and finite when Known
+* [x] Poisson ratio — the semantic type, with both range ends EXCLUDED because
+      each one makes a derivation divide by zero
+* [x] Shear modulus foundation — `derivedShearModulus()`, never stored
+* [x] Bulk modulus foundation — `derivedBulkModulus()`, never stored
+* [x] Yield strength
+* [x] Ultimate tensile strength
+* [x] Ultimate compressive strength foundation — independent of the tensile one
+* [x] Shear strength foundation — never estimated from yield or ultimate
+* [x] Elongation foundation — a FRACTION, 0.12 is 12 %; no upper limit
+* [x] Hardness metadata foundation — value AND scale; 60 HRC != 60 HRB; no
+      conversion between scales
+* [x] Isotropic-material model — E and nu are the coherent pair; completeness is
+      per consumer, not one ambiguous `isComplete()`
+* [x] Validate property ranges — every problem reported, not the first
+* [x] Validate optional / unknown properties — Unknown is valid and is never zero
+* [x] Validate derived modulus relationships — G bit-identical to the
+      hand-computed 80.76923076923077 GPa; K 1 ULP below 175 GPa, explained
+* [x] Adversarial review PASS — 23 questions, 3 findings, 3 fixed. One was a
+      compile-fail case that had been failing on a missing include rather than on
+      the immutability it claimed to test
+* [x] Regression PASS — 3 presets from an external build root, 2400/2400 each,
+      0 warnings, fresh binaries, 0 stages failed, first attempt
+* [x] Evidence recorded
 
 ### Validation examples
 

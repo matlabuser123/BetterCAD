@@ -6,6 +6,11 @@
 namespace bettercad::features {
 
 Result<void> validateMaterialDefinition(const MaterialDefinition& definition) {
+    // Physical validity of the properties, which reports every problem it finds
+    // rather than the first (P15-MECH-001).
+    if (auto valid = materials::validate(definition.mechanical); !valid) {
+        return valid;
+    }
     if (!definition.origin) {
         return {};
     }

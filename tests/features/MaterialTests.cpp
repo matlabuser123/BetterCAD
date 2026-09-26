@@ -1,20 +1,24 @@
 #include <bettercad/core/Id.hpp>
 #include <bettercad/core/document/Document.hpp>
 #include <bettercad/core/materials/MaterialLibrary.hpp>
+#include <bettercad/core/materials/MechanicalProperties.hpp>
 #include <bettercad/core/units/Literals.hpp>
 #include <bettercad/core/units/Units.hpp>
 #include <bettercad/features/Material.hpp>
 #include <bettercad/features/Materials.hpp>
 
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_floating_point.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
 
+#include <limits>
 #include <string>
 #include <vector>
 
 using namespace bettercad;
 using namespace bettercad::literals;
 using Catch::Matchers::ContainsSubstring;
+using Catch::Matchers::WithinRel;
 using features::Material;
 using features::MaterialDefinition;
 using materials::LibraryMaterial;
@@ -713,4 +717,250 @@ TEST_CASE("Material_CanBeRemovedAndPutBackUnderItsOwnIdWhichIsWhatUndoNeeds") {
     REQUIRE(restored->definition() == steelDefinition());
     // And it is back in its place in the order, because the order is the ID's.
     REQUIRE(features::materialIds(document) == std::vector<MaterialId>{a, b});
+}
+
+// --- mechanical properties (P15-MECH-001) -----------------------------------
+
+namespace {
+
+materials::MechanicalProperties steelMechanical() {
+    // Arithmetic fixtures, not a claim about any real steel: this milestone
+    // stores no sourced property values (ADR-028).
+    materials::MechanicalProperties properties;
+    properties.density = materials::MaterialProperty<Density>::known(Density::fromSi(7850.0));
+    properties.youngsModulus = materials::MaterialProperty<ElasticModulus>::known(210_GPa);
+    properties.poissonRatio =
+        materials::MaterialProperty<PoissonRatio>::known(PoissonRatio::of(0.30));
+    properties.yieldStrength = materials::MaterialProperty<Stress>::known(250_MPa);
+    return properties;
+}
+
+} // namespace
+
+TEST_CASE("Material_EditingAMechanicalPropertyDoesNotChangeItsId") {
+    Document document{"Part"};
+    const MaterialId id = createOrFail(document, "SteelA", steelDefinition());
+    const MaterialId before = features::findMaterial(document, id)->materialId();
+
+    REQUIRE(features::setMaterialMechanical(document, id, steelMechanical()));
+
+    // The identity survives a property edit, which is what a later assignment
+    // holding a MaterialId depends on.
+    REQUIRE(features::findMaterial(document, id)->materialId() == before);
+    REQUIRE(features::findMaterial(document, id)->materialId() == id);
+    // And the metadata is untouched by a mechanical edit.
+    const MaterialDefinition& definition = features::findMaterial(document, id)->definition();
+    REQUIRE(definition.designation == steelDefinition().designation);
+    REQUIRE(definition.standard == steelDefinition().standard);
+    REQUIRE(*definition.mechanical.youngsModulus.value() == 210_GPa);
+
+    // Changing one property again still does not touch the ID.
+    materials::MechanicalProperties changed = steelMechanical();
+    changed.youngsModulus = materials::MaterialProperty<ElasticModulus>::known(200_GPa);
+    REQUIRE(features::setMaterialMechanical(document, id, changed));
+    REQUIRE(features::findMaterial(document, id)->materialId() == before);
+}
+
+TEST_CASE("Material_RefusesAnInvalidMechanicalPropertyAndKeepsWhatItHad") {
+    Document document{"Part"};
+    const MaterialId id = createOrFail(document, "SteelA");
+    REQUIRE(features::setMaterialMechanical(document, id, steelMechanical()));
+
+    materials::MechanicalProperties bad = steelMechanical();
+    bad.youngsModulus =
+        materials::MaterialProperty<ElasticModulus>::known(ElasticModulus::fromSi(0.0));
+    const Result<bool> refused = features::setMaterialMechanical(document, id, bad);
+    REQUIRE_FALSE(refused);
+    REQUIRE(refused.error().code == ErrorCode::InvalidArgument);
+
+    // Unchanged: a rejected edit leaves the material exactly as it was.
+    REQUIRE(*features::findMaterial(document, id)->definition().mechanical.youngsModulus.value()
+            == 210_GPa);
+
+    // Nor can a non-finite value reach a material. A MaterialProperty can HOLD
+    // one in a local variable -- quantity construction is unchecked throughout
+    // BetterCAD -- but the material layer is where it is stopped.
+    materials::MechanicalProperties notFinite = steelMechanical();
+    notFinite.density = materials::MaterialProperty<Density>::known(
+        Density::fromSi(std::numeric_limits<double>::quiet_NaN()));
+    REQUIRE_FALSE(features::setMaterialMechanical(document, id, notFinite));
+    notFinite.density = materials::MaterialProperty<Density>::known(
+        Density::fromSi(std::numeric_limits<double>::infinity()));
+    REQUIRE_FALSE(features::setMaterialMechanical(document, id, notFinite));
+    REQUIRE(features::findMaterial(document, id)->definition().mechanical == steelMechanical());
+
+    // A material cannot be CREATED with an invalid property either.
+    MaterialDefinition definition;
+    definition.mechanical.poissonRatio =
+        materials::MaterialProperty<PoissonRatio>::known(PoissonRatio::of(0.5));
+    const Result<MaterialId> rejected = features::createMaterial(document, "Bad", definition);
+    REQUIRE_FALSE(rejected);
+    REQUIRE(rejected.error().code == ErrorCode::InvalidArgument);
+}
+
+TEST_CASE("Material_AnImportedMaterialHasNoPropertiesAndEditingItCannotReachTheLibrary") {
+    Document document{"Part"};
+    const Result<LibraryMaterial> entry =
+        materials::findLibraryMaterial(materials::builtInLibraryName(), "al-6061-t6");
+    REQUIRE(entry);
+    const Result<MaterialId> id = features::importLibraryMaterial(document, "Al6061T6", *entry);
+    REQUIRE(id);
+
+    // The library carries METADATA ONLY at this milestone, so an import starts
+    // with every mechanical property Unknown rather than with a placeholder.
+    const materials::MechanicalProperties& imported =
+        features::findMaterial(document, *id)->definition().mechanical;
+    REQUIRE(imported == materials::MechanicalProperties{});
+    REQUIRE(imported.youngsModulus.isUnknown());
+
+    REQUIRE(features::setMaterialMechanical(document, *id, steelMechanical()));
+    REQUIRE(*features::findMaterial(document, *id)->definition().mechanical.youngsModulus.value()
+            == 210_GPa);
+
+    // The library entry is identical afterwards, and a second import still
+    // arrives with nothing set: there is no shared mutable state to reach.
+    const Result<LibraryMaterial> again =
+        materials::findLibraryMaterial(materials::builtInLibraryName(), "al-6061-t6");
+    REQUIRE(again);
+    REQUIRE(*again == *entry);
+    const Result<MaterialId> second =
+        features::importLibraryMaterial(document, "Al6061T6b", *again);
+    REQUIRE(second);
+    REQUIRE(features::findMaterial(document, *second)->definition().mechanical
+            == materials::MechanicalProperties{});
+}
+
+TEST_CASE("Material_MechanicalPropertiesOfTwoDocumentsAreIndependent") {
+    const Result<LibraryMaterial> entry =
+        materials::findLibraryMaterial(materials::builtInLibraryName(), "al-6061-t6");
+    REQUIRE(entry);
+    Document first{"PartA"};
+    Document second{"PartB"};
+    const Result<MaterialId> a = features::importLibraryMaterial(first, "Al6061T6", *entry);
+    const Result<MaterialId> b = features::importLibraryMaterial(second, "Al6061T6", *entry);
+    REQUIRE(a);
+    REQUIRE(b);
+
+    REQUIRE(features::setMaterialMechanical(first, *a, steelMechanical()));
+
+    REQUIRE(features::findMaterial(first, *a)->definition().mechanical == steelMechanical());
+    REQUIRE(features::findMaterial(second, *b)->definition().mechanical
+            == materials::MechanicalProperties{});
+}
+
+TEST_CASE("Material_RequiresACompleteElasticSetOrFailsNamingEveryGap") {
+    Document document{"Part"};
+    const MaterialId id = createOrFail(document, "SteelA");
+
+    SECTION("nothing known: both inputs are named, and so is the material") {
+        const Result<materials::LinearElasticConstants> constants =
+            features::requireLinearElasticConstants(document, id);
+        REQUIRE_FALSE(constants);
+        REQUIRE(constants.error().code == ErrorCode::FailedPrecondition);
+        REQUIRE_THAT(constants.error().message, ContainsSubstring("SteelA"));
+        REQUIRE_THAT(constants.error().message, ContainsSubstring("object:"));
+        REQUIRE_THAT(constants.error().message, ContainsSubstring("no Young"));
+        REQUIRE_THAT(constants.error().message, ContainsSubstring("no Poisson"));
+    }
+
+    SECTION("only E known: the report names the ratio and not the modulus") {
+        materials::MechanicalProperties partial;
+        partial.youngsModulus = materials::MaterialProperty<ElasticModulus>::known(210_GPa);
+        REQUIRE(features::setMaterialMechanical(document, id, partial));
+
+        const Result<materials::LinearElasticConstants> constants =
+            features::requireLinearElasticConstants(document, id);
+        REQUIRE_FALSE(constants);
+        REQUIRE_THAT(constants.error().message, ContainsSubstring("no Poisson"));
+        REQUIRE_THAT(constants.error().message, !ContainsSubstring("no Young"));
+        // The MISSING INPUT is named, never the derived constant: told that the
+        // shear modulus is unavailable, a user has nothing to act on.
+        REQUIRE_THAT(constants.error().message, !ContainsSubstring("shear modulus"));
+        REQUIRE_THAT(constants.error().message, !ContainsSubstring("bulk modulus"));
+    }
+
+    SECTION("both known: the set is complete and the derived values are right") {
+        REQUIRE(features::setMaterialMechanical(document, id, steelMechanical()));
+        const Result<materials::LinearElasticConstants> constants =
+            features::requireLinearElasticConstants(document, id);
+        REQUIRE(constants);
+        REQUIRE(constants->youngsModulus == 210_GPa);
+        REQUIRE(constants->poissonRatio == PoissonRatio::of(0.30));
+        // Hand-computed, not from the production relationship:
+        //   G = 210 / (2 x 1.30) = 80.76923076923077 GPa
+        //   K = 210 / (3 x 0.4)  = 175 GPa
+        REQUIRE_THAT(constants->shearModulus.si(), WithinRel(80.76923076923077e9, 1e-12));
+        REQUIRE_THAT(constants->bulkModulus.si(), WithinRel(175.0e9, 1e-12));
+    }
+}
+
+TEST_CASE("Material_RequiresDensitySeparatelyFromTheElasticConstants") {
+    Document document{"Part"};
+    const MaterialId id = createOrFail(document, "SteelA");
+
+    // Elastic constants present, density absent: a stiffness calculation must not
+    // fail over a density it never uses, and a mass must not silently get one.
+    materials::MechanicalProperties elasticOnly;
+    elasticOnly.youngsModulus = materials::MaterialProperty<ElasticModulus>::known(210_GPa);
+    elasticOnly.poissonRatio =
+        materials::MaterialProperty<PoissonRatio>::known(PoissonRatio::of(0.30));
+    REQUIRE(features::setMaterialMechanical(document, id, elasticOnly));
+
+    REQUIRE(features::requireLinearElasticConstants(document, id));
+    const Result<Density> density = features::requireDensity(document, id);
+    REQUIRE_FALSE(density);
+    REQUIRE(density.error().code == ErrorCode::FailedPrecondition);
+    REQUIRE_THAT(density.error().message, ContainsSubstring("SteelA"));
+    REQUIRE_THAT(density.error().message, ContainsSubstring("no density"));
+
+    REQUIRE(features::setMaterialMechanical(document, id, steelMechanical()));
+    const Result<Density> found = features::requireDensity(document, id);
+    REQUIRE(found);
+    REQUIRE_THAT(found->si(), WithinRel(7850.0, 1e-12));
+}
+
+TEST_CASE("Material_RequirementsOfAMissingMaterialFailWithoutInventingAnything") {
+    Document document{"Part"};
+    const MaterialId missing = MaterialId::fromValue(4471);
+    const Result<materials::LinearElasticConstants> constants =
+        features::requireLinearElasticConstants(document, missing);
+    REQUIRE_FALSE(constants);
+    REQUIRE(constants.error().code == ErrorCode::NotFound);
+    const Result<Density> density = features::requireDensity(document, missing);
+    REQUIRE_FALSE(density);
+    REQUIRE(density.error().code == ErrorCode::NotFound);
+    const Result<bool> set = features::setMaterialMechanical(document, missing, steelMechanical());
+    REQUIRE_FALSE(set);
+    REQUIRE(set.error().code == ErrorCode::NotFound);
+}
+
+TEST_CASE("Material_TwoMaterialsWithIdenticalPropertiesAreStillTwoMaterials") {
+    Document document{"Part"};
+    const MaterialId a = createOrFail(document, "SteelA", steelDefinition());
+    const MaterialId b = createOrFail(document, "SteelB", steelDefinition());
+    REQUIRE(features::setMaterialMechanical(document, a, steelMechanical()));
+    REQUIRE(features::setMaterialMechanical(document, b, steelMechanical()));
+
+    const Material* first = features::findMaterial(document, a);
+    const Material* second = features::findMaterial(document, b);
+    REQUIRE(first->definition().mechanical == second->definition().mechanical);
+    REQUIRE(first->contentEquals(*second));
+    // Alike in every value and still distinct, because identity is the ID.
+    REQUIRE_FALSE(equivalent(*first, *second));
+    REQUIRE(a != b);
+}
+
+TEST_CASE("Material_PropertiesSurviveACloneAndARemoveAndReinsert") {
+    Document document{"Part"};
+    const MaterialId id = createOrFail(document, "SteelA", steelDefinition());
+    REQUIRE(features::setMaterialMechanical(document, id, steelMechanical()));
+
+    const Document copy = document.clone();
+    REQUIRE(features::findMaterial(copy, id)->definition().mechanical == steelMechanical());
+
+    Result<std::unique_ptr<DocumentObject>> removed = document.removeObject(id);
+    REQUIRE(removed);
+    REQUIRE(document.insertObject(std::move(*removed)));
+    REQUIRE(features::findMaterial(document, id)->definition().mechanical == steelMechanical());
+    REQUIRE(features::findMaterial(document, id)->materialId() == id);
 }
