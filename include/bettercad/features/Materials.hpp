@@ -4,6 +4,7 @@
 #include <bettercad/core/Id.hpp>
 #include <bettercad/core/materials/MaterialLibrary.hpp>
 #include <bettercad/core/materials/MechanicalProperties.hpp>
+#include <bettercad/core/materials/ThermalProperties.hpp>
 #include <bettercad/features/Export.hpp>
 #include <bettercad/features/Material.hpp>
 
@@ -150,6 +151,55 @@ requireLinearElasticConstants(const Document& document, MaterialId id);
 /// fail a stiffness calculation over a missing density it never uses.
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<Density> requireDensity(const Document& document,
                                                                       MaterialId id);
+
+/// Replaces only the thermal properties of the material with @p id, leaving its
+/// name, metadata and MECHANICAL properties alone. Returns whether anything
+/// changed.
+///
+/// Fails, changing nothing, if a property is outside its physical range or is not
+/// finite; the diagnostic lists every problem. It cannot change identity, and it
+/// cannot disturb the mechanical half -- including the density, which lives
+/// there and which thermal consumers read from there.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<bool>
+setMaterialThermal(Document& document, MaterialId id,
+                   const materials::ThermalProperties& properties);
+
+/// What steady-state conduction needs from a material: its thermal conductivity.
+///
+/// A future Fourier-law consumer wants `k` for `q = -k grad(T)` and nothing else
+/// from the material, so this asks for nothing else. Fails naming the material
+/// and the missing property; never returns a default conductivity.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<ThermalConductivity>
+requireThermalConductivity(const Document& document, MaterialId id);
+
+/// What transient conduction needs: density, specific heat capacity and thermal
+/// conductivity, all concrete.
+///
+/// The density comes from the material's ONE density property, which lives with
+/// the mechanical properties -- this is the join, and the reason there is no
+/// second density beside it.
+///
+/// Fails with one diagnostic naming the material and EVERY missing input, so a
+/// run fails once with the whole list rather than at the first gap.
+struct TransientConductionProperties {
+    Density density{};
+    SpecificHeatCapacity specificHeatCapacity{};
+    ThermalConductivity thermalConductivity{};
+
+    friend bool operator==(const TransientConductionProperties&,
+                           const TransientConductionProperties&) = default;
+};
+
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<TransientConductionProperties>
+requireTransientConductionProperties(const Document& document, MaterialId id);
+
+/// The thermal expansion coefficient of the material with @p id.
+///
+/// What a thermo-mechanical consumer needs to turn a temperature change into a
+/// strain. Separate from the conduction requirements, because expansion needs no
+/// conductivity and conduction needs no expansion.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<ThermalExpansionCoefficient>
+requireThermalExpansion(const Document& document, MaterialId id);
 
 /// Removes the material with @p id. Fails if there is no such material.
 ///

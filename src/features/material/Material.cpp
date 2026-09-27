@@ -11,6 +11,9 @@ Result<void> validateMaterialDefinition(const MaterialDefinition& definition) {
     if (auto valid = materials::validate(definition.mechanical); !valid) {
         return valid;
     }
+    if (auto valid = materials::validate(definition.thermal); !valid) {
+        return valid;
+    }
     if (!definition.origin) {
         return {};
     }

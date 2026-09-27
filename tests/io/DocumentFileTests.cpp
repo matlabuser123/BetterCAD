@@ -9,6 +9,7 @@
 #include <bettercad/core/document/Document.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/core/materials/MechanicalProperties.hpp>
+#include <bettercad/core/materials/ThermalProperties.hpp>
 #include <bettercad/features/Materials.hpp>
 #include <bettercad/features/Regenerator.hpp>
 #include <bettercad/io/DocumentFile.hpp>
@@ -760,4 +761,39 @@ TEST_CASE("Mechanical properties are not persisted yet, and saving says so rathe
     // And the properties are still in the document afterwards: a failed save
     // must not have consumed them.
     REQUIRE(features::findMaterial(doc, *material)->definition().mechanical == properties);
+}
+
+TEST_CASE("Thermal properties are not persisted yet either, and saving still refuses",
+          "[io][document][material]") {
+    // P15-THERM-001 adds canonical thermal properties to MaterialDefinition. Like
+    // the mechanical ones, they have no file representation yet
+    // (P15-PERSIST-001), and the gap stays LOUD rather than becoming a writer
+    // that saves the material and quietly omits the conductivity.
+    TempDir dir;
+    const std::filesystem::path path = dir.path() / "with-thermal.bcad";
+
+    Document doc{"Part"};
+    const Result<MaterialId> material = features::createMaterial(doc, "Steel");
+    REQUIRE(material);
+
+    materials::ThermalProperties thermal;
+    thermal.thermalConductivity =
+        materials::MaterialProperty<ThermalConductivity>::known(50_W_per_m_K, 293.15_K);
+    thermal.specificHeatCapacity =
+        materials::MaterialProperty<SpecificHeatCapacity>::known(500_J_per_kg_K);
+    thermal.meltingTemperature = materials::MaterialProperty<Temperature>::known(1800_K);
+    REQUIRE(features::setMaterialThermal(doc, *material, thermal));
+
+    const Result<void> saved = io::saveDocument(doc, path);
+    REQUIRE_FALSE(saved);
+    REQUIRE_THAT(saved.error().message, ContainsSubstring("material"));
+    REQUIRE_THAT(saved.error().message, ContainsSubstring("cannot be saved"));
+    REQUIRE(std::distance(std::filesystem::directory_iterator(dir.path()),
+                          std::filesystem::directory_iterator{}) == 0);
+
+    // Still in the document afterwards, reference temperature included: a failed
+    // save must not consume what it refused to write.
+    const materials::ThermalProperties& kept = features::findMaterial(doc, *material)->definition().thermal;
+    REQUIRE(kept == thermal);
+    REQUIRE(kept.thermalConductivity.referenceTemperature().has_value());
 }

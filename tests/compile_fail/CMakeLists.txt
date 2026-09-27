@@ -72,15 +72,29 @@ bettercad_compile_fail_case(units "${_units}" CONDUCTIVITY_AS_SPECIFIC_HEAT "con
 # --- Mechanical material properties (P15-MECH-001) --------------------------
 set(_mech "${CMAKE_CURRENT_SOURCE_DIR}/MechanicalMisuse.cpp")
 bettercad_compile_fail_group(mech "${_mech}")
-bettercad_compile_fail_case(mech "${_mech}" DENSITY_AS_YOUNGS_MODULUS "cannot convert .Quantity<.*>. to .Quantity<.*>.")
-bettercad_compile_fail_case(mech "${_mech}" CONDUCTIVITY_AS_YIELD_STRENGTH "cannot convert .Quantity<.*>. to .Quantity<.*>.")
+bettercad_compile_fail_case(mech "${_mech}" DENSITY_AS_YOUNGS_MODULUS "no matching function for call to .*::known.bettercad::Quantity<")
+bettercad_compile_fail_case(mech "${_mech}" CONDUCTIVITY_AS_YIELD_STRENGTH "no matching function for call to .*::known.bettercad::Quantity<")
 bettercad_compile_fail_case(mech "${_mech}" SPECIFIC_HEAT_AS_SHEAR_MODULUS "conversion from|could not convert")
-bettercad_compile_fail_case(mech "${_mech}" POISSON_FROM_DOUBLE "cannot convert .double. to .*PoissonRatio")
-bettercad_compile_fail_case(mech "${_mech}" ELONGATION_FROM_DOUBLE "cannot convert .double. to .*Elongation")
+bettercad_compile_fail_case(mech "${_mech}" POISSON_FROM_DOUBLE "no matching function for call to .*MaterialProperty<bettercad::PoissonRatio>::known.double.")
+bettercad_compile_fail_case(mech "${_mech}" ELONGATION_FROM_DOUBLE "no matching function for call to .*Elongation>::known.double.")
 bettercad_compile_fail_case(mech "${_mech}" HARDNESS_WITHOUT_SCALE "too few arguments|no matching function")
 bettercad_compile_fail_case(mech "${_mech}" HARDNESS_AS_STRESS "conversion from|could not convert")
 bettercad_compile_fail_case(mech "${_mech}" PROPERTY_TO_VALUE "conversion from|could not convert")
 bettercad_compile_fail_case(mech "${_mech}" MUTATE_LIBRARY_ENTRY "const bettercad::materials::LibraryMaterial.*discards qualifiers")
+
+# --- Thermal material properties (P15-THERM-001) ----------------------------
+set(_therm "${CMAKE_CURRENT_SOURCE_DIR}/ThermalMisuse.cpp")
+bettercad_compile_fail_group(therm "${_therm}")
+bettercad_compile_fail_case(therm "${_therm}" PRESSURE_AS_CONDUCTIVITY "no matching function for call to .*::known.bettercad::Pressure.")
+bettercad_compile_fail_case(therm "${_therm}" ENERGY_AS_SPECIFIC_HEAT "no matching function for call to .*::known.bettercad::Energy.")
+bettercad_compile_fail_case(therm "${_therm}" HEAT_CAPACITY_AS_SPECIFIC_HEAT "no matching function for call to .*::known.bettercad::Quantity<")
+bettercad_compile_fail_case(therm "${_therm}" POISSON_AS_THERMAL_EXPANSION "no matching function for call to .*::known.bettercad::PoissonRatio.")
+bettercad_compile_fail_case(therm "${_therm}" DIMENSIONLESS_AS_THERMAL_EXPANSION "no matching function for call to .*::known.double.")
+bettercad_compile_fail_case(therm "${_therm}" DENSITY_AS_RESISTIVITY "MaterialProperty<bettercad::materials::ElectricalResistivity>::known.bettercad::Quantity<")
+bettercad_compile_fail_case(therm "${_therm}" RESISTIVITY_FROM_DOUBLE "MaterialProperty<bettercad::materials::ElectricalResistivity>::known.double.")
+bettercad_compile_fail_case(therm "${_therm}" RESISTIVITY_TO_DOUBLE "cannot convert .*ElectricalResistivity")
+bettercad_compile_fail_case(therm "${_therm}" TEMPERATURE_FROM_DOUBLE "no matching function for call to .*::known.double.")
+bettercad_compile_fail_case(therm "${_therm}" CONDUCTIVITY_AS_TEMPERATURE "no matching function for call to .*::known.bettercad::ThermalConductivity.")
 
 # --- Strong IDs (P1-002) ----------------------------------------------------
 set(_ids "${CMAKE_CURRENT_SOURCE_DIR}/IdsMisuse.cpp")

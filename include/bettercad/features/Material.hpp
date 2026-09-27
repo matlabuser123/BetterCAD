@@ -5,6 +5,7 @@
 #include <bettercad/core/document/DocumentObject.hpp>
 #include <bettercad/core/materials/MaterialLibrary.hpp>
 #include <bettercad/core/materials/MechanicalProperties.hpp>
+#include <bettercad/core/materials/ThermalProperties.hpp>
 #include <bettercad/features/Export.hpp>
 
 #include <memory>
@@ -66,6 +67,13 @@ struct MaterialDefinition {
     /// It is part of the definition, so editing it goes through the same
     /// setDefinition() path as a designation and cannot touch the MaterialId.
     materials::MechanicalProperties mechanical;
+    /// What the material is thermally and electrically (P15-THERM-001). Every
+    /// property defaults to Unknown, so this costs a material nothing either.
+    ///
+    /// DENSITY IS NOT HERE: it is in `mechanical`, which is its one home, and
+    /// thermal consumers read that same property. Two densities would be two
+    /// authoritative values for one physical quantity.
+    materials::ThermalProperties thermal;
 
     friend bool operator==(const MaterialDefinition&, const MaterialDefinition&) = default;
 };
@@ -84,9 +92,10 @@ struct MaterialDefinition {
 /// particular would be a way for "Steel" and "steel" to become one thing, and
 /// nothing in this module compares designations case-insensitively.
 ///
-/// The mechanical properties ARE range-checked, by materials::validate(): a
-/// known Young's modulus of zero is not engineering data, whereas an empty
-/// designation is. Properties that are Unknown are never a reason to refuse.
+/// The mechanical and thermal properties ARE range-checked, by
+/// materials::validate(): a known Young's modulus of zero is not engineering
+/// data, whereas an empty designation is. Properties that are Unknown are never
+/// a reason to refuse.
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<void>
 validateMaterialDefinition(const MaterialDefinition& definition);
 

@@ -1,6 +1,10 @@
 #include <bettercad/core/materials/MaterialProperty.hpp>
 
+#include <bettercad/core/units/Format.hpp>
+
 #include <format>
+#include <optional>
+#include <string>
 
 namespace bettercad::materials {
 
@@ -28,6 +32,27 @@ std::string_view toString(HardnessScale scale) noexcept {
         return "HRC";
     }
     return "HBW";
+}
+
+std::optional<std::string> referenceTemperatureProblem(const std::optional<Temperature>& at,
+                                                      std::string_view name) {
+    if (!at) {
+        return std::nullopt;
+    }
+    if (!isFinite(*at)) {
+        return std::format("the reference temperature of {} is not a finite value", name);
+    }
+    // An ABSOLUTE thermodynamic temperature. Zero kelvin and below are not
+    // temperatures a measurement was made at.
+    if (at->si() <= 0.0) {
+        return std::format("the reference temperature of {} must be above absolute zero, not {}",
+                           name, toString(*at));
+    }
+    return std::nullopt;
+}
+
+std::string toString(ElectricalResistivity resistivity) {
+    return std::format("{} Ohm m", resistivity.ohmMetres());
 }
 
 std::string toString(Hardness hardness) {

@@ -28,6 +28,7 @@ bettercad_add_library(bettercad_core
         materials/MaterialLibrary.cpp
         materials/MaterialProperty.cpp
         materials/MechanicalProperties.cpp
+        materials/ThermalProperties.cpp
         standards/ClearanceHoles.cpp
         standards/Designations.hpp
         standards/HoleTolerances.cpp

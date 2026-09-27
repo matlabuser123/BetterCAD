@@ -553,3 +553,31 @@ TEST_CASE("MechanicalProperty_ADerivedModulusIsStillMarkedDerivedWhereItIsProduc
     REQUIRE_FALSE(materials::derivedShearModulus(properties).isKnown());
     REQUIRE_FALSE(materials::derivedBulkModulus(properties).isKnown());
 }
+
+TEST_CASE("MechanicalProperty_ChecksAReferenceTemperatureOnAMechanicalPropertyToo") {
+    // The reference temperature lives on the ONE property wrapper, so a modulus
+    // measured at 20 C is as ordinary as a conductivity measured there -- and is
+    // checked the same way, as the absolute temperature it is.
+    MechanicalProperties good;
+    good.youngsModulus = MaterialProperty<ElasticModulus>::known(210_GPa, Temperature::fromSi(293.15));
+    REQUIRE(materials::validate(good));
+    REQUIRE(good.youngsModulus.referenceTemperature().has_value());
+
+    for (const double kelvin : {0.0, -1.0, -293.15, kNaN, kInf, -kInf}) {
+        MechanicalProperties properties;
+        properties.youngsModulus =
+            MaterialProperty<ElasticModulus>::known(210_GPa, Temperature::fromSi(kelvin));
+        INFO("reference T = " << kelvin << " K");
+        const Result<void> valid = materials::validate(properties);
+        REQUIRE_FALSE(valid);
+        REQUIRE_THAT(valid.error().message, ContainsSubstring("reference temperature"));
+        REQUIRE_THAT(valid.error().message, ContainsSubstring("Young's modulus"));
+    }
+
+    // And the value itself is untouched by the record: a reference temperature
+    // does not make a modulus a function of temperature.
+    REQUIRE(*good.youngsModulus.value() == 210_GPa);
+    const auto withoutReference = MaterialProperty<ElasticModulus>::known(210_GPa);
+    REQUIRE(*withoutReference.value() == *good.youngsModulus.value());
+    REQUIRE(withoutReference != good.youngsModulus);
+}

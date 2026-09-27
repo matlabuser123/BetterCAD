@@ -2,6 +2,7 @@
 #include <bettercad/core/document/Document.hpp>
 #include <bettercad/core/materials/MaterialLibrary.hpp>
 #include <bettercad/core/materials/MechanicalProperties.hpp>
+#include <bettercad/core/materials/ThermalProperties.hpp>
 #include <bettercad/core/units/Literals.hpp>
 #include <bettercad/core/units/Units.hpp>
 #include <bettercad/features/Material.hpp>
@@ -963,4 +964,323 @@ TEST_CASE("Material_PropertiesSurviveACloneAndARemoveAndReinsert") {
     REQUIRE(document.insertObject(std::move(*removed)));
     REQUIRE(features::findMaterial(document, id)->definition().mechanical == steelMechanical());
     REQUIRE(features::findMaterial(document, id)->materialId() == id);
+}
+
+// --- thermal properties (P15-THERM-001) -------------------------------------
+
+namespace {
+
+materials::ThermalProperties steelThermal() {
+    // Arithmetic fixtures, not a claim about any real steel: no library entry
+    // carries a sourced property value (ADR-028).
+    materials::ThermalProperties properties;
+    properties.thermalConductivity =
+        materials::MaterialProperty<ThermalConductivity>::known(50_W_per_m_K, 293.15_K);
+    properties.specificHeatCapacity =
+        materials::MaterialProperty<SpecificHeatCapacity>::known(500_J_per_kg_K);
+    properties.thermalExpansion =
+        materials::MaterialProperty<ThermalExpansionCoefficient>::known(12.0e-6_per_K);
+    properties.meltingTemperature = materials::MaterialProperty<Temperature>::known(1800_K);
+    properties.electricalResistivity = materials::MaterialProperty<materials::ElectricalResistivity>::
+        known(materials::ElectricalResistivity::ofOhmMetres(1.4e-7));
+    return properties;
+}
+
+} // namespace
+
+TEST_CASE("Material_EditingAThermalPropertyDoesNotChangeItsId") {
+    Document document{"Part"};
+    const MaterialId id = createOrFail(document, "SteelA", steelDefinition());
+    const MaterialId before = features::findMaterial(document, id)->materialId();
+
+    REQUIRE(features::setMaterialThermal(document, id, steelThermal()));
+
+    REQUIRE(features::findMaterial(document, id)->materialId() == before);
+    REQUIRE(features::findMaterial(document, id)->materialId() == id);
+    // Metadata untouched by a thermal edit.
+    REQUIRE(features::findMaterial(document, id)->definition().designation
+            == steelDefinition().designation);
+    REQUIRE(features::findMaterial(document, id)->definition().thermal == steelThermal());
+}
+
+TEST_CASE("Material_ThermalAndMechanicalPropertiesCoexistWithoutDisturbingEachOther") {
+    Document document{"Part"};
+    const MaterialId id = createOrFail(document, "SteelA", steelDefinition());
+
+    REQUIRE(features::setMaterialMechanical(document, id, steelMechanical()));
+    REQUIRE(features::setMaterialThermal(document, id, steelThermal()));
+
+    // Both halves present at once.
+    const MaterialDefinition& both = features::findMaterial(document, id)->definition();
+    REQUIRE(both.mechanical == steelMechanical());
+    REQUIRE(both.thermal == steelThermal());
+
+    // Editing the thermal half does not reset the mechanical half...
+    materials::ThermalProperties changedThermal = steelThermal();
+    changedThermal.thermalConductivity =
+        materials::MaterialProperty<ThermalConductivity>::known(45_W_per_m_K);
+    REQUIRE(features::setMaterialThermal(document, id, changedThermal));
+    REQUIRE(features::findMaterial(document, id)->definition().mechanical == steelMechanical());
+
+    // ...and editing the mechanical half does not reset the thermal half.
+    materials::MechanicalProperties changedMechanical = steelMechanical();
+    changedMechanical.yieldStrength = materials::MaterialProperty<Stress>::known(300_MPa);
+    REQUIRE(features::setMaterialMechanical(document, id, changedMechanical));
+    REQUIRE(features::findMaterial(document, id)->definition().thermal == changedThermal);
+    REQUIRE(features::findMaterial(document, id)->materialId() == id);
+}
+
+TEST_CASE("Material_HasExactlyOneDensityAndBothConsumerPathsReadIt") {
+    // The single-source proof. A thermalDensity beside a mechanicalDensity would
+    // be two authoritative values for one physical quantity, so there is one
+    // store -- in the mechanical properties, which is where P15-MECH-001 put it --
+    // and the thermal path reads that.
+    Document document{"Part"};
+    const MaterialId id = createOrFail(document, "SteelA");
+    materials::ThermalProperties thermal;
+    thermal.thermalConductivity = materials::MaterialProperty<ThermalConductivity>::known(50_W_per_m_K);
+    thermal.specificHeatCapacity =
+        materials::MaterialProperty<SpecificHeatCapacity>::known(500_J_per_kg_K);
+    REQUIRE(features::setMaterialThermal(document, id, thermal));
+
+    SECTION("with no density, the thermal path reports it missing") {
+        const Result<features::TransientConductionProperties> transient =
+            features::requireTransientConductionProperties(document, id);
+        REQUIRE_FALSE(transient);
+        REQUIRE_THAT(transient.error().message, ContainsSubstring("no density"));
+        REQUIRE_FALSE(features::requireDensity(document, id));
+    }
+
+    SECTION("one density set once is what both paths return") {
+        materials::MechanicalProperties mechanical;
+        mechanical.density = materials::MaterialProperty<Density>::known(Density::fromSi(7850.0));
+        REQUIRE(features::setMaterialMechanical(document, id, mechanical));
+
+        const Result<Density> massPath = features::requireDensity(document, id);
+        const Result<features::TransientConductionProperties> thermalPath =
+            features::requireTransientConductionProperties(document, id);
+        REQUIRE(massPath);
+        REQUIRE(thermalPath);
+        // Same property, same value, bit for bit.
+        REQUIRE(thermalPath->density == *massPath);
+        REQUIRE(thermalPath->density.si() == massPath->si());
+    }
+
+    SECTION("changing the one density changes what the thermal path sees") {
+        materials::MechanicalProperties mechanical;
+        mechanical.density = materials::MaterialProperty<Density>::known(Density::fromSi(7850.0));
+        REQUIRE(features::setMaterialMechanical(document, id, mechanical));
+        mechanical.density = materials::MaterialProperty<Density>::known(Density::fromSi(2700.0));
+        REQUIRE(features::setMaterialMechanical(document, id, mechanical));
+
+        REQUIRE_THAT(features::requireDensity(document, id)->si(), WithinRel(2700.0, 1e-12));
+        REQUIRE_THAT(features::requireTransientConductionProperties(document, id)->density.si(),
+                     WithinRel(2700.0, 1e-12));
+    }
+
+    SECTION("setting the density back to unknown makes both paths report it missing") {
+        materials::MechanicalProperties mechanical;
+        mechanical.density = materials::MaterialProperty<Density>::known(Density::fromSi(7850.0));
+        REQUIRE(features::setMaterialMechanical(document, id, mechanical));
+        mechanical.density = materials::MaterialProperty<Density>::unknown();
+        REQUIRE(features::setMaterialMechanical(document, id, mechanical));
+
+        REQUIRE_FALSE(features::requireDensity(document, id));
+        REQUIRE_FALSE(features::requireTransientConductionProperties(document, id));
+    }
+}
+
+TEST_CASE("Material_RefusesAnInvalidThermalPropertyAndKeepsWhatItHad") {
+    Document document{"Part"};
+    const MaterialId id = createOrFail(document, "SteelA");
+    REQUIRE(features::setMaterialThermal(document, id, steelThermal()));
+
+    materials::ThermalProperties bad = steelThermal();
+    bad.thermalConductivity =
+        materials::MaterialProperty<ThermalConductivity>::known(ThermalConductivity::fromSi(0.0));
+    const Result<bool> refused = features::setMaterialThermal(document, id, bad);
+    REQUIRE_FALSE(refused);
+    REQUIRE(refused.error().code == ErrorCode::InvalidArgument);
+    REQUIRE(features::findMaterial(document, id)->definition().thermal == steelThermal());
+
+    // Non-finite cannot enter a material either, through any property.
+    materials::ThermalProperties notFinite = steelThermal();
+    notFinite.specificHeatCapacity = materials::MaterialProperty<SpecificHeatCapacity>::known(
+        SpecificHeatCapacity::fromSi(std::numeric_limits<double>::quiet_NaN()));
+    REQUIRE_FALSE(features::setMaterialThermal(document, id, notFinite));
+    notFinite = steelThermal();
+    notFinite.meltingTemperature = materials::MaterialProperty<Temperature>::known(
+        Temperature::fromSi(std::numeric_limits<double>::infinity()));
+    REQUIRE_FALSE(features::setMaterialThermal(document, id, notFinite));
+    REQUIRE(features::findMaterial(document, id)->definition().thermal == steelThermal());
+
+    // Nor can a material be CREATED with an invalid thermal property.
+    MaterialDefinition definition;
+    definition.thermal.meltingTemperature =
+        materials::MaterialProperty<Temperature>::known(Temperature::fromSi(-5.0));
+    const Result<MaterialId> rejected = features::createMaterial(document, "Bad", definition);
+    REQUIRE_FALSE(rejected);
+    REQUIRE(rejected.error().code == ErrorCode::InvalidArgument);
+}
+
+TEST_CASE("Material_AnImportedMaterialHasNoThermalPropertiesAndEditingItCannotReachTheLibrary") {
+    Document document{"Part"};
+    const Result<LibraryMaterial> entry =
+        materials::findLibraryMaterial(materials::builtInLibraryName(), "al-6061-t6");
+    REQUIRE(entry);
+    const Result<MaterialId> id = features::importLibraryMaterial(document, "Al6061T6", *entry);
+    REQUIRE(id);
+
+    // Metadata only in the library, so an import starts with nothing thermal set.
+    REQUIRE(features::findMaterial(document, *id)->definition().thermal
+            == materials::ThermalProperties{});
+
+    REQUIRE(features::setMaterialThermal(document, *id, steelThermal()));
+
+    // The library entry is identical afterwards, and a second import still
+    // arrives empty: no shared mutable thermal state exists to reach.
+    const Result<LibraryMaterial> again =
+        materials::findLibraryMaterial(materials::builtInLibraryName(), "al-6061-t6");
+    REQUIRE(again);
+    REQUIRE(*again == *entry);
+    const Result<MaterialId> second =
+        features::importLibraryMaterial(document, "Al6061T6b", *again);
+    REQUIRE(second);
+    REQUIRE(features::findMaterial(document, *second)->definition().thermal
+            == materials::ThermalProperties{});
+    // And the first material kept its own identity through the edit.
+    REQUIRE(features::findMaterial(document, *id)->materialId() == *id);
+}
+
+TEST_CASE("Material_ThermalPropertiesOfTwoDocumentsAreIndependent") {
+    const Result<LibraryMaterial> entry =
+        materials::findLibraryMaterial(materials::builtInLibraryName(), "al-6061-t6");
+    REQUIRE(entry);
+    Document first{"PartA"};
+    Document second{"PartB"};
+    const Result<MaterialId> a = features::importLibraryMaterial(first, "Al6061T6", *entry);
+    const Result<MaterialId> b = features::importLibraryMaterial(second, "Al6061T6", *entry);
+    REQUIRE(a);
+    REQUIRE(b);
+
+    REQUIRE(features::setMaterialThermal(first, *a, steelThermal()));
+
+    REQUIRE(features::findMaterial(first, *a)->definition().thermal == steelThermal());
+    REQUIRE(features::findMaterial(second, *b)->definition().thermal
+            == materials::ThermalProperties{});
+}
+
+TEST_CASE("Material_RequiresConductionPropertiesPerConsumerAndNamesEveryGap") {
+    Document document{"Part"};
+    const MaterialId id = createOrFail(document, "SteelA");
+
+    SECTION("nothing known: steady conduction names the conductivity") {
+        const Result<ThermalConductivity> k = features::requireThermalConductivity(document, id);
+        REQUIRE_FALSE(k);
+        REQUIRE(k.error().code == ErrorCode::FailedPrecondition);
+        REQUIRE_THAT(k.error().message, ContainsSubstring("SteelA"));
+        REQUIRE_THAT(k.error().message, ContainsSubstring("object:"));
+        REQUIRE_THAT(k.error().message, ContainsSubstring("no thermal conductivity"));
+    }
+
+    SECTION("nothing known: transient conduction names all three at once") {
+        const Result<features::TransientConductionProperties> transient =
+            features::requireTransientConductionProperties(document, id);
+        REQUIRE_FALSE(transient);
+        REQUIRE_THAT(transient.error().message, ContainsSubstring("no density"));
+        REQUIRE_THAT(transient.error().message, ContainsSubstring("no specific heat capacity"));
+        REQUIRE_THAT(transient.error().message, ContainsSubstring("no thermal conductivity"));
+    }
+
+    SECTION("only the conductivity known: steady conduction is satisfied, transient is not") {
+        materials::ThermalProperties partial;
+        partial.thermalConductivity =
+            materials::MaterialProperty<ThermalConductivity>::known(50_W_per_m_K);
+        REQUIRE(features::setMaterialThermal(document, id, partial));
+
+        // Steady conduction needs only k, so a missing density must not fail it.
+        const Result<ThermalConductivity> k = features::requireThermalConductivity(document, id);
+        REQUIRE(k);
+        REQUIRE(*k == 50_W_per_m_K);
+
+        const Result<features::TransientConductionProperties> transient =
+            features::requireTransientConductionProperties(document, id);
+        REQUIRE_FALSE(transient);
+        REQUIRE_THAT(transient.error().message, ContainsSubstring("no density"));
+        REQUIRE_THAT(transient.error().message, ContainsSubstring("no specific heat capacity"));
+        REQUIRE_THAT(transient.error().message, !ContainsSubstring("no thermal conductivity"));
+    }
+
+    SECTION("everything known: the set is complete and typed") {
+        REQUIRE(features::setMaterialMechanical(document, id, steelMechanical()));
+        REQUIRE(features::setMaterialThermal(document, id, steelThermal()));
+
+        const Result<features::TransientConductionProperties> transient =
+            features::requireTransientConductionProperties(document, id);
+        REQUIRE(transient);
+        REQUIRE_THAT(transient->density.si(), WithinRel(7850.0, 1e-12));
+        REQUIRE(transient->specificHeatCapacity == 500_J_per_kg_K);
+        REQUIRE(transient->thermalConductivity == 50_W_per_m_K);
+    }
+}
+
+TEST_CASE("Material_RequiresThermalExpansionSeparatelyAndAcceptsANegativeOne") {
+    Document document{"Part"};
+    const MaterialId id = createOrFail(document, "SteelA");
+
+    const Result<ThermalExpansionCoefficient> missing =
+        features::requireThermalExpansion(document, id);
+    REQUIRE_FALSE(missing);
+    REQUIRE_THAT(missing.error().message, ContainsSubstring("no thermal expansion"));
+
+    // Conduction data does not satisfy an expansion consumer, and vice versa.
+    materials::ThermalProperties conduction;
+    conduction.thermalConductivity =
+        materials::MaterialProperty<ThermalConductivity>::known(50_W_per_m_K);
+    REQUIRE(features::setMaterialThermal(document, id, conduction));
+    REQUIRE(features::requireThermalConductivity(document, id));
+    REQUIRE_FALSE(features::requireThermalExpansion(document, id));
+
+    // A negative coefficient is real data and must come through unchanged.
+    materials::ThermalProperties contracting;
+    contracting.thermalExpansion = materials::MaterialProperty<ThermalExpansionCoefficient>::known(
+        ThermalExpansionCoefficient::fromSi(-2.5e-6));
+    REQUIRE(features::setMaterialThermal(document, id, contracting));
+    const Result<ThermalExpansionCoefficient> negative =
+        features::requireThermalExpansion(document, id);
+    REQUIRE(negative);
+    REQUIRE_THAT(negative->si(), WithinRel(-2.5e-6, 1e-12));
+}
+
+TEST_CASE("Material_ThermalRequirementsOfAMissingMaterialFailWithoutInventingAnything") {
+    Document document{"Part"};
+    const MaterialId missing = MaterialId::fromValue(4471);
+    REQUIRE_FALSE(features::requireThermalConductivity(document, missing));
+    REQUIRE(features::requireThermalConductivity(document, missing).error().code
+            == ErrorCode::NotFound);
+    REQUIRE_FALSE(features::requireTransientConductionProperties(document, missing));
+    REQUIRE_FALSE(features::requireThermalExpansion(document, missing));
+    REQUIRE_FALSE(features::setMaterialThermal(document, missing, steelThermal()));
+}
+
+TEST_CASE("Material_ThermalPropertiesSurviveACloneAndARemoveAndReinsert") {
+    Document document{"Part"};
+    const MaterialId id = createOrFail(document, "SteelA", steelDefinition());
+    REQUIRE(features::setMaterialMechanical(document, id, steelMechanical()));
+    REQUIRE(features::setMaterialThermal(document, id, steelThermal()));
+
+    const Document copy = document.clone();
+    REQUIRE(features::findMaterial(copy, id)->definition().thermal == steelThermal());
+    REQUIRE(features::findMaterial(copy, id)->definition().mechanical == steelMechanical());
+
+    Result<std::unique_ptr<DocumentObject>> removed = document.removeObject(id);
+    REQUIRE(removed);
+    REQUIRE(document.insertObject(std::move(*removed)));
+    REQUIRE(features::findMaterial(document, id)->definition().thermal == steelThermal());
+    REQUIRE(features::findMaterial(document, id)->definition().mechanical == steelMechanical());
+    // Including the reference temperature recorded on the conductivity.
+    REQUIRE(features::findMaterial(document, id)
+                ->definition()
+                .thermal.thermalConductivity.referenceTemperature()
+                .has_value());
 }

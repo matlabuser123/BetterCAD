@@ -4,6 +4,7 @@
 
 #include <cmath>
 #include <cstdlib>
+#include <utility>
 #include <format>
 #include <optional>
 
@@ -40,6 +41,18 @@ void checkPositiveStress(const MaterialProperty<Stress>& property, std::string_v
     if (value->si() <= 0.0) {
         problems.emplace_back(
             std::format("{} must be greater than zero, not {}", name, toString(*value)));
+    }
+}
+
+/// A property's reference temperature, if it recorded one. The field is on the
+/// one property wrapper, so a modulus measured at 20 C is as ordinary as a
+/// conductivity measured there and is checked the same way.
+template <typename Value>
+void checkReferenceTemperature(const MaterialProperty<Value>& property, std::string_view name,
+                               std::vector<std::string>& problems) {
+    if (std::optional<std::string> problem =
+            referenceTemperatureProblem(property.referenceTemperature(), name)) {
+        problems.push_back(std::move(*problem));
     }
 }
 
@@ -175,6 +188,18 @@ Result<void> validate(const MechanicalProperties& properties) {
         // from its standard, which BetterCAD does not have here, and inventing
         // one would reject real measurements.
     }
+
+    checkReferenceTemperature(properties.density, "density", problems);
+    checkReferenceTemperature(properties.youngsModulus, "Young's modulus", problems);
+    checkReferenceTemperature(properties.poissonRatio, "Poisson's ratio", problems);
+    checkReferenceTemperature(properties.yieldStrength, "yield strength", problems);
+    checkReferenceTemperature(properties.ultimateTensileStrength, "ultimate tensile strength",
+                              problems);
+    checkReferenceTemperature(properties.ultimateCompressiveStrength,
+                              "ultimate compressive strength", problems);
+    checkReferenceTemperature(properties.shearStrength, "shear strength", problems);
+    checkReferenceTemperature(properties.elongation, "elongation", problems);
+    checkReferenceTemperature(properties.hardness, "hardness", problems);
 
     if (problems.empty()) {
         return {};

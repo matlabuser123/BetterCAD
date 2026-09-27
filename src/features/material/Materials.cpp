@@ -186,6 +186,120 @@ Result<Density> requireDensity(const Document& document, MaterialId id) {
     return *density;
 }
 
+Result<bool> setMaterialThermal(Document& document, MaterialId id,
+                                const materials::ThermalProperties& properties) {
+    const Material* material = findMaterial(document, id);
+    if (material == nullptr) {
+        return makeError(ErrorCode::NotFound, std::format("there is no material {}", id));
+    }
+    // Only the thermal part is replaced. The mechanical half is carried over
+    // untouched, which is what keeps a thermal edit from erasing a modulus -- or
+    // the density, which lives there and which thermal consumers read.
+    MaterialDefinition definition = material->definition();
+    definition.thermal = properties;
+    return setMaterialDefinition(document, id, definition);
+}
+
+Result<ThermalConductivity> requireThermalConductivity(const Document& document, MaterialId id) {
+    const Material* material = findMaterial(document, id);
+    if (material == nullptr) {
+        return makeError(ErrorCode::NotFound, std::format("there is no material {}", id));
+    }
+    const materials::ThermalProperties& properties = material->definition().thermal;
+    const std::optional<ThermalConductivity> k = properties.thermalConductivity.value();
+    if (!k) {
+        return makeError(ErrorCode::FailedPrecondition,
+                         std::format("{} has no thermal conductivity, which conduction needs",
+                                     describe(*material)));
+    }
+    if (!isFinite(*k) || k->si() <= 0.0) {
+        return makeError(
+            ErrorCode::FailedPrecondition,
+            std::format("{} has a thermal conductivity of {}, which is not a usable value",
+                        describe(*material), toString(*k)));
+    }
+    return *k;
+}
+
+Result<TransientConductionProperties> requireTransientConductionProperties(const Document& document,
+                                                                          MaterialId id) {
+    const Material* material = findMaterial(document, id);
+    if (material == nullptr) {
+        return makeError(ErrorCode::NotFound, std::format("there is no material {}", id));
+    }
+    const MaterialDefinition& definition = material->definition();
+
+    // Every gap at once, in the enumeration's semantic order.
+    std::vector<std::string> missing;
+
+    // The density comes from the MECHANICAL properties, because that is where the
+    // material's one density lives. This is the join between the two halves, and
+    // the reason there is no thermal density beside it.
+    const std::optional<Density> density = definition.mechanical.density.value();
+    if (!density) {
+        missing.emplace_back("no density");
+    } else if (!isFinite(*density) || density->si() <= 0.0) {
+        missing.emplace_back(
+            std::format("a density of {}, which is not a usable value", toString(*density)));
+    }
+    const std::optional<SpecificHeatCapacity> cp = definition.thermal.specificHeatCapacity.value();
+    if (!cp) {
+        missing.emplace_back("no specific heat capacity");
+    } else if (!isFinite(*cp) || cp->si() <= 0.0) {
+        missing.emplace_back(std::format("a specific heat capacity of {}, which is not a usable value",
+                                         toString(*cp)));
+    }
+    const std::optional<ThermalConductivity> k = definition.thermal.thermalConductivity.value();
+    if (!k) {
+        missing.emplace_back("no thermal conductivity");
+    } else if (!isFinite(*k) || k->si() <= 0.0) {
+        missing.emplace_back(std::format("a thermal conductivity of {}, which is not a usable value",
+                                         toString(*k)));
+    }
+
+    if (!missing.empty()) {
+        std::string joined;
+        for (const std::string& item : missing) {
+            if (!joined.empty()) {
+                joined += " and ";
+            }
+            joined += item;
+        }
+        return makeError(ErrorCode::FailedPrecondition,
+                         std::format("{} has {}, which transient conduction needs",
+                                     describe(*material), joined));
+    }
+
+    TransientConductionProperties properties;
+    properties.density = *density;
+    properties.specificHeatCapacity = *cp;
+    properties.thermalConductivity = *k;
+    return properties;
+}
+
+Result<ThermalExpansionCoefficient> requireThermalExpansion(const Document& document,
+                                                            MaterialId id) {
+    const Material* material = findMaterial(document, id);
+    if (material == nullptr) {
+        return makeError(ErrorCode::NotFound, std::format("there is no material {}", id));
+    }
+    const std::optional<ThermalExpansionCoefficient> alpha =
+        material->definition().thermal.thermalExpansion.value();
+    if (!alpha) {
+        return makeError(
+            ErrorCode::FailedPrecondition,
+            std::format("{} has no thermal expansion coefficient", describe(*material)));
+    }
+    // Finiteness only. A NEGATIVE coefficient is real engineering data: some
+    // materials contract when heated.
+    if (!isFinite(*alpha)) {
+        return makeError(ErrorCode::FailedPrecondition,
+                         std::format("{} has a thermal expansion coefficient that is not finite",
+                                     describe(*material)));
+    }
+    return *alpha;
+}
+
 Result<void> removeMaterial(Document& document, MaterialId id) {
     if (findMaterial(document, id) == nullptr) {
         return makeError(ErrorCode::NotFound, std::format("there is no material {}", id));

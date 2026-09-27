@@ -11,7 +11,7 @@
 ```text
 Current:   P15 — Materials / Engineering Data
 Current milestone:
-           NONE. P15-MECH-001 is complete.
+           NONE. P15-THERM-001 is complete.
            The next milestone is a scope decision, not Claude's to make.
 
 Qualified:
@@ -20,13 +20,13 @@ Qualified:
            P13
            P14 — Technical Drawings
            P15-ARCH-001, P15-UNITS-001, INFRA-QT-DEPLOY-001, P15-MAT-001,
-           P15-MECH-001
+           P15-MECH-001, P15-THERM-001
 
 Next:
-           P15-THERM-001 — thermal / physical properties. ADR-027's canonical
-           set already names what it needs (cp, k, alpha), and P15-UNITS-001
-           added those dimensions, so it reuses the property type P15-MECH-001
-           built rather than adding a second one.
+           P15-ASSIGN-001 — material assignment to model objects. ADR-026 already
+           decided its shape: an assignment is INTENT and mass is derived. It is
+           also the first milestone that will hold a MaterialId across time,
+           which is what P15-MAT-001's non-reuse invariant was established for.
            Awaiting explicit scope decision.
 
            A material cannot be SAVED until P15-PERSIST-001. Saving a document
@@ -604,20 +604,56 @@ mechanical properties unit-safe
 
 ## Physical / Thermal Properties
 
-* [ ] Density
-* [ ] Thermal conductivity
-* [ ] Specific heat capacity
-* [ ] Coefficient of thermal expansion
-* [ ] Melting-temperature foundation
-* [ ] Electrical resistivity foundation
-* [ ] Temperature metadata foundation
-* [ ] Define constant-property representation
-* [ ] Define future temperature-dependent property contract
-* [ ] Validate physical ranges
-* [ ] Validate missing-property behaviour
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+Evidence:
+[docs/verification/P15-THERM-001/](docs/verification/P15-THERM-001/README.md).
+
+Built on the SAME `MaterialProperty<Value>` P15-MECH-001 qualified, not a second
+property system. **Density is NOT in `ThermalProperties`**: a material has one
+density, it lives with the mechanical properties, and thermal consumers read that
+one — two authoritative values for one physical quantity is the defect that
+arrangement prevents.
+
+**An absolute temperature and a temperature interval are the same type, and this
+is recorded rather than papered over.** The relationships need `dT` to be
+dimensionally a temperature, so they cannot be separated; the distinction lives in
+validation (a melting point must be above absolute zero, an interval of -20 K is
+ordinary cooling). There is one temperature unit, scale 1:1, so there is no
+Celsius offset to get wrong, and a test fails the day one is added.
+
+Electrical resistivity needed an architecture decision and has one: **ADR-029** —
+a scoped strong type, not a sixth base dimension, because ADR-027 had recorded
+that adding an electric-current exponent is a base-dimension change and nothing in
+P15 consumes the arithmetic. It carries NO dimensional checking, which the ADR
+states at the definition.
+
+* [x] Density — the qualified `Density`, reused; ONE store, read by both consumer
+      paths, proved four ways
+* [x] Thermal conductivity — `> 0`, finite; the Fourier-law shape proved by
+      `static_assert`, without a solver
+* [x] Specific heat capacity — `> 0`, finite; SPECIFIC, so a total heat capacity
+      (J/K) is a compile error
+* [x] Coefficient of thermal expansion — finite ONLY; **negative accepted**,
+      because real materials contract when heated
+* [x] Melting-temperature foundation — an ABSOLUTE temperature, above absolute
+      zero; never inferred from a family, a strength or a name
+* [x] Electrical resistivity foundation — ADR-029; a named type, never an untyped
+      double, never confused with mass density
+* [x] Temperature metadata foundation — a reference temperature on the one
+      property wrapper, validated as the absolute temperature it is, and it does
+      NOT turn a constant into k(T)
+* [x] Define constant-property representation — one value, used as-is
+* [x] Define future temperature-dependent property contract — `Constant` /
+      `Table` / `AnalyticLaw` named; six table invariants fixed; three
+      out-of-range behaviours named with NO default, so nothing extrapolates
+      silently
+* [x] Validate physical ranges — every problem reported, not the first
+* [x] Validate missing-property behaviour — Unknown is valid, is never zero, and
+      needs no placeholder
+* [x] Adversarial review PASS — 23 questions, 2 findings, 2 fixed. The first was
+      this change breaking four of P15-MECH-001's compile-fail assertions
+* [x] Regression PASS — 3 presets from an external build root, 2446/2446 each,
+      0 warnings, fresh binaries, 0 stages failed, first attempt
+* [x] Evidence recorded
 
 ### Relationships
 

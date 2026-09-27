@@ -6,6 +6,7 @@
 #include <compare>
 #include <cstdint>
 #include <optional>
+#include <string>
 #include <string_view>
 #include <utility>
 
@@ -60,13 +61,25 @@ public:
 
     /// A value somebody supplied.
     [[nodiscard]] static constexpr MaterialProperty known(Value value) noexcept {
-        return MaterialProperty{PropertyState::Known, std::move(value)};
+        return MaterialProperty{PropertyState::Known, std::move(value), std::nullopt};
+    }
+
+    /// A value somebody supplied, and the temperature it was specified or
+    /// measured at.
+    ///
+    /// The temperature is a RECORD, not a law. It says where this number came
+    /// from; it does NOT make the property a function of temperature, and
+    /// nothing evaluates the value against it. A constant property stays
+    /// constant over whatever range a consumer uses it in, and that assumption
+    /// is the consumer's to state -- see ADR-027's extension path.
+    [[nodiscard]] static constexpr MaterialProperty known(Value value, Temperature at) noexcept {
+        return MaterialProperty{PropertyState::Known, std::move(value), at};
     }
 
     /// A value computed from other properties. Made only by the code that does
     /// the computing; there is no setter that stores one.
     [[nodiscard]] static constexpr MaterialProperty derived(Value value) noexcept {
-        return MaterialProperty{PropertyState::Derived, std::move(value)};
+        return MaterialProperty{PropertyState::Derived, std::move(value), std::nullopt};
     }
 
     [[nodiscard]] constexpr PropertyState state() const noexcept { return state_; }
@@ -89,15 +102,87 @@ public:
         return value_;
     }
 
+    /// The temperature this value was specified or measured at, if it was
+    /// recorded. std::nullopt means nobody said.
+    ///
+    /// Provenance, in ADR-028's sense of "the state it was measured at". The
+    /// rest of provenance -- source, standard, revision, date -- is
+    /// P15-PROV-001.
+    [[nodiscard]] constexpr std::optional<Temperature> referenceTemperature() const noexcept {
+        return referenceTemperature_;
+    }
+
     friend constexpr bool operator==(const MaterialProperty&, const MaterialProperty&) = default;
 
 private:
-    constexpr MaterialProperty(PropertyState state, Value value) noexcept
-        : value_(std::move(value)), state_(state) {}
+    constexpr MaterialProperty(PropertyState state, Value value,
+                               std::optional<Temperature> at) noexcept
+        : value_(std::move(value)), referenceTemperature_(at), state_(state) {}
 
     Value value_{};
+    std::optional<Temperature> referenceTemperature_{};
     PropertyState state_ = PropertyState::Unknown;
 };
+
+/// What is wrong with a property's reference temperature, or std::nullopt when
+/// nothing is.
+///
+/// An absolute thermodynamic temperature must be above absolute zero and finite.
+/// Shared by the mechanical and thermal validators, because the field is on the
+/// one property wrapper and a modulus measured at 20 C is as ordinary as a
+/// conductivity measured there.
+[[nodiscard]] BETTERCAD_CORE_EXPORT std::optional<std::string>
+referenceTemperatureProblem(const std::optional<Temperature>& at, std::string_view name);
+
+/// Electrical resistivity, in ohm metres (ADR-029).
+///
+/// NOT a Quantity, and this is the one place that matters: `Dimension` has no
+/// electric-current exponent, so `M L^3 T^-3 I^-2` cannot be expressed and
+/// ADR-027 recorded that adding one "is a base-dimension change, not an alias".
+/// So there is NO DIMENSIONAL CHECKING here. This type cannot be multiplied by a
+/// length to give an ohm metre squared, and electrical conductivity is not
+/// derivable from it in any typed way.
+///
+/// What it does guarantee is the confusion that actually costs something: both
+/// electrical resistivity and mass density are written `rho`, and this cannot be
+/// passed where a Density, a modulus or a bare number is wanted. Same reason
+/// PoissonRatio is a type.
+///
+/// When a consumer needs the arithmetic -- P19, on ADR-027's reckoning -- the
+/// answer is an electric-current base dimension, and this class is what it
+/// replaces.
+class ElectricalResistivity {
+public:
+    constexpr ElectricalResistivity() = default;
+
+    /// From a value in ohm metres. Explicit, like Quantity::fromSi.
+    [[nodiscard]] static constexpr ElectricalResistivity ofOhmMetres(double value) noexcept {
+        return ElectricalResistivity{value};
+    }
+
+    /// The value in ohm metres, the only unit this type has.
+    [[nodiscard]] constexpr double ohmMetres() const noexcept { return value_; }
+
+    friend constexpr bool operator==(const ElectricalResistivity&,
+                                     const ElectricalResistivity&) noexcept = default;
+    friend constexpr auto operator<=>(const ElectricalResistivity&,
+                                      const ElectricalResistivity&) noexcept = default;
+
+private:
+    constexpr explicit ElectricalResistivity(double value) noexcept : value_(value) {}
+
+    double value_ = 0.0;
+};
+
+/// Whether @p resistivity is a finite number.
+[[nodiscard]] constexpr bool isFinite(ElectricalResistivity resistivity) noexcept {
+    const double value = resistivity.ohmMetres();
+    return value == value && value != std::numeric_limits<double>::infinity()
+           && value != -std::numeric_limits<double>::infinity();
+}
+
+/// "1.7e-08 Ohm m".
+[[nodiscard]] BETTERCAD_CORE_EXPORT std::string toString(ElectricalResistivity resistivity);
 
 /// Elongation at break, as a FRACTION: 0.12 is 12 %.
 ///

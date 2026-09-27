@@ -99,6 +99,7 @@ bettercad_add_executable(bettercad_tests
         core/standards/HoleStandardsTests.cpp
         core/materials/MaterialLibraryTests.cpp
         core/materials/MechanicalPropertiesTests.cpp
+        core/materials/ThermalPropertiesTests.cpp
         core/units/ConversionTests.cpp
         core/units/FormatAndCatalogTests.cpp
         core/units/EngineeringQuantityTests.cpp
