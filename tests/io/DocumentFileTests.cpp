@@ -839,3 +839,44 @@ TEST_CASE("DocumentFile_RoundTripsParametersInTheMassPropertyUnits", "[io][mass]
     // inertia and 68 kg mm^2 did not become a volume.
     CHECK(loadedInertia->dimension() != loadedSecond->dimension());
 }
+
+TEST_CASE("A cloned custom material is not persisted yet either, and the save still says so",
+          "[io][document][material][custom]") {
+    // P15-CUSTOM-001 adds cloning and property removal. Neither adds a new kind of
+    // canonical state -- a clone is an ordinary document material -- so the file
+    // representation is still P15-PERSIST-001's and the gap must still be LOUD.
+    //
+    // This is here rather than in the custom-material tests because the failure it
+    // guards against is a serializer one: a writer taught to skip a material it
+    // considers "just a copy" would lose it silently on every save. Two documents
+    // are checked, the source and the destination of a cross-document clone, so a
+    // writer that reported success for the document that did not originate the
+    // material would fail here.
+    TempDir dir;
+    Document source{"Source"};
+    const Result<MaterialId> original = features::createMaterial(source, "Steel");
+    REQUIRE(original);
+    // Give it properties, so this is not only about an empty definition.
+    materials::MechanicalProperties mechanical;
+    mechanical.density = materials::MaterialProperty<Density>::known(Density::fromSi(7850.0));
+    REQUIRE(features::setMaterialMechanical(source, *original, mechanical));
+
+    Document destination{"Destination"};
+    const Result<MaterialId> cloned =
+        features::cloneMaterial(destination, source, *original, "SteelCopy");
+    REQUIRE(cloned);
+    REQUIRE(features::removeMaterialProperty(destination, *cloned,
+                                             materials::MechanicalPropertyKind::Density));
+
+    for (const auto& [document, file] :
+         {std::pair{&source, "source.bcad"}, std::pair{&destination, "destination.bcad"}}) {
+        CAPTURE(file);
+        const Result<void> saved = io::saveDocument(*document, dir.path() / file);
+        REQUIRE_FALSE(saved);
+        CHECK_THAT(saved.error().message, ContainsSubstring("material"));
+        CHECK_THAT(saved.error().message, ContainsSubstring("cannot be saved"));
+    }
+    // Nothing half-written, from either attempt.
+    CHECK(std::distance(std::filesystem::directory_iterator(dir.path()),
+                        std::filesystem::directory_iterator{}) == 0);
+}

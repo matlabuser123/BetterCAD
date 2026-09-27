@@ -181,3 +181,54 @@ bettercad_compile_fail_case(massp "${_massp}" MASS_PROPERTIES_HAVE_NO_SETTER
     "has no member named .setMass" BetterCAD::features)
 bettercad_compile_fail_case(massp "${_massp}" BODY_RETURNS_MASS
     "has no member named .mass" BetterCAD::features)
+
+# --- Custom materials (P15-CUSTOM-001) --------------------------------------
+#
+# Two groups of absences. The first proves the built-in library cannot be mutated
+# through any path a caller might reach for -- a runtime test can only show that it
+# did not change. The second proves there is no override model: ADR-025 chose
+# snapshot semantics, so a base reference, an override map and an `Inherited`
+# property state are all unrepresentable, which is what keeps "sometimes copied,
+# sometimes inherited" from ever arising.
+set(_custom "${CMAKE_CURRENT_SOURCE_DIR}/CustomMaterialMisuse.cpp")
+bettercad_compile_fail_group(custom "${_custom}" BetterCAD::features)
+bettercad_compile_fail_case(custom "${_custom}" LIBRARY_ENTRY_HAS_NO_SETTER
+    "has no member named .setDesignation" BetterCAD::features)
+bettercad_compile_fail_case(custom "${_custom}" LIBRARY_ENTRY_FIELDS_ARE_PRIVATE
+    "is private within this context" BetterCAD::features)
+bettercad_compile_fail_case(custom "${_custom}" LIBRARY_TABLE_IS_CONST
+    "binding reference of type .* to .* discards qualifiers" BetterCAD::features)
+bettercad_compile_fail_case(custom "${_custom}" LIBRARY_ENTRY_IS_NOT_A_DEFINITION
+    "invalid initialization of reference|cannot convert|no match for" BetterCAD::features)
+bettercad_compile_fail_case(custom "${_custom}" LIBRARY_ENTRY_IS_NOT_A_DOCUMENT_OBJECT
+    "cannot convert .*LibraryMaterial.* to .*unique_ptr<bettercad::DocumentObject>" BetterCAD::features)
+bettercad_compile_fail_case(custom "${_custom}" LIBRARY_ENTRY_HAS_NO_PROPERTIES
+    "has no member named .mechanical" BetterCAD::features)
+bettercad_compile_fail_case(custom "${_custom}" FOUND_MATERIAL_IS_CONST
+    "discards qualifiers" BetterCAD::features)
+bettercad_compile_fail_case(custom "${_custom}" DEFINITION_HAS_NO_ID
+    "has no member named .id" BetterCAD::features)
+bettercad_compile_fail_case(custom "${_custom}" DEFINITION_HAS_NO_MATERIAL_ID
+    "has no member named .materialId" BetterCAD::features)
+bettercad_compile_fail_case(custom "${_custom}" NO_BASE_MATERIAL_REFERENCE
+    "has no member named .baseMaterial" BetterCAD::features)
+bettercad_compile_fail_case(custom "${_custom}" NO_OVERRIDE_MAP
+    "has no member named .overrides" BetterCAD::features)
+bettercad_compile_fail_case(custom "${_custom}" PROPERTY_IS_NEVER_INHERITED
+    "has no member named .isInherited" BetterCAD::features)
+bettercad_compile_fail_case(custom "${_custom}" NO_INHERITED_PROPERTY_STATE
+    "Inherited. is not a member of" BetterCAD::features)
+bettercad_compile_fail_case(custom "${_custom}" DEFINITION_HAS_NO_MASS
+    "has no member named .mass" BetterCAD::features)
+bettercad_compile_fail_case(custom "${_custom}" DEFINITION_HAS_NO_VOLUME
+    "has no member named .volume" BetterCAD::features)
+bettercad_compile_fail_case(custom "${_custom}" MECHANICAL_HAS_NO_SHEAR_MODULUS_SLOT
+    "has no member named .shearModulus" BetterCAD::features)
+bettercad_compile_fail_case(custom "${_custom}" MECHANICAL_HAS_NO_BULK_MODULUS_SLOT
+    "has no member named .bulkModulus" BetterCAD::features)
+bettercad_compile_fail_case(custom "${_custom}" REMOVE_TAKES_A_TYPED_KIND
+    "no matching function for call to .*removeMaterialProperty" BetterCAD::features)
+bettercad_compile_fail_case(custom "${_custom}" CLONE_TAKES_A_MATERIAL_ID
+    "no matching function for call to .*cloneMaterial|could not convert" BetterCAD::features)
+bettercad_compile_fail_case(custom "${_custom}" CLONE_DOES_NOT_TAKE_A_LIBRARY_ENTRY
+    "no matching function for call to .*cloneMaterial|could not convert" BetterCAD::features)

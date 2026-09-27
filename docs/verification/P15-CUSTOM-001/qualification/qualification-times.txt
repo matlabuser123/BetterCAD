@@ -1,0 +1,45 @@
+qualification started Sun 27/09/2026 23:22:34.02 
+qualification candidate: 
+d99c9f97cae4180cbec2c0ba33248e4b5068f996
+qualified source trees before the first build: 
+  apps a3528787f4b24097c34ca11961d6c0c642315f0e 
+  include 2e2692d641e365057b3040a0e0057ba6050c6ecb 
+  src 9fc16cbd14cdab08bbef0009c7c248c5c8c36ce9 
+  tests 77d4c574ee0939028032ab1563daffdf46620a6f 
+  examples 2e1ef60bb5e67fa3589e1246613261cd746ddce2 
+  cmake 7ed703a3031144d26063a1ff02996e7664e29524 
+  CMakeLists.txt 13823e788ed3975792affa9ee4354ffce9479d80 
+  CMakePresets.json 3229f0f89b236744d7d5c082bed47c28b718288e 
+debug-ext configure started Sun 27/09/2026 23:22:36.94 
+debug-ext configure exit 0 Sun 27/09/2026 23:22:43.99 
+debug-ext clean attempt 1 exit 0 Sun 27/09/2026 23:22:45.55 
+debug-ext build exit 0 Sun 27/09/2026 23:40:16.23 
+debug-ext no-op rebuild exit 0 Sun 27/09/2026 23:40:17.86 
+debug-ext ctest exit 0 Sun 27/09/2026 23:50:03.06 
+release-ext configure started Sun 27/09/2026 23:50:03.06 
+release-ext configure exit 0 Sun 27/09/2026 23:50:13.01 
+release-ext clean attempt 1 exit 0 Sun 27/09/2026 23:50:14.20 
+release-ext build exit 0 Mon 28/09/2026  0:11:33.85 
+release-ext no-op rebuild exit 0 Mon 28/09/2026  0:11:34.90 
+release-ext ctest exit 0 Mon 28/09/2026  0:21:40.81 
+debug-shared-ext configure started Mon 28/09/2026  0:21:40.82 
+debug-shared-ext configure exit 0 Mon 28/09/2026  0:21:48.26 
+debug-shared-ext clean attempt 1 exit 0 Mon 28/09/2026  0:21:49.28 
+debug-shared-ext build exit 0 Mon 28/09/2026  0:38:32.33 
+debug-shared-ext no-op rebuild exit 0 Mon 28/09/2026  0:38:33.61 
+debug-shared-ext ctest exit 0 Mon 28/09/2026  0:49:40.08 
+repeat release-ext started Mon 28/09/2026  0:49:40.08 
+repeat release-ext exit 0 Mon 28/09/2026  1:39:05.17 
+repeat debug-ext started Mon 28/09/2026  1:39:05.18 
+repeat debug-ext exit 0 Mon 28/09/2026  2:27:30.80 
+qualified source trees after the last test run: 
+  apps a3528787f4b24097c34ca11961d6c0c642315f0e 
+  include 2e2692d641e365057b3040a0e0057ba6050c6ecb 
+  src 9fc16cbd14cdab08bbef0009c7c248c5c8c36ce9 
+  tests 77d4c574ee0939028032ab1563daffdf46620a6f 
+  examples 2e1ef60bb5e67fa3589e1246613261cd746ddce2 
+  cmake 7ed703a3031144d26063a1ff02996e7664e29524 
+  CMakeLists.txt 13823e788ed3975792affa9ee4354ffce9479d80 
+  CMakePresets.json 3229f0f89b236744d7d5c082bed47c28b718288e 
+qualification finished Mon 28/09/2026  2:27:33.65, 0 stage(s) failed 
+build root: C:\Users\uqhas\AppData\Local\bc-build 

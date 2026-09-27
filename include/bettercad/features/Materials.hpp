@@ -335,4 +335,99 @@ requireEffectiveMaterial(const Document& document);
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<void> removeMaterial(Document& document,
                                                                     MaterialId id);
 
+// --- Custom materials and controlled overrides (P15-CUSTOM-001) -------------
+//
+// THE OVERRIDE MODEL IS A SNAPSHOT, AND IT WAS ALREADY CHOSEN. ADR-025 decided
+// that a document OWNS its material values, copied from a library entry with the
+// key kept only as provenance, and that "nothing looks a library entry up at load
+// time or at solve time". So there is no base reference, no per-property override
+// map, no inheritance and no fallback: every property of every document material
+// is that material's own, and its state is exactly Known, Unknown or Derived
+// (ADR-027).
+//
+// That is why nothing below adds an "effective value" or a "property source"
+// query. In a snapshot model an INHERITED value is not a state a property can be
+// in, so a function reporting one would have to invent it. What P15-PROV-001 will
+// add is where a value CAME FROM, which is a different question and one the
+// existing `origin` key and MaterialProperty::referenceTemperature() already
+// begin to answer.
+//
+// The consequence worth stating plainly: a library correction can never change
+// what a saved document computes, and equally, a material imported before a
+// correction does not pick it up. The second is the price of the first, and
+// ADR-025 took that trade deliberately.
+
+/// Copies the material @p material of @p source into @p destination as a new
+/// material named @p name, and returns its NEW id.
+///
+/// A new identity, always. @p name is the new material's object name and must be
+/// available in @p destination; the copy is otherwise indistinguishable in
+/// content from its source, including which properties are Unknown.
+///
+/// @p source and @p destination may be the same document -- there is an overload
+/// for that -- or different ones. Nothing about the result refers to @p source
+/// afterwards: the definition is copied by value, every property with it, so
+/// editing either material cannot reach the other. There is deliberately no
+/// handle to a source document anywhere in a Material.
+///
+/// THE ORIGIN KEY IS CARRIED OVER UNCHANGED, and that is correct rather than
+/// lazy: `origin` records where the VALUES came from, and cloning does not change
+/// the values. A material imported from `bettercad/al-6061-t6 rev 1` and then
+/// cloned still holds values that came from that entry, so that is still what its
+/// provenance says. It does NOT mean the clone is a view of the library -- no
+/// lookup happens through it, ever (ADR-025). Recording "cloned from material:N"
+/// as well needs a provenance model that distinguishes a library source from a
+/// document one, and that is P15-PROV-001.
+///
+/// Fails, changing nothing, if @p material is not a material of @p source, or if
+/// @p name is invalid or taken in @p destination. A failed clone consumes no ID.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<MaterialId>
+cloneMaterial(Document& destination, const Document& source, MaterialId material, std::string name);
+
+/// Copies a material within one document. See the two-document overload.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<MaterialId>
+cloneMaterial(Document& document, MaterialId material, std::string name);
+
+/// Makes one mechanical property of the material with @p id Unknown, leaving
+/// every other property, the metadata and the identity alone. Returns whether
+/// anything changed.
+///
+/// REMOVAL IS NOT ZEROING, and the distinction is the reason this function
+/// exists: `remove(Density)` leaves the density Unknown, which is a material
+/// nobody has weighed, while a density of 0 is a claim about a massless solid and
+/// is refused by validation. A consumer then fails with "has no density" rather
+/// than computing a mass of zero.
+///
+/// It removes the WHOLE property record, including the reference temperature the
+/// value was specified at: there is nothing left to have recorded a temperature
+/// for.
+///
+/// Fails for a DERIVED kind -- the shear and bulk moduli -- because there is
+/// nothing stored to remove. Both are computed from E and nu on request
+/// (ADR-027), so the way to stop BetterCAD reporting a shear modulus is to remove
+/// one of those. The diagnostic says so.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<bool>
+removeMaterialProperty(Document& document, MaterialId id, materials::MechanicalPropertyKind kind);
+
+/// Makes one thermal property Unknown. See the mechanical overload; every kind
+/// here is stored, so none of them is refused.
+///
+/// Density is deliberately NOT reachable through this overload even though
+/// thermal consumers read it: it lives in the mechanical properties, which is its
+/// one home, and removing it is a mechanical edit.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<bool>
+removeMaterialProperty(Document& document, MaterialId id, materials::ThermalPropertyKind kind);
+
+/// Whether the material with @p id has a stored value for @p kind.
+///
+/// A convenience over definition().mechanical, provided because "did that removal
+/// take" and "is this material complete enough" are the two questions a caller
+/// asks around an edit. For a derived kind it answers whether the INPUTS are
+/// there, since that is what decides whether a value can be produced.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT bool
+hasMaterialProperty(const Document& document, MaterialId id,
+                    materials::MechanicalPropertyKind kind);
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT bool
+hasMaterialProperty(const Document& document, MaterialId id, materials::ThermalPropertyKind kind);
+
 } // namespace bettercad::features

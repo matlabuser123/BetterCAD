@@ -11,7 +11,7 @@
 ```text
 Current:   P15 — Materials / Engineering Data
 Current milestone:
-           NONE. P15-MASS-001 is complete.
+           NONE. P15-CUSTOM-001 is complete.
            The next milestone is a scope decision, not Claude's to make.
 
 Qualified:
@@ -20,10 +20,11 @@ Qualified:
            P13
            P14 — Technical Drawings
            P15-ARCH-001, P15-UNITS-001, INFRA-QT-DEPLOY-001, P15-MAT-001,
-           P15-MECH-001, P15-THERM-001, P15-ASSIGN-001, P15-MASS-001
+           P15-MECH-001, P15-THERM-001, P15-ASSIGN-001, P15-MASS-001,
+           P15-CUSTOM-001
 
 Next:
-           P15-CUSTOM-001 — custom materials / controlled overrides.
+           P15-PROV-001 — property provenance / completeness / validation.
            Awaiting explicit scope decision.
 
            A material cannot be SAVED until P15-PERSIST-001. Saving a document
@@ -888,19 +889,55 @@ volume correct
 
 ## Custom Materials / Controlled Overrides
 
-* [ ] Create user-defined material
-* [ ] Clone library material into editable document material
-* [ ] Edit custom property
-* [ ] Remove custom property
-* [ ] Preserve original library material
-* [ ] Explicit property override semantics
-* [ ] No accidental partial override
-* [ ] Validate duplicate names
-* [ ] Validate identity preservation
-* [ ] Validate copy/clone semantics
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+**PASS 2026-09-28.** Evidence:
+[docs/verification/P15-CUSTOM-001/](../docs/verification/P15-CUSTOM-001/README.md).
+
+**Mostly a proof that the architecture already got this right.** Three functions were
+missing and were added; everything else was already built or already structurally
+impossible to get wrong, and the work there was turning "impossible" into 12
+compile-fail cases and an audit.
+
+* [x] Create user-defined material — `createMaterial` already existed; a material
+      with nothing but a name is valid and every property starts Unknown, not zero
+* [x] Clone library material into editable document material — `importLibraryMaterial`
+      already existed and already copies (ADR-025). **NEW: `cloneMaterial`**, the
+      document-to-document clone, same-document and cross-document
+* [x] Edit custom property — the three existing setters, tested for non-clobbering:
+      a mechanical edit cannot reach the thermal half, and an unrelated edit does not
+      disturb a hardness scale or a reference temperature
+* [x] Remove custom property — **NEW: `removeMaterialProperty`**. Known → Unknown,
+      never zero; refuses the derived kinds, saying to remove E or nu instead
+* [x] Preserve original library material — the entries are `static constexpr` with no
+      setters, so it is structural. Verified field by field, by key, by `operator==`
+      and by table order after every local edit, plus 6 compile-fail cases
+* [x] Explicit property override semantics — **the model is a SNAPSHOT and ADR-025
+      chose it.** No base reference, no override map, no `Inherited` state; 4
+      compile-fail cases prove the absence rather than asserting it
+* [x] No accidental partial override — an edit touches exactly one property, compared
+      member by member afterwards including the whole other half
+* [x] Validate duplicate names — **the brief's premise does not hold here: names are
+      UNIQUE.** A duplicate name is refused, consumes no ID and changes nothing; the
+      duplicate that is legitimate is the DESIGNATION, and a three-way import +
+      two-custom fixture shows all three resolve by identity with no fallback
+* [x] Validate identity preservation — rename, metadata, mechanical, thermal and
+      removal all leave the MaterialId untouched; a deleted ID never rebinds to an
+      identical replacement
+* [x] Validate copy/clone semantics — `Material::clone()` keeps the ID for undo/redo,
+      which is why it is not the clone route: `addObject` refuses an ID-bearing object
+      and `insertObject` refuses a duplicate ID, neither merging nor overwriting
+* [x] Adversarial review PASS — 26 attacks, 5 findings: 2 defects in this milestone's
+      own work, 3 places where the brief's premises do not hold. **No production
+      defect survived.** Two gates mutation-tested
+* [x] Regression PASS — 3 presets from an external build root, 2589/2589 each,
+      0 warnings, fresh binaries, 0 stages failed, first attempt
+* [x] Evidence recorded
+
+**Known limitation, recorded not hidden:** a clone of an imported material carries the
+same `origin` as the import, so the two are indistinguishable. Both hold values that
+came from that library entry, so neither is lying — but "which document material did
+this come from" needs a provenance model that separates a library source from a
+document one, which is P15-PROV-001's subject. A `clonedFrom` field can be added
+beside `origin` without migrating anything.
 
 ### Rule
 

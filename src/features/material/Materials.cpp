@@ -401,4 +401,196 @@ Result<void> removeMaterial(Document& document, MaterialId id) {
     return {};
 }
 
+// --- Custom materials and controlled overrides (P15-CUSTOM-001) -------------
+
+namespace {
+
+/// Sets the slot @p kind of @p properties to Unknown. Returns false for a kind
+/// that is not stored.
+bool clearMechanical(materials::MechanicalProperties& properties,
+                     materials::MechanicalPropertyKind kind) {
+    using Kind = materials::MechanicalPropertyKind;
+    switch (kind) {
+        case Kind::Density:
+            properties.density = {};
+            return true;
+        case Kind::YoungsModulus:
+            properties.youngsModulus = {};
+            return true;
+        case Kind::PoissonRatio:
+            properties.poissonRatio = {};
+            return true;
+        case Kind::YieldStrength:
+            properties.yieldStrength = {};
+            return true;
+        case Kind::UltimateTensileStrength:
+            properties.ultimateTensileStrength = {};
+            return true;
+        case Kind::UltimateCompressiveStrength:
+            properties.ultimateCompressiveStrength = {};
+            return true;
+        case Kind::ShearStrength:
+            properties.shearStrength = {};
+            return true;
+        case Kind::Elongation:
+            properties.elongation = {};
+            return true;
+        case Kind::Hardness:
+            properties.hardness = {};
+            return true;
+        case Kind::ShearModulus:
+        case Kind::BulkModulus:
+            // Derived, and never stored (ADR-027). There is no slot to clear.
+            return false;
+    }
+    return false;
+}
+
+void clearThermal(materials::ThermalProperties& properties, materials::ThermalPropertyKind kind) {
+    using Kind = materials::ThermalPropertyKind;
+    switch (kind) {
+        case Kind::ThermalConductivity:
+            properties.thermalConductivity = {};
+            return;
+        case Kind::SpecificHeatCapacity:
+            properties.specificHeatCapacity = {};
+            return;
+        case Kind::ThermalExpansion:
+            properties.thermalExpansion = {};
+            return;
+        case Kind::MeltingTemperature:
+            properties.meltingTemperature = {};
+            return;
+        case Kind::ElectricalResistivity:
+            properties.electricalResistivity = {};
+            return;
+    }
+}
+
+} // namespace
+
+Result<MaterialId> cloneMaterial(Document& destination, const Document& source, MaterialId material,
+                                 std::string name) {
+    const Material* original = findMaterial(source, material);
+    if (original == nullptr) {
+        return makeError(ErrorCode::NotFound,
+                         std::format("there is no material {} to clone", material));
+    }
+    // A copy of the definition BY VALUE, taken before anything is added, so the
+    // new material shares no storage with the original even when the two
+    // documents are the same one. MaterialDefinition holds no pointer, no view
+    // and no ID -- every member is a std::string, an optional owning key or a
+    // property struct of values -- so copying it is the whole of the
+    // independence, and createMaterial allocates the new identity.
+    //
+    // Note what is NOT copied, because it cannot be: the MaterialId. It lives on
+    // DocumentObject, not in the definition, so there is no path by which a clone
+    // could inherit its source identity.
+    const MaterialDefinition copied = original->definition();
+    return createMaterial(destination, std::move(name), copied);
+}
+
+Result<MaterialId> cloneMaterial(Document& document, MaterialId material, std::string name) {
+    // The same function. Passing `document` as both arguments is safe: the
+    // definition is copied out before addObject touches the document, so nothing
+    // is read through the const reference after the mutable one is written.
+    return cloneMaterial(document, document, material, std::move(name));
+}
+
+Result<bool> removeMaterialProperty(Document& document, MaterialId id,
+                                    materials::MechanicalPropertyKind kind) {
+    const Material* material = findMaterial(document, id);
+    if (material == nullptr) {
+        return makeError(ErrorCode::NotFound, std::format("there is no material {}", id));
+    }
+    if (materials::isDerivedKind(kind)) {
+        return makeError(
+            ErrorCode::InvalidArgument,
+            std::format("{} of {} is derived from the elastic constants, so there is nothing "
+                        "stored to remove; remove the modulus or the ratio instead",
+                        materials::toString(kind), describe(*material)));
+    }
+    materials::MechanicalProperties properties = material->definition().mechanical;
+    if (!clearMechanical(properties, kind)) {
+        return makeError(ErrorCode::InvalidArgument,
+                         std::format("{} of {} cannot be removed", materials::toString(kind),
+                                     describe(*material)));
+    }
+    // Through setMaterialMechanical, so the same validation runs as for any other
+    // mechanical edit. Removing a property can never make a material invalid --
+    // Unknown is always acceptable (ADR-027) -- but routing it here means there is
+    // one path that writes mechanical properties rather than two.
+    return setMaterialMechanical(document, id, properties);
+}
+
+Result<bool> removeMaterialProperty(Document& document, MaterialId id,
+                                    materials::ThermalPropertyKind kind) {
+    const Material* material = findMaterial(document, id);
+    if (material == nullptr) {
+        return makeError(ErrorCode::NotFound, std::format("there is no material {}", id));
+    }
+    materials::ThermalProperties properties = material->definition().thermal;
+    clearThermal(properties, kind);
+    return setMaterialThermal(document, id, properties);
+}
+
+bool hasMaterialProperty(const Document& document, MaterialId id,
+                         materials::MechanicalPropertyKind kind) {
+    const Material* material = findMaterial(document, id);
+    if (material == nullptr) {
+        return false;
+    }
+    const materials::MechanicalProperties& properties = material->definition().mechanical;
+    using Kind = materials::MechanicalPropertyKind;
+    switch (kind) {
+        case Kind::Density:
+            return properties.density.hasValue();
+        case Kind::YoungsModulus:
+            return properties.youngsModulus.hasValue();
+        case Kind::PoissonRatio:
+            return properties.poissonRatio.hasValue();
+        case Kind::YieldStrength:
+            return properties.yieldStrength.hasValue();
+        case Kind::UltimateTensileStrength:
+            return properties.ultimateTensileStrength.hasValue();
+        case Kind::UltimateCompressiveStrength:
+            return properties.ultimateCompressiveStrength.hasValue();
+        case Kind::ShearStrength:
+            return properties.shearStrength.hasValue();
+        case Kind::Elongation:
+            return properties.elongation.hasValue();
+        case Kind::Hardness:
+            return properties.hardness.hasValue();
+        case Kind::ShearModulus:
+        case Kind::BulkModulus:
+            // A derived kind has a value exactly when its inputs do, which is
+            // what a caller asking whether BetterCAD can report G needs to know.
+            return materials::hasLinearElasticConstants(properties);
+    }
+    return false;
+}
+
+bool hasMaterialProperty(const Document& document, MaterialId id,
+                         materials::ThermalPropertyKind kind) {
+    const Material* material = findMaterial(document, id);
+    if (material == nullptr) {
+        return false;
+    }
+    const materials::ThermalProperties& properties = material->definition().thermal;
+    using Kind = materials::ThermalPropertyKind;
+    switch (kind) {
+        case Kind::ThermalConductivity:
+            return properties.thermalConductivity.hasValue();
+        case Kind::SpecificHeatCapacity:
+            return properties.specificHeatCapacity.hasValue();
+        case Kind::ThermalExpansion:
+            return properties.thermalExpansion.hasValue();
+        case Kind::MeltingTemperature:
+            return properties.meltingTemperature.hasValue();
+        case Kind::ElectricalResistivity:
+            return properties.electricalResistivity.hasValue();
+    }
+    return false;
+}
+
 } // namespace bettercad::features
