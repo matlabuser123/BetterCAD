@@ -142,3 +142,42 @@ bettercad_compile_fail_case(ids "${_ids}" SHEET_ID_AS_MATERIAL_ID "conversion fr
 bettercad_compile_fail_case(ids "${_ids}" INTEGER_TO_MATERIAL_ID "conversion from [^ ]*int[^ ]* to non-scalar type")
 bettercad_compile_fail_case(ids "${_ids}" MATERIAL_ID_TO_INTEGER "cannot convert .*MaterialId.* in initialization")
 bettercad_compile_fail_case(ids "${_ids}" ENTITY_ID_AS_OBJECT_ID "could not convert .*EntityId")
+
+# --- Mass properties (P15-MASS-001) -----------------------------------------
+#
+# Half of these separate a second moment of VOLUME from a second moment of MASS,
+# which differ by a density and by nine orders of magnitude in a millimetre model.
+# The other half prove ABSENCES: nothing can store a mass, because mass is derived
+# and never persisted (ADR-026).
+set(_massp "${CMAKE_CURRENT_SOURCE_DIR}/MassMisuse.cpp")
+bettercad_compile_fail_group(massp "${_massp}" BetterCAD::features)
+bettercad_compile_fail_case(massp "${_massp}" VOLUME_MOMENT_AS_MASS_MOMENT
+    "no match for [^ ]*operator=" BetterCAD::features)
+bettercad_compile_fail_case(massp "${_massp}" MASS_MOMENT_AS_VOLUME_MOMENT
+    "no match for [^ ]*operator=" BetterCAD::features)
+bettercad_compile_fail_case(massp "${_massp}" ADD_VOLUME_AND_MASS_MOMENT
+    "no match for [^ ]*operator\+" BetterCAD::features)
+bettercad_compile_fail_case(massp "${_massp}" MASS_MOMENT_IN_MM5
+    "cannot convert .*bettercad::Unit<" BetterCAD::features)
+bettercad_compile_fail_case(massp "${_massp}" VOLUME_MOMENT_IN_KG_MM2
+    "cannot convert .*bettercad::Unit<" BetterCAD::features)
+bettercad_compile_fail_case(massp "${_massp}" MASS_MOMENT_FROM_DOUBLE
+    "no match for [^ ]*operator=.*double" BetterCAD::features)
+bettercad_compile_fail_case(massp "${_massp}" MASS_MOMENT_TO_DOUBLE
+    "cannot convert" BetterCAD::features)
+bettercad_compile_fail_case(massp "${_massp}" VOLUME_TIMES_DENSITY_IS_NOT_A_MOMENT
+    "no match for [^ ]*operator=" BetterCAD::features)
+bettercad_compile_fail_case(massp "${_massp}" SHIFT_WITH_A_VOLUME
+    "could not convert|cannot convert|invalid conversion" BetterCAD::features)
+bettercad_compile_fail_case(massp "${_massp}" SHIFT_WITH_A_DENSITY
+    "could not convert|cannot convert|invalid conversion" BetterCAD::features)
+bettercad_compile_fail_case(massp "${_massp}" TENSOR_REFERENCE_FROM_COMPONENTS
+    "no match for [^ ]*operator=" BetterCAD::features)
+bettercad_compile_fail_case(massp "${_massp}" DOCUMENT_STORES_MASS
+    "has no member named .setMass" BetterCAD::features)
+bettercad_compile_fail_case(massp "${_massp}" DOCUMENT_READS_MASS
+    "has no member named .mass" BetterCAD::features)
+bettercad_compile_fail_case(massp "${_massp}" MASS_PROPERTIES_HAVE_NO_SETTER
+    "has no member named .setMass" BetterCAD::features)
+bettercad_compile_fail_case(massp "${_massp}" BODY_RETURNS_MASS
+    "has no member named .mass" BetterCAD::features)

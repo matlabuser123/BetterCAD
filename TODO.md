@@ -11,7 +11,7 @@
 ```text
 Current:   P15 — Materials / Engineering Data
 Current milestone:
-           NONE. P15-ASSIGN-001 is complete.
+           NONE. P15-MASS-001 is complete.
            The next milestone is a scope decision, not Claude's to make.
 
 Qualified:
@@ -20,16 +20,10 @@ Qualified:
            P13
            P14 — Technical Drawings
            P15-ARCH-001, P15-UNITS-001, INFRA-QT-DEPLOY-001, P15-MAT-001,
-           P15-MECH-001, P15-THERM-001, P15-ASSIGN-001
+           P15-MECH-001, P15-THERM-001, P15-ASSIGN-001, P15-MASS-001
 
 Next:
-           P15-MASS-001 — mass, centre of mass, inertia. ADR-026 decided its
-           shape: derived, never stored, and a request on a part with no material
-           is a diagnostic rather than a zero.
-           **It should NOT start before the carried regeneration defect below is
-           settled.** Mass = density x volume, and under any non-base
-           configuration the volume is currently stale, so P15-MASS-001 would
-           report a wrong mass without saying so.
+           P15-CUSTOM-001 — custom materials / controlled overrides.
            Awaiting explicit scope decision.
 
            A material cannot be SAVED until P15-PERSIST-001. Saving a document
@@ -780,23 +774,48 @@ assignment stable
 
 ## Mass Properties
 
-* [ ] Compute solid volume from authoritative geometry
-* [ ] Compute material density lookup
-* [ ] Compute mass
-* [ ] Compute centre of mass
-* [ ] Compute moments of inertia
-* [ ] Compute products of inertia
-* [ ] Define reference coordinate frame
-* [ ] Validate transformed bodies
-* [ ] Validate assemblies where in scope
-* [ ] Missing density fails explicitly
-* [ ] Invalid/open geometry fails explicitly where required
-* [ ] Derived values never persisted as authority
-* [ ] Independently validate analytical solids
-* [ ] Determinism PASS
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+**PASS 2026-09-27.** Evidence:
+[docs/verification/P15-MASS-001/](../docs/verification/P15-MASS-001/README.md).
+
+* [x] Compute solid volume from authoritative geometry — the regenerator's body for
+      the named feature, refused when it is absent, stale or encloses no volume
+* [x] Compute material density lookup — composes requireEffectiveMaterial and
+      requireDensity; no material logic is duplicated here
+* [x] Compute mass — density x volume, dimensionally checked, never zero for an
+      unanswered question
+* [x] Compute centre of mass — the geometric centroid for a uniform part (ADR-026)
+* [x] Compute moments of inertia — about the centroid AND about the origin
+* [x] Compute products of inertia — the inertia TENSOR convention (negated
+      products), **measured on a three-box staircase, not assumed**: no symmetric
+      body can distinguish the two conventions
+* [x] Define reference coordinate frame — the document's own axes; each tensor
+      carries the point it is taken about, so a tensor cannot be paired with the
+      wrong reference point
+* [x] Validate transformed bodies — integrating the moved body and moving the
+      integrated tensor agree to 1e-12, on a rotation about a non-principal axis
+      through a non-centroidal point at 37 degrees; plus reflection and a pure
+      translation
+* [x] Validate assemblies where in scope — **scope decision recorded: aggregation is
+      OUT of scope, and NOT implemented.** ADR-026 forces every part in one document
+      to share one material, so an assembly mass would be ρ x ΣV — useless for the
+      case that matters. See KNOWN LIMITATIONS 2 for the reason and what it needs
+* [x] Missing density fails explicitly — three material faults with three diagnostics,
+      asserted pairwise distinct in one test
+* [x] Invalid/open geometry fails explicitly where required — empty body, no volume,
+      no body, failed or blocked regeneration, swept-curve face
+* [x] Derived values never persisted as authority — 0 hits in src/io/, and four
+      compile-fail cases prove there is no setter to persist from
+* [x] Independently validate analytical solids — every expected value a hand-evaluated
+      closed form; box, cylinder, sphere, fused staircase, two-solid body, drilled
+      plate, rotation, translation; plus four reference-free invariants
+* [x] Determinism PASS — bit-for-bit over ten runs at the tightened tolerance on five
+      shapes including a torus; 12655 = 2531 x 5 in each of two presets
+* [x] Adversarial review PASS — 24 questions, 4 findings: 3 defects in this
+      milestone's own work (a wrong API contract, an untrue comment, a test that
+      proved nothing), 1 recorded limitation
+* [x] Regression PASS — 3 presets from an external build root, 2531/2531 each,
+      0 warnings, fresh binaries, 0 stages failed, first attempt
+* [x] Evidence recorded
 
 ### Core equations
 
@@ -1287,8 +1306,18 @@ exists and placements follow a configuration switch.
 
 Why it matters beyond a wrong volume: **P15-MASS-001 computes mass from density
 and volume.** Under any non-base configuration it would multiply a correct density
-by a stale volume and report a mass that is wrong without saying so. This should
-be fixed before, or as part of, that milestone.
+by a stale volume and report a mass that is wrong without saying so.
+
+**P15-MASS-001 shipped a GUARD for this rather than a fix, because the fix is not
+authorized here.** `features::partMassProperties` refuses to answer while a
+configuration with parameter overrides is active, naming the configuration and the
+reason, and it checks that before anything else. So a wrong mass is not reported --
+but mass properties are unavailable under a configuration, which is a real
+capability gap and the reason this defect is now worth fixing on its own.
+
+When it is fixed, delete the guard and
+`MassProperties_RefuseToAnswerUnderAConfigurationThatOverridesAParameter` together,
+and replace them with a test that the mass FOLLOWS a configuration switch.
 
 Scope, when authorized:
 
@@ -1299,11 +1328,13 @@ parameter object -- the assembly solver already distinguishes exactly this case
 ```
 
 A regression test must assert the volume of a feature reading a FREE parameter
-changes across a configuration switch. P15-ASSIGN-001 deliberately did NOT assert
-the present behaviour, because pinning it would record a defect as the contract.
+changes across a configuration switch. Neither P15-ASSIGN-001 nor P15-MASS-001
+asserted the present behaviour, because pinning it would record a defect as the
+contract.
 
 **Awaiting explicit scope decision.** It is a regeneration concern, not a
-materials one, and it was outside P15-ASSIGN-001's authorized scope.
+materials one, and it was outside the authorized scope of both P15-ASSIGN-001 and
+P15-MASS-001.
 
 ## Carried: a document save can still lose to a file synchroniser
 

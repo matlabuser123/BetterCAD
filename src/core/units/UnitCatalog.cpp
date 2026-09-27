@@ -27,6 +27,8 @@ constexpr std::array kCatalog{
     describe(units::J_per_kg_K), describe(units::kJ_per_kg_K), describe(units::per_K),
     describe(units::um_per_m_K), describe(units::Pa_s),      describe(units::mPa_s),
     describe(units::m2_per_s),  describe(units::mm2_per_s),
+    describe(units::kg_m2),     describe(units::kg_mm2),     describe(units::m5),
+    describe(units::mm5),
 };
 
 consteval bool symbolsAreUnique() {

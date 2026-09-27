@@ -30,6 +30,14 @@ using SpecificHeatCapacity = Quantity<dimensions::specificHeatCapacity>;
 using ThermalExpansionCoefficient = Quantity<dimensions::thermalExpansion>;
 using DynamicViscosity = Quantity<dimensions::dynamicViscosity>;
 using KinematicViscosity = Quantity<dimensions::kinematicViscosity>;
+/// One component of an inertia tensor, in kg m^2 (P15-MASS-001). The diagonal
+/// and off-diagonal components share this type because they share a dimension;
+/// which is which is the tensor's business, not the quantity's.
+using MassMomentOfInertia = Quantity<dimensions::massMomentOfInertia>;
+/// A second moment of volume, in m^5: the geometry of an inertia tensor before a
+/// density is applied. `Density * VolumeSecondMoment` IS a MassMomentOfInertia,
+/// by dimension rather than by convention.
+using VolumeSecondMoment = Quantity<dimensions::volumeSecondMoment>;
 
 /// Stress and elastic moduli, which are pressures dimensionally.
 ///
@@ -183,6 +191,16 @@ inline constexpr Unit<dimensions::dynamicViscosity> Pa_s{"Pa s", {1.0, 1.0}};
 inline constexpr Unit<dimensions::dynamicViscosity> mPa_s{"mPa s", {1.0, 1000.0}};
 inline constexpr Unit<dimensions::kinematicViscosity> m2_per_s{"m^2/s", {1.0, 1.0}};
 inline constexpr Unit<dimensions::kinematicViscosity> mm2_per_s{"mm^2/s", {1.0, 1.0e6}};
+
+// Mass moment of inertia
+inline constexpr Unit<dimensions::massMomentOfInertia> kg_m2{"kg m^2", {1.0, 1.0}};
+/// For millimetre-scale models: 1 kg mm^2 = 1e-6 kg m^2.
+inline constexpr Unit<dimensions::massMomentOfInertia> kg_mm2{"kg mm^2", {1.0, 1.0e6}};
+
+// Second moment of volume. mm^5 is what the kernel's integration produces, since
+// OCCT model space is millimetres: 1 mm^5 = 1e-15 m^5.
+inline constexpr Unit<dimensions::volumeSecondMoment> m5{"m^5", {1.0, 1.0}};
+inline constexpr Unit<dimensions::volumeSecondMoment> mm5{"mm^5", {1.0, 1.0e15}};
 
 } // namespace units
 

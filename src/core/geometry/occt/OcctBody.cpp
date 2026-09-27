@@ -46,6 +46,31 @@ namespace {
 
 // Target relative error of the adaptive volume/area integration.
 constexpr double kPropertyRelativeTolerance = 1e-10;
+// The same, for SECOND moments, which need their own value because the kernel
+// spends this budget differently on them (P15-MASS-001 kernel probe,
+// docs/verification/P15-MASS-001/kernel-probe).
+//
+// For volume, 1e-10 is a request the kernel vastly overshoots: measured error
+// 5e-15 or exact, because a volume integral over a planar or quadric face is of
+// low enough degree that its quadrature is exact. A second moment over the same
+// face is two degrees higher, and there the achieved relative error TRACKS the
+// requested tolerance instead of beating it -- measured on a cylinder,
+//
+//     eps  1e-6   1e-8   1e-10  1e-12  1e-14
+//     err  3e-6   6e-8   8e-10  9e-12  7e-14
+//
+// so the 1e-10 above would give an inertia good to nine digits where fourteen are
+// available. At 1e-14 the measured budget is <= 5e-16 for planar-faced bodies,
+// <= 6e-16 for spheres and <= 2.9e-13 for cylinders over four decades of size,
+// the worst case being a flat r 250 h 5 disc. It costs x1.2 to x1.6 in the
+// integration -- x1.41 on a 13-face plate with a boss and five holes, 9.0 ms to
+// 12.7 ms -- and is bit-for-bit repeatable over ten runs on every shape probed,
+// including a torus.
+//
+// Separate from kPropertyRelativeTolerance rather than replacing it: volume and
+// area are already exact at 1e-10, so tightening theirs would buy nothing and
+// slow every existing caller.
+constexpr double kSecondMomentRelativeTolerance = 1e-14;
 // The integration of swept-curve faces (below) stops when doubling the
 // subdivisions changes its results by less than this, relative.
 constexpr double kFaceConvergence = 1e-14;
@@ -409,6 +434,57 @@ Result<MassProperties> Body::massProperties() const {
         properties.volumeRelativeError = total.volumeError;
         properties.areaRelativeError = total.areaError;
         return properties;
+    });
+}
+
+Result<VolumeSecondMoments> Body::centroidalVolumeSecondMoments() const {
+    if (isEmpty()) {
+        return emptyBodyError("centroidal volume second moments");
+    }
+    return occt::guardKernelCall("centroidal volume second moments", [&]() -> Result<VolumeSecondMoments> {
+        const TopoDS_Shape& shape = data_->shape;
+        if (hasSweptCurveFace(shape)) {
+            // Refused rather than answered inaccurately. massProperties()
+            // integrates these faces itself precisely because the kernel's
+            // integration is not good enough for them, and that integration
+            // yields a volume and a first moment only -- so taking SECOND
+            // moments from the kernel here would trust it for exactly the shapes
+            // it is not trusted for.
+            return makeError(ErrorCode::FailedPrecondition,
+                             "centroidal volume second moments: the body has a swept-curve face, whose "
+                             "second moments BetterCAD does not integrate");
+        }
+        GProp_GProps volumeProps;
+        const double volumeError = BRepGProp::VolumeProperties(shape, volumeProps,
+                                                              kSecondMomentRelativeTolerance,
+                                                              /*OnlyClosed=*/true);
+        if (volumeError < 0.0) {
+            return makeError(ErrorCode::Internal,
+                             "centroidal volume second moments: the kernel's volume integration failed");
+        }
+        if (!(volumeProps.Mass() > 0.0)) {
+            return makeError(ErrorCode::FailedPrecondition,
+                             "centroidal volume second moments: the body encloses no volume");
+        }
+        // The kernel's "mass" is the volume, so its matrix of inertia is a second
+        // moment of VOLUME, in model units -- millimetres, hence mm^5. Its
+        // off-diagonals are the tensor's, already negated, and its reference
+        // point is the body's CENTROID regardless of the location the
+        // GProp_GProps was given: that location is a conditioning aid for the
+        // accumulation, not the frame of the result. Both facts are measured in
+        // tests/core/geometry/VolumeSecondMomentsTests.cpp rather than taken from
+        // the kernel's header, which is ambiguous on the first and silent on the
+        // second.
+        const gp_Mat& matrix = volumeProps.MatrixOfInertia();
+        const auto fromModel = [](double value) { return value * occt::kModelVolumeSecondMoment; };
+        VolumeSecondMoments moments;
+        moments.xx = fromModel(matrix.Value(1, 1));
+        moments.yy = fromModel(matrix.Value(2, 2));
+        moments.zz = fromModel(matrix.Value(3, 3));
+        moments.xy = fromModel(matrix.Value(1, 2));
+        moments.xz = fromModel(matrix.Value(1, 3));
+        moments.yz = fromModel(matrix.Value(2, 3));
+        return moments;
     });
 }
 

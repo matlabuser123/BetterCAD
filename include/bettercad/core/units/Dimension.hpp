@@ -92,6 +92,16 @@ inline constexpr Dimension dynamicViscosity = pressure * time;
 /// m^2/s, which is dynamic viscosity over density.
 inline constexpr Dimension kinematicViscosity = area / time;
 
+// Mass-property dimensions (P15-MASS-001), composed like the rest so the
+// composition is the proof.
+/// kg m^2. A second moment of MASS: the dimension of every component of an
+/// inertia tensor, diagonal and off-diagonal alike.
+inline constexpr Dimension massMomentOfInertia = mass * area;
+/// m^5. A second moment of VOLUME -- what the kernel integrates before any
+/// density is involved. Multiplying it by a density gives a mass moment of
+/// inertia, and the type system checks that: (M L^-3)(L^5) = M L^2.
+inline constexpr Dimension volumeSecondMoment = volume * area;
+
 } // namespace dimensions
 
 } // namespace bettercad

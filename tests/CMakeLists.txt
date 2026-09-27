@@ -90,6 +90,7 @@ bettercad_add_executable(bettercad_tests
         core/geometry/SweepTests.cpp
         core/geometry/SweptPathTests.cpp
         core/geometry/TransformTests.cpp
+        core/geometry/VolumeSecondMomentsTests.cpp
         core/math/BSplineTests.cpp
         core/math/FrameTests.cpp
         core/math/RigidTransformTests.cpp
@@ -105,6 +106,7 @@ bettercad_add_executable(bettercad_tests
         core/units/EngineeringQuantityTests.cpp
         core/units/QuantityTests.cpp
         features/ChamferFeatureTests.cpp
+        features/MassPropertiesTests.cpp
         features/MaterialAssignmentTests.cpp
         features/MaterialTests.cpp
         features/DatumTests.cpp

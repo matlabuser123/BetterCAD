@@ -797,3 +797,45 @@ TEST_CASE("Thermal properties are not persisted yet either, and saving still ref
     REQUIRE(kept == thermal);
     REQUIRE(kept.thermalConductivity.referenceTemperature().has_value());
 }
+
+// P15-MASS-001: the four units the mass layer added reach the unit catalog, which
+// parameter round-tripping uses. Nothing DERIVED is persisted -- a grep of
+// src/io/ finds no mass, inertia or centroid field, and the compile-fail group
+// `massp` proves there is no setter to persist from. What is persisted is a
+// PARAMETER a user chose to express in one of those units, which must survive a
+// round trip like any other.
+TEST_CASE("DocumentFile_RoundTripsParametersInTheMassPropertyUnits", "[io][mass]") {
+    TempDir dir;
+    const auto path = dir.path() / "moments.bcad";
+    Document doc{"Moments"};
+    const ParameterId inertia =
+        doc.createParameter("inertia", 68.0 * units::kg_mm2, units::kg_mm2).value();
+    const ParameterId second =
+        doc.createParameter("second_moment", 85.0 * units::mm5, units::mm5).value();
+    REQUIRE(io::saveDocument(doc, path).has_value());
+
+    const auto loaded = io::loadDocument(path);
+    REQUIRE(loaded.has_value());
+
+    // The dimension, the SI value and the DISPLAY UNIT all survive. The display
+    // unit matters as much as the value here: it is the symbol the catalog is
+    // consulted for on load, so a unit added to Units.hpp but not registered in
+    // UnitCatalog.cpp would save and fail to load.
+    const Parameter* loadedInertia = loaded->parameters().find(inertia);
+    REQUIRE(loadedInertia != nullptr);
+    CHECK(loadedInertia->dimension() == dimensions::massMomentOfInertia);
+    CHECK_THAT(loadedInertia->siValue(), Catch::Matchers::WithinRel(68.0e-6, 1e-12));
+    CHECK(loadedInertia->displayUnit().symbol == "kg mm^2");
+    CHECK_THAT(loadedInertia->displayValue(), Catch::Matchers::WithinRel(68.0, 1e-12));
+
+    const Parameter* loadedSecond = loaded->parameters().find(second);
+    REQUIRE(loadedSecond != nullptr);
+    CHECK(loadedSecond->dimension() == dimensions::volumeSecondMoment);
+    CHECK_THAT(loadedSecond->siValue(), Catch::Matchers::WithinRel(85.0e-15, 1e-12));
+    CHECK(loadedSecond->displayUnit().symbol == "mm^5");
+    CHECK_THAT(loadedSecond->displayValue(), Catch::Matchers::WithinRel(85.0, 1e-12));
+
+    // And they are distinguishable after the round trip: 85 mm^5 did not become an
+    // inertia and 68 kg mm^2 did not become a volume.
+    CHECK(loadedInertia->dimension() != loadedSecond->dimension());
+}

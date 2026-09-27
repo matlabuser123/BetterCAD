@@ -31,6 +31,7 @@ bettercad_add_library(bettercad_features
         loft/LoftFeature.cpp
         loft/LoftRegeneration.cpp
         material/Material.cpp
+        material/MassProperties.cpp
         material/Materials.cpp
         pattern/CircularPatternFeature.cpp
         pattern/CircularPatternRegeneration.cpp

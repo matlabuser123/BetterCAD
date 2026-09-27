@@ -84,6 +84,9 @@ inline constexpr Unit<dimensions::length> kModelLength = units::mm;
 [[nodiscard]] inline Volume volumeFromModel(double value) noexcept {
     return value * units::mm3;
 }
+/// A second moment of volume in model units. The kernel integrates in
+/// millimetres, so its matrix of inertia for a unit density is in mm^5.
+inline constexpr Unit<dimensions::volumeSecondMoment> kModelVolumeSecondMoment = units::mm5;
 [[nodiscard]] inline gp_Pnt toModel(const Point3D& point) {
     return gp_Pnt(toModel(point.x), toModel(point.y), toModel(point.z));
 }

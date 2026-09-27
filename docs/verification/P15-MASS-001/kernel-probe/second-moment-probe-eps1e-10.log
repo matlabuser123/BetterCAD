@@ -1,0 +1,90 @@
+Built with GCC 16.1 (MinGW-w64 UCRT), -O2, against OCCT 8.0.1; run 2026-09-27T18:56+10:00.
+P15-MASS-001 second moment probe (OCCT, eps 1e-10)
+
+REFERENCE POINT -- 2 x 3 x 5 box, corner at the origin
+  centroidal would be 85, 72.5, 32.5 with products 0, 0, 0
+  about the origin    340, 290, 130  with products -45, -75, -112.5
+  location (   0.0,   0.0,   0.0)  V 30  G (1, 1.5, 2.5)
+      xx 85  yy 72.5  zz 32.5
+      xy 0.000e+00  xz 0.000e+00  yz -1.421e-14
+  location (   1.0,   1.5,   2.5)  V 30  G (1, 1.5, 2.5)
+      xx 85  yy 72.5  zz 32.5
+      xy 0.000e+00  xz 0.000e+00  yz -1.421e-14
+  location ( 100.0, 100.0, 100.0)  V 30  G (1, 1.5, 2.5)
+      xx 85  yy 72.5  zz 32.5
+      xy 0.000e+00  xz 0.000e+00  yz -1.421e-14
+  location (  -7.0,  11.0,   0.5)  V 30  G (1, 1.5, 2.5)
+      xx 85  yy 72.5  zz 32.5
+      xy 0.000e+00  xz 0.000e+00  yz -1.421e-14
+  same box at (1000,1000,1000), location origin
+      xx 85  yy 72.5  zz 32.5
+      xy 0.000e+00  xz 0.000e+00  yz 0.000e+00
+
+SIGN -- three fused boxes, centroidal products all non-zero
+  tensor convention (negated)  xy +6  xz +9  yz -6
+  positive products            xy -6  xz -9  yz +6
+  V 16  G (1.25, 1.5, 1.25)
+      xx 29.6666666666667 (89/3 = 29.6666666666667)  rel 5.99e-16
+      yy 32.6666666666666 (98/3 = 32.6666666666667)  rel 1.74e-15
+      zz 37.6666666666666 (113/3 = 37.6666666666667) rel 7.55e-16
+      xy 6.00000000000001  rel-to-+6 1.78e-15
+      xz 9.00000000000002  rel-to-+9 2.37e-15
+      yz -5.99999999999998  rel-to--6 2.96e-15
+
+ACCURACY -- boxes, over four decades
+  box 0.2 x 0.3 x 0.5                xx 0.00085000000000000006  rel 1.28e-16
+                                     yy 0.00072499999999999995  rel 4.49e-16
+                                     zz 0.00032499999999999999  rel 5.00e-16
+                                     off xy 5.421e-20  xz 0.000e+00  yz 0.000e+00
+  box 2 x 3 x 5                      xx 85.000000000000028  rel 3.34e-16
+                                     yy 72.500000000000028  rel 3.92e-16
+                                     zz 32.500000000000014  rel 4.37e-16
+                                     off xy 0.000e+00  xz 0.000e+00  yz -1.421e-14
+  box 20 x 30 x 50                   xx 8500000  rel 0.00e+00
+                                     yy 7250000  rel 0.00e+00
+                                     zz 3250000  rel 0.00e+00
+                                     off xy 0.000e+00  xz 0.000e+00  yz 0.000e+00
+  box 200 x 300 x 500                xx 850000000000  rel 0.00e+00
+                                     yy 725000000000  rel 0.00e+00
+                                     zz 325000000000  rel 0.00e+00
+                                     off xy 0.000e+00  xz 0.000e+00  yz 0.000e+00
+  box 2000 x 3000 x 5000             xx 85000000000000000  rel 0.00e+00
+                                     yy 72500000000000000  rel 0.00e+00
+                                     zz 32500000000000016  rel 4.92e-16
+                                     off xy -8.000e+00  xz 0.000e+00  yz -1.600e+01
+
+ACCURACY -- cylinders. xx and yy are EXACTLY equal by symmetry,
+so |xx - yy| / xx is an error estimate that needs no closed form.
+  r 2      h 6       V rel 1.88e-16
+      xx rel 8.32e-10   yy rel 8.32e-10   zz rel 1.88e-16   |xx-yy|/xx 1.66e-09
+      off xy -1.532e-14  xz -2.132e-14  yz 2.498e-16
+  r 10     h 30      V rel 0.00e+00
+      xx rel 8.32e-10   yy rel 8.32e-10   zz rel 1.24e-16   |xx-yy|/xx 1.66e-09
+      off xy -1.640e-11  xz 2.585e-26  yz 1.918e-12
+  r 0.5    h 100     V rel 3.62e-16
+      xx rel 2.50e-13   yy rel 2.48e-13   zz rel 1.81e-16   |xx-yy|/xx 4.98e-13
+      off xy -3.313e-16  xz -9.059e-14  yz -5.049e-29
+  r 250    h 5       V rel 1.19e-16
+      xx rel 3.33e-09   yy rel 3.33e-09   zz rel 3.73e-16   |xx-yy|/xx 6.65e-09
+      off xy -1.468e-06  xz -2.049e-08  yz 7.276e-11
+  r 1      h 1       V rel 1.41e-16
+      xx rel 2.49e-09   yy rel 2.49e-09   zz rel 2.83e-16   |xx-yy|/xx 4.99e-09
+      off xy -2.429e-16  xz 5.898e-17  yz 1.735e-18
+
+ACCURACY -- spheres. xx = yy = zz = 8 pi r^5 / 15, and the three
+must be exactly equal by symmetry.
+  r 0.5     V rel 2.12e-16   xx rel 0.00e+00  yy rel 1.33e-16  zz rel 0.00e+00  spread 1.33e-16
+      off xy -5.024e-18  xz 2.273e-33  yz 2.129e-20
+  r 3       V rel 2.51e-16   xx rel 1.40e-16  yy rel 2.79e-16  zz rel 8.38e-16  spread 9.77e-16
+      off xy -3.906e-14  xz -8.720e-17  yz -8.720e-17
+  r 25      V rel 1.11e-16   xx rel 0.00e+00  yy rel 4.55e-16  zz rel 4.55e-16  spread 4.55e-16
+      off xy -1.554e-09  xz -5.715e-12  yz 5.715e-12
+  r 500     V rel 3.42e-16   xx rel 1.49e-16  yy rel 4.48e-16  zz rel 2.98e-16  spread 5.97e-16
+      off xy -4.602e-03  xz 3.595e-05  yz 4.794e-05
+
+EPS SENSITIVITY -- does a tighter request help the cylinder?
+  eps 1e-06    xx rel 3.08e-06  yy rel 3.08e-06  |xx-yy|/xx 6.16e-06
+  eps 1e-08    xx rel 5.97e-08  yy rel 5.97e-08  |xx-yy|/xx 1.19e-07
+  eps 1e-10    xx rel 8.32e-10  yy rel 8.32e-10  |xx-yy|/xx 1.66e-09
+  eps 1e-12    xx rel 8.73e-12  yy rel 8.73e-12  |xx-yy|/xx 1.75e-11
+  eps 1e-14    xx rel 7.12e-14  yy rel 7.16e-14  |xx-yy|/xx 1.43e-13

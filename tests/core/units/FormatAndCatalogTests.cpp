@@ -54,7 +54,9 @@ TEST_CASE("Unit catalog lists every unit with a unique symbol", "[units][catalog
     // m^2/s, mm^2/s). A bare count is a tripwire for a unit REMOVED by
     // accident; the checks that matter are in the loop below, and they apply to
     // every entry.
-    CHECK(catalog.size() == 50);
+    // 50 through P15-THERM-001, plus the 4 P15-MASS-001 adds: kg m^2, kg mm^2,
+    // m^5, mm^5.
+    CHECK(catalog.size() == 54);
 
     std::set<std::string_view> symbols;
     for (const UnitDescriptor& unit : catalog) {

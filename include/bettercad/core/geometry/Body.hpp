@@ -29,6 +29,47 @@ struct MassProperties {
     double areaRelativeError = 0.0;
 };
 
+/// The second moments of a body's VOLUME about its own CENTROID, in axes parallel
+/// to the document's (P15-MASS-001).
+///
+/// Geometry, not mass: no density has been applied, so every component is a
+/// second moment of volume (m^5). Multiplying by a density gives a mass moment of
+/// inertia, and the dimensions check that rather than a comment asserting it:
+/// (M L^-3)(L^5) = M L^2.
+///
+/// CENTROIDAL, not about the origin. The reference point is the body's own centre
+/// of volume -- massProperties().centerOfMass -- so these are the invariant
+/// moments, and moments about any other point follow by Huygens' parallel-axis
+/// theorem, which ADDS a term and so cannot lose precision. Taking the centroidal
+/// moments by subtraction from moments about a distant origin would, which is why
+/// this is the direction the API offers.
+///
+/// TENSOR CONVENTION, stated because the two conventions differ by a sign and
+/// silently mixing them is a real defect: these are the components of the inertia
+/// TENSOR, so the off-diagonals are the NEGATED products,
+///
+///     xx = integral of (y^2 + z^2) dV        xy = -integral of xy dV
+///
+/// and not the positive products of inertia. A caller assembling a matrix uses
+/// them as they are.
+///
+/// Both of those claims are MEASURED, not taken from the kernel's documentation.
+/// A box at the origin settled the reference point -- it returned its centroidal
+/// moments, while the kernel's header says the reference point it is given is
+/// used for "inertia accumulation" -- and a three-box staircase, whose centroid
+/// has all three products non-zero, settled the sign. See
+/// tests/core/geometry/VolumeSecondMomentsTests.cpp.
+struct VolumeSecondMoments {
+    VolumeSecondMoment xx{};
+    VolumeSecondMoment yy{};
+    VolumeSecondMoment zz{};
+    VolumeSecondMoment xy{};
+    VolumeSecondMoment xz{};
+    VolumeSecondMoment yz{};
+
+    friend bool operator==(const VolumeSecondMoments&, const VolumeSecondMoments&) = default;
+};
+
 /// Number of distinct topological entities of each kind in a body.
 struct TopologySummary {
     std::size_t solids = 0;
@@ -56,6 +97,16 @@ public:
     [[nodiscard]] TopologySummary topology() const;
     /// Fails with FailedPrecondition for an empty body.
     [[nodiscard]] Result<MassProperties> massProperties() const;
+
+    /// The second moments of this body's volume about its own centroid.
+    ///
+    /// Fails for an empty body, for one that encloses no volume, and -- with a
+    /// diagnostic saying so -- for a body with a general swept-curve face.
+    /// massProperties() integrates those itself because the kernel's result is
+    /// not accurate enough for them, and that integration produces a volume and
+    /// a first moment only; taking second moments from the kernel for exactly the
+    /// shapes whose volume it is not trusted for would be inconsistent.
+    [[nodiscard]] Result<VolumeSecondMoments> centroidalVolumeSecondMoments() const;
     /// Tight axis-aligned bounds; fails with FailedPrecondition for an empty body.
     [[nodiscard]] Result<BoundingBox3D> boundingBox() const;
 
