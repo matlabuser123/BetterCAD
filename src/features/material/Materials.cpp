@@ -300,6 +300,96 @@ Result<ThermalExpansionCoefficient> requireThermalExpansion(const Document& docu
     return *alpha;
 }
 
+std::string_view toString(MaterialAssignmentState state) noexcept {
+    switch (state) {
+    case MaterialAssignmentState::Unassigned:
+        return "unassigned";
+    case MaterialAssignmentState::Resolved:
+        return "resolved";
+    case MaterialAssignmentState::Unresolved:
+        return "unresolved";
+    case MaterialAssignmentState::Invalid:
+        return "invalid";
+    }
+    return "unassigned";
+}
+
+Result<bool> assignMaterial(Document& document, MaterialId id) {
+    // Refused unless the ID names a material in THIS document. An assignment
+    // that could be created pointing at nothing would make Unresolved a state
+    // the API produces rather than one the world produces.
+    if (findMaterial(document, id) == nullptr) {
+        return makeError(ErrorCode::NotFound,
+                         std::format("there is no material {} in this document", id));
+    }
+    return document.setMaterialAssignment(id);
+}
+
+Result<bool> removeMaterialAssignment(Document& document) {
+    return document.setMaterialAssignment(std::nullopt);
+}
+
+MaterialAssignment materialAssignment(const Document& document) {
+    MaterialAssignment assignment;
+    const std::optional<MaterialId> id = document.materialAssignment();
+    if (!id) {
+        // Unassigned, and the ID stays empty: there is no intent to keep.
+        return assignment;
+    }
+    assignment.material = id;
+
+    if (findMaterial(document, *id) != nullptr) {
+        assignment.state = MaterialAssignmentState::Resolved;
+        return assignment;
+    }
+
+    // The intent is kept either way. Which of the two failures it is depends on
+    // whether anything of that ID is in the document at all.
+    if (document.contains(*id)) {
+        assignment.state = MaterialAssignmentState::Invalid;
+        assignment.diagnostic =
+            std::format("{} is assigned as this part's material, but it names a '{}'", *id,
+                        document.findObject(*id) != nullptr
+                            ? document.findObject(*id)->typeName()
+                            : std::string_view{"parameter"});
+        return assignment;
+    }
+    assignment.state = MaterialAssignmentState::Unresolved;
+    assignment.diagnostic =
+        std::format("{} is assigned as this part's material, and there is no such material",
+                    *id);
+    return assignment;
+}
+
+const Material* effectiveMaterial(const Document& document) {
+    // No inheritance in P15, so the effective material IS the direct assignment
+    // (ADR-026). The name is ADR-027's, and it is the one that survives if
+    // inheritance is ever added.
+    const MaterialAssignment assignment = materialAssignment(document);
+    if (!assignment.resolved()) {
+        return nullptr;
+    }
+    return findMaterial(document, *assignment.material);
+}
+
+Result<const Material*> requireEffectiveMaterial(const Document& document) {
+    const MaterialAssignment assignment = materialAssignment(document);
+    switch (assignment.state) {
+    case MaterialAssignmentState::Resolved:
+        return findMaterial(document, *assignment.material);
+    case MaterialAssignmentState::Unassigned:
+        // Not the same failure as a missing material, and it does not get the
+        // same message: nothing was ever chosen here.
+        return makeError(ErrorCode::FailedPrecondition,
+                         std::format("'{}' has no material assigned", document.name()));
+    case MaterialAssignmentState::Unresolved:
+    case MaterialAssignmentState::Invalid:
+        return makeError(ErrorCode::FailedPrecondition,
+                         std::format("'{}': {}", document.name(), assignment.diagnostic));
+    }
+    return makeError(ErrorCode::Internal, "unreachable material assignment state");
+}
+
 Result<void> removeMaterial(Document& document, MaterialId id) {
     if (findMaterial(document, id) == nullptr) {
         return makeError(ErrorCode::NotFound, std::format("there is no material {}", id));

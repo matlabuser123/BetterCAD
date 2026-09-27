@@ -194,6 +194,31 @@ public:
         return configurations_.activeOverrides();
     }
 
+    // --- Material assignment (P15-ASSIGN-001, ADR-026) --------------------
+    /// The material this part is made of, or std::nullopt for none.
+    ///
+    /// Document-level intent, for the same reason the active configuration is:
+    /// there is exactly one of it and nothing references it (ADR-026). A part
+    /// with no material is a normal resting state, not an error.
+    ///
+    /// It is an ID and never a name, so renaming or re-describing a material
+    /// cannot move an assignment. It is not affected by the active
+    /// configuration: a configuration overrides free PARAMETER values, and a
+    /// MaterialId is not a parameter value.
+    [[nodiscard]] std::optional<MaterialId> materialAssignment() const noexcept {
+        return materialAssignment_;
+    }
+
+    /// Records which material this part is made of. Returns whether anything
+    /// changed.
+    ///
+    /// THIS DOES NOT VALIDATE THE ID, and cannot: core does not know what a
+    /// material is. It stores intent. features::assignMaterial() is the
+    /// validating entry point and is what ordinary code calls; this is for a
+    /// loader, an undo, and anything else restoring state that was already
+    /// checked once.
+    Result<bool> setMaterialAssignment(std::optional<MaterialId> id);
+
     /// The value @p id has under the active configuration: its override if
     /// the configuration has one, otherwise the parameter's own value.
     /// std::nullopt if the parameter does not exist.
@@ -306,6 +331,7 @@ private:
     IdAllocator ids_;
     ParameterTable parameters_;
     ConfigurationTable configurations_;
+    std::optional<MaterialId> materialAssignment_;
     std::map<ObjectId, std::unique_ptr<DocumentObject>> objects_;
     std::map<std::string, ObjectId, std::less<>> objectIdsByName_;
     std::uint64_t revision_ = 0;

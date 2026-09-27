@@ -105,6 +105,7 @@ bettercad_add_executable(bettercad_tests
         core/units/EngineeringQuantityTests.cpp
         core/units/QuantityTests.cpp
         features/ChamferFeatureTests.cpp
+        features/MaterialAssignmentTests.cpp
         features/MaterialTests.cpp
         features/DatumTests.cpp
         features/DraftFeatureTests.cpp

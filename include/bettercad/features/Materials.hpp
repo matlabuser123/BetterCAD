@@ -9,6 +9,8 @@
 #include <bettercad/features/Material.hpp>
 
 #include <cstddef>
+#include <cstdint>
+#include <optional>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -200,6 +202,123 @@ requireTransientConductionProperties(const Document& document, MaterialId id);
 /// conductivity and conduction needs no expansion.
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<ThermalExpansionCoefficient>
 requireThermalExpansion(const Document& document, MaterialId id);
+
+// --- Material assignment (P15-ASSIGN-001, ADR-026) --------------------------
+//
+// A material assignment is document-level INTENT: one optional MaterialId for
+// the part, held by the Document like the active configuration. There is no
+// Part document object and no body document object to hang it on -- a part IS a
+// document -- and ADR-026 rejected an assignment object because there is exactly
+// one of them and nothing references it.
+//
+// What follows from that, and is not hidden:
+//   * ONE material per document. Per-body materials are deferred, and the
+//     mechanism is named: a body's only persistent handle is its producing
+//     feature's ObjectId, so a later override can be keyed by that.
+//   * NO assembly occurrence override. ComponentDefinition has no material
+//     field, so an occurrence cannot differ from its part, and a compile-fail
+//     case proves the field is absent rather than merely unused. It needs
+//     external part references (ADR-003), which are deferred.
+//   * NO configuration dependence. A configuration overrides free PARAMETER
+//     values; a MaterialId is not one. Switching configurations, and suppressing
+//     a component, leave the assignment exactly as it is.
+//   * NO inheritance, so the effective material IS the direct assignment. There
+//     is no fallback layer and no default material anywhere.
+
+/// What state a document's material assignment is in.
+///
+/// The last three are different answers and are never collapsed into one. This
+/// mirrors drawing::ResolutionState, which cannot be reused directly because it
+/// is layer 4 and this is layer 2; the meanings are deliberately the same.
+enum class MaterialAssignmentState : std::uint8_t {
+    /// Nothing was assigned. A normal resting state, not a fault.
+    Unassigned,
+    /// The assigned material exists and was found.
+    Resolved,
+    /// An assignment exists and its material is not there NOW -- deleted. The
+    /// INTENT is kept, unchanged, so it resolves again if that exact material
+    /// comes back. Nothing rewrites it to point at something else.
+    Unresolved,
+    /// The assignment names an object that exists but is not a material. Only
+    /// reachable through Document::setMaterialAssignment(), which does not
+    /// validate; features::assignMaterial() refuses to create one.
+    Invalid,
+};
+
+/// "unassigned", "resolved", "unresolved" or "invalid".
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT std::string_view
+toString(MaterialAssignmentState state) noexcept;
+
+/// A document's material assignment and what became of it.
+struct MaterialAssignment {
+    MaterialAssignmentState state = MaterialAssignmentState::Unassigned;
+    /// What the document names. Kept even when Unresolved or Invalid, because
+    /// the intent is what makes recovery possible; std::nullopt only when
+    /// Unassigned.
+    std::optional<MaterialId> material{};
+    /// Empty when Unassigned or Resolved; otherwise why not, naming the ID.
+    std::string diagnostic{};
+
+    [[nodiscard]] bool resolved() const noexcept {
+        return state == MaterialAssignmentState::Resolved;
+    }
+
+    friend bool operator==(const MaterialAssignment&, const MaterialAssignment&) = default;
+};
+
+/// Assigns the material with @p id to @p document. Returns whether anything
+/// changed.
+///
+/// Fails, changing nothing, unless @p id names a material IN THIS DOCUMENT. It
+/// never creates a material, and it never allocates an ID: an assignment is a
+/// reference, so assigning cannot disturb identity.
+///
+/// A MaterialId from another document is not a cross-document reference and is
+/// not treated as one. IDs are document-local throughout BetterCAD, so such an
+/// ID either names this document's own material of that number or names nothing;
+/// either way the result is about THIS document. A real cross-document
+/// assignment needs an ObjectReference carrying a DocumentId, which ADR-003
+/// defers.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<bool> assignMaterial(Document& document,
+                                                                    MaterialId id);
+
+/// Removes the assignment, leaving the document with no material. Returns
+/// whether anything changed; removing when there was none changes nothing and is
+/// not an error.
+///
+/// This is the only way an assignment goes away. Deleting the material does NOT
+/// remove it -- that leaves it Unresolved, with the intent intact.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<bool> removeMaterialAssignment(Document& document);
+
+/// The assignment and its state.
+///
+/// Resolution happens here and nowhere else, so there is one answer to "what is
+/// this part made of". Nothing in it resolves by designation, by name, by
+/// position, or by similarity of content.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT MaterialAssignment
+materialAssignment(const Document& document);
+
+/// The material @p document is made of, or nullptr when there is none.
+///
+/// ADR-027 names this call, so a downstream solver finds what the architecture
+/// promised. With no inheritance in P15 it is the direct assignment; the name is
+/// the one that survives if inheritance is ever added.
+///
+/// nullptr covers Unassigned, Unresolved and Invalid alike. A caller that needs
+/// to tell them apart asks materialAssignment(); a caller that needs to FAIL
+/// with a reason asks requireEffectiveMaterial().
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT const Material* effectiveMaterial(
+    const Document& document);
+
+/// The material @p document is made of, or an error saying which problem it is.
+///
+/// What P15-MASS-001, P17 and P18 consume: a mass request on a part with no
+/// material is a diagnostic naming the part, never a zero (ADR-026). The
+/// diagnostic distinguishes "nothing was assigned" from "the assigned material
+/// is gone", because those need different things from the user. Never nullptr on
+/// success.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<const Material*>
+requireEffectiveMaterial(const Document& document);
 
 /// Removes the material with @p id. Fails if there is no such material.
 ///

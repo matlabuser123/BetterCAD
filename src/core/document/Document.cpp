@@ -47,6 +47,7 @@ Document Document::clone() const {
     copy.ids_ = ids_;
     copy.parameters_ = parameters_;
     copy.configurations_ = configurations_;
+    copy.materialAssignment_ = materialAssignment_;
     for (const auto& [id, object] : objects_) {
         copy.objects_.emplace(id, object->clone());
     }
@@ -460,6 +461,15 @@ Result<bool> Document::restoreConfiguration(const Configuration& state) {
 
 Result<bool> Document::setActiveConfiguration(std::optional<ConfigurationId> id) {
     return bump(configurations_.setActive(id));
+}
+
+Result<bool> Document::setMaterialAssignment(std::optional<MaterialId> id) {
+    if (materialAssignment_ == id) {
+        return false;
+    }
+    materialAssignment_ = id;
+    ++revision_;
+    return true;
 }
 
 std::optional<DimensionedValue> Document::effectiveParameterValue(ParameterId id) const noexcept {

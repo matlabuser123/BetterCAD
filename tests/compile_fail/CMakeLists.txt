@@ -7,14 +7,18 @@
 # diagnostic. Because the control compiles, every failure is attributable to
 # the selected line.
 
-# bettercad_compile_fail_group(<group> <source>)
+# bettercad_compile_fail_group(<group> <source> [<extra libraries>...])
+#
+# The targets are OBJECT libraries, so nothing links: the extra libraries are
+# there for their INTERFACE include directories, which is what a case above
+# layer 0 needs (a generated Export.hpp lives with its own target).
 function(bettercad_compile_fail_group group source)
     add_library(bettercad_cf_${group}_control OBJECT "${source}")
     target_link_libraries(bettercad_cf_${group}_control PRIVATE
-        BetterCAD::core BetterCAD::compiler_options)
+        BetterCAD::core BetterCAD::compiler_options ${ARGN})
 endfunction()
 
-# bettercad_compile_fail_case(<group> <source> <CASE> <gnu_regex>)
+# bettercad_compile_fail_case(<group> <source> <CASE> <gnu_regex> [<extra libraries>...])
 #
 # Diagnostics are matched for GCC (the verified toolchain); other compilers
 # only need to report an error. Regexes avoid quote characters because GCC
@@ -26,7 +30,7 @@ function(bettercad_compile_fail_case group source case gnu_regex)
 
     add_library(${target} OBJECT EXCLUDE_FROM_ALL "${source}")
     target_compile_definitions(${target} PRIVATE "BETTERCAD_CF_${case}")
-    target_link_libraries(${target} PRIVATE BetterCAD::core BetterCAD::compiler_options)
+    target_link_libraries(${target} PRIVATE BetterCAD::core BetterCAD::compiler_options ${ARGN})
     target_compile_options(${target} PRIVATE
         "$<$<CXX_COMPILER_ID:GNU>:-fdiagnostics-plain-output>")
 
@@ -81,6 +85,28 @@ bettercad_compile_fail_case(mech "${_mech}" HARDNESS_WITHOUT_SCALE "too few argu
 bettercad_compile_fail_case(mech "${_mech}" HARDNESS_AS_STRESS "conversion from|could not convert")
 bettercad_compile_fail_case(mech "${_mech}" PROPERTY_TO_VALUE "conversion from|could not convert")
 bettercad_compile_fail_case(mech "${_mech}" MUTATE_LIBRARY_ENTRY "const bettercad::materials::LibraryMaterial.*discards qualifiers")
+
+# --- Material assignment (P15-ASSIGN-001) -----------------------------------
+set(_assign "${CMAKE_CURRENT_SOURCE_DIR}/AssignmentMisuse.cpp")
+bettercad_compile_fail_group(assign "${_assign}" BetterCAD::features BetterCAD::assembly)
+bettercad_compile_fail_case(assign "${_assign}" ASSIGN_OBJECT_ID
+    "(could not|cannot) convert .*ObjectIdTag.* to .*MaterialIdTag"
+    BetterCAD::features BetterCAD::assembly)
+bettercad_compile_fail_case(assign "${_assign}" ASSIGN_INTEGER
+    "(could not|cannot) convert .* from .int. to .*MaterialId"
+    BetterCAD::features BetterCAD::assembly)
+bettercad_compile_fail_case(assign "${_assign}" ASSIGN_COMPONENT_ID
+    "(could not|cannot) convert .*ComponentIdTag.* to .*MaterialIdTag"
+    BetterCAD::features BetterCAD::assembly)
+bettercad_compile_fail_case(assign "${_assign}" DOCUMENT_ASSIGN_OBJECT_ID
+    "(could not|cannot) convert .*ObjectIdTag|no matching function for call to .*setMaterialAssignment"
+    BetterCAD::features BetterCAD::assembly)
+bettercad_compile_fail_case(assign "${_assign}" OCCURRENCE_MATERIAL_FIELD
+    "no member named .material"
+    BetterCAD::features BetterCAD::assembly)
+bettercad_compile_fail_case(assign "${_assign}" OCCURRENCE_MATERIAL_READ
+    "no member named .material"
+    BetterCAD::features BetterCAD::assembly)
 
 # --- Thermal material properties (P15-THERM-001) ----------------------------
 set(_therm "${CMAKE_CURRENT_SOURCE_DIR}/ThermalMisuse.cpp")

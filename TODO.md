@@ -11,7 +11,7 @@
 ```text
 Current:   P15 — Materials / Engineering Data
 Current milestone:
-           NONE. P15-THERM-001 is complete.
+           NONE. P15-ASSIGN-001 is complete.
            The next milestone is a scope decision, not Claude's to make.
 
 Qualified:
@@ -20,13 +20,16 @@ Qualified:
            P13
            P14 — Technical Drawings
            P15-ARCH-001, P15-UNITS-001, INFRA-QT-DEPLOY-001, P15-MAT-001,
-           P15-MECH-001, P15-THERM-001
+           P15-MECH-001, P15-THERM-001, P15-ASSIGN-001
 
 Next:
-           P15-ASSIGN-001 — material assignment to model objects. ADR-026 already
-           decided its shape: an assignment is INTENT and mass is derived. It is
-           also the first milestone that will hold a MaterialId across time,
-           which is what P15-MAT-001's non-reuse invariant was established for.
+           P15-MASS-001 — mass, centre of mass, inertia. ADR-026 decided its
+           shape: derived, never stored, and a request on a part with no material
+           is a diagnostic rather than a zero.
+           **It should NOT start before the carried regeneration defect below is
+           settled.** Mass = density x volume, and under any non-base
+           configuration the volume is currently stale, so P15-MASS-001 would
+           report a wrong mass without saying so.
            Awaiting explicit scope decision.
 
            A material cannot be SAVED until P15-PERSIST-001. Saving a document
@@ -695,22 +698,51 @@ thermal properties coherent
 
 ## Material Assignment
 
-* [ ] Define valid material-assignment targets
-* [ ] Assign material to part/body according to architecture
-* [ ] Stable material reference
-* [ ] Query effective material
-* [ ] Replace material assignment explicitly
-* [ ] Remove material assignment explicitly
-* [ ] Missing material becomes unresolved
-* [ ] Deleted material never silently rebinds
-* [ ] Validate duplicate-name materials
-* [ ] Validate model regeneration
-* [ ] Define assembly occurrence behaviour
-* [ ] Define configuration behaviour
-* [ ] Validate undo-ready mutation semantics
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+Evidence:
+[docs/verification/P15-ASSIGN-001/](docs/verification/P15-ASSIGN-001/README.md).
+
+ADR-026 decided the target by AUDIT, and the answer is that there is nothing
+conventional to hang a material on: **there is no Part document object and no body
+document object.** A part IS a document; a body is a regeneration result whose only
+handle is its producing feature's ObjectId. So the assignment is one optional
+`MaterialId` on the Document, exactly as `ConfigurationId` is document-level state.
+No inheritance, so the effective material IS the direct assignment.
+
+Four states, never collapsed: **Unassigned / Resolved / Unresolved / Invalid.**
+Resolution is by identity alone -- no name, no designation, no position, no
+similarity -- and a deleted material leaves the assignment Unresolved with its
+intent intact, never repointed at a same-named or content-identical rival.
+
+* [x] Define valid material-assignment targets — by audit; neither Part nor Body
+      exists as an object, so the DOCUMENT owns it
+* [x] Assign material to part/body according to architecture — document-level
+      intent, one optional MaterialId (ADR-026)
+* [x] Stable material reference — identity only; no name, index, position or
+      pointer is stored, so a rename cannot move an assignment
+* [x] Query effective material — `effectiveMaterial()`, the name ADR-027 promised
+      a solver; plus `materialAssignment()` for the state and
+      `requireEffectiveMaterial()` for a diagnostic
+* [x] Replace material assignment explicitly — identity decides even when the two
+      materials share a designation
+* [x] Remove material assignment explicitly — and removing is not deleting
+* [x] Missing material becomes unresolved — never erased, never defaulted
+* [x] Deleted material never silently rebinds — proved against a same-designation
+      rival AND a content-identical one
+* [x] Validate duplicate-name materials — three coexist; renaming one moves no
+      assignment
+* [x] Validate model regeneration — and a FAILED regeneration keeps the intent
+* [x] Define assembly occurrence behaviour — no override; `ComponentDefinition`
+      has no material field, proved by two compile-fail cases
+* [x] Define configuration behaviour — a configuration cannot change the material.
+      **It also does not rebuild the geometry it changes — a pre-existing defect
+      found here, carried below, and a precondition for P15-MASS-001**
+* [x] Validate undo-ready mutation semantics — canonical state is one optional
+      MaterialId; A→B→A restores exactly and allocates no ID
+* [x] Adversarial review PASS — 22 questions, 3 findings: 1 pre-existing product
+      defect (not fixed, out of scope) and 2 test defects
+* [x] Regression PASS — 3 presets from an external build root, 2479/2479 each,
+      0 warnings, fresh binaries, 0 stages failed, first attempt
+* [x] Evidence recorded
 
 ### Critical no-rebinding fixture
 
@@ -1219,6 +1251,59 @@ quietly building back inside the synchronised folder.
       0 warnings, fresh binaries, 0 stages failed
 * [x] File-replacement stress: 48 runs (4 tests x 12), 0 failures
 * [x] Evidence recorded
+
+## Carried: a configuration override does not rebuild the geometry it changes
+
+**Found by P15-ASSIGN-001, pre-existing, and it contradicts an ADR-026
+consequence.** ADR-026 reasons that "a configuration changes a part's
+*dimensions*, so it changes volume and therefore mass -- through geometry, which
+is exactly the existing derivation chain and requires nothing new". That chain
+does not currently run.
+
+Measured on `BracketModel`, whose `Pad` extrudes a sketch with
+`.depthParameter = depth`:
+
+```text
+setConfigurationOverride(wide, depth, 40 mm)
+setActiveConfiguration(wide)
+regenerate()
+
+effectiveParameterValue(depth)  =  0.040   -- the override IS in force
+report.regenerated              =  1       -- and it is the SLOT, not the pad
+report.updatedParameters        =  1       -- slot_depth = depth * 0.6
+volume of Pad                   =  unchanged from the base configuration
+```
+
+Root cause, as far as this milestone established it: a configuration override
+changes a parameter's EFFECTIVE value and never the parameter object, so the
+parameter's own revision does not change and nothing marks a feature that reads
+it dirty. `features::Regenerator` contains no mention of configurations at all.
+A feature that depends on a DRIVEN parameter is rebuilt, because that parameter's
+stored value and revision do change -- which is why the slot rebuilt and the pad
+did not.
+
+The assembly layer does not have this problem: `SolveTrigger::ConfigurationChanged`
+exists and placements follow a configuration switch.
+
+Why it matters beyond a wrong volume: **P15-MASS-001 computes mass from density
+and volume.** Under any non-base configuration it would multiply a correct density
+by a stale volume and report a mass that is wrong without saying so. This should
+be fixed before, or as part of, that milestone.
+
+Scope, when authorized:
+
+```text
+mark a feature dirty when the EFFECTIVE value of a parameter it reads changes,
+which a configuration switch or an override edit can do without touching the
+parameter object -- the assembly solver already distinguishes exactly this case
+```
+
+A regression test must assert the volume of a feature reading a FREE parameter
+changes across a configuration switch. P15-ASSIGN-001 deliberately did NOT assert
+the present behaviour, because pinning it would record a defect as the contract.
+
+**Awaiting explicit scope decision.** It is a regeneration concern, not a
+materials one, and it was outside P15-ASSIGN-001's authorized scope.
 
 ## Carried: a document save can still lose to a file synchroniser
 
