@@ -271,3 +271,41 @@ bettercad_compile_fail_case(prov "${_prov}" NO_DEFAULT_DENSITY
     "defaultDensity. is not a member of" BetterCAD::features)
 bettercad_compile_fail_case(prov "${_prov}" PROPERTY_HAS_NO_VALUE_OR
     "has no member named .valueOr" BetterCAD::features)
+
+# --- Material commands (P15-CMD-001) ----------------------------------------
+#
+# The absences are the claims. No command has anywhere to hold a mass, an inertia or
+# a completeness report, so a derived value cannot enter the undo history even by
+# mistake; commands are keyed on MaterialId and never on a name, because two
+# materials may share a designation; a library entry has no ObjectId so no command
+# can name one; and commands are not copyable.
+set(_matcmd "${CMAKE_CURRENT_SOURCE_DIR}/MaterialCommandMisuse.cpp")
+bettercad_compile_fail_group(matcmd "${_matcmd}" BetterCAD::features)
+bettercad_compile_fail_case(matcmd "${_matcmd}" CREATE_HAS_NO_MASS
+    "has no member named .setMass" BetterCAD::features)
+bettercad_compile_fail_case(matcmd "${_matcmd}" EDIT_HAS_NO_MASS
+    "has no member named .setMass" BetterCAD::features)
+bettercad_compile_fail_case(matcmd "${_matcmd}" EDIT_HAS_NO_INERTIA
+    "has no member named .inertia" BetterCAD::features)
+bettercad_compile_fail_case(matcmd "${_matcmd}" EDIT_HAS_NO_COMPLETENESS
+    "has no member named .completeness" BetterCAD::features)
+bettercad_compile_fail_case(matcmd "${_matcmd}" DEFINITION_HAS_NO_VOLUME
+    "has no member named .volume" BetterCAD::features)
+bettercad_compile_fail_case(matcmd "${_matcmd}" DELETE_TAKES_A_MATERIAL_ID
+    "could not convert|cannot convert|no matching function" BetterCAD::features)
+bettercad_compile_fail_case(matcmd "${_matcmd}" ASSIGN_TAKES_A_MATERIAL_ID
+    "could not convert|cannot convert|no matching function" BetterCAD::features)
+bettercad_compile_fail_case(matcmd "${_matcmd}" ASSIGN_TAKES_NO_NAME
+    "could not convert|cannot convert|no matching function" BetterCAD::features)
+bettercad_compile_fail_case(matcmd "${_matcmd}" DELETE_TAKES_NO_NAME
+    "could not convert|cannot convert|no matching function" BetterCAD::features)
+bettercad_compile_fail_case(matcmd "${_matcmd}" EDIT_TAKES_NO_NAME
+    "could not convert|cannot convert|no matching function" BetterCAD::features)
+bettercad_compile_fail_case(matcmd "${_matcmd}" DELETE_TAKES_NO_LIBRARY_ENTRY
+    "could not convert|cannot convert|no matching function" BetterCAD::features)
+bettercad_compile_fail_case(matcmd "${_matcmd}" EDIT_TAKES_NO_LIBRARY_ENTRY
+    "could not convert|cannot convert|no matching function" BetterCAD::features)
+bettercad_compile_fail_case(matcmd "${_matcmd}" COMMANDS_ARE_NOT_COPYABLE
+    "use of deleted function" BetterCAD::features)
+bettercad_compile_fail_case(matcmd "${_matcmd}" MATERIAL_ID_IS_NOT_AN_INT
+    "could not convert|cannot convert|no matching function" BetterCAD::features)

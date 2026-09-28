@@ -11,7 +11,7 @@
 ```text
 Current:   P15 — Materials / Engineering Data
 Current milestone:
-           NONE. P15-PROV-001 is complete.
+           NONE. P15-CMD-001 is complete.
            The next milestone is a scope decision, not Claude's to make.
 
 Qualified:
@@ -21,10 +21,12 @@ Qualified:
            P14 — Technical Drawings
            P15-ARCH-001, P15-UNITS-001, INFRA-QT-DEPLOY-001, P15-MAT-001,
            P15-MECH-001, P15-THERM-001, P15-ASSIGN-001, P15-MASS-001,
-           P15-CUSTOM-001, P15-PROV-001
+           P15-CUSTOM-001, P15-PROV-001, P15-CMD-001
 
 Next:
-           P15-CMD-001 — commands / undo / redo for materials.
+           P15-PERSIST-001 — save / load material intent. It also unblocks
+           provenance persistence, which ADR-028 requires and P15-PROV-001
+           could not deliver: no material of any kind can be saved yet.
            Awaiting explicit scope decision.
 
            A material cannot be SAVED until P15-PERSIST-001. Saving a document
@@ -1069,21 +1071,68 @@ property provenance preserved
 
 ## Commands / Undo / Redo
 
-* [ ] Create material command
-* [ ] Delete material command
-* [ ] Edit material command
-* [ ] Assign material command
-* [ ] Remove assignment command
-* [ ] Undo restores exact engineering intent
-* [ ] Redo restores exact post-command state
-* [ ] Failed commands atomic
-* [ ] Redo invalidation correct
-* [ ] Material identity preserved
-* [ ] No derived mass state in history
-* [ ] Determinism PASS
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+**PASS 2026-09-28.** Evidence:
+[docs/verification/P15-CMD-001/](../docs/verification/P15-CMD-001/README.md).
+
+**Most of this already existed, and a probe established that before any code was
+written.** A material IS a DocumentObject, so AddObjectCommand and DeleteObjectCommand
+already created and deleted one correctly -- ID restored on redo, whole object restored
+on undo. Two of the five commands wrap them, as CreateFeatureCommand<F> already does.
+
+* [x] Create material command — `CreateMaterialCommand`, wrapping AddObjectCommand and
+      adding a typed `materialId()`
+* [x] Delete material command — `DeleteMaterialCommand`, wrapping DeleteObjectCommand
+      and adding the one precondition the generic command cannot express: that the ID
+      really names a material. Without it, a sketch's ID would be deleted and reported
+      as success
+* [x] Edit material command — `EditMaterialCommand`, whole-definition before/after
+      snapshots, which is what makes Unknown-restoration and value-with-provenance
+      exact rather than nearly exact
+* [x] Assign material command — `AssignMaterialCommand`; refuses a material that is not
+      in this document, so Unresolved stays a state the world produces
+* [x] Remove assignment command — `RemoveMaterialAssignmentCommand`; removing an absent
+      assignment succeeds and moves no revision, following
+      SetActiveConfigurationCommand rather than inventing a convention
+* [x] Undo restores exact engineering intent — whole-`MaterialDefinition` and
+      whole-document comparisons, not field spot checks. Unknown comes back Unknown
+      with `value()` empty, never zero; a value and its citation are restored together
+* [x] Redo restores exact post-command state — S1 == S3 as whole definitions, over five
+      undo/redo cycles so a drift appearing on the second cycle would be caught
+* [x] Failed commands atomic — 12 distinct failures across the five commands, each
+      leaving the count, the revision and the undo depth unmoved; `undo()`/`redo()`
+      before `execute()` refused on all five
+* [x] Redo invalidation correct — a new command clears redo; a FAILED command does not,
+      which is the opposite error and has its own test
+* [x] Material identity preserved — identical before execute, after execute, after undo
+      and after redo. **Mutation-tested:** making redo allocate a new ID fails 5 test
+      cases
+* [x] No derived mass state in history — every member of all five commands is an ID, a
+      name, a MaterialDefinition or a wrapped generic command. Grepping for the derived
+      vocabulary finds 6 hits, ALL in the comment asserting the absence, and 0
+      elsewhere; 5 compile-fail cases prove there is no setter. Mass, derived G/K and
+      completeness are each shown to recompute from restored intent
+* [x] Determinism PASS — the same sequence from the same fixed DocumentId gives
+      `equivalent()` documents; enumeration order survives five undo/redo cycles; no
+      clock, hash or unordered container is reachable
+* [x] Adversarial review PASS — 28 attacks, 3 findings, **no production defect**. Two
+      automatic-FAIL gates mutation-tested rather than only asserted
+* [x] Regression PASS — 3 presets from an external build root, 2685/2685 each,
+      0 warnings, fresh binaries, 0 stages failed, first attempt
+* [x] Evidence recorded
+
+**Answered by the architecture, not by new code:** the canonical assignment is one
+optional MaterialId on the Document (ADR-026), so there is no direct/effective hierarchy
+for a remove to reach through, no occurrence override to guard (`ComponentDefinition`
+has no material field) and no configuration-local material intent to create by accident.
+Recorded as answered-by-construction rather than tested into existence.
+
+**Known limitations, recorded not hidden:** command history is not persisted (1); no
+compound transaction, because BetterCAD has no compound-command infrastructure — "create
+and assign" is two commands (2); the low-level domain mutation APIs remain public and
+bypass history, deliberately and as in every other module (3); `EditMaterialCommand`
+takes a whole definition, so a caller changing one property reads-modifies-writes (4);
+rename goes through the existing `RenameObjectCommand` (5); the brief's item-42 sequence
+is unreachable here because an assignment's target is the document, not an object (6).
 
 ### Gate
 

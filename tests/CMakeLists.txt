@@ -108,6 +108,7 @@ bettercad_add_executable(bettercad_tests
         features/ChamferFeatureTests.cpp
         features/CustomMaterialTests.cpp
         features/MassPropertiesTests.cpp
+        features/MaterialCommandTests.cpp
         features/ProvenanceTests.cpp
         features/MaterialAssignmentTests.cpp
         features/MaterialTests.cpp
