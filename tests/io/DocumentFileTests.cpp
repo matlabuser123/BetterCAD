@@ -880,3 +880,57 @@ TEST_CASE("A cloned custom material is not persisted yet either, and the save st
     CHECK(std::distance(std::filesystem::directory_iterator(dir.path()),
                         std::filesystem::directory_iterator{}) == 0);
 }
+
+TEST_CASE("Provenance is not persisted yet, and the save says so rather than dropping it",
+          "[io][document][material][provenance]") {
+    // PROVENANCE PERSISTENCE IS BLOCKED ON P15-PERSIST-001, and this is the part of
+    // it that can be verified now.
+    //
+    // ADR-028 requires provenance to be persisted: "a saved document would be unable
+    // to say where its numbers came from, which is most of what makes it an
+    // engineering record". But no material of ANY kind can be saved yet -- the
+    // writer rejects an object type it does not recognise -- so there is no file
+    // format to round-trip provenance through and no round-trip test can exist.
+    //
+    // The failure this guards is the dangerous one: a writer taught about materials
+    // that omits provenance would lose the citations silently on every save, and the
+    // values would still be there, so nothing would look wrong. Keeping the whole
+    // save LOUD is what prevents that, and this pins it with provenance present so
+    // that whoever implements P15-PERSIST-001 has to deal with it.
+    TempDir dir;
+    Document doc{"Part"};
+    const Result<MaterialId> id = features::createMaterial(doc, "Steel");
+    REQUIRE(id);
+
+    materials::MechanicalProperties mechanical;
+    mechanical.density = materials::MaterialProperty<Density>::known(Density::fromSi(7850.0));
+    REQUIRE(features::setMaterialMechanical(doc, *id, mechanical));
+
+    materials::PropertyProvenance cited;
+    cited.kind = materials::SourceKind::Measured;
+    cited.source = "Synthetic test report";
+    cited.standard = "EN 10025-2";
+    cited.reference = "Table 7";
+    cited.revision = "Rev C";
+    cited.condition = "as-rolled";
+    // A FIXED date. Nothing here reads a clock, so the saved bytes cannot depend on
+    // when the test ran.
+    cited.date = materials::Date::of(2024, 3, 17);
+    REQUIRE(features::setMaterialPropertyProvenance(doc, *id,
+                                                    materials::MechanicalPropertyKind::Density,
+                                                    cited));
+
+    const Result<void> saved = io::saveDocument(doc, dir.path() / "cited.bcad");
+    REQUIRE_FALSE(saved);
+    CHECK_THAT(saved.error().message, ContainsSubstring("material"));
+    CHECK_THAT(saved.error().message, ContainsSubstring("cannot be saved"));
+    CHECK(std::distance(std::filesystem::directory_iterator(dir.path()),
+                        std::filesystem::directory_iterator{}) == 0);
+
+    // The provenance is still there in memory, untouched by the failed save.
+    const Result<materials::PropertyProvenance> after = features::materialPropertyProvenance(
+        doc, *id, materials::MechanicalPropertyKind::Density);
+    REQUIRE(after);
+    CHECK(*after == cited);
+    CHECK(materials::toString(*after->date) == "2024-03-17");
+}

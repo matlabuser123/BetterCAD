@@ -3,7 +3,9 @@
 #include <bettercad/core/Error.hpp>
 #include <bettercad/core/Id.hpp>
 #include <bettercad/core/materials/MaterialLibrary.hpp>
+#include <bettercad/core/materials/Completeness.hpp>
 #include <bettercad/core/materials/MechanicalProperties.hpp>
+#include <bettercad/core/materials/Provenance.hpp>
 #include <bettercad/core/materials/ThermalProperties.hpp>
 #include <bettercad/features/Export.hpp>
 #include <bettercad/features/Material.hpp>
@@ -429,5 +431,94 @@ hasMaterialProperty(const Document& document, MaterialId id,
                     materials::MechanicalPropertyKind kind);
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT bool
 hasMaterialProperty(const Document& document, MaterialId id, materials::ThermalPropertyKind kind);
+
+// --- Provenance and completeness (P15-PROV-001) -----------------------------
+//
+// THE EDIT POLICY, stated once here because leaving it ambiguous is how provenance
+// comes to lie:
+//
+//   setMaterialMechanical / setMaterialThermal   replace VALUES. Any property
+//                                               whose value CHANGED loses its
+//                                               provenance, because that citation
+//                                               described the old number.
+//   removeMaterialProperty                      removes the value AND its
+//                                               provenance. No orphan citation.
+//   setMaterialProvenance                       replaces provenance ONLY. No value
+//   setMaterialPropertyProvenance               moves, ever.
+//
+// The clearing is deliberate and it is the conservative choice. The alternative --
+// keeping the old citation against a new number -- makes the document claim a
+// source it does not have, which is worse than a gap. It clears rather than
+// asserting `UserEntered`, because asserting anything would itself be a claim: the
+// new value may well have come from a newer datasheet, and BetterCAD does not
+// know. Cleared means "nobody said", which is true.
+//
+// A caller who is correcting a transcription rather than changing the data can
+// re-state the provenance in the same breath: set the value, then set the
+// provenance. Two calls, and both explicit.
+
+/// Replaces the whole provenance record of the material with @p id, leaving every
+/// VALUE, the metadata and the identity alone. Returns whether anything changed.
+///
+/// Provenance is metadata, so this cannot change a mass, a modulus or a derived
+/// shear modulus, and cannot change the MaterialId. Both are tested.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<bool>
+setMaterialProvenance(Document& document, MaterialId id,
+                      const materials::MaterialProvenance& provenance);
+
+/// Replaces the provenance of ONE property, leaving the other properties'
+/// provenance, the material default, and every value alone.
+///
+/// Fails for a derived kind: a derived value has no source of its own and reports
+/// its inputs' instead (ADR-028), so a citation attached to one would be a claim
+/// about an equation.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<bool>
+setMaterialPropertyProvenance(Document& document, MaterialId id,
+                              materials::MechanicalPropertyKind kind,
+                              const materials::PropertyProvenance& provenance);
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<bool>
+setMaterialPropertyProvenance(Document& document, MaterialId id,
+                              materials::ThermalPropertyKind kind,
+                              const materials::PropertyProvenance& provenance);
+
+/// The provenance in force for one property of the material with @p id: its own if
+/// it has any, otherwise the material default (ADR-028's two-level model).
+///
+/// Fails only if there is no such material. A property with no provenance anywhere
+/// yields an empty record, which is a legitimate answer and NOT an error: an
+/// uncited value is still a value.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<materials::PropertyProvenance>
+materialPropertyProvenance(const Document& document, MaterialId id,
+                           materials::MechanicalPropertyKind kind);
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<materials::PropertyProvenance>
+materialPropertyProvenance(const Document& document, MaterialId id,
+                           materials::ThermalPropertyKind kind);
+
+/// Whether the material with @p id can serve @p consumer, and what is missing.
+///
+/// THE ANSWER IS PER CONSUMER, always. A material with a conductivity and nothing
+/// else is Ready for steady conduction and Incomplete for a mass, and both answers
+/// are correct. Nothing here fabricates a missing value, and an absent citation
+/// never blocks an analysis.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<materials::CompletenessReport>
+materialCompleteness(const Document& document, MaterialId id, materials::ConsumerKind consumer);
+
+/// Everything known and unknown about the material with @p id, for inspection.
+///
+/// NOT a readiness gate for any consumer -- see the note on
+/// materials::generalCompleteness(). A material perfectly ready for steady
+/// conduction will list a dozen missing properties here.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<materials::CompletenessReport>
+materialReport(const Document& document, MaterialId id);
+
+/// Whether the material assigned to @p document can serve @p consumer.
+///
+/// The convenience the analysis phases will call: it resolves the assignment
+/// (ADR-026) and then asks. Fails with the assignment's own diagnostic when there
+/// is no material or the assigned one is gone -- which is a DIFFERENT failure from
+/// an incomplete material, and the two must not be confused: one means "choose a
+/// material", the other "characterise it further".
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<materials::CompletenessReport>
+effectiveMaterialCompleteness(const Document& document, materials::ConsumerKind consumer);
 
 } // namespace bettercad::features

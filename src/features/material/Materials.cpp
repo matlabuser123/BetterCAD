@@ -38,6 +38,22 @@ Result<MaterialId> importLibraryMaterial(Document& document, std::string name,
     definition.family = std::string{entry.family()};
     definition.notes = std::string{entry.notes()};
     definition.origin = entry.key();
+    // The material-level provenance says where this came from, in the same breath
+    // as the origin key -- ADR-028: an import's library key IS provenance, and
+    // recording it there is what lets a later milestone offer "the library has
+    // moved on" without the document ever depending on the library.
+    //
+    // Every property the material later gains WITHOUT a citation of its own
+    // therefore traces to this entry by default, which is right for values
+    // transcribed from it. Any value the user subsequently changes loses that
+    // default for itself, because setMaterialMechanical clears the provenance of a
+    // changed value.
+    materials::PropertyProvenance provenance;
+    provenance.kind = materials::SourceKind::LibraryReference;
+    provenance.source = std::format("BetterCAD library {}", materials::toString(entry.key()));
+    provenance.revision = std::format("rev {}", entry.revision());
+    provenance.standard = std::string{entry.standard()};
+    definition.provenance.material = provenance;
     return createMaterial(document, std::move(name), definition);
 }
 
@@ -91,6 +107,88 @@ std::vector<MaterialId> findMaterialsByDesignation(const Document& document,
     return found;
 }
 
+namespace {
+
+/// Clears the provenance of every mechanical property whose value differs between
+/// @p before and @p after.
+///
+/// THE EDIT POLICY (P15-PROV-001). A citation describes a NUMBER; when the number
+/// changes, the citation no longer describes anything that is there. Keeping it
+/// would make the document claim a source it does not have, which is worse than a
+/// gap -- so it is cleared, and cleared rather than replaced with `UserEntered`,
+/// because asserting a new kind would be a claim BetterCAD cannot support. Cleared
+/// means "nobody said", which is true.
+///
+/// A REMOVAL GETS THE RIGHT BEHAVIOUR FROM THIS FOR FREE: removing a property sets
+/// its slot to Unknown, which differs from the old value, so its provenance goes
+/// with it and no orphan citation is left behind.
+void clearStaleMechanicalProvenance(const materials::MechanicalProperties& before,
+                                    const materials::MechanicalProperties& after,
+                                    materials::MaterialProvenance& provenance) {
+    const auto changed = [&](materials::MechanicalPropertyKind kind) {
+        using Kind = materials::MechanicalPropertyKind;
+        switch (kind) {
+            case Kind::Density:
+                return before.density != after.density;
+            case Kind::YoungsModulus:
+                return before.youngsModulus != after.youngsModulus;
+            case Kind::PoissonRatio:
+                return before.poissonRatio != after.poissonRatio;
+            case Kind::YieldStrength:
+                return before.yieldStrength != after.yieldStrength;
+            case Kind::UltimateTensileStrength:
+                return before.ultimateTensileStrength != after.ultimateTensileStrength;
+            case Kind::UltimateCompressiveStrength:
+                return before.ultimateCompressiveStrength != after.ultimateCompressiveStrength;
+            case Kind::ShearStrength:
+                return before.shearStrength != after.shearStrength;
+            case Kind::Elongation:
+                return before.elongation != after.elongation;
+            case Kind::Hardness:
+                return before.hardness != after.hardness;
+            case Kind::ShearModulus:
+            case Kind::BulkModulus:
+                // Derived: no slot, so nothing to compare and nothing to clear.
+                return false;
+        }
+        return false;
+    };
+    for (const materials::MechanicalPropertyKind kind : materials::mechanicalPropertyKinds()) {
+        if (changed(kind)) {
+            provenance.mechanical.erase(kind);
+        }
+    }
+}
+
+/// The same for the thermal half.
+void clearStaleThermalProvenance(const materials::ThermalProperties& before,
+                                 const materials::ThermalProperties& after,
+                                 materials::MaterialProvenance& provenance) {
+    const auto changed = [&](materials::ThermalPropertyKind kind) {
+        using Kind = materials::ThermalPropertyKind;
+        switch (kind) {
+            case Kind::ThermalConductivity:
+                return before.thermalConductivity != after.thermalConductivity;
+            case Kind::SpecificHeatCapacity:
+                return before.specificHeatCapacity != after.specificHeatCapacity;
+            case Kind::ThermalExpansion:
+                return before.thermalExpansion != after.thermalExpansion;
+            case Kind::MeltingTemperature:
+                return before.meltingTemperature != after.meltingTemperature;
+            case Kind::ElectricalResistivity:
+                return before.electricalResistivity != after.electricalResistivity;
+        }
+        return false;
+    };
+    for (const materials::ThermalPropertyKind kind : materials::thermalPropertyKinds()) {
+        if (changed(kind)) {
+            provenance.thermal.erase(kind);
+        }
+    }
+}
+
+} // namespace
+
 Result<bool> setMaterialMechanical(Document& document, MaterialId id,
                                    const materials::MechanicalProperties& properties) {
     const Material* material = findMaterial(document, id);
@@ -100,7 +198,12 @@ Result<bool> setMaterialMechanical(Document& document, MaterialId id,
     // Only the mechanical part is replaced; everything else is carried over, so
     // there is no way for this to disturb a designation or an origin.
     MaterialDefinition definition = material->definition();
+    const materials::MechanicalProperties before = definition.mechanical;
     definition.mechanical = properties;
+    // A citation describes the number it was recorded against, so a changed value
+    // loses it (P15-PROV-001). The material-level default is NOT cleared: it
+    // describes the material rather than any one value.
+    clearStaleMechanicalProvenance(before, properties, definition.provenance);
     return setMaterialDefinition(document, id, definition);
 }
 
@@ -196,7 +299,9 @@ Result<bool> setMaterialThermal(Document& document, MaterialId id,
     // untouched, which is what keeps a thermal edit from erasing a modulus -- or
     // the density, which lives there and which thermal consumers read.
     MaterialDefinition definition = material->definition();
+    const materials::ThermalProperties before = definition.thermal;
     definition.thermal = properties;
+    clearStaleThermalProvenance(before, properties, definition.provenance);
     return setMaterialDefinition(document, id, definition);
 }
 
@@ -591,6 +696,120 @@ bool hasMaterialProperty(const Document& document, MaterialId id,
             return properties.electricalResistivity.hasValue();
     }
     return false;
+}
+
+
+// --- Provenance and completeness (P15-PROV-001) -----------------------------
+
+Result<bool> setMaterialProvenance(Document& document, MaterialId id,
+                                   const materials::MaterialProvenance& provenance) {
+    const Material* material = findMaterial(document, id);
+    if (material == nullptr) {
+        return makeError(ErrorCode::NotFound, std::format("there is no material {}", id));
+    }
+    MaterialDefinition definition = material->definition();
+    // Metadata only. No value is read, written or compared here, which is what
+    // makes "changing a citation cannot change a mass" true by construction rather
+    // than by test -- though it is tested as well.
+    definition.provenance = provenance;
+    return setMaterialDefinition(document, id, definition);
+}
+
+Result<bool> setMaterialPropertyProvenance(Document& document, MaterialId id,
+                                           materials::MechanicalPropertyKind kind,
+                                           const materials::PropertyProvenance& provenance) {
+    const Material* material = findMaterial(document, id);
+    if (material == nullptr) {
+        return makeError(ErrorCode::NotFound, std::format("there is no material {}", id));
+    }
+    if (materials::isDerivedKind(kind)) {
+        return makeError(
+            ErrorCode::InvalidArgument,
+            std::format("{} of {} is derived, so it has no source of its own; it reports the "
+                        "provenance of the modulus and the ratio it is computed from",
+                        materials::toString(kind), describe(*material)));
+    }
+    MaterialDefinition definition = material->definition();
+    if (provenance.empty()) {
+        // An empty record and an absent one mean the same thing, so storing the
+        // empty one would leave a map entry that says nothing and would make
+        // hasOwnProvenance() disagree with effectiveProvenance().
+        definition.provenance.mechanical.erase(kind);
+    } else {
+        definition.provenance.mechanical[kind] = provenance;
+    }
+    return setMaterialDefinition(document, id, definition);
+}
+
+Result<bool> setMaterialPropertyProvenance(Document& document, MaterialId id,
+                                           materials::ThermalPropertyKind kind,
+                                           const materials::PropertyProvenance& provenance) {
+    const Material* material = findMaterial(document, id);
+    if (material == nullptr) {
+        return makeError(ErrorCode::NotFound, std::format("there is no material {}", id));
+    }
+    MaterialDefinition definition = material->definition();
+    if (provenance.empty()) {
+        definition.provenance.thermal.erase(kind);
+    } else {
+        definition.provenance.thermal[kind] = provenance;
+    }
+    return setMaterialDefinition(document, id, definition);
+}
+
+Result<materials::PropertyProvenance>
+materialPropertyProvenance(const Document& document, MaterialId id,
+                           materials::MechanicalPropertyKind kind) {
+    const Material* material = findMaterial(document, id);
+    if (material == nullptr) {
+        return makeError(ErrorCode::NotFound, std::format("there is no material {}", id));
+    }
+    return materials::effectiveProvenance(material->definition().provenance, kind);
+}
+
+Result<materials::PropertyProvenance>
+materialPropertyProvenance(const Document& document, MaterialId id,
+                           materials::ThermalPropertyKind kind) {
+    const Material* material = findMaterial(document, id);
+    if (material == nullptr) {
+        return makeError(ErrorCode::NotFound, std::format("there is no material {}", id));
+    }
+    return materials::effectiveProvenance(material->definition().provenance, kind);
+}
+
+Result<materials::CompletenessReport> materialCompleteness(const Document& document, MaterialId id,
+                                                           materials::ConsumerKind consumer) {
+    const Material* material = findMaterial(document, id);
+    if (material == nullptr) {
+        return makeError(ErrorCode::NotFound, std::format("there is no material {}", id));
+    }
+    const MaterialDefinition& definition = material->definition();
+    return materials::consumerCompleteness(definition.mechanical, definition.thermal,
+                                           definition.provenance, consumer);
+}
+
+Result<materials::CompletenessReport> materialReport(const Document& document, MaterialId id) {
+    const Material* material = findMaterial(document, id);
+    if (material == nullptr) {
+        return makeError(ErrorCode::NotFound, std::format("there is no material {}", id));
+    }
+    const MaterialDefinition& definition = material->definition();
+    return materials::generalCompleteness(definition.mechanical, definition.thermal,
+                                          definition.provenance);
+}
+
+Result<materials::CompletenessReport>
+effectiveMaterialCompleteness(const Document& document, materials::ConsumerKind consumer) {
+    // The assignment's own diagnostic, not a completeness one. "No material is
+    // assigned" and "the assigned material has no density" need different things
+    // from the user, so they must not arrive as the same answer (ADR-026).
+    const Result<const Material*> material = requireEffectiveMaterial(document);
+    if (!material) {
+        return std::unexpected(material.error());
+    }
+    const MaterialDefinition& definition = (*material)->definition();
+    return materials::consumerCompleteness(definition.mechanical, definition.thermal,
+                                           definition.provenance, consumer);
 }
 
 } // namespace bettercad::features

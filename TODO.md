@@ -11,7 +11,7 @@
 ```text
 Current:   P15 — Materials / Engineering Data
 Current milestone:
-           NONE. P15-CUSTOM-001 is complete.
+           NONE. P15-PROV-001 is complete.
            The next milestone is a scope decision, not Claude's to make.
 
 Qualified:
@@ -21,10 +21,10 @@ Qualified:
            P14 — Technical Drawings
            P15-ARCH-001, P15-UNITS-001, INFRA-QT-DEPLOY-001, P15-MAT-001,
            P15-MECH-001, P15-THERM-001, P15-ASSIGN-001, P15-MASS-001,
-           P15-CUSTOM-001
+           P15-CUSTOM-001, P15-PROV-001
 
 Next:
-           P15-PROV-001 — property provenance / completeness / validation.
+           P15-CMD-001 — commands / undo / redo for materials.
            Awaiting explicit scope decision.
 
            A material cannot be SAVED until P15-PERSIST-001. Saving a document
@@ -955,20 +955,69 @@ Editing a local material must never mutate the built-in library definition.
 
 ## Provenance / Completeness / Validation
 
-* [ ] Define property source metadata
-* [ ] Define optional standard/reference field
-* [ ] Define source revision/date foundation
-* [ ] Define measured vs reference-data distinction if needed
-* [ ] Define completeness report
-* [ ] Query properties required by a consumer
-* [ ] Report missing FEA properties
-* [ ] Report missing thermal properties
-* [ ] Never fabricate unavailable properties
-* [ ] Validate inconsistent data
-* [ ] Validate provenance persistence
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+**PASS 2026-09-28.** Evidence:
+[docs/verification/P15-PROV-001/](../docs/verification/P15-PROV-001/README.md).
+Qualified on the SECOND attempt; the first failed on `debug-shared-ext build` and is
+recorded in
+[qualification-void/](../docs/verification/P15-PROV-001/qualification-void/README.md).
+
+* [x] Define property source metadata — `PropertyProvenance`: kind, source, standard,
+      reference, revision, date, condition, notes. Per property, with a material-level
+      default that a property's own record overrides (ADR-028's two-level model, and
+      the only inheritance in the material model — values never inherit)
+* [x] Define optional standard/reference field — both, plus `condition` for temper.
+      Every field optional; sparse metadata is the normal case and never a reason to
+      refuse data
+* [x] Define source revision/date foundation — `revision` is metadata and is NEVER
+      parsed, ordered or compared for precedence. `materials::Date` is the
+      repository's FIRST date type: validated including leap years, ISO 8601 from
+      three integers so it cannot pick up a locale, a zone or a clock
+* [x] Define measured vs reference-data distinction if needed — needed, and resolved.
+      `isMeasured` / `isReferenceData` predicates, and NOT inferred from whether a
+      source string exists
+* [x] Define completeness report — `CompletenessReport` with `Ready | Incomplete |
+      Invalid`, present/missing lists by semantic kind, and structured
+      `MaterialIssue`s. **No single completeness flag**: 4 compile-fail cases prove a
+      report is not a bool and neither it nor a Material has `isComplete()`
+* [x] Query properties required by a consumer — `requiredProperties(ConsumerKind)`,
+      seven consumers, asserted BY VALUE. **Cross-checked against the six `require*()`
+      functions consumers actually call**, by removing each required property in turn
+      so the table cannot drift from them
+* [x] Report missing FEA properties — exact: E known, ν unknown → missing
+      `{PoissonRatio}`. `FeaLinearStatic` requires NO density; the gravity variant is
+      where a mass enters
+* [x] Report missing thermal properties — exact: density + cp known, k unknown →
+      missing `{ThermalConductivity}`. `ThermalSteady` requires a conductivity and
+      NOTHING else
+* [x] Never fabricate unavailable properties — full tree audit: 12 `value_or` hits,
+      exactly one in the material path and it is a change-flag; `valueOr` on
+      `MaterialProperty` does not exist. 0 hits for `getOrDefault`, `defaultMaterial`,
+      "generic steel", "default density", "default nu". **Mutation-tested**
+* [x] Validate inconsistent data — `inconsistencies()` WRAPS
+      `mechanicalInconsistencies()` rather than restating its rules. A supplied G that
+      disagrees with E and ν cannot arise: ADR-027 gave it no slot, so it was designed
+      out rather than validated
+* [x] Validate provenance persistence — **BLOCKED on P15-PERSIST-001**, recorded as
+      the brief instructs. No material of any kind can be saved, so no round trip
+      exists. Verified instead: provenance is canonical state, a cited material is NOT
+      content-equal to an uncited one, and the save gap stays LOUD with a full record
+      present
+* [x] Adversarial review PASS — 30 attacks, 5 findings: 1 test defect found by
+      mutation testing, 1 implementation defect, 3 recorded conflicts. No production
+      defect survived
+* [x] Regression PASS — 3 presets from an external build root, 2639/2639 each,
+      0 warnings, fresh binaries, 0 stages failed on the second attempt
+* [x] Evidence recorded
+
+**Known limitations, recorded not hidden:** provenance is not persisted (1);
+`FeaYieldStrength` has no runtime counterpart to cross-check against, because no yield
+consumer exists (2); a clone of an import is still indistinguishable from a direct
+import (3); a future CFD consumer will need a dynamic-viscosity property, which no
+material carries — the unit exists, the slot does not (4); provenance and value are
+separable, so a hand-built definition can still create an orphan citation and will be
+told about it rather than prevented (5); `revision` is not ordered, so BetterCAD cannot
+say a citation is older than the library's (6); traceability completeness is reported
+but required by no consumer (7).
 
 ### Example
 

@@ -5,6 +5,7 @@
 #include <bettercad/core/document/DocumentObject.hpp>
 #include <bettercad/core/materials/MaterialLibrary.hpp>
 #include <bettercad/core/materials/MechanicalProperties.hpp>
+#include <bettercad/core/materials/Provenance.hpp>
 #include <bettercad/core/materials/ThermalProperties.hpp>
 #include <bettercad/features/Export.hpp>
 
@@ -67,6 +68,20 @@ struct MaterialDefinition {
     /// It is part of the definition, so editing it goes through the same
     /// setDefinition() path as a designation and cannot touch the MaterialId.
     materials::MechanicalProperties mechanical;
+    /// Where each property's value came from (P15-PROV-001, ADR-028): per
+    /// property, with `provenance.material` as the default for properties that
+    /// state none.
+    ///
+    /// CANONICAL, not derived. A document that computes a stress and cannot say
+    /// where its modulus came from is not an engineering record, so this is the
+    /// user's and the library's data and it is part of the definition.
+    ///
+    /// It is METADATA: it never affects a number, an identity or a derivation.
+    /// Editing a citation changes no mass and no modulus, which is tested. The one
+    /// direction that does couple is the reverse: editing a VALUE clears the
+    /// provenance that described the old number, because a citation for a number
+    /// that is no longer there is a lie. See setMaterialMechanical().
+    materials::MaterialProvenance provenance;
     /// What the material is thermally and electrically (P15-THERM-001). Every
     /// property defaults to Unknown, so this costs a material nothing either.
     ///

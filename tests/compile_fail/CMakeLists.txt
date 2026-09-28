@@ -232,3 +232,42 @@ bettercad_compile_fail_case(custom "${_custom}" CLONE_TAKES_A_MATERIAL_ID
     "no matching function for call to .*cloneMaterial|could not convert" BetterCAD::features)
 bettercad_compile_fail_case(custom "${_custom}" CLONE_DOES_NOT_TAKE_A_LIBRARY_ENTRY
     "no matching function for call to .*cloneMaterial|could not convert" BetterCAD::features)
+
+# --- Provenance and completeness (P15-PROV-001) ------------------------------
+#
+# Mostly absences, and the absences are the milestone. There is no single
+# completeness flag, because "complete" has no meaning without a consumer; no
+# unvalidated Date; no CFD consumer, because ADR-028 defines no requirements for one;
+# and no fabricated value anywhere to reach for.
+set(_prov "${CMAKE_CURRENT_SOURCE_DIR}/ProvenanceMisuse.cpp")
+bettercad_compile_fail_group(prov "${_prov}" BetterCAD::features)
+bettercad_compile_fail_case(prov "${_prov}" REPORT_IS_NOT_A_BOOLEAN
+    "could not convert|no match for|cannot convert" BetterCAD::features)
+bettercad_compile_fail_case(prov "${_prov}" REPORT_HAS_NO_IS_COMPLETE
+    "has no member named .isComplete" BetterCAD::features)
+bettercad_compile_fail_case(prov "${_prov}" MATERIAL_HAS_NO_IS_COMPLETE
+    "has no member named .isComplete" BetterCAD::features)
+bettercad_compile_fail_case(prov "${_prov}" COMPLETENESS_NEEDS_A_CONSUMER
+    "too few arguments to function .*materialCompleteness" BetterCAD::features)
+bettercad_compile_fail_case(prov "${_prov}" CONSUMER_IS_TYPED
+    "cannot convert .*int. to .*ConsumerKind" BetterCAD::features)
+bettercad_compile_fail_case(prov "${_prov}" NO_CFD_CONSUMER
+    "Cfd. is not a member of" BetterCAD::features)
+bettercad_compile_fail_case(prov "${_prov}" DATE_HAS_NO_PUBLIC_CONSTRUCTOR
+    "is private within this context|no matching function for call to" BetterCAD::features)
+bettercad_compile_fail_case(prov "${_prov}" DATE_FACTORY_RETURNS_OPTIONAL
+    "conversion from .*optional.* to non-scalar type|could not convert" BetterCAD::features)
+bettercad_compile_fail_case(prov "${_prov}" PROVENANCE_IS_NOT_A_VALUE
+    "no match for [^ ]*operator=" BetterCAD::features)
+bettercad_compile_fail_case(prov "${_prov}" VALUE_IS_NOT_PROVENANCE
+    "no match for [^ ]*operator=" BetterCAD::features)
+bettercad_compile_fail_case(prov "${_prov}" PROVENANCE_KIND_IS_NOT_A_PROPERTY_STATE
+    "cannot convert|no match for [^ ]*operator=" BetterCAD::features)
+bettercad_compile_fail_case(prov "${_prov}" PROPERTY_STATE_IS_NOT_A_SOURCE_KIND
+    "cannot convert|invalid conversion" BetterCAD::features)
+bettercad_compile_fail_case(prov "${_prov}" ISSUE_IS_NOT_A_STRING
+    "no match for [^ ]*operator==" BetterCAD::features)
+bettercad_compile_fail_case(prov "${_prov}" NO_DEFAULT_DENSITY
+    "defaultDensity. is not a member of" BetterCAD::features)
+bettercad_compile_fail_case(prov "${_prov}" PROPERTY_HAS_NO_VALUE_OR
+    "has no member named .valueOr" BetterCAD::features)

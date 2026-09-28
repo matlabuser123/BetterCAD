@@ -14,6 +14,15 @@ Result<void> validateMaterialDefinition(const MaterialDefinition& definition) {
     if (auto valid = materials::validate(definition.thermal); !valid) {
         return valid;
     }
+    // Provenance is metadata and is permitted to be sparse, so there is very
+    // little to refuse. What IS refused is a date that is not a date: Date::of
+    // validates on construction, so an invalid one cannot be stored -- and that is
+    // where the check lives, rather than being repeated here.
+    //
+    // Deliberately NOT refused: a citation with no kind, a kind with no citation,
+    // or provenance for a property that has no value. Each is reported as an issue
+    // by materials::traceabilityGaps() and none is a reason to reject a material a
+    // user is part-way through entering.
     if (!definition.origin) {
         return {};
     }
