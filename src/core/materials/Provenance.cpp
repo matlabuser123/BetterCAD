@@ -48,6 +48,35 @@ std::string toString(const Date& date) {
     return std::format("{:04}-{:02}-{:02}", date.year(), date.month(), date.day());
 }
 
+std::optional<Date> parseDate(std::string_view text) {
+    // Hand-parsed digit by digit rather than through a stream or std::from_chars
+    // on a substring, because the shape must be EXACTLY what toString writes:
+    // "1999-1-1", "1999/01/01" and " 1999-01-01" are all rejected, and no locale
+    // or stream state can influence the result.
+    if (text.size() != 10 || text[4] != '-' || text[7] != '-') {
+        return std::nullopt;
+    }
+    const auto digits = [&](std::size_t from, std::size_t count) -> std::optional<int> {
+        int value = 0;
+        for (std::size_t i = from; i < from + count; ++i) {
+            if (text[i] < '0' || text[i] > '9') {
+                return std::nullopt;
+            }
+            value = value * 10 + (text[i] - '0');
+        }
+        return value;
+    };
+    const std::optional<int> year = digits(0, 4);
+    const std::optional<int> month = digits(5, 2);
+    const std::optional<int> day = digits(8, 2);
+    if (!year || !month || !day) {
+        return std::nullopt;
+    }
+    // Through Date::of, so the calendar check -- including leap years -- is the
+    // same one a caller constructing a date goes through.
+    return Date::of(*year, *month, *day);
+}
+
 std::span<const SourceKind> sourceKinds() noexcept {
     return std::span<const SourceKind>{kSourceKinds};
 }

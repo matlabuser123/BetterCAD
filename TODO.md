@@ -11,7 +11,7 @@
 ```text
 Current:   P15 — Materials / Engineering Data
 Current milestone:
-           NONE. P15-CMD-001 is complete.
+           NONE. P15-PERSIST-001 is complete.
            The next milestone is a scope decision, not Claude's to make.
 
 Qualified:
@@ -21,18 +21,16 @@ Qualified:
            P14 — Technical Drawings
            P15-ARCH-001, P15-UNITS-001, INFRA-QT-DEPLOY-001, P15-MAT-001,
            P15-MECH-001, P15-THERM-001, P15-ASSIGN-001, P15-MASS-001,
-           P15-CUSTOM-001, P15-PROV-001, P15-CMD-001
+           P15-CUSTOM-001, P15-PROV-001, P15-CMD-001, P15-PERSIST-001
 
 Next:
-           P15-PERSIST-001 — save / load material intent. It also unblocks
-           provenance persistence, which ADR-028 requires and P15-PROV-001
-           could not deliver: no material of any kind can be saved yet.
+           P15-CLI-001 — headless engineering-data workflows.
            Awaiting explicit scope decision.
 
-           A material cannot be SAVED until P15-PERSIST-001. Saving a document
-           that holds one fails loudly and is tested to; nothing is dropped. But
-           materials are not usable end to end until then, which may be reason
-           to bring that milestone forward.
+           Materials now SAVE and LOAD (P15-PERSIST-001), including provenance,
+           which ADR-028 required and P15-PROV-001 had to leave blocked. The
+           schema version did not change: adding an object type and an optional
+           field needs no bump, and a pre-P15 document's bytes are unaltered.
 
            Also awaiting a decision, and arguably ahead of it: the carried
            FileIo replace defect below. A user saving a document into a
@@ -1150,23 +1148,94 @@ commands mutate canonical material intent
 
 ## Materials / Engineering Data Persistence
 
-* [ ] Define canonical persisted schema
-* [ ] Persist material identity
-* [ ] Persist material metadata
-* [ ] Persist mechanical properties
-* [ ] Persist thermal/physical properties
-* [ ] Persist material assignments
-* [ ] Persist provenance
-* [ ] Persist custom materials
-* [ ] Do not persist derived mass properties as authority
-* [ ] Validate stable references
-* [ ] Validate malformed-file rejection
-* [ ] Validate deterministic serialization
-* [ ] Validate backward compatibility
-* [ ] Validate full round trip
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+**PASS 2026-09-29.** Evidence:
+[docs/verification/P15-PERSIST-001/](../docs/verification/P15-PERSIST-001/README.md),
+including [schema-sample.json](../docs/verification/P15-PERSIST-001/schema-sample.json),
+a real serialized document.
+
+**The document format already had a policy for this.** "Adding a kind, an object type or
+an optional field needs no bump" — so the schema version stays 2. Backward and forward
+compatibility, atomic load, duplicate-ID rejection and allocator restoration were all
+already defined; the work was the material's mapping and proving they hold for it.
+
+* [x] Define canonical persisted schema — `{id, type: "material", name, data}` like every
+      other object kind, plus a `material_assignment` root section beside
+      `configurations`. ABSENT MEANS UNKNOWN; SI always; enums as strings; the file's keys
+      are NOT the diagnostic strings, because `toString` returns "Young's modulus" and a
+      reword would break every saved document
+* [x] Persist material identity — `restoreObject` keeps the ID, the mechanism every
+      object kind already used
+* [x] Persist material metadata — designation, standard, family, notes, written only when
+      non-empty
+* [x] Persist mechanical properties — nine stored kinds; hardness carries its SCALE, all
+      four round-tripped individually. **No key exists for a shear or bulk modulus**
+      (ADR-027), so a file cannot claim one
+* [x] Persist thermal/physical properties — five kinds; absolute temperatures stay
+      absolute; electrical resistivity returns to its own type (ADR-029), never a bare
+      double. **Density is NOT here** — one canonical density, and a test counts exactly
+      one `"density"` key in the whole file
+* [x] Persist material assignments — one optional MaterialId, BY ID. Resolved correctly
+      when two materials share a designation; preserved through a rename
+* [x] Persist provenance — all eight source kinds; ISO 8601 dates; records keyed by
+      PROPERTY NAME, not by position, so no reordering can reattach a citation
+* [x] Persist custom materials — an ordinary document material, so it persists as one.
+      Tested with an import and its clone holding DIFFERENT densities, values the library
+      does not have at all
+* [x] Do not persist derived mass properties as authority — a document with a COMPUTED
+      mass is serialized and checked against 24 forbidden substrings. Mass, derived G/K
+      and completeness each recompute after load, and the mass then follows a density
+      edit and a geometry edit
+* [x] Validate stable references — an unresolved assignment survives TWO round trips
+      still naming the deleted material, never the same-designation one.
+      **Mutation-tested:** a loader that rebound fails 3 test cases
+* [x] Validate malformed-file rejection — 19 cases, each differing from a valid file in
+      one thing, plus non-finite tokens and a `1e400` overflow. Validation is NOT
+      duplicated: the file goes through `Material::create`, the same entry point a caller
+      uses
+* [x] Validate deterministic serialization — two saves byte-identical;
+      save→load→save byte-identical, which says the loader adds no normalisation of its
+      own. Materials in ascending ID order, provenance in enumeration order, built in
+      reverse so the order cannot come from insertion
+* [x] Validate backward compatibility — no version bump needed; a pre-P15 document loads
+      with zero materials and **no fabricated default**; version 1 still loads; version 3
+      is refused by name. **An existing golden-text test asserts the exact bytes of a
+      document with no materials and passes unchanged**
+* [x] Validate full round trip — a rich document (import, fully populated, duplicate
+      designation, from-scratch, incomplete, clone, unresolved assignment, geometry)
+      round-tripped TWICE with `equivalent(A,B)`, `equivalent(B,C)`, `equivalent(A,C)`
+* [x] Adversarial review PASS — 30 attacks, 5 findings: 3 defects of mine, all fixed, and
+      2 decisions recorded. Three automatic-FAIL gates mutation-tested
+* [x] Regression PASS — 3 presets from an external build root, 2716/2716 each,
+      0 warnings, fresh binaries, 0 stages failed, first attempt
+* [x] Evidence recorded
+
+**The worst defect was not the one the compiler or the linker found.** My first patch put
+the assignment writer INSIDE the configurations guard: it compiled, linked, and would have
+passed any test whose document happened to have a configuration, while silently dropping
+the assignment from every document without one. Found by reading the patched region,
+because no fixture reached the branch. A patch applied by script into a large function
+needs its region read back.
+
+**Five tests were replaced, not deleted.** P15-MAT through P15-PROV each added a test
+requiring the save to fail LOUDLY so the gap could not become silent data loss. Those
+guarded exactly what this milestone closes, so each was replaced by the round-trip test
+that now proves it.
+
+**Known limitations, recorded not hidden:** command history is not persisted, and nothing
+here added it (1); a temperature-dependent property law has no persisted form because it
+has no in-memory form, and a file containing one is REJECTED rather than misread as a
+constant (2); an assignment holds a bare MaterialId, valid because one document is the
+only reference domain that exists — cross-document references will need a domain field
+(3); byte determinism is asserted within a preset, not compared across presets (4); no
+locale is exercised, the audit being by construction (5); the library's own data is still
+absent, so an imported material persists with metadata and no values (6).
+
+**Legacy material-like fields, audited and deliberately NOT migrated:** the only
+pre-existing use in a document is a free-text metadata property — `{"material":
+"6061-T6"}` in `document.metadata.properties` — and `drawing::MaterialRemoval`, the ISO
+1302 surface-finish symbol. A note a user typed is not an engineering material with
+identity and provenance, and promoting one into a MaterialId would fabricate exactly the
+data ADR-028 forbids.
 
 ### Gate
 

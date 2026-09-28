@@ -1,0 +1,75 @@
+{
+  "format": "bettercad-document",
+  "version": 2,
+  "units": "SI",
+  "document": {
+    "id": "00000000-0000-4000-8000-00000000f15e",
+    "name": "SchemaSample",
+    "metadata": {
+      "description": "",
+      "author": "",
+      "properties": {}
+    },
+    "last_allocated_id": 1
+  },
+  "parameters": [],
+  "material_assignment": {
+    "material": 1
+  },
+  "objects": [
+    {
+      "id": 1,
+      "type": "material",
+      "name": "Steel",
+      "data": {
+        "designation": "Steel S235JR",
+        "standard": "EN 10025-2",
+        "family": "Carbon Steel",
+        "notes": "Synthetic fixture, not measurements.",
+        "origin": {
+          "library": "bettercad",
+          "entry": "steel-s235jr",
+          "revision": 1
+        },
+        "mechanical": {
+          "density": {
+            "value": 7850.0,
+            "at": 293.15
+          },
+          "youngs_modulus": {
+            "value": 210000000000.0
+          },
+          "poisson_ratio": {
+            "value": 0.3
+          },
+          "yield_strength": {
+            "value": 235000000.0
+          },
+          "hardness": {
+            "value": 60.0,
+            "scale": "HRC"
+          }
+        },
+        "thermal": {
+          "thermal_conductivity": {
+            "value": 50.0
+          },
+          "melting_temperature": {
+            "value": 1811.0
+          }
+        },
+        "provenance": {
+          "mechanical": [
+            {
+              "kind": "measured",
+              "source": "Synthetic test report",
+              "revision": "Rev A",
+              "date": "2024-03-17",
+              "property": "density"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

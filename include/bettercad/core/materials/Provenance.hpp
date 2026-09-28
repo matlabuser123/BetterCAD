@@ -83,6 +83,16 @@ private:
 /// "2026-09-28", ISO 8601, locale-independent by construction.
 [[nodiscard]] BETTERCAD_CORE_EXPORT std::string toString(const Date& date);
 
+/// The date @p text names, or std::nullopt if it is not an ISO 8601 date.
+///
+/// Exactly "YYYY-MM-DD": four digits, a hyphen, two, a hyphen, two, and nothing
+/// else. No other separator, no two-digit year, no locale-dependent order -- the
+/// pair toString/parse is what makes a persisted date mean the same thing on every
+/// machine, so this accepts only what toString writes. Named `parse` after
+/// Uuid::parse, and validating in the same way: an impossible date such as
+/// "2026-02-30" gives nothing rather than a silently wrong day.
+[[nodiscard]] BETTERCAD_CORE_EXPORT std::optional<Date> parseDate(std::string_view text);
+
 /// What KIND of source a value came from.
 ///
 /// The categories are the ones that change engineering meaning, and no others. A

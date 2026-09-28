@@ -153,6 +153,7 @@ bettercad_add_executable(bettercad_tests
         io/DrawingExportSupport.hpp
         io/DrawingExportTests.cpp
         io/DocumentFileTests.cpp
+        io/MaterialFileTests.cpp
         io/DraftFileTests.cpp
         io/ExampleModelTests.cpp
         io/ExpressionFileTests.cpp

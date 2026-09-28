@@ -67,6 +67,8 @@ Result<Json> objectToJson(const DocumentObject& object) {
         data = detail::datumAxisToJson(*axis);
     } else if (const auto* system = dynamic_cast<const features::CoordinateSystem*>(&object)) {
         data = detail::coordinateSystemToJson(*system);
+    } else if (const auto* material = dynamic_cast<const features::Material*>(&object)) {
+        data = detail::materialToJson(*material);
     } else {
         return makeError(ErrorCode::InvalidArgument,
                          std::format("objects of type '{}' cannot be saved", object.typeName()));
@@ -277,6 +279,17 @@ Result<std::unique_ptr<DocumentObject>> objectFromJson(const Json& value, std::s
         }
         return std::unique_ptr<DocumentObject>(std::move(*system));
     }
+    // The literal, not Material::kTypeName, for the reason the comment above the
+    // dispatch gives: binding a reference to a dll-imported constexpr static does not
+    // link in a shared build. MaterialJson.cpp carries the static_assert that keeps
+    // the two from drifting.
+    if (*type == "material") {
+        auto material = detail::materialFromJson(**data, *name, detail::childPath(path, "data"));
+        if (!material) {
+            return std::unexpected(material.error());
+        }
+        return std::unique_ptr<DocumentObject>(std::move(*material));
+    }
     return detail::parseError(detail::childPath(path, "type"), std::format("unknown object type '{}'", *type));
 }
 
@@ -477,6 +490,21 @@ Result<std::string> documentToJson(const Document& document) {
     if (!document.configurations().empty()) {
         root["configurations"] = configurationsToJson(document.configurations());
     }
+    // THE DIRECT ASSIGNMENT, and only that (ADR-026, P15-ASSIGN-001). One optional
+    // MaterialId, written as the ID so that identity decides on load and two
+    // materials sharing a designation cannot be confused. The EFFECTIVE material is
+    // derived and is never written.
+    //
+    // Written only when there is one, so a document from before P15 is written back
+    // exactly as it was -- the same rule the configurations above follow.
+    //
+    // An assignment naming a material that is not in the document is legitimate
+    // engineering state -- Unresolved, from a material the user deleted -- and is
+    // written as-is, because erasing it on save would lose the user's intent and
+    // rebinding it would be worse.
+    if (const std::optional<MaterialId> assigned = document.materialAssignment()) {
+        root["material_assignment"] = Json{{"material", assigned->value()}};
+    }
     Json objects = Json::array();
     for (const DocumentObject& object : document.objects()) {
         auto json = objectToJson(object);
@@ -496,7 +524,9 @@ Result<Document> documentFromJson(std::string_view text) {
     }
     const Json& root = *parsed;
     if (auto object = detail::requireObject(
-            root, "", {"format", "version", "units", "document", "parameters", "objects", "configurations"});
+            root, "",
+            {"format", "version", "units", "document", "parameters", "objects", "configurations",
+             "material_assignment"});
         !object) {
         return std::unexpected(object.error());
     }
@@ -624,6 +654,23 @@ Result<Document> documentFromJson(std::string_view text) {
     if (const auto configurations = root.find("configurations"); configurations != root.end()) {
         if (auto read = readConfigurations(*configurations, document); !read) {
             return std::unexpected(read.error());
+        }
+    }
+    // After the objects, because it names one -- though it is deliberately NOT
+    // required to resolve: an assignment to a deleted material is the Unresolved
+    // state P15-ASSIGN-001 defines, and a loader that refused it would turn a
+    // legitimate document into an unopenable one.
+    if (const auto assignment = root.find("material_assignment"); assignment != root.end()) {
+        if (auto object = detail::requireObject(*assignment, "material_assignment", {"material"});
+            !object) {
+            return std::unexpected(object.error());
+        }
+        auto id = detail::readId(*assignment, "material", "material_assignment");
+        if (!id) {
+            return std::unexpected(id.error());
+        }
+        if (auto set = document.setMaterialAssignment(MaterialId::fromValue(*id)); !set) {
+            return detail::atPath("material_assignment", set.error());
         }
     }
     // Deleted items keep their IDs reserved, so the counter is never below an

@@ -24,6 +24,7 @@
 #include <bettercad/features/HoleFeature.hpp>
 #include <bettercad/features/LinearPatternFeature.hpp>
 #include <bettercad/features/LoftFeature.hpp>
+#include <bettercad/features/Material.hpp>
 #include <bettercad/features/MirrorFeature.hpp>
 #include <bettercad/features/RevolveFeature.hpp>
 #include <bettercad/features/RibFeature.hpp>
@@ -38,6 +39,13 @@
 #include <string_view>
 
 namespace bettercad::io::detail {
+
+/// A material's canonical engineering intent (P15-PERSIST-001). Absent property =
+/// Unknown; nothing derived is written. See MaterialJson.cpp for the schema and the
+/// reasons behind it.
+[[nodiscard]] Json materialToJson(const features::Material& material);
+[[nodiscard]] Result<std::unique_ptr<features::Material>>
+materialFromJson(const Json& value, std::string_view name, std::string_view path);
 
 /// [x, y, z] in metres.
 [[nodiscard]] Json pointToJson(const Point3D& point);
