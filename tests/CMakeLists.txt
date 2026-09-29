@@ -261,6 +261,7 @@ endif()
 # library, with the same public APIs as any client.
 if(TARGET bettercad_reference_models)
     target_sources(bettercad_tests PRIVATE
+        qualification/P15MaterialsQualificationTests.cpp
         reference/AllModelsTests.cpp
         reference/MaterialModelsTests.cpp
         reference/AssemblyModelsTests.cpp
