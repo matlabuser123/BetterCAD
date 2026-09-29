@@ -13,6 +13,7 @@
 #include <bettercad/features/Material.hpp>
 #include <bettercad/features/Materials.hpp>
 #include <bettercad/features/Regenerator.hpp>
+#include <bettercad/features/ResultBodies.hpp>
 #include <bettercad/io/DocumentFile.hpp>
 
 #include <algorithm>
@@ -398,11 +399,17 @@ ExitCode runMassProperties(Args args, std::ostream& out, std::ostream& err) {
         }
         features.push_back(*object);
     } else {
-        for (const DocumentObject& object : document.objects()) {
-            if (regenerator.body(object.id()) != nullptr) {
-                features.push_back(object.id());
-            }
-        }
+        // THE RESULT BODIES, which is not the same as every feature that has
+        // one. A bored part is a chain -- the extrude makes a solid and the
+        // hole consumes it -- so both have a body while only the last is a body
+        // OF THE PART. Listing both reported the un-bored solid as though the
+        // part had two, and the first of the two masses was the blank's.
+        //
+        // resultFeatures() is the product's own answer, already used by
+        // validate and export-step, so this asks rather than re-deciding.
+        // Found by RM-MAT-03 (P15-REFMOD-001).
+        features = features::resultFeatures(document);
+        std::erase_if(features, [&](ObjectId id) { return regenerator.body(id) == nullptr; });
         if (features.empty()) {
             return failure("mass-properties", "no_bodies",
                            std::format("{} has no body to weigh", document.name()), err);

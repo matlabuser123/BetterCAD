@@ -11,7 +11,7 @@
 ```text
 Current:   P15 — Materials / Engineering Data
 Current milestone:
-           NONE. P15-CLI-001 is complete.
+           NONE. P15-REFMOD-001 is complete.
            The next milestone is a scope decision, not Claude's to make.
 
 Qualified:
@@ -22,10 +22,10 @@ Qualified:
            P15-ARCH-001, P15-UNITS-001, INFRA-QT-DEPLOY-001, P15-MAT-001,
            P15-MECH-001, P15-THERM-001, P15-ASSIGN-001, P15-MASS-001,
            P15-CUSTOM-001, P15-PROV-001, P15-CMD-001, P15-PERSIST-001,
-           P15-CLI-001
+           P15-CLI-001, P15-REFMOD-001
 
 Next:
-           P15-REFMOD-001 — material reference models, or P15-QUAL-001.
+           P15-QUAL-001 — Full P15 Qualification.
            Awaiting explicit scope decision.
 
            Materials are now usable end to end WITHOUT A GUI: defined, edited,
@@ -1368,27 +1368,91 @@ CLI uses core APIs
 
 ## Materials / Engineering Data Reference Models
 
-* [ ] Define reference suite
-* [ ] Aluminium block
-* [ ] Steel shaft
-* [ ] Hollow steel tube
-* [ ] Multi-material assembly
-* [ ] Custom-material part
-* [ ] Incomplete-property material
-* [ ] Configuration/assignment case if architecture supports it
-* [ ] Validate density → mass
-* [ ] Validate centroid
-* [ ] Validate inertia
-* [ ] Validate mechanical-property lookup
-* [ ] Validate thermal-property lookup
-* [ ] Validate missing-property diagnostics
-* [ ] Validate model-change recomputation
-* [ ] Validate save/load
-* [ ] Validate CLI
-* [ ] Independent analytical validation
-* [ ] Adversarial review PASS
-* [ ] Three-preset regression PASS
-* [ ] Evidence recorded
+**PASS 2026-09-29.** Evidence:
+[docs/verification/P15-REFMOD-001/](../docs/verification/P15-REFMOD-001/README.md), with
+[AUDIT.md](../docs/verification/P15-REFMOD-001/AUDIT.md),
+[ANALYTICAL_TABLES.md](../docs/verification/P15-REFMOD-001/ANALYTICAL_TABLES.md) and
+[ADVERSARIAL_REVIEW.md](../docs/verification/P15-REFMOD-001/ADVERSARIAL_REVIEW.md).
+
+**A REFERENCE MODEL FOUND A PRODUCTION DEFECT.** RM-MAT-03 showed `mass-properties` listing
+consumed intermediate bodies as results: on the tube it reported the UN-BORED blank
+(3392920 mm^3, 26.46 kg) before the real answer, while `validate` said there was one result
+body. Root cause: the command enumerated every feature that had a body. Fixed generally with
+`features::resultFeatures()`, the product's own answer, already used by `validate` and
+`export-step`; pinned by a mutation-verified regression test. Twelve qualified milestones and
+2764 tests had not found it, because no earlier fixture combined a feature chain with a mass.
+
+**The infrastructure was already there.** Three reference suites existed, and P13 and P14 had
+each added their own header, catalog and runner loop, so P15 is the fourth built the same way.
+`tests/reference/Analytic.hpp` already did Green's theorem, Pappus and Gauss-Legendre in a
+header with NO BetterCAD include; it gained closed-form inertia.
+
+* [x] Define reference suite — eight documents under six IDs, each proving something
+      different: three distinct principal moments, a transformed body, a void, equal volumes
+      at different densities, library independence, and three completeness states. Every
+      value is labelled TEST / SYNTHETIC ENGINEERING DATA in the material's own notes, and a
+      test asserts that text reaches the CLI
+* [x] Aluminium block — RM-MAT-01, 200x300x500 mm at 2700: V = 3e7 mm^3 and m = 81 kg
+      EXACTLY, centroid exactly (100,150,250) mm, and Ixx/Iyy/Izz = 2.295/1.9575/0.8775
+      kg m^2, three distinct numbers so a transposed inertia axis cannot hide
+* [x] Steel shaft — RM-MAT-02, and the TRANSFORMED case: turned 90 deg about X, which moves
+      the axis moment from zz to yy, with Ixz = -0.735 kg m^2 about the origin. `I' = R I R^T`
+      and the parallel-axis shift are both computed independently
+* [x] Hollow steel tube — RM-MAT-03. The void is 44% of the bounding cylinder, so a
+      bounding-cylinder volume would be out by 80%. This is the model that found the defect
+* [x] Multi-material assembly — RM-MAT-04, as a document SET, because one document holds one
+      material and `ComponentDefinition` has no material field. Two parts of EQUAL volume at
+      2700 and 7800, so a mass following the geometry would answer the same twice. Aggregate
+      mass/CM/inertia are **N/A** on three verified architectural absences, not PASS
+* [x] Custom-material part — RM-MAT-05. A genuine library import, given values, then cloned;
+      editing the clone leaves the source untouched, and a third material shares the
+      designation
+* [x] Incomplete-property material — RM-MAT-06. Ready for a mass, Incomplete for a stiffness
+      (no nu) and for transient conduction (no k), plus a no-density subcase that refuses and
+      an inconsistent subcase that is INVALID. No nu = 0.3, no default k
+* [x] Configuration/assignment case — **PASS, not N/A.** ADR-026 makes assignment
+      configuration-independent, so none -> Tall -> Plain -> Tall -> none leaves the identity,
+      the assignment and the designation unchanged. And a configuration that overrides a
+      PARAMETER makes the mass refuse, which is the carried regeneration defect held in place
+* [x] Validate density -> mass — every model, against closed form
+* [x] Validate centroid — every model; exactly (100,150,250) mm on RM-MAT-01
+* [x] Validate inertia — all SIX components of both tensors on seven bodies, centroidal and
+      about the origin
+* [x] Validate mechanical-property lookup — through `requireDensity` and
+      `requireLinearElasticConstants`, the boundaries a solver consumes, not field reads.
+      G and K match closed form and report `isDerived()`
+* [x] Validate thermal-property lookup — `requireThermalConductivity`,
+      `requireTransientConductionProperties`, `requireThermalExpansion`
+* [x] Validate missing-property diagnostics — per consumer, against the requirement matrix
+      read out of the source rather than guessed
+* [x] Validate model-change recomputation — length 400 -> 500 mm re-checked against closed
+      form for the NEW dimension, never against the old answer; and the runner changes a main
+      dimension on all eight models
+* [x] Validate save/load — construct, save, load, revalidate, then RECOMPUTE the mass and
+      compare it to closed form. The three richest models go save/load/save/load and the two
+      files are byte identical. A file contains neither `shear_modulus` nor `bulk_modulus`,
+      and after loading both are still derived
+* [x] Validate CLI — STRUCTURED, not string-matched: each number parsed out and compared for
+      EXACT equality with the core's double, then against closed form. Plus a five-process
+      workflow that inspects, edits, re-weighs, gates and reads back, sharing nothing but
+      bytes on disk
+* [x] Independent analytical validation — every expected value from `analytic::cuboid`,
+      `cylinder`, `hollowCylinder`, `rotated`, `shifted`, in a header whose only includes are
+      `<array> <cmath> <cstddef> <numbers> <vector>`. **Worst relative error anywhere:
+      3.28e-14 against a 1e-10 tolerance**
+* [x] Adversarial review PASS — 30 attacks, 1 production defect, 5 findings in the suite all
+      closed, 6 limitations recorded
+* [x] Three-preset regression PASS — 3 presets from an external build root, 2805/2805 each,
+      0 warnings, fresh binaries, 0 stages failed
+* [x] Evidence recorded
+
+**Three findings about the SUITE, not the product, and one of them recurs.** A test of mine
+took a `SUCCEED` escape hatch and asserted nothing in the branch it took — the same defect
+P15-MASS-001 found in one of its own tests. A three-way duplicate designation was built but
+never queried through the CLI. And my first tolerance model compared an expected product of
+inertia of 1.9e-17 relatively against the kernel's 1.86e-17, which compares noise to noise;
+a component negligible beside the diagonal is now compared absolutely, while the transformed
+Ixz of -0.735 kg m^2 is still compared relatively so the gate is not weakened.
 
 ### Reference examples
 
@@ -1745,32 +1809,29 @@ docs/engineering/
 # CURRENT NEXT STEP
 
 ```text
-NONE. P15-CLI-001 is complete and the next milestone is a scope decision.
+NONE. P15-REFMOD-001 is complete and the next milestone is a scope decision.
 ```
 
-P15 — Materials / Engineering Data — is qualified from its architecture through to
-headless use: ADR-025 to ADR-029, units, the material object, mechanical and thermal
+P15 — Materials / Engineering Data — is qualified from its architecture through to a
+reference suite: ADR-025 to ADR-029, units, the material object, mechanical and thermal
 properties, assignment, mass properties, custom materials, provenance and completeness,
-commands with exact undo, persistence, and the CLI.
+commands with exact undo, persistence, the CLI, and eight reference documents validated
+against closed form.
 
-Two candidates remain in the phase, and neither is authorized here:
+One candidate remains in the phase, and it is not authorized here:
 
 ```text
-P15-REFMOD-001   material reference models -- permanent documents that pin
-                 engineering data end to end, the way the drawing reference
-                 models pin P14
 P15-QUAL-001     the phase qualification gate
 ```
 
-Outstanding and arguably ahead of both, because it can lose a user's work:
+Outstanding and arguably ahead of it, because it can lose a user's work:
 
 ```text
 the carried FileIo replace defect -- a document save can still lose to a file
 synchroniser. See Carried, in Status.
 ```
 
-Also carried, and recorded rather than hidden: a configuration override does not
-rebuild the geometry it changes, so `mass-properties` REFUSES under one rather than
-reporting the base configuration's volume as if it were the override's. The refusal is
-now pinned by a test through the CLI as well as in process. Fixing the regeneration
-defect is what removes both the guard and its tests.
+Also carried: a configuration override does not rebuild the geometry it changes, so
+`mass-properties` REFUSES under one rather than reporting the base configuration's volume as
+if it were the override's. That refusal is now pinned in process, through the CLI, and by a
+reference model. Fixing the regeneration defect is what removes the guard and its tests.

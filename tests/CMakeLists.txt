@@ -262,6 +262,7 @@ endif()
 if(TARGET bettercad_reference_models)
     target_sources(bettercad_tests PRIVATE
         reference/AllModelsTests.cpp
+        reference/MaterialModelsTests.cpp
         reference/AssemblyModelsTests.cpp
         reference/Analytic.hpp
         reference/DrawingTestSupport.hpp
@@ -926,6 +927,129 @@ if(TARGET bettercad_cli)
     set_tests_properties(cli.material.exit.ambiguous PROPERTIES DEPENDS cli.material.ambiguous.clone)
     # "Nothing was written" is only evidence if the refusal happened first.
     set_tests_properties(cli.material.atomic.wrote-nothing PROPERTIES DEPENDS cli.material.atomic.refused)
+
+    # --- P15-REFMOD-001: the engineering-data suite, through the real
+    # executables ---
+    #
+    # FIVE PROCESSES in a chain, sharing nothing but bytes on disk: the runner
+    # builds and saves all eight models, then separate bettercad-cli invocations
+    # inspect one, EDIT it, re-weigh it, gate another on a consumer requirement,
+    # and finally read the edit back. An in-process test cannot prove that,
+    # because it never leaves the process that built the model.
+    #
+    # `--materials` runs the material suite alone: the full runner also builds
+    # twelve parts, eight assemblies and seven drawings with their exports,
+    # which is a minute of work this fixture has no use for.
+    #
+    # Every expected number here is CLOSED FORM, worked out from the models'
+    # own dimensions and densities, never from what BetterCAD reported:
+    #
+    #   RM-MAT-01  200x300x500 mm at 2700      V = 3e7 mm^3    m = 81 kg
+    #   RM-MAT-03  Ro 60, Ri 40, h 300 at 7800 V = pi(60^2-40^2)300 = 1884955.59
+    #   RM-MAT-05  120x80x60 mm at 8000 after the edit         m = 4.608 kg
+    if(TARGET bettercad_example_reference_models)
+        set(_matref "${_out}/material-refmod")
+        file(MAKE_DIRECTORY "${_matref}")
+
+        # PROCESS A: build, regenerate, weigh and save all eight. Its own exit
+        # code is the first assertion -- it fails if any model does not build,
+        # does not regenerate, or cannot be written.
+        bettercad_add_process_test(refmod.material.build
+            COMMAND "$<TARGET_FILE:bettercad_example_reference_models>"
+            ARGS "--materials|--out|${_matref}"
+            EXIT_CODE 0
+            STDOUT_REGEX "== RM-MAT-01 MaterialBlock.*body Block volume_mm3 30000000 mass_kg 81 centre_mm 100 150 250")
+
+        # The tube's saved model carries the VOID: closed form says
+        # pi(60^2 - 40^2) x 300 = 1884955.59 mm^3, and a bounding cylinder would
+        # have been 3392920. This is the line that would catch it.
+        bettercad_add_process_test(refmod.material.build.tube-void
+            COMMAND "$<TARGET_FILE:bettercad_example_reference_models>" ARGS "--materials"
+            EXIT_CODE 0
+            STDOUT_REGEX "== RM-MAT-03 MaterialTube.*body Bore volume_mm3 1884955\\.59215387[0-9]* mass_kg 14\\.70265361880[0-9]*")
+
+        # PROCESS B: a different process reads a saved model back. Three
+        # materials, all sharing one designation, and the clone is the assigned
+        # one -- which is the duplicate-label fixture, visible from outside.
+        bettercad_add_process_test(refmod.material.inspect
+            COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "material-list|${_matref}/material_custom.bcad"
+            EXIT_CODE 0
+            STDOUT_REGEX "^Materials of MaterialCustom \\(3\\):\n  Imported \\(object:6\\) +Aluminium 6061-T6\n  Custom \\(object:7\\) +Aluminium 6061-T6 +assigned\n  Twin \\(object:8\\) +Aluminium 6061-T6$")
+
+        # RM-MAT-01's properties, read from the file by another process, with
+        # the derived pair labelled and the SYNTHETIC warning intact.
+        bettercad_add_process_test(refmod.material.properties
+            COMMAND "$<TARGET_FILE:bettercad_cli>"
+            ARGS "material-show|${_matref}/material_block.bcad|Aluminium"
+            EXIT_CODE 0
+            STDOUT_REGEX "TEST / SYNTHETIC ENGINEERING DATA.*density +2700 kg/m\\^3\n +youngs_modulus +70000 MPa\n +poisson_ratio +0\\.33\n +shear_modulus +26315\\.78947368[0-9]* MPa \\(derived\\)")
+
+        # PROCESS C: EDIT the custom material in a separate process. Idempotent
+        # -- it sets a value rather than changing one by a step -- so it
+        # survives `ctest --repeat`, which re-runs each test five times in a row.
+        bettercad_add_process_test(refmod.material.edit
+            COMMAND "$<TARGET_FILE:bettercad_cli>"
+            ARGS "material-set|${_matref}/material_custom.bcad|Custom|density|8000"
+            EXIT_CODE 0 STDOUT_REGEX "^Set density of Custom \\(object:7\\)")
+
+        # PROCESS D: re-weigh it. 120 x 80 x 60 mm at 8000 kg/m^3 is 4.608 kg by
+        # closed form, so the mass followed the edit across two process
+        # boundaries and a file.
+        bettercad_add_process_test(refmod.material.mass-after-edit
+            COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "mass-properties|${_matref}/material_custom.bcad"
+            EXIT_CODE 0
+            STDOUT_REGEX "density +8000 kg/m\\^3\n +volume +576000 mm\\^3\n +mass +4\\.608[0-9]* kg")
+
+        # PROCESS E: the consumer gate on RM-MAT-06. Incomplete for a stiffness,
+        # naming the missing property, exit 1 -- and READY for a mass from the
+        # same material, exit 0.
+        bettercad_add_process_test(refmod.material.completeness.incomplete
+            COMMAND "$<TARGET_FILE:bettercad_cli>"
+            ARGS "material-completeness|${_matref}/material_incomplete.bcad|--consumer|fea_linear_static"
+            EXIT_CODE 1
+            STDOUT_REGEX "Partial \\(object:6\\) for fea_linear_static: incomplete.*missing_property:poisson_ratio")
+        bettercad_add_process_test(refmod.material.completeness.ready
+            COMMAND "$<TARGET_FILE:bettercad_cli>"
+            ARGS "material-completeness|${_matref}/material_incomplete.bcad|--consumer|mass_properties"
+            EXIT_CODE 0 STDOUT_REGEX "for mass_properties: ready")
+
+        # PROCESS F: read the edit back in yet another process. 8000, not 2700.
+        bettercad_add_process_test(refmod.material.reload
+            COMMAND "$<TARGET_FILE:bettercad_cli>"
+            ARGS "material-show|${_matref}/material_custom.bcad|Custom"
+            EXIT_CODE 0 STDOUT_REGEX "density +8000 kg/m\\^3")
+
+        # The source of the clone is UNTOUCHED by the edit, through the file.
+        bettercad_add_process_test(refmod.material.source-untouched
+            COMMAND "$<TARGET_FILE:bettercad_cli>"
+            ARGS "material-show|${_matref}/material_custom.bcad|Imported"
+            EXIT_CODE 0 STDOUT_REGEX "density +2700 kg/m\\^3")
+
+        # Ordering.
+        #
+        # The runner is a FIXTURE, not merely first: ctest pulls a required
+        # fixture's setup in even when the run is filtered, whereas a DEPENDS on
+        # an excluded test is dropped. Without it, `ctest -R refmod.material.mass`
+        # would weigh a document nothing ever built.
+        #
+        # The edit is the one test here that MUTATES, and it is idempotent, so
+        # the set survives `ctest --repeat until-fail:5` -- which re-runs each
+        # test five times back to back with no fixture in between.
+        set_tests_properties(refmod.material.build PROPERTIES FIXTURES_SETUP material_refmod)
+        set_tests_properties(
+            refmod.material.inspect refmod.material.properties refmod.material.edit
+            refmod.material.mass-after-edit refmod.material.completeness.incomplete
+            refmod.material.completeness.ready refmod.material.reload
+            refmod.material.source-untouched
+            PROPERTIES FIXTURES_REQUIRED material_refmod)
+        # inspect reads the list BEFORE the edit changes nothing about it, but
+        # the two mass readers must follow the edit.
+        set_tests_properties(refmod.material.inspect PROPERTIES DEPENDS refmod.material.build)
+        set_tests_properties(refmod.material.edit PROPERTIES DEPENDS refmod.material.inspect)
+        set_tests_properties(
+            refmod.material.mass-after-edit refmod.material.reload refmod.material.source-untouched
+            PROPERTIES DEPENDS refmod.material.edit)
+    endif()
 
     # --- P14-REFMOD-001: the production drawing suite, through the real
     # executables ---

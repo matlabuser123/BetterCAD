@@ -5,6 +5,7 @@
 //   bettercad_example_reference_models [--out <dir>]
 #include "AssemblyReferenceModels.hpp"
 #include "DrawingReferenceModels.hpp"
+#include "MaterialReferenceModels.hpp"
 #include "ReferenceModels.hpp"
 
 #include <bettercad/assembly/Components.hpp>
@@ -13,11 +14,16 @@
 #include <bettercad/assembly/Resolution.hpp>
 #include <bettercad/assembly/Solver.hpp>
 #include <bettercad/core/Units.hpp>
+#include <bettercad/core/document/DocumentObject.hpp>
 #include <bettercad/drawing/Regeneration.hpp>
 #include <bettercad/drawing/SheetScene.hpp>
 #include <bettercad/drawing/Sheets.hpp>
 #include <bettercad/drawing/Views.hpp>
+#include <bettercad/features/MassProperties.hpp>
+#include <bettercad/features/Material.hpp>
+#include <bettercad/features/Materials.hpp>
 #include <bettercad/features/Regenerator.hpp>
+#include <bettercad/features/ResultBodies.hpp>
 #include <bettercad/io/DocumentFile.hpp>
 #include <bettercad/io/DrawingExport.hpp>
 #include <bettercad/io/ModelExport.hpp>
@@ -58,7 +64,8 @@ int main(int argc, char** argv) {
     // exports and eight assembly solves.
     bool parts = true;
     bool assemblies = true;
-    const bool drawings = true;
+    bool drawings = true;
+    bool materials = true;
     for (int i = 1; i < argc; ++i) {
         const std::string_view arg = argv[i];
         if (arg == "--out" && i + 1 < argc) {
@@ -66,8 +73,16 @@ int main(int argc, char** argv) {
         } else if (arg == "--drawings") {
             parts = false;
             assemblies = false;
+            materials = false;
+        } else if (arg == "--materials") {
+            // P15-REFMOD-001. The material suite alone, which is what its CLI
+            // fixture needs: seconds, rather than the minute the twelve parts'
+            // STEP and STL exports and the eight assembly solves cost.
+            parts = false;
+            assemblies = false;
+            drawings = false;
         } else {
-            std::fprintf(stderr, "usage: %s [--out <dir>] [--drawings]\n", argv[0]);
+            std::fprintf(stderr, "usage: %s [--out <dir>] [--drawings] [--materials]\n", argv[0]);
             return 2;
         }
     }
@@ -326,6 +341,102 @@ int main(int argc, char** argv) {
                     items);
         std::printf("timing_ms build %.3f regeneration %.3f scene_and_export %.3f\n", buildMs,
                     regenMs, sceneMs);
+    }
+    // The engineering-data reference models (P15-REFMOD-001). A fourth loop,
+    // because what a material model produces is neither a body count nor a
+    // solve nor a sheet: it is a MASS, which needs the material the document is
+    // assigned as well as the geometry. Printing it here means the saved model
+    // and the mass it implies are produced by the same process, and the CLI
+    // fixture then recomputes that mass in a separate one.
+    for (const reference::MaterialReferenceModelInfo& info :
+         materials ? std::span{reference::kMaterialReferenceModels}
+                   : std::span<const reference::MaterialReferenceModelInfo>{}) {
+        const auto buildStart = Clock::now();
+        auto document = reference::buildMaterialReferenceModel(info.kind);
+        const double buildMs = millisecondsSince(buildStart);
+        if (!document) {
+            return fail(info.name, "build", document.error());
+        }
+        if (!out.empty()) {
+            const auto path = out / (std::string{info.fileStem} + ".bcad");
+            if (auto saved = io::saveDocument(*document, path); !saved) {
+                return fail(info.name, "save", saved.error());
+            }
+        }
+
+        features::Regenerator regenerator;
+        assembly::registerHandlers(regenerator, nullptr, nullptr);
+        const auto regenStart = Clock::now();
+        auto report = regenerator.regenerateAll(*document);
+        const double regenMs = millisecondsSince(regenStart);
+        if (!report) {
+            return fail(info.name, "regenerate", report.error());
+        }
+        if (!report->succeeded()) {
+            for (const auto& [id, error] : report->errors) {
+                std::fprintf(stderr, "%.*s: %s\n", static_cast<int>(info.name.size()), info.name.data(),
+                             error.message.c_str());
+            }
+            return 1;
+        }
+
+        const features::MaterialAssignment assignment = features::materialAssignment(*document);
+        std::printf("== %.*s %.*s\n%.*s\nmaterials %zu assignment %.*s\n",
+                    static_cast<int>(info.id.size()), info.id.data(), static_cast<int>(info.name.size()),
+                    info.name.data(), static_cast<int>(info.purpose.size()), info.purpose.data(),
+                    features::materialCount(*document),
+                    static_cast<int>(features::toString(assignment.state).size()),
+                    features::toString(assignment.state).data());
+
+        // The mass of every body the regeneration produced, from the assigned
+        // material. A model whose material is deliberately incomplete says so
+        // instead of printing a number, which is the honest line for it.
+        for (const ObjectId result : features::resultFeatures(*document)) {
+            if (regenerator.body(result) == nullptr) {
+                continue;
+            }
+            const DocumentObject& object = *document->findObject(result);
+            auto properties = features::partMassProperties(*document, regenerator, object.id());
+            if (!properties) {
+                std::printf("body %s mass unavailable: %s\n", object.name().c_str(),
+                            properties.error().message.c_str());
+                continue;
+            }
+            std::printf("body %s volume_mm3 %.17g mass_kg %.17g centre_mm %.17g %.17g %.17g\n",
+                        object.name().c_str(), properties->volume.in(units::mm3), properties->mass.in(units::kg),
+                        properties->centreOfMass.x.in(units::mm), properties->centreOfMass.y.in(units::mm),
+                        properties->centreOfMass.z.in(units::mm));
+            std::printf("body %s inertia_centroidal_kg_m2 %.17g %.17g %.17g %.17g %.17g %.17g\n",
+                        object.name().c_str(), properties->aboutCentreOfMass.xx.si(),
+                        properties->aboutCentreOfMass.yy.si(), properties->aboutCentreOfMass.zz.si(),
+                        properties->aboutCentreOfMass.xy.si(), properties->aboutCentreOfMass.xz.si(),
+                        properties->aboutCentreOfMass.yz.si());
+        }
+
+        // A change to a main dimension must regenerate, which is what makes the
+        // mass above a recomputed answer rather than a stored one.
+        const auto item = document->findByName(info.mainParameter);
+        const auto parameter = item ? document->asParameter(*item) : std::nullopt;
+        if (!parameter) {
+            std::fprintf(stderr, "%.*s: no parameter '%.*s'\n", static_cast<int>(info.name.size()),
+                         info.name.data(), static_cast<int>(info.mainParameter.size()),
+                         info.mainParameter.data());
+            return 1;
+        }
+        if (auto changed = document->setParameterValue(*parameter, info.mainParameterMm * units::mm); !changed) {
+            return fail(info.name, "parameter change", changed.error());
+        }
+        const auto changeStart = Clock::now();
+        auto afterChange = regenerator.regenerateAll(*document);
+        const double changeMs = millisecondsSince(changeStart);
+        if (!afterChange || !afterChange->succeeded()) {
+            std::fprintf(stderr, "%.*s: the model did not regenerate after changing %.*s\n",
+                         static_cast<int>(info.name.size()), info.name.data(),
+                         static_cast<int>(info.mainParameter.size()), info.mainParameter.data());
+            return 1;
+        }
+        std::printf("timing_ms build %.3f regeneration %.3f changed_%.*s_regeneration %.3f\n", buildMs, regenMs,
+                    static_cast<int>(info.mainParameter.size()), info.mainParameter.data(), changeMs);
     }
     return 0;
 }

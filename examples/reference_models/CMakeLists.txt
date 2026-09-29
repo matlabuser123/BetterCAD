@@ -32,6 +32,9 @@ add_library(bettercad_reference_models STATIC
     GearboxCover.cpp
     IndexPlate.cpp
     ManifoldTube.cpp
+    MaterialCatalog.cpp
+    MaterialModels.cpp
+    MaterialReferenceModels.hpp
     MotorMount.cpp
     MountingBracket.cpp
     Flange.cpp

@@ -13,7 +13,9 @@
 #include <bettercad/features/MassProperties.hpp>
 #include <bettercad/features/Material.hpp>
 #include <bettercad/features/Materials.hpp>
+#include <bettercad/features/HoleFeature.hpp>
 #include <bettercad/features/Regenerator.hpp>
+#include <bettercad/features/ResultBodies.hpp>
 #include <bettercad/io/DocumentFile.hpp>
 #include <bettercad/sketch/Sketch.hpp>
 
@@ -526,6 +528,58 @@ TEST_CASE("MaterialCli_MassProperties_MatchTheCoreApiAndClosedFormGeometry", "[c
     // Ixx = m(b^2 + c^2)/12 about the centroid, in kg mm^2.
     const double ixx = mass * (50.0 * 50.0 + 20.0 * 20.0) / 12.0;
     REQUIRE_THAT(numberOf(run.out, "xx"), Catch::Matchers::WithinRel(ixx, 1e-9));
+}
+
+TEST_CASE("MaterialCli_MassProperties_ReportTheResultBodiesAndNotConsumedIntermediates",
+          "[cli][material][mass]") {
+    // FOUND BY RM-MAT-03 (P15-REFMOD-001). A bored part is a CHAIN: the extrude
+    // makes a solid and the hole consumes it. Both features have a body, so
+    // listing everything with a body reported the UN-BORED solid first, as
+    // though the part had two bodies -- and the first of the two numbers was
+    // the bounding cylinder's mass.
+    //
+    // features::resultFeatures() is the product's own answer to which bodies
+    // are results, and it is what validate and export-step already use.
+    TempDir dir;
+    const std::string path = documentPath(dir, "bored.bcad");
+
+    // 100 x 100 x 40 mm with a 40 mm diameter hole through it.
+    BoxDocument box{100_mm, 100_mm, 40_mm};
+    const geometry::FaceSignature startPlane =
+        geometry::planeSignature(Point3D{0_mm, 0_mm, 0_mm}, Direction3D::unitZ().reversed());
+    auto hole = features::HoleFeature::create(
+        "Bore", {.target = FeatureId::fromValue(box.feature.value()), .face = startPlane,
+                 .center = Point2D{50_mm, 50_mm}, .diameter = 40_mm});
+    REQUIRE(hole.has_value());
+    const ObjectId bore = box.document.addObject(std::move(*hole)).value();
+    const MaterialId id =
+        features::createMaterial(box.document, "Steel", withDensity(Density::fromSi(7800.0))).value();
+    REQUIRE(features::assignMaterial(box.document, id).has_value());
+    save(box.document, path);
+
+    // The product says there is ONE result body, and which.
+    const std::vector<ObjectId> results = features::resultFeatures(box.document);
+    REQUIRE(results.size() == 1);
+    REQUIRE(results.front() == bore);
+
+    const CliRun run = runCliCommand({"mass-properties", path});
+    REQUIRE(run.exitCode == ExitCode::Success);
+
+    // ONE body reported, and it is the bored one. The un-bored solid is a
+    // consumed intermediate and is not a body of this part.
+    REQUIRE_THAT(run.out, ContainsSubstring("Bore (object:"));
+    REQUIRE_THAT(run.out, !ContainsSubstring("Solid (object:"));
+
+    // And the number is the BORED volume: 100 x 100 x 40 - pi x 20^2 x 40,
+    // closed form, which is 12.6% less than the un-bored block.
+    const double bored = 100.0 * 100.0 * 40.0 - 3.14159265358979311599796346854 * 20.0 * 20.0 * 40.0;
+    REQUIRE_THAT(numberOf(run.out, "volume"), Catch::Matchers::WithinRel(bored, 1e-9));
+    // Named explicitly, an intermediate still answers -- asking what the solid
+    // weighed before the hole is a legitimate question, and that form is
+    // unchanged.
+    const CliRun named = runCliCommand({"mass-properties", path, "Solid"});
+    REQUIRE(named.exitCode == ExitCode::Success);
+    REQUIRE_THAT(numberOf(named.out, "volume"), Catch::Matchers::WithinRel(100.0 * 100.0 * 40.0, 1e-9));
 }
 
 TEST_CASE("MaterialCli_MassProperties_RefuseRatherThanReportZero", "[cli][material]") {

@@ -282,6 +282,145 @@ struct Solid {
     return r * (10.0 - 3.0 * pi) / (3.0 * (4.0 - pi));
 }
 
+// --- Uniform-density solids, in SI (P15-REFMOD-001) --------------------------
+//
+// Closed forms, written out from the textbook rather than integrated, for the
+// three shapes the material reference models use. Nothing here calls BetterCAD,
+// the kernel or the CLI: these ARE the independent expectations, and a milestone
+// whose subject is mass properties cannot take its expected masses from the code
+// that computes masses.
+
+/// A symmetric second-moment tensor, in kg m^2. Off-diagonals follow the matrix
+/// convention BetterCAD's InertiaTensor uses -- the NEGATED products of inertia
+/// -- so a comparison needs no sign fixing at the call site.
+struct Inertia {
+    double xx = 0.0;
+    double yy = 0.0;
+    double zz = 0.0;
+    double xy = 0.0;
+    double xz = 0.0;
+    double yz = 0.0;
+};
+
+/// A uniform solid: what closed form says it weighs and where.
+struct UniformSolid {
+    double volume = 0.0;              ///< m^3
+    double mass = 0.0;                ///< kg
+    std::array<double, 3> centroid{}; ///< m, from the document origin
+    Inertia centroidal{};             ///< kg m^2, about the centroid
+};
+
+/// A cuboid a x b x c (m) of density rho (kg/m^3), with one corner at the
+/// origin and its edges along the axes.
+///
+///   V = abc,  m = rho V,  centroid (a/2, b/2, c/2),
+///   Ixx = m(b^2 + c^2)/12,  Iyy = m(a^2 + c^2)/12,  Izz = m(a^2 + b^2)/12,
+///   and every product of inertia zero, because each centroidal plane is a
+///   plane of symmetry.
+[[nodiscard]] inline UniformSolid cuboid(double a, double b, double c, double density) {
+    const double volume = a * b * c;
+    const double mass = density * volume;
+    return {.volume = volume,
+            .mass = mass,
+            .centroid = {a / 2.0, b / 2.0, c / 2.0},
+            .centroidal = {.xx = mass * (b * b + c * c) / 12.0,
+                           .yy = mass * (a * a + c * c) / 12.0,
+                           .zz = mass * (a * a + b * b) / 12.0}};
+}
+
+/// A solid cylinder of radius r and height h (m), axis along Z from z = 0.
+///
+///   V = pi r^2 h,  I_axis = m r^2 / 2,  I_transverse = m(3r^2 + h^2)/12.
+///
+/// The axis is Z because that is how the model is built -- an extrude of a
+/// circle drawn on the XY plane -- and NOT because Z is a safe guess. The test
+/// that uses this checks the model's construction.
+[[nodiscard]] inline UniformSolid cylinder(double radius, double height, double density) {
+    const double volume = pi * radius * radius * height;
+    const double mass = density * volume;
+    const double transverse = mass * (3.0 * radius * radius + height * height) / 12.0;
+    return {.volume = volume,
+            .mass = mass,
+            .centroid = {0.0, 0.0, height / 2.0},
+            .centroidal = {.xx = transverse, .yy = transverse, .zz = 0.5 * mass * radius * radius}};
+}
+
+/// A hollow cylinder, outer radius Ro, inner Ri, height h (m), axis along Z.
+///
+///   V = pi(Ro^2 - Ri^2)h,  I_axis = m(Ro^2 + Ri^2)/2,
+///   I_transverse = m[3(Ro^2 + Ri^2) + h^2]/12.
+///
+/// The void has to reduce the volume, the mass AND the inertia. A bounding
+/// cylinder of radius Ro would give 1.8 times this volume for the tube in the
+/// reference suite, which no tolerance could absorb.
+[[nodiscard]] inline UniformSolid hollowCylinder(double outer, double inner, double height, double density) {
+    const double volume = pi * (outer * outer - inner * inner) * height;
+    const double mass = density * volume;
+    const double sumSquares = outer * outer + inner * inner;
+    const double transverse = mass * (3.0 * sumSquares + height * height) / 12.0;
+    return {.volume = volume,
+            .mass = mass,
+            .centroid = {0.0, 0.0, height / 2.0},
+            .centroidal = {.xx = transverse, .yy = transverse, .zz = 0.5 * mass * sumSquares}};
+}
+
+/// A 3 x 3 rotation, row major.
+using Rotation = std::array<std::array<double, 3>, 3>;
+
+/// A right-handed rotation of @p degrees about the X axis.
+[[nodiscard]] inline Rotation rotationAboutX(double degrees) {
+    const double a = degrees * pi / 180.0;
+    return Rotation{{{1.0, 0.0, 0.0}, {0.0, std::cos(a), -std::sin(a)}, {0.0, std::sin(a), std::cos(a)}}};
+}
+
+/// I' = R I R^T. Written out as a matrix triple product rather than as a
+/// special case, so a rotation that mixes axes is handled too.
+[[nodiscard]] inline Inertia rotated(const Inertia& inertia, const Rotation& r) {
+    const double m[3][3] = {{inertia.xx, inertia.xy, inertia.xz},
+                            {inertia.xy, inertia.yy, inertia.yz},
+                            {inertia.xz, inertia.yz, inertia.zz}};
+    double out[3][3]{};
+    for (std::size_t i = 0; i < 3; ++i) {
+        for (std::size_t j = 0; j < 3; ++j) {
+            double sum = 0.0;
+            for (std::size_t k = 0; k < 3; ++k) {
+                for (std::size_t l = 0; l < 3; ++l) {
+                    sum += r[i][k] * m[k][l] * r[j][l];
+                }
+            }
+            out[i][j] = sum;
+        }
+    }
+    return {.xx = out[0][0], .yy = out[1][1], .zz = out[2][2],
+            .xy = out[0][1], .xz = out[0][2], .yz = out[1][2]};
+}
+
+/// The parallel-axis theorem, I(P) = I(cm) + m[(d.d)1 - d d^T] with
+/// d = cm - P, @p offset being d in metres.
+///
+/// From the centroid OUTWARDS, which is the direction that only adds and so
+/// loses no significance. The reverse shift subtracts two nearly equal numbers.
+[[nodiscard]] inline Inertia shifted(const Inertia& centroidal, double mass,
+                                     const std::array<double, 3>& offset) {
+    const double dd = offset[0] * offset[0] + offset[1] * offset[1] + offset[2] * offset[2];
+    return {.xx = centroidal.xx + mass * (dd - offset[0] * offset[0]),
+            .yy = centroidal.yy + mass * (dd - offset[1] * offset[1]),
+            .zz = centroidal.zz + mass * (dd - offset[2] * offset[2]),
+            .xy = centroidal.xy - mass * offset[0] * offset[1],
+            .xz = centroidal.xz - mass * offset[0] * offset[2],
+            .yz = centroidal.yz - mass * offset[1] * offset[2]};
+}
+
+/// A point turned by @p r and then moved by @p translation, all in metres.
+[[nodiscard]] inline std::array<double, 3> placed(const std::array<double, 3>& point, const Rotation& r,
+                                                  const std::array<double, 3>& translation) {
+    std::array<double, 3> out{};
+    for (std::size_t i = 0; i < 3; ++i) {
+        out[i] = r[i][0] * point[0] + r[i][1] * point[1] + r[i][2] * point[2] + translation[i];
+    }
+    return out;
+}
+
 /// Depth of a countersink cone: (D - d) / 2 / tan(angle / 2).
 [[nodiscard]] inline double countersinkDepth(double sinkDiameter, double diameter, double angleDeg) {
     return (sinkDiameter - diameter) / 2.0 / std::tan(angleDeg * pi / 360.0);
