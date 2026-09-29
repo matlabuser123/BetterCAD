@@ -17,6 +17,10 @@ add_library(bettercad_cli_lib STATIC
     EditSupport.hpp
     Edits.hpp
     ExportCommands.cpp
+    MaterialEdits.cpp
+    MaterialReports.cpp
+    MaterialVocabulary.cpp
+    MaterialVocabulary.hpp
     Selectors.cpp
     Selectors.hpp
 )

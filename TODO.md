@@ -11,7 +11,7 @@
 ```text
 Current:   P15 — Materials / Engineering Data
 Current milestone:
-           NONE. P15-PERSIST-001 is complete.
+           NONE. P15-CLI-001 is complete.
            The next milestone is a scope decision, not Claude's to make.
 
 Qualified:
@@ -21,16 +21,19 @@ Qualified:
            P14 — Technical Drawings
            P15-ARCH-001, P15-UNITS-001, INFRA-QT-DEPLOY-001, P15-MAT-001,
            P15-MECH-001, P15-THERM-001, P15-ASSIGN-001, P15-MASS-001,
-           P15-CUSTOM-001, P15-PROV-001, P15-CMD-001, P15-PERSIST-001
+           P15-CUSTOM-001, P15-PROV-001, P15-CMD-001, P15-PERSIST-001,
+           P15-CLI-001
 
 Next:
-           P15-CLI-001 — headless engineering-data workflows.
+           P15-REFMOD-001 — material reference models, or P15-QUAL-001.
            Awaiting explicit scope decision.
 
-           Materials now SAVE and LOAD (P15-PERSIST-001), including provenance,
-           which ADR-028 required and P15-PROV-001 had to leave blocked. The
-           schema version did not change: adding an object type and an optional
-           field needs no bump, and a pre-P15 document's bytes are unaltered.
+           Materials are now usable end to end WITHOUT A GUI: defined, edited,
+           cloned, assigned, saved, loaded, weighed and gated from a command
+           line, scriptable as one transaction. The CLI is an adapter — every
+           engineering value it prints is compared for exact equality with the
+           core's, and it introduces no material identity, default, validation
+           or derivation of its own.
 
            Also awaiting a decision, and arguably ahead of it: the carried
            FileIo replace defect below. A user saving a document into a
@@ -1255,23 +1258,99 @@ material intent preserved
 
 ## Headless Engineering Data Workflows
 
-* [ ] CLI list materials
-* [ ] CLI inspect material
-* [ ] CLI create custom material
-* [ ] CLI edit custom material
-* [ ] CLI assign material
-* [ ] CLI remove assignment
-* [ ] CLI query effective material
-* [ ] CLI query engineering properties
-* [ ] CLI mass-properties command
-* [ ] CLI completeness/requirements report
-* [ ] Structured diagnostics
-* [ ] Correct process exit codes
-* [ ] Validate CLI/core equivalence
-* [ ] End-to-end scripted workflow PASS
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+**PASS 2026-09-29.** Evidence:
+[docs/verification/P15-CLI-001/](../docs/verification/P15-CLI-001/README.md), with
+[AUDIT.md](../docs/verification/P15-CLI-001/AUDIT.md) — the CLI architecture audit that
+did most of this milestone's design work — and
+[ADVERSARIAL_REVIEW.md](../docs/verification/P15-CLI-001/ADVERSARIAL_REVIEW.md).
+
+**The CLI already had every mechanism this needed.** The command table, the edit spine,
+the batch driver, the selector grammar, the argument parser and the process-test harness
+were all in place; three new files use them. `parseSiValue` was ALREADY
+dimension-generic, so a density is parsed by the code that parses a length. Joining a
+third table to `EditRegistry.cpp` made the material verbs batch verbs with nothing added
+to the batch driver.
+
+* [x] CLI list materials — ascending ID, from the document's ordered map, with the one
+      it is assigned marked. Zero materials is a normal document, not a fault
+* [x] CLI inspect material — metadata and all 16 properties; `--provenance` adds the
+      citation in force per property, and prints `none` where a value is uncited rather
+      than inventing a source
+* [x] CLI create custom material — `CreateMaterialCommand`, plus `material-clone` for
+      the P15-CUSTOM-001 story. Proved across a process boundary: the clone edited to
+      275 MPa, the source still 235 MPa
+* [x] CLI edit custom material — through `setMaterialDefinition` /
+      `setMaterialMechanical` / `setMaterialThermal` and `removeMaterialProperty`, NOT
+      through a rebuilt definition. Each of those carries a coupling the CLI must not
+      restate: removal takes the provenance with the value, and a changed value clears
+      the citation that described the old number
+* [x] CLI assign material — BY ID whatever the selector was, so an assignment survives
+      a rename. Tested
+* [x] CLI remove assignment — the only way one goes away; deleting the material leaves
+      it Unresolved with the intent intact, and that is tested too
+* [x] CLI query effective material — ONE resolution, the core's. Unassigned is exit 0
+      because it is a resting state; a dangling assignment is exit 1 because it is a
+      broken document
+* [x] CLI query engineering properties — every printed number compared for EXACT
+      equality with the core's double, which the shortest-round-trip output format makes
+      possible. UNKNOWN never 0; derived G and K labelled `(derived)`; **neither can be
+      set**, and removing that guard does not even compile
+* [x] CLI mass-properties command — `features::partMassProperties` and nothing else. No
+      OCCT header anywhere in the CLI. Validated against CLOSED-FORM geometry twice:
+      a box in process, and the committed plate
+      (`V = 100x50x20 - pi x 10^2 x 20`, `m = 0.7356769953386403 kg`) through the real
+      executable. **NO whole-part total** — summing inertia tensors needs a derivation
+      core does not offer, and writing it here would be a CLI-only engineering result
+* [x] CLI completeness/requirements report — per consumer or in general, every issue
+      carrying a machine code built from core's own `IssueKind`
+* [x] Structured diagnostics — 11 command codes plus core's four issue kinds, every one
+      naming something core already distinguishes. Ambiguity was given its own
+      `ErrorCode` so that "two materials share this designation" and "that object is a
+      sketch" cannot arrive indistinguishable. `EditFailure` gained a code field, so the
+      edits report the same code a report would for the same situation
+* [x] Correct process exit codes — 0 answered and good, 1 answered and not ready, 1
+      could not answer with stdout EMPTY, 2 unreadable command line. `Incomplete` is
+      exit 1, following `validate`: a gate is only usable from a script if it reaches
+      the exit status. Recorded, with the second per-body shape `mass-properties` needs
+* [x] Validate CLI/core equivalence — a DIFFERENTIAL harness: eleven operations each
+      done twice, once through the core API in memory and once through the CLI and a
+      file, required to agree. Exact equality, not a tolerance — a tolerance would have
+      hidden a unit error
+* [x] End-to-end scripted workflow PASS — one process mutates and saves, five later
+      processes read the file back; nothing shared but bytes on disk. The binary is
+      `$<TARGET_FILE:bettercad_cli>`, so there is no PATH to be ambiguous and no stale
+      copy that could answer
+* [x] Adversarial review PASS — 30 attacks, 5 findings, all resolved, 1 limitation
+      recorded. Six mutations, all caught
+* [x] Regression PASS — 3 presets from an external build root, 2764/2764 each,
+      0 warnings, fresh binaries, 0 stages failed
+* [x] Evidence recorded
+
+**Four true coverage gaps, found by the review and closed.** A designation must match
+exactly and never be folded; a non-ASCII designation must survive command line → file →
+selector; deleting the assigned material must make the mass a refusal; and — the one
+that mattered — **the configuration-override refusal must hold through the CLI**. That
+guard exists because a configuration override does not currently rebuild geometry, and a
+guard that only holds when called in-process is not a guard.
+
+**One defect found while implementing, before any test existed to find it.** Parsing a
+dimensionless property against a dimensionless unit would have taken `0.3 rad` for a
+Poisson ratio and turned `0.3 deg` into 0.0052, because the only dimensionless entries
+in the unit catalog are angles.
+
+**The persisted property keys are the machine vocabulary, and were deliberately NOT
+shared by lifting the table into core.** `kMechanicalKeys` has 9 entries for 11 kinds
+*because* ADR-027 stores no derived modulus, so no key exists and a file cannot claim
+one; the CLI needs all 11 because it prints them. A shared table would have had to
+contain `shear_modulus` and would have turned that structural guarantee into a
+convention. Two tables, and a test that asserts they agree **through the real writer**.
+
+**A gate in the harness was weaker than its comment claimed, and is now measured.** A
+repeat filter matching no tests is refused because the base test preset sets
+`noTestsAction: error` — true through a preset, and NOT true of a bare `ctest -R`, which
+exits 0. `qualify.cmd` now also counts the selected tests itself and records the number,
+so the determinism gate does not depend on one field of `CMakePresets.json` and the
+evidence states how many tests it ran.
 
 ### Gate
 
@@ -1666,27 +1745,32 @@ docs/engineering/
 # CURRENT NEXT STEP
 
 ```text
-P15-ARCH-001
-Materials / Engineering Data Architecture
+NONE. P15-CLI-001 is complete and the next milestone is a scope decision.
 ```
 
-Start here.
+P15 — Materials / Engineering Data — is qualified from its architecture through to
+headless use: ADR-025 to ADR-029, units, the material object, mechanical and thermal
+properties, assignment, mass properties, custom materials, provenance and completeness,
+commands with exact undo, persistence, and the CLI.
 
-Do **not** implement material classes or databases yet.
-
-First audit the existing repository and answer:
+Two candidates remain in the phase, and neither is authorized here:
 
 ```text
-Where does material data belong?
-What is its stable identity?
-What is canonical?
-What is derived?
-What units already exist?
-How is missing data represented?
-How are materials assigned?
-How do P17/P18/P19 consume it?
-How is provenance represented?
-What must be persisted?
+P15-REFMOD-001   material reference models -- permanent documents that pin
+                 engineering data end to end, the way the drawing reference
+                 models pin P14
+P15-QUAL-001     the phase qualification gate
 ```
 
-Only after those decisions are recorded and qualified should implementation begin.
+Outstanding and arguably ahead of both, because it can lose a user's work:
+
+```text
+the carried FileIo replace defect -- a document save can still lose to a file
+synchroniser. See Carried, in Status.
+```
+
+Also carried, and recorded rather than hidden: a configuration override does not
+rebuild the geometry it changes, so `mass-properties` REFUSES under one rather than
+reporting the base configuration's volume as if it were the override's. The refusal is
+now pinned by a test through the CLI as well as in process. Fixing the regeneration
+defect is what removes both the guard and its tests.

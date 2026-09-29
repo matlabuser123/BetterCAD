@@ -6,6 +6,8 @@
 #include <bettercad/core/document/Document.hpp>
 #include <bettercad/core/document/DocumentObject.hpp>
 #include <bettercad/features/Datums.hpp>
+#include <bettercad/features/Material.hpp>
+#include <bettercad/features/Materials.hpp>
 
 #include <algorithm>
 #include <charconv>
@@ -290,6 +292,49 @@ Result<ComponentId> resolveComponent(const Document& document, std::string_view 
                                      document.findObject(*object)->typeName()));
     }
     return component->componentId();
+}
+
+Result<MaterialId> resolveMaterial(const Document& document, std::string_view selector) {
+    if (selector.starts_with(kDesignationPrefix)) {
+        const std::string_view designation = selector.substr(kDesignationPrefix.size());
+        // Exact, and every match. Case-folding or trimming here would quietly
+        // merge two materials a user meant to keep apart, which is the reason
+        // findMaterialsByDesignation() does neither.
+        const std::vector<MaterialId> matches = features::findMaterialsByDesignation(document, designation);
+        if (matches.empty()) {
+            return makeError(ErrorCode::NotFound,
+                             std::format("this document has no material designated '{}'", designation));
+        }
+        if (matches.size() > 1) {
+            // Every match, with the ID that disambiguates it, because the whole
+            // point of refusing is that the user can now choose.
+            std::string listed;
+            for (const MaterialId& id : matches) {
+                listed += listed.empty() ? "" : ", ";
+                listed += label(document, ObjectId{id});
+            }
+            // AlreadyExists, not FailedPrecondition: "an item with the same
+            // identity or name exists" is exactly the situation, and giving
+            // ambiguity its own code is what lets the diagnostic layer name it
+            // `material_ambiguous` without a second channel for the reason.
+            return makeError(ErrorCode::AlreadyExists,
+                             std::format("'{}' is ambiguous: {} materials are designated '{}' ({}); name one by ID",
+                                         designation, matches.size(), designation, listed));
+        }
+        return matches.front();
+    }
+
+    auto object = resolveObject(document, selector);
+    if (!object) {
+        return std::unexpected(object.error());
+    }
+    const auto* material = document.findObjectAs<features::Material>(*object);
+    if (material == nullptr) {
+        return makeError(ErrorCode::FailedPrecondition,
+                         std::format("{} has type '{}'; this takes a material", label(document, *object),
+                                     document.findObject(*object)->typeName()));
+    }
+    return material->materialId();
 }
 
 Result<MateId> resolveMate(const Document& document, std::string_view selector) {

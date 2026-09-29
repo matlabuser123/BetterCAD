@@ -28,6 +28,11 @@ inline EditFailure rejected(std::string message) {
 inline EditFailure rejected(const Error& error) {
     return EditFailure{.usage = false, .message = error.message};
 }
+/// The edit was refused, with a stable machine code for a script to match on:
+/// exit 1. The message stays the thing a person reads.
+inline EditFailure rejected(std::string_view code, const Error& error) {
+    return EditFailure{.usage = false, .code = std::string{code}, .message = error.message};
+}
 /// The command line could not be read: exit 2.
 inline EditFailure malformed(std::string message) {
     return EditFailure{.usage = true, .message = std::move(message)};
@@ -39,6 +44,24 @@ inline EditFailure fromParse(const Error& error) {
     const bool cliCouldNotRead =
         error.code == ErrorCode::InvalidArgument || error.code == ErrorCode::DimensionMismatch;
     return EditFailure{.usage = cliCouldNotRead, .message = error.message};
+}
+/// The same, tagged with a machine code where the failure is the document's
+/// rather than the command line's.
+///
+/// NOT an overload of fromParse(std::string_view, const Error&): that one
+/// already means something else -- it prefixes an option name onto the message
+/// -- and a second meaning for the same spelling is how a call site ends up
+/// doing the wrong one of two right things.
+///
+/// The code is dropped when the failure IS a usage error, because a usage error
+/// prints the usage and exits 2, and a machine code on it would suggest a
+/// document state that was never reached.
+inline EditFailure coded(std::string_view code, const Error& error) {
+    EditFailure failure = fromParse(error);
+    if (!failure.usage) {
+        failure.code = std::string{code};
+    }
+    return failure;
 }
 inline EditFailure fromParse(std::string_view option, const Error& error) {
     EditFailure failure = fromParse(error);

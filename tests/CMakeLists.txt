@@ -251,6 +251,7 @@ if(TARGET bettercad_cli_lib)
         cli/SheetCliTests.cpp
         cli/AssemblyCliTests.cpp
         cli/DrawingCliTests.cpp
+        cli/MaterialCliTests.cpp
         reference/AssemblyWorkflowTests.cpp
         io/AssemblyStepTests.cpp
     )
@@ -736,6 +737,195 @@ if(TARGET bettercad_cli)
         cli.drawing.export.svg cli.drawing.export.dxf cli.drawing.export.pdf
         cli.drawing.export.bad-path cli.drawing.export.no-such-sheet
         PROPERTIES DEPENDS cli.drawing.report)
+
+    # --- P15-CLI-001: engineering data across PROCESS boundaries ---
+    #
+    # The in-process tests (MaterialCliTests.cpp) drive cli::run and compare
+    # every result against the core API. These drive the real executable, and
+    # what they add is the thing an in-process test cannot reach: a workflow
+    # where one process MUTATES and SAVES and a later, separate process reads
+    # the file back and has to agree about what it says. Everything shared
+    # between them is bytes on disk.
+    #
+    # THE BINARY IS NAMED, NOT LOOKED UP. $<TARGET_FILE:bettercad_cli> is the
+    # absolute path of the executable this preset just built, so there is no
+    # PATH to be ambiguous, no installed copy to be picked up, and no way for a
+    # stale binary from another preset to answer.
+    set(_mat "${_out}/material")
+    file(MAKE_DIRECTORY "${_mat}")
+
+    # PROCESS 1 -- mutate and save. One transaction of five material edits,
+    # from the committed example script. The material verbs are in the same
+    # registry as the assembly and drawing verbs, so `batch` drives them with
+    # nothing added to the batch driver; this is what proves that.
+    bettercad_add_process_test(cli.material.batch
+        COPY_FROM "${_example}" COPY_TO "${_mat}/part.bcad"
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "batch|${_mat}/part.bcad|${_scripts}/build_material.txt"
+        EXIT_CODE 0
+        STDOUT_REGEX "^Applied 5 edits from .*build_material\\.txt:\n +[0-9]+  Created Steel \\(object:7\\)\n +[0-9]+  Cloned Steel \\(object:7\\) as SteelCold \\(object:8\\)\n +[0-9]+  Set metadata, yield_strength of SteelCold \\(object:8\\)\n +[0-9]+  Set thermal_conductivity, specific_heat_capacity of Steel \\(object:7\\)\n +[0-9]+  Assigned Steel \\(object:7\\) to Plate\nWrote .*part\\.bcad$")
+
+    # PROCESS 2 -- a different process reads the file back. Both materials are
+    # there, under the IDs the first process gave them, and the assignment
+    # survived being written and re-read.
+    bettercad_add_process_test(cli.material.list
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "material-list|${_mat}/part.bcad"
+        EXIT_CODE 0
+        STDOUT_REGEX "^Materials of Plate \\(2\\):\n  Steel \\(object:7\\) +Steel S235JR +assigned\n  SteelCold \\(object:8\\) +Steel S235JR cold rolled$")
+
+    # PROCESS 3 -- the clone is its own material. It was copied from Steel and
+    # then edited, and the edit did not reach the source: 275 MPa here against
+    # 235 MPa there, across a save and a reload.
+    bettercad_add_process_test(cli.material.show.clone-is-independent
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "material-show|${_mat}/part.bcad|SteelCold"
+        EXIT_CODE 0 STDOUT_REGEX "yield_strength +275 MPa")
+    bettercad_add_process_test(cli.material.show.source-is-untouched
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "material-show|${_mat}/part.bcad|Steel"
+        EXIT_CODE 0 STDOUT_REGEX "yield_strength +235 MPa")
+
+    # The derived pair is printed and labelled, from E = 210 GPa and nu = 0.3:
+    # G = E/(2(1+nu)) = 80769.23... MPa, K = E/(3(1-2nu)) = 175000 MPa. Those
+    # are closed form, worked out here rather than taken from the code.
+    bettercad_add_process_test(cli.material.show.derived-is-labelled
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "material-show|${_mat}/part.bcad|Steel"
+        EXIT_CODE 0 STDOUT_REGEX "shear_modulus +80769\\.230769[0-9]* MPa \\(derived\\)\n +bulk_modulus +17(5000|4999\\.9)[0-9]* MPa \\(derived\\)")
+
+    # And a property nobody supplied is UNKNOWN, never 0.
+    bettercad_add_process_test(cli.material.show.unknown-is-not-zero
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "material-show|${_mat}/part.bcad|Steel"
+        EXIT_CODE 0 STDOUT_REGEX "hardness +UNKNOWN")
+
+    # PROCESS 4 -- the mass, against CLOSED-FORM GEOMETRY.
+    #
+    # plate.bcad is width 100 mm x height 50 mm x thickness 20 mm with one
+    # through hole of radius 10 mm, all four committed as parameters of the
+    # model. So
+    #     V = 100 x 50 x 20 - pi x 10^2 x 20 = 93716.81469282041 mm^3
+    #     m = 7850 kg/m^3 x V = 0.7356769953386403 kg
+    # worked out from the model's own dimensions, not from anything BetterCAD
+    # computed. The centroid is at (50, 25, 10) mm because the hole is central.
+    bettercad_add_process_test(cli.material.mass
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "mass-properties|${_mat}/part.bcad"
+        EXIT_CODE 0
+        STDOUT_REGEX "density +7850 kg/m\\^3\n +volume +93716\\.81469282[0-9]* mm\\^3\n +mass +0\\.73567699533864[0-9]* kg\n +centre of mass +\\(")
+
+    # PROCESS 5 -- the readiness gate reaches the exit status, both ways.
+    bettercad_add_process_test(cli.material.completeness.ready
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "material-completeness|${_mat}/part.bcad|--consumer|thermal_steady"
+        EXIT_CODE 0 STDOUT_REGEX "Steel \\(object:7\\) for thermal_steady: ready")
+    # Thermo-mechanical also wants a thermal expansion coefficient, which this
+    # material does not have: exit 1, with the missing property NAMED, and the
+    # report still on stdout because the query did answer.
+    bettercad_add_process_test(cli.material.completeness.incomplete
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "material-completeness|${_mat}/part.bcad|--consumer|thermo_mechanical"
+        EXIT_CODE 1 STDOUT_REGEX "thermo_mechanical: incomplete.*missing_property:thermal_expansion")
+
+    # --- the same workflow, where a clone makes a designation AMBIGUOUS ---
+    #
+    # Its own document, because it changes what the reports above assert. The
+    # scenario is the real one: cloning copies the designation, so a document
+    # ends up with two materials answering to the same engineering label --
+    # which is exactly why a designation is not an identity.
+    # The clone is the ONE test here that mutates rather than reading or being
+    # refused, so it copies its own pristine input like any other producer.
+    # `--repeat until-fail:5` re-runs each test five times BACK TO BACK, with
+    # no fixture in between, so "the setup will restore it" is not true: a
+    # second clone would meet a name the first one took, and the determinism
+    # gate would fail on that rather than on anything about materials.
+    bettercad_add_process_test(cli.material.ambiguous.build
+        COPY_FROM "${_example}" COPY_TO "${_mat}/ambiguous-src.bcad"
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "batch|${_mat}/ambiguous-src.bcad|${_scripts}/build_material.txt"
+        EXIT_CODE 0)
+    bettercad_add_process_test(cli.material.ambiguous.clone
+        COPY_FROM "${_mat}/ambiguous-src.bcad" COPY_TO "${_mat}/ambiguous.bcad"
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "material-clone|${_mat}/ambiguous.bcad|Steel|--name|Steel3"
+        EXIT_CODE 0 STDOUT_REGEX "Cloned Steel \\(object:7\\) as Steel3 \\(object:9\\)")
+    # Refused, naming BOTH matches with the IDs that separate them. Never a
+    # first match, and the code is the machine-readable part.
+    bettercad_add_process_test(cli.material.exit.ambiguous
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "material-show|${_mat}/ambiguous.bcad|designation:Steel S235JR"
+        EXIT_CODE 1
+        STDERR_REGEX "material_ambiguous: .*2 materials are designated 'Steel S235JR' \\(Steel \\(object:7\\), Steel3 \\(object:9\\)\\); name one by ID")
+
+    # --- exit codes and structured diagnostics, on the real process ---
+    bettercad_add_process_test(cli.material.exit.not-found
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "material-show|${_mat}/part.bcad|Ghost"
+        EXIT_CODE 1 STDERR_REGEX "material_not_found: this document has nothing named 'Ghost'")
+    # A sketch is not a material, and is not reported as a missing one.
+    bettercad_add_process_test(cli.material.exit.not-a-material
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "material-show|${_mat}/part.bcad|Sketch001"
+        EXIT_CODE 1 STDERR_REGEX "not_a_material: .*has type 'sketch'")
+    # A derived modulus is refused by name, saying what to set instead.
+    bettercad_add_process_test(cli.material.exit.derived-is-not-settable
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "material-set|${_mat}/part.bcad|Steel|shear_modulus|80GPa"
+        EXIT_CODE 1 STDERR_REGEX "ADR-027.*set youngs_modulus and poisson_ratio instead")
+    # An unreadable command line is exit 2, not exit 1.
+    bettercad_add_process_test(cli.material.exit.unknown-consumer
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "material-completeness|${_mat}/part.bcad|--consumer|cfd"
+        EXIT_CODE 2 STDERR_REGEX "'cfd' is not a consumer; expected one of mass_properties")
+    bettercad_add_process_test(cli.material.exit.unknown-property
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "material-set|${_mat}/part.bcad|Steel|stiffness|1"
+        EXIT_CODE 2 STDERR_REGEX "'stiffness' is not a material property")
+    # A part with no material does not weigh 0; it refuses and says why.
+    bettercad_add_process_test(cli.material.exit.no-material
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "mass-properties|${_example}"
+        EXIT_CODE 1 STDERR_REGEX "mass_properties_unavailable")
+
+    # --- a refused edit writes NOTHING, proved on the file ---
+    #
+    # A density of 0 is a claim about a massless solid and validation refuses
+    # it. The --designation would have applied first, so this is the case where
+    # a partial write would actually show.
+    bettercad_add_process_test(cli.material.atomic.refused
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "material-set|${_mat}/part.bcad|Steel|--designation|Changed|density|0"
+        EXIT_CODE 1)
+    bettercad_add_process_test(cli.material.atomic.wrote-nothing
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "material-show|${_mat}/part.bcad|Steel"
+        EXIT_CODE 0 STDOUT_REGEX "designation +Steel S235JR\n")
+
+    # Ordering.
+    #
+    # The two commands that PRODUCE a document are fixtures rather than merely
+    # ordered first: ctest pulls a required fixture's setup in even when the run
+    # is filtered, whereas a DEPENDS on an excluded test is dropped. Without
+    # that, `ctest -R cli.material.mass` would weigh a document nothing built.
+    #
+    # IDEMPOTENCE. `ctest --repeat until-fail:5` re-runs each test five times in
+    # a row, and a required fixture does NOT re-run between those passes -- so
+    # every test has to survive being run again immediately, on its own. Each
+    # producer therefore copies its own pristine input (COPY_FROM), and every
+    # other test here is read-only or is an edit that is REFUSED and so changes
+    # nothing. The clone is the only mutating reader and it copies too.
+    set_tests_properties(cli.material.batch PROPERTIES FIXTURES_SETUP material_cli)
+    set_tests_properties(cli.material.ambiguous.build PROPERTIES FIXTURES_SETUP material_ambiguous_cli)
+    set_tests_properties(
+        cli.material.list cli.material.show.clone-is-independent
+        cli.material.show.source-is-untouched cli.material.show.derived-is-labelled
+        cli.material.show.unknown-is-not-zero cli.material.mass
+        cli.material.completeness.ready cli.material.completeness.incomplete
+        cli.material.exit.not-found cli.material.exit.not-a-material
+        cli.material.exit.derived-is-not-settable cli.material.exit.unknown-consumer
+        cli.material.exit.unknown-property
+        cli.material.atomic.refused cli.material.atomic.wrote-nothing
+        PROPERTIES FIXTURES_REQUIRED material_cli)
+    set_tests_properties(
+        cli.material.ambiguous.clone cli.material.exit.ambiguous
+        PROPERTIES FIXTURES_REQUIRED material_ambiguous_cli)
+    # The clone MUTATES its document, so the query that needs two matches runs
+    # after it. This is the one ordering here that is about a change rather
+    # than about a document existing.
+    set_tests_properties(cli.material.exit.ambiguous PROPERTIES DEPENDS cli.material.ambiguous.clone)
+    # "Nothing was written" is only evidence if the refusal happened first.
+    set_tests_properties(cli.material.atomic.wrote-nothing PROPERTIES DEPENDS cli.material.atomic.refused)
 
     # --- P14-REFMOD-001: the production drawing suite, through the real
     # executables ---

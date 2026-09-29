@@ -1,0 +1,43 @@
+# VERBATIM EXTRACT from ctest-repeat-debug-ext.log of the VOID attempt 1.
+# The full log was 27657 lines / 3.0M, almost all of it passing-test lines.
+# Not kept: CLAUDE.md says not to commit large generated files without reason,
+# and the stage's exit code is recorded independently in qualification-times.txt.
+# Nothing below is edited. Line numbers are from the original.
+
+## every appearance of the failing test
+63:          Start 2559: cli.material.ambiguous.clone
+72:        Test #2559: cli.material.ambiguous.clone ................................................................................   Passed    0.37 sec
+73:          Start 2559: cli.material.ambiguous.clone
+78:        Test #2559: cli.material.ambiguous.clone ................................................................................***Failed    0.19 sec
+27656:	2559 - cli.material.ambiguous.clone (Failed)
+
+## the failing run, in full
+63:           Start 2559: cli.material.ambiguous.clone
+64:           Start 1696: unit.ReferenceModel_AllModelsBuildInOneProcess
+65:           Start 1697: unit.ReferenceModel_AllModelsRegenerateAfterAChange
+66:    5/2764 Test #2549: cli.material.batch ..........................................................................................   Passed    0.41 sec
+67:           Start 2567: cli.material.atomic.refused
+68:    6/2764 Test #2535: cli.drawing.batch ...........................................................................................   Passed    0.42 sec
+69:           Start 2536: cli.drawing.report
+70:         Test #2524: cli.assembly.solve ..........................................................................................   Passed    0.38 sec
+71:           Start 2524: cli.assembly.solve
+72:         Test #2559: cli.material.ambiguous.clone ................................................................................   Passed    0.37 sec
+73:           Start 2559: cli.material.ambiguous.clone
+74:         Test #2567: cli.material.atomic.refused .................................................................................   Passed    0.30 sec
+75:           Start 2567: cli.material.atomic.refused
+76:         Test #2536: cli.drawing.report ..........................................................................................   Passed    0.23 sec
+77:           Start 2536: cli.drawing.report
+78:         Test #2559: cli.material.ambiguous.clone ................................................................................***Failed    0.19 sec
+79: -- command  : C:/Users/uqhas/AppData/Local/bc-build/debug-ext/bin/bettercad-cli.exe material-clone;C:/Users/uqhas/AppData/Local/bc-build/debug-ext/tests/cli-output/material/ambiguous.bcad;Steel;--name;Steel3
+80: -- exit code: 1 (expected 0)
+81: -- stdout:
+82: 
+83: -- stderr:
+84: bettercad-cli material-clone: the name 'Steel3' is already used in this document
+85: CMake Error at C:/Users/uqhas/OneDrive/Desktop/CAD/tests/cmake/RunAndCheck.cmake:84 (message):
+86:   Process check failed:
+
+## the stage summary
+27651:99% tests passed, 1 tests failed out of 2764
+27655:The following tests FAILED:
+27656:	2559 - cli.material.ambiguous.clone (Failed)

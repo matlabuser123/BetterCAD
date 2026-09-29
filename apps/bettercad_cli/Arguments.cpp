@@ -10,9 +10,6 @@
 
 namespace bettercad::cli {
 
-namespace {
-
-/// Number and unit symbol of "<number>[ ]<unit>", converted to SI.
 Result<double> parseSiValue(std::string_view text, const UnitDescriptor& defaultUnit) {
     const char* const begin = text.data();
     const char* const end = text.data() + text.size();
@@ -39,8 +36,6 @@ Result<double> parseSiValue(std::string_view text, const UnitDescriptor& default
     }
     return unit->scale.toSi(number);
 }
-
-} // namespace
 
 std::optional<std::string_view> ParsedArguments::value(std::string_view option) const {
     const auto it = options_.find(option);
@@ -99,19 +94,11 @@ std::string displayPath(const std::filesystem::path& path) {
 }
 
 Result<Length> parseLength(std::string_view text, const Unit<dimensions::length>& defaultUnit) {
-    auto si = parseSiValue(text, describe(defaultUnit));
-    if (!si) {
-        return std::unexpected(si.error());
-    }
-    return Length::fromSi(*si);
+    return parseQuantity(text, defaultUnit);
 }
 
 Result<Angle> parseAngle(std::string_view text, const Unit<dimensions::angle>& defaultUnit) {
-    auto si = parseSiValue(text, describe(defaultUnit));
-    if (!si) {
-        return std::unexpected(si.error());
-    }
-    return Angle::fromSi(*si);
+    return parseQuantity(text, defaultUnit);
 }
 
 } // namespace bettercad::cli

@@ -37,6 +37,13 @@ struct EditFailure {
     /// rejected (exit 1). Both leave the document exactly as it was, so the
     /// distinction is for the engineer reading the message, not for recovery.
     bool usage = false;
+    /// A stable machine name for the failure -- "material_not_found",
+    /// "material_ambiguous" -- where the verb knows one (P15-CLI-001).
+    ///
+    /// Empty where it does not, and an empty code prints nothing: the verbs
+    /// that predate this field produce exactly the messages they always did,
+    /// which is what lets it be added without moving any existing output.
+    std::string code{};
     std::string message;
 };
 
@@ -65,11 +72,14 @@ struct EditCommand {
 [[nodiscard]] std::span<const EditCommand> assemblyEditCommands() noexcept;
 /// The drawing edits (P14-CLI-001).
 [[nodiscard]] std::span<const EditCommand> drawingEditCommands() noexcept;
+/// The material edits (P15-CLI-001).
+[[nodiscard]] std::span<const EditCommand> materialEditCommands() noexcept;
 
 /// Every edit, in the order help lists them: the assembly ones, then the
-/// drawing ones. Two tables rather than one because a file that owns the
-/// assembly verbs should not have to be opened to add a sheet verb; one
-/// listing because a script does not care which file a verb came from.
+/// drawing ones, then the material ones. Separate tables because a file that
+/// owns the assembly verbs should not have to be opened to add a sheet verb or
+/// a material verb; one listing because a script does not care which file a
+/// verb came from.
 [[nodiscard]] std::span<const EditCommand> editCommands() noexcept;
 
 /// The edit called @p name, or nullptr.

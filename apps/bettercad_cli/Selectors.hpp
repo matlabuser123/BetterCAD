@@ -48,6 +48,41 @@ namespace bettercad::cli {
 /// The same, narrowed to a mate.
 [[nodiscard]] Result<MateId> resolveMate(const Document& document, std::string_view selector);
 
+/// The material @p selector names (P15-CLI-001).
+///
+/// Three forms, and the gap between the first two and the third is the gap
+/// between identity and a label:
+///
+/// ```text
+/// 7                   an object ID
+/// Steel               an object NAME
+/// designation:Steel   a DESIGNATION
+/// ```
+///
+/// An object name CANNOT be ambiguous, and that is the document's guarantee
+/// rather than this parser's: a name is an identifier, unique across objects
+/// and parameters, re-checked on every rename. A DESIGNATION can be, and
+/// legitimately -- P15-CUSTOM-001 exists so that a document may hold two
+/// materials designated "Steel" with different values.
+///
+/// So this NEVER picks a first match. It reports:
+///   NotFound            nothing of that ID, name or designation;
+///   FailedPrecondition  an ID or name that is not a material, naming what it
+///                       actually is, so "that is a sketch" is never reported
+///                       as "no such material";
+///   AlreadyExists       a designation matching MORE THAN ONE, listing every
+///                       match with its ID so the next command can name one.
+///                       Its own code, so that ambiguity is reportable as
+///                       `material_ambiguous` and never merged with "not found".
+///
+/// The ambiguity is not a policy invented here. features::findMaterialsByDesignation
+/// returns every match precisely so that its caller must decide, and this is
+/// that caller deciding to ask.
+[[nodiscard]] Result<MaterialId> resolveMaterial(const Document& document, std::string_view selector);
+
+/// The prefix that makes a selector a designation lookup.
+inline constexpr std::string_view kDesignationPrefix = "designation:";
+
 /// The configuration @p name names. Configuration names are not object names
 /// and share none of their space, so this is a name lookup and nothing else.
 [[nodiscard]] Result<ConfigurationId> resolveConfiguration(const Document& document, std::string_view name);

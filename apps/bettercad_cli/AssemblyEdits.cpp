@@ -623,8 +623,15 @@ ExitCode runEdit(const EditCommand& command, Args args, std::ostream& out, std::
     if (!applied) {
         // Nothing has been written, and nothing will be: the loaded copy is
         // discarded and the file on disk is exactly as it was.
-        return applied.error().usage ? usageError(command.name, command.usage, applied.error().message, err)
-                                     : failure(command.name, applied.error().message, err);
+        if (applied.error().usage) {
+            return usageError(command.name, command.usage, applied.error().message, err);
+        }
+        // The code where the verb supplied one, so a script branches on it
+        // rather than on the sentence; the message alone where it did not,
+        // which is every verb that predates P15-CLI-001.
+        return applied.error().code.empty()
+                   ? failure(command.name, applied.error().message, err)
+                   : failure(command.name, applied.error().code, applied.error().message, err);
     }
     if (auto saved = io::saveDocument(*document, path); !saved) {
         return failure(command.name, saved.error().message, err);

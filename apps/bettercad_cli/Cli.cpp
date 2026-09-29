@@ -66,6 +66,24 @@ constexpr std::array kCommands{
             "Apply a script of edits as one transaction: the file is written only if every edit succeeded. "
             "One edit per line, without the document path; # comments. --dry-run checks without writing.",
             &runBatch},
+    Command{"material-list", kMaterialListUsage,
+            "List the document's materials, with the one it is assigned. Writes nothing.", &runMaterialList},
+    Command{"material-show", kMaterialShowUsage,
+            "Show one material's metadata and every engineering property, UNKNOWN where there is no value and "
+            "'(derived)' where a value was computed rather than supplied. Writes nothing.",
+            &runMaterialShow},
+    Command{"material-effective", kMaterialEffectiveUsage,
+            "Show what the document is made of and whether its assignment resolves. Exit status 1 if the "
+            "assignment names a material that is not there. Writes nothing.",
+            &runMaterialEffective},
+    Command{"mass-properties", kMassPropertiesUsage,
+            "Regenerate and report the volume, mass, centre of mass and inertia of each body, from the assigned "
+            "material's density. Exit status 1 if it cannot be computed -- never a zero mass. Writes nothing.",
+            &runMassProperties},
+    Command{"material-completeness", kMaterialCompletenessUsage,
+            "Report what a material has and lacks: for one consumer with --consumer, otherwise across every "
+            "property. Exit status 1 unless the state is ready. Writes nothing.",
+            &runMaterialCompleteness},
     Command{"version", "version", "Print version, compiler and build information.", &runVersion},
     Command{"help", "help", "Show this help.", &runHelp},
 };
@@ -139,6 +157,14 @@ ExitCode usageError(std::string_view command, std::string_view usage, std::strin
 
 ExitCode failure(std::string_view command, std::string_view problem, std::ostream& err) {
     err << std::format("{} {}: {}\n", kProgramName, command, problem);
+    return ExitCode::Failure;
+}
+
+ExitCode failure(std::string_view command, std::string_view code, std::string_view problem,
+                 std::ostream& err) {
+    // "<program> <command>: <code>: <problem>". The code sits where a
+    // script can find it without parsing the sentence after it.
+    err << std::format("{} {}: {}: {}\n", kProgramName, command, code, problem);
     return ExitCode::Failure;
 }
 

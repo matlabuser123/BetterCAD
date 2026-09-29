@@ -159,8 +159,10 @@ ExitCode runBatch(Args args, std::ostream& out, std::ostream& err) {
             // Nothing is written. The loaded copy is discarded here and the
             // file on disk is exactly as it was, so rerunning the corrected
             // script is the whole recovery procedure.
-            err << std::format("{} batch: {}:{}: {}\n", kProgramName, displayPath(scriptPath), line.number,
-                               result.error().message);
+            const std::string coded =
+                result.error().code.empty() ? result.error().message
+                                            : std::format("{}: {}", result.error().code, result.error().message);
+            err << std::format("{} batch: {}:{}: {}\n", kProgramName, displayPath(scriptPath), line.number, coded);
             if (result.error().usage) {
                 err << std::format("Usage: {} {}\n", kProgramName, command->usage);
             }

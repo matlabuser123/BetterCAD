@@ -1,0 +1,30 @@
+# BetterCAD headless engineering-data workflow (P15-CLI-001).
+#
+# Run against any part document:
+#     bettercad-cli batch plate.bcad build_material.txt
+#
+# Every line is an ordinary bettercad-cli command with the document path left
+# out, and the whole file is ONE transaction: if any line fails, nothing is
+# written and the document is exactly as it was. The material verbs are in the
+# same registry as the assembly and drawing verbs, so they are batch verbs
+# without anything being added to the batch driver.
+#
+# A bare number is SI -- kg/m^3 for a density, Pa for a modulus or a strength,
+# K for a temperature. Write a unit for anything else.
+
+# The library material, as the document's own copy of it. Everything after this
+# edits that copy; there is no live link back to any library.
+material-create --name Steel --designation "Steel S235JR" --standard "EN 10025-2" --family "Carbon Steel" density 7850 youngs_modulus 210GPa poisson_ratio 0.3 yield_strength 235MPa
+
+# A local variant, with a NEW identity. Cloning copies every property; editing
+# the clone cannot reach the material it was copied from.
+material-clone Steel --name SteelCold
+material-set SteelCold --designation "Steel S235JR cold rolled" yield_strength 275MPa
+
+# Enough thermal data for steady conduction, so that the completeness report
+# has something to say ready about.
+material-set Steel thermal_conductivity 50 specific_heat_capacity 460
+
+# What the part is made of. Stored by ID, so renaming the material later moves
+# nothing.
+material-assign Steel
