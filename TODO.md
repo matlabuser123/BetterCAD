@@ -9,10 +9,10 @@
 # Status
 
 ```text
-Current:   P15 — Materials / Engineering Data
+Current:   P15 — Materials / Engineering Data — QUALIFIED
 Current milestone:
-           NONE. P15-REFMOD-001 is complete.
-           The next milestone is a scope decision, not Claude's to make.
+           NONE. P15 IS QUALIFIED.
+           The next phase is a scope decision, not Claude's to make.
 
 Qualified:
            P11
@@ -22,11 +22,15 @@ Qualified:
            P15-ARCH-001, P15-UNITS-001, INFRA-QT-DEPLOY-001, P15-MAT-001,
            P15-MECH-001, P15-THERM-001, P15-ASSIGN-001, P15-MASS-001,
            P15-CUSTOM-001, P15-PROV-001, P15-CMD-001, P15-PERSIST-001,
-           P15-CLI-001, P15-REFMOD-001
+           P15-CLI-001, P15-REFMOD-001, P15-QUAL-001
+           P15 — Materials / Engineering Data — QUALIFIED as a phase at 8d4b23c
 
 Next:
-           P15-QUAL-001 — Full P15 Qualification.
-           Awaiting explicit scope decision.
+           The next ROADMAP phase. Awaiting explicit scope decision.
+
+           Outstanding and arguably ahead of it, because it can lose a user's
+           work: the carried FileIo replace defect — a document save can still
+           lose to a file synchroniser. See Carried, below.
 
            Materials are now usable end to end WITHOUT A GUI: defined, edited,
            cloned, assigned, saved, loaded, weighed and gated from a command
@@ -1484,33 +1488,98 @@ realistic material data PASS
 
 ## Full P15 Qualification
 
-* [ ] Freeze final P15 tree
-* [ ] Audit all P15 milestone evidence
-* [ ] Verify all P15 TODO items complete
-* [ ] Verify all new P15 ADRs
-* [ ] Audit engineering units
-* [ ] Audit material identity
-* [ ] Audit property provenance
-* [ ] Validate material assignments
-* [ ] Validate no silent material rebinding
-* [ ] Validate mechanical properties
-* [ ] Validate thermal properties
-* [ ] Validate mass properties
-* [ ] Validate analytical reference cases
-* [ ] Validate missing-property behaviour
-* [ ] Validate custom materials
-* [ ] Validate undo / redo
-* [ ] Validate persistence
-* [ ] Validate CLI workflows
-* [ ] Clean Debug qualification
-* [ ] Clean Release qualification
-* [ ] Clean Debug-shared qualification
-* [ ] Repeated determinism qualification
-* [ ] Final adversarial review
-* [ ] Confirm 0 unexpected warnings
-* [ ] Confirm qualified tree == committed tree
-* [ ] Evidence in `docs/verification/P15-QUAL-001/`
-* [ ] Mark P15 qualified
+**PASS 2026-09-30.** Evidence:
+[docs/verification/P15-QUAL-001/](../docs/verification/P15-QUAL-001/README.md) and
+[ADVERSARIAL_REVIEW.md](../docs/verification/P15-QUAL-001/ADVERSARIAL_REVIEW.md).
+
+```text
+FINAL_P15_HEAD   8d4b23c8aa058b28e537054c994ee587fe7b9041
+FINAL_P15_TREE   1f6f2951389e7146eade2ec8a0679a64b484be5f
+```
+
+**Qualified against an ALREADY-COMMITTED tree.** The nine cross-milestone gates this
+milestone adds were committed and pushed first, so the harness's recorded candidate is a
+pushed commit and its eight tree IDs are that commit's. Only `docs/` and `TODO.md` changed
+afterwards, and neither is in the fingerprint — checkable, not asserted: the only occurrences
+of `docs/` in the build system are two comments, and `TODO.md` appears in no build file.
+
+* [x] Freeze final P15 tree — committed, pushed, then frozen; tree identical before the
+      first build and after the last test run
+* [x] Audit all P15 milestone evidence — 13 of 13 PASS, all with evidence, regression and
+      adversarial review. P15-ARCH-001 carries no three-preset regression because it produced
+      ADRs and no executable behaviour, which is correct for it
+* [x] Verify all P15 TODO items complete — 216 ticked, 0 open. One marker hit in all of P15's
+      production code: a documented "NOT IMPLEMENTED HERE, and deliberately so" for
+      temperature-dependent laws
+* [x] Verify all new P15 ADRs — five (025-029), each referenced 6 to 30 times in code AND
+      tests, none contradicting final behaviour
+* [x] Audit engineering units — every property strong-typed or scoped; SI internally;
+      **124 compile-fail cases across 9 groups**; no affine conversion anywhere, so an
+      absolute temperature cannot be shifted by a display unit
+* [x] Audit material identity — 9 invariants, including that a rename changes the name and
+      **nothing else**
+* [x] Audit property provenance — per property, two-level, keyed by property NAME so no
+      reordering can reattach a citation. A known value with no citation is not a missing value
+* [x] Validate material assignments — one optional MaterialId, four states never collapsed,
+      resolution in one place and by ID only; configuration-INDEPENDENT
+* [x] Validate no silent material rebinding — **THE FINAL GATE.** Two materials sharing a
+      designation with DIFFERENT densities; delete one, then two round trips, a CLI query and
+      a third same-designation material. Unresolved-A throughout; only undo restores it.
+      **Mutation-tested: making a dangling assignment rebind fails 22 assertions**
+* [x] Validate mechanical properties — and the derived pair against hand-computed G and K for
+      three (E, nu) pairs including nu = 0
+* [x] Validate thermal properties — one canonical density, and the stored alpha, cp and k
+      satisfy dL = alpha L0 dT and Q = m cp dT with arithmetic done by hand
+* [x] Validate mass properties — geometry is the authority; no bounding box, no display mesh,
+      no OCCT outside its adapter
+* [x] Validate analytical reference cases — asymmetric cuboid, cylinder, hollow tube and a
+      transformed body, all from a header whose only includes are the standard library.
+      **Worst relative error 3.28e-14 against a 1e-10 tolerance**
+* [x] Validate missing-property behaviour — E without nu, density and cp without k, and a
+      mass without a density. No nu = 0.3, no default k, never a zero mass
+* [x] Validate custom materials — a library import edited heavily in a clone leaves the source
+      byte-identical, through a file
+* [x] Validate undo / redo — the brief's five-command chain through the production
+      CommandHistory, undone to an exactly equal canonical state and redone to the original,
+      with the SAME MaterialId and the mass **recomputed** rather than restored
+* [x] Validate persistence — save/load/save/load stable and byte-identical; 12 forbidden
+      tokens absent from a file whose derived state had all been computed first; 36 file tests
+      including a 19-case malformed matrix, atomic load, and a pre-P15 document that gains no
+      fabricated material
+* [x] Validate CLI workflows — every mutation through a core API or a command object, 0 direct
+      field writes; each number parsed and compared for EXACT equality with the core's double
+* [x] Clean Debug qualification — 2814/2814, 0 warnings
+* [x] Clean Release qualification — 2814/2814, 0 warnings, run independently
+* [x] Clean Debug-shared qualification — 2814/2814, 0 warnings, run independently
+* [x] Repeated determinism qualification — 14070 = 2814 x 5 in each of two presets, 0 failures
+* [x] Final adversarial review — a FRESH cross-milestone review: 22 attacks, 3 findings,
+      **0 new production defects**
+* [x] Confirm 0 unexpected warnings — 0 warnings in all SIX build and rebuild logs, so the
+      figure is 0 out of 0: nothing is tolerated because nothing was emitted
+* [x] Confirm qualified tree == committed tree — the eight tree IDs recorded before the first
+      build, after the last test run, and in the commit are the same eight
+* [x] Evidence in docs/verification/P15-QUAL-001/
+* [x] Mark P15 qualified
+
+**36582 test executions, 0 failures.** Canonical output is byte-identical across Debug,
+Release and Debug-shared: the reference-model numerics to 17 digits, the CLI's structured
+output, and the saved `.bcad` bytes of four models. No Release value was accepted as
+different because of floating point.
+
+**What this gate found.** No new production defects, and three findings worth more than a
+clean sheet. The one suspicious `value_or` in all of P15's production code is neither a
+fabricated value nor a swallowed error, and I could say why — but "unreachable" was my
+reasoning rather than the suite's, so it is now a gate. **My own audit script mis-read its
+own input**, reporting P15-ARCH-001 as absent because it looked for a bare heading where the
+repository has `# DONE — P15-ARCH-001`; a phase gate that trusted "row missing → BLOCKED"
+would have blocked P15 over a regex. And **two of the brief's mandatory fixtures cannot be
+built**, because two materials cannot share a NAME and a supplied shear modulus has no slot —
+both substitutes are stronger than what was asked for.
+
+**What the phase found in itself, earlier:** one production defect, found by a fixture rather
+than a review. RM-MAT-03 was the first thing in the repository to combine a feature chain with
+a mass, and it caught `mass-properties` reporting the un-bored blank as a body of the part.
+2764 tests had not found it.
 
 ### Final Gate
 
@@ -1809,29 +1878,37 @@ docs/engineering/
 # CURRENT NEXT STEP
 
 ```text
-NONE. P15-REFMOD-001 is complete and the next milestone is a scope decision.
+NONE. P15 — Materials / Engineering Data — is QUALIFIED as a phase.
+The next phase is a scope decision, not Claude's to make.
 ```
 
-P15 — Materials / Engineering Data — is qualified from its architecture through to a
-reference suite: ADR-025 to ADR-029, units, the material object, mechanical and thermal
-properties, assignment, mass properties, custom materials, provenance and completeness,
-commands with exact undo, persistence, the CLI, and eight reference documents validated
-against closed form.
-
-One candidate remains in the phase, and it is not authorized here:
+Qualified at `8d4b23c` / tree `1f6f2951` on 2026-09-30: thirteen milestones plus the phase
+gate, 2814/2814 in Debug, Release and Debug-shared each from clean, 36582 test executions,
+0 failures, 0 warnings in all six build and rebuild logs, and canonical output byte-identical
+across the three presets.
 
 ```text
-P15-QUAL-001     the phase qualification gate
+P15-ARCH  UNITS  MAT  MECH  THERM  ASSIGN  MASS  CUSTOM  PROV  CMD  PERSIST  CLI
+REFMOD    QUAL
 ```
 
-Outstanding and arguably ahead of it, because it can lose a user's work:
+Before the next phase, two carried defects are worth weighing — neither is P15's, and the
+first can lose a user's work:
 
 ```text
-the carried FileIo replace defect -- a document save can still lose to a file
-synchroniser. See Carried, in Status.
+the FileIo replace defect     a document save can still lose to a file
+                              synchroniser. Arguably ahead of any new phase.
+
+configuration regeneration    a configuration override does not rebuild the
+                              geometry it changes, so mass properties REFUSE
+                              under one rather than reporting the base
+                              configuration's volume as if it were the
+                              override's. The refusal is pinned in process,
+                              through the CLI, and by a reference model.
+                              Fixing the regeneration removes the guard and
+                              its three tests.
 ```
 
-Also carried: a configuration override does not rebuild the geometry it changes, so
-`mass-properties` REFUSES under one rather than reporting the base configuration's volume as
-if it were the override's. That refusal is now pinned in process, through the CLI, and by a
-reference model. Fixing the regeneration defect is what removes the guard and its tests.
+Also carried from earlier phases: hole POSITION dimensions are unsupported, GD&T symbols are
+not fully embedded in PDF/DXF, and cross-preset export byte identity is not guaranteed for
+drawings (it IS guaranteed, and now measured, for material documents).
