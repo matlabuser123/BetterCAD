@@ -25,6 +25,7 @@ bettercad_add_executable(bettercad_tests
     SOURCES
         TestHelpers.hpp
         assembly/CommandTests.cpp
+        meshing/MeshDataTests.cpp
         drawing/AnnotationTests.cpp
         drawing/AssemblyDrawingTests.cpp
         drawing/BomTests.cpp
@@ -213,6 +214,7 @@ bettercad_add_executable(bettercad_tests
         BetterCAD::features
         BetterCAD::geometry
         BetterCAD::io
+        BetterCAD::meshing
         BetterCAD::sketch
         bettercad_test_occt
         Catch2::Catch2WithMain

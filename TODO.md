@@ -13,7 +13,7 @@ Current:
            P16 — Meshing
 
 Current milestone:
-           P16-DATA-001 — Mesh Data Model / Identity / Units
+           P16-GEOM-001 — Geometry Preparation / Validity / Regeneration Boundary
 
 Qualified:
            P0–P10 — BetterCAD v0.1.0
@@ -24,10 +24,11 @@ Qualified:
            P15 — Materials / Engineering Data
 
 Next:
-           P16-DATA-001
+           P16-GEOM-001
 
 Qualified milestones in P16:
            P16-ARCH-001 — Meshing Architecture (ADR-030 to ADR-033)
+           P16-DATA-001 — Mesh Data Model / Identity / Units
 
 P16 objective:
            Geometry
@@ -414,32 +415,109 @@ Do not start `P16-DATA-001` until every architecture question is answered.
 
 ## Mesh Data Model / Identity / Units
 
-* [ ] Define `NodeId`
-* [ ] Define `ElementId`
-* [ ] Define optional `RegionId` / boundary-set identity if required
-* [ ] Define node coordinate representation
-* [ ] Coordinates use strong length quantities or qualified canonical SI boundary
-* [ ] Define triangle connectivity
-* [ ] Define tetrahedral connectivity
-* [ ] Define element type enum
-* [ ] Define element orientation convention
-* [ ] Define mesh-local identity semantics
-* [ ] Define deterministic node enumeration
-* [ ] Define deterministic element enumeration
-* [ ] Define immutable/read-only solver-facing mesh view
-* [ ] Reject invalid connectivity
-* [ ] Reject repeated node references where invalid
-* [ ] Reject nonexistent node references
-* [ ] Reject degenerate elements
-* [ ] Validate positive tetrahedron volume
-* [ ] Validate finite coordinates
-* [ ] Define mesh bounds
-* [ ] Define adjacency foundation only if required
-* [ ] Compile-time/API safety tests
-* [ ] Determinism PASS
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+**PASS 2026-09-30.** Evidence:
+[docs/verification/P16-DATA-001/](docs/verification/P16-DATA-001/README.md),
+[API_AUDIT.md](docs/verification/P16-DATA-001/API_AUDIT.md),
+[ADVERSARIAL_REVIEW.md](docs/verification/P16-DATA-001/ADVERSARIAL_REVIEW.md).
+
+`src/meshing/` exists for the first time, which is what makes `layer_meshing 4` — registered by
+`P16-ARCH-001` — load-bearing rather than declarative. **Nothing here generates a mesh.**
+
+* [x] Define `NodeId` — a concrete strong type in `bettercad::meshing` over `uint32_t`, and
+      deliberately **not** `bettercad::Id`. The brief suggested `Id<NodeIdTag>`; ADR-031 forbids
+      it, because that template's documented contract is stable, persisted, never-reused identity
+      and a mesh handle is the opposite on all four counts. No second generic ID template was
+      introduced either, so both constraints hold
+* [x] Define `ElementId` — the same, one identity space across `Triangle3` and `Tetrahedron4`
+* [x] Define optional `RegionId` — **IMPLEMENTED, not N/A.** ADR-032's "shares no node between
+      regions" is uncheckable unless an element says which region it is in. A strong type, never
+      an `int`, and it carries no material value (ADR-028)
+* [x] Define node coordinate representation — `Point3D {Length x, y, z}`, the existing core type
+      reused, which `core/geometry/Mesh.hpp` already uses. No `gp_Pnt` anywhere
+* [x] Coordinates use strong length quantities — `Length` per component, SI internally. Signed
+      volume returns `Volume` (L³) and area returns `Area` (L²), so the dimension is checked
+      rather than asserted in a comment
+* [x] Define triangle connectivity — three distinct handles, orientation by the right-hand rule
+      on the **stored** order, never canonicalised
+* [x] Define tetrahedral connectivity — four distinct handles, same rule
+* [x] Define element type enum — `Triangle3`, `Tetrahedron4`, and nothing else. `Tet10`, `Hex8`
+      and `Wedge6` are **absent rather than reserved**: an enumerator with no arity, no
+      orientation and no validation would be a promise the code does not keep
+* [x] Define element orientation convention — `V = 1/6 (p2-p1)·((p3-p1)×(p4-p1))`, **positive is
+      valid** (ADR-032). Negative is REJECTED, never renormalised: ADR-032 says a violation is a
+      failure, and reordering destroys the only evidence a generator produced an inverted
+      element. **No `abs()` exists in the module**
+* [x] Define mesh-local identity semantics — valid for one generation of one mesh. A `MeshStamp`
+      lives on the mesh, not on every handle, and `Mesh::owns()` refuses a foreign stamp, the
+      default stamp, and the same `MeshId` with a bumped generation
+* [x] Define deterministic node enumeration — ascending `NodeId`. Handles are **strictly
+      increasing**, which makes a duplicate *unrepresentable* rather than merely rejected, keeps
+      storage contiguous, allows gaps, and therefore forces lookup through identity: `findNode`
+      is a binary search and never `nodes_[id.value()]`
+* [x] Define deterministic element enumeration — ascending `ElementId` per kind; canonically
+      every `Triangle3` then every `Tetrahedron4`. **No unordered container exists in the
+      module**
+* [x] Define immutable/read-only solver-facing mesh view — every accessor is `const` and returns
+      `std::span<const T>`; `build()` returns by value. Two compile-fail cases prove a consumer
+      can neither move a node nor insert an element. **No `ValidatedMesh`**: ADR-030 gives that
+      to the mesher's validating path, and the report method is `dataValid()`, because naming a
+      data-level check "solver ready" is the conflation this phase exists to prevent
+* [x] Reject invalid connectivity — invalid handle, repeated handle, missing node, missing
+      region, and an under-filled braced list (which the compiler *cannot* catch: it is valid
+      aggregate initialisation that zero-fills)
+* [x] Reject repeated node references — reported as the connectivity defect directly, not
+      indirectly as a zero measure
+* [x] Reject nonexistent node references — `NotFound`, and never resolved by vector position.
+      Pinned with sparse handles 1, 4, 10, where indexing would silently return a different node
+* [x] Reject degenerate elements — zero area, zero signed volume, **and a non-finite
+      determinant from finite coordinates**, which is tested at 1e300 because an infinity would
+      answer a `> 0` comparison with a yes
+* [x] Validate positive tetrahedron volume — against hand-computed references: +1/6 for the
+      reference tet, −1/6 swapped, 0 coplanar, +25/6 non-axis-aligned, invariant under
+      translation and a 37° rotation, sign-flipped under reflection
+* [x] Validate finite coordinates — NaN, +Inf and −Inf on each of x, y and z, nine cases, at
+      insertion **and** again in whole-mesh validation
+* [x] Define mesh bounds — `optional<MeshBounds>`; **nullopt for an empty mesh**, because a zero
+      box at the origin is the right answer for a mesh holding one node at the origin and the two
+      must stay distinguishable
+* [x] Define adjacency foundation — **N/A, derived and deferred.** Nothing needs it: the one
+      global check that might have, no-node-shared-between-regions, is computed locally inside
+      `validate()` and exposes no structure
+* [x] Compile-time/API safety tests — 15 cases, each with a control target that compiles so every
+      failure is attributable to its own line. The three that matter most are
+      `node-id-as-object-id`, `element-id-as-object-id` and `region-id-as-object-id`: ADR-031's
+      central invariant, enforced by the compiler instead of by review
+* [x] Determinism PASS — 60 tests × 5 in `release-ext` and `debug-ext`, 0 failures. In process, a
+      mesh is rebuilt 8 times and the whole handle sequence, bounds and report compared, and
+      reports are compared 8 times **including their messages**
+* [x] Adversarial review PASS — 23 attacks from the brief plus 5 more; **7 findings, 0 production
+      defects**, 1 defect in shared tooling, 1 deferral documented at its declaration
+* [x] Regression PASS — 2875/2875 in `debug-ext`, `release-ext` and `debug-shared-ext` each from
+      clean; 9225 executions; 0 failures; **0 compiler warnings in all six build and rebuild
+      logs**; no rebuild recompiled or relinked anything; the eight qualified tree IDs identical
+      before the first build and after the last test run
+* [x] Evidence recorded
+
+**What this milestone found.** No production defects, and two findings worth more than a clean
+sheet.
+
+**Reversing a tetrahedron's connectivity does not invert it.** A fixture expecting two inverted
+tetrahedra got one, and the code was right: `(1,2,3,4) → (4,3,2,1)` is the permutation `(1 4)(2 3)`
+— two transpositions, an **even** permutation — so the signed volume is unchanged. This is a trap
+in the domain, not just in a test: **a mesher author "repairing" inverted elements by reversing
+their connectivity accomplishes nothing.** the permutation-parity test now pins reversal, one swap and a 3-cycle against hand computation.
+
+**The qualification harness could not express this milestone's own subject.** All three presets
+passed and the run then died with `else was unexpected at this time` **before the determinism
+stage**: `%REPEAT%` is substituted when cmd *parses* the enclosing `for` block, so a filter
+containing `|`, `(` or `)` closes the block early. Latent since P15-QUAL-001, and it survived
+three phases only because every earlier subject was a single word. Fixed with delayed expansion,
+`verify-harness.cmd` re-run, and the exact filter proven to parse before spending another two
+hours.
+
+Two of my own compile-fail tests were also wrong in ways that would have passed for the wrong
+reason: one case **could not fail** (an under-filled braced list is valid aggregate
+initialisation), and one regex asked for `could not convert` where GCC emits `cannot convert`.
 
 ### Core tetrahedron relationship
 
@@ -1612,48 +1690,71 @@ docs/engineering/
 # CURRENT NEXT STEP
 
 ```text
-P16-DATA-001 — Mesh Data Model / Identity / Units
+P16-GEOM-001 — Geometry Preparation / Validity / Regeneration Boundary
 ```
 
-`P16-ARCH-001` passed on 2026-09-30. The architecture is frozen in
-[ADR-030](docs/architecture/decisions/ADR-030-a-mesh-is-derived-state-and-a-meshing-control-is-the-intent.md),
-[ADR-031](docs/architecture/decisions/ADR-031-a-mesh-node-is-a-handle-not-an-identity.md),
-[ADR-032](docs/architecture/decisions/ADR-032-a-mesh-boundary-names-a-cad-face-and-a-selection-is-never-a-mesh-entity.md)
-and
-[ADR-033](docs/architecture/decisions/ADR-033-the-volume-mesher-is-a-backend-behind-an-enforced-boundary.md),
-with evidence in [docs/verification/P16-ARCH-001/](docs/verification/P16-ARCH-001/README.md).
+`P16-DATA-001` passed on 2026-09-30: 2875/2875 in three presets from clean, 9225 executions, 0
+failures, 0 warnings in all six logs, and the qualified tree identical to the committed tree.
+Evidence: [docs/verification/P16-DATA-001/](docs/verification/P16-DATA-001/README.md).
 
-What P16-DATA-001 must honour, so it is not re-derived:
+The mesh data model now exists and is qualified. What `P16-GEOM-001` must honour, so it is not
+re-derived:
 
 ```text
-NodeId / ElementId       meshing-module strong index types, deliberately NOT
-                         bettercad::Id. Compile-fail cases for the conversions,
-                         as P15-UNITS-001 did with 124 of them
-a mesh                   derived, owned by the mesher, no ObjectId, never
-                         persisted, one region per solid, no node shared across
-                         regions, an empty body refused
-a MeshControl            a document object holding intent only, no result field
-facet attribution        to a CAD face, with the face-to-name relation stored as
-                         many-to-many. An unnamed face is NORMAL, not a failure
-Tet4                     the only element type, but carried as a type tag
-ValidatedMesh            only the validating path may construct one
-src/meshing/             creating it is what makes layer_meshing 4 load-bearing
+a mesh is BUILT, not mutated    MeshBuilder is the only construction path, and a
+                                finished Mesh is immutable by API
+handles are strictly increasing gaps allowed, duplicates unrepresentable, lookup
+                                by identity and never by index
+one frame, no transform         ADR-032. A mesh is in its body's frame
+positive Jacobian               ADR-032. Inverted is REJECTED, never repaired
+regions                         one per solid, no node shared between them
+no CAD reference yet             attribution to a FaceName is P16-MAP-001's
 ```
 
-Open from the architecture review, and owed here or by `P16-CMD-001`:
+What `P16-GEOM-001` owns, and the guard it already has:
+
+```text
+geometry validity      Body::isValid() and TopologySummary exist; P16 defines no
+                       second validity notion
+the regeneration
+boundary               a mesh must never be built from stale geometry. The
+                       configuration-override refusal in
+                       src/features/material/MassProperties.cpp is the shape to
+                       reuse UNCHANGED (ADR-030), and Document::revision() is
+                       MONOTONIC -- every write is ++revision_ and undo
+                       increments it too -- so a build stamp cannot match a
+                       different state
+the surface gap        geometry::triangulate() is watertight (15 assertions
+                       across 11 files) but NOT topologically conforming: a
+                       vertex on a shared edge appears once per face. Welding it
+                       is P16-SURF-001's. Poly_MergeNodesTool is NOT the route --
+                       it splits nodes at sharp corners
+```
+
+Open from the P16-ARCH-001 review, still owed:
 
 ```text
 F6   a MeshControl whose body is deleted must become explicitly UNRESOLVED and
-     must not mesh nothing and report success
+     must not mesh nothing and report success. P16-DATA-001 created no
+     MeshControl, so this remains P16-GEOM-001's or P16-CMD-001's
 ```
 
-`P16-VOL-001` carries an entry condition that nothing before it does:
+Deferred from P16-DATA-001, with the reason recorded at its declaration:
+
+```text
+a topological duplicate -- two tetrahedra on the same four nodes -- is not
+rejected. Which of the two is right is not answerable from connectivity alone,
+one ordering may be inverted, and detecting the pair needs a canonical key over
+node sets that is a whole-mesh question. P16-QUALITY-001's.
+```
+
+`P16-VOL-001` still carries an entry condition nothing before it does:
 
 ```text
 the volume-meshing backend dependency is approved, or the fallback is chosen
-deliberately. BetterCAD has no licence, so admitting a backend constrains one
-that has not been chosen -- a project decision, not Claude's. See
-docs/verification/P16-ARCH-001/BACKEND_MATRIX.md.
+deliberately. BetterCAD has NO licence, so admitting a copyleft backend
+constrains one that has not been chosen -- a project decision, not Claude's.
+See docs/verification/P16-ARCH-001/BACKEND_MATRIX.md.
 ```
 
 Carried defects, neither P16's, and the first can lose a user's work:
@@ -1665,7 +1766,7 @@ the FileIo replace defect     a document save can still lose to a file
 configuration regeneration    a configuration override does not rebuild the
                               geometry it changes. Mass properties REFUSE under
                               one, and P16 meshing will refuse for the same
-                              reason and with the same guard. Fixing the
+                              reason with the same guard. Fixing the
                               regeneration removes the guard and its tests.
 ```
 

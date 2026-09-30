@@ -309,3 +309,39 @@ bettercad_compile_fail_case(matcmd "${_matcmd}" COMMANDS_ARE_NOT_COPYABLE
     "use of deleted function" BetterCAD::features)
 bettercad_compile_fail_case(matcmd "${_matcmd}" MATERIAL_ID_IS_NOT_AN_INT
     "could not convert|cannot convert|no matching function" BetterCAD::features)
+
+# Mesh-local identity (P16-DATA-001, ADR-031). The central cases are the two
+# directions between a mesh handle and a document identity: a mesh handle is
+# derived state a remesh destroys, and ObjectId means the opposite.
+set(_meshids "${CMAKE_CURRENT_SOURCE_DIR}/MeshIdsMisuse.cpp")
+bettercad_compile_fail_group(meshids "${_meshids}" BetterCAD::meshing)
+bettercad_compile_fail_case(meshids "${_meshids}" NODE_ID_AS_ELEMENT_ID
+    "could not convert|cannot convert|no matching function" BetterCAD::meshing)
+bettercad_compile_fail_case(meshids "${_meshids}" ELEMENT_ID_AS_NODE_ID
+    "could not convert|cannot convert|no matching function" BetterCAD::meshing)
+bettercad_compile_fail_case(meshids "${_meshids}" REGION_ID_AS_NODE_ID
+    "could not convert|cannot convert|no matching function" BetterCAD::meshing)
+bettercad_compile_fail_case(meshids "${_meshids}" NODE_ID_AS_REGION_ID
+    "could not convert|cannot convert|no matching function" BetterCAD::meshing)
+bettercad_compile_fail_case(meshids "${_meshids}" NODE_ID_AS_OBJECT_ID
+    "could not convert|cannot convert|no matching function" BetterCAD::meshing)
+bettercad_compile_fail_case(meshids "${_meshids}" ELEMENT_ID_AS_OBJECT_ID
+    "could not convert|cannot convert|no matching function" BetterCAD::meshing)
+bettercad_compile_fail_case(meshids "${_meshids}" REGION_ID_AS_OBJECT_ID
+    "could not convert|cannot convert|no matching function" BetterCAD::meshing)
+bettercad_compile_fail_case(meshids "${_meshids}" OBJECT_ID_AS_NODE_ID
+    "could not convert|cannot convert|no matching function" BetterCAD::meshing)
+bettercad_compile_fail_case(meshids "${_meshids}" SKETCH_ID_AS_NODE_ID
+    "could not convert|cannot convert|no matching function" BetterCAD::meshing)
+bettercad_compile_fail_case(meshids "${_meshids}" INTEGER_TO_NODE_ID
+    "conversion from [^ ]*int[^ ]* to non-scalar type" BetterCAD::meshing)
+bettercad_compile_fail_case(meshids "${_meshids}" NODE_ID_TO_INTEGER
+    "cannot convert .*NodeId.* in initialization" BetterCAD::meshing)
+bettercad_compile_fail_case(meshids "${_meshids}" COMPARE_NODE_AND_ELEMENT
+    "no match for [^ ]*operator==" BetterCAD::meshing)
+bettercad_compile_fail_case(meshids "${_meshids}" MUTATE_NODE_THROUGH_MESH
+    "assignment of member|read-only|discards qualifiers" BetterCAD::meshing)
+bettercad_compile_fail_case(meshids "${_meshids}" ADD_ELEMENT_THROUGH_MESH
+    "no member named .*push_back|has no member" BetterCAD::meshing)
+bettercad_compile_fail_case(meshids "${_meshids}" TRIANGLE_WITH_TET_CONNECTIVITY
+    "cannot convert .*brace-enclosed initializer list.* to .*array<.*NodeId, 3>" BetterCAD::meshing)

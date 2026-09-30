@@ -1,0 +1,605 @@
+Test project C:/Users/uqhas/AppData/Local/bc-build/debug-ext
+      Start 2868: compile_fail.meshids.object-id-as-node-id
+      Start 2457: unit.Validate_RejectsACoplanarTetrahedronDespiteFourDistinctHandles
+      Start 2085: unit.SignedVolume_IsUnchangedByTranslation
+      Start 2460: unit.Validate_RejectsANonFiniteDeterminantFromExtremeButFiniteCoordinates
+      Start 1498: unit.MeshBuilder_RejectsTheInvalidNodeHandle
+      Start 2462: unit.Validate_ReportsAnEmptyMeshAsHavingNoElements
+      Start 1496: unit.MeshBuilder_RejectsAnElementWithNoRegion
+      Start 1502: unit.MeshStamp_IsUniquePerMeshAndDistinguishesGenerations
+    Test #2085: unit.SignedVolume_IsUnchangedByTranslation ..................................   Passed    2.94 sec
+      Start 2085: unit.SignedVolume_IsUnchangedByTranslation
+    Test #1502: unit.MeshStamp_IsUniquePerMeshAndDistinguishesGenerations ...................   Passed    2.83 sec
+      Start 1502: unit.MeshStamp_IsUniquePerMeshAndDistinguishesGenerations
+    Test #2462: unit.Validate_ReportsAnEmptyMeshAsHavingNoElements ..........................   Passed    2.91 sec
+      Start 2462: unit.Validate_ReportsAnEmptyMeshAsHavingNoElements
+    Test #2457: unit.Validate_RejectsACoplanarTetrahedronDespiteFourDistinctHandles .........   Passed    3.11 sec
+      Start 2457: unit.Validate_RejectsACoplanarTetrahedronDespiteFourDistinctHandles
+    Test #1496: unit.MeshBuilder_RejectsAnElementWithNoRegion ...............................   Passed    2.92 sec
+      Start 1496: unit.MeshBuilder_RejectsAnElementWithNoRegion
+    Test #2460: unit.Validate_RejectsANonFiniteDeterminantFromExtremeButFiniteCoordinates ...   Passed    3.02 sec
+      Start 2460: unit.Validate_RejectsANonFiniteDeterminantFromExtremeButFiniteCoordinates
+    Test #1498: unit.MeshBuilder_RejectsTheInvalidNodeHandle ................................   Passed    3.02 sec
+      Start 1498: unit.MeshBuilder_RejectsTheInvalidNodeHandle
+    Test #1498: unit.MeshBuilder_RejectsTheInvalidNodeHandle ................................   Passed    0.18 sec
+      Start 1498: unit.MeshBuilder_RejectsTheInvalidNodeHandle
+    Test #2460: unit.Validate_RejectsANonFiniteDeterminantFromExtremeButFiniteCoordinates ...   Passed    0.21 sec
+      Start 2460: unit.Validate_RejectsANonFiniteDeterminantFromExtremeButFiniteCoordinates
+    Test #1502: unit.MeshStamp_IsUniquePerMeshAndDistinguishesGenerations ...................   Passed    0.31 sec
+      Start 1502: unit.MeshStamp_IsUniquePerMeshAndDistinguishesGenerations
+    Test #2462: unit.Validate_ReportsAnEmptyMeshAsHavingNoElements ..........................   Passed    0.31 sec
+      Start 2462: unit.Validate_ReportsAnEmptyMeshAsHavingNoElements
+    Test #2457: unit.Validate_RejectsACoplanarTetrahedronDespiteFourDistinctHandles .........   Passed    0.31 sec
+      Start 2457: unit.Validate_RejectsACoplanarTetrahedronDespiteFourDistinctHandles
+    Test #2085: unit.SignedVolume_IsUnchangedByTranslation ..................................   Passed    0.39 sec
+      Start 2085: unit.SignedVolume_IsUnchangedByTranslation
+    Test #1496: unit.MeshBuilder_RejectsAnElementWithNoRegion ...............................   Passed    0.33 sec
+      Start 1496: unit.MeshBuilder_RejectsAnElementWithNoRegion
+    Test #1498: unit.MeshBuilder_RejectsTheInvalidNodeHandle ................................   Passed    0.24 sec
+      Start 1498: unit.MeshBuilder_RejectsTheInvalidNodeHandle
+    Test #2085: unit.SignedVolume_IsUnchangedByTranslation ..................................   Passed    0.17 sec
+      Start 2085: unit.SignedVolume_IsUnchangedByTranslation
+    Test #2462: unit.Validate_ReportsAnEmptyMeshAsHavingNoElements ..........................   Passed    0.23 sec
+      Start 2462: unit.Validate_ReportsAnEmptyMeshAsHavingNoElements
+    Test #1502: unit.MeshStamp_IsUniquePerMeshAndDistinguishesGenerations ...................   Passed    0.27 sec
+      Start 1502: unit.MeshStamp_IsUniquePerMeshAndDistinguishesGenerations
+    Test #2457: unit.Validate_RejectsACoplanarTetrahedronDespiteFourDistinctHandles .........   Passed    0.25 sec
+      Start 2457: unit.Validate_RejectsACoplanarTetrahedronDespiteFourDistinctHandles
+    Test #2460: unit.Validate_RejectsANonFiniteDeterminantFromExtremeButFiniteCoordinates ...   Passed    0.32 sec
+      Start 2460: unit.Validate_RejectsANonFiniteDeterminantFromExtremeButFiniteCoordinates
+    Test #2085: unit.SignedVolume_IsUnchangedByTranslation ..................................   Passed    0.15 sec
+      Start 2085: unit.SignedVolume_IsUnchangedByTranslation
+    Test #2462: unit.Validate_ReportsAnEmptyMeshAsHavingNoElements ..........................   Passed    0.15 sec
+      Start 2462: unit.Validate_ReportsAnEmptyMeshAsHavingNoElements
+    Test #1496: unit.MeshBuilder_RejectsAnElementWithNoRegion ...............................   Passed    0.34 sec
+      Start 1496: unit.MeshBuilder_RejectsAnElementWithNoRegion
+    Test #1498: unit.MeshBuilder_RejectsTheInvalidNodeHandle ................................   Passed    0.23 sec
+      Start 1498: unit.MeshBuilder_RejectsTheInvalidNodeHandle
+    Test #1502: unit.MeshStamp_IsUniquePerMeshAndDistinguishesGenerations ...................   Passed    0.29 sec
+      Start 1502: unit.MeshStamp_IsUniquePerMeshAndDistinguishesGenerations
+    Test #1496: unit.MeshBuilder_RejectsAnElementWithNoRegion ...............................   Passed    0.16 sec
+      Start 1496: unit.MeshBuilder_RejectsAnElementWithNoRegion
+    Test #2460: unit.Validate_RejectsANonFiniteDeterminantFromExtremeButFiniteCoordinates ...   Passed    0.29 sec
+      Start 2460: unit.Validate_RejectsANonFiniteDeterminantFromExtremeButFiniteCoordinates
+ 1/60 Test #2462: unit.Validate_ReportsAnEmptyMeshAsHavingNoElements ..........................   Passed    0.22 sec
+ 2/60 Test #1498: unit.MeshBuilder_RejectsTheInvalidNodeHandle ................................   Passed    0.18 sec
+    Test #2457: unit.Validate_RejectsACoplanarTetrahedronDespiteFourDistinctHandles .........   Passed    0.33 sec
+      Start 2457: unit.Validate_RejectsACoplanarTetrahedronDespiteFourDistinctHandles
+ 3/60 Test #2085: unit.SignedVolume_IsUnchangedByTranslation ..................................   Passed    0.26 sec
+      Start  274: unit.Bounds_TranslateWithTheMesh
+      Start 2454: unit.Validate_CollectsEveryIssueRatherThanStoppingAtTheFirst
+      Start 1492: unit.MeshBuilder_RejectsARepeatedNodeHandleAndLeavesTheMeshUnchanged
+ 4/60 Test #1502: unit.MeshStamp_IsUniquePerMeshAndDistinguishesGenerations ...................   Passed    0.23 sec
+ 5/60 Test #2457: unit.Validate_RejectsACoplanarTetrahedronDespiteFourDistinctHandles .........   Passed    0.17 sec
+      Start  273: unit.Bounds_SpanEveryNodeIncludingNegativeCoordinates
+      Start 1503: unit.Mesh_CopyKeepsTheSameTopologyAndHandlesAndIsNotARemesh
+    Test  #274: unit.Bounds_TranslateWithTheMesh ............................................   Passed    0.20 sec
+      Start  274: unit.Bounds_TranslateWithTheMesh
+ 6/60 Test #1496: unit.MeshBuilder_RejectsAnElementWithNoRegion ...............................   Passed    0.28 sec
+ 7/60 Test #2460: unit.Validate_RejectsANonFiniteDeterminantFromExtremeButFiniteCoordinates ...   Passed    0.27 sec
+      Start 1507: unit.Mesh_ResolvesSparseHandlesByIdentityAndNeverByPosition
+      Start 2089: unit.SignedVolume_SignFollowsThePermutationParityNotTheApparentReversal
+    Test #2454: unit.Validate_CollectsEveryIssueRatherThanStoppingAtTheFirst ................   Passed    0.44 sec
+      Start 2454: unit.Validate_CollectsEveryIssueRatherThanStoppingAtTheFirst
+    Test #1503: unit.Mesh_CopyKeepsTheSameTopologyAndHandlesAndIsNotARemesh .................   Passed    0.31 sec
+      Start 1503: unit.Mesh_CopyKeepsTheSameTopologyAndHandlesAndIsNotARemesh
+    Test #1507: unit.Mesh_ResolvesSparseHandlesByIdentityAndNeverByPosition .................   Passed    0.29 sec
+      Start 1507: unit.Mesh_ResolvesSparseHandlesByIdentityAndNeverByPosition
+    Test  #273: unit.Bounds_SpanEveryNodeIncludingNegativeCoordinates .......................   Passed    0.38 sec
+      Start  273: unit.Bounds_SpanEveryNodeIncludingNegativeCoordinates
+    Test #1492: unit.MeshBuilder_RejectsARepeatedNodeHandleAndLeavesTheMeshUnchanged ........   Passed    0.49 sec
+      Start 1492: unit.MeshBuilder_RejectsARepeatedNodeHandleAndLeavesTheMeshUnchanged
+    Test #2089: unit.SignedVolume_SignFollowsThePermutationParityNotTheApparentReversal .....   Passed    0.32 sec
+      Start 2089: unit.SignedVolume_SignFollowsThePermutationParityNotTheApparentReversal
+    Test  #274: unit.Bounds_TranslateWithTheMesh ............................................   Passed    0.40 sec
+      Start  274: unit.Bounds_TranslateWithTheMesh
+    Test #2454: unit.Validate_CollectsEveryIssueRatherThanStoppingAtTheFirst ................   Passed    0.26 sec
+      Start 2454: unit.Validate_CollectsEveryIssueRatherThanStoppingAtTheFirst
+    Test  #273: unit.Bounds_SpanEveryNodeIncludingNegativeCoordinates .......................   Passed    0.22 sec
+      Start  273: unit.Bounds_SpanEveryNodeIncludingNegativeCoordinates
+    Test #1503: unit.Mesh_CopyKeepsTheSameTopologyAndHandlesAndIsNotARemesh .................   Passed    0.28 sec
+      Start 1503: unit.Mesh_CopyKeepsTheSameTopologyAndHandlesAndIsNotARemesh
+    Test #1492: unit.MeshBuilder_RejectsARepeatedNodeHandleAndLeavesTheMeshUnchanged ........   Passed    0.24 sec
+      Start 1492: unit.MeshBuilder_RejectsARepeatedNodeHandleAndLeavesTheMeshUnchanged
+    Test #1507: unit.Mesh_ResolvesSparseHandlesByIdentityAndNeverByPosition .................   Passed    0.30 sec
+      Start 1507: unit.Mesh_ResolvesSparseHandlesByIdentityAndNeverByPosition
+    Test #2089: unit.SignedVolume_SignFollowsThePermutationParityNotTheApparentReversal .....   Passed    0.26 sec
+      Start 2089: unit.SignedVolume_SignFollowsThePermutationParityNotTheApparentReversal
+    Test  #274: unit.Bounds_TranslateWithTheMesh ............................................   Passed    0.28 sec
+      Start  274: unit.Bounds_TranslateWithTheMesh
+    Test #1492: unit.MeshBuilder_RejectsARepeatedNodeHandleAndLeavesTheMeshUnchanged ........   Passed    0.19 sec
+      Start 1492: unit.MeshBuilder_RejectsARepeatedNodeHandleAndLeavesTheMeshUnchanged
+    Test #1503: unit.Mesh_CopyKeepsTheSameTopologyAndHandlesAndIsNotARemesh .................   Passed    0.23 sec
+      Start 1503: unit.Mesh_CopyKeepsTheSameTopologyAndHandlesAndIsNotARemesh
+    Test  #273: unit.Bounds_SpanEveryNodeIncludingNegativeCoordinates .......................   Passed    0.27 sec
+      Start  273: unit.Bounds_SpanEveryNodeIncludingNegativeCoordinates
+    Test #2454: unit.Validate_CollectsEveryIssueRatherThanStoppingAtTheFirst ................   Passed    0.32 sec
+      Start 2454: unit.Validate_CollectsEveryIssueRatherThanStoppingAtTheFirst
+    Test #1507: unit.Mesh_ResolvesSparseHandlesByIdentityAndNeverByPosition .................   Passed    0.26 sec
+      Start 1507: unit.Mesh_ResolvesSparseHandlesByIdentityAndNeverByPosition
+    Test #2089: unit.SignedVolume_SignFollowsThePermutationParityNotTheApparentReversal .....   Passed    0.26 sec
+      Start 2089: unit.SignedVolume_SignFollowsThePermutationParityNotTheApparentReversal
+    Test  #274: unit.Bounds_TranslateWithTheMesh ............................................   Passed    0.24 sec
+      Start  274: unit.Bounds_TranslateWithTheMesh
+    Test #1492: unit.MeshBuilder_RejectsARepeatedNodeHandleAndLeavesTheMeshUnchanged ........   Passed    0.27 sec
+      Start 1492: unit.MeshBuilder_RejectsARepeatedNodeHandleAndLeavesTheMeshUnchanged
+    Test  #273: unit.Bounds_SpanEveryNodeIncludingNegativeCoordinates .......................   Passed    0.26 sec
+      Start  273: unit.Bounds_SpanEveryNodeIncludingNegativeCoordinates
+    Test #1503: unit.Mesh_CopyKeepsTheSameTopologyAndHandlesAndIsNotARemesh .................   Passed    0.30 sec
+      Start 1503: unit.Mesh_CopyKeepsTheSameTopologyAndHandlesAndIsNotARemesh
+    Test #2454: unit.Validate_CollectsEveryIssueRatherThanStoppingAtTheFirst ................   Passed    0.27 sec
+      Start 2454: unit.Validate_CollectsEveryIssueRatherThanStoppingAtTheFirst
+    Test #1507: unit.Mesh_ResolvesSparseHandlesByIdentityAndNeverByPosition .................   Passed    0.28 sec
+      Start 1507: unit.Mesh_ResolvesSparseHandlesByIdentityAndNeverByPosition
+    Test #2089: unit.SignedVolume_SignFollowsThePermutationParityNotTheApparentReversal .....   Passed    0.28 sec
+      Start 2089: unit.SignedVolume_SignFollowsThePermutationParityNotTheApparentReversal
+ 8/60 Test #1492: unit.MeshBuilder_RejectsARepeatedNodeHandleAndLeavesTheMeshUnchanged ........   Passed    0.24 sec
+ 9/60 Test  #273: unit.Bounds_SpanEveryNodeIncludingNegativeCoordinates .......................   Passed    0.22 sec
+      Start 1501: unit.MeshIssueKind_EveryKindHasAName
+      Start 2083: unit.SignedVolume_ChangesSignWhenTwoNodesAreSwapped
+10/60 Test  #274: unit.Bounds_TranslateWithTheMesh ............................................   Passed    0.44 sec
+11/60 Test #2454: unit.Validate_CollectsEveryIssueRatherThanStoppingAtTheFirst ................   Passed    0.23 sec
+12/60 Test #1503: unit.Mesh_CopyKeepsTheSameTopologyAndHandlesAndIsNotARemesh .................   Passed    0.26 sec
+13/60 Test #1507: unit.Mesh_ResolvesSparseHandlesByIdentityAndNeverByPosition .................   Passed    0.21 sec
+      Start 1497: unit.MeshBuilder_RejectsAnOutOfOrderNodeHandle
+      Start 1504: unit.Mesh_ElementTypeIsReportedPerElementAndSharesOneIdentitySpace
+      Start 1491: unit.MeshBuilder_RejectsANonFiniteCoordinateOnEveryAxis
+      Start 2087: unit.SignedVolume_OfCoplanarNodesIsExactlyZero
+    Test #1491: unit.MeshBuilder_RejectsANonFiniteCoordinateOnEveryAxis .....................   Passed    0.25 sec
+      Start 1491: unit.MeshBuilder_RejectsANonFiniteCoordinateOnEveryAxis
+14/60 Test #2089: unit.SignedVolume_SignFollowsThePermutationParityNotTheApparentReversal .....   Passed    0.54 sec
+    Test #1501: unit.MeshIssueKind_EveryKindHasAName ........................................   Passed    0.41 sec
+      Start 1501: unit.MeshIssueKind_EveryKindHasAName
+    Test #1497: unit.MeshBuilder_RejectsAnOutOfOrderNodeHandle ..............................   Passed    0.37 sec
+      Start 1497: unit.MeshBuilder_RejectsAnOutOfOrderNodeHandle
+    Test #1504: unit.Mesh_ElementTypeIsReportedPerElementAndSharesOneIdentitySpace ..........   Passed    0.36 sec
+      Start 1504: unit.Mesh_ElementTypeIsReportedPerElementAndSharesOneIdentitySpace
+    Test #2087: unit.SignedVolume_OfCoplanarNodesIsExactlyZero ..............................   Passed    0.26 sec
+      Start 2087: unit.SignedVolume_OfCoplanarNodesIsExactlyZero
+    Test #2083: unit.SignedVolume_ChangesSignWhenTwoNodesAreSwapped .........................   Passed    0.46 sec
+      Start 2083: unit.SignedVolume_ChangesSignWhenTwoNodesAreSwapped
+      Start 2459: unit.Validate_RejectsANodeSharedBetweenTwoRegions
+    Test #1501: unit.MeshIssueKind_EveryKindHasAName ........................................   Passed    0.24 sec
+      Start 1501: unit.MeshIssueKind_EveryKindHasAName
+    Test #1491: unit.MeshBuilder_RejectsANonFiniteCoordinateOnEveryAxis .....................   Passed    0.28 sec
+      Start 1491: unit.MeshBuilder_RejectsANonFiniteCoordinateOnEveryAxis
+    Test #1497: unit.MeshBuilder_RejectsAnOutOfOrderNodeHandle ..............................   Passed    0.26 sec
+      Start 1497: unit.MeshBuilder_RejectsAnOutOfOrderNodeHandle
+    Test #1504: unit.Mesh_ElementTypeIsReportedPerElementAndSharesOneIdentitySpace ..........   Passed    0.26 sec
+      Start 1504: unit.Mesh_ElementTypeIsReportedPerElementAndSharesOneIdentitySpace
+    Test #2087: unit.SignedVolume_OfCoplanarNodesIsExactlyZero ..............................   Passed    0.28 sec
+      Start 2087: unit.SignedVolume_OfCoplanarNodesIsExactlyZero
+    Test #2083: unit.SignedVolume_ChangesSignWhenTwoNodesAreSwapped .........................   Passed    0.29 sec
+      Start 2083: unit.SignedVolume_ChangesSignWhenTwoNodesAreSwapped
+    Test #2459: unit.Validate_RejectsANodeSharedBetweenTwoRegions ...........................   Passed    0.30 sec
+      Start 2459: unit.Validate_RejectsANodeSharedBetweenTwoRegions
+    Test #1491: unit.MeshBuilder_RejectsANonFiniteCoordinateOnEveryAxis .....................   Passed    0.45 sec
+      Start 1491: unit.MeshBuilder_RejectsANonFiniteCoordinateOnEveryAxis
+    Test #2083: unit.SignedVolume_ChangesSignWhenTwoNodesAreSwapped .........................   Passed    0.36 sec
+      Start 2083: unit.SignedVolume_ChangesSignWhenTwoNodesAreSwapped
+    Test #2459: unit.Validate_RejectsANodeSharedBetweenTwoRegions ...........................   Passed    0.34 sec
+      Start 2459: unit.Validate_RejectsANodeSharedBetweenTwoRegions
+    Test #2087: unit.SignedVolume_OfCoplanarNodesIsExactlyZero ..............................   Passed    0.42 sec
+      Start 2087: unit.SignedVolume_OfCoplanarNodesIsExactlyZero
+    Test #1501: unit.MeshIssueKind_EveryKindHasAName ........................................   Passed    0.56 sec
+      Start 1501: unit.MeshIssueKind_EveryKindHasAName
+    Test #1497: unit.MeshBuilder_RejectsAnOutOfOrderNodeHandle ..............................   Passed    0.55 sec
+      Start 1497: unit.MeshBuilder_RejectsAnOutOfOrderNodeHandle
+    Test #1504: unit.Mesh_ElementTypeIsReportedPerElementAndSharesOneIdentitySpace ..........   Passed    0.55 sec
+      Start 1504: unit.Mesh_ElementTypeIsReportedPerElementAndSharesOneIdentitySpace
+    Test #2459: unit.Validate_RejectsANodeSharedBetweenTwoRegions ...........................   Passed    0.29 sec
+      Start 2459: unit.Validate_RejectsANodeSharedBetweenTwoRegions
+    Test #1491: unit.MeshBuilder_RejectsANonFiniteCoordinateOnEveryAxis .....................   Passed    0.36 sec
+      Start 1491: unit.MeshBuilder_RejectsANonFiniteCoordinateOnEveryAxis
+    Test #2083: unit.SignedVolume_ChangesSignWhenTwoNodesAreSwapped .........................   Passed    0.35 sec
+      Start 2083: unit.SignedVolume_ChangesSignWhenTwoNodesAreSwapped
+    Test #1497: unit.MeshBuilder_RejectsAnOutOfOrderNodeHandle ..............................   Passed    0.28 sec
+      Start 1497: unit.MeshBuilder_RejectsAnOutOfOrderNodeHandle
+    Test #1504: unit.Mesh_ElementTypeIsReportedPerElementAndSharesOneIdentitySpace ..........   Passed    0.28 sec
+      Start 1504: unit.Mesh_ElementTypeIsReportedPerElementAndSharesOneIdentitySpace
+    Test #2087: unit.SignedVolume_OfCoplanarNodesIsExactlyZero ..............................   Passed    0.38 sec
+      Start 2087: unit.SignedVolume_OfCoplanarNodesIsExactlyZero
+    Test #1501: unit.MeshIssueKind_EveryKindHasAName ........................................   Passed    0.37 sec
+      Start 1501: unit.MeshIssueKind_EveryKindHasAName
+15/60 Test #1504: unit.Mesh_ElementTypeIsReportedPerElementAndSharesOneIdentitySpace ..........   Passed    0.27 sec
+    Test #2459: unit.Validate_RejectsANodeSharedBetweenTwoRegions ...........................   Passed    0.37 sec
+      Start 2459: unit.Validate_RejectsANodeSharedBetweenTwoRegions
+16/60 Test #1497: unit.MeshBuilder_RejectsAnOutOfOrderNodeHandle ..............................   Passed    0.31 sec
+17/60 Test #2083: unit.SignedVolume_ChangesSignWhenTwoNodesAreSwapped .........................   Passed    0.34 sec
+18/60 Test #1491: unit.MeshBuilder_RejectsANonFiniteCoordinateOnEveryAxis .....................   Passed    0.36 sec
+      Start 1506: unit.Mesh_RefusesAHandleFromAnotherMeshRatherThanReinterpretingIt
+      Start 2436: unit.TriangleArea_IsUnchangedByTranslation
+      Start 1505: unit.Mesh_EnumeratesNodesAndElementsInHandleOrderEveryTime
+      Start 2088: unit.SignedVolume_OfTheReferenceTetrahedronIsPositiveOneSixth
+19/60 Test #2087: unit.SignedVolume_OfCoplanarNodesIsExactlyZero ..............................   Passed    0.40 sec
+20/60 Test #1501: unit.MeshIssueKind_EveryKindHasAName ........................................   Passed    0.38 sec
+      Start  788: unit.ElementType_ReportsItsNodeCountAndName
+      Start 2455: unit.Validate_OrdersIssuesByKindThenByHandle
+    Test #1506: unit.Mesh_RefusesAHandleFromAnotherMeshRatherThanReinterpretingIt ...........   Passed    0.19 sec
+      Start 1506: unit.Mesh_RefusesAHandleFromAnotherMeshRatherThanReinterpretingIt
+21/60 Test #2459: unit.Validate_RejectsANodeSharedBetweenTwoRegions ...........................   Passed    0.27 sec
+    Test #2436: unit.TriangleArea_IsUnchangedByTranslation ..................................   Passed    0.22 sec
+      Start 2436: unit.TriangleArea_IsUnchangedByTranslation
+      Start 1495: unit.MeshBuilder_RejectsAnElementWithAnUnderfilledConnectivityList
+    Test #2088: unit.SignedVolume_OfTheReferenceTetrahedronIsPositiveOneSixth ...............   Passed    0.21 sec
+      Start 2088: unit.SignedVolume_OfTheReferenceTetrahedronIsPositiveOneSixth
+    Test  #788: unit.ElementType_ReportsItsNodeCountAndName .................................   Passed    0.25 sec
+      Start  788: unit.ElementType_ReportsItsNodeCountAndName
+    Test #1505: unit.Mesh_EnumeratesNodesAndElementsInHandleOrderEveryTime ..................   Passed    0.33 sec
+      Start 1505: unit.Mesh_EnumeratesNodesAndElementsInHandleOrderEveryTime
+    Test #1506: unit.Mesh_RefusesAHandleFromAnotherMeshRatherThanReinterpretingIt ...........   Passed    0.22 sec
+      Start 1506: unit.Mesh_RefusesAHandleFromAnotherMeshRatherThanReinterpretingIt
+    Test #2455: unit.Validate_OrdersIssuesByKindThenByHandle ................................   Passed    0.29 sec
+      Start 2455: unit.Validate_OrdersIssuesByKindThenByHandle
+    Test #2436: unit.TriangleArea_IsUnchangedByTranslation ..................................   Passed    0.21 sec
+      Start 2436: unit.TriangleArea_IsUnchangedByTranslation
+    Test #2455: unit.Validate_OrdersIssuesByKindThenByHandle ................................   Passed    0.16 sec
+      Start 2455: unit.Validate_OrdersIssuesByKindThenByHandle
+    Test  #788: unit.ElementType_ReportsItsNodeCountAndName .................................   Passed    0.24 sec
+      Start  788: unit.ElementType_ReportsItsNodeCountAndName
+    Test #2088: unit.SignedVolume_OfTheReferenceTetrahedronIsPositiveOneSixth ...............   Passed    0.34 sec
+      Start 2088: unit.SignedVolume_OfTheReferenceTetrahedronIsPositiveOneSixth
+    Test #1495: unit.MeshBuilder_RejectsAnElementWithAnUnderfilledConnectivityList ..........   Passed    0.39 sec
+      Start 1495: unit.MeshBuilder_RejectsAnElementWithAnUnderfilledConnectivityList
+    Test #1505: unit.Mesh_EnumeratesNodesAndElementsInHandleOrderEveryTime ..................   Passed    0.29 sec
+      Start 1505: unit.Mesh_EnumeratesNodesAndElementsInHandleOrderEveryTime
+    Test #2436: unit.TriangleArea_IsUnchangedByTranslation ..................................   Passed    0.25 sec
+      Start 2436: unit.TriangleArea_IsUnchangedByTranslation
+    Test #1506: unit.Mesh_RefusesAHandleFromAnotherMeshRatherThanReinterpretingIt ...........   Passed    0.31 sec
+      Start 1506: unit.Mesh_RefusesAHandleFromAnotherMeshRatherThanReinterpretingIt
+    Test #2868: compile_fail.meshids.object-id-as-node-id ...................................   Passed    8.15 sec
+      Start 2868: compile_fail.meshids.object-id-as-node-id
+    Test #1495: unit.MeshBuilder_RejectsAnElementWithAnUnderfilledConnectivityList ..........   Passed    0.17 sec
+      Start 1495: unit.MeshBuilder_RejectsAnElementWithAnUnderfilledConnectivityList
+    Test #2088: unit.SignedVolume_OfTheReferenceTetrahedronIsPositiveOneSixth ...............   Passed    0.22 sec
+      Start 2088: unit.SignedVolume_OfTheReferenceTetrahedronIsPositiveOneSixth
+    Test #2455: unit.Validate_OrdersIssuesByKindThenByHandle ................................   Passed    0.29 sec
+      Start 2455: unit.Validate_OrdersIssuesByKindThenByHandle
+    Test  #788: unit.ElementType_ReportsItsNodeCountAndName .................................   Passed    0.29 sec
+      Start  788: unit.ElementType_ReportsItsNodeCountAndName
+    Test #2436: unit.TriangleArea_IsUnchangedByTranslation ..................................   Passed    0.22 sec
+      Start 2436: unit.TriangleArea_IsUnchangedByTranslation
+    Test #1505: unit.Mesh_EnumeratesNodesAndElementsInHandleOrderEveryTime ..................   Passed    0.27 sec
+      Start 1505: unit.Mesh_EnumeratesNodesAndElementsInHandleOrderEveryTime
+    Test #2455: unit.Validate_OrdersIssuesByKindThenByHandle ................................   Passed    0.19 sec
+      Start 2455: unit.Validate_OrdersIssuesByKindThenByHandle
+    Test #2088: unit.SignedVolume_OfTheReferenceTetrahedronIsPositiveOneSixth ...............   Passed    0.23 sec
+      Start 2088: unit.SignedVolume_OfTheReferenceTetrahedronIsPositiveOneSixth
+    Test #1506: unit.Mesh_RefusesAHandleFromAnotherMeshRatherThanReinterpretingIt ...........   Passed    0.39 sec
+      Start 1506: unit.Mesh_RefusesAHandleFromAnotherMeshRatherThanReinterpretingIt
+    Test #1495: unit.MeshBuilder_RejectsAnElementWithAnUnderfilledConnectivityList ..........   Passed    0.31 sec
+      Start 1495: unit.MeshBuilder_RejectsAnElementWithAnUnderfilledConnectivityList
+22/60 Test #2088: unit.SignedVolume_OfTheReferenceTetrahedronIsPositiveOneSixth ...............   Passed    0.20 sec
+      Start 2451: unit.Validate_AcceptsAThinTetrahedronBecauseQualityIsNotDataValidity
+    Test  #788: unit.ElementType_ReportsItsNodeCountAndName .................................   Passed    0.42 sec
+      Start  788: unit.ElementType_ReportsItsNodeCountAndName
+    Test #1505: unit.Mesh_EnumeratesNodesAndElementsInHandleOrderEveryTime ..................   Passed    0.39 sec
+      Start 1505: unit.Mesh_EnumeratesNodesAndElementsInHandleOrderEveryTime
+23/60 Test #2436: unit.TriangleArea_IsUnchangedByTranslation ..................................   Passed    0.44 sec
+24/60 Test #2455: unit.Validate_OrdersIssuesByKindThenByHandle ................................   Passed    0.29 sec
+25/60 Test #1506: unit.Mesh_RefusesAHandleFromAnotherMeshRatherThanReinterpretingIt ...........   Passed    0.25 sec
+    Test #1495: unit.MeshBuilder_RejectsAnElementWithAnUnderfilledConnectivityList ..........   Passed    0.23 sec
+      Start 1495: unit.MeshBuilder_RejectsAnElementWithAnUnderfilledConnectivityList
+      Start 1500: unit.MeshIds_DefaultHandleIsInvalidAndZeroIsNeverAllocated
+      Start  272: unit.Bounds_OfAnEmptyMeshAreAbsentRatherThanAZeroBox
+      Start 2452: unit.Validate_AcceptsTheReferenceTetrahedron
+26/60 Test #1495: unit.MeshBuilder_RejectsAnElementWithAnUnderfilledConnectivityList ..........   Passed    0.22 sec
+27/60 Test #1505: unit.Mesh_EnumeratesNodesAndElementsInHandleOrderEveryTime ..................   Passed    0.24 sec
+      Start 2461: unit.Validate_RejectsAnInvertedTetrahedronAndNamesIt
+      Start 2437: unit.TriangleArea_MatchesTheHandComputationAndIsZeroWhenCollinear
+    Test  #272: unit.Bounds_OfAnEmptyMeshAreAbsentRatherThanAZeroBox ........................   Passed    0.24 sec
+      Start  272: unit.Bounds_OfAnEmptyMeshAreAbsentRatherThanAZeroBox
+    Test #1500: unit.MeshIds_DefaultHandleIsInvalidAndZeroIsNeverAllocated ..................   Passed    0.28 sec
+      Start 1500: unit.MeshIds_DefaultHandleIsInvalidAndZeroIsNeverAllocated
+28/60 Test  #788: unit.ElementType_ReportsItsNodeCountAndName .................................   Passed    0.37 sec
+    Test #2451: unit.Validate_AcceptsAThinTetrahedronBecauseQualityIsNotDataValidity ........   Passed    0.40 sec
+      Start 2451: unit.Validate_AcceptsAThinTetrahedronBecauseQualityIsNotDataValidity
+      Start 2453: unit.Validate_AcceptsTwoRegionsThatShareNoNode
+    Test #2452: unit.Validate_AcceptsTheReferenceTetrahedron ................................   Passed    0.45 sec
+      Start 2452: unit.Validate_AcceptsTheReferenceTetrahedron
+    Test #2461: unit.Validate_RejectsAnInvertedTetrahedronAndNamesIt ........................   Passed    0.33 sec
+      Start 2461: unit.Validate_RejectsAnInvertedTetrahedronAndNamesIt
+    Test #1500: unit.MeshIds_DefaultHandleIsInvalidAndZeroIsNeverAllocated ..................   Passed    0.27 sec
+      Start 1500: unit.MeshIds_DefaultHandleIsInvalidAndZeroIsNeverAllocated
+    Test  #272: unit.Bounds_OfAnEmptyMeshAreAbsentRatherThanAZeroBox ........................   Passed    0.31 sec
+      Start  272: unit.Bounds_OfAnEmptyMeshAreAbsentRatherThanAZeroBox
+    Test #2451: unit.Validate_AcceptsAThinTetrahedronBecauseQualityIsNotDataValidity ........   Passed    0.28 sec
+      Start 2451: unit.Validate_AcceptsAThinTetrahedronBecauseQualityIsNotDataValidity
+    Test #2453: unit.Validate_AcceptsTwoRegionsThatShareNoNode ..............................   Passed    0.30 sec
+      Start 2453: unit.Validate_AcceptsTwoRegionsThatShareNoNode
+    Test #2437: unit.TriangleArea_MatchesTheHandComputationAndIsZeroWhenCollinear ...........   Passed    0.43 sec
+      Start 2437: unit.TriangleArea_MatchesTheHandComputationAndIsZeroWhenCollinear
+    Test #2453: unit.Validate_AcceptsTwoRegionsThatShareNoNode ..............................   Passed    0.20 sec
+      Start 2453: unit.Validate_AcceptsTwoRegionsThatShareNoNode
+    Test #2461: unit.Validate_RejectsAnInvertedTetrahedronAndNamesIt ........................   Passed    0.33 sec
+      Start 2461: unit.Validate_RejectsAnInvertedTetrahedronAndNamesIt
+    Test  #272: unit.Bounds_OfAnEmptyMeshAreAbsentRatherThanAZeroBox ........................   Passed    0.31 sec
+      Start  272: unit.Bounds_OfAnEmptyMeshAreAbsentRatherThanAZeroBox
+    Test #2452: unit.Validate_AcceptsTheReferenceTetrahedron ................................   Passed    0.38 sec
+      Start 2452: unit.Validate_AcceptsTheReferenceTetrahedron
+    Test #2437: unit.TriangleArea_MatchesTheHandComputationAndIsZeroWhenCollinear ...........   Passed    0.25 sec
+      Start 2437: unit.TriangleArea_MatchesTheHandComputationAndIsZeroWhenCollinear
+    Test #1500: unit.MeshIds_DefaultHandleIsInvalidAndZeroIsNeverAllocated ..................   Passed    0.40 sec
+      Start 1500: unit.MeshIds_DefaultHandleIsInvalidAndZeroIsNeverAllocated
+    Test #2451: unit.Validate_AcceptsAThinTetrahedronBecauseQualityIsNotDataValidity ........   Passed    0.38 sec
+      Start 2451: unit.Validate_AcceptsAThinTetrahedronBecauseQualityIsNotDataValidity
+    Test #2461: unit.Validate_RejectsAnInvertedTetrahedronAndNamesIt ........................   Passed    0.21 sec
+      Start 2461: unit.Validate_RejectsAnInvertedTetrahedronAndNamesIt
+    Test  #272: unit.Bounds_OfAnEmptyMeshAreAbsentRatherThanAZeroBox ........................   Passed    0.21 sec
+      Start  272: unit.Bounds_OfAnEmptyMeshAreAbsentRatherThanAZeroBox
+    Test #2452: unit.Validate_AcceptsTheReferenceTetrahedron ................................   Passed    0.21 sec
+      Start 2452: unit.Validate_AcceptsTheReferenceTetrahedron
+    Test #2453: unit.Validate_AcceptsTwoRegionsThatShareNoNode ..............................   Passed    0.29 sec
+      Start 2453: unit.Validate_AcceptsTwoRegionsThatShareNoNode
+    Test #1500: unit.MeshIds_DefaultHandleIsInvalidAndZeroIsNeverAllocated ..................   Passed    0.26 sec
+      Start 1500: unit.MeshIds_DefaultHandleIsInvalidAndZeroIsNeverAllocated
+    Test #2451: unit.Validate_AcceptsAThinTetrahedronBecauseQualityIsNotDataValidity ........   Passed    0.26 sec
+      Start 2451: unit.Validate_AcceptsAThinTetrahedronBecauseQualityIsNotDataValidity
+    Test #2437: unit.TriangleArea_MatchesTheHandComputationAndIsZeroWhenCollinear ...........   Passed    0.33 sec
+      Start 2437: unit.TriangleArea_MatchesTheHandComputationAndIsZeroWhenCollinear
+29/60 Test #2451: unit.Validate_AcceptsAThinTetrahedronBecauseQualityIsNotDataValidity ........   Passed    0.15 sec
+30/60 Test #1500: unit.MeshIds_DefaultHandleIsInvalidAndZeroIsNeverAllocated ..................   Passed    0.17 sec
+31/60 Test  #272: unit.Bounds_OfAnEmptyMeshAreAbsentRatherThanAZeroBox ........................   Passed    0.29 sec
+    Test #2453: unit.Validate_AcceptsTwoRegionsThatShareNoNode ..............................   Passed    0.26 sec
+      Start 2453: unit.Validate_AcceptsTwoRegionsThatShareNoNode
+    Test #2461: unit.Validate_RejectsAnInvertedTetrahedronAndNamesIt ........................   Passed    0.34 sec
+      Start 2461: unit.Validate_RejectsAnInvertedTetrahedronAndNamesIt
+      Start 2458: unit.Validate_RejectsADegenerateTriangle
+      Start 1490: unit.MeshBuilder_NeverReordersElementConnectivity
+      Start 1508: unit.Mesh_TwoNodesAtTheSamePositionStayTwoNodes
+    Test #2452: unit.Validate_AcceptsTheReferenceTetrahedron ................................   Passed    0.41 sec
+      Start 2452: unit.Validate_AcceptsTheReferenceTetrahedron
+    Test #2437: unit.TriangleArea_MatchesTheHandComputationAndIsZeroWhenCollinear ...........   Passed    0.29 sec
+      Start 2437: unit.TriangleArea_MatchesTheHandComputationAndIsZeroWhenCollinear
+32/60 Test #2461: unit.Validate_RejectsAnInvertedTetrahedronAndNamesIt ........................   Passed    0.30 sec
+      Start 2082: unit.SignedVolume_ChangesSignUnderAReflection
+    Test #1508: unit.Mesh_TwoNodesAtTheSamePositionStayTwoNodes .............................   Passed    0.26 sec
+      Start 1508: unit.Mesh_TwoNodesAtTheSamePositionStayTwoNodes
+33/60 Test #2453: unit.Validate_AcceptsTwoRegionsThatShareNoNode ..............................   Passed    0.39 sec
+    Test #1490: unit.MeshBuilder_NeverReordersElementConnectivity ...........................   Passed    0.31 sec
+      Start 1490: unit.MeshBuilder_NeverReordersElementConnectivity
+34/60 Test #2437: unit.TriangleArea_MatchesTheHandComputationAndIsZeroWhenCollinear ...........   Passed    0.26 sec
+    Test #2458: unit.Validate_RejectsADegenerateTriangle ....................................   Passed    0.37 sec
+      Start 2458: unit.Validate_RejectsADegenerateTriangle
+35/60 Test #2452: unit.Validate_AcceptsTheReferenceTetrahedron ................................   Passed    0.32 sec
+      Start 2084: unit.SignedVolume_IsUnchangedByAProperRotation
+      Start 1494: unit.MeshBuilder_RejectsAnElementNamingTheSameNodeTwice
+      Start 2456: unit.Validate_ProducesAnIdenticalReportOnRepeatedRuns
+    Test #2082: unit.SignedVolume_ChangesSignUnderAReflection ...............................   Passed    0.53 sec
+      Start 2082: unit.SignedVolume_ChangesSignUnderAReflection
+    Test #1490: unit.MeshBuilder_NeverReordersElementConnectivity ...........................   Passed    0.49 sec
+      Start 1490: unit.MeshBuilder_NeverReordersElementConnectivity
+    Test #2458: unit.Validate_RejectsADegenerateTriangle ....................................   Passed    0.48 sec
+      Start 2458: unit.Validate_RejectsADegenerateTriangle
+    Test #1494: unit.MeshBuilder_RejectsAnElementNamingTheSameNodeTwice .....................   Passed    0.45 sec
+      Start 1494: unit.MeshBuilder_RejectsAnElementNamingTheSameNodeTwice
+    Test #1508: unit.Mesh_TwoNodesAtTheSamePositionStayTwoNodes .............................   Passed    0.58 sec
+      Start 1508: unit.Mesh_TwoNodesAtTheSamePositionStayTwoNodes
+    Test #2456: unit.Validate_ProducesAnIdenticalReportOnRepeatedRuns .......................   Passed    0.47 sec
+      Start 2456: unit.Validate_ProducesAnIdenticalReportOnRepeatedRuns
+    Test #2084: unit.SignedVolume_IsUnchangedByAProperRotation ..............................   Passed    0.57 sec
+      Start 2084: unit.SignedVolume_IsUnchangedByAProperRotation
+    Test #2458: unit.Validate_RejectsADegenerateTriangle ....................................   Passed    0.25 sec
+      Start 2458: unit.Validate_RejectsADegenerateTriangle
+    Test #1494: unit.MeshBuilder_RejectsAnElementNamingTheSameNodeTwice .....................   Passed    0.24 sec
+      Start 1494: unit.MeshBuilder_RejectsAnElementNamingTheSameNodeTwice
+    Test #1508: unit.Mesh_TwoNodesAtTheSamePositionStayTwoNodes .............................   Passed    0.23 sec
+      Start 1508: unit.Mesh_TwoNodesAtTheSamePositionStayTwoNodes
+    Test #2082: unit.SignedVolume_ChangesSignUnderAReflection ...............................   Passed    0.35 sec
+      Start 2082: unit.SignedVolume_ChangesSignUnderAReflection
+    Test #1490: unit.MeshBuilder_NeverReordersElementConnectivity ...........................   Passed    0.36 sec
+      Start 1490: unit.MeshBuilder_NeverReordersElementConnectivity
+    Test #2084: unit.SignedVolume_IsUnchangedByAProperRotation ..............................   Passed    0.41 sec
+      Start 2084: unit.SignedVolume_IsUnchangedByAProperRotation
+    Test #2458: unit.Validate_RejectsADegenerateTriangle ....................................   Passed    0.31 sec
+      Start 2458: unit.Validate_RejectsADegenerateTriangle
+    Test #2456: unit.Validate_ProducesAnIdenticalReportOnRepeatedRuns .......................   Passed    0.49 sec
+      Start 2456: unit.Validate_ProducesAnIdenticalReportOnRepeatedRuns
+    Test #1508: unit.Mesh_TwoNodesAtTheSamePositionStayTwoNodes .............................   Passed    0.30 sec
+      Start 1508: unit.Mesh_TwoNodesAtTheSamePositionStayTwoNodes
+    Test #2082: unit.SignedVolume_ChangesSignUnderAReflection ...............................   Passed    0.33 sec
+      Start 2082: unit.SignedVolume_ChangesSignUnderAReflection
+    Test #1490: unit.MeshBuilder_NeverReordersElementConnectivity ...........................   Passed    0.33 sec
+      Start 1490: unit.MeshBuilder_NeverReordersElementConnectivity
+    Test #1494: unit.MeshBuilder_RejectsAnElementNamingTheSameNodeTwice .....................   Passed    0.42 sec
+      Start 1494: unit.MeshBuilder_RejectsAnElementNamingTheSameNodeTwice
+36/60 Test #2458: unit.Validate_RejectsADegenerateTriangle ....................................   Passed    0.35 sec
+    Test #1494: unit.MeshBuilder_RejectsAnElementNamingTheSameNodeTwice .....................   Passed    0.21 sec
+      Start 1494: unit.MeshBuilder_RejectsAnElementNamingTheSameNodeTwice
+      Start 2086: unit.SignedVolume_OfANonAxisAlignedTetrahedronMatchesTheHandComputation
+37/60 Test #1508: unit.Mesh_TwoNodesAtTheSamePositionStayTwoNodes .............................   Passed    0.35 sec
+    Test #2456: unit.Validate_ProducesAnIdenticalReportOnRepeatedRuns .......................   Passed    0.37 sec
+      Start 2456: unit.Validate_ProducesAnIdenticalReportOnRepeatedRuns
+    Test #2084: unit.SignedVolume_IsUnchangedByAProperRotation ..............................   Passed    0.44 sec
+      Start 2084: unit.SignedVolume_IsUnchangedByAProperRotation
+    Test #2082: unit.SignedVolume_ChangesSignUnderAReflection ...............................   Passed    0.35 sec
+      Start 2082: unit.SignedVolume_ChangesSignUnderAReflection
+38/60 Test #1490: unit.MeshBuilder_NeverReordersElementConnectivity ...........................   Passed    0.34 sec
+      Start 1493: unit.MeshBuilder_RejectsAnElementNamingANodeThatDoesNotExist
+      Start 1499: unit.MeshIds_AreOrderedAndComparableWithinTheirOwnKind
+    Test #2084: unit.SignedVolume_IsUnchangedByAProperRotation ..............................   Passed    0.22 sec
+      Start 2084: unit.SignedVolume_IsUnchangedByAProperRotation
+39/60 Test #2082: unit.SignedVolume_ChangesSignUnderAReflection ...............................   Passed    0.22 sec
+    Test #2456: unit.Validate_ProducesAnIdenticalReportOnRepeatedRuns .......................   Passed    0.26 sec
+      Start 2456: unit.Validate_ProducesAnIdenticalReportOnRepeatedRuns
+    Test #2086: unit.SignedVolume_OfANonAxisAlignedTetrahedronMatchesTheHandComputation .....   Passed    0.31 sec
+      Start 2086: unit.SignedVolume_OfANonAxisAlignedTetrahedronMatchesTheHandComputation
+40/60 Test #1494: unit.MeshBuilder_RejectsAnElementNamingTheSameNodeTwice .....................   Passed    0.35 sec
+    Test #1499: unit.MeshIds_AreOrderedAndComparableWithinTheirOwnKind ......................   Passed    0.21 sec
+      Start 1499: unit.MeshIds_AreOrderedAndComparableWithinTheirOwnKind
+    Test #1493: unit.MeshBuilder_RejectsAnElementNamingANodeThatDoesNotExist ................   Passed    0.26 sec
+      Start 1493: unit.MeshBuilder_RejectsAnElementNamingANodeThatDoesNotExist
+    Test #1499: unit.MeshIds_AreOrderedAndComparableWithinTheirOwnKind ......................   Passed    0.38 sec
+      Start 1499: unit.MeshIds_AreOrderedAndComparableWithinTheirOwnKind
+41/60 Test #2084: unit.SignedVolume_IsUnchangedByAProperRotation ..............................   Passed    0.45 sec
+    Test #1493: unit.MeshBuilder_RejectsAnElementNamingANodeThatDoesNotExist ................   Passed    0.37 sec
+      Start 1493: unit.MeshBuilder_RejectsAnElementNamingANodeThatDoesNotExist
+42/60 Test #2456: unit.Validate_ProducesAnIdenticalReportOnRepeatedRuns .......................   Passed    0.46 sec
+    Test #2086: unit.SignedVolume_OfANonAxisAlignedTetrahedronMatchesTheHandComputation .....   Passed    0.44 sec
+      Start 2086: unit.SignedVolume_OfANonAxisAlignedTetrahedronMatchesTheHandComputation
+    Test #1499: unit.MeshIds_AreOrderedAndComparableWithinTheirOwnKind ......................   Passed    0.17 sec
+      Start 1499: unit.MeshIds_AreOrderedAndComparableWithinTheirOwnKind
+    Test #1493: unit.MeshBuilder_RejectsAnElementNamingANodeThatDoesNotExist ................   Passed    0.17 sec
+      Start 1493: unit.MeshBuilder_RejectsAnElementNamingANodeThatDoesNotExist
+    Test #2086: unit.SignedVolume_OfANonAxisAlignedTetrahedronMatchesTheHandComputation .....   Passed    0.19 sec
+      Start 2086: unit.SignedVolume_OfANonAxisAlignedTetrahedronMatchesTheHandComputation
+    Test #2086: unit.SignedVolume_OfANonAxisAlignedTetrahedronMatchesTheHandComputation .....   Passed    0.18 sec
+      Start 2086: unit.SignedVolume_OfANonAxisAlignedTetrahedronMatchesTheHandComputation
+    Test #1493: unit.MeshBuilder_RejectsAnElementNamingANodeThatDoesNotExist ................   Passed    0.24 sec
+      Start 1493: unit.MeshBuilder_RejectsAnElementNamingANodeThatDoesNotExist
+    Test #1499: unit.MeshIds_AreOrderedAndComparableWithinTheirOwnKind ......................   Passed    0.28 sec
+      Start 1499: unit.MeshIds_AreOrderedAndComparableWithinTheirOwnKind
+43/60 Test #1499: unit.MeshIds_AreOrderedAndComparableWithinTheirOwnKind ......................   Passed    0.15 sec
+44/60 Test #2086: unit.SignedVolume_OfANonAxisAlignedTetrahedronMatchesTheHandComputation .....   Passed    0.19 sec
+45/60 Test #1493: unit.MeshBuilder_RejectsAnElementNamingANodeThatDoesNotExist ................   Passed    0.18 sec
+    Test #2868: compile_fail.meshids.object-id-as-node-id ...................................   Passed    8.13 sec
+      Start 2868: compile_fail.meshids.object-id-as-node-id
+    Test #2868: compile_fail.meshids.object-id-as-node-id ...................................   Passed    6.90 sec
+      Start 2868: compile_fail.meshids.object-id-as-node-id
+    Test #2868: compile_fail.meshids.object-id-as-node-id ...................................   Passed    9.03 sec
+      Start 2868: compile_fail.meshids.object-id-as-node-id
+46/60 Test #2868: compile_fail.meshids.object-id-as-node-id ...................................   Passed    5.77 sec
+      Start 2861: compile_fail.meshids.node-id-as-element-id
+    Test #2861: compile_fail.meshids.node-id-as-element-id ..................................   Passed    5.45 sec
+      Start 2861: compile_fail.meshids.node-id-as-element-id
+    Test #2861: compile_fail.meshids.node-id-as-element-id ..................................   Passed    6.38 sec
+      Start 2861: compile_fail.meshids.node-id-as-element-id
+    Test #2861: compile_fail.meshids.node-id-as-element-id ..................................   Passed    6.87 sec
+      Start 2861: compile_fail.meshids.node-id-as-element-id
+    Test #2861: compile_fail.meshids.node-id-as-element-id ..................................   Passed    7.07 sec
+      Start 2861: compile_fail.meshids.node-id-as-element-id
+47/60 Test #2861: compile_fail.meshids.node-id-as-element-id ..................................   Passed    7.32 sec
+      Start 2864: compile_fail.meshids.node-id-as-region-id
+    Test #2864: compile_fail.meshids.node-id-as-region-id ...................................   Passed    6.39 sec
+      Start 2864: compile_fail.meshids.node-id-as-region-id
+    Test #2864: compile_fail.meshids.node-id-as-region-id ...................................   Passed    6.59 sec
+      Start 2864: compile_fail.meshids.node-id-as-region-id
+    Test #2864: compile_fail.meshids.node-id-as-region-id ...................................   Passed    7.07 sec
+      Start 2864: compile_fail.meshids.node-id-as-region-id
+    Test #2864: compile_fail.meshids.node-id-as-region-id ...................................   Passed    6.56 sec
+      Start 2864: compile_fail.meshids.node-id-as-region-id
+48/60 Test #2864: compile_fail.meshids.node-id-as-region-id ...................................   Passed    5.64 sec
+      Start 2867: compile_fail.meshids.region-id-as-object-id
+    Test #2867: compile_fail.meshids.region-id-as-object-id .................................   Passed    6.49 sec
+      Start 2867: compile_fail.meshids.region-id-as-object-id
+    Test #2867: compile_fail.meshids.region-id-as-object-id .................................   Passed    6.28 sec
+      Start 2867: compile_fail.meshids.region-id-as-object-id
+    Test #2867: compile_fail.meshids.region-id-as-object-id .................................   Passed    6.87 sec
+      Start 2867: compile_fail.meshids.region-id-as-object-id
+    Test #2867: compile_fail.meshids.region-id-as-object-id .................................   Passed    5.78 sec
+      Start 2867: compile_fail.meshids.region-id-as-object-id
+49/60 Test #2867: compile_fail.meshids.region-id-as-object-id .................................   Passed    5.53 sec
+      Start 2865: compile_fail.meshids.node-id-as-object-id
+    Test #2865: compile_fail.meshids.node-id-as-object-id ...................................   Passed    5.20 sec
+      Start 2865: compile_fail.meshids.node-id-as-object-id
+    Test #2865: compile_fail.meshids.node-id-as-object-id ...................................   Passed    5.53 sec
+      Start 2865: compile_fail.meshids.node-id-as-object-id
+    Test #2865: compile_fail.meshids.node-id-as-object-id ...................................   Passed    5.88 sec
+      Start 2865: compile_fail.meshids.node-id-as-object-id
+    Test #2865: compile_fail.meshids.node-id-as-object-id ...................................   Passed    5.05 sec
+      Start 2865: compile_fail.meshids.node-id-as-object-id
+50/60 Test #2865: compile_fail.meshids.node-id-as-object-id ...................................   Passed    5.55 sec
+      Start 2869: compile_fail.meshids.sketch-id-as-node-id
+    Test #2869: compile_fail.meshids.sketch-id-as-node-id ...................................   Passed    6.95 sec
+      Start 2869: compile_fail.meshids.sketch-id-as-node-id
+    Test #2869: compile_fail.meshids.sketch-id-as-node-id ...................................   Passed    7.81 sec
+      Start 2869: compile_fail.meshids.sketch-id-as-node-id
+    Test #2869: compile_fail.meshids.sketch-id-as-node-id ...................................   Passed    8.38 sec
+      Start 2869: compile_fail.meshids.sketch-id-as-node-id
+    Test #2869: compile_fail.meshids.sketch-id-as-node-id ...................................   Passed    6.28 sec
+      Start 2869: compile_fail.meshids.sketch-id-as-node-id
+51/60 Test #2869: compile_fail.meshids.sketch-id-as-node-id ...................................   Passed    5.34 sec
+      Start 2863: compile_fail.meshids.region-id-as-node-id
+    Test #2863: compile_fail.meshids.region-id-as-node-id ...................................   Passed    6.29 sec
+      Start 2863: compile_fail.meshids.region-id-as-node-id
+    Test #2863: compile_fail.meshids.region-id-as-node-id ...................................   Passed    6.60 sec
+      Start 2863: compile_fail.meshids.region-id-as-node-id
+    Test #2863: compile_fail.meshids.region-id-as-node-id ...................................   Passed    6.31 sec
+      Start 2863: compile_fail.meshids.region-id-as-node-id
+    Test #2863: compile_fail.meshids.region-id-as-node-id ...................................   Passed    6.96 sec
+      Start 2863: compile_fail.meshids.region-id-as-node-id
+52/60 Test #2863: compile_fail.meshids.region-id-as-node-id ...................................   Passed    6.75 sec
+      Start 2871: compile_fail.meshids.node-id-to-integer
+    Test #2871: compile_fail.meshids.node-id-to-integer .....................................   Passed    6.78 sec
+      Start 2871: compile_fail.meshids.node-id-to-integer
+    Test #2871: compile_fail.meshids.node-id-to-integer .....................................   Passed    7.91 sec
+      Start 2871: compile_fail.meshids.node-id-to-integer
+    Test #2871: compile_fail.meshids.node-id-to-integer .....................................   Passed    6.22 sec
+      Start 2871: compile_fail.meshids.node-id-to-integer
+    Test #2871: compile_fail.meshids.node-id-to-integer .....................................   Passed    6.22 sec
+      Start 2871: compile_fail.meshids.node-id-to-integer
+53/60 Test #2871: compile_fail.meshids.node-id-to-integer .....................................   Passed    6.33 sec
+      Start 2873: compile_fail.meshids.mutate-node-through-mesh
+    Test #2873: compile_fail.meshids.mutate-node-through-mesh ...............................   Passed    6.74 sec
+      Start 2873: compile_fail.meshids.mutate-node-through-mesh
+    Test #2873: compile_fail.meshids.mutate-node-through-mesh ...............................   Passed    6.99 sec
+      Start 2873: compile_fail.meshids.mutate-node-through-mesh
+    Test #2873: compile_fail.meshids.mutate-node-through-mesh ...............................   Passed    5.97 sec
+      Start 2873: compile_fail.meshids.mutate-node-through-mesh
+    Test #2873: compile_fail.meshids.mutate-node-through-mesh ...............................   Passed    5.02 sec
+      Start 2873: compile_fail.meshids.mutate-node-through-mesh
+54/60 Test #2873: compile_fail.meshids.mutate-node-through-mesh ...............................   Passed    5.30 sec
+      Start 2870: compile_fail.meshids.integer-to-node-id
+    Test #2870: compile_fail.meshids.integer-to-node-id .....................................   Passed    5.21 sec
+      Start 2870: compile_fail.meshids.integer-to-node-id
+    Test #2870: compile_fail.meshids.integer-to-node-id .....................................   Passed    6.17 sec
+      Start 2870: compile_fail.meshids.integer-to-node-id
+    Test #2870: compile_fail.meshids.integer-to-node-id .....................................   Passed    5.23 sec
+      Start 2870: compile_fail.meshids.integer-to-node-id
+    Test #2870: compile_fail.meshids.integer-to-node-id .....................................   Passed    5.50 sec
+      Start 2870: compile_fail.meshids.integer-to-node-id
+55/60 Test #2870: compile_fail.meshids.integer-to-node-id .....................................   Passed    7.10 sec
+      Start 2874: compile_fail.meshids.add-element-through-mesh
+    Test #2874: compile_fail.meshids.add-element-through-mesh ...............................   Passed    8.49 sec
+      Start 2874: compile_fail.meshids.add-element-through-mesh
+    Test #2874: compile_fail.meshids.add-element-through-mesh ...............................   Passed    8.71 sec
+      Start 2874: compile_fail.meshids.add-element-through-mesh
+    Test #2874: compile_fail.meshids.add-element-through-mesh ...............................   Passed    6.00 sec
+      Start 2874: compile_fail.meshids.add-element-through-mesh
+    Test #2874: compile_fail.meshids.add-element-through-mesh ...............................   Passed    5.97 sec
+      Start 2874: compile_fail.meshids.add-element-through-mesh
+56/60 Test #2874: compile_fail.meshids.add-element-through-mesh ...............................   Passed    6.01 sec
+      Start 2866: compile_fail.meshids.element-id-as-object-id
+    Test #2866: compile_fail.meshids.element-id-as-object-id ................................   Passed    7.16 sec
+      Start 2866: compile_fail.meshids.element-id-as-object-id
+    Test #2866: compile_fail.meshids.element-id-as-object-id ................................   Passed    6.98 sec
+      Start 2866: compile_fail.meshids.element-id-as-object-id
+    Test #2866: compile_fail.meshids.element-id-as-object-id ................................   Passed    7.31 sec
+      Start 2866: compile_fail.meshids.element-id-as-object-id
+    Test #2866: compile_fail.meshids.element-id-as-object-id ................................   Passed    6.77 sec
+      Start 2866: compile_fail.meshids.element-id-as-object-id
+57/60 Test #2866: compile_fail.meshids.element-id-as-object-id ................................   Passed    7.86 sec
+      Start 2872: compile_fail.meshids.compare-node-and-element
+    Test #2872: compile_fail.meshids.compare-node-and-element ...............................   Passed    6.67 sec
+      Start 2872: compile_fail.meshids.compare-node-and-element
+    Test #2872: compile_fail.meshids.compare-node-and-element ...............................   Passed    6.15 sec
+      Start 2872: compile_fail.meshids.compare-node-and-element
+    Test #2872: compile_fail.meshids.compare-node-and-element ...............................   Passed    6.01 sec
+      Start 2872: compile_fail.meshids.compare-node-and-element
+    Test #2872: compile_fail.meshids.compare-node-and-element ...............................   Passed    6.98 sec
+      Start 2872: compile_fail.meshids.compare-node-and-element
+58/60 Test #2872: compile_fail.meshids.compare-node-and-element ...............................   Passed    6.89 sec
+      Start 2875: compile_fail.meshids.triangle-with-tet-connectivity
+    Test #2875: compile_fail.meshids.triangle-with-tet-connectivity .........................   Passed    6.15 sec
+      Start 2875: compile_fail.meshids.triangle-with-tet-connectivity
+    Test #2875: compile_fail.meshids.triangle-with-tet-connectivity .........................   Passed    5.19 sec
+      Start 2875: compile_fail.meshids.triangle-with-tet-connectivity
+    Test #2875: compile_fail.meshids.triangle-with-tet-connectivity .........................   Passed    5.08 sec
+      Start 2875: compile_fail.meshids.triangle-with-tet-connectivity
+    Test #2875: compile_fail.meshids.triangle-with-tet-connectivity .........................   Passed    4.92 sec
+      Start 2875: compile_fail.meshids.triangle-with-tet-connectivity
+59/60 Test #2875: compile_fail.meshids.triangle-with-tet-connectivity .........................   Passed    6.03 sec
+      Start 2862: compile_fail.meshids.element-id-as-node-id
+    Test #2862: compile_fail.meshids.element-id-as-node-id ..................................   Passed    5.45 sec
+      Start 2862: compile_fail.meshids.element-id-as-node-id
+    Test #2862: compile_fail.meshids.element-id-as-node-id ..................................   Passed    5.02 sec
+      Start 2862: compile_fail.meshids.element-id-as-node-id
+    Test #2862: compile_fail.meshids.element-id-as-node-id ..................................   Passed    6.25 sec
+      Start 2862: compile_fail.meshids.element-id-as-node-id
+    Test #2862: compile_fail.meshids.element-id-as-node-id ..................................   Passed    7.92 sec
+      Start 2862: compile_fail.meshids.element-id-as-node-id
+60/60 Test #2862: compile_fail.meshids.element-id-as-node-id ..................................   Passed    8.58 sec
+
+100% tests passed out of 60
+
+Total Test time (real) = 486.77 sec

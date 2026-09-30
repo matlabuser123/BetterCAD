@@ -92,14 +92,15 @@ A module may include the public headers of its own module or of a lower layer,
 and nothing else. Public headers live in `include/bettercad/<module>/`; private
 headers beside their sources in `src/<module>/`.
 
-Target directories not yet created: `src/meshing/`, `src/simulation/`,
-`src/versioning/`, `benchmarks/`.
+Target directories not yet created: `src/simulation/`, `src/versioning/`,
+`benchmarks/`.
 `src/renderer/` and `src/scripting/` exist but are empty.
 
-`meshing` is registered in the table but **not yet built**: `P16-ARCH-001` decided
-its layer and its boundaries, and `P16-DATA-001` will create the directory. The
-entry is here because the enforced table refuses an unregistered module, so the
-registration and the decision land together.
+`src/meshing/` was created by `P16-DATA-001`, which is what makes its layer entry
+load-bearing rather than declarative. It holds the engineering mesh data model —
+mesh-local identity, coordinates, connectivity, element typing, orientation and
+validation — and generates nothing: surface and volume meshing are `P16-SURF-001`
+and `P16-VOL-001`.
 
 The table above is the table in force, mirrored from
 `tests/architecture/CheckLayering.cmake`, which is its source of truth. The
