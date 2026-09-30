@@ -92,17 +92,19 @@ P0–P10  Foundation
 P11     Parametric Part Modeling
 P12     Parametric CAD Completion
 P13     Assemblies
+P14     Technical Drawings
+P15     Materials / Engineering Data
 ```
 
 Current authorized development:
 
 ```text
-P14 — Technical Drawings
+P16 — Meshing
 ```
 
 Released: `v0.1.0` — Foundation.
 
-Qualified but not yet separately released: `P11`, `P12`, `P13`.
+Qualified but not yet separately released: `P11`, `P12`, `P13`, `P14`, `P15`.
 
 ---
 
@@ -115,8 +117,8 @@ Qualified but not yet separately released: `P11`, `P12`, `P13`.
 | Parametric CAD Completion | `P12` | **Qualified** |
 | Assemblies | `P13` | **Qualified** |
 | Technical Drawings | `P14` | **Qualified** |
-| Materials / Engineering Data | `P15` | **In Progress** |
-| Meshing | `P16` | Planned |
+| Materials / Engineering Data | `P15` | **Qualified** |
+| Meshing | `P16` | **In Progress** |
 | Structural FEA | `P17` | Planned |
 | Thermal Analysis | `P18` | Planned |
 | CFD Integration | `P19` | Planned |
@@ -124,7 +126,7 @@ Qualified but not yet separately released: `P11`, `P12`, `P13`.
 | Semantic Topology | `P21` | Planned |
 | Versioning / Collaboration | `P22` | Planned |
 | Python / Automation | `P23` | Planned |
-| AI Engineering Agent | `P24` | **In Progress** |
+| AI Engineering Agent | `P24` | Planned |
 | Manufacturing / CAM | `P25` | Planned |
 | Performance / GPU / Scale | `P26` | Planned |
 | Production Hardening | `P27` | Planned |
@@ -473,6 +475,69 @@ representation and view placement, and require structural or read-back
 validation rather than only checking that a file exists.
 
 ---
+
+## Materials / Engineering Data — Qualified
+
+`P15` gave BetterCAD engineering material data: what a part is made of, what that
+material is, where its numbers came from, and what follows from them.
+
+```text
+material library (reference data)
+→ document-local material, with its own identity
+→ mechanical and thermal properties
+→ provenance per property
+→ assignment to the part
+→ mass, centre of mass, inertia
+→ completeness per consumer
+→ persistence of intent
+→ headless workflows
+```
+
+CAD geometry stays the authority for volume; a material supplies a density; mass is
+**derived** and never persisted as authority. An engineering property is Known, Unknown
+or Derived — never defaulted, never zero-for-missing.
+
+Qualified at `0757b8b` on 2026-09-30. `P15-QUAL-001`: 2814/2814 tests in Debug, Release
+and Debug-shared, each from clean; 36582 test executions; 0 failures; **0 warnings in all
+six build and rebuild logs**; canonical output byte-identical across the three presets;
+qualified tree identical to the committed tree.
+
+| Milestone | Capability | Evidence |
+| --- | --- | --- |
+| `P15-ARCH-001` | Materials / engineering-data architecture; ADR-025 to ADR-028 | [P15-ARCH-001](docs/verification/P15-ARCH-001/README.md) |
+| `P15-UNITS-001` | Engineering quantity and property contracts | [P15-UNITS-001](docs/verification/P15-UNITS-001/README.md) |
+| `P15-MAT-001` | Material definition, identity and library | [P15-MAT-001](docs/verification/P15-MAT-001/README.md) |
+| `P15-MECH-001` | Mechanical properties; derived G and K | [P15-MECH-001](docs/verification/P15-MECH-001/README.md) |
+| `P15-THERM-001` | Thermal and physical properties; ADR-029 | [P15-THERM-001](docs/verification/P15-THERM-001/README.md) |
+| `P15-ASSIGN-001` | Material assignment as intent | [P15-ASSIGN-001](docs/verification/P15-ASSIGN-001/README.md) |
+| `P15-MASS-001` | Mass, centre of mass and inertia | [P15-MASS-001](docs/verification/P15-MASS-001/README.md) |
+| `P15-CUSTOM-001` | Custom materials and controlled overrides | [P15-CUSTOM-001](docs/verification/P15-CUSTOM-001/README.md) |
+| `P15-PROV-001` | Per-property provenance, completeness, validation | [P15-PROV-001](docs/verification/P15-PROV-001/README.md) |
+| `P15-CMD-001` | Commands with exact undo and redo | [P15-CMD-001](docs/verification/P15-CMD-001/README.md) |
+| `P15-PERSIST-001` | Save and load canonical material intent | [P15-PERSIST-001](docs/verification/P15-PERSIST-001/README.md) |
+| `P15-CLI-001` | Headless engineering-data workflows | [P15-CLI-001](docs/verification/P15-CLI-001/README.md) |
+| `P15-REFMOD-001` | Engineering-data reference models RM-MAT-01..06 | [P15-REFMOD-001](docs/verification/P15-REFMOD-001/README.md) |
+| `P15-QUAL-001` | Full P15 qualification | [P15-QUAL-001](docs/verification/P15-QUAL-001/README.md) |
+| `INFRA-QT-DEPLOY-001` | Build output outside the synchronised folder | [INFRA-QT-DEPLOY-001](docs/verification/INFRA-QT-DEPLOY-001/README.md) |
+
+Decisions: [ADR-025](docs/architecture/decisions/ADR-025-a-material-is-a-document-object-and-the-library-is-reference-data.md),
+[ADR-026](docs/architecture/decisions/ADR-026-a-material-assignment-is-intent-and-mass-is-derived.md),
+[ADR-027](docs/architecture/decisions/ADR-027-an-engineering-property-is-known-unknown-or-derivable.md),
+[ADR-028](docs/architecture/decisions/ADR-028-provenance-is-per-property-and-solvers-hold-no-material-data.md),
+[ADR-029](docs/architecture/decisions/ADR-029-electrical-resistivity-is-a-scoped-strong-type-not-a-sixth-base-dimension.md).
+
+### What P15 leaves for later
+
+The built-in library carries designations, standards and families but **no property
+values**; a document supplies its own numbers. There is one material per document, no
+per-occurrence material in an assembly, and no assembly mass aggregation —
+`ComponentDefinition` has no material field, and cross-document part references need
+ADR-003. Temperature-dependent property laws are not represented: constants are stored and
+a file containing a law is rejected rather than misread. Command history is not persisted.
+
+`P17` consumes this layer through `requireLinearElasticConstants`, `requireDensity` and the
+thermal requirement entry points, which exist so that a solver receives a complete set or an
+explicit diagnostic, never a fabricated default.
 
 ## Materials / Engineering Data — In Progress
 

@@ -9,62 +9,74 @@
 # Status
 
 ```text
-Current:   P15 — Materials / Engineering Data — QUALIFIED
+Current:
+           P16 — Meshing
+
 Current milestone:
-           NONE. P15 IS QUALIFIED.
-           The next phase is a scope decision, not Claude's to make.
+           P16-ARCH-001 — Meshing Architecture
 
 Qualified:
-           P11
-           P12
-           P13
+           P0–P10 — BetterCAD v0.1.0
+           P11 — Advanced Part Modelling
+           P12 — Production Part Modelling
+           P13 — Assemblies
            P14 — Technical Drawings
-           P15-ARCH-001, P15-UNITS-001, INFRA-QT-DEPLOY-001, P15-MAT-001,
-           P15-MECH-001, P15-THERM-001, P15-ASSIGN-001, P15-MASS-001,
-           P15-CUSTOM-001, P15-PROV-001, P15-CMD-001, P15-PERSIST-001,
-           P15-CLI-001, P15-REFMOD-001, P15-QUAL-001
-           P15 — Materials / Engineering Data — QUALIFIED as a phase at 8d4b23c
+           P15 — Materials / Engineering Data
 
 Next:
-           The next ROADMAP phase. Awaiting explicit scope decision.
+           P16-ARCH-001
 
-           Outstanding and arguably ahead of it, because it can lose a user's
-           work: the carried FileIo replace defect — a document save can still
-           lose to a file synchroniser. See Carried, below.
+P16 objective:
+           Geometry
+           → canonical meshing controls
+           → generated engineering mesh
+           → geometry/mesh correspondence
+           → mesh-quality validation
+           → downstream P17 Structural FEA
 
-           Materials are now usable end to end WITHOUT A GUI: defined, edited,
-           cloned, assigned, saved, loaded, weighed and gated from a command
-           line, scriptable as one transaction. The CLI is an adapter — every
-           engineering value it prints is compared for exact equality with the
-           core's, and it introduces no material identity, default, validation
-           or derivation of its own.
+P16 does NOT implement:
+           structural FEA
+           stresses
+           strains
+           loads
+           restraints
+           stiffness matrices
+           thermal solver
+           CFD discretisation
+```
 
-           Also awaiting a decision, and arguably ahead of it: the carried
-           FileIo replace defect below. A user saving a document into a
-           synchronised folder can still lose the save.
+---
 
-Carried:
-           A document save can still lose to a file synchroniser — see below.
-           Hole POSITION dimensions remain unsupported.
-           GD&T symbols are not fully embedded in PDF/DXF.
-           Cross-preset export byte identity is not guaranteed.
+# Carried
 
-Infrastructure:
-           RESOLVED by INFRA-QT-DEPLOY-001. Build output can now be put outside
-           OneDrive with the -ext presets, and the determinism gate that had
-           failed twice passed from there at 11500 = 2300 x 5.
-           The recorded reason the move was blocked was WRONG: windeployqt does
-           not resolve Qt relative to the executable it is deploying. It
-           resolves the Qt directory through its 8.3 SHORT NAME and reaches the
-           first same-basis sibling in name order; the build root chosen for the
-           first attempt, %LOCALAPPDATA%\BetterCAD-build, was that sibling for
-           %LOCALAPPDATA%\bettercad-deps. The build's location was never the
-           cause -- the same failure reproduces from any location with that
-           name, and none occurs from any location without it. Corrected in
-           docs/verification/INFRA-QT-DEPLOY-001/README.md, which supersedes
-           the diagnosis carried here and in P14-STREF-001's harness comments.
-           The replace fault itself is AVOIDED, not fixed: see the carried
-           FileIo item.
+```text
+1. FileIo atomic replace
+
+   A document save can still lose to a file synchroniser when Windows
+   temporarily refuses the final rename.
+
+   Keep carried.
+   Do not silently fold this into P16.
+
+
+2. Configuration regeneration
+
+   A configuration parameter override can change the effective parameter
+   without rebuilding the geometry that reads it.
+
+   This matters directly to P16:
+   a mesh must NEVER be generated from stale configuration geometry.
+
+   Until fixed:
+   configuration-sensitive meshing must explicitly refuse stale geometry,
+   following the same safety principle used by P15 mass properties.
+
+
+3. Hole POSITION dimensions unsupported.
+
+4. GD&T symbols not fully embedded in PDF/DXF.
+
+5. Cross-preset drawing export byte identity not guaranteed.
 ```
 
 ---
@@ -73,13 +85,14 @@ Infrastructure:
 
 ```text
 P0–P10   BetterCAD v0.1.0
-P11      Advanced Part Modelling             QUALIFIED
-P12      Production Part Modelling           QUALIFIED
-P13      Assemblies                          QUALIFIED
-P14      Technical Drawings                  QUALIFIED 2026-09-26
+P11      Advanced Part Modelling              QUALIFIED
+P12      Production Part Modelling            QUALIFIED
+P13      Assemblies                           QUALIFIED
+P14      Technical Drawings                   QUALIFIED
+P15      Materials / Engineering Data         QUALIFIED
 ```
 
-Detailed completed milestone history and evidence belongs in:
+Detailed completed history belongs in:
 
 ```text
 ROADMAP.md
@@ -87,1716 +100,1363 @@ docs/verification/
 docs/architecture/decisions/
 ```
 
-Do not keep expanding completed-phase implementation diaries in `TODO.md`.
+Do not expand completed P15 implementation diaries in `TODO.md`.
 
 ---
 
-# P15 — Materials / Engineering Data
+# P16 — Meshing
 
 ## Goal
 
-Give BetterCAD a canonical, unit-safe engineering-data system that can describe the physical and engineering behaviour of parts without coupling the data model to FEA, thermal analysis, CFD, or manufacturing solvers.
+Give BetterCAD a trustworthy engineering-mesh layer that converts authoritative
+CAD geometry into validated, deterministic mesh data suitable for downstream
+numerical solvers.
 
 ```text
-Material definition
-→ engineering properties
-→ material assignment
-→ part/body association
-→ mass properties
-→ downstream engineering consumers
+CAD model intent
+→ regenerated authoritative geometry
+→ meshing controls
+→ surface representation
+→ volume mesh
+→ geometry correspondence
+→ quality validation
+→ P17 Structural FEA
 ```
 
-P15 provides trustworthy engineering data.
-
-Later phases consume it:
+P16 owns:
 
 ```text
-P17 Structural FEA
-→ E
-→ ν
-→ yield strength
-→ ultimate strength
-→ density
-
-P18 Thermal
-→ thermal conductivity
-→ specific heat
-→ density
-→ thermal expansion
-
-P19 CFD
-→ density
-→ viscosity
-→ thermal properties where applicable
-
-P25 Manufacturing
-→ material designation
-→ manufacturing metadata
+mesh architecture
+mesh data structures
+meshing controls
+surface meshing
+volume meshing
+mesh quality
+geometry ↔ mesh correspondence
+mesh inspection
+mesh commands
+mesh persistence contract
+headless workflows
+reference models
+qualification
 ```
 
-P15 does **not** implement those solvers.
+P16 does NOT own solver physics.
 
 ---
 
-# P15 Core Invariants
+# P16 Core Invariants
 
-* Engineering data uses strong/unit-safe quantities.
-* Material identity is stable and independent of display name.
-* Material properties are canonical engineering intent.
-* Derived mass/inertia values are not stored as authoritative state.
-* Missing property data is explicit; never invent values.
-* Unknown is different from zero.
-* Material assignment uses stable document/object identity.
-* Model geometry remains authoritative for volume and shape.
-* Density + geometry determine derived mass.
-* Engineering-property provenance must be representable.
-* User-defined materials must not silently mutate library materials.
-* Save/load must preserve material identity and engineering intent.
-* Configuration changes must not silently change material unless explicitly modelled.
-* Downstream solvers must consume P15 data rather than maintain competing material databases.
+* CAD geometry remains authoritative.
+* Generated mesh is derived state.
+* Meshing controls are canonical engineering intent.
+* Generated nodes/elements are never treated as CAD geometry.
+* A stale or failed model must never produce a nominally valid current mesh.
+* Generated mesh IDs are mesh-local identities, not permanent CAD identities.
+* Remeshing may invalidate NodeId / ElementId.
+* Geometry references and mesh identities must remain separate.
+* Engineering mesh must not silently reuse viewer/display tessellation.
+* Invalid/open geometry must fail explicitly where a closed volume is required.
+* Element orientation must be defined and validated.
+* Inverted/degenerate elements must never be accepted silently.
+* Mesh quality metrics must have explicit definitions.
+* Local sizing must be explicit canonical intent.
+* Missing sizing data must use documented defaults, never accidental backend defaults.
+* Backend-specific behaviour must remain behind a meshing interface.
+* P17 must consume P16 mesh APIs rather than creating its own competing mesher.
+* Persisted mesh settings must reproduce meshing intent.
+* Generated mesh is not authoritative persisted engineering state.
+* Determinism must be measured rather than assumed.
+* Every solver-facing mesh must pass validation before use.
 
 ---
 
-# P15 Sequence
+# P16 Scope Boundaries
+
+## In scope
 
 ```text
-P15-ARCH-001      Materials / engineering-data architecture
-P15-UNITS-001     Engineering quantity and property contracts
-P15-MAT-001       Material definition / identity / library
-P15-MECH-001      Mechanical properties
-P15-THERM-001     Thermal / physical properties
-P15-ASSIGN-001    Material assignment to model objects
-P15-MASS-001      Mass / centre of mass / inertia
-P15-CUSTOM-001    Custom materials / controlled overrides
-P15-PROV-001      Property provenance / completeness / validation
-P15-CMD-001       Commands / undo / redo
-P15-PERSIST-001   Save / load material intent
-P15-CLI-001       Headless engineering-data workflows
-P15-REFMOD-001    Engineering-data reference models
-P15-QUAL-001      Full P15 qualification
+3D engineering mesh foundation
+surface triangle representation
+linear tetrahedral volume mesh foundation
+global mesh sizing
+local sizing foundation
+geometry → mesh boundary mapping
+mesh quality metrics
+mesh inspection / visualisation
+mesh regeneration
+headless CLI workflows
+solver-ready mesh API
 ```
 
-Do not implement a milestone until its predecessor passes.
+## Initially out of scope unless P16-ARCH explicitly proves otherwise
+
+```text
+quadratic tetrahedra
+hexahedral meshing
+prism / boundary-layer meshing
+adaptive FEA error refinement
+CFD boundary-layer meshes
+moving mesh
+overset mesh
+GPU meshing
+distributed meshing
+assembly contact meshing
+automatic contact detection
+structural solver
+thermal solver
+CFD solver
+```
+
+These can be added later without corrupting the P16 foundation.
 
 ---
 
-# DONE — P15-ARCH-001
+# P16 Sequence
 
-## Materials / Engineering Data Architecture
+```text
+P16-ARCH-001       Meshing architecture / backend decision
+P16-DATA-001       Mesh data model / identity / units
+P16-GEOM-001       Geometry preparation / validity / regeneration boundary
+P16-SURF-001       Engineering surface mesh
+P16-VOL-001        3D tetrahedral volume mesh
+P16-SIZE-001       Global / local sizing controls
+P16-QUALITY-001    Mesh-quality metrics / validation
+P16-MAP-001        Geometry ↔ mesh correspondence / regions
+P16-VIZ-001        Mesh visualisation / inspection
+P16-CMD-001        Commands / undo / redo
+P16-PERSIST-001    Meshing-intent persistence
+P16-CLI-001        Headless meshing workflows
+P16-REFMOD-001     Meshing reference models
+P16-QUAL-001       Full P16 qualification
+```
 
-**PASS 2026-09-26.** Evidence:
-[docs/verification/P15-ARCH-001/](docs/verification/P15-ARCH-001/README.md).
-Decisions: ADR-025, ADR-026, ADR-027, ADR-028.
+Do not start a milestone until its predecessor passes.
 
-**The audit found no material concept at all** — every "material" in the tree is
-geometric prose or `drawing::MaterialRemoval`, the ISO 1302 surface-finish
-symbol. So nothing was reused and nothing was duplicated. The unit system, by
-contrast, is strong: `Quantity<Dimension>` gives compile-time dimensional safety
-and `Density` already exists.
+---
 
-**The central decision, and it went against the repository's own nearest
-precedent.** `HoleClearance` stores an ISO 273 *designation* and resolves the
-diameter at regeneration — "its diameter comes from ISO 273, so `diameter` stays
-zero". A material library was deliberately NOT modelled that way: a clearance
-diameter is a modelling input chosen by designation, whereas a density is a
-measurement that gets *corrected*, so a library revision would silently change
-the mass and stresses of every saved document naming it. Instead a document OWNS
-its material values, imported from the library with the key and revision kept as
-provenance. Consequence: **no library lookup happens at load or solve time, so a
-missing or updated library cannot change what a saved document computes**, and
-the "unresolved library material" failure mode is designed out rather than
-guarded.
+# P16-ARCH-001
 
-**Two answers were forced by the repository rather than chosen:**
+## Meshing Architecture
 
-* Object names are identifiers, unique per document — `"Aluminium 6061-T6"` is
-  not a legal object name. So a material carries an identifier-style object name
-  AND a free-text designation; identity is the `MaterialId` and is neither.
-* A configuration overrides free *parameter values* only and "never changes the
-  document's canonical state". A `MaterialId` is not a parameter value, so
-  configuration cannot select a material variant. Material assignment is
-  configuration-independent.
-
-**One test was added**, `DocumentFile_NoDerivedGeometryIsPersisted`: ADR-026
-rests on derived geometry never being persisted, which was true in practice and
-guarded by nothing. It is not vacuous (the fixture is asserted to have derived
-geometry, and the file to contain intent) and not over-strict (none of its ten
-forbidden words appears in any of the 32 committed models).
-
-**One adversarial finding, unresolved by design and recorded:** nothing
-mechanical stops a future solver defining its own `kSteelE` constant — that is a
-legal downward dependency on `core/units`. ADR-028 prohibits it in words; the
-milestone that creates the first analysis module inherits the obligation to guard
-it.
-
-**Deferred, with mechanisms named:** per-body material (a body's persistent
-handle is its producing feature's `ObjectId`); occurrence override (needs the
-external references ADR-003 defers, so an assembly uses each part's own
-material); electrical properties (`Dimension` has no electric current base
-dimension — a base change, not an alias).
-
-
-* [x] Audit existing material/property concepts in the repository
-* [x] Audit existing unit/quantity infrastructure
-* [x] Define material ownership model
-* [x] Define stable material identity
-* [x] Define material-definition vs material-assignment boundary
-* [x] Define canonical vs derived engineering data
-* [x] Define missing-property semantics
-* [x] Define material-library vs document-local material semantics
-* [x] Define downstream-consumer contract
-* [x] Define engineering-property provenance model
-* [x] Define configuration behaviour
-* [x] Define persistence boundary
-* [x] Define module/layer ownership
-* [x] Record architecture decisions as ADRs
-* [x] Architecture adversarial review PASS
-* [x] Evidence recorded
+* [ ] Audit all existing tessellation / triangulation code
+* [ ] Audit OCCT meshing capabilities already used by BetterCAD
+* [ ] Audit any existing volume-mesh capability
+* [ ] Audit current geometry-validity APIs
+* [ ] Audit stable geometry-reference infrastructure
+* [ ] Audit configuration/regeneration interaction
+* [ ] Define surface-mesh vs display-tessellation boundary
+* [ ] Define volume-mesh backend interface
+* [ ] Decide initial supported element types
+* [ ] Define canonical meshing controls
+* [ ] Define canonical vs derived mesh state
+* [ ] Define mesh ownership
+* [ ] Define mesh lifetime / invalidation
+* [ ] Define NodeId semantics
+* [ ] Define ElementId semantics
+* [ ] Define geometry-selection mapping strategy
+* [ ] Define material-region boundary
+* [ ] Define transformed-body behaviour
+* [ ] Define configuration behaviour
+* [ ] Define persistence boundary
+* [ ] Define downstream P17 consumer contract
+* [ ] Define module / dependency layering
+* [ ] Record required ADRs
+* [ ] Architecture adversarial review PASS
+* [ ] Evidence recorded
 
 ### Questions that must be answered
 
 ```text
-Does a material live globally, in a document, or both?
+Does BetterCAD already contain an engineering mesher?
 
-What gives a material stable identity?
+Is existing triangulation display-only or engineering-grade?
 
-Can two materials have the same display name?
+What generates a closed surface mesh?
 
-Can a library material be edited directly?
+What generates a volume mesh?
 
-Does assigning a material copy it or reference it?
+Which element types are supported first?
 
-What happens if a referenced library material changes?
+Are Tet4 elements sufficient for P17 foundation?
 
-How is "property unknown" represented?
+Who owns generated mesh state?
 
-How are temperature-dependent properties represented later?
+When exactly is a mesh invalidated?
 
-Can one part/body have more than one material?
+Can a mesh survive geometry regeneration?
 
-Can an assembly occurrence override the part material?
+Are NodeId and ElementId stable across remesh?
 
-Does configuration affect material assignment?
+How are boundary facets associated with CAD geometry?
 
-What exactly is persisted?
+Can selections survive remesh?
 
-Which quantities are canonical?
+How are holes and internal voids represented?
 
-Which quantities are derived?
+What happens with multiple disconnected solids?
 
-How do P17/P18/P19 consume the data without duplicating it?
+What happens with transformed geometry?
+
+What happens under a configuration change?
+
+How does P17 request a mesh?
+
+What is persisted?
+
+What is recomputed?
+
+What backend-specific state is forbidden from leaking into core APIs?
 ```
 
 ### Gate
 
 ```text
-material architecture coherent
-+ stable identity defined
-+ canonical/derived boundary clear
-+ missing-data semantics explicit
-+ assignment semantics clear
-+ unit contract clear
-+ provenance contract clear
-+ downstream solver boundary clear
-+ persistence boundary clear
+meshing architecture coherent
++ backend boundary explicit
++ CAD/mesh authority boundary explicit
++ mesh lifetime defined
++ identity semantics defined
++ geometry mapping contract defined
++ P17 consumer boundary defined
++ persistence boundary defined
++ configuration safety defined
 + ADRs complete
-```
-
-**MET.** Every required question answered, none TBD. 24 claims checked against
-the tree; no ADR rests on infrastructure that does not exist.
-
-```text
-P15-ARCH-001 → [x]
-Next → P15-UNITS-001. The evidence tells it exactly what to add: energy, power,
-       specific heat, thermal conductivity, thermal expansion and dynamic
-       viscosity as aliases over the existing base dimensions — and a separate
-       decision on whether electric current becomes a sixth base dimension.
 ```
 
 ### Evidence
 
 ```text
-docs/verification/P15-ARCH-001/
+docs/verification/P16-ARCH-001/
 ```
 
 ### Stop condition
 
-Do not start `P15-UNITS-001` until every architecture item above passes.
+Do not start `P16-DATA-001` until every architecture question is answered.
 
 ---
 
-# P15-UNITS-001
+# P16-DATA-001
 
-## Engineering Quantity / Property Contracts
+## Mesh Data Model / Identity / Units
 
-**NOT COMPLETE — 19 of 20 items pass; the determinism gate is BLOCKED by the
-machine.** Evidence:
-[docs/verification/P15-UNITS-001/](docs/verification/P15-UNITS-001/README.md).
+* [ ] Define `NodeId`
+* [ ] Define `ElementId`
+* [ ] Define optional `RegionId` / boundary-set identity if required
+* [ ] Define node coordinate representation
+* [ ] Coordinates use strong length quantities or qualified canonical SI boundary
+* [ ] Define triangle connectivity
+* [ ] Define tetrahedral connectivity
+* [ ] Define element type enum
+* [ ] Define element orientation convention
+* [ ] Define mesh-local identity semantics
+* [ ] Define deterministic node enumeration
+* [ ] Define deterministic element enumeration
+* [ ] Define immutable/read-only solver-facing mesh view
+* [ ] Reject invalid connectivity
+* [ ] Reject repeated node references where invalid
+* [ ] Reject nonexistent node references
+* [ ] Reject degenerate elements
+* [ ] Validate positive tetrahedron volume
+* [ ] Validate finite coordinates
+* [ ] Define mesh bounds
+* [ ] Define adjacency foundation only if required
+* [ ] Compile-time/API safety tests
+* [ ] Determinism PASS
+* [ ] Adversarial review PASS
+* [ ] Regression PASS
+* [ ] Evidence recorded
 
-The work itself is done and verified: 7 dimensions, 7 quantity types, 13 units,
-26 literals, a distinct `PoissonRatio`, 27 new tests, **2286/2286 in all three
-presets** with 0 warnings and fresh binaries, and **release determinism clean at
-11430 = 2286 x 5**. Density and pressure already existed and were reused
-untouched; `UnitScale` was already an exact rational, so the exactness
-requirement was met by audit rather than by code.
+### Core tetrahedron relationship
 
-**One production defect found and fixed:** quantity formatting printed `-0`,
-against a convention the project states in five other places — `PdfWriter.cpp`
-says it follows "the same rules as everywhere else". Fixed in `Format.hpp`
-through the existing formatter, so no second formatting rule exists.
-
-**One pre-existing test was stale:** `catalog.size() == 37` became 50. It failed
-the first regression across all five stages. Worth noting that it is a test this
-milestone did not write — a repeat filter narrowed to the new tests would have
-missed it, which is the argument for keeping it total.
-
-**THE BLOCKER IS THE ONEDRIVE BUILD LOCATION, and it has stopped being an
-annoyance.** It failed a determinism repeat once per milestone through P14; here
-it failed twice in a row on an unchanged tree, in two different tests, with zero
-test-logic assertions failing. OneDrive's accumulated CPU is **99,264 s (27.6 h),
-726 MB resident** — five times the 20,633 s recorded in P14-REFMOD-001. The
-decision below is no longer deferrable: it is now preventing a gate from passing.
-
-
-* [x] Audit existing strong quantity types
-* [x] Reuse existing unit infrastructure where possible
-* [x] Define density quantity
-* [x] Define stress / pressure quantity
-* [x] Define elastic modulus quantity
-* [x] Define thermal conductivity quantity
-* [x] Define specific heat capacity quantity
-* [x] Define thermal-expansion quantity
-* [x] Define viscosity quantities only if required by P15 scope
-* [x] Define dimensionless Poisson ratio
-* [x] Reject incompatible dimensions at compile time where practical
-* [x] Define canonical internal units
-* [x] Define display-unit conversion
-* [x] Validate numeric round trips
-* [x] Validate NaN / infinity rejection
-* [x] Compile-fail unit-safety tests
-* [x] Determinism PASS — from a build tree OUTSIDE the synchronised folder
-      (preset `debug-ext`): **11500 = 2300 x 5, counted, exit 0**. Release had
-      already passed at 11430 = 2286 x 5.
-      The two DEBUG failures are NOT retracted -- `cli.refmod.build` then
-      `cli.drawing.batch`, each passing twice and failing on an atomic replace
-      of a file it had just written, 0 test-logic assertions in either. This is
-      not a third attempt at the same thing: the cause was removed
-      (INFRA-QT-DEPLOY-001), not the dice re-rolled. The evidence that it was
-      the right cause is 48 consecutive runs of the four file-replacing CLI
-      tests with 0 failures, not this single pass.
-      NOT CLAIMED: that the gate passes from inside the synchronised folder, or
-      that the replace fault is fixed. It is AVOIDED, for build output only --
-      see the carried `FileIo` item
-* [x] Adversarial review PASS
-* [x] Regression PASS
-* [x] Evidence recorded
-
-### Core relationships
-
-Density:
+For nodes:
 
 ```text
-ρ = m / V
+x1, x2, x3, x4
 ```
 
-Elastic behaviour foundation:
+signed volume:
 
 ```text
-σ = E ε
+Vtet =
+1/6 det(
+    x2 - x1,
+    x3 - x1,
+    x4 - x1
+)
 ```
 
-Shear modulus derivation where appropriate:
+The orientation convention must make the valid sign explicit.
+
+### Identity rule
 
 ```text
-G = E / [2(1 + ν)]
+CAD ObjectId
+!=
+NodeId
+!=
+ElementId
 ```
 
-Bulk modulus derivation where appropriate:
+And:
 
 ```text
-K = E / [3(1 - 2ν)]
+remesh
+→ NodeId / ElementId may change
 ```
 
-Thermal expansion:
-
-```text
-ε_thermal = α ΔT
-```
-
-Thermal energy foundation:
-
-```text
-Q = m cp ΔT
-```
+No downstream solver may treat mesh-local IDs as permanent CAD identities.
 
 ### Gate
 
 ```text
-engineering dimensions correct
-+ incompatible quantities cannot mix silently
-+ conversions correct
-+ invalid numeric state rejected
+mesh representation strong
++ connectivity valid
++ element orientation explicit
++ invalid elements rejected
++ mesh identity separated from CAD identity
 + deterministic representation
 ```
 
 ---
 
-# P15-MAT-001
+# P16-GEOM-001
 
-## Material Definition / Identity / Library
+## Geometry Preparation / Validity / Regeneration Boundary
 
-Evidence:
-[docs/verification/P15-MAT-001/](docs/verification/P15-MAT-001/README.md).
+* [ ] Mesh only authoritative regenerated geometry
+* [ ] Reject missing body
+* [ ] Reject failed regeneration
+* [ ] Reject blocked regeneration
+* [ ] Reject stale derived geometry
+* [ ] Validate closed-solid requirement
+* [ ] Validate shell/open-solid failure behaviour
+* [ ] Validate multiple-solid behaviour
+* [ ] Validate internal holes / voids
+* [ ] Validate transformed geometry
+* [ ] Define tolerance source
+* [ ] Audit shape-healing requirements
+* [ ] Do not silently heal engineering geometry unless contract declares it
+* [ ] Detect zero-volume / degenerate bodies
+* [ ] Define configuration behaviour
+* [ ] Protect against known configuration-regeneration defect
+* [ ] Geometry fingerprint / revision foundation for mesh invalidation
+* [ ] Adversarial review PASS
+* [ ] Regression PASS
+* [ ] Evidence recorded
 
-Built to ADR-025: a material is a **document object**, so it gets an ObjectId, a
-name, a revision, the dependency graph and undo from machinery that already
-exists; the built-in library is **reference data** in `core/materials/` on the
-`core/standards/` pattern, with no ObjectId, named by a structured key. Using a
-library entry **imports** it -- the values become the document's own and the key
-is kept as provenance -- so no library lookup happens at load or solve time and a
-library change cannot alter what a saved document says.
-
-A material carries TWO names, because the repository forces it: the object name
-is an identifier (letters, digits, `_`), unique per document; the designation is
-free engineering text that may duplicate. Neither is identity.
-
-* [x] Implement stable `MaterialId` — `Id<MaterialIdTag>`, widens to ObjectId
-      (ADR-025); the document's one allocator, monotonic, never reused
-* [x] Implement material definition object — `features::Material`, a
-      DocumentObject with `kTypeName == "material"`
-* [x] Implement material name — the existing identifier rule, unchanged
-* [x] Implement optional designation / standard — free text, may duplicate
-* [x] Implement category/family foundation — free text, extensible; a family no
-      built-in entry uses is accepted
-* [x] Implement material description / notes
-* [x] Implement built-in material-library foundation — `core/materials/`, the
-      `core/standards/` pattern, 4 METADATA-ONLY entries
-* [x] Implement document-local material definitions
-* [x] Allow duplicate display names with distinct identity — duplicate
-      DESIGNATIONS; object names stay unique, which is the document's rule
-* [x] Prevent identity from depending on name — rename and every metadata edit
-      tested separately
-* [x] Define immutable vs editable library behaviour — entries are `constexpr`,
-      so there is nothing to mutate; editing means editing the document's copy
-* [x] Validate material lookup — by ID, and by designation returning ALL matches
-* [x] Validate deletion rules — plus the invariant a later assignment needs: a
-      deleted ID never rebinds, tested against an otherwise identical material
-* [x] Validate duplicate/collision behaviour — a taken ID and a taken name are
-      both rejected, nothing overwritten; a rejected create consumes no ID
-* [x] Determinism PASS — 11765 = 2353 x 5 in release-ext AND in debug-ext, 0
-      failures, from the external build tree, no controlled rerun
-* [x] Adversarial review PASS — 4 findings, 4 fixed; one was found by the
-      debug-shared gate and voided a complete qualification run
-* [x] Regression PASS — 3 presets from an external build root, 2353/2353 each,
-      0 warnings, fresh binaries, 0 stages failed
-* [x] Evidence recorded
-
-### Example
-
-As built. Note that "Aluminium 6061-T6" is the DESIGNATION, not the object name:
-an object name is an identifier and may not contain a space or a hyphen, which is
-the reason a material has two names (ADR-025).
+### Critical stale-geometry rule
 
 ```text
-MaterialId:   42
-Object name:  Al6061T6
-Designation:  Aluminium 6061-T6
-Standard:     ASTM B221
-Family:       Aluminium Alloy
-Origin:       bettercad/al-6061-t6 rev 1   (provenance of an import)
+configuration effective value changes
++
+geometry not regenerated
+→ meshing must REFUSE
 ```
-
-Identity must remain:
-
-```text
-MaterialId = 42
-```
-
-after any of:
-
-```text
-object name  → renamed
-designation  → reworded
-standard, family, notes, origin → edited
-```
-
-### Gate
-
-```text
-material identity stable
-+ names are not identity
-+ library/document ownership correct
-+ lookup deterministic
-+ no silent replacement
-```
-
----
-
-# P15-MECH-001
-
-## Mechanical Properties
-
-Evidence:
-[docs/verification/P15-MECH-001/](docs/verification/P15-MECH-001/README.md).
-
-This milestone finally spells ADR-027's property type, which did not exist: the
-ADR deferred it to P15-UNITS-001, and P15-UNITS-001 added the quantities and left
-the property type alone. `MaterialProperty<Value>` carries Known / Unknown /
-Derived, returns an optional and offers no conversion to its value, so an Unknown
-property cannot become a number somewhere else.
-
-**There is no slot for a supplied shear or bulk modulus, by ADR-027**, which says
-"the schema does not offer a slot for a canonical G, so the conflict ... cannot be
-represented". So G and K are derived on request and never stored, and there is no
-supplied-versus-derived reconciliation to get wrong. `-1 < nu < 0.5` lives here
-because `PoissonRatio` says so by name.
-
-* [x] Density available to mechanical consumers — the qualified `Density`, reused;
-      reachable through `requireDensity()`, separate from the elastic constants
-* [x] Young's modulus — `ElasticModulus`, validated > 0 and finite when Known
-* [x] Poisson ratio — the semantic type, with both range ends EXCLUDED because
-      each one makes a derivation divide by zero
-* [x] Shear modulus foundation — `derivedShearModulus()`, never stored
-* [x] Bulk modulus foundation — `derivedBulkModulus()`, never stored
-* [x] Yield strength
-* [x] Ultimate tensile strength
-* [x] Ultimate compressive strength foundation — independent of the tensile one
-* [x] Shear strength foundation — never estimated from yield or ultimate
-* [x] Elongation foundation — a FRACTION, 0.12 is 12 %; no upper limit
-* [x] Hardness metadata foundation — value AND scale; 60 HRC != 60 HRB; no
-      conversion between scales
-* [x] Isotropic-material model — E and nu are the coherent pair; completeness is
-      per consumer, not one ambiguous `isComplete()`
-* [x] Validate property ranges — every problem reported, not the first
-* [x] Validate optional / unknown properties — Unknown is valid and is never zero
-* [x] Validate derived modulus relationships — G bit-identical to the
-      hand-computed 80.76923076923077 GPa; K 1 ULP below 175 GPa, explained
-* [x] Adversarial review PASS — 23 questions, 3 findings, 3 fixed. One was a
-      compile-fail case that had been failing on a missing include rather than on
-      the immutability it claimed to test
-* [x] Regression PASS — 3 presets from an external build root, 2400/2400 each,
-      0 warnings, fresh binaries, 0 stages failed, first attempt
-* [x] Evidence recorded
-
-### Validation examples
-
-```text
-E > 0
-
--1 < ν < 0.5
-for ordinary stable isotropic elasticity
-
-G = E / [2(1 + ν)]
-
-K = E / [3(1 - 2ν)]
-```
-
-Do not automatically invent `G` or `K` unless the contract explicitly declares them derived.
-
-### Gate
-
-```text
-mechanical properties unit-safe
-+ invalid states rejected
-+ unknown != zero
-+ isotropic relationships coherent
-+ downstream FEA-ready
-```
-
----
-
-# P15-THERM-001
-
-## Physical / Thermal Properties
-
-Evidence:
-[docs/verification/P15-THERM-001/](docs/verification/P15-THERM-001/README.md).
-
-Built on the SAME `MaterialProperty<Value>` P15-MECH-001 qualified, not a second
-property system. **Density is NOT in `ThermalProperties`**: a material has one
-density, it lives with the mechanical properties, and thermal consumers read that
-one — two authoritative values for one physical quantity is the defect that
-arrangement prevents.
-
-**An absolute temperature and a temperature interval are the same type, and this
-is recorded rather than papered over.** The relationships need `dT` to be
-dimensionally a temperature, so they cannot be separated; the distinction lives in
-validation (a melting point must be above absolute zero, an interval of -20 K is
-ordinary cooling). There is one temperature unit, scale 1:1, so there is no
-Celsius offset to get wrong, and a test fails the day one is added.
-
-Electrical resistivity needed an architecture decision and has one: **ADR-029** —
-a scoped strong type, not a sixth base dimension, because ADR-027 had recorded
-that adding an electric-current exponent is a base-dimension change and nothing in
-P15 consumes the arithmetic. It carries NO dimensional checking, which the ADR
-states at the definition.
-
-* [x] Density — the qualified `Density`, reused; ONE store, read by both consumer
-      paths, proved four ways
-* [x] Thermal conductivity — `> 0`, finite; the Fourier-law shape proved by
-      `static_assert`, without a solver
-* [x] Specific heat capacity — `> 0`, finite; SPECIFIC, so a total heat capacity
-      (J/K) is a compile error
-* [x] Coefficient of thermal expansion — finite ONLY; **negative accepted**,
-      because real materials contract when heated
-* [x] Melting-temperature foundation — an ABSOLUTE temperature, above absolute
-      zero; never inferred from a family, a strength or a name
-* [x] Electrical resistivity foundation — ADR-029; a named type, never an untyped
-      double, never confused with mass density
-* [x] Temperature metadata foundation — a reference temperature on the one
-      property wrapper, validated as the absolute temperature it is, and it does
-      NOT turn a constant into k(T)
-* [x] Define constant-property representation — one value, used as-is
-* [x] Define future temperature-dependent property contract — `Constant` /
-      `Table` / `AnalyticLaw` named; six table invariants fixed; three
-      out-of-range behaviours named with NO default, so nothing extrapolates
-      silently
-* [x] Validate physical ranges — every problem reported, not the first
-* [x] Validate missing-property behaviour — Unknown is valid, is never zero, and
-      needs no placeholder
-* [x] Adversarial review PASS — 23 questions, 2 findings, 2 fixed. The first was
-      this change breaking four of P15-MECH-001's compile-fail assertions
-* [x] Regression PASS — 3 presets from an external build root, 2446/2446 each,
-      0 warnings, fresh binaries, 0 stages failed, first attempt
-* [x] Evidence recorded
-
-### Relationships
-
-Thermal expansion:
-
-```text
-ΔL = α L0 ΔT
-```
-
-Thermal energy:
-
-```text
-Q = m cp ΔT
-```
-
-Fourier-law consumer contract:
-
-```text
-q = -k ∇T
-```
-
-P15 stores `k`.
-
-P18 implements the thermal PDE.
-
-### Gate
-
-```text
-thermal properties coherent
-+ quantities unit-safe
-+ constant-property model valid
-+ future variable-property path preserved
-+ no solver logic introduced
-```
-
----
-
-# P15-ASSIGN-001
-
-## Material Assignment
-
-Evidence:
-[docs/verification/P15-ASSIGN-001/](docs/verification/P15-ASSIGN-001/README.md).
-
-ADR-026 decided the target by AUDIT, and the answer is that there is nothing
-conventional to hang a material on: **there is no Part document object and no body
-document object.** A part IS a document; a body is a regeneration result whose only
-handle is its producing feature's ObjectId. So the assignment is one optional
-`MaterialId` on the Document, exactly as `ConfigurationId` is document-level state.
-No inheritance, so the effective material IS the direct assignment.
-
-Four states, never collapsed: **Unassigned / Resolved / Unresolved / Invalid.**
-Resolution is by identity alone -- no name, no designation, no position, no
-similarity -- and a deleted material leaves the assignment Unresolved with its
-intent intact, never repointed at a same-named or content-identical rival.
-
-* [x] Define valid material-assignment targets — by audit; neither Part nor Body
-      exists as an object, so the DOCUMENT owns it
-* [x] Assign material to part/body according to architecture — document-level
-      intent, one optional MaterialId (ADR-026)
-* [x] Stable material reference — identity only; no name, index, position or
-      pointer is stored, so a rename cannot move an assignment
-* [x] Query effective material — `effectiveMaterial()`, the name ADR-027 promised
-      a solver; plus `materialAssignment()` for the state and
-      `requireEffectiveMaterial()` for a diagnostic
-* [x] Replace material assignment explicitly — identity decides even when the two
-      materials share a designation
-* [x] Remove material assignment explicitly — and removing is not deleting
-* [x] Missing material becomes unresolved — never erased, never defaulted
-* [x] Deleted material never silently rebinds — proved against a same-designation
-      rival AND a content-identical one
-* [x] Validate duplicate-name materials — three coexist; renaming one moves no
-      assignment
-* [x] Validate model regeneration — and a FAILED regeneration keeps the intent
-* [x] Define assembly occurrence behaviour — no override; `ComponentDefinition`
-      has no material field, proved by two compile-fail cases
-* [x] Define configuration behaviour — a configuration cannot change the material.
-      **It also does not rebuild the geometry it changes — a pre-existing defect
-      found here, carried below, and a precondition for P15-MASS-001**
-* [x] Validate undo-ready mutation semantics — canonical state is one optional
-      MaterialId; A→B→A restores exactly and allocates no ID
-* [x] Adversarial review PASS — 22 questions, 3 findings: 1 pre-existing product
-      defect (not fixed, out of scope) and 2 test defects
-* [x] Regression PASS — 3 presets from an external build root, 2479/2479 each,
-      0 warnings, fresh binaries, 0 stages failed, first attempt
-* [x] Evidence recorded
-
-### Critical no-rebinding fixture
-
-```text
-Material A:
-"Steel"
-
-Material B:
-"Steel"
-
-Part → Material A
-
-delete Material A
-
-Required:
-Part material = unresolved
 
 Forbidden:
-Part silently adopts Material B
+
+```text
+stale geometry
+→ new mesh reported as current
 ```
+
+Once the carried regeneration defect is fixed, replace refusal tests with tests
+proving the mesh follows configuration geometry.
 
 ### Gate
 
 ```text
-assignment stable
-+ identity-based
-+ no name-based rebinding
-+ missing material explicit
-+ configuration semantics correct
+mesh source is authoritative geometry
++ stale geometry rejected
++ invalid/open volume rejected
++ transformations correct
++ holes/voids preserved
++ configuration behaviour safe
 ```
 
 ---
 
-# P15-MASS-001
+# P16-SURF-001
 
-## Mass Properties
+## Engineering Surface Mesh
 
-**PASS 2026-09-27.** Evidence:
-[docs/verification/P15-MASS-001/](../docs/verification/P15-MASS-001/README.md).
+* [ ] Generate engineering surface triangulation
+* [ ] Keep separate from viewer/display tessellation
+* [ ] Triangle node connectivity valid
+* [ ] Triangle orientation defined
+* [ ] Surface normals consistent
+* [ ] Closed-solid surface is watertight
+* [ ] No duplicate zero-area triangles
+* [ ] Reject degenerate triangles
+* [ ] Validate curved surfaces
+* [ ] Validate planar faces
+* [ ] Validate cylindrical faces
+* [ ] Validate holes
+* [ ] Validate sharp edges
+* [ ] Validate transformed bodies
+* [ ] Validate disconnected solids if in scope
+* [ ] Surface area consistency check
+* [ ] Boundary-edge count validation
+* [ ] Determinism PASS
+* [ ] Adversarial review PASS
+* [ ] Regression PASS
+* [ ] Evidence recorded
 
-* [x] Compute solid volume from authoritative geometry — the regenerator's body for
-      the named feature, refused when it is absent, stale or encloses no volume
-* [x] Compute material density lookup — composes requireEffectiveMaterial and
-      requireDensity; no material logic is duplicated here
-* [x] Compute mass — density x volume, dimensionally checked, never zero for an
-      unanswered question
-* [x] Compute centre of mass — the geometric centroid for a uniform part (ADR-026)
-* [x] Compute moments of inertia — about the centroid AND about the origin
-* [x] Compute products of inertia — the inertia TENSOR convention (negated
-      products), **measured on a three-box staircase, not assumed**: no symmetric
-      body can distinguish the two conventions
-* [x] Define reference coordinate frame — the document's own axes; each tensor
-      carries the point it is taken about, so a tensor cannot be paired with the
-      wrong reference point
-* [x] Validate transformed bodies — integrating the moved body and moving the
-      integrated tensor agree to 1e-12, on a rotation about a non-principal axis
-      through a non-centroidal point at 37 degrees; plus reflection and a pure
-      translation
-* [x] Validate assemblies where in scope — **scope decision recorded: aggregation is
-      OUT of scope, and NOT implemented.** ADR-026 forces every part in one document
-      to share one material, so an assembly mass would be ρ x ΣV — useless for the
-      case that matters. See KNOWN LIMITATIONS 2 for the reason and what it needs
-* [x] Missing density fails explicitly — three material faults with three diagnostics,
-      asserted pairwise distinct in one test
-* [x] Invalid/open geometry fails explicitly where required — empty body, no volume,
-      no body, failed or blocked regeneration, swept-curve face
-* [x] Derived values never persisted as authority — 0 hits in src/io/, and four
-      compile-fail cases prove there is no setter to persist from
-* [x] Independently validate analytical solids — every expected value a hand-evaluated
-      closed form; box, cylinder, sphere, fused staircase, two-solid body, drilled
-      plate, rotation, translation; plus four reference-free invariants
-* [x] Determinism PASS — bit-for-bit over ten runs at the tightened tolerance on five
-      shapes including a torus; 12655 = 2531 x 5 in each of two presets
-* [x] Adversarial review PASS — 24 questions, 4 findings: 3 defects in this
-      milestone's own work (a wrong API contract, an untrue comment, a test that
-      proved nothing), 1 recorded limitation
-* [x] Regression PASS — 3 presets from an external build root, 2531/2531 each,
-      0 warnings, fresh binaries, 0 stages failed, first attempt
-* [x] Evidence recorded
-
-### Core equations
+### Required distinction
 
 ```text
-m = ρV
+Display triangulation
+→ visualisation
+
+Engineering surface mesh
+→ numerical meshing / solver boundary
 ```
 
-Centre of mass:
-
-```text
-r_cm = (1/m) ∫ r dm
-```
-
-Inertia tensor:
-
-```text
-I = ∫ (||r||² 1 - r rᵀ) dm
-```
-
-### Independent fixtures
-
-Cube:
-
-```text
-V = abc
-m = ρabc
-```
-
-Centroid:
-
-```text
-(a/2, b/2, c/2)
-```
-
-Cuboid centroidal inertia:
-
-```text
-Ixx = m(b² + c²)/12
-Iyy = m(a² + c²)/12
-Izz = m(a² + b²)/12
-```
-
-Cylinder:
-
-```text
-V = πr²h
-
-Iaxis = 1/2 mr²
-
-Itransverse = m(3r² + h²)/12
-```
-
-Do not use the production mass-property routine to generate expected test values.
+One may reuse backend machinery.
+They must not silently share quality assumptions or authority.
 
 ### Gate
 
 ```text
-volume correct
-+ density resolution correct
-+ mass correct
-+ centroid correct
-+ inertia correct
-+ units correct
-+ independent analytical validation PASS
+surface triangles valid
++ orientation coherent
++ watertight where required
++ engineering/display roles separated
++ holes and curved faces represented
++ deterministic generation
 ```
 
 ---
 
-# P15-CUSTOM-001
+# P16-VOL-001
 
-## Custom Materials / Controlled Overrides
+## 3D Volume Meshing
 
-**PASS 2026-09-28.** Evidence:
-[docs/verification/P15-CUSTOM-001/](../docs/verification/P15-CUSTOM-001/README.md).
-
-**Mostly a proof that the architecture already got this right.** Three functions were
-missing and were added; everything else was already built or already structurally
-impossible to get wrong, and the work there was turning "impossible" into 12
-compile-fail cases and an audit.
-
-* [x] Create user-defined material — `createMaterial` already existed; a material
-      with nothing but a name is valid and every property starts Unknown, not zero
-* [x] Clone library material into editable document material — `importLibraryMaterial`
-      already existed and already copies (ADR-025). **NEW: `cloneMaterial`**, the
-      document-to-document clone, same-document and cross-document
-* [x] Edit custom property — the three existing setters, tested for non-clobbering:
-      a mechanical edit cannot reach the thermal half, and an unrelated edit does not
-      disturb a hardness scale or a reference temperature
-* [x] Remove custom property — **NEW: `removeMaterialProperty`**. Known → Unknown,
-      never zero; refuses the derived kinds, saying to remove E or nu instead
-* [x] Preserve original library material — the entries are `static constexpr` with no
-      setters, so it is structural. Verified field by field, by key, by `operator==`
-      and by table order after every local edit, plus 6 compile-fail cases
-* [x] Explicit property override semantics — **the model is a SNAPSHOT and ADR-025
-      chose it.** No base reference, no override map, no `Inherited` state; 4
-      compile-fail cases prove the absence rather than asserting it
-* [x] No accidental partial override — an edit touches exactly one property, compared
-      member by member afterwards including the whole other half
-* [x] Validate duplicate names — **the brief's premise does not hold here: names are
-      UNIQUE.** A duplicate name is refused, consumes no ID and changes nothing; the
-      duplicate that is legitimate is the DESIGNATION, and a three-way import +
-      two-custom fixture shows all three resolve by identity with no fallback
-* [x] Validate identity preservation — rename, metadata, mechanical, thermal and
-      removal all leave the MaterialId untouched; a deleted ID never rebinds to an
-      identical replacement
-* [x] Validate copy/clone semantics — `Material::clone()` keeps the ID for undo/redo,
-      which is why it is not the clone route: `addObject` refuses an ID-bearing object
-      and `insertObject` refuses a duplicate ID, neither merging nor overwriting
-* [x] Adversarial review PASS — 26 attacks, 5 findings: 2 defects in this milestone's
-      own work, 3 places where the brief's premises do not hold. **No production
-      defect survived.** Two gates mutation-tested
-* [x] Regression PASS — 3 presets from an external build root, 2589/2589 each,
-      0 warnings, fresh binaries, 0 stages failed, first attempt
-* [x] Evidence recorded
-
-**Known limitation, recorded not hidden:** a clone of an imported material carries the
-same `origin` as the import, so the two are indistinguishable. Both hold values that
-came from that library entry, so neither is lying — but "which document material did
-this come from" needs a provenance model that separates a library source from a
-document one, which is P15-PROV-001's subject. A `clonedFrom` field can be added
-beside `origin` without migrating anything.
-
-### Rule
+Initial required element:
 
 ```text
-library material
-≠
-document-local editable clone
+Tet4 — 4-node linear tetrahedron
 ```
 
-Editing a local material must never mutate the built-in library definition.
+unless P16-ARCH proves another minimum is more appropriate.
 
----
+* [ ] Generate tetrahedral mesh from valid closed solid
+* [ ] Every element references valid nodes
+* [ ] Every tetrahedron has positive qualified volume
+* [ ] No inverted tetrahedra
+* [ ] No zero-volume tetrahedra
+* [ ] No duplicate tetrahedra
+* [ ] Boundary conforms to engineering surface
+* [ ] Internal voids remain void
+* [ ] Mesh occupies solid volume
+* [ ] Nodes remain inside/on valid geometry within tolerance
+* [ ] Element volumes approximately recover CAD volume
+* [ ] Validate disconnected solid policy
+* [ ] Validate transformed body
+* [ ] Validate small feature behaviour
+* [ ] Backend failures propagate explicitly
+* [ ] Determinism measured
+* [ ] Adversarial review PASS
+* [ ] Regression PASS
+* [ ] Evidence recorded
 
-# P15-PROV-001
-
-## Provenance / Completeness / Validation
-
-**PASS 2026-09-28.** Evidence:
-[docs/verification/P15-PROV-001/](../docs/verification/P15-PROV-001/README.md).
-Qualified on the SECOND attempt; the first failed on `debug-shared-ext build` and is
-recorded in
-[qualification-void/](../docs/verification/P15-PROV-001/qualification-void/README.md).
-
-* [x] Define property source metadata — `PropertyProvenance`: kind, source, standard,
-      reference, revision, date, condition, notes. Per property, with a material-level
-      default that a property's own record overrides (ADR-028's two-level model, and
-      the only inheritance in the material model — values never inherit)
-* [x] Define optional standard/reference field — both, plus `condition` for temper.
-      Every field optional; sparse metadata is the normal case and never a reason to
-      refuse data
-* [x] Define source revision/date foundation — `revision` is metadata and is NEVER
-      parsed, ordered or compared for precedence. `materials::Date` is the
-      repository's FIRST date type: validated including leap years, ISO 8601 from
-      three integers so it cannot pick up a locale, a zone or a clock
-* [x] Define measured vs reference-data distinction if needed — needed, and resolved.
-      `isMeasured` / `isReferenceData` predicates, and NOT inferred from whether a
-      source string exists
-* [x] Define completeness report — `CompletenessReport` with `Ready | Incomplete |
-      Invalid`, present/missing lists by semantic kind, and structured
-      `MaterialIssue`s. **No single completeness flag**: 4 compile-fail cases prove a
-      report is not a bool and neither it nor a Material has `isComplete()`
-* [x] Query properties required by a consumer — `requiredProperties(ConsumerKind)`,
-      seven consumers, asserted BY VALUE. **Cross-checked against the six `require*()`
-      functions consumers actually call**, by removing each required property in turn
-      so the table cannot drift from them
-* [x] Report missing FEA properties — exact: E known, ν unknown → missing
-      `{PoissonRatio}`. `FeaLinearStatic` requires NO density; the gravity variant is
-      where a mass enters
-* [x] Report missing thermal properties — exact: density + cp known, k unknown →
-      missing `{ThermalConductivity}`. `ThermalSteady` requires a conductivity and
-      NOTHING else
-* [x] Never fabricate unavailable properties — full tree audit: 12 `value_or` hits,
-      exactly one in the material path and it is a change-flag; `valueOr` on
-      `MaterialProperty` does not exist. 0 hits for `getOrDefault`, `defaultMaterial`,
-      "generic steel", "default density", "default nu". **Mutation-tested**
-* [x] Validate inconsistent data — `inconsistencies()` WRAPS
-      `mechanicalInconsistencies()` rather than restating its rules. A supplied G that
-      disagrees with E and ν cannot arise: ADR-027 gave it no slot, so it was designed
-      out rather than validated
-* [x] Validate provenance persistence — **BLOCKED on P15-PERSIST-001**, recorded as
-      the brief instructs. No material of any kind can be saved, so no round trip
-      exists. Verified instead: provenance is canonical state, a cited material is NOT
-      content-equal to an uncited one, and the save gap stays LOUD with a full record
-      present
-* [x] Adversarial review PASS — 30 attacks, 5 findings: 1 test defect found by
-      mutation testing, 1 implementation defect, 3 recorded conflicts. No production
-      defect survived
-* [x] Regression PASS — 3 presets from an external build root, 2639/2639 each,
-      0 warnings, fresh binaries, 0 stages failed on the second attempt
-* [x] Evidence recorded
-
-**Known limitations, recorded not hidden:** provenance is not persisted (1);
-`FeaYieldStrength` has no runtime counterpart to cross-check against, because no yield
-consumer exists (2); a clone of an import is still indistinguishable from a direct
-import (3); a future CFD consumer will need a dynamic-viscosity property, which no
-material carries — the unit exists, the slot does not (4); provenance and value are
-separable, so a hand-built definition can still create an orphan citation and will be
-told about it rather than prevented (5); `revision` is not ordered, so BetterCAD cannot
-say a citation is older than the library's (6); traceability completeness is reported
-but required by no consumer (7).
-
-### Example
+### Volume conservation check
 
 ```text
-Material:
-Aluminium 6061-T6
-
-density:
-  value: ...
-  source: ...
-
-Young's modulus:
-  value: ...
-  source: ...
-
-thermal conductivity:
-  UNKNOWN
+Vmesh = Σ Ve
 ```
 
-Consumer:
+Compare with authoritative CAD volume:
 
 ```text
-P18 Thermal
-→ requires density + cp + k
-
-Result:
-cannot run
-missing thermal conductivity
+error =
+|Vmesh - Vcad| / Vcad
 ```
 
-Not:
-
-```text
-assume some default k
-```
+The acceptable tolerance must be justified by the meshing representation.
+Do not simply choose a loose tolerance to pass.
 
 ### Gate
 
 ```text
-property provenance preserved
-+ missing-data report correct
-+ consumer requirements explicit
-+ no fabricated engineering data
+volume mesh generated
++ all elements valid
++ no inverted elements
++ holes/voids preserved
++ CAD volume agreement validated
++ backend failures explicit
++ solver-ready connectivity
 ```
 
 ---
 
-# P15-CMD-001
+# P16-SIZE-001
+
+## Global / Local Mesh Sizing
+
+* [ ] Define global target element size
+* [ ] Define minimum size if architecture requires it
+* [ ] Define maximum size if architecture requires it
+* [ ] Define growth-rate control if backend supports it
+* [ ] Define curvature control if backend supports it
+* [ ] Define local geometry sizing foundation
+* [ ] Local sizing references stable geometry selections
+* [ ] Validate conflicting sizing controls
+* [ ] Define precedence rules
+* [ ] Reject non-positive sizes
+* [ ] Reject NaN / infinity
+* [ ] Unit-safe length inputs
+* [ ] Validate global coarse/fine behaviour
+* [ ] Validate local refinement behaviour
+* [ ] Validate controls survive geometry regeneration where reference remains valid
+* [ ] Invalid selection becomes explicit unresolved control
+* [ ] No hidden backend default changes engineering meaning
+* [ ] Determinism PASS
+* [ ] Adversarial review PASS
+* [ ] Regression PASS
+* [ ] Evidence recorded
+
+### Required behaviour
+
+For the same geometry:
+
+```text
+smaller target size
+→ generally more nodes/elements
+```
+
+But do not qualify solely by element count.
+Also validate geometry conformity and quality.
+
+### Gate
+
+```text
+sizing intent explicit
++ invalid sizing rejected
++ precedence deterministic
++ local refinement targets correct region
++ no hidden semantic backend defaults
+```
+
+---
+
+# P16-QUALITY-001
+
+## Mesh Quality Metrics / Validation
+
+Define metric conventions before using thresholds.
+
+At minimum audit/support:
+
+```text
+tetrahedron signed volume / Jacobian
+edge-length statistics
+aspect-ratio metric
+radius-ratio or equivalent shape metric
+minimum dihedral angle where backend/data supports it
+maximum dihedral angle where useful
+surface triangle quality
+```
+
+* [ ] Define every metric mathematically
+* [ ] Define good/bad direction for each metric
+* [ ] Define valid numeric range where applicable
+* [ ] Compute mesh-level min/max/mean where useful
+* [ ] Identify worst element
+* [ ] Reject inverted elements
+* [ ] Reject zero-volume elements
+* [ ] Structured quality report
+* [ ] Threshold policy explicit
+* [ ] Warning vs failure semantics explicit
+* [ ] Validate regular tetrahedron analytically
+* [ ] Validate intentionally poor tetrahedron
+* [ ] Validate sliver element
+* [ ] Validate distorted surface triangle
+* [ ] Quality report deterministic
+* [ ] No automatic "repair" without explicit contract
+* [ ] Adversarial review PASS
+* [ ] Regression PASS
+* [ ] Evidence recorded
+
+### Independent reference
+
+A regular tetrahedron must be used to validate metric implementations wherever
+closed-form values exist.
+
+Do not use the production quality function to create expected values.
+
+### Gate
+
+```text
+quality metrics mathematically defined
++ inverted/degenerate detection PASS
++ poor elements detectable
++ structured report PASS
++ threshold semantics explicit
++ independent analytical checks PASS
+```
+
+---
+
+# P16-MAP-001
+
+## Geometry ↔ Mesh Correspondence / Regions
+
+* [ ] Map boundary triangles to originating CAD face where possible
+* [ ] Define mapping to edges where required
+* [ ] Define mapping to volume region
+* [ ] Preserve current stable-reference semantics
+* [ ] Do not pretend P21 Semantic Topology already exists
+* [ ] Define behaviour after remesh
+* [ ] Define behaviour after topology-changing model edit
+* [ ] Define unresolved geometry reference state
+* [ ] Define named boundary-set foundation
+* [ ] Define node-set / element-set foundation if required by P17
+* [ ] Selection → mesh-facet query
+* [ ] Mesh facet → source geometry query
+* [ ] Validate cylindrical face mapping
+* [ ] Validate planar face mapping
+* [ ] Validate hole-wall mapping
+* [ ] Validate transformed geometry
+* [ ] Validate local sizing uses same mapping contract
+* [ ] Adversarial review PASS
+* [ ] Regression PASS
+* [ ] Evidence recorded
+
+### Critical boundary
+
+P16 may guarantee:
+
+```text
+current regenerated geometry reference
+↔ current generated mesh entities
+```
+
+P16 must NOT claim:
+
+```text
+topology-changing future model edit
+→ semantic face identity preserved forever
+```
+
+That broader problem belongs to P21 Semantic Topology unless existing BetterCAD
+stable-reference infrastructure already solves it.
+
+### Gate
+
+```text
+geometry/mesh correspondence explicit
++ current boundary mapping correct
++ unresolved references explicit
++ solver boundary sets possible
++ no false permanent-topology guarantee
+```
+
+---
+
+# P16-VIZ-001
+
+## Mesh Visualisation / Inspection
+
+* [ ] Display surface mesh
+* [ ] Display volume-mesh boundary
+* [ ] Optional interior element inspection
+* [ ] Wireframe / edge display
+* [ ] Node inspection
+* [ ] Element inspection
+* [ ] Element ID display
+* [ ] Quality inspection
+* [ ] Worst-element navigation
+* [ ] Boundary-region highlighting
+* [ ] CAD ↔ mesh selection linkage
+* [ ] Mesh visibility toggle
+* [ ] Clear stale-mesh visual state
+* [ ] Distinguish current vs invalidated mesh
+* [ ] Do not duplicate canonical mesh data in GUI
+* [ ] Rendering does not mutate mesh
+* [ ] Regression PASS
+* [ ] Evidence recorded
+
+### Gate
+
+```text
+mesh inspectable
++ stale mesh obvious
++ quality defects inspectable
++ CAD/mesh mapping visible
++ GUI remains adapter over core mesh state
+```
+
+---
+
+# P16-CMD-001
 
 ## Commands / Undo / Redo
 
-**PASS 2026-09-28.** Evidence:
-[docs/verification/P15-CMD-001/](../docs/verification/P15-CMD-001/README.md).
+Canonical history contains:
 
-**Most of this already existed, and a probe established that before any code was
-written.** A material IS a DocumentObject, so AddObjectCommand and DeleteObjectCommand
-already created and deleted one correctly -- ID restored on redo, whole object restored
-on undo. Two of the five commands wrap them, as CreateFeatureCommand<F> already does.
+```text
+meshing controls
+local sizing intent
+boundary/region intent
+```
 
-* [x] Create material command — `CreateMaterialCommand`, wrapping AddObjectCommand and
-      adding a typed `materialId()`
-* [x] Delete material command — `DeleteMaterialCommand`, wrapping DeleteObjectCommand
-      and adding the one precondition the generic command cannot express: that the ID
-      really names a material. Without it, a sketch's ID would be deleted and reported
-      as success
-* [x] Edit material command — `EditMaterialCommand`, whole-definition before/after
-      snapshots, which is what makes Unknown-restoration and value-with-provenance
-      exact rather than nearly exact
-* [x] Assign material command — `AssignMaterialCommand`; refuses a material that is not
-      in this document, so Unresolved stays a state the world produces
-* [x] Remove assignment command — `RemoveMaterialAssignmentCommand`; removing an absent
-      assignment succeeds and moves no revision, following
-      SetActiveConfigurationCommand rather than inventing a convention
-* [x] Undo restores exact engineering intent — whole-`MaterialDefinition` and
-      whole-document comparisons, not field spot checks. Unknown comes back Unknown
-      with `value()` empty, never zero; a value and its citation are restored together
-* [x] Redo restores exact post-command state — S1 == S3 as whole definitions, over five
-      undo/redo cycles so a drift appearing on the second cycle would be caught
-* [x] Failed commands atomic — 12 distinct failures across the five commands, each
-      leaving the count, the revision and the undo depth unmoved; `undo()`/`redo()`
-      before `execute()` refused on all five
-* [x] Redo invalidation correct — a new command clears redo; a FAILED command does not,
-      which is the opposite error and has its own test
-* [x] Material identity preserved — identical before execute, after execute, after undo
-      and after redo. **Mutation-tested:** making redo allocate a new ID fails 5 test
-      cases
-* [x] No derived mass state in history — every member of all five commands is an ID, a
-      name, a MaterialDefinition or a wrapped generic command. Grepping for the derived
-      vocabulary finds 6 hits, ALL in the comment asserting the absence, and 0
-      elsewhere; 5 compile-fail cases prove there is no setter. Mass, derived G/K and
-      completeness are each shown to recompute from restored intent
-* [x] Determinism PASS — the same sequence from the same fixed DocumentId gives
-      `equivalent()` documents; enumeration order survives five undo/redo cycles; no
-      clock, hash or unordered container is reachable
-* [x] Adversarial review PASS — 28 attacks, 3 findings, **no production defect**. Two
-      automatic-FAIL gates mutation-tested rather than only asserted
-* [x] Regression PASS — 3 presets from an external build root, 2685/2685 each,
-      0 warnings, fresh binaries, 0 stages failed, first attempt
-* [x] Evidence recorded
+Canonical history does NOT contain generated mesh as authority.
 
-**Answered by the architecture, not by new code:** the canonical assignment is one
-optional MaterialId on the Document (ADR-026), so there is no direct/effective hierarchy
-for a remove to reach through, no occurrence override to guard (`ComponentDefinition`
-has no material field) and no configuration-local material intent to create by accident.
-Recorded as answered-by-construction rather than tested into existence.
+* [ ] Create meshing-settings command
+* [ ] Edit global sizing command
+* [ ] Add local sizing command
+* [ ] Edit local sizing command
+* [ ] Remove local sizing command
+* [ ] Boundary/region command where required
+* [ ] Undo restores exact meshing intent
+* [ ] Redo restores exact post-command intent
+* [ ] Failed commands atomic
+* [ ] Redo invalidation correct
+* [ ] Geometry references preserved
+* [ ] Generated mesh invalidated after control change
+* [ ] Generated mesh recomputed after undo/redo when requested
+* [ ] No node/element arrays stored as canonical command history
+* [ ] Determinism PASS
+* [ ] Adversarial review PASS
+* [ ] Regression PASS
+* [ ] Evidence recorded
 
-**Known limitations, recorded not hidden:** command history is not persisted (1); no
-compound transaction, because BetterCAD has no compound-command infrastructure — "create
-and assign" is two commands (2); the low-level domain mutation APIs remain public and
-bypass history, deliberately and as in every other module (3); `EditMaterialCommand`
-takes a whole definition, so a caller changing one property reads-modifies-writes (4);
-rename goes through the existing `RenameObjectCommand` (5); the brief's item-42 sequence
-is unreachable here because an assignment's target is the document, not an object (6).
+### Critical rule
+
+```text
+edit mesh size
+→ undo history stores size intent
+
+NOT
+
+edit mesh size
+→ undo history stores 100,000 generated tetrahedra
+```
 
 ### Gate
 
 ```text
-commands mutate canonical material intent
+commands mutate canonical meshing intent
 + undo exact
 + redo exact
 + failed mutations atomic
-+ derived engineering results excluded
++ generated mesh excluded as authority
 ```
 
 ---
 
-# P15-PERSIST-001
+# P16-PERSIST-001
 
-## Materials / Engineering Data Persistence
+## Meshing Intent Persistence
 
-**PASS 2026-09-29.** Evidence:
-[docs/verification/P15-PERSIST-001/](../docs/verification/P15-PERSIST-001/README.md),
-including [schema-sample.json](../docs/verification/P15-PERSIST-001/schema-sample.json),
-a real serialized document.
+Persist:
 
-**The document format already had a policy for this.** "Adding a kind, an object type or
-an optional field needs no bump" — so the schema version stays 2. Backward and forward
-compatibility, atomic load, duplicate-ID rejection and allocator restoration were all
-already defined; the work was the material's mapping and proving they hold for it.
+```text
+global meshing settings
+local sizing controls
+geometry references
+named region/boundary intent
+backend-independent options that are canonical
+```
 
-* [x] Define canonical persisted schema — `{id, type: "material", name, data}` like every
-      other object kind, plus a `material_assignment` root section beside
-      `configurations`. ABSENT MEANS UNKNOWN; SI always; enums as strings; the file's keys
-      are NOT the diagnostic strings, because `toString` returns "Young's modulus" and a
-      reword would break every saved document
-* [x] Persist material identity — `restoreObject` keeps the ID, the mechanism every
-      object kind already used
-* [x] Persist material metadata — designation, standard, family, notes, written only when
-      non-empty
-* [x] Persist mechanical properties — nine stored kinds; hardness carries its SCALE, all
-      four round-tripped individually. **No key exists for a shear or bulk modulus**
-      (ADR-027), so a file cannot claim one
-* [x] Persist thermal/physical properties — five kinds; absolute temperatures stay
-      absolute; electrical resistivity returns to its own type (ADR-029), never a bare
-      double. **Density is NOT here** — one canonical density, and a test counts exactly
-      one `"density"` key in the whole file
-* [x] Persist material assignments — one optional MaterialId, BY ID. Resolved correctly
-      when two materials share a designation; preserved through a rename
-* [x] Persist provenance — all eight source kinds; ISO 8601 dates; records keyed by
-      PROPERTY NAME, not by position, so no reordering can reattach a citation
-* [x] Persist custom materials — an ordinary document material, so it persists as one.
-      Tested with an import and its clone holding DIFFERENT densities, values the library
-      does not have at all
-* [x] Do not persist derived mass properties as authority — a document with a COMPUTED
-      mass is serialized and checked against 24 forbidden substrings. Mass, derived G/K
-      and completeness each recompute after load, and the mass then follows a density
-      edit and a geometry edit
-* [x] Validate stable references — an unresolved assignment survives TWO round trips
-      still naming the deleted material, never the same-designation one.
-      **Mutation-tested:** a loader that rebound fails 3 test cases
-* [x] Validate malformed-file rejection — 19 cases, each differing from a valid file in
-      one thing, plus non-finite tokens and a `1e400` overflow. Validation is NOT
-      duplicated: the file goes through `Material::create`, the same entry point a caller
-      uses
-* [x] Validate deterministic serialization — two saves byte-identical;
-      save→load→save byte-identical, which says the loader adds no normalisation of its
-      own. Materials in ascending ID order, provenance in enumeration order, built in
-      reverse so the order cannot come from insertion
-* [x] Validate backward compatibility — no version bump needed; a pre-P15 document loads
-      with zero materials and **no fabricated default**; version 1 still loads; version 3
-      is refused by name. **An existing golden-text test asserts the exact bytes of a
-      document with no materials and passes unchanged**
-* [x] Validate full round trip — a rich document (import, fully populated, duplicate
-      designation, from-scratch, incomplete, clone, unresolved assignment, geometry)
-      round-tripped TWICE with `equivalent(A,B)`, `equivalent(B,C)`, `equivalent(A,C)`
-* [x] Adversarial review PASS — 30 attacks, 5 findings: 3 defects of mine, all fixed, and
-      2 decisions recorded. Three automatic-FAIL gates mutation-tested
-* [x] Regression PASS — 3 presets from an external build root, 2716/2716 each,
-      0 warnings, fresh binaries, 0 stages failed, first attempt
-* [x] Evidence recorded
+Do NOT persist generated mesh as engineering authority.
 
-**The worst defect was not the one the compiler or the linker found.** My first patch put
-the assignment writer INSIDE the configurations guard: it compiled, linked, and would have
-passed any test whose document happened to have a configuration, while silently dropping
-the assignment from every document without one. Found by reading the patched region,
-because no fixture reached the branch. A patch applied by script into a large function
-needs its region read back.
+* [ ] Define persisted meshing schema
+* [ ] Persist global controls
+* [ ] Persist local controls
+* [ ] Persist geometry-selection references
+* [ ] Persist boundary/region definitions
+* [ ] Preserve units
+* [ ] Preserve unresolved references explicitly
+* [ ] Exclude generated nodes/elements as authority
+* [ ] Validate malformed files
+* [ ] Validate invalid sizes rejected
+* [ ] Validate duplicate control IDs if IDs exist
+* [ ] Validate deterministic serialization
+* [ ] Validate backward compatibility
+* [ ] Validate full round trip
+* [ ] Regenerate mesh after load
+* [ ] Compare regenerated mesh semantics
+* [ ] Adversarial review PASS
+* [ ] Regression PASS
+* [ ] Evidence recorded
 
-**Five tests were replaced, not deleted.** P15-MAT through P15-PROV each added a test
-requiring the save to fail LOUDLY so the gap could not become silent data loss. Those
-guarded exactly what this milestone closes, so each was replaced by the round-trip test
-that now proves it.
+### Derived-state rule
 
-**Known limitations, recorded not hidden:** command history is not persisted, and nothing
-here added it (1); a temperature-dependent property law has no persisted form because it
-has no in-memory form, and a file containing one is REJECTED rather than misread as a
-constant (2); an assignment holds a bare MaterialId, valid because one document is the
-only reference domain that exists — cross-document references will need a domain field
-(3); byte determinism is asserted within a preset, not compared across presets (4); no
-locale is exercised, the audit being by construction (5); the library's own data is still
-absent, so an imported material persists with metadata and no values (6).
+```text
+save
+→ meshing intent
 
-**Legacy material-like fields, audited and deliberately NOT migrated:** the only
-pre-existing use in a document is a free-text metadata property — `{"material":
-"6061-T6"}` in `document.metadata.properties` — and `drawing::MaterialRemoval`, the ISO
-1302 surface-finish symbol. A note a user typed is not an engineering material with
-identity and provenance, and promoting one into a MaterialId would fabricate exactly the
-data ADR-028 forbids.
+load
+→ regenerate mesh from current geometry + intent
+```
+
+If an optional mesh cache is ever introduced:
+
+```text
+cache must carry geometry/settings fingerprint
++ cache is disposable
++ cache is never canonical
+```
+
+Do not introduce that cache unless measured performance justifies it.
 
 ### Gate
 
 ```text
-material intent preserved
-+ assignments preserved
+meshing intent preserved
++ geometry references preserved
 + units preserved
-+ provenance preserved
-+ derived state excluded
++ derived mesh excluded as authority
 + malformed files rejected
 + deterministic serialization PASS
 ```
 
 ---
 
-# P15-CLI-001
+# P16-CLI-001
 
-## Headless Engineering Data Workflows
+## Headless Meshing Workflows
 
-**PASS 2026-09-29.** Evidence:
-[docs/verification/P15-CLI-001/](../docs/verification/P15-CLI-001/README.md), with
-[AUDIT.md](../docs/verification/P15-CLI-001/AUDIT.md) — the CLI architecture audit that
-did most of this milestone's design work — and
-[ADVERSARIAL_REVIEW.md](../docs/verification/P15-CLI-001/ADVERSARIAL_REVIEW.md).
+At minimum provide commands equivalent to:
 
-**The CLI already had every mechanism this needed.** The command table, the edit spine,
-the batch driver, the selector grammar, the argument parser and the process-test harness
-were all in place; three new files use them. `parseSiValue` was ALREADY
-dimension-generic, so a density is parsed by the code that parses a length. Joining a
-third table to `EditRegistry.cpp` made the material verbs batch verbs with nothing added
-to the batch driver.
+```text
+mesh settings
+mesh generate
+mesh info
+mesh quality
+mesh validate
+mesh boundaries
+```
 
-* [x] CLI list materials — ascending ID, from the document's ordered map, with the one
-      it is assigned marked. Zero materials is a normal document, not a fault
-* [x] CLI inspect material — metadata and all 16 properties; `--provenance` adds the
-      citation in force per property, and prints `none` where a value is uncited rather
-      than inventing a source
-* [x] CLI create custom material — `CreateMaterialCommand`, plus `material-clone` for
-      the P15-CUSTOM-001 story. Proved across a process boundary: the clone edited to
-      275 MPa, the source still 235 MPa
-* [x] CLI edit custom material — through `setMaterialDefinition` /
-      `setMaterialMechanical` / `setMaterialThermal` and `removeMaterialProperty`, NOT
-      through a rebuilt definition. Each of those carries a coupling the CLI must not
-      restate: removal takes the provenance with the value, and a changed value clears
-      the citation that described the old number
-* [x] CLI assign material — BY ID whatever the selector was, so an assignment survives
-      a rename. Tested
-* [x] CLI remove assignment — the only way one goes away; deleting the material leaves
-      it Unresolved with the intent intact, and that is tested too
-* [x] CLI query effective material — ONE resolution, the core's. Unassigned is exit 0
-      because it is a resting state; a dangling assignment is exit 1 because it is a
-      broken document
-* [x] CLI query engineering properties — every printed number compared for EXACT
-      equality with the core's double, which the shortest-round-trip output format makes
-      possible. UNKNOWN never 0; derived G and K labelled `(derived)`; **neither can be
-      set**, and removing that guard does not even compile
-* [x] CLI mass-properties command — `features::partMassProperties` and nothing else. No
-      OCCT header anywhere in the CLI. Validated against CLOSED-FORM geometry twice:
-      a box in process, and the committed plate
-      (`V = 100x50x20 - pi x 10^2 x 20`, `m = 0.7356769953386403 kg`) through the real
-      executable. **NO whole-part total** — summing inertia tensors needs a derivation
-      core does not offer, and writing it here would be a CLI-only engineering result
-* [x] CLI completeness/requirements report — per consumer or in general, every issue
-      carrying a machine code built from core's own `IssueKind`
-* [x] Structured diagnostics — 11 command codes plus core's four issue kinds, every one
-      naming something core already distinguishes. Ambiguity was given its own
-      `ErrorCode` so that "two materials share this designation" and "that object is a
-      sketch" cannot arrive indistinguishable. `EditFailure` gained a code field, so the
-      edits report the same code a report would for the same situation
-* [x] Correct process exit codes — 0 answered and good, 1 answered and not ready, 1
-      could not answer with stdout EMPTY, 2 unreadable command line. `Incomplete` is
-      exit 1, following `validate`: a gate is only usable from a script if it reaches
-      the exit status. Recorded, with the second per-body shape `mass-properties` needs
-* [x] Validate CLI/core equivalence — a DIFFERENTIAL harness: eleven operations each
-      done twice, once through the core API in memory and once through the CLI and a
-      file, required to agree. Exact equality, not a tolerance — a tolerance would have
-      hidden a unit error
-* [x] End-to-end scripted workflow PASS — one process mutates and saves, five later
-      processes read the file back; nothing shared but bytes on disk. The binary is
-      `$<TARGET_FILE:bettercad_cli>`, so there is no PATH to be ambiguous and no stale
-      copy that could answer
-* [x] Adversarial review PASS — 30 attacks, 5 findings, all resolved, 1 limitation
-      recorded. Six mutations, all caught
-* [x] Regression PASS — 3 presets from an external build root, 2764/2764 each,
-      0 warnings, fresh binaries, 0 stages failed
-* [x] Evidence recorded
+Use actual BetterCAD CLI naming conventions.
 
-**Four true coverage gaps, found by the review and closed.** A designation must match
-exactly and never be folded; a non-ASCII designation must survive command line → file →
-selector; deleting the assigned material must make the mass a refusal; and — the one
-that mattered — **the configuration-override refusal must hold through the CLI**. That
-guard exists because a configuration override does not currently rebuild geometry, and a
-guard that only holds when called in-process is not a guard.
-
-**One defect found while implementing, before any test existed to find it.** Parsing a
-dimensionless property against a dimensionless unit would have taken `0.3 rad` for a
-Poisson ratio and turned `0.3 deg` into 0.0052, because the only dimensionless entries
-in the unit catalog are angles.
-
-**The persisted property keys are the machine vocabulary, and were deliberately NOT
-shared by lifting the table into core.** `kMechanicalKeys` has 9 entries for 11 kinds
-*because* ADR-027 stores no derived modulus, so no key exists and a file cannot claim
-one; the CLI needs all 11 because it prints them. A shared table would have had to
-contain `shear_modulus` and would have turned that structural guarantee into a
-convention. Two tables, and a test that asserts they agree **through the real writer**.
-
-**A gate in the harness was weaker than its comment claimed, and is now measured.** A
-repeat filter matching no tests is refused because the base test preset sets
-`noTestsAction: error` — true through a preset, and NOT true of a bare `ctest -R`, which
-exits 0. `qualify.cmd` now also counts the selected tests itself and records the number,
-so the determinism gate does not depend on one field of `CMakePresets.json` and the
-evidence states how many tests it ran.
+* [ ] CLI inspect meshing settings
+* [ ] CLI set global mesh size
+* [ ] CLI add local sizing
+* [ ] CLI remove local sizing
+* [ ] CLI generate mesh
+* [ ] CLI query node count
+* [ ] CLI query element count
+* [ ] CLI query element types
+* [ ] CLI query volume
+* [ ] CLI quality report
+* [ ] CLI validation report
+* [ ] CLI geometry/boundary mapping query
+* [ ] Structured diagnostics
+* [ ] Correct process exit codes
+* [ ] Missing/stale geometry failures propagate
+* [ ] Invalid controls fail non-zero
+* [ ] CLI/core mesh equivalence
+* [ ] Multi-process save/load/remesh workflow
+* [ ] No CLI-only meshing semantics
+* [ ] Fresh-binary proof
+* [ ] Zero-match test-filter protection
+* [ ] End-to-end scripted workflow PASS
+* [ ] Adversarial review PASS
+* [ ] Regression PASS
+* [ ] Evidence recorded
 
 ### Gate
 
 ```text
-CLI uses core APIs
-+ engineering values identical to core
+CLI uses core meshing APIs
++ core/CLI mesh results equivalent
++ quality results equivalent
 + diagnostics structured
 + failures propagate
-+ no CLI-only material semantics
++ no CLI-only meshing implementation
 ```
 
 ---
 
-# P15-REFMOD-001
+# P16-REFMOD-001
 
-## Materials / Engineering Data Reference Models
+## Meshing Reference Models
 
-**PASS 2026-09-29.** Evidence:
-[docs/verification/P15-REFMOD-001/](../docs/verification/P15-REFMOD-001/README.md), with
-[AUDIT.md](../docs/verification/P15-REFMOD-001/AUDIT.md),
-[ANALYTICAL_TABLES.md](../docs/verification/P15-REFMOD-001/ANALYTICAL_TABLES.md) and
-[ADVERSARIAL_REVIEW.md](../docs/verification/P15-REFMOD-001/ADVERSARIAL_REVIEW.md).
-
-**A REFERENCE MODEL FOUND A PRODUCTION DEFECT.** RM-MAT-03 showed `mass-properties` listing
-consumed intermediate bodies as results: on the tube it reported the UN-BORED blank
-(3392920 mm^3, 26.46 kg) before the real answer, while `validate` said there was one result
-body. Root cause: the command enumerated every feature that had a body. Fixed generally with
-`features::resultFeatures()`, the product's own answer, already used by `validate` and
-`export-step`; pinned by a mutation-verified regression test. Twelve qualified milestones and
-2764 tests had not found it, because no earlier fixture combined a feature chain with a mass.
-
-**The infrastructure was already there.** Three reference suites existed, and P13 and P14 had
-each added their own header, catalog and runner loop, so P15 is the fourth built the same way.
-`tests/reference/Analytic.hpp` already did Green's theorem, Pappus and Gauss-Legendre in a
-header with NO BetterCAD include; it gained closed-form inertia.
-
-* [x] Define reference suite — eight documents under six IDs, each proving something
-      different: three distinct principal moments, a transformed body, a void, equal volumes
-      at different densities, library independence, and three completeness states. Every
-      value is labelled TEST / SYNTHETIC ENGINEERING DATA in the material's own notes, and a
-      test asserts that text reaches the CLI
-* [x] Aluminium block — RM-MAT-01, 200x300x500 mm at 2700: V = 3e7 mm^3 and m = 81 kg
-      EXACTLY, centroid exactly (100,150,250) mm, and Ixx/Iyy/Izz = 2.295/1.9575/0.8775
-      kg m^2, three distinct numbers so a transposed inertia axis cannot hide
-* [x] Steel shaft — RM-MAT-02, and the TRANSFORMED case: turned 90 deg about X, which moves
-      the axis moment from zz to yy, with Ixz = -0.735 kg m^2 about the origin. `I' = R I R^T`
-      and the parallel-axis shift are both computed independently
-* [x] Hollow steel tube — RM-MAT-03. The void is 44% of the bounding cylinder, so a
-      bounding-cylinder volume would be out by 80%. This is the model that found the defect
-* [x] Multi-material assembly — RM-MAT-04, as a document SET, because one document holds one
-      material and `ComponentDefinition` has no material field. Two parts of EQUAL volume at
-      2700 and 7800, so a mass following the geometry would answer the same twice. Aggregate
-      mass/CM/inertia are **N/A** on three verified architectural absences, not PASS
-* [x] Custom-material part — RM-MAT-05. A genuine library import, given values, then cloned;
-      editing the clone leaves the source untouched, and a third material shares the
-      designation
-* [x] Incomplete-property material — RM-MAT-06. Ready for a mass, Incomplete for a stiffness
-      (no nu) and for transient conduction (no k), plus a no-density subcase that refuses and
-      an inconsistent subcase that is INVALID. No nu = 0.3, no default k
-* [x] Configuration/assignment case — **PASS, not N/A.** ADR-026 makes assignment
-      configuration-independent, so none -> Tall -> Plain -> Tall -> none leaves the identity,
-      the assignment and the designation unchanged. And a configuration that overrides a
-      PARAMETER makes the mass refuse, which is the carried regeneration defect held in place
-* [x] Validate density -> mass — every model, against closed form
-* [x] Validate centroid — every model; exactly (100,150,250) mm on RM-MAT-01
-* [x] Validate inertia — all SIX components of both tensors on seven bodies, centroidal and
-      about the origin
-* [x] Validate mechanical-property lookup — through `requireDensity` and
-      `requireLinearElasticConstants`, the boundaries a solver consumes, not field reads.
-      G and K match closed form and report `isDerived()`
-* [x] Validate thermal-property lookup — `requireThermalConductivity`,
-      `requireTransientConductionProperties`, `requireThermalExpansion`
-* [x] Validate missing-property diagnostics — per consumer, against the requirement matrix
-      read out of the source rather than guessed
-* [x] Validate model-change recomputation — length 400 -> 500 mm re-checked against closed
-      form for the NEW dimension, never against the old answer; and the runner changes a main
-      dimension on all eight models
-* [x] Validate save/load — construct, save, load, revalidate, then RECOMPUTE the mass and
-      compare it to closed form. The three richest models go save/load/save/load and the two
-      files are byte identical. A file contains neither `shear_modulus` nor `bulk_modulus`,
-      and after loading both are still derived
-* [x] Validate CLI — STRUCTURED, not string-matched: each number parsed out and compared for
-      EXACT equality with the core's double, then against closed form. Plus a five-process
-      workflow that inspects, edits, re-weighs, gates and reads back, sharing nothing but
-      bytes on disk
-* [x] Independent analytical validation — every expected value from `analytic::cuboid`,
-      `cylinder`, `hollowCylinder`, `rotated`, `shifted`, in a header whose only includes are
-      `<array> <cmath> <cstddef> <numbers> <vector>`. **Worst relative error anywhere:
-      3.28e-14 against a 1e-10 tolerance**
-* [x] Adversarial review PASS — 30 attacks, 1 production defect, 5 findings in the suite all
-      closed, 6 limitations recorded
-* [x] Three-preset regression PASS — 3 presets from an external build root, 2805/2805 each,
-      0 warnings, fresh binaries, 0 stages failed
-* [x] Evidence recorded
-
-**Three findings about the SUITE, not the product, and one of them recurs.** A test of mine
-took a `SUCCEED` escape hatch and asserted nothing in the branch it took — the same defect
-P15-MASS-001 found in one of its own tests. A three-way duplicate designation was built but
-never queried through the CLI. And my first tolerance model compared an expected product of
-inertia of 1.9e-17 relatively against the kernel's 1.86e-17, which compares noise to noise;
-a component negligible beside the diagonal is now compared absolutely, while the transformed
-Ixz of -0.735 kg m^2 is still compared relatively so the gate is not weakened.
-
-### Reference examples
+Define a committed qualification suite.
 
 ```text
-RM-MAT-01  Aluminium rectangular block
-RM-MAT-02  Steel cylindrical shaft
-RM-MAT-03  Hollow tube
-RM-MAT-04  Multi-part assembly
-RM-MAT-05  Custom engineering material
-RM-MAT-06  Missing-property failure model
+RM-MESH-01   Rectangular block
+RM-MESH-02   Cylinder
+RM-MESH-03   Plate with through-hole
+RM-MESH-04   Hollow tube
+RM-MESH-05   Thin-feature / aspect-ratio challenge
+RM-MESH-06   Transformed asymmetric solid
+RM-MESH-07   Local-refinement model
+RM-MESH-08   Invalid/open geometry failure
 ```
 
-### Gate
+Add configuration case if safe under the final configuration/regeneration
+contract.
+
+* [ ] Define reference suite
+* [ ] Rectangular block
+* [ ] Cylinder
+* [ ] Plate with hole
+* [ ] Hollow tube
+* [ ] Thin-feature case
+* [ ] Transformed body
+* [ ] Local refinement case
+* [ ] Invalid/open geometry case
+* [ ] Validate element orientation
+* [ ] Validate positive element volumes
+* [ ] Validate CAD-volume agreement
+* [ ] Validate boundary conformity
+* [ ] Validate holes/voids
+* [ ] Validate local sizing
+* [ ] Validate quality metrics
+* [ ] Validate geometry ↔ mesh mapping
+* [ ] Validate model-change remeshing
+* [ ] Validate settings-change remeshing
+* [ ] Validate save/load/regenerate
+* [ ] Validate CLI
+* [ ] Independent analytical validation
+* [ ] Determinism PASS
+* [ ] Adversarial review PASS
+* [ ] Three-preset regression PASS
+* [ ] Evidence recorded
+
+### RM-MESH-01 — Rectangular Block
+
+Use simple dimensions with exact analytical volume.
 
 ```text
-realistic material data PASS
-+ assignment PASS
-+ mass properties PASS
-+ engineering properties PASS
-+ missing-data behaviour PASS
-+ persistence PASS
-+ CLI PASS
-+ independent validation PASS
+Vcad = abc
 ```
+
+Validate:
+
+```text
+closed boundary
+positive Tet4 volumes
+Σ Ve ≈ abc
+correct face mapping
+deterministic quality report
+```
+
+Use an asymmetric block so orientation/axes bugs are not hidden.
+
+### RM-MESH-02 — Cylinder
+
+```text
+Vcad = πr²h
+```
+
+Validate:
+
+```text
+curved-boundary conformity
+end-face mapping
+cylindrical-wall mapping
+volume convergence
+```
+
+### RM-MESH-03 — Plate With Through-Hole
+
+Analytical volume:
+
+```text
+Vcad =
+L W t
+-
+πr²t
+```
+
+Required:
+
+```text
+hole remains empty
+hole wall receives boundary facets
+outer plate remains connected
+mesh volume follows analytical solid
+```
+
+Forbidden:
+
+```text
+mesher fills the hole
+```
+
+### RM-MESH-04 — Hollow Tube
+
+```text
+Vcad =
+π(Ro² - Ri²)h
+```
+
+Validate:
+
+```text
+inner void preserved
+inner wall mapped separately from outer wall
+positive element volumes
+```
+
+### RM-MESH-05 — Thin Feature
+
+Use deliberately challenging geometry.
+
+Validate:
+
+```text
+mesher either
+A. produces valid mesh meeting declared quality policy
+
+or
+B. fails explicitly with structured diagnostic
+```
+
+Never accept an inverted/sliver-invalid mesh silently.
+
+### RM-MESH-06 — Transformed Asymmetric Solid
+
+Generate local mesh and transformed-body mesh.
+
+Validate:
+
+```text
+same topology/counts where backend contract supports it
+node positions follow transformation
+element volumes unchanged under rigid transform
+quality invariant under rigid transform
+geometry mapping preserved
+```
+
+### RM-MESH-07 — Local Refinement
+
+Apply local sizing to a known geometric region.
+
+Require:
+
+```text
+target region refined
+non-target region not globally collapsed to fine size
+boundary mapping remains correct
+quality remains acceptable
+```
+
+Do not qualify local refinement only by total element count.
+
+### RM-MESH-08 — Invalid Geometry
+
+Use:
+
+```text
+open shell
+or
+failed/stale body
+```
+
+Required:
+
+```text
+mesh generation FAILS explicitly
+```
+
+Forbidden:
+
+```text
+0-element "successful" mesh
+```
+
+### P16 Reference Validation
+
+For every valid reference model record:
+
+```text
+CAD volume
+mesh volume
+relative volume error
+
+node count
+element count
+minimum element volume
+
+quality minimum
+quality maximum
+worst element ID
+
+boundary facet count
+geometry mapping result
+```
+
+Where meaningful also record:
+
+```text
+coarse mesh
+medium mesh
+fine mesh
+```
+
+and show geometric approximation behaves consistently.
+
+Do not declare convergence from element count alone.
 
 ---
 
-# P15-QUAL-001
+# P16-QUAL-001
 
-## Full P15 Qualification
+## Full P16 Qualification
 
-**PASS 2026-09-30.** Evidence:
-[docs/verification/P15-QUAL-001/](../docs/verification/P15-QUAL-001/README.md) and
-[ADVERSARIAL_REVIEW.md](../docs/verification/P15-QUAL-001/ADVERSARIAL_REVIEW.md).
+* [ ] Freeze final P16 tree
+* [ ] Audit every P16 milestone
+* [ ] Verify all P16 TODO items complete
+* [ ] Verify all P16 ADRs
+* [ ] Audit mesh architecture
+* [ ] Audit CAD/mesh authority boundary
+* [ ] Audit mesh identity
+* [ ] Audit surface mesh
+* [ ] Audit volume mesh
+* [ ] Audit sizing controls
+* [ ] Audit quality metrics
+* [ ] Audit geometry mapping
+* [ ] Audit stale-geometry protection
+* [ ] Audit configuration behaviour
+* [ ] Audit visualisation
+* [ ] Audit undo / redo
+* [ ] Audit persistence
+* [ ] Audit CLI
+* [ ] Re-run all reference models
+* [ ] Independent analytical volume validation
+* [ ] Validate holes / voids
+* [ ] Validate transformed geometry
+* [ ] Validate local refinement
+* [ ] Validate invalid geometry failures
+* [ ] Clean Debug qualification
+* [ ] Clean Release qualification
+* [ ] Clean Debug-shared qualification
+* [ ] Repeated determinism qualification
+* [ ] Cross-preset equivalence
+* [ ] Final adversarial review
+* [ ] Confirm 0 unexpected warnings
+* [ ] Confirm qualified tree == committed tree
+* [ ] Evidence in `docs/verification/P16-QUAL-001/`
+* [ ] Mark P16 qualified
 
-```text
-FINAL_P15_HEAD   8d4b23c8aa058b28e537054c994ee587fe7b9041
-FINAL_P15_TREE   1f6f2951389e7146eade2ec8a0679a64b484be5f
-```
-
-**Qualified against an ALREADY-COMMITTED tree.** The nine cross-milestone gates this
-milestone adds were committed and pushed first, so the harness's recorded candidate is a
-pushed commit and its eight tree IDs are that commit's. Only `docs/` and `TODO.md` changed
-afterwards, and neither is in the fingerprint — checkable, not asserted: the only occurrences
-of `docs/` in the build system are two comments, and `TODO.md` appears in no build file.
-
-* [x] Freeze final P15 tree — committed, pushed, then frozen; tree identical before the
-      first build and after the last test run
-* [x] Audit all P15 milestone evidence — 13 of 13 PASS, all with evidence, regression and
-      adversarial review. P15-ARCH-001 carries no three-preset regression because it produced
-      ADRs and no executable behaviour, which is correct for it
-* [x] Verify all P15 TODO items complete — 216 ticked, 0 open. One marker hit in all of P15's
-      production code: a documented "NOT IMPLEMENTED HERE, and deliberately so" for
-      temperature-dependent laws
-* [x] Verify all new P15 ADRs — five (025-029), each referenced 6 to 30 times in code AND
-      tests, none contradicting final behaviour
-* [x] Audit engineering units — every property strong-typed or scoped; SI internally;
-      **124 compile-fail cases across 9 groups**; no affine conversion anywhere, so an
-      absolute temperature cannot be shifted by a display unit
-* [x] Audit material identity — 9 invariants, including that a rename changes the name and
-      **nothing else**
-* [x] Audit property provenance — per property, two-level, keyed by property NAME so no
-      reordering can reattach a citation. A known value with no citation is not a missing value
-* [x] Validate material assignments — one optional MaterialId, four states never collapsed,
-      resolution in one place and by ID only; configuration-INDEPENDENT
-* [x] Validate no silent material rebinding — **THE FINAL GATE.** Two materials sharing a
-      designation with DIFFERENT densities; delete one, then two round trips, a CLI query and
-      a third same-designation material. Unresolved-A throughout; only undo restores it.
-      **Mutation-tested: making a dangling assignment rebind fails 22 assertions**
-* [x] Validate mechanical properties — and the derived pair against hand-computed G and K for
-      three (E, nu) pairs including nu = 0
-* [x] Validate thermal properties — one canonical density, and the stored alpha, cp and k
-      satisfy dL = alpha L0 dT and Q = m cp dT with arithmetic done by hand
-* [x] Validate mass properties — geometry is the authority; no bounding box, no display mesh,
-      no OCCT outside its adapter
-* [x] Validate analytical reference cases — asymmetric cuboid, cylinder, hollow tube and a
-      transformed body, all from a header whose only includes are the standard library.
-      **Worst relative error 3.28e-14 against a 1e-10 tolerance**
-* [x] Validate missing-property behaviour — E without nu, density and cp without k, and a
-      mass without a density. No nu = 0.3, no default k, never a zero mass
-* [x] Validate custom materials — a library import edited heavily in a clone leaves the source
-      byte-identical, through a file
-* [x] Validate undo / redo — the brief's five-command chain through the production
-      CommandHistory, undone to an exactly equal canonical state and redone to the original,
-      with the SAME MaterialId and the mass **recomputed** rather than restored
-* [x] Validate persistence — save/load/save/load stable and byte-identical; 12 forbidden
-      tokens absent from a file whose derived state had all been computed first; 36 file tests
-      including a 19-case malformed matrix, atomic load, and a pre-P15 document that gains no
-      fabricated material
-* [x] Validate CLI workflows — every mutation through a core API or a command object, 0 direct
-      field writes; each number parsed and compared for EXACT equality with the core's double
-* [x] Clean Debug qualification — 2814/2814, 0 warnings
-* [x] Clean Release qualification — 2814/2814, 0 warnings, run independently
-* [x] Clean Debug-shared qualification — 2814/2814, 0 warnings, run independently
-* [x] Repeated determinism qualification — 14070 = 2814 x 5 in each of two presets, 0 failures
-* [x] Final adversarial review — a FRESH cross-milestone review: 22 attacks, 3 findings,
-      **0 new production defects**
-* [x] Confirm 0 unexpected warnings — 0 warnings in all SIX build and rebuild logs, so the
-      figure is 0 out of 0: nothing is tolerated because nothing was emitted
-* [x] Confirm qualified tree == committed tree — the eight tree IDs recorded before the first
-      build, after the last test run, and in the commit are the same eight
-* [x] Evidence in docs/verification/P15-QUAL-001/
-* [x] Mark P15 qualified
-
-**36582 test executions, 0 failures.** Canonical output is byte-identical across Debug,
-Release and Debug-shared: the reference-model numerics to 17 digits, the CLI's structured
-output, and the saved `.bcad` bytes of four models. No Release value was accepted as
-different because of floating point.
-
-**What this gate found.** No new production defects, and three findings worth more than a
-clean sheet. The one suspicious `value_or` in all of P15's production code is neither a
-fabricated value nor a swallowed error, and I could say why — but "unreachable" was my
-reasoning rather than the suite's, so it is now a gate. **My own audit script mis-read its
-own input**, reporting P15-ARCH-001 as absent because it looked for a bare heading where the
-repository has `# DONE — P15-ARCH-001`; a phase gate that trusted "row missing → BLOCKED"
-would have blocked P15 over a regex. And **two of the brief's mandatory fixtures cannot be
-built**, because two materials cannot share a NAME and a supplied shear modulus has no slot —
-both substitutes are stronger than what was asked for.
-
-**What the phase found in itself, earlier:** one production defect, found by a fixture rather
-than a review. RM-MAT-03 was the first thing in the repository to combine a feature chain with
-a mass, and it caught `mass-properties` reporting the un-bored blank as a body of the part.
-2764 tests had not found it.
-
-### Final Gate
+### P16 Final Gate
 
 ```text
-all P15 milestones PASS
-+ material architecture PASS
-+ units PASS
-+ material identity PASS
-+ mechanical properties PASS
-+ thermal properties PASS
-+ assignments PASS
-+ mass properties PASS
-+ provenance PASS
-+ missing-data handling PASS
-+ custom materials PASS
+all P16 milestones PASS
+
++ meshing architecture PASS
++ CAD geometry remains authority
++ generated mesh remains derived
++ stale geometry protection PASS
+
++ mesh data model PASS
++ NodeId / ElementId semantics PASS
+
++ surface mesh PASS
++ volume mesh PASS
++ positive element volume PASS
++ no inverted elements PASS
+
++ sizing controls PASS
++ local refinement PASS
+
++ quality metrics PASS
++ invalid mesh detection PASS
+
++ geometry ↔ mesh mapping PASS
++ boundary-region foundation PASS
+
++ visual inspection PASS
+
 + undo/redo PASS
++ generated mesh excluded from history
+
 + persistence PASS
++ generated mesh excluded as persisted authority
+
 + CLI PASS
++ CLI/core equivalence PASS
+
 + reference models PASS
 + independent analytical validation PASS
+
++ holes/voids PASS
++ transformed geometry PASS
+
 + Debug PASS
 + Release PASS
 + Debug-shared PASS
+
 + determinism PASS
++ cross-preset equivalence PASS
 + adversarial review PASS
 + 0 unexpected warnings
+
 + qualified tree == committed tree
 ```
 
----
+### P16 Final Adversarial Questions
 
-# P15 Scope Boundaries
-
-P15 **does** implement:
+At minimum attack:
 
 ```text
-materials
-engineering property storage
-units
-material assignment
-density
-mechanical property data
-thermal property data
-mass properties
-property provenance
-engineering-data persistence
-engineering-data CLI
+Can viewer tessellation accidentally become solver mesh?
+
+Can a stale CAD body produce a nominally current mesh?
+
+Can a failed regeneration leave an old mesh marked valid?
+
+Can NodeId be mistaken for ObjectId?
+
+Can ElementId survive a remesh when it should not?
+
+Can an inverted tetrahedron be accepted?
+
+Can zero-volume elements survive validation?
+
+Can a hole be silently filled?
+
+Can a hollow tube lose its void?
+
+Can local sizing attach to the wrong face after regeneration?
+
+Can an unresolved geometry reference silently target another face?
+
+Can backend defaults change engineering meaning?
+
+Can changing mesh size leave the old mesh current?
+
+Can undo restore generated mesh instead of meshing intent?
+
+Can save/load trust stale node/element arrays?
+
+Can CLI implement its own meshing algorithm?
+
+Can CLI report a successful zero-element mesh?
+
+Can mesh quality ordering differ across presets?
+
+Can a transformed body change tetrahedron volume?
+
+Can surface orientation flip unpredictably?
+
+Can a zero-test filter pass qualification?
+
+Can stale binaries generate apparently valid evidence?
+
+Can a tracked change occur after final qualification?
 ```
 
-P15 does **not** implement:
+Every credible defect:
 
 ```text
-mesh generation               → P16
-stress/strain solution         → P17
-thermal PDE solution           → P18
-CFD solution                   → P19
-optimization                   → P20
-full semantic topology         → P21
-CAM/toolpaths                  → P25
+reproduce
+→ regression test
+→ root cause
+→ general fix
+→ requalify affected milestone
+→ rerun P16-QUAL
 ```
 
-Do not let P15 become a solver phase.
+### P16 Final Evidence
 
----
-
-# INFRA-QT-DEPLOY-001
-
-## Build output outside OneDrive
-
-Evidence:
-[docs/verification/INFRA-QT-DEPLOY-001/](docs/verification/INFRA-QT-DEPLOY-001/README.md).
-
-The problem recorded against this decision was:
+Create:
 
 ```text
-out-of-source-tree GUI build
-→ windeployqt searches for Qt relative to target executable
-→ deployment fails
+docs/verification/P16-QUAL-001/
 ```
 
-**The second line is wrong, and it is the reason this sat blocked for two
-milestones.** windeployqt resolves the Qt binary directory through that
-directory's 8.3 short name, not from the executable. Copying the same executable
-to three unrelated directories produced the *same* reported Qt path, twice with
-no relation to where the executable was. The build root used for the first
-attempt, `%LOCALAPPDATA%\BetterCAD-build`, shared an 8.3 short name with
-`%LOCALAPPDATA%\bettercad-deps` and sorted before it, so the short name resolved
-to the build root. Creating one empty directory beside the dependency prefix
-reproduces it from any build location; removing it fixes it; a name that sorts
-after the dependency prefix, or shares no short name with it, never fails.
-
-The fix does not pretend to repair windeployqt. It refuses the collision at
-configure time with a diagnostic that names both directories, refuses a
-deployment that reported success without producing a Qt runtime, and adds
-`-ext` presets that build into `BETTERCAD_BUILD_ROOT` and fail rather than
-quietly building back inside the synchronised folder.
-
-* [x] Root cause established, and the recorded diagnosis corrected
-* [x] Qt deployment works from a build tree in any location
-* [x] `-ext` presets: configure, build and test resolve to one external tree
-* [x] `BETTERCAD_BUILD_ROOT` unset or pointing inside the source tree is refused
-* [x] Regression tests, each made to fail on the real defect — 14 tests
-* [x] Three-preset qualification from an external build root — 2300/2300 each,
-      0 warnings, fresh binaries, 0 stages failed
-* [x] File-replacement stress: 48 runs (4 tests x 12), 0 failures
-* [x] Evidence recorded
-
-## Carried: a configuration override does not rebuild the geometry it changes
-
-**Found by P15-ASSIGN-001, pre-existing, and it contradicts an ADR-026
-consequence.** ADR-026 reasons that "a configuration changes a part's
-*dimensions*, so it changes volume and therefore mass -- through geometry, which
-is exactly the existing derivation chain and requires nothing new". That chain
-does not currently run.
-
-Measured on `BracketModel`, whose `Pad` extrudes a sketch with
-`.depthParameter = depth`:
+Include at minimum:
 
 ```text
-setConfigurationOverride(wide, depth, 40 mm)
-setActiveConfiguration(wide)
-regenerate()
+README.md
 
-effectiveParameterValue(depth)  =  0.040   -- the override IS in force
-report.regenerated              =  1       -- and it is the SLOT, not the pad
-report.updatedParameters        =  1       -- slot_depth = depth * 0.6
-volume of Pad                   =  unchanged from the base configuration
+FINAL HEAD
+FINAL TREE
+origin/main
+working-tree state
+
+milestone audit
+ADR audit
+
+backend architecture
+mesh data model
+surface meshing
+volume meshing
+sizing controls
+quality metrics
+geometry correspondence
+visualisation
+
+commands
+persistence
+CLI
+
+reference-model matrix
+analytical volume tables
+quality tables
+determinism tables
+
+Debug qualification
+Release qualification
+Debug-shared qualification
+
+warning audit
+adversarial review
+
+qualified tree vs committed tree
+known limitations
+final result
 ```
 
-Root cause, as far as this milestone established it: a configuration override
-changes a parameter's EFFECTIVE value and never the parameter object, so the
-parameter's own revision does not change and nothing marks a feature that reads
-it dirty. `features::Regenerator` contains no mention of configurations at all.
-A feature that depends on a DRIVEN parameter is rebuilt, because that parameter's
-stored value and revision do change -- which is why the slot rebuilt and the pad
-did not.
-
-The assembly layer does not have this problem: `SolveTrigger::ConfigurationChanged`
-exists and placements follow a configuration switch.
-
-Why it matters beyond a wrong volume: **P15-MASS-001 computes mass from density
-and volume.** Under any non-base configuration it would multiply a correct density
-by a stale volume and report a mass that is wrong without saying so.
-
-**P15-MASS-001 shipped a GUARD for this rather than a fix, because the fix is not
-authorized here.** `features::partMassProperties` refuses to answer while a
-configuration with parameter overrides is active, naming the configuration and the
-reason, and it checks that before anything else. So a wrong mass is not reported --
-but mass properties are unavailable under a configuration, which is a real
-capability gap and the reason this defect is now worth fixing on its own.
-
-When it is fixed, delete the guard and
-`MassProperties_RefuseToAnswerUnderAConfigurationThatOverridesAParameter` together,
-and replace them with a test that the mass FOLLOWS a configuration switch.
-
-Scope, when authorized:
+### P16 Final Reference Matrix
 
 ```text
-mark a feature dirty when the EFFECTIVE value of a parameter it reads changes,
-which a configuration switch or an override edit can do without touching the
-parameter object -- the assembly solver already distinguishes exactly this case
+Model        Surface   Volume   Positive   CAD Volume   Mapping   Quality   Save/Load   CLI   PASS
+                       Mesh     Elements   Agreement
+
+RM-MESH-01
+RM-MESH-02
+RM-MESH-03
+RM-MESH-04
+RM-MESH-05
+RM-MESH-06
+RM-MESH-07
+RM-MESH-08
 ```
 
-A regression test must assert the volume of a feature reading a FREE parameter
-changes across a configuration switch. Neither P15-ASSIGN-001 nor P15-MASS-001
-asserted the present behaviour, because pinning it would record a defect as the
-contract.
-
-**Awaiting explicit scope decision.** It is a regeneration concern, not a
-materials one, and it was outside the authorized scope of both P15-ASSIGN-001 and
-P15-MASS-001.
-
-## Carried: a document save can still lose to a file synchroniser
-
-**Not fixed by INFRA-QT-DEPLOY-001, and not a test problem.** That milestone
-moved BetterCAD's *build output* out of the synchronised folder. It did nothing
-for a user whose *documents* are in one, and the fault they would hit is the same
-one that cost six milestones a determinism rerun.
-
-`writeFileAtomically` in `src/io/FileIo.cpp` writes a temporary file and then:
+Use:
 
 ```text
-std::filesystem::rename(temporary, path, error);
-if (error) { remove(temporary); return makeError(IoError, "cannot replace ..."); }
+PASS
+FAIL
+N/A
 ```
 
-One attempt, no retry, and the temporary is discarded. On Windows a rename over
-a file another process holds open -- a synchroniser, an indexer, antivirus, a
-backup agent -- fails with a sharing violation from that single attempt, and the
-holder releases it milliseconds later. So an ordinary save into a OneDrive or
-Dropbox folder can fail with `cannot replace '...': Permission denied` and throw
-the new bytes away. The old file survives, so nothing is corrupted, but the save
-did not happen.
+Never mark unsupported behaviour PASS.
 
-Scope, when it is authorized:
+### P16 Completion
+
+Only after the full qualification gate passes:
 
 ```text
-bounded retry with backoff on a TRANSIENT replace failure, distinguished from a
-permanent one (no such directory, read-only volume, access denied on the
-directory itself) -- which must still fail immediately rather than retry
+P16-QUAL-001 → [x]
+
+P16 — Meshing — QUALIFIED
 ```
 
-Tests must include a regression that holds a handle open on the target and
-proves the retry succeeds, and one proving a permanent failure still fails
-rather than retrying to a timeout. Do not widen this into a general I/O layer
-rewrite.
+Then:
 
-**Awaiting explicit scope decision.** It is a product defect, not infrastructure,
-and it is not part of any authorized P15 milestone.
+```text
+Next:
+P17 — Structural FEA
+```
+
+Do NOT start P17 until P16 is fully qualified.
 
 ---
 
 # Future Phases
 
 ```text
-P15  Materials / Engineering Data       CURRENT
-P16  Meshing
+P16  Meshing                         CURRENT
 P17  Structural FEA
 P18  Thermal Analysis
 P19  CFD Integration
@@ -1878,37 +1538,23 @@ docs/engineering/
 # CURRENT NEXT STEP
 
 ```text
-NONE. P15 — Materials / Engineering Data — is QUALIFIED as a phase.
-The next phase is a scope decision, not Claude's to make.
+P16-ARCH-001 — Meshing Architecture
 ```
 
-Qualified at `8d4b23c` / tree `1f6f2951` on 2026-09-30: thirteen milestones plus the phase
-gate, 2814/2814 in Debug, Release and Debug-shared each from clean, 36582 test executions,
-0 failures, 0 warnings in all six build and rebuild logs, and canonical output byte-identical
-across the three presets.
+Claude should begin by auditing the repository.
+
+Do NOT begin by selecting or integrating a new meshing library.
+
+First determine:
 
 ```text
-P15-ARCH  UNITS  MAT  MECH  THERM  ASSIGN  MASS  CUSTOM  PROV  CMD  PERSIST  CLI
-REFMOD    QUAL
+what meshing/tessellation capability already exists
+what is display-only
+what can be reused
+what P17 actually needs
+what geometry-reference guarantees already exist
+what determinism the available backend can provide
+what persistence boundary is appropriate
 ```
 
-Before the next phase, two carried defects are worth weighing — neither is P15's, and the
-first can lose a user's work:
-
-```text
-the FileIo replace defect     a document save can still lose to a file
-                              synchroniser. Arguably ahead of any new phase.
-
-configuration regeneration    a configuration override does not rebuild the
-                              geometry it changes, so mass properties REFUSE
-                              under one rather than reporting the base
-                              configuration's volume as if it were the
-                              override's. The refusal is pinned in process,
-                              through the CLI, and by a reference model.
-                              Fixing the regeneration removes the guard and
-                              its three tests.
-```
-
-Also carried from earlier phases: hole POSITION dimensions are unsupported, GD&T symbols are
-not fully embedded in PDF/DXF, and cross-preset export byte identity is not guaranteed for
-drawings (it IS guaranteed, and now measured, for material documents).
+Only then freeze the P16 architecture and proceed.
