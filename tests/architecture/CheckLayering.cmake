@@ -13,6 +13,9 @@
 #      or of a lower layer only.
 #   4. Public headers (include/) must use <bettercad/...> style includes only;
 #      quoted includes would reach into private implementation directories.
+#   5. A volume-meshing backend's headers may only be included from
+#      src/meshing/<backend>/ (ADR-033). Rule 1 does not cover them: it keys on
+#      the .hxx extension and every candidate backend ships .h headers.
 #
 # Exits with an error listing every violation.
 if(NOT DEFINED SOURCE_DIR OR NOT IS_DIRECTORY "${SOURCE_DIR}")
@@ -33,12 +36,34 @@ set(layer_assembly 3)
 # (ADR-015). Projection and hidden-line removal are NOT here: they are
 # kernel work and live in core/geometry behind the occt adapter.
 set(layer_drawing 4)
+# meshing sits above features, whose regeneration and face-name resolution it
+# uses, and below io, which must serialize its controls. It SHARES layer 4 with
+# drawing, which is allowed (renderer and scripting share 6): the two are
+# siblings, each deriving a secondary representation from the same geometry and
+# neither using the other. Sharing also leaves assembly (3) reachable, so
+# meshing an assembly occurrence later needs no renumbering, which ADR-006 and
+# ADR-015 each had to do. Volume meshing lives here; surface triangulation of a
+# Body is kernel work and stays in core/geometry behind the occt adapter
+# (ADR-033).
+set(layer_meshing 4)
 set(layer_io 5)
 set(layer_renderer 6)
 set(layer_scripting 6)
 
 set(qt_allowed_regex "^(apps/bettercad|src/renderer)/")
 set(occt_allowed_regex "^src/(.+/)?occt/")
+
+# A volume-meshing backend is a third dependency that needs containment, and
+# rule 1 does NOT provide it: that rule recognises an OCCT header by its .hxx
+# extension, and every candidate backend's entry header is a .h, so without the
+# rule below none of the four would fire on one and a backend could be included
+# anywhere in the tree (ADR-033).
+#
+# Keyed on the entry headers themselves, because there is no extension to key
+# on. Update this list when a backend is admitted.
+set(mesh_backend_header_regex
+    "^(nglib\\.h|nginterface[^/]*\\.h|netgen/.+|tetgen\\.h|gmsh\\.h|gmsh/.+|CGAL/.+|mmg/.+|libmmg.+\\.h)$")
+set(mesh_backend_allowed_regex "^src/meshing/[^/]+/")
 
 file(GLOB_RECURSE files RELATIVE "${SOURCE_DIR}"
     "${SOURCE_DIR}/include/*"
@@ -98,6 +123,13 @@ foreach(file IN LISTS files)
                 list(APPEND violations
                     "${file}: layering violation: '${file_module}' must not depend on '${target_module}'")
             endif()
+        endif()
+
+        # Rule 5: volume-meshing backend containment (ADR-033).
+        if(header MATCHES "${mesh_backend_header_regex}"
+           AND NOT file MATCHES "${mesh_backend_allowed_regex}")
+            list(APPEND violations
+                "${file}: mesh backend header <${header}> outside src/meshing/<backend>/")
         endif()
 
         # Rule 4: public headers only use angle-bracket includes.

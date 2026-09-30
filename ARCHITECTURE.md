@@ -83,7 +83,7 @@ Python and a future agent. The GUI must never become the architecture.
 | 1 | `sketch` | Entities, constraints, solver, profile extraction |
 | 2 | `features` | Feature definitions, regeneration, validation |
 | 3 | `assembly` | Components, placements, mates, the constraint solver, reference resolution |
-| 4 | `drawing` | Sheets, views, dimensions, annotations, the drawing scene |
+| 4 | `drawing`, `meshing` | Sheets, views, dimensions, annotations, the drawing scene; meshing controls, the mesher, mesh regions and quality, the volume backend |
 | 5 | `io` | Native `.bcad`, STEP/STL export |
 | 6 | `renderer`, `scripting` | Display data, bindings |
 | — | `apps` | Desktop application, CLI |
@@ -92,9 +92,14 @@ A module may include the public headers of its own module or of a lower layer,
 and nothing else. Public headers live in `include/bettercad/<module>/`; private
 headers beside their sources in `src/<module>/`.
 
-Target directories not yet created: `src/simulation/`, `src/versioning/`,
-`benchmarks/`.
+Target directories not yet created: `src/meshing/`, `src/simulation/`,
+`src/versioning/`, `benchmarks/`.
 `src/renderer/` and `src/scripting/` exist but are empty.
+
+`meshing` is registered in the table but **not yet built**: `P16-ARCH-001` decided
+its layer and its boundaries, and `P16-DATA-001` will create the directory. The
+entry is here because the enforced table refuses an unregistered module, so the
+registration and the decision land together.
 
 The table above is the table in force, mirrored from
 `tests/architecture/CheckLayering.cmake`, which is its source of truth. The
@@ -119,6 +124,16 @@ the renumber was unavoidable rather than cosmetic.
 [ADR-015](docs/architecture/decisions/ADR-015-drawing-module-and-layer.md)
 moved `io` up a second time. `P14-SHEET-001` applied it when it created
 `src/drawing/`. The table above is in force.
+
+`P16-ARCH-001` added `meshing` and needed **no renumber at all**
+([ADR-033](docs/architecture/decisions/ADR-033-the-volume-mesher-is-a-backend-behind-an-enforced-boundary.md)).
+It shares layer 4 with `drawing`, which the strictly-lower rule permits and which
+states a real relationship: both derive a secondary representation from the same
+geometry, and neither uses the other. Sharing 4 rather than taking 3 also leaves
+`assembly` reachable, so meshing an assembly occurrence later will not force the
+renumber that ADR-006 and ADR-015 each had to do. Volume meshing lives in
+`meshing`; surface triangulation of a `Body` is kernel work and stays in
+`core/geometry` behind the OCCT adapter, like projection below.
 
 Projection and hidden-line removal are **not** in `drawing`: they are kernel
 work, so they belong in `core/geometry` behind the OCCT adapter, below
@@ -590,8 +605,13 @@ engineering geometry. GPU work belongs in explicit subsystems with a CPU
 reference path where practical.
 
 **Enforcement.** The `architecture.layering` test checks OCCT containment, Qt
-containment, layering and the public/private split, and fails the build.
-Fixture trees prove the checker catches each violation.
+containment, mesh-backend containment, layering and the public/private split, and
+fails the build. Fixture trees prove the checker catches each violation.
+
+Mesh-backend containment is a separate rule rather than part of OCCT's because
+OCCT's keys on the `.hxx` extension, and every candidate volume mesher ships `.h`
+headers — so without its own rule a backend header would have been caught by
+nothing at all (ADR-033).
 
 **Other boundaries.** Treat external CAD files, native documents, plugins,
 scripts, macros, AI-generated commands and network data as untrusted: validate

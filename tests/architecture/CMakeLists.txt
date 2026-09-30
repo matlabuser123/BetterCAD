@@ -24,6 +24,9 @@ bettercad_add_process_test(architecture.checker.layer-violation
 bettercad_add_process_test(architecture.checker.drawing-layer-violation
     COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/drawing-layer-violation|-P|${_check_layering}"
     EXIT_CODE 1 STDERR_REGEX "1 violation.*'drawing' must not depend on 'io'")
+bettercad_add_process_test(architecture.checker.mesh-backend-leak
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/mesh-backend-leak|-P|${_check_layering}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*mesh backend header <nglib.h>")
 bettercad_add_process_test(architecture.checker.private-include
     COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/private-include|-P|${_check_layering}"
     EXIT_CODE 1 STDERR_REGEX "1 violation.*quoted include")

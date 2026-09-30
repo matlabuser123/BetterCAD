@@ -13,7 +13,7 @@ Current:
            P16 — Meshing
 
 Current milestone:
-           P16-ARCH-001 — Meshing Architecture
+           P16-DATA-001 — Mesh Data Model / Identity / Units
 
 Qualified:
            P0–P10 — BetterCAD v0.1.0
@@ -24,7 +24,10 @@ Qualified:
            P15 — Materials / Engineering Data
 
 Next:
-           P16-ARCH-001
+           P16-DATA-001
+
+Qualified milestones in P16:
+           P16-ARCH-001 — Meshing Architecture (ADR-030 to ADR-033)
 
 P16 objective:
            Geometry
@@ -239,31 +242,102 @@ Do not start a milestone until its predecessor passes.
 
 ## Meshing Architecture
 
-* [ ] Audit all existing tessellation / triangulation code
-* [ ] Audit OCCT meshing capabilities already used by BetterCAD
-* [ ] Audit any existing volume-mesh capability
-* [ ] Audit current geometry-validity APIs
-* [ ] Audit stable geometry-reference infrastructure
-* [ ] Audit configuration/regeneration interaction
-* [ ] Define surface-mesh vs display-tessellation boundary
-* [ ] Define volume-mesh backend interface
-* [ ] Decide initial supported element types
-* [ ] Define canonical meshing controls
-* [ ] Define canonical vs derived mesh state
-* [ ] Define mesh ownership
-* [ ] Define mesh lifetime / invalidation
-* [ ] Define NodeId semantics
-* [ ] Define ElementId semantics
-* [ ] Define geometry-selection mapping strategy
-* [ ] Define material-region boundary
-* [ ] Define transformed-body behaviour
-* [ ] Define configuration behaviour
-* [ ] Define persistence boundary
-* [ ] Define downstream P17 consumer contract
-* [ ] Define module / dependency layering
-* [ ] Record required ADRs
-* [ ] Architecture adversarial review PASS
-* [ ] Evidence recorded
+**PASS 2026-09-30.** Evidence:
+[docs/verification/P16-ARCH-001/](docs/verification/P16-ARCH-001/README.md),
+[AUDIT.md](docs/verification/P16-ARCH-001/AUDIT.md),
+[BACKEND_MATRIX.md](docs/verification/P16-ARCH-001/BACKEND_MATRIX.md),
+[ADVERSARIAL_REVIEW.md](docs/verification/P16-ARCH-001/ADVERSARIAL_REVIEW.md).
+
+Architecture only. **No mesh type exists, no `src/meshing/` exists, no backend has been
+chosen, added or linked, and no meshing code was written.**
+
+* [x] Audit all existing tessellation / triangulation code — `geometry::triangulate()` and
+      **one** production consumer, STL export. No other `BRepMesh` or `Poly_Triangulation`
+      user anywhere. `src/renderer/` holds one file: `.gitkeep`
+* [x] Audit OCCT meshing capabilities already used by BetterCAD — `BRepMesh_IncrementalMesh`
+      in exactly one place, on a deliberate shape COPY so nothing is cached, `InParallel`
+      already off for determinism
+* [x] Audit any existing volume-mesh capability — **NONE**, and OCCT 8.0.1 ships none: the
+      14 headers matching "tet" are DateTime, Trihedron and Tangence
+* [x] Audit current geometry-validity APIs — `Body::isValid()` (`BRepCheck_Analyzer`, used in
+      exactly two places), `TopologySummary`; `ShapeFix`/`ShapeAnalysis` used nowhere, so the
+      tree does no healing. P16 defines no second validity notion
+* [x] Audit stable geometry-reference infrastructure — `FaceName` is generative, not
+      positional, and `listFaces()` already returns each face's name SET, propagated through
+      booleans by kernel history. **`FaceId` is declared and used nowhere** — a P21
+      placeholder P16 must not adopt
+* [x] Audit configuration/regeneration interaction — the carried defect and P15-MASS-001's
+      refusal guard, reused unchanged. `Document::revision()` is **monotonic** — every write
+      is `++revision_` and undo increments it too, so there is no ABA hazard
+* [x] Define surface-mesh vs display-tessellation boundary — ADR-030/033. There is no display
+      tessellation yet; OCCT's own `Poly_MeshPurpose` already separates Calculation from
+      Presentation. `Poly_MergeNodesTool` is NOT the welding route: its own header says it
+      splits nodes at sharp corners, the opposite of watertight
+* [x] Define volume-mesh backend interface — ADR-033: backend-neutral, no backend type in any
+      API, code only in `src/meshing/<backend>/`, **enforced by a new architecture rule**
+* [x] Decide initial supported element types — Tet4 only. Sufficient for the P17 pipeline;
+      **not** sufficient for accurate bending stress, recorded as a known limitation, which is
+      why an element carries its type from day one
+* [x] Define canonical meshing controls — ADR-030: a `MeshControl` document object holding
+      intent only. Field detail is P16-DATA-001's and P16-SIZE-001's
+* [x] Define canonical vs derived mesh state — ADR-030. `ARCHITECTURE.md` already declared
+      simulation meshes derived; this details it
+* [x] Define mesh ownership — a `Mesher` service, exactly as the `Regenerator` owns derived
+      bodies. Not the Document, not the GUI
+* [x] Define mesh lifetime / invalidation — a build stamp of three revisions plus upstream
+      dirtiness, deliberately conservative: it may narrow with measurement, never widen. A
+      mesh cannot go stale on disk because it is never on disk
+* [x] Define NodeId semantics — ADR-031: a handle into one generation of one mesh, and
+      deliberately **not** `bettercad::Id`, whose documented contract is stable persisted
+      identity with never-reused values. A stale handle is refused, not reinterpreted
+* [x] Define ElementId semantics — the same, and a distinct type from `NodeId`
+* [x] Define geometry-selection mapping strategy — ADR-032: a selection names CAD geometry and
+      **never** a mesh entity, so it survives a remesh definitionally. The face-to-name
+      relation is stored as the **many-to-many** relation it is
+* [x] Define material-region boundary — P16 holds no material data at all (ADR-028). One
+      material per document today; resolved at consumption through P15's require* entry points
+* [x] Define transformed-body behaviour — a mesh is in its body's frame and carries no
+      transform; patterns and mirrors bake theirs in during regeneration. `Placement` is
+      rotation and translation with **no scale field**, so a future occurrence placement is
+      rigid and cannot change a quality metric
+* [x] Define configuration behaviour — REFUSE, reusing P15-MASS-001's guard unchanged, while
+      the carried regeneration defect stands
+* [x] Define persistence boundary — controls only. No nodes, elements, facets, quality numbers
+      or backend version in a `.bcad` file
+* [x] Define downstream P17 consumer contract — P17 receives a `ValidatedMesh` or a structured
+      diagnostic, and **cannot** obtain an unvalidated mesh for computation. Enforced by the
+      type, not by a comment — this was adversarial finding F5
+* [x] Define module / dependency layering — `meshing` at layer 4, sharing it with `drawing`,
+      with **no renumber**, unlike ADR-006 and ADR-015. Registered in the enforced table, and
+      `ARCHITECTURE.md`'s mirror updated to match its source of truth
+* [x] Record required ADRs — ADR-030, ADR-031, ADR-032, ADR-033
+* [x] Architecture adversarial review PASS — 6 findings, **5 found while the architecture was
+      being written and fixed in the ADRs**, 1 residual assigned to P16-DATA-001/P16-CMD-001.
+      0 new production defects
+* [x] Evidence recorded — with a three-preset clean regression, because the milestone changed
+      production code
+
+**What this milestone found.** The audit changed the design four times, which is why the brief's
+order — audit before library, before code — was worth following.
+
+The finding that decided the backend is not about meshers: **BetterCAD has no licence.** `LICENSE`
+grants no permission to distribute, and everything shipped is weak copyleft, dynamically linked.
+So a GPL or AGPL mesher would not add a dependency, it would DECIDE BetterCAD's unchosen licence.
+Applying the project's existing obligations as an admission rule leaves exactly one candidate
+(Netgen, LGPL-2.1); CGAL's meshing package is GPL despite cgal.org's LGPL headline, and MMG's own
+licence says it MODIFIES meshes rather than generating them. **Admitting the dependency is a
+project decision, so it is deliberately not taken here** — `P16-VOL-001` carries it as an entry
+condition, and `P16-DATA-001` through `P16-SURF-001` do not depend on it.
+
+One production defect class was closed: P16's invariant that backend behaviour stay behind the
+meshing interface was **unenforceable**. The OCCT containment rule keys on the `.hxx` extension
+and every candidate backend ships `.h` headers, so no rule would have fired on a backend include
+anywhere in the tree. Rule 5 was added, given a permanent fixture test, and **proven to fire**
+before being trusted.
+
+Two would-be defects were caught before they were written: the attribution rule as first drafted
+would have **refused to mesh a box** (primitives take no namer, so their faces carry no name), and
+`optional<FaceName>` per facet would have been wrong in both directions after the first boolean.
 
 ### Questions that must be answered
 
@@ -1538,23 +1612,63 @@ docs/engineering/
 # CURRENT NEXT STEP
 
 ```text
-P16-ARCH-001 — Meshing Architecture
+P16-DATA-001 — Mesh Data Model / Identity / Units
 ```
 
-Claude should begin by auditing the repository.
+`P16-ARCH-001` passed on 2026-09-30. The architecture is frozen in
+[ADR-030](docs/architecture/decisions/ADR-030-a-mesh-is-derived-state-and-a-meshing-control-is-the-intent.md),
+[ADR-031](docs/architecture/decisions/ADR-031-a-mesh-node-is-a-handle-not-an-identity.md),
+[ADR-032](docs/architecture/decisions/ADR-032-a-mesh-boundary-names-a-cad-face-and-a-selection-is-never-a-mesh-entity.md)
+and
+[ADR-033](docs/architecture/decisions/ADR-033-the-volume-mesher-is-a-backend-behind-an-enforced-boundary.md),
+with evidence in [docs/verification/P16-ARCH-001/](docs/verification/P16-ARCH-001/README.md).
 
-Do NOT begin by selecting or integrating a new meshing library.
-
-First determine:
+What P16-DATA-001 must honour, so it is not re-derived:
 
 ```text
-what meshing/tessellation capability already exists
-what is display-only
-what can be reused
-what P17 actually needs
-what geometry-reference guarantees already exist
-what determinism the available backend can provide
-what persistence boundary is appropriate
+NodeId / ElementId       meshing-module strong index types, deliberately NOT
+                         bettercad::Id. Compile-fail cases for the conversions,
+                         as P15-UNITS-001 did with 124 of them
+a mesh                   derived, owned by the mesher, no ObjectId, never
+                         persisted, one region per solid, no node shared across
+                         regions, an empty body refused
+a MeshControl            a document object holding intent only, no result field
+facet attribution        to a CAD face, with the face-to-name relation stored as
+                         many-to-many. An unnamed face is NORMAL, not a failure
+Tet4                     the only element type, but carried as a type tag
+ValidatedMesh            only the validating path may construct one
+src/meshing/             creating it is what makes layer_meshing 4 load-bearing
 ```
 
-Only then freeze the P16 architecture and proceed.
+Open from the architecture review, and owed here or by `P16-CMD-001`:
+
+```text
+F6   a MeshControl whose body is deleted must become explicitly UNRESOLVED and
+     must not mesh nothing and report success
+```
+
+`P16-VOL-001` carries an entry condition that nothing before it does:
+
+```text
+the volume-meshing backend dependency is approved, or the fallback is chosen
+deliberately. BetterCAD has no licence, so admitting a backend constrains one
+that has not been chosen -- a project decision, not Claude's. See
+docs/verification/P16-ARCH-001/BACKEND_MATRIX.md.
+```
+
+Carried defects, neither P16's, and the first can lose a user's work:
+
+```text
+the FileIo replace defect     a document save can still lose to a file
+                              synchroniser. Arguably ahead of any new milestone.
+
+configuration regeneration    a configuration override does not rebuild the
+                              geometry it changes. Mass properties REFUSE under
+                              one, and P16 meshing will refuse for the same
+                              reason and with the same guard. Fixing the
+                              regeneration removes the guard and its tests.
+```
+
+Also carried from earlier phases: hole POSITION dimensions are unsupported, GD&T symbols are
+not fully embedded in PDF/DXF, and cross-preset export byte identity is not guaranteed for
+drawings.

@@ -1,0 +1,95 @@
+Test project C:/Users/uqhas/AppData/Local/bc-build/release-ext
+    Start 2683: architecture.layering
+    Start 2686: architecture.checker.examples-occt-leak
+    Start 2691: architecture.checker.private-include
+    Start 2685: architecture.checker.occt-leak
+    Start 2684: architecture.checker.valid
+    Start 2688: architecture.checker.layer-violation
+    Start 2689: architecture.checker.drawing-layer-violation
+    Start 2687: architecture.checker.qt-leak
+    Test #2686: architecture.checker.examples-occt-leak ........   Passed    0.11 sec
+    Start 2686: architecture.checker.examples-occt-leak
+    Test #2685: architecture.checker.occt-leak .................   Passed    0.18 sec
+    Start 2685: architecture.checker.occt-leak
+    Test #2691: architecture.checker.private-include ...........   Passed    0.20 sec
+    Start 2691: architecture.checker.private-include
+    Test #2689: architecture.checker.drawing-layer-violation ...   Passed    0.16 sec
+    Start 2689: architecture.checker.drawing-layer-violation
+    Test #2687: architecture.checker.qt-leak ...................   Passed    0.17 sec
+    Start 2687: architecture.checker.qt-leak
+    Test #2684: architecture.checker.valid .....................   Passed    0.21 sec
+    Start 2684: architecture.checker.valid
+    Test #2688: architecture.checker.layer-violation ...........   Passed    0.20 sec
+    Start 2688: architecture.checker.layer-violation
+    Test #2686: architecture.checker.examples-occt-leak ........   Passed    0.25 sec
+    Start 2686: architecture.checker.examples-occt-leak
+    Test #2684: architecture.checker.valid .....................   Passed    0.17 sec
+    Start 2684: architecture.checker.valid
+    Test #2688: architecture.checker.layer-violation ...........   Passed    0.17 sec
+    Start 2688: architecture.checker.layer-violation
+    Test #2687: architecture.checker.qt-leak ...................   Passed    0.19 sec
+    Start 2687: architecture.checker.qt-leak
+    Test #2689: architecture.checker.drawing-layer-violation ...   Passed    0.21 sec
+    Start 2689: architecture.checker.drawing-layer-violation
+    Test #2685: architecture.checker.occt-leak .................   Passed    0.24 sec
+    Start 2685: architecture.checker.occt-leak
+    Test #2691: architecture.checker.private-include ...........   Passed    0.24 sec
+    Start 2691: architecture.checker.private-include
+    Test #2686: architecture.checker.examples-occt-leak ........   Passed    0.18 sec
+    Start 2686: architecture.checker.examples-occt-leak
+    Test #2688: architecture.checker.layer-violation ...........   Passed    0.14 sec
+    Start 2688: architecture.checker.layer-violation
+    Test #2684: architecture.checker.valid .....................   Passed    0.15 sec
+    Start 2684: architecture.checker.valid
+    Test #2687: architecture.checker.qt-leak ...................   Passed    0.14 sec
+    Start 2687: architecture.checker.qt-leak
+    Test #2685: architecture.checker.occt-leak .................   Passed    0.14 sec
+    Start 2685: architecture.checker.occt-leak
+    Test #2691: architecture.checker.private-include ...........   Passed    0.13 sec
+    Start 2691: architecture.checker.private-include
+    Test #2689: architecture.checker.drawing-layer-violation ...   Passed    0.16 sec
+    Start 2689: architecture.checker.drawing-layer-violation
+    Test #2686: architecture.checker.examples-occt-leak ........   Passed    0.18 sec
+    Start 2686: architecture.checker.examples-occt-leak
+    Test #2684: architecture.checker.valid .....................   Passed    0.17 sec
+    Start 2684: architecture.checker.valid
+    Test #2689: architecture.checker.drawing-layer-violation ...   Passed    0.15 sec
+    Start 2689: architecture.checker.drawing-layer-violation
+    Test #2691: architecture.checker.private-include ...........   Passed    0.16 sec
+    Start 2691: architecture.checker.private-include
+    Test #2685: architecture.checker.occt-leak .................   Passed    0.18 sec
+    Start 2685: architecture.checker.occt-leak
+    Test #2688: architecture.checker.layer-violation ...........   Passed    0.21 sec
+    Start 2688: architecture.checker.layer-violation
+    Test #2687: architecture.checker.qt-leak ...................   Passed    0.20 sec
+    Start 2687: architecture.checker.qt-leak
+1/9 Test #2691: architecture.checker.private-include ...........   Passed    0.16 sec
+2/9 Test #2685: architecture.checker.occt-leak .................   Passed    0.16 sec
+3/9 Test #2688: architecture.checker.layer-violation ...........   Passed    0.15 sec
+    Start 2690: architecture.checker.mesh-backend-leak
+4/9 Test #2684: architecture.checker.valid .....................   Passed    0.19 sec
+5/9 Test #2689: architecture.checker.drawing-layer-violation ...   Passed    0.19 sec
+6/9 Test #2686: architecture.checker.examples-occt-leak ........   Passed    0.20 sec
+7/9 Test #2687: architecture.checker.qt-leak ...................   Passed    0.16 sec
+    Test #2690: architecture.checker.mesh-backend-leak .........   Passed    0.10 sec
+    Start 2690: architecture.checker.mesh-backend-leak
+    Test #2683: architecture.layering ..........................   Passed    1.07 sec
+    Start 2683: architecture.layering
+    Test #2690: architecture.checker.mesh-backend-leak .........   Passed    0.09 sec
+    Start 2690: architecture.checker.mesh-backend-leak
+    Test #2690: architecture.checker.mesh-backend-leak .........   Passed    0.08 sec
+    Start 2690: architecture.checker.mesh-backend-leak
+    Test #2690: architecture.checker.mesh-backend-leak .........   Passed    0.09 sec
+    Start 2690: architecture.checker.mesh-backend-leak
+8/9 Test #2690: architecture.checker.mesh-backend-leak .........   Passed    0.08 sec
+    Test #2683: architecture.layering ..........................   Passed    0.67 sec
+    Start 2683: architecture.layering
+    Test #2683: architecture.layering ..........................   Passed    0.60 sec
+    Start 2683: architecture.layering
+    Test #2683: architecture.layering ..........................   Passed    0.60 sec
+    Start 2683: architecture.layering
+9/9 Test #2683: architecture.layering ..........................   Passed    0.68 sec
+
+100% tests passed out of 9
+
+Total Test time (real) =   3.78 sec
