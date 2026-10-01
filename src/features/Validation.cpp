@@ -602,24 +602,33 @@ private:
             return;
         }
         const geometry::TopologySummary topology = body.topology();
-        const bool valid = body.isValid();
         auto properties = body.massProperties();
         auto box = body.boundingBox();
-        if (topology.solids == 0) {
+        // One definition of body eligibility, shared with P16-GEOM-001's meshing
+        // boundary (bodyDefect). The messages stay here, because a report for a
+        // person is this function's business and not the rule's.
+        switch (bodyDefect(body).value_or(BodyDefect::Empty)) {
+        case BodyDefect::NoSolid:
             add(ValidationCheck::Geometry, Severity::Error, feature, std::format("{}: the body has no solid", name));
-        } else if (!valid) {
+            break;
+        case BodyDefect::InvalidShape:
             add(ValidationCheck::Geometry, Severity::Error, feature,
                 std::format("{}: the body fails the kernel's validity check", name));
-        } else if (!properties) {
+            break;
+        case BodyDefect::VolumeUnavailable:
             add(ValidationCheck::Geometry, Severity::Error, feature,
                 std::format("{}: {}", name, properties.error().message));
-        } else if (!(properties->volume > Volume{})) {
+            break;
+        case BodyDefect::NonPositiveVolume:
             add(ValidationCheck::Geometry, Severity::Error, feature,
                 std::format("{}: the body's volume is not positive ({})", name,
                             toString(properties->volume, units::mm3)));
+            break;
+        case BodyDefect::Empty:
+            break; // the empty case returned above
         }
         if (summary != nullptr) {
-            summary->valid = valid && topology.solids > 0 && properties && properties->volume > Volume{};
+            summary->valid = !bodyDefect(body).has_value();
             summary->topology = topology;
             if (properties) {
                 summary->properties = *properties;
@@ -680,6 +689,44 @@ private:
 };
 
 } // namespace
+
+std::string_view toString(BodyDefect defect) noexcept {
+    switch (defect) {
+    case BodyDefect::Empty:
+        return "empty";
+    case BodyDefect::NoSolid:
+        return "no_solid";
+    case BodyDefect::InvalidShape:
+        return "invalid_shape";
+    case BodyDefect::VolumeUnavailable:
+        return "volume_unavailable";
+    case BodyDefect::NonPositiveVolume:
+        return "non_positive_volume";
+    }
+    return "unknown";
+}
+
+std::optional<BodyDefect> bodyDefect(const geometry::Body& body) {
+    if (body.isEmpty()) {
+        return BodyDefect::Empty;
+    }
+    // Topology before measurement: no solid means nothing encloses a volume, and
+    // that is a different failure from enclosing zero.
+    if (body.topology().solids == 0) {
+        return BodyDefect::NoSolid;
+    }
+    if (!body.isValid()) {
+        return BodyDefect::InvalidShape;
+    }
+    const Result<geometry::MassProperties> properties = body.massProperties();
+    if (!properties) {
+        return BodyDefect::VolumeUnavailable;
+    }
+    if (!(properties->volume > Volume{}) || !isFinite(properties->volume)) {
+        return BodyDefect::NonPositiveVolume;
+    }
+    return std::nullopt;
+}
 
 std::string_view toString(ValidationCheck check) noexcept {
     switch (check) {

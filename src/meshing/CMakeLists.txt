@@ -12,17 +12,22 @@
 # no OCCT, and a volume-meshing backend, when one is admitted, lives in
 # src/meshing/<backend>/ where the architecture check confines it.
 #
-# P16-DATA-001 needs core alone: the data model holds no CAD reference, because
-# geometry correspondence is P16-MAP-001's.
+# The data model itself needs core alone -- it holds no CAD reference, because
+# geometry correspondence is P16-MAP-001's. Geometry PREPARATION (P16-GEOM-001)
+# needs features, for the regeneration state and currency that decide whether a
+# body may be meshed at all, which is why meshing sits above features.
 bettercad_add_library(bettercad_meshing
     ALIAS meshing
     EXPORT_BASE BETTERCAD_MESHING
     EXPORT_HEADER bettercad/meshing/Export.hpp
     SOURCES
+        GeometryPreparation.cpp
         Mesh.cpp
         MeshValidation.cpp
     PUBLIC_LINK
         BetterCAD::core
+        BetterCAD::geometry
+        BetterCAD::features
 )
 
 install(TARGETS bettercad_meshing

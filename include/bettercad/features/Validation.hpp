@@ -66,6 +66,40 @@ struct ValidationIssue {
     std::string message{};
 };
 
+/// Why a regenerated body is not usable as engineering geometry.
+///
+/// In the order the checks run, which is also their precedence. Topology comes
+/// before measurement on purpose: a body with no solid is refused for having no
+/// solid, not for integrating to zero, because closure and volume are different
+/// properties and a shape can fail either one alone.
+enum class BodyDefect : std::uint8_t {
+    /// The body holds nothing.
+    Empty,
+    /// No solid, so nothing encloses a volume. An open shell lands here.
+    NoSolid,
+    /// The kernel's own analyzer rejects the shape.
+    InvalidShape,
+    /// The volume could not be integrated at all.
+    VolumeUnavailable,
+    /// The volume is not a positive finite number.
+    NonPositiveVolume,
+};
+
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT std::string_view toString(BodyDefect defect) noexcept;
+
+/// Why @p body is not usable as engineering geometry, or none if it is.
+///
+/// THE ONE DEFINITION, and the reason it is a function rather than a rule written
+/// out wherever it is needed. validateDocument() reports it as a sentence for a
+/// user; P16-GEOM-001's meshing boundary maps it to a typed reason for a caller.
+/// Two copies of the rule would be two definitions of "valid geometry", and the
+/// weaker one would eventually decide what gets meshed.
+///
+/// A non-finite volume counts as non-positive. That matters because `volume > 0`
+/// alone answers YES for an infinity, and an infinite volume is not evidence of a
+/// solid worth meshing.
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT std::optional<BodyDefect> bodyDefect(const geometry::Body& body);
+
 /// A result body of the model (see resultFeatures()).
 struct BodySummary {
     ObjectId feature{};

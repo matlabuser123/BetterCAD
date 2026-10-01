@@ -13,7 +13,7 @@ Current:
            P16 — Meshing
 
 Current milestone:
-           P16-GEOM-001 — Geometry Preparation / Validity / Regeneration Boundary
+           P16-SURF-001 — Engineering Surface Mesh
 
 Qualified:
            P0–P10 — BetterCAD v0.1.0
@@ -24,11 +24,12 @@ Qualified:
            P15 — Materials / Engineering Data
 
 Next:
-           P16-GEOM-001
+           P16-SURF-001
 
 Qualified milestones in P16:
            P16-ARCH-001 — Meshing Architecture (ADR-030 to ADR-033)
            P16-DATA-001 — Mesh Data Model / Identity / Units
+           P16-GEOM-001 — Geometry Preparation / Validity / Regeneration Boundary
 
 P16 objective:
            Geometry
@@ -576,26 +577,104 @@ mesh representation strong
 
 ## Geometry Preparation / Validity / Regeneration Boundary
 
-* [ ] Mesh only authoritative regenerated geometry
-* [ ] Reject missing body
-* [ ] Reject failed regeneration
-* [ ] Reject blocked regeneration
-* [ ] Reject stale derived geometry
-* [ ] Validate closed-solid requirement
-* [ ] Validate shell/open-solid failure behaviour
-* [ ] Validate multiple-solid behaviour
-* [ ] Validate internal holes / voids
-* [ ] Validate transformed geometry
-* [ ] Define tolerance source
-* [ ] Audit shape-healing requirements
-* [ ] Do not silently heal engineering geometry unless contract declares it
-* [ ] Detect zero-volume / degenerate bodies
-* [ ] Define configuration behaviour
-* [ ] Protect against known configuration-regeneration defect
-* [ ] Geometry fingerprint / revision foundation for mesh invalidation
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+**PASS 2026-10-01.** Evidence:
+[docs/verification/P16-GEOM-001/](docs/verification/P16-GEOM-001/README.md),
+[AUDIT.md](docs/verification/P16-GEOM-001/AUDIT.md),
+[ADVERSARIAL_REVIEW.md](docs/verification/P16-GEOM-001/ADVERSARIAL_REVIEW.md).
+
+The one boundary every later meshing milestone passes through. **Nothing here meshes anything,
+calls OCCT, or chooses a backend.**
+
+* [x] Mesh only authoritative regenerated geometry — `requireMeshableGeometry(const Document&,
+      const Regenerator&, ObjectId)`, read-only in every argument, is the single entry point.
+      `P16-SURF-001` and `P16-VOL-001` obtain geometry here and nowhere else, so there is no
+      second meshability rule to diverge
+* [x] Reject missing body — and told apart from failure: a sketch is up to date and will never
+      have a body, so `NoBody` says that rather than suggesting a regeneration
+* [x] Reject failed regeneration — `RegenerationFailed`. The audit CORRECTED my first reading
+      here: `body()` is documented as "the latest successful build", but `fail` and `block` both
+      call `bodies_.erase(id)`, so no last-known-good body survives to be mistaken for current
+* [x] Reject blocked regeneration — `RegenerationBlocked`, kept distinct from `Failed` because
+      the repository distinguishes them
+* [x] Reject stale derived geometry — **THE CENTRAL GUARD.** `state()` reports what the last pass
+      did, not whether the result still follows from the document: after a sketch edit it says
+      `UpToDate` while the old body sits there valid, closed and positive. `builtRevisions_` knew
+      better and was PRIVATE. Added `Regenerator::builtRevision()` and `isCurrent()`, sharing one
+      `dirtySources()` with `regenerate()` so staleness has ONE rule.
+      **The trap:** an own-revision check looks right and is wrong — editing a sketch does not
+      change the extrude's revision — so currency walks the dependency graph. **Mutation-proved:**
+      removing the graph walk fails 4 tests
+* [x] Validate closed-solid requirement — topological, `solids == 0`, and checked BEFORE any
+      volume, because closure and volume are different properties
+* [x] Validate shell/open-solid failure behaviour — `NotASolid`, and no shell is promoted to a
+      solid. P16 requires a solid for surface meshing too, because P16's surface mesh is the
+      boundary of the volume domain (ADR-032), not a standalone sheet mesh
+* [x] Validate multiple-solid behaviour — SUPPORTED, not rejected: ADR-032 gives a mesh one region
+      per solid. One extrude of two disjoint rectangles gives `solidCount == 2` and the
+      hand-computed volume of both. The count is reported so `P16-VOL-001` makes the regions
+      rather than a backend deciding by accident
+* [x] Validate internal holes / voids — a hollow tube, `V = pi(Ro^2 - Ri^2)h`. The arithmetic is
+      what catches using the outer bounding cylinder instead: that would be 2.78x larger. Nothing
+      is rebuilt, so no hole can be filled
+* [x] Validate transformed geometry — a body on the XZ plane away from the origin: volume
+      invariant, and the prepared body's bounding box EXACTLY equals the regenerator's.
+      `TopLoc_Location` stripping is not possible in this layer, which never names a
+      `TopoDS_Shape`, a `TShape` or a `Location`
+* [x] Define tolerance source — **no epsilon was introduced.** Closure is topological; volume is
+      "> 0 and finite". Neither has a threshold, so it cannot reject legitimate micro-scale
+      geometry or accept a near-flat solid the size of a building
+* [x] Audit shape-healing requirements — `ShapeFix` and `ShapeAnalysis` appear in NO source file
+      in the repository. BetterCAD heals nothing today
+* [x] Do not silently heal engineering geometry — nothing is healed, sewn or re-toleranced, and
+      the policy is the status quo rather than a new rule. What a BACKEND does after this boundary
+      is recorded as outside this layer's control and `P16-VOL-001`'s to audit
+* [x] Detect zero-volume / degenerate bodies — through `features::bodyDefect`, the ONE definition.
+      My first implementation duplicated `checkBody`'s rule; extracting it instead found a
+      **production defect in already-qualified code**: `volume > Volume{}` accepts `Inf`, so an
+      infinite volume counted as positive and `BodySummary::valid` was true for it. Now requires
+      finite, which strengthens `validateDocument()` too
+* [x] Define configuration behaviour — refused while any override is active, and accepted under a
+      configuration that overrides nothing, because over-refusing would be its own defect. Both
+      today's and the post-fix behaviour are recorded, so the bug is not encoded as architecture
+* [x] Protect against the known configuration-regeneration defect — the body's volume is recorded
+      as UNCHANGED under the override (the defect) and the refusal is required, naming the
+      configuration. The test asserts the REFUSAL and deliberately does not record the stale
+      volume, which would turn a defect into a contract. Nothing regenerates behind the caller's
+      back to hide it
+* [x] Geometry fingerprint / revision foundation — `GeometryRevision` mixes the feature's revision
+      with every TRANSITIVE dependency's, ascending by ObjectId, plus the active configuration.
+      Not the object's own revision (an upstream edit would not move it), not
+      `Document::revision()` (a density edit would), not `std::hash` (not required to agree
+      between builds), not BRep bytes. **This is the narrowing ADR-030 named in advance.** A
+      material edit moves the document revision and NOT the geometry revision, and there is a test
+      for it
+* [x] Adversarial review PASS — 21 attacks from the brief plus 4 more; **6 findings, 1 production
+      defect in existing code, 1 open and out of scope**. 3 mutations applied, 3 caught
+* [x] Regression PASS — 2900/2900 in `debug-ext`, `release-ext` and `debug-shared-ext` each from
+      clean; 8950 executions; 0 failures; 0 compiler warnings in all six logs; no rebuild
+      recompiled or relinked anything; the eight qualified tree IDs identical before the first
+      build and after the last test run
+* [x] Evidence recorded
+
+**What this milestone found.** One production defect, in code qualified before P16, and it
+surfaced only because the brief required REUSING the existing validity rule instead of writing a
+second one — which forced reading it closely enough to extract it. `Inf > 0` is true, so
+`validateDocument()` would have called an infinite-volume body valid.
+
+**The finding worth reading is about a test that proved less than its name.** Mutation M3 moved the
+currency check to the end of the sequence and broke NOTHING: the precedence test's stale body is
+valid, closed and positive, so every later check passes either way. I then concluded that a body
+both stale AND geometrically unusable could not be built, because features validate their results.
+**That conclusion was wrong.** `LoftFeatureTests` showed an `Intersect` operation that misses
+leaves an empty body the regenerator STORES with a healthy state. Building that gave a real
+`EmptyBody` test — a branch about to be recorded as unreachable — and a fixture where the two
+candidate diagnostics differ, so M3 now fails and the ordering is a property of the suite instead
+of a comment.
+
+**Left open and named, not fixed:** `partMassProperties` has the same currency gap this milestone
+closed for meshing, so mass properties can be computed from stale geometry after an unregenerated
+edit. Changing P15 behaviour is not authorized here; `isCurrent()` now exists for whoever takes
+that decision.
 
 ### Critical stale-geometry rule
 
@@ -1690,71 +1769,67 @@ docs/engineering/
 # CURRENT NEXT STEP
 
 ```text
-P16-GEOM-001 — Geometry Preparation / Validity / Regeneration Boundary
+P16-SURF-001 — Engineering Surface Mesh
 ```
 
-`P16-DATA-001` passed on 2026-09-30: 2875/2875 in three presets from clean, 9225 executions, 0
+`P16-GEOM-001` passed on 2026-10-01: 2900/2900 in three presets from clean, 8950 executions, 0
 failures, 0 warnings in all six logs, and the qualified tree identical to the committed tree.
-Evidence: [docs/verification/P16-DATA-001/](docs/verification/P16-DATA-001/README.md).
+Evidence: [docs/verification/P16-GEOM-001/](docs/verification/P16-GEOM-001/README.md).
 
-The mesh data model now exists and is qualified. What `P16-GEOM-001` must honour, so it is not
-re-derived:
+**`P16-SURF-001` obtains its geometry from `requireMeshableGeometry` and performs no body-validity
+checks of its own.** That is the point of the boundary: one meshability rule, not one per backend.
 
-```text
-a mesh is BUILT, not mutated    MeshBuilder is the only construction path, and a
-                                finished Mesh is immutable by API
-handles are strictly increasing gaps allowed, duplicates unrepresentable, lookup
-                                by identity and never by index
-one frame, no transform         ADR-032. A mesh is in its body's frame
-positive Jacobian               ADR-032. Inverted is REJECTED, never repaired
-regions                         one per solid, no node shared between them
-no CAD reference yet             attribution to a FaceName is P16-MAP-001's
+```cpp
+Result<MeshableGeometry> requireMeshableGeometry(const Document&, const features::Regenerator&,
+                                                ObjectId feature);
 ```
 
-What `P16-GEOM-001` owns, and the guard it already has:
+It gives the authoritative `Body` (by value, sharing the kernel shape), the solid count, the
+kernel's volume, and a `GeometryRevision` for the mesh to record.
+
+What the surface mesh must honour, so it is not re-derived:
 
 ```text
-geometry validity      Body::isValid() and TopologySummary exist; P16 defines no
-                       second validity notion
-the regeneration
-boundary               a mesh must never be built from stale geometry. The
-                       configuration-override refusal in
-                       src/features/material/MassProperties.cpp is the shape to
-                       reuse UNCHANGED (ADR-030), and Document::revision() is
-                       MONOTONIC -- every write is ++revision_ and undo
-                       increments it too -- so a build stamp cannot match a
-                       different state
-the surface gap        geometry::triangulate() is watertight (15 assertions
-                       across 11 files) but NOT topologically conforming: a
-                       vertex on a shared edge appears once per face. Welding it
-                       is P16-SURF-001's. Poly_MergeNodesTool is NOT the route --
-                       it splits nodes at sharp corners
+the gap to close     geometry::triangulate() is watertight -- 15 assertions across
+                     11 files -- but NOT topologically conforming: a vertex on a
+                     shared edge appears once per face. Welding it is this
+                     milestone's work
+NOT the route        Poly_MergeNodesTool merges "for visualization purposes ... but
+                     split the ones on sharp corners", which is the opposite of
+                     watertight
+attribution          core/geometry's listFaces() already returns each face's
+                     FaceName SET, propagated through booleans by kernel history.
+                     The relation is MANY-TO-MANY and an unnamed face is NORMAL --
+                     primitives take no namer, so a box's faces carry no FaceName
+                     (ADR-032). Facet-to-face attribution proper is P16-MAP-001's
+the data model       MeshBuilder is the only construction path; handles strictly
+                     increasing; a finished Mesh is immutable; one region per solid
+                     with no node shared between regions; positive signed volume
+                     REJECTED if negative, never renormalised
+one frame            the body's, no transform (ADR-032)
 ```
 
-Open from the P16-ARCH-001 review, still owed:
+Still owed, and coming from earlier reviews:
 
 ```text
-F6   a MeshControl whose body is deleted must become explicitly UNRESOLVED and
-     must not mesh nothing and report success. P16-DATA-001 created no
-     MeshControl, so this remains P16-GEOM-001's or P16-CMD-001's
-```
-
-Deferred from P16-DATA-001, with the reason recorded at its declaration:
-
-```text
-a topological duplicate -- two tetrahedra on the same four nodes -- is not
-rejected. Which of the two is right is not answerable from connectivity alone,
-one ordering may be inverted, and detecting the pair needs a canonical key over
-node sets that is a whole-mesh question. P16-QUALITY-001's.
+F6 (P16-ARCH)   a MeshControl whose body is deleted must become explicitly
+                UNRESOLVED and must not mesh nothing and report success. No
+                MeshControl exists yet, so this is still open
+F6 (P16-GEOM)   partMassProperties has no currency check, so mass properties can be
+                computed from stale geometry after an unregenerated edit. A P15
+                behaviour change, so a scope decision rather than Claude's
+topological
+duplicates      two tetrahedra on the same four nodes are not rejected.
+                P16-QUALITY-001's, with the reason recorded at the declaration
 ```
 
 `P16-VOL-001` still carries an entry condition nothing before it does:
 
 ```text
 the volume-meshing backend dependency is approved, or the fallback is chosen
-deliberately. BetterCAD has NO licence, so admitting a copyleft backend
-constrains one that has not been chosen -- a project decision, not Claude's.
-See docs/verification/P16-ARCH-001/BACKEND_MATRIX.md.
+deliberately. BetterCAD has NO licence, so admitting a copyleft backend constrains
+one that has not been chosen -- a project decision, not Claude's. See
+docs/verification/P16-ARCH-001/BACKEND_MATRIX.md.
 ```
 
 Carried defects, neither P16's, and the first can lose a user's work:
@@ -1764,12 +1839,11 @@ the FileIo replace defect     a document save can still lose to a file
                               synchroniser. Arguably ahead of any new milestone.
 
 configuration regeneration    a configuration override does not rebuild the
-                              geometry it changes. Mass properties REFUSE under
-                              one, and P16 meshing will refuse for the same
-                              reason with the same guard. Fixing the
-                              regeneration removes the guard and its tests.
+                              geometry it changes. Mass properties REFUSE under one,
+                              and P16 meshing now refuses for the same reason with
+                              the same guard. Fixing the regeneration removes both
+                              guards and their tests.
 ```
 
-Also carried from earlier phases: hole POSITION dimensions are unsupported, GD&T symbols are
-not fully embedded in PDF/DXF, and cross-preset export byte identity is not guaranteed for
-drawings.
+Also carried from earlier phases: hole POSITION dimensions are unsupported, GD&T symbols are not
+fully embedded in PDF/DXF, and cross-preset export byte identity is not guaranteed for drawings.

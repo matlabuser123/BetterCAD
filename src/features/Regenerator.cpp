@@ -213,6 +213,46 @@ const Error* Regenerator::error(ObjectId item) const noexcept {
     return it == errors_.end() ? nullptr : &it->second;
 }
 
+std::optional<std::uint64_t> Regenerator::builtRevision(ObjectId item) const noexcept {
+    const auto it = builtRevisions_.find(item);
+    return it == builtRevisions_.end() ? std::nullopt : std::optional<std::uint64_t>{it->second};
+}
+
+std::set<ObjectId> Regenerator::dirtySources(const Document& document, const DependencyGraph& graph,
+                                             const std::vector<MissingReference>& missing) const {
+    std::set<ObjectId> changed;
+    for (const ObjectId id : graph.nodes()) {
+        const auto built = builtRevisions_.find(id);
+        const auto previous = states_.find(id);
+        const bool unhealthy = previous != states_.end() &&
+                               (previous->second == NodeState::Failed || previous->second == NodeState::Blocked);
+        if (built == builtRevisions_.end() || built->second != document.revisionOf(id) || unhealthy) {
+            changed.insert(id);
+        }
+    }
+    for (const MissingReference& reference : missing) {
+        changed.insert(reference.dependent);
+    }
+    return changed;
+}
+
+bool Regenerator::isCurrent(const Document& document, ObjectId item) const {
+    // Nothing stored is nothing current, and an item the document no longer has
+    // cannot be current either.
+    if (!builtRevisions_.contains(item)) {
+        return false;
+    }
+    const DocumentGraph documentGraph = buildDependencyGraph(document);
+    if (!documentGraph.graph.contains(item)) {
+        return false;
+    }
+    // downstreamOf() includes its seeds, so this covers both "this item moved"
+    // and "something it is built from moved".
+    const std::set<ObjectId> stale =
+        documentGraph.graph.downstreamOf(dirtySources(document, documentGraph.graph, documentGraph.missing));
+    return !stale.contains(item);
+}
+
 Result<RegenerationReport> Regenerator::regenerateAll(Document& document) {
     builtRevisions_.clear();
     states_.clear();
@@ -248,21 +288,12 @@ Result<RegenerationReport> Regenerator::regenerate(Document& document) {
     forgetMissing(bodies_);
 
     // Sources of dirtiness: new or edited items, items that failed before and
-    // items with missing references.
-    std::set<ObjectId> changed;
-    for (const ObjectId id : graph.nodes()) {
-        const auto built = builtRevisions_.find(id);
-        const auto previous = states_.find(id);
-        const bool unhealthy = previous != states_.end() &&
-                               (previous->second == NodeState::Failed || previous->second == NodeState::Blocked);
-        if (built == builtRevisions_.end() || built->second != document.revisionOf(id) || unhealthy) {
-            changed.insert(id);
-        }
-    }
+    // items with missing references. Shared with isCurrent() so that "what must
+    // be rebuilt" and "what is stale" cannot become two different rules.
+    std::set<ObjectId> changed = dirtySources(document, graph, documentGraph.missing);
     std::map<ObjectId, ObjectId> missing;
     for (const MissingReference& reference : documentGraph.missing) {
         missing.try_emplace(reference.dependent, reference.missing);
-        changed.insert(reference.dependent);
     }
     // A failed expression is a source of dirtiness even when its parameter did
     // not change (e.g. a name it uses was deleted or renamed).

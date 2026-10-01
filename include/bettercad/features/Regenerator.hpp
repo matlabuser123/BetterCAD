@@ -2,6 +2,7 @@
 
 #include <bettercad/core/Error.hpp>
 #include <bettercad/core/Id.hpp>
+#include <bettercad/core/document/DependencyGraph.hpp>
 #include <bettercad/core/document/Document.hpp>
 #include <bettercad/core/geometry/Body.hpp>
 #include <bettercad/core/math/RigidTransform.hpp>
@@ -11,6 +12,7 @@
 #include <functional>
 #include <map>
 #include <optional>
+#include <set>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -123,7 +125,56 @@ public:
     [[nodiscard]] std::optional<NodeState> state(ObjectId item) const noexcept;
     [[nodiscard]] const Error* error(ObjectId item) const noexcept;
 
+    /// The revision @p item's stored result was built from, or none if it has no
+    /// stored result.
+    ///
+    /// state() answers a different question and the two are easy to confuse.
+    /// state() reports what the LAST PASS did; this reports what the stored
+    /// result was built FROM. After an edit with no regeneration in between,
+    /// state() still says UpToDate while this no longer matches
+    /// Document::revisionOf(item) -- which is precisely the situation in which a
+    /// stored body is stale (P16-GEOM-001).
+    [[nodiscard]] std::optional<std::uint64_t> builtRevision(ObjectId item) const noexcept;
+
+    /// Whether @p item's stored result still follows from @p document's CURRENT
+    /// state.
+    ///
+    /// False when the item has no stored result, when its last pass failed or
+    /// blocked it, when its own revision has moved since it was built, when
+    /// something it depends on has moved, or when a reference it needs is
+    /// missing. True means nothing the document's revisions can see is out of
+    /// date.
+    ///
+    /// Checking the item's OWN revision is not enough, and that is the trap this
+    /// exists to close: editing a sketch does not change the revision of the
+    /// extrude that consumes it, so an own-revision comparison would call the
+    /// extrude's body current while its profile had moved underneath it. The
+    /// answer walks the dependency graph, using the same sources of dirtiness
+    /// that regenerate() uses to decide what to rebuild.
+    ///
+    /// Read-only: it builds a dependency graph and reads revisions, and mutates
+    /// neither the document nor the regenerator. It does NOT evaluate parameter
+    /// expressions, which only a pass can do, so a driven value that would
+    /// change on the next pass is not seen here directly -- it is seen through
+    /// the revision of whatever the expression reads. The omission can only make
+    /// this answer true where a pass would have found more work, never false
+    /// where a pass would have found none.
+    [[nodiscard]] bool isCurrent(const Document& document, ObjectId item) const;
+
 private:
+    /// Items whose stored result no longer follows from @p document: never
+    /// built, built from a different revision, failed or blocked last pass, or
+    /// waiting on a missing reference.
+    ///
+    /// ONE implementation, used by regenerate() to seed what it rebuilds and by
+    /// isCurrent() to answer whether a stored result is still good. A second copy
+    /// of this rule would be a second notion of staleness, and the two would
+    /// drift. regenerate() adds one further source of its own -- a parameter
+    /// expression that failed in the pass it is running -- which is visibly
+    /// additive at the call site.
+    [[nodiscard]] std::set<ObjectId> dirtySources(const Document& document, const DependencyGraph& graph,
+                                                  const std::vector<MissingReference>& missing) const;
+
     std::map<std::string, RegenerationHandler, std::less<>> handlers_;
     std::optional<DocumentId> documentId_;
     std::map<ObjectId, std::uint64_t> builtRevisions_;

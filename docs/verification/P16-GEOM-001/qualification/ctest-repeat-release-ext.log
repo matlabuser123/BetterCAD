@@ -1,0 +1,255 @@
+Test project C:/Users/uqhas/AppData/Local/bc-build/release-ext
+      Start 1517: unit.Meshable_AcceptsAMultiSolidBodyAndReportsTheSolidCount
+      Start 1521: unit.Meshable_GivesTheSameAnswerAndTheSameVolumeOnRepeatedCalls
+      Start 1518: unit.Meshable_AcceptsGeometryAgainOnceItHasBeenRegenerated
+      Start 1515: unit.Meshable_AcceptsACurrentBoxAndReportsItsAnalyticalVolume
+      Start 1523: unit.Meshable_PreparationDoesNotTouchTheDocumentOrTheRegenerator
+      Start 1514: unit.Meshable_AHollowTubePreservesItsVoidAndItsAnalyticalVolume
+      Start 1519: unit.Meshable_AcceptsGeometryUnderAConfigurationThatOverridesNothing
+      Start 1527: unit.Meshable_RefusesAnEmptyBodyThatRegenerationNonethelessStored
+    Test #1517: unit.Meshable_AcceptsAMultiSolidBodyAndReportsTheSolidCount ................   Passed    0.27 sec
+      Start 1517: unit.Meshable_AcceptsAMultiSolidBodyAndReportsTheSolidCount
+    Test #1515: unit.Meshable_AcceptsACurrentBoxAndReportsItsAnalyticalVolume ..............   Passed    0.23 sec
+      Start 1515: unit.Meshable_AcceptsACurrentBoxAndReportsItsAnalyticalVolume
+    Test #1518: unit.Meshable_AcceptsGeometryAgainOnceItHasBeenRegenerated .................   Passed    0.28 sec
+      Start 1518: unit.Meshable_AcceptsGeometryAgainOnceItHasBeenRegenerated
+    Test #1521: unit.Meshable_GivesTheSameAnswerAndTheSameVolumeOnRepeatedCalls ............   Passed    0.38 sec
+      Start 1521: unit.Meshable_GivesTheSameAnswerAndTheSameVolumeOnRepeatedCalls
+    Test #1527: unit.Meshable_RefusesAnEmptyBodyThatRegenerationNonethelessStored ..........   Passed    0.23 sec
+      Start 1527: unit.Meshable_RefusesAnEmptyBodyThatRegenerationNonethelessStored
+    Test #1514: unit.Meshable_AHollowTubePreservesItsVoidAndItsAnalyticalVolume ............   Passed    0.32 sec
+      Start 1514: unit.Meshable_AHollowTubePreservesItsVoidAndItsAnalyticalVolume
+    Test #1523: unit.Meshable_PreparationDoesNotTouchTheDocumentOrTheRegenerator ...........   Passed    0.36 sec
+      Start 1523: unit.Meshable_PreparationDoesNotTouchTheDocumentOrTheRegenerator
+    Test #1519: unit.Meshable_AcceptsGeometryUnderAConfigurationThatOverridesNothing .......   Passed    0.32 sec
+      Start 1519: unit.Meshable_AcceptsGeometryUnderAConfigurationThatOverridesNothing
+    Test #1515: unit.Meshable_AcceptsACurrentBoxAndReportsItsAnalyticalVolume ..............   Passed    0.20 sec
+      Start 1515: unit.Meshable_AcceptsACurrentBoxAndReportsItsAnalyticalVolume
+    Test #1517: unit.Meshable_AcceptsAMultiSolidBodyAndReportsTheSolidCount ................   Passed    0.26 sec
+      Start 1517: unit.Meshable_AcceptsAMultiSolidBodyAndReportsTheSolidCount
+    Test #1518: unit.Meshable_AcceptsGeometryAgainOnceItHasBeenRegenerated .................   Passed    0.23 sec
+      Start 1518: unit.Meshable_AcceptsGeometryAgainOnceItHasBeenRegenerated
+    Test #1527: unit.Meshable_RefusesAnEmptyBodyThatRegenerationNonethelessStored ..........   Passed    0.14 sec
+      Start 1527: unit.Meshable_RefusesAnEmptyBodyThatRegenerationNonethelessStored
+    Test #1514: unit.Meshable_AHollowTubePreservesItsVoidAndItsAnalyticalVolume ............   Passed    0.19 sec
+      Start 1514: unit.Meshable_AHollowTubePreservesItsVoidAndItsAnalyticalVolume
+    Test #1519: unit.Meshable_AcceptsGeometryUnderAConfigurationThatOverridesNothing .......   Passed    0.18 sec
+      Start 1519: unit.Meshable_AcceptsGeometryUnderAConfigurationThatOverridesNothing
+    Test #1523: unit.Meshable_PreparationDoesNotTouchTheDocumentOrTheRegenerator ...........   Passed    0.30 sec
+      Start 1523: unit.Meshable_PreparationDoesNotTouchTheDocumentOrTheRegenerator
+    Test #1515: unit.Meshable_AcceptsACurrentBoxAndReportsItsAnalyticalVolume ..............   Passed    0.28 sec
+      Start 1515: unit.Meshable_AcceptsACurrentBoxAndReportsItsAnalyticalVolume
+    Test #1521: unit.Meshable_GivesTheSameAnswerAndTheSameVolumeOnRepeatedCalls ............   Passed    0.39 sec
+      Start 1521: unit.Meshable_GivesTheSameAnswerAndTheSameVolumeOnRepeatedCalls
+    Test #1527: unit.Meshable_RefusesAnEmptyBodyThatRegenerationNonethelessStored ..........   Passed    0.24 sec
+      Start 1527: unit.Meshable_RefusesAnEmptyBodyThatRegenerationNonethelessStored
+    Test #1517: unit.Meshable_AcceptsAMultiSolidBodyAndReportsTheSolidCount ................   Passed    0.30 sec
+      Start 1517: unit.Meshable_AcceptsAMultiSolidBodyAndReportsTheSolidCount
+    Test #1518: unit.Meshable_AcceptsGeometryAgainOnceItHasBeenRegenerated .................   Passed    0.30 sec
+      Start 1518: unit.Meshable_AcceptsGeometryAgainOnceItHasBeenRegenerated
+    Test #1514: unit.Meshable_AHollowTubePreservesItsVoidAndItsAnalyticalVolume ............   Passed    0.23 sec
+      Start 1514: unit.Meshable_AHollowTubePreservesItsVoidAndItsAnalyticalVolume
+    Test #1519: unit.Meshable_AcceptsGeometryUnderAConfigurationThatOverridesNothing .......   Passed    0.22 sec
+      Start 1519: unit.Meshable_AcceptsGeometryUnderAConfigurationThatOverridesNothing
+    Test #1515: unit.Meshable_AcceptsACurrentBoxAndReportsItsAnalyticalVolume ..............   Passed    0.18 sec
+      Start 1515: unit.Meshable_AcceptsACurrentBoxAndReportsItsAnalyticalVolume
+    Test #1527: unit.Meshable_RefusesAnEmptyBodyThatRegenerationNonethelessStored ..........   Passed    0.17 sec
+      Start 1527: unit.Meshable_RefusesAnEmptyBodyThatRegenerationNonethelessStored
+    Test #1518: unit.Meshable_AcceptsGeometryAgainOnceItHasBeenRegenerated .................   Passed    0.16 sec
+      Start 1518: unit.Meshable_AcceptsGeometryAgainOnceItHasBeenRegenerated
+    Test #1517: unit.Meshable_AcceptsAMultiSolidBodyAndReportsTheSolidCount ................   Passed    0.20 sec
+      Start 1517: unit.Meshable_AcceptsAMultiSolidBodyAndReportsTheSolidCount
+    Test #1514: unit.Meshable_AHollowTubePreservesItsVoidAndItsAnalyticalVolume ............   Passed    0.18 sec
+      Start 1514: unit.Meshable_AHollowTubePreservesItsVoidAndItsAnalyticalVolume
+    Test #1519: unit.Meshable_AcceptsGeometryUnderAConfigurationThatOverridesNothing .......   Passed    0.18 sec
+      Start 1519: unit.Meshable_AcceptsGeometryUnderAConfigurationThatOverridesNothing
+ 1/25 Test #1527: unit.Meshable_RefusesAnEmptyBodyThatRegenerationNonethelessStored ..........   Passed    0.15 sec
+      Start 1516: unit.Meshable_AcceptsACylinderAndReportsItsAnalyticalVolume
+ 2/25 Test #1515: unit.Meshable_AcceptsACurrentBoxAndReportsItsAnalyticalVolume ..............   Passed    0.20 sec
+    Test #1523: unit.Meshable_PreparationDoesNotTouchTheDocumentOrTheRegenerator ...........   Passed    0.40 sec
+      Start 1523: unit.Meshable_PreparationDoesNotTouchTheDocumentOrTheRegenerator
+      Start 1524: unit.Meshable_RecoversAfterAFailedEditIsUndone
+    Test #1521: unit.Meshable_GivesTheSameAnswerAndTheSameVolumeOnRepeatedCalls ............   Passed    0.47 sec
+      Start 1521: unit.Meshable_GivesTheSameAnswerAndTheSameVolumeOnRepeatedCalls
+ 3/25 Test #1519: unit.Meshable_AcceptsGeometryUnderAConfigurationThatOverridesNothing .......   Passed    0.21 sec
+ 4/25 Test #1514: unit.Meshable_AHollowTubePreservesItsVoidAndItsAnalyticalVolume ............   Passed    0.24 sec
+ 5/25 Test #1517: unit.Meshable_AcceptsAMultiSolidBodyAndReportsTheSolidCount ................   Passed    0.25 sec
+ 6/25 Test #1518: unit.Meshable_AcceptsGeometryAgainOnceItHasBeenRegenerated .................   Passed    0.28 sec
+      Start  931: unit.GeometryRevision_IsUnchangedByAMaterialEdit
+      Start  929: unit.GeometryRevision_ChangesWhenAnUpstreamProfileChangesTheGeometry
+      Start 1522: unit.Meshable_KeepsABodyWhereItIsInModelSpace
+      Start 1525: unit.Meshable_RefusesAFeatureBlockedByAFailedUpstreamSketch
+    Test #1524: unit.Meshable_RecoversAfterAFailedEditIsUndone .............................   Passed    0.23 sec
+      Start 1524: unit.Meshable_RecoversAfterAFailedEditIsUndone
+    Test #1516: unit.Meshable_AcceptsACylinderAndReportsItsAnalyticalVolume ................   Passed    0.29 sec
+      Start 1516: unit.Meshable_AcceptsACylinderAndReportsItsAnalyticalVolume
+    Test #1523: unit.Meshable_PreparationDoesNotTouchTheDocumentOrTheRegenerator ...........   Passed    0.28 sec
+      Start 1523: unit.Meshable_PreparationDoesNotTouchTheDocumentOrTheRegenerator
+    Test  #929: unit.GeometryRevision_ChangesWhenAnUpstreamProfileChangesTheGeometry .......   Passed    0.14 sec
+      Start  929: unit.GeometryRevision_ChangesWhenAnUpstreamProfileChangesTheGeometry
+    Test  #931: unit.GeometryRevision_IsUnchangedByAMaterialEdit ...........................   Passed    0.19 sec
+      Start  931: unit.GeometryRevision_IsUnchangedByAMaterialEdit
+    Test #1522: unit.Meshable_KeepsABodyWhereItIsInModelSpace ..............................   Passed    0.15 sec
+      Start 1522: unit.Meshable_KeepsABodyWhereItIsInModelSpace
+    Test #1521: unit.Meshable_GivesTheSameAnswerAndTheSameVolumeOnRepeatedCalls ............   Passed    0.29 sec
+      Start 1521: unit.Meshable_GivesTheSameAnswerAndTheSameVolumeOnRepeatedCalls
+    Test #1525: unit.Meshable_RefusesAFeatureBlockedByAFailedUpstreamSketch ................   Passed    0.21 sec
+      Start 1525: unit.Meshable_RefusesAFeatureBlockedByAFailedUpstreamSketch
+    Test #1524: unit.Meshable_RecoversAfterAFailedEditIsUndone .............................   Passed    0.23 sec
+      Start 1524: unit.Meshable_RecoversAfterAFailedEditIsUndone
+    Test #1516: unit.Meshable_AcceptsACylinderAndReportsItsAnalyticalVolume ................   Passed    0.24 sec
+      Start 1516: unit.Meshable_AcceptsACylinderAndReportsItsAnalyticalVolume
+    Test  #929: unit.GeometryRevision_ChangesWhenAnUpstreamProfileChangesTheGeometry .......   Passed    0.22 sec
+      Start  929: unit.GeometryRevision_ChangesWhenAnUpstreamProfileChangesTheGeometry
+    Test #1522: unit.Meshable_KeepsABodyWhereItIsInModelSpace ..............................   Passed    0.21 sec
+      Start 1522: unit.Meshable_KeepsABodyWhereItIsInModelSpace
+    Test  #931: unit.GeometryRevision_IsUnchangedByAMaterialEdit ...........................   Passed    0.28 sec
+      Start  931: unit.GeometryRevision_IsUnchangedByAMaterialEdit
+    Test #1525: unit.Meshable_RefusesAFeatureBlockedByAFailedUpstreamSketch ................   Passed    0.19 sec
+      Start 1525: unit.Meshable_RefusesAFeatureBlockedByAFailedUpstreamSketch
+ 7/25 Test #1523: unit.Meshable_PreparationDoesNotTouchTheDocumentOrTheRegenerator ...........   Passed    0.36 sec
+      Start 1520: unit.Meshable_ConfigurationGuardIsCheckedBeforeAnythingElse
+    Test  #929: unit.GeometryRevision_ChangesWhenAnUpstreamProfileChangesTheGeometry .......   Passed    0.23 sec
+      Start  929: unit.GeometryRevision_ChangesWhenAnUpstreamProfileChangesTheGeometry
+ 8/25 Test #1521: unit.Meshable_GivesTheSameAnswerAndTheSameVolumeOnRepeatedCalls ............   Passed    0.38 sec
+      Start  932: unit.GeometryRevision_IsUnchangedByRenamingTheFeature
+    Test #1516: unit.Meshable_AcceptsACylinderAndReportsItsAnalyticalVolume ................   Passed    0.30 sec
+      Start 1516: unit.Meshable_AcceptsACylinderAndReportsItsAnalyticalVolume
+    Test #1524: unit.Meshable_RecoversAfterAFailedEditIsUndone .............................   Passed    0.34 sec
+      Start 1524: unit.Meshable_RecoversAfterAFailedEditIsUndone
+    Test #1522: unit.Meshable_KeepsABodyWhereItIsInModelSpace ..............................   Passed    0.29 sec
+      Start 1522: unit.Meshable_KeepsABodyWhereItIsInModelSpace
+    Test #1520: unit.Meshable_ConfigurationGuardIsCheckedBeforeAnythingElse ................   Passed    0.21 sec
+      Start 1520: unit.Meshable_ConfigurationGuardIsCheckedBeforeAnythingElse
+    Test #1525: unit.Meshable_RefusesAFeatureBlockedByAFailedUpstreamSketch ................   Passed    0.26 sec
+      Start 1525: unit.Meshable_RefusesAFeatureBlockedByAFailedUpstreamSketch
+    Test  #931: unit.GeometryRevision_IsUnchangedByAMaterialEdit ...........................   Passed    0.30 sec
+      Start  931: unit.GeometryRevision_IsUnchangedByAMaterialEdit
+    Test  #929: unit.GeometryRevision_ChangesWhenAnUpstreamProfileChangesTheGeometry .......   Passed    0.15 sec
+      Start  929: unit.GeometryRevision_ChangesWhenAnUpstreamProfileChangesTheGeometry
+    Test  #932: unit.GeometryRevision_IsUnchangedByRenamingTheFeature ......................   Passed    0.15 sec
+      Start  932: unit.GeometryRevision_IsUnchangedByRenamingTheFeature
+    Test #1516: unit.Meshable_AcceptsACylinderAndReportsItsAnalyticalVolume ................   Passed    0.15 sec
+      Start 1516: unit.Meshable_AcceptsACylinderAndReportsItsAnalyticalVolume
+    Test #1522: unit.Meshable_KeepsABodyWhereItIsInModelSpace ..............................   Passed    0.23 sec
+      Start 1522: unit.Meshable_KeepsABodyWhereItIsInModelSpace
+    Test #1524: unit.Meshable_RecoversAfterAFailedEditIsUndone .............................   Passed    0.26 sec
+      Start 1524: unit.Meshable_RecoversAfterAFailedEditIsUndone
+    Test #1520: unit.Meshable_ConfigurationGuardIsCheckedBeforeAnythingElse ................   Passed    0.24 sec
+      Start 1520: unit.Meshable_ConfigurationGuardIsCheckedBeforeAnythingElse
+ 9/25 Test  #929: unit.GeometryRevision_ChangesWhenAnUpstreamProfileChangesTheGeometry .......   Passed    0.21 sec
+      Start 1528: unit.Meshable_RefusesAnObjectThatDoesNotExist
+    Test  #931: unit.GeometryRevision_IsUnchangedByAMaterialEdit ...........................   Passed    0.28 sec
+      Start  931: unit.GeometryRevision_IsUnchangedByAMaterialEdit
+    Test #1525: unit.Meshable_RefusesAFeatureBlockedByAFailedUpstreamSketch ................   Passed    0.32 sec
+      Start 1525: unit.Meshable_RefusesAFeatureBlockedByAFailedUpstreamSketch
+    Test  #932: unit.GeometryRevision_IsUnchangedByRenamingTheFeature ......................   Passed    0.28 sec
+      Start  932: unit.GeometryRevision_IsUnchangedByRenamingTheFeature
+10/25 Test #1516: unit.Meshable_AcceptsACylinderAndReportsItsAnalyticalVolume ................   Passed    0.28 sec
+11/25 Test #1522: unit.Meshable_KeepsABodyWhereItIsInModelSpace ..............................   Passed    0.17 sec
+      Start  930: unit.GeometryRevision_IsStableWhenNothingChanges
+      Start 1526: unit.Meshable_RefusesAFeatureThatHasNeverBeenRegenerated
+    Test #1520: unit.Meshable_ConfigurationGuardIsCheckedBeforeAnythingElse ................   Passed    0.23 sec
+      Start 1520: unit.Meshable_ConfigurationGuardIsCheckedBeforeAnythingElse
+12/25 Test #1524: unit.Meshable_RecoversAfterAFailedEditIsUndone .............................   Passed    0.27 sec
+    Test #1528: unit.Meshable_RefusesAnObjectThatDoesNotExist ..............................   Passed    0.23 sec
+      Start 1528: unit.Meshable_RefusesAnObjectThatDoesNotExist
+13/25 Test #1525: unit.Meshable_RefusesAFeatureBlockedByAFailedUpstreamSketch ................   Passed    0.18 sec
+14/25 Test  #931: unit.GeometryRevision_IsUnchangedByAMaterialEdit ...........................   Passed    0.20 sec
+    Test  #932: unit.GeometryRevision_IsUnchangedByRenamingTheFeature ......................   Passed    0.16 sec
+      Start  932: unit.GeometryRevision_IsUnchangedByRenamingTheFeature
+      Start 1530: unit.Meshable_RefusesEveryGeometryWhileAConfigurationOverridesAParameter
+      Start 1529: unit.Meshable_RefusesAnObjectThatMakesNoBodyAndSaysSoDistinctly
+      Start 1533: unit.Meshable_StalenessIsReportedBeforeTheOldBodyIsInspected
+    Test  #930: unit.GeometryRevision_IsStableWhenNothingChanges ...........................   Passed    0.22 sec
+      Start  930: unit.GeometryRevision_IsStableWhenNothingChanges
+    Test #1526: unit.Meshable_RefusesAFeatureThatHasNeverBeenRegenerated ...................   Passed    0.19 sec
+      Start 1526: unit.Meshable_RefusesAFeatureThatHasNeverBeenRegenerated
+    Test #1528: unit.Meshable_RefusesAnObjectThatDoesNotExist ..............................   Passed    0.15 sec
+      Start 1528: unit.Meshable_RefusesAnObjectThatDoesNotExist
+    Test #1520: unit.Meshable_ConfigurationGuardIsCheckedBeforeAnythingElse ................   Passed    0.20 sec
+      Start 1520: unit.Meshable_ConfigurationGuardIsCheckedBeforeAnythingElse
+    Test  #932: unit.GeometryRevision_IsUnchangedByRenamingTheFeature ......................   Passed    0.17 sec
+      Start  932: unit.GeometryRevision_IsUnchangedByRenamingTheFeature
+    Test #1533: unit.Meshable_StalenessIsReportedBeforeTheOldBodyIsInspected ...............   Passed    0.13 sec
+      Start 1533: unit.Meshable_StalenessIsReportedBeforeTheOldBodyIsInspected
+    Test #1530: unit.Meshable_RefusesEveryGeometryWhileAConfigurationOverridesAParameter ...   Passed    0.20 sec
+      Start 1530: unit.Meshable_RefusesEveryGeometryWhileAConfigurationOverridesAParameter
+    Test #1529: unit.Meshable_RefusesAnObjectThatMakesNoBodyAndSaysSoDistinctly ............   Passed    0.20 sec
+      Start 1529: unit.Meshable_RefusesAnObjectThatMakesNoBodyAndSaysSoDistinctly
+15/25 Test #1520: unit.Meshable_ConfigurationGuardIsCheckedBeforeAnythingElse ................   Passed    0.13 sec
+      Start 1531: unit.Meshable_RefusesGeometryThatIsStaleBecauseItsProfileMoved
+    Test  #930: unit.GeometryRevision_IsStableWhenNothingChanges ...........................   Passed    0.21 sec
+      Start  930: unit.GeometryRevision_IsStableWhenNothingChanges
+    Test #1526: unit.Meshable_RefusesAFeatureThatHasNeverBeenRegenerated ...................   Passed    0.21 sec
+      Start 1526: unit.Meshable_RefusesAFeatureThatHasNeverBeenRegenerated
+    Test #1528: unit.Meshable_RefusesAnObjectThatDoesNotExist ..............................   Passed    0.21 sec
+      Start 1528: unit.Meshable_RefusesAnObjectThatDoesNotExist
+    Test #1533: unit.Meshable_StalenessIsReportedBeforeTheOldBodyIsInspected ...............   Passed    0.20 sec
+      Start 1533: unit.Meshable_StalenessIsReportedBeforeTheOldBodyIsInspected
+16/25 Test  #932: unit.GeometryRevision_IsUnchangedByRenamingTheFeature ......................   Passed    0.25 sec
+      Start 1532: unit.Meshable_ReportsStalenessRatherThanTheDefectOfAStaleBody
+    Test #1529: unit.Meshable_RefusesAnObjectThatMakesNoBodyAndSaysSoDistinctly ............   Passed    0.21 sec
+      Start 1529: unit.Meshable_RefusesAnObjectThatMakesNoBodyAndSaysSoDistinctly
+    Test  #930: unit.GeometryRevision_IsStableWhenNothingChanges ...........................   Passed    0.16 sec
+      Start  930: unit.GeometryRevision_IsStableWhenNothingChanges
+    Test #1530: unit.Meshable_RefusesEveryGeometryWhileAConfigurationOverridesAParameter ...   Passed    0.26 sec
+      Start 1530: unit.Meshable_RefusesEveryGeometryWhileAConfigurationOverridesAParameter
+    Test #1526: unit.Meshable_RefusesAFeatureThatHasNeverBeenRegenerated ...................   Passed    0.18 sec
+      Start 1526: unit.Meshable_RefusesAFeatureThatHasNeverBeenRegenerated
+    Test #1529: unit.Meshable_RefusesAnObjectThatMakesNoBodyAndSaysSoDistinctly ............   Passed    0.10 sec
+      Start 1529: unit.Meshable_RefusesAnObjectThatMakesNoBodyAndSaysSoDistinctly
+    Test #1533: unit.Meshable_StalenessIsReportedBeforeTheOldBodyIsInspected ...............   Passed    0.17 sec
+      Start 1533: unit.Meshable_StalenessIsReportedBeforeTheOldBodyIsInspected
+    Test #1531: unit.Meshable_RefusesGeometryThatIsStaleBecauseItsProfileMoved .............   Passed    0.31 sec
+      Start 1531: unit.Meshable_RefusesGeometryThatIsStaleBecauseItsProfileMoved
+    Test #1528: unit.Meshable_RefusesAnObjectThatDoesNotExist ..............................   Passed    0.27 sec
+      Start 1528: unit.Meshable_RefusesAnObjectThatDoesNotExist
+    Test #1532: unit.Meshable_ReportsStalenessRatherThanTheDefectOfAStaleBody ..............   Passed    0.21 sec
+      Start 1532: unit.Meshable_ReportsStalenessRatherThanTheDefectOfAStaleBody
+    Test  #930: unit.GeometryRevision_IsStableWhenNothingChanges ...........................   Passed    0.19 sec
+      Start  930: unit.GeometryRevision_IsStableWhenNothingChanges
+    Test #1526: unit.Meshable_RefusesAFeatureThatHasNeverBeenRegenerated ...................   Passed    0.17 sec
+      Start 1526: unit.Meshable_RefusesAFeatureThatHasNeverBeenRegenerated
+    Test #1529: unit.Meshable_RefusesAnObjectThatMakesNoBodyAndSaysSoDistinctly ............   Passed    0.13 sec
+      Start 1529: unit.Meshable_RefusesAnObjectThatMakesNoBodyAndSaysSoDistinctly
+    Test #1530: unit.Meshable_RefusesEveryGeometryWhileAConfigurationOverridesAParameter ...   Passed    0.23 sec
+      Start 1530: unit.Meshable_RefusesEveryGeometryWhileAConfigurationOverridesAParameter
+    Test #1533: unit.Meshable_StalenessIsReportedBeforeTheOldBodyIsInspected ...............   Passed    0.17 sec
+      Start 1533: unit.Meshable_StalenessIsReportedBeforeTheOldBodyIsInspected
+    Test #1531: unit.Meshable_RefusesGeometryThatIsStaleBecauseItsProfileMoved .............   Passed    0.19 sec
+      Start 1531: unit.Meshable_RefusesGeometryThatIsStaleBecauseItsProfileMoved
+17/25 Test  #930: unit.GeometryRevision_IsStableWhenNothingChanges ...........................   Passed    0.18 sec
+      Start  928: unit.GeometryIneligibility_EveryReasonHasAName
+18/25 Test #1526: unit.Meshable_RefusesAFeatureThatHasNeverBeenRegenerated ...................   Passed    0.19 sec
+19/25 Test #1529: unit.Meshable_RefusesAnObjectThatMakesNoBodyAndSaysSoDistinctly ............   Passed    0.18 sec
+20/25 Test #1528: unit.Meshable_RefusesAnObjectThatDoesNotExist ..............................   Passed    0.26 sec
+    Test #1532: unit.Meshable_ReportsStalenessRatherThanTheDefectOfAStaleBody ..............   Passed    0.24 sec
+      Start 1532: unit.Meshable_ReportsStalenessRatherThanTheDefectOfAStaleBody
+21/25 Test #1533: unit.Meshable_StalenessIsReportedBeforeTheOldBodyIsInspected ...............   Passed    0.15 sec
+    Test #1530: unit.Meshable_RefusesEveryGeometryWhileAConfigurationOverridesAParameter ...   Passed    0.18 sec
+      Start 1530: unit.Meshable_RefusesEveryGeometryWhileAConfigurationOverridesAParameter
+    Test  #928: unit.GeometryIneligibility_EveryReasonHasAName .............................   Passed    0.11 sec
+      Start  928: unit.GeometryIneligibility_EveryReasonHasAName
+    Test #1531: unit.Meshable_RefusesGeometryThatIsStaleBecauseItsProfileMoved .............   Passed    0.19 sec
+      Start 1531: unit.Meshable_RefusesGeometryThatIsStaleBecauseItsProfileMoved
+    Test #1532: unit.Meshable_ReportsStalenessRatherThanTheDefectOfAStaleBody ..............   Passed    0.12 sec
+      Start 1532: unit.Meshable_ReportsStalenessRatherThanTheDefectOfAStaleBody
+    Test  #928: unit.GeometryIneligibility_EveryReasonHasAName .............................   Passed    0.09 sec
+      Start  928: unit.GeometryIneligibility_EveryReasonHasAName
+22/25 Test #1530: unit.Meshable_RefusesEveryGeometryWhileAConfigurationOverridesAParameter ...   Passed    0.16 sec
+    Test #1531: unit.Meshable_RefusesGeometryThatIsStaleBecauseItsProfileMoved .............   Passed    0.12 sec
+      Start 1531: unit.Meshable_RefusesGeometryThatIsStaleBecauseItsProfileMoved
+    Test #1532: unit.Meshable_ReportsStalenessRatherThanTheDefectOfAStaleBody ..............   Passed    0.13 sec
+      Start 1532: unit.Meshable_ReportsStalenessRatherThanTheDefectOfAStaleBody
+    Test  #928: unit.GeometryIneligibility_EveryReasonHasAName .............................   Passed    0.09 sec
+      Start  928: unit.GeometryIneligibility_EveryReasonHasAName
+23/25 Test #1531: unit.Meshable_RefusesGeometryThatIsStaleBecauseItsProfileMoved .............   Passed    0.15 sec
+    Test  #928: unit.GeometryIneligibility_EveryReasonHasAName .............................   Passed    0.10 sec
+      Start  928: unit.GeometryIneligibility_EveryReasonHasAName
+24/25 Test #1532: unit.Meshable_ReportsStalenessRatherThanTheDefectOfAStaleBody ..............   Passed    0.13 sec
+25/25 Test  #928: unit.GeometryIneligibility_EveryReasonHasAName .............................   Passed    0.09 sec
+
+100% tests passed out of 25
+
+Total Test time (real) =   4.16 sec
