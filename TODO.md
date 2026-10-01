@@ -13,7 +13,7 @@ Current:
            P16 — Meshing
 
 Current milestone:
-           P16-SURF-001 — Engineering Surface Mesh
+           P16-VOL-001 — 3D Tetrahedral Volume Mesh
 
 Qualified:
            P0–P10 — BetterCAD v0.1.0
@@ -24,12 +24,13 @@ Qualified:
            P15 — Materials / Engineering Data
 
 Next:
-           P16-SURF-001
+           P16-VOL-001
 
 Qualified milestones in P16:
            P16-ARCH-001 — Meshing Architecture (ADR-030 to ADR-033)
            P16-DATA-001 — Mesh Data Model / Identity / Units
            P16-GEOM-001 — Geometry Preparation / Validity / Regeneration Boundary
+           P16-SURF-001 — Engineering Surface Mesh
 
 P16 objective:
            Geometry
@@ -712,27 +713,100 @@ mesh source is authoritative geometry
 
 ## Engineering Surface Mesh
 
-* [ ] Generate engineering surface triangulation
-* [ ] Keep separate from viewer/display tessellation
-* [ ] Triangle node connectivity valid
-* [ ] Triangle orientation defined
-* [ ] Surface normals consistent
-* [ ] Closed-solid surface is watertight
-* [ ] No duplicate zero-area triangles
-* [ ] Reject degenerate triangles
-* [ ] Validate curved surfaces
-* [ ] Validate planar faces
-* [ ] Validate cylindrical faces
-* [ ] Validate holes
-* [ ] Validate sharp edges
-* [ ] Validate transformed bodies
-* [ ] Validate disconnected solids if in scope
-* [ ] Surface area consistency check
-* [ ] Boundary-edge count validation
-* [ ] Determinism PASS
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+**PASS 2026-10-01.** Evidence:
+[docs/verification/P16-SURF-001/](docs/verification/P16-SURF-001/README.md),
+[AUDIT.md](docs/verification/P16-SURF-001/AUDIT.md),
+[ADVERSARIAL_REVIEW.md](docs/verification/P16-SURF-001/ADVERSARIAL_REVIEW.md).
+
+* [x] Generate engineering surface triangulation — `generateSurfaceMesh(const MeshableGeometry&,
+      controls)` and `surfaceMeshFor(document, regenerator, feature, controls)`. The first takes
+      P16-GEOM's validated boundary, which is the point: the only way to obtain a
+      `MeshableGeometry` is `requireMeshableGeometry`, so it cannot be handed stale geometry.
+      **P16-SURF performs no body-validity checks of its own**
+* [x] Keep separate from viewer/display tessellation — **structurally, not procedurally.** There
+      is NO display path in the repository (no renderer, no `AIS_Shape`), so this could not be
+      shown by comparing two paths. `triangulate()` meshes a `BRepBuilderAPI_Copy` with
+      `copyMesh=false`, so no cached triangulation can be read as the engineering mesh and none is
+      written to the authoritative faces — the two cannot share a cache even by accident. Tested
+      both orders: coarse-then-engineering and engineering-then-coarse
+* [x] Triangle node connectivity valid — P16-DATA's `Mesh` with `Triangle3` elements, no parallel
+      triangle representation. Arity, distinctness and existence are the data model's, already
+      qualified
+* [x] Triangle orientation defined — the right-hand rule on the **stored** winding. **Face
+      reversal is load-bearing far beyond what I expected: ignoring `TopAbs_REVERSED` fails 23 of
+      30 tests**, because a box has reversed faces
+* [x] Surface normals consistent — derived from the winding, never stored, so they cannot go
+      stale against the positions. Within one planar CAD face every normal has dot product +1
+      with the first (using the new per-face grouping); across the box's six faces there are
+      exactly six distinct axis-aligned directions. Curved normals are checked against the LOCAL
+      outward direction at each centroid, not required to be equal
+* [x] Closed-solid surface is watertight — box, cylinder at three resolutions, tube and the placed
+      box: **boundary edges 0, non-manifold 0, orientation conflicts 0** in every case.
+      `watertight()` requires all three, because a surface can have no boundary edge and still be
+      non-manifold, and can be manifold and still carry a patch facing the wrong way
+* [x] No duplicate zero-area triangles — duplicates detected on the **node set after
+      unification**, never on coordinates, so a future contact interface is not mis-merged. A
+      REVERSED duplicate counts as the same topological triangle
+* [x] Reject degenerate triangles — measured from the geometry, not from handle distinctness:
+      three distinct nodes can still be collinear, and the fixture uses exactly that
+* [x] Validate curved surfaces — the cylinder converges **from below**, which is the only correct
+      direction for an inscribed triangulation: −4.790e-3, −2.501e-3, −5.110e-5 against
+      `2πrh+2πr²`. The test asserts the direction and the monotone convergence, not an equality
+      that would be wrong
+* [x] Validate planar faces — the box's area is **exactly** 6200 mm² and its volume exactly
+      30000 mm³, matching `2(ab+ac+bc)` and `abc`; planar geometry is exact through the kernel
+* [x] Validate cylindrical faces — every node at r ≤ 12 mm within 1e-6 and some at exactly 12:
+      tessellation NODES lie on the true surface even though triangle interiors cut inside it
+* [x] Validate holes — the tube's inner wall has nodes at exactly r = 12 mm and **no node on the
+      axis**, so the opening is not capped. Classified geometrically IN THE TEST, because
+      production face mapping is P16-MAP-001's
+* [x] Validate sharp edges — six distinct face normals on the box, nothing smoothed. This is not a
+      graphics mesh
+* [x] Validate transformed bodies — the same box on the XZ plane gives **identical** node and
+      triangle counts, identical area and identical enclosed volume with a different bounding box.
+      `TopLoc_Location` is applied exactly once, at the one place a node becomes a model-space
+      point
+* [x] Validate disconnected solids — **supported, not refused**: ADR-032 gives a mesh one region
+      per solid, so there is nothing to reject. Each component must still close, which edge
+      incidence enforces over the whole surface
+* [x] Surface area consistency check — against the closed form AND against the kernel's own
+      integration. CAD owns the area; the triangle sum is a derived check and is never authority
+* [x] Boundary-edge count validation — plus the **surface-derived enclosed volume**, which is the
+      check edge counting cannot make: its SIGN detects a globally inward surface (the box's
+      surface with every winding reversed is still watertight and coherent, and its volume comes
+      out exactly negated), and its INVARIANCE under translation detects a crack
+* [x] Determinism PASS — 31 tests ×5 in two presets. Node handles follow **ascending coordinate
+      order** and element order follows the **node-set key** while the stored connectivity keeps
+      its oriented winding, so neither depends on kernel face traversal at all
+* [x] Adversarial review PASS — 22 attacks from the brief plus 4 more; **5 findings, 0 production
+      defects**; 3 mutations applied and 3 caught
+* [x] Regression PASS — 2931/2931 in `debug-ext`, `release-ext` and `debug-shared-ext` each from
+      clean; 9103 executions; 0 failures; 0 compiler warnings in all six logs; no rebuild
+      recompiled anything; the eight qualified tree IDs identical before and after
+* [x] Evidence recorded
+
+**What this milestone found.** No production defects. All five findings were in my own tests, and
+three would have been hidden by a looser assertion.
+
+The determinism test compared `mesh == mesh` and failed — correctly. A `MeshId` is unique per mesh
+by design (ADR-031), so two independently generated meshes are deliberately unequal however
+identical their content. **I had documented exactly that in P16-DATA-001's README and then
+violated it.** Determinism now compares content, and a new test pins why `==` is the wrong tool.
+
+The translation-invariance test moved the body **137 metres** instead of millimetres — a
+cancellation ratio near 1e10 consuming ten significant digits. Rather than discard it, both cases
+are kept: 137 mm at 1e-9, and 137 m with a tolerance derived from the cancellation.
+
+The tube's capped-cavity guard was **arithmetically impossible**: a tube of these radii is 64% of
+its outer cylinder, and the guard demanded under 50%. It would have failed forever and been
+"fixed" by loosening it, which is how a real discriminator gets quietly removed.
+
+**The riskiest design decision held.** Node unification is by EXACT coordinate equality — a
+topological identity here, because the kernel discretises a shared edge once and both faces index
+it. The live risk was a periodic face's seam, and the cylinder closes. What makes that safe rather
+than lucky: the output is PROVEN to close and a mesh that does not is REFUSED, so a welding failure
+can never be reported as watertight. OCCT's `PolygonOnTriangulation` route stays recorded in the
+source as the fallback.
 
 ### Required distinction
 
@@ -1769,80 +1843,81 @@ docs/engineering/
 # CURRENT NEXT STEP
 
 ```text
-P16-SURF-001 — Engineering Surface Mesh
+P16-VOL-001 — 3D Tetrahedral Volume Mesh
 ```
 
-`P16-GEOM-001` passed on 2026-10-01: 2900/2900 in three presets from clean, 8950 executions, 0
+`P16-SURF-001` passed on 2026-10-01: 2931/2931 in three presets from clean, 9103 executions, 0
 failures, 0 warnings in all six logs, and the qualified tree identical to the committed tree.
-Evidence: [docs/verification/P16-GEOM-001/](docs/verification/P16-GEOM-001/README.md).
+Evidence: [docs/verification/P16-SURF-001/](docs/verification/P16-SURF-001/README.md).
 
-**`P16-SURF-001` obtains its geometry from `requireMeshableGeometry` and performs no body-validity
-checks of its own.** That is the point of the boundary: one meshability rule, not one per backend.
-
-```cpp
-Result<MeshableGeometry> requireMeshableGeometry(const Document&, const features::Regenerator&,
-                                                ObjectId feature);
-```
-
-It gives the authoritative `Body` (by value, sharing the kernel shape), the solid count, the
-kernel's volume, and a `GeometryRevision` for the mesh to record.
-
-What the surface mesh must honour, so it is not re-derived:
+## P16-VOL-001 CARRIES AN ENTRY CONDITION NOTHING BEFORE IT DID
 
 ```text
-the gap to close     geometry::triangulate() is watertight -- 15 assertions across
-                     11 files -- but NOT topologically conforming: a vertex on a
-                     shared edge appears once per face. Welding it is this
-                     milestone's work
-NOT the route        Poly_MergeNodesTool merges "for visualization purposes ... but
-                     split the ones on sharp corners", which is the opposite of
-                     watertight
-attribution          core/geometry's listFaces() already returns each face's
-                     FaceName SET, propagated through booleans by kernel history.
-                     The relation is MANY-TO-MANY and an unnamed face is NORMAL --
-                     primitives take no namer, so a box's faces carry no FaceName
-                     (ADR-032). Facet-to-face attribution proper is P16-MAP-001's
-the data model       MeshBuilder is the only construction path; handles strictly
-                     increasing; a finished Mesh is immutable; one region per solid
-                     with no node shared between regions; positive signed volume
-                     REJECTED if negative, never renormalised
-one frame            the body's, no transform (ADR-032)
+The volume-meshing backend dependency must be APPROVED, or the fallback chosen
+deliberately. This is a project decision and not Claude's to take.
+
+BetterCAD has NO LICENCE. LICENSE grants no permission to distribute, and every
+dependency it ships is weak copyleft, dynamically linked. A GPL or AGPL mesher
+would not merely add a dependency -- it would DECIDE BetterCAD's unchosen licence.
+
+Applying the project's already-accepted obligations as an admission rule leaves
+exactly one candidate of six: Netgen, LGPL-2.1. Gmsh is GPL-2+, TetGen AGPL-3,
+CGAL's meshing package GPL despite cgal.org's LGPL headline, MMG modifies meshes
+rather than generating them, and OCCT 8.0.1 has no volume mesher at all.
+
+See docs/verification/P16-ARCH-001/BACKEND_MATRIX.md.
 ```
 
-Still owed, and coming from earlier reviews:
+Until that decision is taken, `P16-VOL-001` cannot begin.
+
+## What P16-VOL-001 must honour, so none of it is re-derived
+
+```text
+geometry            obtain it from meshing::requireMeshableGeometry and perform NO
+                    body-validity checks of its own. P16-SURF does exactly this and
+                    a mutation proves the chain is wired
+the surface         meshing::generateSurfaceMesh gives a watertight, outward,
+                    conforming boundary with shared NodeIds -- which is what a
+                    volume mesher needs as input. Do not re-triangulate
+backend containment ADR-033: no backend type in any BetterCAD API, backend code
+                    only in src/meshing/<backend>/, and rule 5 of the architecture
+                    check enforces it. It is currently INERT and was proven to fire
+Tet4 only           ADR-031, with the element carrying its type so Tet10 is an
+                    addition rather than a rewrite
+orientation         positive signed volume is valid; negative is REJECTED, never
+                    renormalised. No abs() in the module
+regions             one per solid, no node shared between regions
+determinism         node handles by ascending coordinate order, element order by a
+                    node-set key with the oriented winding stored separately
+```
+
+## Still owed, from earlier reviews
 
 ```text
 F6 (P16-ARCH)   a MeshControl whose body is deleted must become explicitly
                 UNRESOLVED and must not mesh nothing and report success. No
-                MeshControl exists yet, so this is still open
+                MeshControl exists yet
 F6 (P16-GEOM)   partMassProperties has no currency check, so mass properties can be
                 computed from stale geometry after an unregenerated edit. A P15
-                behaviour change, so a scope decision rather than Claude's
-topological
+                behaviour change, so a scope decision
 duplicates      two tetrahedra on the same four nodes are not rejected.
-                P16-QUALITY-001's, with the reason recorded at the declaration
+                P16-QUALITY-001's
+sphere          no fixture, so a DEGENERATE POLE EDGE is the one geometry where
+                exact-coordinate node unification is untested
+boundary edges  protected by exactly one test, because closed solids cannot detect
+                the counter's removal
 ```
 
-`P16-VOL-001` still carries an entry condition nothing before it does:
-
-```text
-the volume-meshing backend dependency is approved, or the fallback is chosen
-deliberately. BetterCAD has NO licence, so admitting a copyleft backend constrains
-one that has not been chosen -- a project decision, not Claude's. See
-docs/verification/P16-ARCH-001/BACKEND_MATRIX.md.
-```
-
-Carried defects, neither P16's, and the first can lose a user's work:
+## Carried defects, neither P16's
 
 ```text
 the FileIo replace defect     a document save can still lose to a file
                               synchroniser. Arguably ahead of any new milestone.
 
 configuration regeneration    a configuration override does not rebuild the
-                              geometry it changes. Mass properties REFUSE under one,
-                              and P16 meshing now refuses for the same reason with
-                              the same guard. Fixing the regeneration removes both
-                              guards and their tests.
+                              geometry it changes. Mass properties and meshing both
+                              REFUSE under one, with the same guard. Fixing the
+                              regeneration removes both guards and their tests.
 ```
 
 Also carried from earlier phases: hole POSITION dimensions are unsupported, GD&T symbols are not

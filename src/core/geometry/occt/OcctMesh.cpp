@@ -67,6 +67,8 @@ Result<Mesh> triangulate(const Body& body, const MeshOptions& options) {
                 return makeError(ErrorCode::Internal, "triangulation: too many vertices");
             }
             const auto offset = static_cast<std::uint32_t>(mesh.vertices.size());
+            MeshFace group;
+            group.firstTriangle = mesh.triangles.size();
             const gp_Trsf transform = location.Transformation();
             for (int i = 1; i <= triangulation->NbNodes(); ++i) {
                 mesh.vertices.push_back(occt::pointFromModel(triangulation->Node(i).Transformed(transform)));
@@ -86,6 +88,8 @@ Result<Mesh> triangulate(const Body& body, const MeshOptions& options) {
                                           offset + static_cast<std::uint32_t>(b - 1),
                                           offset + static_cast<std::uint32_t>(c - 1)});
             }
+            group.triangleCount = mesh.triangles.size() - group.firstTriangle;
+            mesh.faces.push_back(group);
         }
         return mesh;
     });

@@ -27,6 +27,7 @@ bettercad_add_executable(bettercad_tests
         assembly/CommandTests.cpp
         meshing/GeometryPreparationTests.cpp
         meshing/MeshDataTests.cpp
+        meshing/SurfaceMeshTests.cpp
         drawing/AnnotationTests.cpp
         drawing/AssemblyDrawingTests.cpp
         drawing/BomTests.cpp

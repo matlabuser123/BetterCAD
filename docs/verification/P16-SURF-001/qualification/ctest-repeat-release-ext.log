@@ -1,0 +1,315 @@
+Test project C:/Users/uqhas/AppData/Local/bc-build/release-ext
+      Start  789: unit.EnclosedVolume_IsNegativeForAnInwardOrientedClosedSurface
+      Start 2300: unit.SurfBox_AreaMatchesTheAnalyticalSurfaceArea
+      Start 2301: unit.SurfBox_EnclosedVolumeFromTheTrianglesMatchesTheCadVolume
+      Start 2318: unit.SurfaceMesh_IsIdenticalOnRepeatedGeneration
+      Start 2302: unit.SurfBox_EulerCharacteristicIsTwo
+      Start 2303: unit.SurfBox_IsWatertightManifoldAndCoherentlyOriented
+      Start 2319: unit.SurfaceMesh_IsUnaffectedByAnEarlierCoarseTriangulationOfTheSameBody
+      Start 2304: unit.SurfBox_NormalsWithinOnePlanarFaceAgree
+    Test #2302: unit.SurfBox_EulerCharacteristicIsTwo ...........................................   Passed    0.23 sec
+      Start 2302: unit.SurfBox_EulerCharacteristicIsTwo
+    Test #2303: unit.SurfBox_IsWatertightManifoldAndCoherentlyOriented ..........................   Passed    0.22 sec
+      Start 2303: unit.SurfBox_IsWatertightManifoldAndCoherentlyOriented
+    Test  #789: unit.EnclosedVolume_IsNegativeForAnInwardOrientedClosedSurface ..................   Passed    0.42 sec
+      Start  789: unit.EnclosedVolume_IsNegativeForAnInwardOrientedClosedSurface
+    Test #2304: unit.SurfBox_NormalsWithinOnePlanarFaceAgree ....................................   Passed    0.20 sec
+      Start 2304: unit.SurfBox_NormalsWithinOnePlanarFaceAgree
+    Test #2300: unit.SurfBox_AreaMatchesTheAnalyticalSurfaceArea ................................   Passed    0.37 sec
+      Start 2300: unit.SurfBox_AreaMatchesTheAnalyticalSurfaceArea
+    Test #2301: unit.SurfBox_EnclosedVolumeFromTheTrianglesMatchesTheCadVolume ..................   Passed    0.36 sec
+      Start 2301: unit.SurfBox_EnclosedVolumeFromTheTrianglesMatchesTheCadVolume
+    Test #2319: unit.SurfaceMesh_IsUnaffectedByAnEarlierCoarseTriangulationOfTheSameBody ........   Passed    0.39 sec
+      Start 2319: unit.SurfaceMesh_IsUnaffectedByAnEarlierCoarseTriangulationOfTheSameBody
+    Test #2304: unit.SurfBox_NormalsWithinOnePlanarFaceAgree ....................................   Passed    0.20 sec
+      Start 2304: unit.SurfBox_NormalsWithinOnePlanarFaceAgree
+    Test #2303: unit.SurfBox_IsWatertightManifoldAndCoherentlyOriented ..........................   Passed    0.25 sec
+      Start 2303: unit.SurfBox_IsWatertightManifoldAndCoherentlyOriented
+    Test  #789: unit.EnclosedVolume_IsNegativeForAnInwardOrientedClosedSurface ..................   Passed    0.25 sec
+      Start  789: unit.EnclosedVolume_IsNegativeForAnInwardOrientedClosedSurface
+    Test #2302: unit.SurfBox_EulerCharacteristicIsTwo ...........................................   Passed    0.30 sec
+      Start 2302: unit.SurfBox_EulerCharacteristicIsTwo
+    Test #2300: unit.SurfBox_AreaMatchesTheAnalyticalSurfaceArea ................................   Passed    0.25 sec
+      Start 2300: unit.SurfBox_AreaMatchesTheAnalyticalSurfaceArea
+    Test #2301: unit.SurfBox_EnclosedVolumeFromTheTrianglesMatchesTheCadVolume ..................   Passed    0.25 sec
+      Start 2301: unit.SurfBox_EnclosedVolumeFromTheTrianglesMatchesTheCadVolume
+    Test #2304: unit.SurfBox_NormalsWithinOnePlanarFaceAgree ....................................   Passed    0.16 sec
+      Start 2304: unit.SurfBox_NormalsWithinOnePlanarFaceAgree
+    Test #2303: unit.SurfBox_IsWatertightManifoldAndCoherentlyOriented ..........................   Passed    0.16 sec
+      Start 2303: unit.SurfBox_IsWatertightManifoldAndCoherentlyOriented
+    Test #2302: unit.SurfBox_EulerCharacteristicIsTwo ...........................................   Passed    0.16 sec
+      Start 2302: unit.SurfBox_EulerCharacteristicIsTwo
+    Test  #789: unit.EnclosedVolume_IsNegativeForAnInwardOrientedClosedSurface ..................   Passed    0.19 sec
+      Start  789: unit.EnclosedVolume_IsNegativeForAnInwardOrientedClosedSurface
+    Test #2319: unit.SurfaceMesh_IsUnaffectedByAnEarlierCoarseTriangulationOfTheSameBody ........   Passed    0.28 sec
+      Start 2319: unit.SurfaceMesh_IsUnaffectedByAnEarlierCoarseTriangulationOfTheSameBody
+    Test #2302: unit.SurfBox_EulerCharacteristicIsTwo ...........................................   Passed    0.17 sec
+      Start 2302: unit.SurfBox_EulerCharacteristicIsTwo
+    Test #2300: unit.SurfBox_AreaMatchesTheAnalyticalSurfaceArea ................................   Passed    0.33 sec
+      Start 2300: unit.SurfBox_AreaMatchesTheAnalyticalSurfaceArea
+    Test #2303: unit.SurfBox_IsWatertightManifoldAndCoherentlyOriented ..........................   Passed    0.24 sec
+      Start 2303: unit.SurfBox_IsWatertightManifoldAndCoherentlyOriented
+    Test #2304: unit.SurfBox_NormalsWithinOnePlanarFaceAgree ....................................   Passed    0.28 sec
+      Start 2304: unit.SurfBox_NormalsWithinOnePlanarFaceAgree
+    Test #2301: unit.SurfBox_EnclosedVolumeFromTheTrianglesMatchesTheCadVolume ..................   Passed    0.37 sec
+      Start 2301: unit.SurfBox_EnclosedVolumeFromTheTrianglesMatchesTheCadVolume
+    Test  #789: unit.EnclosedVolume_IsNegativeForAnInwardOrientedClosedSurface ..................   Passed    0.25 sec
+      Start  789: unit.EnclosedVolume_IsNegativeForAnInwardOrientedClosedSurface
+    Test #2318: unit.SurfaceMesh_IsIdenticalOnRepeatedGeneration ................................   Passed    1.01 sec
+      Start 2318: unit.SurfaceMesh_IsIdenticalOnRepeatedGeneration
+    Test #2300: unit.SurfBox_AreaMatchesTheAnalyticalSurfaceArea ................................   Passed    0.20 sec
+      Start 2300: unit.SurfBox_AreaMatchesTheAnalyticalSurfaceArea
+    Test #2319: unit.SurfaceMesh_IsUnaffectedByAnEarlierCoarseTriangulationOfTheSameBody ........   Passed    0.37 sec
+      Start 2319: unit.SurfaceMesh_IsUnaffectedByAnEarlierCoarseTriangulationOfTheSameBody
+ 1/31 Test #2303: unit.SurfBox_IsWatertightManifoldAndCoherentlyOriented ..........................   Passed    0.23 sec
+ 2/31 Test #2302: unit.SurfBox_EulerCharacteristicIsTwo ...........................................   Passed    0.27 sec
+ 3/31 Test #2304: unit.SurfBox_NormalsWithinOnePlanarFaceAgree ....................................   Passed    0.21 sec
+      Start 2320: unit.SurfaceMesh_NodeHandlesFollowCoordinateOrderNotFaceTraversalOrder
+      Start 2309: unit.SurfCylinder_WallNormalsPointRadiallyOutward
+      Start 2323: unit.SurfaceMesh_RefusesStaleGeometryBeforeTriangulatingAnything
+    Test #2301: unit.SurfBox_EnclosedVolumeFromTheTrianglesMatchesTheCadVolume ..................   Passed    0.27 sec
+      Start 2301: unit.SurfBox_EnclosedVolumeFromTheTrianglesMatchesTheCadVolume
+ 4/31 Test  #789: unit.EnclosedVolume_IsNegativeForAnInwardOrientedClosedSurface ..................   Passed    0.28 sec
+      Start 2314: unit.SurfTube_InnerWallNormalsPointTowardTheAxisBecauseThatIsOutOfTheMaterial
+ 5/31 Test #2300: unit.SurfBox_AreaMatchesTheAnalyticalSurfaceArea ................................   Passed    0.18 sec
+      Start 2502: unit.ValidateSurface_CountsANonManifoldEdgeSharedByThreeTriangles
+    Test #2320: unit.SurfaceMesh_NodeHandlesFollowCoordinateOrderNotFaceTraversalOrder ..........   Passed    0.17 sec
+      Start 2320: unit.SurfaceMesh_NodeHandlesFollowCoordinateOrderNotFaceTraversalOrder
+    Test #2309: unit.SurfCylinder_WallNormalsPointRadiallyOutward ...............................   Passed    0.21 sec
+      Start 2309: unit.SurfCylinder_WallNormalsPointRadiallyOutward
+    Test #2319: unit.SurfaceMesh_IsUnaffectedByAnEarlierCoarseTriangulationOfTheSameBody ........   Passed    0.28 sec
+      Start 2319: unit.SurfaceMesh_IsUnaffectedByAnEarlierCoarseTriangulationOfTheSameBody
+    Test #2323: unit.SurfaceMesh_RefusesStaleGeometryBeforeTriangulatingAnything ................   Passed    0.24 sec
+      Start 2323: unit.SurfaceMesh_RefusesStaleGeometryBeforeTriangulatingAnything
+    Test #2502: unit.ValidateSurface_CountsANonManifoldEdgeSharedByThreeTriangles ...............   Passed    0.18 sec
+      Start 2502: unit.ValidateSurface_CountsANonManifoldEdgeSharedByThreeTriangles
+ 6/31 Test #2301: unit.SurfBox_EnclosedVolumeFromTheTrianglesMatchesTheCadVolume ..................   Passed    0.30 sec
+      Start 2313: unit.SurfTube_HasTrianglesOnTheInnerWallSoTheCavityIsRepresented
+    Test #2314: unit.SurfTube_InnerWallNormalsPointTowardTheAxisBecauseThatIsOutOfTheMaterial ...   Passed    0.31 sec
+      Start 2314: unit.SurfTube_InnerWallNormalsPointTowardTheAxisBecauseThatIsOutOfTheMaterial
+    Test #2320: unit.SurfaceMesh_NodeHandlesFollowCoordinateOrderNotFaceTraversalOrder ..........   Passed    0.26 sec
+      Start 2320: unit.SurfaceMesh_NodeHandlesFollowCoordinateOrderNotFaceTraversalOrder
+    Test #2309: unit.SurfCylinder_WallNormalsPointRadiallyOutward ...............................   Passed    0.21 sec
+      Start 2309: unit.SurfCylinder_WallNormalsPointRadiallyOutward
+    Test #2323: unit.SurfaceMesh_RefusesStaleGeometryBeforeTriangulatingAnything ................   Passed    0.23 sec
+      Start 2323: unit.SurfaceMesh_RefusesStaleGeometryBeforeTriangulatingAnything
+    Test #2502: unit.ValidateSurface_CountsANonManifoldEdgeSharedByThreeTriangles ...............   Passed    0.23 sec
+      Start 2502: unit.ValidateSurface_CountsANonManifoldEdgeSharedByThreeTriangles
+ 7/31 Test #2319: unit.SurfaceMesh_IsUnaffectedByAnEarlierCoarseTriangulationOfTheSameBody ........   Passed    0.32 sec
+      Start 2503: unit.ValidateSurface_CountsAnOrientationConflictThatEdgeCountingCannotSee
+    Test #2320: unit.SurfaceMesh_NodeHandlesFollowCoordinateOrderNotFaceTraversalOrder ..........   Passed    0.20 sec
+      Start 2320: unit.SurfaceMesh_NodeHandlesFollowCoordinateOrderNotFaceTraversalOrder
+    Test #2318: unit.SurfaceMesh_IsIdenticalOnRepeatedGeneration ................................   Passed    0.81 sec
+      Start 2318: unit.SurfaceMesh_IsIdenticalOnRepeatedGeneration
+    Test #2309: unit.SurfCylinder_WallNormalsPointRadiallyOutward ...............................   Passed    0.23 sec
+      Start 2309: unit.SurfCylinder_WallNormalsPointRadiallyOutward
+    Test #2313: unit.SurfTube_HasTrianglesOnTheInnerWallSoTheCavityIsRepresented ................   Passed    0.32 sec
+      Start 2313: unit.SurfTube_HasTrianglesOnTheInnerWallSoTheCavityIsRepresented
+    Test #2502: unit.ValidateSurface_CountsANonManifoldEdgeSharedByThreeTriangles ...............   Passed    0.17 sec
+      Start 2502: unit.ValidateSurface_CountsANonManifoldEdgeSharedByThreeTriangles
+    Test #2314: unit.SurfTube_InnerWallNormalsPointTowardTheAxisBecauseThatIsOutOfTheMaterial ...   Passed    0.33 sec
+      Start 2314: unit.SurfTube_InnerWallNormalsPointTowardTheAxisBecauseThatIsOutOfTheMaterial
+    Test #2323: unit.SurfaceMesh_RefusesStaleGeometryBeforeTriangulatingAnything ................   Passed    0.25 sec
+      Start 2323: unit.SurfaceMesh_RefusesStaleGeometryBeforeTriangulatingAnything
+    Test #2503: unit.ValidateSurface_CountsAnOrientationConflictThatEdgeCountingCannotSee .......   Passed    0.25 sec
+      Start 2503: unit.ValidateSurface_CountsAnOrientationConflictThatEdgeCountingCannotSee
+    Test #2320: unit.SurfaceMesh_NodeHandlesFollowCoordinateOrderNotFaceTraversalOrder ..........   Passed    0.21 sec
+      Start 2320: unit.SurfaceMesh_NodeHandlesFollowCoordinateOrderNotFaceTraversalOrder
+    Test #2309: unit.SurfCylinder_WallNormalsPointRadiallyOutward ...............................   Passed    0.21 sec
+      Start 2309: unit.SurfCylinder_WallNormalsPointRadiallyOutward
+    Test #2502: unit.ValidateSurface_CountsANonManifoldEdgeSharedByThreeTriangles ...............   Passed    0.19 sec
+      Start 2502: unit.ValidateSurface_CountsANonManifoldEdgeSharedByThreeTriangles
+    Test #2503: unit.ValidateSurface_CountsAnOrientationConflictThatEdgeCountingCannotSee .......   Passed    0.12 sec
+      Start 2503: unit.ValidateSurface_CountsAnOrientationConflictThatEdgeCountingCannotSee
+    Test #2323: unit.SurfaceMesh_RefusesStaleGeometryBeforeTriangulatingAnything ................   Passed    0.23 sec
+      Start 2323: unit.SurfaceMesh_RefusesStaleGeometryBeforeTriangulatingAnything
+    Test #2313: unit.SurfTube_HasTrianglesOnTheInnerWallSoTheCavityIsRepresented ................   Passed    0.34 sec
+      Start 2313: unit.SurfTube_HasTrianglesOnTheInnerWallSoTheCavityIsRepresented
+    Test #2314: unit.SurfTube_InnerWallNormalsPointTowardTheAxisBecauseThatIsOutOfTheMaterial ...   Passed    0.32 sec
+      Start 2314: unit.SurfTube_InnerWallNormalsPointTowardTheAxisBecauseThatIsOutOfTheMaterial
+ 8/31 Test #2502: unit.ValidateSurface_CountsANonManifoldEdgeSharedByThreeTriangles ...............   Passed    0.17 sec
+ 9/31 Test #2320: unit.SurfaceMesh_NodeHandlesFollowCoordinateOrderNotFaceTraversalOrder ..........   Passed    0.24 sec
+    Test #2503: unit.ValidateSurface_CountsAnOrientationConflictThatEdgeCountingCannotSee .......   Passed    0.14 sec
+      Start 2503: unit.ValidateSurface_CountsAnOrientationConflictThatEdgeCountingCannotSee
+      Start 2310: unit.SurfTransform_AreaAndVolumeAreInvariantUnderAPlacement
+      Start 2321: unit.SurfaceMesh_RefusesABlockedFeatureWithNoCurrentBody
+10/31 Test #2309: unit.SurfCylinder_WallNormalsPointRadiallyOutward ...............................   Passed    0.29 sec
+      Start 2504: unit.ValidateSurface_CountsAnUnusedNode
+11/31 Test #2323: unit.SurfaceMesh_RefusesStaleGeometryBeforeTriangulatingAnything ................   Passed    0.23 sec
+      Start 2311: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfAThousandBodyLengths
+    Test #2503: unit.ValidateSurface_CountsAnOrientationConflictThatEdgeCountingCannotSee .......   Passed    0.21 sec
+      Start 2503: unit.ValidateSurface_CountsAnOrientationConflictThatEdgeCountingCannotSee
+    Test #2314: unit.SurfTube_InnerWallNormalsPointTowardTheAxisBecauseThatIsOutOfTheMaterial ...   Passed    0.32 sec
+      Start 2314: unit.SurfTube_InnerWallNormalsPointTowardTheAxisBecauseThatIsOutOfTheMaterial
+    Test #2321: unit.SurfaceMesh_RefusesABlockedFeatureWithNoCurrentBody ........................   Passed    0.25 sec
+      Start 2321: unit.SurfaceMesh_RefusesABlockedFeatureWithNoCurrentBody
+    Test #2504: unit.ValidateSurface_CountsAnUnusedNode .........................................   Passed    0.23 sec
+      Start 2504: unit.ValidateSurface_CountsAnUnusedNode
+    Test #2310: unit.SurfTransform_AreaAndVolumeAreInvariantUnderAPlacement .....................   Passed    0.30 sec
+      Start 2310: unit.SurfTransform_AreaAndVolumeAreInvariantUnderAPlacement
+    Test #2313: unit.SurfTube_HasTrianglesOnTheInnerWallSoTheCavityIsRepresented ................   Passed    0.41 sec
+      Start 2313: unit.SurfTube_HasTrianglesOnTheInnerWallSoTheCavityIsRepresented
+12/31 Test #2503: unit.ValidateSurface_CountsAnOrientationConflictThatEdgeCountingCannotSee .......   Passed    0.17 sec
+    Test #2311: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfAThousandBodyLengths .....   Passed    0.23 sec
+      Start 2311: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfAThousandBodyLengths
+      Start 2322: unit.SurfaceMesh_RefusesNonPositiveOrNonFiniteControls
+    Test #2318: unit.SurfaceMesh_IsIdenticalOnRepeatedGeneration ................................   Passed    0.86 sec
+      Start 2318: unit.SurfaceMesh_IsIdenticalOnRepeatedGeneration
+    Test #2504: unit.ValidateSurface_CountsAnUnusedNode .........................................   Passed    0.12 sec
+      Start 2504: unit.ValidateSurface_CountsAnUnusedNode
+    Test #2321: unit.SurfaceMesh_RefusesABlockedFeatureWithNoCurrentBody ........................   Passed    0.16 sec
+      Start 2321: unit.SurfaceMesh_RefusesABlockedFeatureWithNoCurrentBody
+    Test #2310: unit.SurfTransform_AreaAndVolumeAreInvariantUnderAPlacement .....................   Passed    0.24 sec
+      Start 2310: unit.SurfTransform_AreaAndVolumeAreInvariantUnderAPlacement
+    Test #2311: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfAThousandBodyLengths .....   Passed    0.23 sec
+      Start 2311: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfAThousandBodyLengths
+    Test #2504: unit.ValidateSurface_CountsAnUnusedNode .........................................   Passed    0.18 sec
+      Start 2504: unit.ValidateSurface_CountsAnUnusedNode
+    Test #2322: unit.SurfaceMesh_RefusesNonPositiveOrNonFiniteControls ..........................   Passed    0.25 sec
+      Start 2322: unit.SurfaceMesh_RefusesNonPositiveOrNonFiniteControls
+13/31 Test #2314: unit.SurfTube_InnerWallNormalsPointTowardTheAxisBecauseThatIsOutOfTheMaterial ...   Passed    0.38 sec
+      Start 2505: unit.ValidateSurface_CountsBoundaryEdgesOfAnOpenPatch
+    Test #2310: unit.SurfTransform_AreaAndVolumeAreInvariantUnderAPlacement .....................   Passed    0.27 sec
+      Start 2310: unit.SurfTransform_AreaAndVolumeAreInvariantUnderAPlacement
+    Test #2311: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfAThousandBodyLengths .....   Passed    0.27 sec
+      Start 2311: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfAThousandBodyLengths
+    Test #2505: unit.ValidateSurface_CountsBoundaryEdgesOfAnOpenPatch ...........................   Passed    0.22 sec
+      Start 2505: unit.ValidateSurface_CountsBoundaryEdgesOfAnOpenPatch
+    Test #2313: unit.SurfTube_HasTrianglesOnTheInnerWallSoTheCavityIsRepresented ................   Passed    0.55 sec
+      Start 2313: unit.SurfTube_HasTrianglesOnTheInnerWallSoTheCavityIsRepresented
+    Test #2322: unit.SurfaceMesh_RefusesNonPositiveOrNonFiniteControls ..........................   Passed    0.28 sec
+      Start 2322: unit.SurfaceMesh_RefusesNonPositiveOrNonFiniteControls
+    Test #2321: unit.SurfaceMesh_RefusesABlockedFeatureWithNoCurrentBody ........................   Passed    0.48 sec
+      Start 2321: unit.SurfaceMesh_RefusesABlockedFeatureWithNoCurrentBody
+    Test #2504: unit.ValidateSurface_CountsAnUnusedNode .........................................   Passed    0.34 sec
+      Start 2504: unit.ValidateSurface_CountsAnUnusedNode
+14/31 Test #2504: unit.ValidateSurface_CountsAnUnusedNode .........................................   Passed    0.18 sec
+      Start 2506: unit.ValidateSurface_CountsDegenerateAndDuplicateTriangles
+    Test #2322: unit.SurfaceMesh_RefusesNonPositiveOrNonFiniteControls ..........................   Passed    0.24 sec
+      Start 2322: unit.SurfaceMesh_RefusesNonPositiveOrNonFiniteControls
+    Test #2505: unit.ValidateSurface_CountsBoundaryEdgesOfAnOpenPatch ...........................   Passed    0.29 sec
+      Start 2505: unit.ValidateSurface_CountsBoundaryEdgesOfAnOpenPatch
+    Test #2311: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfAThousandBodyLengths .....   Passed    0.34 sec
+      Start 2311: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfAThousandBodyLengths
+    Test #2321: unit.SurfaceMesh_RefusesABlockedFeatureWithNoCurrentBody ........................   Passed    0.28 sec
+      Start 2321: unit.SurfaceMesh_RefusesABlockedFeatureWithNoCurrentBody
+    Test #2310: unit.SurfTransform_AreaAndVolumeAreInvariantUnderAPlacement .....................   Passed    0.39 sec
+      Start 2310: unit.SurfTransform_AreaAndVolumeAreInvariantUnderAPlacement
+15/31 Test #2313: unit.SurfTube_HasTrianglesOnTheInnerWallSoTheCavityIsRepresented ................   Passed    0.38 sec
+      Start 2315: unit.SurfTube_VolumeFromTheSurfaceExcludesTheVoid
+    Test #2505: unit.ValidateSurface_CountsBoundaryEdgesOfAnOpenPatch ...........................   Passed    0.13 sec
+      Start 2505: unit.ValidateSurface_CountsBoundaryEdgesOfAnOpenPatch
+    Test #2506: unit.ValidateSurface_CountsDegenerateAndDuplicateTriangles ......................   Passed    0.19 sec
+      Start 2506: unit.ValidateSurface_CountsDegenerateAndDuplicateTriangles
+    Test #2322: unit.SurfaceMesh_RefusesNonPositiveOrNonFiniteControls ..........................   Passed    0.19 sec
+      Start 2322: unit.SurfaceMesh_RefusesNonPositiveOrNonFiniteControls
+    Test #2318: unit.SurfaceMesh_IsIdenticalOnRepeatedGeneration ................................   Passed    0.95 sec
+      Start 2318: unit.SurfaceMesh_IsIdenticalOnRepeatedGeneration
+16/31 Test #2321: unit.SurfaceMesh_RefusesABlockedFeatureWithNoCurrentBody ........................   Passed    0.17 sec
+      Start 2306: unit.SurfCylinder_EnclosedVolumeIsPositiveAndApproachesTheAnalyticalVolume
+17/31 Test #2311: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfAThousandBodyLengths .....   Passed    0.22 sec
+      Start 2307: unit.SurfCylinder_IsWatertightAndItsAreaConvergesOnTheAnalyticalValue
+    Test #2505: unit.ValidateSurface_CountsBoundaryEdgesOfAnOpenPatch ...........................   Passed    0.14 sec
+      Start 2505: unit.ValidateSurface_CountsBoundaryEdgesOfAnOpenPatch
+    Test #2506: unit.ValidateSurface_CountsDegenerateAndDuplicateTriangles ......................   Passed    0.16 sec
+      Start 2506: unit.ValidateSurface_CountsDegenerateAndDuplicateTriangles
+18/31 Test #2310: unit.SurfTransform_AreaAndVolumeAreInvariantUnderAPlacement .....................   Passed    0.28 sec
+      Start 2305: unit.SurfBox_SharpEdgesKeepDistinctFaceNormals
+    Test #2306: unit.SurfCylinder_EnclosedVolumeIsPositiveAndApproachesTheAnalyticalVolume ......   Passed    0.20 sec
+      Start 2306: unit.SurfCylinder_EnclosedVolumeIsPositiveAndApproachesTheAnalyticalVolume
+19/31 Test #2322: unit.SurfaceMesh_RefusesNonPositiveOrNonFiniteControls ..........................   Passed    0.25 sec
+20/31 Test #2505: unit.ValidateSurface_CountsBoundaryEdgesOfAnOpenPatch ...........................   Passed    0.15 sec
+    Test #2315: unit.SurfTube_VolumeFromTheSurfaceExcludesTheVoid ...............................   Passed    0.33 sec
+      Start 2315: unit.SurfTube_VolumeFromTheSurfaceExcludesTheVoid
+      Start 2324: unit.SurfaceMesh_TwoMeshesOfTheSameBodyAreNeverTheSameMesh
+      Start 2308: unit.SurfCylinder_SideNodesLieOnTheExactCylinderAndItsCapsAreFlat
+    Test #2506: unit.ValidateSurface_CountsDegenerateAndDuplicateTriangles ......................   Passed    0.18 sec
+      Start 2506: unit.ValidateSurface_CountsDegenerateAndDuplicateTriangles
+    Test #2307: unit.SurfCylinder_IsWatertightAndItsAreaConvergesOnTheAnalyticalValue ...........   Passed    0.27 sec
+      Start 2307: unit.SurfCylinder_IsWatertightAndItsAreaConvergesOnTheAnalyticalValue
+    Test #2305: unit.SurfBox_SharpEdgesKeepDistinctFaceNormals ..................................   Passed    0.19 sec
+      Start 2305: unit.SurfBox_SharpEdgesKeepDistinctFaceNormals
+    Test #2324: unit.SurfaceMesh_TwoMeshesOfTheSameBodyAreNeverTheSameMesh ......................   Passed    0.17 sec
+      Start 2324: unit.SurfaceMesh_TwoMeshesOfTheSameBodyAreNeverTheSameMesh
+    Test #2306: unit.SurfCylinder_EnclosedVolumeIsPositiveAndApproachesTheAnalyticalVolume ......   Passed    0.22 sec
+      Start 2306: unit.SurfCylinder_EnclosedVolumeIsPositiveAndApproachesTheAnalyticalVolume
+    Test #2506: unit.ValidateSurface_CountsDegenerateAndDuplicateTriangles ......................   Passed    0.16 sec
+      Start 2506: unit.ValidateSurface_CountsDegenerateAndDuplicateTriangles
+    Test #2308: unit.SurfCylinder_SideNodesLieOnTheExactCylinderAndItsCapsAreFlat ...............   Passed    0.25 sec
+      Start 2308: unit.SurfCylinder_SideNodesLieOnTheExactCylinderAndItsCapsAreFlat
+    Test #2315: unit.SurfTube_VolumeFromTheSurfaceExcludesTheVoid ...............................   Passed    0.32 sec
+      Start 2315: unit.SurfTube_VolumeFromTheSurfaceExcludesTheVoid
+    Test #2305: unit.SurfBox_SharpEdgesKeepDistinctFaceNormals ..................................   Passed    0.24 sec
+      Start 2305: unit.SurfBox_SharpEdgesKeepDistinctFaceNormals
+    Test #2307: unit.SurfCylinder_IsWatertightAndItsAreaConvergesOnTheAnalyticalValue ...........   Passed    0.28 sec
+      Start 2307: unit.SurfCylinder_IsWatertightAndItsAreaConvergesOnTheAnalyticalValue
+21/31 Test #2506: unit.ValidateSurface_CountsDegenerateAndDuplicateTriangles ......................   Passed    0.16 sec
+      Start 2317: unit.SurfaceMesh_GenerationLeavesTheDocumentAndTheBodyUntouched
+    Test #2306: unit.SurfCylinder_EnclosedVolumeIsPositiveAndApproachesTheAnalyticalVolume ......   Passed    0.22 sec
+      Start 2306: unit.SurfCylinder_EnclosedVolumeIsPositiveAndApproachesTheAnalyticalVolume
+    Test #2324: unit.SurfaceMesh_TwoMeshesOfTheSameBodyAreNeverTheSameMesh ......................   Passed    0.25 sec
+      Start 2324: unit.SurfaceMesh_TwoMeshesOfTheSameBodyAreNeverTheSameMesh
+    Test #2305: unit.SurfBox_SharpEdgesKeepDistinctFaceNormals ..................................   Passed    0.20 sec
+      Start 2305: unit.SurfBox_SharpEdgesKeepDistinctFaceNormals
+    Test #2308: unit.SurfCylinder_SideNodesLieOnTheExactCylinderAndItsCapsAreFlat ...............   Passed    0.28 sec
+      Start 2308: unit.SurfCylinder_SideNodesLieOnTheExactCylinderAndItsCapsAreFlat
+    Test #2306: unit.SurfCylinder_EnclosedVolumeIsPositiveAndApproachesTheAnalyticalVolume ......   Passed    0.18 sec
+      Start 2306: unit.SurfCylinder_EnclosedVolumeIsPositiveAndApproachesTheAnalyticalVolume
+    Test #2315: unit.SurfTube_VolumeFromTheSurfaceExcludesTheVoid ...............................   Passed    0.34 sec
+      Start 2315: unit.SurfTube_VolumeFromTheSurfaceExcludesTheVoid
+22/31 Test #2318: unit.SurfaceMesh_IsIdenticalOnRepeatedGeneration ................................   Passed    0.91 sec
+    Test #2324: unit.SurfaceMesh_TwoMeshesOfTheSameBodyAreNeverTheSameMesh ......................   Passed    0.24 sec
+      Start 2324: unit.SurfaceMesh_TwoMeshesOfTheSameBodyAreNeverTheSameMesh
+    Test #2307: unit.SurfCylinder_IsWatertightAndItsAreaConvergesOnTheAnalyticalValue ...........   Passed    0.33 sec
+      Start 2307: unit.SurfCylinder_IsWatertightAndItsAreaConvergesOnTheAnalyticalValue
+      Start 2316: unit.SurfaceMeshFailure_EveryReasonHasAName
+    Test #2317: unit.SurfaceMesh_GenerationLeavesTheDocumentAndTheBodyUntouched .................   Passed    0.35 sec
+      Start 2317: unit.SurfaceMesh_GenerationLeavesTheDocumentAndTheBodyUntouched
+    Test #2305: unit.SurfBox_SharpEdgesKeepDistinctFaceNormals ..................................   Passed    0.21 sec
+      Start 2305: unit.SurfBox_SharpEdgesKeepDistinctFaceNormals
+23/31 Test #2306: unit.SurfCylinder_EnclosedVolumeIsPositiveAndApproachesTheAnalyticalVolume ......   Passed    0.19 sec
+      Start 2312: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfEveryNode
+    Test #2308: unit.SurfCylinder_SideNodesLieOnTheExactCylinderAndItsCapsAreFlat ...............   Passed    0.26 sec
+      Start 2308: unit.SurfCylinder_SideNodesLieOnTheExactCylinderAndItsCapsAreFlat
+    Test #2316: unit.SurfaceMeshFailure_EveryReasonHasAName .....................................   Passed    0.16 sec
+      Start 2316: unit.SurfaceMeshFailure_EveryReasonHasAName
+    Test #2324: unit.SurfaceMesh_TwoMeshesOfTheSameBodyAreNeverTheSameMesh ......................   Passed    0.22 sec
+      Start 2324: unit.SurfaceMesh_TwoMeshesOfTheSameBodyAreNeverTheSameMesh
+    Test #2307: unit.SurfCylinder_IsWatertightAndItsAreaConvergesOnTheAnalyticalValue ...........   Passed    0.22 sec
+      Start 2307: unit.SurfCylinder_IsWatertightAndItsAreaConvergesOnTheAnalyticalValue
+    Test #2315: unit.SurfTube_VolumeFromTheSurfaceExcludesTheVoid ...............................   Passed    0.28 sec
+      Start 2315: unit.SurfTube_VolumeFromTheSurfaceExcludesTheVoid
+    Test #2312: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfEveryNode ................   Passed    0.15 sec
+      Start 2312: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfEveryNode
+24/31 Test #2305: unit.SurfBox_SharpEdgesKeepDistinctFaceNormals ..................................   Passed    0.22 sec
+    Test #2316: unit.SurfaceMeshFailure_EveryReasonHasAName .....................................   Passed    0.11 sec
+      Start 2316: unit.SurfaceMeshFailure_EveryReasonHasAName
+25/31 Test #2324: unit.SurfaceMesh_TwoMeshesOfTheSameBodyAreNeverTheSameMesh ......................   Passed    0.20 sec
+    Test #2308: unit.SurfCylinder_SideNodesLieOnTheExactCylinderAndItsCapsAreFlat ...............   Passed    0.26 sec
+      Start 2308: unit.SurfCylinder_SideNodesLieOnTheExactCylinderAndItsCapsAreFlat
+    Test #2316: unit.SurfaceMeshFailure_EveryReasonHasAName .....................................   Passed    0.12 sec
+      Start 2316: unit.SurfaceMeshFailure_EveryReasonHasAName
+    Test #2317: unit.SurfaceMesh_GenerationLeavesTheDocumentAndTheBodyUntouched .................   Passed    0.39 sec
+      Start 2317: unit.SurfaceMesh_GenerationLeavesTheDocumentAndTheBodyUntouched
+    Test #2312: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfEveryNode ................   Passed    0.19 sec
+      Start 2312: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfEveryNode
+26/31 Test #2307: unit.SurfCylinder_IsWatertightAndItsAreaConvergesOnTheAnalyticalValue ...........   Passed    0.26 sec
+27/31 Test #2315: unit.SurfTube_VolumeFromTheSurfaceExcludesTheVoid ...............................   Passed    0.27 sec
+    Test #2316: unit.SurfaceMeshFailure_EveryReasonHasAName .....................................   Passed    0.11 sec
+      Start 2316: unit.SurfaceMeshFailure_EveryReasonHasAName
+28/31 Test #2308: unit.SurfCylinder_SideNodesLieOnTheExactCylinderAndItsCapsAreFlat ...............   Passed    0.16 sec
+    Test #2312: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfEveryNode ................   Passed    0.14 sec
+      Start 2312: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfEveryNode
+29/31 Test #2316: unit.SurfaceMeshFailure_EveryReasonHasAName .....................................   Passed    0.08 sec
+    Test #2317: unit.SurfaceMesh_GenerationLeavesTheDocumentAndTheBodyUntouched .................   Passed    0.26 sec
+      Start 2317: unit.SurfaceMesh_GenerationLeavesTheDocumentAndTheBodyUntouched
+    Test #2312: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfEveryNode ................   Passed    0.12 sec
+      Start 2312: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfEveryNode
+30/31 Test #2312: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfEveryNode ................   Passed    0.12 sec
+    Test #2317: unit.SurfaceMesh_GenerationLeavesTheDocumentAndTheBodyUntouched .................   Passed    0.19 sec
+      Start 2317: unit.SurfaceMesh_GenerationLeavesTheDocumentAndTheBodyUntouched
+31/31 Test #2317: unit.SurfaceMesh_GenerationLeavesTheDocumentAndTheBodyUntouched .................   Passed    0.17 sec
+
+100% tests passed out of 31
+
+Total Test time (real) =   6.03 sec

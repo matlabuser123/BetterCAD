@@ -24,6 +24,7 @@ bettercad_add_library(bettercad_meshing
         GeometryPreparation.cpp
         Mesh.cpp
         MeshValidation.cpp
+        SurfaceMesh.cpp
     PUBLIC_LINK
         BetterCAD::core
         BetterCAD::geometry

@@ -7,6 +7,7 @@
 #include <bettercad/core/units/Units.hpp>
 
 #include <array>
+#include <cstddef>
 #include <cstdint>
 #include <vector>
 
@@ -21,12 +22,37 @@ struct MeshOptions {
     Angle angularDeflection = Angle::fromSi(0.3490658503988659); // 20 degrees
 };
 
+/// Which triangles of a Mesh came from one CAD face.
+///
+/// Added by P16-SURF-001 so that a higher layer can group triangles by the face
+/// that produced them -- which is what makes a per-face check (are these
+/// normals coherent?) possible without this layer knowing anything about CAD
+/// references. It deliberately carries NO FaceName: attributing a facet to a
+/// named face is P16-MAP-001's, and putting a name here would start that work
+/// three milestones early.
+struct MeshFace {
+    /// Index into Mesh::triangles of this face's first triangle.
+    std::size_t firstTriangle = 0;
+    std::size_t triangleCount = 0;
+
+    friend bool operator==(const MeshFace&, const MeshFace&) = default;
+};
+
 /// Indexed triangle mesh. Triangles are counter-clockwise seen from outside
 /// the solid. Vertices are stored per face: a vertex on an edge shared by two
 /// faces appears once for each face (with identical coordinates).
+///
+/// THAT PER-FACE DUPLICATION IS THE POINT OF THIS TYPE AND ITS LIMIT. It is a
+/// triangle soup suitable for export and display: geometrically watertight, and
+/// NOT topologically conforming. An engineering surface mesh needs shared nodes
+/// on shared edges, which meshing::generateSurfaceMesh builds from this
+/// (P16-SURF-001).
 struct Mesh {
     std::vector<Point3D> vertices{};
     std::vector<std::array<std::uint32_t, 3>> triangles{};
+    /// One entry per CAD face, in the kernel's exploration order, covering
+    /// `triangles` in order and without gaps.
+    std::vector<MeshFace> faces{};
 };
 
 /// Triangulates the faces of @p body. The body itself is not modified.
