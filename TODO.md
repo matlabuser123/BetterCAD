@@ -13,7 +13,9 @@ Current:
            P16 — Meshing
 
 Current milestone:
-           P16-VOL-001 — 3D Tetrahedral Volume Mesh
+           P16-VOL-001 — 3D Tetrahedral Volume Mesh — BLOCKED
+           (the approved backend does not build on this toolchain;
+            see docs/verification/P16-VOL-001/README.md)
 
 Qualified:
            P0–P10 — BetterCAD v0.1.0
@@ -24,7 +26,9 @@ Qualified:
            P15 — Materials / Engineering Data
 
 Next:
-           P16-VOL-001
+           INFRA-NETGEN-001 — make Netgen a qualified dependency, or an owner
+           decision on toolchain or licence. P16-VOL-001 cannot proceed until
+           then, and no later P16 milestone depends on it.
 
 Qualified milestones in P16:
            P16-ARCH-001 — Meshing Architecture (ADR-030 to ADR-033)
@@ -845,6 +849,42 @@ Tet4 — 4-node linear tetrahedron
 ```
 
 unless P16-ARCH proves another minimum is more appropriate.
+
+**BLOCKED 2026-10-01.** Evidence:
+[docs/verification/P16-VOL-001/](docs/verification/P16-VOL-001/README.md).
+
+**The backend was APPROVED and still cannot be used.** The project owner approved Netgen on
+2026-10-01, which cleared the entry condition `P16-ARCH-001` placed on this milestone. Netgen
+v6.2.2604 (LGPL-2.1) then **failed to build with GCC 16.1.0 MinGW**:
+
+```text
+1. MSVC flags passed to GCC (/bigobj, /MP, /W1, /wd4068, /ignore:)
+   applied under if(WIN32) instead of if(MSVC)          FIXED, upstreamable
+2. FARPROC -> void* without a cast in utils.cpp:206     FIXED, upstreamable
+3. makerls, Netgen's OWN mesh-rule code generator:
+      at -O3  access violation (0xC0000005) on all 7 rule files
+      at -O0  hangs indefinitely on a 17.9 KB input      NOT A PATCH
+```
+
+**The rule files are the mesher** -- `tetrules.rls` drives tetrahedral generation -- so there is
+no volume mesher without them. And a dependency exhibiting undefined behaviour under this
+compiler cannot be qualified as a numerical component: "it crashed at -O3 so we built it at -O0"
+is not a foundation for a solver boundary.
+
+**Nothing was written.** No adapter, no tests against a backend that does not run, no substitute
+mesher (Netgen is the only candidate that survives the licence admission rule, and swapping it
+would quietly undo the owner's decision), no vendored binary that a clean checkout could not
+reproduce. All 19 boxes remain open.
+
+**What would unblock it:** `INFRA-NETGEN-001` -- pin v6.2.2604 into `deps/CMakeLists.txt` beside
+Qt and OCCT, carry and upstream the two patches, find and fix the `makerls` defect or establish
+that Netgen cannot be built with this toolchain, and record that Netgen's superbuild also pulls
+in zlib. Alternatively an owner decision on the toolchain for this dependency, or on the licence.
+
+**Worth keeping from the investigation:** the integration design is settled. `nglib` consumes a
+surface mesh directly (`Ng_AddPoint` / `Ng_AddSurfaceElement` / `Ng_GenerateVolumeMesh`), so the
+input is P16-SURF-001's **validated** engineering surface rather than a second unvalidated
+boundary, and Netgen's own OCC front end stays off so there is exactly one path from CAD to mesh.
 
 * [ ] Generate tetrahedral mesh from valid closed solid
 * [ ] Every element references valid nodes
@@ -1843,69 +1883,67 @@ docs/engineering/
 # CURRENT NEXT STEP
 
 ```text
-P16-VOL-001 — 3D Tetrahedral Volume Mesh
+P16-VOL-001 is BLOCKED. The next step is a decision, not an implementation.
 ```
 
-`P16-SURF-001` passed on 2026-10-01: 2931/2931 in three presets from clean, 9103 executions, 0
-failures, 0 warnings in all six logs, and the qualified tree identical to the committed tree.
-Evidence: [docs/verification/P16-SURF-001/](docs/verification/P16-SURF-001/README.md).
+Netgen was approved on 2026-10-01 and **still cannot be used**: v6.2.2604 does not build with
+GCC 16.1.0 MinGW. Two problems were found and fixed (MSVC flags passed to GCC; a missing
+`FARPROC` cast), and a third is not a patch -- `makerls`, Netgen's own mesh-rule generator,
+takes an access violation at `-O3` and hangs at `-O0`. The mesh rules are the mesher.
 
-## P16-VOL-001 CARRIES AN ENTRY CONDITION NOTHING BEFORE IT DID
+Full evidence, including a reproduction from a clean tree:
+[docs/verification/P16-VOL-001/](docs/verification/P16-VOL-001/README.md).
+
+## Three ways forward, all of them the owner's call
 
 ```text
-The volume-meshing backend dependency must be APPROVED, or the fallback chosen
-deliberately. This is a project decision and not Claude's to take.
+1. INFRA-NETGEN-001
+   Pin v6.2.2604 into deps/CMakeLists.txt beside Qt and OCCT, carry and
+   upstream the two patches, and FIND the makerls defect -- or establish that
+   Netgen cannot be built with GCC 16 MinGW at all. Open-ended: the defect is
+   undefined behaviour in a third-party numerical library, and the mesher must
+   be shown CORRECT on this toolchain before anything qualifies it, not merely
+   made to compile.
 
-BetterCAD has NO LICENCE. LICENSE grants no permission to distribute, and every
-dependency it ships is weak copyleft, dynamically linked. A GPL or AGPL mesher
-would not merely add a dependency -- it would DECIDE BetterCAD's unchosen licence.
+2. A different toolchain for this dependency
+   Netgen is routinely built with MSVC and on Linux. Building it with MSVC while
+   BetterCAD uses MinGW raises ABI questions of its own and is not obviously
+   cheaper.
 
-Applying the project's already-accepted obligations as an admission rule leaves
-exactly one candidate of six: Netgen, LGPL-2.1. Gmsh is GPL-2+, TetGen AGPL-3,
-CGAL's meshing package GPL despite cgal.org's LGPL headline, MMG modifies meshes
-rather than generating them, and OCCT 8.0.1 has no volume mesher at all.
-
-See docs/verification/P16-ARCH-001/BACKEND_MATRIX.md.
+3. Reopen the licence decision
+   Gmsh (GPL-2+) builds readily and is widely used. Admitting it would decide
+   BetterCAD's unchosen licence, which is exactly the decision P16-ARCH-001
+   refused to take on the project's behalf.
 ```
 
-Until that decision is taken, `P16-VOL-001` cannot begin.
+## What is NOT blocked
 
-## What P16-VOL-001 must honour, so none of it is re-derived
+`P16-VOL-001` is the only milestone that needs the backend. The rest of P16 does not:
 
 ```text
-geometry            obtain it from meshing::requireMeshableGeometry and perform NO
-                    body-validity checks of its own. P16-SURF does exactly this and
-                    a mutation proves the chain is wired
-the surface         meshing::generateSurfaceMesh gives a watertight, outward,
-                    conforming boundary with shared NodeIds -- which is what a
-                    volume mesher needs as input. Do not re-triangulate
-backend containment ADR-033: no backend type in any BetterCAD API, backend code
-                    only in src/meshing/<backend>/, and rule 5 of the architecture
-                    check enforces it. It is currently INERT and was proven to fire
-Tet4 only           ADR-031, with the element carrying its type so Tet10 is an
-                    addition rather than a rewrite
-orientation         positive signed volume is valid; negative is REJECTED, never
-                    renormalised. No abs() in the module
-regions             one per solid, no node shared between regions
-determinism         node handles by ascending coordinate order, element order by a
-                    node-set key with the oriented winding stored separately
+P16-SIZE-001     sizing controls -- canonical intent, no backend needed
+P16-QUALITY-001  quality metrics over a mesh, and a surface mesh already exists
+P16-MAP-001      facet-to-FaceName attribution, which P16-SURF left hooks for
+P16-VIZ-001      inspection of meshes that already exist
 ```
+
+So the phase can continue around the block if that is preferred to resolving it first. That too
+is a scope decision.
 
 ## Still owed, from earlier reviews
 
 ```text
 F6 (P16-ARCH)   a MeshControl whose body is deleted must become explicitly
-                UNRESOLVED and must not mesh nothing and report success. No
-                MeshControl exists yet
-F6 (P16-GEOM)   partMassProperties has no currency check, so mass properties can be
-                computed from stale geometry after an unregenerated edit. A P15
-                behaviour change, so a scope decision
+                UNRESOLVED and must not mesh nothing and report success
+F6 (P16-GEOM)   partMassProperties has no currency check, so mass properties can
+                be computed from stale geometry after an unregenerated edit. A
+                P15 behaviour change, so a scope decision
 duplicates      two tetrahedra on the same four nodes are not rejected.
                 P16-QUALITY-001's
-sphere          no fixture, so a DEGENERATE POLE EDGE is the one geometry where
+sphere          no fixture, so a degenerate pole edge is the one geometry where
                 exact-coordinate node unification is untested
-boundary edges  protected by exactly one test, because closed solids cannot detect
-                the counter's removal
+boundary edges  protected by exactly one test, because closed solids cannot
+                detect the counter's removal
 ```
 
 ## Carried defects, neither P16's
@@ -1915,9 +1953,8 @@ the FileIo replace defect     a document save can still lose to a file
                               synchroniser. Arguably ahead of any new milestone.
 
 configuration regeneration    a configuration override does not rebuild the
-                              geometry it changes. Mass properties and meshing both
-                              REFUSE under one, with the same guard. Fixing the
-                              regeneration removes both guards and their tests.
+                              geometry it changes. Mass properties and meshing
+                              both REFUSE under one, with the same guard.
 ```
 
 Also carried from earlier phases: hole POSITION dimensions are unsupported, GD&T symbols are not
