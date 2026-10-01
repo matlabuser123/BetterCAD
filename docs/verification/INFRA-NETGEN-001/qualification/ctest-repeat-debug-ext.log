@@ -1,0 +1,1165 @@
+Test project C:/Users/uqhas/AppData/Local/bc-build/debug-ext
+        Start 2318: unit.SurfaceMesh_IsIdenticalOnRepeatedGeneration
+        Start 2314: unit.SurfTube_InnerWallNormalsPointTowardTheAxisBecauseThatIsOutOfTheMaterial
+        Start 2315: unit.SurfTube_VolumeFromTheSurfaceExcludesTheVoid
+        Start 2319: unit.SurfaceMesh_IsUnaffectedByAnEarlierCoarseTriangulationOfTheSameBody
+        Start 2313: unit.SurfTube_HasTrianglesOnTheInnerWallSoTheCavityIsRepresented
+        Start 2317: unit.SurfaceMesh_GenerationLeavesTheDocumentAndTheBodyUntouched
+        Start 2323: unit.SurfaceMesh_RefusesStaleGeometryBeforeTriangulatingAnything
+        Start 2310: unit.SurfTransform_AreaAndVolumeAreInvariantUnderAPlacement
+      Test #2323: unit.SurfaceMesh_RefusesStaleGeometryBeforeTriangulatingAnything ................   Passed    2.96 sec
+        Start 2323: unit.SurfaceMesh_RefusesStaleGeometryBeforeTriangulatingAnything
+      Test #2317: unit.SurfaceMesh_GenerationLeavesTheDocumentAndTheBodyUntouched .................   Passed    3.06 sec
+        Start 2317: unit.SurfaceMesh_GenerationLeavesTheDocumentAndTheBodyUntouched
+      Test #2310: unit.SurfTransform_AreaAndVolumeAreInvariantUnderAPlacement .....................   Passed    2.98 sec
+        Start 2310: unit.SurfTransform_AreaAndVolumeAreInvariantUnderAPlacement
+      Test #2313: unit.SurfTube_HasTrianglesOnTheInnerWallSoTheCavityIsRepresented ................   Passed    3.14 sec
+        Start 2313: unit.SurfTube_HasTrianglesOnTheInnerWallSoTheCavityIsRepresented
+      Test #2319: unit.SurfaceMesh_IsUnaffectedByAnEarlierCoarseTriangulationOfTheSameBody ........   Passed    3.25 sec
+        Start 2319: unit.SurfaceMesh_IsUnaffectedByAnEarlierCoarseTriangulationOfTheSameBody
+      Test #2314: unit.SurfTube_InnerWallNormalsPointTowardTheAxisBecauseThatIsOutOfTheMaterial ...   Passed    3.34 sec
+        Start 2314: unit.SurfTube_InnerWallNormalsPointTowardTheAxisBecauseThatIsOutOfTheMaterial
+      Test #2315: unit.SurfTube_VolumeFromTheSurfaceExcludesTheVoid ...............................   Passed    3.31 sec
+        Start 2315: unit.SurfTube_VolumeFromTheSurfaceExcludesTheVoid
+      Test #2317: unit.SurfaceMesh_GenerationLeavesTheDocumentAndTheBodyUntouched .................   Passed    0.41 sec
+        Start 2317: unit.SurfaceMesh_GenerationLeavesTheDocumentAndTheBodyUntouched
+      Test #2323: unit.SurfaceMesh_RefusesStaleGeometryBeforeTriangulatingAnything ................   Passed    0.46 sec
+        Start 2323: unit.SurfaceMesh_RefusesStaleGeometryBeforeTriangulatingAnything
+      Test #2310: unit.SurfTransform_AreaAndVolumeAreInvariantUnderAPlacement .....................   Passed    0.52 sec
+        Start 2310: unit.SurfTransform_AreaAndVolumeAreInvariantUnderAPlacement
+      Test #2318: unit.SurfaceMesh_IsIdenticalOnRepeatedGeneration ................................   Passed    4.01 sec
+        Start 2318: unit.SurfaceMesh_IsIdenticalOnRepeatedGeneration
+      Test #2314: unit.SurfTube_InnerWallNormalsPointTowardTheAxisBecauseThatIsOutOfTheMaterial ...   Passed    0.62 sec
+        Start 2314: unit.SurfTube_InnerWallNormalsPointTowardTheAxisBecauseThatIsOutOfTheMaterial
+      Test #2323: unit.SurfaceMesh_RefusesStaleGeometryBeforeTriangulatingAnything ................   Passed    0.37 sec
+        Start 2323: unit.SurfaceMesh_RefusesStaleGeometryBeforeTriangulatingAnything
+      Test #2319: unit.SurfaceMesh_IsUnaffectedByAnEarlierCoarseTriangulationOfTheSameBody ........   Passed    0.73 sec
+        Start 2319: unit.SurfaceMesh_IsUnaffectedByAnEarlierCoarseTriangulationOfTheSameBody
+      Test #2317: unit.SurfaceMesh_GenerationLeavesTheDocumentAndTheBodyUntouched .................   Passed    0.49 sec
+        Start 2317: unit.SurfaceMesh_GenerationLeavesTheDocumentAndTheBodyUntouched
+      Test #2313: unit.SurfTube_HasTrianglesOnTheInnerWallSoTheCavityIsRepresented ................   Passed    0.88 sec
+        Start 2313: unit.SurfTube_HasTrianglesOnTheInnerWallSoTheCavityIsRepresented
+      Test #2310: unit.SurfTransform_AreaAndVolumeAreInvariantUnderAPlacement .....................   Passed    0.43 sec
+        Start 2310: unit.SurfTransform_AreaAndVolumeAreInvariantUnderAPlacement
+      Test #2315: unit.SurfTube_VolumeFromTheSurfaceExcludesTheVoid ...............................   Passed    0.93 sec
+        Start 2315: unit.SurfTube_VolumeFromTheSurfaceExcludesTheVoid
+      Test #2323: unit.SurfaceMesh_RefusesStaleGeometryBeforeTriangulatingAnything ................   Passed    0.33 sec
+        Start 2323: unit.SurfaceMesh_RefusesStaleGeometryBeforeTriangulatingAnything
+      Test #2314: unit.SurfTube_InnerWallNormalsPointTowardTheAxisBecauseThatIsOutOfTheMaterial ...   Passed    0.62 sec
+        Start 2314: unit.SurfTube_InnerWallNormalsPointTowardTheAxisBecauseThatIsOutOfTheMaterial
+      Test #2317: unit.SurfaceMesh_GenerationLeavesTheDocumentAndTheBodyUntouched .................   Passed    0.51 sec
+        Start 2317: unit.SurfaceMesh_GenerationLeavesTheDocumentAndTheBodyUntouched
+      Test #2319: unit.SurfaceMesh_IsUnaffectedByAnEarlierCoarseTriangulationOfTheSameBody ........   Passed    0.66 sec
+        Start 2319: unit.SurfaceMesh_IsUnaffectedByAnEarlierCoarseTriangulationOfTheSameBody
+  1/116 Test #2323: unit.SurfaceMesh_RefusesStaleGeometryBeforeTriangulatingAnything ................   Passed    0.40 sec
+      Test #2310: unit.SurfTransform_AreaAndVolumeAreInvariantUnderAPlacement .....................   Passed    0.58 sec
+        Start 2310: unit.SurfTransform_AreaAndVolumeAreInvariantUnderAPlacement
+      Test #2313: unit.SurfTube_HasTrianglesOnTheInnerWallSoTheCavityIsRepresented ................   Passed    0.62 sec
+        Start 2313: unit.SurfTube_HasTrianglesOnTheInnerWallSoTheCavityIsRepresented
+        Start 2307: unit.SurfCylinder_IsWatertightAndItsAreaConvergesOnTheAnalyticalValue
+      Test #2315: unit.SurfTube_VolumeFromTheSurfaceExcludesTheVoid ...............................   Passed    0.65 sec
+        Start 2315: unit.SurfTube_VolumeFromTheSurfaceExcludesTheVoid
+  2/116 Test #2317: unit.SurfaceMesh_GenerationLeavesTheDocumentAndTheBodyUntouched .................   Passed    0.43 sec
+        Start 2324: unit.SurfaceMesh_TwoMeshesOfTheSameBodyAreNeverTheSameMesh
+  3/116 Test #2310: unit.SurfTransform_AreaAndVolumeAreInvariantUnderAPlacement .....................   Passed    0.34 sec
+        Start 2312: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfEveryNode
+      Test #2318: unit.SurfaceMesh_IsIdenticalOnRepeatedGeneration ................................   Passed    1.20 sec
+        Start 2318: unit.SurfaceMesh_IsIdenticalOnRepeatedGeneration
+      Test #2314: unit.SurfTube_InnerWallNormalsPointTowardTheAxisBecauseThatIsOutOfTheMaterial ...   Passed    0.59 sec
+        Start 2314: unit.SurfTube_InnerWallNormalsPointTowardTheAxisBecauseThatIsOutOfTheMaterial
+      Test #2307: unit.SurfCylinder_IsWatertightAndItsAreaConvergesOnTheAnalyticalValue ...........   Passed    0.40 sec
+        Start 2307: unit.SurfCylinder_IsWatertightAndItsAreaConvergesOnTheAnalyticalValue
+      Test #2313: unit.SurfTube_HasTrianglesOnTheInnerWallSoTheCavityIsRepresented ................   Passed    0.45 sec
+        Start 2313: unit.SurfTube_HasTrianglesOnTheInnerWallSoTheCavityIsRepresented
+      Test #2319: unit.SurfaceMesh_IsUnaffectedByAnEarlierCoarseTriangulationOfTheSameBody ........   Passed    0.56 sec
+        Start 2319: unit.SurfaceMesh_IsUnaffectedByAnEarlierCoarseTriangulationOfTheSameBody
+      Test #2315: unit.SurfTube_VolumeFromTheSurfaceExcludesTheVoid ...............................   Passed    0.42 sec
+        Start 2315: unit.SurfTube_VolumeFromTheSurfaceExcludesTheVoid
+      Test #2324: unit.SurfaceMesh_TwoMeshesOfTheSameBodyAreNeverTheSameMesh ......................   Passed    0.42 sec
+        Start 2324: unit.SurfaceMesh_TwoMeshesOfTheSameBodyAreNeverTheSameMesh
+      Test #2312: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfEveryNode ................   Passed    0.39 sec
+        Start 2312: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfEveryNode
+  4/116 Test #2319: unit.SurfaceMesh_IsUnaffectedByAnEarlierCoarseTriangulationOfTheSameBody ........   Passed    0.49 sec
+      Test #2324: unit.SurfaceMesh_TwoMeshesOfTheSameBodyAreNeverTheSameMesh ......................   Passed    0.29 sec
+        Start 2324: unit.SurfaceMesh_TwoMeshesOfTheSameBodyAreNeverTheSameMesh
+      Test #2307: unit.SurfCylinder_IsWatertightAndItsAreaConvergesOnTheAnalyticalValue ...........   Passed    0.59 sec
+        Start 2307: unit.SurfCylinder_IsWatertightAndItsAreaConvergesOnTheAnalyticalValue
+        Start 2308: unit.SurfCylinder_SideNodesLieOnTheExactCylinderAndItsCapsAreFlat
+  5/116 Test #2313: unit.SurfTube_HasTrianglesOnTheInnerWallSoTheCavityIsRepresented ................   Passed    0.62 sec
+  6/116 Test #2314: unit.SurfTube_InnerWallNormalsPointTowardTheAxisBecauseThatIsOutOfTheMaterial ...   Passed    0.67 sec
+        Start 2306: unit.SurfCylinder_EnclosedVolumeIsPositiveAndApproachesTheAnalyticalVolume
+        Start 2309: unit.SurfCylinder_WallNormalsPointRadiallyOutward
+      Test #2312: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfEveryNode ................   Passed    0.47 sec
+        Start 2312: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfEveryNode
+      Test #2307: unit.SurfCylinder_IsWatertightAndItsAreaConvergesOnTheAnalyticalValue ...........   Passed    0.26 sec
+        Start 2307: unit.SurfCylinder_IsWatertightAndItsAreaConvergesOnTheAnalyticalValue
+  7/116 Test #2315: unit.SurfTube_VolumeFromTheSurfaceExcludesTheVoid ...............................   Passed    0.68 sec
+        Start 2300: unit.SurfBox_AreaMatchesTheAnalyticalSurfaceArea
+      Test #2324: unit.SurfaceMesh_TwoMeshesOfTheSameBodyAreNeverTheSameMesh ......................   Passed    0.34 sec
+        Start 2324: unit.SurfaceMesh_TwoMeshesOfTheSameBodyAreNeverTheSameMesh
+      Test #2308: unit.SurfCylinder_SideNodesLieOnTheExactCylinderAndItsCapsAreFlat ...............   Passed    0.41 sec
+        Start 2308: unit.SurfCylinder_SideNodesLieOnTheExactCylinderAndItsCapsAreFlat
+      Test #2312: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfEveryNode ................   Passed    0.28 sec
+        Start 2312: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfEveryNode
+      Test #2306: unit.SurfCylinder_EnclosedVolumeIsPositiveAndApproachesTheAnalyticalVolume ......   Passed    0.41 sec
+        Start 2306: unit.SurfCylinder_EnclosedVolumeIsPositiveAndApproachesTheAnalyticalVolume
+      Test #2318: unit.SurfaceMesh_IsIdenticalOnRepeatedGeneration ................................   Passed    1.17 sec
+        Start 2318: unit.SurfaceMesh_IsIdenticalOnRepeatedGeneration
+      Test #2309: unit.SurfCylinder_WallNormalsPointRadiallyOutward ...............................   Passed    0.47 sec
+        Start 2309: unit.SurfCylinder_WallNormalsPointRadiallyOutward
+      Test #2300: unit.SurfBox_AreaMatchesTheAnalyticalSurfaceArea ................................   Passed    0.32 sec
+        Start 2300: unit.SurfBox_AreaMatchesTheAnalyticalSurfaceArea
+      Test #2307: unit.SurfCylinder_IsWatertightAndItsAreaConvergesOnTheAnalyticalValue ...........   Passed    0.42 sec
+        Start 2307: unit.SurfCylinder_IsWatertightAndItsAreaConvergesOnTheAnalyticalValue
+      Test #2324: unit.SurfaceMesh_TwoMeshesOfTheSameBodyAreNeverTheSameMesh ......................   Passed    0.53 sec
+        Start 2324: unit.SurfaceMesh_TwoMeshesOfTheSameBodyAreNeverTheSameMesh
+      Test #2312: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfEveryNode ................   Passed    0.43 sec
+        Start 2312: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfEveryNode
+      Test #2308: unit.SurfCylinder_SideNodesLieOnTheExactCylinderAndItsCapsAreFlat ...............   Passed    0.48 sec
+        Start 2308: unit.SurfCylinder_SideNodesLieOnTheExactCylinderAndItsCapsAreFlat
+      Test #2306: unit.SurfCylinder_EnclosedVolumeIsPositiveAndApproachesTheAnalyticalVolume ......   Passed    0.62 sec
+        Start 2306: unit.SurfCylinder_EnclosedVolumeIsPositiveAndApproachesTheAnalyticalVolume
+      Test #2309: unit.SurfCylinder_WallNormalsPointRadiallyOutward ...............................   Passed    0.58 sec
+        Start 2309: unit.SurfCylinder_WallNormalsPointRadiallyOutward
+      Test #2300: unit.SurfBox_AreaMatchesTheAnalyticalSurfaceArea ................................   Passed    0.58 sec
+        Start 2300: unit.SurfBox_AreaMatchesTheAnalyticalSurfaceArea
+  8/116 Test #2312: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfEveryNode ................   Passed    0.32 sec
+  9/116 Test #2324: unit.SurfaceMesh_TwoMeshesOfTheSameBodyAreNeverTheSameMesh ......................   Passed    0.36 sec
+        Start 2320: unit.SurfaceMesh_NodeHandlesFollowCoordinateOrderNotFaceTraversalOrder
+        Start 2321: unit.SurfaceMesh_RefusesABlockedFeatureWithNoCurrentBody
+      Test #2306: unit.SurfCylinder_EnclosedVolumeIsPositiveAndApproachesTheAnalyticalVolume ......   Passed    0.35 sec
+        Start 2306: unit.SurfCylinder_EnclosedVolumeIsPositiveAndApproachesTheAnalyticalVolume
+      Test #2308: unit.SurfCylinder_SideNodesLieOnTheExactCylinderAndItsCapsAreFlat ...............   Passed    0.61 sec
+        Start 2308: unit.SurfCylinder_SideNodesLieOnTheExactCylinderAndItsCapsAreFlat
+ 10/116 Test #2307: unit.SurfCylinder_IsWatertightAndItsAreaConvergesOnTheAnalyticalValue ...........   Passed    0.87 sec
+        Start 2316: unit.SurfaceMeshFailure_EveryReasonHasAName
+      Test #2300: unit.SurfBox_AreaMatchesTheAnalyticalSurfaceArea ................................   Passed    0.42 sec
+        Start 2300: unit.SurfBox_AreaMatchesTheAnalyticalSurfaceArea
+      Test #2320: unit.SurfaceMesh_NodeHandlesFollowCoordinateOrderNotFaceTraversalOrder ..........   Passed    0.44 sec
+        Start 2320: unit.SurfaceMesh_NodeHandlesFollowCoordinateOrderNotFaceTraversalOrder
+      Test #2321: unit.SurfaceMesh_RefusesABlockedFeatureWithNoCurrentBody ........................   Passed    0.54 sec
+        Start 2321: unit.SurfaceMesh_RefusesABlockedFeatureWithNoCurrentBody
+      Test #2309: unit.SurfCylinder_WallNormalsPointRadiallyOutward ...............................   Passed    0.67 sec
+        Start 2309: unit.SurfCylinder_WallNormalsPointRadiallyOutward
+      Test #2318: unit.SurfaceMesh_IsIdenticalOnRepeatedGeneration ................................   Passed    1.34 sec
+        Start 2318: unit.SurfaceMesh_IsIdenticalOnRepeatedGeneration
+      Test #2306: unit.SurfCylinder_EnclosedVolumeIsPositiveAndApproachesTheAnalyticalVolume ......   Passed    0.43 sec
+        Start 2306: unit.SurfCylinder_EnclosedVolumeIsPositiveAndApproachesTheAnalyticalVolume
+      Test #2316: unit.SurfaceMeshFailure_EveryReasonHasAName .....................................   Passed    0.48 sec
+        Start 2316: unit.SurfaceMeshFailure_EveryReasonHasAName
+      Test #2308: unit.SurfCylinder_SideNodesLieOnTheExactCylinderAndItsCapsAreFlat ...............   Passed    0.52 sec
+        Start 2308: unit.SurfCylinder_SideNodesLieOnTheExactCylinderAndItsCapsAreFlat
+      Test #2320: unit.SurfaceMesh_NodeHandlesFollowCoordinateOrderNotFaceTraversalOrder ..........   Passed    0.41 sec
+        Start 2320: unit.SurfaceMesh_NodeHandlesFollowCoordinateOrderNotFaceTraversalOrder
+      Test #2300: unit.SurfBox_AreaMatchesTheAnalyticalSurfaceArea ................................   Passed    0.53 sec
+        Start 2300: unit.SurfBox_AreaMatchesTheAnalyticalSurfaceArea
+      Test #2309: unit.SurfCylinder_WallNormalsPointRadiallyOutward ...............................   Passed    0.38 sec
+        Start 2309: unit.SurfCylinder_WallNormalsPointRadiallyOutward
+      Test #2316: unit.SurfaceMeshFailure_EveryReasonHasAName .....................................   Passed    0.18 sec
+        Start 2316: unit.SurfaceMeshFailure_EveryReasonHasAName
+ 11/116 Test #2306: unit.SurfCylinder_EnclosedVolumeIsPositiveAndApproachesTheAnalyticalVolume ......   Passed    0.38 sec
+        Start 2585: unit.VolumeBackend_IsNetgenWhenTheBuildLinkedIt
+      Test #2321: unit.SurfaceMesh_RefusesABlockedFeatureWithNoCurrentBody ........................   Passed    0.72 sec
+        Start 2321: unit.SurfaceMesh_RefusesABlockedFeatureWithNoCurrentBody
+      Test #2316: unit.SurfaceMeshFailure_EveryReasonHasAName .....................................   Passed    0.50 sec
+        Start 2316: unit.SurfaceMeshFailure_EveryReasonHasAName
+ 12/116 Test #2300: unit.SurfBox_AreaMatchesTheAnalyticalSurfaceArea ................................   Passed    0.65 sec
+ 13/116 Test #2308: unit.SurfCylinder_SideNodesLieOnTheExactCylinderAndItsCapsAreFlat ...............   Passed    0.75 sec
+      Test #2320: unit.SurfaceMesh_NodeHandlesFollowCoordinateOrderNotFaceTraversalOrder ..........   Passed    0.73 sec
+        Start 2320: unit.SurfaceMesh_NodeHandlesFollowCoordinateOrderNotFaceTraversalOrder
+        Start 2311: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfAThousandBodyLengths
+        Start 2305: unit.SurfBox_SharpEdgesKeepDistinctFaceNormals
+      Test #2585: unit.VolumeBackend_IsNetgenWhenTheBuildLinkedIt .................................   Passed    0.60 sec
+        Start 2585: unit.VolumeBackend_IsNetgenWhenTheBuildLinkedIt
+      Test #2316: unit.SurfaceMeshFailure_EveryReasonHasAName .....................................   Passed    0.26 sec
+        Start 2316: unit.SurfaceMeshFailure_EveryReasonHasAName
+ 14/116 Test #2309: unit.SurfCylinder_WallNormalsPointRadiallyOutward ...............................   Passed    0.90 sec
+        Start  789: unit.EnclosedVolume_IsNegativeForAnInwardOrientedClosedSurface
+ 15/116 Test #2318: unit.SurfaceMesh_IsIdenticalOnRepeatedGeneration ................................   Passed    1.33 sec
+      Test #2305: unit.SurfBox_SharpEdgesKeepDistinctFaceNormals ..................................   Passed    0.34 sec
+        Start 2305: unit.SurfBox_SharpEdgesKeepDistinctFaceNormals
+      Test #2321: unit.SurfaceMesh_RefusesABlockedFeatureWithNoCurrentBody ........................   Passed    0.72 sec
+        Start 2321: unit.SurfaceMesh_RefusesABlockedFeatureWithNoCurrentBody
+        Start 2322: unit.SurfaceMesh_RefusesNonPositiveOrNonFiniteControls
+      Test #2585: unit.VolumeBackend_IsNetgenWhenTheBuildLinkedIt .................................   Passed    0.41 sec
+        Start 2585: unit.VolumeBackend_IsNetgenWhenTheBuildLinkedIt
+      Test #2320: unit.SurfaceMesh_NodeHandlesFollowCoordinateOrderNotFaceTraversalOrder ..........   Passed    0.57 sec
+        Start 2320: unit.SurfaceMesh_NodeHandlesFollowCoordinateOrderNotFaceTraversalOrder
+      Test #2311: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfAThousandBodyLengths .....   Passed    0.62 sec
+        Start 2311: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfAThousandBodyLengths
+ 16/116 Test #2316: unit.SurfaceMeshFailure_EveryReasonHasAName .....................................   Passed    0.52 sec
+        Start 2502: unit.ValidateSurface_CountsANonManifoldEdgeSharedByThreeTriangles
+      Test #2305: unit.SurfBox_SharpEdgesKeepDistinctFaceNormals ..................................   Passed    0.35 sec
+        Start 2305: unit.SurfBox_SharpEdgesKeepDistinctFaceNormals
+      Test #2321: unit.SurfaceMesh_RefusesABlockedFeatureWithNoCurrentBody ........................   Passed    0.42 sec
+        Start 2321: unit.SurfaceMesh_RefusesABlockedFeatureWithNoCurrentBody
+      Test #2585: unit.VolumeBackend_IsNetgenWhenTheBuildLinkedIt .................................   Passed    0.40 sec
+        Start 2585: unit.VolumeBackend_IsNetgenWhenTheBuildLinkedIt
+      Test #2322: unit.SurfaceMesh_RefusesNonPositiveOrNonFiniteControls ..........................   Passed    0.43 sec
+        Start 2322: unit.SurfaceMesh_RefusesNonPositiveOrNonFiniteControls
+      Test  #789: unit.EnclosedVolume_IsNegativeForAnInwardOrientedClosedSurface ..................   Passed    0.67 sec
+        Start  789: unit.EnclosedVolume_IsNegativeForAnInwardOrientedClosedSurface
+      Test #2502: unit.ValidateSurface_CountsANonManifoldEdgeSharedByThreeTriangles ...............   Passed    0.29 sec
+        Start 2502: unit.ValidateSurface_CountsANonManifoldEdgeSharedByThreeTriangles
+      Test #2305: unit.SurfBox_SharpEdgesKeepDistinctFaceNormals ..................................   Passed    0.27 sec
+        Start 2305: unit.SurfBox_SharpEdgesKeepDistinctFaceNormals
+ 17/116 Test #2320: unit.SurfaceMesh_NodeHandlesFollowCoordinateOrderNotFaceTraversalOrder ..........   Passed    0.47 sec
+      Test #2311: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfAThousandBodyLengths .....   Passed    0.39 sec
+        Start 2311: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfAThousandBodyLengths
+        Start 2301: unit.SurfBox_EnclosedVolumeFromTheTrianglesMatchesTheCadVolume
+      Test #2585: unit.VolumeBackend_IsNetgenWhenTheBuildLinkedIt .................................   Passed    0.27 sec
+        Start 2585: unit.VolumeBackend_IsNetgenWhenTheBuildLinkedIt
+ 18/116 Test #2321: unit.SurfaceMesh_RefusesABlockedFeatureWithNoCurrentBody ........................   Passed    0.33 sec
+      Test #2322: unit.SurfaceMesh_RefusesNonPositiveOrNonFiniteControls ..........................   Passed    0.28 sec
+        Start 2322: unit.SurfaceMesh_RefusesNonPositiveOrNonFiniteControls
+      Test  #789: unit.EnclosedVolume_IsNegativeForAnInwardOrientedClosedSurface ..................   Passed    0.25 sec
+        Start  789: unit.EnclosedVolume_IsNegativeForAnInwardOrientedClosedSurface
+        Start 2586: unit.VolumeBackend_ReportsThePinnedNetgenVersion
+      Test #2311: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfAThousandBodyLengths .....   Passed    0.24 sec
+        Start 2311: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfAThousandBodyLengths
+      Test #2305: unit.SurfBox_SharpEdgesKeepDistinctFaceNormals ..................................   Passed    0.33 sec
+        Start 2305: unit.SurfBox_SharpEdgesKeepDistinctFaceNormals
+      Test #2502: unit.ValidateSurface_CountsANonManifoldEdgeSharedByThreeTriangles ...............   Passed    0.38 sec
+        Start 2502: unit.ValidateSurface_CountsANonManifoldEdgeSharedByThreeTriangles
+      Test #2301: unit.SurfBox_EnclosedVolumeFromTheTrianglesMatchesTheCadVolume ..................   Passed    0.26 sec
+        Start 2301: unit.SurfBox_EnclosedVolumeFromTheTrianglesMatchesTheCadVolume
+      Test  #789: unit.EnclosedVolume_IsNegativeForAnInwardOrientedClosedSurface ..................   Passed    0.27 sec
+        Start  789: unit.EnclosedVolume_IsNegativeForAnInwardOrientedClosedSurface
+      Test #2311: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfAThousandBodyLengths .....   Passed    0.24 sec
+        Start 2311: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfAThousandBodyLengths
+      Test #2586: unit.VolumeBackend_ReportsThePinnedNetgenVersion ................................   Passed    0.30 sec
+        Start 2586: unit.VolumeBackend_ReportsThePinnedNetgenVersion
+      Test #2322: unit.SurfaceMesh_RefusesNonPositiveOrNonFiniteControls ..........................   Passed    0.39 sec
+        Start 2322: unit.SurfaceMesh_RefusesNonPositiveOrNonFiniteControls
+ 19/116 Test #2585: unit.VolumeBackend_IsNetgenWhenTheBuildLinkedIt .................................   Passed    0.43 sec
+        Start 2583: unit.VolumeBackend_IdentityIsConsistentWithAvailability
+      Test #2502: unit.ValidateSurface_CountsANonManifoldEdgeSharedByThreeTriangles ...............   Passed    0.24 sec
+        Start 2502: unit.ValidateSurface_CountsANonManifoldEdgeSharedByThreeTriangles
+ 20/116 Test #2305: unit.SurfBox_SharpEdgesKeepDistinctFaceNormals ..................................   Passed    0.28 sec
+        Start 2302: unit.SurfBox_EulerCharacteristicIsTwo
+      Test #2301: unit.SurfBox_EnclosedVolumeFromTheTrianglesMatchesTheCadVolume ..................   Passed    0.26 sec
+        Start 2301: unit.SurfBox_EnclosedVolumeFromTheTrianglesMatchesTheCadVolume
+ 21/116 Test #2311: unit.SurfTransform_EnclosedVolumeSurvivesATranslationOfAThousandBodyLengths .....   Passed    0.20 sec
+        Start 2587: unit.VolumeBackend_SurvivesRepeatedInitialisation
+      Test #2586: unit.VolumeBackend_ReportsThePinnedNetgenVersion ................................   Passed    0.21 sec
+        Start 2586: unit.VolumeBackend_ReportsThePinnedNetgenVersion
+      Test  #789: unit.EnclosedVolume_IsNegativeForAnInwardOrientedClosedSurface ..................   Passed    0.30 sec
+        Start  789: unit.EnclosedVolume_IsNegativeForAnInwardOrientedClosedSurface
+      Test #2502: unit.ValidateSurface_CountsANonManifoldEdgeSharedByThreeTriangles ...............   Passed    0.22 sec
+        Start 2502: unit.ValidateSurface_CountsANonManifoldEdgeSharedByThreeTriangles
+      Test #2322: unit.SurfaceMesh_RefusesNonPositiveOrNonFiniteControls ..........................   Passed    0.28 sec
+        Start 2322: unit.SurfaceMesh_RefusesNonPositiveOrNonFiniteControls
+      Test #2583: unit.VolumeBackend_IdentityIsConsistentWithAvailability .........................   Passed    0.28 sec
+        Start 2583: unit.VolumeBackend_IdentityIsConsistentWithAvailability
+      Test #2302: unit.SurfBox_EulerCharacteristicIsTwo ...........................................   Passed    0.26 sec
+        Start 2302: unit.SurfBox_EulerCharacteristicIsTwo
+      Test #2587: unit.VolumeBackend_SurvivesRepeatedInitialisation ...............................   Passed    0.19 sec
+        Start 2587: unit.VolumeBackend_SurvivesRepeatedInitialisation
+      Test #2586: unit.VolumeBackend_ReportsThePinnedNetgenVersion ................................   Passed    0.18 sec
+        Start 2586: unit.VolumeBackend_ReportsThePinnedNetgenVersion
+      Test #2301: unit.SurfBox_EnclosedVolumeFromTheTrianglesMatchesTheCadVolume ..................   Passed    0.32 sec
+        Start 2301: unit.SurfBox_EnclosedVolumeFromTheTrianglesMatchesTheCadVolume
+ 22/116 Test  #789: unit.EnclosedVolume_IsNegativeForAnInwardOrientedClosedSurface ..................   Passed    0.24 sec
+        Start 2304: unit.SurfBox_NormalsWithinOnePlanarFaceAgree
+      Test #2587: unit.VolumeBackend_SurvivesRepeatedInitialisation ...............................   Passed    0.14 sec
+        Start 2587: unit.VolumeBackend_SurvivesRepeatedInitialisation
+ 23/116 Test #2322: unit.SurfaceMesh_RefusesNonPositiveOrNonFiniteControls ..........................   Passed    0.22 sec
+      Test #2583: unit.VolumeBackend_IdentityIsConsistentWithAvailability .........................   Passed    0.20 sec
+        Start 2583: unit.VolumeBackend_IdentityIsConsistentWithAvailability
+        Start 2505: unit.ValidateSurface_CountsBoundaryEdgesOfAnOpenPatch
+      Test #2586: unit.VolumeBackend_ReportsThePinnedNetgenVersion ................................   Passed    0.21 sec
+        Start 2586: unit.VolumeBackend_ReportsThePinnedNetgenVersion
+ 24/116 Test #2502: unit.ValidateSurface_CountsANonManifoldEdgeSharedByThreeTriangles ...............   Passed    0.33 sec
+      Test #2302: unit.SurfBox_EulerCharacteristicIsTwo ...........................................   Passed    0.27 sec
+        Start 2302: unit.SurfBox_EulerCharacteristicIsTwo
+        Start 2303: unit.SurfBox_IsWatertightManifoldAndCoherentlyOriented
+      Test #2587: unit.VolumeBackend_SurvivesRepeatedInitialisation ...............................   Passed    0.15 sec
+        Start 2587: unit.VolumeBackend_SurvivesRepeatedInitialisation
+      Test #2301: unit.SurfBox_EnclosedVolumeFromTheTrianglesMatchesTheCadVolume ..................   Passed    0.26 sec
+        Start 2301: unit.SurfBox_EnclosedVolumeFromTheTrianglesMatchesTheCadVolume
+      Test #2583: unit.VolumeBackend_IdentityIsConsistentWithAvailability .........................   Passed    0.17 sec
+        Start 2583: unit.VolumeBackend_IdentityIsConsistentWithAvailability
+      Test #2505: unit.ValidateSurface_CountsBoundaryEdgesOfAnOpenPatch ...........................   Passed    0.17 sec
+        Start 2505: unit.ValidateSurface_CountsBoundaryEdgesOfAnOpenPatch
+      Test #2304: unit.SurfBox_NormalsWithinOnePlanarFaceAgree ....................................   Passed    0.24 sec
+        Start 2304: unit.SurfBox_NormalsWithinOnePlanarFaceAgree
+ 25/116 Test #2586: unit.VolumeBackend_ReportsThePinnedNetgenVersion ................................   Passed    0.15 sec
+        Start 2506: unit.ValidateSurface_CountsDegenerateAndDuplicateTriangles
+      Test #2587: unit.VolumeBackend_SurvivesRepeatedInitialisation ...............................   Passed    0.12 sec
+        Start 2587: unit.VolumeBackend_SurvivesRepeatedInitialisation
+      Test #2303: unit.SurfBox_IsWatertightManifoldAndCoherentlyOriented ..........................   Passed    0.17 sec
+        Start 2303: unit.SurfBox_IsWatertightManifoldAndCoherentlyOriented
+      Test #2302: unit.SurfBox_EulerCharacteristicIsTwo ...........................................   Passed    0.21 sec
+        Start 2302: unit.SurfBox_EulerCharacteristicIsTwo
+      Test #2505: unit.ValidateSurface_CountsBoundaryEdgesOfAnOpenPatch ...........................   Passed    0.14 sec
+        Start 2505: unit.ValidateSurface_CountsBoundaryEdgesOfAnOpenPatch
+      Test #2583: unit.VolumeBackend_IdentityIsConsistentWithAvailability .........................   Passed    0.17 sec
+        Start 2583: unit.VolumeBackend_IdentityIsConsistentWithAvailability
+ 26/116 Test #2301: unit.SurfBox_EnclosedVolumeFromTheTrianglesMatchesTheCadVolume ..................   Passed    0.21 sec
+      Test #2506: unit.ValidateSurface_CountsDegenerateAndDuplicateTriangles ......................   Passed    0.15 sec
+        Start 2506: unit.ValidateSurface_CountsDegenerateAndDuplicateTriangles
+        Start 2584: unit.VolumeBackend_InitialisesAndShutsDownCleanly
+      Test #2304: unit.SurfBox_NormalsWithinOnePlanarFaceAgree ....................................   Passed    0.20 sec
+        Start 2304: unit.SurfBox_NormalsWithinOnePlanarFaceAgree
+ 27/116 Test #2587: unit.VolumeBackend_SurvivesRepeatedInitialisation ...............................   Passed    0.15 sec
+        Start 2504: unit.ValidateSurface_CountsAnUnusedNode
+      Test #2303: unit.SurfBox_IsWatertightManifoldAndCoherentlyOriented ..........................   Passed    0.16 sec
+        Start 2303: unit.SurfBox_IsWatertightManifoldAndCoherentlyOriented
+      Test #2302: unit.SurfBox_EulerCharacteristicIsTwo ...........................................   Passed    0.18 sec
+        Start 2302: unit.SurfBox_EulerCharacteristicIsTwo
+ 28/116 Test #2583: unit.VolumeBackend_IdentityIsConsistentWithAvailability .........................   Passed    0.16 sec
+      Test #2505: unit.ValidateSurface_CountsBoundaryEdgesOfAnOpenPatch ...........................   Passed    0.18 sec
+        Start 2505: unit.ValidateSurface_CountsBoundaryEdgesOfAnOpenPatch
+        Start 2503: unit.ValidateSurface_CountsAnOrientationConflictThatEdgeCountingCannotSee
+      Test #2584: unit.VolumeBackend_InitialisesAndShutsDownCleanly ...............................   Passed    0.16 sec
+        Start 2584: unit.VolumeBackend_InitialisesAndShutsDownCleanly
+      Test #2506: unit.ValidateSurface_CountsDegenerateAndDuplicateTriangles ......................   Passed    0.19 sec
+        Start 2506: unit.ValidateSurface_CountsDegenerateAndDuplicateTriangles
+      Test #2504: unit.ValidateSurface_CountsAnUnusedNode .........................................   Passed    0.18 sec
+        Start 2504: unit.ValidateSurface_CountsAnUnusedNode
+      Test #2304: unit.SurfBox_NormalsWithinOnePlanarFaceAgree ....................................   Passed    0.21 sec
+        Start 2304: unit.SurfBox_NormalsWithinOnePlanarFaceAgree
+      Test #2303: unit.SurfBox_IsWatertightManifoldAndCoherentlyOriented ..........................   Passed    0.23 sec
+        Start 2303: unit.SurfBox_IsWatertightManifoldAndCoherentlyOriented
+      Test #2503: unit.ValidateSurface_CountsAnOrientationConflictThatEdgeCountingCannotSee .......   Passed    0.17 sec
+        Start 2503: unit.ValidateSurface_CountsAnOrientationConflictThatEdgeCountingCannotSee
+ 29/116 Test #2302: unit.SurfBox_EulerCharacteristicIsTwo ...........................................   Passed    0.22 sec
+      Test #2505: unit.ValidateSurface_CountsBoundaryEdgesOfAnOpenPatch ...........................   Passed    0.21 sec
+        Start 2505: unit.ValidateSurface_CountsBoundaryEdgesOfAnOpenPatch
+        Start 2797: architecture.checker.mesh-backend-generated-leak
+      Test #2584: unit.VolumeBackend_InitialisesAndShutsDownCleanly ...............................   Passed    0.20 sec
+        Start 2584: unit.VolumeBackend_InitialisesAndShutsDownCleanly
+      Test #2506: unit.ValidateSurface_CountsDegenerateAndDuplicateTriangles ......................   Passed    0.21 sec
+        Start 2506: unit.ValidateSurface_CountsDegenerateAndDuplicateTriangles
+      Test #2504: unit.ValidateSurface_CountsAnUnusedNode .........................................   Passed    0.21 sec
+        Start 2504: unit.ValidateSurface_CountsAnUnusedNode
+      Test #2303: unit.SurfBox_IsWatertightManifoldAndCoherentlyOriented ..........................   Passed    0.21 sec
+        Start 2303: unit.SurfBox_IsWatertightManifoldAndCoherentlyOriented
+      Test #2304: unit.SurfBox_NormalsWithinOnePlanarFaceAgree ....................................   Passed    0.29 sec
+        Start 2304: unit.SurfBox_NormalsWithinOnePlanarFaceAgree
+      Test #2503: unit.ValidateSurface_CountsAnOrientationConflictThatEdgeCountingCannotSee .......   Passed    0.23 sec
+        Start 2503: unit.ValidateSurface_CountsAnOrientationConflictThatEdgeCountingCannotSee
+ 30/116 Test #2505: unit.ValidateSurface_CountsBoundaryEdgesOfAnOpenPatch ...........................   Passed    0.23 sec
+      Test #2584: unit.VolumeBackend_InitialisesAndShutsDownCleanly ...............................   Passed    0.20 sec
+        Start 2584: unit.VolumeBackend_InitialisesAndShutsDownCleanly
+        Start 1528: unit.Meshable_RefusesAnEmptyBodyThatRegenerationNonethelessStored
+      Test #2506: unit.ValidateSurface_CountsDegenerateAndDuplicateTriangles ......................   Passed    0.22 sec
+        Start 2506: unit.ValidateSurface_CountsDegenerateAndDuplicateTriangles
+      Test #2504: unit.ValidateSurface_CountsAnUnusedNode .........................................   Passed    0.21 sec
+        Start 2504: unit.ValidateSurface_CountsAnUnusedNode
+      Test #2797: architecture.checker.mesh-backend-generated-leak ................................   Passed    0.32 sec
+        Start 2797: architecture.checker.mesh-backend-generated-leak
+ 31/116 Test #2303: unit.SurfBox_IsWatertightManifoldAndCoherentlyOriented ..........................   Passed    0.17 sec
+        Start 1524: unit.Meshable_PreparationDoesNotTouchTheDocumentOrTheRegenerator
+      Test #2503: unit.ValidateSurface_CountsAnOrientationConflictThatEdgeCountingCannotSee .......   Passed    0.16 sec
+        Start 2503: unit.ValidateSurface_CountsAnOrientationConflictThatEdgeCountingCannotSee
+      Test #2584: unit.VolumeBackend_InitialisesAndShutsDownCleanly ...............................   Passed    0.20 sec
+        Start 2584: unit.VolumeBackend_InitialisesAndShutsDownCleanly
+ 32/116 Test #2506: unit.ValidateSurface_CountsDegenerateAndDuplicateTriangles ......................   Passed    0.17 sec
+ 33/116 Test #2304: unit.SurfBox_NormalsWithinOnePlanarFaceAgree ....................................   Passed    0.26 sec
+        Start 1533: unit.Meshable_ReportsStalenessRatherThanTheDefectOfAStaleBody
+        Start 1522: unit.Meshable_GivesTheSameAnswerAndTheSameVolumeOnRepeatedCalls
+      Test #2504: unit.ValidateSurface_CountsAnUnusedNode .........................................   Passed    0.20 sec
+        Start 2504: unit.ValidateSurface_CountsAnUnusedNode
+      Test #1528: unit.Meshable_RefusesAnEmptyBodyThatRegenerationNonethelessStored ...............   Passed    0.28 sec
+        Start 1528: unit.Meshable_RefusesAnEmptyBodyThatRegenerationNonethelessStored
+      Test #2503: unit.ValidateSurface_CountsAnOrientationConflictThatEdgeCountingCannotSee .......   Passed    0.18 sec
+        Start 2503: unit.ValidateSurface_CountsAnOrientationConflictThatEdgeCountingCannotSee
+ 34/116 Test #2584: unit.VolumeBackend_InitialisesAndShutsDownCleanly ...............................   Passed    0.17 sec
+        Start 2513: unit.Validate_RejectsACoplanarTetrahedronDespiteFourDistinctHandles
+      Test #1524: unit.Meshable_PreparationDoesNotTouchTheDocumentOrTheRegenerator ................   Passed    0.29 sec
+        Start 1524: unit.Meshable_PreparationDoesNotTouchTheDocumentOrTheRegenerator
+ 35/116 Test #2504: unit.ValidateSurface_CountsAnUnusedNode .........................................   Passed    0.16 sec
+      Test #1533: unit.Meshable_ReportsStalenessRatherThanTheDefectOfAStaleBody ...................   Passed    0.21 sec
+        Start 1533: unit.Meshable_ReportsStalenessRatherThanTheDefectOfAStaleBody
+        Start 2108: unit.SignedVolume_ChangesSignUnderAReflection
+      Test #2797: architecture.checker.mesh-backend-generated-leak ................................   Passed    0.36 sec
+        Start 2797: architecture.checker.mesh-backend-generated-leak
+ 36/116 Test #2503: unit.ValidateSurface_CountsAnOrientationConflictThatEdgeCountingCannotSee .......   Passed    0.17 sec
+        Start 2508: unit.Validate_AcceptsTheReferenceTetrahedron
+      Test #1528: unit.Meshable_RefusesAnEmptyBodyThatRegenerationNonethelessStored ...............   Passed    0.23 sec
+        Start 1528: unit.Meshable_RefusesAnEmptyBodyThatRegenerationNonethelessStored
+      Test #2513: unit.Validate_RejectsACoplanarTetrahedronDespiteFourDistinctHandles .............   Passed    0.17 sec
+        Start 2513: unit.Validate_RejectsACoplanarTetrahedronDespiteFourDistinctHandles
+      Test #1522: unit.Meshable_GivesTheSameAnswerAndTheSameVolumeOnRepeatedCalls .................   Passed    0.36 sec
+        Start 1522: unit.Meshable_GivesTheSameAnswerAndTheSameVolumeOnRepeatedCalls
+      Test #2108: unit.SignedVolume_ChangesSignUnderAReflection ...................................   Passed    0.19 sec
+        Start 2108: unit.SignedVolume_ChangesSignUnderAReflection
+      Test #1533: unit.Meshable_ReportsStalenessRatherThanTheDefectOfAStaleBody ...................   Passed    0.26 sec
+        Start 1533: unit.Meshable_ReportsStalenessRatherThanTheDefectOfAStaleBody
+      Test #1524: unit.Meshable_PreparationDoesNotTouchTheDocumentOrTheRegenerator ................   Passed    0.35 sec
+        Start 1524: unit.Meshable_PreparationDoesNotTouchTheDocumentOrTheRegenerator
+      Test #1528: unit.Meshable_RefusesAnEmptyBodyThatRegenerationNonethelessStored ...............   Passed    0.23 sec
+        Start 1528: unit.Meshable_RefusesAnEmptyBodyThatRegenerationNonethelessStored
+      Test #2513: unit.Validate_RejectsACoplanarTetrahedronDespiteFourDistinctHandles .............   Passed    0.24 sec
+        Start 2513: unit.Validate_RejectsACoplanarTetrahedronDespiteFourDistinctHandles
+      Test #2508: unit.Validate_AcceptsTheReferenceTetrahedron ....................................   Passed    0.32 sec
+        Start 2508: unit.Validate_AcceptsTheReferenceTetrahedron
+      Test #2108: unit.SignedVolume_ChangesSignUnderAReflection ...................................   Passed    0.21 sec
+        Start 2108: unit.SignedVolume_ChangesSignUnderAReflection
+      Test #1533: unit.Meshable_ReportsStalenessRatherThanTheDefectOfAStaleBody ...................   Passed    0.21 sec
+        Start 1533: unit.Meshable_ReportsStalenessRatherThanTheDefectOfAStaleBody
+      Test #1528: unit.Meshable_RefusesAnEmptyBodyThatRegenerationNonethelessStored ...............   Passed    0.17 sec
+        Start 1528: unit.Meshable_RefusesAnEmptyBodyThatRegenerationNonethelessStored
+      Test #2797: architecture.checker.mesh-backend-generated-leak ................................   Passed    0.51 sec
+        Start 2797: architecture.checker.mesh-backend-generated-leak
+      Test #1522: unit.Meshable_GivesTheSameAnswerAndTheSameVolumeOnRepeatedCalls .................   Passed    0.38 sec
+        Start 1522: unit.Meshable_GivesTheSameAnswerAndTheSameVolumeOnRepeatedCalls
+      Test #2513: unit.Validate_RejectsACoplanarTetrahedronDespiteFourDistinctHandles .............   Passed    0.22 sec
+        Start 2513: unit.Validate_RejectsACoplanarTetrahedronDespiteFourDistinctHandles
+      Test #1524: unit.Meshable_PreparationDoesNotTouchTheDocumentOrTheRegenerator ................   Passed    0.30 sec
+        Start 1524: unit.Meshable_PreparationDoesNotTouchTheDocumentOrTheRegenerator
+      Test #2508: unit.Validate_AcceptsTheReferenceTetrahedron ....................................   Passed    0.25 sec
+        Start 2508: unit.Validate_AcceptsTheReferenceTetrahedron
+      Test #2108: unit.SignedVolume_ChangesSignUnderAReflection ...................................   Passed    0.25 sec
+        Start 2108: unit.SignedVolume_ChangesSignUnderAReflection
+      Test #1533: unit.Meshable_ReportsStalenessRatherThanTheDefectOfAStaleBody ...................   Passed    0.25 sec
+        Start 1533: unit.Meshable_ReportsStalenessRatherThanTheDefectOfAStaleBody
+      Test #2513: unit.Validate_RejectsACoplanarTetrahedronDespiteFourDistinctHandles .............   Passed    0.18 sec
+        Start 2513: unit.Validate_RejectsACoplanarTetrahedronDespiteFourDistinctHandles
+ 37/116 Test #1528: unit.Meshable_RefusesAnEmptyBodyThatRegenerationNonethelessStored ...............   Passed    0.27 sec
+        Start 1519: unit.Meshable_AcceptsGeometryAgainOnceItHasBeenRegenerated
+      Test #2508: unit.Validate_AcceptsTheReferenceTetrahedron ....................................   Passed    0.21 sec
+        Start 2508: unit.Validate_AcceptsTheReferenceTetrahedron
+      Test #2108: unit.SignedVolume_ChangesSignUnderAReflection ...................................   Passed    0.20 sec
+        Start 2108: unit.SignedVolume_ChangesSignUnderAReflection
+      Test #1524: unit.Meshable_PreparationDoesNotTouchTheDocumentOrTheRegenerator ................   Passed    0.29 sec
+        Start 1524: unit.Meshable_PreparationDoesNotTouchTheDocumentOrTheRegenerator
+      Test #2797: architecture.checker.mesh-backend-generated-leak ................................   Passed    0.38 sec
+        Start 2797: architecture.checker.mesh-backend-generated-leak
+ 38/116 Test #1533: unit.Meshable_ReportsStalenessRatherThanTheDefectOfAStaleBody ...................   Passed    0.22 sec
+        Start 1525: unit.Meshable_RecoversAfterAFailedEditIsUndone
+ 39/116 Test #2513: unit.Validate_RejectsACoplanarTetrahedronDespiteFourDistinctHandles .............   Passed    0.21 sec
+        Start 2517: unit.Validate_RejectsAnInvertedTetrahedronAndNamesIt
+      Test #2508: unit.Validate_AcceptsTheReferenceTetrahedron ....................................   Passed    0.15 sec
+        Start 2508: unit.Validate_AcceptsTheReferenceTetrahedron
+      Test #1522: unit.Meshable_GivesTheSameAnswerAndTheSameVolumeOnRepeatedCalls .................   Passed    0.54 sec
+        Start 1522: unit.Meshable_GivesTheSameAnswerAndTheSameVolumeOnRepeatedCalls
+ 40/116 Test #2108: unit.SignedVolume_ChangesSignUnderAReflection ...................................   Passed    0.26 sec
+      Test #1519: unit.Meshable_AcceptsGeometryAgainOnceItHasBeenRegenerated ......................   Passed    0.34 sec
+        Start 1519: unit.Meshable_AcceptsGeometryAgainOnceItHasBeenRegenerated
+        Start 1497: unit.MeshBuilder_RejectsANonFiniteCoordinateOnEveryAxis
+      Test #2517: unit.Validate_RejectsAnInvertedTetrahedronAndNamesIt ............................   Passed    0.19 sec
+        Start 2517: unit.Validate_RejectsAnInvertedTetrahedronAndNamesIt
+ 41/116 Test #2508: unit.Validate_AcceptsTheReferenceTetrahedron ....................................   Passed    0.18 sec
+      Test #1525: unit.Meshable_RecoversAfterAFailedEditIsUndone ..................................   Passed    0.24 sec
+        Start 1525: unit.Meshable_RecoversAfterAFailedEditIsUndone
+        Start 1513: unit.Mesh_ResolvesSparseHandlesByIdentityAndNeverByPosition
+ 42/116 Test #1524: unit.Meshable_PreparationDoesNotTouchTheDocumentOrTheRegenerator ................   Passed    0.33 sec
+        Start 2115: unit.SignedVolume_SignFollowsThePermutationParityNotTheApparentReversal
+ 43/116 Test #2797: architecture.checker.mesh-backend-generated-leak ................................   Passed    0.35 sec
+      Test #1497: unit.MeshBuilder_RejectsANonFiniteCoordinateOnEveryAxis .........................   Passed    0.15 sec
+        Start 1497: unit.MeshBuilder_RejectsANonFiniteCoordinateOnEveryAxis
+      Test #2517: unit.Validate_RejectsAnInvertedTetrahedronAndNamesIt ............................   Passed    0.14 sec
+        Start 2517: unit.Validate_RejectsAnInvertedTetrahedronAndNamesIt
+        Start 2507: unit.Validate_AcceptsAThinTetrahedronBecauseQualityIsNotDataValidity
+      Test #1525: unit.Meshable_RecoversAfterAFailedEditIsUndone ..................................   Passed    0.24 sec
+        Start 1525: unit.Meshable_RecoversAfterAFailedEditIsUndone
+      Test #1497: unit.MeshBuilder_RejectsANonFiniteCoordinateOnEveryAxis .........................   Passed    0.15 sec
+        Start 1497: unit.MeshBuilder_RejectsANonFiniteCoordinateOnEveryAxis
+      Test #2115: unit.SignedVolume_SignFollowsThePermutationParityNotTheApparentReversal .........   Passed    0.20 sec
+        Start 2115: unit.SignedVolume_SignFollowsThePermutationParityNotTheApparentReversal
+      Test #1519: unit.Meshable_AcceptsGeometryAgainOnceItHasBeenRegenerated ......................   Passed    0.35 sec
+        Start 1519: unit.Meshable_AcceptsGeometryAgainOnceItHasBeenRegenerated
+      Test #1513: unit.Mesh_ResolvesSparseHandlesByIdentityAndNeverByPosition .....................   Passed    0.30 sec
+        Start 1513: unit.Mesh_ResolvesSparseHandlesByIdentityAndNeverByPosition
+      Test #1522: unit.Meshable_GivesTheSameAnswerAndTheSameVolumeOnRepeatedCalls .................   Passed    0.42 sec
+        Start 1522: unit.Meshable_GivesTheSameAnswerAndTheSameVolumeOnRepeatedCalls
+      Test #2517: unit.Validate_RejectsAnInvertedTetrahedronAndNamesIt ............................   Passed    0.24 sec
+        Start 2517: unit.Validate_RejectsAnInvertedTetrahedronAndNamesIt
+      Test #2507: unit.Validate_AcceptsAThinTetrahedronBecauseQualityIsNotDataValidity ............   Passed    0.26 sec
+        Start 2507: unit.Validate_AcceptsAThinTetrahedronBecauseQualityIsNotDataValidity
+      Test #1497: unit.MeshBuilder_RejectsANonFiniteCoordinateOnEveryAxis .........................   Passed    0.16 sec
+        Start 1497: unit.MeshBuilder_RejectsANonFiniteCoordinateOnEveryAxis
+      Test #1513: unit.Mesh_ResolvesSparseHandlesByIdentityAndNeverByPosition .....................   Passed    0.18 sec
+        Start 1513: unit.Mesh_ResolvesSparseHandlesByIdentityAndNeverByPosition
+      Test #2115: unit.SignedVolume_SignFollowsThePermutationParityNotTheApparentReversal .........   Passed    0.25 sec
+        Start 2115: unit.SignedVolume_SignFollowsThePermutationParityNotTheApparentReversal
+      Test #1519: unit.Meshable_AcceptsGeometryAgainOnceItHasBeenRegenerated ......................   Passed    0.25 sec
+        Start 1519: unit.Meshable_AcceptsGeometryAgainOnceItHasBeenRegenerated
+      Test #2517: unit.Validate_RejectsAnInvertedTetrahedronAndNamesIt ............................   Passed    0.18 sec
+        Start 2517: unit.Validate_RejectsAnInvertedTetrahedronAndNamesIt
+      Test #1525: unit.Meshable_RecoversAfterAFailedEditIsUndone ..................................   Passed    0.32 sec
+        Start 1525: unit.Meshable_RecoversAfterAFailedEditIsUndone
+      Test #1497: unit.MeshBuilder_RejectsANonFiniteCoordinateOnEveryAxis .........................   Passed    0.16 sec
+        Start 1497: unit.MeshBuilder_RejectsANonFiniteCoordinateOnEveryAxis
+      Test #2507: unit.Validate_AcceptsAThinTetrahedronBecauseQualityIsNotDataValidity ............   Passed    0.18 sec
+        Start 2507: unit.Validate_AcceptsAThinTetrahedronBecauseQualityIsNotDataValidity
+ 44/116 Test #1522: unit.Meshable_GivesTheSameAnswerAndTheSameVolumeOnRepeatedCalls .................   Passed    0.27 sec
+        Start 2509: unit.Validate_AcceptsTwoRegionsThatShareNoNode
+      Test #1513: unit.Mesh_ResolvesSparseHandlesByIdentityAndNeverByPosition .....................   Passed    0.13 sec
+        Start 1513: unit.Mesh_ResolvesSparseHandlesByIdentityAndNeverByPosition
+      Test #2115: unit.SignedVolume_SignFollowsThePermutationParityNotTheApparentReversal .........   Passed    0.15 sec
+        Start 2115: unit.SignedVolume_SignFollowsThePermutationParityNotTheApparentReversal
+ 45/116 Test #2517: unit.Validate_RejectsAnInvertedTetrahedronAndNamesIt ............................   Passed    0.13 sec
+      Test #1519: unit.Meshable_AcceptsGeometryAgainOnceItHasBeenRegenerated ......................   Passed    0.15 sec
+        Start 1519: unit.Meshable_AcceptsGeometryAgainOnceItHasBeenRegenerated
+ 46/116 Test #1497: unit.MeshBuilder_RejectsANonFiniteCoordinateOnEveryAxis .........................   Passed    0.13 sec
+      Test #2507: unit.Validate_AcceptsAThinTetrahedronBecauseQualityIsNotDataValidity ............   Passed    0.13 sec
+        Start 2507: unit.Validate_AcceptsAThinTetrahedronBecauseQualityIsNotDataValidity
+        Start 2511: unit.Validate_OrdersIssuesByKindThenByHandle
+        Start 2111: unit.SignedVolume_IsUnchangedByTranslation
+      Test #1525: unit.Meshable_RecoversAfterAFailedEditIsUndone ..................................   Passed    0.26 sec
+        Start 1525: unit.Meshable_RecoversAfterAFailedEditIsUndone
+      Test #2509: unit.Validate_AcceptsTwoRegionsThatShareNoNode ..................................   Passed    0.22 sec
+        Start 2509: unit.Validate_AcceptsTwoRegionsThatShareNoNode
+      Test #1513: unit.Mesh_ResolvesSparseHandlesByIdentityAndNeverByPosition .....................   Passed    0.22 sec
+        Start 1513: unit.Mesh_ResolvesSparseHandlesByIdentityAndNeverByPosition
+      Test #2115: unit.SignedVolume_SignFollowsThePermutationParityNotTheApparentReversal .........   Passed    0.28 sec
+        Start 2115: unit.SignedVolume_SignFollowsThePermutationParityNotTheApparentReversal
+      Test #2511: unit.Validate_OrdersIssuesByKindThenByHandle ....................................   Passed    0.19 sec
+        Start 2511: unit.Validate_OrdersIssuesByKindThenByHandle
+      Test #2111: unit.SignedVolume_IsUnchangedByTranslation ......................................   Passed    0.33 sec
+        Start 2111: unit.SignedVolume_IsUnchangedByTranslation
+ 47/116 Test #1525: unit.Meshable_RecoversAfterAFailedEditIsUndone ..................................   Passed    0.32 sec
+      Test #2509: unit.Validate_AcceptsTwoRegionsThatShareNoNode ..................................   Passed    0.30 sec
+        Start 2509: unit.Validate_AcceptsTwoRegionsThatShareNoNode
+ 48/116 Test #2115: unit.SignedVolume_SignFollowsThePermutationParityNotTheApparentReversal .........   Passed    0.20 sec
+ 49/116 Test #1513: unit.Mesh_ResolvesSparseHandlesByIdentityAndNeverByPosition .....................   Passed    0.30 sec
+      Test #2507: unit.Validate_AcceptsAThinTetrahedronBecauseQualityIsNotDataValidity ............   Passed    0.44 sec
+        Start 2507: unit.Validate_AcceptsAThinTetrahedronBecauseQualityIsNotDataValidity
+ 50/116 Test #1519: unit.Meshable_AcceptsGeometryAgainOnceItHasBeenRegenerated ......................   Passed    0.49 sec
+      Test #2511: unit.Validate_OrdersIssuesByKindThenByHandle ....................................   Passed    0.21 sec
+        Start 2511: unit.Validate_OrdersIssuesByKindThenByHandle
+        Start 2114: unit.SignedVolume_OfTheReferenceTetrahedronIsPositiveOneSixth
+        Start 1505: unit.MeshIds_AreOrderedAndComparableWithinTheirOwnKind
+        Start 1532: unit.Meshable_RefusesGeometryThatIsStaleBecauseItsProfileMoved
+        Start 2112: unit.SignedVolume_OfANonAxisAlignedTetrahedronMatchesTheHandComputation
+ 51/116 Test #2507: unit.Validate_AcceptsAThinTetrahedronBecauseQualityIsNotDataValidity ............   Passed    0.20 sec
+      Test #2511: unit.Validate_OrdersIssuesByKindThenByHandle ....................................   Passed    0.19 sec
+        Start 2511: unit.Validate_OrdersIssuesByKindThenByHandle
+      Test #2509: unit.Validate_AcceptsTwoRegionsThatShareNoNode ..................................   Passed    0.24 sec
+        Start 2509: unit.Validate_AcceptsTwoRegionsThatShareNoNode
+        Start 2487: unit.TriangleArea_IsUnchangedByTranslation
+      Test #2111: unit.SignedVolume_IsUnchangedByTranslation ......................................   Passed    0.32 sec
+        Start 2111: unit.SignedVolume_IsUnchangedByTranslation
+      Test #2114: unit.SignedVolume_OfTheReferenceTetrahedronIsPositiveOneSixth ...................   Passed    0.26 sec
+        Start 2114: unit.SignedVolume_OfTheReferenceTetrahedronIsPositiveOneSixth
+      Test #2511: unit.Validate_OrdersIssuesByKindThenByHandle ....................................   Passed    0.25 sec
+        Start 2511: unit.Validate_OrdersIssuesByKindThenByHandle
+      Test #2509: unit.Validate_AcceptsTwoRegionsThatShareNoNode ..................................   Passed    0.25 sec
+        Start 2509: unit.Validate_AcceptsTwoRegionsThatShareNoNode
+      Test #1532: unit.Meshable_RefusesGeometryThatIsStaleBecauseItsProfileMoved ..................   Passed    0.40 sec
+        Start 1532: unit.Meshable_RefusesGeometryThatIsStaleBecauseItsProfileMoved
+      Test #1505: unit.MeshIds_AreOrderedAndComparableWithinTheirOwnKind ..........................   Passed    0.44 sec
+        Start 1505: unit.MeshIds_AreOrderedAndComparableWithinTheirOwnKind
+      Test #2112: unit.SignedVolume_OfANonAxisAlignedTetrahedronMatchesTheHandComputation .........   Passed    0.41 sec
+        Start 2112: unit.SignedVolume_OfANonAxisAlignedTetrahedronMatchesTheHandComputation
+      Test #2487: unit.TriangleArea_IsUnchangedByTranslation ......................................   Passed    0.29 sec
+        Start 2487: unit.TriangleArea_IsUnchangedByTranslation
+      Test #2114: unit.SignedVolume_OfTheReferenceTetrahedronIsPositiveOneSixth ...................   Passed    0.27 sec
+        Start 2114: unit.SignedVolume_OfTheReferenceTetrahedronIsPositiveOneSixth
+      Test #2111: unit.SignedVolume_IsUnchangedByTranslation ......................................   Passed    0.32 sec
+        Start 2111: unit.SignedVolume_IsUnchangedByTranslation
+ 52/116 Test #2511: unit.Validate_OrdersIssuesByKindThenByHandle ....................................   Passed    0.21 sec
+      Test #2112: unit.SignedVolume_OfANonAxisAlignedTetrahedronMatchesTheHandComputation .........   Passed    0.14 sec
+        Start 2112: unit.SignedVolume_OfANonAxisAlignedTetrahedronMatchesTheHandComputation
+      Test #1532: unit.Meshable_RefusesGeometryThatIsStaleBecauseItsProfileMoved ..................   Passed    0.21 sec
+        Start 1532: unit.Meshable_RefusesGeometryThatIsStaleBecauseItsProfileMoved
+        Start 2110: unit.SignedVolume_IsUnchangedByAProperRotation
+ 53/116 Test #2509: unit.Validate_AcceptsTwoRegionsThatShareNoNode ..................................   Passed    0.26 sec
+      Test #1505: unit.MeshIds_AreOrderedAndComparableWithinTheirOwnKind ..........................   Passed    0.24 sec
+        Start 1505: unit.MeshIds_AreOrderedAndComparableWithinTheirOwnKind
+        Start  272: unit.Bounds_OfAnEmptyMeshAreAbsentRatherThanAZeroBox
+      Test #2487: unit.TriangleArea_IsUnchangedByTranslation ......................................   Passed    0.25 sec
+        Start 2487: unit.TriangleArea_IsUnchangedByTranslation
+      Test #2114: unit.SignedVolume_OfTheReferenceTetrahedronIsPositiveOneSixth ...................   Passed    0.24 sec
+        Start 2114: unit.SignedVolume_OfTheReferenceTetrahedronIsPositiveOneSixth
+      Test #2111: unit.SignedVolume_IsUnchangedByTranslation ......................................   Passed    0.22 sec
+        Start 2111: unit.SignedVolume_IsUnchangedByTranslation
+      Test #2112: unit.SignedVolume_OfANonAxisAlignedTetrahedronMatchesTheHandComputation .........   Passed    0.21 sec
+        Start 2112: unit.SignedVolume_OfANonAxisAlignedTetrahedronMatchesTheHandComputation
+      Test #2110: unit.SignedVolume_IsUnchangedByAProperRotation ..................................   Passed    0.25 sec
+        Start 2110: unit.SignedVolume_IsUnchangedByAProperRotation
+      Test #2114: unit.SignedVolume_OfTheReferenceTetrahedronIsPositiveOneSixth ...................   Passed    0.18 sec
+        Start 2114: unit.SignedVolume_OfTheReferenceTetrahedronIsPositiveOneSixth
+      Test #1505: unit.MeshIds_AreOrderedAndComparableWithinTheirOwnKind ..........................   Passed    0.26 sec
+        Start 1505: unit.MeshIds_AreOrderedAndComparableWithinTheirOwnKind
+      Test  #272: unit.Bounds_OfAnEmptyMeshAreAbsentRatherThanAZeroBox ............................   Passed    0.24 sec
+        Start  272: unit.Bounds_OfAnEmptyMeshAreAbsentRatherThanAZeroBox
+      Test #1532: unit.Meshable_RefusesGeometryThatIsStaleBecauseItsProfileMoved ..................   Passed    0.33 sec
+        Start 1532: unit.Meshable_RefusesGeometryThatIsStaleBecauseItsProfileMoved
+      Test #2487: unit.TriangleArea_IsUnchangedByTranslation ......................................   Passed    0.26 sec
+        Start 2487: unit.TriangleArea_IsUnchangedByTranslation
+      Test #2112: unit.SignedVolume_OfANonAxisAlignedTetrahedronMatchesTheHandComputation .........   Passed    0.22 sec
+        Start 2112: unit.SignedVolume_OfANonAxisAlignedTetrahedronMatchesTheHandComputation
+      Test #2110: unit.SignedVolume_IsUnchangedByAProperRotation ..................................   Passed    0.15 sec
+        Start 2110: unit.SignedVolume_IsUnchangedByAProperRotation
+ 54/116 Test #2111: unit.SignedVolume_IsUnchangedByTranslation ......................................   Passed    0.30 sec
+ 55/116 Test #2114: unit.SignedVolume_OfTheReferenceTetrahedronIsPositiveOneSixth ...................   Passed    0.15 sec
+        Start 2109: unit.SignedVolume_ChangesSignWhenTwoNodesAreSwapped
+        Start 1531: unit.Meshable_RefusesEveryGeometryWhileAConfigurationOverridesAParameter
+      Test #1505: unit.MeshIds_AreOrderedAndComparableWithinTheirOwnKind ..........................   Passed    0.22 sec
+        Start 1505: unit.MeshIds_AreOrderedAndComparableWithinTheirOwnKind
+      Test #2110: unit.SignedVolume_IsUnchangedByAProperRotation ..................................   Passed    0.12 sec
+        Start 2110: unit.SignedVolume_IsUnchangedByAProperRotation
+      Test #1532: unit.Meshable_RefusesGeometryThatIsStaleBecauseItsProfileMoved ..................   Passed    0.22 sec
+        Start 1532: unit.Meshable_RefusesGeometryThatIsStaleBecauseItsProfileMoved
+      Test  #272: unit.Bounds_OfAnEmptyMeshAreAbsentRatherThanAZeroBox ............................   Passed    0.25 sec
+        Start  272: unit.Bounds_OfAnEmptyMeshAreAbsentRatherThanAZeroBox
+ 56/116 Test #2112: unit.SignedVolume_OfANonAxisAlignedTetrahedronMatchesTheHandComputation .........   Passed    0.18 sec
+      Test #2487: unit.TriangleArea_IsUnchangedByTranslation ......................................   Passed    0.22 sec
+        Start 2487: unit.TriangleArea_IsUnchangedByTranslation
+        Start 2514: unit.Validate_RejectsADegenerateTriangle
+      Test #2109: unit.SignedVolume_ChangesSignWhenTwoNodesAreSwapped .............................   Passed    0.19 sec
+        Start 2109: unit.SignedVolume_ChangesSignWhenTwoNodesAreSwapped
+ 57/116 Test #1505: unit.MeshIds_AreOrderedAndComparableWithinTheirOwnKind ..........................   Passed    0.13 sec
+      Test #1531: unit.Meshable_RefusesEveryGeometryWhileAConfigurationOverridesAParameter ........   Passed    0.19 sec
+        Start 1531: unit.Meshable_RefusesEveryGeometryWhileAConfigurationOverridesAParameter
+        Start 1499: unit.MeshBuilder_RejectsAnElementNamingANodeThatDoesNotExist
+      Test #2110: unit.SignedVolume_IsUnchangedByAProperRotation ..................................   Passed    0.19 sec
+        Start 2110: unit.SignedVolume_IsUnchangedByAProperRotation
+      Test #2514: unit.Validate_RejectsADegenerateTriangle ........................................   Passed    0.15 sec
+        Start 2514: unit.Validate_RejectsADegenerateTriangle
+      Test  #272: unit.Bounds_OfAnEmptyMeshAreAbsentRatherThanAZeroBox ............................   Passed    0.20 sec
+        Start  272: unit.Bounds_OfAnEmptyMeshAreAbsentRatherThanAZeroBox
+ 58/116 Test #1532: unit.Meshable_RefusesGeometryThatIsStaleBecauseItsProfileMoved ..................   Passed    0.23 sec
+ 59/116 Test #2487: unit.TriangleArea_IsUnchangedByTranslation ......................................   Passed    0.19 sec
+        Start 1501: unit.MeshBuilder_RejectsAnElementWithAnUnderfilledConnectivityList
+        Start 1518: unit.Meshable_AcceptsAMultiSolidBodyAndReportsTheSolidCount
+      Test #2514: unit.Validate_RejectsADegenerateTriangle ........................................   Passed    0.11 sec
+        Start 2514: unit.Validate_RejectsADegenerateTriangle
+      Test #2109: unit.SignedVolume_ChangesSignWhenTwoNodesAreSwapped .............................   Passed    0.25 sec
+        Start 2109: unit.SignedVolume_ChangesSignWhenTwoNodesAreSwapped
+      Test #1499: unit.MeshBuilder_RejectsAnElementNamingANodeThatDoesNotExist ....................   Passed    0.22 sec
+        Start 1499: unit.MeshBuilder_RejectsAnElementNamingANodeThatDoesNotExist
+ 60/116 Test #2110: unit.SignedVolume_IsUnchangedByAProperRotation ..................................   Passed    0.17 sec
+      Test  #272: unit.Bounds_OfAnEmptyMeshAreAbsentRatherThanAZeroBox ............................   Passed    0.14 sec
+        Start  272: unit.Bounds_OfAnEmptyMeshAreAbsentRatherThanAZeroBox
+      Test #1531: unit.Meshable_RefusesEveryGeometryWhileAConfigurationOverridesAParameter ........   Passed    0.26 sec
+        Start 1531: unit.Meshable_RefusesEveryGeometryWhileAConfigurationOverridesAParameter
+        Start 2113: unit.SignedVolume_OfCoplanarNodesIsExactlyZero
+      Test #1501: unit.MeshBuilder_RejectsAnElementWithAnUnderfilledConnectivityList ..............   Passed    0.24 sec
+        Start 1501: unit.MeshBuilder_RejectsAnElementWithAnUnderfilledConnectivityList
+ 61/116 Test  #272: unit.Bounds_OfAnEmptyMeshAreAbsentRatherThanAZeroBox ............................   Passed    0.13 sec
+      Test #2109: unit.SignedVolume_ChangesSignWhenTwoNodesAreSwapped .............................   Passed    0.16 sec
+        Start 2109: unit.SignedVolume_ChangesSignWhenTwoNodesAreSwapped
+      Test #2514: unit.Validate_RejectsADegenerateTriangle ........................................   Passed    0.19 sec
+        Start 2514: unit.Validate_RejectsADegenerateTriangle
+      Test #1518: unit.Meshable_AcceptsAMultiSolidBodyAndReportsTheSolidCount .....................   Passed    0.26 sec
+        Start 1518: unit.Meshable_AcceptsAMultiSolidBodyAndReportsTheSolidCount
+      Test #1499: unit.MeshBuilder_RejectsAnElementNamingANodeThatDoesNotExist ....................   Passed    0.19 sec
+        Start 1499: unit.MeshBuilder_RejectsAnElementNamingANodeThatDoesNotExist
+        Start  274: unit.Bounds_TranslateWithTheMesh
+      Test #2113: unit.SignedVolume_OfCoplanarNodesIsExactlyZero ..................................   Passed    0.19 sec
+        Start 2113: unit.SignedVolume_OfCoplanarNodesIsExactlyZero
+      Test #1531: unit.Meshable_RefusesEveryGeometryWhileAConfigurationOverridesAParameter ........   Passed    0.22 sec
+        Start 1531: unit.Meshable_RefusesEveryGeometryWhileAConfigurationOverridesAParameter
+      Test  #274: unit.Bounds_TranslateWithTheMesh ................................................   Passed    0.11 sec
+        Start  274: unit.Bounds_TranslateWithTheMesh
+      Test #1501: unit.MeshBuilder_RejectsAnElementWithAnUnderfilledConnectivityList ..............   Passed    0.20 sec
+        Start 1501: unit.MeshBuilder_RejectsAnElementWithAnUnderfilledConnectivityList
+      Test #2514: unit.Validate_RejectsADegenerateTriangle ........................................   Passed    0.18 sec
+        Start 2514: unit.Validate_RejectsADegenerateTriangle
+      Test #2109: unit.SignedVolume_ChangesSignWhenTwoNodesAreSwapped .............................   Passed    0.22 sec
+        Start 2109: unit.SignedVolume_ChangesSignWhenTwoNodesAreSwapped
+      Test #1499: unit.MeshBuilder_RejectsAnElementNamingANodeThatDoesNotExist ....................   Passed    0.18 sec
+        Start 1499: unit.MeshBuilder_RejectsAnElementNamingANodeThatDoesNotExist
+      Test #1518: unit.Meshable_AcceptsAMultiSolidBodyAndReportsTheSolidCount .....................   Passed    0.22 sec
+        Start 1518: unit.Meshable_AcceptsAMultiSolidBodyAndReportsTheSolidCount
+      Test #2113: unit.SignedVolume_OfCoplanarNodesIsExactlyZero ..................................   Passed    0.19 sec
+        Start 2113: unit.SignedVolume_OfCoplanarNodesIsExactlyZero
+      Test #1531: unit.Meshable_RefusesEveryGeometryWhileAConfigurationOverridesAParameter ........   Passed    0.19 sec
+        Start 1531: unit.Meshable_RefusesEveryGeometryWhileAConfigurationOverridesAParameter
+      Test  #274: unit.Bounds_TranslateWithTheMesh ................................................   Passed    0.14 sec
+        Start  274: unit.Bounds_TranslateWithTheMesh
+      Test #1499: unit.MeshBuilder_RejectsAnElementNamingANodeThatDoesNotExist ....................   Passed    0.15 sec
+        Start 1499: unit.MeshBuilder_RejectsAnElementNamingANodeThatDoesNotExist
+ 62/116 Test #2514: unit.Validate_RejectsADegenerateTriangle ........................................   Passed    0.19 sec
+      Test #1501: unit.MeshBuilder_RejectsAnElementWithAnUnderfilledConnectivityList ..............   Passed    0.21 sec
+        Start 1501: unit.MeshBuilder_RejectsAnElementWithAnUnderfilledConnectivityList
+ 63/116 Test #2109: unit.SignedVolume_ChangesSignWhenTwoNodesAreSwapped .............................   Passed    0.19 sec
+        Start 2518: unit.Validate_ReportsAnEmptyMeshAsHavingNoElements
+        Start 1504: unit.MeshBuilder_RejectsTheInvalidNodeHandle
+      Test #2113: unit.SignedVolume_OfCoplanarNodesIsExactlyZero ..................................   Passed    0.19 sec
+        Start 2113: unit.SignedVolume_OfCoplanarNodesIsExactlyZero
+      Test #1518: unit.Meshable_AcceptsAMultiSolidBodyAndReportsTheSolidCount .....................   Passed    0.22 sec
+        Start 1518: unit.Meshable_AcceptsAMultiSolidBodyAndReportsTheSolidCount
+ 64/116 Test #1531: unit.Meshable_RefusesEveryGeometryWhileAConfigurationOverridesAParameter ........   Passed    0.20 sec
+      Test  #274: unit.Bounds_TranslateWithTheMesh ................................................   Passed    0.18 sec
+        Start  274: unit.Bounds_TranslateWithTheMesh
+        Start  273: unit.Bounds_SpanEveryNodeIncludingNegativeCoordinates
+      Test #1501: unit.MeshBuilder_RejectsAnElementWithAnUnderfilledConnectivityList ..............   Passed    0.17 sec
+        Start 1501: unit.MeshBuilder_RejectsAnElementWithAnUnderfilledConnectivityList
+      Test #2518: unit.Validate_ReportsAnEmptyMeshAsHavingNoElements ..............................   Passed    0.17 sec
+        Start 2518: unit.Validate_ReportsAnEmptyMeshAsHavingNoElements
+ 65/116 Test #1499: unit.MeshBuilder_RejectsAnElementNamingANodeThatDoesNotExist ....................   Passed    0.22 sec
+      Test #1504: unit.MeshBuilder_RejectsTheInvalidNodeHandle ....................................   Passed    0.16 sec
+        Start 1504: unit.MeshBuilder_RejectsTheInvalidNodeHandle
+        Start 1511: unit.Mesh_EnumeratesNodesAndElementsInHandleOrderEveryTime
+      Test #2113: unit.SignedVolume_OfCoplanarNodesIsExactlyZero ..................................   Passed    0.18 sec
+        Start 2113: unit.SignedVolume_OfCoplanarNodesIsExactlyZero
+      Test  #273: unit.Bounds_SpanEveryNodeIncludingNegativeCoordinates ...........................   Passed    0.16 sec
+        Start  273: unit.Bounds_SpanEveryNodeIncludingNegativeCoordinates
+      Test  #274: unit.Bounds_TranslateWithTheMesh ................................................   Passed    0.21 sec
+        Start  274: unit.Bounds_TranslateWithTheMesh
+      Test #1518: unit.Meshable_AcceptsAMultiSolidBodyAndReportsTheSolidCount .....................   Passed    0.24 sec
+        Start 1518: unit.Meshable_AcceptsAMultiSolidBodyAndReportsTheSolidCount
+ 66/116 Test #1501: unit.MeshBuilder_RejectsAnElementWithAnUnderfilledConnectivityList ..............   Passed    0.16 sec
+        Start  788: unit.ElementType_ReportsItsNodeCountAndName
+      Test #2518: unit.Validate_ReportsAnEmptyMeshAsHavingNoElements ..............................   Passed    0.17 sec
+        Start 2518: unit.Validate_ReportsAnEmptyMeshAsHavingNoElements
+      Test #1504: unit.MeshBuilder_RejectsTheInvalidNodeHandle ....................................   Passed    0.17 sec
+        Start 1504: unit.MeshBuilder_RejectsTheInvalidNodeHandle
+ 67/116 Test #2113: unit.SignedVolume_OfCoplanarNodesIsExactlyZero ..................................   Passed    0.17 sec
+      Test #1511: unit.Mesh_EnumeratesNodesAndElementsInHandleOrderEveryTime ......................   Passed    0.19 sec
+        Start 1511: unit.Mesh_EnumeratesNodesAndElementsInHandleOrderEveryTime
+        Start 2510: unit.Validate_CollectsEveryIssueRatherThanStoppingAtTheFirst
+      Test  #273: unit.Bounds_SpanEveryNodeIncludingNegativeCoordinates ...........................   Passed    0.19 sec
+        Start  273: unit.Bounds_SpanEveryNodeIncludingNegativeCoordinates
+      Test  #788: unit.ElementType_ReportsItsNodeCountAndName .....................................   Passed    0.17 sec
+        Start  788: unit.ElementType_ReportsItsNodeCountAndName
+ 68/116 Test  #274: unit.Bounds_TranslateWithTheMesh ................................................   Passed    0.22 sec
+      Test #2518: unit.Validate_ReportsAnEmptyMeshAsHavingNoElements ..............................   Passed    0.16 sec
+        Start 2518: unit.Validate_ReportsAnEmptyMeshAsHavingNoElements
+      Test #1504: unit.MeshBuilder_RejectsTheInvalidNodeHandle ....................................   Passed    0.17 sec
+        Start 1504: unit.MeshBuilder_RejectsTheInvalidNodeHandle
+        Start  929: unit.GeometryIneligibility_EveryReasonHasAName
+ 69/116 Test #1518: unit.Meshable_AcceptsAMultiSolidBodyAndReportsTheSolidCount .....................   Passed    0.28 sec
+        Start 1503: unit.MeshBuilder_RejectsAnOutOfOrderNodeHandle
+      Test #1511: unit.Mesh_EnumeratesNodesAndElementsInHandleOrderEveryTime ......................   Passed    0.20 sec
+        Start 1511: unit.Mesh_EnumeratesNodesAndElementsInHandleOrderEveryTime
+      Test #2510: unit.Validate_CollectsEveryIssueRatherThanStoppingAtTheFirst ....................   Passed    0.20 sec
+        Start 2510: unit.Validate_CollectsEveryIssueRatherThanStoppingAtTheFirst
+      Test  #273: unit.Bounds_SpanEveryNodeIncludingNegativeCoordinates ...........................   Passed    0.20 sec
+        Start  273: unit.Bounds_SpanEveryNodeIncludingNegativeCoordinates
+      Test #2518: unit.Validate_ReportsAnEmptyMeshAsHavingNoElements ..............................   Passed    0.17 sec
+        Start 2518: unit.Validate_ReportsAnEmptyMeshAsHavingNoElements
+      Test  #788: unit.ElementType_ReportsItsNodeCountAndName .....................................   Passed    0.21 sec
+        Start  788: unit.ElementType_ReportsItsNodeCountAndName
+      Test #1504: unit.MeshBuilder_RejectsTheInvalidNodeHandle ....................................   Passed    0.19 sec
+        Start 1504: unit.MeshBuilder_RejectsTheInvalidNodeHandle
+      Test  #929: unit.GeometryIneligibility_EveryReasonHasAName ..................................   Passed    0.18 sec
+        Start  929: unit.GeometryIneligibility_EveryReasonHasAName
+      Test #1511: unit.Mesh_EnumeratesNodesAndElementsInHandleOrderEveryTime ......................   Passed    0.19 sec
+        Start 1511: unit.Mesh_EnumeratesNodesAndElementsInHandleOrderEveryTime
+      Test #1503: unit.MeshBuilder_RejectsAnOutOfOrderNodeHandle ..................................   Passed    0.23 sec
+        Start 1503: unit.MeshBuilder_RejectsAnOutOfOrderNodeHandle
+      Test #2510: unit.Validate_CollectsEveryIssueRatherThanStoppingAtTheFirst ....................   Passed    0.21 sec
+        Start 2510: unit.Validate_CollectsEveryIssueRatherThanStoppingAtTheFirst
+      Test  #273: unit.Bounds_SpanEveryNodeIncludingNegativeCoordinates ...........................   Passed    0.20 sec
+        Start  273: unit.Bounds_SpanEveryNodeIncludingNegativeCoordinates
+ 70/116 Test #2518: unit.Validate_ReportsAnEmptyMeshAsHavingNoElements ..............................   Passed    0.19 sec
+      Test  #788: unit.ElementType_ReportsItsNodeCountAndName .....................................   Passed    0.17 sec
+        Start  788: unit.ElementType_ReportsItsNodeCountAndName
+        Start 1526: unit.Meshable_RefusesAFeatureBlockedByAFailedUpstreamSketch
+      Test #1503: unit.MeshBuilder_RejectsAnOutOfOrderNodeHandle ..................................   Passed    0.18 sec
+        Start 1503: unit.MeshBuilder_RejectsAnOutOfOrderNodeHandle
+ 71/116 Test  #273: unit.Bounds_SpanEveryNodeIncludingNegativeCoordinates ...........................   Passed    0.17 sec
+      Test  #788: unit.ElementType_ReportsItsNodeCountAndName .....................................   Passed    0.16 sec
+        Start  788: unit.ElementType_ReportsItsNodeCountAndName
+      Test  #929: unit.GeometryIneligibility_EveryReasonHasAName ..................................   Passed    0.31 sec
+        Start  929: unit.GeometryIneligibility_EveryReasonHasAName
+      Test #1511: unit.Mesh_EnumeratesNodesAndElementsInHandleOrderEveryTime ......................   Passed    0.25 sec
+        Start 1511: unit.Mesh_EnumeratesNodesAndElementsInHandleOrderEveryTime
+      Test #2510: unit.Validate_CollectsEveryIssueRatherThanStoppingAtTheFirst ....................   Passed    0.23 sec
+        Start 2510: unit.Validate_CollectsEveryIssueRatherThanStoppingAtTheFirst
+ 72/116 Test #1504: unit.MeshBuilder_RejectsTheInvalidNodeHandle ....................................   Passed    0.37 sec
+        Start 2796: architecture.checker.mesh-backend-leak
+        Start 1506: unit.MeshIds_DefaultHandleIsInvalidAndZeroIsNeverAllocated
+      Test #1526: unit.Meshable_RefusesAFeatureBlockedByAFailedUpstreamSketch .....................   Passed    0.23 sec
+        Start 1526: unit.Meshable_RefusesAFeatureBlockedByAFailedUpstreamSketch
+      Test #1503: unit.MeshBuilder_RejectsAnOutOfOrderNodeHandle ..................................   Passed    0.14 sec
+        Start 1503: unit.MeshBuilder_RejectsAnOutOfOrderNodeHandle
+ 73/116 Test  #788: unit.ElementType_ReportsItsNodeCountAndName .....................................   Passed    0.13 sec
+        Start 1500: unit.MeshBuilder_RejectsAnElementNamingTheSameNodeTwice
+      Test #2510: unit.Validate_CollectsEveryIssueRatherThanStoppingAtTheFirst ....................   Passed    0.13 sec
+        Start 2510: unit.Validate_CollectsEveryIssueRatherThanStoppingAtTheFirst
+      Test  #929: unit.GeometryIneligibility_EveryReasonHasAName ..................................   Passed    0.17 sec
+        Start  929: unit.GeometryIneligibility_EveryReasonHasAName
+ 74/116 Test #1511: unit.Mesh_EnumeratesNodesAndElementsInHandleOrderEveryTime ......................   Passed    0.19 sec
+        Start 1516: unit.Meshable_AcceptsACurrentBoxAndReportsItsAnalyticalVolume
+      Test #1526: unit.Meshable_RefusesAFeatureBlockedByAFailedUpstreamSketch .....................   Passed    0.15 sec
+        Start 1526: unit.Meshable_RefusesAFeatureBlockedByAFailedUpstreamSketch
+      Test #1503: unit.MeshBuilder_RejectsAnOutOfOrderNodeHandle ..................................   Passed    0.15 sec
+        Start 1503: unit.MeshBuilder_RejectsAnOutOfOrderNodeHandle
+      Test #1506: unit.MeshIds_DefaultHandleIsInvalidAndZeroIsNeverAllocated ......................   Passed    0.20 sec
+        Start 1506: unit.MeshIds_DefaultHandleIsInvalidAndZeroIsNeverAllocated
+      Test #1500: unit.MeshBuilder_RejectsAnElementNamingTheSameNodeTwice .........................   Passed    0.16 sec
+        Start 1500: unit.MeshBuilder_RejectsAnElementNamingTheSameNodeTwice
+      Test #2796: architecture.checker.mesh-backend-leak ..........................................   Passed    0.31 sec
+        Start 2796: architecture.checker.mesh-backend-leak
+ 75/116 Test #2510: unit.Validate_CollectsEveryIssueRatherThanStoppingAtTheFirst ....................   Passed    0.20 sec
+ 76/116 Test #1503: unit.MeshBuilder_RejectsAnOutOfOrderNodeHandle ..................................   Passed    0.11 sec
+      Test  #929: unit.GeometryIneligibility_EveryReasonHasAName ..................................   Passed    0.19 sec
+        Start  929: unit.GeometryIneligibility_EveryReasonHasAName
+        Start 1520: unit.Meshable_AcceptsGeometryUnderAConfigurationThatOverridesNothing
+        Start 2515: unit.Validate_RejectsANodeSharedBetweenTwoRegions
+      Test #1516: unit.Meshable_AcceptsACurrentBoxAndReportsItsAnalyticalVolume ...................   Passed    0.21 sec
+        Start 1516: unit.Meshable_AcceptsACurrentBoxAndReportsItsAnalyticalVolume
+      Test #1526: unit.Meshable_RefusesAFeatureBlockedByAFailedUpstreamSketch .....................   Passed    0.20 sec
+        Start 1526: unit.Meshable_RefusesAFeatureBlockedByAFailedUpstreamSketch
+      Test #1506: unit.MeshIds_DefaultHandleIsInvalidAndZeroIsNeverAllocated ......................   Passed    0.18 sec
+        Start 1506: unit.MeshIds_DefaultHandleIsInvalidAndZeroIsNeverAllocated
+      Test #1500: unit.MeshBuilder_RejectsAnElementNamingTheSameNodeTwice .........................   Passed    0.19 sec
+        Start 1500: unit.MeshBuilder_RejectsAnElementNamingTheSameNodeTwice
+ 77/116 Test  #929: unit.GeometryIneligibility_EveryReasonHasAName ..................................   Passed    0.13 sec
+        Start 1514: unit.Mesh_TwoNodesAtTheSamePositionStayTwoNodes
+      Test #1516: unit.Meshable_AcceptsACurrentBoxAndReportsItsAnalyticalVolume ...................   Passed    0.16 sec
+        Start 1516: unit.Meshable_AcceptsACurrentBoxAndReportsItsAnalyticalVolume
+      Test #2515: unit.Validate_RejectsANodeSharedBetweenTwoRegions ...............................   Passed    0.20 sec
+        Start 2515: unit.Validate_RejectsANodeSharedBetweenTwoRegions
+      Test #1520: unit.Meshable_AcceptsGeometryUnderAConfigurationThatOverridesNothing ............   Passed    0.23 sec
+        Start 1520: unit.Meshable_AcceptsGeometryUnderAConfigurationThatOverridesNothing
+      Test #1506: unit.MeshIds_DefaultHandleIsInvalidAndZeroIsNeverAllocated ......................   Passed    0.18 sec
+        Start 1506: unit.MeshIds_DefaultHandleIsInvalidAndZeroIsNeverAllocated
+      Test #1526: unit.Meshable_RefusesAFeatureBlockedByAFailedUpstreamSketch .....................   Passed    0.21 sec
+        Start 1526: unit.Meshable_RefusesAFeatureBlockedByAFailedUpstreamSketch
+      Test #2796: architecture.checker.mesh-backend-leak ..........................................   Passed    0.31 sec
+        Start 2796: architecture.checker.mesh-backend-leak
+      Test #1500: unit.MeshBuilder_RejectsAnElementNamingTheSameNodeTwice .........................   Passed    0.19 sec
+        Start 1500: unit.MeshBuilder_RejectsAnElementNamingTheSameNodeTwice
+      Test #1514: unit.Mesh_TwoNodesAtTheSamePositionStayTwoNodes .................................   Passed    0.19 sec
+        Start 1514: unit.Mesh_TwoNodesAtTheSamePositionStayTwoNodes
+      Test #1520: unit.Meshable_AcceptsGeometryUnderAConfigurationThatOverridesNothing ............   Passed    0.14 sec
+        Start 1520: unit.Meshable_AcceptsGeometryUnderAConfigurationThatOverridesNothing
+      Test #1516: unit.Meshable_AcceptsACurrentBoxAndReportsItsAnalyticalVolume ...................   Passed    0.19 sec
+        Start 1516: unit.Meshable_AcceptsACurrentBoxAndReportsItsAnalyticalVolume
+      Test #2515: unit.Validate_RejectsANodeSharedBetweenTwoRegions ...............................   Passed    0.20 sec
+        Start 2515: unit.Validate_RejectsANodeSharedBetweenTwoRegions
+      Test #1506: unit.MeshIds_DefaultHandleIsInvalidAndZeroIsNeverAllocated ......................   Passed    0.19 sec
+        Start 1506: unit.MeshIds_DefaultHandleIsInvalidAndZeroIsNeverAllocated
+      Test #1500: unit.MeshBuilder_RejectsAnElementNamingTheSameNodeTwice .........................   Passed    0.17 sec
+        Start 1500: unit.MeshBuilder_RejectsAnElementNamingTheSameNodeTwice
+ 78/116 Test #1526: unit.Meshable_RefusesAFeatureBlockedByAFailedUpstreamSketch .....................   Passed    0.21 sec
+      Test #1514: unit.Mesh_TwoNodesAtTheSamePositionStayTwoNodes .................................   Passed    0.17 sec
+        Start 1514: unit.Mesh_TwoNodesAtTheSamePositionStayTwoNodes
+        Start 1498: unit.MeshBuilder_RejectsARepeatedNodeHandleAndLeavesTheMeshUnchanged
+      Test #1516: unit.Meshable_AcceptsACurrentBoxAndReportsItsAnalyticalVolume ...................   Passed    0.24 sec
+        Start 1516: unit.Meshable_AcceptsACurrentBoxAndReportsItsAnalyticalVolume
+ 79/116 Test #1500: unit.MeshBuilder_RejectsAnElementNamingTheSameNodeTwice .........................   Passed    0.20 sec
+      Test #1498: unit.MeshBuilder_RejectsARepeatedNodeHandleAndLeavesTheMeshUnchanged ............   Passed    0.16 sec
+        Start 1498: unit.MeshBuilder_RejectsARepeatedNodeHandleAndLeavesTheMeshUnchanged
+ 80/116 Test #1506: unit.MeshIds_DefaultHandleIsInvalidAndZeroIsNeverAllocated ......................   Passed    0.23 sec
+      Test #1514: unit.Mesh_TwoNodesAtTheSamePositionStayTwoNodes .................................   Passed    0.20 sec
+        Start 1514: unit.Mesh_TwoNodesAtTheSamePositionStayTwoNodes
+      Test #2515: unit.Validate_RejectsANodeSharedBetweenTwoRegions ...............................   Passed    0.26 sec
+        Start 2515: unit.Validate_RejectsANodeSharedBetweenTwoRegions
+      Test #1520: unit.Meshable_AcceptsGeometryUnderAConfigurationThatOverridesNothing ............   Passed    0.33 sec
+        Start 1520: unit.Meshable_AcceptsGeometryUnderAConfigurationThatOverridesNothing
+        Start 1507: unit.MeshIssueKind_EveryKindHasAName
+        Start 2512: unit.Validate_ProducesAnIdenticalReportOnRepeatedRuns
+      Test #2796: architecture.checker.mesh-backend-leak ..........................................   Passed    0.49 sec
+        Start 2796: architecture.checker.mesh-backend-leak
+      Test #1514: unit.Mesh_TwoNodesAtTheSamePositionStayTwoNodes .................................   Passed    0.17 sec
+        Start 1514: unit.Mesh_TwoNodesAtTheSamePositionStayTwoNodes
+      Test #1507: unit.MeshIssueKind_EveryKindHasAName ............................................   Passed    0.13 sec
+        Start 1507: unit.MeshIssueKind_EveryKindHasAName
+      Test #2515: unit.Validate_RejectsANodeSharedBetweenTwoRegions ...............................   Passed    0.18 sec
+        Start 2515: unit.Validate_RejectsANodeSharedBetweenTwoRegions
+      Test #1498: unit.MeshBuilder_RejectsARepeatedNodeHandleAndLeavesTheMeshUnchanged ............   Passed    0.23 sec
+        Start 1498: unit.MeshBuilder_RejectsARepeatedNodeHandleAndLeavesTheMeshUnchanged
+ 81/116 Test #1516: unit.Meshable_AcceptsACurrentBoxAndReportsItsAnalyticalVolume ...................   Passed    0.27 sec
+      Test #1520: unit.Meshable_AcceptsGeometryUnderAConfigurationThatOverridesNothing ............   Passed    0.20 sec
+        Start 1520: unit.Meshable_AcceptsGeometryUnderAConfigurationThatOverridesNothing
+      Test #2512: unit.Validate_ProducesAnIdenticalReportOnRepeatedRuns ...........................   Passed    0.19 sec
+        Start 2512: unit.Validate_ProducesAnIdenticalReportOnRepeatedRuns
+        Start 1534: unit.Meshable_StalenessIsReportedBeforeTheOldBodyIsInspected
+ 82/116 Test #1514: unit.Mesh_TwoNodesAtTheSamePositionStayTwoNodes .................................   Passed    0.13 sec
+      Test #2796: architecture.checker.mesh-backend-leak ..........................................   Passed    0.20 sec
+        Start 2796: architecture.checker.mesh-backend-leak
+        Start 1508: unit.MeshStamp_IsUniquePerMeshAndDistinguishesGenerations
+      Test #2512: unit.Validate_ProducesAnIdenticalReportOnRepeatedRuns ...........................   Passed    0.12 sec
+        Start 2512: unit.Validate_ProducesAnIdenticalReportOnRepeatedRuns
+      Test #1498: unit.MeshBuilder_RejectsARepeatedNodeHandleAndLeavesTheMeshUnchanged ............   Passed    0.19 sec
+        Start 1498: unit.MeshBuilder_RejectsARepeatedNodeHandleAndLeavesTheMeshUnchanged
+ 83/116 Test #2515: unit.Validate_RejectsANodeSharedBetweenTwoRegions ...............................   Passed    0.22 sec
+      Test #1507: unit.MeshIssueKind_EveryKindHasAName ............................................   Passed    0.24 sec
+        Start 1507: unit.MeshIssueKind_EveryKindHasAName
+ 84/116 Test #1520: unit.Meshable_AcceptsGeometryUnderAConfigurationThatOverridesNothing ............   Passed    0.21 sec
+      Test #1534: unit.Meshable_StalenessIsReportedBeforeTheOldBodyIsInspected ....................   Passed    0.17 sec
+        Start 1534: unit.Meshable_StalenessIsReportedBeforeTheOldBodyIsInspected
+        Start 1523: unit.Meshable_KeepsABodyWhereItIsInModelSpace
+        Start  930: unit.GeometryRevision_ChangesWhenAnUpstreamProfileChangesTheGeometry
+      Test #1508: unit.MeshStamp_IsUniquePerMeshAndDistinguishesGenerations .......................   Passed    0.18 sec
+        Start 1508: unit.MeshStamp_IsUniquePerMeshAndDistinguishesGenerations
+      Test #1498: unit.MeshBuilder_RejectsARepeatedNodeHandleAndLeavesTheMeshUnchanged ............   Passed    0.16 sec
+        Start 1498: unit.MeshBuilder_RejectsARepeatedNodeHandleAndLeavesTheMeshUnchanged
+      Test #1507: unit.MeshIssueKind_EveryKindHasAName ............................................   Passed    0.17 sec
+        Start 1507: unit.MeshIssueKind_EveryKindHasAName
+      Test #1534: unit.Meshable_StalenessIsReportedBeforeTheOldBodyIsInspected ....................   Passed    0.16 sec
+        Start 1534: unit.Meshable_StalenessIsReportedBeforeTheOldBodyIsInspected
+      Test #2512: unit.Validate_ProducesAnIdenticalReportOnRepeatedRuns ...........................   Passed    0.23 sec
+        Start 2512: unit.Validate_ProducesAnIdenticalReportOnRepeatedRuns
+      Test #1523: unit.Meshable_KeepsABodyWhereItIsInModelSpace ...................................   Passed    0.17 sec
+        Start 1523: unit.Meshable_KeepsABodyWhereItIsInModelSpace
+ 85/116 Test #2796: architecture.checker.mesh-backend-leak ..........................................   Passed    0.34 sec
+      Test  #930: unit.GeometryRevision_ChangesWhenAnUpstreamProfileChangesTheGeometry ............   Passed    0.17 sec
+        Start  930: unit.GeometryRevision_ChangesWhenAnUpstreamProfileChangesTheGeometry
+      Test #1508: unit.MeshStamp_IsUniquePerMeshAndDistinguishesGenerations .......................   Passed    0.16 sec
+        Start 1508: unit.MeshStamp_IsUniquePerMeshAndDistinguishesGenerations
+        Start 1509: unit.Mesh_CopyKeepsTheSameTopologyAndHandlesAndIsNotARemesh
+      Test #1507: unit.MeshIssueKind_EveryKindHasAName ............................................   Passed    0.12 sec
+        Start 1507: unit.MeshIssueKind_EveryKindHasAName
+ 86/116 Test #1498: unit.MeshBuilder_RejectsARepeatedNodeHandleAndLeavesTheMeshUnchanged ............   Passed    0.16 sec
+        Start 1517: unit.Meshable_AcceptsACylinderAndReportsItsAnalyticalVolume
+      Test #2512: unit.Validate_ProducesAnIdenticalReportOnRepeatedRuns ...........................   Passed    0.15 sec
+        Start 2512: unit.Validate_ProducesAnIdenticalReportOnRepeatedRuns
+      Test  #930: unit.GeometryRevision_ChangesWhenAnUpstreamProfileChangesTheGeometry ............   Passed    0.14 sec
+        Start  930: unit.GeometryRevision_ChangesWhenAnUpstreamProfileChangesTheGeometry
+      Test #1534: unit.Meshable_StalenessIsReportedBeforeTheOldBodyIsInspected ....................   Passed    0.22 sec
+        Start 1534: unit.Meshable_StalenessIsReportedBeforeTheOldBodyIsInspected
+      Test #1523: unit.Meshable_KeepsABodyWhereItIsInModelSpace ...................................   Passed    0.22 sec
+        Start 1523: unit.Meshable_KeepsABodyWhereItIsInModelSpace
+      Test #1509: unit.Mesh_CopyKeepsTheSameTopologyAndHandlesAndIsNotARemesh .....................   Passed    0.18 sec
+        Start 1509: unit.Mesh_CopyKeepsTheSameTopologyAndHandlesAndIsNotARemesh
+      Test #1508: unit.MeshStamp_IsUniquePerMeshAndDistinguishesGenerations .......................   Passed    0.22 sec
+        Start 1508: unit.MeshStamp_IsUniquePerMeshAndDistinguishesGenerations
+ 87/116 Test #2512: unit.Validate_ProducesAnIdenticalReportOnRepeatedRuns ...........................   Passed    0.22 sec
+        Start 1510: unit.Mesh_ElementTypeIsReportedPerElementAndSharesOneIdentitySpace
+      Test  #930: unit.GeometryRevision_ChangesWhenAnUpstreamProfileChangesTheGeometry ............   Passed    0.21 sec
+        Start  930: unit.GeometryRevision_ChangesWhenAnUpstreamProfileChangesTheGeometry
+ 88/116 Test #1507: unit.MeshIssueKind_EveryKindHasAName ............................................   Passed    0.31 sec
+      Test #1517: unit.Meshable_AcceptsACylinderAndReportsItsAnalyticalVolume .....................   Passed    0.28 sec
+        Start 1517: unit.Meshable_AcceptsACylinderAndReportsItsAnalyticalVolume
+      Test #1534: unit.Meshable_StalenessIsReportedBeforeTheOldBodyIsInspected ....................   Passed    0.22 sec
+        Start 1534: unit.Meshable_StalenessIsReportedBeforeTheOldBodyIsInspected
+      Test #1523: unit.Meshable_KeepsABodyWhereItIsInModelSpace ...................................   Passed    0.22 sec
+        Start 1523: unit.Meshable_KeepsABodyWhereItIsInModelSpace
+        Start 2488: unit.TriangleArea_MatchesTheHandComputationAndIsZeroWhenCollinear
+      Test #1509: unit.Mesh_CopyKeepsTheSameTopologyAndHandlesAndIsNotARemesh .....................   Passed    0.25 sec
+        Start 1509: unit.Mesh_CopyKeepsTheSameTopologyAndHandlesAndIsNotARemesh
+      Test #1508: unit.MeshStamp_IsUniquePerMeshAndDistinguishesGenerations .......................   Passed    0.24 sec
+        Start 1508: unit.MeshStamp_IsUniquePerMeshAndDistinguishesGenerations
+ 89/116 Test #1534: unit.Meshable_StalenessIsReportedBeforeTheOldBodyIsInspected ....................   Passed    0.17 sec
+        Start 1512: unit.Mesh_RefusesAHandleFromAnotherMeshRatherThanReinterpretingIt
+      Test #2488: unit.TriangleArea_MatchesTheHandComputationAndIsZeroWhenCollinear ...............   Passed    0.15 sec
+        Start 2488: unit.TriangleArea_MatchesTheHandComputationAndIsZeroWhenCollinear
+      Test #1510: unit.Mesh_ElementTypeIsReportedPerElementAndSharesOneIdentitySpace ..............   Passed    0.27 sec
+        Start 1510: unit.Mesh_ElementTypeIsReportedPerElementAndSharesOneIdentitySpace
+      Test #1517: unit.Meshable_AcceptsACylinderAndReportsItsAnalyticalVolume .....................   Passed    0.24 sec
+        Start 1517: unit.Meshable_AcceptsACylinderAndReportsItsAnalyticalVolume
+      Test #1523: unit.Meshable_KeepsABodyWhereItIsInModelSpace ...................................   Passed    0.22 sec
+        Start 1523: unit.Meshable_KeepsABodyWhereItIsInModelSpace
+      Test  #930: unit.GeometryRevision_ChangesWhenAnUpstreamProfileChangesTheGeometry ............   Passed    0.29 sec
+        Start  930: unit.GeometryRevision_ChangesWhenAnUpstreamProfileChangesTheGeometry
+      Test #1509: unit.Mesh_CopyKeepsTheSameTopologyAndHandlesAndIsNotARemesh .....................   Passed    0.24 sec
+        Start 1509: unit.Mesh_CopyKeepsTheSameTopologyAndHandlesAndIsNotARemesh
+      Test #2488: unit.TriangleArea_MatchesTheHandComputationAndIsZeroWhenCollinear ...............   Passed    0.14 sec
+        Start 2488: unit.TriangleArea_MatchesTheHandComputationAndIsZeroWhenCollinear
+ 90/116 Test #1508: unit.MeshStamp_IsUniquePerMeshAndDistinguishesGenerations .......................   Passed    0.26 sec
+      Test #1512: unit.Mesh_RefusesAHandleFromAnotherMeshRatherThanReinterpretingIt ...............   Passed    0.18 sec
+        Start 1512: unit.Mesh_RefusesAHandleFromAnotherMeshRatherThanReinterpretingIt
+        Start  931: unit.GeometryRevision_IsStableWhenNothingChanges
+      Test #1510: unit.Mesh_ElementTypeIsReportedPerElementAndSharesOneIdentitySpace ..............   Passed    0.20 sec
+        Start 1510: unit.Mesh_ElementTypeIsReportedPerElementAndSharesOneIdentitySpace
+      Test #1517: unit.Meshable_AcceptsACylinderAndReportsItsAnalyticalVolume .....................   Passed    0.20 sec
+        Start 1517: unit.Meshable_AcceptsACylinderAndReportsItsAnalyticalVolume
+ 91/116 Test #1523: unit.Meshable_KeepsABodyWhereItIsInModelSpace ...................................   Passed    0.20 sec
+ 92/116 Test  #930: unit.GeometryRevision_ChangesWhenAnUpstreamProfileChangesTheGeometry ............   Passed    0.18 sec
+        Start  932: unit.GeometryRevision_IsUnchangedByAMaterialEdit
+        Start 1496: unit.MeshBuilder_NeverReordersElementConnectivity
+      Test #1509: unit.Mesh_CopyKeepsTheSameTopologyAndHandlesAndIsNotARemesh .....................   Passed    0.22 sec
+        Start 1509: unit.Mesh_CopyKeepsTheSameTopologyAndHandlesAndIsNotARemesh
+      Test #1512: unit.Mesh_RefusesAHandleFromAnotherMeshRatherThanReinterpretingIt ...............   Passed    0.20 sec
+        Start 1512: unit.Mesh_RefusesAHandleFromAnotherMeshRatherThanReinterpretingIt
+      Test #2488: unit.TriangleArea_MatchesTheHandComputationAndIsZeroWhenCollinear ...............   Passed    0.23 sec
+        Start 2488: unit.TriangleArea_MatchesTheHandComputationAndIsZeroWhenCollinear
+      Test #1510: unit.Mesh_ElementTypeIsReportedPerElementAndSharesOneIdentitySpace ..............   Passed    0.16 sec
+        Start 1510: unit.Mesh_ElementTypeIsReportedPerElementAndSharesOneIdentitySpace
+      Test  #931: unit.GeometryRevision_IsStableWhenNothingChanges ................................   Passed    0.22 sec
+        Start  931: unit.GeometryRevision_IsStableWhenNothingChanges
+      Test #1496: unit.MeshBuilder_NeverReordersElementConnectivity ...............................   Passed    0.18 sec
+        Start 1496: unit.MeshBuilder_NeverReordersElementConnectivity
+      Test #1517: unit.Meshable_AcceptsACylinderAndReportsItsAnalyticalVolume .....................   Passed    0.23 sec
+        Start 1517: unit.Meshable_AcceptsACylinderAndReportsItsAnalyticalVolume
+      Test #1512: unit.Mesh_RefusesAHandleFromAnotherMeshRatherThanReinterpretingIt ...............   Passed    0.13 sec
+        Start 1512: unit.Mesh_RefusesAHandleFromAnotherMeshRatherThanReinterpretingIt
+      Test  #932: unit.GeometryRevision_IsUnchangedByAMaterialEdit ................................   Passed    0.25 sec
+        Start  932: unit.GeometryRevision_IsUnchangedByAMaterialEdit
+ 93/116 Test #1509: unit.Mesh_CopyKeepsTheSameTopologyAndHandlesAndIsNotARemesh .....................   Passed    0.18 sec
+        Start 1502: unit.MeshBuilder_RejectsAnElementWithNoRegion
+      Test #2488: unit.TriangleArea_MatchesTheHandComputationAndIsZeroWhenCollinear ...............   Passed    0.18 sec
+        Start 2488: unit.TriangleArea_MatchesTheHandComputationAndIsZeroWhenCollinear
+      Test #1510: unit.Mesh_ElementTypeIsReportedPerElementAndSharesOneIdentitySpace ..............   Passed    0.18 sec
+        Start 1510: unit.Mesh_ElementTypeIsReportedPerElementAndSharesOneIdentitySpace
+      Test  #931: unit.GeometryRevision_IsStableWhenNothingChanges ................................   Passed    0.19 sec
+        Start  931: unit.GeometryRevision_IsStableWhenNothingChanges
+      Test #1496: unit.MeshBuilder_NeverReordersElementConnectivity ...............................   Passed    0.15 sec
+        Start 1496: unit.MeshBuilder_NeverReordersElementConnectivity
+ 94/116 Test #1517: unit.Meshable_AcceptsACylinderAndReportsItsAnalyticalVolume .....................   Passed    0.18 sec
+        Start 2516: unit.Validate_RejectsANonFiniteDeterminantFromExtremeButFiniteCoordinates
+      Test #1512: unit.Mesh_RefusesAHandleFromAnotherMeshRatherThanReinterpretingIt ...............   Passed    0.19 sec
+        Start 1512: unit.Mesh_RefusesAHandleFromAnotherMeshRatherThanReinterpretingIt
+ 95/116 Test #2488: unit.TriangleArea_MatchesTheHandComputationAndIsZeroWhenCollinear ...............   Passed    0.23 sec
+        Start 1527: unit.Meshable_RefusesAFeatureThatHasNeverBeenRegenerated
+ 96/116 Test #1510: unit.Mesh_ElementTypeIsReportedPerElementAndSharesOneIdentitySpace ..............   Passed    0.23 sec
+      Test  #932: unit.GeometryRevision_IsUnchangedByAMaterialEdit ................................   Passed    0.29 sec
+        Start  932: unit.GeometryRevision_IsUnchangedByAMaterialEdit
+      Test  #931: unit.GeometryRevision_IsStableWhenNothingChanges ................................   Passed    0.22 sec
+        Start  931: unit.GeometryRevision_IsStableWhenNothingChanges
+ 97/116 Test #1512: unit.Mesh_RefusesAHandleFromAnotherMeshRatherThanReinterpretingIt ...............   Passed    0.15 sec
+      Test #1496: unit.MeshBuilder_NeverReordersElementConnectivity ...............................   Passed    0.22 sec
+        Start 1496: unit.MeshBuilder_NeverReordersElementConnectivity
+      Test #1502: unit.MeshBuilder_RejectsAnElementWithNoRegion ...................................   Passed    0.32 sec
+        Start 1502: unit.MeshBuilder_RejectsAnElementWithNoRegion
+      Test #2516: unit.Validate_RejectsANonFiniteDeterminantFromExtremeButFiniteCoordinates .......   Passed    0.21 sec
+        Start 2516: unit.Validate_RejectsANonFiniteDeterminantFromExtremeButFiniteCoordinates
+        Start 1530: unit.Meshable_RefusesAnObjectThatMakesNoBodyAndSaysSoDistinctly
+        Start 1521: unit.Meshable_ConfigurationGuardIsCheckedBeforeAnythingElse
+      Test  #932: unit.GeometryRevision_IsUnchangedByAMaterialEdit ................................   Passed    0.19 sec
+        Start  932: unit.GeometryRevision_IsUnchangedByAMaterialEdit
+      Test #1502: unit.MeshBuilder_RejectsAnElementWithNoRegion ...................................   Passed    0.15 sec
+        Start 1502: unit.MeshBuilder_RejectsAnElementWithNoRegion
+      Test  #931: unit.GeometryRevision_IsStableWhenNothingChanges ................................   Passed    0.20 sec
+        Start  931: unit.GeometryRevision_IsStableWhenNothingChanges
+      Test #1527: unit.Meshable_RefusesAFeatureThatHasNeverBeenRegenerated ........................   Passed    0.25 sec
+        Start 1527: unit.Meshable_RefusesAFeatureThatHasNeverBeenRegenerated
+      Test #1496: unit.MeshBuilder_NeverReordersElementConnectivity ...............................   Passed    0.22 sec
+        Start 1496: unit.MeshBuilder_NeverReordersElementConnectivity
+      Test #2516: unit.Validate_RejectsANonFiniteDeterminantFromExtremeButFiniteCoordinates .......   Passed    0.20 sec
+        Start 2516: unit.Validate_RejectsANonFiniteDeterminantFromExtremeButFiniteCoordinates
+      Test #1530: unit.Meshable_RefusesAnObjectThatMakesNoBodyAndSaysSoDistinctly .................   Passed    0.20 sec
+        Start 1530: unit.Meshable_RefusesAnObjectThatMakesNoBodyAndSaysSoDistinctly
+      Test #1521: unit.Meshable_ConfigurationGuardIsCheckedBeforeAnythingElse .....................   Passed    0.19 sec
+        Start 1521: unit.Meshable_ConfigurationGuardIsCheckedBeforeAnythingElse
+      Test #1502: unit.MeshBuilder_RejectsAnElementWithNoRegion ...................................   Passed    0.17 sec
+        Start 1502: unit.MeshBuilder_RejectsAnElementWithNoRegion
+ 98/116 Test  #931: unit.GeometryRevision_IsStableWhenNothingChanges ................................   Passed    0.17 sec
+      Test  #932: unit.GeometryRevision_IsUnchangedByAMaterialEdit ................................   Passed    0.20 sec
+        Start  932: unit.GeometryRevision_IsUnchangedByAMaterialEdit
+      Test #1527: unit.Meshable_RefusesAFeatureThatHasNeverBeenRegenerated ........................   Passed    0.17 sec
+        Start 1527: unit.Meshable_RefusesAFeatureThatHasNeverBeenRegenerated
+ 99/116 Test #1496: unit.MeshBuilder_NeverReordersElementConnectivity ...............................   Passed    0.19 sec
+        Start 1515: unit.Meshable_AHollowTubePreservesItsVoidAndItsAnalyticalVolume
+        Start 2789: architecture.layering
+      Test #2516: unit.Validate_RejectsANonFiniteDeterminantFromExtremeButFiniteCoordinates .......   Passed    0.25 sec
+        Start 2516: unit.Validate_RejectsANonFiniteDeterminantFromExtremeButFiniteCoordinates
+      Test #1530: unit.Meshable_RefusesAnObjectThatMakesNoBodyAndSaysSoDistinctly .................   Passed    0.38 sec
+        Start 1530: unit.Meshable_RefusesAnObjectThatMakesNoBodyAndSaysSoDistinctly
+      Test #1527: unit.Meshable_RefusesAFeatureThatHasNeverBeenRegenerated ........................   Passed    0.28 sec
+        Start 1527: unit.Meshable_RefusesAFeatureThatHasNeverBeenRegenerated
+      Test #1521: unit.Meshable_ConfigurationGuardIsCheckedBeforeAnythingElse .....................   Passed    0.42 sec
+        Start 1521: unit.Meshable_ConfigurationGuardIsCheckedBeforeAnythingElse
+100/116 Test  #932: unit.GeometryRevision_IsUnchangedByAMaterialEdit ................................   Passed    0.35 sec
+        Start 1529: unit.Meshable_RefusesAnObjectThatDoesNotExist
+      Test #2516: unit.Validate_RejectsANonFiniteDeterminantFromExtremeButFiniteCoordinates .......   Passed    0.32 sec
+        Start 2516: unit.Validate_RejectsANonFiniteDeterminantFromExtremeButFiniteCoordinates
+      Test #1502: unit.MeshBuilder_RejectsAnElementWithNoRegion ...................................   Passed    0.49 sec
+        Start 1502: unit.MeshBuilder_RejectsAnElementWithNoRegion
+      Test #1515: unit.Meshable_AHollowTubePreservesItsVoidAndItsAnalyticalVolume .................   Passed    0.43 sec
+        Start 1515: unit.Meshable_AHollowTubePreservesItsVoidAndItsAnalyticalVolume
+      Test #1521: unit.Meshable_ConfigurationGuardIsCheckedBeforeAnythingElse .....................   Passed    0.27 sec
+        Start 1521: unit.Meshable_ConfigurationGuardIsCheckedBeforeAnythingElse
+      Test #1530: unit.Meshable_RefusesAnObjectThatMakesNoBodyAndSaysSoDistinctly .................   Passed    0.35 sec
+        Start 1530: unit.Meshable_RefusesAnObjectThatMakesNoBodyAndSaysSoDistinctly
+101/116 Test #1502: unit.MeshBuilder_RejectsAnElementWithNoRegion ...................................   Passed    0.33 sec
+      Test #1527: unit.Meshable_RefusesAFeatureThatHasNeverBeenRegenerated ........................   Passed    0.50 sec
+        Start 1527: unit.Meshable_RefusesAFeatureThatHasNeverBeenRegenerated
+102/116 Test #2516: unit.Validate_RejectsANonFiniteDeterminantFromExtremeButFiniteCoordinates .......   Passed    0.36 sec
+      Test #1521: unit.Meshable_ConfigurationGuardIsCheckedBeforeAnythingElse .....................   Passed    0.21 sec
+        Start 1521: unit.Meshable_ConfigurationGuardIsCheckedBeforeAnythingElse
+      Test #1515: unit.Meshable_AHollowTubePreservesItsVoidAndItsAnalyticalVolume .................   Passed    0.34 sec
+        Start 1515: unit.Meshable_AHollowTubePreservesItsVoidAndItsAnalyticalVolume
+      Test #1529: unit.Meshable_RefusesAnObjectThatDoesNotExist ...................................   Passed    0.49 sec
+        Start 1529: unit.Meshable_RefusesAnObjectThatDoesNotExist
+        Start  933: unit.GeometryRevision_IsUnchangedByRenamingTheFeature
+        Start 2791: architecture.checker.occt-leak
+      Test #1530: unit.Meshable_RefusesAnObjectThatMakesNoBodyAndSaysSoDistinctly .................   Passed    0.28 sec
+        Start 1530: unit.Meshable_RefusesAnObjectThatMakesNoBodyAndSaysSoDistinctly
+103/116 Test #1530: unit.Meshable_RefusesAnObjectThatMakesNoBodyAndSaysSoDistinctly .................   Passed    0.15 sec
+        Start 2792: architecture.checker.examples-occt-leak
+104/116 Test #1521: unit.Meshable_ConfigurationGuardIsCheckedBeforeAnythingElse .....................   Passed    0.28 sec
+105/116 Test #1527: unit.Meshable_RefusesAFeatureThatHasNeverBeenRegenerated ........................   Passed    0.29 sec
+      Test #1529: unit.Meshable_RefusesAnObjectThatDoesNotExist ...................................   Passed    0.24 sec
+        Start 1529: unit.Meshable_RefusesAnObjectThatDoesNotExist
+      Test  #933: unit.GeometryRevision_IsUnchangedByRenamingTheFeature ...........................   Passed    0.27 sec
+        Start  933: unit.GeometryRevision_IsUnchangedByRenamingTheFeature
+        Start 2793: architecture.checker.qt-leak
+        Start 2790: architecture.checker.valid
+      Test #1515: unit.Meshable_AHollowTubePreservesItsVoidAndItsAnalyticalVolume .................   Passed    0.43 sec
+        Start 1515: unit.Meshable_AHollowTubePreservesItsVoidAndItsAnalyticalVolume
+      Test  #933: unit.GeometryRevision_IsUnchangedByRenamingTheFeature ...........................   Passed    0.23 sec
+        Start  933: unit.GeometryRevision_IsUnchangedByRenamingTheFeature
+      Test #1529: unit.Meshable_RefusesAnObjectThatDoesNotExist ...................................   Passed    0.30 sec
+        Start 1529: unit.Meshable_RefusesAnObjectThatDoesNotExist
+      Test #2791: architecture.checker.occt-leak ..................................................   Passed    0.53 sec
+        Start 2791: architecture.checker.occt-leak
+      Test #1515: unit.Meshable_AHollowTubePreservesItsVoidAndItsAnalyticalVolume .................   Passed    0.22 sec
+        Start 1515: unit.Meshable_AHollowTubePreservesItsVoidAndItsAnalyticalVolume
+      Test #2792: architecture.checker.examples-occt-leak .........................................   Passed    0.47 sec
+        Start 2792: architecture.checker.examples-occt-leak
+      Test #2789: architecture.layering ...........................................................   Passed    1.43 sec
+        Start 2789: architecture.layering
+      Test #1529: unit.Meshable_RefusesAnObjectThatDoesNotExist ...................................   Passed    0.22 sec
+        Start 1529: unit.Meshable_RefusesAnObjectThatDoesNotExist
+      Test #2793: architecture.checker.qt-leak ....................................................   Passed    0.50 sec
+        Start 2793: architecture.checker.qt-leak
+      Test #2790: architecture.checker.valid ......................................................   Passed    0.50 sec
+        Start 2790: architecture.checker.valid
+      Test  #933: unit.GeometryRevision_IsUnchangedByRenamingTheFeature ...........................   Passed    0.33 sec
+        Start  933: unit.GeometryRevision_IsUnchangedByRenamingTheFeature
+106/116 Test #1515: unit.Meshable_AHollowTubePreservesItsVoidAndItsAnalyticalVolume .................   Passed    0.30 sec
+        Start 2795: architecture.checker.drawing-layer-violation
+107/116 Test #1529: unit.Meshable_RefusesAnObjectThatDoesNotExist ...................................   Passed    0.26 sec
+        Start 2798: architecture.checker.private-include
+      Test  #933: unit.GeometryRevision_IsUnchangedByRenamingTheFeature ...........................   Passed    0.23 sec
+        Start  933: unit.GeometryRevision_IsUnchangedByRenamingTheFeature
+      Test #2791: architecture.checker.occt-leak ..................................................   Passed    0.56 sec
+        Start 2791: architecture.checker.occt-leak
+      Test #2792: architecture.checker.examples-occt-leak .........................................   Passed    0.47 sec
+        Start 2792: architecture.checker.examples-occt-leak
+108/116 Test  #933: unit.GeometryRevision_IsUnchangedByRenamingTheFeature ...........................   Passed    0.23 sec
+        Start 2794: architecture.checker.layer-violation
+      Test #2793: architecture.checker.qt-leak ....................................................   Passed    0.58 sec
+        Start 2793: architecture.checker.qt-leak
+      Test #2795: architecture.checker.drawing-layer-violation ....................................   Passed    0.47 sec
+        Start 2795: architecture.checker.drawing-layer-violation
+      Test #2790: architecture.checker.valid ......................................................   Passed    0.58 sec
+        Start 2790: architecture.checker.valid
+      Test #2798: architecture.checker.private-include ............................................   Passed    0.43 sec
+        Start 2798: architecture.checker.private-include
+      Test #2791: architecture.checker.occt-leak ..................................................   Passed    0.41 sec
+        Start 2791: architecture.checker.occt-leak
+      Test #2792: architecture.checker.examples-occt-leak .........................................   Passed    0.42 sec
+        Start 2792: architecture.checker.examples-occt-leak
+      Test #2794: architecture.checker.layer-violation ............................................   Passed    0.37 sec
+        Start 2794: architecture.checker.layer-violation
+      Test #2793: architecture.checker.qt-leak ....................................................   Passed    0.31 sec
+        Start 2793: architecture.checker.qt-leak
+      Test #2790: architecture.checker.valid ......................................................   Passed    0.40 sec
+        Start 2790: architecture.checker.valid
+      Test #2795: architecture.checker.drawing-layer-violation ....................................   Passed    0.44 sec
+        Start 2795: architecture.checker.drawing-layer-violation
+      Test #2798: architecture.checker.private-include ............................................   Passed    0.41 sec
+        Start 2798: architecture.checker.private-include
+      Test #2792: architecture.checker.examples-occt-leak .........................................   Passed    0.35 sec
+        Start 2792: architecture.checker.examples-occt-leak
+      Test #2791: architecture.checker.occt-leak ..................................................   Passed    0.42 sec
+        Start 2791: architecture.checker.occt-leak
+      Test #2793: architecture.checker.qt-leak ....................................................   Passed    0.37 sec
+        Start 2793: architecture.checker.qt-leak
+      Test #2794: architecture.checker.layer-violation ............................................   Passed    0.41 sec
+        Start 2794: architecture.checker.layer-violation
+      Test #2789: architecture.layering ...........................................................   Passed    1.69 sec
+        Start 2789: architecture.layering
+      Test #2790: architecture.checker.valid ......................................................   Passed    0.58 sec
+        Start 2790: architecture.checker.valid
+109/116 Test #2793: architecture.checker.qt-leak ....................................................   Passed    0.44 sec
+      Test #2795: architecture.checker.drawing-layer-violation ....................................   Passed    0.67 sec
+        Start 2795: architecture.checker.drawing-layer-violation
+110/116 Test #2792: architecture.checker.examples-occt-leak .........................................   Passed    0.60 sec
+111/116 Test #2791: architecture.checker.occt-leak ..................................................   Passed    0.56 sec
+      Test #2794: architecture.checker.layer-violation ............................................   Passed    0.42 sec
+        Start 2794: architecture.checker.layer-violation
+      Test #2798: architecture.checker.private-include ............................................   Passed    0.65 sec
+        Start 2798: architecture.checker.private-include
+112/116 Test #2790: architecture.checker.valid ......................................................   Passed    0.26 sec
+      Test #2795: architecture.checker.drawing-layer-violation ....................................   Passed    0.35 sec
+        Start 2795: architecture.checker.drawing-layer-violation
+      Test #2798: architecture.checker.private-include ............................................   Passed    0.34 sec
+        Start 2798: architecture.checker.private-include
+      Test #2794: architecture.checker.layer-violation ............................................   Passed    0.36 sec
+        Start 2794: architecture.checker.layer-violation
+113/116 Test #2798: architecture.checker.private-include ............................................   Passed    0.23 sec
+114/116 Test #2795: architecture.checker.drawing-layer-violation ....................................   Passed    0.24 sec
+115/116 Test #2794: architecture.checker.layer-violation ............................................   Passed    0.23 sec
+      Test #2789: architecture.layering ...........................................................   Passed    1.04 sec
+        Start 2789: architecture.layering
+      Test #2789: architecture.layering ...........................................................   Passed    0.71 sec
+        Start 2789: architecture.layering
+116/116 Test #2789: architecture.layering ...........................................................   Passed    0.63 sec
+
+100% tests passed out of 116
+
+Total Test time (real) =  27.05 sec

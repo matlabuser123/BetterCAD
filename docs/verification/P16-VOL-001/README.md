@@ -1,13 +1,29 @@
 # P16-VOL-001 — 3D Tetrahedral Volume Mesh
 
 ```text
-STATUS:      BLOCKED
+STATUS:      NOT IMPLEMENTED -- no longer blocked
 TASK:        P16-VOL-001 -- 3D tetrahedral volume mesh
 PHASE:       P16 -- Meshing
-DATE:        2026-10-01
-BLOCKED ON:  the approved volume-meshing backend does not build on this
-             toolchain. See THE BLOCKER, below.
+DATE:        2026-10-01 (first issue), corrected 2026-10-01 (second issue)
 ```
+
+> **CORRECTION, second issue.** This document originally reported the milestone
+> BLOCKED because Netgen "does not build on this toolchain", on the strength of
+> a crash and a hang in Netgen's mesh-rule generator. **That diagnosis was
+> wrong.** The generator has no defect this toolchain exposes; it was loading a
+> C++ standard library it had not been compiled against, because of the
+> investigating shell's `PATH`. Netgen v6.2.2604 builds, runs and meshes
+> correctly with GCC 16.1.0 MinGW.
+>
+> `INFRA-NETGEN-001` established that, found the real cause, and made Netgen a
+> qualified BetterCAD dependency. See
+> [../INFRA-NETGEN-001/MAKERLS_ROOT_CAUSE.md](../INFRA-NETGEN-001/MAKERLS_ROOT_CAUSE.md).
+>
+> The sections below are kept as written, with the incorrect finding marked, so
+> the error and its correction stay visible rather than being quietly edited
+> away. **Nothing here is a claim that P16-VOL-001 is implemented** — it is
+> not, it remains 0/19, and it still needs its own authorization in
+> `TODO.md` before any of it is written.
 
 **No production code was written.** The repository is unchanged apart from this evidence
 directory and the TODO entry recording the block. No adapter exists, no tests were written
@@ -99,7 +115,17 @@ void* func = GetProcAddress((HMODULE)lib, func_name.c_str());
 GCC rejects it. **Patch:** one `reinterpret_cast`, which POSIX `dlsym`-style code needs anyway.
 Also upstreamable. `ngcore` then compiled.
 
-### 3. `makerls` crashes, and hangs — NOT A PATCH
+### 3. `makerls` crashes, and hangs — **THIS FINDING IS WRONG**
+
+> **Superseded.** The two symptoms below were observed exactly as described,
+> but they are not Netgen's. `makerls.exe` was compiled by a UCRT toolchain and
+> was loading an msvcrt-based `libstdc++-6.dll` from an MSYS2 directory that
+> sat earlier on `PATH`, putting two C runtimes in one process and corrupting
+> `std::basic_ios` state — hence a loop that never ended at `-O0` and a fault
+> at `-O3`. Netgen is now built with `makerls` statically linked, which removes
+> the failure by construction, and it generates all seven rule files. Full
+> analysis, including the evidence that distinguishes the two explanations:
+> [../INFRA-NETGEN-001/MAKERLS_ROOT_CAUSE.md](../INFRA-NETGEN-001/MAKERLS_ROOT_CAUSE.md).
 
 `makerls` is Netgen's **own build-time code generator**: it converts the `.rls` mesh-rule files
 into C++. Built by the superbuild at `-O3`, it fails on **every one of the seven rule files**:
@@ -128,7 +154,12 @@ makerls at -O0   hangs indefinitely on a 17.9 KB input
 So the generator is non-functional on this toolchain either way, and the behaviour is
 characteristic of undefined behaviour that MSVC happened to tolerate.
 
-### Why this blocks the milestone rather than being one more patch
+### Why this blocks the milestone rather than being one more patch — **PREMISE WITHDRAWN**
+
+> **Superseded.** The reasoning below is sound and the project should keep
+> applying it. It was applied to a finding that turned out to be false, so its
+> conclusion does not hold. There was no undefined behaviour in Netgen to
+> disqualify it.
 
 **The rule files are the mesher.** `tetrules.rls` is the rule set that drives tetrahedral
 generation. Without `makerls` there are no rules, and without rules there is no volume mesher —
@@ -141,6 +172,13 @@ UB found and patched. The mesh rules it generated would then feed a mesher compi
 toolchain that just produced an access violation in the same codebase. P16's premise is that a
 mesh is *validated*, not merely produced; "the generator crashed at -O3 so we built it at -O0"
 is not a foundation to qualify a solver boundary on.
+
+> **What actually happened.** `makerls` was neither run at `-O0` nor patched.
+> It is linked statically, so it cannot load a foreign C++ runtime at all, and
+> it then generates all seven rule files at `-O3` — byte-for-byte identical to
+> the files produced once the correct runtime was placed beside the dynamically
+> linked build. The mesh rules are the same rules upstream ships; nothing was
+> coaxed, and no tolerance or optimisation level was traded away.
 
 ## What was NOT done, deliberately
 
@@ -157,7 +195,23 @@ no vendored binary          a backend that exists only in a scratch directory is
 no boxes ticked             P16-VOL-001 remains 0/19
 ```
 
-## What would unblock it
+## What would unblock it — **DONE**
+
+> `INFRA-NETGEN-001` was carried out and Netgen is now a qualified BetterCAD
+> dependency: pinned by tag and SHA-256 in `deps/CMakeLists.txt`, built from
+> source by the same toolchain, with four upstreamable patches in
+> `deps/patches/netgen/`. Every bullet below was addressed, including the
+> open-ended one — the `makerls` fault was found, and it was not Netgen's.
+> One bullet turned out to understate the problem: Netgen's superbuild does
+> not merely *download* zlib, it downloads a **prebuilt MSVC binary**, which
+> has been eliminated rather than admitted.
+>
+> Evidence: [../INFRA-NETGEN-001/](../INFRA-NETGEN-001/README.md).
+>
+> The two alternatives below were therefore **not** taken: the toolchain is
+> unchanged and the licence decision stays untouched and the owner's.
+>
+> `P16-VOL-001` itself is still unimplemented and still needs authorization.
 
 An infrastructure milestone, because this is infrastructure work and not what this milestone's
 brief describes — its ninety-odd sections are about the adapter, Tet4 validation, occupancy,
@@ -238,15 +292,46 @@ next attempt does not have to rediscover it.
 ## Result
 
 ```text
-RESULT:   BLOCKED
-REASON:   the approved backend (Netgen v6.2.2604, LGPL-2.1) does not build with
-          GCC 16.1.0 MinGW. Two patches fixed; the third problem is a crash and
-          then a hang in Netgen's own mesh-rule generator, and the mesh rules are
-          the mesher.
-NEXT:     INFRA-NETGEN-001, or an owner decision on toolchain or licence.
-TODO:     P16-VOL-001 remains 0/19, marked BLOCKED with this reason.
+RESULT:   NOT IMPLEMENTED, no longer blocked
+REASON:   the block was misdiagnosed. Netgen v6.2.2604 (LGPL-2.1) DOES build,
+          run and mesh with GCC 16.1.0 MinGW. The crash and hang in its
+          mesh-rule generator were caused by the investigating environment
+          loading a mismatched C++ runtime, not by Netgen.
+BACKEND:  qualified by INFRA-NETGEN-001 and pinned in deps/CMakeLists.txt.
+NEXT:     P16-VOL-001 is implementable, but it is NOT authorized by this
+          document. Authorization comes from TODO.md alone.
+TODO:     P16-VOL-001 remains 0/19, unimplemented.
 ```
 
 ## Revision
 
-First issue, 2026-10-01.
+```text
+First issue    2026-10-01   reported BLOCKED on a Netgen build failure.
+Second issue   2026-10-01   CORRECTED. The third and decisive finding of the
+                            first issue was wrong: makerls has no defect that
+                            GCC 16 MinGW exposes, and Netgen is buildable.
+                            The block is withdrawn. Superseded passages are
+                            marked in place rather than deleted.
+```
+
+**Why the first issue reached the wrong conclusion**, recorded because the
+reasoning was confident and the failure mode is easy to repeat:
+
+```text
+two symptoms were treated as corroboration    a crash at -O3 and a hang at -O0
+                                              looked like two independent signs
+                                              of undefined behaviour. They were
+                                              one cause with two faces.
+
+the environment was not a suspect             every hypothesis tested was about
+                                              Netgen's source. The question
+                                              "which libstdc++ is this process
+                                              actually loading" was not asked
+                                              until much later, and answered it
+                                              immediately.
+
+a sound principle made a wrong finding feel   "a dependency showing UB cannot be
+safe to act on                                qualified" is correct, and arguing
+                                              it well made the premise feel
+                                              checked when it had not been.
+```

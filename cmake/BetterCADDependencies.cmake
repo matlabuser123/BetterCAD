@@ -87,6 +87,31 @@ if(OpenCASCADE_VERSION VERSION_LESS 8.0 OR OpenCASCADE_VERSION VERSION_GREATER_E
         "BetterCAD requires 8.0.x.")
 endif()
 
+# --- Netgen (volume meshing backend; private to src/meshing/netgen/) --------
+# Admitted by the licence rule in ADR-032/P16-ARCH-001 (LGPL-2.1, the same
+# obligation class as OCCT) and approved by the project owner on 2026-10-01.
+# Built from source by the deps/ superbuild; see
+# docs/verification/INFRA-NETGEN-001/.
+#
+# AUTO rather than REQUIRED: the only milestone that needs a volume mesher is
+# P16-VOL-001, which is not implemented. A checkout whose deps prefix predates
+# Netgen must still configure and build.
+set(BETTERCAD_NETGEN_ENABLED OFF)
+if(NOT BETTERCAD_VOLUME_MESHING STREQUAL "OFF")
+    if(BETTERCAD_VOLUME_MESHING STREQUAL "ON")
+        find_package(Netgen 6.2.2604 REQUIRED MODULE)
+    else()
+        find_package(Netgen 6.2.2604 QUIET MODULE)
+    endif()
+    if(Netgen_FOUND)
+        set(BETTERCAD_NETGEN_ENABLED ON)
+    else()
+        message(STATUS
+            "Netgen not found: volume meshing disabled (BETTERCAD_VOLUME_MESHING=AUTO). "
+            "Build it with the deps/ superbuild to enable it.")
+    endif()
+endif()
+
 # --- Qt 6 (desktop application) ---------------------------------------------
 set(BETTERCAD_GUI_ENABLED OFF)
 if(NOT BETTERCAD_BUILD_GUI STREQUAL "OFF")

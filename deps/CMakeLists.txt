@@ -33,11 +33,19 @@ endif()
 
 option(BETTERCAD_DEPS_QT "Build Qt 6 (qtbase) from source" ON)
 option(BETTERCAD_DEPS_OCCT "Build Open CASCADE Technology from source" ON)
+option(BETTERCAD_DEPS_NETGEN "Build Netgen (volume meshing backend) from source" ON)
+# zlib exists here only because Netgen's gzstream needs it. It is not a
+# BetterCAD dependency in its own right and nothing in BetterCAD includes it.
+option(BETTERCAD_DEPS_ZLIB "Build zlib from source (required by Netgen)" ${BETTERCAD_DEPS_NETGEN})
 
 set(BETTERCAD_DEPS_QT_VERSION "6.11.2")
 set(BETTERCAD_DEPS_QT_SHA256 "5b2e00eccaf5a4d8c14134ffa0ea8dfd0a35ae1ffc7f8d87fa4305a1ed23cf22")
 set(BETTERCAD_DEPS_OCCT_TAG "V8_0_1")
 set(BETTERCAD_DEPS_OCCT_SHA256 "0d6913eae4bcc09a3653ceced6dda1aec11c35a1513d4c06762c9b002092c68a")
+set(BETTERCAD_DEPS_ZLIB_VERSION "1.3.1")
+set(BETTERCAD_DEPS_ZLIB_SHA256 "9a93b2b7dfdac77ceba5a558a580e74667dd6fede4585b91eefb60f03b72df23")
+set(BETTERCAD_DEPS_NETGEN_TAG "v6.2.2604")
+set(BETTERCAD_DEPS_NETGEN_SHA256 "0a614193ee6106c0c276a1516639bef872f2f2371dec159e1b1f6ffcb425954c")
 
 set(common_cmake_args
     -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
@@ -137,6 +145,93 @@ if(BETTERCAD_DEPS_OCCT)
             -DUSE_TBB:BOOL=OFF
             -DUSE_VTK:BOOL=OFF
             -DUSE_EIGEN:BOOL=OFF
+        ${terminal_steps}
+    )
+endif()
+
+if(BETTERCAD_DEPS_ZLIB)
+    # Built from source with this toolchain on purpose. Netgen's own superbuild
+    # downloads a PREBUILT zlib binary on Windows (cmake/external_projects/
+    # zlib.cmake: no configure step, no build step, just a copy), which is
+    # compiled against the MSVC runtime and imports VCRUNTIME140.dll. Mixing
+    # that with a MinGW libstdc++ in one process is exactly the kind of
+    # unverifiable foreign binary this project does not ship.
+    ExternalProject_Add(zlib
+        URL "https://github.com/madler/zlib/releases/download/v${BETTERCAD_DEPS_ZLIB_VERSION}/zlib-${BETTERCAD_DEPS_ZLIB_VERSION}.tar.gz"
+        URL_HASH SHA256=${BETTERCAD_DEPS_ZLIB_SHA256}
+        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+        DOWNLOAD_DIR "${CMAKE_BINARY_DIR}/downloads"
+        SOURCE_DIR "${CMAKE_BINARY_DIR}/src/zlib"
+        BINARY_DIR "${CMAKE_BINARY_DIR}/b/zlib"
+        CMAKE_ARGS ${common_cmake_args}
+        ${terminal_steps}
+    )
+endif()
+
+if(BETTERCAD_DEPS_NETGEN)
+    # Netgen v6.2.2604 does not build with GCC/MinGW unmodified. The four
+    # patches in patches/netgen/ are small, general and upstreamable; see
+    # docs/verification/INFRA-NETGEN-001/PATCHES.md. git is used only as a
+    # patch tool.
+    find_package(Git REQUIRED)
+
+    set(netgen_order)
+    if(TARGET zlib)
+        set(netgen_order DEPENDS zlib)
+    endif()
+
+    # Netgen derives its version with "git describe" and the archive is not a
+    # git checkout, so without this it silently reports itself as 6.2.0 -- a
+    # pinned dependency must not misname itself. TWEAK 0 means "a tagged
+    # release", which yields exactly ${BETTERCAD_DEPS_NETGEN_TAG}.
+    set(netgen_version_git "${BETTERCAD_DEPS_NETGEN_TAG}-0-0")
+
+    ExternalProject_Add(netgen
+        URL "https://github.com/NGSolve/netgen/archive/refs/tags/${BETTERCAD_DEPS_NETGEN_TAG}.tar.gz"
+        URL_HASH SHA256=${BETTERCAD_DEPS_NETGEN_SHA256}
+        DOWNLOAD_NAME "netgen-${BETTERCAD_DEPS_NETGEN_TAG}.tar.gz"
+        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+        DOWNLOAD_DIR "${CMAKE_BINARY_DIR}/downloads"
+        SOURCE_DIR "${CMAKE_BINARY_DIR}/src/netgen"
+        BINARY_DIR "${CMAKE_BINARY_DIR}/b/netgen"
+        ${netgen_order}
+        PATCH_COMMAND ${CMAKE_COMMAND}
+            -DPATCH_DIR=${CMAKE_CURRENT_LIST_DIR}/patches/netgen
+            -DGIT_EXECUTABLE=${GIT_EXECUTABLE}
+            -P ${CMAKE_CURRENT_LIST_DIR}/ApplyNetgenPatches.cmake
+        CMAKE_ARGS
+            ${common_cmake_args}
+            # No superbuild: it downloads prebuilt Windows binaries (zlib, and
+            # OCC/Tcl when those are enabled) from a third-party release page.
+            # Everything BetterCAD links is built from pinned, hash-verified
+            # source by this toolchain.
+            -DUSE_SUPERBUILD:BOOL=OFF
+            -DNETGEN_VERSION_GIT:STRING=${netgen_version_git}
+            # -march=native would make meshing depend on the build machine's
+            # instruction set, which the determinism contract forbids.
+            -DUSE_NATIVE_ARCH:BOOL=OFF
+            # Netgen's own OCC front end is off so there is exactly one path
+            # from CAD to mesh, through the boundaries P16-GEOM-001 and
+            # P16-SURF-001 already qualify (ADR-033).
+            -DUSE_OCC:BOOL=OFF
+            -DUSE_GUI:BOOL=OFF
+            -DUSE_PYTHON:BOOL=OFF
+            -DUSE_MPI:BOOL=OFF
+            -DENABLE_UNIT_TESTS:BOOL=OFF
+            # USE_STLGEOM / USE_CSG / USE_GEOM2D / USE_INTERFACE are left at
+            # Netgen's defaults (ON) deliberately. Turning them off looks like
+            # a smaller build but is not a configuration upstream supports:
+            # nglib.cpp references netgen::mparam, which is defined in the
+            # interface module, so USE_INTERFACE=OFF fails to link. BetterCAD
+            # feeds nglib a surface mesh directly and never calls these
+            # front ends; they cost binary size, not behaviour.
+            #
+            # makerls, Netgen's build-time mesh-rule generator, is linked
+            # statically: it then cannot load a stray libstdc++-6.dll that
+            # happens to sit earlier on PATH. Dynamically linked, it did, and
+            # the resulting C++ ABI mismatch made it hang or crash. Only
+            # executables are affected; nglib and ngcore stay shared.
+            -DCMAKE_EXE_LINKER_FLAGS:STRING=-static
         ${terminal_steps}
     )
 endif()

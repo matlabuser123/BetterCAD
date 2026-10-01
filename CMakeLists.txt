@@ -23,6 +23,9 @@ option(BETTERCAD_BUILD_EXAMPLES "Build the example programs" ${PROJECT_IS_TOP_LE
 set(BETTERCAD_BUILD_GUI "AUTO" CACHE STRING
     "Build the Qt desktop application: ON (require Qt 6), OFF, or AUTO (build if Qt 6 is found)")
 set_property(CACHE BETTERCAD_BUILD_GUI PROPERTY STRINGS AUTO ON OFF)
+set(BETTERCAD_VOLUME_MESHING "AUTO" CACHE STRING
+    "Volume-meshing backend: ON (require Netgen), OFF, or AUTO (enable if Netgen is found)")
+set_property(CACHE BETTERCAD_VOLUME_MESHING PROPERTY STRINGS AUTO ON OFF)
 option(BETTERCAD_WARNINGS_AS_ERRORS "Treat compiler warnings in BetterCAD code as errors" OFF)
 option(BUILD_SHARED_LIBS "Build BetterCAD libraries as shared libraries" OFF)
 

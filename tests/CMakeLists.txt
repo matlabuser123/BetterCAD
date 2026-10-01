@@ -28,6 +28,7 @@ bettercad_add_executable(bettercad_tests
         meshing/GeometryPreparationTests.cpp
         meshing/MeshDataTests.cpp
         meshing/SurfaceMeshTests.cpp
+        meshing/VolumeBackendTests.cpp
         drawing/AnnotationTests.cpp
         drawing/AssemblyDrawingTests.cpp
         drawing/BomTests.cpp
@@ -228,6 +229,12 @@ bettercad_copy_runtime_dlls(bettercad_tests)
 # docs/verification/P13-SOLVE-001/ for why it is a deliberate exception.
 target_include_directories(bettercad_tests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/src")
 target_link_libraries(bettercad_tests PRIVATE BetterCAD::eigen)
+
+# INFRA-NETGEN-001: let the backend tests assert what the build actually did,
+# instead of asserting whatever the library happens to report.
+if(BETTERCAD_NETGEN_ENABLED)
+    target_compile_definitions(bettercad_tests PRIVATE BETTERCAD_TESTS_EXPECT_NETGEN)
+endif()
 target_compile_definitions(bettercad_tests PRIVATE
     "BETTERCAD_EXPECTED_VERSION=\"${PROJECT_VERSION}\""
     "BETTERCAD_EXPECTED_BUILD_CONFIG=\"$<CONFIG>\""

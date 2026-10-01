@@ -16,6 +16,18 @@
 # geometry correspondence is P16-MAP-001's. Geometry PREPARATION (P16-GEOM-001)
 # needs features, for the regeneration state and currency that decide whether a
 # body may be meshed at all, which is why meshing sits above features.
+# The volume-meshing backend (INFRA-NETGEN-001). Exactly one of these two
+# translation units is compiled, so bettercad::meshing::volumeBackend() is
+# always defined and callers never branch on configuration. The Netgen one is
+# the only file in BetterCAD permitted to include a mesh-backend header, and
+# it lives under src/meshing/netgen/ because rule 5 of
+# tests/architecture/CheckLayering.cmake requires exactly that.
+if(BETTERCAD_NETGEN_ENABLED)
+    set(bettercad_volume_backend_sources netgen/NetgenBackend.cpp)
+else()
+    set(bettercad_volume_backend_sources NoVolumeBackend.cpp)
+endif()
+
 bettercad_add_library(bettercad_meshing
     ALIAS meshing
     EXPORT_BASE BETTERCAD_MESHING
@@ -25,11 +37,19 @@ bettercad_add_library(bettercad_meshing
         Mesh.cpp
         MeshValidation.cpp
         SurfaceMesh.cpp
+        ${bettercad_volume_backend_sources}
     PUBLIC_LINK
         BetterCAD::core
         BetterCAD::geometry
         BetterCAD::features
 )
+
+if(BETTERCAD_NETGEN_ENABLED)
+    # PRIVATE: Netgen is an implementation detail. Nothing that links
+    # BetterCAD::meshing may see nglib.h, and the architecture check enforces
+    # that independently of this line.
+    target_link_libraries(bettercad_meshing PRIVATE Netgen::nglib)
+endif()
 
 install(TARGETS bettercad_meshing
     RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"

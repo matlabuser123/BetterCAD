@@ -1,0 +1,23 @@
+--- a/libsrc/core/CMakeLists.txt
++++ b/libsrc/core/CMakeLists.txt
+@@ -55,10 +55,18 @@
+ endif(USE_PYTHON)
+ 
+ if(WIN32)
+-  target_compile_options(ngcore PUBLIC /bigobj $<BUILD_INTERFACE:/MP;/W1;/wd4068>)
++  # MinGW fix: /bigobj, /MP, /W1, /wd4068 and /ignore: are MSVC spellings and are
++  # passed to the compiler verbatim, so a GCC build fails with "linker input file
++  # not found". The DEFINITIONS below are needed on any Windows compiler, so only
++  # the options move under MSVC. -Wa,-mbig-obj is GCC's /bigobj.
++  if(MSVC)
++    target_compile_options(ngcore PUBLIC /bigobj $<BUILD_INTERFACE:/MP;/W1;/wd4068>)
++    target_link_options(ngcore PUBLIC /ignore:4273 /ignore:4217 /ignore:4049)
++  else()
++    target_compile_options(ngcore PUBLIC -Wa,-mbig-obj)
++  endif()
+   get_WIN32_WINNT(ver)
+   target_compile_definitions(ngcore PUBLIC _WIN32_WINNT=${ver} WNT WNT_WINDOW NOMINMAX MSVC_EXPRESS _CRT_SECURE_NO_WARNINGS HAVE_STRUCT_TIMESPEC WIN32)
+-  target_link_options(ngcore PUBLIC /ignore:4273 /ignore:4217 /ignore:4049)
+ else(WIN32)
+   target_link_libraries(ngcore PUBLIC dl)
+ endif(WIN32)

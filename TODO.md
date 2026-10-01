@@ -13,9 +13,8 @@ Current:
            P16 — Meshing
 
 Current milestone:
-           P16-VOL-001 — 3D Tetrahedral Volume Mesh — BLOCKED
-           (the approved backend does not build on this toolchain;
-            see docs/verification/P16-VOL-001/README.md)
+           none — INFRA-NETGEN-001 is complete. Starting the next one is a
+           scope decision.
 
 Qualified:
            P0–P10 — BetterCAD v0.1.0
@@ -26,15 +25,16 @@ Qualified:
            P15 — Materials / Engineering Data
 
 Next:
-           INFRA-NETGEN-001 — make Netgen a qualified dependency, or an owner
-           decision on toolchain or licence. P16-VOL-001 cannot proceed until
-           then, and no later P16 milestone depends on it.
+           P16-VOL-001 — 3D Tetrahedral Volume Mesh. NO LONGER BLOCKED: the
+           backend is qualified and the earlier block was a misdiagnosis.
+           Not started.
 
 Qualified milestones in P16:
            P16-ARCH-001 — Meshing Architecture (ADR-030 to ADR-033)
            P16-DATA-001 — Mesh Data Model / Identity / Units
            P16-GEOM-001 — Geometry Preparation / Validity / Regeneration Boundary
            P16-SURF-001 — Engineering Surface Mesh
+           INFRA-NETGEN-001 — Netgen toolchain qualification (infrastructure)
 
 P16 objective:
            Geometry
@@ -229,6 +229,7 @@ P16-ARCH-001       Meshing architecture / backend decision
 P16-DATA-001       Mesh data model / identity / units
 P16-GEOM-001       Geometry preparation / validity / regeneration boundary
 P16-SURF-001       Engineering surface mesh
+INFRA-NETGEN-001   Netgen toolchain qualification (infrastructure, out of band)
 P16-VOL-001        3D tetrahedral volume mesh
 P16-SIZE-001       Global / local sizing controls
 P16-QUALITY-001    Mesh-quality metrics / validation
@@ -333,8 +334,11 @@ So a GPL or AGPL mesher would not add a dependency, it would DECIDE BetterCAD's 
 Applying the project's existing obligations as an admission rule leaves exactly one candidate
 (Netgen, LGPL-2.1); CGAL's meshing package is GPL despite cgal.org's LGPL headline, and MMG's own
 licence says it MODIFIES meshes rather than generating them. **Admitting the dependency is a
-project decision, so it is deliberately not taken here** — `P16-VOL-001` carries it as an entry
-condition, and `P16-DATA-001` through `P16-SURF-001` do not depend on it.
+project decision, so it was not taken here** — the project owner approved Netgen on 2026-10-01,
+and `INFRA-NETGEN-001` then qualified it without reopening the licence question. BetterCAD's own
+licence remains unchosen and the owner's, and nothing admitted decides it: Netgen is LGPL-2.1,
+dynamically linked, the same obligation class already accepted for Open CASCADE, and the zlib it
+drags in is permissive.
 
 One production defect class was closed: P16's invariant that backend behaviour stay behind the
 meshing interface was **unenforceable**. The OCCT containment rule keys on the `.hxx` extension
@@ -850,41 +854,45 @@ Tet4 — 4-node linear tetrahedron
 
 unless P16-ARCH proves another minimum is more appropriate.
 
-**BLOCKED 2026-10-01.** Evidence:
+**UNBLOCKED 2026-10-01.** Not started. Evidence for the backend:
+[docs/verification/INFRA-NETGEN-001/](docs/verification/INFRA-NETGEN-001/README.md);
+the corrected block report:
 [docs/verification/P16-VOL-001/](docs/verification/P16-VOL-001/README.md).
 
-**The backend was APPROVED and still cannot be used.** The project owner approved Netgen on
-2026-10-01, which cleared the entry condition `P16-ARCH-001` placed on this milestone. Netgen
-v6.2.2604 (LGPL-2.1) then **failed to build with GCC 16.1.0 MinGW**:
+**The earlier block was a misdiagnosis.** This milestone was reported BLOCKED because `makerls`,
+Netgen's own mesh-rule generator, crashed at `-O3` and hung at `-O0`. Netgen has no defect that
+GCC 16 MinGW exposes: `makerls.exe` was loading an msvcrt-based `libstdc++-6.dll` from an MSYS2
+directory earlier on `PATH` than the UCRT toolchain that built it, which put two C runtimes in
+one process. One cause, two symptoms that looked like independent evidence of undefined
+behaviour. Root cause:
+[docs/verification/INFRA-NETGEN-001/MAKERLS_ROOT_CAUSE.md](docs/verification/INFRA-NETGEN-001/MAKERLS_ROOT_CAUSE.md).
+
+**The backend is now qualified.** Netgen v6.2.2604 (LGPL-2.1) is pinned by tag and SHA-256 in
+`deps/CMakeLists.txt` beside Qt and OCCT, built from source by the same toolchain with four
+upstreamable patches, and reachable as `Netgen::nglib`. `makerls` is linked statically so it
+cannot load a foreign runtime at all, and it generates all seven rule files byte-identically.
+Netgen's prebuilt MSVC zlib was **eliminated**, not admitted: `USE_SUPERBUILD=OFF` plus zlib
+1.3.1 from source.
+
+**Nothing of this milestone was written.** No adapter, no Tet4 validation, no occupancy or void
+checks. All 19 boxes remain open. What exists is infrastructure: a presence-and-liveness probe
+(`bettercad::meshing::volumeBackend`) that meshes nothing.
+
+**Carried in from the backend qualification, and important here:**
 
 ```text
-1. MSVC flags passed to GCC (/bigobj, /MP, /W1, /wd4068, /ignore:)
-   applied under if(WIN32) instead of if(MSVC)          FIXED, upstreamable
-2. FARPROC -> void* without a cast in utils.cpp:206     FIXED, upstreamable
-3. makerls, Netgen's OWN mesh-rule code generator:
-      at -O3  access violation (0xC0000005) on all 7 rule files
-      at -O0  hangs indefinitely on a 17.9 KB input      NOT A PATCH
+nglib returns NG_OK on an UNMESHABLE surface.
+Fed an open surface (a tetrahedron missing a face), nglib printed "Meshing of
+domain 1 failed" and still returned 0, with ZERO tetrahedra. The adapter must
+not trust the return code: check the element count and validate the result.
 ```
-
-**The rule files are the mesher** -- `tetrules.rls` drives tetrahedral generation -- so there is
-no volume mesher without them. And a dependency exhibiting undefined behaviour under this
-compiler cannot be qualified as a numerical component: "it crashed at -O3 so we built it at -O0"
-is not a foundation for a solver boundary.
-
-**Nothing was written.** No adapter, no tests against a backend that does not run, no substitute
-mesher (Netgen is the only candidate that survives the licence admission rule, and swapping it
-would quietly undo the owner's decision), no vendored binary that a clean checkout could not
-reproduce. All 19 boxes remain open.
-
-**What would unblock it:** `INFRA-NETGEN-001` -- pin v6.2.2604 into `deps/CMakeLists.txt` beside
-Qt and OCCT, carry and upstream the two patches, find and fix the `makerls` defect or establish
-that Netgen cannot be built with this toolchain, and record that Netgen's superbuild also pulls
-in zlib. Alternatively an owner decision on the toolchain for this dependency, or on the licence.
 
 **Worth keeping from the investigation:** the integration design is settled. `nglib` consumes a
 surface mesh directly (`Ng_AddPoint` / `Ng_AddSurfaceElement` / `Ng_GenerateVolumeMesh`), so the
 input is P16-SURF-001's **validated** engineering surface rather than a second unvalidated
 boundary, and Netgen's own OCC front end stays off so there is exactly one path from CAD to mesh.
+`nglib.h` does not open its own namespace — Netgen's `nglib.cpp` wraps the include in
+`namespace nglib`, and a consumer must do the same or nothing links.
 
 * [ ] Generate tetrahedral mesh from valid closed solid
 * [ ] Every element references valid nodes
@@ -1883,52 +1891,34 @@ docs/engineering/
 # CURRENT NEXT STEP
 
 ```text
-P16-VOL-001 is BLOCKED. The next step is a decision, not an implementation.
+INFRA-NETGEN-001 is complete and nothing is blocked. The next step is a scope
+decision, not an implementation.
 ```
 
-Netgen was approved on 2026-10-01 and **still cannot be used**: v6.2.2604 does not build with
-GCC 16.1.0 MinGW. Two problems were found and fixed (MSVC flags passed to GCC; a missing
-`FARPROC` cast), and a third is not a patch -- `makerls`, Netgen's own mesh-rule generator,
-takes an access violation at `-O3` and hangs at `-O0`. The mesh rules are the mesher.
+The volume-meshing backend is qualified: Netgen v6.2.2604 is pinned by tag and SHA-256 in
+`deps/CMakeLists.txt`, built from source by this toolchain with four upstreamable patches, and
+consumable as `Netgen::nglib`. Full evidence:
+[docs/verification/INFRA-NETGEN-001/](docs/verification/INFRA-NETGEN-001/README.md).
 
-Full evidence, including a reproduction from a clean tree:
-[docs/verification/P16-VOL-001/](docs/verification/P16-VOL-001/README.md).
+**The earlier block was withdrawn, not worked around.** `makerls` has no defect that GCC 16
+MinGW exposes; it was loading a mismatched C++ runtime from `PATH`. The toolchain was not
+changed and the licence decision was not reopened — options 2 and 3 of the previous plan were
+not needed. The P16-VOL-001 report has been corrected in place rather than rewritten, so the
+error and its correction both remain visible.
 
-## Three ways forward, all of them the owner's call
-
-```text
-1. INFRA-NETGEN-001
-   Pin v6.2.2604 into deps/CMakeLists.txt beside Qt and OCCT, carry and
-   upstream the two patches, and FIND the makerls defect -- or establish that
-   Netgen cannot be built with GCC 16 MinGW at all. Open-ended: the defect is
-   undefined behaviour in a third-party numerical library, and the mesher must
-   be shown CORRECT on this toolchain before anything qualifies it, not merely
-   made to compile.
-
-2. A different toolchain for this dependency
-   Netgen is routinely built with MSVC and on Linux. Building it with MSVC while
-   BetterCAD uses MinGW raises ABI questions of its own and is not obviously
-   cheaper.
-
-3. Reopen the licence decision
-   Gmsh (GPL-2+) builds readily and is widely used. Admitting it would decide
-   BetterCAD's unchosen licence, which is exactly the decision P16-ARCH-001
-   refused to take on the project's behalf.
-```
-
-## What is NOT blocked
-
-`P16-VOL-001` is the only milestone that needs the backend. The rest of P16 does not:
+## Candidates, all of them the owner's call
 
 ```text
+P16-VOL-001      3D tetrahedral volume mesh. The backend is ready and the
+                 integration design is settled. The largest remaining P16
+                 milestone, and the one P17 Structural FEA depends on.
 P16-SIZE-001     sizing controls -- canonical intent, no backend needed
 P16-QUALITY-001  quality metrics over a mesh, and a surface mesh already exists
 P16-MAP-001      facet-to-FaceName attribution, which P16-SURF left hooks for
 P16-VIZ-001      inspection of meshes that already exist
 ```
 
-So the phase can continue around the block if that is preferred to resolving it first. That too
-is a scope decision.
+None of these is authorized by this document. Authorization is a scope decision.
 
 ## Still owed, from earlier reviews
 
@@ -1940,6 +1930,18 @@ F6 (P16-GEOM)   partMassProperties has no currency check, so mass properties can
                 P15 behaviour change, so a scope decision
 duplicates      two tetrahedra on the same four nodes are not rejected.
                 P16-QUALITY-001's
+nglib NG_OK     the backend returns NG_OK with ZERO tetrahedra when given an
+                unmeshable surface, having printed its own failure. Any adapter
+                must check the element count, never the return code alone.
+                P16-VOL-001's. (INFRA-NETGEN-001)
+no sanitizers   this MinGW ships no libasan/libubsan, so neither Netgen nor
+                BetterCAD has ASan/UBSan coverage. Worth a different toolchain
+                before a volume mesh is trusted numerically. (INFRA-NETGEN-001)
+deps/ unfingerprinted
+                the qualification fingerprints 8 paths, and deps/ is not one of
+                them, so a changed Netgen patch would not void a qualification.
+                Pre-existing in kind -- a differently-rebuilt dependency prefix
+                was never detectable either. (INFRA-NETGEN-001)
 sphere          no fixture, so a degenerate pole edge is the one geometry where
                 exact-coordinate node unification is untested
 boundary edges  protected by exactly one test, because closed solids cannot
