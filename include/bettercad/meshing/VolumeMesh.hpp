@@ -5,6 +5,7 @@
 #include <bettercad/meshing/Export.hpp>
 #include <bettercad/meshing/GeometryPreparation.hpp>
 #include <bettercad/meshing/Mesh.hpp>
+#include <bettercad/meshing/MeshSizing.hpp>
 #include <bettercad/meshing/SurfaceMesh.hpp>
 
 #include <array>
@@ -51,11 +52,13 @@ namespace bettercad::meshing {
 /// home for it is the competing-state failure. These are the boundary controls
 /// (passed through unchanged) and one optional size ceiling.
 struct VolumeMeshControls {
-    /// How the boundary is discretised. The volume mesh conforms to whatever
-    /// this produces, so it is the sizing knob that actually matters today.
+    /// How the BOUNDARY is discretised (P16-SURF-001). Deflection and
+    /// curvature live here because the boundary is the surface layer's, fixed
+    /// before the backend sees it.
     SurfaceMeshControls surface{};
-    /// Upper bound on element size, or nullopt for the backend's own choice.
-    std::optional<Length> maxElementSize{};
+    /// How the VOLUME is sized (P16-SIZE-001): the global target and any
+    /// face-local refinements.
+    MeshSizingControls sizing{};
 
     friend bool operator==(const VolumeMeshControls&, const VolumeMeshControls&) = default;
 };
@@ -113,6 +116,12 @@ enum class VolumeMeshFailure : std::uint8_t {
     BoundaryNotConforming,
     /// The tetrahedra do not fill the volume the boundary encloses.
     VolumeNotRecovered,
+    /// A local sizing control's face does not resolve against the geometry.
+    ///
+    /// A REFUSAL rather than a warning: meshing with the controls that did
+    /// resolve would produce a mesh that is not the one asked for while
+    /// reporting success.
+    SizingNotResolved,
 };
 
 [[nodiscard]] BETTERCAD_MESHING_EXPORT std::string_view toString(VolumeMeshFailure failure) noexcept;
@@ -175,6 +184,17 @@ public:
     /// The controls that produced it: what was got, not what was asked for.
     [[nodiscard]] const VolumeMeshControls& controls() const noexcept { return controls_; }
 
+    /// How the sizing intent resolved against this body: the global bound
+    /// actually used, whether it came from BetterCAD's default, the per-point
+    /// restrictions sent to the backend, and what became of each local
+    /// control.
+    ///
+    /// A RECORD of what was done, not authority. Canonical intent lives in
+    /// `controls().sizing`; this is the derived resolution, and it is kept so
+    /// that a caller can see which controls failed to resolve without
+    /// re-running the resolution.
+    [[nodiscard]] const ResolvedSizing& sizing() const noexcept { return sizing_; }
+
 private:
     VolumeMesh() = default;
 
@@ -184,6 +204,7 @@ private:
 
     Mesh mesh_{};
     ObjectId source_{};
+    ResolvedSizing sizing_{};
     VolumeConformity conformity_{};
     Volume tetrahedralVolume_{};
     Volume boundaryVolume_{};
@@ -248,6 +269,20 @@ volumeMeshFor(const Document& document, const features::Regenerator& regenerator
 /// than quietly reused.
 [[nodiscard]] BETTERCAD_MESHING_EXPORT bool isStale(const Document& document,
                                                     const VolumeMesh& mesh);
+
+/// Whether @p mesh is out of date for @p controls as well as for the geometry.
+///
+/// Geometry staleness AND control staleness, because both invalidate a mesh
+/// and a caller asking "may I reuse this?" means both. A sizing edit -- the
+/// global target changed, a local control added, removed or retargeted --
+/// makes the derived mesh stale exactly as a geometry edit does.
+///
+/// Comparison is by VALUE over the canonical intent, so 10 mm and 0.01 m are
+/// the same request and do not invalidate anything, while 10 mm and 5 mm are
+/// different and do. That is why the controls are value-semantic.
+[[nodiscard]] BETTERCAD_MESHING_EXPORT bool isStale(const Document& document,
+                                                    const VolumeMesh& mesh,
+                                                    const VolumeMeshControls& controls);
 
 /// Faces of @p mesh's tetrahedra that exactly one tetrahedron uses.
 ///

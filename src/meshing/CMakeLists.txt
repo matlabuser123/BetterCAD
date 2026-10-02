@@ -37,6 +37,7 @@ bettercad_add_library(bettercad_meshing
         GeometryPreparation.cpp
         Mesh.cpp
         MeshValidation.cpp
+        MeshSizing.cpp
         SurfaceMesh.cpp
         VolumeMesh.cpp
         ${bettercad_volume_backend_sources}

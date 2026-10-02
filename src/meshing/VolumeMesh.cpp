@@ -3,6 +3,8 @@
 #include <bettercad/meshing/MeshValidation.hpp>
 #include <bettercad/meshing/VolumeBackend.hpp>
 
+#include <ranges>
+
 #include <algorithm>
 #include <cmath>
 #include <format>
@@ -120,6 +122,8 @@ std::string_view toString(VolumeMeshFailure failure) noexcept {
         return "the mesh boundary is not the surface it was built from";
     case VolumeMeshFailure::VolumeNotRecovered:
         return "the tetrahedra do not fill the volume the boundary encloses";
+    case VolumeMeshFailure::SizingNotResolved:
+        return "a local sizing control does not resolve against the geometry";
     }
     return "unknown volume mesh failure";
 }
@@ -253,8 +257,34 @@ Result<VolumeMesh> generateVolumeMesh(const MeshableGeometry& geometry,
         triangles.push_back(indices);
     }
 
-    const Result<VolumeBackendMesh> generated = generateTetrahedra(VolumeBackendRequest{
-        .points = points, .triangles = triangles, .maxElementSize = controls.maxElementSize});
+    // SIZING RESOLVES BEFORE THE BACKEND IS CALLED (P16-SIZE-001), so an
+    // invalid canonical request fails fast and never reaches Netgen, and the
+    // global bound is always BetterCAD's number rather than the backend's
+    // default.
+    const Result<ResolvedSizing> sizing =
+        resolveSizing(geometry.body, surface.mesh, controls.sizing);
+    if (!sizing.has_value()) {
+        return std::unexpected(sizing.error());
+    }
+    // A control that does not resolve is a REFUSAL, not a warning. Meshing
+    // with the remaining controls and reporting success would produce a mesh
+    // that is not the one asked for while looking like it was.
+    if (sizing->unresolvedCount() != 0) {
+        const auto first = std::ranges::find_if(sizing->local, [](const LocalSizingResolution& e) {
+            return e.state != SizingSelectionState::Resolved;
+        });
+        return failure(VolumeMeshFailure::SizingNotResolved,
+                       std::format("{} of {} local control(s) did not resolve; the first is {}",
+                                   sizing->unresolvedCount(), sizing->local.size(),
+                                   toString(first->state)));
+    }
+
+    const Result<VolumeBackendMesh> generated =
+        generateTetrahedra(VolumeBackendRequest{.points = points,
+                                                .triangles = triangles,
+                                                .maxElementSize = sizing->globalTargetSize,
+                                                .localSizes = sizing->restrictions,
+                                                .localRegions = sizing->regions});
     if (!generated.has_value()) {
         // The backend's own diagnostic is QUOTED, not replaced: ADR-033 permits
         // a backend's error text inside a BetterCAD diagnostic and forbids its
@@ -396,6 +426,7 @@ Result<VolumeMesh> generateVolumeMesh(const MeshableGeometry& geometry,
     result.cadVolume_ = geometry.volume;
     result.revision_ = geometry.revision;
     result.controls_ = controls;
+    result.sizing_ = *sizing;
     return result;
 }
 
@@ -412,6 +443,15 @@ Result<VolumeMesh> volumeMeshFor(const Document& document,
         return std::unexpected(surface.error());
     }
     return generateVolumeMesh(*prepared, *surface, controls);
+}
+
+bool isStale(const Document& document, const VolumeMesh& mesh,
+             const VolumeMeshControls& controls) {
+    // Controls first: it is the cheaper comparison and the more common edit.
+    if (!(mesh.controls() == controls)) {
+        return true;
+    }
+    return isStale(document, mesh);
 }
 
 bool isStale(const Document& document, const VolumeMesh& mesh) {

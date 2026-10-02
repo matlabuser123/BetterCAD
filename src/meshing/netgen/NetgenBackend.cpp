@@ -171,10 +171,133 @@ Result<VolumeBackendMesh> generateTetrahedra(const VolumeBackendRequest& request
         nglib::Ng_AddSurfaceElement(mesh.get(), nglib::NG_TRIG, indices.data());
     }
 
+    // THE GLOBAL BOUND GOES THROUGH Ng_RestrictMeshSizeGlobal, NOT maxh.
+    //
+    // This is the single most surprising thing about sizing via nglib, and it
+    // was established by measurement and then by reading the source rather
+    // than from the parameter's name. Setting Ng_Meshing_Parameters::maxh
+    // alone changes NOTHING on this pathway: a 40 mm block meshed with maxh of
+    // 20, 10 and 5 mm gave the identical 9-node, 12-tetrahedron mesh three
+    // times.
+    //
+    // The volume mesher asks Mesh::GetH(p), which is
+    //
+    //     min(hglob, localh(p))                 (meshclass.cpp)
+    //
+    // where hglob is set ONLY by SetGlobalH -- that is,
+    // Ng_RestrictMeshSizeGlobal -- and localh is a tree built by CalcLocalH
+    // from the SURFACE ELEMENT SIZES. BetterCAD supplies the surface, so for a
+    // coarsely triangulated body localh is as big as the body and maxh never
+    // gets a say: maxh is consulted only for a domain maximum
+    // (meshfunc.cpp) and inside one local decision (meshing3.cpp).
+    //
+    // So both are set. hglob is the one that works; maxh is set to the same
+    // value for consistency and because it does participate in those two
+    // places.
+    if (maxElementSize > 0.0) {
+        nglib::Ng_RestrictMeshSizeGlobal(mesh.get(), maxElementSize);
+    }
+
+    // LOCAL SIZING, before Ng_GenerateVolumeMesh.
+    //
+    // The order matters and is established from Netgen's source, not guessed.
+    // Ng_RestrictMeshSizePoint -> Mesh::RestrictLocalH, which CREATES the
+    // mesh-size tree if none exists. Ng_GenerateVolumeMesh then calls
+    // Mesh::CalcLocalH, whose first act is
+    //
+    //     if (!lochfunc[layer-1]) { ... SetLocalH(...); }
+    //
+    // -- it creates the tree only when ABSENT, so restrictions set here
+    // survive. CalcLocalH then loops over the surface elements calling
+    // LocalH::SetH, which looks like it would overwrite them and does not:
+    // SetH begins
+    //
+    //     if (box->HOpt() <= 1.2 * h) return;
+    //
+    // so it only ever REFINES and cannot coarsen a restriction already in
+    // place. Restricting AFTER generation would do nothing at all.
+    for (const SizeRestriction& restriction : request.localSizes) {
+        std::array<double, 3> at{restriction.at.x.si(), restriction.at.y.si(),
+                                 restriction.at.z.si()};
+        nglib::Ng_RestrictMeshSizePoint(mesh.get(), at.data(), restriction.maxSize.si());
+    }
+
+    // Regions, through nglib's own box mechanism. Ng_RestrictMeshSizeBox walks
+    // a grid of step h across the box calling RestrictLocalH at each node, so
+    // the restricted region genuinely has volume -- which a restriction
+    // confined to a face's surface does not.
+    for (const BoxSizeRestriction& region : request.localRegions) {
+        std::array<double, 3> lo{region.min.x.si(), region.min.y.si(), region.min.z.si()};
+        std::array<double, 3> hi{region.max.x.si(), region.max.y.si(), region.max.z.si()};
+        nglib::Ng_RestrictMeshSizeBox(mesh.get(), lo.data(), hi.data(), region.maxSize.si());
+    }
+
     nglib::Ng_Meshing_Parameters parameters;
     if (maxElementSize > 0.0) {
         parameters.maxh = maxElementSize;
     }
+
+    // EVERY PARAMETER nglib ACTUALLY TRANSFERS IS PINNED HERE.
+    //
+    // Ng_Meshing_Parameters::Transfer_Parameters() is the only route from this
+    // struct into the mesher, and it copies exactly fourteen fields. Each one
+    // is set explicitly below so that a BetterCAD document's meaning cannot
+    // change because a future Netgen altered a default. The values are
+    // Netgen 6.2.2604's own defaults where BetterCAD has no reason to differ --
+    // which makes them BETTERCAD's values now, not Netgen's.
+    //
+    // Seven fields the header declares are NOT transferred and are therefore
+    // inert on this pathway -- fineness, closeedgeenable, closeedgefact,
+    // minedgelenenable, minedgelen, optsurfmeshenable, optvolmeshenable.
+    // Setting them would be theatre; see
+    // docs/verification/P16-SIZE-001/AUDIT.md.
+    //
+    // uselocalh GATES THE LOCAL SIZE FUNCTION (libsrc/meshing/meshing3.cpp
+    // reads mp.uselocalh), so local sizing silently does nothing without it.
+    // It is the one pinned value this milestone actively depends on.
+    parameters.uselocalh = 1;
+    // minh = 0 means NO minimum, and that is a deliberate choice rather than a
+    // copied default. Mesh::RestrictLocalH begins
+    //     if (hloc < hmin) hloc = hmin;
+    // so a non-zero minimum would SILENTLY RAISE a local target the caller
+    // asked for. BetterCAD does not clamp sizing requests, so the mechanism
+    // that would is switched off.
+    parameters.minh = 0.0;
+    // Growth away from a refinement. Not exposed canonically (its engineering
+    // meaning is not statable yet), so it is fixed here instead of inherited.
+    //
+    // 0.8 AND NOT NETGEN'S OWN 0.3, and the reason is a trap worth recording.
+    // Mesh::RestrictLocalH creates the mesh-size tree when none exists yet:
+    //
+    //     if (!lochfunc[layer-1]) { ... SetLocalH (boxmin, boxmax, 0.8, layer); }
+    //
+    // -- a HARDCODED 0.8, which bypasses mparam.grading entirely. Ng_Generate-
+    // VolumeMesh's own CalcLocalH would have used mparam.grading, but it only
+    // builds the tree when one is absent, and a local restriction has already
+    // built it by then.
+    //
+    // So with a local control the grading is 0.8 and without one it is
+    // whatever mparam says. Measured, that made merely HAVING a control change
+    // the whole mesh: a cylinder's interior near the refined face came out
+    // COARSER than with no control at all, because 0.8 lets size grow away
+    // from a constraint far faster than 0.3. Sizing intent must not depend on
+    // whether another control happens to exist, so BetterCAD pins the value
+    // the restriction path forces, and both paths now agree.
+    parameters.grading = 0.8;
+    // Surface-side controls. BetterCAD supplies an already-triangulated
+    // boundary, so these cannot affect this pathway; pinned for version
+    // stability rather than for effect.
+    parameters.elementsperedge = 2.0;
+    parameters.elementspercurve = 2.0;
+    parameters.optsteps_2d = 3;
+    // Volume optimisation steps: this one does affect the result.
+    parameters.optsteps_3d = 3;
+    // Input checking, left on: it is the backend's own refusal of a bad
+    // boundary, and turning it off would hide a defect P16-SURF should have
+    // caught.
+    parameters.check_overlap = 1;
+    parameters.check_overlapping_boundary = 1;
+    parameters.meshsize_filename = nullptr;
     // Tet4 is P16's only volume element (ADR-031), so second order is pinned
     // OFF rather than left to a default: a Tet10 would arrive as ten nodes
     // through an interface that promises four, and the type check below would

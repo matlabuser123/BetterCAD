@@ -4,6 +4,7 @@
 #include <bettercad/core/math/Point.hpp>
 #include <bettercad/core/units/Units.hpp>
 #include <bettercad/meshing/Export.hpp>
+#include <bettercad/meshing/MeshSizing.hpp>
 
 #include <array>
 #include <cstddef>
@@ -92,14 +93,23 @@ struct VolumeBackendRequest {
     std::span<const Point3D> points;
     /// Oriented triangles as 0-based indices into `points`.
     std::span<const std::array<std::uint32_t, 3>> triangles;
-    /// Upper bound on element size, or nullopt for the backend's own choice.
+    /// Upper bound on element size everywhere.
     ///
-    /// The ONLY sizing knob at this seam, and it exists because a volume mesh
-    /// of a large body with no limit is one element thick. Sizing controls as a
-    /// user-facing concept are P16-SIZE-001's, and a second canonical home for
-    /// them is the competing-state failure SurfaceMeshControls already warns
-    /// about.
+    /// Required rather than optional since P16-SIZE-001: the mesher always
+    /// resolves a global bound, from the request or from BetterCAD's own
+    /// default, so there is no path where the backend's default decides it.
+    /// Nullopt is still accepted and still means "the backend's choice", but
+    /// `generateVolumeMesh` never sends it.
     std::optional<Length> maxElementSize{};
+    /// Per-point maximum sizes, from P16-SIZE-001's resolved local controls.
+    ///
+    /// Point3D and Length only, by ADR-033. Each entry restricts the element
+    /// size around one point; a backend expressing local sizing another way
+    /// would translate the same list differently without this header changing.
+    std::span<const SizeRestriction> localSizes{};
+    /// Per-region maximum sizes. Translated to the backend's own region
+    /// mechanism; see BoxSizeRestriction for why a point is not enough.
+    std::span<const BoxSizeRestriction> localRegions{};
 };
 
 /// Tetrahedra filling a boundary, in the same index space as the points.

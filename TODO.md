@@ -13,7 +13,7 @@ Current:
            P16 — Meshing
 
 Current milestone:
-           none — P16-VOL-001 is complete. Starting the next one is a
+           none — P16-SIZE-001 is complete. Starting the next one is a
            scope decision.
 
 Qualified:
@@ -25,8 +25,7 @@ Qualified:
            P15 — Materials / Engineering Data
 
 Next:
-           a scope decision. P16-SIZE-001, P16-QUALITY-001, P16-MAP-001 and
-           P16-VIZ-001 are all now reachable and none depends on the others.
+           P16-QUALITY-001 — Mesh Quality Metrics / Validation. Not started.
 
 Qualified milestones in P16:
            P16-ARCH-001 — Meshing Architecture (ADR-030 to ADR-033)
@@ -35,6 +34,7 @@ Qualified milestones in P16:
            P16-SURF-001 — Engineering Surface Mesh
            INFRA-NETGEN-001 — Netgen toolchain qualification (infrastructure)
            P16-VOL-001 — 3D Tetrahedral Volume Mesh (Tet4)
+           P16-SIZE-001 — Global / Local Mesh Sizing
 
 P16 objective:
            Geometry
@@ -960,27 +960,49 @@ volume mesh generated
 
 ## Global / Local Mesh Sizing
 
-* [ ] Define global target element size
-* [ ] Define minimum size if architecture requires it
-* [ ] Define maximum size if architecture requires it
-* [ ] Define growth-rate control if backend supports it
-* [ ] Define curvature control if backend supports it
-* [ ] Define local geometry sizing foundation
-* [ ] Local sizing references stable geometry selections
-* [ ] Validate conflicting sizing controls
-* [ ] Define precedence rules
-* [ ] Reject non-positive sizes
-* [ ] Reject NaN / infinity
-* [ ] Unit-safe length inputs
-* [ ] Validate global coarse/fine behaviour
-* [ ] Validate local refinement behaviour
-* [ ] Validate controls survive geometry regeneration where reference remains valid
-* [ ] Invalid selection becomes explicit unresolved control
-* [ ] No hidden backend default changes engineering meaning
-* [ ] Determinism PASS
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+**COMPLETE 2026-10-02.** 21/21. Evidence:
+[docs/verification/P16-SIZE-001/](docs/verification/P16-SIZE-001/README.md).
+
+Three presets clean-rebuilt, 3011/3011 tests passed in each with 0 warnings,
+206-test blast radius x5 repeats in release and debug, qualified tree ==
+committed tree.
+
+**The audit was the substance, and it found four defects that each would have
+shipped a sizing control doing nothing or the opposite of what was asked.**
+`maxh` is not the global size control -- only `Ng_RestrictMeshSizeGlobal`
+writes `hglob`, and a 40 mm block at 20/10/5 mm gave the identical mesh three
+times. A point restriction constrains a sheet the mesher barely samples, so a
+face must become a slab. The slab must extend INWARD several elements deep, or
+one face refines and the opposite one gets fewer elements than no control at
+all. And `RestrictLocalH` hardcodes grading 0.8, so merely HAVING a local
+control changed the whole mesh. See
+[AUDIT.md](docs/verification/P16-SIZE-001/AUDIT.md).
+
+All 14 Netgen parameters nglib actually transfers are pinned explicitly; 7 the
+header declares are never transferred and are documented as dead rather than
+set for show.
+
+* [x] Define global target element size
+* [x] Define minimum size if architecture requires it
+* [x] Define maximum size if architecture requires it
+* [x] Define growth-rate control if backend supports it
+* [x] Define curvature control if backend supports it
+* [x] Define local geometry sizing foundation
+* [x] Local sizing references stable geometry selections
+* [x] Validate conflicting sizing controls
+* [x] Define precedence rules
+* [x] Reject non-positive sizes
+* [x] Reject NaN / infinity
+* [x] Unit-safe length inputs
+* [x] Validate global coarse/fine behaviour
+* [x] Validate local refinement behaviour
+* [x] Validate controls survive geometry regeneration where reference remains valid
+* [x] Invalid selection becomes explicit unresolved control
+* [x] No hidden backend default changes engineering meaning
+* [x] Determinism PASS
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded
 
 ### Required behaviour
 
