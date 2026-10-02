@@ -48,6 +48,21 @@ enum class MeshIssueKind : std::uint8_t {
     /// A tetrahedron has negative signed volume: its nodes are ordered the wrong
     /// way round, and ADR-032 requires positive Jacobians.
     InvertedTetrahedron,
+    /// Two tetrahedra occupy the same four nodes, in any order.
+    ///
+    /// A DATA defect, not a quality finding, and it needs no tolerance: two
+    /// tetrahedra on one node set describe the same region of space, so at
+    /// most one of them can be right. P16-DATA-001 left this to
+    /// P16-QUALITY-001 on the grounds that it is a whole-mesh question rather
+    /// than a per-element one -- which is true, and is why it lives HERE,
+    /// where the other whole-mesh check (NodeSharedBetweenRegions) already
+    /// does, rather than with the threshold-bearing quality metrics. TODO.md
+    /// places "no duplicate tetrahedra" in P16-VOL-001.
+    ///
+    /// The issue names the SECOND tetrahedron found, the one that conflicts
+    /// with an element already accepted, matching NodeSharedBetweenRegions'
+    /// convention.
+    DuplicateTetrahedron,
     /// A node is referenced by elements of two different regions. ADR-032: "A
     /// mesh has one region per solid, shares no node between regions."
     NodeSharedBetweenRegions,

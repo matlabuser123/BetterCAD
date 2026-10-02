@@ -1,5 +1,7 @@
 #include <bettercad/meshing/VolumeBackend.hpp>
 
+#include <format>
+
 // Compiled instead of src/meshing/netgen/NetgenBackend.cpp when BetterCAD is
 // configured without a volume-meshing backend (BETTERCAD_VOLUME_MESHING=OFF,
 // or AUTO with none found).
@@ -22,4 +24,13 @@ bool volumeBackendResponds() noexcept
     return false;
 }
 
-}  // namespace bettercad::meshing
+Result<VolumeBackendMesh> generateTetrahedra(const VolumeBackendRequest& /*request*/)
+{
+    // NotAvailable rather than an empty success. A build with no backend
+    // produces no volume mesh, and must not be able to claim it produced one.
+    return makeError(ErrorCode::FailedPrecondition,
+                     std::format("volume backend: {}",
+                                 toString(VolumeBackendFailure::NotAvailable)));
+}
+
+} // namespace bettercad::meshing

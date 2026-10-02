@@ -13,7 +13,7 @@ Current:
            P16 — Meshing
 
 Current milestone:
-           none — INFRA-NETGEN-001 is complete. Starting the next one is a
+           none — P16-VOL-001 is complete. Starting the next one is a
            scope decision.
 
 Qualified:
@@ -25,9 +25,8 @@ Qualified:
            P15 — Materials / Engineering Data
 
 Next:
-           P16-VOL-001 — 3D Tetrahedral Volume Mesh. NO LONGER BLOCKED: the
-           backend is qualified and the earlier block was a misdiagnosis.
-           Not started.
+           a scope decision. P16-SIZE-001, P16-QUALITY-001, P16-MAP-001 and
+           P16-VIZ-001 are all now reachable and none depends on the others.
 
 Qualified milestones in P16:
            P16-ARCH-001 — Meshing Architecture (ADR-030 to ADR-033)
@@ -35,6 +34,7 @@ Qualified milestones in P16:
            P16-GEOM-001 — Geometry Preparation / Validity / Regeneration Boundary
            P16-SURF-001 — Engineering Surface Mesh
            INFRA-NETGEN-001 — Netgen toolchain qualification (infrastructure)
+           P16-VOL-001 — 3D Tetrahedral Volume Mesh (Tet4)
 
 P16 objective:
            Geometry
@@ -854,10 +854,22 @@ Tet4 — 4-node linear tetrahedron
 
 unless P16-ARCH proves another minimum is more appropriate.
 
-**UNBLOCKED 2026-10-01.** Not started. Evidence for the backend:
-[docs/verification/INFRA-NETGEN-001/](docs/verification/INFRA-NETGEN-001/README.md);
-the corrected block report:
+**COMPLETE 2026-10-02.** 19/19. Evidence:
 [docs/verification/P16-VOL-001/](docs/verification/P16-VOL-001/README.md).
+
+Three presets clean-rebuilt, 2983/2983 tests passed in each with 0 warnings,
+178-test blast radius x5 repeats in release and debug, qualified tree ==
+committed tree. A box of 20x30x40 mm meshes to 9 nodes and 12 tetrahedra whose
+volumes sum to 2.4e-05 m^3 -- the hand-computed CAD volume -- with the boundary
+conforming to the engineering surface in both directions.
+
+**The adversarial review found a correctness defect that made every mesh
+invalid**: Netgen orders a tetrahedron's nodes so the determinant is NEGATIVE,
+the opposite of BetterCAD's convention, so all 12 elements of the first box
+arrived inverted. Fixed by a fixed odd permutation at the adapter -- not an
+abs(), not a flipped comparison, and not a per-element repair, each of which
+would have destroyed the evidence the sign carries. See
+[ADVERSARIAL_REVIEW.md](docs/verification/P16-VOL-001/ADVERSARIAL_REVIEW.md).
 
 **The earlier block was a misdiagnosis.** This milestone was reported BLOCKED because `makerls`,
 Netgen's own mesh-rule generator, crashed at `-O3` and hung at `-O0`. Netgen has no defect that
@@ -894,25 +906,25 @@ boundary, and Netgen's own OCC front end stays off so there is exactly one path 
 `nglib.h` does not open its own namespace — Netgen's `nglib.cpp` wraps the include in
 `namespace nglib`, and a consumer must do the same or nothing links.
 
-* [ ] Generate tetrahedral mesh from valid closed solid
-* [ ] Every element references valid nodes
-* [ ] Every tetrahedron has positive qualified volume
-* [ ] No inverted tetrahedra
-* [ ] No zero-volume tetrahedra
-* [ ] No duplicate tetrahedra
-* [ ] Boundary conforms to engineering surface
-* [ ] Internal voids remain void
-* [ ] Mesh occupies solid volume
-* [ ] Nodes remain inside/on valid geometry within tolerance
-* [ ] Element volumes approximately recover CAD volume
-* [ ] Validate disconnected solid policy
-* [ ] Validate transformed body
-* [ ] Validate small feature behaviour
-* [ ] Backend failures propagate explicitly
-* [ ] Determinism measured
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Generate tetrahedral mesh from valid closed solid
+* [x] Every element references valid nodes
+* [x] Every tetrahedron has positive qualified volume
+* [x] No inverted tetrahedra
+* [x] No zero-volume tetrahedra
+* [x] No duplicate tetrahedra
+* [x] Boundary conforms to engineering surface
+* [x] Internal voids remain void
+* [x] Mesh occupies solid volume
+* [x] Nodes remain inside/on valid geometry within tolerance
+* [x] Element volumes approximately recover CAD volume
+* [x] Validate disconnected solid policy
+* [x] Validate transformed body
+* [x] Validate small feature behaviour
+* [x] Backend failures propagate explicitly
+* [x] Determinism measured
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded
 
 ### Volume conservation check
 
@@ -1891,34 +1903,30 @@ docs/engineering/
 # CURRENT NEXT STEP
 
 ```text
-INFRA-NETGEN-001 is complete and nothing is blocked. The next step is a scope
-decision, not an implementation.
+P16-VOL-001 is complete. The next step is a scope decision, not an
+implementation.
 ```
 
-The volume-meshing backend is qualified: Netgen v6.2.2604 is pinned by tag and SHA-256 in
-`deps/CMakeLists.txt`, built from source by this toolchain with four upstreamable patches, and
-consumable as `Netgen::nglib`. Full evidence:
-[docs/verification/INFRA-NETGEN-001/](docs/verification/INFRA-NETGEN-001/README.md).
-
-**The earlier block was withdrawn, not worked around.** `makerls` has no defect that GCC 16
-MinGW exposes; it was loading a mismatched C++ runtime from `PATH`. The toolchain was not
-changed and the licence decision was not reopened — options 2 and 3 of the previous plan were
-not needed. The P16-VOL-001 report has been corrected in place rather than rewritten, so the
-error and its correction both remain visible.
+BetterCAD generates a validated Tet4 volume mesh from authoritative CAD
+geometry. Evidence:
+[docs/verification/P16-VOL-001/](docs/verification/P16-VOL-001/README.md).
 
 ## Candidates, all of them the owner's call
 
 ```text
-P16-VOL-001      3D tetrahedral volume mesh. The backend is ready and the
-                 integration design is settled. The largest remaining P16
-                 milestone, and the one P17 Structural FEA depends on.
-P16-SIZE-001     sizing controls -- canonical intent, no backend needed
-P16-QUALITY-001  quality metrics over a mesh, and a surface mesh already exists
-P16-MAP-001      facet-to-FaceName attribution, which P16-SURF left hooks for
-P16-VIZ-001      inspection of meshes that already exist
+P16-SIZE-001     global / local sizing controls. The natural next one: the
+                 volume mesher takes a single optional size ceiling today and
+                 sizing as a canonical, persisted intent is unowned.
+P16-QUALITY-001  quality metrics over a mesh. A volume mesh now exists to
+                 measure, and three deferred findings are waiting here.
+P16-MAP-001      geometry <-> mesh correspondence. P16-SURF left per-face
+                 triangle groups for it, and the volume mesh now carries a
+                 conforming boundary to attribute.
+P16-VIZ-001      inspection of meshes that already exist.
 ```
 
-None of these is authorized by this document. Authorization is a scope decision.
+None of these is authorized by this document. Authorization is a scope
+decision.
 
 ## Still owed, from earlier reviews
 
@@ -1928,12 +1936,12 @@ F6 (P16-ARCH)   a MeshControl whose body is deleted must become explicitly
 F6 (P16-GEOM)   partMassProperties has no currency check, so mass properties can
                 be computed from stale geometry after an unregenerated edit. A
                 P15 behaviour change, so a scope decision
-duplicates      two tetrahedra on the same four nodes are not rejected.
-                P16-QUALITY-001's
-nglib NG_OK     the backend returns NG_OK with ZERO tetrahedra when given an
-                unmeshable surface, having printed its own failure. Any adapter
-                must check the element count, never the return code alone.
-                P16-VOL-001's. (INFRA-NETGEN-001)
+duplicates      DISCHARGED by P16-VOL-001: MeshIssueKind::DuplicateTetrahedron
+                now refuses two tetrahedra on one node set, including the case
+                where one of the pair is inverted.
+nglib NG_OK     DISCHARGED by P16-VOL-001: the adapter refuses NG_OK with zero
+                elements as VolumeBackendFailure::NoTetrahedra, and a test
+                feeds it an open surface to prove it.
 no sanitizers   this MinGW ships no libasan/libubsan, so neither Netgen nor
                 BetterCAD has ASan/UBSan coverage. Worth a different toolchain
                 before a volume mesh is trusted numerically. (INFRA-NETGEN-001)
@@ -1942,6 +1950,21 @@ deps/ unfingerprinted
                 them, so a changed Netgen patch would not void a qualification.
                 Pre-existing in kind -- a differently-rebuilt dependency prefix
                 was never detectable either. (INFRA-NETGEN-001)
+stale cache     nothing FORCES a holder to call isStale. A VolumeMesh records
+                its source and revision and answers truthfully, and the request
+                path refuses stale geometry, so this bites only code that
+                CACHES a mesh. P17's solver entry point should take the
+                document and feature, or re-check. (P16-VOL-001)
+cross-preset    mesh determinism is proven WITHIN a preset (5 runs, exact
+determinism     connectivity and positions) and is not asserted across presets,
+                because nothing exports a mesh to compare. Waits for
+                P16-CLI-001 or P16-VIZ-001. (P16-VOL-001)
+concurrency     calls into the volume backend are serialised by a mutex because
+                nglib keeps global state; no test runs two threads through it.
+                (P16-VOL-001)
+multiple solids a body with more than one solid is REFUSED, explicitly and
+                tested. ADR-032's one-region-per-solid remains the eventual
+                design. (P16-VOL-001)
 sphere          no fixture, so a degenerate pole edge is the one geometry where
                 exact-coordinate node unification is untested
 boundary edges  protected by exactly one test, because closed solids cannot

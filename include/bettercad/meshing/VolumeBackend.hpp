@@ -1,8 +1,17 @@
 #pragma once
 
+#include <bettercad/core/Error.hpp>
+#include <bettercad/core/math/Point.hpp>
+#include <bettercad/core/units/Units.hpp>
 #include <bettercad/meshing/Export.hpp>
 
+#include <array>
+#include <cstddef>
+#include <cstdint>
+#include <optional>
+#include <span>
 #include <string_view>
+#include <vector>
 
 // The volume-meshing backend's presence and liveness (INFRA-NETGEN-001).
 //
@@ -53,5 +62,92 @@ struct VolumeBackendInfo
 /// entry points can be called -- which a compile-and-link check alone does
 /// not. It meshes nothing.
 [[nodiscard]] BETTERCAD_MESHING_EXPORT bool volumeBackendResponds() noexcept;
+
+// ---------------------------------------------------------------------------
+// The tetrahedralisation seam (P16-VOL-001, ADR-033)
+// ---------------------------------------------------------------------------
+//
+// ADR-033: "No backend type appears in any BetterCAD API. Not in a public
+// header, not in a MeshControl, not in a Mesh, not in a diagnostic, not in a
+// persisted file." Everything below is BetterCAD and standard-library types
+// only, so a second backend is an added translation unit rather than a change
+// to anything above this line.
+//
+// WHY INDICES AND NOT NodeId. A backend knows nothing of mesh identity and
+// must not: handles belong to one generation of one mesh (ADR-031), they are
+// assigned by MeshBuilder, and letting a third-party library choose them would
+// hand it an invariant it has no way to keep. So the seam speaks in dense
+// 0-based indices -- which is exactly what a mesher library wants anyway -- and
+// the MESHER turns them into handles on the way out. A backend therefore
+// cannot produce a handle, valid or otherwise.
+
+/// A closed, oriented, manifold boundary, as a backend needs it.
+///
+/// This is NOT a Mesh and NOT a viewer tessellation. The mesher builds it from
+/// a `EngineeringSurfaceMesh`, which cannot exist unless it closed
+/// (P16-SURF-001 refuses otherwise), so the backend receives a boundary that
+/// has already been proven watertight, manifold and coherently oriented.
+struct VolumeBackendRequest {
+    /// Boundary node positions. Index order is the request's own.
+    std::span<const Point3D> points;
+    /// Oriented triangles as 0-based indices into `points`.
+    std::span<const std::array<std::uint32_t, 3>> triangles;
+    /// Upper bound on element size, or nullopt for the backend's own choice.
+    ///
+    /// The ONLY sizing knob at this seam, and it exists because a volume mesh
+    /// of a large body with no limit is one element thick. Sizing controls as a
+    /// user-facing concept are P16-SIZE-001's, and a second canonical home for
+    /// them is the competing-state failure SurfaceMeshControls already warns
+    /// about.
+    std::optional<Length> maxElementSize{};
+};
+
+/// Tetrahedra filling a boundary, in the same index space as the points.
+struct VolumeBackendMesh {
+    /// Every node of the volume mesh, boundary and interior.
+    std::vector<Point3D> points;
+    /// Tet4 connectivity as 0-based indices into `points`.
+    std::vector<std::array<std::uint32_t, 4>> tetrahedra;
+};
+
+/// Why a backend produced no usable tetrahedralisation.
+enum class VolumeBackendFailure : std::uint8_t {
+    /// BetterCAD was built without a volume-meshing backend.
+    NotAvailable,
+    /// The request has no points or no triangles.
+    EmptyBoundary,
+    /// A request index names no point, or a triangle repeats one.
+    MalformedRequest,
+    /// A requested element size is not positive and finite.
+    InvalidElementSize,
+    /// The backend rejected the surface it was given.
+    SurfaceRejected,
+    /// The backend reported a failure generating the volume.
+    GenerationFailed,
+    /// The backend reported SUCCESS and produced no tetrahedra.
+    ///
+    /// A DISTINCT failure, not folded into GenerationFailed, because this is
+    /// the documented behaviour of the admitted backend rather than a
+    /// hypothetical: nglib returns NG_OK with zero elements when it cannot
+    /// mesh a surface, having printed its own complaint to stdout. See
+    /// docs/verification/INFRA-NETGEN-001/. A backend's return code is never
+    /// sufficient evidence of success.
+    NoTetrahedra,
+    /// The backend returned an element referencing a node it did not return,
+    /// or a node count inconsistent with its own report.
+    InconsistentOutput,
+};
+
+[[nodiscard]] BETTERCAD_MESHING_EXPORT std::string_view toString(VolumeBackendFailure failure) noexcept;
+
+/// Fills @p request's boundary with tetrahedra.
+///
+/// Checks the request before calling the backend, and checks the backend's
+/// output before returning it: a non-empty node list, a non-empty element
+/// list, and every index in range. It does NOT validate geometry -- positive
+/// volumes, degeneracy, duplication and conformity are the mesher's, over a
+/// real `Mesh`, so that one definition of "valid" serves every producer.
+[[nodiscard]] BETTERCAD_MESHING_EXPORT Result<VolumeBackendMesh>
+generateTetrahedra(const VolumeBackendRequest& request);
 
 }  // namespace bettercad::meshing

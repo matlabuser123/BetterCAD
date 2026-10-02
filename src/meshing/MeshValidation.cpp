@@ -81,6 +81,8 @@ std::string_view toString(MeshIssueKind kind) noexcept {
         return "degenerate_tetrahedron";
     case MeshIssueKind::InvertedTetrahedron:
         return "inverted_tetrahedron";
+    case MeshIssueKind::DuplicateTetrahedron:
+        return "duplicate_tetrahedron";
     case MeshIssueKind::NodeSharedBetweenRegions:
         return "node_shared_between_regions";
     case MeshIssueKind::MissingRegion:
@@ -100,6 +102,7 @@ MeshValidationReport validate(const Mesh& mesh) {
     std::vector<MeshIssue> degenerateTriangle;
     std::vector<MeshIssue> degenerateTetrahedron;
     std::vector<MeshIssue> inverted;
+    std::vector<MeshIssue> duplicate;
     std::vector<MeshIssue> shared;
     std::vector<MeshIssue> missingRegion;
     std::vector<MeshIssue> empty;
@@ -140,8 +143,24 @@ MeshValidationReport validate(const Mesh& mesh) {
         }
     }
 
+    // A duplicate is detected over the SORTED node handles, so the pair is
+    // found whatever order each element lists them in -- including the case
+    // where one of the two is inverted, which an ordered comparison would miss
+    // entirely and which is the more dangerous of the two.
+    std::map<std::array<NodeId, 4>, ElementId> tetrahedronByNodes;
+
     for (const Tetrahedron& tetrahedron : mesh.tetrahedra()) {
         checkElementNodes(mesh, tetrahedron.id, tetrahedron.nodes, missing, repeated);
+
+        std::array<NodeId, 4> key = tetrahedron.nodes;
+        std::ranges::sort(key);
+        const auto [existing, inserted] = tetrahedronByNodes.try_emplace(key, tetrahedron.id);
+        if (!inserted) {
+            addIssue(duplicate, MeshIssueKind::DuplicateTetrahedron, std::nullopt, tetrahedron.id,
+                     std::nullopt,
+                     std::format("element {}: the same four nodes as element {}", tetrahedron.id,
+                                 existing->second));
+        }
         if (!tetrahedron.region.isValid()) {
             addIssue(missingRegion, MeshIssueKind::MissingRegion, std::nullopt, tetrahedron.id, std::nullopt,
                      std::format("element {}: no region", tetrahedron.id));
@@ -187,7 +206,8 @@ MeshValidationReport validate(const Mesh& mesh) {
 
     MeshValidationReport report;
     for (std::vector<MeshIssue>* bucket : {&nonFinite, &missing, &repeated, &degenerateTriangle,
-                                           &degenerateTetrahedron, &inverted, &shared, &missingRegion, &empty}) {
+                                           &degenerateTetrahedron, &inverted, &duplicate, &shared,
+                                           &missingRegion, &empty}) {
         std::ranges::stable_sort(*bucket, issueLess);
         report.issues.insert(report.issues.end(), bucket->begin(), bucket->end());
     }

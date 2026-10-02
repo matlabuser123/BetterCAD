@@ -345,3 +345,20 @@ bettercad_compile_fail_case(meshids "${_meshids}" ADD_ELEMENT_THROUGH_MESH
     "no member named .*push_back|has no member" BetterCAD::meshing)
 bettercad_compile_fail_case(meshids "${_meshids}" TRIANGLE_WITH_TET_CONNECTIVITY
     "cannot convert .*brace-enclosed initializer list.* to .*array<.*NodeId, 3>" BetterCAD::meshing)
+
+# P16-VOL-001: a validated volume mesh cannot be fabricated.
+#
+# ADR-030 requires that "a mesh reaches a solver only as a ValidatedMesh, which
+# only the validating path can construct. The rule is enforced by the type
+# system, not by documentation." VolumeMesh is that token for volume meshes,
+# and these are the proof: if any of them started compiling, possessing a
+# VolumeMesh would stop being evidence that the mesh passed validation,
+# conformity and volume recovery.
+set(_volumemesh "${CMAKE_CURRENT_SOURCE_DIR}/VolumeMeshMisuse.cpp")
+bettercad_compile_fail_group(volumemesh "${_volumemesh}" BetterCAD::meshing)
+bettercad_compile_fail_case(volumemesh "${_volumemesh}" DEFAULT_CONSTRUCT_VOLUME_MESH
+    "private|is private|not accessible|no matching function|deleted" BetterCAD::meshing)
+bettercad_compile_fail_case(volumemesh "${_volumemesh}" VOLUME_MESH_FROM_PLAIN_MESH
+    "private|is private|not accessible|no matching function|no match for|deleted" BetterCAD::meshing)
+bettercad_compile_fail_case(volumemesh "${_volumemesh}" MUTATE_VOLUME_MESH
+    "read-only|discards qualifiers|lvalue|not assignable" BetterCAD::meshing)

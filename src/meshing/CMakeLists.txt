@@ -16,6 +16,7 @@
 # geometry correspondence is P16-MAP-001's. Geometry PREPARATION (P16-GEOM-001)
 # needs features, for the regeneration state and currency that decide whether a
 # body may be meshed at all, which is why meshing sits above features.
+
 # The volume-meshing backend (INFRA-NETGEN-001). Exactly one of these two
 # translation units is compiled, so bettercad::meshing::volumeBackend() is
 # always defined and callers never branch on configuration. The Netgen one is
@@ -37,6 +38,7 @@ bettercad_add_library(bettercad_meshing
         Mesh.cpp
         MeshValidation.cpp
         SurfaceMesh.cpp
+        VolumeMesh.cpp
         ${bettercad_volume_backend_sources}
     PUBLIC_LINK
         BetterCAD::core
