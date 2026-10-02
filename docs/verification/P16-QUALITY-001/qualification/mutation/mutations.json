@@ -1,0 +1,122 @@
+[
+ {
+  "label": "dihedral: the angle between the outward normals, not the internal one",
+  "old": "safeAcos(-dot(normals[i], normals[j]))",
+  "new": "safeAcos(dot(normals[i], normals[j]))"
+ },
+ {
+  "label": "radius ratio: forget the factor of three, r/R instead of 3r/R",
+  "old": "quality.radiusRatio = 3.0 * quality.inradius.si() / circumradius;",
+  "new": "quality.radiusRatio = quality.inradius.si() / circumradius;"
+ },
+ {
+  "label": "inradius: r = V/A instead of 3V/A",
+  "old": "quality.inradius = Length::fromSi(3.0 * volume / totalArea);",
+  "new": "quality.inradius = Length::fromSi(volume / totalArea);"
+ },
+ {
+  "label": "validity: take the absolute value of the signed volume",
+  "old": "    const double volume = quality.volume.si();",
+  "new": "    const double volume = std::abs(quality.volume.si());"
+ },
+ {
+  "label": "aspect ratio: inverted, l_min / l_max",
+  "old": "quality.aspectRatio = edgeStats.maximum / edgeStats.minimum;",
+  "new": "quality.aspectRatio = edgeStats.minimum / edgeStats.maximum;"
+ },
+ {
+  "label": "threshold: non-strict, so a value ON the bound is already a warning",
+  "old": "        return way == QualityDirection::HigherIsBetter ? v < bound : v > bound;",
+  "new": "        return way == QualityDirection::HigherIsBetter ? v <= bound : v >= bound;"
+ },
+ {
+  "label": "threshold: one direction for both, so lower-is-better classifies backwards",
+  "old": "        return way == QualityDirection::HigherIsBetter ? v < bound : v > bound;\n    };",
+  "new": "        return v < bound;\n    };"
+ },
+ {
+  "label": "triangle shape quality: 4 sqrt(2) instead of 4 sqrt(3)",
+  "old": "quality.shapeQuality = 4.0 * std::sqrt(3.0) * area / squareSum;",
+  "new": "quality.shapeQuality = 4.0 * std::sqrt(2.0) * area / squareSum;"
+ },
+ {
+  "label": "worst element: by value alone, ignoring the metric's direction",
+  "old": "                return way == QualityDirection::HigherIsBetter ? a.second < b.second\n                                                               : a.second > b.second;",
+  "new": "                return a.second < b.second;"
+ },
+ {
+  "label": "policy: accept a threshold on a dimensioned size",
+  "old": "        if (way == QualityDirection::ContextOnly) {",
+  "new": "        if (false) {"
+ },
+ {
+  "label": "policy: never report that the ordering of two bounds is wrong",
+  "old": "        const bool ordered = way == QualityDirection::HigherIsBetter\n                                 ? *limit.failure <= *limit.warning\n                                 : *limit.failure >= *limit.warning;",
+  "new": "        const bool ordered = true;\n        (void)way;"
+ },
+ {
+  "label": "policy: a contradictory policy applied anyway, its error unrecorded",
+  "old": "        report.thresholdPolicyError = checked.error();",
+  "new": "        (void)checked;"
+ },
+ {
+  "label": "policy: a contradictory policy's usable half applied regardless",
+  "old": "        report.thresholdPolicyError.has_value() ? reportOnly : thresholds;",
+  "new": "        thresholds;"
+ },
+ {
+  "label": "structure: skip the structural verdict and call every mesh valid",
+  "old": "    report.structurallyValid = report.structural.dataValid();",
+  "new": "    report.structurallyValid = true;"
+ },
+ {
+  "label": "findings: reversed order, so the least severe comes first",
+  "old": "    std::ranges::stable_sort(report.findings, [&metricKey](const QualityFinding& a,\n                                                           const QualityFinding& b) {",
+  "new": "    std::ranges::stable_sort(report.findings, [&metricKey](const QualityFinding& b,\n                                                           const QualityFinding& a) {"
+ },
+ {
+  "label": "mean: divide by a fixed six instead of the sample count",
+  "old": "    stats.mean = std::accumulate(values.begin(), values.end(), 0.0) /\n                 static_cast<double>(values.size());",
+  "new": "    stats.mean = std::accumulate(values.begin(), values.end(), 0.0) / 6.0;"
+ },
+ {
+  "label": "undefined: a non-finite value classified instead of called Invalid",
+  "old": "    if (!std::isfinite(value)) {",
+  "new": "    if (false) {"
+ },
+ {
+  "label": "undefined: an unmeasurable element's infinities fed into the summaries",
+  "old": "        if (quality->defined) {\n            for (const auto& [metric, value] : measured) {\n                note(metric, tet.id, value);",
+  "new": "        if (true) {\n            for (const auto& [metric, value] : measured) {\n                note(metric, tet.id, value);"
+ },
+ {
+  "label": "face winding: one face of the four wound the other way",
+  "old": "    {0, 1, 3},\n    {1, 2, 3},",
+  "new": "    {0, 3, 1},\n    {1, 2, 3},"
+ },
+ {
+  "label": "circumcentre: a sign slip in one of the three cross products",
+  "old": "    const Vec t2 = cross(a3, a1);",
+  "new": "    const Vec t2 = cross(a1, a3);"
+ },
+ {
+  "label": "circumcentre: denominator 6V instead of 12V",
+  "old": "    const double denominator = 12.0 * volume;",
+  "new": "    const double denominator = 6.0 * volume;"
+ },
+ {
+  "label": "edges: one of the six tetrahedron edges duplicated and one lost",
+  "old": "    {0, 1}, {0, 2}, {0, 3}, {1, 2}, {1, 3}, {2, 3},",
+  "new": "    {0, 1}, {0, 2}, {0, 3}, {1, 2}, {1, 3}, {1, 3},"
+ },
+ {
+  "label": "triangle angles: the law-of-cosines sign dropped",
+  "old": "        return safeAcos(dot(u, v) / (lu * lv));",
+  "new": "        return safeAcos(-dot(u, v) / (lu * lv));"
+ },
+ {
+  "label": "structural refusal: a fabricated metric and value on the finding",
+  "old": "            report.findings.push_back(QualityFinding{std::nullopt, tet.id,\n                                                     ElementType::Tetrahedron4, std::nullopt,",
+  "new": "            report.findings.push_back(QualityFinding{QualityMetric::TetVolume, tet.id,\n                                                     ElementType::Tetrahedron4, 0.0,"
+ }
+]

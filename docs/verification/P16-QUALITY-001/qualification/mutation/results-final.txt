@@ -1,0 +1,24 @@
+dihedral: the angle between the outward normals, not the internal one      killed by the suite
+radius ratio: forget the factor of three, r/R instead of 3r/R              killed by the suite
+inradius: r = V/A instead of 3V/A                                          killed by the suite
+validity: take the absolute value of the signed volume                     killed by the suite
+aspect ratio: inverted, l_min / l_max                                      killed by the suite
+threshold: non-strict, so a value ON the bound is already a warning        killed by the suite
+threshold: one direction for both, so lower-is-better classifies backwards killed by the suite
+triangle shape quality: 4 sqrt(2) instead of 4 sqrt(3)                     killed by the suite
+worst element: by value alone, ignoring the metric's direction             killed by the suite
+policy: accept a threshold on a dimensioned size                           killed by the suite
+policy: never report that the ordering of two bounds is wrong              killed by the suite
+policy: a contradictory policy applied anyway, its error unrecorded        killed by the suite
+policy: a contradictory policy's usable half applied regardless            killed by the suite
+structure: skip the structural verdict and call every mesh valid           killed by the suite
+findings: reversed order, so the least severe comes first                  killed by the suite
+mean: divide by a fixed six instead of the sample count                    killed by the suite
+undefined: a non-finite value classified instead of called Invalid         killed by the suite
+undefined: an unmeasurable element's infinities fed into the summaries     killed by the suite
+face winding: one face of the four wound the other way                     killed by the suite
+circumcentre: a sign slip in one of the three cross products               killed by the suite
+circumcentre: denominator 6V instead of 12V                                killed by the suite
+edges: one of the six tetrahedron edges duplicated and one lost            killed by the suite
+triangle angles: the law-of-cosines sign dropped                           killed by the suite
+structural refusal: a fabricated metric and value on the finding           killed by the suite

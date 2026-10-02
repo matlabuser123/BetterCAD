@@ -13,7 +13,7 @@ Current:
            P16 — Meshing
 
 Current milestone:
-           none — P16-SIZE-001 is complete. Starting the next one is a
+           none — P16-QUALITY-001 is complete. Starting the next one is a
            scope decision.
 
 Qualified:
@@ -25,7 +25,7 @@ Qualified:
            P15 — Materials / Engineering Data
 
 Next:
-           P16-QUALITY-001 — Mesh Quality Metrics / Validation. Not started.
+           P16-MAP-001 — Geometry ↔ mesh correspondence / regions. Not started.
 
 Qualified milestones in P16:
            P16-ARCH-001 — Meshing Architecture (ADR-030 to ADR-033)
@@ -35,6 +35,7 @@ Qualified milestones in P16:
            INFRA-NETGEN-001 — Netgen toolchain qualification (infrastructure)
            P16-VOL-001 — 3D Tetrahedral Volume Mesh (Tet4)
            P16-SIZE-001 — Global / Local Mesh Sizing
+           P16-QUALITY-001 — Mesh Quality Metrics / Validation
 
 P16 objective:
            Geometry
@@ -1032,6 +1033,35 @@ sizing intent explicit
 
 ## Mesh Quality Metrics / Validation
 
+**COMPLETE 2026-10-02.** 19/19. Evidence:
+[docs/verification/P16-QUALITY-001/](docs/verification/P16-QUALITY-001/README.md).
+
+Three presets clean-rebuilt, 3071/3071 tests passed in each with 0 warnings,
+214-test blast radius x5 repeats in release and debug, qualified tree ==
+committed tree.
+
+Every metric is a formula with a range, an ideal and a direction, written down
+before any threshold existed; and **BetterCAD ships no thresholds**, because a
+quality threshold is a solver requirement and P17 owns those. Choosing numbers
+that made the existing reference bodies green would have meant choosing a bound
+that passes a 0.26 deg dihedral.
+
+**The metrics' first act was to find that BetterCAD's curved-body meshes carry
+near-degenerate elements**, and that is reported rather than hidden: the r6 h20
+cylinder at a 3 mm target has an element with a 0.26 deg dihedral and a radius
+ratio of 0.000451. A tetrahedron must conform to its boundary triangles, so the
+origin is largely the surface triangulation -- for the bored block the volume
+mesh's worst dihedral and the boundary's worst triangle angle are the SAME
+number, 1.230616 deg. The owner is P16-SURF-001's deflection controls and, for
+a requirement, P17.
+
+Validated against two reference tetrahedra that disagree on every shape metric,
+and on the production path against a hand-derived closed form that all 12
+tetrahedra of a 40 mm cube match. 24 mutations applied, 24 killed by a failing
+test. Three defects found by the adversarial review, one of them only by
+mutation: see
+[ADVERSARIAL_REVIEW.md](docs/verification/P16-QUALITY-001/ADVERSARIAL_REVIEW.md).
+
 Define metric conventions before using thresholds.
 
 At minimum audit/support:
@@ -1046,25 +1076,25 @@ maximum dihedral angle where useful
 surface triangle quality
 ```
 
-* [ ] Define every metric mathematically
-* [ ] Define good/bad direction for each metric
-* [ ] Define valid numeric range where applicable
-* [ ] Compute mesh-level min/max/mean where useful
-* [ ] Identify worst element
-* [ ] Reject inverted elements
-* [ ] Reject zero-volume elements
-* [ ] Structured quality report
-* [ ] Threshold policy explicit
-* [ ] Warning vs failure semantics explicit
-* [ ] Validate regular tetrahedron analytically
-* [ ] Validate intentionally poor tetrahedron
-* [ ] Validate sliver element
-* [ ] Validate distorted surface triangle
-* [ ] Quality report deterministic
-* [ ] No automatic "repair" without explicit contract
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Define every metric mathematically
+* [x] Define good/bad direction for each metric
+* [x] Define valid numeric range where applicable
+* [x] Compute mesh-level min/max/mean where useful
+* [x] Identify worst element
+* [x] Reject inverted elements
+* [x] Reject zero-volume elements
+* [x] Structured quality report
+* [x] Threshold policy explicit
+* [x] Warning vs failure semantics explicit
+* [x] Validate regular tetrahedron analytically
+* [x] Validate intentionally poor tetrahedron
+* [x] Validate sliver element
+* [x] Validate distorted surface triangle
+* [x] Quality report deterministic
+* [x] No automatic "repair" without explicit contract
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded
 
 ### Independent reference
 

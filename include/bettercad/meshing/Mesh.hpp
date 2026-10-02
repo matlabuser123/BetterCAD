@@ -299,9 +299,10 @@ public:
     /// detecting the pair needs a canonical key over node sets that is a
     /// whole-mesh question. Refusing it here would also make the cost of adding
     /// an element depend on how many elements are already present. It belongs
-    /// with the other whole-mesh, threshold-free-but-global checks, and is left
-    /// to P16-QUALITY-001 with this note so that the silence is not mistaken for
-    /// an oversight.
+    /// with the other whole-mesh, threshold-free-but-global checks, and
+    /// P16-VOL-001 put it there: `MeshIssueKind::DuplicateTetrahedron`, beside
+    /// `NodeSharedBetweenRegions`. This note stays so that the silence here is
+    /// not mistaken for an oversight.
     [[nodiscard]] Result<ElementId> addTetrahedron(const std::array<NodeId, 4>& nodes, RegionId region);
 
     [[nodiscard]] std::size_t nodeCount() const noexcept { return mesh_.nodeCount(); }

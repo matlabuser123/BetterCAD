@@ -362,3 +362,28 @@ bettercad_compile_fail_case(volumemesh "${_volumemesh}" VOLUME_MESH_FROM_PLAIN_M
     "private|is private|not accessible|no matching function|no match for|deleted" BetterCAD::meshing)
 bettercad_compile_fail_case(volumemesh "${_volumemesh}" MUTATE_VOLUME_MESH
     "read-only|discards qualifiers|lvalue|not assignable" BetterCAD::meshing)
+
+# P16-QUALITY-001: the quality layer observes, and cannot alter a mesh.
+#
+# The milestone's hard rule is "bad Tet -> report bad Tet", never "bad Tet ->
+# move nodes -> optimise -> silently replace mesh". A before/after comparison
+# shows only that today's implementation does not mutate; these show that no
+# implementation behind this API could, because there is no mutable overload to
+# write through and the report carries no route back to the mesh.
+set(_meshquality "${CMAKE_CURRENT_SOURCE_DIR}/MeshQualityMisuse.cpp")
+bettercad_compile_fail_group(meshquality "${_meshquality}" BetterCAD::meshing)
+bettercad_compile_fail_case(meshquality "${_meshquality}"
+    EVALUATE_MESH_THROUGH_A_MUTABLE_REFERENCE
+    "cannot convert|could not convert|invalid conversion|no matches converting"
+    BetterCAD::meshing)
+bettercad_compile_fail_case(meshquality "${_meshquality}"
+    EVALUATE_TET_THROUGH_A_MUTABLE_REFERENCE
+    "cannot convert|could not convert|invalid conversion|no matches converting"
+    BetterCAD::meshing)
+bettercad_compile_fail_case(meshquality "${_meshquality}"
+    REACH_THE_MESH_THROUGH_THE_REPORT
+    "has no member named|no member named" BetterCAD::meshing)
+bettercad_compile_fail_case(meshquality "${_meshquality}"
+    REPAIRED_MESH_FROM_A_REPORT
+    "conversion from .* to non-scalar type|cannot convert|could not convert|no matching function"
+    BetterCAD::meshing)
