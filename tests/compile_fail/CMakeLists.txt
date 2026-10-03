@@ -413,3 +413,29 @@ bettercad_compile_fail_case(geometrymeshmap "${_geometrymeshmap}"
 bettercad_compile_fail_case(geometrymeshmap "${_geometrymeshmap}"
     REACH_THE_MESH_THROUGH_THE_MAP
     "has no member named|no member named" BetterCAD::meshing)
+
+# INFRA-VIEWER-001: the viewer owns no engineering state.
+#
+# A GUI is the most likely place for an engineering invariant to leak, so these
+# pin it at compile time: the viewer cannot take a mutable body, its own
+# presentation handles cannot be confused with document identities or invented
+# from integers, a viewer cannot be copied, and there is no Document behind it
+# to reach through.
+set(_viewer "${CMAKE_CURRENT_SOURCE_DIR}/ViewerMisuse.cpp")
+bettercad_compile_fail_group(viewer "${_viewer}" BetterCAD::renderer BetterCAD::geometry)
+bettercad_compile_fail_case(viewer "${_viewer}" DISPLAY_THROUGH_A_MUTABLE_BODY
+    "cannot convert|could not convert|invalid conversion|no matches converting"
+    BetterCAD::renderer BetterCAD::geometry)
+bettercad_compile_fail_case(viewer "${_viewer}" PRESENTATION_ID_AS_OBJECT_ID
+    "conversion from .* to non-scalar type|could not convert|cannot convert"
+    BetterCAD::renderer BetterCAD::geometry)
+bettercad_compile_fail_case(viewer "${_viewer}" OBJECT_ID_AS_PRESENTATION_ID
+    "conversion from .* to non-scalar type|could not convert|cannot convert"
+    BetterCAD::renderer BetterCAD::geometry)
+bettercad_compile_fail_case(viewer "${_viewer}" PRESENTATION_ID_FROM_INTEGER
+    "conversion from [^ ]*int[^ ]* to non-scalar type|could not convert|cannot convert"
+    BetterCAD::renderer BetterCAD::geometry)
+bettercad_compile_fail_case(viewer "${_viewer}" COPY_A_VIEWER
+    "use of deleted function|is private|deleted" BetterCAD::renderer BetterCAD::geometry)
+bettercad_compile_fail_case(viewer "${_viewer}" REACH_A_DOCUMENT_THROUGH_THE_VIEWER
+    "has no member named|no member named" BetterCAD::renderer BetterCAD::geometry)

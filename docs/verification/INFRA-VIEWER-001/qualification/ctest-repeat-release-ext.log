@@ -1,0 +1,1915 @@
+Test project C:/Users/uqhas/AppData/Local/bc-build/release-ext
+        Start 3135: compile_fail.volumemesh.volume-mesh-from-plain-mesh
+        Start 2731: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly
+        Start 2726: unit.Viewer_DisplayingDoesNotRegenerateOrHealTheBody
+        Start 2728: unit.Viewer_HidingIsNotDeleting
+        Start 2985: architecture.layering
+        Start 2729: unit.Viewer_HidingOneBodyLeavesTheOtherVisible
+        Start 2724: unit.Viewer_BackgroundIsWhatWasAskedFor
+        Start 2723: unit.Viewer_AnEmptySceneCoversNothing
+      Test #2985: architecture.layering .................................................   Passed    1.22 sec
+        Start 2985: architecture.layering
+      Test #2724: unit.Viewer_BackgroundIsWhatWasAskedFor ...............................   Passed    1.48 sec
+        Start 2724: unit.Viewer_BackgroundIsWhatWasAskedFor
+      Test #2723: unit.Viewer_AnEmptySceneCoversNothing .................................   Passed    1.51 sec
+        Start 2723: unit.Viewer_AnEmptySceneCoversNothing
+      Test #2729: unit.Viewer_HidingOneBodyLeavesTheOtherVisible ........................   Passed    1.58 sec
+        Start 2729: unit.Viewer_HidingOneBodyLeavesTheOtherVisible
+      Test #2726: unit.Viewer_DisplayingDoesNotRegenerateOrHealTheBody ..................   Passed    1.70 sec
+        Start 2726: unit.Viewer_DisplayingDoesNotRegenerateOrHealTheBody
+      Test #2728: unit.Viewer_HidingIsNotDeleting .......................................   Passed    1.70 sec
+        Start 2728: unit.Viewer_HidingIsNotDeleting
+      Test #2985: architecture.layering .................................................   Passed    1.25 sec
+        Start 2985: architecture.layering
+      Test #2724: unit.Viewer_BackgroundIsWhatWasAskedFor ...............................   Passed    1.21 sec
+        Start 2724: unit.Viewer_BackgroundIsWhatWasAskedFor
+      Test #2723: unit.Viewer_AnEmptySceneCoversNothing .................................   Passed    1.22 sec
+        Start 2723: unit.Viewer_AnEmptySceneCoversNothing
+      Test #2729: unit.Viewer_HidingOneBodyLeavesTheOtherVisible ........................   Passed    1.33 sec
+        Start 2729: unit.Viewer_HidingOneBodyLeavesTheOtherVisible
+      Test #2728: unit.Viewer_HidingIsNotDeleting .......................................   Passed    1.34 sec
+        Start 2728: unit.Viewer_HidingIsNotDeleting
+      Test #2726: unit.Viewer_DisplayingDoesNotRegenerateOrHealTheBody ..................   Passed    1.51 sec
+        Start 2726: unit.Viewer_DisplayingDoesNotRegenerateOrHealTheBody
+      Test #2985: architecture.layering .................................................   Passed    1.34 sec
+        Start 2985: architecture.layering
+      Test #2724: unit.Viewer_BackgroundIsWhatWasAskedFor ...............................   Passed    1.19 sec
+        Start 2724: unit.Viewer_BackgroundIsWhatWasAskedFor
+      Test #2723: unit.Viewer_AnEmptySceneCoversNothing .................................   Passed    1.17 sec
+        Start 2723: unit.Viewer_AnEmptySceneCoversNothing
+      Test #2729: unit.Viewer_HidingOneBodyLeavesTheOtherVisible ........................   Passed    1.37 sec
+        Start 2729: unit.Viewer_HidingOneBodyLeavesTheOtherVisible
+      Test #2728: unit.Viewer_HidingIsNotDeleting .......................................   Passed    1.34 sec
+        Start 2728: unit.Viewer_HidingIsNotDeleting
+      Test #2726: unit.Viewer_DisplayingDoesNotRegenerateOrHealTheBody ..................   Passed    1.44 sec
+        Start 2726: unit.Viewer_DisplayingDoesNotRegenerateOrHealTheBody
+      Test #2985: architecture.layering .................................................   Passed    1.23 sec
+        Start 2985: architecture.layering
+      Test #2724: unit.Viewer_BackgroundIsWhatWasAskedFor ...............................   Passed    1.12 sec
+        Start 2724: unit.Viewer_BackgroundIsWhatWasAskedFor
+      Test #2723: unit.Viewer_AnEmptySceneCoversNothing .................................   Passed    1.10 sec
+        Start 2723: unit.Viewer_AnEmptySceneCoversNothing
+      Test #2729: unit.Viewer_HidingOneBodyLeavesTheOtherVisible ........................   Passed    1.29 sec
+        Start 2729: unit.Viewer_HidingOneBodyLeavesTheOtherVisible
+      Test #2728: unit.Viewer_HidingIsNotDeleting .......................................   Passed    1.33 sec
+        Start 2728: unit.Viewer_HidingIsNotDeleting
+      Test #2726: unit.Viewer_DisplayingDoesNotRegenerateOrHealTheBody ..................   Passed    1.22 sec
+        Start 2726: unit.Viewer_DisplayingDoesNotRegenerateOrHealTheBody
+  1/191 Test #2724: unit.Viewer_BackgroundIsWhatWasAskedFor ...............................   Passed    1.14 sec
+        Start 2743: unit.Viewer_StandardViewsChangeWhatIsDrawn
+  2/191 Test #2985: architecture.layering .................................................   Passed    1.18 sec
+        Start 2727: unit.Viewer_DisplaysACadBodyAndDrawsIt
+  3/191 Test #2723: unit.Viewer_AnEmptySceneCoversNothing .................................   Passed    1.23 sec
+        Start 2725: unit.Viewer_CreatesAnOffscreenViewOnThisToolchain
+      Test #2731: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly ................   Passed    6.71 sec
+        Start 2731: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly
+  4/191 Test #2729: unit.Viewer_HidingOneBodyLeavesTheOtherVisible ........................   Passed    1.18 sec
+        Start 2739: unit.Viewer_RemovingAPresentationLeavesTheModelAlone
+  5/191 Test #2728: unit.Viewer_HidingIsNotDeleting .......................................   Passed    1.17 sec
+        Start 2732: unit.Viewer_NothingItDoesChangesTheModel
+  6/191 Test #2726: unit.Viewer_DisplayingDoesNotRegenerateOrHealTheBody ..................   Passed    1.22 sec
+        Start 2736: unit.Viewer_PickingDistinguishesTwoDisplayedBodies
+      Test #2725: unit.Viewer_CreatesAnOffscreenViewOnThisToolchain .....................   Passed    1.03 sec
+        Start 2725: unit.Viewer_CreatesAnOffscreenViewOnThisToolchain
+      Test #2727: unit.Viewer_DisplaysACadBodyAndDrawsIt ................................   Passed    1.13 sec
+        Start 2727: unit.Viewer_DisplaysACadBodyAndDrawsIt
+      Test #2743: unit.Viewer_StandardViewsChangeWhatIsDrawn ............................   Passed    1.27 sec
+        Start 2743: unit.Viewer_StandardViewsChangeWhatIsDrawn
+      Test #2739: unit.Viewer_RemovingAPresentationLeavesTheModelAlone ..................   Passed    1.19 sec
+        Start 2739: unit.Viewer_RemovingAPresentationLeavesTheModelAlone
+      Test #3135: compile_fail.volumemesh.volume-mesh-from-plain-mesh ...................   Passed    8.07 sec
+        Start 3135: compile_fail.volumemesh.volume-mesh-from-plain-mesh
+      Test #2732: unit.Viewer_NothingItDoesChangesTheModel ..............................   Passed    1.19 sec
+        Start 2732: unit.Viewer_NothingItDoesChangesTheModel
+      Test #2736: unit.Viewer_PickingDistinguishesTwoDisplayedBodies ....................   Passed    1.10 sec
+        Start 2736: unit.Viewer_PickingDistinguishesTwoDisplayedBodies
+      Test #2725: unit.Viewer_CreatesAnOffscreenViewOnThisToolchain .....................   Passed    1.10 sec
+        Start 2725: unit.Viewer_CreatesAnOffscreenViewOnThisToolchain
+      Test #2727: unit.Viewer_DisplaysACadBodyAndDrawsIt ................................   Passed    1.19 sec
+        Start 2727: unit.Viewer_DisplaysACadBodyAndDrawsIt
+      Test #2743: unit.Viewer_StandardViewsChangeWhatIsDrawn ............................   Passed    1.31 sec
+        Start 2743: unit.Viewer_StandardViewsChangeWhatIsDrawn
+      Test #2739: unit.Viewer_RemovingAPresentationLeavesTheModelAlone ..................   Passed    1.21 sec
+        Start 2739: unit.Viewer_RemovingAPresentationLeavesTheModelAlone
+      Test #2732: unit.Viewer_NothingItDoesChangesTheModel ..............................   Passed    1.19 sec
+        Start 2732: unit.Viewer_NothingItDoesChangesTheModel
+      Test #2736: unit.Viewer_PickingDistinguishesTwoDisplayedBodies ....................   Passed    1.20 sec
+        Start 2736: unit.Viewer_PickingDistinguishesTwoDisplayedBodies
+      Test #2725: unit.Viewer_CreatesAnOffscreenViewOnThisToolchain .....................   Passed    1.19 sec
+        Start 2725: unit.Viewer_CreatesAnOffscreenViewOnThisToolchain
+      Test #2727: unit.Viewer_DisplaysACadBodyAndDrawsIt ................................   Passed    1.11 sec
+        Start 2727: unit.Viewer_DisplaysACadBodyAndDrawsIt
+      Test #2743: unit.Viewer_StandardViewsChangeWhatIsDrawn ............................   Passed    1.28 sec
+        Start 2743: unit.Viewer_StandardViewsChangeWhatIsDrawn
+      Test #2739: unit.Viewer_RemovingAPresentationLeavesTheModelAlone ..................   Passed    1.11 sec
+        Start 2739: unit.Viewer_RemovingAPresentationLeavesTheModelAlone
+      Test #2732: unit.Viewer_NothingItDoesChangesTheModel ..............................   Passed    1.29 sec
+        Start 2732: unit.Viewer_NothingItDoesChangesTheModel
+      Test #2736: unit.Viewer_PickingDistinguishesTwoDisplayedBodies ....................   Passed    1.20 sec
+        Start 2736: unit.Viewer_PickingDistinguishesTwoDisplayedBodies
+      Test #2725: unit.Viewer_CreatesAnOffscreenViewOnThisToolchain .....................   Passed    1.13 sec
+        Start 2725: unit.Viewer_CreatesAnOffscreenViewOnThisToolchain
+      Test #2727: unit.Viewer_DisplaysACadBodyAndDrawsIt ................................   Passed    1.20 sec
+        Start 2727: unit.Viewer_DisplaysACadBodyAndDrawsIt
+      Test #2743: unit.Viewer_StandardViewsChangeWhatIsDrawn ............................   Passed    1.24 sec
+        Start 2743: unit.Viewer_StandardViewsChangeWhatIsDrawn
+      Test #2739: unit.Viewer_RemovingAPresentationLeavesTheModelAlone ..................   Passed    1.17 sec
+        Start 2739: unit.Viewer_RemovingAPresentationLeavesTheModelAlone
+      Test #2736: unit.Viewer_PickingDistinguishesTwoDisplayedBodies ....................   Passed    1.23 sec
+        Start 2736: unit.Viewer_PickingDistinguishesTwoDisplayedBodies
+      Test #2732: unit.Viewer_NothingItDoesChangesTheModel ..............................   Passed    1.27 sec
+        Start 2732: unit.Viewer_NothingItDoesChangesTheModel
+  7/191 Test #2725: unit.Viewer_CreatesAnOffscreenViewOnThisToolchain .....................   Passed    1.09 sec
+        Start 2733: unit.Viewer_PickCoordinatesStayInTheRenderedImagesSpaceAfterAResize
+      Test #2731: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly ................   Passed    5.32 sec
+        Start 2731: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly
+  8/191 Test #2727: unit.Viewer_DisplaysACadBodyAndDrawsIt ................................   Passed    1.15 sec
+        Start 2738: unit.Viewer_RefusesToDisplayAnEmptyBodyOrAnInvalidObject
+  9/191 Test #2739: unit.Viewer_RemovingAPresentationLeavesTheModelAlone ..................   Passed    1.03 sec
+        Start 2730: unit.Viewer_IgnoresANonsensicalZoom
+ 10/191 Test #2743: unit.Viewer_StandardViewsChangeWhatIsDrawn ............................   Passed    1.29 sec
+        Start 2741: unit.Viewer_SelectionIsReportedAsCadIdentity
+ 11/191 Test #2736: unit.Viewer_PickingDistinguishesTwoDisplayedBodies ....................   Passed    1.16 sec
+        Start 2735: unit.Viewer_PickingAnEmptyViewFindsNothing
+      Test #2733: unit.Viewer_PickCoordinatesStayInTheRenderedImagesSpaceAfterAResize ...   Passed    1.16 sec
+        Start 2733: unit.Viewer_PickCoordinatesStayInTheRenderedImagesSpaceAfterAResize
+ 12/191 Test #2732: unit.Viewer_NothingItDoesChangesTheModel ..............................   Passed    1.25 sec
+        Start 2734: unit.Viewer_PickingADisplayedBodyResolvesToItsObject
+      Test #2738: unit.Viewer_RefusesToDisplayAnEmptyBodyOrAnInvalidObject ..............   Passed    1.07 sec
+        Start 2738: unit.Viewer_RefusesToDisplayAnEmptyBodyOrAnInvalidObject
+      Test #2730: unit.Viewer_IgnoresANonsensicalZoom ...................................   Passed    1.14 sec
+        Start 2730: unit.Viewer_IgnoresANonsensicalZoom
+      Test #2741: unit.Viewer_SelectionIsReportedAsCadIdentity ..........................   Passed    1.07 sec
+        Start 2741: unit.Viewer_SelectionIsReportedAsCadIdentity
+      Test #2735: unit.Viewer_PickingAnEmptyViewFindsNothing ............................   Passed    1.19 sec
+        Start 2735: unit.Viewer_PickingAnEmptyViewFindsNothing
+      Test #2733: unit.Viewer_PickCoordinatesStayInTheRenderedImagesSpaceAfterAResize ...   Passed    1.18 sec
+        Start 2733: unit.Viewer_PickCoordinatesStayInTheRenderedImagesSpaceAfterAResize
+      Test #2738: unit.Viewer_RefusesToDisplayAnEmptyBodyOrAnInvalidObject ..............   Passed    1.14 sec
+        Start 2738: unit.Viewer_RefusesToDisplayAnEmptyBodyOrAnInvalidObject
+      Test #2734: unit.Viewer_PickingADisplayedBodyResolvesToItsObject ..................   Passed    1.21 sec
+        Start 2734: unit.Viewer_PickingADisplayedBodyResolvesToItsObject
+      Test #2741: unit.Viewer_SelectionIsReportedAsCadIdentity ..........................   Passed    1.00 sec
+        Start 2741: unit.Viewer_SelectionIsReportedAsCadIdentity
+      Test #2730: unit.Viewer_IgnoresANonsensicalZoom ...................................   Passed    1.16 sec
+        Start 2730: unit.Viewer_IgnoresANonsensicalZoom
+      Test #2735: unit.Viewer_PickingAnEmptyViewFindsNothing ............................   Passed    1.06 sec
+        Start 2735: unit.Viewer_PickingAnEmptyViewFindsNothing
+      Test #2733: unit.Viewer_PickCoordinatesStayInTheRenderedImagesSpaceAfterAResize ...   Passed    1.13 sec
+        Start 2733: unit.Viewer_PickCoordinatesStayInTheRenderedImagesSpaceAfterAResize
+      Test #2738: unit.Viewer_RefusesToDisplayAnEmptyBodyOrAnInvalidObject ..............   Passed    1.10 sec
+        Start 2738: unit.Viewer_RefusesToDisplayAnEmptyBodyOrAnInvalidObject
+      Test #2734: unit.Viewer_PickingADisplayedBodyResolvesToItsObject ..................   Passed    1.27 sec
+        Start 2734: unit.Viewer_PickingADisplayedBodyResolvesToItsObject
+      Test #2741: unit.Viewer_SelectionIsReportedAsCadIdentity ..........................   Passed    1.13 sec
+        Start 2741: unit.Viewer_SelectionIsReportedAsCadIdentity
+      Test #3135: compile_fail.volumemesh.volume-mesh-from-plain-mesh ...................   Passed    7.87 sec
+        Start 3135: compile_fail.volumemesh.volume-mesh-from-plain-mesh
+      Test #2730: unit.Viewer_IgnoresANonsensicalZoom ...................................   Passed    1.05 sec
+        Start 2730: unit.Viewer_IgnoresANonsensicalZoom
+      Test #2735: unit.Viewer_PickingAnEmptyViewFindsNothing ............................   Passed    1.06 sec
+        Start 2735: unit.Viewer_PickingAnEmptyViewFindsNothing
+      Test #2738: unit.Viewer_RefusesToDisplayAnEmptyBodyOrAnInvalidObject ..............   Passed    1.12 sec
+        Start 2738: unit.Viewer_RefusesToDisplayAnEmptyBodyOrAnInvalidObject
+      Test #2733: unit.Viewer_PickCoordinatesStayInTheRenderedImagesSpaceAfterAResize ...   Passed    1.19 sec
+        Start 2733: unit.Viewer_PickCoordinatesStayInTheRenderedImagesSpaceAfterAResize
+      Test #2734: unit.Viewer_PickingADisplayedBodyResolvesToItsObject ..................   Passed    1.23 sec
+        Start 2734: unit.Viewer_PickingADisplayedBodyResolvesToItsObject
+      Test #2741: unit.Viewer_SelectionIsReportedAsCadIdentity ..........................   Passed    1.15 sec
+        Start 2741: unit.Viewer_SelectionIsReportedAsCadIdentity
+      Test #2730: unit.Viewer_IgnoresANonsensicalZoom ...................................   Passed    1.20 sec
+        Start 2730: unit.Viewer_IgnoresANonsensicalZoom
+      Test #2735: unit.Viewer_PickingAnEmptyViewFindsNothing ............................   Passed    1.07 sec
+        Start 2735: unit.Viewer_PickingAnEmptyViewFindsNothing
+ 13/191 Test #2738: unit.Viewer_RefusesToDisplayAnEmptyBodyOrAnInvalidObject ..............   Passed    1.05 sec
+        Start 2740: unit.Viewer_ResizeRefusesAnEmptyArea
+ 14/191 Test #2733: unit.Viewer_PickCoordinatesStayInTheRenderedImagesSpaceAfterAResize ...   Passed    1.14 sec
+        Start 2744: unit.Viewer_ZoomAndOrbitChangeTheImageWithoutTouchingTheModel
+      Test #2731: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly ................   Passed    5.88 sec
+        Start 2731: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly
+      Test #2734: unit.Viewer_PickingADisplayedBodyResolvesToItsObject ..................   Passed    1.13 sec
+        Start 2734: unit.Viewer_PickingADisplayedBodyResolvesToItsObject
+ 15/191 Test #2741: unit.Viewer_SelectionIsReportedAsCadIdentity ..........................   Passed    1.04 sec
+        Start 2742: unit.Viewer_SelectionRefusesAPresentationItDoesNotHave
+ 16/191 Test #2730: unit.Viewer_IgnoresANonsensicalZoom ...................................   Passed    1.08 sec
+        Start 2970: gui.launch.smoke
+ 17/191 Test #2735: unit.Viewer_PickingAnEmptyViewFindsNothing ............................   Passed    0.99 sec
+        Start 2993: architecture.checker.mesh-backend-generated-leak
+      Test #2970: gui.launch.smoke ......................................................   Passed    0.38 sec
+        Start 2970: gui.launch.smoke
+      Test #2740: unit.Viewer_ResizeRefusesAnEmptyArea ..................................   Passed    1.00 sec
+        Start 2740: unit.Viewer_ResizeRefusesAnEmptyArea
+      Test #2993: architecture.checker.mesh-backend-generated-leak ......................   Passed    0.22 sec
+        Start 2993: architecture.checker.mesh-backend-generated-leak
+      Test #2744: unit.Viewer_ZoomAndOrbitChangeTheImageWithoutTouchingTheModel .........   Passed    1.18 sec
+        Start 2744: unit.Viewer_ZoomAndOrbitChangeTheImageWithoutTouchingTheModel
+      Test #2993: architecture.checker.mesh-backend-generated-leak ......................   Passed    0.30 sec
+        Start 2993: architecture.checker.mesh-backend-generated-leak
+      Test #2970: gui.launch.smoke ......................................................   Passed    0.35 sec
+        Start 2970: gui.launch.smoke
+      Test #2742: unit.Viewer_SelectionRefusesAPresentationItDoesNotHave ................   Passed    0.99 sec
+        Start 2742: unit.Viewer_SelectionRefusesAPresentationItDoesNotHave
+ 18/191 Test #2734: unit.Viewer_PickingADisplayedBodyResolvesToItsObject ..................   Passed    1.13 sec
+        Start 2992: architecture.checker.mesh-backend-leak
+      Test #2993: architecture.checker.mesh-backend-generated-leak ......................   Passed    0.21 sec
+        Start 2993: architecture.checker.mesh-backend-generated-leak
+      Test #2970: gui.launch.smoke ......................................................   Passed    0.38 sec
+        Start 2970: gui.launch.smoke
+      Test #2992: architecture.checker.mesh-backend-leak ................................   Passed    0.27 sec
+        Start 2992: architecture.checker.mesh-backend-leak
+      Test #2993: architecture.checker.mesh-backend-generated-leak ......................   Passed    0.24 sec
+        Start 2993: architecture.checker.mesh-backend-generated-leak
+      Test #2992: architecture.checker.mesh-backend-leak ................................   Passed    0.22 sec
+        Start 2992: architecture.checker.mesh-backend-leak
+ 19/191 Test #2993: architecture.checker.mesh-backend-generated-leak ......................   Passed    0.22 sec
+        Start 2988: architecture.checker.examples-occt-leak
+      Test #2970: gui.launch.smoke ......................................................   Passed    0.30 sec
+        Start 2970: gui.launch.smoke
+      Test #2740: unit.Viewer_ResizeRefusesAnEmptyArea ..................................   Passed    1.04 sec
+        Start 2740: unit.Viewer_ResizeRefusesAnEmptyArea
+      Test #2988: architecture.checker.examples-occt-leak ...............................   Passed    0.24 sec
+        Start 2988: architecture.checker.examples-occt-leak
+      Test #2992: architecture.checker.mesh-backend-leak ................................   Passed    0.29 sec
+        Start 2992: architecture.checker.mesh-backend-leak
+ 20/191 Test #2970: gui.launch.smoke ......................................................   Passed    0.39 sec
+        Start 2986: architecture.checker.valid
+      Test #2742: unit.Viewer_SelectionRefusesAPresentationItDoesNotHave ................   Passed    1.02 sec
+        Start 2742: unit.Viewer_SelectionRefusesAPresentationItDoesNotHave
+      Test #2992: architecture.checker.mesh-backend-leak ................................   Passed    0.25 sec
+        Start 2992: architecture.checker.mesh-backend-leak
+      Test #2988: architecture.checker.examples-occt-leak ...............................   Passed    0.30 sec
+        Start 2988: architecture.checker.examples-occt-leak
+      Test #2744: unit.Viewer_ZoomAndOrbitChangeTheImageWithoutTouchingTheModel .........   Passed    1.24 sec
+        Start 2744: unit.Viewer_ZoomAndOrbitChangeTheImageWithoutTouchingTheModel
+      Test #2986: architecture.checker.valid ............................................   Passed    0.22 sec
+        Start 2986: architecture.checker.valid
+      Test #2988: architecture.checker.examples-occt-leak ...............................   Passed    0.26 sec
+        Start 2988: architecture.checker.examples-occt-leak
+ 21/191 Test #2992: architecture.checker.mesh-backend-leak ................................   Passed    0.28 sec
+        Start 2994: architecture.checker.private-include
+      Test #2986: architecture.checker.valid ............................................   Passed    0.36 sec
+        Start 2986: architecture.checker.valid
+      Test #2988: architecture.checker.examples-occt-leak ...............................   Passed    0.20 sec
+        Start 2988: architecture.checker.examples-occt-leak
+      Test #2994: architecture.checker.private-include ..................................   Passed    0.21 sec
+        Start 2994: architecture.checker.private-include
+      Test #2740: unit.Viewer_ResizeRefusesAnEmptyArea ..................................   Passed    1.06 sec
+        Start 2740: unit.Viewer_ResizeRefusesAnEmptyArea
+      Test #2986: architecture.checker.valid ............................................   Passed    0.40 sec
+        Start 2986: architecture.checker.valid
+ 22/191 Test #2988: architecture.checker.examples-occt-leak ...............................   Passed    0.40 sec
+        Start 2987: architecture.checker.occt-leak
+      Test #2994: architecture.checker.private-include ..................................   Passed    0.41 sec
+        Start 2994: architecture.checker.private-include
+      Test #2742: unit.Viewer_SelectionRefusesAPresentationItDoesNotHave ................   Passed    1.11 sec
+        Start 2742: unit.Viewer_SelectionRefusesAPresentationItDoesNotHave
+      Test #2986: architecture.checker.valid ............................................   Passed    0.25 sec
+        Start 2986: architecture.checker.valid
+      Test #2987: architecture.checker.occt-leak ........................................   Passed    0.25 sec
+        Start 2987: architecture.checker.occt-leak
+      Test #2994: architecture.checker.private-include ..................................   Passed    0.23 sec
+        Start 2994: architecture.checker.private-include
+      Test #2744: unit.Viewer_ZoomAndOrbitChangeTheImageWithoutTouchingTheModel .........   Passed    1.27 sec
+        Start 2744: unit.Viewer_ZoomAndOrbitChangeTheImageWithoutTouchingTheModel
+ 23/191 Test #2986: architecture.checker.valid ............................................   Passed    0.21 sec
+        Start 2990: architecture.checker.layer-violation
+      Test #2994: architecture.checker.private-include ..................................   Passed    0.30 sec
+        Start 2994: architecture.checker.private-include
+      Test #2987: architecture.checker.occt-leak ........................................   Passed    0.33 sec
+        Start 2987: architecture.checker.occt-leak
+      Test #2740: unit.Viewer_ResizeRefusesAnEmptyArea ..................................   Passed    0.95 sec
+        Start 2740: unit.Viewer_ResizeRefusesAnEmptyArea
+      Test #2990: architecture.checker.layer-violation ..................................   Passed    0.22 sec
+        Start 2990: architecture.checker.layer-violation
+ 24/191 Test #2994: architecture.checker.private-include ..................................   Passed    0.33 sec
+      Test #2987: architecture.checker.occt-leak ........................................   Passed    0.32 sec
+        Start 2987: architecture.checker.occt-leak
+        Start 2991: architecture.checker.drawing-layer-violation
+      Test #2990: architecture.checker.layer-violation ..................................   Passed    0.27 sec
+        Start 2990: architecture.checker.layer-violation
+      Test #2987: architecture.checker.occt-leak ........................................   Passed    0.21 sec
+        Start 2987: architecture.checker.occt-leak
+      Test #2991: architecture.checker.drawing-layer-violation ..........................   Passed    0.21 sec
+        Start 2991: architecture.checker.drawing-layer-violation
+      Test #2990: architecture.checker.layer-violation ..................................   Passed    0.21 sec
+        Start 2990: architecture.checker.layer-violation
+      Test #2742: unit.Viewer_SelectionRefusesAPresentationItDoesNotHave ................   Passed    1.04 sec
+        Start 2742: unit.Viewer_SelectionRefusesAPresentationItDoesNotHave
+ 25/191 Test #2987: architecture.checker.occt-leak ........................................   Passed    0.20 sec
+        Start 2989: architecture.checker.qt-leak
+      Test #2991: architecture.checker.drawing-layer-violation ..........................   Passed    0.22 sec
+        Start 2991: architecture.checker.drawing-layer-violation
+      Test #2990: architecture.checker.layer-violation ..................................   Passed    0.21 sec
+        Start 2990: architecture.checker.layer-violation
+      Test #2744: unit.Viewer_ZoomAndOrbitChangeTheImageWithoutTouchingTheModel .........   Passed    1.11 sec
+        Start 2744: unit.Viewer_ZoomAndOrbitChangeTheImageWithoutTouchingTheModel
+      Test #2989: architecture.checker.qt-leak ..........................................   Passed    0.26 sec
+        Start 2989: architecture.checker.qt-leak
+      Test #2991: architecture.checker.drawing-layer-violation ..........................   Passed    0.24 sec
+        Start 2991: architecture.checker.drawing-layer-violation
+ 26/191 Test #2990: architecture.checker.layer-violation ..................................   Passed    0.23 sec
+      Test #2731: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly ................   Passed    4.70 sec
+        Start 2731: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly
+        Start 2737: unit.Viewer_RefusesAViewWithNoArea
+ 27/191 Test #2740: unit.Viewer_ResizeRefusesAnEmptyArea ..................................   Passed    1.02 sec
+        Start 2052: unit.RenderedImage_CoverageAndSamplingAreWellBehavedAtTheEdges
+      Test #2737: unit.Viewer_RefusesAViewWithNoArea ....................................   Passed    0.15 sec
+        Start 2737: unit.Viewer_RefusesAViewWithNoArea
+      Test #2989: architecture.checker.qt-leak ..........................................   Passed    0.29 sec
+        Start 2989: architecture.checker.qt-leak
+      Test #2052: unit.RenderedImage_CoverageAndSamplingAreWellBehavedAtTheEdges ........   Passed    0.21 sec
+        Start 2052: unit.RenderedImage_CoverageAndSamplingAreWellBehavedAtTheEdges
+      Test #2737: unit.Viewer_RefusesAViewWithNoArea ....................................   Passed    0.17 sec
+        Start 2737: unit.Viewer_RefusesAViewWithNoArea
+      Test #2991: architecture.checker.drawing-layer-violation ..........................   Passed    0.36 sec
+        Start 2991: architecture.checker.drawing-layer-violation
+      Test #2052: unit.RenderedImage_CoverageAndSamplingAreWellBehavedAtTheEdges ........   Passed    0.21 sec
+        Start 2052: unit.RenderedImage_CoverageAndSamplingAreWellBehavedAtTheEdges
+      Test #2737: unit.Viewer_RefusesAViewWithNoArea ....................................   Passed    0.16 sec
+        Start 2737: unit.Viewer_RefusesAViewWithNoArea
+      Test #2989: architecture.checker.qt-leak ..........................................   Passed    0.29 sec
+        Start 2989: architecture.checker.qt-leak
+ 28/191 Test #2991: architecture.checker.drawing-layer-violation ..........................   Passed    0.22 sec
+      Test #2052: unit.RenderedImage_CoverageAndSamplingAreWellBehavedAtTheEdges ........   Passed    0.14 sec
+        Start 2052: unit.RenderedImage_CoverageAndSamplingAreWellBehavedAtTheEdges
+      Test #2737: unit.Viewer_RefusesAViewWithNoArea ....................................   Passed    0.14 sec
+        Start 2737: unit.Viewer_RefusesAViewWithNoArea
+ 29/191 Test #2742: unit.Viewer_SelectionRefusesAPresentationItDoesNotHave ................   Passed    1.02 sec
+      Test #2052: unit.RenderedImage_CoverageAndSamplingAreWellBehavedAtTheEdges ........   Passed    0.16 sec
+        Start 2052: unit.RenderedImage_CoverageAndSamplingAreWellBehavedAtTheEdges
+ 30/191 Test #2737: unit.Viewer_RefusesAViewWithNoArea ....................................   Passed    0.16 sec
+      Test #2989: architecture.checker.qt-leak ..........................................   Passed    0.26 sec
+        Start 2989: architecture.checker.qt-leak
+ 31/191 Test #2052: unit.RenderedImage_CoverageAndSamplingAreWellBehavedAtTheEdges ........   Passed    0.14 sec
+ 32/191 Test #2744: unit.Viewer_ZoomAndOrbitChangeTheImageWithoutTouchingTheModel .........   Passed    1.03 sec
+ 33/191 Test #2989: architecture.checker.qt-leak ..........................................   Passed    0.25 sec
+      Test #3135: compile_fail.volumemesh.volume-mesh-from-plain-mesh ...................   Passed    7.90 sec
+        Start 3135: compile_fail.volumemesh.volume-mesh-from-plain-mesh
+ 34/191 Test #2731: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly ................   Passed    3.17 sec
+      Test #3135: compile_fail.volumemesh.volume-mesh-from-plain-mesh ...................   Passed    5.02 sec
+        Start 3135: compile_fail.volumemesh.volume-mesh-from-plain-mesh
+ 35/191 Test #3135: compile_fail.volumemesh.volume-mesh-from-plain-mesh ...................   Passed    4.97 sec
+        Start 3106: compile_fail.matcmd.edit-has-no-mass
+      Test #3106: compile_fail.matcmd.edit-has-no-mass ..................................   Passed    4.78 sec
+        Start 3106: compile_fail.matcmd.edit-has-no-mass
+      Test #3106: compile_fail.matcmd.edit-has-no-mass ..................................   Passed    4.71 sec
+        Start 3106: compile_fail.matcmd.edit-has-no-mass
+      Test #3106: compile_fail.matcmd.edit-has-no-mass ..................................   Passed    4.75 sec
+        Start 3106: compile_fail.matcmd.edit-has-no-mass
+      Test #3106: compile_fail.matcmd.edit-has-no-mass ..................................   Passed    4.81 sec
+        Start 3106: compile_fail.matcmd.edit-has-no-mass
+ 36/191 Test #3106: compile_fail.matcmd.edit-has-no-mass ..................................   Passed    4.80 sec
+        Start 3027: compile_fail.assign.occurrence-material-read
+      Test #3027: compile_fail.assign.occurrence-material-read ..........................   Passed    4.51 sec
+        Start 3027: compile_fail.assign.occurrence-material-read
+      Test #3027: compile_fail.assign.occurrence-material-read ..........................   Passed    4.46 sec
+        Start 3027: compile_fail.assign.occurrence-material-read
+      Test #3027: compile_fail.assign.occurrence-material-read ..........................   Passed    4.44 sec
+        Start 3027: compile_fail.assign.occurrence-material-read
+      Test #3027: compile_fail.assign.occurrence-material-read ..........................   Passed    4.48 sec
+        Start 3027: compile_fail.assign.occurrence-material-read
+ 37/191 Test #3027: compile_fail.assign.occurrence-material-read ..........................   Passed    4.45 sec
+        Start 3056: compile_fail.massp.mass-moment-as-volume-moment
+      Test #3056: compile_fail.massp.mass-moment-as-volume-moment .......................   Passed    4.55 sec
+        Start 3056: compile_fail.massp.mass-moment-as-volume-moment
+      Test #3056: compile_fail.massp.mass-moment-as-volume-moment .......................   Passed    4.45 sec
+        Start 3056: compile_fail.massp.mass-moment-as-volume-moment
+      Test #3056: compile_fail.massp.mass-moment-as-volume-moment .......................   Passed    4.51 sec
+        Start 3056: compile_fail.massp.mass-moment-as-volume-moment
+      Test #3056: compile_fail.massp.mass-moment-as-volume-moment .......................   Passed    4.45 sec
+        Start 3056: compile_fail.massp.mass-moment-as-volume-moment
+ 38/191 Test #3056: compile_fail.massp.mass-moment-as-volume-moment .......................   Passed    4.49 sec
+        Start 3061: compile_fail.massp.mass-moment-to-double
+      Test #3061: compile_fail.massp.mass-moment-to-double ..............................   Passed    4.52 sec
+        Start 3061: compile_fail.massp.mass-moment-to-double
+      Test #3061: compile_fail.massp.mass-moment-to-double ..............................   Passed    4.46 sec
+        Start 3061: compile_fail.massp.mass-moment-to-double
+      Test #3061: compile_fail.massp.mass-moment-to-double ..............................   Passed    4.53 sec
+        Start 3061: compile_fail.massp.mass-moment-to-double
+      Test #3061: compile_fail.massp.mass-moment-to-double ..............................   Passed    4.54 sec
+        Start 3061: compile_fail.massp.mass-moment-to-double
+ 39/191 Test #3061: compile_fail.massp.mass-moment-to-double ..............................   Passed    4.48 sec
+        Start 3057: compile_fail.massp.add-volume-and-mass-moment
+      Test #3057: compile_fail.massp.add-volume-and-mass-moment .........................   Passed    4.43 sec
+        Start 3057: compile_fail.massp.add-volume-and-mass-moment
+      Test #3057: compile_fail.massp.add-volume-and-mass-moment .........................   Passed    4.47 sec
+        Start 3057: compile_fail.massp.add-volume-and-mass-moment
+      Test #3057: compile_fail.massp.add-volume-and-mass-moment .........................   Passed    4.46 sec
+        Start 3057: compile_fail.massp.add-volume-and-mass-moment
+      Test #3057: compile_fail.massp.add-volume-and-mass-moment .........................   Passed    4.52 sec
+        Start 3057: compile_fail.massp.add-volume-and-mass-moment
+ 40/191 Test #3057: compile_fail.massp.add-volume-and-mass-moment .........................   Passed    4.53 sec
+        Start 3085: compile_fail.custom.mechanical-has-no-shear-modulus-slot
+      Test #3085: compile_fail.custom.mechanical-has-no-shear-modulus-slot ..............   Passed    4.47 sec
+        Start 3085: compile_fail.custom.mechanical-has-no-shear-modulus-slot
+      Test #3085: compile_fail.custom.mechanical-has-no-shear-modulus-slot ..............   Passed    4.48 sec
+        Start 3085: compile_fail.custom.mechanical-has-no-shear-modulus-slot
+      Test #3085: compile_fail.custom.mechanical-has-no-shear-modulus-slot ..............   Passed    4.43 sec
+        Start 3085: compile_fail.custom.mechanical-has-no-shear-modulus-slot
+      Test #3085: compile_fail.custom.mechanical-has-no-shear-modulus-slot ..............   Passed    4.49 sec
+        Start 3085: compile_fail.custom.mechanical-has-no-shear-modulus-slot
+ 41/191 Test #3085: compile_fail.custom.mechanical-has-no-shear-modulus-slot ..............   Passed    4.51 sec
+        Start 3080: compile_fail.custom.no-override-map
+      Test #3080: compile_fail.custom.no-override-map ...................................   Passed    4.49 sec
+        Start 3080: compile_fail.custom.no-override-map
+      Test #3080: compile_fail.custom.no-override-map ...................................   Passed    4.47 sec
+        Start 3080: compile_fail.custom.no-override-map
+      Test #3080: compile_fail.custom.no-override-map ...................................   Passed    4.59 sec
+        Start 3080: compile_fail.custom.no-override-map
+      Test #3080: compile_fail.custom.no-override-map ...................................   Passed    4.81 sec
+        Start 3080: compile_fail.custom.no-override-map
+ 42/191 Test #3080: compile_fail.custom.no-override-map ...................................   Passed    4.62 sec
+        Start 3114: compile_fail.matcmd.edit-takes-no-name
+      Test #3114: compile_fail.matcmd.edit-takes-no-name ................................   Passed    4.84 sec
+        Start 3114: compile_fail.matcmd.edit-takes-no-name
+      Test #3114: compile_fail.matcmd.edit-takes-no-name ................................   Passed    4.96 sec
+        Start 3114: compile_fail.matcmd.edit-takes-no-name
+      Test #3114: compile_fail.matcmd.edit-takes-no-name ................................   Passed    4.85 sec
+        Start 3114: compile_fail.matcmd.edit-takes-no-name
+      Test #3114: compile_fail.matcmd.edit-takes-no-name ................................   Passed    4.79 sec
+        Start 3114: compile_fail.matcmd.edit-takes-no-name
+ 43/191 Test #3114: compile_fail.matcmd.edit-takes-no-name ................................   Passed    4.78 sec
+        Start 3079: compile_fail.custom.no-base-material-reference
+      Test #3079: compile_fail.custom.no-base-material-reference ........................   Passed    4.53 sec
+        Start 3079: compile_fail.custom.no-base-material-reference
+      Test #3079: compile_fail.custom.no-base-material-reference ........................   Passed    4.52 sec
+        Start 3079: compile_fail.custom.no-base-material-reference
+      Test #3079: compile_fail.custom.no-base-material-reference ........................   Passed    4.54 sec
+        Start 3079: compile_fail.custom.no-base-material-reference
+      Test #3079: compile_fail.custom.no-base-material-reference ........................   Passed    4.58 sec
+        Start 3079: compile_fail.custom.no-base-material-reference
+ 44/191 Test #3079: compile_fail.custom.no-base-material-reference ........................   Passed    4.54 sec
+        Start 3105: compile_fail.matcmd.create-has-no-mass
+      Test #3105: compile_fail.matcmd.create-has-no-mass ................................   Passed    4.73 sec
+        Start 3105: compile_fail.matcmd.create-has-no-mass
+      Test #3105: compile_fail.matcmd.create-has-no-mass ................................   Passed    4.82 sec
+        Start 3105: compile_fail.matcmd.create-has-no-mass
+      Test #3105: compile_fail.matcmd.create-has-no-mass ................................   Passed    4.90 sec
+        Start 3105: compile_fail.matcmd.create-has-no-mass
+      Test #3105: compile_fail.matcmd.create-has-no-mass ................................   Passed    4.78 sec
+        Start 3105: compile_fail.matcmd.create-has-no-mass
+ 45/191 Test #3105: compile_fail.matcmd.create-has-no-mass ................................   Passed    4.77 sec
+        Start 3111: compile_fail.matcmd.assign-takes-a-material-id
+      Test #3111: compile_fail.matcmd.assign-takes-a-material-id ........................   Passed    4.78 sec
+        Start 3111: compile_fail.matcmd.assign-takes-a-material-id
+      Test #3111: compile_fail.matcmd.assign-takes-a-material-id ........................   Passed    4.83 sec
+        Start 3111: compile_fail.matcmd.assign-takes-a-material-id
+      Test #3111: compile_fail.matcmd.assign-takes-a-material-id ........................   Passed    4.79 sec
+        Start 3111: compile_fail.matcmd.assign-takes-a-material-id
+      Test #3111: compile_fail.matcmd.assign-takes-a-material-id ........................   Passed    4.83 sec
+        Start 3111: compile_fail.matcmd.assign-takes-a-material-id
+ 46/191 Test #3111: compile_fail.matcmd.assign-takes-a-material-id ........................   Passed    4.80 sec
+        Start 3107: compile_fail.matcmd.edit-has-no-inertia
+      Test #3107: compile_fail.matcmd.edit-has-no-inertia ...............................   Passed    4.81 sec
+        Start 3107: compile_fail.matcmd.edit-has-no-inertia
+      Test #3107: compile_fail.matcmd.edit-has-no-inertia ...............................   Passed    4.74 sec
+        Start 3107: compile_fail.matcmd.edit-has-no-inertia
+      Test #3107: compile_fail.matcmd.edit-has-no-inertia ...............................   Passed    4.84 sec
+        Start 3107: compile_fail.matcmd.edit-has-no-inertia
+      Test #3107: compile_fail.matcmd.edit-has-no-inertia ...............................   Passed    4.75 sec
+        Start 3107: compile_fail.matcmd.edit-has-no-inertia
+ 47/191 Test #3107: compile_fail.matcmd.edit-has-no-inertia ...............................   Passed    4.76 sec
+        Start 3038: compile_fail.ids.sketch-id-as-feature-id
+      Test #3038: compile_fail.ids.sketch-id-as-feature-id ..............................   Passed    3.52 sec
+        Start 3038: compile_fail.ids.sketch-id-as-feature-id
+      Test #3038: compile_fail.ids.sketch-id-as-feature-id ..............................   Passed    3.55 sec
+        Start 3038: compile_fail.ids.sketch-id-as-feature-id
+      Test #3038: compile_fail.ids.sketch-id-as-feature-id ..............................   Passed    3.58 sec
+        Start 3038: compile_fail.ids.sketch-id-as-feature-id
+      Test #3038: compile_fail.ids.sketch-id-as-feature-id ..............................   Passed    3.58 sec
+        Start 3038: compile_fail.ids.sketch-id-as-feature-id
+ 48/191 Test #3038: compile_fail.ids.sketch-id-as-feature-id ..............................   Passed    3.56 sec
+        Start 3047: compile_fail.ids.object-to-sheet-id
+      Test #3047: compile_fail.ids.object-to-sheet-id ...................................   Passed    3.56 sec
+        Start 3047: compile_fail.ids.object-to-sheet-id
+      Test #3047: compile_fail.ids.object-to-sheet-id ...................................   Passed    3.53 sec
+        Start 3047: compile_fail.ids.object-to-sheet-id
+      Test #3047: compile_fail.ids.object-to-sheet-id ...................................   Passed    3.59 sec
+        Start 3047: compile_fail.ids.object-to-sheet-id
+      Test #3047: compile_fail.ids.object-to-sheet-id ...................................   Passed    3.56 sec
+        Start 3047: compile_fail.ids.object-to-sheet-id
+ 49/191 Test #3047: compile_fail.ids.object-to-sheet-id ...................................   Passed    3.57 sec
+        Start 3136: compile_fail.volumemesh.mutate-volume-mesh
+      Test #3136: compile_fail.volumemesh.mutate-volume-mesh ............................   Passed    5.06 sec
+        Start 3136: compile_fail.volumemesh.mutate-volume-mesh
+      Test #3136: compile_fail.volumemesh.mutate-volume-mesh ............................   Passed    5.12 sec
+        Start 3136: compile_fail.volumemesh.mutate-volume-mesh
+      Test #3136: compile_fail.volumemesh.mutate-volume-mesh ............................   Passed    5.09 sec
+        Start 3136: compile_fail.volumemesh.mutate-volume-mesh
+      Test #3136: compile_fail.volumemesh.mutate-volume-mesh ............................   Passed    5.09 sec
+        Start 3136: compile_fail.volumemesh.mutate-volume-mesh
+ 50/191 Test #3136: compile_fail.volumemesh.mutate-volume-mesh ............................   Passed    5.11 sec
+        Start 3040: compile_fail.ids.id-to-integer
+      Test #3040: compile_fail.ids.id-to-integer ........................................   Passed    3.55 sec
+        Start 3040: compile_fail.ids.id-to-integer
+      Test #3040: compile_fail.ids.id-to-integer ........................................   Passed    3.55 sec
+        Start 3040: compile_fail.ids.id-to-integer
+      Test #3040: compile_fail.ids.id-to-integer ........................................   Passed    3.53 sec
+        Start 3040: compile_fail.ids.id-to-integer
+      Test #3040: compile_fail.ids.id-to-integer ........................................   Passed    3.53 sec
+        Start 3040: compile_fail.ids.id-to-integer
+ 51/191 Test #3040: compile_fail.ids.id-to-integer ........................................   Passed    3.51 sec
+        Start 3045: compile_fail.ids.object-to-mate-id
+      Test #3045: compile_fail.ids.object-to-mate-id ....................................   Passed    3.56 sec
+        Start 3045: compile_fail.ids.object-to-mate-id
+      Test #3045: compile_fail.ids.object-to-mate-id ....................................   Passed    3.59 sec
+        Start 3045: compile_fail.ids.object-to-mate-id
+      Test #3045: compile_fail.ids.object-to-mate-id ....................................   Passed    3.56 sec
+        Start 3045: compile_fail.ids.object-to-mate-id
+      Test #3045: compile_fail.ids.object-to-mate-id ....................................   Passed    3.58 sec
+        Start 3045: compile_fail.ids.object-to-mate-id
+ 52/191 Test #3045: compile_fail.ids.object-to-mate-id ....................................   Passed    3.53 sec
+        Start 3044: compile_fail.ids.component-id-as-feature-id
+      Test #3044: compile_fail.ids.component-id-as-feature-id ...........................   Passed    3.53 sec
+        Start 3044: compile_fail.ids.component-id-as-feature-id
+      Test #3044: compile_fail.ids.component-id-as-feature-id ...........................   Passed    3.48 sec
+        Start 3044: compile_fail.ids.component-id-as-feature-id
+      Test #3044: compile_fail.ids.component-id-as-feature-id ...........................   Passed    3.58 sec
+        Start 3044: compile_fail.ids.component-id-as-feature-id
+      Test #3044: compile_fail.ids.component-id-as-feature-id ...........................   Passed    3.57 sec
+        Start 3044: compile_fail.ids.component-id-as-feature-id
+ 53/191 Test #3044: compile_fail.ids.component-id-as-feature-id ...........................   Passed    3.55 sec
+        Start 3046: compile_fail.ids.mate-id-as-component-id
+      Test #3046: compile_fail.ids.mate-id-as-component-id ..............................   Passed    3.56 sec
+        Start 3046: compile_fail.ids.mate-id-as-component-id
+      Test #3046: compile_fail.ids.mate-id-as-component-id ..............................   Passed    3.56 sec
+        Start 3046: compile_fail.ids.mate-id-as-component-id
+      Test #3046: compile_fail.ids.mate-id-as-component-id ..............................   Passed    3.54 sec
+        Start 3046: compile_fail.ids.mate-id-as-component-id
+      Test #3046: compile_fail.ids.mate-id-as-component-id ..............................   Passed    3.50 sec
+        Start 3046: compile_fail.ids.mate-id-as-component-id
+ 54/191 Test #3046: compile_fail.ids.mate-id-as-component-id ..............................   Passed    3.54 sec
+        Start 3043: compile_fail.ids.object-to-component-id
+      Test #3043: compile_fail.ids.object-to-component-id ...............................   Passed    3.54 sec
+        Start 3043: compile_fail.ids.object-to-component-id
+      Test #3043: compile_fail.ids.object-to-component-id ...............................   Passed    3.49 sec
+        Start 3043: compile_fail.ids.object-to-component-id
+      Test #3043: compile_fail.ids.object-to-component-id ...............................   Passed    3.56 sec
+        Start 3043: compile_fail.ids.object-to-component-id
+      Test #3043: compile_fail.ids.object-to-component-id ...............................   Passed    3.53 sec
+        Start 3043: compile_fail.ids.object-to-component-id
+ 55/191 Test #3043: compile_fail.ids.object-to-component-id ...............................   Passed    3.53 sec
+        Start 3134: compile_fail.volumemesh.default-construct-volume-mesh
+      Test #3134: compile_fail.volumemesh.default-construct-volume-mesh .................   Passed    4.97 sec
+        Start 3134: compile_fail.volumemesh.default-construct-volume-mesh
+      Test #3134: compile_fail.volumemesh.default-construct-volume-mesh .................   Passed    4.97 sec
+        Start 3134: compile_fail.volumemesh.default-construct-volume-mesh
+      Test #3134: compile_fail.volumemesh.default-construct-volume-mesh .................   Passed    4.87 sec
+        Start 3134: compile_fail.volumemesh.default-construct-volume-mesh
+      Test #3134: compile_fail.volumemesh.default-construct-volume-mesh .................   Passed    4.91 sec
+        Start 3134: compile_fail.volumemesh.default-construct-volume-mesh
+ 56/191 Test #3134: compile_fail.volumemesh.default-construct-volume-mesh .................   Passed    4.92 sec
+        Start 3108: compile_fail.matcmd.edit-has-no-completeness
+      Test #3108: compile_fail.matcmd.edit-has-no-completeness ..........................   Passed    4.77 sec
+        Start 3108: compile_fail.matcmd.edit-has-no-completeness
+      Test #3108: compile_fail.matcmd.edit-has-no-completeness ..........................   Passed    4.88 sec
+        Start 3108: compile_fail.matcmd.edit-has-no-completeness
+      Test #3108: compile_fail.matcmd.edit-has-no-completeness ..........................   Passed    4.73 sec
+        Start 3108: compile_fail.matcmd.edit-has-no-completeness
+      Test #3108: compile_fail.matcmd.edit-has-no-completeness ..........................   Passed    4.77 sec
+        Start 3108: compile_fail.matcmd.edit-has-no-completeness
+ 57/191 Test #3108: compile_fail.matcmd.edit-has-no-completeness ..........................   Passed    4.72 sec
+        Start 3039: compile_fail.ids.integer-to-id
+      Test #3039: compile_fail.ids.integer-to-id ........................................   Passed    3.58 sec
+        Start 3039: compile_fail.ids.integer-to-id
+      Test #3039: compile_fail.ids.integer-to-id ........................................   Passed    3.58 sec
+        Start 3039: compile_fail.ids.integer-to-id
+      Test #3039: compile_fail.ids.integer-to-id ........................................   Passed    3.52 sec
+        Start 3039: compile_fail.ids.integer-to-id
+      Test #3039: compile_fail.ids.integer-to-id ........................................   Passed    3.51 sec
+        Start 3039: compile_fail.ids.integer-to-id
+ 58/191 Test #3039: compile_fail.ids.integer-to-id ........................................   Passed    3.52 sec
+        Start 3110: compile_fail.matcmd.delete-takes-a-material-id
+      Test #3110: compile_fail.matcmd.delete-takes-a-material-id ........................   Passed    4.71 sec
+        Start 3110: compile_fail.matcmd.delete-takes-a-material-id
+      Test #3110: compile_fail.matcmd.delete-takes-a-material-id ........................   Passed    4.77 sec
+        Start 3110: compile_fail.matcmd.delete-takes-a-material-id
+      Test #3110: compile_fail.matcmd.delete-takes-a-material-id ........................   Passed    4.74 sec
+        Start 3110: compile_fail.matcmd.delete-takes-a-material-id
+      Test #3110: compile_fail.matcmd.delete-takes-a-material-id ........................   Passed    4.74 sec
+        Start 3110: compile_fail.matcmd.delete-takes-a-material-id
+ 59/191 Test #3110: compile_fail.matcmd.delete-takes-a-material-id ........................   Passed    4.76 sec
+        Start 3115: compile_fail.matcmd.delete-takes-no-library-entry
+      Test #3115: compile_fail.matcmd.delete-takes-no-library-entry .....................   Passed    4.79 sec
+        Start 3115: compile_fail.matcmd.delete-takes-no-library-entry
+      Test #3115: compile_fail.matcmd.delete-takes-no-library-entry .....................   Passed    4.73 sec
+        Start 3115: compile_fail.matcmd.delete-takes-no-library-entry
+      Test #3115: compile_fail.matcmd.delete-takes-no-library-entry .....................   Passed    4.84 sec
+        Start 3115: compile_fail.matcmd.delete-takes-no-library-entry
+      Test #3115: compile_fail.matcmd.delete-takes-no-library-entry .....................   Passed    4.73 sec
+        Start 3115: compile_fail.matcmd.delete-takes-no-library-entry
+ 60/191 Test #3115: compile_fail.matcmd.delete-takes-no-library-entry .....................   Passed    4.76 sec
+        Start 3117: compile_fail.matcmd.commands-are-not-copyable
+      Test #3117: compile_fail.matcmd.commands-are-not-copyable .........................   Passed    4.73 sec
+        Start 3117: compile_fail.matcmd.commands-are-not-copyable
+      Test #3117: compile_fail.matcmd.commands-are-not-copyable .........................   Passed    4.77 sec
+        Start 3117: compile_fail.matcmd.commands-are-not-copyable
+      Test #3117: compile_fail.matcmd.commands-are-not-copyable .........................   Passed    4.76 sec
+        Start 3117: compile_fail.matcmd.commands-are-not-copyable
+      Test #3117: compile_fail.matcmd.commands-are-not-copyable .........................   Passed    4.84 sec
+        Start 3117: compile_fail.matcmd.commands-are-not-copyable
+ 61/191 Test #3117: compile_fail.matcmd.commands-are-not-copyable .........................   Passed    4.78 sec
+        Start 3112: compile_fail.matcmd.assign-takes-no-name
+      Test #3112: compile_fail.matcmd.assign-takes-no-name ..............................   Passed    4.77 sec
+        Start 3112: compile_fail.matcmd.assign-takes-no-name
+      Test #3112: compile_fail.matcmd.assign-takes-no-name ..............................   Passed    4.92 sec
+        Start 3112: compile_fail.matcmd.assign-takes-no-name
+      Test #3112: compile_fail.matcmd.assign-takes-no-name ..............................   Passed    4.73 sec
+        Start 3112: compile_fail.matcmd.assign-takes-no-name
+      Test #3112: compile_fail.matcmd.assign-takes-no-name ..............................   Passed    4.75 sec
+        Start 3112: compile_fail.matcmd.assign-takes-no-name
+ 62/191 Test #3112: compile_fail.matcmd.assign-takes-no-name ..............................   Passed    4.78 sec
+        Start 3118: compile_fail.matcmd.material-id-is-not-an-int
+      Test #3118: compile_fail.matcmd.material-id-is-not-an-int .........................   Passed    4.77 sec
+        Start 3118: compile_fail.matcmd.material-id-is-not-an-int
+      Test #3118: compile_fail.matcmd.material-id-is-not-an-int .........................   Passed    4.74 sec
+        Start 3118: compile_fail.matcmd.material-id-is-not-an-int
+      Test #3118: compile_fail.matcmd.material-id-is-not-an-int .........................   Passed    4.80 sec
+        Start 3118: compile_fail.matcmd.material-id-is-not-an-int
+      Test #3118: compile_fail.matcmd.material-id-is-not-an-int .........................   Passed    5.06 sec
+        Start 3118: compile_fail.matcmd.material-id-is-not-an-int
+ 63/191 Test #3118: compile_fail.matcmd.material-id-is-not-an-int .........................   Passed    4.81 sec
+        Start 3109: compile_fail.matcmd.definition-has-no-volume
+      Test #3109: compile_fail.matcmd.definition-has-no-volume ..........................   Passed    4.73 sec
+        Start 3109: compile_fail.matcmd.definition-has-no-volume
+      Test #3109: compile_fail.matcmd.definition-has-no-volume ..........................   Passed    4.77 sec
+        Start 3109: compile_fail.matcmd.definition-has-no-volume
+      Test #3109: compile_fail.matcmd.definition-has-no-volume ..........................   Passed    4.77 sec
+        Start 3109: compile_fail.matcmd.definition-has-no-volume
+      Test #3109: compile_fail.matcmd.definition-has-no-volume ..........................   Passed    4.82 sec
+        Start 3109: compile_fail.matcmd.definition-has-no-volume
+ 64/191 Test #3109: compile_fail.matcmd.definition-has-no-volume ..........................   Passed    4.97 sec
+        Start 3116: compile_fail.matcmd.edit-takes-no-library-entry
+      Test #3116: compile_fail.matcmd.edit-takes-no-library-entry .......................   Passed    5.01 sec
+        Start 3116: compile_fail.matcmd.edit-takes-no-library-entry
+      Test #3116: compile_fail.matcmd.edit-takes-no-library-entry .......................   Passed    4.70 sec
+        Start 3116: compile_fail.matcmd.edit-takes-no-library-entry
+      Test #3116: compile_fail.matcmd.edit-takes-no-library-entry .......................   Passed    4.91 sec
+        Start 3116: compile_fail.matcmd.edit-takes-no-library-entry
+      Test #3116: compile_fail.matcmd.edit-takes-no-library-entry .......................   Passed    4.76 sec
+        Start 3116: compile_fail.matcmd.edit-takes-no-library-entry
+ 65/191 Test #3116: compile_fail.matcmd.edit-takes-no-library-entry .......................   Passed    4.68 sec
+        Start 3127: compile_fail.meshids.sketch-id-as-node-id
+      Test #3127: compile_fail.meshids.sketch-id-as-node-id .............................   Passed    3.91 sec
+        Start 3127: compile_fail.meshids.sketch-id-as-node-id
+      Test #3127: compile_fail.meshids.sketch-id-as-node-id .............................   Passed    3.83 sec
+        Start 3127: compile_fail.meshids.sketch-id-as-node-id
+      Test #3127: compile_fail.meshids.sketch-id-as-node-id .............................   Passed    3.83 sec
+        Start 3127: compile_fail.meshids.sketch-id-as-node-id
+      Test #3127: compile_fail.meshids.sketch-id-as-node-id .............................   Passed    3.87 sec
+        Start 3127: compile_fail.meshids.sketch-id-as-node-id
+ 66/191 Test #3127: compile_fail.meshids.sketch-id-as-node-id .............................   Passed    3.84 sec
+        Start 3142: compile_fail.geometrymeshmap.query-through-a-mutable-mesh
+      Test #3142: compile_fail.geometrymeshmap.query-through-a-mutable-mesh .............   Passed    5.08 sec
+        Start 3142: compile_fail.geometrymeshmap.query-through-a-mutable-mesh
+      Test #3142: compile_fail.geometrymeshmap.query-through-a-mutable-mesh .............   Passed    5.02 sec
+        Start 3142: compile_fail.geometrymeshmap.query-through-a-mutable-mesh
+      Test #3142: compile_fail.geometrymeshmap.query-through-a-mutable-mesh .............   Passed    5.02 sec
+        Start 3142: compile_fail.geometrymeshmap.query-through-a-mutable-mesh
+      Test #3142: compile_fail.geometrymeshmap.query-through-a-mutable-mesh .............   Passed    5.15 sec
+        Start 3142: compile_fail.geometrymeshmap.query-through-a-mutable-mesh
+ 67/191 Test #3142: compile_fail.geometrymeshmap.query-through-a-mutable-mesh .............   Passed    5.12 sec
+        Start 3143: compile_fail.geometrymeshmap.fabricate-a-map
+      Test #3143: compile_fail.geometrymeshmap.fabricate-a-map ..........................   Passed    5.16 sec
+        Start 3143: compile_fail.geometrymeshmap.fabricate-a-map
+      Test #3143: compile_fail.geometrymeshmap.fabricate-a-map ..........................   Passed    5.08 sec
+        Start 3143: compile_fail.geometrymeshmap.fabricate-a-map
+      Test #3143: compile_fail.geometrymeshmap.fabricate-a-map ..........................   Passed    5.11 sec
+        Start 3143: compile_fail.geometrymeshmap.fabricate-a-map
+      Test #3143: compile_fail.geometrymeshmap.fabricate-a-map ..........................   Passed    5.01 sec
+        Start 3143: compile_fail.geometrymeshmap.fabricate-a-map
+ 68/191 Test #3143: compile_fail.geometrymeshmap.fabricate-a-map ..........................   Passed    5.08 sec
+        Start 3088: compile_fail.custom.clone-takes-a-material-id
+      Test #3088: compile_fail.custom.clone-takes-a-material-id .........................   Passed    4.49 sec
+        Start 3088: compile_fail.custom.clone-takes-a-material-id
+      Test #3088: compile_fail.custom.clone-takes-a-material-id .........................   Passed    4.46 sec
+        Start 3088: compile_fail.custom.clone-takes-a-material-id
+      Test #3088: compile_fail.custom.clone-takes-a-material-id .........................   Passed    4.43 sec
+        Start 3088: compile_fail.custom.clone-takes-a-material-id
+      Test #3088: compile_fail.custom.clone-takes-a-material-id .........................   Passed    4.49 sec
+        Start 3088: compile_fail.custom.clone-takes-a-material-id
+ 69/191 Test #3088: compile_fail.custom.clone-takes-a-material-id .........................   Passed    4.45 sec
+        Start 3068: compile_fail.massp.mass-properties-have-no-setter
+      Test #3068: compile_fail.massp.mass-properties-have-no-setter .....................   Passed    4.42 sec
+        Start 3068: compile_fail.massp.mass-properties-have-no-setter
+      Test #3068: compile_fail.massp.mass-properties-have-no-setter .....................   Passed    4.47 sec
+        Start 3068: compile_fail.massp.mass-properties-have-no-setter
+      Test #3068: compile_fail.massp.mass-properties-have-no-setter .....................   Passed    4.54 sec
+        Start 3068: compile_fail.massp.mass-properties-have-no-setter
+      Test #3068: compile_fail.massp.mass-properties-have-no-setter .....................   Passed    4.43 sec
+        Start 3068: compile_fail.massp.mass-properties-have-no-setter
+ 70/191 Test #3068: compile_fail.massp.mass-properties-have-no-setter .....................   Passed    4.44 sec
+        Start 3133: compile_fail.meshids.triangle-with-tet-connectivity
+      Test #3133: compile_fail.meshids.triangle-with-tet-connectivity ...................   Passed    3.82 sec
+        Start 3133: compile_fail.meshids.triangle-with-tet-connectivity
+      Test #3133: compile_fail.meshids.triangle-with-tet-connectivity ...................   Passed    3.83 sec
+        Start 3133: compile_fail.meshids.triangle-with-tet-connectivity
+      Test #3133: compile_fail.meshids.triangle-with-tet-connectivity ...................   Passed    3.81 sec
+        Start 3133: compile_fail.meshids.triangle-with-tet-connectivity
+      Test #3133: compile_fail.meshids.triangle-with-tet-connectivity ...................   Passed    3.83 sec
+        Start 3133: compile_fail.meshids.triangle-with-tet-connectivity
+ 71/191 Test #3133: compile_fail.meshids.triangle-with-tet-connectivity ...................   Passed    3.82 sec
+        Start 3073: compile_fail.custom.library-entry-is-not-a-definition
+      Test #3073: compile_fail.custom.library-entry-is-not-a-definition .................   Passed    4.44 sec
+        Start 3073: compile_fail.custom.library-entry-is-not-a-definition
+      Test #3073: compile_fail.custom.library-entry-is-not-a-definition .................   Passed    4.43 sec
+        Start 3073: compile_fail.custom.library-entry-is-not-a-definition
+      Test #3073: compile_fail.custom.library-entry-is-not-a-definition .................   Passed    4.47 sec
+        Start 3073: compile_fail.custom.library-entry-is-not-a-definition
+      Test #3073: compile_fail.custom.library-entry-is-not-a-definition .................   Passed    4.50 sec
+        Start 3073: compile_fail.custom.library-entry-is-not-a-definition
+ 72/191 Test #3073: compile_fail.custom.library-entry-is-not-a-definition .................   Passed    4.44 sec
+        Start 3069: compile_fail.massp.body-returns-mass
+      Test #3069: compile_fail.massp.body-returns-mass ..................................   Passed    4.57 sec
+        Start 3069: compile_fail.massp.body-returns-mass
+      Test #3069: compile_fail.massp.body-returns-mass ..................................   Passed    4.47 sec
+        Start 3069: compile_fail.massp.body-returns-mass
+      Test #3069: compile_fail.massp.body-returns-mass ..................................   Passed    4.45 sec
+        Start 3069: compile_fail.massp.body-returns-mass
+      Test #3069: compile_fail.massp.body-returns-mass ..................................   Passed    4.45 sec
+        Start 3069: compile_fail.massp.body-returns-mass
+ 73/191 Test #3069: compile_fail.massp.body-returns-mass ..................................   Passed    4.43 sec
+        Start 3145: compile_fail.geometrymeshmap.reach-the-mesh-through-the-map
+      Test #3145: compile_fail.geometrymeshmap.reach-the-mesh-through-the-map ...........   Passed    5.18 sec
+        Start 3145: compile_fail.geometrymeshmap.reach-the-mesh-through-the-map
+      Test #3145: compile_fail.geometrymeshmap.reach-the-mesh-through-the-map ...........   Passed    5.01 sec
+        Start 3145: compile_fail.geometrymeshmap.reach-the-mesh-through-the-map
+      Test #3145: compile_fail.geometrymeshmap.reach-the-mesh-through-the-map ...........   Passed    5.04 sec
+        Start 3145: compile_fail.geometrymeshmap.reach-the-mesh-through-the-map
+      Test #3145: compile_fail.geometrymeshmap.reach-the-mesh-through-the-map ...........   Passed    5.01 sec
+        Start 3145: compile_fail.geometrymeshmap.reach-the-mesh-through-the-map
+ 74/191 Test #3145: compile_fail.geometrymeshmap.reach-the-mesh-through-the-map ...........   Passed    5.15 sec
+        Start 3010: compile_fail.units.poisson-as-kinematic-viscosity
+      Test #3010: compile_fail.units.poisson-as-kinematic-viscosity .....................   Passed    3.26 sec
+        Start 3010: compile_fail.units.poisson-as-kinematic-viscosity
+      Test #3010: compile_fail.units.poisson-as-kinematic-viscosity .....................   Passed    3.30 sec
+        Start 3010: compile_fail.units.poisson-as-kinematic-viscosity
+      Test #3010: compile_fail.units.poisson-as-kinematic-viscosity .....................   Passed    3.35 sec
+        Start 3010: compile_fail.units.poisson-as-kinematic-viscosity
+      Test #3010: compile_fail.units.poisson-as-kinematic-viscosity .....................   Passed    3.26 sec
+        Start 3010: compile_fail.units.poisson-as-kinematic-viscosity
+ 75/191 Test #3010: compile_fail.units.poisson-as-kinematic-viscosity .....................   Passed    3.28 sec
+        Start 3096: compile_fail.prov.date-has-no-public-constructor
+      Test #3096: compile_fail.prov.date-has-no-public-constructor ......................   Passed    4.47 sec
+        Start 3096: compile_fail.prov.date-has-no-public-constructor
+      Test #3096: compile_fail.prov.date-has-no-public-constructor ......................   Passed    4.71 sec
+        Start 3096: compile_fail.prov.date-has-no-public-constructor
+      Test #3096: compile_fail.prov.date-has-no-public-constructor ......................   Passed    4.50 sec
+        Start 3096: compile_fail.prov.date-has-no-public-constructor
+      Test #3096: compile_fail.prov.date-has-no-public-constructor ......................   Passed    4.50 sec
+        Start 3096: compile_fail.prov.date-has-no-public-constructor
+ 76/191 Test #3096: compile_fail.prov.date-has-no-public-constructor ......................   Passed    4.40 sec
+        Start 3113: compile_fail.matcmd.delete-takes-no-name
+      Test #3113: compile_fail.matcmd.delete-takes-no-name ..............................   Passed    4.83 sec
+        Start 3113: compile_fail.matcmd.delete-takes-no-name
+      Test #3113: compile_fail.matcmd.delete-takes-no-name ..............................   Passed    4.74 sec
+        Start 3113: compile_fail.matcmd.delete-takes-no-name
+      Test #3113: compile_fail.matcmd.delete-takes-no-name ..............................   Passed    4.73 sec
+        Start 3113: compile_fail.matcmd.delete-takes-no-name
+      Test #3113: compile_fail.matcmd.delete-takes-no-name ..............................   Passed    4.74 sec
+        Start 3113: compile_fail.matcmd.delete-takes-no-name
+ 77/191 Test #3113: compile_fail.matcmd.delete-takes-no-name ..............................   Passed    4.85 sec
+        Start 3077: compile_fail.custom.definition-has-no-id
+      Test #3077: compile_fail.custom.definition-has-no-id ..............................   Passed    4.49 sec
+        Start 3077: compile_fail.custom.definition-has-no-id
+      Test #3077: compile_fail.custom.definition-has-no-id ..............................   Passed    4.55 sec
+        Start 3077: compile_fail.custom.definition-has-no-id
+      Test #3077: compile_fail.custom.definition-has-no-id ..............................   Passed    4.48 sec
+        Start 3077: compile_fail.custom.definition-has-no-id
+      Test #3077: compile_fail.custom.definition-has-no-id ..............................   Passed    4.50 sec
+        Start 3077: compile_fail.custom.definition-has-no-id
+ 78/191 Test #3077: compile_fail.custom.definition-has-no-id ..............................   Passed    4.57 sec
+        Start 3072: compile_fail.custom.library-table-is-const
+      Test #3072: compile_fail.custom.library-table-is-const ............................   Passed    4.48 sec
+        Start 3072: compile_fail.custom.library-table-is-const
+      Test #3072: compile_fail.custom.library-table-is-const ............................   Passed    4.50 sec
+        Start 3072: compile_fail.custom.library-table-is-const
+      Test #3072: compile_fail.custom.library-table-is-const ............................   Passed    4.50 sec
+        Start 3072: compile_fail.custom.library-table-is-const
+      Test #3072: compile_fail.custom.library-table-is-const ............................   Passed    4.56 sec
+        Start 3072: compile_fail.custom.library-table-is-const
+ 79/191 Test #3072: compile_fail.custom.library-table-is-const ............................   Passed    4.54 sec
+        Start 3104: compile_fail.prov.property-has-no-value-or
+      Test #3104: compile_fail.prov.property-has-no-value-or ............................   Passed    4.44 sec
+        Start 3104: compile_fail.prov.property-has-no-value-or
+      Test #3104: compile_fail.prov.property-has-no-value-or ............................   Passed    4.77 sec
+        Start 3104: compile_fail.prov.property-has-no-value-or
+      Test #3104: compile_fail.prov.property-has-no-value-or ............................   Passed    4.58 sec
+        Start 3104: compile_fail.prov.property-has-no-value-or
+      Test #3104: compile_fail.prov.property-has-no-value-or ............................   Passed    4.51 sec
+        Start 3104: compile_fail.prov.property-has-no-value-or
+ 80/191 Test #3104: compile_fail.prov.property-has-no-value-or ............................   Passed    4.48 sec
+        Start 3141: compile_fail.geometrymeshmap.build-map-from-a-mutable-geometry
+      Test #3141: compile_fail.geometrymeshmap.build-map-from-a-mutable-geometry ........   Passed    5.04 sec
+        Start 3141: compile_fail.geometrymeshmap.build-map-from-a-mutable-geometry
+      Test #3141: compile_fail.geometrymeshmap.build-map-from-a-mutable-geometry ........   Passed    5.19 sec
+        Start 3141: compile_fail.geometrymeshmap.build-map-from-a-mutable-geometry
+      Test #3141: compile_fail.geometrymeshmap.build-map-from-a-mutable-geometry ........   Passed    5.06 sec
+        Start 3141: compile_fail.geometrymeshmap.build-map-from-a-mutable-geometry
+      Test #3141: compile_fail.geometrymeshmap.build-map-from-a-mutable-geometry ........   Passed    5.12 sec
+        Start 3141: compile_fail.geometrymeshmap.build-map-from-a-mutable-geometry
+ 81/191 Test #3141: compile_fail.geometrymeshmap.build-map-from-a-mutable-geometry ........   Passed    5.16 sec
+        Start 3099: compile_fail.prov.value-is-not-provenance
+      Test #3099: compile_fail.prov.value-is-not-provenance .............................   Passed    4.53 sec
+        Start 3099: compile_fail.prov.value-is-not-provenance
+      Test #3099: compile_fail.prov.value-is-not-provenance .............................   Passed    4.51 sec
+        Start 3099: compile_fail.prov.value-is-not-provenance
+      Test #3099: compile_fail.prov.value-is-not-provenance .............................   Passed    4.51 sec
+        Start 3099: compile_fail.prov.value-is-not-provenance
+      Test #3099: compile_fail.prov.value-is-not-provenance .............................   Passed    5.08 sec
+        Start 3099: compile_fail.prov.value-is-not-provenance
+ 82/191 Test #3099: compile_fail.prov.value-is-not-provenance .............................   Passed    4.56 sec
+        Start 3094: compile_fail.prov.consumer-is-typed
+      Test #3094: compile_fail.prov.consumer-is-typed ...................................   Passed    4.53 sec
+        Start 3094: compile_fail.prov.consumer-is-typed
+      Test #3094: compile_fail.prov.consumer-is-typed ...................................   Passed    4.66 sec
+        Start 3094: compile_fail.prov.consumer-is-typed
+      Test #3094: compile_fail.prov.consumer-is-typed ...................................   Passed    4.56 sec
+        Start 3094: compile_fail.prov.consumer-is-typed
+      Test #3094: compile_fail.prov.consumer-is-typed ...................................   Passed    4.49 sec
+        Start 3094: compile_fail.prov.consumer-is-typed
+ 83/191 Test #3094: compile_fail.prov.consumer-is-typed ...................................   Passed    4.62 sec
+        Start 3076: compile_fail.custom.found-material-is-const
+      Test #3076: compile_fail.custom.found-material-is-const ...........................   Passed    4.53 sec
+        Start 3076: compile_fail.custom.found-material-is-const
+      Test #3076: compile_fail.custom.found-material-is-const ...........................   Passed    4.57 sec
+        Start 3076: compile_fail.custom.found-material-is-const
+      Test #3076: compile_fail.custom.found-material-is-const ...........................   Passed    4.50 sec
+        Start 3076: compile_fail.custom.found-material-is-const
+      Test #3076: compile_fail.custom.found-material-is-const ...........................   Passed    4.67 sec
+        Start 3076: compile_fail.custom.found-material-is-const
+ 84/191 Test #3076: compile_fail.custom.found-material-is-const ...........................   Passed    4.42 sec
+        Start 3059: compile_fail.massp.volume-moment-in-kg-mm2
+      Test #3059: compile_fail.massp.volume-moment-in-kg-mm2 ............................   Passed    4.51 sec
+        Start 3059: compile_fail.massp.volume-moment-in-kg-mm2
+      Test #3059: compile_fail.massp.volume-moment-in-kg-mm2 ............................   Passed    4.42 sec
+        Start 3059: compile_fail.massp.volume-moment-in-kg-mm2
+      Test #3059: compile_fail.massp.volume-moment-in-kg-mm2 ............................   Passed    4.56 sec
+        Start 3059: compile_fail.massp.volume-moment-in-kg-mm2
+      Test #3059: compile_fail.massp.volume-moment-in-kg-mm2 ............................   Passed    4.45 sec
+        Start 3059: compile_fail.massp.volume-moment-in-kg-mm2
+ 85/191 Test #3059: compile_fail.massp.volume-moment-in-kg-mm2 ............................   Passed    4.47 sec
+        Start 3125: compile_fail.meshids.region-id-as-object-id
+      Test #3125: compile_fail.meshids.region-id-as-object-id ...........................   Passed    3.85 sec
+        Start 3125: compile_fail.meshids.region-id-as-object-id
+      Test #3125: compile_fail.meshids.region-id-as-object-id ...........................   Passed    3.86 sec
+        Start 3125: compile_fail.meshids.region-id-as-object-id
+      Test #3125: compile_fail.meshids.region-id-as-object-id ...........................   Passed    3.91 sec
+        Start 3125: compile_fail.meshids.region-id-as-object-id
+      Test #3125: compile_fail.meshids.region-id-as-object-id ...........................   Passed    3.92 sec
+        Start 3125: compile_fail.meshids.region-id-as-object-id
+ 86/191 Test #3125: compile_fail.meshids.region-id-as-object-id ...........................   Passed    4.00 sec
+        Start 3026: compile_fail.assign.occurrence-material-field
+      Test #3026: compile_fail.assign.occurrence-material-field .........................   Passed    4.43 sec
+        Start 3026: compile_fail.assign.occurrence-material-field
+      Test #3026: compile_fail.assign.occurrence-material-field .........................   Passed    4.42 sec
+        Start 3026: compile_fail.assign.occurrence-material-field
+      Test #3026: compile_fail.assign.occurrence-material-field .........................   Passed    4.48 sec
+        Start 3026: compile_fail.assign.occurrence-material-field
+      Test #3026: compile_fail.assign.occurrence-material-field .........................   Passed    4.52 sec
+        Start 3026: compile_fail.assign.occurrence-material-field
+ 87/191 Test #3026: compile_fail.assign.occurrence-material-field .........................   Passed    4.44 sec
+        Start 3081: compile_fail.custom.property-is-never-inherited
+      Test #3081: compile_fail.custom.property-is-never-inherited .......................   Passed    4.53 sec
+        Start 3081: compile_fail.custom.property-is-never-inherited
+      Test #3081: compile_fail.custom.property-is-never-inherited .......................   Passed    4.55 sec
+        Start 3081: compile_fail.custom.property-is-never-inherited
+      Test #3081: compile_fail.custom.property-is-never-inherited .......................   Passed    4.60 sec
+        Start 3081: compile_fail.custom.property-is-never-inherited
+      Test #3081: compile_fail.custom.property-is-never-inherited .......................   Passed    4.64 sec
+        Start 3081: compile_fail.custom.property-is-never-inherited
+ 88/191 Test #3081: compile_fail.custom.property-is-never-inherited .......................   Passed    4.48 sec
+        Start 3060: compile_fail.massp.mass-moment-from-double
+      Test #3060: compile_fail.massp.mass-moment-from-double ............................   Passed    4.55 sec
+        Start 3060: compile_fail.massp.mass-moment-from-double
+      Test #3060: compile_fail.massp.mass-moment-from-double ............................   Passed    4.45 sec
+        Start 3060: compile_fail.massp.mass-moment-from-double
+      Test #3060: compile_fail.massp.mass-moment-from-double ............................   Passed    4.52 sec
+        Start 3060: compile_fail.massp.mass-moment-from-double
+      Test #3060: compile_fail.massp.mass-moment-from-double ............................   Passed    4.45 sec
+        Start 3060: compile_fail.massp.mass-moment-from-double
+ 89/191 Test #3060: compile_fail.massp.mass-moment-from-double ............................   Passed    4.91 sec
+        Start 3082: compile_fail.custom.no-inherited-property-state
+      Test #3082: compile_fail.custom.no-inherited-property-state .......................   Passed    4.46 sec
+        Start 3082: compile_fail.custom.no-inherited-property-state
+      Test #3082: compile_fail.custom.no-inherited-property-state .......................   Passed    4.56 sec
+        Start 3082: compile_fail.custom.no-inherited-property-state
+      Test #3082: compile_fail.custom.no-inherited-property-state .......................   Passed    4.52 sec
+        Start 3082: compile_fail.custom.no-inherited-property-state
+      Test #3082: compile_fail.custom.no-inherited-property-state .......................   Passed    4.53 sec
+        Start 3082: compile_fail.custom.no-inherited-property-state
+ 90/191 Test #3082: compile_fail.custom.no-inherited-property-state .......................   Passed    4.46 sec
+        Start 3022: compile_fail.assign.assign-object-id
+      Test #3022: compile_fail.assign.assign-object-id ..................................   Passed    4.47 sec
+        Start 3022: compile_fail.assign.assign-object-id
+      Test #3022: compile_fail.assign.assign-object-id ..................................   Passed    4.55 sec
+        Start 3022: compile_fail.assign.assign-object-id
+      Test #3022: compile_fail.assign.assign-object-id ..................................   Passed    4.44 sec
+        Start 3022: compile_fail.assign.assign-object-id
+      Test #3022: compile_fail.assign.assign-object-id ..................................   Passed    4.44 sec
+        Start 3022: compile_fail.assign.assign-object-id
+ 91/191 Test #3022: compile_fail.assign.assign-object-id ..................................   Passed    4.63 sec
+        Start 3064: compile_fail.massp.shift-with-a-density
+      Test #3064: compile_fail.massp.shift-with-a-density ...............................   Passed    4.51 sec
+        Start 3064: compile_fail.massp.shift-with-a-density
+      Test #3064: compile_fail.massp.shift-with-a-density ...............................   Passed    4.44 sec
+        Start 3064: compile_fail.massp.shift-with-a-density
+      Test #3064: compile_fail.massp.shift-with-a-density ...............................   Passed    4.39 sec
+        Start 3064: compile_fail.massp.shift-with-a-density
+      Test #3064: compile_fail.massp.shift-with-a-density ...............................   Passed    4.53 sec
+        Start 3064: compile_fail.massp.shift-with-a-density
+ 92/191 Test #3064: compile_fail.massp.shift-with-a-density ...............................   Passed    4.43 sec
+        Start 3089: compile_fail.custom.clone-does-not-take-a-library-entry
+      Test #3089: compile_fail.custom.clone-does-not-take-a-library-entry ...............   Passed    4.55 sec
+        Start 3089: compile_fail.custom.clone-does-not-take-a-library-entry
+      Test #3089: compile_fail.custom.clone-does-not-take-a-library-entry ...............   Passed    4.47 sec
+        Start 3089: compile_fail.custom.clone-does-not-take-a-library-entry
+      Test #3089: compile_fail.custom.clone-does-not-take-a-library-entry ...............   Passed    4.58 sec
+        Start 3089: compile_fail.custom.clone-does-not-take-a-library-entry
+      Test #3089: compile_fail.custom.clone-does-not-take-a-library-entry ...............   Passed    4.44 sec
+        Start 3089: compile_fail.custom.clone-does-not-take-a-library-entry
+ 93/191 Test #3089: compile_fail.custom.clone-does-not-take-a-library-entry ...............   Passed    4.58 sec
+        Start 3103: compile_fail.prov.no-default-density
+      Test #3103: compile_fail.prov.no-default-density ..................................   Passed    4.47 sec
+        Start 3103: compile_fail.prov.no-default-density
+      Test #3103: compile_fail.prov.no-default-density ..................................   Passed    4.42 sec
+        Start 3103: compile_fail.prov.no-default-density
+      Test #3103: compile_fail.prov.no-default-density ..................................   Passed    4.49 sec
+        Start 3103: compile_fail.prov.no-default-density
+      Test #3103: compile_fail.prov.no-default-density ..................................   Passed    4.63 sec
+        Start 3103: compile_fail.prov.no-default-density
+ 94/191 Test #3103: compile_fail.prov.no-default-density ..................................   Passed    4.50 sec
+        Start 3092: compile_fail.prov.material-has-no-is-complete
+      Test #3092: compile_fail.prov.material-has-no-is-complete .........................   Passed    4.51 sec
+        Start 3092: compile_fail.prov.material-has-no-is-complete
+      Test #3092: compile_fail.prov.material-has-no-is-complete .........................   Passed    4.49 sec
+        Start 3092: compile_fail.prov.material-has-no-is-complete
+      Test #3092: compile_fail.prov.material-has-no-is-complete .........................   Passed    4.52 sec
+        Start 3092: compile_fail.prov.material-has-no-is-complete
+      Test #3092: compile_fail.prov.material-has-no-is-complete .........................   Passed    4.47 sec
+        Start 3092: compile_fail.prov.material-has-no-is-complete
+ 95/191 Test #3092: compile_fail.prov.material-has-no-is-complete .........................   Passed    4.61 sec
+        Start 3083: compile_fail.custom.definition-has-no-mass
+      Test #3083: compile_fail.custom.definition-has-no-mass ............................   Passed    4.48 sec
+        Start 3083: compile_fail.custom.definition-has-no-mass
+      Test #3083: compile_fail.custom.definition-has-no-mass ............................   Passed    4.49 sec
+        Start 3083: compile_fail.custom.definition-has-no-mass
+      Test #3083: compile_fail.custom.definition-has-no-mass ............................   Passed    4.63 sec
+        Start 3083: compile_fail.custom.definition-has-no-mass
+      Test #3083: compile_fail.custom.definition-has-no-mass ............................   Passed    4.51 sec
+        Start 3083: compile_fail.custom.definition-has-no-mass
+ 96/191 Test #3083: compile_fail.custom.definition-has-no-mass ............................   Passed    4.63 sec
+        Start 3067: compile_fail.massp.document-reads-mass
+      Test #3067: compile_fail.massp.document-reads-mass ................................   Passed    4.54 sec
+        Start 3067: compile_fail.massp.document-reads-mass
+      Test #3067: compile_fail.massp.document-reads-mass ................................   Passed    4.53 sec
+        Start 3067: compile_fail.massp.document-reads-mass
+      Test #3067: compile_fail.massp.document-reads-mass ................................   Passed    4.52 sec
+        Start 3067: compile_fail.massp.document-reads-mass
+      Test #3067: compile_fail.massp.document-reads-mass ................................   Passed    4.45 sec
+        Start 3067: compile_fail.massp.document-reads-mass
+ 97/191 Test #3067: compile_fail.massp.document-reads-mass ................................   Passed    4.59 sec
+        Start 3132: compile_fail.meshids.add-element-through-mesh
+      Test #3132: compile_fail.meshids.add-element-through-mesh .........................   Passed    3.87 sec
+        Start 3132: compile_fail.meshids.add-element-through-mesh
+      Test #3132: compile_fail.meshids.add-element-through-mesh .........................   Passed    3.92 sec
+        Start 3132: compile_fail.meshids.add-element-through-mesh
+      Test #3132: compile_fail.meshids.add-element-through-mesh .........................   Passed    3.86 sec
+        Start 3132: compile_fail.meshids.add-element-through-mesh
+      Test #3132: compile_fail.meshids.add-element-through-mesh .........................   Passed    3.88 sec
+        Start 3132: compile_fail.meshids.add-element-through-mesh
+ 98/191 Test #3132: compile_fail.meshids.add-element-through-mesh .........................   Passed    3.85 sec
+        Start 3100: compile_fail.prov.provenance-kind-is-not-a-property-state
+      Test #3100: compile_fail.prov.provenance-kind-is-not-a-property-state .............   Passed    4.56 sec
+        Start 3100: compile_fail.prov.provenance-kind-is-not-a-property-state
+      Test #3100: compile_fail.prov.provenance-kind-is-not-a-property-state .............   Passed    4.60 sec
+        Start 3100: compile_fail.prov.provenance-kind-is-not-a-property-state
+      Test #3100: compile_fail.prov.provenance-kind-is-not-a-property-state .............   Passed    4.59 sec
+        Start 3100: compile_fail.prov.provenance-kind-is-not-a-property-state
+      Test #3100: compile_fail.prov.provenance-kind-is-not-a-property-state .............   Passed    4.46 sec
+        Start 3100: compile_fail.prov.provenance-kind-is-not-a-property-state
+ 99/191 Test #3100: compile_fail.prov.provenance-kind-is-not-a-property-state .............   Passed    4.48 sec
+        Start 3098: compile_fail.prov.provenance-is-not-a-value
+      Test #3098: compile_fail.prov.provenance-is-not-a-value ...........................   Passed    4.50 sec
+        Start 3098: compile_fail.prov.provenance-is-not-a-value
+      Test #3098: compile_fail.prov.provenance-is-not-a-value ...........................   Passed    4.60 sec
+        Start 3098: compile_fail.prov.provenance-is-not-a-value
+      Test #3098: compile_fail.prov.provenance-is-not-a-value ...........................   Passed    4.68 sec
+        Start 3098: compile_fail.prov.provenance-is-not-a-value
+      Test #3098: compile_fail.prov.provenance-is-not-a-value ...........................   Passed    4.51 sec
+        Start 3098: compile_fail.prov.provenance-is-not-a-value
+100/191 Test #3098: compile_fail.prov.provenance-is-not-a-value ...........................   Passed    4.56 sec
+        Start 3023: compile_fail.assign.assign-integer
+      Test #3023: compile_fail.assign.assign-integer ....................................   Passed    4.44 sec
+        Start 3023: compile_fail.assign.assign-integer
+      Test #3023: compile_fail.assign.assign-integer ....................................   Passed    4.52 sec
+        Start 3023: compile_fail.assign.assign-integer
+      Test #3023: compile_fail.assign.assign-integer ....................................   Passed    4.56 sec
+        Start 3023: compile_fail.assign.assign-integer
+      Test #3023: compile_fail.assign.assign-integer ....................................   Passed    4.78 sec
+        Start 3023: compile_fail.assign.assign-integer
+101/191 Test #3023: compile_fail.assign.assign-integer ....................................   Passed    4.56 sec
+        Start 3055: compile_fail.massp.volume-moment-as-mass-moment
+      Test #3055: compile_fail.massp.volume-moment-as-mass-moment .......................   Passed    4.49 sec
+        Start 3055: compile_fail.massp.volume-moment-as-mass-moment
+      Test #3055: compile_fail.massp.volume-moment-as-mass-moment .......................   Passed    4.47 sec
+        Start 3055: compile_fail.massp.volume-moment-as-mass-moment
+      Test #3055: compile_fail.massp.volume-moment-as-mass-moment .......................   Passed    4.61 sec
+        Start 3055: compile_fail.massp.volume-moment-as-mass-moment
+      Test #3055: compile_fail.massp.volume-moment-as-mass-moment .......................   Passed    4.45 sec
+        Start 3055: compile_fail.massp.volume-moment-as-mass-moment
+102/191 Test #3055: compile_fail.massp.volume-moment-as-mass-moment .......................   Passed    4.94 sec
+        Start 3122: compile_fail.meshids.node-id-as-region-id
+      Test #3122: compile_fail.meshids.node-id-as-region-id .............................   Passed    3.92 sec
+        Start 3122: compile_fail.meshids.node-id-as-region-id
+      Test #3122: compile_fail.meshids.node-id-as-region-id .............................   Passed    3.81 sec
+        Start 3122: compile_fail.meshids.node-id-as-region-id
+      Test #3122: compile_fail.meshids.node-id-as-region-id .............................   Passed    3.87 sec
+        Start 3122: compile_fail.meshids.node-id-as-region-id
+      Test #3122: compile_fail.meshids.node-id-as-region-id .............................   Passed    3.96 sec
+        Start 3122: compile_fail.meshids.node-id-as-region-id
+103/191 Test #3122: compile_fail.meshids.node-id-as-region-id .............................   Passed    3.80 sec
+        Start 3058: compile_fail.massp.mass-moment-in-mm5
+      Test #3058: compile_fail.massp.mass-moment-in-mm5 .................................   Passed    4.63 sec
+        Start 3058: compile_fail.massp.mass-moment-in-mm5
+      Test #3058: compile_fail.massp.mass-moment-in-mm5 .................................   Passed    4.48 sec
+        Start 3058: compile_fail.massp.mass-moment-in-mm5
+      Test #3058: compile_fail.massp.mass-moment-in-mm5 .................................   Passed    4.59 sec
+        Start 3058: compile_fail.massp.mass-moment-in-mm5
+      Test #3058: compile_fail.massp.mass-moment-in-mm5 .................................   Passed    4.48 sec
+        Start 3058: compile_fail.massp.mass-moment-in-mm5
+104/191 Test #3058: compile_fail.massp.mass-moment-in-mm5 .................................   Passed    9.01 sec
+        Start 3066: compile_fail.massp.document-stores-mass
+      Test #3066: compile_fail.massp.document-stores-mass ...............................   Passed    4.68 sec
+        Start 3066: compile_fail.massp.document-stores-mass
+      Test #3066: compile_fail.massp.document-stores-mass ...............................   Passed    4.39 sec
+        Start 3066: compile_fail.massp.document-stores-mass
+      Test #3066: compile_fail.massp.document-stores-mass ...............................   Passed    4.75 sec
+        Start 3066: compile_fail.massp.document-stores-mass
+      Test #3066: compile_fail.massp.document-stores-mass ...............................   Passed    4.50 sec
+        Start 3066: compile_fail.massp.document-stores-mass
+105/191 Test #3066: compile_fail.massp.document-stores-mass ...............................   Passed    4.51 sec
+        Start 3070: compile_fail.custom.library-entry-has-no-setter
+      Test #3070: compile_fail.custom.library-entry-has-no-setter .......................   Passed    4.67 sec
+        Start 3070: compile_fail.custom.library-entry-has-no-setter
+      Test #3070: compile_fail.custom.library-entry-has-no-setter .......................   Passed    4.51 sec
+        Start 3070: compile_fail.custom.library-entry-has-no-setter
+      Test #3070: compile_fail.custom.library-entry-has-no-setter .......................   Passed    4.45 sec
+        Start 3070: compile_fail.custom.library-entry-has-no-setter
+      Test #3070: compile_fail.custom.library-entry-has-no-setter .......................   Passed    4.59 sec
+        Start 3070: compile_fail.custom.library-entry-has-no-setter
+106/191 Test #3070: compile_fail.custom.library-entry-has-no-setter .......................   Passed    4.46 sec
+        Start 3065: compile_fail.massp.tensor-reference-from-components
+      Test #3065: compile_fail.massp.tensor-reference-from-components ...................   Passed    4.63 sec
+        Start 3065: compile_fail.massp.tensor-reference-from-components
+      Test #3065: compile_fail.massp.tensor-reference-from-components ...................   Passed    8.12 sec
+        Start 3065: compile_fail.massp.tensor-reference-from-components
+      Test #3065: compile_fail.massp.tensor-reference-from-components ...................   Passed    5.07 sec
+        Start 3065: compile_fail.massp.tensor-reference-from-components
+      Test #3065: compile_fail.massp.tensor-reference-from-components ...................   Passed   10.79 sec
+        Start 3065: compile_fail.massp.tensor-reference-from-components
+107/191 Test #3065: compile_fail.massp.tensor-reference-from-components ...................   Passed    8.20 sec
+        Start 3095: compile_fail.prov.no-cfd-consumer
+      Test #3095: compile_fail.prov.no-cfd-consumer .....................................   Passed    5.02 sec
+        Start 3095: compile_fail.prov.no-cfd-consumer
+      Test #3095: compile_fail.prov.no-cfd-consumer .....................................   Passed    4.73 sec
+        Start 3095: compile_fail.prov.no-cfd-consumer
+      Test #3095: compile_fail.prov.no-cfd-consumer .....................................   Passed    4.67 sec
+        Start 3095: compile_fail.prov.no-cfd-consumer
+      Test #3095: compile_fail.prov.no-cfd-consumer .....................................   Passed    4.58 sec
+        Start 3095: compile_fail.prov.no-cfd-consumer
+108/191 Test #3095: compile_fail.prov.no-cfd-consumer .....................................   Passed    4.64 sec
+        Start 3075: compile_fail.custom.library-entry-has-no-properties
+      Test #3075: compile_fail.custom.library-entry-has-no-properties ...................   Passed    4.57 sec
+        Start 3075: compile_fail.custom.library-entry-has-no-properties
+      Test #3075: compile_fail.custom.library-entry-has-no-properties ...................   Passed    4.66 sec
+        Start 3075: compile_fail.custom.library-entry-has-no-properties
+      Test #3075: compile_fail.custom.library-entry-has-no-properties ...................   Passed    4.61 sec
+        Start 3075: compile_fail.custom.library-entry-has-no-properties
+      Test #3075: compile_fail.custom.library-entry-has-no-properties ...................   Passed    4.66 sec
+        Start 3075: compile_fail.custom.library-entry-has-no-properties
+109/191 Test #3075: compile_fail.custom.library-entry-has-no-properties ...................   Passed    4.61 sec
+        Start 3062: compile_fail.massp.volume-times-density-is-not-a-moment
+      Test #3062: compile_fail.massp.volume-times-density-is-not-a-moment ...............   Passed    4.68 sec
+        Start 3062: compile_fail.massp.volume-times-density-is-not-a-moment
+      Test #3062: compile_fail.massp.volume-times-density-is-not-a-moment ...............   Passed    4.47 sec
+        Start 3062: compile_fail.massp.volume-times-density-is-not-a-moment
+      Test #3062: compile_fail.massp.volume-times-density-is-not-a-moment ...............   Passed    4.72 sec
+        Start 3062: compile_fail.massp.volume-times-density-is-not-a-moment
+      Test #3062: compile_fail.massp.volume-times-density-is-not-a-moment ...............   Passed    4.51 sec
+        Start 3062: compile_fail.massp.volume-times-density-is-not-a-moment
+110/191 Test #3062: compile_fail.massp.volume-times-density-is-not-a-moment ...............   Passed    4.66 sec
+        Start 3084: compile_fail.custom.definition-has-no-volume
+      Test #3084: compile_fail.custom.definition-has-no-volume ..........................   Passed    4.52 sec
+        Start 3084: compile_fail.custom.definition-has-no-volume
+      Test #3084: compile_fail.custom.definition-has-no-volume ..........................   Passed    4.98 sec
+        Start 3084: compile_fail.custom.definition-has-no-volume
+      Test #3084: compile_fail.custom.definition-has-no-volume ..........................   Passed    4.50 sec
+        Start 3084: compile_fail.custom.definition-has-no-volume
+      Test #3084: compile_fail.custom.definition-has-no-volume ..........................   Passed    7.67 sec
+        Start 3084: compile_fail.custom.definition-has-no-volume
+111/191 Test #3084: compile_fail.custom.definition-has-no-volume ..........................   Passed    4.54 sec
+        Start 3101: compile_fail.prov.property-state-is-not-a-source-kind
+      Test #3101: compile_fail.prov.property-state-is-not-a-source-kind .................   Passed    6.71 sec
+        Start 3101: compile_fail.prov.property-state-is-not-a-source-kind
+      Test #3101: compile_fail.prov.property-state-is-not-a-source-kind .................   Passed    4.72 sec
+        Start 3101: compile_fail.prov.property-state-is-not-a-source-kind
+      Test #3101: compile_fail.prov.property-state-is-not-a-source-kind .................   Passed    4.66 sec
+        Start 3101: compile_fail.prov.property-state-is-not-a-source-kind
+      Test #3101: compile_fail.prov.property-state-is-not-a-source-kind .................   Passed    4.53 sec
+        Start 3101: compile_fail.prov.property-state-is-not-a-source-kind
+112/191 Test #3101: compile_fail.prov.property-state-is-not-a-source-kind .................   Passed    4.80 sec
+        Start 3074: compile_fail.custom.library-entry-is-not-a-document-object
+      Test #3074: compile_fail.custom.library-entry-is-not-a-document-object ............   Passed    4.85 sec
+        Start 3074: compile_fail.custom.library-entry-is-not-a-document-object
+      Test #3074: compile_fail.custom.library-entry-is-not-a-document-object ............   Passed    4.62 sec
+        Start 3074: compile_fail.custom.library-entry-is-not-a-document-object
+      Test #3074: compile_fail.custom.library-entry-is-not-a-document-object ............   Passed    4.87 sec
+        Start 3074: compile_fail.custom.library-entry-is-not-a-document-object
+      Test #3074: compile_fail.custom.library-entry-is-not-a-document-object ............   Passed    4.53 sec
+        Start 3074: compile_fail.custom.library-entry-is-not-a-document-object
+113/191 Test #3074: compile_fail.custom.library-entry-is-not-a-document-object ............   Passed    4.76 sec
+        Start 3063: compile_fail.massp.shift-with-a-volume
+      Test #3063: compile_fail.massp.shift-with-a-volume ................................   Passed    4.56 sec
+        Start 3063: compile_fail.massp.shift-with-a-volume
+      Test #3063: compile_fail.massp.shift-with-a-volume ................................   Passed    4.80 sec
+        Start 3063: compile_fail.massp.shift-with-a-volume
+      Test #3063: compile_fail.massp.shift-with-a-volume ................................   Passed    4.58 sec
+        Start 3063: compile_fail.massp.shift-with-a-volume
+      Test #3063: compile_fail.massp.shift-with-a-volume ................................   Passed    4.54 sec
+        Start 3063: compile_fail.massp.shift-with-a-volume
+114/191 Test #3063: compile_fail.massp.shift-with-a-volume ................................   Passed    4.72 sec
+        Start 3091: compile_fail.prov.report-has-no-is-complete
+      Test #3091: compile_fail.prov.report-has-no-is-complete ...........................   Passed    4.55 sec
+        Start 3091: compile_fail.prov.report-has-no-is-complete
+      Test #3091: compile_fail.prov.report-has-no-is-complete ...........................   Passed    4.58 sec
+        Start 3091: compile_fail.prov.report-has-no-is-complete
+      Test #3091: compile_fail.prov.report-has-no-is-complete ...........................   Passed    4.72 sec
+        Start 3091: compile_fail.prov.report-has-no-is-complete
+      Test #3091: compile_fail.prov.report-has-no-is-complete ...........................   Passed    4.58 sec
+        Start 3091: compile_fail.prov.report-has-no-is-complete
+115/191 Test #3091: compile_fail.prov.report-has-no-is-complete ...........................   Passed    4.72 sec
+        Start 3090: compile_fail.prov.report-is-not-a-boolean
+      Test #3090: compile_fail.prov.report-is-not-a-boolean .............................   Passed    4.56 sec
+        Start 3090: compile_fail.prov.report-is-not-a-boolean
+      Test #3090: compile_fail.prov.report-is-not-a-boolean .............................   Passed    4.71 sec
+        Start 3090: compile_fail.prov.report-is-not-a-boolean
+      Test #3090: compile_fail.prov.report-is-not-a-boolean .............................   Passed    4.58 sec
+        Start 3090: compile_fail.prov.report-is-not-a-boolean
+      Test #3090: compile_fail.prov.report-is-not-a-boolean .............................   Passed    4.52 sec
+        Start 3090: compile_fail.prov.report-is-not-a-boolean
+116/191 Test #3090: compile_fail.prov.report-is-not-a-boolean .............................   Passed    4.79 sec
+        Start 3102: compile_fail.prov.issue-is-not-a-string
+      Test #3102: compile_fail.prov.issue-is-not-a-string ...............................   Passed    4.58 sec
+        Start 3102: compile_fail.prov.issue-is-not-a-string
+      Test #3102: compile_fail.prov.issue-is-not-a-string ...............................   Passed    4.64 sec
+        Start 3102: compile_fail.prov.issue-is-not-a-string
+      Test #3102: compile_fail.prov.issue-is-not-a-string ...............................   Passed    4.64 sec
+        Start 3102: compile_fail.prov.issue-is-not-a-string
+      Test #3102: compile_fail.prov.issue-is-not-a-string ...............................   Passed    4.70 sec
+        Start 3102: compile_fail.prov.issue-is-not-a-string
+117/191 Test #3102: compile_fail.prov.issue-is-not-a-string ...............................   Passed    4.64 sec
+        Start 3086: compile_fail.custom.mechanical-has-no-bulk-modulus-slot
+      Test #3086: compile_fail.custom.mechanical-has-no-bulk-modulus-slot ...............   Passed    4.60 sec
+        Start 3086: compile_fail.custom.mechanical-has-no-bulk-modulus-slot
+      Test #3086: compile_fail.custom.mechanical-has-no-bulk-modulus-slot ...............   Passed    4.59 sec
+        Start 3086: compile_fail.custom.mechanical-has-no-bulk-modulus-slot
+      Test #3086: compile_fail.custom.mechanical-has-no-bulk-modulus-slot ...............   Passed    4.86 sec
+        Start 3086: compile_fail.custom.mechanical-has-no-bulk-modulus-slot
+      Test #3086: compile_fail.custom.mechanical-has-no-bulk-modulus-slot ...............   Passed    4.59 sec
+        Start 3086: compile_fail.custom.mechanical-has-no-bulk-modulus-slot
+118/191 Test #3086: compile_fail.custom.mechanical-has-no-bulk-modulus-slot ...............   Passed    4.72 sec
+        Start 3144: compile_fail.geometrymeshmap.write-through-a-mapped-face
+      Test #3144: compile_fail.geometrymeshmap.write-through-a-mapped-face ..............   Passed    5.19 sec
+        Start 3144: compile_fail.geometrymeshmap.write-through-a-mapped-face
+      Test #3144: compile_fail.geometrymeshmap.write-through-a-mapped-face ..............   Passed    5.43 sec
+        Start 3144: compile_fail.geometrymeshmap.write-through-a-mapped-face
+      Test #3144: compile_fail.geometrymeshmap.write-through-a-mapped-face ..............   Passed    5.13 sec
+        Start 3144: compile_fail.geometrymeshmap.write-through-a-mapped-face
+      Test #3144: compile_fail.geometrymeshmap.write-through-a-mapped-face ..............   Passed    5.61 sec
+        Start 3144: compile_fail.geometrymeshmap.write-through-a-mapped-face
+119/191 Test #3144: compile_fail.geometrymeshmap.write-through-a-mapped-face ..............   Passed   10.20 sec
+        Start 3093: compile_fail.prov.completeness-needs-a-consumer
+      Test #3093: compile_fail.prov.completeness-needs-a-consumer .......................   Passed    4.61 sec
+        Start 3093: compile_fail.prov.completeness-needs-a-consumer
+      Test #3093: compile_fail.prov.completeness-needs-a-consumer .......................   Passed    4.75 sec
+        Start 3093: compile_fail.prov.completeness-needs-a-consumer
+      Test #3093: compile_fail.prov.completeness-needs-a-consumer .......................   Passed    4.54 sec
+        Start 3093: compile_fail.prov.completeness-needs-a-consumer
+      Test #3093: compile_fail.prov.completeness-needs-a-consumer .......................   Passed    4.49 sec
+        Start 3093: compile_fail.prov.completeness-needs-a-consumer
+120/191 Test #3093: compile_fail.prov.completeness-needs-a-consumer .......................   Passed    4.62 sec
+        Start 3131: compile_fail.meshids.mutate-node-through-mesh
+      Test #3131: compile_fail.meshids.mutate-node-through-mesh .........................   Passed    3.95 sec
+        Start 3131: compile_fail.meshids.mutate-node-through-mesh
+      Test #3131: compile_fail.meshids.mutate-node-through-mesh .........................   Passed    4.11 sec
+        Start 3131: compile_fail.meshids.mutate-node-through-mesh
+      Test #3131: compile_fail.meshids.mutate-node-through-mesh .........................   Passed    3.98 sec
+        Start 3131: compile_fail.meshids.mutate-node-through-mesh
+      Test #3131: compile_fail.meshids.mutate-node-through-mesh .........................   Passed    3.86 sec
+        Start 3131: compile_fail.meshids.mutate-node-through-mesh
+121/191 Test #3131: compile_fail.meshids.mutate-node-through-mesh .........................   Passed    7.24 sec
+        Start 3071: compile_fail.custom.library-entry-fields-are-private
+      Test #3071: compile_fail.custom.library-entry-fields-are-private ..................   Passed    4.80 sec
+        Start 3071: compile_fail.custom.library-entry-fields-are-private
+      Test #3071: compile_fail.custom.library-entry-fields-are-private ..................   Passed    4.92 sec
+        Start 3071: compile_fail.custom.library-entry-fields-are-private
+      Test #3071: compile_fail.custom.library-entry-fields-are-private ..................   Passed    4.80 sec
+        Start 3071: compile_fail.custom.library-entry-fields-are-private
+      Test #3071: compile_fail.custom.library-entry-fields-are-private ..................   Passed    4.60 sec
+        Start 3071: compile_fail.custom.library-entry-fields-are-private
+122/191 Test #3071: compile_fail.custom.library-entry-fields-are-private ..................   Passed    4.76 sec
+        Start 3004: compile_fail.units.length-as-density
+      Test #3004: compile_fail.units.length-as-density ..................................   Passed    3.52 sec
+        Start 3004: compile_fail.units.length-as-density
+      Test #3004: compile_fail.units.length-as-density ..................................   Passed    3.34 sec
+        Start 3004: compile_fail.units.length-as-density
+      Test #3004: compile_fail.units.length-as-density ..................................   Passed    3.53 sec
+        Start 3004: compile_fail.units.length-as-density
+      Test #3004: compile_fail.units.length-as-density ..................................   Passed    3.47 sec
+        Start 3004: compile_fail.units.length-as-density
+123/191 Test #3004: compile_fail.units.length-as-density ..................................   Passed    3.46 sec
+        Start 3087: compile_fail.custom.remove-takes-a-typed-kind
+      Test #3087: compile_fail.custom.remove-takes-a-typed-kind .........................   Passed    4.66 sec
+        Start 3087: compile_fail.custom.remove-takes-a-typed-kind
+      Test #3087: compile_fail.custom.remove-takes-a-typed-kind .........................   Passed    4.63 sec
+        Start 3087: compile_fail.custom.remove-takes-a-typed-kind
+      Test #3087: compile_fail.custom.remove-takes-a-typed-kind .........................   Passed    4.81 sec
+        Start 3087: compile_fail.custom.remove-takes-a-typed-kind
+      Test #3087: compile_fail.custom.remove-takes-a-typed-kind .........................   Passed    4.51 sec
+        Start 3087: compile_fail.custom.remove-takes-a-typed-kind
+124/191 Test #3087: compile_fail.custom.remove-takes-a-typed-kind .........................   Passed    4.68 sec
+        Start 3126: compile_fail.meshids.object-id-as-node-id
+      Test #3126: compile_fail.meshids.object-id-as-node-id .............................   Passed    3.91 sec
+        Start 3126: compile_fail.meshids.object-id-as-node-id
+      Test #3126: compile_fail.meshids.object-id-as-node-id .............................   Passed    4.05 sec
+        Start 3126: compile_fail.meshids.object-id-as-node-id
+      Test #3126: compile_fail.meshids.object-id-as-node-id .............................   Passed    3.92 sec
+        Start 3126: compile_fail.meshids.object-id-as-node-id
+      Test #3126: compile_fail.meshids.object-id-as-node-id .............................   Passed    3.91 sec
+        Start 3126: compile_fail.meshids.object-id-as-node-id
+125/191 Test #3126: compile_fail.meshids.object-id-as-node-id .............................   Passed    4.22 sec
+        Start 3124: compile_fail.meshids.element-id-as-object-id
+      Test #3124: compile_fail.meshids.element-id-as-object-id ..........................   Passed    5.87 sec
+        Start 3124: compile_fail.meshids.element-id-as-object-id
+      Test #3124: compile_fail.meshids.element-id-as-object-id ..........................   Passed    4.53 sec
+        Start 3124: compile_fail.meshids.element-id-as-object-id
+      Test #3124: compile_fail.meshids.element-id-as-object-id ..........................   Passed    3.91 sec
+        Start 3124: compile_fail.meshids.element-id-as-object-id
+      Test #3124: compile_fail.meshids.element-id-as-object-id ..........................   Passed    4.28 sec
+        Start 3124: compile_fail.meshids.element-id-as-object-id
+126/191 Test #3124: compile_fail.meshids.element-id-as-object-id ..........................   Passed    3.95 sec
+        Start 3128: compile_fail.meshids.integer-to-node-id
+      Test #3128: compile_fail.meshids.integer-to-node-id ...............................   Passed    3.96 sec
+        Start 3128: compile_fail.meshids.integer-to-node-id
+      Test #3128: compile_fail.meshids.integer-to-node-id ...............................   Passed    4.08 sec
+        Start 3128: compile_fail.meshids.integer-to-node-id
+      Test #3128: compile_fail.meshids.integer-to-node-id ...............................   Passed    4.12 sec
+        Start 3128: compile_fail.meshids.integer-to-node-id
+      Test #3128: compile_fail.meshids.integer-to-node-id ...............................   Passed    4.02 sec
+        Start 3128: compile_fail.meshids.integer-to-node-id
+127/191 Test #3128: compile_fail.meshids.integer-to-node-id ...............................   Passed    4.17 sec
+        Start 3024: compile_fail.assign.assign-component-id
+      Test #3024: compile_fail.assign.assign-component-id ...............................   Passed    4.81 sec
+        Start 3024: compile_fail.assign.assign-component-id
+      Test #3024: compile_fail.assign.assign-component-id ...............................   Passed    9.78 sec
+        Start 3024: compile_fail.assign.assign-component-id
+      Test #3024: compile_fail.assign.assign-component-id ...............................   Passed   11.53 sec
+        Start 3024: compile_fail.assign.assign-component-id
+      Test #3024: compile_fail.assign.assign-component-id ...............................   Passed    4.57 sec
+        Start 3024: compile_fail.assign.assign-component-id
+128/191 Test #3024: compile_fail.assign.assign-component-id ...............................   Passed    4.55 sec
+        Start 3130: compile_fail.meshids.compare-node-and-element
+      Test #3130: compile_fail.meshids.compare-node-and-element .........................   Passed    3.97 sec
+        Start 3130: compile_fail.meshids.compare-node-and-element
+      Test #3130: compile_fail.meshids.compare-node-and-element .........................   Passed    3.96 sec
+        Start 3130: compile_fail.meshids.compare-node-and-element
+      Test #3130: compile_fail.meshids.compare-node-and-element .........................   Passed    4.17 sec
+        Start 3130: compile_fail.meshids.compare-node-and-element
+      Test #3130: compile_fail.meshids.compare-node-and-element .........................   Passed    3.91 sec
+        Start 3130: compile_fail.meshids.compare-node-and-element
+129/191 Test #3130: compile_fail.meshids.compare-node-and-element .........................   Passed    3.96 sec
+        Start 3097: compile_fail.prov.date-factory-returns-optional
+      Test #3097: compile_fail.prov.date-factory-returns-optional .......................   Passed    4.76 sec
+        Start 3097: compile_fail.prov.date-factory-returns-optional
+      Test #3097: compile_fail.prov.date-factory-returns-optional .......................   Passed    4.53 sec
+        Start 3097: compile_fail.prov.date-factory-returns-optional
+      Test #3097: compile_fail.prov.date-factory-returns-optional .......................   Passed    4.80 sec
+        Start 3097: compile_fail.prov.date-factory-returns-optional
+      Test #3097: compile_fail.prov.date-factory-returns-optional .......................   Passed    4.55 sec
+        Start 3097: compile_fail.prov.date-factory-returns-optional
+130/191 Test #3097: compile_fail.prov.date-factory-returns-optional .......................   Passed    4.72 sec
+        Start 3078: compile_fail.custom.definition-has-no-material-id
+      Test #3078: compile_fail.custom.definition-has-no-material-id .....................   Passed    4.60 sec
+        Start 3078: compile_fail.custom.definition-has-no-material-id
+      Test #3078: compile_fail.custom.definition-has-no-material-id .....................   Passed    4.50 sec
+        Start 3078: compile_fail.custom.definition-has-no-material-id
+      Test #3078: compile_fail.custom.definition-has-no-material-id .....................   Passed    4.89 sec
+        Start 3078: compile_fail.custom.definition-has-no-material-id
+      Test #3078: compile_fail.custom.definition-has-no-material-id .....................   Passed    4.50 sec
+        Start 3078: compile_fail.custom.definition-has-no-material-id
+131/191 Test #3078: compile_fail.custom.definition-has-no-material-id .....................   Passed    4.80 sec
+        Start 3025: compile_fail.assign.document-assign-object-id
+      Test #3025: compile_fail.assign.document-assign-object-id .........................   Passed    4.53 sec
+        Start 3025: compile_fail.assign.document-assign-object-id
+      Test #3025: compile_fail.assign.document-assign-object-id .........................   Passed    4.53 sec
+        Start 3025: compile_fail.assign.document-assign-object-id
+      Test #3025: compile_fail.assign.document-assign-object-id .........................   Passed    4.67 sec
+        Start 3025: compile_fail.assign.document-assign-object-id
+      Test #3025: compile_fail.assign.document-assign-object-id .........................   Passed    4.66 sec
+        Start 3025: compile_fail.assign.document-assign-object-id
+132/191 Test #3025: compile_fail.assign.document-assign-object-id .........................   Passed    4.71 sec
+        Start 3000: compile_fail.units.compare-length-time
+      Test #3000: compile_fail.units.compare-length-time ................................   Passed    3.37 sec
+        Start 3000: compile_fail.units.compare-length-time
+      Test #3000: compile_fail.units.compare-length-time ................................   Passed    3.33 sec
+        Start 3000: compile_fail.units.compare-length-time
+      Test #3000: compile_fail.units.compare-length-time ................................   Passed    3.46 sec
+        Start 3000: compile_fail.units.compare-length-time
+      Test #3000: compile_fail.units.compare-length-time ................................   Passed    3.33 sec
+        Start 3000: compile_fail.units.compare-length-time
+133/191 Test #3000: compile_fail.units.compare-length-time ................................   Passed    3.36 sec
+        Start 3123: compile_fail.meshids.node-id-as-object-id
+      Test #3123: compile_fail.meshids.node-id-as-object-id .............................   Passed    3.90 sec
+        Start 3123: compile_fail.meshids.node-id-as-object-id
+      Test #3123: compile_fail.meshids.node-id-as-object-id .............................   Passed    3.92 sec
+        Start 3123: compile_fail.meshids.node-id-as-object-id
+      Test #3123: compile_fail.meshids.node-id-as-object-id .............................   Passed    3.89 sec
+        Start 3123: compile_fail.meshids.node-id-as-object-id
+      Test #3123: compile_fail.meshids.node-id-as-object-id .............................   Passed    4.00 sec
+        Start 3123: compile_fail.meshids.node-id-as-object-id
+134/191 Test #3123: compile_fail.meshids.node-id-as-object-id .............................   Passed    4.04 sec
+        Start 3120: compile_fail.meshids.element-id-as-node-id
+      Test #3120: compile_fail.meshids.element-id-as-node-id ............................   Passed    3.93 sec
+        Start 3120: compile_fail.meshids.element-id-as-node-id
+      Test #3120: compile_fail.meshids.element-id-as-node-id ............................   Passed    4.03 sec
+        Start 3120: compile_fail.meshids.element-id-as-node-id
+      Test #3120: compile_fail.meshids.element-id-as-node-id ............................   Passed    3.96 sec
+        Start 3120: compile_fail.meshids.element-id-as-node-id
+      Test #3120: compile_fail.meshids.element-id-as-node-id ............................   Passed    3.95 sec
+        Start 3120: compile_fail.meshids.element-id-as-node-id
+135/191 Test #3120: compile_fail.meshids.element-id-as-node-id ............................   Passed    3.97 sec
+        Start 3121: compile_fail.meshids.region-id-as-node-id
+      Test #3121: compile_fail.meshids.region-id-as-node-id .............................   Passed    4.10 sec
+        Start 3121: compile_fail.meshids.region-id-as-node-id
+      Test #3121: compile_fail.meshids.region-id-as-node-id .............................   Passed    3.99 sec
+        Start 3121: compile_fail.meshids.region-id-as-node-id
+      Test #3121: compile_fail.meshids.region-id-as-node-id .............................   Passed    3.90 sec
+        Start 3121: compile_fail.meshids.region-id-as-node-id
+      Test #3121: compile_fail.meshids.region-id-as-node-id .............................   Passed    3.95 sec
+        Start 3121: compile_fail.meshids.region-id-as-node-id
+136/191 Test #3121: compile_fail.meshids.region-id-as-node-id .............................   Passed    3.86 sec
+        Start 3129: compile_fail.meshids.node-id-to-integer
+      Test #3129: compile_fail.meshids.node-id-to-integer ...............................   Passed    4.00 sec
+        Start 3129: compile_fail.meshids.node-id-to-integer
+      Test #3129: compile_fail.meshids.node-id-to-integer ...............................   Passed    3.90 sec
+        Start 3129: compile_fail.meshids.node-id-to-integer
+      Test #3129: compile_fail.meshids.node-id-to-integer ...............................   Passed    3.91 sec
+        Start 3129: compile_fail.meshids.node-id-to-integer
+      Test #3129: compile_fail.meshids.node-id-to-integer ...............................   Passed    3.93 sec
+        Start 3129: compile_fail.meshids.node-id-to-integer
+137/191 Test #3129: compile_fail.meshids.node-id-to-integer ...............................   Passed    3.97 sec
+        Start 3119: compile_fail.meshids.node-id-as-element-id
+      Test #3119: compile_fail.meshids.node-id-as-element-id ............................   Passed    3.93 sec
+        Start 3119: compile_fail.meshids.node-id-as-element-id
+      Test #3119: compile_fail.meshids.node-id-as-element-id ............................   Passed    3.91 sec
+        Start 3119: compile_fail.meshids.node-id-as-element-id
+      Test #3119: compile_fail.meshids.node-id-as-element-id ............................   Passed    4.02 sec
+        Start 3119: compile_fail.meshids.node-id-as-element-id
+      Test #3119: compile_fail.meshids.node-id-as-element-id ............................   Passed    3.93 sec
+        Start 3119: compile_fail.meshids.node-id-as-element-id
+138/191 Test #3119: compile_fail.meshids.node-id-as-element-id ............................   Passed    4.05 sec
+        Start 3001: compile_fail.units.sqrt-of-volume
+      Test #3001: compile_fail.units.sqrt-of-volume .....................................   Passed    3.48 sec
+        Start 3001: compile_fail.units.sqrt-of-volume
+      Test #3001: compile_fail.units.sqrt-of-volume .....................................   Passed    3.56 sec
+        Start 3001: compile_fail.units.sqrt-of-volume
+      Test #3001: compile_fail.units.sqrt-of-volume .....................................   Passed    3.41 sec
+        Start 3001: compile_fail.units.sqrt-of-volume
+      Test #3001: compile_fail.units.sqrt-of-volume .....................................   Passed    3.29 sec
+        Start 3001: compile_fail.units.sqrt-of-volume
+139/191 Test #3001: compile_fail.units.sqrt-of-volume .....................................   Passed    3.60 sec
+        Start 3006: compile_fail.units.mass-per-area-as-density
+      Test #3006: compile_fail.units.mass-per-area-as-density ...........................   Passed    3.45 sec
+        Start 3006: compile_fail.units.mass-per-area-as-density
+      Test #3006: compile_fail.units.mass-per-area-as-density ...........................   Passed    3.40 sec
+        Start 3006: compile_fail.units.mass-per-area-as-density
+      Test #3006: compile_fail.units.mass-per-area-as-density ...........................   Passed    3.37 sec
+        Start 3006: compile_fail.units.mass-per-area-as-density
+      Test #3006: compile_fail.units.mass-per-area-as-density ...........................   Passed    3.40 sec
+        Start 3006: compile_fail.units.mass-per-area-as-density
+140/191 Test #3006: compile_fail.units.mass-per-area-as-density ...........................   Passed    3.39 sec
+        Start 3003: compile_fail.units.modulus-as-conductivity
+      Test #3003: compile_fail.units.modulus-as-conductivity ............................   Passed    3.38 sec
+        Start 3003: compile_fail.units.modulus-as-conductivity
+      Test #3003: compile_fail.units.modulus-as-conductivity ............................   Passed    3.36 sec
+        Start 3003: compile_fail.units.modulus-as-conductivity
+      Test #3003: compile_fail.units.modulus-as-conductivity ............................   Passed    3.32 sec
+        Start 3003: compile_fail.units.modulus-as-conductivity
+      Test #3003: compile_fail.units.modulus-as-conductivity ............................   Passed    3.27 sec
+        Start 3003: compile_fail.units.modulus-as-conductivity
+141/191 Test #3003: compile_fail.units.modulus-as-conductivity ............................   Passed    3.40 sec
+        Start 2996: compile_fail.units.assign-mass-to-length
+      Test #2996: compile_fail.units.assign-mass-to-length ..............................   Passed    3.38 sec
+        Start 2996: compile_fail.units.assign-mass-to-length
+      Test #2996: compile_fail.units.assign-mass-to-length ..............................   Passed    3.37 sec
+        Start 2996: compile_fail.units.assign-mass-to-length
+      Test #2996: compile_fail.units.assign-mass-to-length ..............................   Passed    3.36 sec
+        Start 2996: compile_fail.units.assign-mass-to-length
+      Test #2996: compile_fail.units.assign-mass-to-length ..............................   Passed    3.31 sec
+        Start 2996: compile_fail.units.assign-mass-to-length
+142/191 Test #2996: compile_fail.units.assign-mass-to-length ..............................   Passed    3.35 sec
+        Start 2999: compile_fail.units.force-per-length-as-pressure
+      Test #2999: compile_fail.units.force-per-length-as-pressure .......................   Passed    3.39 sec
+        Start 2999: compile_fail.units.force-per-length-as-pressure
+      Test #2999: compile_fail.units.force-per-length-as-pressure .......................   Passed    3.33 sec
+        Start 2999: compile_fail.units.force-per-length-as-pressure
+      Test #2999: compile_fail.units.force-per-length-as-pressure .......................   Passed    3.46 sec
+        Start 2999: compile_fail.units.force-per-length-as-pressure
+      Test #2999: compile_fail.units.force-per-length-as-pressure .......................   Passed    3.42 sec
+        Start 2999: compile_fail.units.force-per-length-as-pressure
+143/191 Test #2999: compile_fail.units.force-per-length-as-pressure .......................   Passed    3.33 sec
+        Start 2995: compile_fail.units.add-length-angle
+      Test #2995: compile_fail.units.add-length-angle ...................................   Passed    3.33 sec
+        Start 2995: compile_fail.units.add-length-angle
+      Test #2995: compile_fail.units.add-length-angle ...................................   Passed    3.34 sec
+        Start 2995: compile_fail.units.add-length-angle
+      Test #2995: compile_fail.units.add-length-angle ...................................   Passed    3.39 sec
+        Start 2995: compile_fail.units.add-length-angle
+      Test #2995: compile_fail.units.add-length-angle ...................................   Passed    3.35 sec
+        Start 2995: compile_fail.units.add-length-angle
+144/191 Test #2995: compile_fail.units.add-length-angle ...................................   Passed    3.43 sec
+        Start 2997: compile_fail.units.assign-double-to-length
+      Test #2997: compile_fail.units.assign-double-to-length ............................   Passed    3.37 sec
+        Start 2997: compile_fail.units.assign-double-to-length
+      Test #2997: compile_fail.units.assign-double-to-length ............................   Passed    3.78 sec
+        Start 2997: compile_fail.units.assign-double-to-length
+      Test #2997: compile_fail.units.assign-double-to-length ............................   Passed    3.41 sec
+        Start 2997: compile_fail.units.assign-double-to-length
+      Test #2997: compile_fail.units.assign-double-to-length ............................   Passed    3.31 sec
+        Start 2997: compile_fail.units.assign-double-to-length
+145/191 Test #2997: compile_fail.units.assign-double-to-length ............................   Passed    3.36 sec
+        Start 3002: compile_fail.units.add-density-pressure
+      Test #3002: compile_fail.units.add-density-pressure ...............................   Passed    3.34 sec
+        Start 3002: compile_fail.units.add-density-pressure
+      Test #3002: compile_fail.units.add-density-pressure ...............................   Passed    3.45 sec
+        Start 3002: compile_fail.units.add-density-pressure
+      Test #3002: compile_fail.units.add-density-pressure ...............................   Passed    3.37 sec
+        Start 3002: compile_fail.units.add-density-pressure
+      Test #3002: compile_fail.units.add-density-pressure ...............................   Passed    3.34 sec
+        Start 3002: compile_fail.units.add-density-pressure
+146/191 Test #3002: compile_fail.units.add-density-pressure ...............................   Passed    3.40 sec
+        Start 3009: compile_fail.units.poisson-to-double
+      Test #3009: compile_fail.units.poisson-to-double ..................................   Passed    3.39 sec
+        Start 3009: compile_fail.units.poisson-to-double
+      Test #3009: compile_fail.units.poisson-to-double ..................................   Passed    3.49 sec
+        Start 3009: compile_fail.units.poisson-to-double
+      Test #3009: compile_fail.units.poisson-to-double ..................................   Passed    3.48 sec
+        Start 3009: compile_fail.units.poisson-to-double
+      Test #3009: compile_fail.units.poisson-to-double ..................................   Passed    3.48 sec
+        Start 3009: compile_fail.units.poisson-to-double
+147/191 Test #3009: compile_fail.units.poisson-to-double ..................................   Passed    3.33 sec
+        Start 2998: compile_fail.units.length-to-double
+      Test #2998: compile_fail.units.length-to-double ...................................   Passed    3.40 sec
+        Start 2998: compile_fail.units.length-to-double
+      Test #2998: compile_fail.units.length-to-double ...................................   Passed    3.42 sec
+        Start 2998: compile_fail.units.length-to-double
+      Test #2998: compile_fail.units.length-to-double ...................................   Passed    3.60 sec
+        Start 2998: compile_fail.units.length-to-double
+      Test #2998: compile_fail.units.length-to-double ...................................   Passed    3.39 sec
+        Start 2998: compile_fail.units.length-to-double
+148/191 Test #2998: compile_fail.units.length-to-double ...................................   Passed    3.36 sec
+        Start 3137: compile_fail.meshquality.evaluate-mesh-through-a-mutable-reference
+      Test #3137: compile_fail.meshquality.evaluate-mesh-through-a-mutable-reference ....   Passed    3.96 sec
+        Start 3137: compile_fail.meshquality.evaluate-mesh-through-a-mutable-reference
+      Test #3137: compile_fail.meshquality.evaluate-mesh-through-a-mutable-reference ....   Passed    4.05 sec
+        Start 3137: compile_fail.meshquality.evaluate-mesh-through-a-mutable-reference
+      Test #3137: compile_fail.meshquality.evaluate-mesh-through-a-mutable-reference ....   Passed    3.94 sec
+        Start 3137: compile_fail.meshquality.evaluate-mesh-through-a-mutable-reference
+      Test #3137: compile_fail.meshquality.evaluate-mesh-through-a-mutable-reference ....   Passed    4.03 sec
+        Start 3137: compile_fail.meshquality.evaluate-mesh-through-a-mutable-reference
+149/191 Test #3137: compile_fail.meshquality.evaluate-mesh-through-a-mutable-reference ....   Passed    4.14 sec
+        Start 3054: compile_fail.ids.entity-id-as-object-id
+      Test #3054: compile_fail.ids.entity-id-as-object-id ...............................   Passed    3.74 sec
+        Start 3054: compile_fail.ids.entity-id-as-object-id
+      Test #3054: compile_fail.ids.entity-id-as-object-id ...............................   Passed    3.62 sec
+        Start 3054: compile_fail.ids.entity-id-as-object-id
+      Test #3054: compile_fail.ids.entity-id-as-object-id ...............................   Passed    3.59 sec
+        Start 3054: compile_fail.ids.entity-id-as-object-id
+      Test #3054: compile_fail.ids.entity-id-as-object-id ...............................   Passed    3.65 sec
+        Start 3054: compile_fail.ids.entity-id-as-object-id
+150/191 Test #3054: compile_fail.ids.entity-id-as-object-id ...............................   Passed    3.72 sec
+        Start 3050: compile_fail.ids.material-id-as-feature-id
+      Test #3050: compile_fail.ids.material-id-as-feature-id ............................   Passed    8.18 sec
+        Start 3050: compile_fail.ids.material-id-as-feature-id
+      Test #3050: compile_fail.ids.material-id-as-feature-id ............................   Passed    4.14 sec
+        Start 3050: compile_fail.ids.material-id-as-feature-id
+      Test #3050: compile_fail.ids.material-id-as-feature-id ............................   Passed    6.75 sec
+        Start 3050: compile_fail.ids.material-id-as-feature-id
+      Test #3050: compile_fail.ids.material-id-as-feature-id ............................   Passed    3.69 sec
+        Start 3050: compile_fail.ids.material-id-as-feature-id
+151/191 Test #3050: compile_fail.ids.material-id-as-feature-id ............................   Passed    3.73 sec
+        Start 3051: compile_fail.ids.sheet-id-as-material-id
+      Test #3051: compile_fail.ids.sheet-id-as-material-id ..............................   Passed    3.81 sec
+        Start 3051: compile_fail.ids.sheet-id-as-material-id
+      Test #3051: compile_fail.ids.sheet-id-as-material-id ..............................   Passed    3.60 sec
+        Start 3051: compile_fail.ids.sheet-id-as-material-id
+      Test #3051: compile_fail.ids.sheet-id-as-material-id ..............................   Passed    3.66 sec
+        Start 3051: compile_fail.ids.sheet-id-as-material-id
+      Test #3051: compile_fail.ids.sheet-id-as-material-id ..............................   Passed    3.65 sec
+        Start 3051: compile_fail.ids.sheet-id-as-material-id
+152/191 Test #3051: compile_fail.ids.sheet-id-as-material-id ..............................   Passed    3.77 sec
+        Start 3048: compile_fail.ids.sheet-id-as-component-id
+      Test #3048: compile_fail.ids.sheet-id-as-component-id .............................   Passed    3.59 sec
+        Start 3048: compile_fail.ids.sheet-id-as-component-id
+      Test #3048: compile_fail.ids.sheet-id-as-component-id .............................   Passed    3.58 sec
+        Start 3048: compile_fail.ids.sheet-id-as-component-id
+      Test #3048: compile_fail.ids.sheet-id-as-component-id .............................   Passed    3.68 sec
+        Start 3048: compile_fail.ids.sheet-id-as-component-id
+      Test #3048: compile_fail.ids.sheet-id-as-component-id .............................   Passed    3.61 sec
+        Start 3048: compile_fail.ids.sheet-id-as-component-id
+153/191 Test #3048: compile_fail.ids.sheet-id-as-component-id .............................   Passed    3.79 sec
+        Start 3042: compile_fail.ids.object-to-sketch-id
+      Test #3042: compile_fail.ids.object-to-sketch-id ..................................   Passed    3.71 sec
+        Start 3042: compile_fail.ids.object-to-sketch-id
+      Test #3042: compile_fail.ids.object-to-sketch-id ..................................   Passed    3.68 sec
+        Start 3042: compile_fail.ids.object-to-sketch-id
+      Test #3042: compile_fail.ids.object-to-sketch-id ..................................   Passed    3.71 sec
+        Start 3042: compile_fail.ids.object-to-sketch-id
+      Test #3042: compile_fail.ids.object-to-sketch-id ..................................   Passed    3.60 sec
+        Start 3042: compile_fail.ids.object-to-sketch-id
+154/191 Test #3042: compile_fail.ids.object-to-sketch-id ..................................   Passed    3.58 sec
+        Start 3049: compile_fail.ids.object-to-material-id
+      Test #3049: compile_fail.ids.object-to-material-id ................................   Passed    3.54 sec
+        Start 3049: compile_fail.ids.object-to-material-id
+      Test #3049: compile_fail.ids.object-to-material-id ................................   Passed    3.58 sec
+        Start 3049: compile_fail.ids.object-to-material-id
+      Test #3049: compile_fail.ids.object-to-material-id ................................   Passed    3.61 sec
+        Start 3049: compile_fail.ids.object-to-material-id
+      Test #3049: compile_fail.ids.object-to-material-id ................................   Passed    3.63 sec
+        Start 3049: compile_fail.ids.object-to-material-id
+155/191 Test #3049: compile_fail.ids.object-to-material-id ................................   Passed    3.60 sec
+        Start 3140: compile_fail.meshquality.repaired-mesh-from-a-report
+      Test #3140: compile_fail.meshquality.repaired-mesh-from-a-report ..................   Passed    3.95 sec
+        Start 3140: compile_fail.meshquality.repaired-mesh-from-a-report
+      Test #3140: compile_fail.meshquality.repaired-mesh-from-a-report ..................   Passed    4.00 sec
+        Start 3140: compile_fail.meshquality.repaired-mesh-from-a-report
+      Test #3140: compile_fail.meshquality.repaired-mesh-from-a-report ..................   Passed    4.01 sec
+        Start 3140: compile_fail.meshquality.repaired-mesh-from-a-report
+      Test #3140: compile_fail.meshquality.repaired-mesh-from-a-report ..................   Passed    3.94 sec
+        Start 3140: compile_fail.meshquality.repaired-mesh-from-a-report
+156/191 Test #3140: compile_fail.meshquality.repaired-mesh-from-a-report ..................   Passed    4.01 sec
+        Start 3053: compile_fail.ids.material-id-to-integer
+      Test #3053: compile_fail.ids.material-id-to-integer ...............................   Passed    3.62 sec
+        Start 3053: compile_fail.ids.material-id-to-integer
+      Test #3053: compile_fail.ids.material-id-to-integer ...............................   Passed    3.58 sec
+        Start 3053: compile_fail.ids.material-id-to-integer
+      Test #3053: compile_fail.ids.material-id-to-integer ...............................   Passed    3.60 sec
+        Start 3053: compile_fail.ids.material-id-to-integer
+      Test #3053: compile_fail.ids.material-id-to-integer ...............................   Passed    3.62 sec
+        Start 3053: compile_fail.ids.material-id-to-integer
+157/191 Test #3053: compile_fail.ids.material-id-to-integer ...............................   Passed    3.58 sec
+        Start 3052: compile_fail.ids.integer-to-material-id
+      Test #3052: compile_fail.ids.integer-to-material-id ...............................   Passed    3.62 sec
+        Start 3052: compile_fail.ids.integer-to-material-id
+      Test #3052: compile_fail.ids.integer-to-material-id ...............................   Passed    3.62 sec
+        Start 3052: compile_fail.ids.integer-to-material-id
+      Test #3052: compile_fail.ids.integer-to-material-id ...............................   Passed    3.66 sec
+        Start 3052: compile_fail.ids.integer-to-material-id
+      Test #3052: compile_fail.ids.integer-to-material-id ...............................   Passed    3.68 sec
+        Start 3052: compile_fail.ids.integer-to-material-id
+158/191 Test #3052: compile_fail.ids.integer-to-material-id ...............................   Passed    3.65 sec
+        Start 3147: compile_fail.viewer.presentation-id-as-object-id
+      Test #3147: compile_fail.viewer.presentation-id-as-object-id ......................   Passed    3.96 sec
+        Start 3147: compile_fail.viewer.presentation-id-as-object-id
+      Test #3147: compile_fail.viewer.presentation-id-as-object-id ......................   Passed    3.90 sec
+        Start 3147: compile_fail.viewer.presentation-id-as-object-id
+      Test #3147: compile_fail.viewer.presentation-id-as-object-id ......................   Passed    3.96 sec
+        Start 3147: compile_fail.viewer.presentation-id-as-object-id
+      Test #3147: compile_fail.viewer.presentation-id-as-object-id ......................   Passed    3.99 sec
+        Start 3147: compile_fail.viewer.presentation-id-as-object-id
+159/191 Test #3147: compile_fail.viewer.presentation-id-as-object-id ......................   Passed    3.96 sec
+        Start 3138: compile_fail.meshquality.evaluate-tet-through-a-mutable-reference
+      Test #3138: compile_fail.meshquality.evaluate-tet-through-a-mutable-reference .....   Passed    4.15 sec
+        Start 3138: compile_fail.meshquality.evaluate-tet-through-a-mutable-reference
+      Test #3138: compile_fail.meshquality.evaluate-tet-through-a-mutable-reference .....   Passed    3.95 sec
+        Start 3138: compile_fail.meshquality.evaluate-tet-through-a-mutable-reference
+      Test #3138: compile_fail.meshquality.evaluate-tet-through-a-mutable-reference .....   Passed    3.92 sec
+        Start 3138: compile_fail.meshquality.evaluate-tet-through-a-mutable-reference
+      Test #3138: compile_fail.meshquality.evaluate-tet-through-a-mutable-reference .....   Passed    4.04 sec
+        Start 3138: compile_fail.meshquality.evaluate-tet-through-a-mutable-reference
+160/191 Test #3138: compile_fail.meshquality.evaluate-tet-through-a-mutable-reference .....   Passed    4.06 sec
+        Start 3041: compile_fail.ids.compare-different-kinds
+      Test #3041: compile_fail.ids.compare-different-kinds ..............................   Passed    3.67 sec
+        Start 3041: compile_fail.ids.compare-different-kinds
+      Test #3041: compile_fail.ids.compare-different-kinds ..............................   Passed    3.60 sec
+        Start 3041: compile_fail.ids.compare-different-kinds
+      Test #3041: compile_fail.ids.compare-different-kinds ..............................   Passed    3.60 sec
+        Start 3041: compile_fail.ids.compare-different-kinds
+      Test #3041: compile_fail.ids.compare-different-kinds ..............................   Passed    3.59 sec
+        Start 3041: compile_fail.ids.compare-different-kinds
+161/191 Test #3041: compile_fail.ids.compare-different-kinds ..............................   Passed    3.63 sec
+        Start 3139: compile_fail.meshquality.reach-the-mesh-through-the-report
+      Test #3139: compile_fail.meshquality.reach-the-mesh-through-the-report ............   Passed    4.05 sec
+        Start 3139: compile_fail.meshquality.reach-the-mesh-through-the-report
+      Test #3139: compile_fail.meshquality.reach-the-mesh-through-the-report ............   Passed    4.02 sec
+        Start 3139: compile_fail.meshquality.reach-the-mesh-through-the-report
+      Test #3139: compile_fail.meshquality.reach-the-mesh-through-the-report ............   Passed    3.94 sec
+        Start 3139: compile_fail.meshquality.reach-the-mesh-through-the-report
+      Test #3139: compile_fail.meshquality.reach-the-mesh-through-the-report ............   Passed    4.04 sec
+        Start 3139: compile_fail.meshquality.reach-the-mesh-through-the-report
+162/191 Test #3139: compile_fail.meshquality.reach-the-mesh-through-the-report ............   Passed    4.06 sec
+        Start 3008: compile_fail.units.poisson-from-double
+      Test #3008: compile_fail.units.poisson-from-double ................................   Passed    3.38 sec
+        Start 3008: compile_fail.units.poisson-from-double
+      Test #3008: compile_fail.units.poisson-from-double ................................   Passed    3.31 sec
+        Start 3008: compile_fail.units.poisson-from-double
+      Test #3008: compile_fail.units.poisson-from-double ................................   Passed    3.34 sec
+        Start 3008: compile_fail.units.poisson-from-double
+      Test #3008: compile_fail.units.poisson-from-double ................................   Passed    3.34 sec
+        Start 3008: compile_fail.units.poisson-from-double
+163/191 Test #3008: compile_fail.units.poisson-from-double ................................   Passed    3.37 sec
+        Start 3011: compile_fail.units.dynamic-as-kinematic-viscosity
+      Test #3011: compile_fail.units.dynamic-as-kinematic-viscosity .....................   Passed    3.36 sec
+        Start 3011: compile_fail.units.dynamic-as-kinematic-viscosity
+      Test #3011: compile_fail.units.dynamic-as-kinematic-viscosity .....................   Passed    3.43 sec
+        Start 3011: compile_fail.units.dynamic-as-kinematic-viscosity
+      Test #3011: compile_fail.units.dynamic-as-kinematic-viscosity .....................   Passed    3.34 sec
+        Start 3011: compile_fail.units.dynamic-as-kinematic-viscosity
+      Test #3011: compile_fail.units.dynamic-as-kinematic-viscosity .....................   Passed    3.38 sec
+        Start 3011: compile_fail.units.dynamic-as-kinematic-viscosity
+164/191 Test #3011: compile_fail.units.dynamic-as-kinematic-viscosity .....................   Passed    3.38 sec
+        Start 3012: compile_fail.units.conductivity-as-specific-heat
+      Test #3012: compile_fail.units.conductivity-as-specific-heat ......................   Passed    3.40 sec
+        Start 3012: compile_fail.units.conductivity-as-specific-heat
+      Test #3012: compile_fail.units.conductivity-as-specific-heat ......................   Passed    3.35 sec
+        Start 3012: compile_fail.units.conductivity-as-specific-heat
+      Test #3012: compile_fail.units.conductivity-as-specific-heat ......................   Passed    3.38 sec
+        Start 3012: compile_fail.units.conductivity-as-specific-heat
+      Test #3012: compile_fail.units.conductivity-as-specific-heat ......................   Passed    3.43 sec
+        Start 3012: compile_fail.units.conductivity-as-specific-heat
+165/191 Test #3012: compile_fail.units.conductivity-as-specific-heat ......................   Passed    3.33 sec
+        Start 3005: compile_fail.units.specific-heat-as-expansion
+      Test #3005: compile_fail.units.specific-heat-as-expansion .........................   Passed    3.36 sec
+        Start 3005: compile_fail.units.specific-heat-as-expansion
+      Test #3005: compile_fail.units.specific-heat-as-expansion .........................   Passed    3.30 sec
+        Start 3005: compile_fail.units.specific-heat-as-expansion
+      Test #3005: compile_fail.units.specific-heat-as-expansion .........................   Passed    3.39 sec
+        Start 3005: compile_fail.units.specific-heat-as-expansion
+      Test #3005: compile_fail.units.specific-heat-as-expansion .........................   Passed    3.40 sec
+        Start 3005: compile_fail.units.specific-heat-as-expansion
+166/191 Test #3005: compile_fail.units.specific-heat-as-expansion .........................   Passed    3.36 sec
+        Start 3151: compile_fail.viewer.reach-a-document-through-the-viewer
+      Test #3151: compile_fail.viewer.reach-a-document-through-the-viewer ...............   Passed    3.97 sec
+        Start 3151: compile_fail.viewer.reach-a-document-through-the-viewer
+      Test #3151: compile_fail.viewer.reach-a-document-through-the-viewer ...............   Passed    3.94 sec
+        Start 3151: compile_fail.viewer.reach-a-document-through-the-viewer
+      Test #3151: compile_fail.viewer.reach-a-document-through-the-viewer ...............   Passed    4.04 sec
+        Start 3151: compile_fail.viewer.reach-a-document-through-the-viewer
+      Test #3151: compile_fail.viewer.reach-a-document-through-the-viewer ...............   Passed    3.99 sec
+        Start 3151: compile_fail.viewer.reach-a-document-through-the-viewer
+167/191 Test #3151: compile_fail.viewer.reach-a-document-through-the-viewer ...............   Passed    4.38 sec
+        Start 3150: compile_fail.viewer.copy-a-viewer
+      Test #3150: compile_fail.viewer.copy-a-viewer .....................................   Passed    4.26 sec
+        Start 3150: compile_fail.viewer.copy-a-viewer
+      Test #3150: compile_fail.viewer.copy-a-viewer .....................................   Passed    4.38 sec
+        Start 3150: compile_fail.viewer.copy-a-viewer
+      Test #3150: compile_fail.viewer.copy-a-viewer .....................................   Passed    4.33 sec
+        Start 3150: compile_fail.viewer.copy-a-viewer
+      Test #3150: compile_fail.viewer.copy-a-viewer .....................................   Passed    4.41 sec
+        Start 3150: compile_fail.viewer.copy-a-viewer
+168/191 Test #3150: compile_fail.viewer.copy-a-viewer .....................................   Passed    4.49 sec
+        Start 3148: compile_fail.viewer.object-id-as-presentation-id
+      Test #3148: compile_fail.viewer.object-id-as-presentation-id ......................   Passed    4.46 sec
+        Start 3148: compile_fail.viewer.object-id-as-presentation-id
+      Test #3148: compile_fail.viewer.object-id-as-presentation-id ......................   Passed    4.66 sec
+        Start 3148: compile_fail.viewer.object-id-as-presentation-id
+      Test #3148: compile_fail.viewer.object-id-as-presentation-id ......................   Passed    4.36 sec
+        Start 3148: compile_fail.viewer.object-id-as-presentation-id
+      Test #3148: compile_fail.viewer.object-id-as-presentation-id ......................   Passed    4.29 sec
+        Start 3148: compile_fail.viewer.object-id-as-presentation-id
+169/191 Test #3148: compile_fail.viewer.object-id-as-presentation-id ......................   Passed    4.21 sec
+        Start 3007: compile_fail.units.temperature-as-expansion
+      Test #3007: compile_fail.units.temperature-as-expansion ...........................   Passed    3.59 sec
+        Start 3007: compile_fail.units.temperature-as-expansion
+      Test #3007: compile_fail.units.temperature-as-expansion ...........................   Passed    3.54 sec
+        Start 3007: compile_fail.units.temperature-as-expansion
+      Test #3007: compile_fail.units.temperature-as-expansion ...........................   Passed    3.44 sec
+        Start 3007: compile_fail.units.temperature-as-expansion
+      Test #3007: compile_fail.units.temperature-as-expansion ...........................   Passed    3.51 sec
+        Start 3007: compile_fail.units.temperature-as-expansion
+170/191 Test #3007: compile_fail.units.temperature-as-expansion ...........................   Passed    3.49 sec
+        Start 3149: compile_fail.viewer.presentation-id-from-integer
+      Test #3149: compile_fail.viewer.presentation-id-from-integer ......................   Passed    4.19 sec
+        Start 3149: compile_fail.viewer.presentation-id-from-integer
+      Test #3149: compile_fail.viewer.presentation-id-from-integer ......................   Passed    4.18 sec
+        Start 3149: compile_fail.viewer.presentation-id-from-integer
+      Test #3149: compile_fail.viewer.presentation-id-from-integer ......................   Passed    4.76 sec
+        Start 3149: compile_fail.viewer.presentation-id-from-integer
+      Test #3149: compile_fail.viewer.presentation-id-from-integer ......................   Passed    4.20 sec
+        Start 3149: compile_fail.viewer.presentation-id-from-integer
+171/191 Test #3149: compile_fail.viewer.presentation-id-from-integer ......................   Passed    4.13 sec
+        Start 3146: compile_fail.viewer.display-through-a-mutable-body
+      Test #3146: compile_fail.viewer.display-through-a-mutable-body ....................   Passed    4.16 sec
+        Start 3146: compile_fail.viewer.display-through-a-mutable-body
+      Test #3146: compile_fail.viewer.display-through-a-mutable-body ....................   Passed    4.07 sec
+        Start 3146: compile_fail.viewer.display-through-a-mutable-body
+      Test #3146: compile_fail.viewer.display-through-a-mutable-body ....................   Passed    3.93 sec
+        Start 3146: compile_fail.viewer.display-through-a-mutable-body
+      Test #3146: compile_fail.viewer.display-through-a-mutable-body ....................   Passed    3.95 sec
+        Start 3146: compile_fail.viewer.display-through-a-mutable-body
+172/191 Test #3146: compile_fail.viewer.display-through-a-mutable-body ....................   Passed    3.95 sec
+        Start 3019: compile_fail.mech.hardness-as-stress
+      Test #3019: compile_fail.mech.hardness-as-stress ..................................   Passed    2.36 sec
+        Start 3019: compile_fail.mech.hardness-as-stress
+      Test #3019: compile_fail.mech.hardness-as-stress ..................................   Passed    2.30 sec
+        Start 3019: compile_fail.mech.hardness-as-stress
+      Test #3019: compile_fail.mech.hardness-as-stress ..................................   Passed    2.21 sec
+        Start 3019: compile_fail.mech.hardness-as-stress
+      Test #3019: compile_fail.mech.hardness-as-stress ..................................   Passed    2.24 sec
+        Start 3019: compile_fail.mech.hardness-as-stress
+173/191 Test #3019: compile_fail.mech.hardness-as-stress ..................................   Passed    2.21 sec
+        Start 3036: compile_fail.therm.temperature-from-double
+      Test #3036: compile_fail.therm.temperature-from-double ............................   Passed    2.16 sec
+        Start 3036: compile_fail.therm.temperature-from-double
+      Test #3036: compile_fail.therm.temperature-from-double ............................   Passed    2.01 sec
+        Start 3036: compile_fail.therm.temperature-from-double
+      Test #3036: compile_fail.therm.temperature-from-double ............................   Passed    2.12 sec
+        Start 3036: compile_fail.therm.temperature-from-double
+      Test #3036: compile_fail.therm.temperature-from-double ............................   Passed    2.05 sec
+        Start 3036: compile_fail.therm.temperature-from-double
+174/191 Test #3036: compile_fail.therm.temperature-from-double ............................   Passed    2.04 sec
+        Start 3015: compile_fail.mech.specific-heat-as-shear-modulus
+      Test #3015: compile_fail.mech.specific-heat-as-shear-modulus ......................   Passed    2.20 sec
+        Start 3015: compile_fail.mech.specific-heat-as-shear-modulus
+      Test #3015: compile_fail.mech.specific-heat-as-shear-modulus ......................   Passed    2.20 sec
+        Start 3015: compile_fail.mech.specific-heat-as-shear-modulus
+      Test #3015: compile_fail.mech.specific-heat-as-shear-modulus ......................   Passed    2.16 sec
+        Start 3015: compile_fail.mech.specific-heat-as-shear-modulus
+      Test #3015: compile_fail.mech.specific-heat-as-shear-modulus ......................   Passed    2.16 sec
+        Start 3015: compile_fail.mech.specific-heat-as-shear-modulus
+175/191 Test #3015: compile_fail.mech.specific-heat-as-shear-modulus ......................   Passed    2.14 sec
+        Start 3014: compile_fail.mech.conductivity-as-yield-strength
+      Test #3014: compile_fail.mech.conductivity-as-yield-strength ......................   Passed    2.18 sec
+        Start 3014: compile_fail.mech.conductivity-as-yield-strength
+      Test #3014: compile_fail.mech.conductivity-as-yield-strength ......................   Passed    2.11 sec
+        Start 3014: compile_fail.mech.conductivity-as-yield-strength
+      Test #3014: compile_fail.mech.conductivity-as-yield-strength ......................   Passed    2.17 sec
+        Start 3014: compile_fail.mech.conductivity-as-yield-strength
+      Test #3014: compile_fail.mech.conductivity-as-yield-strength ......................   Passed    2.19 sec
+        Start 3014: compile_fail.mech.conductivity-as-yield-strength
+176/191 Test #3014: compile_fail.mech.conductivity-as-yield-strength ......................   Passed    2.14 sec
+        Start 3017: compile_fail.mech.elongation-from-double
+      Test #3017: compile_fail.mech.elongation-from-double ..............................   Passed    2.18 sec
+        Start 3017: compile_fail.mech.elongation-from-double
+      Test #3017: compile_fail.mech.elongation-from-double ..............................   Passed    2.14 sec
+        Start 3017: compile_fail.mech.elongation-from-double
+      Test #3017: compile_fail.mech.elongation-from-double ..............................   Passed    2.17 sec
+        Start 3017: compile_fail.mech.elongation-from-double
+      Test #3017: compile_fail.mech.elongation-from-double ..............................   Passed    2.14 sec
+        Start 3017: compile_fail.mech.elongation-from-double
+177/191 Test #3017: compile_fail.mech.elongation-from-double ..............................   Passed    2.15 sec
+        Start 3021: compile_fail.mech.mutate-library-entry
+      Test #3021: compile_fail.mech.mutate-library-entry ................................   Passed    2.24 sec
+        Start 3021: compile_fail.mech.mutate-library-entry
+      Test #3021: compile_fail.mech.mutate-library-entry ................................   Passed    2.16 sec
+        Start 3021: compile_fail.mech.mutate-library-entry
+      Test #3021: compile_fail.mech.mutate-library-entry ................................   Passed    2.28 sec
+        Start 3021: compile_fail.mech.mutate-library-entry
+      Test #3021: compile_fail.mech.mutate-library-entry ................................   Passed    2.20 sec
+        Start 3021: compile_fail.mech.mutate-library-entry
+178/191 Test #3021: compile_fail.mech.mutate-library-entry ................................   Passed    2.22 sec
+        Start 3020: compile_fail.mech.property-to-value
+      Test #3020: compile_fail.mech.property-to-value ...................................   Passed    2.16 sec
+        Start 3020: compile_fail.mech.property-to-value
+      Test #3020: compile_fail.mech.property-to-value ...................................   Passed    2.17 sec
+        Start 3020: compile_fail.mech.property-to-value
+      Test #3020: compile_fail.mech.property-to-value ...................................   Passed    2.22 sec
+        Start 3020: compile_fail.mech.property-to-value
+      Test #3020: compile_fail.mech.property-to-value ...................................   Passed    2.21 sec
+        Start 3020: compile_fail.mech.property-to-value
+179/191 Test #3020: compile_fail.mech.property-to-value ...................................   Passed    2.24 sec
+        Start 3018: compile_fail.mech.hardness-without-scale
+      Test #3018: compile_fail.mech.hardness-without-scale ..............................   Passed    2.17 sec
+        Start 3018: compile_fail.mech.hardness-without-scale
+      Test #3018: compile_fail.mech.hardness-without-scale ..............................   Passed    2.16 sec
+        Start 3018: compile_fail.mech.hardness-without-scale
+      Test #3018: compile_fail.mech.hardness-without-scale ..............................   Passed    2.16 sec
+        Start 3018: compile_fail.mech.hardness-without-scale
+      Test #3018: compile_fail.mech.hardness-without-scale ..............................   Passed    2.12 sec
+        Start 3018: compile_fail.mech.hardness-without-scale
+180/191 Test #3018: compile_fail.mech.hardness-without-scale ..............................   Passed    2.15 sec
+        Start 3016: compile_fail.mech.poisson-from-double
+      Test #3016: compile_fail.mech.poisson-from-double .................................   Passed    2.21 sec
+        Start 3016: compile_fail.mech.poisson-from-double
+      Test #3016: compile_fail.mech.poisson-from-double .................................   Passed    2.13 sec
+        Start 3016: compile_fail.mech.poisson-from-double
+      Test #3016: compile_fail.mech.poisson-from-double .................................   Passed    2.15 sec
+        Start 3016: compile_fail.mech.poisson-from-double
+      Test #3016: compile_fail.mech.poisson-from-double .................................   Passed    2.21 sec
+        Start 3016: compile_fail.mech.poisson-from-double
+181/191 Test #3016: compile_fail.mech.poisson-from-double .................................   Passed    2.19 sec
+        Start 3013: compile_fail.mech.density-as-youngs-modulus
+      Test #3013: compile_fail.mech.density-as-youngs-modulus ...........................   Passed    2.14 sec
+        Start 3013: compile_fail.mech.density-as-youngs-modulus
+      Test #3013: compile_fail.mech.density-as-youngs-modulus ...........................   Passed    2.19 sec
+        Start 3013: compile_fail.mech.density-as-youngs-modulus
+      Test #3013: compile_fail.mech.density-as-youngs-modulus ...........................   Passed    2.18 sec
+        Start 3013: compile_fail.mech.density-as-youngs-modulus
+      Test #3013: compile_fail.mech.density-as-youngs-modulus ...........................   Passed    2.29 sec
+        Start 3013: compile_fail.mech.density-as-youngs-modulus
+182/191 Test #3013: compile_fail.mech.density-as-youngs-modulus ...........................   Passed    2.13 sec
+        Start 3032: compile_fail.therm.dimensionless-as-thermal-expansion
+      Test #3032: compile_fail.therm.dimensionless-as-thermal-expansion .................   Passed    2.05 sec
+        Start 3032: compile_fail.therm.dimensionless-as-thermal-expansion
+      Test #3032: compile_fail.therm.dimensionless-as-thermal-expansion .................   Passed    2.08 sec
+        Start 3032: compile_fail.therm.dimensionless-as-thermal-expansion
+      Test #3032: compile_fail.therm.dimensionless-as-thermal-expansion .................   Passed    2.02 sec
+        Start 3032: compile_fail.therm.dimensionless-as-thermal-expansion
+      Test #3032: compile_fail.therm.dimensionless-as-thermal-expansion .................   Passed    2.08 sec
+        Start 3032: compile_fail.therm.dimensionless-as-thermal-expansion
+183/191 Test #3032: compile_fail.therm.dimensionless-as-thermal-expansion .................   Passed    2.04 sec
+        Start 3033: compile_fail.therm.density-as-resistivity
+      Test #3033: compile_fail.therm.density-as-resistivity .............................   Passed    2.12 sec
+        Start 3033: compile_fail.therm.density-as-resistivity
+      Test #3033: compile_fail.therm.density-as-resistivity .............................   Passed    2.04 sec
+        Start 3033: compile_fail.therm.density-as-resistivity
+      Test #3033: compile_fail.therm.density-as-resistivity .............................   Passed    2.12 sec
+        Start 3033: compile_fail.therm.density-as-resistivity
+      Test #3033: compile_fail.therm.density-as-resistivity .............................   Passed    2.07 sec
+        Start 3033: compile_fail.therm.density-as-resistivity
+184/191 Test #3033: compile_fail.therm.density-as-resistivity .............................   Passed    2.01 sec
+        Start 3031: compile_fail.therm.poisson-as-thermal-expansion
+      Test #3031: compile_fail.therm.poisson-as-thermal-expansion .......................   Passed    2.17 sec
+        Start 3031: compile_fail.therm.poisson-as-thermal-expansion
+      Test #3031: compile_fail.therm.poisson-as-thermal-expansion .......................   Passed    2.28 sec
+        Start 3031: compile_fail.therm.poisson-as-thermal-expansion
+      Test #3031: compile_fail.therm.poisson-as-thermal-expansion .......................   Passed    2.14 sec
+        Start 3031: compile_fail.therm.poisson-as-thermal-expansion
+      Test #3031: compile_fail.therm.poisson-as-thermal-expansion .......................   Passed    2.06 sec
+        Start 3031: compile_fail.therm.poisson-as-thermal-expansion
+185/191 Test #3031: compile_fail.therm.poisson-as-thermal-expansion .......................   Passed    2.16 sec
+        Start 3028: compile_fail.therm.pressure-as-conductivity
+      Test #3028: compile_fail.therm.pressure-as-conductivity ...........................   Passed    2.19 sec
+        Start 3028: compile_fail.therm.pressure-as-conductivity
+      Test #3028: compile_fail.therm.pressure-as-conductivity ...........................   Passed    2.22 sec
+        Start 3028: compile_fail.therm.pressure-as-conductivity
+      Test #3028: compile_fail.therm.pressure-as-conductivity ...........................   Passed    2.10 sec
+        Start 3028: compile_fail.therm.pressure-as-conductivity
+      Test #3028: compile_fail.therm.pressure-as-conductivity ...........................   Passed    2.11 sec
+        Start 3028: compile_fail.therm.pressure-as-conductivity
+186/191 Test #3028: compile_fail.therm.pressure-as-conductivity ...........................   Passed    2.07 sec
+        Start 3030: compile_fail.therm.heat-capacity-as-specific-heat
+      Test #3030: compile_fail.therm.heat-capacity-as-specific-heat .....................   Passed    2.08 sec
+        Start 3030: compile_fail.therm.heat-capacity-as-specific-heat
+      Test #3030: compile_fail.therm.heat-capacity-as-specific-heat .....................   Passed    2.16 sec
+        Start 3030: compile_fail.therm.heat-capacity-as-specific-heat
+      Test #3030: compile_fail.therm.heat-capacity-as-specific-heat .....................   Passed    2.02 sec
+        Start 3030: compile_fail.therm.heat-capacity-as-specific-heat
+      Test #3030: compile_fail.therm.heat-capacity-as-specific-heat .....................   Passed    2.49 sec
+        Start 3030: compile_fail.therm.heat-capacity-as-specific-heat
+187/191 Test #3030: compile_fail.therm.heat-capacity-as-specific-heat .....................   Passed    2.06 sec
+        Start 3035: compile_fail.therm.resistivity-to-double
+      Test #3035: compile_fail.therm.resistivity-to-double ..............................   Passed    2.06 sec
+        Start 3035: compile_fail.therm.resistivity-to-double
+      Test #3035: compile_fail.therm.resistivity-to-double ..............................   Passed    2.03 sec
+        Start 3035: compile_fail.therm.resistivity-to-double
+      Test #3035: compile_fail.therm.resistivity-to-double ..............................   Passed    2.05 sec
+        Start 3035: compile_fail.therm.resistivity-to-double
+      Test #3035: compile_fail.therm.resistivity-to-double ..............................   Passed    2.13 sec
+        Start 3035: compile_fail.therm.resistivity-to-double
+188/191 Test #3035: compile_fail.therm.resistivity-to-double ..............................   Passed    2.04 sec
+        Start 3034: compile_fail.therm.resistivity-from-double
+      Test #3034: compile_fail.therm.resistivity-from-double ............................   Passed    2.14 sec
+        Start 3034: compile_fail.therm.resistivity-from-double
+      Test #3034: compile_fail.therm.resistivity-from-double ............................   Passed    2.19 sec
+        Start 3034: compile_fail.therm.resistivity-from-double
+      Test #3034: compile_fail.therm.resistivity-from-double ............................   Passed    2.17 sec
+        Start 3034: compile_fail.therm.resistivity-from-double
+      Test #3034: compile_fail.therm.resistivity-from-double ............................   Passed    2.09 sec
+        Start 3034: compile_fail.therm.resistivity-from-double
+189/191 Test #3034: compile_fail.therm.resistivity-from-double ............................   Passed    2.14 sec
+        Start 3037: compile_fail.therm.conductivity-as-temperature
+      Test #3037: compile_fail.therm.conductivity-as-temperature ........................   Passed    2.19 sec
+        Start 3037: compile_fail.therm.conductivity-as-temperature
+      Test #3037: compile_fail.therm.conductivity-as-temperature ........................   Passed    2.08 sec
+        Start 3037: compile_fail.therm.conductivity-as-temperature
+      Test #3037: compile_fail.therm.conductivity-as-temperature ........................   Passed    2.12 sec
+        Start 3037: compile_fail.therm.conductivity-as-temperature
+      Test #3037: compile_fail.therm.conductivity-as-temperature ........................   Passed    2.14 sec
+        Start 3037: compile_fail.therm.conductivity-as-temperature
+190/191 Test #3037: compile_fail.therm.conductivity-as-temperature ........................   Passed    2.11 sec
+        Start 3029: compile_fail.therm.energy-as-specific-heat
+      Test #3029: compile_fail.therm.energy-as-specific-heat ............................   Passed    2.07 sec
+        Start 3029: compile_fail.therm.energy-as-specific-heat
+      Test #3029: compile_fail.therm.energy-as-specific-heat ............................   Passed    2.10 sec
+        Start 3029: compile_fail.therm.energy-as-specific-heat
+      Test #3029: compile_fail.therm.energy-as-specific-heat ............................   Passed    2.15 sec
+        Start 3029: compile_fail.therm.energy-as-specific-heat
+      Test #3029: compile_fail.therm.energy-as-specific-heat ............................   Passed    2.02 sec
+        Start 3029: compile_fail.therm.energy-as-specific-heat
+191/191 Test #3029: compile_fail.therm.energy-as-specific-heat ............................   Passed    2.25 sec
+
+100% tests passed out of 191
+
+Total Test time (real) = 3199.20 sec

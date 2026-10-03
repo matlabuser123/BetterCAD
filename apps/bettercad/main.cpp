@@ -36,6 +36,32 @@ int main(int argc, char* argv[]) {
     if (parser.isSet(smokeTest)) {
         QTimer::singleShot(0, &app, [&window] {
             // Reached only once the event loop is running with the window shown.
+            const bettercad::app::ViewportWidget* viewport = window.viewport();
+            // REPORTED, not inferred. Under the offscreen platform plugin
+            // there is no native window and therefore no 3D view, and a test
+            // that could not tell that apart from a broken viewport would be
+            // worth very little. So the state is printed either way.
+            if (viewport == nullptr) {
+                std::fprintf(stdout, "viewport: absent\n");
+                QApplication::exit(1);
+                return;
+            }
+            if (viewport->hasView()) {
+                std::fprintf(stdout, "viewport: 3D view created\n");
+                // MEASURED, not assumed. Qt reports the widget in logical
+                // pixels and the view works in device pixels; printing both
+                // and the ratio between them is what turns that from a claim
+                // into an observation, on whatever display the run happens on.
+                std::fprintf(stdout,
+                             "viewport: logical %dx%d, device %dx%d, ratio %.3f\n",
+                             viewport->width(), viewport->height(),
+                             viewport->deviceSize().width(),
+                             viewport->deviceSize().height(), viewport->deviceRatio());
+            } else {
+                std::fprintf(stdout, "viewport: no 3D view (%s)\n",
+                             qPrintable(viewport->unavailableReason()));
+            }
+            std::fflush(stdout);
             QApplication::exit(window.isVisible() ? 0 : 1);
         });
     }

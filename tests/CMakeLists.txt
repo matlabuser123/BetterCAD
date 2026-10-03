@@ -26,6 +26,7 @@ bettercad_add_executable(bettercad_tests
         TestHelpers.hpp
         assembly/CommandTests.cpp
         meshing/GeometryMeshMapTests.cpp
+        renderer/ViewerTests.cpp
         meshing/GeometryPreparationTests.cpp
         meshing/MeshDataTests.cpp
         meshing/MeshQualityTests.cpp
@@ -224,6 +225,7 @@ bettercad_add_executable(bettercad_tests
         BetterCAD::geometry
         BetterCAD::io
         BetterCAD::meshing
+        BetterCAD::renderer
         BetterCAD::sketch
         bettercad_test_occt
         Catch2::Catch2WithMain
@@ -1407,8 +1409,17 @@ endif()
 
 if(TARGET bettercad)
     # Headless: the offscreen platform plugin needs no display.
-    add_test(NAME gui.launch.smoke
-        COMMAND "$<TARGET_FILE:bettercad>" --smoke-test -platform offscreen)
+    #
+    # The viewport REPORTS whether it got a 3D view, and this asserts that it
+    # reported something (INFRA-VIEWER-001). Offscreen it will say it has no
+    # native window; on a desktop it will say the view was created. Either is a
+    # pass -- what would not be is a viewport that says nothing, which is
+    # indistinguishable from a broken one.
+    bettercad_add_process_test(gui.launch.smoke
+        COMMAND "$<TARGET_FILE:bettercad>"
+        ARGS "--smoke-test|-platform|offscreen"
+        EXIT_CODE 0
+        STDOUT_REGEX "viewport: (3D view created|no 3D view)")
     set_tests_properties(gui.launch.smoke PROPERTIES TIMEOUT 60)
 endif()
 

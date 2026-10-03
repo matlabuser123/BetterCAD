@@ -13,8 +13,8 @@ Current:
            P16 — Meshing
 
 Current milestone:
-           none — P16-MAP-001 is complete. Starting the next one is a
-           scope decision.
+           None. INFRA-VIEWER-001 is QUALIFIED (2026-10-04) and the next
+           milestone is a scope decision, not Claude's to make.
 
 Qualified:
            P0–P10 — BetterCAD v0.1.0
@@ -25,12 +25,13 @@ Qualified:
            P15 — Materials / Engineering Data
 
 Next:
-           P16-VIZ-001 — Mesh Visualisation / Inspection. BLOCKED: BetterCAD
-           has no 3D viewport, no CAD display and no selection system, and the
-           OCCT dependency is built without its visualization driver. 16 of 18
-           checkboxes need them. Audit:
-           docs/verification/P16-VIZ-001/VIEWER_AUDIT.md.
-           Unblocking it is a scope decision.
+           P16-VIZ-001 — Mesh Visualisation / Inspection. NO LONGER
+           BLOCKED: INFRA-VIEWER-001 qualified on 2026-10-04 and supplies the
+           viewport, CAD display, camera and selection system its 16 blocked
+           checkboxes needed. It is NOT thereby authorized — starting it is a
+           scope decision. The original audit, and what it found missing, is
+           docs/verification/P16-VIZ-001/VIEWER_AUDIT.md; what now exists is
+           docs/verification/INFRA-VIEWER-001/README.md.
 
 Qualified milestones in P16:
            P16-ARCH-001 — Meshing Architecture (ADR-030 to ADR-033)
@@ -42,6 +43,8 @@ Qualified milestones in P16:
            P16-SIZE-001 — Global / Local Mesh Sizing
            P16-QUALITY-001 — Mesh Quality Metrics / Validation
            P16-MAP-001 — Geometry ↔ Mesh Correspondence / Regions
+           INFRA-VIEWER-001 — OCCT visualization toolchain qualification
+                              (infrastructure)
 
 P16 objective:
            Geometry
@@ -241,6 +244,8 @@ P16-VOL-001        3D tetrahedral volume mesh
 P16-SIZE-001       Global / local sizing controls
 P16-QUALITY-001    Mesh-quality metrics / validation
 P16-MAP-001        Geometry ↔ mesh correspondence / regions
+INFRA-VIEWER-001   OCCT visualization toolchain qualification (infrastructure,
+                   out of band)
 P16-VIZ-001        Mesh visualisation / inspection
 P16-CMD-001        Commands / undo / redo
 P16-PERSIST-001    Meshing-intent persistence
@@ -1208,6 +1213,102 @@ geometry/mesh correspondence explicit
 + solver boundary sets possible
 + no false permanent-topology guarantee
 ```
+
+---
+
+# INFRA-VIEWER-001
+
+## OCCT Visualization Toolchain Qualification
+
+**AUTHORIZED BY THE OWNER 2026-10-03**, out of band, after `P16-VIZ-001` was
+recorded BLOCKED at e7d90e9. Infrastructure, not a P16 capability: it exists
+only so that `P16-VIZ-001` has something to display into.
+
+Same shape as `INFRA-NETGEN-001`, and the same discipline: it ends either
+**QUALIFIED** or **NOT QUALIFIABLE**, with no ambiguous middle state.
+
+### What forced it
+
+`deps/CMakeLists.txt` builds OCCT 8.0.1 from a pinned, hash-verified source
+archive with
+
+```text
+-DBUILD_MODULE_Visualization:BOOL=OFF
+-DUSE_OPENGL:BOOL=OFF
+```
+
+and the comment "Geometry kernel + STEP/STL exchange only". `TKV3d` and
+`TKService` reach the prefix as transitive requirements of DataExchange, but
+**`TKOpenGl` is absent entirely**, and `V3d_Viewer` needs a
+`Graphic3d_GraphicDriver` whose only usable implementation lives there. So no
+view can be instantiated at all.
+
+FreeType was audited first because it is the usual blocker: OCCT guards it with
+`if (CAN_USE_FREETYPE AND USE_FREETYPE)` and merely drops `HAVE_FREETYPE` when
+it is off, so **Visualization builds without it** and no new dependency has to
+be admitted for the gate.
+
+### Scope
+
+```text
+IN    the OCCT dependency rebuilt with Visualization and the OpenGL driver,
+      pinned and reproducible, under the qualified MinGW toolchain
+IN    proof that a V3d view can be created and rendered OFFSCREEN on this
+      toolchain, headlessly, from a test
+IN    an OCCT view embedded in a Qt widget, with the existing offscreen smoke
+      test extended to cover it
+IN    camera: orbit, pan, zoom, standard views
+IN    CAD body display, and a selection system with owners, highlight and
+      visibility state
+OUT   anything about MESHES. P16-VIZ-001 owns that and is still blocked until
+      this passes.
+OUT   model tree, property editor, sketch environment, command system -- the
+      rest of ROADMAP's Desktop Application goal
+```
+
+* [x] Audit how OCCT visualization is excluded today, and what it needs
+* [x] Decide and record the FreeType question
+* [x] Enable Visualization and the OpenGL driver in the pinned deps build
+* [x] Rebuild the dependency reproducibly, with the hash pin intact
+* [x] Verify the toolkits and headers the viewer needs are installed
+* [x] Link the visualization toolkits from the application
+* [x] Create a graphic driver and a V3d view on this toolchain
+* [x] Render OFFSCREEN, headlessly, provably, from a test
+* [x] Embed the view in a Qt widget
+* [x] Camera: orbit, pan, zoom, standard views
+* [x] Display a CAD body
+* [x] Selection with owners, highlight and visibility state
+* [x] The viewer owns no engineering state
+* [x] Deterministic, non-pixel-equality tests
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded
+
+### Gate
+
+```text
+A. QUALIFIED   <-- THIS ONE, 2026-10-04
+   OCCT visualization builds reproducibly from the pinned source under the
+   qualified toolchain; a V3d view renders offscreen from a test in all three
+   presets; a CAD body displays in a Qt-embedded view; selection and
+   visibility work; the viewer holds no engineering state; 0 warnings.
+
+B. NOT QUALIFIABLE
+   with the exact reason, the exact failing step, and what would change it.
+
+No ambiguous middle state.
+```
+
+**QUALIFIED.** Every stage of the three-preset qualification exited 0:
+3151 tests in each of `debug-ext`, `release-ext` and `debug-shared-ext`, each
+built from clean with 0 warnings under `-Werror`, plus 191 tests repeated five
+times in Release and Debug. 15 of 15 mutations killed by a test, none
+surviving. Five production defects and two test gaps were found and fixed
+during the review.
+
+Evidence: [docs/verification/INFRA-VIEWER-001/](docs/verification/INFRA-VIEWER-001/README.md),
+tree `335f7fc176224ffd74db687b6097a664ee4d4fde`
+([FREEZE.md](docs/verification/INFRA-VIEWER-001/FREEZE.md)).
 
 ---
 

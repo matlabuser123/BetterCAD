@@ -1,0 +1,63 @@
+Test project C:/Users/uqhas/AppData/Local/bc-build/release-ext
+        Start 322: compile_fail.volumemesh.volume-mesh-from-plain-mesh
+        Start 172: architecture.layering
+        Start 157: gui.launch.smoke
+        Start 180: architecture.checker.mesh-backend-generated-leak
+        Start 179: architecture.checker.mesh-backend-leak
+        Start 175: architecture.checker.examples-occt-leak
+        Start 181: architecture.checker.private-include
+        Start 173: architecture.checker.valid
+      Test #157: gui.launch.smoke .....................................................***Failed    0.13 sec
+-- command  : C:/Users/uqhas/AppData/Local/bc-build/release-ext/bin/bettercad.exe --smoke-test;-platform;offscreen
+-- exit code: no such file or directory (expected 0)
+-- stdout:
+
+-- stderr:
+
+CMake Error at C:/Users/uqhas/OneDrive/Desktop/CAD/tests/cmake/RunAndCheck.cmake:84 (message):
+  Process check failed:
+
+    exit code no such file or directory != expected 0
+    stdout does not match regex: viewport: (3D view created|no 3D view)
+
+
+
+        Start 174: architecture.checker.occt-leak
+      Test #180: architecture.checker.mesh-backend-generated-leak .....................   Passed    0.29 sec
+        Start 180: architecture.checker.mesh-backend-generated-leak
+      Test #181: architecture.checker.private-include .................................   Passed    0.25 sec
+        Start 181: architecture.checker.private-include
+      Test #179: architecture.checker.mesh-backend-leak ...............................   Passed    0.30 sec
+        Start 179: architecture.checker.mesh-backend-leak
+      Test #174: architecture.checker.occt-leak .......................................   Passed    0.28 sec
+        Start 174: architecture.checker.occt-leak
+      Test #173: architecture.checker.valid ...........................................   Passed    0.33 sec
+        Start 173: architecture.checker.valid
+      Test #175: architecture.checker.examples-occt-leak ..............................   Passed    0.38 sec
+        Start 175: architecture.checker.examples-occt-leak
+      Test #181: architecture.checker.private-include .................................   Passed    0.41 sec
+        Start 181: architecture.checker.private-include
+      Test #179: architecture.checker.mesh-backend-leak ...............................   Passed    0.46 sec
+        Start 179: architecture.checker.mesh-backend-leak
+      Test #174: architecture.checker.occt-leak .......................................   Passed    0.43 sec
+        Start 174: architecture.checker.occt-leak
+      Test #173: architecture.checker.valid ...........................................   Passed    0.51 sec
+        Start 173: architecture.checker.valid
+      Test #180: architecture.checker.mesh-backend-generated-leak .....................   Passed    0.74 sec
+        Start 180: architecture.checker.mesh-backend-generated-leak
+      Test #175: architecture.checker.examples-occt-leak ..............................   Passed    0.62 sec
+        Start 175: architecture.checker.examples-occt-leak
+      Test #179: architecture.checker.mesh-backend-leak ...............................   Passed    0.50 sec
+        Start 179: architecture.checker.mesh-backend-leak
+      Test #174: architecture.checker.occt-leak .......................................   Passed    0.49 sec
+        Start 174: architecture.checker.occt-leak
+      Test #181: architecture.checker.private-include .................................   Passed    0.61 sec
+        Start 181: architecture.checker.private-include
+      Test #180: architecture.checker.mesh-backend-generated-leak .....................   Passed    0.41 sec
+        Start 180: architecture.checker.mesh-backend-generated-leak
+      Test #173: architecture.checker.valid ...........................................   Passed    0.51 sec
+        Start 173: architecture.checker.valid
+      Test #175: architecture.checker.examples-occt-leak ..............................   Passed    0.47 sec
+        Start 175: architecture.checker.examples-occt-leak
+Unable to find executable: C:/Program Files/CMake/bin/cmake.exe
+Errors while running CTest

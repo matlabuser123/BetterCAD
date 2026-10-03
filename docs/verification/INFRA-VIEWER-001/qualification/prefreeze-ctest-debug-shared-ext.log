@@ -1,0 +1,83 @@
+Test project C:/Users/uqhas/AppData/Local/bc-build/debug-shared-ext
+      Start 2970: gui.launch.smoke
+      Start 2985: architecture.layering
+      Start 2993: architecture.checker.mesh-backend-generated-leak
+      Start 2989: architecture.checker.qt-leak
+      Start 2992: architecture.checker.mesh-backend-leak
+      Start 2991: architecture.checker.drawing-layer-violation
+      Start 2986: architecture.checker.valid
+      Start 2988: architecture.checker.examples-occt-leak
+ 1/39 Test #2988: architecture.checker.examples-occt-leak ...............................   Passed    0.34 sec
+ 2/39 Test #2993: architecture.checker.mesh-backend-generated-leak ......................   Passed    0.47 sec
+ 3/39 Test #2989: architecture.checker.qt-leak ..........................................   Passed    0.46 sec
+ 4/39 Test #2991: architecture.checker.drawing-layer-violation ..........................   Passed    0.40 sec
+      Start 2990: architecture.checker.layer-violation
+      Start 2994: architecture.checker.private-include
+      Start 2987: architecture.checker.occt-leak
+      Start 2723: unit.Viewer_AnEmptySceneCoversNothing
+ 5/39 Test #2992: architecture.checker.mesh-backend-leak ................................   Passed    0.56 sec
+      Start 2724: unit.Viewer_BackgroundIsWhatWasAskedFor
+ 6/39 Test #2986: architecture.checker.valid ............................................   Passed    0.60 sec
+      Start 2725: unit.Viewer_CreatesAnOffscreenViewOnThisToolchain
+ 7/39 Test #2987: architecture.checker.occt-leak ........................................   Passed    0.75 sec
+ 8/39 Test #2994: architecture.checker.private-include ..................................   Passed    0.80 sec
+      Start 2726: unit.Viewer_DisplayingDoesNotRegenerateOrHealTheBody
+      Start 2727: unit.Viewer_DisplaysACadBodyAndDrawsIt
+ 9/39 Test #2990: architecture.checker.layer-violation ..................................   Passed    0.99 sec
+      Start 2728: unit.Viewer_HidingIsNotDeleting
+10/39 Test #2985: architecture.layering .................................................   Passed    2.86 sec
+      Start 2729: unit.Viewer_HidingOneBodyLeavesTheOtherVisible
+11/39 Test #2723: unit.Viewer_AnEmptySceneCoversNothing .................................   Passed    2.51 sec
+      Start 2730: unit.Viewer_IgnoresANonsensicalZoom
+12/39 Test #2725: unit.Viewer_CreatesAnOffscreenViewOnThisToolchain .....................   Passed    2.84 sec
+      Start 2731: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly
+13/39 Test #2724: unit.Viewer_BackgroundIsWhatWasAskedFor ...............................   Passed    3.02 sec
+      Start 2732: unit.Viewer_NothingItDoesChangesTheModel
+14/39 Test #2727: unit.Viewer_DisplaysACadBodyAndDrawsIt ................................   Passed    2.67 sec
+      Start 2733: unit.Viewer_PickCoordinatesStayInTheRenderedImagesSpaceAfterAResize
+15/39 Test #2726: unit.Viewer_DisplayingDoesNotRegenerateOrHealTheBody ..................   Passed    2.83 sec
+      Start 2734: unit.Viewer_PickingADisplayedBodyResolvesToItsObject
+16/39 Test #2728: unit.Viewer_HidingIsNotDeleting .......................................   Passed    2.90 sec
+      Start 2735: unit.Viewer_PickingAnEmptyViewFindsNothing
+17/39 Test #2970: gui.launch.smoke ......................................................   Passed    4.88 sec
+      Start 2736: unit.Viewer_PickingDistinguishesTwoDisplayedBodies
+18/39 Test #2729: unit.Viewer_HidingOneBodyLeavesTheOtherVisible ........................   Passed    2.04 sec
+      Start 2737: unit.Viewer_RefusesAViewWithNoArea
+19/39 Test #2737: unit.Viewer_RefusesAViewWithNoArea ....................................   Passed    0.39 sec
+      Start 2738: unit.Viewer_RefusesToDisplayAnEmptyBodyOrAnInvalidObject
+20/39 Test #2730: unit.Viewer_IgnoresANonsensicalZoom ...................................   Passed    2.56 sec
+      Start 2739: unit.Viewer_RemovingAPresentationLeavesTheModelAlone
+21/39 Test #2732: unit.Viewer_NothingItDoesChangesTheModel ..............................   Passed    2.15 sec
+      Start 2740: unit.Viewer_ResizeRefusesAnEmptyArea
+22/39 Test #2733: unit.Viewer_PickCoordinatesStayInTheRenderedImagesSpaceAfterAResize ...   Passed    1.87 sec
+      Start 2741: unit.Viewer_SelectionIsReportedAsCadIdentity
+23/39 Test #2735: unit.Viewer_PickingAnEmptyViewFindsNothing ............................   Passed    2.13 sec
+      Start 2742: unit.Viewer_SelectionRefusesAPresentationItDoesNotHave
+24/39 Test #2734: unit.Viewer_PickingADisplayedBodyResolvesToItsObject ..................   Passed    2.51 sec
+      Start 2743: unit.Viewer_StandardViewsChangeWhatIsDrawn
+25/39 Test #2736: unit.Viewer_PickingDistinguishesTwoDisplayedBodies ....................   Passed    2.07 sec
+      Start 2744: unit.Viewer_ZoomAndOrbitChangeTheImageWithoutTouchingTheModel
+26/39 Test #2738: unit.Viewer_RefusesToDisplayAnEmptyBodyOrAnInvalidObject ..............   Passed    2.10 sec
+      Start 3146: compile_fail.viewer.display-through-a-mutable-body
+27/39 Test #2741: unit.Viewer_SelectionIsReportedAsCadIdentity ..........................   Passed    1.86 sec
+28/39 Test #2740: unit.Viewer_ResizeRefusesAnEmptyArea ..................................   Passed    2.04 sec
+29/39 Test #2739: unit.Viewer_RemovingAPresentationLeavesTheModelAlone ..................   Passed    2.72 sec
+30/39 Test #2742: unit.Viewer_SelectionRefusesAPresentationItDoesNotHave ................   Passed    2.03 sec
+31/39 Test #2743: unit.Viewer_StandardViewsChangeWhatIsDrawn ............................   Passed    2.28 sec
+32/39 Test #2744: unit.Viewer_ZoomAndOrbitChangeTheImageWithoutTouchingTheModel .........   Passed    2.43 sec
+33/39 Test #2731: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly ................   Passed    8.60 sec
+34/39 Test #3146: compile_fail.viewer.display-through-a-mutable-body ....................   Passed    7.69 sec
+      Start 3147: compile_fail.viewer.presentation-id-as-object-id
+35/39 Test #3147: compile_fail.viewer.presentation-id-as-object-id ......................   Passed    7.04 sec
+      Start 3148: compile_fail.viewer.object-id-as-presentation-id
+36/39 Test #3148: compile_fail.viewer.object-id-as-presentation-id ......................   Passed    7.08 sec
+      Start 3149: compile_fail.viewer.presentation-id-from-integer
+37/39 Test #3149: compile_fail.viewer.presentation-id-from-integer ......................   Passed    5.39 sec
+      Start 3150: compile_fail.viewer.copy-a-viewer
+38/39 Test #3150: compile_fail.viewer.copy-a-viewer .....................................   Passed    4.85 sec
+      Start 3151: compile_fail.viewer.reach-a-document-through-the-viewer
+39/39 Test #3151: compile_fail.viewer.reach-a-document-through-the-viewer ...............   Passed    4.90 sec
+
+100% tests passed out of 39
+
+Total Test time (real) =  49.67 sec

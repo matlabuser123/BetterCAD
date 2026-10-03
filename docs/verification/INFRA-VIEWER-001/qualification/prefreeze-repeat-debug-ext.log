@@ -1,0 +1,235 @@
+Test project C:/Users/uqhas/AppData/Local/bc-build/debug-ext
+      Start 2726: unit.Viewer_DisplayingDoesNotRegenerateOrHealTheBody
+      Start 2732: unit.Viewer_NothingItDoesChangesTheModel
+      Start 2731: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly
+      Start 2743: unit.Viewer_StandardViewsChangeWhatIsDrawn
+      Start 2728: unit.Viewer_HidingIsNotDeleting
+      Start 2729: unit.Viewer_HidingOneBodyLeavesTheOtherVisible
+      Start 2744: unit.Viewer_ZoomAndOrbitChangeTheImageWithoutTouchingTheModel
+      Start 2734: unit.Viewer_PickingADisplayedBodyResolvesToItsObject
+    Test #2732: unit.Viewer_NothingItDoesChangesTheModel ..............................   Passed    2.51 sec
+      Start 2732: unit.Viewer_NothingItDoesChangesTheModel
+    Test #2744: unit.Viewer_ZoomAndOrbitChangeTheImageWithoutTouchingTheModel .........   Passed    2.59 sec
+      Start 2744: unit.Viewer_ZoomAndOrbitChangeTheImageWithoutTouchingTheModel
+    Test #2734: unit.Viewer_PickingADisplayedBodyResolvesToItsObject ..................   Passed    2.89 sec
+      Start 2734: unit.Viewer_PickingADisplayedBodyResolvesToItsObject
+    Test #2728: unit.Viewer_HidingIsNotDeleting .......................................   Passed    3.16 sec
+      Start 2728: unit.Viewer_HidingIsNotDeleting
+    Test #2729: unit.Viewer_HidingOneBodyLeavesTheOtherVisible ........................   Passed    3.14 sec
+      Start 2729: unit.Viewer_HidingOneBodyLeavesTheOtherVisible
+    Test #2726: unit.Viewer_DisplayingDoesNotRegenerateOrHealTheBody ..................   Passed    3.46 sec
+      Start 2726: unit.Viewer_DisplayingDoesNotRegenerateOrHealTheBody
+    Test #2743: unit.Viewer_StandardViewsChangeWhatIsDrawn ............................   Passed    3.69 sec
+      Start 2743: unit.Viewer_StandardViewsChangeWhatIsDrawn
+    Test #2744: unit.Viewer_ZoomAndOrbitChangeTheImageWithoutTouchingTheModel .........   Passed    1.96 sec
+      Start 2744: unit.Viewer_ZoomAndOrbitChangeTheImageWithoutTouchingTheModel
+    Test #2732: unit.Viewer_NothingItDoesChangesTheModel ..............................   Passed    2.36 sec
+      Start 2732: unit.Viewer_NothingItDoesChangesTheModel
+    Test #2734: unit.Viewer_PickingADisplayedBodyResolvesToItsObject ..................   Passed    2.25 sec
+      Start 2734: unit.Viewer_PickingADisplayedBodyResolvesToItsObject
+    Test #2729: unit.Viewer_HidingOneBodyLeavesTheOtherVisible ........................   Passed    2.62 sec
+      Start 2729: unit.Viewer_HidingOneBodyLeavesTheOtherVisible
+    Test #2728: unit.Viewer_HidingIsNotDeleting .......................................   Passed    2.69 sec
+      Start 2728: unit.Viewer_HidingIsNotDeleting
+    Test #2726: unit.Viewer_DisplayingDoesNotRegenerateOrHealTheBody ..................   Passed    2.56 sec
+      Start 2726: unit.Viewer_DisplayingDoesNotRegenerateOrHealTheBody
+    Test #2743: unit.Viewer_StandardViewsChangeWhatIsDrawn ............................   Passed    2.55 sec
+      Start 2743: unit.Viewer_StandardViewsChangeWhatIsDrawn
+    Test #2732: unit.Viewer_NothingItDoesChangesTheModel ..............................   Passed    2.04 sec
+      Start 2732: unit.Viewer_NothingItDoesChangesTheModel
+    Test #2744: unit.Viewer_ZoomAndOrbitChangeTheImageWithoutTouchingTheModel .........   Passed    2.30 sec
+      Start 2744: unit.Viewer_ZoomAndOrbitChangeTheImageWithoutTouchingTheModel
+    Test #2734: unit.Viewer_PickingADisplayedBodyResolvesToItsObject ..................   Passed    2.41 sec
+      Start 2734: unit.Viewer_PickingADisplayedBodyResolvesToItsObject
+    Test #2729: unit.Viewer_HidingOneBodyLeavesTheOtherVisible ........................   Passed    3.85 sec
+      Start 2729: unit.Viewer_HidingOneBodyLeavesTheOtherVisible
+    Test #2728: unit.Viewer_HidingIsNotDeleting .......................................   Passed    3.91 sec
+      Start 2728: unit.Viewer_HidingIsNotDeleting
+    Test #2726: unit.Viewer_DisplayingDoesNotRegenerateOrHealTheBody ..................   Passed    3.99 sec
+      Start 2726: unit.Viewer_DisplayingDoesNotRegenerateOrHealTheBody
+    Test #2743: unit.Viewer_StandardViewsChangeWhatIsDrawn ............................   Passed    3.92 sec
+      Start 2743: unit.Viewer_StandardViewsChangeWhatIsDrawn
+    Test #2732: unit.Viewer_NothingItDoesChangesTheModel ..............................   Passed    3.59 sec
+      Start 2732: unit.Viewer_NothingItDoesChangesTheModel
+    Test #2744: unit.Viewer_ZoomAndOrbitChangeTheImageWithoutTouchingTheModel .........   Passed    3.62 sec
+      Start 2744: unit.Viewer_ZoomAndOrbitChangeTheImageWithoutTouchingTheModel
+    Test #2734: unit.Viewer_PickingADisplayedBodyResolvesToItsObject ..................   Passed    3.06 sec
+      Start 2734: unit.Viewer_PickingADisplayedBodyResolvesToItsObject
+    Test #2729: unit.Viewer_HidingOneBodyLeavesTheOtherVisible ........................   Passed    2.32 sec
+      Start 2729: unit.Viewer_HidingOneBodyLeavesTheOtherVisible
+    Test #2731: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly ................   Passed   12.32 sec
+      Start 2731: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly
+    Test #2726: unit.Viewer_DisplayingDoesNotRegenerateOrHealTheBody ..................   Passed    2.88 sec
+      Start 2726: unit.Viewer_DisplayingDoesNotRegenerateOrHealTheBody
+    Test #2743: unit.Viewer_StandardViewsChangeWhatIsDrawn ............................   Passed    3.15 sec
+      Start 2743: unit.Viewer_StandardViewsChangeWhatIsDrawn
+ 1/23 Test #2734: unit.Viewer_PickingADisplayedBodyResolvesToItsObject ..................   Passed    2.87 sec
+ 2/23 Test #2744: unit.Viewer_ZoomAndOrbitChangeTheImageWithoutTouchingTheModel .........   Passed    3.06 sec
+      Start 2730: unit.Viewer_IgnoresANonsensicalZoom
+      Start 2727: unit.Viewer_DisplaysACadBodyAndDrawsIt
+ 3/23 Test #2732: unit.Viewer_NothingItDoesChangesTheModel ..............................   Passed    3.35 sec
+      Start 2740: unit.Viewer_ResizeRefusesAnEmptyArea
+    Test #2728: unit.Viewer_HidingIsNotDeleting .......................................   Passed    5.88 sec
+      Start 2728: unit.Viewer_HidingIsNotDeleting
+ 4/23 Test #2726: unit.Viewer_DisplayingDoesNotRegenerateOrHealTheBody ..................   Passed    3.31 sec
+      Start 2724: unit.Viewer_BackgroundIsWhatWasAskedFor
+ 5/23 Test #2743: unit.Viewer_StandardViewsChangeWhatIsDrawn ............................   Passed    4.11 sec
+      Start 2742: unit.Viewer_SelectionRefusesAPresentationItDoesNotHave
+    Test #2727: unit.Viewer_DisplaysACadBodyAndDrawsIt ................................   Passed    4.31 sec
+      Start 2727: unit.Viewer_DisplaysACadBodyAndDrawsIt
+ 6/23 Test #2729: unit.Viewer_HidingOneBodyLeavesTheOtherVisible ........................   Passed    6.12 sec
+    Test #2730: unit.Viewer_IgnoresANonsensicalZoom ...................................   Passed    4.52 sec
+      Start 2730: unit.Viewer_IgnoresANonsensicalZoom
+    Test #2740: unit.Viewer_ResizeRefusesAnEmptyArea ..................................   Passed    4.25 sec
+      Start 2740: unit.Viewer_ResizeRefusesAnEmptyArea
+      Start 2741: unit.Viewer_SelectionIsReportedAsCadIdentity
+ 7/23 Test #2728: unit.Viewer_HidingIsNotDeleting .......................................   Passed    3.21 sec
+      Start 2725: unit.Viewer_CreatesAnOffscreenViewOnThisToolchain
+    Test #2724: unit.Viewer_BackgroundIsWhatWasAskedFor ...............................   Passed    3.26 sec
+      Start 2724: unit.Viewer_BackgroundIsWhatWasAskedFor
+    Test #2742: unit.Viewer_SelectionRefusesAPresentationItDoesNotHave ................   Passed    2.89 sec
+      Start 2742: unit.Viewer_SelectionRefusesAPresentationItDoesNotHave
+    Test #2727: unit.Viewer_DisplaysACadBodyAndDrawsIt ................................   Passed    3.18 sec
+      Start 2727: unit.Viewer_DisplaysACadBodyAndDrawsIt
+    Test #2740: unit.Viewer_ResizeRefusesAnEmptyArea ..................................   Passed    3.44 sec
+      Start 2740: unit.Viewer_ResizeRefusesAnEmptyArea
+    Test #2741: unit.Viewer_SelectionIsReportedAsCadIdentity ..........................   Passed    3.49 sec
+      Start 2741: unit.Viewer_SelectionIsReportedAsCadIdentity
+    Test #2725: unit.Viewer_CreatesAnOffscreenViewOnThisToolchain .....................   Passed    2.85 sec
+      Start 2725: unit.Viewer_CreatesAnOffscreenViewOnThisToolchain
+    Test #2724: unit.Viewer_BackgroundIsWhatWasAskedFor ...............................   Passed    2.83 sec
+      Start 2724: unit.Viewer_BackgroundIsWhatWasAskedFor
+    Test #2730: unit.Viewer_IgnoresANonsensicalZoom ...................................   Passed    4.14 sec
+      Start 2730: unit.Viewer_IgnoresANonsensicalZoom
+    Test #2742: unit.Viewer_SelectionRefusesAPresentationItDoesNotHave ................   Passed    2.11 sec
+      Start 2742: unit.Viewer_SelectionRefusesAPresentationItDoesNotHave
+    Test #2727: unit.Viewer_DisplaysACadBodyAndDrawsIt ................................   Passed    2.19 sec
+      Start 2727: unit.Viewer_DisplaysACadBodyAndDrawsIt
+    Test #2740: unit.Viewer_ResizeRefusesAnEmptyArea ..................................   Passed    1.91 sec
+      Start 2740: unit.Viewer_ResizeRefusesAnEmptyArea
+    Test #2725: unit.Viewer_CreatesAnOffscreenViewOnThisToolchain .....................   Passed    1.92 sec
+      Start 2725: unit.Viewer_CreatesAnOffscreenViewOnThisToolchain
+    Test #2741: unit.Viewer_SelectionIsReportedAsCadIdentity ..........................   Passed    2.27 sec
+      Start 2741: unit.Viewer_SelectionIsReportedAsCadIdentity
+    Test #2731: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly ................   Passed   11.97 sec
+      Start 2731: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly
+    Test #2724: unit.Viewer_BackgroundIsWhatWasAskedFor ...............................   Passed    2.07 sec
+      Start 2724: unit.Viewer_BackgroundIsWhatWasAskedFor
+    Test #2742: unit.Viewer_SelectionRefusesAPresentationItDoesNotHave ................   Passed    2.10 sec
+      Start 2742: unit.Viewer_SelectionRefusesAPresentationItDoesNotHave
+    Test #2730: unit.Viewer_IgnoresANonsensicalZoom ...................................   Passed    2.30 sec
+      Start 2730: unit.Viewer_IgnoresANonsensicalZoom
+    Test #2727: unit.Viewer_DisplaysACadBodyAndDrawsIt ................................   Passed    1.73 sec
+      Start 2727: unit.Viewer_DisplaysACadBodyAndDrawsIt
+    Test #2725: unit.Viewer_CreatesAnOffscreenViewOnThisToolchain .....................   Passed    1.54 sec
+      Start 2725: unit.Viewer_CreatesAnOffscreenViewOnThisToolchain
+    Test #2741: unit.Viewer_SelectionIsReportedAsCadIdentity ..........................   Passed    1.66 sec
+      Start 2741: unit.Viewer_SelectionIsReportedAsCadIdentity
+    Test #2740: unit.Viewer_ResizeRefusesAnEmptyArea ..................................   Passed    2.09 sec
+      Start 2740: unit.Viewer_ResizeRefusesAnEmptyArea
+    Test #2724: unit.Viewer_BackgroundIsWhatWasAskedFor ...............................   Passed    1.69 sec
+      Start 2724: unit.Viewer_BackgroundIsWhatWasAskedFor
+    Test #2742: unit.Viewer_SelectionRefusesAPresentationItDoesNotHave ................   Passed    1.60 sec
+      Start 2742: unit.Viewer_SelectionRefusesAPresentationItDoesNotHave
+    Test #2730: unit.Viewer_IgnoresANonsensicalZoom ...................................   Passed    1.67 sec
+      Start 2730: unit.Viewer_IgnoresANonsensicalZoom
+ 8/23 Test #2727: unit.Viewer_DisplaysACadBodyAndDrawsIt ................................   Passed    1.60 sec
+      Start 2723: unit.Viewer_AnEmptySceneCoversNothing
+    Test #2725: unit.Viewer_CreatesAnOffscreenViewOnThisToolchain .....................   Passed    1.56 sec
+      Start 2725: unit.Viewer_CreatesAnOffscreenViewOnThisToolchain
+    Test #2741: unit.Viewer_SelectionIsReportedAsCadIdentity ..........................   Passed    1.72 sec
+      Start 2741: unit.Viewer_SelectionIsReportedAsCadIdentity
+ 9/23 Test #2740: unit.Viewer_ResizeRefusesAnEmptyArea ..................................   Passed    1.97 sec
+      Start 2739: unit.Viewer_RemovingAPresentationLeavesTheModelAlone
+10/23 Test #2724: unit.Viewer_BackgroundIsWhatWasAskedFor ...............................   Passed    1.69 sec
+      Start 2735: unit.Viewer_PickingAnEmptyViewFindsNothing
+11/23 Test #2742: unit.Viewer_SelectionRefusesAPresentationItDoesNotHave ................   Passed    1.54 sec
+      Start 2738: unit.Viewer_RefusesToDisplayAnEmptyBodyOrAnInvalidObject
+12/23 Test #2725: unit.Viewer_CreatesAnOffscreenViewOnThisToolchain .....................   Passed    1.48 sec
+    Test #2723: unit.Viewer_AnEmptySceneCoversNothing .................................   Passed    1.56 sec
+      Start 2723: unit.Viewer_AnEmptySceneCoversNothing
+13/23 Test #2730: unit.Viewer_IgnoresANonsensicalZoom ...................................   Passed    2.03 sec
+      Start 2733: unit.Viewer_PickCoordinatesStayInTheRenderedImagesSpaceAfterAResize
+      Start 2736: unit.Viewer_PickingDistinguishesTwoDisplayedBodies
+14/23 Test #2741: unit.Viewer_SelectionIsReportedAsCadIdentity ..........................   Passed    1.51 sec
+      Start 2737: unit.Viewer_RefusesAViewWithNoArea
+    Test #2737: unit.Viewer_RefusesAViewWithNoArea ....................................   Passed    0.46 sec
+      Start 2737: unit.Viewer_RefusesAViewWithNoArea
+    Test #2739: unit.Viewer_RemovingAPresentationLeavesTheModelAlone ..................   Passed    1.90 sec
+      Start 2739: unit.Viewer_RemovingAPresentationLeavesTheModelAlone
+    Test #2738: unit.Viewer_RefusesToDisplayAnEmptyBodyOrAnInvalidObject ..............   Passed    1.89 sec
+      Start 2738: unit.Viewer_RefusesToDisplayAnEmptyBodyOrAnInvalidObject
+    Test #2737: unit.Viewer_RefusesAViewWithNoArea ....................................   Passed    0.43 sec
+      Start 2737: unit.Viewer_RefusesAViewWithNoArea
+    Test #2735: unit.Viewer_PickingAnEmptyViewFindsNothing ............................   Passed    2.12 sec
+      Start 2735: unit.Viewer_PickingAnEmptyViewFindsNothing
+    Test #2737: unit.Viewer_RefusesAViewWithNoArea ....................................   Passed    0.41 sec
+      Start 2737: unit.Viewer_RefusesAViewWithNoArea
+    Test #2723: unit.Viewer_AnEmptySceneCoversNothing .................................   Passed    2.17 sec
+      Start 2723: unit.Viewer_AnEmptySceneCoversNothing
+    Test #2737: unit.Viewer_RefusesAViewWithNoArea ....................................   Passed    0.36 sec
+      Start 2737: unit.Viewer_RefusesAViewWithNoArea
+    Test #2733: unit.Viewer_PickCoordinatesStayInTheRenderedImagesSpaceAfterAResize ...   Passed    2.26 sec
+      Start 2733: unit.Viewer_PickCoordinatesStayInTheRenderedImagesSpaceAfterAResize
+    Test #2736: unit.Viewer_PickingDistinguishesTwoDisplayedBodies ....................   Passed    2.49 sec
+      Start 2736: unit.Viewer_PickingDistinguishesTwoDisplayedBodies
+15/23 Test #2737: unit.Viewer_RefusesAViewWithNoArea ....................................   Passed    0.34 sec
+      Start 2970: gui.launch.smoke
+    Test #2739: unit.Viewer_RemovingAPresentationLeavesTheModelAlone ..................   Passed    1.84 sec
+      Start 2739: unit.Viewer_RemovingAPresentationLeavesTheModelAlone
+    Test #2738: unit.Viewer_RefusesToDisplayAnEmptyBodyOrAnInvalidObject ..............   Passed    2.08 sec
+      Start 2738: unit.Viewer_RefusesToDisplayAnEmptyBodyOrAnInvalidObject
+    Test #2735: unit.Viewer_PickingAnEmptyViewFindsNothing ............................   Passed    1.97 sec
+      Start 2735: unit.Viewer_PickingAnEmptyViewFindsNothing
+    Test #2970: gui.launch.smoke ......................................................   Passed    1.44 sec
+      Start 2970: gui.launch.smoke
+    Test #2723: unit.Viewer_AnEmptySceneCoversNothing .................................   Passed    2.63 sec
+      Start 2723: unit.Viewer_AnEmptySceneCoversNothing
+    Test #2970: gui.launch.smoke ......................................................   Passed    0.77 sec
+      Start 2970: gui.launch.smoke
+    Test #2736: unit.Viewer_PickingDistinguishesTwoDisplayedBodies ....................   Passed    2.46 sec
+      Start 2736: unit.Viewer_PickingDistinguishesTwoDisplayedBodies
+    Test #2970: gui.launch.smoke ......................................................   Passed    0.40 sec
+      Start 2970: gui.launch.smoke
+    Test #2733: unit.Viewer_PickCoordinatesStayInTheRenderedImagesSpaceAfterAResize ...   Passed    3.02 sec
+      Start 2733: unit.Viewer_PickCoordinatesStayInTheRenderedImagesSpaceAfterAResize
+    Test #2738: unit.Viewer_RefusesToDisplayAnEmptyBodyOrAnInvalidObject ..............   Passed    2.13 sec
+      Start 2738: unit.Viewer_RefusesToDisplayAnEmptyBodyOrAnInvalidObject
+    Test #2739: unit.Viewer_RemovingAPresentationLeavesTheModelAlone ..................   Passed    2.70 sec
+      Start 2739: unit.Viewer_RemovingAPresentationLeavesTheModelAlone
+    Test #2735: unit.Viewer_PickingAnEmptyViewFindsNothing ............................   Passed    2.40 sec
+      Start 2735: unit.Viewer_PickingAnEmptyViewFindsNothing
+    Test #2731: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly ................   Passed   10.40 sec
+      Start 2731: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly
+    Test #2970: gui.launch.smoke ......................................................   Passed    1.22 sec
+      Start 2970: gui.launch.smoke
+    Test #2723: unit.Viewer_AnEmptySceneCoversNothing .................................   Passed    2.36 sec
+      Start 2723: unit.Viewer_AnEmptySceneCoversNothing
+16/23 Test #2970: gui.launch.smoke ......................................................   Passed    0.81 sec
+    Test #2733: unit.Viewer_PickCoordinatesStayInTheRenderedImagesSpaceAfterAResize ...   Passed    2.98 sec
+      Start 2733: unit.Viewer_PickCoordinatesStayInTheRenderedImagesSpaceAfterAResize
+    Test #2736: unit.Viewer_PickingDistinguishesTwoDisplayedBodies ....................   Passed    3.34 sec
+      Start 2736: unit.Viewer_PickingDistinguishesTwoDisplayedBodies
+    Test #2735: unit.Viewer_PickingAnEmptyViewFindsNothing ............................   Passed    2.53 sec
+      Start 2735: unit.Viewer_PickingAnEmptyViewFindsNothing
+    Test #2738: unit.Viewer_RefusesToDisplayAnEmptyBodyOrAnInvalidObject ..............   Passed    3.05 sec
+      Start 2738: unit.Viewer_RefusesToDisplayAnEmptyBodyOrAnInvalidObject
+    Test #2739: unit.Viewer_RemovingAPresentationLeavesTheModelAlone ..................   Passed    3.07 sec
+      Start 2739: unit.Viewer_RemovingAPresentationLeavesTheModelAlone
+17/23 Test #2723: unit.Viewer_AnEmptySceneCoversNothing .................................   Passed    1.94 sec
+18/23 Test #2738: unit.Viewer_RefusesToDisplayAnEmptyBodyOrAnInvalidObject ..............   Passed    1.49 sec
+19/23 Test #2735: unit.Viewer_PickingAnEmptyViewFindsNothing ............................   Passed    1.72 sec
+    Test #2736: unit.Viewer_PickingDistinguishesTwoDisplayedBodies ....................   Passed    1.79 sec
+      Start 2736: unit.Viewer_PickingDistinguishesTwoDisplayedBodies
+    Test #2733: unit.Viewer_PickCoordinatesStayInTheRenderedImagesSpaceAfterAResize ...   Passed    1.96 sec
+      Start 2733: unit.Viewer_PickCoordinatesStayInTheRenderedImagesSpaceAfterAResize
+20/23 Test #2739: unit.Viewer_RemovingAPresentationLeavesTheModelAlone ..................   Passed    1.62 sec
+21/23 Test #2736: unit.Viewer_PickingDistinguishesTwoDisplayedBodies ....................   Passed    1.32 sec
+22/23 Test #2733: unit.Viewer_PickCoordinatesStayInTheRenderedImagesSpaceAfterAResize ...   Passed    1.43 sec
+    Test #2731: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly ................   Passed    8.52 sec
+      Start 2731: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly
+23/23 Test #2731: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly ................   Passed    7.17 sec
+
+100% tests passed out of 23
+
+Total Test time (real) =  55.77 sec

@@ -1,0 +1,92 @@
+[
+ {
+  "file": "src/renderer/occt/OcctViewer.cpp",
+  "label": "display mode not set on the presentation, so an erased body returns as wireframe",
+  "old": "        presentation->SetDisplayMode(AIS_Shaded);",
+  "new": "        // mutation: the display mode is left at the AIS_Shape default"
+ },
+ {
+  "file": "src/renderer/occt/OcctViewer.cpp",
+  "label": "the view size checked only after a window is built from it",
+  "old": "    if (const Result<void> checked = checkSize(width, height); !checked.has_value()) {\n        return std::unexpected(checked.error());\n    }\n    // A REAL NATIVE WINDOW THAT IS NEVER MAPPED.",
+  "new": "    // A REAL NATIVE WINDOW THAT IS NEVER MAPPED."
+ },
+ {
+  "file": "src/renderer/occt/OcctViewer.cpp",
+  "label": "a pick returns the first presentation instead of the one detected",
+  "old": "            for (std::size_t i = 0; i < impl_->presentations.size(); ++i) {\n                if (impl_->presentations[i] == detected) {\n                    return std::optional<ObjectId>{impl_->displayed[i].object};\n                }\n            }\n            return std::optional<ObjectId>{};",
+  "new": "            (void)detected;\n            if (!impl_->displayed.empty()) {\n                return std::optional<ObjectId>{impl_->displayed.front().object};\n            }\n            return std::optional<ObjectId>{};"
+ },
+ {
+  "file": "src/renderer/occt/OcctViewer.cpp",
+  "label": "selection reports every displayed object rather than the selected ones",
+  "old": "        if (entry.selected) {\n            objects.push_back(entry.object);\n        }",
+  "new": "        objects.push_back(entry.object);"
+ },
+ {
+  "file": "src/renderer/occt/OcctViewer.cpp",
+  "label": "hiding does not record that the presentation is hidden",
+  "old": "        impl_->displayed[*index].visible = visible;",
+  "new": "        (void)visible;"
+ },
+ {
+  "file": "src/renderer/occt/OcctViewer.cpp",
+  "label": "hiding erases nothing, so a hidden body stays drawn",
+  "old": "        if (visible) {\n            impl_->context->Display(impl_->presentations[*index], false);\n        } else {\n            impl_->context->Erase(impl_->presentations[*index], false);\n        }",
+  "new": "        impl_->context->Display(impl_->presentations[*index], false);"
+ },
+ {
+  "file": "src/renderer/occt/OcctViewer.cpp",
+  "label": "a nonsensical zoom is passed to the kernel instead of ignored",
+  "old": "    if (!(factor > 0.0) || !std::isfinite(factor)) {\n        return;\n    }",
+  "new": "    // mutation: no guard"
+ },
+ {
+  "file": "src/renderer/occt/OcctViewer.cpp",
+  "label": "resize does not record the new size, so renders keep the old one",
+  "old": "        impl_->view->MustBeResized();\n        impl_->width = width;\n        impl_->height = height;",
+  "new": "        impl_->view->MustBeResized();"
+ },
+ {
+  "file": "src/renderer/occt/OcctViewer.cpp",
+  "label": "an empty body is displayed as an empty presentation instead of refused",
+  "old": "    if (shape == nullptr) {\n        return makeError(ErrorCode::FailedPrecondition,\n                         std::format(\"viewer: {} has no body to display\", object));\n    }",
+  "new": "    if (shape == nullptr) {\n        return PresentationId::fromValue(++impl_->lastPresentation);\n    }"
+ },
+ {
+  "file": "src/renderer/occt/OcctViewer.cpp",
+  "label": "removing a presentation leaves it in the viewer's own list",
+  "old": "        impl_->displayed.erase(impl_->displayed.begin() + static_cast<std::ptrdiff_t>(*index));",
+  "new": "        // mutation: the entry stays"
+ },
+ {
+  "file": "src/renderer/occt/OcctViewer.cpp",
+  "label": "the background colour is recorded but never given to the view",
+  "old": "    impl_->background = colour;\n    impl_->view->SetBackgroundColor(colourOf(colour));",
+  "new": "    impl_->background = colour;"
+ },
+ {
+  "file": "src/renderer/occt/OcctViewer.cpp",
+  "label": "coverage ignores its tolerance and counts every pixel as different",
+  "old": "            if (dr > tolerance || dg > tolerance || db > tolerance) {",
+  "new": "            if (dr > -tolerance || dg > -tolerance || db > -tolerance) {"
+ },
+ {
+  "file": "src/renderer/occt/OcctViewer.cpp",
+  "label": "sampling out of bounds returns a neighbouring pixel instead of refusing",
+  "old": "    if (x < 0 || y < 0 || x >= width || y >= height) {\n        return Rgb{};\n    }",
+  "new": "    if (false) {\n        return Rgb{};\n    }\n    x = std::clamp(x, 0, width > 0 ? width - 1 : 0);\n    y = std::clamp(y, 0, height > 0 ? height - 1 : 0);"
+ },
+ {
+  "file": "src/renderer/occt/OcctViewer.cpp",
+  "label": "a standard view is set but the camera never refits",
+  "old": "    impl_->view->SetProj(orientationOf(view));\n    impl_->view->FitAll();",
+  "new": "    impl_->view->SetProj(orientationOf(view));"
+ },
+ {
+  "label": "resize records the new size but never resizes the window it owns",
+  "file": "src/renderer/occt/OcctViewer.cpp",
+  "old": "        if (impl_->window->IsVirtual()) {\n            impl_->window->SetPos(0, 0, width, height);\n            impl_->window->DoResize();\n        }",
+  "new": "        if (false) {\n            impl_->window->SetPos(0, 0, width, height);\n            impl_->window->DoResize();\n        }"
+ }
+]

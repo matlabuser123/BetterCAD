@@ -118,13 +118,22 @@ if(BETTERCAD_DEPS_OCCT)
             ${common_cmake_args}
             -DBUILD_LIBRARY_TYPE:STRING=Shared
             -DINSTALL_DIR_LAYOUT:STRING=Unix
-            # Geometry kernel + STEP/STL exchange only. Required toolkits from
-            # other modules are pulled in automatically by OCCT's CMake.
+            # Geometry kernel, STEP/STL exchange, and -- since
+            # INFRA-VIEWER-001 -- visualization. Required toolkits from other
+            # modules are pulled in automatically by OCCT's CMake.
+            #
+            # VISUALIZATION IS ON FOR THE VIEWER AND NOTHING ELSE. It brings
+            # TKV3d, TKService and TKOpenGl; AIS, V3d and the graphic driver
+            # live there, and V3d_Viewer cannot be instantiated without a
+            # Graphic3d_GraphicDriver, whose only usable implementation is
+            # OpenGl_GraphicDriver. TKV3d and TKService already reached the
+            # prefix as transitive requirements of DataExchange, so the module
+            # switch is what adds the DRIVER.
             -DBUILD_MODULE_FoundationClasses:BOOL=ON
             -DBUILD_MODULE_ModelingData:BOOL=ON
             -DBUILD_MODULE_ModelingAlgorithms:BOOL=ON
             -DBUILD_MODULE_DataExchange:BOOL=ON
-            -DBUILD_MODULE_Visualization:BOOL=OFF
+            -DBUILD_MODULE_Visualization:BOOL=ON
             -DBUILD_MODULE_ApplicationFramework:BOOL=OFF
             -DBUILD_MODULE_Draw:BOOL=OFF
             -DBUILD_DOC_Overview:BOOL=OFF
@@ -132,9 +141,20 @@ if(BETTERCAD_DEPS_OCCT)
             # Keep Standard_Failure exceptions in release builds; BetterCAD
             # converts kernel failures into diagnostics instead of UB.
             -DBUILD_RELEASE_DISABLE_EXCEPTIONS:BOOL=OFF
+            # FreeType stays OFF, and that is a decision rather than an
+            # omission. OCCT guards it with
+            #   if (CAN_USE_FREETYPE AND USE_FREETYPE)
+            # and merely drops the HAVE_FREETYPE define when it is off, so the
+            # Visualization module builds without it; what is lost is TEXT
+            # rendering inside the 3D view. Admitting FreeType would mean a
+            # fourth from-source dependency, pinned and hash-verified, for
+            # labels nothing has asked for yet. When the viewer needs text in
+            # the scene, that is the milestone to add it in.
             -DUSE_FREETYPE:BOOL=OFF
             -DUSE_TK:BOOL=OFF
-            -DUSE_OPENGL:BOOL=OFF
+            # The graphic driver. Without it TKOpenGl is not built and no view
+            # can be created, which is what blocked P16-VIZ-001.
+            -DUSE_OPENGL:BOOL=ON
             -DUSE_GLES2:BOOL=OFF
             -DUSE_D3D:BOOL=OFF
             -DUSE_FREEIMAGE:BOOL=OFF

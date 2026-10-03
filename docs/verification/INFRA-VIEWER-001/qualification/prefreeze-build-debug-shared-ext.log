@@ -1,0 +1,24 @@
+[1/24] Checking git revision
+[2/24] Building CXX object src/core/CMakeFiles/bettercad_core.dir/__/__/generated/src/core/GitRevision.cpp.obj
+[3/24] Linking CXX shared library bin\libbettercad_core.dll
+[4/24] Building CXX object tests/compile_fail/CMakeFiles/bettercad_cf_viewer_control.dir/ViewerMisuse.cpp.obj
+[5/24] Linking CXX shared library bin\libbettercad_sketch.dll
+[6/24] Linking CXX shared library bin\libbettercad_geometry.dll
+[7/24] Linking CXX shared library bin\libbettercad_features.dll
+[8/24] Linking CXX shared library bin\libbettercad_meshing.dll
+[9/24] Linking CXX shared library bin\libbettercad_assembly.dll
+[10/24] Linking CXX executable bin\bettercad_example_geometry_accuracy.exe
+[11/24] Linking CXX shared library bin\libbettercad_drawing.dll
+[12/24] Building CXX object tests/CMakeFiles/bettercad_tests.dir/renderer/ViewerTests.cpp.obj
+[13/24] Building CXX object src/renderer/CMakeFiles/bettercad_renderer.dir/occt/OcctViewer.cpp.obj
+[14/24] Linking CXX shared library bin\libbettercad_renderer.dll
+[15/24] Linking CXX shared library bin\libbettercad_io.dll
+[16/24] Automatic MOC for target bettercad
+[17/24] Linking CXX executable bin\bettercad-cli.exe
+[18/24] Linking CXX executable bin\bettercad_example_reference_models.exe
+[19/24] Building CXX object apps/bettercad/CMakeFiles/bettercad.dir/bettercad_autogen/mocs_compilation.cpp.obj
+[20/24] Building CXX object apps/bettercad/CMakeFiles/bettercad.dir/main.cpp.obj
+[21/24] Building CXX object apps/bettercad/CMakeFiles/bettercad.dir/MainWindow.cpp.obj
+[22/24] Building CXX object apps/bettercad/CMakeFiles/bettercad.dir/ViewportWidget.cpp.obj
+[23/24] Linking CXX executable bin\bettercad.exe; Deploying Qt runtime for bettercad
+[24/24] Linking CXX executable bin\bettercad_tests.exe

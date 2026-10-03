@@ -4,7 +4,6 @@
 
 #include <QAction>
 #include <QKeySequence>
-#include <QLabel>
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QStatusBar>
@@ -25,10 +24,15 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     setObjectName(QStringLiteral("BetterCADMainWindow"));
     setWindowTitle(QStringLiteral("BetterCAD %1").arg(toQString(buildInfo().version)));
 
-    auto* viewport = new QLabel(tr("Viewport — not implemented yet"), this);
-    viewport->setObjectName(QStringLiteral("ViewportPlaceholder"));
-    viewport->setAlignment(Qt::AlignCenter);
-    setCentralWidget(viewport);
+    viewport_ = new ViewportWidget(this);
+    setCentralWidget(viewport_);
+    // What was picked goes to the status bar, so the CAD identity a pick
+    // resolves to is visible rather than only available to tests.
+    connect(viewport_, &ViewportWidget::picked, this, [this](std::optional<ObjectId> object) {
+        statusBar()->showMessage(object.has_value()
+                                     ? tr("Selected %1").arg(object->value())
+                                     : tr("Nothing selected"));
+    });
 
     createMenus();
     statusBar()->showMessage(tr("Ready"));

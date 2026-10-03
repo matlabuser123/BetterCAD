@@ -3,8 +3,12 @@ bettercad_add_executable(bettercad
         main.cpp
         MainWindow.cpp
         MainWindow.hpp
+        ViewportWidget.cpp
+        ViewportWidget.hpp
     LINK
         BetterCAD::core
+        BetterCAD::geometry
+        BetterCAD::renderer
         Qt6::Widgets
 )
 set_target_properties(bettercad PROPERTIES
