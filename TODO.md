@@ -25,7 +25,12 @@ Qualified:
            P15 — Materials / Engineering Data
 
 Next:
-           P16-VIZ-001 — Mesh Visualisation / Inspection. Not started.
+           P16-VIZ-001 — Mesh Visualisation / Inspection. BLOCKED: BetterCAD
+           has no 3D viewport, no CAD display and no selection system, and the
+           OCCT dependency is built without its visualization driver. 16 of 18
+           checkboxes need them. Audit:
+           docs/verification/P16-VIZ-001/VIEWER_AUDIT.md.
+           Unblocking it is a scope decision.
 
 Qualified milestones in P16:
            P16-ARCH-001 — Meshing Architecture (ADR-030 to ADR-033)
@@ -1209,6 +1214,30 @@ geometry/mesh correspondence explicit
 # P16-VIZ-001
 
 ## Mesh Visualisation / Inspection
+
+**BLOCKED 2026-10-03.** 0/18, no production code written. Audit:
+[docs/verification/P16-VIZ-001/](docs/verification/P16-VIZ-001/README.md).
+
+`apps/bettercad/` is 118 lines -- a window with File and Help menus and a
+`QLabel` reading "Viewport -- not implemented yet", described in its own
+comment as a P0 placeholder. `src/renderer/` holds one `.gitkeep`. There are
+ZERO occurrences of `AIS_*`, `V3d_*`, `Graphic3d_*`, `OpenGl_*` or `Aspect_*`
+anywhere in the repository, so there is no scene graph, no selection system and
+no CAD display for a mesh to be inspected against.
+
+The dependency cannot supply one either: OCCT's `TKV3d` and `TKService` are in
+the prefix but unlinked, and **`TKOpenGl` is absent from the build entirely**,
+so `V3d_Viewer` has no graphic driver to instantiate. Standing a viewport up
+means rebuilding the OCCT dependency -- the shape `INFRA-NETGEN-001` already
+established for admitting one.
+
+ROADMAP.md agrees: the 3D viewport and CAD selection are listed under the
+"Desktop Application" goal, which is direction and not qualified capability.
+Sixteen of eighteen checkboxes and four of five gate clauses need them, and the
+four gate clauses are all about what a person can SEE.
+
+Unblocking is a scope decision: an `INFRA-VIEWER-001` first, or the headless
+adapter layer alone as its own entry with its own gate.
 
 * [ ] Display surface mesh
 * [ ] Display volume-mesh boundary
