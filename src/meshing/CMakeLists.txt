@@ -34,6 +34,7 @@ bettercad_add_library(bettercad_meshing
     EXPORT_BASE BETTERCAD_MESHING
     EXPORT_HEADER bettercad/meshing/Export.hpp
     SOURCES
+        GeometryMeshMap.cpp
         GeometryPreparation.cpp
         Mesh.cpp
         MeshValidation.cpp

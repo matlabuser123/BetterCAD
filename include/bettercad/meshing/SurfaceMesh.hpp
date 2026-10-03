@@ -132,6 +132,25 @@ struct EngineeringSurfaceMesh {
     /// How many CAD faces contributed.
     std::size_t faceCount = 0;
 
+    /// The triangles each CAD face produced: `faceTriangles[i]` holds the
+    /// Triangle3 elements generated from the i-th face of
+    /// `geometry::listFaces(body)`, in ascending `ElementId`.
+    ///
+    /// GENERATION PROVENANCE, which is what P16-MAP-001 attributes facets with.
+    /// It is recorded here because this is the one place that knows it: the
+    /// kernel triangulates face by face (`geometry::Mesh::faces`), and that
+    /// grouping is thrown away by the node unification and the deterministic
+    /// re-sort unless it is carried through them. Recovering it afterwards
+    /// would mean classifying triangles by their geometry, which cannot tell
+    /// two coincident CAD faces apart and needs a tolerance where this needs
+    /// none.
+    ///
+    /// The INDEX is a correlation handle for one body, not an identity: it is
+    /// never persisted, and a canonical reference to a face is its `FaceName`.
+    /// `faceCount` is this vector's size. A face that produced no triangle has
+    /// an empty entry rather than being absent, so the indices line up.
+    std::vector<std::vector<ElementId>> faceTriangles{};
+
     friend bool operator==(const EngineeringSurfaceMesh&, const EngineeringSurfaceMesh&) = default;
 };
 

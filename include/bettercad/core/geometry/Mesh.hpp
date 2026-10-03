@@ -28,8 +28,17 @@ struct MeshOptions {
 /// that produced them -- which is what makes a per-face check (are these
 /// normals coherent?) possible without this layer knowing anything about CAD
 /// references. It deliberately carries NO FaceName: attributing a facet to a
-/// named face is P16-MAP-001's, and putting a name here would start that work
-/// three milestones early.
+/// named face is P16-MAP-001's, and a name here would put a document type in
+/// the kernel adapter's output.
+///
+/// WHAT MAKES IT USABLE AS PROVENANCE (P16-MAP-001): `Mesh::faces[i]` is the
+/// i-th face of `listFaces(body)`. Both explore the same authoritative shape
+/// with the same traversal, and `triangulate` indexes its groups by the
+/// ORIGINAL shape's faces -- pairing each with its meshed copy through the
+/// copier's own history -- so the correspondence holds by construction and not
+/// because a copy happened to preserve face order. That index is a correlation
+/// handle for one call on one body, never an identity: it is not persisted, and
+/// `listFaces` documents that the kernel's order carries no meaning.
 struct MeshFace {
     /// Index into Mesh::triangles of this face's first triangle.
     std::size_t firstTriangle = 0;
@@ -50,8 +59,8 @@ struct MeshFace {
 struct Mesh {
     std::vector<Point3D> vertices{};
     std::vector<std::array<std::uint32_t, 3>> triangles{};
-    /// One entry per CAD face, in the kernel's exploration order, covering
-    /// `triangles` in order and without gaps.
+    /// One entry per CAD face, in the same order as `listFaces(body)`,
+    /// covering `triangles` in order and without gaps. See MeshFace.
     std::vector<MeshFace> faces{};
 };
 

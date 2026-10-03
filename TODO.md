@@ -13,7 +13,7 @@ Current:
            P16 — Meshing
 
 Current milestone:
-           none — P16-QUALITY-001 is complete. Starting the next one is a
+           none — P16-MAP-001 is complete. Starting the next one is a
            scope decision.
 
 Qualified:
@@ -25,7 +25,7 @@ Qualified:
            P15 — Materials / Engineering Data
 
 Next:
-           P16-MAP-001 — Geometry ↔ mesh correspondence / regions. Not started.
+           P16-VIZ-001 — Mesh Visualisation / Inspection. Not started.
 
 Qualified milestones in P16:
            P16-ARCH-001 — Meshing Architecture (ADR-030 to ADR-033)
@@ -36,6 +36,7 @@ Qualified milestones in P16:
            P16-VOL-001 — 3D Tetrahedral Volume Mesh (Tet4)
            P16-SIZE-001 — Global / Local Mesh Sizing
            P16-QUALITY-001 — Mesh Quality Metrics / Validation
+           P16-MAP-001 — Geometry ↔ Mesh Correspondence / Regions
 
 P16 objective:
            Geometry
@@ -1120,26 +1121,59 @@ quality metrics mathematically defined
 
 ## Geometry ↔ Mesh Correspondence / Regions
 
-* [ ] Map boundary triangles to originating CAD face where possible
-* [ ] Define mapping to edges where required
-* [ ] Define mapping to volume region
-* [ ] Preserve current stable-reference semantics
-* [ ] Do not pretend P21 Semantic Topology already exists
-* [ ] Define behaviour after remesh
-* [ ] Define behaviour after topology-changing model edit
-* [ ] Define unresolved geometry reference state
-* [ ] Define named boundary-set foundation
-* [ ] Define node-set / element-set foundation if required by P17
-* [ ] Selection → mesh-facet query
-* [ ] Mesh facet → source geometry query
-* [ ] Validate cylindrical face mapping
-* [ ] Validate planar face mapping
-* [ ] Validate hole-wall mapping
-* [ ] Validate transformed geometry
-* [ ] Validate local sizing uses same mapping contract
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+**COMPLETE 2026-10-03.** 20/20. Evidence:
+[docs/verification/P16-MAP-001/](docs/verification/P16-MAP-001/README.md).
+
+Three presets clean-rebuilt, 3121/3121 tests passed in each with 0 warnings,
+414-test blast radius x5 repeats in release and debug, qualified tree ==
+committed tree.
+
+**The attribution chain has no tolerance anywhere.** A facet is attributed by
+generation provenance -- the kernel triangulates face by face, and that
+grouping is carried through node unification, the deterministic re-sort and
+tetrahedralisation -- and the last step is exact because `generateVolumeMesh`
+already REFUSES a boundary that is not positionally identical to the surface it
+was given. So two coincident CAD faces stay distinct, any surface kind maps,
+and no Netgen marker is assigned, read or persisted.
+
+**The audit found almost everything already there and deliberately left for
+this milestone**: P16-SURF-001 had added per-face triangle groups saying so in
+its own comment, and P16-GEOM-001 had recorded that it does not reconstruct the
+shape because that would break the correspondence. The one gap was a checkable
+link from a group to a CAD face, and it is now verified on every call.
+
+**Four findings, none from reading the diff.**
+`BRepBuilderAPI_Copy::ModifiedShape` returns a face WITHOUT its in-shell
+orientation, which broke every surface mesh on the first attempt.
+`GeometryRevision` cannot tell two structurally identical documents apart.
+ADR-032 assumes a hole wall carries a `FaceName` and a DRILLED one does not --
+so hole-wall selection is demonstrated on a tube, whose bore is a
+profile-swept `Side` face, while the drilled wall is mapped, answers in reverse
+with an empty name list, and is counted as unnamed. And mutation testing found
+a check whose only contribution was a diagnostic nothing asserted. 15
+mutations, 15 killed by a failing test. See
+[ADVERSARIAL_REVIEW.md](docs/verification/P16-MAP-001/ADVERSARIAL_REVIEW.md).
+
+* [x] Map boundary triangles to originating CAD face where possible
+* [x] Define mapping to edges where required
+* [x] Define mapping to volume region
+* [x] Preserve current stable-reference semantics
+* [x] Do not pretend P21 Semantic Topology already exists
+* [x] Define behaviour after remesh
+* [x] Define behaviour after topology-changing model edit
+* [x] Define unresolved geometry reference state
+* [x] Define named boundary-set foundation
+* [x] Define node-set / element-set foundation if required by P17
+* [x] Selection → mesh-facet query
+* [x] Mesh facet → source geometry query
+* [x] Validate cylindrical face mapping
+* [x] Validate planar face mapping
+* [x] Validate hole-wall mapping
+* [x] Validate transformed geometry
+* [x] Validate local sizing uses same mapping contract
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded
 
 ### Critical boundary
 

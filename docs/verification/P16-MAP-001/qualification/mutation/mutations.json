@@ -1,0 +1,92 @@
+[
+ {
+  "file": "src/meshing/SurfaceMesh.cpp",
+  "label": "provenance: every triangle attributed to the first CAD face",
+  "old": "        entry.sourceFace = group;",
+  "new": "        entry.sourceFace = 0;"
+ },
+ {
+  "file": "src/meshing/SurfaceMesh.cpp",
+  "label": "provenance: attribution dropped, so no facet has a CAD source",
+  "old": "        faceTriangles[entry.sourceFace].push_back(*added);",
+  "new": "        (void)added;"
+ },
+ {
+  "file": "src/meshing/VolumeMesh.cpp",
+  "label": "provenance: the surface's attribution not carried to the boundary",
+  "old": "        if (attributed != faceOfSurfaceKey.end()) {\n            boundarySourceFaces.emplace(*added, attributed->second);\n        }",
+  "new": "        (void)attributed;"
+ },
+ {
+  "file": "src/meshing/GeometryMeshMap.cpp",
+  "label": "currency: the geometry revision ignored when the map is built",
+  "old": "    if (!(geometry.revision == mesh.revision())) {",
+  "new": "    if (false) {"
+ },
+ {
+  "file": "src/meshing/GeometryMeshMap.cpp",
+  "label": "currency: the mesh generation ignored, so an old map answers a new mesh",
+  "old": "    if (!mesh.owns(map.meshStamp())) {",
+  "new": "    if (!mesh.owns(map.meshStamp()) && false) {"
+ },
+ {
+  "file": "src/meshing/GeometryMeshMap.cpp",
+  "label": "currency: a map accepted for a different feature",
+  "old": "    if (geometry.source != mesh.source()) {",
+  "new": "    if (false) {"
+ },
+ {
+  "file": "src/meshing/GeometryMeshMap.cpp",
+  "label": "unresolved: an unresolvable reference reported as Resolved with no facets",
+  "old": "        resolution.state =\n            resolution.faces.empty() ? MappingState::Unresolved : MappingState::Resolved;",
+  "new": "        resolution.state = MappingState::Resolved;"
+ },
+ {
+  "file": "src/meshing/GeometryMeshMap.cpp",
+  "label": "attribution: every facet pushed onto the first CAD face's list",
+  "old": "        map.faces_[index].facets.push_back(facet);",
+  "new": "        map.faces_.front().facets.push_back(facet);"
+ },
+ {
+  "file": "src/meshing/GeometryMeshMap.cpp",
+  "label": "interior: a tetrahedron's interior face resolved to the first boundary triangle",
+  "old": "        if (candidate == wanted) {",
+  "new": "        if (true) {"
+ },
+ {
+  "file": "src/meshing/GeometryMeshMap.cpp",
+  "label": "sets: a set may list the same face twice",
+  "old": "            if (set.faces[i] == set.faces[j]) {",
+  "new": "            if (false) {"
+ },
+ {
+  "file": "src/meshing/GeometryMeshMap.cpp",
+  "label": "sets: the selector's own validity not checked",
+  "old": "        if (const Result<void> checked = validate(reference.face); !checked.has_value()) {",
+  "new": "        if (const Result<void> checked = validate(reference.face);\n            !checked.has_value() && false) {"
+ },
+ {
+  "file": "src/meshing/GeometryMeshMap.cpp",
+  "label": "determinism: derived facet lists neither sorted nor deduplicated",
+  "old": "void sortUnique(std::vector<ElementId>& ids) {\n    std::ranges::sort(ids);\n    ids.erase(std::ranges::unique(ids).begin(), ids.end());\n}",
+  "new": "void sortUnique(std::vector<ElementId>& ids) {\n    (void)ids;\n}"
+ },
+ {
+  "file": "src/meshing/GeometryMeshMap.cpp",
+  "label": "region: a boundary triangle accepted as a volume element",
+  "old": "    if (mesh.findTetrahedron(element) == nullptr) {",
+  "new": "    if (false) {"
+ },
+ {
+  "file": "src/meshing/GeometryMeshMap.cpp",
+  "label": "nodes: a handle that is not a boundary triangle silently skipped",
+  "old": "        const Triangle* triangle = mesh.findTriangle(facet);\n        if (triangle == nullptr) {\n            return refuse(MappingIssueKind::MeshFacetInvalid, ErrorCode::InvalidArgument,\n                          std::format(\"{} is not a boundary triangle of this mesh\", facet));\n        }\n        nodes.insert(nodes.end(), triangle->nodes.begin(), triangle->nodes.end());",
+  "new": "        const Triangle* triangle = mesh.findTriangle(facet);\n        if (triangle == nullptr) {\n            continue;\n        }\n        nodes.insert(nodes.end(), triangle->nodes.begin(), triangle->nodes.end());"
+ },
+ {
+  "file": "include/bettercad/meshing/GeometryMeshMap.hpp",
+  "label": "report: an empty mapping reported as complete",
+  "old": "        return boundaryFacetCount > 0 && unmappedFacetCount == 0 &&",
+  "new": "        return unmappedFacetCount == 0 &&"
+ }
+]

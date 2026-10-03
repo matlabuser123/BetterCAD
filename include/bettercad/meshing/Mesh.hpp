@@ -222,6 +222,15 @@ public:
     /// The type of the element @p id names, or nullopt if there is none.
     [[nodiscard]] std::optional<ElementType> elementType(ElementId id) const noexcept;
 
+    /// The triangle @p id names, or nullptr -- including when @p id names a
+    /// tetrahedron, because an element of the wrong type is not the element
+    /// that was asked for. The siblings of findNode(), resolved the same way:
+    /// by identity over ascending storage, never by indexing with the handle's
+    /// value.
+    [[nodiscard]] const Triangle* findTriangle(ElementId id) const noexcept;
+    /// The tetrahedron @p id names, or nullptr. See findTriangle().
+    [[nodiscard]] const Tetrahedron* findTetrahedron(ElementId id) const noexcept;
+
     /// The axis-aligned bounds of the nodes, or nullopt for a mesh with no
     /// nodes.
     ///

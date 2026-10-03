@@ -284,14 +284,36 @@ Result<EngineeringSurfaceMesh> generateSurfaceMesh(const MeshableGeometry& geome
     // two must stay separate: sorting the connectivity itself would make the
     // element order deterministic by destroying the orientation it exists to
     // carry.
+    //
+    // Each entry also carries the CAD face it came from, because the sort and
+    // the node unification would otherwise destroy the kernel's per-face
+    // grouping -- the generation provenance P16-MAP-001 attributes facets with.
+    // Carried through rather than reconstructed afterwards: reconstruction
+    // would mean classifying a triangle by its geometry, which needs a
+    // tolerance and cannot tell two coincident CAD faces apart.
     struct Pending {
         std::array<NodeId::ValueType, 3> key{};
         std::array<NodeId, 3> oriented{};
+        std::size_t sourceFace = 0;
     };
     std::vector<Pending> pending;
     pending.reserve(raw->triangles.size());
-    for (const std::array<std::uint32_t, 3>& triangle : raw->triangles) {
+    // The groups cover `triangles` in order and without gaps, so one forward
+    // walk attributes every triangle: no search, and no way for a triangle to
+    // fall between two groups.
+    std::size_t group = 0;
+    for (std::size_t index = 0; index < raw->triangles.size(); ++index) {
+        while (group < raw->faces.size() &&
+               index >= raw->faces[group].firstTriangle + raw->faces[group].triangleCount) {
+            ++group;
+        }
+        if (group >= raw->faces.size() || index < raw->faces[group].firstTriangle) {
+            return makeError(ErrorCode::Internal,
+                             "surface mesh: a kernel triangle belongs to no CAD face group");
+        }
+        const std::array<std::uint32_t, 3>& triangle = raw->triangles[index];
         Pending entry;
+        entry.sourceFace = group;
         for (std::size_t i = 0; i < 3; ++i) {
             const auto it = unified.find(keyOf(raw->vertices[triangle[i]]));
             if (it == unified.end()) {
@@ -310,14 +332,17 @@ Result<EngineeringSurfaceMesh> generateSurfaceMesh(const MeshableGeometry& geome
     // a whole here -- each component must close on its own, which edge incidence
     // checks without needing to know which component a triangle is in.
     constexpr RegionId kSurface = RegionId::fromValue(1);
+    std::vector<std::vector<ElementId>> faceTriangles(raw->faces.size());
     for (const Pending& entry : pending) {
         const Result<ElementId> added = builder.addTriangle(entry.oriented, kSurface);
         if (!added) {
             return std::unexpected(added.error());
         }
+        faceTriangles[entry.sourceFace].push_back(*added);
     }
 
     EngineeringSurfaceMesh surface;
+    surface.faceTriangles = std::move(faceTriangles);
     surface.mesh = builder.build();
     surface.validation = validateSurface(surface.mesh);
     surface.revision = geometry.revision;

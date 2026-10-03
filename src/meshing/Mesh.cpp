@@ -101,6 +101,28 @@ std::optional<ElementType> Mesh::elementType(ElementId id) const noexcept {
     return std::nullopt;
 }
 
+const Triangle* Mesh::findTriangle(ElementId id) const noexcept {
+    if (!id.isValid()) {
+        return nullptr;
+    }
+    const auto it = std::ranges::lower_bound(triangles_, id, {}, &Triangle::id);
+    if (it == triangles_.end() || it->id != id) {
+        return nullptr;
+    }
+    return &*it;
+}
+
+const Tetrahedron* Mesh::findTetrahedron(ElementId id) const noexcept {
+    if (!id.isValid()) {
+        return nullptr;
+    }
+    const auto it = std::ranges::lower_bound(tetrahedra_, id, {}, &Tetrahedron::id);
+    if (it == tetrahedra_.end() || it->id != id) {
+        return nullptr;
+    }
+    return &*it;
+}
+
 std::optional<MeshBounds> Mesh::bounds() const noexcept {
     if (nodes_.empty()) {
         return std::nullopt;

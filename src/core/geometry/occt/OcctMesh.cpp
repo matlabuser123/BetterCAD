@@ -54,8 +54,30 @@ Result<Mesh> triangulate(const Body& body, const MeshOptions& options) {
                              std::format("triangulation: the mesher failed (status flags {:#x})", status));
         }
 
+        // THE FACE GROUPS CORRESPOND TO listFaces() BY INDEX, and this is where
+        // that is made true rather than hoped for. P16-MAP-001 attributes
+        // facets to CAD faces through exactly this correspondence.
+        //
+        // The triangulation is read from the COPY, unchanged from P16-SURF-001:
+        // the face carries its orientation inside the shell, and that
+        // orientation decides the winding below. The ORIGINAL shape is explored
+        // in lockstep purely to check the pairing, through the copier's own
+        // history -- `ModifiedShape` answers which copy a given original became,
+        // and `IsSame` compares identity while ignoring orientation. So the
+        // index contract is verified on every call instead of resting on an
+        // assumption about whether a copy preserves face order.
         Mesh mesh;
-        for (TopExp_Explorer faces(copy, TopAbs_FACE); faces.More(); faces.Next()) {
+        TopExp_Explorer originals(*shape, TopAbs_FACE);
+        for (TopExp_Explorer faces(copy, TopAbs_FACE); faces.More(); faces.Next(), originals.Next()) {
+            if (!originals.More()) {
+                return makeError(ErrorCode::Internal,
+                                 "triangulation: the copy has more faces than the body");
+            }
+            if (!copier.ModifiedShape(originals.Current()).IsSame(faces.Current())) {
+                return makeError(ErrorCode::Internal,
+                                 "triangulation: the copy's faces are not in the body's order, so "
+                                 "a face group could not be attributed to a CAD face");
+            }
             const TopoDS_Face& face = TopoDS::Face(faces.Current());
             TopLoc_Location location;
             const auto& triangulation = BRep_Tool::Triangulation(face, location);
@@ -90,6 +112,10 @@ Result<Mesh> triangulate(const Body& body, const MeshOptions& options) {
             }
             group.triangleCount = mesh.triangles.size() - group.firstTriangle;
             mesh.faces.push_back(group);
+        }
+        if (originals.More()) {
+            return makeError(ErrorCode::Internal,
+                             "triangulation: the body has more faces than the copy");
         }
         return mesh;
     });

@@ -328,7 +328,19 @@ Result<VolumeMesh> generateVolumeMesh(const MeshableGeometry& geometry,
     // surface is not consulted.
     const std::vector<std::array<NodeId, 3>> boundary = tetrahedralBoundary(volume);
 
+    // THE SURFACE'S CAD ATTRIBUTION, keyed by exact position so it can be
+    // carried to the boundary triangles below. The conformity gate immediately
+    // after proves every boundary triangle is one of these, which is what makes
+    // the carry exact rather than approximate (P16-MAP-001).
+    std::map<ElementId, std::size_t> faceOfSurfaceTriangle;
+    for (std::size_t face = 0; face < surface.faceTriangles.size(); ++face) {
+        for (const ElementId triangle : surface.faceTriangles[face]) {
+            faceOfSurfaceTriangle.emplace(triangle, face);
+        }
+    }
+
     std::set<FaceKey> surfaceFaces;
+    std::map<FaceKey, std::size_t> faceOfSurfaceKey;
     for (const Triangle& triangle : surface.mesh.triangles()) {
         const Node* a = surface.mesh.findNode(triangle.nodes[0]);
         const Node* b = surface.mesh.findNode(triangle.nodes[1]);
@@ -337,7 +349,12 @@ Result<VolumeMesh> generateVolumeMesh(const MeshableGeometry& geometry,
             return failure(VolumeMeshFailure::SurfaceNotUsable,
                                      "a surface triangle names an unknown node");
         }
-        surfaceFaces.insert(faceKeyOf(a->position, b->position, c->position));
+        const FaceKey key = faceKeyOf(a->position, b->position, c->position);
+        surfaceFaces.insert(key);
+        if (const auto attributed = faceOfSurfaceTriangle.find(triangle.id);
+            attributed != faceOfSurfaceTriangle.end()) {
+            faceOfSurfaceKey.emplace(key, attributed->second);
+        }
     }
 
     std::set<FaceKey> boundaryFaces;
@@ -367,10 +384,26 @@ Result<VolumeMesh> generateVolumeMesh(const MeshableGeometry& geometry,
     // The boundary triangles go into the mesh with the winding the tetrahedra
     // imply, so a consumer gets one mesh carrying both the volume and its
     // surface rather than having to recompute the boundary.
+    std::map<ElementId, std::size_t> boundarySourceFaces;
     for (const std::array<NodeId, 3>& face : boundary) {
         const Result<ElementId> added = builder.addTriangle(face, kVolume);
         if (!added.has_value()) {
             return failure(VolumeMeshFailure::InvalidMesh, added.error().message);
+        }
+        // Attribution carried by exact position. A boundary triangle with no
+        // entry is left unattributed rather than guessed at; the conformity
+        // gate below means that can only happen if the surface itself carried
+        // no attribution for it.
+        const Node* a = volume.findNode(face[0]);
+        const Node* b = volume.findNode(face[1]);
+        const Node* c = volume.findNode(face[2]);
+        if (a == nullptr || b == nullptr || c == nullptr) {
+            return failure(VolumeMeshFailure::InvalidMesh,
+                                     "a boundary face names an unknown node");
+        }
+        const auto attributed = faceOfSurfaceKey.find(faceKeyOf(a->position, b->position, c->position));
+        if (attributed != faceOfSurfaceKey.end()) {
+            boundarySourceFaces.emplace(*added, attributed->second);
         }
     }
     volume = builder.build();
@@ -427,6 +460,7 @@ Result<VolumeMesh> generateVolumeMesh(const MeshableGeometry& geometry,
     result.revision_ = geometry.revision;
     result.controls_ = controls;
     result.sizing_ = *sizing;
+    result.boundarySourceFaces_ = std::move(boundarySourceFaces);
     return result;
 }
 

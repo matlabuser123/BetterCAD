@@ -69,6 +69,9 @@ struct ConstraintIdTag {
 struct ChamferEdgeIdTag {
     static constexpr std::string_view name = "chamfer_edge";
 };
+struct BoundarySetIdTag {
+    static constexpr std::string_view name = "boundary_set";
+};
 struct FaceIdTag {
     static constexpr std::string_view name = "face";
 };
@@ -217,6 +220,18 @@ using ConstraintId = Id<ConstraintIdTag>;
 /// Allocated by the chamfer's own IdAllocator, so a deleted selection's ID is
 /// never handed out again and a stale reference to it stays unresolved.
 using ChamferEdgeId = Id<ChamferEdgeIdTag>;
+/// One named boundary set: a solver-facing region of a part's surface, meant
+/// for a load or a restraint (P16-MAP-001). Unique within whatever owns the
+/// sets, as a chamfer's edge selections are unique within their chamfer.
+///
+/// This is the set's identity, and the set has nothing else that is. Its
+/// DISPLAY NAME is not identity: two sets may both be called "fixed_end" and
+/// stay distinct, and a set may be renamed and remain the same set. Nor are
+/// the mesh entities it resolves to: a boundary set means a CAD geometry
+/// selection, and the facets, nodes and elements are derived afresh for
+/// whatever mesh is current -- which is what makes a restraint survive a
+/// remesh.
+using BoundarySetId = Id<BoundarySetIdTag>;
 /// Topology IDs; unique within their body. Persistent naming across
 /// regenerations is future work (semantic topology naming).
 using FaceId = Id<FaceIdTag>;

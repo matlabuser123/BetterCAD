@@ -387,3 +387,29 @@ bettercad_compile_fail_case(meshquality "${_meshquality}"
     REPAIRED_MESH_FROM_A_REPORT
     "conversion from .* to non-scalar type|cannot convert|could not convert|no matching function"
     BetterCAD::meshing)
+
+# P16-MAP-001: correspondence observes, and cannot be fabricated.
+#
+# A mapping answers questions about a geometry and a mesh. It must not be able
+# to heal CAD, regenerate a feature or move a node -- and possessing a
+# GeometryMeshMap must stay evidence that a geometry and a mesh were checked to
+# be the same pair (ADR-030), which a default-constructed one would not be.
+set(_geometrymeshmap "${CMAKE_CURRENT_SOURCE_DIR}/GeometryMeshMapMisuse.cpp")
+bettercad_compile_fail_group(geometrymeshmap "${_geometrymeshmap}" BetterCAD::meshing)
+bettercad_compile_fail_case(geometrymeshmap "${_geometrymeshmap}"
+    BUILD_MAP_FROM_A_MUTABLE_GEOMETRY
+    "cannot convert|could not convert|invalid conversion|no matches converting"
+    BetterCAD::meshing)
+bettercad_compile_fail_case(geometrymeshmap "${_geometrymeshmap}"
+    QUERY_THROUGH_A_MUTABLE_MESH
+    "cannot convert|could not convert|invalid conversion|no matches converting"
+    BetterCAD::meshing)
+bettercad_compile_fail_case(geometrymeshmap "${_geometrymeshmap}"
+    FABRICATE_A_MAP
+    "private|is private|not accessible|no matching function|deleted" BetterCAD::meshing)
+bettercad_compile_fail_case(geometrymeshmap "${_geometrymeshmap}"
+    WRITE_THROUGH_A_MAPPED_FACE
+    "read-only|discards qualifiers|no member named clear|assignment of member" BetterCAD::meshing)
+bettercad_compile_fail_case(geometrymeshmap "${_geometrymeshmap}"
+    REACH_THE_MESH_THROUGH_THE_MAP
+    "has no member named|no member named" BetterCAD::meshing)

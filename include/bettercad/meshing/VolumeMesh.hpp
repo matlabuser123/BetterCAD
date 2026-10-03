@@ -11,6 +11,7 @@
 #include <array>
 #include <cstddef>
 #include <cstdint>
+#include <map>
 #include <optional>
 #include <string_view>
 #include <vector>
@@ -184,6 +185,28 @@ public:
     /// The controls that produced it: what was got, not what was asked for.
     [[nodiscard]] const VolumeMeshControls& controls() const noexcept { return controls_; }
 
+    /// Which CAD face produced each boundary triangle: the face's index in
+    /// `geometry::listFaces(body)` order, for the body this mesh was built
+    /// from.
+    ///
+    /// GENERATION PROVENANCE, carried from the engineering surface and keyed by
+    /// exact position. It can be carried at all because `generateVolumeMesh`
+    /// already REFUSES a result whose boundary is not positionally identical to
+    /// the surface it was given, so every boundary triangle here is one of that
+    /// surface's triangles and inherits its attribution. No backend tag, no
+    /// geometric classification and no tolerance is involved.
+    ///
+    /// It is a within-mesh correlation handle, NOT a CAD reference and not an
+    /// identity: the index is never persisted, every entry is invalidated by a
+    /// remesh along with the `ElementId` that keys it, and the canonical name of
+    /// a face is its `FaceName`. `GeometryMeshMap` is what joins the two.
+    ///
+    /// Empty when the surface carried no attribution, which is why a caller asks
+    /// `GeometryMeshMap` rather than reading this.
+    [[nodiscard]] const std::map<ElementId, std::size_t>& boundarySourceFaces() const noexcept {
+        return boundarySourceFaces_;
+    }
+
     /// How the sizing intent resolved against this body: the global bound
     /// actually used, whether it came from BetterCAD's default, the per-point
     /// restrictions sent to the backend, and what became of each local
@@ -211,6 +234,7 @@ private:
     Volume cadVolume_{};
     GeometryRevision revision_{};
     VolumeMeshControls controls_{};
+    std::map<ElementId, std::size_t> boundarySourceFaces_{};
 };
 
 /// Fills @p surface with tetrahedra and validates the result.
