@@ -1,0 +1,116 @@
+[
+ {
+  "label": "render edges are not deduplicated, so every shared edge is drawn twice",
+  "file": "src/renderer/MeshView.cpp",
+  "old": "    std::ranges::sort(edges);\n    const auto repeated = std::ranges::unique(edges);\n    edges.erase(repeated.begin(), repeated.end());",
+  "new": "    std::ranges::sort(edges);"
+ },
+ {
+  "label": "the vertex buffer holds every node, not only the ones drawn",
+  "file": "src/renderer/MeshView.cpp",
+  "old": "    std::ranges::sort(drawn, [](meshing::NodeId a, meshing::NodeId b) {\n        return a.value() < b.value();\n    });\n    const auto duplicates = std::ranges::unique(drawn, [](meshing::NodeId a, meshing::NodeId b) {\n        return a.value() == b.value();\n    });\n    drawn.erase(duplicates.begin(), duplicates.end());",
+  "new": "    drawn.clear();\n    for (const meshing::Node& every : mesh.nodes()) {\n        drawn.push_back(every.id);\n    }"
+ },
+ {
+  "label": "a vertex index past the buffer is answered instead of refused",
+  "file": "src/renderer/MeshView.cpp",
+  "old": "    if (vertex >= nodeOfVertex_.size()) {\n        return makeError(ErrorCode::InvalidArgument,\n                         std::format(\"mesh view: vertex {} of {} drawn vertices\", vertex,\n                                     nodeOfVertex_.size()));\n    }\n    return nodeOfVertex_[vertex];",
+  "new": "    if (vertex >= nodeOfVertex_.size()) {\n        return nodeOfVertex_.empty() ? meshing::NodeId{} : nodeOfVertex_.back();\n    }\n    return nodeOfVertex_[vertex];"
+ },
+ {
+  "label": "an element that is not a tetrahedron is skipped instead of refused",
+  "file": "src/renderer/MeshView.cpp",
+  "old": "        if (tet == nullptr) {\n            // REFUSED, not skipped: a caller that asked for four elements and\n            // silently got three has been told something false about the mesh.\n            return makeError(ErrorCode::NotFound,\n                             std::format(\"mesh view: {} is not a tetrahedron of this mesh\",\n                                         element));\n        }",
+  "new": "        if (tet == nullptr) {\n            continue;\n        }"
+ },
+ {
+  "label": "a tetrahedron face is wound the wrong way round",
+  "file": "src/renderer/MeshView.cpp",
+  "old": "    {{0U, 2U, 1U}}, // omits node 4",
+  "new": "    {{0U, 1U, 2U}}, // omits node 4"
+ },
+ {
+  "label": "the volume boundary reports itself as the engineering surface",
+  "file": "src/renderer/MeshView.cpp",
+  "old": "    return build(mesh, MeshSource::VolumeBoundary, facetsOfTriangles(mesh));",
+  "new": "    return build(mesh, MeshSource::EngineeringSurface, facetsOfTriangles(mesh));"
+ },
+ {
+  "label": "a render cache claims to describe any mesh",
+  "file": "include/bettercad/renderer/MeshView.hpp",
+  "old": "        return mesh.owns(stamp_);",
+  "new": "        return !mesh.isEmpty() || mesh.owns(stamp_);"
+ },
+ {
+  "label": "the generation check passes whatever it is given",
+  "file": "src/renderer/MeshInspection.cpp",
+  "old": "    if (!mesh.owns(held)) {",
+  "new": "    if (false) {"
+ },
+ {
+  "label": "a failed generation attempt leaves the state looking current",
+  "file": "src/renderer/MeshInspection.cpp",
+  "old": "    if (holding.lastFailure.has_value()) {\n        // THE AMBIGUOUS CASE, RESOLVED. An older mesh surviving a failed\n        // attempt must not read as Current, and must not read as merely Stale\n        // either: the user needs to know the attempt to replace it failed.\n        // `inspectable` says the old mesh is still there to look at.\n        status.state = MeshVisualState::GenerationFailed;\n        return status;\n    }",
+  "new": "    if (holding.lastFailure.has_value() && !holding.mesh.has_value()) {\n        status.state = MeshVisualState::GenerationFailed;\n        return status;\n    }"
+ },
+ {
+  "label": "the mesh state ignores the document's geometry revision",
+  "file": "src/renderer/MeshInspection.cpp",
+  "old": "    status.state = (current == holding.mesh->revision()) ? MeshVisualState::Current\n                                                         : MeshVisualState::Stale;",
+  "new": "    (void)current;\n    status.state = MeshVisualState::Current;"
+ },
+ {
+  "label": "every element is classified Valid",
+  "file": "src/renderer/MeshInspection.cpp",
+  "old": "    meshing::QualityClass worst = meshing::QualityClass::Valid;\n    for (const meshing::QualityFinding& finding : report_.findings) {\n        if (finding.element == element &&\n            static_cast<std::uint8_t>(finding.classification) >\n                static_cast<std::uint8_t>(worst)) {\n            worst = finding.classification;\n        }\n    }\n    return worst;",
+  "new": "    return meshing::QualityClass::Valid;"
+ },
+ {
+  "label": "worst-element navigation answers the first metric whatever was asked",
+  "file": "src/renderer/MeshInspection.cpp",
+  "old": "    const auto summary = report_.summaries.find(metric);\n    if (summary == report_.summaries.end()) {",
+  "new": "    const auto summary = report_.summaries.begin();\n    if (summary == report_.summaries.end()) {"
+ },
+ {
+  "label": "an unresolved reference is reported as resolved",
+  "file": "src/renderer/MeshInspection.cpp",
+  "old": "    set.requested.push_back(meshing::FaceResolution{\n        .reference = face.names.empty() ? FaceName{} : face.names.front(),\n        .state = meshing::MappingState::Resolved,\n        .faces = {faceIndex},\n        .facets = face.facets});",
+  "new": "    set.requested.clear();"
+ },
+ {
+  "label": "a scene accepts a quality report from another mesh generation",
+  "file": "src/renderer/MeshScene.cpp",
+  "old": "    if (!quality.describes(mesh.mesh())) {",
+  "new": "    if (false) {"
+ },
+ {
+  "label": "a scene accepts a mapping from another mesh generation",
+  "file": "src/renderer/MeshScene.cpp",
+  "old": "    if (!(map.meshStamp() == stamp)) {",
+  "new": "    if (false) {"
+ },
+ {
+  "label": "mesh positions reach the kernel in SI metres instead of model units",
+  "file": "src/renderer/occt/OcctMeshPresentation.cpp",
+  "old": "[[nodiscard]] double toModelLength(double metres) noexcept {\n    return geometry::occt::toModel(Length::fromSi(metres));\n}",
+  "new": "[[nodiscard]] double toModelLength(double metres) noexcept {\n    return metres;\n}"
+ },
+ {
+  "label": "a highlight index past the render buffer is accepted",
+  "file": "src/renderer/occt/OcctViewer.cpp",
+  "old": "    for (const std::size_t triangle : triangles) {\n        if (triangle >= (*mesh)->triangleCount()) {\n            return makeError(ErrorCode::InvalidArgument,\n                             std::format(\"viewer: render triangle {} of {} in presentation {}\",\n                                         triangle, (*mesh)->triangleCount(),\n                                         presentation.value()));\n        }\n    }",
+  "new": "    for (const std::size_t triangle : triangles) {\n        (void)triangle;\n    }"
+ },
+ {
+  "label": "a stale mesh is drawn exactly like a current one",
+  "file": "src/renderer/occt/OcctMeshPresentation.cpp",
+  "old": "void MeshPresentation::setStale(bool stale) {\n    if (stale == stale_) {\n        return;\n    }\n    stale_ = stale;\n    SetToUpdate();\n}",
+  "new": "void MeshPresentation::setStale(bool stale) {\n    if (stale == stale_ || true) {\n        return;\n    }\n    stale_ = stale;\n    SetToUpdate();\n}"
+ },
+ {
+  "label": "every node is reported as interior, so none has a CAD face",
+  "file": "src/renderer/MeshScene.cpp",
+  "old": "    for (const meshing::Triangle& facet : mesh().triangles()) {\n        if (std::ranges::find(facet.nodes, node) != facet.nodes.end()) {\n            inspection.onBoundary = true;",
+  "new": "    for (const meshing::Triangle& facet : mesh().triangles()) {\n        if (false) {\n            inspection.onBoundary = true;"
+ }
+]

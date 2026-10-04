@@ -439,3 +439,22 @@ bettercad_compile_fail_case(viewer "${_viewer}" COPY_A_VIEWER
     "use of deleted function|is private|deleted" BetterCAD::renderer BetterCAD::geometry)
 bettercad_compile_fail_case(viewer "${_viewer}" REACH_A_DOCUMENT_THROUGH_THE_VIEWER
     "has no member named|no member named" BetterCAD::renderer BetterCAD::geometry)
+
+# The mesh visualisation adapter (P16-VIZ-001). A render index is a position in
+# a GPU buffer; a NodeId and an ElementId are engineering identities. The
+# confusions below are not caught at runtime -- they cannot be written.
+set(_meshview "${CMAKE_CURRENT_SOURCE_DIR}/MeshViewMisuse.cpp")
+bettercad_compile_fail_group(meshview "${_meshview}" BetterCAD::renderer BetterCAD::meshing)
+bettercad_compile_fail_case(meshview "${_meshview}" NODE_ID_FROM_A_RENDER_INDEX
+    "conversion from .* to non-scalar type|could not convert|cannot convert"
+    BetterCAD::renderer BetterCAD::meshing)
+bettercad_compile_fail_case(meshview "${_meshview}" ELEMENT_ID_FROM_A_RENDER_INDEX
+    "conversion from .* to non-scalar type|could not convert|cannot convert"
+    BetterCAD::renderer BetterCAD::meshing)
+bettercad_compile_fail_case(meshview "${_meshview}" RENDER_INDEX_FROM_A_NODE_ID
+    "cannot convert|could not convert|invalid conversion|no matches converting"
+    BetterCAD::renderer BetterCAD::meshing)
+bettercad_compile_fail_case(meshview "${_meshview}" MUTATE_A_MESH
+    "has no member named|no member named" BetterCAD::renderer BetterCAD::meshing)
+bettercad_compile_fail_case(meshview "${_meshview}" REACH_A_MESH_THROUGH_A_VIEW
+    "has no member named|no member named" BetterCAD::renderer BetterCAD::meshing)

@@ -1,0 +1,1505 @@
+﻿Test project C:/Users/uqhas/AppData/Local/bc-build/debug-ext
+        Start 2785: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly
+        Start 3210: compile_fail.viewer.presentation-id-as-object-id
+        Start 2780: unit.Viewer_DisplayingDoesNotRegenerateOrHealTheBody
+        Start 2797: unit.Viewer_StandardViewsChangeWhatIsDrawn
+        Start 2786: unit.Viewer_NothingItDoesChangesTheModel
+        Start 2782: unit.Viewer_HidingIsNotDeleting
+        Start 2783: unit.Viewer_HidingOneBodyLeavesTheOtherVisible
+        Start 2798: unit.Viewer_ZoomAndOrbitChangeTheImageWithoutTouchingTheModel
+      Test #2780: unit.Viewer_DisplayingDoesNotRegenerateOrHealTheBody .......................   Passed    2.02 sec
+        Start 2780: unit.Viewer_DisplayingDoesNotRegenerateOrHealTheBody
+      Test #2786: unit.Viewer_NothingItDoesChangesTheModel ...................................   Passed    2.07 sec
+        Start 2786: unit.Viewer_NothingItDoesChangesTheModel
+      Test #2783: unit.Viewer_HidingOneBodyLeavesTheOtherVisible .............................   Passed    2.08 sec
+        Start 2783: unit.Viewer_HidingOneBodyLeavesTheOtherVisible
+      Test #2797: unit.Viewer_StandardViewsChangeWhatIsDrawn .................................   Passed    2.20 sec
+        Start 2797: unit.Viewer_StandardViewsChangeWhatIsDrawn
+      Test #2798: unit.Viewer_ZoomAndOrbitChangeTheImageWithoutTouchingTheModel ..............   Passed    2.13 sec
+        Start 2798: unit.Viewer_ZoomAndOrbitChangeTheImageWithoutTouchingTheModel
+      Test #2782: unit.Viewer_HidingIsNotDeleting ............................................   Passed    2.24 sec
+        Start 2782: unit.Viewer_HidingIsNotDeleting
+      Test #2780: unit.Viewer_DisplayingDoesNotRegenerateOrHealTheBody .......................   Passed    1.47 sec
+        Start 2780: unit.Viewer_DisplayingDoesNotRegenerateOrHealTheBody
+      Test #2786: unit.Viewer_NothingItDoesChangesTheModel ...................................   Passed    1.75 sec
+        Start 2786: unit.Viewer_NothingItDoesChangesTheModel
+      Test #2783: unit.Viewer_HidingOneBodyLeavesTheOtherVisible .............................   Passed    1.86 sec
+        Start 2783: unit.Viewer_HidingOneBodyLeavesTheOtherVisible
+      Test #2798: unit.Viewer_ZoomAndOrbitChangeTheImageWithoutTouchingTheModel ..............   Passed    1.95 sec
+        Start 2798: unit.Viewer_ZoomAndOrbitChangeTheImageWithoutTouchingTheModel
+      Test #2782: unit.Viewer_HidingIsNotDeleting ............................................   Passed    1.97 sec
+        Start 2782: unit.Viewer_HidingIsNotDeleting
+      Test #2797: unit.Viewer_StandardViewsChangeWhatIsDrawn .................................   Passed    2.22 sec
+        Start 2797: unit.Viewer_StandardViewsChangeWhatIsDrawn
+      Test #2780: unit.Viewer_DisplayingDoesNotRegenerateOrHealTheBody .......................   Passed    1.44 sec
+        Start 2780: unit.Viewer_DisplayingDoesNotRegenerateOrHealTheBody
+      Test #2786: unit.Viewer_NothingItDoesChangesTheModel ...................................   Passed    1.42 sec
+        Start 2786: unit.Viewer_NothingItDoesChangesTheModel
+      Test #2783: unit.Viewer_HidingOneBodyLeavesTheOtherVisible .............................   Passed    1.36 sec
+        Start 2783: unit.Viewer_HidingOneBodyLeavesTheOtherVisible
+      Test #2782: unit.Viewer_HidingIsNotDeleting ............................................   Passed    1.62 sec
+        Start 2782: unit.Viewer_HidingIsNotDeleting
+      Test #2798: unit.Viewer_ZoomAndOrbitChangeTheImageWithoutTouchingTheModel ..............   Passed    1.75 sec
+        Start 2798: unit.Viewer_ZoomAndOrbitChangeTheImageWithoutTouchingTheModel
+      Test #2797: unit.Viewer_StandardViewsChangeWhatIsDrawn .................................   Passed    1.80 sec
+        Start 2797: unit.Viewer_StandardViewsChangeWhatIsDrawn
+      Test #2780: unit.Viewer_DisplayingDoesNotRegenerateOrHealTheBody .......................   Passed    1.51 sec
+        Start 2780: unit.Viewer_DisplayingDoesNotRegenerateOrHealTheBody
+      Test #2786: unit.Viewer_NothingItDoesChangesTheModel ...................................   Passed    1.31 sec
+        Start 2786: unit.Viewer_NothingItDoesChangesTheModel
+      Test #2783: unit.Viewer_HidingOneBodyLeavesTheOtherVisible .............................   Passed    1.41 sec
+        Start 2783: unit.Viewer_HidingOneBodyLeavesTheOtherVisible
+      Test #2782: unit.Viewer_HidingIsNotDeleting ............................................   Passed    1.52 sec
+        Start 2782: unit.Viewer_HidingIsNotDeleting
+      Test #2798: unit.Viewer_ZoomAndOrbitChangeTheImageWithoutTouchingTheModel ..............   Passed    1.56 sec
+        Start 2798: unit.Viewer_ZoomAndOrbitChangeTheImageWithoutTouchingTheModel
+      Test #2785: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly .....................   Passed    7.59 sec
+        Start 2785: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly
+      Test #3210: compile_fail.viewer.presentation-id-as-object-id ...........................   Passed    7.87 sec
+        Start 3210: compile_fail.viewer.presentation-id-as-object-id
+      Test #2797: unit.Viewer_StandardViewsChangeWhatIsDrawn .................................   Passed    1.64 sec
+        Start 2797: unit.Viewer_StandardViewsChangeWhatIsDrawn
+  1/150 Test #2780: unit.Viewer_DisplayingDoesNotRegenerateOrHealTheBody .......................   Passed    1.62 sec
+        Start 2784: unit.Viewer_IgnoresANonsensicalZoom
+  2/150 Test #2786: unit.Viewer_NothingItDoesChangesTheModel ...................................   Passed    1.49 sec
+        Start 2788: unit.Viewer_PickingADisplayedBodyResolvesToItsObject
+  3/150 Test #2783: unit.Viewer_HidingOneBodyLeavesTheOtherVisible .............................   Passed    1.39 sec
+        Start 2794: unit.Viewer_ResizeRefusesAnEmptyArea
+  4/150 Test #2782: unit.Viewer_HidingIsNotDeleting ............................................   Passed    1.54 sec
+        Start 2781: unit.Viewer_DisplaysACadBodyAndDrawsIt
+  5/150 Test #2798: unit.Viewer_ZoomAndOrbitChangeTheImageWithoutTouchingTheModel ..............   Passed    1.73 sec
+        Start 2793: unit.Viewer_RemovingAPresentationLeavesTheModelAlone
+  6/150 Test #2797: unit.Viewer_StandardViewsChangeWhatIsDrawn .................................   Passed    1.72 sec
+        Start 2778: unit.Viewer_BackgroundIsWhatWasAskedFor
+      Test #2788: unit.Viewer_PickingADisplayedBodyResolvesToItsObject .......................   Passed    1.57 sec
+        Start 2788: unit.Viewer_PickingADisplayedBodyResolvesToItsObject
+      Test #2794: unit.Viewer_ResizeRefusesAnEmptyArea .......................................   Passed    1.51 sec
+        Start 2794: unit.Viewer_ResizeRefusesAnEmptyArea
+      Test #2784: unit.Viewer_IgnoresANonsensicalZoom ........................................   Passed    1.70 sec
+        Start 2784: unit.Viewer_IgnoresANonsensicalZoom
+      Test #2781: unit.Viewer_DisplaysACadBodyAndDrawsIt .....................................   Passed    1.34 sec
+        Start 2781: unit.Viewer_DisplaysACadBodyAndDrawsIt
+      Test #2793: unit.Viewer_RemovingAPresentationLeavesTheModelAlone .......................   Passed    1.40 sec
+        Start 2793: unit.Viewer_RemovingAPresentationLeavesTheModelAlone
+      Test #2778: unit.Viewer_BackgroundIsWhatWasAskedFor ....................................   Passed    1.38 sec
+        Start 2778: unit.Viewer_BackgroundIsWhatWasAskedFor
+      Test #2788: unit.Viewer_PickingADisplayedBodyResolvesToItsObject .......................   Passed    1.41 sec
+        Start 2788: unit.Viewer_PickingADisplayedBodyResolvesToItsObject
+      Test #2794: unit.Viewer_ResizeRefusesAnEmptyArea .......................................   Passed    1.39 sec
+        Start 2794: unit.Viewer_ResizeRefusesAnEmptyArea
+      Test #2784: unit.Viewer_IgnoresANonsensicalZoom ........................................   Passed    1.59 sec
+        Start 2784: unit.Viewer_IgnoresANonsensicalZoom
+      Test #2781: unit.Viewer_DisplaysACadBodyAndDrawsIt .....................................   Passed    1.38 sec
+        Start 2781: unit.Viewer_DisplaysACadBodyAndDrawsIt
+      Test #2793: unit.Viewer_RemovingAPresentationLeavesTheModelAlone .......................   Passed    1.46 sec
+        Start 2793: unit.Viewer_RemovingAPresentationLeavesTheModelAlone
+      Test #2778: unit.Viewer_BackgroundIsWhatWasAskedFor ....................................   Passed    1.53 sec
+        Start 2778: unit.Viewer_BackgroundIsWhatWasAskedFor
+      Test #2788: unit.Viewer_PickingADisplayedBodyResolvesToItsObject .......................   Passed    1.51 sec
+        Start 2788: unit.Viewer_PickingADisplayedBodyResolvesToItsObject
+      Test #2794: unit.Viewer_ResizeRefusesAnEmptyArea .......................................   Passed    1.55 sec
+        Start 2794: unit.Viewer_ResizeRefusesAnEmptyArea
+      Test #2784: unit.Viewer_IgnoresANonsensicalZoom ........................................   Passed    1.67 sec
+        Start 2784: unit.Viewer_IgnoresANonsensicalZoom
+      Test #2781: unit.Viewer_DisplaysACadBodyAndDrawsIt .....................................   Passed    1.53 sec
+        Start 2781: unit.Viewer_DisplaysACadBodyAndDrawsIt
+      Test #2793: unit.Viewer_RemovingAPresentationLeavesTheModelAlone .......................   Passed    1.47 sec
+        Start 2793: unit.Viewer_RemovingAPresentationLeavesTheModelAlone
+      Test #2778: unit.Viewer_BackgroundIsWhatWasAskedFor ....................................   Passed    1.42 sec
+        Start 2778: unit.Viewer_BackgroundIsWhatWasAskedFor
+      Test #2794: unit.Viewer_ResizeRefusesAnEmptyArea .......................................   Passed    1.39 sec
+        Start 2794: unit.Viewer_ResizeRefusesAnEmptyArea
+      Test #2788: unit.Viewer_PickingADisplayedBodyResolvesToItsObject .......................   Passed    1.52 sec
+        Start 2788: unit.Viewer_PickingADisplayedBodyResolvesToItsObject
+      Test #2784: unit.Viewer_IgnoresANonsensicalZoom ........................................   Passed    1.48 sec
+        Start 2784: unit.Viewer_IgnoresANonsensicalZoom
+      Test #2781: unit.Viewer_DisplaysACadBodyAndDrawsIt .....................................   Passed    1.44 sec
+        Start 2781: unit.Viewer_DisplaysACadBodyAndDrawsIt
+      Test #2785: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly .....................   Passed    7.44 sec
+        Start 2785: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly
+      Test #2793: unit.Viewer_RemovingAPresentationLeavesTheModelAlone .......................   Passed    1.55 sec
+        Start 2793: unit.Viewer_RemovingAPresentationLeavesTheModelAlone
+      Test #2778: unit.Viewer_BackgroundIsWhatWasAskedFor ....................................   Passed    1.46 sec
+        Start 2778: unit.Viewer_BackgroundIsWhatWasAskedFor
+  7/150 Test #2794: unit.Viewer_ResizeRefusesAnEmptyArea .......................................   Passed    1.36 sec
+        Start 2777: unit.Viewer_AnEmptySceneCoversNothing
+  8/150 Test #2788: unit.Viewer_PickingADisplayedBodyResolvesToItsObject .......................   Passed    1.54 sec
+        Start 2790: unit.Viewer_PickingDistinguishesTwoDisplayedBodies
+  9/150 Test #2784: unit.Viewer_IgnoresANonsensicalZoom ........................................   Passed    1.50 sec
+        Start 2787: unit.Viewer_PickCoordinatesStayInTheRenderedImagesSpaceAfterAResize
+ 10/150 Test #2781: unit.Viewer_DisplaysACadBodyAndDrawsIt .....................................   Passed    1.49 sec
+        Start 2796: unit.Viewer_SelectionRefusesAPresentationItDoesNotHave
+      Test #3210: compile_fail.viewer.presentation-id-as-object-id ...........................   Passed    8.48 sec
+        Start 3210: compile_fail.viewer.presentation-id-as-object-id
+ 11/150 Test #2793: unit.Viewer_RemovingAPresentationLeavesTheModelAlone .......................   Passed    1.72 sec
+        Start 2795: unit.Viewer_SelectionIsReportedAsCadIdentity
+      Test #2777: unit.Viewer_AnEmptySceneCoversNothing ......................................   Passed    1.54 sec
+        Start 2777: unit.Viewer_AnEmptySceneCoversNothing
+ 12/150 Test #2778: unit.Viewer_BackgroundIsWhatWasAskedFor ....................................   Passed    1.65 sec
+        Start 2789: unit.Viewer_PickingAnEmptyViewFindsNothing
+      Test #2790: unit.Viewer_PickingDistinguishesTwoDisplayedBodies .........................   Passed    1.50 sec
+        Start 2790: unit.Viewer_PickingDistinguishesTwoDisplayedBodies
+      Test #2787: unit.Viewer_PickCoordinatesStayInTheRenderedImagesSpaceAfterAResize ........   Passed    1.53 sec
+        Start 2787: unit.Viewer_PickCoordinatesStayInTheRenderedImagesSpaceAfterAResize
+      Test #2796: unit.Viewer_SelectionRefusesAPresentationItDoesNotHave .....................   Passed    1.41 sec
+        Start 2796: unit.Viewer_SelectionRefusesAPresentationItDoesNotHave
+      Test #2795: unit.Viewer_SelectionIsReportedAsCadIdentity ...............................   Passed    1.52 sec
+        Start 2795: unit.Viewer_SelectionIsReportedAsCadIdentity
+      Test #2777: unit.Viewer_AnEmptySceneCoversNothing ......................................   Passed    1.55 sec
+        Start 2777: unit.Viewer_AnEmptySceneCoversNothing
+      Test #2789: unit.Viewer_PickingAnEmptyViewFindsNothing .................................   Passed    1.49 sec
+        Start 2789: unit.Viewer_PickingAnEmptyViewFindsNothing
+      Test #2790: unit.Viewer_PickingDistinguishesTwoDisplayedBodies .........................   Passed    1.60 sec
+        Start 2790: unit.Viewer_PickingDistinguishesTwoDisplayedBodies
+      Test #2796: unit.Viewer_SelectionRefusesAPresentationItDoesNotHave .....................   Passed    1.34 sec
+        Start 2796: unit.Viewer_SelectionRefusesAPresentationItDoesNotHave
+      Test #2787: unit.Viewer_PickCoordinatesStayInTheRenderedImagesSpaceAfterAResize ........   Passed    1.48 sec
+        Start 2787: unit.Viewer_PickCoordinatesStayInTheRenderedImagesSpaceAfterAResize
+      Test #2795: unit.Viewer_SelectionIsReportedAsCadIdentity ...............................   Passed    1.18 sec
+        Start 2795: unit.Viewer_SelectionIsReportedAsCadIdentity
+      Test #2789: unit.Viewer_PickingAnEmptyViewFindsNothing .................................   Passed    1.32 sec
+        Start 2789: unit.Viewer_PickingAnEmptyViewFindsNothing
+      Test #2777: unit.Viewer_AnEmptySceneCoversNothing ......................................   Passed    1.36 sec
+        Start 2777: unit.Viewer_AnEmptySceneCoversNothing
+      Test #2790: unit.Viewer_PickingDistinguishesTwoDisplayedBodies .........................   Passed    1.28 sec
+        Start 2790: unit.Viewer_PickingDistinguishesTwoDisplayedBodies
+      Test #2796: unit.Viewer_SelectionRefusesAPresentationItDoesNotHave .....................   Passed    1.25 sec
+        Start 2796: unit.Viewer_SelectionRefusesAPresentationItDoesNotHave
+      Test #2787: unit.Viewer_PickCoordinatesStayInTheRenderedImagesSpaceAfterAResize ........   Passed    1.24 sec
+        Start 2787: unit.Viewer_PickCoordinatesStayInTheRenderedImagesSpaceAfterAResize
+      Test #2795: unit.Viewer_SelectionIsReportedAsCadIdentity ...............................   Passed    1.20 sec
+        Start 2795: unit.Viewer_SelectionIsReportedAsCadIdentity
+      Test #2789: unit.Viewer_PickingAnEmptyViewFindsNothing .................................   Passed    1.38 sec
+        Start 2789: unit.Viewer_PickingAnEmptyViewFindsNothing
+      Test #2777: unit.Viewer_AnEmptySceneCoversNothing ......................................   Passed    1.42 sec
+        Start 2777: unit.Viewer_AnEmptySceneCoversNothing
+      Test #2790: unit.Viewer_PickingDistinguishesTwoDisplayedBodies .........................   Passed    1.42 sec
+        Start 2790: unit.Viewer_PickingDistinguishesTwoDisplayedBodies
+      Test #2796: unit.Viewer_SelectionRefusesAPresentationItDoesNotHave .....................   Passed    1.37 sec
+        Start 2796: unit.Viewer_SelectionRefusesAPresentationItDoesNotHave
+      Test #2787: unit.Viewer_PickCoordinatesStayInTheRenderedImagesSpaceAfterAResize ........   Passed    1.42 sec
+        Start 2787: unit.Viewer_PickCoordinatesStayInTheRenderedImagesSpaceAfterAResize
+      Test #2795: unit.Viewer_SelectionIsReportedAsCadIdentity ...............................   Passed    1.15 sec
+        Start 2795: unit.Viewer_SelectionIsReportedAsCadIdentity
+      Test #2789: unit.Viewer_PickingAnEmptyViewFindsNothing .................................   Passed    1.27 sec
+        Start 2789: unit.Viewer_PickingAnEmptyViewFindsNothing
+ 13/150 Test #2777: unit.Viewer_AnEmptySceneCoversNothing ......................................   Passed    1.28 sec
+        Start 2792: unit.Viewer_RefusesToDisplayAnEmptyBodyOrAnInvalidObject
+ 14/150 Test #2796: unit.Viewer_SelectionRefusesAPresentationItDoesNotHave .....................   Passed    1.27 sec
+        Start 2779: unit.Viewer_CreatesAnOffscreenViewOnThisToolchain
+      Test #2785: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly .....................   Passed    7.87 sec
+        Start 2785: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly
+ 15/150 Test #2790: unit.Viewer_PickingDistinguishesTwoDisplayedBodies .........................   Passed    1.51 sec
+        Start 3032: gui.mesh.regenerated
+ 16/150 Test #2787: unit.Viewer_PickCoordinatesStayInTheRenderedImagesSpaceAfterAResize ........   Passed    1.36 sec
+        Start 3027: gui.mesh.element
+ 17/150 Test #2795: unit.Viewer_SelectionIsReportedAsCadIdentity ...............................   Passed    1.22 sec
+        Start 3026: gui.mesh.current
+      Test #3032: gui.mesh.regenerated .......................................................   Passed    0.60 sec
+        Start 3032: gui.mesh.regenerated
+      Test #3027: gui.mesh.element ...........................................................   Passed    0.56 sec
+        Start 3027: gui.mesh.element
+ 18/150 Test #2789: unit.Viewer_PickingAnEmptyViewFindsNothing .................................   Passed    1.19 sec
+        Start 3033: gui.mesh.selection-dropped
+      Test #3026: gui.mesh.current ...........................................................   Passed    0.61 sec
+        Start 3026: gui.mesh.current
+      Test #2792: unit.Viewer_RefusesToDisplayAnEmptyBodyOrAnInvalidObject ...................   Passed    1.22 sec
+        Start 2792: unit.Viewer_RefusesToDisplayAnEmptyBodyOrAnInvalidObject
+      Test #2779: unit.Viewer_CreatesAnOffscreenViewOnThisToolchain ..........................   Passed    1.26 sec
+        Start 2779: unit.Viewer_CreatesAnOffscreenViewOnThisToolchain
+      Test #3032: gui.mesh.regenerated .......................................................   Passed    0.66 sec
+        Start 3032: gui.mesh.regenerated
+      Test #3027: gui.mesh.element ...........................................................   Passed    0.61 sec
+        Start 3027: gui.mesh.element
+      Test #3026: gui.mesh.current ...........................................................   Passed    0.59 sec
+        Start 3026: gui.mesh.current
+      Test #3033: gui.mesh.selection-dropped .................................................   Passed    0.71 sec
+        Start 3033: gui.mesh.selection-dropped
+      Test #3210: compile_fail.viewer.presentation-id-as-object-id ...........................   Passed    8.35 sec
+        Start 3210: compile_fail.viewer.presentation-id-as-object-id
+      Test #3032: gui.mesh.regenerated .......................................................   Passed    0.58 sec
+        Start 3032: gui.mesh.regenerated
+      Test #3027: gui.mesh.element ...........................................................   Passed    0.59 sec
+        Start 3027: gui.mesh.element
+      Test #3026: gui.mesh.current ...........................................................   Passed    0.62 sec
+        Start 3026: gui.mesh.current
+      Test #3033: gui.mesh.selection-dropped .................................................   Passed    0.61 sec
+        Start 3033: gui.mesh.selection-dropped
+      Test #2792: unit.Viewer_RefusesToDisplayAnEmptyBodyOrAnInvalidObject ...................   Passed    1.33 sec
+        Start 2792: unit.Viewer_RefusesToDisplayAnEmptyBodyOrAnInvalidObject
+      Test #3032: gui.mesh.regenerated .......................................................   Passed    0.64 sec
+        Start 3032: gui.mesh.regenerated
+      Test #3027: gui.mesh.element ...........................................................   Passed    0.64 sec
+        Start 3027: gui.mesh.element
+      Test #2779: unit.Viewer_CreatesAnOffscreenViewOnThisToolchain ..........................   Passed    1.39 sec
+        Start 2779: unit.Viewer_CreatesAnOffscreenViewOnThisToolchain
+      Test #3026: gui.mesh.current ...........................................................   Passed    0.67 sec
+        Start 3026: gui.mesh.current
+      Test #3033: gui.mesh.selection-dropped .................................................   Passed    0.63 sec
+        Start 3033: gui.mesh.selection-dropped
+ 19/150 Test #3032: gui.mesh.regenerated .......................................................   Passed    0.67 sec
+ 20/150 Test #3027: gui.mesh.element ...........................................................   Passed    0.66 sec
+        Start 3025: gui.mesh.generated
+        Start 3029: gui.mesh.cad-to-mesh
+ 21/150 Test #3026: gui.mesh.current ...........................................................   Passed    0.60 sec
+        Start 3028: gui.mesh.worst
+      Test #3033: gui.mesh.selection-dropped .................................................   Passed    0.75 sec
+        Start 3033: gui.mesh.selection-dropped
+      Test #2792: unit.Viewer_RefusesToDisplayAnEmptyBodyOrAnInvalidObject ...................   Passed    1.34 sec
+        Start 2792: unit.Viewer_RefusesToDisplayAnEmptyBodyOrAnInvalidObject
+      Test #3025: gui.mesh.generated .........................................................   Passed    0.69 sec
+        Start 3025: gui.mesh.generated
+      Test #3029: gui.mesh.cad-to-mesh .......................................................   Passed    0.67 sec
+        Start 3029: gui.mesh.cad-to-mesh
+      Test #2779: unit.Viewer_CreatesAnOffscreenViewOnThisToolchain ..........................   Passed    1.43 sec
+        Start 2779: unit.Viewer_CreatesAnOffscreenViewOnThisToolchain
+      Test #3028: gui.mesh.worst .............................................................   Passed    0.72 sec
+        Start 3028: gui.mesh.worst
+ 22/150 Test #3033: gui.mesh.selection-dropped .................................................   Passed    0.59 sec
+        Start 3030: gui.mesh.mesh-to-cad
+      Test #3025: gui.mesh.generated .........................................................   Passed    0.65 sec
+        Start 3025: gui.mesh.generated
+      Test #3029: gui.mesh.cad-to-mesh .......................................................   Passed    0.70 sec
+        Start 3029: gui.mesh.cad-to-mesh
+      Test #3028: gui.mesh.worst .............................................................   Passed    0.65 sec
+        Start 3028: gui.mesh.worst
+      Test #3030: gui.mesh.mesh-to-cad .......................................................   Passed    0.70 sec
+        Start 3030: gui.mesh.mesh-to-cad
+      Test #2792: unit.Viewer_RefusesToDisplayAnEmptyBodyOrAnInvalidObject ...................   Passed    1.35 sec
+        Start 2792: unit.Viewer_RefusesToDisplayAnEmptyBodyOrAnInvalidObject
+      Test #3025: gui.mesh.generated .........................................................   Passed    0.56 sec
+        Start 3025: gui.mesh.generated
+      Test #3029: gui.mesh.cad-to-mesh .......................................................   Passed    0.64 sec
+        Start 3029: gui.mesh.cad-to-mesh
+      Test #3028: gui.mesh.worst .............................................................   Passed    0.60 sec
+        Start 3028: gui.mesh.worst
+      Test #2779: unit.Viewer_CreatesAnOffscreenViewOnThisToolchain ..........................   Passed    1.32 sec
+        Start 2779: unit.Viewer_CreatesAnOffscreenViewOnThisToolchain
+      Test #3030: gui.mesh.mesh-to-cad .......................................................   Passed    0.71 sec
+        Start 3030: gui.mesh.mesh-to-cad
+      Test #3025: gui.mesh.generated .........................................................   Passed    0.67 sec
+        Start 3025: gui.mesh.generated
+      Test #3029: gui.mesh.cad-to-mesh .......................................................   Passed    0.59 sec
+        Start 3029: gui.mesh.cad-to-mesh
+      Test #3028: gui.mesh.worst .............................................................   Passed    0.60 sec
+        Start 3028: gui.mesh.worst
+      Test #3030: gui.mesh.mesh-to-cad .......................................................   Passed    0.58 sec
+        Start 3030: gui.mesh.mesh-to-cad
+ 23/150 Test #2792: unit.Viewer_RefusesToDisplayAnEmptyBodyOrAnInvalidObject ...................   Passed    1.36 sec
+        Start 3031: gui.mesh.stale
+ 24/150 Test #3025: gui.mesh.generated .........................................................   Passed    0.66 sec
+        Start 2485: unit.StandardView_EveryViewHasADistinctName
+ 25/150 Test #3029: gui.mesh.cad-to-mesh .......................................................   Passed    0.67 sec
+        Start 2791: unit.Viewer_RefusesAViewWithNoArea
+ 26/150 Test #2779: unit.Viewer_CreatesAnOffscreenViewOnThisToolchain ..........................   Passed    1.25 sec
+        Start 2106: unit.RenderedImage_CoverageAndSamplingAreWellBehavedAtTheEdges
+ 27/150 Test #3028: gui.mesh.worst .............................................................   Passed    0.71 sec
+        Start 1579: unit.MeshIssueKind_EveryKindHasAName
+      Test #2485: unit.StandardView_EveryViewHasADistinctName ................................   Passed    0.23 sec
+        Start 2485: unit.StandardView_EveryViewHasADistinctName
+      Test #2791: unit.Viewer_RefusesAViewWithNoArea .........................................   Passed    0.24 sec
+        Start 2791: unit.Viewer_RefusesAViewWithNoArea
+      Test #3030: gui.mesh.mesh-to-cad .......................................................   Passed    0.70 sec
+        Start 3030: gui.mesh.mesh-to-cad
+      Test #2106: unit.RenderedImage_CoverageAndSamplingAreWellBehavedAtTheEdges .............   Passed    0.24 sec
+        Start 2106: unit.RenderedImage_CoverageAndSamplingAreWellBehavedAtTheEdges
+      Test #3031: gui.mesh.stale .............................................................   Passed    0.57 sec
+        Start 3031: gui.mesh.stale
+      Test #1579: unit.MeshIssueKind_EveryKindHasAName .......................................   Passed    0.28 sec
+        Start 1579: unit.MeshIssueKind_EveryKindHasAName
+      Test #2485: unit.StandardView_EveryViewHasADistinctName ................................   Passed    0.27 sec
+        Start 2485: unit.StandardView_EveryViewHasADistinctName
+      Test #2791: unit.Viewer_RefusesAViewWithNoArea .........................................   Passed    0.28 sec
+        Start 2791: unit.Viewer_RefusesAViewWithNoArea
+      Test #2106: unit.RenderedImage_CoverageAndSamplingAreWellBehavedAtTheEdges .............   Passed    0.25 sec
+        Start 2106: unit.RenderedImage_CoverageAndSamplingAreWellBehavedAtTheEdges
+      Test #1579: unit.MeshIssueKind_EveryKindHasAName .......................................   Passed    0.22 sec
+        Start 1579: unit.MeshIssueKind_EveryKindHasAName
+      Test #2485: unit.StandardView_EveryViewHasADistinctName ................................   Passed    0.21 sec
+        Start 2485: unit.StandardView_EveryViewHasADistinctName
+      Test #2791: unit.Viewer_RefusesAViewWithNoArea .........................................   Passed    0.27 sec
+        Start 2791: unit.Viewer_RefusesAViewWithNoArea
+      Test #2106: unit.RenderedImage_CoverageAndSamplingAreWellBehavedAtTheEdges .............   Passed    0.26 sec
+        Start 2106: unit.RenderedImage_CoverageAndSamplingAreWellBehavedAtTheEdges
+      Test #1579: unit.MeshIssueKind_EveryKindHasAName .......................................   Passed    0.23 sec
+        Start 1579: unit.MeshIssueKind_EveryKindHasAName
+ 28/150 Test #3030: gui.mesh.mesh-to-cad .......................................................   Passed    0.57 sec
+        Start 3048: architecture.layering
+      Test #2485: unit.StandardView_EveryViewHasADistinctName ................................   Passed    0.23 sec
+        Start 2485: unit.StandardView_EveryViewHasADistinctName
+      Test #3031: gui.mesh.stale .............................................................   Passed    0.59 sec
+        Start 3031: gui.mesh.stale
+      Test #2791: unit.Viewer_RefusesAViewWithNoArea .........................................   Passed    0.24 sec
+        Start 2791: unit.Viewer_RefusesAViewWithNoArea
+      Test #2106: unit.RenderedImage_CoverageAndSamplingAreWellBehavedAtTheEdges .............   Passed    0.24 sec
+        Start 2106: unit.RenderedImage_CoverageAndSamplingAreWellBehavedAtTheEdges
+      Test #1579: unit.MeshIssueKind_EveryKindHasAName .......................................   Passed    0.27 sec
+        Start 1579: unit.MeshIssueKind_EveryKindHasAName
+ 29/150 Test #2485: unit.StandardView_EveryViewHasADistinctName ................................   Passed    0.25 sec
+        Start 3024: gui.launch.smoke
+ 30/150 Test #2791: unit.Viewer_RefusesAViewWithNoArea .........................................   Passed    0.22 sec
+        Start 3056: architecture.checker.mesh-backend-generated-leak
+ 31/150 Test #2106: unit.RenderedImage_CoverageAndSamplingAreWellBehavedAtTheEdges .............   Passed    0.22 sec
+        Start 1623: unit.Meshable_GivesTheSameAnswerAndTheSameVolumeOnRepeatedCalls
+ 32/150 Test #1579: unit.MeshIssueKind_EveryKindHasAName .......................................   Passed    0.26 sec
+        Start 1544: unit.MeshBuilder_RejectsATetrahedronNamingANodeTheMeshDoesNotHave
+      Test #3031: gui.mesh.stale .............................................................   Passed    0.59 sec
+        Start 3031: gui.mesh.stale
+      Test #3056: architecture.checker.mesh-backend-generated-leak ...........................   Passed    0.28 sec
+        Start 3056: architecture.checker.mesh-backend-generated-leak
+      Test #2785: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly .....................   Passed    8.13 sec
+        Start 2785: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly
+      Test #1544: unit.MeshBuilder_RejectsATetrahedronNamingANodeTheMeshDoesNotHave ..........   Passed    0.26 sec
+        Start 1544: unit.MeshBuilder_RejectsATetrahedronNamingANodeTheMeshDoesNotHave
+      Test #1623: unit.Meshable_GivesTheSameAnswerAndTheSameVolumeOnRepeatedCalls ............   Passed    0.39 sec
+        Start 1623: unit.Meshable_GivesTheSameAnswerAndTheSameVolumeOnRepeatedCalls
+      Test #3024: gui.launch.smoke ...........................................................   Passed    0.61 sec
+        Start 3024: gui.launch.smoke
+      Test #3056: architecture.checker.mesh-backend-generated-leak ...........................   Passed    0.35 sec
+        Start 3056: architecture.checker.mesh-backend-generated-leak
+      Test #1544: unit.MeshBuilder_RejectsATetrahedronNamingANodeTheMeshDoesNotHave ..........   Passed    0.27 sec
+        Start 1544: unit.MeshBuilder_RejectsATetrahedronNamingANodeTheMeshDoesNotHave
+      Test #1623: unit.Meshable_GivesTheSameAnswerAndTheSameVolumeOnRepeatedCalls ............   Passed    0.43 sec
+        Start 1623: unit.Meshable_GivesTheSameAnswerAndTheSameVolumeOnRepeatedCalls
+      Test #3056: architecture.checker.mesh-backend-generated-leak ...........................   Passed    0.24 sec
+        Start 3056: architecture.checker.mesh-backend-generated-leak
+      Test #1544: unit.MeshBuilder_RejectsATetrahedronNamingANodeTheMeshDoesNotHave ..........   Passed    0.23 sec
+        Start 1544: unit.MeshBuilder_RejectsATetrahedronNamingANodeTheMeshDoesNotHave
+      Test #3031: gui.mesh.stale .............................................................   Passed    0.73 sec
+        Start 3031: gui.mesh.stale
+      Test #1544: unit.MeshBuilder_RejectsATetrahedronNamingANodeTheMeshDoesNotHave ..........   Passed    0.23 sec
+        Start 1544: unit.MeshBuilder_RejectsATetrahedronNamingANodeTheMeshDoesNotHave
+      Test #1623: unit.Meshable_GivesTheSameAnswerAndTheSameVolumeOnRepeatedCalls ............   Passed    0.47 sec
+        Start 1623: unit.Meshable_GivesTheSameAnswerAndTheSameVolumeOnRepeatedCalls
+      Test #3056: architecture.checker.mesh-backend-generated-leak ...........................   Passed    0.47 sec
+        Start 3056: architecture.checker.mesh-backend-generated-leak
+      Test #3024: gui.launch.smoke ...........................................................   Passed    0.87 sec
+        Start 3024: gui.launch.smoke
+ 33/150 Test #1544: unit.MeshBuilder_RejectsATetrahedronNamingANodeTheMeshDoesNotHave ..........   Passed    0.44 sec
+        Start 1625: unit.Meshable_PreparationDoesNotTouchTheDocumentOrTheRegenerator
+ 34/150 Test #3056: architecture.checker.mesh-backend-generated-leak ...........................   Passed    0.33 sec
+        Start 1620: unit.Meshable_AcceptsGeometryAgainOnceItHasBeenRegenerated
+      Test #1623: unit.Meshable_GivesTheSameAnswerAndTheSameVolumeOnRepeatedCalls ............   Passed    0.41 sec
+        Start 1623: unit.Meshable_GivesTheSameAnswerAndTheSameVolumeOnRepeatedCalls
+ 35/150 Test #3031: gui.mesh.stale .............................................................   Passed    0.83 sec
+        Start 1626: unit.Meshable_RecoversAfterAFailedEditIsUndone
+      Test #1620: unit.Meshable_AcceptsGeometryAgainOnceItHasBeenRegenerated .................   Passed    0.28 sec
+        Start 1620: unit.Meshable_AcceptsGeometryAgainOnceItHasBeenRegenerated
+      Test #1625: unit.Meshable_PreparationDoesNotTouchTheDocumentOrTheRegenerator ...........   Passed    0.41 sec
+        Start 1625: unit.Meshable_PreparationDoesNotTouchTheDocumentOrTheRegenerator
+      Test #3048: architecture.layering ......................................................   Passed    2.40 sec
+        Start 3048: architecture.layering
+      Test #1626: unit.Meshable_RecoversAfterAFailedEditIsUndone .............................   Passed    0.24 sec
+        Start 1626: unit.Meshable_RecoversAfterAFailedEditIsUndone
+      Test #3024: gui.launch.smoke ...........................................................   Passed    0.74 sec
+        Start 3024: gui.launch.smoke
+ 36/150 Test #1623: unit.Meshable_GivesTheSameAnswerAndTheSameVolumeOnRepeatedCalls ............   Passed    0.38 sec
+        Start 3055: architecture.checker.mesh-backend-leak
+      Test #1620: unit.Meshable_AcceptsGeometryAgainOnceItHasBeenRegenerated .................   Passed    0.38 sec
+        Start 1620: unit.Meshable_AcceptsGeometryAgainOnceItHasBeenRegenerated
+      Test #1625: unit.Meshable_PreparationDoesNotTouchTheDocumentOrTheRegenerator ...........   Passed    0.38 sec
+        Start 1625: unit.Meshable_PreparationDoesNotTouchTheDocumentOrTheRegenerator
+      Test #1626: unit.Meshable_RecoversAfterAFailedEditIsUndone .............................   Passed    0.29 sec
+        Start 1626: unit.Meshable_RecoversAfterAFailedEditIsUndone
+      Test #3055: architecture.checker.mesh-backend-leak .....................................   Passed    0.27 sec
+        Start 3055: architecture.checker.mesh-backend-leak
+      Test #1620: unit.Meshable_AcceptsGeometryAgainOnceItHasBeenRegenerated .................   Passed    0.25 sec
+        Start 1620: unit.Meshable_AcceptsGeometryAgainOnceItHasBeenRegenerated
+      Test #1626: unit.Meshable_RecoversAfterAFailedEditIsUndone .............................   Passed    0.26 sec
+        Start 1626: unit.Meshable_RecoversAfterAFailedEditIsUndone
+      Test #3055: architecture.checker.mesh-backend-leak .....................................   Passed    0.26 sec
+        Start 3055: architecture.checker.mesh-backend-leak
+      Test #1625: unit.Meshable_PreparationDoesNotTouchTheDocumentOrTheRegenerator ...........   Passed    0.32 sec
+        Start 1625: unit.Meshable_PreparationDoesNotTouchTheDocumentOrTheRegenerator
+      Test #3024: gui.launch.smoke ...........................................................   Passed    0.62 sec
+        Start 3024: gui.launch.smoke
+      Test #1620: unit.Meshable_AcceptsGeometryAgainOnceItHasBeenRegenerated .................   Passed    0.35 sec
+        Start 1620: unit.Meshable_AcceptsGeometryAgainOnceItHasBeenRegenerated
+      Test #1626: unit.Meshable_RecoversAfterAFailedEditIsUndone .............................   Passed    0.32 sec
+        Start 1626: unit.Meshable_RecoversAfterAFailedEditIsUndone
+      Test #3055: architecture.checker.mesh-backend-leak .....................................   Passed    0.32 sec
+        Start 3055: architecture.checker.mesh-backend-leak
+      Test #1625: unit.Meshable_PreparationDoesNotTouchTheDocumentOrTheRegenerator ...........   Passed    0.31 sec
+        Start 1625: unit.Meshable_PreparationDoesNotTouchTheDocumentOrTheRegenerator
+      Test #3210: compile_fail.viewer.presentation-id-as-object-id ...........................   Passed    9.05 sec
+        Start 3210: compile_fail.viewer.presentation-id-as-object-id
+ 37/150 Test #1620: unit.Meshable_AcceptsGeometryAgainOnceItHasBeenRegenerated .................   Passed    0.27 sec
+        Start 1545: unit.MeshBuilder_RejectsAnElementNamingANodeThatDoesNotExist
+      Test #3055: architecture.checker.mesh-backend-leak .....................................   Passed    0.26 sec
+        Start 3055: architecture.checker.mesh-backend-leak
+ 38/150 Test #1626: unit.Meshable_RecoversAfterAFailedEditIsUndone .............................   Passed    0.29 sec
+        Start 1619: unit.Meshable_AcceptsAMultiSolidBodyAndReportsTheSolidCount
+ 39/150 Test #3024: gui.launch.smoke ...........................................................   Passed    0.59 sec
+        Start 1613: unit.Mesh_RefusesAHandleFromAnotherMeshRatherThanReinterpretingIt
+ 40/150 Test #1625: unit.Meshable_PreparationDoesNotTouchTheDocumentOrTheRegenerator ...........   Passed    0.35 sec
+        Start 1634: unit.Meshable_ReportsStalenessRatherThanTheDefectOfAStaleBody
+      Test #1545: unit.MeshBuilder_RejectsAnElementNamingANodeThatDoesNotExist ...............   Passed    0.26 sec
+        Start 1545: unit.MeshBuilder_RejectsAnElementNamingANodeThatDoesNotExist
+      Test #1619: unit.Meshable_AcceptsAMultiSolidBodyAndReportsTheSolidCount ................   Passed    0.26 sec
+        Start 1619: unit.Meshable_AcceptsAMultiSolidBodyAndReportsTheSolidCount
+ 41/150 Test #3055: architecture.checker.mesh-backend-leak .....................................   Passed    0.29 sec
+        Start 1543: unit.MeshBuilder_RejectsARepeatedNodeHandleAndLeavesTheMeshUnchanged
+      Test #3048: architecture.layering ......................................................   Passed    1.56 sec
+        Start 3048: architecture.layering
+      Test #1613: unit.Mesh_RefusesAHandleFromAnotherMeshRatherThanReinterpretingIt ..........   Passed    0.26 sec
+        Start 1613: unit.Mesh_RefusesAHandleFromAnotherMeshRatherThanReinterpretingIt
+      Test #1634: unit.Meshable_ReportsStalenessRatherThanTheDefectOfAStaleBody ..............   Passed    0.33 sec
+        Start 1634: unit.Meshable_ReportsStalenessRatherThanTheDefectOfAStaleBody
+      Test #1545: unit.MeshBuilder_RejectsAnElementNamingANodeThatDoesNotExist ...............   Passed    0.24 sec
+        Start 1545: unit.MeshBuilder_RejectsAnElementNamingANodeThatDoesNotExist
+      Test #1543: unit.MeshBuilder_RejectsARepeatedNodeHandleAndLeavesTheMeshUnchanged .......   Passed    0.23 sec
+        Start 1543: unit.MeshBuilder_RejectsARepeatedNodeHandleAndLeavesTheMeshUnchanged
+      Test #1619: unit.Meshable_AcceptsAMultiSolidBodyAndReportsTheSolidCount ................   Passed    0.27 sec
+        Start 1619: unit.Meshable_AcceptsAMultiSolidBodyAndReportsTheSolidCount
+      Test #1613: unit.Mesh_RefusesAHandleFromAnotherMeshRatherThanReinterpretingIt ..........   Passed    0.24 sec
+        Start 1613: unit.Mesh_RefusesAHandleFromAnotherMeshRatherThanReinterpretingIt
+      Test #1545: unit.MeshBuilder_RejectsAnElementNamingANodeThatDoesNotExist ...............   Passed    0.25 sec
+        Start 1545: unit.MeshBuilder_RejectsAnElementNamingANodeThatDoesNotExist
+      Test #1634: unit.Meshable_ReportsStalenessRatherThanTheDefectOfAStaleBody ..............   Passed    0.31 sec
+        Start 1634: unit.Meshable_ReportsStalenessRatherThanTheDefectOfAStaleBody
+      Test #1543: unit.MeshBuilder_RejectsARepeatedNodeHandleAndLeavesTheMeshUnchanged .......   Passed    0.27 sec
+        Start 1543: unit.MeshBuilder_RejectsARepeatedNodeHandleAndLeavesTheMeshUnchanged
+      Test #1613: unit.Mesh_RefusesAHandleFromAnotherMeshRatherThanReinterpretingIt ..........   Passed    0.24 sec
+        Start 1613: unit.Mesh_RefusesAHandleFromAnotherMeshRatherThanReinterpretingIt
+      Test #1619: unit.Meshable_AcceptsAMultiSolidBodyAndReportsTheSolidCount ................   Passed    0.29 sec
+        Start 1619: unit.Meshable_AcceptsAMultiSolidBodyAndReportsTheSolidCount
+      Test #1545: unit.MeshBuilder_RejectsAnElementNamingANodeThatDoesNotExist ...............   Passed    0.24 sec
+        Start 1545: unit.MeshBuilder_RejectsAnElementNamingANodeThatDoesNotExist
+      Test #1634: unit.Meshable_ReportsStalenessRatherThanTheDefectOfAStaleBody ..............   Passed    0.24 sec
+        Start 1634: unit.Meshable_ReportsStalenessRatherThanTheDefectOfAStaleBody
+      Test #1543: unit.MeshBuilder_RejectsARepeatedNodeHandleAndLeavesTheMeshUnchanged .......   Passed    0.22 sec
+        Start 1543: unit.MeshBuilder_RejectsARepeatedNodeHandleAndLeavesTheMeshUnchanged
+      Test #1613: unit.Mesh_RefusesAHandleFromAnotherMeshRatherThanReinterpretingIt ..........   Passed    0.26 sec
+        Start 1613: unit.Mesh_RefusesAHandleFromAnotherMeshRatherThanReinterpretingIt
+      Test #1619: unit.Meshable_AcceptsAMultiSolidBodyAndReportsTheSolidCount ................   Passed    0.28 sec
+        Start 1619: unit.Meshable_AcceptsAMultiSolidBodyAndReportsTheSolidCount
+ 42/150 Test #1545: unit.MeshBuilder_RejectsAnElementNamingANodeThatDoesNotExist ...............   Passed    0.21 sec
+        Start 1633: unit.Meshable_RefusesGeometryThatIsStaleBecauseItsProfileMoved
+      Test #1543: unit.MeshBuilder_RejectsARepeatedNodeHandleAndLeavesTheMeshUnchanged .......   Passed    0.20 sec
+        Start 1543: unit.MeshBuilder_RejectsARepeatedNodeHandleAndLeavesTheMeshUnchanged
+      Test #1634: unit.Meshable_ReportsStalenessRatherThanTheDefectOfAStaleBody ..............   Passed    0.27 sec
+        Start 1634: unit.Meshable_ReportsStalenessRatherThanTheDefectOfAStaleBody
+ 43/150 Test #1613: unit.Mesh_RefusesAHandleFromAnotherMeshRatherThanReinterpretingIt ..........   Passed    0.22 sec
+        Start 1629: unit.Meshable_RefusesAnEmptyBodyThatRegenerationNonethelessStored
+ 44/150 Test #1619: unit.Meshable_AcceptsAMultiSolidBodyAndReportsTheSolidCount ................   Passed    0.25 sec
+        Start 1616: unit.Meshable_AHollowTubePreservesItsVoidAndItsAnalyticalVolume
+      Test #1633: unit.Meshable_RefusesGeometryThatIsStaleBecauseItsProfileMoved .............   Passed    0.23 sec
+        Start 1633: unit.Meshable_RefusesGeometryThatIsStaleBecauseItsProfileMoved
+ 45/150 Test #1543: unit.MeshBuilder_RejectsARepeatedNodeHandleAndLeavesTheMeshUnchanged .......   Passed    0.24 sec
+        Start 1617: unit.Meshable_AcceptsACurrentBoxAndReportsItsAnalyticalVolume
+ 46/150 Test #1634: unit.Meshable_ReportsStalenessRatherThanTheDefectOfAStaleBody ..............   Passed    0.22 sec
+        Start 1548: unit.MeshBuilder_RejectsAnElementWithNoRegion
+      Test #1629: unit.Meshable_RefusesAnEmptyBodyThatRegenerationNonethelessStored ..........   Passed    0.24 sec
+        Start 1629: unit.Meshable_RefusesAnEmptyBodyThatRegenerationNonethelessStored
+      Test #1616: unit.Meshable_AHollowTubePreservesItsVoidAndItsAnalyticalVolume ............   Passed    0.25 sec
+        Start 1616: unit.Meshable_AHollowTubePreservesItsVoidAndItsAnalyticalVolume
+      Test #1633: unit.Meshable_RefusesGeometryThatIsStaleBecauseItsProfileMoved .............   Passed    0.26 sec
+        Start 1633: unit.Meshable_RefusesGeometryThatIsStaleBecauseItsProfileMoved
+      Test #1617: unit.Meshable_AcceptsACurrentBoxAndReportsItsAnalyticalVolume ..............   Passed    0.26 sec
+        Start 1617: unit.Meshable_AcceptsACurrentBoxAndReportsItsAnalyticalVolume
+      Test #1548: unit.MeshBuilder_RejectsAnElementWithNoRegion ..............................   Passed    0.28 sec
+        Start 1548: unit.MeshBuilder_RejectsAnElementWithNoRegion
+      Test #1629: unit.Meshable_RefusesAnEmptyBodyThatRegenerationNonethelessStored ..........   Passed    0.25 sec
+        Start 1629: unit.Meshable_RefusesAnEmptyBodyThatRegenerationNonethelessStored
+      Test #1616: unit.Meshable_AHollowTubePreservesItsVoidAndItsAnalyticalVolume ............   Passed    0.24 sec
+        Start 1616: unit.Meshable_AHollowTubePreservesItsVoidAndItsAnalyticalVolume
+      Test #3048: architecture.layering ......................................................   Passed    1.57 sec
+        Start 3048: architecture.layering
+      Test #1633: unit.Meshable_RefusesGeometryThatIsStaleBecauseItsProfileMoved .............   Passed    0.23 sec
+        Start 1633: unit.Meshable_RefusesGeometryThatIsStaleBecauseItsProfileMoved
+      Test #1617: unit.Meshable_AcceptsACurrentBoxAndReportsItsAnalyticalVolume ..............   Passed    0.28 sec
+        Start 1617: unit.Meshable_AcceptsACurrentBoxAndReportsItsAnalyticalVolume
+      Test #1548: unit.MeshBuilder_RejectsAnElementWithNoRegion ..............................   Passed    0.23 sec
+        Start 1548: unit.MeshBuilder_RejectsAnElementWithNoRegion
+      Test #1629: unit.Meshable_RefusesAnEmptyBodyThatRegenerationNonethelessStored ..........   Passed    0.23 sec
+        Start 1629: unit.Meshable_RefusesAnEmptyBodyThatRegenerationNonethelessStored
+      Test #1616: unit.Meshable_AHollowTubePreservesItsVoidAndItsAnalyticalVolume ............   Passed    0.21 sec
+        Start 1616: unit.Meshable_AHollowTubePreservesItsVoidAndItsAnalyticalVolume
+      Test #1633: unit.Meshable_RefusesGeometryThatIsStaleBecauseItsProfileMoved .............   Passed    0.22 sec
+        Start 1633: unit.Meshable_RefusesGeometryThatIsStaleBecauseItsProfileMoved
+      Test #1548: unit.MeshBuilder_RejectsAnElementWithNoRegion ..............................   Passed    0.19 sec
+        Start 1548: unit.MeshBuilder_RejectsAnElementWithNoRegion
+      Test #1617: unit.Meshable_AcceptsACurrentBoxAndReportsItsAnalyticalVolume ..............   Passed    0.24 sec
+        Start 1617: unit.Meshable_AcceptsACurrentBoxAndReportsItsAnalyticalVolume
+      Test #1629: unit.Meshable_RefusesAnEmptyBodyThatRegenerationNonethelessStored ..........   Passed    0.23 sec
+        Start 1629: unit.Meshable_RefusesAnEmptyBodyThatRegenerationNonethelessStored
+      Test #1616: unit.Meshable_AHollowTubePreservesItsVoidAndItsAnalyticalVolume ............   Passed    0.24 sec
+        Start 1616: unit.Meshable_AHollowTubePreservesItsVoidAndItsAnalyticalVolume
+ 47/150 Test #1633: unit.Meshable_RefusesGeometryThatIsStaleBecauseItsProfileMoved .............   Passed    0.24 sec
+        Start 1546: unit.MeshBuilder_RejectsAnElementNamingTheSameNodeTwice
+      Test #1548: unit.MeshBuilder_RejectsAnElementWithNoRegion ..............................   Passed    0.24 sec
+        Start 1548: unit.MeshBuilder_RejectsAnElementWithNoRegion
+ 48/150 Test #1629: unit.Meshable_RefusesAnEmptyBodyThatRegenerationNonethelessStored ..........   Passed    0.22 sec
+        Start 1550: unit.MeshBuilder_RejectsTheInvalidNodeHandle
+      Test #1617: unit.Meshable_AcceptsACurrentBoxAndReportsItsAnalyticalVolume ..............   Passed    0.27 sec
+        Start 1617: unit.Meshable_AcceptsACurrentBoxAndReportsItsAnalyticalVolume
+ 49/150 Test #1616: unit.Meshable_AHollowTubePreservesItsVoidAndItsAnalyticalVolume ............   Passed    0.23 sec
+        Start 1541: unit.MeshBuilder_NeverReordersElementConnectivity
+      Test #1546: unit.MeshBuilder_RejectsAnElementNamingTheSameNodeTwice ....................   Passed    0.22 sec
+        Start 1546: unit.MeshBuilder_RejectsAnElementNamingTheSameNodeTwice
+ 50/150 Test #1548: unit.MeshBuilder_RejectsAnElementWithNoRegion ..............................   Passed    0.21 sec
+        Start 1615: unit.Mesh_TwoNodesAtTheSamePositionStayTwoNodes
+      Test #1550: unit.MeshBuilder_RejectsTheInvalidNodeHandle ...............................   Passed    0.20 sec
+        Start 1550: unit.MeshBuilder_RejectsTheInvalidNodeHandle
+ 51/150 Test #1617: unit.Meshable_AcceptsACurrentBoxAndReportsItsAnalyticalVolume ..............   Passed    0.29 sec
+      Test #1541: unit.MeshBuilder_NeverReordersElementConnectivity ..........................   Passed    0.22 sec
+        Start 1541: unit.MeshBuilder_NeverReordersElementConnectivity
+        Start 1635: unit.Meshable_StalenessIsReportedBeforeTheOldBodyIsInspected
+      Test #1546: unit.MeshBuilder_RejectsAnElementNamingTheSameNodeTwice ....................   Passed    0.24 sec
+        Start 1546: unit.MeshBuilder_RejectsAnElementNamingTheSameNodeTwice
+      Test #1550: unit.MeshBuilder_RejectsTheInvalidNodeHandle ...............................   Passed    0.25 sec
+        Start 1550: unit.MeshBuilder_RejectsTheInvalidNodeHandle
+      Test #1615: unit.Mesh_TwoNodesAtTheSamePositionStayTwoNodes ............................   Passed    0.30 sec
+        Start 1615: unit.Mesh_TwoNodesAtTheSamePositionStayTwoNodes
+      Test #1541: unit.MeshBuilder_NeverReordersElementConnectivity ..........................   Passed    0.21 sec
+        Start 1541: unit.MeshBuilder_NeverReordersElementConnectivity
+      Test #1635: unit.Meshable_StalenessIsReportedBeforeTheOldBodyIsInspected ...............   Passed    0.22 sec
+        Start 1635: unit.Meshable_StalenessIsReportedBeforeTheOldBodyIsInspected
+      Test #1546: unit.MeshBuilder_RejectsAnElementNamingTheSameNodeTwice ....................   Passed    0.23 sec
+        Start 1546: unit.MeshBuilder_RejectsAnElementNamingTheSameNodeTwice
+      Test #1550: unit.MeshBuilder_RejectsTheInvalidNodeHandle ...............................   Passed    0.21 sec
+        Start 1550: unit.MeshBuilder_RejectsTheInvalidNodeHandle
+      Test #1615: unit.Mesh_TwoNodesAtTheSamePositionStayTwoNodes ............................   Passed    0.21 sec
+        Start 1615: unit.Mesh_TwoNodesAtTheSamePositionStayTwoNodes
+      Test #1541: unit.MeshBuilder_NeverReordersElementConnectivity ..........................   Passed    0.19 sec
+        Start 1541: unit.MeshBuilder_NeverReordersElementConnectivity
+      Test #1546: unit.MeshBuilder_RejectsAnElementNamingTheSameNodeTwice ....................   Passed    0.19 sec
+        Start 1546: unit.MeshBuilder_RejectsAnElementNamingTheSameNodeTwice
+      Test #1635: unit.Meshable_StalenessIsReportedBeforeTheOldBodyIsInspected ...............   Passed    0.26 sec
+        Start 1635: unit.Meshable_StalenessIsReportedBeforeTheOldBodyIsInspected
+      Test #3048: architecture.layering ......................................................   Passed    1.42 sec
+        Start 3048: architecture.layering
+      Test #1550: unit.MeshBuilder_RejectsTheInvalidNodeHandle ...............................   Passed    0.20 sec
+        Start 1550: unit.MeshBuilder_RejectsTheInvalidNodeHandle
+      Test #1615: unit.Mesh_TwoNodesAtTheSamePositionStayTwoNodes ............................   Passed    0.20 sec
+        Start 1615: unit.Mesh_TwoNodesAtTheSamePositionStayTwoNodes
+      Test #1541: unit.MeshBuilder_NeverReordersElementConnectivity ..........................   Passed    0.23 sec
+        Start 1541: unit.MeshBuilder_NeverReordersElementConnectivity
+ 52/150 Test #1546: unit.MeshBuilder_RejectsAnElementNamingTheSameNodeTwice ....................   Passed    0.21 sec
+        Start 1632: unit.Meshable_RefusesEveryGeometryWhileAConfigurationOverridesAParameter
+ 53/150 Test #1550: unit.MeshBuilder_RejectsTheInvalidNodeHandle ...............................   Passed    0.20 sec
+        Start 1575: unit.MeshIds_AreOrderedAndComparableWithinTheirOwnKind
+      Test #1635: unit.Meshable_StalenessIsReportedBeforeTheOldBodyIsInspected ...............   Passed    0.29 sec
+        Start 1635: unit.Meshable_StalenessIsReportedBeforeTheOldBodyIsInspected
+      Test #1615: unit.Mesh_TwoNodesAtTheSamePositionStayTwoNodes ............................   Passed    0.23 sec
+        Start 1615: unit.Mesh_TwoNodesAtTheSamePositionStayTwoNodes
+ 54/150 Test #1541: unit.MeshBuilder_NeverReordersElementConnectivity ..........................   Passed    0.22 sec
+        Start 1618: unit.Meshable_AcceptsACylinderAndReportsItsAnalyticalVolume
+      Test #1632: unit.Meshable_RefusesEveryGeometryWhileAConfigurationOverridesAParameter ...   Passed    0.28 sec
+        Start 1632: unit.Meshable_RefusesEveryGeometryWhileAConfigurationOverridesAParameter
+      Test #1575: unit.MeshIds_AreOrderedAndComparableWithinTheirOwnKind .....................   Passed    0.24 sec
+        Start 1575: unit.MeshIds_AreOrderedAndComparableWithinTheirOwnKind
+      Test #1635: unit.Meshable_StalenessIsReportedBeforeTheOldBodyIsInspected ...............   Passed    0.24 sec
+        Start 1635: unit.Meshable_StalenessIsReportedBeforeTheOldBodyIsInspected
+ 55/150 Test #1615: unit.Mesh_TwoNodesAtTheSamePositionStayTwoNodes ............................   Passed    0.24 sec
+        Start 1621: unit.Meshable_AcceptsGeometryUnderAConfigurationThatOverridesNothing
+      Test #1618: unit.Meshable_AcceptsACylinderAndReportsItsAnalyticalVolume ................   Passed    0.28 sec
+        Start 1618: unit.Meshable_AcceptsACylinderAndReportsItsAnalyticalVolume
+      Test #1632: unit.Meshable_RefusesEveryGeometryWhileAConfigurationOverridesAParameter ...   Passed    0.27 sec
+        Start 1632: unit.Meshable_RefusesEveryGeometryWhileAConfigurationOverridesAParameter
+      Test #1575: unit.MeshIds_AreOrderedAndComparableWithinTheirOwnKind .....................   Passed    0.25 sec
+        Start 1575: unit.MeshIds_AreOrderedAndComparableWithinTheirOwnKind
+ 56/150 Test #1635: unit.Meshable_StalenessIsReportedBeforeTheOldBodyIsInspected ...............   Passed    0.25 sec
+        Start 1614: unit.Mesh_ResolvesSparseHandlesByIdentityAndNeverByPosition
+      Test #1621: unit.Meshable_AcceptsGeometryUnderAConfigurationThatOverridesNothing .......   Passed    0.26 sec
+        Start 1621: unit.Meshable_AcceptsGeometryUnderAConfigurationThatOverridesNothing
+      Test #1618: unit.Meshable_AcceptsACylinderAndReportsItsAnalyticalVolume ................   Passed    0.24 sec
+        Start 1618: unit.Meshable_AcceptsACylinderAndReportsItsAnalyticalVolume
+      Test #1632: unit.Meshable_RefusesEveryGeometryWhileAConfigurationOverridesAParameter ...   Passed    0.25 sec
+        Start 1632: unit.Meshable_RefusesEveryGeometryWhileAConfigurationOverridesAParameter
+      Test #1614: unit.Mesh_ResolvesSparseHandlesByIdentityAndNeverByPosition ................   Passed    0.23 sec
+        Start 1614: unit.Mesh_ResolvesSparseHandlesByIdentityAndNeverByPosition
+      Test #1575: unit.MeshIds_AreOrderedAndComparableWithinTheirOwnKind .....................   Passed    0.27 sec
+        Start 1575: unit.MeshIds_AreOrderedAndComparableWithinTheirOwnKind
+      Test #1621: unit.Meshable_AcceptsGeometryUnderAConfigurationThatOverridesNothing .......   Passed    0.24 sec
+        Start 1621: unit.Meshable_AcceptsGeometryUnderAConfigurationThatOverridesNothing
+ 57/150 Test #2785: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly .....................   Passed    7.30 sec
+        Start 1628: unit.Meshable_RefusesAFeatureThatHasNeverBeenRegenerated
+      Test #1618: unit.Meshable_AcceptsACylinderAndReportsItsAnalyticalVolume ................   Passed    0.23 sec
+        Start 1618: unit.Meshable_AcceptsACylinderAndReportsItsAnalyticalVolume
+      Test #1614: unit.Mesh_ResolvesSparseHandlesByIdentityAndNeverByPosition ................   Passed    0.20 sec
+        Start 1614: unit.Mesh_ResolvesSparseHandlesByIdentityAndNeverByPosition
+      Test #1575: unit.MeshIds_AreOrderedAndComparableWithinTheirOwnKind .....................   Passed    0.23 sec
+        Start 1575: unit.MeshIds_AreOrderedAndComparableWithinTheirOwnKind
+      Test #1632: unit.Meshable_RefusesEveryGeometryWhileAConfigurationOverridesAParameter ...   Passed    0.29 sec
+        Start 1632: unit.Meshable_RefusesEveryGeometryWhileAConfigurationOverridesAParameter
+      Test #1621: unit.Meshable_AcceptsGeometryUnderAConfigurationThatOverridesNothing .......   Passed    0.25 sec
+        Start 1621: unit.Meshable_AcceptsGeometryUnderAConfigurationThatOverridesNothing
+      Test #1628: unit.Meshable_RefusesAFeatureThatHasNeverBeenRegenerated ...................   Passed    0.25 sec
+        Start 1628: unit.Meshable_RefusesAFeatureThatHasNeverBeenRegenerated
+      Test #1618: unit.Meshable_AcceptsACylinderAndReportsItsAnalyticalVolume ................   Passed    0.23 sec
+        Start 1618: unit.Meshable_AcceptsACylinderAndReportsItsAnalyticalVolume
+ 58/150 Test #3048: architecture.layering ......................................................   Passed    1.38 sec
+        Start 1630: unit.Meshable_RefusesAnObjectThatDoesNotExist
+      Test #1614: unit.Mesh_ResolvesSparseHandlesByIdentityAndNeverByPosition ................   Passed    0.25 sec
+        Start 1614: unit.Mesh_ResolvesSparseHandlesByIdentityAndNeverByPosition
+ 59/150 Test #1575: unit.MeshIds_AreOrderedAndComparableWithinTheirOwnKind .....................   Passed    0.22 sec
+        Start 1612: unit.Mesh_EnumeratesNodesAndElementsInHandleOrderEveryTime
+ 60/150 Test #1632: unit.Meshable_RefusesEveryGeometryWhileAConfigurationOverridesAParameter ...   Passed    0.24 sec
+        Start 1611: unit.Mesh_ElementTypeIsReportedPerElementAndSharesOneIdentitySpace
+      Test #1621: unit.Meshable_AcceptsGeometryUnderAConfigurationThatOverridesNothing .......   Passed    0.25 sec
+        Start 1621: unit.Meshable_AcceptsGeometryUnderAConfigurationThatOverridesNothing
+      Test #1628: unit.Meshable_RefusesAFeatureThatHasNeverBeenRegenerated ...................   Passed    0.24 sec
+        Start 1628: unit.Meshable_RefusesAFeatureThatHasNeverBeenRegenerated
+ 61/150 Test #1618: unit.Meshable_AcceptsACylinderAndReportsItsAnalyticalVolume ................   Passed    0.26 sec
+        Start 1624: unit.Meshable_KeepsABodyWhereItIsInModelSpace
+      Test #1614: unit.Mesh_ResolvesSparseHandlesByIdentityAndNeverByPosition ................   Passed    0.19 sec
+        Start 1614: unit.Mesh_ResolvesSparseHandlesByIdentityAndNeverByPosition
+      Test #1630: unit.Meshable_RefusesAnObjectThatDoesNotExist ..............................   Passed    0.26 sec
+        Start 1630: unit.Meshable_RefusesAnObjectThatDoesNotExist
+      Test #1612: unit.Mesh_EnumeratesNodesAndElementsInHandleOrderEveryTime .................   Passed    0.24 sec
+        Start 1612: unit.Mesh_EnumeratesNodesAndElementsInHandleOrderEveryTime
+      Test #1611: unit.Mesh_ElementTypeIsReportedPerElementAndSharesOneIdentitySpace .........   Passed    0.23 sec
+        Start 1611: unit.Mesh_ElementTypeIsReportedPerElementAndSharesOneIdentitySpace
+      Test #1628: unit.Meshable_RefusesAFeatureThatHasNeverBeenRegenerated ...................   Passed    0.22 sec
+        Start 1628: unit.Meshable_RefusesAFeatureThatHasNeverBeenRegenerated
+ 62/150 Test #1621: unit.Meshable_AcceptsGeometryUnderAConfigurationThatOverridesNothing .......   Passed    0.26 sec
+        Start 1627: unit.Meshable_RefusesAFeatureBlockedByAFailedUpstreamSketch
+      Test #1624: unit.Meshable_KeepsABodyWhereItIsInModelSpace ..............................   Passed    0.23 sec
+        Start 1624: unit.Meshable_KeepsABodyWhereItIsInModelSpace
+ 63/150 Test #1614: unit.Mesh_ResolvesSparseHandlesByIdentityAndNeverByPosition ................   Passed    0.21 sec
+        Start 1542: unit.MeshBuilder_RejectsANonFiniteCoordinateOnEveryAxis
+      Test #1630: unit.Meshable_RefusesAnObjectThatDoesNotExist ..............................   Passed    0.22 sec
+        Start 1630: unit.Meshable_RefusesAnObjectThatDoesNotExist
+      Test #1612: unit.Mesh_EnumeratesNodesAndElementsInHandleOrderEveryTime .................   Passed    0.22 sec
+        Start 1612: unit.Mesh_EnumeratesNodesAndElementsInHandleOrderEveryTime
+      Test #1611: unit.Mesh_ElementTypeIsReportedPerElementAndSharesOneIdentitySpace .........   Passed    0.24 sec
+        Start 1611: unit.Mesh_ElementTypeIsReportedPerElementAndSharesOneIdentitySpace
+      Test #1628: unit.Meshable_RefusesAFeatureThatHasNeverBeenRegenerated ...................   Passed    0.21 sec
+        Start 1628: unit.Meshable_RefusesAFeatureThatHasNeverBeenRegenerated
+      Test #1627: unit.Meshable_RefusesAFeatureBlockedByAFailedUpstreamSketch ................   Passed    0.22 sec
+        Start 1627: unit.Meshable_RefusesAFeatureBlockedByAFailedUpstreamSketch
+      Test #1630: unit.Meshable_RefusesAnObjectThatDoesNotExist ..............................   Passed    0.21 sec
+        Start 1630: unit.Meshable_RefusesAnObjectThatDoesNotExist
+      Test #1542: unit.MeshBuilder_RejectsANonFiniteCoordinateOnEveryAxis ....................   Passed    0.25 sec
+        Start 1542: unit.MeshBuilder_RejectsANonFiniteCoordinateOnEveryAxis
+      Test #1624: unit.Meshable_KeepsABodyWhereItIsInModelSpace ..............................   Passed    0.29 sec
+        Start 1624: unit.Meshable_KeepsABodyWhereItIsInModelSpace
+      Test #1612: unit.Mesh_EnumeratesNodesAndElementsInHandleOrderEveryTime .................   Passed    0.22 sec
+        Start 1612: unit.Mesh_EnumeratesNodesAndElementsInHandleOrderEveryTime
+      Test #1627: unit.Meshable_RefusesAFeatureBlockedByAFailedUpstreamSketch ................   Passed    0.21 sec
+        Start 1627: unit.Meshable_RefusesAFeatureBlockedByAFailedUpstreamSketch
+ 64/150 Test #1628: unit.Meshable_RefusesAFeatureThatHasNeverBeenRegenerated ...................   Passed    0.26 sec
+      Test #1611: unit.Mesh_ElementTypeIsReportedPerElementAndSharesOneIdentitySpace .........   Passed    0.27 sec
+        Start 1611: unit.Mesh_ElementTypeIsReportedPerElementAndSharesOneIdentitySpace
+        Start 1549: unit.MeshBuilder_RejectsAnOutOfOrderNodeHandle
+      Test #1630: unit.Meshable_RefusesAnObjectThatDoesNotExist ..............................   Passed    0.22 sec
+        Start 1630: unit.Meshable_RefusesAnObjectThatDoesNotExist
+      Test #1612: unit.Mesh_EnumeratesNodesAndElementsInHandleOrderEveryTime .................   Passed    0.23 sec
+        Start 1612: unit.Mesh_EnumeratesNodesAndElementsInHandleOrderEveryTime
+      Test #1624: unit.Meshable_KeepsABodyWhereItIsInModelSpace ..............................   Passed    0.27 sec
+        Start 1624: unit.Meshable_KeepsABodyWhereItIsInModelSpace
+      Test #1542: unit.MeshBuilder_RejectsANonFiniteCoordinateOnEveryAxis ....................   Passed    0.31 sec
+        Start 1542: unit.MeshBuilder_RejectsANonFiniteCoordinateOnEveryAxis
+      Test #1627: unit.Meshable_RefusesAFeatureBlockedByAFailedUpstreamSketch ................   Passed    0.28 sec
+        Start 1627: unit.Meshable_RefusesAFeatureBlockedByAFailedUpstreamSketch
+ 65/150 Test #1630: unit.Meshable_RefusesAnObjectThatDoesNotExist ..............................   Passed    0.23 sec
+      Test #1549: unit.MeshBuilder_RejectsAnOutOfOrderNodeHandle .............................   Passed    0.25 sec
+        Start 1549: unit.MeshBuilder_RejectsAnOutOfOrderNodeHandle
+      Test #1611: unit.Mesh_ElementTypeIsReportedPerElementAndSharesOneIdentitySpace .........   Passed    0.30 sec
+        Start 1611: unit.Mesh_ElementTypeIsReportedPerElementAndSharesOneIdentitySpace
+        Start 1547: unit.MeshBuilder_RejectsAnElementWithAnUnderfilledConnectivityList
+ 66/150 Test #1612: unit.Mesh_EnumeratesNodesAndElementsInHandleOrderEveryTime .................   Passed    0.22 sec
+        Start 1576: unit.MeshIds_DefaultHandleIsInvalidAndZeroIsNeverAllocated
+      Test #1624: unit.Meshable_KeepsABodyWhereItIsInModelSpace ..............................   Passed    0.26 sec
+        Start 1624: unit.Meshable_KeepsABodyWhereItIsInModelSpace
+      Test #1542: unit.MeshBuilder_RejectsANonFiniteCoordinateOnEveryAxis ....................   Passed    0.26 sec
+        Start 1542: unit.MeshBuilder_RejectsANonFiniteCoordinateOnEveryAxis
+      Test #1549: unit.MeshBuilder_RejectsAnOutOfOrderNodeHandle .............................   Passed    0.20 sec
+        Start 1549: unit.MeshBuilder_RejectsAnOutOfOrderNodeHandle
+      Test #1627: unit.Meshable_RefusesAFeatureBlockedByAFailedUpstreamSketch ................   Passed    0.24 sec
+        Start 1627: unit.Meshable_RefusesAFeatureBlockedByAFailedUpstreamSketch
+ 67/150 Test #1611: unit.Mesh_ElementTypeIsReportedPerElementAndSharesOneIdentitySpace .........   Passed    0.24 sec
+        Start 1610: unit.Mesh_CopyKeepsTheSameTopologyAndHandlesAndIsNotARemesh
+      Test #1547: unit.MeshBuilder_RejectsAnElementWithAnUnderfilledConnectivityList .........   Passed    0.25 sec
+        Start 1547: unit.MeshBuilder_RejectsAnElementWithAnUnderfilledConnectivityList
+      Test #1576: unit.MeshIds_DefaultHandleIsInvalidAndZeroIsNeverAllocated .................   Passed    0.24 sec
+        Start 1576: unit.MeshIds_DefaultHandleIsInvalidAndZeroIsNeverAllocated
+ 68/150 Test #1624: unit.Meshable_KeepsABodyWhereItIsInModelSpace ..............................   Passed    0.20 sec
+      Test #1542: unit.MeshBuilder_RejectsANonFiniteCoordinateOnEveryAxis ....................   Passed    0.19 sec
+        Start 1542: unit.MeshBuilder_RejectsANonFiniteCoordinateOnEveryAxis
+        Start 1592: unit.MeshStamp_IsUniquePerMeshAndDistinguishesGenerations
+      Test #1549: unit.MeshBuilder_RejectsAnOutOfOrderNodeHandle .............................   Passed    0.23 sec
+        Start 1549: unit.MeshBuilder_RejectsAnOutOfOrderNodeHandle
+ 69/150 Test #1627: unit.Meshable_RefusesAFeatureBlockedByAFailedUpstreamSketch ................   Passed    0.23 sec
+        Start 1622: unit.Meshable_ConfigurationGuardIsCheckedBeforeAnythingElse
+      Test #1610: unit.Mesh_CopyKeepsTheSameTopologyAndHandlesAndIsNotARemesh ................   Passed    0.22 sec
+        Start 1610: unit.Mesh_CopyKeepsTheSameTopologyAndHandlesAndIsNotARemesh
+      Test #1547: unit.MeshBuilder_RejectsAnElementWithAnUnderfilledConnectivityList .........   Passed    0.22 sec
+        Start 1547: unit.MeshBuilder_RejectsAnElementWithAnUnderfilledConnectivityList
+      Test #1576: unit.MeshIds_DefaultHandleIsInvalidAndZeroIsNeverAllocated .................   Passed    0.21 sec
+        Start 1576: unit.MeshIds_DefaultHandleIsInvalidAndZeroIsNeverAllocated
+ 70/150 Test #1542: unit.MeshBuilder_RejectsANonFiniteCoordinateOnEveryAxis ....................   Passed    0.21 sec
+        Start 1631: unit.Meshable_RefusesAnObjectThatMakesNoBodyAndSaysSoDistinctly
+      Test #1592: unit.MeshStamp_IsUniquePerMeshAndDistinguishesGenerations ..................   Passed    0.22 sec
+        Start 1592: unit.MeshStamp_IsUniquePerMeshAndDistinguishesGenerations
+      Test #1622: unit.Meshable_ConfigurationGuardIsCheckedBeforeAnythingElse ................   Passed    0.24 sec
+        Start 1622: unit.Meshable_ConfigurationGuardIsCheckedBeforeAnythingElse
+      Test #1547: unit.MeshBuilder_RejectsAnElementWithAnUnderfilledConnectivityList .........   Passed    0.21 sec
+        Start 1547: unit.MeshBuilder_RejectsAnElementWithAnUnderfilledConnectivityList
+      Test #1549: unit.MeshBuilder_RejectsAnOutOfOrderNodeHandle .............................   Passed    0.30 sec
+        Start 1549: unit.MeshBuilder_RejectsAnOutOfOrderNodeHandle
+      Test #1610: unit.Mesh_CopyKeepsTheSameTopologyAndHandlesAndIsNotARemesh ................   Passed    0.27 sec
+        Start 1610: unit.Mesh_CopyKeepsTheSameTopologyAndHandlesAndIsNotARemesh
+      Test #1576: unit.MeshIds_DefaultHandleIsInvalidAndZeroIsNeverAllocated .................   Passed    0.25 sec
+        Start 1576: unit.MeshIds_DefaultHandleIsInvalidAndZeroIsNeverAllocated
+      Test #1631: unit.Meshable_RefusesAnObjectThatMakesNoBodyAndSaysSoDistinctly ............   Passed    0.25 sec
+        Start 1631: unit.Meshable_RefusesAnObjectThatMakesNoBodyAndSaysSoDistinctly
+      Test #1592: unit.MeshStamp_IsUniquePerMeshAndDistinguishesGenerations ..................   Passed    0.24 sec
+        Start 1592: unit.MeshStamp_IsUniquePerMeshAndDistinguishesGenerations
+      Test #1547: unit.MeshBuilder_RejectsAnElementWithAnUnderfilledConnectivityList .........   Passed    0.21 sec
+        Start 1547: unit.MeshBuilder_RejectsAnElementWithAnUnderfilledConnectivityList
+      Test #1622: unit.Meshable_ConfigurationGuardIsCheckedBeforeAnythingElse ................   Passed    0.25 sec
+        Start 1622: unit.Meshable_ConfigurationGuardIsCheckedBeforeAnythingElse
+      Test #1610: unit.Mesh_CopyKeepsTheSameTopologyAndHandlesAndIsNotARemesh ................   Passed    0.21 sec
+        Start 1610: unit.Mesh_CopyKeepsTheSameTopologyAndHandlesAndIsNotARemesh
+ 71/150 Test #1549: unit.MeshBuilder_RejectsAnOutOfOrderNodeHandle .............................   Passed    0.25 sec
+        Start 3049: architecture.checker.valid
+      Test #1576: unit.MeshIds_DefaultHandleIsInvalidAndZeroIsNeverAllocated .................   Passed    0.23 sec
+        Start 1576: unit.MeshIds_DefaultHandleIsInvalidAndZeroIsNeverAllocated
+      Test #1631: unit.Meshable_RefusesAnObjectThatMakesNoBodyAndSaysSoDistinctly ............   Passed    0.26 sec
+        Start 1631: unit.Meshable_RefusesAnObjectThatMakesNoBodyAndSaysSoDistinctly
+      Test #1592: unit.MeshStamp_IsUniquePerMeshAndDistinguishesGenerations ..................   Passed    0.26 sec
+        Start 1592: unit.MeshStamp_IsUniquePerMeshAndDistinguishesGenerations
+ 72/150 Test #1547: unit.MeshBuilder_RejectsAnElementWithAnUnderfilledConnectivityList .........   Passed    0.22 sec
+        Start 3051: architecture.checker.examples-occt-leak
+      Test #1622: unit.Meshable_ConfigurationGuardIsCheckedBeforeAnythingElse ................   Passed    0.23 sec
+        Start 1622: unit.Meshable_ConfigurationGuardIsCheckedBeforeAnythingElse
+      Test #1610: unit.Mesh_CopyKeepsTheSameTopologyAndHandlesAndIsNotARemesh ................   Passed    0.25 sec
+        Start 1610: unit.Mesh_CopyKeepsTheSameTopologyAndHandlesAndIsNotARemesh
+ 73/150 Test #1576: unit.MeshIds_DefaultHandleIsInvalidAndZeroIsNeverAllocated .................   Passed    0.23 sec
+        Start 3053: architecture.checker.layer-violation
+      Test #1631: unit.Meshable_RefusesAnObjectThatMakesNoBodyAndSaysSoDistinctly ............   Passed    0.35 sec
+        Start 1631: unit.Meshable_RefusesAnObjectThatMakesNoBodyAndSaysSoDistinctly
+      Test #1592: unit.MeshStamp_IsUniquePerMeshAndDistinguishesGenerations ..................   Passed    0.36 sec
+        Start 1592: unit.MeshStamp_IsUniquePerMeshAndDistinguishesGenerations
+      Test #1622: unit.Meshable_ConfigurationGuardIsCheckedBeforeAnythingElse ................   Passed    0.29 sec
+        Start 1622: unit.Meshable_ConfigurationGuardIsCheckedBeforeAnythingElse
+      Test #3051: architecture.checker.examples-occt-leak ....................................   Passed    0.33 sec
+        Start 3051: architecture.checker.examples-occt-leak
+      Test #3049: architecture.checker.valid .................................................   Passed    0.51 sec
+        Start 3049: architecture.checker.valid
+ 74/150 Test #1610: unit.Mesh_CopyKeepsTheSameTopologyAndHandlesAndIsNotARemesh ................   Passed    0.30 sec
+        Start 3050: architecture.checker.occt-leak
+ 75/150 Test #1592: unit.MeshStamp_IsUniquePerMeshAndDistinguishesGenerations ..................   Passed    0.32 sec
+        Start 3052: architecture.checker.qt-leak
+      Test #1631: unit.Meshable_RefusesAnObjectThatMakesNoBodyAndSaysSoDistinctly ............   Passed    0.38 sec
+        Start 1631: unit.Meshable_RefusesAnObjectThatMakesNoBodyAndSaysSoDistinctly
+ 76/150 Test #1622: unit.Meshable_ConfigurationGuardIsCheckedBeforeAnythingElse ................   Passed    0.34 sec
+      Test #3053: architecture.checker.layer-violation .......................................   Passed    0.57 sec
+        Start 3053: architecture.checker.layer-violation
+        Start 3054: architecture.checker.drawing-layer-violation
+      Test #3049: architecture.checker.valid .................................................   Passed    0.37 sec
+        Start 3049: architecture.checker.valid
+      Test #3051: architecture.checker.examples-occt-leak ....................................   Passed    0.43 sec
+        Start 3051: architecture.checker.examples-occt-leak
+      Test #3050: architecture.checker.occt-leak .............................................   Passed    0.52 sec
+        Start 3050: architecture.checker.occt-leak
+ 77/150 Test #1631: unit.Meshable_RefusesAnObjectThatMakesNoBodyAndSaysSoDistinctly ............   Passed    0.42 sec
+        Start 3057: architecture.checker.private-include
+      Test #3052: architecture.checker.qt-leak ...............................................   Passed    0.51 sec
+        Start 3052: architecture.checker.qt-leak
+      Test #3051: architecture.checker.examples-occt-leak ....................................   Passed    0.40 sec
+        Start 3051: architecture.checker.examples-occt-leak
+      Test #3054: architecture.checker.drawing-layer-violation ...............................   Passed    0.50 sec
+        Start 3054: architecture.checker.drawing-layer-violation
+      Test #3053: architecture.checker.layer-violation .......................................   Passed    0.52 sec
+        Start 3053: architecture.checker.layer-violation
+      Test #3049: architecture.checker.valid .................................................   Passed    0.69 sec
+        Start 3049: architecture.checker.valid
+      Test #3050: architecture.checker.occt-leak .............................................   Passed    0.55 sec
+        Start 3050: architecture.checker.occt-leak
+ 78/150 Test #3210: compile_fail.viewer.presentation-id-as-object-id ...........................   Passed    8.74 sec
+        Start 3211: compile_fail.viewer.object-id-as-presentation-id
+      Test #3051: architecture.checker.examples-occt-leak ....................................   Passed    0.41 sec
+        Start 3051: architecture.checker.examples-occt-leak
+      Test #3057: architecture.checker.private-include .......................................   Passed    0.54 sec
+        Start 3057: architecture.checker.private-include
+      Test #3054: architecture.checker.drawing-layer-violation ...............................   Passed    0.48 sec
+        Start 3054: architecture.checker.drawing-layer-violation
+      Test #3052: architecture.checker.qt-leak ...............................................   Passed    0.54 sec
+        Start 3052: architecture.checker.qt-leak
+      Test #3053: architecture.checker.layer-violation .......................................   Passed    0.49 sec
+        Start 3053: architecture.checker.layer-violation
+      Test #3050: architecture.checker.occt-leak .............................................   Passed    0.41 sec
+        Start 3050: architecture.checker.occt-leak
+      Test #3049: architecture.checker.valid .................................................   Passed    0.50 sec
+        Start 3049: architecture.checker.valid
+ 79/150 Test #3051: architecture.checker.examples-occt-leak ....................................   Passed    0.39 sec
+        Start 1551: unit.MeshDisplay_AStaleMeshDoesNotLookLikeACurrentOne
+      Test #3057: architecture.checker.private-include .......................................   Passed    0.42 sec
+        Start 3057: architecture.checker.private-include
+      Test #3054: architecture.checker.drawing-layer-violation ...............................   Passed    0.42 sec
+        Start 3054: architecture.checker.drawing-layer-violation
+      Test #3052: architecture.checker.qt-leak ...............................................   Passed    0.42 sec
+        Start 3052: architecture.checker.qt-leak
+      Test #3053: architecture.checker.layer-violation .......................................   Passed    0.42 sec
+        Start 3053: architecture.checker.layer-violation
+      Test #3050: architecture.checker.occt-leak .............................................   Passed    0.45 sec
+        Start 3050: architecture.checker.occt-leak
+ 80/150 Test #3049: architecture.checker.valid .................................................   Passed    0.50 sec
+        Start 1552: unit.MeshDisplay_DrawsAnEngineeringMeshIntoTheView
+      Test #3054: architecture.checker.drawing-layer-violation ...............................   Passed    0.42 sec
+        Start 3054: architecture.checker.drawing-layer-violation
+      Test #3057: architecture.checker.private-include .......................................   Passed    0.47 sec
+        Start 3057: architecture.checker.private-include
+ 81/150 Test #3053: architecture.checker.layer-violation .......................................   Passed    0.41 sec
+        Start 1553: unit.MeshDisplay_HidingTheMeshLeavesTheCadBodyAndViceVersa
+      Test #3052: architecture.checker.qt-leak ...............................................   Passed    0.47 sec
+        Start 3052: architecture.checker.qt-leak
+ 82/150 Test #3050: architecture.checker.occt-leak .............................................   Passed    0.44 sec
+        Start 1554: unit.MeshDisplay_HighlightingChangesTheImageAndNotTheMesh
+ 83/150 Test #3054: architecture.checker.drawing-layer-violation ...............................   Passed    0.35 sec
+        Start 1555: unit.MeshDisplay_InteriorInspectionDrawsTheChosenTetrahedraOnly
+      Test #3057: architecture.checker.private-include .......................................   Passed    0.37 sec
+        Start 3057: architecture.checker.private-include
+ 84/150 Test #3052: architecture.checker.qt-leak ...............................................   Passed    0.33 sec
+        Start 1556: unit.MeshDisplay_IsUnaffectedByTheCadDisplayTessellation
+ 85/150 Test #3057: architecture.checker.private-include .......................................   Passed    0.54 sec
+        Start 1557: unit.MeshDisplay_PickingAMeshFindsNothingWhereThereIsNoMesh
+      Test #1551: unit.MeshDisplay_AStaleMeshDoesNotLookLikeACurrentOne ......................   Passed    1.79 sec
+        Start 1551: unit.MeshDisplay_AStaleMeshDoesNotLookLikeACurrentOne
+      Test #1556: unit.MeshDisplay_IsUnaffectedByTheCadDisplayTessellation ...................   Passed    1.11 sec
+        Start 1556: unit.MeshDisplay_IsUnaffectedByTheCadDisplayTessellation
+      Test #1552: unit.MeshDisplay_DrawsAnEngineeringMeshIntoTheView .........................   Passed    1.81 sec
+        Start 1552: unit.MeshDisplay_DrawsAnEngineeringMeshIntoTheView
+      Test #1553: unit.MeshDisplay_HidingTheMeshLeavesTheCadBodyAndViceVersa .................   Passed    2.08 sec
+        Start 1553: unit.MeshDisplay_HidingTheMeshLeavesTheCadBodyAndViceVersa
+      Test #1554: unit.MeshDisplay_HighlightingChangesTheImageAndNotTheMesh ..................   Passed    1.96 sec
+        Start 1554: unit.MeshDisplay_HighlightingChangesTheImageAndNotTheMesh
+      Test #1555: unit.MeshDisplay_InteriorInspectionDrawsTheChosenTetrahedraOnly ............   Passed    2.00 sec
+        Start 1555: unit.MeshDisplay_InteriorInspectionDrawsTheChosenTetrahedraOnly
+      Test #1557: unit.MeshDisplay_PickingAMeshFindsNothingWhereThereIsNoMesh ................   Passed    1.52 sec
+        Start 1557: unit.MeshDisplay_PickingAMeshFindsNothingWhereThereIsNoMesh
+      Test #1556: unit.MeshDisplay_IsUnaffectedByTheCadDisplayTessellation ...................   Passed    0.98 sec
+        Start 1556: unit.MeshDisplay_IsUnaffectedByTheCadDisplayTessellation
+      Test #1551: unit.MeshDisplay_AStaleMeshDoesNotLookLikeACurrentOne ......................   Passed    1.59 sec
+        Start 1551: unit.MeshDisplay_AStaleMeshDoesNotLookLikeACurrentOne
+      Test #1552: unit.MeshDisplay_DrawsAnEngineeringMeshIntoTheView .........................   Passed    1.43 sec
+        Start 1552: unit.MeshDisplay_DrawsAnEngineeringMeshIntoTheView
+      Test #1556: unit.MeshDisplay_IsUnaffectedByTheCadDisplayTessellation ...................   Passed    0.91 sec
+        Start 1556: unit.MeshDisplay_IsUnaffectedByTheCadDisplayTessellation
+      Test #1553: unit.MeshDisplay_HidingTheMeshLeavesTheCadBodyAndViceVersa .................   Passed    1.62 sec
+        Start 1553: unit.MeshDisplay_HidingTheMeshLeavesTheCadBodyAndViceVersa
+      Test #1554: unit.MeshDisplay_HighlightingChangesTheImageAndNotTheMesh ..................   Passed    1.59 sec
+        Start 1554: unit.MeshDisplay_HighlightingChangesTheImageAndNotTheMesh
+      Test #1557: unit.MeshDisplay_PickingAMeshFindsNothingWhereThereIsNoMesh ................   Passed    1.39 sec
+        Start 1557: unit.MeshDisplay_PickingAMeshFindsNothingWhereThereIsNoMesh
+      Test #1555: unit.MeshDisplay_InteriorInspectionDrawsTheChosenTetrahedraOnly ............   Passed    1.54 sec
+        Start 1555: unit.MeshDisplay_InteriorInspectionDrawsTheChosenTetrahedraOnly
+      Test #1556: unit.MeshDisplay_IsUnaffectedByTheCadDisplayTessellation ...................   Passed    0.85 sec
+        Start 1556: unit.MeshDisplay_IsUnaffectedByTheCadDisplayTessellation
+      Test #1551: unit.MeshDisplay_AStaleMeshDoesNotLookLikeACurrentOne ......................   Passed    1.47 sec
+        Start 1551: unit.MeshDisplay_AStaleMeshDoesNotLookLikeACurrentOne
+      Test #1552: unit.MeshDisplay_DrawsAnEngineeringMeshIntoTheView .........................   Passed    1.35 sec
+        Start 1552: unit.MeshDisplay_DrawsAnEngineeringMeshIntoTheView
+ 86/150 Test #1556: unit.MeshDisplay_IsUnaffectedByTheCadDisplayTessellation ...................   Passed    0.83 sec
+        Start 1558: unit.MeshDisplay_PickingAMeshResolvesToACanonicalElement
+      Test #1557: unit.MeshDisplay_PickingAMeshFindsNothingWhereThereIsNoMesh ................   Passed    1.33 sec
+        Start 1557: unit.MeshDisplay_PickingAMeshFindsNothingWhereThereIsNoMesh
+      Test #1553: unit.MeshDisplay_HidingTheMeshLeavesTheCadBodyAndViceVersa .................   Passed    1.58 sec
+        Start 1553: unit.MeshDisplay_HidingTheMeshLeavesTheCadBodyAndViceVersa
+      Test #1555: unit.MeshDisplay_InteriorInspectionDrawsTheChosenTetrahedraOnly ............   Passed    1.55 sec
+        Start 1555: unit.MeshDisplay_InteriorInspectionDrawsTheChosenTetrahedraOnly
+      Test #1554: unit.MeshDisplay_HighlightingChangesTheImageAndNotTheMesh ..................   Passed    1.67 sec
+        Start 1554: unit.MeshDisplay_HighlightingChangesTheImageAndNotTheMesh
+      Test #1551: unit.MeshDisplay_AStaleMeshDoesNotLookLikeACurrentOne ......................   Passed    1.40 sec
+        Start 1551: unit.MeshDisplay_AStaleMeshDoesNotLookLikeACurrentOne
+      Test #1552: unit.MeshDisplay_DrawsAnEngineeringMeshIntoTheView .........................   Passed    1.34 sec
+        Start 1552: unit.MeshDisplay_DrawsAnEngineeringMeshIntoTheView
+      Test #1558: unit.MeshDisplay_PickingAMeshResolvesToACanonicalElement ...................   Passed    1.34 sec
+        Start 1558: unit.MeshDisplay_PickingAMeshResolvesToACanonicalElement
+      Test #1557: unit.MeshDisplay_PickingAMeshFindsNothingWhereThereIsNoMesh ................   Passed    1.29 sec
+        Start 1557: unit.MeshDisplay_PickingAMeshFindsNothingWhereThereIsNoMesh
+      Test #1553: unit.MeshDisplay_HidingTheMeshLeavesTheCadBodyAndViceVersa .................   Passed    1.65 sec
+        Start 1553: unit.MeshDisplay_HidingTheMeshLeavesTheCadBodyAndViceVersa
+      Test #1555: unit.MeshDisplay_InteriorInspectionDrawsTheChosenTetrahedraOnly ............   Passed    1.62 sec
+        Start 1555: unit.MeshDisplay_InteriorInspectionDrawsTheChosenTetrahedraOnly
+      Test #1554: unit.MeshDisplay_HighlightingChangesTheImageAndNotTheMesh ..................   Passed    1.67 sec
+        Start 1554: unit.MeshDisplay_HighlightingChangesTheImageAndNotTheMesh
+ 87/150 Test #1551: unit.MeshDisplay_AStaleMeshDoesNotLookLikeACurrentOne ......................   Passed    1.61 sec
+        Start 1559: unit.MeshDisplay_RefusesAHighlightOutsideTheRenderBuffer
+ 88/150 Test #1552: unit.MeshDisplay_DrawsAnEngineeringMeshIntoTheView .........................   Passed    1.60 sec
+        Start 1560: unit.MeshDisplay_RefusesAnEmptyMeshViewAndAnInvalidSource
+ 89/150 Test #1557: unit.MeshDisplay_PickingAMeshFindsNothingWhereThereIsNoMesh ................   Passed    1.45 sec
+        Start 1561: unit.MeshDisplay_RefusesMeshOperationsOnACadPresentation
+      Test #1558: unit.MeshDisplay_PickingAMeshResolvesToACanonicalElement ...................   Passed    1.53 sec
+        Start 1558: unit.MeshDisplay_PickingAMeshResolvesToACanonicalElement
+      Test #3211: compile_fail.viewer.object-id-as-presentation-id ...........................   Passed    9.03 sec
+        Start 3211: compile_fail.viewer.object-id-as-presentation-id
+ 90/150 Test #1553: unit.MeshDisplay_HidingTheMeshLeavesTheCadBodyAndViceVersa .................   Passed    1.66 sec
+        Start 1562: unit.MeshDisplay_RemainsOneBatchedPresentationOnAModeratelyLargeMesh
+      Test #1559: unit.MeshDisplay_RefusesAHighlightOutsideTheRenderBuffer ...................   Passed    1.49 sec
+        Start 1559: unit.MeshDisplay_RefusesAHighlightOutsideTheRenderBuffer
+ 91/150 Test #1555: unit.MeshDisplay_InteriorInspectionDrawsTheChosenTetrahedraOnly ............   Passed    1.85 sec
+        Start 1563: unit.MeshDisplay_StyleChangesTheImageAndNotTheMesh
+ 92/150 Test #1554: unit.MeshDisplay_HighlightingChangesTheImageAndNotTheMesh ..................   Passed    1.80 sec
+        Start 1564: unit.MeshDisplay_TheMeshOverlaysACadSolidThatIsNotAtTheOrigin
+      Test #1560: unit.MeshDisplay_RefusesAnEmptyMeshViewAndAnInvalidSource ..................   Passed    1.54 sec
+        Start 1560: unit.MeshDisplay_RefusesAnEmptyMeshViewAndAnInvalidSource
+      Test #1561: unit.MeshDisplay_RefusesMeshOperationsOnACadPresentation ...................   Passed    1.31 sec
+        Start 1561: unit.MeshDisplay_RefusesMeshOperationsOnACadPresentation
+      Test #1558: unit.MeshDisplay_PickingAMeshResolvesToACanonicalElement ...................   Passed    1.45 sec
+        Start 1558: unit.MeshDisplay_PickingAMeshResolvesToACanonicalElement
+      Test #1559: unit.MeshDisplay_RefusesAHighlightOutsideTheRenderBuffer ...................   Passed    1.65 sec
+        Start 1559: unit.MeshDisplay_RefusesAHighlightOutsideTheRenderBuffer
+      Test #1560: unit.MeshDisplay_RefusesAnEmptyMeshViewAndAnInvalidSource ..................   Passed    1.75 sec
+        Start 1560: unit.MeshDisplay_RefusesAnEmptyMeshViewAndAnInvalidSource
+      Test #1561: unit.MeshDisplay_RefusesMeshOperationsOnACadPresentation ...................   Passed    1.60 sec
+        Start 1561: unit.MeshDisplay_RefusesMeshOperationsOnACadPresentation
+      Test #1558: unit.MeshDisplay_PickingAMeshResolvesToACanonicalElement ...................   Passed    1.56 sec
+        Start 1558: unit.MeshDisplay_PickingAMeshResolvesToACanonicalElement
+      Test #1563: unit.MeshDisplay_StyleChangesTheImageAndNotTheMesh .........................   Passed    2.80 sec
+        Start 1563: unit.MeshDisplay_StyleChangesTheImageAndNotTheMesh
+      Test #1562: unit.MeshDisplay_RemainsOneBatchedPresentationOnAModeratelyLargeMesh .......   Passed    3.30 sec
+        Start 1562: unit.MeshDisplay_RemainsOneBatchedPresentationOnAModeratelyLargeMesh
+      Test #1559: unit.MeshDisplay_RefusesAHighlightOutsideTheRenderBuffer ...................   Passed    1.55 sec
+        Start 1559: unit.MeshDisplay_RefusesAHighlightOutsideTheRenderBuffer
+      Test #1560: unit.MeshDisplay_RefusesAnEmptyMeshViewAndAnInvalidSource ..................   Passed    1.66 sec
+        Start 1560: unit.MeshDisplay_RefusesAnEmptyMeshViewAndAnInvalidSource
+      Test #1561: unit.MeshDisplay_RefusesMeshOperationsOnACadPresentation ...................   Passed    1.62 sec
+        Start 1561: unit.MeshDisplay_RefusesMeshOperationsOnACadPresentation
+ 93/150 Test #1558: unit.MeshDisplay_PickingAMeshResolvesToACanonicalElement ...................   Passed    1.63 sec
+        Start 1565: unit.MeshDisplay_TheMeshOverlaysItsOwnCadSolidAtTheSameScale
+      Test #1563: unit.MeshDisplay_StyleChangesTheImageAndNotTheMesh .........................   Passed    1.53 sec
+        Start 1563: unit.MeshDisplay_StyleChangesTheImageAndNotTheMesh
+      Test #1559: unit.MeshDisplay_RefusesAHighlightOutsideTheRenderBuffer ...................   Passed    1.44 sec
+        Start 1559: unit.MeshDisplay_RefusesAHighlightOutsideTheRenderBuffer
+      Test #1561: unit.MeshDisplay_RefusesMeshOperationsOnACadPresentation ...................   Passed    1.40 sec
+        Start 1561: unit.MeshDisplay_RefusesMeshOperationsOnACadPresentation
+      Test #1560: unit.MeshDisplay_RefusesAnEmptyMeshViewAndAnInvalidSource ..................   Passed    1.51 sec
+        Start 1560: unit.MeshDisplay_RefusesAnEmptyMeshViewAndAnInvalidSource
+      Test #1564: unit.MeshDisplay_TheMeshOverlaysACadSolidThatIsNotAtTheOrigin ..............   Passed    5.30 sec
+        Start 1564: unit.MeshDisplay_TheMeshOverlaysACadSolidThatIsNotAtTheOrigin
+      Test #1565: unit.MeshDisplay_TheMeshOverlaysItsOwnCadSolidAtTheSameScale ...............   Passed    1.98 sec
+        Start 1565: unit.MeshDisplay_TheMeshOverlaysItsOwnCadSolidAtTheSameScale
+ 94/150 Test #1559: unit.MeshDisplay_RefusesAHighlightOutsideTheRenderBuffer ...................   Passed    1.40 sec
+        Start 1566: unit.MeshHighlight_CarriesUnresolvedRatherThanAnEmptyHighlight
+      Test #1563: unit.MeshDisplay_StyleChangesTheImageAndNotTheMesh .........................   Passed    1.76 sec
+        Start 1563: unit.MeshDisplay_StyleChangesTheImageAndNotTheMesh
+      Test #1562: unit.MeshDisplay_RemainsOneBatchedPresentationOnAModeratelyLargeMesh .......   Passed    3.18 sec
+        Start 1562: unit.MeshDisplay_RemainsOneBatchedPresentationOnAModeratelyLargeMesh
+ 95/150 Test #1561: unit.MeshDisplay_RefusesMeshOperationsOnACadPresentation ...................   Passed    1.31 sec
+        Start 1567: unit.MeshHighlight_FollowsTheSameFaceOntoARemeshedMesh
+      Test #1566: unit.MeshHighlight_CarriesUnresolvedRatherThanAnEmptyHighlight .............   Passed    0.32 sec
+        Start 1566: unit.MeshHighlight_CarriesUnresolvedRatherThanAnEmptyHighlight
+ 96/150 Test #1560: unit.MeshDisplay_RefusesAnEmptyMeshViewAndAnInvalidSource ..................   Passed    1.32 sec
+        Start 1568: unit.MeshHighlight_HighlightsAnUnnamedHoleWallByItsPlaceInTheMap
+      Test #1566: unit.MeshHighlight_CarriesUnresolvedRatherThanAnEmptyHighlight .............   Passed    0.35 sec
+        Start 1566: unit.MeshHighlight_CarriesUnresolvedRatherThanAnEmptyHighlight
+      Test #1566: unit.MeshHighlight_CarriesUnresolvedRatherThanAnEmptyHighlight .............   Passed    0.32 sec
+        Start 1566: unit.MeshHighlight_CarriesUnresolvedRatherThanAnEmptyHighlight
+      Test #1565: unit.MeshDisplay_TheMeshOverlaysItsOwnCadSolidAtTheSameScale ...............   Passed    1.52 sec
+        Start 1565: unit.MeshDisplay_TheMeshOverlaysItsOwnCadSolidAtTheSameScale
+      Test #1568: unit.MeshHighlight_HighlightsAnUnnamedHoleWallByItsPlaceInTheMap ...........   Passed    0.88 sec
+        Start 1568: unit.MeshHighlight_HighlightsAnUnnamedHoleWallByItsPlaceInTheMap
+      Test #1566: unit.MeshHighlight_CarriesUnresolvedRatherThanAnEmptyHighlight .............   Passed    0.41 sec
+        Start 1566: unit.MeshHighlight_CarriesUnresolvedRatherThanAnEmptyHighlight
+      Test #3211: compile_fail.viewer.object-id-as-presentation-id ...........................   Passed    8.34 sec
+        Start 3211: compile_fail.viewer.object-id-as-presentation-id
+      Test #1563: unit.MeshDisplay_StyleChangesTheImageAndNotTheMesh .........................   Passed    1.55 sec
+        Start 1563: unit.MeshDisplay_StyleChangesTheImageAndNotTheMesh
+      Test #1564: unit.MeshDisplay_TheMeshOverlaysACadSolidThatIsNotAtTheOrigin ..............   Passed    2.35 sec
+        Start 1564: unit.MeshDisplay_TheMeshOverlaysACadSolidThatIsNotAtTheOrigin
+ 97/150 Test #1566: unit.MeshHighlight_CarriesUnresolvedRatherThanAnEmptyHighlight .............   Passed    0.42 sec
+        Start 1569: unit.MeshHighlight_PlanarFacesDoNotLeakIntoEachOther
+      Test #1567: unit.MeshHighlight_FollowsTheSameFaceOntoARemeshedMesh .....................   Passed    1.74 sec
+        Start 1567: unit.MeshHighlight_FollowsTheSameFaceOntoARemeshedMesh
+      Test #1569: unit.MeshHighlight_PlanarFacesDoNotLeakIntoEachOther .......................   Passed    0.32 sec
+        Start 1569: unit.MeshHighlight_PlanarFacesDoNotLeakIntoEachOther
+      Test #1568: unit.MeshHighlight_HighlightsAnUnnamedHoleWallByItsPlaceInTheMap ...........   Passed    0.94 sec
+        Start 1568: unit.MeshHighlight_HighlightsAnUnnamedHoleWallByItsPlaceInTheMap
+      Test #1569: unit.MeshHighlight_PlanarFacesDoNotLeakIntoEachOther .......................   Passed    0.38 sec
+        Start 1569: unit.MeshHighlight_PlanarFacesDoNotLeakIntoEachOther
+      Test #1569: unit.MeshHighlight_PlanarFacesDoNotLeakIntoEachOther .......................   Passed    0.33 sec
+        Start 1569: unit.MeshHighlight_PlanarFacesDoNotLeakIntoEachOther
+      Test #1568: unit.MeshHighlight_HighlightsAnUnnamedHoleWallByItsPlaceInTheMap ...........   Passed    0.90 sec
+        Start 1568: unit.MeshHighlight_HighlightsAnUnnamedHoleWallByItsPlaceInTheMap
+      Test #1569: unit.MeshHighlight_PlanarFacesDoNotLeakIntoEachOther .......................   Passed    0.31 sec
+        Start 1569: unit.MeshHighlight_PlanarFacesDoNotLeakIntoEachOther
+ 98/150 Test #1569: unit.MeshHighlight_PlanarFacesDoNotLeakIntoEachOther .......................   Passed    0.34 sec
+        Start 1570: unit.MeshHighlight_RefusesAFaceIndexTheMapDoesNotHave
+      Test #1562: unit.MeshDisplay_RemainsOneBatchedPresentationOnAModeratelyLargeMesh .......   Passed    3.36 sec
+        Start 1562: unit.MeshDisplay_RemainsOneBatchedPresentationOnAModeratelyLargeMesh
+ 99/150 Test #1563: unit.MeshDisplay_StyleChangesTheImageAndNotTheMesh .........................   Passed    1.99 sec
+        Start 1571: unit.MeshHighlight_RefusesAMappingOrACacheFromADifferentGeneration
+      Test #1567: unit.MeshHighlight_FollowsTheSameFaceOntoARemeshedMesh .....................   Passed    1.71 sec
+        Start 1567: unit.MeshHighlight_FollowsTheSameFaceOntoARemeshedMesh
+      Test #1565: unit.MeshDisplay_TheMeshOverlaysItsOwnCadSolidAtTheSameScale ...............   Passed    2.53 sec
+        Start 1565: unit.MeshDisplay_TheMeshOverlaysItsOwnCadSolidAtTheSameScale
+      Test #1570: unit.MeshHighlight_RefusesAFaceIndexTheMapDoesNotHave ......................   Passed    0.30 sec
+        Start 1570: unit.MeshHighlight_RefusesAFaceIndexTheMapDoesNotHave
+      Test #1568: unit.MeshHighlight_HighlightsAnUnnamedHoleWallByItsPlaceInTheMap ...........   Passed    0.92 sec
+        Start 1568: unit.MeshHighlight_HighlightsAnUnnamedHoleWallByItsPlaceInTheMap
+      Test #1570: unit.MeshHighlight_RefusesAFaceIndexTheMapDoesNotHave ......................   Passed    0.32 sec
+        Start 1570: unit.MeshHighlight_RefusesAFaceIndexTheMapDoesNotHave
+      Test #1571: unit.MeshHighlight_RefusesAMappingOrACacheFromADifferentGeneration .........   Passed    0.51 sec
+        Start 1571: unit.MeshHighlight_RefusesAMappingOrACacheFromADifferentGeneration
+      Test #1564: unit.MeshDisplay_TheMeshOverlaysACadSolidThatIsNotAtTheOrigin ..............   Passed    2.55 sec
+        Start 1564: unit.MeshDisplay_TheMeshOverlaysACadSolidThatIsNotAtTheOrigin
+      Test #1570: unit.MeshHighlight_RefusesAFaceIndexTheMapDoesNotHave ......................   Passed    0.31 sec
+        Start 1570: unit.MeshHighlight_RefusesAFaceIndexTheMapDoesNotHave
+      Test #1571: unit.MeshHighlight_RefusesAMappingOrACacheFromADifferentGeneration .........   Passed    0.38 sec
+        Start 1571: unit.MeshHighlight_RefusesAMappingOrACacheFromADifferentGeneration
+      Test #1570: unit.MeshHighlight_RefusesAFaceIndexTheMapDoesNotHave ......................   Passed    0.29 sec
+        Start 1570: unit.MeshHighlight_RefusesAFaceIndexTheMapDoesNotHave
+100/150 Test #1568: unit.MeshHighlight_HighlightsAnUnnamedHoleWallByItsPlaceInTheMap ...........   Passed    0.88 sec
+        Start 1572: unit.MeshHighlight_ResolvesAFacetBackToItsNamedCadFace
+      Test #1571: unit.MeshHighlight_RefusesAMappingOrACacheFromADifferentGeneration .........   Passed    0.40 sec
+        Start 1571: unit.MeshHighlight_RefusesAMappingOrACacheFromADifferentGeneration
+101/150 Test #1570: unit.MeshHighlight_RefusesAFaceIndexTheMapDoesNotHave ......................   Passed    0.28 sec
+        Start 1573: unit.MeshHighlight_ResolvesANamedBoundarySetToItsCurrentFacets
+      Test #1565: unit.MeshDisplay_TheMeshOverlaysItsOwnCadSolidAtTheSameScale ...............   Passed    1.48 sec
+        Start 1565: unit.MeshDisplay_TheMeshOverlaysItsOwnCadSolidAtTheSameScale
+      Test #1572: unit.MeshHighlight_ResolvesAFacetBackToItsNamedCadFace .....................   Passed    0.40 sec
+        Start 1572: unit.MeshHighlight_ResolvesAFacetBackToItsNamedCadFace
+      Test #1567: unit.MeshHighlight_FollowsTheSameFaceOntoARemeshedMesh .....................   Passed    1.63 sec
+        Start 1567: unit.MeshHighlight_FollowsTheSameFaceOntoARemeshedMesh
+      Test #1571: unit.MeshHighlight_RefusesAMappingOrACacheFromADifferentGeneration .........   Passed    0.45 sec
+        Start 1571: unit.MeshHighlight_RefusesAMappingOrACacheFromADifferentGeneration
+      Test #1572: unit.MeshHighlight_ResolvesAFacetBackToItsNamedCadFace .....................   Passed    0.46 sec
+        Start 1572: unit.MeshHighlight_ResolvesAFacetBackToItsNamedCadFace
+102/150 Test #1571: unit.MeshHighlight_RefusesAMappingOrACacheFromADifferentGeneration .........   Passed    0.57 sec
+        Start 1574: unit.MeshHighlight_ResolvesANamedCadFaceToItsCurrentFacetsAndTriangles
+      Test #1572: unit.MeshHighlight_ResolvesAFacetBackToItsNamedCadFace .....................   Passed    0.36 sec
+        Start 1572: unit.MeshHighlight_ResolvesAFacetBackToItsNamedCadFace
+      Test #1574: unit.MeshHighlight_ResolvesANamedCadFaceToItsCurrentFacetsAndTriangles .....   Passed    0.33 sec
+        Start 1574: unit.MeshHighlight_ResolvesANamedCadFaceToItsCurrentFacetsAndTriangles
+      Test #1572: unit.MeshHighlight_ResolvesAFacetBackToItsNamedCadFace .....................   Passed    0.30 sec
+        Start 1572: unit.MeshHighlight_ResolvesAFacetBackToItsNamedCadFace
+      Test #1562: unit.MeshDisplay_RemainsOneBatchedPresentationOnAModeratelyLargeMesh .......   Passed    3.02 sec
+        Start 1562: unit.MeshDisplay_RemainsOneBatchedPresentationOnAModeratelyLargeMesh
+      Test #1574: unit.MeshHighlight_ResolvesANamedCadFaceToItsCurrentFacetsAndTriangles .....   Passed    0.33 sec
+        Start 1574: unit.MeshHighlight_ResolvesANamedCadFaceToItsCurrentFacetsAndTriangles
+103/150 Test #1572: unit.MeshHighlight_ResolvesAFacetBackToItsNamedCadFace .....................   Passed    0.36 sec
+        Start 1577: unit.MeshInspection_NothingItDoesChangesTheMesh
+      Test #1573: unit.MeshHighlight_ResolvesANamedBoundarySetToItsCurrentFacets .............   Passed    1.83 sec
+        Start 1573: unit.MeshHighlight_ResolvesANamedBoundarySetToItsCurrentFacets
+      Test #1574: unit.MeshHighlight_ResolvesANamedCadFaceToItsCurrentFacetsAndTriangles .....   Passed    0.34 sec
+        Start 1574: unit.MeshHighlight_ResolvesANamedCadFaceToItsCurrentFacetsAndTriangles
+      Test #1577: unit.MeshInspection_NothingItDoesChangesTheMesh ............................   Passed    0.31 sec
+        Start 1577: unit.MeshInspection_NothingItDoesChangesTheMesh
+      Test #1567: unit.MeshHighlight_FollowsTheSameFaceOntoARemeshedMesh .....................   Passed    1.78 sec
+        Start 1567: unit.MeshHighlight_FollowsTheSameFaceOntoARemeshedMesh
+104/150 Test #1565: unit.MeshDisplay_TheMeshOverlaysItsOwnCadSolidAtTheSameScale ...............   Passed    1.95 sec
+        Start 1578: unit.MeshIssueKind_EveryKindHasAName
+      Test #1574: unit.MeshHighlight_ResolvesANamedCadFaceToItsCurrentFacetsAndTriangles .....   Passed    0.38 sec
+        Start 1574: unit.MeshHighlight_ResolvesANamedCadFaceToItsCurrentFacetsAndTriangles
+      Test #1578: unit.MeshIssueKind_EveryKindHasAName .......................................   Passed    0.22 sec
+        Start 1578: unit.MeshIssueKind_EveryKindHasAName
+      Test #1577: unit.MeshInspection_NothingItDoesChangesTheMesh ............................   Passed    0.33 sec
+        Start 1577: unit.MeshInspection_NothingItDoesChangesTheMesh
+      Test #1578: unit.MeshIssueKind_EveryKindHasAName .......................................   Passed    0.20 sec
+        Start 1578: unit.MeshIssueKind_EveryKindHasAName
+105/150 Test #1574: unit.MeshHighlight_ResolvesANamedCadFaceToItsCurrentFacetsAndTriangles .....   Passed    0.35 sec
+        Start 1580: unit.MeshQualityView_ClassifiesFromTheReportAndHoldsNoThresholdsOfItsOwn
+      Test #1577: unit.MeshInspection_NothingItDoesChangesTheMesh ............................   Passed    0.32 sec
+        Start 1577: unit.MeshInspection_NothingItDoesChangesTheMesh
+      Test #1578: unit.MeshIssueKind_EveryKindHasAName .......................................   Passed    0.21 sec
+        Start 1578: unit.MeshIssueKind_EveryKindHasAName
+      Test #1564: unit.MeshDisplay_TheMeshOverlaysACadSolidThatIsNotAtTheOrigin ..............   Passed    3.73 sec
+        Start 1564: unit.MeshDisplay_TheMeshOverlaysACadSolidThatIsNotAtTheOrigin
+      Test #1580: unit.MeshQualityView_ClassifiesFromTheReportAndHoldsNoThresholdsOfItsOwn ...   Passed    0.33 sec
+        Start 1580: unit.MeshQualityView_ClassifiesFromTheReportAndHoldsNoThresholdsOfItsOwn
+      Test #1578: unit.MeshIssueKind_EveryKindHasAName .......................................   Passed    0.29 sec
+        Start 1578: unit.MeshIssueKind_EveryKindHasAName
+      Test #1577: unit.MeshInspection_NothingItDoesChangesTheMesh ............................   Passed    0.38 sec
+        Start 1577: unit.MeshInspection_NothingItDoesChangesTheMesh
+106/150 Test #1578: unit.MeshIssueKind_EveryKindHasAName .......................................   Passed    0.25 sec
+        Start 1581: unit.MeshQualityView_NavigatesToTheReportsOwnWorstElementPerMetric
+      Test #1580: unit.MeshQualityView_ClassifiesFromTheReportAndHoldsNoThresholdsOfItsOwn ...   Passed    0.36 sec
+        Start 1580: unit.MeshQualityView_ClassifiesFromTheReportAndHoldsNoThresholdsOfItsOwn
+107/150 Test #1577: unit.MeshInspection_NothingItDoesChangesTheMesh ............................   Passed    0.35 sec
+        Start 1582: unit.MeshQualityView_RefusesToNavigateIntoADifferentMeshGeneration
+      Test #1573: unit.MeshHighlight_ResolvesANamedBoundarySetToItsCurrentFacets .............   Passed    1.70 sec
+        Start 1573: unit.MeshHighlight_ResolvesANamedBoundarySetToItsCurrentFacets
+      Test #1581: unit.MeshQualityView_NavigatesToTheReportsOwnWorstElementPerMetric .........   Passed    0.32 sec
+        Start 1581: unit.MeshQualityView_NavigatesToTheReportsOwnWorstElementPerMetric
+      Test #1580: unit.MeshQualityView_ClassifiesFromTheReportAndHoldsNoThresholdsOfItsOwn ...   Passed    0.28 sec
+        Start 1580: unit.MeshQualityView_ClassifiesFromTheReportAndHoldsNoThresholdsOfItsOwn
+108/150 Test #1567: unit.MeshHighlight_FollowsTheSameFaceOntoARemeshedMesh .....................   Passed    1.70 sec
+        Start 1583: unit.MeshScene_ClassifiesEveryElementAsTheReportDoes
+      Test #1582: unit.MeshQualityView_RefusesToNavigateIntoADifferentMeshGeneration .........   Passed    0.38 sec
+        Start 1582: unit.MeshQualityView_RefusesToNavigateIntoADifferentMeshGeneration
+      Test #1581: unit.MeshQualityView_NavigatesToTheReportsOwnWorstElementPerMetric .........   Passed    0.29 sec
+        Start 1581: unit.MeshQualityView_NavigatesToTheReportsOwnWorstElementPerMetric
+      Test #1580: unit.MeshQualityView_ClassifiesFromTheReportAndHoldsNoThresholdsOfItsOwn ...   Passed    0.41 sec
+        Start 1580: unit.MeshQualityView_ClassifiesFromTheReportAndHoldsNoThresholdsOfItsOwn
+      Test #1583: unit.MeshScene_ClassifiesEveryElementAsTheReportDoes .......................   Passed    0.34 sec
+        Start 1583: unit.MeshScene_ClassifiesEveryElementAsTheReportDoes
+      Test #1582: unit.MeshQualityView_RefusesToNavigateIntoADifferentMeshGeneration .........   Passed    0.33 sec
+        Start 1582: unit.MeshQualityView_RefusesToNavigateIntoADifferentMeshGeneration
+      Test #1581: unit.MeshQualityView_NavigatesToTheReportsOwnWorstElementPerMetric .........   Passed    0.31 sec
+        Start 1581: unit.MeshQualityView_NavigatesToTheReportsOwnWorstElementPerMetric
+109/150 Test #1562: unit.MeshDisplay_RemainsOneBatchedPresentationOnAModeratelyLargeMesh .......   Passed    2.79 sec
+        Start 1584: unit.MeshScene_InspectsABoundaryFacetAndNamesItsCadFace
+110/150 Test #1580: unit.MeshQualityView_ClassifiesFromTheReportAndHoldsNoThresholdsOfItsOwn ...   Passed    0.31 sec
+        Start 1585: unit.MeshScene_InspectsANodeAgainstTheCanonicalMesh
+      Test #1582: unit.MeshQualityView_RefusesToNavigateIntoADifferentMeshGeneration .........   Passed    0.35 sec
+        Start 1582: unit.MeshQualityView_RefusesToNavigateIntoADifferentMeshGeneration
+      Test #1583: unit.MeshScene_ClassifiesEveryElementAsTheReportDoes .......................   Passed    0.39 sec
+        Start 1583: unit.MeshScene_ClassifiesEveryElementAsTheReportDoes
+      Test #1581: unit.MeshQualityView_NavigatesToTheReportsOwnWorstElementPerMetric .........   Passed    0.30 sec
+        Start 1581: unit.MeshQualityView_NavigatesToTheReportsOwnWorstElementPerMetric
+      Test #1584: unit.MeshScene_InspectsABoundaryFacetAndNamesItsCadFace ....................   Passed    0.35 sec
+        Start 1584: unit.MeshScene_InspectsABoundaryFacetAndNamesItsCadFace
+      Test #3211: compile_fail.viewer.object-id-as-presentation-id ...........................   Passed    8.22 sec
+        Start 3211: compile_fail.viewer.object-id-as-presentation-id
+      Test #1585: unit.MeshScene_InspectsANodeAgainstTheCanonicalMesh ........................   Passed    0.33 sec
+        Start 1585: unit.MeshScene_InspectsANodeAgainstTheCanonicalMesh
+      Test #1583: unit.MeshScene_ClassifiesEveryElementAsTheReportDoes .......................   Passed    0.31 sec
+        Start 1583: unit.MeshScene_ClassifiesEveryElementAsTheReportDoes
+111/150 Test #1581: unit.MeshQualityView_NavigatesToTheReportsOwnWorstElementPerMetric .........   Passed    0.31 sec
+        Start 1586: unit.MeshScene_InspectsATetrahedronWithTheReportsOwnNumbers
+      Test #1582: unit.MeshQualityView_RefusesToNavigateIntoADifferentMeshGeneration .........   Passed    0.39 sec
+        Start 1582: unit.MeshQualityView_RefusesToNavigateIntoADifferentMeshGeneration
+      Test #1584: unit.MeshScene_InspectsABoundaryFacetAndNamesItsCadFace ....................   Passed    0.36 sec
+        Start 1584: unit.MeshScene_InspectsABoundaryFacetAndNamesItsCadFace
+      Test #1585: unit.MeshScene_InspectsANodeAgainstTheCanonicalMesh ........................   Passed    0.35 sec
+        Start 1585: unit.MeshScene_InspectsANodeAgainstTheCanonicalMesh
+      Test #1583: unit.MeshScene_ClassifiesEveryElementAsTheReportDoes .......................   Passed    0.32 sec
+        Start 1583: unit.MeshScene_ClassifiesEveryElementAsTheReportDoes
+      Test #1586: unit.MeshScene_InspectsATetrahedronWithTheReportsOwnNumbers ................   Passed    0.36 sec
+        Start 1586: unit.MeshScene_InspectsATetrahedronWithTheReportsOwnNumbers
+      Test #1573: unit.MeshHighlight_ResolvesANamedBoundarySetToItsCurrentFacets .............   Passed    1.71 sec
+        Start 1573: unit.MeshHighlight_ResolvesANamedBoundarySetToItsCurrentFacets
+112/150 Test #1582: unit.MeshQualityView_RefusesToNavigateIntoADifferentMeshGeneration .........   Passed    0.37 sec
+        Start 1587: unit.MeshScene_ListsEveryCadFaceIncludingUnnamedOnes
+113/150 Test #1564: unit.MeshDisplay_TheMeshOverlaysACadSolidThatIsNotAtTheOrigin ..............   Passed    2.40 sec
+        Start 1588: unit.MeshScene_NavigatesToTheWorstElementForEachMetric
+      Test #1585: unit.MeshScene_InspectsANodeAgainstTheCanonicalMesh ........................   Passed    0.33 sec
+        Start 1585: unit.MeshScene_InspectsANodeAgainstTheCanonicalMesh
+      Test #1584: unit.MeshScene_InspectsABoundaryFacetAndNamesItsCadFace ....................   Passed    0.37 sec
+        Start 1584: unit.MeshScene_InspectsABoundaryFacetAndNamesItsCadFace
+114/150 Test #1583: unit.MeshScene_ClassifiesEveryElementAsTheReportDoes .......................   Passed    0.37 sec
+        Start 1589: unit.MeshScene_RefusesAMeshThatIsNotThisFeatures
+      Test #1586: unit.MeshScene_InspectsATetrahedronWithTheReportsOwnNumbers ................   Passed    0.39 sec
+        Start 1586: unit.MeshScene_InspectsATetrahedronWithTheReportsOwnNumbers
+      Test #1587: unit.MeshScene_ListsEveryCadFaceIncludingUnnamedOnes .......................   Passed    0.36 sec
+        Start 1587: unit.MeshScene_ListsEveryCadFaceIncludingUnnamedOnes
+      Test #1588: unit.MeshScene_NavigatesToTheWorstElementForEachMetric .....................   Passed    0.35 sec
+        Start 1588: unit.MeshScene_NavigatesToTheWorstElementForEachMetric
+      Test #1585: unit.MeshScene_InspectsANodeAgainstTheCanonicalMesh ........................   Passed    0.32 sec
+        Start 1585: unit.MeshScene_InspectsANodeAgainstTheCanonicalMesh
+      Test #1584: unit.MeshScene_InspectsABoundaryFacetAndNamesItsCadFace ....................   Passed    0.36 sec
+        Start 1584: unit.MeshScene_InspectsABoundaryFacetAndNamesItsCadFace
+      Test #1587: unit.MeshScene_ListsEveryCadFaceIncludingUnnamedOnes .......................   Passed    0.33 sec
+        Start 1587: unit.MeshScene_ListsEveryCadFaceIncludingUnnamedOnes
+      Test #1586: unit.MeshScene_InspectsATetrahedronWithTheReportsOwnNumbers ................   Passed    0.37 sec
+        Start 1586: unit.MeshScene_InspectsATetrahedronWithTheReportsOwnNumbers
+      Test #1588: unit.MeshScene_NavigatesToTheWorstElementForEachMetric .....................   Passed    0.33 sec
+        Start 1588: unit.MeshScene_NavigatesToTheWorstElementForEachMetric
+      Test #1589: unit.MeshScene_RefusesAMeshThatIsNotThisFeatures ...........................   Passed    0.52 sec
+        Start 1589: unit.MeshScene_RefusesAMeshThatIsNotThisFeatures
+115/150 Test #1585: unit.MeshScene_InspectsANodeAgainstTheCanonicalMesh ........................   Passed    0.34 sec
+        Start 1590: unit.MeshScene_RefusesASetThatDoesNotDescribeOneMesh
+116/150 Test #1584: unit.MeshScene_InspectsABoundaryFacetAndNamesItsCadFace ....................   Passed    0.36 sec
+        Start 1591: unit.MeshScene_ReportsItsStateFromTheDocument
+      Test #1586: unit.MeshScene_InspectsATetrahedronWithTheReportsOwnNumbers ................   Passed    0.32 sec
+        Start 1586: unit.MeshScene_InspectsATetrahedronWithTheReportsOwnNumbers
+      Test #1587: unit.MeshScene_ListsEveryCadFaceIncludingUnnamedOnes .......................   Passed    0.36 sec
+        Start 1587: unit.MeshScene_ListsEveryCadFaceIncludingUnnamedOnes
+      Test #1588: unit.MeshScene_NavigatesToTheWorstElementForEachMetric .....................   Passed    0.31 sec
+        Start 1588: unit.MeshScene_NavigatesToTheWorstElementForEachMetric
+      Test #1590: unit.MeshScene_RefusesASetThatDoesNotDescribeOneMesh .......................   Passed    0.42 sec
+        Start 1590: unit.MeshScene_RefusesASetThatDoesNotDescribeOneMesh
+      Test #1589: unit.MeshScene_RefusesAMeshThatIsNotThisFeatures ...........................   Passed    0.47 sec
+        Start 1589: unit.MeshScene_RefusesAMeshThatIsNotThisFeatures
+      Test #1591: unit.MeshScene_ReportsItsStateFromTheDocument ..............................   Passed    0.38 sec
+        Start 1591: unit.MeshScene_ReportsItsStateFromTheDocument
+117/150 Test #1586: unit.MeshScene_InspectsATetrahedronWithTheReportsOwnNumbers ................   Passed    0.28 sec
+        Start 1593: unit.MeshStatus_AFailedRemeshCannotLookCurrent
+      Test #1587: unit.MeshScene_ListsEveryCadFaceIncludingUnnamedOnes .......................   Passed    0.29 sec
+        Start 1587: unit.MeshScene_ListsEveryCadFaceIncludingUnnamedOnes
+      Test #1588: unit.MeshScene_NavigatesToTheWorstElementForEachMetric .....................   Passed    0.31 sec
+        Start 1588: unit.MeshScene_NavigatesToTheWorstElementForEachMetric
+      Test #1593: unit.MeshStatus_AFailedRemeshCannotLookCurrent .............................   Passed    0.29 sec
+        Start 1593: unit.MeshStatus_AFailedRemeshCannotLookCurrent
+      Test #1591: unit.MeshScene_ReportsItsStateFromTheDocument ..............................   Passed    0.36 sec
+        Start 1591: unit.MeshScene_ReportsItsStateFromTheDocument
+      Test #1590: unit.MeshScene_RefusesASetThatDoesNotDescribeOneMesh .......................   Passed    0.42 sec
+        Start 1590: unit.MeshScene_RefusesASetThatDoesNotDescribeOneMesh
+118/150 Test #1587: unit.MeshScene_ListsEveryCadFaceIncludingUnnamedOnes .......................   Passed    0.32 sec
+      Test #1589: unit.MeshScene_RefusesAMeshThatIsNotThisFeatures ...........................   Passed    0.42 sec
+        Start 1589: unit.MeshScene_RefusesAMeshThatIsNotThisFeatures
+        Start 1594: unit.MeshStatus_BecomesStaleWhenTheGeometryChanges
+      Test #1573: unit.MeshHighlight_ResolvesANamedBoundarySetToItsCurrentFacets .............   Passed    1.76 sec
+        Start 1573: unit.MeshHighlight_ResolvesANamedBoundarySetToItsCurrentFacets
+119/150 Test #1588: unit.MeshScene_NavigatesToTheWorstElementForEachMetric .....................   Passed    0.36 sec
+        Start 1595: unit.MeshStatus_ReportsCurrentForAMeshOfTheGeometryTheDocumentHasNow
+      Test #1593: unit.MeshStatus_AFailedRemeshCannotLookCurrent .............................   Passed    0.31 sec
+        Start 1593: unit.MeshStatus_AFailedRemeshCannotLookCurrent
+      Test #1591: unit.MeshScene_ReportsItsStateFromTheDocument ..............................   Passed    0.39 sec
+        Start 1591: unit.MeshScene_ReportsItsStateFromTheDocument
+      Test #1594: unit.MeshStatus_BecomesStaleWhenTheGeometryChanges .........................   Passed    0.39 sec
+        Start 1594: unit.MeshStatus_BecomesStaleWhenTheGeometryChanges
+      Test #1595: unit.MeshStatus_ReportsCurrentForAMeshOfTheGeometryTheDocumentHasNow .......   Passed    0.35 sec
+        Start 1595: unit.MeshStatus_ReportsCurrentForAMeshOfTheGeometryTheDocumentHasNow
+      Test #1590: unit.MeshScene_RefusesASetThatDoesNotDescribeOneMesh .......................   Passed    0.47 sec
+        Start 1590: unit.MeshScene_RefusesASetThatDoesNotDescribeOneMesh
+      Test #1589: unit.MeshScene_RefusesAMeshThatIsNotThisFeatures ...........................   Passed    0.50 sec
+        Start 1589: unit.MeshScene_RefusesAMeshThatIsNotThisFeatures
+      Test #1593: unit.MeshStatus_AFailedRemeshCannotLookCurrent .............................   Passed    0.32 sec
+        Start 1593: unit.MeshStatus_AFailedRemeshCannotLookCurrent
+      Test #1595: unit.MeshStatus_ReportsCurrentForAMeshOfTheGeometryTheDocumentHasNow .......   Passed    0.29 sec
+        Start 1595: unit.MeshStatus_ReportsCurrentForAMeshOfTheGeometryTheDocumentHasNow
+      Test #1591: unit.MeshScene_ReportsItsStateFromTheDocument ..............................   Passed    0.39 sec
+        Start 1591: unit.MeshScene_ReportsItsStateFromTheDocument
+      Test #1594: unit.MeshStatus_BecomesStaleWhenTheGeometryChanges .........................   Passed    0.41 sec
+        Start 1594: unit.MeshStatus_BecomesStaleWhenTheGeometryChanges
+      Test #1590: unit.MeshScene_RefusesASetThatDoesNotDescribeOneMesh .......................   Passed    0.41 sec
+        Start 1590: unit.MeshScene_RefusesASetThatDoesNotDescribeOneMesh
+      Test #1593: unit.MeshStatus_AFailedRemeshCannotLookCurrent .............................   Passed    0.30 sec
+        Start 1593: unit.MeshStatus_AFailedRemeshCannotLookCurrent
+120/150 Test #1589: unit.MeshScene_RefusesAMeshThatIsNotThisFeatures ...........................   Passed    0.41 sec
+        Start 1596: unit.MeshStatus_ReportsNoMeshBeforeAnythingIsGenerated
+      Test #1595: unit.MeshStatus_ReportsCurrentForAMeshOfTheGeometryTheDocumentHasNow .......   Passed    0.32 sec
+        Start 1595: unit.MeshStatus_ReportsCurrentForAMeshOfTheGeometryTheDocumentHasNow
+121/150 Test #1591: unit.MeshScene_ReportsItsStateFromTheDocument ..............................   Passed    0.36 sec
+        Start 1597: unit.MeshView_BuildingAndQueryingAViewDoesNotChangeTheMesh
+      Test #1596: unit.MeshStatus_ReportsNoMeshBeforeAnythingIsGenerated .....................   Passed    0.24 sec
+        Start 1596: unit.MeshStatus_ReportsNoMeshBeforeAnythingIsGenerated
+122/150 Test #1593: unit.MeshStatus_AFailedRemeshCannotLookCurrent .............................   Passed    0.30 sec
+      Test #1594: unit.MeshStatus_BecomesStaleWhenTheGeometryChanges .........................   Passed    0.37 sec
+        Start 1594: unit.MeshStatus_BecomesStaleWhenTheGeometryChanges
+        Start 1598: unit.MeshView_DeduplicatesEdgesOnTheUnorderedNodePair
+123/150 Test #1590: unit.MeshScene_RefusesASetThatDoesNotDescribeOneMesh .......................   Passed    0.39 sec
+        Start 1599: unit.MeshView_DoesNotDescribeADifferentMeshGeneration
+      Test #1595: unit.MeshStatus_ReportsCurrentForAMeshOfTheGeometryTheDocumentHasNow .......   Passed    0.31 sec
+        Start 1595: unit.MeshStatus_ReportsCurrentForAMeshOfTheGeometryTheDocumentHasNow
+      Test #1596: unit.MeshStatus_ReportsNoMeshBeforeAnythingIsGenerated .....................   Passed    0.24 sec
+        Start 1596: unit.MeshStatus_ReportsNoMeshBeforeAnythingIsGenerated
+      Test #1597: unit.MeshView_BuildingAndQueryingAViewDoesNotChangeTheMesh .................   Passed    0.31 sec
+        Start 1597: unit.MeshView_BuildingAndQueryingAViewDoesNotChangeTheMesh
+      Test #1594: unit.MeshStatus_BecomesStaleWhenTheGeometryChanges .........................   Passed    0.35 sec
+        Start 1594: unit.MeshStatus_BecomesStaleWhenTheGeometryChanges
+      Test #1598: unit.MeshView_DeduplicatesEdgesOnTheUnorderedNodePair ......................   Passed    0.34 sec
+        Start 1598: unit.MeshView_DeduplicatesEdgesOnTheUnorderedNodePair
+      Test #1596: unit.MeshStatus_ReportsNoMeshBeforeAnythingIsGenerated .....................   Passed    0.23 sec
+        Start 1596: unit.MeshStatus_ReportsNoMeshBeforeAnythingIsGenerated
+      Test #1599: unit.MeshView_DoesNotDescribeADifferentMeshGeneration ......................   Passed    0.39 sec
+        Start 1599: unit.MeshView_DoesNotDescribeADifferentMeshGeneration
+124/150 Test #1595: unit.MeshStatus_ReportsCurrentForAMeshOfTheGeometryTheDocumentHasNow .......   Passed    0.31 sec
+        Start 1600: unit.MeshView_DrawsOnlyTheNodesItsFacetsReference
+      Test #1597: unit.MeshView_BuildingAndQueryingAViewDoesNotChangeTheMesh .................   Passed    0.35 sec
+        Start 1597: unit.MeshView_BuildingAndQueryingAViewDoesNotChangeTheMesh
+125/150 Test #1573: unit.MeshHighlight_ResolvesANamedBoundarySetToItsCurrentFacets .............   Passed    1.74 sec
+        Start 1601: unit.MeshView_EveryRenderIndexResolvesToACanonicalIdentity
+      Test #1596: unit.MeshStatus_ReportsNoMeshBeforeAnythingIsGenerated .....................   Passed    0.20 sec
+        Start 1596: unit.MeshStatus_ReportsNoMeshBeforeAnythingIsGenerated
+      Test #1598: unit.MeshView_DeduplicatesEdgesOnTheUnorderedNodePair ......................   Passed    0.32 sec
+        Start 1598: unit.MeshView_DeduplicatesEdgesOnTheUnorderedNodePair
+126/150 Test #1594: unit.MeshStatus_BecomesStaleWhenTheGeometryChanges .........................   Passed    0.36 sec
+        Start 1602: unit.MeshView_InteriorInspectionDrawsFourFacesPerTetrahedron
+      Test #1600: unit.MeshView_DrawsOnlyTheNodesItsFacetsReference ..........................   Passed    0.30 sec
+        Start 1600: unit.MeshView_DrawsOnlyTheNodesItsFacetsReference
+      Test #1599: unit.MeshView_DoesNotDescribeADifferentMeshGeneration ......................   Passed    0.36 sec
+        Start 1599: unit.MeshView_DoesNotDescribeADifferentMeshGeneration
+127/150 Test #1596: unit.MeshStatus_ReportsNoMeshBeforeAnythingIsGenerated .....................   Passed    0.22 sec
+        Start 1603: unit.MeshView_IsDeterministicForTheSameMesh
+      Test #1597: unit.MeshView_BuildingAndQueryingAViewDoesNotChangeTheMesh .................   Passed    0.30 sec
+        Start 1597: unit.MeshView_BuildingAndQueryingAViewDoesNotChangeTheMesh
+      Test #1601: unit.MeshView_EveryRenderIndexResolvesToACanonicalIdentity .................   Passed    0.33 sec
+        Start 1601: unit.MeshView_EveryRenderIndexResolvesToACanonicalIdentity
+      Test #1598: unit.MeshView_DeduplicatesEdgesOnTheUnorderedNodePair ......................   Passed    0.30 sec
+        Start 1598: unit.MeshView_DeduplicatesEdgesOnTheUnorderedNodePair
+      Test #1602: unit.MeshView_InteriorInspectionDrawsFourFacesPerTetrahedron ...............   Passed    0.29 sec
+        Start 1602: unit.MeshView_InteriorInspectionDrawsFourFacesPerTetrahedron
+      Test #1600: unit.MeshView_DrawsOnlyTheNodesItsFacetsReference ..........................   Passed    0.28 sec
+        Start 1600: unit.MeshView_DrawsOnlyTheNodesItsFacetsReference
+      Test #1603: unit.MeshView_IsDeterministicForTheSameMesh ................................   Passed    0.30 sec
+        Start 1603: unit.MeshView_IsDeterministicForTheSameMesh
+      Test #1597: unit.MeshView_BuildingAndQueryingAViewDoesNotChangeTheMesh .................   Passed    0.29 sec
+        Start 1597: unit.MeshView_BuildingAndQueryingAViewDoesNotChangeTheMesh
+      Test #1599: unit.MeshView_DoesNotDescribeADifferentMeshGeneration ......................   Passed    0.38 sec
+        Start 1599: unit.MeshView_DoesNotDescribeADifferentMeshGeneration
+      Test #1598: unit.MeshView_DeduplicatesEdgesOnTheUnorderedNodePair ......................   Passed    0.28 sec
+        Start 1598: unit.MeshView_DeduplicatesEdgesOnTheUnorderedNodePair
+      Test #1601: unit.MeshView_EveryRenderIndexResolvesToACanonicalIdentity .................   Passed    0.35 sec
+        Start 1601: unit.MeshView_EveryRenderIndexResolvesToACanonicalIdentity
+      Test #1602: unit.MeshView_InteriorInspectionDrawsFourFacesPerTetrahedron ...............   Passed    0.30 sec
+        Start 1602: unit.MeshView_InteriorInspectionDrawsFourFacesPerTetrahedron
+      Test #1600: unit.MeshView_DrawsOnlyTheNodesItsFacetsReference ..........................   Passed    0.27 sec
+        Start 1600: unit.MeshView_DrawsOnlyTheNodesItsFacetsReference
+      Test #1603: unit.MeshView_IsDeterministicForTheSameMesh ................................   Passed    0.27 sec
+        Start 1603: unit.MeshView_IsDeterministicForTheSameMesh
+128/150 Test #1597: unit.MeshView_BuildingAndQueryingAViewDoesNotChangeTheMesh .................   Passed    0.28 sec
+        Start 1604: unit.MeshView_RefusesAnIndexOutsideItsBuffers
+      Test #1599: unit.MeshView_DoesNotDescribeADifferentMeshGeneration ......................   Passed    0.33 sec
+        Start 1599: unit.MeshView_DoesNotDescribeADifferentMeshGeneration
+129/150 Test #1598: unit.MeshView_DeduplicatesEdgesOnTheUnorderedNodePair ......................   Passed    0.29 sec
+        Start 1605: unit.MeshView_RefusesAnInteriorSelectionItCannotHonour
+      Test #1601: unit.MeshView_EveryRenderIndexResolvesToACanonicalIdentity .................   Passed    0.30 sec
+        Start 1601: unit.MeshView_EveryRenderIndexResolvesToACanonicalIdentity
+      Test #1602: unit.MeshView_InteriorInspectionDrawsFourFacesPerTetrahedron ...............   Passed    0.31 sec
+        Start 1602: unit.MeshView_InteriorInspectionDrawsFourFacesPerTetrahedron
+      Test #1600: unit.MeshView_DrawsOnlyTheNodesItsFacetsReference ..........................   Passed    0.31 sec
+        Start 1600: unit.MeshView_DrawsOnlyTheNodesItsFacetsReference
+      Test #1603: unit.MeshView_IsDeterministicForTheSameMesh ................................   Passed    0.31 sec
+        Start 1603: unit.MeshView_IsDeterministicForTheSameMesh
+      Test #1604: unit.MeshView_RefusesAnIndexOutsideItsBuffers ..............................   Passed    0.30 sec
+        Start 1604: unit.MeshView_RefusesAnIndexOutsideItsBuffers
+      Test #1605: unit.MeshView_RefusesAnInteriorSelectionItCannotHonour .....................   Passed    0.27 sec
+        Start 1605: unit.MeshView_RefusesAnInteriorSelectionItCannotHonour
+      Test #1601: unit.MeshView_EveryRenderIndexResolvesToACanonicalIdentity .................   Passed    0.29 sec
+        Start 1601: unit.MeshView_EveryRenderIndexResolvesToACanonicalIdentity
+130/150 Test #1599: unit.MeshView_DoesNotDescribeADifferentMeshGeneration ......................   Passed    0.38 sec
+        Start 1606: unit.MeshView_ResolvesACanonicalIdentityBackToItsRenderPrimitives
+      Test #1602: unit.MeshView_InteriorInspectionDrawsFourFacesPerTetrahedron ...............   Passed    0.30 sec
+        Start 1602: unit.MeshView_InteriorInspectionDrawsFourFacesPerTetrahedron
+131/150 Test #1600: unit.MeshView_DrawsOnlyTheNodesItsFacetsReference ..........................   Passed    0.32 sec
+        Start 1607: unit.MeshView_SaysWhichCanonicalMeshItCameFrom
+      Test #1603: unit.MeshView_IsDeterministicForTheSameMesh ................................   Passed    0.32 sec
+        Start 1603: unit.MeshView_IsDeterministicForTheSameMesh
+      Test #1604: unit.MeshView_RefusesAnIndexOutsideItsBuffers ..............................   Passed    0.35 sec
+        Start 1604: unit.MeshView_RefusesAnIndexOutsideItsBuffers
+      Test #1605: unit.MeshView_RefusesAnInteriorSelectionItCannotHonour .....................   Passed    0.31 sec
+        Start 1605: unit.MeshView_RefusesAnInteriorSelectionItCannotHonour
+132/150 Test #1601: unit.MeshView_EveryRenderIndexResolvesToACanonicalIdentity .................   Passed    0.29 sec
+        Start 1608: unit.MeshView_TetFaceWindingsPointAwayFromTheOppositeVertex
+133/150 Test #1602: unit.MeshView_InteriorInspectionDrawsFourFacesPerTetrahedron ...............   Passed    0.34 sec
+        Start 1609: unit.MeshView_VolumeBoundaryDrawsEveryBoundaryFacetAndNoInteriorFace
+      Test #1606: unit.MeshView_ResolvesACanonicalIdentityBackToItsRenderPrimitives ..........   Passed    0.41 sec
+        Start 1606: unit.MeshView_ResolvesACanonicalIdentityBackToItsRenderPrimitives
+      Test #1607: unit.MeshView_SaysWhichCanonicalMeshItCameFrom .............................   Passed    0.46 sec
+        Start 1607: unit.MeshView_SaysWhichCanonicalMeshItCameFrom
+134/150 Test #1603: unit.MeshView_IsDeterministicForTheSameMesh ................................   Passed    0.39 sec
+      Test #1605: unit.MeshView_RefusesAnInteriorSelectionItCannotHonour .....................   Passed    0.31 sec
+        Start 1605: unit.MeshView_RefusesAnInteriorSelectionItCannotHonour
+      Test #1604: unit.MeshView_RefusesAnIndexOutsideItsBuffers ..............................   Passed    0.38 sec
+        Start 1604: unit.MeshView_RefusesAnIndexOutsideItsBuffers
+      Test #1608: unit.MeshView_TetFaceWindingsPointAwayFromTheOppositeVertex ................   Passed    0.34 sec
+        Start 1608: unit.MeshView_TetFaceWindingsPointAwayFromTheOppositeVertex
+      Test #1606: unit.MeshView_ResolvesACanonicalIdentityBackToItsRenderPrimitives ..........   Passed    0.23 sec
+        Start 1606: unit.MeshView_ResolvesACanonicalIdentityBackToItsRenderPrimitives
+      Test #1609: unit.MeshView_VolumeBoundaryDrawsEveryBoundaryFacetAndNoInteriorFace .......   Passed    0.35 sec
+        Start 1609: unit.MeshView_VolumeBoundaryDrawsEveryBoundaryFacetAndNoInteriorFace
+      Test #1607: unit.MeshView_SaysWhichCanonicalMeshItCameFrom .............................   Passed    0.23 sec
+        Start 1607: unit.MeshView_SaysWhichCanonicalMeshItCameFrom
+      Test #1605: unit.MeshView_RefusesAnInteriorSelectionItCannotHonour .....................   Passed    0.22 sec
+        Start 1605: unit.MeshView_RefusesAnInteriorSelectionItCannotHonour
+      Test #1606: unit.MeshView_ResolvesACanonicalIdentityBackToItsRenderPrimitives ..........   Passed    0.19 sec
+        Start 1606: unit.MeshView_ResolvesACanonicalIdentityBackToItsRenderPrimitives
+      Test #1608: unit.MeshView_TetFaceWindingsPointAwayFromTheOppositeVertex ................   Passed    0.24 sec
+        Start 1608: unit.MeshView_TetFaceWindingsPointAwayFromTheOppositeVertex
+      Test #1604: unit.MeshView_RefusesAnIndexOutsideItsBuffers ..............................   Passed    0.27 sec
+        Start 1604: unit.MeshView_RefusesAnIndexOutsideItsBuffers
+      Test #1609: unit.MeshView_VolumeBoundaryDrawsEveryBoundaryFacetAndNoInteriorFace .......   Passed    0.19 sec
+        Start 1609: unit.MeshView_VolumeBoundaryDrawsEveryBoundaryFacetAndNoInteriorFace
+      Test #1607: unit.MeshView_SaysWhichCanonicalMeshItCameFrom .............................   Passed    0.20 sec
+        Start 1607: unit.MeshView_SaysWhichCanonicalMeshItCameFrom
+135/150 Test #1605: unit.MeshView_RefusesAnInteriorSelectionItCannotHonour .....................   Passed    0.21 sec
+      Test #1606: unit.MeshView_ResolvesACanonicalIdentityBackToItsRenderPrimitives ..........   Passed    0.21 sec
+        Start 1606: unit.MeshView_ResolvesACanonicalIdentityBackToItsRenderPrimitives
+      Test #1608: unit.MeshView_TetFaceWindingsPointAwayFromTheOppositeVertex ................   Passed    0.23 sec
+        Start 1608: unit.MeshView_TetFaceWindingsPointAwayFromTheOppositeVertex
+136/150 Test #1604: unit.MeshView_RefusesAnIndexOutsideItsBuffers ..............................   Passed    0.23 sec
+      Test #1609: unit.MeshView_VolumeBoundaryDrawsEveryBoundaryFacetAndNoInteriorFace .......   Passed    0.27 sec
+        Start 1609: unit.MeshView_VolumeBoundaryDrawsEveryBoundaryFacetAndNoInteriorFace
+      Test #1607: unit.MeshView_SaysWhichCanonicalMeshItCameFrom .............................   Passed    0.26 sec
+        Start 1607: unit.MeshView_SaysWhichCanonicalMeshItCameFrom
+137/150 Test #1606: unit.MeshView_ResolvesACanonicalIdentityBackToItsRenderPrimitives ..........   Passed    0.24 sec
+      Test #1608: unit.MeshView_TetFaceWindingsPointAwayFromTheOppositeVertex ................   Passed    0.26 sec
+        Start 1608: unit.MeshView_TetFaceWindingsPointAwayFromTheOppositeVertex
+138/150 Test #1607: unit.MeshView_SaysWhichCanonicalMeshItCameFrom .............................   Passed    0.24 sec
+      Test #1609: unit.MeshView_VolumeBoundaryDrawsEveryBoundaryFacetAndNoInteriorFace .......   Passed    0.28 sec
+        Start 1609: unit.MeshView_VolumeBoundaryDrawsEveryBoundaryFacetAndNoInteriorFace
+139/150 Test #1608: unit.MeshView_TetFaceWindingsPointAwayFromTheOppositeVertex ................   Passed    0.25 sec
+140/150 Test #1609: unit.MeshView_VolumeBoundaryDrawsEveryBoundaryFacetAndNoInteriorFace .......   Passed    0.24 sec
+      Test #3211: compile_fail.viewer.object-id-as-presentation-id ...........................   Passed    7.62 sec
+        Start 3211: compile_fail.viewer.object-id-as-presentation-id
+141/150 Test #3211: compile_fail.viewer.object-id-as-presentation-id ...........................   Passed    5.06 sec
+        Start 3209: compile_fail.viewer.display-through-a-mutable-body
+      Test #3209: compile_fail.viewer.display-through-a-mutable-body .........................   Passed    4.86 sec
+        Start 3209: compile_fail.viewer.display-through-a-mutable-body
+      Test #3209: compile_fail.viewer.display-through-a-mutable-body .........................   Passed    5.08 sec
+        Start 3209: compile_fail.viewer.display-through-a-mutable-body
+      Test #3209: compile_fail.viewer.display-through-a-mutable-body .........................   Passed    5.42 sec
+        Start 3209: compile_fail.viewer.display-through-a-mutable-body
+      Test #3209: compile_fail.viewer.display-through-a-mutable-body .........................   Passed    5.15 sec
+        Start 3209: compile_fail.viewer.display-through-a-mutable-body
+142/150 Test #3209: compile_fail.viewer.display-through-a-mutable-body .........................   Passed    4.93 sec
+        Start 3212: compile_fail.viewer.presentation-id-from-integer
+      Test #3212: compile_fail.viewer.presentation-id-from-integer ...........................   Passed    5.08 sec
+        Start 3212: compile_fail.viewer.presentation-id-from-integer
+      Test #3212: compile_fail.viewer.presentation-id-from-integer ...........................   Passed    4.67 sec
+        Start 3212: compile_fail.viewer.presentation-id-from-integer
+      Test #3212: compile_fail.viewer.presentation-id-from-integer ...........................   Passed    5.16 sec
+        Start 3212: compile_fail.viewer.presentation-id-from-integer
+      Test #3212: compile_fail.viewer.presentation-id-from-integer ...........................   Passed    4.91 sec
+        Start 3212: compile_fail.viewer.presentation-id-from-integer
+143/150 Test #3212: compile_fail.viewer.presentation-id-from-integer ...........................   Passed    4.85 sec
+        Start 3213: compile_fail.viewer.copy-a-viewer
+      Test #3213: compile_fail.viewer.copy-a-viewer ..........................................   Passed    5.11 sec
+        Start 3213: compile_fail.viewer.copy-a-viewer
+      Test #3213: compile_fail.viewer.copy-a-viewer ..........................................   Passed    4.92 sec
+        Start 3213: compile_fail.viewer.copy-a-viewer
+      Test #3213: compile_fail.viewer.copy-a-viewer ..........................................   Passed    4.85 sec
+        Start 3213: compile_fail.viewer.copy-a-viewer
+      Test #3213: compile_fail.viewer.copy-a-viewer ..........................................   Passed    4.93 sec
+        Start 3213: compile_fail.viewer.copy-a-viewer
+144/150 Test #3213: compile_fail.viewer.copy-a-viewer ..........................................   Passed    4.91 sec
+        Start 3214: compile_fail.viewer.reach-a-document-through-the-viewer
+      Test #3214: compile_fail.viewer.reach-a-document-through-the-viewer ....................   Passed    4.98 sec
+        Start 3214: compile_fail.viewer.reach-a-document-through-the-viewer
+      Test #3214: compile_fail.viewer.reach-a-document-through-the-viewer ....................   Passed    4.87 sec
+        Start 3214: compile_fail.viewer.reach-a-document-through-the-viewer
+      Test #3214: compile_fail.viewer.reach-a-document-through-the-viewer ....................   Passed    4.99 sec
+        Start 3214: compile_fail.viewer.reach-a-document-through-the-viewer
+      Test #3214: compile_fail.viewer.reach-a-document-through-the-viewer ....................   Passed    4.90 sec
+        Start 3214: compile_fail.viewer.reach-a-document-through-the-viewer
+145/150 Test #3214: compile_fail.viewer.reach-a-document-through-the-viewer ....................   Passed    4.85 sec
+        Start 3215: compile_fail.meshview.node-id-from-a-render-index
+      Test #3215: compile_fail.meshview.node-id-from-a-render-index ..........................   Passed    4.43 sec
+        Start 3215: compile_fail.meshview.node-id-from-a-render-index
+      Test #3215: compile_fail.meshview.node-id-from-a-render-index ..........................   Passed    4.51 sec
+        Start 3215: compile_fail.meshview.node-id-from-a-render-index
+      Test #3215: compile_fail.meshview.node-id-from-a-render-index ..........................   Passed    4.36 sec
+        Start 3215: compile_fail.meshview.node-id-from-a-render-index
+      Test #3215: compile_fail.meshview.node-id-from-a-render-index ..........................   Passed    4.47 sec
+        Start 3215: compile_fail.meshview.node-id-from-a-render-index
+146/150 Test #3215: compile_fail.meshview.node-id-from-a-render-index ..........................   Passed    4.40 sec
+        Start 3219: compile_fail.meshview.reach-a-mesh-through-a-view
+      Test #3219: compile_fail.meshview.reach-a-mesh-through-a-view ..........................   Passed    4.36 sec
+        Start 3219: compile_fail.meshview.reach-a-mesh-through-a-view
+      Test #3219: compile_fail.meshview.reach-a-mesh-through-a-view ..........................   Passed    4.41 sec
+        Start 3219: compile_fail.meshview.reach-a-mesh-through-a-view
+      Test #3219: compile_fail.meshview.reach-a-mesh-through-a-view ..........................   Passed    4.28 sec
+        Start 3219: compile_fail.meshview.reach-a-mesh-through-a-view
+      Test #3219: compile_fail.meshview.reach-a-mesh-through-a-view ..........................   Passed    4.32 sec
+        Start 3219: compile_fail.meshview.reach-a-mesh-through-a-view
+147/150 Test #3219: compile_fail.meshview.reach-a-mesh-through-a-view ..........................   Passed    4.39 sec
+        Start 3217: compile_fail.meshview.render-index-from-a-node-id
+      Test #3217: compile_fail.meshview.render-index-from-a-node-id ..........................   Passed    4.29 sec
+        Start 3217: compile_fail.meshview.render-index-from-a-node-id
+      Test #3217: compile_fail.meshview.render-index-from-a-node-id ..........................   Passed    4.66 sec
+        Start 3217: compile_fail.meshview.render-index-from-a-node-id
+      Test #3217: compile_fail.meshview.render-index-from-a-node-id ..........................   Passed    4.31 sec
+        Start 3217: compile_fail.meshview.render-index-from-a-node-id
+      Test #3217: compile_fail.meshview.render-index-from-a-node-id ..........................   Passed    4.53 sec
+        Start 3217: compile_fail.meshview.render-index-from-a-node-id
+148/150 Test #3217: compile_fail.meshview.render-index-from-a-node-id ..........................   Passed    4.45 sec
+        Start 3218: compile_fail.meshview.mutate-a-mesh
+      Test #3218: compile_fail.meshview.mutate-a-mesh ........................................   Passed    4.69 sec
+        Start 3218: compile_fail.meshview.mutate-a-mesh
+      Test #3218: compile_fail.meshview.mutate-a-mesh ........................................   Passed    4.47 sec
+        Start 3218: compile_fail.meshview.mutate-a-mesh
+      Test #3218: compile_fail.meshview.mutate-a-mesh ........................................   Passed    4.38 sec
+        Start 3218: compile_fail.meshview.mutate-a-mesh
+      Test #3218: compile_fail.meshview.mutate-a-mesh ........................................   Passed    4.46 sec
+        Start 3218: compile_fail.meshview.mutate-a-mesh
+149/150 Test #3218: compile_fail.meshview.mutate-a-mesh ........................................   Passed    4.80 sec
+        Start 3216: compile_fail.meshview.element-id-from-a-render-index
+      Test #3216: compile_fail.meshview.element-id-from-a-render-index .......................   Passed    4.27 sec
+        Start 3216: compile_fail.meshview.element-id-from-a-render-index
+      Test #3216: compile_fail.meshview.element-id-from-a-render-index .......................   Passed    4.37 sec
+        Start 3216: compile_fail.meshview.element-id-from-a-render-index
+      Test #3216: compile_fail.meshview.element-id-from-a-render-index .......................   Passed    4.12 sec
+        Start 3216: compile_fail.meshview.element-id-from-a-render-index
+      Test #3216: compile_fail.meshview.element-id-from-a-render-index .......................   Passed    4.12 sec
+        Start 3216: compile_fail.meshview.element-id-from-a-render-index
+150/150 Test #3216: compile_fail.meshview.element-id-from-a-render-index .......................   Passed    4.19 sec
+
+100% tests passed out of 150
+
+Total Test time (real) = 290.54 sec

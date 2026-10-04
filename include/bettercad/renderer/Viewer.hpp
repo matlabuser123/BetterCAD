@@ -1,6 +1,8 @@
 #pragma once
 
 #include <bettercad/core/Error.hpp>
+#include <bettercad/meshing/MeshIds.hpp>
+#include <bettercad/renderer/MeshView.hpp>
 #include <bettercad/core/Id.hpp>
 #include <bettercad/core/geometry/Body.hpp>
 #include <bettercad/core/units/Units.hpp>
@@ -91,11 +93,29 @@ private:
 };
 
 /// What the viewer is showing for one document object.
+/// What kind of thing a presentation shows.
+///
+/// ADDED BY P16-VIZ-001, because "hide the CAD" and "hide the mesh" have to be
+/// separable: a mesh presentation is not a CAD object, and `object` on it names
+/// the feature the mesh was built FROM rather than something being drawn.
+enum class PresentationKind : std::uint8_t {
+    /// A `geometry::Body`, drawn through AIS_Shape.
+    CadBody,
+    /// An engineering mesh, drawn through batched primitive arrays.
+    EngineeringMesh,
+};
+
+[[nodiscard]] BETTERCAD_RENDERER_EXPORT std::string_view toString(PresentationKind kind) noexcept;
+
 struct DisplayedObject {
     PresentationId presentation{};
     /// The CAD identity. The viewer's only link back to the model, and it is a
     /// reference rather than ownership.
     ObjectId object{};
+    /// What this presentation shows. For an engineering mesh, `object` names
+    /// the feature the mesh was built FROM, which is why the kind has to be
+    /// carried: hiding the CAD and hiding its mesh are different acts.
+    PresentationKind kind = PresentationKind::CadBody;
     bool visible = true;
     bool selected = false;
 
@@ -142,6 +162,29 @@ struct RenderedImage {
 ///
 /// Move-only: it owns a graphic driver, a window and a view, which are not
 /// copyable in any meaningful sense.
+/// How a displayed engineering mesh is drawn.
+enum class MeshStyle : std::uint8_t {
+    /// Flat-shaded facets only.
+    Shaded,
+    /// Flat-shaded facets with their edges over them. The default, because a
+    /// shaded mesh with no edges is indistinguishable from a solid.
+    ShadedWithEdges,
+    /// Edges only.
+    Wireframe,
+};
+
+[[nodiscard]] BETTERCAD_RENDERER_EXPORT std::string_view toString(MeshStyle style) noexcept;
+
+/// What a pick on a mesh presentation hit.
+struct MeshPick {
+    PresentationId presentation{};
+    /// THE RENDER TRIANGLE, not an element. Translate it through the MeshView
+    /// that built the presentation; a position in a GPU buffer is not identity.
+    std::size_t triangle = 0;
+
+    friend bool operator==(const MeshPick&, const MeshPick&) = default;
+};
+
 class BETTERCAD_RENDERER_EXPORT Viewer {
 public:
     /// A view that renders offscreen, into a native window that is never
@@ -181,6 +224,51 @@ public:
 
     /// Removes a presentation. The object stays in the document; only the
     /// presentation goes.
+    /// Displays @p view as the engineering mesh of @p source.
+    ///
+    /// ONE BATCHED PRESENTATION FOR THE WHOLE MESH, never one per element.
+    /// @p source names the feature the mesh was built from, so the viewer can
+    /// tell a mesh presentation from the CAD body beside it; the viewer holds
+    /// no mesh and no mesh identity.
+    ///
+    /// The view's buffers are copied, and its `MeshStamp` with them: a caller
+    /// that remeshes displays a NEW view, and `meshStampOf` is what says which
+    /// generation is on screen.
+    [[nodiscard]] Result<PresentationId> displayMesh(ObjectId source, const MeshView& view,
+                                                     MeshStyle style = MeshStyle::ShadedWithEdges);
+
+    /// The mesh generation a mesh presentation is showing.
+    [[nodiscard]] Result<meshing::MeshStamp> meshStampOf(PresentationId presentation) const;
+
+    /// Changes how a mesh presentation is drawn. A VISUAL OPERATION: it
+    /// touches no mesh and triggers no regeneration.
+    [[nodiscard]] Result<void> setMeshStyle(PresentationId presentation, MeshStyle style);
+    [[nodiscard]] Result<MeshStyle> meshStyleOf(PresentationId presentation) const;
+
+    /// Draws @p triangles as highlighted. Render indices, from the MeshView
+    /// that built this presentation; highlight state lives here and nowhere
+    /// near the mesh.
+    /// Draws a mesh presentation as stale, or as current.
+    ///
+    /// The viewer does not DECIDE staleness -- `renderer::statusOf` does, from
+    /// the document's own geometry revision. This only renders the decision,
+    /// which is why it is a setter and not a query of the document.
+    [[nodiscard]] Result<void> setMeshStale(PresentationId presentation, bool stale);
+    [[nodiscard]] Result<bool> meshIsStale(PresentationId presentation) const;
+
+    [[nodiscard]] Result<void> setMeshHighlight(PresentationId presentation,
+                                                std::span<const std::size_t> triangles);
+    [[nodiscard]] Result<std::vector<std::size_t>> meshHighlightOf(
+        PresentationId presentation) const;
+
+    /// Picks a mesh at a pixel.
+    ///
+    /// Answers a RENDER TRIANGLE INDEX, which the caller translates through the
+    /// MeshView that built the presentation. The viewer deliberately does not
+    /// do that translation: it has no MeshView and no mesh, and an AIS object
+    /// has no business producing engineering identity.
+    [[nodiscard]] Result<std::optional<MeshPick>> pickMeshAt(int x, int y);
+
     [[nodiscard]] Result<void> remove(PresentationId presentation);
 
     [[nodiscard]] std::span<const DisplayedObject> displayed() const noexcept;

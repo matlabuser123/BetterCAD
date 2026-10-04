@@ -2,12 +2,16 @@ bettercad_add_executable(bettercad
     SOURCES
         main.cpp
         MainWindow.cpp
+        MeshInspectorPanel.cpp
+        MeshInspectorPanel.hpp
         MainWindow.hpp
         ViewportWidget.cpp
         ViewportWidget.hpp
     LINK
         BetterCAD::core
         BetterCAD::geometry
+        BetterCAD::features
+        BetterCAD::meshing
         BetterCAD::renderer
         Qt6::Widgets
 )

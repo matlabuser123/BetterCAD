@@ -53,6 +53,15 @@ public:
     /// The object last picked, for the status bar and for tests.
     [[nodiscard]] std::optional<ObjectId> lastPicked() const noexcept;
 
+    /// What a click resolves to.
+    ///
+    /// GUI STATE. A CAD body and its mesh occupy the same space, so without a
+    /// mode the answer would depend on drawing order -- the one thing a
+    /// selection must never depend on. Switching it changes what the NEXT
+    /// click means and nothing about the model.
+    void setPickMesh(bool pickMesh) noexcept { pickMesh_ = pickMesh; }
+    [[nodiscard]] bool picksMesh() const noexcept { return pickMesh_; }
+
     [[nodiscard]] renderer::Viewer* viewer() noexcept;
 
     /// The widget's size in the DEVICE pixels the view works in, and the ratio
@@ -66,6 +75,10 @@ public:
 Q_SIGNALS:
     /// A pick resolved to a CAD identity, or to nothing.
     void picked(std::optional<ObjectId> object);
+    /// A pick resolved to a RENDER TRIANGLE of a mesh presentation, or to
+    /// nothing. A render index, which the window translates through the
+    /// MeshView that built the presentation -- the widget has neither.
+    void meshPicked(std::optional<std::size_t> triangle);
 
 protected:
     void showEvent(QShowEvent* event) override;
@@ -87,6 +100,7 @@ private:
     QString unavailable_;
     QPoint lastMouse_{};
     std::optional<ObjectId> lastPicked_{};
+    bool pickMesh_ = true;
 };
 
 } // namespace bettercad::app

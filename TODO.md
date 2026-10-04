@@ -13,8 +13,8 @@ Current:
            P16 — Meshing
 
 Current milestone:
-           None. INFRA-VIEWER-001 is QUALIFIED (2026-10-04) and the next
-           milestone is a scope decision, not Claude's to make.
+           None. P16-VIZ-001 is PASS (2026-10-04) and the next milestone
+           is a scope decision, not Claude's to make.
 
 Qualified:
            P0–P10 — BetterCAD v0.1.0
@@ -25,13 +25,12 @@ Qualified:
            P15 — Materials / Engineering Data
 
 Next:
-           P16-VIZ-001 — Mesh Visualisation / Inspection. NO LONGER
-           BLOCKED: INFRA-VIEWER-001 qualified on 2026-10-04 and supplies the
-           viewport, CAD display, camera and selection system its 16 blocked
-           checkboxes needed. It is NOT thereby authorized — starting it is a
-           scope decision. The original audit, and what it found missing, is
-           docs/verification/P16-VIZ-001/VIEWER_AUDIT.md; what now exists is
-           docs/verification/INFRA-VIEWER-001/README.md.
+           P16-CMD-001 — Meshing Commands / Undo / Redo. NOT AUTHORIZED:
+           being next in the P16 sequence is not permission to start it.
+           Starting it is a scope decision.
+
+           Also unstarted: P16-PERSIST-001, P16-CLI-001, P16-REFMOD-001,
+           P16-QUAL-001.
 
 Qualified milestones in P16:
            P16-ARCH-001 — Meshing Architecture (ADR-030 to ADR-033)
@@ -45,6 +44,7 @@ Qualified milestones in P16:
            P16-MAP-001 — Geometry ↔ Mesh Correspondence / Regions
            INFRA-VIEWER-001 — OCCT visualization toolchain qualification
                               (infrastructure)
+           P16-VIZ-001 — Mesh Visualisation / Inspection
 
 P16 objective:
            Geometry
@@ -1316,8 +1316,23 @@ tree `335f7fc176224ffd74db687b6097a664ee4d4fde`
 
 ## Mesh Visualisation / Inspection
 
-**BLOCKED 2026-10-03.** 0/18, no production code written. Audit:
-[docs/verification/P16-VIZ-001/](docs/verification/P16-VIZ-001/README.md).
+**PASS 2026-10-04.** 18/18. Evidence:
+[docs/verification/P16-VIZ-001/](docs/verification/P16-VIZ-001/README.md),
+tree `6103d53414a0ccdfa87d7edf0c6f62d921e1b535`
+([FREEZE.md](docs/verification/P16-VIZ-001/FREEZE.md)).
+
+Every stage of the three-preset qualification exited 0: 3219 tests in each of
+`debug-ext`, `release-ext` and `debug-shared-ext`, each built from clean with
+0 warnings under `-Werror`, plus 301 tests repeated five times in Release and
+in Debug. 19 of 19 mutations killed by a test, none surviving. Three
+production defects and six test gaps were found and fixed during the review.
+
+It was BLOCKED on 2026-10-03 at `e7d90e9` with 0/18 and no production code,
+because BetterCAD had no 3D viewport, no CAD display and no selection system,
+and the OCCT dependency was built without its visualization driver.
+`INFRA-VIEWER-001` was authorized out of band to supply them and qualified on
+2026-10-04 at `d9c8d53`. The account below is the blocking audit and is kept
+because it is why this milestone has the shape it has.
 
 `apps/bettercad/` is 118 lines -- a window with File and Help menus and a
 `QLabel` reading "Viewport -- not implemented yet", described in its own
@@ -1340,33 +1355,42 @@ four gate clauses are all about what a person can SEE.
 Unblocking is a scope decision: an `INFRA-VIEWER-001` first, or the headless
 adapter layer alone as its own entry with its own gate.
 
-* [ ] Display surface mesh
-* [ ] Display volume-mesh boundary
-* [ ] Optional interior element inspection
-* [ ] Wireframe / edge display
-* [ ] Node inspection
-* [ ] Element inspection
-* [ ] Element ID display
-* [ ] Quality inspection
-* [ ] Worst-element navigation
-* [ ] Boundary-region highlighting
-* [ ] CAD ↔ mesh selection linkage
-* [ ] Mesh visibility toggle
-* [ ] Clear stale-mesh visual state
-* [ ] Distinguish current vs invalidated mesh
-* [ ] Do not duplicate canonical mesh data in GUI
-* [ ] Rendering does not mutate mesh
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Display surface mesh
+* [x] Display volume-mesh boundary
+* [x] Optional interior element inspection
+* [x] Wireframe / edge display
+* [x] Node inspection
+* [x] Element inspection
+* [x] Element ID display
+* [x] Quality inspection
+* [x] Worst-element navigation
+* [x] Boundary-region highlighting
+* [x] CAD ↔ mesh selection linkage
+* [x] Mesh visibility toggle
+* [x] Clear stale-mesh visual state
+* [x] Distinguish current vs invalidated mesh
+* [x] Do not duplicate canonical mesh data in GUI
+* [x] Rendering does not mutate mesh
+* [x] Regression PASS
+* [x] Evidence recorded
 
 ### Gate
 
 ```text
-mesh inspectable
-+ stale mesh obvious
-+ quality defects inspectable
-+ CAD/mesh mapping visible
-+ GUI remains adapter over core mesh state
+mesh inspectable                            [x]  surface, volume boundary,
+                                                 wireframe, and the interior
+                                                 of chosen tetrahedra
++ stale mesh obvious                         [x]  a distinct colour, asserted
+                                                 as a pixel difference, and
+                                                 one state label from the
+                                                 document's own revision
++ quality defects inspectable                [x]  the report's categories and
+                                                 per-metric worst element
++ CAD/mesh mapping visible                   [x]  both directions, including
+                                                 an UNNAMED hole wall
++ GUI remains adapter over core mesh state   [x]  a finished Mesh has no
+                                                 mutator; proved as a build
+                                                 failure, not a convention
 ```
 
 ---

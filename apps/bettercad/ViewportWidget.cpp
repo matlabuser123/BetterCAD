@@ -180,10 +180,24 @@ void ViewportWidget::mousePressEvent(QMouseEvent* event) {
         return;
     }
     if (event->button() == Qt::LeftButton) {
-        // A CLICK IS A PICK, and what comes back is a CAD identity. The
-        // widget never sees a graphics index.
-        const Result<std::optional<ObjectId>> object =
-            viewer_->pickAt(toDevice(event->pos().x()), toDevice(event->pos().y()));
+        const int x = toDevice(event->pos().x());
+        const int y = toDevice(event->pos().y());
+        if (pickMesh_) {
+            // A MESH PICK ANSWERS A RENDER TRIANGLE, and the widget passes it
+            // on without interpreting it: translating a buffer position into
+            // an ElementId needs the MeshView that built the presentation, and
+            // a Qt widget has no business holding one.
+            const Result<std::optional<renderer::MeshPick>> hit = viewer_->pickMeshAt(x, y);
+            if (hit.has_value()) {
+                Q_EMIT meshPicked(hit->has_value() ? std::optional<std::size_t>{(*hit)->triangle}
+                                                   : std::nullopt);
+                update();
+            }
+            return;
+        }
+        // A CAD pick resolves to a CAD identity. The widget never sees a
+        // graphics index.
+        const Result<std::optional<ObjectId>> object = viewer_->pickAt(x, y);
         if (object.has_value()) {
             lastPicked_ = *object;
             Q_EMIT picked(*object);

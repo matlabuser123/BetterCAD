@@ -26,6 +26,10 @@ bettercad_add_executable(bettercad_tests
         TestHelpers.hpp
         assembly/CommandTests.cpp
         meshing/GeometryMeshMapTests.cpp
+        renderer/MeshDisplayTests.cpp
+        renderer/MeshInspectionTests.cpp
+        renderer/MeshSceneTests.cpp
+        renderer/MeshViewTests.cpp
         renderer/ViewerTests.cpp
         meshing/GeometryPreparationTests.cpp
         meshing/MeshDataTests.cpp
@@ -1421,6 +1425,37 @@ if(TARGET bettercad)
         EXIT_CODE 0
         STDOUT_REGEX "viewport: (3D view created|no 3D view)")
     set_tests_properties(gui.launch.smoke PROPERTIES TIMEOUT 60)
+
+    # The mesh inspector, driven end to end WITHOUT A 3D VIEW (P16-VIZ-001).
+    #
+    # Under the offscreen platform plugin there is no native window and so no
+    # view, which is exactly why these pass: the inspection layer is viewless.
+    # Generation, the current/stale state, element selection, worst-element
+    # navigation and both directions of the CAD-to-mesh linkage are all
+    # assertable on a machine with no OpenGL at all. Drawing is what a view
+    # adds, and the renderer's own [meshdisplay] tests cover that.
+    #
+    # ONE TEST PER CLAIM, so a failure says which capability broke rather than
+    # only that the GUI printed something unexpected.
+    foreach(claim IN ITEMS
+            "generated;mesh: generated: [0-9]+ nodes, [0-9]+ Tet4, [0-9]+ boundary facets"
+            "current;mesh: state when current: Mesh: current"
+            "element;mesh: selected a boundary facet: Element [0-9]+"
+            "worst;mesh: navigated to the worst aspect ratio: element [0-9]+"
+            "cad-to-mesh;mesh: CAD face 0 highlights: [0-9]+ facets, [0-9]+ render triangles"
+            "mesh-to-cad;mesh: that facet came from: CAD face [0-9]+"
+            "stale;mesh: state after editing the geometry: Mesh: STALE"
+            "regenerated;mesh: state after regenerating: Mesh: current"
+            "selection-dropped;mesh: selection after regenerating: Nothing selected")
+        list(GET claim 0 claim_name)
+        list(GET claim 1 claim_regex)
+        bettercad_add_process_test(gui.mesh.${claim_name}
+            COMMAND "$<TARGET_FILE:bettercad>"
+            ARGS "--smoke-test|-platform|offscreen"
+            EXIT_CODE 0
+            STDOUT_REGEX "${claim_regex}")
+        set_tests_properties(gui.mesh.${claim_name} PROPERTIES TIMEOUT 60)
+    endforeach()
 endif()
 
 # ---------------------------------------------------------------------------

@@ -34,6 +34,7 @@
 #define NOMINMAX
 #include <windows.h>
 
+#include "OcctMeshPresentation.hpp"
 #include "core/geometry/occt/OcctBody.hpp"
 #include "core/geometry/occt/OcctGuard.hpp"
 
@@ -313,10 +314,239 @@ Result<PresentationId> Viewer::display(ObjectId object, const geometry::Body& bo
         impl_->context->Display(presentation, AIS_Shaded, 0, false);
 
         const PresentationId id = PresentationId::fromValue(++impl_->lastPresentation);
-        impl_->displayed.push_back(DisplayedObject{id, object, true, false});
+        impl_->displayed.push_back(
+            DisplayedObject{id, object, PresentationKind::CadBody, true, false});
         impl_->presentations.push_back(presentation);
         return id;
     });
+}
+
+std::string_view toString(PresentationKind kind) noexcept {
+    switch (kind) {
+    case PresentationKind::CadBody:
+        return "a CAD body";
+    case PresentationKind::EngineeringMesh:
+        return "an engineering mesh";
+    }
+    return "an unknown presentation";
+}
+
+std::string_view toString(MeshStyle style) noexcept {
+    switch (style) {
+    case MeshStyle::Shaded:
+        return "shaded";
+    case MeshStyle::ShadedWithEdges:
+        return "shaded with edges";
+    case MeshStyle::Wireframe:
+        return "wireframe";
+    }
+    return "unknown";
+}
+
+namespace {
+
+[[nodiscard]] occt::MeshDrawStyle drawStyleOf(MeshStyle style) noexcept {
+    switch (style) {
+    case MeshStyle::Shaded:
+        return occt::MeshDrawStyle::Shaded;
+    case MeshStyle::ShadedWithEdges:
+        return occt::MeshDrawStyle::ShadedWithEdges;
+    case MeshStyle::Wireframe:
+        return occt::MeshDrawStyle::Wireframe;
+    }
+    return occt::MeshDrawStyle::ShadedWithEdges;
+}
+
+[[nodiscard]] MeshStyle styleOf(occt::MeshDrawStyle style) noexcept {
+    switch (style) {
+    case occt::MeshDrawStyle::Shaded:
+        return MeshStyle::Shaded;
+    case occt::MeshDrawStyle::ShadedWithEdges:
+        return MeshStyle::ShadedWithEdges;
+    case occt::MeshDrawStyle::Wireframe:
+        return MeshStyle::Wireframe;
+    }
+    return MeshStyle::ShadedWithEdges;
+}
+
+/// The mesh presentation behind @p presentation, or a refusal naming what the
+/// handle actually shows.
+[[nodiscard]] Result<Handle(occt::MeshPresentation)> meshPresentationAt(
+    const std::optional<std::size_t>& index, PresentationId presentation,
+    const std::vector<DisplayedObject>& displayed,
+    const std::vector<Handle(AIS_InteractiveObject)>& presentations) {
+    if (!index.has_value()) {
+        return makeError(ErrorCode::NotFound,
+                         std::format("viewer: presentation {} is not displayed",
+                                     presentation.value()));
+    }
+    Handle(occt::MeshPresentation) mesh =
+        Handle(occt::MeshPresentation)::DownCast(presentations[*index]);
+    if (mesh.IsNull()) {
+        // Refused, and it says what the presentation IS rather than only what
+        // it is not.
+        return makeError(ErrorCode::FailedPrecondition,
+                         std::format("viewer: presentation {} shows {}, not an engineering mesh",
+                                     presentation.value(), toString(displayed[*index].kind)));
+    }
+    return mesh;
+}
+
+} // namespace
+
+Result<PresentationId> Viewer::displayMesh(ObjectId source, const MeshView& view,
+                                           MeshStyle style) {
+    if (!source.isValid()) {
+        return makeError(ErrorCode::InvalidArgument,
+                         "viewer: the invalid handle cannot name the source of a mesh");
+    }
+    if (view.triangleCount() == 0U) {
+        return makeError(ErrorCode::FailedPrecondition,
+                         "viewer: a mesh view with no triangles has nothing to display");
+    }
+    return geometry::occt::guardKernelCall(
+        "viewer mesh display", [&]() -> Result<PresentationId> {
+            Handle(occt::MeshPresentation) presentation =
+                new occt::MeshPresentation(view, drawStyleOf(style));
+            // The display mode is pinned rather than left to the context's
+            // default. MeshPresentation::Compute returns early for any mode
+            // but 0, so a context whose default mode was not 0 would
+            // re-display an erased mesh as nothing at all.
+            //
+            // A GUARD, NOT A FIX: it was tested by removal, and the
+            // [meshdisplay] suite passes without it, because
+            // AIS_InteractiveContext's default display mode is already 0. It
+            // is kept because INFRA-VIEWER-001's Finding 1 was exactly this
+            // shape for AIS_Shape -- whose own default IS wireframe -- and
+            // pinning the mode costs one line and removes the dependency.
+            presentation->SetDisplayMode(0);
+            impl_->context->Display(presentation, 0, 0, false);
+
+            const PresentationId id = PresentationId::fromValue(++impl_->lastPresentation);
+            impl_->displayed.push_back(
+                DisplayedObject{id, source, PresentationKind::EngineeringMesh, true, false});
+            impl_->presentations.push_back(presentation);
+            return id;
+        });
+}
+
+Result<meshing::MeshStamp> Viewer::meshStampOf(PresentationId presentation) const {
+    Result<Handle(occt::MeshPresentation)> mesh = meshPresentationAt(
+        impl_->indexOf(presentation), presentation, impl_->displayed, impl_->presentations);
+    if (!mesh.has_value()) {
+        return std::unexpected(mesh.error());
+    }
+    return (*mesh)->stamp();
+}
+
+Result<void> Viewer::setMeshStyle(PresentationId presentation, MeshStyle style) {
+    Result<Handle(occt::MeshPresentation)> mesh = meshPresentationAt(
+        impl_->indexOf(presentation), presentation, impl_->displayed, impl_->presentations);
+    if (!mesh.has_value()) {
+        return std::unexpected(mesh.error());
+    }
+    return geometry::occt::guardKernelCall("viewer mesh style", [&]() -> Result<void> {
+        // A VISUAL OPERATION. Nothing here touches a mesh and nothing
+        // regenerates: the presentation recomputes from buffers it already
+        // holds.
+        (*mesh)->setStyle(drawStyleOf(style));
+        impl_->context->Redisplay(*mesh, false);
+        return Result<void>{};
+    });
+}
+
+Result<MeshStyle> Viewer::meshStyleOf(PresentationId presentation) const {
+    Result<Handle(occt::MeshPresentation)> mesh = meshPresentationAt(
+        impl_->indexOf(presentation), presentation, impl_->displayed, impl_->presentations);
+    if (!mesh.has_value()) {
+        return std::unexpected(mesh.error());
+    }
+    return styleOf((*mesh)->style());
+}
+
+Result<void> Viewer::setMeshStale(PresentationId presentation, bool stale) {
+    Result<Handle(occt::MeshPresentation)> mesh = meshPresentationAt(
+        impl_->indexOf(presentation), presentation, impl_->displayed, impl_->presentations);
+    if (!mesh.has_value()) {
+        return std::unexpected(mesh.error());
+    }
+    return geometry::occt::guardKernelCall("viewer mesh staleness", [&]() -> Result<void> {
+        (*mesh)->setStale(stale);
+        impl_->context->Redisplay(*mesh, false);
+        return Result<void>{};
+    });
+}
+
+Result<bool> Viewer::meshIsStale(PresentationId presentation) const {
+    Result<Handle(occt::MeshPresentation)> mesh = meshPresentationAt(
+        impl_->indexOf(presentation), presentation, impl_->displayed, impl_->presentations);
+    if (!mesh.has_value()) {
+        return std::unexpected(mesh.error());
+    }
+    return (*mesh)->isStale();
+}
+
+Result<void> Viewer::setMeshHighlight(PresentationId presentation,
+                                      std::span<const std::size_t> triangles) {
+    Result<Handle(occt::MeshPresentation)> mesh = meshPresentationAt(
+        impl_->indexOf(presentation), presentation, impl_->displayed, impl_->presentations);
+    if (!mesh.has_value()) {
+        return std::unexpected(mesh.error());
+    }
+    for (const std::size_t triangle : triangles) {
+        if (triangle >= (*mesh)->triangleCount()) {
+            return makeError(ErrorCode::InvalidArgument,
+                             std::format("viewer: render triangle {} of {} in presentation {}",
+                                         triangle, (*mesh)->triangleCount(),
+                                         presentation.value()));
+        }
+    }
+    return geometry::occt::guardKernelCall("viewer mesh highlight", [&]() -> Result<void> {
+        (*mesh)->setHighlighted(triangles);
+        impl_->context->Redisplay(*mesh, false);
+        return Result<void>{};
+    });
+}
+
+Result<std::vector<std::size_t>> Viewer::meshHighlightOf(PresentationId presentation) const {
+    Result<Handle(occt::MeshPresentation)> mesh = meshPresentationAt(
+        impl_->indexOf(presentation), presentation, impl_->displayed, impl_->presentations);
+    if (!mesh.has_value()) {
+        return std::unexpected(mesh.error());
+    }
+    return (*mesh)->highlighted();
+}
+
+Result<std::optional<MeshPick>> Viewer::pickMeshAt(int x, int y) {
+    return geometry::occt::guardKernelCall(
+        "viewer mesh pick", [&]() -> Result<std::optional<MeshPick>> {
+            impl_->context->MoveTo(x, y, impl_->view, false);
+            if (!impl_->context->HasDetected()) {
+                return std::optional<MeshPick>{};
+            }
+            const Handle(SelectMgr_EntityOwner) owner = impl_->context->DetectedOwner();
+            if (owner.IsNull()) {
+                return std::optional<MeshPick>{};
+            }
+            Handle(occt::MeshPresentation) detected =
+                Handle(occt::MeshPresentation)::DownCast(owner->Selectable());
+            if (detected.IsNull()) {
+                // A CAD body was under the cursor, not a mesh. Nothing, rather
+                // than the nearest mesh.
+                return std::optional<MeshPick>{};
+            }
+            const int triangle = detected->lastDetectedTriangle();
+            if (triangle < 0) {
+                return std::optional<MeshPick>{};
+            }
+            for (std::size_t i = 0; i < impl_->presentations.size(); ++i) {
+                if (impl_->presentations[i] == detected) {
+                    return std::optional<MeshPick>{MeshPick{
+                        impl_->displayed[i].presentation, static_cast<std::size_t>(triangle)}};
+                }
+            }
+            return std::optional<MeshPick>{};
+        });
 }
 
 Result<void> Viewer::remove(PresentationId presentation) {

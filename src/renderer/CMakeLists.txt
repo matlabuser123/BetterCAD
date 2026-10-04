@@ -9,17 +9,29 @@
 # selection and a camera, and its only link back to the model is the ObjectId
 # a caller supplies when displaying a body.
 #
-# It sits at layer 6 because it uses geometry (layer 0) and will later display
-# meshes (layer 4). Nothing depends on it: a renderer is a leaf.
+# It sits at layer 6 because it uses geometry (layer 0) and meshing (layer 4).
+# Nothing depends on it: a renderer is a leaf.
+#
+# MeshView.cpp is NOT under occt/ and that is deliberate: the read-only mesh
+# visualisation adapter (P16-VIZ-001) contains no OCCT and no Qt, so it is
+# testable without a display, and rule 1 of the architecture check has nothing
+# to contain. Everything that talks to OCCT stays in occt/.
 bettercad_add_library(bettercad_renderer
     ALIAS renderer
     EXPORT_BASE BETTERCAD_RENDERER
     EXPORT_HEADER bettercad/renderer/Export.hpp
     SOURCES
+        MeshInspection.cpp
+        MeshScene.cpp
+        MeshView.cpp
+        occt/OcctMeshPresentation.cpp
         occt/OcctViewer.cpp
     PUBLIC_LINK
         BetterCAD::core
         BetterCAD::geometry
+        # Public: MeshView.hpp takes a meshing::Mesh and hands back NodeId and
+        # ElementId, so a consumer of this module's headers needs meshing too.
+        BetterCAD::meshing
     PRIVATE_LINK
         # The modelling toolkits are needed because the viewer displays a
         # TopoDS_Shape through AIS_Shape; the visualization ones are what
