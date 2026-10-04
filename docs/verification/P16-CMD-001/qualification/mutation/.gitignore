@@ -1,0 +1,7 @@
+
+# P16-CMD-001 mutation harness working files: snapshots of production sources
+# and the last mutation's transient build/test logs. results.txt is the evidence.
+pristine/
+build.log
+run.log
+mutate.lock

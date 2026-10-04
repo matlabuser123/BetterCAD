@@ -1,0 +1,20 @@
+M1 undo applies the AFTER state instead of the before state [MeshingCommands.cpp] killed (assertions: 1117 | 1041 passed | 76 failed)
+M2 the before-state is captured AFTER the edit is applied [MeshingCommands.cpp] killed (assertions: 1117 | 1041 passed | 76 failed)
+M3 redo re-derives the edit instead of replaying the recorded after-state [MeshingCommands.cpp] *** SURVIVED ***
+M4 setDefinition reports every assignment as an effective change [MeshControl.cpp] killed (assertions: 1147 | 1143 passed | 4 failed)
+M5 setDefinition assigns before validating [MeshControl.cpp]                   *** SURVIVED ***
+M6 clone drops the ID, so a redone create cannot be re-inserted [MeshControl.cpp] killed (assertions: 1133 | 1129 passed | 4 failed)
+M7 removing a local control removes every control on the same feature [MeshingCommands.cpp] killed (assertions: 1147 | 1143 passed | 4 failed)
+M8 the mesh is not invalidated when the sizing intent changes [Mesher.cpp]     killed (assertions: 1147 | 1142 passed | 5 failed)
+M9 a boundary-set rename invalidates the mesh (precision lost) [Mesher.cpp]    killed (assertions: 1140 | 1138 passed | 2 failed)
+M10 findMeshControl trusts the ID instead of checking the object's type [MeshingCommands.cpp] killed (assertions: 1147 | 1144 passed | 3 failed)
+M11 a failed generation discards the mesh it could not replace [Mesher.cpp]    killed (assertions: 1124 | 1122 passed | 2 failed)
+M12 the redo branch is not discarded when a new command is executed [CommandHistory.cpp] killed (assertions: 1147 | 1144 passed | 3 failed)
+
+---- re-run of both survivors under [meshcmd],[meshcontrol] ----
+M3 redo re-derives the edit instead of replaying the recorded after-state      killed by the COMPILER
+M5 an invalid definition is assigned and left in place                         killed by the COMPILER
+
+---- re-run of both survivors under [meshcmd],[meshcontrol] ----
+M3 redo re-derives the edit instead of replaying the recorded after-state      *** SURVIVED *** ()
+M5 an invalid definition is assigned and left in place                         killed (assertions: 1313 | 1308 passed | 5 failed)

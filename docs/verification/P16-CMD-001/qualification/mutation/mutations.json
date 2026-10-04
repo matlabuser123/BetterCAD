@@ -1,0 +1,74 @@
+[
+  {
+    "label": "M1 undo applies the AFTER state instead of the before state",
+    "file": "src/meshing/MeshingCommands.cpp",
+    "old": "    Result<bool> restored = apply(document, control_, *before_);",
+    "new": "    Result<bool> restored = apply(document, control_, *after_);"
+  },
+  {
+    "label": "M2 the before-state is captured AFTER the edit is applied",
+    "file": "src/meshing/MeshingCommands.cpp",
+    "old": "    before_ = before;\n    after_ = std::move(*after);",
+    "new": "    before_ = findMeshControl(document, control_)->definition();\n    after_ = std::move(*after);"
+  },
+  {
+    "label": "M3 redo re-derives the edit instead of replaying the recorded after-state",
+    "file": "src/meshing/MeshingCommands.cpp",
+    "old": "    Result<bool> reapplied = apply(document, control_, *after_);",
+    "new": "    Result<bool> reapplied = apply(document, control_, *edit(*before_));"
+  },
+  {
+    "label": "M4 setDefinition reports every assignment as an effective change",
+    "file": "src/meshing/MeshControl.cpp",
+    "old": "    if (definition == definition_) {",
+    "new": "    if (false) {"
+  },
+  {
+    "label": "M5 an invalid definition is assigned and left in place",
+    "file": "src/meshing/MeshControl.cpp",
+    "old": "Result<bool> MeshControl::setDefinition(MeshControlDefinition definition) {\n    if (const Result<void> checked = validate(definition); !checked.has_value()) {\n        return std::unexpected(checked.error());\n    }",
+    "new": "Result<bool> MeshControl::setDefinition(MeshControlDefinition definition) {\n    if (const Result<void> checked = validate(definition); !checked.has_value()) {\n        definition_ = definition;\n        return std::unexpected(checked.error());\n    }"
+  },
+  {
+    "label": "M6 clone drops the ID, so a redone create cannot be re-inserted",
+    "file": "src/meshing/MeshControl.cpp",
+    "old": "    return std::unique_ptr<DocumentObject>(new MeshControl(*this));",
+    "new": "    return std::unique_ptr<DocumentObject>(new MeshControl(std::string{name()}, definition_));"
+  },
+  {
+    "label": "M7 removing a local control removes every control on the same feature",
+    "file": "src/meshing/MeshingCommands.cpp",
+    "old": "    const auto removed = std::ranges::remove_if(\n        after.mesh.sizing.local,\n        [this](const LocalMeshSizing& local) { return local.face == face_; });",
+    "new": "    const auto removed = std::ranges::remove_if(\n        after.mesh.sizing.local,\n        [this](const LocalMeshSizing& local) { return local.face.feature == face_.feature; });"
+  },
+  {
+    "label": "M8 the mesh is not invalidated when the sizing intent changes",
+    "file": "src/meshing/Mesher.cpp",
+    "old": "    if (!(definition.mesh == entry->second.controls)) {\n        return MeshCurrency::StaleIntent;\n    }",
+    "new": "    if (false) {\n        return MeshCurrency::StaleIntent;\n    }"
+  },
+  {
+    "label": "M9 a boundary-set rename invalidates the mesh (precision lost)",
+    "file": "src/meshing/Mesher.cpp",
+    "old": "    if (!(definition.mesh == entry->second.controls)) {\n        return MeshCurrency::StaleIntent;\n    }\n    if (!(geometryRevision(document, definition.body) == entry->second.revision)) {",
+    "new": "    if (!(definition.mesh == entry->second.controls) ||\n        !(definition.quality == entry->second.thresholds) ||\n        !(definition.boundarySets.empty() == entry->second.controls.sizing.local.empty())) {\n        return MeshCurrency::StaleIntent;\n    }\n    if (!(geometryRevision(document, definition.body) == entry->second.revision)) {"
+  },
+  {
+    "label": "M10 findMeshControl trusts the ID instead of checking the object's type",
+    "file": "src/meshing/MeshingCommands.cpp",
+    "old": "            return dynamic_cast<const MeshControl*>(&object);",
+    "new": "            return reinterpret_cast<const MeshControl*>(&object);"
+  },
+  {
+    "label": "M11 a failed generation discards the mesh it could not replace",
+    "file": "src/meshing/Mesher.cpp",
+    "old": "        failures_.insert_or_assign(control.value(), mesh.error());\n        return std::unexpected(mesh.error());",
+    "new": "        failures_.insert_or_assign(control.value(), mesh.error());\n        held_.erase(control.value());\n        return std::unexpected(mesh.error());"
+  },
+  {
+    "label": "M12 the redo branch is not discarded when a new command is executed",
+    "file": "src/core/document/CommandHistory.cpp",
+    "old": "    undo_.push_back(std::move(command));\n    redo_.clear();",
+    "new": "    undo_.push_back(std::move(command));"
+  }
+]

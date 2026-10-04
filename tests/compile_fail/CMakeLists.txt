@@ -458,3 +458,39 @@ bettercad_compile_fail_case(meshview "${_meshview}" MUTATE_A_MESH
     "has no member named|no member named" BetterCAD::renderer BetterCAD::meshing)
 bettercad_compile_fail_case(meshview "${_meshview}" REACH_A_MESH_THROUGH_A_VIEW
     "has no member named|no member named" BetterCAD::renderer BetterCAD::meshing)
+
+# P16-CMD-001: a meshing command carries canonical intent and nothing derived.
+# A generated mesh cannot even be default-constructed, so it cannot become a
+# member of what a command copies; canonical intent has no node array, element
+# array, quality report or facet set; local sizing is keyed on a FaceName and
+# never on a mesh-local identity or a bare ObjectId; commands are typed on
+# MeshControlId; commands are not copyable; and the mesher does not hand out a
+# mutable mesh.
+set(_meshcmd "${CMAKE_CURRENT_SOURCE_DIR}/MeshingCommandMisuse.cpp")
+bettercad_compile_fail_group(meshcmd "${_meshcmd}" BetterCAD::meshing BetterCAD::features)
+bettercad_compile_fail_case(meshcmd "${_meshcmd}" MESH_IS_NOT_DEFAULT_CONSTRUCTIBLE
+    "VolumeMesh.* is private" BetterCAD::meshing BetterCAD::features)
+bettercad_compile_fail_case(meshcmd "${_meshcmd}" DEFINITION_HAS_NO_NODES
+    "no member named .nodes" BetterCAD::meshing BetterCAD::features)
+bettercad_compile_fail_case(meshcmd "${_meshcmd}" DEFINITION_HAS_NO_ELEMENTS
+    "no member named .elements" BetterCAD::meshing BetterCAD::features)
+bettercad_compile_fail_case(meshcmd "${_meshcmd}" DEFINITION_HAS_NO_QUALITY_REPORT
+    "no member named .elements" BetterCAD::meshing BetterCAD::features)
+bettercad_compile_fail_case(meshcmd "${_meshcmd}" DEFINITION_HAS_NO_GENERATED_MESH
+    "no member named .tetrahedra" BetterCAD::meshing BetterCAD::features)
+bettercad_compile_fail_case(meshcmd "${_meshcmd}" LOCAL_SIZING_IS_NOT_KEYED_ON_A_NODE
+    "could not convert" BetterCAD::meshing BetterCAD::features)
+bettercad_compile_fail_case(meshcmd "${_meshcmd}" LOCAL_SIZING_IS_NOT_KEYED_ON_AN_ELEMENT
+    "could not convert" BetterCAD::meshing BetterCAD::features)
+bettercad_compile_fail_case(meshcmd "${_meshcmd}" A_COMMAND_WILL_NOT_TAKE_A_FEATURE_FOR_A_FACE
+    "no matching function" BetterCAD::meshing BetterCAD::features)
+bettercad_compile_fail_case(meshcmd "${_meshcmd}" BOUNDARY_SET_HAS_NO_FACETS
+    "no member named .facets" BetterCAD::meshing BetterCAD::features)
+bettercad_compile_fail_case(meshcmd "${_meshcmd}" COMMAND_IS_KEYED_ON_A_MESH_CONTROL_ID
+    "no matching function" BetterCAD::meshing BetterCAD::features)
+bettercad_compile_fail_case(meshcmd "${_meshcmd}" COMMAND_HAS_NO_MESH_SETTER
+    "no member named .setMesh" BetterCAD::meshing BetterCAD::features)
+bettercad_compile_fail_case(meshcmd "${_meshcmd}" COMMAND_IS_NOT_COPYABLE
+    "use of deleted function" BetterCAD::meshing BetterCAD::features)
+bettercad_compile_fail_case(meshcmd "${_meshcmd}" MESHER_DOES_NOT_HAND_OUT_A_MUTABLE_MESH
+    "invalid conversion" BetterCAD::meshing BetterCAD::features)

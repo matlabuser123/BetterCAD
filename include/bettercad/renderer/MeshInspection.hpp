@@ -93,6 +93,21 @@ struct MeshStatus {
 /// A held mesh plus a failed latest attempt is `GenerationFailed`, NOT
 /// `Current` and not merely `Stale`: the user has to be able to tell "this is
 /// old" from "this is old AND the attempt to replace it failed".
+///
+/// GEOMETRY ONLY, AND THAT IS NOW A LIMIT WITH A NAME. This compares
+/// `GeometryRevision`s, so it answers "has the model changed?" and cannot
+/// answer "has the MESHING INTENT changed?" -- the mesh it is given carries no
+/// record of the sizing it was built from. For a mesh generated with default
+/// controls and no canonical control behind it, which is every mesh this
+/// function is reachable from today, those two questions are the same one.
+///
+/// THEY STOP BEING THE SAME QUESTION the moment a caller generates from a
+/// `meshing::MeshControl`. `meshing::Mesher::currency` is then the authority
+/// -- it holds the `VolumeMeshControls` its mesh was built from and
+/// distinguishes `StaleIntent` from `StaleGeometry` -- and a caller that has a
+/// control must take its state from there, not from here, or a mesh whose
+/// element size nobody asked for any more will read as `Current`.
+/// See docs/verification/P16-CMD-001/ADVERSARIAL_REVIEW.md, finding A3.
 [[nodiscard]] BETTERCAD_RENDERER_EXPORT MeshStatus statusOf(const Document& document,
                                                             const MeshHolding& holding);
 

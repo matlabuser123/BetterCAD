@@ -13,7 +13,7 @@ Current:
            P16 — Meshing
 
 Current milestone:
-           None. P16-VIZ-001 is PASS (2026-10-04) and the next milestone
+           None. P16-CMD-001 is PASS (2026-10-05) and the next milestone
            is a scope decision, not Claude's to make.
 
 Qualified:
@@ -25,12 +25,11 @@ Qualified:
            P15 — Materials / Engineering Data
 
 Next:
-           P16-CMD-001 — Meshing Commands / Undo / Redo. NOT AUTHORIZED:
+           P16-PERSIST-001 — Meshing Intent Persistence. NOT AUTHORIZED:
            being next in the P16 sequence is not permission to start it.
            Starting it is a scope decision.
 
-           Also unstarted: P16-PERSIST-001, P16-CLI-001, P16-REFMOD-001,
-           P16-QUAL-001.
+           Also unstarted: P16-CLI-001, P16-REFMOD-001, P16-QUAL-001.
 
 Qualified milestones in P16:
            P16-ARCH-001 — Meshing Architecture (ADR-030 to ADR-033)
@@ -45,6 +44,7 @@ Qualified milestones in P16:
            INFRA-VIEWER-001 — OCCT visualization toolchain qualification
                               (infrastructure)
            P16-VIZ-001 — Mesh Visualisation / Inspection
+           P16-CMD-001 — Meshing Commands / Undo / Redo
 
 P16 objective:
            Geometry
@@ -1409,24 +1409,24 @@ boundary/region intent
 
 Canonical history does NOT contain generated mesh as authority.
 
-* [ ] Create meshing-settings command
-* [ ] Edit global sizing command
-* [ ] Add local sizing command
-* [ ] Edit local sizing command
-* [ ] Remove local sizing command
-* [ ] Boundary/region command where required
-* [ ] Undo restores exact meshing intent
-* [ ] Redo restores exact post-command intent
-* [ ] Failed commands atomic
-* [ ] Redo invalidation correct
-* [ ] Geometry references preserved
-* [ ] Generated mesh invalidated after control change
-* [ ] Generated mesh recomputed after undo/redo when requested
-* [ ] No node/element arrays stored as canonical command history
-* [ ] Determinism PASS
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Create meshing-settings command
+* [x] Edit global sizing command
+* [x] Add local sizing command
+* [x] Edit local sizing command
+* [x] Remove local sizing command
+* [x] Boundary/region command where required
+* [x] Undo restores exact meshing intent
+* [x] Redo restores exact post-command intent
+* [x] Failed commands atomic
+* [x] Redo invalidation correct
+* [x] Geometry references preserved
+* [x] Generated mesh invalidated after control change
+* [x] Generated mesh recomputed after undo/redo when requested
+* [x] No node/element arrays stored as canonical command history
+* [x] Determinism PASS
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded
 
 ### Critical rule
 
@@ -1443,12 +1443,34 @@ edit mesh size
 ### Gate
 
 ```text
-commands mutate canonical meshing intent
-+ undo exact
-+ redo exact
-+ failed mutations atomic
-+ generated mesh excluded as authority
+commands mutate canonical meshing intent  [x]  MeshControl is a document
+                                               object (ADR-030); ten commands
+                                               on the EXISTING CommandHistory,
+                                               no parallel undo system
++ undo exact                              [x]  compared by a fingerprint of
+                                               canonical intent only, over the
+                                               mandatory five-step sequence,
+                                               and the five edits consume
+                                               exactly five history entries
++ redo exact                              [x]  the same sequence forward, and
+                                               a redone create re-inserts
+                                               under the SAME MeshControlId
++ failed mutations atomic                 [x]  fingerprint, both stack depths
+                                               and the document revision all
+                                               unchanged, for four invalid
+                                               sizes; mutation M5 confirms the
+                                               assertions bite
++ generated mesh excluded as authority    [x]  not merely absent but
+                                               impossible: VolumeMesh has a
+                                               private default constructor, 13
+                                               compile-fail cases pin it, and
+                                               a history step measures 1190 B
+                                               whether the mesh it describes
+                                               has 504 or 932 elements
 ```
+
+Evidence: [docs/verification/P16-CMD-001/](docs/verification/P16-CMD-001/)
+Qualified at tree `b9593bbc`, three presets, 3273/3273 each, 0 warnings.
 
 ---
 

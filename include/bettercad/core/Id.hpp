@@ -60,6 +60,9 @@ struct AnnotationIdTag {
 struct MaterialIdTag {
     static constexpr std::string_view name = "material";
 };
+struct MeshControlIdTag {
+    static constexpr std::string_view name = "mesh control";
+};
 struct EntityIdTag {
     static constexpr std::string_view name = "entity";
 };
@@ -108,6 +111,8 @@ template <>
 inline constexpr bool isDocumentObjectTag<AnnotationIdTag> = true;
 template <>
 inline constexpr bool isDocumentObjectTag<MaterialIdTag> = true;
+template <>
+inline constexpr bool isDocumentObjectTag<MeshControlIdTag> = true;
 
 template <typename Tag, typename Value = std::uint64_t>
 class Id;
@@ -208,6 +213,19 @@ using AnnotationId = Id<AnnotationIdTag>;
 /// reference data with no ObjectId, named by a materials::MaterialLibraryKey,
 /// so a library key and a MaterialId cannot be confused for one another.
 using MaterialId = Id<MaterialIdTag>;
+/// A meshing control: the canonical intent for meshing one body (ADR-030).
+///
+/// A DOCUMENT OBJECT ID, which is the whole point. ADR-030 chose "the Document
+/// owns the controls as document objects; a Mesher service owns the generated
+/// meshes", so that changing a body can invalidate a derived mesh -- "and only
+/// a graph node can express that". Undo, redo, persistence and dependency
+/// invalidation then come from the machinery every other document object
+/// already uses.
+///
+/// It is NOT a mesh identity. A NodeId or an ElementId is mesh-local, reused
+/// across generations and never persisted (ADR-031); this names the intent
+/// that produced them and outlives every mesh built from it.
+using MeshControlId = Id<MeshControlIdTag>;
 /// Sketch entity (point, line, arc, ...); unique within its sketch.
 using EntityId = Id<EntityIdTag>;
 /// Sketch constraint; unique within its sketch.

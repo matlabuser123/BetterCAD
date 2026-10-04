@@ -1,0 +1,29 @@
+qualification started Sun 04/10/2026 22:38:55.35 
+qualification candidate: 
+0b13e20de9578214f333da750570c3997daf2afc
+qualified source trees before the first build: 
+  apps 5b2059dc47dd2db91e3fc6a1c6b361074c15a0a6 
+  include 8783fbab3e0ebc5257ba4ddd27908725e789a2f3 
+  src 8eb4087647da0f693124aa7a31094c35f01669db 
+  tests 41795dafbfb682f1e85011fad5bd8c6e97f2ccc2 
+  examples 9187931fa6824e98d3da6296cdc40af6ca4b8607 
+  cmake 5a382115d7ed7775189d40b55e40f318eaae6cc7 
+  CMakeLists.txt 3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd 
+  CMakePresets.json 3229f0f89b236744d7d5c082bed47c28b718288e 
+debug-ext configure started Sun 04/10/2026 22:38:57.29 
+debug-ext configure exit 0 Sun 04/10/2026 22:39:03.79 
+debug-ext clean attempt 1 exit 0 Sun 04/10/2026 22:39:06.21 
+debug-ext build exit 0 Sun 04/10/2026 23:03:51.04 
+debug-ext no-op rebuild exit 0 Sun 04/10/2026 23:03:51.87 
+debug-ext ctest exit 0 Sun 04/10/2026 23:20:02.57 
+release-ext configure started Sun 04/10/2026 23:20:02.57 
+release-ext configure exit 0 Sun 04/10/2026 23:20:08.64 
+release-ext clean attempt 1 exit 0 Sun 04/10/2026 23:20:09.63 
+release-ext build exit 0 Sun 04/10/2026 23:49:33.19 
+release-ext no-op rebuild exit 0 Sun 04/10/2026 23:49:33.96 
+release-ext ctest exit 0 Mon 05/10/2026  0:05:50.78 
+debug-shared-ext configure started Mon 05/10/2026  0:05:50.78 
+debug-shared-ext configure exit 0 Mon 05/10/2026  0:05:56.88 
+debug-shared-ext clean attempt 1 exit 0 Mon 05/10/2026  0:05:58.78 
+debug-shared-ext build exit 0 Mon 05/10/2026  0:29:12.80 
+debug-shared-ext no-op rebuild exit 0 Mon 05/10/2026  0:29:13.67 

@@ -37,6 +37,9 @@ bettercad_add_library(bettercad_meshing
         GeometryMeshMap.cpp
         GeometryPreparation.cpp
         Mesh.cpp
+        Mesher.cpp
+        MeshControl.cpp
+        MeshingCommands.cpp
         MeshValidation.cpp
         MeshQuality.cpp
         MeshSizing.cpp
