@@ -1,0 +1,15 @@
+---- P16-CLI-001 mutations M1..M8 ----
+M1 the CLI substitutes its own default target size                             killed (assertions: 386 | 384 passed | 2 failed)
+M2 the CLI validates the size itself and bypasses the core                     killed (assertions: 386 | 382 passed | 4 failed)
+M3 a failed core mutation is reported as success                               killed (assertions: 386 | 382 passed | 4 failed)
+M4 a failed mesh generation exits zero                                         killed (assertions: 386 | 385 passed | 1 failed)
+M5 a structurally invalid mesh does not gate mesh-validate                     *** SURVIVED *** ()
+M6 the CLI skips the regeneration precondition                                 *** SURVIVED *** ()
+M7 local controls are listed in stored order, not canonical order              *** SURVIVED *** ()
+M8 the JSON writes a bare number with no unit                                  killed (assertions: 382 | 373 passed | 9 failed)
+---- re-run of M5..M7 after closing the two gaps they found ----
+M5 a structurally invalid mesh does not gate mesh-validate                     *** SURVIVED *** ()
+M6 the CLI skips the regeneration precondition                                 NOT APPLIED (PATTERN-ABSENT)
+M7 local controls are listed in stored order, not canonical order              *** SURVIVED *** ()
+---- re-run of M6, re-expressed against the fix it prompted ----
+M6 the CLI ignores a feature that failed to regenerate                         killed (assertions: 452 | 445 passed | 7 failed)

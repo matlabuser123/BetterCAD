@@ -15,10 +15,13 @@ add_library(bettercad_cli_lib STATIC
     DrawingReports.cpp
     EditRegistry.cpp
     EditSupport.hpp
+    StructuredOutput.hpp
     Edits.hpp
     ExportCommands.cpp
     MaterialEdits.cpp
     MaterialReports.cpp
+    MeshingEdits.cpp
+    MeshingReports.cpp
     MaterialVocabulary.cpp
     MaterialVocabulary.hpp
     Selectors.cpp
@@ -34,6 +37,7 @@ target_link_libraries(bettercad_cli_lib
         BetterCAD::drawing
         BetterCAD::features
         BetterCAD::io
+        BetterCAD::meshing
         BetterCAD::sketch
 )
 

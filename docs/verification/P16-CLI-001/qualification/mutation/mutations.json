@@ -1,0 +1,50 @@
+[
+  {
+    "label": "M1 the CLI substitutes its own default target size",
+    "file": "apps/bettercad_cli/MeshingEdits.cpp",
+    "old": "    if (const auto size = parsed->value(\"--size\")) {",
+    "new": "    definition.mesh.sizing.globalTargetSize = Length::fromSi(0.005);\n    if (const auto size = parsed->value(\"--size\")) {"
+  },
+  {
+    "label": "M2 the CLI validates the size itself and bypasses the core",
+    "file": "apps/bettercad_cli/MeshingEdits.cpp",
+    "old": "        // NOT CHECKED HERE. Zero, negative and non-finite are\n        // P16-SIZE-001's to refuse, through the command below.\n        target = *length;",
+    "new": "        if (length->si() <= 0.0) {\n            return std::unexpected(malformed(\"size must be positive\"));\n        }\n        target = Length::fromSi(length->si() <= 0.0 ? 1.0 : length->si());"
+  },
+  {
+    "label": "M3 a failed core mutation is reported as success",
+    "file": "apps/bettercad_cli/MeshingEdits.cpp",
+    "old": "    meshing::SetGlobalMeshSizeCommand command{*control, target};\n    if (auto failed = execute(document, command)) {\n        return std::unexpected(*failed);\n    }",
+    "new": "    meshing::SetGlobalMeshSizeCommand command{*control, target};\n    (void)execute(document, command);"
+  },
+  {
+    "label": "M4 a failed mesh generation exits zero",
+    "file": "apps/bettercad_cli/MeshingReports.cpp",
+    "old": "        failure(command, \"mesh_generation_failed\", mesh.error().message, err);\n        return std::unexpected(ExitCode::Failure);",
+    "new": "        failure(command, \"mesh_generation_failed\", mesh.error().message, err);\n        return std::unexpected(ExitCode::Success);"
+  },
+  {
+    "label": "M5 a structurally invalid mesh does not gate mesh-validate",
+    "file": "apps/bettercad_cli/MeshingReports.cpp",
+    "old": "    return report.dataValid() ? ExitCode::Success : ExitCode::Failure;",
+    "new": "    return ExitCode::Success;"
+  },
+  {
+    "label": "M6 the CLI ignores a feature that failed to regenerate",
+    "file": "apps/bettercad_cli/MeshingReports.cpp",
+    "old": "    if (!report->failed.empty()) {\n        // The core's own message for the first failure, named by object, so\n        // the diagnostic says WHICH feature and WHY rather than that meshing\n        // did not happen.\n",
+    "new": "    if (false) {\n        // The core's own message for the first failure, named by object, so\n        // the diagnostic says WHICH feature and WHY rather than that meshing\n        // did not happen.\n"
+  },
+  {
+    "label": "M7 local controls are listed in stored order, not canonical order",
+    "file": "apps/bettercad_cli/MeshingReports.cpp",
+    "old": "    const std::vector<meshing::LocalMeshSizing> ordered = control->orderedLocalSizing();",
+    "new": "    const std::vector<meshing::LocalMeshSizing> ordered = d.mesh.sizing.local;"
+  },
+  {
+    "label": "M8 the JSON writes a bare number with no unit",
+    "file": "apps/bettercad_cli/StructuredOutput.hpp",
+    "old": "    [[nodiscard]] static JsonValue quantity(double value, std::string_view unit) {\n        JsonValue json = object();\n        json.set(\"value\", number(value));\n        json.set(\"unit\", text(unit));\n        return json;\n    }",
+    "new": "    [[nodiscard]] static JsonValue quantity(double value, std::string_view unit) {\n        (void)unit;\n        return number(value);\n    }"
+  }
+]

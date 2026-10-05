@@ -572,4 +572,17 @@ Result<drawing::AnnotationTarget> parseAnnotationTarget(const Document& document
     return target;
 }
 
+Result<FaceName> parseFaceReference(const Document& document, std::string_view text) {
+    // Routed through parseNamedFace, which is the grammar's one
+    // implementation. A second reader for meshing would be a second contract.
+    const std::vector<std::string_view> fields = split(text, ':');
+    if (fields.empty() || fields.front() != "face") {
+        return makeError(ErrorCode::InvalidArgument,
+                         std::format("'{}': a face is named face:<feature>:<role>[:<entity>], "
+                                     "e.g. face:Block:end_cap or face:Block:side:5",
+                                     text));
+    }
+    return parseNamedFace(document, std::span{fields}.subspan(1), "face", text);
+}
+
 } // namespace bettercad::cli

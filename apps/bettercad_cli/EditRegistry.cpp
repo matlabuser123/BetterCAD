@@ -19,7 +19,7 @@ namespace bettercad::cli {
 namespace {
 
 /// Built once, in a fixed order: the assembly verbs, then the drawing ones,
-/// then the material ones. Order is what `help` prints and is therefore part of
+/// then the material ones, then the meshing ones. Order is what `help` prints and is therefore part of
 /// the output, so it is stated here rather than left to a link order.
 const std::vector<EditCommand>& allEdits() {
     static const std::vector<EditCommand> all = [] {
@@ -27,10 +27,12 @@ const std::vector<EditCommand>& allEdits() {
         const auto assembly = assemblyEditCommands();
         const auto drawing = drawingEditCommands();
         const auto material = materialEditCommands();
-        joined.reserve(assembly.size() + drawing.size() + material.size());
+        const auto meshing = meshingEditCommands();
+        joined.reserve(assembly.size() + drawing.size() + material.size() + meshing.size());
         joined.insert(joined.end(), assembly.begin(), assembly.end());
         joined.insert(joined.end(), drawing.begin(), drawing.end());
         joined.insert(joined.end(), material.begin(), material.end());
+        joined.insert(joined.end(), meshing.begin(), meshing.end());
         return joined;
     }();
     return all;

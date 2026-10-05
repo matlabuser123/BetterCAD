@@ -159,6 +159,21 @@ inline constexpr std::string_view kDesignationPrefix = "designation:";
 [[nodiscard]] Result<drawing::AnnotationTarget> parseAnnotationTarget(const Document& document,
                                                                       std::string_view text);
 
+/// A canonical face reference, as `face:<feature>:<role>[:<entity>]`
+/// (P16-CLI-001).
+///
+/// THE SAME GRAMMAR drawings and mates use, through the same parser, so
+/// `face:Block:side:5` cannot come to mean two things. The roles are
+/// `start_cap`, `end_cap`, `side`, `hole_bottom`, `counterbore_floor`,
+/// `chamfer` and `spotface_floor`; `entity` is the profile entity of a side
+/// face. A copied face cannot be named this way, which is the interface's
+/// recorded limitation and not the model's.
+///
+/// The geometry is NOT resolved here: whether the named face currently exists
+/// is the meshing layer's to report, and an unresolved reference is
+/// legitimate intent (P16-PERSIST-001).
+[[nodiscard]] Result<FaceName> parseFaceReference(const Document& document, std::string_view text);
+
 /// "Base (object:7)", for diagnostics that should name a thing the way the
 /// engineer wrote it and the way the document knows it.
 [[nodiscard]] std::string label(const Document& document, ObjectId id);

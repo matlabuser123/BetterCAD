@@ -41,6 +41,21 @@ inline constexpr std::string_view kMassPropertiesUsage =
 inline constexpr std::string_view kMaterialCompletenessUsage =
     "material-completeness <file.bcad> [<material>] [--consumer <consumer>]";
 
+// P16-CLI-001. Meshing: six reports here, and the edits in MeshingEdits.cpp.
+// Each takes --json for a machine-readable form of the same result.
+//
+// A GENERATED MESH IS NEVER WRITTEN. These load, regenerate, build the mesh
+// the question needs and print the answer; the document holds intent
+// (P16-PERSIST-001), so a fresh process always generates from what it just
+// read rather than trusting anything stored.
+inline constexpr std::string_view kMeshSettingsUsage = "mesh-settings <file.bcad> [--json]";
+inline constexpr std::string_view kMeshGenerateUsage = "mesh-generate <file.bcad> [--json]";
+inline constexpr std::string_view kMeshInfoUsage = "mesh-info <file.bcad> [--json]";
+inline constexpr std::string_view kMeshQualityUsage = "mesh-quality <file.bcad> [--json]";
+inline constexpr std::string_view kMeshValidateUsage = "mesh-validate <file.bcad> [--json]";
+inline constexpr std::string_view kMeshBoundariesUsage =
+    "mesh-boundaries <file.bcad> [<face>] [--json]";
+
 [[nodiscard]] ExitCode runNew(Args args, std::ostream& out, std::ostream& err);
 [[nodiscard]] ExitCode runInfo(Args args, std::ostream& out, std::ostream& err);
 [[nodiscard]] ExitCode runValidate(Args args, std::ostream& out, std::ostream& err);
@@ -79,6 +94,16 @@ inline constexpr std::string_view kMaterialCompletenessUsage =
 [[nodiscard]] ExitCode runMaterialEffective(Args args, std::ostream& out, std::ostream& err);
 [[nodiscard]] ExitCode runMassProperties(Args args, std::ostream& out, std::ostream& err);
 [[nodiscard]] ExitCode runMaterialCompleteness(Args args, std::ostream& out, std::ostream& err);
+
+/// P16-CLI-001. These six report and never write, for the reason P15's do and
+/// one more: a generated mesh is derived state, and a report that saved one
+/// would make the document claim an authority P16-PERSIST-001 denies it.
+[[nodiscard]] ExitCode runMeshSettings(Args args, std::ostream& out, std::ostream& err);
+[[nodiscard]] ExitCode runMeshGenerate(Args args, std::ostream& out, std::ostream& err);
+[[nodiscard]] ExitCode runMeshInfo(Args args, std::ostream& out, std::ostream& err);
+[[nodiscard]] ExitCode runMeshQuality(Args args, std::ostream& out, std::ostream& err);
+[[nodiscard]] ExitCode runMeshValidate(Args args, std::ostream& out, std::ostream& err);
+[[nodiscard]] ExitCode runMeshBoundaries(Args args, std::ostream& out, std::ostream& err);
 
 /// "3 objects", "1 object".
 inline std::string plural(std::size_t count, std::string_view singular, std::string_view many) {

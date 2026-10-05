@@ -86,6 +86,31 @@ constexpr std::array kCommands{
             &runMaterialCompleteness},
     Command{"version", "version", "Print version, compiler and build information.", &runVersion},
     Command{"help", "help", "Show this help.", &runHelp},
+    // P16-CLI-001. Six reports over the P16 meshing core. Each adds --json.
+    Command{"mesh-settings", kMeshSettingsUsage,
+            "Show the canonical meshing intent: the global target size, the local sizing controls "
+            "and their faces, the named boundary sets and the quality thresholds. Writes nothing.",
+            &runMeshSettings},
+    Command{"mesh-generate", kMeshGenerateUsage,
+            "Regenerate the model, mesh it from the document's meshing intent, and report what was "
+            "built. The mesh is NOT saved: a document holds intent, and a mesh is derived from it.",
+            &runMeshGenerate},
+    Command{"mesh-info", kMeshInfoUsage,
+            "Mesh the document and summarise it: nodes, elements, element types, volume and the "
+            "controls behind it. A summary at any size -- it never lists elements.",
+            &runMeshInfo},
+    Command{"mesh-quality", kMeshQualityUsage,
+            "Mesh the document and report element quality under the control's own thresholds: "
+            "invalid, warning and failure counts, and each metric's range and worst element.",
+            &runMeshQuality},
+    Command{"mesh-validate", kMeshValidateUsage,
+            "Mesh the document and check it structurally -- connectivity, degenerate and inverted "
+            "elements. Exit status 1 if the mesh is not data-valid. Shape quality is mesh-quality's.",
+            &runMeshValidate},
+    Command{"mesh-boundaries", kMeshBoundariesUsage,
+            "Mesh the document and report the named boundary sets, or one face, with the facets "
+            "they resolve to now. Reporting that a face is unresolved is a successful answer.",
+            &runMeshBoundaries},
 };
 
 void printUsage(std::ostream& os) {

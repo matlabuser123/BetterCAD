@@ -13,7 +13,7 @@ Current:
            P16 — Meshing
 
 Current milestone:
-           None. P16-PERSIST-001 is PASS (2026-10-05) and the next milestone
+           None. P16-CLI-001 is PASS (2026-10-05) and the next milestone
            is a scope decision, not Claude's to make.
 
 Qualified:
@@ -25,11 +25,11 @@ Qualified:
            P15 — Materials / Engineering Data
 
 Next:
-           P16-CLI-001 — Headless Meshing Workflows. NOT AUTHORIZED:
+           P16-REFMOD-001 — Meshing Reference Models. NOT AUTHORIZED:
            being next in the P16 sequence is not permission to start it.
            Starting it is a scope decision.
 
-           Also unstarted: P16-REFMOD-001, P16-QUAL-001.
+           Also unstarted: P16-QUAL-001.
 
 Qualified milestones in P16:
            P16-ARCH-001 — Meshing Architecture (ADR-030 to ADR-033)
@@ -46,6 +46,7 @@ Qualified milestones in P16:
            P16-VIZ-001 — Mesh Visualisation / Inspection
            P16-CMD-001 — Meshing Commands / Undo / Redo
            P16-PERSIST-001 — Meshing Intent Persistence
+           P16-CLI-001 — Headless Meshing Workflows
 
 P16 objective:
            Geometry
@@ -1586,42 +1587,76 @@ mesh boundaries
 
 Use actual BetterCAD CLI naming conventions.
 
-* [ ] CLI inspect meshing settings
-* [ ] CLI set global mesh size
-* [ ] CLI add local sizing
-* [ ] CLI remove local sizing
-* [ ] CLI generate mesh
-* [ ] CLI query node count
-* [ ] CLI query element count
-* [ ] CLI query element types
-* [ ] CLI query volume
-* [ ] CLI quality report
-* [ ] CLI validation report
-* [ ] CLI geometry/boundary mapping query
-* [ ] Structured diagnostics
-* [ ] Correct process exit codes
-* [ ] Missing/stale geometry failures propagate
-* [ ] Invalid controls fail non-zero
-* [ ] CLI/core mesh equivalence
-* [ ] Multi-process save/load/remesh workflow
-* [ ] No CLI-only meshing semantics
-* [ ] Fresh-binary proof
-* [ ] Zero-match test-filter protection
-* [ ] End-to-end scripted workflow PASS
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] CLI inspect meshing settings
+* [x] CLI set global mesh size
+* [x] CLI add local sizing
+* [x] CLI remove local sizing
+* [x] CLI generate mesh
+* [x] CLI query node count
+* [x] CLI query element count
+* [x] CLI query element types
+* [x] CLI query volume
+* [x] CLI quality report
+* [x] CLI validation report
+* [x] CLI geometry/boundary mapping query
+* [x] Structured diagnostics
+* [x] Correct process exit codes
+* [x] Missing/stale geometry failures propagate
+* [x] Invalid controls fail non-zero
+* [x] CLI/core mesh equivalence
+* [x] Multi-process save/load/remesh workflow
+* [x] No CLI-only meshing semantics
+* [x] Fresh-binary proof
+* [x] Zero-match test-filter protection
+* [x] End-to-end scripted workflow PASS
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded
 
 ### Gate
 
 ```text
-CLI uses core meshing APIs
-+ core/CLI mesh results equivalent
-+ quality results equivalent
-+ diagnostics structured
-+ failures propagate
-+ no CLI-only meshing implementation
+CLI uses core meshing APIs          [x]  ten commands, every one an adapter.
+                                         Mutations go through the P16-CMD
+                                         command objects; the volume, quality,
+                                         structure and mapping come from
+                                         VolumeMesh, MeshQualityReport,
+                                         meshing::validate and
+                                         resolveBoundarySet
++ core/CLI mesh results equivalent  [x]  field for field -- nodes, elements,
+                                         boundary triangles exact, volume to
+                                         1e-12 (round-trip noise, not an
+                                         engineering tolerance) -- and again
+                                         on the real executable in a separate
+                                         process
++ quality results equivalent        [x]  the core's own report, counts and
+                                         per-metric summaries; an absent
+                                         metric or value emits null rather
+                                         than a fabricated default, as
+                                         MeshQuality.hpp asks
++ diagnostics structured            [x]  stable machine codes (no_mesh_control,
+                                         regeneration_failed,
+                                         dependency_cycle, no_body,
+                                         bad_face_reference,
+                                         mesh_generation_failed ...), and a
+                                         failing query prints NOTHING to
+                                         stdout
++ failures propagate                [x]  exit 1 when the core refuses a value,
+                                         2 when the command line is
+                                         unreadable, each with the core's own
+                                         words. A feature that fails to
+                                         regenerate is named -- the defect
+                                         mutation M6 found
++ no CLI-only meshing
+  implementation                    [x]  zero nglib / Ng_ / Netgen / formula
+                                         references in apps/bettercad_cli/,
+                                         and meshing links Netgen PRIVATE so
+                                         the CLI cannot reach it transitively
 ```
+
+Evidence: [docs/verification/P16-CLI-001/](docs/verification/P16-CLI-001/)
+Qualified at tree `f58a1e64`, three presets, 3328/3328 each, 0 warnings.
+Mutation testing: 6 killed, 2 proven equivalent, 1 production defect found.
 
 ---
 

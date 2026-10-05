@@ -278,6 +278,7 @@ if(TARGET bettercad_cli_lib)
         cli/AssemblyCliTests.cpp
         cli/DrawingCliTests.cpp
         cli/MaterialCliTests.cpp
+        cli/MeshingCliTests.cpp
         reference/AssemblyWorkflowTests.cpp
         io/AssemblyStepTests.cpp
     )
@@ -414,6 +415,56 @@ if(TARGET bettercad_cli)
         STDOUT_REGEX "missing references    ok
 .*feature regeneration  ok, 2 objects regenerated
 .*Result: valid$")
+    # P16-CLI-001. The REAL EXECUTABLE, as separate processes.
+    #
+    # The in-process tests prove the command logic; these prove the
+    # executable: a real command line, a real path, the runtime closure
+    # loading, and the exit code reaching the shell. Each names the binary by
+    # an absolute path through $<TARGET_FILE:...>, never a bare `bettercad-cli`
+    # that PATH could resolve to something stale -- which is the brief's
+    # fresh-binary requirement and is checked per preset because each preset
+    # builds its own.
+    bettercad_add_process_test(cli.mesh.settings
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "mesh-settings|${_meshed}|--json"
+        EXIT_CODE 0
+        STDOUT_REGEX "\"value\": 0\.008")
+    bettercad_add_process_test(cli.mesh.info
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "mesh-info|${_meshed}|--json"
+        EXIT_CODE 0
+        STDOUT_REGEX "\"state\": \"current\"")
+    bettercad_add_process_test(cli.mesh.validate
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "mesh-validate|${_meshed}|--json"
+        EXIT_CODE 0 STDOUT_REGEX "\"dataValid\": true")
+    bettercad_add_process_test(cli.mesh.quality
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "mesh-quality|${_meshed}|--json"
+        EXIT_CODE 0 STDOUT_REGEX "\"invalidElements\": 0")
+    bettercad_add_process_test(cli.mesh.boundaries
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "mesh-boundaries|${_meshed}|--json"
+        EXIT_CODE 0 STDOUT_REGEX "\"name\": \"fixed_end\"")
+    # A query on a document with no control FAILS, and prints nothing to
+    # stdout -- the stream discipline P15-CLI-001 established.
+    bettercad_add_process_test(cli.mesh.settings.no-control
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "mesh-settings|${_example}"
+        EXIT_CODE 1 STDERR_REGEX "no_mesh_control")
+
+    # The scripted end-to-end workflow: 21 steps, valid and negative, every
+    # exit code asserted and the output parsed. It fails fast.
+    add_test(NAME cli.mesh.workflow
+        COMMAND "${CMAKE_COMMAND}"
+            "-DCLI=$<TARGET_FILE:bettercad_cli>"
+            "-DSOURCE=${_example}"
+            "-DWORK=${_out}/mesh-workflow"
+            -P "${CMAKE_CURRENT_SOURCE_DIR}/cli/MeshingWorkflow.cmake")
+
+    # The zero-match filter guard. `ctest -R` exits 0 when a pattern matches
+    # NOTHING -- demonstrated by the guard itself -- so a targeted run must
+    # assert a discovered COUNT and never an exit code.
+    add_test(NAME cli.mesh.zero-match-guard
+        COMMAND "${CMAKE_COMMAND}"
+            "-DCTEST=${CMAKE_CTEST_COMMAND}"
+            "-DBUILD_DIR=${PROJECT_BINARY_DIR}"
+            -P "${CMAKE_CURRENT_SOURCE_DIR}/cli/ZeroMatchGuard.cmake")
+
     bettercad_add_process_test(cli.validate.missing-file
         COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "validate|${_out}/does-not-exist.bcad"
         EXIT_CODE 1 STDOUT_REGEX "Result: invalid \\(1 error\\)$")

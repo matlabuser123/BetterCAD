@@ -24,7 +24,9 @@ namespace nglib {
 #include <algorithm>
 #include <cmath>
 #include <format>
+#include <iostream>
 #include <mutex>
+#include <streambuf>
 #include <vector>
 
 namespace bettercad::meshing {
@@ -41,6 +43,47 @@ std::mutex& backendMutex() {
     static std::mutex mutex;
     return mutex;
 }
+
+/// Silences the backend's console chatter for as long as it lives.
+///
+/// NETGEN WRITES TO STDOUT. Meshing with a local size restriction prints
+/// "WARNING: RestrictLocalH called, creating mesh-size tree" -- which is
+/// informational noise about an internal data structure, not an engineering
+/// diagnostic, and nothing a caller can act on. BetterCAD's own meshing path
+/// prints nothing at all.
+///
+/// It has to be contained HERE, in the adapter that owns the backend's
+/// quirks, because stdout is a shared resource and no consumer can be asked to
+/// tolerate a library writing to it. P16-CLI-001 found this the hard way: a
+/// structured `mesh-info --json` was unparseable, because the first line a
+/// script read was Netgen's warning rather than the opening brace. Fixing it
+/// in the CLI would have left the GUI, the tests and any future consumer with
+/// the same corrupted stream and the CLI compensating for it.
+///
+/// The streambuf is swapped rather than the stream replaced, so anything the
+/// backend writes is discarded while BetterCAD's own use of std::cout -- of
+/// which there is none in core -- would be unaffected outside this scope. The
+/// backend mutex is already held whenever this is used, so the swap cannot
+/// race with another mesh.
+class SilentBackendScope {
+public:
+    SilentBackendScope() : saved_(std::cout.rdbuf(&sink_)) {}
+    ~SilentBackendScope() { std::cout.rdbuf(saved_); }
+    SilentBackendScope(const SilentBackendScope&) = delete;
+    SilentBackendScope& operator=(const SilentBackendScope&) = delete;
+
+private:
+    /// Accepts and discards. A std::ostringstream would accumulate a
+    /// backend's output for the life of a mesh for nothing.
+    class NullBuffer : public std::streambuf {
+    protected:
+        int overflow(int c) override { return c; }
+        std::streamsize xsputn(const char*, std::streamsize n) override { return n; }
+    };
+
+    NullBuffer sink_{};
+    std::streambuf* saved_;
+};
 
 /// Ng_Init / Ng_Exit around one generation, exception-safe.
 ///
@@ -110,6 +153,7 @@ bool volumeBackendResponds() noexcept {
     // its runtime closure to load and to prove the entry points are callable;
     // deliberately not enough to mesh anything.
     const std::lock_guard<std::mutex> lock(backendMutex());
+    const SilentBackendScope quiet;
     const LibraryScope library;
     const MeshScope mesh;
     return mesh.get() != nullptr;
@@ -151,6 +195,7 @@ Result<VolumeBackendMesh> generateTetrahedra(const VolumeBackendRequest& request
     }
 
     const std::lock_guard<std::mutex> lock(backendMutex());
+    const SilentBackendScope quiet;
     const LibraryScope library;
     MeshScope mesh;
     if (mesh.get() == nullptr) {

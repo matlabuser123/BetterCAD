@@ -74,6 +74,8 @@ struct EditCommand {
 [[nodiscard]] std::span<const EditCommand> drawingEditCommands() noexcept;
 /// The material edits (P15-CLI-001).
 [[nodiscard]] std::span<const EditCommand> materialEditCommands() noexcept;
+/// The meshing edits (P16-CLI-001).
+[[nodiscard]] std::span<const EditCommand> meshingEditCommands() noexcept;
 
 /// Every edit, in the order help lists them: the assembly ones, then the
 /// drawing ones, then the material ones. Separate tables because a file that
