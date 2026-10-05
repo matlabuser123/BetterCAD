@@ -32,6 +32,7 @@
 #include <bettercad/features/SplitFeature.hpp>
 #include <bettercad/features/SweepFeature.hpp>
 #include <bettercad/features/VariableFilletFeature.hpp>
+#include <bettercad/meshing/MeshControl.hpp>
 #include <bettercad/sketch/Sketch.hpp>
 
 #include <memory>
@@ -46,6 +47,14 @@ namespace bettercad::io::detail {
 [[nodiscard]] Json materialToJson(const features::Material& material);
 [[nodiscard]] Result<std::unique_ptr<features::Material>>
 materialFromJson(const Json& value, std::string_view name, std::string_view path);
+
+/// A meshing control's canonical intent (P16-PERSIST-001): the body, the
+/// boundary discretisation, the global and face-local sizing, the quality
+/// threshold policy, and the named boundary sets. Nothing generated -- see
+/// MeshControlJson.cpp for the schema and why no mesh can appear in it.
+[[nodiscard]] Json meshControlToJson(const meshing::MeshControl& control);
+[[nodiscard]] Result<std::unique_ptr<meshing::MeshControl>>
+meshControlFromJson(const Json& data, std::string name, std::string_view path);
 
 /// [x, y, z] in metres.
 [[nodiscard]] Json pointToJson(const Point3D& point);

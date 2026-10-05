@@ -1,0 +1,74 @@
+[
+  {
+    "label": "M1 a local control's face reference is dropped on write",
+    "file": "src/io/json/MeshControlJson.cpp",
+    "old": "            entry[\"face\"] = faceNameToJson(item.face);\n            entry[\"target_size\"] = item.targetSize.si();",
+    "new": "            entry[\"face\"] = faceNameToJson(FaceName{item.face.feature, FaceSelector{}});\n            entry[\"target_size\"] = item.targetSize.si();"
+  },
+  {
+    "label": "M2 lengths are written in millimetres instead of SI metres",
+    "file": "src/io/json/MeshControlJson.cpp",
+    "old": "        json[\"target_size\"] = sizing.globalTargetSize->si();",
+    "new": "        json[\"target_size\"] = sizing.globalTargetSize->si() * 1000.0;"
+  },
+  {
+    "label": "M3 a local control's size is read with the wrong unit scale",
+    "file": "src/io/json/MeshControlJson.cpp",
+    "old": "            meshing::LocalMeshSizing{.face = std::move(*face), .targetSize = Length::fromSi(*size)});",
+    "new": "            meshing::LocalMeshSizing{.face = std::move(*face), .targetSize = Length::fromSi(*size / 1000.0)});"
+  },
+  {
+    "label": "M4 a boundary set is given a fresh identity on load",
+    "file": "src/io/json/MeshControlJson.cpp",
+    "old": "        set.id = BoundarySetId::fromValue(*id);",
+    "new": "        set.id = BoundarySetId::fromValue(*id + 1U);"
+  },
+  {
+    "label": "M5 local controls are written in stored order, not canonical order",
+    "file": "src/io/json/MeshControlJson.cpp",
+    "old": "    const std::vector<meshing::LocalMeshSizing> local = control.orderedLocalSizing();",
+    "new": "    const std::vector<meshing::LocalMeshSizing> local = control.definition().mesh.sizing.local;"
+  },
+  {
+    "label": "M6 boundary sets are written in stored order, not canonical order",
+    "file": "src/io/json/MeshControlJson.cpp",
+    "old": "    for (const meshing::NamedBoundarySet& set : control.orderedBoundarySets()) {",
+    "new": "    for (const meshing::NamedBoundarySet& set : control.definition().boundarySets) {"
+  },
+  {
+    "label": "M7 reading skips the core's validation entirely",
+    "file": "src/io/json/MeshControlJson.cpp",
+    "old": "    auto control = meshing::MeshControl::create(std::move(name), std::move(definition));\n    if (!control) {\n        return atPath(path, control.error());\n    }\n    return std::move(*control);",
+    "new": "    auto control = meshing::MeshControl::create(std::move(name), meshing::MeshControlDefinition{.body = definition.body});\n    if (!control) {\n        return atPath(path, control.error());\n    }\n    return std::move(*control);"
+  },
+  {
+    "label": "M8 a repeated quality metric silently keeps the last one",
+    "file": "src/io/json/MeshControlJson.cpp",
+    "old": "        if (quality.limits.contains(*metric)) {\n            return parseError(childPath(itemPath, \"metric\"),",
+    "new": "        if (false) {\n            return parseError(childPath(itemPath, \"metric\"),"
+  },
+  {
+    "label": "M9 an absent global target size is written as a zero instead of omitted",
+    "file": "src/io/json/MeshControlJson.cpp",
+    "old": "    if (sizing.globalTargetSize) {\n        json[\"target_size\"] = sizing.globalTargetSize->si();\n    }",
+    "new": "    json[\"target_size\"] = sizing.globalTargetSize ? sizing.globalTargetSize->si() : 0.0;"
+  },
+  {
+    "label": "M10 a local control whose face is absent is skipped rather than kept",
+    "file": "src/io/json/MeshControlJson.cpp",
+    "old": "        auto face = faceNameFromJson(**faceField, childPath(itemPath, \"face\"));\n        if (!face) {\n            return std::unexpected(face.error());\n        }",
+    "new": "        auto face = faceNameFromJson(**faceField, childPath(itemPath, \"face\"));\n        if (!face) {\n            continue;\n        }"
+  },
+  {
+    "label": "M11 the linear deflection is written as the default instead of the control's",
+    "file": "src/io/json/MeshControlJson.cpp",
+    "old": "    json[\"linear_deflection\"] = surface.linearDeflection.si();\n    json[\"angular_deflection\"] = surface.angularDeflection.si();",
+    "new": "    json[\"linear_deflection\"] = meshing::SurfaceMeshControls{}.linearDeflection.si();\n    json[\"angular_deflection\"] = surface.angularDeflection.si();"
+  },
+  {
+    "label": "M12 the quality threshold policy is dropped on write",
+    "file": "src/io/json/MeshControlJson.cpp",
+    "old": "    if (!d.quality.limits.empty()) {\n        json[\"quality\"] = qualityToJson(d.quality);\n    }",
+    "new": "    if (false) {\n        json[\"quality\"] = qualityToJson(d.quality);\n    }"
+  }
+]

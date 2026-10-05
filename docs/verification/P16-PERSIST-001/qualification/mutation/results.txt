@@ -1,0 +1,15 @@
+M1 a local control's face reference is dropped on write [MeshControlJson.cpp]  killed (assertions: 3826 | 3820 passed | 6 failed)
+M2 lengths are written in millimetres instead of SI metres [MeshControlJson.cpp] killed (assertions: 4061 | 4047 passed | 14 failed)
+---- re-run of M3..M12 after the first run was orphaned ----
+M3 a local control's size is read with the wrong unit scale                    killed (assertions: 4048 | 4032 passed | 16 failed)
+M4 a boundary set is given a fresh identity on load                            killed (assertions: 4036 | 4029 passed | 7 failed)
+M5 local controls are written in stored order, not canonical order             killed (assertions: 4061 | 4060 passed | 1 failed)
+M6 boundary sets are written in stored order, not canonical order              killed (assertions: 4061 | 4060 passed | 1 failed)
+M7 reading skips the core's validation entirely                                killed (assertions: 3894 | 3865 passed | 29 failed)
+M8 a repeated quality metric silently keeps the last one                       killed (assertions: 4060 | 4059 passed | 1 failed)
+M9 an absent global target size is written as a zero instead of omitted        killed (assertions: 3761 | 3756 passed | 5 failed)
+M10 a local control whose face is absent is skipped rather than kept           killed (assertions: 4058 | 4056 passed | 2 failed)
+M11 the surface deflections are not written at all                             killed by the COMPILER
+M12 the quality threshold policy is dropped on write                           killed (assertions: 4056 | 4047 passed | 9 failed)
+---- re-run of M11 alone, after its first form was killed only by the compiler ----
+M11 the linear deflection is written as the default instead of the control's   killed (assertions: 4061 | 4059 passed | 2 failed)

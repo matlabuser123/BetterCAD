@@ -20,6 +20,7 @@ bettercad_add_library(bettercad_io
         json/SheetJson.cpp
         json/ViewJson.cpp
         json/MaterialJson.cpp
+        json/MeshControlJson.cpp
         json/MateJson.cpp
         json/DatumJson.cpp
         json/DocumentJson.cpp
@@ -42,6 +43,7 @@ bettercad_add_library(bettercad_io
         BetterCAD::assembly
         BetterCAD::drawing
         BetterCAD::features
+        BetterCAD::meshing
         BetterCAD::sketch
         nlohmann_json::nlohmann_json
 )

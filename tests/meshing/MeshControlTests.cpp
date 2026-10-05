@@ -26,6 +26,7 @@
 #include <bettercad/features/Regenerator.hpp>
 #include <bettercad/io/DocumentFile.hpp>
 #include <bettercad/meshing/MeshControl.hpp>
+#include <bettercad/meshing/MeshingCommands.hpp>
 #include <bettercad/sketch/Sketch.hpp>
 
 #include <catch2/catch_test_macros.hpp>
@@ -344,17 +345,23 @@ TEST_CASE("MeshControl_EnumeratesItsControlsDeterministically", "[meshing][meshc
     CHECK((*control)->boundarySet(BoundarySetId::fromValue(3U)) == nullptr);
 }
 
-TEST_CASE("MeshControl_CannotYetBeSavedAndSaysSo", "[meshing][meshcontrol][persistence]") {
-    // THE BOUNDARY WITH P16-PERSIST-001, PINNED RATHER THAN DISCOVERED.
-    // io's objectToJson dispatches over an explicit type chain and refuses an
-    // unknown one. So a document holding a control cannot be saved until the
-    // persistence milestone defines its schema -- which is a REFUSAL WITH A
-    // DIAGNOSTIC naming the type, not silent data loss, and that is the
-    // correct behaviour while the schema is someone else's decision.
+TEST_CASE("MeshControl_NowSavesAndLoads", "[meshing][meshcontrol][persistence]") {
+    // THE BOUNDARY WITH P16-PERSIST-001 HAS MOVED, ON PURPOSE AND VISIBLY.
     //
-    // When P16-PERSIST-001 lands, this test fails and is replaced by its round
-    // trip. That is the point of writing it: the boundary moves on purpose and
-    // visibly, rather than being noticed by accident.
+    // This test used to be MeshControl_CannotYetBeSavedAndSaysSo. It asserted
+    // that io's objectToJson refused a control by name, because the schema was
+    // another milestone's decision, and it said in its own comment: "When
+    // P16-PERSIST-001 lands, this test fails and is replaced by its round
+    // trip."
+    //
+    // P16-PERSIST-001 landed, this test failed, and this is the replacement.
+    // The gap was closed where it was marked rather than being discovered by
+    // someone wondering why a save had started working.
+    //
+    // The round trip is covered in detail by tests/io/MeshControlFileTests.cpp
+    // -- the schema, the units, determinism, malformed input, regeneration
+    // after load. What belongs HERE is only that a control reaches the file at
+    // all, which is the fact this test was created to track.
     Part part;
     auto control = MeshControl::create("Mesh", part.definition());
     REQUIRE(control.has_value());
@@ -364,9 +371,17 @@ TEST_CASE("MeshControl_CannotYetBeSavedAndSaysSo", "[meshing][meshcontrol][persi
         std::filesystem::temp_directory_path() / "bettercad-meshcontrol-save.bcad";
     std::filesystem::remove(file);
     const Result<void> saved = io::saveDocument(part.document, file);
-    REQUIRE_FALSE(saved.has_value());
-    CHECK(saved.error().code == ErrorCode::InvalidArgument);
-    CHECK_THAT(saved.error().message, ContainsSubstring("mesh-control"));
-    CHECK_THAT(saved.error().message, ContainsSubstring("cannot be saved"));
+    INFO((saved ? std::string{} : saved.error().message));
+    REQUIRE(saved.has_value());
+
+    Result<Document> loaded = io::loadDocument(file);
+    INFO((loaded ? std::string{} : loaded.error().message));
+    REQUIRE(loaded.has_value());
+    const std::vector<MeshControlId> controls = meshing::meshControls(*loaded);
+    REQUIRE(controls.size() == 1U);
+    const MeshControl* restored = meshing::findMeshControl(*loaded, controls.front());
+    REQUIRE(restored != nullptr);
+    CHECK(restored->name() == "Mesh");
+    CHECK(restored->definition() == part.definition());
     std::filesystem::remove(file);
 }

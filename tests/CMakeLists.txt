@@ -171,6 +171,7 @@ bettercad_add_executable(bettercad_tests
         io/DrawingExportTests.cpp
         io/DocumentFileTests.cpp
         io/MaterialFileTests.cpp
+        io/MeshControlFileTests.cpp
         io/DraftFileTests.cpp
         io/ExampleModelTests.cpp
         io/ExpressionFileTests.cpp
@@ -394,6 +395,25 @@ if(TARGET bettercad_cli)
         COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "validate|${_example}"
         EXIT_CODE 0
         STDOUT_REGEX "geometry              ok, 1 result body\nResult bodies \\(1\\):\n  Extrude001 \\(object:6\\): 1 solid, volume 93716\\.815 mm\\^3.*\nResult: valid$")
+    # P16-PERSIST-001: a FRESH PROCESS loads a document carrying meshing
+    # intent. This is the multi-process half of the round trip, and it is the
+    # only evidence that can rule out an in-memory identity dependence -- a
+    # pointer, an address, a per-process hash -- because nothing this process
+    # reads was ever in another one. The file is hand-written, so it is also
+    # the proof that the schema is interpretable without BetterCAD having
+    # produced it, and without a meshing backend present.
+    set(_meshed "${PROJECT_SOURCE_DIR}/examples/models/meshed_plate.bcad")
+    bettercad_add_process_test(cli.info.mesh-control
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "info|${_meshed}"
+        EXIT_CODE 0
+        STDOUT_REGEX "^Document: Meshed plate
+.*object:7  mesh-control  PlateMesh$")
+    bettercad_add_process_test(cli.validate.mesh-control
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "validate|${_meshed}"
+        EXIT_CODE 0
+        STDOUT_REGEX "missing references    ok
+.*feature regeneration  ok, 2 objects regenerated
+.*Result: valid$")
     bettercad_add_process_test(cli.validate.missing-file
         COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "validate|${_out}/does-not-exist.bcad"
         EXIT_CODE 1 STDOUT_REGEX "Result: invalid \\(1 error\\)$")

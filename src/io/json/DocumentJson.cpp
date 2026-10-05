@@ -69,6 +69,8 @@ Result<Json> objectToJson(const DocumentObject& object) {
         data = detail::coordinateSystemToJson(*system);
     } else if (const auto* material = dynamic_cast<const features::Material*>(&object)) {
         data = detail::materialToJson(*material);
+    } else if (const auto* control = dynamic_cast<const meshing::MeshControl*>(&object)) {
+        data = detail::meshControlToJson(*control);
     } else {
         return makeError(ErrorCode::InvalidArgument,
                          std::format("objects of type '{}' cannot be saved", object.typeName()));
@@ -289,6 +291,16 @@ Result<std::unique_ptr<DocumentObject>> objectFromJson(const Json& value, std::s
             return std::unexpected(material.error());
         }
         return std::unique_ptr<DocumentObject>(std::move(*material));
+    }
+    // The literal again, for the reason the comment above gives.
+    // MeshControlJson.cpp carries the static_assert that it and
+    // MeshControl::kTypeName agree.
+    if (*type == "mesh-control") {
+        auto control = detail::meshControlFromJson(**data, *name, detail::childPath(path, "data"));
+        if (!control) {
+            return std::unexpected(control.error());
+        }
+        return std::unique_ptr<DocumentObject>(std::move(*control));
     }
     return detail::parseError(detail::childPath(path, "type"), std::format("unknown object type '{}'", *type));
 }

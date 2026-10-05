@@ -13,7 +13,7 @@ Current:
            P16 — Meshing
 
 Current milestone:
-           None. P16-CMD-001 is PASS (2026-10-05) and the next milestone
+           None. P16-PERSIST-001 is PASS (2026-10-05) and the next milestone
            is a scope decision, not Claude's to make.
 
 Qualified:
@@ -25,11 +25,11 @@ Qualified:
            P15 — Materials / Engineering Data
 
 Next:
-           P16-PERSIST-001 — Meshing Intent Persistence. NOT AUTHORIZED:
+           P16-CLI-001 — Headless Meshing Workflows. NOT AUTHORIZED:
            being next in the P16 sequence is not permission to start it.
            Starting it is a scope decision.
 
-           Also unstarted: P16-CLI-001, P16-REFMOD-001, P16-QUAL-001.
+           Also unstarted: P16-REFMOD-001, P16-QUAL-001.
 
 Qualified milestones in P16:
            P16-ARCH-001 — Meshing Architecture (ADR-030 to ADR-033)
@@ -45,6 +45,7 @@ Qualified milestones in P16:
                               (infrastructure)
            P16-VIZ-001 — Mesh Visualisation / Inspection
            P16-CMD-001 — Meshing Commands / Undo / Redo
+           P16-PERSIST-001 — Meshing Intent Persistence
 
 P16 objective:
            Geometry
@@ -1490,25 +1491,25 @@ backend-independent options that are canonical
 
 Do NOT persist generated mesh as engineering authority.
 
-* [ ] Define persisted meshing schema
-* [ ] Persist global controls
-* [ ] Persist local controls
-* [ ] Persist geometry-selection references
-* [ ] Persist boundary/region definitions
-* [ ] Preserve units
-* [ ] Preserve unresolved references explicitly
-* [ ] Exclude generated nodes/elements as authority
-* [ ] Validate malformed files
-* [ ] Validate invalid sizes rejected
-* [ ] Validate duplicate control IDs if IDs exist
-* [ ] Validate deterministic serialization
-* [ ] Validate backward compatibility
-* [ ] Validate full round trip
-* [ ] Regenerate mesh after load
-* [ ] Compare regenerated mesh semantics
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Define persisted meshing schema
+* [x] Persist global controls
+* [x] Persist local controls
+* [x] Persist geometry-selection references
+* [x] Persist boundary/region definitions
+* [x] Preserve units
+* [x] Preserve unresolved references explicitly
+* [x] Exclude generated nodes/elements as authority
+* [x] Validate malformed files
+* [x] Validate invalid sizes rejected
+* [x] Validate duplicate control IDs if IDs exist
+* [x] Validate deterministic serialization
+* [x] Validate backward compatibility
+* [x] Validate full round trip
+* [x] Regenerate mesh after load
+* [x] Compare regenerated mesh semantics
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded
 
 ### Derived-state rule
 
@@ -1533,13 +1534,38 @@ Do not introduce that cache unless measured performance justifies it.
 ### Gate
 
 ```text
-meshing intent preserved
-+ geometry references preserved
-+ units preserved
-+ derived mesh excluded as authority
-+ malformed files rejected
-+ deterministic serialization PASS
+meshing intent preserved              [x]  a MeshControl is an entry in the
+                                           existing objects array; no version
+                                           bump, no sidecar, one source of
+                                           truth
++ geometry references preserved       [x]  through the format's EXISTING
+                                           faceNameToJson, which writes every
+                                           field of the selector. An
+                                           unresolved reference is kept
+                                           verbatim and never rebound; a
+                                           malformed ENCODING is refused.
+                                           Both tested
++ units preserved                     [x]  bare SI, five quantities exact, and
+                                           the file itself pinned: 10 mm is
+                                           written as 0.01
++ derived mesh excluded as authority  [x]  structurally -- the definition has
+                                           no member for a mesh and VolumeMesh
+                                           cannot be default-constructed.
+                                           MEASURED: 745 -> 1871 elements
+                                           changes the file by 2 BYTES
++ malformed files rejected            [x]  a 23-case matrix, each naming the
+                                           layer that refuses it; a failed
+                                           load leaves the open document's
+                                           fingerprint and revision unchanged
++ deterministic serialization PASS    [x]  byte-identical on repeat saves, on
+                                           save/load/save, and between two
+                                           documents whose controls were added
+                                           in OPPOSITE order
 ```
+
+Evidence: [docs/verification/P16-PERSIST-001/](docs/verification/P16-PERSIST-001/)
+Qualified at tree `a8ffe41b`, three presets, 3301/3301 each, 0 warnings.
+Mutation testing: 12 of 12 killed, every one by a test.
 
 ---
 
