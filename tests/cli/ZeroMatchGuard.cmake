@@ -50,6 +50,11 @@ set(_filters
     "cli\\.mesh\\." 5
     "unit\\.MeshingPersistence" 10
     "unit\\.MeshingCommand" 10
+    # P16-REFMOD-001. The reference suite's own two filters: the in-process
+    # cases and the fresh-process ones. The qualification runs both, so both
+    # have to be seen to match something.
+    "unit\\.Mesh(Block|Cylinder|PlateWithHole|Tube|ThinPlate|TransformedBlock|LocalRefinement|OpenProfile|Reference|Curved)" 20
+    "refmod\\.mesh\\." 15
 )
 list(LENGTH _filters _count)
 math(EXPR _last "${_count} - 1")

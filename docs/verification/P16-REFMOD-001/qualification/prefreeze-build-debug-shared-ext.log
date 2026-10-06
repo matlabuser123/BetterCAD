@@ -1,0 +1,8 @@
+[1/21] Checking git revision
+[2/8] Building CXX object examples/reference_models/CMakeFiles/bettercad_reference_models.dir/MeshCatalog.cpp.obj
+[3/8] Building CXX object examples/reference_models/CMakeFiles/bettercad_reference_models.dir/MeshModels.cpp.obj
+[4/8] Linking CXX static library lib\libbettercad_reference_models.a
+[5/8] Building CXX object examples/reference_models/CMakeFiles/bettercad_example_reference_models.dir/main.cpp.obj
+[6/8] Linking CXX executable bin\bettercad_example_reference_models.exe
+[7/8] Building CXX object tests/CMakeFiles/bettercad_tests.dir/reference/MeshModelsTests.cpp.obj
+[8/8] Linking CXX executable bin\bettercad_tests.exe

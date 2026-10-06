@@ -426,4 +426,106 @@ using Rotation = std::array<std::array<double, 3>, 3>;
     return (sinkDiameter - diameter) / 2.0 / std::tan(angleDeg * pi / 360.0);
 }
 
+// --- Volumes and meshing bounds for the meshing suite (P16-REFMOD-001) ------
+//
+// In MILLIMETRES, because that is how the meshing reference models' dimensions
+// are quoted, and converting a closed form is an opportunity to lose a factor
+// of a thousand. The three SI closed forms above are not restated: these take
+// the model's own dimensions and return a volume in mm^3.
+//
+// WHY THERE ARE BOUNDS AS WELL AS VOLUMES. A tetrahedral mesh of a CURVED body
+// does not have the body's volume, and never will: the boundary is a polyhedron
+// whose faces are chords of the true surface. So "the mesh volume equals the
+// analytic volume" is the wrong expectation, and a percentage tolerance chosen
+// because it passed would be exactly what the brief forbids.
+//
+// What IS available is a two-sided bound that follows from the declared surface
+// deflection alone. A chord of a circle of radius r whose deepest deviation from
+// the arc is at most d has its closest approach to the centre at r - d, so an
+// inscribed chord polygon
+//
+//     contains  the disc of radius r - d
+//     lies in   the disc of radius r
+//
+// and therefore has area between pi(r - d)^2 and pi r^2. Nothing is fitted, no
+// segment count has to be known, and the direction of the error follows from
+// which side of the material the curved surface is on -- which is why a hole's
+// bound runs the OTHER WAY from a boss's and a check written for one would fail
+// the other.
+
+/// A two-sided bound, in mm^3. The meshed volume must lie inside it.
+struct MeshedVolumeBound {
+    double lower = 0.0;
+    double upper = 0.0;
+
+    [[nodiscard]] bool contains(double volume) const noexcept {
+        return volume >= lower && volume <= upper;
+    }
+    /// The width of the bound, relative to its midpoint: how much the
+    /// discretisation is allowed to move the answer at all.
+    [[nodiscard]] double relativeWidth() const noexcept {
+        return (upper - lower) / (0.5 * (upper + lower));
+    }
+};
+
+/// A rectangular block: V = abc. Exact, and planar, so a conforming mesh of it
+/// tiles the exact solid and must recover this to arithmetic accumulation.
+[[nodiscard]] constexpr double blockVolumeMm3(double a, double b, double c) {
+    return a * b * c;
+}
+
+/// A cylinder: V = pi r^2 h.
+[[nodiscard]] inline double cylinderVolumeMm3(double radius, double height) {
+    return pi * radius * radius * height;
+}
+
+/// A plate with one through-hole: V = L W t - pi r^2 t.
+[[nodiscard]] inline double plateWithHoleVolumeMm3(double length, double width, double thickness,
+                                                   double holeRadius) {
+    return length * width * thickness - pi * holeRadius * holeRadius * thickness;
+}
+
+/// A hollow tube: V = pi (Ro^2 - Ri^2) h.
+[[nodiscard]] inline double tubeVolumeMm3(double outerRadius, double innerRadius, double height) {
+    return pi * (outerRadius * outerRadius - innerRadius * innerRadius) * height;
+}
+
+/// A cylinder's meshed volume: the lateral surface is inscribed, so the mesh is
+/// SMALLER than the solid.
+///
+///     pi (r - d)^2 h  <=  V_mesh  <=  pi r^2 h
+[[nodiscard]] inline MeshedVolumeBound cylinderMeshBound(double radius, double height,
+                                                         double deflection) {
+    return {.lower = cylinderVolumeMm3(radius - deflection, height),
+            .upper = cylinderVolumeMm3(radius, height)};
+}
+
+/// A plate with a hole: the outer boundary is PLANAR and exact, and the hole's
+/// wall is inscribed -- so the chord polygon removes LESS material than the true
+/// circle and the mesh is LARGER than the solid.
+///
+///     L W t - pi r^2 t  <=  V_mesh  <=  L W t - pi (r - d)^2 t
+///
+/// The lower bound is the analytic volume itself, which makes the direction of
+/// the error a prediction rather than an allowance: a mesh that came out BELOW
+/// the analytic volume would mean the hole had been cut too big, and a mesh that
+/// filled the hole would miss the upper bound by the whole hole.
+[[nodiscard]] inline MeshedVolumeBound plateWithHoleMeshBound(double length, double width,
+                                                              double thickness, double holeRadius,
+                                                              double deflection) {
+    return {.lower = plateWithHoleVolumeMm3(length, width, thickness, holeRadius),
+            .upper = plateWithHoleVolumeMm3(length, width, thickness, holeRadius - deflection)};
+}
+
+/// A tube: the outer wall's chords LOSE material and the inner wall's chords
+/// GAIN it, so the two errors are in opposite directions and the bound has to
+/// take the extreme of each independently.
+///
+///     pi ((Ro - d)^2 - Ri^2) h  <=  V_mesh  <=  pi (Ro^2 - (Ri - d)^2) h
+[[nodiscard]] inline MeshedVolumeBound tubeMeshBound(double outerRadius, double innerRadius,
+                                                     double height, double deflection) {
+    return {.lower = tubeVolumeMm3(outerRadius - deflection, innerRadius, height),
+            .upper = tubeVolumeMm3(outerRadius, innerRadius - deflection, height)};
+}
+
 } // namespace bettercad::test::analytic

@@ -1,0 +1,535 @@
+Test project C:/Users/uqhas/AppData/Local/bc-build/debug-ext
+      Start 3099: refmod.mesh.build
+      Start 1614: unit.MeshReference_UndoAndRedoOfTheIntentAreFollowedByTheMesh
+      Start 1609: unit.MeshReference_ASettingsEditRemeshesAtTheNewCharacteristicScale
+      Start 3100: refmod.mesh.build.refusal
+      Start 3101: refmod.mesh.build.tube-void
+      Start 1610: unit.MeshReference_EveryModelsOutcomeIsStableOverRepeatedAttempts
+      Start 1563: unit.MeshCylinder_ApproachesTheAnalyticVolumeAsTheSurfaceIsResolved
+      Start 1607: unit.MeshReferenceSuite_EveryValidModelMeshesAndTheInvalidOneIsRefused
+    Test #1614: unit.MeshReference_UndoAndRedoOfTheIntentAreFollowedByTheMesh ...............   Passed    3.18 sec
+      Start 1614: unit.MeshReference_UndoAndRedoOfTheIntentAreFollowedByTheMesh
+    Test #1607: unit.MeshReferenceSuite_EveryValidModelMeshesAndTheInvalidOneIsRefused ......   Passed    4.19 sec
+      Start 1607: unit.MeshReferenceSuite_EveryValidModelMeshesAndTheInvalidOneIsRefused
+    Test #1563: unit.MeshCylinder_ApproachesTheAnalyticVolumeAsTheSurfaceIsResolved .........   Passed    6.26 sec
+      Start 1563: unit.MeshCylinder_ApproachesTheAnalyticVolumeAsTheSurfaceIsResolved
+    Test #1614: unit.MeshReference_UndoAndRedoOfTheIntentAreFollowedByTheMesh ...............   Passed    3.28 sec
+      Start 1614: unit.MeshReference_UndoAndRedoOfTheIntentAreFollowedByTheMesh
+    Test #1607: unit.MeshReferenceSuite_EveryValidModelMeshesAndTheInvalidOneIsRefused ......   Passed    4.88 sec
+      Start 1607: unit.MeshReferenceSuite_EveryValidModelMeshesAndTheInvalidOneIsRefused
+    Test #1614: unit.MeshReference_UndoAndRedoOfTheIntentAreFollowedByTheMesh ...............   Passed    3.29 sec
+      Start 1614: unit.MeshReference_UndoAndRedoOfTheIntentAreFollowedByTheMesh
+    Test #3100: refmod.mesh.build.refusal ...................................................   Passed   10.96 sec
+      Start 3100: refmod.mesh.build.refusal
+    Test #3101: refmod.mesh.build.tube-void .................................................   Passed   11.01 sec
+      Start 3101: refmod.mesh.build.tube-void
+    Test #3099: refmod.mesh.build ...........................................................   Passed   11.12 sec
+      Start 3099: refmod.mesh.build
+    Test #1563: unit.MeshCylinder_ApproachesTheAnalyticVolumeAsTheSurfaceIsResolved .........   Passed    6.60 sec
+      Start 1563: unit.MeshCylinder_ApproachesTheAnalyticVolumeAsTheSurfaceIsResolved
+    Test #1614: unit.MeshReference_UndoAndRedoOfTheIntentAreFollowedByTheMesh ...............   Passed    3.66 sec
+      Start 1614: unit.MeshReference_UndoAndRedoOfTheIntentAreFollowedByTheMesh
+    Test #1610: unit.MeshReference_EveryModelsOutcomeIsStableOverRepeatedAttempts ...........   Passed   13.40 sec
+      Start 1610: unit.MeshReference_EveryModelsOutcomeIsStableOverRepeatedAttempts
+    Test #1607: unit.MeshReferenceSuite_EveryValidModelMeshesAndTheInvalidOneIsRefused ......   Passed    4.75 sec
+      Start 1607: unit.MeshReferenceSuite_EveryValidModelMeshesAndTheInvalidOneIsRefused
+ 1/53 Test #1614: unit.MeshReference_UndoAndRedoOfTheIntentAreFollowedByTheMesh ...............   Passed    3.92 sec
+      Start 1611: unit.MeshReference_IsDeterministicOverRepeatedGeneration
+    Test #1563: unit.MeshCylinder_ApproachesTheAnalyticVolumeAsTheSurfaceIsResolved .........   Passed    6.54 sec
+      Start 1563: unit.MeshCylinder_ApproachesTheAnalyticVolumeAsTheSurfaceIsResolved
+    Test #1607: unit.MeshReferenceSuite_EveryValidModelMeshesAndTheInvalidOneIsRefused ......   Passed    5.70 sec
+      Start 1607: unit.MeshReferenceSuite_EveryValidModelMeshesAndTheInvalidOneIsRefused
+    Test #3100: refmod.mesh.build.refusal ...................................................   Passed   10.91 sec
+      Start 3100: refmod.mesh.build.refusal
+    Test #1611: unit.MeshReference_IsDeterministicOverRepeatedGeneration ....................   Passed    5.14 sec
+      Start 1611: unit.MeshReference_IsDeterministicOverRepeatedGeneration
+    Test #3101: refmod.mesh.build.tube-void .................................................   Passed   11.66 sec
+      Start 3101: refmod.mesh.build.tube-void
+    Test #3099: refmod.mesh.build ...........................................................   Passed   12.48 sec
+      Start 3099: refmod.mesh.build
+ 2/53 Test #1607: unit.MeshReferenceSuite_EveryValidModelMeshesAndTheInvalidOneIsRefused ......   Passed    5.02 sec
+      Start 1631: unit.MeshTube_MapsItsInnerAndOuterWallsToDifferentFaces
+    Test #1563: unit.MeshCylinder_ApproachesTheAnalyticVolumeAsTheSurfaceIsResolved .........   Passed    6.58 sec
+      Start 1563: unit.MeshCylinder_ApproachesTheAnalyticVolumeAsTheSurfaceIsResolved
+    Test #1610: unit.MeshReference_EveryModelsOutcomeIsStableOverRepeatedAttempts ...........   Passed   13.66 sec
+      Start 1610: unit.MeshReference_EveryModelsOutcomeIsStableOverRepeatedAttempts
+    Test #1631: unit.MeshTube_MapsItsInnerAndOuterWallsToDifferentFaces .....................   Passed    2.52 sec
+      Start 1631: unit.MeshTube_MapsItsInnerAndOuterWallsToDifferentFaces
+    Test #1611: unit.MeshReference_IsDeterministicOverRepeatedGeneration ....................   Passed    6.42 sec
+      Start 1611: unit.MeshReference_IsDeterministicOverRepeatedGeneration
+    Test #1631: unit.MeshTube_MapsItsInnerAndOuterWallsToDifferentFaces .....................   Passed    2.52 sec
+      Start 1631: unit.MeshTube_MapsItsInnerAndOuterWallsToDifferentFaces
+    Test #1631: unit.MeshTube_MapsItsInnerAndOuterWallsToDifferentFaces .....................   Passed    2.48 sec
+      Start 1631: unit.MeshTube_MapsItsInnerAndOuterWallsToDifferentFaces
+ 3/53 Test #1563: unit.MeshCylinder_ApproachesTheAnalyticVolumeAsTheSurfaceIsResolved .........   Passed    6.59 sec
+      Start 1632: unit.MeshTube_PreservesTheInnerVoid
+    Test #3100: refmod.mesh.build.refusal ...................................................   Passed   11.17 sec
+      Start 3100: refmod.mesh.build.refusal
+    Test #1611: unit.MeshReference_IsDeterministicOverRepeatedGeneration ....................   Passed    4.69 sec
+      Start 1611: unit.MeshReference_IsDeterministicOverRepeatedGeneration
+    Test #1631: unit.MeshTube_MapsItsInnerAndOuterWallsToDifferentFaces .....................   Passed    2.29 sec
+      Start 1631: unit.MeshTube_MapsItsInnerAndOuterWallsToDifferentFaces
+    Test #3101: refmod.mesh.build.tube-void .................................................   Passed   11.78 sec
+      Start 3101: refmod.mesh.build.tube-void
+    Test #3099: refmod.mesh.build ...........................................................   Passed   11.25 sec
+      Start 3099: refmod.mesh.build
+    Test #1632: unit.MeshTube_PreservesTheInnerVoid .........................................   Passed    2.37 sec
+      Start 1632: unit.MeshTube_PreservesTheInnerVoid
+ 4/53 Test #1631: unit.MeshTube_MapsItsInnerAndOuterWallsToDifferentFaces .....................   Passed    2.25 sec
+      Start 1608: unit.MeshReference_AGeometryEditRemeshesAgainstTheNewAnalyticVolume
+    Test #1632: unit.MeshTube_PreservesTheInnerVoid .........................................   Passed    2.27 sec
+      Start 1632: unit.MeshTube_PreservesTheInnerVoid
+    Test #1608: unit.MeshReference_AGeometryEditRemeshesAgainstTheNewAnalyticVolume .........   Passed    1.29 sec
+      Start 1608: unit.MeshReference_AGeometryEditRemeshesAgainstTheNewAnalyticVolume
+    Test #1611: unit.MeshReference_IsDeterministicOverRepeatedGeneration ....................   Passed    4.63 sec
+      Start 1611: unit.MeshReference_IsDeterministicOverRepeatedGeneration
+    Test #1608: unit.MeshReference_AGeometryEditRemeshesAgainstTheNewAnalyticVolume .........   Passed    1.25 sec
+      Start 1608: unit.MeshReference_AGeometryEditRemeshesAgainstTheNewAnalyticVolume
+    Test #1632: unit.MeshTube_PreservesTheInnerVoid .........................................   Passed    2.09 sec
+      Start 1632: unit.MeshTube_PreservesTheInnerVoid
+    Test #1610: unit.MeshReference_EveryModelsOutcomeIsStableOverRepeatedAttempts ...........   Passed   12.50 sec
+      Start 1610: unit.MeshReference_EveryModelsOutcomeIsStableOverRepeatedAttempts
+    Test #1608: unit.MeshReference_AGeometryEditRemeshesAgainstTheNewAnalyticVolume .........   Passed    1.20 sec
+      Start 1608: unit.MeshReference_AGeometryEditRemeshesAgainstTheNewAnalyticVolume
+    Test #1632: unit.MeshTube_PreservesTheInnerVoid .........................................   Passed    2.25 sec
+      Start 1632: unit.MeshTube_PreservesTheInnerVoid
+    Test #1609: unit.MeshReference_ASettingsEditRemeshesAtTheNewCharacteristicScale .........   Passed   41.83 sec
+      Start 1609: unit.MeshReference_ASettingsEditRemeshesAtTheNewCharacteristicScale
+    Test #1608: unit.MeshReference_AGeometryEditRemeshesAgainstTheNewAnalyticVolume .........   Passed    1.62 sec
+      Start 1608: unit.MeshReference_AGeometryEditRemeshesAgainstTheNewAnalyticVolume
+ 5/53 Test #1611: unit.MeshReference_IsDeterministicOverRepeatedGeneration ....................   Passed    4.36 sec
+      Start 1612: unit.MeshReference_SaveLoadRegenerateKeepsTheIntentAndNotTheMesh
+    Test #3100: refmod.mesh.build.refusal ...................................................   Passed   10.34 sec
+      Start 3100: refmod.mesh.build.refusal
+ 6/53 Test #1608: unit.MeshReference_AGeometryEditRemeshesAgainstTheNewAnalyticVolume .........   Passed    1.42 sec
+      Start 1564: unit.MeshCylinder_MapsItsCapsAndWallWithoutLeakage
+ 7/53 Test #1632: unit.MeshTube_PreservesTheInnerVoid .........................................   Passed    2.37 sec
+      Start 1565: unit.MeshCylinder_MeshedVolumeLiesInsideTheInscribedPolygonBound
+    Test #3101: refmod.mesh.build.tube-void .................................................   Passed    9.86 sec
+      Start 3101: refmod.mesh.build.tube-void
+    Test #1612: unit.MeshReference_SaveLoadRegenerateKeepsTheIntentAndNotTheMesh ............   Passed    1.95 sec
+      Start 1612: unit.MeshReference_SaveLoadRegenerateKeepsTheIntentAndNotTheMesh
+    Test #3099: refmod.mesh.build ...........................................................   Passed    9.88 sec
+      Start 3099: refmod.mesh.build
+    Test #1564: unit.MeshCylinder_MapsItsCapsAndWallWithoutLeakage ..........................   Passed    1.30 sec
+      Start 1564: unit.MeshCylinder_MapsItsCapsAndWallWithoutLeakage
+    Test #1565: unit.MeshCylinder_MeshedVolumeLiesInsideTheInscribedPolygonBound ............   Passed    1.27 sec
+      Start 1565: unit.MeshCylinder_MeshedVolumeLiesInsideTheInscribedPolygonBound
+    Test #1564: unit.MeshCylinder_MapsItsCapsAndWallWithoutLeakage ..........................   Passed    1.36 sec
+      Start 1564: unit.MeshCylinder_MapsItsCapsAndWallWithoutLeakage
+    Test #1565: unit.MeshCylinder_MeshedVolumeLiesInsideTheInscribedPolygonBound ............   Passed    1.34 sec
+      Start 1565: unit.MeshCylinder_MeshedVolumeLiesInsideTheInscribedPolygonBound
+    Test #1612: unit.MeshReference_SaveLoadRegenerateKeepsTheIntentAndNotTheMesh ............   Passed    2.20 sec
+      Start 1612: unit.MeshReference_SaveLoadRegenerateKeepsTheIntentAndNotTheMesh
+    Test #1564: unit.MeshCylinder_MapsItsCapsAndWallWithoutLeakage ..........................   Passed    1.18 sec
+      Start 1564: unit.MeshCylinder_MapsItsCapsAndWallWithoutLeakage
+    Test #1565: unit.MeshCylinder_MeshedVolumeLiesInsideTheInscribedPolygonBound ............   Passed    1.18 sec
+      Start 1565: unit.MeshCylinder_MeshedVolumeLiesInsideTheInscribedPolygonBound
+    Test #1564: unit.MeshCylinder_MapsItsCapsAndWallWithoutLeakage ..........................   Passed    1.29 sec
+      Start 1564: unit.MeshCylinder_MapsItsCapsAndWallWithoutLeakage
+    Test #1612: unit.MeshReference_SaveLoadRegenerateKeepsTheIntentAndNotTheMesh ............   Passed    2.16 sec
+      Start 1612: unit.MeshReference_SaveLoadRegenerateKeepsTheIntentAndNotTheMesh
+    Test #1565: unit.MeshCylinder_MeshedVolumeLiesInsideTheInscribedPolygonBound ............   Passed    1.16 sec
+      Start 1565: unit.MeshCylinder_MeshedVolumeLiesInsideTheInscribedPolygonBound
+ 8/53 Test #1564: unit.MeshCylinder_MapsItsCapsAndWallWithoutLeakage ..........................   Passed    1.34 sec
+      Start 1595: unit.MeshLocalRefinement_FollowsAnEditOfItsLocalSize
+ 9/53 Test #1565: unit.MeshCylinder_MeshedVolumeLiesInsideTheInscribedPolygonBound ............   Passed    1.25 sec
+      Start 1599: unit.MeshPlateWithHole_LeavesTheHoleEmptyAndSaysSoInTheVolume
+    Test #1595: unit.MeshLocalRefinement_FollowsAnEditOfItsLocalSize ........................   Passed    0.96 sec
+      Start 1595: unit.MeshLocalRefinement_FollowsAnEditOfItsLocalSize
+    Test #1599: unit.MeshPlateWithHole_LeavesTheHoleEmptyAndSaysSoInTheVolume ...............   Passed    0.78 sec
+      Start 1599: unit.MeshPlateWithHole_LeavesTheHoleEmptyAndSaysSoInTheVolume
+    Test #1612: unit.MeshReference_SaveLoadRegenerateKeepsTheIntentAndNotTheMesh ............   Passed    2.14 sec
+      Start 1612: unit.MeshReference_SaveLoadRegenerateKeepsTheIntentAndNotTheMesh
+    Test #1599: unit.MeshPlateWithHole_LeavesTheHoleEmptyAndSaysSoInTheVolume ...............   Passed    0.82 sec
+      Start 1599: unit.MeshPlateWithHole_LeavesTheHoleEmptyAndSaysSoInTheVolume
+    Test #1610: unit.MeshReference_EveryModelsOutcomeIsStableOverRepeatedAttempts ...........   Passed   12.33 sec
+      Start 1610: unit.MeshReference_EveryModelsOutcomeIsStableOverRepeatedAttempts
+    Test #1595: unit.MeshLocalRefinement_FollowsAnEditOfItsLocalSize ........................   Passed    1.03 sec
+      Start 1595: unit.MeshLocalRefinement_FollowsAnEditOfItsLocalSize
+    Test #1599: unit.MeshPlateWithHole_LeavesTheHoleEmptyAndSaysSoInTheVolume ...............   Passed    0.71 sec
+      Start 1599: unit.MeshPlateWithHole_LeavesTheHoleEmptyAndSaysSoInTheVolume
+    Test #1595: unit.MeshLocalRefinement_FollowsAnEditOfItsLocalSize ........................   Passed    0.98 sec
+      Start 1595: unit.MeshLocalRefinement_FollowsAnEditOfItsLocalSize
+10/53 Test #1612: unit.MeshReference_SaveLoadRegenerateKeepsTheIntentAndNotTheMesh ............   Passed    2.10 sec
+      Start 1600: unit.MeshPlateWithHole_MapsTheHoleWallWithItsNormalsFacingTheMaterial
+    Test #1599: unit.MeshPlateWithHole_LeavesTheHoleEmptyAndSaysSoInTheVolume ...............   Passed    0.89 sec
+      Start 1599: unit.MeshPlateWithHole_LeavesTheHoleEmptyAndSaysSoInTheVolume
+    Test #1595: unit.MeshLocalRefinement_FollowsAnEditOfItsLocalSize ........................   Passed    0.92 sec
+      Start 1595: unit.MeshLocalRefinement_FollowsAnEditOfItsLocalSize
+    Test #1600: unit.MeshPlateWithHole_MapsTheHoleWallWithItsNormalsFacingTheMaterial .......   Passed    0.80 sec
+      Start 1600: unit.MeshPlateWithHole_MapsTheHoleWallWithItsNormalsFacingTheMaterial
+11/53 Test #3100: refmod.mesh.build.refusal ...................................................   Passed   10.66 sec
+      Start 1598: unit.MeshPlateWithHole_HasNoElementInsideTheHole
+12/53 Test #1599: unit.MeshPlateWithHole_LeavesTheHoleEmptyAndSaysSoInTheVolume ...............   Passed    0.83 sec
+      Start 1596: unit.MeshLocalRefinement_RefinesTheNamedFaceAndLeavesTheOppositeOneAlone
+    Test #1600: unit.MeshPlateWithHole_MapsTheHoleWallWithItsNormalsFacingTheMaterial .......   Passed    0.85 sec
+      Start 1600: unit.MeshPlateWithHole_MapsTheHoleWallWithItsNormalsFacingTheMaterial
+    Test #1598: unit.MeshPlateWithHole_HasNoElementInsideTheHole ............................   Passed    0.82 sec
+      Start 1598: unit.MeshPlateWithHole_HasNoElementInsideTheHole
+13/53 Test #1595: unit.MeshLocalRefinement_FollowsAnEditOfItsLocalSize ........................   Passed    1.14 sec
+      Start 1629: unit.MeshThinPlate_MeshesWithMeasurablyWorseShapeThanTheBlock
+    Test #1596: unit.MeshLocalRefinement_RefinesTheNamedFaceAndLeavesTheOppositeOneAlone ....   Passed    0.81 sec
+      Start 1596: unit.MeshLocalRefinement_RefinesTheNamedFaceAndLeavesTheOppositeOneAlone
+    Test #1600: unit.MeshPlateWithHole_MapsTheHoleWallWithItsNormalsFacingTheMaterial .......   Passed    0.72 sec
+      Start 1600: unit.MeshPlateWithHole_MapsTheHoleWallWithItsNormalsFacingTheMaterial
+    Test #1598: unit.MeshPlateWithHole_HasNoElementInsideTheHole ............................   Passed    0.73 sec
+      Start 1598: unit.MeshPlateWithHole_HasNoElementInsideTheHole
+14/53 Test #3101: refmod.mesh.build.tube-void .................................................   Passed   11.38 sec
+      Start 1543: unit.MeshBlock_SizingLevelsAreBoundedByItsOwnBoundary
+15/53 Test #3099: refmod.mesh.build ...........................................................   Passed   11.12 sec
+      Start 3117: refmod.mesh.boundaries.tube
+    Test #1596: unit.MeshLocalRefinement_RefinesTheNamedFaceAndLeavesTheOppositeOneAlone ....   Passed    0.80 sec
+      Start 1596: unit.MeshLocalRefinement_RefinesTheNamedFaceAndLeavesTheOppositeOneAlone
+    Test #1629: unit.MeshThinPlate_MeshesWithMeasurablyWorseShapeThanTheBlock ...............   Passed    1.05 sec
+      Start 1629: unit.MeshThinPlate_MeshesWithMeasurablyWorseShapeThanTheBlock
+    Test #1543: unit.MeshBlock_SizingLevelsAreBoundedByItsOwnBoundary .......................   Passed    0.57 sec
+      Start 1543: unit.MeshBlock_SizingLevelsAreBoundedByItsOwnBoundary
+    Test #1600: unit.MeshPlateWithHole_MapsTheHoleWallWithItsNormalsFacingTheMaterial .......   Passed    0.87 sec
+      Start 1600: unit.MeshPlateWithHole_MapsTheHoleWallWithItsNormalsFacingTheMaterial
+    Test #1598: unit.MeshPlateWithHole_HasNoElementInsideTheHole ............................   Passed    0.81 sec
+      Start 1598: unit.MeshPlateWithHole_HasNoElementInsideTheHole
+    Test #1596: unit.MeshLocalRefinement_RefinesTheNamedFaceAndLeavesTheOppositeOneAlone ....   Passed    0.69 sec
+      Start 1596: unit.MeshLocalRefinement_RefinesTheNamedFaceAndLeavesTheOppositeOneAlone
+    Test #1543: unit.MeshBlock_SizingLevelsAreBoundedByItsOwnBoundary .......................   Passed    0.46 sec
+      Start 1543: unit.MeshBlock_SizingLevelsAreBoundedByItsOwnBoundary
+    Test #1629: unit.MeshThinPlate_MeshesWithMeasurablyWorseShapeThanTheBlock ...............   Passed    0.78 sec
+      Start 1629: unit.MeshThinPlate_MeshesWithMeasurablyWorseShapeThanTheBlock
+16/53 Test #1600: unit.MeshPlateWithHole_MapsTheHoleWallWithItsNormalsFacingTheMaterial .......   Passed    0.73 sec
+      Start 3105: refmod.mesh.generate.hole
+    Test #1598: unit.MeshPlateWithHole_HasNoElementInsideTheHole ............................   Passed    0.71 sec
+      Start 1598: unit.MeshPlateWithHole_HasNoElementInsideTheHole
+    Test #1596: unit.MeshLocalRefinement_RefinesTheNamedFaceAndLeavesTheOppositeOneAlone ....   Passed    0.70 sec
+      Start 1596: unit.MeshLocalRefinement_RefinesTheNamedFaceAndLeavesTheOppositeOneAlone
+    Test #1543: unit.MeshBlock_SizingLevelsAreBoundedByItsOwnBoundary .......................   Passed    0.58 sec
+      Start 1543: unit.MeshBlock_SizingLevelsAreBoundedByItsOwnBoundary
+    Test #1629: unit.MeshThinPlate_MeshesWithMeasurablyWorseShapeThanTheBlock ...............   Passed    0.85 sec
+      Start 1629: unit.MeshThinPlate_MeshesWithMeasurablyWorseShapeThanTheBlock
+    Test #3105: refmod.mesh.generate.hole ...................................................   Passed    0.75 sec
+      Start 3105: refmod.mesh.generate.hole
+    Test #1543: unit.MeshBlock_SizingLevelsAreBoundedByItsOwnBoundary .......................   Passed    0.52 sec
+      Start 1543: unit.MeshBlock_SizingLevelsAreBoundedByItsOwnBoundary
+17/53 Test #1596: unit.MeshLocalRefinement_RefinesTheNamedFaceAndLeavesTheOppositeOneAlone ....   Passed    0.67 sec
+      Start 3111: refmod.mesh.validate.mesh_plate_with_hole
+18/53 Test #1598: unit.MeshPlateWithHole_HasNoElementInsideTheHole ............................   Passed    0.83 sec
+      Start 3110: refmod.mesh.info.mesh_plate_with_hole
+    Test #3117: refmod.mesh.boundaries.tube .................................................   Passed    2.34 sec
+      Start 3117: refmod.mesh.boundaries.tube
+19/53 Test #1543: unit.MeshBlock_SizingLevelsAreBoundedByItsOwnBoundary .......................   Passed    0.61 sec
+      Start 3112: refmod.mesh.quality.mesh_plate_with_hole
+    Test #1629: unit.MeshThinPlate_MeshesWithMeasurablyWorseShapeThanTheBlock ...............   Passed    0.88 sec
+      Start 1629: unit.MeshThinPlate_MeshesWithMeasurablyWorseShapeThanTheBlock
+    Test #3105: refmod.mesh.generate.hole ...................................................   Passed    0.84 sec
+      Start 3105: refmod.mesh.generate.hole
+    Test #3111: refmod.mesh.validate.mesh_plate_with_hole ...................................   Passed    0.86 sec
+      Start 3111: refmod.mesh.validate.mesh_plate_with_hole
+    Test #3110: refmod.mesh.info.mesh_plate_with_hole .......................................   Passed    0.89 sec
+      Start 3110: refmod.mesh.info.mesh_plate_with_hole
+    Test #3112: refmod.mesh.quality.mesh_plate_with_hole ....................................   Passed    0.70 sec
+      Start 3112: refmod.mesh.quality.mesh_plate_with_hole
+20/53 Test #1629: unit.MeshThinPlate_MeshesWithMeasurablyWorseShapeThanTheBlock ...............   Passed    0.82 sec
+      Start 3116: refmod.mesh.boundaries.hole
+    Test #3105: refmod.mesh.generate.hole ...................................................   Passed    0.82 sec
+      Start 3105: refmod.mesh.generate.hole
+    Test #3111: refmod.mesh.validate.mesh_plate_with_hole ...................................   Passed    0.81 sec
+      Start 3111: refmod.mesh.validate.mesh_plate_with_hole
+    Test #3110: refmod.mesh.info.mesh_plate_with_hole .......................................   Passed    0.78 sec
+      Start 3110: refmod.mesh.info.mesh_plate_with_hole
+    Test #3112: refmod.mesh.quality.mesh_plate_with_hole ....................................   Passed    0.79 sec
+      Start 3112: refmod.mesh.quality.mesh_plate_with_hole
+    Test #3105: refmod.mesh.generate.hole ...................................................   Passed    0.95 sec
+      Start 3105: refmod.mesh.generate.hole
+    Test #3111: refmod.mesh.validate.mesh_plate_with_hole ...................................   Passed    0.86 sec
+      Start 3111: refmod.mesh.validate.mesh_plate_with_hole
+    Test #3116: refmod.mesh.boundaries.hole .................................................   Passed    1.11 sec
+      Start 3116: refmod.mesh.boundaries.hole
+    Test #3110: refmod.mesh.info.mesh_plate_with_hole .......................................   Passed    0.88 sec
+      Start 3110: refmod.mesh.info.mesh_plate_with_hole
+    Test #3117: refmod.mesh.boundaries.tube .................................................   Passed    2.48 sec
+      Start 3117: refmod.mesh.boundaries.tube
+    Test #3112: refmod.mesh.quality.mesh_plate_with_hole ....................................   Passed    0.89 sec
+      Start 3112: refmod.mesh.quality.mesh_plate_with_hole
+21/53 Test #3105: refmod.mesh.generate.hole ...................................................   Passed    0.73 sec
+      Start 3118: refmod.mesh.boundaries.local
+    Test #3111: refmod.mesh.validate.mesh_plate_with_hole ...................................   Passed    0.74 sec
+      Start 3111: refmod.mesh.validate.mesh_plate_with_hole
+    Test #3116: refmod.mesh.boundaries.hole .................................................   Passed    0.71 sec
+      Start 3116: refmod.mesh.boundaries.hole
+    Test #3110: refmod.mesh.info.mesh_plate_with_hole .......................................   Passed    0.76 sec
+      Start 3110: refmod.mesh.info.mesh_plate_with_hole
+    Test #3112: refmod.mesh.quality.mesh_plate_with_hole ....................................   Passed    0.83 sec
+      Start 3112: refmod.mesh.quality.mesh_plate_with_hole
+    Test #3118: refmod.mesh.boundaries.local ................................................   Passed    0.55 sec
+      Start 3118: refmod.mesh.boundaries.local
+22/53 Test #3111: refmod.mesh.validate.mesh_plate_with_hole ...................................   Passed    0.81 sec
+      Start 3113: refmod.mesh.info.mesh_local_refinement
+    Test #3116: refmod.mesh.boundaries.hole .................................................   Passed    0.85 sec
+      Start 3116: refmod.mesh.boundaries.hole
+23/53 Test #3110: refmod.mesh.info.mesh_plate_with_hole .......................................   Passed    0.88 sec
+      Start 3114: refmod.mesh.validate.mesh_local_refinement
+    Test #3118: refmod.mesh.boundaries.local ................................................   Passed    0.55 sec
+      Start 3118: refmod.mesh.boundaries.local
+    Test #3113: refmod.mesh.info.mesh_local_refinement ......................................   Passed    0.55 sec
+      Start 3113: refmod.mesh.info.mesh_local_refinement
+24/53 Test #3112: refmod.mesh.quality.mesh_plate_with_hole ....................................   Passed    0.88 sec
+      Start 3115: refmod.mesh.quality.mesh_local_refinement
+    Test #3118: refmod.mesh.boundaries.local ................................................   Passed    0.44 sec
+      Start 3118: refmod.mesh.boundaries.local
+    Test #3114: refmod.mesh.validate.mesh_local_refinement ..................................   Passed    0.55 sec
+      Start 3114: refmod.mesh.validate.mesh_local_refinement
+    Test #3117: refmod.mesh.boundaries.tube .................................................   Passed    2.23 sec
+      Start 3117: refmod.mesh.boundaries.tube
+    Test #3116: refmod.mesh.boundaries.hole .................................................   Passed    0.79 sec
+      Start 3116: refmod.mesh.boundaries.hole
+    Test #3113: refmod.mesh.info.mesh_local_refinement ......................................   Passed    0.42 sec
+      Start 3113: refmod.mesh.info.mesh_local_refinement
+    Test #3115: refmod.mesh.quality.mesh_local_refinement ...................................   Passed    0.42 sec
+      Start 3115: refmod.mesh.quality.mesh_local_refinement
+    Test #3118: refmod.mesh.boundaries.local ................................................   Passed    0.37 sec
+      Start 3118: refmod.mesh.boundaries.local
+    Test #3114: refmod.mesh.validate.mesh_local_refinement ..................................   Passed    0.36 sec
+      Start 3114: refmod.mesh.validate.mesh_local_refinement
+    Test #3113: refmod.mesh.info.mesh_local_refinement ......................................   Passed    0.45 sec
+      Start 3113: refmod.mesh.info.mesh_local_refinement
+    Test #3115: refmod.mesh.quality.mesh_local_refinement ...................................   Passed    0.45 sec
+      Start 3115: refmod.mesh.quality.mesh_local_refinement
+25/53 Test #3118: refmod.mesh.boundaries.local ................................................   Passed    0.50 sec
+      Start 3106: refmod.mesh.generate.local
+    Test #3114: refmod.mesh.validate.mesh_local_refinement ..................................   Passed    0.52 sec
+      Start 3114: refmod.mesh.validate.mesh_local_refinement
+26/53 Test #3116: refmod.mesh.boundaries.hole .................................................   Passed    0.74 sec
+      Start 3104: refmod.mesh.generate.block
+    Test #3113: refmod.mesh.info.mesh_local_refinement ......................................   Passed    0.50 sec
+      Start 3113: refmod.mesh.info.mesh_local_refinement
+    Test #3115: refmod.mesh.quality.mesh_local_refinement ...................................   Passed    0.50 sec
+      Start 3115: refmod.mesh.quality.mesh_local_refinement
+    Test #3104: refmod.mesh.generate.block ..................................................   Passed    0.37 sec
+      Start 3104: refmod.mesh.generate.block
+27/53 Test #1610: unit.MeshReference_EveryModelsOutcomeIsStableOverRepeatedAttempts ...........   Passed   12.10 sec
+      Start 3107: refmod.mesh.info.mesh_block
+    Test #3114: refmod.mesh.validate.mesh_local_refinement ..................................   Passed    0.48 sec
+      Start 3114: refmod.mesh.validate.mesh_local_refinement
+    Test #3106: refmod.mesh.generate.local ..................................................   Passed    0.52 sec
+      Start 3106: refmod.mesh.generate.local
+    Test #3104: refmod.mesh.generate.block ..................................................   Passed    0.31 sec
+      Start 3104: refmod.mesh.generate.block
+28/53 Test #3113: refmod.mesh.info.mesh_local_refinement ......................................   Passed    0.38 sec
+      Start 3109: refmod.mesh.quality.mesh_block
+    Test #3115: refmod.mesh.quality.mesh_local_refinement ...................................   Passed    0.39 sec
+      Start 3115: refmod.mesh.quality.mesh_local_refinement
+    Test #3107: refmod.mesh.info.mesh_block .................................................   Passed    0.32 sec
+      Start 3107: refmod.mesh.info.mesh_block
+29/53 Test #3114: refmod.mesh.validate.mesh_local_refinement ..................................   Passed    0.49 sec
+      Start 3108: refmod.mesh.validate.mesh_block
+    Test #3106: refmod.mesh.generate.local ..................................................   Passed    0.58 sec
+      Start 3106: refmod.mesh.generate.local
+    Test #3104: refmod.mesh.generate.block ..................................................   Passed    0.45 sec
+      Start 3104: refmod.mesh.generate.block
+    Test #3109: refmod.mesh.quality.mesh_block ..............................................   Passed    0.47 sec
+      Start 3109: refmod.mesh.quality.mesh_block
+    Test #3107: refmod.mesh.info.mesh_block .................................................   Passed    0.50 sec
+      Start 3107: refmod.mesh.info.mesh_block
+30/53 Test #3115: refmod.mesh.quality.mesh_local_refinement ...................................   Passed    0.56 sec
+      Start 3123: refmod.mesh.invalid.mesh-boundaries
+    Test #3108: refmod.mesh.validate.mesh_block .............................................   Passed    0.45 sec
+      Start 3108: refmod.mesh.validate.mesh_block
+    Test #3117: refmod.mesh.boundaries.tube .................................................   Passed    2.22 sec
+      Start 3117: refmod.mesh.boundaries.tube
+    Test #3106: refmod.mesh.generate.local ..................................................   Passed    0.46 sec
+      Start 3106: refmod.mesh.generate.local
+    Test #3123: refmod.mesh.invalid.mesh-boundaries .........................................   Passed    0.26 sec
+      Start 3123: refmod.mesh.invalid.mesh-boundaries
+    Test #3104: refmod.mesh.generate.block ..................................................   Passed    0.44 sec
+      Start 3104: refmod.mesh.generate.block
+    Test #3109: refmod.mesh.quality.mesh_block ..............................................   Passed    0.42 sec
+      Start 3109: refmod.mesh.quality.mesh_block
+    Test #3107: refmod.mesh.info.mesh_block .................................................   Passed    0.39 sec
+      Start 3107: refmod.mesh.info.mesh_block
+    Test #3108: refmod.mesh.validate.mesh_block .............................................   Passed    0.32 sec
+      Start 3108: refmod.mesh.validate.mesh_block
+    Test #3123: refmod.mesh.invalid.mesh-boundaries .........................................   Passed    0.23 sec
+      Start 3123: refmod.mesh.invalid.mesh-boundaries
+31/53 Test #3104: refmod.mesh.generate.block ..................................................   Passed    0.34 sec
+      Start 1630: unit.MeshTransformedBlock_KeepsItsVolumeAndShapeUnderARigidTransform
+    Test #3109: refmod.mesh.quality.mesh_block ..............................................   Passed    0.37 sec
+      Start 3109: refmod.mesh.quality.mesh_block
+    Test #3106: refmod.mesh.generate.local ..................................................   Passed    0.45 sec
+      Start 3106: refmod.mesh.generate.local
+    Test #3107: refmod.mesh.info.mesh_block .................................................   Passed    0.33 sec
+      Start 3107: refmod.mesh.info.mesh_block
+    Test #3123: refmod.mesh.invalid.mesh-boundaries .........................................   Passed    0.21 sec
+      Start 3123: refmod.mesh.invalid.mesh-boundaries
+    Test #3108: refmod.mesh.validate.mesh_block .............................................   Passed    0.32 sec
+      Start 3108: refmod.mesh.validate.mesh_block
+    Test #3123: refmod.mesh.invalid.mesh-boundaries .........................................   Passed    0.21 sec
+      Start 3123: refmod.mesh.invalid.mesh-boundaries
+    Test #3109: refmod.mesh.quality.mesh_block ..............................................   Passed    0.32 sec
+      Start 3109: refmod.mesh.quality.mesh_block
+32/53 Test #3107: refmod.mesh.info.mesh_block .................................................   Passed    0.32 sec
+      Start 1541: unit.MeshBlock_PartitionsItsBoundaryAcrossAllSixNamedFaces
+    Test #1630: unit.MeshTransformedBlock_KeepsItsVolumeAndShapeUnderARigidTransform ........   Passed    0.44 sec
+      Start 1630: unit.MeshTransformedBlock_KeepsItsVolumeAndShapeUnderARigidTransform
+    Test #3108: refmod.mesh.validate.mesh_block .............................................   Passed    0.33 sec
+      Start 3108: refmod.mesh.validate.mesh_block
+33/53 Test #3106: refmod.mesh.generate.local ..................................................   Passed    0.43 sec
+34/53 Test #3123: refmod.mesh.invalid.mesh-boundaries .........................................   Passed    0.20 sec
+      Start 3119: refmod.mesh.invalid.mesh-generate
+      Start 1613: unit.MeshReference_ScalingAModelScalesItsVolumeByTheCube
+35/53 Test #3109: refmod.mesh.quality.mesh_block ..............................................   Passed    0.32 sec
+      Start 1542: unit.MeshBlock_RecoversTheExactVolumeOfAnAsymmetricBlock
+    Test #1541: unit.MeshBlock_PartitionsItsBoundaryAcrossAllSixNamedFaces ..................   Passed    0.34 sec
+      Start 1541: unit.MeshBlock_PartitionsItsBoundaryAcrossAllSixNamedFaces
+    Test #3119: refmod.mesh.invalid.mesh-generate ...........................................   Passed    0.26 sec
+      Start 3119: refmod.mesh.invalid.mesh-generate
+36/53 Test #3108: refmod.mesh.validate.mesh_block .............................................   Passed    0.35 sec
+      Start 3103: refmod.mesh.settings.local
+    Test #1613: unit.MeshReference_ScalingAModelScalesItsVolumeByTheCube ....................   Passed    0.40 sec
+      Start 1613: unit.MeshReference_ScalingAModelScalesItsVolumeByTheCube
+    Test #1630: unit.MeshTransformedBlock_KeepsItsVolumeAndShapeUnderARigidTransform ........   Passed    0.48 sec
+      Start 1630: unit.MeshTransformedBlock_KeepsItsVolumeAndShapeUnderARigidTransform
+    Test #3119: refmod.mesh.invalid.mesh-generate ...........................................   Passed    0.24 sec
+      Start 3119: refmod.mesh.invalid.mesh-generate
+    Test #1542: unit.MeshBlock_RecoversTheExactVolumeOfAnAsymmetricBlock ....................   Passed    0.33 sec
+      Start 1542: unit.MeshBlock_RecoversTheExactVolumeOfAnAsymmetricBlock
+    Test #1541: unit.MeshBlock_PartitionsItsBoundaryAcrossAllSixNamedFaces ..................   Passed    0.31 sec
+      Start 1541: unit.MeshBlock_PartitionsItsBoundaryAcrossAllSixNamedFaces
+    Test #3103: refmod.mesh.settings.local ..................................................   Passed    0.24 sec
+      Start 3103: refmod.mesh.settings.local
+    Test #3119: refmod.mesh.invalid.mesh-generate ...........................................   Passed    0.23 sec
+      Start 3119: refmod.mesh.invalid.mesh-generate
+    Test #3103: refmod.mesh.settings.local ..................................................   Passed    0.24 sec
+      Start 3103: refmod.mesh.settings.local
+    Test #1613: unit.MeshReference_ScalingAModelScalesItsVolumeByTheCube ....................   Passed    0.40 sec
+      Start 1613: unit.MeshReference_ScalingAModelScalesItsVolumeByTheCube
+    Test #1542: unit.MeshBlock_RecoversTheExactVolumeOfAnAsymmetricBlock ....................   Passed    0.31 sec
+      Start 1542: unit.MeshBlock_RecoversTheExactVolumeOfAnAsymmetricBlock
+    Test #1541: unit.MeshBlock_PartitionsItsBoundaryAcrossAllSixNamedFaces ..................   Passed    0.33 sec
+      Start 1541: unit.MeshBlock_PartitionsItsBoundaryAcrossAllSixNamedFaces
+    Test #1630: unit.MeshTransformedBlock_KeepsItsVolumeAndShapeUnderARigidTransform ........   Passed    0.48 sec
+      Start 1630: unit.MeshTransformedBlock_KeepsItsVolumeAndShapeUnderARigidTransform
+    Test #3119: refmod.mesh.invalid.mesh-generate ...........................................   Passed    0.22 sec
+      Start 3119: refmod.mesh.invalid.mesh-generate
+    Test #3103: refmod.mesh.settings.local ..................................................   Passed    0.20 sec
+      Start 3103: refmod.mesh.settings.local
+37/53 Test #3119: refmod.mesh.invalid.mesh-generate ...........................................   Passed    0.18 sec
+      Start 3121: refmod.mesh.invalid.mesh-validate
+    Test #1542: unit.MeshBlock_RecoversTheExactVolumeOfAnAsymmetricBlock ....................   Passed    0.31 sec
+      Start 1542: unit.MeshBlock_RecoversTheExactVolumeOfAnAsymmetricBlock
+    Test #1613: unit.MeshReference_ScalingAModelScalesItsVolumeByTheCube ....................   Passed    0.35 sec
+      Start 1613: unit.MeshReference_ScalingAModelScalesItsVolumeByTheCube
+    Test #1541: unit.MeshBlock_PartitionsItsBoundaryAcrossAllSixNamedFaces ..................   Passed    0.31 sec
+      Start 1541: unit.MeshBlock_PartitionsItsBoundaryAcrossAllSixNamedFaces
+    Test #3103: refmod.mesh.settings.local ..................................................   Passed    0.20 sec
+      Start 3103: refmod.mesh.settings.local
+38/53 Test #3117: refmod.mesh.boundaries.tube .................................................   Passed    2.18 sec
+      Start 3122: refmod.mesh.invalid.mesh-quality
+    Test #1630: unit.MeshTransformedBlock_KeepsItsVolumeAndShapeUnderARigidTransform ........   Passed    0.39 sec
+      Start 1630: unit.MeshTransformedBlock_KeepsItsVolumeAndShapeUnderARigidTransform
+    Test #3121: refmod.mesh.invalid.mesh-validate ...........................................   Passed    0.21 sec
+      Start 3121: refmod.mesh.invalid.mesh-validate
+39/53 Test #3103: refmod.mesh.settings.local ..................................................   Passed    0.19 sec
+      Start 3120: refmod.mesh.invalid.mesh-info
+    Test #3122: refmod.mesh.invalid.mesh-quality ............................................   Passed    0.18 sec
+      Start 3122: refmod.mesh.invalid.mesh-quality
+    Test #1542: unit.MeshBlock_RecoversTheExactVolumeOfAnAsymmetricBlock ....................   Passed    0.28 sec
+      Start 1542: unit.MeshBlock_RecoversTheExactVolumeOfAnAsymmetricBlock
+40/53 Test #1541: unit.MeshBlock_PartitionsItsBoundaryAcrossAllSixNamedFaces ..................   Passed    0.28 sec
+      Start 3102: refmod.mesh.settings.block
+    Test #1613: unit.MeshReference_ScalingAModelScalesItsVolumeByTheCube ....................   Passed    0.32 sec
+      Start 1613: unit.MeshReference_ScalingAModelScalesItsVolumeByTheCube
+    Test #3121: refmod.mesh.invalid.mesh-validate ...........................................   Passed    0.18 sec
+      Start 3121: refmod.mesh.invalid.mesh-validate
+    Test #3120: refmod.mesh.invalid.mesh-info ...............................................   Passed    0.18 sec
+      Start 3120: refmod.mesh.invalid.mesh-info
+    Test #3122: refmod.mesh.invalid.mesh-quality ............................................   Passed    0.19 sec
+      Start 3122: refmod.mesh.invalid.mesh-quality
+    Test #3102: refmod.mesh.settings.block ..................................................   Passed    0.19 sec
+      Start 3102: refmod.mesh.settings.block
+    Test #3121: refmod.mesh.invalid.mesh-validate ...........................................   Passed    0.20 sec
+      Start 3121: refmod.mesh.invalid.mesh-validate
+41/53 Test #1542: unit.MeshBlock_RecoversTheExactVolumeOfAnAsymmetricBlock ....................   Passed    0.30 sec
+      Start 1604: unit.MeshReferenceSuite_DeclaredVolumesAgreeWithTheIndependentClosedForms
+42/53 Test #1630: unit.MeshTransformedBlock_KeepsItsVolumeAndShapeUnderARigidTransform ........   Passed    0.46 sec
+      Start 1597: unit.MeshOpenProfile_IsRefusedExplicitlyAndPublishesNothing
+    Test #3120: refmod.mesh.invalid.mesh-info ...............................................   Passed    0.21 sec
+      Start 3120: refmod.mesh.invalid.mesh-info
+    Test #3122: refmod.mesh.invalid.mesh-quality ............................................   Passed    0.21 sec
+      Start 3122: refmod.mesh.invalid.mesh-quality
+43/53 Test #1613: unit.MeshReference_ScalingAModelScalesItsVolumeByTheCube ....................   Passed    0.34 sec
+      Start 1605: unit.MeshReferenceSuite_DeclaresEightModelsInNineDocuments
+    Test #3102: refmod.mesh.settings.block ..................................................   Passed    0.22 sec
+      Start 3102: refmod.mesh.settings.block
+    Test #3121: refmod.mesh.invalid.mesh-validate ...........................................   Passed    0.21 sec
+      Start 3121: refmod.mesh.invalid.mesh-validate
+    Test #1604: unit.MeshReferenceSuite_DeclaredVolumesAgreeWithTheIndependentClosedForms ...   Passed    0.24 sec
+      Start 1604: unit.MeshReferenceSuite_DeclaredVolumesAgreeWithTheIndependentClosedForms
+    Test #3120: refmod.mesh.invalid.mesh-info ...............................................   Passed    0.21 sec
+      Start 3120: refmod.mesh.invalid.mesh-info
+    Test #1597: unit.MeshOpenProfile_IsRefusedExplicitlyAndPublishesNothing .................   Passed    0.25 sec
+      Start 1597: unit.MeshOpenProfile_IsRefusedExplicitlyAndPublishesNothing
+    Test #3122: refmod.mesh.invalid.mesh-quality ............................................   Passed    0.23 sec
+      Start 3122: refmod.mesh.invalid.mesh-quality
+    Test #1605: unit.MeshReferenceSuite_DeclaresEightModelsInNineDocuments ..................   Passed    0.22 sec
+      Start 1605: unit.MeshReferenceSuite_DeclaresEightModelsInNineDocuments
+    Test #3102: refmod.mesh.settings.block ..................................................   Passed    0.21 sec
+      Start 3102: refmod.mesh.settings.block
+44/53 Test #3121: refmod.mesh.invalid.mesh-validate ...........................................   Passed    0.21 sec
+      Start 1606: unit.MeshReferenceSuite_EveryModelBuildsAndCarriesItsMeshingIntent
+    Test #1604: unit.MeshReferenceSuite_DeclaredVolumesAgreeWithTheIndependentClosedForms ...   Passed    0.21 sec
+      Start 1604: unit.MeshReferenceSuite_DeclaredVolumesAgreeWithTheIndependentClosedForms
+    Test #3120: refmod.mesh.invalid.mesh-info ...............................................   Passed    0.20 sec
+      Start 3120: refmod.mesh.invalid.mesh-info
+    Test #1597: unit.MeshOpenProfile_IsRefusedExplicitlyAndPublishesNothing .................   Passed    0.21 sec
+      Start 1597: unit.MeshOpenProfile_IsRefusedExplicitlyAndPublishesNothing
+45/53 Test #3122: refmod.mesh.invalid.mesh-quality ............................................   Passed    0.21 sec
+      Start 1562: unit.MeshCurved_DeclaresTheDeflectionItsAnalyticBoundsAssume
+    Test #1605: unit.MeshReferenceSuite_DeclaresEightModelsInNineDocuments ..................   Passed    0.23 sec
+      Start 1605: unit.MeshReferenceSuite_DeclaresEightModelsInNineDocuments
+    Test #3102: refmod.mesh.settings.block ..................................................   Passed    0.20 sec
+      Start 3102: refmod.mesh.settings.block
+    Test #1606: unit.MeshReferenceSuite_EveryModelBuildsAndCarriesItsMeshingIntent ..........   Passed    0.20 sec
+      Start 1606: unit.MeshReferenceSuite_EveryModelBuildsAndCarriesItsMeshingIntent
+    Test #1604: unit.MeshReferenceSuite_DeclaredVolumesAgreeWithTheIndependentClosedForms ...   Passed    0.20 sec
+      Start 1604: unit.MeshReferenceSuite_DeclaredVolumesAgreeWithTheIndependentClosedForms
+46/53 Test #3120: refmod.mesh.invalid.mesh-info ...............................................   Passed    0.19 sec
+    Test #1597: unit.MeshOpenProfile_IsRefusedExplicitlyAndPublishesNothing .................   Passed    0.20 sec
+      Start 1597: unit.MeshOpenProfile_IsRefusedExplicitlyAndPublishesNothing
+    Test #1562: unit.MeshCurved_DeclaresTheDeflectionItsAnalyticBoundsAssume ................   Passed    0.20 sec
+      Start 1562: unit.MeshCurved_DeclaresTheDeflectionItsAnalyticBoundsAssume
+    Test #1605: unit.MeshReferenceSuite_DeclaresEightModelsInNineDocuments ..................   Passed    0.19 sec
+      Start 1605: unit.MeshReferenceSuite_DeclaresEightModelsInNineDocuments
+47/53 Test #3102: refmod.mesh.settings.block ..................................................   Passed    0.19 sec
+    Test #1606: unit.MeshReferenceSuite_EveryModelBuildsAndCarriesItsMeshingIntent ..........   Passed    0.18 sec
+      Start 1606: unit.MeshReferenceSuite_EveryModelBuildsAndCarriesItsMeshingIntent
+    Test #1604: unit.MeshReferenceSuite_DeclaredVolumesAgreeWithTheIndependentClosedForms ...   Passed    0.17 sec
+      Start 1604: unit.MeshReferenceSuite_DeclaredVolumesAgreeWithTheIndependentClosedForms
+    Test #1597: unit.MeshOpenProfile_IsRefusedExplicitlyAndPublishesNothing .................   Passed    0.17 sec
+      Start 1597: unit.MeshOpenProfile_IsRefusedExplicitlyAndPublishesNothing
+    Test #1562: unit.MeshCurved_DeclaresTheDeflectionItsAnalyticBoundsAssume ................   Passed    0.17 sec
+      Start 1562: unit.MeshCurved_DeclaresTheDeflectionItsAnalyticBoundsAssume
+    Test #1605: unit.MeshReferenceSuite_DeclaresEightModelsInNineDocuments ..................   Passed    0.18 sec
+      Start 1605: unit.MeshReferenceSuite_DeclaresEightModelsInNineDocuments
+    Test #1606: unit.MeshReferenceSuite_EveryModelBuildsAndCarriesItsMeshingIntent ..........   Passed    0.16 sec
+      Start 1606: unit.MeshReferenceSuite_EveryModelBuildsAndCarriesItsMeshingIntent
+48/53 Test #1604: unit.MeshReferenceSuite_DeclaredVolumesAgreeWithTheIndependentClosedForms ...   Passed    0.18 sec
+49/53 Test #1597: unit.MeshOpenProfile_IsRefusedExplicitlyAndPublishesNothing .................   Passed    0.17 sec
+    Test #1562: unit.MeshCurved_DeclaresTheDeflectionItsAnalyticBoundsAssume ................   Passed    0.17 sec
+      Start 1562: unit.MeshCurved_DeclaresTheDeflectionItsAnalyticBoundsAssume
+50/53 Test #1605: unit.MeshReferenceSuite_DeclaresEightModelsInNineDocuments ..................   Passed    0.17 sec
+    Test #1606: unit.MeshReferenceSuite_EveryModelBuildsAndCarriesItsMeshingIntent ..........   Passed    0.17 sec
+      Start 1606: unit.MeshReferenceSuite_EveryModelBuildsAndCarriesItsMeshingIntent
+    Test #1562: unit.MeshCurved_DeclaresTheDeflectionItsAnalyticBoundsAssume ................   Passed    0.15 sec
+      Start 1562: unit.MeshCurved_DeclaresTheDeflectionItsAnalyticBoundsAssume
+51/53 Test #1606: unit.MeshReferenceSuite_EveryModelBuildsAndCarriesItsMeshingIntent ..........   Passed    0.17 sec
+52/53 Test #1562: unit.MeshCurved_DeclaresTheDeflectionItsAnalyticBoundsAssume ................   Passed    0.16 sec
+    Test #1609: unit.MeshReference_ASettingsEditRemeshesAtTheNewCharacteristicScale .........   Passed   37.03 sec
+      Start 1609: unit.MeshReference_ASettingsEditRemeshesAtTheNewCharacteristicScale
+    Test #1609: unit.MeshReference_ASettingsEditRemeshesAtTheNewCharacteristicScale .........   Passed   33.05 sec
+      Start 1609: unit.MeshReference_ASettingsEditRemeshesAtTheNewCharacteristicScale
+    Test #1609: unit.MeshReference_ASettingsEditRemeshesAtTheNewCharacteristicScale .........   Passed   31.33 sec
+      Start 1609: unit.MeshReference_ASettingsEditRemeshesAtTheNewCharacteristicScale
+53/53 Test #1609: unit.MeshReference_ASettingsEditRemeshesAtTheNewCharacteristicScale .........   Passed   33.19 sec
+
+100% tests passed out of 53
+
+Total Test time (real) = 179.73 sec

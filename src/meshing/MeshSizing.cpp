@@ -110,13 +110,6 @@ std::string_view toString(SizingSelectionState state) noexcept {
     return "unknown_selection_state";
 }
 
-std::size_t ResolvedSizing::unresolvedCount() const noexcept {
-    return static_cast<std::size_t>(
-        std::ranges::count_if(local, [](const LocalSizingResolution& entry) {
-            return entry.state != SizingSelectionState::Resolved;
-        }));
-}
-
 SizingValidationReport validate(const MeshSizingControls& controls) {
     // One bucket per kind, so the report assembles in enumeration order
     // without sorting on an enum value.

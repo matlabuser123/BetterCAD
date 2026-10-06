@@ -252,7 +252,25 @@ struct ResolvedSizing {
     std::vector<LocalSizingResolution> local{};
 
     /// Local controls that did not resolve.
-    [[nodiscard]] std::size_t unresolvedCount() const noexcept;
+    ///
+    /// DEFINED HERE, AND IT HAS TO BE. `ResolvedSizing` is a plain data struct
+    /// with no export macro -- as every report struct in this module is -- so an
+    /// out-of-line definition is not exported, and a caller in another DLL gets
+    /// "undefined reference to ResolvedSizing::unresolvedCount() const" at link
+    /// time. It did until P16-REFMOD-001 became the first caller outside
+    /// `bettercad_meshing` and the `debug-shared-ext` build refused it. Every
+    /// other predicate on a report struct in this module -- `conforms()`,
+    /// `dataValid()`, `complete()`, `fullyResolved()` -- is defined inline for
+    /// the same reason.
+    [[nodiscard]] std::size_t unresolvedCount() const noexcept {
+        std::size_t count = 0;
+        for (const LocalSizingResolution& entry : local) {
+            if (entry.state != SizingSelectionState::Resolved) {
+                ++count;
+            }
+        }
+        return count;
+    }
 
     friend bool operator==(const ResolvedSizing&, const ResolvedSizing&) = default;
 };

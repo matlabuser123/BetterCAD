@@ -13,7 +13,7 @@ Current:
            P16 — Meshing
 
 Current milestone:
-           None. P16-CLI-001 is PASS (2026-10-05) and the next milestone
+           None. P16-REFMOD-001 is PASS (2026-10-06) and the next milestone
            is a scope decision, not Claude's to make.
 
 Qualified:
@@ -25,11 +25,9 @@ Qualified:
            P15 — Materials / Engineering Data
 
 Next:
-           P16-REFMOD-001 — Meshing Reference Models. NOT AUTHORIZED:
+           P16-QUAL-001 — Final P16 Qualification. NOT AUTHORIZED:
            being next in the P16 sequence is not permission to start it.
            Starting it is a scope decision.
-
-           Also unstarted: P16-QUAL-001.
 
 Qualified milestones in P16:
            P16-ARCH-001 — Meshing Architecture (ADR-030 to ADR-033)
@@ -47,6 +45,7 @@ Qualified milestones in P16:
            P16-CMD-001 — Meshing Commands / Undo / Redo
            P16-PERSIST-001 — Meshing Intent Persistence
            P16-CLI-001 — Headless Meshing Workflows
+           P16-REFMOD-001 — Meshing Reference Models
 
 P16 objective:
            Geometry
@@ -1680,32 +1679,32 @@ RM-MESH-08   Invalid/open geometry failure
 Add configuration case if safe under the final configuration/regeneration
 contract.
 
-* [ ] Define reference suite
-* [ ] Rectangular block
-* [ ] Cylinder
-* [ ] Plate with hole
-* [ ] Hollow tube
-* [ ] Thin-feature case
-* [ ] Transformed body
-* [ ] Local refinement case
-* [ ] Invalid/open geometry case
-* [ ] Validate element orientation
-* [ ] Validate positive element volumes
-* [ ] Validate CAD-volume agreement
-* [ ] Validate boundary conformity
-* [ ] Validate holes/voids
-* [ ] Validate local sizing
-* [ ] Validate quality metrics
-* [ ] Validate geometry ↔ mesh mapping
-* [ ] Validate model-change remeshing
-* [ ] Validate settings-change remeshing
-* [ ] Validate save/load/regenerate
-* [ ] Validate CLI
-* [ ] Independent analytical validation
-* [ ] Determinism PASS
-* [ ] Adversarial review PASS
-* [ ] Three-preset regression PASS
-* [ ] Evidence recorded
+* [x] Define reference suite
+* [x] Rectangular block
+* [x] Cylinder
+* [x] Plate with hole
+* [x] Hollow tube
+* [x] Thin-feature case
+* [x] Transformed body
+* [x] Local refinement case
+* [x] Invalid/open geometry case
+* [x] Validate element orientation
+* [x] Validate positive element volumes
+* [x] Validate CAD-volume agreement
+* [x] Validate boundary conformity
+* [x] Validate holes/voids
+* [x] Validate local sizing
+* [x] Validate quality metrics
+* [x] Validate geometry ↔ mesh mapping
+* [x] Validate model-change remeshing
+* [x] Validate settings-change remeshing
+* [x] Validate save/load/regenerate
+* [x] Validate CLI
+* [x] Independent analytical validation
+* [x] Determinism PASS
+* [x] Adversarial review PASS
+* [x] Three-preset regression PASS
+* [x] Evidence recorded
 
 ### RM-MESH-01 — Rectangular Block
 
@@ -1882,6 +1881,74 @@ fine mesh
 and show geometric approximation behaves consistently.
 
 Do not declare convergence from element count alone.
+
+### Gate
+
+```text
+reference suite explicitly defined   [x]  eight model IDs in nine documents,
+                                          each declaring geometry, a closed-form
+                                          volume, its meshing intent, its
+                                          expected regions and its expected
+                                          outcome
++ all 8 models committed/executable  [x]  8 expected, 8 executed, 8 meshed,
+                                          1 refused, 9 rows -- counted by the
+                                          suite, so an omission is a failure
++ positively oriented Tet4 only      [x]  1751 positive, 0 zero, 0 negative,
+                                          0 non-finite, from a determinant per
+                                          element computed in the TEST
++ analytical CAD-volume checks       [x]  four-way: the model's own parameters
+                                          -> a closed form that cannot call
+                                          BetterCAD -> the declared volume ->
+                                          OCCT -> the mesh
++ volume tolerances justified        [x]  1e-9 against a measured 2.4e-16; and
+                                          for the curved models a DERIVED
+                                          two-sided bound, 29.32x narrower than
+                                          the defect it catches
++ through-hole and void preserved    [x]  0 occupancy violations, on a radius
+                                          derived from the declared deflection
++ boundary conformity + mapping      [x]  every model complete, 0 unmapped,
+                                          0 attributed twice, 0 UNNAMED faces
++ local refinement targets F         [x]  proved by the MIRROR -- a third mesh
+                                          refining the opposite face -- not by
+                                          an element count, which mutation M5
+                                          shows would have passed a whole-body
+                                          refinement
++ quality run, nothing hidden        [x]  P16-QUALITY's own report-only policy,
+                                          no threshold invented; RM-MESH-05's
+                                          0.72 degree dihedral is printed
++ rigid transform invariants         [x]  volume to 1e-12, boundary nodes to
+                                          1e-9 mm, quality to a tolerance
+                                          DERIVED from the backend's own
+                                          interior-node discrepancy
++ model- and settings-change remesh  [x]  stale_geometry and stale_INTENT told
+                                          apart; the new mesh checked against
+                                          the NEW analytic volume
++ save/load/regenerate               [x]  intent identical, no mesh in the
+                                          bytes, mesher empty after load, and
+                                          regeneration reproduces it bitwise
++ CLI workflows + equivalence        [x]  25 fresh-process fixtures carrying the
+                                          exact counts and SI volumes the core
+                                          measures
++ determinism                        [x]  5 runs to P16-VOL's own standard, plus
+                                          all nine outcomes stable
++ adversarial review                 [x]  25 + 4 questions, 5 findings, 2
+                                          PRODUCTION DEFECTS fixed
++ mutation protection                [x]  9 mutations: 8 killed, 1 proven
+                                          equivalent
++ three presets + full regression     [x]  3381/3381 in debug-ext, release-ext
+                                          and debug-shared-ext from CLEAN, 0
+                                          warnings, 595 objects each, no-op
+                                          rebuilds doing 0 compiles and 0 links
++ clean-tree verification            [x]  the frozen tree checked out with
+                                          git checkout-index and built there:
+                                          3380 files, 0 build outputs,
+                                          28 cases and 25 fixtures PASS
+```
+
+Evidence: [docs/verification/P16-REFMOD-001/](docs/verification/P16-REFMOD-001/)
+Qualified at tree `c932abc0`, three presets, 3381/3381 each, 0 warnings.
+Adversarial review: 5 findings, 2 production defects found and fixed.
+Mutation testing: 8 killed, 1 proven-equivalent survivor.
 
 ---
 

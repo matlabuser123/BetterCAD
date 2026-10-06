@@ -6,6 +6,7 @@
 #include "AssemblyReferenceModels.hpp"
 #include "DrawingReferenceModels.hpp"
 #include "MaterialReferenceModels.hpp"
+#include "MeshReferenceModels.hpp"
 #include "ReferenceModels.hpp"
 
 #include <bettercad/assembly/Components.hpp>
@@ -27,8 +28,14 @@
 #include <bettercad/io/DocumentFile.hpp>
 #include <bettercad/io/DrawingExport.hpp>
 #include <bettercad/io/ModelExport.hpp>
+#include <bettercad/meshing/GeometryMeshMap.hpp>
+#include <bettercad/meshing/MeshQuality.hpp>
+#include <bettercad/meshing/Mesher.hpp>
+#include <bettercad/meshing/VolumeMesh.hpp>
 
 #include <chrono>
+#include <cmath>
+#include <optional>
 #include <cstddef>
 #include <cstdio>
 #include <span>
@@ -66,6 +73,7 @@ int main(int argc, char** argv) {
     bool assemblies = true;
     bool drawings = true;
     bool materials = true;
+    bool meshes = true;
     for (int i = 1; i < argc; ++i) {
         const std::string_view arg = argv[i];
         if (arg == "--out" && i + 1 < argc) {
@@ -74,6 +82,7 @@ int main(int argc, char** argv) {
             parts = false;
             assemblies = false;
             materials = false;
+            meshes = false;
         } else if (arg == "--materials") {
             // P15-REFMOD-001. The material suite alone, which is what its CLI
             // fixture needs: seconds, rather than the minute the twelve parts'
@@ -81,8 +90,19 @@ int main(int argc, char** argv) {
             parts = false;
             assemblies = false;
             drawings = false;
+            meshes = false;
+        } else if (arg == "--meshes") {
+            // P16-REFMOD-001. The meshing suite alone. Its CLI fixture needs
+            // the nine .bcad files and nothing else, and meshing them is the
+            // expensive part of this runner -- so a fixture that also built
+            // twelve parts' exports and eight assembly solves would pay twice.
+            parts = false;
+            assemblies = false;
+            drawings = false;
+            materials = false;
         } else {
-            std::fprintf(stderr, "usage: %s [--out <dir>] [--drawings] [--materials]\n", argv[0]);
+            std::fprintf(stderr, "usage: %s [--out <dir>] [--drawings] [--materials] [--meshes]\n",
+                         argv[0]);
             return 2;
         }
     }
@@ -437,6 +457,204 @@ int main(int argc, char** argv) {
         }
         std::printf("timing_ms build %.3f regeneration %.3f changed_%.*s_regeneration %.3f\n", buildMs, regenMs,
                     static_cast<int>(info.mainParameter.size()), info.mainParameter.data(), changeMs);
+    }
+    // The meshing reference models (P16-REFMOD-001). A fifth loop, because what
+    // a meshing model produces is a MESH -- derived state held by a Mesher
+    // service, keyed by its control, never written to the file -- and the
+    // numbers that describe it are counts, volumes and a currency, none of
+    // which the other four loops have anywhere to print.
+    //
+    // THIS IS THE SUITE'S EVIDENCE GENERATOR as well as its CLI fixture: every
+    // figure the evidence tables quote is a line printed here, from a process
+    // whose exit code is itself the first assertion. It fails fast, and it
+    // fails on a model that meshes when it should not just as readily as on
+    // one that does not mesh when it should.
+    for (const reference::MeshReferenceModelInfo& info :
+         meshes ? std::span{reference::kMeshReferenceModels}
+                : std::span<const reference::MeshReferenceModelInfo>{}) {
+        const auto buildStart = Clock::now();
+        auto document = reference::buildMeshReferenceModel(info.kind);
+        const double buildMs = millisecondsSince(buildStart);
+        if (!document) {
+            return fail(info.name, "build", document.error());
+        }
+        if (!out.empty()) {
+            const auto path = out / (std::string{info.fileStem} + ".bcad");
+            if (auto saved = io::saveDocument(*document, path); !saved) {
+                return fail(info.name, "save", saved.error());
+            }
+        }
+
+        features::Regenerator regenerator;
+        const auto regenStart = Clock::now();
+        auto report = regenerator.regenerateAll(*document);
+        const double regenMs = millisecondsSince(regenStart);
+        if (!report) {
+            return fail(info.name, "regenerate", report.error());
+        }
+        // RM-MESH-08's body is MEANT to fail, so a failed regeneration is its
+        // expected outcome and a successful one is the defect.
+        if (report->succeeded() != info.expectMesh) {
+            std::fprintf(stderr, "%.*s: regeneration %s, expected it to %s\n",
+                         static_cast<int>(info.name.size()), info.name.data(),
+                         report->succeeded() ? "succeeded" : "FAILED",
+                         info.expectMesh ? "succeed" : "fail");
+            return 1;
+        }
+
+        const std::optional<ObjectId> controlId = document->findByName("Mesh");
+        if (!controlId) {
+            std::fprintf(stderr, "%.*s: no mesh control\n", static_cast<int>(info.name.size()),
+                         info.name.data());
+            return 1;
+        }
+        const auto* control = document->findObjectAs<meshing::MeshControl>(*controlId);
+        if (control == nullptr) {
+            std::fprintf(stderr, "%.*s: 'Mesh' is not a mesh control\n",
+                         static_cast<int>(info.name.size()), info.name.data());
+            return 1;
+        }
+        const MeshControlId key = control->meshControlId();
+
+        std::printf("== %.*s %.*s\n%.*s\n", static_cast<int>(info.id.size()), info.id.data(),
+                    static_cast<int>(info.name.size()), info.name.data(),
+                    static_cast<int>(info.purpose.size()), info.purpose.data());
+
+        meshing::Mesher mesher;
+        const auto meshStart = Clock::now();
+        auto meshed = mesher.generate(*document, regenerator, key);
+        const double meshMs = millisecondsSince(meshStart);
+
+        if (!info.expectMesh) {
+            // THE REFUSAL IS THE RESULT. Nothing may be published: not a mesh
+            // with zero elements, not a stale one relabelled, not anything.
+            if (meshed) {
+                std::fprintf(stderr, "%.*s: meshing SUCCEEDED and must not have\n",
+                             static_cast<int>(info.name.size()), info.name.data());
+                return 1;
+            }
+            if (mesher.heldMeshCount() != 0 || mesher.mesh(key) != nullptr) {
+                std::fprintf(stderr, "%.*s: a mesh was published despite the refusal\n",
+                             static_cast<int>(info.name.size()), info.name.data());
+                return 1;
+            }
+            std::printf("expected_outcome failure actual failure published_mesh no currency %.*s\n",
+                        static_cast<int>(meshing::toString(mesher.currency(*document, key)).size()),
+                        meshing::toString(mesher.currency(*document, key)).data());
+            std::printf("diagnostic %s\n", meshed.error().message.c_str());
+            std::printf("timing_ms build %.3f regeneration %.3f meshing %.3f\n", buildMs, regenMs, meshMs);
+            continue;
+        }
+
+        if (!meshed) {
+            return fail(info.name, "meshing", meshed.error());
+        }
+        const meshing::VolumeMesh& mesh = **meshed;
+        const meshing::MeshQualityReport* quality = mesher.quality(key);
+        const meshing::GeometryMeshMap* map = mesher.map(key);
+        if (quality == nullptr || map == nullptr) {
+            std::fprintf(stderr, "%.*s: the mesher published a mesh with no quality report or no map\n",
+                         static_cast<int>(info.name.size()), info.name.data());
+            return 1;
+        }
+
+        // The whole measured record of one reference mesh, in one place, in
+        // full double precision -- so the evidence tables are transcriptions
+        // and not retypings.
+        std::printf("analytic_volume_mm3 %.17g cad_volume_mm3 %.17g mesh_volume_mm3 %.17g "
+                    "boundary_volume_mm3 %.17g\n",
+                    info.analyticVolumeMm3, mesh.cadVolume().in(units::mm3),
+                    mesh.tetrahedralVolume().in(units::mm3), mesh.boundaryVolume().in(units::mm3));
+        std::printf("relative_volume_error %.6e nodes %zu tets %zu boundary_facets %zu\n",
+                    std::abs(mesh.tetrahedralVolume().in(units::mm3) - info.analyticVolumeMm3) /
+                        info.analyticVolumeMm3,
+                    mesh.nodeCount(), mesh.tetrahedronCount(), mesh.boundaryTriangleCount());
+        std::printf("conforming %s unmatched_boundary %zu unmatched_surface %zu\n",
+                    mesh.conformity().conforms() ? "yes" : "NO",
+                    mesh.conformity().unmatchedBoundaryFaceCount,
+                    mesh.conformity().unmatchedSurfaceTriangleCount);
+        std::printf("structurally_valid %s invalid %zu warning %zu failure %zu valid %zu\n",
+                    quality->structurallyValid ? "yes" : "NO", quality->invalidElements,
+                    quality->warningElements, quality->failureElements, quality->validElements);
+        std::printf("mapping_complete %s cad_faces %zu mapped_facets %zu unmapped %zu "
+                    "attributed_twice %zu faces_without_facets %zu unnamed_faces %zu\n",
+                    map->report().complete() ? "yes" : "NO", map->report().cadFaceCount,
+                    map->report().mappedFacetCount, map->report().unmappedFacetCount,
+                    map->report().facetsWithSeveralFaces, map->report().facesWithoutFacets,
+                    map->report().unnamedFaceCount);
+        std::printf("global_target_mm %.17g global_is_default %s local_controls %zu "
+                    "unresolved_local %zu slabs %zu\n",
+                    mesh.sizing().globalTargetSize.in(units::mm),
+                    mesh.sizing().globalIsDefault ? "yes" : "no", mesh.sizing().local.size(),
+                    mesh.sizing().unresolvedCount(), mesh.sizing().regions.size());
+        // Every boundary set the model declares, resolved against this mesh.
+        for (const meshing::NamedBoundarySet& set : control->orderedBoundarySets()) {
+            auto resolved = meshing::resolveBoundarySet(set, *map);
+            if (!resolved) {
+                return fail(info.name, "boundary set " + set.name, resolved.error());
+            }
+            std::printf("boundary_set %s id %llu faces %zu facets %zu resolved %s\n", set.name.c_str(),
+                        static_cast<unsigned long long>(set.id.value()), set.faces.size(),
+                        resolved->mapping.facets.size(), resolved->fullyResolved() ? "yes" : "NO");
+        }
+        if (meshing::MeshCurrency currency = mesher.currency(*document, key);
+            !meshing::describesTheModel(currency)) {
+            std::fprintf(stderr, "%.*s: a freshly generated mesh reports %.*s\n",
+                         static_cast<int>(info.name.size()), info.name.data(),
+                         static_cast<int>(meshing::toString(currency).size()),
+                         meshing::toString(currency).data());
+            return 1;
+        }
+
+        // A change to a main dimension must make the held mesh STALE for the
+        // right reason, and the regenerated model must then remesh. This is
+        // what makes every number above a recomputed answer rather than a
+        // stored one.
+        const auto item = document->findByName(info.mainParameter);
+        const auto parameter = item ? document->asParameter(*item) : std::nullopt;
+        if (!parameter) {
+            std::fprintf(stderr, "%.*s: no parameter '%.*s'\n", static_cast<int>(info.name.size()),
+                         info.name.data(), static_cast<int>(info.mainParameter.size()),
+                         info.mainParameter.data());
+            return 1;
+        }
+        if (auto changed = document->setParameterValue(*parameter, info.mainParameterMm * units::mm);
+            !changed) {
+            return fail(info.name, "parameter change", changed.error());
+        }
+        const meshing::MeshCurrency afterEdit = mesher.currency(*document, key);
+        if (afterEdit != meshing::MeshCurrency::StaleGeometry) {
+            std::fprintf(stderr, "%.*s: after changing %.*s the mesh reports %.*s, not stale_geometry\n",
+                         static_cast<int>(info.name.size()), info.name.data(),
+                         static_cast<int>(info.mainParameter.size()), info.mainParameter.data(),
+                         static_cast<int>(meshing::toString(afterEdit).size()),
+                         meshing::toString(afterEdit).data());
+            return 1;
+        }
+        const auto changeStart = Clock::now();
+        auto afterChange = regenerator.regenerateAll(*document);
+        const double changeMs = millisecondsSince(changeStart);
+        if (!afterChange || !afterChange->succeeded()) {
+            std::fprintf(stderr, "%.*s: the model did not regenerate after changing %.*s\n",
+                         static_cast<int>(info.name.size()), info.name.data(),
+                         static_cast<int>(info.mainParameter.size()), info.mainParameter.data());
+            return 1;
+        }
+        const auto remeshStart = Clock::now();
+        auto remeshed = mesher.generate(*document, regenerator, key);
+        const double remeshMs = millisecondsSince(remeshStart);
+        if (!remeshed) {
+            return fail(info.name, "remeshing after the change", remeshed.error());
+        }
+        std::printf("after_change %.*s_mm %.17g mesh_volume_mm3 %.17g nodes %zu tets %zu currency %.*s\n",
+                    static_cast<int>(info.mainParameter.size()), info.mainParameter.data(),
+                    info.mainParameterMm, (*remeshed)->tetrahedralVolume().in(units::mm3),
+                    (*remeshed)->nodeCount(), (*remeshed)->tetrahedronCount(),
+                    static_cast<int>(meshing::toString(mesher.currency(*document, key)).size()),
+                    meshing::toString(mesher.currency(*document, key)).data());
+        std::printf("timing_ms build %.3f regeneration %.3f meshing %.3f changed_regeneration %.3f "
+                    "remeshing %.3f\n",
+                    buildMs, regenMs, meshMs, changeMs, remeshMs);
     }
     return 0;
 }

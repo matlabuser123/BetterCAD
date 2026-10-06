@@ -291,6 +291,8 @@ if(TARGET bettercad_reference_models)
         qualification/P15MaterialsQualificationTests.cpp
         reference/AllModelsTests.cpp
         reference/MaterialModelsTests.cpp
+        reference/MeshModelsTests.cpp
+        reference/MeshTestSupport.hpp
         reference/AssemblyModelsTests.cpp
         reference/Analytic.hpp
         reference/DrawingTestSupport.hpp
@@ -1146,6 +1148,159 @@ if(TARGET bettercad_cli)
         set_tests_properties(
             refmod.material.mass-after-edit refmod.material.reload refmod.material.source-untouched
             PROPERTIES DEPENDS refmod.material.edit)
+    endif()
+
+    # --- P16-REFMOD-001: the meshing reference suite, through the real
+    # executables ---
+    #
+    # TWO PROCESSES, and nothing shared between them but the bytes on disk. The
+    # example program builds all nine meshing reference documents, meshes each
+    # one and saves it; separate bettercad-cli invocations then LOAD what it
+    # wrote, regenerate the geometry from the intent in the file, REGENERATE THE
+    # MESH -- which is never in the file -- and report what they find.
+    #
+    # THE NUMBERS BELOW ARE THE CLI/CORE EQUIVALENCE CHECK. Each one is what
+    # MeshModelsTests.cpp measures in process for the same model, so a CLI that
+    # substituted its own default, its own sizing or its own validation would
+    # print something else here. The volumes are the SI doubles, to full
+    # precision, because that is what equivalence means for a derived quantity.
+    #
+    #   RM-MESH-01  120 x 70 x 35 mm        V = 294000 mm^3, planar and exact
+    #   RM-MESH-03  100 x 60 x 12, r 15     V = LWt - pi r^2 t, and the mesh is
+    #                                       ABOVE it because the hole's wall is
+    #                                       an inscribed polygon
+    #   RM-MESH-07  100 x 60 x 40           V = 240000 mm^3, with a 6 mm local
+    #                                       control on one side face
+    if(TARGET bettercad_example_reference_models)
+        set(_meshref "${_out}/mesh-refmod")
+        file(MAKE_DIRECTORY "${_meshref}")
+
+        # PROCESS A: build, regenerate, mesh, validate and save all nine. Its
+        # own exit code is the first assertion -- it fails if any model does not
+        # build, does not regenerate as expected, meshes when it must not, fails
+        # to mesh when it must, or publishes a mesh after a refusal.
+        bettercad_add_process_test(refmod.mesh.build
+            COMMAND "$<TARGET_FILE:bettercad_example_reference_models>"
+            ARGS "--meshes|--out|${_meshref}"
+            EXIT_CODE 0
+            STDOUT_REGEX "== RM-MESH-01 MeshBlock.*analytic_volume_mm3 294000 cad_volume_mm3 [0-9.]+ mesh_volume_mm3 294000")
+
+        # THE REFUSAL, from the runner: RM-MESH-08 fails and NOTHING is
+        # published. The runner returns non-zero if a mesh appears anyway.
+        bettercad_add_process_test(refmod.mesh.build.refusal
+            COMMAND "$<TARGET_FILE:bettercad_example_reference_models>" ARGS "--meshes"
+            EXIT_CODE 0
+            STDOUT_REGEX "== RM-MESH-08 MeshOpenProfile\nan open profile[^\n]*\nexpected_outcome failure actual failure published_mesh no currency generation failed")
+
+        # The void, from the runner: closed form says the tube is
+        # pi(30^2 - 18^2) x 45 = 81430.08 mm^3 and a filled bore would read
+        # 127234.5. This is the line that would catch it.
+        bettercad_add_process_test(refmod.mesh.build.tube-void
+            COMMAND "$<TARGET_FILE:bettercad_example_reference_models>" ARGS "--meshes"
+            EXIT_CODE 0
+            STDOUT_REGEX "== RM-MESH-04 MeshTube.*analytic_volume_mm3 81430\\.0815810474[0-9]* cad_volume_mm3 81430\\.0815810474")
+
+        # PROCESS B: the intent, read back from the file by another process.
+        # The global target, the local control's FACE REFERENCE in the CLI's own
+        # grammar, and the boundary sets with their identities.
+        bettercad_add_process_test(refmod.mesh.settings.block
+            COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "mesh-settings|${_meshref}/mesh_block.bcad"
+            EXIT_CODE 0
+            STDOUT_REGEX "^Meshing control: Mesh\nBody: Block \\(object:[0-9]+\\)\nGlobal target size: 20 mm\nLocal sizing \\(0\\):\nBoundary sets \\(2\\):\n  1  fixed_end  1 face\n  2  loaded_end  1 face\nQuality thresholds: 0$")
+        bettercad_add_process_test(refmod.mesh.settings.local
+            COMMAND "$<TARGET_FILE:bettercad_cli>"
+            ARGS "mesh-settings|${_meshref}/mesh_local_refinement.bcad"
+            EXIT_CODE 0
+            STDOUT_REGEX "Global target size: 20 mm\nLocal sizing \\(1\\):\n  face:LocalBlock:side:[0-9]+  6 mm\nBoundary sets \\(2\\):\n  1  refined_face  1 face\n  2  coarse_face  1 face")
+
+        # PROCESS C: GENERATE, in a fresh process, and agree with the core.
+        bettercad_add_process_test(refmod.mesh.generate.block
+            COMMAND "$<TARGET_FILE:bettercad_cli>"
+            ARGS "mesh-generate|${_meshref}/mesh_block.bcad|--json"
+            EXIT_CODE 0
+            STDOUT_REGEX "\"state\": \"current\",\n  \"meshSource\": \"generatedNow\",\n  \"nodeCount\": 8,\n  \"elementCount\": 6,\n  \"boundaryTriangleCount\": 12,.*\"value\": 0\\.000294")
+        bettercad_add_process_test(refmod.mesh.generate.hole
+            COMMAND "$<TARGET_FILE:bettercad_cli>"
+            ARGS "mesh-generate|${_meshref}/mesh_plate_with_hole.bcad|--json"
+            EXIT_CODE 0
+            STDOUT_REGEX "\"nodeCount\": 81,\n  \"elementCount\": 126,\n  \"boundaryTriangleCount\": 160,.*\"value\": 6\\.356069856538716e-05")
+        bettercad_add_process_test(refmod.mesh.generate.local
+            COMMAND "$<TARGET_FILE:bettercad_cli>"
+            ARGS "mesh-generate|${_meshref}/mesh_local_refinement.bcad|--json"
+            EXIT_CODE 0
+            STDOUT_REGEX "\"nodeCount\": 61,\n  \"elementCount\": 267,\n  \"boundaryTriangleCount\": 12,.*\"value\": 0\\.00023999999999999998")
+
+        # PROCESS D: INFO, VALIDATE and QUALITY on the three equivalence models.
+        foreach(_mesh_model mesh_block mesh_plate_with_hole mesh_local_refinement)
+            bettercad_add_process_test(refmod.mesh.info.${_mesh_model}
+                COMMAND "$<TARGET_FILE:bettercad_cli>"
+                ARGS "mesh-info|${_meshref}/${_mesh_model}.bcad|--json"
+                EXIT_CODE 0 STDOUT_REGEX "\"state\": \"current\"")
+            bettercad_add_process_test(refmod.mesh.validate.${_mesh_model}
+                COMMAND "$<TARGET_FILE:bettercad_cli>"
+                ARGS "mesh-validate|${_meshref}/${_mesh_model}.bcad|--json"
+                EXIT_CODE 0
+                STDOUT_REGEX "^\\{\n  \"dataValid\": true,\n  \"issueCount\": 0,\n  \"issues\": \\[\\]\n\\}$")
+            bettercad_add_process_test(refmod.mesh.quality.${_mesh_model}
+                COMMAND "$<TARGET_FILE:bettercad_cli>"
+                ARGS "mesh-quality|${_meshref}/${_mesh_model}.bcad|--json"
+                EXIT_CODE 0
+                STDOUT_REGEX "\"structurallyValid\": true,.*\"invalidElements\": 0")
+        endforeach()
+
+        # PROCESS E: BOUNDARIES. The hole wall and -- on the tube -- the inner
+        # and outer walls as SEPARATE sets, which is the mapping result the
+        # suite checks in process.
+        bettercad_add_process_test(refmod.mesh.boundaries.hole
+            COMMAND "$<TARGET_FILE:bettercad_cli>"
+            ARGS "mesh-boundaries|${_meshref}/mesh_plate_with_hole.bcad"
+            EXIT_CODE 0
+            STDOUT_REGEX "^Boundary sets \\(2\\):\n  1  hole_wall  resolved  72 facets\n  2  clamped_faces  resolved  4 facets$")
+        bettercad_add_process_test(refmod.mesh.boundaries.tube
+            COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "mesh-boundaries|${_meshref}/mesh_tube.bcad"
+            EXIT_CODE 0
+            STDOUT_REGEX "^Boundary sets \\(4\\):\n  1  outer_wall  resolved  72 facets\n  2  inner_wall  resolved  72 facets\n  3  bottom_annulus  resolved  72 facets\n  4  top_annulus  resolved  72 facets$")
+        bettercad_add_process_test(refmod.mesh.boundaries.local
+            COMMAND "$<TARGET_FILE:bettercad_cli>"
+            ARGS "mesh-boundaries|${_meshref}/mesh_local_refinement.bcad"
+            EXIT_CODE 0
+            STDOUT_REGEX "^Boundary sets \\(2\\):\n  1  refined_face  resolved  2 facets\n  2  coarse_face  resolved  2 facets$")
+
+        # PROCESS F: RM-MESH-08 THROUGH THE CLI. Non-zero exit, nothing on
+        # stdout, and a STRUCTURED diagnostic that names the failing feature and
+        # the real cause -- not a missing mesh control, which is what a model
+        # without one would have reported.
+        foreach(_mesh_query mesh-generate mesh-info mesh-validate mesh-quality mesh-boundaries)
+            bettercad_add_process_test(refmod.mesh.invalid.${_mesh_query}
+                COMMAND "$<TARGET_FILE:bettercad_cli>"
+                ARGS "${_mesh_query}|${_meshref}/mesh_open_profile.bcad"
+                EXIT_CODE 1
+                STDERR_REGEX "regeneration_failed: OpenSolid \\(object:[0-9]+\\) did not regenerate: OpenSolid: the profile is open")
+        endforeach()
+
+        # Ordering. The runner is a FIXTURE, not merely first: ctest pulls a
+        # required fixture's setup in even when the run is filtered, whereas a
+        # DEPENDS on an excluded test is dropped. Without it,
+        # `ctest -R refmod.mesh.generate` would mesh a document nothing ever
+        # built.
+        #
+        # EVERY TEST HERE IS READ-ONLY -- a meshing query writes nothing, which
+        # is P16-CLI-001's own contract -- so the set survives
+        # `ctest --repeat until-fail:5` with no fixture in between.
+        set_tests_properties(refmod.mesh.build PROPERTIES FIXTURES_SETUP mesh_refmod)
+        set(_mesh_refmod_readers
+            refmod.mesh.settings.block refmod.mesh.settings.local
+            refmod.mesh.generate.block refmod.mesh.generate.hole refmod.mesh.generate.local
+            refmod.mesh.boundaries.hole refmod.mesh.boundaries.tube refmod.mesh.boundaries.local)
+        foreach(_mesh_model mesh_block mesh_plate_with_hole mesh_local_refinement)
+            list(APPEND _mesh_refmod_readers
+                refmod.mesh.info.${_mesh_model} refmod.mesh.validate.${_mesh_model}
+                refmod.mesh.quality.${_mesh_model})
+        endforeach()
+        foreach(_mesh_query mesh-generate mesh-info mesh-validate mesh-quality mesh-boundaries)
+            list(APPEND _mesh_refmod_readers refmod.mesh.invalid.${_mesh_query})
+        endforeach()
+        set_tests_properties(${_mesh_refmod_readers} PROPERTIES FIXTURES_REQUIRED mesh_refmod)
     endif()
 
     # --- P14-REFMOD-001: the production drawing suite, through the real

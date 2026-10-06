@@ -1,0 +1,16 @@
+pre-freeze gates 
+started Tue 06/10/2026  0:30:27.41 
+build debug-ext exit 0 
+build release-ext exit 0 
+build debug-shared-ext exit 0 
+gate 3: the new tests, 5 repeats 
+gate 3 exit 0 Tue 06/10/2026  0:36:04.72 
+gate 4: the reference suite in all three presets 
+gate 4 debug-ext exit 0 
+gate 4 release-ext exit 0 
+gate 4 debug-shared-ext exit 0 
+gate 5: the shared full suite 
+gate 5 exit 0 Tue 06/10/2026  0:55:44.32 
+gate 6: the debug-ext full suite 
+gate 6 exit 0 Tue 06/10/2026  1:12:38.18 
+finished Tue 06/10/2026  1:12:38.18 
