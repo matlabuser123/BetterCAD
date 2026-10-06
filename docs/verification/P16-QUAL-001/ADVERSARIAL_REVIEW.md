@@ -3,8 +3,10 @@
 ```text
 SUBJECT:  an attempt to disprove P16 as a whole before calling it qualified
 QUESTIONS: 23 from the brief, 8 further ones it names, and 4 of the reviewer's
-FINDINGS: 6 -- 2 document drift, 2 recorded scope limits, 1 process defect
-           (five instances), 1 owed finding closed by a new test
+FINDINGS: 7 -- 2 document drift, 2 recorded scope limits, 2 process defects
+           (my own audit, five instances; the clean-checkout harness, two,
+           one of which produced a FALSE TEST FAILURE), 1 owed finding
+           closed by a new test
 PRODUCTION DEFECTS: 0 in this milestone
 GATE-BLOCKING DEFECTS REMAINING: 0
 ```
@@ -178,6 +180,52 @@ the extraction that found this first reported `check_overlapping_boundary` as
 **absent** from the table. A regex anchored on `^| <name> ` cannot see a row
 whose name wraps. The row was there; only the count was wrong. Reading the
 table before believing the grep is what kept a false finding out of this file.
+
+### F7 — two defects in the clean-checkout harness (PROCESS)
+
+The clean-checkout check is itself code, and it was wrong twice. Both are
+recorded because the first one produced a **false test failure**, which is the
+most dangerous shape a verification defect can take: the obvious response to it
+is to go and change the product.
+
+**1. It ran `ctest` at the wrong console code page.** The first clean run
+reported `99% tests passed, 1 tests failed out of 3387` —
+`cli.new.unicode-path`. The CLI had done everything right:
+
+```text
+exit code: 0 (expected 0)
+stdout:    Created .../Pl<mangled>t <mangled>.bcad (document 'Pl<mangled>t ...')
+```
+
+The document was created and correctly named `Plåt ✓`; the **console** rendered
+its UTF-8 as CP437 mojibake, so the stdout regex missed. Proved rather than
+assumed, by running the one test twice in the same clean tree against the same
+binaries:
+
+```text
+code page   437   (the Git Bash default)      exit 8   FAILED
+code page 65001   (what qualify.cmd sets)     exit 0   PASSED
+```
+
+`qualify.cmd` line 12 says why it does `chcp 65001` — "the CLI's Unicode test
+needs it" — and `tests/CMakeLists.txt:1378` records that this test exercises
+the code page on purpose. So the three qualification presets, which run under
+the harness, all passed it; only my clean-checkout script, which called `ctest`
+from Git Bash, did not. The full clean suite was re-run under 65001.
+
+**Nothing about the committed tree was at fault, and nothing was changed to
+make the test pass.** The fix was to the checker.
+
+**2. It observed its own output as a dirty working tree.** It wrote
+`cleantree.txt` into `docs/verification/` and *then* read
+`git status --porcelain`, so it reported `working tree clean: NO` — its own
+three files. The tree was clean at commit time; `cleantree.txt` now records the
+reading taken before the script wrote anything.
+
+Both are fixed in the script. The lesson is the same one F4 records in a
+different key: a verification step that can fail for its own reasons must be
+able to tell its reasons from the product's, and the way to do that is to vary
+one thing and measure, not to reason about which is more likely.
 
 ## The brief's 23 questions
 
@@ -415,12 +463,13 @@ frozen candidate's own run.
 
 ```text
 QUESTIONS:                      23 + 8 + 4 = 35
-FINDINGS:                       6
+FINDINGS:                       7
 PRODUCTION DEFECTS:             0
 DOCUMENT DRIFT:                 2  (ADR-031; P16-SIZE-001's field count)
                                    -- both amended, neither a gate failure
 RECORDED SCOPE LIMITS:          2  (GUI intent, zero-element reachability)
-PROCESS DEFECTS:                1  (my own audit, five instances)
+PROCESS DEFECTS:                2  (my own audit, five instances; the
+                                   clean-checkout harness, two)
 OWED FINDINGS CLOSED:           1  (P16-ARCH F6) -- by a new test, which
                                    voided and re-ran the qualification
 GATE-BLOCKING DEFECTS:          0

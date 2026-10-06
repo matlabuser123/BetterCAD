@@ -406,8 +406,15 @@ RESULT:   PASS
 P16:      QUALIFIED
 EVIDENCE: this directory; qualification/qualification-times.txt for the run
 TREE:     8ab30a31695e79c3d02fe222898f8b1ec6274565, qualified and committed
+COMMIT:   137bad1, and a pristine checkout of THAT revision configures,
+          builds with 0 warnings over 596 objects, and passes 3387/3387
+          -- qualification/cleantree.txt
 ```
 
 ## Revision
 
 First issue, 2026-10-06.
+
+Addendum, same day: `qualification/cleantree.txt` and finding F7, which could
+only be produced after the commit because the check verifies the committed
+revision. Documentation only; the qualified tree `8ab30a31` is unchanged.

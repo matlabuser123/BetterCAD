@@ -1,0 +1,56 @@
+P16-QUAL-001 -- clean-checkout verification of the FINAL COMMITTED REVISION
+
+committed revision: 137bad1e0cf609c6c4d6fdbca69e1566b31253bf
+committed tree:     6a632a7b7bebfb21c712eec7e3822e7774e406b7
+working tree clean at commit time: yes (git status --porcelain, 0 lines)
+
+METHOD
+  The pristine tree is written from `git read-tree HEAD` ALONE -- no `add -A`
+  from the working directory -- so it contains exactly what was committed. A
+  file edited but never staged, or staged but never committed, fails here while
+  still passing in the working tree. Then configure, build and run the WHOLE
+  suite there, because what is being qualified is a phase.
+
+checked out into /c/Users/uqhas/AppData/Local/bc-clean/p16-qual
+files: 3478
+build outputs present: 0
+configure exit 0
+build exit 0 warnings 0
+objects compiled: 596
+unit binary exit 0
+  All tests passed (263394 assertions in 2988 test cases)
+full ctest exit 0, code page 65001
+  100% tests passed out of 3387
+  Total Test time (real) = 832.35 sec
+  0 ***Failed, 0 ***Exception, 0 ***Timeout
+
+TWO DEFECTS IN THIS CHECK ITSELF, both fixed, recorded as F7
+
+  1. The first attempt ran ctest from Git Bash, at code page 437, and reported
+     "99% tests passed, 1 tests failed" -- cli.new.unicode-path. The CLI was
+     correct (exit 0, document created and named Plaat-with-ring-above plus a
+     check mark); the CONSOLE rendered its UTF-8 as CP437, so the stdout regex
+     missed. Proved by running the one test twice in this same clean tree
+     against these same binaries:
+
+       code page   437   exit 8   FAILED
+       code page 65001   exit 0   PASSED
+
+     qualify.cmd sets chcp 65001 for exactly this reason and says so on its
+     line 12; tests/CMakeLists.txt:1378 records that the test exercises the
+     code page on purpose. All three qualification presets passed it. The
+     COMMITTED TREE WAS NEVER AT FAULT and nothing was changed to make a test
+     pass -- the checker was fixed and the whole suite re-run, which is the
+     result above.
+
+  2. The script wrote cleantree.txt into docs/verification/ and THEN read
+     `git status --porcelain`, so it reported its own three output files as a
+     dirty working tree ("clean: NO"). It now reads cleanliness before writing
+     anything. The tree was clean at commit time, as recorded above.
+
+ORDERING NOTE
+  This check verifies the COMMITTED revision, which is stronger than
+  P16-REFMOD-001's scratch-index version but can only run AFTER the commit. So
+  this file and the F7 record land in a follow-up documentation commit. The
+  qualified source tree (8ab30a31) is untouched by both: nothing in
+  docs/verification/ is configured, compiled, linked or read by a test.

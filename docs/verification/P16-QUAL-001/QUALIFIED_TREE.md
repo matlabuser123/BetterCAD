@@ -134,11 +134,42 @@ directory comes from the `8ab30a31` run.**
 
 ## Clean-checkout verification
 
-See `qualification/cleantree.txt`. The check writes a pristine tree from
-`git read-tree HEAD` **alone** — no `add -A` from the working directory — and
-configures, builds and runs the whole suite there. That is what catches a
-staged-index mistake: a file edited but never added, or added but never
-committed, fails in the clean tree while still passing in the working one.
+The check writes a pristine tree from `git read-tree HEAD` **alone** — no
+`add -A` from the working directory — and configures, builds and runs the whole
+suite there. That is what catches a staged-index mistake: a file edited but
+never added, or added but never committed, fails in the clean tree while still
+passing in the working one.
+
+```text
+committed revision  137bad1e0cf609c6c4d6fdbca69e1566b31253bf
+committed tree      6a632a7b7bebfb21c712eec7e3822e7774e406b7
+working tree at commit time        clean, 0 porcelain lines
+
+files checked out                  3478
+build outputs present              0
+configure                          exit 0
+build                              exit 0, 0 warnings, 596 objects
+unit binary                        exit 0
+                                   263394 assertions in 2988 test cases
+full ctest, code page 65001        exit 0, 100% passed out of 3387
+                                   832.35 s, 0 Failed/Exception/Timeout
+```
+
+The object count matches the qualification's 596 and the ctest total matches
+its 3387, from a tree that contains nothing but the commit.
+
+This check verifies the **committed** revision, which is stronger than
+P16-REFMOD-001's scratch-index version but can only run after the commit — so
+`qualification/cleantree.txt` and finding F7 land in a follow-up documentation
+commit. The qualified source tree is untouched by that: nothing under `docs/`
+is configured, compiled, linked or read by a test.
+
+The first attempt reported one failure, `cli.new.unicode-path`, and it was the
+**checker** at fault: it ran `ctest` from Git Bash at code page 437, where the
+console mangles the CLI's UTF-8 output and the stdout regex misses. Proved by
+varying the one thing — 437 fails, 65001 passes, same tree and same binaries —
+and recorded as F7 with the second harness defect beside it. Nothing in the
+committed tree was changed, and no test was weakened.
 
 ## Push verification
 

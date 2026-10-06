@@ -1,0 +1,589 @@
+Randomness seeded to: 329806255
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+bettercad_tests.exe is a Catch2 v3.16.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+MeshReference_IsDeterministicOverRepeatedGeneration
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/reference/MeshModelsTests.cpp:2235
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/reference/MeshModelsTests.cpp:2299: warning:
+  P16-REFMOD-001 determinism, 5 runs each
+  | Model | Runs | Nodes | Tet4 | Volume mm^3 | Stable |
+  | RM-MESH-01 | 5 | 8 | 6 | 294000.00000000006 | yes |
+  | RM-MESH-03 | 5 | 81 | 126 | 63560.69856538716 | yes |
+  | RM-MESH-06 | 5 | 9 | 12 | 118799.99999999999 | yes |
+  | RM-MESH-07 | 5 | 61 | 267 | 239999.99999999997 | yes |
+
+-------------------------------------------------------------------------------
+P16Qualification_StaleGeometryNeverYieldsACurrentMesh
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/qualification/P16MeshingQualificationTests.cpp:189
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/qualification/P16MeshingQualificationTests.cpp:257: warning:
+  RM-MESH-01 stale sequence: 6 tets at 120 mm, refused while stale, refused
+  after a failed rebuild, 12 tets at 150 mm (367500 mm^3)
+
+-------------------------------------------------------------------------------
+MapTransform_FollowsTheBodyIntoItsNewFrame
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/GeometryMeshMapTests.cpp:829
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/GeometryMeshMapTests.cpp:863: warning:
+  transform: XY block 6 CAD faces / 12 facets, end_cap 2 facets facing +z; XZ
+  block 6 CAD faces / 12 facets, end_cap 2 facets facing -y
+
+-------------------------------------------------------------------------------
+Map_RecordsTheFaceVocabularyOfTheReferenceFixtures
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/GeometryMeshMapTests.cpp:416
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/GeometryMeshMapTests.cpp:486: warning:
+  
+BOX 30x20x10: 6 CAD faces, 12 boundary facets, 12 mapped, 0 unmapped, 6
+  named, 0 unnamed, 0 without facets
+      [0] plane        2 facets  object:2/side/entity:5
+      [1] plane        2 facets  object:2/side/entity:6
+      [2] plane        2 facets  object:2/side/entity:7
+      [3] plane        2 facets  object:2/side/entity:8
+      [4] plane        2 facets  object:2/start_cap
+      [5] plane        2 facets  object:2/end_cap
+  CYLINDER r8 h20: 3 CAD faces, 140 boundary facets, 140 mapped, 0 unmapped, 3
+  named, 0 unnamed, 0 without facets
+      [0] cylinder    72 facets r=8.000mm  object:2/side/entity:2
+      [1] plane       34 facets  object:2/start_cap
+      [2] plane       34 facets  object:2/end_cap
+  TUBE r12/r6 h20: 4 CAD faces, 288 boundary facets, 288 mapped, 0 unmapped, 4
+  named, 0 unnamed, 0 without facets
+      [0] cylinder    72 facets r=12.000mm  object:2/side/entity:2
+      [1] cylinder    72 facets r=6.000mm  object:2/side/entity:4
+      [2] plane       72 facets  object:2/start_cap
+      [3] plane       72 facets  object:2/end_cap
+  BORED 40x30x10, 12mm hole: 7 CAD faces, 160 boundary facets, 160 mapped, 0
+  unmapped, 6 named, 1 unnamed, 0 without facets
+      [0] plane        2 facets  object:2/side/entity:5
+      [1] plane        2 facets  object:2/side/entity:8
+      [2] plane        2 facets  object:2/side/entity:6
+      [3] plane       40 facets  object:2/start_cap
+      [4] plane       40 facets  object:2/end_cap
+      [5] plane        2 facets  object:2/side/entity:7
+      [6] cylinder    72 facets r=6.000mm  NO NAME
+
+-------------------------------------------------------------------------------
+MeshCylinder_MapsItsCapsAndWallWithoutLeakage
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/reference/MeshModelsTests.cpp:769
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/reference/MeshModelsTests.cpp:848: warning:
+  RM-MESH-02 curved conformity: 72 lateral facets, worst node radial deviation
+  3.55271e-15 mm, worst chord sagitta 0.0951325 mm, declared deflection 0.25 mm
+
+-------------------------------------------------------------------------------
+MeshReference_ASettingsEditRemeshesAtTheNewCharacteristicScale
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/reference/MeshModelsTests.cpp:1990
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/reference/MeshModelsTests.cpp:2028: warning:
+  RM-MESH-02 global target 12 -> 6 mm: 508 -> 1977 tets, median edge 14.6718 ->
+  9.59777 mm, mean 19.9117 -> 13.0003 mm, volume 117212.51992517794 -> 117212.
+  51992517794 mm^3
+
+-------------------------------------------------------------------------------
+MeshingPersistence_ABoundarySetResolvesToCurrentFacetsAfterLoad
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/io/MeshControlFileTests.cpp:1076
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/io/MeshControlFileTests.cpp:1128: warning:
+  boundary set resolved to 34 facets of 624 elements after load
+
+-------------------------------------------------------------------------------
+MeshReference_ScalingAModelScalesItsVolumeByTheCube
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/reference/MeshModelsTests.cpp:1940
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/reference/MeshModelsTests.cpp:1972: warning:
+  scale 2.5: analytic 294000 -> 4593750 mm^3, mesh 294000.00000000006 ->
+  4593749.9999999991; worst radius ratio 0.43725 -> 0.43725, min dihedral 14.
+  6211 -> 14.6211 deg
+
+-------------------------------------------------------------------------------
+QualityProduction_SurfaceMeshTrianglesAreEvaluated
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/MeshQualityTests.cpp:1611
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/MeshQualityTests.cpp:455: warning:
+  cylinder r6 h20 mm SURFACE, 0.05 mm deflection: 0 Tet4, 140 Tri3 | tri q min
+  0.090328 mean 0.141917 | tri min angle 2.993467 deg
+
+-------------------------------------------------------------------------------
+MapRemesh_TheSameReferenceResolvesAgainstACoarseAndAFineMesh
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/GeometryMeshMapTests.cpp:874
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/GeometryMeshMapTests.cpp:906: warning:
+  remesh: cylinder r8 h20 side face -- coarse 738 tets, 140 boundary facets, 72
+  on the face; fine 2038 tets, 248 boundary facets, 126 on the face
+
+-------------------------------------------------------------------------------
+MeshReference_AGeometryEditRemeshesAgainstTheNewAnalyticVolume
+  RM-MESH-01, a = 120 -> 150 mm
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/reference/MeshModelsTests.cpp:1857
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/reference/MeshModelsTests.cpp:1885: warning:
+  RM-MESH-01 geometry edit: analytic 294000 -> 367500 mm^3, mesh 367500 ->
+  367500 mm^3, 12 -> 12 tets
+
+-------------------------------------------------------------------------------
+MeshReference_AGeometryEditRemeshesAgainstTheNewAnalyticVolume
+  RM-MESH-03, t = 12 -> 16 mm
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/reference/MeshModelsTests.cpp:1898
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/reference/MeshModelsTests.cpp:1924: warning:
+  RM-MESH-03 thickness edit: analytic 63517.699835307561 -> 84690.266447076749
+  mm^3, mesh 63560.69856538716 -> 84747.598087182982 mm^3, bound now [84690.
+  266447076749, 85064.115972853935]
+
+-------------------------------------------------------------------------------
+VolCylinder_TetrahedralVolumeApproachesTheCadVolumeFromBelow
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/VolumeMeshTests.cpp:292
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/VolumeMeshTests.cpp:309: warning:
+  cylinder r10 h25 mm, coarse (5e-4 m deflection): 144 nodes, 547 tetrahedra,
+  volume 7.81417e-06 m^3; fine (2e-5): 234 nodes, 809 tetrahedra, volume 7.
+  84373e-06 m^3; CAD 7.85398e-06 m^3
+
+-------------------------------------------------------------------------------
+MeshReferenceSuite_EveryValidModelMeshesAndTheInvalidOneIsRefused
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/reference/MeshModelsTests.cpp:396
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/reference/MeshModelsTests.cpp:497: warning:
+  P16-REFMOD-001 RESULTS
+  | Model | Outcome | Nodes | Tet4 | Vanalytic | Vmesh | RelError | MinTetVol |
+  Invalid | Warn | Fail | Facets |
+  | RM-MESH-01 | mesh | 8 | 6 | 294000 | 294000.00000000006 | 1.980e-16 | 49000
+  | 0 | 0 | 0 | 12 |
+  | RM-MESH-02 | mesh | 140 | 508 | 117809.72450961724 | 117212.51992517807 |
+  5.069e-03 | 0.475278 | 0 | 0 | 0 | 140 |
+  | RM-MESH-03 | mesh | 81 | 126 | 63517.699835307561 | 63560.69856538716 | 6.
+  770e-04 | 39.6433 | 0 | 0 | 0 | 160 |
+  | RM-MESH-04 | mesh | 261 | 808 | 81430.081581047431 | 81017.293772282923 |
+  5.069e-03 | 0.202694 | 0 | 0 | 0 | 288 |
+  | RM-MESH-05 | mesh | 9 | 12 | 14400 | 14399.999999999998 | 1.263e-16 | 1199.
+  93 | 0 | 0 | 0 | 12 |
+  | RM-MESH-06 | mesh | 9 | 12 | 118800 | 118800.00000000003 | 2.450e-16 |
+  9899.93 | 0 | 0 | 0 | 12 |
+  | RM-MESH-06 | mesh | 9 | 12 | 118800 | 118799.99999999999 | 1.225e-16 | 9900
+  | 0 | 0 | 0 | 12 |
+  | RM-MESH-07 | mesh | 61 | 267 | 240000 | 239999.99999999997 | 1.213e-16 |
+  31.5733 | 0 | 0 | 0 | 12 |
+  | RM-MESH-08 | refusal | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a
+  | n/a |
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/reference/MeshModelsTests.cpp:521: warning:
+  P16-REFMOD-001 QUALITY MATRIX
+  | Model | Tet4 | Invalid | Warn | Fail | WorstAspect | WorstRadiusRatio |
+  worst element | MinDihedral deg | worst element | MaxDihedral deg | MinTetVol
+  mm^3 | element |
+  | MeshBlock | 6 | 0 | 0 | 0 | 4.0933 | 0.43725 | 1 | 14.6211 | 1 | 115.641 |
+  49000 | 1 |
+  | MeshCylinder | 508 | 0 | 0 | 0 | 16.0391 | 0.00124845 | 504 | 0.362683 | 54
+  | 177.113 | 0.475278 | 369 |
+  | MeshPlateWithHole | 126 | 0 | 0 | 0 | 20.4856 | 0.0129063 | 120 | 1.11273 |
+  6 | 165.482 | 39.6433 | 122 |
+  | MeshTube | 808 | 0 | 0 | 0 | 14.8994 | 0.00634594 | 462 | 2.3722 | 462 |
+  170.046 | 0.202694 | 546 |
+  | MeshThinPlate | 12 | 0 | 0 | 0 | 80.0062 | 0.000322641 | 12 | 0.71612 | 12
+  | 178.709 | 1199.93 | 1 |
+  | MeshTransformedBase | 12 | 0 | 0 | 0 | 3.88104 | 0.127381 | 6 | 14.9313 | 6
+  | 152.325 | 9899.93 | 4 |
+  | MeshTransformedPlaced | 12 | 0 | 0 | 0 | 3.88104 | 0.127381 | 5 | 14.9314 |
+  5 | 152.325 | 9900 | 2 |
+  | MeshLocalRefinement | 267 | 0 | 0 | 0 | 5.61104 | 0.0411619 | 139 | 7.89468
+  | 101 | 165.695 | 31.5733 | 110 |
+  | RM-MESH-08 | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/
+  a | n/a |
+
+-------------------------------------------------------------------------------
+MeshReference_UndoAndRedoOfTheIntentAreFollowedByTheMesh
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/reference/MeshModelsTests.cpp:2049
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/reference/MeshModelsTests.cpp:2105: warning:
+  RM-MESH-02 undo/redo: S1 508 tets (14.6718 mm), S2 361 tets (19.0971 mm),
+  undone 508 tets (14.6718 mm), redone 361 tets (19.0971 mm)
+
+-------------------------------------------------------------------------------
+SizeGlobal_SmallerTargetGivesAFinerCharacteristicScale
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/MeshSizingTests.cpp:402
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/MeshSizingTests.cpp:417: warning:
+  cylinder r6 h20 mm, coarse target 6 mm: 149 nodes, 554 tets, mean edge 6.
+  54486 mm, median 5.37921 mm, max 23.2305 mm, volume 2.25048e-06 m^3
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/MeshSizingTests.cpp:417: warning:
+  cylinder r6 h20 mm, medium target 3 mm: 235 nodes, 1086 tets, mean edge 4.
+  76373 mm, median 3.08837 mm, max 22.7658 mm, volume 2.25048e-06 m^3
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/MeshSizingTests.cpp:417: warning:
+  cylinder r6 h20 mm, fine target 1.5 mm: 434 nodes, 2185 tets, mean edge 3.
+  11489 mm, median 2.10073 mm, max 20.1083 mm, volume 2.25048e-06 m^3
+
+-------------------------------------------------------------------------------
+P16Qualification_AControlWhoseBodyIsDeletedIsUnresolvedAndMeshesNothing
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/qualification/P16MeshingQualificationTests.cpp:333
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/qualification/P16MeshingQualificationTests.cpp:385: warning:
+  a control whose body was deleted: ineligibility object_not_found, generation
+  refused, the 6 tetrahedra it held are stale
+
+-------------------------------------------------------------------------------
+SizeGlobal_IsScaleRobust
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/MeshSizingTests.cpp:527
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/MeshSizingTests.cpp:538: warning:
+  scale 1x (4 mm block, 1 mm target): median edge 4 mm; 10x (40 mm block, 10 mm
+  target): median edge 40 mm
+
+-------------------------------------------------------------------------------
+QualityProduction_LocalRefinementIntroducesNoInvalidElements
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/MeshQualityTests.cpp:1588
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/MeshQualityTests.cpp:455: warning:
+  cylinder r6 h20 mm, global 6 mm with 1.5 mm on the top disc: 615 Tet4, 140
+  Tri3 | 3r/R min 0.005122 mean 0.171150 | aspect max 19.148984 mean 6.306711 |
+  dihedral 2.213525 to 175.602967 deg | element mean edge 1.280336 to 12.904671
+  mm | tri q min 0.090328 mean 0.141917 | tri min angle 2.993467 deg
+
+-------------------------------------------------------------------------------
+QualityProduction_BlockWithAThroughHoleHasNoInvalidElements
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/MeshQualityTests.cpp:1575
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/MeshQualityTests.cpp:455: warning:
+  block 60x60x20 mm bored 20 mm, 8 mm target: 147 Tet4, 196 Tri3 | 3r/R min 0.
+  032153 mean 0.107301 | aspect max 29.927709 mean 26.003509 | dihedral 1.
+  230616 to 176.101567 deg | element mean edge 24.084127 to 43.677455 mm | tri
+  q min 0.037152 mean 0.131629 | tri min angle 1.230616 deg
+
+-------------------------------------------------------------------------------
+VolBox_GeneratesATetrahedralMeshFromAValidClosedSolid
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/VolumeMeshTests.cpp:168
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/VolumeMeshTests.cpp:174: warning:
+  box 20x30x40 mm: 9 nodes, 12 tetrahedra, 12 boundary triangles, tet volume 2.
+  4e-05 m^3, boundary volume 2.4e-05 m^3, CAD volume 2.4e-05 m^3
+
+-------------------------------------------------------------------------------
+SizeGlobal_CannotBeFinerThanTheBoundaryItMustConformTo
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/MeshSizingTests.cpp:447
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/MeshSizingTests.cpp:466: warning:
+  block 40^3 mm (boundary is 12 triangles of 40-57 mm): target 20 mm -> 12
+  tets, median edge 40 mm; target 10 mm -> 12 tets, median edge 40 mm
+
+-------------------------------------------------------------------------------
+Configurations_SwitchingCostIsMeasured
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/features/ConfigurationFeatureTests.cpp:610
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/features/ConfigurationFeatureTests.cpp:631: warning:
+  configuration switch + regenerate: 57.5814 ms per cycle over 20 cycles
+  (extrude + hole + pattern + attached sketch)
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/features/ConfigurationFeatureTests.cpp:642: warning:
+  regenerate with nothing changed: 0.5967 ms per pass
+
+Meshing of domain 1 failed with error: Stop meshing since too many attempts in domain 1
+-------------------------------------------------------------------------------
+VolTube_VolumeExcludesTheVoid
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/VolumeMeshTests.cpp:369
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/VolumeMeshTests.cpp:388: warning:
+  tube Ro20 Ri12 h30 mm: 257 nodes, 513 tetrahedra, 448 boundary triangles,
+  volume 2.41021e-05 m^3; annulus 2.41274e-05 m^3; filled bore would be 3.
+  76991e-05 m^3
+
+-------------------------------------------------------------------------------
+P16Qualification_EveryReferenceDocumentRoundTripsItsIntentAndRegenerates
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/qualification/P16MeshingQualificationTests.cpp:263
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/qualification/P16MeshingQualificationTests.cpp:328: warning:
+  all 9 reference documents round-tripped their canonical intent; 8 regenerated
+  an identical mesh; RM-MESH-08 still refused after a load
+
+-------------------------------------------------------------------------------
+SizeLocal_RefinesTheSelectedFaceAndNotTheRest
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/MeshSizingTests.cpp:556
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/MeshSizingTests.cpp:605: warning:
+  local 1.5 mm on the TOP disc of a r6 h20 cylinder, global 6 mm: 145 nodes,
+  615 tets | TARGET region mean edge 3.40999 mm (72 nodes), MID-BODY 9.91397 mm
+  (9 nodes) | global-only: target 4.12162 mm (54 nodes), mid-body 8.82378 mm,
+  554 tets
+
+-------------------------------------------------------------------------------
+P16Qualification_SurfaceOrientationIsOutwardAndDeterministic
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/qualification/P16MeshingQualificationTests.cpp:148
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/qualification/P16MeshingQualificationTests.cpp:184: warning:
+  RM-MESH-04 surface orientation: 288 boundary triangles, enclosed volume
+  81017.293772282937 mm^3, identical over 4 generations
+
+-------------------------------------------------------------------------------
+QualityProduction_CylinderMeshHasNoInvalidElementsAndEveryMetricInRange
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/MeshQualityTests.cpp:1542
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/MeshQualityTests.cpp:455: warning:
+  cylinder r6 h20 mm, 3 mm target: 1086 Tet4, 140 Tri3 | 3r/R min 0.000451 mean
+  0.183197 | aspect max 25.941312 mean 5.935955 | dihedral 0.261134 to 176.
+  893079 deg | element mean edge 0.653149 to 15.455133 mm | tri q min 0.090328
+  mean 0.141917 | tri min angle 2.993467 deg
+
+-------------------------------------------------------------------------------
+MeshReference_SaveLoadRegenerateKeepsTheIntentAndNotTheMesh
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/reference/MeshModelsTests.cpp:2124
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/reference/MeshModelsTests.cpp:2207: warning:
+  RM-MESH-01 save/load: 5092 bytes, 8 nodes / 6 tets / 294000.00000000006 mm^3
+  before, 8 / 6 / 294000.00000000006 after
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/reference/MeshModelsTests.cpp:2207: warning:
+  RM-MESH-03 save/load: 6212 bytes, 81 nodes / 126 tets / 63560.69856538716
+  mm^3 before, 81 / 126 / 63560.69856538716 after
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/reference/MeshModelsTests.cpp:2207: warning:
+  RM-MESH-07 save/load: 5435 bytes, 61 nodes / 267 tets / 239999.99999999997
+  mm^3 before, 61 / 267 / 239999.99999999997 after
+
+-------------------------------------------------------------------------------
+MeshThinPlate_MeshesWithMeasurablyWorseShapeThanTheBlock
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/reference/MeshModelsTests.cpp:1209
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/reference/MeshModelsTests.cpp:1261: warning:
+  RM-MESH-05 OUTCOME A -- shape against RM-MESH-01
+  | Metric | RM-MESH-01 | RM-MESH-05 |
+  | worst aspect ratio l_max/l_min | 4.0933 | 80.0062 |
+  | worst radius ratio 3r/R | 0.43725 | 0.000322641 |
+  | min dihedral deg | 14.6211 | 0.71612 |
+  | max dihedral deg | 115.641 | 178.709 |
+  | min element volume mm^3 | 49000 | 1199.93 |
+  | invalid / warning / failure | 0/0/0 | 0/0/0 |
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/reference/MeshModelsTests.cpp:1317: warning:
+  RM-MESH-05 sizing sensitivity
+  | Case | Target mm | Nodes | Tet4 | Worst radius ratio | Min dihedral deg |
+  | 20 mm target | 20 | 9 | 12 | 0.000322641 | 0.71612 |
+  | 5 mm target | 5 | 11 | 19 | 0.00034409 | 0.755676 |
+  | 1 mm target | 1 | 12 | 24 | 0.00021803 | 0.567609 |
+
+-------------------------------------------------------------------------------
+GeometryRevision_IsUnchangedByRenamingTheFeature
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/GeometryPreparationTests.cpp:692
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/GeometryPreparationTests.cpp:704: warning:
+  renaming a feature moves its geometry revision: invalidation is conservative
+  here
+
+-------------------------------------------------------------------------------
+QualityProduction_HollowTubeMeshHasNoInvalidElements
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/MeshQualityTests.cpp:1562
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/MeshQualityTests.cpp:455: warning:
+  hollow tube r10/r6 h20 mm, 3 mm target: 303 Tet4, 324 Tri3 | 3r/R min 0.
+  013208 mean 0.147311 | aspect max 19.528917 mean 13.762010 | dihedral 2.
+  896622 to 167.662447 deg | element mean edge 2.131210 to 14.835462 mm | tri q
+  min 0.090328 mean 0.301582 | tri min angle 2.993467 deg
+
+-------------------------------------------------------------------------------
+MeshLocalRefinement_FollowsAnEditOfItsLocalSize
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/reference/MeshModelsTests.cpp:1704
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/reference/MeshModelsTests.cpp:1752: warning:
+  RM-MESH-07 local size 6 mm -> 3 mm: 267 -> 283 tets; band at F median edge
+  28.9891 -> 28.504 mm, band nodes 8 -> 10; whole-mesh median 15.2672 -> 16.
+  1976 mm (reported, not asserted -- the untouched bulk dominates it)
+
+-------------------------------------------------------------------------------
+MeshingPersistence_FileSizeDoesNotFollowMeshDensity
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/io/MeshControlFileTests.cpp:634
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/io/MeshControlFileTests.cpp:675: warning:
+  coarse 745 elements -> 1778 bytes | fine 1871 elements -> 1780 bytes | file
+  difference 2 bytes
+
+-------------------------------------------------------------------------------
+MeshingCommand_NoCommandIsLargeEnoughToHoldAMesh
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/MeshingCommandTests.cpp:1169
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/MeshingCommandTests.cpp:1190: warning:
+  MeshControlDefinition 136 B | SetGlobalMeshSize 328 B | AddLocalMeshSizing
+  424 B | AddBoundarySet 376 B | SetMeshControlDefinition 448 B |
+  CreateMeshControl 216 B | DeleteMeshControl 384 B
+
+-------------------------------------------------------------------------------
+SizeLocal_RefinesTheFaceItWasGivenAndNotTheOppositeOne
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/MeshSizingTests.cpp:632
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/MeshSizingTests.cpp:676: warning:
+  SLABS  top-control slab z [15.5, 20] mm, h=1.5 | bottom-control slab z [-1e-
+  06, 4.5] mm, h=1.5 | tets 615 vs 748
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/MeshSizingTests.cpp:688: warning:
+  node density -- TOP region: 72 when the top is refined vs 59 when the bottom
+  is | BOTTOM region: 71 when the bottom is refined vs 52 when the top is
+
+-------------------------------------------------------------------------------
+MeshCylinder_ApproachesTheAnalyticVolumeAsTheSurfaceIsResolved
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/reference/MeshModelsTests.cpp:867
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/reference/MeshModelsTests.cpp:932: warning:
+  RM-MESH-02 surface convergence
+  | Level | Deflection mm | Facets | Nodes | Tet4 | Vmesh mm^3 | RelError |
+  Bound width |
+  | coarse | 0.5 | 140 | 114 | 368 | 117212.51992517788 | 5.069e-03 | 4.040e-02
+  |
+  | medium | 0.1 | 196 | 200 | 732 | 117499.90646653521 | 2.630e-03 | 8.016e-03
+  |
+  | fine | 0.02 | 444 | 442 | 1695 | 117747.9391981028 | 5.245e-04 | 1.601e-03
+  |
+
+-------------------------------------------------------------------------------
+MeshLocalRefinement_RefinesTheNamedFaceAndLeavesTheOppositeOneAlone
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/reference/MeshModelsTests.cpp:1535
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/reference/MeshModelsTests.cpp:1636: warning:
+  RM-MESH-07 local refinement: global 20 mm, local 6 mm, band reach 12 mm
+  | Mesh | Nodes | Tet4 | F tets | F nodes | F median | F min | G tets | G
+  nodes | G median | G min |
+  | global only | 9 | 12 | 2 | 4 | 61.6442 | 40 | 2 | 4 | 61.6442 | 40 |
+  | + local at F | 61 | 267 | 25 | 8 | 28.9891 | 8.70349 | 10 | 4 | 42.0199 |
+  11.7644 |
+  | + local at G | 57 | 246 | 7 | 4 | 40 | 11.3203 | 25 | 9 | 28.7113 | 7.37507
+  |
+  F's two boundary facets keep a 57.8489 mm median edge even in the refined
+  mesh, which is why the band and not the facets is the instrument.
+
+-------------------------------------------------------------------------------
+QualityProduction_BlockMeshHasNoInvalidElementsAndEveryMetricInRange
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/MeshQualityTests.cpp:1452
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/MeshQualityTests.cpp:455: warning:
+  block 40x40x40 mm, default sizing: 12 Tet4, 12 Tri3 | 3r/R min 0.640754 mean
+  0.640754 | aspect max 1.632993 mean 1.632993 | dihedral 45.000000 to 120.
+  000000 deg | element mean edge 40.081932 to 40.081932 mm | tri q min 0.866025
+  mean 0.866025 | tri min angle 45.000000 deg
+
+-------------------------------------------------------------------------------
+MeshingPersistence_TheReferenceFileRegeneratesAndMeshes
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/io/MeshControlFileTests.cpp:1325
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/io/MeshControlFileTests.cpp:1365: warning:
+  hand-written reference: 81 nodes, 287 elements, boundary set 'fixed_end' ->
+  40 facets
+
+-------------------------------------------------------------------------------
+MeshingCommand_AHistoryStepCostsTheIntentAndNotTheMesh
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/MeshingCommandTests.cpp:1112
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/meshing/MeshingCommandTests.cpp:1161: warning:
+  history step 1190 B (command 328 B + 2 x intent 431 B) | mesh 14896 B at 504
+  elements, 27760 B at 932 elements | step is 7.989% of the coarse mesh and 4.
+  287% of the fine one
+
+-------------------------------------------------------------------------------
+P16Qualification_TheSavedDocumentIsIndependentOfMeshDensity
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/qualification/P16MeshingQualificationTests.cpp:111
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/qualification/P16MeshingQualificationTests.cpp:136: warning:
+  RM-MESH-02 at 24 mm: 114 nodes, 361 tets. At 6 mm: 376 nodes, 1977 tets.
+  Saved document: 3347 bytes either way.
+
+-------------------------------------------------------------------------------
+MeshBlock_SizingLevelsAreBoundedByItsOwnBoundary
+-------------------------------------------------------------------------------
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/reference/MeshModelsTests.cpp:668
+...............................................................................
+
+C:/Users/uqhas/AppData/Local/bc-clean/p16-qual/tests/reference/MeshModelsTests.cpp:716: warning:
+  RM-MESH-01 sizing levels (a planar boundary bounds them)
+  | Level | Target mm | Nodes | Tet4 | Median edge mm | Volume error |
+  | coarse | 30 | 8 | 6 | 120 | 1.980e-16 |
+  | medium | 20 | 8 | 6 | 120 | 1.980e-16 |
+  | fine | 10 | 8 | 6 | 120 | 1.980e-16 |
+
+===============================================================================
+All tests passed (263394 assertions in 2988 test cases)
+
