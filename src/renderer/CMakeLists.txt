@@ -1,4 +1,4 @@
-# Renderer layer (layer 6): the 3D viewer (INFRA-VIEWER-001).
+# Renderer layer (layer 70): the 3D viewer (INFRA-VIEWER-001).
 #
 # The viewport BetterCAD did not have. Its public header
 # (include/bettercad/renderer/Viewer.hpp) contains no OCCT and no Qt types:
@@ -9,7 +9,7 @@
 # selection and a camera, and its only link back to the model is the ObjectId
 # a caller supplies when displaying a body.
 #
-# It sits at layer 6 because it uses geometry (layer 0) and meshing (layer 4).
+# It sits at layer 70 because it uses geometry (layer 0) and meshing (layer 40).
 # Nothing depends on it: a renderer is a leaf.
 #
 # MeshView.cpp is NOT under occt/ and that is deliberate: the read-only mesh

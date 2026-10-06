@@ -1,4 +1,4 @@
-# Assembly layer (layer 3): components, and later mates and their solver.
+# Assembly layer (layer 30): components, and later mates and their solver.
 # Sits above features, whose bodies and references it uses, and below io,
 # which must serialize it (ADR-006).
 bettercad_add_library(bettercad_assembly

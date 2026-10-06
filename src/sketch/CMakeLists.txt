@@ -1,4 +1,4 @@
-# Sketch layer (layer 1): 2D sketch data model, constraints and solver.
+# Sketch layer (layer 10): 2D sketch data model, constraints and solver.
 # Depends on core only; it has no dependency on the 3D geometry kernel.
 bettercad_add_library(bettercad_sketch
     ALIAS sketch

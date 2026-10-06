@@ -100,7 +100,9 @@ P16     Meshing
 Current authorized development:
 
 ```text
-none — the next phase is a scope decision
+P17 — Structural FEA, authorized 2026-10-06.
+P17-ARCH-001 is PASS (2026-10-07). No milestone is authorized now:
+P17-DATA-001 is next in the sequence, which is not the same as permitted.
 ```
 
 Released: `v0.1.0` — Foundation.

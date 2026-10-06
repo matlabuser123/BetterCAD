@@ -42,6 +42,7 @@ bettercad_add_executable(bettercad_tests
         meshing/TetValidationTests.cpp
         meshing/VolumeBackendTests.cpp
         meshing/VolumeMeshTests.cpp
+        structural/StructuralAnalysisBoundaryTests.cpp
         drawing/AnnotationTests.cpp
         drawing/AssemblyDrawingTests.cpp
         drawing/BomTests.cpp
@@ -234,6 +235,7 @@ bettercad_add_executable(bettercad_tests
         BetterCAD::meshing
         BetterCAD::renderer
         BetterCAD::sketch
+        BetterCAD::structural
         bettercad_test_occt
         Catch2::Catch2WithMain
 )

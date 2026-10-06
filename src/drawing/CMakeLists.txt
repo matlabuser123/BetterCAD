@@ -1,4 +1,4 @@
-# Drawing layer (layer 4): sheets, and later views, dimensions, annotations
+# Drawing layer (layer 40): sheets, and later views, dimensions, annotations
 # and the drawing scene. Sits above assembly, whose solved placements an
 # assembly drawing projects, and below io, which must serialize it (ADR-015).
 #

@@ -1,9 +1,9 @@
-# Meshing layer (layer 4): the engineering mesh data model, and later the
+# Meshing layer (layer 40): the engineering mesh data model, and later the
 # meshing controls, the mesher, regions, quality and the volume backend. Sits
 # above features, whose regeneration and face-name resolution it will use, and
 # below io, which must serialize its controls (ADR-033).
 #
-# It shares layer 4 with drawing, which the strictly-lower rule permits: the two
+# It shares layer 40 with drawing, which the strictly-lower rule permits: the two
 # are siblings, each deriving a secondary representation from the same geometry
 # and neither using the other.
 #

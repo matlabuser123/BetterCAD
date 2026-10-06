@@ -16,6 +16,9 @@
 #   5. A volume-meshing backend's headers may only be included from
 #      src/meshing/<backend>/ (ADR-033). Rule 1 does not cover them: it keys on
 #      the .hxx extension and every candidate backend ships .h headers.
+#   6. The library (include/, src/) must not include anything under apps/.
+#      Rules 2 and 3 miss it: rule 2 keys on Qt's header shape, and apps/ is
+#      not a module so rule 3 has no layer to compare (ADR-035).
 #
 # Exits with an error listing every violation.
 if(NOT DEFINED SOURCE_DIR OR NOT IS_DIRECTORY "${SOURCE_DIR}")
@@ -23,32 +26,52 @@ if(NOT DEFINED SOURCE_DIR OR NOT IS_DIRECTORY "${SOURCE_DIR}")
 endif()
 
 # Layer of each module; lower layers must not depend on higher ones.
+#
+# NUMBERED IN TENS, so that adding a module never renumbers the table again.
+# They were consecutive integers until P17-ARCH-001, and the strictly-lower
+# rule meant every new module in the middle of the stack had to push the ones
+# above it up: ADR-006 moved `io` from 3 to 4 for `assembly`, ADR-015 moved it
+# from 4 to 5 for `drawing`, and a `structural` module that USES meshing needs
+# a number between `meshing` 4 and `io` 5, where there is none. Two renumbers
+# in two additions is a pattern, and the roadmap has four more phases
+# (thermal, CFD, optimisation, semantic topology) that sit in the same band.
+# So the numbers were respaced once (ADR-035) and the renumber ends here.
+#
+# The value is an ORDINAL WITH GAPS, not a distance from core. Nine free
+# integers sit between any two neighbours; use one rather than shifting the
+# table.
 set(layer_core 0)
-set(layer_sketch 1)
-set(layer_features 2)
+set(layer_sketch 10)
+set(layer_features 20)
 # assembly sits above features, which it uses, and below io, which must
-# serialize it. The rule below is strictly-lower, so there is no number
-# between them and io moves up with everything above it (ADR-006).
-set(layer_assembly 3)
+# serialize it (ADR-006).
+set(layer_assembly 30)
 # drawing sits above assembly, whose solved placements an assembly drawing
-# projects, and below io, which must serialize its objects. Strictly-lower
-# again left no number between 3 and 4, so io moves up a second time
-# (ADR-015). Projection and hidden-line removal are NOT here: they are
-# kernel work and live in core/geometry behind the occt adapter.
-set(layer_drawing 4)
+# projects, and below io, which must serialize its objects (ADR-015).
+# Projection and hidden-line removal are NOT here: they are kernel work and
+# live in core/geometry behind the occt adapter.
+set(layer_drawing 40)
 # meshing sits above features, whose regeneration and face-name resolution it
-# uses, and below io, which must serialize its controls. It SHARES layer 4 with
-# drawing, which is allowed (renderer and scripting share 6): the two are
+# uses, and below io, which must serialize its controls. It SHARES layer 40
+# with drawing, which is allowed (renderer and scripting share 70): the two are
 # siblings, each deriving a secondary representation from the same geometry and
-# neither using the other. Sharing also leaves assembly (3) reachable, so
-# meshing an assembly occurrence later needs no renumbering, which ADR-006 and
-# ADR-015 each had to do. Volume meshing lives here; surface triangulation of a
-# Body is kernel work and stays in core/geometry behind the occt adapter
-# (ADR-033).
-set(layer_meshing 4)
-set(layer_io 5)
-set(layer_renderer 6)
-set(layer_scripting 6)
+# neither using the other. Sharing also leaves assembly (30) reachable, so
+# meshing an assembly occurrence later needs no renumbering. Volume meshing
+# lives here; surface triangulation of a Body is kernel work and stays in
+# core/geometry behind the occt adapter (ADR-033).
+set(layer_meshing 40)
+# structural sits above meshing, whose Tet4 volume mesh, geometry/mesh mapping
+# and quality report it CONSUMES, and below io, which must serialize its
+# analysis intent. It cannot share meshing's 40: the rule below is
+# strictly-lower, so same-layer modules cannot include each other at all, and
+# structural must include meshing. That is what forced the respace (ADR-035).
+# P18's thermal module is expected to be a sibling here, at 50 if it
+# neither uses nor is used by structural, and at 55 or 45 if a coupling says
+# otherwise -- the gaps exist so that decision needs no renumber.
+set(layer_structural 50)
+set(layer_io 60)
+set(layer_renderer 70)
+set(layer_scripting 70)
 
 set(qt_allowed_regex "^(apps/bettercad|src/renderer)/")
 set(occt_allowed_regex "^src/(.+/)?occt/")
@@ -138,6 +161,25 @@ foreach(file IN LISTS files)
            AND NOT file MATCHES "${mesh_backend_allowed_regex}")
             list(APPEND violations
                 "${file}: mesh backend header <${header}> outside src/meshing/<backend>/")
+        endif()
+
+        # Rule 6: the library must not reach into an application (P17-ARCH-001).
+        #
+        # Rules 2 and 3 do not cover this. Rule 2 catches Qt by its header
+        # shape, so it would stop `#include <QWidget>` in src/structural/ but
+        # not `#include "../../apps/bettercad_cli/Commands.hpp"`; rule 3 keys on
+        # `bettercad/<module>/`, and apps/ is not a module, so it has no layer
+        # and cannot be compared. A library file reaching a CLI parser, a
+        # file-dialog or a GUI selection would therefore have passed.
+        #
+        # Named by P17's brief, which requires that a structural solver cannot
+        # depend on the GUI or on the CLI, but written for every module: the
+        # dependency direction is apps -> library, never the reverse, and
+        # nothing under include/ or src/ had such an include when the rule was
+        # added.
+        if(header MATCHES "(^|/)apps/" AND file MATCHES "^(include|src)/")
+            list(APPEND violations
+                "${file}: include <${header}> reaches into apps/ from the library")
         endif()
 
         # Rule 4: public headers only use angle-bracket includes.

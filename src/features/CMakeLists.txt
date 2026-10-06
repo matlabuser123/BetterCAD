@@ -1,4 +1,4 @@
-# Feature layer (layer 2): parametric features that turn sketches into solids.
+# Feature layer (layer 20): parametric features that turn sketches into solids.
 bettercad_add_library(bettercad_features
     ALIAS features
     EXPORT_BASE BETTERCAD_FEATURES

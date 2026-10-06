@@ -80,20 +80,20 @@ Python and a future agent. The GUI must never become the architecture.
 | Layer | Module | Contains |
 | --- | --- | --- |
 | 0 | `core` | IDs, units, parameters, document, commands, dependency graph, diagnostics, math value types, geometry abstraction, engineering standards data |
-| 1 | `sketch` | Entities, constraints, solver, profile extraction |
-| 2 | `features` | Feature definitions, regeneration, validation |
-| 3 | `assembly` | Components, placements, mates, the constraint solver, reference resolution |
-| 4 | `drawing`, `meshing` | Sheets, views, dimensions, annotations, the drawing scene; meshing controls, the mesher, mesh regions and quality, the volume backend |
-| 5 | `io` | Native `.bcad`, STEP/STL export |
-| 6 | `renderer`, `scripting` | Display data, bindings |
+| 10 | `sketch` | Entities, constraints, solver, profile extraction |
+| 20 | `features` | Feature definitions, regeneration, validation |
+| 30 | `assembly` | Components, placements, mates, the constraint solver, reference resolution |
+| 40 | `drawing`, `meshing` | Sheets, views, dimensions, annotations, the drawing scene; meshing controls, the mesher, mesh regions and quality, the volume backend |
+| 50 | `structural` | The structural analysis input boundary, and later the Tet4 element, DOFs, loads, restraints, assembly, the linear solve and result recovery |
+| 60 | `io` | Native `.bcad`, STEP/STL export |
+| 70 | `renderer`, `scripting` | Display data, bindings |
 | — | `apps` | Desktop application, CLI |
 
 A module may include the public headers of its own module or of a lower layer,
 and nothing else. Public headers live in `include/bettercad/<module>/`; private
 headers beside their sources in `src/<module>/`.
 
-Target directories not yet created: `src/simulation/`, `src/versioning/`,
-`benchmarks/`.
+Target directories not yet created: `src/versioning/`, `benchmarks/`.
 `src/renderer/` and `src/scripting/` exist but are empty.
 
 `src/meshing/` was created by `P16-DATA-001`, which is what makes its layer entry
@@ -128,13 +128,35 @@ moved `io` up a second time. `P14-SHEET-001` applied it when it created
 
 `P16-ARCH-001` added `meshing` and needed **no renumber at all**
 ([ADR-033](docs/architecture/decisions/ADR-033-the-volume-mesher-is-a-backend-behind-an-enforced-boundary.md)).
-It shares layer 4 with `drawing`, which the strictly-lower rule permits and which
+It shares layer 40 with `drawing`, which the strictly-lower rule permits and which
 states a real relationship: both derive a secondary representation from the same
 geometry, and neither uses the other. Sharing 4 rather than taking 3 also leaves
 `assembly` reachable, so meshing an assembly occurrence later will not force the
 renumber that ADR-006 and ADR-015 each had to do. Volume meshing lives in
 `meshing`; surface triangulation of a `Body` is kernel work and stays in
 `core/geometry` behind the OCCT adapter, like projection below.
+
+`P17-ARCH-001` added `structural` and **had to renumber, so it respaced instead**
+([ADR-035](docs/architecture/decisions/ADR-035-a-structural-module-at-layer-50-and-a-layer-table-respaced-in-tens.md)).
+A structural module *uses* meshing, so it cannot share meshing's layer the way
+`drawing` does — the strictly-lower rule means same-layer modules cannot include
+each other at all — and with consecutive integers there was no number between
+`meshing` 4 and `io` 5. That is the third time: ADR-006 moved `io` from 3 to 4,
+ADR-015 moved it from 4 to 5, and the roadmap has four more phases in the same
+band. So the numbers were multiplied by ten once, relative order unchanged, and
+`structural` took 50. **A layer value is now an ordinal with gaps, not a distance
+from `core`**: nine free integers sit between any two neighbours, and a new
+module takes one rather than shifting the table. P18's thermal module is
+expected at 50 beside `structural` if the two are siblings that do not use each
+other, and at 45 or 55 if a coupling says otherwise.
+
+The same change added rule 6, which no earlier rule could express: the library
+(`include/`, `src/`) must not include anything under `apps/`. Rule 2 keys on
+Qt's header shape, so it stops `#include <QWidget>` in `src/structural/` but not
+`#include "../../apps/bettercad_cli/Commands.hpp"`; and `apps/` is not a module,
+so rule 3 has no layer to compare. A library file reaching a CLI parser or a
+file dialog would have passed. Nothing in the tree had such an include, so the
+rule closed the gap at no cost — for every module, not only this one.
 
 Projection and hidden-line removal are **not** in `drawing`: they are kernel
 work, so they belong in `core/geometry` behind the OCCT adapter, below
@@ -450,7 +472,7 @@ drawing of a broken model publishes nothing rather than its last good picture.
 consumed by PDF, SVG and DXF writers that transcribe and compute nothing, so
 the three formats cannot disagree about the same drawing.
 
-**Layering.** `drawing` sits at layer 4 above `assembly`, with projection and
+**Layering.** `drawing` sits at layer 40 above `assembly`, with projection and
 hidden-line removal in `core/geometry` behind the OCCT adapter and the format
 writers in `io`. A drawing subsystem is three places, not one. See "Layers".
 

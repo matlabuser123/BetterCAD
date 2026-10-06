@@ -16,9 +16,9 @@ Prerequisite:
            P16 — Meshing — QUALIFIED (P16-QUAL-001, 2026-10-06)
 
 Current milestone:
-           P17-ARCH-001 — Structural FEA Architecture. AUTHORIZED by this
-           document. Nothing after it is: finishing a milestone is a stop
-           condition, and the next one needs this file to say so.
+           None. P17-ARCH-001 is PASS (2026-10-07). Finishing a milestone is
+           a stop condition: P17-DATA-001 is next in the sequence and is NOT
+           authorized until this file says so.
 
 Qualified:
            P0–P10 — BetterCAD v0.1.0
@@ -30,8 +30,8 @@ Qualified:
            P16 — Meshing
 
 Next:
-           P17-DATA-001 — Analysis / Result Data Model, after P17-ARCH-001
-           passes its gates and its evidence is recorded. Not before.
+           P17-DATA-001 — Analysis / Result Data Model. NOT AUTHORIZED:
+           P17-ARCH-001 passing is not permission to start it.
 
 P17 objective:
            authoritative CAD / material / mesh state
@@ -374,27 +374,61 @@ The refusals are P17's constraints, not P17's to lift.
 
 ## Structural FEA Architecture
 
-* [ ] Define P17 solver scope
-* [ ] Define linear-static assumption
-* [ ] Define small-strain assumption
-* [ ] Define isotropic linear-elastic material assumption
-* [ ] Define Tet4 as the initial structural element
-* [ ] Define CAD / mesh / solver authority boundaries
-* [ ] Define analysis-definition ownership
-* [ ] Define derived-result ownership
-* [ ] Define the geometry-currentness requirement
-* [ ] Define the mesh-currentness requirement
-* [ ] Define the material-currentness requirement
-* [ ] Define the solver-input validation boundary
-* [ ] Define P16 mapping consumption
-* [ ] Define P15 material consumption
-* [ ] Decide the module's layer and update `CheckLayering.cmake` in the same
+* [x] Define P17 solver scope
+* [x] Define linear-static assumption
+* [x] Define small-strain assumption
+* [x] Define isotropic linear-elastic material assumption
+* [x] Define Tet4 as the initial structural element
+* [x] Define CAD / mesh / solver authority boundaries
+* [x] Define analysis-definition ownership
+* [x] Define derived-result ownership
+* [x] Define the geometry-currentness requirement
+* [x] Define the mesh-currentness requirement
+* [x] Define the material-currentness requirement
+* [x] Define the solver-input validation boundary
+* [x] Define P16 mapping consumption
+* [x] Define P15 material consumption
+* [x] Decide the module's layer and update `CheckLayering.cmake` in the same
       change (see P17 Prerequisites: there is no integer between meshing and io)
-* [ ] Define unsupported physics explicitly
-* [ ] ADR(s) completed
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Define unsupported physics explicitly
+* [x] ADR(s) completed
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded
+
+**COMPLETE 2026-10-07.** 20/20. Evidence:
+[docs/verification/P17-ARCH-001/](docs/verification/P17-ARCH-001/README.md).
+
+Three presets clean-rebuilt, 3401/3401 tests passed in each with 0 warnings
+over 598 objects, 579-test blast radius x5 repeats in release and debug,
+qualified tree == committed tree at `536e14b5`.
+
+**The audit was the substance, and it found that three things P17 was asked to
+design already existed, built by the earlier phases for this consumer by
+name.** `requireLinearElasticConstants` is documented "the boundary a
+structural solver consumes (P17)" and already refuses a non-finite or
+non-positive E and a Poisson ratio outside -1 < nu < 0.5; `ConsumerKind` already
+splits `FeaLinearStatic` from `FeaLinearStaticWithGravity`; and ADR-028 already
+forbade a solver holding material data, naming P17. So `P17-MAT-001`'s
+validation is satisfied by consumption, not implementation. See
+[DEPENDENCY_AUDIT.md](docs/verification/P17-ARCH-001/DEPENDENCY_AUDIT.md).
+
+**What nothing upstream could provide is a boundary that cannot be bypassed.**
+P16's recorded gap is about CALLERS -- `Mesher::mesh()` returns a stale mesh
+deliberately, because P16-VIZ-001 inspects stale meshes -- so no function in
+`structural` takes a `VolumeMesh`. `requireStructuralModel(document,
+regenerator, mesher, control)` is the only entry, and `StructuralModel` has one
+private constructor with one friend, so a function that wanted to skip the
+checks could not construct its argument (ADR-036).
+
+**The layer table was respaced in tens** (ADR-035). A structural module USES
+meshing, so it cannot share meshing's layer -- the rule is strictly-lower -- and
+there was no integer between `meshing` 4 and `io` 5. That is the third time:
+ADR-006 and ADR-015 each moved `io` up, and four roadmap phases sit in the same
+band. Relative order is unchanged and the checker gives the same verdict on the
+same tree. Rule 6 was added in the same change: the library must not include
+anything under `apps/`, which rules 2 and 3 could not express.
+
 
 ### Gate
 
@@ -1429,30 +1463,50 @@ docs/engineering/
 # CURRENT NEXT STEP
 
 ```text
-P17-ARCH-001 — Structural FEA Architecture.
-AUTHORIZED. P17 is the current phase.
+P17-ARCH-001 is PASS. The next step is a scope decision, not an
+implementation.
 ```
 
-P16 left BetterCAD able to generate, inspect, persist and headlessly drive a
-validated Tet4 volume mesh from authoritative CAD geometry, with sizing
-controls, quality metrics, geometry/mesh correspondence, boundary regions,
-undo/redo, a CLI and eight independently validated reference models. That is
-what P17 consumes. Evidence:
+P17-ARCH-001 gave the structural phase a boundary a stale mesh cannot cross, a
+module whose dependencies are enforced rather than described, and three ADRs
+fixing the solver's scope. It built no solver, which was the point.
+Evidence: [docs/verification/P17-ARCH-001/](docs/verification/P17-ARCH-001/README.md).
+
+What it consumes is P16: a validated Tet4 volume mesh from authoritative CAD
+geometry, with sizing controls, quality metrics, geometry/mesh correspondence,
+boundary regions, undo/redo, a headless CLI and eight independently validated
+reference models.
 [docs/verification/P16-QUAL-001/](docs/verification/P16-QUAL-001/README.md).
 
 ## What is authorized, and what is not
 
 ```text
-P17-ARCH-001     AUTHORIZED. Start here. Architecture only: decide the
-                 module and its layer, the authority boundaries, the
-                 validation boundary, and what P17 does not do. Write the
-                 ADRs. Build no solver.
+P17-ARCH-001     PASS 2026-10-07. Qualified at 536e14b5, three presets,
+                 3401/3401 each, 0 warnings. Evidence recorded.
+
+P17-DATA-001     NOT AUTHORIZED. Being next in the sequence is not
+                 permission, and P17-ARCH-001 passing is not either.
+                 Authorizing it is a scope decision.
 
 everything after it
-                 NOT AUTHORIZED YET. Each milestone is authorized when
-                 the one before it has passed its gates and recorded its
-                 evidence, and this file says so. Being next in the
-                 sequence is not permission.
+                 likewise.
+```
+
+### What P17-ARCH-001 leaves in place for the next milestone
+
+```text
+the input boundary      structural::requireStructuralModel is the single
+                        entry, and the gates P17-DATA/LOAD/BC/VALID define
+                        attach to it rather than to each new consumer
+the module              src/structural/, layer 50, linking core, features and
+                        meshing only. No io, no renderer, no Qt, no Eigen
+the enforcement         5 layering fixtures, including the meshing ->
+                        structural CYCLE, and rule 6 (library -> apps/)
+what is still undecided  the Voigt ordering, the DOF numbering, the sparse
+                        representation, the solver and its LICENCE, the
+                        acceptance thresholds, whether gravity is in scope,
+                        and the per-body material story. Each is named in
+                        SCOPE.md rather than assumed settled
 ```
 
 Read `# P17 Prerequisites Already In The Tree` before starting. Three things
