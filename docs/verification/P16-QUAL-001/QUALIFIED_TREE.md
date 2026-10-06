@@ -212,3 +212,20 @@ git status --porcelain      0 lines
 And the eight qualified paths read back out of `origin^{tree}` after the push,
 each identical to the frozen value in the table above. No force push, no
 rewritten history, no tag.
+
+The figures above are the push of `95e419b`. Documentation commits follow it —
+this note is in one — and each moves `HEAD`, so chasing the literal value here
+would never terminate. What does not move is the claim that matters, and anyone
+can re-check it against whatever `HEAD` is current:
+
+```bash
+git fetch origin
+for p in apps include src tests examples cmake CMakeLists.txt CMakePresets.json; do
+  echo "$p $(git rev-parse "origin/main^{tree}:$p")"
+done
+```
+
+Every line must equal the table at the top of this file. If one does not, the
+tree that is published is not the tree that was qualified, and this milestone's
+PASS does not apply to it. That is the whole claim, and it is checkable in one
+command rather than taken on trust.
