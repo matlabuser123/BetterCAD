@@ -31,6 +31,9 @@ bettercad_add_library(bettercad_structural
     EXPORT_HEADER bettercad/structural/Export.hpp
     SOURCES
         StructuralAnalysis.cpp
+        StructuralAnalysisObject.cpp
+        StructuralData.cpp
+        StructuralResult.cpp
     PUBLIC_LINK
         BetterCAD::core
         BetterCAD::features

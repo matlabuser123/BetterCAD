@@ -63,6 +63,15 @@ struct MaterialIdTag {
 struct MeshControlIdTag {
     static constexpr std::string_view name = "mesh control";
 };
+struct AnalysisIdTag {
+    static constexpr std::string_view name = "structural analysis";
+};
+struct LoadIdTag {
+    static constexpr std::string_view name = "load";
+};
+struct RestraintIdTag {
+    static constexpr std::string_view name = "restraint";
+};
 struct EntityIdTag {
     static constexpr std::string_view name = "entity";
 };
@@ -113,6 +122,8 @@ template <>
 inline constexpr bool isDocumentObjectTag<MaterialIdTag> = true;
 template <>
 inline constexpr bool isDocumentObjectTag<MeshControlIdTag> = true;
+template <>
+inline constexpr bool isDocumentObjectTag<AnalysisIdTag> = true;
 
 template <typename Tag, typename Value = std::uint64_t>
 class Id;
@@ -226,6 +237,34 @@ using MaterialId = Id<MaterialIdTag>;
 /// across generations and never persisted (ADR-031); this names the intent
 /// that produced them and outlives every mesh built from it.
 using MeshControlId = Id<MeshControlIdTag>;
+/// One structural analysis: which mesh is analysed, under which loads,
+/// restraints and solver settings (P17-DATA-001). A document object, so it
+/// gets a revision, undo, a place in the dependency graph and a file
+/// representation from machinery that already exists -- the argument ADR-030
+/// made for a meshing control, whose sibling this is.
+///
+/// IT WIDENS TO ObjectId, AND THAT IS THE DOMAIN CLAIM. An analysis is
+/// canonical document state that survives a remesh, a reload and a process.
+/// The two IDs below deliberately do NOT widen, and that difference is the
+/// whole of this milestone's identity model.
+using AnalysisId = Id<AnalysisIdTag>;
+/// One load: a force, a traction or a pressure the user asked for, naming CAD
+/// geometry (P17-LOAD-001 defines the payload). Unique within the analysis
+/// that owns it, as a boundary set is unique within whatever owns the sets.
+///
+/// CANONICAL INTENT, NOT A MESH ENTITY. A load means "this much force on that
+/// CAD face". The nodes it resolves to, the rows of F it contributes and the
+/// facets it covers are derived afresh for whatever mesh is current, which is
+/// what makes a load survive a remesh (ADR-032). A LoadId never identifies a
+/// node, a facet, an element or a row.
+using LoadId = Id<LoadIdTag>;
+/// One restraint: which displacement components are held at which CAD
+/// geometry (P17-BC-001 defines the payload). Unique within its analysis.
+///
+/// The same rule as LoadId, for the same reason. A restraint's identity is the
+/// intent; the constrained DOF indices are a derived consequence of the current
+/// mesh and the current numbering, and are never its identity.
+using RestraintId = Id<RestraintIdTag>;
 /// Sketch entity (point, line, arc, ...); unique within its sketch.
 using EntityId = Id<EntityIdTag>;
 /// Sketch constraint; unique within its sketch.

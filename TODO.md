@@ -16,8 +16,8 @@ Prerequisite:
            P16 — Meshing — QUALIFIED (P16-QUAL-001, 2026-10-06)
 
 Current milestone:
-           None. P17-ARCH-001 is PASS (2026-10-07). Finishing a milestone is
-           a stop condition: P17-DATA-001 is next in the sequence and is NOT
+           None. P17-DATA-001 is PASS (2026-10-07). Finishing a milestone is
+           a stop condition: P17-MAT-001 is next in the sequence and is NOT
            authorized until this file says so.
 
 Qualified:
@@ -30,8 +30,8 @@ Qualified:
            P16 — Meshing
 
 Next:
-           P17-DATA-001 — Analysis / Result Data Model. NOT AUTHORIZED:
-           P17-ARCH-001 passing is not permission to start it.
+           P17-MAT-001 — Structural Material Resolution. NOT AUTHORIZED:
+           P17-DATA-001 passing is not permission to start it.
 
 P17 objective:
            authoritative CAD / material / mesh state
@@ -447,25 +447,57 @@ solver scope explicit
 
 ## Analysis / Result Data Model
 
-* [ ] Define `AnalysisId`
-* [ ] Define `LoadCaseId` if required
-* [ ] Define `LoadId`
-* [ ] Define `RestraintId`
-* [ ] Define solver / result identity
-* [ ] Define DOF identity
-* [ ] Define nodal displacement representation
-* [ ] Define reaction-force representation
-* [ ] Define element strain representation
-* [ ] Define element stress representation
-* [ ] Define units for every field
-* [ ] Define result-currentness semantics
-* [ ] Define result invalidation dependencies
-* [ ] Define the analysis state machine
-* [ ] Prevent mesh IDs becoming permanent CAD identity
-* [ ] Determinism PASS
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Define `AnalysisId`
+* [x] Define `LoadCaseId` if required
+* [x] Define `LoadId`
+* [x] Define `RestraintId`
+* [x] Define solver / result identity
+* [x] Define DOF identity
+* [x] Define nodal displacement representation
+* [x] Define reaction-force representation
+* [x] Define element strain representation
+* [x] Define element stress representation
+* [x] Define units for every field
+* [x] Define result-currentness semantics
+* [x] Define result invalidation dependencies
+* [x] Define the analysis state machine
+* [x] Prevent mesh IDs becoming permanent CAD identity
+* [x] Determinism PASS
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded
+
+**COMPLETE 2026-10-07.** 19/19. Evidence:
+[docs/verification/P17-DATA-001/](docs/verification/P17-DATA-001/README.md).
+
+Three presets clean-rebuilt, 3434/3434 tests passed in each with 0 warnings
+over 603 objects, 715-test blast radius x5 repeats in release and debug,
+qualified tree == committed tree at `fcf2ea16`.
+
+**Three identity domains, made true in the type system.** `AnalysisId`,
+`LoadId` and `RestraintId` are document identities in `core/Id.hpp`; `NodeId`
+and `ElementId` stay P16's mesh-local handles; `DofIndex` is solver-local and
+deliberately NOT in `core/Id.hpp`, because a restraint that stored "DOF 1042"
+would constrain unrelated material after a remesh. Only `AnalysisId` widens to
+`ObjectId`, because only the analysis is a document object -- `LoadId` and
+`RestraintId` follow `BoundarySetId`, which is the member-identity precedent
+already in the tree. Twelve compile-fail cases enforce it.
+
+**`LoadCaseId` is NOT REQUIRED**, decided rather than skipped: one analysis IS
+one load case in the authorized scope, so the type would have been a named
+identity nothing allocates and nothing resolves. `grep -rn LoadCaseId` is 0.
+
+**`Translation3D` already existed** and is the nodal displacement; only
+`Force3D` was new, and it went to `core/math/Vector.hpp` beside its sibling.
+The tensor component order is frozen `XX YY ZZ XY YZ ZX` -- deliberately NOT
+`InertiaTensor`'s order, which is said out loud -- and the engineering shear
+convention is carried by the FIELD NAMES (`gammaXy`), so the rename that would
+reintroduce the ambiguity stops the test suite compiling.
+
+**Undo semantics were audited, not invented**: P16's own tests measure two
+different rules, and P17 inherits both rather than defining a third. See
+[CURRENTNESS_MODEL.md](docs/verification/P17-DATA-001/CURRENTNESS_MODEL.md).
+
 
 ### Required result-currentness dependency
 
@@ -1463,14 +1495,18 @@ docs/engineering/
 # CURRENT NEXT STEP
 
 ```text
-P17-ARCH-001 is PASS. The next step is a scope decision, not an
+P17-DATA-001 is PASS. The next step is a scope decision, not an
 implementation.
 ```
 
 P17-ARCH-001 gave the structural phase a boundary a stale mesh cannot cross, a
 module whose dependencies are enforced rather than described, and three ADRs
-fixing the solver's scope. It built no solver, which was the point.
-Evidence: [docs/verification/P17-ARCH-001/](docs/verification/P17-ARCH-001/README.md).
+fixing the solver's scope. P17-DATA-001 then fixed the identity model -- three
+domains that do not convert into one another -- the result representation, and
+the one place that decides whether a result still describes the model. Neither
+built a solver, which was the point of both.
+Evidence: [docs/verification/P17-ARCH-001/](docs/verification/P17-ARCH-001/README.md),
+[docs/verification/P17-DATA-001/](docs/verification/P17-DATA-001/README.md).
 
 What it consumes is P16: a validated Tet4 volume mesh from authoritative CAD
 geometry, with sizing controls, quality metrics, geometry/mesh correspondence,
@@ -1481,11 +1517,12 @@ reference models.
 ## What is authorized, and what is not
 
 ```text
-P17-ARCH-001     PASS 2026-10-07. Qualified at 536e14b5, three presets,
-                 3401/3401 each, 0 warnings. Evidence recorded.
+P17-ARCH-001     PASS 2026-10-07. Qualified at 536e14b5, 3401/3401 x 3.
+P17-DATA-001     PASS 2026-10-07. Qualified at fcf2ea16, 3434/3434 x 3,
+                 0 warnings over 603 objects. Evidence recorded.
 
-P17-DATA-001     NOT AUTHORIZED. Being next in the sequence is not
-                 permission, and P17-ARCH-001 passing is not either.
+P17-MAT-001      NOT AUTHORIZED. Being next in the sequence is not
+                 permission, and P17-DATA-001 passing is not either.
                  Authorizing it is a scope decision.
 
 everything after it
@@ -1502,11 +1539,20 @@ the module              src/structural/, layer 50, linking core, features and
                         meshing only. No io, no renderer, no Qt, no Eigen
 the enforcement         5 layering fixtures, including the meshing ->
                         structural CYCLE, and rule 6 (library -> apps/)
-what is still undecided  the Voigt ordering, the DOF numbering, the sparse
-                        representation, the solver and its LICENCE, the
-                        acceptance thresholds, whether gravity is in scope,
-                        and the per-body material story. Each is named in
-                        SCOPE.md rather than assumed settled
+the identity model      AnalysisId / LoadId / RestraintId are document
+                        identities; NodeId / ElementId stay mesh-local;
+                        DofIndex is solver-local and NOT in core/Id.hpp.
+                        12 compile-fail cases enforce it
+the result model        Translation3D / Force3D / Strain6 / Stress6, the
+                        component order XX YY ZZ XY YZ ZX frozen, and
+                        engineering shear carried by the FIELD NAMES
+the currentness answer  currentResultSource / resultCurrency / analysisState,
+                        which call requireStructuralModel and so inherit every
+                        ADR-036 gate
+what is still undecided  the DOF numbering, the sparse representation, the
+                        solver and its LICENCE, the acceptance thresholds,
+                        whether gravity is in scope, and the per-body material
+                        story. The Voigt ordering is now DECIDED (P17-DATA-001)
 ```
 
 Read `# P17 Prerequisites Already In The Tree` before starting. Three things

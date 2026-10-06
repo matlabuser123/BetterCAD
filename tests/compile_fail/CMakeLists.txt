@@ -494,3 +494,37 @@ bettercad_compile_fail_case(meshcmd "${_meshcmd}" COMMAND_IS_NOT_COPYABLE
     "use of deleted function" BetterCAD::meshing BetterCAD::features)
 bettercad_compile_fail_case(meshcmd "${_meshcmd}" MESHER_DOES_NOT_HAND_OUT_A_MUTABLE_MESH
     "invalid conversion" BetterCAD::meshing BetterCAD::features)
+
+# Structural identity (P17-DATA-001). Three domains that must not converge:
+# document identities that are persisted and survive a remesh; mesh-local
+# handles that do not; and a solver-local DOF index that is meaningful only
+# within one numbering of one mesh. The central cases are the ones a real
+# mistake would produce -- a load keyed on a node, a restraint keyed on an
+# equation -- and the one widening the model permits, AnalysisId to ObjectId,
+# is exercised by the control rather than by a case.
+set(_structids "${CMAKE_CURRENT_SOURCE_DIR}/StructuralIdMisuse.cpp")
+bettercad_compile_fail_group(structids "${_structids}" BetterCAD::structural)
+bettercad_compile_fail_case(structids "${_structids}" ANALYSIS_ID_AS_LOAD_ID
+    "could not convert|cannot convert|no matching function" BetterCAD::structural)
+bettercad_compile_fail_case(structids "${_structids}" LOAD_ID_AS_RESTRAINT_ID
+    "could not convert|cannot convert|no matching function" BetterCAD::structural)
+bettercad_compile_fail_case(structids "${_structids}" RESTRAINT_ID_AS_LOAD_ID
+    "could not convert|cannot convert|no matching function" BetterCAD::structural)
+bettercad_compile_fail_case(structids "${_structids}" LOAD_ID_AS_OBJECT_ID
+    "could not convert|cannot convert|no matching function" BetterCAD::structural)
+bettercad_compile_fail_case(structids "${_structids}" RESTRAINT_ID_AS_OBJECT_ID
+    "could not convert|cannot convert|no matching function" BetterCAD::structural)
+bettercad_compile_fail_case(structids "${_structids}" DOF_INDEX_AS_OBJECT_ID
+    "could not convert|cannot convert|no matching function" BetterCAD::structural)
+bettercad_compile_fail_case(structids "${_structids}" DOF_INDEX_AS_NODE_ID
+    "could not convert|cannot convert|no matching function" BetterCAD::structural)
+bettercad_compile_fail_case(structids "${_structids}" NODE_ID_AS_DOF_INDEX
+    "could not convert|cannot convert|no matching function" BetterCAD::structural)
+bettercad_compile_fail_case(structids "${_structids}" DOF_INDEX_AS_INTEGER
+    "cannot convert .*DofIndex.*" BetterCAD::structural)
+bettercad_compile_fail_case(structids "${_structids}" INTEGER_AS_LOAD_ID
+    "conversion from [^ ]*int[^ ]* to non-scalar type|could not convert" BetterCAD::structural)
+bettercad_compile_fail_case(structids "${_structids}" NODE_ID_AS_LOAD_ID
+    "could not convert|cannot convert|no matching function" BetterCAD::structural)
+bettercad_compile_fail_case(structids "${_structids}" NODE_ID_AS_RESTRAINT_ID
+    "could not convert|cannot convert|no matching function" BetterCAD::structural)

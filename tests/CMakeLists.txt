@@ -43,6 +43,7 @@ bettercad_add_executable(bettercad_tests
         meshing/VolumeBackendTests.cpp
         meshing/VolumeMeshTests.cpp
         structural/StructuralAnalysisBoundaryTests.cpp
+        structural/StructuralDataTests.cpp
         drawing/AnnotationTests.cpp
         drawing/AssemblyDrawingTests.cpp
         drawing/BomTests.cpp
