@@ -99,8 +99,10 @@ detail with source citations in [AUDIT.md](AUDIT.md).
 ### Hidden-default audit
 
 `Transfer_Parameters()` is the only route from `Ng_Meshing_Parameters` into
-the mesher. It copies **fourteen** fields; all fourteen are now set explicitly
+the mesher. It copies **fifteen** fields; all fifteen are now set explicitly
 before generation, so no BetterCAD semantics rest on a Netgen default.
+(Count corrected from "fourteen" by P16-QUAL-001 on 2026-10-06; the field list
+and the property were already right.)
 
 **Seven fields the header declares are never transferred** —
 `fineness`, `closeedgeenable`, `closeedgefact`, `minedgelenenable`,

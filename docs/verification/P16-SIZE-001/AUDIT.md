@@ -129,8 +129,17 @@ the clamp.
 ## Every parameter `Transfer_Parameters` actually copies
 
 `Ng_Meshing_Parameters::Transfer_Parameters()` is the only route from the
-struct into the mesher. It copies fourteen fields, and all fourteen are now
+struct into the mesher. It copies fifteen fields, and all fifteen are now
 set explicitly by `src/meshing/netgen/NetgenBackend.cpp`.
+
+> **Count corrected by P16-QUAL-001 on 2026-10-06.** The list above is right
+> and every field in it is set explicitly, which is what this audit set out to
+> establish; the word "fourteen" is wrong, because the list has fifteen rows
+> (`check_overlapping_boundary` wraps onto two lines). Checked from both ends:
+> the installed `nglib.h` declares 22 fields, 7 of which nglib never transfers,
+> and `NetgenBackend.cpp` makes exactly 15 `parameters.<field> =` assignments
+> whose names match. See `docs/verification/P16-QUAL-001/BACKEND_DEFAULTS.md`.
+
 
 ```text
 field                       default  BetterCAD  why

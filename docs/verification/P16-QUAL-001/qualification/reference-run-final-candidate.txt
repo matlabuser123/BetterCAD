@@ -1,0 +1,103 @@
+== RM-MESH-01 MeshBlock
+asymmetric block: exact analytic volume, six nameable faces
+analytic_volume_mm3 294000 cad_volume_mm3 293999.99999999994 mesh_volume_mm3 294000.00000000006 boundary_volume_mm3 294000.00000000006
+relative_volume_error 1.979852e-16 nodes 8 tets 6 boundary_facets 12
+conforming yes unmatched_boundary 0 unmatched_surface 0
+structurally_valid yes invalid 0 warning 0 failure 0 valid 18
+mapping_complete yes cad_faces 6 mapped_facets 12 unmapped 0 attributed_twice 0 faces_without_facets 0 unnamed_faces 0
+global_target_mm 20 global_is_default no local_controls 0 unresolved_local 0 slabs 0
+boundary_set fixed_end id 1 faces 1 facets 2 resolved yes
+boundary_set loaded_end id 2 faces 1 facets 2 resolved yes
+after_change block_a_mm 150 mesh_volume_mm3 367500 nodes 9 tets 12 currency current
+timing_ms build 1.045 regeneration 5.352 meshing 47.815 changed_regeneration 4.335 remeshing 58.761
+== RM-MESH-02 MeshCylinder
+cylinder, h != 2r: curved conformity and volume convergence
+analytic_volume_mm3 117809.72450961724 cad_volume_mm3 117809.72450961718 mesh_volume_mm3 117212.51992517807 boundary_volume_mm3 117212.5199251779
+relative_volume_error 5.069230e-03 nodes 140 tets 508 boundary_facets 140
+conforming yes unmatched_boundary 0 unmatched_surface 0
+structurally_valid yes invalid 0 warning 0 failure 0 valid 648
+mapping_complete yes cad_faces 3 mapped_facets 140 unmapped 0 attributed_twice 0 faces_without_facets 0 unnamed_faces 0
+global_target_mm 12 global_is_default no local_controls 0 unresolved_local 0 slabs 0
+boundary_set bottom_cap id 1 faces 1 facets 34 resolved yes
+boundary_set top_cap id 2 faces 1 facets 34 resolved yes
+boundary_set lateral_wall id 3 faces 1 facets 72 resolved yes
+after_change cyl_h_mm 75 mesh_volume_mm3 146515.64990647256 nodes 211 tets 943 currency current
+timing_ms build 0.178 regeneration 2.153 meshing 598.292 changed_regeneration 2.608 remeshing 2793.973
+== RM-MESH-03 MeshPlateWithHole
+plate with a through-hole: the hole must stay empty
+analytic_volume_mm3 63517.699835307561 cad_volume_mm3 63517.699835307569 mesh_volume_mm3 63560.69856538716 boundary_volume_mm3 63560.698565387182
+relative_volume_error 6.769567e-04 nodes 81 tets 126 boundary_facets 160
+conforming yes unmatched_boundary 0 unmatched_surface 0
+structurally_valid yes invalid 0 warning 0 failure 0 valid 286
+mapping_complete yes cad_faces 7 mapped_facets 160 unmapped 0 attributed_twice 0 faces_without_facets 0 unnamed_faces 0
+global_target_mm 12 global_is_default no local_controls 0 unresolved_local 0 slabs 0
+boundary_set hole_wall id 1 faces 1 facets 72 resolved yes
+boundary_set clamped_faces id 2 faces 2 facets 4 resolved yes
+after_change plate_t_mm 16 mesh_volume_mm3 84747.598087182982 nodes 81 tets 127 currency current
+timing_ms build 0.384 regeneration 6.827 meshing 416.325 changed_regeneration 7.381 remeshing 409.865
+== RM-MESH-04 MeshTube
+hollow tube: the void survives and the two walls map apart
+analytic_volume_mm3 81430.081581047431 cad_volume_mm3 81430.081581047416 mesh_volume_mm3 81017.293772282923 boundary_volume_mm3 81017.293772282777
+relative_volume_error 5.069230e-03 nodes 261 tets 808 boundary_facets 288
+conforming yes unmatched_boundary 0 unmatched_surface 0
+structurally_valid yes invalid 0 warning 0 failure 0 valid 1096
+mapping_complete yes cad_faces 4 mapped_facets 288 unmapped 0 attributed_twice 0 faces_without_facets 0 unnamed_faces 0
+global_target_mm 10 global_is_default no local_controls 0 unresolved_local 0 slabs 0
+boundary_set outer_wall id 1 faces 1 facets 72 resolved yes
+boundary_set inner_wall id 2 faces 1 facets 72 resolved yes
+boundary_set bottom_annulus id 3 faces 1 facets 72 resolved yes
+boundary_set top_annulus id 4 faces 1 facets 72 resolved yes
+after_change tube_h_mm 60 mesh_volume_mm3 108023.05836304398 nodes 219 tets 626 currency current
+timing_ms build 0.254 regeneration 3.449 meshing 1755.203 changed_regeneration 3.071 remeshing 794.703
+== RM-MESH-05 MeshThinPlate
+thin plate, 80:1: a valid mesh with worse shape metrics, or a refusal
+analytic_volume_mm3 14400 cad_volume_mm3 14400 mesh_volume_mm3 14399.999999999998 boundary_volume_mm3 14400
+relative_volume_error 1.263187e-16 nodes 9 tets 12 boundary_facets 12
+conforming yes unmatched_boundary 0 unmatched_surface 0
+structurally_valid yes invalid 0 warning 0 failure 0 valid 24
+mapping_complete yes cad_faces 6 mapped_facets 12 unmapped 0 attributed_twice 0 faces_without_facets 0 unnamed_faces 0
+global_target_mm 20 global_is_default no local_controls 0 unresolved_local 0 slabs 0
+boundary_set broad_face id 1 faces 1 facets 2 resolved yes
+after_change thin_t_mm 3 mesh_volume_mm3 28800.000000000007 nodes 9 tets 12 currency current
+timing_ms build 0.336 regeneration 4.063 meshing 60.834 changed_regeneration 4.816 remeshing 70.692
+== RM-MESH-06 MeshTransformedBase
+the base block, at the origin on the XY plane
+analytic_volume_mm3 118800 cad_volume_mm3 118799.99999999999 mesh_volume_mm3 118800.00000000003 boundary_volume_mm3 118800
+relative_volume_error 2.449817e-16 nodes 9 tets 12 boundary_facets 12
+conforming yes unmatched_boundary 0 unmatched_surface 0
+structurally_valid yes invalid 0 warning 0 failure 0 valid 24
+mapping_complete yes cad_faces 6 mapped_facets 12 unmapped 0 attributed_twice 0 faces_without_facets 0 unnamed_faces 0
+global_target_mm 16 global_is_default no local_controls 0 unresolved_local 0 slabs 0
+boundary_set datum_face id 1 faces 1 facets 2 resolved yes
+boundary_set first_side id 2 faces 1 facets 2 resolved yes
+after_change base_a_mm 110 mesh_volume_mm3 145200 nodes 8 tets 6 currency current
+timing_ms build 0.256 regeneration 4.651 meshing 63.046 changed_regeneration 4.450 remeshing 42.770
+== RM-MESH-06 MeshTransformedPlaced
+the same block under a compound rotation and a translation
+analytic_volume_mm3 118800 cad_volume_mm3 118800 mesh_volume_mm3 118799.99999999999 boundary_volume_mm3 118800
+relative_volume_error 1.224909e-16 nodes 9 tets 12 boundary_facets 12
+conforming yes unmatched_boundary 0 unmatched_surface 0
+structurally_valid yes invalid 0 warning 0 failure 0 valid 24
+mapping_complete yes cad_faces 6 mapped_facets 12 unmapped 0 attributed_twice 0 faces_without_facets 0 unnamed_faces 0
+global_target_mm 16 global_is_default no local_controls 0 unresolved_local 0 slabs 0
+boundary_set datum_face id 1 faces 1 facets 2 resolved yes
+boundary_set first_side id 2 faces 1 facets 2 resolved yes
+after_change placed_a_mm 110 mesh_volume_mm3 145200 nodes 9 tets 12 currency current
+timing_ms build 0.325 regeneration 4.437 meshing 58.325 changed_regeneration 4.837 remeshing 58.997
+== RM-MESH-07 MeshLocalRefinement
+local refinement on one face, with the opposite face left coarse
+analytic_volume_mm3 240000 cad_volume_mm3 240000 mesh_volume_mm3 239999.99999999997 boundary_volume_mm3 239999.99999999997
+relative_volume_error 1.212660e-16 nodes 61 tets 267 boundary_facets 12
+conforming yes unmatched_boundary 0 unmatched_surface 0
+structurally_valid yes invalid 0 warning 0 failure 0 valid 279
+mapping_complete yes cad_faces 6 mapped_facets 12 unmapped 0 attributed_twice 0 faces_without_facets 0 unnamed_faces 0
+global_target_mm 20 global_is_default no local_controls 1 unresolved_local 0 slabs 1
+boundary_set refined_face id 1 faces 1 facets 2 resolved yes
+boundary_set coarse_face id 2 faces 1 facets 2 resolved yes
+after_change local_a_mm 120 mesh_volume_mm3 287999.99999999994 nodes 75 tets 341 currency current
+timing_ms build 0.405 regeneration 4.952 meshing 112.778 changed_regeneration 4.747 remeshing 185.876
+== RM-MESH-08 MeshOpenProfile
+an open profile: the body fails and nothing is published
+expected_outcome failure actual failure published_mesh no currency generation failed
+diagnostic 'OpenSolid' (object:5) failed to regenerate, so it has no current geometry to mesh: OpenSolid: the profile is open: an edge ends at (0, 0) mm without a neighbour
+timing_ms build 0.320 regeneration 0.810 meshing 0.073

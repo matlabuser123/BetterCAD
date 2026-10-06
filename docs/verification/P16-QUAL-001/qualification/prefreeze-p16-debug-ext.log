@@ -1,0 +1,639 @@
+Test project C:/Users/uqhas/AppData/Local/bc-build/debug-ext
+        Start 3104: refmod.mesh.build
+        Start 1609: unit.MeshReference_ASettingsEditRemeshesAtTheNewCharacteristicScale
+        Start 1825: unit.P16Qualification_TheSavedDocumentIsIndependentOfMeshDensity
+        Start 2398: unit.SizeGlobal_SmallerTargetGivesAFinerCharacteristicScale
+        Start 1735: unit.MeshingPersistence_FileSizeDoesNotFollowMeshDensity
+        Start 1610: unit.MeshReference_EveryModelsOutcomeIsStableOverRepeatedAttempts
+        Start 3105: refmod.mesh.build.refusal
+        Start 3106: refmod.mesh.build.tube-void
+  1/317 Test #3105: refmod.mesh.build.refusal ..........................................................   Passed   10.65 sec
+        Start 1824: unit.P16Qualification_SurfaceOrientationIsOutwardAndDeterministic
+  2/317 Test #3106: refmod.mesh.build.tube-void ........................................................   Passed   10.84 sec
+        Start 1821: unit.P16Qualification_EveryReferenceDocumentRoundTripsItsIntentAndRegenerates
+  3/317 Test #3104: refmod.mesh.build ..................................................................   Passed   11.03 sec
+        Start 1614: unit.MeshReference_UndoAndRedoOfTheIntentAreFollowedByTheMesh
+  4/317 Test #1610: unit.MeshReference_EveryModelsOutcomeIsStableOverRepeatedAttempts ..................   Passed   12.17 sec
+        Start 3005: cli.mesh.workflow
+  5/317 Test #1614: unit.MeshReference_UndoAndRedoOfTheIntentAreFollowedByTheMesh ......................   Passed    3.24 sec
+        Start 1684: unit.MeshingCli_OutputIsDeterministic
+  6/317 Test #2398: unit.SizeGlobal_SmallerTargetGivesAFinerCharacteristicScale ........................   Passed   15.68 sec
+        Start 1563: unit.MeshCylinder_ApproachesTheAnalyticVolumeAsTheSurfaceIsResolved
+  7/317 Test #1735: unit.MeshingPersistence_FileSizeDoesNotFollowMeshDensity ...........................   Passed   15.98 sec
+        Start 1681: unit.MeshingCli_HumanAndJsonAgree
+  8/317 Test #1824: unit.P16Qualification_SurfaceOrientationIsOutwardAndDeterministic ..................   Passed    8.54 sec
+        Start 1579: unit.MeshDisplay_TheMeshOverlaysACadSolidThatIsNotAtTheOrigin
+  9/317 Test #1821: unit.P16Qualification_EveryReferenceDocumentRoundTripsItsIntentAndRegenerates ......   Passed    8.55 sec
+        Start 2411: unit.Sizing_IsDeterministicAcrossRepeatedGeneration
+ 10/317 Test #3005: cli.mesh.workflow ..................................................................   Passed    7.65 sec
+        Start 1738: unit.MeshingPersistence_LocalRefinementStillRefinesTheSameFaceAfterLoad
+ 11/317 Test #1684: unit.MeshingCli_OutputIsDeterministic ..............................................   Passed    6.38 sec
+        Start 1607: unit.MeshReferenceSuite_EveryValidModelMeshesAndTheInvalidOneIsRefused
+ 12/317 Test #1681: unit.MeshingCli_HumanAndJsonAgree ..................................................   Passed    5.32 sec
+        Start 1611: unit.MeshReference_IsDeterministicOverRepeatedGeneration
+ 13/317 Test #1563: unit.MeshCylinder_ApproachesTheAnalyticVolumeAsTheSurfaceIsResolved ................   Passed    6.20 sec
+        Start 1577: unit.MeshDisplay_RemainsOneBatchedPresentationOnAModeratelyLargeMesh
+ 14/317 Test #1579: unit.MeshDisplay_TheMeshOverlaysACadSolidThatIsNotAtTheOrigin ......................   Passed    3.18 sec
+        Start 1690: unit.MeshingCli_ValidateGatesOnStructureAndQualityDoesNot
+ 15/317 Test #2411: unit.Sizing_IsDeterministicAcrossRepeatedGeneration ................................   Passed    3.99 sec
+        Start 1677: unit.MeshingCli_EveryExposedFieldMatchesTheCore
+ 16/317 Test #1738: unit.MeshingPersistence_LocalRefinementStillRefinesTheSameFaceAfterLoad ............   Passed    4.27 sec
+        Start 2401: unit.SizeLocal_RefinesTheSelectedFaceAndNotTheRest
+ 17/317 Test #1577: unit.MeshDisplay_RemainsOneBatchedPresentationOnAModeratelyLargeMesh ...............   Passed    2.51 sec
+        Start 1580: unit.MeshDisplay_TheMeshOverlaysItsOwnCadSolidAtTheSameScale
+ 18/317 Test #1607: unit.MeshReferenceSuite_EveryValidModelMeshesAndTheInvalidOneIsRefused .............   Passed    3.96 sec
+        Start 1578: unit.MeshDisplay_StyleChangesTheImageAndNotTheMesh
+ 19/317 Test #1611: unit.MeshReference_IsDeterministicOverRepeatedGeneration ...........................   Passed    3.87 sec
+        Start 1727: unit.MeshingPersistence_ALoadedDocumentHasIntentAndNoMesh
+ 20/317 Test #1578: unit.MeshDisplay_StyleChangesTheImageAndNotTheMesh .................................   Passed    1.25 sec
+        Start 2400: unit.SizeLocal_RefinesTheFaceItWasGivenAndNotTheOppositeOne
+ 21/317 Test #1580: unit.MeshDisplay_TheMeshOverlaysItsOwnCadSolidAtTheSameScale .......................   Passed    1.51 sec
+        Start 1566: unit.MeshDisplay_AStaleMeshDoesNotLookLikeACurrentOne
+ 22/317 Test #1690: unit.MeshingCli_ValidateGatesOnStructureAndQualityDoesNot ..........................   Passed    3.63 sec
+        Start 2404: unit.SizeLocal_ResolutionDoesNotDependOnControlOrder
+ 23/317 Test #1677: unit.MeshingCli_EveryExposedFieldMatchesTheCore ....................................   Passed    2.86 sec
+        Start 1568: unit.MeshDisplay_HidingTheMeshLeavesTheCadBodyAndViceVersa
+ 24/317 Test #2401: unit.SizeLocal_RefinesTheSelectedFaceAndNotTheRest .................................   Passed    2.32 sec
+        Start 1631: unit.MeshTube_MapsItsInnerAndOuterWallsToDifferentFaces
+ 25/317 Test #1566: unit.MeshDisplay_AStaleMeshDoesNotLookLikeACurrentOne ..............................   Passed    1.16 sec
+        Start 1709: unit.MeshingCommand_AnUnresolvedFaceReferenceSurvivesUndoAndRedoUnrebound
+ 26/317 Test #2404: unit.SizeLocal_ResolutionDoesNotDependOnControlOrder ...............................   Passed    1.46 sec
+        Start 1632: unit.MeshTube_PreservesTheInnerVoid
+ 27/317 Test #2400: unit.SizeLocal_RefinesTheFaceItWasGivenAndNotTheOppositeOne ........................   Passed    1.78 sec
+        Start 1569: unit.MeshDisplay_HighlightingChangesTheImageAndNotTheMesh
+ 28/317 Test #1568: unit.MeshDisplay_HidingTheMeshLeavesTheCadBodyAndViceVersa .........................   Passed    1.34 sec
+        Start 1696: unit.MeshingCommand_AHistoryStepCostsTheIntentAndNotTheMesh
+ 29/317 Test #1727: unit.MeshingPersistence_ALoadedDocumentHasIntentAndNoMesh ..........................   Passed    2.68 sec
+        Start 3122: refmod.mesh.boundaries.tube
+ 30/317 Test #1631: unit.MeshTube_MapsItsInnerAndOuterWallsToDifferentFaces ............................   Passed    1.96 sec
+        Start 1720: unit.MeshingCommand_RemeshingAfterAnUndoRedoChainFollowsTheRestoredIntent
+ 31/317 Test #1569: unit.MeshDisplay_HighlightingChangesTheImageAndNotTheMesh ..........................   Passed    0.96 sec
+        Start 1688: unit.MeshingCli_SettingsSurviveASaveAndLoadAndRemeshTheSame
+ 32/317 Test #1709: unit.MeshingCommand_AnUnresolvedFaceReferenceSurvivesUndoAndRedoUnrebound ..........   Passed    1.86 sec
+        Start 1682: unit.MeshingCli_InfoSummarisesAndNeverListsElements
+ 33/317 Test #1696: unit.MeshingCommand_AHistoryStepCostsTheIntentAndNotTheMesh ........................   Passed    1.83 sec
+        Start 1612: unit.MeshReference_SaveLoadRegenerateKeepsTheIntentAndNotTheMesh
+ 34/317 Test #1632: unit.MeshTube_PreservesTheInnerVoid ................................................   Passed    2.05 sec
+        Start 1588: unit.MeshHighlight_ResolvesANamedBoundarySetToItsCurrentFacets
+ 35/317 Test #3122: refmod.mesh.boundaries.tube ........................................................   Passed    1.93 sec
+        Start 1582: unit.MeshHighlight_FollowsTheSameFaceOntoARemeshedMesh
+ 36/317 Test #1720: unit.MeshingCommand_RemeshingAfterAnUndoRedoChainFollowsTheRestoredIntent ..........   Passed    1.68 sec
+        Start 1573: unit.MeshDisplay_PickingAMeshResolvesToACanonicalElement
+ 37/317 Test #1688: unit.MeshingCli_SettingsSurviveASaveAndLoadAndRemeshTheSame ........................   Passed    1.63 sec
+        Start 1678: unit.MeshingCli_GenerateReportsWhatItBuiltAndSavesNoMesh
+ 38/317 Test #1682: unit.MeshingCli_InfoSummarisesAndNeverListsElements ................................   Passed    1.53 sec
+        Start 1570: unit.MeshDisplay_InteriorInspectionDrawsTheChosenTetrahedraOnly
+ 39/317 Test #1573: unit.MeshDisplay_PickingAMeshResolvesToACanonicalElement ...........................   Passed    0.92 sec
+        Start 1724: unit.MeshingPersistence_ABoundarySetResolvesToCurrentFacetsAfterLoad
+ 40/317 Test #1588: unit.MeshHighlight_ResolvesANamedBoundarySetToItsCurrentFacets .....................   Passed    1.46 sec
+        Start 1567: unit.MeshDisplay_DrawsAnEngineeringMeshIntoTheView
+ 41/317 Test #1612: unit.MeshReference_SaveLoadRegenerateKeepsTheIntentAndNotTheMesh ...................   Passed    1.56 sec
+        Start 1740: unit.MeshingPersistence_QualityIsRecomputedAndNotRestored
+ 42/317 Test #1582: unit.MeshHighlight_FollowsTheSameFaceOntoARemeshedMesh .............................   Passed    1.37 sec
+        Start 1572: unit.MeshDisplay_PickingAMeshFindsNothingWhereThereIsNoMesh
+ 43/317 Test #1678: unit.MeshingCli_GenerateReportsWhatItBuiltAndSavesNoMesh ...........................   Passed    1.24 sec
+        Start 1575: unit.MeshDisplay_RefusesAnEmptyMeshViewAndAnInvalidSource
+ 44/317 Test #1570: unit.MeshDisplay_InteriorInspectionDrawsTheChosenTetrahedraOnly ....................   Passed    1.00 sec
+        Start 2405: unit.SizeLocal_SurvivesATopologyPreservingEdit
+ 45/317 Test #2405: unit.SizeLocal_SurvivesATopologyPreservingEdit .....................................   Passed    0.69 sec
+        Start 1576: unit.MeshDisplay_RefusesMeshOperationsOnACadPresentation
+ 46/317 Test #1567: unit.MeshDisplay_DrawsAnEngineeringMeshIntoTheView .................................   Passed    1.15 sec
+        Start 3006: cli.mesh.zero-match-guard
+ 47/317 Test #1572: unit.MeshDisplay_PickingAMeshFindsNothingWhereThereIsNoMesh ........................   Passed    1.07 sec
+        Start 1574: unit.MeshDisplay_RefusesAHighlightOutsideTheRenderBuffer
+ 48/317 Test #1724: unit.MeshingPersistence_ABoundarySetResolvesToCurrentFacetsAfterLoad ...............   Passed    1.26 sec
+        Start 1608: unit.MeshReference_AGeometryEditRemeshesAgainstTheNewAnalyticVolume
+ 49/317 Test #1740: unit.MeshingPersistence_QualityIsRecomputedAndNotRestored ..........................   Passed    1.23 sec
+        Start 1565: unit.MeshCylinder_MeshedVolumeLiesInsideTheInscribedPolygonBound
+ 50/317 Test #1575: unit.MeshDisplay_RefusesAnEmptyMeshViewAndAnInvalidSource ..........................   Passed    0.98 sec
+        Start 1564: unit.MeshCylinder_MapsItsCapsAndWallWithoutLeakage
+ 51/317 Test #1576: unit.MeshDisplay_RefusesMeshOperationsOnACadPresentation ...........................   Passed    0.94 sec
+        Start 2399: unit.SizeLocal_OverlappingFacesTakeTheSmallerSize
+ 52/317 Test #1574: unit.MeshDisplay_RefusesAHighlightOutsideTheRenderBuffer ...........................   Passed    0.96 sec
+        Start 1571: unit.MeshDisplay_IsUnaffectedByTheCadDisplayTessellation
+ 53/317 Test #1564: unit.MeshCylinder_MapsItsCapsAndWallWithoutLeakage .................................   Passed    0.92 sec
+        Start 1583: unit.MeshHighlight_HighlightsAnUnnamedHoleWallByItsPlaceInTheMap
+ 54/317 Test #1565: unit.MeshCylinder_MeshedVolumeLiesInsideTheInscribedPolygonBound ...................   Passed    1.02 sec
+        Start 1595: unit.MeshLocalRefinement_FollowsAnEditOfItsLocalSize
+ 55/317 Test #1608: unit.MeshReference_AGeometryEditRemeshesAgainstTheNewAnalyticVolume ................   Passed    1.27 sec
+        Start 3002: cli.mesh.quality
+ 56/317 Test #2399: unit.SizeLocal_OverlappingFacesTakeTheSmallerSize ..................................   Passed    0.71 sec
+        Start 1748: unit.MeshingPersistence_TheReferenceFileRegeneratesAndMeshes
+ 57/317 Test #1571: unit.MeshDisplay_IsUnaffectedByTheCadDisplayTessellation ...........................   Passed    0.79 sec
+        Start 3000: cli.mesh.info
+ 58/317 Test #1595: unit.MeshLocalRefinement_FollowsAnEditOfItsLocalSize ...............................   Passed    0.72 sec
+        Start 1629: unit.MeshThinPlate_MeshesWithMeasurablyWorseShapeThanTheBlock
+ 59/317 Test #1583: unit.MeshHighlight_HighlightsAnUnnamedHoleWallByItsPlaceInTheMap ...................   Passed    0.80 sec
+        Start 3001: cli.mesh.validate
+ 60/317 Test #3002: cli.mesh.quality ...................................................................   Passed    0.79 sec
+        Start 3003: cli.mesh.boundaries
+ 61/317 Test #1748: unit.MeshingPersistence_TheReferenceFileRegeneratesAndMeshes .......................   Passed    0.71 sec
+        Start 3110: refmod.mesh.generate.hole
+ 62/317 Test #1629: unit.MeshThinPlate_MeshesWithMeasurablyWorseShapeThanTheBlock ......................   Passed    0.62 sec
+        Start 3121: refmod.mesh.boundaries.hole
+ 63/317 Test #3000: cli.mesh.info ......................................................................   Passed    0.72 sec
+        Start 3116: refmod.mesh.validate.mesh_plate_with_hole
+ 64/317 Test #3001: cli.mesh.validate ..................................................................   Passed    0.74 sec
+        Start 3117: refmod.mesh.quality.mesh_plate_with_hole
+ 65/317 Test #3003: cli.mesh.boundaries ................................................................   Passed    0.73 sec
+        Start 1600: unit.MeshPlateWithHole_MapsTheHoleWallWithItsNormalsFacingTheMaterial
+ 66/317 Test #3110: refmod.mesh.generate.hole ..........................................................   Passed    0.61 sec
+        Start 1599: unit.MeshPlateWithHole_LeavesTheHoleEmptyAndSaysSoInTheVolume
+ 67/317 Test #3006: cli.mesh.zero-match-guard ..........................................................   Passed    3.00 sec
+        Start 3115: refmod.mesh.info.mesh_plate_with_hole
+ 68/317 Test #3121: refmod.mesh.boundaries.hole ........................................................   Passed    0.60 sec
+        Start 1598: unit.MeshPlateWithHole_HasNoElementInsideTheHole
+ 69/317 Test #3116: refmod.mesh.validate.mesh_plate_with_hole ..........................................   Passed    0.60 sec
+        Start 1822: unit.P16Qualification_GeneratingAMeshLeavesTheCanonicalDocumentByteIdentical
+ 70/317 Test #3117: refmod.mesh.quality.mesh_plate_with_hole ...........................................   Passed    0.65 sec
+        Start 2395: unit.SizeGlobal_DefaultTargetIsBetterCadsAndIsRecorded
+ 71/317 Test #1600: unit.MeshPlateWithHole_MapsTheHoleWallWithItsNormalsFacingTheMaterial ..............   Passed    0.70 sec
+        Start 1596: unit.MeshLocalRefinement_RefinesTheNamedFaceAndLeavesTheOppositeOneAlone
+ 72/317 Test #2395: unit.SizeGlobal_DefaultTargetIsBetterCadsAndIsRecorded .............................   Passed    0.31 sec
+ 73/317 Test #1599: unit.MeshPlateWithHole_LeavesTheHoleEmptyAndSaysSoInTheVolume ......................   Passed    0.69 sec
+        Start 2947: unit.VolumeMesh_IsIdenticalOnRepeatedGeneration
+        Start 1695: unit.MeshingCommand_AHistoryOutlivesTheMeshesGeneratedUnderIt
+ 74/317 Test #3115: refmod.mesh.info.mesh_plate_with_hole ..............................................   Passed    0.65 sec
+        Start 1734: unit.MeshingPersistence_EveryQualityMetricRoundTrips
+ 75/317 Test #1598: unit.MeshPlateWithHole_HasNoElementInsideTheHole ...................................   Passed    0.65 sec
+        Start 2396: unit.SizeGlobal_IsScaleRobust
+ 76/317 Test #1822: unit.P16Qualification_GeneratingAMeshLeavesTheCanonicalDocumentByteIdentical .......   Passed    0.68 sec
+        Start 2933: unit.VolumeBackend_IsDeterministicAcrossRepeatedCalls
+ 77/317 Test #1695: unit.MeshingCommand_AHistoryOutlivesTheMeshesGeneratedUnderIt ......................   Passed    0.41 sec
+        Start 2624: unit.SurfaceMesh_IsIdenticalOnRepeatedGeneration
+ 78/317 Test #2396: unit.SizeGlobal_IsScaleRobust ......................................................   Passed    0.35 sec
+        Start 1679: unit.MeshingCli_GlobalSizeTakesEitherUnitSpelling
+ 79/317 Test #1596: unit.MeshLocalRefinement_RefinesTheNamedFaceAndLeavesTheOppositeOneAlone ...........   Passed    0.53 sec
+        Start 1689: unit.MeshingCli_TheListingIsCanonicalAndNotInsertionOrder
+ 80/317 Test #1734: unit.MeshingPersistence_EveryQualityMetricRoundTrips ...............................   Passed    0.47 sec
+        Start 1693: unit.MeshingCommand_AGeometryChangeIsStaleForADifferentReason
+ 81/317 Test #2947: unit.VolumeMesh_IsIdenticalOnRepeatedGeneration ....................................   Passed    0.55 sec
+        Start 1703: unit.MeshingCommand_ASizeEditMakesTheHeldMeshStaleAndNothingElse
+ 82/317 Test #2933: unit.VolumeBackend_IsDeterministicAcrossRepeatedCalls ..............................   Passed    0.45 sec
+        Start 1543: unit.MeshBlock_SizingLevelsAreBoundedByItsOwnBoundary
+ 83/317 Test #1679: unit.MeshingCli_GlobalSizeTakesEitherUnitSpelling ..................................   Passed    0.44 sec
+        Start 1675: unit.MeshingCli_BoundariesReportsMappedFacetsAndUnresolvedIsAnAnswer
+ 84/317 Test #1703: unit.MeshingCommand_ASizeEditMakesTheHeldMeshStaleAndNothingElse ...................   Passed    0.39 sec
+ 85/317 Test #1693: unit.MeshingCommand_AGeometryChangeIsStaleForADifferentReason ......................   Passed    0.42 sec
+        Start 1722: unit.MeshingCommand_TwoControlsOnOneBodyAreIndependent
+        Start 1692: unit.MeshingCommand_AFailedRegenerationKeepsTheMeshItCouldNotReplace
+ 86/317 Test #1689: unit.MeshingCli_TheListingIsCanonicalAndNotInsertionOrder ..........................   Passed    0.52 sec
+        Start 1621: unit.MeshScene_RefusesAMeshThatIsNotThisFeatures
+ 87/317 Test #2624: unit.SurfaceMesh_IsIdenticalOnRepeatedGeneration ...................................   Passed    0.69 sec
+        Start 1713: unit.MeshingCommand_DeletingAControlLeavesNoMeshBehindIt
+ 88/317 Test #1543: unit.MeshBlock_SizingLevelsAreBoundedByItsOwnBoundary ..............................   Passed    0.52 sec
+        Start 2394: unit.SizeGlobal_CannotBeFinerThanTheBoundaryItMustConformTo
+ 89/317 Test #1825: unit.P16Qualification_TheSavedDocumentIsIndependentOfMeshDensity ...................   Passed   37.07 sec
+        Start 2412: unit.Sizing_IsNotChangedByAMaterialEdit
+ 90/317 Test #1722: unit.MeshingCommand_TwoControlsOnOneBodyAreIndependent .............................   Passed    0.39 sec
+        Start 1622: unit.MeshScene_RefusesASetThatDoesNotDescribeOneMesh
+ 91/317 Test #1692: unit.MeshingCommand_AFailedRegenerationKeepsTheMeshItCouldNotReplace ...............   Passed    0.40 sec
+        Start 1586: unit.MeshHighlight_RefusesAMappingOrACacheFromADifferentGeneration
+ 92/317 Test #1675: unit.MeshingCli_BoundariesReportsMappedFacetsAndUnresolvedIsAnAnswer ...............   Passed    0.50 sec
+ 93/317 Test #1621: unit.MeshScene_RefusesAMeshThatIsNotThisFeatures ...................................   Passed    0.38 sec
+        Start 2939: unit.VolumeBackend_RefusesAnOpenSurfaceRatherThanReportingSuccess
+        Start 1823: unit.P16Qualification_StaleGeometryNeverYieldsACurrentMesh
+ 94/317 Test #1713: unit.MeshingCommand_DeletingAControlLeavesNoMeshBehindIt ...........................   Passed    0.33 sec
+        Start 1626: unit.MeshStatus_BecomesStaleWhenTheGeometryChanges
+ 95/317 Test #2394: unit.SizeGlobal_CannotBeFinerThanTheBoundaryItMustConformTo ........................   Passed    0.31 sec
+ 96/317 Test #2412: unit.Sizing_IsNotChangedByAMaterialEdit ............................................   Passed    0.26 sec
+        Start 3123: refmod.mesh.boundaries.local
+        Start 1733: unit.MeshingPersistence_EngineeringLengthsSurviveWithoutAFactorOfAThousand
+ 97/317 Test #1622: unit.MeshScene_RefusesASetThatDoesNotDescribeOneMesh ...............................   Passed    0.35 sec
+        Start 2944: unit.VolumeMesh_FollowsATransformedBody
+ 98/317 Test #1586: unit.MeshHighlight_RefusesAMappingOrACacheFromADifferentGeneration .................   Passed    0.35 sec
+        Start 1635: unit.MeshView_DoesNotDescribeADifferentMeshGeneration
+ 99/317 Test #1823: unit.P16Qualification_StaleGeometryNeverYieldsACurrentMesh .........................   Passed    0.33 sec
+100/317 Test #1626: unit.MeshStatus_BecomesStaleWhenTheGeometryChanges .................................   Passed    0.30 sec
+        Start 3111: refmod.mesh.generate.local
+        Start 1630: unit.MeshTransformedBlock_KeepsItsVolumeAndShapeUnderARigidTransform
+101/317 Test #2939: unit.VolumeBackend_RefusesAnOpenSurfaceRatherThanReportingSuccess ..................   Passed    0.39 sec
+        Start 1603: unit.MeshQualityView_RefusesToNavigateIntoADifferentMeshGeneration
+102/317 Test #3123: refmod.mesh.boundaries.local .......................................................   Passed    0.34 sec
+        Start 3118: refmod.mesh.info.mesh_local_refinement
+103/317 Test #1733: unit.MeshingPersistence_EngineeringLengthsSurviveWithoutAFactorOfAThousand .........   Passed    0.38 sec
+        Start 1676: unit.MeshingCli_CoreFailuresPropagateWithTheirOwnDiagnostics
+104/317 Test #1635: unit.MeshView_DoesNotDescribeADifferentMeshGeneration ..............................   Passed    0.35 sec
+        Start 2410: unit.Sizing_EditInvalidatesTheDerivedMesh
+105/317 Test #2944: unit.VolumeMesh_FollowsATransformedBody ............................................   Passed    0.42 sec
+        Start 1739: unit.MeshingPersistence_NoGeneratedMeshReachesTheFile
+106/317 Test #3111: refmod.mesh.generate.local .........................................................   Passed    0.37 sec
+        Start 1691: unit.MeshingCommand_AFailedGenerationLeavesTheIntentAndTheHistoryIntact
+107/317 Test #1609: unit.MeshReference_ASettingsEditRemeshesAtTheNewCharacteristicScale ................   Passed   38.03 sec
+108/317 Test #1603: unit.MeshQualityView_RefusesToNavigateIntoADifferentMeshGeneration .................   Passed    0.36 sec
+        Start 1704: unit.MeshingCommand_AThresholdEditDatesTheReportAndNotTheMesh
+        Start 1706: unit.MeshingCommand_AnInteriorMeshFaceCannotNameASizingTarget
+109/317 Test #1630: unit.MeshTransformedBlock_KeepsItsVolumeAndShapeUnderARigidTransform ...............   Passed    0.44 sec
+        Start 1699: unit.MeshingCommand_AMeshOriginatedEditStoresTheSameReferenceAsACadOriginatedOne
+110/317 Test #3118: refmod.mesh.info.mesh_local_refinement .............................................   Passed    0.41 sec
+111/317 Test #1676: unit.MeshingCli_CoreFailuresPropagateWithTheirOwnDiagnostics .......................   Passed    0.36 sec
+        Start 3120: refmod.mesh.quality.mesh_local_refinement
+        Start 3119: refmod.mesh.validate.mesh_local_refinement
+112/317 Test #2410: unit.Sizing_EditInvalidatesTheDerivedMesh ..........................................   Passed    0.25 sec
+        Start 1698: unit.MeshingCommand_ALongHistoryStaysProportionalToTheEdits
+113/317 Test #1691: unit.MeshingCommand_AFailedGenerationLeavesTheIntentAndTheHistoryIntact ............   Passed    0.27 sec
+        Start 1615: unit.MeshScene_ClassifiesEveryElementAsTheReportDoes
+114/317 Test #1739: unit.MeshingPersistence_NoGeneratedMeshReachesTheFile ..............................   Passed    0.32 sec
+        Start 1623: unit.MeshScene_ReportsItsStateFromTheDocument
+115/317 Test #1704: unit.MeshingCommand_AThresholdEditDatesTheReportAndNotTheMesh ......................   Passed    0.29 sec
+        Start 2393: unit.SizeGlobal_AcceptsATargetCoarserThanTheBody
+116/317 Test #1706: unit.MeshingCommand_AnInteriorMeshFaceCannotNameASizingTarget ......................   Passed    0.29 sec
+        Start 1697: unit.MeshingCommand_ALocalSizeEditInvalidatesAndARenameDoesNot
+117/317 Test #1699: unit.MeshingCommand_AMeshOriginatedEditStoresTheSameReferenceAsACadOriginatedOne ...   Passed    0.30 sec
+        Start 1683: unit.MeshingCli_LocalSizingAddsAndRemovesByFace
+118/317 Test #3120: refmod.mesh.quality.mesh_local_refinement ..........................................   Passed    0.34 sec
+        Start 2415: unit.Sizing_RefusesStaleGeometryRatherThanMeshingIt
+119/317 Test #3119: refmod.mesh.validate.mesh_local_refinement .........................................   Passed    0.35 sec
+        Start 1587: unit.MeshHighlight_ResolvesAFacetBackToItsNamedCadFace
+120/317 Test #1698: unit.MeshingCommand_ALongHistoryStaysProportionalToTheEdits ........................   Passed    0.29 sec
+        Start 2413: unit.Sizing_IsNotChangedByDisplayTessellationSettings
+121/317 Test #1615: unit.MeshScene_ClassifiesEveryElementAsTheReportDoes ...............................   Passed    0.27 sec
+        Start 2950: unit.VolumeMesh_OfADeletedFeatureIsStale
+122/317 Test #1623: unit.MeshScene_ReportsItsStateFromTheDocument ......................................   Passed    0.29 sec
+        Start 1592: unit.MeshInspection_NothingItDoesChangesTheMesh
+123/317 Test #2393: unit.SizeGlobal_AcceptsATargetCoarserThanTheBody ...................................   Passed    0.29 sec
+        Start 1581: unit.MeshHighlight_CarriesUnresolvedRatherThanAnEmptyHighlight
+124/317 Test #1697: unit.MeshingCommand_ALocalSizeEditInvalidatesAndARenameDoesNot .....................   Passed    0.29 sec
+        Start 1619: unit.MeshScene_ListsEveryCadFaceIncludingUnnamedOnes
+125/317 Test #1683: unit.MeshingCli_LocalSizingAddsAndRemovesByFace ....................................   Passed    0.28 sec
+        Start 2397: unit.SizeGlobal_RefusesInvalidSizesBeforeReachingTheBackend
+126/317 Test #2415: unit.Sizing_RefusesStaleGeometryRatherThanMeshingIt ................................   Passed    0.24 sec
+        Start 1618: unit.MeshScene_InspectsATetrahedronWithTheReportsOwnNumbers
+127/317 Test #1587: unit.MeshHighlight_ResolvesAFacetBackToItsNamedCadFace .............................   Passed    0.27 sec
+        Start 1589: unit.MeshHighlight_ResolvesANamedCadFaceToItsCurrentFacetsAndTriangles
+128/317 Test #2413: unit.Sizing_IsNotChangedByDisplayTessellationSettings ..............................   Passed    0.26 sec
+        Start 1616: unit.MeshScene_InspectsABoundaryFacetAndNamesItsCadFace
+129/317 Test #2950: unit.VolumeMesh_OfADeletedFeatureIsStale ...........................................   Passed    0.28 sec
+        Start 1686: unit.MeshingCli_SettingsReportsCanonicalIntent
+130/317 Test #1592: unit.MeshInspection_NothingItDoesChangesTheMesh ....................................   Passed    0.28 sec
+        Start 1584: unit.MeshHighlight_PlanarFacesDoNotLeakIntoEachOther
+131/317 Test #1581: unit.MeshHighlight_CarriesUnresolvedRatherThanAnEmptyHighlight .....................   Passed    0.33 sec
+        Start 1617: unit.MeshScene_InspectsANodeAgainstTheCanonicalMesh
+132/317 Test #2397: unit.SizeGlobal_RefusesInvalidSizesBeforeReachingTheBackend ........................   Passed    0.31 sec
+133/317 Test #1619: unit.MeshScene_ListsEveryCadFaceIncludingUnnamedOnes ...............................   Passed    0.34 sec
+        Start 1620: unit.MeshScene_NavigatesToTheWorstElementForEachMetric
+        Start 1602: unit.MeshQualityView_NavigatesToTheReportsOwnWorstElementPerMetric
+134/317 Test #1618: unit.MeshScene_InspectsATetrahedronWithTheReportsOwnNumbers ........................   Passed    0.34 sec
+        Start 1637: unit.MeshView_EveryRenderIndexResolvesToACanonicalIdentity
+135/317 Test #1589: unit.MeshHighlight_ResolvesANamedCadFaceToItsCurrentFacetsAndTriangles .............   Passed    0.32 sec
+        Start 1601: unit.MeshQualityView_ClassifiesFromTheReportAndHoldsNoThresholdsOfItsOwn
+136/317 Test #1616: unit.MeshScene_InspectsABoundaryFacetAndNamesItsCadFace ............................   Passed    0.32 sec
+        Start 2941: unit.VolumeBackend_ReturnsEveryElementInBetterCadsOrientation
+137/317 Test #1686: unit.MeshingCli_SettingsReportsCanonicalIntent .....................................   Passed    0.33 sec
+        Start 1627: unit.MeshStatus_ReportsCurrentForAMeshOfTheGeometryTheDocumentHasNow
+138/317 Test #1584: unit.MeshHighlight_PlanarFacesDoNotLeakIntoEachOther ...............................   Passed    0.31 sec
+        Start 1585: unit.MeshHighlight_RefusesAFaceIndexTheMapDoesNotHave
+139/317 Test #1617: unit.MeshScene_InspectsANodeAgainstTheCanonicalMesh ................................   Passed    0.28 sec
+        Start 1643: unit.MeshView_SaysWhichCanonicalMeshItCameFrom
+140/317 Test #1620: unit.MeshScene_NavigatesToTheWorstElementForEachMetric .............................   Passed    0.27 sec
+        Start 1672: unit.MeshingCli_ADocumentThatWillNotRegenerateIsNotMeshed
+141/317 Test #1602: unit.MeshQualityView_NavigatesToTheReportsOwnWorstElementPerMetric .................   Passed    0.27 sec
+        Start 1638: unit.MeshView_InteriorInspectionDrawsFourFacesPerTetrahedron
+142/317 Test #1637: unit.MeshView_EveryRenderIndexResolvesToACanonicalIdentity .........................   Passed    0.27 sec
+        Start 1639: unit.MeshView_IsDeterministicForTheSameMesh
+143/317 Test #1601: unit.MeshQualityView_ClassifiesFromTheReportAndHoldsNoThresholdsOfItsOwn ...........   Passed    0.26 sec
+144/317 Test #2941: unit.VolumeBackend_ReturnsEveryElementInBetterCadsOrientation ......................   Passed    0.23 sec
+        Start 1687: unit.MeshingCli_SettingsReportsTheAbsenceOfAGlobalSize
+        Start 1673: unit.MeshingCli_AMalformedFaceReferenceIsAUsageError
+145/317 Test #1627: unit.MeshStatus_ReportsCurrentForAMeshOfTheGeometryTheDocumentHasNow ...............   Passed    0.25 sec
+        Start 1641: unit.MeshView_RefusesAnInteriorSelectionItCannotHonour
+146/317 Test #1585: unit.MeshHighlight_RefusesAFaceIndexTheMapDoesNotHave ..............................   Passed    0.27 sec
+        Start 1636: unit.MeshView_DrawsOnlyTheNodesItsFacetsReference
+147/317 Test #1643: unit.MeshView_SaysWhichCanonicalMeshItCameFrom .....................................   Passed    0.25 sec
+        Start 1634: unit.MeshView_DeduplicatesEdgesOnTheUnorderedNodePair
+148/317 Test #1672: unit.MeshingCli_ADocumentThatWillNotRegenerateIsNotMeshed ..........................   Passed    0.25 sec
+        Start 1625: unit.MeshStatus_AFailedRemeshCannotLookCurrent
+149/317 Test #1638: unit.MeshView_InteriorInspectionDrawsFourFacesPerTetrahedron .......................   Passed    0.25 sec
+        Start 1742: unit.MeshingPersistence_RejectsMalformedMeshingIntent
+150/317 Test #1639: unit.MeshView_IsDeterministicForTheSameMesh ........................................   Passed    0.25 sec
+        Start 1642: unit.MeshView_ResolvesACanonicalIdentityBackToItsRenderPrimitives
+151/317 Test #1687: unit.MeshingCli_SettingsReportsTheAbsenceOfAGlobalSize .............................   Passed    0.25 sec
+        Start 1613: unit.MeshReference_ScalingAModelScalesItsVolumeByTheCube
+152/317 Test #1673: unit.MeshingCli_AMalformedFaceReferenceIsAUsageError ...............................   Passed    0.25 sec
+        Start 1633: unit.MeshView_BuildingAndQueryingAViewDoesNotChangeTheMesh
+153/317 Test #1641: unit.MeshView_RefusesAnInteriorSelectionItCannotHonour .............................   Passed    0.26 sec
+        Start 1674: unit.MeshingCli_AnInvalidGlobalSizeFailsAndChangesNothing
+154/317 Test #1636: unit.MeshView_DrawsOnlyTheNodesItsFacetsReference ..................................   Passed    0.27 sec
+        Start 2946: unit.VolumeMesh_HandlesAThinWallOrFailsExplicitly
+155/317 Test #1634: unit.MeshView_DeduplicatesEdgesOnTheUnorderedNodePair ..............................   Passed    0.26 sec
+        Start 1640: unit.MeshView_RefusesAnIndexOutsideItsBuffers
+156/317 Test #1625: unit.MeshStatus_AFailedRemeshCannotLookCurrent .....................................   Passed    0.26 sec
+        Start 1645: unit.MeshView_VolumeBoundaryDrawsEveryBoundaryFacetAndNoInteriorFace
+157/317 Test #1742: unit.MeshingPersistence_RejectsMalformedMeshingIntent ..............................   Passed    0.26 sec
+        Start 1644: unit.MeshView_TetFaceWindingsPointAwayFromTheOppositeVertex
+158/317 Test #1642: unit.MeshView_ResolvesACanonicalIdentityBackToItsRenderPrimitives ..................   Passed    0.27 sec
+        Start 2952: unit.VolumeMesh_RefusesAStaleFeatureRatherThanMeshingIt
+159/317 Test #1633: unit.MeshView_BuildingAndQueryingAViewDoesNotChangeTheMesh .........................   Passed    0.26 sec
+        Start 2945: unit.VolumeMesh_HandlesASmallBodyOrFailsExplicitly
+160/317 Test #1613: unit.MeshReference_ScalingAModelScalesItsVolumeByTheCube ...........................   Passed    0.31 sec
+        Start 2949: unit.VolumeMesh_IsStaleOnceItsGeometryMoves
+161/317 Test #1674: unit.MeshingCli_AnInvalidGlobalSizeFailsAndChangesNothing ..........................   Passed    0.27 sec
+        Start 1736: unit.MeshingPersistence_GlobalSizingRoundTripsIncludingItsAbsence
+162/317 Test #2946: unit.VolumeMesh_HandlesAThinWallOrFailsExplicitly ..................................   Passed    0.29 sec
+        Start 3109: refmod.mesh.generate.block
+163/317 Test #1640: unit.MeshView_RefusesAnIndexOutsideItsBuffers ......................................   Passed    0.28 sec
+        Start 2948: unit.VolumeMesh_IsNeverWrittenToTheDocumentFile
+164/317 Test #1645: unit.MeshView_VolumeBoundaryDrawsEveryBoundaryFacetAndNoInteriorFace ...............   Passed    0.28 sec
+        Start 2951: unit.VolumeMesh_RefusesABodyHoldingMoreThanOneSolid
+165/317 Test #1644: unit.MeshView_TetFaceWindingsPointAwayFromTheOppositeVertex ........................   Passed    0.28 sec
+        Start 1743: unit.MeshingPersistence_SaveLoadSaveIsByteIdentical
+166/317 Test #2952: unit.VolumeMesh_RefusesAStaleFeatureRatherThanMeshingIt ............................   Passed    0.28 sec
+        Start 3112: refmod.mesh.info.mesh_block
+167/317 Test #2945: unit.VolumeMesh_HandlesASmallBodyOrFailsExplicitly .................................   Passed    0.28 sec
+        Start 2625: unit.SurfaceMesh_IsUnaffectedByAnEarlierCoarseTriangulationOfTheSameBody
+168/317 Test #2949: unit.VolumeMesh_IsStaleOnceItsGeometryMoves ........................................   Passed    0.28 sec
+        Start 2403: unit.SizeLocal_RefusesAFaceThatDoesNotResolve
+169/317 Test #1736: unit.MeshingPersistence_GlobalSizingRoundTripsIncludingItsAbsence ..................   Passed    0.32 sec
+        Start 3114: refmod.mesh.quality.mesh_block
+170/317 Test #3109: refmod.mesh.generate.block .........................................................   Passed    0.29 sec
+        Start 1541: unit.MeshBlock_PartitionsItsBoundaryAcrossAllSixNamedFaces
+171/317 Test #2948: unit.VolumeMesh_IsNeverWrittenToTheDocumentFile ....................................   Passed    0.32 sec
+        Start 2407: unit.Sizing_AcceptsAPositiveFiniteGlobalTarget
+172/317 Test #1743: unit.MeshingPersistence_SaveLoadSaveIsByteIdentical ................................   Passed    0.29 sec
+173/317 Test #2951: unit.VolumeMesh_RefusesABodyHoldingMoreThanOneSolid ................................   Passed    0.32 sec
+        Start 1542: unit.MeshBlock_RecoversTheExactVolumeOfAnAsymmetricBlock
+        Start 1725: unit.MeshingPersistence_AControlCreatedAfterALoadCannotCollideWithALoadedId
+174/317 Test #2403: unit.SizeLocal_RefusesAFaceThatDoesNotResolve ......................................   Passed    0.24 sec
+        Start 1560: unit.MeshControl_NowSavesAndLoads
+175/317 Test #3112: refmod.mesh.info.mesh_block ........................................................   Passed    0.35 sec
+        Start 3113: refmod.mesh.validate.mesh_block
+176/317 Test #3114: refmod.mesh.quality.mesh_block .....................................................   Passed    0.29 sec
+        Start 1729: unit.MeshingPersistence_APreP16DocumentLoadsAndSimplyHasNoControls
+177/317 Test #2407: unit.Sizing_AcceptsAPositiveFiniteGlobalTarget .....................................   Passed    0.22 sec
+        Start 2402: unit.SizeLocal_RefusesAFaceOfAnotherObject
+178/317 Test #2625: unit.SurfaceMesh_IsUnaffectedByAnEarlierCoarseTriangulationOfTheSameBody ...........   Passed    0.44 sec
+        Start 2929: unit.VolumeBackend_FillsACubeAndKeepsItsCorners
+179/317 Test #1541: unit.MeshBlock_PartitionsItsBoundaryAcrossAllSixNamedFaces .........................   Passed    0.32 sec
+        Start 1685: unit.MeshingCli_SettingsNeedsAControl
+180/317 Test #1725: unit.MeshingPersistence_AControlCreatedAfterALoadCannotCollideWithALoadedId ........   Passed    0.25 sec
+        Start 1737: unit.MeshingPersistence_LocalControlsKeepTheirFaceAndSize
+181/317 Test #1542: unit.MeshBlock_RecoversTheExactVolumeOfAnAsymmetricBlock ...........................   Passed    0.31 sec
+        Start 1732: unit.MeshingPersistence_CommandsUndoAndRedoExactlyAfterALoad
+182/317 Test #1560: unit.MeshControl_NowSavesAndLoads ..................................................   Passed    0.28 sec
+        Start 1731: unit.MeshingPersistence_BoundarySetsKeepTheirIdentityNameAndOrder
+183/317 Test #3113: refmod.mesh.validate.mesh_block ....................................................   Passed    0.32 sec
+        Start 1728: unit.MeshingPersistence_AMalformedReferenceIsNotTheSameAsAnUnresolvedOne
+184/317 Test #1729: unit.MeshingPersistence_APreP16DocumentLoadsAndSimplyHasNoControls .................   Passed    0.26 sec
+        Start 1745: unit.MeshingPersistence_SurfaceDeflectionsRoundTripExactly
+185/317 Test #2402: unit.SizeLocal_RefusesAFaceOfAnotherObject .........................................   Passed    0.26 sec
+        Start 1749: unit.MeshingPersistence_TheWholeCanonicalIntentRoundTrips
+186/317 Test #2929: unit.VolumeBackend_FillsACubeAndKeepsItsCorners ....................................   Passed    0.28 sec
+        Start 1741: unit.MeshingPersistence_RejectsDuplicateIdentitiesRatherThanMerging
+187/317 Test #1685: unit.MeshingCli_SettingsNeedsAControl ..............................................   Passed    0.27 sec
+        Start 2623: unit.SurfaceMesh_GenerationLeavesTheDocumentAndTheBodyUntouched
+188/317 Test #1737: unit.MeshingPersistence_LocalControlsKeepTheirFaceAndSize ..........................   Passed    0.27 sec
+        Start 2691: unit.TetrahedralVolume_SumsTheSignedVolumesWithoutTakingAbsoluteValues
+189/317 Test #1732: unit.MeshingPersistence_CommandsUndoAndRedoExactlyAfterALoad .......................   Passed    0.27 sec
+        Start 1556: unit.MeshControlProbe_TheGenericDeleteCommandRestoresTheWholeControl
+190/317 Test #1731: unit.MeshingPersistence_BoundarySetsKeepTheirIdentityNameAndOrder ..................   Passed    0.30 sec
+191/317 Test #1728: unit.MeshingPersistence_AMalformedReferenceIsNotTheSameAsAnUnresolvedOne ...........   Passed    0.23 sec
+        Start 2930: unit.VolumeBackend_FillsTheReferenceTetrahedronWithOneElement
+        Start 1694: unit.MeshingCommand_AGeometryReferenceSurvivesUndoAndRedoUnchanged
+192/317 Test #1745: unit.MeshingPersistence_SurfaceDeflectionsRoundTripExactly .........................   Passed    0.26 sec
+        Start 1557: unit.MeshControl_DependsOnTheBodyItMeshes
+193/317 Test #1749: unit.MeshingPersistence_TheWholeCanonicalIntentRoundTrips ..........................   Passed    0.26 sec
+        Start 2420: unit.Sizing_RejectsTwoControlsNamingTheSameFace
+194/317 Test #1741: unit.MeshingPersistence_RejectsDuplicateIdentitiesRatherThanMerging ................   Passed    0.25 sec
+        Start 2409: unit.Sizing_DefaultGlobalTargetScalesWithTheBody
+195/317 Test #2691: unit.TetrahedralVolume_SumsTheSignedVolumesWithoutTakingAbsoluteValues .............   Passed    0.23 sec
+        Start 1707: unit.MeshingCommand_AnInvalidSizeFailsBeforeTouchingAnything
+196/317 Test #1556: unit.MeshControlProbe_TheGenericDeleteCommandRestoresTheWholeControl ...............   Passed    0.26 sec
+        Start 1726: unit.MeshingPersistence_ACorruptFileLeavesTheOpenDocumentAlone
+197/317 Test #2623: unit.SurfaceMesh_GenerationLeavesTheDocumentAndTheBodyUntouched ....................   Passed    0.35 sec
+        Start 1702: unit.MeshingCommand_ANoOpEditCostsNothingButAHistoryEntry
+198/317 Test #2930: unit.VolumeBackend_FillsTheReferenceTetrahedronWithOneElement ......................   Passed    0.26 sec
+199/317 Test #1694: unit.MeshingCommand_AGeometryReferenceSurvivesUndoAndRedoUnchanged .................   Passed    0.23 sec
+        Start 1716: unit.MeshingCommand_LocalSizingAddEditRemoveAreExactAndKeyedByFace
+        Start 1723: unit.MeshingCommand_UndoRestoresTheStoredOrderAndNotOnlyTheSet
+200/317 Test #1557: unit.MeshControl_DependsOnTheBodyItMeshes ..........................................   Passed    0.26 sec
+201/317 Test #2420: unit.Sizing_RejectsTwoControlsNamingTheSameFace ....................................   Passed    0.23 sec
+        Start 1710: unit.MeshingCommand_BoundarySetAddEditRemoveKeepItsIdentity
+        Start 1721: unit.MeshingCommand_TheSameSequenceGivesTheSameCanonicalState
+202/317 Test #2409: unit.Sizing_DefaultGlobalTargetScalesWithTheBody ...................................   Passed    0.25 sec
+203/317 Test #1707: unit.MeshingCommand_AnInvalidSizeFailsBeforeTouchingAnything .......................   Passed    0.22 sec
+        Start 1558: unit.MeshControl_EnumeratesItsControlsDeterministically
+        Start 1714: unit.MeshingCommand_DescriptionsNameTheIntentAndNotAnyMesh
+204/317 Test #1726: unit.MeshingPersistence_ACorruptFileLeavesTheOpenDocumentAlone .....................   Passed    0.22 sec
+        Start 1711: unit.MeshingCommand_CreateExecutesUndoesAndRedoesWithTheSameIdentity
+205/317 Test #1702: unit.MeshingCommand_ANoOpEditCostsNothingButAHistoryEntry ..........................   Passed    0.21 sec
+        Start 1554: unit.MeshControlProbe_ModifyObjectBumpsTheRevisionOnlyOnAnEffectiveChange
+206/317 Test #1716: unit.MeshingCommand_LocalSizingAddEditRemoveAreExactAndKeyedByFace .................   Passed    0.21 sec
+        Start 1559: unit.MeshControl_HoldsOnlyIntentAndComparesByIt
+207/317 Test #1723: unit.MeshingCommand_UndoRestoresTheStoredOrderAndNotOnlyTheSet .....................   Passed    0.22 sec
+        Start 1719: unit.MeshingCommand_RefusesAnIdThatIsNotAMeshControl
+208/317 Test #1710: unit.MeshingCommand_BoundarySetAddEditRemoveKeepItsIdentity ........................   Passed    0.22 sec
+        Start 2408: unit.Sizing_AcceptsNoGlobalTargetAtAll
+209/317 Test #1721: unit.MeshingCommand_TheSameSequenceGivesTheSameCanonicalState ......................   Passed    0.24 sec
+        Start 1701: unit.MeshingCommand_ANewCommandDiscardsTheRedoBranch
+210/317 Test #1558: unit.MeshControl_EnumeratesItsControlsDeterministically ............................   Passed    0.24 sec
+        Start 1717: unit.MeshingCommand_LocalSizingRefusesWhatTheModelForbids
+211/317 Test #1714: unit.MeshingCommand_DescriptionsNameTheIntentAndNotAnyMesh .........................   Passed    0.24 sec
+        Start 1555: unit.MeshControlProbe_TheGenericAddCommandUndoesAndRedoesWithTheSameId
+212/317 Test #1711: unit.MeshingCommand_CreateExecutesUndoesAndRedoesWithTheSameIdentity ...............   Passed    0.24 sec
+213/317 Test #1554: unit.MeshControlProbe_ModifyObjectBumpsTheRevisionOnlyOnAnEffectiveChange ..........   Passed    0.21 sec
+        Start 1730: unit.MeshingPersistence_AnUnknownObjectTypeIsRefusedByName
+        Start 1715: unit.MeshingCommand_GlobalSizeIsExactThroughUndoAndRedo
+214/317 Test #1559: unit.MeshControl_HoldsOnlyIntentAndComparesByIt ....................................   Passed    0.24 sec
+215/317 Test #1719: unit.MeshingCommand_RefusesAnIdThatIsNotAMeshControl ...............................   Passed    0.22 sec
+        Start 2417: unit.Sizing_RejectsANonFiniteGlobalTarget
+        Start 1705: unit.MeshingCommand_AUnitEquivalentEditChangesNothing
+216/317 Test #2408: unit.Sizing_AcceptsNoGlobalTargetAtAll .............................................   Passed    0.23 sec
+        Start 2406: unit.SizingIssueKind_EveryKindHasADistinctName
+217/317 Test #1701: unit.MeshingCommand_ANewCommandDiscardsTheRedoBranch ...............................   Passed    0.24 sec
+        Start 1708: unit.MeshingCommand_AnUndoneCreateDoesNotFreeItsIdForReuse
+218/317 Test #1717: unit.MeshingCommand_LocalSizingRefusesWhatTheModelForbids ..........................   Passed    0.23 sec
+        Start 1712: unit.MeshingCommand_DeleteRestoresTheWholeControlOnUndo
+219/317 Test #1555: unit.MeshControlProbe_TheGenericAddCommandUndoesAndRedoesWithTheSameId .............   Passed    0.24 sec
+        Start 1700: unit.MeshingCommand_AMultiStepSequenceUndoesAndRedoesExactly
+220/317 Test #1730: unit.MeshingPersistence_AnUnknownObjectTypeIsRefusedByName .........................   Passed    0.24 sec
+        Start 1561: unit.MeshControl_RefusesADefinitionTheOwningValidatorsReject
+221/317 Test #1715: unit.MeshingCommand_GlobalSizeIsExactThroughUndoAndRedo ............................   Passed    0.24 sec
+        Start 1628: unit.MeshStatus_ReportsNoMeshBeforeAnythingIsGenerated
+222/317 Test #2417: unit.Sizing_RejectsANonFiniteGlobalTarget ..........................................   Passed    0.23 sec
+        Start 2935: unit.VolumeBackend_RefusesANonPositiveElementSize
+223/317 Test #1705: unit.MeshingCommand_AUnitEquivalentEditChangesNothing ..............................   Passed    0.24 sec
+224/317 Test #2406: unit.SizingIssueKind_EveryKindHasADistinctName .....................................   Passed    0.22 sec
+        Start 1746: unit.MeshingPersistence_TheFileNeedsNoMeshingBackendToBeInterpreted
+        Start 2414: unit.Sizing_IsUnitSafeSoTenMillimetresEqualsAHundredthOfAMetre
+225/317 Test #1708: unit.MeshingCommand_AnUndoneCreateDoesNotFreeItsIdForReuse .........................   Passed    0.23 sec
+        Start 2418: unit.Sizing_RejectsANonPositiveGlobalTarget
+226/317 Test #1712: unit.MeshingCommand_DeleteRestoresTheWholeControlOnUndo ............................   Passed    0.24 sec
+        Start 2419: unit.Sizing_RejectsANonPositiveOrNonFiniteLocalTarget
+227/317 Test #1700: unit.MeshingCommand_AMultiStepSequenceUndoesAndRedoesExactly .......................   Passed    0.24 sec
+        Start 2416: unit.Sizing_RejectsAMalformedFaceSelector
+228/317 Test #1561: unit.MeshControl_RefusesADefinitionTheOwningValidatorsReject .......................   Passed    0.24 sec
+        Start 2689: unit.TetrahedralBoundary_DropsTheFaceTwoTetrahedraShare
+229/317 Test #1628: unit.MeshStatus_ReportsNoMeshBeforeAnythingIsGenerated .............................   Passed    0.23 sec
+        Start 2954: unit.VolumeMesh_RefusesASurfaceThatIsNotAValidBoundary
+230/317 Test #2935: unit.VolumeBackend_RefusesANonPositiveElementSize ..................................   Passed    0.23 sec
+        Start 1744: unit.MeshingPersistence_SerializationIsByteIdenticalAndIndependentOfEditOrder
+231/317 Test #1746: unit.MeshingPersistence_TheFileNeedsNoMeshingBackendToBeInterpreted ................   Passed    0.23 sec
+        Start 2955: unit.VolumeMesh_RefusesAnEmptySurface
+232/317 Test #2414: unit.Sizing_IsUnitSafeSoTenMillimetresEqualsAHundredthOfAMetre .....................   Passed    0.23 sec
+        Start 2956: unit.VolumeMesh_RefusesEverythingWhenThereIsNoBackend
+233/317 Test #2418: unit.Sizing_RejectsANonPositiveGlobalTarget ........................................   Passed    0.23 sec
+        Start 1718: unit.MeshingCommand_NoCommandIsLargeEnoughToHoldAMesh
+234/317 Test #2419: unit.Sizing_RejectsANonPositiveOrNonFiniteLocalTarget ..............................   Passed    0.22 sec
+        Start 1747: unit.MeshingPersistence_TheHandWrittenReferenceFileLoadsAsWritten
+235/317 Test #2416: unit.Sizing_RejectsAMalformedFaceSelector ..........................................   Passed    0.22 sec
+        Start 2928: unit.VolumeBackendFailure_EveryReasonHasADistinctName
+236/317 Test #2689: unit.TetrahedralBoundary_DropsTheFaceTwoTetrahedraShare ............................   Passed    0.23 sec
+        Start 1680: unit.MeshingCli_HelpDocumentsTheMeshCommands
+237/317 Test #2954: unit.VolumeMesh_RefusesASurfaceThatIsNotAValidBoundary .............................   Passed    0.23 sec
+        Start 2629: unit.SurfaceMesh_RefusesStaleGeometryBeforeTriangulatingAnything
+238/317 Test #2955: unit.VolumeMesh_RefusesAnEmptySurface ..............................................   Passed    0.20 sec
+        Start 2943: unit.VolumeMeshFailure_EveryReasonHasADistinctName
+239/317 Test #1744: unit.MeshingPersistence_SerializationIsByteIdenticalAndIndependentOfEditOrder ......   Passed    0.26 sec
+        Start 2937: unit.VolumeBackend_RefusesATriangleThatRepeatsANode
+240/317 Test #2956: unit.VolumeMesh_RefusesEverythingWhenThereIsNoBackend ..............................   Passed    0.23 sec
+        Start 2690: unit.TetrahedralBoundary_OfOneTetrahedronIsItsFourFaces
+241/317 Test #1718: unit.MeshingCommand_NoCommandIsLargeEnoughToHoldAMesh ..............................   Passed    0.23 sec
+        Start 2938: unit.VolumeBackend_RefusesAnEmptyBoundary
+242/317 Test #1747: unit.MeshingPersistence_TheHandWrittenReferenceFileLoadsAsWritten ..................   Passed    0.23 sec
+        Start 2953: unit.VolumeMesh_RefusesASurfaceThatAlreadyHoldsVolumeElements
+243/317 Test #2928: unit.VolumeBackendFailure_EveryReasonHasADistinctName ..............................   Passed    0.23 sec
+        Start 2936: unit.VolumeBackend_RefusesATriangleIndexOutOfRange
+244/317 Test #1680: unit.MeshingCli_HelpDocumentsTheMeshCommands .......................................   Passed    0.22 sec
+        Start 3108: refmod.mesh.settings.local
+245/317 Test #2943: unit.VolumeMeshFailure_EveryReasonHasADistinctName .................................   Passed    0.20 sec
+        Start 3124: refmod.mesh.invalid.mesh-generate
+246/317 Test #2937: unit.VolumeBackend_RefusesATriangleThatRepeatsANode ................................   Passed    0.23 sec
+        Start 3004: cli.mesh.settings.no-control
+247/317 Test #2629: unit.SurfaceMesh_RefusesStaleGeometryBeforeTriangulatingAnything ...................   Passed    0.31 sec
+        Start 3107: refmod.mesh.settings.block
+248/317 Test #2690: unit.TetrahedralBoundary_OfOneTetrahedronIsItsFourFaces ............................   Passed    0.24 sec
+        Start 1659: unit.Meshable_GivesTheSameAnswerAndTheSameVolumeOnRepeatedCalls
+249/317 Test #2938: unit.VolumeBackend_RefusesAnEmptyBoundary ..........................................   Passed    0.24 sec
+        Start 2630: unit.SurfaceMesh_TwoMeshesOfTheSameBodyAreNeverTheSameMesh
+250/317 Test #2953: unit.VolumeMesh_RefusesASurfaceThatAlreadyHoldsVolumeElements ......................   Passed    0.24 sec
+        Start 1604: unit.MeshReferenceSuite_DeclaredVolumesAgreeWithTheIndependentClosedForms
+251/317 Test #2936: unit.VolumeBackend_RefusesATriangleIndexOutOfRange .................................   Passed    0.24 sec
+        Start 3128: refmod.mesh.invalid.mesh-boundaries
+252/317 Test #3108: refmod.mesh.settings.local .........................................................   Passed    0.24 sec
+        Start 1597: unit.MeshOpenProfile_IsRefusedExplicitlyAndPublishesNothing
+253/317 Test #3124: refmod.mesh.invalid.mesh-generate ..................................................   Passed    0.23 sec
+        Start 1605: unit.MeshReferenceSuite_DeclaresEightModelsInNineDocuments
+254/317 Test #3004: cli.mesh.settings.no-control .......................................................   Passed    0.23 sec
+        Start 2999: cli.mesh.settings
+255/317 Test #3107: refmod.mesh.settings.block .........................................................   Passed    0.24 sec
+        Start 2628: unit.SurfaceMesh_RefusesNonPositiveOrNonFiniteControls
+256/317 Test #1604: unit.MeshReferenceSuite_DeclaredVolumesAgreeWithTheIndependentClosedForms ..........   Passed    0.24 sec
+        Start 3126: refmod.mesh.invalid.mesh-validate
+257/317 Test #3128: refmod.mesh.invalid.mesh-boundaries ................................................   Passed    0.24 sec
+        Start 2626: unit.SurfaceMesh_NodeHandlesFollowCoordinateOrderNotFaceTraversalOrder
+258/317 Test #2630: unit.SurfaceMesh_TwoMeshesOfTheSameBodyAreNeverTheSameMesh .........................   Passed    0.32 sec
+259/317 Test #1597: unit.MeshOpenProfile_IsRefusedExplicitlyAndPublishesNothing ........................   Passed    0.24 sec
+        Start 1606: unit.MeshReferenceSuite_EveryModelBuildsAndCarriesItsMeshingIntent
+        Start 1562: unit.MeshCurved_DeclaresTheDeflectionItsAnalyticBoundsAssume
+260/317 Test #1605: unit.MeshReferenceSuite_DeclaresEightModelsInNineDocuments .........................   Passed    0.25 sec
+        Start 3125: refmod.mesh.invalid.mesh-info
+261/317 Test #2999: cli.mesh.settings ..................................................................   Passed    0.22 sec
+262/317 Test #1659: unit.Meshable_GivesTheSameAnswerAndTheSameVolumeOnRepeatedCalls ....................   Passed    0.42 sec
+        Start 2934: unit.VolumeBackend_IsNetgenWhenTheBuildLinkedIt
+        Start 1594: unit.MeshIssueKind_EveryKindHasAName
+263/317 Test #2628: unit.SurfaceMesh_RefusesNonPositiveOrNonFiniteControls .............................   Passed    0.26 sec
+        Start 3127: refmod.mesh.invalid.mesh-quality
+264/317 Test #3126: refmod.mesh.invalid.mesh-validate ..................................................   Passed    0.22 sec
+        Start 2627: unit.SurfaceMesh_RefusesABlockedFeatureWithNoCurrentBody
+265/317 Test #1606: unit.MeshReferenceSuite_EveryModelBuildsAndCarriesItsMeshingIntent .................   Passed    0.21 sec
+        Start 2932: unit.VolumeBackend_InitialisesAndShutsDownCleanly
+266/317 Test #2626: unit.SurfaceMesh_NodeHandlesFollowCoordinateOrderNotFaceTraversalOrder .............   Passed    0.27 sec
+        Start 1661: unit.Meshable_PreparationDoesNotTouchTheDocumentOrTheRegenerator
+267/317 Test #1562: unit.MeshCurved_DeclaresTheDeflectionItsAnalyticBoundsAssume .......................   Passed    0.24 sec
+        Start 2940: unit.VolumeBackend_ReportsThePinnedNetgenVersion
+268/317 Test #3125: refmod.mesh.invalid.mesh-info ......................................................   Passed    0.25 sec
+269/317 Test #2934: unit.VolumeBackend_IsNetgenWhenTheBuildLinkedIt ....................................   Passed    0.23 sec
+        Start 2622: unit.SurfaceMeshFailure_EveryReasonHasAName
+        Start 2942: unit.VolumeBackend_SurvivesRepeatedInitialisation
+270/317 Test #1594: unit.MeshIssueKind_EveryKindHasAName ...............................................   Passed    0.25 sec
+        Start 2931: unit.VolumeBackend_IdentityIsConsistentWithAvailability
+271/317 Test #3127: refmod.mesh.invalid.mesh-quality ...................................................   Passed    0.25 sec
+        Start 1547: unit.MeshBuilder_RejectsATetrahedronNamingANodeTheMeshDoesNotHave
+272/317 Test #2932: unit.VolumeBackend_InitialisesAndShutsDownCleanly ..................................   Passed    0.21 sec
+        Start 1656: unit.Meshable_AcceptsGeometryAgainOnceItHasBeenRegenerated
+273/317 Test #2627: unit.SurfaceMesh_RefusesABlockedFeatureWithNoCurrentBody ...........................   Passed    0.29 sec
+        Start 1655: unit.Meshable_AcceptsAMultiSolidBodyAndReportsTheSolidCount
+274/317 Test #2940: unit.VolumeBackend_ReportsThePinnedNetgenVersion ...................................   Passed    0.22 sec
+        Start 1662: unit.Meshable_RecoversAfterAFailedEditIsUndone
+275/317 Test #2622: unit.SurfaceMeshFailure_EveryReasonHasAName ........................................   Passed    0.22 sec
+        Start 1670: unit.Meshable_ReportsStalenessRatherThanTheDefectOfAStaleBody
+276/317 Test #2942: unit.VolumeBackend_SurvivesRepeatedInitialisation ..................................   Passed    0.22 sec
+        Start 1668: unit.Meshable_RefusesEveryGeometryWhileAConfigurationOverridesAParameter
+277/317 Test #2931: unit.VolumeBackend_IdentityIsConsistentWithAvailability ............................   Passed    0.22 sec
+        Start 1653: unit.Meshable_AcceptsACurrentBoxAndReportsItsAnalyticalVolume
+278/317 Test #1661: unit.Meshable_PreparationDoesNotTouchTheDocumentOrTheRegenerator ...................   Passed    0.37 sec
+        Start 1665: unit.Meshable_RefusesAnEmptyBodyThatRegenerationNonethelessStored
+279/317 Test #1547: unit.MeshBuilder_RejectsATetrahedronNamingANodeTheMeshDoesNotHave ..................   Passed    0.25 sec
+        Start 1649: unit.Mesh_RefusesAHandleFromAnotherMeshRatherThanReinterpretingIt
+280/317 Test #1656: unit.Meshable_AcceptsGeometryAgainOnceItHasBeenRegenerated .........................   Passed    0.27 sec
+        Start 1652: unit.Meshable_AHollowTubePreservesItsVoidAndItsAnalyticalVolume
+281/317 Test #1655: unit.Meshable_AcceptsAMultiSolidBodyAndReportsTheSolidCount ........................   Passed    0.28 sec
+        Start 1548: unit.MeshBuilder_RejectsAnElementNamingANodeThatDoesNotExist
+282/317 Test #1670: unit.Meshable_ReportsStalenessRatherThanTheDefectOfAStaleBody ......................   Passed    0.23 sec
+283/317 Test #1662: unit.Meshable_RecoversAfterAFailedEditIsUndone .....................................   Passed    0.27 sec
+        Start 1669: unit.Meshable_RefusesGeometryThatIsStaleBecauseItsProfileMoved
+        Start 1671: unit.Meshable_StalenessIsReportedBeforeTheOldBodyIsInspected
+284/317 Test #1668: unit.Meshable_RefusesEveryGeometryWhileAConfigurationOverridesAParameter ...........   Passed    0.28 sec
+        Start 1654: unit.Meshable_AcceptsACylinderAndReportsItsAnalyticalVolume
+285/317 Test #1653: unit.Meshable_AcceptsACurrentBoxAndReportsItsAnalyticalVolume ......................   Passed    0.28 sec
+286/317 Test #1649: unit.Mesh_RefusesAHandleFromAnotherMeshRatherThanReinterpretingIt ..................   Passed    0.23 sec
+287/317 Test #1665: unit.Meshable_RefusesAnEmptyBodyThatRegenerationNonethelessStored ..................   Passed    0.26 sec
+        Start 1657: unit.Meshable_AcceptsGeometryUnderAConfigurationThatOverridesNothing
+        Start 1546: unit.MeshBuilder_RejectsARepeatedNodeHandleAndLeavesTheMeshUnchanged
+        Start 1551: unit.MeshBuilder_RejectsAnElementWithNoRegion
+288/317 Test #1652: unit.Meshable_AHollowTubePreservesItsVoidAndItsAnalyticalVolume ....................   Passed    0.26 sec
+        Start 1651: unit.Mesh_TwoNodesAtTheSamePositionStayTwoNodes
+289/317 Test #1548: unit.MeshBuilder_RejectsAnElementNamingANodeThatDoesNotExist .......................   Passed    0.25 sec
+        Start 1549: unit.MeshBuilder_RejectsAnElementNamingTheSameNodeTwice
+290/317 Test #1669: unit.Meshable_RefusesGeometryThatIsStaleBecauseItsProfileMoved .....................   Passed    0.25 sec
+        Start 1660: unit.Meshable_KeepsABodyWhereItIsInModelSpace
+291/317 Test #1671: unit.Meshable_StalenessIsReportedBeforeTheOldBodyIsInspected .......................   Passed    0.26 sec
+        Start 1553: unit.MeshBuilder_RejectsTheInvalidNodeHandle
+292/317 Test #1654: unit.Meshable_AcceptsACylinderAndReportsItsAnalyticalVolume ........................   Passed    0.23 sec
+        Start 1663: unit.Meshable_RefusesAFeatureBlockedByAFailedUpstreamSketch
+293/317 Test #1546: unit.MeshBuilder_RejectsARepeatedNodeHandleAndLeavesTheMeshUnchanged ...............   Passed    0.23 sec
+294/317 Test #1657: unit.Meshable_AcceptsGeometryUnderAConfigurationThatOverridesNothing ...............   Passed    0.25 sec
+        Start 1664: unit.Meshable_RefusesAFeatureThatHasNeverBeenRegenerated
+        Start 1590: unit.MeshIds_AreOrderedAndComparableWithinTheirOwnKind
+295/317 Test #1551: unit.MeshBuilder_RejectsAnElementWithNoRegion ......................................   Passed    0.26 sec
+296/317 Test #1651: unit.Mesh_TwoNodesAtTheSamePositionStayTwoNodes ....................................   Passed    0.23 sec
+        Start 1544: unit.MeshBuilder_NeverReordersElementConnectivity
+        Start 1646: unit.Mesh_CopyKeepsTheSameTopologyAndHandlesAndIsNotARemesh
+297/317 Test #1549: unit.MeshBuilder_RejectsAnElementNamingTheSameNodeTwice ............................   Passed    0.24 sec
+        Start 1650: unit.Mesh_ResolvesSparseHandlesByIdentityAndNeverByPosition
+298/317 Test #1660: unit.Meshable_KeepsABodyWhereItIsInModelSpace ......................................   Passed    0.24 sec
+299/317 Test #1553: unit.MeshBuilder_RejectsTheInvalidNodeHandle .......................................   Passed    0.21 sec
+        Start 1647: unit.Mesh_ElementTypeIsReportedPerElementAndSharesOneIdentitySpace
+        Start 1648: unit.Mesh_EnumeratesNodesAndElementsInHandleOrderEveryTime
+300/317 Test #1663: unit.Meshable_RefusesAFeatureBlockedByAFailedUpstreamSketch ........................   Passed    0.25 sec
+        Start 1667: unit.Meshable_RefusesAnObjectThatMakesNoBodyAndSaysSoDistinctly
+301/317 Test #1664: unit.Meshable_RefusesAFeatureThatHasNeverBeenRegenerated ...........................   Passed    0.24 sec
+        Start 1624: unit.MeshStamp_IsUniquePerMeshAndDistinguishesGenerations
+302/317 Test #1590: unit.MeshIds_AreOrderedAndComparableWithinTheirOwnKind .............................   Passed    0.25 sec
+        Start 1666: unit.Meshable_RefusesAnObjectThatDoesNotExist
+303/317 Test #1544: unit.MeshBuilder_NeverReordersElementConnectivity ..................................   Passed    0.25 sec
+        Start 1658: unit.Meshable_ConfigurationGuardIsCheckedBeforeAnythingElse
+304/317 Test #1646: unit.Mesh_CopyKeepsTheSameTopologyAndHandlesAndIsNotARemesh ........................   Passed    0.25 sec
+305/317 Test #1650: unit.Mesh_ResolvesSparseHandlesByIdentityAndNeverByPosition ........................   Passed    0.22 sec
+        Start 1545: unit.MeshBuilder_RejectsANonFiniteCoordinateOnEveryAxis
+        Start 1552: unit.MeshBuilder_RejectsAnOutOfOrderNodeHandle
+306/317 Test #1647: unit.Mesh_ElementTypeIsReportedPerElementAndSharesOneIdentitySpace .................   Passed    0.25 sec
+307/317 Test #1648: unit.Mesh_EnumeratesNodesAndElementsInHandleOrderEveryTime .........................   Passed    0.21 sec
+        Start 1550: unit.MeshBuilder_RejectsAnElementWithAnUnderfilledConnectivityList
+        Start 1591: unit.MeshIds_DefaultHandleIsInvalidAndZeroIsNeverAllocated
+308/317 Test #1667: unit.Meshable_RefusesAnObjectThatMakesNoBodyAndSaysSoDistinctly ....................   Passed    0.24 sec
+        Start 2927: unit.Volume second moments carry the dimension of a second moment of volume
+309/317 Test #1624: unit.MeshStamp_IsUniquePerMeshAndDistinguishesGenerations ..........................   Passed    0.23 sec
+        Start 1593: unit.MeshIssueKind_EveryKindHasAName
+310/317 Test #1666: unit.Meshable_RefusesAnObjectThatDoesNotExist ......................................   Passed    0.23 sec
+311/317 Test #1658: unit.Meshable_ConfigurationGuardIsCheckedBeforeAnythingElse ........................   Passed    0.23 sec
+312/317 Test #1545: unit.MeshBuilder_RejectsANonFiniteCoordinateOnEveryAxis ............................   Passed    0.22 sec
+313/317 Test #1552: unit.MeshBuilder_RejectsAnOutOfOrderNodeHandle .....................................   Passed    0.21 sec
+314/317 Test #1550: unit.MeshBuilder_RejectsAnElementWithAnUnderfilledConnectivityList .................   Passed    0.20 sec
+315/317 Test #1591: unit.MeshIds_DefaultHandleIsInvalidAndZeroIsNeverAllocated .........................   Passed    0.21 sec
+316/317 Test #2927: unit.Volume second moments carry the dimension of a second moment of volume ........   Passed    0.20 sec
+317/317 Test #1593: unit.MeshIssueKind_EveryKindHasAName ...............................................   Passed    0.20 sec
+
+100% tests passed out of 317
+
+Total Test time (real) =  45.16 sec

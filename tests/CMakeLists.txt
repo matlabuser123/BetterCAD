@@ -289,6 +289,7 @@ endif()
 if(TARGET bettercad_reference_models)
     target_sources(bettercad_tests PRIVATE
         qualification/P15MaterialsQualificationTests.cpp
+        qualification/P16MeshingQualificationTests.cpp
         reference/AllModelsTests.cpp
         reference/MaterialModelsTests.cpp
         reference/MeshModelsTests.cpp

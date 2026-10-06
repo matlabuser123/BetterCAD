@@ -227,9 +227,10 @@ for a user to find.
   claimed or qualified.
 - **STEP export only** — no STEP import. The kernel-based reader in the tree is
   test-only tooling that reads exports back to check them. No DXF, IGES or OBJ.
-- No assemblies, drawings, materials database, meshing, simulation,
-  optimization, Python API, CAM or AI. All are planned; see
-  [ROADMAP.md](ROADMAP.md).
+- No simulation, optimization, semantic topology, Python API, CAM or AI. All
+  are planned; see [ROADMAP.md](ROADMAP.md), which also records the qualified
+  capabilities this overview does not yet describe: assemblies, drawings,
+  materials and meshing.
 
 ### Limits of the evidence
 

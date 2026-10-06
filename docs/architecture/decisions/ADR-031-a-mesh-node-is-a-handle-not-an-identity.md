@@ -105,6 +105,28 @@ linear tetrahedron and no other element. An element records its type; connectivi
 a variable-length span rather than `array<NodeId, 4>`, so Tet10 is a new enumerator and a new
 validator, not a new data model.
 
+> **Amended by P16-DATA-001, and the amendment is recorded here because the evidence outranks
+> this document.** The sentence above is the only part of this ADR the implementation does not
+> follow. `P16-DATA-001` stored connectivity as **fixed-arity arrays** —
+> `Triangle {ElementId; array<NodeId,3>; RegionId}` and
+> `Tetrahedron {ElementId; array<NodeId,4>; RegionId}` — and recorded why:
+>
+> > "Arity is part of the type, so an element with the wrong number of handles is mostly a
+> > compile error and always a rejection."
+>
+> That is a better property than the span gives, and it is what shipped. The ADR's *purpose*
+> here — that an element carries its type, so a second element family is an enumerator and a
+> validator rather than a redesign — is only partly served by it: `ElementType` exists and is
+> recorded per element, but Tet10 would need a new struct, not just a new enumerator. So the
+> cost the span was meant to avoid is deferred to whichever milestone adds a second element
+> family, and is carried as a known limitation of P16 rather than left as a surprise.
+>
+> Everything else in this decision is implemented as written, and `P16-QUAL-001` verified each
+> clause against the code: `NodeId` and `ElementId` are standalone 32-bit handle classes and not
+> `Id<Tag>`, `core/Id.hpp` holds no node, element or region tag, no handle appears in the
+> `.bcad` format, in a `MeshControl`, in a command or in a `FaceName`, and `Tet4` is the only
+> element family. Recorded 2026-10-06; see `docs/verification/P16-QUAL-001/ADR_AUDIT.md`.
+
 **Are Tet4 elements sufficient for the P17 foundation?** For building and qualifying the
 pipeline, yes: assembly, boundary conditions, solve, recover, validate against analytic cases.
 **For accurate stress in bending, no** — the linear tetrahedron has constant strain, is

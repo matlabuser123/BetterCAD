@@ -95,7 +95,7 @@ A  No. resolveSizing runs validate() first and returns InvalidArgument, so the
 Q  Can the global target depend on a hidden Netgen default?
 A  No. A request with no global target gets BetterCAD's own default -- the
    bounding-box diagonal -- and ResolvedSizing::globalIsDefault records that
-   it did. All fourteen parameters nglib actually transfers are set
+   it did. All fifteen parameters nglib actually transfers are set
    explicitly; the seven it never transfers are documented as dead rather than
    set for show.
 

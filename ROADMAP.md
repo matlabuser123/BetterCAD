@@ -94,17 +94,18 @@ P12     Parametric CAD Completion
 P13     Assemblies
 P14     Technical Drawings
 P15     Materials / Engineering Data
+P16     Meshing
 ```
 
 Current authorized development:
 
 ```text
-P16 — Meshing
+none — the next phase is a scope decision
 ```
 
 Released: `v0.1.0` — Foundation.
 
-Qualified but not yet separately released: `P11`, `P12`, `P13`, `P14`, `P15`.
+Qualified but not yet separately released: `P11`, `P12`, `P13`, `P14`, `P15`, `P16`.
 
 ---
 
@@ -118,7 +119,7 @@ Qualified but not yet separately released: `P11`, `P12`, `P13`, `P14`, `P15`.
 | Assemblies | `P13` | **Qualified** |
 | Technical Drawings | `P14` | **Qualified** |
 | Materials / Engineering Data | `P15` | **Qualified** |
-| Meshing | `P16` | **In Progress** |
+| Meshing | `P16` | **Qualified** |
 | Structural FEA | `P17` | Planned |
 | Thermal Analysis | `P18` | Planned |
 | CFD Integration | `P19` | Planned |
@@ -539,25 +540,98 @@ a file containing a law is rejected rather than misread. Command history is not 
 thermal requirement entry points, which exist so that a solver receives a complete set or an
 explicit diagnostic, never a fabricated default.
 
-## Materials / Engineering Data — In Progress
+## Meshing — Qualified
 
-A material system: density, elastic modulus, Poisson ratio, yield and ultimate
-strength, thermal conductivity, specific heat, coefficient of thermal
-expansion, viscosity, electrical conductivity, and custom materials.
+`P16` gave BetterCAD a simulation mesh: separate from the CAD B-Rep, separate
+from the viewer's tessellation, and derived from the authoritative geometry
+every time.
 
-**Gate.** Material assignments persist; units correct; mass properties consume
-material data; simulation consumes the same material definitions.
+```text
+authoritative CAD model
+→ regenerated authoritative geometry      one boundary, which refuses stale,
+                                          failed, blocked, non-solid, empty
+                                          and configuration-overridden input
+→ engineering surface mesh                closed, manifold, coherently
+                                          oriented, or it does not exist
+→ volume meshing backend                  behind an enforced interface
+→ canonical BetterCAD Tet4 mesh           validated, conformity-checked,
+                                          volume-recovered, or REFUSED
+→ quality / mapping / visualisation / P17
+```
 
----
+**CAD geometry stays the authority and the mesh is derived.** A `MeshControl` is
+the canonical intent — which body, how finely, which regions matter — and it is
+a document object, in the dependency graph, edited only through commands and
+persisted. The mesh itself is held by a service keyed by its control: never a
+document object, never persisted, never restored by undo. Generating one leaves
+the document byte-identical, and the saved file is byte-identical for a 361-element
+and a 1977-element mesh.
 
-## Meshing — Planned
+**A selection is never a mesh entity.** Loads, restraints and local sizing name
+CAD faces by `FaceName`, so they survive a remesh because they were never mesh
+selections. A `NodeId` is a handle, not an identity: it cannot reach a `.bcad`
+file, a control, a command or a face reference. 15 compile-fail cases pin the
+handle types themselves and 45 across the mesh modules refuse the conversions
+that would let one escape.
 
-Simulation mesh infrastructure separate from both CAD B-Reps and visualization
-tessellation. Targets: 1D, 2D and 3D; beam elements, triangles, quadrilaterals,
-tetrahedra, hexahedra later; global and local sizing; curvature and surface
-refinement; mesh quality; convergence tools.
+Qualified at `8ab30a31` on 2026-10-06. `P16-QUAL-001`: 3387/3387 tests in
+debug-ext, release-ext and debug-shared-ext, each from clean; 698 selected tests
+× 5 repeats in two presets; **0 warnings in all three builds** under `-Werror`
+over 596 objects; no-op rebuilds doing 0 compiles and 0 links; 1751 tetrahedra
+positively oriented with 0 zero and 0 negative; qualified tree identical to the
+committed tree.
 
-A meshing backend such as Gmsh may be used behind BetterCAD abstractions.
+| Milestone | Capability | Evidence |
+| --- | --- | --- |
+| `P16-ARCH-001` | Meshing architecture; ADR-030 to ADR-033 | [P16-ARCH-001](docs/verification/P16-ARCH-001/README.md) |
+| `P16-DATA-001` | Mesh data model, identity and units | [P16-DATA-001](docs/verification/P16-DATA-001/README.md) |
+| `P16-GEOM-001` | Geometry preparation and the regeneration boundary | [P16-GEOM-001](docs/verification/P16-GEOM-001/README.md) |
+| `P16-SURF-001` | Engineering surface mesh | [P16-SURF-001](docs/verification/P16-SURF-001/README.md) |
+| `INFRA-NETGEN-001` | Netgen toolchain qualification | [INFRA-NETGEN-001](docs/verification/INFRA-NETGEN-001/README.md) |
+| `P16-VOL-001` | 3D tetrahedral volume mesh (Tet4) | [P16-VOL-001](docs/verification/P16-VOL-001/README.md) |
+| `P16-SIZE-001` | Global and local mesh sizing | [P16-SIZE-001](docs/verification/P16-SIZE-001/README.md) |
+| `P16-QUALITY-001` | Mesh quality metrics and validation | [P16-QUALITY-001](docs/verification/P16-QUALITY-001/README.md) |
+| `P16-MAP-001` | Geometry ↔ mesh correspondence and regions | [P16-MAP-001](docs/verification/P16-MAP-001/README.md) |
+| `INFRA-VIEWER-001` | OCCT visualization toolchain qualification | [INFRA-VIEWER-001](docs/verification/INFRA-VIEWER-001/README.md) |
+| `P16-VIZ-001` | Mesh visualisation and inspection | [P16-VIZ-001](docs/verification/P16-VIZ-001/README.md) |
+| `P16-CMD-001` | Meshing commands with exact undo and redo | [P16-CMD-001](docs/verification/P16-CMD-001/README.md) |
+| `P16-PERSIST-001` | Save and load canonical meshing intent | [P16-PERSIST-001](docs/verification/P16-PERSIST-001/README.md) |
+| `P16-CLI-001` | Headless meshing workflows | [P16-CLI-001](docs/verification/P16-CLI-001/README.md) |
+| `P16-REFMOD-001` | Meshing reference models RM-MESH-01..08 | [P16-REFMOD-001](docs/verification/P16-REFMOD-001/README.md) |
+| `P16-QUAL-001` | Full P16 qualification | [P16-QUAL-001](docs/verification/P16-QUAL-001/README.md) |
+
+Decisions: [ADR-030](docs/architecture/decisions/ADR-030-a-mesh-is-derived-state-and-a-meshing-control-is-the-intent.md),
+[ADR-031](docs/architecture/decisions/ADR-031-a-mesh-node-is-a-handle-not-an-identity.md),
+[ADR-032](docs/architecture/decisions/ADR-032-a-mesh-boundary-names-a-cad-face-and-a-selection-is-never-a-mesh-entity.md),
+[ADR-033](docs/architecture/decisions/ADR-033-the-volume-mesher-is-a-backend-behind-an-enforced-boundary.md).
+
+### What P16 leaves for later
+
+**Tet4 only, and Tet4 is not enough for accurate stress in bending** — the
+linear tetrahedron has constant strain and converges slowly on exactly the
+stress concentrations engineers care about. ADR-031 records that as a known
+limitation of the P16/P17 foundation rather than leaving it to be discovered as
+a validation failure, which is why the element type is a tag from the first day.
+Adding a second family costs a new struct, not only a new enumerator.
+
+No quadratic elements, no hex meshing, no 1D or 2D element families, no adaptive
+or boundary-layer meshing, and no convergence tooling beyond the reference
+suite's own studies.
+
+Configuration-driven meshing is **blocked by design**: meshing refuses while a
+configuration override is active, because configuration regeneration does not
+yet rebuild bodies. Making it supported is a change to the configuration
+contract, not to meshing.
+
+The GUI meshes with default controls rather than the document's `MeshControl` —
+wiring the two needs GUI undo. A drilled hole's cylindrical wall carries no
+`FaceName`, so it cannot be a forward query target; mesh edges are not mapped at
+all, deliberately, because the alternative is geometric classification with a
+tolerance. Permanent semantic topology across arbitrary edits is `P21`'s.
+
+`P17` consumes this layer as a validated `Mesh` plus a `GeometryMeshMap`, so a
+load or a restraint is expressed in CAD terms and resolved to current facets
+per mesh — which is what makes it survive a remesh.
 
 ---
 

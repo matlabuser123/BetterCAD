@@ -1,0 +1,292 @@
+Filters: [refmod] [mesh],[p16qual]
+Randomness seeded to: 2411914944
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+bettercad_tests.exe is a Catch2 v3.16.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+P16Qualification_SurfaceOrientationIsOutwardAndDeterministic
+-------------------------------------------------------------------------------
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/qualification/P16MeshingQualificationTests.cpp:148
+...............................................................................
+
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/qualification/P16MeshingQualificationTests.cpp:184: warning:
+  RM-MESH-04 surface orientation: 288 boundary triangles, enclosed volume
+  81017.293772282937 mm^3, identical over 4 generations
+
+-------------------------------------------------------------------------------
+P16Qualification_AControlWhoseBodyIsDeletedIsUnresolvedAndMeshesNothing
+-------------------------------------------------------------------------------
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/qualification/P16MeshingQualificationTests.cpp:333
+...............................................................................
+
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/qualification/P16MeshingQualificationTests.cpp:385: warning:
+  a control whose body was deleted: ineligibility object_not_found, generation
+  refused, the 6 tetrahedra it held are stale
+
+-------------------------------------------------------------------------------
+MeshCylinder_ApproachesTheAnalyticVolumeAsTheSurfaceIsResolved
+-------------------------------------------------------------------------------
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/MeshModelsTests.cpp:867
+...............................................................................
+
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/MeshModelsTests.cpp:932: warning:
+  RM-MESH-02 surface convergence
+  | Level | Deflection mm | Facets | Nodes | Tet4 | Vmesh mm^3 | RelError |
+  Bound width |
+  | coarse | 0.5 | 140 | 114 | 368 | 117212.51992517788 | 5.069e-03 | 4.040e-02
+  |
+  | medium | 0.1 | 196 | 200 | 732 | 117499.90646653521 | 2.630e-03 | 8.016e-03
+  |
+  | fine | 0.02 | 444 | 442 | 1695 | 117747.9391981028 | 5.245e-04 | 1.601e-03
+  |
+
+-------------------------------------------------------------------------------
+MeshLocalRefinement_FollowsAnEditOfItsLocalSize
+-------------------------------------------------------------------------------
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/MeshModelsTests.cpp:1704
+...............................................................................
+
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/MeshModelsTests.cpp:1752: warning:
+  RM-MESH-07 local size 6 mm -> 3 mm: 267 -> 283 tets; band at F median edge
+  28.9891 -> 28.504 mm, band nodes 8 -> 10; whole-mesh median 15.2672 -> 16.
+  1976 mm (reported, not asserted -- the untouched bulk dominates it)
+
+-------------------------------------------------------------------------------
+MeshReference_AGeometryEditRemeshesAgainstTheNewAnalyticVolume
+  RM-MESH-01, a = 120 -> 150 mm
+-------------------------------------------------------------------------------
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/MeshModelsTests.cpp:1857
+...............................................................................
+
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/MeshModelsTests.cpp:1885: warning:
+  RM-MESH-01 geometry edit: analytic 294000 -> 367500 mm^3, mesh 367500 ->
+  367500 mm^3, 12 -> 12 tets
+
+-------------------------------------------------------------------------------
+MeshReference_AGeometryEditRemeshesAgainstTheNewAnalyticVolume
+  RM-MESH-03, t = 12 -> 16 mm
+-------------------------------------------------------------------------------
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/MeshModelsTests.cpp:1898
+...............................................................................
+
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/MeshModelsTests.cpp:1924: warning:
+  RM-MESH-03 thickness edit: analytic 63517.699835307561 -> 84690.266447076749
+  mm^3, mesh 63560.69856538716 -> 84747.598087182982 mm^3, bound now [84690.
+  266447076749, 85064.115972853935]
+
+-------------------------------------------------------------------------------
+MeshLocalRefinement_RefinesTheNamedFaceAndLeavesTheOppositeOneAlone
+-------------------------------------------------------------------------------
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/MeshModelsTests.cpp:1535
+...............................................................................
+
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/MeshModelsTests.cpp:1636: warning:
+  RM-MESH-07 local refinement: global 20 mm, local 6 mm, band reach 12 mm
+  | Mesh | Nodes | Tet4 | F tets | F nodes | F median | F min | G tets | G
+  nodes | G median | G min |
+  | global only | 9 | 12 | 2 | 4 | 61.6442 | 40 | 2 | 4 | 61.6442 | 40 |
+  | + local at F | 61 | 267 | 25 | 8 | 28.9891 | 8.70349 | 10 | 4 | 42.0199 |
+  11.7644 |
+  | + local at G | 57 | 246 | 7 | 4 | 40 | 11.3203 | 25 | 9 | 28.7113 | 7.37507
+  |
+  F's two boundary facets keep a 57.8489 mm median edge even in the refined
+  mesh, which is why the band and not the facets is the instrument.
+
+-------------------------------------------------------------------------------
+MeshReference_ASettingsEditRemeshesAtTheNewCharacteristicScale
+-------------------------------------------------------------------------------
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/MeshModelsTests.cpp:1990
+...............................................................................
+
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/MeshModelsTests.cpp:2028: warning:
+  RM-MESH-02 global target 12 -> 6 mm: 508 -> 1977 tets, median edge 14.6718 ->
+  9.59777 mm, mean 19.9117 -> 13.0003 mm, volume 117212.51992517794 -> 117212.
+  51992517794 mm^3
+
+-------------------------------------------------------------------------------
+MeshReference_SaveLoadRegenerateKeepsTheIntentAndNotTheMesh
+-------------------------------------------------------------------------------
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/MeshModelsTests.cpp:2124
+...............................................................................
+
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/MeshModelsTests.cpp:2207: warning:
+  RM-MESH-01 save/load: 5092 bytes, 8 nodes / 6 tets / 294000.00000000006 mm^3
+  before, 8 / 6 / 294000.00000000006 after
+
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/MeshModelsTests.cpp:2207: warning:
+  RM-MESH-03 save/load: 6212 bytes, 81 nodes / 126 tets / 63560.69856538716
+  mm^3 before, 81 / 126 / 63560.69856538716 after
+
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/MeshModelsTests.cpp:2207: warning:
+  RM-MESH-07 save/load: 5435 bytes, 61 nodes / 267 tets / 239999.99999999997
+  mm^3 before, 61 / 267 / 239999.99999999997 after
+
+-------------------------------------------------------------------------------
+P16Qualification_EveryReferenceDocumentRoundTripsItsIntentAndRegenerates
+-------------------------------------------------------------------------------
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/qualification/P16MeshingQualificationTests.cpp:263
+...............................................................................
+
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/qualification/P16MeshingQualificationTests.cpp:328: warning:
+  all 9 reference documents round-tripped their canonical intent; 8 regenerated
+  an identical mesh; RM-MESH-08 still refused after a load
+
+-------------------------------------------------------------------------------
+MeshCylinder_MapsItsCapsAndWallWithoutLeakage
+-------------------------------------------------------------------------------
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/MeshModelsTests.cpp:769
+...............................................................................
+
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/MeshModelsTests.cpp:848: warning:
+  RM-MESH-02 curved conformity: 72 lateral facets, worst node radial deviation
+  3.55271e-15 mm, worst chord sagitta 0.0951325 mm, declared deflection 0.25 mm
+
+-------------------------------------------------------------------------------
+MeshReference_UndoAndRedoOfTheIntentAreFollowedByTheMesh
+-------------------------------------------------------------------------------
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/MeshModelsTests.cpp:2049
+...............................................................................
+
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/MeshModelsTests.cpp:2105: warning:
+  RM-MESH-02 undo/redo: S1 508 tets (14.6718 mm), S2 361 tets (19.0971 mm),
+  undone 508 tets (14.6718 mm), redone 361 tets (19.0971 mm)
+
+-------------------------------------------------------------------------------
+P16Qualification_TheSavedDocumentIsIndependentOfMeshDensity
+-------------------------------------------------------------------------------
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/qualification/P16MeshingQualificationTests.cpp:111
+...............................................................................
+
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/qualification/P16MeshingQualificationTests.cpp:136: warning:
+  RM-MESH-02 at 24 mm: 114 nodes, 361 tets. At 6 mm: 376 nodes, 1977 tets.
+  Saved document: 3347 bytes either way.
+
+-------------------------------------------------------------------------------
+MeshBlock_SizingLevelsAreBoundedByItsOwnBoundary
+-------------------------------------------------------------------------------
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/MeshModelsTests.cpp:668
+...............................................................................
+
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/MeshModelsTests.cpp:716: warning:
+  RM-MESH-01 sizing levels (a planar boundary bounds them)
+  | Level | Target mm | Nodes | Tet4 | Median edge mm | Volume error |
+  | coarse | 30 | 8 | 6 | 120 | 1.980e-16 |
+  | medium | 20 | 8 | 6 | 120 | 1.980e-16 |
+  | fine | 10 | 8 | 6 | 120 | 1.980e-16 |
+
+-------------------------------------------------------------------------------
+MeshReferenceSuite_EveryValidModelMeshesAndTheInvalidOneIsRefused
+-------------------------------------------------------------------------------
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/MeshModelsTests.cpp:396
+...............................................................................
+
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/MeshModelsTests.cpp:497: warning:
+  P16-REFMOD-001 RESULTS
+  | Model | Outcome | Nodes | Tet4 | Vanalytic | Vmesh | RelError | MinTetVol |
+  Invalid | Warn | Fail | Facets |
+  | RM-MESH-01 | mesh | 8 | 6 | 294000 | 294000.00000000006 | 1.980e-16 | 49000
+  | 0 | 0 | 0 | 12 |
+  | RM-MESH-02 | mesh | 140 | 508 | 117809.72450961724 | 117212.51992517807 |
+  5.069e-03 | 0.475278 | 0 | 0 | 0 | 140 |
+  | RM-MESH-03 | mesh | 81 | 126 | 63517.699835307561 | 63560.69856538716 | 6.
+  770e-04 | 39.6433 | 0 | 0 | 0 | 160 |
+  | RM-MESH-04 | mesh | 261 | 808 | 81430.081581047431 | 81017.293772282923 |
+  5.069e-03 | 0.202694 | 0 | 0 | 0 | 288 |
+  | RM-MESH-05 | mesh | 9 | 12 | 14400 | 14399.999999999998 | 1.263e-16 | 1199.
+  93 | 0 | 0 | 0 | 12 |
+  | RM-MESH-06 | mesh | 9 | 12 | 118800 | 118800.00000000003 | 2.450e-16 |
+  9899.93 | 0 | 0 | 0 | 12 |
+  | RM-MESH-06 | mesh | 9 | 12 | 118800 | 118799.99999999999 | 1.225e-16 | 9900
+  | 0 | 0 | 0 | 12 |
+  | RM-MESH-07 | mesh | 61 | 267 | 240000 | 239999.99999999997 | 1.213e-16 |
+  31.5733 | 0 | 0 | 0 | 12 |
+  | RM-MESH-08 | refusal | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a
+  | n/a |
+
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/MeshModelsTests.cpp:521: warning:
+  P16-REFMOD-001 QUALITY MATRIX
+  | Model | Tet4 | Invalid | Warn | Fail | WorstAspect | WorstRadiusRatio |
+  worst element | MinDihedral deg | worst element | MaxDihedral deg | MinTetVol
+  mm^3 | element |
+  | MeshBlock | 6 | 0 | 0 | 0 | 4.0933 | 0.43725 | 1 | 14.6211 | 1 | 115.641 |
+  49000 | 1 |
+  | MeshCylinder | 508 | 0 | 0 | 0 | 16.0391 | 0.00124845 | 504 | 0.362683 | 54
+  | 177.113 | 0.475278 | 369 |
+  | MeshPlateWithHole | 126 | 0 | 0 | 0 | 20.4856 | 0.0129063 | 120 | 1.11273 |
+  6 | 165.482 | 39.6433 | 122 |
+  | MeshTube | 808 | 0 | 0 | 0 | 14.8994 | 0.00634594 | 462 | 2.3722 | 462 |
+  170.046 | 0.202694 | 546 |
+  | MeshThinPlate | 12 | 0 | 0 | 0 | 80.0062 | 0.000322641 | 12 | 0.71612 | 12
+  | 178.709 | 1199.93 | 1 |
+  | MeshTransformedBase | 12 | 0 | 0 | 0 | 3.88104 | 0.127381 | 6 | 14.9313 | 6
+  | 152.325 | 9899.93 | 4 |
+  | MeshTransformedPlaced | 12 | 0 | 0 | 0 | 3.88104 | 0.127381 | 5 | 14.9314 |
+  5 | 152.325 | 9900 | 2 |
+  | MeshLocalRefinement | 267 | 0 | 0 | 0 | 5.61104 | 0.0411619 | 139 | 7.89468
+  | 101 | 165.695 | 31.5733 | 110 |
+  | RM-MESH-08 | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/
+  a | n/a |
+
+-------------------------------------------------------------------------------
+MeshReference_IsDeterministicOverRepeatedGeneration
+-------------------------------------------------------------------------------
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/MeshModelsTests.cpp:2235
+...............................................................................
+
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/MeshModelsTests.cpp:2299: warning:
+  P16-REFMOD-001 determinism, 5 runs each
+  | Model | Runs | Nodes | Tet4 | Volume mm^3 | Stable |
+  | RM-MESH-01 | 5 | 8 | 6 | 294000.00000000006 | yes |
+  | RM-MESH-03 | 5 | 81 | 126 | 63560.69856538716 | yes |
+  | RM-MESH-06 | 5 | 9 | 12 | 118799.99999999999 | yes |
+  | RM-MESH-07 | 5 | 61 | 267 | 239999.99999999997 | yes |
+
+-------------------------------------------------------------------------------
+P16Qualification_StaleGeometryNeverYieldsACurrentMesh
+-------------------------------------------------------------------------------
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/qualification/P16MeshingQualificationTests.cpp:189
+...............................................................................
+
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/qualification/P16MeshingQualificationTests.cpp:257: warning:
+  RM-MESH-01 stale sequence: 6 tets at 120 mm, refused while stale, refused
+  after a failed rebuild, 12 tets at 150 mm (367500 mm^3)
+
+-------------------------------------------------------------------------------
+MeshReference_ScalingAModelScalesItsVolumeByTheCube
+-------------------------------------------------------------------------------
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/MeshModelsTests.cpp:1940
+...............................................................................
+
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/MeshModelsTests.cpp:1972: warning:
+  scale 2.5: analytic 294000 -> 4593750 mm^3, mesh 294000.00000000006 ->
+  4593749.9999999991; worst radius ratio 0.43725 -> 0.43725, min dihedral 14.
+  6211 -> 14.6211 deg
+
+-------------------------------------------------------------------------------
+MeshThinPlate_MeshesWithMeasurablyWorseShapeThanTheBlock
+-------------------------------------------------------------------------------
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/MeshModelsTests.cpp:1209
+...............................................................................
+
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/MeshModelsTests.cpp:1261: warning:
+  RM-MESH-05 OUTCOME A -- shape against RM-MESH-01
+  | Metric | RM-MESH-01 | RM-MESH-05 |
+  | worst aspect ratio l_max/l_min | 4.0933 | 80.0062 |
+  | worst radius ratio 3r/R | 0.43725 | 0.000322641 |
+  | min dihedral deg | 14.6211 | 0.71612 |
+  | max dihedral deg | 115.641 | 178.709 |
+  | min element volume mm^3 | 49000 | 1199.93 |
+  | invalid / warning / failure | 0/0/0 | 0/0/0 |
+
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/MeshModelsTests.cpp:1317: warning:
+  RM-MESH-05 sizing sensitivity
+  | Case | Target mm | Nodes | Tet4 | Worst radius ratio | Min dihedral deg |
+  | 20 mm target | 20 | 9 | 12 | 0.000322641 | 0.71612 |
+  | 5 mm target | 5 | 11 | 19 | 0.00034409 | 0.755676 |
+  | 1 mm target | 1 | 12 | 24 | 0.00021803 | 0.567609 |
+
+===============================================================================
+All tests passed (23693 assertions in 34 test cases)
+

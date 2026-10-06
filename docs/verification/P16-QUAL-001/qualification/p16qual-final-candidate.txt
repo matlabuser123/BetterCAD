@@ -1,0 +1,60 @@
+Filters: [p16qual]
+Randomness seeded to: 3381920685
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+bettercad_tests.exe is a Catch2 v3.16.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+P16Qualification_AControlWhoseBodyIsDeletedIsUnresolvedAndMeshesNothing
+-------------------------------------------------------------------------------
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/qualification/P16MeshingQualificationTests.cpp:333
+...............................................................................
+
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/qualification/P16MeshingQualificationTests.cpp:385: warning:
+  a control whose body was deleted: ineligibility object_not_found, generation
+  refused, the 6 tetrahedra it held are stale
+
+-------------------------------------------------------------------------------
+P16Qualification_EveryReferenceDocumentRoundTripsItsIntentAndRegenerates
+-------------------------------------------------------------------------------
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/qualification/P16MeshingQualificationTests.cpp:263
+...............................................................................
+
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/qualification/P16MeshingQualificationTests.cpp:328: warning:
+  all 9 reference documents round-tripped their canonical intent; 8 regenerated
+  an identical mesh; RM-MESH-08 still refused after a load
+
+-------------------------------------------------------------------------------
+P16Qualification_StaleGeometryNeverYieldsACurrentMesh
+-------------------------------------------------------------------------------
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/qualification/P16MeshingQualificationTests.cpp:189
+...............................................................................
+
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/qualification/P16MeshingQualificationTests.cpp:257: warning:
+  RM-MESH-01 stale sequence: 6 tets at 120 mm, refused while stale, refused
+  after a failed rebuild, 12 tets at 150 mm (367500 mm^3)
+
+-------------------------------------------------------------------------------
+P16Qualification_SurfaceOrientationIsOutwardAndDeterministic
+-------------------------------------------------------------------------------
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/qualification/P16MeshingQualificationTests.cpp:148
+...............................................................................
+
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/qualification/P16MeshingQualificationTests.cpp:184: warning:
+  RM-MESH-04 surface orientation: 288 boundary triangles, enclosed volume
+  81017.293772282937 mm^3, identical over 4 generations
+
+-------------------------------------------------------------------------------
+P16Qualification_TheSavedDocumentIsIndependentOfMeshDensity
+-------------------------------------------------------------------------------
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/qualification/P16MeshingQualificationTests.cpp:111
+...............................................................................
+
+C:/Users/uqhas/OneDrive/Desktop/CAD/tests/qualification/P16MeshingQualificationTests.cpp:136: warning:
+  RM-MESH-02 at 24 mm: 114 nodes, 361 tets. At 6 mm: 376 nodes, 1977 tets.
+  Saved document: 3347 bytes either way.
+
+===============================================================================
+All tests passed (283 assertions in 6 test cases)
+

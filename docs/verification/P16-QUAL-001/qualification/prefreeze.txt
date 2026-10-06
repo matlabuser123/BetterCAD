@@ -1,0 +1,16 @@
+P16-QUAL-001 pre-freeze gates 
+started Tue 06/10/2026 14:19:23.35 
+build debug-ext exit 0 
+build release-ext exit 0 
+build debug-shared-ext exit 0 
+gate A: the new final gates, 5 repeats 
+gate A exit 0 Tue 06/10/2026 14:23:38.04 
+gate B: the whole P16 surface in all three presets 
+gate B debug-ext exit 0 
+gate B release-ext exit 0 
+gate B debug-shared-ext exit 0 
+gate C: the shared full suite 
+gate C exit 0 Tue 06/10/2026 14:44:11.82 
+gate D: the debug-ext full suite 
+gate D exit 0 Tue 06/10/2026 15:01:14.68 
+finished Tue 06/10/2026 15:01:14.68 

@@ -55,6 +55,10 @@ set(_filters
     # have to be seen to match something.
     "unit\\.Mesh(Block|Cylinder|PlateWithHole|Tube|ThinPlate|TransformedBlock|LocalRefinement|OpenProfile|Reference|Curved)" 20
     "refmod\\.mesh\\." 15
+    # P16-QUAL-001. The final cross-milestone gates, which no per-milestone
+    # filter reaches: they live under their own test-name prefix precisely so
+    # that the final qualification can select them and be seen to have done so.
+    "unit\\.P16Qualification" 4
 )
 list(LENGTH _filters _count)
 math(EXPR _last "${_count} - 1")
