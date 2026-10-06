@@ -53,6 +53,33 @@ CMakeLists.txt     3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd
 CMakePresets.json  3229f0f89b236744d7d5c082bed47c28b718288e
 ```
 
+
+### What the whole fingerprint is a function of
+
+Worth stating exactly, because a reader who recomputes it from `origin/main`
+will get a different number and be right to ask why. The harness builds its
+scratch index with `read-tree HEAD` and *then* `add -A` over the eight paths,
+so the value is a function of **the eight paths plus whatever base tree HEAD
+pointed at when it ran**. Throughout this qualification HEAD was `d7db08b`,
+P16-REFMOD-001's commit, and it never moved during the run — which is why all
+three readings agree.
+
+```text
+read-tree d7db08b  +  add -A over the eight paths, from the tree as pushed
+  -> 8ab30a31695e79c3d02fe222898f8b1ec6274565     reproduced exactly
+
+read-tree origin/main  +  the same add -A
+  -> a different value, necessarily: the base now carries this evidence
+     directory, which is the whole reason evidence is kept outside the
+     fingerprint
+```
+
+So the single value is a convenient summary, meaningful relative to the base it
+was taken against. **The invariant is the eight component hashes**, which are
+pure functions of content and which the pushed revision carries unchanged —
+verified against `origin/main^{tree}` after the push, path by path. Those are
+the rows in the table above, and they are what the claim rests on.
+
 **Nothing that can affect an executable or a test moved during the run**, and
 nothing moved between the run and the commit. The harness reads the fingerprint
 itself, at both ends, so the first two readings are not claims I make about the
@@ -173,6 +200,15 @@ committed tree was changed, and no test was weakened.
 
 ## Push verification
 
-Recorded in the final report: `git fetch origin`, then `HEAD`, `origin/main`,
-`HEAD^{tree}` and `git status --porcelain`, requiring a clean working tree and
-`HEAD == origin/main`.
+```text
+git push origin main        d7db08b..95e419b  main -> main
+git fetch origin
+HEAD                        95e419b336cf9955e7a7cc2e49911d4637b5d491
+origin/main                 95e419b336cf9955e7a7cc2e49911d4637b5d491
+HEAD == origin/main         YES
+git status --porcelain      0 lines
+```
+
+And the eight qualified paths read back out of `origin^{tree}` after the push,
+each identical to the frozen value in the table above. No force push, no
+rewritten history, no tag.
