@@ -16,8 +16,8 @@ Prerequisite:
            P16 — Meshing — QUALIFIED (P16-QUAL-001, 2026-10-06)
 
 Current milestone:
-           None. P17-DOF-001 is PASS (2026-10-07). Finishing a milestone is
-           a stop condition: P17-ELEM-001 is next in the sequence and is NOT
+           None. P17-ELEM-001 is PASS (2026-10-08). Finishing a milestone is
+           a stop condition: P17-LOAD-001 is next in the sequence and is NOT
            authorized until this file says so.
 
 Qualified:
@@ -30,9 +30,9 @@ Qualified:
            P16 — Meshing
 
 Next:
-           P17-ELEM-001 — Tet4 Linear Elastic Element. NOT AUTHORIZED:
-           P17-DOF-001 passing is not permission to start it. Authorizing
-           it is a scope decision.
+           P17-LOAD-001 — Structural Loads. NOT AUTHORIZED: P17-ELEM-001
+           passing is not permission to start it. Authorizing it is a scope
+           decision.
 
 P17 objective:
            authoritative CAD / material / mesh state
@@ -677,24 +677,69 @@ the element, so:
 Ke = integral of B^T D B dV   =   V B^T D B
 ```
 
-* [ ] Derive the Tet4 shape functions
-* [ ] Derive the Jacobian
-* [ ] Derive the B matrix
-* [ ] Define the isotropic D matrix
-* [ ] Implement the element stiffness matrix
-* [ ] Verify Ke is symmetric
-* [ ] Verify the rigid-body modes
-* [ ] Verify the unconstrained Ke is positive semidefinite
-* [ ] Verify element volume handling
-* [ ] Reject an inverted Tet
-* [ ] Reject a degenerate Tet
-* [ ] Validate coordinate-scale behaviour
-* [ ] Analytical single-Tet test
-* [ ] Independent reference implementation / test
-* [ ] Determinism PASS
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Derive the Tet4 shape functions
+* [x] Derive the Jacobian
+* [x] Derive the B matrix
+* [x] Define the isotropic D matrix
+* [x] Implement the element stiffness matrix
+* [x] Verify Ke is symmetric
+* [x] Verify the rigid-body modes
+* [x] Verify the unconstrained Ke is positive semidefinite
+* [x] Verify element volume handling
+* [x] Reject an inverted Tet
+* [x] Reject a degenerate Tet
+* [x] Validate coordinate-scale behaviour
+* [x] Analytical single-Tet test
+* [x] Independent reference implementation / test
+* [x] Determinism PASS
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded
+
+**COMPLETE 2026-10-08.** 18/18. Evidence:
+[docs/verification/P17-ELEM-001/](docs/verification/P17-ELEM-001/README.md).
+
+Three presets clean-rebuilt, 3522/3522 tests passed in each with 0 warnings
+over 612 objects, 797-test blast radius x5 repeats in release and debug,
+13 mutation probes with 11 killed by tests, qualified tree == committed tree
+at `845b118c`.
+
+**The derivation was written BEFORE the implementation**, and the tests check
+the code against it rather than the other way round:
+[TET4_DERIVATION.md](docs/verification/P17-ELEM-001/TET4_DERIVATION.md) fixes
+the reference element, the Jacobian convention (columns are the edge vectors),
+`grad_x N = J^-T grad_xi N`, `V = det J / 6` with no absolute value, the B
+block, the local DOF order and `Ke = V B^T D B`.
+
+**P16's degeneracy criterion has NO TOLERANCE, and that answered the brief
+differently than it expected.** `MeshValidation.hpp` refuses a volume that is
+exactly zero, deliberately -- "a thin tetrahedron is data-valid and is
+P16-QUALITY-001's to complain about" -- so there is no scale-aware policy to
+reuse and inventing one here would refuse elements a qualified mesh publishes.
+A 1000:1 thin Tet is ACCEPTED, with a test saying so. `invalid` is not `poor
+quality`.
+
+**`mu` already existed.** P15's `LinearElasticConstants::shearModulus` IS
+`E/(2(1+nu))`, so production carries P15's value instead of recomputing it --
+the fourth milestone running in which the audit found the quantity already
+built. `lambda` comes from the frozen formula and is cross-checked against
+P15's OTHER derived constant through `lambda = K - 2 mu / 3`.
+
+**One production defect, found by my own test.** The derivation claimed `det J`
+was "character-for-character" `meshing::signedVolume`; the bit-identity
+assertion failed ONE ULP apart on a skew Tet, because a first-row cofactor
+expansion is the same algebra and not the same floating-point operations. Fixed
+by matching P16's association rather than relaxing the test: the two are
+predicates on the SAME boundary, so a Tet whose volume rounds near zero must
+not be data-valid for the validator and inverted for the solver. Now exactly
+zero disagreement on every element of three reference meshes.
+
+**No Eigen in production**, and that is a scope decision: no public header in
+the repository includes it, so `Ke`, `B` and `D` could not be Eigen types
+anyway, and `src/structural/CMakeLists.txt` records that admitting it here is
+P17-SOLVE-001's decision with an open licence question. The TESTS use it for
+eigenvalues, SVD and an independent reference that inverts a 4x4 coordinate
+matrix -- so it never forms a Jacobian and cannot mirror a transposition.
 
 ### Conventions, fixed once
 
@@ -1572,7 +1617,7 @@ docs/engineering/
 # CURRENT NEXT STEP
 
 ```text
-P17-DOF-001 is PASS. The next step is a scope decision, not an
+P17-ELEM-001 is PASS. The next step is a scope decision, not an
 implementation.
 ```
 
@@ -1605,8 +1650,12 @@ P17-DOF-001      PASS 2026-10-07. Qualified at 9301b643, 3493/3493 x 3,
                  0 warnings over 609 objects, 10 mutation probes killed.
                  Evidence recorded, plus ADR-037.
 
-P17-ELEM-001     NOT AUTHORIZED. Being next in the sequence is not
-                 permission, and P17-DOF-001 passing is not either.
+P17-ELEM-001     PASS 2026-10-08. Qualified at 845b118c, 3522/3522 x 3,
+                 0 warnings over 612 objects, 13 mutation probes with 11
+                 killed by tests. Evidence recorded.
+
+P17-LOAD-001     NOT AUTHORIZED. Being next in the sequence is not
+                 permission, and P17-ELEM-001 passing is not either.
                  Authorizing it is a scope decision.
 
 everything after it
