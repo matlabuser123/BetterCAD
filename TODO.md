@@ -16,8 +16,8 @@ Prerequisite:
            P16 — Meshing — QUALIFIED (P16-QUAL-001, 2026-10-06)
 
 Current milestone:
-           None. P17-MAT-001 is PASS (2026-10-07). Finishing a milestone is
-           a stop condition: P17-DOF-001 is next in the sequence and is NOT
+           None. P17-DOF-001 is PASS (2026-10-07). Finishing a milestone is
+           a stop condition: P17-ELEM-001 is next in the sequence and is NOT
            authorized until this file says so.
 
 Qualified:
@@ -30,8 +30,9 @@ Qualified:
            P16 — Meshing
 
 Next:
-           P17-DOF-001 — DOF Numbering / Constraint Foundation. NOT
-           AUTHORIZED: P17-MAT-001 passing is not permission to start it.
+           P17-ELEM-001 — Tet4 Linear Elastic Element. NOT AUTHORIZED:
+           P17-DOF-001 passing is not permission to start it. Authorizing
+           it is a scope decision.
 
 P17 objective:
            authoritative CAD / material / mesh state
@@ -601,18 +602,58 @@ needs may already be a `CompletenessState` away.
 
 Three translational DOFs per node: `ux`, `uy`, `uz`.
 
-* [ ] Define deterministic DOF numbering
-* [ ] Map `NodeId` to its three DOFs
-* [ ] Define constrained and free DOFs
-* [ ] Define DOF ordering
-* [ ] Reject missing nodes
-* [ ] Reject duplicate DOFs
-* [ ] Define active / free equation numbering
-* [ ] Determinism PASS
-* [ ] Scale to the reference meshes
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Define deterministic DOF numbering
+* [x] Map `NodeId` to its three DOFs
+* [x] Define constrained and free DOFs
+* [x] Define DOF ordering
+* [x] Reject missing nodes
+* [x] Reject duplicate DOFs
+* [x] Define active / free equation numbering
+* [x] Determinism PASS
+* [x] Scale to the reference meshes
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded
+
+**COMPLETE 2026-10-07.** 12/12. Evidence:
+[docs/verification/P17-DOF-001/](docs/verification/P17-DOF-001/README.md).
+
+Three presets clean-rebuilt, 3493/3493 tests passed in each with 0 warnings
+over 609 objects, 765-test blast radius x5 repeats in release and debug,
+10 mutation probes all killed, qualified tree == committed tree at `9301b643`.
+
+**The node ordinal was ADOPTED, not invented.** P16 documents that node handles
+may be sparse and that `Mesh` enumerates in ascending `NodeId`; P17-DATA-001's
+`StructuralResult` had already keyed its displacement array "parallel to
+mesh.nodes()". So `dof = 3 * nodeId.value() + component` is forbidden -- a mesh
+whose nodes are 3, 1000 and 9000000 has NINE degrees of freedom and that formula
+would build 27000003 rows -- and the ordinal is the mesh's own enumeration
+index, which is also the one a result already uses. A test compares the two
+through the result's OWN lookup, so a future divergence fails the suite instead
+of writing node i's answer into node j's slot.
+
+**The numbering is interleaved per node and that is now permanent**
+(`3k+1, 3k+2, 3k+3`), because an element's stiffness couples the DOFs of its own
+four nodes. Asserted WITH its negation: the second node's Ux is asserted to be 4
+and asserted NOT to be 2, since the two conventions agree at ordinal 0 and a
+formula check there would pass under either. `ADR-037` records the four
+decisions and the eight rejected alternatives.
+
+**One production defect, found by reading rather than by a failing test.** A
+`MeshStamp` identifies the BUILDER, not the snapshot: `MeshBuilder` sets it in
+its constructor and `build()` is a snapshot, so two snapshots share a stamp and
+may differ in size. A stamp-only binding check accepted a constraint set from
+the larger and then numbered every DOF as free -- a restrained model assembled
+as an unrestrained one. Fixed with a range check and a node-count check, both
+confirmed load-bearing by mutation.
+
+**Three types, not one**: `MeshDofMap` (which DOFs exist), `ConstraintSet`
+(which are prescribed, carrying no VALUE), `FreeEquationMap` (which are
+unknown, and their row). Each has one friend, so possession is the evidence.
+And a row of the reduced system is a DIFFERENT TYPE from a degree of freedom --
+`FreeEquationIndex`, zero-based with no invalid value -- because the two agree
+for an unrestrained model, so a test on a free-floating body would not catch
+the confusion.
 
 ### Gate
 
@@ -1531,7 +1572,7 @@ docs/engineering/
 # CURRENT NEXT STEP
 
 ```text
-P17-MAT-001 is PASS. The next step is a scope decision, not an
+P17-DOF-001 is PASS. The next step is a scope decision, not an
 implementation.
 ```
 
@@ -1560,8 +1601,12 @@ P17-DATA-001     PASS 2026-10-07. Qualified at fcf2ea16, 3434/3434 x 3,
 P17-MAT-001      PASS 2026-10-07. Qualified at 4d4698b3, 3453/3453 x 3,
                  0 warnings over 605 objects. Evidence recorded.
 
-P17-DOF-001      NOT AUTHORIZED. Being next in the sequence is not
-                 permission, and P17-MAT-001 passing is not either.
+P17-DOF-001      PASS 2026-10-07. Qualified at 9301b643, 3493/3493 x 3,
+                 0 warnings over 609 objects, 10 mutation probes killed.
+                 Evidence recorded, plus ADR-037.
+
+P17-ELEM-001     NOT AUTHORIZED. Being next in the sequence is not
+                 permission, and P17-DOF-001 passing is not either.
                  Authorizing it is a scope decision.
 
 everything after it

@@ -44,6 +44,7 @@ bettercad_add_executable(bettercad_tests
         meshing/VolumeMeshTests.cpp
         structural/StructuralAnalysisBoundaryTests.cpp
         structural/StructuralDataTests.cpp
+        structural/StructuralDofTests.cpp
         structural/StructuralMaterialTests.cpp
         drawing/AnnotationTests.cpp
         drawing/AssemblyDrawingTests.cpp
@@ -297,6 +298,7 @@ if(TARGET bettercad_reference_models)
         reference/AllModelsTests.cpp
         reference/MaterialModelsTests.cpp
         reference/MeshModelsTests.cpp
+        reference/StructuralDofReferenceTests.cpp
         reference/MeshTestSupport.hpp
         reference/AssemblyModelsTests.cpp
         reference/Analytic.hpp

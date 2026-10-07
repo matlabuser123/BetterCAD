@@ -528,3 +528,31 @@ bettercad_compile_fail_case(structids "${_structids}" NODE_ID_AS_LOAD_ID
     "could not convert|cannot convert|no matching function" BetterCAD::structural)
 bettercad_compile_fail_case(structids "${_structids}" NODE_ID_AS_RESTRAINT_ID
     "could not convert|cannot convert|no matching function" BetterCAD::structural)
+
+# P17-DOF-001: the solver-local index space. A DofIndex names a degree of
+# freedom of the model and a FreeEquationIndex a row of the REDUCED system, and
+# the two agree only for a model with no restraints -- so a test on a
+# free-floating body would not catch the confusion and the compiler has to. The
+# last three cases enforce the other half of the milestone: a numbering, a
+# constraint set and a free-equation map have one friend each, so possessing one
+# is evidence it came from a real mesh (ADR-036).
+set(_structdof "${CMAKE_CURRENT_SOURCE_DIR}/StructuralDofMisuse.cpp")
+bettercad_compile_fail_group(structdof "${_structdof}" BetterCAD::structural)
+bettercad_compile_fail_case(structdof "${_structdof}" FREE_EQUATION_AS_DOF_INDEX
+    "could not convert|cannot convert|no matching function" BetterCAD::structural)
+bettercad_compile_fail_case(structdof "${_structdof}" DOF_INDEX_AS_FREE_EQUATION
+    "could not convert|cannot convert|no matching function" BetterCAD::structural)
+bettercad_compile_fail_case(structdof "${_structdof}" FREE_EQUATION_FROM_INTEGER
+    "could not convert|cannot convert|no matching function" BetterCAD::structural)
+bettercad_compile_fail_case(structdof "${_structdof}" FREE_EQUATION_AS_INTEGER
+    "cannot convert .*FreeEquationIndex.*" BetterCAD::structural)
+bettercad_compile_fail_case(structdof "${_structdof}" FREE_EQUATION_AS_NODE_ID
+    "could not convert|cannot convert|no matching function" BetterCAD::structural)
+bettercad_compile_fail_case(structdof "${_structdof}" FREE_EQUATION_DEFAULT_CONSTRUCTED
+    "use of deleted function|deleted" BetterCAD::structural)
+bettercad_compile_fail_case(structdof "${_structdof}" MESH_DOF_MAP_CONSTRUCTED_DIRECTLY
+    "is private within this context|private" BetterCAD::structural)
+bettercad_compile_fail_case(structdof "${_structdof}" CONSTRAINT_SET_CONSTRUCTED_DIRECTLY
+    "is private within this context|private" BetterCAD::structural)
+bettercad_compile_fail_case(structdof "${_structdof}" FREE_EQUATION_MAP_CONSTRUCTED_DIRECTLY
+    "is private within this context|private" BetterCAD::structural)
