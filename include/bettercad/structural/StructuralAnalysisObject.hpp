@@ -24,6 +24,7 @@
 #include <bettercad/meshing/MeshIds.hpp>
 #include <bettercad/structural/Export.hpp>
 #include <bettercad/structural/StructuralData.hpp>
+#include <bettercad/structural/StructuralLoad.hpp>
 
 #include <cstdint>
 #include <memory>
@@ -52,7 +53,26 @@ struct StructuralAnalysisDefinition {
     /// so does (P17-MAT-001).
     StructuralAnalysisMode mode = StructuralAnalysisMode::LinearStatic;
 
-    // Loads          -- P17-LOAD-001
+    /// The loads applied, in the order the user gave them.
+    ///
+    /// HERE, AND NOT IN A SEPARATE COUNTER, for the reason this struct's own
+    /// note gives: an edit to any field moves the owning object's revision, so
+    /// a result computed under the old intent is detectably stale through the
+    /// one `analysisRevision` that `StructuralResultSource` already carries.
+    /// Added by P17-LOAD-001, which is what the placeholder here anticipated.
+    ///
+    /// CANONICAL INTENT ONLY. A face load carries a `FaceName`; nothing here
+    /// holds a boundary facet, a node handle or a derived force vector. The
+    /// nodal force field is rebuilt from these for whatever mesh is current
+    /// (`StructuralLoadVector.hpp`).
+    ///
+    /// ORDER IS THE USER'S AND IS PRESERVED. It does not affect the physical
+    /// result -- linear statics superposes, and the nodal field is accumulated
+    /// into an ascending map -- but reordering a user's list is not this
+    /// layer's to do, and keeping it makes the definition compare equal only
+    /// when it really is equal.
+    std::vector<StructuralLoad> loads{};
+
     // Restraints     -- P17-BC-001
     // Solver settings -- P17-SOLVE-001
     //

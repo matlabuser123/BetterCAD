@@ -28,6 +28,7 @@
 #include <bettercad/sketch/Sketch.hpp>
 #include <bettercad/structural/StructuralAnalysisObject.hpp>
 #include <bettercad/structural/StructuralData.hpp>
+#include <bettercad/structural/StructuralLoad.hpp>
 #include <bettercad/structural/StructuralResult.hpp>
 
 #include <catch2/catch_test_macros.hpp>
@@ -343,21 +344,53 @@ TEST_CASE("StructuralData_AnAnalysisIsADocumentObjectThatHoldsOnlyIntent",
     // strict a proxy for it, because it also catches the intent fields the
     // definition is supposed to grow.
     //
-    // A bound plus trivial copyability is the honest form: an array, a vector
-    // or a result would break both, while an enumerator or an id breaks
-    // neither.
-    static_assert(std::is_trivially_copyable_v<StructuralAnalysisDefinition>,
-                  "no owning container has appeared in the definition");
-    static_assert(sizeof(StructuralAnalysisDefinition) <= 4 * sizeof(MeshControlId),
-                  "the analysis definition holds intent only: a displacement array, a result "
-                  "or a mesh handle added to it would break this");
+    // AND THE INSTRUMENT CHANGED AGAIN, EXACTLY WHEN THIS COMMENT SAID IT
+    // WOULD. P17-DATA-001's note predicted that "trivial copyability holds
+    // only until P17-LOAD-001 gives the definition a collection of loads,
+    // which is a legitimate intent field and will break it", and it did: the
+    // definition now carries `std::vector<StructuralLoad> loads`.
+    //
+    // So trivial copyability is asserted FALSE, and for the stated reason --
+    // a bare `!is_trivially_copyable` would also pass if a result had been
+    // added, which is the thing being guarded against.
+    static_assert(!std::is_trivially_copyable_v<StructuralAnalysisDefinition>,
+                  "the loads collection makes the definition non-trivial, which is expected");
 
-    // AND THE HALF-LIFE OF THAT INSTRUMENT IS STATED RATHER THAN DISCOVERED.
-    // Trivial copyability holds only until P17-LOAD-001 gives the definition a
-    // collection of loads, which is a legitimate intent field and will break
-    // it. At that point the property to assert is still "no derived state" and
-    // the instrument has to change again -- a compile-fail case naming the
-    // types that may not appear would survive it.
+    // THE REPLACEMENT INSTRUMENT, which that note also named: state the types
+    // that MAY appear, and let an added field break a size equality. The
+    // mirror declares the same three members in the same order, so padding is
+    // the same and any fourth field changes the size.
+    struct PermittedDefinition {
+        MeshControlId mesh;
+        structural::StructuralAnalysisMode mode;
+        std::vector<structural::StructuralLoad> loads;
+    };
+    static_assert(sizeof(StructuralAnalysisDefinition) == sizeof(PermittedDefinition),
+                  "the analysis definition holds a control, a mode and the loads -- nothing "
+                  "else. A displacement array, a result, a mesh handle or a facet set added to "
+                  "it breaks this");
+
+    // And derived state still cannot be put in it, which is the property the
+    // size equality is a proxy for.
+    static_assert(!std::is_constructible_v<StructuralAnalysisDefinition, StructuralResult>);
+    static_assert(!std::is_constructible_v<StructuralAnalysisDefinition, meshing::MeshStamp>);
+
+    // THE CANONICAL LOADS CARRY NO MESH-LOCAL HANDLE EITHER, which is
+    // P17-LOAD-001's central rule in compile-time form: a face load is a
+    // FaceName and a physical value, and there is nowhere in it for a boundary
+    // facet or a node to hide.
+    struct PermittedTraction {
+        FaceName face;
+        Traction3D traction;
+    };
+    struct PermittedPressure {
+        FaceName face;
+        Pressure magnitude;
+    };
+    static_assert(sizeof(structural::SurfaceTractionLoad) == sizeof(PermittedTraction));
+    static_assert(sizeof(structural::PressureLoad) == sizeof(PermittedPressure));
+    static_assert(!std::is_constructible_v<structural::SurfaceTractionLoad, meshing::ElementId>);
+    static_assert(!std::is_constructible_v<structural::PressureLoad, meshing::NodeId>);
 }
 
 TEST_CASE("StructuralData_ANoOpEditDoesNotMoveTheAnalysisRevision",

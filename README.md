@@ -20,7 +20,7 @@ unless a log says so.
 | --- | --- |
 | Parametric part modeling | **Qualified** — `P11-QUAL-001` |
 | Parametric CAD completion | **Qualified** — `P12-QUAL-001` |
-| Current implementation | `P17` — Structural FEA; `P17-ARCH-001`, `P17-DATA-001`, `P17-MAT-001`, `P17-DOF-001` and `P17-ELEM-001` qualified, nothing after them authorized ([TODO.md](TODO.md)) |
+| Current implementation | `P17` — Structural FEA; `P17-ARCH-001`, `P17-DATA-001`, `P17-MAT-001`, `P17-DOF-001`, `P17-ELEM-001` and `P17-LOAD-001` qualified, nothing after them authorized ([TODO.md](TODO.md)) |
 | Released | `v0.1.0` (`P0`–`P10`); `P11` and `P12` are qualified but not released |
 
 `P12-QUAL-001` rebuilt the tree clean in Debug, Release and Debug-shared and ran

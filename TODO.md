@@ -16,8 +16,8 @@ Prerequisite:
            P16 — Meshing — QUALIFIED (P16-QUAL-001, 2026-10-06)
 
 Current milestone:
-           None. P17-ELEM-001 is PASS (2026-10-08). Finishing a milestone is
-           a stop condition: P17-LOAD-001 is next in the sequence and is NOT
+           None. P17-LOAD-001 is PASS (2026-10-08). Finishing a milestone is
+           a stop condition: P17-BC-001 is next in the sequence and is NOT
            authorized until this file says so.
 
 Qualified:
@@ -30,7 +30,7 @@ Qualified:
            P16 — Meshing
 
 Next:
-           P17-LOAD-001 — Structural Loads. NOT AUTHORIZED: P17-ELEM-001
+           P17-BC-001 — Structural Restraints. NOT AUTHORIZED: P17-LOAD-001
            passing is not permission to start it. Authorizing it is a scope
            decision.
 
@@ -783,24 +783,73 @@ pressure on a CAD face
 gravity / body force, if the density path is ready
 ```
 
-* [ ] Define the load schema
-* [ ] Define force units
-* [ ] `GeometryReference`-based face loads
-* [ ] Nodal-force policy explicit
-* [ ] Surface traction
-* [ ] Pressure
-* [ ] Direction convention explicit
-* [ ] Pressure-normal convention explicit
-* [ ] Convert mapped facets to equivalent nodal forces
-* [ ] Preserve the resultant force
-* [ ] Preserve the resultant moment where mathematically required
-* [ ] Gravity / body-force decision explicit
-* [ ] Reject an unresolved load reference
-* [ ] Load-change result invalidation
-* [ ] Deterministic load vector
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Define the load schema
+* [x] Define force units
+* [x] `GeometryReference`-based face loads
+* [x] Nodal-force policy explicit
+* [x] Surface traction
+* [x] Pressure
+* [x] Direction convention explicit
+* [x] Pressure-normal convention explicit
+* [x] Convert mapped facets to equivalent nodal forces
+* [x] Preserve the resultant force
+* [x] Preserve the resultant moment where mathematically required
+* [x] Gravity / body-force decision explicit
+* [x] Reject an unresolved load reference
+* [x] Load-change result invalidation
+* [x] Deterministic load vector
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded
+
+**COMPLETE 2026-10-08.** 18/18. Evidence:
+[docs/verification/P17-LOAD-001/](docs/verification/P17-LOAD-001/README.md).
+
+Three presets clean-rebuilt, 3545/3545 tests passed in each with 0 warnings
+over 615 objects, 820-test blast radius x5 repeats in release and debug,
+13 mutation probes with 12 killed, qualified tree == committed tree at
+`27afe8d3`.
+
+**THREE of the brief's requirements name states that DO NOT EXIST**, and
+establishing that was most of the design work. `MappingState` has exactly
+`Resolved` and `Unresolved`: P16's header says a `FaceName` "can be ambiguous
+... and that is exactly why this layer does not map through one", and
+`Unsupported` is absent because "attribution needs no surface kind at all". And
+a stale-mapping check here is unreachable, because `requireStructuralModel`
+already refuses a stale mesh and proves the map came from the same lookup
+(ADR-036). So `LoadProblem` has EIGHT values rather than the eleven sketched,
+and the three omissions are recorded with P16's own words instead of shipped as
+placeholders.
+
+**A facet handle is never load authority, and it is a compile-time
+assertion.** Mirror structs fix the permitted members of the two face loads, so
+an added field changes the `sizeof`; neither is constructible from an
+`ElementId`; and the canonical header contains no `ElementId` outside comments
+and exactly one `NodeId` -- `NodalForceLoad::node`, which is MESH-LOCAL by
+declaration and carries its `MeshStamp`.
+
+**Load-change invalidation needed NO new mechanism.** The loads went into
+`StructuralAnalysisDefinition`, where P17-DATA-001 left `// Loads --
+P17-LOAD-001` and explained why: "an edit to any of them moves the owning
+object's revision ... Three independent counters would give three chances to
+forget one." That broke the two assertions P17-MAT-001 PREDICTED it would
+break, and whose comment named its own replacement.
+
+**Pressure follows the current normal; a traction does not.** `t = -p n_out`,
+so the block's two opposite caps under ONE positive scalar give opposite
+forces -- which a global-direction pressure cannot produce. On RM-MESH-06 the
+pressure resultant rotates as `R F` and the traction resultant does not, and
+the test says which is which rather than requiring either of the other.
+
+**Gravity is IMPLEMENTED**, because P17-MAT-001 had already made the density
+available for this consumer by name; the only thing missing was the integral.
+The load carries an acceleration and no density (ADR-028), and a missing
+density is refused -- there is no 7850 anywhere in the module.
+
+**The moment conservation gate earned itself.** Mutation probe M2 puts the
+whole facet force on one corner, which preserves the total force EXACTLY and
+is invisible to every force assertion in the suite. It is caught only through
+the first moment.
 
 ### Critical mapping rule
 
@@ -1617,7 +1666,7 @@ docs/engineering/
 # CURRENT NEXT STEP
 
 ```text
-P17-ELEM-001 is PASS. The next step is a scope decision, not an
+P17-LOAD-001 is PASS. The next step is a scope decision, not an
 implementation.
 ```
 
@@ -1654,8 +1703,12 @@ P17-ELEM-001     PASS 2026-10-08. Qualified at 845b118c, 3522/3522 x 3,
                  0 warnings over 612 objects, 13 mutation probes with 11
                  killed by tests. Evidence recorded.
 
-P17-LOAD-001     NOT AUTHORIZED. Being next in the sequence is not
-                 permission, and P17-ELEM-001 passing is not either.
+P17-LOAD-001     PASS 2026-10-08. Qualified at 27afe8d3, 3545/3545 x 3,
+                 0 warnings over 615 objects, 13 mutation probes with 12
+                 killed. Evidence recorded.
+
+P17-BC-001       NOT AUTHORIZED. Being next in the sequence is not
+                 permission, and P17-LOAD-001 passing is not either.
                  Authorizing it is a scope decision.
 
 everything after it

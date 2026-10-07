@@ -56,6 +56,12 @@ using VolumeSecondMoment = Quantity<dimensions::volumeSecondMoment>;
 using Stress = Pressure;
 using ElasticModulus = Pressure;
 
+/// A moment of force, in N m. THE SAME TYPE AS `Energy`, for the reason just
+/// given about stress and pressure: a newton-metre and a joule share a
+/// dimension, and a `Quantity` is keyed on its dimension alone. Added by
+/// P17-LOAD-001, where the resultant moment of a load distribution is a gate.
+using Torque = Energy;
+
 /// Poisson's ratio: dimensionless, and a distinct type all the same.
 ///
 /// It is NOT `Quantity<dimensions::dimensionless>`, because this system returns

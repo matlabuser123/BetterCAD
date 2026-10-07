@@ -36,6 +36,7 @@ bettercad_add_library(bettercad_structural
         StructuralDof.cpp
         StructuralMaterial.cpp
         StructuralResult.cpp
+        StructuralLoad.cpp
         Tet4Element.cpp
     PUBLIC_LINK
         BetterCAD::core

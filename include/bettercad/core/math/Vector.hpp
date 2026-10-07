@@ -97,4 +97,79 @@ struct Force3D {
     return isFinite(t.x) && isFinite(t.y) && isFinite(t.z);
 }
 
+/// A traction in model space: force per unit area, resolved onto X, Y and Z.
+///
+/// The third sibling, added by P17-LOAD-001 and placed here for the reason
+/// `Force3D` records above -- a traction is an engineering quantity, not a
+/// structural-analysis concept. Each component is a `Pressure`, so the type
+/// system knows that `traction * area` is a `Force` and that a traction cannot
+/// be assigned from one.
+///
+/// GLOBAL COMPONENTS. A traction is expressed on the model's own X, Y and Z,
+/// never on a surface-local basis: that is what makes it the load type whose
+/// direction does NOT follow a rotated face, as against a pressure, whose
+/// direction does. P17-LOAD-001 freezes the distinction and tests both halves.
+struct Traction3D {
+    Pressure x{};
+    Pressure y{};
+    Pressure z{};
+
+    /// @p magnitude along @p direction: each component is one product.
+    [[nodiscard]] static constexpr Traction3D along(const Direction3D& direction,
+                                                    Pressure magnitude) noexcept {
+        return {magnitude * direction.x(), magnitude * direction.y(), magnitude * direction.z()};
+    }
+
+    friend constexpr bool operator==(const Traction3D&, const Traction3D&) = default;
+};
+
+[[nodiscard]] constexpr Traction3D operator+(const Traction3D& a, const Traction3D& b) noexcept {
+    return {a.x + b.x, a.y + b.y, a.z + b.z};
+}
+
+[[nodiscard]] inline bool isFinite(const Traction3D& t) noexcept {
+    return isFinite(t.x) && isFinite(t.y) && isFinite(t.z);
+}
+
+/// A moment of force about a point, resolved onto X, Y and Z.
+///
+/// COMPONENTS ARE `Torque`, WHICH IS AN ALIAS OF `Energy`, and saying so is the
+/// point. A `Quantity` is keyed on its dimension alone and a newton-metre
+/// shares a dimension with a joule, so the two are the same type -- exactly as
+/// `Stress` and `ElasticModulus` are the same type as `Pressure`, which
+/// `Units.hpp` documents in the same terms. The alias buys readability in a
+/// signature, never a second layer of safety, and a reader who assumed
+/// otherwise would be wrong in a way that matters.
+///
+/// Added by P17-LOAD-001, where conservation of the resultant moment is a
+/// gate: a nodal load distribution can preserve the total force and still be
+/// wrong, and only the first moment catches it.
+struct Moment3D {
+    Torque x{};
+    Torque y{};
+    Torque z{};
+
+    friend constexpr bool operator==(const Moment3D&, const Moment3D&) = default;
+};
+
+[[nodiscard]] constexpr Moment3D operator+(const Moment3D& a, const Moment3D& b) noexcept {
+    return {a.x + b.x, a.y + b.y, a.z + b.z};
+}
+
+[[nodiscard]] inline bool isFinite(const Moment3D& m) noexcept {
+    return isFinite(m.x) && isFinite(m.y) && isFinite(m.z);
+}
+
+/// The moment of @p force applied at @p lever, which is a position RELATIVE to
+/// the reference point: `M = lever x force`.
+///
+/// The lever is a `Translation3D` rather than a `Point3D` so that the caller
+/// has to form the difference, which is where the choice of reference point
+/// belongs. A moment about an unstated origin is not a quantity.
+[[nodiscard]] constexpr Moment3D momentOf(const Translation3D& lever,
+                                          const Force3D& force) noexcept {
+    return {lever.y * force.z - lever.z * force.y, lever.z * force.x - lever.x * force.z,
+            lever.x * force.y - lever.y * force.x};
+}
+
 } // namespace bettercad
