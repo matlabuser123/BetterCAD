@@ -332,15 +332,32 @@ TEST_CASE("StructuralData_AnAnalysisIsADocumentObjectThatHoldsOnlyIntent",
     REQUIRE(dependencies.size() == 1);
     CHECK(dependencies.front() == ObjectId::fromValue(part.control.value()));
 
-    // AND IT HOLDS NOTHING DERIVED, which is a fact about the type's size
-    // rather than about the header's text. The definition is one MeshControlId
-    // and nothing else; a displacement array, a result or a mesh handle added
-    // to it would make this fail, and no amount of renaming would hide that.
-    static_assert(sizeof(StructuralAnalysisDefinition) == sizeof(MeshControlId),
-                  "the analysis definition holds intent only: adding derived state to it is "
-                  "the defect this asserts against");
+    // AND IT HOLDS NOTHING DERIVED, which is a fact about the type rather than
+    // about the header's text.
+    //
+    // THIS ASSERTION WAS TIGHTER AND WAS WRONG. P17-DATA-001 wrote
+    // `sizeof(definition) == sizeof(MeshControlId)`, meaning "nothing has been
+    // added". P17-MAT-001 then added `StructuralAnalysisMode`, which is
+    // ANALYSIS INTENT and exactly what this type is for, and the assertion
+    // fired. The intent -- catch DERIVED state -- was right; equality was too
+    // strict a proxy for it, because it also catches the intent fields the
+    // definition is supposed to grow.
+    //
+    // A bound plus trivial copyability is the honest form: an array, a vector
+    // or a result would break both, while an enumerator or an id breaks
+    // neither.
     static_assert(std::is_trivially_copyable_v<StructuralAnalysisDefinition>,
-                  "no owning container has appeared in it");
+                  "no owning container has appeared in the definition");
+    static_assert(sizeof(StructuralAnalysisDefinition) <= 4 * sizeof(MeshControlId),
+                  "the analysis definition holds intent only: a displacement array, a result "
+                  "or a mesh handle added to it would break this");
+
+    // AND THE HALF-LIFE OF THAT INSTRUMENT IS STATED RATHER THAN DISCOVERED.
+    // Trivial copyability holds only until P17-LOAD-001 gives the definition a
+    // collection of loads, which is a legitimate intent field and will break
+    // it. At that point the property to assert is still "no derived state" and
+    // the instrument has to change again -- a compile-fail case naming the
+    // types that may not appear would survive it.
 }
 
 TEST_CASE("StructuralData_ANoOpEditDoesNotMoveTheAnalysisRevision",

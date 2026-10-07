@@ -47,6 +47,37 @@
 namespace bettercad::structural {
 
 // ---------------------------------------------------------------------------
+// Analysis mode
+// ---------------------------------------------------------------------------
+
+/// What a structural analysis asks of its material.
+///
+/// ANALYSIS INTENT DECIDES, never the data. A material that happens to carry a
+/// density does not make an analysis a self-weight analysis, and one that lacks
+/// it does not disqualify an ordinary linear-static solve. The mode is a field
+/// of `StructuralAnalysisDefinition` for exactly that reason: the user says
+/// whether gravity is part of the problem, and the material requirement follows
+/// from the answer.
+///
+/// This maps onto P15's `ConsumerKind`, which already holds the one requirement
+/// table (`requiredProperties`): FeaLinearStatic needs E and nu only, and the
+/// WITH GRAVITY variant adds a density, "because that is when a mass enters the
+/// equations".
+enum class StructuralAnalysisMode : std::uint8_t {
+    /// Linear static with no body force. Needs E and nu.
+    LinearStatic,
+    /// Linear static including self-weight. Needs E, nu and a density.
+    ///
+    /// SELECTABLE, NOT YET ASSEMBLED. P17-LOAD-001 owns the body-force vector.
+    /// A material can be resolved for this mode today, which is what proves the
+    /// data is there before the physics needs it.
+    LinearStaticWithGravity,
+};
+
+[[nodiscard]] BETTERCAD_STRUCTURAL_EXPORT std::string_view
+toString(StructuralAnalysisMode mode) noexcept;
+
+// ---------------------------------------------------------------------------
 // Solver-local identity
 // ---------------------------------------------------------------------------
 

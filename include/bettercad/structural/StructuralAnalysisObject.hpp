@@ -45,6 +45,12 @@ struct StructuralAnalysisDefinition {
     /// transitively, so the analysis does not hold a second opinion about
     /// which body it is for.
     MeshControlId mesh{};
+    /// What the analysis asks of its material, and later of the load set.
+    ///
+    /// INTENT, which is why it is here and not inferred. A density on the
+    /// material does not make a problem a self-weight problem; the user saying
+    /// so does (P17-MAT-001).
+    StructuralAnalysisMode mode = StructuralAnalysisMode::LinearStatic;
 
     // Loads          -- P17-LOAD-001
     // Restraints     -- P17-BC-001

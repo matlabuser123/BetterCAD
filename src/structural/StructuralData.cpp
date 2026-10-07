@@ -4,6 +4,16 @@
 
 namespace bettercad::structural {
 
+std::string_view toString(StructuralAnalysisMode mode) noexcept {
+    switch (mode) {
+    case StructuralAnalysisMode::LinearStatic:
+        return "linear static";
+    case StructuralAnalysisMode::LinearStaticWithGravity:
+        return "linear static with gravity";
+    }
+    return "unknown";
+}
+
 std::string_view toString(DofComponent component) noexcept {
     switch (component) {
     case DofComponent::Ux:

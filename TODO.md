@@ -16,8 +16,8 @@ Prerequisite:
            P16 — Meshing — QUALIFIED (P16-QUAL-001, 2026-10-06)
 
 Current milestone:
-           None. P17-DATA-001 is PASS (2026-10-07). Finishing a milestone is
-           a stop condition: P17-MAT-001 is next in the sequence and is NOT
+           None. P17-MAT-001 is PASS (2026-10-07). Finishing a milestone is
+           a stop condition: P17-DOF-001 is next in the sequence and is NOT
            authorized until this file says so.
 
 Qualified:
@@ -30,8 +30,8 @@ Qualified:
            P16 — Meshing
 
 Next:
-           P17-MAT-001 — Structural Material Resolution. NOT AUTHORIZED:
-           P17-DATA-001 passing is not permission to start it.
+           P17-DOF-001 — DOF Numbering / Constraint Foundation. NOT
+           AUTHORIZED: P17-MAT-001 passing is not permission to start it.
 
 P17 objective:
            authoritative CAD / material / mesh state
@@ -526,20 +526,56 @@ not be, for the same reason `NodeId` is not (ADR-031).
 Consume qualified P15 engineering material data. At minimum `E`, `nu`, and
 `rho` where self-weight is required.
 
-* [ ] Resolve the structural material for the active body
-* [ ] Validate E > 0
-* [ ] Validate -1 < nu < 0.5
-* [ ] Reject NaN / infinity
-* [ ] Unit-safe material inputs
-* [ ] Define missing-material behaviour
-* [ ] Define custom-material behaviour
-* [ ] Define provenance behaviour
-* [ ] Define material-change result invalidation
-* [ ] Verify a material change does NOT require a remesh
-* [ ] Verify a material change DOES invalidate the structural result
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Resolve the structural material for the active body
+* [x] Validate E > 0
+* [x] Validate -1 < nu < 0.5
+* [x] Reject NaN / infinity
+* [x] Unit-safe material inputs
+* [x] Define missing-material behaviour
+* [x] Define custom-material behaviour
+* [x] Define provenance behaviour
+* [x] Define material-change result invalidation
+* [x] Verify a material change does NOT require a remesh
+* [x] Verify a material change DOES invalidate the structural result
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded
+
+**COMPLETE 2026-10-07.** 14/14. Evidence:
+[docs/verification/P17-MAT-001/](docs/verification/P17-MAT-001/README.md).
+
+Three presets clean-rebuilt, 3453/3453 tests passed in each with 0 warnings
+over 605 objects, 734-test blast radius x5 repeats in release and debug,
+qualified tree == committed tree at `4d4698b3`.
+
+**The audit changed what this milestone could honestly claim.** The checklist
+asks P17 to validate E > 0, validate -1 < nu < 0.5 and reject NaN and infinity.
+P15 already does all of it AT THE POINT OF ENTRY -- `createMaterial` and
+`setMaterialMechanical` both refuse an unusable value, and a refused edit leaves
+the previous one intact -- so such a value cannot be in a document at all. That
+was found by eleven failing tests, not by reading: the first draft asserted the
+resolver refused them and every case failed at `createMaterial`. The boundary
+tests now assert the guarantee that EXISTS, and the delegation is proved through
+the reachable half of P15's contract, a required property that is absent.
+
+**What the milestone adds is the three things P15 cannot know**:
+`StructuralAnalysisMode` (intent, so it is a field of the analysis definition --
+a density on the material does not make a problem a self-weight problem),
+`resolveStructuralMaterial` giving one solver-ready view per mode, and the
+integration proof. The density requirement is READ from P15's
+`requiredProperties` rather than hardcoded, which is the one line that makes the
+two impossible to disagree.
+
+**The hard requirement, measured.** An E edit of 210 -> 190 GPa leaves
+`Mesher::currency` Current, the MeshStamp unchanged, the geometry revision
+unchanged and the whole MeshControlDefinition equal by value, while
+`staleReasons` reports exactly `{ Material }`. And the same MaterialId with a
+changed modulus is a different solver input: revision 1 -> 2, stale, which is
+why the source stamp carries a revision and not just an id.
+
+Invalidation is dynamic, never imperative: no `markMeshStale` or
+`invalidateResult` hook exists anywhere in the tree.
+
 
 ### Critical rule
 
@@ -1495,7 +1531,7 @@ docs/engineering/
 # CURRENT NEXT STEP
 
 ```text
-P17-DATA-001 is PASS. The next step is a scope decision, not an
+P17-MAT-001 is PASS. The next step is a scope decision, not an
 implementation.
 ```
 
@@ -1521,8 +1557,11 @@ P17-ARCH-001     PASS 2026-10-07. Qualified at 536e14b5, 3401/3401 x 3.
 P17-DATA-001     PASS 2026-10-07. Qualified at fcf2ea16, 3434/3434 x 3,
                  0 warnings over 603 objects. Evidence recorded.
 
-P17-MAT-001      NOT AUTHORIZED. Being next in the sequence is not
-                 permission, and P17-DATA-001 passing is not either.
+P17-MAT-001      PASS 2026-10-07. Qualified at 4d4698b3, 3453/3453 x 3,
+                 0 warnings over 605 objects. Evidence recorded.
+
+P17-DOF-001      NOT AUTHORIZED. Being next in the sequence is not
+                 permission, and P17-MAT-001 passing is not either.
                  Authorizing it is a scope decision.
 
 everything after it

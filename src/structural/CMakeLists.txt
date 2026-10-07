@@ -33,6 +33,7 @@ bettercad_add_library(bettercad_structural
         StructuralAnalysis.cpp
         StructuralAnalysisObject.cpp
         StructuralData.cpp
+        StructuralMaterial.cpp
         StructuralResult.cpp
     PUBLIC_LINK
         BetterCAD::core
