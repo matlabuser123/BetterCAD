@@ -580,3 +580,25 @@ bettercad_compile_fail_case(structbc "${_structbc}" COMPONENTS_FROM_DISPLACEMENT
     "could not convert|cannot convert|no matching function|invalid conversion" BetterCAD::structural)
 bettercad_compile_fail_case(structbc "${_structbc}" PREPARED_RESTRAINTS_CONSTRUCTED_DIRECTLY
     "is private within this context|private|no matching function" BetterCAD::structural)
+
+# P17-ASSEMBLY-001: the global system. A hand-built K would defeat every check
+# in the module -- the dimensions against a real numbering, every element's
+# acceptance by P17-ELEM, every load's mesh, and the finiteness scan -- so the
+# matrix, the vector and the system each have one friend (ADR-036). And `K u =
+# F` is dimensional: a stiffness is N/m and a force is N, neither converts to
+# the other, and neither decays to a double. `values()` is the one deliberate
+# SI escape hatch, for a solver that maps the buffer.
+set(_structasm "${CMAKE_CURRENT_SOURCE_DIR}/StructuralSystemMisuse.cpp")
+bettercad_compile_fail_group(structasm "${_structasm}" BetterCAD::structural)
+bettercad_compile_fail_case(structasm "${_structasm}" STIFFNESS_MATRIX_CONSTRUCTED_DIRECTLY
+    "is private within this context|private|no matching function" BetterCAD::structural)
+bettercad_compile_fail_case(structasm "${_structasm}" FORCE_VECTOR_CONSTRUCTED_DIRECTLY
+    "is private within this context|private|no matching function" BetterCAD::structural)
+bettercad_compile_fail_case(structasm "${_structasm}" GLOBAL_SYSTEM_CONSTRUCTED_DIRECTLY
+    "is private within this context|private|no matching function" BetterCAD::structural)
+bettercad_compile_fail_case(structasm "${_structasm}" STIFFNESS_AS_FORCE
+    "could not convert|cannot convert|no matching function|invalid conversion" BetterCAD::structural)
+bettercad_compile_fail_case(structasm "${_structasm}" FORCE_AS_STIFFNESS
+    "could not convert|cannot convert|no matching function|invalid conversion" BetterCAD::structural)
+bettercad_compile_fail_case(structasm "${_structasm}" STIFFNESS_AS_DOUBLE
+    "cannot convert .*Quantity.*|could not convert|invalid conversion" BetterCAD::structural)

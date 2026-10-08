@@ -16,8 +16,8 @@ Prerequisite:
            P16 — Meshing — QUALIFIED (P16-QUAL-001, 2026-10-06)
 
 Current milestone:
-           None. P17-BC-001 is PASS (2026-10-08). Finishing a milestone is a
-           stop condition: P17-ASSEMBLY-001 is next in the sequence and is
+           None. P17-ASSEMBLY-001 is PASS (2026-10-08). Finishing a milestone
+           is a stop condition: P17-SOLVE-001 is next in the sequence and is
            NOT authorized until this file says so.
 
 Qualified:
@@ -30,9 +30,10 @@ Qualified:
            P16 — Meshing
 
 Next:
-           P17-ASSEMBLY-001 — Global Matrix / Vector Assembly. NOT
-           AUTHORIZED: P17-BC-001 passing is not permission to start it.
-           Authorizing it is a scope decision.
+           P17-SOLVE-001 — Linear System Solver. NOT AUTHORIZED:
+           P17-ASSEMBLY-001 passing is not permission to start it.
+           Authorizing it is a scope decision, and it carries the sparse
+           direct solver's licence question with it.
 
 P17 objective:
            authoritative CAD / material / mesh state
@@ -957,24 +958,105 @@ restraint intent attached to CAD geometry
 
 Assemble `K u = F`.
 
-* [ ] Define the sparse-matrix representation
-* [ ] Define the vector representation
-* [ ] Assemble the Tet4 `Ke`
-* [ ] Assemble the nodal force vector
-* [ ] Assemble the surface-load contribution
-* [ ] Assemble the body-force contribution if supported
-* [ ] Deterministic element traversal
-* [ ] Deterministic DOF insertion
-* [ ] Validate K dimensions
-* [ ] Validate K symmetry
-* [ ] Validate every entry is finite
-* [ ] Validate the unconstrained rigid-body singularity
-* [ ] No duplicate-entry loss
-* [ ] No race-sensitive assembly
-* [ ] Large-mesh smoke
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Define the sparse-matrix representation
+* [x] Define the vector representation
+* [x] Assemble the Tet4 `Ke`
+* [x] Assemble the nodal force vector
+* [x] Assemble the surface-load contribution
+* [x] Assemble the body-force contribution if supported
+* [x] Deterministic element traversal
+* [x] Deterministic DOF insertion
+* [x] Validate K dimensions
+* [x] Validate K symmetry
+* [x] Validate every entry is finite
+* [x] Validate the unconstrained rigid-body singularity
+* [x] No duplicate-entry loss
+* [x] No race-sensitive assembly
+* [x] Large-mesh smoke
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded
+
+PASS 2026-10-08. Evidence:
+[docs/verification/P17-ASSEMBLY-001/](docs/verification/P17-ASSEMBLY-001/).
+Decision: [ADR-038](docs/architecture/decisions/ADR-038-the-global-stiffness-matrix-is-a-bettercad-owned-csr-that-eigen-can-map.md).
+
+Four of those lines need their wording qualified, because the brief's words and
+what the tree can support are not the same thing:
+
+```text
+"Assemble the surface-load contribution"
+    TICKED FOR CONSUMING IT, which is the only correct reading. P17-LOAD-001
+    integrates traction and pressure into a nodal force field; assembly
+    scatters that field and re-integrates nothing. Searched over the
+    implementation: pressure, traction, facet and area have zero executable
+    occurrences. The test compares the assembled F against the prepared field
+    ENTRY BY ENTRY as well as against the analytical -p A.
+
+"Assemble the body-force contribution if supported"
+    SUPPORTED, and not an N/A: P17-LOAD-001 implemented gravity, so the
+    conditional is satisfied. Consumed the same way as every other load
+    through one path, with no second density lookup -- `density` and `gravity`
+    also have zero executable occurrences. Verified against rho V g on
+    RM-MESH-01.
+
+"Validate K symmetry"
+    TICKED FOR A DERIVED BOUND, not for exact symmetry. P17-ELEM forms Ke(a,b)
+    and Ke(b,a) as different sums of different products, so they agree to a few
+    ulps and the global matrix inherits exactly that. The test MEASURES the
+    elements' asymmetry and bounds the global error by it times the worst
+    contributor count -- and asserts the error is strictly POSITIVE, which is
+    what detects a post-hoc symmetrisation.
+
+"Validate the unconstrained rigid-body singularity"
+    TICKED FOR SIX MODES ON A CONNECTED BODY, with the connectivity asserted
+    by the test's own flood fill rather than assumed. Nullity is NOT hardcoded
+    for an arbitrary mesh, which brief section 37 is explicit about.
+```
+
+### Gate
+
+```text
+global K/F mathematically correct
+    MET. Every entry against a dense oracle built test-side from an
+    independent Ke and an independently computed row, compared BOTH ways;
+    plus the energy identity, the internal-force scatter and six rigid-body
+    modes at 1e-17 relative
+
++ sparse representation explicit
+    MET. CSR, 64-bit index with the overflow bound proved by static_assert,
+    SI doubles, documented duplicate semantics. ADR-038 records why it is
+    BetterCAD's and not a library's, and the structural library still links
+    no linear algebra -- zero occurrences of Eigen
+
++ deterministic traversal/insertion explicit
+    MET. P16's ascending-ElementId order, recorded on the system and asserted
+    against the mesh's own; local row 0..11 then column 0..11; loads in
+    PreparedLoads' ascending order. No unordered container, no thread, no
+    atomic -- zero occurrences of each. Repeat runs are bit-identical
+
++ duplicate sparse contributions summed, never overwritten
+    MET. One slot per (row, column) by construction. Fifteen
+    contributor-count groups from 2 to 22 elements per entry, every one equal
+    to the independent sum; the += -> = probe is killed by nine tests
+
++ unconstrained rigid-body singularity preserved
+    MET. Nullity exactly six with a four-order eigenvalue gap, and no
+    regularisation anywhere -- the probe that scales the diagonal by 1.000001
+    is killed by eight tests
+
++ no race-sensitive assembly
+    MET by design: the assembly is serial
+
++ production K remains sparse
+    MET. Entries per row 33 -> 40 while Ndof grew 420 -> 2550; 1.56 MiB
+    against 49.61 MiB for a dense equivalent; nnz <= 144 * tets exactly. The
+    symmetry and finiteness checks walk stored entries and densify nothing
+
++ large-mesh smoke PASS
+    MET. 850 nodes, 4210 tetrahedra, 2550 DOFs, 102 276 nonzeros, finite,
+    symmetric, rigid modes intact
+```
 
 ### Representation
 
@@ -1707,7 +1789,7 @@ docs/engineering/
 # CURRENT NEXT STEP
 
 ```text
-P17-BC-001 is PASS. The next step is a scope decision, not an
+P17-ASSEMBLY-001 is PASS. The next step is a scope decision, not an
 implementation.
 ```
 
@@ -1756,9 +1838,20 @@ P17-BC-001       PASS 2026-10-08. Qualified at 60e01a98, 3583/3583 x 3,
                  StructuralLoad.cpp now calls the shared
                  structural::resolveFaceTarget. Evidence recorded.
 
-P17-ASSEMBLY-001 NOT AUTHORIZED. Being next in the sequence is not
-                 permission, and P17-BC-001 passing is not either.
-                 Authorizing it is a scope decision.
+P17-ASSEMBLY-001 PASS 2026-10-08. Qualified at 6d36b39e, 3615/3615 x 3,
+                 0 warnings over 624 objects, 14 mutation probes with 11
+                 killed. BetterCAD owns the CSR and the structural library
+                 still links no linear algebra: ADR-038, which keeps the
+                 Eigen admission P17-SOLVE-001's. No solve, no constraint
+                 application, no reduced system, no regularisation of the
+                 free-body singularity. Evidence recorded.
+
+P17-SOLVE-001    NOT AUTHORIZED. Being next in the sequence is not
+                 permission, and P17-ASSEMBLY-001 passing is not either.
+                 Authorizing it is a scope decision -- and it is the one that
+                 must state the licence of whatever solver it proposes:
+                 Eigen is MPL-2.0 and admissible, several common sparse
+                 direct solvers are not.
 
 everything after it
                  likewise.

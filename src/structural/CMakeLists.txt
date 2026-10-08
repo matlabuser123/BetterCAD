@@ -39,6 +39,7 @@ bettercad_add_library(bettercad_structural
         StructuralTarget.cpp
         StructuralLoad.cpp
         StructuralConstraints.cpp
+        StructuralSystem.cpp
         Tet4Element.cpp
     PUBLIC_LINK
         BetterCAD::core
