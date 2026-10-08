@@ -101,9 +101,10 @@ Current authorized development:
 
 ```text
 P17 — Structural FEA, authorized 2026-10-06.
-P17-ARCH-001, P17-DATA-001, P17-MAT-001, P17-DOF-001, P17-ELEM-001 and
-P17-LOAD-001 are PASS (2026-10-08). No milestone is authorized now:
-P17-BC-001 is next in the sequence, which is not the same as permitted.
+P17-ARCH-001, P17-DATA-001, P17-MAT-001, P17-DOF-001, P17-ELEM-001,
+P17-LOAD-001 and P17-BC-001 are PASS (2026-10-08). No milestone is
+authorized now: P17-ASSEMBLY-001 is next in the sequence, which is not the
+same as permitted.
 ```
 
 Released: `v0.1.0` — Foundation.

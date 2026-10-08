@@ -16,6 +16,8 @@
 
 #include <bettercad/structural/StructuralLoadVector.hpp>
 
+#include <bettercad/structural/StructuralTarget.hpp>
+
 #include <algorithm>
 #include <cmath>
 #include <format>
@@ -77,19 +79,27 @@ struct ResolvedTarget {
     Error error{};
 };
 
+/// THE THREE CHECKS ARE `structural::resolveFaceTarget`'s, NOT THIS FILE'S.
+/// They moved to `StructuralTarget.hpp` when P17-BC-001 needed the same
+/// resolution for a restraint: copying them would have put P16's mapping
+/// semantics in two places. What stays here is the mapping onto this module's
+/// own diagnostics, because a load "has nothing to act on" and a restraint has
+/// nothing to constrain, and each names its own identity.
 [[nodiscard]] ResolvedTarget resolveTarget(const meshing::GeometryMeshMap& map, LoadId load,
                                            const FaceName& face) {
     ResolvedTarget out;
-    // P16 DECIDES. Not a geometric test here, and not a second classifier.
-    Result<meshing::BoundaryFacetSet> set = meshing::boundaryFacetsOf(map, face);
-    if (!set.has_value()) {
-        // boundaryFacetsOf fails only for a malformed selector: an
-        // unresolvable reference is a STATUS it reports, not an error.
-        out.problem = LoadProblem::TargetInvalid;
-        out.error = set.error();
+    const std::optional<TargetProblem> problem = faceTargetProblem(map, face);
+    if (!problem.has_value()) {
+        Result<std::vector<meshing::ElementId>> facets = resolveFaceTarget(map, face);
+        out.facets = std::move(*facets);
         return out;
     }
-    if (!set->fullyResolved()) {
+    switch (*problem) {
+    case TargetProblem::SelectorInvalid:
+        out.problem = LoadProblem::TargetInvalid;
+        out.error = resolveFaceTarget(map, face).error();
+        return out;
+    case TargetProblem::Unresolved:
         out.problem = LoadProblem::TargetUnresolved;
         out.error = makeError(ErrorCode::NotFound,
                               std::format("{}: its target face names no face of the body as "
@@ -98,8 +108,7 @@ struct ResolvedTarget {
                                           load))
                         .error();
         return out;
-    }
-    if (set->facets.empty()) {
+    case TargetProblem::WithoutFacets:
         // Resolved, and the mapping gave it no facet. A load that integrates
         // over nothing is not a zero load.
         out.problem = LoadProblem::TargetWithoutFacets;
@@ -111,7 +120,6 @@ struct ResolvedTarget {
                 .error();
         return out;
     }
-    out.facets = set->facets;
     return out;
 }
 

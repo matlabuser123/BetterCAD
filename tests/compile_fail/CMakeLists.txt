@@ -556,3 +556,27 @@ bettercad_compile_fail_case(structdof "${_structdof}" CONSTRAINT_SET_CONSTRUCTED
     "is private within this context|private" BetterCAD::structural)
 bettercad_compile_fail_case(structdof "${_structdof}" FREE_EQUATION_MAP_CONSTRUCTED_DIRECTLY
     "is private within this context|private" BetterCAD::structural)
+
+# P17-BC-001: the restraint model. A canonical restraint is an identity, a CAD
+# target and a component mask, and the facets, nodes and indices it resolves to
+# are rebuilt for whatever mesh is current. A restraint carrying a mesh handle
+# would survive a remesh naming material that had moved, which a size assertion
+# in the suite cannot catch for an attempted CONVERSION -- so the compiler
+# refuses. The mask is a strong type for the same reason a DofIndex is: a
+# 1|2|4 bitfield would be interchangeable with a count, an offset and a DOF
+# index. And `PreparedRestraints` has one friend, so possessing one is evidence
+# that every target resolved and the numbering describes this mesh (ADR-036).
+set(_structbc "${CMAKE_CURRENT_SOURCE_DIR}/StructuralRestraintMisuse.cpp")
+bettercad_compile_fail_group(structbc "${_structbc}" BetterCAD::structural)
+bettercad_compile_fail_case(structbc "${_structbc}" RESTRAINT_FROM_NODE_ID
+    "could not convert|cannot convert|no matching function|no match for" BetterCAD::structural)
+bettercad_compile_fail_case(structbc "${_structbc}" RESTRAINT_FROM_DOF_INDEX
+    "could not convert|cannot convert|no matching function|no match for" BetterCAD::structural)
+bettercad_compile_fail_case(structbc "${_structbc}" COMPONENTS_FROM_INTEGER
+    "could not convert|cannot convert|no matching function|invalid conversion" BetterCAD::structural)
+bettercad_compile_fail_case(structbc "${_structbc}" COMPONENTS_AS_INTEGER
+    "cannot convert .*RestraintComponents.*|could not convert" BetterCAD::structural)
+bettercad_compile_fail_case(structbc "${_structbc}" COMPONENTS_FROM_DISPLACEMENT
+    "could not convert|cannot convert|no matching function|invalid conversion" BetterCAD::structural)
+bettercad_compile_fail_case(structbc "${_structbc}" PREPARED_RESTRAINTS_CONSTRUCTED_DIRECTLY
+    "is private within this context|private|no matching function" BetterCAD::structural)

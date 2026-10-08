@@ -25,6 +25,7 @@
 #include <bettercad/structural/Export.hpp>
 #include <bettercad/structural/StructuralData.hpp>
 #include <bettercad/structural/StructuralLoad.hpp>
+#include <bettercad/structural/StructuralRestraint.hpp>
 
 #include <cstdint>
 #include <memory>
@@ -73,11 +74,35 @@ struct StructuralAnalysisDefinition {
     /// when it really is equal.
     std::vector<StructuralLoad> loads{};
 
-    // Restraints     -- P17-BC-001
+    /// The restraints applied, in the order the user gave them.
+    ///
+    /// HERE FOR THE SAME REASON THE LOADS ARE, AND WITH NO NEW MECHANISM. An
+    /// edit to a restraint moves this definition, which moves the owning
+    /// object's revision, which makes a result computed under the old intent
+    /// detectably stale through the one `analysisRevision` that
+    /// `StructuralResultSource` already carries. P17-BC-001 adds no second
+    /// invalidation path, and that is the point: the staleness question was
+    /// answered by P17-DATA-001 for every field this struct will ever grow.
+    ///
+    /// IT STALES THE RESULT AND NOT THE MESH. A restraint names a `FaceName`,
+    /// not a mesh control, so editing one leaves the mesh current and the
+    /// result stale -- the same asymmetry a material edit has.
+    ///
+    /// CANONICAL INTENT ONLY. A restraint carries a `FaceName` and a component
+    /// mask; nothing here holds a boundary facet, a node handle or a
+    /// `DofIndex`. The constrained DOF set is rebuilt for whatever mesh is
+    /// current (`StructuralConstraints.hpp`).
+    ///
+    /// ORDER IS THE USER'S AND IS PRESERVED, and here it cannot affect the
+    /// result at all: the constrained set is a union accumulated into an
+    /// ascending `ConstraintSet`, so two orderings of one list give the same
+    /// set index for index.
+    std::vector<StructuralRestraint> restraints{};
+
     // Solver settings -- P17-SOLVE-001
     //
-    // Named rather than declared. An empty `std::vector<Load>` here would be a
-    // placeholder for a type that does not exist, and a reader could not tell
+    // Named rather than declared. An empty `std::vector<Setting>` here would be
+    // a placeholder for a type that does not exist, and a reader could not tell
     // an unimplemented field from an intentionally empty one.
 
     friend bool operator==(const StructuralAnalysisDefinition&,

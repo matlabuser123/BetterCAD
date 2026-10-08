@@ -16,9 +16,9 @@ Prerequisite:
            P16 — Meshing — QUALIFIED (P16-QUAL-001, 2026-10-06)
 
 Current milestone:
-           None. P17-LOAD-001 is PASS (2026-10-08). Finishing a milestone is
-           a stop condition: P17-BC-001 is next in the sequence and is NOT
-           authorized until this file says so.
+           None. P17-BC-001 is PASS (2026-10-08). Finishing a milestone is a
+           stop condition: P17-ASSEMBLY-001 is next in the sequence and is
+           NOT authorized until this file says so.
 
 Qualified:
            P0–P10 — BetterCAD v0.1.0
@@ -30,9 +30,9 @@ Qualified:
            P16 — Meshing
 
 Next:
-           P17-BC-001 — Structural Restraints. NOT AUTHORIZED: P17-LOAD-001
-           passing is not permission to start it. Authorizing it is a scope
-           decision.
+           P17-ASSEMBLY-001 — Global Matrix / Vector Assembly. NOT
+           AUTHORIZED: P17-BC-001 passing is not permission to start it.
+           Authorizing it is a scope decision.
 
 P17 objective:
            authoritative CAD / material / mesh state
@@ -882,30 +882,71 @@ component-selective displacement = 0
 
 Prescribed non-zero displacement is deliberately deferred.
 
-* [ ] Define the restraint schema
-* [ ] `GeometryReference`-based restraints
-* [ ] Resolve a CAD region to the current mesh nodes
-* [ ] Fixed support
-* [ ] X restraint
-* [ ] Y restraint
-* [ ] Z restraint
-* [ ] Combined component restraints
-* [ ] Duplicate restraint handling
-* [ ] Conflicting restraint handling
-* [ ] An unresolved reference fails explicitly
-* [ ] Restraint-change result invalidation
-* [ ] Deterministic constrained DOF set
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Define the restraint schema
+* [x] `GeometryReference`-based restraints
+* [x] Resolve a CAD region to the current mesh nodes
+* [x] Fixed support
+* [x] X restraint
+* [x] Y restraint
+* [x] Z restraint
+* [x] Combined component restraints
+* [x] Duplicate restraint handling
+* [x] Conflicting restraint handling
+* [x] An unresolved reference fails explicitly
+* [x] Restraint-change result invalidation
+* [x] Deterministic constrained DOF set
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded
+
+PASS 2026-10-08. Evidence: [docs/verification/P17-BC-001/](docs/verification/P17-BC-001/).
+
+Two of those lines need their wording qualified, because the brief's words and
+what the tree can support are not the same thing:
+
+```text
+"GeometryReference-based restraints"
+    THERE IS NO SUCH TYPE in BetterCAD. The canonical CAD reference for a face
+    is `FaceName` (ObjectId + FaceSelector), which is what P16's mapping takes
+    and what P17-LOAD-001 already uses. The box is ticked for a FaceName
+    target; `NamedBoundarySet` was considered and rejected (it would couple
+    structural intent to MESHING intent), and edge and vertex targets have no
+    canonical reference in P16 at all. RESTRAINT_SCHEMA.md records both.
+
+"Conflicting restraint handling"
+    TICKED FOR THE POLICY, which in this scope is that there is no conflict to
+    have: every prescribed value is zero, so two restraints on one degree of
+    freedom are REDUNDANT, and that is lawful and normalised rather than
+    refused. `RestraintProblem` therefore has no `Conflict` value -- inventing
+    one would have been a branch nothing could take.
+    CONSTRAINT_VALIDATION.md states what a real conflict will be once
+    prescribed displacement exists, and why adding it then costs nothing.
+```
 
 ### Gate
 
 ```text
 restraint intent attached to CAD geometry
+    MET. RestraintId + FaceName + a component mask, and the record is
+    constructible from no NodeId, ElementId, DofIndex, MeshStamp or
+    ConstraintSet -- six build-failure cases and a sizeof mirror, so two
+    mutations that persist mesh handles are killed by the COMPILER
+
 + the current node set derived from P16 mapping
+    MET. structural::resolveFaceTarget then meshing::boundaryNodesOf, which
+    ALREADY sorts and deduplicates. P17-BC writes neither, and there is no
+    3 * nodeId anywhere in it
+
 + constrained DOFs deterministic
+    MET. Reversed insertion order gives an identical ordered index list and an
+    identical ordered node list, compared element for element; no unordered
+    container appears in the module; 634 x until-fail:5 in two presets
+
 + unresolved references explicit, never rebound to a nearby face
+    MET. TargetUnresolved with NotFound, on a block with six nameable faces so
+    a fallback would have found one. No nearest, distance, centroid or
+    tolerance exists in the implementation, and the mutation that proceeds
+    anyway is killed by five tests across P17-BC and P17-LOAD
 ```
 
 ---
@@ -1666,7 +1707,7 @@ docs/engineering/
 # CURRENT NEXT STEP
 
 ```text
-P17-LOAD-001 is PASS. The next step is a scope decision, not an
+P17-BC-001 is PASS. The next step is a scope decision, not an
 implementation.
 ```
 
@@ -1707,8 +1748,16 @@ P17-LOAD-001     PASS 2026-10-08. Qualified at 27afe8d3, 3545/3545 x 3,
                  0 warnings over 615 objects, 13 mutation probes with 12
                  killed. Evidence recorded.
 
-P17-BC-001       NOT AUTHORIZED. Being next in the sequence is not
-                 permission, and P17-LOAD-001 passing is not either.
+P17-BC-001       PASS 2026-10-08. Qualified at 60e01a98, 3583/3583 x 3,
+                 0 warnings over 620 objects, 14 mutation probes with 12
+                 killed. Prescribed non-zero displacement deliberately
+                 deferred, with no field in the schema for one.
+                 P17-LOAD-001 REQUALIFIED by the same run: its
+                 StructuralLoad.cpp now calls the shared
+                 structural::resolveFaceTarget. Evidence recorded.
+
+P17-ASSEMBLY-001 NOT AUTHORIZED. Being next in the sequence is not
+                 permission, and P17-BC-001 passing is not either.
                  Authorizing it is a scope decision.
 
 everything after it

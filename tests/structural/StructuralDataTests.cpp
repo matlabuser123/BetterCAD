@@ -358,17 +358,23 @@ TEST_CASE("StructuralData_AnAnalysisIsADocumentObjectThatHoldsOnlyIntent",
 
     // THE REPLACEMENT INSTRUMENT, which that note also named: state the types
     // that MAY appear, and let an added field break a size equality. The
-    // mirror declares the same three members in the same order, so padding is
-    // the same and any fourth field changes the size.
+    // mirror declares the same four members in the same order, so padding is
+    // the same and any fifth field changes the size.
+    //
+    // THE MIRROR IS EXTENDED BY A MILESTONE THAT ADDS AN AUTHORIZED FIELD, and
+    // extending it is the point at which the field's authority is stated: the
+    // restraints joined it in P17-BC-001 as canonical intent, and anything
+    // DERIVED still cannot be put here.
     struct PermittedDefinition {
         MeshControlId mesh;
         structural::StructuralAnalysisMode mode;
         std::vector<structural::StructuralLoad> loads;
+        std::vector<structural::StructuralRestraint> restraints;
     };
     static_assert(sizeof(StructuralAnalysisDefinition) == sizeof(PermittedDefinition),
-                  "the analysis definition holds a control, a mode and the loads -- nothing "
-                  "else. A displacement array, a result, a mesh handle or a facet set added to "
-                  "it breaks this");
+                  "the analysis definition holds a control, a mode, the loads and the "
+                  "restraints -- nothing else. A displacement array, a result, a mesh handle, a "
+                  "facet set or a constrained DOF list added to it breaks this");
 
     // And derived state still cannot be put in it, which is the property the
     // size equality is a proxy for.

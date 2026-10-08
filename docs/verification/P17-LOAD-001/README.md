@@ -393,3 +393,30 @@ EVIDENCE: this directory
 ## Revision
 
 First issue, 2026-10-08.
+
+## Forward note, 2026-10-08 — refactored by P17-BC-001
+
+`src/structural/StructuralLoad.cpp` was **changed after this milestone was
+qualified**. Its private `resolveTarget` had the three P16 mapping checks
+written inline; P17-BC-001 needs the same three for a restraint, so they moved
+to a shared helper and this file now calls it:
+
+```text
+structural::resolveFaceTarget / faceTargetProblem
+    include/bettercad/structural/StructuralTarget.hpp
+    src/structural/StructuralTarget.cpp
+```
+
+Behaviour is unchanged — the same checks in the same order — and P17-LOAD-001's
+own diagnostics are byte-for-byte what they were, because `TargetProblem` is
+neutral and each consumer maps it onto its own problem enum.
+
+**The qualification above stands for the tree it names, and this file's
+`FREEZE.md` fingerprint is left exactly as recorded.** That fingerprint is the
+tree P17-LOAD-001 was qualified on; editing it would falsify a record. The
+requalification on the new tree is P17-BC-001's, and is recorded there:
+
+```text
+docs/verification/P17-BC-001/REQUALIFICATION.md
+docs/verification/P17-BC-001/FREEZE.md
+```
