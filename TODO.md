@@ -16,9 +16,9 @@ Prerequisite:
            P16 — Meshing — QUALIFIED (P16-QUAL-001, 2026-10-06)
 
 Current milestone:
-           None. P17-ASSEMBLY-001 is PASS (2026-10-08). Finishing a milestone
-           is a stop condition: P17-SOLVE-001 is next in the sequence and is
-           NOT authorized until this file says so.
+           None. P17-SOLVE-001 is PASS (2026-10-09). Finishing a milestone is
+           a stop condition: P17-POST-001 is next in the sequence and is NOT
+           authorized until this file says so.
 
 Qualified:
            P0–P10 — BetterCAD v0.1.0
@@ -30,10 +30,9 @@ Qualified:
            P16 — Meshing
 
 Next:
-           P17-SOLVE-001 — Linear System Solver. NOT AUTHORIZED:
-           P17-ASSEMBLY-001 passing is not permission to start it.
-           Authorizing it is a scope decision, and it carries the sparse
-           direct solver's licence question with it.
+           P17-POST-001 — Displacement / Strain / Stress Recovery. NOT
+           AUTHORIZED: P17-SOLVE-001 passing is not permission to start it.
+           Authorizing it is a scope decision.
 
 P17 objective:
            authoritative CAD / material / mesh state
@@ -1077,23 +1076,90 @@ decision.
 
 Solve `K u = F` after restraints.
 
-* [ ] Audit available linear algebra libraries
-* [ ] State the licence of anything proposed (see P17 Prerequisites)
-* [ ] Select a direct or iterative solver
-* [ ] Define solver tolerances
-* [ ] Define convergence criteria
-* [ ] Define maximum iterations where relevant
-* [ ] Apply constraints correctly
-* [ ] Detect a singular system
-* [ ] Detect an under-constrained model
-* [ ] Detect a non-finite solution
-* [ ] Structured solver diagnostics
-* [ ] Deterministic solve behaviour MEASURED
-* [ ] Residual validation
-* [ ] Independent small-system validation
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Audit available linear algebra libraries
+* [x] State the licence of anything proposed (see P17 Prerequisites)
+* [x] Select a direct or iterative solver
+* [x] Define solver tolerances
+* [x] Define convergence criteria
+* [x] Define maximum iterations where relevant
+* [x] Apply constraints correctly
+* [x] Detect a singular system
+* [x] Detect an under-constrained model
+* [x] Detect a non-finite solution
+* [x] Structured solver diagnostics
+* [x] Deterministic solve behaviour MEASURED
+* [x] Residual validation
+* [x] Independent small-system validation
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded
+
+PASS 2026-10-09. Evidence:
+[docs/verification/P17-SOLVE-001/](docs/verification/P17-SOLVE-001/).
+Decision: [ADR-039](docs/architecture/decisions/ADR-039-the-structural-solver-is-eigens-simplicial-ldlt-with-a-pivot-gate-eigen-admitted-private.md).
+
+Three of those lines need their wording qualified, because the brief's words
+and what a DIRECT solver has are not the same thing:
+
+```text
+"Define convergence criteria"
+    TICKED FOR THE ACCEPTANCE CRITERION, which for a direct solve is the only
+    convergence there is. There is no iterative convergence to define: the
+    criterion is the INDEPENDENT normalized residual
+    ||r||2 / (||Kff||inf ||uf||2 + ||Ff||2) <= 1e-9, plus a pivot ratio
+    min|D|/max|D| >= 1e-12 and finiteness. All three are required; the
+    library's own status satisfies none of them on its own.
+
+"Define maximum iterations where relevant"
+    NOT RELEVANT, and recorded as N/A rather than invented as a field. The
+    settings have no maximumIterations, no iterative tolerance and no
+    preconditioner, and two compile-failure cases prove that referring to one
+    does not compile -- because a field that existed but did nothing would be
+    a false capability.
+
+"Detect an under-constrained model"
+    TICKED FOR DETECTING THE SINGULARITY, not for naming its cause. A singular
+    Kff usually means unremoved rigid-body modes, but it can also mean a
+    disconnected unrestrained region, a mechanism or bad conditioning, and
+    distinguishing them needs a nullspace analysis this milestone does not
+    perform on production systems. So there is ONE value, SingularSystem, and
+    its message says the model "may be under-constrained, disconnected or a
+    mechanism -- this layer measures the conditioning and does not claim to
+    know which". Inventing a separate UnderConstrained value would have been a
+    claim the code cannot support.
+```
+
+### Required residual check
+
+```text
+r = Kff uf - Ff        on the free system
+```
+
+```text
+MET, and computed by BetterCAD rather than read out of the solver: a loop over
+BetterCAD's own CSR copy of Kff against its own Ff, after the solve returned,
+so it uses the ORIGINAL system. `solver.error()` has zero occurrences in the
+file; the only Eigen members used anywhere are compute, info, solve and
+vectorD.
+
+AND THE GATE IS ON THE FREE SYSTEM, which is the trap the brief calls the most
+important. K u - F over the FULL system is correctly NON-ZERO at the
+constrained degrees of freedom -- those entries are the support reactions.
+Measured on the block fixture under 1000 N: largest free entry 2.56e-13 N,
+largest constrained entry 273.83 N, and the constrained entries sum to
+(7.1e-15, 1.3e-13, -1000) N against the applied +1000 N. Both halves are
+asserted, including that the constrained entries are NOT zero. The mutation
+that checks the residual over the full system is killed by twelve tests.
+
+RECORDED, for every main reference: ||r||2, ||r||inf, the normalized residual
+and the threshold. The measured normalized values run from 3.85e-18 to
+2.98e-17, eight orders below the 1e-9 gate, so the threshold is a margin and
+not a tuned constant.
+
+AND THE SOLVER'S OWN SUCCESS IS DEMONSTRABLY INSUFFICIENT. A near-singular
+system solves with a normalized residual of 1.00e-17 -- passing -- and an
+answer five orders larger than its data; the pivot gate is what refuses it.
+```
 
 ### Required residual check
 
@@ -1789,7 +1855,7 @@ docs/engineering/
 # CURRENT NEXT STEP
 
 ```text
-P17-ASSEMBLY-001 is PASS. The next step is a scope decision, not an
+P17-SOLVE-001 is PASS. The next step is a scope decision, not an
 implementation.
 ```
 
@@ -1846,12 +1912,20 @@ P17-ASSEMBLY-001 PASS 2026-10-08. Qualified at 6d36b39e, 3615/3615 x 3,
                  application, no reduced system, no regularisation of the
                  free-body singularity. Evidence recorded.
 
-P17-SOLVE-001    NOT AUTHORIZED. Being next in the sequence is not
-                 permission, and P17-ASSEMBLY-001 passing is not either.
-                 Authorizing it is a scope decision -- and it is the one that
-                 must state the licence of whatever solver it proposes:
-                 Eigen is MPL-2.0 and admissible, several common sparse
-                 direct solvers are not.
+P17-SOLVE-001    PASS 2026-10-09. Qualified at 4e41fdd2, 3647/3647 x 3,
+                 0 warnings over 628 objects, 14 mutation probes with 14
+                 killed. Eigen::SimplicialLDLT, direct, with a PIVOT GATE the
+                 library does not have: ADR-039, which also records the
+                 licence verified from the vendored tree (MPL-2.0, no new
+                 dependency). The residual gate is on the FREE system; the
+                 constrained entries of K u - F are the reactions and are
+                 retained for P17-REACTION-001. No penalty method, no
+                 arbitrary pinning, no diagonal regularisation. Evidence
+                 recorded.
+
+P17-POST-001     NOT AUTHORIZED. Being next in the sequence is not
+                 permission, and P17-SOLVE-001 passing is not either.
+                 Authorizing it is a scope decision.
 
 everything after it
                  likewise.

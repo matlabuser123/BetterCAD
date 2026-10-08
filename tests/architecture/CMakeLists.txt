@@ -54,3 +54,14 @@ bettercad_add_process_test(architecture.checker.structural-backend-leak
 bettercad_add_process_test(architecture.checker.library-reaches-apps
     COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/library-reaches-apps|-P|${_check_layering}"
     EXIT_CODE 1 STDERR_REGEX "1 violation.*reaches into apps/ from the library")
+# P17-SOLVE-001 / ADR-039. Rule 7: Eigen is PRIVATE to the modules that link
+# it, so no PUBLIC header may include it -- otherwise it would propagate to
+# io 60, renderer 70, scripting 70, the app and the CLI.
+#
+# The tree holds BOTH directions deliberately: a public header that includes
+# <Eigen/SparseCholesky> and a src/ file that includes <Eigen/SparseCore>. So
+# the expected count of ONE proves the rule fires on the public header and does
+# not fire on the permitted use -- a rule that flagged both would report two.
+bettercad_add_process_test(architecture.checker.eigen-public-header
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/eigen-public-header|-P|${_check_layering}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*Eigen header <Eigen/SparseCholesky>")

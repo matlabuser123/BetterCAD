@@ -19,6 +19,9 @@
 #   6. The library (include/, src/) must not include anything under apps/.
 #      Rules 2 and 3 miss it: rule 2 keys on Qt's header shape, and apps/ is
 #      not a module so rule 3 has no layer to compare (ADR-035).
+#   7. Eigen headers may only be included from src/, never from a public
+#      header (ADR-039). Rule 1 does not cover them either: Eigen's entry
+#      headers have no extension at all, so there is nothing to key on.
 #
 # Exits with an error listing every violation.
 if(NOT DEFINED SOURCE_DIR OR NOT IS_DIRECTORY "${SOURCE_DIR}")
@@ -96,6 +99,26 @@ set(mesh_backend_header_regex
     "^(nglib\\.h|nginterface[^/]*\\.(h|hpp)|netgen_version\\.hpp|netgen_config\\.hpp|netgen/.+|tetgen\\.h|gmsh\\.h|gmsh/.+|CGAL/.+|mmg/.+|libmmg.+\\.h)$")
 set(mesh_backend_allowed_regex "^src/meshing/[^/]+/")
 
+# Eigen is a fourth dependency that needs containment, and none of the rules
+# above provides it: Eigen's entry headers have NO extension at all
+# (<Eigen/Dense>, <Eigen/SparseCholesky>), so the .hxx rule cannot see them,
+# the Qt shape does not match, and the backend list does not name them.
+#
+# THE INVARIANT IS THAT NO PUBLIC HEADER INCLUDES EIGEN. It held across the
+# whole repository by practice before this rule existed -- bettercad_sketch and
+# bettercad_assembly link it PRIVATE and include it only from a .cpp or a
+# private .hpp beside its sources -- and P17-SOLVE-001 (ADR-039) made it
+# load-bearing by admitting Eigen to a third module. A public header including
+# it would make Eigen a PUBLIC dependency of that module and propagate it to
+# io 60, renderer 70, scripting 70, the app and the CLI.
+#
+# So the rule is enforced rather than reviewed, which is what rule 1 does for
+# OCCT and rule 5 for a mesh backend. Allowed: anything under src/, which is
+# where a .cpp or a private header lives. Forbidden: include/, which is the
+# public surface.
+set(eigen_header_regex "^(Eigen/.+|unsupported/Eigen/.+)$")
+set(eigen_allowed_regex "^src/")
+
 file(GLOB_RECURSE files RELATIVE "${SOURCE_DIR}"
     "${SOURCE_DIR}/include/*"
     "${SOURCE_DIR}/src/*"
@@ -161,6 +184,16 @@ foreach(file IN LISTS files)
            AND NOT file MATCHES "${mesh_backend_allowed_regex}")
             list(APPEND violations
                 "${file}: mesh backend header <${header}> outside src/meshing/<backend>/")
+        endif()
+
+        # Rule 7: Eigen containment (ADR-039).
+        #
+        # Eigen may be included from src/, never from a public header. See the
+        # note beside eigen_header_regex for why no earlier rule covers it.
+        if(header MATCHES "${eigen_header_regex}"
+           AND NOT file MATCHES "${eigen_allowed_regex}")
+            list(APPEND violations
+                "${file}: Eigen header <${header}> in a public header -- it is PRIVATE to the modules that link it and may be included only from src/")
         endif()
 
         # Rule 6: the library must not reach into an application (P17-ARCH-001).

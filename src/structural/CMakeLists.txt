@@ -20,10 +20,24 @@
 # a default or a typical value. That is why this module links features rather
 # than reaching into core/materials directly for a second opinion.
 #
-# NO LINEAR ALGEBRA YET. Eigen is in the tree, pinned and already qualified,
-# but it is declared private to bettercad_sketch. Admitting it here is
-# P17-SOLVE-001's decision and carries a licence question the owner must answer
-# (the project has no licence yet), so this module does not link it.
+# EIGEN, PRIVATE, ADMITTED BY P17-SOLVE-001 (ADR-039). The note that used to
+# stand here reserved this decision for that milestone, and it made it: Eigen
+# 5.0.1 is already pinned by hash and already linked PRIVATE by
+# bettercad_sketch and bettercad_assembly, so a third private link adds no
+# dependency and no new licence obligation.
+#
+# THE LICENCE WAS VERIFIED FROM THE VENDORED TREE, not from memory. Eigen
+# 5.0.1's COPYING.README says it is "primarily MPL2 licensed", it ships no
+# COPYING.LGPL and no COPYING.GPL (which Eigen 3.x did), and every file
+# SimplicialLDLT needs carries the Mozilla header -- including Amd.h, whose
+# CSparse-derived ordering states that Tim Davis executed a licence permitting
+# MPL-2.0 distribution. MPL-2.0 is FILE-LEVEL weak copyleft, so it attaches to
+# Eigen's own files and does not decide BetterCAD's licence.
+#
+# PRIVATE, AND NO PUBLIC HEADER INCLUDES IT. include/bettercad/structural/
+# exposes BetterCAD types only, so nothing above layer 50 -- io 60,
+# renderer 70, scripting 70, the app, the CLI -- sees Eigen. That invariant
+# holds across the whole repository and this milestone did not break it.
 
 bettercad_add_library(bettercad_structural
     ALIAS structural
@@ -40,11 +54,14 @@ bettercad_add_library(bettercad_structural
         StructuralLoad.cpp
         StructuralConstraints.cpp
         StructuralSystem.cpp
+        StructuralSolve.cpp
         Tet4Element.cpp
     PUBLIC_LINK
         BetterCAD::core
         BetterCAD::features
         BetterCAD::meshing
+    PRIVATE_LINK
+        BetterCAD::eigen
 )
 
 install(TARGETS bettercad_structural

@@ -602,3 +602,26 @@ bettercad_compile_fail_case(structasm "${_structasm}" FORCE_AS_STIFFNESS
     "could not convert|cannot convert|no matching function|invalid conversion" BetterCAD::structural)
 bettercad_compile_fail_case(structasm "${_structasm}" STIFFNESS_AS_DOUBLE
     "cannot convert .*Quantity.*|could not convert|invalid conversion" BetterCAD::structural)
+
+# P17-SOLVE-001: the linear static solve. A hand-built SolvedSystem would be a
+# displacement field nobody validated -- not the mesh pairing, not the pivot
+# ratio, not finiteness, not the independent residual -- so the reduced system
+# and the solution each have one friend (ADR-036, ADR-039). The settings of a
+# DIRECT solver have no iteration count and no preconditioner, and referring to
+# one must not compile: a field that existed but did nothing would be a false
+# capability. And a residual norm is a Force, not a Length and not a double,
+# because `K u = F` is dimensional.
+set(_structsolve "${CMAKE_CURRENT_SOURCE_DIR}/StructuralSolveMisuse.cpp")
+bettercad_compile_fail_group(structsolve "${_structsolve}" BetterCAD::structural)
+bettercad_compile_fail_case(structsolve "${_structsolve}" FREE_SYSTEM_CONSTRUCTED_DIRECTLY
+    "is private within this context|private|no matching function" BetterCAD::structural)
+bettercad_compile_fail_case(structsolve "${_structsolve}" SOLVED_SYSTEM_CONSTRUCTED_DIRECTLY
+    "is private within this context|private|no matching function" BetterCAD::structural)
+bettercad_compile_fail_case(structsolve "${_structsolve}" SETTINGS_HAVE_MAXIMUM_ITERATIONS
+    "has no member named|no member" BetterCAD::structural)
+bettercad_compile_fail_case(structsolve "${_structsolve}" SETTINGS_HAVE_PRECONDITIONER
+    "has no member named|no member" BetterCAD::structural)
+bettercad_compile_fail_case(structsolve "${_structsolve}" RESIDUAL_NORM_AS_LENGTH
+    "could not convert|cannot convert|no matching function|invalid conversion" BetterCAD::structural)
+bettercad_compile_fail_case(structsolve "${_structsolve}" RESIDUAL_NORM_AS_DOUBLE
+    "cannot convert .*Quantity.*|could not convert|invalid conversion" BetterCAD::structural)
