@@ -14,6 +14,26 @@ rem logs. The run had already printed "every stage exited 0" and the evidence
 rem for it was gone.
 rem ---------------------------------------------------------------------
 rem
+rem CORRECTED 2026-10-10 by P17-POST-001, AFTER this milestone had passed.
+rem
+rem This file carried 2 bare `OLD_END` lines -- a heredoc terminator
+rem leaked by the session that wrote it -- in the middle of the comment block
+rem below. cmd.exe reported "'OLD_END' is not recognized as an internal or
+rem external command" for each, and run-qualification.err beside this file
+rem STILL RECORDS THAT, because it is the record of what the run actually
+rem produced and is not edited.
+rem
+rem THE RUN WAS NOT AFFECTED. An unrecognized command prints to stderr and
+rem cmd.exe carries on; every stage still recorded exit 0, the stage table and
+rem the test counts in this milestone's README are unchanged, and the qualified
+rem source fingerprint is unchanged -- this file is documentation and is
+rem outside the eight fingerprinted paths. Nothing in the qualification result
+rem moves because of this correction.
+rem
+rem What changed: the bare lines were removed, and this note added. A file that
+rem calls itself "the exact invocation" must not contain lines that are not
+rem part of it.
+rem
 rem P17-SOLVE-001 -- Linear Static Solver. The exact invocation, recorded so
 rem the run is reproducible rather than described.
 rem
@@ -66,7 +86,6 @@ rem                            the free numbering from P17-DOF, and through
 rem                            them Ke from P17-ELEM and the loads from
 rem                            P17-LOAD. A solve is the first milestone that
 rem                            exercises the whole chain end to end
-OLD_END
 rem   unit\.MeshDofMap, unit\.ConstraintSet, unit\.FreeEquationMap
 rem                            P17-DOF's. The global ROW SPACE is the free
 rem                            numbering of the empty constraint set, so all
@@ -92,7 +111,6 @@ rem   unit\.Id                 the identity machinery
 rem   architecture             containment and layering over the whole tree,
 rem                            because a new public header went into an
 rem                            existing module
-OLD_END
 rem   unit\.ReferenceModel     the twelve mechanical parts (P11/P12)
 rem   unit\.Analytic           the independent geometry toolkit's own tests
 rem   refmod\.                 every reference-model process test

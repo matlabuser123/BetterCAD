@@ -625,3 +625,27 @@ bettercad_compile_fail_case(structsolve "${_structsolve}" RESIDUAL_NORM_AS_LENGT
     "could not convert|cannot convert|no matching function|invalid conversion" BetterCAD::structural)
 bettercad_compile_fail_case(structsolve "${_structsolve}" RESIDUAL_NORM_AS_DOUBLE
     "cannot convert .*Quantity.*|could not convert|invalid conversion" BetterCAD::structural)
+
+# P17-POST-001. `RecoveredFields` cannot be conjured: it has a private
+# constructor and one friend, so possession proves the four sources agreed and
+# every value is finite -- and that its source stamp was checked rather than
+# assigned, which is how a stale result would otherwise be made to look
+# current. Stress is a Pressure and strain is a ratio, so neither converts to
+# the other nor to a bare double; a displacement magnitude is a Length, so an
+# MPa/mm leak cannot enter the core unnoticed. And a `Strain6` (ENGINEERING
+# shear) is not a `StrainTensor3` (TENSOR shear, gamma/2), which is the
+# convention error the whole milestone is built against.
+set(_structpost "${CMAKE_CURRENT_SOURCE_DIR}/StructuralPostMisuse.cpp")
+bettercad_compile_fail_group(structpost "${_structpost}" BetterCAD::structural)
+bettercad_compile_fail_case(structpost "${_structpost}" RECOVERED_FIELDS_CONSTRUCTED_DIRECTLY
+    "is private within this context|private|no matching function" BetterCAD::structural)
+bettercad_compile_fail_case(structpost "${_structpost}" VON_MISES_AS_DOUBLE
+    "cannot convert .*Quantity.*|could not convert|invalid conversion" BetterCAD::structural)
+bettercad_compile_fail_case(structpost "${_structpost}" PRINCIPAL_STRAIN_AS_STRESS
+    "could not convert|cannot convert|no matching function|invalid conversion" BetterCAD::structural)
+bettercad_compile_fail_case(structpost "${_structpost}" DISPLACEMENT_MAGNITUDE_AS_DOUBLE
+    "cannot convert .*Quantity.*|could not convert|invalid conversion" BetterCAD::structural)
+bettercad_compile_fail_case(structpost "${_structpost}" STRAIN6_AS_STRAIN_TENSOR
+    "invalid initialization of reference|could not convert|cannot convert|no matching function|invalid conversion" BetterCAD::structural)
+bettercad_compile_fail_case(structpost "${_structpost}" STRESS_TENSOR_AS_STRAIN_TENSOR
+    "invalid initialization of reference|could not convert|cannot convert|no matching function|invalid conversion" BetterCAD::structural)

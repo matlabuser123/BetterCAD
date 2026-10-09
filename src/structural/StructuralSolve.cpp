@@ -1,9 +1,11 @@
 // The linear static solve (P17-SOLVE-001).
 //
-// EIGEN IS USED HERE AND NOWHERE ELSE IN THIS MODULE. ADR-039 admitted it,
-// PRIVATE, as `bettercad_sketch` and `bettercad_assembly` already have it, and
-// no public header includes it -- `StructuralSolve.hpp` exposes BetterCAD types
-// only, so nothing above layer 50 sees Eigen.
+// EIGEN IS USED HERE, PRIVATE. ADR-039 admitted it, as `bettercad_sketch` and
+// `bettercad_assembly` already have it, and no public header includes it --
+// `StructuralSolve.hpp` exposes BetterCAD types only, so nothing above layer 50
+// sees Eigen. `StructuralPost.cpp` is the module's one other Eigen consumer
+// (P17-POST-001, for symmetric 3x3 eigenvalues); it uses a different header and
+// shares no solver state with this file.
 //
 // WHAT EIGEN IS USED FOR, AND WHAT IT IS NOT. It factorises and it
 // back-substitutes. It does NOT decide whether the system was solvable and it

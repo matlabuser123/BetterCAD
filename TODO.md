@@ -16,9 +16,9 @@ Prerequisite:
            P16 — Meshing — QUALIFIED (P16-QUAL-001, 2026-10-06)
 
 Current milestone:
-           None. P17-SOLVE-001 is PASS (2026-10-09). Finishing a milestone is
-           a stop condition: P17-POST-001 is next in the sequence and is NOT
-           authorized until this file says so.
+           None. P17-POST-001 is PASS (2026-10-10). Finishing a milestone is
+           a stop condition: P17-REACTION-001 is next in the sequence and is
+           NOT authorized until this file says so.
 
 Qualified:
            P0–P10 — BetterCAD v0.1.0
@@ -30,9 +30,9 @@ Qualified:
            P16 — Meshing
 
 Next:
-           P17-POST-001 — Displacement / Strain / Stress Recovery. NOT
-           AUTHORIZED: P17-SOLVE-001 passing is not permission to start it.
-           Authorizing it is a scope decision.
+           P17-REACTION-001 — Reaction Forces / Equilibrium. NOT AUTHORIZED:
+           P17-POST-001 passing is not permission to start it. Authorizing it
+           is a scope decision.
 
 P17 objective:
            authoritative CAD / material / mesh state
@@ -1183,26 +1183,70 @@ u_e  →  epsilon = B u_e
 
 constant within each linear Tet4.
 
-* [ ] Recover the nodal displacement vector
-* [ ] Recover Tet strain
-* [ ] Recover Tet stress
-* [ ] Define the Voigt component order (same as P17-ELEM-001)
-* [ ] Define tensor conventions
-* [ ] Compute displacement magnitude
-* [ ] Compute principal stresses
-* [ ] Compute von Mises stress from the full 3D state
-* [ ] Define hydrostatic stress if useful
-* [ ] Define principal strain if useful
-* [ ] Units explicit
-* [ ] All results finite
-* [ ] Independent analytical validation
-* [ ] Deterministic result ordering
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Recover the nodal displacement vector
+* [x] Recover Tet strain
+* [x] Recover Tet stress
+* [x] Define the Voigt component order (same as P17-ELEM-001)
+* [x] Define tensor conventions
+* [x] Compute displacement magnitude
+* [x] Compute principal stresses
+* [x] Compute von Mises stress from the full 3D state
+* [x] Define hydrostatic stress if useful
+* [x] Define principal strain if useful
+* [x] Units explicit
+* [x] All results finite
+* [x] Independent analytical validation
+* [x] Deterministic result ordering
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded
+
+PASS 2026-10-10. Evidence:
+[docs/verification/P17-POST-001/](docs/verification/P17-POST-001/).
+Decision: [ADR-040](docs/architecture/decisions/ADR-040-recovered-fields-are-a-stage-product-and-the-tensor-conventions-live-with-the-voigt-vectors.md).
 
 Implement von Mises from the full 3D stress state and validate it
 independently. No 2D simplification.
+
+```text
+MET, AND THE PLANE-STRESS FORMULA IS MEASURED RATHER THAN MERELY AVOIDED. The
+production formula uses all six components; the mandatory fixture has szz, tyz
+AND tzx nonzero (120, -35, 55, 18, -27, 41 MPa); and the test COMPUTES the
+common plane-stress form alongside it and requires them to differ by more than
+5%. Measured: 1.62410e+08 Pa against 1.44212e+08 Pa, 11.2% apart. Without that
+assertion the fixture could have passed a 2D implementation by coincidence.
+
+VALIDATED THROUGH THREE INDEPENDENT ROUTES, none sharing a line with
+production: the deviatoric invariant sqrt(3/2 s:s), the principal-stress form,
+and Cardano's closed-form principal values -- a different ALGORITHM from
+Eigen's tridiagonal QL rather than a second call to it. Plus the properties:
+zero for five hydrostatic states, |sigma| for uniaxial on each axis
+(szz-alone is where a 2D formula gives ZERO), sqrt(3)|tau| for each of the
+three pure shears, and unchanged under a hydrostatic shift for five values of
+q. The mutation that substitutes the plane-stress formula is killed by 13 of
+41 tests.
+```
+
+Two of those lines need their wording qualified:
+
+```text
+"Define hydrostatic stress if useful"
+    IMPLEMENTED, not deferred. sigma_h = tr(S)/3, in Pa, in the NORMAL-STRESS
+    sign convention -- a uniform -100 MPa state has sigma_h = -100 MPa. It is
+    named `hydrostaticStress` and NOT `pressure` for that reason, and a
+    `meanPressure` with the opposite sign is deliberately not defined, so the
+    two cannot be conflated. Implemented for verification power rather than
+    completeness: the identity sigma_h == (sigma1+sigma2+sigma3)/3 is a
+    cross-check between it and the eigensolver that neither could provide
+    alone.
+
+"Define principal strain if useful"
+    IMPLEMENTED, through StrainTensor3, so the engineering shear is halved
+    BEFORE the eigensolve. Its pure-shear case -- +|gamma|/2, 0, -|gamma|/2 --
+    is the sharpest available measurement of that halving, because a tensor
+    carrying the full gamma would give exactly double while leaving every
+    normal component correct.
+```
 
 ---
 
@@ -1855,7 +1899,7 @@ docs/engineering/
 # CURRENT NEXT STEP
 
 ```text
-P17-SOLVE-001 is PASS. The next step is a scope decision, not an
+P17-POST-001 is PASS. The next step is a scope decision, not an
 implementation.
 ```
 
@@ -1923,8 +1967,25 @@ P17-SOLVE-001    PASS 2026-10-09. Qualified at 4e41fdd2, 3647/3647 x 3,
                  arbitrary pinning, no diagonal regularisation. Evidence
                  recorded.
 
-P17-POST-001     NOT AUTHORIZED. Being next in the sequence is not
-                 permission, and P17-SOLVE-001 passing is not either.
+P17-POST-001     PASS 2026-10-10. Qualified at src bba30676 / include
+                 a1a6ba1c / tests 14ae02cf -- the three component hashes that
+                 moved, identical before the first build and after the last
+                 test run. 3694/3694 x 3, 0 warnings over 632 objects, 17
+                 stages with 0 failed, 30 mutation probes with 27
+                 killed. REUSES P17-ELEM-001's B and D rather than restating
+                 either: one computeTet4Kinematics, one strainFrom, one
+                 stressFrom, and zero occurrences of a second shape gradient
+                 or of `lambda`. ADR-040 makes the result a STAGE PRODUCT
+                 carrying the solve's own AssemblySource -- not a
+                 StructuralResult, which would have needed an empty reaction
+                 channel and an analysis identity recovery cannot see. Full-3D
+                 von Mises, with the plane-stress formula measured at 11.2%
+                 away on the mandatory fixture. Hydrostatic stress and
+                 principal strain IMPLEMENTED. No re-solve, no reactions, no
+                 nodal smoothing, no deformed geometry. Evidence recorded.
+
+P17-REACTION-001 NOT AUTHORIZED. Being next in the sequence is not
+                 permission, and P17-POST-001 passing is not either.
                  Authorizing it is a scope decision.
 
 everything after it
