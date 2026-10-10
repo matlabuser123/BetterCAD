@@ -649,3 +649,27 @@ bettercad_compile_fail_case(structpost "${_structpost}" STRAIN6_AS_STRAIN_TENSOR
     "invalid initialization of reference|could not convert|cannot convert|no matching function|invalid conversion" BetterCAD::structural)
 bettercad_compile_fail_case(structpost "${_structpost}" STRESS_TENSOR_AS_STRAIN_TENSOR
     "invalid initialization of reference|could not convert|cannot convert|no matching function|invalid conversion" BetterCAD::structural)
+
+# P17-REACTION-001. `SupportReactions` cannot be conjured: it has a private
+# constructor and one friend, so possession proves every source agreed and
+# BOTH equilibrium gates passed (ADR-041). A Tet4 node has no rotational
+# degree of freedom, so a nodal reaction carries a Force3D and NO moment --
+# a support region's moment is derived from the distribution and needs an
+# explicit origin. A force is not a moment, a norm is not a number, and the
+# two tolerance FLOORS carry their own dimensions so a newton cannot be used
+# as a newton-metre. And the settings have no solver residual tolerance,
+# because a solver residual is not an equilibrium tolerance.
+set(_structreaction "${CMAKE_CURRENT_SOURCE_DIR}/StructuralReactionMisuse.cpp")
+bettercad_compile_fail_group(structreaction "${_structreaction}" BetterCAD::structural)
+bettercad_compile_fail_case(structreaction "${_structreaction}" SUPPORT_REACTIONS_CONSTRUCTED_DIRECTLY
+    "is private within this context|private|no matching function" BetterCAD::structural)
+bettercad_compile_fail_case(structreaction "${_structreaction}" NODAL_REACTION_HAS_A_MOMENT
+    "has no member named|no member" BetterCAD::structural)
+bettercad_compile_fail_case(structreaction "${_structreaction}" REACTION_FORCE_AS_TORQUE
+    "could not convert|cannot convert|no matching function|invalid conversion" BetterCAD::structural)
+bettercad_compile_fail_case(structreaction "${_structreaction}" FORCE_NORM_AS_DOUBLE
+    "cannot convert .*Quantity.*|could not convert|invalid conversion" BetterCAD::structural)
+bettercad_compile_fail_case(structreaction "${_structreaction}" MOMENT_FLOOR_AS_FORCE
+    "cannot convert|could not convert|no match for|invalid conversion|no viable" BetterCAD::structural)
+bettercad_compile_fail_case(structreaction "${_structreaction}" TOLERANCE_HAS_A_SOLVER_RESIDUAL
+    "has no member named|no member" BetterCAD::structural)

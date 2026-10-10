@@ -56,6 +56,7 @@ bettercad_add_library(bettercad_structural
         StructuralSystem.cpp
         StructuralSolve.cpp
         StructuralPost.cpp
+        StructuralReaction.cpp
         Tet4Element.cpp
     PUBLIC_LINK
         BetterCAD::core

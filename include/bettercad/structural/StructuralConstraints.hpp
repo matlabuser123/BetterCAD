@@ -125,8 +125,32 @@ struct RestraintResolution {
     /// Unique current nodes those facets carry.
     std::size_t nodes = 0;
     RestraintComponents components{};
-    /// `nodes * components.count()`, before any union with other restraints.
+    /// How many degrees of freedom THIS restraint resolved to, before any
+    /// union with other restraints: `constrained.size()`, which equals
+    /// `nodes * components.count()` because a restraint's nodes are unique and
+    /// its components are a mask.
     std::size_t degreesOfFreedom = 0;
+    /// The degrees of freedom THIS restraint resolved to, ascending and unique
+    /// within the restraint. `constrained.size() == degreesOfFreedom`.
+    ///
+    /// ADDED BY P17-REACTION-001 (ADR-041), AND IT IS A VALUE ALREADY
+    /// COMPUTED. The loop that builds this already asks
+    /// `numbering.indexOf(NodalDof{node, component})` for every degree of
+    /// freedom it resolves and verifies the answer; it used to discard the
+    /// index and keep only the `NodalDof` in the global union. Keeping it is
+    /// what lets a reaction be attributed to the restraint that caused it,
+    /// WITHOUT re-resolving the target after the solve -- which would assume
+    /// the geometry mapping reproduces the same set and is exactly how a
+    /// source mismatch hides.
+    ///
+    /// DERIVED, NEVER PERSISTED, like the counts beside it. A `DofIndex` is
+    /// solver-local: it means a row of one numbering of one mesh, and storing
+    /// one as intent is the defect P17-DATA-001 exists to prevent.
+    ///
+    /// ACROSS restraints these lists may INTERSECT, which is the whole reason
+    /// `constraints()` is a union. P17-REACTION-001's attribution policy is
+    /// built on that intersection rather than around it.
+    std::vector<DofIndex> constrained{};
 
     friend bool operator==(const RestraintResolution&, const RestraintResolution&) = default;
 };

@@ -16,8 +16,8 @@ Prerequisite:
            P16 — Meshing — QUALIFIED (P16-QUAL-001, 2026-10-06)
 
 Current milestone:
-           None. P17-POST-001 is PASS (2026-10-10). Finishing a milestone is
-           a stop condition: P17-REACTION-001 is next in the sequence and is
+           None. P17-REACTION-001 is PASS (2026-10-10). Finishing a milestone
+           is a stop condition: P17-VALID-001 is next in the sequence and is
            NOT authorized until this file says so.
 
 Qualified:
@@ -30,9 +30,9 @@ Qualified:
            P16 — Meshing
 
 Next:
-           P17-REACTION-001 — Reaction Forces / Equilibrium. NOT AUTHORIZED:
-           P17-POST-001 passing is not permission to start it. Authorizing it
-           is a scope decision.
+           P17-VALID-001 — Structural Validation / Acceptance. NOT
+           AUTHORIZED: P17-REACTION-001 passing is not permission to start
+           it. Authorizing it is a scope decision.
 
 P17 objective:
            authoritative CAD / material / mesh state
@@ -1254,19 +1254,53 @@ Two of those lines need their wording qualified:
 
 ## Reaction Forces / Equilibrium
 
-* [ ] Recover support reactions
-* [ ] Define the sign convention
-* [ ] Sum the external applied force
-* [ ] Sum the reaction force
-* [ ] Validate force equilibrium
-* [ ] Validate moment equilibrium where applicable
-* [ ] Reaction components inspectable per restraint
-* [ ] Multiple support regions
-* [ ] Deterministic aggregation
-* [ ] Analytical reference cases
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Recover support reactions
+* [x] Define the sign convention
+* [x] Sum the external applied force
+* [x] Sum the reaction force
+* [x] Validate force equilibrium
+* [x] Validate moment equilibrium where applicable
+* [x] Reaction components inspectable per restraint
+* [x] Multiple support regions
+* [x] Deterministic aggregation
+* [x] Analytical reference cases
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded
+
+PASS 2026-10-10. Evidence:
+[docs/verification/P17-REACTION-001/](docs/verification/P17-REACTION-001/).
+Decision: [ADR-041](docs/architecture/decisions/ADR-041-a-reaction-is-the-constrained-residual-and-a-shared-degree-of-freedom-is-counted-once.md).
+
+Two of those lines need their wording qualified:
+
+```text
+"Validate moment equilibrium where applicable"
+    APPLICABLE AND VALIDATED, with no "where" about it. Moment equilibrium is
+    checked on EVERY fixture and the gate is independent of the force gate --
+    a pure couple balances in force by construction and would pass a
+    force-only check with any moment error at all. Every case has a nonzero
+    moment scale, asserted, and equilibrium is verified about THREE origins
+    because a mutation proved one was not enough: with everything at the
+    global origin, `x - O == x` and a path that ignored the origin was a
+    no-op.
+
+"Analytical reference cases"
+    FIVE, each with the test's OWN oracle: a hand-derived partition formula on
+    a 3x3 system; the exact R = -F of a fully constrained body; a planar
+    pressure resultant -p A through its centroid; a weight rho V g through the
+    centre of mass; and the origin-shift relation
+    M(O2) = M(O1) - (O2-O1) x F.
+
+    AN ANALYTICALLY PREDICTED TWO-SUPPORT SPLIT IS NOT AMONG THEM, and that is
+    deliberate rather than an omission. A 3D continuum with two fixed faces is
+    statically indeterminate, and a symmetric prediction would need a provably
+    symmetric MESH, which P16 does not guarantee for a symmetric body. What is
+    asserted is the statics that holds regardless -- R_A + R_B = -F_external,
+    and R = -F exactly when fully constrained -- while the split itself is
+    MEASURED and printed. Brief sections 45 and 106 both warn against forcing
+    an analytically false expectation.
+```
 
 ### Fundamental equilibrium gate
 
@@ -1279,6 +1313,53 @@ State the tolerance and why. BetterCAD's rule: 1e-12 for well-conditioned
 double-precision algebra, 1e-9 for geometric accumulation, larger only with a
 documented reason. A solver residual is neither of those by default, so derive
 the tolerance from a measurement rather than picking one.
+
+```text
+MET, AND DERIVED FROM MEASUREMENT RATHER THAN PICKED. Both thresholds are
+1e-12 normalized, with floors of 1e-12 N and 1e-12 N m -- each carrying its own
+dimension, because one bare number for both would be a unit error the compiler
+could not see.
+
+MEASURED FIRST, on every fixture, and the thresholds chosen afterwards:
+
+    algebraic path, small fixtures    eta_F 1.3e-16 .. 2.2e-16
+                                      eta_M 3.7e-17 .. 3.3e-16
+    fully constrained                 EXACTLY 0 -- u = 0 is known, not solved
+    geometric path, pressure          4.33e-16 relative
+    geometric path, gravity           1.57e-16 relative
+    far origin, nodes to 0.126 m      eta_F 1.4e-16, eta_M 8.7e-17
+    LARGE MESH, 850 nodes             eta_F 1.48e-14, eta_M 2.50e-14  <- worst
+
+    chosen 1e-12 -> a 40x margin on the worst case, 4000x on the small ones
+
+NOT 1e-13, which leaves only 4x on the worst case while the error grows with
+the term count -- a mesh an order larger could cross it with nothing wrong.
+NOT 1e-9, because nothing measured needs it: that band is offered for
+geometric accumulation and the geometric path measured 4e-16, so inheriting it
+would accept a 1e-10 imbalance -- five orders above anything observed, which is
+exactly the room a sign or mapping defect would hide in.
+
+THE GEOMETRIC PATH DID NOT NEED A LOOSER GATE, which contradicts the
+expectation and is the measurement's own finding: the boundary facets tile a
+PLANAR pressure face exactly, and the tetrahedra tile a BOX exactly, so
+neither integration accumulates geometric error. One threshold covers both
+layers. A curved face WOULD differ, but that is P17-LOAD's discretisation and
+not an equilibrium error -- the reactions still balance the assembled F
+exactly, which the large-mesh cylinder confirms.
+
+AND A SOLVER RESIDUAL TOLERANCE IS NOT THIS TOLERANCE. Measured side by side
+they differ by an order -- 2-3e-17 against 1-3e-16 -- because the solver's gate
+is on the FREE equations and this one is on the whole body's applied and
+constrained forces plus, for moments, every node position.
+`relativeResidualTolerance` is referenced nowhere in the module, and a
+compile-failure case proves the field is ABSENT from `EquilibriumTolerance`
+rather than present and ignored.
+
+THE GATE CAN FAIL, DEMONSTRATED. The imbalance cannot be injected from
+outside, so the threshold is tightened BELOW the measured error and the
+recovery is refused -- and the mutation that loosens the gate to 1e-3 is
+killed. Equilibrium failure is a FAILURE, not a warning: nothing is published.
+```
 
 ---
 # P17-VALID-001
@@ -1899,7 +1980,7 @@ docs/engineering/
 # CURRENT NEXT STEP
 
 ```text
-P17-POST-001 is PASS. The next step is a scope decision, not an
+P17-REACTION-001 is PASS. The next step is a scope decision, not an
 implementation.
 ```
 
@@ -1984,8 +2065,38 @@ P17-POST-001     PASS 2026-10-10. Qualified at src bba30676 / include
                  principal strain IMPLEMENTED. No re-solve, no reactions, no
                  nodal smoothing, no deformed geometry. Evidence recorded.
 
-P17-REACTION-001 NOT AUTHORIZED. Being next in the sequence is not
-                 permission, and P17-POST-001 passing is not either.
+P17-REACTION-001 PASS 2026-10-10. Qualified at include f2a6fb7e / src 1a0fcf71 /
+                 tests 0ab21f75 -- the three component hashes that moved,
+                 identical before the first build and after the last test
+                 run. 3721/3721 x 3,
+                 0 warnings over 636 objects, 20 mutation probes with 20
+                 killed. The reaction is the CONSTRAINED component of
+                 K u - F, READ from SolvedSystem::fullResidual() rather than
+                 recomputed: zero occurrences of `stiffness()` in the module,
+                 and zero load re-integration. ADR-041 freezes the sign
+                 convention against the one-DOF case, counts a shared degree
+                 of freedom ONCE globally with per-restraint summaries that
+                 are additive BY CONSTRUCTION, and keeps support moments
+                 derived from the translational distribution -- there are no
+                 rotational reaction DOFs.
+
+                 THE TOLERANCE WAS MEASURED: worst eta_F 1.48e-14 and
+                 eta_M 2.50e-14 on the large mesh against a chosen 1e-12,
+                 a 40x margin. The geometric path measured 4e-16, NOT the
+                 1e-9 the brief anticipated, because a planar pressure face
+                 and a box under gravity integrate exactly -- so ONE
+                 threshold covers both layers, on the strength of the
+                 measurement. A solver residual tolerance is referenced
+                 nowhere and the field is absent from EquilibriumTolerance.
+
+                 P17-BC-001 REQUALIFIED by the same run: RestraintResolution
+                 gained its resolved DofIndex list, because per-restraint
+                 attribution needs the mapping the SOLVE used and
+                 re-resolving a target afterwards is how a source mismatch
+                 hides. Evidence recorded.
+
+P17-VALID-001    NOT AUTHORIZED. Being next in the sequence is not
+                 permission, and P17-REACTION-001 passing is not either.
                  Authorizing it is a scope decision.
 
 everything after it

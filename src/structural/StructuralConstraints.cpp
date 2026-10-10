@@ -211,6 +211,13 @@ struct Prepared {
         }
 
         // NODE + COMPONENT -> INDEX IS P17-DOF'S. There is no 3 * nodeId here.
+        //
+        // AND THE INDEX IS KEPT (P17-REACTION-001, ADR-041). It was already
+        // computed and verified here and then discarded; retaining it per
+        // restraint is what lets a reaction be attributed to the restraint
+        // that caused it without re-resolving the target after the solve.
+        std::vector<DofIndex> mine;
+        mine.reserve(nodes->size() * restraint.components().count());
         for (const meshing::NodeId node : *nodes) {
             for (const DofComponent component : kDofComponents) {
                 if (!restraint.components().holds(component)) {
@@ -222,23 +229,34 @@ struct Prepared {
                 // and it is propagated rather than skipped, because silently
                 // dropping a node would leave the model under-constrained with
                 // nothing reporting it.
-                if (Result<DofIndex> index =
-                        numbering.indexOf(NodalDof{.node = node, .component = component});
-                    !index.has_value()) {
+                Result<DofIndex> index =
+                    numbering.indexOf(NodalDof{.node = node, .component = component});
+                if (!index.has_value()) {
                     return fail(RestraintProblem::NumberingIsForADifferentMesh, index.error());
                 }
+                mine.push_back(*index);
                 out.prescribed.push_back(NodalDof{.node = node, .component = component});
             }
             out.nodes.push_back(node);
         }
 
+        // ASCENDING AND UNIQUE WITHIN THE RESTRAINT. `nodes` is already
+        // ascending and the components are taken in `kDofComponents` order,
+        // and ADR-037's numbering is interleaved per node, so this is already
+        // sorted -- the sort is here so the CONTRACT does not depend on that
+        // reasoning holding after a future renumbering, and the unique is here
+        // because a duplicate would silently double a reaction.
+        std::ranges::sort(mine);
+        mine.erase(std::ranges::unique(mine).begin(), mine.end());
+
+        const std::size_t mineCount = mine.size();
         out.resolutions.push_back(
             RestraintResolution{.restraint = restraint.id(),
                                 .facets = facets->size(),
                                 .nodes = nodes->size(),
                                 .components = restraint.components(),
-                                .degreesOfFreedom =
-                                    nodes->size() * restraint.components().count()});
+                                .degreesOfFreedom = mineCount,
+                                .constrained = std::move(mine)});
     }
 
     // THE UNION, DETERMINISTICALLY. Two restraints that reach one node

@@ -101,13 +101,15 @@ Current authorized development:
 
 ```text
 P17 — Structural FEA, authorized 2026-10-06.
-P17-ARCH-001 through P17-POST-001 are PASS -- ten milestones, the last on
-2026-10-10. The chain now runs end to end: authoritative CAD and material
-state, a validated Tet4 mesh, an analysis definition, loads, restraints, a
-global system, a linear solve, and the displacement, strain, stress and
-invariants recovered back out of it.
-No milestone is authorized now: P17-REACTION-001 is next in the sequence,
-which is not the same as permitted.
+P17-ARCH-001 through P17-REACTION-001 are PASS -- eleven milestones, the last
+on 2026-10-10. The chain runs end to end and now PROVES ITSELF: authoritative
+CAD and material state, a validated Tet4 mesh, an analysis definition, loads,
+restraints, a global system, a linear solve, the displacement, strain, stress
+and invariants recovered back out of it, and support reactions whose global
+force and moment equilibrium is checked against the exact assembled load --
+with the tolerance measured rather than assumed.
+No milestone is authorized now: P17-VALID-001 is next in the sequence, which
+is not the same as permitted.
 ```
 
 Released: `v0.1.0` — Foundation.
