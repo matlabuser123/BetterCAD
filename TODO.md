@@ -16,8 +16,8 @@ Prerequisite:
            P16 — Meshing — QUALIFIED (P16-QUAL-001, 2026-10-06)
 
 Current milestone:
-           None. P17-REACTION-001 is PASS (2026-10-10). Finishing a milestone
-           is a stop condition: P17-VALID-001 is next in the sequence and is
+           None. P17-VALID-001 is PASS (2026-10-11). Finishing a milestone
+           is a stop condition: P17-VIZ-001 is next in the sequence and is
            NOT authorized until this file says so.
 
 Qualified:
@@ -30,9 +30,9 @@ Qualified:
            P16 — Meshing
 
 Next:
-           P17-VALID-001 — Structural Validation / Acceptance. NOT
-           AUTHORIZED: P17-REACTION-001 passing is not permission to start
-           it. Authorizing it is a scope decision.
+           P17-VIZ-001 — FEA Visualisation / Inspection. NOT AUTHORIZED:
+           P17-VALID-001 passing is not permission to start it. Authorizing
+           it is a scope decision.
 
 P17 objective:
            authoritative CAD / material / mesh state
@@ -1371,23 +1371,68 @@ are deliberately report-only: `P16-QUALITY-001` ships metrics and no
 accept/reject line, because the phase that consumes a mesh owns them. This is
 that phase.
 
-* [ ] Define the FEA mesh-acceptance policy
-* [ ] Define structural-invalid mesh rejection
-* [ ] Define the quality warning policy
-* [ ] Define the quality failure policy if used
-* [ ] Define under-constrained detection
-* [ ] Define over- / conflicting-constraint behaviour
-* [ ] Define material-validity checks
-* [ ] Define load-validity checks
-* [ ] Define stale-input checks
-* [ ] Define solver-residual acceptance
-* [ ] Define equilibrium acceptance
-* [ ] Define result-finiteness checks
-* [ ] Structured validation report
-* [ ] Determinism PASS
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Define the FEA mesh-acceptance policy
+* [x] Define structural-invalid mesh rejection
+* [x] Define the quality warning policy
+* [x] Define the quality failure policy if used
+* [x] Define under-constrained detection
+* [x] Define over- / conflicting-constraint behaviour
+* [x] Define material-validity checks
+* [x] Define load-validity checks
+* [x] Define stale-input checks
+* [x] Define solver-residual acceptance
+* [x] Define equilibrium acceptance
+* [x] Define result-finiteness checks
+* [x] Structured validation report
+* [x] Determinism PASS
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded
+
+PASS 2026-10-11. Evidence:
+[docs/verification/P17-VALID-001/](docs/verification/P17-VALID-001/).
+Decision: [ADR-042](docs/architecture/decisions/ADR-042-mesh-quality-rejects-on-measured-accuracy-laws-one-bound-per-degeneration-family-and-one-unbypassable-solve-entry.md).
+
+Five of those lines need their wording qualified, because a tick alone would
+overstate three of them and understate one:
+
+```text
+"Define the quality failure policy IF USED"
+    USED, and the "if" is the part worth answering. TWO bounds, one per
+    degeneration family -- 3r/R < 1e-10 and aspect > 3e5 -- each DERIVED as
+    the inverse of its own measured accuracy law at the 1e-9 geometric band.
+    An earlier draft of this milestone recorded NOT IMPLEMENTED, and a
+    later one shipped a single radius-ratio bound that accepted a needle
+    whose recovered strain was wrong by 2.5e-09. Both are recorded.
+
+    NO bound on either dihedral angle. That asymmetry is the policy and not
+    an omission: no law was measured against them.
+
+"Define under-constrained detection"
+    DEFINED AS A NECESSARY CONDITION ONLY, which is the opposite of the rule
+    the brief forbids. Fewer than six constrained degrees of freedom is
+    refused, because a 3D continuum's rigid-body null space is
+    six-dimensional and a constraint set's rank cannot exceed its size.
+    SIX OR MORE SAYS NOTHING, and the factorisation's pivot ratio decides.
+    DoesNotClaimSixDegreesOfFreedomIsSufficient proves the asymmetry rather
+    than asserting it: validation ACCEPTS a model restrained in z on three
+    faces and the SOLVER refuses it.
+
+"Define over- / conflicting-constraint behaviour"
+    DEFINED BY INHERITANCE, and nothing was added. P17-BC-001 made a
+    constrained degree of freedom a SET membership, so two restraints on the
+    same face cannot conflict -- the representation cannot express it --
+    and P17-REACTION-001 settled the reporting half. A second conflict check
+    would be a second answer that could drift.
+
+"Define solver-residual acceptance" / "Define equilibrium acceptance"
+    ALREADY GATES, and this milestone adds no second threshold beside either
+    and loosens neither. Acceptance is defined as "that gate passed, and
+    this is the number it passed with": StructuralSolveOutcome records the
+    residual, the pivot ratio, the strain energy and both balances from the
+    stage that owns each. The refusals are DEMONSTRATED by tightening each
+    gate below its measured value, which also proves they are live.
+```
 
 ### Solver entry-point safety
 
@@ -1980,7 +2025,7 @@ docs/engineering/
 # CURRENT NEXT STEP
 
 ```text
-P17-REACTION-001 is PASS. The next step is a scope decision, not an
+P17-VALID-001 is PASS. The next step is a scope decision, not an
 implementation.
 ```
 
@@ -2095,8 +2140,65 @@ P17-REACTION-001 PASS 2026-10-10. Qualified at include f2a6fb7e / src 1a0fcf71 /
                  re-resolving a target afterwards is how a source mismatch
                  hides. Evidence recorded.
 
-P17-VALID-001    NOT AUTHORIZED. Being next in the sequence is not
-                 permission, and P17-REACTION-001 passing is not either.
+P17-VALID-001    PASS 2026-10-11. Qualified at include 34b3ec8d / src b6cddc44 /
+                 tests 81b34bee -- the three component hashes that moved,
+                 identical before the first build and after the last test run.
+                 3759/3759 x 3, 0 warnings over 640 objects per preset, 836 tests x5 in two
+                 presets, 28 mutation probes with 27 killed.
+                 P16 stayed REPORT-ONLY: zero meshing source files changed,
+                 and a grep of this milestone's production files with comments
+                 stripped finds no radius-ratio, aspect-ratio, dihedral or
+                 cross-product formula. One definition of every metric still
+                 lives in src/meshing/MeshQuality.cpp.
+
+                 THE THRESHOLDS WERE MEASURED FIRST, AND THE MEASUREMENT
+                 CONTRADICTED THIS MILESTONE THREE TIMES. The sweep confirmed
+                 that no shape metric separates BetterCAD's qualified meshes
+                 from pathological ones -- a QUALIFIED CYLINDER (3r/R
+                 0.00124845, min dihedral 0.362683 deg) is worse than a
+                 deliberate 1.98-degree sliver, and on the aspect ratio the two
+                 sets are INVERTED. But "therefore no threshold is derivable"
+                 was wrong twice over, and both corrections are recorded in
+                 docs/verification/P17-VALID-001/PRIOR_DRAFT_CORRECTION.md
+                 rather than overwritten.
+
+                 WHAT IS ACTUALLY SHIPPED IS TWO DERIVED BOUNDS, one per
+                 degeneration family, because neither metric can see the
+                 other's:
+
+                     3r/R   < 1e-10   flattening, err ~ C/sqrt(3r/R),
+                                      C <= 2.41e-15 over SIXTEEN orders
+                     aspect > 3e5     stretching, err ~ C*aspect,
+                                      C <= 4.45e-16 over SEVEN orders
+
+                 Each is the inverse of its own law at BetterCAD's 1e-9
+                 geometric band, with 17x and 7.5x margin on the crossings,
+                 and each is verified on BOTH sides. They sit 3.2e6 and 3.7e3
+                 clear of the worst qualified element, so neither refuses
+                 anything BetterCAD produces -- and a 0.198-degree sliver
+                 PASSES both, correctly, because its measured error is
+                 1.33e-13. Hard failure means "the kernel cannot recover a
+                 strain here to better than 1e-9", never "this is badly
+                 shaped". NO bound on either dihedral angle: no law was
+                 measured against them and they cannot separate the sets.
+
+                 AND THE LARGER CONTRIBUTION IS THE ENTRY POINT. Every gate a
+                 solve needs already existed and `solveStructuralSystem` had
+                 NO production caller, so the safety was available rather than
+                 enforced -- P16's own recorded limitation, one layer up.
+                 solveStructuralAnalysis is now the only production path from
+                 a Document to a StructuralResult and it validates first;
+                 refusing a stale mesh end to end is tested with all three
+                 premises asserted.
+
+                 NO REPAIR OF ANY KIND, checkable by grep and checked: no node
+                 move, no node swap, no abs(volume), no element removal, no
+                 merge, no remesh, no loosened tolerance, no invented material
+                 property, no rebound face. No predecessor production file was
+                 modified at all.
+
+P17-VIZ-001      NOT AUTHORIZED. Being next in the sequence is not
+                 permission, and P17-VALID-001 passing is not either.
                  Authorizing it is a scope decision.
 
 everything after it

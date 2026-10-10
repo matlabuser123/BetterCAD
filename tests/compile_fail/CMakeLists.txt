@@ -673,3 +673,27 @@ bettercad_compile_fail_case(structreaction "${_structreaction}" MOMENT_FLOOR_AS_
     "cannot convert|could not convert|no match for|invalid conversion|no viable" BetterCAD::structural)
 bettercad_compile_fail_case(structreaction "${_structreaction}" TOLERANCE_HAS_A_SOLVER_RESIDUAL
     "has no member named|no member" BetterCAD::structural)
+
+# P17-VALID-001 -- the structural acceptance policy. P16 owns every metric and
+# P17 owns the thresholds, so neither entry point here can be handed a mesh: the
+# quality function takes a REPORT, which is what makes a second radius-ratio
+# formula impossible, and the solve function takes a document, a regenerator and
+# a mesher, which is what makes the staleness check unbypassable. A verdict is
+# derived from the findings rather than assigned, the one threshold that refuses
+# a mesh is constexpr so it cannot be loosened, a solve outcome cannot exist
+# without a validated result, and a finding's severity is not the report's
+# status.
+set(_structvalid "${CMAKE_CURRENT_SOURCE_DIR}/StructuralValidationMisuse.cpp")
+bettercad_compile_fail_group(structvalid "${_structvalid}" BetterCAD::structural)
+bettercad_compile_fail_case(structvalid "${_structvalid}" QUALITY_ENTRY_TAKES_A_MESH
+    "no matching function|cannot convert|could not convert|invalid initialization" BetterCAD::structural)
+bettercad_compile_fail_case(structvalid "${_structvalid}" SOLVE_ENTRY_TAKES_A_MESH
+    "no matching function|too few arguments|cannot convert|could not convert|invalid initialization" BetterCAD::structural)
+bettercad_compile_fail_case(structvalid "${_structvalid}" STATUS_IS_ASSIGNED
+    "invalid use of member|cannot be used as a member function|no member named|assignment of" BetterCAD::structural)
+bettercad_compile_fail_case(structvalid "${_structvalid}" ACCURACY_FLOOR_IS_LOOSENED
+    "assignment of read-only|read-only variable|cannot assign" BetterCAD::structural)
+bettercad_compile_fail_case(structvalid "${_structvalid}" SOLVE_OUTCOME_WITHOUT_A_RESULT
+    "use of deleted function|no matching function|is private|deleted|no default constructor" BetterCAD::structural)
+bettercad_compile_fail_case(structvalid "${_structvalid}" SEVERITY_USED_AS_A_STATUS
+    "cannot convert|could not convert|invalid conversion|no matching function" BetterCAD::structural)

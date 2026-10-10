@@ -1,0 +1,213 @@
+﻿UpdateCTestConfiguration  from :C:/Users/uqhas/OneDrive/Desktop/CAD/DartConfiguration.tcl
+Test project C:/Users/uqhas/AppData/Local/bc-build/debug-ext
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 2857
+    Start 2857: unit.StructuralValidation_AcceptsEveryQualifiedReferenceMesh
+
+2857: Test command: C:\Users\uqhas\AppData\Local\bc-build\debug-ext\bin\bettercad_tests.exe "StructuralValidation_AcceptsEveryQualifiedReferenceMesh"
+2857: Working Directory: C:/Users/uqhas/AppData/Local/bc-build/debug-ext/tests
+2857: Test timeout computed to be: 10000000
+2857: Filters: "StructuralValidation_AcceptsEveryQualifiedReferenceMesh"
+2857: Randomness seeded to: 984176361
+2857: ===============================================================================
+2857: All tests passed (56 assertions in 1 test case)
+2857: 
+1/4 Test #2857: unit.StructuralValidation_AcceptsEveryQualifiedReferenceMesh ...............   Passed    2.91 sec
+test 2882
+    Start 2882: unit.StructuralValidation_SweepsTheDeliberatelyPathologicalFixtures
+
+2882: Test command: C:\Users\uqhas\AppData\Local\bc-build\debug-ext\bin\bettercad_tests.exe "StructuralValidation_SweepsTheDeliberatelyPathologicalFixtures"
+2882: Working Directory: C:/Users/uqhas/AppData/Local/bc-build/debug-ext/tests
+2882: Test timeout computed to be: 10000000
+2882: Filters: "StructuralValidation_SweepsTheDeliberatelyPathologicalFixtures"
+2882: Randomness seeded to: 2077458183
+2882: 
+2882: ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2882: bettercad_tests.exe is a Catch2 v3.16.0 host application.
+2882: Run with -? for options
+2882: 
+2882: -------------------------------------------------------------------------------
+2882: StructuralValidation_SweepsTheDeliberatelyPathologicalFixtures
+2882:   the flattening wedge: aspect saturates while the radius ratio collapses
+2882: -------------------------------------------------------------------------------
+2882: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:258
+2882: ...............................................................................
+2882: 
+2882: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:268: warning:
+2882:   SWEEP pathological | wedge apex 10 mm | 3r/R 0.977082 | aspect 1.1547 |
+2882:   minDihedral 67.3801 deg | structurallyValid YES
+2882: 
+2882: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:268: warning:
+2882:   SWEEP pathological | wedge apex 1 mm | 3r/R 0.0849037 | aspect 1.70664 |
+2882:   minDihedral 19.1066 deg | structurallyValid YES
+2882: 
+2882: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:268: warning:
+2882:   SWEEP pathological | wedge apex 0.1 mm | 3r/R 0.00089946 | aspect 1.73179 |
+2882:   minDihedral 1.98399 deg | structurallyValid YES
+2882: 
+2882: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:268: warning:
+2882:   SWEEP pathological | wedge apex 0.01 mm | 3r/R 8.99995e-06 | aspect 1.73205 |
+2882:   minDihedral 0.198478 deg | structurallyValid YES
+2882: 
+2882: ===============================================================================
+2882: All tests passed (36 assertions in 1 test case)
+2882: 
+2/4 Test #2882: unit.StructuralValidation_SweepsTheDeliberatelyPathologicalFixtures ........   Passed    0.17 sec
+test 2883
+    Start 2883: unit.StructuralValidation_SweepsTheQualifiedReferenceMeshes
+
+2883: Test command: C:\Users\uqhas\AppData\Local\bc-build\debug-ext\bin\bettercad_tests.exe "StructuralValidation_SweepsTheQualifiedReferenceMeshes"
+2883: Working Directory: C:/Users/uqhas/AppData/Local/bc-build/debug-ext/tests
+2883: Test timeout computed to be: 10000000
+2883: Filters: "StructuralValidation_SweepsTheQualifiedReferenceMeshes"
+2883: Randomness seeded to: 3295228141
+2883: 
+2883: ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2883: bettercad_tests.exe is a Catch2 v3.16.0 host application.
+2883: Run with -? for options
+2883: 
+2883: -------------------------------------------------------------------------------
+2883: StructuralValidation_SweepsTheQualifiedReferenceMeshes
+2883:   RM-MESH-01 block
+2883: -------------------------------------------------------------------------------
+2883: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:171
+2883: ...............................................................................
+2883: 
+2883: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:100: warning:
+2883:   SWEEP | RM-MESH-01 block | tets 6 | structurallyValid YES | worst 3r/R 0.
+2883:   43725 (element 1) | worst aspect 4.0933 (element 1) | worst minDihedral 14.
+2883:   6211 deg | worst maxDihedral 115.641 deg
+2883: 
+2883: -------------------------------------------------------------------------------
+2883: StructuralValidation_SweepsTheQualifiedReferenceMeshes
+2883:   RM-MESH-02 cylinder
+2883: -------------------------------------------------------------------------------
+2883: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:182
+2883: ...............................................................................
+2883: 
+2883: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:100: warning:
+2883:   SWEEP | RM-MESH-02 cylinder | tets 508 | structurallyValid YES | worst 3r/R
+2883:   0.00124845 (element 504) | worst aspect 16.0391 (element 296) | worst
+2883:   minDihedral 0.362683 deg | worst maxDihedral 177.113 deg
+2883: 
+2883: -------------------------------------------------------------------------------
+2883: StructuralValidation_SweepsTheQualifiedReferenceMeshes
+2883:   RM-MESH-03 plate with hole
+2883: -------------------------------------------------------------------------------
+2883: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:193
+2883: ...............................................................................
+2883: 
+2883: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:100: warning:
+2883:   SWEEP | RM-MESH-03 plate with hole | tets 126 | structurallyValid YES | worst
+2883:   3r/R 0.0129063 (element 120) | worst aspect 20.4856 (element 26) | worst
+2883:   minDihedral 1.11273 deg | worst maxDihedral 165.482 deg
+2883: 
+2883: -------------------------------------------------------------------------------
+2883: StructuralValidation_SweepsTheQualifiedReferenceMeshes
+2883:   RM-MESH-04 hollow tube
+2883: -------------------------------------------------------------------------------
+2883: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:204
+2883: ...............................................................................
+2883: 
+2883: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:100: warning:
+2883:   SWEEP | RM-MESH-04 hollow tube | tets 808 | structurallyValid YES | worst 3r/
+2883:   R 0.00634594 (element 462) | worst aspect 14.8994 (element 184) | worst
+2883:   minDihedral 2.3722 deg | worst maxDihedral 170.046 deg
+2883: 
+2883: -------------------------------------------------------------------------------
+2883: StructuralValidation_SweepsTheQualifiedReferenceMeshes
+2883:   RM-MESH-05 thin plate
+2883: -------------------------------------------------------------------------------
+2883: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:215
+2883: ...............................................................................
+2883: 
+2883: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:100: warning:
+2883:   SWEEP | RM-MESH-05 thin plate | tets 12 | structurallyValid YES | worst 3r/R
+2883:   0.000322641 (element 12) | worst aspect 80.0062 (element 3) | worst
+2883:   minDihedral 0.71612 deg | worst maxDihedral 178.709 deg
+2883: 
+2883: -------------------------------------------------------------------------------
+2883: StructuralValidation_SweepsTheQualifiedReferenceMeshes
+2883:   RM-MESH-06 transformed, base and placed
+2883: -------------------------------------------------------------------------------
+2883: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:226
+2883: ...............................................................................
+2883: 
+2883: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:100: warning:
+2883:   SWEEP | RM-MESH-06 transformed base | tets 12 | structurallyValid YES | worst
+2883:   3r/R 0.127381 (element 6) | worst aspect 3.88104 (element 4) | worst
+2883:   minDihedral 14.9313 deg | worst maxDihedral 152.325 deg
+2883: 
+2883: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:100: warning:
+2883:   SWEEP | RM-MESH-06 transformed placed | tets 12 | structurallyValid YES |
+2883:   worst 3r/R 0.127381 (element 5) | worst aspect 3.88104 (element 4) | worst
+2883:   minDihedral 14.9314 deg | worst maxDihedral 152.325 deg
+2883: 
+2883: -------------------------------------------------------------------------------
+2883: StructuralValidation_SweepsTheQualifiedReferenceMeshes
+2883:   RM-MESH-07 local refinement
+2883: -------------------------------------------------------------------------------
+2883: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:241
+2883: ...............................................................................
+2883: 
+2883: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:100: warning:
+2883:   SWEEP | RM-MESH-07 local refinement | tets 267 | structurallyValid YES |
+2883:   worst 3r/R 0.0411619 (element 139) | worst aspect 5.61104 (element 158) |
+2883:   worst minDihedral 7.89468 deg | worst maxDihedral 165.695 deg
+2883: 
+2883: ===============================================================================
+2883: All tests passed (40 assertions in 1 test case)
+2883: 
+3/4 Test #2883: unit.StructuralValidation_SweepsTheQualifiedReferenceMeshes ................   Passed    3.18 sec
+test 2885
+    Start 2885: unit.StructuralValidation_TheEnvelopeBoundsReallyAreTheMeasuredWorstCase
+
+2885: Test command: C:\Users\uqhas\AppData\Local\bc-build\debug-ext\bin\bettercad_tests.exe "StructuralValidation_TheEnvelopeBoundsReallyAreTheMeasuredWorstCase"
+2885: Working Directory: C:/Users/uqhas/AppData/Local/bc-build/debug-ext/tests
+2885: Test timeout computed to be: 10000000
+2885: Filters: "StructuralValidation_TheEnvelopeBoundsReallyAreTheMeasuredWorstCase"
+2885: Randomness seeded to: 2184628494
+2885: 
+2885: ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2885: bettercad_tests.exe is a Catch2 v3.16.0 host application.
+2885: Run with -? for options
+2885: 
+2885: -------------------------------------------------------------------------------
+2885: StructuralValidation_TheEnvelopeBoundsReallyAreTheMeasuredWorstCase
+2885: -------------------------------------------------------------------------------
+2885: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:721
+2885: ...............................................................................
+2885: 
+2885: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:751: warning:
+2885:   ENVELOPE | measured worst 3r/R 0.000322641 vs bound 0.0003 | minDihedral 0.
+2885:   00633002 vs 0.006 | maxDihedral 3.11906 vs 3.125 | aspect 80.0062 vs 81
+2885: 
+2885: -------------------------------------------------------------------------------
+2885: StructuralValidation_TheEnvelopeBoundsReallyAreTheMeasuredWorstCase
+2885: -------------------------------------------------------------------------------
+2885: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:721
+2885: ...............................................................................
+2885: 
+2885: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:751: warning:
+2885:   ENVELOPE | measured worst 3r/R 0.000322641 vs bound 0.0003 | minDihedral 0.
+2885:   00633002 vs 0.006 | maxDihedral 3.11906 vs 3.125 | aspect 80.0062 vs 81
+2885: 
+2885: ===============================================================================
+2885: All tests passed (64 assertions in 1 test case)
+2885: 
+4/4 Test #2885: unit.StructuralValidation_TheEnvelopeBoundsReallyAreTheMeasuredWorstCase ...   Passed    6.22 sec
+
+The following tests passed:
+	unit.StructuralValidation_AcceptsEveryQualifiedReferenceMesh
+	unit.StructuralValidation_SweepsTheDeliberatelyPathologicalFixtures
+	unit.StructuralValidation_SweepsTheQualifiedReferenceMeshes
+	unit.StructuralValidation_TheEnvelopeBoundsReallyAreTheMeasuredWorstCase
+
+100% tests passed out of 4
+
+Total Test time (real) =  12.73 sec

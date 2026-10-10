@@ -1,0 +1,177 @@
+﻿UpdateCTestConfiguration  from :C:/Users/uqhas/OneDrive/Desktop/CAD/DartConfiguration.tcl
+Test project C:/Users/uqhas/AppData/Local/bc-build/debug-ext
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 2863
+    Start 2863: unit.StructuralValidation_MeasuresHowKernelAccuracyDegradesWithElementShape
+
+2863: Test command: C:\Users\uqhas\AppData\Local\bc-build\debug-ext\bin\bettercad_tests.exe "StructuralValidation_MeasuresHowKernelAccuracyDegradesWithElementShape"
+2863: Working Directory: C:/Users/uqhas/AppData/Local/bc-build/debug-ext/tests
+2863: Test timeout computed to be: 10000000
+2863: Filters: "StructuralValidation_MeasuresHowKernelAccuracyDegradesWithElementShape"
+2863: Randomness seeded to: 3630505629
+2863: 
+2863: ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2863: bettercad_tests.exe is a Catch2 v3.16.0 host application.
+2863: Run with -? for options
+2863: 
+2863: -------------------------------------------------------------------------------
+2863: StructuralValidation_MeasuresHowKernelAccuracyDegradesWithElementShape
+2863:   a regular tetrahedron, as the baseline
+2863: -------------------------------------------------------------------------------
+2863: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:394
+2863: ...............................................................................
+2863: 
+2863: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:404: warning:
+2863:   SHAPE | regular tetrahedron | worst relative strain error 8.13152e-16
+2863: 
+2863: -------------------------------------------------------------------------------
+2863: StructuralValidation_MeasuresHowKernelAccuracyDegradesWithElementShape
+2863:   and every wedge, down to a radius ratio of 9e-06
+2863: -------------------------------------------------------------------------------
+2863: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:408
+2863: ...............................................................................
+2863: 
+2863: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:411: warning:
+2863:   SHAPE | wedge apex 10 mm | worst relative strain error 2.71051e-16
+2863: 
+2863: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:411: warning:
+2863:   SHAPE | wedge apex 1 mm | worst relative strain error 1.9877e-15
+2863: 
+2863: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:411: warning:
+2863:   SHAPE | wedge apex 0.1 mm | worst relative strain error 1.17455e-14
+2863: 
+2863: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:411: warning:
+2863:   SHAPE | wedge apex 0.01 mm | worst relative strain error 1.33176e-13
+2863: 
+2863: -------------------------------------------------------------------------------
+2863: StructuralValidation_MeasuresHowKernelAccuracyDegradesWithElementShape
+2863:   a NEEDLE obeys a DIFFERENT law, which is why a second bound exists
+2863: -------------------------------------------------------------------------------
+2863: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:437
+2863: ...............................................................................
+2863: 
+2863: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:462: warning:
+2863:   NEEDLE | base 10 mm | 3r/R 0.977082 | aspect 1.1547 | strain error 2.71051e-
+2863:   16 | err*sqrt(3r/R) 2.67927e-16 | err/aspect 2.34737e-16
+2863: 
+2863: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:462: warning:
+2863:   NEEDLE | base 1 mm | 3r/R 0.167718 | aspect 10.0167 | strain error 1.76183e-
+2863:   15 | err*sqrt(3r/R) 7.21529e-16 | err/aspect 1.7589e-16
+2863: 
+2863: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:462: warning:
+2863:   NEEDLE | base 0.1 mm | 3r/R 0.01727 | aspect 100.002 | strain error 4.07931e-
+2863:   14 | err*sqrt(3r/R) 5.36084e-15 | err/aspect 4.07924e-16
+2863: 
+2863: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:462: warning:
+2863:   NEEDLE | base 0.01 mm | 3r/R 0.00173155 | aspect 1000 | strain error 4.
+2863:   44929e-13 | err*sqrt(3r/R) 1.85144e-14 | err/aspect 4.44929e-16
+2863: 
+2863: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:462: warning:
+2863:   NEEDLE | base 0.001 mm | 3r/R 0.0001732 | aspect 10000 | strain error 2.
+2863:   33063e-12 | err*sqrt(3r/R) 3.06723e-14 | err/aspect 2.33063e-16
+2863: 
+2863: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:462: warning:
+2863:   NEEDLE | base 0.0001 mm | 3r/R 1.73205e-05 | aspect 100000 | strain error 3.
+2863:   31965e-11 | err*sqrt(3r/R) 1.38157e-13 | err/aspect 3.31965e-16
+2863: 
+2863: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:462: warning:
+2863:   NEEDLE | base 1e-05 mm | 3r/R 1.73205e-06 | aspect 1e+06 | strain error 2.
+2863:   51021e-10 | err*sqrt(3r/R) 3.30362e-13 | err/aspect 2.51021e-16
+2863: 
+2863: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:462: warning:
+2863:   NEEDLE | base 1e-06 mm | 3r/R 1.73205e-07 | aspect 1e+07 | strain error 2.
+2863:   52476e-09 | err*sqrt(3r/R) 1.05075e-12 | err/aspect 2.52476e-16
+2863: 
+2863: -------------------------------------------------------------------------------
+2863: StructuralValidation_MeasuresHowKernelAccuracyDegradesWithElementShape
+2863:   and where the VALIDITY boundary actually is, walked down by orders
+2863: -------------------------------------------------------------------------------
+2863: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:533
+2863: ...............................................................................
+2863: 
+2863: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:612: warning:
+2863:   BOUNDARY | field 0 | wedge apex 0.01 mm | meshBuilt YES | structurallyValid
+2863:   YES | invalidElements 0 | 3r/R 8.99995e-06 | kernel OK | strain error 1.
+2863:   33176e-13 | err*sqrt(3r/R) 3.99527e-16
+2863: 
+2863: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:612: warning:
+2863:   BOUNDARY | field 0 | wedge apex 0.0001 mm | meshBuilt YES | structurallyValid
+2863:   YES | invalidElements 0 | 3r/R 9e-10 | kernel OK | strain error 9.43603e-12 |
+2863:   err*sqrt(3r/R) 2.83081e-16
+2863: 
+2863: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:612: warning:
+2863:   BOUNDARY | field 0 | wedge apex 3e-05 mm | meshBuilt YES | structurallyValid
+2863:   YES | invalidElements 0 | 3r/R 8.1e-11 | kernel OK | strain error 3.78577e-11
+2863:   | err*sqrt(3r/R) 3.4072e-16
+2863: 
+2863: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:612: warning:
+2863:   BOUNDARY | field 0 | wedge apex 1e-05 mm | meshBuilt YES | structurallyValid
+2863:   YES | invalidElements 0 | 3r/R 9e-12 | kernel OK | strain error 1.08912e-10 |
+2863:   err*sqrt(3r/R) 3.26736e-16
+2863: 
+2863: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:612: warning:
+2863:   BOUNDARY | field 0 | wedge apex 1e-06 mm | meshBuilt YES | structurallyValid
+2863:   YES | invalidElements 0 | 3r/R 9e-14 | kernel OK | strain error 1.38789e-09 |
+2863:   err*sqrt(3r/R) 4.16367e-16
+2863: 
+2863: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:612: warning:
+2863:   BOUNDARY | field 0 | wedge apex 1e-08 mm | meshBuilt YES | structurallyValid
+2863:   YES | invalidElements 0 | 3r/R 9e-18 | kernel OK | strain error 1.46528e-07 |
+2863:   err*sqrt(3r/R) 4.39584e-16
+2863: 
+2863: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:612: warning:
+2863:   BOUNDARY | field 0 | wedge apex 1e-10 mm | meshBuilt YES | structurallyValid
+2863:   YES | invalidElements 0 | 3r/R 9e-22 | kernel OK | strain error 1.1012e-05 |
+2863:   err*sqrt(3r/R) 3.30359e-16
+2863: 
+2863: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:612: warning:
+2863:   BOUNDARY | field 1 | wedge apex 0.01 mm | meshBuilt YES | structurallyValid
+2863:   YES | invalidElements 0 | 3r/R 8.99995e-06 | kernel OK | strain error 5.
+2863:   66453e-13 | err*sqrt(3r/R) 1.69935e-15
+2863: 
+2863: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:612: warning:
+2863:   BOUNDARY | field 1 | wedge apex 0.0001 mm | meshBuilt YES | structurallyValid
+2863:   YES | invalidElements 0 | 3r/R 9e-10 | kernel OK | strain error 4.06332e-11 |
+2863:   err*sqrt(3r/R) 1.219e-15
+2863: 
+2863: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:612: warning:
+2863:   BOUNDARY | field 1 | wedge apex 3e-05 mm | meshBuilt YES | structurallyValid
+2863:   YES | invalidElements 0 | 3r/R 8.1e-11 | kernel OK | strain error 2.87557e-11
+2863:   | err*sqrt(3r/R) 2.58801e-16
+2863: 
+2863: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:612: warning:
+2863:   BOUNDARY | field 1 | wedge apex 1e-05 mm | meshBuilt YES | structurallyValid
+2863:   YES | invalidElements 0 | 3r/R 9e-12 | kernel OK | strain error 5.83867e-10 |
+2863:   err*sqrt(3r/R) 1.7516e-15
+2863: 
+2863: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:612: warning:
+2863:   BOUNDARY | field 1 | wedge apex 1e-06 mm | meshBuilt YES | structurallyValid
+2863:   YES | invalidElements 0 | 3r/R 9e-14 | kernel OK | strain error 2.80431e-09 |
+2863:   err*sqrt(3r/R) 8.41294e-16
+2863: 
+2863: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:612: warning:
+2863:   BOUNDARY | field 1 | wedge apex 1e-08 mm | meshBuilt YES | structurallyValid
+2863:   YES | invalidElements 0 | 3r/R 9e-18 | kernel OK | strain error 7.93283e-07 |
+2863:   err*sqrt(3r/R) 2.37985e-15
+2863: 
+2863: C:/Users/uqhas/OneDrive/Desktop/CAD/tests/reference/StructuralValidationSweepTests.cpp:612: warning:
+2863:   BOUNDARY | field 1 | wedge apex 1e-10 mm | meshBuilt YES | structurallyValid
+2863:   YES | invalidElements 0 | 3r/R 9e-22 | kernel OK | strain error 8.03741e-05 |
+2863:   err*sqrt(3r/R) 2.41122e-15
+2863: 
+2863: ===============================================================================
+2863: All tests passed (305 assertions in 1 test case)
+2863: 
+1/1 Test #2863: unit.StructuralValidation_MeasuresHowKernelAccuracyDegradesWithElementShape ...   Passed    0.20 sec
+
+The following tests passed:
+	unit.StructuralValidation_MeasuresHowKernelAccuracyDegradesWithElementShape
+
+100% tests passed out of 1
+
+Total Test time (real) =   0.41 sec
