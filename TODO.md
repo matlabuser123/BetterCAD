@@ -16,9 +16,8 @@ Prerequisite:
            P16 — Meshing — QUALIFIED (P16-QUAL-001, 2026-10-06)
 
 Current milestone:
-           None. P17-VALID-001 is PASS (2026-10-11). Finishing a milestone
-           is a stop condition: P17-VIZ-001 is next in the sequence and is
-           NOT authorized until this file says so.
+           P17-VIZ-001 — FEA Visualisation / Inspection. AUTHORIZED
+           2026-10-11 by an explicit scope decision. In progress.
 
 Qualified:
            P0–P10 — BetterCAD v0.1.0
@@ -30,9 +29,8 @@ Qualified:
            P16 — Meshing
 
 Next:
-           P17-VIZ-001 — FEA Visualisation / Inspection. NOT AUTHORIZED:
-           P17-VALID-001 passing is not permission to start it. Authorizing
-           it is a scope decision.
+           P17-CMD-001 — Commands / Undo / Redo. NOT AUTHORIZED:
+           P17-VIZ-001 passing will not be permission to start it.
 
 P17 objective:
            authoritative CAD / material / mesh state
@@ -1470,29 +1468,69 @@ tuned on one body shape will reject a legitimate mesh of another.
 
 ## FEA Visualisation / Inspection
 
-* [ ] Undeformed mesh display
-* [ ] Deformed-shape display
-* [ ] Deformation scale factor
-* [ ] Displacement magnitude contour
-* [ ] Ux contour
-* [ ] Uy contour
-* [ ] Uz contour
-* [ ] von Mises contour
-* [ ] Normal stress components
-* [ ] Shear stress components
-* [ ] Principal stress inspection
-* [ ] Element inspection
-* [ ] Node displacement inspection
-* [ ] Support reaction inspection
-* [ ] Load arrows
-* [ ] Restraint symbols
-* [ ] Boundary-set highlighting
-* [ ] Worst / highest-result navigation
-* [ ] Clear stale-result visual state
-* [ ] Rendering does not mutate results
-* [ ] The GUI does not duplicate canonical result data
-* [ ] Regression PASS
-* [ ] Evidence recorded
+**IN PROGRESS.** The headless inspection layer is complete, mutation-tested
+and qualified in three presets; the DISPLAY SURFACE is not built. Evidence:
+[docs/verification/P17-VIZ-001/](docs/verification/P17-VIZ-001/README.md).
+
+The rule applied to the boxes below, stated so it can be checked: **tick a box
+only where this milestone's own evidence demonstrates the deliverable end to
+end.** A deformation scale factor with nothing to scale visually is not end to
+end, and a contour whose bands are computed but never drawn is not either —
+even though the arithmetic for both is built, tested and qualified.
+
+* [ ] Undeformed mesh display — needs a result presentation; P16's own mesh
+      display is qualified under P16-VIZ-001 and this milestone adds nothing
+      to it
+* [ ] Deformed-shape display — `deformedPositions()` is built and qualified;
+      nothing draws it
+* [ ] Deformation scale factor — `isUsableDeformationScale`, non-cumulative,
+      refuses a negative or non-finite scale, four mutation kills; no display
+* [ ] Displacement magnitude contour — channel + classifier + bands built; no
+      display
+* [ ] Ux contour — as above
+* [ ] Uy contour — as above
+* [ ] Uz contour — as above
+* [ ] von Mises contour — as above
+* [ ] Normal stress components — as above
+* [ ] Shear stress components — as above, and `yz`/`zx` cannot be transposed
+      (two mutation kills, on a fixture with unequal shears)
+* [x] Principal stress inspection
+* [x] Element inspection
+* [x] Node displacement inspection
+* [x] Support reaction inspection
+* [ ] Load arrows — `LoadGlyph` and `NodalLoadArrow` built and qualified,
+      resultants read from the prepared contributions, sign and scale each
+      mutation-killed; no glyph is drawn
+* [ ] Restraint symbols — `RestraintGlyph` built and qualified, components
+      distinguished rather than flattened to fixed; no symbol is drawn
+* [x] Boundary-set highlighting
+* [x] Worst / highest-result navigation
+* [x] Clear stale-result visual state
+* [x] Rendering does not mutate results
+* [x] The GUI does not duplicate canonical result data
+* [x] Regression PASS
+* [x] Evidence recorded
+
+```text
+QUALIFIED   3792 / 3792 in debug-ext, release-ext and debug-shared-ext
+            937 x 5 in release-ext and debug-ext
+            0 warnings, 0 errors, -Werror on
+            eight tree hashes identical before and after
+            qualify.cmd exit 0, 0 stages failed, 3h13m
+
+            This run also REQUALIFIES P17-VALID-001, which this milestone
+            modified: StructuralSolveOutcome gained `fields` and
+            `reactions`, both already computed one statement earlier and
+            discarded. That debt is discharged, not assumed away.
+
+MUTATION    61 probes, 54 killed, 7 unreachable with derived reasons, 0 void
+            TEN real test gaps found and closed
+
+NEXT        the OCCT result presentation and the Qt inspector surface. P16
+            left a working offscreen harness, so this is tractable rather
+            than risky -- but it changes a qualified P16 file and an OCCT
+            adapter, so it needs its own architecture pass.
+```
 
 ### Critical visualisation rule
 
@@ -2025,8 +2063,7 @@ docs/engineering/
 # CURRENT NEXT STEP
 
 ```text
-P17-VALID-001 is PASS. The next step is a scope decision, not an
-implementation.
+P17-VIZ-001 is AUTHORIZED and in progress.
 ```
 
 P17-ARCH-001 gave the structural phase a boundary a stale mesh cannot cross, a
@@ -2197,8 +2234,19 @@ P17-VALID-001    PASS 2026-10-11. Qualified at include 34b3ec8d / src b6cddc44 /
                  property, no rebound face. No predecessor production file was
                  modified at all.
 
-P17-VIZ-001      NOT AUTHORIZED. Being next in the sequence is not
-                 permission, and P17-VALID-001 passing is not either.
+P17-VIZ-001      AUTHORIZED 2026-10-11, in progress. A trustworthy
+                 inspection layer over the qualified P17 result, and nothing
+                 more: the viewer is a VIEW. The invariant is that a deformed
+                 display is a visual transform of the current derived
+                 displacement -- never a mutation of the P16 mesh, the CAD
+                 geometry, the document parameters or the result, and never a
+                 second solver authority. Two carried traps bind it: mesh and
+                 displacement are SI METRES while OCCT model space is
+                 MILLIMETRES, and a classifier that classified zero entities
+                 is NOT an all-valid visualisation.
+
+P17-CMD-001      NOT AUTHORIZED. Being next in the sequence is not
+                 permission, and P17-VIZ-001 passing will not be either.
                  Authorizing it is a scope decision.
 
 everything after it

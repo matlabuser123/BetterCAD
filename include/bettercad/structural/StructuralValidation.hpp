@@ -570,6 +570,33 @@ struct StructuralSolveOutcome {
     /// The published result, keyed to the mesh it was computed on.
     StructuralResult result;
 
+    /// The recovered fields the result was built from, CARRIED RATHER THAN
+    /// DISCARDED.
+    ///
+    /// ADDED FOR P17-VIZ-001, and the reason is a gap the viewer audit found.
+    /// `StructuralResult` carries `Strain6` and `Stress6`; it does NOT carry
+    /// von Mises, the principal stresses, the principal strains, the
+    /// hydrostatic stress or `|u|`. A consumer wanting any of those from the
+    /// result alone would have to RECOMPUTE them -- a second von Mises formula
+    /// or a second eigensolver outside this module, which is exactly the
+    /// duplicate numerical authority the P17 briefs forbid.
+    ///
+    /// `RecoveredFields` already holds every one of them as a stored value,
+    /// with identity-safe `displacementOf`/`fieldsOf` lookups and a
+    /// `MeshStamp` guard. It was computed one statement before the result was
+    /// published and then thrown away. Keeping it costs a move.
+    RecoveredFields fields;
+
+    /// The support reactions, likewise carried rather than discarded.
+    ///
+    /// `StructuralResult::reactions()` is a flat `NodalReaction` list. It
+    /// cannot answer "which restraint does this reaction belong to", because
+    /// per-restraint attribution and the shared-degree-of-freedom accounting
+    /// live on `SupportReactions` -- and P17-REACTION-001 was careful that a
+    /// shared DOF is counted ONCE with additive-by-construction summaries. A
+    /// consumer that re-derived attribution would lose that.
+    SupportReactions reactions;
+
     ResidualMetrics residual{};
     double pivotRatio = 0.0;
     Energy strainEnergy{};

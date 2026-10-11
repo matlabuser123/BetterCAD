@@ -1,0 +1,77 @@
+######## the partition ########
+Mon Oct 12 01:39:15 EAST 2026
+C1  the last band rounds its top   KILLED  (3 tests failed out of 30)
+        	2889 - unit.StructuralViz_ARangeTooNarrowToSubdivideIsOneBandToo (Failed)
+        	2897 - unit.StructuralViz_ContourBandsPartitionTheFieldsOwnRange (Failed)
+        	2898 - unit.StructuralViz_ContourRefusesWhatItCannotHonestlyColour (Failed)
+C2  boundaries computed per band   KILLED  (1 tests failed out of 30)
+        	2897 - unit.StructuralViz_ContourBandsPartitionTheFieldsOwnRange (Failed)
+C3  EVERY band closed above       KILLED  (3 tests failed out of 30)
+        	2889 - unit.StructuralViz_ARangeTooNarrowToSubdivideIsOneBandToo (Failed)
+        	2897 - unit.StructuralViz_ContourBandsPartitionTheFieldsOwnRange (Failed)
+        	2898 - unit.StructuralViz_ContourRefusesWhatItCannotHonestlyColour (Failed)
+C4  NO band closed above          KILLED  (3 tests failed out of 30)
+        	2889 - unit.StructuralViz_ARangeTooNarrowToSubdivideIsOneBandToo (Failed)
+        	2897 - unit.StructuralViz_ContourBandsPartitionTheFieldsOwnRange (Failed)
+        	2898 - unit.StructuralViz_ContourRefusesWhatItCannotHonestlyColour (Failed)
+C5  partition check: gaps allowed  KILLED  (1 tests failed out of 30)
+        	2898 - unit.StructuralViz_ContourRefusesWhatItCannotHonestlyColour (Failed)
+C6  partition check: ends ignored  *** SURVIVED ***
+C7  two closed bands allowed      KILLED  (1 tests failed out of 30)
+        	2898 - unit.StructuralViz_ContourRefusesWhatItCannotHonestlyColour (Failed)
+######## the uniform field ########
+Mon Oct 12 01:56:46 EAST 2026
+C8  the one-band collapse removed   KILLED  (2 tests failed out of 30)
+        	2889 - unit.StructuralViz_ARangeTooNarrowToSubdivideIsOneBandToo (Failed)
+        	2892 - unit.StructuralViz_AUniformFieldIsOneBandNotADivisionByZero (Failed)
+C9  uniform flag never set        KILLED  (2 tests failed out of 30)
+        	2889 - unit.StructuralViz_ARangeTooNarrowToSubdivideIsOneBandToo (Failed)
+        	2892 - unit.StructuralViz_AUniformFieldIsOneBandNotADivisionByZero (Failed)
+######## the refusals ########
+Mon Oct 12 02:01:45 EAST 2026
+C10 an incomplete field banded     KILLED  (2 tests failed out of 30)
+        	2891 - unit.StructuralViz_ASkippedEntityMakesAFieldIncomplete (Failed)
+        	2898 - unit.StructuralViz_ContourRefusesWhatItCannotHonestlyColour (Failed)
+C11 the band-count range dropped   KILLED  (1 tests failed out of 30)
+        	2898 - unit.StructuralViz_ContourRefusesWhatItCannotHonestlyColour (Failed)
+C12 the ceiling only, no floor     KILLED  (1 tests failed out of 30)
+        	2898 - unit.StructuralViz_ContourRefusesWhatItCannotHonestlyColour (Failed)
+C13 the legend mismatch ignored    KILLED  (1 tests failed out of 30)
+        	2898 - unit.StructuralViz_ContourRefusesWhatItCannotHonestlyColour (Failed)
+C14 the range ignored, name only   KILLED  (1 tests failed out of 30)
+        	2898 - unit.StructuralViz_ContourRefusesWhatItCannotHonestlyColour (Failed)
+C15 partition not checked at use   KILLED  (1 tests failed out of 30)
+        	2898 - unit.StructuralViz_ContourRefusesWhatItCannotHonestlyColour (Failed)
+C16 an unbanded value clamped      *** SURVIVED ***
+######## bandOf and the ramp ########
+Mon Oct 12 02:19:04 EAST 2026
+C17 bandOf computed, not searched  KILLED  (1 tests failed out of 30)
+        	2897 - unit.StructuralViz_ContourBandsPartitionTheFieldsOwnRange (Failed)
+C18 contains() closes every band   *** SURVIVED ***
+C19 contains() opens every band    KILLED  (3 tests failed out of 30)
+        	2889 - unit.StructuralViz_ARangeTooNarrowToSubdivideIsOneBandToo (Failed)
+        	2892 - unit.StructuralViz_AUniformFieldIsOneBandNotADivisionByZero (Failed)
+        	2897 - unit.StructuralViz_ContourBandsPartitionTheFieldsOwnRange (Failed)
+C20 the ramp is one colour         *** SURVIVED ***
+C21 the band fraction loses +0.5   *** SURVIVED ***
+C22 the legend borrows no unit     KILLED  (1 tests failed out of 30)
+        	2897 - unit.StructuralViz_ContourBandsPartitionTheFieldsOwnRange (Failed)
+C23 the range taken from values    *** SURVIVED ***
+C24 the floor drops to one band    KILLED  (1 tests failed out of 30)
+        	2898 - unit.StructuralViz_ContourRefusesWhatItCannotHonestlyColour (Failed)
+C25 the narrow-range collapse gone  KILLED  (1 tests failed out of 30)
+        	2889 - unit.StructuralViz_ARangeTooNarrowToSubdivideIsOneBandToo (Failed)
+C26 the collapse fires too eagerly  KILLED  (3 tests failed out of 30)
+        	2889 - unit.StructuralViz_ARangeTooNarrowToSubdivideIsOneBandToo (Failed)
+        	2897 - unit.StructuralViz_ContourBandsPartitionTheFieldsOwnRange (Failed)
+        	2898 - unit.StructuralViz_ContourRefusesWhatItCannotHonestlyColour (Exit code 0xc0000409)
+######## RESTORE ########
+[4/5] Building CXX object tests/CMakeFiles/bettercad_tests.dir/renderer/StructuralResultViewTests.cpp.obj
+[5/5] Linking CXX executable bin\bettercad_tests.exe
+3dc0ef479226ebb90560788372871fb8eac3ce47 */c/Users/uqhas/OneDrive/Desktop/CAD/src/renderer/StructuralContour.cpp
+a88355954543afc23ea91ce23e18f08486e0288a */c/Users/uqhas/OneDrive/Desktop/CAD/include/bettercad/renderer/StructuralContour.hpp
+100% tests passed out of 30
+
+Total Test time (real) =  38.96 sec
+######## ALL DONE ########
+Mon Oct 12 02:46:13 EAST 2026

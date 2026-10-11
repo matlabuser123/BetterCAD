@@ -30,6 +30,7 @@ bettercad_add_executable(bettercad_tests
         renderer/MeshInspectionTests.cpp
         renderer/MeshSceneTests.cpp
         renderer/MeshViewTests.cpp
+        renderer/StructuralResultViewTests.cpp
         renderer/ViewerTests.cpp
         meshing/GeometryPreparationTests.cpp
         meshing/MeshDataTests.cpp

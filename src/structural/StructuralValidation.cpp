@@ -642,6 +642,8 @@ solveStructuralAnalysis(const Document& document, const features::Regenerator& r
 
     return StructuralSolveOutcome{.validation = std::move(validation),
                                   .result = std::move(*result),
+                                  .fields = std::move(*fields),
+                                  .reactions = std::move(*reactions),
                                   .residual = solution->residual(),
                                   .pivotRatio = solution->pivotRatio(),
                                   .strainEnergy = solution->strainEnergy(),

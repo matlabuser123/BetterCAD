@@ -1,0 +1,34 @@
+######## RE-PROBE: the 11 survivors and the one compiler kill ########
+Mon Oct 12 01:05:12 EAST 2026
+V8  a signed channel plots abs()    KILLED  (3 tests failed out of 30)
+        	2887 - unit.StructuralViz_AChannelWithNoValueIsAbsentNotZero (Failed)
+        	2903 - unit.StructuralViz_EveryChannelsValuesAreItsSourcesValues (Failed)
+        	2904 - unit.StructuralViz_EverySignedChannelKeepsTheSignOfEveryValue (Failed)
+V11 an EMPTY domain accepted        *** SURVIVED ***
+V12 an INCOMPLETE field accepted    *** SURVIVED ***
+V13 a non-finite value accepted     *** SURVIVED ***
+V17 MaximumMagnitude loses the sign  KILLED  (1 tests failed out of 30)
+        	2888 - unit.StructuralViz_AMagnitudeExtremeReportsTheSignedValue (Failed)
+V19 describes() ignores the source  KILLED  (1 tests failed out of 30)
+        	2893 - unit.StructuralViz_AViewRefusesAResultOfTheSameMeshFromAnotherSource (Failed)
+V20 describes() ignores the mesh    KILLED  (1 tests failed out of 30)
+        	2911 - unit.StructuralViz_RefusesAResultFromADifferentMesh (Failed)
+V21 restraint read from displacement  KILLED  (1 tests failed out of 30)
+        	2915 - unit.StructuralViz_RestraintSurvivesANonZeroDisplacement (Failed)
+V28 stale-on-current ignores mesh   *** SURVIVED ***
+V33 the skipped refusal removed     *** SURVIVED ***
+V34 complete() drops skipped==0     KILLED  (1 tests failed out of 30)
+        	2891 - unit.StructuralViz_ASkippedEntityMakesAFieldIncomplete (Failed)
+V35 ChannelUnavailable not Internal  *** SURVIVED ***
+######## RESTORE ########
+[6/7] Building CXX object tests/CMakeFiles/bettercad_tests.dir/renderer/StructuralResultViewTests.cpp.obj
+[7/7] Linking CXX executable bin\bettercad_tests.exe
+9398073a32768be139a7b191b3ab7ff092242eeb */c/Users/uqhas/OneDrive/Desktop/CAD/src/renderer/StructuralResultView.cpp
+d9d8b2111282831d101d69e8cc86ef447e52c22a */c/Users/uqhas/OneDrive/Desktop/CAD/src/renderer/StructuralInspection.cpp
+45978dd3e2084d8a7d522aa2e34a73669d226dec */c/Users/uqhas/OneDrive/Desktop/CAD/include/bettercad/renderer/StructuralResultView.hpp
+d5b9a91ab75dd7194c707d726145407f8ca563d4 */c/Users/uqhas/OneDrive/Desktop/CAD/include/bettercad/renderer/StructuralInspection.hpp
+100% tests passed out of 30
+
+Total Test time (real) =  36.92 sec
+######## ALL DONE ########
+Mon Oct 12 01:37:34 EAST 2026

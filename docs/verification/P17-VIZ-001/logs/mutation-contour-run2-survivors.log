@@ -1,0 +1,23 @@
+######## RE-PROBE: the six contour survivors ########
+Mon Oct 12 02:51:51 EAST 2026
+C6  partition check: ends ignored  KILLED  (1 tests failed out of 33)
+        	2888 - unit.StructuralViz_ALegendMustPartitionItsOwnStatedRange (Failed)
+C16 an unbanded value clamped      *** SURVIVED ***
+C18 contains() closes every band   KILLED  (1 tests failed out of 33)
+        	2900 - unit.StructuralViz_ContourGapsTheProbesFound (Failed)
+C20 the ramp is one colour         KILLED  (1 tests failed out of 33)
+        	2900 - unit.StructuralViz_ContourGapsTheProbesFound (Failed)
+C21 the band fraction loses +0.5   KILLED  (1 tests failed out of 33)
+        	2900 - unit.StructuralViz_ContourGapsTheProbesFound (Failed)
+C23 the range taken from values    KILLED  (1 tests failed out of 33)
+        	2889 - unit.StructuralViz_ALegendRestatesTheFieldsRangeAndDoesNotRescan (Failed)
+######## RESTORE ########
+[4/5] Building CXX object tests/CMakeFiles/bettercad_tests.dir/renderer/StructuralResultViewTests.cpp.obj
+[5/5] Linking CXX executable bin\bettercad_tests.exe
+3dc0ef479226ebb90560788372871fb8eac3ce47 */c/Users/uqhas/OneDrive/Desktop/CAD/src/renderer/StructuralContour.cpp
+a88355954543afc23ea91ce23e18f08486e0288a */c/Users/uqhas/OneDrive/Desktop/CAD/include/bettercad/renderer/StructuralContour.hpp
+100% tests passed out of 33
+
+Total Test time (real) =  36.63 sec
+######## ALL DONE ########
+Mon Oct 12 03:09:51 EAST 2026

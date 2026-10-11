@@ -1,0 +1,92 @@
+######## A: units and the deformed buffer ########
+Sun Oct 11 23:24:30 EAST 2026
+V1  the deformation scale ignored    KILLED  (1 tests failed out of 20)
+        	2892 - unit.StructuralViz_DeformedPositionsAreTheUndeformedPlusScaledDisplacement (Failed)
+V2  deformed MULTIPLIES the position  KILLED  (1 tests failed out of 20)
+        	2892 - unit.StructuralViz_DeformedPositionsAreTheUndeformedPlusScaledDisplacement (Failed)
+V3  a negative scale allowed        KILLED  (1 tests failed out of 20)
+        	2892 - unit.StructuralViz_DeformedPositionsAreTheUndeformedPlusScaledDisplacement (Failed)
+V4  scale 0 no longer undeformed    KILLED  (1 tests failed out of 20)
+        	2892 - unit.StructuralViz_DeformedPositionsAreTheUndeformedPlusScaledDisplacement (Failed)
+V5  a metres-to-mm factor sneaks in  KILLED  (2 tests failed out of 20)
+        	2892 - unit.StructuralViz_DeformedPositionsAreTheUndeformedPlusScaledDisplacement (Failed)
+        	2896 - unit.StructuralViz_EverythingLeavingThisLayerIsSiMetres (Failed)
+######## B: channels ########
+Sun Oct 11 23:37:28 EAST 2026
+V6  tau_YZ and tau_ZX transposed    KILLED  (2 tests failed out of 20)
+        	2887 - unit.StructuralViz_AChannelWithNoValueIsAbsentNotZero (Failed)
+        	2891 - unit.StructuralViz_ChannelsAreNotTransposed (Failed)
+V7  |u| returns a component         KILLED  (3 tests failed out of 20)
+        	2887 - unit.StructuralViz_AChannelWithNoValueIsAbsentNotZero (Failed)
+        	2897 - unit.StructuralViz_ExtremeNavigationIsGlobalAndDeterministic (Failed)
+        	2900 - unit.StructuralViz_RangeAndExtremesMatchAnIndependentSweep (Failed)
+V8  a signed channel plots abs()    *** SURVIVED ***
+V9  von Mises declared NODAL        KILLED  (7 tests failed out of 20)
+        	2887 - unit.StructuralViz_AChannelWithNoValueIsAbsentNotZero (Failed)
+        	2891 - unit.StructuralViz_ChannelsAreNotTransposed (Failed)
+        	2894 - unit.StructuralViz_EveryChannelClassifiesItsWholeDomain (Failed)
+        	2895 - unit.StructuralViz_EveryChannelHasOneDescriptorAndOneDomain (Failed)
+V10 a norm declared signed          KILLED  (1 tests failed out of 20)
+        	2895 - unit.StructuralViz_EveryChannelHasOneDescriptorAndOneDomain (Failed)
+######## C: the classifier ########
+Sun Oct 11 23:50:52 EAST 2026
+V11 an EMPTY domain accepted        *** SURVIVED ***
+V12 an INCOMPLETE field accepted    *** SURVIVED ***
+V13 a non-finite value accepted     *** SURVIVED ***
+V14 complete() drops expected>0     KILLED  (1 tests failed out of 20)
+        	2897 - unit.StructuralViz_ExtremeNavigationIsGlobalAndDeterministic (Failed)
+V15 the extremum seeded at zero     KILLED  (3 tests failed out of 20)
+        	2894 - unit.StructuralViz_EveryChannelClassifiesItsWholeDomain (Failed)
+        	2897 - unit.StructuralViz_ExtremeNavigationIsGlobalAndDeterministic (Failed)
+        	2900 - unit.StructuralViz_RangeAndExtremesMatchAnIndependentSweep (Failed)
+######## D: extremes and source guards ########
+Mon Oct 12 00:03:26 EAST 2026
+V16 ties go to the LAST entity      KILLED  (1 tests failed out of 20)
+        	2897 - unit.StructuralViz_ExtremeNavigationIsGlobalAndDeterministic (Failed)
+V17 MaximumMagnitude loses the sign  *** SURVIVED ***
+V18 extremeOf drops completeness    KILLED  (1 tests failed out of 20)
+        	2897 - unit.StructuralViz_ExtremeNavigationIsGlobalAndDeterministic (Failed)
+V19 describes() ignores the source  *** SURVIVED ***
+V20 describes() ignores the mesh    KILLED-BY-COMPILER (weak)
+        C:/Users/uqhas/OneDrive/Desktop/CAD/src/renderer/StructuralResultView.cpp:304:59: error: unused parameter 'mesh' [-Werror=unused-parameter]
+######## E: inspection, overlays and state ########
+Mon Oct 12 00:13:51 EAST 2026
+V21 restraint read from displacement  *** SURVIVED ***
+V22 the reaction sign reversed      KILLED  (1 tests failed out of 20)
+        	2898 - unit.StructuralViz_InspectionReportsExactSourceValues (Failed)
+V23 the pressure glyph negated      KILLED  (1 tests failed out of 20)
+        	2899 - unit.StructuralViz_LoadGlyphsReadThePreparedContributions (Failed)
+V24 every restraint drawn as FIXED  KILLED  (1 tests failed out of 20)
+        	2905 - unit.StructuralViz_RestraintGlyphsDistinguishTheirComponents (Failed)
+V25 a zero vector given a direction  KILLED  (1 tests failed out of 20)
+        	2899 - unit.StructuralViz_LoadGlyphsReadThePreparedContributions (Failed)
+V26 the arrow scale ignored         KILLED  (1 tests failed out of 20)
+        	2889 - unit.StructuralViz_ArrowScaleIsPresentationOnly (Failed)
+V27 a STALE result drawn as current  KILLED  (1 tests failed out of 20)
+        	2906 - unit.StructuralViz_StaleResultIsNeverDrawableAsCurrent (Failed)
+V28 stale-on-current ignores mesh   *** SURVIVED ***
+V29 stale REASONS never populated   KILLED  (1 tests failed out of 20)
+        	2906 - unit.StructuralViz_StaleResultIsNeverDrawableAsCurrent (Failed)
+V30 a load target silently empty    KILLED  (1 tests failed out of 20)
+        	2890 - unit.StructuralViz_BoundaryHighlightGoesThroughTheP16Mapping (Exit code 0xc0000409)
+######## F: the adversarial-review fix ########
+Mon Oct 12 00:37:52 EAST 2026
+V31 nodal absent becomes 0.0        KILLED  (1 tests failed out of 20)
+        	2887 - unit.StructuralViz_AChannelWithNoValueIsAbsentNotZero (Failed)
+V32 element absent becomes 0.0      KILLED  (1 tests failed out of 20)
+        	2887 - unit.StructuralViz_AChannelWithNoValueIsAbsentNotZero (Failed)
+V33 the skipped refusal removed     *** SURVIVED ***
+V34 complete() drops skipped==0     *** SURVIVED ***
+V35 ChannelUnavailable not Internal  *** SURVIVED ***
+######## RESTORE ########
+[5/6] Building CXX object tests/CMakeFiles/bettercad_tests.dir/renderer/StructuralResultViewTests.cpp.obj
+[6/6] Linking CXX executable bin\bettercad_tests.exe
+e1a465477e6772e96d8bf6d3b1ec719e90f40ca9 */c/Users/uqhas/OneDrive/Desktop/CAD/src/renderer/StructuralResultView.cpp
+d9d8b2111282831d101d69e8cc86ef447e52c22a */c/Users/uqhas/OneDrive/Desktop/CAD/src/renderer/StructuralInspection.cpp
+45978dd3e2084d8a7d522aa2e34a73669d226dec */c/Users/uqhas/OneDrive/Desktop/CAD/include/bettercad/renderer/StructuralResultView.hpp
+d5b9a91ab75dd7194c707d726145407f8ca563d4 */c/Users/uqhas/OneDrive/Desktop/CAD/include/bettercad/renderer/StructuralInspection.hpp
+100% tests passed out of 20
+
+Total Test time (real) =  38.63 sec
+######## ALL DONE ########
+Mon Oct 12 00:52:22 EAST 2026

@@ -24,6 +24,9 @@ bettercad_add_library(bettercad_renderer
         MeshInspection.cpp
         MeshScene.cpp
         MeshView.cpp
+        StructuralContour.cpp
+        StructuralInspection.cpp
+        StructuralResultView.cpp
         occt/OcctMeshPresentation.cpp
         occt/OcctViewer.cpp
     PUBLIC_LINK
@@ -32,6 +35,7 @@ bettercad_add_library(bettercad_renderer
         # Public: MeshView.hpp takes a meshing::Mesh and hands back NodeId and
         # ElementId, so a consumer of this module's headers needs meshing too.
         BetterCAD::meshing
+        BetterCAD::structural
     PRIVATE_LINK
         # The modelling toolkits are needed because the viewer displays a
         # TopoDS_Shape through AIS_Shape; the visualization ones are what
