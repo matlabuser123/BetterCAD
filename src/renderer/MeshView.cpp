@@ -135,6 +135,8 @@ std::string_view toString(MeshSource source) noexcept {
         return "the volume mesh boundary";
     case MeshSource::SelectedTetrahedra:
         return "the selected tetrahedra";
+    case MeshSource::VolumeBoundaryByTetrahedron:
+        return "the volume mesh boundary, by tetrahedron";
     }
     return "an unknown mesh source";
 }
@@ -149,6 +151,97 @@ Result<MeshView> MeshView::volumeBoundaryOf(const meshing::Mesh& mesh) {
     // no interior tetrahedron face can reach the buffer. One canonical
     // definition of "boundary", and it is P16-VOL-001's.
     return build(mesh, MeshSource::VolumeBoundary, facetsOfTriangles(mesh));
+}
+
+Result<std::vector<MeshView::Facet>> MeshView::facetsOfTetrahedronExterior(
+    const meshing::Mesh& mesh) {
+    // ONE ENTRY PER TETRAHEDRON FACE, keyed on the SORTED node triple.
+    //
+    // The key is sorted because that is how two tetrahedra are recognised as
+    // sharing a face. The EMITTED nodes stay UNSORTED, because the winding
+    // from kTetFaces is what makes the normal point out of the tetrahedron --
+    // and for an exterior face, out of the solid. Confusing the two would draw
+    // a boundary with arbitrary normals.
+    struct Keyed {
+        std::array<meshing::NodeId, 3> key{};
+        meshing::ElementId element{};
+        std::array<meshing::NodeId, 3> nodes{};
+    };
+
+    std::vector<Keyed> all;
+    all.reserve(mesh.tetrahedra().size() * 4U);
+    for (const meshing::Tetrahedron& tet : mesh.tetrahedra()) {
+        for (const std::array<std::size_t, 3>& face : kTetFaces) {
+            const std::array<meshing::NodeId, 3> nodes{tet.nodes[face[0]], tet.nodes[face[1]],
+                                                       tet.nodes[face[2]]};
+            std::array<meshing::NodeId, 3> key = nodes;
+            std::ranges::sort(key);
+            all.push_back(Keyed{key, tet.id, nodes});
+        }
+    }
+
+    // SORTED, NEVER HASHED. An unordered_map would make the facet order depend
+    // on the standard library's bucketing, and this class promises
+    // byte-identical buffers in Debug, Release and Debug-shared.
+    std::ranges::sort(all, [](const Keyed& a, const Keyed& b) {
+        if (a.key != b.key) {
+            return a.key < b.key;
+        }
+        return a.element < b.element;
+    });
+
+    std::vector<Facet> facets;
+    facets.reserve(all.size());
+    std::size_t at = 0U;
+    while (at < all.size()) {
+        std::size_t run = at + 1U;
+        while (run < all.size() && all[run].key == all[at].key) {
+            ++run;
+        }
+        const std::size_t shared = run - at;
+        if (shared == 1U) {
+            // EXTERIOR: exactly one tetrahedron carries this face.
+            facets.push_back(Facet{all[at].element, all[at].nodes});
+        } else if (shared > 2U) {
+            // NON-MANIFOLD, AND REFUSED BY NAME. Treating it as exterior would
+            // draw a plausible surface over a mesh the generator got wrong, and
+            // picking one of the claimants would be a silent choice.
+            return makeError(
+                ErrorCode::FailedPrecondition,
+                std::format("mesh view: the face on nodes {}, {} and {} is carried by {} "
+                            "tetrahedra, so this mesh is not manifold",
+                            all[at].key[0].value(), all[at].key[1].value(),
+                            all[at].key[2].value(), shared));
+        }
+        at = run;
+    }
+
+    // ASCENDING ElementId, which is what this class documents its triangles to
+    // be. `build` sorts the vertices and the edges but NOT the facets, so the
+    // triangle order is the order they arrive in -- and the walk above
+    // produced them in key order, not element order.
+    std::ranges::sort(facets, [](const Facet& a, const Facet& b) {
+        if (a.element != b.element) {
+            return a.element < b.element;
+        }
+        return a.nodes < b.nodes;
+    });
+    return facets;
+}
+
+Result<MeshView> MeshView::volumeBoundaryByTetrahedronOf(const meshing::Mesh& mesh) {
+    if (mesh.tetrahedra().empty()) {
+        // REFUSED, not answered with an empty view. This factory exists to name
+        // tetrahedra, and a mesh with none has nothing to name.
+        return makeError(ErrorCode::FailedPrecondition,
+                         "mesh view: this mesh has no tetrahedron, so its boundary cannot be "
+                         "derived from tetrahedra");
+    }
+    Result<std::vector<Facet>> facets = facetsOfTetrahedronExterior(mesh);
+    if (!facets.has_value()) {
+        return makeError(facets.error().code, facets.error().message);
+    }
+    return build(mesh, MeshSource::VolumeBoundaryByTetrahedron, std::move(*facets));
 }
 
 Result<MeshView> MeshView::tetrahedraOf(const meshing::Mesh& mesh,

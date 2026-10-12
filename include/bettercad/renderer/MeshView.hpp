@@ -64,6 +64,19 @@ enum class MeshSource : std::uint8_t {
     /// The four faces of each of a chosen few tetrahedra: interior inspection,
     /// built on demand for a selection and never for a whole mesh.
     SelectedTetrahedra,
+    /// The volume mesh's boundary, derived from the TETRAHEDRA rather than
+    /// taken from the Triangle3 elements, so `elementOfTriangle` names a
+    /// **Tet4** and not a boundary triangle.
+    ///
+    /// THE ONLY SOURCE WHOSE ELEMENT IDS ARE TETRAHEDRA WHILE THE PICTURE IS A
+    /// BOUNDARY, which is what lets an ELEMENT channel be contoured on the
+    /// outside of a solid (ADR-046). `VolumeBoundary` draws the same surface
+    /// and names Triangle3 elements; the two are not interchangeable and
+    /// `source()` is how a caller tells them apart.
+    ///
+    /// Unlike `VolumeBoundary`, this one DOES count face incidences: a face
+    /// carried by exactly one tetrahedron is exterior, two is interior.
+    VolumeBoundaryByTetrahedron,
 };
 
 [[nodiscard]] BETTERCAD_RENDERER_EXPORT std::string_view toString(MeshSource source) noexcept;
@@ -94,6 +107,31 @@ public:
     /// asked to inspect four elements and silently got three has been misled.
     [[nodiscard]] static Result<MeshView> tetrahedraOf(const meshing::Mesh& mesh,
                                                        std::span<const meshing::ElementId> tetrahedra);
+
+    /// The volume mesh's boundary, derived from the tetrahedra, so every drawn
+    /// triangle names the tetrahedron that OWNS it.
+    ///
+    /// WHY THIS EXISTS, and it is the whole of ADR-046. An element channel --
+    /// von Mises, a stress component -- has one value per TETRAHEDRON, and
+    /// `volumeBoundaryOf` names Triangle3 elements, so its ids cannot index
+    /// such a field. The fix is not a triangle-to-tetrahedron lookup; it is to
+    /// build the boundary from the tetrahedra in the first place, and then
+    /// ownership is known by construction because the tetrahedron was in hand
+    /// when the face was emitted.
+    ///
+    /// A face carried by exactly ONE tetrahedron is exterior. Two is interior
+    /// and is not drawn. THREE OR MORE IS REFUSED BY NAME: a face shared by
+    /// three tetrahedra is a non-manifold mesh, and drawing it as a boundary
+    /// would hide that the generator produced something wrong.
+    ///
+    /// Refuses a mesh with no tetrahedron, rather than returning an empty
+    /// view: this factory is about a volume mesh, and an engineering surface
+    /// has no tetrahedron to name.
+    ///
+    /// The facets carry NO `RegionId` -- no view does -- so boundary-region
+    /// work still belongs to `volumeBoundaryOf`.
+    [[nodiscard]] static Result<MeshView> volumeBoundaryByTetrahedronOf(
+        const meshing::Mesh& mesh);
 
     [[nodiscard]] MeshSource source() const noexcept { return source_; }
 
@@ -167,6 +205,12 @@ private:
     [[nodiscard]] static Result<MeshView> build(const meshing::Mesh& mesh, MeshSource source,
                                                 std::vector<Facet> facets);
     [[nodiscard]] static std::vector<Facet> facetsOfTriangles(const meshing::Mesh& mesh);
+    /// The exterior faces of every tetrahedron, each carrying its owner.
+    ///
+    /// A `Result` because it REFUSES a non-manifold face rather than choosing
+    /// one of the tetrahedra that claim it.
+    [[nodiscard]] static Result<std::vector<Facet>> facetsOfTetrahedronExterior(
+        const meshing::Mesh& mesh);
 
     MeshSource source_ = MeshSource::EngineeringSurface;
     meshing::MeshStamp stamp_{};

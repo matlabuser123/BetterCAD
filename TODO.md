@@ -1468,14 +1468,16 @@ tuned on one body shape will reject a legitimate mesh of another.
 
 ## FEA Visualisation / Inspection
 
-**IN PROGRESS, 20 of 23.** The headless inspection layer, the DEFORMED
-display, the FOUR NODAL contours and the LOAD AND RESTRAINT GLYPHS are
-complete and mutation-tested. What remains is the three ELEMENT contours
-alone -- blocked, not unfinished. Evidence:
+**23 of 23. COMPLETE and qualified.** The headless inspection layer, the
+DEFORMED display, the FOUR NODAL contours, the LOAD AND RESTRAINT GLYPHS and
+the THREE ELEMENT contours are all built, drawn, measured on screen and
+mutation-tested. Evidence:
 [docs/verification/P17-VIZ-001/](docs/verification/P17-VIZ-001/README.md),
 the display surface in
-[DISPLAY.md](docs/verification/P17-VIZ-001/DISPLAY.md), and the glyphs in
-[DISPLAY_GLYPHS.md](docs/verification/P17-VIZ-001/DISPLAY_GLYPHS.md).
+[DISPLAY.md](docs/verification/P17-VIZ-001/DISPLAY.md), the glyphs in
+[DISPLAY_GLYPHS.md](docs/verification/P17-VIZ-001/DISPLAY_GLYPHS.md), and the
+element contours in
+[ELEMENT_CONTOURS.md](docs/verification/P17-VIZ-001/ELEMENT_CONTOURS.md).
 
 The rule applied to the boxes below, stated so it can be checked: **tick a box
 only where this milestone's own evidence demonstrates the deliverable end to
@@ -1491,11 +1493,12 @@ been measured on screen at 1 distinct colour against 4807.
 * [x] Ux contour
 * [x] Uy contour
 * [x] Uz contour
-* [ ] von Mises contour — BLOCKED on a mapping that does not exist. See the
-      note below; the element path itself is correct and tested.
-* [ ] Normal stress components — blocked the same way
-* [ ] Shear stress components — blocked the same way. `yz`/`zx` cannot be
-      transposed (two mutation kills, on a fixture with unequal shears)
+* [x] von Mises contour — drawn on a boundary derived from the TETRAHEDRA, so
+      each facet names the element that owns it (ADR-046). 7 distinct colours
+      on screen against a uniform fill of 1
+* [x] Normal stress components — XX, YY and ZZ, through the same mechanism
+* [x] Shear stress components — XY, YZ and ZX. `yz`/`zx` cannot be transposed
+      (two mutation kills, on a fixture with unequal shears)
 * [x] Principal stress inspection
 * [x] Element inspection
 * [x] Node displacement inspection
@@ -1515,30 +1518,33 @@ been measured on screen at 1 distinct colour against 4807.
 * [x] Evidence recorded
 
 ```text
-QUALIFIED THREE TIMES, each run covering what the one before it did
+QUALIFIED FOUR TIMES, each run covering what the one before it did
             not. The figures below are the LATEST, read from the logs.
 
             b04a9e1   the inspection layer      11 of 23
             ec68076   the display surface        18 of 23
-            THIS RUN  the load and restraint glyphs, 20 of 23
+            974b62b   the load and restraint glyphs  20 of 23
+            THIS RUN  the three element contours   23 of 23
 
-            3825 / 3825 in debug-ext, release-ext and debug-shared-ext
-            970 x 5 in release-ext and debug-ext
+            3835 / 3835 in debug-ext, release-ext and debug-shared-ext
+            980 x 5 in release-ext and debug-ext
             0 compiler warnings, 0 errors, -Werror on
             17 stages, every one exit 0, 0 stage(s) failed
             no-op rebuild exit 0 in all three, so the binaries that ran
               the tests are the ones the build produced
             eight tree hashes identical before and after, and matched
               against a SECOND fingerprint taken independently
-            qualify.cmd exit 0, 3h21m00s
+            qualify.cmd exit 0, 3h15m17s
+            and the MESHING MODULE was checked as a GATE to be untouched:
+              zero diff in src/meshing and include/bettercad/meshing
 
             This run also REQUALIFIES P17-VALID-001, which this milestone
             modified: StructuralSolveOutcome gained `fields` and
             `reactions`, both already computed one statement earlier and
             discarded. That debt is discharged, not assumed away.
 
-MUTATION    113 probe runs across the whole milestone: 83 before the
-            glyphs, 30 for them.
+MUTATION    121 probe runs across the whole milestone: 83 before the
+            glyphs, 30 for them, 8 for the element contours.
             The glyph work: 30 runs over 27 distinct mutations --
             25 killed, 1 equivalent mutant kept and documented
             (G20), 1 void and superseded (G11). SIX real test gaps
@@ -1550,31 +1556,57 @@ MUTATION    113 probe runs across the whole milestone: 83 before the
             other two came from mutations SURVIVING. Neither method
             would have found what the other did.
 
-THE ELEMENT CONTOURS ARE BLOCKED, and the blocker is a scope decision
-rather than a defect:
+            THE ELEMENT CONTOURS: 8 runs over 7 distinct mutations, ALL
+            SEVEN KILLED. E7 -- the non-manifold refusal -- survived the
+            first batch and was ONE STEP FROM BEING RECORDED AS AN
+            UNREACHABLE GUARD. That was wrong: MeshBuilder is public and
+            addTetrahedron checks CONNECTIVITY ONLY, because positive
+            volume is a whole-mesh question its own header says validation
+            answers later. So a non-manifold mesh can be built by hand, the
+            guard is reachable, and E7 was a REAL GAP.
+            Before calling a guard unreachable, ask what the module's own
+            public BUILDERS can construct, not what today's callers pass.
 
-    MeshView::volumeBoundaryOf builds from the mesh's Triangle3 SURFACE
-    elements, so elementOfTriangle returns a TRIANGLE's id. An element
-    channel's values are per TETRAHEDRON. The two id spaces are disjoint.
+THE ELEMENT CONTOURS ARE DONE, and the blocker recorded here for two
+milestones was a WRONG CONCLUSION FROM A CORRECT DIAGNOSIS.
+ELEMENT_CONTOURS.md, FREEZE_ELEMENTS.md, ADR-046.
 
-    meshing::Triangle carries id, nodes and region. It does NOT carry an
-    owning tetrahedron, and no accessor in meshing answers for one.
+    THE BLOCKER RECORDED HERE FOR TWO MILESTONES WAS A WRONG CONCLUSION
+    FROM A CORRECT DIAGNOSIS. It said a boundary-view element contour
+    needed a new capability in the qualified P16 meshing module -- a
+    triangle-to-owning-tetrahedron mapping -- and that this was therefore
+    a scope decision.
 
-    So a boundary-view element contour needs a NEW CAPABILITY IN THE
-    QUALIFIED P16 MESHING MODULE -- a triangle-to-owning-tetrahedron
-    mapping, which is a topological search over sorted node triples and
-    wants its own design, not an inline helper in the renderer.
+    Every fact was right. volumeBoundaryOf names Triangle3 elements, an
+    element channel is per TETRAHEDRON, and meshing::Triangle carries no
+    owning tetrahedron. But the question "which tetrahedron owns this
+    triangle" ONLY ARISES IF THE BOUNDARY IS TAKEN FROM THE TRIANGLE3
+    ELEMENTS. volumeBoundaryByTetrahedronOf derives it from the
+    tetrahedra, and ownership is known by construction because the
+    tetrahedron is in hand when the face is emitted.
 
-    The element path itself is CORRECT and tested: the same function, the
-    same field and a MeshView::tetrahedraOf view produce flat per-facet
-    bands that match an independent lookup
-    (StructuralViz_AnElementChannelNeedsTheOwningTetrahedron). What is
-    absent is the mapping, not the colouring.
+    NO meshing change. NO contour-layer change either -- triangleCornerBands
+    reads elementOfTriangle and looks the id up in the field, so a view
+    whose element ids are tetrahedra simply works.
 
-NEXT        the meshing triangle-to-tetrahedron mapping, and it is the ONLY
-            remaining item. It is a SCOPE DECISION and it touches a
-            qualified module, so it is not Claude's to start.
-            P17-CMD-001 remains NOT AUTHORIZED.
+    Measured: the tet-derived boundary covers EXACTLY the same node triples
+    as the Triangle3 boundary, both directions; all seven element channels
+    contour it; and on screen it shows 7 distinct colours against a uniform
+    fill's 1.
+
+    The lesson: A BLOCKER DERIVED FROM ONE IMPLEMENTATION ROUTE IS A
+    STATEMENT ABOUT THAT ROUTE, NOT ABOUT THE CAPABILITY.
+
+NEXT        NOTHING IN THIS MILESTONE. P17-VIZ-001 is complete at 23 of 23.
+
+            The triangle-to-tetrahedron mapping this file previously named
+            as the only remaining item IS NOT NEEDED AT ALL -- see ADR-046.
+            No capability was added to the qualified P16 meshing module, and
+            that was checked as a GATE before the freeze rather than
+            asserted after it.
+
+            P17-CMD-001 remains NOT AUTHORIZED: this passing is not
+            permission to start it.
 ```
 
 ### Critical visualisation rule

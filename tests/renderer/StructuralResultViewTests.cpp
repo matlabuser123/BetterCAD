@@ -46,6 +46,8 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
+#include <set>
+#include <span>
 #include <cstddef>
 #include <limits>
 #include <optional>
@@ -3709,15 +3711,23 @@ TEST_CASE("StructuralViz_ANodalChannelColoursEachCornerFromItsOwnNode", "[render
 }
 
 TEST_CASE("StructuralViz_AnElementChannelNeedsTheOwningTetrahedron", "[renderer][viz]") {
-    // THE LIMITATION, MEASURED RATHER THAN DESCRIBED, and the distinction it
-    // draws matters: the element path is CORRECT, and what is missing is a
-    // mapping that lives in another module.
+    // WHY A TRIANGLE3 BOUNDARY CANNOT CARRY AN ELEMENT CHANNEL, measured
+    // rather than described. MeshView::volumeBoundaryOf builds from the mesh's
+    // Triangle3 surface elements, so elementOfTriangle returns a TRIANGLE's
+    // id, while an element channel's values are per TETRAHEDRON. The two id
+    // spaces are disjoint, and meshing::Triangle carries id, nodes and region
+    // -- no owning tetrahedron.
     //
-    // MeshView::volumeBoundaryOf builds from the mesh's Triangle3 surface
-    // elements, so elementOfTriangle returns a TRIANGLE's id. An element
-    // channel's values are per TETRAHEDRON. The two id spaces are disjoint,
-    // and meshing::Triangle carries id, nodes and region -- no owning
-    // tetrahedron, and no accessor anywhere answers for one.
+    // THIS CASE NO LONGER RECORDS A BLOCKED FEATURE. An earlier revision of it
+    // concluded that closing the gap needed a triangle-to-tetrahedron mapping
+    // in the qualified P16 meshing module, and that was WRONG: the question
+    // only arises if the boundary is taken from the Triangle3 elements.
+    // volumeBoundaryByTetrahedronOf derives the boundary from the tetrahedra
+    // instead, and ownership is then known by construction (ADR-046). See
+    // StructuralViz_EveryElementChannelContoursTheBoundaryByTetrahedron.
+    //
+    // What this case still holds is the REFUSAL, which is correct behaviour for
+    // THIS view and must not be relaxed because another view succeeds.
     //
     // So a boundary view is REFUSED, by name, rather than coloured from a
     // mismatched lookup.
@@ -5600,5 +5610,243 @@ TEST_CASE("StructuralViz_AStaleDofNumberingIsRefusedNotTrusted", "[renderer][viz
 
         // AND WITH THE FRESH NUMBERING IT DRAWS, so the refusal is not blanket.
         REQUIRE(renderer::restraintSymbolOverlay(mesh, *held, *fresh, 0.004).has_value());
+    }
+}
+
+// ---------------------------------------------------------------------------
+// The element contours, on a boundary derived from the tetrahedra (ADR-046)
+// ---------------------------------------------------------------------------
+
+TEST_CASE("StructuralViz_EveryElementChannelContoursTheBoundaryByTetrahedron",
+          "[renderer][viz]") {
+    // THE THREE BOXES THAT WERE RECORDED AS BLOCKED: the von Mises contour,
+    // the normal stress components and the shear stress components.
+    //
+    // They were blocked on a premise, not on a missing capability. The recorded
+    // reason was that `volumeBoundaryOf` names Triangle3 elements while an
+    // element channel is per TETRAHEDRON, and that closing the gap needed a
+    // triangle-to-tetrahedron mapping in the qualified P16 meshing module.
+    //
+    // Every sentence of that was true and the conclusion did not follow: build
+    // the boundary FROM the tetrahedra and ownership is known by construction.
+    // `StructuralContour` needed NO change at all -- it reads
+    // `elementOfTriangle` and looks the id up in the field, so a view whose
+    // element ids are tetrahedra simply works (ADR-046).
+    Prepared prepared;
+    const meshing::Mesh& mesh = prepared.part.mesh();
+
+    Result<MeshView> byTetrahedron = MeshView::volumeBoundaryByTetrahedronOf(mesh);
+    INFO((byTetrahedron.has_value() ? std::string{} : byTetrahedron.error().message));
+    REQUIRE(byTetrahedron.has_value());
+    REQUIRE(byTetrahedron->source() == renderer::MeshSource::VolumeBoundaryByTetrahedron);
+    REQUIRE(byTetrahedron->triangleCount() > 0U);
+
+    Result<StructuralResultView> result =
+        StructuralResultView::of(mesh, *byTetrahedron, prepared.outcome().fields);
+    INFO((result.has_value() ? std::string{} : result.error().message));
+    REQUIRE(result.has_value());
+
+    // ALL SEVEN ELEMENT CHANNELS THE THREE BOXES NAME. Checked in one loop
+    // rather than three cases, because the mechanism is one mechanism and a
+    // channel that worked while its neighbour did not would be a lookup bug,
+    // which this catches.
+    const std::array<ResultChannel, 7> channels{
+        ResultChannel::VonMises,  ResultChannel::StressXX, ResultChannel::StressYY,
+        ResultChannel::StressZZ,  ResultChannel::StressXY, ResultChannel::StressYZ,
+        ResultChannel::StressZX};
+
+    for (const ResultChannel channel : channels) {
+        INFO("channel " << renderer::toString(channel));
+        const Result<ScalarField> field =
+            result->field(mesh, prepared.outcome().fields, channel);
+        REQUIRE(field.has_value());
+        REQUIRE(field->domain == ChannelDomain::Element);
+        REQUIRE(field->complete());
+
+        const Result<renderer::ContourLegend> legend = renderer::contourLegend(*field, 8);
+        REQUIRE(legend.has_value());
+        const Result<std::vector<std::size_t>> bands =
+            renderer::contourBandsOf(*field, *legend);
+        REQUIRE(bands.has_value());
+
+        // THE DELIVERABLE. This is the call that used to be refused by name.
+        const Result<std::vector<std::size_t>> corners =
+            renderer::triangleCornerBands(*byTetrahedron, *field, *bands);
+        INFO((corners.has_value() ? std::string{} : corners.error().message));
+        REQUIRE(corners.has_value());
+        REQUIRE(corners->size() == byTetrahedron->triangleCount() * 3U);
+
+        // AND THE COLOURS COMPOSE, so a caller reaches a full buffer and not a
+        // half-built one.
+        const Result<std::vector<double>> colours =
+            renderer::contourCornerColours(*byTetrahedron, *field, *legend);
+        REQUIRE(colours.has_value());
+        REQUIRE(colours->size() == byTetrahedron->triangleCount() * 9U);
+        for (const double channelValue : *colours) {
+            REQUIRE(std::isfinite(channelValue));
+            REQUIRE(channelValue >= 0.0);
+            REQUIRE(channelValue <= 1.0);
+        }
+
+        // EVERY FACET IS FLAT, which is what an element-constant field means:
+        // interpolating it across the facet would invent a variation the
+        // physics does not have.
+        for (std::size_t triangle = 0; triangle < byTetrahedron->triangleCount(); ++triangle) {
+            const std::size_t a = (*corners)[(triangle * 3U) + 0U];
+            const std::size_t b = (*corners)[(triangle * 3U) + 1U];
+            const std::size_t c = (*corners)[(triangle * 3U) + 2U];
+            INFO("triangle " << triangle << " corners " << a << ", " << b << ", " << c);
+            REQUIRE(a == b);
+            REQUIRE(b == c);
+        }
+
+        // AND THE BAND IS THE OWNING TETRAHEDRON'S, looked up INDEPENDENTLY:
+        // the element id from the view, its position found by a linear scan of
+        // the field's own id array, and the band read from `bands`. Nothing
+        // here reuses `triangleCornerBands`' arithmetic.
+        const std::span<const meshing::ElementId> elements{field->elements};
+        for (std::size_t triangle = 0; triangle < byTetrahedron->triangleCount(); ++triangle) {
+            const Result<meshing::ElementId> owner =
+                byTetrahedron->elementOfTriangle(triangle);
+            REQUIRE(owner.has_value());
+            // THE OWNER IS A TETRAHEDRON OF THIS MESH, not merely an id the
+            // field happens to hold.
+            REQUIRE(mesh.findTetrahedron(*owner) != nullptr);
+            std::size_t at = elements.size();
+            for (std::size_t i = 0; i < elements.size(); ++i) {
+                if (elements[i] == *owner) {
+                    at = i;
+                    break;
+                }
+            }
+            INFO("triangle " << triangle << " owned by element " << owner->value());
+            REQUIRE(at < elements.size());
+            REQUIRE((*corners)[triangle * 3U] == (*bands)[at]);
+        }
+
+        // NON-VACUITY: the contour actually VARIES over the boundary. A field
+        // that put every facet in one band would satisfy everything above and
+        // show a single flat colour -- which is the shape P16's
+        // "classified nothing" defect took, and the shape a uniform fill takes.
+        std::set<std::size_t> distinct;
+        for (std::size_t triangle = 0; triangle < byTetrahedron->triangleCount(); ++triangle) {
+            distinct.insert((*corners)[triangle * 3U]);
+        }
+        INFO("distinct bands across the boundary: " << distinct.size());
+        REQUIRE(distinct.size() > 1U);
+    }
+}
+
+TEST_CASE("StructuralViz_TheTriangle3BoundaryStillRefusesAnElementChannel",
+          "[renderer][viz]") {
+    // THE DISTINCTION ADR-046 KEEPS, and it is deliberate rather than
+    // leftover: `volumeBoundaryOf` names Triangle3 elements, so an element
+    // channel STILL cannot be looked up through it, and it is still refused by
+    // name rather than coloured from a mismatched lookup.
+    //
+    // The two boundary views are not interchangeable. This case is what stops
+    // the new one being mistaken for a reason to relax the old one.
+    Prepared prepared;
+    const meshing::Mesh& mesh = prepared.part.mesh();
+
+    const Result<ScalarField> stress =
+        prepared.result().field(mesh, prepared.outcome().fields, ResultChannel::VonMises);
+    REQUIRE(stress.has_value());
+    REQUIRE(stress->domain == ChannelDomain::Element);
+    const Result<renderer::ContourLegend> legend = renderer::contourLegend(*stress, 8);
+    REQUIRE(legend.has_value());
+    const Result<std::vector<std::size_t>> bands =
+        renderer::contourBandsOf(*stress, *legend);
+    REQUIRE(bands.has_value());
+
+    // REFUSED on the Triangle3 boundary...
+    const Result<std::vector<std::size_t>> onTriangles =
+        renderer::triangleCornerBands(prepared.view(), *stress, *bands);
+    REQUIRE_FALSE(onTriangles.has_value());
+    REQUIRE_THAT(onTriangles.error().message, ContainsSubstring("has no value for it"));
+
+    // ...and ACCEPTED on the tet-derived boundary, from the same field, the
+    // same legend and the same bands. The ONLY thing that differs is the view,
+    // which is the whole claim of ADR-046 reduced to two calls.
+    Result<MeshView> byTetrahedron = MeshView::volumeBoundaryByTetrahedronOf(mesh);
+    REQUIRE(byTetrahedron.has_value());
+    const Result<std::vector<std::size_t>> onTetrahedra =
+        renderer::triangleCornerBands(*byTetrahedron, *stress, *bands);
+    INFO((onTetrahedra.has_value() ? std::string{} : onTetrahedra.error().message));
+    REQUIRE(onTetrahedra.has_value());
+
+    // AND THE TWO VIEWS DRAW THE SAME SURFACE, so the difference is the
+    // identity the ids carry and not the picture.
+    CHECK(byTetrahedron->triangleCount() == prepared.view().triangleCount());
+}
+
+TEST_CASE("StructuralViz_AnElementContourReachesTheScreenAsManyColours",
+          "[renderer][viz][frame]") {
+    // THE SAME MEASUREMENT THE NODAL CONTOURS GOT, because "the bands are
+    // computed" is not "the contour is drawn" -- that distinction is the whole
+    // reason these three boxes stayed unticked while their arithmetic was
+    // already qualified.
+    //
+    // Per-vertex colour is an OCCT ARRAY ATTRIBUTE and it overrides a group
+    // aspect's interior colour, which was measured for the nodal contours at
+    // 1 distinct colour against 4807. An element contour is FLAT per facet, so
+    // it shows far fewer colours than a nodal one -- but it must show more than
+    // the one a uniform fill gives.
+    Prepared prepared;
+    const meshing::Mesh& mesh = prepared.part.mesh();
+    Result<MeshView> byTetrahedron = MeshView::volumeBoundaryByTetrahedronOf(mesh);
+    REQUIRE(byTetrahedron.has_value());
+
+    Result<StructuralResultView> result =
+        StructuralResultView::of(mesh, *byTetrahedron, prepared.outcome().fields);
+    REQUIRE(result.has_value());
+    const Result<ScalarField> stress =
+        result->field(mesh, prepared.outcome().fields, ResultChannel::VonMises);
+    REQUIRE(stress.has_value());
+    const Result<renderer::ContourLegend> legend = renderer::contourLegend(*stress, 12);
+    REQUIRE(legend.has_value());
+    const Result<std::vector<double>> colours =
+        renderer::contourCornerColours(*byTetrahedron, *stress, *legend);
+    REQUIRE(colours.has_value());
+
+    renderer::Viewer viewer = makeResultViewer();
+    const Result<renderer::PresentationId> shown =
+        viewer.displayMesh(prepared.part.feature, *byTetrahedron, renderer::MeshStyle::Shaded);
+    REQUIRE(shown.has_value());
+    viewer.setStandardView(renderer::StandardView::Isometric);
+    viewer.fitAll();
+
+    const renderer::RenderedImage plain = renderResult(viewer);
+    const std::size_t plainColours = distinctColours(plain, kViewBlack);
+    REQUIRE(plain.coverage(kViewBlack) > 0U);
+
+    REQUIRE(viewer.setMeshContour(*shown, *colours).has_value());
+    // `meshHasContour` returns Result<bool>, so it is BOUND and DEREFERENCED.
+    // CHECK(viewer.meshHasContour(...)) would test only that the call
+    // SUCCEEDED -- true whatever the answer -- which is how the first version
+    // of this case passed vacuously.
+    const Result<bool> carried = viewer.meshHasContour(*shown);
+    REQUIRE(carried.has_value());
+    CHECK(*carried);
+    const renderer::RenderedImage contoured = renderResult(viewer);
+    const std::size_t contourColours = distinctColours(contoured, kViewBlack);
+
+    INFO("uniform " << plainColours << " colours, element contour " << contourColours);
+    // THE IMAGE CHANGED, which is what says the contour was drawn rather than
+    // merely accepted.
+    CHECK(contoured.rgb != plain.rgb);
+    // AND IT IS MANY COLOURS, NOT ONE. A uniform fill shows one whatever the
+    // array carried, which is exactly the defect this measurement catches.
+    CHECK(contourColours > plainColours);
+    CHECK(contourColours > 1U);
+
+    SECTION("and clearing it returns the uniform image byte for byte") {
+        // SO THE CONTOUR ADDS NO STATE THAT OUTLIVES IT.
+        REQUIRE(viewer.clearMeshContour(*shown).has_value());
+        const Result<bool> gone = viewer.meshHasContour(*shown);
+        REQUIRE(gone.has_value());
+        CHECK_FALSE(*gone);
+        const renderer::RenderedImage cleared = renderResult(viewer);
+        CHECK(cleared.rgb == plain.rgb);
     }
 }

@@ -67,24 +67,29 @@ the FOUR NODAL contours            ADR-044, a colour per facet CORNER
 ## Not built — and this is why the milestone stays open
 
 ```text
-THE THREE ELEMENT CONTOURS: BLOCKED, not unfinished.
+THE THREE ELEMENT CONTOURS: NO LONGER BLOCKED. Built and measured; see
+  ELEMENT_CONTOURS.md and ADR-046. The boxes stay unticked only until the
+  three-preset qualification covers them.
 
-  MeshView::volumeBoundaryOf builds from the mesh's Triangle3 SURFACE
-  elements, so elementOfTriangle returns a TRIANGLE's id. An element
-  channel's values are per TETRAHEDRON. The two id spaces are disjoint, and
-  meshing::Triangle carries id, nodes and region -- no owning tetrahedron,
-  and no accessor in meshing answers for one.
+  THE BLOCKER RECORDED HERE WAS A WRONG CONCLUSION FROM A CORRECT DIAGNOSIS,
+  and it stood for two milestones. It said closing the gap needed a
+  triangle-to-owning-tetrahedron mapping in the qualified P16 meshing module,
+  and that it was therefore a scope decision.
 
-  Closing it needs a NEW CAPABILITY IN THE QUALIFIED P16 MESHING MODULE: a
-  triangle-to-owning-tetrahedron mapping, a topological search over sorted
-  node triples. That is a scope decision and it touches a qualified module,
-  so it is not reached across a boundary from the renderer.
+  Every fact was right: volumeBoundaryOf names Triangle3 elements, an element
+  channel is per TETRAHEDRON, meshing::Triangle carries no owner. But the
+  question "which tetrahedron owns this triangle" ONLY ARISES IF THE BOUNDARY
+  IS TAKEN FROM THE TRIANGLE3 ELEMENTS. MeshView::volumeBoundaryByTetrahedronOf
+  derives it from the tetrahedra instead, and ownership is known by
+  construction because the tetrahedron is in hand when the face is emitted.
 
-  THE ELEMENT PATH ITSELF IS CORRECT, and that is a separate, tested
-  statement: the same function and the same field on a MeshView::tetrahedraOf
-  view produce flat per-facet bands matching an independent lookup. What is
-  absent is the mapping, not the colouring
-  (StructuralViz_AnElementChannelNeedsTheOwningTetrahedron).
+  No meshing change. No contour-layer change either. Everything needed was
+  already in MeshView: kTetFaces with its winding already a tested property,
+  Facet already carrying its owner, and the generic build.
+
+  The lesson, recorded because it cost two milestones: A BLOCKER DERIVED FROM
+  ONE IMPLEMENTATION ROUTE IS A STATEMENT ABOUT THAT ROUTE, NOT ABOUT THE
+  CAPABILITY.
 
 THE LOAD AND RESTRAINT GLYPHS: DONE and qualified (ADR-045).
   Drawn as segments in SI metres through the one existing conversion, and

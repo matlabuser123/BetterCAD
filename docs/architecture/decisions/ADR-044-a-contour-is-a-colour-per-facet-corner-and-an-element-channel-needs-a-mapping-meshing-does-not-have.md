@@ -1,10 +1,24 @@
 # ADR-044 — A contour is a colour per facet corner, and an element channel needs a mapping meshing does not have
 
 ```text
-STATUS:   Accepted, with one consequence deliberately left open
+STATUS:   Accepted for the colour-per-facet-corner decision.
+          ITS SECOND CLAIM IS SUPERSEDED BY ADR-046.
 DATE:     2026-10-12
 CONTEXT:  P17-VIZ-001, the contour display
 ```
+
+> **SUPERSEDED, IN PART.** This ADR's title says an element channel "needs a
+> mapping meshing does not have". **It does not.** The diagnosis below is
+> correct in every particular -- a Triangle3 boundary names triangles, an
+> element channel is per tetrahedron, and `meshing::Triangle` carries no owner
+> -- but the conclusion that closing the gap needs a new capability in the
+> qualified P16 meshing module was wrong. The question only arises if the
+> boundary is taken from the Triangle3 elements; build it from the tetrahedra
+> and ownership is known by construction. See
+> [ADR-046](ADR-046-a-tetrahedron-derived-boundary-view-carries-its-owning-element-so-no-meshing-capability-is-needed.md).
+>
+> **The colour-per-facet-corner decision stands unchanged**, and is in fact
+> what lets one mechanism serve a nodal and an element channel honestly.
 
 ## Context
 
