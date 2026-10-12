@@ -1,7 +1,8 @@
 # P17-VIZ-001 — mutation probes
 
 ```text
-RESULT (the result-view and inspection layer, 35 probes)
+RESULT (the result-view and inspection layer only, 35 probes -- the GRAND
+        TOTAL over all four batches is at the end of this file)
 
     29 KILLED
      6 SURVIVED, every one of them unreachable with the reason derived
@@ -427,24 +428,52 @@ refusal cannot fire. The production comment already says so
 the two checks above passed while the partition was still wrong. Clamping into
 the nearest band instead would colour a defect as data.
 
-## Combined total, both layers
+## Running total after the first three batches
+
+SUPERSEDED by "Grand total, all four batches" at the end of this file, which
+adds the contour display. Kept because the gap list below is scoped to these
+three and reading it against the final figure would make the counts look
+wrong.
 
 ```text
-61 probes
-54 KILLED
- 7 SURVIVED  -- V11 V12 V13 V28 V33 V35 C16, every one unreachable with the
-                reason derived and recorded above
+69 probes across the first three batches
+60 KILLED
+ 9 SURVIVED
+     7 UNREACHABLE  V11 V12 V13 V28 V33 V35 C16
+                    each with the reason DERIVED and recorded above
+     2 EQUIVALENT   D7 D8
+                    no behavioural change at all -- a flaw in the probe, not
+                    in the suite
  0 VOID
- 0 compiler kills
+ 0 compiler kills in the final run
 
-10 real test gaps found and closed:
-   V8 V17 V19 V20 V21 V34   the result-view and inspection layer
+11 real test gaps found and closed:
+   V8 V17 V19 V21 V34       the result-view and inspection layer
    C6 C18 C20 C21 C23       the contour and legend layer
+   D3                       the deformed display's EDGE buffer
 ```
 
+**V20 is in neither list, and that is the correction.** An earlier revision of
+this block said "10 real test gaps" and then named eleven, V20 among them —
+the count and the list disagreeing inside one code block, which is this
+project's "a quoted figure is an unverified figure" in its own evidence.
+
+V20 was a **compiler kill**: dropping `mesh` from `describes()` orphaned the
+parameter and `-Werror=unused-parameter` rejected it, which says nothing about
+the tests. `(void)`-cast, it became an ordinary kill against tests that already
+existed. It was a flaw in the probe, like D7 and D8 — not a gap the suite had.
+
 Derived from the harness logs by difference rather than by counting the prose:
-each probe's final verdict is the re-run's where it was re-run, and the totals
-are taken from that table.
+each probe's final verdict is the re-run's where it was re-run, the totals come
+from that table, and the gap list is reconciled against it name by name.
+
+### The three batches
+
+| batch | probes | killed | survived |
+| --- | --- | --- | --- |
+| result view and inspection | 35 | 29 | 6 unreachable |
+| contour and legend | 26 | 25 | 1 unreachable |
+| the deformed display | 8 | 6 | 2 equivalent |
 
 ## Pre-freeze checks, cheap before expensive
 
@@ -483,6 +512,15 @@ logs/mutation-contour-run1.log             26 contour probes
 logs/mutation-contour-run2-survivors.log   the 6 contour survivors re-probed
 logs/probe.sh                              the harness for the first set
 logs/probe-contour.sh                      the harness for the contour set
+logs/mutation-display-run1.log             8 probes, the deformed display
+logs/mutation-contour-display.log          14 probes, the contour display
+logs/mutation-contour-display-2.log        its four survivors re-probed
+logs/mutation-e9-focused.log               E9 alone, re-measured a third time
+                                           after its test was rewritten; a
+                                           TRANSCRIPTION, and it says so
+logs/probe-e9-focused.sh                   that one-probe script
+logs/probe-display.sh                      the deformed-display harness
+logs/probe-contour2.sh                     the contour-display harness
 logs/guard.sh                              the busy-guard, and the comment
                                            in it records both ways it was
                                            wrong before it worked
@@ -491,3 +529,221 @@ logs/guard.sh                              the busy-guard, and the comment
 Each probe's **final** verdict is the re-run's where it was re-run, and the
 totals in this document were derived from those four logs by difference rather
 than counted from this prose.
+
+## The deformed display batch (ADR-043)
+
+8 probes against `OcctMeshPresentation.cpp` and `OcctViewer.cpp`, run against
+the whole `StructuralViz_` set **and P16's own `unit.MeshDisplay` set** — 54
+tests — because a mutation in a qualified P16 file ought to be caught by P16's
+tests too, and if it is not, that is worth knowing.
+
+```text
+6 KILLED
+2 SURVIVED, both EQUIVALENT MUTANTS -- my own probe-construction errors, not
+            test gaps, and demonstrated as such rather than asserted
+0 VOID
+```
+
+| probe | result |
+| --- | --- |
+| D1 the override span ignored | KILLED (2 tests) |
+| D2 the override test inverted | KILLED (15 tests) |
+| D3 the **edges** keep the undeformed shape | KILLED |
+| D4 the millimetre conversion removed | KILLED (6 tests) |
+| D5 the length guard removed | KILLED |
+| D6 the empty guard removed | KILLED |
+| D7 the guards back in the wrong order | SURVIVED — equivalent mutant |
+| D8 `displayMesh` passes the view's own span | SURVIVED — equivalent mutant |
+
+### D3 is the one worth pointing at
+
+**It was found by inspection, not by a failure, and the test was written before
+the probe ran.** The presentation builds *two* buffers from the position span —
+the facet corners and the edge endpoints — and both read the same local
+`positions`. Nothing proved it, because every other deformed case either draws
+`Shaded` (no edges) or `ShadedWithEdges`, where the facets moving is enough to
+change the image while the edges stay behind.
+
+`StructuralViz_ADeformedDisplayMovesItsEDGESToo` draws **Wireframe**, so the
+only thing on screen is the edges and an edge buffer that ignored the
+deformation would render identically at every scale. The probe confirms the
+test kills it.
+
+### D4 is a check on the right thing failing
+
+Removing `toModelLength` from the facet corners kills **six** tests, and they
+are P16's `MeshDisplay` cases — the ones that found the original
+metres-versus-millimetres defect. The single conversion is still guarded by the
+tests that earned it.
+
+### Why D7 and D8 are equivalent mutants
+
+```text
+D7  if (positions.empty())
+      -> if (positions.size() != view.positions().size() && positions.empty())
+
+    An empty buffer on a non-empty view ALWAYS has a length mismatch, so
+    (mismatch && empty) == empty for every reachable input. The mutation
+    changes no behaviour.
+
+    AND THE ORDERING IS ALREADY MEASURED, by D6. Removing the empty guard
+    makes an empty buffer fall through to the length check and report
+    InvalidArgument instead of FailedPrecondition -- which is EXACTLY the
+    bug the first version of this function had, and D6 kills it. D7 was
+    redundant as well as equivalent.
+
+D8  displayMeshInternal(source, view, {}, style)
+      -> displayMeshInternal(source, view, view.positions(), style)
+
+    The presentation computes `deformed.empty() ? view.positions() : deformed`.
+    With `deformed` bound to `view.positions()`, both arms are the SAME
+    BUFFER, so the mutation changes no behaviour either.
+```
+
+An equivalent mutant is a flaw in the probe, not in the suite, and it is
+recorded as such — counting it as a survivor alongside the seven genuine
+unreachables would overstate the gap.
+
+### A third CRLF encounter, and the harness fix
+
+Two of the eight anchors did not resolve on the first dry run: the OCCT adapter
+sources are **CRLF** (`OcctViewer.cpp` carries 811 carriage returns) while the
+renderer sources this milestone added are LF. A multi-line anchor written with
+`\n` matches nothing in a CRLF file, **and the failure looks exactly like a
+stale anchor.**
+
+Fixed in the harness rather than in the two anchors: it now tries the anchor as
+written and retries with the newlines converted, in both the anchor and the
+replacement, so the file's own convention is preserved. The dry run is what
+turned this into a two-minute fix instead of two false survivors.
+
+My own edits to those four CRLF files were checked for mixed endings
+afterwards — all four are pure CRLF, and git's normalised diff shows only the
+intended additions.
+
+## The contour display batch
+
+14 probes against `StructuralContour.cpp`, `OcctMeshPresentation.cpp` and
+`OcctViewer.cpp`, run against the whole `StructuralViz_` set **and** P16's
+`unit.MeshDisplay` set.
+
+```text
+14 KILLED after the gaps were closed
+ 0 SURVIVED
+ 0 VOID
+
+FOUR real gaps, and they were in code a qualification run would otherwise
+have certified -- which is why that run was aborted to probe first.
+```
+
+| probe | first run | final |
+| --- | --- | --- |
+| E1 a nodal channel degraded to per-facet | KILLED (3 tests) | KILLED |
+| E2 an element channel made to interpolate | KILLED | KILLED |
+| E3 the ascending-order check removed | KILLED | KILLED |
+| E4 a missing entity clamped to band 0 | **SURVIVED** | **KILLED** |
+| E5 the parallel-length check removed | KILLED | KILLED |
+| E6 the colour triple read out of order | KILLED | KILLED |
+| E7 the composition skips banding | KILLED | KILLED |
+| E8 **the stale contour is drawn** | KILLED | KILLED |
+| E9 the highlight takes its band colour | **SURVIVED** ×2 | **KILLED** |
+| E10 the `VertexColor` flag dropped | KILLED (2 tests) | KILLED |
+| E11 `setFacetColours` stores nothing | compiler kill | KILLED (3 tests) |
+| E12 the contour length guard removed | **SURVIVED** | **KILLED** |
+| E13 an out-of-range component accepted | **SURVIVED** | **KILLED** |
+| E14 `clearMeshContour` does nothing | KILLED | KILLED |
+
+**E8 is the standing regression for the defect that aborted the first
+qualification** — it reintroduces the stale contour, and it dies.
+
+### E4 — I nearly filed a reachable guard as unreachable
+
+My first reading was "unreachable: every boundary vertex's node is in the
+field, because `RecoveredFields` holds every mesh node and the view draws a
+subset". That is true of the **production** path and false of the function:
+
+```text
+triangleCornerBands takes a RAW MeshView and a RAW ScalarField, and
+ScalarField CARRIES NO STAMP. Nothing stops a caller pairing a view with a
+field that does not describe the same mesh.
+```
+
+Band 0 is the **bottom of the range**, so clamping would draw a missing entity
+as the minimum — a plausible colour for an absent value, which is the worst
+kind of wrong.
+
+The fixture also had to be chosen carefully. Crossing two meshes was the
+obvious instrument and is unreliable: two meshes can number their nodes over
+the same range, so the lookup would **succeed with the wrong value** — which a
+test cannot distinguish from success. Removing one entry from a real field is
+deterministic and names the node in the diagnostic.
+
+### E9 — the first test was true and still proved nothing
+
+It survived twice, and the first attempt is the instructive one.
+
+```text
+attempt 1   "a highlight changes the image"
+            TRUE, and the mutation satisfies it: the plain and highlight
+            groups carry different MATERIALS, so the lighting differs even
+            when the highlighted facets wrongly take their band colours.
+
+attempt 2   highlight EVERY triangle
+            the plain group empties, so the whole mesh is drawn by the
+            highlight group:
+                correct  withColours=false -> one uniform colour
+                mutated  withColours=true  -> the contour, thousands
+            a difference of ORDERS, not of lighting.
+```
+
+**A true assertion that the mutation also satisfies is not a test of the
+contract.** That is the same lesson as the disjunction in C20, in a new shape:
+there the assertion was too weak to discriminate, here it discriminated the
+wrong thing.
+
+### E12 and E13 — written, documented, never exercised
+
+Both guards were in the code and in the header. Nothing reached them, because
+the contour display case only ever handed `setMeshContour` a buffer that
+`contourCornerColours` had just produced — which is by construction the right
+length and in range. The happy path cannot test a guard that exists for the
+unhappy one.
+
+The new case also asserts that **a refused buffer leaves no partial contour
+behind** (`meshHasContour` stays false), and that the exact bounds 0.0 and 1.0
+are accepted — so the check is a range rather than an off-by-one.
+
+### E11 — a compiler kill, reformulated
+
+Making both branches `facetColours_.clear()` tripped
+`-Werror=duplicated-branches`, which says nothing about the tests. Reformulated
+as a **flat grey** of the right length: the contour then draws uniformly and
+the colour-count assertions collapse. Three tests kill it.
+
+## Grand total, all four batches
+
+```text
+83 probes
+74 KILLED
+ 9 SURVIVED
+     7 UNREACHABLE  V11 V12 V13 V28 V33 V35 C16
+     2 EQUIVALENT   D7 D8
+ 0 VOID
+ 0 compiler kills in the final runs
+
+15 real test gaps found and closed:
+   V8 V17 V19 V21 V34         the result view and inspection layer
+   C6 C18 C20 C21 C23         the contour and legend layer
+   D3                         the deformed display's edge buffer
+   E4 E9 E12 E13              the contour display
+```
+
+| batch | probes | killed | survived |
+| --- | --- | --- | --- |
+| result view and inspection | 35 | 29 | 6 unreachable |
+| contour and legend | 26 | 25 | 1 unreachable |
+| the deformed display | 8 | 6 | 2 equivalent |
+| the contour display | 14 | 14 | 0 |
+
+Derived from the seven harness logs by difference, name by name, rather than
+counted from this prose. Each probe's final verdict is its last run's.

@@ -23,6 +23,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <span>
 #include <string_view>
 #include <vector>
 
@@ -178,5 +179,46 @@ contourLegend(const ScalarField& field, std::size_t bands,
 /// be silently wrong rather than visibly wrong.
 [[nodiscard]] BETTERCAD_RENDERER_EXPORT Result<std::vector<std::size_t>>
 contourBandsOf(const ScalarField& field, const ContourLegend& legend);
+
+// ---------------------------------------------------------------------------
+// From bands to render triangles
+// ---------------------------------------------------------------------------
+
+/// The band of every CORNER of every render triangle of @p view:
+/// `3 * view.triangleCount()` entries, corner `c` of triangle `t` at
+/// `(3 * t) + c`.
+///
+/// PER CORNER, NOT PER TRIANGLE, and that is what lets ONE mechanism serve
+/// both channel domains honestly:
+///
+/// - an ELEMENT channel gives all three corners of a facet the band of the
+///   element that owns it, so the facet is flat -- which is the truth about
+///   element-constant stress rather than a smoothing of it.
+/// - a NODAL channel gives each corner the band of its own node, and the
+///   interpolation across the facet is the Tet4 shape function, which is
+///   where a nodal field is actually defined. It is NOT an average of element
+///   values onto nodes, which is the thing this milestone must not do.
+///
+/// A per-triangle index could not express the nodal case without picking one
+/// of three nodes, and picking would be a lie.
+///
+/// @p entityBands is parallel to `field.values` -- what `contourBandsOf`
+/// returned. REFUSES rather than colouring an entity the field has no value
+/// for: a triangle whose element was absent would otherwise take band 0 and
+/// read as the bottom of the range.
+[[nodiscard]] BETTERCAD_RENDERER_EXPORT Result<std::vector<std::size_t>>
+triangleCornerBands(const MeshView& view, const ScalarField& field,
+                    std::span<const std::size_t> entityBands);
+
+/// The sRGB triple of every corner of every render triangle: `9 *
+/// view.triangleCount()` doubles, corner `c` of triangle `t` starting at
+/// `(9 * t) + (3 * c)`.
+///
+/// The whole composition in one call, so a caller cannot assemble it from
+/// three pieces in the wrong order: it bands @p field through @p legend, maps
+/// those bands onto corners, and reads each band's colour.
+[[nodiscard]] BETTERCAD_RENDERER_EXPORT Result<std::vector<double>>
+contourCornerColours(const MeshView& view, const ScalarField& field,
+                     const ContourLegend& legend);
 
 } // namespace bettercad::renderer

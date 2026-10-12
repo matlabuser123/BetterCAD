@@ -90,17 +90,82 @@ alone it is invisible as an error.
 The second row is the one that matters: if this layer were secretly converting,
 the extent would be 40 rather than 0.04, and the first row would still pass.
 
-## What is NOT yet evidenced
+## Measured: the deformed buffer reaches model space at the right scale
 
-The conversion itself is P16's and is covered by P16-VIZ-001's qualification.
-**This milestone has not yet produced an OCCT presentation for the deformed
-buffer**, so there is no P17-VIZ measurement of a millimetre coordinate
-reaching the viewer. The brief's required table of
+The deformed display now exists (ADR-043), so this is no longer owed.
+
+`StructuralViz_ADeformedMeshOverlaysItsOwnCadSolidAtTheSameScale`.
+
+A boundary mesh of a solid has the **same silhouette** as the solid, so from a
+fixed camera the solid alone, the mesh alone and both together cover the same
+pixels. A scale error between them gives three different numbers, and a factor
+of 1000 gives a speck. At a displacement of micrometres on a 40 mm bar the
+deformation is far below one pixel, so the deformed buffer must satisfy the
+same three-way equality:
+
+Measured at 320 × 240, isometric, `fitAll`:
+
+| displayed | covered pixels |
+| --- | --- |
+| the CAD solid alone | **42036** — the reference, asserted `> 0` first so the equalities are not four zeros agreeing |
+| the **deformed** mesh alone | **42036** |
+| the CAD solid **and** the deformed mesh | **42036** |
+| the undeformed mesh alone | **42036** |
+
+**All four exactly equal.** The last row is the same claim from the other side:
+both buffers pass through the one conversion in the presentation constructor,
+so they cannot disagree.
+
+The contrast with the defect this test shape exists to catch is the point.
+P16-VIZ-001 measured **32674** for the mesh and **54120** for the two together
+— one silhouette, two scales. Here the four numbers are one number.
+
+Two more measurements pin the ends of the range:
+
+```text
+scale 0      the deformed image is BYTE-IDENTICAL to the undeformed one
+             (rgb == rgb), and the buffer is first asserted equal to
+             view.positions() element by element -- so the case cannot pass
+             for the wrong reason
+
+scale 2e4    the image DIFFERS, and the buffer's largest coordinate change is
+             measured as > 1e-3 m BEFORE anything is drawn, so a failure is
+             about the display rather than the arithmetic
+```
+
+Without the second, the first would be satisfied by a deformed path that
+ignored its buffer entirely.
+
+## The brief's table, and the column no API can fill
+
+The brief asked for:
 
 ```text
 NodeId | x_m | u_m | scale | expected x_view_mm | actual x_view_mm
 ```
 
-therefore has its first four columns measured here and its last two still
-owed. Recorded as outstanding rather than implied — see
-[REMAINING_SCOPE.md](REMAINING_SCOPE.md).
+The first four columns are measured above and in
+[MEASUREMENTS.md](MEASUREMENTS.md). **The last column cannot be filled, and
+the reason is a design property rather than an omission: nothing in the public
+API returns a model-space coordinate.**
+
+```text
+MeshPick        carries a PresentationId and a render triangle index -- an
+                index, deliberately, because "an AIS object has no business
+                producing engineering identity"
+RenderedImage   carries pixels: at(x, y) and coverage(background)
+MeshPresentation's millimetre corners are private to the OCCT adapter, which
+                is what architecture rule 1 enforces
+```
+
+Adding an accessor that returned those corners would be **behaviour that
+exists only for tests**, which this project forbids outright. So the column
+stays empty and the measurement above stands in its place — and it is not a
+weaker one, because it is the measurement that actually caught the defect:
+P16-VIZ-001 found the metres-versus-millimetres error precisely by displaying
+the mesh beside its own solid, after the mesh *alone* had looked perfect.
+
+A per-node millimetre readout would have agreed with a wrong answer just as
+readily, as long as the test computed its expectation the same wrong way. The
+overlay comparison cannot, because the solid's scale is supplied by the kernel
+and not by the test.

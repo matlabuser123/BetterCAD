@@ -4,7 +4,10 @@ This milestone is **incomplete**. This file exists so the gap is stated rather
 than discovered, and so nothing in the other evidence documents reads as a
 claim about work that has not happened.
 
-**12 of TODO.md's 23 checkboxes are unticked, and `ROADMAP.md` is untouched.**
+**5 of TODO.md's 23 checkboxes are unticked, and `ROADMAP.md` is untouched.**
+
+Three of the five are BLOCKED rather than unfinished, and the distinction is
+tested rather than claimed -- see below.
 
 ## Done, qualified
 
@@ -41,56 +44,83 @@ boundary highlighting, WIRED        loadTarget, restraintTarget,
                                     highlightForLoad, highlightForRestraint
   no resolution logic: P16's highlightFor does the work and its
   MappingState is carried whole
+
+the DEFORMED display               ADR-043, an override position buffer
+  through the ONE existing conversion, so the deformed and undeformed
+  buffers reach the kernel from the same call site. Measured against the
+  CAD solid's own scale: 42036 covered pixels, all four ways.
+
+the FOUR NODAL contours            ADR-044, a colour per facet CORNER
+  one mechanism for both channel domains: an element channel draws flat and
+  a nodal one interpolates by the element's shape function. Measured: 1
+  distinct colour for a uniform fill against 4807 for twelve bands, and
+  clearing it returns a byte-identical image.
 ```
 
 ```text
-33 targeted cases
-3792 / 3792 x 3 presets, 937 x 5 in two, 0 warnings
-61 mutation probes: 54 killed, 7 unreachable, 0 void
+47 targeted cases, 37 headless + 10 that need a GPU
+3806 / 3806 x 3 presets, 951 x 5 in two; the display surface requalified
+83 mutation probes: 74 killed, 7 unreachable, 2 equivalent, 0 void
+15 real test gaps found and closed
 ```
 
 ## Not built — and this is why the milestone stays open
 
 ```text
-THE OCCT RESULT PRESENTATION
-  No presentation consumes the deformed buffer or the colour bands. So:
-    - no millimetre coordinate has been measured reaching the viewer
-    - the brief's x_view_mm table has four of six columns (UNIT_BOUNDARY.md)
-    - per-facet constant colouring for element-constant stress is designed
-      for (MeshView::elementOfTriangle gives the owner-Tet mapping) but
-      not implemented
+THE THREE ELEMENT CONTOURS: BLOCKED, not unfinished.
 
-  THE ARITHMETIC IS NOT PART OF THIS GAP. The bands and the legend are in
-  StructuralContour.hpp and are tested headlessly, because the interesting
-  failures there are numerical: a partition with a gap, a value in two
-  bands or in none, a uniform field divided by a zero range, a range too
-  narrow to subdivide. 26 probes, 25 killed. What is missing is the drawing.
+  MeshView::volumeBoundaryOf builds from the mesh's Triangle3 SURFACE
+  elements, so elementOfTriangle returns a TRIANGLE's id. An element
+  channel's values are per TETRAHEDRON. The two id spaces are disjoint, and
+  meshing::Triangle carries id, nodes and region -- no owning tetrahedron,
+  and no accessor in meshing answers for one.
 
-  AND THE HARNESS FOR THE REST ALREADY EXISTS, which lowers the risk an
-  earlier revision of this file recorded here. P16-VIZ-001 left
-  Viewer::createOffscreen plus RenderedImage with at() and coverage(), and
-  MeshDisplayTests already proves the pattern the deformed buffer needs:
-      MeshDisplay_TheMeshOverlaysItsOwnCadSolidAtTheSameScale
-          the exact shape of the owed millimetre measurement
-      MeshDisplay_AStaleMeshDoesNotLookLikeACurrentOne
-      MeshDisplay_HighlightingChangesTheImageAndNotTheMesh
+  Closing it needs a NEW CAPABILITY IN THE QUALIFIED P16 MESHING MODULE: a
+  triangle-to-owning-tetrahedron mapping, a topological search over sorted
+  node triples. That is a scope decision and it touches a qualified module,
+  so it is not reached across a boundary from the renderer.
 
-  So the work is a Viewer entry point taking an override position buffer and
-  per-entity colours, and a MeshPresentation that honours them. That is
-  additive, but it changes a QUALIFIED P16 file and an OCCT adapter, so it
-  deserves its own architecture pass rather than being appended to the end
-  of a long session.
+  THE ELEMENT PATH ITSELF IS CORRECT, and that is a separate, tested
+  statement: the same function and the same field on a MeshView::tetrahedraOf
+  view produce flat per-facet bands matching an independent lookup. What is
+  absent is the mapping, not the colouring
+  (StructuralViz_AnElementChannelNeedsTheOwningTetrahedron).
+
+THE LOAD AND RESTRAINT GLYPHS
+  LoadGlyph, NodalLoadArrow, RestraintGlyph and ReactionArrow are built,
+  tested and qualified -- the resultants read from the prepared
+  contributions, and the sign, the scale, the zero-vector case and the
+  components-not-flattened-to-fixed case are each mutation-killed. Nothing
+  draws them, and they need NO new capability: a glyph is a position, a
+  direction and a length, and the viewer already displays arbitrary
+  geometry.
 
 THE Qt INSPECTOR SURFACE
   No panel, no channel selector, no legend widget, no stale badge, no
   navigation buttons. The headless layer each would bind to is built,
   tested and qualified; none of it is wired.
 
-THE DISPLAY CHECKBOXES
-  Consequently unticked: the undeformed and deformed displays, the
-  deformation scale factor, the eight contours, the load arrows and the
-  restraint symbols. See TODO.md for the rule applied and the reason
-  against each.
+  The LEGEND is worth singling out: ContourLegend carries the band
+  boundaries, the channel's SI unit and the range, and partitionsItsRange()
+  proves the bands tile it. Drawing it is a widget over data that is already
+  complete -- there is no arithmetic left in it.
+```
+
+### A prediction in an earlier revision of this file was wrong
+
+It said the per-facet colouring was "designed for (MeshView::elementOfTriangle
+gives the owner-Tet mapping) but not implemented".
+
+**`elementOfTriangle` does not give the owner-Tet mapping on a boundary view.**
+It gives the Triangle3 surface element's id, and that is what blocks the
+element contours. The implementation refuted the prediction, which is the
+honest direction for that to go — and it is recorded here rather than quietly
+rewritten, because the cost of the wrong note was a failing test that took a
+diagnosis to read:
+
+```text
+band_out_of_range: element 59 owns render triangle 0 and channel von_mises
+has no value for it
 ```
 
 ## Carried forward honestly
@@ -138,9 +168,14 @@ See [FREEZE.md](FREEZE.md).
 ## Honest status
 
 ```text
-P17-VIZ-001 = PARTIAL. Qualified, committed, 11 of 23 boxes ticked.
+P17-VIZ-001 = PARTIAL. 18 of 23 boxes ticked.
+              The headless layer and the DEFORMED and NODAL-CONTOUR displays
+              are built and mutation-tested.
+              Qualified through b04a9e1; the display surface has its own
+              three-preset run in qualification-display/.
 ```
 
-The headless layer — where every numerical gate in the brief lives — is built,
-mutation-tested and qualified. The viewer surface is not. Nothing here should
-be read as a passed gate for the twelve boxes above.
+What remains is five boxes: three ELEMENT contours blocked on a mapping the
+qualified P16 meshing module does not have, and the load and restraint GLYPHS,
+whose data is complete and qualified and which need no new capability to draw.
+Nothing here should be read as a passed gate for those five.

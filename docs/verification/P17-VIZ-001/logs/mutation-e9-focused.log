@@ -1,0 +1,24 @@
+E9, third attempt -- a FOCUSED SINGLE-PROBE RUN rather than a harness batch,
+because only one probe needed re-measuring after its test was rewritten.
+Script: probe-e9-focused.sh beside this file.
+
+Captured output:
+
+    === E9: the highlight group takes band colours ===
+    1                       (the mutation applied: one occurrence)
+      errors: 0             (it compiled, so this is a TEST verdict)
+    98% tests passed, 1 tests failed out of 47
+    === restore ===
+    [4/4] Linking CXX executable bin\bettercad_tests.exe
+    a69a0199ec6d            (sha1 prefix, matches the pristine baseline)
+    100% tests passed out of 47
+    DONE
+
+VERDICT: KILLED.
+
+The restore was rebuilt and re-run before anything else proceeded -- a
+restored source is not a restored binary, and the hash line above is the
+check that the file came back.
+
+This log is a transcription rather than a redirect, which is why it says so.
+The two harness batches beside it are redirected output.

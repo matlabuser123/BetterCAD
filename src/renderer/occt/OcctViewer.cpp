@@ -394,8 +394,47 @@ namespace {
 
 } // namespace
 
+Result<PresentationId> Viewer::displayDeformedMesh(ObjectId source, const MeshView& view,
+                                                   std::span<const double> positions,
+                                                   MeshStyle style) {
+    // AN EMPTY BUFFER IS ITS OWN MISTAKE, AND IT IS CHECKED FIRST. The
+    // presentation reads an empty span as "use the view's own positions", so
+    // reaching it with one would silently draw the UNDEFORMED mesh through the
+    // deformed entry point -- a result indistinguishable from a solve that
+    // produced no displacement. `displayMesh` is the way to ask for that.
+    //
+    // THE ORDER MATTERS and the first version of this function had it wrong:
+    // with the length check first, an empty buffer is simply a length mismatch
+    // and reports InvalidArgument, so the specific diagnostic below could
+    // never be reached. A test asserting the specific code is what caught it.
+    if (positions.empty()) {
+        return makeError(ErrorCode::FailedPrecondition,
+                         "viewer: a deformed display needs a position buffer; use displayMesh for "
+                         "the undeformed mesh");
+    }
+    // THEN THE LENGTH, which is the whole remaining precondition. It is
+    // checked here rather than in the presentation so that a caller gets a
+    // diagnostic instead of reading past the end of its own buffer. A span
+    // carries its length and nothing else: it cannot say which mesh it came
+    // from, so the length is all there is to check and it is checked exactly.
+    if (positions.size() != view.positions().size()) {
+        return makeError(
+            ErrorCode::InvalidArgument,
+            std::format("viewer: a deformed position buffer must hold {} doubles for this mesh "
+                        "view, and this one holds {}",
+                        view.positions().size(), positions.size()));
+    }
+    return displayMeshInternal(source, view, positions, style);
+}
+
 Result<PresentationId> Viewer::displayMesh(ObjectId source, const MeshView& view,
                                            MeshStyle style) {
+    return displayMeshInternal(source, view, {}, style);
+}
+
+Result<PresentationId> Viewer::displayMeshInternal(ObjectId source, const MeshView& view,
+                                                   std::span<const double> deformed,
+                                                   MeshStyle style) {
     if (!source.isValid()) {
         return makeError(ErrorCode::InvalidArgument,
                          "viewer: the invalid handle cannot name the source of a mesh");
@@ -407,7 +446,7 @@ Result<PresentationId> Viewer::displayMesh(ObjectId source, const MeshView& view
     return geometry::occt::guardKernelCall(
         "viewer mesh display", [&]() -> Result<PresentationId> {
             Handle(occt::MeshPresentation) presentation =
-                new occt::MeshPresentation(view, drawStyleOf(style));
+                new occt::MeshPresentation(view, drawStyleOf(style), deformed);
             // The display mode is pinned rather than left to the context's
             // default. MeshPresentation::Compute returns early for any mode
             // but 0, so a context whose default mode was not 0 would
@@ -462,6 +501,66 @@ Result<MeshStyle> Viewer::meshStyleOf(PresentationId presentation) const {
         return std::unexpected(mesh.error());
     }
     return styleOf((*mesh)->style());
+}
+
+Result<void> Viewer::setMeshContour(PresentationId presentation, std::span<const double> rgb) {
+    Result<Handle(occt::MeshPresentation)> mesh = meshPresentationAt(
+        impl_->indexOf(presentation), presentation, impl_->displayed, impl_->presentations);
+    if (!mesh.has_value()) {
+        return std::unexpected(mesh.error());
+    }
+    // NINE DOUBLES PER RENDER TRIANGLE: three sRGB components for each of
+    // three corners. Refused rather than partially applied, because a contour
+    // covering some facets and leaving the rest in the uniform colour is a
+    // picture that reads as data.
+    const std::size_t expected = (*mesh)->triangleCount() * 9U;
+    if (rgb.size() != expected) {
+        return makeError(
+            ErrorCode::InvalidArgument,
+            std::format("viewer: a contour needs {} doubles for this presentation's {} render "
+                        "triangles -- nine per triangle, three per corner -- and this one holds "
+                        "{}",
+                        expected, (*mesh)->triangleCount(), rgb.size()));
+    }
+    // AND EVERY COMPONENT MUST BE A COLOUR. A value outside [0, 1] or a NaN is
+    // refused here rather than clamped: `contourCornerColours` cannot produce
+    // one, so reaching this means the buffer did not come from it, and
+    // clamping would draw a plausible picture from an implausible input.
+    for (std::size_t i = 0; i < rgb.size(); ++i) {
+        if (!std::isfinite(rgb[i]) || rgb[i] < 0.0 || rgb[i] > 1.0) {
+            return makeError(ErrorCode::InvalidArgument,
+                             std::format("viewer: contour component {} is {}, and an sRGB "
+                                         "component must be finite and within [0, 1]",
+                                         i, rgb[i]));
+        }
+    }
+    return geometry::occt::guardKernelCall("viewer mesh contour", [&]() -> Result<void> {
+        (*mesh)->setFacetColours(rgb);
+        impl_->context->Redisplay(*mesh, false);
+        return Result<void>{};
+    });
+}
+
+Result<void> Viewer::clearMeshContour(PresentationId presentation) {
+    Result<Handle(occt::MeshPresentation)> mesh = meshPresentationAt(
+        impl_->indexOf(presentation), presentation, impl_->displayed, impl_->presentations);
+    if (!mesh.has_value()) {
+        return std::unexpected(mesh.error());
+    }
+    return geometry::occt::guardKernelCall("viewer mesh contour", [&]() -> Result<void> {
+        (*mesh)->setFacetColours({});
+        impl_->context->Redisplay(*mesh, false);
+        return Result<void>{};
+    });
+}
+
+Result<bool> Viewer::meshHasContour(PresentationId presentation) const {
+    Result<Handle(occt::MeshPresentation)> mesh = meshPresentationAt(
+        impl_->indexOf(presentation), presentation, impl_->displayed, impl_->presentations);
+    if (!mesh.has_value()) {
+        return std::unexpected(mesh.error());
+    }
+    return (*mesh)->hasContour();
 }
 
 Result<void> Viewer::setMeshStale(PresentationId presentation, bool stale) {

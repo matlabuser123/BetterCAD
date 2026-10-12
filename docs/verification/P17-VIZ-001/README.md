@@ -1,13 +1,16 @@
 # P17-VIZ-001 — FEA Visualisation / Inspection
 
 ```text
-STATUS:  PARTIAL. The headless inspection layer is complete, mutation-tested
-         and QUALIFIED in three presets. The DISPLAY SURFACE is not built, so
-         the milestone is NOT complete and its display checkboxes stay
-         unticked. See REMAINING_SCOPE.md.
+STATUS:  PARTIAL, 18 of 23 boxes. The headless inspection layer, the
+         DEFORMED display and the NODAL contours are built and
+         mutation-tested. The ELEMENT contours are BLOCKED on a mapping
+         meshing does not have, and the GLYPHS are not drawn.
+         See REMAINING_SCOPE.md and DISPLAY.md.
 
-         Qualified: 3792 / 3792 x 3 presets, 937 x 5 in two, 0 warnings.
-         This run also REQUALIFIES P17-VALID-001.
+         QUALIFIED: 3806 / 3806 x 3 presets, 951 x 5 in two, 0 warnings,
+         eight tree hashes identical before and after.
+         The earlier run at b04a9e1 (3792, 937 x 5) also REQUALIFIED
+         P17-VALID-001 and is kept in qualification/..
 ```
 
 A trustworthy inspection layer over the already-qualified P17 result, and
@@ -28,8 +31,11 @@ NOT  a mutation of the P16 mesh, the CAD geometry, the document parameters
 | [UNIT_BOUNDARY.md](UNIT_BOUNDARY.md) | metres vs millimetres, the single conversion, and what is still owed |
 | [MEASUREMENTS.md](MEASUREMENTS.md) | every measured table: channels, cardinality, ranges, extremes, deformation, source guards, immutability, currentness, inspection, overlays, the public kernel, the brief's prohibitions, and the two shared-build traps |
 | [ADVERSARIAL_REVIEW.md](ADVERSARIAL_REVIEW.md) | the gate, and the defect it found: a counter declared, gated on, asserted and never written, hiding a complete uniformly zero field that all 19 earlier tests accepted |
-| [MUTATION.md](MUTATION.md) | 61 probes, 54 killed, 7 unreachable — and the **ten real test gaps** they found, with why nothing caught each |
-| [FREEZE.md](FREEZE.md) | the three-preset qualification, the eight tree hashes before and after, and the pre-freeze checks |
+| [MUTATION.md](MUTATION.md) | 83 probes over four batches, 74 killed, 7 unreachable, 2 equivalent mutants — and the **fifteen real test gaps** they found, with why nothing caught each |
+| [ADR-043](../../architecture/decisions/ADR-043-a-deformed-display-is-an-override-position-buffer-through-the-one-existing-conversion.md) | why the deformed buffer is an override position span through the ONE existing conversion, and the two designs that were rejected |
+| [FREEZE.md](FREEZE.md) | the three-preset qualification at b04a9e1, the eight tree hashes before and after, and the pre-freeze checks |
+| [FREEZE_DISPLAY.md](FREEZE_DISPLAY.md) | the display surface's own three-preset qualification — 3806 x 3, 951 x 5, and why there were three attempts |
+| [DISPLAY.md](DISPLAY.md) | the deformed display and the contours: the pixel measurements, the 1-versus-4807 colour count, and the element-contour blocker diagnosed from a real failure |
 | [ODR_ROOT_CAUSE.md](ODR_ROOT_CAUSE.md) | a type-name collision I introduced, why every cheap measurement exonerated it, and the one command that found it |
 | [REMAINING_SCOPE.md](REMAINING_SCOPE.md) | what is **not** done, and why the milestone stays open |
 
@@ -113,12 +119,18 @@ ABSENT != 0  the adversarial review's finding. A value reader that answers
 ## Totals
 
 ```text
-33 targeted cases                tests/renderer/StructuralResultViewTests.cpp
-3792 / 3792 x 3 presets          debug-ext, release-ext, debug-shared-ext
-937 x 5 in two presets           determinism, release-ext and debug-ext
-0 warnings, 0 errors             all three builds, -Werror on
-61 mutation probes               54 killed, 7 unreachable, 0 void
-10 real test gaps found          and closed, each with its reproducer
+47 targeted cases                tests/renderer/StructuralResultViewTests.cpp
+                                 37 headless + 10 that need a GPU, tagged
+                                 [frame] so they are identifiable
+3806 / 3806 x 3 presets          debug-ext, release-ext, debug-shared-ext
+951 x 5 in two presets           determinism, release-ext and debug-ext
+                                 (3792 and 937 x 5 at b04a9e1, before the
+                                 display surface -- that run is in
+                                 qualification/, this one in
+                                 qualification-display/)
+0 warnings, 0 errors             every build, -Werror on
+83 mutation probes               74 killed, 7 unreachable, 2 equivalent
+15 real test gaps found          and closed, each with its reproducer
 ```
 
 Every scalar is a read of a stored member. The production files contain no
@@ -128,28 +140,60 @@ and no tolerance change.
 
 ## Why this is PARTIAL and not PASS
 
-Of `TODO.md`'s 23 checkboxes, **11 are ticked and 12 are not**. The rule
-applied, stated so it can be checked: *tick a box only where this milestone's
-own evidence demonstrates the deliverable end to end.*
+Of `TODO.md`'s 23 checkboxes, **18 are ticked and 5 are not** — counted from
+the file, not from this sentence. The rule applied, stated so it can be
+checked: *tick a box only where this milestone's own evidence demonstrates the
+deliverable end to end.*
 
 ```text
-TICKED      inspection (element, node, reaction, principal stress),
+TICKED      the undeformed and deformed displays and the deformation scale
+            factor (ADR-043, measured against the CAD solid's own scale),
+            the FOUR NODAL contours (ADR-044, 1 colour vs 4807),
+            inspection (element, node, reaction, principal stress),
             boundary-set highlighting, worst-result navigation, the stale
             visual state, rendering-does-not-mutate, the
             no-duplicate-canonical-data rule, regression, evidence
 
-NOT TICKED  every box whose deliverable is a DRAWN thing: the undeformed and
-            deformed displays, the deformation scale factor, the eight
-            contours, the load arrows and the restraint symbols
+NOT TICKED  the three ELEMENT contours -- BLOCKED, not unfinished -- and the
+            load arrows and restraint symbols, whose data is complete and
+            qualified and which need no new capability to draw
 ```
 
-A scale factor with nothing to scale visually is not end-to-end, and a contour
-whose bands are computed but never drawn is not either. The arithmetic behind
-all of them is built, tested and qualified — `StructuralContour` partitions a
-field's range into bands with no gap and no overlap, bitwise — but no OCCT
-presentation consumes it yet.
+Both displays are now end to end, and each is measured against something the
+test did not compute itself:
 
-That work is named, scoped and de-risked in
-[REMAINING_SCOPE.md](REMAINING_SCOPE.md), and it is the next step. It changes a
-qualified P16 file and an OCCT adapter, so it deserves its own architecture
-pass rather than being appended to the end of this one.
+```text
+THE DEFORMED BUFFER reaches model space at the CAD solid's own scale
+
+  the CAD solid alone                       42036 covered pixels
+  the deformed mesh alone                   42036
+  the solid AND the deformed mesh           42036
+  the undeformed mesh alone                 42036
+
+  All four exactly equal. The solid's scale comes from the KERNEL, not from
+  the test, which is why this cannot agree with a wrong answer the way a
+  self-computed expectation can. P16-VIZ-001 measured 32674 and 54120 for
+  the defect this shape catches -- one silhouette, two scales.
+
+THE CONTOUR reaches the screen as many colours
+
+  uniform fill, distinct non-background colours      1
+  twelve-band contour                             4807
+
+  And 4807 rather than 12 is the second thing it says: the GPU is
+  INTERPOLATING between band colours across each facet, which is what a
+  nodal channel requires. Clearing the contour returns a BYTE-IDENTICAL
+  image.
+```
+
+**The three element contours are blocked, not unfinished**, and the difference
+is itself tested. `MeshView::volumeBoundaryOf` names Triangle3 **surface**
+element ids while an element channel's values are per **tetrahedron**, and
+`meshing::Triangle` carries no owning tetrahedron. The boundary view is refused
+*by name*; the same function on a `tetrahedraOf` view produces correct flat
+per-facet bands. What is absent is a mapping in the qualified P16 meshing
+module — a scope decision — not the colouring.
+
+The remaining work is named and scoped in
+[REMAINING_SCOPE.md](REMAINING_SCOPE.md) and measured in
+[DISPLAY.md](DISPLAY.md).

@@ -1,0 +1,42 @@
+######## the corner mapping ########
+Mon Oct 12 15:30:35 EAST 2026
+E1  a nodal channel goes per FACET   KILLED  (3 tests failed out of 59)
+        	2888 - unit.StructuralViz_AContourReachesTheScreenAsManyColours (Failed)
+        	2898 - unit.StructuralViz_ANodalChannelColoursEachCornerFromItsOwnNode (Failed)
+        	2902 - unit.StructuralViz_AStaleContourIsNotDrawnAtAll (Failed)
+E2  an element channel interpolates  KILLED  (1 tests failed out of 59)
+        	2905 - unit.StructuralViz_AnElementChannelNeedsTheOwningTetrahedron (Failed)
+E3  the ascending check removed     KILLED  (1 tests failed out of 59)
+        	2912 - unit.StructuralViz_CornerColoursRefuseWhatTheyCannotMap (Failed)
+E4  a missing entity takes band 0   *** SURVIVED ***
+E5  the parallel-length check gone  KILLED  (1 tests failed out of 59)
+        	2912 - unit.StructuralViz_CornerColoursRefuseWhatTheyCannotMap (Failed)
+E6  colours read the wrong band     KILLED  (1 tests failed out of 59)
+        	2912 - unit.StructuralViz_CornerColoursRefuseWhatTheyCannotMap (Failed)
+E7  the composition skips banding   KILLED  (1 tests failed out of 59)
+        	2912 - unit.StructuralViz_CornerColoursRefuseWhatTheyCannotMap (Exit code 0xc0000409)
+######## the presentation and the entry point ########
+Mon Oct 12 15:47:18 EAST 2026
+E8  the STALE contour is drawn      KILLED  (1 tests failed out of 59)
+        	2902 - unit.StructuralViz_AStaleContourIsNotDrawnAtAll (Failed)
+E9  the HIGHLIGHT takes band colour  *** SURVIVED ***
+E10 the VertexColor flag dropped    KILLED  (2 tests failed out of 59)
+        	2888 - unit.StructuralViz_AContourReachesTheScreenAsManyColours (Failed)
+        	2902 - unit.StructuralViz_AStaleContourIsNotDrawnAtAll (Failed)
+E11 setFacetColours never stores    KILLED-BY-COMPILER (weak)
+        C:/Users/uqhas/OneDrive/Desktop/CAD/src/renderer/occt/OcctMeshPresentation.cpp:206:5: error: this condition has identical branches [-Werror=duplicated-branches]
+E12 the contour length guard gone   *** SURVIVED ***
+E13 an out-of-range component ok    *** SURVIVED ***
+E14 clearMeshContour does nothing   KILLED  (1 tests failed out of 59)
+        	2888 - unit.StructuralViz_AContourReachesTheScreenAsManyColours (Failed)
+######## RESTORE ########
+[5/6] Linking CXX static library lib\libbettercad_renderer.a
+[6/6] Linking CXX executable bin\bettercad_tests.exe
+25da2475bec0ca8017fefb6e6fee515ccf433082 */c/Users/uqhas/OneDrive/Desktop/CAD/src/renderer/StructuralContour.cpp
+a69a0199ec6d5c7d93828eabe438946b47587974 */c/Users/uqhas/OneDrive/Desktop/CAD/src/renderer/occt/OcctMeshPresentation.cpp
+14b699b5e6e306f055eb95cdfe50e057ee018dc4 */c/Users/uqhas/OneDrive/Desktop/CAD/src/renderer/occt/OcctViewer.cpp
+100% tests passed out of 59
+
+Total Test time (real) =  40.34 sec
+######## ALL DONE ########
+Mon Oct 12 16:04:21 EAST 2026

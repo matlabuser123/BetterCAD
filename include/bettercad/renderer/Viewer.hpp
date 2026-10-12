@@ -237,6 +237,30 @@ public:
     [[nodiscard]] Result<PresentationId> displayMesh(ObjectId source, const MeshView& view,
                                                      MeshStyle style = MeshStyle::ShadedWithEdges);
 
+    /// Displays @p view with its vertices moved to @p positions.
+    ///
+    /// A VISUAL TRANSFORM OF A DERIVED RESULT, and nothing else. @p positions
+    /// is what `StructuralResultView::deformedPositions` produced -- `x + s*u`
+    /// in **SI metres**, in exactly the layout of `MeshView::positions()`. No
+    /// mesh, no CAD geometry, no document parameter and no result is touched
+    /// by displaying it.
+    ///
+    /// A NAMED SIBLING RATHER THAN A DEFAULTED ARGUMENT on `displayMesh`
+    /// (ADR-043): a span that silently meant "undeformed" would hide which
+    /// path a caller took, and this layer's rule is the opposite one.
+    ///
+    /// REFUSES A LENGTH MISMATCH. @p positions must be exactly as long as
+    /// `view.positions()`: a short buffer would be read past its end, and a
+    /// longer one means the caller is holding a different mesh.
+    ///
+    /// A NEW SCALE MEANS A NEW PRESENTATION. There is no API to re-scale one
+    /// in place, for the reason ADR-031 gives for `MeshView` itself -- a
+    /// presentation whose buffers were swapped under it would pick against one
+    /// scale while drawing another.
+    [[nodiscard]] Result<PresentationId> displayDeformedMesh(
+        ObjectId source, const MeshView& view, std::span<const double> positions,
+        MeshStyle style = MeshStyle::ShadedWithEdges);
+
     /// The mesh generation a mesh presentation is showing.
     [[nodiscard]] Result<meshing::MeshStamp> meshStampOf(PresentationId presentation) const;
 
@@ -253,6 +277,34 @@ public:
     /// The viewer does not DECIDE staleness -- `renderer::statusOf` does, from
     /// the document's own geometry revision. This only renders the decision,
     /// which is why it is a setter and not a query of the document.
+    /// Colours @p presentation's facet corners from @p rgb: nine doubles per
+    /// render triangle, three sRGB components for each of three corners, each
+    /// in `[0, 1]`.
+    ///
+    /// WHAT `renderer::contourCornerColours` RETURNS, and the intended way to
+    /// obtain it — that function bands a `ScalarField` through a
+    /// `ContourLegend` and decides, from the channel's own domain, whether a
+    /// facet is flat or interpolated. Assembling this buffer by hand is
+    /// possible and is checked rather than trusted.
+    ///
+    /// A VISUAL OPERATION. It touches no mesh, no result and no document, and
+    /// it triggers no regeneration. The CONTOUR IS NOT THE RESULT: it is a
+    /// colour per corner, and a caller that wants the number asks the field.
+    ///
+    /// Refuses a buffer of the wrong length, and refuses a component that is
+    /// not a finite value within `[0, 1]` rather than clamping it.
+    ///
+    /// A SELECTED FACET KEEPS THE HIGHLIGHT COLOUR, not its band, so
+    /// selecting something while a contour is displayed still shows.
+    [[nodiscard]] Result<void> setMeshContour(PresentationId presentation,
+                                              std::span<const double> rgb);
+
+    /// Returns @p presentation to its uniform facet colour.
+    [[nodiscard]] Result<void> clearMeshContour(PresentationId presentation);
+
+    /// Whether @p presentation is currently drawing a contour.
+    [[nodiscard]] Result<bool> meshHasContour(PresentationId presentation) const;
+
     [[nodiscard]] Result<void> setMeshStale(PresentationId presentation, bool stale);
     [[nodiscard]] Result<bool> meshIsStale(PresentationId presentation) const;
 
@@ -326,6 +378,19 @@ public:
 private:
     class Impl;
     explicit Viewer(std::unique_ptr<Impl> impl) noexcept;
+
+    /// The one body behind `displayMesh` and `displayDeformedMesh`, so the two
+    /// cannot drift apart. @p deformed empty means the view's own positions.
+    ///
+    /// The PRECONDITIONS of a deformed display are checked by its public entry
+    /// point and not here, deliberately: this function cannot tell an empty
+    /// span that means "undeformed" from one that means "the caller had
+    /// nothing", and only the caller's chosen entry point carries that
+    /// distinction.
+    [[nodiscard]] Result<PresentationId> displayMeshInternal(ObjectId source,
+                                                             const MeshView& view,
+                                                             std::span<const double> deformed,
+                                                             MeshStyle style);
 
     std::unique_ptr<Impl> impl_;
 };

@@ -15,7 +15,10 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstdint>
 #include <format>
+#include <ranges>
+#include <span>
 
 namespace bettercad::renderer {
 namespace {
@@ -249,6 +252,141 @@ Result<std::vector<std::size_t>> contourBandsOf(const ScalarField& field,
                                     toString(field.channel), legend.minimum, legend.maximum));
         }
         out.push_back(band);
+    }
+    return out;
+}
+
+namespace {
+
+/// The index of @p entity in @p sorted, or `sorted.size()` when absent.
+///
+/// A BINARY SEARCH, and the caller has already checked that @p sorted really
+/// is sorted. `ScalarField` documents its id arrays as ascending, and
+/// `triangleCornerBands` checks that rather than trusting it -- a linear scan
+/// would be correct whatever the order, but it would also hide an unsorted
+/// field that every other consumer of that documented guarantee relies on.
+template <typename Id>
+[[nodiscard]] std::size_t indexOf(std::span<const Id> sorted, Id entity) {
+    const auto at = std::ranges::lower_bound(sorted, entity);
+    if (at == sorted.end() || *at != entity) {
+        return sorted.size();
+    }
+    return static_cast<std::size_t>(std::distance(sorted.begin(), at));
+}
+
+} // namespace
+
+Result<std::vector<std::size_t>> triangleCornerBands(const MeshView& view,
+                                                     const ScalarField& field,
+                                                     std::span<const std::size_t> entityBands) {
+    if (!field.complete()) {
+        return fail(ContourProblem::FieldIncomplete,
+                    std::format("channel {} classified {} of {} {}s, so its bands cannot be "
+                                "mapped onto render triangles",
+                                toString(field.channel), field.classified, field.expected,
+                                toString(field.domain)));
+    }
+    if (entityBands.size() != field.values.size()) {
+        return fail(ContourProblem::LegendMismatch,
+                    std::format("the field has {} values and {} band indices were given",
+                                field.values.size(), entityBands.size()));
+    }
+    if (view.triangleCount() == 0U) {
+        return fail(ContourProblem::FieldIncomplete,
+                    "this mesh view has no triangles, so there is nothing to colour");
+    }
+
+    const bool nodal = field.domain == ChannelDomain::Node;
+    const std::span<const meshing::NodeId> nodes{field.nodes};
+    const std::span<const meshing::ElementId> elements{field.elements};
+    // THE DOCUMENTED ORDER, CHECKED. `indexOf` is a binary search, so an
+    // unsorted array would return a wrong index rather than an error -- which
+    // is the quiet kind of wrong this layer exists to avoid.
+    if (nodal ? !std::ranges::is_sorted(nodes) : !std::ranges::is_sorted(elements)) {
+        return fail(ContourProblem::FieldIncomplete,
+                    std::format("channel {}'s identity array is not in ascending order, which "
+                                "its own contract requires",
+                                toString(field.channel)));
+    }
+
+    const std::span<const std::uint32_t> indices = view.triangleIndices();
+    std::vector<std::size_t> out;
+    out.reserve(view.triangleCount() * 3U);
+
+    for (std::size_t triangle = 0U; triangle < view.triangleCount(); ++triangle) {
+        if (!nodal) {
+            // ALL THREE CORNERS SHARE THE ELEMENT'S BAND, so the facet draws
+            // flat. Element-constant stress IS constant over the element, and
+            // interpolating it would invent a variation.
+            const Result<meshing::ElementId> owner = view.elementOfTriangle(triangle);
+            if (!owner.has_value()) {
+                return fail(ContourProblem::BandOutOfRange,
+                            std::format("render triangle {} names no element", triangle));
+            }
+            const std::size_t at = indexOf(elements, *owner);
+            if (at >= elements.size()) {
+                return fail(ContourProblem::BandOutOfRange,
+                            std::format("element {} owns render triangle {} and channel {} has "
+                                        "no value for it",
+                                        owner->value(), triangle, toString(field.channel)));
+            }
+            out.push_back(entityBands[at]);
+            out.push_back(entityBands[at]);
+            out.push_back(entityBands[at]);
+            continue;
+        }
+        // EACH CORNER TAKES ITS OWN NODE'S BAND. The interpolation across the
+        // facet is the element's linear shape function, which is where a
+        // nodal field is defined -- not an average of anything.
+        for (std::size_t corner = 0U; corner < 3U; ++corner) {
+            const std::size_t vertex = indices[(triangle * 3U) + corner];
+            const Result<meshing::NodeId> node = view.nodeOfVertex(vertex);
+            if (!node.has_value()) {
+                return fail(ContourProblem::BandOutOfRange,
+                            std::format("render vertex {} names no node", vertex));
+            }
+            const std::size_t at = indexOf(nodes, *node);
+            if (at >= nodes.size()) {
+                return fail(ContourProblem::BandOutOfRange,
+                            std::format("node {} is a corner of render triangle {} and channel "
+                                        "{} has no value for it",
+                                        node->value(), triangle, toString(field.channel)));
+            }
+            out.push_back(entityBands[at]);
+        }
+    }
+    return out;
+}
+
+Result<std::vector<double>> contourCornerColours(const MeshView& view, const ScalarField& field,
+                                                 const ContourLegend& legend) {
+    // THE ORDER IS THE WHOLE VALUE OF THIS FUNCTION: band the field through
+    // the legend FIRST, so the legend-mismatch and partition checks run before
+    // anything is mapped onto geometry.
+    const Result<std::vector<std::size_t>> bands = contourBandsOf(field, legend);
+    if (!bands.has_value()) {
+        return std::unexpected(bands.error());
+    }
+    const Result<std::vector<std::size_t>> corners = triangleCornerBands(view, field, *bands);
+    if (!corners.has_value()) {
+        return std::unexpected(corners.error());
+    }
+
+    std::vector<double> out;
+    out.reserve(corners->size() * 3U);
+    for (const std::size_t band : *corners) {
+        if (band >= legend.bands.size()) {
+            // UNREACHABLE, AND CHECKED: `contourBandsOf` already refused a
+            // value outside the legend, and `triangleCornerBands` only copies
+            // indices it produced. Kept because reading past the palette is
+            // the one mistake here that would not look like a mistake.
+            return fail(ContourProblem::BandOutOfRange,
+                        std::format("band {} is outside a legend of {} bands", band,
+                                    legend.bands.size()));
+        }
+        out.push_back(legend.bands[band].red);
+        out.push_back(legend.bands[band].green);
+        out.push_back(legend.bands[band].blue);
     }
     return out;
 }

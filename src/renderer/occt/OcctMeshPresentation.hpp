@@ -66,7 +66,25 @@ public:
     /// what is kept is a copy of its arrays and its stamp, so this object
     /// cannot outlive its meaning silently -- `stamp()` is what a caller
     /// compares against the current mesh.
-    MeshPresentation(const MeshView& view, MeshDrawStyle style);
+    ///
+    /// @p deformed OVERRIDES the vertex positions, and is empty for the
+    /// undeformed mesh. It is in SI METRES, in exactly the layout of
+    /// `MeshView::positions()`, and the caller has already checked its length
+    /// -- `Viewer::displayDeformedMesh` refuses a mismatch.
+    ///
+    /// THE POINT OF TAKING IT HERE rather than converting it elsewhere
+    /// (ADR-043): the single metres-to-millimetres conversion is in this
+    /// constructor, so a deformed buffer and an undeformed one reach the
+    /// kernel through the SAME call and are consistent by construction rather
+    /// than by two call sites agreeing. P16-VIZ-001 recorded what the second
+    /// site costs -- a mesh in metres beside a body in millimetres is 1000x
+    /// too small, and alone in the scene that is invisible as an error.
+    ///
+    /// The normals and the selection array are rebuilt from the overridden
+    /// corners, so a deformed facet is lit by its own normal and a pick
+    /// resolves against what is on screen.
+    MeshPresentation(const MeshView& view, MeshDrawStyle style,
+                     std::span<const double> deformed = {});
 
     [[nodiscard]] const meshing::MeshStamp& stamp() const noexcept { return stamp_; }
     [[nodiscard]] MeshSource source() const noexcept { return source_; }
@@ -83,6 +101,22 @@ public:
     void setStale(bool stale);
     [[nodiscard]] bool isStale() const noexcept { return stale_; }
     [[nodiscard]] MeshDrawStyle style() const noexcept { return style_; }
+
+    /// Colours every facet CORNER from @p rgb: 9 doubles per render triangle,
+    /// three sRGB components per corner, in `[0, 1]`. Empty clears the
+    /// contour and returns the mesh to its uniform facet colour.
+    ///
+    /// PER CORNER, so one mechanism serves both channel domains: an element
+    /// channel hands all three corners of a facet the same colour and the
+    /// facet draws flat, while a nodal channel hands each corner its own and
+    /// the interpolation across the facet is the element's linear shape
+    /// function. Deciding which is the caller's job and is done headlessly by
+    /// `renderer::contourCornerColours`.
+    ///
+    /// A VISUAL OPERATION, like `setStyle` and `setStale`: it touches no mesh,
+    /// no result and no document, and it triggers no regeneration.
+    void setFacetColours(std::span<const double> rgb);
+    [[nodiscard]] bool hasContour() const noexcept { return !facetColours_.empty(); }
 
     /// The render triangles to draw as selected. GUI state, held here and
     /// nowhere near the mesh.
@@ -114,8 +148,11 @@ private:
     /// engineering mesh inspection must not do: the user is looking AT the
     /// faceting. It also makes render triangle i the i-th facet of the view,
     /// so the selection index needs no second mapping.
+    /// @p withColours is false for the HIGHLIGHT group: a selected facet must
+    /// keep the highlight colour rather than its contour band, or selecting
+    /// something during a contour display would do nothing visible.
     [[nodiscard]] Handle(Graphic3d_ArrayOfTriangles) facets(
-        std::span<const std::size_t> which) const;
+        std::span<const std::size_t> which, bool withColours) const;
     [[nodiscard]] Handle(Graphic3d_ArrayOfSegments) edges() const;
 
     meshing::MeshStamp stamp_{};
@@ -129,6 +166,9 @@ private:
     std::vector<double> normals_{};
     /// Flattened edge endpoints: 6 doubles per edge.
     std::vector<double> edgeCorners_{};
+    /// Nine doubles per facet: three sRGB components for each of three
+    /// corners. Empty means no contour.
+    std::vector<double> facetColours_{};
     std::vector<std::size_t> highlighted_{};
     Handle(Select3D_SensitivePrimitiveArray) sensitive_{};
 };

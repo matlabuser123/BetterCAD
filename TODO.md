@@ -1468,32 +1468,33 @@ tuned on one body shape will reject a legitimate mesh of another.
 
 ## FEA Visualisation / Inspection
 
-**IN PROGRESS.** The headless inspection layer is complete, mutation-tested
-and qualified in three presets; the DISPLAY SURFACE is not built. Evidence:
-[docs/verification/P17-VIZ-001/](docs/verification/P17-VIZ-001/README.md).
+**IN PROGRESS, 18 of 23.** The headless inspection layer, the DEFORMED
+display and the FOUR NODAL contours are complete and mutation-tested. What
+remains is the three ELEMENT contours -- blocked, not unfinished -- and the
+two glyph boxes. Evidence:
+[docs/verification/P17-VIZ-001/](docs/verification/P17-VIZ-001/README.md),
+and the display surface specifically in
+[DISPLAY.md](docs/verification/P17-VIZ-001/DISPLAY.md).
 
 The rule applied to the boxes below, stated so it can be checked: **tick a box
 only where this milestone's own evidence demonstrates the deliverable end to
-end.** A deformation scale factor with nothing to scale visually is not end to
-end, and a contour whose bands are computed but never drawn is not either —
-even though the arithmetic for both is built, tested and qualified.
+end.** A contour whose bands are computed but never DRAWN is not end to end,
+which is why the element boxes stay unticked even though their arithmetic is
+built, tested and qualified -- and why the nodal ones are now ticked, having
+been measured on screen at 1 distinct colour against 4807.
 
-* [ ] Undeformed mesh display — needs a result presentation; P16's own mesh
-      display is qualified under P16-VIZ-001 and this milestone adds nothing
-      to it
-* [ ] Deformed-shape display — `deformedPositions()` is built and qualified;
-      nothing draws it
-* [ ] Deformation scale factor — `isUsableDeformationScale`, non-cumulative,
-      refuses a negative or non-finite scale, four mutation kills; no display
-* [ ] Displacement magnitude contour — channel + classifier + bands built; no
-      display
-* [ ] Ux contour — as above
-* [ ] Uy contour — as above
-* [ ] Uz contour — as above
-* [ ] von Mises contour — as above
-* [ ] Normal stress components — as above
-* [ ] Shear stress components — as above, and `yz`/`zx` cannot be transposed
-      (two mutation kills, on a fixture with unequal shears)
+* [x] Undeformed mesh display
+* [x] Deformed-shape display
+* [x] Deformation scale factor
+* [x] Displacement magnitude contour
+* [x] Ux contour
+* [x] Uy contour
+* [x] Uz contour
+* [ ] von Mises contour — BLOCKED on a mapping that does not exist. See the
+      note below; the element path itself is correct and tested.
+* [ ] Normal stress components — blocked the same way
+* [ ] Shear stress components — blocked the same way. `yz`/`zx` cannot be
+      transposed (two mutation kills, on a fixture with unequal shears)
 * [x] Principal stress inspection
 * [x] Element inspection
 * [x] Node displacement inspection
@@ -1512,7 +1513,11 @@ even though the arithmetic for both is built, tested and qualified.
 * [x] Evidence recorded
 
 ```text
-QUALIFIED   3792 / 3792 in debug-ext, release-ext and debug-shared-ext
+QUALIFIED AT b04a9e1, which is BEFORE the display surface below.
+            The deformed display and the nodal contours are built and
+            tested but NOT yet requalified.
+
+            3792 / 3792 in debug-ext, release-ext and debug-shared-ext
             937 x 5 in release-ext and debug-ext
             0 warnings, 0 errors, -Werror on
             eight tree hashes identical before and after
@@ -1523,13 +1528,33 @@ QUALIFIED   3792 / 3792 in debug-ext, release-ext and debug-shared-ext
             `reactions`, both already computed one statement earlier and
             discarded. That debt is discharged, not assumed away.
 
-MUTATION    61 probes, 54 killed, 7 unreachable with derived reasons, 0 void
-            TEN real test gaps found and closed
+MUTATION    69 probes, 60 killed, 7 unreachable, 2 equivalent mutants
+            ELEVEN real test gaps found and closed
 
-NEXT        the OCCT result presentation and the Qt inspector surface. P16
-            left a working offscreen harness, so this is tractable rather
-            than risky -- but it changes a qualified P16 file and an OCCT
-            adapter, so it needs its own architecture pass.
+THE ELEMENT CONTOURS ARE BLOCKED, and the blocker is a scope decision
+rather than a defect:
+
+    MeshView::volumeBoundaryOf builds from the mesh's Triangle3 SURFACE
+    elements, so elementOfTriangle returns a TRIANGLE's id. An element
+    channel's values are per TETRAHEDRON. The two id spaces are disjoint.
+
+    meshing::Triangle carries id, nodes and region. It does NOT carry an
+    owning tetrahedron, and no accessor in meshing answers for one.
+
+    So a boundary-view element contour needs a NEW CAPABILITY IN THE
+    QUALIFIED P16 MESHING MODULE -- a triangle-to-owning-tetrahedron
+    mapping, which is a topological search over sorted node triples and
+    wants its own design, not an inline helper in the renderer.
+
+    The element path itself is CORRECT and tested: the same function, the
+    same field and a MeshView::tetrahedraOf view produce flat per-facet
+    bands that match an independent lookup
+    (StructuralViz_AnElementChannelNeedsTheOwningTetrahedron). What is
+    absent is the mapping, not the colouring.
+
+NEXT        either the meshing triangle-to-tetrahedron mapping (a scope
+            decision, and it touches a qualified module), or the load and
+            restraint GLYPHS, which need no new capability.
 ```
 
 ### Critical visualisation rule
@@ -2063,7 +2088,11 @@ docs/engineering/
 # CURRENT NEXT STEP
 
 ```text
-P17-VIZ-001 is AUTHORIZED and in progress.
+P17-VIZ-001 is AUTHORIZED and in progress, 18 of its 23 boxes ticked.
+The headless layer, the deformed display and the four nodal contours are
+qualified; the three element contours are BLOCKED on a triangle-to-owning-
+tetrahedron mapping that `meshing` does not have, and the two glyph boxes
+are not drawn.
 ```
 
 P17-ARCH-001 gave the structural phase a boundary a stale mesh cannot cross, a

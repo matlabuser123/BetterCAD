@@ -1,0 +1,33 @@
+######## the deformed buffer ########
+Mon Oct 12 08:56:22 EAST 2026
+D1  the override span IGNORED      KILLED  (2 tests failed out of 54)
+        	2888 - unit.StructuralViz_ADeformedDisplayAtAVisibleScaleChangesTheImage (Failed)
+        	2890 - unit.StructuralViz_ADeformedDisplayMovesItsEDGESToo (Failed)
+D2  the override test INVERTED     KILLED  (15 tests failed out of 54)
+        	1579 - unit.MeshDisplay_AStaleMeshDoesNotLookLikeACurrentOne (Exit code 0xc0000409)
+        	1580 - unit.MeshDisplay_DrawsAnEngineeringMeshIntoTheView (Exit code 0xc0000409)
+        	1581 - unit.MeshDisplay_HidingTheMeshLeavesTheCadBodyAndViceVersa (Exit code 0xc0000409)
+D3  the EDGES keep the old shape   KILLED  (1 tests failed out of 54)
+        	2890 - unit.StructuralViz_ADeformedDisplayMovesItsEDGESToo (Failed)
+D4  the millimetre conversion gone  KILLED  (6 tests failed out of 54)
+        	1582 - unit.MeshDisplay_HighlightingChangesTheImageAndNotTheMesh (Failed)
+        	1586 - unit.MeshDisplay_PickingAMeshResolvesToACanonicalElement (Failed)
+        	1591 - unit.MeshDisplay_StyleChangesTheImageAndNotTheMesh (Failed)
+######## the entry point guards ########
+Mon Oct 12 09:05:50 EAST 2026
+D5  the length guard removed       KILLED  (1 tests failed out of 54)
+        	2891 - unit.StructuralViz_ADeformedDisplayRefusesABufferThatIsNotThisMeshs (Exit code 0xc0000409)
+D6  the empty guard removed        KILLED  (1 tests failed out of 54)
+        	2891 - unit.StructuralViz_ADeformedDisplayRefusesABufferThatIsNotThisMeshs (Failed)
+D7  the guards back in the wrong order  *** SURVIVED ***
+D8  displayMesh passes the span     *** SURVIVED ***
+######## RESTORE ########
+[4/5] Linking CXX static library lib\libbettercad_renderer.a
+[5/5] Linking CXX executable bin\bettercad_tests.exe
+d3d134b1c936274f83fbfdc33152c86fe1bba198 */c/Users/uqhas/OneDrive/Desktop/CAD/src/renderer/occt/OcctMeshPresentation.cpp
+dbda5cb4276603da22045945dce49085c6580af9 */c/Users/uqhas/OneDrive/Desktop/CAD/src/renderer/occt/OcctViewer.cpp
+100% tests passed out of 54
+
+Total Test time (real) =  39.55 sec
+######## ALL DONE ########
+Mon Oct 12 09:17:49 EAST 2026

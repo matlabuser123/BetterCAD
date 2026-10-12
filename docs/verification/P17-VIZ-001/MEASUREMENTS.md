@@ -306,9 +306,15 @@ a non-exported data struct with an out-of-line member
 ## Totals
 
 ```text
-20 targeted cases, 20 passing        tests/renderer/StructuralResultViewTests.cpp
-0 warnings                           full build, debug-ext
+47 targeted cases, 47 passing        tests/renderer/StructuralResultViewTests.cpp
+                                     37 headless + 10 tagged [frame] for a GPU
+0 warnings                           every build, -Werror on
 ```
+
+This file grew with the milestone, so a count here is the count NOW and not
+the count when a section above it was written. The figure was 20 while the
+adversarial review was being resolved and 33 at the b04a9e1 qualification;
+both appear in context elsewhere and are correct there.
 
 The regression set and the three-preset qualification are run after the
 mutation probe set, not before it — the probes change the source, and a

@@ -31,6 +31,7 @@
 #include <bettercad/renderer/StructuralContour.hpp>
 #include <bettercad/renderer/StructuralInspection.hpp>
 #include <bettercad/renderer/StructuralResultView.hpp>
+#include <bettercad/renderer/Viewer.hpp>
 #include <bettercad/sketch/Sketch.hpp>
 #include <bettercad/structural/StructuralAnalysisObject.hpp>
 #include <bettercad/structural/StructuralLoadVector.hpp>
@@ -45,6 +46,7 @@
 #include <array>
 #include <cmath>
 #include <cstddef>
+#include <limits>
 #include <optional>
 #include <string>
 #include <vector>
@@ -3219,4 +3221,964 @@ TEST_CASE("StructuralViz_ALegendRestatesTheFieldsRangeAndDoesNotRescan",
         renderer::extremeOf(wider, renderer::ExtremeKind::Maximum);
     REQUIRE(highest.has_value());
     REQUIRE(legend->bandOf(highest->value) < legend->bands.size());
+}
+
+// ---------------------------------------------------------------------------
+// The deformed display (ADR-043)
+// ---------------------------------------------------------------------------
+//
+// THE ONLY TESTS IN THIS FILE THAT NEED A GPU, and they are kept apart for
+// that reason: a driver is not an engineering gate, so everything numerical is
+// asserted headlessly above and these measure the one thing a headless test
+// cannot -- that the buffer reaches OCCT model space at the right SCALE.
+
+namespace {
+
+constexpr int kViewWidth = 320;
+constexpr int kViewHeight = 240;
+const renderer::Rgb kViewBlack{0, 0, 0};
+
+[[nodiscard]] renderer::Viewer makeResultViewer() {
+    Result<renderer::Viewer> viewer = renderer::Viewer::createOffscreen(kViewWidth, kViewHeight);
+    if (!viewer.has_value()) {
+        FAIL("the offscreen viewer could not be created: " << viewer.error().message);
+    }
+    viewer->setBackground(kViewBlack);
+    return std::move(*viewer);
+}
+
+[[nodiscard]] renderer::RenderedImage renderResult(renderer::Viewer& viewer) {
+    Result<renderer::RenderedImage> image = viewer.render();
+    if (!image.has_value()) {
+        FAIL("the view could not be rendered: " << image.error().message);
+    }
+    return std::move(*image);
+}
+
+} // namespace
+
+TEST_CASE("StructuralViz_ADeformedMeshOverlaysItsOwnCadSolidAtTheSameScale",
+          "[renderer][viz][frame]") {
+    // THE MEASUREMENT UNIT_BOUNDARY.md OWED, and the reason it is the right
+    // one: P16-VIZ-001 found the metres-versus-millimetres defect exactly this
+    // way, and recorded why nothing else could.
+    //
+    //   "a mesh displayed ALONE looked perfect, because FitAll framed the only
+    //    thing in the scene. Displayed beside its own CAD solid and then
+    //    fitted, it became a sub-pixel speck -- 0 covered pixels"
+    //
+    // A boundary mesh of a solid has the SAME SILHOUETTE as the solid, so from
+    // a fixed camera the solid alone, the mesh alone, and both together cover
+    // the same pixels. A scale error between them gives three different
+    // numbers, and a factor of 1000 gives a speck.
+    //
+    // AT A TINY SCALE the deformed buffer is the undeformed one to well under
+    // a pixel, so it must satisfy the same three-way equality. That is what
+    // proves `x + s*u` reaches model space in MILLIMETRES rather than metres.
+    Prepared part;
+    const geometry::Body* body = part.part.regenerator.body(part.part.feature);
+    REQUIRE(body != nullptr);
+
+    const Result<std::vector<double>> deformed =
+        part.result().deformedPositions(part.part.mesh(), part.view(), part.outcome().fields, 1.0);
+    INFO((deformed.has_value() ? std::string{} : deformed.error().message));
+    REQUIRE(deformed.has_value());
+    REQUIRE(deformed->size() == part.view().positions().size());
+
+    const auto coverageOf = [&](bool withCad, bool withMesh, bool asDeformed) {
+        renderer::Viewer viewer = makeResultViewer();
+        if (withCad) {
+            const Result<renderer::PresentationId> shown =
+                viewer.display(part.part.feature, *body);
+            REQUIRE(shown.has_value());
+        }
+        if (withMesh) {
+            const Result<renderer::PresentationId> shown =
+                asDeformed ? viewer.displayDeformedMesh(part.part.feature, part.view(), *deformed,
+                                                        renderer::MeshStyle::Shaded)
+                           : viewer.displayMesh(part.part.feature, part.view(),
+                                                renderer::MeshStyle::Shaded);
+            INFO((shown.has_value() ? std::string{} : shown.error().message));
+            REQUIRE(shown.has_value());
+        }
+        viewer.setStandardView(renderer::StandardView::Isometric);
+        viewer.fitAll();
+        return renderResult(viewer).coverage(kViewBlack);
+    };
+
+    const std::size_t cadOnly = coverageOf(true, false, false);
+    const std::size_t undeformedOnly = coverageOf(false, true, false);
+    const std::size_t deformedOnly = coverageOf(false, true, true);
+    const std::size_t cadAndDeformed = coverageOf(true, true, true);
+
+    INFO("cad " << cadOnly << ", undeformed " << undeformedOnly << ", deformed " << deformedOnly
+                << ", cad+deformed " << cadAndDeformed);
+
+    // NON-VACUITY FIRST: the solid really is on screen, so the equalities
+    // below are not three zeros agreeing.
+    REQUIRE(cadOnly > 0U);
+
+    // THE DEFORMED BUFFER IS IN THE SAME SPACE AS THE SOLID. At this
+    // displacement -- micrometres on a 40 mm bar -- the deformation is far
+    // below one pixel, so the silhouettes coincide. If the buffer were in
+    // metres it would be 1000x too small and `cadAndDeformed` would equal
+    // `cadOnly` while `deformedOnly` framed a speck.
+    CHECK(deformedOnly == cadOnly);
+    CHECK(cadAndDeformed == cadOnly);
+
+    // AND IT MATCHES THE UNDEFORMED PATH, which is the same claim from the
+    // other side: both buffers pass through the one conversion in the
+    // presentation constructor (ADR-043).
+    CHECK(deformedOnly == undeformedOnly);
+}
+
+TEST_CASE("StructuralViz_ADeformedDisplayAtScaleZeroIsTheUndeformedImage",
+          "[renderer][viz][frame]") {
+    // EXACT, AND THAT IS THE POINT. `deformedPositions` at scale 0 returns the
+    // undeformed positions bit for bit -- `x + 0*u` where the buffer starts as
+    // a copy of x -- so the two presentations must produce the SAME IMAGE, not
+    // a similar one.
+    //
+    // A byte-identical image is a stronger statement than any coverage count:
+    // it says the deformed path changed nothing at all, including the normals
+    // that light the facets and the edges drawn over them.
+    Prepared part;
+    const Result<std::vector<double>> still =
+        part.result().deformedPositions(part.part.mesh(), part.view(), part.outcome().fields, 0.0);
+    REQUIRE(still.has_value());
+
+    // The precondition, asserted so the case cannot pass for the wrong reason.
+    const std::span<const double> undeformed = part.view().positions();
+    REQUIRE(still->size() == undeformed.size());
+    for (std::size_t i = 0; i < still->size(); ++i) {
+        REQUIRE((*still)[i] == undeformed[i]);
+    }
+
+    const auto imageOf = [&part, &still](bool asDeformed) {
+        renderer::Viewer viewer = makeResultViewer();
+        const Result<renderer::PresentationId> shown =
+            asDeformed ? viewer.displayDeformedMesh(part.part.feature, part.view(), *still)
+                       : viewer.displayMesh(part.part.feature, part.view());
+        REQUIRE(shown.has_value());
+        viewer.setStandardView(renderer::StandardView::Isometric);
+        viewer.fitAll();
+        return renderResult(viewer);
+    };
+
+    const renderer::RenderedImage plain = imageOf(false);
+    const renderer::RenderedImage zero = imageOf(true);
+    REQUIRE(plain.coverage(kViewBlack) > 0U);
+    CHECK(zero.rgb == plain.rgb);
+}
+
+TEST_CASE("StructuralViz_ADeformedDisplayAtAVisibleScaleChangesTheImage",
+          "[renderer][viz][frame]") {
+    // THE OTHER HALF, without which the case above would be satisfied by a
+    // deformed path that ignored its buffer entirely: at a scale big enough to
+    // move the geometry by more than a pixel, the image must DIFFER.
+    //
+    // The displacements here are micrometres on a 40 mm bar, so the scale has
+    // to be large to be visible. That is exactly what a deformation scale
+    // factor is for, and it is a presentation value -- it scales the picture
+    // and nothing else.
+    Prepared part;
+    const Result<std::vector<double>> still =
+        part.result().deformedPositions(part.part.mesh(), part.view(), part.outcome().fields, 0.0);
+    REQUIRE(still.has_value());
+    const Result<std::vector<double>> moved =
+        part.result().deformedPositions(part.part.mesh(), part.view(), part.outcome().fields, 2.0e4);
+    INFO((moved.has_value() ? std::string{} : moved.error().message));
+    REQUIRE(moved.has_value());
+
+    // THE BUFFER REALLY MOVED, measured before anything is drawn -- so a
+    // failure below is about the display and not about the arithmetic.
+    double worst = 0.0;
+    for (std::size_t i = 0; i < moved->size(); ++i) {
+        worst = std::max(worst, std::abs((*moved)[i] - (*still)[i]));
+    }
+    INFO("largest coordinate change: " << worst << " m");
+    REQUIRE(worst > 1.0e-3);
+
+    const auto imageOf = [&part](const std::vector<double>& positions) {
+        renderer::Viewer viewer = makeResultViewer();
+        const Result<renderer::PresentationId> shown =
+            viewer.displayDeformedMesh(part.part.feature, part.view(), positions);
+        REQUIRE(shown.has_value());
+        viewer.setStandardView(renderer::StandardView::Isometric);
+        viewer.fitAll();
+        return renderResult(viewer);
+    };
+
+    const renderer::RenderedImage undeformed = imageOf(*still);
+    const renderer::RenderedImage deformed = imageOf(*moved);
+    REQUIRE(undeformed.coverage(kViewBlack) > 0U);
+    REQUIRE(deformed.coverage(kViewBlack) > 0U);
+    CHECK(deformed.rgb != undeformed.rgb);
+}
+
+TEST_CASE("StructuralViz_ADeformedDisplayRefusesABufferThatIsNotThisMeshs",
+          "[renderer][viz][frame]") {
+    // A SPAN CARRIES ITS LENGTH AND NOTHING ELSE. It cannot say which mesh it
+    // came from, so the length is all there is to check -- and it is checked
+    // exactly, because a short buffer would be read past its end and a longer
+    // one means the caller is holding a different mesh.
+    Prepared part;
+    const Result<std::vector<double>> deformed =
+        part.result().deformedPositions(part.part.mesh(), part.view(), part.outcome().fields, 1.0);
+    REQUIRE(deformed.has_value());
+    renderer::Viewer viewer = makeResultViewer();
+
+    SECTION("a short buffer") {
+        std::vector<double> truncated = *deformed;
+        truncated.pop_back();
+        truncated.pop_back();
+        truncated.pop_back();
+        const Result<renderer::PresentationId> shown =
+            viewer.displayDeformedMesh(part.part.feature, part.view(), truncated);
+        REQUIRE_FALSE(shown.has_value());
+        REQUIRE(shown.error().code == ErrorCode::InvalidArgument);
+        REQUIRE_THAT(shown.error().message, ContainsSubstring("must hold"));
+    }
+
+    SECTION("a long buffer") {
+        std::vector<double> extended = *deformed;
+        extended.push_back(0.0);
+        extended.push_back(0.0);
+        extended.push_back(0.0);
+        REQUIRE_FALSE(
+            viewer.displayDeformedMesh(part.part.feature, part.view(), extended).has_value());
+    }
+
+    SECTION("and an EMPTY buffer is refused rather than drawn undeformed") {
+        // THE TRAP THIS GUARD EXISTS FOR. The presentation reads an empty span
+        // as "use the view's own positions", so an empty buffer reaching it
+        // would silently draw the UNDEFORMED mesh through the deformed entry
+        // point -- which looks exactly like a solve that produced no
+        // displacement. A different code from the length mismatch, because it
+        // is a different mistake.
+        const Result<renderer::PresentationId> shown =
+            viewer.displayDeformedMesh(part.part.feature, part.view(), {});
+        REQUIRE_FALSE(shown.has_value());
+        REQUIRE(shown.error().code == ErrorCode::FailedPrecondition);
+        REQUIRE_THAT(shown.error().message, ContainsSubstring("use displayMesh"));
+    }
+
+    SECTION("the valid buffer still displays, so the refusals are not blanket") {
+        REQUIRE(viewer.displayDeformedMesh(part.part.feature, part.view(), *deformed).has_value());
+    }
+}
+
+TEST_CASE("StructuralViz_ADeformedDisplayStillKnowsItsMeshGeneration",
+          "[renderer][viz][frame]") {
+    // THE STAMP IS THE VIEW'S, not something the deformation invents. A
+    // deformed presentation is still a presentation OF one mesh generation,
+    // and a caller comparing `meshStampOf` against the current mesh must get
+    // the same answer it would for the undeformed one -- otherwise a remesh
+    // would leave a deformed display looking current.
+    Prepared part;
+    const Result<std::vector<double>> deformed =
+        part.result().deformedPositions(part.part.mesh(), part.view(), part.outcome().fields, 1.0e4);
+    REQUIRE(deformed.has_value());
+
+    renderer::Viewer viewer = makeResultViewer();
+    const Result<renderer::PresentationId> shown =
+        viewer.displayDeformedMesh(part.part.feature, part.view(), *deformed);
+    REQUIRE(shown.has_value());
+
+    const Result<meshing::MeshStamp> stamp = viewer.meshStampOf(*shown);
+    REQUIRE(stamp.has_value());
+    CHECK(*stamp == part.part.mesh().stamp());
+
+    // ONE BATCHED PRESENTATION, not one per element -- the deformed path must
+    // not have become a per-facet object.
+    REQUIRE(viewer.displayed().size() == 1U);
+    CHECK(viewer.displayed().front().kind == renderer::PresentationKind::EngineeringMesh);
+
+    // AND IT CAN BE DRAWN STALE, like any mesh presentation: the deformed
+    // entry point is a position override, not a separate kind of object, so
+    // every visual state the undeformed one has still applies.
+    REQUIRE(viewer.setMeshStale(*shown, true).has_value());
+    const Result<bool> stale = viewer.meshIsStale(*shown);
+    REQUIRE(stale.has_value());
+    CHECK(*stale);
+}
+
+TEST_CASE("StructuralViz_ADeformedDisplayMovesItsEDGESToo", "[renderer][viz][frame]") {
+    // AN ADVERSARIAL-REVIEW TEST, written because the gap was visible by
+    // inspection rather than by a failure.
+    //
+    // The presentation builds TWO buffers from the position span: the facet
+    // corners and the edge endpoints. Both read the same local `positions`,
+    // so they move together -- but no test proved it, because every other
+    // deformed case either draws Shaded (no edges at all) or draws
+    // ShadedWithEdges, where the facets moving is enough to change the image
+    // while the edges stay behind.
+    //
+    // WIREFRAME ISOLATES THE EDGE BUFFER: with no facets drawn, the only thing
+    // on screen is the edges, so an edge buffer that ignored the deformation
+    // would render the same image at every scale.
+    Prepared part;
+    const Result<std::vector<double>> still = part.result().deformedPositions(
+        part.part.mesh(), part.view(), part.outcome().fields, 0.0);
+    REQUIRE(still.has_value());
+    const Result<std::vector<double>> moved = part.result().deformedPositions(
+        part.part.mesh(), part.view(), part.outcome().fields, 2.0e4);
+    REQUIRE(moved.has_value());
+
+    const auto wireframeOf = [&part](const std::vector<double>& positions) {
+        renderer::Viewer viewer = makeResultViewer();
+        const Result<renderer::PresentationId> shown = viewer.displayDeformedMesh(
+            part.part.feature, part.view(), positions, renderer::MeshStyle::Wireframe);
+        REQUIRE(shown.has_value());
+        viewer.setStandardView(renderer::StandardView::Isometric);
+        viewer.fitAll();
+        return renderResult(viewer);
+    };
+
+    const renderer::RenderedImage undeformed = wireframeOf(*still);
+    const renderer::RenderedImage deformed = wireframeOf(*moved);
+
+    // EDGES ARE ON SCREEN, so the comparison is not two empty images.
+    REQUIRE(undeformed.coverage(kViewBlack) > 0U);
+    REQUIRE(deformed.coverage(kViewBlack) > 0U);
+    CHECK(deformed.rgb != undeformed.rgb);
+}
+
+// ---------------------------------------------------------------------------
+// The contour display
+// ---------------------------------------------------------------------------
+
+namespace {
+
+/// How many distinct non-background colours the image contains.
+///
+/// THE MEASUREMENT A UNIFORM FILL CANNOT PASS. A contour that reached the
+/// screen shows many; a group aspect's single interior colour shows one,
+/// whatever the array carried.
+[[nodiscard]] std::size_t distinctColours(const renderer::RenderedImage& image,
+                                          renderer::Rgb background) {
+    std::vector<std::uint32_t> seen;
+    for (int y = 0; y < image.height; ++y) {
+        for (int x = 0; x < image.width; ++x) {
+            const renderer::Rgb pixel = image.at(x, y);
+            if (pixel == background) {
+                continue;
+            }
+            const auto key = static_cast<std::uint32_t>((pixel.red << 16) | (pixel.green << 8) |
+                                                        pixel.blue);
+            if (std::ranges::find(seen, key) == seen.end()) {
+                seen.push_back(key);
+            }
+        }
+    }
+    return seen.size();
+}
+
+} // namespace
+
+TEST_CASE("StructuralViz_AContourReachesTheScreenAsManyColours", "[renderer][viz][frame]") {
+    // THE MEASUREMENT THE WHOLE CONTOUR PATH RESTS ON, and it was taken
+    // before anything was claimed about it: per-vertex colour is an ARRAY
+    // ATTRIBUTE in OCCT while the facet colour is a GROUP ASPECT, and whether
+    // the attribute wins was a question rather than an assumption.
+    //
+    // A uniform fill produces ONE non-background colour under flat lighting
+    // and a handful under shading. A contour over a banded field produces
+    // many. The assertion is a wide margin, not a precise count, because the
+    // exact number depends on the driver's shading -- but the two cases are
+    // orders apart and the comparison is against the SAME mesh drawn without
+    // the contour.
+    Prepared part;
+    // A NODAL CHANNEL. An element channel cannot be contoured on a boundary
+    // view yet: see the note in this case below.
+    const Result<ScalarField> field = part.result().field(
+        part.part.mesh(), part.outcome().fields, ResultChannel::DisplacementMagnitude);
+    INFO((field.has_value() ? std::string{} : field.error().message));
+    REQUIRE(field.has_value());
+    REQUIRE_FALSE(field->uniform());
+
+    const Result<renderer::ContourLegend> legend = renderer::contourLegend(*field, 12);
+    REQUIRE(legend.has_value());
+    const Result<std::vector<double>> colours =
+        renderer::contourCornerColours(part.view(), *field, *legend);
+    INFO((colours.has_value() ? std::string{} : colours.error().message));
+    REQUIRE(colours.has_value());
+    REQUIRE(colours->size() == part.view().triangleCount() * 9U);
+
+    renderer::Viewer viewer = makeResultViewer();
+    const Result<renderer::PresentationId> shown = viewer.displayMesh(
+        part.part.feature, part.view(), renderer::MeshStyle::Shaded);
+    REQUIRE(shown.has_value());
+    viewer.setStandardView(renderer::StandardView::Isometric);
+    viewer.fitAll();
+
+    const renderer::RenderedImage plain = renderResult(viewer);
+    const std::size_t plainColours = distinctColours(plain, kViewBlack);
+    REQUIRE(plainColours > 0U);
+
+    const Result<bool> before = viewer.meshHasContour(*shown);
+    REQUIRE(before.has_value());
+    REQUIRE_FALSE(*before);
+
+    REQUIRE(viewer.setMeshContour(*shown, *colours).has_value());
+    const Result<bool> after = viewer.meshHasContour(*shown);
+    REQUIRE(after.has_value());
+    REQUIRE(*after);
+
+    const renderer::RenderedImage contoured = renderResult(viewer);
+    const std::size_t contourColours = distinctColours(contoured, kViewBlack);
+    INFO("distinct colours: uniform " << plainColours << ", contoured " << contourColours);
+
+    // THE IMAGE CHANGED AT ALL.
+    REQUIRE(contoured.rgb != plain.rgb);
+    // AND IT CHANGED INTO MANY COLOURS. Twelve bands over this field cannot
+    // show as one or two.
+    REQUIRE(contourColours > plainColours);
+    REQUIRE(contourColours >= 12U);
+
+    SECTION("and clearing it returns the uniform image exactly") {
+        REQUIRE(viewer.clearMeshContour(*shown).has_value());
+        const Result<bool> cleared = viewer.meshHasContour(*shown);
+        REQUIRE(cleared.has_value());
+        REQUIRE_FALSE(*cleared);
+        // BYTE-IDENTICAL, which says the contour added no state that outlives
+        // it -- no changed aspect, no changed style, no moved geometry.
+        CHECK(renderResult(viewer).rgb == plain.rgb);
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Bands onto render triangles
+// ---------------------------------------------------------------------------
+
+TEST_CASE("StructuralViz_ANodalChannelColoursEachCornerFromItsOwnNode", "[renderer][viz]") {
+    // THE NODAL PATH, and the independent oracle is the view's own
+    // vertex-to-node bridge plus the field's id array -- asked directly here,
+    // rather than through the function under test.
+    //
+    // EACH CORNER ITS OWN BAND, which is what makes the interpolation across a
+    // facet the element's linear shape function. It is NOT an average:
+    // nothing here reads an element value, and nothing combines two nodes.
+    Prepared part;
+    const Result<ScalarField> field = part.result().field(
+        part.part.mesh(), part.outcome().fields, ResultChannel::DisplacementMagnitude);
+    REQUIRE(field.has_value());
+    REQUIRE(field->domain == ChannelDomain::Node);
+    const Result<renderer::ContourLegend> legend = renderer::contourLegend(*field, 9);
+    REQUIRE(legend.has_value());
+    const Result<std::vector<std::size_t>> bands = renderer::contourBandsOf(*field, *legend);
+    REQUIRE(bands.has_value());
+
+    const Result<std::vector<std::size_t>> corners =
+        renderer::triangleCornerBands(part.view(), *field, *bands);
+    INFO((corners.has_value() ? std::string{} : corners.error().message));
+    REQUIRE(corners.has_value());
+    REQUIRE(corners->size() == part.view().triangleCount() * 3U);
+
+    const std::span<const std::uint32_t> indices = part.view().triangleIndices();
+    std::size_t facetsWithMixedBands = 0;
+    for (std::size_t triangle = 0; triangle < part.view().triangleCount(); ++triangle) {
+        std::array<std::size_t, 3> seen{};
+        for (std::size_t corner = 0; corner < 3U; ++corner) {
+            const std::size_t vertex = indices[(triangle * 3U) + corner];
+            const Result<meshing::NodeId> node = part.view().nodeOfVertex(vertex);
+            REQUIRE(node.has_value());
+            // THE INDEPENDENT LOOKUP: find the node in the field's own array
+            // by a linear scan and read its band.
+            const auto at = std::ranges::find(field->nodes, *node);
+            REQUIRE(at != field->nodes.end());
+            const auto index = static_cast<std::size_t>(std::distance(field->nodes.begin(), at));
+            INFO("triangle " << triangle << " corner " << corner << " node " << node->value());
+            REQUIRE((*corners)[(triangle * 3U) + corner] == (*bands)[index]);
+            seen[corner] = (*bands)[index];
+        }
+        if (seen[0] != seen[1] || seen[1] != seen[2]) {
+            ++facetsWithMixedBands;
+        }
+    }
+
+    // NON-VACUITY, and it is the assertion that distinguishes a nodal contour
+    // from an element one: at least one facet must span TWO bands, otherwise
+    // every corner happened to agree and the per-corner mapping would be
+    // indistinguishable from a per-facet one.
+    INFO("facets whose three corners do not share a band: " << facetsWithMixedBands);
+    REQUIRE(facetsWithMixedBands > 0);
+}
+
+TEST_CASE("StructuralViz_AnElementChannelNeedsTheOwningTetrahedron", "[renderer][viz]") {
+    // THE LIMITATION, MEASURED RATHER THAN DESCRIBED, and the distinction it
+    // draws matters: the element path is CORRECT, and what is missing is a
+    // mapping that lives in another module.
+    //
+    // MeshView::volumeBoundaryOf builds from the mesh's Triangle3 surface
+    // elements, so elementOfTriangle returns a TRIANGLE's id. An element
+    // channel's values are per TETRAHEDRON. The two id spaces are disjoint,
+    // and meshing::Triangle carries id, nodes and region -- no owning
+    // tetrahedron, and no accessor anywhere answers for one.
+    //
+    // So a boundary view is REFUSED, by name, rather than coloured from a
+    // mismatched lookup.
+    Prepared part;
+    const Result<ScalarField> stress =
+        part.result().field(part.part.mesh(), part.outcome().fields, ResultChannel::VonMises);
+    REQUIRE(stress.has_value());
+    REQUIRE(stress->domain == ChannelDomain::Element);
+    const Result<renderer::ContourLegend> legend = renderer::contourLegend(*stress, 8);
+    REQUIRE(legend.has_value());
+    const Result<std::vector<std::size_t>> bands = renderer::contourBandsOf(*stress, *legend);
+    REQUIRE(bands.has_value());
+
+    SECTION("a boundary view is refused, naming the element it could not find") {
+        const Result<std::vector<std::size_t>> corners =
+            renderer::triangleCornerBands(part.view(), *stress, *bands);
+        REQUIRE_FALSE(corners.has_value());
+        REQUIRE(corners.error().code == ErrorCode::Internal);
+        REQUIRE_THAT(corners.error().message, ContainsSubstring("has no value for it"));
+        // AND THE WHOLE COMPOSITION REFUSES TOO, so a caller cannot reach a
+        // half-built colour buffer.
+        REQUIRE_FALSE(renderer::contourCornerColours(part.view(), *stress, *legend).has_value());
+    }
+
+    SECTION("and the element path itself is correct, shown on a TETRAHEDRON view") {
+        // THE SAME FUNCTION, THE SAME FIELD, A VIEW WHOSE TRIANGLES REALLY DO
+        // NAME TETRAHEDRA. This is what separates a broken element path from
+        // an absent boundary mapping, and it is the second that is true.
+        std::vector<meshing::ElementId> tetrahedra;
+        for (const structural::ElementFields& each : part.outcome().fields.elements()) {
+            tetrahedra.push_back(each.element);
+        }
+        REQUIRE_FALSE(tetrahedra.empty());
+        Result<MeshView> interior = MeshView::tetrahedraOf(part.part.mesh(), tetrahedra);
+        INFO((interior.has_value() ? std::string{} : interior.error().message));
+        REQUIRE(interior.has_value());
+
+        const Result<std::vector<std::size_t>> corners =
+            renderer::triangleCornerBands(*interior, *stress, *bands);
+        INFO((corners.has_value() ? std::string{} : corners.error().message));
+        REQUIRE(corners.has_value());
+        REQUIRE(corners->size() == interior->triangleCount() * 3U);
+
+        // EVERY FACET IS FLAT: all three corners share the owning element's
+        // band, which is the truth about element-constant stress.
+        for (std::size_t triangle = 0; triangle < interior->triangleCount(); ++triangle) {
+            const std::size_t a = (*corners)[(triangle * 3U) + 0U];
+            const std::size_t b = (*corners)[(triangle * 3U) + 1U];
+            const std::size_t c = (*corners)[(triangle * 3U) + 2U];
+            INFO("triangle " << triangle);
+            REQUIRE(a == b);
+            REQUIRE(b == c);
+            // And it is the band of the element the view names.
+            const Result<meshing::ElementId> owner = interior->elementOfTriangle(triangle);
+            REQUIRE(owner.has_value());
+            const auto at = std::ranges::find(stress->elements, *owner);
+            REQUIRE(at != stress->elements.end());
+            const auto index =
+                static_cast<std::size_t>(std::distance(stress->elements.begin(), at));
+            REQUIRE(a == (*bands)[index]);
+        }
+
+        // AND MORE THAN ONE BAND IS IN USE, so "every facet flat" is not
+        // "every facet the same colour".
+        std::vector<std::size_t> distinct = *corners;
+        std::ranges::sort(distinct);
+        const auto repeated = std::ranges::unique(distinct);
+        const auto used = static_cast<std::size_t>(
+            std::distance(distinct.begin(), repeated.begin()));
+        INFO("distinct bands in use: " << used);
+        REQUIRE(used > 1U);
+    }
+}
+
+TEST_CASE("StructuralViz_CornerColoursRefuseWhatTheyCannotMap", "[renderer][viz]") {
+    Prepared part;
+    const Result<ScalarField> field = part.result().field(
+        part.part.mesh(), part.outcome().fields, ResultChannel::DisplacementMagnitude);
+    REQUIRE(field.has_value());
+    const Result<renderer::ContourLegend> legend = renderer::contourLegend(*field, 6);
+    REQUIRE(legend.has_value());
+    const Result<std::vector<std::size_t>> bands = renderer::contourBandsOf(*field, *legend);
+    REQUIRE(bands.has_value());
+
+    SECTION("a band array that is not parallel to the field") {
+        std::vector<std::size_t> shortened = *bands;
+        shortened.pop_back();
+        const Result<std::vector<std::size_t>> corners =
+            renderer::triangleCornerBands(part.view(), *field, shortened);
+        REQUIRE_FALSE(corners.has_value());
+        REQUIRE_THAT(corners.error().message, ContainsSubstring("band indices were given"));
+    }
+
+    SECTION("an incomplete field") {
+        ScalarField partial = *field;
+        partial.classified = partial.expected - 1;
+        REQUIRE_FALSE(partial.complete());
+        REQUIRE_FALSE(renderer::triangleCornerBands(part.view(), partial, *bands).has_value());
+    }
+
+    SECTION("an identity array that is not ascending") {
+        // THE DOCUMENTED ORDER, CHECKED. The lookup is a binary search, so an
+        // unsorted array would return a WRONG INDEX rather than an error --
+        // the quiet kind of wrong this layer exists to avoid. A test that only
+        // trusted the contract could not tell the difference.
+        ScalarField shuffled = *field;
+        REQUIRE(shuffled.nodes.size() > 1U);
+        std::swap(shuffled.nodes.front(), shuffled.nodes.back());
+        REQUIRE_FALSE(std::ranges::is_sorted(shuffled.nodes));
+        const Result<std::vector<std::size_t>> corners =
+            renderer::triangleCornerBands(part.view(), shuffled, *bands);
+        REQUIRE_FALSE(corners.has_value());
+        REQUIRE_THAT(corners.error().message, ContainsSubstring("ascending order"));
+    }
+
+    SECTION("and the colours are the legend's own band colours") {
+        const Result<std::vector<double>> colours =
+            renderer::contourCornerColours(part.view(), *field, *legend);
+        REQUIRE(colours.has_value());
+        REQUIRE(colours->size() == part.view().triangleCount() * 9U);
+
+        const Result<std::vector<std::size_t>> corners =
+            renderer::triangleCornerBands(part.view(), *field, *bands);
+        REQUIRE(corners.has_value());
+        for (std::size_t i = 0; i < corners->size(); ++i) {
+            const renderer::ContourBand& band = legend->bands[(*corners)[i]];
+            REQUIRE((*colours)[(i * 3U) + 0U] == band.red);
+            REQUIRE((*colours)[(i * 3U) + 1U] == band.green);
+            REQUIRE((*colours)[(i * 3U) + 2U] == band.blue);
+        }
+    }
+
+    SECTION("and a legend from another range is refused before any mapping") {
+        renderer::ContourLegend shifted = *legend;
+        shifted.maximum = legend->maximum + 1.0;
+        REQUIRE_FALSE(renderer::contourCornerColours(part.view(), *field, shifted).has_value());
+    }
+}
+
+TEST_CASE("StructuralViz_AStaleContourIsNotDrawnAtAll", "[renderer][viz][frame]") {
+    // THE BRIEF'S HARDEST REQUIREMENT, and the case that nearly shipped
+    // broken: "a stale result must never be presented indistinguishably from
+    // a current one".
+    //
+    // Found by asking an adversarial question about an interaction, not by a
+    // failure. Per-vertex colours OVERRIDE a group aspect's interior colour --
+    // that is exactly what the 1-versus-4807 measurement established -- and
+    // `Compute` sets that interior colour to `staleFacetColour()` when the
+    // mesh is stale. So a stale CONTOURED mesh would have drawn its contour
+    // and swallowed the stale colour, and in Shaded style there would have
+    // been no stale indication whatsoever.
+    //
+    // A stale contour is not merely mislabelled, it is WRONG DATA: the colours
+    // are derived from a result that no longer describes the model. So the
+    // contour is dropped rather than tinted.
+    Prepared part;
+    const Result<ScalarField> field = part.result().field(
+        part.part.mesh(), part.outcome().fields, ResultChannel::DisplacementMagnitude);
+    REQUIRE(field.has_value());
+    const Result<renderer::ContourLegend> legend = renderer::contourLegend(*field, 12);
+    REQUIRE(legend.has_value());
+    const Result<std::vector<double>> colours =
+        renderer::contourCornerColours(part.view(), *field, *legend);
+    REQUIRE(colours.has_value());
+
+    // Shaded, deliberately: with no edges drawn there is nothing BUT the
+    // facets to carry the distinction, which is the case the defect hid in.
+    const auto imageOf = [&part, &colours](bool contoured, bool stale) {
+        renderer::Viewer viewer = makeResultViewer();
+        const Result<renderer::PresentationId> shown = viewer.displayMesh(
+            part.part.feature, part.view(), renderer::MeshStyle::Shaded);
+        REQUIRE(shown.has_value());
+        if (contoured) {
+            REQUIRE(viewer.setMeshContour(*shown, *colours).has_value());
+        }
+        if (stale) {
+            REQUIRE(viewer.setMeshStale(*shown, true).has_value());
+        }
+        viewer.setStandardView(renderer::StandardView::Isometric);
+        viewer.fitAll();
+        return renderResult(viewer);
+    };
+
+    const renderer::RenderedImage currentContoured = imageOf(true, false);
+    const renderer::RenderedImage staleContoured = imageOf(true, true);
+    const renderer::RenderedImage staleUniform = imageOf(false, true);
+    const renderer::RenderedImage currentUniform = imageOf(false, false);
+
+    const std::size_t currentBands = distinctColours(currentContoured, kViewBlack);
+    const std::size_t staleBands = distinctColours(staleContoured, kViewBlack);
+    INFO("distinct colours: current contoured " << currentBands << ", stale contoured "
+                                                << staleBands);
+
+    // THE PRECONDITION: a CURRENT contour really is many colours, so the
+    // comparison below is not two uniform images agreeing.
+    REQUIRE(currentBands >= 12U);
+
+    // THE ASSERTION THE DEFECT FAILED. A stale contoured mesh must not look
+    // like a current contoured one.
+    CHECK(staleContoured.rgb != currentContoured.rgb);
+    // And it is not merely different -- it has lost the bands entirely.
+    CHECK(staleBands < currentBands);
+
+    // IT LOOKS LIKE A STALE MESH, which is the positive form: dropping the
+    // contour means the stale facet colour finally reaches the screen, so the
+    // image is the stale uniform one.
+    CHECK(staleContoured.rgb == staleUniform.rgb);
+
+    // AND STALE IS STILL DISTINGUISHABLE FROM CURRENT without a contour,
+    // which is P16's own guarantee and must not have been disturbed.
+    CHECK(staleUniform.rgb != currentUniform.rgb);
+
+    SECTION("and the contour is retained, not discarded, so clearing stale restores it") {
+        // THE CONTOUR IS SUPPRESSED FOR DRAWING, not forgotten. A UI that
+        // marks a result stale and then re-solves must not have to re-send
+        // the colours, and `meshHasContour` must keep telling the truth.
+        renderer::Viewer viewer = makeResultViewer();
+        const Result<renderer::PresentationId> shown = viewer.displayMesh(
+            part.part.feature, part.view(), renderer::MeshStyle::Shaded);
+        REQUIRE(shown.has_value());
+        REQUIRE(viewer.setMeshContour(*shown, *colours).has_value());
+        REQUIRE(viewer.setMeshStale(*shown, true).has_value());
+
+        const Result<bool> held = viewer.meshHasContour(*shown);
+        REQUIRE(held.has_value());
+        CHECK(*held);
+
+        REQUIRE(viewer.setMeshStale(*shown, false).has_value());
+        viewer.setStandardView(renderer::StandardView::Isometric);
+        viewer.fitAll();
+        CHECK(distinctColours(renderResult(viewer), kViewBlack) >= 12U);
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Four gaps the contour-display probes found
+// ---------------------------------------------------------------------------
+
+TEST_CASE("StructuralViz_AnEntityWithNoValueIsRefusedNotColouredBandZero",
+          "[renderer][viz]") {
+    // THE GAP PROBE E4 FOUND. Clamping a missing entity to band 0 survived,
+    // because on a boundary view every vertex's node IS in the field --
+    // RecoveredFields holds every mesh node and the view draws a subset.
+    //
+    // BUT THE GUARD IS REACHABLE, and that is the point: triangleCornerBands
+    // takes a raw MeshView and a raw ScalarField, and ScalarField CARRIES NO
+    // STAMP. So nothing stops a caller pairing a view with a field that does
+    // not describe the same mesh, and the entity-presence check is the only
+    // thing standing between that and a picture.
+    //
+    // Band 0 is the bottom of the range, so clamping would draw the missing
+    // entity as the MINIMUM -- a plausible colour for an absent value, which
+    // is the worst kind of wrong.
+    Prepared part;
+    const Result<ScalarField> field = part.result().field(
+        part.part.mesh(), part.outcome().fields, ResultChannel::DisplacementMagnitude);
+    REQUIRE(field.has_value());
+    const Result<renderer::ContourLegend> legend = renderer::contourLegend(*field, 7);
+    REQUIRE(legend.has_value());
+    const Result<std::vector<std::size_t>> bands = renderer::contourBandsOf(*field, *legend);
+    REQUIRE(bands.has_value());
+
+    // A FIELD MISSING ONE NODE THE VIEW DRAWS. Built by removing an entry
+    // rather than by crossing two meshes, because two meshes can number their
+    // nodes over the same range and the lookup would then SUCCEED with the
+    // wrong value -- which this test could not distinguish from success.
+    const Result<meshing::NodeId> drawn = part.view().nodeOfVertex(0U);
+    REQUIRE(drawn.has_value());
+    const auto at = std::ranges::find(field->nodes, *drawn);
+    REQUIRE(at != field->nodes.end());
+    const auto index = static_cast<std::size_t>(std::distance(field->nodes.begin(), at));
+
+    ScalarField missing = *field;
+    std::vector<std::size_t> shortBands = *bands;
+    missing.nodes.erase(missing.nodes.begin() + static_cast<std::ptrdiff_t>(index));
+    missing.values.erase(missing.values.begin() + static_cast<std::ptrdiff_t>(index));
+    shortBands.erase(shortBands.begin() + static_cast<std::ptrdiff_t>(index));
+    missing.expected -= 1;
+    missing.classified -= 1;
+    // STILL COMPLETE AND STILL SORTED, so the refusal below can only be the
+    // entity-presence check and not one of the earlier guards.
+    REQUIRE(missing.complete());
+    REQUIRE(std::ranges::is_sorted(missing.nodes));
+    REQUIRE(shortBands.size() == missing.values.size());
+    REQUIRE(std::ranges::find(missing.nodes, *drawn) == missing.nodes.end());
+
+    const Result<std::vector<std::size_t>> corners =
+        renderer::triangleCornerBands(part.view(), missing, shortBands);
+    REQUIRE_FALSE(corners.has_value());
+    REQUIRE(corners.error().code == ErrorCode::Internal);
+    REQUIRE_THAT(corners.error().message, ContainsSubstring("has no value for it"));
+    REQUIRE_THAT(corners.error().message,
+                 ContainsSubstring(std::to_string(drawn->value())));
+
+    SECTION("and the unmodified field still maps, so the refusal is not blanket") {
+        REQUIRE(renderer::triangleCornerBands(part.view(), *field, *bands).has_value());
+    }
+}
+
+TEST_CASE("StructuralViz_ASelectedFacetKeepsItsHighlightUnderAContour",
+          "[renderer][viz][frame]") {
+    // THE GAP PROBE E9 FOUND, and it took two attempts to measure.
+    //
+    // The contract is in the Viewer header: "A SELECTED FACET KEEPS THE
+    // HIGHLIGHT COLOUR, not its band, so selecting something while a contour
+    // is displayed still shows". `facets()` takes a withColours flag that the
+    // highlight group passes as FALSE for exactly that reason.
+    //
+    // THE FIRST ATTEMPT ASSERTED THAT A HIGHLIGHT CHANGES THE IMAGE, and the
+    // probe survived it: the two groups carry different MATERIALS, so even
+    // when the highlighted facets wrongly take their band colours the
+    // lighting still differs and the image still changes. A true assertion
+    // that the mutation also satisfies is not a test of the contract.
+    //
+    // HIGHLIGHTING EVERY TRIANGLE IS THE DECISIVE FORM. The plain group is
+    // then empty and the whole mesh is drawn by the highlight group, so:
+    //
+    //     correct   withColours=false -> ONE uniform colour
+    //     mutated   withColours=true  -> the contour, thousands of colours
+    //
+    // which is a difference of orders rather than of lighting.
+    Prepared part;
+    const Result<ScalarField> field = part.result().field(
+        part.part.mesh(), part.outcome().fields, ResultChannel::DisplacementMagnitude);
+    REQUIRE(field.has_value());
+    const Result<renderer::ContourLegend> legend = renderer::contourLegend(*field, 10);
+    REQUIRE(legend.has_value());
+    const Result<std::vector<double>> colours =
+        renderer::contourCornerColours(part.view(), *field, *legend);
+    REQUIRE(colours.has_value());
+
+    std::vector<std::size_t> everyTriangle;
+    for (std::size_t i = 0; i < part.view().triangleCount(); ++i) {
+        everyTriangle.push_back(i);
+    }
+    REQUIRE_FALSE(everyTriangle.empty());
+
+    const auto imageOf = [&part, &colours, &everyTriangle](bool contoured, bool allSelected) {
+        renderer::Viewer viewer = makeResultViewer();
+        const Result<renderer::PresentationId> shown = viewer.displayMesh(
+            part.part.feature, part.view(), renderer::MeshStyle::Shaded);
+        REQUIRE(shown.has_value());
+        if (contoured) {
+            REQUIRE(viewer.setMeshContour(*shown, *colours).has_value());
+        }
+        if (allSelected) {
+            REQUIRE(viewer.setMeshHighlight(*shown, everyTriangle).has_value());
+        }
+        viewer.setStandardView(renderer::StandardView::Isometric);
+        viewer.fitAll();
+        return renderResult(viewer);
+    };
+
+    const renderer::RenderedImage contourOnly = imageOf(true, false);
+    const renderer::RenderedImage allLitContoured = imageOf(true, true);
+    const renderer::RenderedImage allLitPlain = imageOf(false, true);
+
+    const std::size_t contourBands = distinctColours(contourOnly, kViewBlack);
+    const std::size_t litBands = distinctColours(allLitContoured, kViewBlack);
+    INFO("distinct colours: contour " << contourBands << ", every facet selected " << litBands);
+
+    // THE PRECONDITION: the contour really is many colours, so the collapse
+    // below is a collapse and not two uniform images agreeing.
+    REQUIRE(contourBands >= 10U);
+
+    // THE ASSERTION THE CONTRACT NEEDED. A fully selected mesh is ONE colour,
+    // not a contour. The margin is wide because the exact count depends on
+    // the driver's shading, but the two cases are orders apart.
+    CHECK(litBands < contourBands / 4U);
+
+    // AND IT IS THE SAME IMAGE AS SELECTING EVERYTHING WITHOUT A CONTOUR,
+    // which is the positive form: the highlight group ignores the contour
+    // entirely rather than blending with it.
+    CHECK(allLitContoured.rgb == allLitPlain.rgb);
+
+    SECTION("and a PARTIAL selection still shows, so the highlight is not simply lost") {
+        // The complement of the case above: with only some facets selected,
+        // both groups draw and the image must differ from the contour alone.
+        std::vector<std::size_t> some;
+        for (std::size_t i = 0; i < part.view().triangleCount() / 4U; ++i) {
+            some.push_back(i);
+        }
+        REQUIRE_FALSE(some.empty());
+
+        renderer::Viewer viewer = makeResultViewer();
+        const Result<renderer::PresentationId> shown = viewer.displayMesh(
+            part.part.feature, part.view(), renderer::MeshStyle::Shaded);
+        REQUIRE(shown.has_value());
+        REQUIRE(viewer.setMeshContour(*shown, *colours).has_value());
+        REQUIRE(viewer.setMeshHighlight(*shown, some).has_value());
+        viewer.setStandardView(renderer::StandardView::Isometric);
+        viewer.fitAll();
+        CHECK(renderResult(viewer).rgb != contourOnly.rgb);
+    }
+}
+TEST_CASE("StructuralViz_AContourBufferIsCheckedBeforeItIsDrawn",
+          "[renderer][viz][frame]") {
+    // THE GAPS PROBES E12 AND E13 FOUND. Both guards were written and
+    // documented, and neither was exercised -- the contour display case only
+    // ever handed setMeshContour a buffer that contourCornerColours had just
+    // produced, which is by construction the right length and in range.
+    Prepared part;
+    const Result<ScalarField> field = part.result().field(
+        part.part.mesh(), part.outcome().fields, ResultChannel::DisplacementMagnitude);
+    REQUIRE(field.has_value());
+    const Result<renderer::ContourLegend> legend = renderer::contourLegend(*field, 6);
+    REQUIRE(legend.has_value());
+    const Result<std::vector<double>> colours =
+        renderer::contourCornerColours(part.view(), *field, *legend);
+    REQUIRE(colours.has_value());
+
+    renderer::Viewer viewer = makeResultViewer();
+    const Result<renderer::PresentationId> shown =
+        viewer.displayMesh(part.part.feature, part.view());
+    REQUIRE(shown.has_value());
+
+    SECTION("a buffer of the wrong length") {
+        // NINE DOUBLES PER RENDER TRIANGLE. A short buffer would be read past
+        // its end; a long one means the caller is holding a different mesh.
+        std::vector<double> truncated = *colours;
+        truncated.resize(truncated.size() - 9U);
+        const Result<void> set = viewer.setMeshContour(*shown, truncated);
+        REQUIRE_FALSE(set.has_value());
+        REQUIRE(set.error().code == ErrorCode::InvalidArgument);
+        REQUIRE_THAT(set.error().message, ContainsSubstring("nine per triangle"));
+
+        std::vector<double> extended = *colours;
+        extended.insert(extended.end(), 9U, 0.5);
+        REQUIRE_FALSE(viewer.setMeshContour(*shown, extended).has_value());
+
+        // AND NOTHING WAS APPLIED, which is the half that matters: a refused
+        // buffer must not leave a partial contour behind.
+        const Result<bool> has = viewer.meshHasContour(*shown);
+        REQUIRE(has.has_value());
+        CHECK_FALSE(*has);
+    }
+
+    SECTION("a component that is not a colour") {
+        // REFUSED, NOT CLAMPED. contourCornerColours cannot produce one, so
+        // reaching here means the buffer did not come from it -- and clamping
+        // would draw a plausible picture from an implausible input.
+        for (const double bad : {-0.001, 1.001, 2.0, -1.0,
+                                 std::numeric_limits<double>::quiet_NaN(),
+                                 std::numeric_limits<double>::infinity()}) {
+            std::vector<double> spoiled = *colours;
+            spoiled[spoiled.size() / 2U] = bad;
+            INFO("component " << bad);
+            const Result<void> set = viewer.setMeshContour(*shown, spoiled);
+            REQUIRE_FALSE(set.has_value());
+            REQUIRE(set.error().code == ErrorCode::InvalidArgument);
+            REQUIRE_THAT(set.error().message, ContainsSubstring("within [0, 1]"));
+        }
+        const Result<bool> has = viewer.meshHasContour(*shown);
+        REQUIRE(has.has_value());
+        CHECK_FALSE(*has);
+    }
+
+    SECTION("and the exact bounds are accepted, so the check is a range") {
+        std::vector<double> edges = *colours;
+        edges[0] = 0.0;
+        edges[1] = 1.0;
+        REQUIRE(viewer.setMeshContour(*shown, edges).has_value());
+        const Result<bool> has = viewer.meshHasContour(*shown);
+        REQUIRE(has.has_value());
+        CHECK(*has);
+    }
 }

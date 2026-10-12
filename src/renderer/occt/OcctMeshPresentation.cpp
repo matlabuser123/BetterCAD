@@ -78,10 +78,15 @@ constexpr int kDisplayMode = 0;
 
 } // namespace
 
-MeshPresentation::MeshPresentation(const MeshView& view, MeshDrawStyle style)
+MeshPresentation::MeshPresentation(const MeshView& view, MeshDrawStyle style,
+                                   std::span<const double> deformed)
     : stamp_(view.stamp()), source_(view.source()), style_(style),
       triangleCount_(view.triangleCount()) {
-    const std::span<const double> positions = view.positions();
+    // THE ONLY DIFFERENCE A DEFORMED DISPLAY MAKES, and it is deliberately
+    // this small (ADR-043). Everything below -- the winding, the normals, the
+    // edge buffer, the millimetre conversion and the selection array -- is the
+    // undeformed path, unchanged, so the two buffers cannot drift apart.
+    const std::span<const double> positions = deformed.empty() ? view.positions() : deformed;
     const std::span<const std::uint32_t> indices = view.triangleIndices();
 
     corners_.reserve(triangleCount_ * 9U);
@@ -155,12 +160,19 @@ int MeshPresentation::lastDetectedTriangle() const {
 }
 
 Handle(Graphic3d_ArrayOfTriangles) MeshPresentation::facets(
-    std::span<const std::size_t> which) const {
+    std::span<const std::size_t> which, bool withColours) const {
     if (which.empty()) {
         return {};
     }
-    Handle(Graphic3d_ArrayOfTriangles) array = new Graphic3d_ArrayOfTriangles(
-        static_cast<int>(which.size() * 3U), 0, Graphic3d_ArrayFlags_VertexNormal);
+    // PER-VERTEX COLOUR IS AN ARRAY ATTRIBUTE, not a group aspect, which is
+    // what lets one array carry a whole contour: the aspect's interior colour
+    // applies to primitives that have no colour of their own.
+    const bool coloured = withColours && !facetColours_.empty();
+    const Graphic3d_ArrayFlags flags =
+        coloured ? (Graphic3d_ArrayFlags_VertexNormal | Graphic3d_ArrayFlags_VertexColor)
+                 : Graphic3d_ArrayFlags_VertexNormal;
+    Handle(Graphic3d_ArrayOfTriangles) array =
+        new Graphic3d_ArrayOfTriangles(static_cast<int>(which.size() * 3U), 0, flags);
     for (const std::size_t triangle : which) {
         if (triangle >= triangleCount_) {
             continue;
@@ -169,10 +181,34 @@ Handle(Graphic3d_ArrayOfTriangles) MeshPresentation::facets(
                             normals_[(triangle * 3U) + 2U]};
         for (std::size_t corner = 0U; corner < 3U; ++corner) {
             const std::size_t at = (triangle * 9U) + (corner * 3U);
-            array->AddVertex(gp_Pnt{corners_[at], corners_[at + 1U], corners_[at + 2U]}, normal);
+            const gp_Pnt vertex{corners_[at], corners_[at + 1U], corners_[at + 2U]};
+            if (coloured) {
+                array->AddVertex(vertex, normal,
+                                 Quantity_Color{facetColours_[at], facetColours_[at + 1U],
+                                                facetColours_[at + 2U], Quantity_TOC_sRGB});
+            } else {
+                array->AddVertex(vertex, normal);
+            }
         }
     }
     return array;
+}
+
+void MeshPresentation::setFacetColours(std::span<const double> rgb) {
+    // NINE DOUBLES PER FACET, OR NOTHING. `Viewer::setMeshContour` refuses a
+    // mismatched buffer with a diagnostic, so this branch is UNREACHABLE
+    // through the public API -- the same arrangement as the deformed position
+    // buffer, and for the same reason: the caller gets told, rather than
+    // getting a contour over some facets and the uniform colour over the rest.
+    //
+    // Kept because the alternative is reading past the end of the buffer in a
+    // class whose constructor cannot check it.
+    if (rgb.size() != triangleCount_ * 9U) {
+        facetColours_.clear();
+    } else {
+        facetColours_.assign(rgb.begin(), rgb.end());
+    }
+    SetToUpdate();
 }
 
 Handle(Graphic3d_ArrayOfSegments) MeshPresentation::edges() const {
@@ -234,13 +270,21 @@ void MeshPresentation::Compute(const Handle(PrsMgr_PresentationManager)& /*manag
             return aspect;
         };
 
-        if (const Handle(Graphic3d_ArrayOfTriangles) array = facets(plain); !array.IsNull()) {
+        // A STALE MESH DROPS ITS CONTOUR, which is not a style choice. Contour
+        // colours are derived from a result that no longer describes the
+        // model, and per-vertex colours OVERRIDE this group's interior
+        // colour -- that is what the 1-versus-4807 measurement proved -- so
+        // drawing them would hide `staleFacetColour` entirely and a stale
+        // contoured mesh would be indistinguishable from a current one in
+        // Shaded style. The brief calls that its hardest requirement.
+        if (const Handle(Graphic3d_ArrayOfTriangles) array = facets(plain, !stale_);
+            !array.IsNull()) {
             const Handle(Graphic3d_Group) group = presentation->NewGroup();
             group->SetGroupPrimitivesAspect(
                 fillAspect(stale_ ? staleFacetColour() : facetColour()));
             group->AddPrimitiveArray(array);
         }
-        if (const Handle(Graphic3d_ArrayOfTriangles) array = facets(highlighted_);
+        if (const Handle(Graphic3d_ArrayOfTriangles) array = facets(highlighted_, false);
             !array.IsNull()) {
             const Handle(Graphic3d_Group) group = presentation->NewGroup();
             group->SetGroupPrimitivesAspect(fillAspect(highlightColour()));

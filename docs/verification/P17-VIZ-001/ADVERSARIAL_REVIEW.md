@@ -250,7 +250,8 @@ at layer 70 and structural at 50, so the new dependency points downward.
 FINDINGS        2 -- one confirmed defect, fixed at the root with a regression
                      test proven to have teeth; one unreachable branch kept
                      deliberately and documented as unreachable
-REQUIRED FIXES  Finding 1: DONE and reverified (20/20 targeted)
+REQUIRED FIXES  Finding 1: DONE and reverified (20/20 targeted AT THE TIME;
+                the file has since grown to 43, and the fix is still green)
 VERDICT         NOT COMPLETE
 ```
 
@@ -260,3 +261,148 @@ about the milestone. What remains is unchanged by this review and is listed in
 presentation and Qt surface, the deformed buffer's millimetre measurement, and
 the three-preset qualification of both this milestone and the predecessor it
 touched.
+
+---
+
+# The display increment — a second adversarial review
+
+```text
+CLAIM BEING CHALLENGED
+    A deformed display and a nodal contour that are visual transforms of a
+    derived result: no second conversion, no second authority, and no
+    picture that reads as data when the data is not there.
+
+ASSUMPTIONS
+    1. toModelLength stays the only metres-to-millimetres conversion.
+    2. Per-vertex colour overrides a group aspect's interior colour.
+    3. MeshView::elementOfTriangle names the element whose values a
+       channel holds.
+    4. Every visual state the undeformed presentation has still applies to
+       a deformed or contoured one.
+```
+
+Two of those four assumptions were wrong, and both were caught here.
+
+## Finding 1 — assumption 3 was false, and it blocks the element contours
+
+**CONFIRMED. Not fixed: it is a scope decision, recorded and refused by name.**
+
+`volumeBoundaryOf` builds from the mesh's Triangle3 **surface** elements, so
+`elementOfTriangle` returns a *triangle* id, while an element channel's values
+are per *tetrahedron*. `meshing::Triangle` carries `id`, `nodes`, `region` —
+no owning tetrahedron, and no accessor answers for one.
+
+An earlier revision of this milestone's own `REMAINING_SCOPE.md` had asserted
+the opposite — "`MeshView::elementOfTriangle` gives the owner-Tet mapping" —
+and the implementation refuted it. The note is corrected in place rather than
+quietly rewritten.
+
+Resolved by refusing **by name** and by proving the distinction: the same
+function on a `tetrahedraOf` view produces correct flat per-facet bands. *What
+is absent is the mapping, not the colouring* — and without that test, "element
+contours do not work" would have sent the next session looking in the wrong
+place.
+
+## Finding 2 — assumption 4 was false, and it was nearly a false checkbox
+
+**CONFIRMED. Fixed at the root, with a test proven to have teeth.**
+
+Assumptions 2 and 4 are incompatible and I held both. If per-vertex colour
+overrides a group aspect — which this milestone *measured* — then a stale
+contoured mesh cannot show `staleFacetColour`, because the contour is in the
+array and the stale colour is in the aspect.
+
+Measured: **1535** distinct colours where the stale uniform image was
+required. In `Shaded` style there was no stale indication at all.
+
+It is in [DISPLAY.md](DISPLAY.md) with the numbers, and it aborted a
+qualification run. The thing to note is that it was reachable from two facts I
+already had written down in the same document; the review's value was asking
+how they interacted.
+
+## The remaining questions
+
+### Could this pass its tests and still be wrong?
+
+The pixel tests are coverage- and colour-count-based, so a *wrong* colour
+mapping that still produced many colours would satisfy them. That is why the
+mapping is pinned headlessly instead:
+`StructuralViz_ANodalChannelColoursEachCornerFromItsOwnNode` compares every
+corner's band against an independent lookup — the view's own vertex-to-node
+bridge and a linear scan of the field's id array — and requires at least one
+facet to span two bands, so a per-facet mapping could not masquerade as a
+per-corner one.
+
+### Are the expected values independent of the implementation?
+
+```text
+the deformed scale      the CAD solid's silhouette, supplied by the KERNEL.
+                        A self-computed millimetre expectation would agree
+                        with a wrong answer; this cannot.
+the contour reaching    a colour COUNT, not a colour. 1 versus 4807 is a
+the screen              fact about the image, not about the palette.
+the corner mapping      an independent lookup, as above.
+the band colours        compared against legend.bands[i] directly.
+```
+
+### Did a test get weakened, deleted or renamed away?
+
+No. 33 cases before this increment, 44 after. No tolerance moved — the image
+comparisons are `==` on the whole buffer, and the band comparisons are exact.
+
+### Is there hidden state? Does order matter?
+
+Order mattered twice, and both are now pinned.
+
+```text
+the two guards          an empty deformed buffer reported a LENGTH mismatch
+                        because the length check ran first, so its own
+                        diagnostic was unreachable. Fixed; probe D6
+                        measures it.
+contour then stale      Finding 2. Fixed; the test asserts the stale image
+                        both ways and that clearing stale restores the
+                        bands.
+```
+
+`clearMeshContour` returning a **byte-identical** image to the never-contoured
+one is the direct evidence that a contour leaves no residue — no changed
+aspect, no changed style, no moved geometry.
+
+### Can a failure leave partial state committed?
+
+`contourCornerColours` bands the field *first*, so the legend-mismatch and
+partition checks run before anything is mapped onto geometry; a refusal means
+no buffer was built. `setMeshContour` validates length and every component
+before touching the presentation.
+
+### Was an architectural boundary crossed?
+
+Two qualified P16 files were modified, which is why this increment has its own
+three-preset run. No OCCT header left the adapter, `architecture.layering`
+passes, and the renderer→structural edge still points downward.
+
+The boundary that was **not** crossed is the interesting one: the element
+contour needs a capability in `meshing`, and the renderer does not reach across
+to build it inline.
+
+## Verdict
+
+```text
+FINDINGS        2, both confirmed. One fixed at the root with a measured
+                reproducer; one is a scope decision, refused by name with the
+                distinction tested.
+REQUIRED FIXES  Finding 2: DONE, reverified, and the test proven to fail
+                without the fix (1535 colours versus the stale image).
+VERDICT         the INCREMENT is complete and pending its qualification.
+                The MILESTONE is not: 5 of 23 boxes remain.
+```
+
+### What this review cost, and why it was still cheap
+
+It aborted a qualification 15 minutes in. Finishing would have cost ~195
+minutes and recorded a PASS for a tree with a known defect.
+
+**The lesson repeated inside one milestone.** This evidence already said probes
+belong after the review, for the same reason; the review belongs before the
+qualification too. Twice now an expensive run was started while a cheap gate
+was still outstanding.

@@ -1,0 +1,159 @@
+[1/666] Checking git revision
+[2/666] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/benchmark/catch_chronometer.cpp.obj
+[3/666] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/benchmark/detail/catch_run_for_at_least.cpp.obj
+[4/666] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/benchmark/detail/catch_benchmark_function.cpp.obj
+[5/666] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/benchmark/detail/catch_analyse.cpp.obj
+[6/666] Building CXX object _deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/benchmark/catch_benchmark.cpp.obj
+[7/666] Building CXX object src/core/CMakeFiles/bettercad_core.dir/Error.cpp.obj
+[8/666] Building CXX object src/core/CMakeFiles/bettercad_core.dir/BuildInfo.cpp.obj
+[9/666] Building CXX object src/core/CMakeFiles/bettercad_core.dir/Uuid.cpp.obj
+[10/666] Building CXX object src/core/CMakeFiles/bettercad_core.dir/Naming.cpp.obj
+[11/666] Building CXX object src/core/CMakeFiles/bettercad_core.dir/document/CommandHistory.cpp.obj
+[12/666] Building CXX object src/core/CMakeFiles/bettercad_core.dir/document/DocumentObject.cpp.obj
+[13/666] Building CXX object src/core/CMakeFiles/bettercad_core.dir/document/Configurations.cpp.obj
+[14/666] Building CXX object src/core/CMakeFiles/bettercad_core.dir/document/DependencyGraph.cpp.obj
+[15/666] Building CXX object src/core/CMakeFiles/bettercad_core.dir/document/Commands.cpp.obj
+[16/666] Building CXX object src/core/CMakeFiles/bettercad_core.dir/document/ObjectReference.cpp.obj
+[17/666] Building CXX object src/core/CMakeFiles/bettercad_core.dir/document/MateReference.cpp.obj
+[18/666] Building CXX object src/core/CMakeFiles/bettercad_core.dir/math/Direction.cpp.obj
+[19/666] Building CXX object src/core/CMakeFiles/bettercad_core.dir/document/Document.cpp.obj
+[20/666] Building CXX object src/core/CMakeFiles/bettercad_core.dir/document/Placement.cpp.obj
+[21/666] Building CXX object src/core/CMakeFiles/bettercad_core.dir/document/References.cpp.obj
+[22/666] Building CXX object src/core/CMakeFiles/bettercad_core.dir/math/Frame.cpp.obj
+[23/666] Building CXX object src/core/CMakeFiles/bettercad_core.dir/document/ParameterExpressions.cpp.obj
+[24/666] Building CXX object src/core/CMakeFiles/bettercad_core.dir/math/BSpline.cpp.obj
+[25/666] Building CXX object src/core/CMakeFiles/bettercad_core.dir/parameters/Parameter.cpp.obj
+[26/666] Building CXX object src/core/CMakeFiles/bettercad_core.dir/parameters/Expression.cpp.obj
+[27/666] Building CXX object src/core/CMakeFiles/bettercad_core.dir/parameters/ParameterTable.cpp.obj
+[28/666] Building CXX object src/core/CMakeFiles/bettercad_core.dir/materials/Completeness.cpp.obj
+[29/666] Building CXX object src/core/CMakeFiles/bettercad_core.dir/materials/MaterialLibrary.cpp.obj
+[30/666] Building CXX object src/core/CMakeFiles/bettercad_core.dir/materials/MaterialProperty.cpp.obj
+[31/666] Building CXX object src/core/CMakeFiles/bettercad_core.dir/standards/ClearanceHoles.cpp.obj
+[32/666] Building CXX object src/core/CMakeFiles/bettercad_core.dir/materials/MechanicalProperties.cpp.obj
+[33/666] Building CXX object src/core/CMakeFiles/bettercad_core.dir/materials/Provenance.cpp.obj
+[34/666] Building CXX object src/core/CMakeFiles/bettercad_core.dir/units/Format.cpp.obj
+[35/666] Building CXX object src/core/CMakeFiles/bettercad_core.dir/materials/ThermalProperties.cpp.obj
+[36/666] Building CXX object src/core/CMakeFiles/bettercad_core.dir/__/__/generated/src/core/GitRevision.cpp.obj
+[37/666] Building CXX object src/core/CMakeFiles/bettercad_core.dir/units/UnitCatalog.cpp.obj
+[38/666] Building CXX object src/core/CMakeFiles/bettercad_core.dir/standards/HoleTolerances.cpp.obj
+[39/666] Building CXX object src/core/CMakeFiles/bettercad_core.dir/standards/MetricThreads.cpp.obj
+[40/666] Linking CXX static library lib\libbettercad_core.a
+[41/666] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/Blends.cpp.obj
+[42/666] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/Edges.cpp.obj
+[43/666] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/Draft.cpp.obj
+[44/666] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/Faces.cpp.obj
+[45/666] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/Holes.cpp.obj
+[46/666] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/RadiusLaw.cpp.obj
+[47/666] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/Profile.cpp.obj
+[48/666] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/LoftMatching.cpp.obj
+[49/666] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/Shell.cpp.obj
+[50/666] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/LoftPlan.cpp.obj
+[51/666] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/Rib.cpp.obj
+[52/666] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/Split.cpp.obj
+[53/666] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/SweepPlan.cpp.obj
+[54/666] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/VariableFillet.cpp.obj
+[55/666] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/SweptPathPlan.cpp.obj
+[56/666] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctBody.cpp.obj
+[57/666] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctBlend.cpp.obj
+[58/666] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctBooleans.cpp.obj
+[59/666] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctChamfer.cpp.obj
+[60/666] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctDraft.cpp.obj
+[61/666] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctEdges.cpp.obj
+[62/666] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctFaceNames.cpp.obj
+[63/666] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctFillet.cpp.obj
+[64/666] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctKernel.cpp.obj
+[65/666] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctFaces.cpp.obj
+[66/666] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctHiddenLine.cpp.obj
+[67/666] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctHole.cpp.obj
+[68/666] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctMesh.cpp.obj
+[69/666] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctPrimitives.cpp.obj
+[70/666] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctShell.cpp.obj
+[71/666] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctStep.cpp.obj
+[72/666] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctSplit.cpp.obj
+[73/666] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctTransform.cpp.obj
+[74/666] Building CXX object src/sketch/CMakeFiles/bettercad_sketch.dir/SketchRegeneration.cpp.obj
+[75/666] Building CXX object src/sketch/CMakeFiles/bettercad_sketch.dir/SketchCommands.cpp.obj
+[76/666] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctSweeps.cpp.obj
+[77/666] Building CXX object src/core/geometry/CMakeFiles/bettercad_geometry.dir/occt/OcctVariableFillet.cpp.obj
+[78/666] Linking CXX static library lib\libbettercad_geometry.a
+[79/666] Building CXX object src/sketch/CMakeFiles/bettercad_sketch.dir/Sketch.cpp.obj
+[80/666] Building CXX object src/sketch/CMakeFiles/bettercad_sketch.dir/entities/Entities.cpp.obj
+[81/666] Building CXX object src/sketch/CMakeFiles/bettercad_sketch.dir/constraints/SketchConstraints.cpp.obj
+[82/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/Feature.cpp.obj
+[83/666] Building CXX object src/sketch/CMakeFiles/bettercad_sketch.dir/solver/SolverSystem.cpp.obj
+[84/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/ResultBodies.cpp.obj
+[85/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/SolidSupport.cpp.obj
+[86/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/Regenerator.cpp.obj
+[87/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/boolean/CombineFeature.cpp.obj
+[88/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/boolean/BooleanRegeneration.cpp.obj
+[89/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/boolean/SplitFeature.cpp.obj
+[90/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/Validation.cpp.obj
+[91/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/chamfer/ChamferFeature.cpp.obj
+[92/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/chamfer/ChamferRegeneration.cpp.obj
+[93/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/datum/Datums.cpp.obj
+[94/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/draft/DraftFeature.cpp.obj
+[95/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/datum/DatumResolution.cpp.obj
+[96/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/draft/DraftRegeneration.cpp.obj
+[97/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/fillet/FilletFeature.cpp.obj
+[98/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/extrude/ExtrudeFeature.cpp.obj
+[99/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/reference/FaceReferences.cpp.obj
+[100/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/extrude/ExtrudeRegeneration.cpp.obj
+[101/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/fillet/FilletRegeneration.cpp.obj
+[102/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/fillet/VariableFilletFeature.cpp.obj
+[103/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/fillet/VariableFilletRegeneration.cpp.obj
+[104/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/hole/HoleFeature.cpp.obj
+[105/666] Building CXX object src/sketch/CMakeFiles/bettercad_sketch.dir/solver/Solver.cpp.obj
+[106/666] Linking CXX static library lib\libbettercad_sketch.a
+[107/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/hole/HoleRegeneration.cpp.obj
+[108/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/loft/LoftFeature.cpp.obj
+[109/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/material/Material.cpp.obj
+[110/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/loft/LoftRegeneration.cpp.obj
+[111/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/material/MassProperties.cpp.obj
+[112/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/material/MaterialCommands.cpp.obj
+[113/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/pattern/CircularPatternFeature.cpp.obj
+[114/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/material/Materials.cpp.obj
+[115/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/pattern/LinearPatternFeature.cpp.obj
+[116/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/pattern/CircularPatternRegeneration.cpp.obj
+[117/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/pattern/LinearPatternRegeneration.cpp.obj
+[118/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/pattern/MirrorFeature.cpp.obj
+[119/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/pattern/MirrorRegeneration.cpp.obj
+[120/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/revolve/RevolveFeature.cpp.obj
+[121/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/pattern/PatternSupport.cpp.obj
+[122/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/profile/Profiles.cpp.obj
+[123/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/rib/RibFeature.cpp.obj
+[124/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/shell/ShellFeature.cpp.obj
+[125/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/revolve/RevolveRegeneration.cpp.obj
+[126/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/rib/RibRegeneration.cpp.obj
+[127/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/sweep/SweepFeature.cpp.obj
+[128/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/shell/ShellRegeneration.cpp.obj
+[129/666] Building CXX object src/meshing/CMakeFiles/bettercad_meshing.dir/GeometryPreparation.cpp.obj
+[130/666] Building CXX object src/features/CMakeFiles/bettercad_features.dir/sweep/SweepRegeneration.cpp.obj
+[131/666] Linking CXX static library lib\libbettercad_features.a
+[132/666] Building CXX object src/meshing/CMakeFiles/bettercad_meshing.dir/Mesh.cpp.obj
+[133/666] Building CXX object src/meshing/CMakeFiles/bettercad_meshing.dir/GeometryMeshMap.cpp.obj
+[134/666] Building CXX object src/meshing/CMakeFiles/bettercad_meshing.dir/MeshControl.cpp.obj
+[135/666] Building CXX object src/meshing/CMakeFiles/bettercad_meshing.dir/Mesher.cpp.obj
+[136/666] Building CXX object src/meshing/CMakeFiles/bettercad_meshing.dir/MeshingCommands.cpp.obj
+[137/666] Building CXX object src/meshing/CMakeFiles/bettercad_meshing.dir/MeshValidation.cpp.obj
+[138/666] Building CXX object src/meshing/CMakeFiles/bettercad_meshing.dir/MeshQuality.cpp.obj
+[139/666] Building CXX object src/meshing/CMakeFiles/bettercad_meshing.dir/MeshSizing.cpp.obj
+[140/666] Building CXX object src/assembly/CMakeFiles/bettercad_assembly.dir/Component.cpp.obj
+[141/666] Building CXX object src/assembly/CMakeFiles/bettercad_assembly.dir/Configurations.cpp.obj
+FAILED: [code=3221225794] src/assembly/CMakeFiles/bettercad_assembly.dir/Configurations.cpp.obj 
+C:\Users\uqhas\AppData\Local\Microsoft\WinGet\Packages\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\mingw64\bin\c++.exe -DBETTERCAD_ASSEMBLY_STATIC_DEFINE -DBETTERCAD_CORE_STATIC_DEFINE -DBETTERCAD_FEATURES_STATIC_DEFINE -DBETTERCAD_GEOMETRY_STATIC_DEFINE -DBETTERCAD_SKETCH_STATIC_DEFINE -IC:/Users/uqhas/OneDrive/Desktop/CAD/include -IC:/Users/uqhas/AppData/Local/bc-build/debug-ext/generated/include -IC:/Users/uqhas/OneDrive/Desktop/CAD/src -isystem C:/Users/uqhas/AppData/Local/bc-build/debug-ext/_deps/eigen3-src -g -std=c++23 -fvisibility=hidden -fno-keep-inline-dllexport -Wall -Wextra -Wpedantic -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wconversion -Wsign-conversion -Wdouble-promotion -Wformat=2 -Wimplicit-fallthrough -Wextra-semi -Wundef -Wmissing-declarations -Wsuggest-override -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Werror -Wa,-mbig-obj -MD -MT src/assembly/CMakeFiles/bettercad_assembly.dir/Configurations.cpp.obj -MF src\assembly\CMakeFiles\bettercad_assembly.dir\Configurations.cpp.obj.d -o src/assembly/CMakeFiles/bettercad_assembly.dir/Configurations.cpp.obj -c C:/Users/uqhas/OneDrive/Desktop/CAD/src/assembly/Configurations.cpp
+[142/666] Building CXX object src/meshing/CMakeFiles/bettercad_meshing.dir/SurfaceMesh.cpp.obj
+FAILED: [code=4294967295] src/meshing/CMakeFiles/bettercad_meshing.dir/SurfaceMesh.cpp.obj 
+C:\Users\uqhas\AppData\Local\Microsoft\WinGet\Packages\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\mingw64\bin\c++.exe -DBETTERCAD_CORE_STATIC_DEFINE -DBETTERCAD_FEATURES_STATIC_DEFINE -DBETTERCAD_GEOMETRY_STATIC_DEFINE -DBETTERCAD_MESHING_STATIC_DEFINE -DBETTERCAD_SKETCH_STATIC_DEFINE -IC:/Users/uqhas/OneDrive/Desktop/CAD/include -IC:/Users/uqhas/AppData/Local/bc-build/debug-ext/generated/include -IC:/Users/uqhas/OneDrive/Desktop/CAD/src -isystem C:/Users/uqhas/AppData/Local/bettercad-deps/gnu-16-mingw-amd64/include -isystem C:/Users/uqhas/AppData/Local/bettercad-deps/gnu-16-mingw-amd64/include/include -g -std=c++23 -fvisibility=hidden -fno-keep-inline-dllexport -Wall -Wextra -Wpedantic -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wconversion -Wsign-conversion -Wdouble-promotion -Wformat=2 -Wimplicit-fallthrough -Wextra-semi -Wundef -Wmissing-declarations -Wsuggest-override -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Werror -Wa,-mbig-obj -MD -MT src/meshing/CMakeFiles/bettercad_meshing.dir/SurfaceMesh.cpp.obj -MF src\meshing\CMakeFiles\bettercad_meshing.dir\SurfaceMesh.cpp.obj.d -o src/meshing/CMakeFiles/bettercad_meshing.dir/SurfaceMesh.cpp.obj -c C:/Users/uqhas/OneDrive/Desktop/CAD/src/meshing/SurfaceMesh.cpp
+[143/666] Building CXX object src/meshing/CMakeFiles/bettercad_meshing.dir/VolumeMesh.cpp.obj
+FAILED: [code=4294967295] src/meshing/CMakeFiles/bettercad_meshing.dir/VolumeMesh.cpp.obj 
+C:\Users\uqhas\AppData\Local\Microsoft\WinGet\Packages\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\mingw64\bin\c++.exe -DBETTERCAD_CORE_STATIC_DEFINE -DBETTERCAD_FEATURES_STATIC_DEFINE -DBETTERCAD_GEOMETRY_STATIC_DEFINE -DBETTERCAD_MESHING_STATIC_DEFINE -DBETTERCAD_SKETCH_STATIC_DEFINE -IC:/Users/uqhas/OneDrive/Desktop/CAD/include -IC:/Users/uqhas/AppData/Local/bc-build/debug-ext/generated/include -IC:/Users/uqhas/OneDrive/Desktop/CAD/src -isystem C:/Users/uqhas/AppData/Local/bettercad-deps/gnu-16-mingw-amd64/include -isystem C:/Users/uqhas/AppData/Local/bettercad-deps/gnu-16-mingw-amd64/include/include -g -std=c++23 -fvisibility=hidden -fno-keep-inline-dllexport -Wall -Wextra -Wpedantic -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wconversion -Wsign-conversion -Wdouble-promotion -Wformat=2 -Wimplicit-fallthrough -Wextra-semi -Wundef -Wmissing-declarations -Wsuggest-override -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Werror -Wa,-mbig-obj -MD -MT src/meshing/CMakeFiles/bettercad_meshing.dir/VolumeMesh.cpp.obj -MF src\meshing\CMakeFiles\bettercad_meshing.dir\VolumeMesh.cpp.obj.d -o src/meshing/CMakeFiles/bettercad_meshing.dir/VolumeMesh.cpp.obj -c C:/Users/uqhas/OneDrive/Desktop/CAD/src/meshing/VolumeMesh.cpp
+[144/666] Building CXX object src/meshing/CMakeFiles/bettercad_meshing.dir/netgen/NetgenBackend.cpp.obj
+FAILED: [code=4294967295] src/meshing/CMakeFiles/bettercad_meshing.dir/netgen/NetgenBackend.cpp.obj 
+C:\Users\uqhas\AppData\Local\Microsoft\WinGet\Packages\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\mingw64\bin\c++.exe -DBETTERCAD_CORE_STATIC_DEFINE -DBETTERCAD_FEATURES_STATIC_DEFINE -DBETTERCAD_GEOMETRY_STATIC_DEFINE -DBETTERCAD_MESHING_STATIC_DEFINE -DBETTERCAD_SKETCH_STATIC_DEFINE -IC:/Users/uqhas/OneDrive/Desktop/CAD/include -IC:/Users/uqhas/AppData/Local/bc-build/debug-ext/generated/include -IC:/Users/uqhas/OneDrive/Desktop/CAD/src -isystem C:/Users/uqhas/AppData/Local/bettercad-deps/gnu-16-mingw-amd64/include -isystem C:/Users/uqhas/AppData/Local/bettercad-deps/gnu-16-mingw-amd64/include/include -g -std=c++23 -fvisibility=hidden -fno-keep-inline-dllexport -Wall -Wextra -Wpedantic -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wconversion -Wsign-conversion -Wdouble-promotion -Wformat=2 -Wimplicit-fallthrough -Wextra-semi -Wundef -Wmissing-declarations -Wsuggest-override -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Werror -Wa,-mbig-obj -MD -MT src/meshing/CMakeFiles/bettercad_meshing.dir/netgen/NetgenBackend.cpp.obj -MF src\meshing\CMakeFiles\bettercad_meshing.dir\netgen\NetgenBackend.cpp.obj.d -o src/meshing/CMakeFiles/bettercad_meshing.dir/netgen/NetgenBackend.cpp.obj -c C:/Users/uqhas/OneDrive/Desktop/CAD/src/meshing/netgen/NetgenBackend.cpp
+[145/666] Building CXX object src/assembly/CMakeFiles/bettercad_assembly.dir/Commands.cpp.obj
+FAILED: [code=4294967295] src/assembly/CMakeFiles/bettercad_assembly.dir/Commands.cpp.obj 
+C:\Users\uqhas\AppData\Local\Microsoft\WinGet\Packages\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\mingw64\bin\c++.exe -DBETTERCAD_ASSEMBLY_STATIC_DEFINE -DBETTERCAD_CORE_STATIC_DEFINE -DBETTERCAD_FEATURES_STATIC_DEFINE -DBETTERCAD_GEOMETRY_STATIC_DEFINE -DBETTERCAD_SKETCH_STATIC_DEFINE -IC:/Users/uqhas/OneDrive/Desktop/CAD/include -IC:/Users/uqhas/AppData/Local/bc-build/debug-ext/generated/include -IC:/Users/uqhas/OneDrive/Desktop/CAD/src -isystem C:/Users/uqhas/AppData/Local/bc-build/debug-ext/_deps/eigen3-src -g -std=c++23 -fvisibility=hidden -fno-keep-inline-dllexport -Wall -Wextra -Wpedantic -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wconversion -Wsign-conversion -Wdouble-promotion -Wformat=2 -Wimplicit-fallthrough -Wextra-semi -Wundef -Wmissing-declarations -Wsuggest-override -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Werror -Wa,-mbig-obj -MD -MT src/assembly/CMakeFiles/bettercad_assembly.dir/Commands.cpp.obj -MF src\assembly\CMakeFiles\bettercad_assembly.dir\Commands.cpp.obj.d -o src/assembly/CMakeFiles/bettercad_assembly.dir/Commands.cpp.obj -c C:/Users/uqhas/OneDrive/Desktop/CAD/src/assembly/Commands.cpp
+[146/666] Building CXX object src/assembly/CMakeFiles/bettercad_assembly.dir/Components.cpp.obj
+FAILED: [code=4294967295] src/assembly/CMakeFiles/bettercad_assembly.dir/Components.cpp.obj 
+C:\Users\uqhas\AppData\Local\Microsoft\WinGet\Packages\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\mingw64\bin\c++.exe -DBETTERCAD_ASSEMBLY_STATIC_DEFINE -DBETTERCAD_CORE_STATIC_DEFINE -DBETTERCAD_FEATURES_STATIC_DEFINE -DBETTERCAD_GEOMETRY_STATIC_DEFINE -DBETTERCAD_SKETCH_STATIC_DEFINE -IC:/Users/uqhas/OneDrive/Desktop/CAD/include -IC:/Users/uqhas/AppData/Local/bc-build/debug-ext/generated/include -IC:/Users/uqhas/OneDrive/Desktop/CAD/src -isystem C:/Users/uqhas/AppData/Local/bc-build/debug-ext/_deps/eigen3-src -g -std=c++23 -fvisibility=hidden -fno-keep-inline-dllexport -Wall -Wextra -Wpedantic -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wconversion -Wsign-conversion -Wdouble-promotion -Wformat=2 -Wimplicit-fallthrough -Wextra-semi -Wundef -Wmissing-declarations -Wsuggest-override -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Werror -Wa,-mbig-obj -MD -MT src/assembly/CMakeFiles/bettercad_assembly.dir/Components.cpp.obj -MF src\assembly\CMakeFiles\bettercad_assembly.dir\Components.cpp.obj.d -o src/assembly/CMakeFiles/bettercad_assembly.dir/Components.cpp.obj -c C:/Users/uqhas/OneDrive/Desktop/CAD/src/assembly/Components.cpp
+ninja: build stopped: subcommand failed.
