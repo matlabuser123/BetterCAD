@@ -30,6 +30,7 @@
 #include <bettercad/renderer/MeshView.hpp>
 #include <bettercad/renderer/StructuralContour.hpp>
 #include <bettercad/renderer/StructuralInspection.hpp>
+#include <bettercad/renderer/StructuralOverlay.hpp>
 #include <bettercad/renderer/StructuralResultView.hpp>
 #include <bettercad/renderer/Viewer.hpp>
 #include <bettercad/sketch/Sketch.hpp>
@@ -1116,8 +1117,10 @@ TEST_CASE("StructuralViz_RestraintComesFromTheRestraintsNotTheDisplacement",
     SECTION("with them, a restrained node is reported restrained with its components") {
         std::size_t restrainedSeen = 0;
         for (const meshing::NodeId node : prepared_restraints->nodes()) {
+            // THE NUMBERING IS REQUIRED for the component mask: without it the
+            // mask is empty, which means UNKNOWN. See inspectNode.
             const Result<renderer::NodeResultInspection> inspection = renderer::inspectNode(
-                mesh, prepared.outcome().fields, node, &*prepared_restraints);
+                mesh, prepared.outcome().fields, node, &*prepared_restraints, &*numbering);
             INFO("node " << node.value());
             REQUIRE(inspection.has_value());
             REQUIRE(inspection->restrained);
@@ -4180,5 +4183,1422 @@ TEST_CASE("StructuralViz_AContourBufferIsCheckedBeforeItIsDrawn",
         const Result<bool> has = viewer.meshHasContour(*shown);
         REQUIRE(has.has_value());
         CHECK(*has);
+    }
+}
+
+TEST_CASE("StructuralViz_ANodesRestrainedComponentsAreItsOwn", "[renderer][viz]") {
+    // A REPRODUCER FIRST. inspectNode's comment says its component mask is
+    // "accumulated over every restraint that NAMES THIS NODE", and the loop
+    // iterates every resolution unconditionally:
+    //
+    //     for (const RestraintResolution& r : restraints->resolutions()) {
+    //         out.restrainedComponents = out.restrainedComponents.unionWith(r.components);
+    //     }
+    //
+    // With two restraints of DIFFERENT masks, every restrained node then
+    // reports the union of both -- so a node held only in Uz reports fixed,
+    // and a UI drawing a support symbol from it draws the wrong support.
+    //
+    // THE FIXTURE MAKES THE TWO MASKS DIFFER, which is the only way to see
+    // it: with one restraint, or with two of equal mask, the union is the
+    // right answer by accident. That is why the existing cases missed it.
+    SolvedView part;
+    const FaceName side{part.feature,
+                        FaceSelector{.role = FaceRole::Side, .entity = part.lines.at(0)}};
+
+    std::vector<structural::StructuralLoad> loads = part.endLoadList();
+    REQUIRE(part.document
+                .modifyObject<structural::StructuralAnalysis>(
+                    ObjectId::fromValue(part.analysis.value()),
+                    [&](structural::StructuralAnalysis& object) -> Result<bool> {
+                        structural::StructuralAnalysisDefinition definition = object.definition();
+                        definition.loads = std::move(loads);
+                        definition.restraints = {
+                            structural::StructuralRestraint::fixedSupport(
+                                RestraintId::fromValue(1), part.startCap()),
+                            structural::StructuralRestraint{
+                                RestraintId::fromValue(2), side,
+                                structural::RestraintComponents::along(
+                                    structural::DofComponent::Uz)}};
+                        return object.setDefinition(std::move(definition));
+                    })
+                .has_value());
+
+    const structural::StructuralSolveOutcome outcome = part.solve();
+    const meshing::Mesh& mesh = part.mesh();
+
+    Result<structural::StructuralModel> model = structural::requireStructuralModel(
+        part.document, part.regenerator, part.mesher, part.control);
+    REQUIRE(model.has_value());
+    Result<structural::MeshDofMap> numbering = structural::buildMeshDofMap(model->mesh().mesh());
+    REQUIRE(numbering.has_value());
+
+    const std::vector<structural::StructuralRestraint> fixedOnly{
+        structural::StructuralRestraint::fixedSupport(RestraintId::fromValue(1),
+                                                      part.startCap())};
+    const std::vector<structural::StructuralRestraint> sideOnly{
+        structural::StructuralRestraint{
+            RestraintId::fromValue(2), side,
+            structural::RestraintComponents::along(structural::DofComponent::Uz)}};
+    const std::vector<structural::StructuralRestraint> both{fixedOnly[0], sideOnly[0]};
+
+    // THE TWO SETS SEPARATELY, so the test knows which nodes belong to which
+    // restraint without asking the code under test.
+    Result<structural::PreparedRestraints> capNodes =
+        structural::prepareStructuralRestraints(*model, *numbering, fixedOnly);
+    REQUIRE(capNodes.has_value());
+    Result<structural::PreparedRestraints> sideNodes =
+        structural::prepareStructuralRestraints(*model, *numbering, sideOnly);
+    REQUIRE(sideNodes.has_value());
+    Result<structural::PreparedRestraints> all =
+        structural::prepareStructuralRestraints(*model, *numbering, both);
+    REQUIRE(all.has_value());
+
+    // A node on the SIDE face and NOT on the cap. Its only constraint is Uz.
+    std::optional<meshing::NodeId> sideOnlyNode;
+    for (const meshing::NodeId node : sideNodes->nodes()) {
+        if (!std::ranges::binary_search(capNodes->nodes(), node)) {
+            sideOnlyNode = node;
+            break;
+        }
+    }
+    INFO("cap nodes " << capNodes->nodes().size() << ", side nodes "
+                      << sideNodes->nodes().size());
+    REQUIRE(sideOnlyNode.has_value());
+
+    const Result<renderer::NodeResultInspection> inspection =
+        renderer::inspectNode(mesh, outcome.fields, *sideOnlyNode, &*all, &*numbering);
+    REQUIRE(inspection.has_value());
+    REQUIRE(inspection->restrained);
+
+    INFO("node " << sideOnlyNode->value() << " reports "
+                 << inspection->restrainedComponents.count() << " constrained component(s)");
+
+    // THE ASSERTION. Uz only: one component, and it is Uz.
+    CHECK(inspection->restrainedComponents.count() == 1);
+    CHECK(inspection->restrainedComponents.holds(structural::DofComponent::Uz));
+    CHECK_FALSE(inspection->restrainedComponents.holds(structural::DofComponent::Ux));
+    CHECK_FALSE(inspection->restrainedComponents.holds(structural::DofComponent::Uy));
+    CHECK_FALSE(inspection->restrainedComponents.isFixed());
+
+    SECTION("and a node on the fixed cap still reports all three") {
+        // THE OTHER SIDE, so the fix cannot be "report fewer components".
+        const meshing::NodeId capNode = capNodes->nodes().front();
+        const Result<renderer::NodeResultInspection> atCap =
+            renderer::inspectNode(mesh, outcome.fields, capNode, &*all, &*numbering);
+        REQUIRE(atCap.has_value());
+        REQUIRE(atCap->restrained);
+        CHECK(atCap->restrainedComponents.isFixed());
+        CHECK(atCap->restrainedComponents.count() == 3);
+    }
+}
+
+// ---------------------------------------------------------------------------
+// The glyph overlays (ADR-045)
+// ---------------------------------------------------------------------------
+
+namespace {
+
+/// The length of a segment, in metres.
+[[nodiscard]] double lengthOf(const renderer::OverlaySegment& segment) {
+    return std::hypot(segment.to.x.si() - segment.from.x.si(),
+                      segment.to.y.si() - segment.from.y.si(),
+                      segment.to.z.si() - segment.from.z.si());
+}
+
+} // namespace
+
+TEST_CASE("StructuralViz_AnArrowsHeadIsExactlyAtItsNode", "[renderer][viz]") {
+    // THE CONVENTION ADR-045 FIXES, and the reason it was chosen: the head
+    // coincides with a canonical node position, so a test can compare it BIT
+    // FOR BIT rather than within a tolerance.
+    //
+    // The oracle is `Mesh::findNode`, asked directly here -- not the overlay's
+    // own idea of where the node is, because that is the thing under test.
+    SolvedView part;
+    const std::vector<structural::StructuralRestraint> rest{
+        structural::StructuralRestraint::fixedSupport(RestraintId::fromValue(1),
+                                                      part.startCap())};
+    const PreparedOverlays prepared = prepareOverlays(part, part.endLoadList(), rest);
+    const meshing::Mesh& mesh = part.mesh();
+    const std::vector<renderer::NodalLoadArrow> arrows =
+        renderer::nodalLoadArrows(*prepared.loads);
+    REQUIRE_FALSE(arrows.empty());
+
+    const Result<renderer::StructuralOverlay> overlay =
+        renderer::loadArrowOverlay(mesh, arrows, 1.0, 1000.0);
+    INFO((overlay.has_value() ? std::string{} : overlay.error().message));
+    REQUIRE(overlay.has_value());
+    REQUIRE(overlay->role == renderer::OverlayRole::LoadArrows);
+
+    // FIVE SEGMENTS PER DRAWN ARROW: one shaft and four barbs.
+    REQUIRE(overlay->glyphs > 0);
+    REQUIRE(overlay->segments.size() == overlay->glyphs * renderer::kSegmentsPerArrow);
+    REQUIRE(overlay->glyphs + overlay->skipped == arrows.size());
+
+    std::size_t checked = 0;
+    for (std::size_t i = 0; i < arrows.size(); ++i) {
+        const renderer::NodalLoadArrow& arrow = arrows[i];
+        if (!arrow.hasDirection) {
+            continue;
+        }
+        const meshing::Node* node = mesh.findNode(arrow.node);
+        REQUIRE(node != nullptr);
+        // The shaft of the i-th DRAWN arrow. Skipped arrows produce nothing,
+        // so the index walks the drawn ones.
+        const renderer::OverlaySegment& shaft =
+            overlay->segments[checked * renderer::kSegmentsPerArrow];
+        INFO("node " << arrow.node.value());
+        // EXACTLY, not within a tolerance.
+        REQUIRE(shaft.to == node->position);
+        // AND THE TAIL IS UPSTREAM: the shaft's length is the display length,
+        // and the tail is on the far side of the node from the force.
+        const Result<double> expected =
+            renderer::displayArrowLength(std::hypot(arrow.force.x.si(), arrow.force.y.si(),
+                                                    arrow.force.z.si()),
+                                         1000.0, 1.0);
+        REQUIRE(expected.has_value());
+        REQUIRE_THAT(lengthOf(shaft), WithinRel(*expected, 1.0e-12));
+        ++checked;
+    }
+    REQUIRE(checked == overlay->glyphs);
+}
+
+TEST_CASE("StructuralViz_AnOverlayLeavesThisLayerInSiMetres", "[renderer][viz]") {
+    // THE UNIT BOUNDARY, for the overlay. Everything here is metres, and the
+    // single conversion is the adapter's.
+    //
+    // The discriminating assertion is the EXTENT: the fixture is a
+    // 40 x 30 x 20 mm bar, so every endpoint must sit within a few hundredths
+    // of a metre of the origin. If this layer were converting, the numbers
+    // would be in the tens.
+    SolvedView part;
+    const std::vector<structural::StructuralRestraint> rest{
+        structural::StructuralRestraint::fixedSupport(RestraintId::fromValue(1),
+                                                      part.startCap())};
+    const PreparedOverlays prepared = prepareOverlays(part, part.endLoadList(), rest);
+    const Result<renderer::StructuralOverlay> overlay = renderer::restraintSymbolOverlay(
+        part.mesh(), *prepared.restraints, *prepared.numbering, 0.004);
+    INFO((overlay.has_value() ? std::string{} : overlay.error().message));
+    REQUIRE(overlay.has_value());
+    REQUIRE_FALSE(overlay->empty());
+
+    double widest = 0.0;
+    for (const renderer::OverlaySegment& segment : overlay->segments) {
+        for (const double each : {segment.from.x.si(), segment.from.y.si(), segment.from.z.si(),
+                                  segment.to.x.si(), segment.to.y.si(), segment.to.z.si()}) {
+            REQUIRE(std::isfinite(each));
+            widest = std::max(widest, std::abs(each));
+        }
+    }
+    INFO("widest coordinate: " << widest << " m");
+    // 40 mm plus a 4 mm bar, so comfortably under 0.05 m and nowhere near 40.
+    REQUIRE(widest < 0.05);
+    REQUIRE(widest > 0.001);
+
+    // AND EVERY BAR IS THE LENGTH ASKED FOR, exactly.
+    for (const renderer::OverlaySegment& segment : overlay->segments) {
+        REQUIRE_THAT(lengthOf(segment), WithinRel(0.004, 1.0e-12));
+    }
+}
+
+TEST_CASE("StructuralViz_ARestraintSymbolHasOneBarPerConstrainedComponent",
+          "[renderer][viz]") {
+    // THE CLAIM ADR-045 MAKES ABOUT READABILITY, as an assertion: the bar
+    // count IS the constrained degree-of-freedom count, and the bar
+    // directions are which ones.
+    //
+    // The oracle is the ConstraintSet and the numbering, asked directly --
+    // the same two objects the function uses, but asked here independently so
+    // a wrong mask would show as a mismatch rather than agree with itself.
+    SolvedView part;
+    const std::vector<structural::StructuralRestraint> rest{
+        structural::StructuralRestraint::fixedSupport(RestraintId::fromValue(1),
+                                                      part.startCap())};
+    const PreparedOverlays prepared = prepareOverlays(part, part.endLoadList(), rest);
+    const meshing::Mesh& mesh = part.mesh();
+    const Result<renderer::StructuralOverlay> overlay = renderer::restraintSymbolOverlay(
+        mesh, *prepared.restraints, *prepared.numbering, 0.004);
+    REQUIRE(overlay.has_value());
+
+    // A FIXED SUPPORT: three bars per node, one along each axis.
+    const std::span<const meshing::NodeId> held = prepared.restraints->nodes();
+    REQUIRE_FALSE(held.empty());
+    REQUIRE(overlay->glyphs == held.size());
+
+    std::size_t expectedBars = 0;
+    for (const meshing::NodeId node : held) {
+        const Result<std::array<structural::DofIndex, structural::kDofsPerNode>> indices =
+            prepared.numbering->indicesOf(node);
+        REQUIRE(indices.has_value());
+        for (const structural::DofIndex& dof : *indices) {
+            if (prepared.restraints->constraints().contains(dof)) {
+                ++expectedBars;
+            }
+        }
+    }
+    INFO("expected bars " << expectedBars << ", segments " << overlay->segments.size());
+    REQUIRE(overlay->segments.size() == expectedBars);
+    // A fixed support holds all three, so it is three per node -- stated
+    // separately so the equality above cannot pass on a wrong count twice.
+    REQUIRE(expectedBars == held.size() * structural::kDofsPerNode);
+
+    // EVERY BAR IS AXIS-ALIGNED AND CENTRED ON ITS NODE. Two of the three
+    // coordinates are unchanged along a bar, which is what "aligned with that
+    // axis" means, and the midpoint is the node.
+    for (const renderer::OverlaySegment& segment : overlay->segments) {
+        const std::array<double, 3> delta{segment.to.x.si() - segment.from.x.si(),
+                                          segment.to.y.si() - segment.from.y.si(),
+                                          segment.to.z.si() - segment.from.z.si()};
+        std::size_t moving = 0;
+        for (const double each : delta) {
+            if (each != 0.0) {
+                ++moving;
+            }
+        }
+        REQUIRE(moving == 1);
+
+        const Point3D midpoint{
+            Length::fromSi((segment.from.x.si() + segment.to.x.si()) / 2.0),
+            Length::fromSi((segment.from.y.si() + segment.to.y.si()) / 2.0),
+            Length::fromSi((segment.from.z.si() + segment.to.z.si()) / 2.0)};
+        bool atSomeNode = false;
+        for (const meshing::NodeId node : held) {
+            const meshing::Node* found = mesh.findNode(node);
+            REQUIRE(found != nullptr);
+            if (std::abs(midpoint.x.si() - found->position.x.si()) < 1.0e-15 &&
+                std::abs(midpoint.y.si() - found->position.y.si()) < 1.0e-15 &&
+                std::abs(midpoint.z.si() - found->position.z.si()) < 1.0e-15) {
+                atSomeNode = true;
+                break;
+            }
+        }
+        REQUIRE(atSomeNode);
+    }
+}
+
+TEST_CASE("StructuralViz_AZeroForceDrawsNoArrowAndIsCounted", "[renderer][viz]") {
+    // A ZERO FORCE IS SKIPPED, NOT DRAWN, and the count says so. An arrow of
+    // zero length pointing some arbitrary way would be a drawn claim about a
+    // direction that does not exist, and silently omitting it would make a
+    // UI's "3 loads" disagree with the three arrows it did not draw.
+    //
+    // BUILT BY HAND, because the solved fixture's loads are all non-zero:
+    // NodalLoadArrow is a public aggregate, so the case can be stated exactly.
+    SolvedView part;
+    const std::vector<structural::StructuralRestraint> rest{
+        structural::StructuralRestraint::fixedSupport(RestraintId::fromValue(1),
+                                                      part.startCap())};
+    const PreparedOverlays prepared = prepareOverlays(part, part.endLoadList(), rest);
+    const meshing::Mesh& mesh = part.mesh();
+    const meshing::NodeId first = mesh.nodes().front().id;
+    const meshing::NodeId second = mesh.nodes().back().id;
+
+    const std::vector<renderer::NodalLoadArrow> arrows{
+        renderer::NodalLoadArrow{.node = first,
+                                 .force = Force3D{Force::fromSi(0.0), Force::fromSi(0.0),
+                                                  Force::fromSi(0.0)},
+                                 .hasDirection = false},
+        renderer::NodalLoadArrow{.node = second,
+                                 .force = Force3D{Force::fromSi(0.0), Force::fromSi(0.0),
+                                                  Force::fromSi(500.0)},
+                                 .hasDirection = true}};
+
+    const Result<renderer::StructuralOverlay> overlay =
+        renderer::loadArrowOverlay(mesh, arrows, 1.0, 500.0);
+    REQUIRE(overlay.has_value());
+
+    REQUIRE(overlay->glyphs == 1);
+    REQUIRE(overlay->skipped == 1);
+    REQUIRE(overlay->segments.size() == renderer::kSegmentsPerArrow);
+    // AND THE ONE DRAWN IS THE NON-ZERO ONE, at its own node.
+    const meshing::Node* node = mesh.findNode(second);
+    REQUIRE(node != nullptr);
+    REQUIRE(overlay->segments.front().to == node->position);
+
+    SECTION("and an all-zero set draws nothing while still counting") {
+        const std::vector<renderer::NodalLoadArrow> silent{arrows.front()};
+        const Result<renderer::StructuralOverlay> none =
+            renderer::loadArrowOverlay(mesh, silent, 1.0, 500.0);
+        REQUIRE(none.has_value());
+        CHECK(none->empty());
+        CHECK(none->glyphs == 0);
+        CHECK(none->skipped == 1);
+    }
+}
+
+TEST_CASE("StructuralViz_AnOverlayRefusesWhatItCannotPlace", "[renderer][viz]") {
+    SolvedView part;
+    const std::vector<structural::StructuralRestraint> rest{
+        structural::StructuralRestraint::fixedSupport(RestraintId::fromValue(1),
+                                                      part.startCap())};
+    const PreparedOverlays prepared = prepareOverlays(part, part.endLoadList(), rest);
+    const meshing::Mesh& mesh = part.mesh();
+
+    SECTION("a node the mesh does not hold is refused, not dropped") {
+        // AN ABSENT NODE MEANS THE ARROWS AND THE MESH DISAGREE, and a
+        // silently shorter overlay would hide that.
+        const std::vector<renderer::NodalLoadArrow> stray{
+            renderer::NodalLoadArrow{.node = meshing::NodeId::fromValue(999991),
+                                     .force = Force3D{Force::fromSi(1.0), Force::fromSi(0.0),
+                                                      Force::fromSi(0.0)},
+                                     .hasDirection = true}};
+        const Result<renderer::StructuralOverlay> overlay =
+            renderer::loadArrowOverlay(mesh, stray, 1.0, 1.0);
+        REQUIRE_FALSE(overlay.has_value());
+        REQUIRE(overlay.error().code == ErrorCode::NotFound);
+        REQUIRE_THAT(overlay.error().message, ContainsSubstring("999991"));
+    }
+
+    SECTION("a bad scale or reference is refused") {
+        const std::vector<renderer::NodalLoadArrow> one{
+            renderer::NodalLoadArrow{.node = mesh.nodes().front().id,
+                                     .force = Force3D{Force::fromSi(1.0), Force::fromSi(0.0),
+                                                      Force::fromSi(0.0)},
+                                     .hasDirection = true}};
+        for (const double bad : {0.0, -1.0, std::numeric_limits<double>::quiet_NaN(),
+                                 std::numeric_limits<double>::infinity()}) {
+            INFO("scale " << bad);
+            REQUIRE_FALSE(renderer::loadArrowOverlay(mesh, one, bad, 1.0).has_value());
+            INFO("reference " << bad);
+            REQUIRE_FALSE(renderer::loadArrowOverlay(mesh, one, 1.0, bad).has_value());
+        }
+        // AND THE VALID PAIR STILL WORKS, so the refusals are not blanket.
+        REQUIRE(renderer::loadArrowOverlay(mesh, one, 1.0, 1.0).has_value());
+    }
+
+    SECTION("a bad bar length is refused") {
+        for (const double bad : {0.0, -0.001, std::numeric_limits<double>::quiet_NaN()}) {
+            INFO("bar length " << bad);
+            REQUIRE_FALSE(renderer::restraintSymbolOverlay(mesh, *prepared.restraints,
+                                                           *prepared.numbering, bad)
+                              .has_value());
+        }
+    }
+}
+
+TEST_CASE("StructuralViz_AReactionOverlayKeepsTheQualifiedSign", "[renderer][viz]") {
+    // THE SIGN IS P17-REACTION'S, and a viewer is not entitled to a second
+    // opinion. The fixture pushes the end cap along +z against a fixed start
+    // cap, so the reactions OPPOSE the load and point along -z.
+    //
+    // The assertion is on the GEOMETRY, which is the thing a user reads: the
+    // shaft runs from +z toward the node, so the arrow points in -z.
+    SolvedView part;
+    part.installAndSolve();
+    const structural::StructuralSolveOutcome outcome = part.solve();
+    const meshing::Mesh& mesh = part.mesh();
+    const std::vector<renderer::ReactionArrow> arrows =
+        renderer::reactionArrows(outcome.reactions);
+    REQUIRE_FALSE(arrows.empty());
+
+    const Result<renderer::StructuralOverlay> overlay =
+        renderer::reactionArrowOverlay(mesh, arrows, 1.0, 1000.0);
+    REQUIRE(overlay.has_value());
+    REQUIRE(overlay->role == renderer::OverlayRole::ReactionArrows);
+    REQUIRE(overlay->glyphs > 0);
+
+    std::size_t downward = 0;
+    std::size_t drawn = 0;
+    for (const renderer::ReactionArrow& arrow : arrows) {
+        if (!arrow.hasDirection) {
+            continue;
+        }
+        const renderer::OverlaySegment& shaft =
+            overlay->segments[drawn * renderer::kSegmentsPerArrow];
+        // THE SHAFT'S DIRECTION IS THE FORCE'S, compared component by
+        // component against the glyph the caller already holds.
+        const double dz = shaft.to.z.si() - shaft.from.z.si();
+        if (arrow.force.z.si() < 0.0) {
+            REQUIRE(dz < 0.0);
+            ++downward;
+        } else if (arrow.force.z.si() > 0.0) {
+            REQUIRE(dz > 0.0);
+        }
+        ++drawn;
+    }
+    INFO("reactions pointing along -z: " << downward << " of " << drawn);
+    // NON-VACUITY: the load is +z, so the reactions carrying it must oppose
+    // it. If none did, the sign would have been reversed somewhere.
+    REQUIRE(downward > 0);
+}
+
+TEST_CASE("StructuralViz_AnOverlayReachesTheScreenOverItsMesh", "[renderer][viz][frame]") {
+    // THE GLYPHS ON SCREEN, measured the only way that distinguishes "drawn"
+    // from "accepted": the image CHANGES when the overlay is added, and the
+    // overlay alone covers FEWER pixels than the mesh -- because arrows are
+    // line segments over a solid, not a second solid.
+    SolvedView part;
+    const std::vector<structural::StructuralRestraint> rest{
+        structural::StructuralRestraint::fixedSupport(RestraintId::fromValue(1),
+                                                      part.startCap())};
+    const PreparedOverlays prepared = prepareOverlays(part, part.endLoadList(), rest);
+    const meshing::Mesh& mesh = part.mesh();
+    Result<MeshView> view = MeshView::volumeBoundaryOf(mesh);
+    REQUIRE(view.has_value());
+
+    const std::vector<renderer::NodalLoadArrow> arrows =
+        renderer::nodalLoadArrows(*prepared.loads);
+    // A SCALE BIG ENOUGH TO SEE. The loads are a kilonewton spread over the
+    // end cap's nodes, so a reference of that per-node magnitude and a scale
+    // of a few millimetres gives arrows the size of the part's features.
+    const Result<renderer::StructuralOverlay> loadOverlay =
+        renderer::loadArrowOverlay(mesh, arrows, 0.008, 1000.0 / static_cast<double>(arrows.size()));
+    INFO((loadOverlay.has_value() ? std::string{} : loadOverlay.error().message));
+    REQUIRE(loadOverlay.has_value());
+    REQUIRE_FALSE(loadOverlay->empty());
+
+    const Result<renderer::StructuralOverlay> supports = renderer::restraintSymbolOverlay(
+        mesh, *prepared.restraints, *prepared.numbering, 0.004);
+    REQUIRE(supports.has_value());
+    REQUIRE_FALSE(supports->empty());
+
+    const auto imageOf = [&](bool withMesh, bool withLoads, bool withSupports) {
+        renderer::Viewer viewer = makeResultViewer();
+        if (withMesh) {
+            REQUIRE(viewer.displayMesh(part.feature, *view, renderer::MeshStyle::Shaded)
+                        .has_value());
+        }
+        if (withLoads) {
+            const Result<renderer::PresentationId> shown =
+                viewer.displayOverlay(part.feature, *loadOverlay);
+            INFO((shown.has_value() ? std::string{} : shown.error().message));
+            REQUIRE(shown.has_value());
+        }
+        if (withSupports) {
+            REQUIRE(viewer.displayOverlay(part.feature, *supports).has_value());
+        }
+        viewer.setStandardView(renderer::StandardView::Isometric);
+        viewer.fitAll();
+        return renderResult(viewer);
+    };
+
+    const renderer::RenderedImage meshOnly = imageOf(true, false, false);
+    const renderer::RenderedImage withLoads = imageOf(true, true, false);
+    const renderer::RenderedImage everything = imageOf(true, true, true);
+    const renderer::RenderedImage loadsAlone = imageOf(false, true, false);
+
+    const std::size_t bare = meshOnly.coverage(kViewBlack);
+    const std::size_t arrowsOnly = loadsAlone.coverage(kViewBlack);
+    INFO("mesh " << bare << " px, arrows alone " << arrowsOnly << " px");
+
+    REQUIRE(bare > 0U);
+    // THE ARROWS ARE ON SCREEN.
+    REQUIRE(arrowsOnly > 0U);
+    // AND THEY ARE LINES, NOT A SOLID: a handful of segments cannot cover
+    // what a shaded boundary mesh covers. If this failed, the overlay would
+    // be drawing something other than segments.
+    REQUIRE(arrowsOnly < bare);
+
+    // ADDING EACH OVERLAY CHANGES THE IMAGE, which is what says it was drawn
+    // rather than merely accepted.
+    CHECK(withLoads.rgb != meshOnly.rgb);
+    CHECK(everything.rgb != withLoads.rgb);
+
+    SECTION("each overlay is one batched presentation, and it is not a mesh") {
+        renderer::Viewer viewer = makeResultViewer();
+        const Result<renderer::PresentationId> shown =
+            viewer.displayOverlay(part.feature, *loadOverlay);
+        REQUIRE(shown.has_value());
+        REQUIRE(viewer.displayed().size() == 1U);
+        CHECK(viewer.displayed().front().kind == renderer::PresentationKind::Overlay);
+
+        // MESH OPERATIONS MUST REFUSE IT, and say what it IS. An overlay that
+        // accepted setMeshStyle would be a presentation pretending to be a
+        // mesh.
+        const Result<void> styled =
+            viewer.setMeshStyle(*shown, renderer::MeshStyle::Wireframe);
+        REQUIRE_FALSE(styled.has_value());
+        REQUIRE(styled.error().code == ErrorCode::FailedPrecondition);
+        REQUIRE_THAT(styled.error().message, ContainsSubstring("a structural overlay"));
+        REQUIRE_FALSE(viewer.setMeshStale(*shown, true).has_value());
+        REQUIRE_FALSE(viewer.meshStampOf(*shown).has_value());
+    }
+
+    SECTION("an empty overlay is refused rather than displayed as nothing") {
+        const std::vector<renderer::NodalLoadArrow> silent{
+            renderer::NodalLoadArrow{.node = mesh.nodes().front().id,
+                                     .force = Force3D{},
+                                     .hasDirection = false}};
+        const Result<renderer::StructuralOverlay> nothing =
+            renderer::loadArrowOverlay(mesh, silent, 1.0, 1.0);
+        REQUIRE(nothing.has_value());
+        REQUIRE(nothing->empty());
+
+        renderer::Viewer viewer = makeResultViewer();
+        const Result<renderer::PresentationId> shown =
+            viewer.displayOverlay(part.feature, *nothing);
+        REQUIRE_FALSE(shown.has_value());
+        REQUIRE(shown.error().code == ErrorCode::FailedPrecondition);
+        REQUIRE_THAT(shown.error().message, ContainsSubstring("no segments"));
+        CHECK(viewer.displayed().empty());
+    }
+}
+
+TEST_CASE("StructuralViz_ARestraintBarLiesAlongTheComponentItDepicts", "[renderer][viz]") {
+    // THE GAP THE ADVERSARIAL REVIEW FOUND, before any probe ran.
+    //
+    // The earlier case asserts that each bar is axis-aligned, centred on a
+    // node, and that the bar COUNT matches the constrained degree-of-freedom
+    // count. With a FIXED support all three components are held, so all three
+    // bars exist and ANY PERMUTATION OF THE AXES satisfies every one of those
+    // assertions. A Ux constraint drawn along Y would have passed.
+    //
+    // Only a PARTIAL restraint can tell: hold Uz alone and the single bar must
+    // lie along Z.
+    SolvedView part;
+    const FaceName side{part.feature,
+                        FaceSelector{.role = FaceRole::Side, .entity = part.lines.at(0)}};
+    const std::vector<structural::StructuralRestraint> rest{
+        structural::StructuralRestraint::fixedSupport(RestraintId::fromValue(1),
+                                                      part.startCap()),
+        structural::StructuralRestraint{
+            RestraintId::fromValue(2), side,
+            structural::RestraintComponents::along(structural::DofComponent::Uz)}};
+    const PreparedOverlays prepared = prepareOverlays(part, part.endLoadList(), rest);
+    const meshing::Mesh& mesh = part.mesh();
+
+    const Result<renderer::StructuralOverlay> overlay = renderer::restraintSymbolOverlay(
+        mesh, *prepared.restraints, *prepared.numbering, 0.004);
+    INFO((overlay.has_value() ? std::string{} : overlay.error().message));
+    REQUIRE(overlay.has_value());
+
+    // WALK THE NODES IN THE ORDER THE OVERLAY DOES, and for each, check that
+    // the bars it emitted lie along exactly the constrained axes -- asked of
+    // the ConstraintSet and the numbering independently.
+    std::size_t at = 0;
+    std::size_t partialNodes = 0;
+    for (const meshing::NodeId node : prepared.restraints->nodes()) {
+        const Result<std::array<structural::DofIndex, structural::kDofsPerNode>> indices =
+            prepared.numbering->indicesOf(node);
+        REQUIRE(indices.has_value());
+        std::vector<std::size_t> expectedAxes;
+        for (std::size_t which = 0; which < structural::kDofsPerNode; ++which) {
+            if (prepared.restraints->constraints().contains((*indices)[which])) {
+                expectedAxes.push_back(which);
+            }
+        }
+        REQUIRE_FALSE(expectedAxes.empty());
+        if (expectedAxes.size() < structural::kDofsPerNode) {
+            ++partialNodes;
+        }
+
+        for (const std::size_t axis : expectedAxes) {
+            REQUIRE(at < overlay->segments.size());
+            const renderer::OverlaySegment& bar = overlay->segments[at];
+            const std::array<double, 3> delta{bar.to.x.si() - bar.from.x.si(),
+                                              bar.to.y.si() - bar.from.y.si(),
+                                              bar.to.z.si() - bar.from.z.si()};
+            INFO("node " << node.value() << " bar " << at << " expected axis " << axis);
+            // THE CONSTRAINED AXIS MOVES, and the other two do not.
+            REQUIRE(delta[axis] != 0.0);
+            for (std::size_t other = 0; other < 3U; ++other) {
+                if (other != axis) {
+                    REQUIRE(delta[other] == 0.0);
+                }
+            }
+            ++at;
+        }
+    }
+    REQUIRE(at == overlay->segments.size());
+
+    // NON-VACUITY, and it is the whole point of this case: at least one node
+    // must be PARTIALLY restrained, otherwise every node has all three bars
+    // and the axis mapping is again untested.
+    INFO("partially restrained nodes: " << partialNodes);
+    REQUIRE(partialNodes > 0);
+}
+
+TEST_CASE("StructuralViz_AnArrowTooSmallToDrawIsCountedNotDegenerate", "[renderer][viz]") {
+    // THE SECOND GAP THE REVIEW FOUND. `displayArrowLength` is a proportion,
+    // scale times magnitude over reference, and it UNDERFLOWS TO ZERO for a
+    // small enough force against a large enough reference. The force still has
+    // a direction, so it is not skipped as a zero -- and a zero-length shaft
+    // puts the tail on the head and collapses all four barbs onto the same
+    // point, drawing five degenerate segments at a dot.
+    //
+    // A DIFFERENT COUNTER FROM `skipped`, because the remedy differs: this one
+    // is the caller's scale, not the model's load.
+    SolvedView part;
+    const std::vector<structural::StructuralRestraint> rest{
+        structural::StructuralRestraint::fixedSupport(RestraintId::fromValue(1),
+                                                      part.startCap())};
+    const PreparedOverlays prepared = prepareOverlays(part, part.endLoadList(), rest);
+    const meshing::Mesh& mesh = part.mesh();
+
+    const std::vector<renderer::NodalLoadArrow> arrows{
+        // A real direction, and a magnitude that cannot survive the division.
+        renderer::NodalLoadArrow{.node = mesh.nodes().front().id,
+                                 .force = Force3D{Force::fromSi(1.0e-300), Force::fromSi(0.0),
+                                                  Force::fromSi(0.0)},
+                                 .hasDirection = true},
+        renderer::NodalLoadArrow{.node = mesh.nodes().back().id,
+                                 .force = Force3D{Force::fromSi(0.0), Force::fromSi(0.0),
+                                                  Force::fromSi(1.0e300)},
+                                 .hasDirection = true}};
+
+    const Result<renderer::StructuralOverlay> overlay =
+        renderer::loadArrowOverlay(mesh, arrows, 1.0, 1.0e300);
+    INFO((overlay.has_value() ? std::string{} : overlay.error().message));
+    REQUIRE(overlay.has_value());
+
+    // THE PRECONDITION: the tiny one really does underflow, asked of
+    // displayArrowLength directly rather than inferred from the overlay.
+    const Result<double> tiny = renderer::displayArrowLength(1.0e-300, 1.0e300, 1.0);
+    REQUIRE(tiny.has_value());
+    INFO("the tiny arrow display length is " << *tiny);
+    REQUIRE(*tiny == 0.0);
+
+    // ONE DRAWN, ONE COUNTED AS TOO SMALL, NONE SKIPPED -- both forces have a
+    // direction, so neither is a zero.
+    CHECK(overlay->glyphs == 1);
+    CHECK(overlay->tooSmall == 1);
+    CHECK(overlay->skipped == 0);
+    CHECK(overlay->segments.size() == renderer::kSegmentsPerArrow);
+
+    // AND THE ACCOUNTING INVARIANT HOLDS.
+    CHECK(overlay->glyphs + overlay->skipped + overlay->tooSmall == arrows.size());
+
+    // NO DEGENERATE SEGMENT REACHED THE LIST: every segment has a positive
+    // length, which is what the guard exists to guarantee.
+    for (const renderer::OverlaySegment& segment : overlay->segments) {
+        REQUIRE(lengthOf(segment) > 0.0);
+    }
+}
+
+TEST_CASE("StructuralViz_AnOverlayDoesNotBlockPickingTheMeshBeneathIt",
+          "[renderer][viz][frame]") {
+    // THE THIRD GAP THE REVIEW FOUND, and it is the whole reason
+    // OverlayPresentation::ComputeSelection is deliberately empty: an
+    // annotation drawn over a mesh must not come between the user and the
+    // element they were trying to click.
+    //
+    // Asserting that ComputeSelection adds nothing is not the same as
+    // asserting that picking still WORKS, and only the second is a property a
+    // user has.
+    SolvedView part;
+    const std::vector<structural::StructuralRestraint> rest{
+        structural::StructuralRestraint::fixedSupport(RestraintId::fromValue(1),
+                                                      part.startCap())};
+    const PreparedOverlays prepared = prepareOverlays(part, part.endLoadList(), rest);
+    const meshing::Mesh& mesh = part.mesh();
+    Result<MeshView> view = MeshView::volumeBoundaryOf(mesh);
+    REQUIRE(view.has_value());
+
+    const std::vector<renderer::NodalLoadArrow> arrows =
+        renderer::nodalLoadArrows(*prepared.loads);
+    const Result<renderer::StructuralOverlay> overlay = renderer::loadArrowOverlay(
+        mesh, arrows, 0.008, 1000.0 / static_cast<double>(arrows.size()));
+    REQUIRE(overlay.has_value());
+
+    const auto pickAtCentre = [&](bool withOverlay) {
+        renderer::Viewer viewer = makeResultViewer();
+        const Result<renderer::PresentationId> shown =
+            viewer.displayMesh(part.feature, *view, renderer::MeshStyle::Shaded);
+        REQUIRE(shown.has_value());
+        if (withOverlay) {
+            REQUIRE(viewer.displayOverlay(part.feature, *overlay).has_value());
+        }
+        viewer.setStandardView(renderer::StandardView::Isometric);
+        viewer.fitAll();
+        Result<std::optional<renderer::MeshPick>> picked =
+            viewer.pickMeshAt(kViewWidth / 2, kViewHeight / 2);
+        REQUIRE(picked.has_value());
+        return *picked;
+    };
+
+    const std::optional<renderer::MeshPick> bare = pickAtCentre(false);
+    const std::optional<renderer::MeshPick> covered = pickAtCentre(true);
+
+    // THE PRECONDITION: the centre of the view really does hit the mesh, so
+    // the comparison below is not two misses agreeing.
+    REQUIRE(bare.has_value());
+
+    // THE MESH IS STILL PICKABLE THROUGH THE OVERLAY, and it is the SAME
+    // triangle -- so the overlay neither swallowed the pick nor deflected it.
+    REQUIRE(covered.has_value());
+    CHECK(covered->triangle == bare->triangle);
+}
+
+TEST_CASE("StructuralViz_AnAxisAlignedArrowStillGetsItsBarbs", "[renderer][viz]") {
+    // A FOURTH REVIEW FINDING. The barbs need a basis perpendicular to the
+    // shaft, and `perpendicularTo` seeds the cross product from the axis LEAST
+    // aligned with the arrow -- precisely so an axis-aligned arrow does not
+    // produce a degenerate cross product and lose its head.
+    //
+    // Nothing tested it. Every arrow in the other cases points along +z or -z
+    // because that is what the fixture's load does, so a seed hard-coded to
+    // unitX would have worked for all of them and collapsed the barbs of any
+    // arrow pointing along x.
+    //
+    // All three axes, both directions, plus a diagonal.
+    SolvedView part;
+    const std::vector<structural::StructuralRestraint> rest{
+        structural::StructuralRestraint::fixedSupport(RestraintId::fromValue(1),
+                                                      part.startCap())};
+    const PreparedOverlays prepared = prepareOverlays(part, part.endLoadList(), rest);
+    const meshing::Mesh& mesh = part.mesh();
+    const meshing::NodeId node = mesh.nodes().front().id;
+
+    const std::array<Force3D, 7> directions{
+        Force3D{Force::fromSi(1.0), Force::fromSi(0.0), Force::fromSi(0.0)},
+        Force3D{Force::fromSi(-1.0), Force::fromSi(0.0), Force::fromSi(0.0)},
+        Force3D{Force::fromSi(0.0), Force::fromSi(1.0), Force::fromSi(0.0)},
+        Force3D{Force::fromSi(0.0), Force::fromSi(-1.0), Force::fromSi(0.0)},
+        Force3D{Force::fromSi(0.0), Force::fromSi(0.0), Force::fromSi(1.0)},
+        Force3D{Force::fromSi(0.0), Force::fromSi(0.0), Force::fromSi(-1.0)},
+        Force3D{Force::fromSi(1.0), Force::fromSi(1.0), Force::fromSi(1.0)}};
+
+    for (const Force3D& force : directions) {
+        const std::vector<renderer::NodalLoadArrow> one{
+            renderer::NodalLoadArrow{.node = node, .force = force, .hasDirection = true}};
+        const Result<renderer::StructuralOverlay> overlay =
+            renderer::loadArrowOverlay(mesh, one, 0.004, 1.0);
+        INFO("force (" << force.x.si() << ", " << force.y.si() << ", " << force.z.si() << ")");
+        REQUIRE(overlay.has_value());
+
+        // THE WHOLE ARROW, every time: one shaft and four barbs.
+        REQUIRE(overlay->glyphs == 1);
+        REQUIRE(overlay->segments.size() == renderer::kSegmentsPerArrow);
+
+        // AND NO SEGMENT IS DEGENERATE. A collapsed basis would emit the
+        // shaft and nothing else, which the count above catches -- but a
+        // NEAR-degenerate one would emit four barbs of almost no length, and
+        // only this catches that.
+        for (const renderer::OverlaySegment& segment : overlay->segments) {
+            REQUIRE(lengthOf(segment) > 0.0);
+        }
+
+        // THE FOUR BARBS ALL START AT THE HEAD and are shorter than the
+        // shaft, which is what makes them read as a head rather than a cross.
+        const double shaft = lengthOf(overlay->segments.front());
+        for (std::size_t barb = 1; barb < renderer::kSegmentsPerArrow; ++barb) {
+            const renderer::OverlaySegment& each = overlay->segments[barb];
+            REQUIRE(each.from == overlay->segments.front().to);
+            REQUIRE(lengthOf(each) < shaft);
+        }
+    }
+}
+
+TEST_CASE("StructuralViz_AnOverlayIsDrawnAtTheMeshsOwnScale", "[renderer][viz][frame]") {
+    // THE P16 TRAP, FOR THE OVERLAY. A fifth review finding, and the one most
+    // worth having: the overlay leaves this layer in SI metres and reaches
+    // model space through `toModelLength`. Drop that conversion and the
+    // overlay is 1000 times too small -- and displayed ALONE it looks
+    // perfect, because fitAll frames the only thing in the scene. That is
+    // exactly how P16-VIZ-001's defect hid.
+    //
+    // The earlier display case asserts the arrows are on screen and that
+    // adding them changes the image. A thousand-times-small overlay satisfies
+    // both: framed alone it is a full-size picture of tiny arrows, and beside
+    // the mesh it is a speck that still perturbs a few pixels.
+    //
+    // THE DISCRIMINATOR IS THE SILHOUETTE. Arrows sized to the part STICK OUT
+    // of it, so mesh-plus-overlay covers MORE pixels than the mesh alone. A
+    // speck sitting inside the silhouette covers no more.
+    SolvedView part;
+    const std::vector<structural::StructuralRestraint> rest{
+        structural::StructuralRestraint::fixedSupport(RestraintId::fromValue(1),
+                                                      part.startCap())};
+    const PreparedOverlays prepared = prepareOverlays(part, part.endLoadList(), rest);
+    const meshing::Mesh& mesh = part.mesh();
+    Result<MeshView> view = MeshView::volumeBoundaryOf(mesh);
+    REQUIRE(view.has_value());
+
+    const std::vector<renderer::NodalLoadArrow> arrows =
+        renderer::nodalLoadArrows(*prepared.loads);
+    // ARROWS ABOUT HALF THE BAR'S LENGTH, so they unmistakably extend past
+    // the end cap they are applied to.
+    const Result<renderer::StructuralOverlay> overlay = renderer::loadArrowOverlay(
+        mesh, arrows, 0.020, 1000.0 / static_cast<double>(arrows.size()));
+    REQUIRE(overlay.has_value());
+    REQUIRE(overlay->glyphs == arrows.size());
+
+    // THE ARROWS REALLY ARE THAT LONG, measured headlessly before anything is
+    // drawn, so a failure below is about the display and not the geometry.
+    double longest = 0.0;
+    for (std::size_t i = 0; i < overlay->segments.size();
+         i += renderer::kSegmentsPerArrow) {
+        longest = std::max(longest, lengthOf(overlay->segments[i]));
+    }
+    INFO("longest shaft: " << longest << " m on a 0.040 m bar");
+    REQUIRE(longest > 0.010);
+
+    // THE DISCRIMINATOR HAS TO SURVIVE fitAll's REFRAMING, and the first
+    // attempt at this test did not. Asserting that mesh-plus-overlay covers
+    // MORE pixels than the mesh alone is wrong: fitAll zooms out to fit the
+    // arrows, so the mesh's own silhouette shrinks faster than thin segments
+    // add pixels, and the measured coverage went DOWN -- 42036 to 36586. The
+    // arrows were correct and the assertion was not.
+    //
+    // SO THE CAMERA IS HELD STILL. Display both, fitAll once so the framing
+    // accounts for both, then HIDE the overlay and render again. setVisible
+    // does not move the camera, so the two images differ by exactly the
+    // arrows' pixels -- a meaningful count at the mesh's own scale, and
+    // essentially nothing for a speck a thousand times too small.
+    renderer::Viewer viewer = makeResultViewer();
+    REQUIRE(viewer.displayMesh(part.feature, *view, renderer::MeshStyle::Shaded).has_value());
+    const Result<renderer::PresentationId> shown =
+        viewer.displayOverlay(part.feature, *overlay);
+    REQUIRE(shown.has_value());
+    viewer.setStandardView(renderer::StandardView::Isometric);
+    viewer.fitAll();
+
+    const std::size_t both = renderResult(viewer).coverage(kViewBlack);
+    REQUIRE(viewer.setVisible(*shown, false).has_value());
+    const std::size_t meshOnly = renderResult(viewer).coverage(kViewBlack);
+
+    INFO("at one camera: mesh+overlay " << both << " px, mesh alone " << meshOnly << " px");
+    REQUIRE(meshOnly > 0U);
+
+    // MEASURED: 278 px of 36308, and the first version of this assertion
+    // demanded five per cent -- a threshold I guessed rather than measured.
+    //
+    // WHY IT IS ONLY 278. The convention is head-at-the-node with the tail
+    // UPSTREAM, so for this load -- tensile, +z on the +z end cap -- the
+    // shaft runs back INTO the solid and the depth buffer hides it. What
+    // shows is the head and the barbs splaying past the cap. That is a
+    // readability consequence of the convention and it is recorded in
+    // DISPLAY_GLYPHS.md rather than tuned away here.
+    //
+    // THE FLOOR IS 50, chosen to sit far above what a thousand-times-small
+    // overlay can contribute -- a sub-pixel speck, so nearly zero -- and far
+    // below the 278 actually measured. It discriminates the scale, which is
+    // what this case is for; it does not claim the arrows are prominent.
+    const std::size_t arrowPixels = both - meshOnly;
+    INFO("the arrows contribute " << arrowPixels << " px");
+    CHECK(both > meshOnly);
+    CHECK(arrowPixels > 50U);
+}
+
+// ---------------------------------------------------------------------------
+// The gaps found by READING the contract, and the two glyph-batch survivors.
+// Each is a property no probe in that batch could see, or one it saw survive.
+// ---------------------------------------------------------------------------
+
+TEST_CASE("StructuralViz_WithoutTheNumberingTheComponentsAreUnknownNotFixed",
+          "[renderer][viz]") {
+    // A GAP FOUND BY READING THE CONTRACT, not by a probe, and NO PROBE IN
+    // THE GLYPH BATCH COULD SEE IT.
+    //
+    // `numbering` defaults to null, and the header is explicit about what
+    // that means:
+    //
+    //   "@p numbering IS REQUIRED FOR `restrainedComponents`, and null leaves
+    //    that mask EMPTY -- which is the same 'unknown' that a null
+    //    @p restraints means for `restrained`."
+    //
+    // StructuralViz_RestraintSurvivesANonZeroDisplacement already calls
+    // inspectNode with restraints and NO numbering, so the path RUNS -- but it
+    // asserts only `restrained`, so nothing holds the mask. Probe G17 replaces
+    // the component loop with the old union UNCONDITIONALLY, which the
+    // numbering-supplied case kills; a mutation that fell back to the union
+    // ONLY when numbering is null would have survived the whole batch.
+    //
+    // THE DISCRIMINATOR IS THE PAIR, not the empty mask. Asserting count()==0
+    // alone would also pass if the mask were never filled at all -- which is
+    // the feature being broken outright. So the SAME NODE is inspected both
+    // ways and the two must DIFFER.
+    SolvedView part;
+    const FaceName side{part.feature,
+                        FaceSelector{.role = FaceRole::Side, .entity = part.lines.at(0)}};
+
+    // THE SAME FIXTURE AS StructuralViz_ANodesRestrainedComponentsAreItsOwn:
+    // the two restraints are INSTALLED in the analysis before the solve, so
+    // the fields and the prepared restraints come from one consistent model
+    // rather than from two that merely share a mesh.
+    std::vector<structural::StructuralLoad> loads = part.endLoadList();
+    REQUIRE(part.document
+                .modifyObject<structural::StructuralAnalysis>(
+                    ObjectId::fromValue(part.analysis.value()),
+                    [&](structural::StructuralAnalysis& object) -> Result<bool> {
+                        structural::StructuralAnalysisDefinition definition =
+                            object.definition();
+                        definition.loads = std::move(loads);
+                        definition.restraints = {
+                            structural::StructuralRestraint::fixedSupport(
+                                RestraintId::fromValue(1), part.startCap()),
+                            structural::StructuralRestraint{
+                                RestraintId::fromValue(2), side,
+                                structural::RestraintComponents::along(
+                                    structural::DofComponent::Uz)}};
+                        return object.setDefinition(std::move(definition));
+                    })
+                .has_value());
+
+    const structural::StructuralSolveOutcome outcome = part.solve();
+    const meshing::Mesh& mesh = part.mesh();
+
+    Result<structural::StructuralModel> model = structural::requireStructuralModel(
+        part.document, part.regenerator, part.mesher, part.control);
+    REQUIRE(model.has_value());
+    Result<structural::MeshDofMap> numbering = structural::buildMeshDofMap(model->mesh().mesh());
+    REQUIRE(numbering.has_value());
+
+    // TWO RESTRAINTS WITH DIFFERENT MASKS, because that is the only fixture
+    // that can tell a per-node answer from a union of every resolution.
+    const std::vector<structural::StructuralRestraint> both{
+        structural::StructuralRestraint::fixedSupport(RestraintId::fromValue(1),
+                                                      part.startCap()),
+        structural::StructuralRestraint{
+            RestraintId::fromValue(2), side,
+            structural::RestraintComponents::along(structural::DofComponent::Uz)}};
+    Result<structural::PreparedRestraints> all =
+        structural::prepareStructuralRestraints(*model, *numbering, both);
+    INFO((all.has_value() ? std::string{} : all.error().message));
+    REQUIRE(all.has_value());
+
+    const meshing::NodeId node = all->nodes().front();
+
+    // WITHOUT THE NUMBERING: restrained is KNOWN, the components are NOT.
+    const Result<renderer::NodeResultInspection> blind =
+        renderer::inspectNode(mesh, outcome.fields, node, &*all);
+    REQUIRE(blind.has_value());
+    CHECK(blind->restrained);
+    INFO("without numbering: " << blind->restrainedComponents.count() << " component(s)");
+    CHECK(blind->restrainedComponents.isEmpty());
+    CHECK_FALSE(blind->restrainedComponents.isFixed());
+    CHECK_FALSE(blind->restrainedComponents.holds(structural::DofComponent::Ux));
+    CHECK_FALSE(blind->restrainedComponents.holds(structural::DofComponent::Uy));
+    CHECK_FALSE(blind->restrainedComponents.holds(structural::DofComponent::Uz));
+
+    // WITH IT, ON THE SAME NODE: the mask is populated.
+    const Result<renderer::NodeResultInspection> seeing =
+        renderer::inspectNode(mesh, outcome.fields, node, &*all, &*numbering);
+    REQUIRE(seeing.has_value());
+    CHECK(seeing->restrained);
+    INFO("with numbering: " << seeing->restrainedComponents.count() << " component(s)");
+
+    // NON-VACUITY: the numbering really does add something, so the empty mask
+    // above is the absence of the numbering and not the absence of the
+    // feature.
+    REQUIRE(seeing->restrainedComponents.count() > 0);
+    CHECK(seeing->restrainedComponents != blind->restrainedComponents);
+}
+
+TEST_CASE("StructuralViz_ADisplayRefusesAnInvalidSourceHandle", "[renderer][viz]") {
+    // BOTH GUARDS THIS MILESTONE OWNS, and NEITHER WAS TESTED. `displayOverlay`
+    // is new, and `displayMeshInternal` is the shared path the two mesh display
+    // entry points were factored into -- so one case covers the mesh path, the
+    // deformed mesh path and the overlay path.
+    //
+    // A presentation is keyed by its source ObjectId, and `displayed()` is how
+    // a UI finds what it put on screen. An invalid handle names nothing, so a
+    // presentation registered under one could never be found again: it would
+    // be drawn, un-hideable and un-removable. Refusing is the only answer that
+    // leaves the viewer consistent.
+    //
+    // NO GPU NEEDED: every refusal here happens before any kernel call, which
+    // is why this is not tagged [frame].
+    SolvedView part;
+    const std::vector<structural::StructuralRestraint> rest{
+        structural::StructuralRestraint::fixedSupport(RestraintId::fromValue(1),
+                                                      part.startCap())};
+    const PreparedOverlays prepared = prepareOverlays(part, part.endLoadList(), rest);
+    const meshing::Mesh& mesh = part.mesh();
+    Result<MeshView> view = MeshView::volumeBoundaryOf(mesh);
+    REQUIRE(view.has_value());
+
+    const std::vector<renderer::NodalLoadArrow> arrows =
+        renderer::nodalLoadArrows(*prepared.loads);
+    const Result<renderer::StructuralOverlay> overlay = renderer::loadArrowOverlay(
+        mesh, arrows, 0.004, 1000.0 / static_cast<double>(arrows.size()));
+    REQUIRE(overlay.has_value());
+    // THE PRECONDITION: this overlay is perfectly displayable, so a refusal
+    // below is about the HANDLE and not about the overlay.
+    REQUIRE_FALSE(overlay->empty());
+
+    renderer::Viewer viewer = makeResultViewer();
+
+    const Result<renderer::PresentationId> badOverlay =
+        viewer.displayOverlay(ObjectId{}, *overlay);
+    REQUIRE_FALSE(badOverlay.has_value());
+    CHECK(badOverlay.error().code == ErrorCode::InvalidArgument);
+    CHECK_THAT(badOverlay.error().message, ContainsSubstring("cannot name the source"));
+
+    const Result<renderer::PresentationId> badMesh =
+        viewer.displayMesh(ObjectId{}, *view, renderer::MeshStyle::Shaded);
+    REQUIRE_FALSE(badMesh.has_value());
+    CHECK(badMesh.error().code == ErrorCode::InvalidArgument);
+
+    // AND NOTHING WAS REGISTERED BY EITHER. A guard that refuses and still
+    // pushes a DisplayedObject would leave an unreachable presentation behind,
+    // which is the failure the guard exists to prevent.
+    CHECK(viewer.displayed().empty());
+}
+
+TEST_CASE("StructuralViz_AReactionIsNotDrawnInALoadsColour", "[renderer][viz][frame]") {
+    // A GAP NO PROBE IN THE GLYPH BATCH COULD SEE, because none of them
+    // touches the presentation's colour table. ADR-045 promises a colour per
+    // role -- "so a load, a reaction and a support are told apart without a
+    // legend" -- and `colourOf` could have returned `loadColour()` for all
+    // three roles with every one of the 60 cases still passing.
+    //
+    // The existing on-screen case only checks that ADDING an overlay changes
+    // the image. That is true whatever colour it is drawn in, because the
+    // restraint bars sit at different positions from the load arrows. Nothing
+    // compared two roles at the SAME geometry.
+    //
+    // THE DISCRIMINATOR IS IDENTICAL GEOMETRY. A NodalLoadArrow and a
+    // ReactionArrow carry the same node, the same force and the same
+    // hasDirection, so built from one node and one force the two overlays
+    // produce BYTE-IDENTICAL segment lists -- asserted below, not assumed.
+    // Two identical segment lists that render to different images can differ
+    // in nothing but colour.
+    //
+    // AND IT IS THE CONFUSION THAT MATTERS: a reaction read as a load is a
+    // sign error a user would act on.
+    SolvedView part;
+    const std::vector<structural::StructuralRestraint> rest{
+        structural::StructuralRestraint::fixedSupport(RestraintId::fromValue(1),
+                                                      part.startCap())};
+    const PreparedOverlays prepared = prepareOverlays(part, part.endLoadList(), rest);
+    const meshing::Mesh& mesh = part.mesh();
+
+    const meshing::NodeId node = mesh.nodes().front().id;
+    const Force3D force{Force::fromSi(0.0), Force::fromSi(0.0), Force::fromSi(1000.0)};
+
+    const std::vector<renderer::NodalLoadArrow> asLoad{
+        renderer::NodalLoadArrow{.node = node, .force = force, .hasDirection = true}};
+    const std::vector<renderer::ReactionArrow> asReaction{renderer::ReactionArrow{
+        .node = node,
+        .force = force,
+        .constrained = structural::RestraintComponents::fixed(),
+        .hasDirection = true}};
+
+    const Result<renderer::StructuralOverlay> loads =
+        renderer::loadArrowOverlay(mesh, asLoad, 0.020, 1000.0);
+    const Result<renderer::StructuralOverlay> reactions =
+        renderer::reactionArrowOverlay(mesh, asReaction, 0.020, 1000.0);
+    REQUIRE(loads.has_value());
+    REQUIRE(reactions.has_value());
+
+    // THE ROLES DIFFER...
+    REQUIRE(loads->role == renderer::OverlayRole::LoadArrows);
+    REQUIRE(reactions->role == renderer::OverlayRole::ReactionArrows);
+    // ...AND THE GEOMETRY DOES NOT. This is the precondition that makes the
+    // image comparison mean "colour" and nothing else.
+    REQUIRE(loads->segments.size() == renderer::kSegmentsPerArrow);
+    REQUIRE(loads->segments == reactions->segments);
+
+    const auto imageOf = [&](const renderer::StructuralOverlay& overlay) {
+        renderer::Viewer viewer = makeResultViewer();
+        REQUIRE(viewer.displayOverlay(part.feature, overlay).has_value());
+        viewer.setStandardView(renderer::StandardView::Isometric);
+        viewer.fitAll();
+        return renderResult(viewer);
+    };
+
+    const renderer::RenderedImage loadImage = imageOf(*loads);
+    const renderer::RenderedImage reactionImage = imageOf(*reactions);
+
+    // BOTH REACHED THE SCREEN, so the comparison is not two blank images
+    // agreeing -- the shape the 'uniform' contour defect took.
+    const std::size_t loadPixels = loadImage.coverage(kViewBlack);
+    const std::size_t reactionPixels = reactionImage.coverage(kViewBlack);
+    INFO("load " << loadPixels << " px, reaction " << reactionPixels << " px");
+    REQUIRE(loadPixels > 0U);
+    REQUIRE(reactionPixels > 0U);
+
+    // THE SAME GEOMETRY, FRAMED THE SAME WAY, so the two cover the same area.
+    CHECK(loadPixels == reactionPixels);
+
+    // AND THE PIXELS DIFFER. With identical segments and identical framing,
+    // the only thing left to differ is the colour.
+    CHECK(loadImage.rgb != reactionImage.rgb);
+
+    // HOW MANY DISTINCT COLOURS EACH OVERLAY SHOWS IS REPORTED, NOT
+    // ASSERTED. A solid aspect should give one, but whether this view
+    // anti-aliases a line has not been measured, and an exact count I have
+    // not measured would be a guessed figure in a test. The property this
+    // case exists for is the INEQUALITY above, which `colourOf` returning one
+    // colour for every role fails regardless.
+    //
+    // Once the figure is measured it belongs here as an equality.
+    INFO("distinct colours -- load " << distinctColours(loadImage, kViewBlack)
+                                    << ", reaction "
+                                    << distinctColours(reactionImage, kViewBlack));
+    CHECK(distinctColours(loadImage, kViewBlack) ==
+          distinctColours(reactionImage, kViewBlack));
+}
+
+TEST_CASE("StructuralViz_ARestraintOverlayRefusesAnotherMeshsRestraints",
+          "[renderer][viz]") {
+    // THE IDENTITY-SAFETY GUARD, and nothing reached it. `restraintSymbolOverlay`
+    // checks `restraints.describes(mesh)` before placing a single bar, and a
+    // remesh is exactly what invalidates prepared restraints: the node ids
+    // repeat, so the bars would be drawn at the WRONG NODES and look perfectly
+    // plausible.
+    //
+    // WHY THIS ENTRY POINT AND NOT inspectNode. The existing crossed-mesh case
+    // for inspectNode is refused on the FIELDS first -- its own comment says
+    // so -- so the restraints guard there is shadowed and never independently
+    // exercised. `restraintSymbolOverlay` takes NO fields, so the restraints
+    // guard is the first thing a foreign mesh meets.
+    SolvedView part;
+    const std::vector<structural::StructuralRestraint> rest{
+        structural::StructuralRestraint::fixedSupport(RestraintId::fromValue(1),
+                                                      part.startCap())};
+    const PreparedOverlays prepared = prepareOverlays(part, part.endLoadList(), rest);
+
+    // THE FIRST MESH IS SIZED NOW, BEFORE THE REMESH. `part.mesh()` re-queries
+    // the mesher, so after regenerating it would answer with the SECOND mesh
+    // and the non-vacuity check below would compare that mesh with itself --
+    // and pass vacuously whatever the remesh did. The reference would dangle
+    // too.
+    const std::size_t firstNodes = part.mesh().nodes().size();
+
+    // THE PRECONDITION: against its OWN mesh it works, so the refusal below is
+    // about the mesh and not about the restraints.
+    REQUIRE(renderer::restraintSymbolOverlay(part.mesh(), *prepared.restraints,
+                                             *prepared.numbering, 0.004)
+                .has_value());
+
+    // A REMESH, through the document, which is what a user changing a mesh
+    // control actually does.
+    REQUIRE(part.document
+                .modifyObject<meshing::MeshControl>(
+                    ObjectId::fromValue(part.control.value()),
+                    [](meshing::MeshControl& control) -> Result<bool> {
+                        auto definition = control.definition();
+                        definition.mesh.sizing.globalTargetSize = 12_mm;
+                        definition.mesh.sizing.local.clear();
+                        return control.setDefinition(definition).has_value();
+                    })
+                .has_value());
+    requireReport(part.regenerator, part.document);
+    const Result<const meshing::VolumeMesh*> remeshed =
+        part.mesher.generate(part.document, part.regenerator, part.control);
+    REQUIRE(remeshed.has_value());
+    const meshing::Mesh& second = (*remeshed)->mesh();
+
+    // NON-VACUITY: the remesh really produced a different mesh. Without this,
+    // an identical mesh would make the refusal below meaningless.
+    INFO("first " << firstNodes << " nodes, second " << second.nodes().size());
+    REQUIRE(second.nodes().size() != firstNodes);
+
+    // A NUMBERING FOR THE *SECOND* MESH, so this case isolates the RESTRAINTS
+    // guard instead of being refused by the numbering one.
+    //
+    // PROBE P5 CAUGHT THE FIRST VERSION OF THIS. It passed
+    // `prepared.numbering`, which belongs to the FIRST mesh -- so with
+    // `restraints.describes(mesh)` deleted the call still refused, by the
+    // NUMBERING check one line below it, and the case passed under the very
+    // defect it was written for. The assertion was also
+    // ContainsSubstring("different mesh"), which matches BOTH messages:
+    //
+    //   "these prepared restraints were resolved against a different mesh"
+    //   "this degree-of-freedom numbering was built for a different mesh
+    //    generation"
+    //
+    // Two fixes, because either alone would still be weak: a FRESH numbering
+    // so the restraints check is the only one that can fire, and a substring
+    // UNIQUE to the restraints message.
+    Result<structural::StructuralModel> secondModel = structural::requireStructuralModel(
+        part.document, part.regenerator, part.mesher, part.control);
+    REQUIRE(secondModel.has_value());
+    Result<structural::MeshDofMap> secondNumbering =
+        structural::buildMeshDofMap(secondModel->mesh().mesh());
+    REQUIRE(secondNumbering.has_value());
+
+    // THE PREMISE, ASSERTED: the numbering DOES describe the second mesh and
+    // the restraints do NOT. That is what makes the restraints guard the only
+    // thing standing here.
+    REQUIRE(secondNumbering->describes(second));
+    REQUIRE_FALSE(prepared.restraints->describes(second));
+
+    const Result<renderer::StructuralOverlay> crossed = renderer::restraintSymbolOverlay(
+        second, *prepared.restraints, *secondNumbering, 0.004);
+    REQUIRE_FALSE(crossed.has_value());
+    CHECK(crossed.error().code == ErrorCode::FailedPrecondition);
+    // UNIQUE TO THE RESTRAINTS MESSAGE. "different mesh" would also match the
+    // numbering refusal, which is exactly how P5 survived.
+    CHECK_THAT(crossed.error().message, ContainsSubstring("prepared restraints"));
+}
+
+TEST_CASE("StructuralViz_AnEmptyArrowListStillRefusesABadScale", "[renderer][viz]") {
+    // THE GAP PROBE G12 FOUND: deleting `if (!isUsableArrowScale(scale))` from
+    // the overlay entry point SURVIVED every one of the 60 cases.
+    //
+    // WHY IT ALMOST DOESN'T MATTER, AND WHERE IT DOES. `displayArrowLength`
+    // repeats the identical check -- the same `isUsableArrowScale` predicate,
+    // the same ErrorCode, the same message -- so for a NON-EMPTY list the
+    // early guard is redundant and removing it is an equivalent mutant: the
+    // refusal just moves from before the loop to the first arrow inside it.
+    //
+    // WITH AN EMPTY LIST THE LOOP NEVER RUNS. Without the early guard a bad
+    // scale then yields a SUCCESSFUL EMPTY OVERLAY instead of a refusal, and
+    // the caller's bug is swallowed. That is the only observable difference,
+    // and it is the reason the guard is kept rather than deleted as duplicate.
+    //
+    // The contract is argument validation, not work-dependent validation: a
+    // caller passing an unusable scale has a bug whether or not it also
+    // passed anything to draw.
+    SolvedView part;
+    const meshing::Mesh& mesh = part.mesh();
+    const std::vector<renderer::NodalLoadArrow> none{};
+    const std::vector<renderer::ReactionArrow> noReactions{};
+
+    for (const double bad : {0.0, -1.0, std::numeric_limits<double>::quiet_NaN(),
+                             std::numeric_limits<double>::infinity()}) {
+        INFO("scale " << bad << " with no arrows at all");
+        const Result<renderer::StructuralOverlay> refused =
+            renderer::loadArrowOverlay(mesh, none, bad, 1.0);
+        REQUIRE_FALSE(refused.has_value());
+        CHECK(refused.error().code == ErrorCode::InvalidArgument);
+
+        // THE REFERENCE GUARD IS THE SAME SHAPE and the same redundancy, so
+        // it gets the same case rather than waiting for its own probe.
+        INFO("reference " << bad << " with no arrows at all");
+        const Result<renderer::StructuralOverlay> alsoRefused =
+            renderer::loadArrowOverlay(mesh, none, 1.0, bad);
+        REQUIRE_FALSE(alsoRefused.has_value());
+        CHECK(alsoRefused.error().code == ErrorCode::InvalidArgument);
+
+        // AND THE REACTION ENTRY POINT SHARES THE IMPLEMENTATION, so it must
+        // refuse on the same terms. One template, one set of guards -- which
+        // is the whole reason the two overlays cannot drift apart.
+        REQUIRE_FALSE(renderer::reactionArrowOverlay(mesh, noReactions, bad, 1.0).has_value());
+    }
+
+    // AND THE REFUSALS ARE NOT BLANKET: no arrows with a USABLE scale is a
+    // success that drew nothing, which is a different answer from an error.
+    const Result<renderer::StructuralOverlay> empty =
+        renderer::loadArrowOverlay(mesh, none, 1.0, 1.0);
+    REQUIRE(empty.has_value());
+    CHECK(empty->empty());
+    CHECK(empty->glyphs == 0);
+    CHECK(empty->skipped == 0);
+    CHECK(empty->tooSmall == 0);
+    // THE ACCOUNTING INVARIANT HOLDS AT ZERO TOO.
+    CHECK(empty->glyphs + empty->skipped + empty->tooSmall == none.size());
+}
+
+TEST_CASE("StructuralViz_AStaleDofNumberingIsRefusedNotTrusted", "[renderer][viz]") {
+    // THE GAP PROBE G18 FOUND: deleting `if (!numbering->describes(mesh))`
+    // from inspectNode SURVIVED all 60 cases. Nothing ever handed either entry
+    // point a numbering built for a different mesh generation.
+    //
+    // IT ALSO CORRECTS A NOTE OF MINE. I first recorded the guard as
+    // unreachable through the public API, reasoning that
+    // prepareStructuralRestraints binds restraints to the numbering they were
+    // prepared with -- so a disagreeing numbering would arrive with
+    // disagreeing restraints, and the restraints check would fire first. That
+    // is wrong: the two can be made to disagree independently, and this case
+    // is the construction.
+    //
+    // WHAT THE DEFECT WOULD LOOK LIKE: not a crash. `indicesOf` returns
+    // indices from the WRONG numbering, the ConstraintSet is asked about
+    // those, and a plausible-looking mask comes back for degrees of freedom
+    // that are not the node's -- so a support symbol is drawn for components
+    // that are not held.
+    //
+    // TWO EARLIER VERSIONS OF THIS FIXTURE FAILED, and both failures were the
+    // product's gates working rather than defects:
+    //
+    //   1. change the mesh control, requireReport, then solve
+    //      -> "meshing control 3 has no mesh that describes the model:
+    //          stale: the meshing intent changed"
+    //      requireReport regenerates the DOCUMENT, not the mesh.
+    //
+    //   2. also call mesher.generate, then solve
+    //      -> "load:1: its node:2 belongs to a different mesh generation, so
+    //          it names no node of this one"
+    //      `endLoadList` builds NodalForceLoads carrying a MeshStamp and a
+    //      NodeId, so the installed loads CANNOT survive a remesh. Re-solving
+    //      on a second mesh is not possible with this fixture at all.
+    //
+    // SO NO REMESH AND NO SECOND SOLVE. A numbering only has to fail
+    // `describes`, and `describes` is `mesh.owns(stamp) && node count` -- a
+    // MeshStamp identifies the BUILDER, so an INDEPENDENT DOCUMENT's numbering
+    // is stale with respect to this mesh however similar the two meshes are.
+    // That is also a real caller error: holding a numbering from another
+    // analysis.
+    SolvedView part;
+    const FaceName side{part.feature,
+                        FaceSelector{.role = FaceRole::Side, .entity = part.lines.at(0)}};
+
+    std::vector<structural::StructuralLoad> loads = part.endLoadList();
+    const std::vector<structural::StructuralRestraint> both{
+        structural::StructuralRestraint::fixedSupport(RestraintId::fromValue(1),
+                                                      part.startCap()),
+        structural::StructuralRestraint{
+            RestraintId::fromValue(2), side,
+            structural::RestraintComponents::along(structural::DofComponent::Uz)}};
+    REQUIRE(part.document
+                .modifyObject<structural::StructuralAnalysis>(
+                    ObjectId::fromValue(part.analysis.value()),
+                    [&](structural::StructuralAnalysis& object) -> Result<bool> {
+                        structural::StructuralAnalysisDefinition definition =
+                            object.definition();
+                        definition.loads = std::move(loads);
+                        definition.restraints = both;
+                        return object.setDefinition(std::move(definition));
+                    })
+                .has_value());
+
+    const structural::StructuralSolveOutcome outcome = part.solve();
+    const meshing::Mesh& mesh = part.mesh();
+    Result<structural::StructuralModel> model = structural::requireStructuralModel(
+        part.document, part.regenerator, part.mesher, part.control);
+    REQUIRE(model.has_value());
+    Result<structural::MeshDofMap> fresh =
+        structural::buildMeshDofMap(model->mesh().mesh());
+    REQUIRE(fresh.has_value());
+    Result<structural::PreparedRestraints> held =
+        structural::prepareStructuralRestraints(*model, *fresh, both);
+    INFO((held.has_value() ? std::string{} : held.error().message));
+    REQUIRE(held.has_value());
+
+    // AN INDEPENDENT DOCUMENT, whose numbering cannot describe the mesh above.
+    SolvedView other;
+    Result<structural::StructuralModel> otherModel = structural::requireStructuralModel(
+        other.document, other.regenerator, other.mesher, other.control);
+    REQUIRE(otherModel.has_value());
+    Result<structural::MeshDofMap> stale =
+        structural::buildMeshDofMap(otherModel->mesh().mesh());
+    REQUIRE(stale.has_value());
+
+    // THE PREMISE, ASSERTED RATHER THAN ASSUMED. If these two ever stopped
+    // holding, every refusal below would be vacuous and this case would be
+    // testing nothing -- so they are REQUIREs, and they are the first thing a
+    // failure here should point at.
+    REQUIRE(fresh->describes(mesh));
+    REQUIRE_FALSE(stale->describes(mesh));
+    // AND THE RESTRAINTS DO DESCRIBE THIS MESH, which is the whole point: the
+    // restraints check PASSES, so the numbering check is the only thing left
+    // between a stale DofIndex and a drawn support symbol.
+    REQUIRE(held->describes(mesh));
+
+    const meshing::NodeId node = held->nodes().front();
+
+    // THE PRECONDITION: with the CURRENT numbering everything works and the
+    // mask is populated, so the refusals below are about the numbering alone.
+    const Result<renderer::NodeResultInspection> good =
+        renderer::inspectNode(mesh, outcome.fields, node, &*held, &*fresh);
+    INFO((good.has_value() ? std::string{} : good.error().message));
+    REQUIRE(good.has_value());
+    REQUIRE(good->restrained);
+    REQUIRE_FALSE(good->restrainedComponents.isEmpty());
+
+    SECTION("inspectNode refuses it") {
+        const Result<renderer::NodeResultInspection> crossed =
+            renderer::inspectNode(mesh, outcome.fields, node, &*held, &*stale);
+        REQUIRE_FALSE(crossed.has_value());
+        CHECK(crossed.error().code == ErrorCode::FailedPrecondition);
+        CHECK_THAT(crossed.error().message, ContainsSubstring("mesh generation"));
+    }
+
+    SECTION("the restraint overlay refuses it too") {
+        // THE SAME GUARD IN THE OTHER ENTRY POINT. One construction, both call
+        // sites, because a stale numbering is equally wrong in each.
+        const Result<renderer::StructuralOverlay> overlay =
+            renderer::restraintSymbolOverlay(mesh, *held, *stale, 0.004);
+        REQUIRE_FALSE(overlay.has_value());
+        CHECK(overlay.error().code == ErrorCode::FailedPrecondition);
+        CHECK_THAT(overlay.error().message, ContainsSubstring("mesh generation"));
+
+        // AND WITH THE FRESH NUMBERING IT DRAWS, so the refusal is not blanket.
+        REQUIRE(renderer::restraintSymbolOverlay(mesh, *held, *fresh, 0.004).has_value());
     }
 }

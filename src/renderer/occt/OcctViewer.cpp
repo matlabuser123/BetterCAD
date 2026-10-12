@@ -35,6 +35,7 @@
 #include <windows.h>
 
 #include "OcctMeshPresentation.hpp"
+#include "OcctOverlayPresentation.hpp"
 #include "core/geometry/occt/OcctBody.hpp"
 #include "core/geometry/occt/OcctGuard.hpp"
 
@@ -327,6 +328,8 @@ std::string_view toString(PresentationKind kind) noexcept {
         return "a CAD body";
     case PresentationKind::EngineeringMesh:
         return "an engineering mesh";
+    case PresentationKind::Overlay:
+        return "a structural overlay";
     }
     return "an unknown presentation";
 }
@@ -393,6 +396,38 @@ namespace {
 }
 
 } // namespace
+
+Result<PresentationId> Viewer::displayOverlay(ObjectId source,
+                                              const StructuralOverlay& overlay) {
+    if (!source.isValid()) {
+        return makeError(ErrorCode::InvalidArgument,
+                         "viewer: the invalid handle cannot name the source of an overlay");
+    }
+    // NOTHING TO DRAW IS A CALLER ERROR, not an empty presentation to manage.
+    // The overlay functions already report `skipped` for the glyphs they left
+    // out, so an empty overlay means every glyph was skipped or there were
+    // none -- either way the caller knows more about it than the viewer does.
+    if (overlay.empty()) {
+        return makeError(ErrorCode::FailedPrecondition,
+                         std::format("viewer: an overlay of {} has no segments to display",
+                                     toString(overlay.role)));
+    }
+    return geometry::occt::guardKernelCall(
+        "viewer overlay display", [&]() -> Result<PresentationId> {
+            Handle(occt::OverlayPresentation) presentation =
+                new occt::OverlayPresentation(overlay);
+            // The display mode is pinned for the reason displayMesh records:
+            // Compute returns early for any mode but 0.
+            presentation->SetDisplayMode(0);
+            impl_->context->Display(presentation, 0, -1, false);
+
+            const PresentationId id = PresentationId::fromValue(++impl_->lastPresentation);
+            impl_->displayed.push_back(
+                DisplayedObject{id, source, PresentationKind::Overlay, true, false});
+            impl_->presentations.push_back(presentation);
+            return id;
+        });
+}
 
 Result<PresentationId> Viewer::displayDeformedMesh(ObjectId source, const MeshView& view,
                                                    std::span<const double> positions,

@@ -49,6 +49,10 @@
 // assumed -- see docs/verification/INFRA-VIEWER-001/.
 namespace bettercad::renderer {
 
+/// Forward-declared rather than included: `StructuralOverlay.hpp` reaches the
+/// structural module, and `displayOverlay` only takes a reference to one.
+struct StructuralOverlay;
+
 /// Where a standard view looks from.
 enum class StandardView : std::uint8_t {
     Front,
@@ -103,6 +107,13 @@ enum class PresentationKind : std::uint8_t {
     CadBody,
     /// An engineering mesh, drawn through batched primitive arrays.
     EngineeringMesh,
+    /// A structural overlay: load arrows, reaction arrows or restraint
+    /// symbols, drawn as line segments over whatever else is displayed.
+    ///
+    /// Named `Overlay` rather than `StructuralOverlay` so the KIND and the
+    /// struct it depicts do not share a name. The enumerator is scoped, so
+    /// both spellings would compile; one of them would just read badly.
+    Overlay,
 };
 
 [[nodiscard]] BETTERCAD_RENDERER_EXPORT std::string_view toString(PresentationKind kind) noexcept;
@@ -260,6 +271,22 @@ public:
     [[nodiscard]] Result<PresentationId> displayDeformedMesh(
         ObjectId source, const MeshView& view, std::span<const double> positions,
         MeshStyle style = MeshStyle::ShadedWithEdges);
+
+    /// Displays  overlay: load arrows, reaction arrows or restraint symbols.
+    ///
+    /// AN ANNOTATION, NOT A RESULT. The overlay is a list of line segments in
+    /// SI metres that `renderer::loadArrowOverlay`, `reactionArrowOverlay` or
+    /// `restraintSymbolOverlay` resolved from the glyph data and the canonical
+    /// mesh. Displaying it touches no mesh, no result and no document.
+    ///
+    /// NOT SELECTABLE, deliberately: an arrow drawn over a mesh must not come
+    /// between the user and the element they were trying to pick.
+    ///
+    /// Refuses an overlay with no segments -- nothing to draw is a caller
+    /// error rather than an empty presentation to manage, and the overlay
+    /// functions already report `skipped` for the glyphs they left out.
+    [[nodiscard]] Result<PresentationId> displayOverlay(ObjectId source,
+                                                        const StructuralOverlay& overlay);
 
     /// The mesh generation a mesh presentation is showing.
     [[nodiscard]] Result<meshing::MeshStamp> meshStampOf(PresentationId presentation) const;

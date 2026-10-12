@@ -1468,13 +1468,14 @@ tuned on one body shape will reject a legitimate mesh of another.
 
 ## FEA Visualisation / Inspection
 
-**IN PROGRESS, 18 of 23.** The headless inspection layer, the DEFORMED
-display and the FOUR NODAL contours are complete and mutation-tested. What
-remains is the three ELEMENT contours -- blocked, not unfinished -- and the
-two glyph boxes. Evidence:
+**IN PROGRESS, 20 of 23.** The headless inspection layer, the DEFORMED
+display, the FOUR NODAL contours and the LOAD AND RESTRAINT GLYPHS are
+complete and mutation-tested. What remains is the three ELEMENT contours
+alone -- blocked, not unfinished. Evidence:
 [docs/verification/P17-VIZ-001/](docs/verification/P17-VIZ-001/README.md),
-and the display surface specifically in
-[DISPLAY.md](docs/verification/P17-VIZ-001/DISPLAY.md).
+the display surface in
+[DISPLAY.md](docs/verification/P17-VIZ-001/DISPLAY.md), and the glyphs in
+[DISPLAY_GLYPHS.md](docs/verification/P17-VIZ-001/DISPLAY_GLYPHS.md).
 
 The rule applied to the boxes below, stated so it can be checked: **tick a box
 only where this milestone's own evidence demonstrates the deliverable end to
@@ -1499,11 +1500,12 @@ been measured on screen at 1 distinct colour against 4807.
 * [x] Element inspection
 * [x] Node displacement inspection
 * [x] Support reaction inspection
-* [ ] Load arrows — `LoadGlyph` and `NodalLoadArrow` built and qualified,
-      resultants read from the prepared contributions, sign and scale each
-      mutation-killed; no glyph is drawn
-* [ ] Restraint symbols — `RestraintGlyph` built and qualified, components
-      distinguished rather than flattened to fixed; no symbol is drawn
+* [x] Load arrows — drawn as five segments per arrow (one shaft, four barbs)
+      in SI metres through the one existing conversion, measured on screen at
+      278 px over a 36308 px mesh with the camera held still. ADR-045
+* [x] Restraint symbols — one bar per constrained component, centred on the
+      node and aligned with that axis, so the bar COUNT is the constrained
+      DOF count and the directions are which ones. ADR-045
 * [x] Boundary-set highlighting
 * [x] Worst / highest-result navigation
 * [x] Clear stale-result visual state
@@ -1513,23 +1515,40 @@ been measured on screen at 1 distinct colour against 4807.
 * [x] Evidence recorded
 
 ```text
-QUALIFIED AT b04a9e1, which is BEFORE the display surface below.
-            The deformed display and the nodal contours are built and
-            tested but NOT yet requalified.
+QUALIFIED THREE TIMES, each run covering what the one before it did
+            not. The figures below are the LATEST, read from the logs.
 
-            3792 / 3792 in debug-ext, release-ext and debug-shared-ext
-            937 x 5 in release-ext and debug-ext
-            0 warnings, 0 errors, -Werror on
-            eight tree hashes identical before and after
-            qualify.cmd exit 0, 0 stages failed, 3h13m
+            b04a9e1   the inspection layer      11 of 23
+            ec68076   the display surface        18 of 23
+            THIS RUN  the load and restraint glyphs, 20 of 23
+
+            3825 / 3825 in debug-ext, release-ext and debug-shared-ext
+            970 x 5 in release-ext and debug-ext
+            0 compiler warnings, 0 errors, -Werror on
+            17 stages, every one exit 0, 0 stage(s) failed
+            no-op rebuild exit 0 in all three, so the binaries that ran
+              the tests are the ones the build produced
+            eight tree hashes identical before and after, and matched
+              against a SECOND fingerprint taken independently
+            qualify.cmd exit 0, 3h21m00s
 
             This run also REQUALIFIES P17-VALID-001, which this milestone
             modified: StructuralSolveOutcome gained `fields` and
             `reactions`, both already computed one statement earlier and
             discarded. That debt is discharged, not assumed away.
 
-MUTATION    69 probes, 60 killed, 7 unreachable, 2 equivalent mutants
-            ELEVEN real test gaps found and closed
+MUTATION    113 probe runs across the whole milestone: 83 before the
+            glyphs, 30 for them.
+            The glyph work: 30 runs over 27 distinct mutations --
+            25 killed, 1 equivalent mutant kept and documented
+            (G20), 1 void and superseded (G11). SIX real test gaps
+            closed.
+            THE TWO DETECTION METHODS FOUND DISJOINT SETS: four of
+            the six gaps came from READING the pristine sources
+            while the probes were rewriting the working copies, and
+            no mutation in the batch could reach any of them; the
+            other two came from mutations SURVIVING. Neither method
+            would have found what the other did.
 
 THE ELEMENT CONTOURS ARE BLOCKED, and the blocker is a scope decision
 rather than a defect:
@@ -1552,9 +1571,10 @@ rather than a defect:
     (StructuralViz_AnElementChannelNeedsTheOwningTetrahedron). What is
     absent is the mapping, not the colouring.
 
-NEXT        either the meshing triangle-to-tetrahedron mapping (a scope
-            decision, and it touches a qualified module), or the load and
-            restraint GLYPHS, which need no new capability.
+NEXT        the meshing triangle-to-tetrahedron mapping, and it is the ONLY
+            remaining item. It is a SCOPE DECISION and it touches a
+            qualified module, so it is not Claude's to start.
+            P17-CMD-001 remains NOT AUTHORIZED.
 ```
 
 ### Critical visualisation rule

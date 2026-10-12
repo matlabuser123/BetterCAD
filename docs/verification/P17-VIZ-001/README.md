@@ -32,10 +32,15 @@ NOT  a mutation of the P16 mesh, the CAD geometry, the document parameters
 | [MEASUREMENTS.md](MEASUREMENTS.md) | every measured table: channels, cardinality, ranges, extremes, deformation, source guards, immutability, currentness, inspection, overlays, the public kernel, the brief's prohibitions, and the two shared-build traps |
 | [ADVERSARIAL_REVIEW.md](ADVERSARIAL_REVIEW.md) | the gate, and the defect it found: a counter declared, gated on, asserted and never written, hiding a complete uniformly zero field that all 19 earlier tests accepted |
 | [MUTATION.md](MUTATION.md) | 83 probes over four batches, 74 killed, 7 unreachable, 2 equivalent mutants — and the **fifteen real test gaps** they found, with why nothing caught each |
+| [MUTATION_GLYPHS.md](MUTATION_GLYPHS.md) | the glyph probes: two batches plus P5, and why the two methods found DISJOINT sets -- six gaps from reading the pristine sources, two from surviving mutations, and one equivalent mutant kept rather than tested |
 | [ADR-043](../../architecture/decisions/ADR-043-a-deformed-display-is-an-override-position-buffer-through-the-one-existing-conversion.md) | why the deformed buffer is an override position span through the ONE existing conversion, and the two designs that were rejected |
+| [ADR-045](../../architecture/decisions/ADR-045-a-glyph-overlay-is-a-list-of-segments-in-si-metres-and-the-glyph-data-carries-no-position.md) | why an overlay is a list of SEGMENTS in SI metres resolved in the headless layer, and the two designs that were rejected |
 | [FREEZE.md](FREEZE.md) | the three-preset qualification at b04a9e1, the eight tree hashes before and after, and the pre-freeze checks |
 | [FREEZE_DISPLAY.md](FREEZE_DISPLAY.md) | the display surface's own three-preset qualification — 3806 x 3, 951 x 5, and why there were three attempts |
+| [FREEZE_GLYPHS.md](FREEZE_GLYPHS.md) | the glyphs own three-preset qualification -- 3825 x 3, 970 x 5, 3h21m00s, two fingerprint witnesses, and the two false starts where `cmd /c` ran nothing and returned 0 |
 | [DISPLAY.md](DISPLAY.md) | the deformed display and the contours: the pixel measurements, the 1-versus-4807 colour count, and the element-contour blocker diagnosed from a real failure |
+| [DISPLAY_GLYPHS.md](DISPLAY_GLYPHS.md) | the load and restraint glyphs: the conventions a test can hold, the 278-pixel measurement and why it is not tuned away, and the five gaps the review found before a probe ran |
+| [DEFECT_RESTRAINT_COMPONENTS.md](DEFECT_RESTRAINT_COMPONENTS.md) | a defect in COMMITTED, QUALIFIED code: inspectNode unioned every restraint resolution, so with two different masks in one analysis every restrained node reported FIXED |
 | [ODR_ROOT_CAUSE.md](ODR_ROOT_CAUSE.md) | a type-name collision I introduced, why every cheap measurement exonerated it, and the one command that found it |
 | [REMAINING_SCOPE.md](REMAINING_SCOPE.md) | what is **not** done, and why the milestone stays open |
 

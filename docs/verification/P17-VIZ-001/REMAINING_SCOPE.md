@@ -58,10 +58,10 @@ the FOUR NODAL contours            ADR-044, a colour per facet CORNER
 ```
 
 ```text
-47 targeted cases, 37 headless + 10 that need a GPU
-3806 / 3806 x 3 presets, 951 x 5 in two; the display surface requalified
-83 mutation probes: 74 killed, 7 unreachable, 2 equivalent, 0 void
-15 real test gaps found and closed
+66 targeted cases, 52 headless + 14 that need a GPU
+3825 / 3825 x 3 presets, 970 x 5 in two; the glyphs qualified, 3h21m00s
+113 mutation probe runs: 83 before the glyphs, 30 for them
+21 real test gaps found and closed (15 + 6)
 ```
 
 ## Not built — and this is why the milestone stays open
@@ -86,14 +86,13 @@ THE THREE ELEMENT CONTOURS: BLOCKED, not unfinished.
   absent is the mapping, not the colouring
   (StructuralViz_AnElementChannelNeedsTheOwningTetrahedron).
 
-THE LOAD AND RESTRAINT GLYPHS
-  LoadGlyph, NodalLoadArrow, RestraintGlyph and ReactionArrow are built,
-  tested and qualified -- the resultants read from the prepared
-  contributions, and the sign, the scale, the zero-vector case and the
-  components-not-flattened-to-fixed case are each mutation-killed. Nothing
-  draws them, and they need NO new capability: a glyph is a position, a
-  direction and a length, and the viewer already displays arbitrary
-  geometry.
+THE LOAD AND RESTRAINT GLYPHS: DONE and qualified (ADR-045).
+  Drawn as segments in SI metres through the one existing conversion, and
+  measured on screen. What remains unDRAWN is LoadGlyph, deliberately: a
+  pressure or a traction has no single point and gravity has no location at
+  all, so a per-facet pressure arrow needs facet centroids through
+  GeometryMeshMap. That is a separate, larger piece, named here rather than
+  half-built.
 
 THE Qt INSPECTOR SURFACE
   No panel, no channel selector, no legend widget, no stale badge, no

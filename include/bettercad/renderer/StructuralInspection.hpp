@@ -34,6 +34,7 @@
 #include <bettercad/renderer/MeshInspection.hpp>
 #include <bettercad/renderer/MeshView.hpp>
 #include <bettercad/structural/StructuralConstraints.hpp>
+#include <bettercad/structural/StructuralDof.hpp>
 #include <bettercad/structural/StructuralLoad.hpp>
 #include <bettercad/structural/StructuralLoadVector.hpp>
 #include <bettercad/structural/StructuralRestraint.hpp>
@@ -225,9 +226,28 @@ struct ReactionInspection {
 /// without the prepared restraints in hand, and then `restrained` is false
 /// because it is UNKNOWN rather than because it was checked. A UI without them
 /// must not draw a support symbol from this.
+///
+/// @p numbering IS REQUIRED FOR `restrainedComponents`, and null leaves that
+/// mask EMPTY -- which is the same "unknown" that a null @p restraints means
+/// for `restrained`.
+///
+/// WHY IT IS NEEDED, because the first version of this function did without
+/// it and was WRONG. `PreparedRestraints` holds the `ConstraintSet` but not
+/// the degree-of-freedom numbering, so "which components are held at THIS
+/// node" cannot be answered from the resolutions: `RestraintResolution`
+/// carries a mask and a node COUNT, never a node list. The original code
+/// unioned every resolution's mask unconditionally, so with a fixed support
+/// and a Uz-only support in the same analysis every restrained node reported
+/// FIXED -- and a UI drawing a support symbol from it drew the wrong support.
+///
+/// With @p numbering the answer is exact and comes from the owners: the DOF
+/// index of each component from P17-DOF's map, and whether it is constrained
+/// from P17-BC's own `ConstraintSet`. Nothing is unioned and nothing is
+/// inferred.
 [[nodiscard]] BETTERCAD_RENDERER_EXPORT Result<NodeResultInspection>
 inspectNode(const meshing::Mesh& mesh, const structural::RecoveredFields& fields,
-            meshing::NodeId node, const structural::PreparedRestraints* restraints);
+            meshing::NodeId node, const structural::PreparedRestraints* restraints,
+            const structural::MeshDofMap* numbering = nullptr);
 
 /// The inspection of @p element.
 [[nodiscard]] BETTERCAD_RENDERER_EXPORT Result<ElementResultInspection>

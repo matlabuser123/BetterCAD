@@ -15,6 +15,7 @@
 #include <bettercad/renderer/StructuralInspection.hpp>
 
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <format>
 
@@ -64,7 +65,8 @@ StructuralDisplayState structuralDisplayState(const Document& document,
 Result<NodeResultInspection> inspectNode(const meshing::Mesh& mesh,
                                    const structural::RecoveredFields& fields,
                                    meshing::NodeId node,
-                                   const structural::PreparedRestraints* restraints) {
+                                   const structural::PreparedRestraints* restraints,
+                                   const structural::MeshDofMap* numbering) {
     // THE IDENTITY-SAFE LOOKUP, which takes the mesh and refuses a foreign
     // one. This is the guard that stops an old selection binding to a
     // remeshed result because the numeric id repeated.
@@ -101,13 +103,46 @@ Result<NodeResultInspection> inspectNode(const meshing::Mesh& mesh,
         }
         const std::span<const meshing::NodeId> held = restraints->nodes();
         out.restrained = std::ranges::binary_search(held, node);
-        if (out.restrained) {
-            // WHICH components, accumulated over every restraint that names
-            // this node -- a union, which is what a constrained set is. Read
-            // from the resolutions' own masks; nothing is inferred.
-            for (const structural::RestraintResolution& resolution : restraints->resolutions()) {
-                out.restrainedComponents =
-                    out.restrainedComponents.unionWith(resolution.components);
+        if (out.restrained && numbering != nullptr) {
+            if (!numbering->describes(mesh)) {
+                return makeError(ErrorCode::FailedPrecondition,
+                                 "this degree-of-freedom numbering was built for a different "
+                                 "mesh generation");
+            }
+            // WHICH COMPONENTS, ASKED OF THE OWNERS ONE DOF AT A TIME: the
+            // index from P17-DOF's numbering, the verdict from P17-BC's own
+            // ConstraintSet. Nothing is unioned and nothing is inferred.
+            //
+            // THE ORIGINAL CODE UNIONED EVERY RESOLUTION'S MASK, because
+            // RestraintResolution carries a mask and a node COUNT but never a
+            // node list, so it could not tell which restraints named this
+            // node. With a fixed support and a Uz-only support in one
+            // analysis, every restrained node reported FIXED. A fixture whose
+            // two restraints have DIFFERENT masks is the only thing that can
+            // see it -- with one restraint, or two of equal mask, the union is
+            // the right answer by accident, which is why the first round of
+            // tests missed it.
+            const Result<std::array<structural::DofIndex, structural::kDofsPerNode>> indices =
+                numbering->indicesOf(node);
+            if (!indices.has_value()) {
+                return makeError(indices.error().code, indices.error().message);
+            }
+            for (std::size_t which = 0; which < structural::kDofsPerNode; ++which) {
+                if (restraints->constraints().contains((*indices)[which])) {
+                    out.restrainedComponents.add(structural::kDofComponents[which]);
+                }
+            }
+            // A NODE THE PREPARED RESTRAINTS NAME MUST HOLD AT LEAST ONE
+            // CONSTRAINED DOF. The two answers come from different objects --
+            // `nodes()` and the ConstraintSet -- so disagreement means they
+            // were built from different inputs, which is worth refusing
+            // rather than drawing.
+            if (out.restrainedComponents.isEmpty()) {
+                return makeError(
+                    ErrorCode::Internal,
+                    std::format("node {} is named by the prepared restraints and yet none of its "
+                                "degrees of freedom is in the constraint set",
+                                node.value()));
             }
         }
     }

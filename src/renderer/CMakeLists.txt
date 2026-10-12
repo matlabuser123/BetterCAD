@@ -26,8 +26,10 @@ bettercad_add_library(bettercad_renderer
         MeshView.cpp
         StructuralContour.cpp
         StructuralInspection.cpp
+        StructuralOverlay.cpp
         StructuralResultView.cpp
         occt/OcctMeshPresentation.cpp
+        occt/OcctOverlayPresentation.cpp
         occt/OcctViewer.cpp
     PUBLIC_LINK
         BetterCAD::core
