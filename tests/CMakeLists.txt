@@ -54,6 +54,7 @@ bettercad_add_executable(bettercad_tests
         structural/StructuralReactionTests.cpp
         structural/StructuralValidationTests.cpp
         structural/StructuralLoadTests.cpp
+        structural/StructuralCommandTests.cpp
         structural/Tet4ElementTests.cpp
         drawing/AnnotationTests.cpp
         drawing/AssemblyDrawingTests.cpp

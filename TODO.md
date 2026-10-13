@@ -16,8 +16,18 @@ Prerequisite:
            P16 — Meshing — QUALIFIED (P16-QUAL-001, 2026-10-06)
 
 Current milestone:
-           P17-VIZ-001 — FEA Visualisation / Inspection. AUTHORIZED
-           2026-10-11 by an explicit scope decision. In progress.
+           P17-CMD-001 — Commands / Undo / Redo. AUTHORIZED
+           2026-10-13 by an explicit scope decision. In progress.
+
+           The line that stood under "Next" said "NOT AUTHORIZED:
+           P17-VIZ-001 passing will not be permission to start it", and it
+           did its job: it stopped the milestone being started on the
+           momentum of the one before. The owner then authorized it, which
+           is the only thing that could.
+
+Completed in P17:
+           P17-VIZ-001 — FEA Visualisation / Inspection. COMPLETE at
+           23 of 23, qualified at e795acb on 2026-10-13.
 
 Qualified:
            P0–P10 — BetterCAD v0.1.0
@@ -29,8 +39,9 @@ Qualified:
            P16 — Meshing
 
 Next:
-           P17-CMD-001 — Commands / Undo / Redo. NOT AUTHORIZED:
-           P17-VIZ-001 passing will not be permission to start it.
+           P17-PERSIST-001 — Structural Analysis Persistence. NOT
+           AUTHORIZED: P17-CMD-001 passing will not be permission to start
+           it.
 
 P17 objective:
            authoritative CAD / material / mesh state
@@ -1633,25 +1644,41 @@ Canonical history contains analysis definitions, loads, restraints and solver
 settings. It does NOT contain `K`, `F`, displacement arrays, stress arrays or
 any generated solver result.
 
-* [ ] Create-analysis command
-* [ ] Add-load command
-* [ ] Edit-load command
-* [ ] Remove-load command
-* [ ] Add-restraint command
-* [ ] Edit-restraint command
-* [ ] Remove-restraint command
-* [ ] Solver-settings command
-* [ ] Undo exact
-* [ ] Redo exact
-* [ ] A failed command is atomic
-* [ ] Redo invalidation correct
-* [ ] Geometry references preserved
-* [ ] The FEA result is invalidated correctly
-* [ ] No solver arrays in canonical history
-* [ ] Determinism PASS
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Create-analysis command — wraps AddObjectCommand; redo restores the
+      SAME AnalysisId, because a result records which analysis it came from
+* [x] Add-load command — appended, so the order stays the users; refuses a
+      duplicate LoadId and a non-finite value through validate(StructuralLoad)
+* [x] Edit-load command — the whole record replaced IN PLACE, so a
+      multi-field edit cannot half-apply and the position survives (probe C8)
+* [x] Remove-load command — by identity, not position; undo restores it at
+      the index it held
+* [x] Add-restraint command — refuses a duplicate RestraintId and an empty
+      component mask through P17-BCs own validate(StructuralRestraint)
+* [x] Edit-restraint command — face AND mask together, as one validated
+      record. No geometry rebinding and no nearby-face fallback
+* [x] Remove-restraint command — same id, face, mask and position on undo
+* [x] Solver-settings command — the settings became CANONICAL to make this
+      possible (ADR-047); refused through P17-SOLVEs own validate
+* [x] Undo exact — of CONTENT. Checked by an independent canonical
+      projection; 50 undo/redo cycles keep the value bit for bit
+* [x] Redo exact — assigns the stored after-state; nothing is inverted, so
+      there is no arithmetic to drift
+* [x] A failed command is atomic — nine refusal shapes, each leaving the
+      canonical state, the undo depth and the result currentness unchanged
+* [x] Redo invalidation correct — a SUCCESSFUL new command clears the redo
+      branch; a FAILED one does not, which is the frameworks own convention
+* [x] Geometry references preserved — a FaceName survives execute, undo and
+      redo exactly; no facets, nodes or coordinates are stored
+* [x] The FEA result is invalidated correctly — through the objects REVISION
+      and P17-DATAs own two functions. No new mechanism, no flag
+* [x] No solver arrays in canonical history — 16 compile-fail cases prove
+      none CAN be stored, not merely that none was
+* [x] Determinism PASS — 32 cases x 5 under --repeat until-fail:5, and
+      semantic agreement across all three presets
+* [x] Adversarial review PASS — 16 probe runs over 13 mutations; THREE real
+      test gaps found and closed, 1 equivalent mutant documented
+* [x] Regression PASS — 3883/3883 x 3 presets, 1012 x 5 in two, 0 warnings
+* [x] Evidence recorded — docs/verification/P17-CMD-001/
 
 P16 enforced the equivalent rule with compile-fail cases rather than review —
 a command API that mentions a node or an element does not compile. Consider the

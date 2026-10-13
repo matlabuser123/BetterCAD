@@ -810,11 +810,29 @@ struct ValidatablePart {
                                                               analysis);
     }
 
+    /// Solves under @p settings, which are INSTALLED IN THE DOCUMENT first.
+    ///
+    /// ADR-047 made the solver settings canonical, so `solveStructuralAnalysis`
+    /// reads them from the analysis definition rather than taking them as an
+    /// argument. Installing them here keeps every caller's intent -- "solve
+    /// under these settings" -- and exercises the path the solve actually
+    /// reads, which a function argument could not.
+    ///
+    /// NOT const, because installing the settings mutates the document.
     [[nodiscard]] Result<structural::StructuralSolveOutcome>
     solve(const structural::SolverSettings& settings = {},
-          const structural::EquilibriumTolerance& tolerance = {}) const {
+          const structural::EquilibriumTolerance& tolerance = {}) {
+        REQUIRE(document
+                    .modifyObject<structural::StructuralAnalysis>(
+                        analysis,
+                        [&settings](structural::StructuralAnalysis& object) -> Result<bool> {
+                            structural::StructuralAnalysisDefinition updated = object.definition();
+                            updated.solver = settings;
+                            return object.setDefinition(std::move(updated));
+                        })
+                    .has_value());
         return structural::solveStructuralAnalysis(document, regenerator, mesher, analysis,
-                                                   settings, Point3D{}, tolerance);
+                                                   Point3D{}, tolerance);
     }
 
     /// Every node of the end cap pushed along +Z. A fixed start cap resists it.

@@ -653,7 +653,6 @@ struct StructuralSolveOutcome {
 [[nodiscard]] BETTERCAD_STRUCTURAL_EXPORT Result<StructuralSolveOutcome>
 solveStructuralAnalysis(const Document& document, const features::Regenerator& regenerator,
                         const meshing::Mesher& mesher, AnalysisId analysis,
-                        const SolverSettings& settings = {},
                         const Point3D& origin = Point3D{},
                         const EquilibriumTolerance& tolerance = {});
 

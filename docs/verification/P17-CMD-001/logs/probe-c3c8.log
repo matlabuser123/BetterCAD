@@ -1,0 +1,23 @@
+######## baseline, with the two new position cases ########
+  build OK, warnings: 0
+  100% tests passed out of 356
+  BASELINE GREEN
+######## C3: the before-state recorded even when the apply failed ########
+Tue Oct 13 14:45:31 EAST 2026
+C3  before_ recorded on failure    *** STILL SURVIVED ***
+######## C8: an edit erases and appends, losing the position ########
+Tue Oct 13 14:48:29 EAST 2026
+C8  an edit reorders the loads     KILLED  (1 tests failed out of 356)
+        	2677 - unit.StructuralCommand_AnEditKeepsTheLoadAtItsOwnPosition (Failed)
+######## C8b: the same mutation on the RESTRAINT path ########
+Tue Oct 13 14:51:28 EAST 2026
+C8b a restraint edit reorders      KILLED  (1 tests failed out of 356)
+        	2678 - unit.StructuralCommand_AnEditKeepsTheRestraintAtItsOwnPosition (Failed)
+######## RESTORE ########
+[4/4] Linking CXX executable bin\bettercad_tests.exe
+  restored: 02a20d191767
+  100% tests passed out of 356
+  
+  Total Test time (real) =  84.75 sec
+######## C3C8 DONE ########
+Tue Oct 13 14:57:15 EAST 2026

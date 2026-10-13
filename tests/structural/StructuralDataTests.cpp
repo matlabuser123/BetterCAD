@@ -370,11 +370,21 @@ TEST_CASE("StructuralData_AnAnalysisIsADocumentObjectThatHoldsOnlyIntent",
         structural::StructuralAnalysisMode mode;
         std::vector<structural::StructuralLoad> loads;
         std::vector<structural::StructuralRestraint> restraints;
+        /// Joined the mirror in P17-CMD-001 (ADR-047), and this line is where
+        /// that field's authority is stated: the solver settings are CANONICAL
+        /// INTENT. They are a chosen algorithm and two tolerances -- a decision
+        /// a user makes and a command edits -- and not a number measured from a
+        /// mesh or read back out of a factorisation.
+        ///
+        /// They had to become canonical for a command to edit them: settings
+        /// that lived only as an argument to the solve could not be undone,
+        /// redone or persisted.
+        structural::SolverSettings solver;
     };
     static_assert(sizeof(StructuralAnalysisDefinition) == sizeof(PermittedDefinition),
-                  "the analysis definition holds a control, a mode, the loads and the "
-                  "restraints -- nothing else. A displacement array, a result, a mesh handle, a "
-                  "facet set or a constrained DOF list added to it breaks this");
+                  "the analysis definition holds a control, a mode, the loads, the restraints "
+                  "and the solver settings -- nothing else. A displacement array, a result, a "
+                  "mesh handle, a facet set or a constrained DOF list added to it breaks this");
 
     // And derived state still cannot be put in it, which is the property the
     // size equality is a proxy for.

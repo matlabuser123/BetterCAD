@@ -15,6 +15,13 @@ Result<void> validate(const StructuralAnalysisDefinition& definition) {
         return makeError(ErrorCode::InvalidArgument,
                          "structural analysis: the invalid handle cannot name the mesh to analyse");
     }
+    // THE SOLVER SETTINGS, THROUGH THEIR OWN VALIDATOR (ADR-047). Not a second
+    // copy of the rules: `validate(SolverSettings)` owns what a recognised
+    // algorithm and a usable tolerance are, and it is the same function the
+    // solve uses.
+    if (const Result<void> settings = validate(definition.solver); !settings.has_value()) {
+        return std::unexpected(settings.error());
+    }
     return Result<void>{};
 }
 

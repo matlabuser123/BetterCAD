@@ -1,0 +1,13 @@
+######## baseline with the apply-failure case ########
+  build OK, warnings: 0
+  100% tests passed out of 357
+######## C3 again ########
+C3  KILLED  (1 tests failed out of 357)
+        	2669 - unit.StructuralCommand_ACommandWhoseApplyFailedCannotBeUndone (Failed)
+--- restore and rebuild ---
+[4/4] Linking CXX executable bin\bettercad_tests.exe
+  100% tests passed out of 357
+  
+  Total Test time (real) =  82.83 sec
+C3-AGAIN-DONE verdict=killed
+Tue Oct 13 16:39:17 EAST 2026

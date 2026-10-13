@@ -515,8 +515,7 @@ StructuralValidationReport validateStructuralAnalysisForSolve(
 Result<StructuralSolveOutcome>
 solveStructuralAnalysis(const Document& document, const features::Regenerator& regenerator,
                         const meshing::Mesher& mesher, AnalysisId analysis,
-                        const SolverSettings& settings, const Point3D& origin,
-                        const EquilibriumTolerance& tolerance) {
+                        const Point3D& origin, const EquilibriumTolerance& tolerance) {
     // --- the gate ------------------------------------------------------------
     //
     // ONE IMPLEMENTATION OF THE ORDER. This calls the validator rather than
@@ -583,7 +582,12 @@ solveStructuralAnalysis(const Document& document, const features::Regenerator& r
         return makeError(system.error().code, system.error().message);
     }
     Result<SolvedSystem> solution =
-        solveStructuralSystem(*system, restraints->constraints(), settings);
+        // THE SETTINGS COME FROM THE DOCUMENT (ADR-047), not from a parameter.
+        // An analysis whose solver settings lived outside the document could
+        // not be undone, redone or persisted -- and `validate(definition)`
+        // has already run them through `validate(SolverSettings)`, so by here
+        // they are known good.
+        solveStructuralSystem(*system, restraints->constraints(), definition.solver);
     if (!solution.has_value()) {
         return makeError(solution.error().code, solution.error().message);
     }

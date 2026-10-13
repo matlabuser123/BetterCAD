@@ -36,14 +36,6 @@
 
 namespace bettercad::structural {
 
-std::string_view toString(SolverAlgorithm algorithm) noexcept {
-    switch (algorithm) {
-    case SolverAlgorithm::SimplicialLdlt:
-        return "simplicial_ldlt";
-    }
-    return "unknown";
-}
-
 std::string_view toString(SolveProblem problem) noexcept {
     switch (problem) {
     case SolveProblem::InvalidSettings:
@@ -66,32 +58,6 @@ std::string_view toString(SolveProblem problem) noexcept {
         return "source_mismatch";
     }
     return "unknown";
-}
-
-Result<void> validate(const SolverSettings& settings) {
-    switch (settings.algorithm) {
-    case SolverAlgorithm::SimplicialLdlt:
-        break;
-    default:
-        return makeError(ErrorCode::InvalidArgument,
-                         "the solver algorithm is not one this build recognises");
-    }
-    // A NaN threshold is refused here rather than left to decide something
-    // inside a comparison: `r < NaN` is false, so it would reject every solve
-    // for a reason no diagnostic could explain.
-    if (!std::isfinite(settings.relativeResidualTolerance) ||
-        settings.relativeResidualTolerance <= 0.0) {
-        return makeError(ErrorCode::InvalidArgument,
-                         std::format("the relative residual tolerance must be finite and "
-                                     "positive, not {}",
-                                     settings.relativeResidualTolerance));
-    }
-    if (!std::isfinite(settings.pivotFloor) || settings.pivotFloor <= 0.0) {
-        return makeError(ErrorCode::InvalidArgument,
-                         std::format("the pivot floor must be finite and positive, not {}",
-                                     settings.pivotFloor));
-    }
-    return {};
 }
 
 // ---------------------------------------------------------------------------

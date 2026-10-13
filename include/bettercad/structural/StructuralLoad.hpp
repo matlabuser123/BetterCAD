@@ -221,4 +221,19 @@ private:
     std::variant<NodalForceLoad, SurfaceTractionLoad, PressureLoad, GravityLoad> payload_;
 };
 
+/// Checks @p load on its own terms: a valid identity and a finite value.
+///
+/// DELIBERATELY DOES NOT CONSULT A MESH, which is the same division
+/// `validate(StructuralRestraint)` draws. Whether the target RESOLVES is a
+/// question about a particular mesh and belongs to `prepareStructuralLoads`;
+/// whether the record is well formed is a question about the record, and is
+/// this.
+///
+/// ADDED BY P17-CMD-001 (ADR-047), AND FACTORED RATHER THAN DUPLICATED. A
+/// command must refuse a NaN force at the moment the user asks for it, with no
+/// mesh in hand -- but the finiteness rule already existed inside
+/// `prepareStructuralLoads`. This is that same check, exposed: the two share
+/// one implementation in `StructuralLoad.cpp` rather than drifting apart.
+[[nodiscard]] BETTERCAD_STRUCTURAL_EXPORT Result<void> validate(const StructuralLoad& load);
+
 } // namespace bettercad::structural

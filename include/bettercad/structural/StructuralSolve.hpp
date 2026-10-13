@@ -81,81 +81,22 @@
 
 namespace bettercad::structural {
 
-// ---------------------------------------------------------------------------
 // Settings
 // ---------------------------------------------------------------------------
-
-/// Which factorisation to use.
-///
-/// ONE VALUE, AND IT IS NAMED RATHER THAN DEFAULTED. ADR-039 selected
-/// `SimplicialLDLT` and recorded the three alternatives it rejected; the enum
-/// exists so the choice is visible in a result's provenance and so a later
-/// milestone adds a value rather than changing a hidden default.
-enum class SolverAlgorithm : std::uint8_t {
-    /// Eigen's `SimplicialLDLT`: a direct `L D L^T` factorisation with an AMD
-    /// fill-reducing ordering, for a symmetric positive definite `Kff`.
-    SimplicialLdlt,
-};
-
-[[nodiscard]] BETTERCAD_STRUCTURAL_EXPORT std::string_view
-toString(SolverAlgorithm algorithm) noexcept;
-
-/// The settings that materially affect the numerical result.
-///
-/// NO LIBRARY DEFAULT IS INHERITED. Everything that changes convergence,
-/// failure classification or the published numbers is here with a value and a
-/// reason, because a library-version-dependent default would make the
-/// engineering semantics move under the project's feet.
-///
-/// AND THE FIELDS A DIRECT SOLVER DOES NOT HAVE ARE ABSENT RATHER THAN
-/// PRESENT AND IGNORED. There is no `maximumIterations`, no
-/// `relativeTolerance` and no preconditioner: `SimplicialLDLT` is direct, so
-/// those are `N/A`, and a field that existed but did nothing would be a false
-/// capability. A later iterative algorithm adds them alongside its enum value.
-struct SolverSettings {
-    SolverAlgorithm algorithm = SolverAlgorithm::SimplicialLdlt;
-
-    /// The acceptance threshold for the INDEPENDENT normalized residual.
-    /// Dimensionless. See `ResidualMetrics::normalized` for the formula.
-    ///
-    /// 1e-9 CHOSEN FOR A REASON AND NOT FROM OBSERVED VALUES. An LDLT of an
-    /// SPD matrix is backward stable, so the normalized residual of a
-    /// well-conditioned solve sits at a small multiple of the double epsilon
-    /// -- around 1e-16. 1e-9 leaves seven orders of head-room for
-    /// conditioning, and a residual one part in a billion of the applied load
-    /// is far below any engineering significance. The measured values are
-    /// recorded in the evidence so the gap is visible rather than assumed.
-    double relativeResidualTolerance = 1.0e-9;
-
-    /// The smallest admissible `min|D| / max|D|` of the factorisation.
-    /// Dimensionless.
-    ///
-    /// THE GATE THE LIBRARY DOES NOT HAVE. `SimplicialLDLT` fails only on an
-    /// exactly zero pivot, so a singular system factorises successfully; this
-    /// is what refuses it. A RATIO rather than an absolute pivot, because `D`
-    /// carries the units of the stiffness diagonal: a soft material with a
-    /// small `E` has small pivots and is not singular, and a raw threshold
-    /// would confuse the two.
-    ///
-    /// 1e-12 CHOSEN FOR A REASON. The error of an LDLT solve grows with
-    /// `max|D| / min|D|`, so a ratio below 1e-12 means the component of the
-    /// solution along that direction has lost twelve of a double's sixteen
-    /// digits and is noise. The evidence records the measured ratio for a
-    /// well-restrained model and for a free body, which are orders apart, so
-    /// this number does not decide the verdict.
-    double pivotFloor = 1.0e-12;
-
-    friend bool operator==(const SolverSettings&, const SolverSettings&) = default;
-};
-
-/// Checks @p settings on its own terms: a recognised algorithm and two
-/// tolerances that are finite and strictly positive.
-///
-/// A NaN or negative tolerance is refused HERE rather than left to decide
-/// something inside the library: `r < NaN` is false, so a NaN threshold would
-/// silently reject every solve, and a negative one would reject every solve
-/// too but for a reason no diagnostic would explain.
-[[nodiscard]] BETTERCAD_STRUCTURAL_EXPORT Result<void> validate(const SolverSettings& settings);
+//
+// `SolverAlgorithm`, `SolverSettings` and `validate(SolverSettings)` MOVED TO
+// StructuralData.hpp (ADR-047), because the settings became CANONICAL state:
+// `StructuralAnalysisDefinition` owns them, so a command can edit them and
+// undo/redo can restore them.
+//
+// They live with the other canonical data rather than here so that the
+// structural COMMAND headers reach the definition without also reaching
+// `GlobalStructuralSystem`, `SolvedSystem`, `ConstraintSet` or the Tet4
+// element matrix. A command header that cannot see the assembled system is
+// a compile-time statement about what a command can hold.
+//
+// This header still provides them: StructuralDof.hpp includes
+// StructuralData.hpp, so every existing includer is unaffected.
 
 // ---------------------------------------------------------------------------
 // Residual metrics

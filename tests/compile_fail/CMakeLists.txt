@@ -697,3 +697,60 @@ bettercad_compile_fail_case(structvalid "${_structvalid}" SOLVE_OUTCOME_WITHOUT_
     "use of deleted function|no matching function|is private|deleted|no default constructor" BetterCAD::structural)
 bettercad_compile_fail_case(structvalid "${_structvalid}" SEVERITY_USED_AS_A_STATUS
     "cannot convert|could not convert|invalid conversion|no matching function" BetterCAD::structural)
+
+# Structural commands (P17-CMD-001, ADR-047).
+#
+# THE ABSENCES ARE THE MILESTONE'S CENTRAL CLAIM: the undo history holds
+# canonical engineering intent and never a generated solver array. A runtime
+# test shows that no stiffness matrix WAS stored; these show that none CAN be.
+#
+# THE PROBES GO THROUGH CONSTRUCTOR PARAMETERS, for the reason P16-CMD-001
+# recorded: an aggregate's brace elision silently accepts a wrong first member,
+# so `SomeAggregate{.member = wrongId}` compiles. A command parameter of a named
+# type is copy-initialized and no elision applies.
+#
+# ONE EXCEPTION IS DELIBERATELY NOT PROBED. A NodalForceLoad names a NodeId by
+# P17-LOAD-001's explicit decision -- it carries the MeshStamp the handle
+# belongs to and is refused against any other mesh -- so a command that adds one
+# legitimately carries it. What is probed is a NodeId or an ElementId as a
+# command's TARGET, and every form of derived solver state.
+set(_structcmd "${CMAKE_CURRENT_SOURCE_DIR}/StructuralCommandMisuse.cpp")
+bettercad_compile_fail_group(structcmd "${_structcmd}" BetterCAD::structural)
+bettercad_compile_fail_case(structcmd "${_structcmd}" A_LOAD_COMMAND_IS_NOT_KEYED_ON_A_NODE
+    "could not convert|cannot convert|no matching function" BetterCAD::structural)
+bettercad_compile_fail_case(structcmd "${_structcmd}" A_LOAD_COMMAND_IS_NOT_KEYED_ON_AN_ELEMENT
+    "could not convert|cannot convert|no matching function" BetterCAD::structural)
+bettercad_compile_fail_case(structcmd "${_structcmd}" A_RESTRAINT_COMMAND_IS_NOT_KEYED_ON_A_NODE
+    "could not convert|cannot convert|no matching function" BetterCAD::structural)
+bettercad_compile_fail_case(structcmd "${_structcmd}" A_COMMAND_IS_NOT_KEYED_ON_A_DOF_INDEX
+    "could not convert|cannot convert|no matching function" BetterCAD::structural)
+bettercad_compile_fail_case(structcmd "${_structcmd}" A_RESTRAINT_DOES_NOT_TARGET_A_NODE
+    "could not convert|cannot convert|no matching function" BetterCAD::structural)
+bettercad_compile_fail_case(structcmd "${_structcmd}" A_RESTRAINT_MASK_IS_NOT_A_DOF_INDEX_LIST
+    "could not convert|cannot convert|no matching function" BetterCAD::structural)
+bettercad_compile_fail_case(structcmd "${_structcmd}" THE_DEFINITION_HAS_NO_DISPLACEMENTS
+    "no member named|has no member" BetterCAD::structural)
+bettercad_compile_fail_case(structcmd "${_structcmd}" THE_DEFINITION_HAS_NO_STRESSES
+    "no member named|has no member" BetterCAD::structural)
+bettercad_compile_fail_case(structcmd "${_structcmd}" THE_DEFINITION_HAS_NO_REACTIONS
+    "no member named|has no member" BetterCAD::structural)
+bettercad_compile_fail_case(structcmd "${_structcmd}" THE_DEFINITION_HAS_NO_CONSTRAINT_SET
+    "no member named|has no member" BetterCAD::structural)
+bettercad_compile_fail_case(structcmd "${_structcmd}" THE_DEFINITION_HAS_NO_PREPARED_LOADS
+    "no member named|has no member" BetterCAD::structural)
+bettercad_compile_fail_case(structcmd "${_structcmd}" THE_DEFINITION_HAS_NO_STIFFNESS_MATRIX
+    "no member named|has no member" BetterCAD::structural)
+# MEASURED, AND IT PROVED THE STRONGER PROPERTY. The expected diagnostic was a
+# conversion failure; the actual one is
+#   "StructuralResult is not a member of bettercad::structural"
+# because StructuralResult.hpp is not reachable from the command header at all.
+# A command cannot be handed a generated result because the result TYPE IS NOT
+# VISIBLE, which is a better answer than refusing the conversion.
+bettercad_compile_fail_case(structcmd "${_structcmd}" A_COMMAND_IS_NOT_CONSTRUCTIBLE_FROM_A_RESULT
+    "is not a member of|has not been declared|could not convert|cannot convert|no matching function" BetterCAD::structural)
+bettercad_compile_fail_case(structcmd "${_structcmd}" A_COMMAND_HAS_NO_RESULT_SETTER
+    "no member named|has no member" BetterCAD::structural)
+bettercad_compile_fail_case(structcmd "${_structcmd}" A_COMMAND_IS_NOT_COPYABLE
+    "use of deleted function|deleted" BetterCAD::structural)
+bettercad_compile_fail_case(structcmd "${_structcmd}" THE_DEFINITION_DOES_NOT_TAKE_A_MESH
+    "could not convert|cannot convert|no match for|no viable overloaded" BetterCAD::structural)

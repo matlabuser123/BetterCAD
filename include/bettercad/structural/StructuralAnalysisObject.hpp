@@ -99,11 +99,25 @@ struct StructuralAnalysisDefinition {
     /// set index for index.
     std::vector<StructuralRestraint> restraints{};
 
-    // Solver settings -- P17-SOLVE-001
-    //
-    // Named rather than declared. An empty `std::vector<Setting>` here would be
-    // a placeholder for a type that does not exist, and a reader could not tell
-    // an unimplemented field from an intentionally empty one.
+    /// The settings that materially affect the numerical result.
+    ///
+    /// CANONICAL SINCE ADR-047, and the note that stood here recorded exactly
+    /// why it was not: "an empty `std::vector<Setting>` here would be a
+    /// placeholder for a type that does not exist". **`SolverSettings` exists
+    /// now** -- P17-SOLVE-001 created it, with its own `validate` -- so the
+    /// reason for the omission is gone rather than overruled.
+    ///
+    /// IT HAD TO BECOME CANONICAL FOR A COMMAND TO EDIT IT. Settings that live
+    /// only as an argument to the solve cannot be undone, redone or persisted,
+    /// and a settings command would have had nothing to mutate.
+    ///
+    /// IT STALES THE RESULT AND NOT THE MESH, like the loads and the
+    /// restraints: a tolerance is not a meshing question. And unlike them it
+    /// does not invalidate the assembled `K` or `F` on its own terms -- those
+    /// depend on geometry, material, loads and restraints, not on which
+    /// factorisation reduces them -- though nothing here caches an assembled
+    /// system to take advantage of that.
+    SolverSettings solver{};
 
     friend bool operator==(const StructuralAnalysisDefinition&,
                            const StructuralAnalysisDefinition&) = default;

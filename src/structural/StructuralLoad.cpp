@@ -152,6 +152,22 @@ private:
 
 } // namespace
 
+Result<void> validate(const StructuralLoad& load) {
+    // THE SAME `isFiniteValue` THE PREPARE PATH USES, which is the point of
+    // this function existing here rather than in the command layer: a command
+    // must refuse a NaN force with no mesh in hand, and the rule for what
+    // counts as finite must not exist twice (ADR-047).
+    if (!load.id().isValid()) {
+        return makeError(ErrorCode::InvalidArgument,
+                         "a structural load must carry a valid LoadId");
+    }
+    if (!isFiniteValue(load)) {
+        return makeError(ErrorCode::InvalidArgument,
+                         std::format("{} carries a value that is not finite", load.id()));
+    }
+    return Result<void>{};
+}
+
 std::string_view toString(LoadKind kind) noexcept {
     switch (kind) {
     case LoadKind::NodalForce:

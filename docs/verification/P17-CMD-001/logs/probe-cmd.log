@@ -1,0 +1,47 @@
+######## undo and redo ########
+Tue Oct 13 14:03:41 EAST 2026
+C1  undo applies the AFTER state   KILLED  (11 tests failed out of 354)
+        	2676 - unit.StructuralCommand_AddLoadUndoRedoIsExact (Failed)
+        	2682 - unit.StructuralCommand_EditLoadRestoresEveryFieldExactly (Failed)
+        	2683 - unit.StructuralCommand_EditRestraintChangesTargetAndComponentsTogether (Failed)
+C2  redo applies the BEFORE state  KILLED  (8 tests failed out of 354)
+        	2671 - unit.StructuralCommand_AFailedNewCommandLeavesTheRedoBranchIntact (Failed)
+        	2676 - unit.StructuralCommand_AddLoadUndoRedoIsExact (Failed)
+        	2682 - unit.StructuralCommand_EditLoadRestoresEveryFieldExactly (Failed)
+ANCHOR NOT FOUND
+C3  before_ recorded on failure    ANCHOR FAILED
+C4  a no-op claims it changed      KILLED  (2 tests failed out of 354)
+        	2672 - unit.StructuralCommand_ANoOpEditDoesNotStaleACurrentResult (Failed)
+        	2673 - unit.StructuralCommand_ANoOpEditSucceedsAndMovesNoRevision (Failed)
+######## the load commands ########
+Tue Oct 13 14:13:23 EAST 2026
+C5  a duplicate LoadId is allowed  KILLED  (2 tests failed out of 354)
+        	2669 - unit.StructuralCommand_ADuplicateLoadIdFailsAtomically (Failed)
+        	2670 - unit.StructuralCommand_AFailedCommandLeavesACurrentResultCurrent (Failed)
+C6  editing a missing load adds    KILLED  (2 tests failed out of 354)
+        	2671 - unit.StructuralCommand_AFailedNewCommandLeavesTheRedoBranchIntact (Failed)
+        	2684 - unit.StructuralCommand_EditingAMissingLoadFailsAndCreatesNothing (Failed)
+C7  a NaN load value is accepted   KILLED  (2 tests failed out of 354)
+        	2670 - unit.StructuralCommand_AFailedCommandLeavesACurrentResultCurrent (Failed)
+        	2674 - unit.StructuralCommand_ANonFiniteLoadValueFailsAtomically (Failed)
+C8  an edit reorders the loads     *** SURVIVED ***
+C9  remove erases the first load   KILLED  (2 tests failed out of 354)
+        	2670 - unit.StructuralCommand_AFailedCommandLeavesACurrentResultCurrent (Failed)
+        	2687 - unit.StructuralCommand_RemoveLoadUndoRestoresItAtItsOriginalPosition (Failed)
+######## restraints and settings ########
+Tue Oct 13 14:28:14 EAST 2026
+C10 an empty mask is accepted      KILLED  (1 tests failed out of 354)
+        	2677 - unit.StructuralCommand_AnEmptyRestraintMaskFailsAtomically (Failed)
+C11 unusable settings unchecked    *** SURVIVED ***
+C12 the solve ignores the settings  KILLED  (1 tests failed out of 354)
+        	2903 - unit.StructuralValidation_PublishesNothingWhenAGateRefuses (Failed)
+######## RESTORE ########
+[4/5] Linking CXX static library lib\libbettercad_structural.a
+[5/5] Linking CXX executable bin\bettercad_tests.exe
+  02a20d19176785d1d5b8f76881bce13a2636db2c */c/Users/uqhas/OneDrive/Desktop/CAD/src/structural/StructuralCommands.cpp
+  819eeb5badc81991684c1b16f4c66994ad7c0cbd */c/Users/uqhas/OneDrive/Desktop/CAD/src/structural/StructuralValidation.cpp
+  100% tests passed out of 354
+  
+  Total Test time (real) =  84.02 sec
+######## CMD PROBES DONE ########
+Tue Oct 13 14:40:14 EAST 2026
