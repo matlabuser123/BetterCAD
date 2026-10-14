@@ -71,6 +71,18 @@ Result<Json> objectToJson(const DocumentObject& object) {
         data = detail::materialToJson(*material);
     } else if (const auto* control = dynamic_cast<const meshing::MeshControl*>(&object)) {
         data = detail::meshControlToJson(*control);
+    } else if (const auto* analysis = dynamic_cast<const structural::StructuralAnalysis*>(&object)) {
+        // THE ONE WRITER THAT CAN FAIL (P17-PERSIST-001). A nodal force load
+        // names a mesh node and the mesh generation it belongs to, and ADR-031
+        // says neither is ever persisted -- so the save is refused rather than
+        // writing a load no reload could resolve. Propagated here rather than
+        // swallowed, which is what makes the refusal atomic: documentToJson
+        // returns the error and saveDocument never opens its temporary file.
+        Result<Json> written = detail::structuralAnalysisToJson(*analysis);
+        if (!written) {
+            return std::unexpected(written.error());
+        }
+        data = std::move(*written);
     } else {
         return makeError(ErrorCode::InvalidArgument,
                          std::format("objects of type '{}' cannot be saved", object.typeName()));
@@ -301,6 +313,17 @@ Result<std::unique_ptr<DocumentObject>> objectFromJson(const Json& value, std::s
             return std::unexpected(control.error());
         }
         return std::unique_ptr<DocumentObject>(std::move(*control));
+    }
+    // The literal again, for the reason the comment above gives.
+    // StructuralAnalysisJson.cpp carries the static_assert that it and
+    // StructuralAnalysis::kTypeName agree.
+    if (*type == "structural-analysis") {
+        auto analysis =
+            detail::structuralAnalysisFromJson(**data, *name, detail::childPath(path, "data"));
+        if (!analysis) {
+            return std::unexpected(analysis.error());
+        }
+        return std::unique_ptr<DocumentObject>(std::move(*analysis));
     }
     return detail::parseError(detail::childPath(path, "type"), std::format("unknown object type '{}'", *type));
 }

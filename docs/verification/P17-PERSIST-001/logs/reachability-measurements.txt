@@ -1,0 +1,64 @@
+P17-PERSIST-001 -- the two reachability measurements
+====================================================
+
+The brief's mutations 131-133 (serialize maxVonMises / a residual / a
+displacement count) and 139 (rebind an unresolved reference to a nearby face)
+could not be written. These are the measurements that establish WHY, rather
+than an assertion that the code is safe.
+
+Each was produced by editing src/io/json/StructuralAnalysisJson.cpp, building
+the bettercad_io target, recording the diagnostic, and restoring the pristine
+source (hash-verified afterwards).
+
+-------------------------------------------------------------------------------
+R-A  attempting to write a result field from the WRITER
+-------------------------------------------------------------------------------
+
+Inserted into structuralAnalysisToJson, immediately after the "mode" key:
+
+    json["max_von_mises"] = structural::StructuralResult{}.maxVonMises();
+
+Measured:
+
+    src/io/json/StructuralAnalysisJson.cpp:601:41: error: 'StructuralResult'
+        is not a member of 'bettercad::structural'; did you mean
+        'StructuralRestraint'?
+    src/io/json/StructuralAnalysisJson.cpp:601:59: error: expected
+        primary-expression before '.' token
+
+CONCLUSION: the result type is not reachable from this translation unit at
+all. There is no expression the writer could use to read solve output, so the
+brief's 131-133 mutations have no form in this code.
+
+-------------------------------------------------------------------------------
+R-B  which types ARE nameable from the READER
+-------------------------------------------------------------------------------
+
+Inserted into structuralAnalysisFromJson, before the "mesh" read:
+
+    static_cast<void>(sizeof(meshing::GeometryMeshMap));
+    static_cast<void>(sizeof(Document));
+    static_cast<void>(sizeof(structural::GlobalStructuralSystem));
+
+Measured -- ONE error, naming only the third:
+
+    src/io/json/StructuralAnalysisJson.cpp:627:42: error:
+        'GlobalStructuralSystem' is not a member of 'bettercad::structural'
+
+CONCLUSION, stated precisely rather than generously:
+
+    Document                            NAMEABLE  (via DocumentObject.hpp)
+    meshing::GeometryMeshMap            NAMEABLE  (via StructuralLoad.hpp)
+    structural::StructuralResult        not reachable
+    structural::GlobalStructuralSystem  not reachable
+
+Include isolation is therefore PARTIAL, exactly as P17-CMD-001 measured for
+the command header. What makes a rebind impossible is not that the types are
+unnameable -- two of them are -- but that the reader's signature
+
+    structuralAnalysisFromJson(const Json& data, std::string name,
+                               std::string_view path)
+
+holds no INSTANCE of a Document, a Regenerator, a Mesher or a
+GeometryMeshMap. There is nothing for a reference to be rebound to without
+first adding a parameter and changing every caller.

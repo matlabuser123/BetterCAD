@@ -1,0 +1,160 @@
+######## 0. THE PRISTINE COPY ########
+  8f236003e7b03ab9e68727ffedf0e76e631c9261 *sa.pristine
+  verified
+
+######## 1. DRY RUN: every anchor, before anything is mutated ########
+  P1-revision-leak                   occurrences=1  ok
+  P2-drop-tolerance                  occurrences=1  ok
+  P3-pressure-to-MPa                 occurrences=1  ok
+  P4-float-precision                 occurrences=1  ok
+  P5-reverse-the-load-order          occurrences=1  ok
+  P6-accept-duplicate-load-id        occurrences=1  ok
+  P7-reallocate-load-id              occurrences=1  ok
+  P8-default-the-mask-to-fixed       occurrences=1  ok
+  P9-lose-the-traction-sign          occurrences=1  ok
+  P10-drop-validate-load             occurrences=1  ok
+  P11-drop-validate-restraint        occurrences=1  ok
+  P12-write-the-nodal-force          occurrences=1  ok
+  P13-accept-nodal-force-on-read     occurrences=1  ok
+  P14-drop-the-per-kind-key-check    occurrences=1  ok
+
+######## 2. THE BASELINE MUST BE GREEN ########
+  100% tests passed out of 64
+  baseline green over  tests
+
+######## 3. THE PROBES ########
+
+---- P1-revision-leak ----
+     expect to die: non-canonical state in the file: history independence, save/load/save
+     KILLED by 28 test(s)   56% tests passed, 28 tests failed out of 64
+       unit.StructuralPersistence_AFullDestroyAndLoadRoundTripReSolvesEquivalently
+       unit.StructuralPersistence_ALoadedAnalysisHasIntentAndNoCurrentResult
+       unit.StructuralPersistence_ALoadedIdCannotBeReusedByALaterCommand
+       unit.StructuralPersistence_AMalformedReferenceIsNotTheSameAsAnUnresolvedOne
+       unit.StructuralPersistence_AReloadedFaceLoadResolvesToTheSameGeometry
+       unit.StructuralPersistence_AnEmptyLoadAndRestraintSetRoundTrips
+       unit.StructuralPersistence_AnExplicitEmptyCollectionNormalisesThenIsByteStable
+       unit.StructuralPersistence_AnObjectCreatedAfterALoadCannotCollideWithALoadedId
+
+---- P2-drop-tolerance ----
+     expect to die: a dropped non-default solver setting
+     KILLED by 28 test(s)   56% tests passed, 28 tests failed out of 64
+       unit.StructuralPersistence_AFullDestroyAndLoadRoundTripReSolvesEquivalently
+       unit.StructuralPersistence_ALoadedAnalysisHasIntentAndNoCurrentResult
+       unit.StructuralPersistence_ALoadedIdCannotBeReusedByALaterCommand
+       unit.StructuralPersistence_AMalformedReferenceIsNotTheSameAsAnUnresolvedOne
+       unit.StructuralPersistence_AReloadedFaceLoadResolvesToTheSameGeometry
+       unit.StructuralPersistence_AnEmptyLoadAndRestraintSetRoundTrips
+       unit.StructuralPersistence_AnExplicitEmptyCollectionNormalisesThenIsByteStable
+       unit.StructuralPersistence_AnObjectCreatedAfterALoadCannotCollideWithALoadedId
+
+---- P3-pressure-to-MPa ----
+     expect to die: a unit conversion on the way to the file
+     KILLED by 9 test(s)   86% tests passed, 9 tests failed out of 64
+       unit.StructuralPersistence_AFullDestroyAndLoadRoundTripReSolvesEquivalently
+       unit.StructuralPersistence_AReloadedFaceLoadResolvesToTheSameGeometry
+       unit.StructuralPersistence_AnUnresolvedReferenceIsPreservedAndNotRebound
+       unit.StructuralPersistence_EngineeringValuesSurviveWithoutAUnitConversion
+       unit.StructuralPersistence_EveryPersistableLoadKindRoundTrips
+       unit.StructuralPersistence_ExtremeAndAwkwardFiniteValuesSurvive
+       unit.StructuralPersistence_SaveLoadSaveIsByteIdentical
+       unit.StructuralPersistence_TheWholeCanonicalIntentRoundTrips
+
+---- P4-float-precision ----
+     expect to die: low-precision floating formatting
+     KILLED by 1 test(s)   98% tests passed, 1 tests failed out of 64
+       unit.StructuralPersistence_ExtremeAndAwkwardFiniteValuesSurvive
+
+---- P5-reverse-the-load-order ----
+     expect to die: the user's load order not preserved
+     KILLED by 7 test(s)   89% tests passed, 7 tests failed out of 64
+       unit.StructuralPersistence_ALoadedIdCannotBeReusedByALaterCommand
+       unit.StructuralPersistence_AnUnresolvedReferenceIsPreservedAndNotRebound
+       unit.StructuralPersistence_EngineeringValuesSurviveWithoutAUnitConversion (SEGFAULT)
+       unit.StructuralPersistence_GeometryReferencesSurviveExactly
+       unit.StructuralPersistence_LoadAndRestraintOrderIsTheUsersAndIsPreserved
+       unit.StructuralPersistence_SaveLoadSaveIsByteIdentical
+       unit.StructuralPersistence_TheWholeCanonicalIntentRoundTrips
+
+---- P6-accept-duplicate-load-id ----
+     expect to die: a duplicate LoadId accepted instead of refused
+     KILLED by 1 test(s)   98% tests passed, 1 tests failed out of 64
+       unit.StructuralPersistence_RejectsDuplicateIdentitiesRatherThanMerging
+
+---- P7-reallocate-load-id ----
+     expect to die: a fresh LoadId allocated on load instead of the file's
+     KILLED by 11 test(s)   83% tests passed, 11 tests failed out of 64
+       unit.StructuralPersistence_AFullDestroyAndLoadRoundTripReSolvesEquivalently
+       unit.StructuralPersistence_ALoadedIdCannotBeReusedByALaterCommand
+       unit.StructuralPersistence_CommandsUndoAndRedoExactlyAfterALoad
+       unit.StructuralPersistence_EveryPersistableLoadKindRoundTrips
+       unit.StructuralPersistence_LoadAndRestraintOrderIsTheUsersAndIsPreserved
+       unit.StructuralPersistence_RejectsDuplicateIdentitiesRatherThanMerging
+       unit.StructuralPersistence_RejectsMalformedStructuralIntent
+       unit.StructuralPersistence_SaveLoadSaveIsByteIdentical
+
+---- P8-default-the-mask-to-fixed ----
+     expect to die: a restraint component mask replaced by a default
+     KILLED by 27 test(s)   58% tests passed, 27 tests failed out of 64
+       unit.StructuralPersistence_AFullDestroyAndLoadRoundTripReSolvesEquivalently
+       unit.StructuralPersistence_ALoadedAnalysisHasIntentAndNoCurrentResult
+       unit.StructuralPersistence_ALoadedIdCannotBeReusedByALaterCommand
+       unit.StructuralPersistence_AMalformedReferenceIsNotTheSameAsAnUnresolvedOne
+       unit.StructuralPersistence_AReloadedFaceLoadResolvesToTheSameGeometry
+       unit.StructuralPersistence_AnObjectCreatedAfterALoadCannotCollideWithALoadedId
+       unit.StructuralPersistence_AnUnresolvedReferenceIsPreservedAndNotRebound
+       unit.StructuralPersistence_AnUnresolvedReferenceStillRefusesTheSolveAfterLoading
+
+---- P9-lose-the-traction-sign ----
+     expect to die: a lost sign on a traction component
+     KILLED by 2 test(s)   97% tests passed, 2 tests failed out of 64
+       unit.StructuralPersistence_TheWholeCanonicalIntentRoundTrips
+       unit.StructuralPersistence_TwoAnalysesRoundTripWithoutLeaking
+
+---- P10-drop-validate-load ----
+     expect to die: the load validator the definition's own validator does not cover
+     KILLED by 1 test(s)   98% tests passed, 1 tests failed out of 64
+       unit.StructuralPersistence_RejectsMalformedStructuralIntent
+
+---- P11-drop-validate-restraint ----
+     expect to die: the restraint validator (an empty mask would be accepted)
+     KILLED by 1 test(s)   98% tests passed, 1 tests failed out of 64
+       unit.StructuralPersistence_RejectsMalformedStructuralIntent
+
+---- P12-write-the-nodal-force ----
+     expect to die: a NodeId written to the file instead of refused
+     KILLED by 1 test(s)   98% tests passed, 1 tests failed out of 64
+       unit.StructuralPersistence_ANodalForceLoadIsRefusedRatherThanWritten
+
+---- P13-accept-nodal-force-on-read ----
+     expect to die: the reader accepting a nodal_force key
+     KILLED by 1 test(s)   98% tests passed, 1 tests failed out of 64
+       unit.StructuralPersistence_TheReaderRefusesANodalForceLoadByName
+
+---- P14-drop-the-per-kind-key-check ----
+     expect to die: a load carrying another kind's keys, quietly ignored
+     *** DID NOT COMPILE -- VOID, not a kill ***
+       src/io/json/StructuralAnalysisJson.cpp:275:86: error: unused parameter 'keys' [-Werror=unused-parameter]
+       src/io/json/StructuralAnalysisJson.cpp:276:63: error: unused parameter 'kindName' [-Werror=unused-parameter]
+
+######## 4. RESTORE AND REBUILD ########
+  source restored and hash-verified
+  restore build OK -- the binary matches the pristine source again
+  100% tests passed out of 64
+
+######## VERDICTS ########
+  P1-revision-leak KILLED(28)
+  P2-drop-tolerance KILLED(28)
+  P3-pressure-to-MPa KILLED(9)
+  P4-float-precision KILLED(1)
+  P5-reverse-the-load-order KILLED(7)
+  P6-accept-duplicate-load-id KILLED(1)
+  P7-reallocate-load-id KILLED(11)
+  P8-default-the-mask-to-fixed KILLED(27)
+  P9-lose-the-traction-sign KILLED(2)
+  P10-drop-validate-load KILLED(1)
+  P11-drop-validate-restraint KILLED(1)
+  P12-write-the-nodal-force KILLED(1)
+  P13-accept-nodal-force-on-read KILLED(1)
+######## PROBE RUN DONE ########
+Wed Oct 14 03:12:26 EAST 2026

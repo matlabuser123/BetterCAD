@@ -1,0 +1,7 @@
+---- P14b-drop-the-per-kind-key-check ----
+  compiled, warning:=0
+  KILLED by 1 test(s)   98% tests passed, 1 tests failed out of 64
+    unit.StructuralPersistence_RejectsMalformedStructuralIntent
+  restored and hash-verified
+  restore build OK
+DONE

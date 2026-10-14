@@ -34,6 +34,7 @@
 #include <bettercad/features/VariableFilletFeature.hpp>
 #include <bettercad/meshing/MeshControl.hpp>
 #include <bettercad/sketch/Sketch.hpp>
+#include <bettercad/structural/StructuralAnalysisObject.hpp>
 
 #include <memory>
 #include <string>
@@ -55,6 +56,20 @@ materialFromJson(const Json& value, std::string_view name, std::string_view path
 [[nodiscard]] Json meshControlToJson(const meshing::MeshControl& control);
 [[nodiscard]] Result<std::unique_ptr<meshing::MeshControl>>
 meshControlFromJson(const Json& data, std::string name, std::string_view path);
+
+/// A structural analysis's canonical intent (P17-PERSIST-001): the meshing
+/// control analysed, the mode, the loads and restraints with their CAD targets
+/// and physical values, and the solver settings. Nothing generated -- see
+/// StructuralAnalysisJson.cpp for the schema and why no solver state can appear
+/// in it.
+///
+/// THE ONE WRITER THAT CAN FAIL, and the only one in the format. A nodal force
+/// load names a mesh node and the mesh generation it belongs to, which ADR-031
+/// says is never persisted; the save is refused rather than writing a load that
+/// no reload could ever resolve. Every other object kind's writer is infallible.
+[[nodiscard]] Result<Json> structuralAnalysisToJson(const structural::StructuralAnalysis& analysis);
+[[nodiscard]] Result<std::unique_ptr<structural::StructuralAnalysis>>
+structuralAnalysisFromJson(const Json& data, std::string name, std::string_view path);
 
 /// [x, y, z] in metres.
 [[nodiscard]] Json pointToJson(const Point3D& point);

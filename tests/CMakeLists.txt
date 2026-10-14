@@ -186,6 +186,7 @@ bettercad_add_executable(bettercad_tests
         io/DocumentFileTests.cpp
         io/MaterialFileTests.cpp
         io/MeshControlFileTests.cpp
+        io/StructuralAnalysisFileTests.cpp
         io/DraftFileTests.cpp
         io/ExampleModelTests.cpp
         io/ExpressionFileTests.cpp

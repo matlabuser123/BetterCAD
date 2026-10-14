@@ -16,18 +16,20 @@ Prerequisite:
            P16 — Meshing — QUALIFIED (P16-QUAL-001, 2026-10-06)
 
 Current milestone:
-           P17-CMD-001 — Commands / Undo / Redo. AUTHORIZED
-           2026-10-13 by an explicit scope decision. In progress.
+           P17-PERSIST-001 — Structural Analysis Persistence. AUTHORIZED
+           2026-10-14 by an explicit scope decision. COMPLETE at 20 of 20.
 
            The line that stood under "Next" said "NOT AUTHORIZED:
-           P17-VIZ-001 passing will not be permission to start it", and it
-           did its job: it stopped the milestone being started on the
-           momentum of the one before. The owner then authorized it, which
-           is the only thing that could.
+           P17-CMD-001 passing will not be permission to start it", and it
+           did its job for the second milestone running: it stopped the work
+           being started on the momentum of the one before. The owner then
+           authorized it, which is the only thing that could.
 
 Completed in P17:
            P17-VIZ-001 — FEA Visualisation / Inspection. COMPLETE at
            23 of 23, qualified at e795acb on 2026-10-13.
+           P17-CMD-001 — Commands / Undo / Redo. COMPLETE at 19 of 19,
+           qualified at bde6f8b on 2026-10-13.
 
 Qualified:
            P0–P10 — BetterCAD v0.1.0
@@ -39,9 +41,8 @@ Qualified:
            P16 — Meshing
 
 Next:
-           P17-PERSIST-001 — Structural Analysis Persistence. NOT
-           AUTHORIZED: P17-CMD-001 passing will not be permission to start
-           it.
+           P17-CLI-001 — Headless Structural FEA. NOT AUTHORIZED:
+           P17-PERSIST-001 passing will not be permission to start it.
 
 P17 objective:
            authoritative CAD / material / mesh state
@@ -1690,26 +1691,56 @@ same instrument here.
 
 ## Structural Analysis Persistence
 
-* [ ] Define the P17 schema
-* [ ] Persist the analysis definition
-* [ ] Persist loads
-* [ ] Persist restraints
-* [ ] Persist `GeometryReference`s
-* [ ] Persist solver settings
-* [ ] Preserve units
-* [ ] Preserve unresolved references explicitly
-* [ ] Exclude K / F / u / stress arrays as authority
-* [ ] Malformed files rejected
-* [ ] Invalid values rejected
-* [ ] Duplicate IDs rejected
-* [ ] Backward compatibility
-* [ ] Deterministic serialization
-* [ ] Full round trip
-* [ ] Save / load / re-solve
-* [ ] Compare re-solved semantics
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+PASS 2026-10-14. Evidence:
+[docs/verification/P17-PERSIST-001/](docs/verification/P17-PERSIST-001/README.md),
+with the architecture audit in [AUDIT.md](docs/verification/P17-PERSIST-001/AUDIT.md),
+the schema in [SCHEMA.md](docs/verification/P17-PERSIST-001/SCHEMA.md) and the
+hard gate in [BYTE_IDENTITY.md](docs/verification/P17-PERSIST-001/BYTE_IDENTITY.md).
+
+* [x] Define the P17 schema — one object type in the EXISTING format, and the
+      version does NOT move: P13-PERSIST-001's rule is "bump only for a change
+      an existing reader would get WRONG", and adding a type is additive
+* [x] Persist the analysis definition — the mesh control and the mode; all five
+      definition members covered, checked by its own field-complete operator==
+      as well as by a fingerprint
+* [x] Persist loads — three kinds. The fourth, NodalForceLoad, REFUSES THE SAVE
+      (ADR-048): it names a NodeId, which ADR-031 never persists
+* [x] Persist restraints — id, face and a component mask written as names in
+      canonical order; all seven non-empty masks round-trip
+* [x] Persist `GeometryReference`s — through faceNameToJson, the encoding six
+      other object kinds already use. No second contract
+* [x] Persist solver settings — all three fields ALWAYS written, so an old file
+      can never be reconstructed from a future build's defaults
+* [x] Preserve units — bare SI doubles, bit for bit, including 0.1+0.2 and 1/3.
+      Checked against the display spellings MPa and kN as well
+* [x] Preserve unresolved references explicitly — preserved, and NOT rebound:
+      checked against all six faces the body actually has. A rebind is not
+      writable at all, because the reader has no geometry to rebind to
+* [x] Exclude K / F / u / stress arrays as authority — not persisted at all,
+      and STRUCTURALLY so: a StructuralResult does not live on a document
+      object, and the result type is not even nameable from the serializer
+* [x] Malformed files rejected — 34 cases, each naming a JSON path, plus 2
+      deliberate ACCEPTANCE cases because malformed is not unresolved and
+      invalid is not incomplete
+* [x] Invalid values rejected — through the core's own validators, called
+      rather than copied; a non-finite value cannot even be expressed
+* [x] Duplicate IDs rejected — refused by name with the index, never merged or
+      last-write-wins. A LoadId and a RestraintId may share a number
+* [x] Backward compatibility — a real pre-P17 document loads, has no analyses,
+      keeps its own semantics and re-saves without inventing a section
+* [x] Deterministic serialization PASS — five identical saves, save/load/save a
+      FIXED POINT, and no map, hash or sort anywhere in the serializer
+* [x] Full round trip — create, solve, save, DESTROY every object, load into a
+      fresh document. The intent is compared BEFORE anything is regenerated
+* [x] Save / load / re-solve — the normal P16 mesh path and the normal
+      P17-VALID entry. No injected result, no private shortcut
+* [x] Compare re-solved semantics — 12 metrics; the mesh regenerates
+      identically and U, max|u|, max von Mises and R_z all match to 1e-12
+* [x] Adversarial review PASS — 33 attacks, 13 findings, 0 production defects;
+      6 found by reading and 7 by a failing test, disjoint sets
+* [x] Regression PASS — 3921/3921 x 3 presets, 1050 x 5 in two, 0 warnings.
+      NO predecessor requalified: not one structural file changed
+* [x] Evidence recorded — docs/verification/P17-PERSIST-001/
 
 ### Derived-state rule
 
@@ -1724,6 +1755,26 @@ re-solve, compare. Never file size or object count alone. P16's equivalent
 gate was that the saved file is byte-identical for a 361-element and a
 1977-element mesh — the analogous P17 check is that it is byte-identical
 whether or not a solve has been run.
+
+    DONE, AND STRONGER THAN ASKED. The brief's gate was two states; a format
+    that wrote a result only when the result was VALID would pass that. So the
+    test compares FOUR states of one document -- no result, a CURRENT result, a
+    STALE one (reached by remeshing, which touches no document object) and one
+    after a FAILED solve -- all measured at 4426 bytes and compared BYTE FOR
+    BYTE, not by size. The P16 analogue holds too: 499 vs 1313 tetrahedra give
+    an identical 907-byte structural section.
+
+    THE AUDIT WAS THE VALUABLE PART, AGAIN. Every architectural question the
+    brief raises already had an answer in the tree with a recorded reason, so
+    this milestone adds NO second file format, NO version bump, NO migration
+    code, NO new validation framework, NO new reference encoding and NO change
+    to any structural production file. `include` did not move at all: there is
+    no public API change.
+
+    THE ONE GENUINELY NEW DECISION is that a NodalForceLoad refuses the save,
+    and the cost was MEASURED rather than estimated -- it has zero callers in
+    apps/ and zero in src/ outside its own definition, so the refusal guards a
+    path that does not exist yet.
 
 ---
 

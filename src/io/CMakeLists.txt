@@ -35,6 +35,7 @@ bettercad_add_library(bettercad_io
         json/RibJson.cpp
         json/ShellJson.cpp
         json/SketchJson.cpp
+        json/StructuralAnalysisJson.cpp
         json/VariableFilletJson.cpp
     PUBLIC_LINK
         BetterCAD::core
@@ -45,6 +46,7 @@ bettercad_add_library(bettercad_io
         BetterCAD::features
         BetterCAD::meshing
         BetterCAD::sketch
+        BetterCAD::structural
         nlohmann_json::nlohmann_json
 )
 
