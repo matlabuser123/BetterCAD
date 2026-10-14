@@ -16,20 +16,33 @@ Prerequisite:
            P16 — Meshing — QUALIFIED (P16-QUAL-001, 2026-10-06)
 
 Current milestone:
-           P17-PERSIST-001 — Structural Analysis Persistence. AUTHORIZED
-           2026-10-14 by an explicit scope decision. COMPLETE at 20 of 20.
+           P17-CLI-001 — Headless Structural FEA. AUTHORIZED 2026-10-14 by
+           an explicit scope decision. COMPLETE at 24 of 24, qualified
+           2026-10-15: 3949/3949 x 3 presets, 1078 x 5 in two, 0 warnings,
+           17 stages exit 0, qualified tree == committed tree.
+
+           Qualified on a SECOND MACHINE, by an explicit owner decision
+           when the uqhas machine was unavailable. Same compiler to the
+           WinLibs revision, same CMake, same dependency versions rebuilt
+           from the same hash-verified archives; different build root and
+           prefix path, recorded beside the invocation. FREEZE.md states
+           what is identical and what is not.
 
            The line that stood under "Next" said "NOT AUTHORIZED:
-           P17-CMD-001 passing will not be permission to start it", and it
-           did its job for the second milestone running: it stopped the work
-           being started on the momentum of the one before. The owner then
-           authorized it, which is the only thing that could.
+           P17-PERSIST-001 passing will not be permission to start it", and
+           it did its job for the third milestone running: it stopped the
+           work being started on the momentum of the one before. The owner
+           then authorized it, which is the only thing that could.
 
 Completed in P17:
            P17-VIZ-001 — FEA Visualisation / Inspection. COMPLETE at
            23 of 23, qualified at e795acb on 2026-10-13.
            P17-CMD-001 — Commands / Undo / Redo. COMPLETE at 19 of 19,
            qualified at bde6f8b on 2026-10-13.
+           P17-PERSIST-001 — Structural Analysis Persistence. COMPLETE at
+           20 of 20, qualified 2026-10-14 and committed as 7e18175.
+           P17-CLI-001 — Headless Structural FEA. COMPLETE at 24 of 24,
+           qualified 2026-10-15 against 7e18175 plus the working tree.
 
 Qualified:
            P0–P10 — BetterCAD v0.1.0
@@ -41,8 +54,8 @@ Qualified:
            P16 — Meshing
 
 Next:
-           P17-CLI-001 — Headless Structural FEA. NOT AUTHORIZED:
-           P17-PERSIST-001 passing will not be permission to start it.
+           P17-REFMOD-001 — Structural Reference Models. NOT AUTHORIZED:
+           P17-CLI-001 passing will not be permission to start it.
 
 P17 objective:
            authoritative CAD / material / mesh state
@@ -1784,35 +1797,72 @@ whether or not a solve has been run.
 
 Follow BetterCAD's existing CLI naming; the P16 set is ten `mesh-*` commands.
 
-* [ ] CLI inspect analysis definition
-* [ ] CLI add / remove loads
-* [ ] CLI add / remove restraints
-* [ ] CLI solve
-* [ ] CLI displacement summary
-* [ ] CLI stress summary
-* [ ] CLI reaction summary
-* [ ] CLI validation report
-* [ ] Structured diagnostics
-* [ ] Correct process exit codes
-* [ ] Stale-geometry failure
-* [ ] Stale-mesh failure
-* [ ] Missing-material failure
-* [ ] Under-constrained failure
-* [ ] Invalid load / restraint failure
-* [ ] CLI / core equivalence
-* [ ] Multi-process save / load / re-solve
-* [ ] No CLI-only FEA implementation
-* [ ] Fresh-binary proof
-* [ ] Zero-match test protection
-* [ ] End-to-end scripted workflow PASS
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] CLI inspect analysis definition — `structural-settings`, canonical
+      intent only, `faceResolves` per target
+* [x] CLI add / remove loads — `structural-load-add` / `-remove`, through
+      `AddStructuralLoadCommand` / `RemoveStructuralLoadCommand`
+* [x] CLI add / remove restraints — the same shape over the restraint commands
+* [x] CLI solve — `structural-solve`, through `solveStructuralAnalysis` only
+* [x] CLI displacement summary — `structural-displacement`
+* [x] CLI stress summary — `structural-stress`, `"domain": "element"`
+* [x] CLI reaction summary — `structural-reactions`, shared term written out
+* [x] CLI validation report — `structural-validate`, no solve, gate reaches
+      the exit status
+* [x] Structured diagnostics — the project's two-kind contract: stdout empty
+      when the command cannot answer, the payload plus exit 1 when the
+      answer is a failure
+* [x] Correct process exit codes — three, since P10; 36 rows measured
+* [x] Stale-geometry failure — NOT PRESENTABLE through this CLI, and recorded
+      as such: every process regenerates from intent. The analogue at this
+      layer is a model that will not regenerate, with three codes reached by
+      `cli.mesh.*`. The core gate stays P17-VALID-001's and probe L3 shows
+      the CLI uses it. FAILURE_MATRIX.md
+* [x] Stale-mesh failure — likewise: nothing persists a mesh, so none can be
+      handed to a fresh process. FAILURE_MATRIX.md
+* [x] Missing-material failure — the material stage's code, exit 1, stdout
+      empty, solver not invoked; no `--default-E`
+* [x] Under-constrained failure — `insufficient_restraint` with the core's
+      own wording; no `--auto-pin`
+* [x] Invalid load / restraint failure — `loads_unresolvable` /
+      `restraints_unresolvable`; the entity is preserved, never dropped
+* [x] CLI / core equivalence — every engineering assertion is an equivalence
+      against the core's own accessor; no expected-value table
+* [x] Multi-process save / load / re-solve — 28 steps, 28 processes, every
+      payload parsed with `string(JSON)`; no result persisted
+* [x] No CLI-only FEA implementation — zero occurrences of every solver,
+      mapping, formula and threshold name; checked by grep, line by line
+* [x] Fresh-binary proof — `$<TARGET_FILE:bettercad_cli>` structurally; path,
+      size and sha256 per preset in FREEZE.md
+* [x] Zero-match test protection — 19 and 9 discovered and executed in all
+      three presets; the guard's impossible filter discovers 0
+* [x] End-to-end scripted workflow PASS — `cli.structural.workflow`, in all
+      three presets
+* [x] Adversarial review PASS — 31 attacks, 8 findings, 1 production defect
+      (`elementCount` was triangles plus tetrahedra), fixed; 17 probe runs,
+      12 killed, 2 real test gaps closed
+* [x] Regression PASS — 3949/3949 x 3 presets, 1078 x 5 in two, 0 warnings
+      over 676 objects, 17 stages exit 0
+* [x] Evidence recorded —
+      [docs/verification/P17-CLI-001/](docs/verification/P17-CLI-001/README.md)
+
+**PASS 2026-10-15.** 24 of 24. Qualified against candidate 7e18175 (the
+parent commit) plus the working tree; the eight source/test fingerprints in
+[FREEZE.md](docs/verification/P17-CLI-001/FREEZE.md) are identical before and
+after the run, six of them identical to the P17-PERSIST-001 freeze (no core
+file changed), and are compared against the closeout commit's own subtree
+hashes in that commit.
+
+**Qualified on a second machine**, by an explicit owner decision when the
+uqhas machine was unavailable: same compiler to the WinLibs revision, same
+CMake, same dependency versions rebuilt from the same hash-verified archives;
+different build root and prefix path, both recorded beside the invocation.
+FREEZE.md states what is identical and what is not.
 
 Machine-readable output is fragile for a reason P16 had to find: Netgen writes
 a sizing warning to STDOUT, where `2>/dev/null` cannot remove it, and it
 corrupts any structured output. Silence a backend's chatter in the adapter,
-never in the consumer.
+never in the consumer. Measured again here: the chatter is contained in the
+adapter, and nine parsing processes saw clean stdout. BACKEND_STDOUT.md
 
 ---
 # P17-REFMOD-001
@@ -2218,11 +2268,24 @@ docs/engineering/
 # CURRENT NEXT STEP
 
 ```text
-P17-VIZ-001 is AUTHORIZED and in progress, 18 of its 23 boxes ticked.
-The headless layer, the deformed display and the four nodal contours are
-qualified; the three element contours are BLOCKED on a triangle-to-owning-
-tetrahedron mapping that `meshing` does not have, and the two glyph boxes
-are not drawn.
+P17-CLI-001 is COMPLETE at 24 of 24 and QUALIFIED, 2026-10-15.
+
+    eleven structural-* commands (six reports, five edits) in
+      apps/bettercad_cli/StructuralEdits.cpp and StructuralReports.cpp;
+      no file under src/ or include/ changed -- six of the eight tree
+      fingerprints are identical to the P17-PERSIST-001 freeze
+    19 in-process cases, 9 fresh-process tests, a 28-step multi-process
+      workflow parsed with string(JSON)
+    17 probe runs over 13 mutations: 12 killed, 1 equivalent (tie count
+      measured), 2 real test gaps closed
+    adversarial review: 31 attacks, 8 findings, 1 production defect
+      (elementCount was triangles plus tetrahedra), fixed
+    qualification: 3949/3949 x 3 presets, 1078 x 5 in two, 0 warnings over
+      676 objects, 17 stages exit 0, 3h00m43s, fingerprints before == after
+    the three presets' CLI solve payloads on the fixture are BYTE-IDENTICAL
+
+There is no open milestone. P17-REFMOD-001 is next in the sequence and is
+NOT AUTHORIZED; P17-CLI-001 passing is not permission to start it.
 ```
 
 P17-ARCH-001 gave the structural phase a boundary a stale mesh cannot cross, a
@@ -2393,19 +2456,38 @@ P17-VALID-001    PASS 2026-10-11. Qualified at include 34b3ec8d / src b6cddc44 /
                  property, no rebound face. No predecessor production file was
                  modified at all.
 
-P17-VIZ-001      AUTHORIZED 2026-10-11, in progress. A trustworthy
-                 inspection layer over the qualified P17 result, and nothing
-                 more: the viewer is a VIEW. The invariant is that a deformed
-                 display is a visual transform of the current derived
-                 displacement -- never a mutation of the P16 mesh, the CAD
-                 geometry, the document parameters or the result, and never a
-                 second solver authority. Two carried traps bind it: mesh and
-                 displacement are SI METRES while OCCT model space is
-                 MILLIMETRES, and a classifier that classified zero entities
-                 is NOT an all-valid visualisation.
+P17-VIZ-001      PASS 2026-10-13. COMPLETE at 23 of 23, qualified at
+                 e795acb: 3835/3835 x 3 presets, 980 x 5 in two, 0 warnings.
+                 The viewer is a VIEW: a deformed display is a visual
+                 transform of the current derived displacement, never a
+                 mutation of the mesh, the geometry or the result. The
+                 element contours are drawn from a tetrahedron-derived
+                 boundary (ADR-046), so the mapping once recorded here as a
+                 blocker was never needed. Evidence recorded.
 
-P17-CMD-001      NOT AUTHORIZED. Being next in the sequence is not
-                 permission, and P17-VIZ-001 passing will not be either.
+P17-CMD-001      PASS 2026-10-13. COMPLETE at 19 of 19, qualified at
+                 bde6f8b: 3883/3883 x 3, 1012 x 5 in two, 0 warnings. Eight
+                 commands over the canonical analysis, loads, restraints and
+                 solver settings; 16 compile-fail cases prove no solver
+                 array CAN enter history. Evidence recorded.
+
+P17-PERSIST-001  PASS 2026-10-14. COMPLETE at 20 of 20, qualified against
+                 bde6f8b and committed as 7e18175: 3921/3921 x 3, 1050 x 5
+                 in two, 0 warnings. One additive object type, no version
+                 bump, no core change; a NodalForceLoad refuses the save
+                 (ADR-048). Evidence recorded.
+
+P17-CLI-001      PASS 2026-10-15. COMPLETE at 24 of 24, qualified against
+                 7e18175 plus the working tree: 3949/3949 x 3, 1078 x 5 in
+                 two, 0 warnings over 676 objects, 17 stages exit 0. Eleven
+                 structural-* commands over the qualified core, no core
+                 file changed, one production defect found by the
+                 equivalence tests and fixed. Qualified on a second machine
+                 by owner decision, with the deviation recorded in
+                 FREEZE.md. Evidence recorded.
+
+P17-REFMOD-001   NOT AUTHORIZED. Being next in the sequence is not
+                 permission, and P17-CLI-001 passing will not be either.
                  Authorizing it is a scope decision.
 
 everything after it
@@ -2432,19 +2514,19 @@ the result model        Translation3D / Force3D / Strain6 / Stress6, the
 the currentness answer  currentResultSource / resultCurrency / analysisState,
                         which call requireStructuralModel and so inherit every
                         ADR-036 gate
-what is still undecided  the DOF numbering, the sparse representation, the
-                        solver and its LICENCE, the acceptance thresholds,
-                        whether gravity is in scope, and the per-body material
-                        story. The Voigt ordering is now DECIDED (P17-DATA-001)
+what was then undecided  has since been decided, each by a named milestone:
+                        the Voigt ordering (P17-DATA-001), the DOF numbering
+                        (P17-DOF-001, ADR-037), gravity in scope
+                        (P17-LOAD-001), the sparse representation
+                        (P17-ASSEMBLY-001, ADR-038), the solver and its
+                        licence (P17-SOLVE-001, ADR-039, Eigen MPL-2.0), the
+                        acceptance thresholds (P17-VALID-001, ADR-042)
 ```
 
-Read `# P17 Prerequisites Already In The Tree` before starting. Three things
-are already settled and one is a decision waiting: P15 names
-`ConsumerKind::FeaLinearStatic` and `FeaLinearStaticWithGravity`; Eigen 5.0.1
-is already a pinned dependency, private to `bettercad_sketch`; P16's handover
-and its four refusals are fixed. The decision: a module that USES meshing
-cannot share meshing's layer, and the layering table has no integer between
-`meshing` 4 and `io` 5.
+`# P17 Prerequisites Already In The Tree` is kept as the record of what each
+milestone inherited. Its one open decision, the layer a module that USES
+meshing may occupy, was taken by P17-ARCH-001: the table was respaced in tens
+(ADR-035) and `structural` sits at layer 50.
 
 ## Still owed, from earlier reviews
 

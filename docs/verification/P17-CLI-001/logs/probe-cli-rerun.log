@@ -1,0 +1,49 @@
+######## 0. THE PRISTINE COPIES ########
+  b7c6262caace680c1eb30c0c9b27b44d9a24a6c0 *rep.pristine
+  04acb1dd4a2c08a5a0350e752ed48a468e797f66 *ed.pristine
+  verified
+
+######## 1. DRY RUN: every anchor ########
+  L5-stress-labelled-Pa-but-in-MPa       occurrences=1  ok
+  L7-displacement-tiebreak-reversed      occurrences=1  ok
+  L10-unresolved-reported-as-resolving   occurrences=1  ok
+  L13-usage-error-reported-as-failure    occurrences=1  ok
+
+######## 2. THE BASELINE MUST BE GREEN ########
+  100% tests passed out of 28
+
+######## 3. THE PROBES ########
+
+---- L5-stress-labelled-Pa-but-in-MPa ----
+     expect to die: a unit label that does not match the number
+     KILLED by 1 test(s)   96% tests passed, 1 tests failed out of 28
+       unit.StructuralCli_StressSummaryMatchesTheCore
+
+---- L7-displacement-tiebreak-reversed ----
+     expect to die: a nondeterministic extremum tie-break
+     SURVIVED   100% tests passed out of 28
+
+---- L10-unresolved-reported-as-resolving ----
+     expect to die: an unresolved load target reported as resolving
+     KILLED by 1 test(s)   96% tests passed, 1 tests failed out of 28
+       unit.StructuralCli_InspectReportsAnUnresolvedTargetRatherThanOmittingIt
+
+---- L13-usage-error-reported-as-failure ----
+     expect to die: a command-line fault reported as a model failure
+     KILLED by 3 test(s)   89% tests passed, 3 tests failed out of 28
+       unit.StructuralCli_EveryRefusalClassReachesTheExitStatus
+       unit.StructuralCli_ThereIsNoFlagThatBypassesValidation
+       cli.structural.workflow
+
+######## 4. RESTORE AND REBUILD ########
+  sources restored and hash-verified
+  restore build OK -- the binaries match the pristine sources again
+  100% tests passed out of 28
+
+######## VERDICTS ########
+  L5-stress-labelled-Pa-but-in-MPa KILLED(1)
+  L7-displacement-tiebreak-reversed SURVIVED
+  L10-unresolved-reported-as-resolving KILLED(1)
+  L13-usage-error-reported-as-failure KILLED(3)
+######## PROBE RUN DONE ########
+Wed Oct 14 16:42:15 EAST 2026

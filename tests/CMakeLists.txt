@@ -294,6 +294,7 @@ if(TARGET bettercad_cli_lib)
         cli/AssemblyCliTests.cpp
         cli/DrawingCliTests.cpp
         cli/MaterialCliTests.cpp
+        cli/StructuralCliTests.cpp
         cli/MeshingCliTests.cpp
         reference/AssemblyWorkflowTests.cpp
         io/AssemblyStepTests.cpp
@@ -483,6 +484,51 @@ if(TARGET bettercad_cli)
             "-DSOURCE=${_example}"
             "-DWORK=${_out}/mesh-workflow"
             -P "${CMAKE_CURRENT_SOURCE_DIR}/cli/MeshingWorkflow.cmake")
+
+    # P17-CLI-001. The structural commands on the real executable, with the
+    # hand-written analysed_plate.bcad -- so argument parsing, document
+    # loading, the runtime closure, the exit code and stdout cleanliness are
+    # all exercised by a separate process, which the in-process tests cannot
+    # do.
+    set(_analysed "${PROJECT_SOURCE_DIR}/examples/models/analysed_plate.bcad")
+    bettercad_add_process_test(cli.structural.settings
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "structural-settings|${_analysed}|--json"
+        EXIT_CODE 0 STDOUT_REGEX "\"mode\": \"linear static\"")
+    bettercad_add_process_test(cli.structural.validate
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "structural-validate|${_analysed}|--json"
+        EXIT_CODE 0 STDOUT_REGEX "\"acceptable\": true")
+    bettercad_add_process_test(cli.structural.solve
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "structural-solve|${_analysed}|--json"
+        EXIT_CODE 0 STDOUT_REGEX "\"freeEquations\": [1-9][0-9]*")
+    bettercad_add_process_test(cli.structural.displacement
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "structural-displacement|${_analysed}|--json"
+        EXIT_CODE 0 STDOUT_REGEX "\"unit\": \"m\"")
+    bettercad_add_process_test(cli.structural.stress
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "structural-stress|${_analysed}|--json"
+        EXIT_CODE 0 STDOUT_REGEX "\"domain\": \"element\"")
+    bettercad_add_process_test(cli.structural.reactions
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "structural-reactions|${_analysed}|--json"
+        EXIT_CODE 0 STDOUT_REGEX "\"constrainedNodes\": [1-9][0-9]*")
+    # A query on a document with no analysis FAILS, and prints nothing to
+    # stdout -- the stream discipline P15-CLI-001 established.
+    bettercad_add_process_test(cli.structural.settings.no-analysis
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "structural-settings|${_example}"
+        EXIT_CODE 1 STDERR_REGEX "no_structural_analysis")
+    # And the prose form carries the same numbers in a readable shape.
+    bettercad_add_process_test(cli.structural.solve.prose
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "structural-solve|${_analysed}"
+        EXIT_CODE 0 STDOUT_REGEX "^Solved: [0-9]+ nodes, [0-9]+ tetrahedra")
+
+    # The scripted multi-process workflow: separate processes throughout, every
+    # exit code asserted, every payload PARSED with string(JSON) rather than
+    # matched with a regex. It fails fast.
+    add_test(NAME cli.structural.workflow
+        COMMAND "${CMAKE_COMMAND}"
+            "-DCLI=$<TARGET_FILE:bettercad_cli>"
+            "-DSOURCE=${_analysed}"
+            "-DSOURCE_NO_ANALYSIS=${_example}"
+            "-DWORK=${_out}/structural-workflow"
+            -P "${CMAKE_CURRENT_SOURCE_DIR}/cli/StructuralWorkflow.cmake")
 
     # The zero-match filter guard. `ctest -R` exits 0 when a pattern matches
     # NOTHING -- demonstrated by the guard itself -- so a targeted run must

@@ -111,6 +111,36 @@ constexpr std::array kCommands{
             "Mesh the document and report the named boundary sets, or one face, with the facets "
             "they resolve to now. Reporting that a face is unresolved is a successful answer.",
             &runMeshBoundaries},
+    // P17-CLI-001. Six reports over the P17 structural core. Each adds --json.
+    Command{"structural-settings", kStructuralSettingsUsage,
+            "Show the canonical structural intent: the mode, the loads and restraints with their "
+            "CAD targets and values, and the solver settings. Says which targets no longer "
+            "resolve. Never meshes, never solves, writes nothing.",
+            &runStructuralSettings},
+    Command{"structural-validate", kStructuralValidateUsage,
+            "Mesh the document and report whether the analysis is ready to solve: mesh quality, "
+            "material, restraints and loads, in the core's staged order. Exit status 1 unless it "
+            "is acceptable. Does NOT solve.",
+            &runStructuralValidate},
+    Command{"structural-solve", kStructuralSolveUsage,
+            "Mesh, validate and solve, and report a summary at any size: counts, free equations, "
+            "strain energy, the largest displacement and von Mises, the residual and the "
+            "equilibrium. The result is NOT saved -- it is derived state.",
+            &runStructuralSolve},
+    Command{"structural-displacement", kStructuralDisplacementUsage,
+            "Solve and summarise the nodal displacements: the range of the magnitude and of each "
+            "component, and the node carrying the largest, tie-broken by ascending node id.",
+            &runStructuralDisplacement},
+    Command{"structural-stress", kStructuralStressUsage,
+            "Solve and summarise the element stresses -- one constant state per tetrahedron, "
+            "never averaged to nodes: the range of von Mises, of each component and of the "
+            "principal stresses, and the element carrying the largest.",
+            &runStructuralStress},
+    Command{"structural-reactions", kStructuralReactionsUsage,
+            "Solve and summarise the support reactions: the total force and moment in the core's "
+            "own sign convention, the equilibrium residuals, and the per-restraint owned and "
+            "shared parts -- which are additive only together.",
+            &runStructuralReactions},
 };
 
 void printUsage(std::ostream& os) {

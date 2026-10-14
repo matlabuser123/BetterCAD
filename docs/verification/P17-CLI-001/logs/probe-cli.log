@@ -1,0 +1,97 @@
+######## 0. THE PRISTINE COPIES ########
+  b7c6262caace680c1eb30c0c9b27b44d9a24a6c0 *rep.pristine
+  04acb1dd4a2c08a5a0350e752ed48a468e797f66 *ed.pristine
+  verified
+
+######## 1. DRY RUN: every anchor ########
+  L1-solve-swallows-its-failure          occurrences=1  ok
+  L2-validate-always-succeeds            occurrences=1  ok
+  L3-skip-the-validation-precheck        occurrences=1  ok
+  L4-debug-line-before-the-payload       occurrences=1  ok
+  L5-stress-labelled-Pa-but-in-MPa       occurrences=1  ok
+  L6-tetrahedron-count-is-the-mesh-total occurrences=1  ok
+  L7-displacement-tiebreak-reversed      occurrences=1  ok
+  L8-reaction-sign-flipped               occurrences=1  ok
+  L9-ambiguity-takes-the-first           occurrences=1  ok
+  L10-unresolved-reported-as-resolving   occurrences=1  ok
+  L11-edit-bypasses-the-command          occurrences=1  ok
+  L12-two-load-kinds-silently-take-one   occurrences=1  ok
+  L13-usage-error-reported-as-failure    occurrences=1  ok
+
+######## 2. THE BASELINE MUST BE GREEN ########
+  100% tests passed out of 28
+
+######## 3. THE PROBES ########
+
+---- L1-solve-swallows-its-failure ----
+     expect to die: a refused solve reported as a successful command
+     KILLED by 3 test(s)   89% tests passed, 3 tests failed out of 28
+       unit.StructuralCli_EveryRefusalClassReachesTheExitStatus
+       unit.StructuralCli_ThereIsNoFlagThatBypassesValidation
+       cli.structural.workflow
+
+---- L2-validate-always-succeeds ----
+     expect to die: the validation gate reaching the exit status
+     KILLED by 3 test(s)   89% tests passed, 3 tests failed out of 28
+       unit.StructuralCli_EveryRefusalClassReachesTheExitStatus
+       unit.StructuralCli_ValidationMatchesTheCore
+       cli.structural.workflow
+
+---- L3-skip-the-validation-precheck ----
+     expect to die: a refused model being allowed past the staged diagnostic
+     KILLED by 2 test(s)   93% tests passed, 2 tests failed out of 28
+       unit.StructuralCli_EveryRefusalClassReachesTheExitStatus
+       cli.structural.workflow
+
+---- L4-debug-line-before-the-payload ----
+     expect to die: stdout contamination ahead of the structured payload
+     KILLED by 2 test(s)   93% tests passed, 2 tests failed out of 28
+       unit.StructuralCli_StructuredOutputIsTheWholeOfStdout
+       cli.structural.workflow
+
+---- L5-stress-labelled-Pa-but-in-MPa ----
+     expect to die: a unit label that does not match the number
+     SURVIVED   100% tests passed out of 28
+
+---- L6-tetrahedron-count-is-the-mesh-total ----
+     expect to die: the per-tetrahedron count conflated with the mesh total
+     KILLED by 2 test(s)   93% tests passed, 2 tests failed out of 28
+       unit.StructuralCli_StressSummaryMatchesTheCore
+       unit.StructuralCli_TheProseAndTheJsonCarryTheSameNumbers
+
+---- L7-displacement-tiebreak-reversed ----
+     expect to die: a nondeterministic extremum tie-break
+     SURVIVED   100% tests passed out of 28
+
+---- L8-reaction-sign-flipped ----
+     expect to die: the core's reaction sign convention flipped for presentation
+     KILLED by 1 test(s)   96% tests passed, 1 tests failed out of 28
+       unit.StructuralCli_ReactionSummaryMatchesTheCore
+
+---- L9-ambiguity-takes-the-first ----
+     expect to die: an ambiguous document analysed by first match instead of refused
+     KILLED by 1 test(s)   96% tests passed, 1 tests failed out of 28
+       unit.StructuralCli_AmbiguityIsRefusedRatherThanGuessed
+
+---- L10-unresolved-reported-as-resolving ----
+     expect to die: an unresolved load target reported as resolving
+     SURVIVED   100% tests passed out of 28
+
+---- L11-edit-bypasses-the-command ----
+     expect to die: a load added without the command's duplicate and value checks
+     KILLED by 2 test(s)   93% tests passed, 2 tests failed out of 28
+       unit.StructuralCli_AFailedMutationLeavesTheFileExactlyAsItWas
+       unit.StructuralCli_TheEditsAreScriptableThroughBatch
+
+---- L12-two-load-kinds-silently-take-one ----
+     expect to die: two load kinds at once accepted instead of refused
+     KILLED by 1 test(s)   96% tests passed, 1 tests failed out of 28
+       unit.StructuralCli_AFailedMutationLeavesTheFileExactlyAsItWas
+
+---- L13-usage-error-reported-as-failure ----
+     expect to die: a command-line fault reported as a model failure
+     *** DID NOT COMPILE -- VOID, not a kill ***
+
+######## 4. RESTORE AND REBUILD ########
+  sources restored and hash-verified
+  *** RESTORE BUILD FAILED ***

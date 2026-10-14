@@ -1,0 +1,19 @@
+=== the first batch (13 mutations) ===
+KILLED by 3 test(s)   89% tests passed, 3 tests failed out of 28
+KILLED by 3 test(s)   89% tests passed, 3 tests failed out of 28
+KILLED by 2 test(s)   93% tests passed, 2 tests failed out of 28
+KILLED by 2 test(s)   93% tests passed, 2 tests failed out of 28
+SURVIVED   100% tests passed out of 28
+KILLED by 2 test(s)   93% tests passed, 2 tests failed out of 28
+SURVIVED   100% tests passed out of 28
+KILLED by 1 test(s)   96% tests passed, 1 tests failed out of 28
+KILLED by 1 test(s)   96% tests passed, 1 tests failed out of 28
+SURVIVED   100% tests passed out of 28
+KILLED by 2 test(s)   93% tests passed, 2 tests failed out of 28
+KILLED by 1 test(s)   96% tests passed, 1 tests failed out of 28
+
+=== the rerun: L5, L10 after the fixes; L7 confirmed equivalent; L13 after the ENOSPC void ===
+L5-stress-labelled-Pa-but-in-MPa KILLED(1)
+L7-displacement-tiebreak-reversed SURVIVED
+L10-unresolved-reported-as-resolving KILLED(1)
+L13-usage-error-reported-as-failure KILLED(3)

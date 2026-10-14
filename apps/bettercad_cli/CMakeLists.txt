@@ -22,6 +22,8 @@ add_library(bettercad_cli_lib STATIC
     MaterialReports.cpp
     MeshingEdits.cpp
     MeshingReports.cpp
+    StructuralEdits.cpp
+    StructuralReports.cpp
     MaterialVocabulary.cpp
     MaterialVocabulary.hpp
     Selectors.cpp
@@ -39,6 +41,7 @@ target_link_libraries(bettercad_cli_lib
         BetterCAD::io
         BetterCAD::meshing
         BetterCAD::sketch
+        BetterCAD::structural
 )
 
 bettercad_add_executable(bettercad_cli

@@ -59,6 +59,13 @@ set(_filters
     # filter reaches: they live under their own test-name prefix precisely so
     # that the final qualification can select them and be seen to have done so.
     "unit\\.P16Qualification" 4
+    # P17-CLI-001. The in-process command tests, and the fresh-process ones --
+    # which include the multi-process workflow. Both halves are listed because
+    # the qualification runs both, so both have to be seen to match something:
+    # the in-process cases cannot prove the executable works, and the process
+    # cases cannot reach the core for an equivalence comparison.
+    "unit\\.StructuralCli" 15
+    "cli\\.structural\\." 8
 )
 list(LENGTH _filters _count)
 math(EXPR _last "${_count} - 1")

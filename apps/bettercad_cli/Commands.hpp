@@ -56,6 +56,27 @@ inline constexpr std::string_view kMeshValidateUsage = "mesh-validate <file.bcad
 inline constexpr std::string_view kMeshBoundariesUsage =
     "mesh-boundaries <file.bcad> [<face>] [--json]";
 
+// P17-CLI-001. Structural FEA: six reports here, and the five edits in
+// StructuralEdits.cpp. Each takes --json for a machine-readable form.
+//
+// NO RESULT IS EVER WRITTEN. Displacements, stresses and reactions are derived
+// state that ADR-048 keeps out of the document, so each result command solves
+// from canonical intent in its own process and exits -- exactly as the mesh
+// reports generate a mesh rather than loading one. A fresh process therefore
+// re-solves, which is correct and is tested rather than worked around.
+inline constexpr std::string_view kStructuralSettingsUsage =
+    "structural-settings <file.bcad> [--json]";
+inline constexpr std::string_view kStructuralValidateUsage =
+    "structural-validate <file.bcad> [--json]";
+inline constexpr std::string_view kStructuralSolveUsage =
+    "structural-solve <file.bcad> [--json]";
+inline constexpr std::string_view kStructuralDisplacementUsage =
+    "structural-displacement <file.bcad> [--json]";
+inline constexpr std::string_view kStructuralStressUsage =
+    "structural-stress <file.bcad> [--json]";
+inline constexpr std::string_view kStructuralReactionsUsage =
+    "structural-reactions <file.bcad> [--json]";
+
 [[nodiscard]] ExitCode runNew(Args args, std::ostream& out, std::ostream& err);
 [[nodiscard]] ExitCode runInfo(Args args, std::ostream& out, std::ostream& err);
 [[nodiscard]] ExitCode runValidate(Args args, std::ostream& out, std::ostream& err);
@@ -104,6 +125,20 @@ inline constexpr std::string_view kMeshBoundariesUsage =
 [[nodiscard]] ExitCode runMeshQuality(Args args, std::ostream& out, std::ostream& err);
 [[nodiscard]] ExitCode runMeshValidate(Args args, std::ostream& out, std::ostream& err);
 [[nodiscard]] ExitCode runMeshBoundaries(Args args, std::ostream& out, std::ostream& err);
+
+/// P17-CLI-001. These six report and never write, for the reason P16's do:
+/// a structural result is derived state, and a report that saved one would
+/// make the document claim an authority ADR-048 denies it.
+///
+/// THE FOUR RESULT COMMANDS SOLVE, through `solveStructuralAnalysis` and
+/// nothing else, so every P17-VALID refusal reaches the exit status. There is
+/// no flag that bypasses validation.
+[[nodiscard]] ExitCode runStructuralSettings(Args args, std::ostream& out, std::ostream& err);
+[[nodiscard]] ExitCode runStructuralValidate(Args args, std::ostream& out, std::ostream& err);
+[[nodiscard]] ExitCode runStructuralSolve(Args args, std::ostream& out, std::ostream& err);
+[[nodiscard]] ExitCode runStructuralDisplacement(Args args, std::ostream& out, std::ostream& err);
+[[nodiscard]] ExitCode runStructuralStress(Args args, std::ostream& out, std::ostream& err);
+[[nodiscard]] ExitCode runStructuralReactions(Args args, std::ostream& out, std::ostream& err);
 
 /// "3 objects", "1 object".
 inline std::string plural(std::size_t count, std::string_view singular, std::string_view many) {
