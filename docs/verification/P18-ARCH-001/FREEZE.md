@@ -152,6 +152,25 @@ functions and `toString`, each `BETTERCAD_THERMAL_EXPORT`.
 
 ## The commit record
 
-Filled in after `BetterCAD: define thermal analysis architecture` was made,
-with the eight subtree hashes read back from the commit; see the final
-report and `TODO.md`'s PASS entry.
+```text
+commit             7e7578feac3e582618d21904491145801ef0af1a
+                   "BetterCAD: define thermal analysis architecture",
+                   parent a3b721b; the fingerprint recomputed from a scratch
+                   index (read-tree HEAD + add -A over the eight paths)
+                   immediately before `git add`, then read back with
+                   git rev-parse <commit>^{tree}:<path>
+apps               a95876bc6dbf843d4e0cec114059bc196fa16175   == frozen
+include            33ea62c2406871dc5d65df6eb381e247fc6ff6c6   == frozen
+src                9e992c58ffefc159d75bc780d29f756386053fa4   == frozen
+tests              360b9e04cfb11ada85f4fafd7cbad51d4962ab11   == frozen
+examples           a955cf6511ce715fcb95bc06ef82b877535869e6   == frozen
+cmake              5a382115d7ed7775189d40b55e40f318eaae6cc7   == frozen
+CMakeLists.txt     3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd   == frozen
+CMakePresets.json  3229f0f89b236744d7d5c082bed47c28b718288e   == frozen
+```
+
+All eight equal, at all three readings. This record could only be written
+after the commit existed, so it lands in a documentation commit that follows
+it; `docs/` is outside the fingerprint by construction, and anyone can
+re-check the eight lines against whatever `HEAD` is current with the one
+command P16-QUAL-001 gave.
