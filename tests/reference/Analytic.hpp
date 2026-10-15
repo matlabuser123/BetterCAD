@@ -528,4 +528,212 @@ struct MeshedVolumeBound {
             .upper = tubeVolumeMm3(outerRadius, innerRadius - deflection, height)};
 }
 
+// --- Linear elasticity closed forms for the structural suite (P17-REFMOD-001)
+//
+// In SI, because the structural models' loads and material constants are SI
+// and the solver's answers are SI; the one conversion from the models'
+// millimetre dimensions happens at the call site, once.
+//
+// NOTHING HERE CALLS BETTERCAD. There is no B matrix, no D matrix, no von Mises
+// from `StructuralPost.hpp`, no facet integration from `StructuralLoadVector.hpp`
+// and no Lame constant read from an `ElasticityMatrix`. Every expression below
+// is the textbook form written out, so a defect in the production formula has
+// nothing in common with the number it is compared against. The suite reads
+// E, nu and rho from the DOCUMENT's resolved material and the dimensions from
+// the model's own parameters, and puts them through these.
+
+/// The Lame constants of an isotropic solid.
+///
+///     lambda = E nu / ((1 + nu)(1 - 2 nu))        mu = E / (2 (1 + nu))
+struct Lame {
+    double lambda = 0.0;
+    double mu = 0.0;
+};
+
+[[nodiscard]] inline Lame lame(double youngs, double poisson) {
+    return {.lambda = youngs * poisson / ((1.0 + poisson) * (1.0 - 2.0 * poisson)),
+            .mu = youngs / (2.0 * (1.0 + poisson))};
+}
+
+/// A symmetric small-strain or stress state as six components, in the order
+/// xx, yy, zz, xy, yz, zx. For a STRAIN the shear entries are ENGINEERING
+/// shear (gamma = 2 eps_xy); for a stress they are the shear stresses. That is
+/// the convention the structural module freezes, restated here rather than
+/// read from it, so a halved or doubled shear in production shows as a
+/// mismatch rather than as agreement.
+using Voigt6 = std::array<double, 6>;
+
+/// The engineering strain of the affine displacement field
+///
+///     u = A x + b        A row-major, A[i][j] = d u_i / d x_j
+///
+/// which is `eps_ij = (A_ij + A_ji) / 2` on the diagonal and the full sum
+/// `A_ij + A_ji` for the engineering shears. The field's constant `b` does not
+/// enter a strain, which is the rigid-translation statement.
+using Gradient3 = std::array<std::array<double, 3>, 3>;
+
+[[nodiscard]] constexpr Voigt6 affineStrain(const Gradient3& a) {
+    return {a[0][0],           a[1][1],           a[2][2],
+            a[0][1] + a[1][0], a[1][2] + a[2][1], a[2][0] + a[0][2]};
+}
+
+/// The affine field's displacement at a point, in the same units as the
+/// point and `b`.
+[[nodiscard]] constexpr std::array<double, 3> affineDisplacement(const Gradient3& a,
+                                                                 const std::array<double, 3>& b,
+                                                                 const std::array<double, 3>& x) {
+    return {a[0][0] * x[0] + a[0][1] * x[1] + a[0][2] * x[2] + b[0],
+            a[1][0] * x[0] + a[1][1] * x[1] + a[1][2] * x[2] + b[1],
+            a[2][0] * x[0] + a[2][1] * x[1] + a[2][2] * x[2] + b[2]};
+}
+
+/// Hooke's law for an isotropic solid, from the Lame constants:
+///
+///     sigma_ii = lambda tr(eps) + 2 mu eps_ii         tau_ij = mu gamma_ij
+///
+/// `mu gamma`, NOT `2 mu gamma`: with engineering shear the factor of two is
+/// already in gamma.
+[[nodiscard]] constexpr Voigt6 isotropicStress(const Voigt6& strain, const Lame& constants) {
+    const double trace = strain[0] + strain[1] + strain[2];
+    return {constants.lambda * trace + 2.0 * constants.mu * strain[0],
+            constants.lambda * trace + 2.0 * constants.mu * strain[1],
+            constants.lambda * trace + 2.0 * constants.mu * strain[2],
+            constants.mu * strain[3], constants.mu * strain[4], constants.mu * strain[5]};
+}
+
+/// Von Mises through the DEVIATORIC contraction, `sqrt(3/2 s:s)`, which is a
+/// different route from the pairwise-difference form the production code
+/// uses and agrees with it identically for every symmetric tensor.
+[[nodiscard]] inline double vonMises(const Voigt6& s) {
+    const double mean = (s[0] + s[1] + s[2]) / 3.0;
+    const double dxx = s[0] - mean;
+    const double dyy = s[1] - mean;
+    const double dzz = s[2] - mean;
+    return std::sqrt(1.5 * (dxx * dxx + dyy * dyy + dzz * dzz +
+                            2.0 * (s[3] * s[3] + s[4] * s[4] + s[5] * s[5])));
+}
+
+/// `sigma n` on a face with area vector `S` (outward normal times area): the
+/// total force the stress state transmits across that face. Written from the
+/// tensor's symmetric layout.
+[[nodiscard]] constexpr std::array<double, 3> tractionForce(const Voigt6& s,
+                                                            const std::array<double, 3>& areaVector) {
+    return {s[0] * areaVector[0] + s[3] * areaVector[1] + s[5] * areaVector[2],
+            s[3] * areaVector[0] + s[1] * areaVector[1] + s[4] * areaVector[2],
+            s[5] * areaVector[0] + s[4] * areaVector[1] + s[2] * areaVector[2]};
+}
+
+/// The strain energy density `(1/2) sigma : eps`, with engineering shear:
+/// `(1/2)(sigma_ii eps_ii + tau_ij gamma_ij)`.
+[[nodiscard]] constexpr double strainEnergyDensity(const Voigt6& stress, const Voigt6& strain) {
+    return 0.5 * (stress[0] * strain[0] + stress[1] * strain[1] + stress[2] * strain[2] +
+                  stress[3] * strain[3] + stress[4] * strain[4] + stress[5] * strain[5]);
+}
+
+/// An axial bar of length L and area A under a total force F:
+///
+///     sigma = F / A       eps = sigma / E       delta = F L / (A E)
+///
+/// and, with the Poisson contraction left free, the lateral strains are
+/// `-nu eps`. The whole state is affine, which is why RM-FEA-02 can hold the
+/// solver to these to roundoff.
+struct AxialBar {
+    double stress = 0.0;
+    double strain = 0.0;
+    double lateralStrain = 0.0;
+    double elongation = 0.0;
+    /// `(1/2) F delta`, the strain energy of the whole bar.
+    double energy = 0.0;
+};
+
+[[nodiscard]] constexpr AxialBar axialBar(double force, double length, double area, double youngs,
+                                          double poisson) {
+    const double stress = force / area;
+    const double strain = stress / youngs;
+    const double elongation = strain * length;
+    return {.stress = stress,
+            .strain = strain,
+            .lateralStrain = -poisson * strain,
+            .elongation = elongation,
+            .energy = 0.5 * force * elongation};
+}
+
+/// The second moment of area of a solid circle about a diameter, `pi r^4 / 4`,
+/// and of a rectangle b wide and h deep about its centroidal axis parallel to
+/// b, `b h^3 / 12`.
+[[nodiscard]] inline double secondMomentCircle(double radius) {
+    return pi * radius * radius * radius * radius / 4.0;
+}
+[[nodiscard]] constexpr double secondMomentRectangle(double width, double depth) {
+    return width * depth * depth * depth / 12.0;
+}
+
+/// Timoshenko's shear coefficient for a solid circular section,
+/// `6 (1 + nu) / (7 + 6 nu)` (Cowper, 1966).
+[[nodiscard]] constexpr double shearCoefficientCircle(double poisson) {
+    return 6.0 * (1.0 + poisson) / (7.0 + 6.0 * poisson);
+}
+
+/// A tip-loaded cantilever of length L, flexural rigidity E I, shear
+/// rigidity kappa G A:
+///
+///     delta_EB   = F L^3 / (3 E I)                 Euler-Bernoulli
+///     delta_T    = delta_EB + F L / (kappa G A)    Timoshenko
+///     M_root     = F L                             the root bending moment
+///     sigma_root = M_root c / I                    extreme fibre at the root
+///
+/// Beam theory is an APPROXIMATION of the 3D continuum the solver models, so
+/// a Tet4 mesh approaches these; it does not hit them. The suite uses them as
+/// the target of a convergence study and as exact equilibrium statements
+/// (the reaction and the root moment), never as a point value on one mesh.
+struct Cantilever {
+    double eulerBernoulli = 0.0;
+    double shear = 0.0;
+    double timoshenko = 0.0;
+    double rootMoment = 0.0;
+    double rootFibreStress = 0.0;
+};
+
+[[nodiscard]] constexpr Cantilever cantilever(double force, double length, double youngs,
+                                              double secondMoment, double shearModulus,
+                                              double shearCoefficient, double area,
+                                              double extremeFibre) {
+    const double bending = force * length * length * length / (3.0 * youngs * secondMoment);
+    const double shear = force * length / (shearCoefficient * shearModulus * area);
+    const double moment = force * length;
+    return {.eulerBernoulli = bending,
+            .shear = shear,
+            .timoshenko = bending + shear,
+            .rootMoment = moment,
+            .rootFibreStress = moment * extremeFibre / secondMoment};
+}
+
+/// A block of base area A under a uniform pressure p on its top face: the
+/// resultant `p A`, and the MEAN axial stress `-p`.
+///
+/// The mean is EXACT for the discrete solution, not approximate, and the
+/// argument is the virtual work of the affine field `u = z e_z`: the internal
+/// work is `sum_e sigma_zz,e V_e`, the external work is the top traction's
+/// `-p A H` (the base reactions act at z = 0 and do no work), so
+/// `(1/V) sum sigma_zz V = -p A H / (A H) = -p`. RM-FEA-04 holds the solver
+/// to it at the accumulation band.
+[[nodiscard]] constexpr double pressureResultant(double pressure, double area) {
+    return pressure * area;
+}
+[[nodiscard]] constexpr double meanAxialStressUnderPressure(double pressure) {
+    return -pressure;
+}
+
+/// A column of height H and density rho under gravity g: the weight
+/// `rho V g`, and the MEAN axial stress `-rho g H / 2`, which is exact for
+/// the same virtual-work reason with the body force's work `-rho g V z_bar`
+/// and a box's centroid at `H / 2`.
+[[nodiscard]] constexpr double selfWeight(double density, double volume, double gravity) {
+    return density * volume * gravity;
+}
+[[nodiscard]] constexpr double meanAxialStressUnderSelfWeight(double density, double gravity,
+                                                               double height) {
+    return -density * gravity * height / 2.0;
+}
+
 } // namespace bettercad::test::analytic

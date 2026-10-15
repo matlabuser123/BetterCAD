@@ -1,0 +1,164 @@
+== RM-FEA-01 StructuralPatch
+constant-strain patch test on a mesh with an interior node
+loads 1 restraints 1 mode linear static
+nodes 9 tets 12 boundary_facets 12
+sizing global_mm 20 local_controls 0 unresolved_local 0 slabs 0
+validation accepted reached_stage complete constrained_dofs 12 loaded_nodes 4
+expected_outcome solve actual solve published_result yes
+solve free_equations 15 residual 2.6768756826880601e-17 pivot_ratio 0.13028700385047212 strain_energy_J 0.00031175253826080208
+fields largest_displacement_m 2.2757757155534776e-07 largest_von_mises_Pa 2467880.079150897 nodes 9 elements 12
+reactions total_N 8.5265128291212022e-14 1.7053025658242404e-13 3000.0000000000005 external_N 0 0 -2999.9999999999995
+equilibrium force_eta 1.500735e-16 moment_eta 1.856689e-16 constrained_dofs 12 reaction_nodes 4
+after_change patch_a_mm 48 currency stale: the geometry changed validation rejected input_problem mesh_stale solve refused
+after_remesh nodes 9 tets 12 free_equations 15 strain_energy_J 0.00037122785714879922 largest_displacement_m 2.2432824647995027e-07
+timing_ms build 1.244 regeneration 4.925 meshing 53.529 solve 21.713 changed_regeneration 3.239 remesh_and_resolve 69.707
+== RM-FEA-02 StructuralAxialBar
+axial bar on rollers: delta = FL/AE, sigma = F/A, R = -F to roundoff
+loads 1 restraints 3 mode linear static
+nodes 10 tets 16 boundary_facets 12
+sizing global_mm 20 local_controls 0 unresolved_local 0 slabs 0
+validation accepted reached_stage complete constrained_dofs 12 loaded_nodes 4
+expected_outcome solve actual solve published_result yes
+solve free_equations 18 residual 1.792041813971423e-17 pivot_ratio 0.095094590448151911 strain_energy_J 0.23142857142857104
+fields largest_displacement_m 2.1535447759544763e-05 largest_von_mises_Pa 50000000.000000075 nodes 10 elements 16
+reactions total_N 1.6116413759093007e-11 8.7414034344313052e-12 -21600.000000000015 external_N 0 0 21600
+equilibrium force_eta 5.418393e-16 moment_eta 1.504153e-15 constrained_dofs 12 reaction_nodes 7
+after_change bar_l_mm 120 currency stale: the geometry changed validation rejected input_problem mesh_stale solve refused
+after_remesh nodes 8 tets 6 free_equations 12 strain_energy_J 0.30857142857142972 largest_displacement_m 2.8651673028759416e-05
+timing_ms build 0.312 regeneration 3.115 meshing 53.372 solve 18.055 changed_regeneration 2.853 remesh_and_resolve 46.125
+== RM-FEA-03 StructuralCantilever
+circular cantilever: convergence toward beam theory over three meshes
+loads 1 restraints 1 mode linear static
+nodes 138 tets 489 boundary_facets 140
+sizing global_mm 10 local_controls 0 unresolved_local 0 slabs 0
+validation accepted_with_warnings reached_stage complete constrained_dofs 108 loaded_nodes 36
+finding warning element_outside_qualified_envelope element 64 has tet_min_dihedral_angle 0.003026877936067231, outside the range of every qualified BetterCAD reference mesh (0.006). Results near it carry larger discretisation error. This is an envelope, not a rejection.
+finding warning element_outside_qualified_envelope element 410 has tet_radius_ratio 6.522115439760449e-05, outside the range of every qualified BetterCAD reference mesh (3e-04). Results near it carry larger discretisation error. This is an envelope, not a rejection.
+expected_outcome solve actual solve published_result yes
+solve free_equations 306 residual 1.7951589071049352e-17 pivot_ratio 0.00048164560429170099 strain_energy_J 0.00015506499378414136
+fields largest_displacement_m 1.5698141397420332e-06 largest_von_mises_Pa 5171211.77429152 nodes 138 elements 489
+reactions total_N 1.0044853837598566e-11 198.98615400873939 4.4231285301066237e-12 external_N 0 -198.98615400905973 0
+equilibrium force_eta 1.115663e-13 moment_eta 5.981977e-13 constrained_dofs 108 reaction_nodes 36
+after_change cant_l_mm 80 currency stale: the geometry changed validation rejected input_problem mesh_stale solve refused
+after_remesh nodes 263 tets 1207 free_equations 681 strain_energy_J 0.00010960879487741862 largest_displacement_m 1.1135599011623344e-06
+timing_ms build 0.255 regeneration 1.632 meshing 772.968 solve 115.427 changed_regeneration 1.615 remesh_and_resolve 1970.927
+== RM-FEA-04 StructuralPressureBlock
+uniform pressure: F = pA through the loads and -F through the reactions
+loads 1 restraints 1 mode linear static
+nodes 8 tets 6 boundary_facets 12
+sizing global_mm 20 local_controls 0 unresolved_local 0 slabs 0
+validation accepted reached_stage complete constrained_dofs 12 loaded_nodes 4
+expected_outcome solve actual solve published_result yes
+solve free_equations 12 residual 3.7472870898389154e-17 pivot_ratio 0.33039198037860079 strain_energy_J 0.00065193918964935788
+fields largest_displacement_m 2.7379596925014462e-07 largest_von_mises_Pa 1803968.7750770743 nodes 8 elements 6
+reactions total_N -5.6843418860808015e-14 0 5399.9999999999982 external_N 0 0 -5399.9999999999982
+equilibrium force_eta 5.046412e-18 moment_eta 1.515168e-17 constrained_dofs 12 reaction_nodes 4
+after_change press_a_mm 72 currency stale: the geometry changed validation rejected input_problem mesh_stale solve refused
+after_remesh nodes 9 tets 12 free_equations 15 strain_energy_J 0.00080185216957303523 largest_displacement_m 2.6919453858213175e-07
+timing_ms build 0.319 regeneration 2.916 meshing 28.317 solve 13.004 changed_regeneration 2.986 remesh_and_resolve 52.808
+== RM-FEA-05 StructuralGravityBlock
+self-weight: W = rho V g at the centre of volume
+loads 1 restraints 1 mode linear static with gravity
+nodes 10 tets 16 boundary_facets 12
+sizing global_mm 20 local_controls 0 unresolved_local 0 slabs 0
+validation accepted reached_stage complete constrained_dofs 12 loaded_nodes 10
+expected_outcome solve actual solve published_result yes
+solve free_equations 18 residual 4.5845345232347062e-17 pivot_ratio 0.032853572726411005 strain_energy_J 2.9033097697784947e-09
+fields largest_displacement_m 1.0866069423795997e-09 largest_von_mises_Pa 2917.7612762606095 nodes 10 elements 16
+reactions total_N 5.5511151231257827e-16 6.6613381477509392e-16 10.777508349999987 external_N 0 0 -10.777508350000002
+equilibrium force_eta 6.175311e-16 moment_eta 5.608655e-16 constrained_dofs 12 reaction_nodes 4
+after_change grav_h_mm 100 currency stale: the geometry changed validation rejected input_problem mesh_stale solve refused
+after_remesh nodes 11 tets 21 free_equations 21 strain_energy_J 5.6590686422300162e-09 largest_displacement_m 1.6880820526943949e-09
+timing_ms build 0.285 regeneration 2.920 meshing 43.521 solve 15.073 changed_regeneration 2.935 remesh_and_resolve 58.986
+== RM-FEA-06 StructuralTransformedBase
+the base block, at the origin on the XY plane
+loads 1 restraints 1 mode linear static
+nodes 9 tets 12 boundary_facets 12
+sizing global_mm 16 local_controls 0 unresolved_local 0 slabs 0
+validation accepted reached_stage complete constrained_dofs 12 loaded_nodes 4
+expected_outcome solve actual solve published_result yes
+solve free_equations 15 residual 4.6520321209578034e-17 pivot_ratio 0.085864148571150392 strain_energy_J 0.094355459074912343
+fields largest_displacement_m 2.1408843095462878e-06 largest_von_mises_Pa 17712741.087825816 nodes 9 elements 12
+reactions total_N 9.0949470177292824e-13 0 98999.999999999942 external_N 0 0 -98999.999999999971
+equilibrium force_eta 1.441946e-16 moment_eta 8.671452e-17 constrained_dofs 12 reaction_nodes 4
+after_change sbase_a_mm 110 currency stale: the geometry changed validation rejected input_problem mesh_stale solve refused
+after_remesh nodes 8 tets 6 free_equations 12 strain_energy_J 0.11252797513514874 largest_displacement_m 2.0223600351347158e-06
+timing_ms build 0.293 regeneration 2.863 meshing 38.620 solve 13.214 changed_regeneration 3.128 remesh_and_resolve 39.897
+== RM-FEA-06 StructuralTransformedPlaced
+the same block under a compound rotation and a translation
+loads 1 restraints 1 mode linear static
+nodes 9 tets 12 boundary_facets 12
+sizing global_mm 16 local_controls 0 unresolved_local 0 slabs 0
+validation accepted reached_stage complete constrained_dofs 12 loaded_nodes 4
+expected_outcome solve actual solve published_result yes
+solve free_equations 15 residual 2.6388716172492887e-17 pivot_ratio 0.10494196888205164 strain_energy_J 0.094355458706504372
+fields largest_displacement_m 2.1408836124553069e-06 largest_von_mises_Pa 17712741.646789078 nodes 9 elements 12
+reactions total_N 65999.999999999985 -33000 66000 external_N -65999.999999999971 33000 -66000
+equilibrium force_eta 7.206214e-17 moment_eta 4.821615e-17 constrained_dofs 12 reaction_nodes 4
+after_change splaced_a_mm 110 currency stale: the geometry changed validation rejected input_problem mesh_stale solve refused
+after_remesh nodes 9 tets 12 free_equations 15 strain_energy_J 0.11439664730144362 largest_displacement_m 2.1441214894696199e-06
+timing_ms build 0.294 regeneration 2.927 meshing 37.086 solve 13.800 changed_regeneration 3.091 remesh_and_resolve 50.416
+== RM-FEA-07 StructuralLocalRefinementRoot
+rectangular cantilever with a 5 mm local control at the root
+loads 1 restraints 1 mode linear static
+nodes 78 tets 369 boundary_facets 12
+sizing global_mm 20 local_controls 1 unresolved_local 0 slabs 1
+slab_mm -1e-06 -1e-06 -1e-06 .. 40 60 15 at 5
+validation accepted reached_stage complete constrained_dofs 12 loaded_nodes 4
+expected_outcome solve actual solve published_result yes
+solve free_equations 222 residual 2.6774013147893727e-17 pivot_ratio 0.038573344182085141 strain_energy_J 3.7252242968374304e-05
+fields largest_displacement_m 2.5960885994562326e-07 largest_von_mises_Pa 426691.48829494842 nodes 78 elements 369
+reactions total_N 4.9737991503207013e-14 299.99999999999858 5.4001247917767614e-13 external_N 0 -300 0
+equilibrium force_eta 1.117587e-15 moment_eta 2.481762e-15 constrained_dofs 12 reaction_nodes 4
+after_change loc_l_mm 120 currency stale: the geometry changed validation rejected input_problem mesh_stale solve refused
+after_remesh nodes 63 tets 289 free_equations 177 strain_energy_J 5.1524326857982632e-05 largest_displacement_m 3.7814198298754318e-07
+timing_ms build 0.303 regeneration 3.030 meshing 114.748 solve 95.834 changed_regeneration 3.414 remesh_and_resolve 171.128
+== RM-FEA-07 StructuralLocalRefinementTip
+the mirror: the same cantilever refined at the tip instead
+loads 1 restraints 1 mode linear static
+nodes 60 tets 271 boundary_facets 12
+sizing global_mm 20 local_controls 1 unresolved_local 0 slabs 1
+slab_mm -1e-06 -1e-06 85 .. 40 60 100 at 5
+validation accepted reached_stage complete constrained_dofs 12 loaded_nodes 4
+expected_outcome solve actual solve published_result yes
+solve free_equations 168 residual 1.9665531150883166e-17 pivot_ratio 0.036034216458126898 strain_energy_J 3.9470604736045392e-05
+fields largest_displacement_m 2.776811358037859e-07 largest_von_mises_Pa 470049.79906189331 nodes 60 elements 271
+reactions total_N -9.5212726591853425e-13 299.99999999999619 -1.3073986337985843e-12 external_N 0 -300 0
+equilibrium force_eta 3.060110e-15 moment_eta 6.063823e-15 constrained_dofs 12 reaction_nodes 4
+after_change loct_l_mm 120 currency stale: the geometry changed validation rejected input_problem mesh_stale solve refused
+after_remesh nodes 63 tets 285 free_equations 177 strain_energy_J 4.4686585713425852e-05 largest_displacement_m 3.1523400039698926e-07
+timing_ms build 0.300 regeneration 2.923 meshing 92.235 solve 69.897 changed_regeneration 2.870 remesh_and_resolve 171.073
+== RM-FEA-08 StructuralUnderConstrained
+eight constrained DOFs all in z: the pivot gate must refuse
+loads 1 restraints 2 mode linear static
+nodes 9 tets 12 boundary_facets 12
+sizing global_mm 20 local_controls 0 unresolved_local 0 slabs 0
+validation accepted reached_stage complete constrained_dofs 8 loaded_nodes 4
+expected_outcome refusal actual refusal published_result no
+diagnostic the system is singular or too ill conditioned to solve: the factorisation's smallest pivot is 1.1077337993396741e-17 of its largest, below the floor of 1e-12, and at least one pivot is not positive. The model may be under-constrained, disconnected or a mechanism -- this layer measures the conditioning and does not claim to know which
+timing_ms build 0.303 regeneration 3.070 meshing 37.206 solve 9.439
+== RM-FEA-09 StructuralStaleMesh
+a valid block whose mesh the suite makes stale after meshing
+loads 1 restraints 1 mode linear static
+nodes 9 tets 12 boundary_facets 12
+sizing global_mm 20 local_controls 0 unresolved_local 0 slabs 0
+validation accepted reached_stage complete constrained_dofs 12 loaded_nodes 4
+expected_outcome solve actual solve published_result yes
+solve free_equations 15 residual 3.9571256253649317e-17 pivot_ratio 0.14742348529512611 strain_energy_J 0.00028329870275605888
+fields largest_displacement_m 2.0486852330260381e-07 largest_von_mises_Pa 1505043.8968983707 nodes 9 elements 12
+reactions total_N -2.8421709430404007e-14 -3.4106051316484809e-13 3000 external_N 0 0 -3000
+equilibrium force_eta 5.498365e-17 moment_eta 1.341261e-16 constrained_dofs 12 reaction_nodes 4
+after_change stale_c_mm 36 currency stale: the geometry changed validation rejected input_problem mesh_stale solve refused
+after_remesh nodes 9 tets 12 free_equations 15 strain_energy_J 0.00034287846390522155 largest_displacement_m 2.4387512475553187e-07
+timing_ms build 0.283 regeneration 3.144 meshing 38.301 solve 13.543 changed_regeneration 2.763 remesh_and_resolve 56.927
+== RM-FEA-10 StructuralUnresolved
+a load on a face that does not exist: refused, never rebound
+loads 2 restraints 1 mode linear static
+nodes 9 tets 12 boundary_facets 12
+sizing global_mm 20 local_controls 0 unresolved_local 0 slabs 0
+validation rejected reached_stage loads constrained_dofs 12 loaded_nodes 0
+finding failure loads_unresolvable a load does not resolve against the current mesh: load:2: its target face names no face of the body as it is now, so the load has nothing to act on. Nothing nearby is substituted
+expected_outcome refusal actual refusal published_result no
+diagnostic analysis 8 is not acceptable for a solve (stage loads): a load does not resolve against the current mesh: load:2: its target face names no face of the body as it is now, so the load has nothing to act on. Nothing nearby is substituted
+timing_ms build 0.298 regeneration 3.676 meshing 44.708 solve 4.451
+runner exit 0 

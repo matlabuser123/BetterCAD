@@ -16,23 +16,31 @@ Prerequisite:
            P16 — Meshing — QUALIFIED (P16-QUAL-001, 2026-10-06)
 
 Current milestone:
-           P17-CLI-001 — Headless Structural FEA. AUTHORIZED 2026-10-14 by
-           an explicit scope decision. COMPLETE at 24 of 24, qualified
-           2026-10-15: 3949/3949 x 3 presets, 1078 x 5 in two, 0 warnings,
-           17 stages exit 0, qualified tree == committed tree.
+           P17-REFMOD-001 — Structural Reference Models. AUTHORIZED
+           2026-10-15 by an explicit scope decision. COMPLETE at 22 of 22,
+           qualified 2026-10-15: 4006/4006 x 3 presets, 1135 x 5 in two,
+           0 warnings, 17 stages exit 0, qualified tree == committed tree.
+           NO production file changed: six of the eight fingerprints are
+           identical to the P17-CLI-001 freeze.
 
-           Qualified on a SECOND MACHINE, by an explicit owner decision
-           when the uqhas machine was unavailable. Same compiler to the
-           WinLibs revision, same CMake, same dependency versions rebuilt
-           from the same hash-verified archives; different build root and
-           prefix path, recorded beside the invocation. FREEZE.md states
-           what is identical and what is not.
+           Ten model IDs in twelve committed documents, every expected
+           value from a closed form that cannot call BetterCAD, 14 mutation
+           probes killed including three on production formulas -- and
+           THREE MEASURED FINDINGS carried to the owner as ADR-level
+           decisions: the 1e-12 moment-equilibrium threshold is crossed by
+           a correct bending solve (F1), linear Tet4 locks in bending (F2),
+           and OCCT never subdivides a developable wall along its ruling,
+           so a cylinder's wall tetrahedra are needles however fine the
+           target (F3). ANALYTICAL_VALIDATION.md.
+
+           Qualified on the hasib machine, as P17-CLI-001 was, by the
+           owner's decision of 2026-10-14; what is identical and what is
+           not is stated in FREEZE.md.
 
            The line that stood under "Next" said "NOT AUTHORIZED:
-           P17-PERSIST-001 passing will not be permission to start it", and
-           it did its job for the third milestone running: it stopped the
-           work being started on the momentum of the one before. The owner
-           then authorized it, which is the only thing that could.
+           P17-CLI-001 passing will not be permission to start it", and it
+           did its job for the fourth milestone running. The owner then
+           authorized it, which is the only thing that could.
 
 Completed in P17:
            P17-VIZ-001 — FEA Visualisation / Inspection. COMPLETE at
@@ -42,7 +50,10 @@ Completed in P17:
            P17-PERSIST-001 — Structural Analysis Persistence. COMPLETE at
            20 of 20, qualified 2026-10-14 and committed as 7e18175.
            P17-CLI-001 — Headless Structural FEA. COMPLETE at 24 of 24,
-           qualified 2026-10-15 against 7e18175 plus the working tree.
+           qualified 2026-10-15 and committed as 460321a.
+           P17-REFMOD-001 — Structural Reference Models. COMPLETE at
+           22 of 22, qualified 2026-10-15 against 460321a plus the working
+           tree.
 
 Qualified:
            P0–P10 — BetterCAD v0.1.0
@@ -54,8 +65,10 @@ Qualified:
            P16 — Meshing
 
 Next:
-           P17-REFMOD-001 — Structural Reference Models. NOT AUTHORIZED:
-           P17-CLI-001 passing will not be permission to start it.
+           P17-QUAL-001 — the P17 phase qualification. NOT AUTHORIZED:
+           P17-REFMOD-001 passing will not be permission to start it, and
+           three findings (F1, F2, F3 in P17-REFMOD-001's evidence) are
+           owner decisions it should take into account.
 
 P17 objective:
            authoritative CAD / material / mesh state
@@ -1882,28 +1895,110 @@ RM-FEA-09   Invalid / stale mesh -- explicit failure
 RM-FEA-10   Unresolved boundary reference -- explicit failure
 ```
 
-* [ ] Define the reference suite
-* [ ] Single-Tet analytical case
-* [ ] Constant-strain patch test
-* [ ] Axial tension
-* [ ] Cantilever bending
-* [ ] Pressure resultant
-* [ ] Reaction equilibrium
-* [ ] Displacement agreement
-* [ ] Stress agreement
-* [ ] von Mises validation
-* [ ] Rigid-transform invariance
-* [ ] Mesh-refinement behaviour
-* [ ] Local refinement behaviour
-* [ ] Under-constrained failure
-* [ ] Stale-mesh failure
-* [ ] Unresolved-reference failure
-* [ ] Save / load / re-solve
-* [ ] CLI validation
-* [ ] Independent analytical validation
-* [ ] Determinism PASS
-* [ ] Three-preset regression PASS
-* [ ] Evidence recorded
+* [x] Define the reference suite — ten model IDs in twelve documents, the
+      sixth suite in the five places every suite before it used; each
+      document carries its material, its `MeshControl` and one
+      `StructuralAnalysis` named "Study". REFERENCE_MODELS.md
+* [x] Single-Tet analytical case — a skew tetrahedron under an affine field
+      through the public kernels: strain and stress to 1.5e-15, `Ke u`
+      against the faces' `sigma S / 3` to 1.8e-15, a rigid rotation to zero
+* [x] Constant-strain patch test — RM-FEA-01, whose mesh has an interior
+      node: every element recovers `sym(A)` and `D sym(A)`, and `K u` is the
+      boundary traction with ZERO at the interior node (2.1e-15)
+* [x] Axial tension — RM-FEA-02 on ROLLERS, so the exact solution is affine:
+      `delta = FL/AE`, `sigma = F/A`, `R = -F`, `U = F delta / 2`, every node
+      and every element, at 1e-9, measured at 1e-15
+* [x] Cantilever bending — RM-FEA-03, three meshes asserted to differ before
+      any error is compared; the deflection rises monotonically toward
+      Timoshenko and the error falls. NO equality claimed: 3.8%, 4.7%, 4.8%
+      of beam theory (findings F2 and F3), and the root reaction and moment
+      exact at every level
+* [x] Pressure resultant — RM-FEA-04: `F = pA` through the nodal loads at
+      1.7e-16, `-F` through the reactions, no moment about the face centroid
+* [x] Reaction equilibrium — every solvable document, through the production
+      path, eta_F and eta_M at 1e-13 or better; RM-FEA-05's weight at the
+      centre of volume with two distinct moment components
+* [x] Displacement agreement — the bar's whole field against the affine
+      state (4.7e-16 of delta), the tip corner's `|u|`, the transformed
+      pair's vectors rotated by R (1.1e-6)
+* [x] Stress agreement — per element against Hooke's law from `lambda, mu`;
+      the mean axial stress EXACTLY `-p` and `-rho g H / 2` by discrete
+      equilibrium (0 and 1.8e-15)
+* [x] von Mises validation — through the deviatoric contraction, a different
+      route from production's, on the patch, the bar and the transformed pair
+* [x] Rigid-transform invariance — RM-FEA-06 on RM-MESH-06's block and frame,
+      with element-by-element connectivity correspondence asserted first;
+      boundary nodes at 1.6e-17 m, the one interior node at 2.7e-7 m, judged
+      separately; invariants equal to 1e-6, measured
+* [x] Mesh-refinement behaviour — the cantilever's three levels: 489, 1626,
+      2465 tetrahedra, monotone in every measure, 1.27x coarse to fine
+* [x] Local refinement behaviour — RM-FEA-07 and its MIRROR, measured in a
+      volume band 0.3 L deep: 315 against 6 tetrahedra and 9.0 against
+      55.9 mm at the root in the root document, the reverse in the mirror;
+      both caps resolve to two facets on every mesh; both refined meshes
+      softer and with a higher stress peak than the unrefined one
+* [x] Under-constrained failure — RM-FEA-08: eight constrained DOFs all in z,
+      validation ACCEPTS, the factorisation refuses (`singular_system`, pivot
+      1.1e-17), nothing published; one fewer refused by the count instead
+* [x] Stale-mesh failure — RM-FEA-09: a geometry edit and a sizing edit each
+      leave a HELD mesh refused at the INPUT stage with `mesh_stale`, nothing
+      measured past it; remeshing restores a different answer. And the
+      runner proves it on ALL TEN solvable documents
+* [x] Unresolved-reference failure — RM-FEA-10: `loads_unresolvable` at the
+      load stage after the restraint stage passed, the missing face resolving
+      to NO facet while the real faces resolve to two; an unresolvable
+      restraint refused likewise
+* [x] Save / load / re-solve — all twelve documents: intent equal, no result
+      word in the bytes, the reloaded mesher empty, the re-solve
+      bit-identical by fingerprint
+* [x] CLI validation — 41 fresh-process tests on the runner's twelve files:
+      settings, validate, solve, displacement, stress and reactions, with
+      the bar's `2.15354e-05 m` and `50000000 Pa` and the block's `5400 N`
+      pinned to the closed forms' digits; the two refusals through all four
+      result commands
+* [x] Independent analytical validation — `Analytic.hpp` includes no
+      BetterCAD header; mutating the ORACLE (M03, M10) fails the suite, so the
+      comparison is between two independent computations
+* [x] Determinism PASS — five fresh documents each of six models, one
+      fingerprint each; fingerprints IDENTICAL across the three presets;
+      three CLI solve payloads byte-identical across the three presets
+* [x] Three-preset regression PASS — 4006/4006 x 3 presets, 1135 x 5 in two,
+      0 warnings over 657 objects, 17 stages exit 0, 3h43m41s
+* [x] Evidence recorded —
+      [docs/verification/P17-REFMOD-001/](docs/verification/P17-REFMOD-001/README.md)
+
+**PASS 2026-10-15.** 22 of 22. Qualified against candidate 460321a (the
+parent commit) plus the working tree; the eight source/test fingerprints in
+[FREEZE.md](docs/verification/P17-REFMOD-001/FREEZE.md) are identical before
+and after the run, SIX of them identical to the P17-CLI-001 freeze -- `apps`,
+`include`, `src`, `cmake`, `CMakeLists.txt`, `CMakePresets.json` -- which is
+the fingerprint-level proof that no production file changed. Only `tests`
+and `examples` moved, and those are the milestone. The closeout commit's
+index was hashed subtree by subtree (`git write-tree --prefix=<dir>/`) before
+committing: all eight values equal the frozen ones -- `tests`
+3568eb0e8d194387d9244ff02367fc155a9596c8, `examples`
+a955cf6511ce715fcb95bc06ef82b877535869e6, the other six as in the P17-CLI-001
+freeze -- so the qualified tree IS the committed tree.
+
+**Three measured findings, carried to the owner rather than corrected
+here**, each about a qualified module and each an ADR-level decision:
+F1, P17-REACTION-001's 1e-12 moment threshold is crossed by a CORRECT bending
+solve of ~2500 needle elements (eta_M 1.15e-12); F2, linear Tet4 locks in
+bending (a few per cent of beam theory on these meshes); F3, OCCT never
+subdivides a developable wall along its ruling, so every wall triangle of a
+cylinder spans its full length at every deflection -- the cause of F2's slow
+trend and F1's conditioning, and the curved form of P16-REFMOD-001's
+planar-face limitation. ANALYTICAL_VALIDATION.md.
+
+Two measurements changed the models themselves: a box can get two DIFFERENT
+tetrahedralisations of the same corners in two placements (RM-FEA-06 uses
+the pair P17-POST-001 measured and asserts the correspondence), and a slab
+control on a cap refines nothing unless size-tree boxes fit inside the
+section (RM-FEA-07 is 40 x 60 for that reason). AUDIT.md.
+
+Mutation: 14 probes, 14 killed -- three on PRODUCTION formulas (a consistent
+load of `A t / 2`, a `2 mu` shear stiffness, an outward pressure), each
+caught by a closed form. MUTATION.md.
 
 ### RM-FEA-01 -- constant-strain patch test
 
@@ -2268,24 +2363,27 @@ docs/engineering/
 # CURRENT NEXT STEP
 
 ```text
-P17-CLI-001 is COMPLETE at 24 of 24 and QUALIFIED, 2026-10-15.
+P17-REFMOD-001 is COMPLETE at 22 of 22 and QUALIFIED, 2026-10-15.
 
-    eleven structural-* commands (six reports, five edits) in
-      apps/bettercad_cli/StructuralEdits.cpp and StructuralReports.cpp;
-      no file under src/ or include/ changed -- six of the eight tree
-      fingerprints are identical to the P17-PERSIST-001 freeze
-    19 in-process cases, 9 fresh-process tests, a 28-step multi-process
-      workflow parsed with string(JSON)
-    17 probe runs over 13 mutations: 12 killed, 1 equivalent (tie count
-      measured), 2 real test gaps closed
-    adversarial review: 31 attacks, 8 findings, 1 production defect
-      (elementCount was triangles plus tetrahedra), fixed
-    qualification: 3949/3949 x 3 presets, 1078 x 5 in two, 0 warnings over
-      676 objects, 17 stages exit 0, 3h00m43s, fingerprints before == after
-    the three presets' CLI solve payloads on the fixture are BYTE-IDENTICAL
+    ten model IDs in twelve committed documents, built in
+      examples/reference_models/StructuralModels.cpp; NOT ONE FILE under
+      src/, include/ or apps/ changed -- six of the eight tree fingerprints
+      are identical to the P17-CLI-001 freeze
+    16 in-process cases (133 872 assertions), 41 fresh-process tests on the
+      runner's twelve files; every expected value from Analytic.hpp, which
+      includes no BetterCAD header
+    14 mutation probes, 14 killed: 3 on production formulas, 2 on the oracle
+    adversarial review: 9 findings -- 3 measured limitations of qualified
+      modules (F1 equilibrium threshold, F2 Tet4 bending, F3 developable
+      walls), 6 suite defects fixed before the freeze
+    qualification: 4006/4006 x 3 presets, 1135 x 5 in two, 0 warnings over
+      657 objects, 17 stages exit 0, 3h43m41s, fingerprints before == after
+    the three presets' suite fingerprints and CLI solve payloads are
+      BIT-IDENTICAL
 
-There is no open milestone. P17-REFMOD-001 is next in the sequence and is
-NOT AUTHORIZED; P17-CLI-001 passing is not permission to start it.
+There is no open milestone. P17-QUAL-001 is next in the sequence and is
+NOT AUTHORIZED; P17-REFMOD-001 passing is not permission to start it. F1,
+F2 and F3 are owner decisions it should weigh first.
 ```
 
 P17-ARCH-001 gave the structural phase a boundary a stale mesh cannot cross, a
@@ -2486,9 +2584,17 @@ P17-CLI-001      PASS 2026-10-15. COMPLETE at 24 of 24, qualified against
                  by owner decision, with the deviation recorded in
                  FREEZE.md. Evidence recorded.
 
-P17-REFMOD-001   NOT AUTHORIZED. Being next in the sequence is not
-                 permission, and P17-CLI-001 passing will not be either.
-                 Authorizing it is a scope decision.
+P17-REFMOD-001   PASS 2026-10-15. COMPLETE at 22 of 22, qualified against
+                 460321a plus the working tree: 4006/4006 x 3, 1135 x 5 in
+                 two, 0 warnings over 657 objects, 17 stages exit 0. Ten
+                 model IDs in twelve documents, no production file changed,
+                 14 mutation probes killed. Three measured findings carried
+                 to the owner (F1, F2, F3). Evidence recorded.
+
+P17-QUAL-001     NOT AUTHORIZED. Being next in the sequence is not
+                 permission, and P17-REFMOD-001 passing will not be either.
+                 Authorizing it is a scope decision, and F1-F3 are inputs to
+                 it.
 
 everything after it
                  likewise.

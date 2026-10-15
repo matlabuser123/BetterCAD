@@ -66,6 +66,12 @@ set(_filters
     # cases cannot reach the core for an equivalence comparison.
     "unit\\.StructuralCli" 15
     "cli\\.structural\\." 8
+    # P17-REFMOD-001. The structural reference suite's own two filters: the
+    # in-process cases, named per model as the repository's convention gives
+    # them, and the fresh-process ones. Both run in the qualification, so
+    # both have to be seen to match something.
+    "unit\\.Structural(Patch|AxialBar|Cantilever|PressureBlock|GravityBlock|Transformed|LocalRefinement|UnderConstrained|StaleMesh|Unresolved|Reference)" 12
+    "refmod\\.structural\\." 30
 )
 list(LENGTH _filters _count)
 math(EXPR _last "${_count} - 1")

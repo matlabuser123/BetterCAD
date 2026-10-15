@@ -318,6 +318,8 @@ if(TARGET bettercad_reference_models)
         reference/StructuralReactionReferenceTests.cpp
         reference/StructuralValidationSweepTests.cpp
         reference/StructuralLoadReferenceTests.cpp
+        reference/StructuralModelsTests.cpp
+        reference/StructuralTestSupport.hpp
         reference/Tet4ElementReferenceTests.cpp
         reference/MeshTestSupport.hpp
         reference/AssemblyModelsTests.cpp
@@ -1373,6 +1375,186 @@ if(TARGET bettercad_cli)
             list(APPEND _mesh_refmod_readers refmod.mesh.invalid.${_mesh_query})
         endforeach()
         set_tests_properties(${_mesh_refmod_readers} PROPERTIES FIXTURES_REQUIRED mesh_refmod)
+    endif()
+
+    # --- P17-REFMOD-001: the structural reference suite, through the real
+    # executables ---
+    #
+    # TWO PROCESSES, and nothing shared between them but the bytes on disk.
+    # The example program builds every structural reference model, saves it,
+    # meshes it, validates it and solves it -- or is refused -- printing the
+    # measured record; separate bettercad-cli invocations then LOAD what it
+    # wrote, regenerate from the intent in the file, mesh, and solve again in
+    # a process that never saw the model being built.
+    #
+    # WHAT THE REGEXES PIN, and why they are numbers rather than shapes:
+    #
+    #   RM-FEA-02  the axial bar is EXACT -- sigma = F/A = 50 MPa, and the tip
+    #              moves FL/AE = 2.142857e-5 m -- so the CLI's largest von
+    #              Mises and largest displacement are pinned to the closed
+    #              form's leading digits, in a process that solved from a file
+    #   RM-FEA-04  the reactions carry p A = 2 MPa x 60 x 45 mm = 5400 N
+    #   RM-FEA-05  the reactions carry rho V g = 7850 x 1.4e-4 x 9.80665 =
+    #              10.777 N
+    #   RM-FEA-08  structural-solve FAILS with the solver's singular verdict,
+    #              nothing on stdout, after structural-validate ACCEPTED it
+    #   RM-FEA-10  structural-validate prints the rejected report and exits
+    #              1; structural-solve prints nothing and names the code
+    if(TARGET bettercad_example_reference_models)
+        set(_fearef "${_out}/structural-refmod")
+        file(MAKE_DIRECTORY "${_fearef}")
+
+        # PROCESS A: build, save, regenerate, mesh, validate and solve all
+        # twelve. Its own exit code is the first assertion -- it fails if any
+        # model does not build or regenerate, solves when it must not, fails
+        # to solve when it must, publishes a result after a refusal, or is not
+        # refused as mesh_stale after its main dimension is edited.
+        bettercad_add_process_test(refmod.structural.build
+            COMMAND "$<TARGET_FILE:bettercad_example_reference_models>"
+            ARGS "--structural|--out|${_fearef}"
+            EXIT_CODE 0
+            STDOUT_REGEX "== RM-FEA-02 StructuralAxialBar.*expected_outcome solve actual solve published_result yes.*after_change bar_l_mm 120 currency stale: the geometry changed validation rejected input_problem mesh_stale solve refused")
+
+        # THE TWO REFUSALS, from the runner: refused, and nothing published.
+        bettercad_add_process_test(refmod.structural.build.under-constrained
+            COMMAND "$<TARGET_FILE:bettercad_example_reference_models>" ARGS "--structural"
+            EXIT_CODE 0
+            STDOUT_REGEX "== RM-FEA-08 StructuralUnderConstrained\n[^\n]*\n[^\n]*\n[^\n]*\n[^\n]*\nvalidation accepted reached_stage complete constrained_dofs 8 loaded_nodes [1-9][0-9]*\nexpected_outcome refusal actual refusal published_result no\ndiagnostic [^\n]*singular")
+        bettercad_add_process_test(refmod.structural.build.unresolved
+            COMMAND "$<TARGET_FILE:bettercad_example_reference_models>" ARGS "--structural"
+            EXIT_CODE 0
+            STDOUT_REGEX "== RM-FEA-10 StructuralUnresolved\n[^\n]*\n[^\n]*\n[^\n]*\n[^\n]*\nvalidation rejected reached_stage loads constrained_dofs 12 loaded_nodes 0\nfinding failure loads_unresolvable [^\n]*\nexpected_outcome refusal actual refusal published_result no")
+
+        # PROCESS B: the canonical intent, read back from the file by another
+        # process -- the rollers' component masks and the gravity mode.
+        bettercad_add_process_test(refmod.structural.settings.axial-bar
+            COMMAND "$<TARGET_FILE:bettercad_cli>"
+            ARGS "structural-settings|${_fearef}/structural_axial_bar.bcad|--json"
+            EXIT_CODE 0
+            STDOUT_REGEX "\"mode\": \"linear static\".*\"components\": \"uz\".*\"components\": \"ux\".*\"components\": \"uy\"")
+        bettercad_add_process_test(refmod.structural.settings.gravity
+            COMMAND "$<TARGET_FILE:bettercad_cli>"
+            ARGS "structural-settings|${_fearef}/structural_gravity_block.bcad|--json"
+            EXIT_CODE 0
+            STDOUT_REGEX "\"mode\": \"linear static with gravity\".*\"type\": \"gravity\"")
+        bettercad_add_process_test(refmod.structural.settings.unresolved
+            COMMAND "$<TARGET_FILE:bettercad_cli>"
+            ARGS "structural-settings|${_fearef}/structural_unresolved.bcad|--json"
+            EXIT_CODE 0
+            STDOUT_REGEX "\"faceResolves\": true.*\"faceResolves\": false.*\"faceResolves\": true")
+
+        # PROCESS C: VALIDATE, in a fresh process, on every document that
+        # solves, and the two that do not.
+        # The cantilever is ACCEPTED WITH WARNINGS: two of its 489 elements lie
+        # outside P17-VALID-001's qualified envelope (a 0.17-degree dihedral
+        # and a 6.5e-05 radius ratio, both from Netgen's grading at the curved
+        # wall), which is a warning by that milestone's design and never a
+        # refusal. The regex says which it expects of each model rather than
+        # accepting either everywhere.
+        foreach(_fea_model structural_patch structural_axial_bar structural_cantilever
+                structural_pressure_block structural_gravity_block structural_transformed_base
+                structural_transformed_placed structural_local_refinement_root
+                structural_local_refinement_tip structural_stale_mesh)
+            if(_fea_model STREQUAL "structural_cantilever")
+                set(_fea_status "accepted_with_warnings")
+            else()
+                set(_fea_status "accepted")
+            endif()
+            bettercad_add_process_test(refmod.structural.validate.${_fea_model}
+                COMMAND "$<TARGET_FILE:bettercad_cli>"
+                ARGS "structural-validate|${_fearef}/${_fea_model}.bcad|--json"
+                EXIT_CODE 0
+                STDOUT_REGEX "\"status\": \"${_fea_status}\",\n  \"acceptable\": true,\n  \"reachedStage\": \"complete\"")
+            bettercad_add_process_test(refmod.structural.solve.${_fea_model}
+                COMMAND "$<TARGET_FILE:bettercad_cli>"
+                ARGS "structural-solve|${_fearef}/${_fea_model}.bcad|--json"
+                EXIT_CODE 0
+                STDOUT_REGEX "\"freeEquations\": [1-9][0-9]*,.*\"status\": \"${_fea_status}\"")
+        endforeach()
+        bettercad_add_process_test(refmod.structural.validate.under-constrained
+            COMMAND "$<TARGET_FILE:bettercad_cli>"
+            ARGS "structural-validate|${_fearef}/structural_under_constrained.bcad|--json"
+            EXIT_CODE 0
+            STDOUT_REGEX "\"status\": \"accepted\"")
+        bettercad_add_process_test(refmod.structural.validate.unresolved
+            COMMAND "$<TARGET_FILE:bettercad_cli>"
+            ARGS "structural-validate|${_fearef}/structural_unresolved.bcad|--json"
+            EXIT_CODE 1
+            STDOUT_REGEX "\"status\": \"rejected\",\n  \"acceptable\": false,\n  \"reachedStage\": \"loads\",.*\"code\": \"loads_unresolvable\"")
+
+        # PROCESS D: SOLVE, and agree with the closed forms in a process that
+        # never saw the model built. The axial bar is exact, so its largest
+        # von Mises is 50 MPa and its largest displacement is the tip corner's
+        # hypot(nu eps a, nu eps b, FL/AE) = hypot(1.7143e-6, 1.2857e-6,
+        # 2.142857e-5) = 2.15354e-05 m, to the digits the regex pins.
+        bettercad_add_process_test(refmod.structural.solve.axial-bar.exact
+            COMMAND "$<TARGET_FILE:bettercad_cli>"
+            ARGS "structural-solve|${_fearef}/structural_axial_bar.bcad|--json"
+            EXIT_CODE 0
+            STDOUT_REGEX "\"largestDisplacement\": \\{\n    \"value\": 2\\.15354[0-9]*e-05,\n    \"unit\": \"m\"\n  \\},\n  \"largestVonMises\": \\{\n    \"value\": (49999999\\.9|50000000)[0-9.]*,\n    \"unit\": \"Pa\"\n  \\}")
+        bettercad_add_process_test(refmod.structural.stress.axial-bar
+            COMMAND "$<TARGET_FILE:bettercad_cli>"
+            ARGS "structural-stress|${_fearef}/structural_axial_bar.bcad|--json"
+            EXIT_CODE 0
+            STDOUT_REGEX "\"domain\": \"element\"")
+        bettercad_add_process_test(refmod.structural.reactions.pressure-block
+            COMMAND "$<TARGET_FILE:bettercad_cli>"
+            ARGS "structural-reactions|${_fearef}/structural_pressure_block.bcad|--json"
+            EXIT_CODE 0
+            STDOUT_REGEX "\"totalForce\": \\{\n    \"x\": [-0-9.e]+,\n    \"y\": [-0-9.e]+,\n    \"z\": (5399\\.99|5400)[0-9.]*,\n    \"unit\": \"N\"\n  \\}")
+        bettercad_add_process_test(refmod.structural.reactions.gravity-block
+            COMMAND "$<TARGET_FILE:bettercad_cli>"
+            ARGS "structural-reactions|${_fearef}/structural_gravity_block.bcad|--json"
+            EXIT_CODE 0
+            STDOUT_REGEX "\"totalForce\": \\{\n    \"x\": [-0-9.e]+,\n    \"y\": [-0-9.e]+,\n    \"z\": 10\\.77[0-9]*,\n    \"unit\": \"N\"\n  \\}")
+        bettercad_add_process_test(refmod.structural.displacement.axial-bar
+            COMMAND "$<TARGET_FILE:bettercad_cli>"
+            ARGS "structural-displacement|${_fearef}/structural_axial_bar.bcad|--json"
+            EXIT_CODE 0
+            STDOUT_REGEX "\"unit\": \"m\"")
+
+        # PROCESS E: THE REFUSALS THROUGH THE CLI. Non-zero exit, nothing on
+        # stdout, and the diagnostic naming the real cause: the solver's
+        # singular verdict for RM-FEA-08, the load stage's code for RM-FEA-10.
+        foreach(_fea_query structural-solve structural-displacement structural-stress structural-reactions)
+            bettercad_add_process_test(refmod.structural.refused.under-constrained.${_fea_query}
+                COMMAND "$<TARGET_FILE:bettercad_cli>"
+                ARGS "${_fea_query}|${_fearef}/structural_under_constrained.bcad|--json"
+                EXIT_CODE 1
+                STDERR_REGEX "solve_failed: .*singular")
+            bettercad_add_process_test(refmod.structural.refused.unresolved.${_fea_query}
+                COMMAND "$<TARGET_FILE:bettercad_cli>"
+                ARGS "${_fea_query}|${_fearef}/structural_unresolved.bcad|--json"
+                EXIT_CODE 1
+                STDERR_REGEX "loads_unresolvable")
+        endforeach()
+
+        # Ordering. The runner is a FIXTURE, for the reason the meshing suite
+        # records: ctest pulls a required fixture's setup in even when the run
+        # is filtered. EVERY TEST HERE IS READ-ONLY -- a structural report
+        # writes nothing, which is P17-CLI-001's own contract -- so the set
+        # survives `ctest --repeat until-fail:5` with no fixture in between.
+        set_tests_properties(refmod.structural.build PROPERTIES FIXTURES_SETUP structural_refmod)
+        set(_fea_refmod_readers
+            refmod.structural.settings.axial-bar refmod.structural.settings.gravity
+            refmod.structural.settings.unresolved
+            refmod.structural.validate.under-constrained refmod.structural.validate.unresolved
+            refmod.structural.solve.axial-bar.exact refmod.structural.stress.axial-bar
+            refmod.structural.reactions.pressure-block refmod.structural.reactions.gravity-block
+            refmod.structural.displacement.axial-bar)
+        foreach(_fea_model structural_patch structural_axial_bar structural_cantilever
+                structural_pressure_block structural_gravity_block structural_transformed_base
+                structural_transformed_placed structural_local_refinement_root
+                structural_local_refinement_tip structural_stale_mesh)
+            list(APPEND _fea_refmod_readers
+                refmod.structural.validate.${_fea_model} refmod.structural.solve.${_fea_model})
+        endforeach()
+        foreach(_fea_query structural-solve structural-displacement structural-stress structural-reactions)
+            list(APPEND _fea_refmod_readers
+                refmod.structural.refused.under-constrained.${_fea_query}
+                refmod.structural.refused.unresolved.${_fea_query})
+        endforeach()
+        set_tests_properties(${_fea_refmod_readers} PROPERTIES FIXTURES_REQUIRED structural_refmod)
     endif()
 
     # --- P14-REFMOD-001: the production drawing suite, through the real

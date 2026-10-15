@@ -8,6 +8,7 @@
 #include "MaterialReferenceModels.hpp"
 #include "MeshReferenceModels.hpp"
 #include "ReferenceModels.hpp"
+#include "StructuralReferenceModels.hpp"
 
 #include <bettercad/assembly/Components.hpp>
 #include <bettercad/assembly/Configurations.hpp>
@@ -32,6 +33,10 @@
 #include <bettercad/meshing/MeshQuality.hpp>
 #include <bettercad/meshing/Mesher.hpp>
 #include <bettercad/meshing/VolumeMesh.hpp>
+#include <bettercad/structural/StructuralAnalysisObject.hpp>
+#include <bettercad/structural/StructuralPost.hpp>
+#include <bettercad/structural/StructuralReaction.hpp>
+#include <bettercad/structural/StructuralValidation.hpp>
 
 #include <chrono>
 #include <cmath>
@@ -74,6 +79,7 @@ int main(int argc, char** argv) {
     bool drawings = true;
     bool materials = true;
     bool meshes = true;
+    bool structural = true;
     for (int i = 1; i < argc; ++i) {
         const std::string_view arg = argv[i];
         if (arg == "--out" && i + 1 < argc) {
@@ -83,6 +89,7 @@ int main(int argc, char** argv) {
             assemblies = false;
             materials = false;
             meshes = false;
+            structural = false;
         } else if (arg == "--materials") {
             // P15-REFMOD-001. The material suite alone, which is what its CLI
             // fixture needs: seconds, rather than the minute the twelve parts'
@@ -91,6 +98,7 @@ int main(int argc, char** argv) {
             assemblies = false;
             drawings = false;
             meshes = false;
+            structural = false;
         } else if (arg == "--meshes") {
             // P16-REFMOD-001. The meshing suite alone. Its CLI fixture needs
             // the nine .bcad files and nothing else, and meshing them is the
@@ -100,8 +108,18 @@ int main(int argc, char** argv) {
             assemblies = false;
             drawings = false;
             materials = false;
+            structural = false;
+        } else if (arg == "--structural") {
+            // P17-REFMOD-001. The structural suite alone: twelve documents,
+            // each meshed and solved, which is what its CLI fixture needs.
+            parts = false;
+            assemblies = false;
+            drawings = false;
+            materials = false;
+            meshes = false;
         } else {
-            std::fprintf(stderr, "usage: %s [--out <dir>] [--drawings] [--materials] [--meshes]\n",
+            std::fprintf(stderr,
+                         "usage: %s [--out <dir>] [--drawings] [--materials] [--meshes] [--structural]\n",
                          argv[0]);
             return 2;
         }
@@ -655,6 +673,226 @@ int main(int argc, char** argv) {
         std::printf("timing_ms build %.3f regeneration %.3f meshing %.3f changed_regeneration %.3f "
                     "remeshing %.3f\n",
                     buildMs, regenMs, meshMs, changeMs, remeshMs);
+    }
+    // The structural reference models (P17-REFMOD-001). A sixth loop, because
+    // what a structural model produces is a SOLVE -- a validation verdict, a
+    // displacement field, a stress field and a set of reactions, every one of
+    // them derived from a mesh the Mesher holds and a result that is never
+    // written to the file -- and the numbers that describe it are residuals,
+    // energies, extremes and balances, none of which the other five loops
+    // have anywhere to print.
+    //
+    // THIS IS THE SUITE'S EVIDENCE GENERATOR as well as its CLI fixture: every
+    // figure the evidence tables quote is a line printed here, from a process
+    // whose exit code is itself the first assertion. It fails on a model that
+    // solves when it should not just as readily as on one that does not solve
+    // when it should -- and it fails if a refused solve publishes anything.
+    for (const reference::StructuralReferenceModelInfo& info :
+         structural ? std::span{reference::kStructuralReferenceModels}
+                    : std::span<const reference::StructuralReferenceModelInfo>{}) {
+        const auto buildStart = Clock::now();
+        auto document = reference::buildStructuralReferenceModel(info.kind);
+        const double buildMs = millisecondsSince(buildStart);
+        if (!document) {
+            return fail(info.name, "build", document.error());
+        }
+        if (!out.empty()) {
+            const auto path = out / (std::string{info.fileStem} + ".bcad");
+            if (auto saved = io::saveDocument(*document, path); !saved) {
+                return fail(info.name, "save", saved.error());
+            }
+        }
+
+        features::Regenerator regenerator;
+        const auto regenStart = Clock::now();
+        auto report = regenerator.regenerateAll(*document);
+        const double regenMs = millisecondsSince(regenStart);
+        if (!report) {
+            return fail(info.name, "regenerate", report.error());
+        }
+        // Every structural model's BODY builds: the refusals in this suite are
+        // structural refusals, not geometry failures, and a model that did not
+        // regenerate would be refused for the wrong reason.
+        if (!report->succeeded()) {
+            for (const auto& [id, error] : report->errors) {
+                std::fprintf(stderr, "%.*s: %s\n", static_cast<int>(info.name.size()),
+                             info.name.data(), error.message.c_str());
+            }
+            return 1;
+        }
+
+        const std::vector<AnalysisId> analyses = structural::structuralAnalysisIds(*document);
+        if (analyses.size() != 1) {
+            std::fprintf(stderr, "%.*s: expected exactly one structural analysis, found %zu\n",
+                         static_cast<int>(info.name.size()), info.name.data(), analyses.size());
+            return 1;
+        }
+        const AnalysisId analysisId = analyses.front();
+        const structural::StructuralAnalysis* analysis =
+            structural::findStructuralAnalysis(*document, analysisId);
+        if (analysis == nullptr) {
+            std::fprintf(stderr, "%.*s: the analysis id does not resolve\n",
+                         static_cast<int>(info.name.size()), info.name.data());
+            return 1;
+        }
+        const MeshControlId key = analysis->definition().mesh;
+
+        std::printf("== %.*s %.*s\n%.*s\n", static_cast<int>(info.id.size()), info.id.data(),
+                    static_cast<int>(info.name.size()), info.name.data(),
+                    static_cast<int>(info.purpose.size()), info.purpose.data());
+        std::printf("loads %zu restraints %zu mode %.*s\n", analysis->definition().loads.size(),
+                    analysis->definition().restraints.size(),
+                    static_cast<int>(structural::toString(analysis->definition().mode).size()),
+                    structural::toString(analysis->definition().mode).data());
+
+        meshing::Mesher mesher;
+        const auto meshStart = Clock::now();
+        auto meshed = mesher.generate(*document, regenerator, key);
+        const double meshMs = millisecondsSince(meshStart);
+        if (!meshed) {
+            return fail(info.name, "meshing", meshed.error());
+        }
+        std::printf("nodes %zu tets %zu boundary_facets %zu\n", (*meshed)->nodeCount(),
+                    (*meshed)->tetrahedronCount(), (*meshed)->boundaryTriangleCount());
+        std::printf("sizing global_mm %.17g local_controls %zu unresolved_local %zu slabs %zu\n",
+                    (*meshed)->sizing().globalTargetSize.in(units::mm), (*meshed)->sizing().local.size(),
+                    (*meshed)->sizing().unresolvedCount(), (*meshed)->sizing().regions.size());
+        for (const meshing::BoxSizeRestriction& slab : (*meshed)->sizing().regions) {
+            std::printf("slab_mm %.6g %.6g %.6g .. %.6g %.6g %.6g at %.6g\n", slab.min.x.in(units::mm),
+                        slab.min.y.in(units::mm), slab.min.z.in(units::mm), slab.max.x.in(units::mm),
+                        slab.max.y.in(units::mm), slab.max.z.in(units::mm), slab.maxSize.in(units::mm));
+        }
+
+        // THE STAGED VERDICT FIRST, so a refusal's reason is the stage that
+        // refused and not a consequence downstream of it.
+        const structural::StructuralValidationReport validation =
+            structural::validateStructuralAnalysisForSolve(*document, regenerator, mesher, analysisId);
+        std::printf("validation %.*s reached_stage %.*s constrained_dofs %zu loaded_nodes %zu\n",
+                    static_cast<int>(structural::toString(validation.status()).size()),
+                    structural::toString(validation.status()).data(),
+                    static_cast<int>(structural::toString(validation.reachedStage).size()),
+                    structural::toString(validation.reachedStage).data(),
+                    validation.constrainedDegreesOfFreedom, validation.loadedNodes);
+        for (const structural::ValidationFinding& finding : validation.findings) {
+            std::printf("finding %.*s %.*s %s\n",
+                        static_cast<int>(structural::toString(finding.severity).size()),
+                        structural::toString(finding.severity).data(),
+                        static_cast<int>(structural::toString(finding.code).size()),
+                        structural::toString(finding.code).data(), finding.message.c_str());
+        }
+
+        const auto solveStart = Clock::now();
+        auto outcome = structural::solveStructuralAnalysis(*document, regenerator, mesher, analysisId);
+        const double solveMs = millisecondsSince(solveStart);
+
+        if (!info.expectSolve) {
+            // THE REFUSAL IS THE RESULT. Nothing may be published: no outcome,
+            // no result, no field with a plausible-looking number in it.
+            if (outcome) {
+                std::fprintf(stderr, "%.*s: the solve SUCCEEDED and must not have\n",
+                             static_cast<int>(info.name.size()), info.name.data());
+                return 1;
+            }
+            std::printf("expected_outcome refusal actual refusal published_result no\n");
+            std::printf("diagnostic %s\n", outcome.error().message.c_str());
+            std::printf("timing_ms build %.3f regeneration %.3f meshing %.3f solve %.3f\n", buildMs,
+                        regenMs, meshMs, solveMs);
+            continue;
+        }
+
+        if (!outcome) {
+            return fail(info.name, "solve", outcome.error());
+        }
+        const structural::StructuralSolveOutcome& solved = *outcome;
+        std::printf("expected_outcome solve actual solve published_result yes\n");
+
+        // The whole measured record of one solved reference model, in full
+        // double precision, so the evidence tables are transcriptions.
+        std::printf("solve free_equations %zu residual %.17g pivot_ratio %.17g strain_energy_J %.17g\n",
+                    solved.freeEquations, solved.residual.normalized, solved.pivotRatio,
+                    solved.strainEnergy.si());
+        std::printf("fields largest_displacement_m %.17g largest_von_mises_Pa %.17g nodes %zu elements %zu\n",
+                    solved.largestDisplacement.si(), solved.largestVonMises.si(),
+                    solved.fields.displacements().size(), solved.fields.elements().size());
+        const Force3D& total = solved.reactions.totalForce();
+        const Force3D& external = solved.forceBalance.external;
+        std::printf("reactions total_N %.17g %.17g %.17g external_N %.17g %.17g %.17g\n", total.x.si(),
+                    total.y.si(), total.z.si(), external.x.si(), external.y.si(), external.z.si());
+        std::printf("equilibrium force_eta %.6e moment_eta %.6e constrained_dofs %zu reaction_nodes %zu\n",
+                    solved.forceBalance.normalized, solved.momentBalance.normalized,
+                    solved.reactions.constrainedDegreesOfFreedom(), solved.reactions.nodal().size());
+        if (!solved.result.describes(**meshed)) {
+            std::fprintf(stderr, "%.*s: the published result does not describe the mesh it was solved on\n",
+                         static_cast<int>(info.name.size()), info.name.data());
+            return 1;
+        }
+
+        // A change to a main dimension must make the held mesh STALE, the
+        // solve must be REFUSED while it is, and the regenerated, remeshed
+        // model must then solve again. This is what makes every number above
+        // a recomputed answer rather than a stored one -- and it runs
+        // RM-FEA-09's protection on every model, not only on the one named
+        // for it.
+        const auto item = document->findByName(info.mainParameter);
+        const auto parameter = item ? document->asParameter(*item) : std::nullopt;
+        if (!parameter) {
+            std::fprintf(stderr, "%.*s: no parameter '%.*s'\n", static_cast<int>(info.name.size()),
+                         info.name.data(), static_cast<int>(info.mainParameter.size()),
+                         info.mainParameter.data());
+            return 1;
+        }
+        if (auto changed = document->setParameterValue(*parameter, info.mainParameterMm * units::mm);
+            !changed) {
+            return fail(info.name, "parameter change", changed.error());
+        }
+        const auto changeStart = Clock::now();
+        auto afterChange = regenerator.regenerateAll(*document);
+        const double changeMs = millisecondsSince(changeStart);
+        if (!afterChange || !afterChange->succeeded()) {
+            std::fprintf(stderr, "%.*s: the model did not regenerate after changing %.*s\n",
+                         static_cast<int>(info.name.size()), info.name.data(),
+                         static_cast<int>(info.mainParameter.size()), info.mainParameter.data());
+            return 1;
+        }
+        const meshing::MeshCurrency afterEdit = mesher.currency(*document, key);
+        const structural::StructuralValidationReport stale =
+            structural::validateStructuralAnalysisForSolve(*document, regenerator, mesher, analysisId);
+        const bool refusedAsStale = stale.status() == structural::ValidationStatus::Rejected &&
+                                    stale.inputProblem == structural::InputProblem::MeshStale;
+        auto staleSolve = structural::solveStructuralAnalysis(*document, regenerator, mesher, analysisId);
+        std::printf("after_change %.*s_mm %.17g currency %.*s validation %.*s input_problem %s solve %s\n",
+                    static_cast<int>(info.mainParameter.size()), info.mainParameter.data(),
+                    info.mainParameterMm, static_cast<int>(meshing::toString(afterEdit).size()),
+                    meshing::toString(afterEdit).data(),
+                    static_cast<int>(structural::toString(stale.status()).size()),
+                    structural::toString(stale.status()).data(),
+                    stale.inputProblem ? std::string{structural::toString(*stale.inputProblem)}.c_str()
+                                       : "none",
+                    staleSolve ? "PUBLISHED" : "refused");
+        if (afterEdit != meshing::MeshCurrency::StaleGeometry || !refusedAsStale || staleSolve) {
+            std::fprintf(stderr,
+                         "%.*s: after changing %.*s the stale mesh was not refused as mesh_stale\n",
+                         static_cast<int>(info.name.size()), info.name.data(),
+                         static_cast<int>(info.mainParameter.size()), info.mainParameter.data());
+            return 1;
+        }
+        const auto remeshStart = Clock::now();
+        auto remeshed = mesher.generate(*document, regenerator, key);
+        if (!remeshed) {
+            return fail(info.name, "remeshing after the change", remeshed.error());
+        }
+        auto resolved = structural::solveStructuralAnalysis(*document, regenerator, mesher, analysisId);
+        const double remeshMs = millisecondsSince(remeshStart);
+        if (!resolved) {
+            return fail(info.name, "re-solving after the change", resolved.error());
+        }
+        std::printf("after_remesh nodes %zu tets %zu free_equations %zu strain_energy_J %.17g "
+                    "largest_displacement_m %.17g\n",
+                    (*remeshed)->nodeCount(), (*remeshed)->tetrahedronCount(), resolved->freeEquations,
+                    resolved->strainEnergy.si(), resolved->largestDisplacement.si());
+        std::printf("timing_ms build %.3f regeneration %.3f meshing %.3f solve %.3f "
+                    "changed_regeneration %.3f remesh_and_resolve %.3f\n",
+                    buildMs, regenMs, meshMs, solveMs, changeMs, remeshMs);
     }
     return 0;
 }

@@ -46,6 +46,9 @@ add_library(bettercad_reference_models STATIC
     RibbedBracket.cpp
     ReferenceModels.hpp
     Shaft.cpp
+    StructuralCatalog.cpp
+    StructuralModels.cpp
+    StructuralReferenceModels.hpp
     TransitionDuct.cpp
     UBolt.cpp
 )
@@ -56,8 +59,13 @@ target_link_libraries(bettercad_reference_models
     # which is already here -- so no layer is crossed and nothing needs
     # renumbering. PUBLIC because the test suite reads the models' MeshControl
     # definitions through these headers.
+    #
+    # structural joins it for P17-REFMOD-001. Layer 50, above meshing, which
+    # the examples -- a client of the library, checked like any other -- may
+    # use freely. PUBLIC for the same reason: the test suite reads the models'
+    # StructuralAnalysis definitions through these headers.
     PUBLIC BetterCAD::assembly BetterCAD::core BetterCAD::drawing BetterCAD::features
-           BetterCAD::geometry BetterCAD::meshing BetterCAD::sketch
+           BetterCAD::geometry BetterCAD::meshing BetterCAD::sketch BetterCAD::structural
     PRIVATE BetterCAD::compiler_options
 )
 
