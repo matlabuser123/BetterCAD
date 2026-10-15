@@ -1,0 +1,44 @@
+Test project C:/Users/hasib/bcdev/bc-build/debug-ext
+      Start 3758: architecture.layering
+      Start 3763: architecture.checker.layer-violation
+      Start 3765: architecture.checker.mesh-backend-leak
+      Start 3764: architecture.checker.drawing-layer-violation
+ 1/19 Test #3763: architecture.checker.layer-violation ...............   Passed    0.16 sec
+      Start 3759: architecture.checker.valid
+ 2/19 Test #3765: architecture.checker.mesh-backend-leak .............   Passed    0.16 sec
+      Start 3762: architecture.checker.qt-leak
+ 3/19 Test #3764: architecture.checker.drawing-layer-violation .......   Passed    0.17 sec
+      Start 3766: architecture.checker.mesh-backend-generated-leak
+ 4/19 Test #3759: architecture.checker.valid .........................   Passed    0.16 sec
+      Start 3768: architecture.checker.structural-layer-violation
+ 5/19 Test #3762: architecture.checker.qt-leak .......................   Passed    0.17 sec
+      Start 3761: architecture.checker.examples-occt-leak
+ 6/19 Test #3766: architecture.checker.mesh-backend-generated-leak ...   Passed    0.16 sec
+      Start 3769: architecture.checker.meshing-to-structural
+ 7/19 Test #3768: architecture.checker.structural-layer-violation ....   Passed    0.16 sec
+      Start 3771: architecture.checker.library-reaches-apps
+ 8/19 Test #3761: architecture.checker.examples-occt-leak ............   Passed    0.16 sec
+      Start 3767: architecture.checker.private-include
+ 9/19 Test #3769: architecture.checker.meshing-to-structural .........   Passed    0.16 sec
+      Start 3770: architecture.checker.structural-backend-leak
+10/19 Test #3771: architecture.checker.library-reaches-apps ..........   Passed    0.16 sec
+      Start 3760: architecture.checker.occt-leak
+11/19 Test #3767: architecture.checker.private-include ...............   Passed    0.17 sec
+      Start 3776: architecture.checker.eigen-public-header
+12/19 Test #3770: architecture.checker.structural-backend-leak .......   Passed    0.17 sec
+      Start 3774: architecture.checker.meshing-to-thermal
+13/19 Test #3760: architecture.checker.occt-leak .....................   Passed    0.17 sec
+      Start 3772: architecture.checker.thermal-layer-violation
+14/19 Test #3776: architecture.checker.eigen-public-header ...........   Passed    0.17 sec
+      Start 3773: architecture.checker.thermal-to-structural
+15/19 Test #3774: architecture.checker.meshing-to-thermal ............   Passed    0.17 sec
+      Start 3775: architecture.checker.thermal-backend-leak
+16/19 Test #3772: architecture.checker.thermal-layer-violation .......   Passed    0.17 sec
+17/19 Test #3773: architecture.checker.thermal-to-structural .........   Passed    0.16 sec
+18/19 Test #3775: architecture.checker.thermal-backend-leak ..........   Passed    0.16 sec
+19/19 Test #3758: architecture.layering ..............................   Passed    1.17 sec
+
+100% tests passed out of 19
+
+Total Test time (real) =   3.97 sec
+ctest exit 0 

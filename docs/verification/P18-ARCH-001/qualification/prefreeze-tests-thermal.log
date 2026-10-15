@@ -1,0 +1,39 @@
+Filters: [thermal]
+Randomness seeded to: 2091647028
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+bettercad_tests.exe is a Catch2 v3.16.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+ThermalInput_ReachesEveryInputProblemItDeclares
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalAnalysisBoundaryTests.cpp:373
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalAnalysisBoundaryTests.cpp:390: warning:
+  7 input problems declared, every one reached by a case in this file
+
+-------------------------------------------------------------------------------
+ThermalInput_RefusesAMeshOfGeometryThatHasSinceChanged
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalAnalysisBoundaryTests.cpp:221
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalAnalysisBoundaryTests.cpp:261: warning:
+  a mesh of changed geometry: 12 tetrahedra still held and still valid,
+  currency stale: the geometry changed, thermal analysis refused as mesh_stale
+
+-------------------------------------------------------------------------------
+ThermalInput_AcceptsACurrentMeshWithAUsableMaterial
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalAnalysisBoundaryTests.cpp:139
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalAnalysisBoundaryTests.cpp:173: warning:
+  prepared: 12 tets, 9 nodes, k = 45 kg*m/(s^3*K)
+
+===============================================================================
+All tests passed (280 assertions in 16 test cases)
+
+tests exit 0 

@@ -1,0 +1,26 @@
+prefreeze build started Fri 10/16/2026  1:24:11.55 
+build exit 0 Fri 10/16/2026  1:24:12.45 
+ctest exit 0 Fri 10/16/2026  1:51:34.29 
+freeze: HEAD a3b721b150338cc1cbd24ee592a11a70a6196c0c
+git status --short at the freeze:
+ M ROADMAP.md
+ M TODO.md
+ M docs/architecture.md
+ M src/CMakeLists.txt
+ M tests/CMakeLists.txt
+ M tests/architecture/CMakeLists.txt
+ M tests/architecture/CheckLayering.cmake
+ M tests/cli/ZeroMatchGuard.cmake
+?? .claude/
+?? docs/architecture/decisions/ADR-049-the-first-thermal-solver-is-linear-conduction-on-tet4-steady-and-transient-on-one-solid.md
+?? docs/architecture/decisions/ADR-050-a-thermal-module-at-layer-45-below-structural-so-the-coupling-can-flow-down.md
+?? docs/architecture/decisions/ADR-051-a-thermal-analysis-input-is-validated-once-and-possession-is-the-proof.md
+?? docs/verification/P18-ARCH-001/
+?? include/bettercad/thermal/
+?? src/thermal/
+?? tests/architecture/fixtures/meshing-to-thermal/
+?? tests/architecture/fixtures/thermal-backend-leak/
+?? tests/architecture/fixtures/thermal-layer-violation/
+?? tests/architecture/fixtures/thermal-to-structural/
+?? tests/architecture/fixtures/valid/src/thermal/
+?? tests/thermal/

@@ -1,0 +1,4 @@
+[1/7] Checking git revision
+[2/3] Building CXX object tests/CMakeFiles/bettercad_tests.dir/thermal/ThermalAnalysisBoundaryTests.cpp.obj
+[3/3] Linking CXX executable bin\bettercad_tests.exe
+build exit 0 

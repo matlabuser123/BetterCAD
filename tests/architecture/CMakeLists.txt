@@ -54,6 +54,25 @@ bettercad_add_process_test(architecture.checker.structural-backend-leak
 bettercad_add_process_test(architecture.checker.library-reaches-apps
     COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/library-reaches-apps|-P|${_check_layering}"
     EXIT_CODE 1 STDERR_REGEX "1 violation.*reaches into apps/ from the library")
+# P18-ARCH-001. The thermal module's permitted and forbidden directions, each
+# proved by a tree that holds exactly one of them. The POSITIVE direction
+# (thermal -> meshing, features, core) is proved by the `valid` tree, which
+# also keeps `set(layer_thermal 45)` in place. The SHARP one is
+# thermal-to-structural: 45 is below 50 by decision (ADR-050), so the include
+# a thermo-mechanical coupling will one day need runs structural -> thermal
+# and never the reverse -- and P17's solver API is unreachable from here.
+bettercad_add_process_test(architecture.checker.thermal-layer-violation
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermal-layer-violation|-P|${_check_layering}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*'thermal' must not depend on 'io'")
+bettercad_add_process_test(architecture.checker.thermal-to-structural
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermal-to-structural|-P|${_check_layering}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*'thermal' must not depend on 'structural'")
+bettercad_add_process_test(architecture.checker.meshing-to-thermal
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/meshing-to-thermal|-P|${_check_layering}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*'meshing' must not depend on 'thermal'")
+bettercad_add_process_test(architecture.checker.thermal-backend-leak
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermal-backend-leak|-P|${_check_layering}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*mesh backend header <nglib.h>")
 # P17-SOLVE-001 / ADR-039. Rule 7: Eigen is PRIVATE to the modules that link
 # it, so no PUBLIC header may include it -- otherwise it would propagate to
 # io 60, renderer 70, scripting 70, the app and the CLI.

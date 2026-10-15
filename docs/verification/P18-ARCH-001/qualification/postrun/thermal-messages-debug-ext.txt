@@ -1,0 +1,4 @@
+﻿  7 input problems declared, every one reached by a case in this file
+  a mesh of changed geometry: 12 tetrahedra still held and still valid,
+  currency stale: the geometry changed, thermal analysis refused as mesh_stale
+  prepared: 12 tets, 9 nodes, k = 45 kg*m/(s^3*K)

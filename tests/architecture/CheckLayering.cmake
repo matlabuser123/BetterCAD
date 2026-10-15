@@ -68,9 +68,17 @@ set(layer_meshing 40)
 # analysis intent. It cannot share meshing's 40: the rule below is
 # strictly-lower, so same-layer modules cannot include each other at all, and
 # structural must include meshing. That is what forced the respace (ADR-035).
-# P18's thermal module is expected to be a sibling here, at 50 if it
-# neither uses nor is used by structural, and at 55 or 45 if a coupling says
-# otherwise -- the gaps exist so that decision needs no renumber.
+#
+# thermal sits above meshing, which it consumes exactly as structural does,
+# and BELOW structural (ADR-050): the roadmap's one known coupling is a
+# temperature field driving thermal expansion and thermal stress, which means
+# structural will one day READ a thermal result. Strictly-lower puts the
+# reader above the read, so thermal takes 45 -- the free integer ADR-035 left
+# for exactly this decision -- and no module was renumbered. The mirror
+# image is enforced too: thermal may not include structural, which is why
+# P17's solver API is not reachable from the thermal module and
+# P18-SOLVE-001 has to decide reuse by extraction or by an independent link.
+set(layer_thermal 45)
 set(layer_structural 50)
 set(layer_io 60)
 set(layer_renderer 70)

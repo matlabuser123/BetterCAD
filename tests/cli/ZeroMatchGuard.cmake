@@ -76,6 +76,10 @@ set(_filters
     # the reason P16-QUAL-001 gave: so the final qualification can select them
     # and be seen to have done so.
     "unit\\.P17Qualification" 3
+    # P18-ARCH-001. The thermal input boundary's cases, and the checker
+    # fixtures that prove the module's directions.
+    "unit\\.ThermalInput" 8
+    "architecture\\.checker\\.[a-z-]*thermal" 4
 )
 list(LENGTH _filters _count)
 math(EXPR _last "${_count} - 1")

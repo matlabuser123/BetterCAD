@@ -1,0 +1,42 @@
+﻿postrun-arch started 2026-10-16T05:30:28.3683804+10:00
+== layering checker on the source tree
+-- Architecture check passed: 497 files, 0 violations
+== debug-ext
+  bettercad-cli.exe 368170949 72992f5c2a85ea39428e6e1011ba17af499023308dff3e3b6341245d4cf42140
+  bettercad_example_reference_models.exe 372836927 28d41bdbdbde774826e00332be3cdfaca18d422044a0411a2b78bea4b71c6255
+  bettercad_tests.exe 1169754596 c31d83f1a13f214999e3d88e2462f4b0ba1b71438e5f7a44974279aa06ba71a0
+  ctest -N: Total Tests: 4024
+  ctest -N -R unit\.ThermalInput : Total Tests: 11
+  ctest -N -R unit\.Thermal : Total Tests: 35
+  ctest -N -R architecture\.checker\.[a-z-]*thermal : Total Tests: 4
+  ctest -N -R ^architecture\. : Total Tests: 19
+  ctest -N -R unit\.StructuralInput : Total Tests: 10
+  [thermal][arch] exit 0 : All tests passed (259 assertions in 11 test cases)
+  message lines: 4
+== release-ext
+  bettercad-cli.exe 10113338 4e73ad5e57118d0ef5b2fd12231a697c83f9203679a34f481511aede391d200d
+  bettercad_example_reference_models.exe 9496172 bfe7b84913342cea441baf53b2232bf455c84b7af79ade4664e52a4e0738ae09
+  bettercad_tests.exe 48883857 50ebc523de27f332e11bf2294b182d3f4113e50cf2bc06a083ac7fcd9aa7f356
+  ctest -N: Total Tests: 4024
+  ctest -N -R unit\.ThermalInput : Total Tests: 11
+  ctest -N -R unit\.Thermal : Total Tests: 35
+  ctest -N -R architecture\.checker\.[a-z-]*thermal : Total Tests: 4
+  ctest -N -R ^architecture\. : Total Tests: 19
+  ctest -N -R unit\.StructuralInput : Total Tests: 10
+  [thermal][arch] exit 0 : All tests passed (259 assertions in 11 test cases)
+  message lines: 4
+== debug-shared-ext
+  bettercad-cli.exe 41310182 3d94608fe9c4fa965048d6703fecba456a6eaf1408372626165ad4ea5a8a3b59
+  bettercad_example_reference_models.exe 52417896 59a7ac09a0c0676d52b6c26187fd65c4b89b0b89785c3c075af3f9e00016994d
+  bettercad_tests.exe 834480180 a9e20af194956a197d57aedb95964d0bc0797c55c494bc3f7db7e97b041a209f
+  libbettercad_thermal.dll 2927334 3c17100ee109bb172a23ba00511e5eefae92d61a0d02a81d5cb23fd4b48fc6df
+  dll count: 11
+  ctest -N: Total Tests: 4024
+  ctest -N -R unit\.ThermalInput : Total Tests: 11
+  ctest -N -R unit\.Thermal : Total Tests: 35
+  ctest -N -R architecture\.checker\.[a-z-]*thermal : Total Tests: 4
+  ctest -N -R ^architecture\. : Total Tests: 19
+  ctest -N -R unit\.StructuralInput : Total Tests: 10
+  [thermal][arch] exit 0 : All tests passed (259 assertions in 11 test cases)
+  message lines: 4
+postrun-arch finished 2026-10-16T05:30:47.5073496+10:00

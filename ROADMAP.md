@@ -101,10 +101,10 @@ P17     Structural FEA
 Current authorized development:
 
 ```text
-None. P17 — Structural FEA was authorized 2026-10-06 and QUALIFIED
-2026-10-15 by P17-QUAL-001: seventeen milestones PASS, 4009/4009 tests in
-three presets, qualified tree == committed tree. P18 — Thermal Analysis is
-next in the sequence, which is not the same as authorized.
+P18 — Thermal Analysis, authorized 2026-10-16.
+P17 — Structural FEA was QUALIFIED 2026-10-15 by P17-QUAL-001: seventeen
+milestones PASS, 4009/4009 tests in three presets, qualified tree ==
+committed tree. P18-ARCH-001 is the current milestone; see TODO.md.
 ```
 
 Released: `v0.1.0` — Foundation.
@@ -125,7 +125,7 @@ Qualified but not yet separately released: `P11`, `P12`, `P13`, `P14`, `P15`, `P
 | Materials / Engineering Data | `P15` | **Qualified** |
 | Meshing | `P16` | **Qualified** |
 | Structural FEA | `P17` | **Qualified** |
-| Thermal Analysis | `P18` | Planned |
+| Thermal Analysis | `P18` | In Progress (authorized 2026-10-16) |
 | CFD Integration | `P19` | Planned |
 | Design Optimization | `P20` | Planned |
 | Semantic Topology | `P21` | Planned |
