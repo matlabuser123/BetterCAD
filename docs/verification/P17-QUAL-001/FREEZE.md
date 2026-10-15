@@ -162,7 +162,11 @@ Filled in after `BetterCAD: qualify P17 structural FEA` was made, with the
 eight subtree hashes read from the commit itself:
 
 ```text
-commit             (see below)
+commit             ae8c2f7195c8c0c70460095ff3d1fc383acf5973
+                   "BetterCAD: qualify P17 structural FEA", parent a99f0b6;
+                   recomputed from a scratch index (read-tree HEAD + add -A
+                   over the eight paths) immediately before `git add`, then
+                   read back with git rev-parse <commit>^{tree}:<path>
 apps               a95876bc6dbf843d4e0cec114059bc196fa16175   == frozen
 include            c9696d26cd8583a90cdddd00a51ee654fc3ba72b   == frozen
 src                f3c1245dabbfda68008db3660f3d15a73e8e607f   == frozen

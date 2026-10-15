@@ -465,8 +465,13 @@ P17-ARCH-001 .. P17-REFMOD-001
 
 P17-QUAL-001     PASS 2026-10-15. Qualified against a99f0b6 plus the
                  working tree: 4009/4009 x 3, 1138 x 5 in two, 0 warnings
-                 over 658 objects, 17 stages exit 0, qualified tree ==
-                 committed tree. Evidence recorded.
+                 over 658 objects, 17 stages exit 0. Committed as ae8c2f7,
+                 and all eight subtree hashes of that commit equal the
+                 frozen fingerprint (apps a95876bc, include c9696d26, src
+                 f3c1245d, tests 90f93c52, examples a955cf65, cmake
+                 5a382115, CMakeLists.txt 3ec3c10f, CMakePresets.json
+                 3229f0f8): qualified tree == committed tree. Evidence
+                 recorded.
 
 P18              NOT AUTHORIZED. Being next in the sequence is not
                  permission, and P17 being qualified is not either.

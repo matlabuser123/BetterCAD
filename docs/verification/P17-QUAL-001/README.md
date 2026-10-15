@@ -266,8 +266,9 @@ P17:      QUALIFIED
 EVIDENCE: this directory; qualification/qualification-times.txt for the run
 TREE:     the eight-path fingerprint in FREEZE.md, identical before and after
           the run and read back from the closeout commit
-COMMIT:   BetterCAD: qualify P17 structural FEA -- recorded in FREEZE.md's
-          commit record and in the final report
+COMMIT:   ae8c2f7195c8c0c70460095ff3d1fc383acf5973, "BetterCAD: qualify
+          P17 structural FEA"; its eight subtree hashes equal the frozen
+          fingerprint, read back from the commit (FREEZE.md)
 ```
 
 ## Revision
