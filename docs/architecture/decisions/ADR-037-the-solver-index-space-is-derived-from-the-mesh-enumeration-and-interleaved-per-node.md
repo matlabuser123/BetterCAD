@@ -239,3 +239,19 @@ a prescribed VALUE on ConstraintSet         fixes a restraint representation
 ```
 
 Evidence: [docs/verification/P17-DOF-001/](../../verification/P17-DOF-001/README.md).
+
+## Amendment (P17-QUAL-001, 2026-10-15)
+
+> **Recorded because the evidence outranks this document.** The Consequences
+> say "`P17-BC-001` produces `NodalDof`s from CAD references and never stores
+> an index". Since ADR-041 Decision 3, `RestraintResolution::constrained`
+> (`include/bettercad/structural/StructuralConstraints.hpp`) holds the
+> ascending `DofIndex` list a restraint resolved to, so that reactions can be
+> attributed per restraint without a second resolution. It is DERIVED state
+> on a derived object, never persisted and never a document identity, so the
+> invariant this sentence was protecting -- no solver index becomes CAD
+> intent -- holds unchanged; the sentence as written does not. Every other
+> clause (ordinal = mesh enumeration, interleaved `3k + c + 1`, `FreeEquationIndex`
+> a distinct 0-based type, three types with one friend each, `DofIndex`
+> outside `core/Id.hpp`) was verified against the code by P17-QUAL-001. See
+> `docs/verification/P17-QUAL-001/ADR_AUDIT.md`.

@@ -218,3 +218,20 @@ value nothing can return is a placeholder, and this ADR records their removal
 rather than their presence.
 
 Evidence: [docs/verification/P17-ARCH-001/](../../verification/P17-ARCH-001/README.md).
+
+## Amendment (P17-QUAL-001, 2026-10-15)
+
+> **Recorded because the evidence outranks this document.** Two sentences no
+> longer describe the tree. (1) The Decision's "What possession does NOT prove"
+> forecast that the quality, load, restraint and sufficiency gates would be
+> "added to this function". They were not: ADR-042 Decision 4 put them in
+> `validateStructuralAnalysisForSolve`, staged after `requireStructuralModel`
+> and reached only through `solveStructuralAnalysis`, and recorded why.
+> Possession of a `StructuralModel` therefore still proves exactly the seven
+> `InputProblem` checks this ADR lists, and nothing more -- which is the
+> stronger reading of the ADR's own title. (2) The Verification section says
+> "nine cases"; `tests/structural/StructuralAnalysisBoundaryTests.cpp` holds
+> ten, the tenth being `StructuralInput_ReachesEveryInputProblemItDeclares`.
+> Every invariant of the decision -- one boundary, no public constructor, one
+> friend, geometry asked first, delegation to P16 and P15 -- is implemented as
+> written. See `docs/verification/P17-QUAL-001/ADR_AUDIT.md`.

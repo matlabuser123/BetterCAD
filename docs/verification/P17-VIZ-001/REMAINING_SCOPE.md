@@ -1,5 +1,13 @@
 # P17-VIZ-001 — what is NOT done
 
+> **Addendum, P17-QUAL-001, 2026-10-15.** Written after the glyph run; the
+> element-contour run (`FREEZE_ELEMENTS.md`, candidate `974b62b`, 3835/3835 x
+> 3) then covered the three boxes this file says "stay unticked only until the
+> three-preset qualification covers them", and `TODO.md` ticks all 23. The
+> milestone is COMPLETE. What genuinely remains out of scope is unchanged and
+> still true: the Qt inspector surface is not wired, `LoadGlyph` is data and
+> not drawn, and there is no logarithmic scale.
+
 This milestone is **incomplete**. This file exists so the gap is stated rather
 than discovered, and so nothing in the other evidence documents reads as a
 claim about work that has not happened.

@@ -1,5 +1,17 @@
 # P17-VIZ-001 — FEA Visualisation / Inspection
 
+> **Addendum, P17-QUAL-001, 2026-10-15.** The status block below was written
+> after the second of this milestone's four qualification runs and was not
+> updated by the two that followed. The milestone is **COMPLETE at 23 of 23**:
+> the glyphs were drawn and qualified at `974b62b` (`FREEZE_GLYPHS.md`,
+> 3825/3825 x 3) and the three element contours were drawn and qualified at
+> `e795acb` (`FREEZE_ELEMENTS.md`, 3835/3835 x 3, "takes P17-VIZ-001 to 23 of
+> 23"), which `TODO.md` records with every box ticked. The text below is kept
+> as written because the measurements in it are still the measurements; only
+> the status line and the section "Why this is PARTIAL and not PASS" are
+> superseded. Recorded in `docs/verification/P17-QUAL-001/MILESTONE_AUDIT.md`
+> as finding D1.
+
 ```text
 STATUS:  PARTIAL, 18 of 23 boxes. The headless inspection layer, the
          DEFORMED display and the NODAL contours are built and

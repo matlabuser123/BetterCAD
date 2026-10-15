@@ -357,3 +357,22 @@ the solver service, result caching and invalidation
 P17-VIZ, P17-CMD, P17-PERSIST, P17-CLI, P17-REFMOD, P17-QUAL
     Not authorized. Finishing this milestone is a stop condition.
 ```
+
+## Amendment (P17-QUAL-001, 2026-10-15)
+
+> **Recorded because the evidence outranks this document.** Decision 4 shows
+> the entry as `solveStructuralAnalysis(document, regenerator, mesher,
+> analysis, settings)`. ADR-047 removed `settings` (they are canonical on the
+> definition, read at `StructuralValidation.cpp`), and P17-REACTION-001 added
+> the moment origin and the equilibrium tolerance, so the signature is
+> `(document, regenerator, mesher, analysis, origin = Point3D{}, tolerance = {})`.
+> The header's own comment says the origin "is explicit because ... a mutation
+> proved a default of zero made an origin-ignoring path a no-op" and then
+> defaults it; the mutation that comment refers to is caught by the tests that
+> pass a non-zero origin (`StructuralReaction_BalancesTheMomentAboutANonZeroOriginToo`,
+> RM-FEA-06's placed document), so the default is a convenience and not a hole
+> -- recorded, not edited. Every gate this ADR decides -- the two measured
+> floors, no dihedral failure, the warning envelope that rejects nothing,
+> `< 6` constrained DOFs, one unbypassable entry, staged short-circuit, a
+> derived status -- is implemented as written. See
+> `docs/verification/P17-QUAL-001/ADR_AUDIT.md`.

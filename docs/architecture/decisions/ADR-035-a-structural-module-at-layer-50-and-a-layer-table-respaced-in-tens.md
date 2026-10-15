@@ -167,3 +167,15 @@ and not on a module, so `architecture.checker.qt-leak` already covers every
 module including this one.
 
 Evidence: [docs/verification/P17-ARCH-001/](../../verification/P17-ARCH-001/README.md).
+
+## Amendment (P17-QUAL-001, 2026-10-15)
+
+> **Recorded because the evidence outranks this document.** The Rationale said
+> the respaced numbers appear in the checker "plus prose in `ARCHITECTURE.md`".
+> The checker (`tests/architecture/CheckLayering.cmake`) and the module
+> `CMakeLists.txt` comments carried the respace; `docs/ARCHITECTURE.md` did not,
+> and still listed `sketch 1 ... renderer/scripting 6` with no `meshing` or
+> `structural` row until P17-QUAL-001 corrected it on 2026-10-15. The decision
+> -- the table in tens, `structural` at 50, rule 6 -- is implemented exactly as
+> written and is enforced by the `architecture.*` tests; the drift was in the
+> prose copy only. See `docs/verification/P17-QUAL-001/ADR_AUDIT.md`.

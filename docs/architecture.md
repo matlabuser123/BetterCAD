@@ -33,8 +33,11 @@ the `architecture.layering` test. Fixture trees under
 2. **Qt containment.** Qt headers may only be included from `apps/bettercad/`
    and `src/renderer/`. The modelling libraries are GUI-free.
 3. **Layering.** A module may include public headers of its own module or of a
-   lower layer only. Layers: `core` 0, `sketch` 1, `features` 2, `assembly` 3,
-   `drawing` 4, `io` 5, `renderer`/`scripting` 6.
+   strictly lower layer only. Layers, respaced in tens by ADR-035: `core` 0,
+   `sketch` 10, `features` 20, `assembly` 30, `drawing` 40, `meshing` 40,
+   `structural` 50, `io` 60, `renderer`/`scripting` 70. The checker is the
+   authority for the numbers; this list was brought back into agreement with
+   it by P17-QUAL-001 on 2026-10-15.
 4. **Public/private split.** Public headers live in `include/bettercad/<module>/`
    and use only `<bettercad/...>`-style includes. Private headers live next to
    their sources in `src/<module>/`.
@@ -45,11 +48,13 @@ the `architecture.layering` test. Fixture trees under
 |------------------------------|-------------------------------|------------|-----------------------------------------------|
 | `bettercad_core`             | `BetterCAD::core`             | library    | Build info, units, IDs, parameters, document  |
 | `bettercad_geometry`         | `BetterCAD::geometry`         | library    | Solid geometry, meshing, STEP over OCCT       |
-| `bettercad_sketch`           | `BetterCAD::sketch`           | library    | Sketches, constraints, solver (layer 1)       |
-| `bettercad_features`         | `BetterCAD::features`         | library    | Features, regeneration, validation (layer 2)  |
-| `bettercad_assembly`         | `BetterCAD::assembly`         | library    | Components, mates, constraint solver (layer 3)|
-| `bettercad_drawing`          | `BetterCAD::drawing`          | library    | Drawing sheets and formats (layer 4)          |
-| `bettercad_io`               | `BetterCAD::io`               | library    | Native document files, STEP/STL export        |
+| `bettercad_sketch`           | `BetterCAD::sketch`           | library    | Sketches, constraints, solver (layer 10)      |
+| `bettercad_features`         | `BetterCAD::features`         | library    | Features, regeneration, validation (layer 20) |
+| `bettercad_assembly`         | `BetterCAD::assembly`         | library    | Components, mates, constraint solver (layer 30)|
+| `bettercad_drawing`          | `BetterCAD::drawing`          | library    | Drawing sheets and formats (layer 40)         |
+| `bettercad_meshing`          | `BetterCAD::meshing`          | library    | Tet4 volume meshing, mapping, quality (layer 40) |
+| `bettercad_structural`       | `BetterCAD::structural`       | library    | Linear static Tet4 FEA (layer 50)             |
+| `bettercad_io`               | `BetterCAD::io`               | library    | Native document files, STEP/STL export (layer 60) |
 | `bettercad_cli_lib`          | `BetterCAD::cli_lib`          | static lib | CLI commands (new, info, validate, export)    |
 | `bettercad_cli`              | —                             | executable | `bettercad-cli`                               |
 | `bettercad`                  | —                             | executable | Qt desktop application (placeholder)          |

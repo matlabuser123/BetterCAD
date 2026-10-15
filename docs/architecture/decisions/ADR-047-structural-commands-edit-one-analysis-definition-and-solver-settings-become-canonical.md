@@ -260,3 +260,17 @@ accept a wrong first member, so the probes go through COMMAND CONSTRUCTOR
 PARAMETERS, where a typed parameter is copy-initialised and no elision
 applies.
 ```
+
+## Amendment (P17-QUAL-001, 2026-10-15)
+
+> **Recorded because the evidence outranks this document.** The Decision's
+> class list omits two commands that shipped with it:
+> `DeleteStructuralAnalysisCommand` and `SetStructuralAnalysisDefinitionCommand`
+> (`include/bettercad/structural/StructuralCommands.hpp`). Both follow the
+> decision exactly -- the delete wraps the document's own object removal and
+> restores the whole definition on undo (`StructuralCommand_DeleteAnalysisUndoRestoresTheWholeAnalysis`),
+> and the set-definition command is one more `edit(before)` subclass. Every
+> other clause -- one base, failure atomic, undo and redo ASSIGN a stored
+> definition, canonical solver settings, no new invalidation mechanism -- was
+> verified against the code by P17-QUAL-001. See
+> `docs/verification/P17-QUAL-001/ADR_AUDIT.md`.

@@ -1,0 +1,21 @@
+prefreeze build started Thu 10/15/2026 18:41:07.23 
+build exit 0 Thu 10/15/2026 18:42:45.55 
+ctest exit 0 Thu 10/15/2026 19:14:06.17 
+freeze: HEAD a99f0b6c332c4c122d495c55b99df598a083d86a
+git status --short at the freeze:
+ M docs/architecture.md
+ M docs/architecture/decisions/ADR-034-the-first-structural-solver-is-linear-static-tet4-on-one-solid.md
+ M docs/architecture/decisions/ADR-035-a-structural-module-at-layer-50-and-a-layer-table-respaced-in-tens.md
+ M docs/architecture/decisions/ADR-036-a-structural-analysis-input-is-validated-once-and-possession-is-the-proof.md
+ M docs/architecture/decisions/ADR-037-the-solver-index-space-is-derived-from-the-mesh-enumeration-and-interleaved-per-node.md
+ M docs/architecture/decisions/ADR-038-the-global-stiffness-matrix-is-a-bettercad-owned-csr-that-eigen-can-map.md
+ M docs/architecture/decisions/ADR-042-mesh-quality-rejects-on-measured-accuracy-laws-one-bound-per-degeneration-family-and-one-unbypassable-solve-entry.md
+ M docs/architecture/decisions/ADR-043-a-deformed-display-is-an-override-position-buffer-through-the-one-existing-conversion.md
+ M docs/architecture/decisions/ADR-047-structural-commands-edit-one-analysis-definition-and-solver-settings-become-canonical.md
+ M docs/verification/P17-VIZ-001/README.md
+ M docs/verification/P17-VIZ-001/REMAINING_SCOPE.md
+ M tests/CMakeLists.txt
+ M tests/cli/ZeroMatchGuard.cmake
+?? .claude/
+?? docs/verification/P17-QUAL-001/
+?? tests/qualification/P17StructuralQualificationTests.cpp

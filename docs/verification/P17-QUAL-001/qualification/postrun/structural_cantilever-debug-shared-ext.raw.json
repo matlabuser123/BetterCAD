@@ -1,0 +1,53 @@
+{
+  "nodeCount": 138,
+  "elementCount": 629,
+  "tetrahedronCount": 489,
+  "freeEquations": 306,
+  "normalizedResidual": 1.7951589071049352e-17,
+  "pivotRatio": 0.000481645604291701,
+  "strainEnergy": {
+    "value": 0.00015506499378414136,
+    "unit": "J"
+  },
+  "largestDisplacement": {
+    "value": 1.5698141397420332e-06,
+    "unit": "m"
+  },
+  "largestVonMises": {
+    "value": 5171211.77429152,
+    "unit": "Pa"
+  },
+  "forceImbalance": {
+    "value": 3.2052905510827076e-10,
+    "unit": "N"
+  },
+  "momentImbalance": {
+    "value": 2.776877801303445e-11,
+    "unit": "N m"
+  },
+  "validation": {
+    "status": "accepted_with_warnings",
+    "acceptable": true,
+    "reachedStage": "complete",
+    "findings": [
+      {
+        "code": "element_outside_qualified_envelope",
+        "severity": "warning",
+        "message": "element 64 has tet_min_dihedral_angle 0.003026877936067231, outside the range of every qualified BetterCAD reference mesh (0.006). Results near it carry larger discretisation error. This is an envelope, not a rejection.",
+        "element": 64,
+        "metric": "tet_min_dihedral_angle",
+        "value": 0.003026877936067231,
+        "threshold": 0.006
+      },
+      {
+        "code": "element_outside_qualified_envelope",
+        "severity": "warning",
+        "message": "element 410 has tet_radius_ratio 6.522115439760449e-05, outside the range of every qualified BetterCAD reference mesh (3e-04). Results near it carry larger discretisation error. This is an envelope, not a rejection.",
+        "element": 410,
+        "metric": "tet_radius_ratio",
+        "value": 6.522115439760449e-05,
+        "threshold": 3e-04
+      }
+    ]
+  }
+}

@@ -236,3 +236,26 @@ production CSR; `K r = 0` for the six rigid-body modes; nullity exactly six on
 a small connected fixture; `nnz` and the ordered coordinate pattern identical
 across the three presets; and the mutation that replaces `+=` with `=` is
 killed.
+
+## Amendment (P17-QUAL-001, 2026-10-15)
+
+> **Recorded because the evidence outranks this document.** Three statements
+> were overtaken by ADR-039 the same day and were not amended then.
+> (1) "`bettercad_structural` continues to link no linear algebra at all":
+> ADR-039 admitted Eigen PRIVATE to the module (`src/structural/CMakeLists.txt`);
+> no public header includes it, and `CheckLayering.cmake` rule 7 fails the
+> build if one does. (2) "`P17-SOLVE-001` wraps the same arrays in
+> `Eigen::Map<const Eigen::SparseMatrix<double>>` at zero copy": it does not. A
+> `Map` needs Eigen's signed `StorageIndex` and BetterCAD's index is unsigned
+> 64-bit, so `StructuralSolve.cpp` CONVERTS the CSR through `Eigen::Triplet`
+> and `setFromTriplets`, and says so in place. The CSR holds each `(row, col)`
+> once, so the reduction order of `setFromTriplets` has nothing to reduce and
+> the conversion is exact. (3) The Context's "no `Eigen::Triplet` anywhere in
+> the tree" is therefore also stale. The decision itself -- a BetterCAD-owned
+> CSR, two passes, every contribution `+=`, no pruning, no regularisation, no
+> symmetrisation, row space from the empty constraint set -- is implemented as
+> written and was verified by P17-QUAL-001, including the mutation `+=` to `=`
+> run again at that gate. The header comment in `StructuralSystem.hpp` that
+> repeats (1) and (2) is a comment and is recorded here rather than edited,
+> because the qualification changed no production file. See
+> `docs/verification/P17-QUAL-001/ADR_AUDIT.md`.

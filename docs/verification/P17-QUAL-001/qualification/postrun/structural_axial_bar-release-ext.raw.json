@@ -1,0 +1,34 @@
+{
+  "nodeCount": 10,
+  "elementCount": 28,
+  "tetrahedronCount": 16,
+  "freeEquations": 18,
+  "normalizedResidual": 1.792041813971423e-17,
+  "pivotRatio": 0.09509459044815191,
+  "strainEnergy": {
+    "value": 0.23142857142857104,
+    "unit": "J"
+  },
+  "largestDisplacement": {
+    "value": 2.1535447759544763e-05,
+    "unit": "m"
+  },
+  "largestVonMises": {
+    "value": 50000000.000000075,
+    "unit": "Pa"
+  },
+  "forceImbalance": {
+    "value": 2.3407459564663245e-11,
+    "unit": "N"
+  },
+  "momentImbalance": {
+    "value": 1.1046499416619684e-12,
+    "unit": "N m"
+  },
+  "validation": {
+    "status": "accepted",
+    "acceptable": true,
+    "reachedStage": "complete",
+    "findings": []
+  }
+}

@@ -72,6 +72,10 @@ set(_filters
     # both have to be seen to match something.
     "unit\\.Structural(Patch|AxialBar|Cantilever|PressureBlock|GravityBlock|Transformed|LocalRefinement|UnderConstrained|StaleMesh|Unresolved|Reference)" 12
     "refmod\\.structural\\." 30
+    # P17-QUAL-001. The final cross-milestone gates, under their own prefix for
+    # the reason P16-QUAL-001 gave: so the final qualification can select them
+    # and be seen to have done so.
+    "unit\\.P17Qualification" 3
 )
 list(LENGTH _filters _count)
 math(EXPR _last "${_count} - 1")

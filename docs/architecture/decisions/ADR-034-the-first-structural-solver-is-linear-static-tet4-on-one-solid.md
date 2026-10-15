@@ -176,3 +176,18 @@ The reference models and the acceptance policy that test the formulation belong
 to `P17-ELEM-001`, `P17-VALID-001` and `P17-REFMOD-001`.
 
 Evidence: [docs/verification/P17-ARCH-001/](../../verification/P17-ARCH-001/README.md).
+
+## Amendment (P17-QUAL-001, 2026-10-15)
+
+> **Recorded because the evidence outranks this document.** The Verification
+> section's sentence "no element, no DOF, no stiffness and no solve exists in
+> `src/structural/`" was true on the day P17-ARCH-001 passed and is a statement
+> about THAT milestone's module, not about the decision. The module now compiles
+> `Tet4Element.cpp`, `StructuralDof.cpp`, `StructuralSystem.cpp` and
+> `StructuralSolve.cpp` (`src/structural/CMakeLists.txt`), each added by the
+> milestone this ADR names for it. Every clause of the decision itself --
+> linear static, infinitesimal strain, homogeneous isotropic elasticity, Tet4
+> only, three translations per node, one solid, one current P16 mesh, and
+> refusal rather than approximation -- was verified against the code by
+> P17-QUAL-001 (`docs/verification/P17-QUAL-001/ADR_AUDIT.md`), with no
+> divergence.

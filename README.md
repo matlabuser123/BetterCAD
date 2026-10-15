@@ -20,7 +20,8 @@ unless a log says so.
 | --- | --- |
 | Parametric part modeling | **Qualified** — `P11-QUAL-001` |
 | Parametric CAD completion | **Qualified** — `P12-QUAL-001` |
-| Current implementation | `P17` — Structural FEA; `P17-ARCH-001`, `P17-DATA-001`, `P17-MAT-001`, `P17-DOF-001`, `P17-ELEM-001` and `P17-LOAD-001` qualified, nothing after them authorized ([TODO.md](TODO.md)) |
+| Structural FEA | **Qualified** — `P17-QUAL-001`, 2026-10-15 ([ROADMAP.md](ROADMAP.md)) |
+| Current implementation | none authorized; `P18` — Thermal Analysis is next in the sequence ([TODO.md](TODO.md)) |
 | Released | `v0.1.0` (`P0`–`P10`); `P11` and `P12` are qualified but not released |
 
 `P12-QUAL-001` rebuilt the tree clean in Debug, Release and Debug-shared and ran
@@ -227,10 +228,10 @@ for a user to find.
   claimed or qualified.
 - **STEP export only** — no STEP import. The kernel-based reader in the tree is
   test-only tooling that reads exports back to check them. No DXF, IGES or OBJ.
-- No simulation, optimization, semantic topology, Python API, CAM or AI. All
-  are planned; see [ROADMAP.md](ROADMAP.md), which also records the qualified
-  capabilities this overview does not yet describe: assemblies, drawings,
-  materials and meshing.
+- No thermal or fluid simulation, optimization, semantic topology, Python
+  API, CAM or AI. All are planned; see [ROADMAP.md](ROADMAP.md), which also
+  records the qualified capabilities this overview does not yet describe:
+  assemblies, drawings, materials, meshing and linear-static structural FEA.
 
 ### Limits of the evidence
 

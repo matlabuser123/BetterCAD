@@ -95,26 +95,21 @@ P13     Assemblies
 P14     Technical Drawings
 P15     Materials / Engineering Data
 P16     Meshing
+P17     Structural FEA
 ```
 
 Current authorized development:
 
 ```text
-P17 — Structural FEA, authorized 2026-10-06.
-P17-ARCH-001 through P17-REACTION-001 are PASS -- eleven milestones, the last
-on 2026-10-10. The chain runs end to end and now PROVES ITSELF: authoritative
-CAD and material state, a validated Tet4 mesh, an analysis definition, loads,
-restraints, a global system, a linear solve, the displacement, strain, stress
-and invariants recovered back out of it, and support reactions whose global
-force and moment equilibrium is checked against the exact assembled load --
-with the tolerance measured rather than assumed.
-No milestone is authorized now: P17-VALID-001 is next in the sequence, which
-is not the same as permitted.
+None. P17 — Structural FEA was authorized 2026-10-06 and QUALIFIED
+2026-10-15 by P17-QUAL-001: seventeen milestones PASS, 4009/4009 tests in
+three presets, qualified tree == committed tree. P18 — Thermal Analysis is
+next in the sequence, which is not the same as authorized.
 ```
 
 Released: `v0.1.0` — Foundation.
 
-Qualified but not yet separately released: `P11`, `P12`, `P13`, `P14`, `P15`, `P16`.
+Qualified but not yet separately released: `P11`, `P12`, `P13`, `P14`, `P15`, `P16`, `P17`.
 
 ---
 
@@ -129,7 +124,7 @@ Qualified but not yet separately released: `P11`, `P12`, `P13`, `P14`, `P15`, `P
 | Technical Drawings | `P14` | **Qualified** |
 | Materials / Engineering Data | `P15` | **Qualified** |
 | Meshing | `P16` | **Qualified** |
-| Structural FEA | `P17` | Planned |
+| Structural FEA | `P17` | **Qualified** |
 | Thermal Analysis | `P18` | Planned |
 | CFD Integration | `P19` | Planned |
 | Design Optimization | `P20` | Planned |
@@ -644,23 +639,119 @@ per mesh — which is what makes it survive a remesh.
 
 ---
 
-## Structural FEA — Planned
+## Structural FEA — Qualified
 
-Initial scope: linear elasticity, small deformation, static analysis, isotropic
-materials. Boundary conditions: fixed supports, forces, pressures, gravity,
-moments. Results: displacement, strain, stress, von Mises stress, reactions,
-factor of safety.
-
-Qualification requires analytical benchmarks:
+`P17` gave BetterCAD a linear-static structural solver whose every input is
+canonical state it does not own, and whose every output is derived state
+that cannot become authority.
 
 ```text
-uniaxial bar
-cantilever beam
-simply supported beam
-plate benchmark
+authoritative CAD model + P15 material + P16 meshing intent
+→ structural analysis definition      loads, restraints and solver settings
+                                      naming CAD faces, never mesh entities
+→ one validated input boundary        requireStructuralModel: geometry
+                                      eligible, mesh HELD and CURRENT,
+                                      material complete for the MODE
+→ staged acceptance                   quality on measured accuracy laws,
+                                      restraints, loads -- stops at the
+                                      first refusing stage
+→ DOF numbering from the mesh         interleaved 3k + c + 1, remesh-bound
+→ Tet4 element, CSR assembly          one Voigt order, engineering shear
+→ SimplicialLDLT behind a pivot gate  and an INDEPENDENT residual
+→ displacement / strain / stress /    recovered through the same B and D
+  von Mises / principal / hydrostatic
+→ reactions = the constrained         force AND moment equilibrium as a gate
+  residual
+→ a result keyed to the mesh stamp,   inspectable, never persisted, never
+  the material and analysis revisions restored by undo, never a second
+                                      authority in the GUI or the CLI
 ```
 
-Plausible contour plots are not validation.
+**CAD geometry, the P15 material and the P16 mesh stay the authority; the
+result is derived.** Solving leaves every committed reference document
+byte-identical with its revision unmoved. A geometry, mesh-intent, material,
+load, restraint or solver-settings edit stales the result for exactly that
+reason, an undo does not resurrect it, a failed regeneration cannot yield a
+current one, and a loaded document holds intent and no result. A `NodeId`
+cannot reach a load, a restraint, a command or the file; the one mesh-local
+load that carries one refuses the save.
+
+**Refused, never approximated.** An under-constrained model is refused by
+the pivot gate with nothing published; a stale mesh at the inputs stage
+before anything is numbered; an unresolved face at the load stage with
+nothing substituted; an inverted or degenerate element before any stiffness
+exists. The solver's own success is never sufficient: the residual is
+recomputed over BetterCAD's own matrix.
+
+**Validated against closed forms that cannot call BetterCAD.** The patch
+test and the axial bar on rollers to roundoff (1e-15 against gates of 1e-9);
+the mean axial stress under a pressure (`-p`) and under self-weight
+(`-rho g H / 2`) exactly; the pressure resultant and `rho V g` balanced by
+the reactions; rigid-transform invariance with connectivity correspondence;
+local refinement proved by a mirror document; a cantilever convergence study
+that is recorded as a trend, with the linear tetrahedron's bending lock and
+its cause measured rather than excused.
+
+Qualified at tests fingerprint `90f93c52` on 2026-10-15. `P17-QUAL-001`:
+4009/4009 tests in debug-ext, release-ext and debug-shared-ext, each from
+clean; 1138 selected tests × 5 repeats in two presets; **0 warnings in all
+three builds** under `-Werror` over 658 objects; no-op rebuilds doing 0
+compiles and 0 links; suite fingerprints and CLI solve payloads bit-identical
+across the three presets; 206 ADR clauses checked against the code; seven
+mutation probes on the production tree, seven killed; qualified tree
+identical to the committed tree.
+
+| Milestone | Capability | Evidence |
+| --- | --- | --- |
+| `P17-ARCH-001` | Structural FEA architecture; ADR-034 to ADR-036 | [P17-ARCH-001](docs/verification/P17-ARCH-001/README.md) |
+| `P17-DATA-001` | Analysis / result data model, identity and currentness | [P17-DATA-001](docs/verification/P17-DATA-001/README.md) |
+| `P17-MAT-001` | Structural material resolution through P15 | [P17-MAT-001](docs/verification/P17-MAT-001/README.md) |
+| `P17-DOF-001` | DOF numbering and the constraint model; ADR-037 | [P17-DOF-001](docs/verification/P17-DOF-001/README.md) |
+| `P17-ELEM-001` | Tet4 linear-elastic element | [P17-ELEM-001](docs/verification/P17-ELEM-001/README.md) |
+| `P17-LOAD-001` | Structural loads: traction, pressure, gravity, nodal | [P17-LOAD-001](docs/verification/P17-LOAD-001/README.md) |
+| `P17-BC-001` | Structural restraints | [P17-BC-001](docs/verification/P17-BC-001/README.md) |
+| `P17-ASSEMBLY-001` | Deterministic CSR assembly; ADR-038 | [P17-ASSEMBLY-001](docs/verification/P17-ASSEMBLY-001/README.md) |
+| `P17-SOLVE-001` | Linear solver with a pivot gate and a residual gate; ADR-039 | [P17-SOLVE-001](docs/verification/P17-SOLVE-001/README.md) |
+| `P17-POST-001` | Displacement / strain / stress recovery; ADR-040 | [P17-POST-001](docs/verification/P17-POST-001/README.md) |
+| `P17-REACTION-001` | Reaction forces and equilibrium validation; ADR-041 | [P17-REACTION-001](docs/verification/P17-REACTION-001/README.md) |
+| `P17-VALID-001` | Structural acceptance policy and the one solve entry; ADR-042 | [P17-VALID-001](docs/verification/P17-VALID-001/README.md) |
+| `P17-VIZ-001` | FEA visualisation and inspection; ADR-043 to ADR-046 | [P17-VIZ-001](docs/verification/P17-VIZ-001/README.md) |
+| `P17-CMD-001` | Structural commands with exact undo and redo; ADR-047 | [P17-CMD-001](docs/verification/P17-CMD-001/README.md) |
+| `P17-PERSIST-001` | Save and load canonical structural intent; ADR-048 | [P17-PERSIST-001](docs/verification/P17-PERSIST-001/README.md) |
+| `P17-CLI-001` | Headless structural FEA | [P17-CLI-001](docs/verification/P17-CLI-001/README.md) |
+| `P17-REFMOD-001` | Structural reference models RM-FEA-01..10 | [P17-REFMOD-001](docs/verification/P17-REFMOD-001/README.md) |
+| `P17-QUAL-001` | Full P17 qualification | [P17-QUAL-001](docs/verification/P17-QUAL-001/README.md) |
+
+Decisions: ADR-034 to ADR-048 in `docs/architecture/decisions/`.
+
+### What P17 leaves for later
+
+**Linear Tet4 locks in bending.** The committed cantilever deflects a few
+per cent of Timoshenko across three meshes, monotonically and with the error
+falling, because OCCT never subdivides a developable wall along its ruling
+and every wall tetrahedron is a needle the full length of the body
+(P17-REFMOD-001 findings F2 and F3). Bending on a prismatic body is a trend
+BetterCAD measures, not a number it certifies, until a quadratic element or a
+surface mesher that subdivides along a ruling exists.
+
+**The 1e-12 moment-equilibrium threshold is crossed by a correct bending
+solve** of ~2500 needle elements (F1). The committed cantilever passes it;
+the measurement is on file and revising a qualified threshold is the owner's
+decision.
+
+Linear static only: no nonlinearity, contact, buckling, dynamics, thermal
+stress, shells, beams, Tet10 or multi-solid assemblies -- each refused rather
+than approximated (ADR-034). The Qt inspector surface is not wired; the
+headless display layer is qualified and the desktop application draws
+nothing structural. A pressure, traction or gravity glyph is data and not
+drawn. A drilled hole's wall still carries no `FaceName`, so it cannot be
+loaded or restrained. Configuration-driven analysis is blocked by design, as
+meshing is. Eigen's MPL-2.0 licence is recorded and the project's own licence
+remains the owner's to choose.
+
+`P18` consumes this layer as a result keyed to the mesh it was computed on,
+a material resolved per analysis mode, and a validation entry whose gates it
+inherits rather than re-asks.
 
 ---
 

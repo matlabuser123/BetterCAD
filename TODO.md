@@ -10,50 +10,28 @@
 
 ```text
 Current:
-           P17 — Structural FEA
-
-Prerequisite:
-           P16 — Meshing — QUALIFIED (P16-QUAL-001, 2026-10-06)
+           none. P17 — Structural FEA — QUALIFIED (P17-QUAL-001,
+           2026-10-15).
 
 Current milestone:
-           P17-REFMOD-001 — Structural Reference Models. AUTHORIZED
-           2026-10-15 by an explicit scope decision. COMPLETE at 22 of 22,
-           qualified 2026-10-15: 4006/4006 x 3 presets, 1135 x 5 in two,
-           0 warnings, 17 stages exit 0, qualified tree == committed tree.
-           NO production file changed: six of the eight fingerprints are
-           identical to the P17-CLI-001 freeze.
+           none. P17-QUAL-001 — Full P17 Qualification. AUTHORIZED
+           2026-10-15 by an explicit scope decision ("start P17-QUAL-001")
+           and PASSED the same day: seventeen milestones audited from their
+           own recorded verdicts, 206 ADR clauses checked against the code
+           (11 text drifts amended, 0 invariant violations), three final
+           cross-milestone gates added, seven mutation probes on the
+           production tree all killed, 44 adversarial questions, 0
+           production defects; 4009/4009 x 3 presets, 1138 x 5 in two, 0
+           warnings over 658 objects, 17 stages exit 0, 3h49m57s,
+           fingerprints before == after, qualified tree == committed tree.
+           NO file under src/, include/, apps/ or examples/ changed.
+           Evidence: docs/verification/P17-QUAL-001/.
 
-           Ten model IDs in twelve committed documents, every expected
-           value from a closed form that cannot call BetterCAD, 14 mutation
-           probes killed including three on production formulas -- and
-           THREE MEASURED FINDINGS carried to the owner as ADR-level
-           decisions: the 1e-12 moment-equilibrium threshold is crossed by
-           a correct bending solve (F1), linear Tet4 locks in bending (F2),
-           and OCCT never subdivides a developable wall along its ruling,
-           so a cylinder's wall tetrahedra are needles however fine the
-           target (F3). ANALYTICAL_VALIDATION.md.
-
-           Qualified on the hasib machine, as P17-CLI-001 was, by the
-           owner's decision of 2026-10-14; what is identical and what is
-           not is stated in FREEZE.md.
-
-           The line that stood under "Next" said "NOT AUTHORIZED:
-           P17-CLI-001 passing will not be permission to start it", and it
-           did its job for the fourth milestone running. The owner then
-           authorized it, which is the only thing that could.
-
-Completed in P17:
-           P17-VIZ-001 — FEA Visualisation / Inspection. COMPLETE at
-           23 of 23, qualified at e795acb on 2026-10-13.
-           P17-CMD-001 — Commands / Undo / Redo. COMPLETE at 19 of 19,
-           qualified at bde6f8b on 2026-10-13.
-           P17-PERSIST-001 — Structural Analysis Persistence. COMPLETE at
-           20 of 20, qualified 2026-10-14 and committed as 7e18175.
-           P17-CLI-001 — Headless Structural FEA. COMPLETE at 24 of 24,
-           qualified 2026-10-15 and committed as 460321a.
-           P17-REFMOD-001 — Structural Reference Models. COMPLETE at
-           22 of 22, qualified 2026-10-15 against 460321a plus the working
-           tree.
+           Three measured findings stay with the owner, unchanged: the
+           1e-12 moment-equilibrium threshold is crossed by a correct
+           bending solve of ~2500 needle elements (F1), linear Tet4 locks
+           in bending (F2), and OCCT never subdivides a developable wall
+           along its ruling (F3). P17-REFMOD-001/ANALYTICAL_VALIDATION.md.
 
 Qualified:
            P0–P10 — BetterCAD v0.1.0
@@ -63,14 +41,14 @@ Qualified:
            P14 — Technical Drawings
            P15 — Materials / Engineering Data
            P16 — Meshing
+           P17 — Structural FEA
 
 Next:
-           P17-QUAL-001 — the P17 phase qualification. NOT AUTHORIZED:
-           P17-REFMOD-001 passing will not be permission to start it, and
-           three findings (F1, F2, F3 in P17-REFMOD-001's evidence) are
-           owner decisions it should take into account.
+           P18 — Thermal Analysis is next in the sequence. NOT AUTHORIZED:
+           P17 being qualified is not permission to start it. Authorizing
+           it is a scope decision, and F1-F3 are inputs to it.
 
-P17 objective:
+P17 objective, as delivered:
            authoritative CAD / material / mesh state
            → structural analysis definition
            → linear-elastic FE assembly
@@ -88,7 +66,7 @@ P17 does NOT implement:
            optimisation, adaptive remeshing, shell or beam elements,
            multiple-solid contact assemblies
 
-P16 milestones:
+P16 and P17 milestones:
            recorded in ROADMAP.md with their evidence links. A completed
            phase does not accumulate in this file.
 ```
@@ -141,6 +119,7 @@ P13      Assemblies                           QUALIFIED
 P14      Technical Drawings                   QUALIFIED
 P15      Materials / Engineering Data         QUALIFIED
 P16      Meshing                              QUALIFIED
+P17      Structural FEA                       QUALIFIED
 ```
 
 Detailed completed history belongs in:
@@ -155,1985 +134,99 @@ Do not expand completed-phase implementation diaries in `TODO.md`.
 
 ---
 
-# P17 — Structural FEA
+# P17 — Structural FEA — QUALIFIED
 
-Give BetterCAD a trustworthy linear-static structural solver that consumes
-authoritative CAD geometry, canonical P15 material data and a validated P16
-Tet4 mesh, and produces displacements, strains, stresses and reactions that an
-engineer can check against an analytical answer.
-
-```text
-CAD model intent
-→ regenerated authoritative geometry
-+ P15 material definition
-+ P16 current validated Tet4 mesh
-+ geometry-based load / restraint intent
-→ structural analysis preparation
-→ DOF numbering
-→ Tet4 element matrices
-→ global K / F assembly
-→ boundary-condition application
-→ linear solve            K u = F
-→ displacement field
-→ reactions
-→ strain
-→ stress
-→ validation
-→ derived result
-→ P18 Thermal Analysis
-```
-
-P17 owns:
+`P17-QUAL-001` PASS, 2026-10-15. The seventeen milestones -- `P17-ARCH-001`
+through `P17-REFMOD-001` and this gate -- are recorded in `ROADMAP.md`
+("Structural FEA — Qualified") with their evidence links, as this file's own
+rule requires. The phase diary that stood here, every milestone's checklist
+and PASS record, is in git history at `a99f0b6` and in each milestone's
+`docs/verification/<milestone>/` directory; it is not repeated.
 
 ```text
-structural analysis definition
-analysis / result data model
-structural material resolution
-DOF numbering and the constraint model
-the Tet4 linear-elastic element
-structural loads
-structural restraints
-global assembly
-the linear solver
-displacement / strain / stress recovery
-reaction forces and equilibrium
-structural validation and acceptance policy
-FEA inspection
-FEA commands
-the structural persistence contract
-headless workflows
-reference models
-qualification
-```
+P17 objective, delivered:
+    authoritative CAD / material / mesh state
+    → structural analysis definition
+    → linear-elastic FE assembly
+    → boundary conditions / loads
+    → linear solve
+    → displacements / reactions
+    → strain / stress recovery
+    → structural validation
+    → inspectable, persistent, headless result
 
-P17 does NOT own geometry, meshing, or material data. It consumes all three.
-
-## The first supported solver
-
-```text
-small-strain
-linear-static
-isotropic linear-elastic
-Tet4
-single solid
-```
-
-Anything else is out of scope until a later milestone authorizes it.
-
-## P17 does NOT initially implement
-
-```text
-nonlinear material behaviour     plasticity
-large deformation                contact
-buckling                         fatigue
-fracture                         composites
-dynamics / modal analysis        transient structural analysis
-topology optimisation            adaptive remeshing
-shell / beam elements            multiple-solid contact assemblies
+P17 did NOT implement, by decision (ADR-034), and refuses rather than
+approximates: nonlinear material behaviour, plasticity, large deformation,
+contact, buckling, fatigue, fracture, composites, dynamics or modal
+analysis, transient structural analysis, topology optimisation, adaptive
+remeshing, shell or beam elements, multiple-solid contact assemblies.
 ```
 
 ---
-
-# P17 Core Invariants
-
-* CAD geometry remains authoritative.
-* P15 engineering material data remains authoritative.
-* The P16 Tet4 mesh remains derived state.
-* P17 solver results remain derived state.
-* Loads and restraints reference CAD geometry intent, never a persisted
-  `NodeId` or `ElementId`.
-* `NodeId` / `ElementId` are valid only for the mesh that issued them.
-* Every solver entry point re-checks geometry currentness, mesh currentness,
-  mesh validity, material validity and analysis-definition validity.
-* A stale mesh must never be solved as current.
-* Generated stiffness matrices, vectors and results are never canonical
-  document authority.
-* P17 consumes P16's mesh and mapping APIs. P17 does not create a competing
-  mesher.
-* A material edit invalidates the FEA result. It does NOT necessarily
-  invalidate the mesh.
-* An under-constrained model fails explicitly. It never reports a large finite
-  displacement as a solution.
-* The solver's own success status is never sufficient. The residual is checked.
-* Engineering and tensor shear-strain conventions are fixed once, written
-  down, and shared by assembly and post-processing.
-* Equilibrium is a gate, not a diagnostic: for a static model the applied and
-  reaction forces must sum to zero.
-
----
-
-# P17 Scope Boundaries
-
-## In scope
-
-```text
-linear-static structural analysis on a single solid
-Tet4 constant-strain elements
-isotropic linear elasticity
-nodal force, face traction, face pressure
-optional gravity / body force
-fixed and component-selective zero-displacement restraints
-displacement, strain, stress, von Mises, principal stresses
-support reactions and equilibrium validation
-the structural mesh-acceptance policy P16 deliberately left unowned
-```
-
-## Out of scope
-
-```text
-every item in "P17 does NOT initially implement"
-a second mesher, a second material store, a second document model
-prescribed non-zero displacement, unless a milestone authorizes it
-multi-body contact, which P16 refuses at the mesh level today
-```
-
----
-
-# P17 Sequence
-
-```text
-P17-ARCH-001      Structural FEA Architecture
-P17-DATA-001      Analysis / Result Data Model
-P17-MAT-001       Structural Material Resolution
-P17-DOF-001       DOF Numbering / Constraint Model
-P17-ELEM-001      Tet4 Linear Elastic Element
-P17-LOAD-001      Structural Loads
-P17-BC-001        Structural Restraints
-P17-ASSEMBLY-001  Global Matrix / Vector Assembly
-P17-SOLVE-001     Linear System Solver
-P17-POST-001      Displacement / Strain / Stress Recovery
-P17-REACTION-001  Reaction Forces / Equilibrium
-P17-VALID-001     Structural Validation / Acceptance
-P17-VIZ-001       FEA Visualisation / Inspection
-P17-CMD-001       Commands / Undo / Redo
-P17-PERSIST-001   Structural Analysis Persistence
-P17-CLI-001       Headless Structural FEA
-P17-REFMOD-001    Structural Reference Models
-P17-QUAL-001      Full P17 Qualification
-```
-
-The order deliberately puts the element formulation, the load and restraint
-mapping, assembly, solve and validation policy BEFORE the GUI: a trustworthy
-core first, then inspection, persistence, CLI and qualification around it.
-
----
-# P17 Prerequisites Already In The Tree
-
-Read before `P17-ARCH-001`. Each line below was checked against the code, not
-assumed, because BetterCAD's generic infrastructure has repeatedly already
-covered the next case. None of this is authorization to skip a milestone; it
-is the starting point each one inherits.
-
-## P15 already names P17 as a consumer
-
-`include/bettercad/core/materials/Completeness.hpp` defines:
-
-```text
-ConsumerKind::FeaLinearStatic              E and nu ONLY
-ConsumerKind::FeaLinearStaticWithGravity   the same, plus a density
-ConsumerKind::FeaYieldStrength
-MechanicalPropertyKind::{Density, YoungsModulus, PoissonsRatio, ...}
-features::requireDensity(document, id)
-CompletenessState::{Ready, Incomplete, Invalid}
-IssueKind::{MissingProperty, InconsistentValues, OrphanProvenance, ...}
-```
-
-Its stated rule is "MISSING DATA IS REPORTED, NEVER FILLED. No default
-modulus, no typical density." So `P17-MAT-001` is mostly a question of
-consuming the right `ConsumerKind` and honouring its answer — and the
-gravity/no-gravity split the brief asks for already exists as two consumers.
-Verify what is there before adding anything.
-
-## Eigen 5.0.1 is already a dependency, and is private to one module
-
-```text
-cmake/BetterCADDependencies.cmake:50   BetterCAD::eigen, header-only,
-                                       SHA256-pinned, "private to
-                                       bettercad_sketch"
-```
-
-So `P17-SOLVE-001`'s library audit starts from a pinned, already-qualified
-dense/sparse library rather than a blank page. Making it available to a
-structural module is an explicit decision, not a side effect.
-
-## A new `fea` module cannot share a layer with meshing
-
-`tests/architecture/CheckLayering.cmake` reports a violation when the included
-module differs from the includer AND its layer is **not strictly less**
-(lines 129-130). The table today:
-
-```text
-core 0   sketch 1   features 2   assembly 3
-drawing 4   meshing 4   io 5   renderer 6   scripting 6
-```
-
-`drawing` and `meshing` may share layer 4 only because neither uses the other.
-A structural module **does** use meshing, so it must be strictly above 4 and
-strictly below `io` 5 — **and there is no integer between them.** So
-`P17-ARCH-001` faces the renumbering that `ADR-006` and `ADR-015` each had to
-perform, and it should decide deliberately rather than discover it:
-
-```text
-move io / renderer / scripting up      the ADR-006 / ADR-015 precedent
-respace the table                      a wider change, once
-some other containment                 must be argued, not assumed
-```
-
-An unregistered module fails the build, so the table must be updated in the
-same change that creates the module.
-
-## The licence decision a solver choice would make
-
-`LICENSE` grants no permission to distribute, so the project's licence is still
-the owner's to choose. Adding a copyleft solver would make that choice by
-accident. Eigen is MPL-2.0 and passes the project's weak-copyleft admission
-rule; several common sparse direct solvers do not. `P17-SOLVE-001` must state
-the licence of anything it proposes and leave a GPL/AGPL choice to the owner.
-
-## What P16 hands over, and what it refuses
-
-```text
-HANDS OVER   a validated Tet4 VolumeMesh with outward-oriented, closed,
-             manifold boundary; a complete GeometryMeshMap from CAD faces to
-             boundary facets; NamedBoundarySet resolution from FaceName;
-             MeshCurrency and meshing::isStale(); report-only quality metrics
-
-REFUSES      a body with more than one solid, explicitly and tested
-             a mesh of stale, failed, blocked or non-solid geometry
-             configuration-overridden geometry
-             a drilled hole's cylindrical wall as a FaceName target
-```
-
-The refusals are P17's constraints, not P17's to lift.
-
----
-# P17-ARCH-001
-
-## Structural FEA Architecture
-
-* [x] Define P17 solver scope
-* [x] Define linear-static assumption
-* [x] Define small-strain assumption
-* [x] Define isotropic linear-elastic material assumption
-* [x] Define Tet4 as the initial structural element
-* [x] Define CAD / mesh / solver authority boundaries
-* [x] Define analysis-definition ownership
-* [x] Define derived-result ownership
-* [x] Define the geometry-currentness requirement
-* [x] Define the mesh-currentness requirement
-* [x] Define the material-currentness requirement
-* [x] Define the solver-input validation boundary
-* [x] Define P16 mapping consumption
-* [x] Define P15 material consumption
-* [x] Decide the module's layer and update `CheckLayering.cmake` in the same
-      change (see P17 Prerequisites: there is no integer between meshing and io)
-* [x] Define unsupported physics explicitly
-* [x] ADR(s) completed
-* [x] Adversarial review PASS
-* [x] Regression PASS
-* [x] Evidence recorded
-
-**COMPLETE 2026-10-07.** 20/20. Evidence:
-[docs/verification/P17-ARCH-001/](docs/verification/P17-ARCH-001/README.md).
-
-Three presets clean-rebuilt, 3401/3401 tests passed in each with 0 warnings
-over 598 objects, 579-test blast radius x5 repeats in release and debug,
-qualified tree == committed tree at `536e14b5`.
-
-**The audit was the substance, and it found that three things P17 was asked to
-design already existed, built by the earlier phases for this consumer by
-name.** `requireLinearElasticConstants` is documented "the boundary a
-structural solver consumes (P17)" and already refuses a non-finite or
-non-positive E and a Poisson ratio outside -1 < nu < 0.5; `ConsumerKind` already
-splits `FeaLinearStatic` from `FeaLinearStaticWithGravity`; and ADR-028 already
-forbade a solver holding material data, naming P17. So `P17-MAT-001`'s
-validation is satisfied by consumption, not implementation. See
-[DEPENDENCY_AUDIT.md](docs/verification/P17-ARCH-001/DEPENDENCY_AUDIT.md).
-
-**What nothing upstream could provide is a boundary that cannot be bypassed.**
-P16's recorded gap is about CALLERS -- `Mesher::mesh()` returns a stale mesh
-deliberately, because P16-VIZ-001 inspects stale meshes -- so no function in
-`structural` takes a `VolumeMesh`. `requireStructuralModel(document,
-regenerator, mesher, control)` is the only entry, and `StructuralModel` has one
-private constructor with one friend, so a function that wanted to skip the
-checks could not construct its argument (ADR-036).
-
-**The layer table was respaced in tens** (ADR-035). A structural module USES
-meshing, so it cannot share meshing's layer -- the rule is strictly-lower -- and
-there was no integer between `meshing` 4 and `io` 5. That is the third time:
-ADR-006 and ADR-015 each moved `io` up, and four roadmap phases sit in the same
-band. Relative order is unchanged and the checker gives the same verdict on the
-same tree. Rule 6 was added in the same change: the library must not include
-anything under `apps/`, which rules 2 and 3 could not express.
-
-
-### Gate
-
-```text
-solver scope explicit
-+ authority boundaries explicit
-+ stale-input protection explicit
-+ P15/P16 contracts reused rather than duplicated
-+ module layer decided and enforced
-+ unsupported behaviour explicit
-```
-
----
-
-# P17-DATA-001
-
-## Analysis / Result Data Model
-
-* [x] Define `AnalysisId`
-* [x] Define `LoadCaseId` if required
-* [x] Define `LoadId`
-* [x] Define `RestraintId`
-* [x] Define solver / result identity
-* [x] Define DOF identity
-* [x] Define nodal displacement representation
-* [x] Define reaction-force representation
-* [x] Define element strain representation
-* [x] Define element stress representation
-* [x] Define units for every field
-* [x] Define result-currentness semantics
-* [x] Define result invalidation dependencies
-* [x] Define the analysis state machine
-* [x] Prevent mesh IDs becoming permanent CAD identity
-* [x] Determinism PASS
-* [x] Adversarial review PASS
-* [x] Regression PASS
-* [x] Evidence recorded
-
-**COMPLETE 2026-10-07.** 19/19. Evidence:
-[docs/verification/P17-DATA-001/](docs/verification/P17-DATA-001/README.md).
-
-Three presets clean-rebuilt, 3434/3434 tests passed in each with 0 warnings
-over 603 objects, 715-test blast radius x5 repeats in release and debug,
-qualified tree == committed tree at `fcf2ea16`.
-
-**Three identity domains, made true in the type system.** `AnalysisId`,
-`LoadId` and `RestraintId` are document identities in `core/Id.hpp`; `NodeId`
-and `ElementId` stay P16's mesh-local handles; `DofIndex` is solver-local and
-deliberately NOT in `core/Id.hpp`, because a restraint that stored "DOF 1042"
-would constrain unrelated material after a remesh. Only `AnalysisId` widens to
-`ObjectId`, because only the analysis is a document object -- `LoadId` and
-`RestraintId` follow `BoundarySetId`, which is the member-identity precedent
-already in the tree. Twelve compile-fail cases enforce it.
-
-**`LoadCaseId` is NOT REQUIRED**, decided rather than skipped: one analysis IS
-one load case in the authorized scope, so the type would have been a named
-identity nothing allocates and nothing resolves. `grep -rn LoadCaseId` is 0.
-
-**`Translation3D` already existed** and is the nodal displacement; only
-`Force3D` was new, and it went to `core/math/Vector.hpp` beside its sibling.
-The tensor component order is frozen `XX YY ZZ XY YZ ZX` -- deliberately NOT
-`InertiaTensor`'s order, which is said out loud -- and the engineering shear
-convention is carried by the FIELD NAMES (`gammaXy`), so the rename that would
-reintroduce the ambiguity stops the test suite compiling.
-
-**Undo semantics were audited, not invented**: P16's own tests measure two
-different rules, and P17 inherits both rather than defining a third. See
-[CURRENTNESS_MODEL.md](docs/verification/P17-DATA-001/CURRENTNESS_MODEL.md).
-
-
-### Required result-currentness dependency
-
-An FEA result is current only if ALL of these match:
-
-```text
-geometry revision
-mesh revision
-meshing intent / source
-material revision
-load / restraint revision
-solver-settings revision
-```
-
-Note which of these are document identities and which are mesh-local handles:
-`AnalysisId`, `LoadId` and `RestraintId` are persisted document identities and
-belong in `core/Id.hpp`; a DOF index is derived from the current mesh and must
-not be, for the same reason `NodeId` is not (ADR-031).
-
----
-
-# P17-MAT-001
-
-## Structural Material Resolution
-
-Consume qualified P15 engineering material data. At minimum `E`, `nu`, and
-`rho` where self-weight is required.
-
-* [x] Resolve the structural material for the active body
-* [x] Validate E > 0
-* [x] Validate -1 < nu < 0.5
-* [x] Reject NaN / infinity
-* [x] Unit-safe material inputs
-* [x] Define missing-material behaviour
-* [x] Define custom-material behaviour
-* [x] Define provenance behaviour
-* [x] Define material-change result invalidation
-* [x] Verify a material change does NOT require a remesh
-* [x] Verify a material change DOES invalidate the structural result
-* [x] Adversarial review PASS
-* [x] Regression PASS
-* [x] Evidence recorded
-
-**COMPLETE 2026-10-07.** 14/14. Evidence:
-[docs/verification/P17-MAT-001/](docs/verification/P17-MAT-001/README.md).
-
-Three presets clean-rebuilt, 3453/3453 tests passed in each with 0 warnings
-over 605 objects, 734-test blast radius x5 repeats in release and debug,
-qualified tree == committed tree at `4d4698b3`.
-
-**The audit changed what this milestone could honestly claim.** The checklist
-asks P17 to validate E > 0, validate -1 < nu < 0.5 and reject NaN and infinity.
-P15 already does all of it AT THE POINT OF ENTRY -- `createMaterial` and
-`setMaterialMechanical` both refuse an unusable value, and a refused edit leaves
-the previous one intact -- so such a value cannot be in a document at all. That
-was found by eleven failing tests, not by reading: the first draft asserted the
-resolver refused them and every case failed at `createMaterial`. The boundary
-tests now assert the guarantee that EXISTS, and the delegation is proved through
-the reachable half of P15's contract, a required property that is absent.
-
-**What the milestone adds is the three things P15 cannot know**:
-`StructuralAnalysisMode` (intent, so it is a field of the analysis definition --
-a density on the material does not make a problem a self-weight problem),
-`resolveStructuralMaterial` giving one solver-ready view per mode, and the
-integration proof. The density requirement is READ from P15's
-`requiredProperties` rather than hardcoded, which is the one line that makes the
-two impossible to disagree.
-
-**The hard requirement, measured.** An E edit of 210 -> 190 GPa leaves
-`Mesher::currency` Current, the MeshStamp unchanged, the geometry revision
-unchanged and the whole MeshControlDefinition equal by value, while
-`staleReasons` reports exactly `{ Material }`. And the same MaterialId with a
-changed modulus is a different solver input: revision 1 -> 2, stale, which is
-why the source stamp carries a revision and not just an id.
-
-Invalidation is dynamic, never imperative: no `markMeshStale` or
-`invalidateResult` hook exists anywhere in the tree.
-
-
-### Critical rule
-
-```text
-material edit  →  FEA result stale
-
-NOT
-material edit  →  mesh stale
-```
-
-### Start from what exists
-
-`ConsumerKind::FeaLinearStatic` and `FeaLinearStaticWithGravity` already exist
-in `core/materials/Completeness.hpp`, and P15's rule is that missing data is
-reported and never filled. Probe before adding: the validation this milestone
-needs may already be a `CompletenessState` away.
-
----
-
-# P17-DOF-001
-
-## DOF Numbering / Constraint Model
-
-Three translational DOFs per node: `ux`, `uy`, `uz`.
-
-* [x] Define deterministic DOF numbering
-* [x] Map `NodeId` to its three DOFs
-* [x] Define constrained and free DOFs
-* [x] Define DOF ordering
-* [x] Reject missing nodes
-* [x] Reject duplicate DOFs
-* [x] Define active / free equation numbering
-* [x] Determinism PASS
-* [x] Scale to the reference meshes
-* [x] Adversarial review PASS
-* [x] Regression PASS
-* [x] Evidence recorded
-
-**COMPLETE 2026-10-07.** 12/12. Evidence:
-[docs/verification/P17-DOF-001/](docs/verification/P17-DOF-001/README.md).
-
-Three presets clean-rebuilt, 3493/3493 tests passed in each with 0 warnings
-over 609 objects, 765-test blast radius x5 repeats in release and debug,
-10 mutation probes all killed, qualified tree == committed tree at `9301b643`.
-
-**The node ordinal was ADOPTED, not invented.** P16 documents that node handles
-may be sparse and that `Mesh` enumerates in ascending `NodeId`; P17-DATA-001's
-`StructuralResult` had already keyed its displacement array "parallel to
-mesh.nodes()". So `dof = 3 * nodeId.value() + component` is forbidden -- a mesh
-whose nodes are 3, 1000 and 9000000 has NINE degrees of freedom and that formula
-would build 27000003 rows -- and the ordinal is the mesh's own enumeration
-index, which is also the one a result already uses. A test compares the two
-through the result's OWN lookup, so a future divergence fails the suite instead
-of writing node i's answer into node j's slot.
-
-**The numbering is interleaved per node and that is now permanent**
-(`3k+1, 3k+2, 3k+3`), because an element's stiffness couples the DOFs of its own
-four nodes. Asserted WITH its negation: the second node's Ux is asserted to be 4
-and asserted NOT to be 2, since the two conventions agree at ordinal 0 and a
-formula check there would pass under either. `ADR-037` records the four
-decisions and the eight rejected alternatives.
-
-**One production defect, found by reading rather than by a failing test.** A
-`MeshStamp` identifies the BUILDER, not the snapshot: `MeshBuilder` sets it in
-its constructor and `build()` is a snapshot, so two snapshots share a stamp and
-may differ in size. A stamp-only binding check accepted a constraint set from
-the larger and then numbered every DOF as free -- a restrained model assembled
-as an unrestrained one. Fixed with a range check and a node-count check, both
-confirmed load-bearing by mutation.
-
-**Three types, not one**: `MeshDofMap` (which DOFs exist), `ConstraintSet`
-(which are prescribed, carrying no VALUE), `FreeEquationMap` (which are
-unknown, and their row). Each has one friend, so possession is the evidence.
-And a row of the reduced system is a DIFFERENT TYPE from a degree of freedom --
-`FreeEquationIndex`, zero-based with no invalid value -- because the two agree
-for an unrestrained model, so a test on a free-floating body would not catch
-the confusion.
-
-### Gate
-
-```text
-each current mesh node  →  exactly 3 translational DOFs
-+ deterministic numbering
-+ constraints representable
-+ no permanent solver identity survives a remesh
-```
-
----
-
-# P17-ELEM-001
-
-## Tet4 Linear Elastic Element
-
-Constant-strain tetrahedral elasticity. For a linear Tet4 `B` is constant over
-the element, so:
-
-```text
-Ke = integral of B^T D B dV   =   V B^T D B
-```
-
-* [x] Derive the Tet4 shape functions
-* [x] Derive the Jacobian
-* [x] Derive the B matrix
-* [x] Define the isotropic D matrix
-* [x] Implement the element stiffness matrix
-* [x] Verify Ke is symmetric
-* [x] Verify the rigid-body modes
-* [x] Verify the unconstrained Ke is positive semidefinite
-* [x] Verify element volume handling
-* [x] Reject an inverted Tet
-* [x] Reject a degenerate Tet
-* [x] Validate coordinate-scale behaviour
-* [x] Analytical single-Tet test
-* [x] Independent reference implementation / test
-* [x] Determinism PASS
-* [x] Adversarial review PASS
-* [x] Regression PASS
-* [x] Evidence recorded
-
-**COMPLETE 2026-10-08.** 18/18. Evidence:
-[docs/verification/P17-ELEM-001/](docs/verification/P17-ELEM-001/README.md).
-
-Three presets clean-rebuilt, 3522/3522 tests passed in each with 0 warnings
-over 612 objects, 797-test blast radius x5 repeats in release and debug,
-13 mutation probes with 11 killed by tests, qualified tree == committed tree
-at `845b118c`.
-
-**The derivation was written BEFORE the implementation**, and the tests check
-the code against it rather than the other way round:
-[TET4_DERIVATION.md](docs/verification/P17-ELEM-001/TET4_DERIVATION.md) fixes
-the reference element, the Jacobian convention (columns are the edge vectors),
-`grad_x N = J^-T grad_xi N`, `V = det J / 6` with no absolute value, the B
-block, the local DOF order and `Ke = V B^T D B`.
-
-**P16's degeneracy criterion has NO TOLERANCE, and that answered the brief
-differently than it expected.** `MeshValidation.hpp` refuses a volume that is
-exactly zero, deliberately -- "a thin tetrahedron is data-valid and is
-P16-QUALITY-001's to complain about" -- so there is no scale-aware policy to
-reuse and inventing one here would refuse elements a qualified mesh publishes.
-A 1000:1 thin Tet is ACCEPTED, with a test saying so. `invalid` is not `poor
-quality`.
-
-**`mu` already existed.** P15's `LinearElasticConstants::shearModulus` IS
-`E/(2(1+nu))`, so production carries P15's value instead of recomputing it --
-the fourth milestone running in which the audit found the quantity already
-built. `lambda` comes from the frozen formula and is cross-checked against
-P15's OTHER derived constant through `lambda = K - 2 mu / 3`.
-
-**One production defect, found by my own test.** The derivation claimed `det J`
-was "character-for-character" `meshing::signedVolume`; the bit-identity
-assertion failed ONE ULP apart on a skew Tet, because a first-row cofactor
-expansion is the same algebra and not the same floating-point operations. Fixed
-by matching P16's association rather than relaxing the test: the two are
-predicates on the SAME boundary, so a Tet whose volume rounds near zero must
-not be data-valid for the validator and inverted for the solver. Now exactly
-zero disagreement on every element of three reference meshes.
-
-**No Eigen in production**, and that is a scope decision: no public header in
-the repository includes it, so `Ke`, `B` and `D` could not be Eigen types
-anyway, and `src/structural/CMakeLists.txt` records that admitting it here is
-P17-SOLVE-001's decision with an open licence question. The TESTS use it for
-eigenvalues, SVD and an independent reference that inverts a 4x4 coordinate
-matrix -- so it never forms a Jacobian and cannot mirror a transposition.
-
-### Conventions, fixed once
-
-```text
-lambda = E nu / ((1 + nu)(1 - 2 nu))
-mu     = E / (2 (1 + nu))
-
-strain  [ exx eyy ezz gxy gyz gzx ]^T      ENGINEERING shear
-stress  [ sxx syy szz txy tyz tzx ]^T
-```
-
-Write the Voigt ordering down and share it between assembly and
-post-processing. Do not mix engineering and tensor shear strain.
-
-Note for the orientation check: P16's adapter already corrects Netgen's
-inverted node order with one swap, so a mesh arriving here has positive signed
-volume. This milestone must still reject an inverted Tet on its own account —
-it must not rely on an upstream guarantee it does not verify.
-
-### Gate
-
-```text
-Tet4 stiffness analytically correct
-+ symmetric
-+ rigid-body modes correct
-+ invalid Tet rejected
-+ units correct
-```
-
----
-# P17-LOAD-001
-
-## Structural Loads
-
-Keep the initial set small:
-
-```text
-nodal force
-distributed force / traction on a CAD face
-pressure on a CAD face
-gravity / body force, if the density path is ready
-```
-
-* [x] Define the load schema
-* [x] Define force units
-* [x] `GeometryReference`-based face loads
-* [x] Nodal-force policy explicit
-* [x] Surface traction
-* [x] Pressure
-* [x] Direction convention explicit
-* [x] Pressure-normal convention explicit
-* [x] Convert mapped facets to equivalent nodal forces
-* [x] Preserve the resultant force
-* [x] Preserve the resultant moment where mathematically required
-* [x] Gravity / body-force decision explicit
-* [x] Reject an unresolved load reference
-* [x] Load-change result invalidation
-* [x] Deterministic load vector
-* [x] Adversarial review PASS
-* [x] Regression PASS
-* [x] Evidence recorded
-
-**COMPLETE 2026-10-08.** 18/18. Evidence:
-[docs/verification/P17-LOAD-001/](docs/verification/P17-LOAD-001/README.md).
-
-Three presets clean-rebuilt, 3545/3545 tests passed in each with 0 warnings
-over 615 objects, 820-test blast radius x5 repeats in release and debug,
-13 mutation probes with 12 killed, qualified tree == committed tree at
-`27afe8d3`.
-
-**THREE of the brief's requirements name states that DO NOT EXIST**, and
-establishing that was most of the design work. `MappingState` has exactly
-`Resolved` and `Unresolved`: P16's header says a `FaceName` "can be ambiguous
-... and that is exactly why this layer does not map through one", and
-`Unsupported` is absent because "attribution needs no surface kind at all". And
-a stale-mapping check here is unreachable, because `requireStructuralModel`
-already refuses a stale mesh and proves the map came from the same lookup
-(ADR-036). So `LoadProblem` has EIGHT values rather than the eleven sketched,
-and the three omissions are recorded with P16's own words instead of shipped as
-placeholders.
-
-**A facet handle is never load authority, and it is a compile-time
-assertion.** Mirror structs fix the permitted members of the two face loads, so
-an added field changes the `sizeof`; neither is constructible from an
-`ElementId`; and the canonical header contains no `ElementId` outside comments
-and exactly one `NodeId` -- `NodalForceLoad::node`, which is MESH-LOCAL by
-declaration and carries its `MeshStamp`.
-
-**Load-change invalidation needed NO new mechanism.** The loads went into
-`StructuralAnalysisDefinition`, where P17-DATA-001 left `// Loads --
-P17-LOAD-001` and explained why: "an edit to any of them moves the owning
-object's revision ... Three independent counters would give three chances to
-forget one." That broke the two assertions P17-MAT-001 PREDICTED it would
-break, and whose comment named its own replacement.
-
-**Pressure follows the current normal; a traction does not.** `t = -p n_out`,
-so the block's two opposite caps under ONE positive scalar give opposite
-forces -- which a global-direction pressure cannot produce. On RM-MESH-06 the
-pressure resultant rotates as `R F` and the traction resultant does not, and
-the test says which is which rather than requiring either of the other.
-
-**Gravity is IMPLEMENTED**, because P17-MAT-001 had already made the density
-available for this consumer by name; the only thing missing was the integral.
-The load carries an acceleration and no density (ADR-028), and a missing
-density is refused -- there is no 7850 anywhere in the module.
-
-**The moment conservation gate earned itself.** Mutation probe M2 puts the
-whole facet force on one corner, which preserves the total force EXACTLY and
-is invisible to every force assertion in the suite. It is caught only through
-the first moment.
-
-### Critical mapping rule
-
-```text
-CAD face load intent
-→ P16 GeometryReference
-→ current boundary facets
-→ equivalent current nodal load vector
-```
-
-Facet IDs are never persisted as load authority. A `FaceName` is; a facet
-index is not. P16's `NamedBoundarySet` already resolves a `FaceName` to the
-current facets, and `GeometryMeshMap` is complete for every reference model —
-use them rather than classifying geometrically with a tolerance.
-
-Note the known gap: a drilled hole's cylindrical wall has no `FaceName`, so it
-cannot be a load target today. Do not fake targeting for unsupported topology.
-
----
-
-# P17-BC-001
-
-## Structural Restraints
-
-```text
-fix ux        fix uy        fix uz
-fixed support
-component-selective displacement = 0
-```
-
-Prescribed non-zero displacement is deliberately deferred.
-
-* [x] Define the restraint schema
-* [x] `GeometryReference`-based restraints
-* [x] Resolve a CAD region to the current mesh nodes
-* [x] Fixed support
-* [x] X restraint
-* [x] Y restraint
-* [x] Z restraint
-* [x] Combined component restraints
-* [x] Duplicate restraint handling
-* [x] Conflicting restraint handling
-* [x] An unresolved reference fails explicitly
-* [x] Restraint-change result invalidation
-* [x] Deterministic constrained DOF set
-* [x] Adversarial review PASS
-* [x] Regression PASS
-* [x] Evidence recorded
-
-PASS 2026-10-08. Evidence: [docs/verification/P17-BC-001/](docs/verification/P17-BC-001/).
-
-Two of those lines need their wording qualified, because the brief's words and
-what the tree can support are not the same thing:
-
-```text
-"GeometryReference-based restraints"
-    THERE IS NO SUCH TYPE in BetterCAD. The canonical CAD reference for a face
-    is `FaceName` (ObjectId + FaceSelector), which is what P16's mapping takes
-    and what P17-LOAD-001 already uses. The box is ticked for a FaceName
-    target; `NamedBoundarySet` was considered and rejected (it would couple
-    structural intent to MESHING intent), and edge and vertex targets have no
-    canonical reference in P16 at all. RESTRAINT_SCHEMA.md records both.
-
-"Conflicting restraint handling"
-    TICKED FOR THE POLICY, which in this scope is that there is no conflict to
-    have: every prescribed value is zero, so two restraints on one degree of
-    freedom are REDUNDANT, and that is lawful and normalised rather than
-    refused. `RestraintProblem` therefore has no `Conflict` value -- inventing
-    one would have been a branch nothing could take.
-    CONSTRAINT_VALIDATION.md states what a real conflict will be once
-    prescribed displacement exists, and why adding it then costs nothing.
-```
-
-### Gate
-
-```text
-restraint intent attached to CAD geometry
-    MET. RestraintId + FaceName + a component mask, and the record is
-    constructible from no NodeId, ElementId, DofIndex, MeshStamp or
-    ConstraintSet -- six build-failure cases and a sizeof mirror, so two
-    mutations that persist mesh handles are killed by the COMPILER
-
-+ the current node set derived from P16 mapping
-    MET. structural::resolveFaceTarget then meshing::boundaryNodesOf, which
-    ALREADY sorts and deduplicates. P17-BC writes neither, and there is no
-    3 * nodeId anywhere in it
-
-+ constrained DOFs deterministic
-    MET. Reversed insertion order gives an identical ordered index list and an
-    identical ordered node list, compared element for element; no unordered
-    container appears in the module; 634 x until-fail:5 in two presets
-
-+ unresolved references explicit, never rebound to a nearby face
-    MET. TargetUnresolved with NotFound, on a block with six nameable faces so
-    a fallback would have found one. No nearest, distance, centroid or
-    tolerance exists in the implementation, and the mutation that proceeds
-    anyway is killed by five tests across P17-BC and P17-LOAD
-```
-
----
-
-# P17-ASSEMBLY-001
-
-## Global Matrix / Vector Assembly
-
-Assemble `K u = F`.
-
-* [x] Define the sparse-matrix representation
-* [x] Define the vector representation
-* [x] Assemble the Tet4 `Ke`
-* [x] Assemble the nodal force vector
-* [x] Assemble the surface-load contribution
-* [x] Assemble the body-force contribution if supported
-* [x] Deterministic element traversal
-* [x] Deterministic DOF insertion
-* [x] Validate K dimensions
-* [x] Validate K symmetry
-* [x] Validate every entry is finite
-* [x] Validate the unconstrained rigid-body singularity
-* [x] No duplicate-entry loss
-* [x] No race-sensitive assembly
-* [x] Large-mesh smoke
-* [x] Adversarial review PASS
-* [x] Regression PASS
-* [x] Evidence recorded
-
-PASS 2026-10-08. Evidence:
-[docs/verification/P17-ASSEMBLY-001/](docs/verification/P17-ASSEMBLY-001/).
-Decision: [ADR-038](docs/architecture/decisions/ADR-038-the-global-stiffness-matrix-is-a-bettercad-owned-csr-that-eigen-can-map.md).
-
-Four of those lines need their wording qualified, because the brief's words and
-what the tree can support are not the same thing:
-
-```text
-"Assemble the surface-load contribution"
-    TICKED FOR CONSUMING IT, which is the only correct reading. P17-LOAD-001
-    integrates traction and pressure into a nodal force field; assembly
-    scatters that field and re-integrates nothing. Searched over the
-    implementation: pressure, traction, facet and area have zero executable
-    occurrences. The test compares the assembled F against the prepared field
-    ENTRY BY ENTRY as well as against the analytical -p A.
-
-"Assemble the body-force contribution if supported"
-    SUPPORTED, and not an N/A: P17-LOAD-001 implemented gravity, so the
-    conditional is satisfied. Consumed the same way as every other load
-    through one path, with no second density lookup -- `density` and `gravity`
-    also have zero executable occurrences. Verified against rho V g on
-    RM-MESH-01.
-
-"Validate K symmetry"
-    TICKED FOR A DERIVED BOUND, not for exact symmetry. P17-ELEM forms Ke(a,b)
-    and Ke(b,a) as different sums of different products, so they agree to a few
-    ulps and the global matrix inherits exactly that. The test MEASURES the
-    elements' asymmetry and bounds the global error by it times the worst
-    contributor count -- and asserts the error is strictly POSITIVE, which is
-    what detects a post-hoc symmetrisation.
-
-"Validate the unconstrained rigid-body singularity"
-    TICKED FOR SIX MODES ON A CONNECTED BODY, with the connectivity asserted
-    by the test's own flood fill rather than assumed. Nullity is NOT hardcoded
-    for an arbitrary mesh, which brief section 37 is explicit about.
-```
-
-### Gate
-
-```text
-global K/F mathematically correct
-    MET. Every entry against a dense oracle built test-side from an
-    independent Ke and an independently computed row, compared BOTH ways;
-    plus the energy identity, the internal-force scatter and six rigid-body
-    modes at 1e-17 relative
-
-+ sparse representation explicit
-    MET. CSR, 64-bit index with the overflow bound proved by static_assert,
-    SI doubles, documented duplicate semantics. ADR-038 records why it is
-    BetterCAD's and not a library's, and the structural library still links
-    no linear algebra -- zero occurrences of Eigen
-
-+ deterministic traversal/insertion explicit
-    MET. P16's ascending-ElementId order, recorded on the system and asserted
-    against the mesh's own; local row 0..11 then column 0..11; loads in
-    PreparedLoads' ascending order. No unordered container, no thread, no
-    atomic -- zero occurrences of each. Repeat runs are bit-identical
-
-+ duplicate sparse contributions summed, never overwritten
-    MET. One slot per (row, column) by construction. Fifteen
-    contributor-count groups from 2 to 22 elements per entry, every one equal
-    to the independent sum; the += -> = probe is killed by nine tests
-
-+ unconstrained rigid-body singularity preserved
-    MET. Nullity exactly six with a four-order eigenvalue gap, and no
-    regularisation anywhere -- the probe that scales the diagonal by 1.000001
-    is killed by eight tests
-
-+ no race-sensitive assembly
-    MET by design: the assembly is serial
-
-+ production K remains sparse
-    MET. Entries per row 33 -> 40 while Ndof grew 420 -> 2550; 1.56 MiB
-    against 49.61 MiB for a dense equivalent; nnz <= 144 * tets exactly. The
-    symmetry and finiteness checks walk stored entries and densify nothing
-
-+ large-mesh smoke PASS
-    MET. 850 nodes, 4210 tetrahedra, 2550 DOFs, 102 276 nonzeros, finite,
-    symmetric, rigid modes intact
-```
-
-### Representation
-
-Prefer a solver-compatible sparse format (CSR or the selected library's own).
-Do not write a custom sparse-matrix library unless a recorded reason requires
-it.
-
-Determinism here is not a formality: BetterCAD's determinism rule forbids
-depending on unordered iteration, and a sparse assembly that sums in map order
-can differ bitwise between presets. Traversal order must be an explicit
-decision.
-
----
-
-# P17-SOLVE-001
-
-## Linear Static Solver
-
-Solve `K u = F` after restraints.
-
-* [x] Audit available linear algebra libraries
-* [x] State the licence of anything proposed (see P17 Prerequisites)
-* [x] Select a direct or iterative solver
-* [x] Define solver tolerances
-* [x] Define convergence criteria
-* [x] Define maximum iterations where relevant
-* [x] Apply constraints correctly
-* [x] Detect a singular system
-* [x] Detect an under-constrained model
-* [x] Detect a non-finite solution
-* [x] Structured solver diagnostics
-* [x] Deterministic solve behaviour MEASURED
-* [x] Residual validation
-* [x] Independent small-system validation
-* [x] Adversarial review PASS
-* [x] Regression PASS
-* [x] Evidence recorded
-
-PASS 2026-10-09. Evidence:
-[docs/verification/P17-SOLVE-001/](docs/verification/P17-SOLVE-001/).
-Decision: [ADR-039](docs/architecture/decisions/ADR-039-the-structural-solver-is-eigens-simplicial-ldlt-with-a-pivot-gate-eigen-admitted-private.md).
-
-Three of those lines need their wording qualified, because the brief's words
-and what a DIRECT solver has are not the same thing:
-
-```text
-"Define convergence criteria"
-    TICKED FOR THE ACCEPTANCE CRITERION, which for a direct solve is the only
-    convergence there is. There is no iterative convergence to define: the
-    criterion is the INDEPENDENT normalized residual
-    ||r||2 / (||Kff||inf ||uf||2 + ||Ff||2) <= 1e-9, plus a pivot ratio
-    min|D|/max|D| >= 1e-12 and finiteness. All three are required; the
-    library's own status satisfies none of them on its own.
-
-"Define maximum iterations where relevant"
-    NOT RELEVANT, and recorded as N/A rather than invented as a field. The
-    settings have no maximumIterations, no iterative tolerance and no
-    preconditioner, and two compile-failure cases prove that referring to one
-    does not compile -- because a field that existed but did nothing would be
-    a false capability.
-
-"Detect an under-constrained model"
-    TICKED FOR DETECTING THE SINGULARITY, not for naming its cause. A singular
-    Kff usually means unremoved rigid-body modes, but it can also mean a
-    disconnected unrestrained region, a mechanism or bad conditioning, and
-    distinguishing them needs a nullspace analysis this milestone does not
-    perform on production systems. So there is ONE value, SingularSystem, and
-    its message says the model "may be under-constrained, disconnected or a
-    mechanism -- this layer measures the conditioning and does not claim to
-    know which". Inventing a separate UnderConstrained value would have been a
-    claim the code cannot support.
-```
-
-### Required residual check
-
-```text
-r = Kff uf - Ff        on the free system
-```
-
-```text
-MET, and computed by BetterCAD rather than read out of the solver: a loop over
-BetterCAD's own CSR copy of Kff against its own Ff, after the solve returned,
-so it uses the ORIGINAL system. `solver.error()` has zero occurrences in the
-file; the only Eigen members used anywhere are compute, info, solve and
-vectorD.
-
-AND THE GATE IS ON THE FREE SYSTEM, which is the trap the brief calls the most
-important. K u - F over the FULL system is correctly NON-ZERO at the
-constrained degrees of freedom -- those entries are the support reactions.
-Measured on the block fixture under 1000 N: largest free entry 2.56e-13 N,
-largest constrained entry 273.83 N, and the constrained entries sum to
-(7.1e-15, 1.3e-13, -1000) N against the applied +1000 N. Both halves are
-asserted, including that the constrained entries are NOT zero. The mutation
-that checks the residual over the full system is killed by twelve tests.
-
-RECORDED, for every main reference: ||r||2, ||r||inf, the normalized residual
-and the threshold. The measured normalized values run from 3.85e-18 to
-2.98e-17, eight orders below the 1e-9 gate, so the threshold is a margin and
-not a tuned constant.
-
-AND THE SOLVER'S OWN SUCCESS IS DEMONSTRABLY INSUFFICIENT. A near-singular
-system solves with a normalized residual of 1.00e-17 -- passing -- and an
-answer five orders larger than its data; the pivot gate is what refuses it.
-```
-
-### Required residual check
-
-```text
-r = K u - F        on the free system
-```
-
-The solver's own success status is never sufficient evidence. Record the
-residual.
-
----
-
-# P17-POST-001
-
-## Displacement / Strain / Stress Recovery
-
-```text
-u_e  →  epsilon = B u_e
-        sigma   = D epsilon
-```
-
-constant within each linear Tet4.
-
-* [x] Recover the nodal displacement vector
-* [x] Recover Tet strain
-* [x] Recover Tet stress
-* [x] Define the Voigt component order (same as P17-ELEM-001)
-* [x] Define tensor conventions
-* [x] Compute displacement magnitude
-* [x] Compute principal stresses
-* [x] Compute von Mises stress from the full 3D state
-* [x] Define hydrostatic stress if useful
-* [x] Define principal strain if useful
-* [x] Units explicit
-* [x] All results finite
-* [x] Independent analytical validation
-* [x] Deterministic result ordering
-* [x] Adversarial review PASS
-* [x] Regression PASS
-* [x] Evidence recorded
-
-PASS 2026-10-10. Evidence:
-[docs/verification/P17-POST-001/](docs/verification/P17-POST-001/).
-Decision: [ADR-040](docs/architecture/decisions/ADR-040-recovered-fields-are-a-stage-product-and-the-tensor-conventions-live-with-the-voigt-vectors.md).
-
-Implement von Mises from the full 3D stress state and validate it
-independently. No 2D simplification.
-
-```text
-MET, AND THE PLANE-STRESS FORMULA IS MEASURED RATHER THAN MERELY AVOIDED. The
-production formula uses all six components; the mandatory fixture has szz, tyz
-AND tzx nonzero (120, -35, 55, 18, -27, 41 MPa); and the test COMPUTES the
-common plane-stress form alongside it and requires them to differ by more than
-5%. Measured: 1.62410e+08 Pa against 1.44212e+08 Pa, 11.2% apart. Without that
-assertion the fixture could have passed a 2D implementation by coincidence.
-
-VALIDATED THROUGH THREE INDEPENDENT ROUTES, none sharing a line with
-production: the deviatoric invariant sqrt(3/2 s:s), the principal-stress form,
-and Cardano's closed-form principal values -- a different ALGORITHM from
-Eigen's tridiagonal QL rather than a second call to it. Plus the properties:
-zero for five hydrostatic states, |sigma| for uniaxial on each axis
-(szz-alone is where a 2D formula gives ZERO), sqrt(3)|tau| for each of the
-three pure shears, and unchanged under a hydrostatic shift for five values of
-q. The mutation that substitutes the plane-stress formula is killed by 13 of
-41 tests.
-```
-
-Two of those lines need their wording qualified:
-
-```text
-"Define hydrostatic stress if useful"
-    IMPLEMENTED, not deferred. sigma_h = tr(S)/3, in Pa, in the NORMAL-STRESS
-    sign convention -- a uniform -100 MPa state has sigma_h = -100 MPa. It is
-    named `hydrostaticStress` and NOT `pressure` for that reason, and a
-    `meanPressure` with the opposite sign is deliberately not defined, so the
-    two cannot be conflated. Implemented for verification power rather than
-    completeness: the identity sigma_h == (sigma1+sigma2+sigma3)/3 is a
-    cross-check between it and the eigensolver that neither could provide
-    alone.
-
-"Define principal strain if useful"
-    IMPLEMENTED, through StrainTensor3, so the engineering shear is halved
-    BEFORE the eigensolve. Its pure-shear case -- +|gamma|/2, 0, -|gamma|/2 --
-    is the sharpest available measurement of that halving, because a tensor
-    carrying the full gamma would give exactly double while leaving every
-    normal component correct.
-```
-
----
-
-# P17-REACTION-001
-
-## Reaction Forces / Equilibrium
-
-* [x] Recover support reactions
-* [x] Define the sign convention
-* [x] Sum the external applied force
-* [x] Sum the reaction force
-* [x] Validate force equilibrium
-* [x] Validate moment equilibrium where applicable
-* [x] Reaction components inspectable per restraint
-* [x] Multiple support regions
-* [x] Deterministic aggregation
-* [x] Analytical reference cases
-* [x] Adversarial review PASS
-* [x] Regression PASS
-* [x] Evidence recorded
-
-PASS 2026-10-10. Evidence:
-[docs/verification/P17-REACTION-001/](docs/verification/P17-REACTION-001/).
-Decision: [ADR-041](docs/architecture/decisions/ADR-041-a-reaction-is-the-constrained-residual-and-a-shared-degree-of-freedom-is-counted-once.md).
-
-Two of those lines need their wording qualified:
-
-```text
-"Validate moment equilibrium where applicable"
-    APPLICABLE AND VALIDATED, with no "where" about it. Moment equilibrium is
-    checked on EVERY fixture and the gate is independent of the force gate --
-    a pure couple balances in force by construction and would pass a
-    force-only check with any moment error at all. Every case has a nonzero
-    moment scale, asserted, and equilibrium is verified about THREE origins
-    because a mutation proved one was not enough: with everything at the
-    global origin, `x - O == x` and a path that ignored the origin was a
-    no-op.
-
-"Analytical reference cases"
-    FIVE, each with the test's OWN oracle: a hand-derived partition formula on
-    a 3x3 system; the exact R = -F of a fully constrained body; a planar
-    pressure resultant -p A through its centroid; a weight rho V g through the
-    centre of mass; and the origin-shift relation
-    M(O2) = M(O1) - (O2-O1) x F.
-
-    AN ANALYTICALLY PREDICTED TWO-SUPPORT SPLIT IS NOT AMONG THEM, and that is
-    deliberate rather than an omission. A 3D continuum with two fixed faces is
-    statically indeterminate, and a symmetric prediction would need a provably
-    symmetric MESH, which P16 does not guarantee for a symmetric body. What is
-    asserted is the statics that holds regardless -- R_A + R_B = -F_external,
-    and R = -F exactly when fully constrained -- while the split itself is
-    MEASURED and printed. Brief sections 45 and 106 both warn against forcing
-    an analytically false expectation.
-```
-
-### Fundamental equilibrium gate
-
-```text
-sum(F external) + sum(F reaction)  ~  0
-sum(M external) + sum(M reaction)  ~  0      where relevant
-```
-
-State the tolerance and why. BetterCAD's rule: 1e-12 for well-conditioned
-double-precision algebra, 1e-9 for geometric accumulation, larger only with a
-documented reason. A solver residual is neither of those by default, so derive
-the tolerance from a measurement rather than picking one.
-
-```text
-MET, AND DERIVED FROM MEASUREMENT RATHER THAN PICKED. Both thresholds are
-1e-12 normalized, with floors of 1e-12 N and 1e-12 N m -- each carrying its own
-dimension, because one bare number for both would be a unit error the compiler
-could not see.
-
-MEASURED FIRST, on every fixture, and the thresholds chosen afterwards:
-
-    algebraic path, small fixtures    eta_F 1.3e-16 .. 2.2e-16
-                                      eta_M 3.7e-17 .. 3.3e-16
-    fully constrained                 EXACTLY 0 -- u = 0 is known, not solved
-    geometric path, pressure          4.33e-16 relative
-    geometric path, gravity           1.57e-16 relative
-    far origin, nodes to 0.126 m      eta_F 1.4e-16, eta_M 8.7e-17
-    LARGE MESH, 850 nodes             eta_F 1.48e-14, eta_M 2.50e-14  <- worst
-
-    chosen 1e-12 -> a 40x margin on the worst case, 4000x on the small ones
-
-NOT 1e-13, which leaves only 4x on the worst case while the error grows with
-the term count -- a mesh an order larger could cross it with nothing wrong.
-NOT 1e-9, because nothing measured needs it: that band is offered for
-geometric accumulation and the geometric path measured 4e-16, so inheriting it
-would accept a 1e-10 imbalance -- five orders above anything observed, which is
-exactly the room a sign or mapping defect would hide in.
-
-THE GEOMETRIC PATH DID NOT NEED A LOOSER GATE, which contradicts the
-expectation and is the measurement's own finding: the boundary facets tile a
-PLANAR pressure face exactly, and the tetrahedra tile a BOX exactly, so
-neither integration accumulates geometric error. One threshold covers both
-layers. A curved face WOULD differ, but that is P17-LOAD's discretisation and
-not an equilibrium error -- the reactions still balance the assembled F
-exactly, which the large-mesh cylinder confirms.
-
-AND A SOLVER RESIDUAL TOLERANCE IS NOT THIS TOLERANCE. Measured side by side
-they differ by an order -- 2-3e-17 against 1-3e-16 -- because the solver's gate
-is on the FREE equations and this one is on the whole body's applied and
-constrained forces plus, for moments, every node position.
-`relativeResidualTolerance` is referenced nowhere in the module, and a
-compile-failure case proves the field is ABSENT from `EquilibriumTolerance`
-rather than present and ignored.
-
-THE GATE CAN FAIL, DEMONSTRATED. The imbalance cannot be injected from
-outside, so the threshold is tightened BELOW the measured error and the
-recovery is refused -- and the mutation that loosens the gate to 1e-3 is
-killed. Equilibrium failure is a FAILURE, not a warning: nothing is published.
-```
-
----
-# P17-VALID-001
-
-## Structural Validation / Acceptance
-
-**This milestone owns the P17 acceptance policy.** P16's quality thresholds
-are deliberately report-only: `P16-QUALITY-001` ships metrics and no
-accept/reject line, because the phase that consumes a mesh owns them. This is
-that phase.
-
-* [x] Define the FEA mesh-acceptance policy
-* [x] Define structural-invalid mesh rejection
-* [x] Define the quality warning policy
-* [x] Define the quality failure policy if used
-* [x] Define under-constrained detection
-* [x] Define over- / conflicting-constraint behaviour
-* [x] Define material-validity checks
-* [x] Define load-validity checks
-* [x] Define stale-input checks
-* [x] Define solver-residual acceptance
-* [x] Define equilibrium acceptance
-* [x] Define result-finiteness checks
-* [x] Structured validation report
-* [x] Determinism PASS
-* [x] Adversarial review PASS
-* [x] Regression PASS
-* [x] Evidence recorded
-
-PASS 2026-10-11. Evidence:
-[docs/verification/P17-VALID-001/](docs/verification/P17-VALID-001/).
-Decision: [ADR-042](docs/architecture/decisions/ADR-042-mesh-quality-rejects-on-measured-accuracy-laws-one-bound-per-degeneration-family-and-one-unbypassable-solve-entry.md).
-
-Five of those lines need their wording qualified, because a tick alone would
-overstate three of them and understate one:
-
-```text
-"Define the quality failure policy IF USED"
-    USED, and the "if" is the part worth answering. TWO bounds, one per
-    degeneration family -- 3r/R < 1e-10 and aspect > 3e5 -- each DERIVED as
-    the inverse of its own measured accuracy law at the 1e-9 geometric band.
-    An earlier draft of this milestone recorded NOT IMPLEMENTED, and a
-    later one shipped a single radius-ratio bound that accepted a needle
-    whose recovered strain was wrong by 2.5e-09. Both are recorded.
-
-    NO bound on either dihedral angle. That asymmetry is the policy and not
-    an omission: no law was measured against them.
-
-"Define under-constrained detection"
-    DEFINED AS A NECESSARY CONDITION ONLY, which is the opposite of the rule
-    the brief forbids. Fewer than six constrained degrees of freedom is
-    refused, because a 3D continuum's rigid-body null space is
-    six-dimensional and a constraint set's rank cannot exceed its size.
-    SIX OR MORE SAYS NOTHING, and the factorisation's pivot ratio decides.
-    DoesNotClaimSixDegreesOfFreedomIsSufficient proves the asymmetry rather
-    than asserting it: validation ACCEPTS a model restrained in z on three
-    faces and the SOLVER refuses it.
-
-"Define over- / conflicting-constraint behaviour"
-    DEFINED BY INHERITANCE, and nothing was added. P17-BC-001 made a
-    constrained degree of freedom a SET membership, so two restraints on the
-    same face cannot conflict -- the representation cannot express it --
-    and P17-REACTION-001 settled the reporting half. A second conflict check
-    would be a second answer that could drift.
-
-"Define solver-residual acceptance" / "Define equilibrium acceptance"
-    ALREADY GATES, and this milestone adds no second threshold beside either
-    and loosens neither. Acceptance is defined as "that gate passed, and
-    this is the number it passed with": StructuralSolveOutcome records the
-    residual, the pivot ratio, the strain energy and both balances from the
-    stage that owns each. The refusals are DEMONSTRATED by tightening each
-    gate below its measured value, which also proves they are live.
-```
-
-### Solver entry-point safety
-
-Every solve validates:
-
-```text
-geometry current
-mesh current
-mesh structurally valid
-mesh quality acceptable under P17 policy
-material current and valid
-loads resolved
-restraints resolved
-system sufficiently constrained
-```
-
-P16 recorded that nothing FORCES a mesh holder to call `isStale` — a
-`VolumeMesh` records its source and revision and answers truthfully, but only
-code that asks finds out. So P17's entry point takes the document and the
-feature and re-checks, rather than trusting a mesh a caller handed it.
-
-### A note on thresholds
-
-P16 measured what the metrics can and cannot see, and P17's policy should
-start from those measurements rather than from intuition: `l_max/l_min`
-saturates at sqrt(3) and cannot detect a sliver, while the radius ratio
-collapses by three orders of magnitude on the same element. A policy written
-on aspect ratio alone would accept a sliver. A cylinder's chord-polygon
-boundary also gives a lower minimum dihedral than a thin plate, so a threshold
-tuned on one body shape will reject a legitimate mesh of another.
-
----
-
-# P17-VIZ-001
-
-## FEA Visualisation / Inspection
-
-**23 of 23. COMPLETE and qualified.** The headless inspection layer, the
-DEFORMED display, the FOUR NODAL contours, the LOAD AND RESTRAINT GLYPHS and
-the THREE ELEMENT contours are all built, drawn, measured on screen and
-mutation-tested. Evidence:
-[docs/verification/P17-VIZ-001/](docs/verification/P17-VIZ-001/README.md),
-the display surface in
-[DISPLAY.md](docs/verification/P17-VIZ-001/DISPLAY.md), the glyphs in
-[DISPLAY_GLYPHS.md](docs/verification/P17-VIZ-001/DISPLAY_GLYPHS.md), and the
-element contours in
-[ELEMENT_CONTOURS.md](docs/verification/P17-VIZ-001/ELEMENT_CONTOURS.md).
-
-The rule applied to the boxes below, stated so it can be checked: **tick a box
-only where this milestone's own evidence demonstrates the deliverable end to
-end.** A contour whose bands are computed but never DRAWN is not end to end,
-which is why the element boxes stay unticked even though their arithmetic is
-built, tested and qualified -- and why the nodal ones are now ticked, having
-been measured on screen at 1 distinct colour against 4807.
-
-* [x] Undeformed mesh display
-* [x] Deformed-shape display
-* [x] Deformation scale factor
-* [x] Displacement magnitude contour
-* [x] Ux contour
-* [x] Uy contour
-* [x] Uz contour
-* [x] von Mises contour — drawn on a boundary derived from the TETRAHEDRA, so
-      each facet names the element that owns it (ADR-046). 7 distinct colours
-      on screen against a uniform fill of 1
-* [x] Normal stress components — XX, YY and ZZ, through the same mechanism
-* [x] Shear stress components — XY, YZ and ZX. `yz`/`zx` cannot be transposed
-      (two mutation kills, on a fixture with unequal shears)
-* [x] Principal stress inspection
-* [x] Element inspection
-* [x] Node displacement inspection
-* [x] Support reaction inspection
-* [x] Load arrows — drawn as five segments per arrow (one shaft, four barbs)
-      in SI metres through the one existing conversion, measured on screen at
-      278 px over a 36308 px mesh with the camera held still. ADR-045
-* [x] Restraint symbols — one bar per constrained component, centred on the
-      node and aligned with that axis, so the bar COUNT is the constrained
-      DOF count and the directions are which ones. ADR-045
-* [x] Boundary-set highlighting
-* [x] Worst / highest-result navigation
-* [x] Clear stale-result visual state
-* [x] Rendering does not mutate results
-* [x] The GUI does not duplicate canonical result data
-* [x] Regression PASS
-* [x] Evidence recorded
-
-```text
-QUALIFIED FOUR TIMES, each run covering what the one before it did
-            not. The figures below are the LATEST, read from the logs.
-
-            b04a9e1   the inspection layer      11 of 23
-            ec68076   the display surface        18 of 23
-            974b62b   the load and restraint glyphs  20 of 23
-            THIS RUN  the three element contours   23 of 23
-
-            3835 / 3835 in debug-ext, release-ext and debug-shared-ext
-            980 x 5 in release-ext and debug-ext
-            0 compiler warnings, 0 errors, -Werror on
-            17 stages, every one exit 0, 0 stage(s) failed
-            no-op rebuild exit 0 in all three, so the binaries that ran
-              the tests are the ones the build produced
-            eight tree hashes identical before and after, and matched
-              against a SECOND fingerprint taken independently
-            qualify.cmd exit 0, 3h15m17s
-            and the MESHING MODULE was checked as a GATE to be untouched:
-              zero diff in src/meshing and include/bettercad/meshing
-
-            This run also REQUALIFIES P17-VALID-001, which this milestone
-            modified: StructuralSolveOutcome gained `fields` and
-            `reactions`, both already computed one statement earlier and
-            discarded. That debt is discharged, not assumed away.
-
-MUTATION    121 probe runs across the whole milestone: 83 before the
-            glyphs, 30 for them, 8 for the element contours.
-            The glyph work: 30 runs over 27 distinct mutations --
-            25 killed, 1 equivalent mutant kept and documented
-            (G20), 1 void and superseded (G11). SIX real test gaps
-            closed.
-            THE TWO DETECTION METHODS FOUND DISJOINT SETS: four of
-            the six gaps came from READING the pristine sources
-            while the probes were rewriting the working copies, and
-            no mutation in the batch could reach any of them; the
-            other two came from mutations SURVIVING. Neither method
-            would have found what the other did.
-
-            THE ELEMENT CONTOURS: 8 runs over 7 distinct mutations, ALL
-            SEVEN KILLED. E7 -- the non-manifold refusal -- survived the
-            first batch and was ONE STEP FROM BEING RECORDED AS AN
-            UNREACHABLE GUARD. That was wrong: MeshBuilder is public and
-            addTetrahedron checks CONNECTIVITY ONLY, because positive
-            volume is a whole-mesh question its own header says validation
-            answers later. So a non-manifold mesh can be built by hand, the
-            guard is reachable, and E7 was a REAL GAP.
-            Before calling a guard unreachable, ask what the module's own
-            public BUILDERS can construct, not what today's callers pass.
-
-THE ELEMENT CONTOURS ARE DONE, and the blocker recorded here for two
-milestones was a WRONG CONCLUSION FROM A CORRECT DIAGNOSIS.
-ELEMENT_CONTOURS.md, FREEZE_ELEMENTS.md, ADR-046.
-
-    THE BLOCKER RECORDED HERE FOR TWO MILESTONES WAS A WRONG CONCLUSION
-    FROM A CORRECT DIAGNOSIS. It said a boundary-view element contour
-    needed a new capability in the qualified P16 meshing module -- a
-    triangle-to-owning-tetrahedron mapping -- and that this was therefore
-    a scope decision.
-
-    Every fact was right. volumeBoundaryOf names Triangle3 elements, an
-    element channel is per TETRAHEDRON, and meshing::Triangle carries no
-    owning tetrahedron. But the question "which tetrahedron owns this
-    triangle" ONLY ARISES IF THE BOUNDARY IS TAKEN FROM THE TRIANGLE3
-    ELEMENTS. volumeBoundaryByTetrahedronOf derives it from the
-    tetrahedra, and ownership is known by construction because the
-    tetrahedron is in hand when the face is emitted.
-
-    NO meshing change. NO contour-layer change either -- triangleCornerBands
-    reads elementOfTriangle and looks the id up in the field, so a view
-    whose element ids are tetrahedra simply works.
-
-    Measured: the tet-derived boundary covers EXACTLY the same node triples
-    as the Triangle3 boundary, both directions; all seven element channels
-    contour it; and on screen it shows 7 distinct colours against a uniform
-    fill's 1.
-
-    The lesson: A BLOCKER DERIVED FROM ONE IMPLEMENTATION ROUTE IS A
-    STATEMENT ABOUT THAT ROUTE, NOT ABOUT THE CAPABILITY.
-
-NEXT        NOTHING IN THIS MILESTONE. P17-VIZ-001 is complete at 23 of 23.
-
-            The triangle-to-tetrahedron mapping this file previously named
-            as the only remaining item IS NOT NEEDED AT ALL -- see ADR-046.
-            No capability was added to the qualified P16 meshing module, and
-            that was checked as a GATE before the freeze rather than
-            asserted after it.
-
-            P17-CMD-001 remains NOT AUTHORIZED: this passing is not
-            permission to start it.
-```
-
-### Critical visualisation rule
-
-```text
-deformed display = a visual transform of a derived solver result
-
-NOT
-deformed display → mutation of CAD or model geometry
-```
-
-Two P16 traps apply directly: `MeshView` works in SI metres while OCCT model
-space is millimetres, and a contour that classifies nothing reports everything
-as valid. Check the units at the boundary and check that a classifier
-actually classifies.
-
----
-
-# P17-CMD-001
-
-## Commands / Undo / Redo
-
-Canonical history contains analysis definitions, loads, restraints and solver
-settings. It does NOT contain `K`, `F`, displacement arrays, stress arrays or
-any generated solver result.
-
-* [x] Create-analysis command — wraps AddObjectCommand; redo restores the
-      SAME AnalysisId, because a result records which analysis it came from
-* [x] Add-load command — appended, so the order stays the users; refuses a
-      duplicate LoadId and a non-finite value through validate(StructuralLoad)
-* [x] Edit-load command — the whole record replaced IN PLACE, so a
-      multi-field edit cannot half-apply and the position survives (probe C8)
-* [x] Remove-load command — by identity, not position; undo restores it at
-      the index it held
-* [x] Add-restraint command — refuses a duplicate RestraintId and an empty
-      component mask through P17-BCs own validate(StructuralRestraint)
-* [x] Edit-restraint command — face AND mask together, as one validated
-      record. No geometry rebinding and no nearby-face fallback
-* [x] Remove-restraint command — same id, face, mask and position on undo
-* [x] Solver-settings command — the settings became CANONICAL to make this
-      possible (ADR-047); refused through P17-SOLVEs own validate
-* [x] Undo exact — of CONTENT. Checked by an independent canonical
-      projection; 50 undo/redo cycles keep the value bit for bit
-* [x] Redo exact — assigns the stored after-state; nothing is inverted, so
-      there is no arithmetic to drift
-* [x] A failed command is atomic — nine refusal shapes, each leaving the
-      canonical state, the undo depth and the result currentness unchanged
-* [x] Redo invalidation correct — a SUCCESSFUL new command clears the redo
-      branch; a FAILED one does not, which is the frameworks own convention
-* [x] Geometry references preserved — a FaceName survives execute, undo and
-      redo exactly; no facets, nodes or coordinates are stored
-* [x] The FEA result is invalidated correctly — through the objects REVISION
-      and P17-DATAs own two functions. No new mechanism, no flag
-* [x] No solver arrays in canonical history — 16 compile-fail cases prove
-      none CAN be stored, not merely that none was
-* [x] Determinism PASS — 32 cases x 5 under --repeat until-fail:5, and
-      semantic agreement across all three presets
-* [x] Adversarial review PASS — 16 probe runs over 13 mutations; THREE real
-      test gaps found and closed, 1 equivalent mutant documented
-* [x] Regression PASS — 3883/3883 x 3 presets, 1012 x 5 in two, 0 warnings
-* [x] Evidence recorded — docs/verification/P17-CMD-001/
-
-P16 enforced the equivalent rule with compile-fail cases rather than review —
-a command API that mentions a node or an element does not compile. Consider the
-same instrument here.
-
----
-
-# P17-PERSIST-001
-
-## Structural Analysis Persistence
-
-PASS 2026-10-14. Evidence:
-[docs/verification/P17-PERSIST-001/](docs/verification/P17-PERSIST-001/README.md),
-with the architecture audit in [AUDIT.md](docs/verification/P17-PERSIST-001/AUDIT.md),
-the schema in [SCHEMA.md](docs/verification/P17-PERSIST-001/SCHEMA.md) and the
-hard gate in [BYTE_IDENTITY.md](docs/verification/P17-PERSIST-001/BYTE_IDENTITY.md).
-
-* [x] Define the P17 schema — one object type in the EXISTING format, and the
-      version does NOT move: P13-PERSIST-001's rule is "bump only for a change
-      an existing reader would get WRONG", and adding a type is additive
-* [x] Persist the analysis definition — the mesh control and the mode; all five
-      definition members covered, checked by its own field-complete operator==
-      as well as by a fingerprint
-* [x] Persist loads — three kinds. The fourth, NodalForceLoad, REFUSES THE SAVE
-      (ADR-048): it names a NodeId, which ADR-031 never persists
-* [x] Persist restraints — id, face and a component mask written as names in
-      canonical order; all seven non-empty masks round-trip
-* [x] Persist `GeometryReference`s — through faceNameToJson, the encoding six
-      other object kinds already use. No second contract
-* [x] Persist solver settings — all three fields ALWAYS written, so an old file
-      can never be reconstructed from a future build's defaults
-* [x] Preserve units — bare SI doubles, bit for bit, including 0.1+0.2 and 1/3.
-      Checked against the display spellings MPa and kN as well
-* [x] Preserve unresolved references explicitly — preserved, and NOT rebound:
-      checked against all six faces the body actually has. A rebind is not
-      writable at all, because the reader has no geometry to rebind to
-* [x] Exclude K / F / u / stress arrays as authority — not persisted at all,
-      and STRUCTURALLY so: a StructuralResult does not live on a document
-      object, and the result type is not even nameable from the serializer
-* [x] Malformed files rejected — 34 cases, each naming a JSON path, plus 2
-      deliberate ACCEPTANCE cases because malformed is not unresolved and
-      invalid is not incomplete
-* [x] Invalid values rejected — through the core's own validators, called
-      rather than copied; a non-finite value cannot even be expressed
-* [x] Duplicate IDs rejected — refused by name with the index, never merged or
-      last-write-wins. A LoadId and a RestraintId may share a number
-* [x] Backward compatibility — a real pre-P17 document loads, has no analyses,
-      keeps its own semantics and re-saves without inventing a section
-* [x] Deterministic serialization PASS — five identical saves, save/load/save a
-      FIXED POINT, and no map, hash or sort anywhere in the serializer
-* [x] Full round trip — create, solve, save, DESTROY every object, load into a
-      fresh document. The intent is compared BEFORE anything is regenerated
-* [x] Save / load / re-solve — the normal P16 mesh path and the normal
-      P17-VALID entry. No injected result, no private shortcut
-* [x] Compare re-solved semantics — 12 metrics; the mesh regenerates
-      identically and U, max|u|, max von Mises and R_z all match to 1e-12
-* [x] Adversarial review PASS — 33 attacks, 13 findings, 0 production defects;
-      6 found by reading and 7 by a failing test, disjoint sets
-* [x] Regression PASS — 3921/3921 x 3 presets, 1050 x 5 in two, 0 warnings.
-      NO predecessor requalified: not one structural file changed
-* [x] Evidence recorded — docs/verification/P17-PERSIST-001/
-
-### Derived-state rule
-
-```text
-save  →  structural-analysis intent
-load  →  regenerate or reuse a valid current mesh
-      →  solve again when requested
-```
-
-The persistence test runs the real round trip: create, save, destroy, load,
-re-solve, compare. Never file size or object count alone. P16's equivalent
-gate was that the saved file is byte-identical for a 361-element and a
-1977-element mesh — the analogous P17 check is that it is byte-identical
-whether or not a solve has been run.
-
-    DONE, AND STRONGER THAN ASKED. The brief's gate was two states; a format
-    that wrote a result only when the result was VALID would pass that. So the
-    test compares FOUR states of one document -- no result, a CURRENT result, a
-    STALE one (reached by remeshing, which touches no document object) and one
-    after a FAILED solve -- all measured at 4426 bytes and compared BYTE FOR
-    BYTE, not by size. The P16 analogue holds too: 499 vs 1313 tetrahedra give
-    an identical 907-byte structural section.
-
-    THE AUDIT WAS THE VALUABLE PART, AGAIN. Every architectural question the
-    brief raises already had an answer in the tree with a recorded reason, so
-    this milestone adds NO second file format, NO version bump, NO migration
-    code, NO new validation framework, NO new reference encoding and NO change
-    to any structural production file. `include` did not move at all: there is
-    no public API change.
-
-    THE ONE GENUINELY NEW DECISION is that a NodalForceLoad refuses the save,
-    and the cost was MEASURED rather than estimated -- it has zero callers in
-    apps/ and zero in src/ outside its own definition, so the refusal guards a
-    path that does not exist yet.
-
----
-
-# P17-CLI-001
-
-## Headless Structural FEA
-
-Follow BetterCAD's existing CLI naming; the P16 set is ten `mesh-*` commands.
-
-* [x] CLI inspect analysis definition — `structural-settings`, canonical
-      intent only, `faceResolves` per target
-* [x] CLI add / remove loads — `structural-load-add` / `-remove`, through
-      `AddStructuralLoadCommand` / `RemoveStructuralLoadCommand`
-* [x] CLI add / remove restraints — the same shape over the restraint commands
-* [x] CLI solve — `structural-solve`, through `solveStructuralAnalysis` only
-* [x] CLI displacement summary — `structural-displacement`
-* [x] CLI stress summary — `structural-stress`, `"domain": "element"`
-* [x] CLI reaction summary — `structural-reactions`, shared term written out
-* [x] CLI validation report — `structural-validate`, no solve, gate reaches
-      the exit status
-* [x] Structured diagnostics — the project's two-kind contract: stdout empty
-      when the command cannot answer, the payload plus exit 1 when the
-      answer is a failure
-* [x] Correct process exit codes — three, since P10; 36 rows measured
-* [x] Stale-geometry failure — NOT PRESENTABLE through this CLI, and recorded
-      as such: every process regenerates from intent. The analogue at this
-      layer is a model that will not regenerate, with three codes reached by
-      `cli.mesh.*`. The core gate stays P17-VALID-001's and probe L3 shows
-      the CLI uses it. FAILURE_MATRIX.md
-* [x] Stale-mesh failure — likewise: nothing persists a mesh, so none can be
-      handed to a fresh process. FAILURE_MATRIX.md
-* [x] Missing-material failure — the material stage's code, exit 1, stdout
-      empty, solver not invoked; no `--default-E`
-* [x] Under-constrained failure — `insufficient_restraint` with the core's
-      own wording; no `--auto-pin`
-* [x] Invalid load / restraint failure — `loads_unresolvable` /
-      `restraints_unresolvable`; the entity is preserved, never dropped
-* [x] CLI / core equivalence — every engineering assertion is an equivalence
-      against the core's own accessor; no expected-value table
-* [x] Multi-process save / load / re-solve — 28 steps, 28 processes, every
-      payload parsed with `string(JSON)`; no result persisted
-* [x] No CLI-only FEA implementation — zero occurrences of every solver,
-      mapping, formula and threshold name; checked by grep, line by line
-* [x] Fresh-binary proof — `$<TARGET_FILE:bettercad_cli>` structurally; path,
-      size and sha256 per preset in FREEZE.md
-* [x] Zero-match test protection — 19 and 9 discovered and executed in all
-      three presets; the guard's impossible filter discovers 0
-* [x] End-to-end scripted workflow PASS — `cli.structural.workflow`, in all
-      three presets
-* [x] Adversarial review PASS — 31 attacks, 8 findings, 1 production defect
-      (`elementCount` was triangles plus tetrahedra), fixed; 17 probe runs,
-      12 killed, 2 real test gaps closed
-* [x] Regression PASS — 3949/3949 x 3 presets, 1078 x 5 in two, 0 warnings
-      over 676 objects, 17 stages exit 0
-* [x] Evidence recorded —
-      [docs/verification/P17-CLI-001/](docs/verification/P17-CLI-001/README.md)
-
-**PASS 2026-10-15.** 24 of 24. Qualified against candidate 7e18175 (the
-parent commit) plus the working tree; the eight source/test fingerprints in
-[FREEZE.md](docs/verification/P17-CLI-001/FREEZE.md) are identical before and
-after the run, six of them identical to the P17-PERSIST-001 freeze (no core
-file changed), and are compared against the closeout commit's own subtree
-hashes in that commit.
-
-**Qualified on a second machine**, by an explicit owner decision when the
-uqhas machine was unavailable: same compiler to the WinLibs revision, same
-CMake, same dependency versions rebuilt from the same hash-verified archives;
-different build root and prefix path, both recorded beside the invocation.
-FREEZE.md states what is identical and what is not.
-
-Machine-readable output is fragile for a reason P16 had to find: Netgen writes
-a sizing warning to STDOUT, where `2>/dev/null` cannot remove it, and it
-corrupts any structured output. Silence a backend's chatter in the adapter,
-never in the consumer. Measured again here: the chatter is contained in the
-adapter, and nine parsing processes saw clean stdout. BACKEND_STDOUT.md
-
----
-# P17-REFMOD-001
-
-## Structural Reference Models
-
-```text
-RM-FEA-01   Single Tet patch test
-RM-FEA-02   Axial bar / prism in tension
-RM-FEA-03   Cantilever beam
-RM-FEA-04   Block under uniform pressure
-RM-FEA-05   Gravity / body-force block
-RM-FEA-06   Transformed structural model
-RM-FEA-07   Local-refined cantilever / stress field
-RM-FEA-08   Under-constrained model -- explicit failure
-RM-FEA-09   Invalid / stale mesh -- explicit failure
-RM-FEA-10   Unresolved boundary reference -- explicit failure
-```
-
-* [x] Define the reference suite — ten model IDs in twelve documents, the
-      sixth suite in the five places every suite before it used; each
-      document carries its material, its `MeshControl` and one
-      `StructuralAnalysis` named "Study". REFERENCE_MODELS.md
-* [x] Single-Tet analytical case — a skew tetrahedron under an affine field
-      through the public kernels: strain and stress to 1.5e-15, `Ke u`
-      against the faces' `sigma S / 3` to 1.8e-15, a rigid rotation to zero
-* [x] Constant-strain patch test — RM-FEA-01, whose mesh has an interior
-      node: every element recovers `sym(A)` and `D sym(A)`, and `K u` is the
-      boundary traction with ZERO at the interior node (2.1e-15)
-* [x] Axial tension — RM-FEA-02 on ROLLERS, so the exact solution is affine:
-      `delta = FL/AE`, `sigma = F/A`, `R = -F`, `U = F delta / 2`, every node
-      and every element, at 1e-9, measured at 1e-15
-* [x] Cantilever bending — RM-FEA-03, three meshes asserted to differ before
-      any error is compared; the deflection rises monotonically toward
-      Timoshenko and the error falls. NO equality claimed: 3.8%, 4.7%, 4.8%
-      of beam theory (findings F2 and F3), and the root reaction and moment
-      exact at every level
-* [x] Pressure resultant — RM-FEA-04: `F = pA` through the nodal loads at
-      1.7e-16, `-F` through the reactions, no moment about the face centroid
-* [x] Reaction equilibrium — every solvable document, through the production
-      path, eta_F and eta_M at 1e-13 or better; RM-FEA-05's weight at the
-      centre of volume with two distinct moment components
-* [x] Displacement agreement — the bar's whole field against the affine
-      state (4.7e-16 of delta), the tip corner's `|u|`, the transformed
-      pair's vectors rotated by R (1.1e-6)
-* [x] Stress agreement — per element against Hooke's law from `lambda, mu`;
-      the mean axial stress EXACTLY `-p` and `-rho g H / 2` by discrete
-      equilibrium (0 and 1.8e-15)
-* [x] von Mises validation — through the deviatoric contraction, a different
-      route from production's, on the patch, the bar and the transformed pair
-* [x] Rigid-transform invariance — RM-FEA-06 on RM-MESH-06's block and frame,
-      with element-by-element connectivity correspondence asserted first;
-      boundary nodes at 1.6e-17 m, the one interior node at 2.7e-7 m, judged
-      separately; invariants equal to 1e-6, measured
-* [x] Mesh-refinement behaviour — the cantilever's three levels: 489, 1626,
-      2465 tetrahedra, monotone in every measure, 1.27x coarse to fine
-* [x] Local refinement behaviour — RM-FEA-07 and its MIRROR, measured in a
-      volume band 0.3 L deep: 315 against 6 tetrahedra and 9.0 against
-      55.9 mm at the root in the root document, the reverse in the mirror;
-      both caps resolve to two facets on every mesh; both refined meshes
-      softer and with a higher stress peak than the unrefined one
-* [x] Under-constrained failure — RM-FEA-08: eight constrained DOFs all in z,
-      validation ACCEPTS, the factorisation refuses (`singular_system`, pivot
-      1.1e-17), nothing published; one fewer refused by the count instead
-* [x] Stale-mesh failure — RM-FEA-09: a geometry edit and a sizing edit each
-      leave a HELD mesh refused at the INPUT stage with `mesh_stale`, nothing
-      measured past it; remeshing restores a different answer. And the
-      runner proves it on ALL TEN solvable documents
-* [x] Unresolved-reference failure — RM-FEA-10: `loads_unresolvable` at the
-      load stage after the restraint stage passed, the missing face resolving
-      to NO facet while the real faces resolve to two; an unresolvable
-      restraint refused likewise
-* [x] Save / load / re-solve — all twelve documents: intent equal, no result
-      word in the bytes, the reloaded mesher empty, the re-solve
-      bit-identical by fingerprint
-* [x] CLI validation — 41 fresh-process tests on the runner's twelve files:
-      settings, validate, solve, displacement, stress and reactions, with
-      the bar's `2.15354e-05 m` and `50000000 Pa` and the block's `5400 N`
-      pinned to the closed forms' digits; the two refusals through all four
-      result commands
-* [x] Independent analytical validation — `Analytic.hpp` includes no
-      BetterCAD header; mutating the ORACLE (M03, M10) fails the suite, so the
-      comparison is between two independent computations
-* [x] Determinism PASS — five fresh documents each of six models, one
-      fingerprint each; fingerprints IDENTICAL across the three presets;
-      three CLI solve payloads byte-identical across the three presets
-* [x] Three-preset regression PASS — 4006/4006 x 3 presets, 1135 x 5 in two,
-      0 warnings over 657 objects, 17 stages exit 0, 3h43m41s
-* [x] Evidence recorded —
-      [docs/verification/P17-REFMOD-001/](docs/verification/P17-REFMOD-001/README.md)
-
-**PASS 2026-10-15.** 22 of 22. Qualified against candidate 460321a (the
-parent commit) plus the working tree; the eight source/test fingerprints in
-[FREEZE.md](docs/verification/P17-REFMOD-001/FREEZE.md) are identical before
-and after the run, SIX of them identical to the P17-CLI-001 freeze -- `apps`,
-`include`, `src`, `cmake`, `CMakeLists.txt`, `CMakePresets.json` -- which is
-the fingerprint-level proof that no production file changed. Only `tests`
-and `examples` moved, and those are the milestone. The closeout commit's
-index was hashed subtree by subtree (`git write-tree --prefix=<dir>/`) before
-committing: all eight values equal the frozen ones -- `tests`
-3568eb0e8d194387d9244ff02367fc155a9596c8, `examples`
-a955cf6511ce715fcb95bc06ef82b877535869e6, the other six as in the P17-CLI-001
-freeze -- so the qualified tree IS the committed tree.
-
-**Three measured findings, carried to the owner rather than corrected
-here**, each about a qualified module and each an ADR-level decision:
-F1, P17-REACTION-001's 1e-12 moment threshold is crossed by a CORRECT bending
-solve of ~2500 needle elements (eta_M 1.15e-12); F2, linear Tet4 locks in
-bending (a few per cent of beam theory on these meshes); F3, OCCT never
-subdivides a developable wall along its ruling, so every wall triangle of a
-cylinder spans its full length at every deflection -- the cause of F2's slow
-trend and F1's conditioning, and the curved form of P16-REFMOD-001's
-planar-face limitation. ANALYTICAL_VALIDATION.md.
-
-Two measurements changed the models themselves: a box can get two DIFFERENT
-tetrahedralisations of the same corners in two placements (RM-FEA-06 uses
-the pair P17-POST-001 measured and asserts the correspondence), and a slab
-control on a cap refines nothing unless size-tree boxes fit inside the
-section (RM-FEA-07 is 40 x 60 for that reason). AUDIT.md.
-
-Mutation: 14 probes, 14 killed -- three on PRODUCTION formulas (a consistent
-load of `A t / 2`, a `2 mu` shear stiffness, an outward pressure), each
-caught by a closed form. MUTATION.md.
-
-### RM-FEA-01 -- constant-strain patch test
-
-An affine displacement field:
-
-```text
-u(x,y,z) = [ a1 + a2 x + a3 y + a4 z
-             b1 + b2 x + b3 y + b4 z
-             c1 + c2 x + c3 y + c4 z ]
-```
-
-A linear Tet4 must reproduce this exactly to floating point. Validate constant
-strain, constant stress, exact nodal interpolation and internal force
-consistency. This is the strongest single test of the implementation.
-
-### RM-FEA-02 -- axial bar
-
-```text
-delta = F L / (A E)        sigma = F / A        epsilon = sigma / E
-```
-
-Validate tip displacement, axial stress, strain, and reaction = -F.
-
-### RM-FEA-03 -- cantilever beam
-
-```text
-delta_tip ~ F L^3 / (3 E I)        sigma = M y / I
-```
-
-3D continuum FEA and beam theory differ on a coarse mesh. Use a convergence
-study, coarse / medium / fine, and do NOT expect equality on one coarse mesh.
-
-**Assert the levels really differ before comparing errors.** P16-REFMOD-001
-found a convergence table that passed on one unit in the last place, because
-two different surface deflections produced the identical boundary. Show a
-structural difference -- strictly increasing element counts -- then compare.
-
-### RM-FEA-04 -- uniform pressure
-
-Pressure p on a known face area A must give resultant F = p A. Validate that
-the nodal load conversion preserves the resultant, and validate the support
-reactions.
-
-### RM-FEA-05 -- gravity / body force
-
-Only if gravity is in the initial scope. For density rho and volume V the
-expected weight is W = rho V g; validate the equivalent nodal body force and
-the reactions. Otherwise defer this model EXPLICITLY, as a deferral with a
-reason rather than as a gap.
-
-### RM-FEA-06 -- rigidly transformed model
-
-Invariant: strain, stress invariants, strain energy, element stiffness physics.
-Transformed: displacement vectors, reaction vectors.
-
-Judge node populations separately, as P16-REFMOD-001 had to: boundary node
-positions are CAD-determined and follow R x + t closely, while an interior node
-is the mesher's own choice and is NOT equivariant under rotation -- 2.66e-4 mm
-on a 108 mm body, four thousand times the arithmetic noise. One tolerance over
-both either fails a correct result or gives up the check.
-
-### RM-FEA-07 -- local refinement / convergence
-
-Validate that the solve stays valid, the target region is really refined, the
-result trend is sensible, and the mapping is preserved. Do not claim stress
-convergence at a mathematical singularity.
-
-Measuring refinement needs care: a refined face's own boundary facets do not
-show it, because OCCT gives a planar face two triangles whatever the
-deflection. Measure a band in the volume, and prove it with a mirror model
-that refines the opposite face.
-
-### RM-FEA-08 -- under-constrained model
-
-```text
-REQUIRED   the solve FAILS explicitly, with a singular / rigid-body diagnostic
-FORBIDDEN  a huge finite displacement reported as a successful solution
-```
-
-### RM-FEA-09 -- stale / invalid mesh
-
-A mesh made stale by a geometry or settings edit. The solve must be refused
-BEFORE assembly. This is the model that protects against P16's recorded
-stale-cache limitation.
-
-### RM-FEA-10 -- unresolved geometry reference
-
-A load or restraint naming deleted or invalid geometry. The solve fails
-explicitly. No nearest-face rebinding.
-
----
-# P17-QUAL-001
+# P17-QUAL-001 — PASS
 
 ## Full P17 Qualification
 
-* [ ] Freeze the final P17 tree
-* [ ] Audit every P17 milestone
-* [ ] Verify all TODO items complete
-* [ ] Verify all P17 ADRs
-* [ ] Audit CAD / material / mesh / solver authority
-* [ ] Audit solver identity and currentness
-* [ ] Audit the Tet4 formulation
-* [ ] Audit the DOF model
-* [ ] Audit loads
-* [ ] Audit restraints
-* [ ] Audit assembly
-* [ ] Audit the solver
-* [ ] Audit displacement recovery
-* [ ] Audit strain / stress recovery
-* [ ] Audit reactions
-* [ ] Audit the validation policy
-* [ ] Audit stale-input protection
-* [ ] Audit visualisation
-* [ ] Audit commands
-* [ ] Audit persistence
-* [ ] Audit the CLI
-* [ ] Re-run all reference models
-* [ ] Independent analytical validation
-* [ ] Force equilibrium PASS
-* [ ] Moment equilibrium PASS where relevant
-* [ ] Patch test PASS
-* [ ] Axial test PASS
-* [ ] Cantilever convergence PASS
-* [ ] Under-constrained failure PASS
-* [ ] Stale-mesh failure PASS
-* [ ] Clean Debug qualification
-* [ ] Clean Release qualification
-* [ ] Clean Debug-shared qualification
-* [ ] Repeated determinism qualification
-* [ ] Cross-preset equivalence
-* [ ] Final adversarial review
-* [ ] 0 unexpected warnings
-* [ ] Qualified tree == committed tree
-* [ ] Evidence recorded
-* [ ] Mark P17 qualified
+* [x] Freeze the final P17 tree
+* [x] Audit every P17 milestone
+* [x] Verify all TODO items complete
+* [x] Verify all P17 ADRs
+* [x] Audit CAD / material / mesh / solver authority
+* [x] Audit solver identity and currentness
+* [x] Audit the Tet4 formulation
+* [x] Audit the DOF model
+* [x] Audit loads
+* [x] Audit restraints
+* [x] Audit assembly
+* [x] Audit the solver
+* [x] Audit displacement recovery
+* [x] Audit strain / stress recovery
+* [x] Audit reactions
+* [x] Audit the validation policy
+* [x] Audit stale-input protection
+* [x] Audit visualisation
+* [x] Audit commands
+* [x] Audit persistence
+* [x] Audit the CLI
+* [x] Re-run all reference models
+* [x] Independent analytical validation
+* [x] Force equilibrium PASS
+* [x] Moment equilibrium PASS where relevant
+* [x] Patch test PASS
+* [x] Axial test PASS
+* [x] Cantilever convergence PASS
+* [x] Under-constrained failure PASS
+* [x] Stale-mesh failure PASS
+* [x] Clean Debug qualification
+* [x] Clean Release qualification
+* [x] Clean Debug-shared qualification
+* [x] Repeated determinism qualification
+* [x] Cross-preset equivalence
+* [x] Final adversarial review
+* [x] 0 unexpected warnings
+* [x] Qualified tree == committed tree
+* [x] Evidence recorded
+* [x] Mark P17 qualified
+
+```text
+PASS 2026-10-15. Qualified against a99f0b6 plus the working tree, tests
+fingerprint 90f93c52, the other seven paths byte-identical to the
+P17-REFMOD-001 freeze: 4009/4009 x 3 presets, 1138 x 5 in two, 0 warnings
+over 658 objects, 17 stages exit 0, 3h49m57s, fingerprints before == after.
+17 of 17 milestones PASS from their own harness verdicts; 206 ADR clauses,
+195 implemented, 11 text drifts amended, 0 invariant violations; three
+final cross-milestone gates (tests/qualification/P17StructuralQualificationTests.cpp);
+7 mutation probes on the production tree, 7 killed; 44 adversarial
+questions, 0 production defects, 0 gate-blocking. Evidence:
+docs/verification/P17-QUAL-001/.
+
+The "Cantilever convergence PASS" box is ticked as the brief defines it --
+a convergence study with strictly increasing meshes, a monotone trend and a
+falling error -- and NOT as agreement with beam theory, which linear Tet4
+does not reach on these meshes (F2, F3). "Moment equilibrium PASS where
+relevant" is ticked for every solved reference model under the production
+default, with F1 recorded beside it.
+```
 
 ### P17 Final Gate
 
@@ -2198,49 +291,9 @@ all P17 milestones PASS
 + qualified tree == committed tree
 ```
 
-### P17 Final Adversarial Questions
-
-At minimum, attack:
-
-```text
-Can P17 solve a stale mesh?
-Can P17 solve geometry that has failed regeneration?
-Can a material edit leave an old result current?
-Can a load edit leave an old result current?
-Can a restraint edit leave an old result current?
-Can NodeId become permanent CAD load identity?
-Can ElementId survive a remesh as solver intent?
-Can a load silently move to another face after regeneration?
-Can an unresolved support bind to a nearby face?
-Can an inverted Tet enter stiffness assembly?
-Can a zero-volume Tet produce finite-looking stiffness?
-Can engineering and tensor shear conventions get mixed?
-Can B or D ordering disagree with post-processing?
-Can global K lose symmetry during assembly?
-Can duplicate sparse entries overwrite instead of accumulate?
-Can an under-constrained model appear solved?
-Can the solver return success with a large residual?
-Can reactions fail force equilibrium?
-Can pressure conversion fail to preserve the resultant?
-Can a rigid transform change stress invariants?
-Can displacement scaling mutate actual result data?
-Can the GUI recalculate stresses differently from core?
-Can undo restore a stiffness matrix instead of analysis intent?
-Can save/load trust old displacement / stress arrays?
-Can the CLI implement separate Tet stiffness logic?
-Can the CLI return zero on a singular solve?
-Can mesh-quality thresholds differ between GUI and CLI?
-Can stale binaries produce qualification evidence?
-Can a zero-test filter pass qualification?
-Can source change after the final qualification?
-```
-
-For every credible defect:
-
-```text
-reproduce -> regression test -> root cause -> general fix
--> requalify the affected milestone -> rerun P17-QUAL
-```
+The thirty adversarial questions the gate named, and fourteen more, are
+answered one by one with the attack, the test and the result in
+`docs/verification/P17-QUAL-001/ADVERSARIAL_REVIEW.md`.
 
 ---
 
@@ -2363,37 +416,37 @@ docs/engineering/
 # CURRENT NEXT STEP
 
 ```text
-P17-REFMOD-001 is COMPLETE at 22 of 22 and QUALIFIED, 2026-10-15.
+P17 — Structural FEA is QUALIFIED. P17-QUAL-001 PASS, 2026-10-15.
 
-    ten model IDs in twelve committed documents, built in
-      examples/reference_models/StructuralModels.cpp; NOT ONE FILE under
-      src/, include/ or apps/ changed -- six of the eight tree fingerprints
-      are identical to the P17-CLI-001 freeze
-    16 in-process cases (133 872 assertions), 41 fresh-process tests on the
-      runner's twelve files; every expected value from Analytic.hpp, which
-      includes no BetterCAD header
-    14 mutation probes, 14 killed: 3 on production formulas, 2 on the oracle
-    adversarial review: 9 findings -- 3 measured limitations of qualified
-      modules (F1 equilibrium threshold, F2 Tet4 bending, F3 developable
-      walls), 6 suite defects fixed before the freeze
-    qualification: 4006/4006 x 3 presets, 1135 x 5 in two, 0 warnings over
-      657 objects, 17 stages exit 0, 3h43m41s, fingerprints before == after
-    the three presets' suite fingerprints and CLI solve payloads are
-      BIT-IDENTICAL
+    seventeen milestones audited from their own recorded verdicts, 17 PASS
+    206 ADR clauses checked against the code: 195 implemented, 11 sentences
+      overtaken by later milestones and amended, 0 invariant violations
+    three final cross-milestone gates: solving leaves every reference
+      document byte-identical; every dependency edit stales the result in
+      one sequence with undo in the middle; a FAILED regeneration never
+      yields a current result
+    seven mutation probes on the production tree -- duplicate-entry
+      overwrite, pivot gate removed, residual gate removed, inverted
+      element admitted, material staleness dropped, CLI exit 0 on a
+      singular solve, reaction sign flipped -- seven killed
+    44 adversarial questions, 0 production defects, 0 gate-blocking
+    qualification: 4009/4009 x 3 presets, 1138 x 5 in two, 0 warnings over
+      658 objects, 17 stages exit 0, 3h49m57s, fingerprints before == after,
+      suite fingerprints and CLI solve payloads bit-identical across presets
+    NO file under src/, include/, apps/ or examples/ changed
 
-There is no open milestone. P17-QUAL-001 is next in the sequence and is
-NOT AUTHORIZED; P17-REFMOD-001 passing is not permission to start it. F1,
-F2 and F3 are owner decisions it should weigh first.
+There is no open milestone and nothing is authorized. P18 — Thermal
+Analysis is next in the sequence and is NOT AUTHORIZED; P17 being qualified
+is not permission to start it. F1, F2 and F3 (P17-REFMOD-001) are owner
+decisions it should weigh first.
 ```
 
-P17-ARCH-001 gave the structural phase a boundary a stale mesh cannot cross, a
-module whose dependencies are enforced rather than described, and three ADRs
-fixing the solver's scope. P17-DATA-001 then fixed the identity model -- three
-domains that do not convert into one another -- the result representation, and
-the one place that decides whether a result still describes the model. Neither
-built a solver, which was the point of both.
-Evidence: [docs/verification/P17-ARCH-001/](docs/verification/P17-ARCH-001/README.md),
-[docs/verification/P17-DATA-001/](docs/verification/P17-DATA-001/README.md).
+What P17 hands over: a result keyed to the mesh stamp, the material revision
+and the analysis revision it was computed from; a material resolved per
+analysis mode through P15's consumer model; one validation entry whose gates
+a later phase inherits rather than re-asks; and ten reference models with
+closed-form oracles that cannot call BetterCAD.
+Evidence: [docs/verification/P17-QUAL-001/](docs/verification/P17-QUAL-001/README.md).
 
 What it consumes is P16: a validated Tet4 volume mesh from authoritative CAD
 geometry, with sizing controls, quality metrics, geometry/mesh correspondence,
@@ -2404,235 +457,26 @@ reference models.
 ## What is authorized, and what is not
 
 ```text
-P17-ARCH-001     PASS 2026-10-07. Qualified at 536e14b5, 3401/3401 x 3.
-P17-DATA-001     PASS 2026-10-07. Qualified at fcf2ea16, 3434/3434 x 3,
-                 0 warnings over 603 objects. Evidence recorded.
+P17-ARCH-001 .. P17-REFMOD-001
+                 PASS, each at its own recorded candidate and harness
+                 verdict; the chain and the figures are in
+                 docs/verification/P17-QUAL-001/MILESTONE_AUDIT.md and the
+                 evidence links in ROADMAP.md.
 
-P17-MAT-001      PASS 2026-10-07. Qualified at 4d4698b3, 3453/3453 x 3,
-                 0 warnings over 605 objects. Evidence recorded.
+P17-QUAL-001     PASS 2026-10-15. Qualified against a99f0b6 plus the
+                 working tree: 4009/4009 x 3, 1138 x 5 in two, 0 warnings
+                 over 658 objects, 17 stages exit 0, qualified tree ==
+                 committed tree. Evidence recorded.
 
-P17-DOF-001      PASS 2026-10-07. Qualified at 9301b643, 3493/3493 x 3,
-                 0 warnings over 609 objects, 10 mutation probes killed.
-                 Evidence recorded, plus ADR-037.
-
-P17-ELEM-001     PASS 2026-10-08. Qualified at 845b118c, 3522/3522 x 3,
-                 0 warnings over 612 objects, 13 mutation probes with 11
-                 killed by tests. Evidence recorded.
-
-P17-LOAD-001     PASS 2026-10-08. Qualified at 27afe8d3, 3545/3545 x 3,
-                 0 warnings over 615 objects, 13 mutation probes with 12
-                 killed. Evidence recorded.
-
-P17-BC-001       PASS 2026-10-08. Qualified at 60e01a98, 3583/3583 x 3,
-                 0 warnings over 620 objects, 14 mutation probes with 12
-                 killed. Prescribed non-zero displacement deliberately
-                 deferred, with no field in the schema for one.
-                 P17-LOAD-001 REQUALIFIED by the same run: its
-                 StructuralLoad.cpp now calls the shared
-                 structural::resolveFaceTarget. Evidence recorded.
-
-P17-ASSEMBLY-001 PASS 2026-10-08. Qualified at 6d36b39e, 3615/3615 x 3,
-                 0 warnings over 624 objects, 14 mutation probes with 11
-                 killed. BetterCAD owns the CSR and the structural library
-                 still links no linear algebra: ADR-038, which keeps the
-                 Eigen admission P17-SOLVE-001's. No solve, no constraint
-                 application, no reduced system, no regularisation of the
-                 free-body singularity. Evidence recorded.
-
-P17-SOLVE-001    PASS 2026-10-09. Qualified at 4e41fdd2, 3647/3647 x 3,
-                 0 warnings over 628 objects, 14 mutation probes with 14
-                 killed. Eigen::SimplicialLDLT, direct, with a PIVOT GATE the
-                 library does not have: ADR-039, which also records the
-                 licence verified from the vendored tree (MPL-2.0, no new
-                 dependency). The residual gate is on the FREE system; the
-                 constrained entries of K u - F are the reactions and are
-                 retained for P17-REACTION-001. No penalty method, no
-                 arbitrary pinning, no diagonal regularisation. Evidence
-                 recorded.
-
-P17-POST-001     PASS 2026-10-10. Qualified at src bba30676 / include
-                 a1a6ba1c / tests 14ae02cf -- the three component hashes that
-                 moved, identical before the first build and after the last
-                 test run. 3694/3694 x 3, 0 warnings over 632 objects, 17
-                 stages with 0 failed, 30 mutation probes with 27
-                 killed. REUSES P17-ELEM-001's B and D rather than restating
-                 either: one computeTet4Kinematics, one strainFrom, one
-                 stressFrom, and zero occurrences of a second shape gradient
-                 or of `lambda`. ADR-040 makes the result a STAGE PRODUCT
-                 carrying the solve's own AssemblySource -- not a
-                 StructuralResult, which would have needed an empty reaction
-                 channel and an analysis identity recovery cannot see. Full-3D
-                 von Mises, with the plane-stress formula measured at 11.2%
-                 away on the mandatory fixture. Hydrostatic stress and
-                 principal strain IMPLEMENTED. No re-solve, no reactions, no
-                 nodal smoothing, no deformed geometry. Evidence recorded.
-
-P17-REACTION-001 PASS 2026-10-10. Qualified at include f2a6fb7e / src 1a0fcf71 /
-                 tests 0ab21f75 -- the three component hashes that moved,
-                 identical before the first build and after the last test
-                 run. 3721/3721 x 3,
-                 0 warnings over 636 objects, 20 mutation probes with 20
-                 killed. The reaction is the CONSTRAINED component of
-                 K u - F, READ from SolvedSystem::fullResidual() rather than
-                 recomputed: zero occurrences of `stiffness()` in the module,
-                 and zero load re-integration. ADR-041 freezes the sign
-                 convention against the one-DOF case, counts a shared degree
-                 of freedom ONCE globally with per-restraint summaries that
-                 are additive BY CONSTRUCTION, and keeps support moments
-                 derived from the translational distribution -- there are no
-                 rotational reaction DOFs.
-
-                 THE TOLERANCE WAS MEASURED: worst eta_F 1.48e-14 and
-                 eta_M 2.50e-14 on the large mesh against a chosen 1e-12,
-                 a 40x margin. The geometric path measured 4e-16, NOT the
-                 1e-9 the brief anticipated, because a planar pressure face
-                 and a box under gravity integrate exactly -- so ONE
-                 threshold covers both layers, on the strength of the
-                 measurement. A solver residual tolerance is referenced
-                 nowhere and the field is absent from EquilibriumTolerance.
-
-                 P17-BC-001 REQUALIFIED by the same run: RestraintResolution
-                 gained its resolved DofIndex list, because per-restraint
-                 attribution needs the mapping the SOLVE used and
-                 re-resolving a target afterwards is how a source mismatch
-                 hides. Evidence recorded.
-
-P17-VALID-001    PASS 2026-10-11. Qualified at include 34b3ec8d / src b6cddc44 /
-                 tests 81b34bee -- the three component hashes that moved,
-                 identical before the first build and after the last test run.
-                 3759/3759 x 3, 0 warnings over 640 objects per preset, 836 tests x5 in two
-                 presets, 28 mutation probes with 27 killed.
-                 P16 stayed REPORT-ONLY: zero meshing source files changed,
-                 and a grep of this milestone's production files with comments
-                 stripped finds no radius-ratio, aspect-ratio, dihedral or
-                 cross-product formula. One definition of every metric still
-                 lives in src/meshing/MeshQuality.cpp.
-
-                 THE THRESHOLDS WERE MEASURED FIRST, AND THE MEASUREMENT
-                 CONTRADICTED THIS MILESTONE THREE TIMES. The sweep confirmed
-                 that no shape metric separates BetterCAD's qualified meshes
-                 from pathological ones -- a QUALIFIED CYLINDER (3r/R
-                 0.00124845, min dihedral 0.362683 deg) is worse than a
-                 deliberate 1.98-degree sliver, and on the aspect ratio the two
-                 sets are INVERTED. But "therefore no threshold is derivable"
-                 was wrong twice over, and both corrections are recorded in
-                 docs/verification/P17-VALID-001/PRIOR_DRAFT_CORRECTION.md
-                 rather than overwritten.
-
-                 WHAT IS ACTUALLY SHIPPED IS TWO DERIVED BOUNDS, one per
-                 degeneration family, because neither metric can see the
-                 other's:
-
-                     3r/R   < 1e-10   flattening, err ~ C/sqrt(3r/R),
-                                      C <= 2.41e-15 over SIXTEEN orders
-                     aspect > 3e5     stretching, err ~ C*aspect,
-                                      C <= 4.45e-16 over SEVEN orders
-
-                 Each is the inverse of its own law at BetterCAD's 1e-9
-                 geometric band, with 17x and 7.5x margin on the crossings,
-                 and each is verified on BOTH sides. They sit 3.2e6 and 3.7e3
-                 clear of the worst qualified element, so neither refuses
-                 anything BetterCAD produces -- and a 0.198-degree sliver
-                 PASSES both, correctly, because its measured error is
-                 1.33e-13. Hard failure means "the kernel cannot recover a
-                 strain here to better than 1e-9", never "this is badly
-                 shaped". NO bound on either dihedral angle: no law was
-                 measured against them and they cannot separate the sets.
-
-                 AND THE LARGER CONTRIBUTION IS THE ENTRY POINT. Every gate a
-                 solve needs already existed and `solveStructuralSystem` had
-                 NO production caller, so the safety was available rather than
-                 enforced -- P16's own recorded limitation, one layer up.
-                 solveStructuralAnalysis is now the only production path from
-                 a Document to a StructuralResult and it validates first;
-                 refusing a stale mesh end to end is tested with all three
-                 premises asserted.
-
-                 NO REPAIR OF ANY KIND, checkable by grep and checked: no node
-                 move, no node swap, no abs(volume), no element removal, no
-                 merge, no remesh, no loosened tolerance, no invented material
-                 property, no rebound face. No predecessor production file was
-                 modified at all.
-
-P17-VIZ-001      PASS 2026-10-13. COMPLETE at 23 of 23, qualified at
-                 e795acb: 3835/3835 x 3 presets, 980 x 5 in two, 0 warnings.
-                 The viewer is a VIEW: a deformed display is a visual
-                 transform of the current derived displacement, never a
-                 mutation of the mesh, the geometry or the result. The
-                 element contours are drawn from a tetrahedron-derived
-                 boundary (ADR-046), so the mapping once recorded here as a
-                 blocker was never needed. Evidence recorded.
-
-P17-CMD-001      PASS 2026-10-13. COMPLETE at 19 of 19, qualified at
-                 bde6f8b: 3883/3883 x 3, 1012 x 5 in two, 0 warnings. Eight
-                 commands over the canonical analysis, loads, restraints and
-                 solver settings; 16 compile-fail cases prove no solver
-                 array CAN enter history. Evidence recorded.
-
-P17-PERSIST-001  PASS 2026-10-14. COMPLETE at 20 of 20, qualified against
-                 bde6f8b and committed as 7e18175: 3921/3921 x 3, 1050 x 5
-                 in two, 0 warnings. One additive object type, no version
-                 bump, no core change; a NodalForceLoad refuses the save
-                 (ADR-048). Evidence recorded.
-
-P17-CLI-001      PASS 2026-10-15. COMPLETE at 24 of 24, qualified against
-                 7e18175 plus the working tree: 3949/3949 x 3, 1078 x 5 in
-                 two, 0 warnings over 676 objects, 17 stages exit 0. Eleven
-                 structural-* commands over the qualified core, no core
-                 file changed, one production defect found by the
-                 equivalence tests and fixed. Qualified on a second machine
-                 by owner decision, with the deviation recorded in
-                 FREEZE.md. Evidence recorded.
-
-P17-REFMOD-001   PASS 2026-10-15. COMPLETE at 22 of 22, qualified against
-                 460321a plus the working tree: 4006/4006 x 3, 1135 x 5 in
-                 two, 0 warnings over 657 objects, 17 stages exit 0. Ten
-                 model IDs in twelve documents, no production file changed,
-                 14 mutation probes killed. Three measured findings carried
-                 to the owner (F1, F2, F3). Evidence recorded.
-
-P17-QUAL-001     NOT AUTHORIZED. Being next in the sequence is not
-                 permission, and P17-REFMOD-001 passing will not be either.
-                 Authorizing it is a scope decision, and F1-F3 are inputs to
-                 it.
+P18              NOT AUTHORIZED. Being next in the sequence is not
+                 permission, and P17 being qualified is not either.
+                 Authorizing it is a scope decision, and F1-F3 are inputs
+                 to it.
 
 everything after it
                  likewise.
 ```
 
-### What P17-ARCH-001 leaves in place for the next milestone
-
-```text
-the input boundary      structural::requireStructuralModel is the single
-                        entry, and the gates P17-DATA/LOAD/BC/VALID define
-                        attach to it rather than to each new consumer
-the module              src/structural/, layer 50, linking core, features and
-                        meshing only. No io, no renderer, no Qt, no Eigen
-the enforcement         5 layering fixtures, including the meshing ->
-                        structural CYCLE, and rule 6 (library -> apps/)
-the identity model      AnalysisId / LoadId / RestraintId are document
-                        identities; NodeId / ElementId stay mesh-local;
-                        DofIndex is solver-local and NOT in core/Id.hpp.
-                        12 compile-fail cases enforce it
-the result model        Translation3D / Force3D / Strain6 / Stress6, the
-                        component order XX YY ZZ XY YZ ZX frozen, and
-                        engineering shear carried by the FIELD NAMES
-the currentness answer  currentResultSource / resultCurrency / analysisState,
-                        which call requireStructuralModel and so inherit every
-                        ADR-036 gate
-what was then undecided  has since been decided, each by a named milestone:
-                        the Voigt ordering (P17-DATA-001), the DOF numbering
-                        (P17-DOF-001, ADR-037), gravity in scope
-                        (P17-LOAD-001), the sparse representation
-                        (P17-ASSEMBLY-001, ADR-038), the solver and its
-                        licence (P17-SOLVE-001, ADR-039, Eigen MPL-2.0), the
-                        acceptance thresholds (P17-VALID-001, ADR-042)
-```
-
-`# P17 Prerequisites Already In The Tree` is kept as the record of what each
-milestone inherited. Its one open decision, the layer a module that USES
-meshing may occupy, was taken by P17-ARCH-001: the table was respaced in tens
-(ADR-035) and `structural` sits at layer 50.
 
 ## Still owed, from earlier reviews
 
@@ -2661,11 +505,14 @@ fetch           because CMake's bundled curl carries no CA trust anchors in
                 this environment. Verified instead with
                 FETCHCONTENT_SOURCE_DIR_* pointing at the same SHA256-verified
                 archives. (P16-REFMOD-001, P16-QUAL-001)
-stale cache     nothing FORCES a holder to call isStale. A VolumeMesh records
-                its source and revision and answers truthfully, and the request
-                path refuses stale geometry, so this bites only code that
-                CACHES a mesh. P17's solver entry point should take the
-                document and feature, or re-check. (P16-VOL-001)
+stale cache     DISCHARGED for P17 by P17-ARCH-001 and re-proved by
+                P17-QUAL-001: the solver entry takes the document, the
+                regenerator and the mesher and re-checks mesh currency
+                through requireStructuralModel on every call; a failed
+                regeneration and a stale mesh are both refused in sequence.
+                Still true in general: nothing FORCES a holder of a
+                VolumeMesh to call isStale, so a future consumer that CACHES
+                a mesh owns the same check. (P16-VOL-001)
 concurrency     calls into the volume backend are serialised by a mutex because
                 nglib keeps global state; no test runs two threads through it.
                 (P16-VOL-001)
@@ -2676,9 +523,12 @@ sphere          no fixture, so a degenerate pole edge is the one geometry where
                 exact-coordinate node unification is untested
 boundary edges  protected by exactly one test, because closed solids cannot
                 detect the counter's removal
-quality         P16-QUALITY-001's policy is deliberately report-only and
-thresholds      ships no accept/reject thresholds. The phase that consumes a
-                mesh owns them. (P16-QUALITY-001, P16-QUAL-001)
+quality         DISCHARGED for P17 by P17-VALID-001 (ADR-042): the
+thresholds      structural acceptance policy rejects on measured accuracy
+                laws, one bound per degeneration family, and warns at the
+                qualified envelope. P16's own policy stays report-only, so
+                the next consumer of a mesh (P18) owns its own thresholds
+                the same way. (P16-QUALITY-001, P16-QUAL-001)
 drilled hole    a hole cut by a feature has no stable face reference, so a
 wall            boundary set cannot name it. A tube's bore can. (P16-MAP-001)
 RM-MESH-09      the configuration reference case is DEFERRED, not failed: a

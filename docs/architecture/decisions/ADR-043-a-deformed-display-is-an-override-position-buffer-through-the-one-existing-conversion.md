@@ -174,3 +174,18 @@ defect wearing a palette. Only the mechanism changed.
 And one thing the forecast could not have known, which ADR-044 records: a
 boundary view names **Triangle3** surface element ids, not owning tetrahedra,
 so the element channels are blocked on a mapping `meshing` does not have.
+
+## Amendment (P17-QUAL-001, 2026-10-15)
+
+> **Recorded because the evidence outranks this document.** This ADR says
+> `toModelLength` in `OcctMeshPresentation.cpp` is "the project's only
+> metres-to-millimetres conversion". ADR-045 added a second wrapper of the same
+> name and body in `OcctOverlayPresentation.cpp`. Both are one line over the
+> kernel's single `geometry::occt::toModel`, so the conversion the decision
+> cares about -- one place where metres become millimetres -- is still single
+> at the kernel; the wrapper is duplicated, which is the shape this ADR argues
+> against and is recorded as such. Everything else -- the override position
+> span, both buffers through the same call site, normals and selection from
+> the deformed corners, a new scale is a new presentation, the length-mismatch
+> refusal -- is implemented as written and was verified by P17-QUAL-001. See
+> `docs/verification/P17-QUAL-001/ADR_AUDIT.md`.
