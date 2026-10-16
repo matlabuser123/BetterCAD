@@ -80,6 +80,10 @@ set(_filters
     # fixtures that prove the module's directions.
     "unit\\.ThermalInput" 8
     "architecture\\.checker\\.[a-z-]*thermal" 4
+    # P18-DATA-001. The data-model cases, and the compile-fail group that
+    # proves the thermal identities do not convert.
+    "unit\\.ThermalData" 20
+    "compile_fail\\.thermalids\\." 12
 )
 list(LENGTH _filters _count)
 math(EXPR _last "${_count} - 1")

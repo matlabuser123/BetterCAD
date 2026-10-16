@@ -56,7 +56,9 @@ TEST_CASE("Unit catalog lists every unit with a unique symbol", "[units][catalog
     // every entry.
     // 50 through P15-THERM-001, plus the 4 P15-MASS-001 adds: kg m^2, kg mm^2,
     // m^5, mm^5.
-    CHECK(catalog.size() == 54);
+    // 54 through P17, plus the 4 P18-DATA-001 adds: K/m, W/m^2, W/(m^2 K),
+    // W/m^3 -- the field and boundary units of heat conduction.
+    CHECK(catalog.size() == 58);
 
     std::set<std::string_view> symbols;
     for (const UnitDescriptor& unit : catalog) {

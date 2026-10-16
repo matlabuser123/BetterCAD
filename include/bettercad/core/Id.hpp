@@ -72,6 +72,15 @@ struct LoadIdTag {
 struct RestraintIdTag {
     static constexpr std::string_view name = "restraint";
 };
+struct ThermalAnalysisIdTag {
+    static constexpr std::string_view name = "thermal analysis";
+};
+struct ThermalLoadIdTag {
+    static constexpr std::string_view name = "thermal load";
+};
+struct ThermalBoundaryConditionIdTag {
+    static constexpr std::string_view name = "thermal boundary condition";
+};
 struct EntityIdTag {
     static constexpr std::string_view name = "entity";
 };
@@ -124,6 +133,8 @@ template <>
 inline constexpr bool isDocumentObjectTag<MeshControlIdTag> = true;
 template <>
 inline constexpr bool isDocumentObjectTag<AnalysisIdTag> = true;
+template <>
+inline constexpr bool isDocumentObjectTag<ThermalAnalysisIdTag> = true;
 
 template <typename Tag, typename Value = std::uint64_t>
 class Id;
@@ -265,6 +276,42 @@ using LoadId = Id<LoadIdTag>;
 /// intent; the constrained DOF indices are a derived consequence of the current
 /// mesh and the current numbering, and are never its identity.
 using RestraintId = Id<RestraintIdTag>;
+/// One thermal analysis: which mesh is analysed, in which mode, under which
+/// heat loads, boundary conditions, initial condition and solver settings
+/// (P18-DATA-001). A document object, so it gets a revision, undo, a place in
+/// the dependency graph and a file representation from machinery that already
+/// exists -- the argument ADR-030 made for a meshing control and P17-DATA-001
+/// repeated for a structural analysis, whose sibling this is.
+///
+/// IT WIDENS TO ObjectId, AND IT IS NOT AN AnalysisId. A thermal analysis and
+/// a structural analysis are both document objects, and a solve that took the
+/// wrong kind would read loads in newtons as heat in watts. The two tags keep
+/// them apart at compile time; nothing converts one into the other.
+using ThermalAnalysisId = Id<ThermalAnalysisIdTag>;
+/// One heat load: a surface heat flux on a CAD face or a volumetric heat
+/// source in the body (P18-DATA-001 defines the payload). Unique within the
+/// thermal analysis that owns it, as a load is unique within its structural
+/// analysis and a boundary set within whatever owns the sets.
+///
+/// CANONICAL INTENT, NOT A MESH ENTITY, and NOT A STRUCTURAL LoadId. A heat
+/// load means "this much heat through that CAD face"; the facets it covers,
+/// the nodes it resolves to and the rows of Q it contributes are derived
+/// afresh for whatever mesh is current (ADR-032). It does not widen to
+/// ObjectId -- it is a member of an analysis's definition -- and it does not
+/// convert to or from the structural LoadId, because a traction and a heat
+/// flux have nothing in common but a face.
+using ThermalLoadId = Id<ThermalLoadIdTag>;
+/// One thermal boundary condition: a prescribed temperature or a convection
+/// surface on a CAD face (P18-DATA-001 defines the payload). Unique within
+/// its analysis.
+///
+/// The same rule as ThermalLoadId, for the same reason. A boundary
+/// condition's identity is the intent; the constrained temperature DOFs and
+/// the convection facets are a derived consequence of the current mesh and
+/// the current numbering, and are never its identity. Not a RestraintId: a
+/// restraint holds a displacement at zero, and this holds a temperature or an
+/// exchange with an ambient.
+using ThermalBoundaryConditionId = Id<ThermalBoundaryConditionIdTag>;
 /// Sketch entity (point, line, arc, ...); unique within its sketch.
 using EntityId = Id<EntityIdTag>;
 /// Sketch constraint; unique within its sketch.

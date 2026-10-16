@@ -22,15 +22,18 @@ Prerequisite:
            (OCCT never subdivides a developable wall along its ruling).
 
 Current milestone:
-           none. P18-ARCH-001 — Thermal Architecture / Scope. COMPLETE at
-           19 of 19 and qualified 2026-10-16 against a3b721b plus the
-           working tree: 4024/4024 x 3 presets, 1177 x 5 in two, 0 warnings
-           over 660 objects, 17 stages exit 0, 3h29m47s, fingerprints
-           before == after. A thermal module at layer 45, BELOW structural
-           (ADR-050), the scope (ADR-049) and the input boundary
-           requireThermalModel (ADR-051); 11 boundary cases, 4 checker
-           fixtures, 497 files and 0 layering violations.
-           Evidence: docs/verification/P18-ARCH-001/.
+           none. P18-DATA-001 — Thermal Analysis Data Model. COMPLETE at
+           19 of 19 and qualified 2026-10-17 against e6fded3 plus the
+           working tree: 4084/4084 x 3 presets, 1213 x 5 in two, 0 warnings
+           over 665 objects, 17 stages exit 0, 3h40m44s, fingerprints at
+           the freeze == before == after. Three thermal document
+           identities, four heat-conduction quantities, the canonical
+           ThermalAnalysis document object, the immutable ThermalResult with
+           a revision-tuple source, currentness by source identity, six
+           derived states and the result lifecycle; 36 data cases, 24
+           compile-fail cases, 25 mutation probes, 503 files and 0 layering
+           violations. Evidence: docs/verification/P18-DATA-001/.
+           P18-ARCH-001 PASSED 2026-10-16 (docs/verification/P18-ARCH-001/).
 
 Qualified:
            P0–P10 — BetterCAD v0.1.0
@@ -43,8 +46,8 @@ Qualified:
            P17 — Structural FEA
 
 Next:
-           P18-DATA-001 — Thermal Analysis Data Model. NOT AUTHORIZED:
-           P18-ARCH-001 passing is not permission to start it; each
+           P18-MAT-001 — Thermal Material Resolution. NOT AUTHORIZED:
+           P18-DATA-001 passing is not permission to start it; each
            milestone is started by the owner, as every P17 milestone was.
 
 P17 objective, as delivered:
@@ -401,25 +404,43 @@ No P18 solver-local identity becomes permanent CAD/document authority.
 
 ## Thermal Analysis Data Model
 
-* [ ] Define `ThermalAnalysisId`
-* [ ] Define `ThermalLoadId`
-* [ ] Define `ThermalBoundaryConditionId`
-* [ ] Define analysis state
-* [ ] Define steady solver settings
-* [ ] Define transient solver settings
-* [ ] Define initial-condition representation
-* [ ] Define temperature-result representation
-* [ ] Define gradient-result representation
-* [ ] Define heat-flux-result representation
-* [ ] Define heat-balance-result representation
-* [ ] Define provenance/source fingerprints
-* [ ] Define result-currentness semantics
-* [ ] Define stale-result semantics
-* [ ] Define failure-result semantics
-* [ ] Units explicit
-* [ ] Deterministic ordering
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Define `ThermalAnalysisId`
+* [x] Define `ThermalLoadId`
+* [x] Define `ThermalBoundaryConditionId`
+* [x] Define analysis state
+* [x] Define steady solver settings
+* [x] Define transient solver settings
+* [x] Define initial-condition representation
+* [x] Define temperature-result representation
+* [x] Define gradient-result representation
+* [x] Define heat-flux-result representation
+* [x] Define heat-balance-result representation
+* [x] Define provenance/source fingerprints
+* [x] Define result-currentness semantics
+* [x] Define stale-result semantics
+* [x] Define failure-result semantics
+* [x] Units explicit
+* [x] Deterministic ordering
+* [x] Regression PASS
+* [x] Evidence recorded
+
+```text
+PASS 2026-10-17. Qualified against e6fded3 plus the working tree:
+4084/4084 x 3 presets, 1213 x 5 in two, 0 warnings over 665 objects,
+17 stages exit 0, 3h40m44s, fingerprints at the freeze == before ==
+after. ThermalAnalysisId (a document object), ThermalLoadId and
+ThermalBoundaryConditionId in core/Id.hpp; TemperatureGradient, HeatFlux,
+HeatTransferCoefficient and VolumetricHeatSource in core/units; the
+canonical ThermalAnalysis document object with strict per-mode
+validation; the immutable ThermalResult bound to its mesh stamp with a
+revision-tuple source (body, control, geometry, mesh, material + revision,
+analysis + revision, mode); currentness by source identity, never arrays
+or sizes -- a remesh with identical NodeIds is stale; six derived states
+and ThermalResultSlot, where a failure is never current and never
+resurrects a stale result. 36 data cases, 24 compile-fail cases, 25
+mutation probes (23 killed, 1 equivalent, 1 recorded), 42 adversarial
+questions, 0 production defects. Evidence: docs/verification/P18-DATA-001/.
+```
 
 ```text
 CANONICAL   thermal analysis definition, loads, boundary conditions, initial

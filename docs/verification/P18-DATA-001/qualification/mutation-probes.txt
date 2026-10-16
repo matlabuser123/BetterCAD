@@ -1,0 +1,34 @@
+﻿P18-DATA-001 mutation probes started 10/16/2026 18:35:43
+M01-omit-mesh-from-stale-reasons : VERDICT: KILLED : TESTS exit 42 : test cases:   36 |   33 passed | 3 failed | assertions: 2349 | 2345 passed | 4 failed
+M02-omit-material-revision-from-source : VERDICT: KILLED : TESTS exit 42 : test cases:   36 |   34 passed | 2 failed | assertions: 2349 | 2343 passed | 6 failed
+M03-omit-mode-from-source : VERDICT: KILLED : TESTS exit 42 : test cases:   36 |   34 passed | 2 failed | assertions: 2217 | 2214 passed | 3 failed
+M04-omit-analysis-revision-from-source : VERDICT: KILLED : TESTS exit 42 : test cases:   36 |   34 passed |  2 failed | assertions: 2349 | 2315 passed | 34 failed
+M05-omit-mode-from-stale-reasons : VERDICT: KILLED : TESTS exit 42 : test cases:   36 |   33 passed | 3 failed | assertions: 2349 | 2344 passed | 5 failed
+M06-currentness-by-analysis-id-only : VERDICT: KILLED : TESTS exit 42 : test cases:   36 |   29 passed |  7 failed | assertions: 2349 | 2316 passed | 33 failed
+M07-describes-ignores-the-stamp : VERDICT: KILLED : TESTS exit 42 : test cases:   36 |   35 passed | 1 failed | assertions: 2348 | 2346 passed | 2 failed
+M08-create-skips-the-stamp-check : VERDICT: KILLED : TESTS exit 42 : test cases:   36 |   35 passed | 1 failed | assertions: 2348 | 2347 passed | 1 failed
+M09-failure-does-not-take-precedence : BUILD FAILED (exit 1) -- DID NOT COMPILE, VOID : 
+M10-failure-discards-the-result : VERDICT: KILLED : TESTS exit 42 : test cases:   36 |   35 passed | 1 failed | assertions: 2334 | 2333 passed | 1 failed
+M11-failure-recorded-as-success :     (void)failure; VERDICT: KILLED : TESTS exit 42 : test cases:   36 |   34 passed | 2 failed | assertions: 2336 | 2333 passed | 3 failed
+M12-steady-accepts-an-initial-condition : VERDICT: KILLED : TESTS exit 42 : test cases:   36 |   35 passed | 1 failed | assertions: 2348 | 2347 passed | 1 failed
+M13-transient-does-not-need-an-initial-condition :     if (const Result<void> initial = validate(*definition.initialCondition); !initial.has_value()) { VERDICT: KILLED : TESTS exit 42 : test cases:   36 |   35 passed | 1 failed | assertions: 2348 | 2346 passed | 2 failed
+M14-no-op-edit-moves-the-revision : VERDICT: KILLED : TESTS exit 42 : test cases:   36 |   35 passed | 1 failed | assertions: 2349 | 2346 passed | 3 failed
+M15-duplicate-load-ids-accepted : VERDICT: KILLED : TESTS exit 42 : test cases:   36 |   35 passed | 1 failed | assertions: 2348 | 2347 passed | 1 failed
+M16-dt-zero-accepted : VERDICT: KILLED : TESTS exit 42 : test cases:   36 |   34 passed | 2 failed | assertions: 2347 | 2344 passed | 3 failed
+M17-h-zero-accepted : VERDICT: KILLED : TESTS exit 42 : test cases:   36 |   35 passed | 1 failed | assertions: 2342 | 2341 passed | 1 failed
+M18-negative-kelvin-accepted : VERDICT: KILLED : TESTS exit 42 : test cases:   36 |   31 passed | 5 failed | assertions: 2329 | 2323 passed | 6 failed
+M19-swapped-flux-components : VERDICT: KILLED : TESTS exit 42 : test cases:   36 |   35 passed | 1 failed | assertions: 2349 | 2347 passed | 2 failed
+M20-steady-result-accepts-a-stored-energy-rate : VERDICT: KILLED : TESTS exit 42 : test cases:   36 |   35 passed | 1 failed | assertions: 2348 | 2347 passed | 1 failed
+M21-normalized-imbalance-magic-zero : VERDICT: KILLED : TESTS exit 42 : test cases:   36 |   35 passed | 1 failed | assertions: 2349 | 2348 passed | 1 failed
+M22-roster-unsorted : VERDICT: SURVIVED : TESTS exit 0 : All tests passed (2349 assertions in 36 test cases)
+M23-roster-through-an-unordered-set : BUILD FAILED (exit 1) -- DID NOT COMPILE, VOID : 
+M24-a-celsius-unit-appears : VERDICT: SURVIVED : TESTS exit 0 : All tests passed (2599 assertions in 39 test cases)
+P18-DATA-001 mutation probes finished 10/16/2026 19:56:21
+P18-DATA-001 mutation probes, batch 2, started 10/16/2026 20:00:38
+tree verified clean of earlier mutations
+M09b-failure-does-not-take-precedence :   replace:     (void)lastFailure; VERDICT: KILLED : TESTS exit 42 : test cases:   36 |   33 passed | 3 failed | assertions: 2349 | 2343 passed | 6 failed
+M23c-roster-through-an-unordered-set : VERDICT: KILLED : TESTS exit 42 : test cases:   36 |   34 passed | 2 failed | assertions: 2349 | 2345 passed | 4 failed
+M23c: restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalAnalysisObject.cpp
+M24b-a-celsius-unit-in-the-catalog : VERDICT: KILLED : TESTS exit 42 : test cases:   39 |   37 passed | 2 failed | assertions: 2593 | 2591 passed | 2 failed
+M24b: restored C:\Users\hasib\OneDrive\Desktop\CAD\include\bettercad\core\units\Units.hpp
+batch 2 finished 10/16/2026 20:42:48

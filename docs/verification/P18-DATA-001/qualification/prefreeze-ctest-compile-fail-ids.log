@@ -1,0 +1,78 @@
+Test project C:/Users/hasib/bcdev/bc-build/debug-ext
+      Start 3988: compile_fail.structids.analysis-id-as-load-id
+ 1/36 Test #3988: compile_fail.structids.analysis-id-as-load-id ............................   Passed    5.76 sec
+      Start 3989: compile_fail.structids.load-id-as-restraint-id
+ 2/36 Test #3989: compile_fail.structids.load-id-as-restraint-id ...........................   Passed    6.49 sec
+      Start 3990: compile_fail.structids.restraint-id-as-load-id
+ 3/36 Test #3990: compile_fail.structids.restraint-id-as-load-id ...........................   Passed    7.44 sec
+      Start 3991: compile_fail.structids.load-id-as-object-id
+ 4/36 Test #3991: compile_fail.structids.load-id-as-object-id ..............................   Passed    6.75 sec
+      Start 3992: compile_fail.structids.restraint-id-as-object-id
+ 5/36 Test #3992: compile_fail.structids.restraint-id-as-object-id .........................   Passed    6.72 sec
+      Start 3993: compile_fail.structids.dof-index-as-object-id
+ 6/36 Test #3993: compile_fail.structids.dof-index-as-object-id ............................   Passed    6.83 sec
+      Start 3994: compile_fail.structids.dof-index-as-node-id
+ 7/36 Test #3994: compile_fail.structids.dof-index-as-node-id ..............................   Passed    6.70 sec
+      Start 3995: compile_fail.structids.node-id-as-dof-index
+ 8/36 Test #3995: compile_fail.structids.node-id-as-dof-index ..............................   Passed    7.13 sec
+      Start 3996: compile_fail.structids.dof-index-as-integer
+ 9/36 Test #3996: compile_fail.structids.dof-index-as-integer ..............................   Passed    6.88 sec
+      Start 3997: compile_fail.structids.integer-as-load-id
+10/36 Test #3997: compile_fail.structids.integer-as-load-id ................................   Passed    6.46 sec
+      Start 3998: compile_fail.structids.node-id-as-load-id
+11/36 Test #3998: compile_fail.structids.node-id-as-load-id ................................   Passed    6.10 sec
+      Start 3999: compile_fail.structids.node-id-as-restraint-id
+12/36 Test #3999: compile_fail.structids.node-id-as-restraint-id ...........................   Passed    6.58 sec
+      Start 4061: compile_fail.thermalids.thermal-analysis-id-as-thermal-load-id
+13/36 Test #4061: compile_fail.thermalids.thermal-analysis-id-as-thermal-load-id ...........   Passed    7.71 sec
+      Start 4062: compile_fail.thermalids.thermal-analysis-id-as-boundary-condition-id
+14/36 Test #4062: compile_fail.thermalids.thermal-analysis-id-as-boundary-condition-id .....   Passed    8.31 sec
+      Start 4063: compile_fail.thermalids.thermal-load-id-as-boundary-condition-id
+15/36 Test #4063: compile_fail.thermalids.thermal-load-id-as-boundary-condition-id .........   Passed    7.59 sec
+      Start 4064: compile_fail.thermalids.boundary-condition-id-as-thermal-load-id
+16/36 Test #4064: compile_fail.thermalids.boundary-condition-id-as-thermal-load-id .........   Passed    7.02 sec
+      Start 4065: compile_fail.thermalids.thermal-load-id-as-object-id
+17/36 Test #4065: compile_fail.thermalids.thermal-load-id-as-object-id .....................   Passed    7.20 sec
+      Start 4066: compile_fail.thermalids.boundary-condition-id-as-object-id
+18/36 Test #4066: compile_fail.thermalids.boundary-condition-id-as-object-id ...............   Passed    7.67 sec
+      Start 4067: compile_fail.thermalids.node-id-as-thermal-analysis-id
+19/36 Test #4067: compile_fail.thermalids.node-id-as-thermal-analysis-id ...................   Passed    8.44 sec
+      Start 4068: compile_fail.thermalids.node-id-as-thermal-load-id
+20/36 Test #4068: compile_fail.thermalids.node-id-as-thermal-load-id .......................   Passed    8.48 sec
+      Start 4069: compile_fail.thermalids.element-id-as-thermal-load-id
+21/36 Test #4069: compile_fail.thermalids.element-id-as-thermal-load-id ....................   Passed    7.51 sec
+      Start 4070: compile_fail.thermalids.structural-load-id-as-thermal-load-id
+22/36 Test #4070: compile_fail.thermalids.structural-load-id-as-thermal-load-id ............   Passed    6.94 sec
+      Start 4071: compile_fail.thermalids.structural-analysis-id-as-thermal-analysis-id
+23/36 Test #4071: compile_fail.thermalids.structural-analysis-id-as-thermal-analysis-id ....   Passed    7.43 sec
+      Start 4072: compile_fail.thermalids.thermal-analysis-id-as-structural-analysis-id
+24/36 Test #4072: compile_fail.thermalids.thermal-analysis-id-as-structural-analysis-id ....   Passed    8.26 sec
+      Start 4073: compile_fail.thermalids.a-heat-flux-load-does-not-target-a-node
+25/36 Test #4073: compile_fail.thermalids.a-heat-flux-load-does-not-target-a-node ..........   Passed    8.78 sec
+      Start 4074: compile_fail.thermalids.a-temperature-is-not-a-heat-flux
+26/36 Test #4074: compile_fail.thermalids.a-temperature-is-not-a-heat-flux .................   Passed    8.45 sec
+      Start 4075: compile_fail.thermalids.a-conductivity-is-not-a-convection-coefficient
+27/36 Test #4075: compile_fail.thermalids.a-conductivity-is-not-a-convection-coefficient ...   Passed    6.87 sec
+      Start 4076: compile_fail.thermalids.a-heat-flux-is-not-a-temperature
+28/36 Test #4076: compile_fail.thermalids.a-heat-flux-is-not-a-temperature .................   Passed    6.78 sec
+      Start 4077: compile_fail.thermalids.the-mode-is-not-a-bool
+29/36 Test #4077: compile_fail.thermalids.the-mode-is-not-a-bool ...........................   Passed    8.10 sec
+      Start 4078: compile_fail.thermalids.integer-as-thermal-load-id
+30/36 Test #4078: compile_fail.thermalids.integer-as-thermal-load-id .......................   Passed    8.96 sec
+      Start 4079: compile_fail.thermalids.a-result-source-cannot-be-rewritten
+31/36 Test #4079: compile_fail.thermalids.a-result-source-cannot-be-rewritten ..............   Passed    8.12 sec
+      Start 4080: compile_fail.thermalids.a-result-has-no-temperature-setter
+32/36 Test #4080: compile_fail.thermalids.a-result-has-no-temperature-setter ...............   Passed    7.00 sec
+      Start 4081: compile_fail.thermalids.a-result-temperature-is-read-only
+33/36 Test #4081: compile_fail.thermalids.a-result-temperature-is-read-only ................   Passed    6.85 sec
+      Start 4082: compile_fail.thermalids.the-definition-has-no-temperatures
+34/36 Test #4082: compile_fail.thermalids.the-definition-has-no-temperatures ...............   Passed    8.13 sec
+      Start 4083: compile_fail.thermalids.the-definition-has-no-conductivity-matrix
+35/36 Test #4083: compile_fail.thermalids.the-definition-has-no-conductivity-matrix ........   Passed    7.46 sec
+      Start 4084: compile_fail.thermalids.the-definition-has-no-result
+36/36 Test #4084: compile_fail.thermalids.the-definition-has-no-result .....................   Passed    7.95 sec
+
+100% tests passed out of 36
+
+Total Test time (real) = 268.84 sec
+ctest exit 0 

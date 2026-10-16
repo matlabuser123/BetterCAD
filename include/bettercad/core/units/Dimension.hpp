@@ -102,6 +102,23 @@ inline constexpr Dimension massMomentOfInertia = mass * area;
 /// inertia, and the type system checks that: (M L^-3)(L^5) = M L^2.
 inline constexpr Dimension volumeSecondMoment = volume * area;
 
+// Heat-conduction dimensions (P18-DATA-001), composed like the rest so the
+// composition is the proof. Each one is what Fourier's law and a heat balance
+// need and P15 did not: P15 characterised the MATERIAL (k, cp, alpha) and these
+// characterise the FIELD and its BOUNDARY.
+/// K/m. The gradient of a temperature field: Theta L^-1.
+inline constexpr Dimension temperatureGradient = temperature / length;
+/// W/m^2. Heat flow per unit area: M T^-3. By Fourier's law a heat flux is a
+/// conductivity times a temperature gradient, and the type system checks that:
+/// (M L T^-3 Theta^-1)(Theta L^-1) = M T^-3.
+inline constexpr Dimension heatFlux = power / area;
+/// W/(m^2 K). A convection coefficient: heat flux per kelvin of difference,
+/// M T^-3 Theta^-1. NOT a thermal conductivity -- that is per metre, this is
+/// per square metre -- and the dimensions keep the two apart.
+inline constexpr Dimension heatTransferCoefficient = heatFlux / temperature;
+/// W/m^3. Volumetric heat generation: M L^-1 T^-3.
+inline constexpr Dimension volumetricHeatSource = power / volume;
+
 } // namespace dimensions
 
 } // namespace bettercad

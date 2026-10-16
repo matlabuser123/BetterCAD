@@ -39,6 +39,9 @@ bettercad_add_library(bettercad_thermal
     EXPORT_HEADER bettercad/thermal/Export.hpp
     SOURCES
         ThermalAnalysis.cpp
+        ThermalAnalysisObject.cpp
+        ThermalData.cpp
+        ThermalResult.cpp
     PUBLIC_LINK
         BetterCAD::core
         BetterCAD::features

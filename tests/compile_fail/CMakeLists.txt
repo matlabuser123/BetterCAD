@@ -754,3 +754,51 @@ bettercad_compile_fail_case(structcmd "${_structcmd}" A_COMMAND_IS_NOT_COPYABLE
     "use of deleted function|deleted" BetterCAD::structural)
 bettercad_compile_fail_case(structcmd "${_structcmd}" THE_DEFINITION_DOES_NOT_TAKE_A_MESH
     "could not convert|cannot convert|no match for|no viable overloaded" BetterCAD::structural)
+
+# Thermal identity and data model (P18-DATA-001). The thermal sibling of the
+# structids group, plus the cross-phase cases that group could not have: a
+# structural LoadId or AnalysisId offered where a thermal one is wanted, and
+# the reverse. The last cases enforce the canonical/derived line by type: a
+# flux load cannot take a node, a temperature cannot be typed as a flux, a
+# conductivity cannot be typed as a convection coefficient, the definition has
+# no member for T, K or a result, and a result has no setter and no mutable
+# view. The one widening the model permits, ThermalAnalysisId to ObjectId, is
+# exercised by the control rather than by a case.
+set(_thermalids "${CMAKE_CURRENT_SOURCE_DIR}/ThermalIdMisuse.cpp")
+bettercad_compile_fail_group(thermalids "${_thermalids}" BetterCAD::thermal)
+foreach(_case
+        THERMAL_ANALYSIS_ID_AS_THERMAL_LOAD_ID
+        THERMAL_ANALYSIS_ID_AS_BOUNDARY_CONDITION_ID
+        THERMAL_LOAD_ID_AS_BOUNDARY_CONDITION_ID
+        BOUNDARY_CONDITION_ID_AS_THERMAL_LOAD_ID
+        THERMAL_LOAD_ID_AS_OBJECT_ID
+        BOUNDARY_CONDITION_ID_AS_OBJECT_ID
+        NODE_ID_AS_THERMAL_ANALYSIS_ID
+        NODE_ID_AS_THERMAL_LOAD_ID
+        ELEMENT_ID_AS_THERMAL_LOAD_ID
+        STRUCTURAL_LOAD_ID_AS_THERMAL_LOAD_ID
+        STRUCTURAL_ANALYSIS_ID_AS_THERMAL_ANALYSIS_ID
+        THERMAL_ANALYSIS_ID_AS_STRUCTURAL_ANALYSIS_ID
+        A_HEAT_FLUX_LOAD_DOES_NOT_TARGET_A_NODE
+        A_TEMPERATURE_IS_NOT_A_HEAT_FLUX
+        A_CONDUCTIVITY_IS_NOT_A_CONVECTION_COEFFICIENT
+        A_HEAT_FLUX_IS_NOT_A_TEMPERATURE
+        THE_MODE_IS_NOT_A_BOOL)
+    bettercad_compile_fail_case(thermalids "${_thermalids}" ${_case}
+        "could not convert|cannot convert|no matching function|no match for|invalid conversion"
+        BetterCAD::thermal)
+endforeach()
+bettercad_compile_fail_case(thermalids "${_thermalids}" INTEGER_AS_THERMAL_LOAD_ID
+    "conversion from [^ ]*int[^ ]* to non-scalar type|could not convert" BetterCAD::thermal)
+bettercad_compile_fail_case(thermalids "${_thermalids}" A_RESULT_SOURCE_CANNOT_BE_REWRITTEN
+    "read-only|discards qualifiers" BetterCAD::thermal)
+bettercad_compile_fail_case(thermalids "${_thermalids}" A_RESULT_HAS_NO_TEMPERATURE_SETTER
+    "no member named|has no member" BetterCAD::thermal)
+bettercad_compile_fail_case(thermalids "${_thermalids}" A_RESULT_TEMPERATURE_IS_READ_ONLY
+    "read-only|discards qualifiers|no match for" BetterCAD::thermal)
+bettercad_compile_fail_case(thermalids "${_thermalids}" THE_DEFINITION_HAS_NO_TEMPERATURES
+    "no member named|has no member" BetterCAD::thermal)
+bettercad_compile_fail_case(thermalids "${_thermalids}" THE_DEFINITION_HAS_NO_CONDUCTIVITY_MATRIX
+    "no member named|has no member" BetterCAD::thermal)
+bettercad_compile_fail_case(thermalids "${_thermalids}" THE_DEFINITION_HAS_NO_RESULT
+    "no member named|has no member" BetterCAD::thermal)

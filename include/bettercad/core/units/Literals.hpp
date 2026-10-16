@@ -158,6 +158,20 @@ constexpr KinematicViscosity operator""_m2_per_s(long double v) noexcept { retur
 constexpr KinematicViscosity operator""_m2_per_s(unsigned long long v) noexcept { return detail::quantityFromLiteral(v, units::m2_per_s); }
 constexpr KinematicViscosity operator""_mm2_per_s(long double v) noexcept { return detail::quantityFromLiteral(v, units::mm2_per_s); }
 constexpr KinematicViscosity operator""_mm2_per_s(unsigned long long v) noexcept { return detail::quantityFromLiteral(v, units::mm2_per_s); }
+
+// Heat-conduction quantities (P18-DATA-001)
+// TemperatureGradient
+constexpr TemperatureGradient operator""_K_per_m(long double v) noexcept { return detail::quantityFromLiteral(v, units::K_per_m); }
+constexpr TemperatureGradient operator""_K_per_m(unsigned long long v) noexcept { return detail::quantityFromLiteral(v, units::K_per_m); }
+// HeatFlux
+constexpr HeatFlux operator""_W_per_m2(long double v) noexcept { return detail::quantityFromLiteral(v, units::W_per_m2); }
+constexpr HeatFlux operator""_W_per_m2(unsigned long long v) noexcept { return detail::quantityFromLiteral(v, units::W_per_m2); }
+// HeatTransferCoefficient
+constexpr HeatTransferCoefficient operator""_W_per_m2_K(long double v) noexcept { return detail::quantityFromLiteral(v, units::W_per_m2_K); }
+constexpr HeatTransferCoefficient operator""_W_per_m2_K(unsigned long long v) noexcept { return detail::quantityFromLiteral(v, units::W_per_m2_K); }
+// VolumetricHeatSource
+constexpr VolumetricHeatSource operator""_W_per_m3(long double v) noexcept { return detail::quantityFromLiteral(v, units::W_per_m3); }
+constexpr VolumetricHeatSource operator""_W_per_m3(unsigned long long v) noexcept { return detail::quantityFromLiteral(v, units::W_per_m3); }
 // clang-format on
 
 } // namespace literals

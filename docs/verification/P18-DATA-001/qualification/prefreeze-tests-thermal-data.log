@@ -1,0 +1,50 @@
+Filters: [thermal] [data]
+Randomness seeded to: 1470053482
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+bettercad_tests.exe is a Catch2 v3.16.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+ThermalData_AMaterialEditStalesTheResultAndNotTheMesh
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalDataTests.cpp:1270
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalDataTests.cpp:1295: warning:
+  a thermal conductivity edit, 45 -> 50 W/(m K): mesh current, result stale,
+  reason material
+
+-------------------------------------------------------------------------------
+ThermalData_SameIdsNewMeshGenerationIsStale
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalDataTests.cpp:1010
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalDataTests.cpp:1050: warning:
+  remesh of the same body: 9 nodes with identical NodeIds and 12 tetrahedra
+  either way; stamps differ; result stale for reason mesh
+
+-------------------------------------------------------------------------------
+ThermalData_DeterministicCanonicalOrdering
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalDataTests.cpp:1639
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalDataTests.cpp:1690: warning:
+  6 analysis states, 3 stale reasons and a roster of 4 analyses, all
+  deterministic over 16 runs
+
+-------------------------------------------------------------------------------
+ThermalData_AResultDoesNotCopyTheMeshAndItsSizeIsIndependentOfTheMesh
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalDataTests.cpp:1556
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalDataTests.cpp:1630: warning:
+  coarse 9 nodes, fine 178 nodes and 741 tetrahedra; sizeof(ThermalResult) =
+  216 bytes either way
+
+===============================================================================
+All tests passed (2349 assertions in 36 test cases)
+

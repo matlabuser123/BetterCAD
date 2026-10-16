@@ -39,6 +39,20 @@ using MassMomentOfInertia = Quantity<dimensions::massMomentOfInertia>;
 /// by dimension rather than by convention.
 using VolumeSecondMoment = Quantity<dimensions::volumeSecondMoment>;
 
+// Heat-conduction quantities (P18-DATA-001). The FIELD and its BOUNDARY, where
+// P15's thermal quantities are the material's.
+/// grad(T), in K/m. One component of a temperature gradient.
+using TemperatureGradient = Quantity<dimensions::temperatureGradient>;
+/// q, in W/m^2. One component of a heat flux, or a surface heat flux load.
+/// `ThermalConductivity * TemperatureGradient` IS a HeatFlux, by dimension.
+using HeatFlux = Quantity<dimensions::heatFlux>;
+/// h, in W/(m^2 K). A convection coefficient. `HeatTransferCoefficient *
+/// Temperature` IS a HeatFlux, which is how a convection boundary enters the
+/// balance, and the type system checks it.
+using HeatTransferCoefficient = Quantity<dimensions::heatTransferCoefficient>;
+/// q''', in W/m^3. Volumetric heat generation.
+using VolumetricHeatSource = Quantity<dimensions::volumetricHeatSource>;
+
 /// Stress and elastic moduli, which are pressures dimensionally.
 ///
 /// THESE ARE ALIASES AND NOT DISTINCT TYPES, and saying so is the point. A
@@ -207,6 +221,14 @@ inline constexpr Unit<dimensions::massMomentOfInertia> kg_mm2{"kg mm^2", {1.0, 1
 // OCCT model space is millimetres: 1 mm^5 = 1e-15 m^5.
 inline constexpr Unit<dimensions::volumeSecondMoment> m5{"m^5", {1.0, 1.0}};
 inline constexpr Unit<dimensions::volumeSecondMoment> mm5{"mm^5", {1.0, 1.0e15}};
+
+// Heat conduction (P18-DATA-001). SI only, one unit per dimension: a thermal
+// result is expressed in these and in K, and no other scale exists for a
+// consumer to pick by mistake.
+inline constexpr Unit<dimensions::temperatureGradient> K_per_m{"K/m", {1.0, 1.0}};
+inline constexpr Unit<dimensions::heatFlux> W_per_m2{"W/m^2", {1.0, 1.0}};
+inline constexpr Unit<dimensions::heatTransferCoefficient> W_per_m2_K{"W/(m^2 K)", {1.0, 1.0}};
+inline constexpr Unit<dimensions::volumetricHeatSource> W_per_m3{"W/m^3", {1.0, 1.0}};
 
 } // namespace units
 
