@@ -204,9 +204,27 @@ out-of-line symbol of the three new headers is behind
 
 ## The commit record
 
-The milestone commit's hash and the comparison of its eight subtree hashes
-with the frozen fingerprint can only be written after that commit exists, so
-they land in a documentation commit that follows it, as every milestone since
-P16-QUAL-001 has done. `docs/` is outside the fingerprint by construction, and
-anyone can re-check the eight lines against whatever `HEAD` is current with
-the one command P16-QUAL-001 gave.
+```text
+commit             314166e339a875b41461b09bd906808c98711a5e
+                   "BetterCAD: add thermal analysis data model",
+                   parent e6fded3; the fingerprint recomputed from a scratch
+                   index (read-tree HEAD + add -A over the eight paths)
+                   immediately before `git add`, then read back with
+                   git rev-parse <commit>^{tree}:<path>
+apps               a95876bc6dbf843d4e0cec114059bc196fa16175   == frozen
+include            5b4d1dfbd362823779373f679f7a715b6f388ee9   == frozen
+src                4fbeceef5f669bdfd9d065683055598986c23624   == frozen
+tests              de83d2e5092413f76ff59ca9b62ffd470b2753e7   == frozen
+examples           a955cf6511ce715fcb95bc06ef82b877535869e6   == frozen
+cmake              5a382115d7ed7775189d40b55e40f318eaae6cc7   == frozen
+CMakeLists.txt     3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd   == frozen
+CMakePresets.json  3229f0f89b236744d7d5c082bed47c28b718288e   == frozen
+```
+
+All eight equal, at all five readings: the freeze, the post-pre-freeze
+recheck, the harness before the first build, the harness after the last test
+run, and the commit. This record could only be written after the commit
+existed, so it lands in a documentation commit that follows it; `docs/` is
+outside the fingerprint by construction, and anyone can re-check the eight
+lines against whatever `HEAD` is current with the one command P16-QUAL-001
+gave.
