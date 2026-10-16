@@ -179,9 +179,12 @@ enum class ResultCurrency : std::uint8_t {
 ///
 /// Fails for exactly the reasons `requireThermalModel` fails, because it
 /// calls it: every gate ADR-051 established is inherited rather than
-/// re-asked. On top of that it reads the analysis, its revision and mode,
-/// and the material's identity and revision, which the input boundary has no
-/// reason to know about.
+/// re-asked. On top of that it resolves the material FOR THE ANALYSIS'S MODE
+/// through `resolveThermalMaterial` (P18-MAT-001) -- so a transient analysis
+/// whose material lacks a density or a specific heat has no current source
+/// and is `InputsUnavailable`, while a steady one on the same material is
+/// `Ready` -- and reads the analysis, its revision and mode, and the
+/// material's identity and revision from that resolution.
 [[nodiscard]] BETTERCAD_THERMAL_EXPORT Result<ThermalResultSource>
 currentResultSource(const Document& document, const features::Regenerator& regenerator,
                     const meshing::Mesher& mesher, ThermalAnalysisId analysis);
@@ -200,9 +203,12 @@ enum class AnalysisState : std::uint8_t {
     /// The document has no thermal analysis with that id.
     NoAnalysis,
     /// The analysis is defined but its inputs do not resolve: the geometry is
-    /// ineligible, no mesh is current, or the material is missing or cannot
-    /// conduct. `thermalInputProblem` says which. The brief's "defined" state:
-    /// a definition exists and nothing can yet be computed from it.
+    /// ineligible, no mesh is current, the material is missing or cannot
+    /// conduct, or -- for a transient analysis -- the material lacks the
+    /// density or specific heat the mode requires (`thermalMaterialProblem`,
+    /// P18-MAT-001). `thermalInputProblem` names the first group. The brief's
+    /// "defined" state: a definition exists and nothing can yet be computed
+    /// from it.
     InputsUnavailable,
     /// Every input resolves and nothing has been solved yet.
     Ready,

@@ -22,18 +22,19 @@ Prerequisite:
            (OCCT never subdivides a developable wall along its ruling).
 
 Current milestone:
-           none. P18-DATA-001 — Thermal Analysis Data Model. COMPLETE at
-           19 of 19 and qualified 2026-10-17 against e6fded3 plus the
-           working tree: 4084/4084 x 3 presets, 1213 x 5 in two, 0 warnings
-           over 665 objects, 17 stages exit 0, 3h40m44s, fingerprints at
-           the freeze == before == after. Three thermal document
-           identities, four heat-conduction quantities, the canonical
-           ThermalAnalysis document object, the immutable ThermalResult with
-           a revision-tuple source, currentness by source identity, six
-           derived states and the result lifecycle; 36 data cases, 24
-           compile-fail cases, 25 mutation probes, 503 files and 0 layering
-           violations. Evidence: docs/verification/P18-DATA-001/.
-           P18-ARCH-001 PASSED 2026-10-16 (docs/verification/P18-ARCH-001/).
+           none. P18-MAT-001 — Thermal Material Resolution. COMPLETE at
+           19 of 19 and qualified 2026-10-17 against 843469a plus the
+           working tree: 4115/4115 x 3 presets, 1244 x 5 in two, 0 warnings
+           over 667 objects, 17 stages exit 0, 3h51m07s, fingerprints at
+           the freeze == before == after. P15 consumed, not extended: the
+           per-mode resolver reads P15's requirement table (steady k;
+           transient k, rho, cp), returns a source-bound derived view, and
+           the result source resolves the material for the analysis's mode;
+           a material edit leaves the P16 mesh current and stales the
+           result. 31 cases, 14 mutation probes, 505 files and 0 layering
+           violations. Evidence: docs/verification/P18-MAT-001/.
+           P18-ARCH-001 PASSED 2026-10-16, P18-DATA-001 PASSED 2026-10-17
+           (docs/verification/P18-ARCH-001/, docs/verification/P18-DATA-001/).
 
 Qualified:
            P0–P10 — BetterCAD v0.1.0
@@ -46,8 +47,8 @@ Qualified:
            P17 — Structural FEA
 
 Next:
-           P18-MAT-001 — Thermal Material Resolution. NOT AUTHORIZED:
-           P18-DATA-001 passing is not permission to start it; each
+           P18-DOF-001 — Temperature DOF Model. NOT AUTHORIZED:
+           P18-MAT-001 passing is not permission to start it; each
            milestone is started by the owner, as every P17 milestone was.
 
 P17 objective, as delivered:
@@ -457,25 +458,46 @@ DERIVED     thermal DOF map, K, C, Q, T, grad(T), q, balance results,
 Reuse P15 canonical materials. Required properties: `k` [W/(m K)], `rho`
 [kg/m3], `cp` [J/(kg K)].
 
-* [ ] Resolve thermal conductivity from P15
-* [ ] Resolve density
-* [ ] Resolve specific heat
-* [ ] Define which properties steady analysis requires
-* [ ] Define which properties transient analysis requires
-* [ ] Reject missing conductivity
-* [ ] Reject missing density for transient analysis
-* [ ] Reject missing specific heat for transient analysis
-* [ ] Reject non-finite values
-* [ ] Require `k > 0`
-* [ ] Require `rho > 0` where required
-* [ ] Require `cp > 0` where required
-* [ ] Preserve material provenance
-* [ ] Material edit stales thermal result
-* [ ] Material edit does NOT stale P16 mesh
-* [ ] No P18 material database
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Resolve thermal conductivity from P15
+* [x] Resolve density
+* [x] Resolve specific heat
+* [x] Define which properties steady analysis requires
+* [x] Define which properties transient analysis requires
+* [x] Reject missing conductivity
+* [x] Reject missing density for transient analysis
+* [x] Reject missing specific heat for transient analysis
+* [x] Reject non-finite values
+* [x] Require `k > 0`
+* [x] Require `rho > 0` where required
+* [x] Require `cp > 0` where required
+* [x] Preserve material provenance
+* [x] Material edit stales thermal result
+* [x] Material edit does NOT stale P16 mesh
+* [x] No P18 material database
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded
+
+```text
+PASS 2026-10-17. Qualified against 843469a plus the working tree:
+4115/4115 x 3 presets, 1244 x 5 in two, 0 warnings over 667 objects,
+17 stages exit 0, 3h51m07s, fingerprints at the freeze == before ==
+after. NO P15 SCHEMA CHANGE: k, rho and cp are P15's, validated at entry
+by P15, and resolved through P15's own require* functions.
+resolveThermalMaterial(document, body, mode) returns a derived,
+source-bound ThermalMaterial -- MaterialId, revision, mode, k always, a
+rho/cp ThermalCapacity exactly when the mode is transient -- with the
+requirement READ from P15's table: steady needs k only, transient needs
+k, rho and cp. The result source now resolves the material for the
+analysis's mode, so a transient analysis on a k-only material is
+InputsUnavailable where a steady one is Ready. A k, rho, cp or E edit
+leaves the P16 mesh current (same stamp, same NodeIds) and stales the
+result for reason material alone, under whole-material revision as P17.
+No default, clamp, abs, epsilon, cache or database. 31 cases, 14
+mutation probes (13 killed, 1 refused by the compiler, 0 survived), 38
+adversarial questions, 0 production defects. Evidence:
+docs/verification/P18-MAT-001/.
+```
 
 ---
 # P18-DOF-001

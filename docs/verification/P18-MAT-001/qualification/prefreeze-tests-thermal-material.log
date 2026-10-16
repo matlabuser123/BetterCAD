@@ -1,0 +1,32 @@
+Filters: [thermal] [material]
+Randomness seeded to: 1934256250
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+bettercad_tests.exe is a Catch2 v3.16.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+ThermalMaterial_TheResolverStillAsksP15RatherThanAssumingValidity
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalMaterialTests.cpp:715
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalMaterialTests.cpp:736: warning:
+  an unusable VALUE cannot reach a document, because P15 refuses it at entry;
+  an ABSENT required property can, and the resolver refuses that through P15's
+  own words
+
+-------------------------------------------------------------------------------
+ThermalMaterial_AConductivityEditLeavesTheMeshCurrentAndStalesTheResult
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalMaterialTests.cpp:900
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalMaterialTests.cpp:948: warning:
+  k 42.75 -> 50 W/(m K): mesh current, stamp and NodeIds unchanged, geometry
+  revision unchanged, meshing intent unchanged; result source stale on material
+  alone
+
+===============================================================================
+All tests passed (1529 assertions in 31 test cases)
+

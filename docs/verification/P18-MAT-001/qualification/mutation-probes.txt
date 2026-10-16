@@ -1,0 +1,20 @@
+﻿P18-MAT-001 mutation probes started 10/17/2026 02:04:45
+MAT01-steady-requires-rho-and-cp : VERDICT: KILLED : TESTS exit 42 : test cases:   31 |   23 passed |  8 failed | assertions: 1490 | 1475 passed | 15 failed
+MAT02-transient-ignores-rho-and-cp : VERDICT: KILLED : TESTS exit -1073740791 : 
+MAT03-consumerFor-maps-transient-to-steady : VERDICT: KILLED : TESTS exit -1073740791 : 
+MAT04-missing-k-becomes-a-default : VERDICT: KILLED : TESTS exit 42 : test cases:   31 |   27 passed | 4 failed | assertions: 1495 | 1488 passed | 7 failed
+MAT05-missing-rho-cp-become-defaults : VERDICT: KILLED : TESTS exit 42 : test cases:   31 |   23 passed |  8 failed | assertions: 1427 | 1410 passed | 17 failed
+MAT06-cp-divided-by-1000 : VERDICT: KILLED : TESTS exit 42 : test cases:   31 |   25 passed |  6 failed | assertions: 1506 | 1496 passed | 10 failed
+MAT07-rho-divided-by-1000 : VERDICT: KILLED : TESTS exit 42 : test cases:   31 |   25 passed |  6 failed | assertions: 1506 | 1495 passed | 11 failed
+MAT08-k-in-mm : VERDICT: KILLED : TESTS exit 42 : test cases:   31 |   24 passed |  7 failed | assertions: 1506 | 1479 passed | 27 failed
+MAT09-rho-and-cp-swapped : BUILD FAILED (exit 1) -- DID NOT COMPILE, VOID : 
+MAT10-provenance-is-the-id-alone : VERDICT: KILLED : TESTS exit 42 : test cases:   67 |   62 passed |  5 failed | assertions: 3855 | 3835 passed | 20 failed
+MAT11-result-source-ignores-the-mode : VERDICT: KILLED : TESTS exit 42 : test cases:   31 |   30 passed | 1 failed | assertions: 1495 | 1494 passed | 1 failed
+MAT12-body-check-removed : VERDICT: KILLED : TESTS exit 42 : test cases:   31 |   29 passed | 2 failed | assertions: 1505 | 1502 passed | 3 failed
+MAT13-capability-transient-equals-steady : VERDICT: KILLED : TESTS exit 42 : test cases:   31 |   30 passed | 1 failed | assertions: 1506 | 1503 passed | 3 failed
+MAT14-no-material-reported-as-property-unavailable : VERDICT: KILLED : TESTS exit 42 : test cases:   31 |   27 passed | 4 failed | assertions: 1506 | 1500 passed | 6 failed
+P18-MAT-001 mutation probes finished 10/17/2026 02:42:43
+P18-MAT-001 mutation probes, batch 2, started 10/17/2026 02:48:53
+MAT02b-transient-ignores-rho-and-cp : VERDICT: KILLED : TESTS exit 42 : test cases:   31 |   18 passed | 13 failed | assertions: 1442 | 1390 passed | 52 failed
+MAT03b-consumerFor-maps-transient-to-steady : VERDICT: KILLED : TESTS exit 42 : test cases:   31 |   17 passed | 14 failed | assertions: 1440 | 1385 passed | 55 failed
+batch 2 finished 10/17/2026 02:54:12

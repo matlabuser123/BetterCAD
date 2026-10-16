@@ -84,6 +84,8 @@ set(_filters
     # proves the thermal identities do not convert.
     "unit\\.ThermalData" 20
     "compile_fail\\.thermalids\\." 12
+    # P18-MAT-001. The thermal material resolution cases.
+    "unit\\.ThermalMaterial" 15
 )
 list(LENGTH _filters _count)
 math(EXPR _last "${_count} - 1")

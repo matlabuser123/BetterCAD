@@ -4,10 +4,9 @@
 #include <bettercad/thermal/ThermalResult.hpp>
 
 #include <bettercad/core/document/Document.hpp>
-#include <bettercad/features/Material.hpp>
-#include <bettercad/features/Materials.hpp>
 #include <bettercad/features/Regenerator.hpp>
 #include <bettercad/thermal/ThermalAnalysis.hpp>
+#include <bettercad/thermal/ThermalMaterial.hpp>
 
 #include <algorithm>
 #include <format>
@@ -204,10 +203,16 @@ Result<ThermalResultSource> currentResultSource(const Document& document,
         return std::unexpected(model.error());
     }
 
-    // The material's identity and revision, which the input boundary has no
-    // reason to carry: it needs k, and currentness needs to know whether the
-    // material k came from has since been edited.
-    const Result<const features::Material*> material = features::requireEffectiveMaterial(document);
+    // THE MATERIAL FOR THIS MODE, THROUGH P18-MAT-001. The input boundary
+    // established a usable k, which is all a STEADY analysis needs; a
+    // transient one needs a density and a specific heat as well, and whether
+    // it has them is this call's question. A transient analysis on a material
+    // characterised only by k therefore has no current source, so it is
+    // InputsUnavailable rather than Ready -- and a steady one on the same
+    // material is Ready. The material's identity and revision come from the
+    // same resolution, so the source names exactly what was consumed.
+    const Result<ThermalMaterial> material =
+        resolveThermalMaterial(document, model->body(), intent->definition().mode);
     if (!material.has_value()) {
         return std::unexpected(material.error());
     }
@@ -217,8 +222,8 @@ Result<ThermalResultSource> currentResultSource(const Document& document,
         .control = model->control(),
         .geometry = model->geometryRevision(),
         .mesh = model->mesh().mesh().stamp(),
-        .material = (*material)->materialId(),
-        .materialRevision = (*material)->revision(),
+        .material = material->id(),
+        .materialRevision = material->revision(),
         .analysis = analysis,
         .analysisRevision = intent->revision(),
         .mode = intent->definition().mode,

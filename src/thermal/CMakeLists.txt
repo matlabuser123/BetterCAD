@@ -41,6 +41,7 @@ bettercad_add_library(bettercad_thermal
         ThermalAnalysis.cpp
         ThermalAnalysisObject.cpp
         ThermalData.cpp
+        ThermalMaterial.cpp
         ThermalResult.cpp
     PUBLIC_LINK
         BetterCAD::core
