@@ -187,3 +187,49 @@ token in this directory or in the message, commits, and reads the eight
 subtree hashes back out of the commit's tree. Its output, with the commit
 hash, is appended to this file by the follow-up documentation commit, because
 a commit cannot carry its own hash.
+
+### The commit record
+
+```text
+commit    72872de0dc7963e73c89807517c4579b22adb389
+subject   BetterCAD: add linear Tet4 thermal element
+tree      72ae0b5a3c38cdf76962dc30d123a893e7e774a5
+parent    d4800f79e394d8a893526707a82c68b1600095df   (P18-DOF-001's record commit)
+date      2026-10-18 08:12:12 +1000
+files     79 files changed, 123573 insertions(+), 45 deletions(-)
+          ROADMAP.md                                                                              |     4 +- 1   TODO.md                                                                                 |   116 +- 1   docs 69   include 1   src 2   tests 5
+
+recomputed from a scratch index immediately before the commit
+  apps               a95876bc6dbf843d4e0cec114059bc196fa16175   == frozen
+  include            655275dd348a91fe20bb771157aca08077fc70a4   == frozen
+  src                762b0a9c6d4430bf17309b8ae9477604bba4193e   == frozen
+  tests              6dd667361cbc723897342d956d8c6b9dbf64b8d1   == frozen
+  examples           a955cf6511ce715fcb95bc06ef82b877535869e6   == frozen
+  cmake              5a382115d7ed7775189d40b55e40f318eaae6cc7   == frozen
+  CMakeLists.txt     3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd   == frozen
+  CMakePresets.json  3229f0f89b236744d7d5c082bed47c28b718288e   == frozen
+
+read back from 72872de0^{tree} after the commit
+  all eight                                                     == frozen
+  "ALL EIGHT == FROZEN"
+
+untracked left behind   .claude/ only (the session's settings, never committed)
+message                 no BOM (first bytes 66,101,116), no fill-in token
+```
+
+qualified == committed: the tree the three presets built and tested in the
+qualifying run (2026-10-18 03:57:49 to 08:08:24) is, under every one of the
+eight paths, the tree commit 72872de0 carries. The files under `docs/` are this
+directory: the evidence, the harness copies, the mutation scripts and
+summaries, the logs of the qualifying run, and the preserved logs of the
+first attempt.
+
+```text
+origin/main at the time of this record   a3b721b150338cc1cbd24ee592a11a70a6196c0c
+unpushed, oldest first                   7e7578f  e6fded3  314166e  843469a
+                                         448eb5e  d40001c  daea78b  d4800f7
+                                         72872de  (+ this record)
+```
+
+The push is the owner's; this record is written before it and does not
+claim it.
