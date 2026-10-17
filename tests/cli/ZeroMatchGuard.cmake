@@ -90,6 +90,21 @@ set(_filters
     # that proves the solver-local indices do not convert.
     "unit\\.ThermalDof" 20
     "compile_fail\\.thermaldof\\." 8
+    # P18-ELEM-001. The Tet4 thermal element cases, by the brief's seven
+    # groups -- geometry, orientation and degeneracy, conduction, capacity,
+    # transforms, scaling, determinism -- each under its own name prefix so a
+    # targeted run of any one group can be seen to have matched something;
+    # and the compile-fail group that proves the quantities and the local
+    # matrices do not convert.
+    "unit\\.ThermalElement" 40
+    "unit\\.ThermalElement_(UnitTet|GeneralTet|ShapeGradient|Affine|Constant)" 5
+    "unit\\.ThermalElement_(Inverted|Coplanar|Coincident|NearDegenerate|NonFinite)" 4
+    "unit\\.ThermalElement_Conduct" 8
+    "unit\\.ThermalElement_(Capacity|OnePoint|Density|SpecificHeat)" 8
+    "unit\\.ThermalElement_(Translation|Rotation|Gradient|Reflection|Even|Odd)" 5
+    "unit\\.ThermalElement_(GeometryScaling|ConductivityScaling)" 2
+    "unit\\.ThermalElement_(Repeat|NoHidden|BitFingerprint)" 3
+    "compile_fail\\.thermalelem\\." 8
 )
 list(LENGTH _filters _count)
 math(EXPR _last "${_count} - 1")

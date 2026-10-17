@@ -837,3 +837,41 @@ bettercad_compile_fail_case(thermaldof "${_thermaldof}" THE_DEFINITION_HAS_NO_DO
     "no member named|has no member" BetterCAD::thermal)
 bettercad_compile_fail_case(thermaldof "${_thermaldof}" THE_DEFINITION_HAS_NO_CONSTRAINED_DOFS
     "no member named|has no member" BetterCAD::thermal)
+# Tet4 thermal element kernel (P18-ELEM-001). The inputs and outputs are
+# dimensioned and distinct: a conductivity is not a double or a density, the
+# capacity pair is two distinct quantities that cannot be swapped (a swap
+# gives the same product at runtime, so the type is the only place it can be
+# caught), W/K is not J/K, a gradient is not a temperature; the capacity call
+# takes no conductivity and the conduction has no capacity total; corners are
+# coordinates, not node handles and not unknowns; and the three value types
+# cannot be conjured.
+set(_thermalelem "${CMAKE_CURRENT_SOURCE_DIR}/ThermalElementMisuse.cpp")
+bettercad_compile_fail_group(thermalelem "${_thermalelem}" BetterCAD::thermal)
+foreach(_case
+        A_CONDUCTIVITY_IS_NOT_A_DOUBLE
+        A_DENSITY_IS_NOT_A_CONDUCTIVITY
+        CAPACITY_TAKES_NO_CONDUCTIVITY
+        A_CAPACITY_PAIR_IS_NOT_TWO_DOUBLES
+        RHO_AND_CP_ARE_NOT_INTERCHANGEABLE
+        A_CONDUCTANCE_IS_NOT_A_HEAT_CAPACITY
+        A_HEAT_CAPACITY_IS_NOT_A_CONDUCTANCE
+        A_GRADIENT_IS_NOT_A_TEMPERATURE
+        CORNERS_ARE_NOT_NODE_IDS
+        CORNERS_ARE_NOT_DOF_INDICES
+        TEMPERATURES_ARE_NOT_DOUBLES)
+    bettercad_compile_fail_case(thermalelem "${_thermalelem}" ${_case}
+        "could not convert|cannot convert|no matching function|no match for|invalid conversion|invalid initialization of reference"
+        BetterCAD::thermal)
+endforeach()
+bettercad_compile_fail_case(thermalelem "${_thermalelem}" GEOMETRY_CONSTRUCTED_DIRECTLY
+    "is private within this context|private" BetterCAD::thermal)
+bettercad_compile_fail_case(thermalelem "${_thermalelem}" CONDUCTION_CONSTRUCTED_DIRECTLY
+    "is private within this context|private" BetterCAD::thermal)
+bettercad_compile_fail_case(thermalelem "${_thermalelem}" CAPACITY_CONSTRUCTED_DIRECTLY
+    "is private within this context|private" BetterCAD::thermal)
+bettercad_compile_fail_case(thermalelem "${_thermalelem}" THE_GEOMETRY_HAS_NO_CONDUCTIVITY
+    "no member named|has no member" BetterCAD::thermal)
+bettercad_compile_fail_case(thermalelem "${_thermalelem}" THE_CONDUCTION_HAS_NO_CAPACITY_TOTAL
+    "no member named|has no member" BetterCAD::thermal)
+bettercad_compile_fail_case(thermalelem "${_thermalelem}" THE_CAPACITY_HAS_NO_LUMPED_VARIANT
+    "no member named|has no member" BetterCAD::thermal)

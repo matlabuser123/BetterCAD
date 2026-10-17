@@ -22,23 +22,26 @@ Prerequisite:
            (OCCT never subdivides a developable wall along its ruling).
 
 Current milestone:
-           none. P18-DOF-001 — Temperature DOF Model. COMPLETE at 12 of 12
-           and qualified 2026-10-17 against d40001c plus the working tree:
-           4163/4163 x 3 presets, 1277 x 5 in two, 0 warnings over 670
-           objects, 17 stages exit 0, 3h44m12s, fingerprints at the freeze
-           == before == after. One scalar temperature unknown per P16 node,
-           numbered from the mesh's own enumeration and bound to its stamp
-           and count; ThermalDofIndex is a distinct type from NodeId,
-           ElementId, the free row and P17's DofIndex; the constraint map
-           carries the prescribed temperature in kelvin (300 K and 350 K
-           survive exactly), collapses exact duplicates and refuses
-           conflicts; the free map is compact and re-derives its complement.
-           33 cases, 15 compile-fail cases, 17 mutation probes, 507 files
-           and 0 layering violations. Evidence: docs/verification/P18-DOF-001/.
-           P18-ARCH-001 PASSED 2026-10-16, P18-DATA-001 and P18-MAT-001
-           PASSED 2026-10-17 (docs/verification/P18-ARCH-001/,
-           docs/verification/P18-DATA-001/, docs/verification/P18-MAT-001/).
-
+           none. P18-ELEM-001 — Linear Tet4 Thermal Element. COMPLETE at
+           21 of 21 and qualified 2026-10-18 against d4800f7 plus the
+           working tree: 4240/4240 x 3 presets, 1337 x 5 in two, 0 warnings
+           over 673 objects, 17 stages exit 0, 4h10m35s, fingerprints at
+           the freeze == before == after, on the second attempt at the one
+           frozen candidate (the first had one stage fail on the unrelated,
+           documented Windows file-replace flake and is preserved, not
+           counted). The local element: shape-function gradients G (3x4),
+           the conduction matrix Ke = V k G^T G in W/K, and the CONSISTENT
+           capacity matrix Ce = rho cp V/20 [2 1 1 1; ...] in J/K, from the
+           P16 corner order, with an inverted tetrahedron refused and never
+           reordered. 60 cases, 17 compile-fail cases, 33 mutation probes,
+           509 files and 0 layering violations. One production defect found
+           by the milestone's own test and fixed: the exact-zero degeneracy
+           rule inherited from P16 and P17 accepts zero-volume tetrahedra
+           (885 of 2000 fixtures); replaced by a derived scale-aware bound.
+           The same gap in P17's kernel is RECORDED for the owner, not
+           changed. Evidence: docs/verification/P18-ELEM-001/.
+           P18-ARCH-001 PASSED 2026-10-16; P18-DATA-001, P18-MAT-001 and
+           P18-DOF-001 PASSED 2026-10-17 (docs/verification/P18-*/).
 Qualified:
            P0–P10 — BetterCAD v0.1.0
            P11 — Advanced Part Modelling
@@ -50,8 +53,8 @@ Qualified:
            P17 — Structural FEA
 
 Next:
-           P18-ELEM-001 — Linear Tet4 Thermal Element. NOT AUTHORIZED:
-           P18-DOF-001 passing is not permission to start it; each
+           P18-LOAD-001 — Thermal Loads. NOT AUTHORIZED:
+           P18-ELEM-001 passing is not permission to start it; each
            milestone is started by the owner, as every P17 milestone was.
 
 P17 objective, as delivered:
@@ -562,27 +565,60 @@ transient capacity     Ce = integral rho cp N^T N dV
 units                  Ke -> W/K      Ce -> J/K
 ```
 
-* [ ] Define local node order
-* [ ] Define Jacobian convention
-* [ ] Define signed volume convention
-* [ ] Reject inverted Tet
-* [ ] Reject degenerate Tet
-* [ ] Define shape-function gradients
-* [ ] Implement conduction matrix
-* [ ] Implement transient capacity matrix
-* [ ] Define consistent vs lumped capacity policy
-* [ ] Check symmetry
-* [ ] Check positive-semidefinite conduction behaviour
-* [ ] Check capacity matrix positivity
-* [ ] Translation invariance
-* [ ] Rotation invariance for isotropic `k`
-* [ ] Geometry scaling validation
-* [ ] Conductivity scaling validation
-* [ ] Independent analytical oracle
-* [ ] Determinism PASS
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Define local node order
+* [x] Define Jacobian convention
+* [x] Define signed volume convention
+* [x] Reject inverted Tet
+* [x] Reject degenerate Tet
+* [x] Define shape-function gradients
+* [x] Implement conduction matrix
+* [x] Implement transient capacity matrix
+* [x] Define consistent vs lumped capacity policy
+* [x] Check symmetry
+* [x] Check positive-semidefinite conduction behaviour
+* [x] Check capacity matrix positivity
+* [x] Translation invariance
+* [x] Rotation invariance for isotropic `k`
+* [x] Geometry scaling validation
+* [x] Conductivity scaling validation
+* [x] Independent analytical oracle
+* [x] Determinism PASS
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded
+
+```text
+PASS 2026-10-18. Qualified against d4800f7 plus the working tree:
+4240/4240 x 3 presets, 1337 x 5 in two, 0 warnings over 673 objects,
+17 stages exit 0, 4h10m35s, fingerprints at the freeze == before ==
+after; second attempt on the one frozen candidate, the first (one
+unrelated Windows file-replace flake in a drawing CLI test, 30/30 in
+isolation) preserved under qualification/run1-failed/.
+Local order [n1,n2,n3,n4] as P16 stores it, never sorted. J has the edge
+vectors from corner 1 as columns; det J = e1.(e2 x e3) grouped as
+meshing::signedVolume, and V = det J / 6 agrees with it bit for bit; no
+absolute value repairs a sign. G is 3x4 (row = axis, column = corner),
+grad T = G Te, mapped by J^-T. Ke = V k G^T G [W/K]: symmetric
+(max |Kij - Kji| = 0), row sums 2.7e-16, constant null mode, positive
+semidefinite with rank 3 / nullity 1, energy identity Te^T Ke Te = k V |G Te|^2
+against an independent right-hand side. Capacity policy = CONSISTENT: Ce =
+rho cp V/20 [2 1 1 1; 1 2 1 1; 1 1 2 1; 1 1 1 2] [J/K], symmetric positive
+definite, rank 4, spectrum rho cp V/4 (once) and rho cp V/20 (three
+times), total heat capacity rho cp V, and NOT the one-point centroid
+matrix (rank 1, same row sums). Translation, proper rotation, even
+permutation covariance and geometry scaling (V s^3, G 1/s, Ke s, Ce s^3)
+hold; the six odd permutations and the reflected tetrahedron are refused.
+The independent oracle is the [1 x y z] inverse plus hand matrices; it
+shares no code with production. Steady Ke needs only k; Ce needs only rho
+and cp. DEGENERACY: P16 and P17's exact-zero rule accepted 885 of 2000
+exactly-degenerate tetrahedra (rounding noise in the determinant of
+non-integer coordinates); the kernel uses |det J| <= 16 eps |e1||e2||e3|,
+derived from the rounding bound (analytic 4 eps, measured 1.01 eps). The
+same gap in P17's Tet4Element.cpp is recorded, not changed. Results are
+bitwise identical across the three presets. 60 cases, 17 compile-fail
+cases, 33 mutation probes (33 killed), 44 adversarial attacks, 6 findings.
+Evidence: docs/verification/P18-ELEM-001/.
+```
 
 ---
 # P18-LOAD-001
