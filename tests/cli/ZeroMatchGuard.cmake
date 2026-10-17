@@ -86,6 +86,10 @@ set(_filters
     "compile_fail\\.thermalids\\." 12
     # P18-MAT-001. The thermal material resolution cases.
     "unit\\.ThermalMaterial" 15
+    # P18-DOF-001. The temperature DOF model cases, and the compile-fail group
+    # that proves the solver-local indices do not convert.
+    "unit\\.ThermalDof" 20
+    "compile_fail\\.thermaldof\\." 8
 )
 list(LENGTH _filters _count)
 math(EXPR _last "${_count} - 1")

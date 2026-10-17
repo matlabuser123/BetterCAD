@@ -802,3 +802,38 @@ bettercad_compile_fail_case(thermalids "${_thermalids}" THE_DEFINITION_HAS_NO_CO
     "no member named|has no member" BetterCAD::thermal)
 bettercad_compile_fail_case(thermalids "${_thermalids}" THE_DEFINITION_HAS_NO_RESULT
     "no member named|has no member" BetterCAD::thermal)
+# Temperature DOF index space (P18-DOF-001). The thermal sibling of structdof:
+# a node ordinal is not a node handle, a row of the reduced system is not an
+# unknown of the full one, neither is an integer, a prescribed temperature is a
+# Temperature and not a double or a bit, the three maps cannot be conjured, and
+# the canonical analysis definition has no member for any of them.
+set(_thermaldof "${CMAKE_CURRENT_SOURCE_DIR}/ThermalDofMisuse.cpp")
+bettercad_compile_fail_group(thermaldof "${_thermaldof}" BetterCAD::thermal)
+foreach(_case
+        NODE_ID_AS_THERMAL_DOF
+        THERMAL_DOF_AS_NODE_ID
+        ELEMENT_ID_AS_THERMAL_DOF
+        THERMAL_DOF_AS_FREE_EQUATION
+        FREE_EQUATION_AS_THERMAL_DOF
+        THERMAL_DOF_FROM_INTEGER
+        A_CONSTRAINT_TAKES_A_TEMPERATURE_NOT_A_DOUBLE)
+    bettercad_compile_fail_case(thermaldof "${_thermaldof}" ${_case}
+        "could not convert|cannot convert|no matching function|no match for|invalid conversion"
+        BetterCAD::thermal)
+endforeach()
+bettercad_compile_fail_case(thermaldof "${_thermaldof}" THERMAL_DOF_AS_INTEGER
+    "cannot convert .*ThermalDofIndex.*" BetterCAD::thermal)
+bettercad_compile_fail_case(thermaldof "${_thermaldof}" THERMAL_DOF_DEFAULT_CONSTRUCTED
+    "use of deleted function|deleted" BetterCAD::thermal)
+bettercad_compile_fail_case(thermaldof "${_thermaldof}" FREE_EQUATION_DEFAULT_CONSTRUCTED
+    "use of deleted function|deleted" BetterCAD::thermal)
+bettercad_compile_fail_case(thermaldof "${_thermaldof}" DOF_MAP_CONSTRUCTED_DIRECTLY
+    "is private within this context|private" BetterCAD::thermal)
+bettercad_compile_fail_case(thermaldof "${_thermaldof}" CONSTRAINT_MAP_CONSTRUCTED_DIRECTLY
+    "is private within this context|private" BetterCAD::thermal)
+bettercad_compile_fail_case(thermaldof "${_thermaldof}" FREE_EQUATION_MAP_CONSTRUCTED_DIRECTLY
+    "is private within this context|private" BetterCAD::thermal)
+bettercad_compile_fail_case(thermaldof "${_thermaldof}" THE_DEFINITION_HAS_NO_DOF_MAP
+    "no member named|has no member" BetterCAD::thermal)
+bettercad_compile_fail_case(thermaldof "${_thermaldof}" THE_DEFINITION_HAS_NO_CONSTRAINED_DOFS
+    "no member named|has no member" BetterCAD::thermal)

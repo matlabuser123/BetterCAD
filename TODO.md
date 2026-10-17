@@ -22,19 +22,22 @@ Prerequisite:
            (OCCT never subdivides a developable wall along its ruling).
 
 Current milestone:
-           none. P18-MAT-001 — Thermal Material Resolution. COMPLETE at
-           19 of 19 and qualified 2026-10-17 against 843469a plus the
-           working tree: 4115/4115 x 3 presets, 1244 x 5 in two, 0 warnings
-           over 667 objects, 17 stages exit 0, 3h51m07s, fingerprints at
-           the freeze == before == after. P15 consumed, not extended: the
-           per-mode resolver reads P15's requirement table (steady k;
-           transient k, rho, cp), returns a source-bound derived view, and
-           the result source resolves the material for the analysis's mode;
-           a material edit leaves the P16 mesh current and stales the
-           result. 31 cases, 14 mutation probes, 505 files and 0 layering
-           violations. Evidence: docs/verification/P18-MAT-001/.
-           P18-ARCH-001 PASSED 2026-10-16, P18-DATA-001 PASSED 2026-10-17
-           (docs/verification/P18-ARCH-001/, docs/verification/P18-DATA-001/).
+           none. P18-DOF-001 — Temperature DOF Model. COMPLETE at 12 of 12
+           and qualified 2026-10-17 against d40001c plus the working tree:
+           4163/4163 x 3 presets, 1277 x 5 in two, 0 warnings over 670
+           objects, 17 stages exit 0, 3h44m12s, fingerprints at the freeze
+           == before == after. One scalar temperature unknown per P16 node,
+           numbered from the mesh's own enumeration and bound to its stamp
+           and count; ThermalDofIndex is a distinct type from NodeId,
+           ElementId, the free row and P17's DofIndex; the constraint map
+           carries the prescribed temperature in kelvin (300 K and 350 K
+           survive exactly), collapses exact duplicates and refuses
+           conflicts; the free map is compact and re-derives its complement.
+           33 cases, 15 compile-fail cases, 17 mutation probes, 507 files
+           and 0 layering violations. Evidence: docs/verification/P18-DOF-001/.
+           P18-ARCH-001 PASSED 2026-10-16, P18-DATA-001 and P18-MAT-001
+           PASSED 2026-10-17 (docs/verification/P18-ARCH-001/,
+           docs/verification/P18-DATA-001/, docs/verification/P18-MAT-001/).
 
 Qualified:
            P0–P10 — BetterCAD v0.1.0
@@ -47,8 +50,8 @@ Qualified:
            P17 — Structural FEA
 
 Next:
-           P18-DOF-001 — Temperature DOF Model. NOT AUTHORIZED:
-           P18-MAT-001 passing is not permission to start it; each
+           P18-ELEM-001 — Linear Tet4 Thermal Element. NOT AUTHORIZED:
+           P18-DOF-001 passing is not permission to start it; each
            milestone is started by the owner, as every P17 milestone was.
 
 P17 objective, as delivered:
@@ -506,18 +509,46 @@ docs/verification/P18-MAT-001/.
 
 Initial thermal model: 1 scalar temperature DOF per node.
 
-* [ ] Define thermal `DofIndex`
-* [ ] Define deterministic node → thermal DOF mapping
-* [ ] Define constrained/free thermal equations
-* [ ] Define temperature constraint map
-* [ ] Bind DOF map to exact P16 mesh source
-* [ ] Remesh invalidates old thermal DOF map
-* [ ] NodeId is not used as raw equation number
-* [ ] No thermal DOF IDs persisted as canonical intent
-* [ ] Sparse NodeId tests
-* [ ] Determinism PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Define thermal `DofIndex`
+* [x] Define deterministic node → thermal DOF mapping
+* [x] Define constrained/free thermal equations
+* [x] Define temperature constraint map
+* [x] Bind DOF map to exact P16 mesh source
+* [x] Remesh invalidates old thermal DOF map
+* [x] NodeId is not used as raw equation number
+* [x] No thermal DOF IDs persisted as canonical intent
+* [x] Sparse NodeId tests
+* [x] Determinism PASS
+* [x] Regression PASS
+* [x] Evidence recorded
+
+```text
+PASS 2026-10-17. Qualified against d40001c plus the working tree:
+4163/4163 x 3 presets, 1277 x 5 in two, 0 warnings over 670 objects,
+17 stages exit 0, 3h44m12s, fingerprints at the freeze == before ==
+after. ThermalDofIndex is the node's ordinal in the P16 mesh's own
+enumeration -- zero-based, no default, no invalid value -- and indexes
+P18-DATA-001's nodal temperature array directly; it is a distinct type
+from NodeId, ElementId, ThermalFreeEquationIndex and P17's DofIndex (15
+compile-fail cases). Sparse handles 7 / 104 / 9001 / 500000 number to
+0 / 1 / 2 / 3 with four handles of storage; a handle near 2^32 gives a
+two-entry map. ThermalDofMap is bound to the mesh's stamp AND node count:
+a remesh with identical counts and NodeIds is refused by stamp, two
+snapshots of one builder by count; material, load, solver and BC edits
+leave it current and equal to a rebuild. The constraint map stores the
+prescribed temperature in kelvin -- 300 K and 350 K survive exactly, a
+free unknown has no prescribed value rather than 0 K -- collapses exact
+duplicates, refuses conflicts naming both, and refuses NaN, infinity and
+sub-zero by the absolute-temperature rule; nothing and everything
+prescribed are representable. The free map numbers rows compactly in
+ascending unknown order, a constrained unknown has no row, agreesWith
+re-derives the complement, and reconstruction rebuilds [310 300 320 330
+350]. Element-local unknowns keep the element's node order. No thermal
+DOF index is persisted or constructible from the definition. 33 cases
+(21 480 assertions), 17 mutation probes (17 killed, 0 survived), 37
+adversarial attacks, 2 test-method findings, 0 production defects.
+Evidence: docs/verification/P18-DOF-001/.
+```
 
 ---
 # P18-ELEM-001
