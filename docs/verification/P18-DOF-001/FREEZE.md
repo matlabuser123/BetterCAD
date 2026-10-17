@@ -126,3 +126,47 @@ fill-in token in this directory or in the message, commits, and reads
 the eight subtree hashes back out of the commit's tree. Its output, with the
 commit hash, is appended to this file by the follow-up documentation commit,
 because a commit cannot carry its own hash.
+
+### The commit record
+
+```text
+commit    daea78be0d8ae3d6bd8b0b504e0c5fd541b5596b
+subject   BetterCAD: add thermal temperature DOF model
+tree      3ca0a117063cf359a118c2aa6c22dcd793331417
+parent    d40001ca68382ebc71295fcee413cdc9e6f125f7   (P18-MAT-001's record commit)
+date      2026-10-17 20:22:59 +1000
+files     59 changed, 65 279 insertions, 30 deletions
+          include 1   src 2   tests 5   docs 49   TODO.md   ROADMAP.md
+
+recomputed from a scratch index immediately before the commit
+  apps               a95876bc6dbf843d4e0cec114059bc196fa16175   == frozen
+  include            f5477fa04f211206185502d87a4c24c494e14d84   == frozen
+  src                1cc3182e1e385e964664fa143516fdec8c969f04   == frozen
+  tests              023734eb5ff478258ee5f61487f03902e320fb84   == frozen
+  examples           a955cf6511ce715fcb95bc06ef82b877535869e6   == frozen
+  cmake              5a382115d7ed7775189d40b55e40f318eaae6cc7   == frozen
+  CMakeLists.txt     3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd   == frozen
+  CMakePresets.json  3229f0f89b236744d7d5c082bed47c28b718288e   == frozen
+
+read back from daea78be^{tree} after the commit
+  all eight                                                     == frozen
+  "ALL EIGHT == FROZEN"
+
+untracked left behind   .claude/ only (the session's settings, never committed)
+message                 no BOM (first bytes 66,101,116), no fill-in token
+```
+
+qualified == committed: the tree the three presets built and tested between
+16:28:50 and 20:13:03 is, under every one of the eight paths, the tree commit
+daea78be carries. The 49 files under `docs/` are this directory: the
+evidence, the harness copies, the mutation scripts and summaries, and the
+five qualification logs per preset.
+
+```text
+origin/main at the time of this record   a3b721b150338cc1cbd24ee592a11a70a6196c0c
+unpushed, oldest first                   7e7578f  e6fded3  314166e  843469a
+                                         448eb5e  d40001c  daea78b  (+ this record)
+```
+
+The push is the owner's; this record is written before it and does not
+claim it.
