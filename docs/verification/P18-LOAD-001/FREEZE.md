@@ -162,3 +162,46 @@ token in this directory or in the message, commits, and reads the eight
 subtree hashes back out of the commit's tree. Its output, with the commit
 hash, is appended to this file by the follow-up documentation commit, because
 a commit cannot carry its own hash.
+
+### The commit record
+
+```text
+commit    a96cedae2db71101363bdbf9663890061c172189
+subject   BetterCAD: add thermal heat loads
+tree      ba93283d7c532b010bb108d5cc9a8e0691c16db9
+parent    f10f5f07694bc3c5cec001a485eaaf9f1f5eee30   (P18-ELEM-001's record commit)
+date      2026-10-18 22:20:39 +1000
+files     72 files changed, 71348 insertions(+), 43 deletions(-)
+          ROADMAP.md 1   TODO.md 1   docs 60   include 2   src 3   tests 5
+
+recomputed from a scratch index immediately before the commit
+  apps               a95876bc6dbf843d4e0cec114059bc196fa16175   == frozen
+  include            1822fe06db1599e3e67c41d4e031a9ffb3702b51   == frozen
+  src                f1e63c1a5e1407bf687b16f8e2232abeebe3799e   == frozen
+  tests              4bfc1876b3db3a179f86efca456cd52ab50086e9   == frozen
+  examples           a955cf6511ce715fcb95bc06ef82b877535869e6   == frozen
+  cmake              5a382115d7ed7775189d40b55e40f318eaae6cc7   == frozen
+  CMakeLists.txt     3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd   == frozen
+  CMakePresets.json  3229f0f89b236744d7d5c082bed47c28b718288e   == frozen
+
+read back from a96cedae^{tree} after the commit
+  all eight                                                     == frozen
+  "ALL EIGHT == FROZEN"
+
+untracked left behind   .claude/ only (the session's settings, never committed)
+message                 no BOM (first bytes 66,101,116), no fill-in token
+```
+
+qualified == committed: the tree the three presets built and tested in the
+qualifying run (2026-10-18 17:51:35 to 22:13:03) is, under every one of the
+eight paths, the tree commit a96cedae carries. The files under `docs/` are this
+directory: the evidence, the harness copies, the mutation scripts and
+summaries, the logs of the qualifying run and the post-run measurements.
+
+```text
+origin/main at the time of this record   f10f5f07694bc3c5cec001a485eaaf9f1f5eee30
+unpushed, oldest first                   a96cedae  (+ this record)
+```
+
+The push is the owner's; this record is written before it and does not
+claim it.
