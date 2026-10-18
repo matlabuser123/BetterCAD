@@ -105,6 +105,22 @@ set(_filters
     "unit\\.ThermalElement_(GeometryScaling|ConductivityScaling)" 2
     "unit\\.ThermalElement_(Repeat|NoHidden|BitFingerprint)" 3
     "compile_fail\\.thermalelem\\." 8
+    # P18-LOAD-001. The thermal load cases, by the brief's groups -- surface,
+    # volume, mapping, remesh and currentness, sparse identities, superposition,
+    # invalid input, determinism -- each under its own name prefix so a targeted
+    # run of any one group can be seen to have matched something; and the
+    # compile-fail group that proves the load values, identities and the
+    # prepared type do not convert.
+    "unit\\.ThermalLoad" 66
+    "unit\\.ThermalLoad_(Surface|SingleTriangle|GeneralTriangle|Triangulation|FacetWinding)" 10
+    "unit\\.ThermalLoad_(Volume|UnitTet|GeneralTet|Generation|SharedVolume|MultiTet)" 10
+    "unit\\.ThermalLoad_(GeometryReference|Unresolved|Malformed|NoNearest|Empty|Target|OneInvalid)" 7
+    "unit\\.ThermalLoad_(Prepared|Remesh|SameCounts|SameIds|Edit|Material|Solver|Geometry|Document)" 12
+    "unit\\.ThermalLoad_(Sparse|LargeSparse)" 3
+    "unit\\.ThermalLoad_(.*Superposition|SignedCancellation|LoadOrder)" 5
+    "unit\\.ThermalLoad_(Rejects|Zero|Duplicate|Repeated|ANumbering|Every|NonFinite)" 12
+    "unit\\.ThermalLoad_(RepeatedPreparation|Diagnostics|BitFingerprint)" 3
+    "compile_fail\\.thermalload\\." 19
 )
 list(LENGTH _filters _count)
 math(EXPR _last "${_count} - 1")

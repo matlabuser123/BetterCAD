@@ -1,0 +1,11 @@
+[1/11] Checking git revision
+[2/11] Building CXX object src/core/CMakeFiles/bettercad_core.dir/__/__/generated/src/core/GitRevision.cpp.obj
+[3/11] Linking CXX static library lib\libbettercad_core.a
+[4/11] Linking CXX executable bin\bettercad_example_geometry_accuracy.exe
+[5/11] Building CXX object tests/compile_fail/CMakeFiles/bettercad_cf_thermalload_control.dir/ThermalLoadMisuse.cpp.obj
+[6/11] Building CXX object src/thermal/CMakeFiles/bettercad_thermal.dir/ThermalLoadVector.cpp.obj
+[7/11] Linking CXX static library lib\libbettercad_thermal.a
+[8/11] Linking CXX executable bin\bettercad.exe; Deploying Qt runtime for bettercad
+[9/11] Linking CXX executable bin\bettercad_example_reference_models.exe
+[10/11] Linking CXX executable bin\bettercad-cli.exe
+[11/11] Linking CXX executable bin\bettercad_tests.exe

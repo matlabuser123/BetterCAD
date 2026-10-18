@@ -22,26 +22,25 @@ Prerequisite:
            (OCCT never subdivides a developable wall along its ruling).
 
 Current milestone:
-           none. P18-ELEM-001 — Linear Tet4 Thermal Element. COMPLETE at
-           21 of 21 and qualified 2026-10-18 against d4800f7 plus the
-           working tree: 4240/4240 x 3 presets, 1337 x 5 in two, 0 warnings
-           over 673 objects, 17 stages exit 0, 4h10m35s, fingerprints at
-           the freeze == before == after, on the second attempt at the one
-           frozen candidate (the first had one stage fail on the unrelated,
-           documented Windows file-replace flake and is preserved, not
-           counted). The local element: shape-function gradients G (3x4),
-           the conduction matrix Ke = V k G^T G in W/K, and the CONSISTENT
-           capacity matrix Ce = rho cp V/20 [2 1 1 1; ...] in J/K, from the
-           P16 corner order, with an inverted tetrahedron refused and never
-           reordered. 60 cases, 17 compile-fail cases, 33 mutation probes,
-           509 files and 0 layering violations. One production defect found
-           by the milestone's own test and fixed: the exact-zero degeneracy
-           rule inherited from P16 and P17 accepts zero-volume tetrahedra
-           (885 of 2000 fixtures); replaced by a derived scale-aware bound.
-           The same gap in P17's kernel is RECORDED for the owner, not
-           changed. Evidence: docs/verification/P18-ELEM-001/.
-           P18-ARCH-001 PASSED 2026-10-16; P18-DATA-001, P18-MAT-001 and
-           P18-DOF-001 PASSED 2026-10-17 (docs/verification/P18-*/).
+           none. P18-LOAD-001 — Thermal Loads. COMPLETE at 18 of 18 and
+           qualified 2026-10-18 against f10f5f0 plus the working tree:
+           4325/4325 x 3 presets, 1403 x 5 in two, 0 warnings over 677
+           objects, 17 stages exit 0, 4h21m28s, fingerprints at the freeze
+           == before == after, in ONE run. A surface heat flux q'' [W/m2]
+           named by a CAD face (the existing FaceName) and a volumetric
+           generation q''' [W/m3], resolved through P16's mapping with no
+           nearest-face fallback, integrated to the nodal heat input Q [W]
+           (q''A/3 per facet corner, q'''V/4 per tetrahedron corner),
+           conserved, superposed, held by ThermalDofMap ordinal and bound to
+           the exact mesh it was prepared on (stale after a remesh even with
+           the same counts and the same NodeIds). 66 cases, 19 compile-fail
+           cases, 46 mutation probes (45 killed, 1 dead code removed), 513
+           files and 0 layering violations. Two defects in the first version
+           of the production code were found by mutation and fixed before the
+           freeze. Evidence: docs/verification/P18-LOAD-001/.
+           P18-ARCH-001 PASSED 2026-10-16; P18-DATA-001, P18-MAT-001,
+           P18-DOF-001 PASSED 2026-10-17; P18-ELEM-001 PASSED 2026-10-18
+           (docs/verification/P18-*/).
 Qualified:
            P0–P10 — BetterCAD v0.1.0
            P11 — Advanced Part Modelling
@@ -53,8 +52,8 @@ Qualified:
            P17 — Structural FEA
 
 Next:
-           P18-LOAD-001 — Thermal Loads. NOT AUTHORIZED:
-           P18-ELEM-001 passing is not permission to start it; each
+           P18-BC-001 — Thermal Boundary Conditions. NOT AUTHORIZED:
+           P18-LOAD-001 passing is not permission to start it; each
            milestone is started by the owner, as every P17 milestone was.
 
 P17 objective, as delivered:
@@ -630,24 +629,58 @@ positive-direction convention; volumetric heat generation `q'''` [W/m3], with
 `Q_element = q''' V` for constant generation. Convection's source term is
 handled with the BC milestone.
 
-* [ ] Define heat-flux load
-* [ ] Define volumetric heat-generation load
-* [ ] Define `GeometryReference` authority
-* [ ] Resolve current P16 boundary mapping
-* [ ] Convert face heat flux to equivalent nodal heat input
-* [ ] Convert volumetric generation to equivalent nodal heat input
-* [ ] Preserve total heat rate
-* [ ] Define sign conventions
-* [ ] Explicit SI units
-* [ ] Multiple loads superpose deterministically
-* [ ] Remesh re-resolves canonical geometry references
-* [ ] No facet/NodeId persistence
-* [ ] Unsupported target fails explicitly
-* [ ] Stale prepared loads rejected
-* [ ] Analytical resultant validation
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Define heat-flux load
+* [x] Define volumetric heat-generation load
+* [x] Define `GeometryReference` authority
+* [x] Resolve current P16 boundary mapping
+* [x] Convert face heat flux to equivalent nodal heat input
+* [x] Convert volumetric generation to equivalent nodal heat input
+* [x] Preserve total heat rate
+* [x] Define sign conventions
+* [x] Explicit SI units
+* [x] Multiple loads superpose deterministically
+* [x] Remesh re-resolves canonical geometry references
+* [x] No facet/NodeId persistence
+* [x] Unsupported target fails explicitly
+* [x] Stale prepared loads rejected
+* [x] Analytical resultant validation
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded
+
+```text
+PASS 2026-10-18. Qualified against f10f5f0 plus the working tree:
+4325/4325 x 3 presets, 1403 x 5 in two, 0 warnings over 677 objects, 17
+stages exit 0, 4h21m28s, fingerprints at the freeze == before == after; one
+run, every stage exit 0. The canonical load was already frozen by P18-DATA-001
+(SurfaceHeatFluxLoad {FaceName, HeatFlux}, VolumetricHeatSourceLoad
+{VolumetricHeatSource}); positive is heat INTO the body, a negative value
+extracts, and nothing takes an absolute value. A load holds no facet, node,
+element or unknown: sizeof mirrors, static_asserts and five compile-fail cases.
+The GeometryReference is the FaceName; P16's boundaryFacetsOf is the only
+resolver, and an unresolved face is a refusal, never the nearest face (a hole
+bottom, an unknown object and a malformed selector each refused, with both end
+caps present). Surface: Q_i = q'' A / 3 per facet corner with A the unsigned P16
+area in m2; volume: Q_i = q''' V / 4 per tetrahedron corner with V the signed
+volume of a validated element in m3. A 3 m2 triangle at 12 W/m2 gives 12 W per
+corner, 36 W; a unit tetrahedron at 24 W/m3 gives 1 W per corner, 4 W; the
+block's end cap carries 0.6 W at 500 W/m2 and its volume 60 W at 2.5e6 W/m3,
+the sums equal to q'' sum(A) and q''' sum(V) to a few ulps. Geometry scaling
+gives s^2 and s^3, so no millimetre factor exists. Loads superpose by ordinal in
+the order given; signed cancellation is exact for surfaces and 0.83 eps for a
+volume. The vector is indexed by ThermalDofMap, never by NodeId (ids 7, 104,
+9001, 500000 and 4 294 967 294 tested). The prepared loads carry the body, the
+mesh stamp and node count, the geometry revision and the loads; a remesh with the
+same counts and the same ids is stale, a material, solver or boundary-condition
+edit is not. Coarse and fine cylinders genuinely differ (156 against 900 nodes,
+140 against 572 boundary facets). One bad load refuses the whole set. Results are
+bitwise identical across the three presets. 66 cases, 19 compile-fail cases, 46
+mutation probes (45 killed, 1 dead code removed), 44 adversarial attacks, 9
+findings. Limits recorded: a hole's cylindrical wall cannot be named (P16 has no
+role for it); two failure values are reachable only through the integration
+seams. No convection, no prescribed temperature, no assembly, no solve.
+Evidence: docs/verification/P18-LOAD-001/.
+```
 
 ---
 # P18-BC-001

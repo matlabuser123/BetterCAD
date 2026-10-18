@@ -875,3 +875,43 @@ bettercad_compile_fail_case(thermalelem "${_thermalelem}" THE_CONDUCTION_HAS_NO_
     "no member named|has no member" BetterCAD::thermal)
 bettercad_compile_fail_case(thermalelem "${_thermalelem}" THE_CAPACITY_HAS_NO_LUMPED_VARIANT
     "no member named|has no member" BetterCAD::thermal)
+
+# Thermal heat loads (P18-LOAD-001). The inputs are dimensioned and distinct (a
+# heat flux is not a generation, a power, a temperature or a double); a canonical
+# load holds a FaceName and a value and nothing mesh-local (no node, facet,
+# element or unknown, and the volumetric load has no face); identities and
+# handle lists do not convert; and a prepared heat input cannot be conjured or
+# edited and has no convection, no temperature constraint and no material -- the
+# scope line to P18-BC-001.
+set(_thermalload "${CMAKE_CURRENT_SOURCE_DIR}/ThermalLoadMisuse.cpp")
+bettercad_compile_fail_group(thermalload "${_thermalload}" BetterCAD::thermal)
+foreach(_case
+        A_HEAT_FLUX_IS_NOT_A_DOUBLE
+        A_HEAT_FLUX_IS_NOT_A_GENERATION
+        A_GENERATION_IS_NOT_A_HEAT_FLUX
+        A_POWER_IS_NOT_A_HEAT_FLUX
+        A_TEMPERATURE_IS_NOT_A_GENERATION
+        A_NODE_ID_IS_NOT_A_LOAD_ID
+        A_STRUCTURAL_LOAD_ID_IS_NOT_A_THERMAL_LOAD_ID
+        A_NODE_LIST_IS_NOT_A_FACET_LIST
+        A_DOUBLE_SPAN_IS_NOT_A_HEAT_INPUT)
+    bettercad_compile_fail_case(thermalload "${_thermalload}" ${_case}
+        "could not convert|cannot convert|no matching function|no match for|invalid conversion|invalid initialization of reference|conversion from"
+        BetterCAD::thermal)
+endforeach()
+bettercad_compile_fail_case(thermalload "${_thermalload}" A_PREPARED_LOAD_CONSTRUCTED_DIRECTLY
+    "is private within this context|private" BetterCAD::thermal)
+foreach(_case
+        THE_SURFACE_LOAD_HAS_NO_NODE
+        THE_SURFACE_LOAD_HAS_NO_FACET
+        THE_SURFACE_LOAD_HAS_NO_UNKNOWN
+        THE_VOLUMETRIC_LOAD_HAS_NO_ELEMENT
+        THE_VOLUMETRIC_LOAD_HAS_NO_FACE
+        THE_PREPARED_LOAD_HAS_NO_CONVECTION
+        THE_PREPARED_LOAD_HAS_NO_TEMPERATURE_CONSTRAINT
+        THE_PREPARED_LOAD_HAS_NO_MATERIAL)
+    bettercad_compile_fail_case(thermalload "${_thermalload}" ${_case}
+        "no member named|has no member" BetterCAD::thermal)
+endforeach()
+bettercad_compile_fail_case(thermalload "${_thermalload}" THE_PREPARED_HEAT_INPUT_IS_READ_ONLY
+    "read-only|discards qualifiers|no match for|passing .const" BetterCAD::thermal)

@@ -60,6 +60,7 @@ bettercad_add_executable(bettercad_tests
         thermal/ThermalDataTests.cpp
         thermal/ThermalDofTests.cpp
         thermal/ThermalElementTests.cpp
+        thermal/ThermalLoadTests.cpp
         thermal/ThermalMaterialTests.cpp
         drawing/AnnotationTests.cpp
         drawing/AssemblyDrawingTests.cpp
