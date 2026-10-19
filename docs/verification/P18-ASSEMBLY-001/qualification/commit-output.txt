@@ -1,0 +1,25 @@
+﻿recomputed before the commit (scratch tree 11c861209cd211b01130f69f02c104cb5db99c0e):
+  apps a95876bc6dbf843d4e0cec114059bc196fa16175 == frozen
+  include 97c83ec23d321c4ef611c46554e441e9d54c1864 == frozen
+  src 0f4d1f8f4b189ad914770577f4e24ebc71450041 == frozen
+  tests 94c593a4281988e1b9067db1546076267c59d2c2 == frozen
+  examples a955cf6511ce715fcb95bc06ef82b877535869e6 == frozen
+  cmake 5a382115d7ed7775189d40b55e40f318eaae6cc7 == frozen
+  CMakeLists.txt 3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd == frozen
+  CMakePresets.json 3229f0f89b236744d7d5c082bed47c28b718288e == frozen
+message first bytes: 66,101,116
+untracked left behind:
+?? .claude/
+c0ca6321e78111f594216faa03853a5040954ed7 BetterCAD: add global thermal assembly
+subtree hashes of the commit:
+  apps a95876bc6dbf843d4e0cec114059bc196fa16175 == frozen
+  include 97c83ec23d321c4ef611c46554e441e9d54c1864 == frozen
+  src 0f4d1f8f4b189ad914770577f4e24ebc71450041 == frozen
+  tests 94c593a4281988e1b9067db1546076267c59d2c2 == frozen
+  examples a955cf6511ce715fcb95bc06ef82b877535869e6 == frozen
+  cmake 5a382115d7ed7775189d40b55e40f318eaae6cc7 == frozen
+  CMakeLists.txt 3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd == frozen
+  CMakePresets.json 3229f0f89b236744d7d5c082bed47c28b718288e == frozen
+ALL EIGHT == FROZEN
+?? .claude/
+ 163 files changed, 76407 insertions(+), 46 deletions(-)
