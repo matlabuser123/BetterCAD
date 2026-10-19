@@ -915,3 +915,63 @@ foreach(_case
 endforeach()
 bettercad_compile_fail_case(thermalload "${_thermalload}" THE_PREPARED_HEAT_INPUT_IS_READ_ONLY
     "read-only|discards qualifiers|no match for|passing .const" BetterCAD::thermal)
+
+# Thermal boundary conditions (P18-BC-001). The values are dimensioned and
+# distinct (a convection coefficient is not a conductivity, a temperature, a
+# conductance entry or a double, and the two sides of a Robin term are different
+# dimensions); a canonical condition holds a FaceName and physical numbers and
+# nothing mesh-local, and neither kind has a conductivity; identities and handle
+# lists do not convert; a prepared boundary and a convection term cannot be
+# conjured or edited; and the prepared boundary has no penalty, no stiffness
+# matrix, no solution, no material and no radiation -- the scope line to
+# P18-ASSEMBLY-001 and P18-SOLVE-001.
+set(_thermalbc "${CMAKE_CURRENT_SOURCE_DIR}/ThermalBoundaryMisuse.cpp")
+bettercad_compile_fail_group(thermalbc "${_thermalbc}" BetterCAD::thermal)
+foreach(_case
+        A_COEFFICIENT_IS_NOT_A_DOUBLE
+        A_COEFFICIENT_IS_NOT_A_CONDUCTIVITY
+        A_TEMPERATURE_IS_NOT_A_DOUBLE
+        A_TEMPERATURE_IS_NOT_A_COEFFICIENT
+        A_COEFFICIENT_IS_NOT_AN_AMBIENT
+        THE_CONVECTION_TAKES_NO_CONDUCTIVITY
+        A_CONDUCTANCE_IS_NOT_A_POWER
+        A_POWER_IS_NOT_A_CONDUCTANCE
+        A_NODE_ID_IS_NOT_A_CONDITION_ID
+        A_LOAD_ID_IS_NOT_A_CONDITION_ID
+        A_RESTRAINT_ID_IS_NOT_A_CONDITION_ID
+        A_NODE_LIST_IS_NOT_A_FACET_LIST
+        A_NODE_IS_NOT_AN_UNKNOWN
+        A_DOUBLE_IS_NOT_A_REQUESTED_TEMPERATURE)
+    bettercad_compile_fail_case(thermalbc "${_thermalbc}" ${_case}
+        "could not convert|cannot convert|no matching function|no match for|invalid conversion|invalid initialization of reference|conversion from"
+        BetterCAD::thermal)
+endforeach()
+foreach(_case
+        A_PREPARED_BOUNDARY_CONSTRUCTED_DIRECTLY
+        A_CONVECTION_TERM_CONSTRUCTED_DIRECTLY)
+    bettercad_compile_fail_case(thermalbc "${_thermalbc}" ${_case}
+        "is private within this context|private" BetterCAD::thermal)
+endforeach()
+foreach(_case
+        THE_PRESCRIBED_TEMPERATURE_HAS_NO_NODE
+        THE_PRESCRIBED_TEMPERATURE_HAS_NO_FACET
+        THE_PRESCRIBED_TEMPERATURE_HAS_NO_UNKNOWN
+        THE_CONVECTION_HAS_NO_NODE
+        THE_CONVECTION_HAS_NO_FACET
+        THE_CONVECTION_HAS_NO_UNKNOWN
+        THE_CONVECTION_HAS_NO_CONDUCTIVITY
+        THE_CONVECTION_TERM_HAS_NO_CONDUCTIVITY
+        THE_PREPARED_BOUNDARY_HAS_NO_PENALTY
+        THE_PREPARED_BOUNDARY_HAS_NO_STIFFNESS_MATRIX
+        THE_PREPARED_BOUNDARY_HAS_NO_SOLUTION
+        THE_PREPARED_BOUNDARY_HAS_NO_MATERIAL
+        THE_PREPARED_BOUNDARY_HAS_NO_RADIATION)
+    bettercad_compile_fail_case(thermalbc "${_thermalbc}" ${_case}
+        "no member named|has no member" BetterCAD::thermal)
+endforeach()
+foreach(_case
+        THE_CONSTRAINT_TEMPERATURES_ARE_READ_ONLY
+        THE_CONVECTION_COEFFICIENT_IS_READ_ONLY)
+    bettercad_compile_fail_case(thermalbc "${_thermalbc}" ${_case}
+        "read-only|discards qualifiers|no match for|passing .const" BetterCAD::thermal)
+endforeach()

@@ -121,6 +121,30 @@ set(_filters
     "unit\\.ThermalLoad_(Rejects|Zero|Duplicate|Repeated|ANumbering|Every|NonFinite)" 12
     "unit\\.ThermalLoad_(RepeatedPreparation|Diagnostics|BitFingerprint)" 3
     "compile_fail\\.thermalload\\." 19
+    # P18-BC-001. The thermal boundary-condition cases, by the brief's groups --
+    # Dirichlet, conflict, Robin analytical, mapping, remesh and currentness,
+    # invalid input, sparse identities and determinism, plus the Robin traps, the
+    # scaling cases, superposition and purity -- each under its own name prefix so
+    # a targeted run of any one group can be seen to have matched something; and
+    # the compile-fail group that proves the values, identities and the prepared
+    # type do not convert and that nothing mesh-local, penalty or solve is
+    # reachable.
+    "unit\\.ThermalBC" 92
+    "unit\\.ThermalBC_(PrescribedTemperatureDef|ConvectionDef|CanonicalGeometry|UnitsContract|SignConvention)" 5
+    "unit\\.ThermalBC_(PrescribedTemperature(Maps|Uses|Stores|Dedup|Deter)|MappedFaceDirichlet)" 6
+    "unit\\.ThermalBC_(Duplicate|Conflict|PartialSurface|IdenticalOverlap)" 8
+    "unit\\.ThermalBC_(SingleTriangle|GeneralTriangle|ConvectionMatrix|ConvectionAmbientEq|ConvectionAbove|ConvectionBelow|NonUniform|ConvectionFacet|SharedFacet|TriangleWinding|ConstantTemperature|MappedFaceConvection)" 14
+    "unit\\.ThermalBC_(ConvectionRejects|ConvectionIsNotLumped|WrongSigns)" 3
+    "unit\\.ThermalBC_(ConvectionArea|ConvectionCoefficientScaling|ConvectionAmbientScaling|ConvectionDoesNot|ConvectionIsIndependent)" 5
+    "unit\\.ThermalBC_(GeometryReference|PreparedBoundaryKeeps|DirichletAndRobin|NoDirichlet|Unresolved|Unsupported|NoNearest|OneInvalid|Empty)" 9
+    "unit\\.ThermalBC_(PreparedBCBinds|Remesh|SameCounts|SameIds|ADifferentBody|Edit|Material|LoadSolver|GeometryEdit|DocumentBoundary)" 12
+    "unit\\.ThermalBC_(ZeroConvection|Negative|NaN|Infinite|BelowZero|InvalidArea|EveryBoundary|SeamRefusals|ConvectionSeamRefusals|ZeroArea|ConvectionZeroCoefficientSeam|Identities|ValuesAreChecked|ANumbering|Overflowing)" 20
+    "unit\\.ThermalBC_(Sparse|LargeSparse)" 2
+    "unit\\.ThermalBC_ConvectionSuperposition" 2
+    "unit\\.ThermalBC_(AFailedPreparation|PreparationDoesNot)" 2
+    "unit\\.ThermalBC_(RepeatedPreparation|Diagnostics|BitFingerprint)" 3
+    "unit\\.ThermalBC_PreparedBoundaryHasNo" 1
+    "compile_fail\\.thermalbc\\." 31
 )
 list(LENGTH _filters _count)
 math(EXPR _last "${_count} - 1")

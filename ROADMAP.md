@@ -105,8 +105,9 @@ P18 — Thermal Analysis, authorized 2026-10-16.
 P17 — Structural FEA was QUALIFIED 2026-10-15 by P17-QUAL-001: seventeen
 milestones PASS, 4009/4009 tests in three presets, qualified tree ==
 committed tree. P18-ARCH-001 (2026-10-16), P18-DATA-001, P18-MAT-001 and
-P18-DOF-001 (2026-10-17), P18-ELEM-001 and P18-LOAD-001 (2026-10-18) have
-PASSED; P18-BC-001 is next and not yet authorized; see TODO.md.
+P18-DOF-001 (2026-10-17), P18-ELEM-001 and P18-LOAD-001 (2026-10-18) and
+P18-BC-001 (2026-10-19) have PASSED; P18-ASSEMBLY-001 is next and not yet
+authorized; see TODO.md.
 ```
 
 Released: `v0.1.0` — Foundation.

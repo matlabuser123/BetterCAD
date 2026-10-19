@@ -22,25 +22,29 @@ Prerequisite:
            (OCCT never subdivides a developable wall along its ruling).
 
 Current milestone:
-           none. P18-LOAD-001 — Thermal Loads. COMPLETE at 18 of 18 and
-           qualified 2026-10-18 against f10f5f0 plus the working tree:
-           4325/4325 x 3 presets, 1403 x 5 in two, 0 warnings over 677
-           objects, 17 stages exit 0, 4h21m28s, fingerprints at the freeze
-           == before == after, in ONE run. A surface heat flux q'' [W/m2]
-           named by a CAD face (the existing FaceName) and a volumetric
-           generation q''' [W/m3], resolved through P16's mapping with no
-           nearest-face fallback, integrated to the nodal heat input Q [W]
-           (q''A/3 per facet corner, q'''V/4 per tetrahedron corner),
-           conserved, superposed, held by ThermalDofMap ordinal and bound to
-           the exact mesh it was prepared on (stale after a remesh even with
-           the same counts and the same NodeIds). 66 cases, 19 compile-fail
-           cases, 46 mutation probes (45 killed, 1 dead code removed), 513
-           files and 0 layering violations. Two defects in the first version
-           of the production code were found by mutation and fixed before the
-           freeze. Evidence: docs/verification/P18-LOAD-001/.
+           none. P18-BC-001 — Thermal Boundary Conditions. COMPLETE at 17
+           of 17 and qualified 2026-10-19 against b4714a4 plus the working
+           tree: 4448/4448 x 3 presets, 1495 x 5 in two, 0 warnings over 682
+           objects, 17 stages exit 0, 4h48m16s, fingerprints at the freeze
+           == before == after, on the second attempt at the corrected tree
+           (the first failed the debug-shared-ext BUILD on a production
+           defect: a struct with out-of-line members lacked its DLL export
+           annotation; fixed and preserved, not counted). A prescribed
+           temperature as an exact constraint carrying T_bar in kelvin (one
+           per unique boundary unknown, equal prescriptions deduplicated, a
+           contradiction refused) and convection -k grad(T).n = h (T - T_inf)
+           as the consistent per-facet boundary terms Kconv = (hA/12)[2 1 1;
+           1 2 1; 1 1 2] W/K and Qconv = (h T_inf A/3)[1 1 1] W, resolved
+           through P16's mapping with no nearest-face fallback and bound to
+           the exact mesh (stale after a remesh even with the same counts
+           and the same NodeIds). 92 cases, 31 compile-fail cases, 58
+           mutation probes (all killed), 517 files and 0 layering
+           violations. A canonical h = 0 stays refused (P18-DATA's rule);
+           allowing it is an owner decision. Evidence:
+           docs/verification/P18-BC-001/.
            P18-ARCH-001 PASSED 2026-10-16; P18-DATA-001, P18-MAT-001,
-           P18-DOF-001 PASSED 2026-10-17; P18-ELEM-001 PASSED 2026-10-18
-           (docs/verification/P18-*/).
+           P18-DOF-001 PASSED 2026-10-17; P18-ELEM-001, P18-LOAD-001 PASSED
+           2026-10-18 (docs/verification/P18-*/).
 Qualified:
            P0–P10 — BetterCAD v0.1.0
            P11 — Advanced Part Modelling
@@ -52,8 +56,8 @@ Qualified:
            P17 — Structural FEA
 
 Next:
-           P18-BC-001 — Thermal Boundary Conditions. NOT AUTHORIZED:
-           P18-LOAD-001 passing is not permission to start it; each
+           P18-ASSEMBLY-001 — Global Thermal Assembly. NOT AUTHORIZED:
+           P18-BC-001 passing is not permission to start it; each
            milestone is started by the owner, as every P17 milestone was.
 
 P17 objective, as delivered:
@@ -691,23 +695,70 @@ Initial supported BCs: prescribed temperature; convection / Robin,
 `-k grad(T) . n = h (T - T_inf)`, assembled as the qualified equivalent
 boundary matrix and source terms.
 
-* [ ] Define prescribed-temperature BC
-* [ ] Define convection BC
-* [ ] Define ambient temperature
-* [ ] Define convection coefficient
-* [ ] Define sign convention
-* [ ] Map BCs through canonical `GeometryReference`
-* [ ] Prescribed temperature resolves to current thermal DOFs
-* [ ] Duplicate constraints handled deterministically
-* [ ] Conflicting prescribed temperatures rejected
-* [ ] Convection contributes correct matrix/source terms
-* [ ] Unresolved reference fails explicitly
-* [ ] No nearest-face rebinding
-* [ ] Remesh invalidates derived mappings
-* [ ] Analytical validation
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Define prescribed-temperature BC
+* [x] Define convection BC
+* [x] Define ambient temperature
+* [x] Define convection coefficient
+* [x] Define sign convention
+* [x] Map BCs through canonical `GeometryReference`
+* [x] Prescribed temperature resolves to current thermal DOFs
+* [x] Duplicate constraints handled deterministically
+* [x] Conflicting prescribed temperatures rejected
+* [x] Convection contributes correct matrix/source terms
+* [x] Unresolved reference fails explicitly
+* [x] No nearest-face rebinding
+* [x] Remesh invalidates derived mappings
+* [x] Analytical validation
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded
+
+```text
+PASS 2026-10-19. Qualified against b4714a4 plus the working tree:
+4448/4448 x 3 presets, 1495 x 5 in two, 0 warnings over 682 objects, 17
+stages exit 0, 4h48m16s, fingerprints at the freeze == before == after;
+run 2 of 2 on the corrected tree. Run 1 passed debug-ext and release-ext
+and failed the debug-shared-ext BUILD: PreparedConvectionBoundary, a plain
+struct with member functions defined in the library, lacked
+BETTERCAD_THERMAL_EXPORT, so a DLL build could not find area(); static
+builds ignore the macro, which is why nothing else saw it. Fixed, logs
+preserved under qualification/run1-failed/, whole qualification rerun.
+The canonical conditions already existed (P18-DATA-001) and are unchanged:
+PrescribedTemperature {FaceName, Temperature K} and ConvectionBoundary
+{FaceName, h W/(m2 K), T_inf K}; no facet, node, element or unknown is
+canonical (sizeof mirrors, seven compile-fail cases). The GeometryReference
+is the FaceName; P16's boundaryFacetsOf, through ThermalTarget, is the only
+resolver, and an unresolved face is refused for both kinds, never bound to
+the nearest. Prescribed temperature: GeometryReference -> facets -> unique
+NodeIds -> ThermalDofIndex -> ThermalConstraintMap, ONE constraint per
+unknown (the end cap's six corners are four constraints), nonzero values
+preserved (350 K stays 350 K, a free node has no temperature), equal
+prescriptions deduplicated with both conditions recorded, a contradiction
+refused by exact number equality with a per-pair report (end cap 350 K and a
+side wall 300 K share two unknowns); no penalty, no epsilon, no-Dirichlet
+sets valid. Convection: -k grad(T).n = h (T - T_inf), n outward; weak form
+(K + Kconv) T = Q + Qconv derived in WEAK_FORM.md; per linear triangle
+Kconv = (hA/12) [2 1 1; 1 2 1; 1 1 2] W/K and Qconv = (h T_inf A/3) [1 1 1]
+W, exact, with no conductivity. Hand triangle A = 3 m2, h = 4, T_inf = 300
+K: Kconv = [2 1 1; 1 2 1; 1 1 2], Qconv = [1200 1200 1200], error 0. The
+centroid matrix hA/9 and the lumped matrix hA/3 I have the correct row sums
+and are rejected by the whole-matrix oracle. T = T_inf gives a zero
+residual; 350 K gives +600 W outward, 250 K gives -600 W. Convections add
+(identical ones double), a prescribed temperature and a convection on one
+face are both kept. Scaling s^2, h and T_inf hold. A canonical h = 0 stays
+refused (P18-DATA-001's rule); the kernel and seam give zeros for h = 0.
+Prepared boundary bound to body, MeshStamp, node count, geometry revision
+and the conditions by value: stale after a remesh with the same counts and
+the same ids, not stale after a material, load, solver or transient edit,
+and the mesh is not regenerated. 92 cases, 31 compile-fail cases, 58
+mutation probes (all killed; a share-order survivor closed by two
+assertions), 40 + 9 adversarial questions, 7 findings, 1 production defect.
+Results are bitwise identical across the three presets. Limits recorded: a
+hole's cylindrical wall cannot be named; TargetWithoutFacets is reachable
+only through the seams; nothing yet forces the currentness call. No
+assembly, no solve, no penalty, no radiation, no time-varying BC, no
+contact. Evidence: docs/verification/P18-BC-001/.
+```
 
 ---
 # P18-ASSEMBLY-001

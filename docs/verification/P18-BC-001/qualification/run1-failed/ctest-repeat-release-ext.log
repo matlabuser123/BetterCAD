@@ -1,0 +1,1255 @@
+Test project C:/Users/hasib/bcdev/bc-build/release-ext
+          Start 3927: refmod.material.build
+          Start 3937: refmod.mesh.build
+          Start 3962: refmod.structural.build
+          Start 4003: cli.refmod.build
+          Start 2673: unit.StructuralCantilever_TrendsTowardBeamTheoryAcrossThreeMeshesAndMeasuresWhyItCannotReachIt
+          Start 2767: unit.StructuralLoad_ConvergesToTheAnalyticLoadAsTheSurfaceIsRefined
+          Start 2068: unit.ReferenceModel_AllModelsStressRegression
+          Start 2903: unit.StructuralReaction_RecoversALargeMeshAndStillBalances
+        Test #3927: refmod.material.build ............................................................................   Passed    0.99 sec
+          Start 3927: refmod.material.build
+        Test #3927: refmod.material.build ............................................................................   Passed    0.58 sec
+          Start 3927: refmod.material.build
+        Test #3927: refmod.material.build ............................................................................   Passed    0.56 sec
+          Start 3927: refmod.material.build
+        Test #4003: cli.refmod.build .................................................................................   Passed    2.36 sec
+          Start 4003: cli.refmod.build
+        Test #3927: refmod.material.build ............................................................................   Passed    0.45 sec
+          Start 3927: refmod.material.build
+   1/1495 Test #3927: refmod.material.build ............................................................................   Passed    0.55 sec
+          Start 3929: refmod.material.inspect
+        Test #3929: refmod.material.inspect ..........................................................................   Passed    0.50 sec
+          Start 3929: refmod.material.inspect
+        Test #3929: refmod.material.inspect ..........................................................................   Passed    0.19 sec
+          Start 3929: refmod.material.inspect
+        Test #3929: refmod.material.inspect ..........................................................................   Passed    0.25 sec
+          Start 3929: refmod.material.inspect
+        Test #4003: cli.refmod.build .................................................................................   Passed    1.79 sec
+          Start 4003: cli.refmod.build
+        Test #3929: refmod.material.inspect ..........................................................................   Passed    0.24 sec
+          Start 3929: refmod.material.inspect
+   2/1495 Test #3929: refmod.material.inspect ..........................................................................   Passed    0.30 sec
+          Start 3931: refmod.material.edit
+        Test #3931: refmod.material.edit .............................................................................   Passed    0.25 sec
+          Start 3931: refmod.material.edit
+        Test #3931: refmod.material.edit .............................................................................   Passed    0.22 sec
+          Start 3931: refmod.material.edit
+        Test #3931: refmod.material.edit .............................................................................   Passed    0.26 sec
+          Start 3931: refmod.material.edit
+        Test #3931: refmod.material.edit .............................................................................   Passed    0.25 sec
+          Start 3931: refmod.material.edit
+   3/1495 Test #3931: refmod.material.edit .............................................................................   Passed    0.18 sec
+          Start 2936: unit.StructuralSolve_SolvesALargeMeshWithoutDensifying
+        Test #4003: cli.refmod.build .................................................................................   Passed    1.75 sec
+          Start 4003: cli.refmod.build
+        Test #3962: refmod.structural.build ..........................................................................   Passed    7.10 sec
+          Start 3962: refmod.structural.build
+        Test #4003: cli.refmod.build .................................................................................   Passed    1.55 sec
+          Start 4003: cli.refmod.build
+   4/1495 Test #4003: cli.refmod.build .................................................................................   Passed    1.69 sec
+          Start 2066: unit.ReferenceModel_AllModelsBuildInOneProcess
+        Test #3937: refmod.mesh.build ................................................................................   Passed    9.57 sec
+          Start 3937: refmod.mesh.build
+        Test #3962: refmod.structural.build ..........................................................................   Passed    6.07 sec
+          Start 3962: refmod.structural.build
+        Test #3937: refmod.mesh.build ................................................................................   Passed    8.11 sec
+          Start 3937: refmod.mesh.build
+        Test #3962: refmod.structural.build ..........................................................................   Passed    5.81 sec
+          Start 3962: refmod.structural.build
+        Test #3962: refmod.structural.build ..........................................................................   Passed    6.99 sec
+          Start 3962: refmod.structural.build
+        Test #3937: refmod.mesh.build ................................................................................   Passed    9.45 sec
+          Start 3937: refmod.mesh.build
+   5/1495 Test #3962: refmod.structural.build ..........................................................................   Passed    6.33 sec
+          Start 2652: unit.StructuralBC_FollowsTheNodeCountOfARefinedCurvedFace
+        Test #3937: refmod.mesh.build ................................................................................   Passed    9.47 sec
+          Start 3937: refmod.mesh.build
+   6/1495 Test #3937: refmod.mesh.build ................................................................................   Passed   10.58 sec
+          Start 2067: unit.ReferenceModel_AllModelsRegenerateAfterAChange
+        Test #2903: unit.StructuralReaction_RecoversALargeMeshAndStillBalances .......................................   Passed   61.25 sec
+          Start 2903: unit.StructuralReaction_RecoversALargeMeshAndStillBalances
+        Test #2066: unit.ReferenceModel_AllModelsBuildInOneProcess ...................................................   Passed   52.88 sec
+          Start 2066: unit.ReferenceModel_AllModelsBuildInOneProcess
+        Test #2936: unit.StructuralSolve_SolvesALargeMeshWithoutDensifying ...........................................   Passed   59.31 sec
+          Start 2936: unit.StructuralSolve_SolvesALargeMeshWithoutDensifying
+        Test #2068: unit.ReferenceModel_AllModelsStressRegression ....................................................   Passed   76.02 sec
+          Start 2068: unit.ReferenceModel_AllModelsStressRegression
+        Test #2652: unit.StructuralBC_FollowsTheNodeCountOfARefinedCurvedFace ........................................   Passed   47.45 sec
+          Start 2652: unit.StructuralBC_FollowsTheNodeCountOfARefinedCurvedFace
+        Test #2067: unit.ReferenceModel_AllModelsRegenerateAfterAChange ..............................................   Passed   44.28 sec
+          Start 2067: unit.ReferenceModel_AllModelsRegenerateAfterAChange
+        Test #2767: unit.StructuralLoad_ConvergesToTheAnalyticLoadAsTheSurfaceIsRefined ..............................   Passed   94.21 sec
+          Start 2767: unit.StructuralLoad_ConvergesToTheAnalyticLoadAsTheSurfaceIsRefined
+        Test #2066: unit.ReferenceModel_AllModelsBuildInOneProcess ...................................................   Passed   51.30 sec
+          Start 2066: unit.ReferenceModel_AllModelsBuildInOneProcess
+        Test #2903: unit.StructuralReaction_RecoversALargeMeshAndStillBalances .......................................   Passed   57.58 sec
+          Start 2903: unit.StructuralReaction_RecoversALargeMeshAndStillBalances
+        Test #2936: unit.StructuralSolve_SolvesALargeMeshWithoutDensifying ...........................................   Passed   57.53 sec
+          Start 2936: unit.StructuralSolve_SolvesALargeMeshWithoutDensifying
+        Test #2652: unit.StructuralBC_FollowsTheNodeCountOfARefinedCurvedFace ........................................   Passed   47.95 sec
+          Start 2652: unit.StructuralBC_FollowsTheNodeCountOfARefinedCurvedFace
+        Test #2067: unit.ReferenceModel_AllModelsRegenerateAfterAChange ..............................................   Passed   46.36 sec
+          Start 2067: unit.ReferenceModel_AllModelsRegenerateAfterAChange
+        Test #2068: unit.ReferenceModel_AllModelsStressRegression ....................................................   Passed   73.36 sec
+          Start 2068: unit.ReferenceModel_AllModelsStressRegression
+        Test #2066: unit.ReferenceModel_AllModelsBuildInOneProcess ...................................................   Passed   49.37 sec
+          Start 2066: unit.ReferenceModel_AllModelsBuildInOneProcess
+        Test #2652: unit.StructuralBC_FollowsTheNodeCountOfARefinedCurvedFace ........................................   Passed   46.03 sec
+          Start 2652: unit.StructuralBC_FollowsTheNodeCountOfARefinedCurvedFace
+        Test #2903: unit.StructuralReaction_RecoversALargeMeshAndStillBalances .......................................   Passed   55.64 sec
+          Start 2903: unit.StructuralReaction_RecoversALargeMeshAndStillBalances
+        Test #2936: unit.StructuralSolve_SolvesALargeMeshWithoutDensifying ...........................................   Passed   56.87 sec
+          Start 2936: unit.StructuralSolve_SolvesALargeMeshWithoutDensifying
+        Test #2067: unit.ReferenceModel_AllModelsRegenerateAfterAChange ..............................................   Passed   45.84 sec
+          Start 2067: unit.ReferenceModel_AllModelsRegenerateAfterAChange
+        Test #2767: unit.StructuralLoad_ConvergesToTheAnalyticLoadAsTheSurfaceIsRefined ..............................   Passed   95.39 sec
+          Start 2767: unit.StructuralLoad_ConvergesToTheAnalyticLoadAsTheSurfaceIsRefined
+        Test #2673: unit.StructuralCantilever_TrendsTowardBeamTheoryAcrossThreeMeshesAndMeasuresWhyItCannotReachIt ...   Passed  203.15 sec
+          Start 2673: unit.StructuralCantilever_TrendsTowardBeamTheoryAcrossThreeMeshesAndMeasuresWhyItCannotReachIt
+        Test #2066: unit.ReferenceModel_AllModelsBuildInOneProcess ...................................................   Passed   49.86 sec
+          Start 2066: unit.ReferenceModel_AllModelsBuildInOneProcess
+        Test #2652: unit.StructuralBC_FollowsTheNodeCountOfARefinedCurvedFace ........................................   Passed   45.67 sec
+          Start 2652: unit.StructuralBC_FollowsTheNodeCountOfARefinedCurvedFace
+        Test #2068: unit.ReferenceModel_AllModelsStressRegression ....................................................   Passed   74.80 sec
+          Start 2068: unit.ReferenceModel_AllModelsStressRegression
+        Test #2067: unit.ReferenceModel_AllModelsRegenerateAfterAChange ..............................................   Passed   44.81 sec
+          Start 2067: unit.ReferenceModel_AllModelsRegenerateAfterAChange
+        Test #2903: unit.StructuralReaction_RecoversALargeMeshAndStillBalances .......................................   Passed   56.45 sec
+          Start 2903: unit.StructuralReaction_RecoversALargeMeshAndStillBalances
+        Test #2936: unit.StructuralSolve_SolvesALargeMeshWithoutDensifying ...........................................   Passed   56.09 sec
+          Start 2936: unit.StructuralSolve_SolvesALargeMeshWithoutDensifying
+   7/1495 Test #2066: unit.ReferenceModel_AllModelsBuildInOneProcess ...................................................   Passed   51.27 sec
+          Start 2134: unit.ReferenceModel_P12ModelsUndoAndRedoAProductionEdit
+   8/1495 Test #2652: unit.StructuralBC_FollowsTheNodeCountOfARefinedCurvedFace ........................................   Passed   47.24 sec
+          Start 2866: unit.StructuralPost_RecoversALargeMeshWithLinearStorageGrowth
+   9/1495 Test #2067: unit.ReferenceModel_AllModelsRegenerateAfterAChange ..............................................   Passed   46.75 sec
+          Start 2943: unit.StructuralSystem_AssemblesALargeMeshInSparseStorage
+        Test #2767: unit.StructuralLoad_ConvergesToTheAnalyticLoadAsTheSurfaceIsRefined ..............................   Passed   95.72 sec
+          Start 2767: unit.StructuralLoad_ConvergesToTheAnalyticLoadAsTheSurfaceIsRefined
+  10/1495 Test #2903: unit.StructuralReaction_RecoversALargeMeshAndStillBalances .......................................   Passed   58.60 sec
+          Start 1633: unit.MeshReference_ASettingsEditRemeshesAtTheNewCharacteristicScale
+  11/1495 Test #2936: unit.StructuralSolve_SolvesALargeMeshWithoutDensifying ...........................................   Passed   58.69 sec
+          Start 2132: unit.ReferenceModel_P12ModelsRegenerateAfterAChangeAndBack
+        Test #2068: unit.ReferenceModel_AllModelsStressRegression ....................................................   Passed   76.02 sec
+          Start 2068: unit.ReferenceModel_AllModelsStressRegression
+        Test #2134: unit.ReferenceModel_P12ModelsUndoAndRedoAProductionEdit ..........................................   Passed   43.04 sec
+          Start 2134: unit.ReferenceModel_P12ModelsUndoAndRedoAProductionEdit
+        Test #2866: unit.StructuralPost_RecoversALargeMeshWithLinearStorageGrowth ....................................   Passed   40.89 sec
+          Start 2866: unit.StructuralPost_RecoversALargeMeshWithLinearStorageGrowth
+        Test #2943: unit.StructuralSystem_AssemblesALargeMeshInSparseStorage .........................................   Passed   38.91 sec
+          Start 2943: unit.StructuralSystem_AssemblesALargeMeshInSparseStorage
+        Test #2132: unit.ReferenceModel_P12ModelsRegenerateAfterAChangeAndBack .......................................   Passed   30.05 sec
+          Start 2132: unit.ReferenceModel_P12ModelsRegenerateAfterAChangeAndBack
+        Test #1633: unit.MeshReference_ASettingsEditRemeshesAtTheNewCharacteristicScale ..............................   Passed   36.48 sec
+          Start 1633: unit.MeshReference_ASettingsEditRemeshesAtTheNewCharacteristicScale
+        Test #2866: unit.StructuralPost_RecoversALargeMeshWithLinearStorageGrowth ....................................   Passed   38.70 sec
+          Start 2866: unit.StructuralPost_RecoversALargeMeshWithLinearStorageGrowth
+        Test #2134: unit.ReferenceModel_P12ModelsUndoAndRedoAProductionEdit ..........................................   Passed   39.88 sec
+          Start 2134: unit.ReferenceModel_P12ModelsUndoAndRedoAProductionEdit
+        Test #2943: unit.StructuralSystem_AssemblesALargeMeshInSparseStorage .........................................   Passed   38.94 sec
+          Start 2943: unit.StructuralSystem_AssemblesALargeMeshInSparseStorage
+        Test #2132: unit.ReferenceModel_P12ModelsRegenerateAfterAChangeAndBack .......................................   Passed   30.64 sec
+          Start 2132: unit.ReferenceModel_P12ModelsRegenerateAfterAChangeAndBack
+        Test #1633: unit.MeshReference_ASettingsEditRemeshesAtTheNewCharacteristicScale ..............................   Passed   36.07 sec
+          Start 1633: unit.MeshReference_ASettingsEditRemeshesAtTheNewCharacteristicScale
+  12/1495 Test #2068: unit.ReferenceModel_AllModelsStressRegression ....................................................   Passed   70.55 sec
+          Start 2165: unit.ReferenceModel_SavedModelsMatchTheBuilders
+        Test #2767: unit.StructuralLoad_ConvergesToTheAnalyticLoadAsTheSurfaceIsRefined ..............................   Passed   91.52 sec
+          Start 2767: unit.StructuralLoad_ConvergesToTheAnalyticLoadAsTheSurfaceIsRefined
+        Test #2866: unit.StructuralPost_RecoversALargeMeshWithLinearStorageGrowth ....................................   Passed   37.57 sec
+          Start 2866: unit.StructuralPost_RecoversALargeMeshWithLinearStorageGrowth
+        Test #2132: unit.ReferenceModel_P12ModelsRegenerateAfterAChangeAndBack .......................................   Passed   30.11 sec
+          Start 2132: unit.ReferenceModel_P12ModelsRegenerateAfterAChangeAndBack
+        Test #2134: unit.ReferenceModel_P12ModelsUndoAndRedoAProductionEdit ..........................................   Passed   40.07 sec
+          Start 2134: unit.ReferenceModel_P12ModelsUndoAndRedoAProductionEdit
+        Test #2943: unit.StructuralSystem_AssemblesALargeMeshInSparseStorage .........................................   Passed   38.80 sec
+          Start 2943: unit.StructuralSystem_AssemblesALargeMeshInSparseStorage
+        Test #1633: unit.MeshReference_ASettingsEditRemeshesAtTheNewCharacteristicScale ..............................   Passed   36.09 sec
+          Start 1633: unit.MeshReference_ASettingsEditRemeshesAtTheNewCharacteristicScale
+        Test #2165: unit.ReferenceModel_SavedModelsMatchTheBuilders ..................................................   Passed   29.30 sec
+          Start 2165: unit.ReferenceModel_SavedModelsMatchTheBuilders
+        Test #2673: unit.StructuralCantilever_TrendsTowardBeamTheoryAcrossThreeMeshesAndMeasuresWhyItCannotReachIt ...   Passed  201.73 sec
+          Start 2673: unit.StructuralCantilever_TrendsTowardBeamTheoryAcrossThreeMeshesAndMeasuresWhyItCannotReachIt
+        Test #2132: unit.ReferenceModel_P12ModelsRegenerateAfterAChangeAndBack .......................................   Passed   30.63 sec
+          Start 2132: unit.ReferenceModel_P12ModelsRegenerateAfterAChangeAndBack
+        Test #2866: unit.StructuralPost_RecoversALargeMeshWithLinearStorageGrowth ....................................   Passed   38.77 sec
+          Start 2866: unit.StructuralPost_RecoversALargeMeshWithLinearStorageGrowth
+        Test #2134: unit.ReferenceModel_P12ModelsUndoAndRedoAProductionEdit ..........................................   Passed   40.31 sec
+          Start 2134: unit.ReferenceModel_P12ModelsUndoAndRedoAProductionEdit
+        Test #2165: unit.ReferenceModel_SavedModelsMatchTheBuilders ..................................................   Passed   28.72 sec
+          Start 2165: unit.ReferenceModel_SavedModelsMatchTheBuilders
+        Test #2943: unit.StructuralSystem_AssemblesALargeMeshInSparseStorage .........................................   Passed   37.89 sec
+          Start 2943: unit.StructuralSystem_AssemblesALargeMeshInSparseStorage
+        Test #1633: unit.MeshReference_ASettingsEditRemeshesAtTheNewCharacteristicScale ..............................   Passed   35.55 sec
+          Start 1633: unit.MeshReference_ASettingsEditRemeshesAtTheNewCharacteristicScale
+  13/1495 Test #2132: unit.ReferenceModel_P12ModelsRegenerateAfterAChangeAndBack .......................................   Passed   29.76 sec
+          Start 2097: unit.ReferenceModel_ManifoldTubeFollowsItsParameters
+        Test #2165: unit.ReferenceModel_SavedModelsMatchTheBuilders ..................................................   Passed   28.62 sec
+          Start 2165: unit.ReferenceModel_SavedModelsMatchTheBuilders
+  14/1495 Test #2866: unit.StructuralPost_RecoversALargeMeshWithLinearStorageGrowth ....................................   Passed   37.68 sec
+          Start 2129: unit.ReferenceModel_P12ModelsBuildValidateAndRegenerate
+  15/1495 Test #2767: unit.StructuralLoad_ConvergesToTheAnalyticLoadAsTheSurfaceIsRefined ..............................   Passed   90.25 sec
+          Start 2913: unit.StructuralReference_IsDeterministicOverRepeatedSolves
+  16/1495 Test #2134: unit.ReferenceModel_P12ModelsUndoAndRedoAProductionEdit ..........................................   Passed   40.03 sec
+          Start 2131: unit.ReferenceModel_P12ModelsExportStepAndReadBack
+  17/1495 Test #2943: unit.StructuralSystem_AssemblesALargeMeshInSparseStorage .........................................   Passed   38.11 sec
+          Start 2128: unit.ReferenceModel_P12ModelsAreDeterministic
+  18/1495 Test #1633: unit.MeshReference_ASettingsEditRemeshesAtTheNewCharacteristicScale ..............................   Passed   36.67 sec
+          Start 2133: unit.ReferenceModel_P12ModelsSaveLoadAndRegenerate
+        Test #2097: unit.ReferenceModel_ManifoldTubeFollowsItsParameters .............................................   Passed   25.24 sec
+          Start 2097: unit.ReferenceModel_ManifoldTubeFollowsItsParameters
+        Test #2129: unit.ReferenceModel_P12ModelsBuildValidateAndRegenerate ..........................................   Passed   22.60 sec
+          Start 2129: unit.ReferenceModel_P12ModelsBuildValidateAndRegenerate
+        Test #2165: unit.ReferenceModel_SavedModelsMatchTheBuilders ..................................................   Passed   29.63 sec
+          Start 2165: unit.ReferenceModel_SavedModelsMatchTheBuilders
+        Test #2913: unit.StructuralReference_IsDeterministicOverRepeatedSolves .......................................   Passed   20.46 sec
+          Start 2913: unit.StructuralReference_IsDeterministicOverRepeatedSolves
+        Test #2131: unit.ReferenceModel_P12ModelsExportStepAndReadBack ...............................................   Passed   20.97 sec
+          Start 2131: unit.ReferenceModel_P12ModelsExportStepAndReadBack
+        Test #2128: unit.ReferenceModel_P12ModelsAreDeterministic ....................................................   Passed   20.38 sec
+          Start 2128: unit.ReferenceModel_P12ModelsAreDeterministic
+        Test #2133: unit.ReferenceModel_P12ModelsSaveLoadAndRegenerate ...............................................   Passed   19.46 sec
+          Start 2133: unit.ReferenceModel_P12ModelsSaveLoadAndRegenerate
+        Test #2097: unit.ReferenceModel_ManifoldTubeFollowsItsParameters .............................................   Passed   24.10 sec
+          Start 2097: unit.ReferenceModel_ManifoldTubeFollowsItsParameters
+        Test #2129: unit.ReferenceModel_P12ModelsBuildValidateAndRegenerate ..........................................   Passed   21.58 sec
+          Start 2129: unit.ReferenceModel_P12ModelsBuildValidateAndRegenerate
+        Test #2913: unit.StructuralReference_IsDeterministicOverRepeatedSolves .......................................   Passed   19.06 sec
+          Start 2913: unit.StructuralReference_IsDeterministicOverRepeatedSolves
+        Test #2131: unit.ReferenceModel_P12ModelsExportStepAndReadBack ...............................................   Passed   19.67 sec
+          Start 2131: unit.ReferenceModel_P12ModelsExportStepAndReadBack
+        Test #2128: unit.ReferenceModel_P12ModelsAreDeterministic ....................................................   Passed   19.59 sec
+          Start 2128: unit.ReferenceModel_P12ModelsAreDeterministic
+        Test #2133: unit.ReferenceModel_P12ModelsSaveLoadAndRegenerate ...............................................   Passed   19.25 sec
+          Start 2133: unit.ReferenceModel_P12ModelsSaveLoadAndRegenerate
+  19/1495 Test #2165: unit.ReferenceModel_SavedModelsMatchTheBuilders ..................................................   Passed   28.06 sec
+          Start 2130: unit.ReferenceModel_P12ModelsBuiltTogetherMatchThoseBuiltAlone
+        Test #2097: unit.ReferenceModel_ManifoldTubeFollowsItsParameters .............................................   Passed   24.24 sec
+          Start 2097: unit.ReferenceModel_ManifoldTubeFollowsItsParameters
+        Test #2913: unit.StructuralReference_IsDeterministicOverRepeatedSolves .......................................   Passed   19.78 sec
+          Start 2913: unit.StructuralReference_IsDeterministicOverRepeatedSolves
+        Test #2129: unit.ReferenceModel_P12ModelsBuildValidateAndRegenerate ..........................................   Passed   22.10 sec
+          Start 2129: unit.ReferenceModel_P12ModelsBuildValidateAndRegenerate
+        Test #2128: unit.ReferenceModel_P12ModelsAreDeterministic ....................................................   Passed   20.26 sec
+          Start 2128: unit.ReferenceModel_P12ModelsAreDeterministic
+        Test #2131: unit.ReferenceModel_P12ModelsExportStepAndReadBack ...............................................   Passed   20.52 sec
+          Start 2131: unit.ReferenceModel_P12ModelsExportStepAndReadBack
+        Test #2133: unit.ReferenceModel_P12ModelsSaveLoadAndRegenerate ...............................................   Passed   19.68 sec
+          Start 2133: unit.ReferenceModel_P12ModelsSaveLoadAndRegenerate
+        Test #2130: unit.ReferenceModel_P12ModelsBuiltTogetherMatchThoseBuiltAlone ...................................   Passed   19.68 sec
+          Start 2130: unit.ReferenceModel_P12ModelsBuiltTogetherMatchThoseBuiltAlone
+        Test #2097: unit.ReferenceModel_ManifoldTubeFollowsItsParameters .............................................   Passed   24.66 sec
+          Start 2097: unit.ReferenceModel_ManifoldTubeFollowsItsParameters
+        Test #2913: unit.StructuralReference_IsDeterministicOverRepeatedSolves .......................................   Passed   20.08 sec
+          Start 2913: unit.StructuralReference_IsDeterministicOverRepeatedSolves
+        Test #2128: unit.ReferenceModel_P12ModelsAreDeterministic ....................................................   Passed   20.67 sec
+          Start 2128: unit.ReferenceModel_P12ModelsAreDeterministic
+        Test #2133: unit.ReferenceModel_P12ModelsSaveLoadAndRegenerate ...............................................   Passed   20.08 sec
+          Start 2133: unit.ReferenceModel_P12ModelsSaveLoadAndRegenerate
+        Test #2129: unit.ReferenceModel_P12ModelsBuildValidateAndRegenerate ..........................................   Passed   22.48 sec
+          Start 2129: unit.ReferenceModel_P12ModelsBuildValidateAndRegenerate
+        Test #2131: unit.ReferenceModel_P12ModelsExportStepAndReadBack ...............................................   Passed   20.84 sec
+          Start 2131: unit.ReferenceModel_P12ModelsExportStepAndReadBack
+        Test #2130: unit.ReferenceModel_P12ModelsBuiltTogetherMatchThoseBuiltAlone ...................................   Passed   20.00 sec
+          Start 2130: unit.ReferenceModel_P12ModelsBuiltTogetherMatchThoseBuiltAlone
+  20/1495 Test #2913: unit.StructuralReference_IsDeterministicOverRepeatedSolves .......................................   Passed   20.12 sec
+          Start 2101: unit.ReferenceModel_ManifoldTubeTwistIsWhatCostsTheExactness
+  21/1495 Test #2097: unit.ReferenceModel_ManifoldTubeFollowsItsParameters .............................................   Passed   24.69 sec
+          Start 2125: unit.ReferenceModel_MountingBracketRegeneratesDeterministically
+  22/1495 Test #2133: unit.ReferenceModel_P12ModelsSaveLoadAndRegenerate ...............................................   Passed   19.46 sec
+          Start 2085: unit.ReferenceModel_FlangeRegeneratesDeterministically
+  23/1495 Test #2128: unit.ReferenceModel_P12ModelsAreDeterministic ....................................................   Passed   19.96 sec
+          Start 3465: unit.ThermalLoad_RemeshReResolvesGeometryReference
+  24/1495 Test #2131: unit.ReferenceModel_P12ModelsExportStepAndReadBack ...............................................   Passed   20.12 sec
+          Start 3432: unit.ThermalLoad_ADifferentBodyIsStale
+  25/1495 Test #2129: unit.ReferenceModel_P12ModelsBuildValidateAndRegenerate ..........................................   Passed   22.09 sec
+          Start 1766: unit.MeshingPersistence_FileSizeDoesNotFollowMeshDensity
+        Test #2130: unit.ReferenceModel_P12ModelsBuiltTogetherMatchThoseBuiltAlone ...................................   Passed   19.06 sec
+          Start 2130: unit.ReferenceModel_P12ModelsBuiltTogetherMatchThoseBuiltAlone
+        Test #3465: unit.ThermalLoad_RemeshReResolvesGeometryReference ...............................................   Passed   13.43 sec
+          Start 3465: unit.ThermalLoad_RemeshReResolvesGeometryReference
+        Test #3432: unit.ThermalLoad_ADifferentBodyIsStale ...........................................................   Passed   13.21 sec
+          Start 3432: unit.ThermalLoad_ADifferentBodyIsStale
+        Test #2085: unit.ReferenceModel_FlangeRegeneratesDeterministically ...........................................   Passed   14.94 sec
+          Start 2085: unit.ReferenceModel_FlangeRegeneratesDeterministically
+        Test #2125: unit.ReferenceModel_MountingBracketRegeneratesDeterministically ..................................   Passed   17.46 sec
+          Start 2125: unit.ReferenceModel_MountingBracketRegeneratesDeterministically
+        Test #1766: unit.MeshingPersistence_FileSizeDoesNotFollowMeshDensity .........................................   Passed   15.30 sec
+          Start 1766: unit.MeshingPersistence_FileSizeDoesNotFollowMeshDensity
+        Test #2101: unit.ReferenceModel_ManifoldTubeTwistIsWhatCostsTheExactness .....................................   Passed   20.27 sec
+          Start 2101: unit.ReferenceModel_ManifoldTubeTwistIsWhatCostsTheExactness
+        Test #2130: unit.ReferenceModel_P12ModelsBuiltTogetherMatchThoseBuiltAlone ...................................   Passed   20.30 sec
+          Start 2130: unit.ReferenceModel_P12ModelsBuiltTogetherMatchThoseBuiltAlone
+        Test #3465: unit.ThermalLoad_RemeshReResolvesGeometryReference ...............................................   Passed   13.23 sec
+          Start 3465: unit.ThermalLoad_RemeshReResolvesGeometryReference
+        Test #3432: unit.ThermalLoad_ADifferentBodyIsStale ...........................................................   Passed   13.22 sec
+          Start 3432: unit.ThermalLoad_ADifferentBodyIsStale
+        Test #2085: unit.ReferenceModel_FlangeRegeneratesDeterministically ...........................................   Passed   15.03 sec
+          Start 2085: unit.ReferenceModel_FlangeRegeneratesDeterministically
+        Test #2673: unit.StructuralCantilever_TrendsTowardBeamTheoryAcrossThreeMeshesAndMeasuresWhyItCannotReachIt ...   Passed  195.33 sec
+          Start 2673: unit.StructuralCantilever_TrendsTowardBeamTheoryAcrossThreeMeshesAndMeasuresWhyItCannotReachIt
+        Test #1766: unit.MeshingPersistence_FileSizeDoesNotFollowMeshDensity .........................................   Passed   14.51 sec
+          Start 1766: unit.MeshingPersistence_FileSizeDoesNotFollowMeshDensity
+        Test #2125: unit.ReferenceModel_MountingBracketRegeneratesDeterministically ..................................   Passed   17.09 sec
+          Start 2125: unit.ReferenceModel_MountingBracketRegeneratesDeterministically
+        Test #2101: unit.ReferenceModel_ManifoldTubeTwistIsWhatCostsTheExactness .....................................   Passed   20.16 sec
+          Start 2101: unit.ReferenceModel_ManifoldTubeTwistIsWhatCostsTheExactness
+        Test #3465: unit.ThermalLoad_RemeshReResolvesGeometryReference ...............................................   Passed   13.33 sec
+          Start 3465: unit.ThermalLoad_RemeshReResolvesGeometryReference
+        Test #3432: unit.ThermalLoad_ADifferentBodyIsStale ...........................................................   Passed   13.64 sec
+          Start 3432: unit.ThermalLoad_ADifferentBodyIsStale
+        Test #2085: unit.ReferenceModel_FlangeRegeneratesDeterministically ...........................................   Passed   15.25 sec
+          Start 2085: unit.ReferenceModel_FlangeRegeneratesDeterministically
+  26/1495 Test #2130: unit.ReferenceModel_P12ModelsBuiltTogetherMatchThoseBuiltAlone ...................................   Passed   20.21 sec
+          Start 2433: unit.SizeGlobal_SmallerTargetGivesAFinerCharacteristicScale
+        Test #1766: unit.MeshingPersistence_FileSizeDoesNotFollowMeshDensity .........................................   Passed   14.47 sec
+          Start 1766: unit.MeshingPersistence_FileSizeDoesNotFollowMeshDensity
+        Test #2125: unit.ReferenceModel_MountingBracketRegeneratesDeterministically ..................................   Passed   17.37 sec
+          Start 2125: unit.ReferenceModel_MountingBracketRegeneratesDeterministically
+        Test #3465: unit.ThermalLoad_RemeshReResolvesGeometryReference ...............................................   Passed   13.03 sec
+          Start 3465: unit.ThermalLoad_RemeshReResolvesGeometryReference
+        Test #3432: unit.ThermalLoad_ADifferentBodyIsStale ...........................................................   Passed   13.09 sec
+          Start 3432: unit.ThermalLoad_ADifferentBodyIsStale
+        Test #2101: unit.ReferenceModel_ManifoldTubeTwistIsWhatCostsTheExactness .....................................   Passed   20.07 sec
+          Start 2101: unit.ReferenceModel_ManifoldTubeTwistIsWhatCostsTheExactness
+        Test #2433: unit.SizeGlobal_SmallerTargetGivesAFinerCharacteristicScale ......................................   Passed   13.60 sec
+          Start 2433: unit.SizeGlobal_SmallerTargetGivesAFinerCharacteristicScale
+        Test #2085: unit.ReferenceModel_FlangeRegeneratesDeterministically ...........................................   Passed   14.52 sec
+          Start 2085: unit.ReferenceModel_FlangeRegeneratesDeterministically
+        Test #1766: unit.MeshingPersistence_FileSizeDoesNotFollowMeshDensity .........................................   Passed   14.08 sec
+          Start 1766: unit.MeshingPersistence_FileSizeDoesNotFollowMeshDensity
+  27/1495 Test #3465: unit.ThermalLoad_RemeshReResolvesGeometryReference ...............................................   Passed   12.75 sec
+          Start 2100: unit.ReferenceModel_ManifoldTubeRefusesAPathItCannotSweep
+  28/1495 Test #3432: unit.ThermalLoad_ADifferentBodyIsStale ...........................................................   Passed   13.29 sec
+          Start 3200: unit.ThermalBC_ADifferentBodyIsStale
+        Test #2125: unit.ReferenceModel_MountingBracketRegeneratesDeterministically ..................................   Passed   17.08 sec
+          Start 2125: unit.ReferenceModel_MountingBracketRegeneratesDeterministically
+        Test #2433: unit.SizeGlobal_SmallerTargetGivesAFinerCharacteristicScale ......................................   Passed   14.70 sec
+          Start 2433: unit.SizeGlobal_SmallerTargetGivesAFinerCharacteristicScale
+  29/1495 Test #2085: unit.ReferenceModel_FlangeRegeneratesDeterministically ...........................................   Passed   15.48 sec
+          Start 2140: unit.ReferenceModel_PulleyRegeneratesDeterministically
+  30/1495 Test #1766: unit.MeshingPersistence_FileSizeDoesNotFollowMeshDensity .........................................   Passed   14.92 sec
+          Start 3274: unit.ThermalBC_RemeshReResolvesGeometryReference
+        Test #2101: unit.ReferenceModel_ManifoldTubeTwistIsWhatCostsTheExactness .....................................   Passed   20.98 sec
+          Start 2101: unit.ReferenceModel_ManifoldTubeTwistIsWhatCostsTheExactness
+        Test #3200: unit.ThermalBC_ADifferentBodyIsStale .............................................................   Passed   12.72 sec
+          Start 3200: unit.ThermalBC_ADifferentBodyIsStale
+        Test #2100: unit.ReferenceModel_ManifoldTubeRefusesAPathItCannotSweep ........................................   Passed   14.03 sec
+          Start 2100: unit.ReferenceModel_ManifoldTubeRefusesAPathItCannotSweep
+  31/1495 Test #2125: unit.ReferenceModel_MountingBracketRegeneratesDeterministically ..................................   Passed   16.87 sec
+          Start 2098: unit.ReferenceModel_ManifoldTubeFollowsItsSection
+        Test #2433: unit.SizeGlobal_SmallerTargetGivesAFinerCharacteristicScale ......................................   Passed   14.51 sec
+          Start 2433: unit.SizeGlobal_SmallerTargetGivesAFinerCharacteristicScale
+        Test #2140: unit.ReferenceModel_PulleyRegeneratesDeterministically ...........................................   Passed   13.58 sec
+          Start 2140: unit.ReferenceModel_PulleyRegeneratesDeterministically
+        Test #3274: unit.ThermalBC_RemeshReResolvesGeometryReference .................................................   Passed   13.22 sec
+          Start 3274: unit.ThermalBC_RemeshReResolvesGeometryReference
+        Test #3200: unit.ThermalBC_ADifferentBodyIsStale .............................................................   Passed   13.50 sec
+          Start 3200: unit.ThermalBC_ADifferentBodyIsStale
+        Test #2100: unit.ReferenceModel_ManifoldTubeRefusesAPathItCannotSweep ........................................   Passed   14.05 sec
+          Start 2100: unit.ReferenceModel_ManifoldTubeRefusesAPathItCannotSweep
+        Test #2098: unit.ReferenceModel_ManifoldTubeFollowsItsSection ................................................   Passed   12.44 sec
+          Start 2098: unit.ReferenceModel_ManifoldTubeFollowsItsSection
+  32/1495 Test #2101: unit.ReferenceModel_ManifoldTubeTwistIsWhatCostsTheExactness .....................................   Passed   20.57 sec
+          Start 2171: unit.ReferenceModel_ShaftRegeneratesDeterministically
+        Test #2140: unit.ReferenceModel_PulleyRegeneratesDeterministically ...........................................   Passed   13.25 sec
+          Start 2140: unit.ReferenceModel_PulleyRegeneratesDeterministically
+        Test #3274: unit.ThermalBC_RemeshReResolvesGeometryReference .................................................   Passed   13.30 sec
+          Start 3274: unit.ThermalBC_RemeshReResolvesGeometryReference
+        Test #2433: unit.SizeGlobal_SmallerTargetGivesAFinerCharacteristicScale ......................................   Passed   14.85 sec
+          Start 2433: unit.SizeGlobal_SmallerTargetGivesAFinerCharacteristicScale
+        Test #3200: unit.ThermalBC_ADifferentBodyIsStale .............................................................   Passed   13.20 sec
+          Start 3200: unit.ThermalBC_ADifferentBodyIsStale
+        Test #2100: unit.ReferenceModel_ManifoldTubeRefusesAPathItCannotSweep ........................................   Passed   13.72 sec
+          Start 2100: unit.ReferenceModel_ManifoldTubeRefusesAPathItCannotSweep
+        Test #2098: unit.ReferenceModel_ManifoldTubeFollowsItsSection ................................................   Passed   12.41 sec
+          Start 2098: unit.ReferenceModel_ManifoldTubeFollowsItsSection
+        Test #2171: unit.ReferenceModel_ShaftRegeneratesDeterministically ............................................   Passed   11.22 sec
+          Start 2171: unit.ReferenceModel_ShaftRegeneratesDeterministically
+        Test #2140: unit.ReferenceModel_PulleyRegeneratesDeterministically ...........................................   Passed   13.21 sec
+          Start 2140: unit.ReferenceModel_PulleyRegeneratesDeterministically
+        Test #3274: unit.ThermalBC_RemeshReResolvesGeometryReference .................................................   Passed   13.20 sec
+          Start 3274: unit.ThermalBC_RemeshReResolvesGeometryReference
+  33/1495 Test #2433: unit.SizeGlobal_SmallerTargetGivesAFinerCharacteristicScale ......................................   Passed   14.73 sec
+          Start 1634: unit.MeshReference_EveryModelsOutcomeIsStableOverRepeatedAttempts
+        Test #3200: unit.ThermalBC_ADifferentBodyIsStale .............................................................   Passed   13.38 sec
+          Start 3200: unit.ThermalBC_ADifferentBodyIsStale
+        Test #2100: unit.ReferenceModel_ManifoldTubeRefusesAPathItCannotSweep ........................................   Passed   14.09 sec
+          Start 2100: unit.ReferenceModel_ManifoldTubeRefusesAPathItCannotSweep
+        Test #2098: unit.ReferenceModel_ManifoldTubeFollowsItsSection ................................................   Passed   12.40 sec
+          Start 2098: unit.ReferenceModel_ManifoldTubeFollowsItsSection
+        Test #2171: unit.ReferenceModel_ShaftRegeneratesDeterministically ............................................   Passed   11.72 sec
+          Start 2171: unit.ReferenceModel_ShaftRegeneratesDeterministically
+        Test #2140: unit.ReferenceModel_PulleyRegeneratesDeterministically ...........................................   Passed   12.68 sec
+          Start 2140: unit.ReferenceModel_PulleyRegeneratesDeterministically
+        Test #1634: unit.MeshReference_EveryModelsOutcomeIsStableOverRepeatedAttempts ................................   Passed    9.67 sec
+          Start 1634: unit.MeshReference_EveryModelsOutcomeIsStableOverRepeatedAttempts
+        Test #3274: unit.ThermalBC_RemeshReResolvesGeometryReference .................................................   Passed   12.57 sec
+          Start 3274: unit.ThermalBC_RemeshReResolvesGeometryReference
+  34/1495 Test #3200: unit.ThermalBC_ADifferentBodyIsStale .............................................................   Passed   11.88 sec
+          Start 2124: unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges
+        Test #2171: unit.ReferenceModel_ShaftRegeneratesDeterministically ............................................   Passed   10.96 sec
+          Start 2171: unit.ReferenceModel_ShaftRegeneratesDeterministically
+        Test #2098: unit.ReferenceModel_ManifoldTubeFollowsItsSection ................................................   Passed   11.82 sec
+          Start 2098: unit.ReferenceModel_ManifoldTubeFollowsItsSection
+  35/1495 Test #2100: unit.ReferenceModel_ManifoldTubeRefusesAPathItCannotSweep ........................................   Passed   13.18 sec
+          Start 3838: cli.structural.workflow
+        Test #1634: unit.MeshReference_EveryModelsOutcomeIsStableOverRepeatedAttempts ................................   Passed   10.67 sec
+          Start 1634: unit.MeshReference_EveryModelsOutcomeIsStableOverRepeatedAttempts
+  36/1495 Test #2140: unit.ReferenceModel_PulleyRegeneratesDeterministically ...........................................   Passed   13.64 sec
+          Start 3938: refmod.mesh.build.refusal
+  37/1495 Test #3274: unit.ThermalBC_RemeshReResolvesGeometryReference .................................................   Passed   13.74 sec
+          Start 3939: refmod.mesh.build.tube-void
+        Test #2124: unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges ..............................   Passed   10.25 sec
+          Start 2124: unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges
+        Test #3838: cli.structural.workflow ..........................................................................   Passed    9.27 sec
+          Start 3838: cli.structural.workflow
+        Test #2171: unit.ReferenceModel_ShaftRegeneratesDeterministically ............................................   Passed   11.68 sec
+          Start 2171: unit.ReferenceModel_ShaftRegeneratesDeterministically
+  38/1495 Test #2098: unit.ReferenceModel_ManifoldTubeFollowsItsSection ................................................   Passed   12.88 sec
+          Start 2075: unit.ReferenceModel_BearingHousingRegeneratesDeterministically
+        Test #1634: unit.MeshReference_EveryModelsOutcomeIsStableOverRepeatedAttempts ................................   Passed   10.68 sec
+          Start 1634: unit.MeshReference_EveryModelsOutcomeIsStableOverRepeatedAttempts
+        Test #3938: refmod.mesh.build.refusal ........................................................................   Passed    8.97 sec
+          Start 3938: refmod.mesh.build.refusal
+        Test #3939: refmod.mesh.build.tube-void ......................................................................   Passed    8.85 sec
+          Start 3939: refmod.mesh.build.tube-void
+        Test #2124: unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges ..............................   Passed   10.16 sec
+          Start 2124: unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges
+        Test #3838: cli.structural.workflow ..........................................................................   Passed    8.77 sec
+          Start 3838: cli.structural.workflow
+        Test #2075: unit.ReferenceModel_BearingHousingRegeneratesDeterministically ...................................   Passed    8.83 sec
+          Start 2075: unit.ReferenceModel_BearingHousingRegeneratesDeterministically
+  39/1495 Test #2171: unit.ReferenceModel_ShaftRegeneratesDeterministically ............................................   Passed   11.73 sec
+          Start 2099: unit.ReferenceModel_ManifoldTubeMatchesPappus
+        Test #3938: refmod.mesh.build.refusal ........................................................................   Passed    9.14 sec
+          Start 3938: refmod.mesh.build.refusal
+        Test #1634: unit.MeshReference_EveryModelsOutcomeIsStableOverRepeatedAttempts ................................   Passed   10.55 sec
+          Start 1634: unit.MeshReference_EveryModelsOutcomeIsStableOverRepeatedAttempts
+        Test #3939: refmod.mesh.build.tube-void ......................................................................   Passed    9.28 sec
+          Start 3939: refmod.mesh.build.tube-void
+        Test #3838: cli.structural.workflow ..........................................................................   Passed    9.21 sec
+          Start 3838: cli.structural.workflow
+        Test #2124: unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges ..............................   Passed   10.39 sec
+          Start 2124: unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges
+        Test #2075: unit.ReferenceModel_BearingHousingRegeneratesDeterministically ...................................   Passed    8.81 sec
+          Start 2075: unit.ReferenceModel_BearingHousingRegeneratesDeterministically
+        Test #2099: unit.ReferenceModel_ManifoldTubeMatchesPappus ....................................................   Passed    7.91 sec
+          Start 2099: unit.ReferenceModel_ManifoldTubeMatchesPappus
+        Test #3938: refmod.mesh.build.refusal ........................................................................   Passed    9.17 sec
+          Start 3938: refmod.mesh.build.refusal
+        Test #3939: refmod.mesh.build.tube-void ......................................................................   Passed    9.26 sec
+          Start 3939: refmod.mesh.build.tube-void
+  40/1495 Test #1634: unit.MeshReference_EveryModelsOutcomeIsStableOverRepeatedAttempts ................................   Passed   10.51 sec
+          Start 2018: unit.QualityProduction_CylinderMeshHasNoInvalidElementsAndEveryMetricInRange
+        Test #3838: cli.structural.workflow ..........................................................................   Passed    8.96 sec
+          Start 3838: cli.structural.workflow
+        Test #2099: unit.ReferenceModel_ManifoldTubeMatchesPappus ....................................................   Passed    7.48 sec
+          Start 2099: unit.ReferenceModel_ManifoldTubeMatchesPappus
+        Test #2124: unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges ..............................   Passed   10.20 sec
+          Start 2124: unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges
+        Test #2075: unit.ReferenceModel_BearingHousingRegeneratesDeterministically ...................................   Passed    8.70 sec
+          Start 2075: unit.ReferenceModel_BearingHousingRegeneratesDeterministically
+        Test #3938: refmod.mesh.build.refusal ........................................................................   Passed    8.65 sec
+          Start 3938: refmod.mesh.build.refusal
+        Test #2018: unit.QualityProduction_CylinderMeshHasNoInvalidElementsAndEveryMetricInRange .....................   Passed    7.22 sec
+          Start 2018: unit.QualityProduction_CylinderMeshHasNoInvalidElementsAndEveryMetricInRange
+        Test #3939: refmod.mesh.build.tube-void ......................................................................   Passed    8.63 sec
+          Start 3939: refmod.mesh.build.tube-void
+  41/1495 Test #3838: cli.structural.workflow ..........................................................................   Passed    8.80 sec
+          Start 2999: unit.StructuralValidation_TheEnvelopeBoundsReallyAreTheMeasuredWorstCase
+        Test #2099: unit.ReferenceModel_ManifoldTubeMatchesPappus ....................................................   Passed    7.63 sec
+          Start 2099: unit.ReferenceModel_ManifoldTubeMatchesPappus
+        Test #2075: unit.ReferenceModel_BearingHousingRegeneratesDeterministically ...................................   Passed    8.78 sec
+          Start 2075: unit.ReferenceModel_BearingHousingRegeneratesDeterministically
+  42/1495 Test #2124: unit.ReferenceModel_MountingBracketRegeneratesAfterParameterChanges ..............................   Passed   10.35 sec
+          Start 3963: refmod.structural.build.under-constrained
+        Test #2018: unit.QualityProduction_CylinderMeshHasNoInvalidElementsAndEveryMetricInRange .....................   Passed    7.29 sec
+          Start 2018: unit.QualityProduction_CylinderMeshHasNoInvalidElementsAndEveryMetricInRange
+  43/1495 Test #3938: refmod.mesh.build.refusal ........................................................................   Passed    8.81 sec
+          Start 3964: refmod.structural.build.unresolved
+  44/1495 Test #3939: refmod.mesh.build.tube-void ......................................................................   Passed    9.28 sec
+          Start 3728: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly
+        Test #2999: unit.StructuralValidation_TheEnvelopeBoundsReallyAreTheMeasuredWorstCase .........................   Passed    7.23 sec
+          Start 2999: unit.StructuralValidation_TheEnvelopeBoundsReallyAreTheMeasuredWorstCase
+        Test #2099: unit.ReferenceModel_ManifoldTubeMatchesPappus ....................................................   Passed    7.79 sec
+          Start 2099: unit.ReferenceModel_ManifoldTubeMatchesPappus
+        Test #3963: refmod.structural.build.under-constrained ........................................................   Passed    6.44 sec
+          Start 3963: refmod.structural.build.under-constrained
+  45/1495 Test #2075: unit.ReferenceModel_BearingHousingRegeneratesDeterministically ...................................   Passed    8.84 sec
+          Start 2084: unit.ReferenceModel_FlangeRegeneratesAfterParameterChanges
+        Test #2018: unit.QualityProduction_CylinderMeshHasNoInvalidElementsAndEveryMetricInRange .....................   Passed    7.44 sec
+          Start 2018: unit.QualityProduction_CylinderMeshHasNoInvalidElementsAndEveryMetricInRange
+        Test #3964: refmod.structural.build.unresolved ...............................................................   Passed    6.46 sec
+          Start 3964: refmod.structural.build.unresolved
+        Test #3728: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly ...........................................   Passed    6.02 sec
+          Start 3728: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly
+        Test #2999: unit.StructuralValidation_TheEnvelopeBoundsReallyAreTheMeasuredWorstCase .........................   Passed    6.65 sec
+          Start 2999: unit.StructuralValidation_TheEnvelopeBoundsReallyAreTheMeasuredWorstCase
+  46/1495 Test #2099: unit.ReferenceModel_ManifoldTubeMatchesPappus ....................................................   Passed    7.02 sec
+          Start 2647: unit.StructuralBC_ConstrainsEveryNodeOfACurvedReferenceWall
+        Test #3963: refmod.structural.build.under-constrained ........................................................   Passed    5.81 sec
+          Start 3963: refmod.structural.build.under-constrained
+        Test #2084: unit.ReferenceModel_FlangeRegeneratesAfterParameterChanges .......................................   Passed    5.45 sec
+          Start 2084: unit.ReferenceModel_FlangeRegeneratesAfterParameterChanges
+        Test #3728: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly ...........................................   Passed    4.44 sec
+          Start 3728: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly
+        Test #3964: refmod.structural.build.unresolved ...............................................................   Passed    5.91 sec
+          Start 3964: refmod.structural.build.unresolved
+        Test #2018: unit.QualityProduction_CylinderMeshHasNoInvalidElementsAndEveryMetricInRange .....................   Passed    6.66 sec
+          Start 2018: unit.QualityProduction_CylinderMeshHasNoInvalidElementsAndEveryMetricInRange
+        Test #2999: unit.StructuralValidation_TheEnvelopeBoundsReallyAreTheMeasuredWorstCase .........................   Passed    6.68 sec
+          Start 2999: unit.StructuralValidation_TheEnvelopeBoundsReallyAreTheMeasuredWorstCase
+        Test #2647: unit.StructuralBC_ConstrainsEveryNodeOfACurvedReferenceWall ......................................   Passed    5.47 sec
+          Start 2647: unit.StructuralBC_ConstrainsEveryNodeOfACurvedReferenceWall
+        Test #3963: refmod.structural.build.under-constrained ........................................................   Passed    6.57 sec
+          Start 3963: refmod.structural.build.under-constrained
+        Test #2084: unit.ReferenceModel_FlangeRegeneratesAfterParameterChanges .......................................   Passed    6.13 sec
+          Start 2084: unit.ReferenceModel_FlangeRegeneratesAfterParameterChanges
+        Test #3728: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly ...........................................   Passed    7.64 sec
+          Start 3728: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly
+        Test #3964: refmod.structural.build.unresolved ...............................................................   Passed    6.85 sec
+          Start 3964: refmod.structural.build.unresolved
+  47/1495 Test #2018: unit.QualityProduction_CylinderMeshHasNoInvalidElementsAndEveryMetricInRange .....................   Passed    7.83 sec
+          Start 2787: unit.StructuralLocalRefinement_RefinesTheRootBandAndTheMirrorRefinesTheTip
+        Test #2647: unit.StructuralBC_ConstrainsEveryNodeOfACurvedReferenceWall ......................................   Passed    6.07 sec
+          Start 2647: unit.StructuralBC_ConstrainsEveryNodeOfACurvedReferenceWall
+        Test #2999: unit.StructuralValidation_TheEnvelopeBoundsReallyAreTheMeasuredWorstCase .........................   Passed    7.16 sec
+          Start 2999: unit.StructuralValidation_TheEnvelopeBoundsReallyAreTheMeasuredWorstCase
+        Test #3963: refmod.structural.build.under-constrained ........................................................   Passed    7.34 sec
+          Start 3963: refmod.structural.build.under-constrained
+        Test #2084: unit.ReferenceModel_FlangeRegeneratesAfterParameterChanges .......................................   Passed    6.24 sec
+          Start 2084: unit.ReferenceModel_FlangeRegeneratesAfterParameterChanges
+        Test #3728: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly ...........................................   Passed    6.31 sec
+          Start 3728: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly
+        Test #2787: unit.StructuralLocalRefinement_RefinesTheRootBandAndTheMirrorRefinesTheTip .......................   Passed    5.84 sec
+          Start 2787: unit.StructuralLocalRefinement_RefinesTheRootBandAndTheMirrorRefinesTheTip
+        Test #3964: refmod.structural.build.unresolved ...............................................................   Passed    7.44 sec
+          Start 3964: refmod.structural.build.unresolved
+        Test #2647: unit.StructuralBC_ConstrainsEveryNodeOfACurvedReferenceWall ......................................   Passed    6.45 sec
+          Start 2647: unit.StructuralBC_ConstrainsEveryNodeOfACurvedReferenceWall
+  48/1495 Test #2999: unit.StructuralValidation_TheEnvelopeBoundsReallyAreTheMeasuredWorstCase .........................   Passed    7.93 sec
+          Start 2139: unit.ReferenceModel_PulleyRegeneratesAfterParameterChanges
+        Test #2084: unit.ReferenceModel_FlangeRegeneratesAfterParameterChanges .......................................   Passed    6.46 sec
+          Start 2084: unit.ReferenceModel_FlangeRegeneratesAfterParameterChanges
+  49/1495 Test #3963: refmod.structural.build.under-constrained ........................................................   Passed    7.00 sec
+          Start 1576: unit.MeshCylinder_ApproachesTheAnalyticVolumeAsTheSurfaceIsResolved
+        Test #2787: unit.StructuralLocalRefinement_RefinesTheRootBandAndTheMirrorRefinesTheTip .......................   Passed    5.78 sec
+          Start 2787: unit.StructuralLocalRefinement_RefinesTheRootBandAndTheMirrorRefinesTheTip
+        Test #2647: unit.StructuralBC_ConstrainsEveryNodeOfACurvedReferenceWall ......................................   Passed    6.29 sec
+          Start 2647: unit.StructuralBC_ConstrainsEveryNodeOfACurvedReferenceWall
+  50/1495 Test #3964: refmod.structural.build.unresolved ...............................................................   Passed    6.83 sec
+          Start 1715: unit.MeshingCli_OutputIsDeterministic
+  51/1495 Test #3728: unit.Viewer_ManyViewersInOneProcessEachRenderCorrectly ...........................................   Passed    8.70 sec
+          Start 2173: unit.ReferenceModel_ShaftUndoRedo
+        Test #2139: unit.ReferenceModel_PulleyRegeneratesAfterParameterChanges .......................................   Passed    6.30 sec
+          Start 2139: unit.ReferenceModel_PulleyRegeneratesAfterParameterChanges
+  52/1495 Test #2084: unit.ReferenceModel_FlangeRegeneratesAfterParameterChanges .......................................   Passed    6.42 sec
+          Start 2093: unit.ReferenceModel_IndexPlateFollowsItsParameters
+        Test #1576: unit.MeshCylinder_ApproachesTheAnalyticVolumeAsTheSurfaceIsResolved ..............................   Passed    6.06 sec
+          Start 1576: unit.MeshCylinder_ApproachesTheAnalyticVolumeAsTheSurfaceIsResolved
+        Test #2787: unit.StructuralLocalRefinement_RefinesTheRootBandAndTheMirrorRefinesTheTip .......................   Passed    6.06 sec
+          Start 2787: unit.StructuralLocalRefinement_RefinesTheRootBandAndTheMirrorRefinesTheTip
+        Test #1715: unit.MeshingCli_OutputIsDeterministic ............................................................   Passed    5.68 sec
+          Start 1715: unit.MeshingCli_OutputIsDeterministic
+  53/1495 Test #2647: unit.StructuralBC_ConstrainsEveryNodeOfACurvedReferenceWall ......................................   Passed    6.26 sec
+          Start 2914: unit.StructuralReference_SaveLoadAndResolveReproducesEverySolutionBitForBit
+        Test #2173: unit.ReferenceModel_ShaftUndoRedo ................................................................   Passed    5.79 sec
+          Start 2173: unit.ReferenceModel_ShaftUndoRedo
+        Test #2093: unit.ReferenceModel_IndexPlateFollowsItsParameters ...............................................   Passed    5.75 sec
+          Start 2093: unit.ReferenceModel_IndexPlateFollowsItsParameters
+        Test #2139: unit.ReferenceModel_PulleyRegeneratesAfterParameterChanges .......................................   Passed    6.33 sec
+          Start 2139: unit.ReferenceModel_PulleyRegeneratesAfterParameterChanges
+        Test #1576: unit.MeshCylinder_ApproachesTheAnalyticVolumeAsTheSurfaceIsResolved ..............................   Passed    6.04 sec
+          Start 1576: unit.MeshCylinder_ApproachesTheAnalyticVolumeAsTheSurfaceIsResolved
+        Test #2787: unit.StructuralLocalRefinement_RefinesTheRootBandAndTheMirrorRefinesTheTip .......................   Passed    6.56 sec
+          Start 2787: unit.StructuralLocalRefinement_RefinesTheRootBandAndTheMirrorRefinesTheTip
+        Test #1715: unit.MeshingCli_OutputIsDeterministic ............................................................   Passed    5.82 sec
+          Start 1715: unit.MeshingCli_OutputIsDeterministic
+        Test #2914: unit.StructuralReference_SaveLoadAndResolveReproducesEverySolutionBitForBit ......................   Passed    5.77 sec
+          Start 2914: unit.StructuralReference_SaveLoadAndResolveReproducesEverySolutionBitForBit
+        Test #2173: unit.ReferenceModel_ShaftUndoRedo ................................................................   Passed    5.94 sec
+          Start 2173: unit.ReferenceModel_ShaftUndoRedo
+        Test #2093: unit.ReferenceModel_IndexPlateFollowsItsParameters ...............................................   Passed    5.87 sec
+          Start 2093: unit.ReferenceModel_IndexPlateFollowsItsParameters
+        Test #2139: unit.ReferenceModel_PulleyRegeneratesAfterParameterChanges .......................................   Passed    6.34 sec
+          Start 2139: unit.ReferenceModel_PulleyRegeneratesAfterParameterChanges
+        Test #1576: unit.MeshCylinder_ApproachesTheAnalyticVolumeAsTheSurfaceIsResolved ..............................   Passed    6.29 sec
+          Start 1576: unit.MeshCylinder_ApproachesTheAnalyticVolumeAsTheSurfaceIsResolved
+        Test #1715: unit.MeshingCli_OutputIsDeterministic ............................................................   Passed    6.05 sec
+          Start 1715: unit.MeshingCli_OutputIsDeterministic
+        Test #2673: unit.StructuralCantilever_TrendsTowardBeamTheoryAcrossThreeMeshesAndMeasuresWhyItCannotReachIt ...   Passed  205.70 sec
+          Start 2673: unit.StructuralCantilever_TrendsTowardBeamTheoryAcrossThreeMeshesAndMeasuresWhyItCannotReachIt
+  54/1495 Test #2787: unit.StructuralLocalRefinement_RefinesTheRootBandAndTheMirrorRefinesTheTip .......................   Passed    6.75 sec
+          Start 2126: unit.ReferenceModel_MountingBracketSaveLoad
+        Test #2914: unit.StructuralReference_SaveLoadAndResolveReproducesEverySolutionBitForBit ......................   Passed    6.24 sec
+          Start 2914: unit.StructuralReference_SaveLoadAndResolveReproducesEverySolutionBitForBit
+        Test #2173: unit.ReferenceModel_ShaftUndoRedo ................................................................   Passed    6.23 sec
+          Start 2173: unit.ReferenceModel_ShaftUndoRedo
+        Test #2093: unit.ReferenceModel_IndexPlateFollowsItsParameters ...............................................   Passed    6.35 sec
+          Start 2093: unit.ReferenceModel_IndexPlateFollowsItsParameters
+        Test #2139: unit.ReferenceModel_PulleyRegeneratesAfterParameterChanges .......................................   Passed    6.18 sec
+          Start 2139: unit.ReferenceModel_PulleyRegeneratesAfterParameterChanges
+        Test #1576: unit.MeshCylinder_ApproachesTheAnalyticVolumeAsTheSurfaceIsResolved ..............................   Passed    6.21 sec
+          Start 1576: unit.MeshCylinder_ApproachesTheAnalyticVolumeAsTheSurfaceIsResolved
+        Test #1715: unit.MeshingCli_OutputIsDeterministic ............................................................   Passed    5.97 sec
+          Start 1715: unit.MeshingCli_OutputIsDeterministic
+        Test #2914: unit.StructuralReference_SaveLoadAndResolveReproducesEverySolutionBitForBit ......................   Passed    5.42 sec
+          Start 2914: unit.StructuralReference_SaveLoadAndResolveReproducesEverySolutionBitForBit
+        Test #2126: unit.ReferenceModel_MountingBracketSaveLoad ......................................................   Passed    5.59 sec
+          Start 2126: unit.ReferenceModel_MountingBracketSaveLoad
+        Test #2173: unit.ReferenceModel_ShaftUndoRedo ................................................................   Passed    6.04 sec
+          Start 2173: unit.ReferenceModel_ShaftUndoRedo
+        Test #2093: unit.ReferenceModel_IndexPlateFollowsItsParameters ...............................................   Passed    6.03 sec
+          Start 2093: unit.ReferenceModel_IndexPlateFollowsItsParameters
+  55/1495 Test #1576: unit.MeshCylinder_ApproachesTheAnalyticVolumeAsTheSurfaceIsResolved ..............................   Passed    6.11 sec
+          Start 1712: unit.MeshingCli_HumanAndJsonAgree
+  56/1495 Test #2139: unit.ReferenceModel_PulleyRegeneratesAfterParameterChanges .......................................   Passed    6.31 sec
+          Start 2072: unit.ReferenceModel_BearingHousingFailsSafelyOnInvalidParameters
+        Test #2914: unit.StructuralReference_SaveLoadAndResolveReproducesEverySolutionBitForBit ......................   Passed    5.36 sec
+          Start 2914: unit.StructuralReference_SaveLoadAndResolveReproducesEverySolutionBitForBit
+  57/1495 Test #1715: unit.MeshingCli_OutputIsDeterministic ............................................................   Passed    5.71 sec
+          Start 2183: unit.ReferenceModel_UBoltRegeneratesDeterministically
+        Test #2126: unit.ReferenceModel_MountingBracketSaveLoad ......................................................   Passed    5.60 sec
+          Start 2126: unit.ReferenceModel_MountingBracketSaveLoad
+  58/1495 Test #2173: unit.ReferenceModel_ShaftUndoRedo ................................................................   Passed    5.68 sec
+          Start 2170: unit.ReferenceModel_ShaftRegeneratesAfterParameterChanges
+  59/1495 Test #2093: unit.ReferenceModel_IndexPlateFollowsItsParameters ...............................................   Passed    5.45 sec
+          Start 2087: unit.ReferenceModel_FlangeUndoRedo
+        Test #2072: unit.ReferenceModel_BearingHousingFailsSafelyOnInvalidParameters .................................   Passed    4.93 sec
+          Start 2072: unit.ReferenceModel_BearingHousingFailsSafelyOnInvalidParameters
+        Test #1712: unit.MeshingCli_HumanAndJsonAgree ................................................................   Passed    5.06 sec
+          Start 1712: unit.MeshingCli_HumanAndJsonAgree
+  60/1495 Test #2914: unit.StructuralReference_SaveLoadAndResolveReproducesEverySolutionBitForBit ......................   Passed    4.52 sec
+          Start 2096: unit.ReferenceModel_IndexPlateSuppressionKeepsTheOtherIndices
+        Test #2183: unit.ReferenceModel_UBoltRegeneratesDeterministically ............................................   Passed    4.66 sec
+          Start 2183: unit.ReferenceModel_UBoltRegeneratesDeterministically
+        Test #2126: unit.ReferenceModel_MountingBracketSaveLoad ......................................................   Passed    5.07 sec
+          Start 2126: unit.ReferenceModel_MountingBracketSaveLoad
+        Test #2170: unit.ReferenceModel_ShaftRegeneratesAfterParameterChanges ........................................   Passed    4.72 sec
+          Start 2170: unit.ReferenceModel_ShaftRegeneratesAfterParameterChanges
+        Test #2087: unit.ReferenceModel_FlangeUndoRedo ...............................................................   Passed    4.50 sec
+          Start 2087: unit.ReferenceModel_FlangeUndoRedo
+        Test #2072: unit.ReferenceModel_BearingHousingFailsSafelyOnInvalidParameters .................................   Passed    4.76 sec
+          Start 2072: unit.ReferenceModel_BearingHousingFailsSafelyOnInvalidParameters
+        Test #1712: unit.MeshingCli_HumanAndJsonAgree ................................................................   Passed    4.93 sec
+          Start 1712: unit.MeshingCli_HumanAndJsonAgree
+        Test #2096: unit.ReferenceModel_IndexPlateSuppressionKeepsTheOtherIndices ....................................   Passed    4.39 sec
+          Start 2096: unit.ReferenceModel_IndexPlateSuppressionKeepsTheOtherIndices
+        Test #2183: unit.ReferenceModel_UBoltRegeneratesDeterministically ............................................   Passed    4.63 sec
+          Start 2183: unit.ReferenceModel_UBoltRegeneratesDeterministically
+        Test #2126: unit.ReferenceModel_MountingBracketSaveLoad ......................................................   Passed    5.10 sec
+          Start 2126: unit.ReferenceModel_MountingBracketSaveLoad
+        Test #2170: unit.ReferenceModel_ShaftRegeneratesAfterParameterChanges ........................................   Passed    4.66 sec
+          Start 2170: unit.ReferenceModel_ShaftRegeneratesAfterParameterChanges
+        Test #2087: unit.ReferenceModel_FlangeUndoRedo ...............................................................   Passed    4.45 sec
+          Start 2087: unit.ReferenceModel_FlangeUndoRedo
+        Test #2072: unit.ReferenceModel_BearingHousingFailsSafelyOnInvalidParameters .................................   Passed    4.66 sec
+          Start 2072: unit.ReferenceModel_BearingHousingFailsSafelyOnInvalidParameters
+        Test #2096: unit.ReferenceModel_IndexPlateSuppressionKeepsTheOtherIndices ....................................   Passed    4.39 sec
+          Start 2096: unit.ReferenceModel_IndexPlateSuppressionKeepsTheOtherIndices
+        Test #1712: unit.MeshingCli_HumanAndJsonAgree ................................................................   Passed    4.98 sec
+          Start 1712: unit.MeshingCli_HumanAndJsonAgree
+        Test #2183: unit.ReferenceModel_UBoltRegeneratesDeterministically ............................................   Passed    4.74 sec
+          Start 2183: unit.ReferenceModel_UBoltRegeneratesDeterministically
+        Test #2170: unit.ReferenceModel_ShaftRegeneratesAfterParameterChanges ........................................   Passed    4.66 sec
+          Start 2170: unit.ReferenceModel_ShaftRegeneratesAfterParameterChanges
+  61/1495 Test #2126: unit.ReferenceModel_MountingBracketSaveLoad ......................................................   Passed    5.06 sec
+          Start 1769: unit.MeshingPersistence_LocalRefinementStillRefinesTheSameFaceAfterLoad
+        Test #2087: unit.ReferenceModel_FlangeUndoRedo ...............................................................   Passed    4.26 sec
+          Start 2087: unit.ReferenceModel_FlangeUndoRedo
+        Test #2072: unit.ReferenceModel_BearingHousingFailsSafelyOnInvalidParameters .................................   Passed    4.40 sec
+          Start 2072: unit.ReferenceModel_BearingHousingFailsSafelyOnInvalidParameters
+        Test #2096: unit.ReferenceModel_IndexPlateSuppressionKeepsTheOtherIndices ....................................   Passed    4.04 sec
+          Start 2096: unit.ReferenceModel_IndexPlateSuppressionKeepsTheOtherIndices
+        Test #1712: unit.MeshingCli_HumanAndJsonAgree ................................................................   Passed    4.64 sec
+          Start 1712: unit.MeshingCli_HumanAndJsonAgree
+        Test #2183: unit.ReferenceModel_UBoltRegeneratesDeterministically ............................................   Passed    4.11 sec
+          Start 2183: unit.ReferenceModel_UBoltRegeneratesDeterministically
+        Test #1769: unit.MeshingPersistence_LocalRefinementStillRefinesTheSameFaceAfterLoad ..........................   Passed    3.90 sec
+          Start 1769: unit.MeshingPersistence_LocalRefinementStillRefinesTheSameFaceAfterLoad
+        Test #2170: unit.ReferenceModel_ShaftRegeneratesAfterParameterChanges ........................................   Passed    4.21 sec
+          Start 2170: unit.ReferenceModel_ShaftRegeneratesAfterParameterChanges
+        Test #2087: unit.ReferenceModel_FlangeUndoRedo ...............................................................   Passed    4.05 sec
+          Start 2087: unit.ReferenceModel_FlangeUndoRedo
+        Test #2096: unit.ReferenceModel_IndexPlateSuppressionKeepsTheOtherIndices ....................................   Passed    4.03 sec
+          Start 2096: unit.ReferenceModel_IndexPlateSuppressionKeepsTheOtherIndices
+  62/1495 Test #2072: unit.ReferenceModel_BearingHousingFailsSafelyOnInvalidParameters .................................   Passed    4.32 sec
+          Start 2121: unit.ReferenceModel_MountingBracketExports
+  63/1495 Test #2183: unit.ReferenceModel_UBoltRegeneratesDeterministically ............................................   Passed    4.22 sec
+          Start 2446: unit.Sizing_IsDeterministicAcrossRepeatedGeneration
+  64/1495 Test #1712: unit.MeshingCli_HumanAndJsonAgree ................................................................   Passed    4.77 sec
+          Start 2775: unit.StructuralLoad_PressureOnACurvedWallUsesEachFacetOwnNormal
+        Test #1769: unit.MeshingPersistence_LocalRefinementStillRefinesTheSameFaceAfterLoad ..........................   Passed    3.93 sec
+          Start 1769: unit.MeshingPersistence_LocalRefinementStillRefinesTheSameFaceAfterLoad
+  65/1495 Test #2170: unit.ReferenceModel_ShaftRegeneratesAfterParameterChanges ........................................   Passed    4.25 sec
+          Start 2086: unit.ReferenceModel_FlangeSaveLoad
+  66/1495 Test #2087: unit.ReferenceModel_FlangeUndoRedo ...............................................................   Passed    4.12 sec
+          Start 2123: unit.ReferenceModel_MountingBracketMatchesIndependentProperties
+        Test #2121: unit.ReferenceModel_MountingBracketExports .......................................................   Passed    3.79 sec
+          Start 2121: unit.ReferenceModel_MountingBracketExports
+  67/1495 Test #2096: unit.ReferenceModel_IndexPlateSuppressionKeepsTheOtherIndices ....................................   Passed    4.15 sec
+          Start 2138: unit.ReferenceModel_PulleyMatchesIndependentProperties
+        Test #2775: unit.StructuralLoad_PressureOnACurvedWallUsesEachFacetOwnNormal ..................................   Passed    3.72 sec
+          Start 2775: unit.StructuralLoad_PressureOnACurvedWallUsesEachFacetOwnNormal
+        Test #2446: unit.Sizing_IsDeterministicAcrossRepeatedGeneration ..............................................   Passed    4.08 sec
+          Start 2446: unit.Sizing_IsDeterministicAcrossRepeatedGeneration
+        Test #1769: unit.MeshingPersistence_LocalRefinementStillRefinesTheSameFaceAfterLoad ..........................   Passed    4.05 sec
+          Start 1769: unit.MeshingPersistence_LocalRefinementStillRefinesTheSameFaceAfterLoad
+        Test #2086: unit.ReferenceModel_FlangeSaveLoad ...............................................................   Passed    4.31 sec
+          Start 2086: unit.ReferenceModel_FlangeSaveLoad
+        Test #2123: unit.ReferenceModel_MountingBracketMatchesIndependentProperties ..................................   Passed    4.25 sec
+          Start 2123: unit.ReferenceModel_MountingBracketMatchesIndependentProperties
+        Test #2138: unit.ReferenceModel_PulleyMatchesIndependentProperties ...........................................   Passed    4.46 sec
+          Start 2138: unit.ReferenceModel_PulleyMatchesIndependentProperties
+        Test #2121: unit.ReferenceModel_MountingBracketExports .......................................................   Passed    4.74 sec
+          Start 2121: unit.ReferenceModel_MountingBracketExports
+        Test #2775: unit.StructuralLoad_PressureOnACurvedWallUsesEachFacetOwnNormal ..................................   Passed    4.50 sec
+          Start 2775: unit.StructuralLoad_PressureOnACurvedWallUsesEachFacetOwnNormal
+        Test #2446: unit.Sizing_IsDeterministicAcrossRepeatedGeneration ..............................................   Passed    4.61 sec
+          Start 2446: unit.Sizing_IsDeterministicAcrossRepeatedGeneration
+        Test #1769: unit.MeshingPersistence_LocalRefinementStillRefinesTheSameFaceAfterLoad ..........................   Passed    4.62 sec
+          Start 1769: unit.MeshingPersistence_LocalRefinementStillRefinesTheSameFaceAfterLoad
+        Test #2086: unit.ReferenceModel_FlangeSaveLoad ...............................................................   Passed    4.71 sec
+          Start 2086: unit.ReferenceModel_FlangeSaveLoad
+        Test #2123: unit.ReferenceModel_MountingBracketMatchesIndependentProperties ..................................   Passed    4.59 sec
+          Start 2123: unit.ReferenceModel_MountingBracketMatchesIndependentProperties
+        Test #2138: unit.ReferenceModel_PulleyMatchesIndependentProperties ...........................................   Passed    4.39 sec
+          Start 2138: unit.ReferenceModel_PulleyMatchesIndependentProperties
+        Test #2121: unit.ReferenceModel_MountingBracketExports .......................................................   Passed    4.74 sec
+          Start 2121: unit.ReferenceModel_MountingBracketExports
+        Test #2775: unit.StructuralLoad_PressureOnACurvedWallUsesEachFacetOwnNormal ..................................   Passed    4.22 sec
+          Start 2775: unit.StructuralLoad_PressureOnACurvedWallUsesEachFacetOwnNormal
+        Test #2446: unit.Sizing_IsDeterministicAcrossRepeatedGeneration ..............................................   Passed    4.02 sec
+          Start 2446: unit.Sizing_IsDeterministicAcrossRepeatedGeneration
+  68/1495 Test #1769: unit.MeshingPersistence_LocalRefinementStillRefinesTheSameFaceAfterLoad ..........................   Passed    4.70 sec
+          Start 2079: unit.ReferenceModel_FlangeBoltPatternPositionsCorrect
+        Test #2086: unit.ReferenceModel_FlangeSaveLoad ...............................................................   Passed    4.76 sec
+          Start 2086: unit.ReferenceModel_FlangeSaveLoad
+        Test #2123: unit.ReferenceModel_MountingBracketMatchesIndependentProperties ..................................   Passed    4.63 sec
+          Start 2123: unit.ReferenceModel_MountingBracketMatchesIndependentProperties
+        Test #2138: unit.ReferenceModel_PulleyMatchesIndependentProperties ...........................................   Passed    4.27 sec
+          Start 2138: unit.ReferenceModel_PulleyMatchesIndependentProperties
+        Test #2121: unit.ReferenceModel_MountingBracketExports .......................................................   Passed    4.66 sec
+          Start 2121: unit.ReferenceModel_MountingBracketExports
+        Test #2446: unit.Sizing_IsDeterministicAcrossRepeatedGeneration ..............................................   Passed    4.29 sec
+          Start 2446: unit.Sizing_IsDeterministicAcrossRepeatedGeneration
+        Test #2775: unit.StructuralLoad_PressureOnACurvedWallUsesEachFacetOwnNormal ..................................   Passed    4.43 sec
+          Start 2775: unit.StructuralLoad_PressureOnACurvedWallUsesEachFacetOwnNormal
+        Test #2079: unit.ReferenceModel_FlangeBoltPatternPositionsCorrect ............................................   Passed    4.10 sec
+          Start 2079: unit.ReferenceModel_FlangeBoltPatternPositionsCorrect
+        Test #2086: unit.ReferenceModel_FlangeSaveLoad ...............................................................   Passed    4.24 sec
+          Start 2086: unit.ReferenceModel_FlangeSaveLoad
+        Test #2123: unit.ReferenceModel_MountingBracketMatchesIndependentProperties ..................................   Passed    4.28 sec
+          Start 2123: unit.ReferenceModel_MountingBracketMatchesIndependentProperties
+        Test #2138: unit.ReferenceModel_PulleyMatchesIndependentProperties ...........................................   Passed    4.21 sec
+          Start 2138: unit.ReferenceModel_PulleyMatchesIndependentProperties
+  69/1495 Test #2446: unit.Sizing_IsDeterministicAcrossRepeatedGeneration ..............................................   Passed    3.95 sec
+          Start 1631: unit.MeshReferenceSuite_EveryValidModelMeshesAndTheInvalidOneIsRefused
+  70/1495 Test #2775: unit.StructuralLoad_PressureOnACurvedWallUsesEachFacetOwnNormal ..................................   Passed    4.01 sec
+          Start 2141: unit.ReferenceModel_PulleySaveLoad
+  71/1495 Test #2121: unit.ReferenceModel_MountingBracketExports .......................................................   Passed    4.36 sec
+          Start 2997: unit.StructuralValidation_SweepsTheQualifiedReferenceMeshes
+        Test #2079: unit.ReferenceModel_FlangeBoltPatternPositionsCorrect ............................................   Passed    4.02 sec
+          Start 2079: unit.ReferenceModel_FlangeBoltPatternPositionsCorrect
+  72/1495 Test #2086: unit.ReferenceModel_FlangeSaveLoad ...............................................................   Passed    4.23 sec
+          Start 2142: unit.ReferenceModel_PulleyUndoRedo
+  73/1495 Test #2123: unit.ReferenceModel_MountingBracketMatchesIndependentProperties ..................................   Passed    4.20 sec
+          Start 2750: unit.StructuralDof_NumbersTheReferenceMeshesAndScalesToThem
+  74/1495 Test #2138: unit.ReferenceModel_PulleyMatchesIndependentProperties ...........................................   Passed    4.09 sec
+          Start 2074: unit.ReferenceModel_BearingHousingRegeneratesAfterParameterChanges
+        Test #1631: unit.MeshReferenceSuite_EveryValidModelMeshesAndTheInvalidOneIsRefused ...........................   Passed    3.91 sec
+          Start 1631: unit.MeshReferenceSuite_EveryValidModelMeshesAndTheInvalidOneIsRefused
+        Test #2141: unit.ReferenceModel_PulleySaveLoad ...............................................................   Passed    3.93 sec
+          Start 2141: unit.ReferenceModel_PulleySaveLoad
+        Test #2997: unit.StructuralValidation_SweepsTheQualifiedReferenceMeshes ......................................   Passed    3.90 sec
+          Start 2997: unit.StructuralValidation_SweepsTheQualifiedReferenceMeshes
+        Test #2079: unit.ReferenceModel_FlangeBoltPatternPositionsCorrect ............................................   Passed    3.96 sec
+          Start 2079: unit.ReferenceModel_FlangeBoltPatternPositionsCorrect
+        Test #2142: unit.ReferenceModel_PulleyUndoRedo ...............................................................   Passed    3.88 sec
+          Start 2142: unit.ReferenceModel_PulleyUndoRedo
+        Test #2750: unit.StructuralDof_NumbersTheReferenceMeshesAndScalesToThem ......................................   Passed    3.75 sec
+          Start 2750: unit.StructuralDof_NumbersTheReferenceMeshesAndScalesToThem
+        Test #2074: unit.ReferenceModel_BearingHousingRegeneratesAfterParameterChanges ...............................   Passed    3.89 sec
+          Start 2074: unit.ReferenceModel_BearingHousingRegeneratesAfterParameterChanges
+        Test #1631: unit.MeshReferenceSuite_EveryValidModelMeshesAndTheInvalidOneIsRefused ...........................   Passed    3.71 sec
+          Start 1631: unit.MeshReferenceSuite_EveryValidModelMeshesAndTheInvalidOneIsRefused
+        Test #2141: unit.ReferenceModel_PulleySaveLoad ...............................................................   Passed    3.80 sec
+          Start 2141: unit.ReferenceModel_PulleySaveLoad
+        Test #2997: unit.StructuralValidation_SweepsTheQualifiedReferenceMeshes ......................................   Passed    3.69 sec
+          Start 2997: unit.StructuralValidation_SweepsTheQualifiedReferenceMeshes
+        Test #2079: unit.ReferenceModel_FlangeBoltPatternPositionsCorrect ............................................   Passed    3.84 sec
+          Start 2079: unit.ReferenceModel_FlangeBoltPatternPositionsCorrect
+        Test #2142: unit.ReferenceModel_PulleyUndoRedo ...............................................................   Passed    3.77 sec
+          Start 2142: unit.ReferenceModel_PulleyUndoRedo
+        Test #2750: unit.StructuralDof_NumbersTheReferenceMeshesAndScalesToThem ......................................   Passed    3.78 sec
+          Start 2750: unit.StructuralDof_NumbersTheReferenceMeshesAndScalesToThem
+        Test #2074: unit.ReferenceModel_BearingHousingRegeneratesAfterParameterChanges ...............................   Passed    3.68 sec
+          Start 2074: unit.ReferenceModel_BearingHousingRegeneratesAfterParameterChanges
+        Test #1631: unit.MeshReferenceSuite_EveryValidModelMeshesAndTheInvalidOneIsRefused ...........................   Passed    3.63 sec
+          Start 1631: unit.MeshReferenceSuite_EveryValidModelMeshesAndTheInvalidOneIsRefused
+        Test #2997: unit.StructuralValidation_SweepsTheQualifiedReferenceMeshes ......................................   Passed    3.61 sec
+          Start 2997: unit.StructuralValidation_SweepsTheQualifiedReferenceMeshes
+        Test #2141: unit.ReferenceModel_PulleySaveLoad ...............................................................   Passed    3.73 sec
+          Start 2141: unit.ReferenceModel_PulleySaveLoad
+  75/1495 Test #2079: unit.ReferenceModel_FlangeBoltPatternPositionsCorrect ............................................   Passed    3.93 sec
+          Start 1635: unit.MeshReference_IsDeterministicOverRepeatedGeneration
+        Test #2142: unit.ReferenceModel_PulleyUndoRedo ...............................................................   Passed    3.93 sec
+          Start 2142: unit.ReferenceModel_PulleyUndoRedo
+        Test #2750: unit.StructuralDof_NumbersTheReferenceMeshesAndScalesToThem ......................................   Passed    3.85 sec
+          Start 2750: unit.StructuralDof_NumbersTheReferenceMeshesAndScalesToThem
+        Test #2074: unit.ReferenceModel_BearingHousingRegeneratesAfterParameterChanges ...............................   Passed    4.00 sec
+          Start 2074: unit.ReferenceModel_BearingHousingRegeneratesAfterParameterChanges
+        Test #1631: unit.MeshReferenceSuite_EveryValidModelMeshesAndTheInvalidOneIsRefused ...........................   Passed    4.00 sec
+          Start 1631: unit.MeshReferenceSuite_EveryValidModelMeshesAndTheInvalidOneIsRefused
+        Test #2997: unit.StructuralValidation_SweepsTheQualifiedReferenceMeshes ......................................   Passed    3.92 sec
+          Start 2997: unit.StructuralValidation_SweepsTheQualifiedReferenceMeshes
+        Test #2141: unit.ReferenceModel_PulleySaveLoad ...............................................................   Passed    4.17 sec
+          Start 2141: unit.ReferenceModel_PulleySaveLoad
+        Test #1635: unit.MeshReference_IsDeterministicOverRepeatedGeneration .........................................   Passed    3.66 sec
+          Start 1635: unit.MeshReference_IsDeterministicOverRepeatedGeneration
+        Test #2142: unit.ReferenceModel_PulleyUndoRedo ...............................................................   Passed    3.87 sec
+          Start 2142: unit.ReferenceModel_PulleyUndoRedo
+        Test #2750: unit.StructuralDof_NumbersTheReferenceMeshesAndScalesToThem ......................................   Passed    3.98 sec
+          Start 2750: unit.StructuralDof_NumbersTheReferenceMeshesAndScalesToThem
+        Test #2074: unit.ReferenceModel_BearingHousingRegeneratesAfterParameterChanges ...............................   Passed    3.83 sec
+          Start 2074: unit.ReferenceModel_BearingHousingRegeneratesAfterParameterChanges
+  76/1495 Test #1631: unit.MeshReferenceSuite_EveryValidModelMeshesAndTheInvalidOneIsRefused ...........................   Passed    3.81 sec
+          Start 2972: unit.StructuralValidation_AcceptsEveryQualifiedReferenceMesh
+  77/1495 Test #2997: unit.StructuralValidation_SweepsTheQualifiedReferenceMeshes ......................................   Passed    3.65 sec
+          Start 1721: unit.MeshingCli_ValidateGatesOnStructureAndQualityDoesNot
+  78/1495 Test #2141: unit.ReferenceModel_PulleySaveLoad ...............................................................   Passed    3.93 sec
+          Start 2120: unit.ReferenceModel_MountingBracketBuildsValidGeometry
+        Test #1635: unit.MeshReference_IsDeterministicOverRepeatedGeneration .........................................   Passed    3.47 sec
+          Start 1635: unit.MeshReference_IsDeterministicOverRepeatedGeneration
+  79/1495 Test #2142: unit.ReferenceModel_PulleyUndoRedo ...............................................................   Passed    3.87 sec
+          Start 2127: unit.ReferenceModel_MountingBracketUndoRedo
+  80/1495 Test #2750: unit.StructuralDof_NumbersTheReferenceMeshesAndScalesToThem ......................................   Passed    3.91 sec
+          Start 2839: unit.StructuralPersistence_TheFileDoesNotFollowTheMeshOrTheResultSize
+        Test #1721: unit.MeshingCli_ValidateGatesOnStructureAndQualityDoesNot ........................................   Passed    3.60 sec
+          Start 1721: unit.MeshingCli_ValidateGatesOnStructureAndQualityDoesNot
+  81/1495 Test #2074: unit.ReferenceModel_BearingHousingRegeneratesAfterParameterChanges ...............................   Passed    3.98 sec
+          Start 2175: unit.ReferenceModel_TransitionDuctFollowsItsParameters
+        Test #2972: unit.StructuralValidation_AcceptsEveryQualifiedReferenceMesh .....................................   Passed    3.88 sec
+          Start 2972: unit.StructuralValidation_AcceptsEveryQualifiedReferenceMesh
+        Test #2120: unit.ReferenceModel_MountingBracketBuildsValidGeometry ...........................................   Passed    3.66 sec
+          Start 2120: unit.ReferenceModel_MountingBracketBuildsValidGeometry
+        Test #1635: unit.MeshReference_IsDeterministicOverRepeatedGeneration .........................................   Passed    3.97 sec
+          Start 1635: unit.MeshReference_IsDeterministicOverRepeatedGeneration
+        Test #2127: unit.ReferenceModel_MountingBracketUndoRedo ......................................................   Passed    3.62 sec
+          Start 2127: unit.ReferenceModel_MountingBracketUndoRedo
+        Test #2839: unit.StructuralPersistence_TheFileDoesNotFollowTheMeshOrTheResultSize ............................   Passed    3.37 sec
+          Start 2839: unit.StructuralPersistence_TheFileDoesNotFollowTheMeshOrTheResultSize
+        Test #1721: unit.MeshingCli_ValidateGatesOnStructureAndQualityDoesNot ........................................   Passed    3.37 sec
+          Start 1721: unit.MeshingCli_ValidateGatesOnStructureAndQualityDoesNot
+        Test #2175: unit.ReferenceModel_TransitionDuctFollowsItsParameters ...........................................   Passed    3.37 sec
+          Start 2175: unit.ReferenceModel_TransitionDuctFollowsItsParameters
+        Test #2972: unit.StructuralValidation_AcceptsEveryQualifiedReferenceMesh .....................................   Passed    3.52 sec
+          Start 2972: unit.StructuralValidation_AcceptsEveryQualifiedReferenceMesh
+        Test #2120: unit.ReferenceModel_MountingBracketBuildsValidGeometry ...........................................   Passed    3.43 sec
+          Start 2120: unit.ReferenceModel_MountingBracketBuildsValidGeometry
+        Test #1635: unit.MeshReference_IsDeterministicOverRepeatedGeneration .........................................   Passed    4.05 sec
+          Start 1635: unit.MeshReference_IsDeterministicOverRepeatedGeneration
+        Test #2127: unit.ReferenceModel_MountingBracketUndoRedo ......................................................   Passed    3.51 sec
+          Start 2127: unit.ReferenceModel_MountingBracketUndoRedo
+        Test #2839: unit.StructuralPersistence_TheFileDoesNotFollowTheMeshOrTheResultSize ............................   Passed    3.53 sec
+          Start 2839: unit.StructuralPersistence_TheFileDoesNotFollowTheMeshOrTheResultSize
+        Test #2175: unit.ReferenceModel_TransitionDuctFollowsItsParameters ...........................................   Passed    3.46 sec
+          Start 2175: unit.ReferenceModel_TransitionDuctFollowsItsParameters
+        Test #1721: unit.MeshingCli_ValidateGatesOnStructureAndQualityDoesNot ........................................   Passed    3.96 sec
+          Start 1721: unit.MeshingCli_ValidateGatesOnStructureAndQualityDoesNot
+        Test #2120: unit.ReferenceModel_MountingBracketBuildsValidGeometry ...........................................   Passed    3.57 sec
+          Start 2120: unit.ReferenceModel_MountingBracketBuildsValidGeometry
+        Test #2972: unit.StructuralValidation_AcceptsEveryQualifiedReferenceMesh .....................................   Passed    4.04 sec
+          Start 2972: unit.StructuralValidation_AcceptsEveryQualifiedReferenceMesh
+  82/1495 Test #1635: unit.MeshReference_IsDeterministicOverRepeatedGeneration .........................................   Passed    3.77 sec
+          Start 2083: unit.ReferenceModel_FlangeMatchesAnalyticVolume
+        Test #2839: unit.StructuralPersistence_TheFileDoesNotFollowTheMeshOrTheResultSize ............................   Passed    3.36 sec
+          Start 2839: unit.StructuralPersistence_TheFileDoesNotFollowTheMeshOrTheResultSize
+        Test #2127: unit.ReferenceModel_MountingBracketUndoRedo ......................................................   Passed    3.55 sec
+          Start 2127: unit.ReferenceModel_MountingBracketUndoRedo
+        Test #2175: unit.ReferenceModel_TransitionDuctFollowsItsParameters ...........................................   Passed    3.51 sec
+          Start 2175: unit.ReferenceModel_TransitionDuctFollowsItsParameters
+        Test #1721: unit.MeshingCli_ValidateGatesOnStructureAndQualityDoesNot ........................................   Passed    3.51 sec
+          Start 1721: unit.MeshingCli_ValidateGatesOnStructureAndQualityDoesNot
+        Test #2120: unit.ReferenceModel_MountingBracketBuildsValidGeometry ...........................................   Passed    3.73 sec
+          Start 2120: unit.ReferenceModel_MountingBracketBuildsValidGeometry
+        Test #2972: unit.StructuralValidation_AcceptsEveryQualifiedReferenceMesh .....................................   Passed    3.74 sec
+          Start 2972: unit.StructuralValidation_AcceptsEveryQualifiedReferenceMesh
+        Test #2083: unit.ReferenceModel_FlangeMatchesAnalyticVolume ..................................................   Passed    3.25 sec
+          Start 2083: unit.ReferenceModel_FlangeMatchesAnalyticVolume
+        Test #2839: unit.StructuralPersistence_TheFileDoesNotFollowTheMeshOrTheResultSize ............................   Passed    3.45 sec
+          Start 2839: unit.StructuralPersistence_TheFileDoesNotFollowTheMeshOrTheResultSize
+        Test #2127: unit.ReferenceModel_MountingBracketUndoRedo ......................................................   Passed    3.71 sec
+          Start 2127: unit.ReferenceModel_MountingBracketUndoRedo
+        Test #2175: unit.ReferenceModel_TransitionDuctFollowsItsParameters ...........................................   Passed    3.58 sec
+          Start 2175: unit.ReferenceModel_TransitionDuctFollowsItsParameters
+  83/1495 Test #1721: unit.MeshingCli_ValidateGatesOnStructureAndQualityDoesNot ........................................   Passed    3.65 sec
+          Start 2172: unit.ReferenceModel_ShaftSaveLoad
+  84/1495 Test #2120: unit.ReferenceModel_MountingBracketBuildsValidGeometry ...........................................   Passed    3.71 sec
+          Start 2135: unit.ReferenceModel_PulleyBuildsValidGeometry
+  85/1495 Test #2972: unit.StructuralValidation_AcceptsEveryQualifiedReferenceMesh .....................................   Passed    3.85 sec
+          Start 2095: unit.ReferenceModel_IndexPlateRefusesPocketsThatWouldMeet
+        Test #2083: unit.ReferenceModel_FlangeMatchesAnalyticVolume ..................................................   Passed    3.33 sec
+          Start 2083: unit.ReferenceModel_FlangeMatchesAnalyticVolume
+  86/1495 Test #2839: unit.StructuralPersistence_TheFileDoesNotFollowTheMeshOrTheResultSize ............................   Passed    3.63 sec
+          Start 1708: unit.MeshingCli_EveryExposedFieldMatchesTheCore
+  87/1495 Test #2127: unit.ReferenceModel_MountingBracketUndoRedo ......................................................   Passed    3.74 sec
+          Start 2136: unit.ReferenceModel_PulleyExports
+  88/1495 Test #2175: unit.ReferenceModel_TransitionDuctFollowsItsParameters ...........................................   Passed    3.57 sec
+          Start 2122: unit.ReferenceModel_MountingBracketFailsSafelyOnInvalidParameters
+        Test #2172: unit.ReferenceModel_ShaftSaveLoad ................................................................   Passed    3.19 sec
+          Start 2172: unit.ReferenceModel_ShaftSaveLoad
+        Test #2135: unit.ReferenceModel_PulleyBuildsValidGeometry ....................................................   Passed    3.03 sec
+          Start 2135: unit.ReferenceModel_PulleyBuildsValidGeometry
+        Test #2095: unit.ReferenceModel_IndexPlateRefusesPocketsThatWouldMeet ........................................   Passed    2.96 sec
+          Start 2095: unit.ReferenceModel_IndexPlateRefusesPocketsThatWouldMeet
+        Test #2083: unit.ReferenceModel_FlangeMatchesAnalyticVolume ..................................................   Passed    3.03 sec
+          Start 2083: unit.ReferenceModel_FlangeMatchesAnalyticVolume
+        Test #1708: unit.MeshingCli_EveryExposedFieldMatchesTheCore ..................................................   Passed    2.98 sec
+          Start 1708: unit.MeshingCli_EveryExposedFieldMatchesTheCore
+        Test #2136: unit.ReferenceModel_PulleyExports ................................................................   Passed    2.77 sec
+          Start 2136: unit.ReferenceModel_PulleyExports
+        Test #2122: unit.ReferenceModel_MountingBracketFailsSafelyOnInvalidParameters ................................   Passed    2.58 sec
+          Start 2122: unit.ReferenceModel_MountingBracketFailsSafelyOnInvalidParameters
+        Test #2172: unit.ReferenceModel_ShaftSaveLoad ................................................................   Passed    2.76 sec
+          Start 2172: unit.ReferenceModel_ShaftSaveLoad
+        Test #2135: unit.ReferenceModel_PulleyBuildsValidGeometry ....................................................   Passed    2.84 sec
+          Start 2135: unit.ReferenceModel_PulleyBuildsValidGeometry
+        Test #2095: unit.ReferenceModel_IndexPlateRefusesPocketsThatWouldMeet ........................................   Passed    2.71 sec
+          Start 2095: unit.ReferenceModel_IndexPlateRefusesPocketsThatWouldMeet
+        Test #2083: unit.ReferenceModel_FlangeMatchesAnalyticVolume ..................................................   Passed    2.87 sec
+          Start 2083: unit.ReferenceModel_FlangeMatchesAnalyticVolume
+        Test #1708: unit.MeshingCli_EveryExposedFieldMatchesTheCore ..................................................   Passed    2.78 sec
+          Start 1708: unit.MeshingCli_EveryExposedFieldMatchesTheCore
+        Test #2122: unit.ReferenceModel_MountingBracketFailsSafelyOnInvalidParameters ................................   Passed    2.54 sec
+          Start 2122: unit.ReferenceModel_MountingBracketFailsSafelyOnInvalidParameters
+        Test #2136: unit.ReferenceModel_PulleyExports ................................................................   Passed    2.69 sec
+          Start 2136: unit.ReferenceModel_PulleyExports
+        Test #2172: unit.ReferenceModel_ShaftSaveLoad ................................................................   Passed    2.72 sec
+          Start 2172: unit.ReferenceModel_ShaftSaveLoad
+        Test #2135: unit.ReferenceModel_PulleyBuildsValidGeometry ....................................................   Passed    2.74 sec
+          Start 2135: unit.ReferenceModel_PulleyBuildsValidGeometry
+        Test #2095: unit.ReferenceModel_IndexPlateRefusesPocketsThatWouldMeet ........................................   Passed    2.77 sec
+          Start 2095: unit.ReferenceModel_IndexPlateRefusesPocketsThatWouldMeet
+  89/1495 Test #2083: unit.ReferenceModel_FlangeMatchesAnalyticVolume ..................................................   Passed    2.95 sec
+          Start 1860: unit.P17Qualification_SolvingLeavesEveryReferenceDocumentByteIdentical
+        Test #2122: unit.ReferenceModel_MountingBracketFailsSafelyOnInvalidParameters ................................   Passed    2.65 sec
+          Start 2122: unit.ReferenceModel_MountingBracketFailsSafelyOnInvalidParameters
+        Test #1708: unit.MeshingCli_EveryExposedFieldMatchesTheCore ..................................................   Passed    2.75 sec
+          Start 1708: unit.MeshingCli_EveryExposedFieldMatchesTheCore
+        Test #2136: unit.ReferenceModel_PulleyExports ................................................................   Passed    2.74 sec
+          Start 2136: unit.ReferenceModel_PulleyExports
+        Test #2172: unit.ReferenceModel_ShaftSaveLoad ................................................................   Passed    2.81 sec
+          Start 2172: unit.ReferenceModel_ShaftSaveLoad
+        Test #2135: unit.ReferenceModel_PulleyBuildsValidGeometry ....................................................   Passed    2.77 sec
+          Start 2135: unit.ReferenceModel_PulleyBuildsValidGeometry
+        Test #2095: unit.ReferenceModel_IndexPlateRefusesPocketsThatWouldMeet ........................................   Passed    2.88 sec
+          Start 2095: unit.ReferenceModel_IndexPlateRefusesPocketsThatWouldMeet
+        Test #1860: unit.P17Qualification_SolvingLeavesEveryReferenceDocumentByteIdentical ...........................   Passed    2.25 sec
+          Start 1860: unit.P17Qualification_SolvingLeavesEveryReferenceDocumentByteIdentical
+        Test #2122: unit.ReferenceModel_MountingBracketFailsSafelyOnInvalidParameters ................................   Passed    2.48 sec
+          Start 2122: unit.ReferenceModel_MountingBracketFailsSafelyOnInvalidParameters
+        Test #1708: unit.MeshingCli_EveryExposedFieldMatchesTheCore ..................................................   Passed    2.58 sec
+          Start 1708: unit.MeshingCli_EveryExposedFieldMatchesTheCore
+        Test #2136: unit.ReferenceModel_PulleyExports ................................................................   Passed    2.70 sec
+          Start 2136: unit.ReferenceModel_PulleyExports
+  90/1495 Test #2172: unit.ReferenceModel_ShaftSaveLoad ................................................................   Passed    2.72 sec
+          Start 2946: unit.StructuralSystem_AssemblesEveryReferenceModel
+        Test #1860: unit.P17Qualification_SolvingLeavesEveryReferenceDocumentByteIdentical ...........................   Passed    2.27 sec
+          Start 1860: unit.P17Qualification_SolvingLeavesEveryReferenceDocumentByteIdentical
+  91/1495 Test #2135: unit.ReferenceModel_PulleyBuildsValidGeometry ....................................................   Passed    2.74 sec
+          Start 1638: unit.MeshReference_UndoAndRedoOfTheIntentAreFollowedByTheMesh
+  92/1495 Test #2095: unit.ReferenceModel_IndexPlateRefusesPocketsThatWouldMeet ........................................   Passed    2.67 sec
+          Start 2939: unit.StructuralSolve_SolvesTheReferenceModelsWithAFixedSupport
+  93/1495 Test #2122: unit.ReferenceModel_MountingBracketFailsSafelyOnInvalidParameters ................................   Passed    2.51 sec
+          Start 2912: unit.StructuralReferenceSuite_EveryModelSolvesOrIsRefusedAsDeclared
+  94/1495 Test #1708: unit.MeshingCli_EveryExposedFieldMatchesTheCore ..................................................   Passed    2.88 sec
+          Start 2076: unit.ReferenceModel_BearingHousingSaveLoad
+  95/1495 Test #2136: unit.ReferenceModel_PulleyExports ................................................................   Passed    2.91 sec
+          Start 2080: unit.ReferenceModel_FlangeBuildsValidGeometry
+        Test #2946: unit.StructuralSystem_AssemblesEveryReferenceModel ...............................................   Passed    2.74 sec
+          Start 2946: unit.StructuralSystem_AssemblesEveryReferenceModel
+        Test #2939: unit.StructuralSolve_SolvesTheReferenceModelsWithAFixedSupport ...................................   Passed    2.72 sec
+          Start 2939: unit.StructuralSolve_SolvesTheReferenceModelsWithAFixedSupport
+        Test #1638: unit.MeshReference_UndoAndRedoOfTheIntentAreFollowedByTheMesh ....................................   Passed    3.08 sec
+          Start 1638: unit.MeshReference_UndoAndRedoOfTheIntentAreFollowedByTheMesh
+        Test #1860: unit.P17Qualification_SolvingLeavesEveryReferenceDocumentByteIdentical ...........................   Passed    3.13 sec
+          Start 1860: unit.P17Qualification_SolvingLeavesEveryReferenceDocumentByteIdentical
+        Test #2912: unit.StructuralReferenceSuite_EveryModelSolvesOrIsRefusedAsDeclared ..............................   Passed    2.84 sec
+          Start 2912: unit.StructuralReferenceSuite_EveryModelSolvesOrIsRefusedAsDeclared
+        Test #2076: unit.ReferenceModel_BearingHousingSaveLoad .......................................................   Passed    2.85 sec
+          Start 2076: unit.ReferenceModel_BearingHousingSaveLoad
+        Test #2080: unit.ReferenceModel_FlangeBuildsValidGeometry ....................................................   Passed    2.82 sec
+          Start 2080: unit.ReferenceModel_FlangeBuildsValidGeometry
+        Test #2946: unit.StructuralSystem_AssemblesEveryReferenceModel ...............................................   Passed    3.05 sec
+          Start 2946: unit.StructuralSystem_AssemblesEveryReferenceModel
+        Test #2939: unit.StructuralSolve_SolvesTheReferenceModelsWithAFixedSupport ...................................   Passed    2.91 sec
+          Start 2939: unit.StructuralSolve_SolvesTheReferenceModelsWithAFixedSupport
+        Test #1860: unit.P17Qualification_SolvingLeavesEveryReferenceDocumentByteIdentical ...........................   Passed    2.93 sec
+          Start 1860: unit.P17Qualification_SolvingLeavesEveryReferenceDocumentByteIdentical
+        Test #1638: unit.MeshReference_UndoAndRedoOfTheIntentAreFollowedByTheMesh ....................................   Passed    3.17 sec
+          Start 1638: unit.MeshReference_UndoAndRedoOfTheIntentAreFollowedByTheMesh
+        Test #2912: unit.StructuralReferenceSuite_EveryModelSolvesOrIsRefusedAsDeclared ..............................   Passed    2.77 sec
+          Start 2912: unit.StructuralReferenceSuite_EveryModelSolvesOrIsRefusedAsDeclared
+        Test #2076: unit.ReferenceModel_BearingHousingSaveLoad .......................................................   Passed    2.89 sec
+          Start 2076: unit.ReferenceModel_BearingHousingSaveLoad
+        Test #2080: unit.ReferenceModel_FlangeBuildsValidGeometry ....................................................   Passed    2.71 sec
+          Start 2080: unit.ReferenceModel_FlangeBuildsValidGeometry
+        Test #2946: unit.StructuralSystem_AssemblesEveryReferenceModel ...............................................   Passed    3.18 sec
+          Start 2946: unit.StructuralSystem_AssemblesEveryReferenceModel
+        Test #2939: unit.StructuralSolve_SolvesTheReferenceModelsWithAFixedSupport ...................................   Passed    2.74 sec
+          Start 2939: unit.StructuralSolve_SolvesTheReferenceModelsWithAFixedSupport
+        Test #1638: unit.MeshReference_UndoAndRedoOfTheIntentAreFollowedByTheMesh ....................................   Passed    2.80 sec
+          Start 1638: unit.MeshReference_UndoAndRedoOfTheIntentAreFollowedByTheMesh
+  96/1495 Test #1860: unit.P17Qualification_SolvingLeavesEveryReferenceDocumentByteIdentical ...........................   Passed    3.04 sec
+          Start 1758: unit.MeshingPersistence_ALoadedDocumentHasIntentAndNoMesh
+        Test #2912: unit.StructuralReferenceSuite_EveryModelSolvesOrIsRefusedAsDeclared ..............................   Passed    2.80 sec
+          Start 2912: unit.StructuralReferenceSuite_EveryModelSolvesOrIsRefusedAsDeclared
+        Test #2076: unit.ReferenceModel_BearingHousingSaveLoad .......................................................   Passed    2.83 sec
+          Start 2076: unit.ReferenceModel_BearingHousingSaveLoad
+        Test #2080: unit.ReferenceModel_FlangeBuildsValidGeometry ....................................................   Passed    2.81 sec
+          Start 2080: unit.ReferenceModel_FlangeBuildsValidGeometry
+        Test #2946: unit.StructuralSystem_AssemblesEveryReferenceModel ...............................................   Passed    2.91 sec
+          Start 2946: unit.StructuralSystem_AssemblesEveryReferenceModel
+        Test #2939: unit.StructuralSolve_SolvesTheReferenceModelsWithAFixedSupport ...................................   Passed    3.08 sec
+          Start 2939: unit.StructuralSolve_SolvesTheReferenceModelsWithAFixedSupport
+        Test #1758: unit.MeshingPersistence_ALoadedDocumentHasIntentAndNoMesh ........................................   Passed    2.83 sec
+          Start 1758: unit.MeshingPersistence_ALoadedDocumentHasIntentAndNoMesh
+        Test #1638: unit.MeshReference_UndoAndRedoOfTheIntentAreFollowedByTheMesh ....................................   Passed    3.07 sec
+          Start 1638: unit.MeshReference_UndoAndRedoOfTheIntentAreFollowedByTheMesh
+        Test #2912: unit.StructuralReferenceSuite_EveryModelSolvesOrIsRefusedAsDeclared ..............................   Passed    2.84 sec
+          Start 2912: unit.StructuralReferenceSuite_EveryModelSolvesOrIsRefusedAsDeclared
+        Test #2076: unit.ReferenceModel_BearingHousingSaveLoad .......................................................   Passed    3.04 sec
+          Start 2076: unit.ReferenceModel_BearingHousingSaveLoad
+        Test #2080: unit.ReferenceModel_FlangeBuildsValidGeometry ....................................................   Passed    3.07 sec
+          Start 2080: unit.ReferenceModel_FlangeBuildsValidGeometry
+  97/1495 Test #2946: unit.StructuralSystem_AssemblesEveryReferenceModel ...............................................   Passed    3.28 sec
+          Start 2436: unit.SizeLocal_RefinesTheSelectedFaceAndNotTheRest
+  98/1495 Test #2939: unit.StructuralSolve_SolvesTheReferenceModelsWithAFixedSupport ...................................   Passed    3.33 sec
+          Start 1590: unit.MeshDisplay_RemainsOneBatchedPresentationOnAModeratelyLargeMesh
+        Test #1758: unit.MeshingPersistence_ALoadedDocumentHasIntentAndNoMesh ........................................   Passed    3.18 sec
+          Start 1758: unit.MeshingPersistence_ALoadedDocumentHasIntentAndNoMesh
+  99/1495 Test #1638: unit.MeshReference_UndoAndRedoOfTheIntentAreFollowedByTheMesh ....................................   Passed    3.31 sec
+          Start 2081: unit.ReferenceModel_FlangeExports
+ 100/1495 Test #2912: unit.StructuralReferenceSuite_EveryModelSolvesOrIsRefusedAsDeclared ..............................   Passed    3.57 sec
+          Start 2169: unit.ReferenceModel_ShaftMatchesAnalyticProperties
+ 101/1495 Test #2080: unit.ReferenceModel_FlangeBuildsValidGeometry ....................................................   Passed    2.94 sec
+          Start 2077: unit.ReferenceModel_BearingHousingUndoRedo
+ 102/1495 Test #2076: unit.ReferenceModel_BearingHousingSaveLoad .......................................................   Passed    3.27 sec
+          Start 2137: unit.ReferenceModel_PulleyFailsSafelyOnInvalidParameters
+        Test #2436: unit.SizeLocal_RefinesTheSelectedFaceAndNotTheRest ...............................................   Passed    2.68 sec
+          Start 2436: unit.SizeLocal_RefinesTheSelectedFaceAndNotTheRest
+        Test #1590: unit.MeshDisplay_RemainsOneBatchedPresentationOnAModeratelyLargeMesh .............................   Passed    2.69 sec
+          Start 1590: unit.MeshDisplay_RemainsOneBatchedPresentationOnAModeratelyLargeMesh
+        Test #2081: unit.ReferenceModel_FlangeExports ................................................................   Passed    2.64 sec
+          Start 2081: unit.ReferenceModel_FlangeExports
+        Test #1758: unit.MeshingPersistence_ALoadedDocumentHasIntentAndNoMesh ........................................   Passed    3.15 sec
+          Start 1758: unit.MeshingPersistence_ALoadedDocumentHasIntentAndNoMesh
+        Test #2169: unit.ReferenceModel_ShaftMatchesAnalyticProperties ...............................................   Passed    2.54 sec
+          Start 2169: unit.ReferenceModel_ShaftMatchesAnalyticProperties
+        Test #2077: unit.ReferenceModel_BearingHousingUndoRedo .......................................................   Passed    2.46 sec
+          Start 2077: unit.ReferenceModel_BearingHousingUndoRedo
+        Test #2137: unit.ReferenceModel_PulleyFailsSafelyOnInvalidParameters .........................................   Passed    2.46 sec
+          Start 2137: unit.ReferenceModel_PulleyFailsSafelyOnInvalidParameters
+        Test #2436: unit.SizeLocal_RefinesTheSelectedFaceAndNotTheRest ...............................................   Passed    2.70 sec
+          Start 2436: unit.SizeLocal_RefinesTheSelectedFaceAndNotTheRest
+        Test #1590: unit.MeshDisplay_RemainsOneBatchedPresentationOnAModeratelyLargeMesh .............................   Passed    2.86 sec
+          Start 1590: unit.MeshDisplay_RemainsOneBatchedPresentationOnAModeratelyLargeMesh
+        Test #2081: unit.ReferenceModel_FlangeExports ................................................................   Passed    2.70 sec
+          Start 2081: unit.ReferenceModel_FlangeExports
+        Test #2169: unit.ReferenceModel_ShaftMatchesAnalyticProperties ...............................................   Passed    2.63 sec
+          Start 2169: unit.ReferenceModel_ShaftMatchesAnalyticProperties
+        Test #1758: unit.MeshingPersistence_ALoadedDocumentHasIntentAndNoMesh ........................................   Passed    2.98 sec
+          Start 1758: unit.MeshingPersistence_ALoadedDocumentHasIntentAndNoMesh
+        Test #2077: unit.ReferenceModel_BearingHousingUndoRedo .......................................................   Passed    2.62 sec
+          Start 2077: unit.ReferenceModel_BearingHousingUndoRedo
+        Test #2137: unit.ReferenceModel_PulleyFailsSafelyOnInvalidParameters .........................................   Passed    2.70 sec
+          Start 2137: unit.ReferenceModel_PulleyFailsSafelyOnInvalidParameters
+        Test #2436: unit.SizeLocal_RefinesTheSelectedFaceAndNotTheRest ...............................................   Passed    2.57 sec
+          Start 2436: unit.SizeLocal_RefinesTheSelectedFaceAndNotTheRest
+        Test #1590: unit.MeshDisplay_RemainsOneBatchedPresentationOnAModeratelyLargeMesh .............................   Passed    2.52 sec
+          Start 1590: unit.MeshDisplay_RemainsOneBatchedPresentationOnAModeratelyLargeMesh
+        Test #2081: unit.ReferenceModel_FlangeExports ................................................................   Passed    2.66 sec
+          Start 2081: unit.ReferenceModel_FlangeExports
+        Test #2169: unit.ReferenceModel_ShaftMatchesAnalyticProperties ...............................................   Passed    2.52 sec
+          Start 2169: unit.ReferenceModel_ShaftMatchesAnalyticProperties
+ 103/1495 Test #1758: unit.MeshingPersistence_ALoadedDocumentHasIntentAndNoMesh ........................................   Passed    2.54 sec
+          Start 2675: unit.StructuralCli_ARepeatedCommandGivesTheSameBytes
+        Test #2077: unit.ReferenceModel_BearingHousingUndoRedo .......................................................   Passed    2.51 sec
+          Start 2077: unit.ReferenceModel_BearingHousingUndoRedo
+        Test #2137: unit.ReferenceModel_PulleyFailsSafelyOnInvalidParameters .........................................   Passed    2.47 sec
+          Start 2137: unit.ReferenceModel_PulleyFailsSafelyOnInvalidParameters
+        Test #2436: unit.SizeLocal_RefinesTheSelectedFaceAndNotTheRest ...............................................   Passed    2.52 sec
+          Start 2436: unit.SizeLocal_RefinesTheSelectedFaceAndNotTheRest
+        Test #1590: unit.MeshDisplay_RemainsOneBatchedPresentationOnAModeratelyLargeMesh .............................   Passed    2.59 sec
+          Start 1590: unit.MeshDisplay_RemainsOneBatchedPresentationOnAModeratelyLargeMesh
+        Test #2081: unit.ReferenceModel_FlangeExports ................................................................   Passed    2.57 sec
+          Start 2081: unit.ReferenceModel_FlangeExports
+        Test #2169: unit.ReferenceModel_ShaftMatchesAnalyticProperties ...............................................   Passed    2.57 sec
+          Start 2169: unit.ReferenceModel_ShaftMatchesAnalyticProperties
+        Test #2675: unit.StructuralCli_ARepeatedCommandGivesTheSameBytes .............................................   Passed    2.42 sec
+          Start 2675: unit.StructuralCli_ARepeatedCommandGivesTheSameBytes
+        Test #2077: unit.ReferenceModel_BearingHousingUndoRedo .......................................................   Passed    2.50 sec
+          Start 2077: unit.ReferenceModel_BearingHousingUndoRedo
+        Test #2137: unit.ReferenceModel_PulleyFailsSafelyOnInvalidParameters .........................................   Passed    2.38 sec
+          Start 2137: unit.ReferenceModel_PulleyFailsSafelyOnInvalidParameters
+ 104/1495 Test #2436: unit.SizeLocal_RefinesTheSelectedFaceAndNotTheRest ...............................................   Passed    2.59 sec
+          Start 1592: unit.MeshDisplay_TheMeshOverlaysACadSolidThatIsNotAtTheOrigin
+ 105/1495 Test #1590: unit.MeshDisplay_RemainsOneBatchedPresentationOnAModeratelyLargeMesh .............................   Passed    2.39 sec
+          Start 3041: unit.StructuralViz_AnOverlayReachesTheScreenOverItsMesh
+        Test #2675: unit.StructuralCli_ARepeatedCommandGivesTheSameBytes .............................................   Passed    2.29 sec
+          Start 2675: unit.StructuralCli_ARepeatedCommandGivesTheSameBytes
+ 106/1495 Test #2081: unit.ReferenceModel_FlangeExports ................................................................   Passed    2.50 sec
+          Start 2166: unit.ReferenceModel_ShaftBuildsValidGeometry
+ 107/1495 Test #2169: unit.ReferenceModel_ShaftMatchesAnalyticProperties ...............................................   Passed    2.48 sec
+          Start 2073: unit.ReferenceModel_BearingHousingMatchesIndependentProperties
+ 108/1495 Test #2077: unit.ReferenceModel_BearingHousingUndoRedo .......................................................   Passed    2.41 sec
+          Start 2082: unit.ReferenceModel_FlangeFailsSafelyOnInvalidParameters
+ 109/1495 Test #2137: unit.ReferenceModel_PulleyFailsSafelyOnInvalidParameters .........................................   Passed    2.43 sec
+          Start 3955: refmod.mesh.boundaries.tube
+        Test #3041: unit.StructuralViz_AnOverlayReachesTheScreenOverItsMesh ..........................................   Passed    1.75 sec
+          Start 3041: unit.StructuralViz_AnOverlayReachesTheScreenOverItsMesh
+        Test #1592: unit.MeshDisplay_TheMeshOverlaysACadSolidThatIsNotAtTheOrigin ....................................   Passed    2.18 sec
+          Start 1592: unit.MeshDisplay_TheMeshOverlaysACadSolidThatIsNotAtTheOrigin
+        Test #2166: unit.ReferenceModel_ShaftBuildsValidGeometry .....................................................   Passed    2.32 sec
+          Start 2166: unit.ReferenceModel_ShaftBuildsValidGeometry
+        Test #2073: unit.ReferenceModel_BearingHousingMatchesIndependentProperties ...................................   Passed    2.24 sec
+          Start 2073: unit.ReferenceModel_BearingHousingMatchesIndependentProperties
+        Test #3955: refmod.mesh.boundaries.tube ......................................................................   Passed    2.12 sec
+          Start 3955: refmod.mesh.boundaries.tube
+        Test #2675: unit.StructuralCli_ARepeatedCommandGivesTheSameBytes .............................................   Passed    2.56 sec
+          Start 2675: unit.StructuralCli_ARepeatedCommandGivesTheSameBytes
+        Test #2082: unit.ReferenceModel_FlangeFailsSafelyOnInvalidParameters .........................................   Passed    2.34 sec
+          Start 2082: unit.ReferenceModel_FlangeFailsSafelyOnInvalidParameters
+        Test #1592: unit.MeshDisplay_TheMeshOverlaysACadSolidThatIsNotAtTheOrigin ....................................   Passed    2.62 sec
+          Start 1592: unit.MeshDisplay_TheMeshOverlaysACadSolidThatIsNotAtTheOrigin
+        Test #3041: unit.StructuralViz_AnOverlayReachesTheScreenOverItsMesh ..........................................   Passed    2.83 sec
+          Start 3041: unit.StructuralViz_AnOverlayReachesTheScreenOverItsMesh
+        Test #2166: unit.ReferenceModel_ShaftBuildsValidGeometry .....................................................   Passed    2.26 sec
+          Start 2166: unit.ReferenceModel_ShaftBuildsValidGeometry
+        Test #3955: refmod.mesh.boundaries.tube ......................................................................   Passed    2.11 sec
+          Start 3955: refmod.mesh.boundaries.tube
+        Test #2073: unit.ReferenceModel_BearingHousingMatchesIndependentProperties ...................................   Passed    2.25 sec
+          Start 2073: unit.ReferenceModel_BearingHousingMatchesIndependentProperties
+        Test #2082: unit.ReferenceModel_FlangeFailsSafelyOnInvalidParameters .........................................   Passed    2.28 sec
+          Start 2082: unit.ReferenceModel_FlangeFailsSafelyOnInvalidParameters
+        Test #2675: unit.StructuralCli_ARepeatedCommandGivesTheSameBytes .............................................   Passed    2.35 sec
+          Start 2675: unit.StructuralCli_ARepeatedCommandGivesTheSameBytes
+        Test #1592: unit.MeshDisplay_TheMeshOverlaysACadSolidThatIsNotAtTheOrigin ....................................   Passed    2.01 sec
+          Start 1592: unit.MeshDisplay_TheMeshOverlaysACadSolidThatIsNotAtTheOrigin
+        Test #3041: unit.StructuralViz_AnOverlayReachesTheScreenOverItsMesh ..........................................   Passed    2.11 sec
+          Start 3041: unit.StructuralViz_AnOverlayReachesTheScreenOverItsMesh
+        Test #3955: refmod.mesh.boundaries.tube ......................................................................   Passed    1.98 sec
+          Start 3955: refmod.mesh.boundaries.tube
+        Test #2166: unit.ReferenceModel_ShaftBuildsValidGeometry .....................................................   Passed    2.25 sec
+          Start 2166: unit.ReferenceModel_ShaftBuildsValidGeometry
+        Test #2073: unit.ReferenceModel_BearingHousingMatchesIndependentProperties ...................................   Passed    2.25 sec
+          Start 2073: unit.ReferenceModel_BearingHousingMatchesIndependentProperties
+        Test #2082: unit.ReferenceModel_FlangeFailsSafelyOnInvalidParameters .........................................   Passed    2.31 sec
+          Start 2082: unit.ReferenceModel_FlangeFailsSafelyOnInvalidParameters
+ 110/1495 Test #2675: unit.StructuralCli_ARepeatedCommandGivesTheSameBytes .............................................   Passed    2.29 sec
+          Start 2959: unit.StructuralSystem_PreservesTheRigidBodyModesOfAReferenceBody
+        Test #1592: unit.MeshDisplay_TheMeshOverlaysACadSolidThatIsNotAtTheOrigin ....................................   Passed    2.27 sec
+          Start 1592: unit.MeshDisplay_TheMeshOverlaysACadSolidThatIsNotAtTheOrigin
+        Test #3041: unit.StructuralViz_AnOverlayReachesTheScreenOverItsMesh ..........................................   Passed    2.33 sec
+          Start 3041: unit.StructuralViz_AnOverlayReachesTheScreenOverItsMesh
+        Test #3955: refmod.mesh.boundaries.tube ......................................................................   Passed    2.17 sec
+          Start 3955: refmod.mesh.boundaries.tube
+        Test #2959: unit.StructuralSystem_PreservesTheRigidBodyModesOfAReferenceBody .................................   Passed    2.12 sec
+          Start 2959: unit.StructuralSystem_PreservesTheRigidBodyModesOfAReferenceBody
+        Test #2073: unit.ReferenceModel_BearingHousingMatchesIndependentProperties ...................................   Passed    2.41 sec
+          Start 2073: unit.ReferenceModel_BearingHousingMatchesIndependentProperties
+        Test #2166: unit.ReferenceModel_ShaftBuildsValidGeometry .....................................................   Passed    2.48 sec
+          Start 2166: unit.ReferenceModel_ShaftBuildsValidGeometry
+        Test #2082: unit.ReferenceModel_FlangeFailsSafelyOnInvalidParameters .........................................   Passed    2.41 sec
+          Start 2082: unit.ReferenceModel_FlangeFailsSafelyOnInvalidParameters
+ 111/1495 Test #3041: unit.StructuralViz_AnOverlayReachesTheScreenOverItsMesh ..........................................   Passed    2.14 sec
+          Start 1656: unit.MeshTube_PreservesTheInnerVoid
+ 112/1495 Test #3955: refmod.mesh.boundaries.tube ......................................................................   Passed    2.22 sec
+          Start 2748: unit.StructuralDof_ConstrainsTwoDistinctCadFacesOfATubeWithoutOverlap
+ 113/1495 Test #1592: unit.MeshDisplay_TheMeshOverlaysACadSolidThatIsNotAtTheOrigin ....................................   Passed    3.04 sec
+          Start 1655: unit.MeshTube_MapsItsInnerAndOuterWallsToDifferentFaces
+        Test #2959: unit.StructuralSystem_PreservesTheRigidBodyModesOfAReferenceBody .................................   Passed    2.13 sec
+          Start 2959: unit.StructuralSystem_PreservesTheRigidBodyModesOfAReferenceBody
+ 114/1495 Test #2073: unit.ReferenceModel_BearingHousingMatchesIndependentProperties ...................................   Passed    2.24 sec
+          Start 2658: unit.StructuralBC_PartitionsAReferenceModelsEquationsWithP17Dof
+ 115/1495 Test #2166: unit.ReferenceModel_ShaftBuildsValidGeometry .....................................................   Passed    2.34 sec
+          Start 2168: unit.ReferenceModel_ShaftFailsSafelyOnInvalidParameters
+ 116/1495 Test #2082: unit.ReferenceModel_FlangeFailsSafelyOnInvalidParameters .........................................   Passed    2.30 sec
+          Start 2070: unit.ReferenceModel_BearingHousingBuildsValidGeometry
+        Test #1656: unit.MeshTube_PreservesTheInnerVoid ..............................................................   Passed    2.25 sec
+          Start 1656: unit.MeshTube_PreservesTheInnerVoid
+        Test #2748: unit.StructuralDof_ConstrainsTwoDistinctCadFacesOfATubeWithoutOverlap ............................   Passed    2.16 sec
+          Start 2748: unit.StructuralDof_ConstrainsTwoDistinctCadFacesOfATubeWithoutOverlap
+        Test #1655: unit.MeshTube_MapsItsInnerAndOuterWallsToDifferentFaces ..........................................   Passed    2.16 sec
+          Start 1655: unit.MeshTube_MapsItsInnerAndOuterWallsToDifferentFaces
+        Test #2959: unit.StructuralSystem_PreservesTheRigidBodyModesOfAReferenceBody .................................   Passed    2.19 sec
+          Start 2959: unit.StructuralSystem_PreservesTheRigidBodyModesOfAReferenceBody
+        Test #2658: unit.StructuralBC_PartitionsAReferenceModelsEquationsWithP17Dof ..................................   Passed    2.10 sec
+          Start 2658: unit.StructuralBC_PartitionsAReferenceModelsEquationsWithP17Dof
+        Test #2168: unit.ReferenceModel_ShaftFailsSafelyOnInvalidParameters ..........................................   Passed    2.16 sec
+          Start 2168: unit.ReferenceModel_ShaftFailsSafelyOnInvalidParameters
+        Test #2070: unit.ReferenceModel_BearingHousingBuildsValidGeometry ............................................   Passed    2.21 sec
+          Start 2070: unit.ReferenceModel_BearingHousingBuildsValidGeometry
+        Test #1656: unit.MeshTube_PreservesTheInnerVoid ..............................................................   Passed    2.17 sec
+          Start 1656: unit.MeshTube_PreservesTheInnerVoid
+        Test #2748: unit.StructuralDof_ConstrainsTwoDistinctCadFacesOfATubeWithoutOverlap ............................   Passed    2.09 sec
+          Start 2748: unit.StructuralDof_ConstrainsTwoDistinctCadFacesOfATubeWithoutOverlap
+        Test #1655: unit.MeshTube_MapsItsInnerAndOuterWallsToDifferentFaces ..........................................   Passed    2.12 sec
+          Start 1655: unit.MeshTube_MapsItsInnerAndOuterWallsToDifferentFaces
+        Test #2658: unit.StructuralBC_PartitionsAReferenceModelsEquationsWithP17Dof ..................................   Passed    2.02 sec
+          Start 2658: unit.StructuralBC_PartitionsAReferenceModelsEquationsWithP17Dof
+        Test #2959: unit.StructuralSystem_PreservesTheRigidBodyModesOfAReferenceBody .................................   Passed    2.22 sec
+          Start 2959: unit.StructuralSystem_PreservesTheRigidBodyModesOfAReferenceBody
+        Test #2168: unit.ReferenceModel_ShaftFailsSafelyOnInvalidParameters ..........................................   Passed    2.08 sec
+          Start 2168: unit.ReferenceModel_ShaftFailsSafelyOnInvalidParameters
+        Test #2070: unit.ReferenceModel_BearingHousingBuildsValidGeometry ............................................   Passed    2.05 sec
+          Start 2070: unit.ReferenceModel_BearingHousingBuildsValidGeometry
+        Test #1656: unit.MeshTube_PreservesTheInnerVoid ..............................................................   Passed    2.24 sec
+          Start 1656: unit.MeshTube_PreservesTheInnerVoid
+        Test #2748: unit.StructuralDof_ConstrainsTwoDistinctCadFacesOfATubeWithoutOverlap ............................   Passed    2.14 sec
+          Start 2748: unit.StructuralDof_ConstrainsTwoDistinctCadFacesOfATubeWithoutOverlap
+        Test #1655: unit.MeshTube_MapsItsInnerAndOuterWallsToDifferentFaces ..........................................   Passed    2.19 sec
+          Start 1655: unit.MeshTube_MapsItsInnerAndOuterWallsToDifferentFaces
+        Test #2658: unit.StructuralBC_PartitionsAReferenceModelsEquationsWithP17Dof ..................................   Passed    2.22 sec
+          Start 2658: unit.StructuralBC_PartitionsAReferenceModelsEquationsWithP17Dof
+ 117/1495 Test #2959: unit.StructuralSystem_PreservesTheRigidBodyModesOfAReferenceBody .................................   Passed    2.19 sec
+          Start 4076: architecture.layering
+        Test #2168: unit.ReferenceModel_ShaftFailsSafelyOnInvalidParameters ..........................................   Passed    2.18 sec
+          Start 2168: unit.ReferenceModel_ShaftFailsSafelyOnInvalidParameters
+        Test #2070: unit.ReferenceModel_BearingHousingBuildsValidGeometry ............................................   Passed    2.11 sec
+          Start 2070: unit.ReferenceModel_BearingHousingBuildsValidGeometry
+        Test #1656: unit.MeshTube_PreservesTheInnerVoid ..............................................................   Passed    2.11 sec
+          Start 1656: unit.MeshTube_PreservesTheInnerVoid
+        Test #2748: unit.StructuralDof_ConstrainsTwoDistinctCadFacesOfATubeWithoutOverlap ............................   Passed    2.14 sec
+          Start 2748: unit.StructuralDof_ConstrainsTwoDistinctCadFacesOfATubeWithoutOverlap
+        Test #1655: unit.MeshTube_MapsItsInnerAndOuterWallsToDifferentFaces ..........................................   Passed    1.97 sec
+          Start 1655: unit.MeshTube_MapsItsInnerAndOuterWallsToDifferentFaces
+        Test #4076: architecture.layering ............................................................................   Passed    1.77 sec
+          Start 4076: architecture.layering
+        Test #2658: unit.StructuralBC_PartitionsAReferenceModelsEquationsWithP17Dof ..................................   Passed    2.10 sec
+          Start 2658: unit.StructuralBC_PartitionsAReferenceModelsEquationsWithP17Dof
+        Test #2168: unit.ReferenceModel_ShaftFailsSafelyOnInvalidParameters ..........................................   Passed    1.97 sec
+          Start 2168: unit.ReferenceModel_ShaftFailsSafelyOnInvalidParameters
+        Test #2070: unit.ReferenceModel_BearingHousingBuildsValidGeometry ............................................   Passed    1.99 sec
+          Start 2070: unit.ReferenceModel_BearingHousingBuildsValidGeometry
+ 118/1495 Test #1656: unit.MeshTube_PreservesTheInnerVoid ..............................................................   Passed    2.26 sec
+          Start 1740: unit.MeshingCommand_AnUnresolvedFaceReferenceSurvivesUndoAndRedoUnrebound
+        Test #4076: architecture.layering ............................................................................   Passed    1.95 sec
+          Start 4076: architecture.layering
+ 119/1495 Test #2748: unit.StructuralDof_ConstrainsTwoDistinctCadFacesOfATubeWithoutOverlap ............................   Passed    2.52 sec
+          Start 2660: unit.StructuralBC_ReResolvesALocallyRefinedReferenceFace
+ 120/1495 Test #1655: unit.MeshTube_MapsItsInnerAndOuterWallsToDifferentFaces ..........................................   Passed    2.33 sec
+          Start 2167: unit.ReferenceModel_ShaftExports
+ 121/1495 Test #2658: unit.StructuralBC_PartitionsAReferenceModelsEquationsWithP17Dof ..................................   Passed    2.44 sec
+          Start 2090: unit.ReferenceModel_GearboxCoverFollowsItsHeight
+ 122/1495 Test #2168: unit.ReferenceModel_ShaftFailsSafelyOnInvalidParameters ..........................................   Passed    2.45 sec
+          Start 2185: unit.ReferenceModel_UBoltUndoRedoAndFailure
+ 123/1495 Test #2070: unit.ReferenceModel_BearingHousingBuildsValidGeometry ............................................   Passed    2.50 sec
+          Start 3026: unit.StructuralViz_AStaleContourIsNotDrawnAtAll
+        Test #4076: architecture.layering ............................................................................   Passed    2.22 sec
+          Start 4076: architecture.layering
+        Test #1740: unit.MeshingCommand_AnUnresolvedFaceReferenceSurvivesUndoAndRedoUnrebound ........................   Passed    2.36 sec
+          Start 1740: unit.MeshingCommand_AnUnresolvedFaceReferenceSurvivesUndoAndRedoUnrebound

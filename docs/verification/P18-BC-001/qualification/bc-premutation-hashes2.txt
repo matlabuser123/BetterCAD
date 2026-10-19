@@ -1,0 +1,11 @@
+﻿src/thermal/ThermalBoundary.cpp                                cde982c0e5106fe4b51fe9a564ef42db1e21276d
+src/thermal/ThermalConvection.cpp                              06e46a5b9d1ea2881e99a6c3e2ba1e14eadb57b4
+src/thermal/ThermalTarget.cpp                                  a6fb2722790d908d40b25f24550ae137429da4b9
+include/bettercad/thermal/ThermalData.hpp                      f119406ee91a764e711c37e124ebd51e99298851
+include/bettercad/thermal/ThermalBoundary.hpp                  bb2d541c3bc7461feb9e4b3403249c53a60147f1
+include/bettercad/thermal/ThermalConvection.hpp                8135b9e2bbb76fa94c4440777793b36db0cbea81
+tests/thermal/ThermalBoundaryTests.cpp                         a4075cbe43f3774a315abf597c4b0c9ac3762fc7
+tests/thermal/ThermalBoundaryMappedTests.cpp                   4a29fc505c8e2572dd763ecbb7e391742e78863b
+tests/thermal/ThermalBoundaryTestSupport.hpp                   224d6374105e3bf08c8060b2b81cb28cf9c5867e
+tests/compile_fail/ThermalBoundaryMisuse.cpp                   e8f4965e61b4030800eb210da5ea2da4d55005ef
+tests/cli/ZeroMatchGuard.cmake                                 09ba8c68d7402f9316048f19e96dde3406d3a7e0
