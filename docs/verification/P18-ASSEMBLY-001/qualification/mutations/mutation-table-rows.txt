@@ -1,0 +1,75 @@
+﻿| A01 | conduction contribution overwrites instead of summing | KILLED | 12 of 520 cases failed |
+| A02 | capacity contribution overwrites instead of summing | KILLED | 9 of 58 cases failed |
+| A03 | prepared heat input omitted | KILLED | 10 of 58 cases failed |
+| A04 | convection source overwrites instead of summing | KILLED | 7 of 58 cases failed |
+| A05 | convection source omitted | KILLED | 7 of 58 cases failed |
+| A06 | convection matrix omitted | KILLED | 9 of 58 cases failed |
+| A07 | convection facet rows rotated | KILLED | 28 of 58 cases failed |
+| A08 | element columns reversed against rows | KILLED | 49 of 58 cases failed |
+| A09 | node handle minus one used as the row | KILLED | 2 of 58 cases failed |
+| A10 | convection facets not reserved in the K pattern | KILLED (survived the first pass; closed by a new test, see below) | 1 of 61 cases failed |
+| A11 | duplicate columns kept in the layout | KILLED | 44 of 58 cases failed |
+| A12 | row columns not sorted | KILLED | 44 of 58 cases failed |
+| A13 | only the upper triangle of Ke scattered | KILLED | 50 of 59 cases failed |
+| A14 | element order not recorded | KILLED | 3 of 59 cases failed |
+| A15 | steady always (no capacity ever) | KILLED | abnormal exit (-1073740791): the test binary crashed |
+| A16 | recorded mode always steady | KILLED | 2 of 59 cases failed |
+| A17 | mesh stamp not recorded | KILLED | 5 of 59 cases failed |
+| A18 | node count not recorded | KILLED | 5 of 59 cases failed |
+| A19 | body not compared | KILLED (survived the first pass; closed by a new test, see below) | 1 of 61 cases failed |
+| A20 | mesh stamp not compared | KILLED | 2 of 59 cases failed |
+| A21 | node count not compared | KILLED (survived the first pass; closed by a new test, see below) | 1 of 61 cases failed |
+| A22 | geometry not compared | KILLED | 1 of 61 cases failed |
+| A23 | mode not compared | KILLED | 2 of 61 cases failed |
+| A24 | material revision not compared | KILLED | 3 of 61 cases failed |
+| A25 | material id not compared | KILLED | 1 of 61 cases failed |
+| A26 | loads not compared | KILLED | 2 of 61 cases failed |
+| A27 | convections not compared | KILLED | 2 of 61 cases failed |
+| A28 | prescribed temperatures enter the source | KILLED | 2 of 61 cases failed |
+| A29 | loads not recorded in the source | KILLED | 1 of 61 cases failed |
+| A30 | material revision not recorded | KILLED | 2 of 61 cases failed |
+| A31 | geometry not recorded | KILLED (survived the first pass; closed by a new test, see below) | 1 of 62 cases failed |
+| A32 | body not recorded | KILLED (survived the first pass; closed by a new test, see below) | 1 of 62 cases failed |
+| A33 | model-level numbering check removed | KILLED | 2 of 61 cases failed |
+| A34 | prepared load staleness not checked | KILLED | 2 of 61 cases failed |
+| A35 | prepared boundary staleness not checked | KILLED | 1 of 62 cases failed |
+| A36 | conductivity edit not detected | KILLED | 1 of 62 cases failed |
+| A37 | transient capacity never requested | KILLED | abnormal exit (-1073740791): the test binary crashed |
+| A38 | convection dof range check removed | KILLED | abnormal exit (-1073740791): the test binary crashed |
+| A39 | heat vector length check removed | KILLED | abnormal exit (-1073740791): the test binary crashed |
+| A40 | empty mesh accepted | KILLED | 1 of 62 cases failed |
+| A41 | rejected element skipped | KILLED | abnormal exit (-1073740791): the test binary crashed |
+| A42 | convection matrix negated | KILLED | 9 of 62 cases failed |
+| A43 | convection source negated | KILLED | 7 of 62 cases failed |
+| A44 | capacity halved | KILLED | 11 of 62 cases failed |
+| A45 | diagonal epsilon added to K | KILLED | 16 of 62 cases failed |
+| A46 | elements visited in reverse order | KILLED | 2 of 62 cases failed |
+| A47 | non-finite classified as inconsistent | KILLED | 1 of 62 cases failed |
+| A48 | wrong conductivity (doubled) passed to the kernel | KILLED | 11 of 62 cases failed |
+| A49 | capacity computed with density ignored | KILLED | 12 of 62 cases failed |
+| A50 | lookup returns the neighbour for an absent pair | KILLED | 6 of 62 cases failed |
+| A51 | symmetry error always zero | KILLED | 1 of 62 cases failed |
+| A52 | non-finite entry check removed from the matrix | KILLED | 2 of 62 cases failed |
+| A53 | column bound off by one | KILLED | 1 of 62 cases failed |
+| A54 | repeated column allowed | KILLED | 1 of 62 cases failed |
+| A55 | last row start not checked | KILLED | abnormal exit (-1073740791): the test binary crashed |
+| A56 | symmetry bound strict | KILLED | 1 of 62 cases failed |
+| A57 | matrix product keeps only the last term | KILLED | 9 of 62 cases failed |
+| A58 | heat total keeps only the last entry | KILLED | 6 of 62 cases failed |
+| A59 | heat vector finite check removed | KILLED | 1 of 62 cases failed |
+| A60 | non-square matrix reports symmetric | KILLED | 1 of 62 cases failed |
+| A61 | symmetry gate not applied to K | SURVIVED | all passed |
+| B01 | Ke added to C | KILLED | 12 of 62 cases failed |
+| B02 | Ce added to K as well | KILLED | 12 of 62 cases failed |
+| B03 | last element omitted | KILLED | abnormal exit (-1073740791): the test binary crashed |
+| B04 | first element counted twice in K | KILLED | 11 of 62 cases failed |
+| B05 | combined and per-load heat input both added | KILLED | 3 of 62 cases failed |
+| B06 | penalty-enforced Dirichlet on unknown 0 | KILLED | 25 of 62 cases failed |
+| B07 | entries below a threshold dropped | KILLED | 11 of 62 cases failed |
+| B08 | transient with a missing capacity silently becomes steady | KILLED | abnormal exit (-1073740791): the test binary crashed |
+| B09 | C / dt added into K | KILLED | 12 of 62 cases failed |
+| B10 | convection matrix recomputed as a half off-diagonal | KILLED | 9 of 62 cases failed |
+| B11 | matrix size taken from the largest handle | KILLED | 53 of 62 cases failed |
+| B12 | convection matrix counted twice | KILLED | 10 of 62 cases failed |
+| B13 | convection source counted twice | KILLED | 7 of 62 cases failed |
+| C01 | upper-only Ke scatter with the symmetry gate removed | KILLED | 19 of 62 cases failed |

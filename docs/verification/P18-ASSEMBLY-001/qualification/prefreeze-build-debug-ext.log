@@ -1,0 +1,8 @@
+[1/10] Checking git revision
+[2/8] Linking CXX executable bin\bettercad_example_geometry_accuracy.exe
+[3/8] Building CXX object src/thermal/CMakeFiles/bettercad_thermal.dir/ThermalSystem.cpp.obj
+[4/8] Linking CXX executable bin\bettercad.exe; Deploying Qt runtime for bettercad
+[5/8] Linking CXX static library lib\libbettercad_thermal.a
+[6/8] Linking CXX executable bin\bettercad_example_reference_models.exe
+[7/8] Linking CXX executable bin\bettercad-cli.exe
+[8/8] Linking CXX executable bin\bettercad_tests.exe

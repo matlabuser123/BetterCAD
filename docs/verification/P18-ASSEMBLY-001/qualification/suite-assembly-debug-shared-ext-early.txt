@@ -1,0 +1,116 @@
+﻿Filters: "ThermalAssembly_*"
+RNG seed: 1652291477
+0.215 s: ThermalAssembly_BlockElementOrderIsP16sAscendingOrder
+0.082 s: ThermalAssembly_RejectsStaleMaterialSource
+0.001 s: ThermalAssembly_EmptyLoadVectorIsValid
+0.000 s: ThermalAssembly_ConductanceAndCapacityAreDifferentTypes
+0.001 s: ThermalAssembly_ConvectionMatrixScattersToCorrectDofs
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalAssemblyTests.cpp:891: warning: 'sparse smoke: grid 22^3, Ndof 10648, Ntet 55566, nnz(K) 148366, nnz(C) 148366, Ndof^2 113379904, nnz/Ndof^2 1.309e-03, assembled in 2.59 s, all finite, symmetric'
+3.005 s: ThermalAssembly_LargeMeshSparseSmoke
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalAssemblyMappedTests.cpp:168: warning: 'block Q: surface 0.6 W + generation 60 W + convection source 8.7945 W = 69.3945 W (actual 69.3945); convection source is the AMBIENT part only, not the exchanged heat'
+0.132 s: ThermalAssembly_BlockHeatResultantsPreserved
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalAssemblyTests.cpp:247: warning: 'shared K(1,1): contribution A 1.0 + contribution B 1.5 = 2.5 (actual 2.5); shared Q(1): 1 W + 2 W = 3 W'
+0.001 s: ThermalAssembly_TwoTetDuplicateContributionsSum
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalAssemblyTests.cpp:213: warning: 'two Tets: K11 = A 1.0 + B 1.5 = 2.5; K23 = A 0 + B -0.5; K04 = 0 (no shared element); nnz 23'
+0.000 s: ThermalAssembly_TwoTetSharedNodeConductivity
+0.000 s: ThermalAssembly_SingleTetCompositeSystemAnalytical
+0.000 s: ThermalAssembly_RepeatedConvectionAddsTwice
+0.094 s: ThermalAssembly_TransientRequiresCapacityProperties
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalAssemblyMappedTests.cpp:398: warning: '' with 1 message: 'k-only material: steady assembles (no C); transient is refused as material_unavailable, never given a zero C'
+11.878 s: ThermalAssembly_SteadyKOnlyMaterialSucceeds
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalAssemblyTests.cpp:526: warning: 'T^T K T = 39.0073708222; sum of local energies = 39.0073708222; difference 0.00e+00'
+0.000 s: ThermalAssembly_EnergyIdentities
+0.004 s: ThermalAssembly_SparseSymmetryCheckSeesAMissingTranspose
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalAssemblyMappedTests.cpp:335: warning: 'block energy identities: T^T K T = 5075.81169256 vs sum of local 5075.81169256; v^T C v = 8018351.61539 vs 8018351.61539'
+0.072 s: ThermalAssembly_BlockEnergyIdentities
+0.000 s: ThermalAssembly_TwoTetSharedNodeCapacity
+0.151 s: ThermalAssembly_FailureOrderIsDeterministic
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalAssemblyTests.cpp:274: warning: 'two Tets vs independent dense oracle: max |K error| 0.00e+00, |C error| 0.00e+00, |Q error| 0.00e+00'
+0.001 s: ThermalAssembly_SmallSystemMatchesIndependentDenseOracle
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalAssemblyTests.cpp:959: warning: 'bit fingerprint, two-Tet system with convection: 6398b41313705d28'
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalAssemblyTests.cpp:960: warning: 'bit fingerprint, 9^3 grid (729 unknowns): c6a042bf47d865e0'
+0.352 s: ThermalAssembly_BitFingerprintForCrossPresetComparison
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalAssemblyTests.cpp:750: warning: 'sparse ids [7 42 104 9001 500000]: matrices 5 x 5 over unknowns [0 1 2 3 4] (not 500001)'
+0.000 s: ThermalAssembly_SparseNodeIds
+0.000 s: ThermalAssembly_SparseMatrixLayoutIsValidated
+0.081 s: ThermalAssembly_RejectsStalePreparedBC
+0.000 s: ThermalAssembly_PureConductionPreservesConstantNullMode
+0.155 s: ThermalAssembly_RejectsMismatchedDofMeshSource
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalAssemblyMappedTests.cpp:199: warning: 'block, conduction only: ||K 1||_inf = 2.22e-16 against max |K| 6.1; 1^T C 1 = 86.664 J/K (rho cp V = 86.664)'
+0.087 s: ThermalAssembly_BlockNullModeAndCapacityConservation
+0.000 s: a numbering built for another mesh
+0.001 s: ThermalAssembly_SeamRefusals
+0.000 s: a mesh with no tetrahedron
+0.000 s: ThermalAssembly_SeamRefusals
+0.000 s: a heat vector of the wrong length
+0.000 s: ThermalAssembly_SeamRefusals
+0.000 s: a convection facet naming an unknown the numbering does not have
+0.000 s: ThermalAssembly_SeamRefusals
+0.000 s: an inverted tetrahedron is refused and named, never skipped
+0.000 s: ThermalAssembly_SeamRefusals
+0.000 s: a degenerate tetrahedron
+0.000 s: ThermalAssembly_SeamRefusals
+0.000 s: an unusable conductivity and an unusable capacity
+0.000 s: ThermalAssembly_SeamRefusals
+0.000 s: a sum that overflows is refused, never accepted
+0.000 s: ThermalAssembly_SeamRefusals
+0.000 s: every problem has a name
+0.000 s: ThermalAssembly_SeamRefusals
+0.001 s: ThermalAssembly_LocalOrderIsPreservedUnderEvenPermutation
+0.087 s: ThermalAssembly_PrescribedTemperaturesNeverEnterTheMatrices
+0.076 s: ThermalAssembly_TransientCapacityEditStalesTheSystem
+0.000 s: ThermalAssembly_AllGlobalEntriesFinite
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalAssemblyTests.cpp:764: warning: 'max NodeId 4 294 967 294, 4 nodes: matrices 4 x 4, 16 entries'
+0.000 s: ThermalAssembly_LargeSparseNodeIdDoesNotControlMatrixSize
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalAssemblyMappedTests.cpp:841: warning: 'bit fingerprint, real block, 9 unknowns, transient with loads and convection: 07c4bb5e30c65a38'
+0.075 s: ThermalAssembly_BlockBitFingerprintForCrossPresetComparison
+0.000 s: ThermalAssembly_SingleTetGenerationAnalytical
+0.082 s: ThermalAssembly_DefinitionOverloadReadsOnlyModeLoadsAndConditions
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalAssemblyTests.cpp:458: warning: 'C symmetry: max |Cij - Cji| = 0.00e+00 against max |C| = 6 J/K'
+0.001 s: ThermalAssembly_GlobalCSymmetric
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalAssemblyMappedTests.cpp:772: warning: 'real fine cylinder: Ndof 900, Ntet 4118, boundary facets 572, nnz(K) 11506, Ndof^2 810000, nnz/Ndof^2 1.420e-02, 0.137 s'
+12.030 s: ThermalAssembly_LargeRealMeshSparseSmoke
+0.078 s: ThermalAssembly_RejectsStalePreparedLoad
+0.000 s: ThermalAssembly_GlobalDimensions
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalAssemblyTests.cpp:414: warning: 'combined Q: generation 12 W + surface 5 W + convection source 600 W = 617 W (actual 617)'
+0.001 s: ThermalAssembly_HeatResultantsPreserved
+0.000 s: ThermalAssembly_UsesSparseGlobalMatrices
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalAssemblyMappedTests.cpp:603: warning: 'remesh: 9 nodes, 12 tets, 12 boundary facets in BOTH generations; the old 9-unknown system is stale (reason mesh), the new one is current'
+0.163 s: ThermalAssembly_RemeshStalesAssembledSystem
+0.000 s: ThermalAssembly_ConvectionLiftsTheConstantMode
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalAssemblyMappedTests.cpp:802: warning: 'determinism: 30 repeated block assemblies, 0 bitwise differences in K, C, Q, the element order or the provenance'
+0.158 s: ThermalAssembly_RepeatedBlockAssemblyDeterministic
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalAssemblyTests.cpp:163: warning: 'single unit Tet, rho cp = 120: C = [2 1 1 1; 1 2 1 1; 1 1 2 1; 1 1 1 2] J/K, max entry error 0.00e+00'
+0.001 s: ThermalAssembly_SingleTetCapacityAnalytical
+0.000 s: ThermalAssembly_ConvectionSharedNodesAccumulate
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalAssemblyTests.cpp:914: warning: 'determinism: 50 repeated assemblies of a two-Tet system with convection, loads and capacity, 0 bitwise differences in K, C, Q, the element order or the provenance'
+0.006 s: ThermalAssembly_RepeatedAssemblyDeterministic
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalAssemblyMappedTests.cpp:134: warning: 'block: Ndof 9, Ntet 12, nnz(K) 61, nnz(C) 61, convection facets 2, Q total 69.3945 W'
+0.069 s: ThermalAssembly_BlockSystemCompositionAndDimensions
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalAssemblyTests.cpp:450: warning: 'K symmetry: max |Kij - Kji| = 0.00e+00 against max |K| = 3.411 W/K'
+0.000 s: ThermalAssembly_GlobalKSymmetric
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalAssemblyTests.cpp:146: warning: 'single unit Tet, k = 6: K = [3 -1 -1 -1; -1 1 0 0; -1 0 1 0; -1 0 0 1] W/K, max entry error 0.00e+00'
+0.000 s: ThermalAssembly_SingleTetConductivityAnalytical
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalAssemblyMappedTests.cpp:274: warning: 'block (9 x 9) vs independent dense scatter: max |K error| 0.00e+00 (max |K| 6.1), |C error| 0.00e+00, |Q error| 0.00e+00'
+0.071 s: ThermalAssembly_BlockMatchesIndependentDenseOracle
+0.077 s: ThermalAssembly_AssemblyDoesNotMutateItsInputs
+0.000 s: ThermalAssembly_DisconnectedComponentsRemainBlockDiagonal
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalAssemblyTests.cpp:258: warning: 'two Tets, conduction only: ||K 1||_inf = 0.00e+00 (constant mode preserved)'
+0.000 s: ThermalAssembly_TwoTetConstantTemperatureNull
+0.000 s: ThermalAssembly_ConvectionSourceScattersToCorrectDofs
+0.000 s: ThermalAssembly_HeatVectorRefusesNonFinite
+0.000 s: a prescribed temperature does NOT stale it (it is not in K, C or Q)
+0.079 s: ThermalAssembly_EditsStaleExactlyWhatTheyChange
+0.000 s: a heat load does
+0.073 s: ThermalAssembly_EditsStaleExactlyWhatTheyChange
+0.000 s: a convection coefficient or ambient does
+0.071 s: ThermalAssembly_EditsStaleExactlyWhatTheyChange
+0.000 s: the mode does
+0.072 s: ThermalAssembly_EditsStaleExactlyWhatTheyChange
+0.000 s: solver settings, the time step, the end time and the initial condition do NOT
+0.078 s: ThermalAssembly_EditsStaleExactlyWhatTheyChange
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalAssemblyMappedTests.cpp:638: warning: 'same ids: every NodeId and ElementId identical across the remesh; the old system is stale by stamp alone'
+0.135 s: ThermalAssembly_SameIdsNewMeshIsStale
+All tests passed (220488 assertions in 58 test cases)
+
+

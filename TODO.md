@@ -22,29 +22,29 @@ Prerequisite:
            (OCCT never subdivides a developable wall along its ruling).
 
 Current milestone:
-           none. P18-BC-001 — Thermal Boundary Conditions. COMPLETE at 17
-           of 17 and qualified 2026-10-19 against b4714a4 plus the working
-           tree: 4448/4448 x 3 presets, 1495 x 5 in two, 0 warnings over 682
-           objects, 17 stages exit 0, 4h48m16s, fingerprints at the freeze
-           == before == after, on the second attempt at the corrected tree
-           (the first failed the debug-shared-ext BUILD on a production
-           defect: a struct with out-of-line members lacked its DLL export
-           annotation; fixed and preserved, not counted). A prescribed
-           temperature as an exact constraint carrying T_bar in kelvin (one
-           per unique boundary unknown, equal prescriptions deduplicated, a
-           contradiction refused) and convection -k grad(T).n = h (T - T_inf)
-           as the consistent per-facet boundary terms Kconv = (hA/12)[2 1 1;
-           1 2 1; 1 1 2] W/K and Qconv = (h T_inf A/3)[1 1 1] W, resolved
-           through P16's mapping with no nearest-face fallback and bound to
-           the exact mesh (stale after a remesh even with the same counts
-           and the same NodeIds). 92 cases, 31 compile-fail cases, 58
-           mutation probes (all killed), 517 files and 0 layering
-           violations. A canonical h = 0 stays refused (P18-DATA's rule);
-           allowing it is an owner decision. Evidence:
-           docs/verification/P18-BC-001/.
+           none. P18-ASSEMBLY-001 — Global Thermal Assembly. COMPLETE at 20
+           of 20 and qualified 2026-10-20 against a5b8cc2 plus the working
+           tree: 4546/4546 x 3 presets, 1557 x 5 in two, 0 warnings over 687
+           objects, 17 stages exit 0, 5h08m45s, fingerprints at the freeze
+           == before == after, first run. The unconstrained global system
+           K T = Q / C dT/dt + K T = Q as BetterCAD-owned sparse CSR (the
+           same representation as P17's): K in W/K (Tet4 Ke plus the Robin
+           Kconv), C in J/K (Tet4 Ce, transient only; a steady analysis has
+           no C at all and a transient one without rho and cp is refused),
+           Q in W (the prepared heat input plus the convection ambient
+           source), scattered through ThermalDofMap in a frozen serial order
+           with duplicates SUMMED, validated finite and symmetric, bound by
+           value to the exact mesh, numbering, loads, boundary and material
+           (stale after a remesh even with the same counts and the same
+           ids). Assembly consumes P18-ELEM, -LOAD and -BC and repeats none of
+           their formulas; no Dirichlet handling, penalty, regularisation,
+           pruning, symmetrisation, C/dt or solve. 62 cases, 36 compile-fail
+           cases, 75 mutation probes (74 killed, 1 explained equivalent; five
+           test gaps found and closed), 521 files and 0 layering violations.
+           Evidence: docs/verification/P18-ASSEMBLY-001/.
            P18-ARCH-001 PASSED 2026-10-16; P18-DATA-001, P18-MAT-001,
            P18-DOF-001 PASSED 2026-10-17; P18-ELEM-001, P18-LOAD-001 PASSED
-           2026-10-18 (docs/verification/P18-*/).
+           2026-10-18; P18-BC-001 PASSED 2026-10-19 (docs/verification/P18-*/).
 Qualified:
            P0–P10 — BetterCAD v0.1.0
            P11 — Advanced Part Modelling
@@ -56,8 +56,8 @@ Qualified:
            P17 — Structural FEA
 
 Next:
-           P18-ASSEMBLY-001 — Global Thermal Assembly. NOT AUTHORIZED:
-           P18-BC-001 passing is not permission to start it; each
+           P18-SOLVE-001 — Steady Thermal Solver. NOT AUTHORIZED:
+           P18-ASSEMBLY-001 passing is not permission to start it; each
            milestone is started by the owner, as every P17 milestone was.
 
 P17 objective, as delivered:
@@ -770,26 +770,62 @@ steady      K T = Q
 transient   C dT/dt + K T = Q
 ```
 
-* [ ] Assemble global thermal conductivity matrix
-* [ ] Assemble global thermal capacity matrix
-* [ ] Assemble global heat-load vector
-* [ ] Deterministic sparse assembly
-* [ ] Duplicate sparse contributions SUM
-* [ ] Validate dimensions
-* [ ] Validate finite entries
-* [ ] Validate symmetry
-* [ ] Single-Tet analytical assembly
-* [ ] Two-Tet shared-node assembly
-* [ ] Independent dense oracle for small systems
-* [ ] Heat-load resultant preservation
-* [ ] Source compatibility checks
-* [ ] No silent regularisation
-* [ ] No production dense global matrix
-* [ ] Large-mesh sparse smoke
-* [ ] Determinism PASS
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Assemble global thermal conductivity matrix
+* [x] Assemble global thermal capacity matrix
+* [x] Assemble global heat-load vector
+* [x] Deterministic sparse assembly
+* [x] Duplicate sparse contributions SUM
+* [x] Validate dimensions
+* [x] Validate finite entries
+* [x] Validate symmetry
+* [x] Single-Tet analytical assembly
+* [x] Two-Tet shared-node assembly
+* [x] Independent dense oracle for small systems
+* [x] Heat-load resultant preservation
+* [x] Source compatibility checks
+* [x] No silent regularisation
+* [x] No production dense global matrix
+* [x] Large-mesh sparse smoke
+* [x] Determinism PASS
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded
+
+```text
+PASS 2026-10-20. Qualified against a5b8cc2 plus the working tree:
+4546/4546 x 3 presets, 1557 x 5 in two, 0 warnings over 687 objects, 17
+stages exit 0, 5h08m45s, fingerprints at the freeze == before == after;
+first run on the frozen tree (an earlier launch died in under a second for
+want of PATH, built nothing and is not counted). Global system, unconstrained:
+K = sum Ke + sum Kconv (W/K), C = sum Ce (J/K, transient only), Q = prepared
+heat input + sum Qconv (W), over Ndof = Nnode unknowns from ThermalDofMap;
+NodeId is never an index and the dimension is never the largest handle (a
+mesh with max id 4 294 967 294 and four nodes gives 4 x 4). BetterCAD CSR,
+64-bit indices, strictly ascending columns, a validating constructor, typed
+so K is not C; a symbolic pass then a numeric += pass in a frozen serial
+order, so duplicates SUM by construction. Single unit tet: K = [3 -1 -1 -1;
+-1 1 0 0; -1 0 1 0; -1 0 0 1], C = [2 1 1 1; ...], Q = 1 W per corner, error
+0. Two tets: K(1,1) = 1.0 + 1.5 = 2.5, C(1,1) = 2 + 4 = 6, Q(1) = 1 + 2 = 3 W;
+independent dense oracle error 0. Real block (9 unknowns, 12 tets): Q = 0.6 +
+60 + 8.7945 = 69.3945 W, ||K 1|| = 2.2e-16, 1^T C 1 = 86.664 J/K = rho cp V,
+T^T K T and v^T C v equal the sums of the local energies. Steady k-only
+assembles with no C; transient without rho/cp is refused (material_unavailable),
+never a zero C. Stale numbering, loads, boundary or material refused before the
+first element, in a fixed order; a remesh with the same counts and the same
+ids is stale by stamp; a prescribed temperature edit does not stale the system
+because it never enters K, C or Q (bit-identical with and without). No
+Dirichlet, penalty, epsilon, pin, symmetrisation or pruning; no dense global
+matrix (22^3 grid: 10 648 unknowns, nnz/Ndof^2 = 1.3e-3). 62 cases, 36
+compile-fail cases, 75 mutation probes (74 killed; A61, the symmetry gate on a
+correct scatter, is an explained equivalent; five test gaps found and closed),
+35 + 6 adversarial questions, 5 findings, 0 production defects. Results are
+bitwise identical across the three presets (fingerprints 6398b41313705d28,
+c6a042bf47d865e0, 07c4bb5e30c65a38). Limits recorded: the seam takes
+convection facets as data (exterior-ness is P18-BC's), thermalAssemblyFailure
+costs a full assembly, inconsistent_system is reachable only through a
+defective scatter. No solve, no elimination, no C/dt, no residual, no
+reaction, no result field. Evidence: docs/verification/P18-ASSEMBLY-001/.
+```
 
 ---
 # P18-SOLVE-001

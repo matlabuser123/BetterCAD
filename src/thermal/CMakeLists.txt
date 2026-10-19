@@ -49,6 +49,8 @@ bettercad_add_library(bettercad_thermal
         ThermalLoadVector.cpp
         ThermalMaterial.cpp
         ThermalResult.cpp
+        ThermalSparse.cpp
+        ThermalSystem.cpp
         ThermalTarget.cpp
     PUBLIC_LINK
         BetterCAD::core

@@ -145,6 +145,30 @@ set(_filters
     "unit\\.ThermalBC_(RepeatedPreparation|Diagnostics|BitFingerprint)" 3
     "unit\\.ThermalBC_PreparedBoundaryHasNo" 1
     "compile_fail\\.thermalbc\\." 31
+    # P18-ASSEMBLY-001. The global thermal assembly cases, by the brief's groups --
+    # the single-tetrahedron and two-tetrahedra analytical systems, the convection
+    # scatter, the dense-oracle and energy identities, the resultants and the null
+    # mode, source compatibility and currentness, the steady-versus-transient
+    # material contract, the sparse containers and sparse identities, the seam
+    # refusals, and determinism -- each under its own name prefix so a targeted run
+    # of any one group can be seen to have matched something; and the compile-fail
+    # group that proves K and C are different types, a row is an unknown, and
+    # nothing that solves or constrains is reachable.
+    "unit\\.ThermalAssembly" 62
+    "unit\\.ThermalAssembly_SingleTet" 4
+    "unit\\.ThermalAssembly_TwoTet" 4
+    "unit\\.ThermalAssembly_(Convection|RepeatedConvection)" 6
+    "unit\\.ThermalAssembly_(SmallSystemMatchesIndependentDenseOracle|BlockMatchesIndependentDenseOracle|EnergyIdentities|BlockEnergyIdentities)" 4
+    "unit\\.ThermalAssembly_(HeatResultants|BlockHeatResultants)" 2
+    "unit\\.ThermalAssembly_(PureConduction|BlockNullMode|ConvectionLifts|TwoTetConstant)" 4
+    "unit\\.ThermalAssembly_(Rejects|Remesh|SameIds|Edits|TransientCapacityEdit|FailureOrder)" 9
+    "unit\\.ThermalAssembly_(StaleReasons|SameBuilder|BlockSourceRecords)" 3
+    "unit\\.ThermalAssembly_(SteadyKOnly|TransientRequires|TransientCapacityEdit)" 3
+    "unit\\.ThermalAssembly_(Sparse|LargeSparse|LargeMesh|LargeReal|UsesSparse|Disconnected)" 8
+    "unit\\.ThermalAssembly_(SeamRefusals|HeatVectorRefusesNonFinite|EmptyLoadVector)" 3
+    "unit\\.ThermalAssembly_(Repeated|BitFingerprint|BlockBitFingerprint)" 5
+    "unit\\.ThermalAssembly_(AssemblyDoesNotMutate|PrescribedTemperaturesNever|LocalOrder|DefinitionOverload)" 4
+    "compile_fail\\.thermalsys\\." 36
 )
 list(LENGTH _filters _count)
 math(EXPR _last "${_count} - 1")

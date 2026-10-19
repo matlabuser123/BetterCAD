@@ -975,3 +975,66 @@ foreach(_case
     bettercad_compile_fail_case(thermalbc "${_thermalbc}" ${_case}
         "read-only|discards qualifiers|no match for|passing .const" BetterCAD::thermal)
 endforeach()
+
+# The global thermal system (P18-ASSEMBLY-001). K and C are different types with
+# different units; a row is an unknown and neither a node handle nor an element
+# identity; a system and its containers cannot be conjured, and the arrays are
+# read-only views; the system has no solution, no temperatures, no penalty, no
+# reduced or constrained matrix, no residual, no reaction, no factorisation and no
+# C / dt -- the scope line to P18-SOLVE-001 and P18-TRANSIENT-001; and its
+# provenance holds only what the matrices depend on.
+set(_thermalsys "${CMAKE_CURRENT_SOURCE_DIR}/ThermalSystemMisuse.cpp")
+bettercad_compile_fail_group(thermalsys "${_thermalsys}" BetterCAD::thermal)
+foreach(_case
+        A_CONDUCTANCE_MATRIX_IS_NOT_A_CAPACITY_MATRIX
+        A_CAPACITY_MATRIX_IS_NOT_A_CONDUCTANCE_MATRIX
+        A_CONDUCTANCE_ENTRY_IS_NOT_A_CAPACITY_ENTRY
+        A_CONDUCTANCE_ENTRY_IS_NOT_A_POWER
+        A_POWER_IS_NOT_A_CONDUCTANCE_ENTRY
+        A_HEAT_ENTRY_IS_NOT_A_DOUBLE
+        A_NODE_ID_IS_NOT_A_ROW
+        AN_ELEMENT_ID_IS_NOT_A_ROW
+        AN_UNKNOWN_IS_NOT_A_BARE_ROW
+        A_DOUBLE_IS_NOT_A_CONDUCTIVITY
+        A_DENSITY_IS_NOT_A_CONDUCTIVITY
+        A_VECTOR_OF_DOUBLES_IS_NOT_A_HEAT_INPUT)
+    bettercad_compile_fail_case(thermalsys "${_thermalsys}" ${_case}
+        "could not convert|cannot convert|no matching function|no match for|invalid conversion|invalid initialization of reference|conversion from|no known conversion"
+        BetterCAD::thermal)
+endforeach()
+foreach(_case
+        A_SYSTEM_CONSTRUCTED_DIRECTLY
+        A_SPARSE_MATRIX_CONSTRUCTED_DIRECTLY
+        A_HEAT_VECTOR_CONSTRUCTED_DIRECTLY)
+    bettercad_compile_fail_case(thermalsys "${_thermalsys}" ${_case}
+        "is private within this context|private" BetterCAD::thermal)
+endforeach()
+foreach(_case
+        THE_SYSTEM_HAS_NO_SOLUTION
+        THE_SYSTEM_HAS_NO_TEMPERATURES
+        THE_SYSTEM_HAS_NO_PENALTY
+        THE_SYSTEM_HAS_NO_REDUCED_MATRIX
+        THE_SYSTEM_HAS_NO_CONSTRAINED_MATRIX
+        THE_SYSTEM_HAS_NO_RESIDUAL
+        THE_SYSTEM_HAS_NO_REACTIONS
+        THE_SYSTEM_HAS_NO_FACTORISATION
+        THE_SYSTEM_HAS_NO_CAPACITY_OVER_TIME_STEP
+        THE_MATRIX_HAS_NO_DENSE_FORM
+        THE_MATRIX_HAS_NO_SYMMETRISE
+        THE_MATRIX_HAS_NO_REGULARISE
+        THE_MATRIX_HAS_NO_SETTER
+        THE_SOURCE_HAS_NO_SOLVER_SETTINGS
+        THE_SOURCE_HAS_NO_TIME_STEP
+        THE_SOURCE_HAS_NO_INITIAL_CONDITION
+        THE_SOURCE_HAS_NO_PRESCRIBED_TEMPERATURES)
+    bettercad_compile_fail_case(thermalsys "${_thermalsys}" ${_case}
+        "no member named|has no member" BetterCAD::thermal)
+endforeach()
+foreach(_case
+        THE_MATRIX_VALUES_ARE_READ_ONLY
+        THE_MATRIX_PATTERN_IS_READ_ONLY
+        THE_HEAT_VECTOR_IS_READ_ONLY
+        THE_SOURCE_IS_READ_ONLY)
+    bettercad_compile_fail_case(thermalsys "${_thermalsys}" ${_case}
+        "read-only|discards qualifiers|no match for|passing .const" BetterCAD::thermal)
+endforeach()
