@@ -206,3 +206,47 @@ commit unless each equals the frozen one, refuses any remaining fill-in token in
 this directory or in the message, commits, and reads the eight subtree hashes back
 out of the commit's tree. Its output, with the commit hash, is appended to this file
 by the follow-up documentation commit, because a commit cannot carry its own hash.
+
+### The commit record
+
+```text
+commit    a0745de35bef8a9958ae5dd8688c811778f4f137
+subject   BetterCAD: add thermal boundary conditions
+tree      911b4fce198bcda5a579593be0e8de8ba5e8798c
+parent    b4714a487c04a3ac8ef2d294bc40f26585ec2f8e   (P18-LOAD-001's record commit)
+date      2026-10-19 13:04:25 +1000
+files     94 files changed, 97059 insertions(+), 40 deletions(-)
+          docs 80   include 2   ROADMAP.md 1   src 3   tests 7   TODO.md 1
+
+recomputed from a scratch index immediately before the commit
+  apps               a95876bc6dbf843d4e0cec114059bc196fa16175   == frozen
+  include            ecc31f1413556446cd361c53949f65daf3aca2ff   == frozen
+  src                8a842d893095081f59490dccf1cb3deb6d21d424   == frozen
+  tests              ce9f67bf6966e7345507ebc9fe2b2b90a5e3eb12   == frozen
+  examples           a955cf6511ce715fcb95bc06ef82b877535869e6   == frozen
+  cmake              5a382115d7ed7775189d40b55e40f318eaae6cc7   == frozen
+  CMakeLists.txt     3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd   == frozen
+  CMakePresets.json  3229f0f89b236744d7d5c082bed47c28b718288e   == frozen
+
+read back from a0745de3^{tree} after the commit
+  all eight                                                     == frozen
+  "ALL EIGHT == FROZEN"
+
+untracked left behind   .claude/ only (the session's settings, never committed)
+message                 no BOM (first bytes 66,101,116), no fill-in token
+```
+
+qualified == committed: the tree the three presets built and tested in the
+qualifying run (2026-10-19 07:54:43 to 12:42:59) is, under every one of the eight
+paths, the tree commit a0745de3 carries. The files under `docs/` are this directory:
+the evidence, the harness copies, the mutation scripts and summaries, the logs of
+the qualifying run and the post-run measurements, and the preserved logs of the
+first attempt.
+
+```text
+origin/main at the time of this record   b4714a487c04a3ac8ef2d294bc40f26585ec2f8e
+unpushed, oldest first                   a0745de3  (+ this record)
+```
+
+The push is the owner's; this record is written before it and does not
+claim it.
