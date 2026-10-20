@@ -3,6 +3,7 @@
 # Modules are added here as they are implemented; see TODO.md.
 add_subdirectory(core)
 add_subdirectory(core/geometry)
+add_subdirectory(linalg)
 add_subdirectory(sketch)
 add_subdirectory(features)
 add_subdirectory(assembly)

@@ -84,3 +84,31 @@ bettercad_add_process_test(architecture.checker.thermal-backend-leak
 bettercad_add_process_test(architecture.checker.eigen-public-header
     COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/eigen-public-header|-P|${_check_layering}"
     EXIT_CODE 1 STDERR_REGEX "1 violation.*Eigen header <Eigen/SparseCholesky>")
+
+# P18-SOLVE-001 / ADR-052. The generic symmetric solve was extracted from
+# structural (50) into linalg (5) so that thermal (45) can call the SAME
+# qualified kernel without including or linking structural. Two halves:
+#
+#   includes   linalg may include core and nothing above it: a thermal or a
+#              structural header from linalg would make the generic kernel
+#              physical and recreate the cycle. thermal -> structural is already
+#              refused by architecture.checker.thermal-to-structural.
+#   links      CheckTargetDependencies.cmake reads the CMakeLists of thermal and
+#              linalg: a PRIVATE link to the structural target gives thermal the
+#              structural layer without a forbidden include, and is exactly what
+#              ADR-050 forbids. Each fixture holds exactly one violation.
+bettercad_add_process_test(architecture.checker.linalg-to-thermal
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/linalg-to-thermal|-P|${_check_layering}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*'linalg' must not depend on 'thermal'")
+bettercad_add_process_test(architecture.checker.linalg-to-structural
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/linalg-to-structural|-P|${_check_layering}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*'linalg' must not depend on 'structural'")
+set(_check_targets "${CMAKE_CURRENT_SOURCE_DIR}/CheckTargetDependencies.cmake")
+add_test(NAME architecture.targets.link-graph
+    COMMAND "${CMAKE_COMMAND}" "-DSOURCE_DIR=${PROJECT_SOURCE_DIR}" -P "${_check_targets}")
+bettercad_add_process_test(architecture.targets.valid
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/targets-valid|-P|${_check_targets}"
+    EXIT_CODE 0 STDOUT_REGEX "Target dependency check passed")
+bettercad_add_process_test(architecture.targets.thermal-links-structural
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermal-links-structural|-P|${_check_targets}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*bettercad_thermal links the structural target")

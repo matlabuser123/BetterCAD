@@ -44,6 +44,13 @@ endif()
 # integers sit between any two neighbours; use one rather than shifting the
 # table.
 set(layer_core 0)
+# linalg holds the GENERIC numerical kernels more than one physics needs, and
+# nothing that knows what the numbers mean (ADR-052). It sits at 5, the free
+# integer under sketch, because the kernel P17 qualified inside structural (50)
+# had to move BELOW thermal (45) to be reachable from it, and it needs nothing
+# but core's Result/Error. Strictly-lower means it can include core and no
+# physics, which is the point.
+set(layer_linalg 5)
 set(layer_sketch 10)
 set(layer_features 20)
 # assembly sits above features, which it uses, and below io, which must

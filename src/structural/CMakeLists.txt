@@ -65,6 +65,7 @@ bettercad_add_library(bettercad_structural
         BetterCAD::features
         BetterCAD::meshing
     PRIVATE_LINK
+        BetterCAD::linalg
         BetterCAD::eigen
 )
 

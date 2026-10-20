@@ -1038,3 +1038,57 @@ foreach(_case
     bettercad_compile_fail_case(thermalsys "${_thermalsys}" ${_case}
         "read-only|discards qualifiers|no match for|passing .const" BetterCAD::thermal)
 endforeach()
+
+# The steady thermal solve (P18-SOLVE-001). The numbers are dimensioned; an unknown, a
+# free-equation row and a node are three index spaces that do not convert; a
+# solution and a reduced system cannot be conjured or edited; the solution has no
+# gradient, flux, reaction, balance or time step and the settings have no algorithm
+# selector, regularisation, reference temperature or iteration count -- the scope
+# line to P18-POST-001, P18-BALANCE-001 and P18-TRANSIENT-001; and P17's structural
+# settings record is a different type (the physics share a kernel, ADR-052, not a
+# record).
+set(_thermalsolve "${CMAKE_CURRENT_SOURCE_DIR}/ThermalSolveMisuse.cpp")
+bettercad_compile_fail_group(thermalsolve "${_thermalsolve}" BetterCAD::thermal BetterCAD::structural)
+foreach(_case
+        A_TEMPERATURE_IS_NOT_A_DOUBLE
+        A_RESIDUAL_IN_WATTS_IS_NOT_A_TEMPERATURE
+        A_CONDUCTANCE_NORM_IS_NOT_A_POWER
+        A_POWER_IS_NOT_A_CONDUCTANCE_NORM
+        A_BARE_DOUBLE_IS_NOT_A_PRESCRIBED_TEMPERATURE
+        A_NODE_ID_IS_NOT_A_FREE_EQUATION
+        AN_UNKNOWN_IS_NOT_A_FREE_EQUATION
+        A_FREE_EQUATION_IS_NOT_AN_UNKNOWN
+        A_STRUCTURAL_SETTINGS_RECORD_IS_NOT_A_THERMAL_ONE)
+    bettercad_compile_fail_case(thermalsolve "${_thermalsolve}" ${_case}
+        "could not convert|cannot convert|no matching function|no match for|invalid conversion|invalid initialization of reference|conversion from|no known conversion"
+        BetterCAD::thermal BetterCAD::structural)
+endforeach()
+foreach(_case
+        A_SOLUTION_CONSTRUCTED_DIRECTLY
+        A_REDUCED_SYSTEM_CONSTRUCTED_DIRECTLY)
+    bettercad_compile_fail_case(thermalsolve "${_thermalsolve}" ${_case}
+        "is private within this context|private" BetterCAD::thermal BetterCAD::structural)
+endforeach()
+foreach(_case
+        THE_SOLUTION_HAS_NO_GRADIENT
+        THE_SOLUTION_HAS_NO_HEAT_FLUX
+        THE_SOLUTION_HAS_NO_REACTIONS
+        THE_SOLUTION_HAS_NO_HEAT_BALANCE
+        THE_SOLUTION_HAS_NO_TIME_STEP
+        THE_SOLUTION_HAS_NO_PENALTY
+        THE_SOLUTION_HAS_NO_FACTORISATION
+        THE_REDUCED_SYSTEM_HAS_NO_DENSE_FORM
+        THE_SETTINGS_HAVE_NO_ALGORITHM_SELECTOR
+        THE_SETTINGS_HAVE_NO_REGULARISATION
+        THE_SETTINGS_HAVE_NO_REFERENCE_TEMPERATURE
+        THE_SETTINGS_HAVE_NO_ITERATION_COUNT)
+    bettercad_compile_fail_case(thermalsolve "${_thermalsolve}" ${_case}
+        "no member named|has no member" BetterCAD::thermal BetterCAD::structural)
+endforeach()
+foreach(_case
+        THE_SOLUTION_TEMPERATURES_ARE_READ_ONLY
+        THE_REDUCED_RIGHT_HAND_SIDE_IS_READ_ONLY
+        THE_SOLUTION_SOURCE_IS_READ_ONLY)
+    bettercad_compile_fail_case(thermalsolve "${_thermalsolve}" ${_case}
+        "read-only|discards qualifiers|no match for|passing .const" BetterCAD::thermal BetterCAD::structural)
+endforeach()

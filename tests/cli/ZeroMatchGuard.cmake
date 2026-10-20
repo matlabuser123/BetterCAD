@@ -169,6 +169,27 @@ set(_filters
     "unit\\.ThermalAssembly_(Repeated|BitFingerprint|BlockBitFingerprint)" 5
     "unit\\.ThermalAssembly_(AssemblyDoesNotMutate|PrescribedTemperaturesNever|LocalOrder|DefinitionOverload)" 4
     "compile_fail\\.thermalsys\\." 36
+    # P18-SOLVE-001. The steady thermal solve, by the brief's groups -- the Dirichlet
+    # partition and its nonzero right-hand side, the analytical and independent
+    # oracles, singularity and the missing datum, disconnected regions, the
+    # independent residual and the wrong answers it must refuse, source
+    # compatibility and the result lifecycle, determinism, and the sparse solves --
+    # plus the generic kernel it calls, the ADR-050 / ADR-052 architecture gates and
+    # the compile-fail group. Each under its own name so a targeted run of any one
+    # can be seen to have matched something.
+    "unit\\.ThermalSolve" 51
+    "unit\\.Linalg_" 10
+    "unit\\.ThermalSolve_(DirichletPartition|InterleavedConstraints|NonzeroDirichlet|OneFreeNode|SingleTetThrough)" 5
+    "unit\\.ThermalSolve_(ThreeNodeChain|RobinOnly|RobinAnchored|FullyConstrained|OneFreeNode|MatchesIndependentDenseOracle|LinearProfile|AffineField|BlockLinearProfile|BlockDirichletInSeries|BlockConvectionOnly|ConvectionAnchors)" 13
+    "unit\\.ThermalSolve_(PureNeumann|FactorisationSingularity|AnchorTolerance|BlockWithoutAnyDatum)" 5
+    "unit\\.ThermalSolve_(Disconnected|ExplicitZeros)" 3
+    "unit\\.ThermalSolve_(IndependentResidual|BadSolution|RejectsNonFinite|ConstraintViolation|NonFiniteReduced|FreeResidualMatches|ResidualTolerance|SystemScaling)" 8
+    "unit\\.ThermalSolve_(StaleReasons|Edits|Remesh|SolutionRecordsExactly|FailedResolve|RejectsStaleBoundary|SeamRefusals|RejectsMismatched)" 8
+    "unit\\.ThermalSolve_(Deterministic|RepeatedBlockSolve|BitFingerprint|SolveDoesNotMutate)" 5
+    "unit\\.ThermalSolve_(LargeSparse|FineCylinder|SparseNodeIds)" 3
+    "compile_fail\\.thermalsolve\\." 26
+    "architecture\\.targets\\." 3
+    "architecture\\.checker\\.linalg" 2
 )
 list(LENGTH _filters _count)
 math(EXPR _last "${_count} - 1")

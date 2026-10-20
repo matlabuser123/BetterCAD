@@ -22,30 +22,30 @@ Prerequisite:
            (OCCT never subdivides a developable wall along its ruling).
 
 Current milestone:
-           none. P18-ASSEMBLY-001 — Global Thermal Assembly. COMPLETE at 20
-           of 20 and qualified 2026-10-20 against a5b8cc2 plus the working
-           tree: 4546/4546 x 3 presets, 1557 x 5 in two, 0 warnings over 687
-           objects, 17 stages exit 0, 5h08m45s, fingerprints at the freeze
-           == before == after, first run. The unconstrained global system
-           K T = Q / C dT/dt + K T = Q as BetterCAD-owned sparse CSR (the
-           same representation as P17's): K in W/K (Tet4 Ke plus the Robin
-           Kconv), C in J/K (Tet4 Ce, transient only; a steady analysis has
-           no C at all and a transient one without rho and cp is refused),
-           Q in W (the prepared heat input plus the convection ambient
-           source), scattered through ThermalDofMap in a frozen serial order
-           with duplicates SUMMED, validated finite and symmetric, bound by
-           value to the exact mesh, numbering, loads, boundary and material
-           (stale after a remesh even with the same counts and the same
-           ids). Assembly consumes P18-ELEM, -LOAD and -BC and repeats none of
-           their formulas; no Dirichlet handling, penalty, regularisation,
-           pruning, symmetrisation, C/dt or solve. 62 cases, 36 compile-fail
-           cases, 75 mutation probes (74 killed, 1 explained equivalent; five
-           test gaps found and closed), 521 files and 0 layering violations.
-           Evidence: docs/verification/P18-ASSEMBLY-001/.
+           none. P18-SOLVE-001 — Steady Thermal Solver. COMPLETE at 15 of 15
+           and qualified 2026-10-20 against 241c13a plus the working tree:
+           4638/4638 x 3 presets, 1623 x 5 in two, 0 warnings over 693
+           objects, 17 stages exit 0, 5h12m08s, fingerprints at the freeze
+           == before == after, first run. K T = Q by the exact reduction
+           Kff Tf = Qf - Kfc Tc over P18-DOF's maps (the Kfc Tc term P17 did
+           not need: a prescribed temperature is not zero), through P17's
+           qualified symmetric sparse solve EXTRACTED, mechanically, out of
+           structural (50) into a new module linalg (5) so that thermal (45)
+           reaches it without including or linking structural (ADR-052;
+           ADR-050 kept; the 415 structural cases pass unchanged in all three
+           presets). Independent residual, normalized and scale free, that a
+           finite wrong answer cannot pass; prescribed values held exactly;
+           Nfree = 0 solves, a convection-anchored model with no Dirichlet
+           solves, a disconnected model solves when every region is anchored;
+           a model with no absolute-temperature datum is REFUSED
+           (missing_temperature_datum / unanchored_thermal_region), never
+           given a level. 51 + 10 cases, 26 compile-fail, 5 architecture
+           tests, 43 mutation probes (all killed), 525 files and 0 layering
+           violations. Evidence: docs/verification/P18-SOLVE-001/.
            P18-ARCH-001 PASSED 2026-10-16; P18-DATA-001, P18-MAT-001,
            P18-DOF-001 PASSED 2026-10-17; P18-ELEM-001, P18-LOAD-001 PASSED
-           2026-10-18; P18-BC-001 PASSED 2026-10-19 (docs/verification/P18-*/).
-Qualified:
+           2026-10-18; P18-BC-001, P18-ASSEMBLY-001 PASSED 2026-10-19/20
+           (docs/verification/P18-*/).Qualified:
            P0–P10 — BetterCAD v0.1.0
            P11 — Advanced Part Modelling
            P12 — Production Part Modelling
@@ -56,8 +56,8 @@ Qualified:
            P17 — Structural FEA
 
 Next:
-           P18-SOLVE-001 — Steady Thermal Solver. NOT AUTHORIZED:
-           P18-ASSEMBLY-001 passing is not permission to start it; each
+           P18-TRANSIENT-001 — Transient Thermal Solver. NOT AUTHORIZED:
+           P18-SOLVE-001 passing is not permission to start it; each
            milestone is started by the owner, as every P17 milestone was.
 
 P17 objective, as delivered:
@@ -838,22 +838,69 @@ alone. ADR-050 fixes the reuse constraint: thermal (45) cannot include
 structural (50), so P17's solver is reused by EXTRACTION below 45 or by an
 independent private link, never by a hand copy.
 
-* [ ] Audit available linear algebra
-* [ ] Reuse qualified compatible solver infrastructure
-* [ ] Define solver tolerances
-* [ ] Apply temperature constraints correctly
-* [ ] Detect singular thermal system
-* [ ] Detect missing temperature datum where applicable
-* [ ] Detect disconnected thermal region
-* [ ] Reject non-finite solution
-* [ ] Structured solver diagnostics
-* [ ] Deterministic solve behaviour measured
-* [ ] Independent residual validation
-* [ ] Independent small-system validation
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Audit available linear algebra
+* [x] Reuse qualified compatible solver infrastructure
+* [x] Define solver tolerances
+* [x] Apply temperature constraints correctly
+* [x] Detect singular thermal system
+* [x] Detect missing temperature datum where applicable
+* [x] Detect disconnected thermal region
+* [x] Reject non-finite solution
+* [x] Structured solver diagnostics
+* [x] Deterministic solve behaviour measured
+* [x] Independent residual validation
+* [x] Independent small-system validation
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded
 
+```text
+PASS 2026-10-20. Qualified against 241c13a plus the working tree: 4638/4638 x 3
+presets, 1623 x 5 in two, 0 warnings over 693 objects, 17 stages exit 0,
+5h12m08s, fingerprints at the freeze == before == after; first run on the
+frozen tree. AUDIT: the generic sparse solve belonged to structural (50);
+thermal (45) cannot include it (ADR-050). EXTRACTION (ADR-052): P17's
+runKernel moved mechanically to a new module linalg (layer 5; core PUBLIC,
+Eigen PRIVATE); structural::solveSymmetricSparse is now a wrapper that puts
+P17's units on the numbers and rebuilds P17's three unit- or structure-bearing
+messages from the kernel's structured failure, byte for byte; 415 structural
+cases / 271 414 assertions pass unchanged in all three presets (P17-SOLVE,
+reaction, validation, post and the reference models requalified by the
+unfiltered runs). NO hand copy: src/thermal holds no factorisation; no
+structural include (architecture.layering, 525 files) and no structural link
+(architecture.targets.link-graph, a fixture holds the forbidden private link
+and is refused). DIRICHLET: Kff Tf = Qf - Kfc Tc over ThermalFreeEquationMap,
+free and prescribed unknowns interleaved; one-free-node oracle K=[2 -2;-2 2],
+Q=[0 100], T0=300: Kff=[2], Kfc=[-2], beff=700, T1=350 K exactly (50 K if the
+term is dropped); 3-node chains 350 K and 366.667 K; Robin-only K=[4],
+Q=[1240] gives 310 K with no Dirichlet; fully prescribed Nfree=0 gives T=Tc
+with the kernel not invoked. WELL POSEDNESS: pure Neumann (compatible or not)
+-> missing_temperature_datum; a region cut off from every datum while another
+is anchored -> unanchored_thermal_region; anchored disconnected regions
+solve; stored exact zeros join no regions; the pivot gate independently
+refuses indefinite, exactly singular and tiny-pivot systems. RESIDUAL:
+||r||_2 / (||Kff|| ||Tf|| + ||beff||), independent of the solver and scale
+free (K, Q scaled 1e-6..1e6 give the same T to 5.7e-14 K and a normalized
+residual in [1.7e-17, 6.3e-17]); a finite answer one kelvin off is refused
+while solver status is Success; NaN/Inf, an overflowing residual and a
+prescribed value one ulp off are refused. FE: 6^3 grid linear profile to
+1.25e-12 K, affine patch to 2.84e-13 K, the real block 400->300 K to 5.7e-14 K,
+Dirichlet in series with convection to 1.7e-13 K, 60 W generation leaves
+through the film, 5832-unknown grid and the 900-unknown cylinder solve
+sparsely (nnz(Kff) 70 766 vs Nfree^2 26.9 million). Stale system, boundary,
+constraints and numbering refused before any arithmetic, including after a
+remesh with the same counts and ids; a T_bar edit stales the solution but
+not the assembled system; a failed re-solve leaves the old result stale and
+creates no current one. No epsilon, pin, penalty, pseudo-inverse or hidden
+datum; no dense reduced matrix; no gradient, flux, reaction, balance or
+time stepping. Results are bitwise identical across the three presets.
+51 + 10 cases, 26 compile-fail, 5 architecture tests, 43 mutation probes
+(all killed; two test gaps closed), 30 + 7 adversarial questions, 5
+findings, 0 production defects. Limits recorded: the solve accepts any
+finite field including one below 0 K (POST/VALID's policy), the datum
+classification rests on a measured 1e-10 tolerance. Evidence:
+docs/verification/P18-SOLVE-001/ and ADR-052.
+```
 ---
 # P18-TRANSIENT-001
 

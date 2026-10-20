@@ -300,10 +300,13 @@ validate(const UniformInitialTemperature& initial);
 /// layer 50, and until a second algorithm exists a selector would be a field
 /// with one legal value.
 struct ThermalSolverSettings {
-    /// `||K T - Q|| / ||Q||` above which a solve is refused. Finite, positive.
+    /// The normalized residual above which a solve is refused. Finite, positive. The residual is
+    /// the independently computed one of the reduced free system,
+    /// `r = Kff Tf - (Qf - Kfc Tc)`, normalized as `||r|| / (||Kff|| ||Tf|| + ||beff||)`;
+    /// scaling `K` and `Q` leaves it unchanged (P18-SOLVE-001).
     double relativeResidualTolerance = 1.0e-9;
-    /// The smallest factor pivot accepted before the system is declared
-    /// singular. Finite, positive.
+    /// The smallest ratio `min|D| / max|D|` of the factorisation's pivots accepted
+    /// before the system is declared singular. Finite, positive.
     double pivotFloor = 1.0e-12;
 
     friend bool operator==(const ThermalSolverSettings&, const ThermalSolverSettings&) = default;

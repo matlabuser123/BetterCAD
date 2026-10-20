@@ -68,6 +68,10 @@ bettercad_add_executable(bettercad_tests
         thermal/ThermalElementTests.cpp
         thermal/ThermalLoadTests.cpp
         thermal/ThermalMaterialTests.cpp
+        thermal/ThermalSolveMappedTests.cpp
+        thermal/ThermalSolveTestSupport.hpp
+        thermal/ThermalSolveTests.cpp
+        linalg/SymmetricSolveTests.cpp
         drawing/AnnotationTests.cpp
         drawing/AssemblyDrawingTests.cpp
         drawing/BomTests.cpp
@@ -258,6 +262,7 @@ bettercad_add_executable(bettercad_tests
         BetterCAD::features
         BetterCAD::geometry
         BetterCAD::io
+        BetterCAD::linalg
         BetterCAD::meshing
         BetterCAD::renderer
         BetterCAD::sketch

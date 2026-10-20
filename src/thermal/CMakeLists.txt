@@ -29,10 +29,14 @@
 # why this module links features rather than reaching into core/materials for
 # a second opinion.
 #
-# NO LINEAR ALGEBRA LINKED. The element matrices of P18-ELEM-001 are 4x4 and
-# 3x4 fixed arrays computed by hand-written loops, as P17's kernel is.
-# Admitting a library is P18-SOLVE-001's decision, under rule 7: Eigen may be
-# linked PRIVATE and never included from a public header.
+# THE LINEAR SOLVE IS linalg's (ADR-052). P18-SOLVE-001 chose extraction, the
+# first of the two answers ADR-050 left open: P17's symmetric sparse solve and its
+# pivot gate were moved MECHANICALLY out of structural (50) into `linalg` (5), and
+# this module links that, PRIVATELY. It links nothing from structural -- by
+# include or by target, which tests/architecture/CheckTargetDependencies.cmake
+# reads -- and it links no Eigen of its own: the element matrices of P18-ELEM-001
+# are 4x4 and 3x4 fixed arrays computed by hand-written loops, and the sparse
+# containers are BetterCAD's own CSR.
 
 bettercad_add_library(bettercad_thermal
     ALIAS thermal
@@ -49,6 +53,7 @@ bettercad_add_library(bettercad_thermal
         ThermalLoadVector.cpp
         ThermalMaterial.cpp
         ThermalResult.cpp
+        ThermalSolve.cpp
         ThermalSparse.cpp
         ThermalSystem.cpp
         ThermalTarget.cpp
@@ -56,6 +61,8 @@ bettercad_add_library(bettercad_thermal
         BetterCAD::core
         BetterCAD::features
         BetterCAD::meshing
+    PRIVATE_LINK
+        BetterCAD::linalg
 )
 
 install(TARGETS bettercad_thermal
