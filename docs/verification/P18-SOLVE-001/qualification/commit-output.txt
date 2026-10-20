@@ -1,0 +1,25 @@
+﻿recomputed before the commit (scratch tree db7b2362999dd926a71a5adbfa6c6d0d4fff2bae):
+  apps a95876bc6dbf843d4e0cec114059bc196fa16175 == frozen
+  include 691d479cd800f40768b42b24856af83ddc5b3b2a == frozen
+  src 9ae037dabc7d2433a40ff22be9f4d03f265c2427 == frozen
+  tests 2c2d5cedaab22fe059bc02cc57a2fc201e06e6f6 == frozen
+  examples a955cf6511ce715fcb95bc06ef82b877535869e6 == frozen
+  cmake 5a382115d7ed7775189d40b55e40f318eaae6cc7 == frozen
+  CMakeLists.txt 3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd == frozen
+  CMakePresets.json 3229f0f89b236744d7d5c082bed47c28b718288e == frozen
+message first bytes: 66,101,116
+untracked left behind:
+?? .claude/
+8fdcb0cf743dadb7b83e7477025ac2ea0a633038 BetterCAD: extract generic linear solver and add steady thermal solve
+subtree hashes of the commit:
+  apps a95876bc6dbf843d4e0cec114059bc196fa16175 == frozen
+  include 691d479cd800f40768b42b24856af83ddc5b3b2a == frozen
+  src 9ae037dabc7d2433a40ff22be9f4d03f265c2427 == frozen
+  tests 2c2d5cedaab22fe059bc02cc57a2fc201e06e6f6 == frozen
+  examples a955cf6511ce715fcb95bc06ef82b877535869e6 == frozen
+  cmake 5a382115d7ed7775189d40b55e40f318eaae6cc7 == frozen
+  CMakeLists.txt 3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd == frozen
+  CMakePresets.json 3229f0f89b236744d7d5c082bed47c28b718288e == frozen
+ALL EIGHT == FROZEN
+?? .claude/
+ 133 files changed, 79121 insertions(+), 322 deletions(-)
