@@ -162,3 +162,46 @@ The commit script recomputes the eight hashes from a scratch index, refuses to c
 refuses any remaining fill-in token in this directory or in the message, commits, and reads the eight subtree hashes back out
 of the commit's tree. Its output, with the commit hash, is appended to this file by the follow-up documentation commit,
 because a commit cannot carry its own hash.
+
+### The commit record
+
+```text
+commit    693a950c0b8763242fde2b35682b44ad2d455aa0
+subject   BetterCAD: add transient thermal solver
+tree      467930a97265b14ee0d53b1595ede056cd5869c7
+parent    147d35572045791f16e45ff65db2d64e4c4aefb4   (P18-SOLVE-001's record commit)
+date      2026-10-21 11:26:05 +1000
+files     168 files changed, 72482 insertions(+), 49 deletions(-)
+          docs 155   include 2   src 2   tests 7   ROADMAP.md 1   TODO.md 1
+
+recomputed from a scratch index immediately before the commit
+  apps               a95876bc6dbf843d4e0cec114059bc196fa16175   == frozen
+  include            4757ad6f819f5a62668e8d1bf7c9ef3b9af71e1a   == frozen
+  src                2d17a75fdcb2da0b9528fe2008bd12540849fb38   == frozen
+  tests              97eebe01c11f8787c982ce61f17dc9b994bc0077   == frozen
+  examples           a955cf6511ce715fcb95bc06ef82b877535869e6   == frozen
+  cmake              5a382115d7ed7775189d40b55e40f318eaae6cc7   == frozen
+  CMakeLists.txt     3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd   == frozen
+  CMakePresets.json  3229f0f89b236744d7d5c082bed47c28b718288e   == frozen
+
+read back from 693a950c^{tree} after the commit
+  all eight                                                     == frozen
+  "ALL EIGHT == FROZEN"
+
+untracked left behind   .claude/ only (the session's settings, never committed)
+message                 no BOM (first bytes 66,101,116), no fill-in token
+```
+
+qualified == committed: the tree the three presets built and tested in the qualifying run (2026-10-21
+05:40:32 to 10:43:43) is, under every one of the eight paths, the tree commit 693a950c carries. The
+files under `docs/` are this directory: the evidence, the harness copies, the mutation scripts, drivers
+and logs, the logs of the qualifying run and the post-run measurements.
+
+```text
+origin/main at the time of this record   241c13aba2701e661e355c5a310d3d04c06709b4
+unpushed, oldest first                   8fdcb0cf  (P18-SOLVE-001)
+                                         147d355   (P18-SOLVE-001's record)
+                                         693a950c  (this milestone)  (+ this record)
+```
+
+The push is the owner's; this record is written before it and does not claim it.
