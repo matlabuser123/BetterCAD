@@ -22,30 +22,32 @@ Prerequisite:
            (OCCT never subdivides a developable wall along its ruling).
 
 Current milestone:
-           none. P18-SOLVE-001 — Steady Thermal Solver. COMPLETE at 15 of 15
-           and qualified 2026-10-20 against 241c13a plus the working tree:
-           4638/4638 x 3 presets, 1623 x 5 in two, 0 warnings over 693
-           objects, 17 stages exit 0, 5h12m08s, fingerprints at the freeze
-           == before == after, first run. K T = Q by the exact reduction
-           Kff Tf = Qf - Kfc Tc over P18-DOF's maps (the Kfc Tc term P17 did
-           not need: a prescribed temperature is not zero), through P17's
-           qualified symmetric sparse solve EXTRACTED, mechanically, out of
-           structural (50) into a new module linalg (5) so that thermal (45)
-           reaches it without including or linking structural (ADR-052;
-           ADR-050 kept; the 415 structural cases pass unchanged in all three
-           presets). Independent residual, normalized and scale free, that a
-           finite wrong answer cannot pass; prescribed values held exactly;
-           Nfree = 0 solves, a convection-anchored model with no Dirichlet
-           solves, a disconnected model solves when every region is anchored;
-           a model with no absolute-temperature datum is REFUSED
-           (missing_temperature_datum / unanchored_thermal_region), never
-           given a level. 51 + 10 cases, 26 compile-fail, 5 architecture
-           tests, 43 mutation probes (all killed), 525 files and 0 layering
-           violations. Evidence: docs/verification/P18-SOLVE-001/.
+           none. P18-TRANSIENT-001 — Transient Thermal Solver. COMPLETE at 21
+           of 21 and qualified 2026-10-21 against 147d355 plus the working
+           tree: 4745/4745 x 3 presets, 1695 x 5 in two, 0 warnings over 697
+           objects, 17 stages exit 0, 5h03m11s, fingerprints at the freeze
+           == before == after, first run. C dT/dt + K T = Q by backward Euler
+           at a fixed step, (C/dt + K) T[n+1] = Q + (C/dt) T[n], every step
+           through the SAME exact reduction Kff Tf = Qf - Kfc Tc and the SAME
+           qualified kernel as the steady solve (nothing qualified changed);
+           the consistent capacity as assembled (a lumped one gives [306 324]
+           where the oracle gives [310 320]); a deterministic time grid that
+           lands on t_end exactly with a shortened last step; the prescribed
+           values dominate the initial temperature at t = 0. A pure-Neumann or
+           disconnected positive-capacity model SUCCEEDS (the steady solve
+           refuses it); only a region with no capacity at all is refused.
+           Every step is accepted by two independent residuals, so a system
+           built wrongly (C*dt, a flipped history) is refused although it was
+           solved perfectly. 72 + 35 cases, 85 mutation probes (all killed),
+           527 files and 0 layering violations. Evidence:
+           docs/verification/P18-TRANSIENT-001/.
            P18-ARCH-001 PASSED 2026-10-16; P18-DATA-001, P18-MAT-001,
            P18-DOF-001 PASSED 2026-10-17; P18-ELEM-001, P18-LOAD-001 PASSED
-           2026-10-18; P18-BC-001, P18-ASSEMBLY-001 PASSED 2026-10-19/20
-           (docs/verification/P18-*/).Qualified:
+           2026-10-18; P18-BC-001, P18-ASSEMBLY-001 PASSED 2026-10-19/20;
+           P18-SOLVE-001 PASSED 2026-10-20; P18-TRANSIENT-001 PASSED
+           2026-10-21 (docs/verification/P18-*/).
+
+Qualified:
            P0–P10 — BetterCAD v0.1.0
            P11 — Advanced Part Modelling
            P12 — Production Part Modelling
@@ -56,8 +58,8 @@ Current milestone:
            P17 — Structural FEA
 
 Next:
-           P18-TRANSIENT-001 — Transient Thermal Solver. NOT AUTHORIZED:
-           P18-SOLVE-001 passing is not permission to start it; each
+           P18-POST-001 — Thermal Result Recovery. NOT AUTHORIZED:
+           P18-TRANSIENT-001 passing is not permission to start it; each
            milestone is started by the owner, as every P17 milestone was.
 
 P17 objective, as delivered:
@@ -909,28 +911,74 @@ docs/verification/P18-SOLVE-001/ and ADR-052.
 Initial implicit formulation, backward Euler:
 `(C/dt + K) T[n+1] = Q[n+1] + (C/dt) T[n]`.
 
-* [ ] Define initial temperature
-* [ ] Define timestep
-* [ ] Define end time
-* [ ] Define output times
-* [ ] Implement implicit integration
-* [ ] Define transient constraint treatment
-* [ ] Define time-varying load policy
-* [ ] Define time-varying BC policy
-* [ ] Validate `dt > 0`
-* [ ] Validate time ordering
-* [ ] Reject non-finite temperatures
-* [ ] Define transient residual
-* [ ] Define energy-balance check
-* [ ] Deterministic timestepping
-* [ ] Constant-temperature solution test
-* [ ] Lumped thermal benchmark
-* [ ] Time-step refinement study
-* [ ] Steady-limit comparison
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Define initial temperature
+* [x] Define timestep
+* [x] Define end time
+* [x] Define output times
+* [x] Implement implicit integration
+* [x] Define transient constraint treatment
+* [x] Define time-varying load policy
+* [x] Define time-varying BC policy
+* [x] Validate `dt > 0`
+* [x] Validate time ordering
+* [x] Reject non-finite temperatures
+* [x] Define transient residual
+* [x] Define energy-balance check
+* [x] Deterministic timestepping
+* [x] Constant-temperature solution test
+* [x] Lumped thermal benchmark
+* [x] Time-step refinement study
+* [x] Steady-limit comparison
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded
 
+```text
+PASS 2026-10-21. Qualified against 147d355 plus the working tree: 4745/4745 x 3
+presets, 1695 x 5 in two, 0 warnings over 697 objects, 17 stages exit 0,
+5h03m11s, fingerprints at the freeze == before == after; first run on the
+frozen tree. NOTHING QUALIFIED CHANGED: the steady solver, the generic kernel
+and the structural wrapper are byte-identical to P18-SOLVE-001's tree (one
+comment in ThermalData.hpp now says how the end time is reached).
+FORMULATION: (C/dt + K) T[n+1] = Q + (C/dt) T[n], history from T[n], every step
+through the same reduceThermalSystem (Aff Tf = bf - Afc Tc, A = C/dt + K, so
+Afc = Cfc/dt + Kfc) and the same linalg::solveSymmetricSparse as the steady
+solve. ORACLES: one unknown C=10 G=2 Tinf=300 T0=400 dt=1 gives 4600/12 =
+383.3333; the non-uniform pair C=[2 1;1 2] K=[1 -1;-1 1] T0=[300 330] dt=1 gives
+[310 320] (a lumped C gives [306 324]); the prescribed value dominates T0 at
+t=0 (1000/3, not 300). SINGULARITY: a pure-Neumann model and disconnected
+positive-capacity regions SUCCEED where the steady solve refuses them; only a
+region with no capacity at all is refused (singular_system at its step); the
+steady datum rule is not applied (analyseAnchoring is not called; the faithful
+leak, mutation TA21, is killed by 10 cases). TIME GRID: t_k = k dt (a
+product), t_N = t_end exactly, the last step shortened and using its own dt,
+0.3/0.1 is three steps, dt=0.3 t_end=1 is 0.3 0.3 0.3 0.1, one tolerance
+(1e-9), at most 1 000 000 steps, integratedSpan() says what was integrated.
+ACCEPTANCE: two independent residuals from the original K, C, Q (the solve of
+the system that was built; the heat equation on the free rows); a step built
+wrongly (C*dt, a flipped history sign) and solved perfectly is refused;
+explicit Euler, Crank-Nicolson, a stagnant and a steady candidate are refused;
+the boundary heat at prescribed rows is not a failure. CHECKS: first-order
+refinement (orders 0.951 0.976 0.988), the lumped body and a lumped steel
+block (tau 666.646 s, mean within 0.057 K of the discrete exponential, energy
+identity 2.9e-13), stored energy +dt sum(Q) per step on insulated bodies, the
+steady limit to 5.7e-14 K of the qualified steady solver, a constant
+temperature in equilibrium stays constant, 216 unknowns against a dense
+oracle, a 900-unknown cylinder. PROVENANCE: the history is bound to the
+system, the prescribed conditions, the initial temperature, the time settings
+and the solver settings; each edit stales exactly its own reason (a specific
+heat edit stales it although K is unchanged); a remesh with the same counts
+and ids is caught; a failed run publishes nothing and leaves an older result
+stale. Typed K and C; no gradient, flux, reaction, balance, interpolation,
+restart, adaptivity, retry, regularisation, lumping or time-dependent
+coefficient anywhere. Bitwise identical across the three presets. 72 + 35
+cases, 85 mutation probes (all killed; three test gaps closed), 30
+adversarial questions, 6 findings, 0 production defects. Limits recorded: a
+step whose temperature change is below the rounding of the temperature (dt/tau
+~ 1e-12) is refused by the physical residual and says so; every step
+refactorises; the solve accepts any finite field including one below 0 K.
+Evidence: docs/verification/P18-TRANSIENT-001/.
+```
 ---
 # P18-POST-001
 

@@ -1092,3 +1092,67 @@ foreach(_case
     bettercad_compile_fail_case(thermalsolve "${_thermalsolve}" ${_case}
         "read-only|discards qualifiers|no match for|passing .const" BetterCAD::thermal BetterCAD::structural)
 endforeach()
+
+# The transient thermal solve (P18-TRANSIENT-001). K and C are different types, so the
+# swap that would solve a different equation does not compile; the numbers are
+# dimensioned and a bare double stands in for neither a temperature nor a time; a
+# history and a time grid cannot be conjured or edited; the history has no gradient,
+# flux, reaction, balance, interpolation or restart and the settings no algorithm
+# selector, regularisation, lumping, retry, theta, method, adaptive step or output
+# times -- the scope line to P18-POST-001 and P18-BALANCE-001, and the proof that a
+# failed step fails the run; nothing is a function of time; and the steady and the
+# transient solves, and P17's structural settings record, are different types.
+set(_thermaltransient "${CMAKE_CURRENT_SOURCE_DIR}/ThermalTransientMisuse.cpp")
+bettercad_compile_fail_group(thermaltransient "${_thermaltransient}" BetterCAD::thermal BetterCAD::structural)
+foreach(_case
+        A_CAPACITY_IS_NOT_A_CONDUCTANCE
+        A_CONDUCTANCE_IS_NOT_A_CAPACITY
+        A_BARE_DOUBLE_IS_NOT_AN_INITIAL_TEMPERATURE
+        A_BARE_DOUBLE_IS_NOT_A_TIME_STEP
+        A_TIME_IS_NOT_A_TEMPERATURE
+        A_TEMPERATURE_IS_NOT_A_TIME
+        A_TEMPERATURE_IS_NOT_A_DOUBLE
+        A_STEADY_SOLUTION_IS_NOT_A_TRANSIENT_ONE
+        A_TRANSIENT_FAILURE_IS_NOT_A_STEADY_ONE
+        A_STRUCTURAL_SETTINGS_RECORD_IS_NOT_A_THERMAL_ONE)
+    bettercad_compile_fail_case(thermaltransient "${_thermaltransient}" ${_case}
+        "could not convert|cannot convert|no matching function|no match for|invalid conversion|invalid initialization of reference|conversion from|no known conversion"
+        BetterCAD::thermal BetterCAD::structural)
+endforeach()
+foreach(_case
+        A_SOLUTION_CONSTRUCTED_DIRECTLY
+        A_TIME_GRID_CONSTRUCTED_DIRECTLY)
+    bettercad_compile_fail_case(thermaltransient "${_thermaltransient}" ${_case}
+        "is private within this context|private" BetterCAD::thermal BetterCAD::structural)
+endforeach()
+foreach(_case
+        THE_SOLUTION_HAS_NO_GRADIENT
+        THE_SOLUTION_HAS_NO_HEAT_FLUX
+        THE_SOLUTION_HAS_NO_REACTIONS
+        THE_SOLUTION_HAS_NO_HEAT_BALANCE
+        THE_SOLUTION_HAS_NO_INTERPOLATION
+        THE_SOLUTION_HAS_NO_RESTART
+        THE_SOLUTION_HAS_NO_PENALTY
+        THE_SOLUTION_HAS_NO_FACTORISATION
+        THE_SETTINGS_HAVE_NO_ALGORITHM_SELECTOR
+        THE_SETTINGS_HAVE_NO_REGULARISATION
+        THE_SETTINGS_HAVE_NO_LUMPING
+        THE_SETTINGS_HAVE_NO_RETRY
+        THE_TRANSIENT_SETTINGS_HAVE_NO_METHOD_SELECTOR
+        THE_TRANSIENT_SETTINGS_HAVE_NO_THETA
+        THE_TRANSIENT_SETTINGS_HAVE_NO_ADAPTIVE_STEP
+        THE_TRANSIENT_SETTINGS_HAVE_NO_OUTPUT_TIMES
+        THE_TRANSIENT_SETTINGS_HAVE_NO_TIME_PROFILE
+        A_LOAD_HAS_NO_TIME_FUNCTION
+        A_BOUNDARY_CONDITION_HAS_NO_TIME_FUNCTION)
+    bettercad_compile_fail_case(thermaltransient "${_thermaltransient}" ${_case}
+        "no member named|has no member" BetterCAD::thermal BetterCAD::structural)
+endforeach()
+foreach(_case
+        THE_HISTORY_TEMPERATURES_ARE_READ_ONLY
+        THE_SAMPLE_TIMES_ARE_READ_ONLY
+        THE_STEP_RECORDS_ARE_READ_ONLY
+        THE_SOLUTION_SOURCE_IS_READ_ONLY)
+    bettercad_compile_fail_case(thermaltransient "${_thermaltransient}" ${_case}
+        "read-only|discards qualifiers|no match for|passing .const" BetterCAD::thermal BetterCAD::structural)
+endforeach()

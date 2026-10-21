@@ -57,6 +57,7 @@ bettercad_add_library(bettercad_thermal
         ThermalSparse.cpp
         ThermalSystem.cpp
         ThermalTarget.cpp
+        ThermalTransient.cpp
     PUBLIC_LINK
         BetterCAD::core
         BetterCAD::features

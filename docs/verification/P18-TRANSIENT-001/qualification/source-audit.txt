@@ -1,0 +1,37 @@
+﻿=== include\bettercad\thermal\ThermalTransient.hpp  (564 lines)
+unordered_map / unordered_set / std::hash    code:   0   anywhere (incl. comments):   0
+std::thread / async / jthread / mutex        code:   0   anywhere (incl. comments):   0
+OpenMP / parallel algorithms                 code:   0   anywhere (incl. comments):   0
+Eigen                                        code:   0   anywhere (incl. comments):   0
+dense matrix / toDense                       code:   0   anywhere (incl. comments):   0
+regularisation / epsilon / penalty           code:   0   anywhere (incl. comments):   2
+pinning / fixed datum                        code:   0   anywhere (incl. comments):   1
+lumping                                      code:   0   anywhere (incl. comments):   1
+retry / adaptive / halve / halving           code:   0   anywhere (incl. comments):   3
+a call of analyseAnchoring                   code:   0   anywhere (incl. comments):   0
+rand / time( / chrono / clock                code:   0   anywhere (incl. comments):   0
+a time-dependent coefficient                 code:   0   anywhere (incl. comments):   0
+=== src\thermal\ThermalTransient.cpp  (1136 lines)
+unordered_map / unordered_set / std::hash    code:   0   anywhere (incl. comments):   0
+std::thread / async / jthread / mutex        code:   0   anywhere (incl. comments):   0
+OpenMP / parallel algorithms                 code:   0   anywhere (incl. comments):   0
+Eigen                                        code:   0   anywhere (incl. comments):   0
+dense matrix / toDense                       code:   0   anywhere (incl. comments):   0
+regularisation / epsilon / penalty           code:   0   anywhere (incl. comments):   0
+pinning / fixed datum                        code:   1   anywhere (incl. comments):   3
+    CODE   "capacity is never singular for want of a datum, so a region has no heat "
+lumping                                      code:   0   anywhere (incl. comments):   1
+retry / adaptive / halve / halving           code:   0   anywhere (incl. comments):   0
+a call of analyseAnchoring                   code:   0   anywhere (incl. comments):   0
+rand / time( / chrono / clock                code:   0   anywhere (incl. comments):   0
+a time-dependent coefficient                 code:   0   anywhere (incl. comments):   0
+=== comment lines that mention a forbidden thing, each of which must say it is ABSENT
+ThermalTransient.hpp:31: // factorisation's pivot gate reports as singular. Nothing is regularised.
+ThermalTransient.hpp:34: // row-lumped, replaced or scaled here: a lumped matrix and the consistent one
+ThermalTransient.hpp:63: //     no adaptive stepping       a failed step fails the run; dt is never changed
+ThermalTransient.hpp:64: //     no retry                   no second attempt with a smaller step
+ThermalTransient.hpp:65: //     no regularisation          no `A += eps*I`, no replacement of C
+ThermalTransient.hpp:371: /// A step that fails fails the RUN: there is no retry, no smaller step and no
+ThermalTransient.cpp:14: // WHAT THIS FILE DELIBERATELY DOES NOT CALL: `analyseAnchoring`. A steady model
+ThermalTransient.cpp:19: // WHAT IS NOT HERE EITHER: no `A += eps*I`, no pinned unknown, no replacement or
+ThermalTransient.cpp:20: // lumping of C, no dense effective matrix, no second attempt with a smaller step.

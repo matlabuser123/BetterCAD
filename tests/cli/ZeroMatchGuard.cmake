@@ -190,6 +190,34 @@ set(_filters
     "compile_fail\\.thermalsolve\\." 26
     "architecture\\.targets\\." 3
     "architecture\\.checker\\.linalg" 2
+    # P18-TRANSIENT-001. The backward-Euler transient solve, by the brief's groups --
+    # the time grid, the effective matrix C/dt + K, the hard oracles (the non-uniform
+    # consistent-capacity pair and the one-unknown body), the singularity rules (a
+    # pure-Neumann or disconnected model SUCCEEDS where the steady one is refused),
+    # nonzero Dirichlet and the initial state, stepping and the output policy, the
+    # refusals, the two independent residuals and the wrong steps they must refuse, the
+    # scaling, steady-limit, refinement, lumped and energy checks, source compatibility
+    # and the result lifecycle, determinism, the sparse runs, the assembled-system seam
+    # and the diagnostics' vocabulary -- plus the compile-fail group that proves K and C
+    # are different types and that nothing time-dependent, adaptive or regularised is
+    # reachable. Each under its own name so a targeted run of any one can be seen to
+    # have matched something.
+    "unit\\.ThermalTransient" 72
+    "unit\\.ThermalTransient_TimeGrid" 10
+    "unit\\.ThermalTransient_EffectiveMatrix" 3
+    "unit\\.ThermalTransient_(OneDofHandOracle|NonUniformTwoUnknown)" 2
+    "unit\\.ThermalTransient_(PureNeumann|DisconnectedPositive|RegionWithNoCapacity|ZeroCapacityConnected|InsulatedBlock)" 5
+    "unit\\.ThermalTransient_(NonzeroDirichlet|PrescribedDominates|FullyPrescribed)" 3
+    "unit\\.ThermalTransient_(LastPartialStep|OutputPolicies|EveryStepEvidence)" 3
+    "unit\\.ThermalTransient_(AlgebraRefusals|TheUsersSolverSettings|AStepThatCannotBeTaken|AFailureAtALaterStep|AnOverflowingHistory|SettingsAreRefused|SeamRefusals|AStepBelowTheResolution|AFailedRunNames|EffectiveMatrixRefusals)" 11
+    "unit\\.ThermalTransient_(Acceptance|PhysicalResidual|AnOverflowingResidual)" 8
+    "unit\\.ThermalTransient_(AnswerIsInvariant|SteadyLimit|TimeStepRefinement|LumpedBody|BlockCooling|BlockRelaxes|BlockWithGeneration|EnergyIsConserved|ConstantTemperature|ABlockAtItsAmbient)" 10
+    "unit\\.ThermalTransient_(SolutionRecordsExactly|EditsStale|RejectsStaleBoundary|RemeshStales|SteadyAndTransientSystems|FailedRunDoesNot|StaleReasonsName|SolvesADefinition|RunDoesNotMutate|SolutionAccessors)" 10
+    "unit\\.ThermalTransient_(RepeatedRuns|RepeatedBlockRun|TheInputsAreNever|TimeGridIsDeterministic)" 4
+    "unit\\.ThermalTransient_(LargeSparse|FineCylinder|SparseNodeIds)" 3
+    "unit\\.ThermalTransient_(SeamMatches|SeamRefusals|SparseNodeIds)" 3
+    "unit\\.ThermalTransient_DiagnosticNames" 1
+    "compile_fail\\.thermaltransient\\." 35
 )
 list(LENGTH _filters _count)
 math(EXPR _last "${_count} - 1")

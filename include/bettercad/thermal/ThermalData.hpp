@@ -331,8 +331,9 @@ enum class TransientOutputPolicy : std::uint8_t {
 ///
 /// A FIXED STEP. Backward Euler at constant `timeStep` from `t = 0` to
 /// `endTime` (ADR-049); adaptive stepping is out of scope and has no field
-/// here. How P18-TRANSIENT-001 lands on `endTime` when it is not a multiple
-/// of the step is that milestone's decision; what this type fixes is that
+/// here. When `endTime` is not a multiple of the step the LAST step is the
+/// shortened remainder, so the run lands on `endTime` exactly and never
+/// overshoots it (P18-TRANSIENT-001, `TimeGrid`); what this type fixes is that
 /// both are finite, both positive, and the step is no longer than the span.
 struct TransientSettings {
     Time timeStep{};

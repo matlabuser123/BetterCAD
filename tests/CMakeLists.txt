@@ -71,6 +71,9 @@ bettercad_add_executable(bettercad_tests
         thermal/ThermalSolveMappedTests.cpp
         thermal/ThermalSolveTestSupport.hpp
         thermal/ThermalSolveTests.cpp
+        thermal/ThermalTransientMappedTests.cpp
+        thermal/ThermalTransientTestSupport.hpp
+        thermal/ThermalTransientTests.cpp
         linalg/SymmetricSolveTests.cpp
         drawing/AnnotationTests.cpp
         drawing/AssemblyDrawingTests.cpp
