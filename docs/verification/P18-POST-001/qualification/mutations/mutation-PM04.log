@@ -1,0 +1,7 @@
+MUTATION PM04 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalPost.cpp
+  find:            const TemperatureGradient3 gradient = table.geometries[e].gradientFrom(local);
+  replace:         const TemperatureGradient3 gradient0 = table.geometries[e].gradientFrom(local);
+        const TemperatureGradient3 gradient{.x = gradient0.y, .y = gradient0.x, .z = gradient0.z};
+TESTS : test cases:    40 |    28 passed |  12 failed | assertions: 38883 | 38438 passed | 445 failed
+VERDICT: KILLED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalPost.cpp

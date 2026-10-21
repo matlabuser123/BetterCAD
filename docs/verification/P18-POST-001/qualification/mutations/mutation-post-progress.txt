@@ -1,0 +1,37 @@
+
+PM01 | the local node order is sorted by unknown index (not the tetrahedron's own order) | VERDICT: KILLED | TESTS : test cases:    40 |    22 passed |  18 failed | assertions: 38883 | 38597 passed | 286 failed
+PM02 | temperatures are read through the raw NodeId (minus one) and not through the thermal numbering | VERDICT: UNKNOWN (no summary line) | TESTS : 
+PM03 | the y and z gradient components are swapped | VERDICT: KILLED | TESTS : test cases:    40 |    25 passed |  15 failed | assertions: 38883 | 38582 passed | 301 failed
+PM04 | the x and y gradient components are swapped | VERDICT: KILLED | TESTS : test cases:    40 |    28 passed |  12 failed | assertions: 38883 | 38438 passed | 445 failed
+PM05 | the Fourier sign is dropped: q = +k grad(T) | VERDICT: KILLED | TESTS : test cases:    40 |    23 passed |   17 failed | assertions: 38883 | 33861 passed | 5022 failed
+PM06 | the sign is dropped on the z component only | VERDICT: KILLED | TESTS : test cases:    40 |    26 passed |   14 failed | assertions: 38883 | 34153 passed | 4730 failed
+PM07 | the conductivity is omitted: q = -grad(T) with k = 1 | VERDICT: KILLED | TESTS : test cases:    40 |    27 passed |  13 failed | assertions: 38882 | 38465 passed | 417 failed
+PM08 | the conductivity enters squared on y: q_y = -k^2 grad_y | VERDICT: KILLED | TESTS : test cases:    40 |    28 passed |  12 failed | assertions: 38883 | 38506 passed | 377 failed
+PM09 | the stored steady temperatures are in Celsius | VERDICT: KILLED | TESTS : test cases:    40 |    37 passed |  3 failed | assertions: 38883 | 38804 passed | 79 failed
+PM10 | the gradient is computed per millimetre (a stray 1e-3) | VERDICT: SURVIVED | TESTS : All tests passed (38883 assertions in 40 test cases)
+PM11 | the magnitude is the L1 norm | VERDICT: KILLED | TESTS : test cases:    40 |    35 passed |    5 failed | assertions: 38883 | 34723 passed | 4160 failed
+PM12 | the magnitude is the largest component only | VERDICT: KILLED | TESTS : test cases:    40 |    35 passed |   5 failed | assertions: 38882 | 38782 passed | 100 failed
+PM13 | an invalid element is skipped instead of failing the whole recovery | VERDICT: KILLED | TESTS : test cases:    40 |    39 passed | 1 failed | assertions: 38872 | 38871 passed | 1 failed
+PM14 | the non-finite gradient gate is removed | VERDICT: KILLED | TESTS : test cases:    40 |    39 passed | 1 failed | assertions: 38883 | 38882 passed | 1 failed
+PM15 | the non-finite flux gate is removed | VERDICT: KILLED | TESTS : test cases:    40 |    39 passed | 1 failed | assertions: 38883 | 38882 passed | 1 failed
+PM16 | the non-finite magnitude gate is removed | VERDICT: KILLED | TESTS : test cases:    40 |    39 passed | 1 failed | assertions: 38882 | 38881 passed | 1 failed
+PM17 | a non-finite nodal temperature is accepted | VERDICT: KILLED | TESTS : test cases:    40 |    39 passed | 1 failed | assertions: 38883 | 38880 passed | 3 failed
+PM18 | a temperature below absolute zero is accepted | VERDICT: KILLED | TESTS : test cases:    40 |    38 passed | 2 failed | assertions: 38881 | 38879 passed | 2 failed
+PM19 | the temperature count is not checked against the numbering | VERDICT: UNKNOWN (no summary line) | TESTS : 
+PM20 | a conductivity of zero or less is accepted | VERDICT: KILLED | TESTS : test cases:    40 |    39 passed | 1 failed | assertions: 38883 | 38881 passed | 2 failed
+PM21 | the numbering is not checked against the mesh | VERDICT: KILLED | TESTS : test cases:    40 |    39 passed | 1 failed | assertions: 38889 | 38888 passed | 1 failed
+PM22 | a remesh with the same counts is accepted as the same mesh (stamp ignored) | VERDICT: KILLED | TESTS : test cases:    40 |    39 passed | 1 failed | assertions: 38876 | 38875 passed | 1 failed
+PM23 | the solution is not required to be current at the model level (steady) | VERDICT: KILLED | TESTS : test cases:    40 |    39 passed | 1 failed | assertions: 38872 | 38867 passed | 5 failed
+PM24 | the solution is not required to be current at the model level (transient) | VERDICT: KILLED | TESTS : test cases:    40 |    39 passed | 1 failed | assertions: 38881 | 38880 passed | 1 failed
+PM25 | a model older than a material edit is paired with the new conductivity (cross-check removed) | VERDICT: KILLED | TESTS : test cases:    40 |    39 passed | 1 failed | assertions: 38881 | 38880 passed | 1 failed
+PM26 | the transient states are published in reverse order | VERDICT: KILLED | TESTS : test cases:    40 |    37 passed |   3 failed | assertions: 38883 | 38658 passed | 225 failed
+PM27 | every transient state carries the first state's time | VERDICT: KILLED | TESTS : test cases:    40 |    38 passed |  2 failed | assertions: 38883 | 38845 passed | 38 failed
+PM28 | a bad late state is reported as state 0 | VERDICT: KILLED | TESTS : test cases:    40 |    39 passed | 1 failed | assertions: 38883 | 38882 passed | 1 failed
+PM29 | an element is looked up by its raw id (minus one) and not by its ordinal | VERDICT: UNKNOWN (no summary line) | TESTS : 
+PM30 | a zero gradient gives negative zero (the flux is written -(k g)) | VERDICT: KILLED | TESTS : test cases:    40 |    39 passed | 1 failed | assertions: 38883 | 38882 passed | 1 failed
+PM31 | a steady source records itself as transient | VERDICT: KILLED | TESTS : test cases:    40 |    36 passed | 4 failed | assertions: 38673 | 38669 passed | 4 failed
+PM32 | the result stores nodal temperatures by averaging element values (nodal smoothing of the gradient: each element gets the mean of itself and its predecessor) | VERDICT: KILLED | TESTS : test cases:    40 |    37 passed |   3 failed | assertions: 38883 | 38755 passed | 128 failed
+PM33 | the temperatureOf lookup ignores the numbering the result belongs to | VERDICT: KILLED | TESTS : test cases:    40 |    39 passed | 1 failed | assertions: 38880 | 38879 passed | 1 failed
+PM34 | the state index of temperatureOf is not range-checked | VERDICT: UNKNOWN (no summary line) | TESTS : 
+PM35 | a held steady result is judged current even when the model changed (stale reasons ignored) | VERDICT: KILLED | TESTS : test cases:    40 |    37 passed | 3 failed | assertions: 38883 | 38876 passed | 7 failed
+DONE

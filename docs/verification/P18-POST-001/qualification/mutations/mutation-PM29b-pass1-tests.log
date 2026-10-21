@@ -1,0 +1,236 @@
+Filters: [thermal] [post]
+Randomness seeded to: 1362438147
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+bettercad_tests.exe is a Catch2 v3.16.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+ThermalPost_FourierLawSign
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostTests.cpp:300
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostTests.cpp:313: warning:
+  Fourier sign: dT/dx = +10 K/m, k = 5 -> qx = -50 W/m2 (heat flows toward -x);
+  dT/dx = -10 -> qx = +50
+
+-------------------------------------------------------------------------------
+ThermalPost_SteadySlabOnAJitteredMeshRecoversTheFourierLaw
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostTests.cpp:703
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostTests.cpp:752: warning:
+  steady slab L = 1 m, k = 45, 400 K -> 300 K: expected dT/dz = -100 K/m, qz =
+  +4500 W/m2; max errors 1.02e-12 K/m, 4.64e-11 W/m2, 4.64e-11 W/m2 (|q|);
+  reversed: qz = -4500, max error 4.37e-11
+
+-------------------------------------------------------------------------------
+ThermalPost_RotationCovariant
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostTests.cpp:428
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostTests.cpp:469: warning:
+  rotation about (1,2,3) by 0.7 rad (det 1.000000000000000): max |grad' - R
+  grad| 2.90e-13, max |q' - R q| 1.45e-12, max ||q'| - |q|| 1.08e-12; affine: R
+  [7.2, -3.5, 11.4] = [11.818088, 0.234864, 7.370728]
+
+-------------------------------------------------------------------------------
+ThermalPost_AffineFieldGradientAndFourierFlux
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostTests.cpp:229
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostTests.cpp:266: warning:
+  affine patch, 162 jittered tetrahedra: max gradient error 2.73e-13 K/m, max
+  flux error 1.36e-12 W/m2, max |q| error 1.51e-12, expected |q| 69.650915285,
+  max |q.grad + k|grad|^2| 2.27e-13, max |q x grad| 1.18e-13
+
+-------------------------------------------------------------------------------
+ThermalPost_RemeshStalesTheResultEvenWhenCountsAndIdsAgree
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostMappedTests.cpp:285
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostMappedTests.cpp:339: warning:
+  remesh: 9 nodes and 12 tetrahedra with the same ids in both generations; the
+  old recovery is stale and refused, the new one is current
+
+-------------------------------------------------------------------------------
+ThermalPost_RepeatedRecoveryIsBitwiseDeterministic
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostTests.cpp:933
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostTests.cpp:964: warning:
+  determinism: 25 repeated recoveries of 384 tetrahedra, 0 bitwise differences
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostTests.cpp:965: warning:
+  bit fingerprint, jittered 5^3 grid with a scattered field: 6ba1d58f018354ca
+
+-------------------------------------------------------------------------------
+ThermalPost_FineCylinderRecoverySmoke
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostMappedTests.cpp:540
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostMappedTests.cpp:582: warning:
+  real fine cylinder recovery: Ndof 900, Ntet 4118, temperature/gradient/flux/
+  magnitude counts 900/4118/4118/4118, all finite
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostMappedTests.cpp:585: warning:
+  bit fingerprint, real fine cylinder recovery (350 K cap + convection):
+  262ce7759cb1d043
+
+-------------------------------------------------------------------------------
+ThermalPost_GeneralTetIndependentGradientOracle
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostTests.cpp:505
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostTests.cpp:522: warning:
+  general-tet oracle over 162 tetrahedra of a scattered field: max |grad -
+  dense solve| 2.45e-13 K/m
+
+-------------------------------------------------------------------------------
+ThermalPost_SteadySlabOnTheBlockFollowsFourierLaw
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostMappedTests.cpp:122
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostMappedTests.cpp:152: warning:
+  steady block slab L = 0.02 m, k = 45, 400 K -> 300 K: expected dT/dz = -5000
+  K/m, qz = +225000 W/m2; 12 elements, max errors 7.28e-12 K/m, 3.27e-10 W/m2,
+  3.20e-10 W/m2 (|q|), transverse 3.27e-10
+
+-------------------------------------------------------------------------------
+ThermalPost_NodalTemperatureUsesThermalDofOrderForSparseNodeIds
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostTests.cpp:166
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostTests.cpp:200: warning:
+  sparse NodeIds 7, 42, 104, 9001 -> ThermalDofIndex 0..3; element order [104,
+  7, 9001, 42] gives grad (14, -14, 48) K/m; result arrays of size 4, not 9002
+
+-------------------------------------------------------------------------------
+ThermalPost_NodalTemperatureRemainsKelvinAndFollowsTheSolver
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostTests.cpp:120
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostTests.cpp:163: warning:
+  recovered nodal temperature: source 350 K and 280 K, recovered 350 K and 280
+  K (not 76.85 / 6.85), bitwise equal to the solver's vector
+
+-------------------------------------------------------------------------------
+ThermalPost_GeometryScalingDividesTheGradientAndTheFlux
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostTests.cpp:474
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostTests.cpp:498: warning:
+  geometry scaling s = 2: max |grad' - grad/2| 0.00e+00, max |q' - q/2| 0.00e+
+  00
+
+-------------------------------------------------------------------------------
+ThermalPost_ConvectionIsNotPartOfTheConductiveFlux
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostMappedTests.cpp:488
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostMappedTests.cpp:532: warning:
+  convection is not in q: film exchange 2671.25 W/m2 at t = 0; conductive |q|
+  max 3.27e-10 W/m2 at t = 0 and 1753.07 W/m2 at 200 s; max |q + k grad T| over
+  all states 0.00e+00
+
+-------------------------------------------------------------------------------
+ThermalPost_RepeatedBlockRecoveryIsDeterministic
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostMappedTests.cpp:588
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostMappedTests.cpp:603: warning:
+  determinism: 20 repeated block recoveries, 0 bitwise differences
+
+-------------------------------------------------------------------------------
+ThermalPost_TransientHistoryKeepsTheSolutionsOrderAndSeparatesStorageFromFlux
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostTests.cpp:757
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostTests.cpp:809: warning:
+  transient uniform heating, 7 states: mean temperature 341.5397 K at t = 60 s,
+  max |grad T| 3.99e-11 K/m, max |q| 1.79e-09 W/m2 (conductive flux is zero
+  although dT/dt is not)
+
+-------------------------------------------------------------------------------
+ThermalPost_ConductivityScalingScalesTheFluxAndNotTheGradient
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostTests.cpp:344
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostTests.cpp:360: warning:
+  conductivity scaling k1 = 2.5, k2 = 10 (ratio 4): gradient difference 0.0e+
+  00, max |q2 - 4 q1| 0.00e+00, max ||q2| - 4|q1|| 0.00e+00
+
+-------------------------------------------------------------------------------
+ThermalPost_ConstantTemperatureZeroGradient
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostTests.cpp:99
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostTests.cpp:116: warning:
+  constant field T = 325.7 K over 162 jittered tetrahedra: max |grad| 3.22e-13
+  K/m, max |q| 1.61e-12 W/m2, max |q| field 1.61e-12
+
+-------------------------------------------------------------------------------
+ThermalPost_ALateStateBelowAbsoluteZeroFailsTheWholeHistory
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostTests.cpp:814
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostTests.cpp:846: warning:
+  a heat sink cools the insulated body below 0 K at state 5 of 11: the whole
+  history is refused, state 5 named
+
+-------------------------------------------------------------------------------
+ThermalPost_TransientUniformHeatingHasZeroConductiveFluxOnTheBlock
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostMappedTests.cpp:456
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostMappedTests.cpp:484: warning:
+  insulated block, 60 W: hottest node 369.2329 K at t = 100 s (dT/dt != 0), max
+  |grad T| 2.13e-11 K/m, max |q| 9.58e-10 W/m2
+
+-------------------------------------------------------------------------------
+ThermalPost_SteadySlabOnTwoDifferentCylinderMeshesFollowsFourierLaw
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostMappedTests.cpp:167
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostMappedTests.cpp:184: warning:
+  steady cylinder slab, 156 nodes / 605 tetrahedra: max errors 9.31e-10 K/m, 4.
+  19e-08 W/m2, transverse 4.19e-08
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostMappedTests.cpp:184: warning:
+  steady cylinder slab, 900 nodes / 4118 tetrahedra: max errors 3.73e-08 K/m,
+  1.68e-06 W/m2, transverse 1.68e-06
+
+-------------------------------------------------------------------------------
+ThermalPost_TransientRecoveryOnTheBlockKeepsOrderAndFollowsTheSolution
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostMappedTests.cpp:392
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalPostMappedTests.cpp:451: warning:
+  transient block recovery: 16 states in the solution's order (the last step
+  shortened to 2 s), final |q| 225000.000000 W/m2 against the slab's 225000;
+  max flux error at t_end 1.42e-06 W/m2
+
+===============================================================================
+All tests passed (38883 assertions in 40 test cases)
+

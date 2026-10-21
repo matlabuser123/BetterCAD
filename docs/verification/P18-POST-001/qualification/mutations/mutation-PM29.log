@@ -1,0 +1,8 @@
+MUTATION PM29 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalPost.cpp
+  find:        return *ordinal;
+}
+  replace:     return static_cast<std::size_t>(element.value() - 1);
+}
+TESTS : 
+VERDICT: UNKNOWN (no summary line)
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalPost.cpp

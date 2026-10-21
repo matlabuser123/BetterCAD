@@ -1,0 +1,8 @@
+MUTATION PM29b applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalPost.cpp
+  find:        return *ordinal;
+}
+  replace:     return std::min<std::size_t>(static_cast<std::size_t>(element.value() - 1), result.stateCount() > 0 ? result.elementIds().size() - 1 : 0);
+}
+TESTS : All tests passed (38883 assertions in 40 test cases)
+VERDICT: SURVIVED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalPost.cpp

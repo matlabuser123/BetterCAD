@@ -1156,3 +1156,58 @@ foreach(_case
     bettercad_compile_fail_case(thermaltransient "${_thermaltransient}" ${_case}
         "read-only|discards qualifiers|no match for|passing .const" BetterCAD::thermal BetterCAD::structural)
 endforeach()
+
+# The thermal result recovery (P18-POST-001). The numbers are dimensioned and a gradient, a
+# heat flux, a temperature and a conductivity do not convert to one another or stand in for a
+# bare double; an element result is keyed by an ElementId, never a node; a result cannot be
+# conjured or edited; it is not a ThermalResult; and it has no nodal or smoothed flux, no
+# boundary flux, no balance or reaction, no storage, convection or generation term, no
+# Celsius, no colour, no component selection and no conductivity of its own, and its source
+# has no view setting -- the scope line to P18-BALANCE-001 and P18-VIZ-001.
+set(_thermalpost "${CMAKE_CURRENT_SOURCE_DIR}/ThermalPostMisuse.cpp")
+bettercad_compile_fail_group(thermalpost "${_thermalpost}" BetterCAD::thermal)
+foreach(_case
+        A_GRADIENT_IS_NOT_A_HEAT_FLUX
+        A_TEMPERATURE_IS_NOT_A_HEAT_FLUX
+        A_HEAT_FLUX_IS_NOT_A_TEMPERATURE_GRADIENT
+        A_MAGNITUDE_IS_NOT_A_TEMPERATURE
+        A_BARE_DOUBLE_IS_NOT_A_CONDUCTIVITY
+        A_BARE_DOUBLE_IS_NOT_A_TEMPERATURE
+        A_NODE_ID_IS_NOT_AN_ELEMENT_ID
+        A_SOLVER_SOURCE_IS_NOT_A_POST_SOURCE
+        A_POST_RESULT_IS_NOT_A_THERMAL_RESULT)
+    bettercad_compile_fail_case(thermalpost "${_thermalpost}" ${_case}
+        "could not convert|cannot convert|no matching function|no match for|invalid conversion|invalid initialization of reference|conversion from|no known conversion"
+        BetterCAD::thermal)
+endforeach()
+bettercad_compile_fail_case(thermalpost "${_thermalpost}" A_POST_RESULT_CONSTRUCTED_DIRECTLY
+    "is private within this context|private" BetterCAD::thermal)
+foreach(_case
+        THE_RESULT_HAS_NO_NODAL_HEAT_FLUX
+        THE_RESULT_HAS_NO_SMOOTHED_FIELD
+        THE_RESULT_HAS_NO_BOUNDARY_FLUX
+        THE_RESULT_HAS_NO_HEAT_BALANCE
+        THE_RESULT_HAS_NO_REACTIONS
+        THE_RESULT_HAS_NO_STORAGE_FLUX
+        THE_RESULT_HAS_NO_CONVECTIVE_FLUX
+        THE_RESULT_HAS_NO_TEMPERATURE_RATE
+        THE_RESULT_HAS_NO_CELSIUS
+        THE_RESULT_HAS_NO_GRADIENT_MAGNITUDE
+        THE_RESULT_STORES_NO_CONDUCTIVITY
+        THE_SOURCE_HAS_NO_COLOUR_MAP
+        THE_SOURCE_HAS_NO_COMPONENT_SELECTION
+        THE_SOURCE_HAS_NO_SMOOTHING_SETTING
+        A_FIELD_DESCRIPTOR_HAS_NO_COLOUR)
+    bettercad_compile_fail_case(thermalpost "${_thermalpost}" ${_case}
+        "no member named|has no member" BetterCAD::thermal)
+endforeach()
+foreach(_case
+        THE_TEMPERATURES_ARE_READ_ONLY
+        THE_GRADIENTS_ARE_READ_ONLY
+        THE_HEAT_FLUXES_ARE_READ_ONLY
+        THE_MAGNITUDES_ARE_READ_ONLY
+        THE_ELEMENT_IDS_ARE_READ_ONLY
+        THE_SOURCE_IS_READ_ONLY)
+    bettercad_compile_fail_case(thermalpost "${_thermalpost}" ${_case}
+        "read-only|discards qualifiers|no match for|passing .const" BetterCAD::thermal)
+endforeach()

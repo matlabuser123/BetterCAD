@@ -1,0 +1,6 @@
+MUTATION PM08 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalPost.cpp
+  find:    .y = HeatFlux{} - conductivity * gradient.y,
+  replace: .y = HeatFlux::fromSi(-conductivity.si() * conductivity.si() * gradient.y.si()),
+TESTS : test cases:    40 |    28 passed |  12 failed | assertions: 38883 | 38506 passed | 377 failed
+VERDICT: KILLED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalPost.cpp

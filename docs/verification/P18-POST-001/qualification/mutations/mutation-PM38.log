@@ -1,0 +1,6 @@
+MUTATION PM38 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalPost.cpp
+  find:        if (result.mode() != ThermalAnalysisMode::Transient) {
+  replace:     if (false && result.mode() != ThermalAnalysisMode::Transient) {
+TESTS : test cases:    40 |    39 passed | 1 failed | assertions: 38883 | 38882 passed | 1 failed
+VERDICT: KILLED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalPost.cpp

@@ -52,6 +52,7 @@ bettercad_add_library(bettercad_thermal
         ThermalElement.cpp
         ThermalLoadVector.cpp
         ThermalMaterial.cpp
+        ThermalPost.cpp
         ThermalResult.cpp
         ThermalSolve.cpp
         ThermalSparse.cpp

@@ -1,0 +1,6 @@
+MUTATION PM12 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalPost.cpp
+  find:            const HeatFlux magnitude = flux.magnitude();
+  replace:         const HeatFlux magnitude = HeatFlux::fromSi(std::max({std::abs(flux.x.si()), std::abs(flux.y.si()), std::abs(flux.z.si())}));
+TESTS : test cases:    40 |    35 passed |   5 failed | assertions: 38882 | 38782 passed | 100 failed
+VERDICT: KILLED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalPost.cpp

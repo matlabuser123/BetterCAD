@@ -1,0 +1,10 @@
+MUTATION PM34 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalPost.cpp
+  find:        if (state >= states_.size()) {
+        return makeError(ErrorCode::InvalidArgument,
+                         std::format("state {} is outside this result's {} states", state, states_.size()));
+    }
+    const Result<ThermalDofIndex> dof
+  replace:     const Result<ThermalDofIndex> dof
+TESTS : 
+VERDICT: UNKNOWN (no summary line)
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalPost.cpp

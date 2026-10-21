@@ -1,0 +1,8 @@
+MUTATION PM23 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalPost.cpp
+  find:        if (Result<void> current = requireCurrent(solution, document, model, loads, conditions, settings);
+        !current.has_value()) {
+  replace:     if (Result<void> current = requireCurrent(solution, document, model, loads, conditions, settings);
+        false && !current.has_value()) {
+TESTS : test cases:    40 |    39 passed | 1 failed | assertions: 38872 | 38867 passed | 5 failed
+VERDICT: KILLED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalPost.cpp

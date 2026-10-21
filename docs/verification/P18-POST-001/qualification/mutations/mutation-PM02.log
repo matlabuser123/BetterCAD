@@ -1,0 +1,10 @@
+MUTATION PM02 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalPost.cpp
+  find:            table.dofs.push_back(*dofs);
+  replace:         table.dofs.push_back(std::array<ThermalDofIndex, 4>{
+            ThermalDofIndex::fromValue(static_cast<ThermalDofIndex::ValueType>(tet.nodes[0].value() - 1)),
+            ThermalDofIndex::fromValue(static_cast<ThermalDofIndex::ValueType>(tet.nodes[1].value() - 1)),
+            ThermalDofIndex::fromValue(static_cast<ThermalDofIndex::ValueType>(tet.nodes[2].value() - 1)),
+            ThermalDofIndex::fromValue(static_cast<ThermalDofIndex::ValueType>(tet.nodes[3].value() - 1))});
+TESTS : 
+VERDICT: UNKNOWN (no summary line)
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalPost.cpp

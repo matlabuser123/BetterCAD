@@ -1,0 +1,6 @@
+MUTATION PM27 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalPost.cpp
+  find:    .time = solution.timeOf(i),
+  replace: .time = solution.timeOf(0),
+TESTS : test cases:    40 |    38 passed |  2 failed | assertions: 38883 | 38845 passed | 38 failed
+VERDICT: KILLED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalPost.cpp

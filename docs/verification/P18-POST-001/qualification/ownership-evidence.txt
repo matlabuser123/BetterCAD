@@ -1,0 +1,33 @@
+--- real tree
+-- Recovery ownership check passed: 497 files outside the thermal module scanned, 0 violations
+--- fixture recovery-gui-recomputes
+cmake : CMake Error at tests/architecture/CheckRecoveryOwnership.cmake:79 (message):
+At line:9 char:3
++   cmake -DSOURCE_DIR="$($_.FullName)" -P tests/architecture/CheckReco ...
++   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (CMake Error at ...e:79 (message)::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  Recovery ownership check failed: 1 violation(s): apps/app/Viewer.cpp: GUI
+  or other non-thermal code recomputes the recovered fields (gradientFrom);
+  consume the core result instead.
+
+
+exit 1
+--- fixture recovery-rewrites-geometry
+cmake : CMake Error at tests/architecture/CheckRecoveryOwnership.cmake:79 (message):
+At line:9 char:3
++   cmake -DSOURCE_DIR="$($_.FullName)" -P tests/architecture/CheckReco ...
++   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (CMake Error at ...e:79 (message)::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  Recovery ownership check failed: 1 violation(s):
+  src/thermal/ThermalPost.cpp: rewrites Tet4 geometry (Jacobian);
+  P18-ELEM-001 owns G.
+
+
+exit 1
+--- fixture recovery-valid
+-- Recovery ownership check passed: 3 files outside the thermal module scanned, 0 violations
+exit 0

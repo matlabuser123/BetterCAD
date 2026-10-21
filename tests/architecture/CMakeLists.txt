@@ -112,3 +112,23 @@ bettercad_add_process_test(architecture.targets.valid
 bettercad_add_process_test(architecture.targets.thermal-links-structural
     COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermal-links-structural|-P|${_check_targets}"
     EXIT_CODE 1 STDERR_REGEX "1 violation.*bettercad_thermal links the structural target")
+
+# P18-POST-001. grad(T) and q = -k grad(T) are computed in ONE place, the thermal module;
+# a viewer, a report or a command consumes the recovered arrays and never recomputes them
+# from the mesh. CheckRecoveryOwnership.cmake scans every file outside the thermal module
+# for the three names that recompute the fields, and checks the recovery does not rewrite
+# P18-ELEM-001's geometry. Each fixture tree holds exactly one violation (or none): the
+# valid tree also holds a comment that names a forbidden function and a viewer that calls
+# the core's source-bound entry point, neither of which may be flagged.
+set(_check_recovery "${CMAKE_CURRENT_SOURCE_DIR}/CheckRecoveryOwnership.cmake")
+add_test(NAME architecture.recovery-ownership
+    COMMAND "${CMAKE_COMMAND}" "-DSOURCE_DIR=${PROJECT_SOURCE_DIR}" -P "${_check_recovery}")
+bettercad_add_process_test(architecture.recovery-ownership.valid
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/recovery-valid|-P|${_check_recovery}"
+    EXIT_CODE 0 STDOUT_REGEX "Recovery ownership check passed")
+bettercad_add_process_test(architecture.recovery-ownership.gui-recomputes
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/recovery-gui-recomputes|-P|${_check_recovery}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*recomputes the recovered fields")
+bettercad_add_process_test(architecture.recovery-ownership.rewrites-geometry
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/recovery-rewrites-geometry|-P|${_check_recovery}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*rewrites Tet4 geometry")

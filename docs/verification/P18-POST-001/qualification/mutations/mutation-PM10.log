@@ -1,0 +1,10 @@
+MUTATION PM10 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalPost.cpp
+  find:            if (!isFinite(gradient)) {
+  replace:         const TemperatureGradient3 gradientMm{.x = TemperatureGradient::fromSi(gradient.x.si() * 1e-3),
+                                              .y = TemperatureGradient::fromSi(gradient.y.si() * 1e-3),
+                                              .z = TemperatureGradient::fromSi(gradient.z.si() * 1e-3)};
+        (void)gradientMm;
+        if (!isFinite(gradient)) {
+TESTS : All tests passed (38883 assertions in 40 test cases)
+VERDICT: SURVIVED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalPost.cpp

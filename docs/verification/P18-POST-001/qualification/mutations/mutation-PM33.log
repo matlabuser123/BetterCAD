@@ -1,0 +1,9 @@
+MUTATION PM33 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalPost.cpp
+  find:        if (!describes(map)) {
+        return makeError(ErrorCode::FailedPrecondition,
+                         "this result belongs to another numbering, so a node cannot be looked up through it");
+    }
+  replace: 
+TESTS : test cases:    40 |    39 passed | 1 failed | assertions: 38880 | 38879 passed | 1 failed
+VERDICT: KILLED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalPost.cpp

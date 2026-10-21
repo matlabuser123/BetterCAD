@@ -22,31 +22,34 @@ Prerequisite:
            (OCCT never subdivides a developable wall along its ruling).
 
 Current milestone:
-           none. P18-TRANSIENT-001 — Transient Thermal Solver. COMPLETE at 21
-           of 21 and qualified 2026-10-21 against 147d355 plus the working
-           tree: 4745/4745 x 3 presets, 1695 x 5 in two, 0 warnings over 697
-           objects, 17 stages exit 0, 5h03m11s, fingerprints at the freeze
-           == before == after, first run. C dT/dt + K T = Q by backward Euler
-           at a fixed step, (C/dt + K) T[n+1] = Q + (C/dt) T[n], every step
-           through the SAME exact reduction Kff Tf = Qf - Kfc Tc and the SAME
-           qualified kernel as the steady solve (nothing qualified changed);
-           the consistent capacity as assembled (a lumped one gives [306 324]
-           where the oracle gives [310 320]); a deterministic time grid that
-           lands on t_end exactly with a shortened last step; the prescribed
-           values dominate the initial temperature at t = 0. A pure-Neumann or
-           disconnected positive-capacity model SUCCEEDS (the steady solve
-           refuses it); only a region with no capacity at all is refused.
-           Every step is accepted by two independent residuals, so a system
-           built wrongly (C*dt, a flipped history) is refused although it was
-           solved perfectly. 72 + 35 cases, 85 mutation probes (all killed),
-           527 files and 0 layering violations. Evidence:
-           docs/verification/P18-TRANSIENT-001/.
+           none. P18-POST-001 — Temperature / Gradient / Heat Flux Recovery.
+           COMPLETE at 16 of 16 and qualified 2026-10-21 against 7a9ec06 plus
+           the working tree: 4820/4820 x 3 presets, 1739 x 5 in two, 0
+           warnings over 701 objects, 17 stages exit 0, 5h38m59s,
+           fingerprints at the freeze == before == after, first run. Per
+           linear tetrahedron grad(T) = G Te through P18-ELEM-001's published
+           gradient path (G is not reimplemented: an architecture gate and a
+           fixture say so), q = -k grad(T) with the physical sign (heat flows
+           toward lower temperature; conductive only: no convection,
+           generation or storage term), |q| Euclidean; K, K/m, W/m2, W/m2;
+           [x, y, z]; element-constant and unsmoothed; the temperature stays
+           in kelvin and is checked on its own. Keyed through ThermalDofIndex
+           and the mesh element order (a raw NodeId or ElementId is never an
+           index); atomic (one invalid tetrahedron or non-finite value fails
+           the whole recovery; a field below 0 K is refused, closing the
+           limit both solvers recorded). Bound to the solution it came from:
+           a remesh with the same counts and ids is stale, a conductivity edit
+           stales it, a model older than a material edit is refused. Derived
+           only: not canonical, not persisted, no post setting in its source;
+           no GUI recomputation (497 files scanned, 0 violations, a fixture
+           that fails the gate). 40 + 31 + 4 cases, 43 mutation probes (42
+           killed, 1 void, 3 first-pass survivors closed), 529 files and 0
+           layering violations. Evidence: docs/verification/P18-POST-001/.
            P18-ARCH-001 PASSED 2026-10-16; P18-DATA-001, P18-MAT-001,
            P18-DOF-001 PASSED 2026-10-17; P18-ELEM-001, P18-LOAD-001 PASSED
            2026-10-18; P18-BC-001, P18-ASSEMBLY-001 PASSED 2026-10-19/20;
-           P18-SOLVE-001 PASSED 2026-10-20; P18-TRANSIENT-001 PASSED
-           2026-10-21 (docs/verification/P18-*/).
-
+           P18-SOLVE-001 PASSED 2026-10-20; P18-TRANSIENT-001, P18-POST-001
+           PASSED 2026-10-21 (docs/verification/P18-*/).
 Qualified:
            P0–P10 — BetterCAD v0.1.0
            P11 — Advanced Part Modelling
@@ -58,8 +61,8 @@ Qualified:
            P17 — Structural FEA
 
 Next:
-           P18-POST-001 — Thermal Result Recovery. NOT AUTHORIZED:
-           P18-TRANSIENT-001 passing is not permission to start it; each
+           P18-BALANCE-001 — Energy / Heat Balance. NOT AUTHORIZED:
+           P18-POST-001 passing is not permission to start it; each
            milestone is started by the owner, as every P17 milestone was.
 
 P17 objective, as delivered:
@@ -987,23 +990,66 @@ Evidence: docs/verification/P18-TRANSIENT-001/.
 For each Tet4: `grad(T) = G T_e`; for isotropic conductivity `q = -k grad(T)`.
 Units: `T` K, `grad(T)` K/m, `q` W/m2.
 
-* [ ] Recover nodal temperature
-* [ ] Recover temperature magnitude/value
-* [ ] Recover element temperature gradient
-* [ ] Recover heat-flux vector
-* [ ] Recover heat-flux magnitude
-* [ ] Define component order
-* [ ] Define sign convention
-* [ ] Units explicit
-* [ ] All results finite
-* [ ] Constant-gradient patch validation
-* [ ] Independent Fourier-law validation
-* [ ] Deterministic result ordering
-* [ ] No GUI recomputation
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Recover nodal temperature
+* [x] Recover temperature magnitude/value
+* [x] Recover element temperature gradient
+* [x] Recover heat-flux vector
+* [x] Recover heat-flux magnitude
+* [x] Define component order
+* [x] Define sign convention
+* [x] Units explicit
+* [x] All results finite
+* [x] Constant-gradient patch validation
+* [x] Independent Fourier-law validation
+* [x] Deterministic result ordering
+* [x] No GUI recomputation
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded
 
+```text
+PASS 2026-10-21. Qualified against 7a9ec06 plus the working tree: 4820/4820 x 3
+presets, 1739 x 5 in two, 0 warnings over 701 objects, 17 stages exit 0,
+5h38m59s, fingerprints at the freeze == before == after; first run on the
+frozen tree. NOTHING QUALIFIED CHANGED: thirteen files of the solvers, the
+element, the data and the DOF model are byte-identical to HEAD.
+FORMULATION: grad(T) = G Te per Tet4 (Tet4Geometry::gradientFrom, P18-ELEM-001's
+path; Te gathered through elementDofs in the tetrahedron's own node order),
+q = -k grad(T) written 0 - k g, |q| = hypot(qx, qy, qz). Units K, K/m, W/m2,
+W/m2; components [x, y, z]; sign: q . grad(T) = -k |grad(T)|^2 <= 0, heat flows
+toward lower temperature. q is the conductive flux inside the solid: it holds
+no convection (film exchange 2671.25 W/m2 against a conductive 3.27e-10 W/m2),
+no generation (a 60 W body heats 69.2 K with max |q| 9.58e-10 W/m2) and no
+storage (uniform heating: dT/dt != 0, max |q| 1.79e-09 W/m2). ORACLES: the
+affine patch T = 307.3 + 7.2x - 3.5y + 11.4z, k = 5 gives (7.2, -3.5, 11.4) and
+(-36, 17.5, -57) on 162 different tetrahedra to 2.73e-13 K/m and 1.36e-12
+W/m2; the three axis fields; the test's own dense 4x4 solve on a scattered field
+to 2.45e-13 K/m; a constant 325.7 K field has zero gradient (3.22e-13);
+(3, 4, 12) has |q| = 13 (L1 would be 19). SLABS: 400 K -> 300 K, k = 45 on a
+jittered 1 m grid (qz = +4500, reversed -4500 W/m2, 4.64e-11), the 20 mm block
+(+225 000 W/m2, 3.27e-10), the cylinder on two meshes of 156 and 900 nodes
+(1.68e-06), and the transient block at t_end. TRANSFORMS: translation, a proper
+rotation (gradient and flux rotate, 2.90e-13 / 1.45e-12), geometry scale,
+conductivity scale (gradient bit-identical, flux x4), temperature offset and
+difference. KELVIN: 350 K and 280 K come back as 350 K and 280 K, bit for bit,
+checked on their own because an offset cancels in every gradient. KEYING:
+sparse handles 7, 42, 104, 9001 and ElementIds 2 and 3 give arrays of the node
+and tetrahedron counts; the lookup is a binary search, never the raw id.
+ATOMIC: one invalid tetrahedron, three overflows (gradient, flux, magnitude),
+a non-finite or below-0 K temperature, in any state, fail the whole recovery;
+a bad late transient state is named and nothing earlier is published.
+CURRENTNESS: the solution's own comparison; a remesh with the same counts and
+ids, a load, condition, settings, conductivity or time-step edit, a model older
+than a material edit and a steady/transient confusion are refused; a failed
+recovery leaves an older result stale. OWNERSHIP: CheckRecoveryOwnership.cmake
+(497 files scanned, 0 violations; fixtures that fail it). Results are bitwise
+identical across the three presets. 40 + 31 + 4 cases, 43 mutation probes (42
+killed, 1 void; three test gaps closed), 34 adversarial questions, 6 findings,
+0 production defects. Limits recorded: element-constant values are
+discontinuous across faces (smoothing is P18-VIZ-001's display only); a field
+below 0 K cannot be recovered; each state copies the nodal temperatures.
+Evidence: docs/verification/P18-POST-001/.
+```
 ---
 # P18-BALANCE-001
 

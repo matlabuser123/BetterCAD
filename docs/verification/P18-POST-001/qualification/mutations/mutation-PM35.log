@@ -1,0 +1,30 @@
+MUTATION PM35 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalPost.cpp
+  find:        const std::vector<TransientStaleReason> reasons = staleReasons(result.source(), postSourceOf(*current));
+    if (reasons.empty()) {
+        return Result<void>{};
+    }
+    return makeError(ErrorCode::FailedPrecondition,
+                     std::format("the recovered fields no longer describe the model: {} changed. Solve and recover "
+                                 "again",
+                                 reasonsText(reasons)));
+}
+
+Result<void> requireCurrent(const ThermalPostResult& result, const Document& document, const ThermalModel& model,
+                            std::span<const ThermalLoad> loads, std::span<const ThermalBoundaryCondition> conditions,
+                            const UniformInitialTemperature& initial,
+  replace:     const std::vector<TransientStaleReason> reasons = staleReasons(result.source(), postSourceOf(*current));
+    if (reasons.empty() || true) {
+        return Result<void>{};
+    }
+    return makeError(ErrorCode::FailedPrecondition,
+                     std::format("the recovered fields no longer describe the model: {} changed. Solve and recover "
+                                 "again",
+                                 reasonsText(reasons)));
+}
+
+Result<void> requireCurrent(const ThermalPostResult& result, const Document& document, const ThermalModel& model,
+                            std::span<const ThermalLoad> loads, std::span<const ThermalBoundaryCondition> conditions,
+                            const UniformInitialTemperature& initial,
+TESTS : test cases:    40 |    37 passed | 3 failed | assertions: 38883 | 38876 passed | 7 failed
+VERDICT: KILLED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalPost.cpp

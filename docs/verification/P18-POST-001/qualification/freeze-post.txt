@@ -1,0 +1,79 @@
+P18-POST-001 freeze 2026-10-21 17:10:39
+HEAD      7a9ec06f76e72fab8c1fa4bfeebe2593ccfef453
+HEAD tree b0e109feb227aff233bc4a5c43aa20b66ca7afc4
+scratch tree 4f821e821379c15dd15798b6c68bb59a89d8b7ce
+apps               a95876bc6dbf843d4e0cec114059bc196fa16175
+include            6139370a9603d494069544f0ebbc746638f0a462
+src                9826f86b4822fe3560923e5091a8be4d1dc00ed6
+tests              3465f39da6c67b9c05d8adea634c1a6125cc169d
+examples           a955cf6511ce715fcb95bc06ef82b877535869e6
+cmake              5a382115d7ed7775189d40b55e40f318eaae6cc7
+CMakeLists.txt     3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd
+CMakePresets.json  3229f0f89b236744d7d5c082bed47c28b718288e
+ThermalPost.hpp      22a1933bf4d9e2c30f28e9647849eaa42c775298
+ThermalElement.hpp   a37d1e5561d013da8e3fed7027916fd9c05eb8fd
+ThermalData.hpp      c13722336f4d6cc9e2b20d16415c5154464f81c3
+P18_POST_CONTRACT_FINGERPRINT 7ad133be753f511d3c42953d5ca851562e3b3797
+FIELD_DESCRIPTOR_FINGERPRINT 3860e3426442a4e660c9a5c1b16f46724876a1a8
+fourier line   const HeatFlux3 flux{.x = HeatFlux{} - conductivity * gradient.x,
+fourier line   .y = HeatFlux{} - conductivity * gradient.y,
+fourier line   .z = HeatFlux{} - conductivity * gradient.z};
+FOURIER_LINE_FINGERPRINT 54f0e63e0a6775cf743199a2a18c65e3064f4f0a
+ownership   tests/architecture/CheckRecoveryOwnership.cmake f66983622510306d8fcb3da05b641b4562f58141
+ownership   tests/architecture/fixtures/recovery-gui-recomputes/apps/app/main.cpp 76e8197013aabca95639bb3d9e5de847b0c0a5fd
+ownership   tests/architecture/fixtures/recovery-gui-recomputes/apps/app/Viewer.cpp d0c5acffe104627f4539f9f00c80f270f05e9fda
+ownership   tests/architecture/fixtures/recovery-gui-recomputes/include/bettercad/thermal/ThermalPost.hpp 30918224aef1fee82f6d841e4bee9b63792116ed
+ownership   tests/architecture/fixtures/recovery-gui-recomputes/src/core/Other.cpp e5253a1a4d69eab0aa936f41d47521f351f0e66a
+ownership   tests/architecture/fixtures/recovery-gui-recomputes/src/thermal/ThermalPost.cpp b132c79dd0b1b56f665fb18d0f1f2d017216f19e
+ownership   tests/architecture/fixtures/recovery-rewrites-geometry/apps/app/main.cpp 76e8197013aabca95639bb3d9e5de847b0c0a5fd
+ownership   tests/architecture/fixtures/recovery-rewrites-geometry/include/bettercad/thermal/ThermalPost.hpp 30918224aef1fee82f6d841e4bee9b63792116ed
+ownership   tests/architecture/fixtures/recovery-rewrites-geometry/src/core/Other.cpp e5253a1a4d69eab0aa936f41d47521f351f0e66a
+ownership   tests/architecture/fixtures/recovery-rewrites-geometry/src/thermal/ThermalPost.cpp 39dee018ca8790f718813f1bb283e92de9823f1c
+ownership   tests/architecture/fixtures/recovery-valid/apps/app/main.cpp 76e8197013aabca95639bb3d9e5de847b0c0a5fd
+ownership   tests/architecture/fixtures/recovery-valid/include/bettercad/thermal/ThermalPost.hpp 30918224aef1fee82f6d841e4bee9b63792116ed
+ownership   tests/architecture/fixtures/recovery-valid/src/core/Other.cpp e5253a1a4d69eab0aa936f41d47521f351f0e66a
+ownership   tests/architecture/fixtures/recovery-valid/src/renderer/Viewer.cpp d970a2966af2ac6fccafea680a5672b1c53b7575
+ownership   tests/architecture/fixtures/recovery-valid/src/thermal/ThermalPost.cpp b132c79dd0b1b56f665fb18d0f1f2d017216f19e
+RECOVERY_OWNERSHIP_FINGERPRINT 1cdb2b750020345057f21cf6cf5e5f986c2bb303
+src/thermal/CMakeLists.txt     75b5e164b877ea95972be01c30e1c125f0735dd0
+src/linalg/CMakeLists.txt      6ddd2cf742ed6e49b7500283d4d392446f37971b
+src/structural/CMakeLists.txt  1f7bf0b4bec0aadba989e244cedd02ef5c1f13b8
+CheckLayering.cmake           505897ecff3c3cad62370e785ee379e78a5884c4
+CheckTargetDependencies.cmake 987e0536567bfea1565318aa616218bd9a374805
+ADR_050_DEPENDENCY_FINGERPRINT 632af6215a2fbd384f1dee41bdf0368da0b57629
+untouched src/thermal/ThermalSolve.cpp                         work 304276ca9c1b60480e5907e2fae37bc90799a633 head 304276ca9c1b60480e5907e2fae37bc90799a633 EQUAL
+untouched include/bettercad/thermal/ThermalSolve.hpp           work 7e2e0c43342043e0f675b83d37be722cfae0756c head 7e2e0c43342043e0f675b83d37be722cfae0756c EQUAL
+untouched src/thermal/ThermalTransient.cpp                     work 4849e68d3628c5a021c356142b03db26bfa50c54 head 4849e68d3628c5a021c356142b03db26bfa50c54 EQUAL
+untouched include/bettercad/thermal/ThermalTransient.hpp       work 9b69f1f2089b383f0aad474c718f17fd4f2f8e36 head 9b69f1f2089b383f0aad474c718f17fd4f2f8e36 EQUAL
+untouched src/thermal/ThermalElement.cpp                       work c6b85fffab477b2828ef9c9e0300027bc83bc3fa head c6b85fffab477b2828ef9c9e0300027bc83bc3fa EQUAL
+untouched include/bettercad/thermal/ThermalElement.hpp         work a37d1e5561d013da8e3fed7027916fd9c05eb8fd head a37d1e5561d013da8e3fed7027916fd9c05eb8fd EQUAL
+untouched include/bettercad/thermal/ThermalData.hpp            work c13722336f4d6cc9e2b20d16415c5154464f81c3 head c13722336f4d6cc9e2b20d16415c5154464f81c3 EQUAL
+untouched src/thermal/ThermalData.cpp                          work e23fb2014da40c9416f96c4eed5dbcd39caad420 head e23fb2014da40c9416f96c4eed5dbcd39caad420 EQUAL
+untouched src/thermal/ThermalDof.cpp                           work 56be927c6923e7184720c7343d7744f64ba2d0ea head 56be927c6923e7184720c7343d7744f64ba2d0ea EQUAL
+untouched include/bettercad/thermal/ThermalDof.hpp             work fc68a94a213e17015ea52570a9943a439c2823ae head fc68a94a213e17015ea52570a9943a439c2823ae EQUAL
+untouched src/linalg/SymmetricSolve.cpp                        work 3b0895bd8c204b71a12df574241819126a0d0008 head 3b0895bd8c204b71a12df574241819126a0d0008 EQUAL
+untouched include/bettercad/linalg/SymmetricSolve.hpp          work 55f84e2f2cf20886080c15990dae1ba8d674c236 head 55f84e2f2cf20886080c15990dae1ba8d674c236 EQUAL
+untouched src/structural/StructuralSolve.cpp                   work deff2301440a25d6a52f67b160ab49bbf9f54f77 head deff2301440a25d6a52f67b160ab49bbf9f54f77 EQUAL
+blob src/thermal/ThermalPost.cpp                          29f81073ba27a67a348a7e98e2c54cfc2eec50b6
+blob tests/thermal/ThermalPostTests.cpp                   28ceae341b3e978cffb8b06df296be61ab202b6b
+blob tests/thermal/ThermalPostMappedTests.cpp             0dc3be4b1eca6d671cc4bc64237912670d00b9fd
+blob tests/thermal/ThermalPostTestSupport.hpp             f0c17f94c49442805e4e901951925307c7f3b723
+blob tests/compile_fail/ThermalPostMisuse.cpp             1f44733cd822591056825f842e44d9ed5c9a764b
+status:
+ M src/thermal/CMakeLists.txt
+ M tests/CMakeLists.txt
+ M tests/architecture/CMakeLists.txt
+ M tests/cli/ZeroMatchGuard.cmake
+ M tests/compile_fail/CMakeLists.txt
+?? .claude/
+?? docs/verification/P18-POST-001/
+?? include/bettercad/thermal/ThermalPost.hpp
+?? src/thermal/ThermalPost.cpp
+?? tests/architecture/CheckRecoveryOwnership.cmake
+?? tests/architecture/fixtures/recovery-gui-recomputes/
+?? tests/architecture/fixtures/recovery-rewrites-geometry/
+?? tests/architecture/fixtures/recovery-valid/
+?? tests/compile_fail/ThermalPostMisuse.cpp
+?? tests/thermal/ThermalPostMappedTests.cpp
+?? tests/thermal/ThermalPostTestSupport.hpp
+?? tests/thermal/ThermalPostTests.cpp

@@ -1,0 +1,9 @@
+MUTATION PM10b applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalPost.cpp
+  find:            const TemperatureGradient3 gradient = table.geometries[e].gradientFrom(local);
+  replace:         const TemperatureGradient3 gradient0 = table.geometries[e].gradientFrom(local);
+        const TemperatureGradient3 gradient{.x = TemperatureGradient::fromSi(gradient0.x.si() * 1e-3),
+                                            .y = TemperatureGradient::fromSi(gradient0.y.si() * 1e-3),
+                                            .z = TemperatureGradient::fromSi(gradient0.z.si() * 1e-3)};
+TESTS : test cases:    40 |    21 passed |  19 failed | assertions: 38881 | 38381 passed | 500 failed
+VERDICT: KILLED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalPost.cpp

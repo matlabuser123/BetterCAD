@@ -1,0 +1,60 @@
+=== include\bettercad\thermal\ThermalPost.hpp  (502 lines)
+unordered_map / unordered_set / std::hash        code:   0   anywhere (incl. comments):   0
+std::thread / async / jthread / mutex            code:   0   anywhere (incl. comments):   0
+OpenMP / parallel algorithms                     code:   0   anywhere (incl. comments):   9
+Eigen / dense matrix                             code:   0   anywhere (incl. comments):   0
+a Jacobian / adjugate / cofactor / shape         code:   0   anywhere (incl. comments):   0
+a call of computeTet4Geometry                    code:   0   anywhere (incl. comments):   1
+a call of gradientFrom                           code:   0   anywhere (incl. comments):   2
+nodal averaging / smoothing / patch recovery     code:   0   anywhere (incl. comments):   3
+a Celsius or Fahrenheit conversion               code:   0   anywhere (incl. comments):   1
+a unit conversion factor (mm, 1e-3, 1000)        code:   0   anywhere (incl. comments):   0
+a convection or generation term in q             code:   0   anywhere (incl. comments):   5
+a storage term C dT/dt                           code:   0   anywhere (incl. comments):   0
+a boundary normal or q . n                       code:   0   anywhere (incl. comments):   0
+colour / range / legend / clipping               code:   0   anywhere (incl. comments):   3
+rand / time( / chrono / clock                    code:   0   anywhere (incl. comments):   0
+abs / fabs / max / min on a flux value           code:   0   anywhere (incl. comments):   0
+a persistence or command-history type            code:   0   anywhere (incl. comments):   2
+=== src\thermal\ThermalPost.cpp  (679 lines)
+unordered_map / unordered_set / std::hash        code:   0   anywhere (incl. comments):   0
+std::thread / async / jthread / mutex            code:   0   anywhere (incl. comments):   0
+OpenMP / parallel algorithms                     code:   0   anywhere (incl. comments):   0
+Eigen / dense matrix                             code:   0   anywhere (incl. comments):   0
+a Jacobian / adjugate / cofactor / shape         code:   0   anywhere (incl. comments):   2
+a call of computeTet4Geometry                    code:   1   anywhere (incl. comments):   1
+    CODE   const Result<Tet4Geometry> geometry = computeTet4Geometry(*corners);
+a call of gradientFrom                           code:   1   anywhere (incl. comments):   1
+    CODE   const TemperatureGradient3 gradient = table.geometries[e].gradientFrom(local);
+nodal averaging / smoothing / patch recovery     code:   0   anywhere (incl. comments):   1
+a Celsius or Fahrenheit conversion               code:   0   anywhere (incl. comments):   1
+a unit conversion factor (mm, 1e-3, 1000)        code:   0   anywhere (incl. comments):   0
+a convection or generation term in q             code:   1   anywhere (incl. comments):   2
+    CODE   "the solution was computed on another mesh (or another generation of this one) than the mesh "
+a storage term C dT/dt                           code:   0   anywhere (incl. comments):   0
+a boundary normal or q . n                       code:   0   anywhere (incl. comments):   1
+colour / range / legend / clipping               code:   0   anywhere (incl. comments):   1
+rand / time( / chrono / clock                    code:   0   anywhere (incl. comments):   0
+abs / fabs / max / min on a flux value           code:   0   anywhere (incl. comments):   0
+a persistence or command-history type            code:   0   anywhere (incl. comments):   0
+=== what the implementation MUST contain (code lines)
+P18-ELEM gradient path (gradientFrom)                  1 line(s)
+P18-ELEM geometry (computeTet4Geometry)                1 line(s)
+the numbering gather (elementDofs)                     1 line(s)
+the Fourier line, minus sign and k                     3 line(s)
+the Euclidean magnitude (HeatFlux3::magnitude)         1 line(s)
+the absolute-temperature rule                          1 line(s)
+the solver's own currentness (requireCurrent)          6 line(s)
+the mesh stamp, not the counts (owns)                  1 line(s)
+an ordinal binary search (lower_bound)                 1 line(s)
+=== comment lines that mention a forbidden thing, each of which must say it is ABSENT
+ThermalPost.hpp:45: // convection term `h (T - Tinf)` (a boundary heat transfer), no volumetric
+ThermalPost.hpp:46: // generation (it changes the solved T, not Fourier's law), and no storage term
+ThermalPost.hpp:50: // UNSMOOTHED, ELEMENT-WISE, DELIBERATELY. A linear tetrahedron has a constant
+ThermalPost.hpp:52: // element is the engineering result. There is no nodal averaging, no
+ThermalPost.hpp:53: // superconvergent patch recovery and no least-squares nodal flux. A smoothed field
+ThermalPost.hpp:57: // value, bit for bit, in K. A Celsius offset cancels in every gradient, so a flux
+ThermalPost.hpp:74: //     no nodal heat-flux smoothing   P18-VIZ-001 may define a display representation
+ThermalPost.hpp:78: //     no unit conversion             SI throughout; K, K/m, W/m^2
+ThermalPost.cpp:10: // WHAT IS NOT HERE EITHER: no nodal averaging, no smoothing, no boundary normal, no
+ThermalPost.cpp:11: // convection or generation or storage term in q, no Celsius, no unit conversion, no

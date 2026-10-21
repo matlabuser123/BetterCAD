@@ -1,0 +1,6 @@
+MUTATION PM31 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalPost.cpp
+  find:        return ThermalPostSource{.mode = ThermalAnalysisMode::Steady,
+  replace:     return ThermalPostSource{.mode = ThermalAnalysisMode::Transient,
+TESTS : test cases:    40 |    36 passed | 4 failed | assertions: 38673 | 38669 passed | 4 failed
+VERDICT: KILLED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalPost.cpp

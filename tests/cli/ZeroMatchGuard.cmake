@@ -218,6 +218,30 @@ set(_filters
     "unit\\.ThermalTransient_(SeamMatches|SeamRefusals|SparseNodeIds)" 3
     "unit\\.ThermalTransient_DiagnosticNames" 1
     "compile_fail\\.thermaltransient\\." 35
+    # P18-POST-001. The temperature / gradient / heat-flux recovery, by the brief's
+    # groups -- the field descriptors and component order, the affine patch and the
+    # axis fields, Fourier's sign, the independent general-tetrahedron oracle, the
+    # scaling and covariance families, the constant field, the slab validations,
+    # the transient history and its zero flux under uniform heating, the refusals
+    # and the atomic failure, currentness and the remesh trap, the ordinal keying
+    # of sparse identities, determinism, and the large smoke -- plus the
+    # compile-fail group that proves the three derived quantities do not convert and
+    # that nothing nodal, smoothed, balanced or drawn is reachable, and the
+    # ownership gate that keeps a viewer from recomputing the fields. Each under its
+    # own name so a targeted run of any one can be seen to have matched something.
+    "unit\\.ThermalPost" 40
+    "unit\\.ThermalPost_(FieldDescriptors|DiagnosticNames|HeatFluxMagnitude)" 3
+    "unit\\.ThermalPost_(AffineField|MultiTetAffine|XLinear|YLinear|ZLinear|GeneralTet)" 6
+    "unit\\.ThermalPost_(FourierLaw|ConstantTemperature|ConvectionIsNot)" 3
+    "unit\\.ThermalPost_(TemperatureOffset|TemperatureDifference|ConductivityScaling|GeometryScaling)" 4
+    "unit\\.ThermalPost_(Translation|Rotation)" 2
+    "unit\\.ThermalPost_(SteadySlab|TransientHistory|TransientRecovery|TransientUniform|ALateState)" 7
+    "unit\\.ThermalPost_(Refuses|OneInvalid|RecoveryIsRefused|RemeshStales|AFailedRecovery)" 6
+    "unit\\.ThermalPost_(NodalTemperature|ElementResultsAreKeyed|PreservesTetLocal)" 4
+    "unit\\.ThermalPost_(Repeated|RecoveryDoesNotMutate)" 3
+    "unit\\.ThermalPost_(LargeMesh|FineCylinder)" 2
+    "compile_fail\\.thermalpost\\." 31
+    "architecture\\.recovery-ownership" 4
 )
 list(LENGTH _filters _count)
 math(EXPR _last "${_count} - 1")

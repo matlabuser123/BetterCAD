@@ -1,0 +1,10 @@
+
+PM02b | temperatures are read through the raw NodeId (minus one), clamped so the read stays in range | VERDICT: KILLED | TESTS : test cases:    40 |    38 passed |  2 failed | assertions: 38883 | 38869 passed | 14 failed
+PM10b | the gradient is computed per millimetre (a stray 1e-3 applied for real) | VERDICT: KILLED | TESTS : test cases:    40 |    21 passed |  19 failed | assertions: 38881 | 38381 passed | 500 failed
+PM29b | an element is looked up by its raw id (minus one), clamped to stay in range | VERDICT: SURVIVED | TESTS : All tests passed (38883 assertions in 40 test cases)
+PM36 | a held transient result is judged current even when the model changed (stale reasons ignored) | VERDICT: KILLED | TESTS : test cases:    40 |    39 passed | 1 failed | assertions: 38883 | 38882 passed | 1 failed
+PM37 | a held steady result may be asked about with the transient settings (mode check removed) | VERDICT: SURVIVED | TESTS : All tests passed (38883 assertions in 40 test cases)
+PM38 | a held transient result may be asked about without the transient settings (mode check removed) | VERDICT: KILLED | TESTS : test cases:    40 |    39 passed | 1 failed | assertions: 38883 | 38882 passed | 1 failed
+PM39 | the recovery does not refuse a solution whose conductivity is invalid at the seam (seam check skipped) | VERDICT: SURVIVED | TESTS : All tests passed (38883 assertions in 40 test cases)
+PM40 | the history is checked only through the first state (late states are not pre-checked) | VERDICT: KILLED | TESTS : test cases:    40 |    39 passed | 1 failed | assertions: 38881 | 38880 passed | 1 failed
+DONE

@@ -1,0 +1,6 @@
+MUTATION PM37 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalPost.cpp
+  find:        if (result.mode() != ThermalAnalysisMode::Steady) {
+  replace:     if (false && result.mode() != ThermalAnalysisMode::Steady) {
+TESTS : All tests passed (38883 assertions in 40 test cases)
+VERDICT: SURVIVED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalPost.cpp

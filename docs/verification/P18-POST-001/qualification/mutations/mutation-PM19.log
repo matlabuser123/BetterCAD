@@ -1,0 +1,6 @@
+MUTATION PM19 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalPost.cpp
+  find:        if (temperatures.size() != static_cast<std::size_t>(map.dofCount())) {
+  replace:     if (false && temperatures.size() != static_cast<std::size_t>(map.dofCount())) {
+TESTS : 
+VERDICT: UNKNOWN (no summary line)
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalPost.cpp

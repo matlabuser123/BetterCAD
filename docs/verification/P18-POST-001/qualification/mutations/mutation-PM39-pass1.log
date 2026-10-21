@@ -1,0 +1,8 @@
+MUTATION PM39 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalPost.cpp
+  find:        if (std::optional<PostFailure> refused = checkConductivity(conductivity); refused.has_value()) {
+        return refused;
+    }
+  replace:     (void)conductivity;
+TESTS : All tests passed (38883 assertions in 40 test cases)
+VERDICT: SURVIVED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalPost.cpp

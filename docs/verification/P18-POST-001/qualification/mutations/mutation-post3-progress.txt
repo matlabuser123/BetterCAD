@@ -1,0 +1,5 @@
+
+PM29b | an element is looked up by its raw id (minus one), clamped to stay in range | VERDICT: KILLED | TESTS : test cases:    40 |    39 passed | 1 failed | assertions: 38910 | 38907 passed | 3 failed
+PM37 | a held steady result may be asked about with the transient settings (mode check removed) | VERDICT: KILLED | TESTS : test cases:    40 |    39 passed | 1 failed | assertions: 38910 | 38909 passed | 1 failed
+PM39 | the recovery does not refuse a solution whose conductivity is invalid at the seam (seam check skipped) | VERDICT: KILLED | TESTS : test cases:    40 |    38 passed | 2 failed | assertions: 38872 | 38868 passed | 4 failed
+DONE
