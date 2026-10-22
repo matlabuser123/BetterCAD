@@ -85,3 +85,16 @@ result: 17 stages, 0 failed, first run on the frozen tree, 5h12m47s
 `qualification-times.txt` records the three fingerprints; `postrun-summary.txt` records the build, test and cross-preset results; the numbers are in README.md. A first launch at 23:22
 exited in under a second because `git` and `cmake` were not on the launching shell's PATH (exit 9009, no build, no test); its logs were deleted and the run was started again at 23:28
 from the same frozen tree. Nothing was edited in between.
+
+## The commit
+
+```text
+COMMIT   15ad364de00ff15d56d41798771b5f608e47a201   BetterCAD: add thermal validation and acceptance
+TREE     c772c7f1d073c07c159bd22115884d9144c16c7f
+PARENT   bc62b0ce3e3ec12cdd884a617649f9e4dab617fe
+SUBTREES apps, include, src, tests, examples, cmake, CMakeLists.txt, CMakePresets.json: all eight == the frozen hashes above
+          (read back from the commit, not recomputed from the working tree)
+QUALIFIED == COMMITTED
+```
+
+The commit that records this section changes only this file.
