@@ -175,3 +175,44 @@ debug-shared-ext  libbettercad_thermal.dll   35 134 334 B  00806a2a00076592a3afa
 The commit script recomputes the eight hashes from a scratch index, refuses to commit unless each equals the frozen one, refuses any remaining fill-in token in this directory
 or in the message, commits, and reads the eight subtree hashes back out of the commit's tree. Its output, with the commit hash, is appended to this file by the follow-up
 documentation commit, because a commit cannot carry its own hash.
+
+### The commit record
+
+```text
+commit    60ce0a3ec189a4435e82b71c67fbc6e0abd64d28
+subject   BetterCAD: add thermal heat and energy balance
+tree      742214d94d2c6bbe9d6544d3dc52d11c387cf38b
+parent    fa15d36f257f698683a2d52fc4f9dcd5f8b7b684   (P18-POST-001's record commit)
+date      2026-10-22 11:20:22 +1000
+files     157 files changed, 78561 insertions(+), 42 deletions(-)
+          docs 125   include 1   src 2   tests 27   ROADMAP.md 1   TODO.md 1
+
+recomputed from a scratch index immediately before the commit (scratch tree 14722d52616af83f2a6696448dcf18b0e99bd871)
+  apps               a95876bc6dbf843d4e0cec114059bc196fa16175   == frozen
+  include            ee2dd26d23f2a84600bf05a33090bcaaeeb14499   == frozen
+  src                4dd2f59fd14a4ec4b768dff526be706192df8d19   == frozen
+  tests              314e71c94b1152ee53cbb13cc96322b134027c06   == frozen
+  examples           a955cf6511ce715fcb95bc06ef82b877535869e6   == frozen
+  cmake              5a382115d7ed7775189d40b55e40f318eaae6cc7   == frozen
+  CMakeLists.txt     3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd   == frozen
+  CMakePresets.json  3229f0f89b236744d7d5c082bed47c28b718288e   == frozen
+
+read back from 60ce0a3e^{tree} after the commit
+  all eight                                                     == frozen
+  "ALL EIGHT == FROZEN"
+
+untracked left behind   .claude/ only (the session's settings, never committed)
+message                 no BOM (first bytes 66,101,116), no fill-in token
+```
+
+qualified == committed: the tree the three presets built and tested in the qualifying run (2026-10-22
+05:16:10 to 10:40:25) is, under every one of the eight paths, the tree commit 60ce0a3e carries. The
+files under `docs/` are this directory: the evidence, the harness copies, the mutation scripts, drivers
+and logs, the logs of the qualifying run and the post-run measurements.
+
+```text
+origin/main at the time of this record   fa15d36f257f698683a2d52fc4f9dcd5f8b7b684
+unpushed, oldest first                   60ce0a3e  (this milestone)  (+ this record)
+```
+
+The push is the owner's; this record is written before it and does not claim it.
