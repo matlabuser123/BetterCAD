@@ -1,0 +1,6 @@
+MUTATION BAL24 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp
+  find:            if (dof >= state.size() || !(state[dof].si() == constraint.temperature.si())) {
+  replace:         if (false && (dof >= state.size() || !(state[dof].si() == constraint.temperature.si()))) {
+TESTS : All tests passed (2169 assertions in 67 test cases)
+VERDICT: SURVIVED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp

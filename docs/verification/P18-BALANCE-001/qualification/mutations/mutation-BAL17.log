@@ -1,0 +1,11 @@
+MUTATION BAL17 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp
+  find:        for (const ThermalLoadContribution& load : input.loads) {
+        const LoadHeat entry
+  replace:     for (const ThermalLoadContribution& load : input.loads) {
+        if (&load == input.loads.data()) {
+            continue;
+        }
+        const LoadHeat entry
+TESTS : test cases:   67 |   38 passed |  29 failed | assertions: 2116 | 1995 passed | 121 failed
+VERDICT: KILLED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp

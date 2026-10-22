@@ -1,0 +1,10 @@
+MUTATION BAL12 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp
+  find:        std::expected<Energy, BalanceFailure> stored = storedEnergyChange(*input.capacity, previous, next);
+  replace:     std::vector<Temperature> nextFree(next.begin(), next.end());
+    for (const ThermalTemperatureConstraint& c : input.constraints.constrained()) {
+        nextFree[static_cast<std::size_t>(c.dof.value())] = previous[static_cast<std::size_t>(c.dof.value())];
+    }
+    std::expected<Energy, BalanceFailure> stored = storedEnergyChange(*input.capacity, previous, nextFree);
+TESTS : All tests passed (2169 assertions in 67 test cases)
+VERDICT: SURVIVED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp

@@ -1,0 +1,6 @@
+MUTATION BAL41 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp
+  find:            state->time = Time::fromSi(grid.timeAt(k));
+  replace:         state->time = Time::fromSi(grid.timeAt(k - 1));
+TESTS : test cases:   67 |   65 passed |  2 failed | assertions: 2169 | 2153 passed | 16 failed
+VERDICT: KILLED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp

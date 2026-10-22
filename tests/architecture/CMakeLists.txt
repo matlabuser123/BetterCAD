@@ -132,3 +132,28 @@ bettercad_add_process_test(architecture.recovery-ownership.gui-recomputes
 bettercad_add_process_test(architecture.recovery-ownership.rewrites-geometry
     COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/recovery-rewrites-geometry|-P|${_check_recovery}"
     EXIT_CODE 1 STDERR_REGEX "1 violation.*rewrites Tet4 geometry")
+
+# P18-BALANCE-001. The residual K T - Q, the reactions read from it, the heat each convection face
+# exchanges, the energy a step stores and the sums that make the balance are computed in ONE place,
+# the thermal module; a viewer, a report or a command consumes the balance result and never rebuilds
+# the accounting. CheckBalanceOwnership.cmake scans every file outside the thermal module for the
+# functions that recompute it, checks the balance does not rewrite what P18-LOAD, P18-BC, P18-ASSEMBLY
+# or the solves own, and checks it reads the convection exchange and the load totals from them. Each
+# fixture tree holds exactly one defect (or none): the valid tree also holds a comment that names a
+# forbidden function, a viewer that calls the core's source-bound entry point and reads a result member
+# called storedEnergyChange, none of which may be flagged.
+set(_check_balance "${CMAKE_CURRENT_SOURCE_DIR}/CheckBalanceOwnership.cmake")
+add_test(NAME architecture.balance-ownership
+    COMMAND "${CMAKE_COMMAND}" "-DSOURCE_DIR=${PROJECT_SOURCE_DIR}" -P "${_check_balance}")
+bettercad_add_process_test(architecture.balance-ownership.valid
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/balance-valid|-P|${_check_balance}"
+    EXIT_CODE 0 STDOUT_REGEX "Balance ownership check passed")
+bettercad_add_process_test(architecture.balance-ownership.gui-recomputes
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/balance-gui-recomputes|-P|${_check_balance}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*recomputes the heat accounting")
+bettercad_add_process_test(architecture.balance-ownership.reintegrates
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/balance-reintegrates|-P|${_check_balance}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*rewrites what another milestone owns")
+bettercad_add_process_test(architecture.balance-ownership.lacks-attribution
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/balance-lacks-attribution|-P|${_check_balance}"
+    EXIT_CODE 1 STDERR_REGEX "2 violation.*does not take the convection exchange")

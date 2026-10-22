@@ -1,0 +1,7 @@
+MUTATION BAL36 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp
+  find:        out.status = balanceWithinTolerance(residual, gross, out.arithmeticScale) ? BalanceStatus::Balanced
+                                                                              : BalanceStatus::OutOfTolerance;
+  replace:     out.status = BalanceStatus::Balanced;
+TESTS : test cases:   67 |   63 passed | 4 failed | assertions: 2169 | 2164 passed | 5 failed
+VERDICT: KILLED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp

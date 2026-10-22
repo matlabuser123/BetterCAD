@@ -1,0 +1,6 @@
+MUTATION BAL29 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp
+  find:        if (Result<void> current = requireCurrent(preparedBoundary, model, conditions); !current.has_value()) {
+  replace:     if (Result<void> current = requireCurrent(preparedBoundary, model, conditions); false && !current.has_value()) {
+TESTS : test cases:   68 |   67 passed | 1 failed | assertions: 2221 | 2220 passed | 1 failed
+VERDICT: KILLED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp

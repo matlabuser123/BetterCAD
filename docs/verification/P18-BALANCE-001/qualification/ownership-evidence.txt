@@ -1,0 +1,30 @@
+--- real tree
+-- Balance ownership check passed: 497 files outside the thermal module scanned, 0 violations
+--- fixture balance-gui-recomputes
+CMake Error at tests/architecture/CheckBalanceOwnership.cmake:94 (message):
+  Balance ownership check failed: 1 violation(s): apps/app/Viewer.cpp: GUI or
+  other non-thermal code recomputes the heat accounting (steadyFullResidual);
+  consume the core result instead.
+System.Management.Automation.RemoteException
+System.Management.Automation.RemoteException
+exit 1
+--- fixture balance-lacks-attribution
+CMake Error at tests/architecture/CheckBalanceOwnership.cmake:94 (message):
+  Balance ownership check failed: 2 violation(s):
+  src/thermal/ThermalBalance.cpp: does not take the convection exchange from
+  residualFrom.  src/thermal/ThermalBalance.cpp: does not take the load
+  totals from the prepared contributions (heatRate).
+System.Management.Automation.RemoteException
+System.Management.Automation.RemoteException
+exit 1
+--- fixture balance-reintegrates
+CMake Error at tests/architecture/CheckBalanceOwnership.cmake:94 (message):
+  Balance ownership check failed: 1 violation(s):
+  src/thermal/ThermalBalance.cpp: rewrites what another milestone owns
+  (solveTransient); P18-LOAD, P18-BC, P18-ASSEMBLY and the solves own it.
+System.Management.Automation.RemoteException
+System.Management.Automation.RemoteException
+exit 1
+--- fixture balance-valid
+-- Balance ownership check passed: 3 files outside the thermal module scanned, 0 violations
+exit 0

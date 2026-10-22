@@ -1,0 +1,11 @@
+MUTATION BAL04 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp
+  find:            out.push_back(ReactionHeat{.dof = constraint.dof, .heatInto = Power::fromSi(heat)});
+    }
+    return out;
+  replace:         out.push_back(ReactionHeat{.dof = constraint.dof, .heatInto = Power::fromSi(heat)});
+        out.push_back(ReactionHeat{.dof = constraint.dof, .heatInto = Power::fromSi(heat)});
+    }
+    return out;
+TESTS : test cases:   67 |   38 passed |  29 failed | assertions: 2125 | 2019 passed | 106 failed
+VERDICT: KILLED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp

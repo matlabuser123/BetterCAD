@@ -1,0 +1,65 @@
+=== include\bettercad\thermal\ThermalBalance.hpp  (548 lines)
+unordered_map / unordered_set / std::hash            code:   0   anywhere (incl. comments):   0
+std::thread / async / jthread / mutex / atomic       code:   0   anywhere (incl. comments):   0
+OpenMP / parallel algorithms                         code:   0   anywhere (incl. comments):   0
+Eigen / a dense matrix                               code:   0   anywhere (incl. comments):   0
+a Jacobian / an element or facet integral            code:   0   anywhere (incl. comments):   1
+a call that solves or steps in time                  code:   0   anywhere (incl. comments):   0
+regularisation / epsilon / penalty / pinning         code:   0   anywhere (incl. comments):   0
+lumping / row sums / diagonal capacity               code:   0   anywhere (incl. comments):   3
+a "remainder" or leftover reaction                   code:   0   anywhere (incl. comments):   1
+a normal, an outward direction, q . n                code:   0   anywhere (incl. comments):   1
+a Celsius / Fahrenheit conversion                    code:   0   anywhere (incl. comments):   0
+a unit conversion factor (mm, 1e-3, 1000)            code:   0   anywhere (incl. comments):   0
+a gradient or a flux field                           code:   0   anywhere (incl. comments):   0
+colour / range / legend / clipping                   code:   0   anywhere (incl. comments):   1
+rand / time( / chrono / clock                        code:   0   anywhere (incl. comments):   0
+a persistence or command-history type                code:   0   anywhere (incl. comments):   2
+a time-dependent coefficient                         code:   0   anywhere (incl. comments):   0
+the NOMINAL step size where the actual one belongs   code:   0   anywhere (incl. comments):   0
+=== src\thermal\ThermalBalance.cpp  (941 lines)
+unordered_map / unordered_set / std::hash            code:   0   anywhere (incl. comments):   0
+std::thread / async / jthread / mutex / atomic       code:   0   anywhere (incl. comments):   0
+OpenMP / parallel algorithms                         code:   0   anywhere (incl. comments):   0
+Eigen / a dense matrix                               code:   0   anywhere (incl. comments):   0
+a Jacobian / an element or facet integral            code:   0   anywhere (incl. comments):   1
+a call that solves or steps in time                  code:   0   anywhere (incl. comments):   0
+regularisation / epsilon / penalty / pinning         code:   0   anywhere (incl. comments):   0
+lumping / row sums / diagonal capacity               code:   0   anywhere (incl. comments):   0
+a "remainder" or leftover reaction                   code:   0   anywhere (incl. comments):   1
+a normal, an outward direction, q . n                code:   0   anywhere (incl. comments):   1
+a Celsius / Fahrenheit conversion                    code:   0   anywhere (incl. comments):   0
+a unit conversion factor (mm, 1e-3, 1000)            code:   0   anywhere (incl. comments):   0
+a gradient or a flux field                           code:   0   anywhere (incl. comments):   0
+colour / range / legend / clipping                   code:   0   anywhere (incl. comments):   0
+rand / time( / chrono / clock                        code:   0   anywhere (incl. comments):   0
+a persistence or command-history type                code:   0   anywhere (incl. comments):   0
+a time-dependent coefficient                         code:   0   anywhere (incl. comments):   0
+the NOMINAL step size where the actual one belongs   code:   0   anywhere (incl. comments):   0
+=== what the implementation MUST contain (code lines)
+the convection exchange from the BC terms (residualFrom)       1 line(s)
+the load totals from the contributions (heatRate)              2 line(s)
+the sparse product K T (multiply)                              4 line(s)
+the actual step size (stepAt)                                  1 line(s)
+the reaction from the residual (+r at the constraint)          1 line(s)
+the one tolerance policy (balanceWithinTolerance)              3 line(s)
+the solver's own currentness (requireCurrent)                  9 line(s)
+the solution's source by value (postSourceOf)                  4 line(s)
+the sample times are the grid's (timeAt)                       1 line(s)
+=== std::abs in code (each must be a MAGNITUDE for a scale or a tolerance, never a heat rate that is reported)
+ThermalBalance.cpp:52: sum += std::abs(values[static_cast<std::size_t>(p)]) * std::abs(x[static_cast<std::size_t>(inner[static_cast<std::size_t>(p)])]);
+ThermalBalance.cpp:61: sum += std::abs(v);
+ThermalBalance.cpp:103: const double scale = absoluteSum(input.heat.values()) + std::abs(attributed);
+ThermalBalance.cpp:206: return std::abs(r) <= kBalanceAbsoluteToleranceW + kBalanceRelativeTolerance * (std::abs(g) + std::abs(a));
+ThermalBalance.cpp:250: sum += std::abs(load.heatInto.si());
+ThermalBalance.cpp:253: sum += std::abs(load.heatInto.si());
+ThermalBalance.cpp:256: sum += std::abs(condition.heatInto.si());
+ThermalBalance.cpp:259: sum += std::abs(reaction.heatInto.si());
+ThermalBalance.cpp:262: sum += std::abs(terms.storedEnergyRate->si());
+ThermalBalance.cpp:269: return std::abs(residual().si()) / std::max(gross, kBalanceScaleFloorW);
+ThermalBalance.cpp:699: kBalanceRelativeTolerance * (std::abs(state->grossScale().si()) + std::abs(state->arithmeticScale.si())));
+=== comment lines that mention a forbidden thing, each of which must say it is ABSENT
+ThermalBalance.hpp:75: // and BALANCE does not integrate again to invent them and does not treat an output interval
+ThermalBalance.hpp:337: /// never re-integrated.
+ThermalBalance.cpp:12: // time integration, no remainder reaction (a reaction is never "what makes the balance
+ThermalBalance.cpp:385: // Kconv T - Qconv: outward positive. Never re-integrated from h and the ambient.

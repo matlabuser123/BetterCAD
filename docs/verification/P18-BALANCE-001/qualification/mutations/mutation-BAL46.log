@@ -1,0 +1,12 @@
+MUTATION BAL46 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp
+  find:        if (!(timeStep > 0.0) || !std::isfinite(timeStep)) {
+        return std::unexpected(failure(BalanceProblem::InvalidTimeStep, ErrorCode::InvalidArgument,
+                                       std::format("the time step must be finite and positive, got {} s", timeStep), step));
+    }
+  replace:     if (false) {
+        return std::unexpected(failure(BalanceProblem::InvalidTimeStep, ErrorCode::InvalidArgument,
+                                       std::format("the time step must be finite and positive, got {} s", timeStep), step));
+    }
+TESTS : All tests passed (2169 assertions in 67 test cases)
+VERDICT: SURVIVED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp

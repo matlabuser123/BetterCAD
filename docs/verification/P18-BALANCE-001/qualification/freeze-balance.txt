@@ -1,0 +1,102 @@
+P18-BALANCE-001 freeze 2026-10-22 05:15:16
+HEAD      fa15d36f257f698683a2d52fc4f9dcd5f8b7b684
+HEAD tree 78aaf3c0ba78283ac53ccef73891abd530c38d87
+scratch tree 14722d52616af83f2a6696448dcf18b0e99bd871
+apps               a95876bc6dbf843d4e0cec114059bc196fa16175
+include            ee2dd26d23f2a84600bf05a33090bcaaeeb14499
+src                4dd2f59fd14a4ec4b768dff526be706192df8d19
+tests              314e71c94b1152ee53cbb13cc96322b134027c06
+examples           a955cf6511ce715fcb95bc06ef82b877535869e6
+cmake              5a382115d7ed7775189d40b55e40f318eaae6cc7
+CMakeLists.txt     3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd
+CMakePresets.json  3229f0f89b236744d7d5c082bed47c28b718288e
+ThermalBalance.hpp   93e1cc10f7c42667a580ffa1f52c2f3a27c27589
+ThermalData.hpp      c13722336f4d6cc9e2b20d16415c5154464f81c3
+P18_BALANCE_CONTRACT_FINGERPRINT d1925ef3d79f038081924d1c255f48206191921e
+sign line   out.terms.storedEnergyRate = Power::fromSi(stored->si() / timeStep);
+sign line   const Power residual = out.residual();
+sign line   r[i] = (*kt)[i] - q[i];
+sign line   r[i] = (*cdt)[i] / timeStep + (*kt)[i] - q[i];
+sign line   .heatInto = Power::fromSi(-out)};
+sign line   const double heat = fullResidual[dof];
+sign line   std::expected<CategoryTotals, BalanceFailure> categories = categoriesOf(input, next, step);
+sign line   const double dt = grid.stepAt(k - 1);
+sign line   netImbalance: [[nodiscard]] Power netImbalance() const noexcept { return appliedSurfaceHeat + generatedHeat + convectionHeat + prescribedTemperatureReaction - storedEnergyRate.value_or(Power{}
+P18_BALANCE_SIGN_CONVENTION_FINGERPRINT 2121f672bec9a533d75e30d7b1ea4a17b9fe9960
+tolerance constant   inline constexpr double kBalanceAbsoluteToleranceW = 1.0e-12;
+tolerance constant   inline constexpr double kBalanceRelativeTolerance = 1.0e-13;
+tolerance constant   inline constexpr double kBalanceScaleFloorW = 1.0e-12;
+P18_BALANCE_TOLERANCE_FINGERPRINT 6a6b1de34effcbcf91b62a056eb2152e83149055
+ownership   tests/architecture/CheckBalanceOwnership.cmake 85c45dc879ff24edeca4184c32f868f3e6ff216a
+ownership   tests/architecture/fixtures/balance-gui-recomputes/apps/app/main.cpp 76e8197013aabca95639bb3d9e5de847b0c0a5fd
+ownership   tests/architecture/fixtures/balance-gui-recomputes/apps/app/Viewer.cpp ac224b4245df860efc54a5cf257d6171f5d45154
+ownership   tests/architecture/fixtures/balance-gui-recomputes/include/bettercad/thermal/ThermalBalance.hpp 30918224aef1fee82f6d841e4bee9b63792116ed
+ownership   tests/architecture/fixtures/balance-gui-recomputes/src/core/Other.cpp 30a9022a2f4533f7e599786d1ad6997c0a18eb90
+ownership   tests/architecture/fixtures/balance-gui-recomputes/src/thermal/ThermalBalance.cpp 1c246c0170ed9aec13b63a224715d91b992c930b
+ownership   tests/architecture/fixtures/balance-lacks-attribution/apps/app/main.cpp 76e8197013aabca95639bb3d9e5de847b0c0a5fd
+ownership   tests/architecture/fixtures/balance-lacks-attribution/include/bettercad/thermal/ThermalBalance.hpp 30918224aef1fee82f6d841e4bee9b63792116ed
+ownership   tests/architecture/fixtures/balance-lacks-attribution/src/core/Other.cpp 30a9022a2f4533f7e599786d1ad6997c0a18eb90
+ownership   tests/architecture/fixtures/balance-lacks-attribution/src/thermal/ThermalBalance.cpp 7ab067f84a62561f94ebc0e68cb3345ed0ced164
+ownership   tests/architecture/fixtures/balance-reintegrates/apps/app/main.cpp 76e8197013aabca95639bb3d9e5de847b0c0a5fd
+ownership   tests/architecture/fixtures/balance-reintegrates/include/bettercad/thermal/ThermalBalance.hpp 30918224aef1fee82f6d841e4bee9b63792116ed
+ownership   tests/architecture/fixtures/balance-reintegrates/src/core/Other.cpp 30a9022a2f4533f7e599786d1ad6997c0a18eb90
+ownership   tests/architecture/fixtures/balance-reintegrates/src/thermal/ThermalBalance.cpp 5e77821e761e4e30ad5f95533104a0a4410b851d
+ownership   tests/architecture/fixtures/balance-valid/apps/app/main.cpp 76e8197013aabca95639bb3d9e5de847b0c0a5fd
+ownership   tests/architecture/fixtures/balance-valid/include/bettercad/thermal/ThermalBalance.hpp 30918224aef1fee82f6d841e4bee9b63792116ed
+ownership   tests/architecture/fixtures/balance-valid/src/core/Other.cpp 30a9022a2f4533f7e599786d1ad6997c0a18eb90
+ownership   tests/architecture/fixtures/balance-valid/src/renderer/Viewer.cpp 46525eb4ca45ede63ef2c61fd02d729d749ea13f
+ownership   tests/architecture/fixtures/balance-valid/src/thermal/ThermalBalance.cpp 1c246c0170ed9aec13b63a224715d91b992c930b
+BALANCE_OWNERSHIP_FINGERPRINT 9782e55f5dc58314357b06f19377be31e38c313b
+src/thermal/CMakeLists.txt     5171f0644902cf7058831b4fc8eea4f5ab09d87a
+src/linalg/CMakeLists.txt      6ddd2cf742ed6e49b7500283d4d392446f37971b
+src/structural/CMakeLists.txt  1f7bf0b4bec0aadba989e244cedd02ef5c1f13b8
+CheckLayering.cmake           505897ecff3c3cad62370e785ee379e78a5884c4
+CheckTargetDependencies.cmake 987e0536567bfea1565318aa616218bd9a374805
+ADR_050_DEPENDENCY_FINGERPRINT 2ae700e12ffc461048a970b7455d342488c3ebff
+untouched src/thermal/ThermalSolve.cpp                         work 304276ca9c1b60480e5907e2fae37bc90799a633 head 304276ca9c1b60480e5907e2fae37bc90799a633 EQUAL
+untouched include/bettercad/thermal/ThermalSolve.hpp           work 7e2e0c43342043e0f675b83d37be722cfae0756c head 7e2e0c43342043e0f675b83d37be722cfae0756c EQUAL
+untouched src/thermal/ThermalTransient.cpp                     work 4849e68d3628c5a021c356142b03db26bfa50c54 head 4849e68d3628c5a021c356142b03db26bfa50c54 EQUAL
+untouched include/bettercad/thermal/ThermalTransient.hpp       work 9b69f1f2089b383f0aad474c718f17fd4f2f8e36 head 9b69f1f2089b383f0aad474c718f17fd4f2f8e36 EQUAL
+untouched src/thermal/ThermalPost.cpp                          work 29f81073ba27a67a348a7e98e2c54cfc2eec50b6 head 29f81073ba27a67a348a7e98e2c54cfc2eec50b6 EQUAL
+untouched include/bettercad/thermal/ThermalPost.hpp            work 22a1933bf4d9e2c30f28e9647849eaa42c775298 head 22a1933bf4d9e2c30f28e9647849eaa42c775298 EQUAL
+untouched src/thermal/ThermalElement.cpp                       work c6b85fffab477b2828ef9c9e0300027bc83bc3fa head c6b85fffab477b2828ef9c9e0300027bc83bc3fa EQUAL
+untouched include/bettercad/thermal/ThermalElement.hpp         work a37d1e5561d013da8e3fed7027916fd9c05eb8fd head a37d1e5561d013da8e3fed7027916fd9c05eb8fd EQUAL
+untouched include/bettercad/thermal/ThermalData.hpp            work c13722336f4d6cc9e2b20d16415c5154464f81c3 head c13722336f4d6cc9e2b20d16415c5154464f81c3 EQUAL
+untouched src/thermal/ThermalData.cpp                          work e23fb2014da40c9416f96c4eed5dbcd39caad420 head e23fb2014da40c9416f96c4eed5dbcd39caad420 EQUAL
+untouched src/thermal/ThermalDof.cpp                           work 56be927c6923e7184720c7343d7744f64ba2d0ea head 56be927c6923e7184720c7343d7744f64ba2d0ea EQUAL
+untouched include/bettercad/thermal/ThermalDof.hpp             work fc68a94a213e17015ea52570a9943a439c2823ae head fc68a94a213e17015ea52570a9943a439c2823ae EQUAL
+untouched src/thermal/ThermalLoadVector.cpp                    work b1b1d43d79bdba99226c52ef9b1a6b11179d1d2c head b1b1d43d79bdba99226c52ef9b1a6b11179d1d2c EQUAL
+untouched include/bettercad/thermal/ThermalLoadVector.hpp      work c2803e98731f2d52c957078f4862081c7283e40d head c2803e98731f2d52c957078f4862081c7283e40d EQUAL
+untouched src/thermal/ThermalBoundary.cpp                      work cde982c0e5106fe4b51fe9a564ef42db1e21276d head cde982c0e5106fe4b51fe9a564ef42db1e21276d EQUAL
+untouched include/bettercad/thermal/ThermalBoundary.hpp        work 7e099d43380ea323f4b6664e86cec424c95e5514 head 7e099d43380ea323f4b6664e86cec424c95e5514 EQUAL
+untouched src/thermal/ThermalConvection.cpp                    work 06e46a5b9d1ea2881e99a6c3e2ba1e14eadb57b4 head 06e46a5b9d1ea2881e99a6c3e2ba1e14eadb57b4 EQUAL
+untouched include/bettercad/thermal/ThermalConvection.hpp      work 8135b9e2bbb76fa94c4440777793b36db0cbea81 head 8135b9e2bbb76fa94c4440777793b36db0cbea81 EQUAL
+untouched src/thermal/ThermalSystem.cpp                        work 698741e3b1e0a8b1de389693bac0a751b32b6edd head 698741e3b1e0a8b1de389693bac0a751b32b6edd EQUAL
+untouched include/bettercad/thermal/ThermalSystem.hpp          work 1ddb90cbb3737e2194cf53a4afe5d3291c772382 head 1ddb90cbb3737e2194cf53a4afe5d3291c772382 EQUAL
+untouched src/linalg/SymmetricSolve.cpp                        work 3b0895bd8c204b71a12df574241819126a0d0008 head 3b0895bd8c204b71a12df574241819126a0d0008 EQUAL
+untouched include/bettercad/linalg/SymmetricSolve.hpp          work 55f84e2f2cf20886080c15990dae1ba8d674c236 head 55f84e2f2cf20886080c15990dae1ba8d674c236 EQUAL
+untouched src/structural/StructuralSolve.cpp                   work deff2301440a25d6a52f67b160ab49bbf9f54f77 head deff2301440a25d6a52f67b160ab49bbf9f54f77 EQUAL
+blob src/thermal/ThermalBalance.cpp                       fcf79d4518a07da2dd37a740aed9dae76dc49e6b
+blob tests/thermal/ThermalBalanceTests.cpp                e1c838a8ba8155d919704584927eb05f9bd400d2
+blob tests/thermal/ThermalBalanceMappedTests.cpp          e360aa75b3bf3be48dcdf40d29145f4f3be9d14d
+blob tests/thermal/ThermalBalanceTestSupport.hpp          0a51ff5cc5992a715c6022f2a4e41a808df75104
+blob tests/compile_fail/ThermalBalanceMisuse.cpp          5d37c46b39121925dc543241ce18b63ebaa21742
+status:
+ M src/thermal/CMakeLists.txt
+ M tests/CMakeLists.txt
+ M tests/architecture/CMakeLists.txt
+ M tests/cli/ZeroMatchGuard.cmake
+ M tests/compile_fail/CMakeLists.txt
+?? .claude/
+?? docs/verification/P18-BALANCE-001/
+?? include/bettercad/thermal/ThermalBalance.hpp
+?? src/thermal/ThermalBalance.cpp
+?? tests/architecture/CheckBalanceOwnership.cmake
+?? tests/architecture/fixtures/balance-gui-recomputes/
+?? tests/architecture/fixtures/balance-lacks-attribution/
+?? tests/architecture/fixtures/balance-reintegrates/
+?? tests/architecture/fixtures/balance-valid/
+?? tests/compile_fail/ThermalBalanceMisuse.cpp
+?? tests/thermal/ThermalBalanceMappedTests.cpp
+?? tests/thermal/ThermalBalanceTestSupport.hpp
+?? tests/thermal/ThermalBalanceTests.cpp

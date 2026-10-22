@@ -1,0 +1,7 @@
+MUTATION BAL21 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp
+  find:        if (!std::isfinite(out.surfaceInto) || !std::isfinite(out.generationInto) || !std::isfinite(out.convectionInto)) {
+  replace:     std::ranges::reverse(out.convections);
+    if (!std::isfinite(out.surfaceInto) || !std::isfinite(out.generationInto) || !std::isfinite(out.convectionInto)) {
+TESTS : test cases:   67 |   63 passed | 4 failed | assertions: 2169 | 2161 passed | 8 failed
+VERDICT: KILLED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp

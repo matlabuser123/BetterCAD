@@ -1,0 +1,284 @@
+Filters: [thermal] [balance]
+Randomness seeded to: 949090025
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+bettercad_tests.exe is a Catch2 v3.16.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+ThermalBalance_RepeatedAggregationDeterministic
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceTests.cpp:918
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceTests.cpp:961: warning:
+  determinism: 25 repeated balances, 0 bitwise differences
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceTests.cpp:962: warning:
+  bit fingerprint, steady combined network balance: 6b81a56797403e0d
+
+-------------------------------------------------------------------------------
+ThermalBalance_SteadyFixedTemperatureAndConvection
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceTests.cpp:434
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceTests.cpp:456: warning:
+  fixed T and convection: 330 K body in 300 K air: convection -120 W, reaction
+  +120 W; 290 K: convection +40 W, reaction -40 W
+
+-------------------------------------------------------------------------------
+ThermalBalance_ReactionSignAnalytical
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceTests.cpp:99
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceTests.cpp:127: warning:
+  reaction sign: g = 2 W/K, 400 K / 300 K: K T = [+200, -200] W; reaction INTO
+  the body = +r = [+200, -200] W; total 0
+
+-------------------------------------------------------------------------------
+ThermalBalance_SteadyGenerationAndConvectionOnTheBlock
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceMappedTests.cpp:260
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceMappedTests.cpp:146: warning:
+  measure steady generation 2.4 W vs convection: gross 4.800000e+00 W,
+  arithmetic 1.368147e+04 W, |B| 2.980e-13 W, |B|/(gross+arithmetic) 2.177e-17,
+  normalized 6.208e-14, status balanced
+
+-------------------------------------------------------------------------------
+ThermalBalance_RepeatedBlockBalanceIsDeterministic
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceMappedTests.cpp:795
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceMappedTests.cpp:810: warning:
+  determinism: 20 repeated block balances, 0 differences
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceMappedTests.cpp:811: warning:
+  bit fingerprint, steady block balance (Dirichlet + convection + surface +
+  generation): ee1e1c859a3999d5
+
+-------------------------------------------------------------------------------
+ThermalBalance_TransientFinalPartialStepUsesActualDt
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceTests.cpp:1009
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceTests.cpp:1052: warning:
+  final partial step: dt_nominal 0.3, dt_actual 0.1: storage rate 10 W (dE = 1
+  J); the nominal-dt rate would be 3.333 W
+
+-------------------------------------------------------------------------------
+ThermalBalance_TransientInsulatedGeneration
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceTests.cpp:675
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceTests.cpp:692: warning:
+  insulated generation: C = 10 J/K, 20 W, dt = 2 s: dT = 4 K, dE = 40 J,
+  storage rate 20 W = generation, residual 0
+
+-------------------------------------------------------------------------------
+ThermalBalance_RemeshStalesBalanceEvenWhenCountsAndIdsAgree
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceMappedTests.cpp:693
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceMappedTests.cpp:743: warning:
+  remesh: 9 nodes and 12 tetrahedra with the same ids in both generations; the
+  old balance is stale and refused, the new one is current
+
+-------------------------------------------------------------------------------
+ThermalBalance_SteadyAppliedSurfaceHeatBalancedByDirichletReactionOnTheBlock
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceMappedTests.cpp:237
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceMappedTests.cpp:146: warning:
+  measure steady surface heat 8 W vs 300 K cap: gross 1.600000e+01 W,
+  arithmetic 1.101511e+04 W, |B| 4.103e-13 W, |B|/(gross+arithmetic) 3.720e-17,
+  normalized 2.565e-14, status balanced
+
+-------------------------------------------------------------------------------
+ThermalBalance_FixedTemperatureAndConvectionOverlapOnOneFace
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceMappedTests.cpp:381
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceMappedTests.cpp:146: warning:
+  measure fixed temperature + convection overlap: gross 5.464110e+02 W,
+  arithmetic 1.282279e+04 W, |B| 3.695e-13 W, |B|/(gross+arithmetic) 2.764e-17,
+  normalized 6.762e-16, status balanced
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceMappedTests.cpp:399: warning:
+  fixed temperature + convection on one face: convection loses 3.205500 W
+  (analytical 3.205500), hot reaction 273.205500 W
+
+-------------------------------------------------------------------------------
+ThermalBalance_AdditiveConvectionBoundariesBothCount
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceMappedTests.cpp:403
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceMappedTests.cpp:146: warning:
+  measure two additive convection conditions on one face: gross 4.800000e+00 W,
+  arithmetic 1.271187e+04 W, |B| 2.496e-13 W, |B|/(gross+arithmetic) 1.963e-17,
+  normalized 5.200e-14, status balanced
+
+-------------------------------------------------------------------------------
+ThermalBalance_SteadyCombinedCategoriesOnMultipleBoundaries
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceMappedTests.cpp:294
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceMappedTests.cpp:146: warning:
+  measure steady combined, two caps + two convections + four loads: gross 3.
+  864703e+02 W, arithmetic 1.337536e+04 W, |B| 2.425e-13 W, |B|/(gross+
+  arithmetic) 1.762e-17, normalized 6.274e-16, status balanced
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceMappedTests.cpp:353: warning:
+  combined steady: surface 1.800000 W, generation 0.960000 W, convection -2.
+  457000 W, reaction -0.303000 W, residual 2.425e-13 W
+
+-------------------------------------------------------------------------------
+ThermalBalance_NonuniformStoredEnergyUsesConsistentCapacity
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceTests.cpp:791
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceTests.cpp:808: warning:
+  consistent capacity: C = [2 1;1 2], dT = [10, -4]: dE = 18 J (diag(C) alone
+  would give 12 J)
+
+-------------------------------------------------------------------------------
+ThermalBalance_AppliedHeatBalancedByDirichletReaction
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceTests.cpp:217
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceTests.cpp:233: warning:
+  applied 100 W + 300 K boundary: K T - Q = [-100, 0], reaction -100 W, T1 =
+  350 K, residual 0
+
+-------------------------------------------------------------------------------
+ThermalBalance_FineCylinderTransientBalanceSmoke
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceMappedTests.cpp:843
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceMappedTests.cpp:146: warning:
+  measure transient fine cylinder, worst of 6 steps: gross 9.363750e+00 W,
+  arithmetic 4.700974e+06 W, |B| 1.187e-11 W, |B|/(gross+arithmetic) 2.524e-18,
+  normalized 1.267e-12, status balanced
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceMappedTests.cpp:871: warning:
+  transient fine cylinder: Ndof 900, 6 steps of 10 s, worst normalized residual
+  1.267e-12; step 1 storage 24.4027 W, reaction 19.9386 W; step 6 storage 0.
+  6618 W, reaction -3.6817 W; integrated external 426.0495 J, stored 426.0495 J
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceMappedTests.cpp:876: warning:
+  bit fingerprint, transient fine cylinder balance: 5a8ba61c30276a46
+
+-------------------------------------------------------------------------------
+ThermalBalance_TransientDirichletReactionIncludesCapacity
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceTests.cpp:737
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceTests.cpp:777: warning:
+  transient reaction: C = [2 1;1 2], dT = [0, -10], K T' = [-20, +20]: r_0 = -
+  10 (storage) - 20 (conduction) = -30 W; the steady formula gives -20
+
+-------------------------------------------------------------------------------
+ThermalBalance_SteadySlabReactionMatchesAnalyticalAndPostFlux
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceMappedTests.cpp:196
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceMappedTests.cpp:146: warning:
+  measure steady slab 400/300 K: gross 5.400000e+02 W, arithmetic 1.281000e+04
+  W, |B| 4.832e-13 W, |B|/(gross+arithmetic) 3.619e-17, normalized 8.948e-16,
+  status balanced
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceMappedTests.cpp:233: warning:
+  steady slab: analytical k A dT/L = 270.000000 W; hot reaction 270.000000000
+  W; cold reaction -270.000000000 W; POST |q| A 270.000000 W
+
+-------------------------------------------------------------------------------
+ThermalBalance_TransientInsulatedGenerationWithAPartialLastStep
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceMappedTests.cpp:428
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceMappedTests.cpp:146: warning:
+  measure transient insulated generation, worst of 15 steps: gross 4.800000e+00
+  W, arithmetic 1.108616e+04 W, |B| 1.902e-12 W, |B|/(gross+arithmetic) 1.715e-
+  16, normalized 3.963e-13, status balanced
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceMappedTests.cpp:469: warning:
+  insulated generation: 15 steps, last dt 2.0 s, per-step storage rate 2.400000
+  W = generation 2.400000 W; integrated external 240.000000 J, stored 240.
+  000000 J, endpoints 240.000000 J
+
+-------------------------------------------------------------------------------
+ThermalBalance_TransientDirichletBlockBalancesEveryStep
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceMappedTests.cpp:475
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceMappedTests.cpp:146: warning:
+  measure transient Dirichlet block, worst step: gross 5.400030e+02 W,
+  arithmetic 1.281000e+04 W, |B| 6.221e-13 W, |B|/(gross+arithmetic) 4.660e-17,
+  normalized 1.152e-15, status balanced
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceMappedTests.cpp:508: warning:
+  transient Dirichlet block: worst normalized residual 1.152e-15; first-step
+  hot reaction 334.3235 W; final-step hot reaction 270.0000 W; stored 1083.3001
+  J
+
+-------------------------------------------------------------------------------
+ThermalBalance_SignConvention
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceTests.cpp:73
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceTests.cpp:96: warning:
+  sign convention: positive = heat INTO the body; q'' = +100 W, q''' = -20 W
+  (sink), reaction = -80 W; residual 0
+
+-------------------------------------------------------------------------------
+ThermalBalance_TransientConvectionCoolingOnTheBlock
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceMappedTests.cpp:513
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceMappedTests.cpp:146: warning:
+  measure transient convection cooling, worst of 10 steps: gross 5.573509e+00
+  W, arithmetic 1.415533e+04 W, |B| 6.404e-13 W, |B|/(gross+arithmetic) 4.522e-
+  17, normalized 1.149e-13, status balanced
+
+-------------------------------------------------------------------------------
+ThermalBalance_FineCylinderSteadyBalanceSmoke
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceMappedTests.cpp:814
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceMappedTests.cpp:146: warning:
+  measure steady fine cylinder: gross 9.447754e+00 W, arithmetic 4.712304e+06
+  W, |B| 9.870e-12 W, |B|/(gross+arithmetic) 2.095e-18, normalized 1.045e-12,
+  status balanced
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceMappedTests.cpp:835: warning:
+  steady fine cylinder: Ndof 900, Nconstrained 144, 1 loads, 142 convection
+  facets, reactions 144, generation 4.522458 W, convection -0.183771 W,
+  reaction -4.338687 W, residual -9.870e-12 W, normalized 1.045e-12
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalBalanceMappedTests.cpp:840: warning:
+  bit fingerprint, steady fine cylinder balance: eb44675aa9d555a1
+
+===============================================================================
+All tests passed (2169 assertions in 67 test cases)
+

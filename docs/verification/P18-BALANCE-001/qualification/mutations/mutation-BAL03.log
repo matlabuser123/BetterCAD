@@ -1,0 +1,15 @@
+MUTATION BAL03 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp
+  find:            out.push_back(ReactionHeat{.dof = constraint.dof, .heatInto = Power::fromSi(heat)});
+    }
+    return out;
+  replace:         out.push_back(ReactionHeat{.dof = constraint.dof, .heatInto = Power::fromSi(heat)});
+    }
+    for (std::size_t i = 0; i < fullResidual.size(); ++i) {
+        if (!constraints.isConstrained(ThermalDofIndex::fromValue(i))) {
+            out.push_back(ReactionHeat{.dof = ThermalDofIndex::fromValue(i), .heatInto = Power::fromSi(fullResidual[i])});
+        }
+    }
+    return out;
+TESTS : test cases:   67 |   49 passed | 18 failed | assertions: 2121 | 2058 passed | 63 failed
+VERDICT: KILLED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp

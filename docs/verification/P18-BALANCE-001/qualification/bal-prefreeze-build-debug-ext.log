@@ -1,0 +1,6 @@
+[1/9] Checking git revision
+[2/6] Linking CXX executable bin\bettercad_example_geometry_accuracy.exe
+[3/6] Building CXX object tests/compile_fail/CMakeFiles/bettercad_cf_thermalbalance_control.dir/ThermalBalanceMisuse.cpp.obj
+[4/6] Linking CXX executable bin\bettercad.exe; Deploying Qt runtime for bettercad
+[5/6] Linking CXX executable bin\bettercad-cli.exe
+[6/6] Linking CXX executable bin\bettercad_example_reference_models.exe

@@ -1,0 +1,19 @@
+MUTATION BAL12b applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp
+  find:        std::expected<Energy, BalanceFailure> stored = storedEnergyChange(*input.capacity, previous, next);
+  replace:     std::expected<Energy, BalanceFailure> stored = [&]() -> std::expected<Energy, BalanceFailure> {
+        std::vector<double> change(n);
+        for (std::size_t i = 0; i < n; ++i) {
+            change[i] = next[i].si() - previous[i].si();
+        }
+        Result<std::vector<double>> cdt = input.capacity->multiply(change);
+        double s = 0.0;
+        for (std::size_t i = 0; i < n; ++i) {
+            if (!input.constraints.isConstrained(ThermalDofIndex::fromValue(i))) {
+                s += (*cdt)[i];
+            }
+        }
+        return Energy::fromSi(s);
+    }();
+TESTS : test cases:   68 |   65 passed |  3 failed | assertions: 2221 | 2190 passed | 31 failed
+VERDICT: KILLED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp

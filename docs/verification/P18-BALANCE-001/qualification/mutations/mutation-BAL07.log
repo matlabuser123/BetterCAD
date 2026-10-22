@@ -1,0 +1,6 @@
+MUTATION BAL07 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp
+  find:            const LoadHeat entry{.load = load.load, .heatInto = load.integrated.heatRate};
+  replace:         const LoadHeat entry{.load = load.load, .heatInto = Power::fromSi(std::abs(load.integrated.heatRate.si()))};
+TESTS : test cases:   67 |   60 passed |  7 failed | assertions: 2169 | 2149 passed | 20 failed
+VERDICT: KILLED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp

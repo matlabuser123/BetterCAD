@@ -1,0 +1,10 @@
+MUTATION BAL19 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp
+  find:        if (!allFinite(r)) {
+        return std::unexpected(failure(BalanceProblem::NonFiniteResidual, ErrorCode::FailedPrecondition,
+                                       "a component of the full residual K T - Q is not finite"));
+  replace:     if (false && !allFinite(r)) {
+        return std::unexpected(failure(BalanceProblem::NonFiniteResidual, ErrorCode::FailedPrecondition,
+                                       "a component of the full residual K T - Q is not finite"));
+TESTS : test cases:   67 |   66 passed | 1 failed | assertions: 2169 | 2167 passed | 2 failed
+VERDICT: KILLED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp

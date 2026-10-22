@@ -1,0 +1,36 @@
+debug-ext | transient Dirichlet block, worst step | gross 5.400030E+002 W | arithmetic 1.281000E+004 W | |B| 6.221E-013 W | ratio 4.660E-017 | normalized 1.152E-015 | balanced
+debug-ext | two additive convection conditions on one face | gross 4.800000E+000 W | arithmetic 1.271187E+004 W | |B| 2.496E-013 W | ratio 1.963E-017 | normalized 5.200E-014 | balanced
+debug-ext | fixed temperature + convection overlap | gross 5.464110E+002 W | arithmetic 1.282279E+004 W | |B| 3.695E-013 W | ratio 2.764E-017 | normalized 6.762E-016 | balanced
+debug-ext | steady combined, two caps + two convections + four loads | gross 3.864703E+002 W | arithmetic 1.337536E+004 W | |B| 2.425E-013 W | ratio 1.762E-017 | normalized 6.274E-016 | balanced
+debug-ext | steady surface heat 8 W vs 300 K cap | gross 1.600000E+001 W | arithmetic 1.101511E+004 W | |B| 4.103E-013 W | ratio 3.720E-017 | normalized 2.565E-014 | balanced
+debug-ext | transient convection cooling, worst of 10 steps | gross 5.573509E+000 W | arithmetic 1.415533E+004 W | |B| 6.404E-013 W | ratio 4.522E-017 | normalized 1.149E-013 | balanced
+debug-ext | transient fine cylinder, worst of 6 steps | gross 9.363750E+000 W | arithmetic 4.700974E+006 W | |B| 1.187E-011 W | ratio 2.524E-018 | normalized 1.267E-012 | balanced
+debug-ext | steady generation 2.4 W vs convection | gross 4.800000E+000 W | arithmetic 1.368147E+004 W | |B| 2.980E-013 W | ratio 2.177E-017 | normalized 6.208E-014 | balanced
+debug-ext | transient insulated generation, worst of 15 steps | gross 4.800000E+000 W | arithmetic 1.108616E+004 W | |B| 1.902E-012 W | ratio 1.715E-016 | normalized 3.963E-013 | balanced
+debug-ext | steady slab 400/300 K | gross 5.400000E+002 W | arithmetic 1.281000E+004 W | |B| 4.832E-013 W | ratio 3.619E-017 | normalized 8.948E-016 | balanced
+debug-ext | steady fine cylinder | gross 9.447754E+000 W | arithmetic 4.712304E+006 W | |B| 9.870E-012 W | ratio 2.095E-018 | normalized 1.045E-012 | balanced
+debug-ext | large cancellation +1e6 W / -1e6 W + 5 W | gross 2.000000E+006 W | arithmetic 2.415000E+003 W | |B| 0.000E+000 W | ratio 0.000E+000 | normalized 0.000E+000 | balanced
+release-ext | steady fine cylinder | gross 9.447754E+000 W | arithmetic 4.712304E+006 W | |B| 9.870E-012 W | ratio 2.095E-018 | normalized 1.045E-012 | balanced
+release-ext | transient Dirichlet block, worst step | gross 5.400030E+002 W | arithmetic 1.281000E+004 W | |B| 6.221E-013 W | ratio 4.660E-017 | normalized 1.152E-015 | balanced
+release-ext | two additive convection conditions on one face | gross 4.800000E+000 W | arithmetic 1.271187E+004 W | |B| 2.496E-013 W | ratio 1.963E-017 | normalized 5.200E-014 | balanced
+release-ext | transient insulated generation, worst of 15 steps | gross 4.800000E+000 W | arithmetic 1.108616E+004 W | |B| 1.902E-012 W | ratio 1.715E-016 | normalized 3.963E-013 | balanced
+release-ext | steady combined, two caps + two convections + four loads | gross 3.864703E+002 W | arithmetic 1.337536E+004 W | |B| 2.425E-013 W | ratio 1.762E-017 | normalized 6.274E-016 | balanced
+release-ext | steady surface heat 8 W vs 300 K cap | gross 1.600000E+001 W | arithmetic 1.101511E+004 W | |B| 4.103E-013 W | ratio 3.720E-017 | normalized 2.565E-014 | balanced
+release-ext | fixed temperature + convection overlap | gross 5.464110E+002 W | arithmetic 1.282279E+004 W | |B| 3.695E-013 W | ratio 2.764E-017 | normalized 6.762E-016 | balanced
+release-ext | transient fine cylinder, worst of 6 steps | gross 9.363750E+000 W | arithmetic 4.700974E+006 W | |B| 1.187E-011 W | ratio 2.524E-018 | normalized 1.267E-012 | balanced
+release-ext | transient convection cooling, worst of 10 steps | gross 5.573509E+000 W | arithmetic 1.415533E+004 W | |B| 6.404E-013 W | ratio 4.522E-017 | normalized 1.149E-013 | balanced
+release-ext | steady slab 400/300 K | gross 5.400000E+002 W | arithmetic 1.281000E+004 W | |B| 4.832E-013 W | ratio 3.619E-017 | normalized 8.948E-016 | balanced
+release-ext | steady generation 2.4 W vs convection | gross 4.800000E+000 W | arithmetic 1.368147E+004 W | |B| 2.980E-013 W | ratio 2.177E-017 | normalized 6.208E-014 | balanced
+release-ext | large cancellation +1e6 W / -1e6 W + 5 W | gross 2.000000E+006 W | arithmetic 2.415000E+003 W | |B| 0.000E+000 W | ratio 0.000E+000 | normalized 0.000E+000 | balanced
+debug-shared-ext | steady combined, two caps + two convections + four loads | gross 3.864703E+002 W | arithmetic 1.337536E+004 W | |B| 2.425E-013 W | ratio 1.762E-017 | normalized 6.274E-016 | balanced
+debug-shared-ext | two additive convection conditions on one face | gross 4.800000E+000 W | arithmetic 1.271187E+004 W | |B| 2.496E-013 W | ratio 1.963E-017 | normalized 5.200E-014 | balanced
+debug-shared-ext | transient insulated generation, worst of 15 steps | gross 4.800000E+000 W | arithmetic 1.108616E+004 W | |B| 1.902E-012 W | ratio 1.715E-016 | normalized 3.963E-013 | balanced
+debug-shared-ext | transient convection cooling, worst of 10 steps | gross 5.573509E+000 W | arithmetic 1.415533E+004 W | |B| 6.404E-013 W | ratio 4.522E-017 | normalized 1.149E-013 | balanced
+debug-shared-ext | transient fine cylinder, worst of 6 steps | gross 9.363750E+000 W | arithmetic 4.700974E+006 W | |B| 1.187E-011 W | ratio 2.524E-018 | normalized 1.267E-012 | balanced
+debug-shared-ext | transient Dirichlet block, worst step | gross 5.400030E+002 W | arithmetic 1.281000E+004 W | |B| 6.221E-013 W | ratio 4.660E-017 | normalized 1.152E-015 | balanced
+debug-shared-ext | fixed temperature + convection overlap | gross 5.464110E+002 W | arithmetic 1.282279E+004 W | |B| 3.695E-013 W | ratio 2.764E-017 | normalized 6.762E-016 | balanced
+debug-shared-ext | steady slab 400/300 K | gross 5.400000E+002 W | arithmetic 1.281000E+004 W | |B| 4.832E-013 W | ratio 3.619E-017 | normalized 8.948E-016 | balanced
+debug-shared-ext | steady generation 2.4 W vs convection | gross 4.800000E+000 W | arithmetic 1.368147E+004 W | |B| 2.980E-013 W | ratio 2.177E-017 | normalized 6.208E-014 | balanced
+debug-shared-ext | steady fine cylinder | gross 9.447754E+000 W | arithmetic 4.712304E+006 W | |B| 9.870E-012 W | ratio 2.095E-018 | normalized 1.045E-012 | balanced
+debug-shared-ext | steady surface heat 8 W vs 300 K cap | gross 1.600000E+001 W | arithmetic 1.101511E+004 W | |B| 4.103E-013 W | ratio 3.720E-017 | normalized 2.565E-014 | balanced
+debug-shared-ext | large cancellation +1e6 W / -1e6 W + 5 W | gross 2.000000E+006 W | arithmetic 2.415000E+003 W | |B| 0.000E+000 W | ratio 0.000E+000 | normalized 0.000E+000 | balanced

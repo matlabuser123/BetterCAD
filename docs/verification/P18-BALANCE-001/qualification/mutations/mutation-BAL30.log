@@ -1,0 +1,6 @@
+MUTATION BAL30 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp
+  find:        if (!same) {
+  replace:     if (false && !same) {
+TESTS : All tests passed (2169 assertions in 67 test cases)
+VERDICT: SURVIVED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp

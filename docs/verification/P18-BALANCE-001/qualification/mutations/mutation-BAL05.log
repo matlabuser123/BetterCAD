@@ -1,0 +1,8 @@
+MUTATION BAL05 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp
+  find:            const std::array<Power, kTri3Nodes> parts = facet.term.residualFrom(face);
+        out += parts[0].si() + parts[1].si() + parts[2].si();
+  replace:         (void)face;
+        out += facet.term.source(0).si() + facet.term.source(1).si() + facet.term.source(2).si();
+TESTS : test cases:   67 |   49 passed | 18 failed | assertions: 2169 | 2073 passed | 96 failed
+VERDICT: KILLED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp

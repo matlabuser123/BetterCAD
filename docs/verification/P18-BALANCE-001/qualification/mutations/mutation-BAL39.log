@@ -1,0 +1,6 @@
+MUTATION BAL39 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp
+  find:            external += dt * into;
+  replace:         external += grid.nominalStep() * into;
+TESTS : test cases:   67 |   65 passed | 2 failed | assertions: 2169 | 2167 passed | 2 failed
+VERDICT: KILLED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp

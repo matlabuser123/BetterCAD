@@ -22,34 +22,37 @@ Prerequisite:
            (OCCT never subdivides a developable wall along its ruling).
 
 Current milestone:
-           none. P18-POST-001 — Temperature / Gradient / Heat Flux Recovery.
-           COMPLETE at 16 of 16 and qualified 2026-10-21 against 7a9ec06 plus
-           the working tree: 4820/4820 x 3 presets, 1739 x 5 in two, 0
-           warnings over 701 objects, 17 stages exit 0, 5h38m59s,
-           fingerprints at the freeze == before == after, first run. Per
-           linear tetrahedron grad(T) = G Te through P18-ELEM-001's published
-           gradient path (G is not reimplemented: an architecture gate and a
-           fixture say so), q = -k grad(T) with the physical sign (heat flows
-           toward lower temperature; conductive only: no convection,
-           generation or storage term), |q| Euclidean; K, K/m, W/m2, W/m2;
-           [x, y, z]; element-constant and unsmoothed; the temperature stays
-           in kelvin and is checked on its own. Keyed through ThermalDofIndex
-           and the mesh element order (a raw NodeId or ElementId is never an
-           index); atomic (one invalid tetrahedron or non-finite value fails
-           the whole recovery; a field below 0 K is refused, closing the
-           limit both solvers recorded). Bound to the solution it came from:
-           a remesh with the same counts and ids is stale, a conductivity edit
-           stales it, a model older than a material edit is refused. Derived
-           only: not canonical, not persisted, no post setting in its source;
-           no GUI recomputation (497 files scanned, 0 violations, a fixture
-           that fails the gate). 40 + 31 + 4 cases, 43 mutation probes (42
-           killed, 1 void, 3 first-pass survivors closed), 529 files and 0
-           layering violations. Evidence: docs/verification/P18-POST-001/.
+           none. P18-BALANCE-001 — Heat / Energy Balance. COMPLETE at 14 of
+           14 and qualified 2026-10-22 against fa15d36 plus the working tree:
+           4927/4927 x 3 presets, 1813 x 5 in two, 0 warnings over 705
+           objects, 17 stages exit 0, 5h24m15s, fingerprints at the freeze ==
+           before == after, first run. The global heat accounting of an
+           accepted solution, positive INTO the body: applied surface heat and
+           volumetric generation from P18-LOAD-001's contributions, convection
+           per condition as -(Kconv T - Qconv), the reaction at every
+           prescribed unknown from the full residual (R = +r, one per unique
+           unknown, never the remainder that closes the books) and, for a
+           transient, the stored energy 1^T C dT of every step with the
+           consistent C and the actual step. The books are checked against the
+           attribution sum Q = sum loads + sum Qconv before any residual is
+           formed, so an omitted or doubled category is refused. Tolerance
+           |B| <= 1e-12 W + 1e-13 (gross + arithmetic), measured: the worst
+           |B|/(gross + arithmetic) over twelve cases is 1.7e-16, 583x inside
+           the policy, bit-identical in three presets. A balance PASS is not
+           a solve PASS. Bound to the solution it came from (a remesh with
+           the same counts and ids is stale); atomic; derived only: not
+           canonical, not persisted, no balance setting in its source; no GUI
+           recomputation (497 files scanned, 0 violations, fixtures that fail
+           the gate). Nothing qualified changed (twenty-five files
+           byte-identical). 69 + 33 + 5 cases, 48 mutation probes (45 killed,
+           1 void, 2 removed, 6 first-pass survivors closed), 531 files and 0
+           layering violations. Evidence: docs/verification/P18-BALANCE-001/.
            P18-ARCH-001 PASSED 2026-10-16; P18-DATA-001, P18-MAT-001,
            P18-DOF-001 PASSED 2026-10-17; P18-ELEM-001, P18-LOAD-001 PASSED
            2026-10-18; P18-BC-001, P18-ASSEMBLY-001 PASSED 2026-10-19/20;
            P18-SOLVE-001 PASSED 2026-10-20; P18-TRANSIENT-001, P18-POST-001
-           PASSED 2026-10-21 (docs/verification/P18-*/).
+           PASSED 2026-10-21; P18-BALANCE-001 PASSED 2026-10-22
+           (docs/verification/P18-*/).
 Qualified:
            P0–P10 — BetterCAD v0.1.0
            P11 — Advanced Part Modelling
@@ -61,8 +64,8 @@ Qualified:
            P17 — Structural FEA
 
 Next:
-           P18-BALANCE-001 — Energy / Heat Balance. NOT AUTHORIZED:
-           P18-POST-001 passing is not permission to start it; each
+           P18-VALID-001 — Thermal Validation / Acceptance. NOT AUTHORIZED:
+           P18-BALANCE-001 passing is not permission to start it; each
            milestone is started by the owner, as every P17 milestone was.
 
 P17 objective, as delivered:
@@ -1061,21 +1064,65 @@ transient   heat input + generation - heat output ≈ rate of stored thermal
             energy
 ```
 
-* [ ] Define heat-flow sign convention
-* [ ] Recover prescribed-temperature reaction heat flow
-* [ ] Sum applied heat flux
-* [ ] Sum volumetric heat generation
-* [ ] Sum convection heat transfer
-* [ ] Validate steady heat balance
-* [ ] Validate transient stored-energy balance
-* [ ] Define tolerances from measurement
-* [ ] Multiple thermal boundaries
-* [ ] Deterministic aggregation
-* [ ] Analytical reference cases
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Define heat-flow sign convention
+* [x] Recover prescribed-temperature reaction heat flow
+* [x] Sum applied heat flux
+* [x] Sum volumetric heat generation
+* [x] Sum convection heat transfer
+* [x] Validate steady heat balance
+* [x] Validate transient stored-energy balance
+* [x] Define tolerances from measurement
+* [x] Multiple thermal boundaries
+* [x] Deterministic aggregation
+* [x] Analytical reference cases
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded
 
+```text
+PASS 2026-10-22. Qualified against fa15d36 plus the working tree: 4927/4927 x 3
+presets, 1813 x 5 in two, 0 warnings over 705 objects, 17 stages exit 0,
+5h24m15s, fingerprints at the freeze == before == after; first run on the
+frozen tree. NOTHING QUALIFIED CHANGED: twenty-five files of the solvers, the
+recovery, the element, the data, the DOF model, the loads, the boundaries and
+the assembly are byte-identical to HEAD.
+FORMULATION: heat is positive INTO the body. The reaction at a prescribed
+unknown is R = +r from the full residual (steady r = K T - Q; transient
+r = C (T1 - T0)/dt + K T1 - Q), one per unique unknown, never the remainder
+that closes the books. Convection per condition is -(Kconv T - Qconv), not the
+ambient source (a 1200 W source for a face that exchanges 0 W at equilibrium).
+Surface heat and generation come from P18-LOAD-001's contributions, the global
+Q is never added on top, and sum Q = sum loads + sum Qconv is checked before
+any residual is formed (an omitted or doubled category is refused). Stored
+energy is 1^T C dT over every row with the consistent C and the ACTUAL step
+(1 J over a 0.1 s last step is 10 W, not 3.33 W). A FinalOnly history of
+several steps is refused; nothing is re-integrated. ORACLES: a g = 2 network at
+400/300 K gives +200 W and -200 W, each asserted alone; the block's Dirichlet
+reaction 270 W once for duplicate temperature conditions (not 540); the
+first-step reaction on the block 334.3 W (it feeds the warm-up); the capacity in
+the transient reaction (-30 W against the steady -20 W; lumped -22.5 W); 18 J
+with the full C against 12 J with diag(C). TOLERANCE: |B| <= 1e-12 W +
+1e-13 (gross + arithmetic), gross being the sum of individual magnitudes so a
++1e6 / -1e6 W cancellation cannot shrink it. MEASURED, twelve cases in three
+presets: worst |B|/(gross + arithmetic) 1.7e-16, the policy 583x above it,
+every allowed residual at least 584x the measured one, identical bits in the
+three presets; an earlier 1e-10 was found 10^6 too loose and tightened. A
+balance PASS is not a solve PASS: K = I, Q = 0, T = [+5, -5] balances with a
+5 W local error; the accepted-solution type is the gate. CURRENTNESS: the
+solution's own comparison; a remesh with the same counts and ids, a load,
+condition, settings, conductivity or time-step edit and a steady/transient
+confusion are refused; a failed recovery leaves an older result stale. DERIVED
+only: not canonical, not persisted, no balance setting in its source; no GUI
+recomputation (CheckBalanceOwnership.cmake: 497 files scanned, 0 violations;
+fixtures that fail it). 69 + 33 + 5 cases, 48 mutation probes (45 killed, 1
+void, 2 removed as redundant, 6 first-pass survivors closed), 36 adversarial
+questions, 12 findings (three defects of the new code, all fixed before the
+freeze), 0 qualified-module defects. Limits recorded: the books closing does
+not prove the physics (P18-VALID-001's); prescribed temperatures are constant
+in time in this version; no reaction per boundary condition; a FinalOnly
+multi-step history cannot be balanced.
+Evidence: docs/verification/P18-BALANCE-001/.
+```
 ---
 # P18-VALID-001
 

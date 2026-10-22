@@ -1,0 +1,9 @@
+MUTATION BAL22 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp
+  find:        const double scale = absoluteSum(input.heat.values()) + std::abs(attributed);
+  replace:     const double scale = absoluteSum(input.heat.values()) + std::abs(attributed);
+    if (scale >= 0.0) {
+        return std::nullopt;
+    }
+TESTS : test cases:   67 |   65 passed | 2 failed | assertions: 2169 | 2165 passed | 4 failed
+VERDICT: KILLED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp

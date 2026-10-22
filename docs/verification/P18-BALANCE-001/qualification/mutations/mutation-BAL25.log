@@ -1,0 +1,10 @@
+MUTATION BAL25 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp
+  find:        if (!(solution.source().system == system.source())) {
+        return std::unexpected(failure(BalanceProblem::SourceMismatch, ErrorCode::FailedPrecondition,
+                                       "the solution was not computed from this assembled system"));
+  replace:     if (false && !(solution.source().system == system.source())) {
+        return std::unexpected(failure(BalanceProblem::SourceMismatch, ErrorCode::FailedPrecondition,
+                                       "the solution was not computed from this assembled system"));
+TESTS : test cases:   67 |   65 passed | 2 failed | assertions: 2168 | 2166 passed | 2 failed
+VERDICT: KILLED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp

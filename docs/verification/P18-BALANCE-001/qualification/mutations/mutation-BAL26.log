@@ -1,0 +1,6 @@
+MUTATION BAL26 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp
+  find:        if (Result<void> current = requireCurrent(solution, document, model, loads, conditions, settings); !current.has_value()) {
+  replace:     if (Result<void> current = requireCurrent(solution, document, model, loads, conditions, settings); false && !current.has_value()) {
+TESTS : test cases:   67 |   65 passed | 2 failed | assertions: 2166 | 2163 passed | 3 failed
+VERDICT: KILLED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp

@@ -1,0 +1,6 @@
+MUTATION BAL23 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp
+  find:        if (system.source().mode != mode) {
+  replace:     if (false && system.source().mode != mode) {
+TESTS : All tests passed (2169 assertions in 67 test cases)
+VERDICT: SURVIVED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp

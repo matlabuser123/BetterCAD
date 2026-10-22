@@ -1,0 +1,6 @@
+MUTATION BAL20 applied to C:\Users\hasib\OneDrive\Desktop\CAD\include\bettercad\thermal\ThermalBalance.hpp
+  find:    inline constexpr double kBalanceRelativeTolerance = 1.0e-13;
+  replace: inline constexpr double kBalanceRelativeTolerance = 1.0e-3;
+TESTS : test cases:   67 |   62 passed | 5 failed | assertions: 2169 | 2161 passed | 8 failed
+VERDICT: KILLED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\include\bettercad\thermal\ThermalBalance.hpp

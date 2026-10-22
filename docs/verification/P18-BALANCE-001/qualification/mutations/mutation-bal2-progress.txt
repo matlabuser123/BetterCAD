@@ -1,0 +1,9 @@
+
+BAL23 | the mode of the system is not checked at the seam | VERDICT: KILLED | TESTS : test cases:   68 |   67 passed | 1 failed | assertions: 2221 | 2220 passed | 1 failed
+BAL24 | a prescribed unknown that does not hold its temperature is accepted | VERDICT: KILLED | TESTS : test cases:   68 |   67 passed | 1 failed | assertions: 2214 | 2213 passed | 1 failed
+BAL27 | the assembled system is not required to be current | VERDICT: KILLED | TESTS : test cases:   68 |   67 passed | 1 failed | assertions: 2221 | 2220 passed | 1 failed
+BAL28 | the prepared loads are not required to be current | VERDICT: KILLED | TESTS : test cases:   68 |   67 passed | 1 failed | assertions: 2221 | 2220 passed | 1 failed
+BAL29 | the prepared boundary is not required to be current | VERDICT: KILLED | TESTS : test cases:   68 |   67 passed | 1 failed | assertions: 2221 | 2220 passed | 1 failed
+BAL47 | a time step in the residual is not validated | VERDICT: KILLED | TESTS : test cases:   68 |   67 passed | 1 failed | assertions: 2221 | 2213 passed | 8 failed
+BAL12b | the stored energy sums only the FREE rows of C dT (the prescribed rows' storage is dropped) | VERDICT: KILLED | TESTS : test cases:   68 |   65 passed |  3 failed | assertions: 2221 | 2190 passed | 31 failed
+DONE

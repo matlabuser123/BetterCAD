@@ -1,0 +1,12 @@
+MUTATION BAL11 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp
+  find:        double sum = 0.0;
+    for (const double row : *cdt) {
+        sum += row;
+    }
+  replace:     double sum = 0.0;
+    for (std::size_t i = 0; i < n; ++i) {
+        sum += capacity.coeffSi(i, i) * change[i];
+    }
+TESTS : test cases:   67 |   55 passed |  12 failed | assertions: 2169 | 2017 passed | 152 failed
+VERDICT: KILLED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp

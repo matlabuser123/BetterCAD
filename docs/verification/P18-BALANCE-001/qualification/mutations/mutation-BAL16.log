@@ -1,0 +1,11 @@
+MUTATION BAL16 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp
+  find:        for (const PreparedConvectionBoundary& condition : input.convections) {
+        std::expected<ConvectionHeat, BalanceFailure> exchanged
+  replace:     for (const PreparedConvectionBoundary& condition : input.convections) {
+        if (&condition == input.convections.data()) {
+            continue;
+        }
+        std::expected<ConvectionHeat, BalanceFailure> exchanged
+TESTS : test cases:   67 |   53 passed | 14 failed | assertions: 2092 | 2026 passed | 66 failed
+VERDICT: KILLED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp

@@ -1,0 +1,6 @@
+MUTATION BAL33 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp
+  find:        if (reasons.empty()) {
+  replace:     if (reasons.empty() || true) {
+TESTS : test cases:   67 |   63 passed |  4 failed | assertions: 2169 | 2159 passed | 10 failed
+VERDICT: KILLED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp

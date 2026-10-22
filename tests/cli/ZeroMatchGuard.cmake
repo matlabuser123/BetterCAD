@@ -242,6 +242,33 @@ set(_filters
     "unit\\.ThermalPost_(LargeMesh|FineCylinder)" 2
     "compile_fail\\.thermalpost\\." 31
     "architecture\\.recovery-ownership" 4
+    # P18-BALANCE-001. The heat accounting, by the brief's groups -- the sign convention and
+    # the reaction sign oracle, the reactions, the categories and their multiple boundaries,
+    # the aggregation, the steady reference suite, the transient reference suite, the
+    # consistent-capacity storage, the actual-dt partial step, the step data a history must
+    # hold, the cancellation and double-count traps, the measured tolerance, the refusals, the
+    # currentness lifecycle and the large models -- plus the compile-fail group that proves a
+    # power is not an energy, K is not C and nothing remainder-shaped, per-condition,
+    # re-integrating or lumped is reachable, and the ownership gate that keeps a viewer from
+    # recomputing the accounting. Each under its own name so a targeted run of any one can be
+    # seen to have matched something.
+    "unit\\.ThermalBalance" 69
+    "unit\\.ThermalBalance_(SignConvention|ReactionSignAnalytical|ConvectionSignAbove|ConvectionSignBelow|ConvectionHeatTransferIs)" 5
+    "unit\\.ThermalBalance_(SteadyDirichletReaction|TwoTemperatureReactionsEqualOpposite|AppliedHeatBalancedByDirichletReaction|FreeResidualsAreNotReactions|DuplicateIdentical|DuplicateTemperatureBoundaries|ConstantTemperatureUnderGeneration|SteadySlabReaction)" 8
+    "unit\\.ThermalBalance_(AppliedSurfaceHeatTotal|VolumetricGenerationTotal|MultipleSurfaceLoads|MultipleConvectionBoundaries|MultipleTemperatureBoundariesAndLoads|AdditiveConvectionBoundaries)" 6
+    "unit\\.ThermalBalance_(PerLoadTotals|PerConvectionTotals|PerReactionTotals|RepeatedAggregation|RepeatedBlockBalance)" 5
+    "unit\\.ThermalBalance_(SteadyPureConduction|SteadyAppliedHeatAndReaction|SteadyGenerationAndConvection|SteadyRobinOnly|SteadyFixedTemperatureAndConvection|SteadyCombinedCategories|SteadyAppliedSurfaceHeat)" 9
+    "unit\\.ThermalBalance_(TransientInsulated|TransientLumped|TransientDirichlet|TransientFullyConstrained|TransientConvectionCooling)" 8
+    "unit\\.ThermalBalance_(TransientStoredEnergyUsesFullC|NonuniformStoredEnergyUsesConsistentCapacity)" 2
+    "unit\\.ThermalBalance_(TransientFinalPartialStep|TransientInsulatedGenerationWithAPartialLastStep)" 2
+    "unit\\.ThermalBalance_(TransientNeedsEveryStep|TransientSeamNeedsEveryStep)" 2
+    "unit\\.ThermalBalance_(GlobalHeatInput|BalanceCannotRescue|AttributionMust|OutOfTolerance|AnIncompleteConstraintMap)" 5
+    "unit\\.ThermalBalance_(ZeroHeatCase|LargeCancellationScale|MeasuredTolerancePolicy|TolerancePolicyConstantsArePinned)" 4
+    "unit\\.ThermalBalance_(RefusesWhat|EveryDiagnostic|DiagnosticNames|SeamRefuses|SparseNodeIds)" 5
+    "unit\\.ThermalBalance_(RejectsStale|RejectsMismatched|RemeshStales|FailedRecovery|RecoveryDoesNotMutate)" 6
+    "unit\\.ThermalBalance_FineCylinder" 2
+    "compile_fail\\.thermalbalance\\." 33
+    "architecture\\.balance-ownership" 5
 )
 list(LENGTH _filters _count)
 math(EXPR _last "${_count} - 1")

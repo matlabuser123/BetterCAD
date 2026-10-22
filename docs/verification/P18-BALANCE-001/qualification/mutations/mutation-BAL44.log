@@ -1,0 +1,6 @@
+MUTATION BAL44 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp
+  find:            if (state.status != BalanceStatus::Balanced) {
+  replace:         if (false && state.status != BalanceStatus::Balanced) {
+TESTS : test cases:   67 |   66 passed | 1 failed | assertions: 2169 | 2168 passed | 1 failed
+VERDICT: KILLED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp

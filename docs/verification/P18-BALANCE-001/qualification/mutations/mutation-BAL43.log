@@ -1,0 +1,6 @@
+MUTATION BAL43 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp
+  find:            if (load.kind == ThermalLoadKind::SurfaceHeatFlux) {
+  replace:         if (load.kind == ThermalLoadKind::VolumetricHeatSource) {
+TESTS : test cases:   67 |   46 passed | 21 failed | assertions: 2150 | 2103 passed | 47 failed
+VERDICT: KILLED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp

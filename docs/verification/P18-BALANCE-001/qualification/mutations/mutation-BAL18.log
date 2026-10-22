@@ -1,0 +1,9 @@
+MUTATION BAL18 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp
+  find:    Power ThermalHeatBalance::grossScale() const noexcept {
+  replace: Power ThermalHeatBalance::grossScale() const noexcept {
+    if (true) {
+        return terms.scale();
+    }
+TESTS : test cases:   67 |   66 passed | 1 failed | assertions: 2169 | 2168 passed | 1 failed
+VERDICT: KILLED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp

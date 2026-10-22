@@ -1,0 +1,12 @@
+MUTATION BAL45 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp
+  find:        if (input.capacity != nullptr) {
+        return std::unexpected(failure(BalanceProblem::ModeMismatch, ErrorCode::FailedPrecondition,
+                                       "a steady balance was asked of an algebra that carries a capacity"));
+    }
+  replace:     if (false) {
+        return std::unexpected(failure(BalanceProblem::ModeMismatch, ErrorCode::FailedPrecondition,
+                                       "a steady balance was asked of an algebra that carries a capacity"));
+    }
+TESTS : test cases:   67 |   66 passed | 1 failed | assertions: 2169 | 2168 passed | 1 failed
+VERDICT: KILLED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp

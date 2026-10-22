@@ -1,0 +1,49 @@
+
+BAL01 | the reaction sign is flipped: R = -r | VERDICT: KILLED | TESTS : test cases:   67 |   39 passed |  28 failed | assertions: 2169 | 2060 passed | 109 failed
+BAL02 | the reaction is defined as whatever closes the balance (the remainder) | VERDICT: KILLED | TESTS : test cases:   67 |   60 passed |  7 failed | assertions: 2169 | 2155 passed | 14 failed
+BAL03 | the free rows are counted as reactions too | VERDICT: KILLED | TESTS : test cases:   67 |   49 passed | 18 failed | assertions: 2121 | 2058 passed | 63 failed
+BAL04 | each prescribed unknown is counted twice | VERDICT: KILLED | TESTS : test cases:   67 |   38 passed |  29 failed | assertions: 2125 | 2019 passed | 106 failed
+BAL05 | the convection is the ambient source Qconv alone | VERDICT: KILLED | TESTS : test cases:   67 |   49 passed | 18 failed | assertions: 2169 | 2073 passed | 96 failed
+BAL06 | the convection sign is reversed (outward counted as into the body) | VERDICT: KILLED | TESTS : test cases:   67 |   52 passed | 15 failed | assertions: 2169 | 2077 passed | 92 failed
+BAL07 | the surface load totals are made absolute | VERDICT: KILLED | TESTS : test cases:   67 |   60 passed |  7 failed | assertions: 2169 | 2149 passed | 20 failed
+BAL08 | the generation totals are made absolute | VERDICT: KILLED | TESTS : test cases:   67 |   64 passed | 3 failed | assertions: 2169 | 2161 passed | 8 failed
+BAL09 | the global heat input is added on top of the explicit categories | VERDICT: KILLED | TESTS : test cases:   67 |   42 passed | 25 failed | assertions: 2169 | 2114 passed | 55 failed
+BAL10 | the transient residual omits the storage term C dT/dt | VERDICT: KILLED | TESTS : test cases:   67 |   64 passed |  3 failed | assertions: 2169 | 2138 passed | 31 failed
+BAL11 | the stored energy uses diag(C) only | VERDICT: KILLED | TESTS : test cases:   67 |   55 passed |  12 failed | assertions: 2169 | 2017 passed | 152 failed
+BAL12 | the stored energy leaves out the prescribed unknowns | VERDICT: SURVIVED | TESTS : All tests passed (2169 assertions in 67 test cases)
+BAL13 | the nominal step is used where the actual one belongs | VERDICT: KILLED | TESTS : test cases:   67 |   64 passed |  3 failed | assertions: 2169 | 2151 passed | 18 failed
+BAL14 | the convection of a step is evaluated at T[n] instead of T[n+1] | VERDICT: KILLED | TESTS : test cases:   67 |   64 passed |  3 failed | assertions: 2169 | 2124 passed | 45 failed
+BAL15 | an output interval is accepted as an integration step (FinalOnly over many steps) | VERDICT: KILLED | TESTS : test cases:   67 |   65 passed | 2 failed | assertions: 2146 | 2144 passed | 2 failed
+BAL16 | the first convection condition is skipped | VERDICT: KILLED | TESTS : test cases:   67 |   53 passed | 14 failed | assertions: 2092 | 2026 passed | 66 failed
+BAL17 | the first load is skipped | VERDICT: KILLED | TESTS : test cases:   67 |   38 passed |  29 failed | assertions: 2116 | 1995 passed | 121 failed
+BAL18 | the gross scale is the category-level scale (cancelling loads vanish from it) | VERDICT: KILLED | TESTS : test cases:   67 |   66 passed | 1 failed | assertions: 2169 | 2168 passed | 1 failed
+BAL19 | a non-finite residual component is accepted (steady) | VERDICT: KILLED | TESTS : test cases:   67 |   66 passed | 1 failed | assertions: 2169 | 2167 passed | 2 failed
+BAL20 | the relative tolerance is loosened to 1e-3 | VERDICT: KILLED | TESTS : test cases:   67 |   62 passed | 5 failed | assertions: 2169 | 2161 passed | 8 failed
+BAL21 | the convection conditions are listed in reverse order | VERDICT: KILLED | TESTS : test cases:   67 |   63 passed | 4 failed | assertions: 2169 | 2161 passed | 8 failed
+BAL22 | the attribution check is skipped | VERDICT: KILLED | TESTS : test cases:   67 |   65 passed | 2 failed | assertions: 2169 | 2165 passed | 4 failed
+BAL23 | the mode of the system is not checked at the seam | VERDICT: SURVIVED | TESTS : All tests passed (2169 assertions in 67 test cases)
+BAL24 | a prescribed unknown that does not hold its temperature is accepted | VERDICT: SURVIVED | TESTS : All tests passed (2169 assertions in 67 test cases)
+BAL25 | the system is not compared with the solution's own (steady seam) | VERDICT: KILLED | TESTS : test cases:   67 |   65 passed | 2 failed | assertions: 2168 | 2166 passed | 2 failed
+BAL26 | the steady solution is not required to be current | VERDICT: KILLED | TESTS : test cases:   67 |   65 passed | 2 failed | assertions: 2166 | 2163 passed | 3 failed
+BAL27 | the assembled system is not required to be current | VERDICT: SURVIVED | TESTS : All tests passed (2169 assertions in 67 test cases)
+BAL28 | the prepared loads are not required to be current | VERDICT: SURVIVED | TESTS : All tests passed (2169 assertions in 67 test cases)
+BAL29 | the prepared boundary is not required to be current | VERDICT: SURVIVED | TESTS : All tests passed (2169 assertions in 67 test cases)
+BAL30 | the prepared convection conditions are not compared with the system's | VERDICT: SURVIVED | TESTS : All tests passed (2169 assertions in 67 test cases)
+BAL31 | a transient balance may be asked about as steady (mode check removed) | VERDICT: KILLED | TESTS : test cases:   67 |   66 passed | 1 failed | assertions: 2169 | 2168 passed | 1 failed
+BAL32 | a steady balance may be asked about as transient (mode check removed) | VERDICT: KILLED | TESTS : test cases:   67 |   66 passed | 1 failed | assertions: 2169 | 2168 passed | 1 failed
+BAL33 | a held balance is always judged current (stale reasons ignored) | VERDICT: KILLED | TESTS : test cases:   67 |   63 passed |  4 failed | assertions: 2169 | 2159 passed | 10 failed
+BAL34 | the storage rate divides by 1 s instead of the step | VERDICT: KILLED | TESTS : test cases:   67 |   60 passed |   7 failed | assertions: 2169 | 2060 passed | 109 failed
+BAL35 | the stored energy has the wrong sign | VERDICT: KILLED | TESTS : test cases:   67 |   55 passed |  12 failed | assertions: 2169 | 2009 passed | 160 failed
+BAL36 | the status is always Balanced | VERDICT: KILLED | TESTS : test cases:   67 |   63 passed | 4 failed | assertions: 2169 | 2164 passed | 5 failed
+BAL37 | the steady residual is K T + Q | VERDICT: KILLED | TESTS : test cases:   67 |   58 passed |  9 failed | assertions: 2169 | 2131 passed | 38 failed
+BAL38 | the arithmetic scale is dropped from the tolerance | VERDICT: KILLED | TESTS : test cases:   67 |   62 passed | 5 failed | assertions: 2169 | 2163 passed | 6 failed
+BAL39 | the integrated external energy uses the nominal step | VERDICT: KILLED | TESTS : test cases:   67 |   65 passed | 2 failed | assertions: 2169 | 2167 passed | 2 failed
+BAL40 | the step number is not recorded | VERDICT: KILLED | TESTS : test cases:   67 |   65 passed |  2 failed | assertions: 2169 | 2153 passed | 16 failed
+BAL41 | a step is stamped with the time of its start | VERDICT: KILLED | TESTS : test cases:   67 |   65 passed |  2 failed | assertions: 2169 | 2153 passed | 16 failed
+BAL42 | the reactions are listed in reverse order | VERDICT: KILLED | TESTS : test cases:   67 |   65 passed | 2 failed | assertions: 2169 | 2165 passed | 4 failed
+BAL43 | surface and generation loads are swapped | VERDICT: KILLED | TESTS : test cases:   67 |   46 passed | 21 failed | assertions: 2150 | 2103 passed | 47 failed
+BAL44 | balanced() ignores the state statuses | VERDICT: KILLED | TESTS : test cases:   67 |   66 passed | 1 failed | assertions: 2169 | 2168 passed | 1 failed
+BAL45 | the steady balance accepts a capacity-bearing algebra (mode check removed) | VERDICT: KILLED | TESTS : test cases:   67 |   66 passed | 1 failed | assertions: 2169 | 2168 passed | 1 failed
+BAL46 | a transient step balance does not validate the time step | VERDICT: SURVIVED | TESTS : All tests passed (2169 assertions in 67 test cases)
+BAL47 | a time step in the residual is not validated | VERDICT: SURVIVED | TESTS : All tests passed (2169 assertions in 67 test cases)
+DONE

@@ -1,0 +1,6 @@
+MUTATION BAL13 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp
+  find:            const double dt = grid.stepAt(k - 1);
+  replace:         const double dt = grid.nominalStep();
+TESTS : test cases:   67 |   64 passed |  3 failed | assertions: 2169 | 2151 passed | 18 failed
+VERDICT: KILLED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp

@@ -1211,3 +1211,60 @@ foreach(_case
     bettercad_compile_fail_case(thermalpost "${_thermalpost}" ${_case}
         "read-only|discards qualifiers|no match for|passing .const" BetterCAD::thermal)
 endforeach()
+
+# The heat balance (P18-BALANCE-001). Five claims are enforced: the numbers are dimensioned (W is not J, K
+# is not C, a bare double is neither, a heat rate is not a temperature); the identity spaces do not mix (a
+# prescribed unknown, a load and a condition are not node handles or each other); a balance cannot be conjured
+# or edited; it has no remainder reaction that closes the books, no per-condition split of a shared reaction,
+# no flux or gradient, no Celsius, no re-integration, no validation verdict, no persistence, no tolerance or
+# view setting, no time-dependent load and no lumped capacity; and it is neither a ThermalResult nor a
+# post result.
+set(_thermalbalance "${CMAKE_CURRENT_SOURCE_DIR}/ThermalBalanceMisuse.cpp")
+bettercad_compile_fail_group(thermalbalance "${_thermalbalance}" BetterCAD::thermal)
+foreach(_case
+        A_POWER_IS_NOT_AN_ENERGY
+        AN_ENERGY_IS_NOT_A_POWER
+        A_HEAT_RATE_IS_NOT_A_TEMPERATURE
+        A_BARE_DOUBLE_IS_NOT_A_POWER
+        A_BARE_DOUBLE_IS_NOT_AN_ENERGY
+        A_DOF_INDEX_IS_NOT_A_NODE_ID
+        A_LOAD_ID_IS_NOT_A_CONDITION_ID
+        A_NODE_ID_IS_NOT_A_LOAD_ID
+        A_CAPACITY_IS_NOT_A_CONDUCTANCE
+        A_CONDUCTANCE_IS_NOT_A_CAPACITY
+        A_SOLVER_SOURCE_IS_NOT_A_BALANCE_SOURCE
+        A_BALANCE_RESULT_IS_NOT_A_THERMAL_RESULT
+        A_BALANCE_RESULT_IS_NOT_A_POST_RESULT
+        A_LOAD_HEAT_IS_NOT_A_CONVECTION_HEAT)
+    bettercad_compile_fail_case(thermalbalance "${_thermalbalance}" ${_case}
+        "could not convert|cannot convert|no matching function|no match for|invalid conversion|invalid initialization of reference|conversion from|no known conversion"
+        BetterCAD::thermal)
+endforeach()
+bettercad_compile_fail_case(thermalbalance "${_thermalbalance}" A_BALANCE_RESULT_CONSTRUCTED_DIRECTLY
+    "is private within this context|private" BetterCAD::thermal)
+foreach(_case
+        THE_RESULT_HAS_NO_REMAINDER_REACTION
+        THE_RESULT_HAS_NO_PER_CONDITION_REACTION
+        THE_RESULT_HAS_NO_CELSIUS
+        THE_RESULT_HAS_NO_HEAT_FLUX
+        THE_RESULT_HAS_NO_GRADIENT
+        THE_RESULT_HAS_NO_TIME_INTEGRATION
+        THE_RESULT_HAS_NO_VALIDATION_VERDICT
+        THE_RESULT_HAS_NO_PERSISTENCE
+        THE_SOURCE_HAS_NO_TOLERANCE_SETTING
+        THE_SOURCE_HAS_NO_COLOUR_MAP
+        THE_SOURCE_HAS_NO_COMPONENT_SELECTION
+        THE_ALGEBRA_HAS_NO_TIME_FUNCTION
+        THE_ALGEBRA_HAS_NO_LUMPING)
+    bettercad_compile_fail_case(thermalbalance "${_thermalbalance}" ${_case}
+        "no member named|has no member" BetterCAD::thermal)
+endforeach()
+foreach(_case
+        THE_STATES_ARE_READ_ONLY
+        THE_REACTIONS_ARE_READ_ONLY
+        THE_TERMS_ARE_READ_ONLY
+        THE_INTEGRATED_ENERGY_IS_READ_ONLY
+        THE_SOURCE_IS_READ_ONLY)
+    bettercad_compile_fail_case(thermalbalance "${_thermalbalance}" ${_case}
+        "read-only|discards qualifiers|no match for|passing .const" BetterCAD::thermal)
+endforeach()

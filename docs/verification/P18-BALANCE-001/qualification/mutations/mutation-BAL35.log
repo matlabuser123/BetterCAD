@@ -1,0 +1,6 @@
+MUTATION BAL35 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp
+  find:        return Energy::fromSi(sum);
+  replace:     return Energy::fromSi(-sum);
+TESTS : test cases:   67 |   55 passed |  12 failed | assertions: 2169 | 2009 passed | 160 failed
+VERDICT: KILLED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp

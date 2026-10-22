@@ -1,0 +1,6 @@
+MUTATION BAL14 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp
+  find:        std::expected<CategoryTotals, BalanceFailure> categories = categoriesOf(input, next, step);
+  replace:     std::expected<CategoryTotals, BalanceFailure> categories = categoriesOf(input, previous, step);
+TESTS : test cases:   67 |   64 passed |  3 failed | assertions: 2169 | 2124 passed | 45 failed
+VERDICT: KILLED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp

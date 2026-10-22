@@ -1,0 +1,6 @@
+MUTATION BAL02 applied to C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp
+  find:        out.terms.prescribedTemperatureReaction = Power::fromSi(reactionInto);
+  replace:     out.terms.prescribedTemperatureReaction = Power::fromSi(-(categories.surfaceInto + categories.generationInto + categories.convectionInto) + (stored.has_value() ? stored->si() / timeStep : 0.0));
+TESTS : test cases:   67 |   60 passed |  7 failed | assertions: 2169 | 2155 passed | 14 failed
+VERDICT: KILLED
+restored C:\Users\hasib\OneDrive\Desktop\CAD\src\thermal\ThermalBalance.cpp
