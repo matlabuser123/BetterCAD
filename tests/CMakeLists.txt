@@ -80,6 +80,10 @@ bettercad_add_executable(bettercad_tests
         thermal/ThermalTransientMappedTests.cpp
         thermal/ThermalTransientTestSupport.hpp
         thermal/ThermalTransientTests.cpp
+        thermal/ThermalValidationLawTests.cpp
+        thermal/ThermalValidationMappedTests.cpp
+        thermal/ThermalValidationTestSupport.hpp
+        thermal/ThermalValidationTests.cpp
         linalg/SymmetricSolveTests.cpp
         drawing/AnnotationTests.cpp
         drawing/AssemblyDrawingTests.cpp
@@ -345,6 +349,7 @@ if(TARGET bettercad_reference_models)
         reference/StructuralPostReferenceTests.cpp
         reference/StructuralReactionReferenceTests.cpp
         reference/StructuralValidationSweepTests.cpp
+        reference/ThermalValidationSweepTests.cpp
         reference/StructuralLoadReferenceTests.cpp
         reference/StructuralModelsTests.cpp
         reference/StructuralTestSupport.hpp

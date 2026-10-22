@@ -107,8 +107,9 @@ milestones PASS, 4009/4009 tests in three presets, qualified tree ==
 committed tree. P18-ARCH-001 (2026-10-16), P18-DATA-001, P18-MAT-001 and
 P18-DOF-001 (2026-10-17), P18-ELEM-001 and P18-LOAD-001 (2026-10-18),
 P18-BC-001 (2026-10-19), P18-ASSEMBLY-001 and P18-SOLVE-001 (2026-10-20),
-P18-TRANSIENT-001 and P18-POST-001 (2026-10-21) and P18-BALANCE-001 (2026-10-22)
-have PASSED; P18-VALID-001 is next and not yet authorized; see TODO.md.
+P18-TRANSIENT-001 and P18-POST-001 (2026-10-21), P18-BALANCE-001 (2026-10-22) and
+P18-VALID-001 (2026-10-23) have PASSED; P18-VIZ-001 is next and not yet authorized;
+see TODO.md.
 ```
 
 Released: `v0.1.0` — Foundation.

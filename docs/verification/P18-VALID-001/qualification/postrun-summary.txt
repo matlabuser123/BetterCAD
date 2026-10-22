@@ -1,0 +1,242 @@
+postrun-valid started 2026-10-23T04:42:49.7378317+10:00
+== layering checker on the source tree
+-- Architecture check passed: 533 files, 0 violations
+== validation ownership checker on the source tree
+-- Validation ownership check passed: 497 files outside the thermal module scanned, 0 violations
+== warnings and errors in the harness build logs
+  debug-ext : warning: 0  error: 0  objects 711  last step [735/735] Linking CXX executable bin\bettercad_tests.exe
+  debug-ext no-op rebuild edges: 1
+  debug-ext clean: [1/2] Cleaning additional files... [2/2] Cleaning all built files... Cleaning... 734 files.
+  debug-ext ctest: 100% tests passed out of 5106 | Total Test time (real) = 3774.59 sec
+  release-ext : warning: 0  error: 0  objects 711  last step [735/735] Building CXX object tests/compile_fail/CMakeFiles/bettercad_cf_thermalvalidation_control.dir/ThermalValidationMisuse.cpp.obj
+  release-ext no-op rebuild edges: 1
+  release-ext clean: [1/2] Cleaning additional files... [2/2] Cleaning all built files... Cleaning... 728 files.
+  release-ext ctest: 100% tests passed out of 5106 | Total Test time (real) = 3509.63 sec
+  debug-shared-ext : warning: 0  error: 0  objects 711  last step [735/735] Linking CXX executable bin\bettercad_tests.exe
+  debug-shared-ext no-op rebuild edges: 1
+  debug-shared-ext clean: [1/2] Cleaning additional files... [2/2] Cleaning all built files... Cleaning... 740 files.
+  debug-shared-ext ctest: 100% tests passed out of 5106 | Total Test time (real) = 3769.77 sec
+  repeat release-ext : 100% tests passed out of 1959 | Total Test time (real) = 1211.75 sec
+  repeat debug-ext : 100% tests passed out of 1959 | Total Test time (real) = 1348.31 sec
+== harness stderr lines: 266
+== non-CRLF stderr lines: 0
+== debug-ext
+  bettercad-cli.exe 368790973 ac3fe1ea1aa7458d59555399323a8daf2bd3994d57a1246e4397a2bab7938b3f
+  bettercad_example_reference_models.exe 373453474 2e57baa0bf8a13104a842f086c8bfccbb1bf0ee06285f45b428f4ff51ca988f8
+  bettercad_tests.exe 1329753853 841072efbeea9ef32e729ac8882879dcb5c3df97c86e3eaae3926792eafc91c9
+  ctest -N: Total Tests: 5106
+  ctest -N -R unit\.ThermalValidation : Total Tests: 138
+  ctest -N -R unit\.ThermalValidation_(PolicyIsAccepted|PolicyConstantsArePinned|PolicyFingerprint|SeverityIsAFunction|EveryRuleHasAStableId) : Total Tests: 5
+  ctest -N -R unit\.ThermalValidation_(StatusAndCountsAreDerived|ASkippedRuleIsNeverAPass|SolveAcceptedIsNot|ModeSpecificChecks) : Total Tests: 4
+  ctest -N -R unit\.ThermalValidation_(RejectsAnInvertedTetrahedron|RejectsADegenerateTetrahedron|ANotANumberMetricIsInvalid|AcceptsAWellShaped|ThermalMeshQualityWarning|ThermalMeshQualityReject$|ReportsTheNumberOfElements|ComparesStrictly|WarnsAboutAContradictory|ReusesP16Metrics|RejectionByThermalPolicy) : Total Tests: 11
+  ctest -N -R unit\.ThermalValidation_(ThermalMeshQualityRejectOnARealMesh|TheAspectRatioBoundCatches|QualifiedReferenceMeshesAreAccepted|AcceptsEveryQualifiedReferenceMesh|TheEnvelopeBoundsAreTheMeasuredWorstCase|RejectsAMeshWhoseSizingIntent|RejectsMissingMesh|RejectsStaleMesh|AWarningOnly) : Total Tests: 9
+  ctest -N -R unit\.ThermalValidation_(MeasuresHow|TheBoundsGuarantee) : Total Tests: 3
+  ctest -N -R unit\.ThermalValidation_(SteadyRequiresConductivityOnly|TransientRequiresConductivityDensitySpecificHeat|RejectsMissingMaterial|RejectsAMaterialWithoutAConductivity|NonFiniteAndNonPositive) : Total Tests: 5
+  ctest -N -R unit\.ThermalValidation_(RejectsUnresolved|NoLoadsIsNot|AZeroMagnitudeLoad|RejectsConflicting|IdenticalDuplicate|InvalidConvection) : Total Tests: 7
+  ctest -N -R unit\.ThermalValidation_(RejectsSameCounts|RejectsSameIds|RejectsMismatchedAssembly|EveryEditStales|EveryTransientEditStales|InputEditStales|FailedResolve|ANewSolveThatFails|RejectsAMissingAnalysis) : Total Tests: 9
+  ctest -N -R unit\.ThermalValidation_(SteadyPureNeumann|SteadyDirichlet|SteadyRobin|FullyPrescribedSteady|FullyConstrainedSteadyPasses|DisconnectedUnanchored|DisconnectedAllAnchored|TransientPureNeumann|TransientDisconnected|TransientMissingCapacity|TransientCapacityMust|TheValidatorAndTheSolverAgree) : Total Tests: 16
+  ctest -N -R unit\.ThermalValidation_(AcceptsQualifiedSteadyResidual|RejectsBadSteadyResidual|SolverSuccessDoesNotOverride|ResidualIsJudgedAgainst|ANotANumberResidual|RejectsAPrescribedTemperatureThatIsNotHeld|RejectsAPivotRatio|RejectsInvalidSolverSettings|FullyConstrainedSteadyResidual|ASteadyFieldOfTheWrongSize|AcceptsQualifiedTransientResiduals|RejectsAnyBadTransientStep|TheFinalPartialStep|FinalOnlyHistoriesAreJudged|ASingleStepFinalOnlyRun|ANotANumberTransientRecord|ATransientHistoryWithTheWrongNumber|TransientResidualsUseTheCanonical) : Total Tests: 18
+  ctest -N -R unit\.ThermalValidation_(AcceptsQualifiedSteadyBalance|RejectsBadSteadyBalance|BalanceIsJudgedByBalances|ABalanceThatRecordsItself|RejectsNonFiniteBalance|ABalanceWithTheWrongNumber|EveryStepOfATransientBalance|BalancePassDoesNotOverride|ResidualPassDoesNotOverride) : Total Tests: 9
+  ctest -N -R unit\.ThermalValidation_(RejectsNonFiniteTemperature|RejectsATemperatureBelow|RejectsAStateOfTheWrongSize|EveryNonFiniteState|AcceptsAFiniteComplete|RejectsNonFiniteGradient|RejectsNonFiniteHeatFlux|RejectsAMissingElementResult|RejectsRecoveredTemperatures|RejectsARecoveredResultWithTheWrong) : Total Tests: 10
+  ctest -N -R unit\.ThermalValidation_(AcceptsValidTransientSetup|RejectsInvalidInitialTemperature|RejectsInvalidTimeSettings|RejectsTimeSettingsPastTheResourceGuard|AFinalOnlyHistoryOfSeveralSteps|ASingleStepFinalOnlyTransientIsFully) : Total Tests: 6
+  ctest -N -R unit\.ThermalValidation_(ValidSteadyAnalysisPasses|ValidTransientAnalysisPasses|ValidationIsReadOnly|ReportOrderingAndContents|RepeatedReportsOfEveryClass|PrimaryFailureReason) : Total Tests: 6
+  ctest -N -R unit\.ThermalValidation_(EvidenceOfAQualified|APerturbedFreeTemperature|ACorruptedBalanceFailsTheBalanceAlone|ANotANumberTemperatureFailsTheFinitenessGate|ANotANumberHeatFluxFailsThePostGate|ABalanceThatCancelsDoes|AResidualThatPassesDoesNotRescue|ABalanceMissingACategory|ATransientHistoryWithAPerturbedMiddleState|ATransientHistoryWithAWrongStateCount|AnAbsentSolutionOrRecordedFailure) : Total Tests: 11
+  ctest -N -R compile_fail\.thermalvalidation\. : Total Tests: 33
+  ctest -N -R architecture\.validation-ownership : Total Tests: 8
+  ctest -N -R unit\.ThermalBalance : Total Tests: 69
+  ctest -N -R compile_fail\.thermalbalance\. : Total Tests: 33
+  ctest -N -R architecture\.balance-ownership : Total Tests: 5
+  ctest -N -R unit\.ThermalPost : Total Tests: 40
+  ctest -N -R compile_fail\.thermalpost\. : Total Tests: 31
+  ctest -N -R architecture\.recovery-ownership : Total Tests: 4
+  ctest -N -R unit\.ThermalTransient : Total Tests: 72
+  ctest -N -R compile_fail\.thermaltransient\. : Total Tests: 35
+  ctest -N -R unit\.ThermalSolve : Total Tests: 51
+  ctest -N -R unit\.Linalg_ : Total Tests: 10
+  ctest -N -R compile_fail\.thermalsolve\. : Total Tests: 26
+  ctest -N -R architecture\.targets\. : Total Tests: 3
+  ctest -N -R architecture\.checker\.linalg : Total Tests: 2
+  ctest -N -R unit\.ThermalAssembly : Total Tests: 62
+  ctest -N -R compile_fail\.thermalsys\. : Total Tests: 36
+  ctest -N -R unit\.ThermalBC : Total Tests: 92
+  ctest -N -R unit\.ThermalLoad : Total Tests: 66
+  ctest -N -R unit\.ThermalElement : Total Tests: 60
+  ctest -N -R unit\.ThermalDof : Total Tests: 33
+  ctest -N -R unit\.ThermalMaterial : Total Tests: 31
+  ctest -N -R unit\.ThermalData : Total Tests: 36
+  ctest -N -R unit\.Thermal : Total Tests: 785
+  ctest -N -R unit\.Structural : Total Tests: 431
+  ctest -N -R unit\.Tet4Element : Total Tests: 29
+  ctest -N -R compile_fail\.structsolve : Total Tests: 6
+  ctest -N -R ^architecture\. : Total Tests: 41
+  ThermalValidation_* : <OverallResultsCases successes="138" failures="0" expectedFailures="0" skips="0"/>  <OverallResults successes="506" failures="0" expectedFailures="0" skipped="false"/>
+  evidence lines: 607
+  ThermalBalance_* exit 0 : All tests passed (2240 assertions in 69 test cases)
+  ThermalPost_* exit 0 : All tests passed (38910 assertions in 40 test cases)
+  ThermalTransient_* exit 0 : All tests passed (105966 assertions in 72 test cases)
+  ThermalSolve_* exit 0 : All tests passed (39532 assertions in 51 test cases)
+  Linalg_* exit 0 : All tests passed (171 assertions in 10 test cases)
+  ThermalAssembly_* exit 0 : All tests passed (220586 assertions in 62 test cases)
+  ThermalBC_* exit 0 : All tests passed (4785 assertions in 92 test cases)
+  ThermalLoad_* exit 0 : All tests passed (21588 assertions in 66 test cases)
+  ThermalElement_* exit 0 : All tests passed (11402 assertions in 60 test cases)
+  [thermal][dof] exit 0 : All tests passed (21480 assertions in 33 test cases)
+  [thermal][material] exit 0 : All tests passed (2250 assertions in 38 test cases)
+  [thermal][data] exit 0 : All tests passed (2349 assertions in 36 test cases)
+  [structural] exit 0 : All tests passed (271414 assertions in 415 test cases)
+  [meshing] exit 0 : All tests passed (95088 assertions in 364 test cases)
+== release-ext
+  bettercad-cli.exe 10150220 b6a0abf7f2b61383ca2052644797a543f62fde2906d1f2a70c48c87b7c216663
+  bettercad_example_reference_models.exe 9533566 a0a448f8c699da76b473a99d7fa2b68b21308f392441090eb7ac49f72d6a4153
+  bettercad_tests.exe 56453282 c6df9009878fbb35de801b4485a0b8c7f307384e6d41be231435739577690759
+  ctest -N: Total Tests: 5106
+  ctest -N -R unit\.ThermalValidation : Total Tests: 138
+  ctest -N -R unit\.ThermalValidation_(PolicyIsAccepted|PolicyConstantsArePinned|PolicyFingerprint|SeverityIsAFunction|EveryRuleHasAStableId) : Total Tests: 5
+  ctest -N -R unit\.ThermalValidation_(StatusAndCountsAreDerived|ASkippedRuleIsNeverAPass|SolveAcceptedIsNot|ModeSpecificChecks) : Total Tests: 4
+  ctest -N -R unit\.ThermalValidation_(RejectsAnInvertedTetrahedron|RejectsADegenerateTetrahedron|ANotANumberMetricIsInvalid|AcceptsAWellShaped|ThermalMeshQualityWarning|ThermalMeshQualityReject$|ReportsTheNumberOfElements|ComparesStrictly|WarnsAboutAContradictory|ReusesP16Metrics|RejectionByThermalPolicy) : Total Tests: 11
+  ctest -N -R unit\.ThermalValidation_(ThermalMeshQualityRejectOnARealMesh|TheAspectRatioBoundCatches|QualifiedReferenceMeshesAreAccepted|AcceptsEveryQualifiedReferenceMesh|TheEnvelopeBoundsAreTheMeasuredWorstCase|RejectsAMeshWhoseSizingIntent|RejectsMissingMesh|RejectsStaleMesh|AWarningOnly) : Total Tests: 9
+  ctest -N -R unit\.ThermalValidation_(MeasuresHow|TheBoundsGuarantee) : Total Tests: 3
+  ctest -N -R unit\.ThermalValidation_(SteadyRequiresConductivityOnly|TransientRequiresConductivityDensitySpecificHeat|RejectsMissingMaterial|RejectsAMaterialWithoutAConductivity|NonFiniteAndNonPositive) : Total Tests: 5
+  ctest -N -R unit\.ThermalValidation_(RejectsUnresolved|NoLoadsIsNot|AZeroMagnitudeLoad|RejectsConflicting|IdenticalDuplicate|InvalidConvection) : Total Tests: 7
+  ctest -N -R unit\.ThermalValidation_(RejectsSameCounts|RejectsSameIds|RejectsMismatchedAssembly|EveryEditStales|EveryTransientEditStales|InputEditStales|FailedResolve|ANewSolveThatFails|RejectsAMissingAnalysis) : Total Tests: 9
+  ctest -N -R unit\.ThermalValidation_(SteadyPureNeumann|SteadyDirichlet|SteadyRobin|FullyPrescribedSteady|FullyConstrainedSteadyPasses|DisconnectedUnanchored|DisconnectedAllAnchored|TransientPureNeumann|TransientDisconnected|TransientMissingCapacity|TransientCapacityMust|TheValidatorAndTheSolverAgree) : Total Tests: 16
+  ctest -N -R unit\.ThermalValidation_(AcceptsQualifiedSteadyResidual|RejectsBadSteadyResidual|SolverSuccessDoesNotOverride|ResidualIsJudgedAgainst|ANotANumberResidual|RejectsAPrescribedTemperatureThatIsNotHeld|RejectsAPivotRatio|RejectsInvalidSolverSettings|FullyConstrainedSteadyResidual|ASteadyFieldOfTheWrongSize|AcceptsQualifiedTransientResiduals|RejectsAnyBadTransientStep|TheFinalPartialStep|FinalOnlyHistoriesAreJudged|ASingleStepFinalOnlyRun|ANotANumberTransientRecord|ATransientHistoryWithTheWrongNumber|TransientResidualsUseTheCanonical) : Total Tests: 18
+  ctest -N -R unit\.ThermalValidation_(AcceptsQualifiedSteadyBalance|RejectsBadSteadyBalance|BalanceIsJudgedByBalances|ABalanceThatRecordsItself|RejectsNonFiniteBalance|ABalanceWithTheWrongNumber|EveryStepOfATransientBalance|BalancePassDoesNotOverride|ResidualPassDoesNotOverride) : Total Tests: 9
+  ctest -N -R unit\.ThermalValidation_(RejectsNonFiniteTemperature|RejectsATemperatureBelow|RejectsAStateOfTheWrongSize|EveryNonFiniteState|AcceptsAFiniteComplete|RejectsNonFiniteGradient|RejectsNonFiniteHeatFlux|RejectsAMissingElementResult|RejectsRecoveredTemperatures|RejectsARecoveredResultWithTheWrong) : Total Tests: 10
+  ctest -N -R unit\.ThermalValidation_(AcceptsValidTransientSetup|RejectsInvalidInitialTemperature|RejectsInvalidTimeSettings|RejectsTimeSettingsPastTheResourceGuard|AFinalOnlyHistoryOfSeveralSteps|ASingleStepFinalOnlyTransientIsFully) : Total Tests: 6
+  ctest -N -R unit\.ThermalValidation_(ValidSteadyAnalysisPasses|ValidTransientAnalysisPasses|ValidationIsReadOnly|ReportOrderingAndContents|RepeatedReportsOfEveryClass|PrimaryFailureReason) : Total Tests: 6
+  ctest -N -R unit\.ThermalValidation_(EvidenceOfAQualified|APerturbedFreeTemperature|ACorruptedBalanceFailsTheBalanceAlone|ANotANumberTemperatureFailsTheFinitenessGate|ANotANumberHeatFluxFailsThePostGate|ABalanceThatCancelsDoes|AResidualThatPassesDoesNotRescue|ABalanceMissingACategory|ATransientHistoryWithAPerturbedMiddleState|ATransientHistoryWithAWrongStateCount|AnAbsentSolutionOrRecordedFailure) : Total Tests: 11
+  ctest -N -R compile_fail\.thermalvalidation\. : Total Tests: 33
+  ctest -N -R architecture\.validation-ownership : Total Tests: 8
+  ctest -N -R unit\.ThermalBalance : Total Tests: 69
+  ctest -N -R compile_fail\.thermalbalance\. : Total Tests: 33
+  ctest -N -R architecture\.balance-ownership : Total Tests: 5
+  ctest -N -R unit\.ThermalPost : Total Tests: 40
+  ctest -N -R compile_fail\.thermalpost\. : Total Tests: 31
+  ctest -N -R architecture\.recovery-ownership : Total Tests: 4
+  ctest -N -R unit\.ThermalTransient : Total Tests: 72
+  ctest -N -R compile_fail\.thermaltransient\. : Total Tests: 35
+  ctest -N -R unit\.ThermalSolve : Total Tests: 51
+  ctest -N -R unit\.Linalg_ : Total Tests: 10
+  ctest -N -R compile_fail\.thermalsolve\. : Total Tests: 26
+  ctest -N -R architecture\.targets\. : Total Tests: 3
+  ctest -N -R architecture\.checker\.linalg : Total Tests: 2
+  ctest -N -R unit\.ThermalAssembly : Total Tests: 62
+  ctest -N -R compile_fail\.thermalsys\. : Total Tests: 36
+  ctest -N -R unit\.ThermalBC : Total Tests: 92
+  ctest -N -R unit\.ThermalLoad : Total Tests: 66
+  ctest -N -R unit\.ThermalElement : Total Tests: 60
+  ctest -N -R unit\.ThermalDof : Total Tests: 33
+  ctest -N -R unit\.ThermalMaterial : Total Tests: 31
+  ctest -N -R unit\.ThermalData : Total Tests: 36
+  ctest -N -R unit\.Thermal : Total Tests: 785
+  ctest -N -R unit\.Structural : Total Tests: 431
+  ctest -N -R unit\.Tet4Element : Total Tests: 29
+  ctest -N -R compile_fail\.structsolve : Total Tests: 6
+  ctest -N -R ^architecture\. : Total Tests: 41
+  ThermalValidation_* : <OverallResultsCases successes="138" failures="0" expectedFailures="0" skips="0"/>  <OverallResults successes="506" failures="0" expectedFailures="0" skipped="false"/>
+  evidence lines: 607
+  ThermalBalance_* exit 0 : All tests passed (2240 assertions in 69 test cases)
+  ThermalPost_* exit 0 : All tests passed (38910 assertions in 40 test cases)
+  ThermalTransient_* exit 0 : All tests passed (105966 assertions in 72 test cases)
+  ThermalSolve_* exit 0 : All tests passed (39532 assertions in 51 test cases)
+  Linalg_* exit 0 : All tests passed (171 assertions in 10 test cases)
+  ThermalAssembly_* exit 0 : All tests passed (220586 assertions in 62 test cases)
+  ThermalBC_* exit 0 : All tests passed (4785 assertions in 92 test cases)
+  ThermalLoad_* exit 0 : All tests passed (21588 assertions in 66 test cases)
+  ThermalElement_* exit 0 : All tests passed (11402 assertions in 60 test cases)
+  [thermal][dof] exit 0 : All tests passed (21480 assertions in 33 test cases)
+  [thermal][material] exit 0 : All tests passed (2250 assertions in 38 test cases)
+  [thermal][data] exit 0 : All tests passed (2349 assertions in 36 test cases)
+  [structural] exit 0 : All tests passed (271414 assertions in 415 test cases)
+  [meshing] exit 0 : All tests passed (95088 assertions in 364 test cases)
+== debug-shared-ext
+  bettercad-cli.exe 41310182 d321f69707eb4e8b28e4ead5fe498fd652b84e9c7e2ace76fa2c09f69bf56198
+  bettercad_example_reference_models.exe 52417896 7e76e9b46aad7a8c1baf3f17c849539242b7dcab1a37b6ba5516c74dfcb11f9b
+  bettercad_tests.exe 959936718 b19d0d3635be74dc9a8ffc5ed41bb0650f788afafa04a19167294d464063b419
+  libbettercad_thermal.dll 40522245 191eaeb53f03513655f604cddf1ea98ebcca12dfa9d0dc2480f31c79ef8e7db5
+  dll count: 12
+  ctest -N: Total Tests: 5106
+  ctest -N -R unit\.ThermalValidation : Total Tests: 138
+  ctest -N -R unit\.ThermalValidation_(PolicyIsAccepted|PolicyConstantsArePinned|PolicyFingerprint|SeverityIsAFunction|EveryRuleHasAStableId) : Total Tests: 5
+  ctest -N -R unit\.ThermalValidation_(StatusAndCountsAreDerived|ASkippedRuleIsNeverAPass|SolveAcceptedIsNot|ModeSpecificChecks) : Total Tests: 4
+  ctest -N -R unit\.ThermalValidation_(RejectsAnInvertedTetrahedron|RejectsADegenerateTetrahedron|ANotANumberMetricIsInvalid|AcceptsAWellShaped|ThermalMeshQualityWarning|ThermalMeshQualityReject$|ReportsTheNumberOfElements|ComparesStrictly|WarnsAboutAContradictory|ReusesP16Metrics|RejectionByThermalPolicy) : Total Tests: 11
+  ctest -N -R unit\.ThermalValidation_(ThermalMeshQualityRejectOnARealMesh|TheAspectRatioBoundCatches|QualifiedReferenceMeshesAreAccepted|AcceptsEveryQualifiedReferenceMesh|TheEnvelopeBoundsAreTheMeasuredWorstCase|RejectsAMeshWhoseSizingIntent|RejectsMissingMesh|RejectsStaleMesh|AWarningOnly) : Total Tests: 9
+  ctest -N -R unit\.ThermalValidation_(MeasuresHow|TheBoundsGuarantee) : Total Tests: 3
+  ctest -N -R unit\.ThermalValidation_(SteadyRequiresConductivityOnly|TransientRequiresConductivityDensitySpecificHeat|RejectsMissingMaterial|RejectsAMaterialWithoutAConductivity|NonFiniteAndNonPositive) : Total Tests: 5
+  ctest -N -R unit\.ThermalValidation_(RejectsUnresolved|NoLoadsIsNot|AZeroMagnitudeLoad|RejectsConflicting|IdenticalDuplicate|InvalidConvection) : Total Tests: 7
+  ctest -N -R unit\.ThermalValidation_(RejectsSameCounts|RejectsSameIds|RejectsMismatchedAssembly|EveryEditStales|EveryTransientEditStales|InputEditStales|FailedResolve|ANewSolveThatFails|RejectsAMissingAnalysis) : Total Tests: 9
+  ctest -N -R unit\.ThermalValidation_(SteadyPureNeumann|SteadyDirichlet|SteadyRobin|FullyPrescribedSteady|FullyConstrainedSteadyPasses|DisconnectedUnanchored|DisconnectedAllAnchored|TransientPureNeumann|TransientDisconnected|TransientMissingCapacity|TransientCapacityMust|TheValidatorAndTheSolverAgree) : Total Tests: 16
+  ctest -N -R unit\.ThermalValidation_(AcceptsQualifiedSteadyResidual|RejectsBadSteadyResidual|SolverSuccessDoesNotOverride|ResidualIsJudgedAgainst|ANotANumberResidual|RejectsAPrescribedTemperatureThatIsNotHeld|RejectsAPivotRatio|RejectsInvalidSolverSettings|FullyConstrainedSteadyResidual|ASteadyFieldOfTheWrongSize|AcceptsQualifiedTransientResiduals|RejectsAnyBadTransientStep|TheFinalPartialStep|FinalOnlyHistoriesAreJudged|ASingleStepFinalOnlyRun|ANotANumberTransientRecord|ATransientHistoryWithTheWrongNumber|TransientResidualsUseTheCanonical) : Total Tests: 18
+  ctest -N -R unit\.ThermalValidation_(AcceptsQualifiedSteadyBalance|RejectsBadSteadyBalance|BalanceIsJudgedByBalances|ABalanceThatRecordsItself|RejectsNonFiniteBalance|ABalanceWithTheWrongNumber|EveryStepOfATransientBalance|BalancePassDoesNotOverride|ResidualPassDoesNotOverride) : Total Tests: 9
+  ctest -N -R unit\.ThermalValidation_(RejectsNonFiniteTemperature|RejectsATemperatureBelow|RejectsAStateOfTheWrongSize|EveryNonFiniteState|AcceptsAFiniteComplete|RejectsNonFiniteGradient|RejectsNonFiniteHeatFlux|RejectsAMissingElementResult|RejectsRecoveredTemperatures|RejectsARecoveredResultWithTheWrong) : Total Tests: 10
+  ctest -N -R unit\.ThermalValidation_(AcceptsValidTransientSetup|RejectsInvalidInitialTemperature|RejectsInvalidTimeSettings|RejectsTimeSettingsPastTheResourceGuard|AFinalOnlyHistoryOfSeveralSteps|ASingleStepFinalOnlyTransientIsFully) : Total Tests: 6
+  ctest -N -R unit\.ThermalValidation_(ValidSteadyAnalysisPasses|ValidTransientAnalysisPasses|ValidationIsReadOnly|ReportOrderingAndContents|RepeatedReportsOfEveryClass|PrimaryFailureReason) : Total Tests: 6
+  ctest -N -R unit\.ThermalValidation_(EvidenceOfAQualified|APerturbedFreeTemperature|ACorruptedBalanceFailsTheBalanceAlone|ANotANumberTemperatureFailsTheFinitenessGate|ANotANumberHeatFluxFailsThePostGate|ABalanceThatCancelsDoes|AResidualThatPassesDoesNotRescue|ABalanceMissingACategory|ATransientHistoryWithAPerturbedMiddleState|ATransientHistoryWithAWrongStateCount|AnAbsentSolutionOrRecordedFailure) : Total Tests: 11
+  ctest -N -R compile_fail\.thermalvalidation\. : Total Tests: 33
+  ctest -N -R architecture\.validation-ownership : Total Tests: 8
+  ctest -N -R unit\.ThermalBalance : Total Tests: 69
+  ctest -N -R compile_fail\.thermalbalance\. : Total Tests: 33
+  ctest -N -R architecture\.balance-ownership : Total Tests: 5
+  ctest -N -R unit\.ThermalPost : Total Tests: 40
+  ctest -N -R compile_fail\.thermalpost\. : Total Tests: 31
+  ctest -N -R architecture\.recovery-ownership : Total Tests: 4
+  ctest -N -R unit\.ThermalTransient : Total Tests: 72
+  ctest -N -R compile_fail\.thermaltransient\. : Total Tests: 35
+  ctest -N -R unit\.ThermalSolve : Total Tests: 51
+  ctest -N -R unit\.Linalg_ : Total Tests: 10
+  ctest -N -R compile_fail\.thermalsolve\. : Total Tests: 26
+  ctest -N -R architecture\.targets\. : Total Tests: 3
+  ctest -N -R architecture\.checker\.linalg : Total Tests: 2
+  ctest -N -R unit\.ThermalAssembly : Total Tests: 62
+  ctest -N -R compile_fail\.thermalsys\. : Total Tests: 36
+  ctest -N -R unit\.ThermalBC : Total Tests: 92
+  ctest -N -R unit\.ThermalLoad : Total Tests: 66
+  ctest -N -R unit\.ThermalElement : Total Tests: 60
+  ctest -N -R unit\.ThermalDof : Total Tests: 33
+  ctest -N -R unit\.ThermalMaterial : Total Tests: 31
+  ctest -N -R unit\.ThermalData : Total Tests: 36
+  ctest -N -R unit\.Thermal : Total Tests: 785
+  ctest -N -R unit\.Structural : Total Tests: 431
+  ctest -N -R unit\.Tet4Element : Total Tests: 29
+  ctest -N -R compile_fail\.structsolve : Total Tests: 6
+  ctest -N -R ^architecture\. : Total Tests: 41
+  ThermalValidation_* : <OverallResultsCases successes="138" failures="0" expectedFailures="0" skips="0"/>  <OverallResults successes="506" failures="0" expectedFailures="0" skipped="false"/>
+  evidence lines: 607
+  ThermalBalance_* exit 0 : All tests passed (2240 assertions in 69 test cases)
+  ThermalPost_* exit 0 : All tests passed (38910 assertions in 40 test cases)
+  ThermalTransient_* exit 0 : All tests passed (105966 assertions in 72 test cases)
+  ThermalSolve_* exit 0 : All tests passed (39532 assertions in 51 test cases)
+  Linalg_* exit 0 : All tests passed (171 assertions in 10 test cases)
+  ThermalAssembly_* exit 0 : All tests passed (220586 assertions in 62 test cases)
+  ThermalBC_* exit 0 : All tests passed (4785 assertions in 92 test cases)
+  ThermalLoad_* exit 0 : All tests passed (21588 assertions in 66 test cases)
+  ThermalElement_* exit 0 : All tests passed (11402 assertions in 60 test cases)
+  [thermal][dof] exit 0 : All tests passed (21480 assertions in 33 test cases)
+  [thermal][material] exit 0 : All tests passed (2250 assertions in 38 test cases)
+  [thermal][data] exit 0 : All tests passed (2349 assertions in 36 test cases)
+  [structural] exit 0 : All tests passed (271414 assertions in 415 test cases)
+  [meshing] exit 0 : All tests passed (95088 assertions in 364 test cases)
+== cross-preset classification (every FP, OVERALL and REPORT line of the validation suite)
+  FP lines, debug-ext vs release-ext : 32 vs 32, differing: 0
+  FP lines, debug-ext vs debug-shared-ext : 32 vs 32, differing: 0
+  OVERALL lines, debug-ext vs release-ext : 28 vs 28, differing: 0
+  OVERALL lines, debug-ext vs debug-shared-ext : 28 vs 28, differing: 0
+  REPORT lines, debug-ext vs release-ext : 420 vs 420, differing: 0
+  REPORT lines, debug-ext vs debug-shared-ext : 420 vs 420, differing: 0
+  FINDING lines, debug-ext vs release-ext : 48 vs 48, differing: 0
+  FINDING lines, debug-ext vs debug-shared-ext : 48 vs 48, differing: 0
+  MATRIX lines, debug-ext vs release-ext : 11 vs 11, differing: 0
+  MATRIX lines, debug-ext vs debug-shared-ext : 11 vs 11, differing: 0
+== cross-preset bit fingerprints of the neighbours (balance)
+  debug-ext : ee1e1c859a3999d5 6b81a56797403e0d 5a8ba61c30276a46 eb44675aa9d555a1
+  release-ext : eb44675aa9d555a1 6b81a56797403e0d ee1e1c859a3999d5 5a8ba61c30276a46
+  debug-shared-ext : ee1e1c859a3999d5 eb44675aa9d555a1 6b81a56797403e0d 5a8ba61c30276a46
+  balance fingerprints identical across presets: False
+postrun-valid finished 2026-10-23T05:17:54.0722429+10:00
+
+== balance fingerprints, compared as sets (the four values are the same in every preset; only the order in which they were printed differs)
+  debug-ext : 5a8ba61c30276a46 6b81a56797403e0d eb44675aa9d555a1 ee1e1c859a3999d5
+  release-ext : 5a8ba61c30276a46 6b81a56797403e0d eb44675aa9d555a1 ee1e1c859a3999d5
+  debug-shared-ext : 5a8ba61c30276a46 6b81a56797403e0d eb44675aa9d555a1 ee1e1c859a3999d5
+  identical as sets across the three presets: True

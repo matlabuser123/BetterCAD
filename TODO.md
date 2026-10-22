@@ -22,37 +22,36 @@ Prerequisite:
            (OCCT never subdivides a developable wall along its ruling).
 
 Current milestone:
-           none. P18-BALANCE-001 — Heat / Energy Balance. COMPLETE at 14 of
-           14 and qualified 2026-10-22 against fa15d36 plus the working tree:
-           4927/4927 x 3 presets, 1813 x 5 in two, 0 warnings over 705
-           objects, 17 stages exit 0, 5h24m15s, fingerprints at the freeze ==
-           before == after, first run. The global heat accounting of an
-           accepted solution, positive INTO the body: applied surface heat and
-           volumetric generation from P18-LOAD-001's contributions, convection
-           per condition as -(Kconv T - Qconv), the reaction at every
-           prescribed unknown from the full residual (R = +r, one per unique
-           unknown, never the remainder that closes the books) and, for a
-           transient, the stored energy 1^T C dT of every step with the
-           consistent C and the actual step. The books are checked against the
-           attribution sum Q = sum loads + sum Qconv before any residual is
-           formed, so an omitted or doubled category is refused. Tolerance
-           |B| <= 1e-12 W + 1e-13 (gross + arithmetic), measured: the worst
-           |B|/(gross + arithmetic) over twelve cases is 1.7e-16, 583x inside
-           the policy, bit-identical in three presets. A balance PASS is not
-           a solve PASS. Bound to the solution it came from (a remesh with
-           the same counts and ids is stale); atomic; derived only: not
-           canonical, not persisted, no balance setting in its source; no GUI
-           recomputation (497 files scanned, 0 violations, fixtures that fail
-           the gate). Nothing qualified changed (twenty-five files
-           byte-identical). 69 + 33 + 5 cases, 48 mutation probes (45 killed,
-           1 void, 2 removed, 6 first-pass survivors closed), 531 files and 0
-           layering violations. Evidence: docs/verification/P18-BALANCE-001/.
+           none. P18-VALID-001 — Thermal Validation / Acceptance. COMPLETE at
+           18 of 18 and qualified 2026-10-23 against bc62b0c plus the working
+           tree: 5106/5106 x 3 presets, 1959 x 5 in two, 0 warnings over 711
+           objects, 17 stages exit 0, 5h12m47s, fingerprints at the freeze ==
+           before == after, first run. The one place a thermal analysis is
+           ACCEPTED: validateThermalAnalysis returns a deterministic structured
+           report of 15 ordered rules (TV_*), each finding with a stable code, a
+           severity that is a function of the code, a subject and the numbers;
+           the status is derived, never stored, and a skipped rule is never a
+           pass. P16 measures and states no opinion; the thermal mesh bounds are
+           decided here from a measured gradient-recovery law at the
+           absolute-temperature condition (3r/R < 7.0e-6 or aspect > 700 fail, a
+           factor of three inside a 1e-9 relative gradient error; the qualified
+           envelope warns). Steady needs k, a transient k, rho and cp; a pure
+           Neumann steady model fails and a pure Neumann transient passes; a
+           stale mesh with the same counts and ids is refused. The residual
+           tolerance is the canonical solver setting and the balance tolerance
+           is P18-BALANCE-001's, consumed and never copied; residual and balance
+           are independent gates. The validator solves, repairs and remeshes
+           nothing (497 files scanned, 0 violations, fixtures that fail the
+           gate). Nothing qualified changed (63 files byte-identical). 138 + 33
+           + 8 cases, 78 mutation probes all killed, 35 adversarial questions,
+           4 findings, 533 files and 0 layering violations. Evidence:
+           docs/verification/P18-VALID-001/.
            P18-ARCH-001 PASSED 2026-10-16; P18-DATA-001, P18-MAT-001,
            P18-DOF-001 PASSED 2026-10-17; P18-ELEM-001, P18-LOAD-001 PASSED
            2026-10-18; P18-BC-001, P18-ASSEMBLY-001 PASSED 2026-10-19/20;
            P18-SOLVE-001 PASSED 2026-10-20; P18-TRANSIENT-001, P18-POST-001
-           PASSED 2026-10-21; P18-BALANCE-001 PASSED 2026-10-22
-           (docs/verification/P18-*/).
+           PASSED 2026-10-21; P18-BALANCE-001 PASSED 2026-10-22; P18-VALID-001 PASSED
+           2026-10-23 (docs/verification/P18-*/).
 Qualified:
            P0–P10 — BetterCAD v0.1.0
            P11 — Advanced Part Modelling
@@ -64,8 +63,8 @@ Qualified:
            P17 — Structural FEA
 
 Next:
-           P18-VALID-001 — Thermal Validation / Acceptance. NOT AUTHORIZED:
-           P18-BALANCE-001 passing is not permission to start it; each
+           P18-VIZ-001 — Thermal Visualization. NOT AUTHORIZED:
+           P18-VALID-001 passing is not permission to start it; each
            milestone is started by the owner, as every P17 milestone was.
 
 P17 objective, as delivered:
@@ -1133,25 +1132,67 @@ geometry current, mesh current, mesh structurally valid, thermal mesh quality
 acceptable, material current and thermally complete, loads resolved, boundary
 conditions resolved, thermal system well posed.
 
-* [ ] Define thermal mesh-acceptance policy
-* [ ] Reuse P16 quality metrics
-* [ ] Define invalid mesh rejection
-* [ ] Define warning policy
-* [ ] Define thermal material validation
-* [ ] Define thermal-load validation
-* [ ] Define thermal-BC validation
-* [ ] Define stale-input checks
-* [ ] Define singular thermal-system detection
-* [ ] Define steady solver residual acceptance
-* [ ] Define transient residual acceptance
-* [ ] Define heat-balance acceptance
-* [ ] Define result-finiteness checks
-* [ ] Structured validation report
-* [ ] Determinism PASS
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Define thermal mesh-acceptance policy
+* [x] Reuse P16 quality metrics
+* [x] Define invalid mesh rejection
+* [x] Define warning policy
+* [x] Define thermal material validation
+* [x] Define thermal-load validation
+* [x] Define thermal-BC validation
+* [x] Define stale-input checks
+* [x] Define singular thermal-system detection
+* [x] Define steady solver residual acceptance
+* [x] Define transient residual acceptance
+* [x] Define heat-balance acceptance
+* [x] Define result-finiteness checks
+* [x] Structured validation report
+* [x] Determinism PASS
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded
 
+```text
+PASS 2026-10-23. Qualified against bc62b0c plus the working tree: 5106/5106 x 3
+presets, 1959 x 5 in two, 0 warnings over 711 objects, 17 stages exit 0,
+5h12m47s, fingerprints at the freeze == before == after; first run on the
+frozen tree. NOTHING QUALIFIED CHANGED: 63 files (every other thermal source and
+header, all of P16 meshing, the linalg and structural solve files) are
+byte-identical to HEAD.
+DECISION: validateThermalAnalysis(document, regenerator, mesher, analysis,
+derived state) is the only place a thermal analysis is accepted. 15 ordered
+rules with stable ids; a report whose status, counts and acceptance are derived
+every time; severity is a function of the code (no field to change it); an
+input failure skips the system, solve, result and balance rules and a skipped
+rule is never a pass. accepted() (needs the recovered fields and the balance),
+solveAccepted() and inputsAccepted() are three different answers.
+MESH: P16 measures, P18-VALID decides. A temperature of 307 K carries the
+rounding of a 307 K number, so a flattened or stretched element amplifies it:
+relative gradient error <= C / sqrt(3r/R) with C <= 8.62e-13 and <= C * aspect
+with C <= 4.28e-13 at 14 K/m, three orders above the isolating field the
+structural kernel measured. Inverted at 1e-9 with a factor of three: failure
+3r/R < 7.0e-6 or aspect > 700; warning 3.0e-4, 81, 6.0e-3 rad, 3.125 rad (the
+qualified envelope, rounded away); the dihedral angles carry no failure bound;
+a value on a bound is on the good side; a NaN is never on it. Qualified worst
+case 3.226e-4 (46x the floor) and aspect 80.0 (8.7x inside the ceiling).
+RULES: steady needs k only, a transient k, rho and cp; no load and no condition
+are information; pure-Neumann steady FAILS (no datum), pure-Neumann transient
+PASSES (the capacity), steady Robin-only and fully prescribed PASS; a remesh with
+the same counts and the same ids is stale, found by identity. The residual is
+re-evaluated independently for every step against the canonical solver
+tolerance and the balance through P18-BALANCE-001's policy, consumed and never
+copied; a balance that nearly cancels (|B| 6.2e-14 W) does not rescue a free
+residual of 1.5e-4, and the reverse. A FinalOnly history of several steps can be
+solve-accepted and cannot be fully accepted. No GUI decision: the gate scans
+497 files and has 0 violations, with seven fixtures that fail it. 138 + 33 + 8
+cases, 19 zero-match filters, 78 mutation probes all killed (3 first-pass
+survivors were test gaps, closed), 35 adversarial questions, 4 findings (one
+model gap, now BalanceAttributionMismatch, and three test gaps), 0 qualified-
+module defects. Limits recorded: single-solid meshes only; prescribed
+temperatures are constant in time; the mesh bounds guarantee gradient recovery
+at a stated condition, not discretisation or conditioning; the dihedrals have no
+failure bound; the books closing does not prove the physics.
+Evidence: docs/verification/P18-VALID-001/.
+```
 ---
 # P18-VIZ-001
 

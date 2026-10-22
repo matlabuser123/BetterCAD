@@ -60,6 +60,7 @@ bettercad_add_library(bettercad_thermal
         ThermalSystem.cpp
         ThermalTarget.cpp
         ThermalTransient.cpp
+        ThermalValidation.cpp
     PUBLIC_LINK
         BetterCAD::core
         BetterCAD::features

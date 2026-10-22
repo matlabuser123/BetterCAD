@@ -1,0 +1,76 @@
+VAL01 | an inverted/degenerate tetrahedron is downgraded to a warning | KILLED | test cases:   130 |   128 passed | 2 failed | assertions: 12784 | 12781 passed | 3 failed | restored | 169s
+VAL02 | a stale mesh is downgraded to information | KILLED | test cases:   130 |   126 passed | 4 failed | assertions: 12780 | 12775 passed | 5 failed | restored | 164s
+VAL03 | a value on a bound is on the BAD side (non-strict comparison) | KILLED | test cases:   130 |   129 passed | 1 failed | assertions: 12784 | 12777 passed | 7 failed | restored | 171s
+VAL04 | a non-finite worst metric is no longer an error | KILLED | test cases:   130 |   129 passed | 1 failed | assertions: 12726 | 12724 passed | 2 failed | restored | 170s
+VAL05 | the failure bound is judged against the warning bound (warnings become errors) | UNKNOWN (no summary line) |  | restored | 162s
+VAL06 | the aspect-ratio ceiling is removed | KILLED | test cases:   130 |   124 passed | 6 failed | assertions: 12775 | 12767 passed | 8 failed | restored | 172s
+VAL07 | the radius-ratio floor is removed | KILLED | test cases:   130 |   122 passed |  8 failed | assertions: 12750 | 12738 passed | 12 failed | restored | 166s
+VAL08 | the count of elements past the failure bound is reported as 1 | KILLED | test cases:   130 |   129 passed | 1 failed | assertions: 12784 | 12783 passed | 1 failed | restored | 166s
+VAL09 | the worst value is taken from the wrong end of the summary | KILLED | test cases:   130 |   128 passed | 2 failed | assertions: 12733 | 12724 passed | 9 failed | restored | 162s
+VAL10 | a structurally invalid mesh is not reported | KILLED | test cases:   130 |   128 passed | 2 failed | assertions: 12781 | 12778 passed | 3 failed | restored | 158s
+VAL11 | invalid elements are not reported | SURVIVED | All tests passed (12782 assertions in 130 test cases) | restored | 178s
+VAL12 | a contradictory reporting policy is silently ignored | KILLED | test cases:   130 |   129 passed | 1 failed | assertions: 12780 | 12779 passed | 1 failed | restored | 172s
+VAL13 | a steady analysis requires rho and cp | KILLED | test cases:   130 |   128 passed | 2 failed | assertions: 12795 | 12791 passed | 4 failed | restored | 167s
+VAL14 | a transient analysis does not require rho and cp | KILLED | test cases:   130 |   128 passed | 2 failed | assertions: 12773 | 12766 passed | 7 failed | restored | 165s
+VAL15 | at least one load is required | KILLED | test cases:   130 |   115 passed | 15 failed | assertions: 12244 | 12215 passed | 29 failed | restored | 160s
+VAL16 | at least one boundary condition is required | KILLED | test cases:   130 |   127 passed |  3 failed | assertions: 12776 | 12763 passed | 13 failed | restored | 162s
+VAL17 | an unresolved load is not reported | KILLED | test cases:   130 |   128 passed | 2 failed | assertions: 12773 | 12770 passed | 3 failed | restored | 161s
+VAL18 | an unresolved or conflicting boundary condition is not reported | KILLED | test cases:   130 |   126 passed | 4 failed | assertions: 12769 | 12764 passed | 5 failed | restored | 162s
+VAL19 | a stale assembled system is accepted | KILLED | test cases:   130 |   126 passed | 4 failed | assertions: 12729 | 12722 passed | 7 failed | restored | 161s
+VAL20 | a numbering of another mesh generation is accepted | KILLED | test cases:   130 |   129 passed | 1 failed | assertions: 12744 | 12743 passed | 1 failed | restored | 176s
+VAL21 | stale prepared loads are accepted | KILLED | test cases:   130 |   128 passed | 2 failed | assertions: 12741 | 12739 passed | 2 failed | restored | 171s
+VAL22 | a stale prepared boundary is accepted | KILLED | test cases:   130 |   128 passed | 2 failed | assertions: 12735 | 12732 passed | 3 failed | restored | 157s
+VAL23 | a stale steady solution is accepted | KILLED | test cases:   130 |   127 passed | 3 failed | assertions: 12726 | 12719 passed | 7 failed | restored | 157s
+VAL24 | a stale steady recovered result is accepted | KILLED | test cases:   130 |   127 passed | 3 failed | assertions: 12726 | 12719 passed | 7 failed | restored | 160s
+VAL25 | a stale steady balance is accepted | KILLED | test cases:   130 |   127 passed | 3 failed | assertions: 12726 | 12719 passed | 7 failed | restored | 161s
+VAL26 | a solution from another assembled system is accepted | SURVIVED | All tests passed (12784 assertions in 130 test cases) | restored | 160s
+VAL27 | a steady solution for a transient analysis is not a mode mismatch | NOT APPLIED (find text missing) |  | restored | 1s
+VAL28 | recovered fields of another solution are accepted | SURVIVED | All tests passed (12784 assertions in 130 test cases) | restored | 164s
+VAL29 | a pure-Neumann steady model is accepted | KILLED | test cases:   130 |   123 passed |  7 failed | assertions: 12765 | 12755 passed | 10 failed | restored | 165s
+VAL30 | the steady datum rule is applied to a transient | KILLED | test cases:   130 |   123 passed |  7 failed | assertions: 12495 | 12478 passed | 17 failed | restored | 158s
+VAL31 | no free equation (fully constrained) is a failure | VOID (did not compile) |  | restored | 9s
+VAL32 | a missing transient capacity is not noticed | UNKNOWN (no summary line) |  | restored | 166s
+VAL33 | a zero capacity on the diagonal is accepted | KILLED | test cases:   130 |   129 passed | 1 failed | assertions: 12784 | 12782 passed | 2 failed | restored | 162s
+VAL34 | the recorded physical step residual is not judged | KILLED | test cases:   130 |   129 passed | 1 failed | assertions: 12778 | 12777 passed | 1 failed | restored | 162s
+VAL35 | the recorded reduced step residual is not judged | KILLED | test cases:   130 |   129 passed | 1 failed | assertions: 12782 | 12781 passed | 1 failed | restored | 186s
+VAL36 | the nominal step size is used where the actual one belongs | KILLED | test cases:   130 |   126 passed | 4 failed | assertions: 12786 | 12777 passed | 9 failed | restored | 166s
+VAL37 | no step is ever re-evaluated independently | KILLED | test cases:   130 |   125 passed | 5 failed | assertions: 12768 | 12760 passed | 8 failed | restored | 157s
+VAL38 | the balance tolerance is not applied to the numbers | KILLED | test cases:   130 |   124 passed |  6 failed | assertions: 12773 | 12763 passed | 10 failed | restored | 161s
+VAL39 | a balance state that records itself out of tolerance is accepted | KILLED | test cases:   130 |   129 passed | 1 failed | assertions: 12782 | 12781 passed | 1 failed | restored | 164s
+VAL40 | a non-finite balance term falls through to the comparison | KILLED | test cases:   130 |   129 passed | 1 failed | assertions: 12782 | 12774 passed | 8 failed | restored | 161s
+VAL41 | the number of balance states is not checked | KILLED | test cases:   130 |   129 passed | 1 failed | assertions: 12782 | 12781 passed | 1 failed | restored | 156s
+VAL42 | the finiteness of the temperatures is not checked | KILLED | test cases:   130 |   126 passed |  4 failed | assertions: 12763 | 12752 passed | 11 failed | restored | 159s
+VAL43 | a state of the wrong size is read anyway | KILLED | test cases:   130 |   129 passed | 1 failed | assertions: 12781 | 12780 passed | 1 failed | restored | 159s
+VAL44 | recovered temperatures are not compared with the solver's | KILLED | test cases:   130 |   129 passed | 1 failed | assertions: 12783 | 12782 passed | 1 failed | restored | 176s
+VAL45 | a missing element result is not a cardinality failure | VOID (did not compile) |  | restored | 15s
+VAL46 | a recorded solve failure is ignored | UNKNOWN (no summary line) |  | restored | 178s
+VAL47 | an absent solution is accepted | UNKNOWN (no summary line) |  | restored | 158s
+VAL48 | the history contract is not enforced | KILLED | test cases:   130 |   129 passed | 1 failed | assertions: 12784 | 12782 passed | 2 failed | restored | 157s
+VAL49 | the steady pivot floor is ignored | KILLED | test cases:   130 |   128 passed | 2 failed | assertions: 12782 | 12780 passed | 2 failed | restored | 161s
+VAL50 | the transient pivot floor is ignored | KILLED | test cases:   130 |   129 passed | 1 failed | assertions: 12783 | 12782 passed | 1 failed | restored | 160s
+VAL51 | a transient balance is expected to have one state | KILLED | test cases:   130 |   124 passed |  6 failed | assertions: 12495 | 12479 passed | 16 failed | restored | 161s
+VAL52 | a second residual tolerance in the transient check | KILLED | test cases:   130 |   128 passed | 2 failed | assertions: 12778 | 12775 passed | 3 failed | restored | 160s
+VAL53 | a failed transient setup no longer blocks the derived rules | KILLED | test cases:   130 |   129 passed | 1 failed | assertions: 12785 | 12784 passed | 1 failed | restored | 162s
+VAL54 | a source-compatibility failure no longer blocks well-posedness | KILLED | test cases:   130 |   129 passed | 1 failed | assertions: 12777 | 12776 passed | 1 failed | restored | 162s
+VAL55 | a well-posedness failure no longer blocks the solve rules | UNKNOWN (no summary line) |  | restored | 170s
+VAL56 | a report under another policy is still current | KILLED | test cases:   130 |   129 passed | 1 failed | assertions: 12784 | 12783 passed | 1 failed | restored | 168s
+VAL57 | the recorded attribution check is skipped | KILLED | test cases:   130 |   128 passed | 2 failed | assertions: 12772 | 12769 passed | 3 failed | restored | 158s
+VAL58 | the findings are not ordered by rule first | KILLED | test cases:   130 |   109 passed | 21 failed | assertions: 12784 | 12734 passed | 50 failed | restored | 161s
+VAL59 | the steady residual is judged against a tolerance 1e12 too loose | KILLED | test cases:   130 |   124 passed |  6 failed | assertions: 12778 | 12768 passed | 10 failed | restored | 161s
+VAL60 | the transient step is re-evaluated against a tolerance 1e15 too loose | KILLED | test cases:   130 |   125 passed | 5 failed | assertions: 12768 | 12761 passed | 7 failed | restored | 161s
+VAL61 | the balance attribution is not wired into the decision | KILLED | test cases:   130 |   129 passed | 1 failed | assertions: 12784 | 12782 passed | 2 failed | restored | 161s
+VAL62 | the recovered fields are not judged | KILLED | test cases:   130 |   129 passed | 1 failed | assertions: 12784 | 12781 passed | 3 failed | restored | 160s
+VAL63 | the temperature finiteness is not wired into the decision | KILLED | test cases:   130 |   129 passed | 1 failed | assertions: 12784 | 12776 passed | 8 failed | restored | 159s
+VAL64 | the steady residual verdict is not wired into the decision | KILLED | test cases:   130 |   127 passed | 3 failed | assertions: 12784 | 12775 passed | 9 failed | restored | 176s
+VAL65 | the transient residual verdict is not wired into the decision | KILLED | test cases:   130 |   129 passed | 1 failed | assertions: 12784 | 12782 passed | 2 failed | restored | 172s
+VAL66 | the balance verdict is not wired into the decision | KILLED | test cases:   130 |   128 passed | 2 failed | assertions: 12784 | 12778 passed | 6 failed | restored | 156s
+VAL67 | a stale transient solution is accepted | KILLED | test cases:   130 |   129 passed | 1 failed | assertions: 12766 | 12760 passed | 6 failed | restored | 160s
+VAL68 | stale transient recovered fields are accepted | KILLED | test cases:   130 |   129 passed | 1 failed | assertions: 12766 | 12760 passed | 6 failed | restored | 163s
+VAL69 | a stale transient balance is accepted | KILLED | test cases:   130 |   129 passed | 1 failed | assertions: 12766 | 12760 passed | 6 failed | restored | 159s
+VAL70 | the FinalOnly explanation is dropped | KILLED | test cases:   130 |   129 passed | 1 failed | assertions: 12784 | 12783 passed | 1 failed | restored | 155s
+VAL71 | a skipped rule counts as a pass in the overall status | KILLED | test cases:   130 |   129 passed | 1 failed | assertions: 12784 | 12782 passed | 2 failed | restored | 179s
+VAL72 | accepted() refuses a warning | KILLED | test cases:   130 |   128 passed | 2 failed | assertions: 12784 | 12781 passed | 3 failed | restored | 176s
+VAL73 | solveAccepted() ignores the temperature finiteness | KILLED | test cases:   130 |   129 passed | 1 failed | assertions: 12784 | 12783 passed | 1 failed | restored | 176s
+VAL74 | errorCount() counts warnings too | KILLED | test cases:   130 |   126 passed | 4 failed | assertions: 12784 | 12779 passed | 5 failed | restored | 176s
+VAL75 | a warning makes the overall status Fail | KILLED | test cases:   130 |   128 passed | 2 failed | assertions: 12784 | 12777 passed | 7 failed | restored | 180s
+campaign finished 2026-10-22T21:26:14

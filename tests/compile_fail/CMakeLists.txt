@@ -1268,3 +1268,63 @@ foreach(_case
     bettercad_compile_fail_case(thermalbalance "${_thermalbalance}" ${_case}
         "read-only|discards qualifiers|no match for|passing .const" BetterCAD::thermal)
 endforeach()
+
+# The thermal validation and acceptance (P18-VALID-001). Five claims are enforced: the outcome is not a
+# boolean (an overall status, a rule status, a severity and a code are four enumerations and none converts to
+# another, to bool or to an integer); the identity spaces do not mix (an analysis is not a meshing control and
+# a solver's source is not a report's); the status is DERIVED and the severity a function of the code (no stored
+# status, no valid flag, no setter, no display severity, constant thresholds); the one owner and the scope line
+# (no policy object to edit, no second function that accepts a result, no solve, remesh, repair or persistence
+# in the validator, no display setting in a report's source); and a report is neither a result nor a balance.
+set(_thermalvalidation "${CMAKE_CURRENT_SOURCE_DIR}/ThermalValidationMisuse.cpp")
+bettercad_compile_fail_group(thermalvalidation "${_thermalvalidation}" BetterCAD::thermal)
+foreach(_case
+        A_STATUS_IS_NOT_A_BOOL
+        A_CODE_IS_NOT_AN_INTEGER
+        A_RULE_IS_NOT_A_CODE
+        A_SEVERITY_IS_NOT_A_STATUS
+        A_RULE_STATUS_IS_NOT_AN_OVERALL_STATUS
+        A_CHECK_STATE_IS_NOT_A_CHECK_STATUS
+        AN_INTEGER_IS_NOT_A_SEVERITY
+        A_MESH_CONTROL_ID_IS_NOT_AN_ANALYSIS_ID
+        A_SOLVER_SOURCE_IS_NOT_A_REPORT_SOURCE
+        A_BALANCE_IS_NOT_A_REPORT
+        A_REPORT_IS_NOT_A_THERMAL_RESULT
+        A_SOLUTION_IS_NOT_A_REPORT)
+    bettercad_compile_fail_case(thermalvalidation "${_thermalvalidation}" ${_case}
+        "could not convert|cannot convert|no matching function|no match for|invalid conversion|invalid initialization of reference|conversion from|no known conversion"
+        BetterCAD::thermal)
+endforeach()
+foreach(_case
+        THE_REPORT_HAS_NO_STORED_STATUS
+        THE_REPORT_HAS_NO_VALID_FLAG
+        THE_REPORT_HAS_NO_STATUS_SETTER
+        THE_REPORT_HAS_NO_IS_VALIDATED_FLAG
+        A_FINDING_HAS_NO_DISPLAY_SEVERITY
+        A_FINDING_HAS_NO_OVERRIDE
+        THE_REPORT_SOURCE_HAS_NO_DISPLAY_SETTING
+        THE_REPORT_SOURCE_HAS_NO_TOLERANCE_OVERRIDE
+        THE_MESH_VERDICT_HAS_NO_REPAIRED_MESH
+        THE_DERIVED_STATE_HAS_NO_SOLVER
+        THE_DERIVED_STATE_HAS_NO_REMESH)
+    bettercad_compile_fail_case(thermalvalidation "${_thermalvalidation}" ${_case}
+        "no member named|has no member" BetterCAD::thermal)
+endforeach()
+foreach(_case
+        THERE_IS_NO_POLICY_OBJECT_TO_EDIT
+        THERE_IS_NO_SECOND_ACCEPTANCE_OWNER
+        THERE_IS_NO_SOLVE_AND_VALIDATE_IN_THE_VALIDATOR
+        THERE_IS_NO_VALIDATION_PERSISTENCE)
+    bettercad_compile_fail_case(thermalvalidation "${_thermalvalidation}" ${_case}
+        "is not a member of|not declared|has not been declared|does not name a type" BetterCAD::thermal)
+endforeach()
+foreach(_case
+        THE_THRESHOLDS_ARE_CONSTANTS
+        THE_ASPECT_CEILING_IS_A_CONSTANT
+        THE_ACCURACY_REQUIREMENT_IS_A_CONSTANT
+        THE_REPORT_IS_READ_ONLY_THROUGH_A_CONST_VIEW
+        THE_CHECKS_ARE_READ_ONLY_THROUGH_A_CONST_VIEW
+        THERE_IS_NO_SEVERITY_SETTER)
+    bettercad_compile_fail_case(thermalvalidation "${_thermalvalidation}" ${_case}
+        "read-only|discards qualifiers|no match for|passing .const|lvalue required|using temporary as lvalue" BetterCAD::thermal)
+endforeach()

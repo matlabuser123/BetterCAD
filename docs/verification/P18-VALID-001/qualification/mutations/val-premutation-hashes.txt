@@ -1,0 +1,2 @@
+22dc52183a38f0d74dd58a18765dbe041259b335d816b7ae698ebb5e4f876237  src\thermal\ThermalValidation.cpp
+d49323f3d4dc7704d49852be67b6f0db8d9421521a1a6ca4b1419af00b28e4cb  include\bettercad\thermal\ThermalValidation.hpp

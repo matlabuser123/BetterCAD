@@ -1,0 +1,11 @@
+rerun started 2026-10-22T21:47:16
+VAL11r | invalid elements are not reported (now with a test on the count alone) | VERDICT: KILLED | TESTS : test cases:   138 |   137 passed | 1 failed | assertions: 13461 | 13460 passed | 1 failed | 166s
+VAL26r | a solution from another assembled system is accepted (now named for the Solution) | VERDICT: KILLED | TESTS : test cases:   138 |   137 passed | 1 failed | assertions: 13468 | 13467 passed | 1 failed | 155s
+VAL28r | recovered fields of another solution are accepted (now named for the PostResult) | VERDICT: KILLED | TESTS : test cases:   138 |   137 passed | 1 failed | assertions: 13468 | 13467 passed | 1 failed | 158s
+VAL27r | a steady solution for a transient analysis is not a mode mismatch | VERDICT: KILLED | TESTS : test cases:   138 |   137 passed | 1 failed | assertions: 13468 | 13467 passed | 1 failed | 164s
+VAL31r | no free equation (fully constrained) is a failure | VERDICT: KILLED | TESTS : test cases:   138 |   136 passed | 2 failed | assertions: 13468 | 13466 passed | 2 failed | 163s
+VAL45r | a missing element result is not a cardinality failure | VERDICT: UNKNOWN (no summary line) | TESTS :  | 163s
+VAL76 | a balance of another solution is accepted | VERDICT: KILLED | TESTS : test cases:   138 |   137 passed | 1 failed | assertions: 13468 | 13467 passed | 1 failed | 166s
+VAL77 | a history from another assembled system is accepted | VERDICT: KILLED | TESTS : test cases:   138 |   137 passed | 1 failed | assertions: 13468 | 13467 passed | 1 failed | 156s
+VAL78 | prepared loads of another list than the system are accepted | VERDICT: KILLED | TESTS : test cases:   138 |   137 passed | 1 failed | assertions: 13468 | 13467 passed | 1 failed | 158s
+rerun finished 2026-10-22T22:11:26

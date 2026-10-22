@@ -157,3 +157,37 @@ bettercad_add_process_test(architecture.balance-ownership.reintegrates
 bettercad_add_process_test(architecture.balance-ownership.lacks-attribution
     COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/balance-lacks-attribution|-P|${_check_balance}"
     EXIT_CODE 1 STDERR_REGEX "2 violation.*does not take the convection exchange")
+
+
+# P18-VALID-001. Whether a thermal analysis is ACCEPTED is decided in ONE place, validateThermalAnalysis in the
+# thermal module; the solver, the recovery, the balance, a viewer or a command consumes its verdict and keeps no
+# threshold, severity or pass/fail of its own. CheckValidationOwnership.cmake scans every file outside the thermal
+# module for the seams and constants that decide, checks the validator does not rerun or rewrite what the other
+# milestones own, adds no tolerance of its own, reads each owner's published function, is deterministic, and that
+# no other thermal file defines a competing acceptance API. Each fixture tree holds exactly one defect (or none):
+# the valid tree also holds comments that name forbidden things, and a viewer that calls the core's entry point and
+# reads a report member, none of which may be flagged.
+set(_check_validation "${CMAKE_CURRENT_SOURCE_DIR}/CheckValidationOwnership.cmake")
+add_test(NAME architecture.validation-ownership
+    COMMAND "${CMAKE_COMMAND}" "-DSOURCE_DIR=${PROJECT_SOURCE_DIR}" -P "${_check_validation}")
+bettercad_add_process_test(architecture.validation-ownership.valid
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/validation-valid|-P|${_check_validation}"
+    EXIT_CODE 0 STDOUT_REGEX "Validation ownership check passed")
+bettercad_add_process_test(architecture.validation-ownership.gui-decides
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/validation-gui-decides|-P|${_check_validation}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*decides thermal acceptance")
+bettercad_add_process_test(architecture.validation-ownership.reruns
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/validation-reruns|-P|${_check_validation}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*reruns or rewrites")
+bettercad_add_process_test(architecture.validation-ownership.second-tolerance
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/validation-second-tolerance|-P|${_check_validation}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*carries a tolerance literal")
+bettercad_add_process_test(architecture.validation-ownership.lacks-owners
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/validation-lacks-owners|-P|${_check_validation}"
+    EXIT_CODE 1 STDERR_REGEX "2 violation.*does not read")
+bettercad_add_process_test(architecture.validation-ownership.second-owner
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/validation-second-owner|-P|${_check_validation}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*a second acceptance API")
+bettercad_add_process_test(architecture.validation-ownership.unordered
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/validation-unordered|-P|${_check_validation}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*non-deterministic construct")

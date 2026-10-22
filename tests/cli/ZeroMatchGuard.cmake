@@ -269,6 +269,25 @@ set(_filters
     "unit\\.ThermalBalance_FineCylinder" 2
     "compile_fail\\.thermalbalance\\." 33
     "architecture\\.balance-ownership" 5
+    "unit\\.ThermalValidation" 138
+    "unit\\.ThermalValidation_(PolicyIsAccepted|PolicyConstantsArePinned|PolicyFingerprint|SeverityIsAFunction|EveryRuleHasAStableId)" 5
+    "unit\\.ThermalValidation_(StatusAndCountsAreDerived|ASkippedRuleIsNeverAPass|SolveAcceptedIsNot|ModeSpecificChecks)" 4
+    "unit\\.ThermalValidation_(RejectsAnInvertedTetrahedron|RejectsADegenerateTetrahedron|ANotANumberMetricIsInvalid|AcceptsAWellShaped|ThermalMeshQualityWarning|ThermalMeshQualityReject$|ReportsTheNumberOfElements|ComparesStrictly|WarnsAboutAContradictory|ReusesP16Metrics|RejectionByThermalPolicy)" 11
+    "unit\\.ThermalValidation_(ThermalMeshQualityRejectOnARealMesh|TheAspectRatioBoundCatches|QualifiedReferenceMeshesAreAccepted|AcceptsEveryQualifiedReferenceMesh|TheEnvelopeBoundsAreTheMeasuredWorstCase|RejectsAMeshWhoseSizingIntent|RejectsMissingMesh|RejectsStaleMesh|AWarningOnly)" 9
+    "unit\\.ThermalValidation_(MeasuresHow|TheBoundsGuarantee)" 3
+    "unit\\.ThermalValidation_(SteadyRequiresConductivityOnly|TransientRequiresConductivityDensitySpecificHeat|RejectsMissingMaterial|RejectsAMaterialWithoutAConductivity|NonFiniteAndNonPositive)" 5
+    "unit\\.ThermalValidation_(RejectsUnresolved|NoLoadsIsNot|AZeroMagnitudeLoad|RejectsConflicting|IdenticalDuplicate|InvalidConvection)" 7
+    "unit\\.ThermalValidation_(RejectsSameCounts|RejectsSameIds|RejectsMismatchedAssembly|EveryEditStales|EveryTransientEditStales|InputEditStales|FailedResolve|ANewSolveThatFails|RejectsAMissingAnalysis)" 9
+    "unit\\.ThermalValidation_(SteadyPureNeumann|SteadyDirichlet|SteadyRobin|FullyPrescribedSteady|FullyConstrainedSteadyPasses|DisconnectedUnanchored|DisconnectedAllAnchored|TransientPureNeumann|TransientDisconnected|TransientMissingCapacity|TransientCapacityMust|TheValidatorAndTheSolverAgree)" 16
+    "unit\\.ThermalValidation_(AcceptsQualifiedSteadyResidual|RejectsBadSteadyResidual|SolverSuccessDoesNotOverride|ResidualIsJudgedAgainst|ANotANumberResidual|RejectsAPrescribedTemperatureThatIsNotHeld|RejectsAPivotRatio|RejectsInvalidSolverSettings|FullyConstrainedSteadyResidual|ASteadyFieldOfTheWrongSize|AcceptsQualifiedTransientResiduals|RejectsAnyBadTransientStep|TheFinalPartialStep|FinalOnlyHistoriesAreJudged|ASingleStepFinalOnlyRun|ANotANumberTransientRecord|ATransientHistoryWithTheWrongNumber|TransientResidualsUseTheCanonical)" 18
+    "unit\\.ThermalValidation_(AcceptsQualifiedSteadyBalance|RejectsBadSteadyBalance|BalanceIsJudgedByBalances|ABalanceThatRecordsItself|RejectsNonFiniteBalance|ABalanceWithTheWrongNumber|ABalanceMustAccountFor|EveryStepOfATransientBalance|BalancePassDoesNotOverride|ResidualPassDoesNotOverride)" 10
+    "unit\\.ThermalValidation_(RejectsNonFiniteTemperature|RejectsATemperatureBelow|RejectsAStateOfTheWrongSize|EveryNonFiniteState|AcceptsAFiniteComplete|RejectsNonFiniteGradient|RejectsNonFiniteHeatFlux|RejectsAMissingElementResult|RejectsRecoveredTemperatures|RejectsARecoveredResultWithTheWrong)" 10
+    "unit\\.ThermalValidation_(AcceptsValidTransientSetup|RejectsInvalidInitialTemperature|RejectsInvalidTimeSettings|RejectsTimeSettingsPastTheResourceGuard|AFinalOnlyHistoryOfSeveralSteps|ASingleStepFinalOnlyTransientIsFully)" 6
+    "unit\\.ThermalValidation_(ValidSteadyAnalysisPasses|ValidTransientAnalysisPasses|ValidationIsReadOnly|ReportOrderingAndContents|RepeatedReportsOfEveryClass|PrimaryFailureReason)" 6
+    "unit\\.ThermalValidation_(EvidenceOfAQualified|APerturbedFreeTemperature|ACorruptedBalanceFailsTheBalanceAlone|ANotANumberTemperatureFailsTheFinitenessGate|ANotANumberHeatFluxFailsThePostGate|ABalanceThatCancelsDoes|AResidualThatPassesDoesNotRescue|ABalanceMissingACategory|ATransientHistoryWithAPerturbedMiddleState|ATransientHistoryWithAWrongStateCount|AnAbsentSolutionOrRecordedFailure)" 11
+    "unit\\.ThermalValidation_(RejectsAnAnalysisWhoseMeshingControl|RejectsABodyThatIsNoLonger|RejectsAGeometryEditThat|RejectsAFailedGeneration|RejectsAnAnalysisWithoutAnAssembled|ASystemWhoseReduction|AnInvalidElementCountFromP16|ARecoveryOrABalanceThatWasNever)" 8
+    "compile_fail\\.thermalvalidation\\." 33
+    "architecture\\.validation-ownership" 8
 )
 list(LENGTH _filters _count)
 math(EXPR _last "${_count} - 1")

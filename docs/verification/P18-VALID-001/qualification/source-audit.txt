@@ -1,0 +1,47 @@
+P18-VALID-001 source audit
+
+== src/thermal/ThermalValidation.cpp (1690 lines, 84920 bytes)
+  unordered containers / std::hash           0
+  clock, time, random                        0
+  threads / atomics / mutexes                0
+  mutable globals (static, non-const)        0
+  tolerance literals 1e-9 .. 1e-16           0
+  calls that would solve or assemble         0
+  calls that would remesh or regenerate      0
+  mesh metric computation                    0
+  raw owning memory                          0
+  goto / setjmp / exceptions thrown          0
+  BETTERCAD_THERMAL_EXPORT declarations      0
+
+== include/bettercad/thermal/ThermalValidation.hpp (838 lines, 46006 bytes)
+  unordered containers / std::hash           0
+  clock, time, random                        0
+  threads / atomics / mutexes                0
+  mutable globals (static, non-const)        0
+  tolerance literals 1e-9 .. 1e-16           1
+  calls that would solve or assemble         0
+  calls that would remesh or regenerate      0
+  mesh metric computation                    0
+  raw owning memory                          0
+  goto / setjmp / exceptions thrown          0
+  BETTERCAD_THERMAL_EXPORT declarations      27
+
+== authorities named in ThermalValidation.cpp (each must be present)
+  validateSteadySolution             3
+  validateTransientStep              3
+  balanceWithinTolerance             2
+  analyseAnchoring                   1
+  requireCurrent                     9
+  requireThermalModel                1
+  thermalInputProblem                1
+  staleReasons                       1
+  summaries                          2
+  direction                          3
+  thermalMaterialProblem             2
+  thermalLoadProblem                 1
+  thermalBoundaryFailure             1
+  reduceThermalSystem                1
+
+== validation codes
+  codes in the enumeration: 50
+  codes never named by a test: 0
