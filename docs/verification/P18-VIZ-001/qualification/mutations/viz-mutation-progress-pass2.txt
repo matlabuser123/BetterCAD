@@ -1,0 +1,8 @@
+VIZ09 | the lowest value ties resolve to the LAST entity | KILLED | test cases:   100 |    99 passed | 1 failed | assertions: 28871 | 28870 passed | 1 failed | restored | 177s
+VIZ14 | the view no longer compares the result source | KILLED | test cases:   100 |    99 passed | 1 failed | assertions: 28871 | 28869 passed | 2 failed | restored | 177s
+VIZ33 | any held result is current | KILLED | test cases:   100 |    92 passed |  8 failed | assertions: 28854 | 28834 passed | 20 failed | restored | 175s
+VIZ35 | the stale reasons are not reported | KILLED | test cases:   100 |    97 passed | 3 failed | assertions: 28871 | 28866 passed | 5 failed | restored | 174s
+VIZ41 | the stale banner is blank | KILLED | test cases:   100 |    99 passed | 1 failed | assertions: 28871 | 28870 passed | 1 failed | restored | 175s
+VIZ54 | a frame outside the stored states can be selected | KILLED | test cases:   100 |    99 passed | 1 failed | assertions: 28871 | 28869 passed | 2 failed | restored | 173s
+VIZ74 | a vector glyph takes its ordinal from the raw element id | KILLED | test cases:   100 |    99 passed | 1 failed | assertions: 28871 | 28867 passed | 4 failed | restored | 194s
+campaign finished 2026-10-23T12:02:42

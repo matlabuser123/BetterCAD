@@ -1,0 +1,5 @@
+src/renderer/ThermalResultView.cpp 0e655b1d1538303695a0e4b003776e15f6139413
+src/renderer/ThermalContour.cpp dde4e250bf848690a8f320ea1cae0c083d816078
+src/renderer/ThermalInspection.cpp 8117289ff2a322288c49656bfdf84e4d03935818
+src/renderer/ThermalOverlay.cpp c470c2eb2c9367fa2059193f8b2c83619b4ebd72
+src/renderer/occt/OcctOverlayPresentation.cpp 339811ee7be2f6a55c86de4cc06b463deb6a5959

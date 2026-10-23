@@ -1,0 +1,6 @@
+src/renderer/occt/OcctOverlayPresentation.cpp 339811ee7be2f6a55c86de4cc06b463deb6a5959
+src/renderer/occt/OcctOverlayPresentation.hpp 6de77b5a8e64a4b152ca0cf6681d7f08ade437f0
+src/renderer/occt/OcctMeshPresentation.cpp 7df947f97043870c5e09c0c73e4be11c17a245d7
+tests/renderer/ThermalVizViewerTests.cpp a31f0fba877dab7ef5ba6475663ee1749552d932
+descriptorOf 59448c7d8e766ce5d14f1c646f6a61d7f6fb991b
+toModelLength occurrences in OcctOverlayPresentation.cpp: 13

@@ -22,36 +22,37 @@ Prerequisite:
            (OCCT never subdivides a developable wall along its ruling).
 
 Current milestone:
-           none. P18-VALID-001 — Thermal Validation / Acceptance. COMPLETE at
-           18 of 18 and qualified 2026-10-23 against bc62b0c plus the working
-           tree: 5106/5106 x 3 presets, 1959 x 5 in two, 0 warnings over 711
-           objects, 17 stages exit 0, 5h12m47s, fingerprints at the freeze ==
-           before == after, first run. The one place a thermal analysis is
-           ACCEPTED: validateThermalAnalysis returns a deterministic structured
-           report of 15 ordered rules (TV_*), each finding with a stable code, a
-           severity that is a function of the code, a subject and the numbers;
-           the status is derived, never stored, and a skipped rule is never a
-           pass. P16 measures and states no opinion; the thermal mesh bounds are
-           decided here from a measured gradient-recovery law at the
-           absolute-temperature condition (3r/R < 7.0e-6 or aspect > 700 fail, a
-           factor of three inside a 1e-9 relative gradient error; the qualified
-           envelope warns). Steady needs k, a transient k, rho and cp; a pure
-           Neumann steady model fails and a pure Neumann transient passes; a
-           stale mesh with the same counts and ids is refused. The residual
-           tolerance is the canonical solver setting and the balance tolerance
-           is P18-BALANCE-001's, consumed and never copied; residual and balance
-           are independent gates. The validator solves, repairs and remeshes
-           nothing (497 files scanned, 0 violations, fixtures that fail the
-           gate). Nothing qualified changed (63 files byte-identical). 138 + 33
-           + 8 cases, 78 mutation probes all killed, 35 adversarial questions,
-           4 findings, 533 files and 0 layering violations. Evidence:
-           docs/verification/P18-VALID-001/.
+           none. P18-VIZ-001 — Thermal Visualisation / Inspection. COMPLETE at
+           21 of 21 and qualified 2026-10-23 against c56aef0 plus the working
+           tree: 5269/5269 x 3 presets, 2071 x 5 in two, 0 warnings over 721
+           objects, 17 stages exit 0, 6h05m33s, fingerprints at the freeze ==
+           before == after, second attempt (the first was stopped after a
+           transient failure of a CLI process test; see the evidence). A
+           READ-ONLY VIEW of the qualified derived thermal data, not a thermal
+           authority: nodal-temperature, gradient-magnitude and heat-flux
+           contours, recovered-flux vectors, applied-flux arrows (positive into
+           the body), prescribed-temperature and convection symbols, boundary
+           highlights, node and element inspection, extrema navigation (ties to
+           the first entity), transient playback on the stored times, and a
+           display state recomputed from the core on every call (a stale result,
+           even with the same counts and ids, is never drawn as current). Nothing
+           is recomputed, rescaled or copied: K, K/m and W/m^2 are never
+           converted, the metre to millimetre conversion stays the OCCT
+           adapter's one, measured against the CAD solid. Every field and glyph
+           reports expected / classified / rendered; zero-classified and partial
+           are never complete. 100 + 51 + 12 cases, 75 mutation probes (71
+           killed, 4 unreachable by construction), 50 adversarial questions,
+           13 findings (an independent review found four real holes, all fixed;
+           one production defect, a NaN swallowed by hypot, found by a test),
+           one gate scanning 43 files with 0 violations. Nothing qualified
+           changed (265 files byte-identical). No Qt result panel yet (as in
+           P17-VIZ-001). Evidence: docs/verification/P18-VIZ-001/.
            P18-ARCH-001 PASSED 2026-10-16; P18-DATA-001, P18-MAT-001,
            P18-DOF-001 PASSED 2026-10-17; P18-ELEM-001, P18-LOAD-001 PASSED
            2026-10-18; P18-BC-001, P18-ASSEMBLY-001 PASSED 2026-10-19/20;
            P18-SOLVE-001 PASSED 2026-10-20; P18-TRANSIENT-001, P18-POST-001
-           PASSED 2026-10-21; P18-BALANCE-001 PASSED 2026-10-22; P18-VALID-001 PASSED
-           2026-10-23 (docs/verification/P18-*/).
+           PASSED 2026-10-21; P18-BALANCE-001 PASSED 2026-10-22; P18-VALID-001,
+           P18-VIZ-001 PASSED 2026-10-23 (docs/verification/P18-*/).
 Qualified:
            P0–P10 — BetterCAD v0.1.0
            P11 — Advanced Part Modelling
@@ -63,8 +64,8 @@ Qualified:
            P17 — Structural FEA
 
 Next:
-           P18-VIZ-001 — Thermal Visualization. NOT AUTHORIZED:
-           P18-VALID-001 passing is not permission to start it; each
+           P18-CMD-001 — Thermal Commands / Undo-Redo. NOT AUTHORIZED:
+           P18-VIZ-001 passing is not permission to start it; each
            milestone is started by the owner, as every P17 milestone was.
 
 P17 objective, as delivered:
@@ -1201,27 +1202,73 @@ Evidence: docs/verification/P18-VALID-001/.
 Critical rule: thermal visualisation = a view of derived P18 data, NOT a new
 thermal-analysis authority.
 
-* [ ] Undeformed thermal mesh display
-* [ ] Temperature contour
-* [ ] Temperature-gradient magnitude contour
-* [ ] Heat-flux magnitude contour
-* [ ] Heat-flux vector display
-* [ ] Element inspection
-* [ ] Node temperature inspection
-* [ ] Heat-flux boundary arrows
-* [ ] Prescribed-temperature symbols
-* [ ] Convection BC symbols
-* [ ] Boundary-set highlighting
-* [ ] Highest / lowest temperature navigation
-* [ ] Highest heat-flux navigation
-* [ ] Transient playback
-* [ ] Clear stale-result visual state
-* [ ] Rendering does not mutate results
-* [ ] GUI does not duplicate canonical thermal data
-* [ ] SI metre → OCCT millimetre boundary verified
-* [ ] Classifier cardinality verified
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Undeformed thermal mesh display
+* [x] Temperature contour
+* [x] Temperature-gradient magnitude contour
+* [x] Heat-flux magnitude contour
+* [x] Heat-flux vector display
+* [x] Element inspection
+* [x] Node temperature inspection
+* [x] Heat-flux boundary arrows
+* [x] Prescribed-temperature symbols
+* [x] Convection BC symbols
+* [x] Boundary-set highlighting
+* [x] Highest / lowest temperature navigation
+* [x] Highest heat-flux navigation
+* [x] Transient playback
+* [x] Clear stale-result visual state
+* [x] Rendering does not mutate results
+* [x] GUI does not duplicate canonical thermal data
+* [x] SI metre → OCCT millimetre boundary verified
+* [x] Classifier cardinality verified
+* [x] Regression PASS
+* [x] Evidence recorded
+
+```text
+PASS 2026-10-23. Qualified against c56aef0 plus the working tree: 5269/5269 x 3
+presets, 2071 x 5 in two, 0 warnings over 721 objects, 17 stages exit 0,
+6h05m33s, fingerprints at the freeze == before == after; second attempt on the
+frozen tree (the first, stopped by the author after cli.assembly.batch failed
+once after 34 s and nine dependants did not run, is in qualification/attempt1/;
+the test passes alone in 0.22 s and in attempt 2). NOTHING QUALIFIED CHANGED: 265
+files (the whole thermal, meshing, structural, linalg and core modules, the P17
+renderer files and the OCCT mesh presentation) are byte-identical to HEAD; the
+Viewer gained one additive overload.
+DECISION: a read-only view. Four headless files (ThermalResultView, ThermalContour,
+ThermalInspection, ThermalOverlay) read the stored nodal temperature, element
+gradient vector, heat-flux vector and magnitude, the prepared loads and conditions,
+the validation report and the core's currentness; they compute nothing but a display
+norm and arrow geometry. The unit and location of every channel are the core's
+descriptors; the gradient magnitude is the display norm of the stored vector (a NaN
+component stays NaN - std::hypot(0, NaN, 0) is 0 here, found by a test and fixed);
+element values are unsmoothed; the legend tiles its range exactly and a constant range
+is one band; a manual range clamps a colour and never a value; the cache key holds the
+whole source and the view. q is drawn from the stored vector, never flipped or
+normalised; an applied q'' points along -n_out for q'' > 0 and is a different overlay;
+the outward normal is verified against the owning tetrahedron, also on a curved wall.
+CURRENTNESS: the display state is recomputed from the core on every call; a remesh with
+the same counts or the same ids, a material, load or condition edit, and a failed
+recompute never leave a result drawn as current; the validation badge is the core's
+verdict, belongs to its analysis and its result, and goes Stale with the model. CARDINALITY:
+expected / classified / rendered on every field and glyph; zero-classified, partial and
+unresolved are never complete, nothing is rebound to the nearest face. UNITS: K, K/m and
+W/m^2 never rescaled; the one metre -> millimetre conversion is the OCCT adapter's,
+measured against a 1 x 2 x 3 mm and a 40 mm CAD solid. PLAYBACK: the stored times
+(0, 0.3, 0.6, 0.8999999999999999, 1 s - not 1.2), one state per frame, no interpolation.
+The Qt application has no thermal panel yet (as for P17-VIZ-001); the GUI smoke is the
+headless layer plus offscreen renders of the production viewer. One gate scans 43 files
+with 0 violations and has eleven fixtures that fail it. 100 + 51 + 12 cases, 15 zero-match
+filters, 75 mutation probes (71 killed, 3 of them by an abort; 4 unreachable by construction;
+3 first-pass survivors were test gaps, closed), 50 adversarial questions, 13 findings (an
+independent review found four holes - cache key without the view, glyphs not bound to the
+prepared loads, a badge not bound to its analysis, an overflowing arrow length - all fixed
+with tests; a test with literal \n sequences had never run its last paragraph, repaired),
+0 qualified-module defects. Limits recorded: no Qt panels; inspect* default resultState to
+Current (the caller states it); a glyph and an extreme carry no mesh stamp; four guards
+are unreachable through any public construction; the core's HeatFlux3::magnitude() has the
+hypot NaN property (untouched, POST validates first).
+Evidence: docs/verification/P18-VIZ-001/.
+```
 
 ---
 # P18-CMD-001

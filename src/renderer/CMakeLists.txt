@@ -28,6 +28,10 @@ bettercad_add_library(bettercad_renderer
         StructuralInspection.cpp
         StructuralOverlay.cpp
         StructuralResultView.cpp
+        ThermalContour.cpp
+        ThermalInspection.cpp
+        ThermalOverlay.cpp
+        ThermalResultView.cpp
         occt/OcctMeshPresentation.cpp
         occt/OcctOverlayPresentation.cpp
         occt/OcctViewer.cpp
@@ -38,6 +42,9 @@ bettercad_add_library(bettercad_renderer
         # ElementId, so a consumer of this module's headers needs meshing too.
         BetterCAD::meshing
         BetterCAD::structural
+        # Public: ThermalResultView.hpp takes a thermal::ThermalPostResult and hands back NodeId and ElementId,
+        # so a consumer of this module's headers needs thermal too (P18-VIZ-001).
+        BetterCAD::thermal
     PRIVATE_LINK
         # The modelling toolkits are needed because the viewer displays a
         # TopoDS_Shape through AIS_Shape; the visualization ones are what

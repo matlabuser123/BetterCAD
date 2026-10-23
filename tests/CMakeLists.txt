@@ -31,6 +31,12 @@ bettercad_add_executable(bettercad_tests
         renderer/MeshSceneTests.cpp
         renderer/MeshViewTests.cpp
         renderer/StructuralResultViewTests.cpp
+        renderer/ThermalVizBoundaryTests.cpp
+        renderer/ThermalVizContourTests.cpp
+        renderer/ThermalVizFieldTests.cpp
+        renderer/ThermalVizStateTests.cpp
+        renderer/ThermalVizTestSupport.hpp
+        renderer/ThermalVizViewerTests.cpp
         renderer/ViewerTests.cpp
         meshing/GeometryPreparationTests.cpp
         meshing/MeshDataTests.cpp

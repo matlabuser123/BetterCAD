@@ -1,0 +1,160 @@
+ThermalChannelDescriptor descriptorOf(ThermalChannel channel) noexcept {
+    ThermalChannelDescriptor out;
+    out.channel = channel;
+    switch (channel) {
+    case ThermalChannel::Temperature:
+        out.source = thermal::ThermalPostField::Temperature;
+        out.name = "Temperature";
+        break;
+    case ThermalChannel::TemperatureGradientMagnitude:
+        out.source = thermal::ThermalPostField::TemperatureGradient;
+        out.name = "Temperature Gradient Magnitude";
+        break;
+    case ThermalChannel::HeatFluxMagnitude:
+        out.source = thermal::ThermalPostField::HeatFluxMagnitude;
+        out.name = "Heat Flux Magnitude";
+        break;
+    }
+    // THE LOCATION AND THE UNIT ARE THE CORE'S, read from POST's own descriptor. They are not restated here.
+    const thermal::ThermalFieldDescriptor core = thermal::descriptorOf(out.source);
+    out.location = core.location;
+    out.unit = core.unit;
+    out.mayBeNegative = false;
+    return out;
+}double gradientDisplayNorm(const thermal::TemperatureGradient3& gradient) noexcept {
+    // A COMPONENT THAT IS NOT A NUMBER MAKES THE NORM NOT A NUMBER. This is not a nicety: libstdc++'s three-argument
+    // hypot takes the largest component with std::max, which returns its FIRST argument when the comparison
+    // involves a NaN, so hypot(0, NaN, 0) is 0 -- a corrupt gradient would read as a perfectly quiet one, and the
+    // finiteness check downstream would never see it. Found by RejectsANonFiniteValueInsteadOfMappingItToAColour.
+    if (!std::isfinite(gradient.x.si()) || !std::isfinite(gradient.y.si()) || !std::isfinite(gradient.z.si())) {
+        return std::numeric_limits<double>::quiet_NaN();
+    }
+    return std::hypot(gradient.x.si(), gradient.y.si(), gradient.z.si());
+}std::optional<double> channelValue(ThermalChannel channel, Temperature temperature) noexcept {
+    switch (channel) {
+    case ThermalChannel::Temperature:
+        // THE STORED KELVIN VALUE, bit for bit. No offset, no conversion.
+        return temperature.si();
+    // EVERY ELEMENT CHANNEL IS ABSENT ON A NODE, written out rather than defaulted so that a channel added to the
+    // enum fails to compile here instead of silently joining this arm.
+    case ThermalChannel::TemperatureGradientMagnitude:
+    case ThermalChannel::HeatFluxMagnitude:
+        break;
+    }
+    return std::nullopt;
+}std::optional<double> channelValue(ThermalChannel channel, const thermal::TemperatureGradient3& gradient,
+                                   HeatFlux magnitude) noexcept {
+    switch (channel) {
+    case ThermalChannel::TemperatureGradientMagnitude:
+        return gradientDisplayNorm(gradient);
+    case ThermalChannel::HeatFluxMagnitude:
+        // POST'S STORED |q|. Not a norm of the flux vector taken here: POST owns that value.
+        return magnitude.si();
+    case ThermalChannel::Temperature:
+        break;
+    }
+    return std::nullopt;
+}Result<ThermalScalarField> classifyThermalState(ThermalChannel channel, const thermal::ThermalPostState& stored,
+                                                std::span<const meshing::NodeId> nodes,
+                                                std::span<const meshing::ElementId> elements, std::size_t state) {
+    const ThermalChannelDescriptor descriptor = descriptorOf(channel);
+
+    ThermalScalarField out;
+    out.channel = channel;
+    out.location = descriptor.location;
+    out.state = state;
+    if (stored.time.has_value()) {
+        out.time = stored.time->si();
+    }
+    out.expected = descriptor.location == thermal::FieldLocation::Node ? nodes.size() : elements.size();
+    if (out.expected == 0U) {
+        return fail(ThermalFieldProblem::EmptyClassificationDomain,
+                    std::format("channel {} has no {} to classify", toString(channel), toString(descriptor.location)));
+    }
+
+    if (descriptor.location == thermal::FieldLocation::Node) {
+        // THE ARRAY IS PARALLEL TO ThermalDofIndex AND TO the numbering's node list, and a short or long one is
+        // refused -- not padded with zeros (a field of silence reads as a valid uniform result) and not truncated.
+        if (stored.temperatures.size() != out.expected) {
+            return fail(ThermalFieldProblem::CardinalityMismatch,
+                        std::format("state {} holds {} temperatures for {} nodes", state,
+                                    stored.temperatures.size(), out.expected));
+        }
+        out.nodes.assign(nodes.begin(), nodes.end());
+        out.values.reserve(out.expected);
+        for (const Temperature t : stored.temperatures) {
+            const std::optional<double> value = channelValue(channel, t);
+            if (!value.has_value()) {
+                ++out.skipped;
+                continue;
+            }
+            if (!std::isfinite(*value)) {
+                ++out.nonFinite;
+                continue;
+            }
+            out.values.push_back(*value);
+        }
+    } else {
+        const std::size_t n = out.expected;
+        if (stored.fields.gradients.size() != n || stored.fields.heatFluxes.size() != n ||
+            stored.fields.heatFluxMagnitudes.size() != n) {
+            return fail(ThermalFieldProblem::CardinalityMismatch,
+                        std::format("state {} holds {} gradients, {} fluxes and {} flux magnitudes for {} "
+                                    "tetrahedra",
+                                    state, stored.fields.gradients.size(), stored.fields.heatFluxes.size(),
+                                    stored.fields.heatFluxMagnitudes.size(), n));
+        }
+        out.elements.assign(elements.begin(), elements.end());
+        out.values.reserve(n);
+        for (std::size_t i = 0U; i < n; ++i) {
+            const std::optional<double> value =
+                channelValue(channel, stored.fields.gradients[i], stored.fields.heatFluxMagnitudes[i]);
+            if (!value.has_value()) {
+                ++out.skipped;
+                continue;
+            }
+            if (!std::isfinite(*value)) {
+                ++out.nonFinite;
+                continue;
+            }
+            out.values.push_back(*value);
+        }
+    }
+
+    if (out.skipped > 0U) {
+        return fail(ThermalFieldProblem::ChannelUnavailable,
+                    std::format("channel {} has no value on {} of {} {} entities", toString(channel), out.skipped,
+                                out.expected, toString(descriptor.location)));
+    }
+    if (out.nonFinite > 0U) {
+        return fail(ThermalFieldProblem::NonFiniteValue,
+                    std::format("channel {} of state {} holds {} value(s) that are not finite", toString(channel),
+                                state, out.nonFinite));
+    }
+    out.classified = out.values.size();
+    // The expected count is positive (the view refused an empty domain), so a complete field here has entities.
+
+    // SEEDED FROM THE FIRST VALUE, never from zero. Ties keep the first entity: the comparison is strict.
+    out.minimum = out.values.front();
+    out.maximum = out.values.front();
+    std::size_t lowest = 0U;
+    std::size_t highest = 0U;
+    for (std::size_t i = 1U; i < out.values.size(); ++i) {
+        if (out.values[i] < out.minimum) {
+            out.minimum = out.values[i];
+            lowest = i;
+        }
+        if (out.values[i] > out.maximum) {
+            out.maximum = out.values[i];
+            highest = i;
+        }
+    }
+    if (descriptor.location == thermal::FieldLocation::Node) {
+        out.minimumNode = out.nodes[lowest];
+        out.maximumNode = out.nodes[highest];
+    } else {
+        out.minimumElement = out.elements[lowest];
+        out.maximumElement = out.elements[highest];
+    }
+    return out;
+}

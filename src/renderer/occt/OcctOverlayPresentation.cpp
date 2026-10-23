@@ -35,6 +35,23 @@ constexpr int kDisplayMode = 0;
     return Quantity_Color{0.20, 0.75, 0.35, Quantity_TOC_sRGB};
 }
 
+/// Thermal roles (P18-VIZ-001), again far apart in hue: magenta for the recovered flux inside the solid, red for
+/// the heat applied at a boundary, blue for a held temperature and cyan for convection. The recovered flux and the
+/// applied flux are different quantities, and they are drawn in different colours for that reason.
+[[nodiscard]] Quantity_Color colourOf(ThermalOverlayRole role) {
+    switch (role) {
+    case ThermalOverlayRole::HeatFluxVectors:
+        return Quantity_Color{0.75, 0.15, 0.75, Quantity_TOC_sRGB};
+    case ThermalOverlayRole::AppliedHeatFluxArrows:
+        return Quantity_Color{0.95, 0.25, 0.20, Quantity_TOC_sRGB};
+    case ThermalOverlayRole::PrescribedTemperatureSymbols:
+        return Quantity_Color{0.15, 0.35, 0.95, Quantity_TOC_sRGB};
+    case ThermalOverlayRole::ConvectionSymbols:
+        return Quantity_Color{0.10, 0.75, 0.85, Quantity_TOC_sRGB};
+    }
+    return Quantity_Color{0.75, 0.15, 0.75, Quantity_TOC_sRGB};
+}
+
 /// A COLOUR PER ROLE, so a load, a reaction and a support are told apart
 /// without a legend. The three are far apart in hue rather than in shade,
 /// because the alternative is a user reading a reaction as a load.
@@ -53,9 +70,22 @@ constexpr int kDisplayMode = 0;
 } // namespace
 
 OverlayPresentation::OverlayPresentation(const StructuralOverlay& overlay)
-    : role_(overlay.role), segmentCount_(overlay.segments.size()) {
+    : colour_(colourOf(overlay.role)), segmentCount_(overlay.segments.size()) {
     endpoints_.reserve(segmentCount_ * 6U);
     for (const OverlaySegment& segment : overlay.segments) {
+        endpoints_.push_back(toModelLength(segment.from.x.si()));
+        endpoints_.push_back(toModelLength(segment.from.y.si()));
+        endpoints_.push_back(toModelLength(segment.from.z.si()));
+        endpoints_.push_back(toModelLength(segment.to.x.si()));
+        endpoints_.push_back(toModelLength(segment.to.y.si()));
+        endpoints_.push_back(toModelLength(segment.to.z.si()));
+    }
+}
+
+OverlayPresentation::OverlayPresentation(const ThermalOverlay& overlay)
+    : colour_(colourOf(overlay.role)), segmentCount_(overlay.segments.size()) {
+    endpoints_.reserve(segmentCount_ * 6U);
+    for (const ThermalOverlaySegment& segment : overlay.segments) {
         endpoints_.push_back(toModelLength(segment.from.x.si()));
         endpoints_.push_back(toModelLength(segment.from.y.si()));
         endpoints_.push_back(toModelLength(segment.from.z.si()));
@@ -85,7 +115,7 @@ void OverlayPresentation::Compute(const Handle(PrsMgr_PresentationManager)& /*ma
     // WIDTH 2, so an overlay reads over a shaded mesh rather than
     // disappearing into its edges, which are drawn at 1.
     Handle(Graphic3d_AspectLine3d) aspect =
-        new Graphic3d_AspectLine3d(colourOf(role_), Aspect_TOL_SOLID, 2.0);
+        new Graphic3d_AspectLine3d(colour_, Aspect_TOL_SOLID, 2.0);
     group->SetGroupPrimitivesAspect(aspect);
     group->AddPrimitiveArray(array);
 }

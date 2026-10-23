@@ -1,0 +1,4 @@
+src/renderer/CMakeLists.txt    ff0356569c929005eddc8f523dabf7e9700a49bf
+src/thermal/CMakeLists.txt     734cc87c7d70875957be29a9ec6667f1c8916ab2
+CheckLayering.cmake           505897ecff3c3cad62370e785ee379e78a5884c4
+CheckTargetDependencies.cmake 987e0536567bfea1565318aa616218bd9a374805

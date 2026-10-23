@@ -1328,3 +1328,86 @@ foreach(_case
     bettercad_compile_fail_case(thermalvalidation "${_thermalvalidation}" ${_case}
         "read-only|discards qualifiers|no match for|passing .const|lvalue required|using temporary as lvalue" BetterCAD::thermal)
 endforeach()
+
+# --- Thermal visualisation and inspection (P18-VIZ-001) ---------------------
+# A thermal view READS qualified derived data and authors nothing. Five claims are enforced here: no thermal
+# authority (no setter on a field, no editable stale flag, no write through a const view, no function that
+# recovers, smooths, interpolates, rescales, rebinds or solves); the units cannot be confused (a temperature, a
+# gradient and a heat flux are three dimensions, none converts to a double, and there is no Celsius quantity); the
+# enumerations are not booleans or integers (a badge is not the core's status, a partial classification is not
+# "complete"); the identity spaces do not mix (a node is not an element, a frame index is not a time); and a
+# playback and a result view are bound to a result, never default-constructed.
+set(_thermalviz "${CMAKE_CURRENT_SOURCE_DIR}/ThermalVizMisuse.cpp")
+bettercad_compile_fail_group(thermalviz "${_thermalviz}" BetterCAD::renderer BetterCAD::thermal BetterCAD::meshing)
+foreach(_case
+        A_TEMPERATURE_IS_NOT_A_DOUBLE
+        A_QUANTITY_IS_NOT_A_DOUBLE
+        A_TEMPERATURE_IS_NOT_A_HEAT_FLUX
+        A_GRADIENT_IS_NOT_A_HEAT_FLUX
+        A_HEAT_FLUX_IS_NOT_A_GRADIENT
+        A_FRAME_INDEX_IS_NOT_A_TIME
+        A_CHANNEL_IS_NOT_AN_INTEGER
+        A_CHANNEL_IS_NOT_A_POST_FIELD
+        A_RESULT_STATE_IS_NOT_A_BOOL
+        A_BADGE_IS_NOT_A_BOOL
+        A_BADGE_IS_NOT_A_VALIDATION_STATUS
+        AN_AVAILABILITY_IS_NOT_A_BOOL
+        A_BOUNDARY_STATUS_IS_NOT_A_BOOL
+        A_BOUNDARY_STATUS_IS_NOT_AN_INTEGER
+        AN_OVERLAY_ROLE_IS_NOT_AN_INTEGER
+        A_TARGET_KIND_IS_NOT_AN_OVERLAY_ROLE
+        AN_EXTREME_KIND_IS_NOT_A_BOOL
+        A_NODE_ID_IS_NOT_AN_ELEMENT_ID
+        AN_ELEMENT_ID_IS_NOT_A_NODE_ID)
+    bettercad_compile_fail_case(thermalviz "${_thermalviz}" ${_case}
+        "could not convert|cannot convert|no matching function|no match for|invalid conversion|invalid initialization of reference|conversion from|no known conversion"
+        BetterCAD::renderer BetterCAD::thermal BetterCAD::meshing)
+endforeach()
+foreach(_case
+        THE_DISPLAY_STATE_HAS_NO_STALE_FLAG
+        THE_DISPLAY_STATE_HAS_NO_OVERRIDE
+        THE_FIELD_HAS_NO_SMOOTHED_VALUES
+        THE_FIELD_HAS_NO_CELSIUS
+        THE_FIELD_HAS_NO_INTERPOLATED_TIME
+        THE_LEGEND_HAS_NO_RESCALED_UNIT
+        THE_NODE_INSPECTION_HAS_NO_MILLIMETRE_POSITION
+        THE_ELEMENT_INSPECTION_HAS_NO_NORMALISED_FLUX
+        THE_ELEMENT_INSPECTION_HAS_NO_CONDUCTIVITY
+        THE_ELEMENT_INSPECTION_HAS_NO_MATERIAL
+        THE_PLAYBACK_HAS_NO_TIME_STEP
+        THE_PLAYBACK_HAS_NO_INTERPOLATION
+        THE_PLAYBACK_HAS_NO_SET_TIME
+        THE_GLYPH_HAS_NO_NORMALISED_DIRECTION_STORE
+        THE_OVERLAY_HAS_NO_RESULT_STORE)
+    bettercad_compile_fail_case(thermalviz "${_thermalviz}" ${_case}
+        "no member named|has no member" BetterCAD::renderer BetterCAD::thermal BetterCAD::meshing)
+endforeach()
+foreach(_case
+        THERE_IS_NO_GRADIENT_RECOVERY_IN_THE_VIEW
+        THERE_IS_NO_SMOOTHING
+        THERE_IS_NO_FRAME_INTERPOLATION
+        THERE_IS_NO_CELSIUS_CONVERSION
+        THERE_IS_NO_NEAREST_FACE_REBINDING
+        THERE_IS_NO_VIEW_SIDE_SOLVE
+        THERE_IS_NO_STALE_SETTER
+        QUANTITIES_HAVE_NO_CELSIUS_FACTORY)
+    bettercad_compile_fail_case(thermalviz "${_thermalviz}" ${_case}
+        "is not a member of|not declared|has not been declared|does not name a type" BetterCAD::renderer BetterCAD::thermal BetterCAD::meshing)
+endforeach()
+foreach(_case
+        THE_FIELD_IS_READ_ONLY_THROUGH_A_CONST_VIEW
+        THE_EXTREME_IS_READ_ONLY_THROUGH_A_CONST_VIEW
+        THE_DISPLAY_STATE_IS_READ_ONLY_THROUGH_A_CONST_VIEW
+        THE_CARDINALITY_IS_READ_ONLY_THROUGH_A_CONST_VIEW
+        THE_INSPECTION_IS_READ_ONLY_THROUGH_A_CONST_VIEW
+        THE_PLAYBACK_CURSOR_IS_NOT_MOVED_THROUGH_A_CONST_VIEW
+        THE_BANNER_TEXT_IS_READ_ONLY)
+    bettercad_compile_fail_case(thermalviz "${_thermalviz}" ${_case}
+        "read-only|discards qualifiers|no match for|passing .const|lvalue required|using temporary as lvalue" BetterCAD::renderer BetterCAD::thermal BetterCAD::meshing)
+endforeach()
+foreach(_case
+        A_PLAYBACK_IS_BOUND_NOT_CONSTRUCTED
+        A_RESULT_VIEW_IS_BOUND_NOT_CONSTRUCTED)
+    bettercad_compile_fail_case(thermalviz "${_thermalviz}" ${_case}
+        "is private|is protected|inaccessible|use of deleted function" BetterCAD::renderer BetterCAD::thermal BetterCAD::meshing)
+endforeach()

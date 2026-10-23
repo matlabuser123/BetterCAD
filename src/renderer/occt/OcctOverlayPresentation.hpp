@@ -33,16 +33,22 @@
 
 #include <AIS_InteractiveObject.hxx>
 #include <Graphic3d_ArrayOfSegments.hxx>
+#include <Quantity_Color.hxx>
 #include <Standard_Type.hxx>
 
 #include <bettercad/renderer/StructuralOverlay.hpp>
+#include <bettercad/renderer/ThermalOverlay.hpp>
 
 #include <cstddef>
 #include <vector>
 
 namespace bettercad::renderer::occt {
 
-/// One batched presentation of one structural overlay.
+/// One batched presentation of one overlay: a structural one (P17-VIZ-001) or a thermal one (P18-VIZ-001).
+///
+/// BOTH THROUGH THE SAME CONVERSION. The two constructors differ only in the colour a role maps to; the segments
+/// of either reach millimetres through the one function in the .cpp, so a thermal arrow and a structural one drawn
+/// over the same mesh cannot disagree about scale.
 class OverlayPresentation : public AIS_InteractiveObject {
     DEFINE_STANDARD_RTTI_INLINE(OverlayPresentation, AIS_InteractiveObject)
 
@@ -51,8 +57,8 @@ public:
     /// through the adapter's single conversion. The overlay may be discarded
     /// afterwards.
     explicit OverlayPresentation(const StructuralOverlay& overlay);
+    explicit OverlayPresentation(const ThermalOverlay& overlay);
 
-    [[nodiscard]] OverlayRole role() const noexcept { return role_; }
     [[nodiscard]] std::size_t segmentCount() const noexcept { return segmentCount_; }
 
 protected:
@@ -61,7 +67,9 @@ protected:
     void ComputeSelection(const Handle(SelectMgr_Selection)& selection, const int mode) override;
 
 private:
-    OverlayRole role_ = OverlayRole::LoadArrows;
+    /// The colour of the role the overlay depicts: a load, a reaction and a support (or a recovered flux, an applied
+    /// flux, a temperature and a convection) are told apart without a legend.
+    Quantity_Color colour_{};
     std::size_t segmentCount_ = 0U;
     /// Flattened endpoints in MILLIMETRES: six doubles per segment.
     std::vector<double> endpoints_{};

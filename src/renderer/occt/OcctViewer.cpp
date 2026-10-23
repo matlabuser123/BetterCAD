@@ -330,6 +330,8 @@ std::string_view toString(PresentationKind kind) noexcept {
         return "an engineering mesh";
     case PresentationKind::Overlay:
         return "a structural overlay";
+    case PresentationKind::ThermalOverlay:
+        return "a thermal overlay";
     }
     return "an unknown presentation";
 }
@@ -424,6 +426,32 @@ Result<PresentationId> Viewer::displayOverlay(ObjectId source,
             const PresentationId id = PresentationId::fromValue(++impl_->lastPresentation);
             impl_->displayed.push_back(
                 DisplayedObject{id, source, PresentationKind::Overlay, true, false});
+            impl_->presentations.push_back(presentation);
+            return id;
+        });
+}
+
+Result<PresentationId> Viewer::displayOverlay(ObjectId source, const ThermalOverlay& overlay) {
+    if (!source.isValid()) {
+        return makeError(ErrorCode::InvalidArgument,
+                         "viewer: the invalid handle cannot name the source of an overlay");
+    }
+    // NOTHING TO DRAW IS A CALLER ERROR: the overlay functions report what they skipped, so an empty overlay means
+    // every item was skipped, grouped or too small, or there were none -- and the caller knows more about it.
+    if (overlay.empty()) {
+        return makeError(ErrorCode::FailedPrecondition,
+                         std::format("viewer: a thermal overlay of {} has no segments to display",
+                                     toString(overlay.role)));
+    }
+    return geometry::occt::guardKernelCall(
+        "viewer thermal overlay display", [&]() -> Result<PresentationId> {
+            Handle(occt::OverlayPresentation) presentation = new occt::OverlayPresentation(overlay);
+            presentation->SetDisplayMode(0);
+            impl_->context->Display(presentation, 0, -1, false);
+
+            const PresentationId id = PresentationId::fromValue(++impl_->lastPresentation);
+            impl_->displayed.push_back(
+                DisplayedObject{id, source, PresentationKind::ThermalOverlay, true, false});
             impl_->presentations.push_back(presentation);
             return id;
         });

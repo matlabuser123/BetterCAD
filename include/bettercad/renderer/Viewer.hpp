@@ -52,6 +52,7 @@ namespace bettercad::renderer {
 /// Forward-declared rather than included: `StructuralOverlay.hpp` reaches the
 /// structural module, and `displayOverlay` only takes a reference to one.
 struct StructuralOverlay;
+struct ThermalOverlay;
 
 /// Where a standard view looks from.
 enum class StandardView : std::uint8_t {
@@ -114,6 +115,9 @@ enum class PresentationKind : std::uint8_t {
     /// struct it depicts do not share a name. The enumerator is scoped, so
     /// both spellings would compile; one of them would just read badly.
     Overlay,
+    /// A thermal overlay (P18-VIZ-001): recovered heat-flux vectors, applied heat-flux arrows, prescribed-temperature
+    /// symbols or convection symbols, drawn as line segments over whatever else is displayed.
+    ThermalOverlay,
 };
 
 [[nodiscard]] BETTERCAD_RENDERER_EXPORT std::string_view toString(PresentationKind kind) noexcept;
@@ -287,6 +291,15 @@ public:
     /// functions already report `skipped` for the glyphs they left out.
     [[nodiscard]] Result<PresentationId> displayOverlay(ObjectId source,
                                                         const StructuralOverlay& overlay);
+
+    /// Displays a thermal overlay (P18-VIZ-001).
+    ///
+    /// AN ANNOTATION, NOT A RESULT, exactly as the structural one: a list of line segments in SI metres that
+    /// `renderer::heatFluxVectorOverlay`, `appliedHeatFluxOverlay`, `prescribedTemperatureOverlay` or
+    /// `convectionOverlay` resolved from canonical intent and the qualified result. They pass through the SAME
+    /// single metres-to-millimetres conversion the structural overlay and the mesh use. NOT SELECTABLE. Refuses an
+    /// overlay with no segments.
+    [[nodiscard]] Result<PresentationId> displayOverlay(ObjectId source, const ThermalOverlay& overlay);
 
     /// The mesh generation a mesh presentation is showing.
     [[nodiscard]] Result<meshing::MeshStamp> meshStampOf(PresentationId presentation) const;

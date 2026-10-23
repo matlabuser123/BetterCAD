@@ -1,0 +1,37 @@
+BoundaryCardinality classifyBoundaryCardinality(BoundaryTargetKind kind, std::uint64_t id,
+                                                const meshing::BoundaryFacetSet& mapping, std::size_t classified,
+                                                std::size_t rendered) noexcept {
+    BoundaryCardinality out;
+    out.kind = kind;
+    out.id = id;
+    out.expected = mapping.facets.size();
+    out.classified = classified;
+    out.rendered = rendered;
+    if (!mapping.fullyResolved()) {
+        out.status = BoundaryClassStatus::Unresolved;
+    } else if (out.expected == 0U && classified > 0U) {
+        out.status = BoundaryClassStatus::Inconsistent;
+    } else if (out.expected == 0U || classified == 0U) {
+        // THE TRAP: the classifier succeeded and classified nothing. Not a complete highlight, not an empty one.
+        out.status = BoundaryClassStatus::ZeroClassified;
+    } else if (classified > out.expected || rendered > out.expected) {
+        out.status = BoundaryClassStatus::Inconsistent;
+    } else if (classified < out.expected || rendered < out.expected) {
+        out.status = BoundaryClassStatus::Partial;
+    } else {
+        out.status = BoundaryClassStatus::Complete;
+    }
+    return out;
+}enum class BoundaryClassStatus : std::uint8_t {
+    /// Resolved, non-empty, and expected == classified == rendered.
+    Complete,
+    /// A reference no longer resolves. KEPT and reported; nothing is rebound to a nearby face.
+    Unresolved,
+    /// The classifier reported success and classified NOTHING (or the core classified none of what the map
+    /// resolved). THE P16 TRAP: this is a failure, never an empty highlight that looks like a success.
+    ZeroClassified,
+    /// Fewer entities were classified or rendered than the mapping resolved. Not complete, and not reported so.
+    Partial,
+    /// More were classified or rendered than the mapping resolved: the owners disagree.
+    Inconsistent,
+};

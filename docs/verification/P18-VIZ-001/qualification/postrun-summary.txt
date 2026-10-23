@@ -1,0 +1,169 @@
+postrun-viz started 2026-10-23T21:33:48.4255214+10:00
+== layering checker on the source tree
+-- Architecture check passed: 541 files, 0 violations
+== thermal visualization ownership checker on the source tree
+-- Thermal visualization ownership check passed: 43 files scanned, 0 violations
+== warnings and errors in the harness build logs
+  debug-ext : warning: 0  error: 0  objects 721  last step [745/745] Linking CXX executable bin\bettercad_tests.exe
+  debug-ext no-op rebuild edges: 1
+  debug-ext clean: [1/2] Cleaning additional files... [2/2] Cleaning all built files... Cleaning... 744 files.
+  debug-ext ctest: 100% tests passed out of 5269 | Total Test time (real) = 4492.58 sec
+  release-ext : warning: 0  error: 0  objects 721  last step [745/745] Building CXX object tests/compile_fail/CMakeFiles/bettercad_cf_thermalviz_control.dir/ThermalVizMisuse.cpp.obj
+  release-ext no-op rebuild edges: 1
+  release-ext clean: [1/2] Cleaning additional files... [2/2] Cleaning all built files... Cleaning... 193 files.
+  release-ext ctest: 100% tests passed out of 5269 | Total Test time (real) = 4269.40 sec
+  debug-shared-ext : warning: 0  error: 0  objects 721  last step [745/745] Linking CXX executable bin\bettercad_tests.exe
+  debug-shared-ext no-op rebuild edges: 1
+  debug-shared-ext clean: [1/2] Cleaning additional files... [2/2] Cleaning all built files... Cleaning... 746 files.
+  debug-shared-ext ctest: 100% tests passed out of 5269 | Total Test time (real) = 4453.75 sec
+  repeat release-ext : 100% tests passed out of 2071 | Total Test time (real) = 1345.29 sec
+  repeat debug-ext : 100% tests passed out of 2071 | Total Test time (real) = 1544.85 sec
+== harness stderr lines: 266
+== non-CRLF stderr lines: 0
+== debug-ext
+  bettercad-cli.exe 368790973 e91a6a504254c4e1e41da75e1fadf14761b19e3898977417cff31f5df36c25cc
+  bettercad_example_reference_models.exe 373453474 902f69dab17616bfe61620d428c0100b3476228d13b23ac2ee57e338382b80af
+  bettercad_tests.exe 1363862117 0a90cf6a89c28aa7b1eb82a56f14a27f1ef012a8d93fa8cf0de6c6a2fa6382af
+  ctest -N: Total Tests: 5269
+  ctest -N -R unit\.ThermalViz : Total Tests: 100
+  ctest -N -R unit\.ThermalViz_(ConsumesQualified(Gradient|HeatFlux|Temperature)|TemperatureRemainsKelvin|GradientRemainsKelvinPerMetre|HeatFluxRemainsWattPerSquareMetre|SIMetreToOCCTMillimetre|AnOverlayInMetresCoincides|EverythingLeavingThisLayerIsSiMetres|ChannelsDescribeThemselves|TheGradientMagnitudeIsTheNorm) : Total Tests: 11
+  ctest -N -R unit\.ThermalViz_(TemperatureContourUsesNodalValues|GradientMagnitudeContourUsesElementResult|HeatFluxMagnitudeContourUsesElementResult|ATemperatureContourReachesTheScreen|ConstantScalarRangeHandled|ManualRangeClamps|RejectsAnUnusableDisplayRange|TheBandsPartition|TheLegendNames|TheSameScalarGetsTheSameColour|ARangeTooNarrow|ALegendOfAnotherField|APartialFieldIsNeverColoured|AnElementChannelNeeds|ColourBuffersAreDeterministic|TheContourCacheIsKeyed|AnEmptyDomain) : Total Tests: 18
+  ctest -N -R unit\.ThermalViz_(HeatFluxVectorDirection|ZeroHeatFluxVector|VectorScalingDoesNotMutateResult|TheDisplayThresholdIsReadability|RecoveredHeatFluxFlowsFromHotToCold|RecoveredQAndAppliedQ|AnOverflowingArrowLength|VectorGlyphsCarryTheOrdinal) : Total Tests: 8
+  ctest -N -R unit\.ThermalViz_(PositiveAppliedHeatFluxArrow|NegativeAppliedHeatFluxArrow|AZeroAppliedFlux|PrescribedTemperatureSymbol|ConvectionSymbol|BoundarySetHighlight|MultipleBoundaries|IdenticalPrescriptions|NoInternalFace|OutwardNormalMatches|ACurvedWall|AnUnresolvedReference|AGlyphIsRefused) : Total Tests: 13
+  ctest -N -R unit\.ThermalViz_(ClassifierCardinalityMatchesExpected|ZeroClassifiedEntitiesRejected|PartialClassificationNotReportedComplete|RejectsTemperatureCardinalityMismatch|RejectsElementGradientCardinalityMismatch|RejectsHeatFluxCardinalityMismatch|RejectsANonFiniteValue|RejectsAStateThatIsNotStored|IncompleteTargetsAreCounted) : Total Tests: 9
+  ctest -N -R unit\.ThermalViz_(ExtremaTieBreakDeterministic|HighestTemperatureNavigation|LowestTemperatureNavigation|HighestHeatFluxNavigation|NavigationLooksAtTheEntity|TheLowestValueTie) : Total Tests: 6
+  ctest -N -R unit\.ThermalViz_(NodeTemperatureInspection|ElementThermalInspection|SparseNodeIdInspection|SparseElementIdInspection|PickMapsARenderTriangle) : Total Tests: 5
+  ctest -N -R unit\.ThermalViz_(CurrentResultDisplaysNormally|StaleResultHasExplicitState|SameCountsNewMeshStillStale|SameIdsNewMeshStillStale|FailedRecompute|DoesNotMapStaleResultToNewMesh|StaleResultSuppresses|TheStatesBeforeAnyResult|TheValidationBadge|AWarningStaysDrawn|ARecoveredResultIsBound|AViewBuiltForOneResult) : Total Tests: 13
+  ctest -N -R unit\.ThermalViz_(ASteadyResultIsOneFrame|TransientCacheInvalidates|TransientFrameBinds|TransientFramesDraw|TransientPlaybackDoesNotInterpolate|TransientPlaybackUsesStoredTimes) : Total Tests: 6
+  ctest -N -R unit\.ThermalViz_(DoesNotMutateMeshDuringUnitConversion|DoesNotMutateThermalResult|ViewStateChangesDoNotStale|ViewerStateChangesDoNotStale) : Total Tests: 4
+  ctest -N -R unit\.ThermalViz_(LargeCurvedMeshVisualizationDataSmoke|LargeMeshVisualizationDataSmoke|LargeMeshVisualizationReachesTheScreen|ThermalOverlaysReachTheScreen) : Total Tests: 4
+  ctest -N -R unit\.ThermalViz_(DisplayStateAndInspectionAreDeterministic|FieldExtractionIsDeterministic|VisualizationDataIsDeterministicAndFingerprinted) : Total Tests: 3
+  ctest -N -R compile_fail\.thermalviz\. : Total Tests: 51
+  ctest -N -R architecture\.thermalviz-ownership : Total Tests: 12
+  ctest -N -R unit\.ThermalValidation : Total Tests: 138
+  ctest -N -R architecture\.validation-ownership : Total Tests: 8
+  ctest -N -R compile_fail\.thermalvalidation\. : Total Tests: 33
+  ctest -N -R unit\.StructuralViz : Total Tests: 69
+  ctest -N -R unit\.Structural : Total Tests: 431
+  ctest -N -R unit\.View : Total Tests: 68
+  ctest -N -R unit\.Mesh : Total Tests: 227
+  ctest -N -R unit\.ThermalBalance : Total Tests: 69
+  ctest -N -R unit\.ThermalPost : Total Tests: 40
+  ctest -N -R unit\.ThermalTransient : Total Tests: 72
+  ctest -N -R unit\.ThermalSolve : Total Tests: 51
+  ctest -N -R unit\.Linalg_ : Total Tests: 10
+  ctest -N -R architecture\.targets\. : Total Tests: 3
+  ctest -N -R unit\.Thermal : Total Tests: 885
+  ctest -N -R ^architecture\. : Total Tests: 53
+  ThermalViz_* : <OverallResultsCases successes="100" failures="0" expectedFailures="0" skips="0"/>  <OverallResults successes="28871" failures="0" expectedFailures="0" skips="0"/>
+  evidence lines: 7
+  ThermalValidation_* exit 0 : All tests passed (13468 assertions in 138 test cases)
+  ThermalBalance_* exit 0 : All tests passed (2240 assertions in 69 test cases)
+  ThermalPost_* exit 0 : All tests passed (38910 assertions in 40 test cases)
+  ThermalTransient_* exit 0 : All tests passed (105966 assertions in 72 test cases)
+  StructuralViz_* exit 0 : All tests passed (16277 assertions in 69 test cases)
+  [structural] exit 0 : All tests passed (271414 assertions in 415 test cases)
+  [meshing] exit 0 : All tests passed (95088 assertions in 364 test cases)
+== release-ext
+  bettercad-cli.exe 10150220 49a2f12ff139b2a629dfb2d00c40ad1bf1cb32dee616a82bc4108b4cfd977873
+  bettercad_example_reference_models.exe 9533566 b9119de91af4aecea2b69ba07b870a176c214ae873f0e9361607786bb6a3bd6c
+  bettercad_tests.exe 57847911 590b62bf5e925835ea11158ef05c067dd8d75dc4c0a4b83dc504ca61953bdbe2
+  ctest -N: Total Tests: 5269
+  ctest -N -R unit\.ThermalViz : Total Tests: 100
+  ctest -N -R unit\.ThermalViz_(ConsumesQualified(Gradient|HeatFlux|Temperature)|TemperatureRemainsKelvin|GradientRemainsKelvinPerMetre|HeatFluxRemainsWattPerSquareMetre|SIMetreToOCCTMillimetre|AnOverlayInMetresCoincides|EverythingLeavingThisLayerIsSiMetres|ChannelsDescribeThemselves|TheGradientMagnitudeIsTheNorm) : Total Tests: 11
+  ctest -N -R unit\.ThermalViz_(TemperatureContourUsesNodalValues|GradientMagnitudeContourUsesElementResult|HeatFluxMagnitudeContourUsesElementResult|ATemperatureContourReachesTheScreen|ConstantScalarRangeHandled|ManualRangeClamps|RejectsAnUnusableDisplayRange|TheBandsPartition|TheLegendNames|TheSameScalarGetsTheSameColour|ARangeTooNarrow|ALegendOfAnotherField|APartialFieldIsNeverColoured|AnElementChannelNeeds|ColourBuffersAreDeterministic|TheContourCacheIsKeyed|AnEmptyDomain) : Total Tests: 18
+  ctest -N -R unit\.ThermalViz_(HeatFluxVectorDirection|ZeroHeatFluxVector|VectorScalingDoesNotMutateResult|TheDisplayThresholdIsReadability|RecoveredHeatFluxFlowsFromHotToCold|RecoveredQAndAppliedQ|AnOverflowingArrowLength|VectorGlyphsCarryTheOrdinal) : Total Tests: 8
+  ctest -N -R unit\.ThermalViz_(PositiveAppliedHeatFluxArrow|NegativeAppliedHeatFluxArrow|AZeroAppliedFlux|PrescribedTemperatureSymbol|ConvectionSymbol|BoundarySetHighlight|MultipleBoundaries|IdenticalPrescriptions|NoInternalFace|OutwardNormalMatches|ACurvedWall|AnUnresolvedReference|AGlyphIsRefused) : Total Tests: 13
+  ctest -N -R unit\.ThermalViz_(ClassifierCardinalityMatchesExpected|ZeroClassifiedEntitiesRejected|PartialClassificationNotReportedComplete|RejectsTemperatureCardinalityMismatch|RejectsElementGradientCardinalityMismatch|RejectsHeatFluxCardinalityMismatch|RejectsANonFiniteValue|RejectsAStateThatIsNotStored|IncompleteTargetsAreCounted) : Total Tests: 9
+  ctest -N -R unit\.ThermalViz_(ExtremaTieBreakDeterministic|HighestTemperatureNavigation|LowestTemperatureNavigation|HighestHeatFluxNavigation|NavigationLooksAtTheEntity|TheLowestValueTie) : Total Tests: 6
+  ctest -N -R unit\.ThermalViz_(NodeTemperatureInspection|ElementThermalInspection|SparseNodeIdInspection|SparseElementIdInspection|PickMapsARenderTriangle) : Total Tests: 5
+  ctest -N -R unit\.ThermalViz_(CurrentResultDisplaysNormally|StaleResultHasExplicitState|SameCountsNewMeshStillStale|SameIdsNewMeshStillStale|FailedRecompute|DoesNotMapStaleResultToNewMesh|StaleResultSuppresses|TheStatesBeforeAnyResult|TheValidationBadge|AWarningStaysDrawn|ARecoveredResultIsBound|AViewBuiltForOneResult) : Total Tests: 13
+  ctest -N -R unit\.ThermalViz_(ASteadyResultIsOneFrame|TransientCacheInvalidates|TransientFrameBinds|TransientFramesDraw|TransientPlaybackDoesNotInterpolate|TransientPlaybackUsesStoredTimes) : Total Tests: 6
+  ctest -N -R unit\.ThermalViz_(DoesNotMutateMeshDuringUnitConversion|DoesNotMutateThermalResult|ViewStateChangesDoNotStale|ViewerStateChangesDoNotStale) : Total Tests: 4
+  ctest -N -R unit\.ThermalViz_(LargeCurvedMeshVisualizationDataSmoke|LargeMeshVisualizationDataSmoke|LargeMeshVisualizationReachesTheScreen|ThermalOverlaysReachTheScreen) : Total Tests: 4
+  ctest -N -R unit\.ThermalViz_(DisplayStateAndInspectionAreDeterministic|FieldExtractionIsDeterministic|VisualizationDataIsDeterministicAndFingerprinted) : Total Tests: 3
+  ctest -N -R compile_fail\.thermalviz\. : Total Tests: 51
+  ctest -N -R architecture\.thermalviz-ownership : Total Tests: 12
+  ctest -N -R unit\.ThermalValidation : Total Tests: 138
+  ctest -N -R architecture\.validation-ownership : Total Tests: 8
+  ctest -N -R compile_fail\.thermalvalidation\. : Total Tests: 33
+  ctest -N -R unit\.StructuralViz : Total Tests: 69
+  ctest -N -R unit\.Structural : Total Tests: 431
+  ctest -N -R unit\.View : Total Tests: 68
+  ctest -N -R unit\.Mesh : Total Tests: 227
+  ctest -N -R unit\.ThermalBalance : Total Tests: 69
+  ctest -N -R unit\.ThermalPost : Total Tests: 40
+  ctest -N -R unit\.ThermalTransient : Total Tests: 72
+  ctest -N -R unit\.ThermalSolve : Total Tests: 51
+  ctest -N -R unit\.Linalg_ : Total Tests: 10
+  ctest -N -R architecture\.targets\. : Total Tests: 3
+  ctest -N -R unit\.Thermal : Total Tests: 885
+  ctest -N -R ^architecture\. : Total Tests: 53
+  ThermalViz_* : <OverallResultsCases successes="100" failures="0" expectedFailures="0" skips="0"/>  <OverallResults successes="28871" failures="0" expectedFailures="0" skips="0"/>
+  evidence lines: 7
+  ThermalValidation_* exit 0 : All tests passed (13468 assertions in 138 test cases)
+  ThermalBalance_* exit 0 : All tests passed (2240 assertions in 69 test cases)
+  ThermalPost_* exit 0 : All tests passed (38910 assertions in 40 test cases)
+  ThermalTransient_* exit 0 : All tests passed (105966 assertions in 72 test cases)
+  StructuralViz_* exit 0 : All tests passed (16277 assertions in 69 test cases)
+  [structural] exit 0 : All tests passed (271414 assertions in 415 test cases)
+  [meshing] exit 0 : All tests passed (95088 assertions in 364 test cases)
+== debug-shared-ext
+  bettercad-cli.exe 41310182 75d1380084b7f894d2b7bcafdbd615735de1fcfd9a8eca359d2600dd1eb95b16
+  bettercad_example_reference_models.exe 52417896 20370e74202febcef3016fbf745c7b2c6860a603aeeba007619c61d9fa31de18
+  bettercad_tests.exe 984858570 31a70b8a24d539e9f32daf98836888c403138adb52d80bd6c5b314cd36bdc93c
+  libbettercad_renderer.dll 27318691 5dfec1298b6630f26509ffc7461afc7213b5f8e052caaf8cd5f0fab1914aa2a3
+  libbettercad_thermal.dll 40522245 43aca814ef01ce50f43be3bbb41a8e54d3469c58129e9b00885f66b1705ae922
+  dll count: 12
+  ctest -N: Total Tests: 5269
+  ctest -N -R unit\.ThermalViz : Total Tests: 100
+  ctest -N -R unit\.ThermalViz_(ConsumesQualified(Gradient|HeatFlux|Temperature)|TemperatureRemainsKelvin|GradientRemainsKelvinPerMetre|HeatFluxRemainsWattPerSquareMetre|SIMetreToOCCTMillimetre|AnOverlayInMetresCoincides|EverythingLeavingThisLayerIsSiMetres|ChannelsDescribeThemselves|TheGradientMagnitudeIsTheNorm) : Total Tests: 11
+  ctest -N -R unit\.ThermalViz_(TemperatureContourUsesNodalValues|GradientMagnitudeContourUsesElementResult|HeatFluxMagnitudeContourUsesElementResult|ATemperatureContourReachesTheScreen|ConstantScalarRangeHandled|ManualRangeClamps|RejectsAnUnusableDisplayRange|TheBandsPartition|TheLegendNames|TheSameScalarGetsTheSameColour|ARangeTooNarrow|ALegendOfAnotherField|APartialFieldIsNeverColoured|AnElementChannelNeeds|ColourBuffersAreDeterministic|TheContourCacheIsKeyed|AnEmptyDomain) : Total Tests: 18
+  ctest -N -R unit\.ThermalViz_(HeatFluxVectorDirection|ZeroHeatFluxVector|VectorScalingDoesNotMutateResult|TheDisplayThresholdIsReadability|RecoveredHeatFluxFlowsFromHotToCold|RecoveredQAndAppliedQ|AnOverflowingArrowLength|VectorGlyphsCarryTheOrdinal) : Total Tests: 8
+  ctest -N -R unit\.ThermalViz_(PositiveAppliedHeatFluxArrow|NegativeAppliedHeatFluxArrow|AZeroAppliedFlux|PrescribedTemperatureSymbol|ConvectionSymbol|BoundarySetHighlight|MultipleBoundaries|IdenticalPrescriptions|NoInternalFace|OutwardNormalMatches|ACurvedWall|AnUnresolvedReference|AGlyphIsRefused) : Total Tests: 13
+  ctest -N -R unit\.ThermalViz_(ClassifierCardinalityMatchesExpected|ZeroClassifiedEntitiesRejected|PartialClassificationNotReportedComplete|RejectsTemperatureCardinalityMismatch|RejectsElementGradientCardinalityMismatch|RejectsHeatFluxCardinalityMismatch|RejectsANonFiniteValue|RejectsAStateThatIsNotStored|IncompleteTargetsAreCounted) : Total Tests: 9
+  ctest -N -R unit\.ThermalViz_(ExtremaTieBreakDeterministic|HighestTemperatureNavigation|LowestTemperatureNavigation|HighestHeatFluxNavigation|NavigationLooksAtTheEntity|TheLowestValueTie) : Total Tests: 6
+  ctest -N -R unit\.ThermalViz_(NodeTemperatureInspection|ElementThermalInspection|SparseNodeIdInspection|SparseElementIdInspection|PickMapsARenderTriangle) : Total Tests: 5
+  ctest -N -R unit\.ThermalViz_(CurrentResultDisplaysNormally|StaleResultHasExplicitState|SameCountsNewMeshStillStale|SameIdsNewMeshStillStale|FailedRecompute|DoesNotMapStaleResultToNewMesh|StaleResultSuppresses|TheStatesBeforeAnyResult|TheValidationBadge|AWarningStaysDrawn|ARecoveredResultIsBound|AViewBuiltForOneResult) : Total Tests: 13
+  ctest -N -R unit\.ThermalViz_(ASteadyResultIsOneFrame|TransientCacheInvalidates|TransientFrameBinds|TransientFramesDraw|TransientPlaybackDoesNotInterpolate|TransientPlaybackUsesStoredTimes) : Total Tests: 6
+  ctest -N -R unit\.ThermalViz_(DoesNotMutateMeshDuringUnitConversion|DoesNotMutateThermalResult|ViewStateChangesDoNotStale|ViewerStateChangesDoNotStale) : Total Tests: 4
+  ctest -N -R unit\.ThermalViz_(LargeCurvedMeshVisualizationDataSmoke|LargeMeshVisualizationDataSmoke|LargeMeshVisualizationReachesTheScreen|ThermalOverlaysReachTheScreen) : Total Tests: 4
+  ctest -N -R unit\.ThermalViz_(DisplayStateAndInspectionAreDeterministic|FieldExtractionIsDeterministic|VisualizationDataIsDeterministicAndFingerprinted) : Total Tests: 3
+  ctest -N -R compile_fail\.thermalviz\. : Total Tests: 51
+  ctest -N -R architecture\.thermalviz-ownership : Total Tests: 12
+  ctest -N -R unit\.ThermalValidation : Total Tests: 138
+  ctest -N -R architecture\.validation-ownership : Total Tests: 8
+  ctest -N -R compile_fail\.thermalvalidation\. : Total Tests: 33
+  ctest -N -R unit\.StructuralViz : Total Tests: 69
+  ctest -N -R unit\.Structural : Total Tests: 431
+  ctest -N -R unit\.View : Total Tests: 68
+  ctest -N -R unit\.Mesh : Total Tests: 227
+  ctest -N -R unit\.ThermalBalance : Total Tests: 69
+  ctest -N -R unit\.ThermalPost : Total Tests: 40
+  ctest -N -R unit\.ThermalTransient : Total Tests: 72
+  ctest -N -R unit\.ThermalSolve : Total Tests: 51
+  ctest -N -R unit\.Linalg_ : Total Tests: 10
+  ctest -N -R architecture\.targets\. : Total Tests: 3
+  ctest -N -R unit\.Thermal : Total Tests: 885
+  ctest -N -R ^architecture\. : Total Tests: 53
+  ThermalViz_* : <OverallResultsCases successes="100" failures="0" expectedFailures="0" skips="0"/>  <OverallResults successes="28871" failures="0" expectedFailures="0" skips="0"/>
+  evidence lines: 7
+  ThermalValidation_* exit 0 : All tests passed (13468 assertions in 138 test cases)
+  ThermalBalance_* exit 0 : All tests passed (2240 assertions in 69 test cases)
+  ThermalPost_* exit 0 : All tests passed (38910 assertions in 40 test cases)
+  ThermalTransient_* exit 0 : All tests passed (105966 assertions in 72 test cases)
+  StructuralViz_* exit 0 : All tests passed (16277 assertions in 69 test cases)
+  [structural] exit 0 : All tests passed (271414 assertions in 415 test cases)
+  [meshing] exit 0 : All tests passed (95088 assertions in 364 test cases)
+== cross-preset classification (every VIZFP line of the visualization suite)
+  debug-ext VIZFP lines: 7
+    VIZFP steady-block 7cd19fb9128ca590
+    VIZFP steady-cylinder bd76108f12f5fbcf
+    VIZFP transient-block frame 0 6e2b1d3bb510ea00
+    VIZFP transient-block frame 1 f852c55e57e66ad5
+    VIZFP transient-block frame 2 0108fcb4a733f303
+    VIZFP transient-block frame 3 dc58cd0f6678d744
+    VIZFP transient-block frame 4 fcc4d4e5a09b3bd8
+  VIZFP lines, debug-ext vs release-ext : 7 vs 7, differing: 0
+  VIZFP lines, debug-ext vs debug-shared-ext : 7 vs 7, differing: 0
+postrun-viz finished 2026-10-23T22:06:08.1622744+10:00

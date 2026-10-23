@@ -1,0 +1,187 @@
+P18-VIZ-001 source audit
+
+== src/renderer/ThermalResultView.cpp (379 lines, 17073 bytes)
+  unordered containers / std::hash             0
+  clock, time, random                          0
+  threads / atomics / mutexes                  0
+  const_cast / mutable                         0
+  mutable globals (static, non-const)          0
+  unit literals 1000 / 1e3 / 0.001 / 1e-3      0
+  Celsius / 273.15                             0
+  toModel (the one conversion is elsewhere)    0
+  gradient recovery / Fourier / balance        0
+  solve / assemble / integrate                 0
+  validation rule seams                        0
+  raw id as an index                           0
+  raw owning memory                            0
+  goto / setjmp / exceptions thrown            0
+  hypot / sqrt (norms)                         1
+  BETTERCAD_RENDERER_EXPORT declarations       0
+
+== src/renderer/ThermalContour.cpp (436 lines, 20401 bytes)
+  unordered containers / std::hash             0
+  clock, time, random                          0
+  threads / atomics / mutexes                  0
+  const_cast / mutable                         0
+  mutable globals (static, non-const)          0
+  unit literals 1000 / 1e3 / 0.001 / 1e-3      0
+  Celsius / 273.15                             0
+  toModel (the one conversion is elsewhere)    0
+  gradient recovery / Fourier / balance        0
+  solve / assemble / integrate                 0
+  validation rule seams                        0
+  raw id as an index                           0
+  raw owning memory                            0
+  goto / setjmp / exceptions thrown            0
+  hypot / sqrt (norms)                         0
+  BETTERCAD_RENDERER_EXPORT declarations       0
+
+== src/renderer/ThermalInspection.cpp (433 lines, 18697 bytes)
+  unordered containers / std::hash             0
+  clock, time, random                          0
+  threads / atomics / mutexes                  0
+  const_cast / mutable                         0
+  mutable globals (static, non-const)          0
+  unit literals 1000 / 1e3 / 0.001 / 1e-3      0
+  Celsius / 273.15                             0
+  toModel (the one conversion is elsewhere)    0
+  gradient recovery / Fourier / balance        0
+  solve / assemble / integrate                 0
+  validation rule seams                        0
+  raw id as an index                           0
+  raw owning memory                            0
+  goto / setjmp / exceptions thrown            0
+  hypot / sqrt (norms)                         0
+  BETTERCAD_RENDERER_EXPORT declarations       0
+
+== src/renderer/ThermalOverlay.cpp (653 lines, 31612 bytes)
+  unordered containers / std::hash             0
+  clock, time, random                          0
+  threads / atomics / mutexes                  0
+  const_cast / mutable                         0
+  mutable globals (static, non-const)          0
+  unit literals 1000 / 1e3 / 0.001 / 1e-3      0
+  Celsius / 273.15                             0
+  toModel (the one conversion is elsewhere)    0
+  gradient recovery / Fourier / balance        0
+  solve / assemble / integrate                 0
+  validation rule seams                        0
+  raw id as an index                           0
+  raw owning memory                            0
+  goto / setjmp / exceptions thrown            0
+  hypot / sqrt (norms)                         1
+  BETTERCAD_RENDERER_EXPORT declarations       0
+
+== include/bettercad/renderer/ThermalResultView.hpp (297 lines, 16008 bytes)
+  unordered containers / std::hash             0
+  clock, time, random                          0
+  threads / atomics / mutexes                  0
+  const_cast / mutable                         0
+  mutable globals (static, non-const)          0
+  unit literals 1000 / 1e3 / 0.001 / 1e-3      0
+  Celsius / 273.15                             0
+  toModel (the one conversion is elsewhere)    0
+  gradient recovery / Fourier / balance        0
+  solve / assemble / integrate                 0
+  validation rule seams                        0
+  raw id as an index                           0
+  raw owning memory                            0
+  goto / setjmp / exceptions thrown            0
+  hypot / sqrt (norms)                         0
+  BETTERCAD_RENDERER_EXPORT declarations       11
+
+== include/bettercad/renderer/ThermalContour.hpp (208 lines, 10610 bytes)
+  unordered containers / std::hash             0
+  clock, time, random                          0
+  threads / atomics / mutexes                  0
+  const_cast / mutable                         0
+  mutable globals (static, non-const)          0
+  unit literals 1000 / 1e3 / 0.001 / 1e-3      0
+  Celsius / 273.15                             0
+  toModel (the one conversion is elsewhere)    0
+  gradient recovery / Fourier / balance        0
+  solve / assemble / integrate                 0
+  validation rule seams                        0
+  raw id as an index                           0
+  raw owning memory                            0
+  goto / setjmp / exceptions thrown            0
+  hypot / sqrt (norms)                         0
+  BETTERCAD_RENDERER_EXPORT declarations       10
+
+== include/bettercad/renderer/ThermalInspection.hpp (280 lines, 14893 bytes)
+  unordered containers / std::hash             0
+  clock, time, random                          0
+  threads / atomics / mutexes                  0
+  const_cast / mutable                         0
+  mutable globals (static, non-const)          0
+  unit literals 1000 / 1e3 / 0.001 / 1e-3      0
+  Celsius / 273.15                             0
+  toModel (the one conversion is elsewhere)    0
+  gradient recovery / Fourier / balance        0
+  solve / assemble / integrate                 0
+  validation rule seams                        0
+  raw id as an index                           0
+  raw owning memory                            0
+  goto / setjmp / exceptions thrown            0
+  hypot / sqrt (norms)                         0
+  BETTERCAD_RENDERER_EXPORT declarations       10
+
+== include/bettercad/renderer/ThermalOverlay.hpp (366 lines, 19521 bytes)
+  unordered containers / std::hash             0
+  clock, time, random                          0
+  threads / atomics / mutexes                  0
+  const_cast / mutable                         0
+  mutable globals (static, non-const)          0
+  unit literals 1000 / 1e3 / 0.001 / 1e-3      0
+  Celsius / 273.15                             0
+  toModel (the one conversion is elsewhere)    0
+  gradient recovery / Fourier / balance        0
+  solve / assemble / integrate                 0
+  validation rule seams                        0
+  raw id as an index                           0
+  raw owning memory                            0
+  goto / setjmp / exceptions thrown            0
+  hypot / sqrt (norms)                         0
+  BETTERCAD_RENDERER_EXPORT declarations       18
+
+== totals over the eight files (every forbidden pattern must be 0 except the two documented norms)
+  unordered containers / std::hash             0
+  clock, time, random                          0
+  threads / atomics / mutexes                  0
+  const_cast / mutable                         0
+  mutable globals (static, non-const)          0
+  unit literals 1000 / 1e3 / 0.001 / 1e-3      0
+  Celsius / 273.15                             0
+  toModel (the one conversion is elsewhere)    0
+  gradient recovery / Fourier / balance        0
+  solve / assemble / integrate                 0
+  validation rule seams                        0
+  raw id as an index                           0
+  raw owning memory                            0
+  goto / setjmp / exceptions thrown            0
+  hypot / sqrt (norms)                         2
+
+== owners named (each must be present in the file that must read it)
+  src/renderer/ThermalInspection.cpp       isCurrent                      3
+  src/renderer/ThermalInspection.cpp       staleReasons                   3
+  src/renderer/ThermalInspection.cpp       requireThermalModel            1
+  src/renderer/ThermalInspection.cpp       postSourceOf                   2
+  src/renderer/ThermalInspection.cpp       ordinalOf                      1
+  src/renderer/ThermalInspection.cpp       dofOf                          1
+  src/renderer/ThermalInspection.cpp       currentSteadySolutionSource    1
+  src/renderer/ThermalResultView.cpp       describes                      7
+  src/renderer/ThermalResultView.cpp       elementIds                     2
+  src/renderer/ThermalResultView.cpp       descriptorOf                   3
+  src/renderer/ThermalOverlay.cpp          describes                      6
+  src/renderer/ThermalOverlay.cpp          elementIds                     1
+  src/renderer/ThermalOverlay.cpp          ordinalOf                      1
+  src/renderer/ThermalOverlay.cpp          sourceOfFacet                  1
+  src/renderer/ThermalOverlay.cpp          classifyBoundaryCardinality    5
+  src/renderer/ThermalOverlay.cpp          highlightFor                   4
+  src/renderer/ThermalContour.cpp          nodeOfVertex                   1
+  src/renderer/ThermalContour.cpp          elementOfTriangle              1
+  src/renderer/ThermalContour.cpp          describes                      1
+
+== the two display-norm sites (the only hypot calls)
+  src/renderer/ThermalResultView.cpp       hypot 1
+  src/renderer/ThermalOverlay.cpp          hypot 1

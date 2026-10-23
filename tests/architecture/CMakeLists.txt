@@ -191,3 +191,45 @@ bettercad_add_process_test(architecture.validation-ownership.second-owner
 bettercad_add_process_test(architecture.validation-ownership.unordered
     COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/validation-unordered|-P|${_check_validation}"
     EXIT_CODE 1 STDERR_REGEX "1 violation.*non-deterministic construct")
+
+# P18-VIZ-001: a thermal view is a READ-ONLY VIEW of qualified derived data. The check scans the renderer's thermal
+# files and the applications: no thermal physics, no unit conversion of its own, no raw identifier used as an index,
+# no non-determinism, no write through a const view, no stale flag of its own, a norm only at the two documented
+# display-norm sites, and every view file reads its binding from the milestone that owns it. Each fixture tree holds
+# exactly one defect (or none): the valid tree also holds comments that name forbidden things, which are not code.
+set(_check_thermalviz "${CMAKE_CURRENT_SOURCE_DIR}/CheckThermalVizOwnership.cmake")
+add_test(NAME architecture.thermalviz-ownership
+    COMMAND "${CMAKE_COMMAND}" "-DSOURCE_DIR=${PROJECT_SOURCE_DIR}" -P "${_check_thermalviz}")
+bettercad_add_process_test(architecture.thermalviz-ownership.valid
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalviz-valid|-P|${_check_thermalviz}"
+    EXIT_CODE 0 STDOUT_REGEX "Thermal visualization ownership check passed")
+bettercad_add_process_test(architecture.thermalviz-ownership.gui-recomputes
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalviz-gui-recomputes|-P|${_check_thermalviz}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*gradientFrom")
+bettercad_add_process_test(architecture.thermalviz-ownership.converts-units
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalviz-converts-units|-P|${_check_thermalviz}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*rescales")
+bettercad_add_process_test(architecture.thermalviz-ownership.celsius
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalviz-celsius|-P|${_check_thermalviz}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*273")
+bettercad_add_process_test(architecture.thermalviz-ownership.index-by-id
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalviz-index-by-id|-P|${_check_thermalviz}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*raw")
+bettercad_add_process_test(architecture.thermalviz-ownership.unordered
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalviz-unordered|-P|${_check_thermalviz}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*non-deterministic")
+bettercad_add_process_test(architecture.thermalviz-ownership.mutates
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalviz-mutates|-P|${_check_thermalviz}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*const_cast")
+bettercad_add_process_test(architecture.thermalviz-ownership.stale-flag
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalviz-stale-flag|-P|${_check_thermalviz}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*stale")
+bettercad_add_process_test(architecture.thermalviz-ownership.second-norm
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalviz-second-norm|-P|${_check_thermalviz}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*sqrt")
+bettercad_add_process_test(architecture.thermalviz-ownership.lacks-owners
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalviz-lacks-owners|-P|${_check_thermalviz}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*ordinalOf")
+bettercad_add_process_test(architecture.thermalviz-ownership.no-cardinality
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalviz-no-cardinality|-P|${_check_thermalviz}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*classifyBoundaryCardinality")

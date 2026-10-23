@@ -1,0 +1,76 @@
+VIZ01 | node values are bound to the nodes in reverse order | KILLED | test cases:    97 |    76 passed | 21 failed | assertions: 10144 | 10116 passed | 28 failed | restored | 173s
+VIZ02 | the temperature channel is converted to Celsius | UNKNOWN (no summary line) |  | restored | 169s
+VIZ03 | the temperature channel is rescaled in place by 1000 | UNKNOWN (no summary line) |  | restored | 184s
+VIZ04 | the heat-flux magnitude is reported in kW/m^2 | KILLED | test cases:    97 |    92 passed |  5 failed | assertions: 28750 | 28680 passed | 70 failed | restored | 178s
+VIZ05 | the gradient channel shows one component, not the norm | KILLED | test cases:    97 |    93 passed |  4 failed | assertions: 28750 | 28710 passed | 40 failed | restored | 175s
+VIZ06 | a NaN gradient component is swallowed by hypot | KILLED | test cases:    97 |    96 passed | 1 failed | assertions: 28750 | 28749 passed | 1 failed | restored | 178s
+VIZ07 | a short temperature array is accepted (zero fill) | KILLED | test cases:    97 |    96 passed | 1 failed | assertions: 28745 | 28744 passed | 1 failed | restored | 175s
+VIZ08 | a non-finite value is mapped instead of refused | KILLED | test cases:    97 |    96 passed | 1 failed | assertions: 28739 | 28738 passed | 1 failed | restored | 174s
+VIZ09 | the lowest value ties resolve to the LAST entity | SURVIVED | All tests passed (28750 assertions in 97 test cases) | restored | 173s
+VIZ10 | the extreme search ties resolve to the LAST entity | KILLED | test cases:    97 |    93 passed |  4 failed | assertions: 28750 | 28739 passed | 11 failed | restored | 176s
+VIZ11 | the minimum is seeded from zero instead of the first value | KILLED | test cases:    97 |    88 passed |  9 failed | assertions: 28432 | 28390 passed | 42 failed | restored | 175s
+VIZ12 | the result elements are not compared id for id with the mesh | SURVIVED | All tests passed (28750 assertions in 97 test cases) | restored | 170s
+VIZ13 | the result is not checked against the numbering | KILLED | test cases:    97 |    95 passed | 2 failed | assertions: 28750 | 28748 passed | 2 failed | restored | 189s
+VIZ14 | the view no longer compares the result source | SURVIVED | All tests passed (28750 assertions in 97 test cases) | restored | 178s
+VIZ15 | a channel with skipped entities is still a field | SURVIVED | All tests passed (28750 assertions in 97 test cases) | restored | 169s
+VIZ16 | an extreme over a partial field is allowed | UNKNOWN (no summary line) |  | restored | 160s
+VIZ17 | the OCCT adapter applies the metre-to-millimetre conversion twice | KILLED | test cases:    97 |    95 passed | 2 failed | assertions: 28737 | 28735 passed | 2 failed | restored | 173s
+VIZ18 | the OCCT adapter applies no conversion (metres drawn as millimetres) | KILLED | test cases:    97 |    94 passed | 3 failed | assertions: 28739 | 28733 passed | 6 failed | restored | 170s
+VIZ19 | a manual range stops clamping the colour (the value is refused) | KILLED | test cases:    97 |    94 passed | 3 failed | assertions: 28697 | 28692 passed | 5 failed | restored | 172s
+VIZ20 | the last band is half open (the maximum falls in no band) | KILLED | test cases:    97 |    76 passed |  21 failed | assertions: 10298 | 10086 passed | 212 failed | restored | 160s
+VIZ21 | a uniform range is divided (0/0) instead of one band | KILLED | test cases:    97 |    94 passed | 3 failed | assertions: 28432 | 28425 passed | 7 failed | restored | 170s
+VIZ22 | the shared band boundaries are not clamped against their predecessor | SURVIVED | All tests passed (28750 assertions in 97 test cases) | restored | 171s
+VIZ23 | a legend of another field is accepted | KILLED | test cases:    97 |    96 passed | 1 failed | assertions: 28743 | 28742 passed | 1 failed | restored | 172s
+VIZ24 | a partial field is banded | KILLED | test cases:    97 |    95 passed | 2 failed | assertions: 28744 | 28742 passed | 2 failed | restored | 187s
+VIZ25 | an element channel is drawn on the boundary-triangle view | KILLED | test cases:    97 |    96 passed | 1 failed | assertions: 28750 | 28749 passed | 1 failed | restored | 184s
+VIZ26 | an element value is smoothed: the third corner takes a neighbour element band | KILLED | test cases:    97 |    96 passed |  1 failed | assertions: 28750 | 28734 passed | 16 failed | restored | 171s
+VIZ27 | all three corners of a nodal triangle take the first vertex | KILLED | test cases:    97 |    94 passed |  3 failed | assertions: 28739 | 28729 passed | 10 failed | restored | 170s
+VIZ28 | the cache ignores the displayed frame | KILLED | test cases:    97 |    96 passed | 1 failed | assertions: 28750 | 28747 passed | 3 failed | restored | 172s
+VIZ29 | the cache ignores the result source | KILLED | test cases:    97 |    96 passed | 1 failed | assertions: 28750 | 28748 passed | 2 failed | restored | 165s
+VIZ30 | the cache ignores the display range | KILLED | test cases:    97 |    96 passed | 1 failed | assertions: 28750 | 28747 passed | 3 failed | restored | 171s
+VIZ31 | the cache ignores the view it was built for | KILLED | test cases:    97 |    96 passed | 1 failed | assertions: 28750 | 28746 passed | 4 failed | restored | 170s
+VIZ32 | a failed rebuild leaves the held buffer as the answer | KILLED | test cases:    97 |    96 passed | 1 failed | assertions: 28750 | 28749 passed | 1 failed | restored | 170s
+VIZ33 | any held result is current | VOID (did not compile) |  | restored | 14s
+VIZ34 | a failed recompute brings the old result back as current | KILLED | test cases:    97 |    89 passed |  8 failed | assertions: 28733 | 28717 passed | 16 failed | restored | 199s
+VIZ35 | the stale reasons are not reported | VOID (did not compile) |  | restored | 13s
+VIZ36 | a stale report keeps its badge | KILLED | test cases:    97 |    96 passed | 1 failed | assertions: 28750 | 28748 passed | 2 failed | restored | 186s
+VIZ37 | the GUI downgrades a failed validation to a pass-with-warnings badge | KILLED | test cases:    97 |    96 passed | 1 failed | assertions: 28750 | 28749 passed | 1 failed | restored | 173s
+VIZ38 | the GUI hides warnings: pass-with-warnings is shown as pass | KILLED | test cases:    97 |    96 passed | 1 failed | assertions: 28750 | 28749 passed | 1 failed | restored | 169s
+VIZ39 | a failed validation no longer makes the fields unavailable | KILLED | test cases:    97 |    96 passed | 1 failed | assertions: 28750 | 28749 passed | 1 failed | restored | 171s
+VIZ40 | a stale result leaves the fields available | KILLED | test cases:    97 |    93 passed | 4 failed | assertions: 28742 | 28737 passed | 5 failed | restored | 169s
+VIZ41 | the stale banner is blank | UNKNOWN |  | restored | 1s
+VIZ42 | a report of another analysis supplies the badge | KILLED | test cases:    97 |    96 passed | 1 failed | assertions: 28750 | 28748 passed | 2 failed | restored | 171s
+VIZ43 | a report about another result keeps its badge | KILLED | test cases:    97 |    96 passed | 1 failed | assertions: 28750 | 28748 passed | 2 failed | restored | 171s
+VIZ44 | a node is inspected through its raw id as an index | KILLED | test cases:    97 |    93 passed |  4 failed | assertions: 28750 | 28730 passed | 20 failed | restored | 172s
+VIZ45 | an element ordinal is its raw id | KILLED | test cases:    97 |    94 passed |  3 failed | assertions: 28750 | 28733 passed | 17 failed | restored | 190s
+VIZ46 | the gradient magnitude is one component | KILLED | test cases:    97 |    96 passed |  1 failed | assertions: 28750 | 28738 passed | 12 failed | restored | 179s
+VIZ47 | the inspected heat flux is sign-flipped | KILLED | test cases:    97 |    94 passed |  3 failed | assertions: 28750 | 28703 passed | 47 failed | restored | 169s
+VIZ48 | a node of another numbering is inspected | KILLED | test cases:    97 |    95 passed | 2 failed | assertions: 28750 | 28748 passed | 2 failed | restored | 175s
+VIZ49 | an element of another mesh generation is inspected | KILLED | test cases:    97 |    95 passed | 2 failed | assertions: 28750 | 28748 passed | 2 failed | restored | 172s
+VIZ50 | the navigation target of an element is not its centroid | KILLED | test cases:    97 |    96 passed | 1 failed | assertions: 28750 | 28747 passed | 3 failed | restored | 171s
+VIZ51 | a frame time is the frame index times a nominal step | KILLED | test cases:    97 |    96 passed | 1 failed | assertions: 28750 | 28746 passed | 4 failed | restored | 173s
+VIZ52 | non-increasing stored times are accepted | SURVIVED | All tests passed (28750 assertions in 97 test cases) | restored | 190s
+VIZ53 | a steady result reports a time | KILLED | test cases:    97 |    96 passed | 1 failed | assertions: 28750 | 28749 passed | 1 failed | restored | 186s
+VIZ54 | a frame outside the stored states can be selected | NOT APPLIED (find text missing) |  | restored | 1s
+VIZ55 | the outward normal is inward (winding reversed) | KILLED | test cases:    97 |    88 passed |   9 failed | assertions: 28818 | 27916 passed | 902 failed | restored | 169s
+VIZ56 | a positive applied flux points out of the body | KILLED | test cases:    97 |    93 passed |   4 failed | assertions: 28750 | 28448 passed | 302 failed | restored | 171s
+VIZ57 | the recovered heat-flux direction is negated | KILLED | test cases:    97 |    93 passed |  4 failed | assertions: 28750 | 28714 passed | 36 failed | restored | 172s
+VIZ58 | the stored heat-flux vector is sign-flipped in the glyph | KILLED | test cases:    97 |    93 passed |  4 failed | assertions: 28750 | 28664 passed | 86 failed | restored | 170s
+VIZ59 | a zero heat flux is given an invented direction | KILLED | test cases:    97 |    96 passed | 1 failed | assertions: 28750 | 28747 passed | 3 failed | restored | 171s
+VIZ60 | a zero applied flux gets an arrow | KILLED | test cases:    97 |    96 passed | 1 failed | assertions: 28750 | 28748 passed | 2 failed | restored | 170s
+VIZ61 | a zero-classified target reads as complete | KILLED | test cases:    97 |    96 passed | 1 failed | assertions: 28750 | 28746 passed | 4 failed | restored | 184s
+VIZ62 | a partial classification reads as complete | KILLED | test cases:    97 |    96 passed |  1 failed | assertions: 28750 | 28705 passed | 45 failed | restored | 179s
+VIZ63 | an unresolved mapping is classified | KILLED | test cases:    97 |    95 passed | 2 failed | assertions: 28750 | 28746 passed | 4 failed | restored | 169s
+VIZ64 | the rendered count is not part of completeness | KILLED | test cases:    97 |    96 passed | 1 failed | assertions: 28750 | 28743 passed | 7 failed | restored | 170s
+VIZ65 | the applied-flux magnitude is signed (a negative flux is refused) | KILLED | test cases:    97 |    95 passed | 2 failed | assertions: 28722 | 28720 passed | 2 failed | restored | 174s
+VIZ66 | identical prescriptions are drawn twice | KILLED | test cases:    97 |    96 passed | 1 failed | assertions: 28750 | 28748 passed | 2 failed | restored | 169s
+VIZ67 | the display threshold is ignored | KILLED | test cases:    97 |    96 passed | 1 failed | assertions: 28750 | 28748 passed | 2 failed | restored | 171s
+VIZ68 | the recovered arrow is drawn with its head at the centroid | KILLED | test cases:    97 |    94 passed | 3 failed | assertions: 28750 | 28743 passed | 7 failed | restored | 168s
+VIZ69 | the named-set cardinality counts every boundary triangle | KILLED | test cases:    97 |    95 passed | 2 failed | assertions: 28750 | 28746 passed | 4 failed | restored | 171s
+VIZ70 | an overflowing arrow length reaches the geometry | KILLED | test cases:    97 |    96 passed | 1 failed | assertions: 28750 | 28748 passed | 2 failed | restored | 173s
+VIZ71 | loads other than the prepared ones are drawn | KILLED | test cases:    97 |    96 passed | 1 failed | assertions: 28750 | 28748 passed | 2 failed | restored | 193s
+VIZ72 | conditions other than the prepared ones are drawn | KILLED | test cases:    97 |    96 passed | 1 failed | assertions: 28750 | 28748 passed | 2 failed | restored | 181s
+VIZ73 | an incomplete target is not counted by the overlay | KILLED | test cases:    97 |    96 passed | 1 failed | assertions: 28750 | 28747 passed | 3 failed | restored | 173s
+VIZ74 | a vector glyph takes its ordinal from the raw element id | SURVIVED | All tests passed (28750 assertions in 97 test cases) | restored | 171s
+VIZ75 | a result of another mesh generation is drawn | KILLED | test cases:    97 |    95 passed | 2 failed | assertions: 28750 | 28748 passed | 2 failed | restored | 168s
+campaign finished 2026-10-23T11:29:47

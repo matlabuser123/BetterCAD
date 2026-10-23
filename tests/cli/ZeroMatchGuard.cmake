@@ -288,6 +288,21 @@ set(_filters
     "unit\\.ThermalValidation_(RejectsAnAnalysisWhoseMeshingControl|RejectsABodyThatIsNoLonger|RejectsAGeometryEditThat|RejectsAFailedGeneration|RejectsAnAnalysisWithoutAnAssembled|ASystemWhoseReduction|AnInvalidElementCountFromP16|ARecoveryOrABalanceThatWasNever)" 8
     "compile_fail\\.thermalvalidation\\." 33
     "architecture\\.validation-ownership" 8
+    "unit\\.ThermalViz" 100
+    "unit\\.ThermalViz_(ConsumesQualified(Gradient|HeatFlux|Temperature)|TemperatureRemainsKelvin|GradientRemainsKelvinPerMetre|HeatFluxRemainsWattPerSquareMetre|SIMetreToOCCTMillimetre|AnOverlayInMetresCoincides|EverythingLeavingThisLayerIsSiMetres|ChannelsDescribeThemselves|TheGradientMagnitudeIsTheNorm)" 11
+    "unit\\.ThermalViz_(TemperatureContourUsesNodalValues|GradientMagnitudeContourUsesElementResult|HeatFluxMagnitudeContourUsesElementResult|ATemperatureContourReachesTheScreen|ConstantScalarRangeHandled|ManualRangeClamps|RejectsAnUnusableDisplayRange|TheBandsPartition|TheLegendNames|TheSameScalarGetsTheSameColour|ARangeTooNarrow|ALegendOfAnotherField|APartialFieldIsNeverColoured|AnElementChannelNeeds|ColourBuffersAreDeterministic|TheContourCacheIsKeyed|AnEmptyDomain)" 18
+    "unit\\.ThermalViz_(HeatFluxVectorDirection|ZeroHeatFluxVector|VectorScalingDoesNotMutateResult|TheDisplayThresholdIsReadability|RecoveredHeatFluxFlowsFromHotToCold|RecoveredQAndAppliedQ|AnOverflowingArrowLength|VectorGlyphsCarryTheOrdinal)" 8
+    "unit\\.ThermalViz_(PositiveAppliedHeatFluxArrow|NegativeAppliedHeatFluxArrow|AZeroAppliedFlux|PrescribedTemperatureSymbol|ConvectionSymbol|BoundarySetHighlight|MultipleBoundaries|IdenticalPrescriptions|NoInternalFace|OutwardNormalMatches|ACurvedWall|AnUnresolvedReference|AGlyphIsRefused)" 13
+    "unit\\.ThermalViz_(ClassifierCardinalityMatchesExpected|ZeroClassifiedEntitiesRejected|PartialClassificationNotReportedComplete|RejectsTemperatureCardinalityMismatch|RejectsElementGradientCardinalityMismatch|RejectsHeatFluxCardinalityMismatch|RejectsANonFiniteValue|RejectsAStateThatIsNotStored|IncompleteTargetsAreCounted)" 9
+    "unit\\.ThermalViz_(ExtremaTieBreakDeterministic|HighestTemperatureNavigation|LowestTemperatureNavigation|HighestHeatFluxNavigation|NavigationLooksAtTheEntity|TheLowestValueTie)" 6
+    "unit\\.ThermalViz_(NodeTemperatureInspection|ElementThermalInspection|SparseNodeIdInspection|SparseElementIdInspection|PickMapsARenderTriangle)" 5
+    "unit\\.ThermalViz_(CurrentResultDisplaysNormally|StaleResultHasExplicitState|SameCountsNewMeshStillStale|SameIdsNewMeshStillStale|FailedRecompute|DoesNotMapStaleResultToNewMesh|StaleResultSuppresses|TheStatesBeforeAnyResult|TheValidationBadge|AWarningStaysDrawn|ARecoveredResultIsBound|AViewBuiltForOneResult)" 13
+    "unit\\.ThermalViz_(ASteadyResultIsOneFrame|TransientCacheInvalidates|TransientFrameBinds|TransientFramesDraw|TransientPlaybackDoesNotInterpolate|TransientPlaybackUsesStoredTimes)" 6
+    "unit\\.ThermalViz_(DoesNotMutateMeshDuringUnitConversion|DoesNotMutateThermalResult|ViewStateChangesDoNotStale|ViewerStateChangesDoNotStale)" 4
+    "unit\\.ThermalViz_(LargeCurvedMeshVisualizationDataSmoke|LargeMeshVisualizationDataSmoke|LargeMeshVisualizationReachesTheScreen|ThermalOverlaysReachTheScreen)" 4
+    "unit\\.ThermalViz_(DisplayStateAndInspectionAreDeterministic|FieldExtractionIsDeterministic|VisualizationDataIsDeterministicAndFingerprinted)" 3
+    "compile_fail\\.thermalviz\\." 51
+    "architecture\\.thermalviz-ownership" 12
 )
 list(LENGTH _filters _count)
 math(EXPR _last "${_count} - 1")
