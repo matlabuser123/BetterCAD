@@ -1267,6 +1267,8 @@ with tests; a test with literal \n sequences had never run its last paragraph, r
 Current (the caller states it); a glyph and an extreme carry no mesh stamp; four guards
 are unreachable through any public construction; the core's HeatFlux3::magnitude() has the
 hypot NaN property (untouched, POST validates first).
+Committed 7ba06a7 (qualified == committed: all eight subtree hashes read back
+from the commit equal the frozen ones).
 Evidence: docs/verification/P18-VIZ-001/.
 ```
 

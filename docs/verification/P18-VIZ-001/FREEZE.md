@@ -86,3 +86,23 @@ tests/architecture/CheckThermalVizOwnership.cmake and tests/architecture/fixture
 The four production sources have the same blobs as the ones the mutation campaign restored (`qualification/mutations/viz-premutation-hashes-pass2.txt`).
 
 Documents, scripts, the ADR, `TODO.md` and `ROADMAP.md` are outside the eight paths and do not change the fingerprint.
+
+## The qualification run
+
+`qualification/qualification-times.txt` records the three fingerprints (before the first build, and after the last test: both equal the frozen ones above); `postrun-summary.txt` records the build, test and
+cross-preset results; the numbers are in README.md. Attempt 1 (13:30) was stopped by the author after its debug-ext ctest reported `cli.assembly.batch` failed after 34 s and nine dependants not run; the test passes
+alone and in attempt 2, and its logs are kept in `qualification/attempt1/`. Attempt 2 started at 15:19 from the same frozen tree and nothing was edited between the two: the eight-path fingerprint was recomputed
+after both and is unchanged.
+
+## The commit
+
+```text
+COMMIT   7ba06a7518d5a7d0dd97ce753fc1feb999156c01   BetterCAD: add thermal visualization and inspection
+TREE     bba349815cbd8f8d1d50a82703a71ac92d544ee8
+PARENT   c56aef0521582b2eb20e7fc4b5cf52edeb618c17
+SUBTREES apps, include, src, tests, examples, cmake, CMakeLists.txt, CMakePresets.json: all eight == the frozen hashes above
+         (read back from the commit, not recomputed from the working tree)
+QUALIFIED == COMMITTED
+```
+
+The commit that records this section changes only this file and the commit hash in `TODO.md`.
