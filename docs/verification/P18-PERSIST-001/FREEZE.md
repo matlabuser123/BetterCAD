@@ -68,3 +68,19 @@ examples/models/thermal_plate.bcad         4ea8f364e1e5df73b4cad9e650b39c729a87b
 ## What changed after the freeze
 
 Documentation only (this directory, `TODO.md`, `ROADMAP.md`). The commit script recomputes the fingerprint from the working tree, requires the eight hashes to equal the ones above, refuses a BOM and the word this milestone's documents must not contain, and reads the eight subtree hashes back from the commit.
+
+## The commit
+
+Qualification finished 2026-10-25 07:32:34 with 0 stages failed; the harness printed the eight subtree hashes after the last test run and they equal the ones above. The tree was committed as `3f00ca7` (tree `1a5c614680ea47695347441711b9fce7b4b7db7c`), "BetterCAD: add thermal analysis persistence", and the commit script read the eight subtree hashes back from the commit:
+
+```text
+apps                                                    == frozen   a95876bc6dbf843d4e0cec114059bc196fa16175
+include                                                 == frozen   829ea4b19f2e906f13d63c84127a1fd34c3454b9
+src                                                     == frozen   878f2626a99a50367e32b969f5bd2cd8239178b3
+tests                                                   == frozen   9a3a4103d58addf09561e8346792ea02915d27f2
+examples                                                == frozen   b99eef98ccb4924698f89010b1e11869b680985d
+cmake                                                   == frozen   5a382115d7ed7775189d40b55e40f318eaae6cc7
+CMakeLists.txt                                          == frozen   3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd
+CMakePresets.json                                       == frozen   3229f0f89b236744d7d5c082bed47c28b718288e
+ALL EIGHT == FROZEN
+```

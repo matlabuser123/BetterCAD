@@ -1414,6 +1414,8 @@ recorded: a repeated JSON key is last-wins format-wide (pinned, an owner decisio
 a dangling mesh control loads and is refused later; validate(definition) is O(n^2);
 no NamedBoundarySet, output schedule or material reference exists in the data model;
 analysis names are validated identifiers.
+Committed 3f00ca7 (qualified == committed: all eight subtree hashes read back
+from the commit equal the frozen ones).
 Evidence: docs/verification/P18-PERSIST-001/.
 ```
 ---
