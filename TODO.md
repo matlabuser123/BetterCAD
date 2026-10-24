@@ -1340,6 +1340,8 @@ survivors were a missing test and a missing fixture, closed), 21 adversarial que
 7 review defects and 2 mutation findings, 0 qualified-module defects. Limits recorded:
 a create accepts a dangling mesh-control handle; validate(TransientSettings) has no
 step-count bound; no mode-switch, delete or whole-definition command (not on the list).
+Committed fe16f9d (qualified == committed: all eight subtree hashes read back
+from the commit equal the frozen ones).
 Evidence: docs/verification/P18-CMD-001/.
 ```
 ---

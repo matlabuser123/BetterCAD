@@ -74,3 +74,19 @@ this milestone's documents must not contain, and reads the eight subtree hashes 
 ## The re-freeze
 
 The first freeze (scratch tree `2e015236998ead4b4e35342c1848f7fdfa485d2f`) was qualified in full on `debug-ext` and `release-ext` (5432/5432 each) and then failed to LINK `bettercad_tests` on `debug-shared-ext`: the rewritten `CreateAnalysisCreatesIntentOnly` read `ThermalAnalysis::kTypeName`, a static member that the thermal DLL does not export (`undefined reference to __imp_..kTypeName`). The test now compares the new object's type name with the type name of the analysis the fixture already holds. Nothing under `src` or `include` changed; the `tests` tree and the scratch tree moved, and the whole three-preset qualification was started again on the new tree (the two stopped attempts are kept in `qualification/attempt1` and `qualification/attempt2`). Production sources, the mutation-tested file and the contract fingerprints are unchanged.
+
+## The commit
+
+Qualification finished 2026-10-24 17:51:09 with 0 stages failed; the harness printed the eight subtree hashes after the last test run and they equal the ones above. The tree was committed as `fe16f9d` (tree `6dd0746ff3f45af6293bcd3220d55aa26d30a820`), "BetterCAD: add thermal commands and undo redo", and the commit script read the eight subtree hashes back from the commit:
+
+```text
+apps a95876bc6dbf843d4e0cec114059bc196fa16175         == frozen
+include 829ea4b19f2e906f13d63c84127a1fd34c3454b9      == frozen
+src 5ecc221d275b9672a0f8478e9eb2ed2ddbe2bf95          == frozen
+tests 4a10e7fa508ccff3d9f905212893c41dfadc69e4        == frozen
+examples a955cf6511ce715fcb95bc06ef82b877535869e6     == frozen
+cmake 5a382115d7ed7775189d40b55e40f318eaae6cc7        == frozen
+CMakeLists.txt 3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd   == frozen
+CMakePresets.json 3229f0f89b236744d7d5c082bed47c28b718288e == frozen
+ALL EIGHT == FROZEN
+```
