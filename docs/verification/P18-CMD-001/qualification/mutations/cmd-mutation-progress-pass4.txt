@@ -1,0 +1,3 @@
+CMD14 | a refused apply leaves the command staged as executed | KILLED | test cases:   95 |   94 passed | 1 failed | assertions: 4888 | 4886 passed | 2 failed | restored | 150s
+CMD21 | a refused apply is reported as success (the command is recorded) | KILLED | test cases:   95 |   94 passed | 1 failed | assertions: 4872 | 4869 passed | 3 failed | restored | 152s
+campaign finished 2026-10-24T02:35:47

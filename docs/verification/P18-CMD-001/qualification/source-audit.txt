@@ -1,0 +1,78 @@
+P18-CMD-001 source audit
+
+== src/thermal/ThermalCommands.cpp (504 lines, 23187 bytes)
+  unordered containers / std::hash                 0
+  clock, time, random                              0
+  threads / atomics / mutexes                      0
+  const_cast / mutable                             0
+  mutable globals (static, non-const)              0
+  text round trip (parse a number)                 0
+  mesh identity (NodeId / ElementId / MeshStamp)   0
+  derived names (DOF / system / solution / post)   0
+  solve / assemble / remesh / validate-run         0
+  a stale flag of its own                          0
+  positional addressing (loads[i] / begin()+n)     0
+  revision written by hand                         0
+  raw owning memory                                0
+  goto / setjmp / exceptions thrown                0
+  BETTERCAD_THERMAL_EXPORT declarations            0
+
+== include/bettercad/thermal/ThermalCommands.hpp (394 lines, 18754 bytes)
+  unordered containers / std::hash                 0
+  clock, time, random                              0
+  threads / atomics / mutexes                      0
+  const_cast / mutable                             0
+  mutable globals (static, non-const)              0
+  text round trip (parse a number)                 0
+  mesh identity (NodeId / ElementId / MeshStamp)   0
+  derived names (DOF / system / solution / post)   0
+  solve / assemble / remesh / validate-run         0
+  a stale flag of its own                          0
+  positional addressing (loads[i] / begin()+n)     0
+  revision written by hand                         0
+  raw owning memory                                0
+  goto / setjmp / exceptions thrown                0
+  BETTERCAD_THERMAL_EXPORT declarations            11
+
+== totals over the two files (every forbidden pattern must be 0)
+  unordered containers / std::hash                 0
+  clock, time, random                              0
+  threads / atomics / mutexes                      0
+  const_cast / mutable                             0
+  mutable globals (static, non-const)              0
+  text round trip (parse a number)                 0
+  mesh identity (NodeId / ElementId / MeshStamp)   0
+  derived names (DOF / system / solution / post)   0
+  solve / assemble / remesh / validate-run         0
+  a stale flag of its own                          0
+  positional addressing (loads[i] / begin()+n)     0
+  revision written by hand                         0
+  raw owning memory                                0
+  goto / setjmp / exceptions thrown                0
+
+== owners named (each must be present in the command source)
+  modifyObject                                     1
+  setDefinition                                    1
+  validate                                         7
+  findThermalAnalysis                              3
+  requireNamedFeature                              3
+  divergedFrom                                     3
+  steadyHasNo                                      3
+  AddObjectCommand                                 1  (the header, which wraps it)
+
+== includes of the two command files
+  src/thermal/ThermalCommands.cpp
+    #include <bettercad/thermal/ThermalCommands.hpp>
+    #include <bettercad/core/document/Document.hpp>
+    #include <algorithm>
+    #include <format>
+    #include <utility>
+  include/bettercad/thermal/ThermalCommands.hpp
+    #include <bettercad/core/Error.hpp>
+    #include <bettercad/core/Id.hpp>
+    #include <bettercad/core/document/Command.hpp>
+    #include <bettercad/core/document/Commands.hpp>
+    #include <bettercad/thermal/Export.hpp>
+    #include <bettercad/thermal/ThermalAnalysisObject.hpp>
+    #include <optional>
+    #include <string>

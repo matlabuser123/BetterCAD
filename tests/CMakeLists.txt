@@ -73,6 +73,9 @@ bettercad_add_executable(bettercad_tests
         thermal/ThermalBoundaryMappedTests.cpp
         thermal/ThermalBoundaryTestSupport.hpp
         thermal/ThermalBoundaryTests.cpp
+        thermal/ThermalCommandCurrentnessTests.cpp
+        thermal/ThermalCommandTestSupport.hpp
+        thermal/ThermalCommandTests.cpp
         thermal/ThermalDofTests.cpp
         thermal/ThermalElementTests.cpp
         thermal/ThermalLoadTests.cpp

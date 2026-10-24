@@ -1,0 +1,11 @@
+CMD01 | an added load is inserted at the front, not appended | KILLED (assertion failures, and the run ended without a summary line: the mutant also crashed the runner) |  | restored | 153s
+CMD02 | an added condition is inserted at the front, not appended | KILLED (assertion failures, and the run ended without a summary line: the mutant also crashed the runner) |  | restored | 152s
+CMD03 | a load edit moves the record to the end instead of replacing it in place | KILLED (assertion failures, and the run ended without a summary line: the mutant also crashed the runner) |  | restored | 155s
+CMD23 | an undo of a create leaves the analysis in the document | KILLED | test cases:   94 |   90 passed | 4 failed | assertions: 4816 | 4808 passed | 8 failed | restored | 154s
+CMD32 | the named-feature rule never fires | KILLED | test cases:   94 |   93 passed |  1 failed | assertions: 4839 | 4828 passed | 11 failed | restored | 152s
+CMD33 | add-load no longer requires a named feature | KILLED | test cases:   94 |   93 passed | 1 failed | assertions: 4839 | 4838 passed | 1 failed | restored | 156s
+CMD35 | add-condition no longer requires a named feature | KILLED | test cases:   94 |   93 passed | 1 failed | assertions: 4844 | 4841 passed | 3 failed | restored | 151s
+CMD37 | a create no longer requires its loads to name a feature | VOID (did not compile) |  | restored | 10s
+CMD38 | a create no longer requires its conditions to name a feature | VOID (did not compile) |  | restored | 9s
+CMD39 | the command layer drops the record validator of an added load (defence in depth) | KILLED | test cases:   94 |   93 passed | 1 failed | assertions: 4844 | 4843 passed | 1 failed | restored | 158s
+campaign finished 2026-10-24T02:10:58

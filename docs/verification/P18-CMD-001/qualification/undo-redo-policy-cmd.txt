@@ -1,0 +1,107 @@
+Result<void> ThermalAnalysisEditCommand::execute(Document& document) {
+    const ThermalAnalysis* object = findThermalAnalysis(document, analysis_);
+    if (object == nullptr) {
+        return noSuchAnalysis(analysis_);
+    }
+    const ThermalAnalysisDefinition before = object->definition();
+    Result<ThermalAnalysisDefinition> after = edit(before);
+    if (!after.has_value()) {
+        return std::unexpected(after.error());
+    }
+    // STAGED BEFORE THE DOCUMENT IS TOUCHED, so that an allocation failure while copying the two definitions leaves the
+    // document unchanged and the command unexecuted; and unstaged again if the apply is refused, so a refused edit leaves
+    // before_ unset -- which is what makes CommandHistory record nothing and what makes undo refuse.
+    before_ = before;
+    after_ = *after;
+    Result<bool> changed = apply(document, analysis_, *after);
+    if (!changed.has_value()) {
+        before_.reset();
+        after_.reset();
+        return std::unexpected(changed.error());
+    }
+    changed_ = *changed;
+    if (!changed_) {
+        // NO EFFECTIVE CHANGE (the document's own equality: a signed zero equals its negation, so +0.0 -> -0.0 is a
+        // no-op), so the document still holds `before` and that is what this command installed. Recording the requested
+        // value instead would make after() disagree with the document.
+        after_ = before;
+    }
+    return Result<void>{};
+}Result<void> ThermalAnalysisEditCommand::undo(Document& document) {
+    if (!before_.has_value()) {
+        return notExecuted("undo");
+    }
+    const ThermalAnalysis* object = findThermalAnalysis(document, analysis_);
+    if (object == nullptr) {
+        return noSuchAnalysis(analysis_);
+    }
+    // THE STACK DISCIPLINE, CHECKED. CommandHistory undoes in reverse order, so the analysis holds exactly the definition
+    // this command installed. If it does not, something edited it outside the history, and assigning `before_` would
+    // silently take that change with it: refuse, and leave the document and the stacks as they are.
+    if (!(object->definition() == *after_)) {
+        return divergedFrom("undo", analysis_);
+    }
+    // EXACTLY the definition that was there, as one value. Nothing is reconstructed field by field and nothing is
+    // inverted, so there is no field to forget and no arithmetic to drift.
+    Result<bool> restored = apply(document, analysis_, *before_);
+    if (!restored.has_value()) {
+        return std::unexpected(restored.error());
+    }
+    return Result<void>{};
+}Result<void> ThermalAnalysisEditCommand::redo(Document& document) {
+    if (!after_.has_value()) {
+        return notExecuted("redo");
+    }
+    const ThermalAnalysis* object = findThermalAnalysis(document, analysis_);
+    if (object == nullptr) {
+        return noSuchAnalysis(analysis_);
+    }
+    if (!(object->definition() == *before_)) {
+        return divergedFrom("redo", analysis_);
+    }
+    Result<bool> reapplied = apply(document, analysis_, *after_);
+    if (!reapplied.has_value()) {
+        return std::unexpected(reapplied.error());
+    }
+    return Result<void>{};
+}Result<void> CreateThermalAnalysisCommand::execute(Document& document) {
+    // ThermalAnalysis::create validates before anything is built, so an invalid
+    // definition fails here and the document is never touched. Because
+    // CommandHistory records only a command whose execute() succeeded, the failed
+    // attempt does not reach the history either.
+    for (const ThermalLoad& load : definition_.loads) {
+        if (const Result<void> named = requireNamedTarget(load); !named.has_value()) {
+            return std::unexpected(named.error());
+        }
+    }
+    for (const ThermalBoundaryCondition& condition : definition_.boundaryConditions) {
+        if (const Result<void> named = requireNamedTarget(condition); !named.has_value()) {
+            return std::unexpected(named.error());
+        }
+    }
+    auto analysis = ThermalAnalysis::create(name_, definition_);
+    if (!analysis.has_value()) {
+        return std::unexpected(analysis.error());
+    }
+    add_.emplace(std::move(*analysis));
+    if (auto added = add_->execute(document); !added.has_value()) {
+        // Undo the emplace so a second attempt starts clean rather than reusing a
+        // half-executed AddObjectCommand.
+        add_.reset();
+        return added;
+    }
+    return Result<void>{};
+}Result<void> CreateThermalAnalysisCommand::undo(Document& document) {
+    if (!add_.has_value()) {
+        return notExecuted("undo");
+    }
+    return add_->undo(document);
+}Result<void> CreateThermalAnalysisCommand::redo(Document& document) {
+    if (!add_.has_value()) {
+        return notExecuted("redo");
+    }
+    // THE SAME ThermalAnalysisId, because AddObjectCommand restores the prototype's
+    // recorded ID rather than minting a new one. A result records which analysis it
+    // came from, so a redo that renumbered would orphan it.
+    return add_->redo(document);
+}

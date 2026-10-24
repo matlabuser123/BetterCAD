@@ -1,0 +1,21 @@
+qualification started Sat 10/24/2026  4:07:46.50 
+qualification candidate: 
+6b675ecdfb389a194a0206dade1fefbcd4af40bb
+qualified source trees before the first build: 
+  apps a95876bc6dbf843d4e0cec114059bc196fa16175 
+  include 829ea4b19f2e906f13d63c84127a1fd34c3454b9 
+  src 5ecc221d275b9672a0f8478e9eb2ed2ddbe2bf95 
+  tests 9bd4e079da775d84985937e8619fce51b52b7c50 
+  examples a955cf6511ce715fcb95bc06ef82b877535869e6 
+  cmake 5a382115d7ed7775189d40b55e40f318eaae6cc7 
+  CMakeLists.txt 3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd 
+  CMakePresets.json 3229f0f89b236744d7d5c082bed47c28b718288e 
+debug-ext configure started Sat 10/24/2026  4:07:51.37 
+debug-ext configure exit 0 Sat 10/24/2026  4:07:56.10 
+debug-ext clean attempt 1 exit 0 Sat 10/24/2026  4:07:57.78 
+debug-ext build exit 0 Sat 10/24/2026  4:36:24.36 
+debug-ext no-op rebuild exit 0 Sat 10/24/2026  4:36:26.53 
+debug-ext ctest exit 8 Sat 10/24/2026  6:02:50.17 
+release-ext configure started Sat 10/24/2026  6:02:50.17 
+release-ext configure exit 0 Sat 10/24/2026  6:02:55.15 
+release-ext clean attempt 1 exit 0 Sat 10/24/2026  6:02:55.95 

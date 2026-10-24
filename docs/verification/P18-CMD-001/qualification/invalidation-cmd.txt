@@ -1,0 +1,9 @@
+[[nodiscard]] Result<bool> apply(Document& document, ThermalAnalysisId analysis,
+                                 const ThermalAnalysisDefinition& definition) {
+    return document.modifyObject<ThermalAnalysis>(
+        ObjectId::fromValue(analysis.value()),
+        [&definition](ThermalAnalysis& object) { return object.setDefinition(definition); });
+}constexpr Layers kLoadEdit{true, false, true, false, false, false, false, false};
+constexpr Layers kHeldTemperatureEdit{true, true, false, true, false, false, false, false};
+constexpr Layers kConvectionEdit{true, true, false, false, false, false, false, false};
+constexpr Layers kSettingsEdit{true, true, true, true, false, false, false, false};

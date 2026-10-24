@@ -1,0 +1,15 @@
+GATE01 | rule 1: a quoted include is allowed | KILLED | 93% tests passed, 1 tests failed out of 15 | by: architecture.thermalcmd-ownership.quoted-include | restored | 8s
+GATE02 | rule 1: any bettercad header may be included | KILLED | 93% tests passed, 1 tests failed out of 15 | by: architecture.thermalcmd-ownership.includes-solver | restored | 3s
+GATE03 | rule 1: a third-party header may be included | KILLED | 93% tests passed, 1 tests failed out of 15 | by: architecture.thermalcmd-ownership.includes-third-party | restored | 3s
+GATE04 | rule 2: derived work may be named | KILLED | 93% tests passed, 1 tests failed out of 15 | by: architecture.thermalcmd-ownership.solves | restored | 3s
+GATE05 | rule 3: a mesh identity may be named | KILLED | 93% tests passed, 1 tests failed out of 15 | by: architecture.thermalcmd-ownership.mesh-identity | restored | 3s
+GATE06 | rule 4: a record may be addressed by position | KILLED | 93% tests passed, 1 tests failed out of 15 | by: architecture.thermalcmd-ownership.positional | restored | 3s
+GATE07 | rule 5: a number may be parsed from text | KILLED | 93% tests passed, 1 tests failed out of 15 | by: architecture.thermalcmd-ownership.parses-text | restored | 3s
+GATE08 | rule 6: a second authority / non-deterministic construct is allowed | KILLED | 87% tests passed, 2 tests failed out of 15 | by: architecture.thermalcmd-ownership.stale-flag, architecture.thermalcmd-ownership.unordered | restored | 3s
+GATE09 | rule 7: the one path need not be used | KILLED | 93% tests passed, 1 tests failed out of 15 | by: architecture.thermalcmd-ownership.bypasses-path | restored | 3s
+GATE10 | rule 8: a second owner of thermal commands is allowed | KILLED | 93% tests passed, 1 tests failed out of 15 | by: architecture.thermalcmd-ownership.second-owner | restored | 3s
+GATE11 | rule 8: nobody is checked for editing around the commands | KILLED | 87% tests passed, 2 tests failed out of 15 | by: architecture.thermalcmd-ownership.app-edits, architecture.thermalcmd-ownership.io-edits | restored | 3s
+GATE12 | rule 8: the scope falls back to the renderer only | KILLED | 93% tests passed, 1 tests failed out of 15 | by: architecture.thermalcmd-ownership.io-edits | restored | 3s
+GATE13 | rule 8: a qualified modifyObject<bettercad::thermal::ThermalAnalysis> is not seen | SURVIVED | 100% tests passed out of 15 | by:  | restored | 3s
+GATE14 | rule 8: a direct setDefinition call is not seen | KILLED | 93% tests passed, 1 tests failed out of 15 | by: architecture.thermalcmd-ownership.io-edits | restored | 3s
+gate campaign finished 2026-10-24T02:38:01

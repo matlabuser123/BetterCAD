@@ -1,0 +1,2 @@
+GATE13 | rule 8: a qualified modifyObject<bettercad::thermal::ThermalAnalysis> is not seen | KILLED | 94% tests passed, 1 tests failed out of 16 | by: architecture.thermalcmd-ownership.qualified-edit | restored | 4s
+gate campaign finished 2026-10-24T02:38:53

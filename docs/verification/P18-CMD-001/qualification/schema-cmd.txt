@@ -1,0 +1,26 @@
+class BETTERCAD_THERMAL_EXPORT CreateThermalAnalysisCommand final : public Command {
+    std::string name_;
+    ThermalAnalysisDefinition definition_;
+    std::optional<AddObjectCommand> add_{};
+class BETTERCAD_THERMAL_EXPORT ThermalAnalysisEditCommand : public Command {
+    ThermalAnalysisId analysis_;
+    std::optional<ThermalAnalysisDefinition> before_{};
+    std::optional<ThermalAnalysisDefinition> after_{};
+class BETTERCAD_THERMAL_EXPORT AddThermalLoadCommand final : public ThermalAnalysisEditCommand {
+    ThermalLoad load_;
+class BETTERCAD_THERMAL_EXPORT EditThermalLoadCommand final : public ThermalAnalysisEditCommand {
+    ThermalLoad replacement_;
+class BETTERCAD_THERMAL_EXPORT RemoveThermalLoadCommand final : public ThermalAnalysisEditCommand {
+    ThermalLoadId load_;
+class BETTERCAD_THERMAL_EXPORT AddThermalBoundaryConditionCommand final
+    ThermalBoundaryCondition condition_;
+class BETTERCAD_THERMAL_EXPORT EditThermalBoundaryConditionCommand final
+    ThermalBoundaryCondition replacement_;
+class BETTERCAD_THERMAL_EXPORT RemoveThermalBoundaryConditionCommand final
+    ThermalBoundaryConditionId condition_;
+class BETTERCAD_THERMAL_EXPORT SetInitialTemperatureCommand final : public ThermalAnalysisEditCommand {
+    UniformInitialTemperature initial_;
+class BETTERCAD_THERMAL_EXPORT SetThermalSolverSettingsCommand final
+    ThermalSolverSettings settings_;
+class BETTERCAD_THERMAL_EXPORT SetTransientSettingsCommand final : public ThermalAnalysisEditCommand {
+    TransientSettings settings_;

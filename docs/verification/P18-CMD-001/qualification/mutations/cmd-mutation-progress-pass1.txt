@@ -1,0 +1,47 @@
+campaign finished 2026-10-24T00:07:24
+CMD01 | an added load is inserted at the front, not appended | UNKNOWN (no summary line) |  | restored | 179s
+CMD02 | an added condition is inserted at the front, not appended | UNKNOWN (no summary line) |  | restored | 161s
+CMD03 | a load edit moves the record to the end instead of replacing it in place | UNKNOWN (no summary line) |  | restored | 154s
+CMD04 | a condition edit moves the record to the end instead of replacing it in place | KILLED | test cases:   94 |   93 passed | 1 failed | assertions: 4844 | 4842 passed | 2 failed | restored | 158s
+CMD05 | an edit of a load that does not exist creates it | KILLED | test cases:   94 |   88 passed |  6 failed | assertions: 4836 | 4812 passed | 24 failed | restored | 156s
+CMD06 | a duplicate load id is accepted | KILLED | test cases:   94 |   92 passed | 2 failed | assertions: 4844 | 4842 passed | 2 failed | restored | 149s
+CMD07 | a duplicate condition id is accepted | KILLED | test cases:   94 |   92 passed | 2 failed | assertions: 4844 | 4842 passed | 2 failed | restored | 155s
+CMD08 | removing a load that does not exist succeeds silently | KILLED | test cases:   94 |   91 passed | 3 failed | assertions: 4844 | 4839 passed | 5 failed | restored | 162s
+CMD09 | removing a condition that does not exist succeeds silently | KILLED | test cases:   94 |   90 passed | 4 failed | assertions: 4844 | 4836 passed | 8 failed | restored | 160s
+CMD10 | removing a load removes the last load | KILLED (assertion failures, and the run ended without a summary line: the mutant also crashed the runner) |  | restored | 165s
+CMD11 | removing a condition removes the first condition | KILLED | test cases:   94 |   93 passed | 1 failed | assertions: 4844 | 4843 passed | 1 failed | restored | 159s
+CMD12 | a load is addressed by its raw id as a position | KILLED | test cases:   94 |   87 passed |  7 failed | assertions: 4777 | 4765 passed | 12 failed | restored | 154s
+CMD13 | the recorded before-state is the after-state | KILLED | test cases:   94 |   58 passed |  36 failed | assertions: 4658 | 4510 passed | 148 failed | restored | 154s
+CMD14 | a refused apply leaves the command staged as executed | SURVIVED | All tests passed (4844 assertions in 94 test cases) | restored | 158s
+CMD15 | a no-op records the requested definition instead of what the document holds | KILLED | test cases:   94 |   93 passed | 1 failed | assertions: 4844 | 4843 passed | 1 failed | restored | 155s
+CMD16 | a no-op is reported as a change | KILLED | test cases:   94 |   92 passed | 2 failed | assertions: 4844 | 4841 passed | 3 failed | restored | 158s
+CMD17 | undo no longer checks that the analysis is as the command left it | KILLED | test cases:   94 |   93 passed | 1 failed | assertions: 4823 | 4822 passed | 1 failed | restored | 155s
+CMD18 | redo no longer checks that the analysis is as the command found it | KILLED | test cases:   94 |   93 passed | 1 failed | assertions: 4844 | 4841 passed | 3 failed | restored | 156s
+CMD19 | undo assigns the after-state (undo does nothing) | KILLED | test cases:   94 |   55 passed | 39 failed | assertions: 3672 | 3592 passed | 80 failed | restored | 154s
+CMD20 | redo assigns the before-state (redo does nothing) | KILLED (assertion failures, and the run ended without a summary line: the mutant also crashed the runner) |  | restored | 159s
+CMD21 | a refused apply is reported as success (the command is recorded) | SURVIVED | All tests passed (4844 assertions in 94 test cases) | restored | 157s
+CMD22 | a redo of a create makes a NEW analysis with a new id | KILLED | test cases:   94 |   91 passed |  3 failed | assertions: 4837 | 4825 passed | 12 failed | restored | 158s
+CMD23 | an undo of a create leaves the analysis in the document | VOID (did not compile) |  | restored | 10s
+CMD24 | a create silently drops the loads of its definition | KILLED | test cases:   94 |   92 passed | 2 failed | assertions: 4844 | 4841 passed | 3 failed | restored | 152s
+CMD25 | a solver-settings command lands only the pivot floor | KILLED | test cases:   94 |   91 passed | 3 failed | assertions: 4844 | 4838 passed | 6 failed | restored | 155s
+CMD26 | a transient-settings command keeps the old output policy | KILLED | test cases:   94 |   89 passed | 5 failed | assertions: 4844 | 4836 passed | 8 failed | restored | 147s
+CMD27 | an initial temperature is shifted by half a kelvin on its way in | KILLED | test cases:   94 |   91 passed | 3 failed | assertions: 4844 | 4836 passed | 8 failed | restored | 161s
+CMD28 | a steady analysis accepts an initial temperature (mode not checked) | KILLED | test cases:   94 |   92 passed | 2 failed | assertions: 4844 | 4841 passed | 3 failed | restored | 150s
+CMD29 | a steady analysis accepts transient settings (mode not checked) | KILLED | test cases:   94 |   92 passed | 2 failed | assertions: 4844 | 4841 passed | 3 failed | restored | 152s
+CMD30 | the initial-temperature value is checked before the mode | KILLED | test cases:   94 |   93 passed | 1 failed | assertions: 4844 | 4843 passed | 1 failed | restored | 154s
+CMD31 | the transient-settings value is checked before the mode | KILLED | test cases:   94 |   93 passed | 1 failed | assertions: 4844 | 4843 passed | 1 failed | restored | 149s
+CMD32 | the named-feature rule never fires | VOID (did not compile) |  | restored | 11s
+CMD33 | add-load no longer requires a named feature | VOID (did not compile) |  | restored | 7s
+CMD34 | edit-load no longer requires a named feature | KILLED | test cases:   94 |   93 passed | 1 failed | assertions: 4844 | 4842 passed | 2 failed | restored | 149s
+CMD35 | add-condition no longer requires a named feature | VOID (did not compile) |  | restored | 7s
+CMD36 | edit-condition no longer requires a named feature | KILLED | test cases:   94 |   93 passed | 1 failed | assertions: 4844 | 4842 passed | 2 failed | restored | 153s
+CMD37 | a create no longer requires its loads to name a feature | VOID (did not compile) |  | restored | 8s
+CMD38 | a create no longer requires its conditions to name a feature | VOID (did not compile) |  | restored | 8s
+CMD39 | the command layer drops the record validator of an added load (defence in depth) | VOID (did not compile) |  | restored | 7s
+CMD40 | a missing analysis is reported as an invalid argument | KILLED | test cases:   94 |   92 passed | 2 failed | assertions: 4844 | 4841 passed | 3 failed | restored | 155s
+CMD41 | a diverged undo is reported as not found | KILLED | test cases:   94 |   93 passed | 1 failed | assertions: 4844 | 4843 passed | 1 failed | restored | 156s
+CMD42 | a steady-mode refusal is reported as an invalid argument | KILLED | test cases:   94 |   91 passed | 3 failed | assertions: 4844 | 4838 passed | 6 failed | restored | 162s
+CMD43 | the load description loses its id | KILLED | test cases:   94 |   93 passed | 1 failed | assertions: 4844 | 4842 passed | 2 failed | restored | 156s
+campaign finished 2026-10-24T01:47:52
+CMD44 | the initial-temperature description shows the wrong unit | KILLED | test cases:   94 |   93 passed | 1 failed | assertions: 4844 | 4843 passed | 1 failed | restored | 156s
+campaign finished 2026-10-24T01:48:56

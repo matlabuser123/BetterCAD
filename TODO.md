@@ -22,37 +22,34 @@ Prerequisite:
            (OCCT never subdivides a developable wall along its ruling).
 
 Current milestone:
-           none. P18-VIZ-001 — Thermal Visualisation / Inspection. COMPLETE at
-           21 of 21 and qualified 2026-10-23 against c56aef0 plus the working
-           tree: 5269/5269 x 3 presets, 2071 x 5 in two, 0 warnings over 721
-           objects, 17 stages exit 0, 6h05m33s, fingerprints at the freeze ==
-           before == after, second attempt (the first was stopped after a
-           transient failure of a CLI process test; see the evidence). A
-           READ-ONLY VIEW of the qualified derived thermal data, not a thermal
-           authority: nodal-temperature, gradient-magnitude and heat-flux
-           contours, recovered-flux vectors, applied-flux arrows (positive into
-           the body), prescribed-temperature and convection symbols, boundary
-           highlights, node and element inspection, extrema navigation (ties to
-           the first entity), transient playback on the stored times, and a
-           display state recomputed from the core on every call (a stale result,
-           even with the same counts and ids, is never drawn as current). Nothing
-           is recomputed, rescaled or copied: K, K/m and W/m^2 are never
-           converted, the metre to millimetre conversion stays the OCCT
-           adapter's one, measured against the CAD solid. Every field and glyph
-           reports expected / classified / rendered; zero-classified and partial
-           are never complete. 100 + 51 + 12 cases, 75 mutation probes (71
-           killed, 4 unreachable by construction), 50 adversarial questions,
-           13 findings (an independent review found four real holes, all fixed;
-           one production defect, a NaN swallowed by hypot, found by a test),
-           one gate scanning 43 files with 0 violations. Nothing qualified
-           changed (265 files byte-identical). No Qt result panel yet (as in
-           P17-VIZ-001). Evidence: docs/verification/P18-VIZ-001/.
+           none. P18-CMD-001 — Thermal Commands / Undo-Redo. COMPLETE at 22
+           of 22 and qualified 2026-10-24 against 6b675ec plus the working
+           tree: 5432/5432 x 3 presets, 2182 x 2 in two, 0 warnings over 725
+           objects, 17 stages exit 0, 6h35m56s, fingerprints at the freeze ==
+           before == after, third attempt (the first stopped after Smart App
+           Control blocked the unsigned bettercad.exe, the second after a test
+           failed to link on the shared-library preset; see the evidence). Ten
+           undoable commands that edit CANONICAL thermal intent on the existing
+           command framework: create an analysis; add, edit and remove a load;
+           add, edit and remove a boundary condition; set the initial
+           temperature, the solver settings and the transient settings. Undo and
+           redo assign a stored definition, so nothing is inverted and nothing
+           drifts; a failed command changes no field, no revision and no stack;
+           the GeometryReference (a FaceName) is stored as given and never
+           resolved; the history holds no node, element, DOF index or solver
+           array. Edits invalidate exactly the derived layers whose recorded
+           source contains what they changed, and never the mesh. TWO currentness
+           regimes were found and left as they are: derived objects compare
+           their recorded intent by value (an undo makes an old result current
+           again), the validation report compares the monotonic analysis
+           revision (it stays stale). Nothing qualified changed.
            P18-ARCH-001 PASSED 2026-10-16; P18-DATA-001, P18-MAT-001,
            P18-DOF-001 PASSED 2026-10-17; P18-ELEM-001, P18-LOAD-001 PASSED
            2026-10-18; P18-BC-001, P18-ASSEMBLY-001 PASSED 2026-10-19/20;
            P18-SOLVE-001 PASSED 2026-10-20; P18-TRANSIENT-001, P18-POST-001
            PASSED 2026-10-21; P18-BALANCE-001 PASSED 2026-10-22; P18-VALID-001,
-           P18-VIZ-001 PASSED 2026-10-23 (docs/verification/P18-*/).
+           P18-VIZ-001 PASSED 2026-10-23; P18-CMD-001 PASSED 2026-10-24
+           (docs/verification/P18-*/).
 Qualified:
            P0–P10 — BetterCAD v0.1.0
            P11 — Advanced Part Modelling
@@ -64,8 +61,8 @@ Qualified:
            P17 — Structural FEA
 
 Next:
-           P18-CMD-001 — Thermal Commands / Undo-Redo. NOT AUTHORIZED:
-           P18-VIZ-001 passing is not permission to start it; each
+           P18-PERSIST-001 — Thermal Persistence / Round-Trip. NOT AUTHORIZED:
+           P18-CMD-001 passing is not permission to start it; each
            milestone is started by the owner, as every P17 milestone was.
 
 P17 objective, as delivered:
@@ -1282,29 +1279,69 @@ thermal boundary conditions, initial conditions, solver settings and time
 settings. It does NOT contain K, C, Q, temperature arrays, temperature-gradient
 arrays, heat-flux arrays or heat-balance arrays.
 
-* [ ] Create-analysis command
-* [ ] Add-load command
-* [ ] Edit-load command
-* [ ] Remove-load command
-* [ ] Add-BC command
-* [ ] Edit-BC command
-* [ ] Remove-BC command
-* [ ] Initial-temperature command
-* [ ] Solver-settings command
-* [ ] Transient-settings command
-* [ ] Undo exact
-* [ ] Redo exact
-* [ ] Failed command atomic
-* [ ] Redo invalidation correct
-* [ ] `GeometryReference` preserved
-* [ ] Thermal result invalidated correctly
-* [ ] No thermal solver arrays in canonical history
-* [ ] Compile-fail mesh-identity misuse where practical
-* [ ] Determinism PASS
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Create-analysis command
+* [x] Add-load command
+* [x] Edit-load command
+* [x] Remove-load command
+* [x] Add-BC command
+* [x] Edit-BC command
+* [x] Remove-BC command
+* [x] Initial-temperature command
+* [x] Solver-settings command
+* [x] Transient-settings command
+* [x] Undo exact
+* [x] Redo exact
+* [x] Failed command atomic
+* [x] Redo invalidation correct
+* [x] `GeometryReference` preserved
+* [x] Thermal result invalidated correctly
+* [x] No thermal solver arrays in canonical history
+* [x] Compile-fail mesh-identity misuse where practical
+* [x] Determinism PASS
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded
 
+```text
+PASS 2026-10-24. Qualified against 6b675ec plus the working tree: 5432/5432 x 3
+presets, 2182 x 2 in two, 0 warnings over 725 objects, 17 stages exit 0, 6h35m56s,
+fingerprints at the freeze == before == after; third attempt (attempt 1, stopped by
+the author after 11 gui/deploy tests could not start because Windows Smart App Control
+blocked the unsigned bettercad.exe - the owner then turned it off; attempt 2, which
+passed debug-ext and release-ext and then could not link bettercad_tests on
+debug-shared-ext because a test read a static member the thermal DLL does not export,
+fixed and re-frozen; both are in qualification/attempt1 and attempt2). NOTHING
+QUALIFIED CHANGED: 319 of the 322 thermal, meshing, structural, linalg, core and
+renderer files and apps are byte-identical to HEAD, 2 are new and 1 differs by one line
+(src/thermal/CMakeLists.txt).
+DECISION: no new framework, no new invalidation mechanism, no new identity type. Ten
+commands on Command / CommandHistory / AddObjectCommand / Document::modifyObject /
+ThermalAnalysis::setDefinition. A command is keyed on a ThermalAnalysisId and addresses a
+record by its stable id, never by position; an add appends, an edit replaces the whole
+record in place, a removal's undo returns the record to its position. Undo and redo
+ASSIGN a stored definition (no inverse, no text round trip, 50 cycles do not drift) and
+CHECK that the analysis is as the command left it, refusing instead of discarding an
+out-of-history edit. A failed command moves no field, revision or stack; a no-op
+succeeds, moves nothing and is recorded; a steady analysis refuses an initial
+temperature and transient settings (mode before value). A FaceName is stored as given
+(eight selector forms round-trip, copies in order, an unresolved one too), never
+resolved; the command layer refuses the invalid feature handle, which the data model
+lets through. The payload is two definitions: independent of mesh and result size.
+CURRENTNESS, measured on real solves: a load edit stales loads, system, solution, post,
+balance and report; a held temperature the boundary, solution, post, balance and report
+(not the system); a convection also the system; settings, initial temperature and
+transient settings only solution, post, balance and report; the mesh never. TWO REGIMES:
+derived objects compare their recorded intent by value (an undo makes an old result
+current again, and a fresh solve is bit-identical), the validation report compares the
+monotonic revision (it stays stale) - recorded, not changed. The Qt application has no
+thermal panel. 95 + 52 + 16 cases (52 compile-fail with a control; a gate with 15
+fixtures), 14 zero-match filters, 44 + 14 mutation probes all killed (3 first-run
+survivors were a missing test and a missing fixture, closed), 21 adversarial questions,
+7 review defects and 2 mutation findings, 0 qualified-module defects. Limits recorded:
+a create accepts a dangling mesh-control handle; validate(TransientSettings) has no
+step-count bound; no mode-switch, delete or whole-definition command (not on the list).
+Evidence: docs/verification/P18-CMD-001/.
+```
 ---
 # P18-PERSIST-001
 

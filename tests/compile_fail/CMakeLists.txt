@@ -1411,3 +1411,88 @@ foreach(_case
     bettercad_compile_fail_case(thermalviz "${_thermalviz}" ${_case}
         "is private|is protected|inaccessible|use of deleted function" BetterCAD::renderer BetterCAD::thermal BetterCAD::meshing)
 endforeach()
+
+# --- Thermal commands / undo / redo (P18-CMD-001) ---------------------------
+# The undo history holds canonical thermal intent and never a generated solver or result array. A runtime test shows
+# that none WAS stored; these show that none CAN be: a command is keyed on typed identities (a mesh node, an element or
+# another thermal id cannot stand in for the analysis, the load or the condition it addresses); a record names a face
+# and not a node; a quantity is a typed quantity and not a bare double; the command header cannot even NAME a DOF index,
+# a DOF map, the assembled system, a solution, a post result, a balance, a validation report, a prepared load or the
+# result container; the definition has no member in which one could be kept; and a command exposes its payload
+# read-only, has no solve, no mesh and no result, and is not copyable.
+set(_thermalcmd "${CMAKE_CURRENT_SOURCE_DIR}/ThermalCommandMisuse.cpp")
+bettercad_compile_fail_group(thermalcmd "${_thermalcmd}" BetterCAD::thermal)
+foreach(_case
+        A_LOAD_COMMAND_IS_NOT_KEYED_ON_A_NODE
+        A_LOAD_COMMAND_IS_NOT_KEYED_ON_AN_ELEMENT
+        A_LOAD_COMMAND_IS_NOT_KEYED_ON_A_LOAD_ID
+        A_LOAD_COMMAND_IS_NOT_KEYED_ON_A_CONDITION_ID
+        A_CONDITION_COMMAND_IS_NOT_KEYED_ON_A_NODE
+        A_CONDITION_COMMAND_IS_NOT_KEYED_ON_A_LOAD_ID
+        AN_EDIT_COMMAND_IS_NOT_KEYED_ON_AN_ELEMENT
+        REMOVE_LOAD_NEEDS_A_LOAD_ID_NOT_A_NODE
+        REMOVE_LOAD_NEEDS_A_LOAD_ID_NOT_A_CONDITION_ID
+        REMOVE_CONDITION_NEEDS_A_CONDITION_ID_NOT_A_LOAD_ID
+        REMOVE_CONDITION_NEEDS_A_CONDITION_ID_NOT_AN_ELEMENT
+        A_SETTINGS_COMMAND_IS_NOT_KEYED_ON_A_NODE
+        AN_INITIAL_TEMPERATURE_COMMAND_IS_NOT_KEYED_ON_AN_ELEMENT
+        A_TRANSIENT_COMMAND_IS_NOT_KEYED_ON_A_MESH_CONTROL
+        AN_INITIAL_TEMPERATURE_IS_NOT_A_DOUBLE
+        A_TIME_STEP_IS_NOT_A_DOUBLE
+        A_HEAT_FLUX_IS_NOT_A_DOUBLE
+        A_CONVECTION_COEFFICIENT_IS_NOT_A_DOUBLE
+        A_FLUX_IS_NOT_A_TEMPERATURE
+        A_LOAD_DOES_NOT_TARGET_A_NODE
+        A_CONDITION_DOES_NOT_TARGET_A_NODE
+        A_LOAD_ID_IS_NOT_A_NODE_ID)
+    bettercad_compile_fail_case(thermalcmd "${_thermalcmd}" ${_case}
+        "could not convert|cannot convert|no matching function|no match for|invalid conversion|invalid initialization of reference|conversion from|no known conversion"
+        BetterCAD::thermal)
+endforeach()
+foreach(_case
+        THE_DOF_INDEX_IS_NOT_REACHABLE
+        THE_FREE_EQUATION_INDEX_IS_NOT_REACHABLE
+        THE_DOF_MAP_IS_NOT_REACHABLE
+        THE_ASSEMBLED_SYSTEM_IS_NOT_REACHABLE
+        THE_STEADY_SOLUTION_IS_NOT_REACHABLE
+        THE_TRANSIENT_SOLUTION_IS_NOT_REACHABLE
+        THE_POST_RESULT_IS_NOT_REACHABLE
+        THE_BALANCE_IS_NOT_REACHABLE
+        THE_VALIDATION_REPORT_IS_NOT_REACHABLE
+        THE_PREPARED_LOADS_ARE_NOT_REACHABLE
+        THE_PREPARED_BOUNDARY_IS_NOT_REACHABLE
+        THE_RESULT_CONTAINER_IS_NOT_REACHABLE
+        THE_MODEL_IS_NOT_REACHABLE)
+    bettercad_compile_fail_case(thermalcmd "${_thermalcmd}" ${_case}
+        "is not a member of|not declared|has not been declared|does not name a type" BetterCAD::thermal)
+endforeach()
+foreach(_case
+        THE_DEFINITION_HAS_NO_TEMPERATURE_ARRAY
+        THE_DEFINITION_HAS_NO_MATRIX
+        THE_DEFINITION_HAS_NO_PREPARED_LOADS
+        THE_DEFINITION_HAS_NO_DOF_MAP
+        THE_DEFINITION_HAS_NO_SOLUTION
+        THE_DEFINITION_HAS_NO_HEAT_FLUX
+        THE_DEFINITION_HAS_NO_REPORT
+        THE_DEFINITION_HAS_NO_TIME_GRID
+        A_COMMAND_HAS_NO_RESULT_ACCESSOR
+        A_COMMAND_HAS_NO_MESH_ACCESSOR
+        A_COMMAND_HAS_NO_SOLVE
+        A_COMMAND_HAS_NO_PAYLOAD_SETTER)
+    bettercad_compile_fail_case(thermalcmd "${_thermalcmd}" ${_case}
+        "no member named|has no member" BetterCAD::thermal)
+endforeach()
+foreach(_case
+        THE_BEFORE_PAYLOAD_IS_READ_ONLY
+        THE_AFTER_PAYLOAD_IS_READ_ONLY)
+    bettercad_compile_fail_case(thermalcmd "${_thermalcmd}" ${_case}
+        "read-only|discards qualifiers|no match for|passing .const|lvalue required|using temporary as lvalue" BetterCAD::thermal)
+endforeach()
+foreach(_case
+        AN_EDIT_COMMAND_IS_NOT_COPYABLE
+        A_CREATE_COMMAND_IS_NOT_COPYABLE)
+    bettercad_compile_fail_case(thermalcmd "${_thermalcmd}" ${_case}
+        "use of deleted function|is private|deleted" BetterCAD::thermal)
+endforeach()
+bettercad_compile_fail_case(thermalcmd "${_thermalcmd}" THE_EDIT_BASE_CANNOT_BE_INSTANTIATED
+    "protected|abstract|cannot declare" BetterCAD::thermal)

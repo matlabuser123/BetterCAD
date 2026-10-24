@@ -47,6 +47,7 @@ bettercad_add_library(bettercad_thermal
         ThermalAnalysisObject.cpp
         ThermalBalance.cpp
         ThermalBoundary.cpp
+        ThermalCommands.cpp
         ThermalConvection.cpp
         ThermalData.cpp
         ThermalDof.cpp

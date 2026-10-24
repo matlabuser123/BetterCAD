@@ -1,0 +1,163 @@
+P18-CMD-001 freeze 2026-10-24 11:13:10
+HEAD      6b675ecdfb389a194a0206dade1fefbcd4af40bb
+HEAD tree 1985954fa2eb4f9e446049948cf9d71f79cea398
+scratch tree ae9cde735cb55f54fd1b33c76866939e45ba2f11
+apps               a95876bc6dbf843d4e0cec114059bc196fa16175
+include            829ea4b19f2e906f13d63c84127a1fd34c3454b9
+src                5ecc221d275b9672a0f8478e9eb2ed2ddbe2bf95
+tests              4a10e7fa508ccff3d9f905212893c41dfadc69e4
+examples           a955cf6511ce715fcb95bc06ef82b877535869e6
+cmake              5a382115d7ed7775189d40b55e40f318eaae6cc7
+CMakeLists.txt     3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd
+CMakePresets.json  3229f0f89b236744d7d5c082bed47c28b718288e
+ThermalCommands.hpp          cdab8e0fcb3eb23f64dcd3df366d70de83db0379
+ThermalAnalysisObject.hpp    e2a63372d5eea2e1b7d67a64c499a9719b9a06a6
+ThermalData.hpp              c13722336f4d6cc9e2b20d16415c5154464f81c3
+ThermalBoundary.hpp          7e099d43380ea323f4b6664e86cec424c95e5514
+ThermalTarget.hpp            15e44ae3c3ebe3fec0fbadcf38616aed5bac9563
+P18_CMD_CONTRACT_FINGERPRINT 22d24fa8659862293f52fadd3b552760e46e9a5a
+canonical history schema: 26 lines (classes and data members)
+  schema class BETTERCAD_THERMAL_EXPORT CreateThermalAnalysisCommand final : public Command {
+  schema     std::string name_;
+  schema     ThermalAnalysisDefinition definition_;
+  schema     std::optional<AddObjectCommand> add_{};
+  schema class BETTERCAD_THERMAL_EXPORT ThermalAnalysisEditCommand : public Command {
+  schema     ThermalAnalysisId analysis_;
+  schema     std::optional<ThermalAnalysisDefinition> before_{};
+  schema     std::optional<ThermalAnalysisDefinition> after_{};
+  schema class BETTERCAD_THERMAL_EXPORT AddThermalLoadCommand final : public ThermalAnalysisEditCommand {
+  schema     ThermalLoad load_;
+  schema class BETTERCAD_THERMAL_EXPORT EditThermalLoadCommand final : public ThermalAnalysisEditCommand {
+  schema     ThermalLoad replacement_;
+  schema class BETTERCAD_THERMAL_EXPORT RemoveThermalLoadCommand final : public ThermalAnalysisEditCommand {
+  schema     ThermalLoadId load_;
+  schema class BETTERCAD_THERMAL_EXPORT AddThermalBoundaryConditionCommand final
+  schema     ThermalBoundaryCondition condition_;
+  schema class BETTERCAD_THERMAL_EXPORT EditThermalBoundaryConditionCommand final
+  schema     ThermalBoundaryCondition replacement_;
+  schema class BETTERCAD_THERMAL_EXPORT RemoveThermalBoundaryConditionCommand final
+  schema     ThermalBoundaryConditionId condition_;
+  schema class BETTERCAD_THERMAL_EXPORT SetInitialTemperatureCommand final : public ThermalAnalysisEditCommand {
+  schema     UniformInitialTemperature initial_;
+  schema class BETTERCAD_THERMAL_EXPORT SetThermalSolverSettingsCommand final
+  schema     ThermalSolverSettings settings_;
+  schema class BETTERCAD_THERMAL_EXPORT SetTransientSettingsCommand final : public ThermalAnalysisEditCommand {
+  schema     TransientSettings settings_;
+P18_CMD_CANONICAL_HISTORY_SCHEMA_FINGERPRINT accca6ee911ced109bd81546e67fdac54b66f3ad
+undo/redo policy: edit execute/undo/redo + create execute/undo/redo (bytes 4996)
+P18_CMD_UNDO_REDO_POLICY_FINGERPRINT 447763c6a78794f5317d64888dbe1ffb59033758
+source-invalidation policy: apply() and the granularity matrix (bytes 700)
+  matrix constexpr Layers kLoadEdit{true, false, true, false, false, false, false, false};
+  matrix constexpr Layers kHeldTemperatureEdit{true, true, false, true, false, false, false, false};
+  matrix constexpr Layers kConvectionEdit{true, true, false, false, false, false, false, false};
+  matrix constexpr Layers kSettingsEdit{true, true, true, true, false, false, false, false};
+P18_CMD_SOURCE_INVALIDATION_POLICY_FINGERPRINT 036fb0b2e44d29385c223664f2c51c8496592f0c
+ownership   tests/architecture/CheckThermalCommandOwnership.cmake 04cf53a5dc92c2c2d38958d3f0001fcb922e592c
+ownership   tests/architecture/fixtures/thermalcmd-app-edits/apps/app/main.cpp 2f4dca3654689bab5ccb01fbdbff2bdf3b9a2a49
+ownership   tests/architecture/fixtures/thermalcmd-app-edits/include/bettercad/thermal/ThermalCommands.hpp 177bee1d586b2e2d862e568f0bd6e797b8730fb9
+ownership   tests/architecture/fixtures/thermalcmd-app-edits/src/thermal/ThermalCommands.cpp 79e979fecc99796b13f91173c84f8b1f1e5db1e3
+ownership   tests/architecture/fixtures/thermalcmd-app-edits/src/thermal/ThermalData.cpp 21dad22d796c228cd77b4f222d5d9f1fa34d74a6
+ownership   tests/architecture/fixtures/thermalcmd-bypasses-path/apps/app/main.cpp 76e8197013aabca95639bb3d9e5de847b0c0a5fd
+ownership   tests/architecture/fixtures/thermalcmd-bypasses-path/include/bettercad/thermal/ThermalCommands.hpp 177bee1d586b2e2d862e568f0bd6e797b8730fb9
+ownership   tests/architecture/fixtures/thermalcmd-bypasses-path/src/thermal/ThermalCommands.cpp aaf8628695de26a6a4b2c635f590cf0617b494f2
+ownership   tests/architecture/fixtures/thermalcmd-bypasses-path/src/thermal/ThermalData.cpp 21dad22d796c228cd77b4f222d5d9f1fa34d74a6
+ownership   tests/architecture/fixtures/thermalcmd-includes-solver/apps/app/main.cpp 76e8197013aabca95639bb3d9e5de847b0c0a5fd
+ownership   tests/architecture/fixtures/thermalcmd-includes-solver/include/bettercad/thermal/ThermalCommands.hpp 177bee1d586b2e2d862e568f0bd6e797b8730fb9
+ownership   tests/architecture/fixtures/thermalcmd-includes-solver/src/thermal/ThermalCommands.cpp f87bff20385930200d87032b25e140bd724b23c7
+ownership   tests/architecture/fixtures/thermalcmd-includes-solver/src/thermal/ThermalData.cpp 21dad22d796c228cd77b4f222d5d9f1fa34d74a6
+ownership   tests/architecture/fixtures/thermalcmd-includes-third-party/apps/app/main.cpp 76e8197013aabca95639bb3d9e5de847b0c0a5fd
+ownership   tests/architecture/fixtures/thermalcmd-includes-third-party/include/bettercad/thermal/ThermalCommands.hpp 177bee1d586b2e2d862e568f0bd6e797b8730fb9
+ownership   tests/architecture/fixtures/thermalcmd-includes-third-party/src/thermal/ThermalCommands.cpp 03036f41e0e5256eb870a252f9122963c63e5386
+ownership   tests/architecture/fixtures/thermalcmd-includes-third-party/src/thermal/ThermalData.cpp 21dad22d796c228cd77b4f222d5d9f1fa34d74a6
+ownership   tests/architecture/fixtures/thermalcmd-io-edits/apps/app/main.cpp 76e8197013aabca95639bb3d9e5de847b0c0a5fd
+ownership   tests/architecture/fixtures/thermalcmd-io-edits/include/bettercad/thermal/ThermalCommands.hpp 177bee1d586b2e2d862e568f0bd6e797b8730fb9
+ownership   tests/architecture/fixtures/thermalcmd-io-edits/src/io/Loader.cpp 7ec8d7d19e940c61447bcb2a2c628129dfe0fc28
+ownership   tests/architecture/fixtures/thermalcmd-io-edits/src/thermal/ThermalCommands.cpp 79e979fecc99796b13f91173c84f8b1f1e5db1e3
+ownership   tests/architecture/fixtures/thermalcmd-io-edits/src/thermal/ThermalData.cpp 21dad22d796c228cd77b4f222d5d9f1fa34d74a6
+ownership   tests/architecture/fixtures/thermalcmd-mesh-identity/apps/app/main.cpp 76e8197013aabca95639bb3d9e5de847b0c0a5fd
+ownership   tests/architecture/fixtures/thermalcmd-mesh-identity/include/bettercad/thermal/ThermalCommands.hpp 4acf8ba6465403422a5f661a97ff1738f4363b58
+ownership   tests/architecture/fixtures/thermalcmd-mesh-identity/src/thermal/ThermalCommands.cpp 79e979fecc99796b13f91173c84f8b1f1e5db1e3
+ownership   tests/architecture/fixtures/thermalcmd-mesh-identity/src/thermal/ThermalData.cpp 21dad22d796c228cd77b4f222d5d9f1fa34d74a6
+ownership   tests/architecture/fixtures/thermalcmd-parses-text/apps/app/main.cpp 76e8197013aabca95639bb3d9e5de847b0c0a5fd
+ownership   tests/architecture/fixtures/thermalcmd-parses-text/include/bettercad/thermal/ThermalCommands.hpp 177bee1d586b2e2d862e568f0bd6e797b8730fb9
+ownership   tests/architecture/fixtures/thermalcmd-parses-text/src/thermal/ThermalCommands.cpp ede0cb763d0babf283fe4fda2086e6112cc49f4e
+ownership   tests/architecture/fixtures/thermalcmd-parses-text/src/thermal/ThermalData.cpp 21dad22d796c228cd77b4f222d5d9f1fa34d74a6
+ownership   tests/architecture/fixtures/thermalcmd-positional/apps/app/main.cpp 76e8197013aabca95639bb3d9e5de847b0c0a5fd
+ownership   tests/architecture/fixtures/thermalcmd-positional/include/bettercad/thermal/ThermalCommands.hpp 177bee1d586b2e2d862e568f0bd6e797b8730fb9
+ownership   tests/architecture/fixtures/thermalcmd-positional/src/thermal/ThermalCommands.cpp b5c22a8d2313833a932c2efab592e4ec3b8b4733
+ownership   tests/architecture/fixtures/thermalcmd-positional/src/thermal/ThermalData.cpp 21dad22d796c228cd77b4f222d5d9f1fa34d74a6
+ownership   tests/architecture/fixtures/thermalcmd-qualified-edit/apps/app/main.cpp 33b5e825050cc1d0a71871e17044b3e1c56a3cd2
+ownership   tests/architecture/fixtures/thermalcmd-qualified-edit/include/bettercad/thermal/ThermalCommands.hpp 177bee1d586b2e2d862e568f0bd6e797b8730fb9
+ownership   tests/architecture/fixtures/thermalcmd-qualified-edit/src/thermal/ThermalCommands.cpp 79e979fecc99796b13f91173c84f8b1f1e5db1e3
+ownership   tests/architecture/fixtures/thermalcmd-qualified-edit/src/thermal/ThermalData.cpp 21dad22d796c228cd77b4f222d5d9f1fa34d74a6
+ownership   tests/architecture/fixtures/thermalcmd-quoted-include/apps/app/main.cpp 76e8197013aabca95639bb3d9e5de847b0c0a5fd
+ownership   tests/architecture/fixtures/thermalcmd-quoted-include/include/bettercad/thermal/ThermalCommands.hpp 177bee1d586b2e2d862e568f0bd6e797b8730fb9
+ownership   tests/architecture/fixtures/thermalcmd-quoted-include/src/thermal/ThermalCommands.cpp ff591291ff6627c2565d8ee49fc4ba355573c39c
+ownership   tests/architecture/fixtures/thermalcmd-quoted-include/src/thermal/ThermalData.cpp 21dad22d796c228cd77b4f222d5d9f1fa34d74a6
+ownership   tests/architecture/fixtures/thermalcmd-second-owner/apps/app/main.cpp 76e8197013aabca95639bb3d9e5de847b0c0a5fd
+ownership   tests/architecture/fixtures/thermalcmd-second-owner/include/bettercad/thermal/ThermalCommands.hpp 177bee1d586b2e2d862e568f0bd6e797b8730fb9
+ownership   tests/architecture/fixtures/thermalcmd-second-owner/src/thermal/ThermalCommands.cpp 79e979fecc99796b13f91173c84f8b1f1e5db1e3
+ownership   tests/architecture/fixtures/thermalcmd-second-owner/src/thermal/ThermalData.cpp 21dad22d796c228cd77b4f222d5d9f1fa34d74a6
+ownership   tests/architecture/fixtures/thermalcmd-second-owner/src/thermal/ThermalOther.cpp 4bb782830c4911b71059b798e43284bce28a1b9d
+ownership   tests/architecture/fixtures/thermalcmd-solves/apps/app/main.cpp 76e8197013aabca95639bb3d9e5de847b0c0a5fd
+ownership   tests/architecture/fixtures/thermalcmd-solves/include/bettercad/thermal/ThermalCommands.hpp 177bee1d586b2e2d862e568f0bd6e797b8730fb9
+ownership   tests/architecture/fixtures/thermalcmd-solves/src/thermal/ThermalCommands.cpp 06ad7b181cebe67365e2bb25bf87361be7c9eced
+ownership   tests/architecture/fixtures/thermalcmd-solves/src/thermal/ThermalData.cpp 21dad22d796c228cd77b4f222d5d9f1fa34d74a6
+ownership   tests/architecture/fixtures/thermalcmd-stale-flag/apps/app/main.cpp 76e8197013aabca95639bb3d9e5de847b0c0a5fd
+ownership   tests/architecture/fixtures/thermalcmd-stale-flag/include/bettercad/thermal/ThermalCommands.hpp 177bee1d586b2e2d862e568f0bd6e797b8730fb9
+ownership   tests/architecture/fixtures/thermalcmd-stale-flag/src/thermal/ThermalCommands.cpp c4eb983b5e5aa208db3808f8ac2499958abb1930
+ownership   tests/architecture/fixtures/thermalcmd-stale-flag/src/thermal/ThermalData.cpp 21dad22d796c228cd77b4f222d5d9f1fa34d74a6
+ownership   tests/architecture/fixtures/thermalcmd-unordered/apps/app/main.cpp 76e8197013aabca95639bb3d9e5de847b0c0a5fd
+ownership   tests/architecture/fixtures/thermalcmd-unordered/include/bettercad/thermal/ThermalCommands.hpp 177bee1d586b2e2d862e568f0bd6e797b8730fb9
+ownership   tests/architecture/fixtures/thermalcmd-unordered/src/thermal/ThermalCommands.cpp 70aadd102770e8bfbbe6e54b9b2ad77144bbc093
+ownership   tests/architecture/fixtures/thermalcmd-unordered/src/thermal/ThermalData.cpp 21dad22d796c228cd77b4f222d5d9f1fa34d74a6
+ownership   tests/architecture/fixtures/thermalcmd-valid/apps/app/main.cpp 76e8197013aabca95639bb3d9e5de847b0c0a5fd
+ownership   tests/architecture/fixtures/thermalcmd-valid/include/bettercad/thermal/ThermalCommands.hpp 177bee1d586b2e2d862e568f0bd6e797b8730fb9
+ownership   tests/architecture/fixtures/thermalcmd-valid/src/thermal/ThermalCommands.cpp 79e979fecc99796b13f91173c84f8b1f1e5db1e3
+ownership   tests/architecture/fixtures/thermalcmd-valid/src/thermal/ThermalData.cpp 21dad22d796c228cd77b4f222d5d9f1fa34d74a6
+THERMAL_CMD_OWNERSHIP_FINGERPRINT 2d5fdebcfa3d50863c4721803a6ba2eb68517d7b
+src/thermal/CMakeLists.txt     e85aafc13d382dbaa3900f525139e8ef8e053122
+CheckLayering.cmake           505897ecff3c3cad62370e785ee379e78a5884c4
+CheckTargetDependencies.cmake 987e0536567bfea1565318aa616218bd9a374805
+ADR_055_DEPENDENCY_FINGERPRINT 630384cd0b469f6120ae33147ca154d84225d2b1
+untouched-scope files: 322 equal 319 different 1 new 2
+  DIFFERENT src/thermal/CMakeLists.txt
+  NEW       src/thermal/ThermalCommands.cpp
+  NEW       include/bettercad/thermal/ThermalCommands.hpp
+blob include/bettercad/thermal/ThermalCommands.hpp        cdab8e0fcb3eb23f64dcd3df366d70de83db0379
+blob src/thermal/ThermalCommands.cpp                      093f52f5a0261f82e6b99f2ee65d772cc58f0818
+blob tests/thermal/ThermalCommandTests.cpp                8365d74d04b8ce471e8ec9b3f84ec1410e4aad66
+blob tests/thermal/ThermalCommandCurrentnessTests.cpp     4cc60e41e89b1bf9256960bd6540e6f9cfb81078
+blob tests/thermal/ThermalCommandTestSupport.hpp          0c768c37c56c7d679eace2805859c0cdf515659f
+blob tests/compile_fail/ThermalCommandMisuse.cpp          ff6befe179d016630d28e916468c55c25bb7b476
+status:
+ M src/thermal/CMakeLists.txt
+ M tests/CMakeLists.txt
+ M tests/architecture/CMakeLists.txt
+ M tests/cli/ZeroMatchGuard.cmake
+ M tests/compile_fail/CMakeLists.txt
+?? .claude/
+?? docs/architecture/decisions/ADR-055-thermal-commands-edit-one-analysis-definition-and-the-history-holds-intent-only.md
+?? docs/verification/P18-CMD-001/
+?? include/bettercad/thermal/ThermalCommands.hpp
+?? src/thermal/ThermalCommands.cpp
+?? tests/architecture/CheckThermalCommandOwnership.cmake
+?? tests/architecture/fixtures/thermalcmd-app-edits/
+?? tests/architecture/fixtures/thermalcmd-bypasses-path/
+?? tests/architecture/fixtures/thermalcmd-includes-solver/
+?? tests/architecture/fixtures/thermalcmd-includes-third-party/
+?? tests/architecture/fixtures/thermalcmd-io-edits/
+?? tests/architecture/fixtures/thermalcmd-mesh-identity/
+?? tests/architecture/fixtures/thermalcmd-parses-text/
+?? tests/architecture/fixtures/thermalcmd-positional/
+?? tests/architecture/fixtures/thermalcmd-qualified-edit/
+?? tests/architecture/fixtures/thermalcmd-quoted-include/
+?? tests/architecture/fixtures/thermalcmd-second-owner/
+?? tests/architecture/fixtures/thermalcmd-solves/
+?? tests/architecture/fixtures/thermalcmd-stale-flag/
+?? tests/architecture/fixtures/thermalcmd-unordered/
+?? tests/architecture/fixtures/thermalcmd-valid/
+?? tests/compile_fail/ThermalCommandMisuse.cpp
+?? tests/thermal/ThermalCommandCurrentnessTests.cpp
+?? tests/thermal/ThermalCommandTestSupport.hpp
+?? tests/thermal/ThermalCommandTests.cpp

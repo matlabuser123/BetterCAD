@@ -1,0 +1,3 @@
+CMD37 | a create no longer requires its loads to name a feature | KILLED | test cases:   94 |   93 passed | 1 failed | assertions: 4844 | 4842 passed | 2 failed | restored | 159s
+CMD38 | a create no longer requires its conditions to name a feature | KILLED | test cases:   94 |   93 passed | 1 failed | assertions: 4844 | 4842 passed | 2 failed | restored | 154s
+campaign finished 2026-10-24T02:20:00

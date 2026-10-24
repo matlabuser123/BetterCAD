@@ -233,3 +233,58 @@ bettercad_add_process_test(architecture.thermalviz-ownership.lacks-owners
 bettercad_add_process_test(architecture.thermalviz-ownership.no-cardinality
     COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalviz-no-cardinality|-P|${_check_thermalviz}"
     EXIT_CODE 1 STDERR_REGEX "1 violation.*classifyBoundaryCardinality")
+
+# P18-CMD-001: the thermal command layer edits canonical intent and does nothing else. The check scans the two command
+# files for their includes (canonical data and the document only), for derived work, mesh identity, positional targeting,
+# text round trips and second authorities, requires them to use the one mutation path (modifyObject, setDefinition,
+# validate), and scans the rest of the thermal module, the applications and the renderer for a second owner of thermal
+# commands or an edit that goes around them. Each fixture tree holds exactly one defect (or none); the valid tree also
+# holds comments that name forbidden things, which are not code.
+set(_check_thermalcmd "${CMAKE_CURRENT_SOURCE_DIR}/CheckThermalCommandOwnership.cmake")
+add_test(NAME architecture.thermalcmd-ownership
+    COMMAND "${CMAKE_COMMAND}" "-DSOURCE_DIR=${PROJECT_SOURCE_DIR}" -P "${_check_thermalcmd}")
+bettercad_add_process_test(architecture.thermalcmd-ownership.valid
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcmd-valid|-P|${_check_thermalcmd}"
+    EXIT_CODE 0 STDOUT_REGEX "Thermal command ownership check passed")
+bettercad_add_process_test(architecture.thermalcmd-ownership.includes-solver
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcmd-includes-solver|-P|${_check_thermalcmd}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*ThermalSolve")
+bettercad_add_process_test(architecture.thermalcmd-ownership.includes-third-party
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcmd-includes-third-party|-P|${_check_thermalcmd}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*Eigen")
+bettercad_add_process_test(architecture.thermalcmd-ownership.solves
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcmd-solves|-P|${_check_thermalcmd}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*solveSteady")
+bettercad_add_process_test(architecture.thermalcmd-ownership.mesh-identity
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcmd-mesh-identity|-P|${_check_thermalcmd}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*NodeId")
+bettercad_add_process_test(architecture.thermalcmd-ownership.positional
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcmd-positional|-P|${_check_thermalcmd}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*position")
+bettercad_add_process_test(architecture.thermalcmd-ownership.parses-text
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcmd-parses-text|-P|${_check_thermalcmd}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*stod")
+bettercad_add_process_test(architecture.thermalcmd-ownership.stale-flag
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcmd-stale-flag|-P|${_check_thermalcmd}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*authority")
+bettercad_add_process_test(architecture.thermalcmd-ownership.unordered
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcmd-unordered|-P|${_check_thermalcmd}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*unordered")
+bettercad_add_process_test(architecture.thermalcmd-ownership.bypasses-path
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcmd-bypasses-path|-P|${_check_thermalcmd}"
+    EXIT_CODE 1 STDERR_REGEX "3 violation.*does not use")
+bettercad_add_process_test(architecture.thermalcmd-ownership.second-owner
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcmd-second-owner|-P|${_check_thermalcmd}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*second owner")
+bettercad_add_process_test(architecture.thermalcmd-ownership.app-edits
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcmd-app-edits|-P|${_check_thermalcmd}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*around the commands")
+bettercad_add_process_test(architecture.thermalcmd-ownership.quoted-include
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcmd-quoted-include|-P|${_check_thermalcmd}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*quoted include")
+bettercad_add_process_test(architecture.thermalcmd-ownership.io-edits
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcmd-io-edits|-P|${_check_thermalcmd}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*around the commands")
+bettercad_add_process_test(architecture.thermalcmd-ownership.qualified-edit
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcmd-qualified-edit|-P|${_check_thermalcmd}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*around the commands")
