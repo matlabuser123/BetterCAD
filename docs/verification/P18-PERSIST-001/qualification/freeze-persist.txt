@@ -1,0 +1,119 @@
+P18-PERSIST-001 freeze 2026-10-25 00:44:14
+HEAD      975efa6d51bb4f13804c5e44ebd59d73a1d02b21
+HEAD tree 874b6ec6167c12ba4cdc2f1e35137513789d8d87
+scratch tree 7e3913ad1f215d970a5f859690d49e2b84864c35
+apps               a95876bc6dbf843d4e0cec114059bc196fa16175
+include            829ea4b19f2e906f13d63c84127a1fd34c3454b9
+src                878f2626a99a50367e32b969f5bd2cd8239178b3
+tests              9a3a4103d58addf09561e8346792ea02915d27f2
+examples           b99eef98ccb4924698f89010b1e11869b680985d
+cmake              5a382115d7ed7775189d40b55e40f318eaae6cc7
+CMakeLists.txt     3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd
+CMakePresets.json  3229f0f89b236744d7d5c082bed47c28b718288e
+src/io/json/ObjectJson.hpp                                 84667d6a37ea64ad1a8acaacadad24faa6eaa98a
+src/io/json/ThermalAnalysisJson.cpp                        faa72dfcf283a52970f8f39f2d4d0e66f3734c5e
+src/io/json/DocumentJson.cpp                               d5656abc583b61707db3c84115907a1dab4624ff
+include/bettercad/thermal/ThermalAnalysisObject.hpp        e2a63372d5eea2e1b7d67a64c499a9719b9a06a6
+include/bettercad/thermal/ThermalData.hpp                  c13722336f4d6cc9e2b20d16415c5154464f81c3
+P18_PERSISTENCE_CONTRACT_FINGERPRINT 4fee1da549286ed94e15f60898eed8527bdf2572
+schema: 36 lines (allowed keys, enumeration keys, written keys)
+  schema keys: "id", "type", "face", "flux", "generation"
+  schema keys: "id", "type", "face", "temperature", "coefficient", "ambient"
+  schema keys: "relative_residual_tolerance", "pivot_floor"
+  schema keys: "time_step", "end_time", "output"
+  schema keys: "mesh", "mode", "loads", "boundary_conditions", "initial_temperature", "solver", "transient"
+  schema enum: {thermal::ThermalAnalysisMode::Steady, "steady"}
+  schema enum: {thermal::ThermalAnalysisMode::Transient, "transient"}
+  schema enum: {thermal::ThermalLoadKind::SurfaceHeatFlux, "surface_heat_flux"}
+  schema enum: {thermal::ThermalLoadKind::VolumetricHeatSource, "volumetric_heat_source"}
+  schema enum: {thermal::ThermalBoundaryConditionKind::PrescribedTemperature, "prescribed_temperature"}
+  schema enum: {thermal::ThermalBoundaryConditionKind::Convection, "convection"}
+  schema enum: {thermal::TransientOutputPolicy::FinalOnly, "final_only"}
+  schema enum: {thermal::TransientOutputPolicy::EveryStep, "every_step"}
+  schema writes: id
+  schema writes: type
+  schema writes: face
+  schema writes: flux
+  schema writes: generation
+  schema writes: id
+  schema writes: type
+  schema writes: face
+  schema writes: temperature
+  schema writes: coefficient
+  schema writes: ambient
+  schema writes: relative_residual_tolerance
+  schema writes: pivot_floor
+  schema writes: time_step
+  schema writes: end_time
+  schema writes: output
+  schema writes: mesh
+  schema writes: mode
+  schema writes: loads
+  schema writes: boundary_conditions
+  schema writes: initial_temperature
+  schema writes: solver
+  schema writes: transient
+P18_SCHEMA_FINGERPRINT 0cd63891b1bcff5611b1323bf366b02c747a5dec
+canonical boundary: the definition (bytes 695) and 8 forbidden-name sets
+P18_CANONICAL_PERSISTENCE_BOUNDARY_FINGERPRINT 48d1b31d0dce32eeee3287ec76acc6c2e00d71b1
+serialization policy: writer + dumpJson + golden constants + format constants (bytes 3259)
+  golden CHECK(fnv(steadyText) == 0x4cec5ef3f4cc7014ULL);
+  golden CHECK(fnv(transientText) == 0x23d057e01f95e19cULL);
+P18_SERIALIZATION_POLICY_FINGERPRINT e64e32a56c4972be302a873cd37b4c31b145fb0b
+backward compatibility: format constants, three pre-P18 document blobs and the read dispatch
+  examples/models/meshed_plate.bcad b077b4a909d5f5da20845b5f2c914ba1b95ea5ac
+  examples/models/analysed_plate.bcad e2de7d2396f3d48365a174bf0c2788f87263b7d6
+  examples/models/plate.bcad 06760dd3c80c832474f19f40ff372c2d698e1565
+P18_BACKWARD_COMPATIBILITY_POLICY_FINGERPRINT 463ed21af22e3a3a7947499c88a5d9a03f5cfc4b
+ownership: 70 files (the checker and its fixtures)
+THERMAL_PERSIST_OWNERSHIP_FINGERPRINT 4207d2750460f75c7cd78ca2513dd65be09c39a4
+src/io/CMakeLists.txt         ce426b9cee2a1838575ec751eb9a7712871a1808
+CheckLayering.cmake           505897ecff3c3cad62370e785ee379e78a5884c4
+CheckTargetDependencies.cmake 987e0536567bfea1565318aa616218bd9a374805
+ADR_056_DEPENDENCY_FINGERPRINT fff50da5d9a5e65a006345e831412e3f54b890e7
+src + include + apps files: 515 equal 511 different 3 new 1
+  DIFFERENT src/io/CMakeLists.txt (expected)
+  DIFFERENT src/io/json/DocumentJson.cpp (expected)
+  DIFFERENT src/io/json/ObjectJson.hpp (expected)
+  NEW       src/io/json/ThermalAnalysisJson.cpp (expected)
+blob src/io/json/ThermalAnalysisJson.cpp                  faa72dfcf283a52970f8f39f2d4d0e66f3734c5e
+blob tests/io/ThermalAnalysisFileTests.cpp                9889fd1aaafcbf11f131a350d1258ab75d72da00
+blob examples/models/thermal_plate.bcad                   4ea8f364e1e5df73b4cad9e650b39c729a87bf40
+status:
+ M src/io/CMakeLists.txt
+ M src/io/json/DocumentJson.cpp
+ M src/io/json/ObjectJson.hpp
+ M tests/CMakeLists.txt
+ M tests/architecture/CMakeLists.txt
+ M tests/cli/ZeroMatchGuard.cmake
+ M tests/thermal/ThermalDataTests.cpp
+?? .claude/
+?? docs/architecture/decisions/ADR-056-thermal-analysis-persistence-is-one-more-object-type-and-the-file-holds-intent-only.md
+?? docs/verification/P18-PERSIST-001/
+?? examples/models/thermal_plate.bcad
+?? src/io/json/ThermalAnalysisJson.cpp
+?? tests/architecture/CheckThermalPersistenceOwnership.cmake
+?? tests/architecture/fixtures/thermalpersist-current-check/
+?? tests/architecture/fixtures/thermalpersist-derived-name/
+?? tests/architecture/fixtures/thermalpersist-dispatch-derived/
+?? tests/architecture/fixtures/thermalpersist-includes-solver/
+?? tests/architecture/fixtures/thermalpersist-includes-third-party/
+?? tests/architecture/fixtures/thermalpersist-io-includes-solver/
+?? tests/architecture/fixtures/thermalpersist-lookalike-include/
+?? tests/architecture/fixtures/thermalpersist-material-copy/
+?? tests/architecture/fixtures/thermalpersist-material-id/
+?? tests/architecture/fixtures/thermalpersist-mesh-identity/
+?? tests/architecture/fixtures/thermalpersist-missing-face-encoding/
+?? tests/architecture/fixtures/thermalpersist-mutable/
+?? tests/architecture/fixtures/thermalpersist-other-project-include/
+?? tests/architecture/fixtures/thermalpersist-parses-text/
+?? tests/architecture/fixtures/thermalpersist-resolves/
+?? tests/architecture/fixtures/thermalpersist-spaced-include/
+?? tests/architecture/fixtures/thermalpersist-stale-flag/
+?? tests/architecture/fixtures/thermalpersist-timestamp/
+?? tests/architecture/fixtures/thermalpersist-units/
+?? tests/architecture/fixtures/thermalpersist-unordered/
+?? tests/architecture/fixtures/thermalpersist-valid/
+?? tests/architecture/fixtures/thermalpersist-vendored-layer-include/
+?? tests/architecture/fixtures/thermalpersist-weak-strictness/
+?? tests/io/ThermalAnalysisFileTests.cpp

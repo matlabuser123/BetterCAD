@@ -1,0 +1,148 @@
+postrun-persist started 2026-10-25T07:54:33.5616130+10:00
+== layering checker on the source tree
+-- Architecture check passed: 544 files, 0 violations
+== thermal persistence ownership checker on the source tree
+-- Thermal persistence ownership check passed: 35 files scanned, 0 violations
+== warnings and errors in the harness build logs
+  debug-ext : warning: 0  error: 0  objects 727  last step [751/751] Linking CXX executable bin\bettercad_tests.exe
+  debug-ext no-op rebuild edges: 1
+  debug-ext clean: [1/2] Cleaning additional files... [2/2] Cleaning all built files... Cleaning... 750 files.
+  debug-ext ctest: 100% tests passed out of 5504 | Total Test time (real) = 5127.25 sec
+  release-ext : warning: 0  error: 0  objects 727  last step [751/751] Building CXX object tests/compile_fail/CMakeFiles/bettercad_cf_thermalviz_control.dir/ThermalVizMisuse.cpp.obj
+  release-ext no-op rebuild edges: 1
+  release-ext clean: [1/2] Cleaning additional files... [2/2] Cleaning all built files... Cleaning... 750 files.
+  release-ext ctest: 100% tests passed out of 5504 | Total Test time (real) = 4865.63 sec
+  debug-shared-ext : warning: 0  error: 0  objects 727  last step [751/751] Linking CXX executable bin\bettercad_tests.exe
+  debug-shared-ext no-op rebuild edges: 1
+  debug-shared-ext clean: [1/2] Cleaning additional files... [2/2] Cleaning all built files... Cleaning... 762 files.
+  debug-shared-ext ctest: 100% tests passed out of 5504 | Total Test time (real) = 5144.13 sec
+  repeat release-ext : 100% tests passed out of 2254 | Total Test time (real) = 1403.20 sec
+  repeat debug-ext : 100% tests passed out of 2254 | Total Test time (real) = 1637.67 sec
+== harness stderr lines: 266
+== non-CRLF stderr lines: 0
+== debug-ext
+  bettercad-cli.exe 374709392 a45f9ddd00ccd14d1a3b194588508cf05fa41e2e8b59f7f9fa584cad283f6671
+  bettercad_example_reference_models.exe 379369775 fb67a52f9d182fbaff3c27a8108ec4a4ab5c97f3f33f1da3e616131cce09fd76
+  bettercad_tests.exe 1387311430 7217b2f8adfdbca8dc78e06f59888f693ad3ee00f118600f573b633c7e6df162
+  ctest -N: Total Tests: 5504
+  ctest -N -R unit\.ThermalPersistence_ : Total Tests: 48
+  ctest -N -R unit\.ThermalPersistence_(TheWholeSteadyCanonicalIntentRoundTrips|TheWholeTransientCanonicalIntentRoundTrips|EveryEnumeratorRoundTrips|SignedLoadsKeepTheirSignAndTheirZero|ExtremeAndAwkwardFiniteValuesSurviveBitForBit|LoadAndConditionOrderIsTheUsersAndIsPreserved|AnEmptyAnalysisAndManyRecordsRoundTrip|TwoAnalysesRoundTripWithoutLeaking|ObjectNamesRoundTripExactlyIncludingUnicodeAndEscapes|AThermalAndAStructuralAnalysisShareOneFileWithoutInterfering)$ : Total Tests: 10
+  ctest -N -R unit\.ThermalPersistence_(Rejects|ACorruptFile|AnIdentifierAbove) : Total Tests: 6
+  ctest -N -R unit\.ThermalPersistence_.*(Bytes|Identical|Fixed|ByteStable|Locale|FixedPoint) : Total Tests: 7
+  ctest -N -R unit\.ThermalPersistence_.*(ReSolves|Resolves|Destroy) : Total Tests: 4
+  ctest -N -R architecture\.thermalpersist-ownership : Total Tests: 24
+  ctest -N -R unit\.StructuralPersistence_ : Total Tests: 38
+  ctest -N -R unit\.MeshingPersistence_ : Total Tests: 26
+  ctest -N -R unit\.ThermalCommand_ : Total Tests: 95
+  ctest -N -R unit\.ThermalViz : Total Tests: 100
+  ctest -N -R unit\.ThermalValidation : Total Tests: 138
+  ctest -N -R unit\.Structural : Total Tests: 431
+  ctest -N -R unit\.View : Total Tests: 68
+  ctest -N -R unit\.Mesh : Total Tests: 227
+  ctest -N -R unit\.ThermalBalance : Total Tests: 69
+  ctest -N -R unit\.ThermalPost : Total Tests: 40
+  ctest -N -R unit\.ThermalTransient : Total Tests: 72
+  ctest -N -R unit\.ThermalSolve : Total Tests: 51
+  ctest -N -R unit\.Linalg_ : Total Tests: 10
+  ctest -N -R architecture\.targets\. : Total Tests: 3
+  ctest -N -R unit\.Thermal : Total Tests: 1028
+  ctest -N -R ^architecture\. : Total Tests: 93
+  ThermalPersistence_* : <OverallResultsCases successes="48" failures="0" expectedFailures="0" skips="0"/>  <OverallResults successes="7" failures="0" expectedFailures="0" skipped="false"/>
+  evidence lines: 1
+  ThermalCommand_* exit 0 : All tests passed (4888 assertions in 95 test cases)
+  ThermalViz_* exit 0 : All tests passed (28871 assertions in 100 test cases)
+  ThermalValidation_* exit 0 : All tests passed (13468 assertions in 138 test cases)
+  ThermalBalance_* exit 0 : All tests passed (2240 assertions in 69 test cases)
+  ThermalPost_* exit 0 : All tests passed (38910 assertions in 40 test cases)
+  ThermalTransient_* exit 0 : All tests passed (105966 assertions in 72 test cases)
+  StructuralPersistence_* exit 0 : All tests passed (2399 assertions in 38 test cases)
+  MeshingPersistence_* exit 0 : All tests passed (1320 assertions in 26 test cases)
+  [structural] exit 0 : All tests passed (271414 assertions in 415 test cases)
+  [meshing] exit 0 : All tests passed (95088 assertions in 364 test cases)
+== release-ext
+  bettercad-cli.exe 10293485 c7bb402f4c6e51b6ead231b2866835b994aa8aab527131bfa88673607f86d586
+  bettercad_example_reference_models.exe 9676831 72700cce87809bb65da4ad8dd4df549e1873f1637e35c3539537c878c559e8bc
+  bettercad_tests.exe 59303900 fc7de1cbb8b1d0bcb1f001b8c730a048121ed1ce272780b826b28eaf8d95390b
+  ctest -N: Total Tests: 5504
+  ctest -N -R unit\.ThermalPersistence_ : Total Tests: 48
+  ctest -N -R unit\.ThermalPersistence_(TheWholeSteadyCanonicalIntentRoundTrips|TheWholeTransientCanonicalIntentRoundTrips|EveryEnumeratorRoundTrips|SignedLoadsKeepTheirSignAndTheirZero|ExtremeAndAwkwardFiniteValuesSurviveBitForBit|LoadAndConditionOrderIsTheUsersAndIsPreserved|AnEmptyAnalysisAndManyRecordsRoundTrip|TwoAnalysesRoundTripWithoutLeaking|ObjectNamesRoundTripExactlyIncludingUnicodeAndEscapes|AThermalAndAStructuralAnalysisShareOneFileWithoutInterfering)$ : Total Tests: 10
+  ctest -N -R unit\.ThermalPersistence_(Rejects|ACorruptFile|AnIdentifierAbove) : Total Tests: 6
+  ctest -N -R unit\.ThermalPersistence_.*(Bytes|Identical|Fixed|ByteStable|Locale|FixedPoint) : Total Tests: 7
+  ctest -N -R unit\.ThermalPersistence_.*(ReSolves|Resolves|Destroy) : Total Tests: 4
+  ctest -N -R architecture\.thermalpersist-ownership : Total Tests: 24
+  ctest -N -R unit\.StructuralPersistence_ : Total Tests: 38
+  ctest -N -R unit\.MeshingPersistence_ : Total Tests: 26
+  ctest -N -R unit\.ThermalCommand_ : Total Tests: 95
+  ctest -N -R unit\.ThermalViz : Total Tests: 100
+  ctest -N -R unit\.ThermalValidation : Total Tests: 138
+  ctest -N -R unit\.Structural : Total Tests: 431
+  ctest -N -R unit\.View : Total Tests: 68
+  ctest -N -R unit\.Mesh : Total Tests: 227
+  ctest -N -R unit\.ThermalBalance : Total Tests: 69
+  ctest -N -R unit\.ThermalPost : Total Tests: 40
+  ctest -N -R unit\.ThermalTransient : Total Tests: 72
+  ctest -N -R unit\.ThermalSolve : Total Tests: 51
+  ctest -N -R unit\.Linalg_ : Total Tests: 10
+  ctest -N -R architecture\.targets\. : Total Tests: 3
+  ctest -N -R unit\.Thermal : Total Tests: 1028
+  ctest -N -R ^architecture\. : Total Tests: 93
+  ThermalPersistence_* : <OverallResultsCases successes="48" failures="0" expectedFailures="0" skips="0"/>  <OverallResults successes="6" failures="0" expectedFailures="0" skipped="false"/>
+  evidence lines: 1
+  ThermalCommand_* exit 0 : All tests passed (4888 assertions in 95 test cases)
+  ThermalViz_* exit 0 : All tests passed (28871 assertions in 100 test cases)
+  ThermalValidation_* exit 0 : All tests passed (13468 assertions in 138 test cases)
+  ThermalBalance_* exit 0 : All tests passed (2240 assertions in 69 test cases)
+  ThermalPost_* exit 0 : All tests passed (38910 assertions in 40 test cases)
+  ThermalTransient_* exit 0 : All tests passed (105966 assertions in 72 test cases)
+  StructuralPersistence_* exit 0 : All tests passed (2399 assertions in 38 test cases)
+  MeshingPersistence_* exit 0 : All tests passed (1320 assertions in 26 test cases)
+  [structural] exit 0 : All tests passed (271414 assertions in 415 test cases)
+  [meshing] exit 0 : All tests passed (95088 assertions in 364 test cases)
+== debug-shared-ext
+  bettercad-cli.exe 41310182 aecdacd94e589523f3b0368a02956840263ebff6fad3d90d03740610d4fac870
+  bettercad_example_reference_models.exe 52417896 7a5e328168fab164b3c1a3c7e4f5b9f243147e6134f69656abd9e3601f5c9936
+  bettercad_tests.exe 1003600648 e2045c0d3b89040f8cc81882483eb4fb3a8fca32494d2ed9d858161eba16f7e0
+  libbettercad_thermal.dll 42694220 014beb6f830ccf6400bd1b50d1350fe27c81f913309fb3221679b21f7f140007
+  libbettercad_core.dll 25770431 43117beaf8e4da03c39c192b2d0937f57e055f8164529ceb21f488a1cd57ab22
+  dll count: 12
+  ctest -N: Total Tests: 5504
+  ctest -N -R unit\.ThermalPersistence_ : Total Tests: 48
+  ctest -N -R unit\.ThermalPersistence_(TheWholeSteadyCanonicalIntentRoundTrips|TheWholeTransientCanonicalIntentRoundTrips|EveryEnumeratorRoundTrips|SignedLoadsKeepTheirSignAndTheirZero|ExtremeAndAwkwardFiniteValuesSurviveBitForBit|LoadAndConditionOrderIsTheUsersAndIsPreserved|AnEmptyAnalysisAndManyRecordsRoundTrip|TwoAnalysesRoundTripWithoutLeaking|ObjectNamesRoundTripExactlyIncludingUnicodeAndEscapes|AThermalAndAStructuralAnalysisShareOneFileWithoutInterfering)$ : Total Tests: 10
+  ctest -N -R unit\.ThermalPersistence_(Rejects|ACorruptFile|AnIdentifierAbove) : Total Tests: 6
+  ctest -N -R unit\.ThermalPersistence_.*(Bytes|Identical|Fixed|ByteStable|Locale|FixedPoint) : Total Tests: 7
+  ctest -N -R unit\.ThermalPersistence_.*(ReSolves|Resolves|Destroy) : Total Tests: 4
+  ctest -N -R architecture\.thermalpersist-ownership : Total Tests: 24
+  ctest -N -R unit\.StructuralPersistence_ : Total Tests: 38
+  ctest -N -R unit\.MeshingPersistence_ : Total Tests: 26
+  ctest -N -R unit\.ThermalCommand_ : Total Tests: 95
+  ctest -N -R unit\.ThermalViz : Total Tests: 100
+  ctest -N -R unit\.ThermalValidation : Total Tests: 138
+  ctest -N -R unit\.Structural : Total Tests: 431
+  ctest -N -R unit\.View : Total Tests: 68
+  ctest -N -R unit\.Mesh : Total Tests: 227
+  ctest -N -R unit\.ThermalBalance : Total Tests: 69
+  ctest -N -R unit\.ThermalPost : Total Tests: 40
+  ctest -N -R unit\.ThermalTransient : Total Tests: 72
+  ctest -N -R unit\.ThermalSolve : Total Tests: 51
+  ctest -N -R unit\.Linalg_ : Total Tests: 10
+  ctest -N -R architecture\.targets\. : Total Tests: 3
+  ctest -N -R unit\.Thermal : Total Tests: 1028
+  ctest -N -R ^architecture\. : Total Tests: 93
+  ThermalPersistence_* : <OverallResultsCases successes="48" failures="0" expectedFailures="0" skips="0"/>  <OverallResults successes="6" failures="0" expectedFailures="0" skipped="false"/>
+  evidence lines: 1
+  ThermalCommand_* exit 0 : All tests passed (4888 assertions in 95 test cases)
+  ThermalViz_* exit 0 : All tests passed (28871 assertions in 100 test cases)
+  ThermalValidation_* exit 0 : All tests passed (13468 assertions in 138 test cases)
+  ThermalBalance_* exit 0 : All tests passed (2240 assertions in 69 test cases)
+  ThermalPost_* exit 0 : All tests passed (38910 assertions in 40 test cases)
+  ThermalTransient_* exit 0 : All tests passed (105966 assertions in 72 test cases)
+  StructuralPersistence_* exit 0 : All tests passed (2399 assertions in 38 test cases)
+  MeshingPersistence_* exit 0 : All tests passed (1320 assertions in 26 test cases)
+  [structural] exit 0 : All tests passed (271414 assertions in 415 test cases)
+  [meshing] exit 0 : All tests passed (95088 assertions in 364 test cases)
+== cross-preset classification (every PERFP line of the command suite)
+  debug-ext PERFP lines: 1
+    PERFP steady 4cec5ef3f4cc7014 1559 bytes | transient 23d057e01f95e19c 1728 bytes
+  PERFP lines, debug-ext vs release-ext : 1 vs 1, differing: 0
+  PERFP lines, debug-ext vs debug-shared-ext : 1 vs 1, differing: 0
+postrun-persist finished 2026-10-25T08:37:28.8354843+10:00

@@ -1,0 +1,5 @@
+src/io/json/ObjectJson.hpp                                 84667d6a37ea64ad1a8acaacadad24faa6eaa98a
+src/io/json/ThermalAnalysisJson.cpp                        faa72dfcf283a52970f8f39f2d4d0e66f3734c5e
+src/io/json/DocumentJson.cpp                               d5656abc583b61707db3c84115907a1dab4624ff
+include/bettercad/thermal/ThermalAnalysisObject.hpp        e2a63372d5eea2e1b7d67a64c499a9719b9a06a6
+include/bettercad/thermal/ThermalData.hpp                  c13722336f4d6cc9e2b20d16415c5154464f81c3

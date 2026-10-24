@@ -1,0 +1,22 @@
+struct ThermalAnalysisDefinition {
+    /// The meshing control whose current mesh is analysed.
+    MeshControlId mesh{};
+    ThermalAnalysisMode mode = ThermalAnalysisMode::Steady;
+    std::vector<ThermalLoad> loads{};
+    std::vector<ThermalBoundaryCondition> boundaryConditions{};
+    /// Required for a transient analysis; must be absent for a steady one.
+    std::optional<UniformInitialTemperature> initialCondition{};
+    ThermalSolverSettings solver{};
+    /// Required for a transient analysis; must be absent for a steady one.
+    std::optional<TransientSettings> transient{};
+
+    friend bool operator==(const ThermalAnalysisDefinition&, const ThermalAnalysisDefinition&) = default;
+};
+set(_forbidden_includes "bettercad/thermal/Thermal(System|Solve|LoadVector|Boundary|Dof|Transient|Post|Balance|Validation|Result|Element|Sparse|Convection|Material|Target|Analysis)\\.hpp|bettercad/(renderer|linalg|meshing/Mesher|features/Regenerator)")
+set(_derived "solveSteady|solveTransient|prepareThermal|assembleThermal|recoverSteady|recoverTransient|recoverThermal|balanceSteady|balanceTransient|validateThermalAnalysis|requireThermalModel|ThermalModel|ThermalDofMap|buildThermalDofMap|ThermalSystem|SteadyThermalSolution|TransientThermalSolution|ThermalPostResult|ThermalBalanceResult|ThermalValidationReport|PreparedThermal|ThermalResult|ThermalDerivedState|requireCurrent|isCurrent|staleReasons|currentResultSource|Mesher|Regenerator|regenerateAll|ThermalResultView|ThermalContour|ThermalOverlay|SparseMatrix")
+set(_mesh_identity "NodeId|ElementId|ThermalDofIndex|ThermalFreeEquationIndex|MeshStamp|FacetId|facet|VolumeMesh|BoundaryFacet")
+set(_material "[Cc]onductivity|[Dd]ensity|[Ss]pecificHeat|specific_heat|[Mm]aterial|[Cc]apacity|[Dd]iffusivity|emissivity|[^A-Za-z]rho[^A-Za-z]|ThermalProperties")
+set(_resolution "[^A-Za-z]Document[^A-Za-z]|findObject|modifyObject|[Rr]esolve|regenerat|Regenerator")
+set(_units "273\\.15|[Cc]elsius|1000\\.0|1e3|1\\.0e3|\\.in[ \t]*\\(|to_string|printf|std::fixed|setprecision")
+set(_text_parse "stod|stold|stof|from_chars|strtod|sscanf|atof|istringstream|stringstream|std::stoi|std::stoll|lexical_cast")
+set(_nondeterminism "unordered_|std::hash|chrono|clock|std::time|time[ \t]*\\(|rand[ \t]*\\(|random_device|std::thread|std::async|std::atomic|mutable|const_cast|[Rr]evision|[Tt]imestamp|[Ss]tale|bool[ \t]+(is)?(valid|current|solved|validated)[A-Za-z_]*")

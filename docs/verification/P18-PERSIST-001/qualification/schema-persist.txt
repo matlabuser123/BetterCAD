@@ -1,0 +1,36 @@
+keys: "id", "type", "face", "flux", "generation"
+keys: "id", "type", "face", "temperature", "coefficient", "ambient"
+keys: "relative_residual_tolerance", "pivot_floor"
+keys: "time_step", "end_time", "output"
+keys: "mesh", "mode", "loads", "boundary_conditions", "initial_temperature", "solver", "transient"
+enum: {thermal::ThermalAnalysisMode::Steady, "steady"}
+enum: {thermal::ThermalAnalysisMode::Transient, "transient"}
+enum: {thermal::ThermalLoadKind::SurfaceHeatFlux, "surface_heat_flux"}
+enum: {thermal::ThermalLoadKind::VolumetricHeatSource, "volumetric_heat_source"}
+enum: {thermal::ThermalBoundaryConditionKind::PrescribedTemperature, "prescribed_temperature"}
+enum: {thermal::ThermalBoundaryConditionKind::Convection, "convection"}
+enum: {thermal::TransientOutputPolicy::FinalOnly, "final_only"}
+enum: {thermal::TransientOutputPolicy::EveryStep, "every_step"}
+writes: id
+writes: type
+writes: face
+writes: flux
+writes: generation
+writes: id
+writes: type
+writes: face
+writes: temperature
+writes: coefficient
+writes: ambient
+writes: relative_residual_tolerance
+writes: pivot_floor
+writes: time_step
+writes: end_time
+writes: output
+writes: mesh
+writes: mode
+writes: loads
+writes: boundary_conditions
+writes: initial_temperature
+writes: solver
+writes: transient

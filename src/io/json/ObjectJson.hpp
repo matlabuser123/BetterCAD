@@ -35,6 +35,7 @@
 #include <bettercad/meshing/MeshControl.hpp>
 #include <bettercad/sketch/Sketch.hpp>
 #include <bettercad/structural/StructuralAnalysisObject.hpp>
+#include <bettercad/thermal/ThermalAnalysisObject.hpp>
 
 #include <memory>
 #include <string>
@@ -70,6 +71,21 @@ meshControlFromJson(const Json& data, std::string name, std::string_view path);
 [[nodiscard]] Result<Json> structuralAnalysisToJson(const structural::StructuralAnalysis& analysis);
 [[nodiscard]] Result<std::unique_ptr<structural::StructuralAnalysis>>
 structuralAnalysisFromJson(const Json& data, std::string name, std::string_view path);
+
+/// A thermal analysis's canonical intent (P18-PERSIST-001): the meshing control
+/// analysed, the mode, the loads and boundary conditions with their CAD targets
+/// and signed SI values, the uniform initial temperature, the solver settings and
+/// the transient settings. Nothing generated -- see ThermalAnalysisJson.cpp for
+/// the schema and why no solver or result state can appear in it.
+///
+/// The writer returns a Result only as defence in depth: an analysis can hold
+/// nothing but a validated definition, so a refusal means a broken invariant
+/// rather than a user error. The reader's only inputs are the JSON, a name and a
+/// path -- no document, regenerator or mesher -- so an unresolvable reference has
+/// nothing to be rebound to.
+[[nodiscard]] Result<Json> thermalAnalysisToJson(const thermal::ThermalAnalysis& analysis);
+[[nodiscard]] Result<std::unique_ptr<thermal::ThermalAnalysis>>
+thermalAnalysisFromJson(const Json& data, std::string name, std::string_view path);
 
 /// [x, y, z] in metres.
 [[nodiscard]] Json pointToJson(const Point3D& point);

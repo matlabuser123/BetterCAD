@@ -1,0 +1,13 @@
+inline constexpr int kDocumentFormatVersion = 2;
+inline constexpr int kOldestReadableDocumentVersion = 1;
+examples/models/meshed_plate.bcad b077b4a909d5f5da20845b5f2c914ba1b95ea5ac
+examples/models/analysed_plate.bcad e2de7d2396f3d48365a174bf0c2788f87263b7d6
+examples/models/plate.bcad 06760dd3c80c832474f19f40ff372c2d698e1565
+if (*type == "thermal-analysis") {
+        auto analysis =
+            detail::thermalAnalysisFromJson(**data, *name, detail::childPath(path, "data"));
+        if (!analysis) {
+            return std::unexpected(analysis.error());
+        }
+        return std::unique_ptr<DocumentObject>(std::move(*analysis));
+    }

@@ -22,34 +22,34 @@ Prerequisite:
            (OCCT never subdivides a developable wall along its ruling).
 
 Current milestone:
-           none. P18-CMD-001 — Thermal Commands / Undo-Redo. COMPLETE at 22
-           of 22 and qualified 2026-10-24 against 6b675ec plus the working
-           tree: 5432/5432 x 3 presets, 2182 x 2 in two, 0 warnings over 725
-           objects, 17 stages exit 0, 6h35m56s, fingerprints at the freeze ==
-           before == after, third attempt (the first stopped after Smart App
-           Control blocked the unsigned bettercad.exe, the second after a test
-           failed to link on the shared-library preset; see the evidence). Ten
-           undoable commands that edit CANONICAL thermal intent on the existing
-           command framework: create an analysis; add, edit and remove a load;
-           add, edit and remove a boundary condition; set the initial
-           temperature, the solver settings and the transient settings. Undo and
-           redo assign a stored definition, so nothing is inverted and nothing
-           drifts; a failed command changes no field, no revision and no stack;
-           the GeometryReference (a FaceName) is stored as given and never
-           resolved; the history holds no node, element, DOF index or solver
-           array. Edits invalidate exactly the derived layers whose recorded
-           source contains what they changed, and never the mesh. TWO currentness
-           regimes were found and left as they are: derived objects compare
-           their recorded intent by value (an undo makes an old result current
-           again), the validation report compares the monotonic analysis
-           revision (it stays stale). Nothing qualified changed.
+           none. P18-PERSIST-001 — Thermal Analysis Persistence. COMPLETE at 22
+           of 22 and qualified 2026-10-25 against 975efa6 plus the working
+           tree: 5504/5504 x 3 presets, 2254 x 2 in two, 0 warnings over 727
+           objects, 17 stages exit 0, 6h44m47s, fingerprints at the freeze ==
+           before == after, first attempt. A thermal analysis is saved as one
+           more object type in the existing document format ("thermal-analysis",
+           document version 2, unchanged): the mesh control, the mode, the loads
+           and boundary conditions with their FaceName targets and signed SI
+           values, the uniform initial temperature, the solver settings and the
+           transient settings - CANONICAL INTENT AND NOTHING A SOLVE PRODUCES.
+           The same document saved before and after a steady solve (eight
+           derived stages, a stale result, a failed solve) and after a 201-state
+           transient (a 3.9 MB result) is byte-for-byte identical; the file does
+           not follow the mesh; save-load-save is a fixed point; golden bytes are
+           pinned by a hand-written file and two constants. An unresolved
+           reference is preserved exactly and never rebound; unknown keys, fake
+           results and fake status flags are refused by name; duplicate ids,
+           invalid values and malformed files are refused with the path, and a
+           failed load changes nothing. Destroy -> load -> remesh -> re-solve
+           reproduces temperature, gradient and heat-flux fields bit for bit.
+           P15 stays the only material authority. Nothing qualified changed.
            P18-ARCH-001 PASSED 2026-10-16; P18-DATA-001, P18-MAT-001,
            P18-DOF-001 PASSED 2026-10-17; P18-ELEM-001, P18-LOAD-001 PASSED
            2026-10-18; P18-BC-001, P18-ASSEMBLY-001 PASSED 2026-10-19/20;
            P18-SOLVE-001 PASSED 2026-10-20; P18-TRANSIENT-001, P18-POST-001
            PASSED 2026-10-21; P18-BALANCE-001 PASSED 2026-10-22; P18-VALID-001,
-           P18-VIZ-001 PASSED 2026-10-23; P18-CMD-001 PASSED 2026-10-24
-           (docs/verification/P18-*/).
+           P18-VIZ-001 PASSED 2026-10-23; P18-CMD-001 PASSED 2026-10-24;
+           P18-PERSIST-001 PASSED 2026-10-25 (docs/verification/P18-*/).
 Qualified:
            P0–P10 — BetterCAD v0.1.0
            P11 — Advanced Part Modelling
@@ -61,8 +61,8 @@ Qualified:
            P17 — Structural FEA
 
 Next:
-           P18-PERSIST-001 — Thermal Persistence / Round-Trip. NOT AUTHORIZED:
-           P18-CMD-001 passing is not permission to start it; each
+           P18-CLI-001 — Thermal CLI. NOT AUTHORIZED:
+           P18-PERSIST-001 passing is not permission to start it; each
            milestone is started by the owner, as every P17 milestone was.
 
 P17 objective, as delivered:
@@ -1355,29 +1355,67 @@ Do NOT persist as authority: K, C, Q, T, grad(T), heat flux, heat-balance
 arrays. Mandatory byte-identity test: the same canonical document saved before
 a thermal solve == saved after it, byte for byte.
 
-* [ ] Define P18 schema
-* [ ] Persist analysis definition
-* [ ] Persist thermal loads
-* [ ] Persist thermal BCs
-* [ ] Persist `GeometryReference`s
-* [ ] Persist initial condition
-* [ ] Persist steady solver settings
-* [ ] Persist transient settings
-* [ ] Preserve units
-* [ ] Preserve unresolved references explicitly
-* [ ] Exclude thermal solver/result arrays
-* [ ] Malformed files rejected
-* [ ] Invalid values rejected
-* [ ] Duplicate IDs rejected
-* [ ] Backward compatibility
-* [ ] Deterministic serialization
-* [ ] Full round trip
-* [ ] Save / load / re-solve
-* [ ] Compare re-solved semantics
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Define P18 schema
+* [x] Persist analysis definition
+* [x] Persist thermal loads
+* [x] Persist thermal BCs
+* [x] Persist `GeometryReference`s
+* [x] Persist initial condition
+* [x] Persist steady solver settings
+* [x] Persist transient settings
+* [x] Preserve units
+* [x] Preserve unresolved references explicitly
+* [x] Exclude thermal solver/result arrays
+* [x] Malformed files rejected
+* [x] Invalid values rejected
+* [x] Duplicate IDs rejected
+* [x] Backward compatibility
+* [x] Deterministic serialization
+* [x] Full round trip
+* [x] Save / load / re-solve
+* [x] Compare re-solved semantics
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded
 
+```text
+PASS 2026-10-25. Qualified against 975efa6 plus the working tree: 5504/5504 x 3
+presets, 2254 x 2 in two, 0 warnings over 727 objects, 17 stages exit 0, 6h44m47s,
+fingerprints at the freeze == before == after; first attempt. NOTHING QUALIFIED
+CHANGED: 511 of 515 src/include/apps files are byte-identical to HEAD, 3 differ and 1
+is new (the io module's shared private header, its dispatch, its CMake list and the
+new reader/writer); one P18-DATA test that pinned the refusal this milestone removes
+was renamed and rewritten.
+DECISION: no new file, no version bump, no migration, no new validation framework, no
+new reference encoding. ONE OBJECT TYPE in the existing format, exactly as P17. The
+writer's only argument is the analysis object (seven members, none derived); the
+reader gets no document, mesher or regenerator, so an unresolved reference has nothing
+to be rebound to. Fixed SI named by the key (flux W/m^2, generation W/m^3, temperature
+and ambient K, coefficient W/(m^2 K), time_step and end_time s); variants and
+enumerations by stable strings; a kind carries only its own keys; solver settings
+always written and all required; unknown keys rejected; order and ids preserved; the
+core's validators called, not copied; the writer refuses an identifier above the file
+cap, the file refuses the invalid feature handle (as the commands do).
+BYTES: the same document saved before and after assembly, solve, POST, BALANCE,
+VALID, VIZ, a stale result and a failed solve is identical (4230 B); a 201-state x 84
+node transient (3,926,736 B of numbers) leaves the 5251 B file unchanged; the thermal
+section is equal on a coarse and a fine mesh; save-load-save is a fixed point; a
+hand-written file reproduces itself character for character; two FNV constants pin the
+golden sections (1559 B and 1728 B) in the source, identical in all three presets.
+ROUND TRIP: destroy, load, remesh, re-solve: nodal temperatures and the element
+gradient and heat-flux fields bit-identical (1, 20 and 5 states; a shortened last
+step lands on the end time), balance terms within 1e-12, verdicts equal. A result of
+one document is stale for a copy even with equal analysis revisions (mesh and loads).
+48 cases (4363 assertions), a 24-test source-text gate with 22 fixtures, 11
+zero-match filters, 41 + 16 mutation probes all killed (2 first-run survivors closed
+by a sharper assertion and a new fixture), an independent review (4 medium, 6 low, 8
+gate holes - all with dispositions, 0 high), 0 qualified-module defects. Limits
+recorded: a repeated JSON key is last-wins format-wide (pinned, an owner decision);
+a dangling mesh control loads and is refused later; validate(definition) is O(n^2);
+no NamedBoundarySet, output schedule or material reference exists in the data model;
+analysis names are validated identifiers.
+Evidence: docs/verification/P18-PERSIST-001/.
+```
 ---
 # P18-CLI-001
 

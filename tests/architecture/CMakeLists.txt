@@ -288,3 +288,82 @@ bettercad_add_process_test(architecture.thermalcmd-ownership.io-edits
 bettercad_add_process_test(architecture.thermalcmd-ownership.qualified-edit
     COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcmd-qualified-edit|-P|${_check_thermalcmd}"
     EXIT_CODE 1 STDERR_REGEX "1 violation.*around the commands")
+
+# P18-PERSIST-001: the persisted form of a thermal analysis is canonical intent and nothing else. The check scans
+# src/io/json/ThermalAnalysisJson.cpp for its includes (the shared private header and the standard library), for derived
+# work and state, mesh identity, material properties, numbers parsed from text and non-determinism, requires it to go
+# through the one face encoding and the core's own validators, and scans the rest of the io module for a thermal header
+# other than the canonical analysis object. Each fixture tree holds exactly one defect (or none); the valid tree also holds
+# comments that name forbidden things, which are not code.
+set(_check_thermalpersist "${CMAKE_CURRENT_SOURCE_DIR}/CheckThermalPersistenceOwnership.cmake")
+add_test(NAME architecture.thermalpersist-ownership
+    COMMAND "${CMAKE_COMMAND}" "-DSOURCE_DIR=${PROJECT_SOURCE_DIR}" -P "${_check_thermalpersist}")
+bettercad_add_process_test(architecture.thermalpersist-ownership.valid
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalpersist-valid|-P|${_check_thermalpersist}"
+    EXIT_CODE 0 STDOUT_REGEX "Thermal persistence ownership check passed")
+bettercad_add_process_test(architecture.thermalpersist-ownership.includes-solver
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalpersist-includes-solver|-P|${_check_thermalpersist}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*ThermalSolve")
+bettercad_add_process_test(architecture.thermalpersist-ownership.spaced-include
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalpersist-spaced-include|-P|${_check_thermalpersist}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*ThermalSolve")
+bettercad_add_process_test(architecture.thermalpersist-ownership.lookalike-include
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalpersist-lookalike-include|-P|${_check_thermalpersist}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*xThermalAnalysisObject")
+bettercad_add_process_test(architecture.thermalpersist-ownership.includes-third-party
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalpersist-includes-third-party|-P|${_check_thermalpersist}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*Eigen")
+bettercad_add_process_test(architecture.thermalpersist-ownership.other-project-include
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalpersist-other-project-include|-P|${_check_thermalpersist}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*JsonReader")
+bettercad_add_process_test(architecture.thermalpersist-ownership.derived-name
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalpersist-derived-name|-P|${_check_thermalpersist}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*solveSteady")
+bettercad_add_process_test(architecture.thermalpersist-ownership.current-check
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalpersist-current-check|-P|${_check_thermalpersist}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*isCurrent")
+bettercad_add_process_test(architecture.thermalpersist-ownership.mesh-identity
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalpersist-mesh-identity|-P|${_check_thermalpersist}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*NodeId")
+bettercad_add_process_test(architecture.thermalpersist-ownership.material-copy
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalpersist-material-copy|-P|${_check_thermalpersist}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*Conductivity")
+bettercad_add_process_test(architecture.thermalpersist-ownership.material-id
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalpersist-material-id|-P|${_check_thermalpersist}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*Material")
+bettercad_add_process_test(architecture.thermalpersist-ownership.parses-text
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalpersist-parses-text|-P|${_check_thermalpersist}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*stod")
+bettercad_add_process_test(architecture.thermalpersist-ownership.unordered
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalpersist-unordered|-P|${_check_thermalpersist}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*unordered_")
+bettercad_add_process_test(architecture.thermalpersist-ownership.timestamp
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalpersist-timestamp|-P|${_check_thermalpersist}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*chrono")
+bettercad_add_process_test(architecture.thermalpersist-ownership.stale-flag
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalpersist-stale-flag|-P|${_check_thermalpersist}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*stale")
+bettercad_add_process_test(architecture.thermalpersist-ownership.mutable
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalpersist-mutable|-P|${_check_thermalpersist}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*mutable")
+bettercad_add_process_test(architecture.thermalpersist-ownership.resolves
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalpersist-resolves|-P|${_check_thermalpersist}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*Document")
+bettercad_add_process_test(architecture.thermalpersist-ownership.units
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalpersist-units|-P|${_check_thermalpersist}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*celsius")
+bettercad_add_process_test(architecture.thermalpersist-ownership.missing-face-encoding
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalpersist-missing-face-encoding|-P|${_check_thermalpersist}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*faceNameFromJson 0 time")
+bettercad_add_process_test(architecture.thermalpersist-ownership.weak-strictness
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalpersist-weak-strictness|-P|${_check_thermalpersist}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*requireObject 1 time")
+bettercad_add_process_test(architecture.thermalpersist-ownership.io-includes-solver
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalpersist-io-includes-solver|-P|${_check_thermalpersist}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*ThermalPost")
+bettercad_add_process_test(architecture.thermalpersist-ownership.dispatch-derived
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalpersist-dispatch-derived|-P|${_check_thermalpersist}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*solveSteady")
+bettercad_add_process_test(architecture.thermalpersist-ownership.vendored-layer-include
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalpersist-vendored-layer-include|-P|${_check_thermalpersist}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):[ \n]+src/io/json/ThermalAnalysisJson.cpp: includes[ \n]+vendor/bettercad/renderer/Renderer\\.hpp, a header of the derived chain")

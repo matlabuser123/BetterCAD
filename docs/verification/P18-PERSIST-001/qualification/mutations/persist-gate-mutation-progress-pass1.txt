@@ -1,0 +1,17 @@
+PGATE01 | rule 1: a derived-chain header may be included | SURVIVED | 100% tests passed out of 23 | by:  | restored | 5s
+PGATE02 | rule 1: a third-party header may be included | KILLED | 96% tests passed, 1 tests failed out of 23 | by: architecture.thermalpersist-ownership.includes-third-party | restored | 4s
+PGATE03 | rule 1: any quoted project header may be included | KILLED | 96% tests passed, 1 tests failed out of 23 | by: architecture.thermalpersist-ownership.other-project-include | restored | 4s
+PGATE04 | rule 1: a space after the # hides an include | KILLED | 96% tests passed, 1 tests failed out of 23 | by: architecture.thermalpersist-ownership.spaced-include | restored | 4s
+PGATE05 | rule 2: derived work may be named | KILLED | 91% tests passed, 2 tests failed out of 23 | by: architecture.thermalpersist-ownership.derived-name, architecture.thermalpersist-ownership.current-check | restored | 4s
+PGATE06 | rule 3: a mesh identity may be named | KILLED | 96% tests passed, 1 tests failed out of 23 | by: architecture.thermalpersist-ownership.mesh-identity | restored | 4s
+PGATE07 | rule 4: a material property may be named | KILLED | 91% tests passed, 2 tests failed out of 23 | by: architecture.thermalpersist-ownership.material-copy, architecture.thermalpersist-ownership.material-id | restored | 4s
+PGATE08 | rule 5: a number may be parsed from text | KILLED | 96% tests passed, 1 tests failed out of 23 | by: architecture.thermalpersist-ownership.parses-text | restored | 4s
+PGATE09 | rule 6: a non-deterministic construct is allowed | KILLED | 83% tests passed, 4 tests failed out of 23 | by: architecture.thermalpersist-ownership.unordered, architecture.thermalpersist-ownership.timestamp, architecture.thermalpersist-ownership.stale-flag, architecture.thermalpersist-ownership.mutable | restored | 4s
+PGATE10 | rule 9: the reader may resolve and look up | KILLED | 96% tests passed, 1 tests failed out of 23 | by: architecture.thermalpersist-ownership.resolves | restored | 4s
+PGATE11 | rule 10: a unit may be converted | KILLED | 96% tests passed, 1 tests failed out of 23 | by: architecture.thermalpersist-ownership.units | restored | 4s
+PGATE12 | rule 7: the owners need not be used at every place that needs them | KILLED | 91% tests passed, 2 tests failed out of 23 | by: architecture.thermalpersist-ownership.missing-face-encoding, architecture.thermalpersist-ownership.weak-strictness | restored | 4s
+PGATE13 | rule 7: the strict-key reads are counted as one | KILLED | 96% tests passed, 1 tests failed out of 23 | by: architecture.thermalpersist-ownership.weak-strictness | restored | 4s
+PGATE14 | rule 8: another thermal header may be included in the io module | KILLED | 91% tests passed, 2 tests failed out of 23 | by: architecture.thermalpersist-ownership.lookalike-include, architecture.thermalpersist-ownership.io-includes-solver | restored | 4s
+PGATE15 | rule 8: a lookalike of the analysis header is allowed (unanchored) | KILLED | 96% tests passed, 1 tests failed out of 23 | by: architecture.thermalpersist-ownership.lookalike-include | restored | 4s
+PGATE16 | rule 8: the dispatch may name derived work | KILLED | 96% tests passed, 1 tests failed out of 23 | by: architecture.thermalpersist-ownership.dispatch-derived | restored | 4s
+gate campaign finished 2026-10-25T00:23:09

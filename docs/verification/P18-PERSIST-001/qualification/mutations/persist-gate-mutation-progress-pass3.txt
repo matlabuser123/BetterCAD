@@ -1,0 +1,2 @@
+PGATE01 | rule 1: a derived-chain header may be included | KILLED | 96% tests passed, 1 tests failed out of 24 | by: architecture.thermalpersist-ownership.vendored-layer-include | restored | 5s
+gate campaign finished 2026-10-25T00:24:36

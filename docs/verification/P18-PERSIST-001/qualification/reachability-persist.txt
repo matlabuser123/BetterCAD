@@ -1,0 +1,24 @@
+preprocessed io/json/ObjectJson.hpp with the debug-ext flags: 5839819 bytes
+
+ThermalPostResult            0
+ThermalSystem                0
+SteadyThermalSolution        0
+TransientThermalSolution     0
+ThermalBalanceResult         0
+ThermalValidationReport      0
+PreparedThermalLoads         0
+PreparedThermalBoundary      0
+ThermalDofMap                0
+ThermalDofIndex              0
+ThermalFreeEquationIndex     0
+ThermalModel                 0
+class Mesher                 1
+class Regenerator            3
+Eigen                        0
+SparseMatrix                 0
+VolumeMesh                   44
+
+declared and pre-existing (not introduced by this milestone):
+MeshStamp                    18
+NodeId                       38
+ElementId                    42

@@ -83,6 +83,16 @@ Result<Json> objectToJson(const DocumentObject& object) {
             return std::unexpected(written.error());
         }
         data = std::move(*written);
+    } else if (const auto* thermalAnalysis = dynamic_cast<const thermal::ThermalAnalysis*>(&object)) {
+        // The writer's only argument is the analysis object, which holds a
+        // validated definition and no result, so nothing a solve produced can
+        // reach this branch (P18-PERSIST-001). Its Result is defence in depth,
+        // propagated for the reason the structural branch gives.
+        Result<Json> written = detail::thermalAnalysisToJson(*thermalAnalysis);
+        if (!written) {
+            return std::unexpected(written.error());
+        }
+        data = std::move(*written);
     } else {
         return makeError(ErrorCode::InvalidArgument,
                          std::format("objects of type '{}' cannot be saved", object.typeName()));
@@ -320,6 +330,16 @@ Result<std::unique_ptr<DocumentObject>> objectFromJson(const Json& value, std::s
     if (*type == "structural-analysis") {
         auto analysis =
             detail::structuralAnalysisFromJson(**data, *name, detail::childPath(path, "data"));
+        if (!analysis) {
+            return std::unexpected(analysis.error());
+        }
+        return std::unique_ptr<DocumentObject>(std::move(*analysis));
+    }
+    // The literal once more; ThermalAnalysisJson.cpp carries the static_assert
+    // that it and ThermalAnalysis::kTypeName agree.
+    if (*type == "thermal-analysis") {
+        auto analysis =
+            detail::thermalAnalysisFromJson(**data, *name, detail::childPath(path, "data"));
         if (!analysis) {
             return std::unexpected(analysis.error());
         }

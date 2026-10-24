@@ -1,0 +1,65 @@
+Result<Json> thermalAnalysisToJson(const thermal::ThermalAnalysis& analysis) {
+    const thermal::ThermalAnalysisDefinition& d = analysis.definition();
+    // DEFENCE IN DEPTH. An analysis can only hold a definition that passed
+    // `validate`, so this cannot fail today; it is here so that the writer can
+    // never emit a state the reader would refuse (a NaN would dump as `null`).
+    if (const Result<void> valid = thermal::validate(d); !valid) {
+        return std::unexpected(valid.error());
+    }
+    // THE WRITER MUST NOT EMIT WHAT THE READER REFUSES. `validate` only asks that an
+    // identity be valid, and `readId` caps a file identifier at 2^53 - 1 (the largest
+    // integer every JSON implementation represents exactly), so an identity above the cap
+    // would save and then never load. Refused here, by name, before anything is written.
+    const auto fits = [](std::uint64_t value, std::string_view what) -> Result<void> {
+        if (value > kMaxFileId) {
+            return makeError(ErrorCode::InvalidArgument,
+                             std::format("{} {} exceeds the largest identifier a file can hold ({}); "
+                                         "it could be written but never read back",
+                                         what, value, kMaxFileId));
+        }
+        return Result<void>{};
+    };
+    if (const Result<void> ok = fits(d.mesh.value(), "the meshing control"); !ok) {
+        return std::unexpected(ok.error());
+    }
+    for (const thermal::ThermalLoad& load : d.loads) {
+        if (const Result<void> ok = fits(load.id().value(), "the load id"); !ok) {
+            return std::unexpected(ok.error());
+        }
+    }
+    for (const thermal::ThermalBoundaryCondition& condition : d.boundaryConditions) {
+        if (const Result<void> ok = fits(condition.id().value(), "the boundary condition id"); !ok) {
+            return std::unexpected(ok.error());
+        }
+    }
+    Json json = Json::object();
+    // Keys inserted in a fixed order, because ordered_json writes insertion order
+    // and this file's determinism claim rests on it.
+    json["mesh"] = d.mesh.value();
+    json["mode"] = enumName(kModes, d.mode);
+    // Omitted when empty, P16/P17's convention for a collection that says
+    // nothing. An absent array reads back as an empty vector.
+    if (!d.loads.empty()) {
+        json["loads"] = loadsToJson(d.loads);
+    }
+    if (!d.boundaryConditions.empty()) {
+        json["boundary_conditions"] = conditionsToJson(d.boundaryConditions);
+    }
+    if (d.initialCondition.has_value()) {
+        json["initial_temperature"] = d.initialCondition->value.si();   // K
+    }
+    json["solver"] = solverToJson(d.solver);
+    if (d.transient.has_value()) {
+        json["transient"] = transientToJson(*d.transient);
+    }
+    return json;
+}Result<std::string> dumpJson(const Json& value) {
+    try {
+        return value.dump(2) + '\n';
+    } catch (const Json::type_error&) {
+        return makeError(ErrorCode::InvalidArgument, "text in the document is not valid UTF-8");
+    }
+}CHECK(fnv(steadyText) == 0x4cec5ef3f4cc7014ULL);
+CHECK(fnv(transientText) == 0x23d057e01f95e19cULL);
+inline constexpr int kDocumentFormatVersion = 2;
+inline constexpr int kOldestReadableDocumentVersion = 1;

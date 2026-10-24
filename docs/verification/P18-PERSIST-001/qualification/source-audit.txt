@@ -1,0 +1,42 @@
+P18-PERSIST-001 source audit
+
+== src/io/json/ThermalAnalysisJson.cpp (625 lines, 28688 bytes)
+  unordered containers / std::hash                 0
+  clock, time, random                              0
+  threads / atomics / mutexes                      0
+  const_cast / mutable                             0
+  mutable globals (static, non-const)              0
+  text round trip (parse a number)                 0
+  mesh identity (NodeId / ElementId / MeshStamp)   0
+  derived names (DOF / system / solution / post)   0
+  solve / assemble / remesh / validate-run         0
+  material properties (P15 owns them)              0
+  resolution / lookup                              0
+  unit conversion / number formatting              0
+  revision / timestamp / status flag               0
+  raw owning memory                                0
+  goto / setjmp / exceptions thrown                0
+
+== owners used (each at least as many times as there are places that need it)
+  faceNameToJson                     2   (at least 2)  ok
+  faceNameFromJson                   1   (at least 1)  ok
+  thermal::validate                  6   (at least 5)  ok
+  ThermalAnalysis::create            1   (at least 1)  ok
+  requireObject                      5   (at least 5)  ok
+  readNumber                        10   (at least 8)  ok
+  readId                             3   (at least 3)  ok
+  readEnum                           5   (at least 4)  ok
+
+== includes
+  #include "io/json/ObjectJson.hpp"
+  #include <array>
+  #include <cstddef>
+  #include <format>
+  #include <initializer_list>
+  #include <string>
+  #include <string_view>
+  #include <utility>
+  #include <vector>
+
+== the rest of src/io: thermal includes (only the canonical analysis object may appear)
+  src/io/json/ObjectJson.hpp: #include <bettercad/thermal/ThermalAnalysisObject.hpp>

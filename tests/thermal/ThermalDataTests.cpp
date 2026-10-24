@@ -879,22 +879,29 @@ TEST_CASE("ThermalData_AddUndoRedoRestoresTheAnalysisExactly", "[thermal][data][
     }));
 }
 
-TEST_CASE("ThermalData_SavingADocumentWithAThermalAnalysisIsRefusedUntilPersistenceExists",
+TEST_CASE("ThermalData_SavingADocumentWithAThermalAnalysisWritesItsIntentAndOnlyThat",
           "[thermal][data][analysis][persistence]") {
-    // THE PERSISTENCE AUDIT, as a test. P18-PERSIST-001 has not happened, so
-    // the document format has no representation of a thermal analysis. The
-    // honest behaviour is a REFUSAL THAT NAMES THE TYPE -- not a file with the
-    // analysis silently dropped, which a user would read back as "my analysis
-    // was lost", and not a file carrying a result array, which this milestone
-    // forbids outright. This test pins the current behaviour so that the
-    // persistence milestone replaces a known refusal rather than a surprise.
+    // THE PERSISTENCE AUDIT, as a test -- REPLACED BY P18-PERSIST-001. This test used to pin the
+    // honest behaviour before persistence existed: a REFUSAL THAT NAMES THE TYPE ("objects of type
+    // 'thermal-analysis' cannot be saved"), so that the persistence milestone would replace a known
+    // refusal rather than a surprise. It has now replaced it: a document with a thermal analysis
+    // saves, the analysis is in the file as its own object type, and what comes back is the same
+    // intent. (What the file does and does not contain is tests/io/ThermalAnalysisFileTests.cpp's.)
     ConductingStudy part;
     const Result<std::string> json = io::documentToJson(part.document);
-    REQUIRE_FALSE(json.has_value());
-    CHECK_THAT(json.error().message, ContainsSubstring("thermal-analysis"));
-    CHECK_THAT(json.error().message, ContainsSubstring("cannot be saved"));
+    INFO((json.has_value() ? std::string{} : json.error().message));
+    REQUIRE(json.has_value());
+    CHECK_THAT(*json, ContainsSubstring("\"type\": \"thermal-analysis\""));
+    CHECK_THAT(*json, !ContainsSubstring("cannot be saved"));
+    Result<Document> loaded = io::documentFromJson(*json);
+    INFO((loaded.has_value() ? std::string{} : loaded.error().message));
+    REQUIRE(loaded.has_value());
+    const ThermalAnalysis* back = thermal::findThermalAnalysis(*loaded, part.analysis);
+    const ThermalAnalysis* original = thermal::findThermalAnalysis(part.document, part.analysis);
+    REQUIRE(back != nullptr);
+    REQUIRE(original != nullptr);
+    CHECK(back->definition() == original->definition());
 }
-
 // ---------------------------------------------------------------------------
 // The result container
 // ---------------------------------------------------------------------------

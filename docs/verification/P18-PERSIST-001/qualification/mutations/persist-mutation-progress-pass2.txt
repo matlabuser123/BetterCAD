@@ -1,0 +1,3 @@
+PER11 | the loads are written in reverse order | KILLED (assertion failures, and the run ended without a summary line: the mutant also crashed the runner) |  | restored | 181s
+PER23 | the core load validator is not called on read | KILLED | test cases:   48 |   47 passed | 1 failed | assertions: 4363 | 4362 passed | 1 failed | restored | 196s
+campaign finished 2026-10-24T22:35:29

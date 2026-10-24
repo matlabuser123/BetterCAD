@@ -1,0 +1,42 @@
+PER01 | the pivot floor is not written | KILLED | test cases:  112 |   81 passed | 31 failed | assertions: 6499 | 6459 passed | 40 failed | restored | 197s
+PER02 | the residual tolerance is not written | KILLED | test cases:  112 |   81 passed | 31 failed | assertions: 6499 | 6459 passed | 40 failed | restored | 190s
+PER03 | a surface flux is written as its absolute value | KILLED | test cases:  112 |   98 passed |  14 failed | assertions: 8060 | 7940 passed | 120 failed | restored | 186s
+PER04 | a generation is written as its absolute value | KILLED | test cases:  112 |  111 passed | 1 failed | assertions: 8081 | 8080 passed | 1 failed | restored | 180s
+PER05 | a held temperature is written in Celsius | KILLED | test cases:  112 |   98 passed | 14 failed | assertions: 8041 | 7945 passed | 96 failed | restored | 183s
+PER06 | a convection coefficient is written in kW/(m^2 K) | KILLED | test cases:  112 |   97 passed | 15 failed | assertions: 8049 | 7953 passed | 96 failed | restored | 178s
+PER07 | the ambient is written from the coefficient | KILLED | test cases:  112 |   98 passed | 14 failed | assertions: 8060 | 7966 passed | 94 failed | restored | 183s
+PER08 | the time step is written in milliseconds | KILLED | test cases:  112 |   99 passed | 13 failed | assertions: 7739 | 7723 passed | 16 failed | restored | 179s
+PER09 | the end time is written in minutes | KILLED | test cases:  112 |  100 passed | 12 failed | assertions: 7739 | 7724 passed | 15 failed | restored | 179s
+PER10 | the initial temperature is not written | KILLED | test cases:  112 |  100 passed | 12 failed | assertions: 7739 | 7724 passed | 15 failed | restored | 182s
+PER11 | the loads are written in reverse order | UNKNOWN (no summary line) |  | restored | 120s
+PER12 | the conditions are written in reverse order | KILLED (assertion failures, and the run ended without a summary line: the mutant also crashed the runner) |  | restored | 118s
+PER13 | a load face is rebound to the end cap on the way out | KILLED | test cases:  112 |   99 passed |  13 failed | assertions: 8059 | 7924 passed | 135 failed | restored | 179s
+PER14 | the writer adds the analysis revision to the file | KILLED | test cases:  112 |   80 passed | 32 failed | assertions: 6499 | 6457 passed | 42 failed | restored | 179s
+PER15 | empty load and condition arrays are always written | KILLED | test cases:  112 |  111 passed | 1 failed | assertions: 8081 | 8080 passed | 1 failed | restored | 175s
+PER16 | the load kind keys are swapped | KILLED | test cases:  112 |  102 passed | 10 failed | assertions: 8005 | 7984 passed | 21 failed | restored | 180s
+PER17 | the mode keys are swapped | KILLED | test cases:  112 |  101 passed | 11 failed | assertions: 7633 | 7617 passed | 16 failed | restored | 180s
+PER18 | the output policy keys are swapped | KILLED | test cases:  112 |  109 passed | 3 failed | assertions: 8076 | 8073 passed | 3 failed | restored | 180s
+PER19 | a load id is regenerated as id + 1 on load | KILLED | test cases:  112 |   96 passed | 16 failed | assertions: 8080 | 8053 passed | 27 failed | restored | 257s
+PER20 | a condition id is regenerated as id + 1 on load | KILLED | test cases:  112 |  100 passed | 12 failed | assertions: 8060 | 8042 passed | 18 failed | restored | 250s
+PER21 | a duplicate load id is accepted (last write wins in the vector) | KILLED | test cases:  112 |  111 passed | 1 failed | assertions: 8081 | 8079 passed | 2 failed | restored | 240s
+PER22 | a duplicate condition id is accepted | KILLED | test cases:  112 |  111 passed | 1 failed | assertions: 8081 | 8079 passed | 2 failed | restored | 236s
+PER23 | the core load validator is not called on read | SURVIVED | All tests passed (8081 assertions in 112 test cases) | restored | 239s
+PER24 | the core condition validator is not called on read | KILLED | test cases:  112 |  111 passed | 1 failed | assertions: 8081 | 8078 passed | 3 failed | restored | 226s
+PER25 | the core solver-settings validator is not called on read | KILLED | test cases:  112 |  111 passed | 1 failed | assertions: 8081 | 8077 passed | 4 failed | restored | 215s
+PER26 | the core transient-settings validator is not called on read | KILLED | test cases:  112 |  111 passed | 1 failed | assertions: 8081 | 8076 passed | 5 failed | restored | 217s
+PER27 | the keys a kind must not carry are no longer refused | KILLED | test cases:  112 |  111 passed | 1 failed | assertions: 8065 | 8061 passed | 4 failed | restored | 217s
+PER28 | an unknown enumerator is read as the first one | KILLED | test cases:  112 |  110 passed | 2 failed | assertions: 8067 | 8063 passed | 4 failed | restored | 219s
+PER29 | the initial temperature is read as Celsius | KILLED | test cases:  112 |  103 passed |  9 failed | assertions: 8079 | 7994 passed | 85 failed | restored | 214s
+PER30 | the time step is read as milliseconds | KILLED | test cases:  112 |  102 passed | 10 failed | assertions: 7900 | 7880 passed | 20 failed | restored | 267s
+PER31 | a surface flux sign is flipped on read | KILLED | test cases:  112 |   95 passed |  17 failed | assertions: 8060 | 7932 passed | 128 failed | restored | 218s
+PER32 | a generation is read as its absolute value | KILLED | test cases:  112 |  111 passed | 1 failed | assertions: 8081 | 8080 passed | 1 failed | restored | 216s
+PER33 | the two solver tolerances are swapped on read | KILLED | test cases:  112 |   98 passed | 14 failed | assertions: 8060 | 8037 passed | 23 failed | restored | 223s
+PER34 | the output policy is always read as final-only | KILLED | test cases:  112 |  102 passed | 10 failed | assertions: 7901 | 7888 passed | 13 failed | restored | 223s
+PER35 | the strict key list is loosened so generated keys are accepted and ignored | KILLED | test cases:  112 |  111 passed | 1 failed | assertions: 7952 | 7951 passed | 1 failed | restored | 249s
+PER36 | a load face is rebound on read (the nearest-face repair) | KILLED | test cases:  112 |   95 passed | 17 failed | assertions: 7840 | 7800 passed | 40 failed | restored | 234s
+PER38 | the invalid feature handle is accepted as a target | KILLED | test cases:  112 |  111 passed | 1 failed | assertions: 8094 | 8093 passed | 1 failed | restored | 218s
+PER39 | the writer no longer refuses an identifier above the file cap | KILLED | test cases:  112 |  111 passed | 1 failed | assertions: 8076 | 8074 passed | 2 failed | restored | 220s
+PER40 | the writer emits mode before mesh (key order) | KILLED | test cases:  112 |  110 passed | 2 failed | assertions: 8081 | 8077 passed | 4 failed | restored | 219s
+PER41 | the writer emits the solver section before the loads (key order) | KILLED | test cases:  112 |  110 passed | 2 failed | assertions: 8081 | 8077 passed | 4 failed | restored | 218s
+PER37 | the reader no longer dispatches thermal-analysis | KILLED | test cases:  112 |   76 passed | 36 failed | assertions: 6035 | 5954 passed | 81 failed | restored | 219s
+campaign finished 2026-10-24T22:17:19
