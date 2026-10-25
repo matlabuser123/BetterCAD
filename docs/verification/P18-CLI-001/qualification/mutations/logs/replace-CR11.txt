@@ -1,0 +1,1 @@
+            entry.set("faceResolves", JsonValue::boolean(true));

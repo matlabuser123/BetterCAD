@@ -1,0 +1,2 @@
+            sawNonFinite_ = true;
+            return JsonValue::null();

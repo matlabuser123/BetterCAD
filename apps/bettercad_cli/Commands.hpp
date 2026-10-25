@@ -77,6 +77,22 @@ inline constexpr std::string_view kStructuralStressUsage =
 inline constexpr std::string_view kStructuralReactionsUsage =
     "structural-reactions <file.bcad> [--json]";
 
+// P18-CLI-001. Thermal analysis: seven reports here, and the five edits in
+// ThermalEdits.cpp. Each report takes --json for a machine-readable form.
+//
+// NO RESULT IS EVER WRITTEN. Temperatures, gradients, fluxes and the heat balance
+// are derived state that ADR-049 keeps out of the document, so each result command
+// runs the analysis from canonical intent in its own process and exits -- exactly
+// as the structural reports solve and the mesh reports mesh. A fresh process
+// therefore re-solves, which is correct and is tested rather than worked around.
+inline constexpr std::string_view kThermalSettingsUsage = "thermal-settings <file.bcad> [--json]";
+inline constexpr std::string_view kThermalValidateUsage = "thermal-validate <file.bcad> [--json]";
+inline constexpr std::string_view kThermalSolveUsage = "thermal-solve <file.bcad> [--json]";
+inline constexpr std::string_view kThermalTemperatureUsage = "thermal-temperature <file.bcad> [--json]";
+inline constexpr std::string_view kThermalGradientUsage = "thermal-gradient <file.bcad> [--json]";
+inline constexpr std::string_view kThermalHeatFluxUsage = "thermal-heat-flux <file.bcad> [--json]";
+inline constexpr std::string_view kThermalBalanceUsage = "thermal-balance <file.bcad> [--json]";
+
 [[nodiscard]] ExitCode runNew(Args args, std::ostream& out, std::ostream& err);
 [[nodiscard]] ExitCode runInfo(Args args, std::ostream& out, std::ostream& err);
 [[nodiscard]] ExitCode runValidate(Args args, std::ostream& out, std::ostream& err);
@@ -139,6 +155,21 @@ inline constexpr std::string_view kStructuralReactionsUsage =
 [[nodiscard]] ExitCode runStructuralDisplacement(Args args, std::ostream& out, std::ostream& err);
 [[nodiscard]] ExitCode runStructuralStress(Args args, std::ostream& out, std::ostream& err);
 [[nodiscard]] ExitCode runStructuralReactions(Args args, std::ostream& out, std::ostream& err);
+
+/// P18-CLI-001. These seven run or report and never write, for the reason P17's do.
+///
+/// THE RESULT COMMANDS RUN THE ANALYSIS through `thermal::runThermalAnalysis` and nothing
+/// else, so every P18-VALID refusal reaches the exit status. There is no flag that
+/// bypasses validation. `thermal-validate` and `thermal-balance` print their payload when
+/// the chain reached it AND exit 1 when the analysis is not accepted; the other result
+/// commands print nothing to stdout unless it is.
+[[nodiscard]] ExitCode runThermalSettings(Args args, std::ostream& out, std::ostream& err);
+[[nodiscard]] ExitCode runThermalValidate(Args args, std::ostream& out, std::ostream& err);
+[[nodiscard]] ExitCode runThermalSolve(Args args, std::ostream& out, std::ostream& err);
+[[nodiscard]] ExitCode runThermalTemperature(Args args, std::ostream& out, std::ostream& err);
+[[nodiscard]] ExitCode runThermalGradient(Args args, std::ostream& out, std::ostream& err);
+[[nodiscard]] ExitCode runThermalHeatFlux(Args args, std::ostream& out, std::ostream& err);
+[[nodiscard]] ExitCode runThermalBalance(Args args, std::ostream& out, std::ostream& err);
 
 /// "3 objects", "1 object".
 inline std::string plural(std::size_t count, std::string_view singular, std::string_view many) {

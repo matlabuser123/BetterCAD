@@ -1,0 +1,1 @@
+structured.set("reactionCount", count(last.reactions.size() + 1U));

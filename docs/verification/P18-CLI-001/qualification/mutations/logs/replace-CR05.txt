@@ -1,0 +1,1 @@
+largest.set("flux", vectorJson(fin, -fields.heatFluxes[at].x.si(), fields.heatFluxes[at].y.si(),

@@ -1,0 +1,36 @@
+{
+  "analysisId": 9,
+  "name": "Thermal1",
+  "mode": "steady",
+  "nodeCount": 81,
+  "tetrahedronCount": 127,
+  "domain": "element",
+  "quantity": "temperature_gradient",
+  "unit": "K/m",
+  "count": 127,
+  "magnitude": {
+    "min": 14.555441164413422,
+    "max": 23.177527094971808,
+    "unit": "K/m"
+  },
+  "largest": {
+    "element": 113,
+    "magnitude": {
+      "value": 23.177527094971808,
+      "unit": "K/m"
+    },
+    "gradient": {
+      "x": -2.6479297413707172,
+      "y": -12.257590500303195,
+      "z": 19.491990802629516,
+      "unit": "K/m"
+    }
+  },
+  "smallest": {
+    "element": 44,
+    "magnitude": {
+      "value": 14.555441164413422,
+      "unit": "K/m"
+    }
+  }
+}

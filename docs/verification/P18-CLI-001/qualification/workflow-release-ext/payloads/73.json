@@ -1,0 +1,139 @@
+{
+  "analysisId": 9,
+  "name": "Thermal1",
+  "mode": "steady",
+  "nodeCount": 81,
+  "tetrahedronCount": 127,
+  "freeEquations": 41,
+  "constrainedCount": 40,
+  "temperature": {
+    "unit": "K",
+    "count": 81,
+    "min": {
+      "node": 1,
+      "value": 300,
+      "unit": "K"
+    },
+    "max": {
+      "node": 80,
+      "value": 300.442270429665,
+      "unit": "K"
+    }
+  },
+  "normalizedResidual": 2.1828450632723417e-17,
+  "pivotRatio": 0.06407346507219576,
+  "heatBalance": {
+    "balanced": true,
+    "worstNormalizedResidual": 7.531860204221296e-14
+  },
+  "validation": {
+    "status": "PASS",
+    "accepted": true,
+    "inputsAccepted": true,
+    "solveAccepted": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "policy": "p18-valid-v1:f97b835a659f144e",
+    "checks": [
+      {
+        "rule": "TV_ANALYSIS_DEFINITION",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_GEOMETRY_CURRENT",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_MESH_CURRENT",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_MESH_STRUCTURAL",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_MESH_QUALITY",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_MATERIAL",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_LOADS",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_BCS",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_TRANSIENT_SETUP",
+        "group": "input",
+        "status": "NOT_APPLICABLE"
+      },
+      {
+        "rule": "TV_SOURCE_COMPAT",
+        "group": "system",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_WELL_POSED",
+        "group": "system",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_SOLVER_RESIDUAL",
+        "group": "solve",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_RESULT_FINITE",
+        "group": "result",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_POST",
+        "group": "result",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_BALANCE",
+        "group": "balance",
+        "status": "PASS"
+      }
+    ],
+    "findings": [],
+    "metrics": {
+      "tetrahedronCount": 127,
+      "unknownCount": 81,
+      "freeEquations": 41,
+      "constrainedCount": 40,
+      "steadyResidual": 2.1828450632723417e-17,
+      "residualTolerance": 1e-09,
+      "worstBalanceStep": 0,
+      "worstBalanceResidual": 7.531860204221296e-14,
+      "minimumTemperature": {
+        "value": 300,
+        "unit": "K"
+      },
+      "maximumTemperature": {
+        "value": 300.442270429665,
+        "unit": "K"
+      },
+      "maximumHeatFlux": {
+        "value": 1042.9887192737315,
+        "unit": "W/m^2"
+      }
+    }
+  }
+}

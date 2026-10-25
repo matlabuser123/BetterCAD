@@ -1,0 +1,2 @@
+    run.stoppedAt = stage;
+    run.failure = std::move(error);

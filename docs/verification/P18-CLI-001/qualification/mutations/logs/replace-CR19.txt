@@ -1,0 +1,2 @@
+    structured.set("accepted", JsonValue::boolean(true));
+    structured.set("stoppedAt"

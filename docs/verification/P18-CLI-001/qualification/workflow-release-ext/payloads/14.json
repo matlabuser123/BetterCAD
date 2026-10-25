@@ -1,0 +1,18 @@
+{
+  "state": "current",
+  "meshSource": "generatedNow",
+  "nodeCount": 81,
+  "elementCount": 127,
+  "boundaryTriangleCount": 160,
+  "elementTypes": [
+    "Tet4",
+    "Triangle3"
+  ],
+  "meshVolume": {
+    "value": 9.374866560399051e-05,
+    "unit": "m^3"
+  },
+  "body": "Extrude001 (object:6)",
+  "localSizingCount": 0,
+  "boundarySetCount": 0
+}

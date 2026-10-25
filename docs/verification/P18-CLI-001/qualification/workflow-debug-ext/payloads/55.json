@@ -1,0 +1,142 @@
+{
+  "analysisId": 9,
+  "name": "Thermal1",
+  "mode": "transient",
+  "nodeCount": 81,
+  "tetrahedronCount": 127,
+  "accepted": true,
+  "stoppedAt": null,
+  "failure": null,
+  "validation": {
+    "status": "PASS",
+    "accepted": true,
+    "inputsAccepted": true,
+    "solveAccepted": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 1,
+    "policy": "p18-valid-v1:f97b835a659f144e",
+    "checks": [
+      {
+        "rule": "TV_ANALYSIS_DEFINITION",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_GEOMETRY_CURRENT",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_MESH_CURRENT",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_MESH_STRUCTURAL",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_MESH_QUALITY",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_MATERIAL",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_LOADS",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_BCS",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_TRANSIENT_SETUP",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_SOURCE_COMPAT",
+        "group": "system",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_WELL_POSED",
+        "group": "system",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_SOLVER_RESIDUAL",
+        "group": "solve",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_RESULT_FINITE",
+        "group": "result",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_POST",
+        "group": "result",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_BALANCE",
+        "group": "balance",
+        "status": "PASS"
+      }
+    ],
+    "findings": [
+      {
+        "code": "initial_condition_overridden_by_prescription",
+        "rule": "TV_SOLVER_RESIDUAL",
+        "severity": "info",
+        "message": "40 unknown(s) had an initial temperature different from their prescription; the prescription dominates at t = 0",
+        "count": 40
+      }
+    ],
+    "metrics": {
+      "tetrahedronCount": 127,
+      "unknownCount": 81,
+      "freeEquations": 41,
+      "constrainedCount": 40,
+      "residualTolerance": 1e-09,
+      "worstResidualStep": 4,
+      "worstResidualTime": {
+        "value": 1,
+        "unit": "s"
+      },
+      "worstResidualStepSize": {
+        "value": 0.10000000000000009,
+        "unit": "s"
+      },
+      "worstTransientResidual": 8.578714595839269e-17,
+      "transientStepCount": 4,
+      "worstBalanceStep": 3,
+      "worstBalanceTime": {
+        "value": 0.8999999999999999,
+        "unit": "s"
+      },
+      "worstBalanceResidual": 6.117084690123233e-14,
+      "minimumTemperature": {
+        "value": 295.81466951741066,
+        "unit": "K"
+      },
+      "maximumTemperature": {
+        "value": 300,
+        "unit": "K"
+      },
+      "maximumHeatFlux": {
+        "value": 9603.382871610975,
+        "unit": "W/m^2"
+      }
+    }
+  }
+}

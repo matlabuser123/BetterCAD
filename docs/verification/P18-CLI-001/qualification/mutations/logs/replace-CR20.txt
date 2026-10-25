@@ -1,0 +1,1 @@
+    json.set("residual", fin.quantity(state.terms.appliedSurfaceHeat.si() + state.terms.generatedHeat.si() + state.terms.convectionHeat.si() + state.terms.prescribedTemperatureReaction.si(), "W"));

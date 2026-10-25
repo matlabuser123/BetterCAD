@@ -1,0 +1,1 @@
+(candidate.value == e.low.value && candidate.id > e.low.id)

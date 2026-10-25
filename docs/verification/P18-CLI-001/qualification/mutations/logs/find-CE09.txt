@@ -1,0 +1,2 @@
+    thermal::ThermalAnalysisDefinition definition;
+    if (const auto mode = parsed->value("--mode")) {

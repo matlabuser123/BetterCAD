@@ -1,0 +1,51 @@
+﻿CR01 | the temperature minimum and maximum are swapped | KILLED by tests | test cases:  105 |   99 passed |  6 failed | assertions: 6013 | 5995 passed | 18 failed | gate passes | restored | 188s
+CR02 | the minimum tie-break is the DESCENDING id | KILLED by tests and gate | test cases:  105 |  101 passed | 4 failed | assertions: 6013 | 6008 passed | 5 failed | gate 1 violation(s) | restored | 200s
+CR03 | a node id is the ordinal plus one (NodeId == index + 1) | SURVIVED | All tests passed (6013 assertions in 105 test cases) | gate passes | restored | 199s
+CR04 | an element is found by id minus one instead of the stored ordinal | SURVIVED | All tests passed (6013 assertions in 105 test cases) | gate passes | restored | 174s
+CR05 | the printed heat-flux vector has its x sign inverted | KILLED by tests and gate | test cases:  105 |  104 passed | 1 failed | assertions: 6013 | 6012 passed | 1 failed | gate 1 violation(s) | restored | 178s
+CR06 | the gradient magnitude is reported squared | KILLED by tests and gate | test cases:  105 |  102 passed | 3 failed | assertions: 6013 | 6007 passed | 6 failed | gate 1 violation(s) | restored | 166s
+CR07 | thermal-validate exits 0 whatever the verdict | KILLED by tests and gate | test cases:  105 |   97 passed | 8 failed | assertions: 5989 | 5981 passed | 8 failed | gate 2 violation(s) | restored | 184s
+CR08 | thermal-balance exits 0 whatever the verdict | KILLED by tests and gate | test cases:  105 |  104 passed | 1 failed | assertions: 6013 | 6012 passed | 1 failed | gate 2 violation(s) | restored | 173s
+CR09 | success means a solution exists (solver success), not that the analysis is accepted | KILLED by tests and gate | test cases:  105 |  103 passed |  2 failed | assertions: 6013 | 6001 passed | 12 failed | gate 1 violation(s) | restored | 177s
+CR10 | the result commands never refuse | KILLED by tests |  | gate passes | restored | 161s
+CR11 | a load whose face does not resolve reports faceResolves true | KILLED by tests and gate | test cases:  105 |  104 passed | 1 failed | assertions: 6013 | 6012 passed | 1 failed | gate 1 violation(s) | restored | 174s
+CR12 | thermal-validate always reports stoppedAt as null | KILLED by tests | test cases:  105 |  100 passed |  5 failed | assertions: 6013 | 6003 passed | 10 failed | gate passes | restored | 175s
+CR13 | the stored times are generated as frame times a nominal step | KILLED by tests and gate | test cases:  105 |  102 passed |  3 failed | assertions: 6013 | 5990 passed | 23 failed | gate 1 violation(s) | restored | 180s
+CR14 | a progress banner is written to stdout before the solve payload | KILLED by the gate (the mutant does not compile either) |  | gate 1 violation(s) | restored | 12s
+CR15 | an extremum value bypasses the finite-checking writer | KILLED by the gate (the mutant does not compile either) |  | gate 1 violation(s) | restored | 18s
+CR16 | the reaction count is off by one | KILLED by tests | test cases:  105 |  104 passed | 1 failed | assertions: 6013 | 6012 passed | 1 failed | gate passes | restored | 179s
+CR17 | a refusal is reported under the first finding of ANY severity | KILLED by tests | test cases:  105 |  102 passed | 3 failed | assertions: 6013 | 6005 passed | 8 failed | gate passes | restored | 176s
+CR18 | the non-finite guard of thermal-solve is removed | KILLED by gate | All tests passed (6013 assertions in 105 test cases) | gate 1 violation(s) | restored | 175s
+CR19 | thermal-validate always reports accepted true | KILLED by tests and gate | test cases:  105 |  101 passed | 4 failed | assertions: 6013 | 6009 passed | 4 failed | gate 1 violation(s) | restored | 176s
+CR20 | a heat-balance residual is recomputed in the CLI as a sum of the printed terms | KILLED by gate | All tests passed (6013 assertions in 105 test cases) | gate 1 violation(s) | restored | 186s
+CR21 | the validation checks are listed in reverse order | KILLED by tests | test cases:  105 |  104 passed |  1 failed | assertions: 6013 | 5985 passed | 28 failed | gate passes | restored | 220s
+CR22 | the analysis start time is the first STORED time | KILLED by tests | test cases:  105 |  104 passed | 1 failed | assertions: 6013 | 6012 passed | 1 failed | gate passes | restored | 199s
+CR23 | the extremum tie-break is deleted from the maximum | KILLED by tests and gate | test cases:  105 |  104 passed | 1 failed | assertions: 6013 | 6011 passed | 2 failed | gate 1 violation(s) | restored | 185s
+CE01 | a surface flux is made positive on the way in (abs) | KILLED by tests and gate | test cases:  105 |  104 passed | 1 failed | assertions: 6013 | 6011 passed | 2 failed | gate 1 violation(s) | restored | 187s
+CE02 | a convection coefficient is made positive on the way in (abs) | KILLED by tests and gate | test cases:  105 |  104 passed | 1 failed | assertions: 6013 | 6009 passed | 4 failed | gate 1 violation(s) | restored | 155s
+CE03 | a time step is clamped to a floor | KILLED by tests and gate | test cases:  105 |  104 passed | 1 failed | assertions: 6013 | 6004 passed | 9 failed | gate 2 violation(s) | restored | 158s
+CE04 | a refused command is reported as success | KILLED by tests | test cases:  105 |   99 passed |  6 failed | assertions: 6013 | 5954 passed | 59 failed | gate passes | restored | 158s
+CE05 | a missing id is reported under the duplicate-id code | KILLED by tests | test cases:  105 |  103 passed | 2 failed | assertions: 6013 | 6011 passed | 2 failed | gate passes | restored | 157s
+CE06 | a non-numeric id is read as 0 instead of being a usage error | KILLED by tests | test cases:  105 |  102 passed |  3 failed | assertions: 6013 | 6003 passed | 10 failed | gate passes | restored | 161s
+CE07 | a surface flux without a face is accepted | SURVIVED | All tests passed (6013 assertions in 105 test cases) | gate passes | restored | 157s
+CE08 | a volumetric generation silently accepts a face | KILLED by tests | test cases:  105 |  104 passed | 1 failed | assertions: 6013 | 6009 passed | 4 failed | gate passes | restored | 167s
+CE09 | an analysis without --mode is transient | KILLED by tests | test cases:  105 |  102 passed | 3 failed | assertions: 5998 | 5995 passed | 3 failed | gate passes | restored | 163s
+CE10 | an unparseable face falls back to the empty reference | KILLED by tests | test cases:  105 |  104 passed | 1 failed | assertions: 6013 | 6012 passed | 1 failed | gate passes | restored | 165s
+CE11 | a prescribed temperature silently accepts an ambient | KILLED by tests | test cases:  105 |  104 passed | 1 failed | assertions: 6013 | 6009 passed | 4 failed | gate passes | restored | 163s
+CE12 | an id above the file cap is accepted by the command line | KILLED by tests | test cases:  105 |  104 passed | 1 failed | assertions: 6013 | 6006 passed | 7 failed | gate passes | restored | 150s
+CE13 | time settings no longer need --output (the data model default is taken) | KILLED by tests |  | gate passes | restored | 133s
+CE14 | a name clash is reported as a duplicate id | KILLED by tests | test cases:  105 |  104 passed | 1 failed | assertions: 6013 | 6012 passed | 1 failed | gate passes | restored | 162s
+CK01 | the validator is handed nothing derived | KILLED by tests and gate | test cases:  105 |   61 passed | 44 failed | assertions: 3975 | 3908 passed | 67 failed | gate 1 violation(s) | restored | 159s
+CK02 | every failure is handed to the validator as a solve failure | KILLED by tests | test cases:  105 |  104 passed | 1 failed | assertions: 6013 | 6012 passed | 1 failed | gate passes | restored | 184s
+CK03 | accepted() is a completed chain only (solver success) | KILLED by tests and gate | test cases:  105 |  104 passed |  1 failed | assertions: 6013 | 6001 passed | 12 failed | gate 1 violation(s) | restored | 197s
+CK04 | accepted() is the validator only | KILLED by gate | All tests passed (6013 assertions in 105 test cases) | gate 1 violation(s) | restored | 195s
+CK05 | the refusal of a link is not recorded | VOID |  | gate passes | restored | 46s
+CK06 | a transient analysis is run through the steady links | KILLED by tests | test cases:  105 |   88 passed | 17 failed | assertions: 4379 | 4358 passed | 21 failed | gate passes | restored | 162s
+CO01 | a non-finite number is written through to the payload | KILLED by tests | test cases:  105 |  103 passed | 2 failed | assertions: 5963 | 5959 passed | 4 failed | gate passes | restored | 190s
+CO02 | a non-finite number is replaced by null but not remembered | KILLED by tests and gate | test cases:  105 |  103 passed | 2 failed | assertions: 6013 | 6011 passed | 2 failed | gate 1 violation(s) | restored | 177s
+campaign finished 2026-10-25T18:54:45
+CR03 | a node id is the ordinal plus one (NodeId == index + 1) | KILLED by gate | All tests passed (6013 assertions in 105 test cases) | gate 1 violation(s) | restored | 215s
+CR04 | an element is found by id minus one instead of the stored ordinal | KILLED by gate | All tests passed (6013 assertions in 105 test cases) | gate 1 violation(s) | restored | 159s
+CE07 | a surface flux without a face is given a default face | KILLED by tests | test cases:  105 |  102 passed | 3 failed | assertions: 6013 | 6005 passed | 8 failed | gate passes | restored | 157s
+CK05 | the refusal of a link is not recorded | KILLED by tests | test cases:  105 |   93 passed | 12 failed | assertions: 5981 | 5960 passed | 21 failed | gate passes | restored | 154s
+campaign finished 2026-10-25T19:13:18

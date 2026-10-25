@@ -1,0 +1,1 @@
+    auto ran = analyse("thermal-solve", *prepared, mesher, true, err);

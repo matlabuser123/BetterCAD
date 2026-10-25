@@ -1,0 +1,2 @@
+            entry.set("faceResolves",
+                      JsonValue::boolean(features::checkFaceName(prepared->document, *target).has_value()));

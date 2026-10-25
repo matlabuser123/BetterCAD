@@ -1,0 +1,1 @@
+{ return !stoppedAt.has_value(); }

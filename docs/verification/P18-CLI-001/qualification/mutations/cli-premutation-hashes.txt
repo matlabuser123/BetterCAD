@@ -1,0 +1,5 @@
+apps/bettercad_cli/ThermalReports.cpp                2f2066e441d4ba27d173c1c580cfdb416a0a17fd
+apps/bettercad_cli/ThermalEdits.cpp                  cbb99d23f6aa17bc1ec0f22157afbf80adeaee0f
+apps/bettercad_cli/ThermalOutput.hpp                 0fc234cc2c2e7ea47bebf88d284b1e138e98f78b
+src/thermal/ThermalAnalysisRun.cpp                   49bc5aae753c7d32403b68b6267af93dfa094b6b
+include/bettercad/thermal/ThermalAnalysisRun.hpp     d99797e6af4f966097ce2324a6f84f6b7a8e4e21

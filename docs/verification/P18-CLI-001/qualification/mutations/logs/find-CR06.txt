@@ -1,0 +1,1 @@
+        return normOf(gradients[i].x.si(), gradients[i].y.si(), gradients[i].z.si());

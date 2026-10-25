@@ -1,0 +1,2 @@
+Added boundary condition 1: prescribed temperature 300 K on face:Extrude001:start_cap
+Wrote C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-workflow/transient.bcad

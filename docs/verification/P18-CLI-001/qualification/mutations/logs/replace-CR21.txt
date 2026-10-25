@@ -1,0 +1,4 @@
+    for (std::size_t reversed = report.checks.size(); reversed > 0U; --reversed) {
+        const thermal::ThermalCheck& check = report.checks[reversed - 1U];
+        JsonValue entry = JsonValue::object();
+        entry.set("rule"

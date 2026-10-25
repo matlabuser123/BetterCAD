@@ -1,0 +1,2 @@
+    structured.set("stoppedAt", run.stoppedAt.has_value() ? JsonValue::text(thermal::toString(*run.stoppedAt))
+                                                          : JsonValue::null());

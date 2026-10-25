@@ -22,35 +22,32 @@ Prerequisite:
            (OCCT never subdivides a developable wall along its ruling).
 
 Current milestone:
-           none. P18-PERSIST-001 — Thermal Analysis Persistence. COMPLETE at 22
-           of 22 and qualified 2026-10-25 against 975efa6 plus the working
-           tree: 5504/5504 x 3 presets, 2254 x 2 in two, 0 warnings over 727
-           objects, 17 stages exit 0, 6h44m47s, fingerprints at the freeze ==
-           before == after, first attempt. A thermal analysis is saved as one
-           more object type in the existing document format ("thermal-analysis",
-           document version 2, unchanged): the mesh control, the mode, the loads
-           and boundary conditions with their FaceName targets and signed SI
-           values, the uniform initial temperature, the solver settings and the
-           transient settings - CANONICAL INTENT AND NOTHING A SOLVE PRODUCES.
-           The same document saved before and after a steady solve (eight
-           derived stages, a stale result, a failed solve) and after a 201-state
-           transient (a 3.9 MB result) is byte-for-byte identical; the file does
-           not follow the mesh; save-load-save is a fixed point; golden bytes are
-           pinned by a hand-written file and two constants. An unresolved
-           reference is preserved exactly and never rebound; unknown keys, fake
-           results and fake status flags are refused by name; duplicate ids,
-           invalid values and malformed files are refused with the path, and a
-           failed load changes nothing. Destroy -> load -> remesh -> re-solve
-           reproduces temperature, gradient and heat-flux fields bit for bit.
-           P15 stays the only material authority. Nothing qualified changed.
+           none. P18-CLI-001 — Headless Thermal Analysis. COMPLETE at 27 of 27
+           and qualified 2026-10-26 against 2ffba66 plus the working tree:
+           5725/5725 x 3 presets, 2483 x 5 in two, 0 warnings over 732 objects
+           per preset, 17 stages exit 0, 6h38m21s, fingerprints at the freeze ==
+           before == after, first attempt. Twelve verbs (seven reports, five
+           edits) are adapters over the qualified chain: no Tet4, load or
+           boundary integration, assembly, solve, time integration, recovery,
+           balance, validation policy, reference resolution, currentness,
+           persistence format or material property is in the CLI. The thermal
+           core had NO production orchestrator, so ONE additive entry,
+           thermal::runThermalAnalysis (ADR-057), holds the order of the chain;
+           no existing thermal file changed. Every number printed is the core's,
+           bit for bit; the edits are the P18-CMD command objects and produce the
+           same canonical bytes; a solve writes nothing; raw --json stdout is
+           one strict-JSON object; a refusal prints nothing to stdout and one
+           coded line to stderr; exit 0/1/2; a 74-process scripted workflow per
+           preset; 45 mutation probes all killed; an independent review (0
+           critical, 14 findings, all disposed of).
            P18-ARCH-001 PASSED 2026-10-16; P18-DATA-001, P18-MAT-001,
            P18-DOF-001 PASSED 2026-10-17; P18-ELEM-001, P18-LOAD-001 PASSED
            2026-10-18; P18-BC-001, P18-ASSEMBLY-001 PASSED 2026-10-19/20;
            P18-SOLVE-001 PASSED 2026-10-20; P18-TRANSIENT-001, P18-POST-001
            PASSED 2026-10-21; P18-BALANCE-001 PASSED 2026-10-22; P18-VALID-001,
            P18-VIZ-001 PASSED 2026-10-23; P18-CMD-001 PASSED 2026-10-24;
-           P18-PERSIST-001 PASSED 2026-10-25 (docs/verification/P18-*/).
-Qualified:
+           P18-PERSIST-001 PASSED 2026-10-25; P18-CLI-001 PASSED 2026-10-26
+           (docs/verification/P18-*/).Qualified:
            P0–P10 — BetterCAD v0.1.0
            P11 — Advanced Part Modelling
            P12 — Production Part Modelling
@@ -61,8 +58,8 @@ Qualified:
            P17 — Structural FEA
 
 Next:
-           P18-CLI-001 — Thermal CLI. NOT AUTHORIZED:
-           P18-PERSIST-001 passing is not permission to start it; each
+           P18-REFMOD-001 — Thermal Reference Models. NOT AUTHORIZED:
+           P18-CLI-001 passing is not permission to start it; each
            milestone is started by the owner, as every P17 milestone was.
 
 P17 objective, as delivered:
@@ -1425,34 +1422,72 @@ Evidence: docs/verification/P18-PERSIST-001/.
 
 Follow existing BetterCAD CLI naming.
 
-* [ ] Inspect thermal analysis
-* [ ] Add / remove thermal loads
-* [ ] Add / remove thermal BCs
-* [ ] Steady solve
-* [ ] Transient solve
-* [ ] Temperature summary
-* [ ] Gradient summary
-* [ ] Heat-flux summary
-* [ ] Heat-balance report
-* [ ] Validation report
-* [ ] Structured diagnostics
-* [ ] Correct process exit codes
-* [ ] Stale-geometry failure
-* [ ] Stale-mesh failure
-* [ ] Missing-material failure
-* [ ] Singular thermal-model failure
-* [ ] Invalid load / BC failure
-* [ ] CLI / core equivalence
-* [ ] Multi-process save / load / re-solve
-* [ ] No CLI-only thermal implementation
-* [ ] Fresh-binary proof
-* [ ] Raw structured STDOUT clean
-* [ ] Zero-match protection
-* [ ] End-to-end scripted workflow PASS
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Inspect thermal analysis
+* [x] Add / remove thermal loads
+* [x] Add / remove thermal BCs
+* [x] Steady solve
+* [x] Transient solve
+* [x] Temperature summary
+* [x] Gradient summary
+* [x] Heat-flux summary
+* [x] Heat-balance report
+* [x] Validation report
+* [x] Structured diagnostics
+* [x] Correct process exit codes
+* [x] Stale-geometry failure
+* [x] Stale-mesh failure
+* [x] Missing-material failure
+* [x] Singular thermal-model failure
+* [x] Invalid load / BC failure
+* [x] CLI / core equivalence
+* [x] Multi-process save / load / re-solve
+* [x] No CLI-only thermal implementation
+* [x] Fresh-binary proof
+* [x] Raw structured STDOUT clean
+* [x] Zero-match protection
+* [x] End-to-end scripted workflow PASS
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded
 
+```text
+PASS 2026-10-26. Qualified against 2ffba66 plus the working tree: 5725/5725 x 3
+presets (5504 before + 221 new), 2483 x 5 repeats in two, 0 warnings over 732 objects
+per preset, 17 stages exit 0, 6h38m21s, fingerprints at the freeze == before == after;
+first attempt. NOTHING QUALIFIED CHANGED: 509 of 520 src/include/apps files are
+byte-identical to HEAD, 6 differ (the registration of the verbs and the thermal source
+list) and 5 are new; no existing thermal source or header was touched.
+DECISION: the CLI is an adapter. The thermal core had no production orchestrator (only
+the viewer's test-support derive), so ONE additive entry holds the order of the chain:
+thermal::runThermalAnalysis (ADR-057) - it calls each link once, never meshes, never
+writes, does no arithmetic. Twelve verbs: thermal-settings, -validate, -solve,
+-temperature, -gradient, -heat-flux, -balance, and thermal-analysis-add, -load-add,
+-load-remove, -boundary-add, -boundary-remove (registered in the edit registry, so
+batch scripts them). Ids are the caller's, a bare number is kelvin, there is no
+Celsius, no default solver setting, no CLI-chosen tolerance, no mesh-local target.
+EXIT: 0 success, 1 failure (a refusal, or a rejected validation report / heat balance,
+which is printed AND exits 1), 2 an unreadable command line; one command line gets one
+code whatever the file holds.
+EVIDENCE OF EQUIVALENCE: every printed temperature, gradient, flux, reaction and
+residual equals the core's bit for bit; the five edits give the same canonical bytes as
+the P18-CMD command objects; the 74-process workflow re-solves in fresh processes to
+byte-identical payloads and a solve leaves the document byte-identical; the three
+presets agree on every exit code, key and text field and (measured) on every number.
+STDOUT: --json is one strict RFC 8259 object and a newline, parsed twice (CMake and the
+strict reader) over the raw bytes of every process; a refusal prints nothing to stdout;
+a non-finite number is null and says so; the backend's own chatter cannot reach it.
+85 + 20 cases (6013 assertions), 12 process tests, a 104-test source-text ownership gate
+with 102 violating fixtures, 45 mutation probes all killed (4 first-pass non-kills: 2
+real survivors - ids derived from a position, closed by two gate rules - and 2 probe
+defects of mine, an inert probe and one that did not compile, rewritten), an independent review (0 critical, 14 findings: 2 production defects
+fixed, 9 gate escapes closed), 1 core addition (additive). Limits recorded: a
+load/save failure inside the shared edit driver carries no code for any edit family;
+tolerance 1e300 is accepted by the data model; a final_only transient of more than one
+step can never be accepted; a 23750-step transient is refused at state 812; stale
+geometry and stale mesh cannot be presented to a one-shot process (core tests plus the
+regeneration_failed / mesh_generation_failed analogues).
+Evidence: docs/verification/P18-CLI-001/.
+```
 ---
 # P18-REFMOD-001
 

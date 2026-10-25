@@ -1,0 +1,1 @@
+bettercad-cli thermal-solve: loads_invalid: thermal load:7: its target face names no face of the body as it is now, so the load has nothing to act on. Nothing nearby is substituted

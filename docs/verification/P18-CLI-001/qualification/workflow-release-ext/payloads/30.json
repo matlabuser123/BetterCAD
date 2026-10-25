@@ -1,0 +1,117 @@
+{
+  "analysisId": 9,
+  "name": "Thermal1",
+  "mode": "steady",
+  "nodeCount": 81,
+  "tetrahedronCount": 127,
+  "accepted": false,
+  "stoppedAt": "model",
+  "failure": "'Thermal bare plate' has no material assigned",
+  "validation": {
+    "status": "FAIL",
+    "accepted": false,
+    "inputsAccepted": false,
+    "solveAccepted": false,
+    "errorCount": 1,
+    "warningCount": 0,
+    "infoCount": 0,
+    "policy": "p18-valid-v1:f97b835a659f144e",
+    "checks": [
+      {
+        "rule": "TV_ANALYSIS_DEFINITION",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_GEOMETRY_CURRENT",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_MESH_CURRENT",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_MESH_STRUCTURAL",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_MESH_QUALITY",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_MATERIAL",
+        "group": "input",
+        "status": "FAIL"
+      },
+      {
+        "rule": "TV_LOADS",
+        "group": "input",
+        "status": "SKIPPED",
+        "blockedBy": "TV_MATERIAL"
+      },
+      {
+        "rule": "TV_BCS",
+        "group": "input",
+        "status": "SKIPPED",
+        "blockedBy": "TV_MATERIAL"
+      },
+      {
+        "rule": "TV_TRANSIENT_SETUP",
+        "group": "input",
+        "status": "NOT_APPLICABLE"
+      },
+      {
+        "rule": "TV_SOURCE_COMPAT",
+        "group": "system",
+        "status": "SKIPPED",
+        "blockedBy": "TV_MATERIAL"
+      },
+      {
+        "rule": "TV_WELL_POSED",
+        "group": "system",
+        "status": "SKIPPED",
+        "blockedBy": "TV_MATERIAL"
+      },
+      {
+        "rule": "TV_SOLVER_RESIDUAL",
+        "group": "solve",
+        "status": "SKIPPED",
+        "blockedBy": "TV_MATERIAL"
+      },
+      {
+        "rule": "TV_RESULT_FINITE",
+        "group": "result",
+        "status": "SKIPPED",
+        "blockedBy": "TV_MATERIAL"
+      },
+      {
+        "rule": "TV_POST",
+        "group": "result",
+        "status": "SKIPPED",
+        "blockedBy": "TV_MATERIAL"
+      },
+      {
+        "rule": "TV_BALANCE",
+        "group": "balance",
+        "status": "SKIPPED",
+        "blockedBy": "TV_MATERIAL"
+      }
+    ],
+    "findings": [
+      {
+        "code": "material_missing",
+        "rule": "TV_MATERIAL",
+        "severity": "error",
+        "message": "'Thermal bare plate' has no material assigned",
+        "cause": "no_material_assigned"
+      }
+    ],
+    "metrics": {
+      "tetrahedronCount": 127
+    }
+  }
+}

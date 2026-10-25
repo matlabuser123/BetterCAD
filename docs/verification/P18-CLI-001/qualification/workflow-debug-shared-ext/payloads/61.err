@@ -1,0 +1,1 @@
+bettercad-cli thermal-solve: material_incomplete_for_mode: Steel (object:8) has no specific heat capacity, which transient conduction needs

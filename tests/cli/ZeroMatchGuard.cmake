@@ -328,6 +328,41 @@ set(_filters
     "unit\\.ThermalPersistence_(ALoadedAnalysisHasIntentAndNoDerivedState|ASteadyDestroyAndLoadRoundTripReSolvesEquivalently|ATransientDestroyAndLoadRoundTripReSolvesEquivalently|ATransientWithAShortenedLastStepReSolvesEquivalently|AReloadedFaceLoadResolvesToTheSameGeometry|ALoadedDocumentKeepsItsIdentitiesAndCommandsStillWork|AResultOfOneDocumentDoesNotAttachToACopyThatDiffers)$" 7
     "unit\\.ThermalPersistence_(TheHandWrittenReferenceFileLoadsAsWritten|TheReferenceFileRegeneratesMeshesAndSolves)$" 2
     "architecture\\.thermalpersist-ownership" 24
+    # P18-CLI-001. Every group of the headless thermal CLI, each at its EXACT count so a renamed or dropped test is a failure and not a
+    # shrinking filter: inspection, analysis creation, loads, boundary conditions, the steady and transient solves, the summaries and
+    # reports, the failures, the equivalences with the core, persistence, standard output, exit codes, and the core entry's own tests.
+    "unit\\.ThermalCli_" 85
+    # inspection
+    "unit\\.ThermalCli_(InspectAnalysis|InspectAnalysisStructured|InspectTransientStructured|InspectDoesNotMutateDocument|InspectShowsAnUnresolvedReferenceAndInventsNoSubstitute|InspectIsDeterministic|InspectWithoutAnAnalysisIsRefusedByCode|TwoAnalysesAreAmbiguousAndNeverAFirstMatch)$" 8
+    # analysis creation
+    "unit\\.ThermalCli_(AddSteadyAnalysis|AddTransientAnalysis|AnalysisModeCompletenessIsTheCoresAndNeverGuessed|AnalysisAddUsageErrors|ASecondAnalysisIsRefused|TheOutputPolicyAcceptsWhatSettingsPrintsAndANameClashHasItsOwnCode)$" 6
+    # loads
+    "unit\\.ThermalCli_(AddSurfaceHeatFlux|AddVolumetricGeneration|NegativeFluxIsASinkAndIsNotCorrected|RemoveLoad|LoadIdsAreTheUsersAndNeverAContainerIndex|InvalidLoadFailsAtomically|LoadGeometryReferencePreserved)$" 7
+    # boundary conditions
+    "unit\\.ThermalCli_(AddPrescribedTemperature|AddConvection|RemoveBoundaryCondition|InvalidBoundaryConditionFailsAtomically|BoundaryGeometryReferencePreserved|ConflictingPrescribedTemperaturesAreRefusedNotOrdered)$" 6
+    # steady
+    "unit\\.ThermalCli_(SteadySolve|SteadyRobinOnly|FullyConstrainedSteady|SingularSteadyFails|SteadyNeedsOnlyConductivity)$" 5
+    # transient
+    "unit\\.ThermalCli_(TransientSolve|TransientPureNeumann|TransientUsesActualStoredTimes|TransientFinalPartialStep|TransientFinalOnlyHasOneStoredState|TransientFinalOnlyWithManyStepsIsRefusedByTheCoreAndSaysWhy|TransientNeedsDensityAndSpecificHeat|AFinalOnlyTransientStartsWhereTheGridStartsNotWhereItWasStored)$" 8
+    # summaries and reports
+    "unit\\.ThermalCli_(TemperatureSummary|TemperatureExtremaTieBreakIsTheAscendingNodeId|ExtremumTieBreakIsTheLowestIdWhateverTheOrder|GradientSummary|HeatFluxSummary|HeatBalanceReport|HeatBalanceReportTransientIsPerStep|ValidationReport|WarningOnlyReportExitsZeroAndKeepsTheWarning)$" 9
+    # failures
+    "unit\\.ThermalCli_(MissingMaterialFails|InvalidLoadFails|InvalidBoundaryConditionFails|AMeshThatCannotBeGeneratedIsTheCliAnalogueOfAStaleMesh|AFileThatIsNotThereIsADocumentFailure|ARejectedBalanceIsStillPrintedAndTheExitStatusSaysNo|NoMeshingControlIsRefusedByCode|AModelThatWillNotRegenerateIsTheCliAnalogueOfStaleGeometry)$" 8
+    # core equivalence
+    "unit\\.ThermalCli_(SteadyCoreEquivalence|TransientCoreEquivalence|AddLoadCoreEquivalence|RemoveLoadCoreEquivalence|AddBoundaryConditionCoreEquivalence|RemoveBoundaryConditionCoreEquivalence|AddAnalysisCoreEquivalence)$" 7
+    # persistence
+    "unit\\.ThermalCli_(SolveDoesNotModifyCanonicalBytes|SaveLoadResolveAgreesAcrossFreshRuns|AnEditChangesTheNextSolveAndNothingStaleSurvives)$" 3
+    # standard output
+    "unit\\.ThermalCli_(StructuredStdoutIsClean|StructuredFailureOutputIsClean|NonFiniteNumbersAreNeverWrittenAsNumbers|ANonFiniteMeasurementInTheReportKeepsAParseablePayload|TheTestParserIsStrict|ValidationJsonWritesANonFiniteMeasurementAsNullAndSaysSo|ThirdPartyOutputDoesNotPolluteStdout)$" 7
+    # exit codes
+    "unit\\.ThermalCli_(SuccessExitCode|SyntaxFailureExitCode|DocumentFailureExitCode|AnalysisFailureExitCode|NoFlagBypassesValidation|ACommandLineFaultHasOneExitCodeWhateverTheDocumentHolds|AnIdAboveTheFileCapIsACommandLineFaultNotASaveFailure)$" 7
+    # help and batch
+    "unit\\.ThermalCli_(HelpDescribesOnlyWhatIsSupported|ThermalEditsAreBatchVerbs|HelpPrintsEveryReportUsageVerbatim|ABatchWithAnUnreadableLineWritesNothing)$" 4
+    "unit\\.ThermalRun_" 20
+    "unit\\.ThermalRun_(ARunOfAnEditedGeometryIsStaleAndTheEditedGeometryIsNotRunOnTheOldMesh|ARemeshWithTheSameCountsAndIdsStillMakesTheOldRunStale|AnEditAfterARunMakesItStaleAndAFailedRerunPublishesNothing|ARunEditsNothing)$" 4
+    "cli\\.thermal\\." 12
+    "cli\\.thermal\\.workflow$" 1
+    "architecture\\.thermalcli-ownership" 104
 )
 list(LENGTH _filters _count)
 math(EXPR _last "${_count} - 1")

@@ -1,0 +1,1 @@
+entry.set("time", s.time.has_value() ? fin.quantity(s.time->si(), "s") : JsonValue::null());

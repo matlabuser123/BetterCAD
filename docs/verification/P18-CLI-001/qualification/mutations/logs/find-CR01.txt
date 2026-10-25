@@ -1,0 +1,2 @@
+    json.set("min", extremumJson(fin, "node", extrema->low, "K"));
+    json.set("max", extremumJson(fin, "node", extrema->high, "K"));

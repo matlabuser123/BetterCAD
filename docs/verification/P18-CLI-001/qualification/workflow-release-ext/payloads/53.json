@@ -1,0 +1,105 @@
+{
+  "analysisId": 9,
+  "name": "Thermal1",
+  "mode": "transient",
+  "nodeCount": 81,
+  "tetrahedronCount": 127,
+  "state": {
+    "index": 4,
+    "time": {
+      "value": 1,
+      "unit": "s"
+    }
+  },
+  "temperature": {
+    "unit": "K",
+    "count": 81,
+    "min": {
+      "node": 6,
+      "value": 295.81466951741066,
+      "unit": "K"
+    },
+    "max": {
+      "node": 1,
+      "value": 300,
+      "unit": "K"
+    }
+  },
+  "history": [
+    {
+      "index": 0,
+      "time": {
+        "value": 0,
+        "unit": "s"
+      },
+      "min": {
+        "value": 295.5,
+        "unit": "K"
+      },
+      "max": {
+        "value": 300,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 1,
+      "time": {
+        "value": 0.3,
+        "unit": "s"
+      },
+      "min": {
+        "value": 295.385064143605,
+        "unit": "K"
+      },
+      "max": {
+        "value": 300,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 2,
+      "time": {
+        "value": 0.6,
+        "unit": "s"
+      },
+      "min": {
+        "value": 295.63629105567605,
+        "unit": "K"
+      },
+      "max": {
+        "value": 300,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 3,
+      "time": {
+        "value": 0.8999999999999999,
+        "unit": "s"
+      },
+      "min": {
+        "value": 295.77536324900984,
+        "unit": "K"
+      },
+      "max": {
+        "value": 300,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 4,
+      "time": {
+        "value": 1,
+        "unit": "s"
+      },
+      "min": {
+        "value": 295.81466951741066,
+        "unit": "K"
+      },
+      "max": {
+        "value": 300,
+        "unit": "K"
+      }
+    }
+  ]
+}

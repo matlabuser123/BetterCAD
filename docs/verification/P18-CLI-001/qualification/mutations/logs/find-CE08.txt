@@ -1,0 +1,4 @@
+        if (parsed->has("--face")) {
+            return std::unexpected(malformed(
+                "a volumetric heat generation acts on the whole body and takes no --face"));
+        }

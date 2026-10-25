@@ -1,0 +1,1 @@
+    if (auto done = command.execute(document); false && !done) {

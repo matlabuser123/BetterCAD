@@ -1,0 +1,1 @@
+bettercad-cli thermal-boundary-add: invalid_value: thermal boundary condition:9 has a convection coefficient of 0 W/(m^2 K); it must be finite and positive, or the face exchanges nothing

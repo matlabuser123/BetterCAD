@@ -1,0 +1,2 @@
+    // The payload above is the answer; the verdict is the production entry's.
+    return run.accepted() ? ExitCode::Success : ExitCode::Failure;

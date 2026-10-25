@@ -1,0 +1,3 @@
+    if (fin.sawNonFinite()) {
+        return refuseNonFinite("thermal-solve", err);
+    }

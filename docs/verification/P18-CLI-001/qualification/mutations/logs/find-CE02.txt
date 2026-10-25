@@ -1,0 +1,1 @@
+.coefficient = *coefficient, .ambient = *ambient}};

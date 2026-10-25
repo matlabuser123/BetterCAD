@@ -1,0 +1,4 @@
+        if (parsed->has("--ambient")) {
+            return std::unexpected(
+                malformed("a prescribed temperature has no ambient; --ambient belongs to --convection"));
+        }

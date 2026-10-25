@@ -1,0 +1,3 @@
+    thermal::ThermalAnalysisDefinition definition;
+    definition.mode = thermal::ThermalAnalysisMode::Transient;
+    if (const auto mode = parsed->value("--mode")) {

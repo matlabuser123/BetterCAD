@@ -24,6 +24,9 @@ add_library(bettercad_cli_lib STATIC
     MeshingReports.cpp
     StructuralEdits.cpp
     StructuralReports.cpp
+    ThermalEdits.cpp
+    ThermalOutput.hpp
+    ThermalReports.cpp
     MaterialVocabulary.cpp
     MaterialVocabulary.hpp
     Selectors.cpp
@@ -42,6 +45,7 @@ target_link_libraries(bettercad_cli_lib
         BetterCAD::meshing
         BetterCAD::sketch
         BetterCAD::structural
+        BetterCAD::thermal
 )
 
 bettercad_add_executable(bettercad_cli

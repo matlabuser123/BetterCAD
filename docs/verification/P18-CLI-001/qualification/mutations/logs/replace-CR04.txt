@@ -1,0 +1,2 @@
+    (void)ordinal;
+    return static_cast<std::size_t>(id) - 1U;

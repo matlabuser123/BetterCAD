@@ -1,0 +1,2 @@
+        load = thermal::ThermalLoad{ThermalLoadId::fromValue(*id),
+                                    thermal::SurfaceHeatFluxLoad{.face = *face, .flux = HeatFlux::fromSi(std::abs(flux->si()))}};

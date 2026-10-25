@@ -1,0 +1,1 @@
+executeEdit(document, command, "duplicate_name")

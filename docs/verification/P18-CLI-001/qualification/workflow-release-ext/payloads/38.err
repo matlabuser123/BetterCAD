@@ -1,0 +1,1 @@
+bettercad-cli thermal-boundary-add: invalid_value: thermal boundary condition:9 prescribes -5 K, which is not a finite absolute temperature

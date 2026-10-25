@@ -1,0 +1,3 @@
+    for (const thermal::ThermalCheck& check : report.checks) {
+        JsonValue entry = JsonValue::object();
+        entry.set("rule"

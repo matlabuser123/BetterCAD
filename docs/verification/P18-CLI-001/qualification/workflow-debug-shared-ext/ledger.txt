@@ -1,0 +1,133 @@
+binary C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/bettercad-cli.exe
+size 48966994
+sha256 de9d33a288712fcb5629b6b03126251a539158e388a6725fc3326759bfcb06fe
+project-libraries-beside-binary 11
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libTKBO.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libTKBRep.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libTKBool.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libTKCAF.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libTKCDF.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libTKDE.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libTKDESTEP.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libTKFillet.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libTKG2d.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libTKG3d.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libTKGeomAlgo.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libTKGeomBase.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libTKHLR.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libTKLCAF.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libTKMath.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libTKMesh.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libTKOffset.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libTKPrim.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libTKService.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libTKShHealing.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libTKTopAlgo.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libTKV3d.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libTKVCAF.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libTKXCAF.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libTKXSBase.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libTKernel.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libbettercad_assembly.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libbettercad_core.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libbettercad_drawing.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libbettercad_features.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libbettercad_geometry.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libbettercad_io.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libbettercad_linalg.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libbettercad_meshing.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libbettercad_sketch.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libbettercad_structural.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libbettercad_thermal.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libgcc_s_seh-1.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libngcore.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libnglib.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libstdc++-6.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libwinpthread-1.dll
+runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libzlib.dll
+
+process | exit | stdout-bytes | stderr-bytes | stdout-sha256 | command      (byte counts are of the raw files)
+1 | 0 | 203 | 0 | 5d1d53066ca632bd8ac8ed26cec00e2510366751dbd49178983530fe55aad74a | version
+2 | 1 | 0 | 126 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-settings C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/steady.bcad --json
+3 | 0 | 174 | 0 | 5ed71f55dd7bd37164b24973604a5cae812b46d0fe27b7929208cd1af4ac3c98 | thermal-analysis-add C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/steady.bcad
+4 | 0 | 154 | 0 | 550b097c1427949aae431f8182ebf90f05f62acc4396404d62710a3410e58dc6 | thermal-load-add C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/steady.bcad 1 --generation 1e5
+5 | 0 | 187 | 0 | a2d619a99f9ddee4ed552dc214bad96bcbebe3e02ecedf563da6b453008e1664 | thermal-boundary-add C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/steady.bcad 1 face:Extrude001:start_cap --temperature 300
+6 | 0 | 192 | 0 | 6dc936108dde642b23e6e9c8268d83e57176d1ae3cd618a1fbbb5e94fba0b144 | thermal-boundary-add C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/steady.bcad 2 face:Extrude001:end_cap --convection 25 --ambient 293.15
+7 | 0 | 1013 | 0 | 46373908d7906381d893e4040e6f94e8cbacc8aacc503c57058640c3cfc2d4aa | thermal-settings C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/steady.bcad --json
+8 | 0 | 2685 | 0 | b792dcd8631f1a9ddd0f3d28f2bbf7ec53a86d6d0a37f2c2c6ac92d91c77e6da | thermal-validate C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/steady.bcad --json
+9 | 0 | 3098 | 0 | 27a6aeccfa3724012e0194ce93f25ff1c998d5c656ba64f58f129ee64f880fc5 | thermal-solve C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/steady.bcad --json
+10 | 0 | 407 | 0 | 106ae47274a5bb60514a38d76a5cf206b4145239c530d0c93377ce62699b48fb | thermal-temperature C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/steady.bcad --json
+11 | 0 | 722 | 0 | a28d3bb5993529b1060c1641b6304e8c6aacc86923c66c98e44fc14355778ff3 | thermal-gradient C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/steady.bcad --json
+12 | 0 | 721 | 0 | 464a744b7c7d27f3c49779fd2b4dd11d4ed0ddd36ed4e6845b6eb647ec5bb2aa | thermal-heat-flux C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/steady.bcad --json
+13 | 0 | 3723 | 0 | bc6e41cec840d906c938d2071156fafe6a6ca2ca6303913df6f89cf98307d287 | thermal-balance C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/steady.bcad --json
+14 | 0 | 364 | 0 | 7938797140f37adf13618cbafb102ebaa59048d4bd895f75b4fa36e375a2a838 | mesh-info C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/steady.bcad --json
+15 | 0 | 3098 | 0 | 27a6aeccfa3724012e0194ce93f25ff1c998d5c656ba64f58f129ee64f880fc5 | thermal-solve C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/steady.bcad --json
+16 | 0 | 186 | 0 | 946a0ddd44fe2973e440a236512c4944494cce2caa92e8da89e5f6ff39e0074e | thermal-load-add C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/steady.bcad 2 --flux -1500 --face face:Extrude001:end_cap
+17 | 0 | 3096 | 0 | 522102f5d3f87502993007f3a80e25a518b305a9b5db0f37b6dc787aa1370971 | thermal-solve C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/steady.bcad --json
+18 | 0 | 116 | 0 | 7bb641528f2225ae3dd2c8c5ad477a3c3a412054e6ae48150dfea4c58a5f402c | thermal-load-remove C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/steady.bcad 2
+19 | 0 | 3098 | 0 | 27a6aeccfa3724012e0194ce93f25ff1c998d5c656ba64f58f129ee64f880fc5 | thermal-solve C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/steady.bcad --json
+20 | 0 | 132 | 0 | a762885c467ee741cf418e4156fae1ad79a1d1d7069e86e888424e01d1d68020 | thermal-boundary-remove C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/singular.bcad 1
+21 | 0 | 132 | 0 | f719904ee17f6bd1c33cecd2a6550d278bc400fc2e2a25bb1c58f8b8384e0e06 | thermal-boundary-remove C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/singular.bcad 2
+22 | 1 | 0 | 210 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-solve C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/singular.bcad --json
+23 | 1 | 0 | 216 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-temperature C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/singular.bcad --json
+24 | 1 | 0 | 213 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-gradient C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/singular.bcad --json
+25 | 1 | 0 | 214 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-heat-flux C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/singular.bcad --json
+26 | 1 | 0 | 212 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-balance C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/singular.bcad --json
+27 | 1 | 3244 | 0 | 1e31f3b59ec1d53bd54b7702f1db8d164d1a31bc53b3d415612c3deaab38e84b | thermal-validate C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/singular.bcad --json
+28 | 0 | 160 | 0 | 4da6f29dad1d2f8c38d40192c435f79a76b59fece7e284eb07cc3a0aa6037cc8 | material-unassign C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/no-material.bcad
+29 | 1 | 0 | 94 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-solve C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/no-material.bcad --json
+30 | 1 | 2750 | 0 | c4847b1b69699ec48ea1b02d0a88126e991d22fd9d61580e6e3684b858e35ac5 | thermal-validate C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/no-material.bcad --json
+31 | 0 | 190 | 0 | c2571d89e2f8440c32d26b5d78d937786c25e7c84341b3f6301c6fe2234020b7 | thermal-load-add C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/unresolved.bcad 7 --flux 250 --face face:Extrude001:side:9991
+32 | 0 | 1232 | 0 | 16ba875dd824361617ded962b1db1239ea9b62763c6e499fdd65eccac7a2fbfd | thermal-settings C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/unresolved.bcad --json
+33 | 1 | 0 | 182 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-solve C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/unresolved.bcad --json
+34 | 0 | 189 | 0 | dda4d89973c7c33118d61d4812793fbd4829e4cdf8b200eff795a46d5829a9af | thermal-boundary-add C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/conflict.bcad 5 face:Extrude001:start_cap --temperature 350
+35 | 1 | 0 | 247 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-solve C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/conflict.bcad --json
+36 | 1 | 0 | 87 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-load-add C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/steady.bcad 1 --generation 5
+37 | 1 | 0 | 84 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-load-remove C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/steady.bcad 99
+38 | 1 | 0 | 141 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-boundary-add C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/steady.bcad 9 face:Extrude001:end_cap --temperature -5
+39 | 1 | 0 | 188 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-boundary-add C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/steady.bcad 9 face:Extrude001:end_cap --convection 0 --ambient 290
+40 | 2 | 0 | 171 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-load-add C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/steady.bcad 9 --flux nan --face face:Extrude001:end_cap
+41 | 2 | 0 | 171 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-load-add C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/steady.bcad 9 --flux inf --face face:Extrude001:end_cap
+42 | 2 | 0 | 210 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-boundary-add C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/steady.bcad 9 face:Extrude001:end_cap --temperature 20degC
+43 | 2 | 0 | 170 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-load-add C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/steady.bcad 9 --node 12 --flux 5
+44 | 2 | 0 | 117 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-solve C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/steady.bcad --force
+45 | 2 | 0 | 109 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-solve
+46 | 1 | 0 | 186 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-solve C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/does-not-exist.bcad --json
+47 | 0 | 180 | 0 | 33ee55a2b85a744d7b10ee3a5fea90244fa65c5bcc758f6ce40a1119e181d569 | thermal-analysis-add C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/transient.bcad --mode transient --initial-temperature 295.5 --time-step 0.3 --end-time 1.0 --output every-step
+48 | 0 | 157 | 0 | 0d898b6e690c45c1f83a9c41e0a8835d145082ef6cf601940158b540be4e7b2f | thermal-load-add C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/transient.bcad 1 --generation 2e5
+49 | 0 | 190 | 0 | 07f34348bd1d8197d9b51ea211aee59825c54a608cefca833b913cbfdba6e1d0 | thermal-boundary-add C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/transient.bcad 1 face:Extrude001:start_cap --temperature 300
+50 | 0 | 195 | 0 | 12d8c0ea5e8e6692e0fafd216390410c51491e0cce02e779d4382b6dfe2ef4a4 | thermal-boundary-add C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/transient.bcad 2 face:Extrude001:end_cap --convection 25 --ambient 293.15
+51 | 0 | 1217 | 0 | fc6960e91d7ca5f33df98eaabae8c0734eb05f084725fb369ec7cc6a0c4a7813 | thermal-settings C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/transient.bcad --json
+52 | 0 | 4060 | 0 | 40aaefe6fa017a9c2a1f64dfe324f0dcd396ba87f269347530761b464f371e06 | thermal-solve C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/transient.bcad --json
+53 | 0 | 1765 | 0 | 130ffb94ba17b1d54a0bfdbbe9f39dd4060f556d9ef84585e67e54ac7bda966d | thermal-temperature C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/transient.bcad --json
+54 | 0 | 8972 | 0 | 131358be5790cbd7550cb8470a3ca249e03629089cd8c8bc0d8e6b4a8c663f4c | thermal-balance C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/transient.bcad --json
+55 | 0 | 3346 | 0 | ec0fe819ba5586af30160147231c864c18180343e267b7a32c2e1899ab8b2296 | thermal-validate C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/transient.bcad --json
+56 | 0 | 4060 | 0 | 40aaefe6fa017a9c2a1f64dfe324f0dcd396ba87f269347530761b464f371e06 | thermal-solve C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/transient.bcad --json
+57 | 0 | 141 | 0 | fbe136e1fa1ce1fe04e68f2668b08e37501d0c15ffe775677c4f80af218e5cc9 | thermal-boundary-remove C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/transient-neumann.bcad 1
+58 | 0 | 141 | 0 | f922536b8dae9f6934db2d422a632732228bd4fe2ee634ab6adb7b7ba21d0da7 | thermal-boundary-remove C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/transient-neumann.bcad 2
+59 | 0 | 4228 | 0 | 522045b1e315a3637b236a6a77e9136d8cf43e5e9c8283fd8aa5b395600e8474 | thermal-solve C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/transient-neumann.bcad --json
+60 | 0 | 150 | 0 | 62dd3b022fd7ed11ad9077a35126913ee742203986f8d68a64c5297324fa735d | material-unset C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/k-only.bcad Steel specific_heat_capacity
+61 | 1 | 0 | 141 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-solve C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/k-only.bcad --json
+62 | 0 | 157 | 0 | 6adecd616614efd9102760279d5d9edb2a6255f5a9829d51f2022276e6aebe25 | material-unset C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/k-only-steady.bcad Steel specific_heat_capacity
+63 | 0 | 3098 | 0 | 27a6aeccfa3724012e0194ce93f25ff1c998d5c656ba64f58f129ee64f880fc5 | thermal-solve C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/k-only-steady.bcad --json
+64 | 0 | 4062 | 0 | 491bf6096579338783948068ee5638e7680f9e0859e5003226aeb60eb2d92c0c | thermal-solve C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/reference.bcad --json
+65 | 0 | 162 | 0 | 4bb469e0341d7b2e85788ba68dfce7ec8674111c5ea77e2087c70f10eaa9800a | mesh-local-add C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/local-size.bcad face:Extrude001:side:5 0.8mm
+66 | 0 | 3102 | 0 | 950f15e0b8b74ced87ebbfea1dbe101e2648e3e891d97af0d1f113a8c826a36f | thermal-solve C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/local-size.bcad --json
+67 | 1 | 0 | 134 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-solve C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/broken.bcad --json
+68 | 1 | 0 | 137 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-settings C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/broken.bcad --json
+69 | 0 | 3098 | 0 | 27a6aeccfa3724012e0194ce93f25ff1c998d5c656ba64f58f129ee64f880fc5 | thermal-solve C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/steady.bcad --json
+70 | 0 | 3098 | 0 | 27a6aeccfa3724012e0194ce93f25ff1c998d5c656ba64f58f129ee64f880fc5 | thermal-solve C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/with space/plate doc.bcad --json
+71 | 0 | 265 | 0 | 54c9ddfc650da7d2cc38529b2c3e0c37f1fb1bf674611b3bcf0f8c017dde5830 | thermal-solve C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/steady.bcad
+72 | 0 | 552 | 0 | 1406f5012cdfad15b33040a08d5a7d97944b362726a825757dd75eb5cb337198 | batch C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/batch.bcad C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/batch.txt
+73 | 0 | 3098 | 0 | 27a6aeccfa3724012e0194ce93f25ff1c998d5c656ba64f58f129ee64f880fc5 | thermal-solve C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/batch.bcad --json
+74 | 1 | 0 | 302 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | batch C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/batch.bcad C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/bad-batch.txt
+
+strict re-parse of the raw payloads: exit 0
+Filters: "ThermalCliWorkflow_EveryPayloadIsStrictJson"
+Randomness seeded to: 3409134429
+===============================================================================
+All tests passed (178 assertions in 1 test case)
+
+
+
+steps 74

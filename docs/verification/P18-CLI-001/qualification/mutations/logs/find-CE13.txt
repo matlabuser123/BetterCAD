@@ -1,0 +1,1 @@
+        if (!parsed->has("--output")) {

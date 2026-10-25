@@ -1,0 +1,1 @@
+failure.has_value() && stoppedAt == ThermalRunStage::Solve ? &*failure : nullptr;

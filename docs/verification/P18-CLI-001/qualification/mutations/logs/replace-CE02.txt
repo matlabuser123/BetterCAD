@@ -1,0 +1,1 @@
+.coefficient = HeatTransferCoefficient::fromSi(std::abs(coefficient->si())), .ambient = *ambient}};

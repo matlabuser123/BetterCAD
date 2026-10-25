@@ -1,0 +1,4 @@
+    if (!ordinal.has_value()) {
+        throw std::logic_error("an element id taken from the result is not in the result");
+    }
+    return *ordinal;

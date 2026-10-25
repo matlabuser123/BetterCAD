@@ -63,6 +63,7 @@ bettercad_add_executable(bettercad_tests
         structural/StructuralCommandTests.cpp
         structural/Tet4ElementTests.cpp
         thermal/ThermalAnalysisBoundaryTests.cpp
+        thermal/ThermalAnalysisRunTests.cpp
         thermal/ThermalDataTests.cpp
         thermal/ThermalAssemblyMappedTests.cpp
         thermal/ThermalAssemblyTestSupport.hpp
@@ -336,6 +337,8 @@ if(TARGET bettercad_cli_lib)
         cli/DrawingCliTests.cpp
         cli/MaterialCliTests.cpp
         cli/StructuralCliTests.cpp
+        cli/ThermalCliTests.cpp
+        cli/MiniJson.hpp
         cli/MeshingCliTests.cpp
         reference/AssemblyWorkflowTests.cpp
         io/AssemblyStepTests.cpp
@@ -574,6 +577,67 @@ if(TARGET bettercad_cli)
             "-DSOURCE_NO_ANALYSIS=${_example}"
             "-DWORK=${_out}/structural-workflow"
             -P "${CMAKE_CURRENT_SOURCE_DIR}/cli/StructuralWorkflow.cmake")
+
+    # P18-CLI-001. The thermal commands on the real executable, with the hand-written thermal_plate.bcad (a transient analysis on a
+    # plate with a hole: both load kinds, both condition kinds) -- so argument parsing, document loading, the runtime closure, the
+    # exit code and stdout cleanliness are all exercised by a separate process, which the in-process tests cannot do. The binary is
+    # always $<TARGET_FILE:bettercad_cli>: an absolute build-tree path, never a bare name that PATH could resolve to something stale.
+    set(_thermal_plate "${PROJECT_SOURCE_DIR}/examples/models/thermal_plate.bcad")
+    set(_thermal_bare "${PROJECT_SOURCE_DIR}/examples/models/thermal_bare_plate.bcad")
+    bettercad_add_process_test(cli.thermal.settings
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "thermal-settings|${_thermal_plate}|--json"
+        EXIT_CODE 0 STDOUT_REGEX "\"mode\": \"transient\"")
+    bettercad_add_process_test(cli.thermal.validate
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "thermal-validate|${_thermal_plate}|--json"
+        EXIT_CODE 0 STDOUT_REGEX "\"accepted\": true")
+    bettercad_add_process_test(cli.thermal.solve
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "thermal-solve|${_thermal_plate}|--json"
+        EXIT_CODE 0 STDOUT_REGEX "\"freeEquations\": [1-9][0-9]*")
+    bettercad_add_process_test(cli.thermal.temperature
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "thermal-temperature|${_thermal_plate}|--json"
+        EXIT_CODE 0 STDOUT_REGEX "\"unit\": \"K\"")
+    bettercad_add_process_test(cli.thermal.gradient
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "thermal-gradient|${_thermal_plate}|--json"
+        EXIT_CODE 0 STDOUT_REGEX "\"unit\": \"K/m\"")
+    bettercad_add_process_test(cli.thermal.heat-flux
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "thermal-heat-flux|${_thermal_plate}|--json"
+        EXIT_CODE 0 STDOUT_REGEX "\"quantity\": \"conductive_heat_flux\"")
+    bettercad_add_process_test(cli.thermal.balance
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "thermal-balance|${_thermal_plate}|--json"
+        EXIT_CODE 0 STDOUT_REGEX "\"balanced\": true")
+    # A query on a document with no analysis FAILS, and prints nothing to stdout -- the stream discipline P15-CLI-001 established.
+    bettercad_add_process_test(cli.thermal.settings.no-analysis
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "thermal-settings|${_thermal_bare}"
+        EXIT_CODE 1 STDERR_REGEX "no_thermal_analysis")
+    bettercad_add_process_test(cli.thermal.solve.no-analysis
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "thermal-solve|${_thermal_bare}|--json"
+        EXIT_CODE 1 STDERR_REGEX "no_thermal_analysis")
+    bettercad_add_process_test(cli.thermal.solve.usage
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "thermal-solve"
+        EXIT_CODE 2 STDERR_REGEX "Usage: bettercad-cli thermal-solve")
+    # And the prose form carries the same numbers in a readable shape.
+    bettercad_add_process_test(cli.thermal.solve.prose
+        COMMAND "$<TARGET_FILE:bettercad_cli>" ARGS "thermal-solve|${_thermal_plate}"
+        EXIT_CODE 0 STDOUT_REGEX "^Solved transient: [0-9]+ nodes, [0-9]+ tetrahedra")
+
+    # The scripted multi-process workflow: separate processes throughout, every exit code asserted, every payload PARSED with
+    # string(JSON) rather than matched with a regex, and the fresh-binary proof (the binary's path, size, SHA-256 and runtime
+    # libraries) recorded in its ledger. It fails fast.
+    if(BUILD_SHARED_LIBS)
+        set(_thermal_expect_shared ON)
+    else()
+        set(_thermal_expect_shared OFF)
+    endif()
+    add_test(NAME cli.thermal.workflow
+        COMMAND "${CMAKE_COMMAND}"
+            "-DCLI=$<TARGET_FILE:bettercad_cli>"
+            "-DBUILD_DIR=${PROJECT_BINARY_DIR}"
+            "-DEXPECT_SHARED=${_thermal_expect_shared}"
+            "-DBARE=${_thermal_bare}"
+            "-DTRANSIENT=${_thermal_plate}"
+            "-DTESTS=$<TARGET_FILE:bettercad_tests>"
+            "-DWORK=${_out}/thermal-workflow"
+            -P "${CMAKE_CURRENT_SOURCE_DIR}/cli/ThermalWorkflow.cmake")
 
     # The zero-match filter guard. `ctest -R` exits 0 when a pattern matches
     # NOTHING -- demonstrated by the guard itself -- so a targeted run must

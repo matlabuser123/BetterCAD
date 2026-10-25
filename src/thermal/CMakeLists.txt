@@ -45,6 +45,7 @@ bettercad_add_library(bettercad_thermal
     SOURCES
         ThermalAnalysis.cpp
         ThermalAnalysisObject.cpp
+        ThermalAnalysisRun.cpp
         ThermalBalance.cpp
         ThermalBoundary.cpp
         ThermalCommands.cpp

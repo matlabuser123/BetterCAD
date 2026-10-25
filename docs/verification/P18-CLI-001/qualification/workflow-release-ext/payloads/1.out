@@ -1,0 +1,7 @@
+BetterCAD 0.1.0
+  revision   : 2ffba66f6676 (modified)
+  build type : Release
+  compiler   : GCC 16.1.0
+  language   : C++23 (__cplusplus=202302)
+  platform   : Windows x86_64
+  libraries  : static

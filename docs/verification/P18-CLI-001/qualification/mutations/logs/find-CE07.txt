@@ -1,0 +1,1 @@
+            return std::unexpected(malformed("a surface heat flux needs --face <face>"));

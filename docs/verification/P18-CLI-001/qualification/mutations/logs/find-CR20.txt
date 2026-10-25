@@ -1,0 +1,1 @@
+    json.set("residual", fin.quantity(state.residual().si(), "W"));

@@ -1,0 +1,1 @@
+            settings.timeStep = Time::fromSi(std::max(value->si(), 0.01));

@@ -1,0 +1,213 @@
+P18-CLI-001 source audit
+
+== apps/bettercad_cli/ThermalReports.cpp (946 lines, 51010 bytes)
+  Tet4 / element matrices (Ke, Ce, gradientFrom, computeTet4Geometry)      0
+  load / boundary integration (prepareThermal*, ThermalLoadContribution)   0
+  Robin / convection matrices                                              0
+  assembly (assembleThermalSystem, ConductanceMatrix, CapacityMatrix)      0
+  steady solve (solveSteady*, factorisation, anchoring)                    0
+  transient integration (solveTransient*, TimeGrid, backward Euler)        1
+  recovery (recover*Thermal, ThermalPostResult construction)               0
+  balance (recover*Balance, steadyHeatBalance, balanceWithinTolerance)     0
+  validation policy (validateThermalAnalysis, thresholds, severities)      7
+  material properties (conductivity, density, specific heat)               0
+  floating-point literals                                                  0
+  abs / clamp / min / max / round                                          0
+  sqrt / pow / exp / log                                                   0
+  Celsius / Fahrenheit / degC / 273.15                                     0
+  ValidationStatus / CheckStatus / BalanceStatus enumerators               0
+  id value() used as an index                                              0
+  file writes (ofstream, saveDocument, writeFile)                          0
+  process streams (std::cout, printf, puts, std::print)                    0
+  meshing / writing in the entry (generate, modifyObject, addObject)       2
+
+== apps/bettercad_cli/ThermalEdits.cpp (546 lines, 27444 bytes)
+  Tet4 / element matrices (Ke, Ce, gradientFrom, computeTet4Geometry)      0
+  load / boundary integration (prepareThermal*, ThermalLoadContribution)   0
+  Robin / convection matrices                                              1
+  assembly (assembleThermalSystem, ConductanceMatrix, CapacityMatrix)      0
+  steady solve (solveSteady*, factorisation, anchoring)                    0
+  transient integration (solveTransient*, TimeGrid, backward Euler)        0
+  recovery (recover*Thermal, ThermalPostResult construction)               0
+  balance (recover*Balance, steadyHeatBalance, balanceWithinTolerance)     0
+  validation policy (validateThermalAnalysis, thresholds, severities)      0
+  material properties (conductivity, density, specific heat)               0
+  floating-point literals                                                  0
+  abs / clamp / min / max / round                                          0
+  sqrt / pow / exp / log                                                   0
+  Celsius / Fahrenheit / degC / 273.15                                     0
+  ValidationStatus / CheckStatus / BalanceStatus enumerators               0
+  id value() used as an index                                              0
+  file writes (ofstream, saveDocument, writeFile)                          0
+  process streams (std::cout, printf, puts, std::print)                    0
+  meshing / writing in the entry (generate, modifyObject, addObject)       0
+
+== apps/bettercad_cli/ThermalOutput.hpp (247 lines, 11136 bytes)
+  Tet4 / element matrices (Ke, Ce, gradientFrom, computeTet4Geometry)      0
+  load / boundary integration (prepareThermal*, ThermalLoadContribution)   0
+  Robin / convection matrices                                              0
+  assembly (assembleThermalSystem, ConductanceMatrix, CapacityMatrix)      0
+  steady solve (solveSteady*, factorisation, anchoring)                    0
+  transient integration (solveTransient*, TimeGrid, backward Euler)        0
+  recovery (recover*Thermal, ThermalPostResult construction)               0
+  balance (recover*Balance, steadyHeatBalance, balanceWithinTolerance)     0
+  validation policy (validateThermalAnalysis, thresholds, severities)      0
+  material properties (conductivity, density, specific heat)               0
+  floating-point literals                                                  0
+  abs / clamp / min / max / round                                          0
+  sqrt / pow / exp / log                                                   0
+  Celsius / Fahrenheit / degC / 273.15                                     0
+  ValidationStatus / CheckStatus / BalanceStatus enumerators               0
+  id value() used as an index                                              0
+  file writes (ofstream, saveDocument, writeFile)                          0
+  process streams (std::cout, printf, puts, std::print)                    0
+  meshing / writing in the entry (generate, modifyObject, addObject)       0
+
+== src/thermal/ThermalAnalysisRun.cpp (171 lines, 6988 bytes)
+  Tet4 / element matrices (Ke, Ce, gradientFrom, computeTet4Geometry)      0
+  load / boundary integration (prepareThermal*, ThermalLoadContribution)   4
+  Robin / convection matrices                                              0
+  assembly (assembleThermalSystem, ConductanceMatrix, CapacityMatrix)      1
+  steady solve (solveSteady*, factorisation, anchoring)                    2
+  transient integration (solveTransient*, TimeGrid, backward Euler)        2
+  recovery (recover*Thermal, ThermalPostResult construction)               4
+  balance (recover*Balance, steadyHeatBalance, balanceWithinTolerance)     2
+  validation policy (validateThermalAnalysis, thresholds, severities)      1
+  material properties (conductivity, density, specific heat)               0
+  floating-point literals                                                  0
+  abs / clamp / min / max / round                                          0
+  sqrt / pow / exp / log                                                   0
+  Celsius / Fahrenheit / degC / 273.15                                     0
+  ValidationStatus / CheckStatus / BalanceStatus enumerators               0
+  id value() used as an index                                              0
+  file writes (ofstream, saveDocument, writeFile)                          0
+  process streams (std::cout, printf, puts, std::print)                    0
+  meshing / writing in the entry (generate, modifyObject, addObject)       0
+
+== include/bettercad/thermal/ThermalAnalysisRun.hpp (163 lines, 9519 bytes)
+  Tet4 / element matrices (Ke, Ce, gradientFrom, computeTet4Geometry)      0
+  load / boundary integration (prepareThermal*, ThermalLoadContribution)   2
+  Robin / convection matrices                                              0
+  assembly (assembleThermalSystem, ConductanceMatrix, CapacityMatrix)      0
+  steady solve (solveSteady*, factorisation, anchoring)                    1
+  transient integration (solveTransient*, TimeGrid, backward Euler)        1
+  recovery (recover*Thermal, ThermalPostResult construction)               0
+  balance (recover*Balance, steadyHeatBalance, balanceWithinTolerance)     0
+  validation policy (validateThermalAnalysis, thresholds, severities)      0
+  material properties (conductivity, density, specific heat)               0
+  floating-point literals                                                  0
+  abs / clamp / min / max / round                                          0
+  sqrt / pow / exp / log                                                   0
+  Celsius / Fahrenheit / degC / 273.15                                     0
+  ValidationStatus / CheckStatus / BalanceStatus enumerators               0
+  id value() used as an index                                              0
+  file writes (ofstream, saveDocument, writeFile)                          0
+  process streams (std::cout, printf, puts, std::print)                    0
+  meshing / writing in the entry (generate, modifyObject, addObject)       0
+
+== owners used (each at least as many times as there are places that need it)
+  reports: runThermalAnalysis                            1   (at least 1)  ok
+  reports: accepted()                                    5   (at least 5)  ok
+  reports: thermalAnalysisIds                            1   (at least 1)  ok
+  reports: checkFaceName                                 4   (at least 4)  ok
+  reports: nodeOf                                        1   (at least 1)  ok
+  reports: ordinalOrThrow                                3   (at least 3)  ok
+  reports: validationJson                                3   (at least 3)  ok
+  reports: sawNonFinite()                                6   (at least 6)  ok
+  edits: AddThermalLoadCommand                           1   (at least 1)  ok
+  edits: RemoveThermalLoadCommand                        1   (at least 1)  ok
+  edits: AddThermalBoundaryConditionCommand              1   (at least 1)  ok
+  edits: RemoveThermalBoundaryConditionCommand           1   (at least 1)  ok
+  edits: CreateThermalAnalysisCommand                    1   (at least 1)  ok
+  edits: parseFaceReference                              2   (at least 2)  ok
+  edits: parseQuantity                                   1   (at least 1)  ok
+  edits: executeEdit(                                    6   (at least 6)  ok
+  edits: kLargestFileId                                  3   (at least 2)  ok
+
+== includes of the thermal files
+  apps/bettercad_cli/ThermalReports.cpp: #include "Commands.hpp"
+  apps/bettercad_cli/ThermalReports.cpp: #include "Selectors.hpp"
+  apps/bettercad_cli/ThermalReports.cpp: #include "StructuredOutput.hpp"
+  apps/bettercad_cli/ThermalReports.cpp: #include "ThermalOutput.hpp"
+  apps/bettercad_cli/ThermalReports.cpp: #include <bettercad/core/document/Document.hpp>
+  apps/bettercad_cli/ThermalReports.cpp: #include <bettercad/core/units/UnitCatalog.hpp>
+  apps/bettercad_cli/ThermalReports.cpp: #include <bettercad/features/FaceReferences.hpp>
+  apps/bettercad_cli/ThermalReports.cpp: #include <bettercad/features/Regenerator.hpp>
+  apps/bettercad_cli/ThermalReports.cpp: #include <bettercad/io/DocumentFile.hpp>
+  apps/bettercad_cli/ThermalReports.cpp: #include <bettercad/meshing/Mesh.hpp>
+  apps/bettercad_cli/ThermalReports.cpp: #include <bettercad/meshing/Mesher.hpp>
+  apps/bettercad_cli/ThermalReports.cpp: #include <bettercad/thermal/ThermalAnalysisObject.hpp>
+  apps/bettercad_cli/ThermalReports.cpp: #include <bettercad/thermal/ThermalAnalysisRun.hpp>
+  apps/bettercad_cli/ThermalReports.cpp: #include <bettercad/thermal/ThermalBalance.hpp>
+  apps/bettercad_cli/ThermalReports.cpp: #include <bettercad/thermal/ThermalData.hpp>
+  apps/bettercad_cli/ThermalReports.cpp: #include <bettercad/thermal/ThermalPost.hpp>
+  apps/bettercad_cli/ThermalReports.cpp: #include <bettercad/thermal/ThermalValidation.hpp>
+  apps/bettercad_cli/ThermalReports.cpp: #include <cmath>
+  apps/bettercad_cli/ThermalReports.cpp: #include <cstddef>
+  apps/bettercad_cli/ThermalReports.cpp: #include <cstdint>
+  apps/bettercad_cli/ThermalReports.cpp: #include <expected>
+  apps/bettercad_cli/ThermalReports.cpp: #include <filesystem>
+  apps/bettercad_cli/ThermalReports.cpp: #include <format>
+  apps/bettercad_cli/ThermalReports.cpp: #include <optional>
+  apps/bettercad_cli/ThermalReports.cpp: #include <ostream>
+  apps/bettercad_cli/ThermalReports.cpp: #include <span>
+  apps/bettercad_cli/ThermalReports.cpp: #include <stdexcept>
+  apps/bettercad_cli/ThermalReports.cpp: #include <string>
+  apps/bettercad_cli/ThermalReports.cpp: #include <string_view>
+  apps/bettercad_cli/ThermalReports.cpp: #include <vector>
+  apps/bettercad_cli/ThermalEdits.cpp: #include "EditSupport.hpp"
+  apps/bettercad_cli/ThermalEdits.cpp: #include "Selectors.hpp"
+  apps/bettercad_cli/ThermalEdits.cpp: #include <bettercad/core/document/Document.hpp>
+  apps/bettercad_cli/ThermalEdits.cpp: #include <bettercad/core/units/UnitCatalog.hpp>
+  apps/bettercad_cli/ThermalEdits.cpp: #include <bettercad/meshing/MeshControl.hpp>
+  apps/bettercad_cli/ThermalEdits.cpp: #include <bettercad/meshing/MeshingCommands.hpp>
+  apps/bettercad_cli/ThermalEdits.cpp: #include <bettercad/thermal/ThermalAnalysisObject.hpp>
+  apps/bettercad_cli/ThermalEdits.cpp: #include <bettercad/thermal/ThermalCommands.hpp>
+  apps/bettercad_cli/ThermalEdits.cpp: #include <bettercad/thermal/ThermalData.hpp>
+  apps/bettercad_cli/ThermalEdits.cpp: #include <algorithm>
+  apps/bettercad_cli/ThermalEdits.cpp: #include <array>
+  apps/bettercad_cli/ThermalEdits.cpp: #include <cstdint>
+  apps/bettercad_cli/ThermalEdits.cpp: #include <format>
+  apps/bettercad_cli/ThermalEdits.cpp: #include <optional>
+  apps/bettercad_cli/ThermalEdits.cpp: #include <span>
+  apps/bettercad_cli/ThermalEdits.cpp: #include <string>
+  apps/bettercad_cli/ThermalEdits.cpp: #include <string_view>
+  apps/bettercad_cli/ThermalEdits.cpp: #include <vector>
+  apps/bettercad_cli/ThermalOutput.hpp: #include "StructuredOutput.hpp"
+  apps/bettercad_cli/ThermalOutput.hpp: #include <bettercad/meshing/MeshQuality.hpp>
+  apps/bettercad_cli/ThermalOutput.hpp: #include <bettercad/thermal/ThermalValidation.hpp>
+  apps/bettercad_cli/ThermalOutput.hpp: #include <cmath>
+  apps/bettercad_cli/ThermalOutput.hpp: #include <cstddef>
+  apps/bettercad_cli/ThermalOutput.hpp: #include <cstdint>
+  apps/bettercad_cli/ThermalOutput.hpp: #include <optional>
+  apps/bettercad_cli/ThermalOutput.hpp: #include <string_view>
+  apps/bettercad_cli/ThermalOutput.hpp: #include <utility>
+  src/thermal/ThermalAnalysisRun.cpp: #include <bettercad/thermal/ThermalAnalysisRun.hpp>
+  src/thermal/ThermalAnalysisRun.cpp: #include <bettercad/core/document/Document.hpp>
+  src/thermal/ThermalAnalysisRun.cpp: #include <bettercad/features/Regenerator.hpp>
+  src/thermal/ThermalAnalysisRun.cpp: #include <bettercad/meshing/Mesher.hpp>
+  src/thermal/ThermalAnalysisRun.cpp: #include <bettercad/thermal/ThermalAnalysis.hpp>
+  src/thermal/ThermalAnalysisRun.cpp: #include <utility>
+  include/bettercad/thermal/ThermalAnalysisRun.hpp: #include <bettercad/core/Error.hpp>
+  include/bettercad/thermal/ThermalAnalysisRun.hpp: #include <bettercad/core/Id.hpp>
+  include/bettercad/thermal/ThermalAnalysisRun.hpp: #include <bettercad/thermal/Export.hpp>
+  include/bettercad/thermal/ThermalAnalysisRun.hpp: #include <bettercad/thermal/ThermalAnalysisObject.hpp>
+  include/bettercad/thermal/ThermalAnalysisRun.hpp: #include <bettercad/thermal/ThermalBalance.hpp>
+  include/bettercad/thermal/ThermalAnalysisRun.hpp: #include <bettercad/thermal/ThermalBoundary.hpp>
+  include/bettercad/thermal/ThermalAnalysisRun.hpp: #include <bettercad/thermal/ThermalData.hpp>
+  include/bettercad/thermal/ThermalAnalysisRun.hpp: #include <bettercad/thermal/ThermalDof.hpp>
+  include/bettercad/thermal/ThermalAnalysisRun.hpp: #include <bettercad/thermal/ThermalLoadVector.hpp>
+  include/bettercad/thermal/ThermalAnalysisRun.hpp: #include <bettercad/thermal/ThermalPost.hpp>
+  include/bettercad/thermal/ThermalAnalysisRun.hpp: #include <bettercad/thermal/ThermalSolve.hpp>
+  include/bettercad/thermal/ThermalAnalysisRun.hpp: #include <bettercad/thermal/ThermalSystem.hpp>
+  include/bettercad/thermal/ThermalAnalysisRun.hpp: #include <bettercad/thermal/ThermalTransient.hpp>
+  include/bettercad/thermal/ThermalAnalysisRun.hpp: #include <bettercad/thermal/ThermalValidation.hpp>
+  include/bettercad/thermal/ThermalAnalysisRun.hpp: #include <cstdint>
+  include/bettercad/thermal/ThermalAnalysisRun.hpp: #include <optional>
+  include/bettercad/thermal/ThermalAnalysisRun.hpp: #include <string_view>
+
+== the dispatch: which core API each thermal verb reaches
+  reports   -> prepare(): io::loadDocument, Regenerator::regenerate, thermal::thermalAnalysisIds
+  reports   -> analyse(): Mesher::generate, thermal::runThermalAnalysis
+  edits     -> executeEdit(): the P18-CMD command objects only (Create/Add/Remove)
+  verdict   -> ThermalAnalysisRun::accepted()

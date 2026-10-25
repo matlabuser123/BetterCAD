@@ -1,0 +1,2 @@
+    // warning-only analysis is accepted and exits 0, and this file never names a ValidationStatus enumerator.
+    return run.accepted() ? ExitCode::Success : ExitCode::Failure;

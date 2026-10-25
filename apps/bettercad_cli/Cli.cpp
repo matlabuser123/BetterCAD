@@ -141,6 +141,44 @@ constexpr std::array kCommands{
             "own sign convention, the equilibrium residuals, and the per-restraint owned and "
             "shared parts -- which are additive only together.",
             &runStructuralReactions},
+    // P18-CLI-001. Seven reports over the P18 thermal core. Each adds --json.
+    Command{"thermal-settings", kThermalSettingsUsage,
+            "Show the canonical thermal intent: the mode, the heat loads and boundary conditions with "
+            "their CAD targets and values, the initial temperature and the solver and time settings. "
+            "Regenerates the model to say which targets no longer resolve (a model that will not "
+            "regenerate is refused as regeneration_failed). Never meshes, never solves, writes nothing.",
+            &runThermalSettings},
+    Command{"thermal-validate", kThermalValidateUsage,
+            "Mesh the document, run the analysis and print the validation report: the fifteen rules in "
+            "the core's order, each finding with its code. Exit status 1 unless the analysis is accepted "
+            "-- a solver that returned is not enough. The report is printed even when it rejects; a "
+            "model that cannot be regenerated or meshed has no report and fails with "
+            "regeneration_failed or mesh_generation_failed. Writes nothing.",
+            &runThermalValidate},
+    Command{"thermal-solve", kThermalSolveUsage,
+            "Mesh, run the analysis and report a summary at any size: counts, the temperature range, the "
+            "residual, the heat balance and the validation. Nothing is printed unless the analysis is "
+            "accepted. The result is NOT saved -- it is derived state.",
+            &runThermalSolve},
+    Command{"thermal-temperature", kThermalTemperatureUsage,
+            "Run and summarise the nodal temperatures (K) of the final accepted state: the range and the "
+            "node carrying each end, tie-broken by ascending node id. A transient analysis adds the range "
+            "of every stored state at the time the core stored it.",
+            &runThermalTemperature},
+    Command{"thermal-gradient", kThermalGradientUsage,
+            "Run and summarise grad(T) (K/m) -- one constant value per tetrahedron, never smoothed to "
+            "nodes: the range of its magnitude and the element carrying each end.",
+            &runThermalGradient},
+    Command{"thermal-heat-flux", kThermalHeatFluxUsage,
+            "Run and summarise the conductive heat flux q = -k grad(T) (W/m^2), pointing the way heat "
+            "flows, one constant value per tetrahedron. NOT the applied surface flux of a load.",
+            &runThermalHeatFlux},
+    Command{"thermal-balance", kThermalBalanceUsage,
+            "Run and report the global heat balance (W): surface heat, generation, convection, the "
+            "prescribed-temperature reaction and, for a transient analysis, the stored energy, per step. "
+            "Printed whenever the analysis got as far as forming it, even when it is out of tolerance, "
+            "and exit status 1 then; before that it fails like the other result commands.",
+            &runThermalBalance},
 };
 
 void printUsage(std::ostream& os) {

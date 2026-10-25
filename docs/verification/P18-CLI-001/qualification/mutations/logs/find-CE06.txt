@@ -1,0 +1,2 @@
+        return std::unexpected(
+            malformed(std::format("{} must be a positive integer, not '{}'", what, text)));

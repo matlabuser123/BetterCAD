@@ -367,3 +367,324 @@ bettercad_add_process_test(architecture.thermalpersist-ownership.dispatch-derive
 bettercad_add_process_test(architecture.thermalpersist-ownership.vendored-layer-include
     COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalpersist-vendored-layer-include|-P|${_check_thermalpersist}"
     EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):[ \n]+src/io/json/ThermalAnalysisJson.cpp: includes[ \n]+vendor/bettercad/renderer/Renderer\\.hpp, a header of the derived chain")
+
+# P18-CLI-001: the thermal command line is an adapter over the qualified chain, and the chain's order lives in one place. The check
+# scans every apps/bettercad_cli/Thermal*.cpp and .hpp -- literals masked in one pass, comments removed -- for a header of the derived
+# chain, a link of it, a material property, a floating-point literal, a decision on a residual or a status written either way round,
+# a correction or a math function, a mesh id used as an index or accepted as a target, a file write, a unit conversion, a direct write
+# to a process stream, a macro, arithmetic on a quantity (also through a local), and counts the owners each file must use EXACTLY
+# where a slack would hide a deleted verdict. It scans src/thermal/ThermalAnalysisRun.cpp for the chain, once each, in order, and for
+# any arithmetic, policy, meshing or write; and the header for the exact spelling of `accepted()`. Each fixture tree holds exactly one
+# defect (or none); the valid tree also holds comments and strings that name forbidden things, which are not code.
+set(_check_thermalcli "${CMAKE_CURRENT_SOURCE_DIR}/CheckThermalCliOwnership.cmake")
+add_test(NAME architecture.thermalcli-ownership
+    COMMAND "${CMAKE_COMMAND}" "-DSOURCE_DIR=${PROJECT_SOURCE_DIR}" -P "${_check_thermalcli}")
+bettercad_add_process_test(architecture.thermalcli-ownership.valid
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-valid|-P|${_check_thermalcli}"
+    EXIT_CODE 0 STDOUT_REGEX "Thermal CLI ownership check passed")
+bettercad_add_process_test(architecture.thermalcli-ownership.includes-solver
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-includes-solver|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*includes[ \n]+bettercad/thermal/ThermalSolve\\.hpp,[ \n]+a[ \n]+header[ \n]+of[ \n]+the[ \n]+derived[ \n]+chain")
+bettercad_add_process_test(architecture.thermalcli-ownership.includes-system
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-includes-system|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*includes[ \n]+bettercad/thermal/ThermalSystem\\.hpp,[ \n]+a[ \n]+header[ \n]+of[ \n]+the[ \n]+derived[ \n]+chain")
+bettercad_add_process_test(architecture.thermalcli-ownership.includes-linalg
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-includes-linalg|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*includes[ \n]+bettercad/linalg/SparseSolver\\.hpp,[ \n]+a[ \n]+header[ \n]+of[ \n]+the[ \n]+derived[ \n]+chain")
+bettercad_add_process_test(architecture.thermalcli-ownership.includes-eigen
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-includes-eigen|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*includes[ \n]+Eigen/Dense,[ \n]+a[ \n]+header[ \n]+of[ \n]+the[ \n]+derived[ \n]+chain")
+bettercad_add_process_test(architecture.thermalcli-ownership.includes-renderer
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-includes-renderer|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*includes[ \n]+bettercad/renderer/ThermalContour\\.hpp,[ \n]+a[ \n]+header[ \n]+of[ \n]+the[ \n]+derived[ \n]+chain")
+bettercad_add_process_test(architecture.thermalcli-ownership.includes-structural
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-includes-structural|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*includes[ \n]+bettercad/structural/StructuralPost\\.hpp,[ \n]+a[ \n]+header[ \n]+of[ \n]+the[ \n]+derived[ \n]+chain")
+bettercad_add_process_test(architecture.thermalcli-ownership.includes-other-thermal
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-includes-other-thermal|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*includes[ \n]+bettercad/thermal/ThermalResult\\.hpp,[ \n]+a[ \n]+thermal[ \n]+header[ \n]+other[ \n]+than")
+bettercad_add_process_test(architecture.thermalcli-ownership.includes-lookalike
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-includes-lookalike|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*includes[ \n]+bettercad/thermal/xThermalAnalysisRun\\.hpp,[ \n]+a[ \n]+thermal[ \n]+header[ \n]+other[ \n]+than")
+bettercad_add_process_test(architecture.thermalcli-ownership.spaced-include
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-spaced-include|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*includes[ \n]+bettercad/thermal/ThermalTransient\\.hpp,[ \n]+a[ \n]+header[ \n]+of[ \n]+the[ \n]+derived[ \n]+chain")
+bettercad_add_process_test(architecture.thermalcli-ownership.names-solve
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-names-solve|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*names[ \n]+a[ \n]+link[ \n]+of[ \n]+the[ \n]+derived[ \n]+chain[ \n]+\\(solveSteady\\)")
+bettercad_add_process_test(architecture.thermalcli-ownership.names-assemble
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-names-assemble|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*names[ \n]+a[ \n]+link[ \n]+of[ \n]+the[ \n]+derived[ \n]+chain[ \n]+\\(assembleThermal\\)")
+bettercad_add_process_test(architecture.thermalcli-ownership.names-validate
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-names-validate|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*names[ \n]+a[ \n]+link[ \n]+of[ \n]+the[ \n]+derived[ \n]+chain[ \n]+\\(validateThermalAnalysis\\)")
+bettercad_add_process_test(architecture.thermalcli-ownership.names-gradient
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-names-gradient|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*names[ \n]+a[ \n]+link[ \n]+of[ \n]+the[ \n]+derived[ \n]+chain[ \n]+\\(gradientFrom\\)")
+bettercad_add_process_test(architecture.thermalcli-ownership.names-time-grid
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-names-time-grid|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*names[ \n]+a[ \n]+link[ \n]+of[ \n]+the[ \n]+derived[ \n]+chain[ \n]+\\(TimeGrid\\)")
+bettercad_add_process_test(architecture.thermalcli-ownership.material-property
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-material-property|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*names[ \n]+a[ \n]+material[ \n]+property[ \n]+\\(Conductivity\\)")
+bettercad_add_process_test(architecture.thermalcli-ownership.material-density
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-material-density|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*names[ \n]+a[ \n]+material[ \n]+property[ \n]+\\(density\\)")
+bettercad_add_process_test(architecture.thermalcli-ownership.float-tolerance
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-float-tolerance|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*holds[ \n]+a[ \n]+floating-point[ \n]+literal")
+bettercad_add_process_test(architecture.thermalcli-ownership.float-default
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-float-default|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*holds[ \n]+a[ \n]+floating-point[ \n]+literal")
+bettercad_add_process_test(architecture.thermalcli-ownership.float-step
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-float-step|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*holds[ \n]+a[ \n]+floating-point[ \n]+literal")
+bettercad_add_process_test(architecture.thermalcli-ownership.float-no-leading-digit
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-float-no-leading-digit|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*holds[ \n]+a[ \n]+floating-point[ \n]+literal")
+bettercad_add_process_test(architecture.thermalcli-ownership.float-after-char-literal
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-float-after-char-literal|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*holds[ \n]+a[ \n]+floating-point[ \n]+literal")
+bettercad_add_process_test(architecture.thermalcli-ownership.float-after-slashes-in-string
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-float-after-slashes-in-string|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*holds[ \n]+a[ \n]+floating-point[ \n]+literal")
+bettercad_add_process_test(architecture.thermalcli-ownership.float-in-a-new-file
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-float-in-a-new-file|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*ThermalExtra\\.cpp:[ \n]+holds[ \n]+a[ \n]+floating-point[ \n]+literal")
+bettercad_add_process_test(architecture.thermalcli-ownership.decision-residual
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-decision-residual|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*decides[ \n]+on[ \n]+a[ \n]+residual,[ \n]+a[ \n]+balance[ \n]+or[ \n]+a[ \n]+status")
+bettercad_add_process_test(architecture.thermalcli-ownership.decision-reversed
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-decision-reversed|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*decides[ \n]+on[ \n]+a[ \n]+residual,[ \n]+a[ \n]+balance[ \n]+or[ \n]+a[ \n]+status")
+bettercad_add_process_test(architecture.thermalcli-ownership.decision-balance
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-decision-balance|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*decides[ \n]+on[ \n]+a[ \n]+residual,[ \n]+a[ \n]+balance[ \n]+or[ \n]+a[ \n]+status")
+bettercad_add_process_test(architecture.thermalcli-ownership.decision-balanced-branch
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-decision-balanced-branch|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*decides[ \n]+on[ \n]+a[ \n]+residual,[ \n]+a[ \n]+balance[ \n]+or[ \n]+a[ \n]+status")
+bettercad_add_process_test(architecture.thermalcli-ownership.decision-status
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-decision-status|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*decides[ \n]+on[ \n]+a[ \n]+residual,[ \n]+a[ \n]+balance[ \n]+or[ \n]+a[ \n]+status")
+bettercad_add_process_test(architecture.thermalcli-ownership.decision-enumerator
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-decision-enumerator|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*decides[ \n]+on[ \n]+a[ \n]+residual,[ \n]+a[ \n]+balance[ \n]+or[ \n]+a[ \n]+status")
+bettercad_add_process_test(architecture.thermalcli-ownership.correction-abs
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-correction-abs|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*corrects[ \n]+or[ \n]+rounds[ \n]+a[ \n]+value[ \n]+\\(abs\\(\\)")
+bettercad_add_process_test(architecture.thermalcli-ownership.correction-clamp
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-correction-clamp|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*corrects[ \n]+or[ \n]+rounds[ \n]+a[ \n]+value[ \n]+\\(std::clamp\\)")
+bettercad_add_process_test(architecture.thermalcli-ownership.correction-max
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-correction-max|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*corrects[ \n]+or[ \n]+rounds[ \n]+a[ \n]+value[ \n]+\\(std::max\\)")
+bettercad_add_process_test(architecture.thermalcli-ownership.math-sqrt
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-math-sqrt|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*calls[ \n]+a[ \n]+math[ \n]+function[ \n]+\\(std::sqrt\\(\\)")
+bettercad_add_process_test(architecture.thermalcli-ownership.math-pow
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-math-pow|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*calls[ \n]+a[ \n]+math[ \n]+function[ \n]+\\(std::pow\\(\\)")
+bettercad_add_process_test(architecture.thermalcli-ownership.index-node
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-index-node|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*as[ \n]+an[ \n]+index[ \n]+or[ \n]+parks[ \n]+it[ \n]+in[ \n]+a[ \n]+local")
+bettercad_add_process_test(architecture.thermalcli-ownership.index-element
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-index-element|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*as[ \n]+an[ \n]+index[ \n]+or[ \n]+parks[ \n]+it[ \n]+in[ \n]+a[ \n]+local")
+bettercad_add_process_test(architecture.thermalcli-ownership.index-through-a-local
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-index-through-a-local|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*as[ \n]+an[ \n]+index[ \n]+or[ \n]+parks[ \n]+it[ \n]+in[ \n]+a[ \n]+local")
+bettercad_add_process_test(architecture.thermalcli-ownership.option-node
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-option-node|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*accepts[ \n]+a[ \n]+mesh-local[ \n]+target[ \n]+option[ \n]+\\(\"--node\"\\)")
+bettercad_add_process_test(architecture.thermalcli-ownership.option-facet
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-option-facet|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*accepts[ \n]+a[ \n]+mesh-local[ \n]+target[ \n]+option[ \n]+\\(\"--facet\"\\)")
+bettercad_add_process_test(architecture.thermalcli-ownership.option-dof
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-option-dof|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*accepts[ \n]+a[ \n]+mesh-local[ \n]+target[ \n]+option[ \n]+\\(\"--dof\"\\)")
+bettercad_add_process_test(architecture.thermalcli-ownership.persist-ofstream
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-persist-ofstream|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*writes[ \n]+a[ \n]+file[ \n]+or[ \n]+parses[ \n]+document[ \n]+JSON[ \n]+itself[ \n]+\\(ofstream\\)")
+bettercad_add_process_test(architecture.thermalcli-ownership.persist-save
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-persist-save|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*writes[ \n]+a[ \n]+file[ \n]+or[ \n]+parses[ \n]+document[ \n]+JSON[ \n]+itself[ \n]+\\(saveDocument\\)")
+bettercad_add_process_test(architecture.thermalcli-ownership.persist-json
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-persist-json|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*writes[ \n]+a[ \n]+file[ \n]+or[ \n]+parses[ \n]+document[ \n]+JSON[ \n]+itself[ \n]+\\(nlohmann\\)")
+bettercad_add_process_test(architecture.thermalcli-ownership.unit-celsius
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-unit-celsius|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*converts[ \n]+a[ \n]+temperature[ \n]+unit[ \n]+\\(celsius\\)")
+bettercad_add_process_test(architecture.thermalcli-ownership.unit-degc
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-unit-degc|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*converts[ \n]+a[ \n]+temperature[ \n]+unit[ \n]+\\(degC\\)")
+bettercad_add_process_test(architecture.thermalcli-ownership.stream-cout
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-stream-cout|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*writes[ \n]+to[ \n]+a[ \n]+process[ \n]+stream[ \n]+directly[ \n]+\\(std::cout\\)")
+bettercad_add_process_test(architecture.thermalcli-ownership.stream-printf
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-stream-printf|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*writes[ \n]+to[ \n]+a[ \n]+process[ \n]+stream[ \n]+directly[ \n]+\\(printf\\)")
+bettercad_add_process_test(architecture.thermalcli-ownership.stream-println
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-stream-println|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*writes[ \n]+to[ \n]+a[ \n]+process[ \n]+stream[ \n]+directly[ \n]+\\(std::print\\)")
+bettercad_add_process_test(architecture.thermalcli-ownership.stream-write
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-stream-write|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*writes[ \n]+to[ \n]+a[ \n]+process[ \n]+stream[ \n]+directly[ \n]+\\(\\.write\\(")
+bettercad_add_process_test(architecture.thermalcli-ownership.stream-extra-out
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-stream-extra-out|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*3[ \n]+statement\\(s\\)[ \n]+write[ \n]+to[ \n]+out,[ \n]+expected[ \n]+exactly[ \n]+2")
+bettercad_add_process_test(architecture.thermalcli-ownership.stream-err
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-stream-err|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*1[ \n]+statement\\(s\\)[ \n]+write[ \n]+to[ \n]+err[ \n]+directly")
+bettercad_add_process_test(architecture.thermalcli-ownership.raw-number
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-raw-number|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*JsonValue::number\\([ \n]+appears[ \n]+1[ \n]+time\\(s\\);[ \n]+a[ \n]+double[ \n]+must[ \n]+go[ \n]+through[ \n]+FiniteJson")
+bettercad_add_process_test(architecture.thermalcli-ownership.raw-quantity
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-raw-quantity|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*JsonValue::quantity\\([ \n]+appears")
+bettercad_add_process_test(architecture.thermalcli-ownership.verdict-lost
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-verdict-lost|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*uses[ \n]+accepted\\(\\)[ \n]+4[ \n]+time\\(s\\),[ \n]+expected[ \n]+exactly[ \n]+5")
+bettercad_add_process_test(architecture.thermalcli-ownership.verdict-extra
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-verdict-extra|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*uses[ \n]+accepted\\(\\)[ \n]+6[ \n]+time\\(s\\),[ \n]+expected[ \n]+exactly[ \n]+5")
+bettercad_add_process_test(architecture.thermalcli-ownership.verdict-return-weakened
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-verdict-return-weakened|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*1[ \n]+exit[ \n]+statement\\(s\\)[ \n]+are[ \n]+exactly")
+bettercad_add_process_test(architecture.thermalcli-ownership.run-entry-lost
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-run-entry-lost|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*uses[ \n]+runThermalAnalysis[ \n]+0[ \n]+time\\(s\\),[ \n]+fewer[ \n]+than[ \n]+the[ \n]+1")
+bettercad_add_process_test(architecture.thermalcli-ownership.edits-remove-lost
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-edits-remove-lost|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*uses[ \n]+RemoveThermalLoadCommand[ \n]+0[ \n]+time\\(s\\),[ \n]+fewer[ \n]+than[ \n]+the[ \n]+1")
+bettercad_add_process_test(architecture.thermalcli-ownership.edits-execute-lost
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-edits-execute-lost|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*uses[ \n]+executeEdit\\([ \n]+5[ \n]+time\\(s\\),[ \n]+fewer[ \n]+than[ \n]+the[ \n]+6")
+bettercad_add_process_test(architecture.thermalcli-ownership.edits-id-cap-lost
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-edits-id-cap-lost|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*uses[ \n]+kLargestFileId[ \n]+0[ \n]+time\\(s\\),[ \n]+fewer[ \n]+than[ \n]+the[ \n]+2")
+bettercad_add_process_test(architecture.thermalcli-ownership.nonfinite-check-lost
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-nonfinite-check-lost|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*uses[ \n]+sawNonFinite\\(\\)[ \n]+5[ \n]+time\\(s\\),[ \n]+expected[ \n]+exactly[ \n]+6")
+bettercad_add_process_test(architecture.thermalcli-ownership.refusal-lost
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-refusal-lost|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*uses[ \n]+refusalOf[ \n]+2[ \n]+time\\(s\\),[ \n]+expected[ \n]+exactly[ \n]+3")
+bettercad_add_process_test(architecture.thermalcli-ownership.node-mapping-lost
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-node-mapping-lost|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*uses[ \n]+nodeOf[ \n]+0[ \n]+time\\(s\\),[ \n]+fewer[ \n]+than[ \n]+the[ \n]+1")
+bettercad_add_process_test(architecture.thermalcli-ownership.ordinal-lost
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-ordinal-lost|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*uses[ \n]+ordinalOrThrow[ \n]+2[ \n]+time\\(s\\),[ \n]+fewer[ \n]+than[ \n]+the[ \n]+3")
+bettercad_add_process_test(architecture.thermalcli-ownership.id-from-position
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-id-from-position|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*4[ \n]+conversion\\(s\\)[ \n]+of[ \n]+a[ \n]+value[ \n]+to[ \n]+std::uint64_t[ \n]+but[ \n]+only[ \n]+3[ \n]+of[ \n]+them[ \n]+are")
+bettercad_add_process_test(architecture.thermalcli-ownership.id-from-position-in-place
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-id-from-position-in-place|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*3[ \n]+conversion\\(s\\)[ \n]+of[ \n]+a[ \n]+value[ \n]+to[ \n]+std::uint64_t[ \n]+but[ \n]+only[ \n]+2[ \n]+of[ \n]+them[ \n]+are")
+bettercad_add_process_test(architecture.thermalcli-ownership.ordinal-is-id-minus-one
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-ordinal-is-id-minus-one|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*the[ \n]+ordinal[ \n]+lookup[ \n]+lost[ \n]+its[ \n]+answer[ \n]+or[ \n]+its[ \n]+refusal[ \n]+\\(0[ \n]+`return[ \n]+\\*ordinal;`,[ \n]+2[ \n]+defect[ \n]+throw\\(s\\)")
+bettercad_add_process_test(architecture.thermalcli-ownership.ordinal-fallback-not-thrown
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-ordinal-fallback-not-thrown|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*the[ \n]+ordinal[ \n]+lookup[ \n]+lost[ \n]+its[ \n]+answer[ \n]+or[ \n]+its[ \n]+refusal[ \n]+\\(1[ \n]+`return[ \n]+\\*ordinal;`,[ \n]+1[ \n]+defect[ \n]+throw\\(s\\)")
+bettercad_add_process_test(architecture.thermalcli-ownership.reports-missing
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-reports-missing|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*apps/bettercad_cli/ThermalReports\\.cpp:[ \n]+is[ \n]+missing")
+bettercad_add_process_test(architecture.thermalcli-ownership.edits-missing
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-edits-missing|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*apps/bettercad_cli/ThermalEdits\\.cpp:[ \n]+is[ \n]+missing")
+bettercad_add_process_test(architecture.thermalcli-ownership.output-missing
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-output-missing|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*apps/bettercad_cli/ThermalOutput\\.hpp:[ \n]+is[ \n]+missing")
+bettercad_add_process_test(architecture.thermalcli-ownership.arith-balance-sum
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-arith-balance-sum|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*does[ \n]+arithmetic[ \n]+on[ \n]+a[ \n]+quantity[ \n]+or[ \n]+parks[ \n]+one[ \n]+in[ \n]+a[ \n]+local")
+bettercad_add_process_test(architecture.thermalcli-ownership.arith-flux-scale
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-arith-flux-scale|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*does[ \n]+arithmetic[ \n]+on[ \n]+a[ \n]+quantity[ \n]+or[ \n]+parks[ \n]+one[ \n]+in[ \n]+a[ \n]+local")
+bettercad_add_process_test(architecture.thermalcli-ownership.arith-unit-rescale
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-arith-unit-rescale|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*does[ \n]+arithmetic[ \n]+on[ \n]+a[ \n]+quantity[ \n]+or[ \n]+parks[ \n]+one[ \n]+in[ \n]+a[ \n]+local")
+bettercad_add_process_test(architecture.thermalcli-ownership.arith-through-locals
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-arith-through-locals|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*does[ \n]+arithmetic[ \n]+on[ \n]+a[ \n]+quantity[ \n]+or[ \n]+parks[ \n]+one[ \n]+in[ \n]+a[ \n]+local")
+bettercad_add_process_test(architecture.thermalcli-ownership.arith-on-an-arrow
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-arith-on-an-arrow|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*does[ \n]+arithmetic[ \n]+on[ \n]+a[ \n]+quantity[ \n]+or[ \n]+parks[ \n]+one[ \n]+in[ \n]+a[ \n]+local")
+bettercad_add_process_test(architecture.thermalcli-ownership.arith-across-a-line
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-arith-across-a-line|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*does[ \n]+arithmetic[ \n]+on[ \n]+a[ \n]+quantity[ \n]+or[ \n]+parks[ \n]+one[ \n]+in[ \n]+a[ \n]+local")
+bettercad_add_process_test(architecture.thermalcli-ownership.macro-define
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-macro-define|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*defines[ \n]+a[ \n]+macro[ \n]+or[ \n]+pastes[ \n]+tokens")
+bettercad_add_process_test(architecture.thermalcli-ownership.macro-paste
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-macro-paste|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*defines[ \n]+a[ \n]+macro[ \n]+or[ \n]+pastes[ \n]+tokens")
+bettercad_add_process_test(architecture.thermalcli-ownership.output-isfinite-lost
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-output-isfinite-lost|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*lost[ \n]+std::isfinite")
+bettercad_add_process_test(architecture.thermalcli-ownership.output-tiebreak-lost
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-output-tiebreak-lost|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*lost[ \n]+candidate\\.id[ \n]+<[ \n]+e\\.low\\.id")
+bettercad_add_process_test(architecture.thermalcli-ownership.output-tiebreak-high-lost
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-output-tiebreak-high-lost|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*lost[ \n]+candidate\\.id[ \n]+<[ \n]+e\\.high\\.id")
+bettercad_add_process_test(architecture.thermalcli-ownership.output-valuefinite-lost
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-output-valuefinite-lost|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*lost[ \n]+valueFinite")
+bettercad_add_process_test(architecture.thermalcli-ownership.run-link-missing
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-run-link-missing|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*assembleThermalSystem[ \n]+is[ \n]+called[ \n]+0[ \n]+time\\(s\\)")
+bettercad_add_process_test(architecture.thermalcli-ownership.run-link-twice
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-run-link-twice|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*solveSteadyThermal[ \n]+is[ \n]+called[ \n]+2[ \n]+time\\(s\\)")
+bettercad_add_process_test(architecture.thermalcli-ownership.run-order
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-run-order|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*prepareThermalBoundary[ \n]+is[ \n]+called[ \n]+before[ \n]+prepareThermalLoads")
+bettercad_add_process_test(architecture.thermalcli-ownership.run-validate-twice
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-run-validate-twice|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*validateThermalAnalysis[ \n]+is[ \n]+called[ \n]+2[ \n]+time\\(s\\)")
+bettercad_add_process_test(architecture.thermalcli-ownership.run-validate-blind
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-run-validate-blind|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*is[ \n]+not[ \n]+handed[ \n]+derivedState\\(\\)")
+bettercad_add_process_test(architecture.thermalcli-ownership.run-missing
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-run-missing|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*src/thermal/ThermalAnalysisRun\\.cpp:[ \n]+is[ \n]+missing")
+bettercad_add_process_test(architecture.thermalcli-ownership.run-float
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-run-float|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*holds[ \n]+a[ \n]+floating-point[ \n]+literal")
+bettercad_add_process_test(architecture.thermalcli-ownership.run-math
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-run-math|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*calls[ \n]+a[ \n]+math[ \n]+function[ \n]+\\(std::sqrt\\(\\)")
+bettercad_add_process_test(architecture.thermalcli-ownership.run-tolerance
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-run-tolerance|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*holds[ \n]+a[ \n]+tolerance,[ \n]+a[ \n]+status[ \n]+or[ \n]+severity[ \n]+decision")
+bettercad_add_process_test(architecture.thermalcli-ownership.run-status
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-run-status|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*holds[ \n]+a[ \n]+tolerance,[ \n]+a[ \n]+status[ \n]+or[ \n]+severity[ \n]+decision")
+bettercad_add_process_test(architecture.thermalcli-ownership.run-assigns-definition
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-run-assigns-definition|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*holds[ \n]+a[ \n]+tolerance,[ \n]+a[ \n]+status[ \n]+or[ \n]+severity[ \n]+decision")
+bettercad_add_process_test(architecture.thermalcli-ownership.run-builds-settings
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-run-builds-settings|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*holds[ \n]+a[ \n]+tolerance,[ \n]+a[ \n]+status[ \n]+or[ \n]+severity[ \n]+decision")
+bettercad_add_process_test(architecture.thermalcli-ownership.run-clears-the-report
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-run-clears-the-report|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*holds[ \n]+a[ \n]+tolerance,[ \n]+a[ \n]+status[ \n]+or[ \n]+severity[ \n]+decision")
+bettercad_add_process_test(architecture.thermalcli-ownership.run-meshes
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-run-meshes|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*meshes[ \n]+or[ \n]+writes[ \n]+\\(generate")
+bettercad_add_process_test(architecture.thermalcli-ownership.run-writes
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-run-writes|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*meshes[ \n]+or[ \n]+writes[ \n]+\\(addObject\\)")
+bettercad_add_process_test(architecture.thermalcli-ownership.run-edits-definition
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-run-edits-definition|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*meshes[ \n]+or[ \n]+writes[ \n]+\\(setDefinition\\)")
+bettercad_add_process_test(architecture.thermalcli-ownership.header-solver-success
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-header-solver-success|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*accepted\\(\\)[ \n]+is[ \n]+not[ \n]+exactly")
+bettercad_add_process_test(architecture.thermalcli-ownership.header-validator-only
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-header-validator-only|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*accepted\\(\\)[ \n]+is[ \n]+not[ \n]+exactly")
+bettercad_add_process_test(architecture.thermalcli-ownership.header-missing
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermalcli-header-missing|-P|${_check_thermalcli}"
+    EXIT_CODE 1 STDERR_REGEX "check failed: 1 violation\\(s\\):.*include/bettercad/thermal/ThermalAnalysisRun\\.hpp:[ \n]+is[ \n]+missing")
