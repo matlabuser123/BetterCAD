@@ -1486,6 +1486,8 @@ tolerance 1e300 is accepted by the data model; a final_only transient of more th
 step can never be accepted; a 23750-step transient is refused at state 812; stale
 geometry and stale mesh cannot be presented to a one-shot process (core tests plus the
 regeneration_failed / mesh_generation_failed analogues).
+Committed ebca776 (qualified == committed: all eight subtree hashes read back
+from the commit equal the frozen ones).
 Evidence: docs/verification/P18-CLI-001/.
 ```
 ---

@@ -55,3 +55,19 @@ Supporting fingerprints in the same file: `THERMAL_CLI_OWNERSHIP_FINGERPRINT` `0
 ## What is not frozen
 
 `TODO.md`, `ROADMAP.md`, `docs/` and `.claude/` are outside the eight paths. They were edited after the run, as the harness expects.
+
+## The commit
+
+Qualification finished 2026-10-26 02:06:03 with 0 stages failed; the harness printed the eight subtree hashes after the last test run and they equal the ones above. The tree was committed as `ebca776` (tree `392363004d6a527ba8db488b7c65cf8ac9404e7b`), "BetterCAD: add headless thermal CLI", and the commit script read the eight subtree hashes back from the commit:
+
+```text
+apps                    == frozen   b4e2268d1a42fbdd543c7d4e0d10d58ecb70b117
+include                 == frozen   cb59f4ab38f38f65e9caa633b674ab16e0c36543
+src                     == frozen   d90a0f33e379ef71bd4a34f1ca6c29e6f768a4ed
+tests                   == frozen   d73ceca94659c58d38d2fab44c8801dd9db2afc3
+examples                == frozen   0934015777cbb002ac29ec8ef8709cb26fb93705
+cmake                   == frozen   5a382115d7ed7775189d40b55e40f318eaae6cc7
+CMakeLists.txt          == frozen   3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd
+CMakePresets.json       == frozen   3229f0f89b236744d7d5c082bed47c28b718288e
+ALL EIGHT == FROZEN
+```
