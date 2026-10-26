@@ -1,0 +1,735 @@
+{
+  "analysisId": 8,
+  "name": "Study",
+  "mode": "transient",
+  "nodeCount": 9,
+  "tetrahedronCount": 12,
+  "state": {
+    "index": 46,
+    "time": {
+      "value": 4600,
+      "unit": "s"
+    }
+  },
+  "temperature": {
+    "unit": "K",
+    "count": 9,
+    "min": {
+      "node": 4,
+      "value": 300.86837839836414,
+      "unit": "K"
+    },
+    "max": {
+      "node": 9,
+      "value": 300.8693478075124,
+      "unit": "K"
+    }
+  },
+  "history": [
+    {
+      "index": 0,
+      "time": {
+        "value": 0,
+        "unit": "s"
+      },
+      "min": {
+        "value": 400,
+        "unit": "K"
+      },
+      "max": {
+        "value": 400,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 1,
+      "time": {
+        "value": 100,
+        "unit": "s"
+      },
+      "min": {
+        "value": 390.1620807475594,
+        "unit": "K"
+      },
+      "max": {
+        "value": 390.26250810846255,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 2,
+      "time": {
+        "value": 200,
+        "unit": "s"
+      },
+      "min": {
+        "value": 381.3235582856588,
+        "unit": "K"
+      },
+      "max": {
+        "value": 381.4143427238444,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 3,
+      "time": {
+        "value": 300,
+        "unit": "s"
+      },
+      "min": {
+        "value": 373.35156513168477,
+        "unit": "K"
+      },
+      "max": {
+        "value": 373.43345072023595,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 4,
+      "time": {
+        "value": 400,
+        "unit": "s"
+      },
+      "min": {
+        "value": 366.1610516058336,
+        "unit": "K"
+      },
+      "max": {
+        "value": 366.2349101089825,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 5,
+      "time": {
+        "value": 500,
+        "unit": "s"
+      },
+      "min": {
+        "value": 359.6754103588686,
+        "unit": "K"
+      },
+      "max": {
+        "value": 359.74202865433836,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 6,
+      "time": {
+        "value": 600,
+        "unit": "s"
+      },
+      "min": {
+        "value": 353.82554410888133,
+        "unit": "K"
+      },
+      "max": {
+        "value": 353.88563194036345,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 7,
+      "time": {
+        "value": 700,
+        "unit": "s"
+      },
+      "min": {
+        "value": 348.54912904987793,
+        "unit": "K"
+      },
+      "max": {
+        "value": 348.60332658625686,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 8,
+      "time": {
+        "value": 800,
+        "unit": "s"
+      },
+      "min": {
+        "value": 343.789950859276,
+        "unit": "K"
+      },
+      "max": {
+        "value": 343.8388355149057,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 9,
+      "time": {
+        "value": 900,
+        "unit": "s"
+      },
+      "min": {
+        "value": 339.4973057969334,
+        "unit": "K"
+      },
+      "max": {
+        "value": 339.5413983833441,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 10,
+      "time": {
+        "value": 1000,
+        "unit": "s"
+      },
+      "min": {
+        "value": 335.6254605132996,
+        "unit": "K"
+      },
+      "max": {
+        "value": 335.6652307878641,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 11,
+      "time": {
+        "value": 1100,
+        "unit": "s"
+      },
+      "min": {
+        "value": 332.13316481154027,
+        "unit": "K"
+      },
+      "max": {
+        "value": 332.16903648221546,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 12,
+      "time": {
+        "value": 1200,
+        "unit": "s"
+      },
+      "min": {
+        "value": 328.9832121726581,
+        "unit": "K"
+      },
+      "max": {
+        "value": 329.0155674121207,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 13,
+      "time": {
+        "value": 1300,
+        "unit": "s"
+      },
+      "min": {
+        "value": 326.1420433614941,
+        "unit": "K"
+      },
+      "max": {
+        "value": 326.17122687876474,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 14,
+      "time": {
+        "value": 1400,
+        "unit": "s"
+      },
+      "min": {
+        "value": 323.5793888904744,
+        "unit": "K"
+      },
+      "max": {
+        "value": 323.6057116034085,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 15,
+      "time": {
+        "value": 1500,
+        "unit": "s"
+      },
+      "min": {
+        "value": 321.26794653195196,
+        "unit": "K"
+      },
+      "max": {
+        "value": 321.29168887972276,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 16,
+      "time": {
+        "value": 1600,
+        "unit": "s"
+      },
+      "min": {
+        "value": 319.1830904433956,
+        "unit": "K"
+      },
+      "max": {
+        "value": 319.2045053742608,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 17,
+      "time": {
+        "value": 1700,
+        "unit": "s"
+      },
+      "min": {
+        "value": 317.30260880648007,
+        "unit": "K"
+      },
+      "max": {
+        "value": 317.3219244726638,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 18,
+      "time": {
+        "value": 1800,
+        "unit": "s"
+      },
+      "min": {
+        "value": 315.60646718491347,
+        "unit": "K"
+      },
+      "max": {
+        "value": 315.6238893733142,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 19,
+      "time": {
+        "value": 1900,
+        "unit": "s"
+      },
+      "min": {
+        "value": 314.07659507984505,
+        "unit": "K"
+      },
+      "max": {
+        "value": 314.09230940446554,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 20,
+      "time": {
+        "value": 2000,
+        "unit": "s"
+      },
+      "min": {
+        "value": 312.69669340883684,
+        "unit": "K"
+      },
+      "max": {
+        "value": 312.7108672882943,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 21,
+      "time": {
+        "value": 2100,
+        "unit": "s"
+      },
+      "min": {
+        "value": 311.4520608573032,
+        "unit": "K"
+      },
+      "max": {
+        "value": 311.4648452984884,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 22,
+      "time": {
+        "value": 2200,
+        "unit": "s"
+      },
+      "min": {
+        "value": 310.32943725238715,
+        "unit": "K"
+      },
+      "max": {
+        "value": 310.3409684592742,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 23,
+      "time": {
+        "value": 2300,
+        "unit": "s"
+      },
+      "min": {
+        "value": 309.31686229059466,
+        "unit": "K"
+      },
+      "max": {
+        "value": 309.327263115343,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 24,
+      "time": {
+        "value": 2400,
+        "unit": "s"
+      },
+      "min": {
+        "value": 308.4035481140897,
+        "unit": "K"
+      },
+      "max": {
+        "value": 308.4129293658966,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 25,
+      "time": {
+        "value": 2500,
+        "unit": "s"
+      },
+      "min": {
+        "value": 307.5797643780901,
+        "unit": "K"
+      },
+      "max": {
+        "value": 307.5882260037395,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 26,
+      "time": {
+        "value": 2600,
+        "unit": "s"
+      },
+      "min": {
+        "value": 306.83673458488755,
+        "unit": "K"
+      },
+      "max": {
+        "value": 306.8443667335714,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 27,
+      "time": {
+        "value": 2700,
+        "unit": "s"
+      },
+      "min": {
+        "value": 306.1665425800447,
+        "unit": "K"
+      },
+      "max": {
+        "value": 306.1734265638021,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 28,
+      "time": {
+        "value": 2800,
+        "unit": "s"
+      },
+      "min": {
+        "value": 305.5620482145906,
+        "unit": "K"
+      },
+      "max": {
+        "value": 305.56825737459724,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 29,
+      "time": {
+        "value": 2900,
+        "unit": "s"
+      },
+      "min": {
+        "value": 305.0168112746912,
+        "unit": "K"
+      },
+      "max": {
+        "value": 305.0224117626276,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 30,
+      "time": {
+        "value": 3000,
+        "unit": "s"
+      },
+      "min": {
+        "value": 304.52502286834647,
+        "unit": "K"
+      },
+      "max": {
+        "value": 304.5300743511707,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 31,
+      "time": {
+        "value": 3100,
+        "unit": "s"
+      },
+      "min": {
+        "value": 304.0814435381207,
+        "unit": "K"
+      },
+      "max": {
+        "value": 304.0859998337529,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 32,
+      "time": {
+        "value": 3200,
+        "unit": "s"
+      },
+      "min": {
+        "value": 303.6813474405609,
+        "unit": "K"
+      },
+      "max": {
+        "value": 303.68545709125374,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 33,
+      "time": {
+        "value": 3300,
+        "unit": "s"
+      },
+      "min": {
+        "value": 303.3204719976023,
+        "unit": "K"
+      },
+      "max": {
+        "value": 303.3241787871042,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 34,
+      "time": {
+        "value": 3400,
+        "unit": "s"
+      },
+      "min": {
+        "value": 302.9949724835484,
+        "unit": "K"
+      },
+      "max": {
+        "value": 302.99831590357076,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 35,
+      "time": {
+        "value": 3500,
+        "unit": "s"
+      },
+      "min": {
+        "value": 302.70138106380335,
+        "unit": "K"
+      },
+      "max": {
+        "value": 302.70439673476073,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 36,
+      "time": {
+        "value": 3600,
+        "unit": "s"
+      },
+      "min": {
+        "value": 302.4365698489588,
+        "unit": "K"
+      },
+      "max": {
+        "value": 302.4392898994647,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 37,
+      "time": {
+        "value": 3700,
+        "unit": "s"
+      },
+      "min": {
+        "value": 302.197717570618,
+        "unit": "K"
+      },
+      "max": {
+        "value": 302.2001709797794,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 38,
+      "time": {
+        "value": 3800,
+        "unit": "s"
+      },
+      "min": {
+        "value": 301.98227952392466,
+        "unit": "K"
+      },
+      "max": {
+        "value": 301.9844924300821,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 39,
+      "time": {
+        "value": 3900,
+        "unit": "s"
+      },
+      "min": {
+        "value": 301.7879604565686,
+        "unit": "K"
+      },
+      "max": {
+        "value": 301.7899564357713,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 40,
+      "time": {
+        "value": 4000,
+        "unit": "s"
+      },
+      "min": {
+        "value": 301.61269011543015,
+        "unit": "K"
+      },
+      "max": {
+        "value": 301.61449043261223,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 41,
+      "time": {
+        "value": 4100,
+        "unit": "s"
+      },
+      "min": {
+        "value": 301.4546011903403,
+        "unit": "K"
+      },
+      "max": {
+        "value": 301.45622502587514,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 42,
+      "time": {
+        "value": 4200,
+        "unit": "s"
+      },
+      "min": {
+        "value": 301.31200941997173,
+        "unit": "K"
+      },
+      "max": {
+        "value": 301.31347407401734,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 43,
+      "time": {
+        "value": 4300,
+        "unit": "s"
+      },
+      "min": {
+        "value": 301.18339564791086,
+        "unit": "K"
+      },
+      "max": {
+        "value": 301.18471672472396,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 44,
+      "time": {
+        "value": 4400,
+        "unit": "s"
+      },
+      "min": {
+        "value": 301.06738963773944,
+        "unit": "K"
+      },
+      "max": {
+        "value": 301.0685812119213,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 45,
+      "time": {
+        "value": 4500,
+        "unit": "s"
+      },
+      "min": {
+        "value": 300.96275547469264,
+        "unit": "K"
+      },
+      "max": {
+        "value": 300.9638302411383,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 46,
+      "time": {
+        "value": 4600,
+        "unit": "s"
+      },
+      "min": {
+        "value": 300.86837839836414,
+        "unit": "K"
+      },
+      "max": {
+        "value": 300.8693478075124,
+        "unit": "K"
+      }
+    }
+  ]
+}

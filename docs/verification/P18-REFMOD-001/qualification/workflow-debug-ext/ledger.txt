@@ -1,0 +1,187 @@
+cli binary C:/Users/hasib/bcdev/bc-build/debug-ext/bin/bettercad-cli.exe
+cli size 422854437
+cli sha256 3dc8d986d1d74175d9ca54bd499b1230d31f58d2f9e5270d1cbc9718ca4a8dae
+cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKBO.dll
+cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKBRep.dll
+cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKBool.dll
+cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKCAF.dll
+cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKCDF.dll
+cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKDE.dll
+cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKDESTEP.dll
+cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKFillet.dll
+cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKG2d.dll
+cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKG3d.dll
+cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKGeomAlgo.dll
+cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKGeomBase.dll
+cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKHLR.dll
+cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKLCAF.dll
+cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKMath.dll
+cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKMesh.dll
+cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKOffset.dll
+cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKPrim.dll
+cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKService.dll
+cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKShHealing.dll
+cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKTopAlgo.dll
+cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKV3d.dll
+cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKVCAF.dll
+cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKXCAF.dll
+cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKXSBase.dll
+cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKernel.dll
+cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libgcc_s_seh-1.dll
+cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libngcore.dll
+cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libnglib.dll
+cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libstdc++-6.dll
+cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libwinpthread-1.dll
+cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libzlib.dll
+cli project-libraries-beside-binary 0
+runner binary C:/Users/hasib/bcdev/bc-build/debug-ext/bin/bettercad_example_reference_models.exe
+runner size 423243996
+runner sha256 ea7af82140916be329f1f159653e2a91e506a843af073fdf613ab4b6c63e28af
+runner runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKBO.dll
+runner runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKBRep.dll
+runner runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKBool.dll
+runner runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKCAF.dll
+runner runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKCDF.dll
+runner runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKDE.dll
+runner runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKDESTEP.dll
+runner runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKFillet.dll
+runner runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKG2d.dll
+runner runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKG3d.dll
+runner runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKGeomAlgo.dll
+runner runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKGeomBase.dll
+runner runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKHLR.dll
+runner runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKLCAF.dll
+runner runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKMath.dll
+runner runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKMesh.dll
+runner runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKOffset.dll
+runner runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKPrim.dll
+runner runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKService.dll
+runner runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKShHealing.dll
+runner runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKTopAlgo.dll
+runner runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKV3d.dll
+runner runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKVCAF.dll
+runner runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKXCAF.dll
+runner runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKXSBase.dll
+runner runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKernel.dll
+runner runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libgcc_s_seh-1.dll
+runner runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libngcore.dll
+runner runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libnglib.dll
+runner runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libstdc++-6.dll
+runner runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libwinpthread-1.dll
+runner runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libzlib.dll
+runner project-libraries-beside-binary 0
+tests binary C:/Users/hasib/bcdev/bc-build/debug-ext/bin/bettercad_tests.exe
+tests size 1444481108
+tests sha256 f77611afbaf2c84a96fdeab5642284ecf21955ad03f617f848ddd22999ca3c48
+tests runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKBO.dll
+tests runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKBRep.dll
+tests runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKBool.dll
+tests runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKCAF.dll
+tests runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKCDF.dll
+tests runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKDE.dll
+tests runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKDESTEP.dll
+tests runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKFillet.dll
+tests runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKG2d.dll
+tests runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKG3d.dll
+tests runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKGeomAlgo.dll
+tests runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKGeomBase.dll
+tests runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKHLR.dll
+tests runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKLCAF.dll
+tests runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKMath.dll
+tests runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKMesh.dll
+tests runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKOffset.dll
+tests runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKOpenGl.dll
+tests runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKPrim.dll
+tests runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKService.dll
+tests runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKShHealing.dll
+tests runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKTopAlgo.dll
+tests runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKV3d.dll
+tests runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKVCAF.dll
+tests runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKXCAF.dll
+tests runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKXSBase.dll
+tests runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKernel.dll
+tests runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libgcc_s_seh-1.dll
+tests runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libngcore.dll
+tests runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libnglib.dll
+tests runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libstdc++-6.dll
+tests runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libwinpthread-1.dll
+tests runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libzlib.dll
+tests project-libraries-beside-binary 0
+
+name | exit | stdout-bytes | stderr-bytes | stdout-sha256 | command
+runner | 0 | 20839 | 0 | b0ee16528fdf4f9d8b575648b7fbc5bdffd87f92e490964999648b0bf7c318b6 | --thermal --out C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs
+rm02.validate | 0 | 2806 | 0 | 65f6a4fc413d792850229b8cc5197f135d47a4c4814a6b11e72f855b06f1ca6d | thermal-validate C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_slab.bcad --json
+rm02.solve | 0 | 3164 | 0 | 448cb65c28c6fe2de8443f56fe448e2d1379a07a2ece6b6454647109e87da126 | thermal-solve C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_slab.bcad --json
+rm02.solve-again | 0 | 3164 | 0 | 448cb65c28c6fe2de8443f56fe448e2d1379a07a2ece6b6454647109e87da126 | thermal-solve C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_slab.bcad --json
+rm02.heatflux | 0 | 657 | 0 | 5f48e0a709acd8a6210b360060fdf77e81a286d02655c940f14b136226a1654f | thermal-heat-flux C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_slab.bcad --json
+rm02.balance | 0 | 3416 | 0 | a5879aede260abf1877fed87b0d9ad45c323c3e7e1f1f41e4e0365e82b26a3d9 | thermal-balance C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_slab.bcad --json
+rm05.validate | 0 | 2855 | 0 | ed7f02bb7b75385f834b5d173ab550d2dd77b5991a7a44467f8ec08d2efb73c7 | thermal-validate C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_convection.bcad --json
+rm05.solve | 0 | 3265 | 0 | a78c571020bd9428c25461e89a198e52606bf002e41753fb98b6aeaf79fd1f37 | thermal-solve C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_convection.bcad --json
+rm05.solve-again | 0 | 3265 | 0 | a78c571020bd9428c25461e89a198e52606bf002e41753fb98b6aeaf79fd1f37 | thermal-solve C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_convection.bcad --json
+rm05.heatflux | 0 | 681 | 0 | 127f4d1b28011bc7eac58e5e062750c71c4b58fa1d49a8c4f9740b1b59711a10 | thermal-heat-flux C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_convection.bcad --json
+rm05.balance | 0 | 3692 | 0 | b3b3c416adc0ca54447c6f8ef438140a7c2edde7cfaffdc58320816b0eacbdf5 | thermal-balance C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_convection.bcad --json
+rm02b.validate | 0 | 2677 | 0 | 32ec2d6d6fa0057d502bcb7c7ca5068676cda9876e0304d78b55b0dc91f05768 | thermal-validate C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_surface_flux.bcad --json
+rm02b.solve | 0 | 3087 | 0 | 5e1787ce9faa2cf83a13a8dc9c660d2753aa9dcba68146b79aa725c98a9c8900 | thermal-solve C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_surface_flux.bcad --json
+rm02b.solve-again | 0 | 3087 | 0 | 5e1787ce9faa2cf83a13a8dc9c660d2753aa9dcba68146b79aa725c98a9c8900 | thermal-solve C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_surface_flux.bcad --json
+rm02b.heatflux | 0 | 700 | 0 | 7a749bb6d6a8b2fa86d992bc89a5da79c6cfb8565448c26a12ea95b705d79f8e | thermal-heat-flux C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_surface_flux.bcad --json
+rm02b.balance | 0 | 3462 | 0 | 285ff63b2f7cd5a4f02bba48e8b2b202cc555f96ee6b997adec9096a62a7e8b1 | thermal-balance C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_surface_flux.bcad --json
+rm08b.validate | 0 | 3481 | 0 | 5392e6d43ac0be4e3fbf8ffeb0dd07c00f0da0ca9c80e516f06ab5a214cbd0b2 | thermal-validate C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_transient_slab.bcad --json
+rm08b.solve | 0 | 4199 | 0 | 5bf20e5d28f279e40a8e20ad2e7e1666938488c040e7a70a1914b5caff30f839 | thermal-solve C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_transient_slab.bcad --json
+rm08b.solve-again | 0 | 4199 | 0 | 5bf20e5d28f279e40a8e20ad2e7e1666938488c040e7a70a1914b5caff30f839 | thermal-solve C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_transient_slab.bcad --json
+rm08b.temperature | 0 | 3296 | 0 | 4d381a39df86f4d814e5066f4fe72a15e429fc26cf0315a9a1c7c39aa7545c04 | thermal-temperature C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_transient_slab.bcad --json
+rm08b.balance | 0 | 14450 | 0 | 50420402e7bb79315667e4d98226f3390fc63053fbfec42286a451aa72c2bf29 | thermal-balance C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_transient_slab.bcad --json
+rm08.validate | 0 | 3193 | 0 | dac36053d65aa201a00180bdf4b0066acb6b50e59b7c06dab1df3d77882c25c9 | thermal-validate C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_lumped.bcad --json
+rm08.solve | 0 | 3927 | 0 | 2c79f347fe75f7f9108339b4ee8aacfa46cbac6d0373b6fa1706cd0853fb2e47 | thermal-solve C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_lumped.bcad --json
+rm08.solve-again | 0 | 3927 | 0 | 2c79f347fe75f7f9108339b4ee8aacfa46cbac6d0373b6fa1706cd0853fb2e47 | thermal-solve C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_lumped.bcad --json
+rm08.temperature | 0 | 13349 | 0 | 4debbd4dfceec3a96f284ab0d204151ad43422294aeaeae6c12df9645afb3fe2 | thermal-temperature C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_lumped.bcad --json
+rm08.balance | 0 | 47165 | 0 | a14b0f7dcd1f1b7219f890ec292bb710db1b169456783c41ae9ef341cd0a80cf | thermal-balance C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_lumped.bcad --json
+rm09.thermal-solve | 1 | 0 | 210 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-solve C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_singular.bcad --json
+rm09.thermal-temperature | 1 | 0 | 216 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-temperature C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_singular.bcad --json
+rm09.thermal-gradient | 1 | 0 | 213 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-gradient C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_singular.bcad --json
+rm09.thermal-heat-flux | 1 | 0 | 214 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-heat-flux C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_singular.bcad --json
+rm09.thermal-balance | 1 | 0 | 212 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-balance C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_singular.bcad --json
+rm09.validate | 1 | 3236 | 0 | 43f8779626928ece027d47251c3c4c46f80d1a6d3fde8ee6413e9adf7a7e74a3 | thermal-validate C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_singular.bcad --json
+rm09b.thermal-solve | 1 | 0 | 210 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-solve C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_singular_balanced.bcad --json
+rm09b.thermal-temperature | 1 | 0 | 216 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-temperature C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_singular_balanced.bcad --json
+rm09b.thermal-gradient | 1 | 0 | 213 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-gradient C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_singular_balanced.bcad --json
+rm09b.thermal-heat-flux | 1 | 0 | 214 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-heat-flux C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_singular_balanced.bcad --json
+rm09b.thermal-balance | 1 | 0 | 212 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-balance C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_singular_balanced.bcad --json
+rm09b.validate | 1 | 3236 | 0 | 43f8779626928ece027d47251c3c4c46f80d1a6d3fde8ee6413e9adf7a7e74a3 | thermal-validate C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_singular_balanced.bcad --json
+rm10load.thermal-solve | 1 | 0 | 182 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-solve C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_unresolved_load.bcad --json
+rm10load.thermal-temperature | 1 | 0 | 188 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-temperature C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_unresolved_load.bcad --json
+rm10load.thermal-gradient | 1 | 0 | 185 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-gradient C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_unresolved_load.bcad --json
+rm10load.thermal-heat-flux | 1 | 0 | 186 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-heat-flux C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_unresolved_load.bcad --json
+rm10load.thermal-balance | 1 | 0 | 184 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-balance C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_unresolved_load.bcad --json
+rm10load.validate | 1 | 2845 | 0 | 971301694b19f3e7b98df758b8b38aef806cd6c10a48aa358b1189a16c21cdd8 | thermal-validate C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_unresolved_load.bcad --json
+rm10temperature.thermal-solve | 1 | 0 | 215 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-solve C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_unresolved_temperature.bcad --json
+rm10temperature.thermal-temperature | 1 | 0 | 221 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-temperature C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_unresolved_temperature.bcad --json
+rm10temperature.thermal-gradient | 1 | 0 | 218 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-gradient C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_unresolved_temperature.bcad --json
+rm10temperature.thermal-heat-flux | 1 | 0 | 219 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-heat-flux C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_unresolved_temperature.bcad --json
+rm10temperature.thermal-balance | 1 | 0 | 217 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-balance C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_unresolved_temperature.bcad --json
+rm10temperature.validate | 1 | 3059 | 0 | 0bb602cc51fdc9b7c6879df43100f71efeda619b6bf25b570bab90bf486b4d94 | thermal-validate C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_unresolved_temperature.bcad --json
+rm10convection.thermal-solve | 1 | 0 | 215 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-solve C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_unresolved_convection.bcad --json
+rm10convection.thermal-temperature | 1 | 0 | 221 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-temperature C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_unresolved_convection.bcad --json
+rm10convection.thermal-gradient | 1 | 0 | 218 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-gradient C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_unresolved_convection.bcad --json
+rm10convection.thermal-heat-flux | 1 | 0 | 219 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-heat-flux C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_unresolved_convection.bcad --json
+rm10convection.thermal-balance | 1 | 0 | 217 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | thermal-balance C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_unresolved_convection.bcad --json
+rm10convection.validate | 1 | 3059 | 0 | 0bb602cc51fdc9b7c6879df43100f71efeda619b6bf25b570bab90bf486b4d94 | thermal-validate C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_unresolved_convection.bcad --json
+rm10stale.before.heatflux | 0 | 680 | 0 | 4babefc07aafa6554d400fcb2901494ff340831664b25260d6c9df80ebf0a962 | thermal-heat-flux C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_stale_mesh.bcad --json
+rm10stale.after.heatflux | 0 | 683 | 0 | d55171cfcca4615cd860d24bf5386737e1c8c47d00cfb7fa1ed8a46ec467f7b1 | thermal-heat-flux C:/Users/hasib/bcdev/bc-build/debug-ext/tests/cli-output/thermal-refmod-workflow/docs/thermal_stale_mesh_edited.bcad --json
+
+numeric comparison with the closed forms: exit 0
+Filters: [refmod-cli]
+Randomness seeded to: 470064709
+===============================================================================
+All tests passed (666 assertions in 6 test cases)
+
+
+
+strict re-parse of every payload: exit 0
+Filters: "ThermalRefmodCli_EveryPayloadIsStrictJson"
+Randomness seeded to: 3145482227
+===============================================================================
+All tests passed (220 assertions in 1 test case)
+
+
+
+processes 58

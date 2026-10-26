@@ -1,0 +1,195 @@
+{
+  "analysisId": 8,
+  "name": "Study",
+  "mode": "transient",
+  "nodeCount": 9,
+  "tetrahedronCount": 12,
+  "state": {
+    "index": 10,
+    "time": {
+      "value": 500,
+      "unit": "s"
+    }
+  },
+  "temperature": {
+    "unit": "K",
+    "count": 9,
+    "min": {
+      "node": 6,
+      "value": 369.78113407272997,
+      "unit": "K"
+    },
+    "max": {
+      "node": 1,
+      "value": 400,
+      "unit": "K"
+    }
+  },
+  "history": [
+    {
+      "index": 0,
+      "time": {
+        "value": 0,
+        "unit": "s"
+      },
+      "min": {
+        "value": 300,
+        "unit": "K"
+      },
+      "max": {
+        "value": 400,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 1,
+      "time": {
+        "value": 50,
+        "unit": "s"
+      },
+      "min": {
+        "value": 300.559803190439,
+        "unit": "K"
+      },
+      "max": {
+        "value": 400,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 2,
+      "time": {
+        "value": 100,
+        "unit": "s"
+      },
+      "min": {
+        "value": 315.3769767370934,
+        "unit": "K"
+      },
+      "max": {
+        "value": 400,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 3,
+      "time": {
+        "value": 150,
+        "unit": "s"
+      },
+      "min": {
+        "value": 327.9755041941141,
+        "unit": "K"
+      },
+      "max": {
+        "value": 400,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 4,
+      "time": {
+        "value": 200,
+        "unit": "s"
+      },
+      "min": {
+        "value": 338.22242950716975,
+        "unit": "K"
+      },
+      "max": {
+        "value": 400,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 5,
+      "time": {
+        "value": 250,
+        "unit": "s"
+      },
+      "min": {
+        "value": 346.5352296361736,
+        "unit": "K"
+      },
+      "max": {
+        "value": 400,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 6,
+      "time": {
+        "value": 300,
+        "unit": "s"
+      },
+      "min": {
+        "value": 353.28702151579284,
+        "unit": "K"
+      },
+      "max": {
+        "value": 400,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 7,
+      "time": {
+        "value": 350,
+        "unit": "s"
+      },
+      "min": {
+        "value": 358.7709348141119,
+        "unit": "K"
+      },
+      "max": {
+        "value": 400,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 8,
+      "time": {
+        "value": 400,
+        "unit": "s"
+      },
+      "min": {
+        "value": 363.2250582355922,
+        "unit": "K"
+      },
+      "max": {
+        "value": 400,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 9,
+      "time": {
+        "value": 450,
+        "unit": "s"
+      },
+      "min": {
+        "value": 366.84276980443224,
+        "unit": "K"
+      },
+      "max": {
+        "value": 400,
+        "unit": "K"
+      }
+    },
+    {
+      "index": 10,
+      "time": {
+        "value": 500,
+        "unit": "s"
+      },
+      "min": {
+        "value": 369.78113407272997,
+        "unit": "K"
+      },
+      "max": {
+        "value": 400,
+        "unit": "K"
+      }
+    }
+  ]
+}

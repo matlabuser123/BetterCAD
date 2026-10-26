@@ -313,6 +313,7 @@ target_compile_definitions(bettercad_tests PRIVATE
     "BETTERCAD_EXPECTED_BUILD_CONFIG=\"$<CONFIG>\""
     "$<$<BOOL:${BUILD_SHARED_LIBS}>:BETTERCAD_EXPECT_SHARED_LIBS>"
     "BETTERCAD_EXAMPLE_MODELS_DIR=\"${PROJECT_SOURCE_DIR}/examples/models\""
+    "BETTERCAD_THERMAL_ORACLE_PATH=\"${CMAKE_CURRENT_SOURCE_DIR}/reference/ThermalAnalytic.hpp\""
 )
 if(TARGET bettercad_cli_lib)
     target_sources(bettercad_tests PRIVATE
@@ -363,6 +364,17 @@ if(TARGET bettercad_reference_models)
         reference/StructuralReactionReferenceTests.cpp
         reference/StructuralValidationSweepTests.cpp
         reference/ThermalValidationSweepTests.cpp
+        reference/ThermalAnalytic.hpp
+        reference/ThermalReferenceSupport.hpp
+        reference/ThermalPatchSupport.hpp
+        reference/ThermalElementReferenceTests.cpp
+        reference/ThermalSteadyReferenceTests.cpp
+        reference/ThermalTransformRefineReferenceTests.cpp
+        reference/ThermalTransientReferenceTests.cpp
+        reference/ThermalFailureReferenceTests.cpp
+        reference/ThermalPersistenceReferenceTests.cpp
+        reference/ThermalIndependenceReferenceTests.cpp
+        reference/ThermalCliReferenceTests.cpp
         reference/StructuralLoadReferenceTests.cpp
         reference/StructuralModelsTests.cpp
         reference/StructuralTestSupport.hpp
@@ -638,6 +650,67 @@ if(TARGET bettercad_cli)
             "-DTESTS=$<TARGET_FILE:bettercad_tests>"
             "-DWORK=${_out}/thermal-workflow"
             -P "${CMAKE_CURRENT_SOURCE_DIR}/cli/ThermalWorkflow.cmake")
+
+    # P18-REFMOD-001. The thermal reference models through the real executables: the example program writes the documents, the CLI --
+    # another process -- loads them, solves them and prints, and the numbers are compared with the closed forms.
+    if(TARGET bettercad_example_reference_models)
+        set(_thermal_ref "${_out}/thermal-refmod")
+        file(MAKE_DIRECTORY "${_thermal_ref}")
+
+        # PROCESS A: build, save, regenerate, mesh, solve and judge all eighteen documents. Its exit code is the first assertion.
+        bettercad_add_process_test(refmod.thermal.build
+            COMMAND "$<TARGET_FILE:bettercad_example_reference_models>"
+            ARGS "--thermal|--out|${_thermal_ref}"
+            EXIT_CODE 0
+            STDOUT_REGEX "== RM-THERM-02 ThermalSlab.*validation PASS accepted yes.*== RM-THERM-09 ThermalSingular.*expected_outcome refusal actual refusal published_result no.*== RM-THERM-10 ThermalUnresolvedConvection.*expected_outcome refusal actual refusal published_result no")
+        set(_thermal_ref_readers "")
+        # PROCESS B: the three models that solve are ACCEPTED in a fresh process, and the five that must not are refused with the
+        # real cause on stderr and nothing on stdout.
+        foreach(_thermal_model thermal_slab thermal_convection thermal_lumped thermal_surface_flux thermal_transient_slab)
+            bettercad_add_process_test(refmod.thermal.validate.${_thermal_model}
+                COMMAND "$<TARGET_FILE:bettercad_cli>"
+                ARGS "thermal-validate|${_thermal_ref}/${_thermal_model}.bcad|--json"
+                EXIT_CODE 0
+                STDOUT_REGEX "\"accepted\": true,\n  \"stoppedAt\": null")
+            bettercad_add_process_test(refmod.thermal.solve.${_thermal_model}
+                COMMAND "$<TARGET_FILE:bettercad_cli>"
+                ARGS "thermal-solve|${_thermal_ref}/${_thermal_model}.bcad|--json"
+                EXIT_CODE 0
+                STDOUT_REGEX "\"balanced\": true")
+            list(APPEND _thermal_ref_readers refmod.thermal.validate.${_thermal_model} refmod.thermal.solve.${_thermal_model})
+        endforeach()
+        foreach(_thermal_refusal
+                "thermal_singular|no_temperature_datum"
+                "thermal_singular_balanced|no_temperature_datum"
+                "thermal_unresolved_load|loads_invalid"
+                "thermal_unresolved_temperature|boundary_conditions_invalid"
+                "thermal_unresolved_convection|boundary_conditions_invalid")
+            string(REPLACE "|" ";" _thermal_refusal_parts "${_thermal_refusal}")
+            list(GET _thermal_refusal_parts 0 _thermal_model)
+            list(GET _thermal_refusal_parts 1 _thermal_code)
+            bettercad_add_process_test(refmod.thermal.refused.${_thermal_model}
+                COMMAND "$<TARGET_FILE:bettercad_cli>"
+                ARGS "thermal-solve|${_thermal_ref}/${_thermal_model}.bcad|--json"
+                EXIT_CODE 1
+                STDERR_REGEX ": ${_thermal_code}: ")
+            list(APPEND _thermal_ref_readers refmod.thermal.refused.${_thermal_model})
+        endforeach()
+        # The runner is a FIXTURE (ctest pulls a required fixture's setup in even when the run is filtered); every reader is read-only.
+        set_tests_properties(refmod.thermal.build PROPERTIES FIXTURES_SETUP thermal_refmod)
+        set_tests_properties(${_thermal_ref_readers} PROPERTIES FIXTURES_REQUIRED thermal_refmod)
+
+        # The scripted two-binary workflow, with the fresh-binary proof, the byte-identity checks across processes and the numeric
+        # comparison with the closed forms. It runs the example program itself, into its own directory.
+        add_test(NAME refmod.thermal.workflow
+            COMMAND "${CMAKE_COMMAND}"
+                "-DCLI=$<TARGET_FILE:bettercad_cli>"
+                "-DRUNNER=$<TARGET_FILE:bettercad_example_reference_models>"
+                "-DBUILD_DIR=${PROJECT_BINARY_DIR}"
+                "-DEXPECT_SHARED=${_thermal_expect_shared}"
+                "-DTESTS=$<TARGET_FILE:bettercad_tests>"
+                "-DWORK=${_out}/thermal-refmod-workflow"
+                -P "${CMAKE_CURRENT_SOURCE_DIR}/cli/ThermalReferenceWorkflow.cmake")
+    endif()
 
     # The zero-match filter guard. `ctest -R` exits 0 when a pattern matches
     # NOTHING -- demonstrated by the guard itself -- so a targeted run must

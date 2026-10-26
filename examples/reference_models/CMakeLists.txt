@@ -49,6 +49,9 @@ add_library(bettercad_reference_models STATIC
     StructuralCatalog.cpp
     StructuralModels.cpp
     StructuralReferenceModels.hpp
+    ThermalCatalog.cpp
+    ThermalModels.cpp
+    ThermalReferenceModels.hpp
     TransitionDuct.cpp
     UBolt.cpp
 )
@@ -65,7 +68,7 @@ target_link_libraries(bettercad_reference_models
     # use freely. PUBLIC for the same reason: the test suite reads the models'
     # StructuralAnalysis definitions through these headers.
     PUBLIC BetterCAD::assembly BetterCAD::core BetterCAD::drawing BetterCAD::features
-           BetterCAD::geometry BetterCAD::meshing BetterCAD::sketch BetterCAD::structural
+           BetterCAD::geometry BetterCAD::meshing BetterCAD::sketch BetterCAD::structural BetterCAD::thermal
     PRIVATE BetterCAD::compiler_options
 )
 

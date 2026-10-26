@@ -9,6 +9,7 @@
 #include "MeshReferenceModels.hpp"
 #include "ReferenceModels.hpp"
 #include "StructuralReferenceModels.hpp"
+#include "ThermalReferenceModels.hpp"
 
 #include <bettercad/assembly/Components.hpp>
 #include <bettercad/assembly/Configurations.hpp>
@@ -37,7 +38,13 @@
 #include <bettercad/structural/StructuralPost.hpp>
 #include <bettercad/structural/StructuralReaction.hpp>
 #include <bettercad/structural/StructuralValidation.hpp>
+#include <bettercad/thermal/ThermalAnalysisObject.hpp>
+#include <bettercad/thermal/ThermalAnalysisRun.hpp>
+#include <bettercad/thermal/ThermalBalance.hpp>
+#include <bettercad/thermal/ThermalPost.hpp>
+#include <bettercad/thermal/ThermalValidation.hpp>
 
+#include <algorithm>
 #include <chrono>
 #include <cmath>
 #include <optional>
@@ -80,6 +87,7 @@ int main(int argc, char** argv) {
     bool materials = true;
     bool meshes = true;
     bool structural = true;
+    bool thermalSuite = true;
     for (int i = 1; i < argc; ++i) {
         const std::string_view arg = argv[i];
         if (arg == "--out" && i + 1 < argc) {
@@ -90,6 +98,7 @@ int main(int argc, char** argv) {
             materials = false;
             meshes = false;
             structural = false;
+            thermalSuite = false;
         } else if (arg == "--materials") {
             // P15-REFMOD-001. The material suite alone, which is what its CLI
             // fixture needs: seconds, rather than the minute the twelve parts'
@@ -99,6 +108,7 @@ int main(int argc, char** argv) {
             drawings = false;
             meshes = false;
             structural = false;
+            thermalSuite = false;
         } else if (arg == "--meshes") {
             // P16-REFMOD-001. The meshing suite alone. Its CLI fixture needs
             // the nine .bcad files and nothing else, and meshing them is the
@@ -109,6 +119,7 @@ int main(int argc, char** argv) {
             drawings = false;
             materials = false;
             structural = false;
+            thermalSuite = false;
         } else if (arg == "--structural") {
             // P17-REFMOD-001. The structural suite alone: twelve documents,
             // each meshed and solved, which is what its CLI fixture needs.
@@ -117,9 +128,19 @@ int main(int argc, char** argv) {
             drawings = false;
             materials = false;
             meshes = false;
+            thermalSuite = false;
+        } else if (arg == "--thermal") {
+            // P18-REFMOD-001. The thermal suite alone: twenty documents, each meshed and run through the
+            // production entry, which is what its CLI fixture needs.
+            parts = false;
+            assemblies = false;
+            drawings = false;
+            materials = false;
+            meshes = false;
+            structural = false;
         } else {
             std::fprintf(stderr,
-                         "usage: %s [--out <dir>] [--drawings] [--materials] [--meshes] [--structural]\n",
+                         "usage: %s [--out <dir>] [--drawings] [--materials] [--meshes] [--structural] [--thermal]\n",
                          argv[0]);
             return 2;
         }
@@ -892,6 +913,223 @@ int main(int argc, char** argv) {
                     resolved->strainEnergy.si(), resolved->largestDisplacement.si());
         std::printf("timing_ms build %.3f regeneration %.3f meshing %.3f solve %.3f "
                     "changed_regeneration %.3f remesh_and_resolve %.3f\n",
+                    buildMs, regenMs, meshMs, solveMs, changeMs, remeshMs);
+    }
+    // The thermal reference models (P18-REFMOD-001). A seventh loop, because what a thermal model produces is a
+    // RUN -- a validation verdict, a temperature field, gradients, heat fluxes and a heat balance, every one of them
+    // derived from a mesh the Mesher holds and none of them written to the file.
+    //
+    // THIS IS THE SUITE'S EVIDENCE GENERATOR as well as its CLI fixture: every figure the evidence tables quote is
+    // a line printed here, from a process whose exit code is itself the first assertion. It fails on a model that is
+    // accepted when it should be refused just as readily as on one that is refused when it should be accepted --
+    // and it fails if a refused run publishes a field.
+    for (const reference::ThermalReferenceModelInfo& info :
+         thermalSuite ? std::span{reference::kThermalReferenceModels}
+                      : std::span<const reference::ThermalReferenceModelInfo>{}) {
+        const auto buildStart = Clock::now();
+        auto document = reference::buildThermalReferenceModel(info.kind);
+        const double buildMs = millisecondsSince(buildStart);
+        if (!document) {
+            return fail(info.name, "build", document.error());
+        }
+        if (!out.empty()) {
+            const auto path = out / (std::string{info.fileStem} + ".bcad");
+            if (auto saved = io::saveDocument(*document, path); !saved) {
+                return fail(info.name, "save", saved.error());
+            }
+        }
+
+        features::Regenerator regenerator;
+        const auto regenStart = Clock::now();
+        auto report = regenerator.regenerateAll(*document);
+        const double regenMs = millisecondsSince(regenStart);
+        if (!report) {
+            return fail(info.name, "regenerate", report.error());
+        }
+        // Every thermal model's BODY builds: the refusals in this suite are thermal refusals, not geometry failures.
+        if (!report->succeeded()) {
+            for (const auto& [id, error] : report->errors) {
+                std::fprintf(stderr, "%.*s: %s\n", static_cast<int>(info.name.size()), info.name.data(),
+                             error.message.c_str());
+            }
+            return 1;
+        }
+
+        const std::vector<ThermalAnalysisId> analyses = thermal::thermalAnalysisIds(*document);
+        if (analyses.size() != 1) {
+            std::fprintf(stderr, "%.*s: expected exactly one thermal analysis, found %zu\n",
+                         static_cast<int>(info.name.size()), info.name.data(), analyses.size());
+            return 1;
+        }
+        const ThermalAnalysisId analysisId = analyses.front();
+        const thermal::ThermalAnalysis* analysis = thermal::findThermalAnalysis(*document, analysisId);
+        if (analysis == nullptr) {
+            std::fprintf(stderr, "%.*s: the analysis id does not resolve\n", static_cast<int>(info.name.size()),
+                         info.name.data());
+            return 1;
+        }
+        const MeshControlId key = analysis->definition().mesh;
+
+        std::printf("== %.*s %.*s\n%.*s\n", static_cast<int>(info.id.size()), info.id.data(),
+                    static_cast<int>(info.name.size()), info.name.data(), static_cast<int>(info.purpose.size()),
+                    info.purpose.data());
+        std::printf("loads %zu conditions %zu mode %.*s\n", analysis->definition().loads.size(),
+                    analysis->definition().boundaryConditions.size(),
+                    static_cast<int>(thermal::toString(analysis->definition().mode).size()),
+                    thermal::toString(analysis->definition().mode).data());
+
+        meshing::Mesher mesher;
+        const auto meshStart = Clock::now();
+        auto meshed = mesher.generate(*document, regenerator, key);
+        const double meshMs = millisecondsSince(meshStart);
+        if (!meshed) {
+            return fail(info.name, "meshing", meshed.error());
+        }
+        std::printf("nodes %zu tets %zu boundary_facets %zu\n", (*meshed)->nodeCount(), (*meshed)->tetrahedronCount(),
+                    (*meshed)->boundaryTriangleCount());
+        std::printf("sizing global_mm %.17g local_controls %zu unresolved_local %zu slabs %zu\n",
+                    (*meshed)->sizing().globalTargetSize.in(units::mm), (*meshed)->sizing().local.size(),
+                    (*meshed)->sizing().unresolvedCount(), (*meshed)->sizing().regions.size());
+
+        const auto printRun = [&](const thermal::ThermalAnalysisRun& run) {
+            const thermal::ThermalValidationReport& v = run.validation;
+            std::printf("validation %.*s accepted %s stopped_at %.*s errors %zu warnings %zu\n",
+                        static_cast<int>(thermal::toString(v.status()).size()), thermal::toString(v.status()).data(),
+                        run.accepted() ? "yes" : "no",
+                        run.stoppedAt.has_value() ? static_cast<int>(thermal::toString(*run.stoppedAt).size()) : 4,
+                        run.stoppedAt.has_value() ? thermal::toString(*run.stoppedAt).data() : "none", v.errorCount(),
+                        v.warningCount());
+            for (const thermal::ValidationFinding& finding : v.findings) {
+                std::printf("finding %.*s %.*s %s\n", static_cast<int>(thermal::toString(finding.severity).size()),
+                            thermal::toString(finding.severity).data(),
+                            static_cast<int>(thermal::toString(finding.code).size()),
+                            thermal::toString(finding.code).data(), finding.message.c_str());
+            }
+        };
+
+        const auto solveStart = Clock::now();
+        const thermal::ThermalAnalysisRun run = thermal::runThermalAnalysis(*document, regenerator, mesher, analysisId);
+        const double solveMs = millisecondsSince(solveStart);
+        printRun(run);
+
+        if (!info.expectAccepted) {
+            // THE REFUSAL IS THE RESULT. Nothing may be published: no post result, no balance, no field with a
+            // plausible-looking number in it.
+            if (run.accepted() || run.post.has_value() || run.balance.has_value()) {
+                std::fprintf(stderr, "%.*s: the run was ACCEPTED or published a result, and must not have\n",
+                             static_cast<int>(info.name.size()), info.name.data());
+                return 1;
+            }
+            std::printf("expected_outcome refusal actual refusal published_result no\n");
+            if (run.failure.has_value()) {
+                std::printf("diagnostic %s\n", run.failure->message.c_str());
+            }
+            std::printf("timing_ms build %.3f regeneration %.3f meshing %.3f solve %.3f\n", buildMs, regenMs, meshMs,
+                        solveMs);
+            continue;
+        }
+
+        if (!run.accepted() || !run.post.has_value() || !run.balance.has_value()) {
+            std::fprintf(stderr, "%.*s: the run was not accepted\n", static_cast<int>(info.name.size()),
+                         info.name.data());
+            return 1;
+        }
+        std::printf("expected_outcome accepted actual accepted published_result yes\n");
+        const thermal::ThermalPostState& last = run.post->finalState();
+        double tMin = last.temperatures.front().si();
+        double tMax = tMin;
+        for (const Temperature& t : last.temperatures) {
+            tMin = t.si() < tMin ? t.si() : tMin;
+            tMax = t.si() > tMax ? t.si() : tMax;
+        }
+        double qMax = 0.0;
+        for (const HeatFlux& q : last.fields.heatFluxMagnitudes) {
+            qMax = q.si() > qMax ? q.si() : qMax;
+        }
+        std::printf("fields states %zu nodes %zu elements %zu t_min_K %.17g t_max_K %.17g q_max_W_m2 %.17g\n",
+                    run.post->stateCount(), run.post->nodeCount(), run.post->elementCount(), tMin, tMax, qMax);
+        const thermal::ThermalHeatBalance& fb = run.balance->finalState();
+        std::printf("balance states %zu surface_W %.17g generation_W %.17g convection_W %.17g reaction_W %.17g "
+                    "storage_W %.17g residual_W %.17g normalized %.6e balanced %s\n",
+                    run.balance->stateCount(), fb.terms.appliedSurfaceHeat.si(), fb.terms.generatedHeat.si(),
+                    fb.terms.convectionHeat.si(), fb.terms.prescribedTemperatureReaction.si(),
+                    fb.terms.storedEnergyRate.value_or(Power{}).si(), fb.residual().si(), run.balance->worstNormalizedResidual(),
+                    run.balance->balanced() ? "yes" : "NO");
+        if (run.validation.metrics.steadyResidual.has_value()) {
+            std::printf("solve steady_residual %.6e tolerance %.6e\n", *run.validation.metrics.steadyResidual,
+                        run.validation.metrics.residualTolerance.value_or(0.0));
+        }
+        if (run.validation.metrics.worstTransientResidual.has_value()) {
+            std::printf("solve transient_steps %zu worst_physical_residual %.6e tolerance %.6e\n",
+                        run.validation.metrics.transientStepCount.value_or(0),
+                        *run.validation.metrics.worstTransientResidual,
+                        run.validation.metrics.residualTolerance.value_or(0.0));
+        }
+
+        // A change to a main dimension must make the held mesh STALE, the run must be REFUSED while it is, and the
+        // regenerated, remeshed model must then be accepted again. This runs RM-THERM-10's protection on EVERY
+        // model, not only on the one named for it.
+        const auto item = document->findByName(info.mainParameter);
+        const auto parameter = item ? document->asParameter(*item) : std::nullopt;
+        if (!parameter) {
+            std::fprintf(stderr, "%.*s: no parameter '%.*s'\n", static_cast<int>(info.name.size()), info.name.data(),
+                         static_cast<int>(info.mainParameter.size()), info.mainParameter.data());
+            return 1;
+        }
+        if (auto changed = document->setParameterValue(*parameter, info.mainParameterMm * units::mm); !changed) {
+            return fail(info.name, "parameter change", changed.error());
+        }
+        const auto changeStart = Clock::now();
+        auto afterChange = regenerator.regenerateAll(*document);
+        const double changeMs = millisecondsSince(changeStart);
+        if (!afterChange || !afterChange->succeeded()) {
+            std::fprintf(stderr, "%.*s: the model did not regenerate after changing %.*s\n",
+                         static_cast<int>(info.name.size()), info.name.data(),
+                         static_cast<int>(info.mainParameter.size()), info.mainParameter.data());
+            return 1;
+        }
+        const meshing::MeshCurrency afterEdit = mesher.currency(*document, key);
+        const thermal::ThermalAnalysisRun stale = thermal::runThermalAnalysis(*document, regenerator, mesher, analysisId);
+        bool meshStaleFinding = false;
+        for (const thermal::ValidationFinding& finding : stale.validation.findings) {
+            meshStaleFinding = meshStaleFinding || finding.code == thermal::ValidationCode::MeshStale;
+        }
+        std::printf("after_change %.*s_mm %.17g currency %.*s accepted %s stopped_at %.*s mesh_stale_finding %s "
+                    "published %s\n",
+                    static_cast<int>(info.mainParameter.size()), info.mainParameter.data(), info.mainParameterMm,
+                    static_cast<int>(meshing::toString(afterEdit).size()), meshing::toString(afterEdit).data(),
+                    stale.accepted() ? "yes" : "no",
+                    stale.stoppedAt.has_value() ? static_cast<int>(thermal::toString(*stale.stoppedAt).size()) : 4,
+                    stale.stoppedAt.has_value() ? thermal::toString(*stale.stoppedAt).data() : "none",
+                    meshStaleFinding ? "yes" : "no", stale.post.has_value() ? "PUBLISHED" : "no");
+        if (afterEdit != meshing::MeshCurrency::StaleGeometry || stale.accepted() || !meshStaleFinding ||
+            stale.post.has_value()) {
+            std::fprintf(stderr, "%.*s: after changing %.*s the stale mesh was not refused as mesh_stale\n",
+                         static_cast<int>(info.name.size()), info.name.data(),
+                         static_cast<int>(info.mainParameter.size()), info.mainParameter.data());
+            return 1;
+        }
+        const auto remeshStart = Clock::now();
+        auto remeshed = mesher.generate(*document, regenerator, key);
+        if (!remeshed) {
+            return fail(info.name, "remeshing after the change", remeshed.error());
+        }
+        const thermal::ThermalAnalysisRun resolved = thermal::runThermalAnalysis(*document, regenerator, mesher, analysisId);
+        const double remeshMs = millisecondsSince(remeshStart);
+        if (!resolved.accepted() || !resolved.post.has_value()) {
+            std::fprintf(stderr, "%.*s: the remeshed model was not accepted\n", static_cast<int>(info.name.size()),
+                         info.name.data());
+            return 1;
+        }
+        const thermal::ThermalPostState& after = resolved.post->finalState();
+        double aMax = after.temperatures.front().si();
+        for (const Temperature& t : after.temperatures) {
+            aMax = t.si() > aMax ? t.si() : aMax;
+        }
+        std::printf("after_remesh nodes %zu tets %zu t_max_K %.17g\n", (*remeshed)->nodeCount(),
+                    (*remeshed)->tetrahedronCount(), aMax);
+        std::printf("timing_ms build %.3f regeneration %.3f meshing %.3f solve %.3f changed_regeneration %.3f "
+                    "remesh_and_resolve %.3f\n",
                     buildMs, regenMs, meshMs, solveMs, changeMs, remeshMs);
     }
     return 0;

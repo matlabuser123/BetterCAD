@@ -1,0 +1,146 @@
+{
+  "analysisId": 8,
+  "name": "Study",
+  "mode": "steady",
+  "nodeCount": 9,
+  "tetrahedronCount": 12,
+  "freeEquations": 1,
+  "constrainedCount": 8,
+  "temperature": {
+    "unit": "K",
+    "count": 9,
+    "min": {
+      "node": 2,
+      "value": 300,
+      "unit": "K"
+    },
+    "max": {
+      "node": 1,
+      "value": 400,
+      "unit": "K"
+    }
+  },
+  "normalizedResidual": 0,
+  "pivotRatio": 1,
+  "heatBalance": {
+    "balanced": true,
+    "worstNormalizedResidual": 1.9895196601282835e-15
+  },
+  "validation": {
+    "status": "PASS",
+    "accepted": true,
+    "inputsAccepted": true,
+    "solveAccepted": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 1,
+    "policy": "p18-valid-v1:f97b835a659f144e",
+    "checks": [
+      {
+        "rule": "TV_ANALYSIS_DEFINITION",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_GEOMETRY_CURRENT",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_MESH_CURRENT",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_MESH_STRUCTURAL",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_MESH_QUALITY",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_MATERIAL",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_LOADS",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_BCS",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_TRANSIENT_SETUP",
+        "group": "input",
+        "status": "NOT_APPLICABLE"
+      },
+      {
+        "rule": "TV_SOURCE_COMPAT",
+        "group": "system",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_WELL_POSED",
+        "group": "system",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_SOLVER_RESIDUAL",
+        "group": "solve",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_RESULT_FINITE",
+        "group": "result",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_POST",
+        "group": "result",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_BALANCE",
+        "group": "balance",
+        "status": "PASS"
+      }
+    ],
+    "findings": [
+      {
+        "code": "no_loads_configured",
+        "rule": "TV_LOADS",
+        "severity": "info",
+        "message": "the analysis applies no heat load"
+      }
+    ],
+    "metrics": {
+      "tetrahedronCount": 12,
+      "unknownCount": 9,
+      "freeEquations": 1,
+      "constrainedCount": 8,
+      "steadyResidual": 0,
+      "residualTolerance": 1e-09,
+      "worstBalanceStep": 0,
+      "worstBalanceResidual": 1.9895196601282835e-15,
+      "minimumTemperature": {
+        "value": 300,
+        "unit": "K"
+      },
+      "maximumTemperature": {
+        "value": 400,
+        "unit": "K"
+      },
+      "maximumHeatFlux": {
+        "value": 800,
+        "unit": "W/m^2"
+      }
+    }
+  }
+}

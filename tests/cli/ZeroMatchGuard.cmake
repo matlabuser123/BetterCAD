@@ -363,6 +363,29 @@ set(_filters
     "cli\\.thermal\\." 12
     "cli\\.thermal\\.workflow$" 1
     "architecture\\.thermalcli-ownership" 104
+    # P18-REFMOD-001. The thermal reference suite, by its ten reference models and its four cross-cutting groups -- each under its own
+    # name prefix so a targeted run of any one can be seen to have matched something -- and the fresh-process tests, which include the
+    # two-binary workflow. RM-THERM-03 has its own group (the composite wall P18 v1 cannot represent: the limitation, the closed form
+    # and the refusals), because "no document" must not mean "no test".
+    "unit\\.ThermalReference_" 47
+    "unit\\.ThermalReference_RM01" 8
+    "unit\\.ThermalReference_RM02" 2
+    "unit\\.ThermalReference_RM03" 3
+    "unit\\.ThermalReference_RM04" 3
+    "unit\\.ThermalReference_RM05" 2
+    "unit\\.ThermalReference_RM06" 3
+    "unit\\.ThermalReference_RM07" 3
+    "unit\\.ThermalReference_RM08" 8
+    "unit\\.ThermalReference_RM09" 4
+    "unit\\.ThermalReference_RM10" 4
+    "unit\\.ThermalReference_Persistence" 2
+    "unit\\.ThermalReference_Determinism" 2
+    "unit\\.ThermalReference_Independence" 2
+    "unit\\.ThermalReference_Intent" 1
+    "refmod\\.thermal\\." 17
+    "refmod\\.thermal\\.(validate|solve)\\." 10
+    "refmod\\.thermal\\.refused\\." 5
+    "refmod\\.thermal\\.workflow$" 1
 )
 list(LENGTH _filters _count)
 math(EXPR _last "${_count} - 1")

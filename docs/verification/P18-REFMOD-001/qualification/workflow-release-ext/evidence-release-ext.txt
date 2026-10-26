@@ -1,0 +1,72 @@
+EVIDENCE determinism RM-THERM-02 slab: 10 runs, 97 values, one fingerprint
+EVIDENCE determinism RM-THERM-02 surface flux: 10 runs, 93 values, one fingerprint
+EVIDENCE determinism RM-THERM-04 generation: 10 runs, 97 values, one fingerprint
+EVIDENCE determinism RM-THERM-05 convection: 10 runs, 93 values, one fingerprint
+EVIDENCE determinism RM-THERM-08 lumped: 10 runs, 819 values, one fingerprint
+EVIDENCE determinism RM-THERM-08 transient slab: 10 runs, 283 values, one fingerprint
+EVIDENCE persistence RM-THERM-02 slab: 6597 bytes, 97 values hashed, fingerprint equal: yes
+EVIDENCE persistence RM-THERM-02 surface flux: 6643 bytes, 93 values hashed, fingerprint equal: yes
+EVIDENCE persistence RM-THERM-04 generation: 6790 bytes, 97 values hashed, fingerprint equal: yes
+EVIDENCE persistence RM-THERM-05 convection: 6644 bytes, 93 values hashed, fingerprint equal: yes
+EVIDENCE persistence RM-THERM-08 lumped: 8046 bytes, 819 values hashed, fingerprint equal: yes
+EVIDENCE persistence RM-THERM-08 transient slab: 7128 bytes, 283 values hashed, fingerprint equal: yes
+EVIDENCE RM-THERM-01 patch interior node T 287.45549987439267 affine 287.45549987439256
+EVIDENCE RM-THERM-01 patch worst gradient component error 8.730793865652231e-12 flux 4.3655745685100555e-11
+EVIDENCE RM-THERM-01 patch worst reaction error 1.0384054727197167e-14
+EVIDENCE RM-THERM-01 skew energy 180.70906249999371 expected 180.70906250000004
+EVIDENCE RM-THERM-01 skew gradient 7.1999999999999647 -3.5000000000000213 11.400000000000034
+EVIDENCE RM-THERM-01 skew Ke max entry error 4.4408920985006262e-16 scale 1.5713087248322148
+EVIDENCE RM-THERM-01 unit energy 161.70833333334895 expected 161.70833333333331
+EVIDENCE RM-THERM-01 unit gradient 7.1999999999999886 -3.5 11.399999999999977
+EVIDENCE RM-THERM-01 unit Ke max entry error 0 scale 2.5
+EVIDENCE RM-THERM-02 faces_mm 0 nodes 9 tets 12 worst_T 0 hot 199.99999999999932 cold -200.00000000000011 normalized_balance 1.9895196601282835e-15
+EVIDENCE RM-THERM-02 faces_mm 100 nodes 32 tets 122 worst_T 2.8421709430404007e-13 hot 199.99999999999164 cold -200.00000000000426 normalized_balance 3.1548097467748773e-14
+EVIDENCE RM-THERM-02 faces_mm 50 nodes 449 tets 2456 worst_T 7.9580786405131221e-13 hot 199.99999999996254 cold -200.00000000003695 normalized_balance 1.8605561535878245e-13
+EVIDENCE RM-THERM-03 averaged slab interface 360 composite interface 337.5
+EVIDENCE RM-THERM-04 cube N 16 nodes 4913 centre_error_K 0.3326458653177724 max_error_K 0.3326458653177724 rms_K 0.1661877252471391 gradient_rms_K_m 179.11684603968445
+EVIDENCE RM-THERM-04 cube N 4 nodes 125 centre_error_K 4.7430564484412798 max_error_K 4.7430564484412798 rms_K 2.2279456393734387 gradient_rms_K_m 620.89879384787866
+EVIDENCE RM-THERM-04 cube N 8 nodes 729 centre_error_K 1.2959755674954749 max_error_K 1.2959755674954749 rms_K 0.63984095358496718 gradient_rms_K_m 340.01825737947161
+EVIDENCE RM-THERM-04 slab generated 204.80000000000004 expected 204.79999999999998 reactions -204.8000000000001 nodes 9
+EVIDENCE RM-THERM-04 slab production-vs-independent 0
+EVIDENCE RM-THERM-04 tube defl_mm 0.02 target_mm 10 nodes 507 tets 883 vs_independent 3.808509063674137e-12 volume_deficiency 0.00022194960470767189 rms_K 3.7948974477274651 hottest_K 353.84509699749862 exact_hottest_K 348.41116916640328
+EVIDENCE RM-THERM-04 tube defl_mm 0.10000000000000001 target_mm 10 nodes 229 tets 404 vs_independent 1.3642420526593924e-12 volume_deficiency 0.0011272479141872793 rms_K 3.8001180843535005 hottest_K 354.09378467556206 exact_hottest_K 348.41116916640328
+EVIDENCE RM-THERM-04 tube defl_mm 2 target_mm 10 nodes 180 tets 399 vs_independent 9.6633812063373625e-13 volume_deficiency 0.005069229954701826 rms_K 3.9890767253715329 hottest_K 354.9442073993954 exact_hottest_K 348.41116916640328
+EVIDENCE RM-THERM-05 Ts (mean of 4 surface nodes) 349.99999999999994 convection_out 199.99999999999974 reaction 200.00000000000074 normalized 2.4868995751603473e-15
+EVIDENCE RM-THERM-06 affine patch: gradient_vs_R_b 3.75877107217093e-12 flux_vs_R_q 5.638156608256395e-11 boundary_scalar 0 boundary_reaction_difference 3.4106051316484809e-13 sum|reaction| base 1.6929000000001935 placed 1.6928999999999306
+EVIDENCE RM-THERM-06 base boundary_nodes 8 interior_nodes 1 boundary_triangles 12 tets 12
+EVIDENCE RM-THERM-06 det 1 orthogonality 0
+EVIDENCE RM-THERM-06 placed boundary_nodes 8 interior_nodes 1 boundary_triangles 12 tets 12
+EVIDENCE RM-THERM-06 scalar 0 placed_gradient_vs_R_g 3.4106051316484809e-12 placed_flux_vs_R_q 5.0931703299283981e-11 magnitude 5.0931703299283981e-11
+EVIDENCE RM-THERM-06 the interior node's distance from the image of the base's: 0.00026635329268858771 mm
+EVIDENCE RM-THERM-07 change of the refined side's error relative to the baseline: target 0.047147503226340648 mirror 0.040843876510923582
+EVIDENCE RM-THERM-07 end-band   baseline:  tets 0 mean_size_mm 0 median_mm 0 max_mm 0
+EVIDENCE RM-THERM-07 end-band   mirror:    tets 31 mean_size_mm 15.681365364601126 median_mm 14.353123781176739 max_mm 26.974513719234928
+EVIDENCE RM-THERM-07 end-band   target:    tets 2 mean_size_mm 48.703682281456665 median_mm 48.703682281456665 max_mm 48.703682281456665
+EVIDENCE RM-THERM-07 gradient_rms_K_m near_start/near_end baseline 1688.0191981648177 1688.019582998556 target 1767.6050887564184 1594.4703354096187 mirror 1648.9577912646414 1756.9648463945696
+EVIDENCE RM-THERM-07 nodes baseline 9 target 78 mirror 60 | tets 12 369 271 | boundary triangles 12
+EVIDENCE RM-THERM-07 start-band baseline:  tets 0 mean_size_mm 0 median_mm 0 max_mm 0
+EVIDENCE RM-THERM-07 start-band mirror:    tets 4 mean_size_mm 32.388978567765719 median_mm 33.894889914545558 max_mm 41.249320527728791
+EVIDENCE RM-THERM-07 start-band target:    tets 74 mean_size_mm 11.304882741786933 median_mm 11.273892352288438 max_mm 23.58022003531897
+EVIDENCE RM-THERM-07 the unrefined mesh's mean characteristic size (mm) 55.364589130365339
+EVIDENCE RM-THERM-08 Bi 0.00041666666666666653 tau 919.89333333333298 Lc_mm 6.6666666666666643
+EVIDENCE RM-THERM-08 energy lost -21885.649378440234 J, external -21885.649378444647 J, worst normalized residual 2.0720625748990777e-12
+EVIDENCE RM-THERM-08 insulated generation dt 0.25: worst |T - line| 1.7053025658242404e-13 spread 3.4106051316484809e-13
+EVIDENCE RM-THERM-08 insulated generation dt 0.29999999999999999: worst |T - line| 4.5474735088646412e-13 spread 7.3896444519050419e-13
+EVIDENCE RM-THERM-08 insulated generation dt 0.5: worst |T - line| 3.4106051316484809e-13 spread 5.1159076974727213e-13
+EVIDENCE RM-THERM-08 lumped: worst |Tbar - T_BE| 0.0084468815136915509 worst |Tbar - T_exp| 1.9205633832031594 worst nodal spread 0.10042736090315429 final Tbar 300.86871766635886 exp 300.67340416221595 BE 300.86777083486953
+EVIDENCE RM-THERM-08 non-uniform transient final field spans 369.78113407273014 .. 400 K
+EVIDENCE RM-THERM-08 non-uniform transient: worst |production - independent| over 11 states 2.2737367544323206e-13
+EVIDENCE RM-THERM-08 observed order 0.93990815803984329 then 0.9639816715419145
+EVIDENCE RM-THERM-08 partial final step: last stored time 1 last step size 0.10000000000000009 storage 63.999999999999417
+EVIDENCE RM-THERM-08 refinement dt 100 steps 46 worst_error_K 1.9194973460147935
+EVIDENCE RM-THERM-08 refinement dt 200 steps 23 worst_error_K 3.6823754348778834
+EVIDENCE RM-THERM-08 refinement dt 50 steps 92 worst_error_K 0.98401137215654444
+EVIDENCE RM-THERM-08 steady limit: 20 tau, Tbar - Tinf = 1.3845587432115281e-06 K; BE closed form 1.3790968296234496e-06
+EVIDENCE RM-THERM-09 balanced: net heat 0 W; two pins differ by 199.99999999999966 K everywhere
+EVIDENCE RM-THERM-09 pinned at 300 K: reaction -5.9999999999999281 W
+EVIDENCE RM-THERM-09 pinned at 500 K: reaction -5.9999999999998428 W
+EVIDENCE RM-THERM-09 singular: stopped at solve, diagnostic: the steady model has no absolute temperature datum: none of its 1 independent region(s) is tied to a prescribed temperature or a convection face, so the constant temperature is in the null space and the solution is not unique. Prescribe a temperature or add a convection condition (unknown 0 is in the first such region)
+EVIDENCE RM-THERM-10 same counts 9/12 same ids; flux 16666.666666666679 -> 13888.888888888905; R1 stale: FAIL
+EVIDENCE RM-THERM-10 unresolved convection: stopped at boundary, boundary_conditions_invalid
+EVIDENCE RM-THERM-10 unresolved held temperature: stopped at boundary, boundary_conditions_invalid
+EVIDENCE RM-THERM-10 unresolved load: stopped at loads, loads_invalid

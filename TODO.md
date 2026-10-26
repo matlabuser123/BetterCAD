@@ -22,31 +22,32 @@ Prerequisite:
            (OCCT never subdivides a developable wall along its ruling).
 
 Current milestone:
-           none. P18-CLI-001 — Headless Thermal Analysis. COMPLETE at 27 of 27
-           and qualified 2026-10-26 against 2ffba66 plus the working tree:
-           5725/5725 x 3 presets, 2483 x 5 in two, 0 warnings over 732 objects
-           per preset, 17 stages exit 0, 6h38m21s, fingerprints at the freeze ==
-           before == after, first attempt. Twelve verbs (seven reports, five
-           edits) are adapters over the qualified chain: no Tet4, load or
-           boundary integration, assembly, solve, time integration, recovery,
-           balance, validation policy, reference resolution, currentness,
-           persistence format or material property is in the CLI. The thermal
-           core had NO production orchestrator, so ONE additive entry,
-           thermal::runThermalAnalysis (ADR-057), holds the order of the chain;
-           no existing thermal file changed. Every number printed is the core's,
-           bit for bit; the edits are the P18-CMD command objects and produce the
-           same canonical bytes; a solve writes nothing; raw --json stdout is
-           one strict-JSON object; a refusal prints nothing to stdout and one
-           coded line to stderr; exit 0/1/2; a 74-process scripted workflow per
-           preset; 45 mutation probes all killed; an independent review (0
-           critical, 14 findings, all disposed of).
+           none. P18-REFMOD-001 — Thermal Reference Models. COMPLETE at 24 of 24
+           and qualified 2026-10-26 against b274df2 plus the working tree:
+           5789/5789 x 3 presets, 2547 x 5 in two, 0 warnings over 742 objects
+           per preset, 17 stages exit 0, 6h15m48s, fingerprints at the freeze ==
+           before == after, first attempt. Ten reference models (twenty
+           documents, fifteen that solve and five that must be refused) judged
+           against closed forms, hand arithmetic and an independent dense FE
+           solver and backward-Euler integrator that share no code with
+           production; 47 in-process cases, 17 fresh-process tests, a 58-process
+           two-binary workflow; 29 mutation probes all killed; an independent
+           review (0 critical, 17 findings, all disposed of). NO PRODUCTION FILE
+           CHANGED (src, include, apps: 520 files byte-identical to HEAD) and no
+           reference model exposed a production defect. Owner findings, none a
+           P18 defect: F-R1 P16 cannot refine a smooth field on a box, rod or
+           tube (the stack converges on structured meshes, order 1.87/1.96);
+           F-R2 local sizing does not improve gradient accuracy near a held
+           boundary; F-R3 P18 v1 cannot represent a composite wall (RM-THERM-03
+           is recorded as such, not faked).
            P18-ARCH-001 PASSED 2026-10-16; P18-DATA-001, P18-MAT-001,
            P18-DOF-001 PASSED 2026-10-17; P18-ELEM-001, P18-LOAD-001 PASSED
            2026-10-18; P18-BC-001, P18-ASSEMBLY-001 PASSED 2026-10-19/20;
            P18-SOLVE-001 PASSED 2026-10-20; P18-TRANSIENT-001, P18-POST-001
            PASSED 2026-10-21; P18-BALANCE-001 PASSED 2026-10-22; P18-VALID-001,
            P18-VIZ-001 PASSED 2026-10-23; P18-CMD-001 PASSED 2026-10-24;
-           P18-PERSIST-001 PASSED 2026-10-25; P18-CLI-001 PASSED 2026-10-26
+           P18-PERSIST-001 PASSED 2026-10-25; P18-CLI-001 and
+           P18-REFMOD-001 PASSED 2026-10-26
            (docs/verification/P18-*/).Qualified:
            P0–P10 — BetterCAD v0.1.0
            P11 — Advanced Part Modelling
@@ -58,9 +59,10 @@ Current milestone:
            P17 — Structural FEA
 
 Next:
-           P18-REFMOD-001 — Thermal Reference Models. NOT AUTHORIZED:
-           P18-CLI-001 passing is not permission to start it; each
-           milestone is started by the owner, as every P17 milestone was.
+           P18-QUAL-001 — Thermal Analysis Final Qualification. NOT STARTED,
+           NOT AUTHORIZED: P18-REFMOD-001 passing is not permission to start
+           it; each milestone is started by the owner, as every P17 milestone
+           was.
 
 P17 objective, as delivered:
            authoritative CAD / material / mesh state
@@ -1508,31 +1510,72 @@ RM-THERM-09  Singular thermal model / missing datum
 RM-THERM-10  Stale mesh / unresolved thermal boundary failure
 ```
 
-* [ ] Define reference suite
-* [ ] Single-Tet thermal patch test
-* [ ] Constant temperature-gradient validation
-* [ ] Fourier-law validation
-* [ ] 1D slab conduction
-* [ ] Composite-wall conduction
-* [ ] Volumetric heat generation
-* [ ] Convection benchmark
-* [ ] Heat-balance validation
-* [ ] Temperature agreement
-* [ ] Heat-flux agreement
-* [ ] Rigid-transform invariance
-* [ ] Mesh-refinement behaviour
-* [ ] Local-refinement behaviour
-* [ ] Transient analytical benchmark
-* [ ] Singular-system failure
-* [ ] Stale-mesh failure
-* [ ] Unresolved-reference failure
-* [ ] Save / load / re-solve
-* [ ] CLI validation
-* [ ] Independent analytical validation
-* [ ] Determinism PASS
-* [ ] Three-preset regression PASS
-* [ ] Evidence recorded
+* [x] Define reference suite
+* [x] Single-Tet thermal patch test
+* [x] Constant temperature-gradient validation
+* [x] Fourier-law validation
+* [x] 1D slab conduction
+* [x] Composite-wall conduction (RECORDED AS NOT REPRESENTABLE in P18 v1 - one material per document, one solid per mesh; closed form verified by hand, both refusals tested, no stand-in built)
+* [x] Volumetric heat generation
+* [x] Convection benchmark
+* [x] Heat-balance validation
+* [x] Temperature agreement
+* [x] Heat-flux agreement
+* [x] Rigid-transform invariance
+* [x] Mesh-refinement behaviour
+* [x] Local-refinement behaviour
+* [x] Transient analytical benchmark
+* [x] Singular-system failure
+* [x] Stale-mesh failure
+* [x] Unresolved-reference failure
+* [x] Save / load / re-solve
+* [x] CLI validation
+* [x] Independent analytical validation
+* [x] Determinism PASS
+* [x] Three-preset regression PASS
+* [x] Evidence recorded
 
+```text
+PASS 2026-10-26. Qualified against b274df2 plus the working tree: 5789/5789 x 3
+presets (5725 before + 64 new), 2547 x 5 repeats in two, 0 warnings over 742 objects
+per preset, 17 stages exit 0, 6h15m48s, fingerprints at the freeze == before == after;
+first attempt. NOTHING QUALIFIED CHANGED: src, include and apps (520 files), cmake and
+the root build files are byte-identical to HEAD; only tests and examples differ.
+DECISION: reference values come from hand arithmetic, closed forms and an independent
+dense FE solver and backward-Euler integrator in a std-only header, never from the code
+under test; a whitelist gate fails if that header ever includes production code.
+Tolerances are classed A-E with no global percentage; the guards fixed from a
+measurement are labelled and four redesigned after one are listed.
+SUITE: 10 models, 20 documents (15 solve, 5 refused); 47 in-process cases (63168
+assertions), 17 fresh-process tests, a 58-process two-binary workflow per preset, 6
+hidden cases comparing every CLI number with the closed forms, 19 zero-match groups.
+RESULTS: exact fields exact (slab 8e-13 K on 9/32/449 nodes, reactions +-200 W); production
+== independent FE on real meshes (<= 3.8e-12 K) and == independent backward Euler over 11
+states of a non-uniform held-cap transient (2.3e-13 K); convection network 350 K / +-200 W
+with correct signs for loss and gain; surface heat flux 1.25 W with correct signs; rigid
+motion rotates gradient and flux (3.8e-12 K/m); lumped body follows backward Euler to
+0.0084 K, first order in dt (0.94, 0.96), shortened last step lands on 1.0 s; pure-Neumann
+(also net-zero) refused as no datum at the solve stage; a stale mesh with the SAME counts
+and ids, edited or not, still stales the old result; unresolved load / temperature /
+convection refused before assembly, no rebinding. Save -> load -> re-solve bit-identical
+(6 documents); results bit-identical across runs, processes and the three presets (57/57
+process lines, 32 payloads, 20 documents, 72 evidence lines).
+29 mutation probes all killed; an independent review (0 critical, 17 findings, 4 HIGH:
+5 production-defect classes the first suite would have missed - surface-load share,
+lumped capacity, lumped Robin matrix, held node and two convections in a transient,
+persistence of loads - closed by new documents and cases; a false doc claim corrected).
+OWNER FINDINGS (none a P18 defect): F-R1 P16 cannot refine a smooth field on a box, rod
+or tube (tube hottest node 351.6-358.2 K vs 348.411 K, not converging, while production
+== an independent solve to 4e-12 K) - convergence is shown on structured meshes (order
+1.87, 1.96); F-R2 local sizing does not improve gradient accuracy near a held boundary
+(+4.7 % / +4.1 % on the refined sides); F-R3 P18 v1 cannot represent a composite wall.
+Limits recorded: only every_step is run in the reference documents; no unbalanced result
+is built to test the balance classifier negatively; the CLI transient comparison (0.02 K)
+is a guard; the exploratory mesh sweeps are not reproducible from committed code.
+Committed COMMIT_HASH_TO_RECORD (qualified == committed: all eight subtree hashes read
+back from the commit equal the frozen ones).
+Evidence: docs/verification/P18-REFMOD-001/.
+```
 ### RM-THERM-01 — linear temperature patch test
 
 Affine `T(x,y,z) = a + b x + c y + d z`; a linear Tet4 must reproduce it
