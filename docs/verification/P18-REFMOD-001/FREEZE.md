@@ -31,3 +31,20 @@ All four are equal in `freeze-ref-pre.txt` and `freeze-ref-post.txt`. They exist
 ## Harness
 
 `qualify.cmd` `d313a64070718c44fae290ac042fe259d1a03c8b` and `verify-harness.cmd` `11855b8ff891093b021d1e0351761283d0eedd24` are byte-identical to the ones every milestone since P16-SIZE-001 has used (forty-nine in a row with this one); `verify-harness.cmd` was run before the qualification and passed. `run-qualification.cmd` satisfies the line-prefix rule (checked before the run, 0 violations) and was not edited while running.
+
+## Qualified == committed
+
+Qualification finished 2026-10-26 12:30:01 with 0 stages failed (6 h 15 min 48 s). The feature commit is **`04751f65126eac0e60ca17881f01f68cdc910d00`** (`BetterCAD: add thermal reference model suite`), its tree `5c9d33d750d577782070881740fec11e529bdaca`. The eight subtree hashes read back **from the commit** equal the frozen ones:
+
+| Path | Subtree hash in the commit (== frozen) |
+|---|---|
+| `apps` | `b4e2268d1a42fbdd543c7d4e0d10d58ecb70b117` |
+| `include` | `cb59f4ab38f38f65e9caa633b674ab16e0c36543` |
+| `src` | `d90a0f33e379ef71bd4a34f1ca6c29e6f768a4ed` |
+| `tests` | `897e247d07f15093f326e4e8707e726a5d141b04` |
+| `examples` | `4da234ebf4779f7c16d5df0075f106f7e3d4c958` |
+| `cmake` | `5a382115d7ed7775189d40b55e40f318eaae6cc7` |
+| `CMakeLists.txt` | `3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd` |
+| `CMakePresets.json` | `3229f0f89b236744d7d5c082bed47c28b718288e` |
+
+A second commit, `BetterCAD: record the P18-REFMOD-001 commit`, adds this section and the commit hash to the TODO.md PASS block; it changes only those two files.

@@ -1572,7 +1572,7 @@ or tube (tube hottest node 351.6-358.2 K vs 348.411 K, not converging, while pro
 Limits recorded: only every_step is run in the reference documents; no unbalanced result
 is built to test the balance classifier negatively; the CLI transient comparison (0.02 K)
 is a guard; the exploratory mesh sweeps are not reproducible from committed code.
-Committed COMMIT_HASH_TO_RECORD (qualified == committed: all eight subtree hashes read
+Committed 04751f6 (qualified == committed: all eight subtree hashes read
 back from the commit equal the frozen ones).
 Evidence: docs/verification/P18-REFMOD-001/.
 ```
