@@ -85,6 +85,16 @@ set(layer_meshing 40)
 # image is enforced too: thermal may not include structural, which is why
 # P17's solver API is not reachable from the thermal module and
 # P18-SOLVE-001 has to decide reuse by extraction or by an independent link.
+# cfd sits above meshing, which it consumes exactly as thermal and structural do,
+# and BELOW thermal and structural (ADR-059): the two one-way couplings the
+# roadmap makes likely run OUT of CFD -- a wall pressure is a structural load, a
+# wall heat-transfer coefficient is a thermal boundary condition -- so each of
+# those modules will one day READ a CFD result. Strictly-lower puts the reader
+# above the read, so cfd takes 42, the free integer between meshing (40) and
+# thermal (45), and no module was renumbered. The mirror image is enforced too: cfd
+# may not include thermal or structural. Conjugate heat transfer and buoyancy are
+# deferred (ADR-058) and, when wanted, are an exchange orchestrated above both.
+set(layer_cfd 42)
 set(layer_thermal 45)
 set(layer_structural 50)
 set(layer_io 60)

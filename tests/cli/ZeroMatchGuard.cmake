@@ -79,7 +79,7 @@ set(_filters
     # P18-ARCH-001. The thermal input boundary's cases, and the checker
     # fixtures that prove the module's directions.
     "unit\\.ThermalInput" 8
-    "architecture\\.checker\\.[a-z-]*thermal" 4
+    "architecture\\.checker\\.[a-z-]*thermal" 6
     # P18-DATA-001. The data-model cases, and the compile-fail group that
     # proves the thermal identities do not convert.
     "unit\\.ThermalData" 20
@@ -188,7 +188,7 @@ set(_filters
     "unit\\.ThermalSolve_(Deterministic|RepeatedBlockSolve|BitFingerprint|SolveDoesNotMutate)" 5
     "unit\\.ThermalSolve_(LargeSparse|FineCylinder|SparseNodeIds)" 3
     "compile_fail\\.thermalsolve\\." 26
-    "architecture\\.targets\\." 3
+    "architecture\\.targets\\." 6
     "architecture\\.checker\\.linalg" 2
     # P18-TRANSIENT-001. The backward-Euler transient solve, by the brief's groups --
     # the time grid, the effective matrix C/dt + K, the hard oracles (the non-uniform
@@ -386,6 +386,10 @@ set(_filters
     "refmod\\.thermal\\.(validate|solve)\\." 10
     "refmod\\.thermal\\.refused\\." 5
     "refmod\\.thermal\\.workflow$" 1
+    # P19-ARCH-001. The CFD input boundary's cases (ADR-060), the layering and link-graph fixtures that keep cfd at layer 42 (ADR-059).
+    "unit\\.CfdInput" 14
+    "architecture\\.checker\\.(cfd-|meshing-to-cfd)" 5
+    "architecture\\.targets\\.cfd-" 3
     # P18-QUAL-001. The final-gate cases (the authority matrix over every reference document, the currentness matrix in one sequence and its
     # edit-back path, a failed regeneration, the unforgeable proof of an accepted input, the units of the transient sum), and one test for
     # each defect the final audit found and fixed or each gap it closed, each at its own name so a rename or a drop is a failure.

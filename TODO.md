@@ -1903,29 +1903,46 @@ k-ε / SST adds another major layer of numerical complexity.
 
 Define the complete P19 ownership model before adding CFD physics.
 
-* [ ] Define P19 supported CFD scope
-* [ ] Define canonical CFD intent
-* [ ] Define derived CFD state
-* [ ] Define CAD authority
-* [ ] Define fluid/material authority
-* [ ] Define mesh authority
-* [ ] Define CFD result authority
-* [ ] Define source/currentness model
-* [ ] Define geometry-reference policy
-* [ ] Define field-location policy
-* [ ] Define unit system
-* [ ] Define steady/transient scope
-* [ ] Define incompressible/compressible scope
-* [ ] Define laminar/turbulence scope
-* [ ] Define thermal-coupling scope
-* [ ] Define unsupported-physics policy
-* [ ] Define dependency layers / ADRs
-* [ ] Define failure policy
-* [ ] Define determinism policy
-* [ ] Define evidence structure
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Define P19 supported CFD scope
+* [x] Define canonical CFD intent
+* [x] Define derived CFD state
+* [x] Define CAD authority
+* [x] Define fluid/material authority
+* [x] Define mesh authority
+* [x] Define CFD result authority
+* [x] Define source/currentness model
+* [x] Define geometry-reference policy
+* [x] Define field-location policy
+* [x] Define unit system
+* [x] Define steady/transient scope
+* [x] Define incompressible/compressible scope
+* [x] Define laminar/turbulence scope
+* [x] Define thermal-coupling scope
+* [x] Define unsupported-physics policy
+* [x] Define dependency layers / ADRs
+* [x] Define failure policy
+* [x] Define determinism policy
+* [x] Define evidence structure
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded
+
+```text
+PASS 2026-10-27. Qualified against e1a8eb2 plus the working tree:
+5826/5826 x 3 presets, 2583 x 5 in two, 0 warnings over 745 objects,
+17 stages exit 0, 6h37m11s (attempt 2; attempt 1 stopped when the linker
+ran out of memory, cause outside the tree), fingerprints before == after.
+A cfd module at layer 42 (ADR-059, below thermal and structural so CFD
+results can flow up; cfd links neither), the v1 scope ADR-058 (laminar
+incompressible collocated finite volume on the P16 tets), and the input
+boundary requireCfdModel / CfdModel (ADR-060, the fluid is the document's
+P15 material) with 14 boundary cases and 8 architecture fixtures; 554
+files, 0 layering violations. Adversarial review: independent reviewer
+0 blockers, 13 findings disposed; 10 of 10 mutants killed. Evidence:
+docs/verification/P19-ARCH-001/.
+
+P19-DATA-001 is NOT AUTHORIZED. Being next in the plan is not permission.
+```
 
 Initial recommended P19 v1 scope:
 

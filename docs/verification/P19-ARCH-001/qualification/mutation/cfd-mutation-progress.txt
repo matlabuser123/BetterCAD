@@ -1,0 +1,11 @@
+﻿CP01 | geometry ineligibility reported as no mesh | KILLED by tests | 99% tests passed, 3 tests failed out of 219 | CfdInput_NamesTheSameReasonAsTheThermalBoundaryForTheSameDocument; CfdInput_RefusesAnIneligibleBodyBeforeLookingAtTheMesh; CfdInput_ReportsTheFirstFailureInTheDocumentedOrder | restored
+CP02 | mesh currency is not asked | KILLED by tests | 98% tests passed, 5 tests failed out of 219 | CfdInput_NamesTheSameReasonAsTheThermalBoundaryForTheSameDocument; CfdInput_RefusesAfterAFailedGenerationOfEligibleGeometry; CfdInput_RefusesAMeshOfGeometryThatHasSinceChanged; CfdInput_RefusesAMeshWhoseSizingIntentHasChanged; CfdInput_ReportsTheFirstFailureInTheDocumentedOrder | restored
+CP03 | the density is not required | KILLED by tests | 99% tests passed, 1 tests failed out of 219 | CfdInput_RefusesAMaterialThatHasNoDensity | restored
+CP04 | a stale mesh is reported as no mesh | KILLED by tests | 98% tests passed, 4 tests failed out of 219 | CfdInput_NamesTheSameReasonAsTheThermalBoundaryForTheSameDocument; CfdInput_RefusesAMeshOfGeometryThatHasSinceChanged; CfdInput_RefusesAMeshWhoseSizingIntentHasChanged; CfdInput_ReportsTheFirstFailureInTheDocumentedOrder | restored
+CP05 | no geometry revision carried | KILLED by tests | 99% tests passed, 1 tests failed out of 219 | CfdInput_AcceptsACurrentMeshWithAUsableDensity | restored
+CP06 | no material id carried | KILLED by tests | 99% tests passed, 1 tests failed out of 219 | CfdInput_AcceptsACurrentMeshWithAUsableDensity | restored
+CP07 | missing material reported as a bad density | KILLED by tests | 99% tests passed, 1 tests failed out of 219 | CfdInput_RefusesWhenTheDocumentNamesNoMaterial | restored
+CP08 | cfd at layer 60 | KILLED by tests | 99% tests passed, 3 tests failed out of 219 |  | restored
+CP09 | cfd at layer 47 | KILLED by tests | 99% tests passed, 2 tests failed out of 219 |  | restored
+CP10 | cfd -> thermal link not refused | KILLED by tests | 99% tests passed, 1 tests failed out of 219 |  | restored
+campaign finished

@@ -34,11 +34,13 @@ the `architecture.layering` test. Fixture trees under
    and `src/renderer/`. The modelling libraries are GUI-free.
 3. **Layering.** A module may include public headers of its own module or of a
    strictly lower layer only. Layers, respaced in tens by ADR-035: `core` 0,
-   `sketch` 10, `features` 20, `assembly` 30, `drawing` 40, `meshing` 40,
-   `thermal` 45, `structural` 50, `io` 60, `renderer`/`scripting` 70. The
-   checker is the authority for the numbers; this list was brought back into
-   agreement with it by P17-QUAL-001 on 2026-10-15, and `thermal` 45 was
-   added by P18-ARCH-001 (ADR-050) on 2026-10-16.
+   `linalg` 5, `sketch` 10, `features` 20, `assembly` 30, `drawing` 40,
+   `meshing` 40, `cfd` 42, `thermal` 45, `structural` 50, `io` 60,
+   `renderer`/`scripting` 70. The checker is the authority for the numbers;
+   this list was brought back into agreement with it by P17-QUAL-001 on
+   2026-10-15, `thermal` 45 was added by P18-ARCH-001 (ADR-050) on 2026-10-16,
+   `linalg` 5 by P18-SOLVE-001 (ADR-052), and `cfd` 42 by P19-ARCH-001
+   (ADR-059) on 2026-10-27.
 4. **Public/private split.** Public headers live in `include/bettercad/<module>/`
    and use only `<bettercad/...>`-style includes. Private headers live next to
    their sources in `src/<module>/`.
@@ -54,6 +56,7 @@ the `architecture.layering` test. Fixture trees under
 | `bettercad_assembly`         | `BetterCAD::assembly`         | library    | Components, mates, constraint solver (layer 30)|
 | `bettercad_drawing`          | `BetterCAD::drawing`          | library    | Drawing sheets and formats (layer 40)         |
 | `bettercad_meshing`          | `BetterCAD::meshing`          | library    | Tet4 volume meshing, mapping, quality (layer 40) |
+| `bettercad_cfd`              | `BetterCAD::cfd`              | library    | Laminar incompressible finite-volume flow on the Tet4 mesh (layer 42) |
 | `bettercad_thermal`          | `BetterCAD::thermal`          | library    | Tet4 heat conduction, steady and transient (layer 45) |
 | `bettercad_structural`       | `BetterCAD::structural`       | library    | Linear static Tet4 FEA (layer 50)             |
 | `bettercad_io`               | `BetterCAD::io`               | library    | Native document files, STEP/STL export (layer 60) |

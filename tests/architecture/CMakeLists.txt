@@ -73,6 +73,27 @@ bettercad_add_process_test(architecture.checker.meshing-to-thermal
 bettercad_add_process_test(architecture.checker.thermal-backend-leak
     COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermal-backend-leak|-P|${_check_layering}"
     EXIT_CODE 1 STDERR_REGEX "1 violation.*mesh backend header <nglib.h>")
+# P19-ARCH-001 / ADR-059. cfd takes layer 42: above meshing, which it consumes, and
+# BELOW thermal (45) and structural (50), because the couplings the roadmap makes likely
+# run OUT of CFD (a wall pressure is a structural load, a wall heat-transfer coefficient
+# is a thermal boundary condition). Each fixture tree holds exactly one violation.
+# The POSITIVE directions -- thermal -> cfd and structural -> cfd -- are proved by the
+# `valid` tree, which also keeps `set(layer_cfd 42)` in place.
+bettercad_add_process_test(architecture.checker.cfd-layer-violation
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/cfd-layer-violation|-P|${_check_layering}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*'cfd' must not depend on 'io'")
+bettercad_add_process_test(architecture.checker.cfd-to-structural
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/cfd-to-structural|-P|${_check_layering}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*'cfd' must not depend on 'structural'")
+bettercad_add_process_test(architecture.checker.cfd-to-thermal
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/cfd-to-thermal|-P|${_check_layering}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*'cfd' must not depend on 'thermal'")
+bettercad_add_process_test(architecture.checker.meshing-to-cfd
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/meshing-to-cfd|-P|${_check_layering}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*'meshing' must not depend on 'cfd'")
+bettercad_add_process_test(architecture.checker.cfd-backend-leak
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/cfd-backend-leak|-P|${_check_layering}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*mesh backend header <nglib.h>")
 # P17-SOLVE-001 / ADR-039. Rule 7: Eigen is PRIVATE to the modules that link
 # it, so no PUBLIC header may include it -- otherwise it would propagate to
 # io 60, renderer 70, scripting 70, the app and the CLI.
@@ -112,6 +133,18 @@ bettercad_add_process_test(architecture.targets.valid
 bettercad_add_process_test(architecture.targets.thermal-links-structural
     COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/thermal-links-structural|-P|${_check_targets}"
     EXIT_CODE 1 STDERR_REGEX "1 violation.*bettercad_thermal links the structural target")
+# P19-ARCH-001 / ADR-059. A link is a second way to depend on a module that no include
+# shows: a PRIVATE link from cfd to the thermal or the structural target would give it
+# that layer's symbols without one forbidden header.
+bettercad_add_process_test(architecture.targets.cfd-links-thermal
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/cfd-links-thermal|-P|${_check_targets}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*bettercad_cfd links the thermal target")
+bettercad_add_process_test(architecture.targets.cfd-links-structural
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/cfd-links-structural|-P|${_check_targets}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*bettercad_cfd links the structural target")
+bettercad_add_process_test(architecture.targets.cfd-links-io
+    COMMAND "${CMAKE_COMMAND}" ARGS "-DSOURCE_DIR=${_fixtures}/cfd-links-io|-P|${_check_targets}"
+    EXIT_CODE 1 STDERR_REGEX "1 violation.*bettercad_cfd names 'BetterCAD::io'")
 
 # P18-POST-001. grad(T) and q = -k grad(T) are computed in ONE place, the thermal module;
 # a viewer, a report or a command consumes the recovered arrays and never recomputes them

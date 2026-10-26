@@ -10,3 +10,6 @@
 // thermo-mechanical coupling reads a temperature field to compute thermal strain. The checker allows it by LESS, and until now no fixture
 // proved it; thermal-to-structural proves the reverse is refused.
 #include <bettercad/thermal/ThermalAnalysis.hpp>
+// P19-ARCH-001 (ADR-059). structural may READ a CFD result: a wall pressure is a structural load and a wall heat-transfer
+// coefficient is a thermal boundary condition. The checker allows it by LESS; cfd-to-structural proves the reverse is refused.
+#include <bettercad/cfd/CfdAnalysis.hpp>

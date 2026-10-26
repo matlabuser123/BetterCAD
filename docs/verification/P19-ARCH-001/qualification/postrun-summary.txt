@@ -1,0 +1,290 @@
+﻿postrun-arch started 2026-10-27T09:33:51.3916771+10:00
+== layering and link-graph checkers on the source tree
+-- Architecture check passed: 554 files, 0 violations
+-- Target dependency check passed: thermal -> linalg, no structural link, cfd links neither thermal nor structural, linalg -> core + eigen only
+== warnings and errors in the harness build logs (0 unexpected warnings is a requirement)
+  debug-ext : warning: 0  error: 0  objects 745  (cfd: 1)
+  debug-ext no-op rebuild edges: 1
+  debug-ext ctest: 100% tests passed out of 5826 | Total Test time (real) = 4764.74 sec
+  release-ext : warning: 0  error: 0  objects 745  (cfd: 1)
+  release-ext no-op rebuild edges: 1
+  release-ext ctest: 100% tests passed out of 5826 | Total Test time (real) = 4559.90 sec
+  debug-shared-ext : warning: 0  error: 0  objects 745  (cfd: 1)
+  debug-shared-ext no-op rebuild edges: 1
+  debug-shared-ext ctest: 100% tests passed out of 5826 | Total Test time (real) = 4938.93 sec
+  repeat release-ext : 100% tests passed out of 2583 | Total Test time (real) = 1670.18 sec
+  repeat debug-ext : 100% tests passed out of 2583 | Total Test time (real) = 1951.05 sec
+== harness stderr lines: 272 (git line-ending notices: 270)
+   other: 'remrem' is not recognized as an internal or external command,
+   other: operable program or batch file.
+== qualification-times last line: qualification finished Tue 10/27/2026  9:25:20.74, 0 stage(s) failed 
+== FRESH BINARY: each preset's binaries are newer than that preset's clean and newer than the newest file of the frozen source tree
+  newest source file: tests\architecture\CheckTargetDependencies.cmake  2026-10-27T01:45:02.2313778+10:00
+  debug-ext         cleaned 2026-10-27 02:48:27.59
+  debug-ext         bettercad-cli.exe          422882002 bytes  built 2026-10-27 03:17:02  after clean True  after newest source True  sha256 610e68766b4fc3ea43c7073a7e97e4604f962fa258f8261aa0d3882c24eb39f8
+  debug-ext         bettercad_tests.exe       1456398719 bytes  built 2026-10-27 03:18:53  after clean True  after newest source True  sha256 362807934c3ca580891a9f3d5f03cd5637a7039a0a868bba776218f8613e52ad
+  release-ext       cleaned 2026-10-27 04:38:33.07
+  release-ext       bettercad-cli.exe           11585182 bytes  built 2026-10-27 05:13:56  after clean True  after newest source True  sha256 436faa03e7e81f25df9e389824502315a5da07ce95c8a3a61aae96568919d8a1
+  release-ext       bettercad_tests.exe         61608916 bytes  built 2026-10-27 05:14:23  after clean True  after newest source True  sha256 0bc2df6aedfec16ed5ee49ecd9565d4fe07bf68267f1790967cba83fe63ef089
+  debug-shared-ext  cleaned 2026-10-27 06:31:04.89
+  debug-shared-ext  bettercad-cli.exe           48966994 bytes  built 2026-10-27 06:59:51  after clean True  after newest source True  sha256 f3e7d4609a1f49e37dacc257738c441a01f3188ad501b29c141d0caf37a625b0
+  debug-shared-ext  bettercad_tests.exe       1066974014 bytes  built 2026-10-27 07:01:54  after clean True  after newest source True  sha256 2a0f7342a6645de24ba0dd75628fdbaf64e1a01e3df1dc985d4c1a7aad9fdde4
+  debug-shared-ext  libbettercad_cfd.dll         2926205 bytes  built 2026-10-27 06:42:22  after clean True  after newest source True  sha256 0fdea645e2330cd8abc5ea80e9ed2dbec1d937aa6b28c8f275822b2e89572367
+== ZERO-MATCH TABLE: for every group of the guard, per preset: EXPECTED (the guard's minimum), DISCOVERED (ctest -N -R, fixture setups excluded), EXECUTED-AND-PASSED (the full ctest log)
+  groups in the guard: 237
+  debug-ext : 5826 tests passed in the full ctest log
+  release-ext : 5826 tests passed in the full ctest log
+  debug-shared-ext : 5826 tests passed in the full ctest log
+  unit\.MeshingCli                                                                                       min   10  disc   19   19   19  exec   19   19   19 
+  cli\.mesh\.                                                                                            min    5  disc    8    8    8  exec    8    8    8 
+  unit\.MeshingPersistence                                                                               min   10  disc   26   26   26  exec   26   26   26 
+  unit\.MeshingCommand                                                                                   min   10  disc   33   33   33  exec   33   33   33 
+  unit\.Mesh(Block|Cylinder|PlateWithHole|Tube|ThinPlate|TransformedBlock|LocalRefinement|OpenProfi...   min   20  disc   28   28   28  exec   28   28   28 
+  refmod\.mesh\.                                                                                         min   15  disc   25   25   25  exec   25   25   25 
+  unit\.P16Qualification                                                                                 min    4  disc    6    6    6  exec    6    6    6 
+  unit\.StructuralCli                                                                                    min   15  disc   19   19   19  exec   19   19   19 
+  cli\.structural\.                                                                                      min    8  disc    9    9    9  exec    9    9    9 
+  unit\.Structural(Patch|AxialBar|Cantilever|PressureBlock|GravityBlock|Transformed|LocalRefinement...   min   12  disc   16   16   16  exec   16   16   16 
+  refmod\.structural\.                                                                                   min   30  disc   41   41   41  exec   41   41   41 
+  unit\.P17Qualification                                                                                 min    3  disc    3    3    3  exec    3    3    3 
+  unit\.ThermalInput                                                                                     min    8  disc   11   11   11  exec   11   11   11 
+  architecture\.checker\.[a-z-]*thermal                                                                  min    6  disc    6    6    6  exec    6    6    6 
+  unit\.ThermalData                                                                                      min   20  disc   36   36   36  exec   36   36   36 
+  compile_fail\.thermalids\.                                                                             min   12  disc   24   24   24  exec   24   24   24 
+  unit\.ThermalMaterial                                                                                  min   15  disc   31   31   31  exec   31   31   31 
+  unit\.ThermalDof                                                                                       min   20  disc   33   33   33  exec   33   33   33 
+  compile_fail\.thermaldof\.                                                                             min    8  disc   15   15   15  exec   15   15   15 
+  unit\.ThermalElement                                                                                   min   40  disc   60   60   60  exec   60   60   60 
+  unit\.ThermalElement_(UnitTet|GeneralTet|ShapeGradient|Affine|Constant)                                min    5  disc   10   10   10  exec   10   10   10 
+  unit\.ThermalElement_(Inverted|Coplanar|Coincident|NearDegenerate|NonFinite)                           min    4  disc    6    6    6  exec    6    6    6 
+  unit\.ThermalElement_Conduct                                                                           min    8  disc    9    9    9  exec    9    9    9 
+  unit\.ThermalElement_(Capacity|OnePoint|Density|SpecificHeat)                                          min    8  disc   14   14   14  exec   14   14   14 
+  unit\.ThermalElement_(Translation|Rotation|Gradient|Reflection|Even|Odd)                               min    5  disc    6    6    6  exec    6    6    6 
+  unit\.ThermalElement_(GeometryScaling|ConductivityScaling)                                             min    2  disc    3    3    3  exec    3    3    3 
+  unit\.ThermalElement_(Repeat|NoHidden|BitFingerprint)                                                  min    3  disc    3    3    3  exec    3    3    3 
+  compile_fail\.thermalelem\.                                                                            min    8  disc   17   17   17  exec   17   17   17 
+  unit\.ThermalLoad                                                                                      min   66  disc   66   66   66  exec   66   66   66 
+  unit\.ThermalLoad_(Surface|SingleTriangle|GeneralTriangle|Triangulation|FacetWinding)                  min   10  disc   10   10   10  exec   10   10   10 
+  unit\.ThermalLoad_(Volume|UnitTet|GeneralTet|Generation|SharedVolume|MultiTet)                         min   10  disc   10   10   10  exec   10   10   10 
+  unit\.ThermalLoad_(GeometryReference|Unresolved|Malformed|NoNearest|Empty|Target|OneInvalid)           min    7  disc    7    7    7  exec    7    7    7 
+  unit\.ThermalLoad_(Prepared|Remesh|SameCounts|SameIds|Edit|Material|Solver|Geometry|Document)          min   12  disc   12   12   12  exec   12   12   12 
+  unit\.ThermalLoad_(Sparse|LargeSparse)                                                                 min    3  disc    3    3    3  exec    3    3    3 
+  unit\.ThermalLoad_(.*Superposition|SignedCancellation|LoadOrder)                                       min    5  disc    5    5    5  exec    5    5    5 
+  unit\.ThermalLoad_(Rejects|Zero|Duplicate|Repeated|ANumbering|Every|NonFinite)                         min   12  disc   12   12   12  exec   12   12   12 
+  unit\.ThermalLoad_(RepeatedPreparation|Diagnostics|BitFingerprint)                                     min    3  disc    3    3    3  exec    3    3    3 
+  compile_fail\.thermalload\.                                                                            min   19  disc   19   19   19  exec   19   19   19 
+  unit\.ThermalBC                                                                                        min   92  disc   92   92   92  exec   92   92   92 
+  unit\.ThermalBC_(PrescribedTemperatureDef|ConvectionDef|CanonicalGeometry|UnitsContract|SignConve...   min    5  disc    5    5    5  exec    5    5    5 
+  unit\.ThermalBC_(PrescribedTemperature(Maps|Uses|Stores|Dedup|Deter)|MappedFaceDirichlet)              min    6  disc    6    6    6  exec    6    6    6 
+  unit\.ThermalBC_(Duplicate|Conflict|PartialSurface|IdenticalOverlap)                                   min    8  disc    8    8    8  exec    8    8    8 
+  unit\.ThermalBC_(SingleTriangle|GeneralTriangle|ConvectionMatrix|ConvectionAmbientEq|ConvectionAb...   min   14  disc   14   14   14  exec   14   14   14 
+  unit\.ThermalBC_(ConvectionRejects|ConvectionIsNotLumped|WrongSigns)                                   min    3  disc    3    3    3  exec    3    3    3 
+  unit\.ThermalBC_(ConvectionArea|ConvectionCoefficientScaling|ConvectionAmbientScaling|ConvectionD...   min    5  disc    5    5    5  exec    5    5    5 
+  unit\.ThermalBC_(GeometryReference|PreparedBoundaryKeeps|DirichletAndRobin|NoDirichlet|Unresolved...   min    9  disc    9    9    9  exec    9    9    9 
+  unit\.ThermalBC_(PreparedBCBinds|Remesh|SameCounts|SameIds|ADifferentBody|Edit|Material|LoadSolve...   min   12  disc   12   12   12  exec   12   12   12 
+  unit\.ThermalBC_(ZeroConvection|Negative|NaN|Infinite|BelowZero|InvalidArea|EveryBoundary|SeamRef...   min   20  disc   20   20   20  exec   20   20   20 
+  unit\.ThermalBC_(Sparse|LargeSparse)                                                                   min    2  disc    2    2    2  exec    2    2    2 
+  unit\.ThermalBC_ConvectionSuperposition                                                                min    2  disc    2    2    2  exec    2    2    2 
+  unit\.ThermalBC_(AFailedPreparation|PreparationDoesNot)                                                min    2  disc    2    2    2  exec    2    2    2 
+  unit\.ThermalBC_(RepeatedPreparation|Diagnostics|BitFingerprint)                                       min    3  disc    3    3    3  exec    3    3    3 
+  unit\.ThermalBC_PreparedBoundaryHasNo                                                                  min    1  disc    1    1    1  exec    1    1    1 
+  compile_fail\.thermalbc\.                                                                              min   31  disc   31   31   31  exec   31   31   31 
+  unit\.ThermalAssembly                                                                                  min   62  disc   62   62   62  exec   62   62   62 
+  unit\.ThermalAssembly_SingleTet                                                                        min    4  disc    4    4    4  exec    4    4    4 
+  unit\.ThermalAssembly_TwoTet                                                                           min    4  disc    4    4    4  exec    4    4    4 
+  unit\.ThermalAssembly_(Convection|RepeatedConvection)                                                  min    6  disc    6    6    6  exec    6    6    6 
+  unit\.ThermalAssembly_(SmallSystemMatchesIndependentDenseOracle|BlockMatchesIndependentDenseOracl...   min    4  disc    4    4    4  exec    4    4    4 
+  unit\.ThermalAssembly_(HeatResultants|BlockHeatResultants)                                             min    2  disc    2    2    2  exec    2    2    2 
+  unit\.ThermalAssembly_(PureConduction|BlockNullMode|ConvectionLifts|TwoTetConstant)                    min    4  disc    4    4    4  exec    4    4    4 
+  unit\.ThermalAssembly_(Rejects|Remesh|SameIds|Edits|TransientCapacityEdit|FailureOrder)                min    9  disc    9    9    9  exec    9    9    9 
+  unit\.ThermalAssembly_(StaleReasons|SameBuilder|BlockSourceRecords)                                    min    3  disc    3    3    3  exec    3    3    3 
+  unit\.ThermalAssembly_(SteadyKOnly|TransientRequires|TransientCapacityEdit)                            min    3  disc    3    3    3  exec    3    3    3 
+  unit\.ThermalAssembly_(Sparse|LargeSparse|LargeMesh|LargeReal|UsesSparse|Disconnected)                 min    8  disc    8    8    8  exec    8    8    8 
+  unit\.ThermalAssembly_(SeamRefusals|HeatVectorRefusesNonFinite|EmptyLoadVector)                        min    3  disc    3    3    3  exec    3    3    3 
+  unit\.ThermalAssembly_(Repeated|BitFingerprint|BlockBitFingerprint)                                    min    5  disc    5    5    5  exec    5    5    5 
+  unit\.ThermalAssembly_(AssemblyDoesNotMutate|PrescribedTemperaturesNever|LocalOrder|DefinitionOve...   min    4  disc    4    4    4  exec    4    4    4 
+  compile_fail\.thermalsys\.                                                                             min   36  disc   36   36   36  exec   36   36   36 
+  unit\.ThermalSolve                                                                                     min   51  disc   54   54   54  exec   54   54   54 
+  unit\.Linalg_                                                                                          min   10  disc   10   10   10  exec   10   10   10 
+  unit\.ThermalSolve_(DirichletPartition|InterleavedConstraints|NonzeroDirichlet|OneFreeNode|Single...   min    5  disc    5    5    5  exec    5    5    5 
+  unit\.ThermalSolve_(ThreeNodeChain|RobinOnly|RobinAnchored|FullyConstrained|OneFreeNode|MatchesIn...   min   13  disc   13   13   13  exec   13   13   13 
+  unit\.ThermalSolve_(PureNeumann|FactorisationSingularity|AnchorTolerance|BlockWithoutAnyDatum)         min    5  disc    5    5    5  exec    5    5    5 
+  unit\.ThermalSolve_(Disconnected|ExplicitZeros)                                                        min    3  disc    3    3    3  exec    3    3    3 
+  unit\.ThermalSolve_(IndependentResidual|BadSolution|RejectsNonFinite|ConstraintViolation|NonFinit...   min    8  disc    8    8    8  exec    8    8    8 
+  unit\.ThermalSolve_(StaleReasons|Edits|Remesh|SolutionRecordsExactly|FailedResolve|RejectsStaleBo...   min    8  disc    8    8    8  exec    8    8    8 
+  unit\.ThermalSolve_(Deterministic|RepeatedBlockSolve|BitFingerprint|SolveDoesNotMutate)                min    5  disc    5    5    5  exec    5    5    5 
+  unit\.ThermalSolve_(LargeSparse|FineCylinder|SparseNodeIds)                                            min    3  disc    3    3    3  exec    3    3    3 
+  compile_fail\.thermalsolve\.                                                                           min   26  disc   26   26   26  exec   26   26   26 
+  architecture\.targets\.                                                                                min    6  disc    6    6    6  exec    6    6    6 
+  architecture\.checker\.linalg                                                                          min    2  disc    2    2    2  exec    2    2    2 
+  unit\.ThermalTransient                                                                                 min   72  disc   72   72   72  exec   72   72   72 
+  unit\.ThermalTransient_TimeGrid                                                                        min   10  disc   10   10   10  exec   10   10   10 
+  unit\.ThermalTransient_EffectiveMatrix                                                                 min    3  disc    3    3    3  exec    3    3    3 
+  unit\.ThermalTransient_(OneDofHandOracle|NonUniformTwoUnknown)                                         min    2  disc    2    2    2  exec    2    2    2 
+  unit\.ThermalTransient_(PureNeumann|DisconnectedPositive|RegionWithNoCapacity|ZeroCapacityConnect...   min    5  disc    5    5    5  exec    5    5    5 
+  unit\.ThermalTransient_(NonzeroDirichlet|PrescribedDominates|FullyPrescribed)                          min    3  disc    3    3    3  exec    3    3    3 
+  unit\.ThermalTransient_(LastPartialStep|OutputPolicies|EveryStepEvidence)                              min    3  disc    3    3    3  exec    3    3    3 
+  unit\.ThermalTransient_(AlgebraRefusals|TheUsersSolverSettings|AStepThatCannotBeTaken|AFailureAtA...   min   11  disc   11   11   11  exec   11   11   11 
+  unit\.ThermalTransient_(Acceptance|PhysicalResidual|AnOverflowingResidual)                             min    8  disc    8    8    8  exec    8    8    8 
+  unit\.ThermalTransient_(AnswerIsInvariant|SteadyLimit|TimeStepRefinement|LumpedBody|BlockCooling|...   min   10  disc   10   10   10  exec   10   10   10 
+  unit\.ThermalTransient_(SolutionRecordsExactly|EditsStale|RejectsStaleBoundary|RemeshStales|Stead...   min   10  disc   10   10   10  exec   10   10   10 
+  unit\.ThermalTransient_(RepeatedRuns|RepeatedBlockRun|TheInputsAreNever|TimeGridIsDeterministic)       min    4  disc    4    4    4  exec    4    4    4 
+  unit\.ThermalTransient_(LargeSparse|FineCylinder|SparseNodeIds)                                        min    3  disc    3    3    3  exec    3    3    3 
+  unit\.ThermalTransient_(SeamMatches|SeamRefusals|SparseNodeIds)                                        min    3  disc    3    3    3  exec    3    3    3 
+  unit\.ThermalTransient_DiagnosticNames                                                                 min    1  disc    1    1    1  exec    1    1    1 
+  compile_fail\.thermaltransient\.                                                                       min   35  disc   35   35   35  exec   35   35   35 
+  unit\.ThermalPost                                                                                      min   40  disc   40   40   40  exec   40   40   40 
+  unit\.ThermalPost_(FieldDescriptors|DiagnosticNames|HeatFluxMagnitude)                                 min    3  disc    3    3    3  exec    3    3    3 
+  unit\.ThermalPost_(AffineField|MultiTetAffine|XLinear|YLinear|ZLinear|GeneralTet)                      min    6  disc    6    6    6  exec    6    6    6 
+  unit\.ThermalPost_(FourierLaw|ConstantTemperature|ConvectionIsNot)                                     min    3  disc    3    3    3  exec    3    3    3 
+  unit\.ThermalPost_(TemperatureOffset|TemperatureDifference|ConductivityScaling|GeometryScaling)        min    4  disc    4    4    4  exec    4    4    4 
+  unit\.ThermalPost_(Translation|Rotation)                                                               min    2  disc    2    2    2  exec    2    2    2 
+  unit\.ThermalPost_(SteadySlab|TransientHistory|TransientRecovery|TransientUniform|ALateState)          min    7  disc    7    7    7  exec    7    7    7 
+  unit\.ThermalPost_(Refuses|OneInvalid|RecoveryIsRefused|RemeshStales|AFailedRecovery)                  min    6  disc    6    6    6  exec    6    6    6 
+  unit\.ThermalPost_(NodalTemperature|ElementResultsAreKeyed|PreservesTetLocal)                          min    4  disc    4    4    4  exec    4    4    4 
+  unit\.ThermalPost_(Repeated|RecoveryDoesNotMutate)                                                     min    3  disc    3    3    3  exec    3    3    3 
+  unit\.ThermalPost_(LargeMesh|FineCylinder)                                                             min    2  disc    2    2    2  exec    2    2    2 
+  compile_fail\.thermalpost\.                                                                            min   31  disc   31   31   31  exec   31   31   31 
+  architecture\.recovery-ownership                                                                       min    4  disc    4    4    4  exec    4    4    4 
+  unit\.ThermalBalance                                                                                   min   69  disc   69   69   69  exec   69   69   69 
+  unit\.ThermalBalance_(SignConvention|ReactionSignAnalytical|ConvectionSignAbove|ConvectionSignBel...   min    5  disc    5    5    5  exec    5    5    5 
+  unit\.ThermalBalance_(SteadyDirichletReaction|TwoTemperatureReactionsEqualOpposite|AppliedHeatBal...   min    8  disc    8    8    8  exec    8    8    8 
+  unit\.ThermalBalance_(AppliedSurfaceHeatTotal|VolumetricGenerationTotal|MultipleSurfaceLoads|Mult...   min    6  disc    6    6    6  exec    6    6    6 
+  unit\.ThermalBalance_(PerLoadTotals|PerConvectionTotals|PerReactionTotals|RepeatedAggregation|Rep...   min    5  disc    5    5    5  exec    5    5    5 
+  unit\.ThermalBalance_(SteadyPureConduction|SteadyAppliedHeatAndReaction|SteadyGenerationAndConvec...   min    9  disc    9    9    9  exec    9    9    9 
+  unit\.ThermalBalance_(TransientInsulated|TransientLumped|TransientDirichlet|TransientFullyConstra...   min    8  disc    8    8    8  exec    8    8    8 
+  unit\.ThermalBalance_(TransientStoredEnergyUsesFullC|NonuniformStoredEnergyUsesConsistentCapacity)     min    2  disc    2    2    2  exec    2    2    2 
+  unit\.ThermalBalance_(TransientFinalPartialStep|TransientInsulatedGenerationWithAPartialLastStep)      min    2  disc    2    2    2  exec    2    2    2 
+  unit\.ThermalBalance_(TransientNeedsEveryStep|TransientSeamNeedsEveryStep)                             min    2  disc    2    2    2  exec    2    2    2 
+  unit\.ThermalBalance_(GlobalHeatInput|BalanceCannotRescue|AttributionMust|OutOfTolerance|AnIncomp...   min    5  disc    5    5    5  exec    5    5    5 
+  unit\.ThermalBalance_(ZeroHeatCase|LargeCancellationScale|MeasuredTolerancePolicy|TolerancePolicy...   min    4  disc    4    4    4  exec    4    4    4 
+  unit\.ThermalBalance_(RefusesWhat|EveryDiagnostic|DiagnosticNames|SeamRefuses|SparseNodeIds)           min    5  disc    5    5    5  exec    5    5    5 
+  unit\.ThermalBalance_(RejectsStale|RejectsMismatched|RemeshStales|FailedRecovery|RecoveryDoesNotM...   min    6  disc    6    6    6  exec    6    6    6 
+  unit\.ThermalBalance_FineCylinder                                                                      min    2  disc    2    2    2  exec    2    2    2 
+  compile_fail\.thermalbalance\.                                                                         min   33  disc   33   33   33  exec   33   33   33 
+  architecture\.balance-ownership                                                                        min    5  disc    5    5    5  exec    5    5    5 
+  unit\.ThermalValidation                                                                                min  138  disc  140  140  140  exec  140  140  140 
+  unit\.ThermalValidation_(PolicyIsAccepted|PolicyConstantsArePinned|PolicyFingerprint|SeverityIsAF...   min    5  disc    5    5    5  exec    5    5    5 
+  unit\.ThermalValidation_(StatusAndCountsAreDerived|ASkippedRuleIsNeverAPass|SolveAcceptedIsNot|Mo...   min    4  disc    4    4    4  exec    4    4    4 
+  unit\.ThermalValidation_(RejectsAnInvertedTetrahedron|RejectsADegenerateTetrahedron|ANotANumberMe...   min   11  disc   11   11   11  exec   11   11   11 
+  unit\.ThermalValidation_(ThermalMeshQualityRejectOnARealMesh|TheAspectRatioBoundCatches|Qualified...   min    9  disc    9    9    9  exec    9    9    9 
+  unit\.ThermalValidation_(MeasuresHow|TheBoundsGuarantee)                                               min    3  disc    3    3    3  exec    3    3    3 
+  unit\.ThermalValidation_(SteadyRequiresConductivityOnly|TransientRequiresConductivityDensitySpeci...   min    5  disc    5    5    5  exec    5    5    5 
+  unit\.ThermalValidation_(RejectsUnresolved|NoLoadsIsNot|AZeroMagnitudeLoad|RejectsConflicting|Ide...   min    7  disc    7    7    7  exec    7    7    7 
+  unit\.ThermalValidation_(RejectsSameCounts|RejectsSameIds|RejectsMismatchedAssembly|EveryEditStal...   min    9  disc    9    9    9  exec    9    9    9 
+  unit\.ThermalValidation_(SteadyPureNeumann|SteadyDirichlet|SteadyRobin|FullyPrescribedSteady|Full...   min   16  disc   16   16   16  exec   16   16   16 
+  unit\.ThermalValidation_(AcceptsQualifiedSteadyResidual|RejectsBadSteadyResidual|SolverSuccessDoe...   min   18  disc   18   18   18  exec   18   18   18 
+  unit\.ThermalValidation_(AcceptsQualifiedSteadyBalance|RejectsBadSteadyBalance|BalanceIsJudgedByB...   min   10  disc   10   10   10  exec   10   10   10 
+  unit\.ThermalValidation_(RejectsNonFiniteTemperature|RejectsATemperatureBelow|RejectsAStateOfTheW...   min   10  disc   10   10   10  exec   10   10   10 
+  unit\.ThermalValidation_(AcceptsValidTransientSetup|RejectsInvalidInitialTemperature|RejectsInval...   min    6  disc    6    6    6  exec    6    6    6 
+  unit\.ThermalValidation_(ValidSteadyAnalysisPasses|ValidTransientAnalysisPasses|ValidationIsReadO...   min    6  disc    6    6    6  exec    6    6    6 
+  unit\.ThermalValidation_(EvidenceOfAQualified|APerturbedFreeTemperature|ACorruptedBalanceFailsThe...   min   11  disc   11   11   11  exec   11   11   11 
+  unit\.ThermalValidation_(RejectsAnAnalysisWhoseMeshingControl|RejectsABodyThatIsNoLonger|RejectsA...   min    8  disc    8    8    8  exec    8    8    8 
+  compile_fail\.thermalvalidation\.                                                                      min   33  disc   33   33   33  exec   33   33   33 
+  architecture\.validation-ownership                                                                     min    8  disc    8    8    8  exec    8    8    8 
+  unit\.ThermalViz                                                                                       min  100  disc  100  100  100  exec  100  100  100 
+  unit\.ThermalViz_(ConsumesQualified(Gradient|HeatFlux|Temperature)|TemperatureRemainsKelvin|Gradi...   min   11  disc   11   11   11  exec   11   11   11 
+  unit\.ThermalViz_(TemperatureContourUsesNodalValues|GradientMagnitudeContourUsesElementResult|Hea...   min   18  disc   18   18   18  exec   18   18   18 
+  unit\.ThermalViz_(HeatFluxVectorDirection|ZeroHeatFluxVector|VectorScalingDoesNotMutateResult|The...   min    8  disc    8    8    8  exec    8    8    8 
+  unit\.ThermalViz_(PositiveAppliedHeatFluxArrow|NegativeAppliedHeatFluxArrow|AZeroAppliedFlux|Pres...   min   13  disc   13   13   13  exec   13   13   13 
+  unit\.ThermalViz_(ClassifierCardinalityMatchesExpected|ZeroClassifiedEntitiesRejected|PartialClas...   min    9  disc    9    9    9  exec    9    9    9 
+  unit\.ThermalViz_(ExtremaTieBreakDeterministic|HighestTemperatureNavigation|LowestTemperatureNavi...   min    6  disc    6    6    6  exec    6    6    6 
+  unit\.ThermalViz_(NodeTemperatureInspection|ElementThermalInspection|SparseNodeIdInspection|Spars...   min    5  disc    5    5    5  exec    5    5    5 
+  unit\.ThermalViz_(CurrentResultDisplaysNormally|StaleResultHasExplicitState|SameCountsNewMeshStil...   min   13  disc   13   13   13  exec   13   13   13 
+  unit\.ThermalViz_(ASteadyResultIsOneFrame|TransientCacheInvalidates|TransientFrameBinds|Transient...   min    6  disc    6    6    6  exec    6    6    6 
+  unit\.ThermalViz_(DoesNotMutateMeshDuringUnitConversion|DoesNotMutateThermalResult|ViewStateChang...   min    4  disc    4    4    4  exec    4    4    4 
+  unit\.ThermalViz_(LargeCurvedMeshVisualizationDataSmoke|LargeMeshVisualizationDataSmoke|LargeMesh...   min    4  disc    4    4    4  exec    4    4    4 
+  unit\.ThermalViz_(DisplayStateAndInspectionAreDeterministic|FieldExtractionIsDeterministic|Visual...   min    3  disc    3    3    3  exec    3    3    3 
+  compile_fail\.thermalviz\.                                                                             min   51  disc   52   52   52  exec   52   52   52 
+  architecture\.thermalviz-ownership                                                                     min   12  disc   12   12   12  exec   12   12   12 
+  unit\.ThermalCommand_                                                                                  min   95  disc   95   95   95  exec   95   95   95 
+  unit\.ThermalCommand_(CreateAnalysis|CreateAnalysisUndoExact|CreateAnalysisRedoExact|CreateAnalys...   min    8  disc    8    8    8  exec    8    8    8 
+  unit\.ThermalCommand_(AddLoadUndoRedo|AddVolumetricLoadUndoRedo|EditLoadUndoRedo|EditLoadMayChang...   min   15  disc   15   15   15  exec   15   15   15 
+  unit\.ThermalCommand_(AddPrescribedTemperatureUndoRedo|EditPrescribedTemperatureUndoRedo|RemovePr...   min   13  disc   13   13   13  exec   13   13   13 
+  unit\.ThermalCommand_(InitialTemperatureUndoRedoExact|InitialTemperatureHoldsOneValueAndNoField|I...   min    4  disc    4    4    4  exec    4    4    4 
+  unit\.ThermalCommand_(SolverSettingsUndoRedoExact|InvalidSolverSettingsAtomic)$                        min    2  disc    2    2    2  exec    2    2    2 
+  unit\.ThermalCommand_(TransientSettingsUndoRedoExact|TransientSettingsDoNotPersistDerivedTimeGrid...   min    4  disc    4    4    4  exec    4    4    4 
+  unit\.ThermalCommand_(FailedCommandDoesNotPushHistory|FailedCommandDoesNotChangeSource|UndoMakesR...   min   21  disc   21   21   21  exec   21   21   21 
+  unit\.ThermalCommand_(TwoAnalysesDoNotConfuseTheirIds|ACommandCannotReachAnObjectOfAnotherKind|St...   min    6  disc    6    6    6  exec    6    6    6 
+  unit\.ThermalCommand_(RepeatedSequenceDeterministic|HistorySemanticFingerprintDeterministic|Descr...   min    3  disc    3    3    3  exec    3    3    3 
+  unit\.ThermalCommand_(LoadMutationStalesResult|LoadEditDoesNotInvalidateMesh|BCMutationStalesResu...   min   17  disc   17   17   17  exec   17   17   17 
+  unit\.ThermalCommand_(HistorySurvivesARemesh|HistorySizeIndependentOfThermalResultSize)$               min    2  disc    2    2    2  exec    2    2    2 
+  compile_fail\.thermalcmd\.                                                                             min   52  disc   52   52   52  exec   52   52   52 
+  architecture\.thermalcmd-ownership                                                                     min   16  disc   16   16   16  exec   16   16   16 
+  unit\.ThermalPersistence_                                                                              min   48  disc   49   49   49  exec   49   49   49 
+  unit\.ThermalPersistence_(TheWholeSteadyCanonicalIntentRoundTrips|TheWholeTransientCanonicalInten...   min   10  disc   10   10   10  exec   10   10   10 
+  unit\.ThermalPersistence_(GeometryReferencesSurviveExactlyInEveryForm|AnUnresolvedReferenceIsPres...   min    5  disc    5    5    5  exec    5    5    5 
+  unit\.ThermalPersistence_(EngineeringValuesAreWrittenInTheirCoreUnits|NoDerivedStateReachesTheFil...   min    5  disc    5    5    5  exec    5    5    5 
+  unit\.ThermalPersistence_(TheFileIsIdenticalWhateverASteadySolveHasDone|TheFileIsIdenticalWhateve...   min    5  disc    5    5    5  exec    5    5    5 
+  unit\.ThermalPersistence_(SerializationIsByteIdenticalRepeatedlyAndIndependentOfHowItWasBuilt|Sav...   min    5  disc    5    5    5  exec    5    5    5 
+  unit\.ThermalPersistence_(RejectsMalformedThermalIntent|RejectsWrongFieldTypes|RejectsInvalidValu...   min    6  disc    6    6    6  exec    6    6    6 
+  unit\.ThermalPersistence_(APreP18DocumentLoadsAndSimplyHasNoThermalAnalyses|AFutureSchemaVersionI...   min    3  disc    3    3    3  exec    3    3    3 
+  unit\.ThermalPersistence_(ALoadedAnalysisHasIntentAndNoDerivedState|ASteadyDestroyAndLoadRoundTri...   min    7  disc    7    7    7  exec    7    7    7 
+  unit\.ThermalPersistence_(TheHandWrittenReferenceFileLoadsAsWritten|TheReferenceFileRegeneratesMe...   min    2  disc    2    2    2  exec    2    2    2 
+  architecture\.thermalpersist-ownership                                                                 min   24  disc   24   24   24  exec   24   24   24 
+  unit\.ThermalCli_                                                                                      min   85  disc   86   86   86  exec   86   86   86 
+  unit\.ThermalCli_(InspectAnalysis|InspectAnalysisStructured|InspectTransientStructured|InspectDoe...   min    8  disc    8    8    8  exec    8    8    8 
+  unit\.ThermalCli_(AddSteadyAnalysis|AddTransientAnalysis|AnalysisModeCompletenessIsTheCoresAndNev...   min    6  disc    6    6    6  exec    6    6    6 
+  unit\.ThermalCli_(AddSurfaceHeatFlux|AddVolumetricGeneration|NegativeFluxIsASinkAndIsNotCorrected...   min    7  disc    7    7    7  exec    7    7    7 
+  unit\.ThermalCli_(AddPrescribedTemperature|AddConvection|RemoveBoundaryCondition|InvalidBoundaryC...   min    6  disc    6    6    6  exec    6    6    6 
+  unit\.ThermalCli_(SteadySolve|SteadyRobinOnly|FullyConstrainedSteady|SingularSteadyFails|SteadyNe...   min    5  disc    5    5    5  exec    5    5    5 
+  unit\.ThermalCli_(TransientSolve|TransientPureNeumann|TransientUsesActualStoredTimes|TransientFin...   min    8  disc    8    8    8  exec    8    8    8 
+  unit\.ThermalCli_(TemperatureSummary|TemperatureExtremaTieBreakIsTheAscendingNodeId|ExtremumTieBr...   min    9  disc    9    9    9  exec    9    9    9 
+  unit\.ThermalCli_(MissingMaterialFails|InvalidLoadFails|InvalidBoundaryConditionFails|AMeshThatCa...   min    8  disc    8    8    8  exec    8    8    8 
+  unit\.ThermalCli_(SteadyCoreEquivalence|TransientCoreEquivalence|AddLoadCoreEquivalence|RemoveLoa...   min    7  disc    7    7    7  exec    7    7    7 
+  unit\.ThermalCli_(SolveDoesNotModifyCanonicalBytes|SaveLoadResolveAgreesAcrossFreshRuns|AnEditCha...   min    3  disc    3    3    3  exec    3    3    3 
+  unit\.ThermalCli_(StructuredStdoutIsClean|StructuredFailureOutputIsClean|NonFiniteNumbersAreNever...   min    7  disc    7    7    7  exec    7    7    7 
+  unit\.ThermalCli_(SuccessExitCode|SyntaxFailureExitCode|DocumentFailureExitCode|AnalysisFailureEx...   min    7  disc    7    7    7  exec    7    7    7 
+  unit\.ThermalCli_(HelpDescribesOnlyWhatIsSupported|ThermalEditsAreBatchVerbs|HelpPrintsEveryRepor...   min    4  disc    4    4    4  exec    4    4    4 
+  unit\.ThermalRun_                                                                                      min   20  disc   20   20   20  exec   20   20   20 
+  unit\.ThermalRun_(ARunOfAnEditedGeometryIsStaleAndTheEditedGeometryIsNotRunOnTheOldMesh|ARemeshWi...   min    4  disc    4    4    4  exec    4    4    4 
+  cli\.thermal\.                                                                                         min   12  disc   12   12   12  exec   12   12   12 
+  cli\.thermal\.workflow$                                                                                min    1  disc    1    1    1  exec    1    1    1 
+  architecture\.thermalcli-ownership                                                                     min  104  disc  104  104  104  exec  104  104  104 
+  unit\.ThermalReference_                                                                                min   47  disc   47   47   47  exec   47   47   47 
+  unit\.ThermalReference_RM01                                                                            min    8  disc    8    8    8  exec    8    8    8 
+  unit\.ThermalReference_RM02                                                                            min    2  disc    2    2    2  exec    2    2    2 
+  unit\.ThermalReference_RM03                                                                            min    3  disc    3    3    3  exec    3    3    3 
+  unit\.ThermalReference_RM04                                                                            min    3  disc    3    3    3  exec    3    3    3 
+  unit\.ThermalReference_RM05                                                                            min    2  disc    2    2    2  exec    2    2    2 
+  unit\.ThermalReference_RM06                                                                            min    3  disc    3    3    3  exec    3    3    3 
+  unit\.ThermalReference_RM07                                                                            min    3  disc    3    3    3  exec    3    3    3 
+  unit\.ThermalReference_RM08                                                                            min    8  disc    8    8    8  exec    8    8    8 
+  unit\.ThermalReference_RM09                                                                            min    4  disc    4    4    4  exec    4    4    4 
+  unit\.ThermalReference_RM10                                                                            min    4  disc    4    4    4  exec    4    4    4 
+  unit\.ThermalReference_Persistence                                                                     min    2  disc    2    2    2  exec    2    2    2 
+  unit\.ThermalReference_Determinism                                                                     min    2  disc    2    2    2  exec    2    2    2 
+  unit\.ThermalReference_Independence                                                                    min    2  disc    2    2    2  exec    2    2    2 
+  unit\.ThermalReference_Intent                                                                          min    1  disc    1    1    1  exec    1    1    1 
+  refmod\.thermal\.                                                                                      min   17  disc   17   17   17  exec   17   17   17 
+  refmod\.thermal\.(validate|solve)\.                                                                    min   10  disc   10   10   10  exec   10   10   10 
+  refmod\.thermal\.refused\.                                                                             min    5  disc    5    5    5  exec    5    5    5 
+  refmod\.thermal\.workflow$                                                                             min    1  disc    1    1    1  exec    1    1    1 
+  unit\.CfdInput                                                                                         min   14  disc   14   14   14  exec   14   14   14 
+  architecture\.checker\.(cfd-|meshing-to-cfd)                                                           min    5  disc    5    5    5  exec    5    5    5 
+  architecture\.targets\.cfd-                                                                            min    3  disc    3    3    3  exec    3    3    3 
+  unit\.P18Qualification_                                                                                min    7  disc    7    7    7  exec    7    7    7 
+  unit\.P18Qualification_(RunningTheChainLeavesEveryReferenceDocumentByteIdentical|EveryDependencyE...   min    4  disc    4    4    4  exec    4    4    4 
+  unit\.P18Qualification_(AManualEditBackFollowsTheSameTwoRegimesAsUndo|PossessionOfAThermalModelIs...   min    3  disc    3    3    3  exec    3    3    3 
+  unit\.ThermalPersistence_WhatTheWriterEmitsTheReaderAccepts$                                           min    1  disc    1    1    1  exec    1    1    1 
+  unit\.ThermalValidation_AMissingOrShortQualitySummaryIsNotAPass$                                       min    1  disc    1    1    1  exec    1    1    1 
+  unit\.ThermalValidation_AMeshAtTheEdgeOfTheAcceptedBoundsStillSolvesAndBalances$                       min    1  disc    1    1    1  exec    1    1    1 
+  unit\.ThermalSolve_(ADisconnectedMeshWithAnUnanchoredComponentFailsEndToEnd|AnUnmeetableTolerance...   min    3  disc    3    3    3  exec    3    3    3 
+  unit\.ThermalCli_ValidationJsonCarriesAWarningReportWithEveryOptionalFieldItHolds$                     min    1  disc    1    1    1  exec    1    1    1 
+  compile_fail\.thermalviz\.an-inspection-must-state-the-result-state$                                   min    1  disc    1    1    1  exec    1    1    1 
+  groups with discovered < expected or executed != discovered: 0
+  an impossible filter discovers: Total Tests: 0
+== THE CFD BOUNDARY CASES and the architecture fixtures, on each preset's own executable and CTest
+  debug-ext : All tests passed (450 assertions in 14 test cases)
+  debug-ext architecture (cfd fixtures + valid trees + link graph): 100% tests passed out of 11 | Total Test time (real) =   1.96 sec
+  release-ext : All tests passed (450 assertions in 14 test cases)
+  release-ext architecture (cfd fixtures + valid trees + link graph): 100% tests passed out of 11 | Total Test time (real) =   2.07 sec
+  debug-shared-ext : All tests passed (450 assertions in 14 test cases)
+  debug-shared-ext architecture (cfd fixtures + valid trees + link graph): 100% tests passed out of 11 | Total Test time (real) =   2.01 sec
+  assertions identical on all three presets: True ((450 assertions in 14 test cases))
+== CROSS-PRESET: the bit-exact thermal/structural/reference suites still agree (the cases below are carried; the full agreement is in the full ctest of each preset)
+  debug-ext : Total Tests: 5826
+  release-ext : Total Tests: 5826
+  debug-shared-ext : Total Tests: 5826
+evidence copied under C:\Users\hasib\OneDrive\Desktop\CAD\docs\verification\P19-ARCH-001\qualification
+postrun-arch finished 2026-10-27T09:40:08.5985278+10:00 ; failures recorded by this script: 0

@@ -6,3 +6,6 @@
 #include <bettercad/core/Error.hpp>
 #include <bettercad/features/Regenerator.hpp>
 #include <bettercad/meshing/Mesher.hpp>
+// P19-ARCH-001 (ADR-059). thermal may READ a CFD result: a wall pressure is a structural load and a wall heat-transfer
+// coefficient is a thermal boundary condition. The checker allows it by LESS; cfd-to-thermal proves the reverse is refused.
+#include <bettercad/cfd/CfdAnalysis.hpp>

@@ -1,0 +1,456 @@
+﻿Test project C:/Users/hasib/bcdev/bc-build/release-ext
+        Start  308: unit.CfdInput_NamesTheSameReasonAsTheThermalBoundaryForTheSameDocument
+        Start  313: unit.CfdInput_RefusesAMeshOfGeometryThatHasSinceChanged
+        Start  314: unit.CfdInput_RefusesAMeshWhoseSizingIntentHasChanged
+        Start  315: unit.CfdInput_RefusesAfterAFailedGenerationOfEligibleGeometry
+        Start  319: unit.CfdInput_ReportsTheFirstFailureInTheDocumentedOrder
+        Start 4970: architecture.layering
+  1/219 Test  #315: unit.CfdInput_RefusesAfterAFailedGenerationOfEligibleGeometry .................   Passed    0.24 sec
+  2/219 Test  #313: unit.CfdInput_RefusesAMeshOfGeometryThatHasSinceChanged .......................   Passed    0.26 sec
+        Start 5011: architecture.validation-ownership
+        Start 5006: architecture.balance-ownership
+  3/219 Test  #314: unit.CfdInput_RefusesAMeshWhoseSizingIntentHasChanged .........................   Passed    0.28 sec
+        Start 5002: architecture.recovery-ownership
+  4/219 Test  #319: unit.CfdInput_ReportsTheFirstFailureInTheDocumentedOrder ......................   Passed    0.29 sec
+        Start 5031: architecture.thermalcmd-ownership
+  5/219 Test  #308: unit.CfdInput_NamesTheSameReasonAsTheThermalBoundaryForTheSameDocument ........   Passed    0.46 sec
+        Start 5019: architecture.thermalviz-ownership
+  6/219 Test #5019: architecture.thermalviz-ownership .............................................   Passed    0.41 sec
+        Start 5047: architecture.thermalpersist-ownership
+  7/219 Test #5002: architecture.recovery-ownership ...............................................   Passed    0.68 sec
+        Start 5071: architecture.thermalcli-ownership
+  8/219 Test #5031: architecture.thermalcmd-ownership .............................................   Passed    0.67 sec
+        Start 5001: architecture.targets.cfd-links-io
+  9/219 Test #5047: architecture.thermalpersist-ownership .........................................   Passed    0.25 sec
+        Start  306: unit.CfdInput_AcceptsACurrentMeshWithAUsableDensity
+ 10/219 Test #5006: architecture.balance-ownership ................................................   Passed    0.85 sec
+        Start  318: unit.CfdInput_RefusesWhenTheDocumentNamesNoMaterial
+ 11/219 Test #5001: architecture.targets.cfd-links-io .............................................   Passed    0.18 sec
+        Start 5128: architecture.thermalcli-ownership.verdict-return-weakened
+ 12/219 Test #5071: architecture.thermalcli-ownership .............................................   Passed    0.27 sec
+        Start  312: unit.CfdInput_RefusesAMaterialThatHasNoDensity
+ 13/219 Test  #306: unit.CfdInput_AcceptsACurrentMeshWithAUsableDensity ...........................   Passed    0.23 sec
+        Start 5170: architecture.thermalcli-ownership.run-writes
+ 14/219 Test  #318: unit.CfdInput_RefusesWhenTheDocumentNamesNoMaterial ...........................   Passed    0.23 sec
+        Start  307: unit.CfdInput_AcceptsADensityWithNoViscosityBecauseNoMaterialCanCarryOneYet
+ 15/219 Test #5128: architecture.thermalcli-ownership.verdict-return-weakened .....................   Passed    0.24 sec
+        Start 5166: architecture.thermalcli-ownership.run-assigns-definition
+ 16/219 Test #4970: architecture.layering .........................................................   Passed    1.43 sec
+        Start 5084: architecture.thermalcli-ownership.names-validate
+ 17/219 Test #5170: architecture.thermalcli-ownership.run-writes ..................................   Passed    0.20 sec
+        Start 5104: architecture.thermalcli-ownership.correction-max
+ 18/219 Test  #312: unit.CfdInput_RefusesAMaterialThatHasNoDensity ................................***Failed    0.31 sec
+        Start 5149: architecture.thermalcli-ownership.arith-across-a-line
+ 19/219 Test #5011: architecture.validation-ownership .............................................   Passed    1.32 sec
+        Start 5123: architecture.thermalcli-ownership.stream-err
+ 20/219 Test #5166: architecture.thermalcli-ownership.run-assigns-definition ......................   Passed    0.20 sec
+ 21/219 Test  #307: unit.CfdInput_AcceptsADensityWithNoViscosityBecauseNoMaterialCanCarryOneYet ...   Passed    0.26 sec
+        Start 5161: architecture.thermalcli-ownership.run-missing
+        Start 5089: architecture.thermalcli-ownership.float-tolerance
+ 22/219 Test #5084: architecture.thermalcli-ownership.names-validate ..............................   Passed    0.21 sec
+        Start 5110: architecture.thermalcli-ownership.option-node
+ 23/219 Test #5104: architecture.thermalcli-ownership.correction-max ..............................   Passed    0.22 sec
+        Start 5171: architecture.thermalcli-ownership.run-edits-definition
+ 24/219 Test #5149: architecture.thermalcli-ownership.arith-across-a-line .........................   Passed    0.22 sec
+        Start 5087: architecture.thermalcli-ownership.material-property
+ 25/219 Test #5123: architecture.thermalcli-ownership.stream-err ..................................   Passed    0.26 sec
+ 26/219 Test #5161: architecture.thermalcli-ownership.run-missing .................................   Passed    0.22 sec
+        Start 5088: architecture.thermalcli-ownership.material-density
+        Start 5168: architecture.thermalcli-ownership.run-clears-the-report
+ 27/219 Test #5089: architecture.thermalcli-ownership.float-tolerance .............................   Passed    0.25 sec
+        Start 5164: architecture.thermalcli-ownership.run-tolerance
+ 28/219 Test #5110: architecture.thermalcli-ownership.option-node .................................   Passed    0.27 sec
+        Start 5094: architecture.thermalcli-ownership.float-after-slashes-in-string
+ 29/219 Test #5171: architecture.thermalcli-ownership.run-edits-definition ........................   Passed    0.21 sec
+        Start 5131: architecture.thermalcli-ownership.edits-execute-lost
+ 30/219 Test #5087: architecture.thermalcli-ownership.material-property ...........................   Passed    0.26 sec
+        Start 4971: architecture.checker.valid
+ 31/219 Test #5088: architecture.thermalcli-ownership.material-density ............................   Passed    0.22 sec
+        Start 5144: architecture.thermalcli-ownership.arith-balance-sum
+ 32/219 Test #5168: architecture.thermalcli-ownership.run-clears-the-report .......................   Passed    0.25 sec
+        Start 5079: architecture.thermalcli-ownership.includes-other-thermal
+ 33/219 Test #5164: architecture.thermalcli-ownership.run-tolerance ...............................   Passed    0.25 sec
+        Start 5105: architecture.thermalcli-ownership.math-sqrt
+ 34/219 Test #5131: architecture.thermalcli-ownership.edits-execute-lost ..........................   Passed    0.26 sec
+        Start 5080: architecture.thermalcli-ownership.includes-lookalike
+ 35/219 Test #5094: architecture.thermalcli-ownership.float-after-slashes-in-string ...............   Passed    0.33 sec
+ 36/219 Test #4971: architecture.checker.valid ....................................................   Passed    0.25 sec
+        Start 5140: architecture.thermalcli-ownership.ordinal-fallback-not-thrown
+        Start 5073: architecture.thermalcli-ownership.includes-solver
+ 37/219 Test #5144: architecture.thermalcli-ownership.arith-balance-sum ...........................   Passed    0.32 sec
+ 38/219 Test #5079: architecture.thermalcli-ownership.includes-other-thermal ......................   Passed    0.27 sec
+        Start 5121: architecture.thermalcli-ownership.stream-write
+        Start 5169: architecture.thermalcli-ownership.run-meshes
+ 39/219 Test #5105: architecture.thermalcli-ownership.math-sqrt ...................................   Passed    0.42 sec
+        Start 5102: architecture.thermalcli-ownership.correction-abs
+ 40/219 Test #5080: architecture.thermalcli-ownership.includes-lookalike ..........................   Passed    0.34 sec
+        Start 5095: architecture.thermalcli-ownership.float-in-a-new-file
+ 41/219 Test #5140: architecture.thermalcli-ownership.ordinal-fallback-not-thrown .................   Passed    0.31 sec
+        Start 5148: architecture.thermalcli-ownership.arith-on-an-arrow
+ 42/219 Test #5121: architecture.thermalcli-ownership.stream-write ................................   Passed    0.30 sec
+ 43/219 Test #5073: architecture.thermalcli-ownership.includes-solver .............................   Passed    0.32 sec
+        Start 5099: architecture.thermalcli-ownership.decision-balanced-branch
+        Start 5142: architecture.thermalcli-ownership.edits-missing
+ 44/219 Test #5169: architecture.thermalcli-ownership.run-meshes ..................................   Passed    0.31 sec
+        Start 5129: architecture.thermalcli-ownership.run-entry-lost
+ 45/219 Test #5102: architecture.thermalcli-ownership.correction-abs ..............................   Passed    0.22 sec
+        Start 5150: architecture.thermalcli-ownership.macro-define
+ 46/219 Test #5095: architecture.thermalcli-ownership.float-in-a-new-file .........................   Passed    0.22 sec
+        Start 5158: architecture.thermalcli-ownership.run-order
+ 47/219 Test #5148: architecture.thermalcli-ownership.arith-on-an-arrow ...........................   Passed    0.22 sec
+        Start 5112: architecture.thermalcli-ownership.option-dof
+ 48/219 Test #5099: architecture.thermalcli-ownership.decision-balanced-branch ....................   Passed    0.22 sec
+        Start 4984: architecture.checker.thermal-layer-violation
+ 49/219 Test #5142: architecture.thermalcli-ownership.edits-missing ...............................   Passed    0.22 sec
+        Start 4987: architecture.checker.thermal-backend-leak
+ 50/219 Test #5129: architecture.thermalcli-ownership.run-entry-lost ..............................   Passed    0.21 sec
+        Start 4981: architecture.checker.meshing-to-structural
+ 51/219 Test #5150: architecture.thermalcli-ownership.macro-define ................................   Passed    0.22 sec
+        Start 5118: architecture.thermalcli-ownership.stream-cout
+ 52/219 Test #5158: architecture.thermalcli-ownership.run-order ...................................   Passed    0.22 sec
+        Start 5154: architecture.thermalcli-ownership.output-tiebreak-high-lost
+ 53/219 Test #5112: architecture.thermalcli-ownership.option-dof ..................................   Passed    0.22 sec
+        Start 4980: architecture.checker.structural-layer-violation
+ 54/219 Test #4984: architecture.checker.thermal-layer-violation ..................................   Passed    0.20 sec
+        Start 5077: architecture.thermalcli-ownership.includes-renderer
+ 55/219 Test #4987: architecture.checker.thermal-backend-leak .....................................   Passed    0.20 sec
+        Start 5146: architecture.thermalcli-ownership.arith-unit-rescale
+ 56/219 Test #4981: architecture.checker.meshing-to-structural ....................................   Passed    0.20 sec
+        Start 5108: architecture.thermalcli-ownership.index-element
+ 57/219 Test #5118: architecture.thermalcli-ownership.stream-cout .................................   Passed    0.22 sec
+        Start 5173: architecture.thermalcli-ownership.header-validator-only
+ 58/219 Test #5154: architecture.thermalcli-ownership.output-tiebreak-high-lost ...................   Passed    0.25 sec
+        Start 5172: architecture.thermalcli-ownership.header-solver-success
+ 59/219 Test #4980: architecture.checker.structural-layer-violation ...............................   Passed    0.23 sec
+        Start 4976: architecture.checker.drawing-layer-violation
+ 60/219 Test #5077: architecture.thermalcli-ownership.includes-renderer ...........................   Passed    0.23 sec
+        Start 5093: architecture.thermalcli-ownership.float-after-char-literal
+ 61/219 Test #5146: architecture.thermalcli-ownership.arith-unit-rescale ..........................   Passed    0.23 sec
+        Start 4986: architecture.checker.meshing-to-thermal
+ 62/219 Test #5108: architecture.thermalcli-ownership.index-element ...............................   Passed    0.23 sec
+        Start 5143: architecture.thermalcli-ownership.output-missing
+ 63/219 Test #5173: architecture.thermalcli-ownership.header-validator-only .......................   Passed    0.23 sec
+        Start 4982: architecture.checker.structural-backend-leak
+ 64/219 Test #4976: architecture.checker.drawing-layer-violation ..................................   Passed    0.20 sec
+        Start  311: unit.CfdInput_RefusesAControlTheDocumentDoesNotHave
+ 65/219 Test #5172: architecture.thermalcli-ownership.header-solver-success .......................   Passed    0.23 sec
+        Start 5023: architecture.thermalviz-ownership.celsius
+ 66/219 Test #5093: architecture.thermalcli-ownership.float-after-char-literal ....................   Passed    0.21 sec
+        Start 5086: architecture.thermalcli-ownership.names-time-grid
+ 67/219 Test #4986: architecture.checker.meshing-to-thermal .......................................   Passed    0.21 sec
+        Start 5133: architecture.thermalcli-ownership.nonfinite-check-lost
+ 68/219 Test #5143: architecture.thermalcli-ownership.output-missing ..............................   Passed    0.22 sec
+        Start 5165: architecture.thermalcli-ownership.run-status
+ 69/219 Test #4982: architecture.checker.structural-backend-leak ..................................   Passed    0.20 sec
+        Start 5130: architecture.thermalcli-ownership.edits-remove-lost
+ 70/219 Test #5023: architecture.thermalviz-ownership.celsius .....................................   Passed    0.20 sec
+        Start 5160: architecture.thermalcli-ownership.run-validate-blind
+ 71/219 Test  #311: unit.CfdInput_RefusesAControlTheDocumentDoesNotHave ...........................   Passed    0.26 sec
+        Start 5090: architecture.thermalcli-ownership.float-default
+ 72/219 Test #5086: architecture.thermalcli-ownership.names-time-grid .............................   Passed    0.23 sec
+        Start 4985: architecture.checker.thermal-to-structural
+ 73/219 Test #5133: architecture.thermalcli-ownership.nonfinite-check-lost ........................   Passed    0.23 sec
+        Start 5107: architecture.thermalcli-ownership.index-node
+ 74/219 Test #5130: architecture.thermalcli-ownership.edits-remove-lost ...........................   Passed    0.26 sec
+        Start 5156: architecture.thermalcli-ownership.run-link-missing
+ 75/219 Test #5165: architecture.thermalcli-ownership.run-status ..................................   Passed    0.29 sec
+ 76/219 Test #5160: architecture.thermalcli-ownership.run-validate-blind ..........................   Passed    0.22 sec
+        Start 5152: architecture.thermalcli-ownership.output-isfinite-lost
+        Start 5106: architecture.thermalcli-ownership.math-pow
+ 77/219 Test #4985: architecture.checker.thermal-to-structural ....................................   Passed    0.20 sec
+        Start 5117: architecture.thermalcli-ownership.unit-degc
+ 78/219 Test #5090: architecture.thermalcli-ownership.float-default ...............................   Passed    0.26 sec
+        Start 5114: architecture.thermalcli-ownership.persist-save
+ 79/219 Test #5107: architecture.thermalcli-ownership.index-node ..................................   Passed    0.21 sec
+        Start 4993: architecture.checker.eigen-public-header
+ 80/219 Test #5156: architecture.thermalcli-ownership.run-link-missing ............................   Passed    0.22 sec
+        Start 5124: architecture.thermalcli-ownership.raw-number
+ 81/219 Test #5152: architecture.thermalcli-ownership.output-isfinite-lost ........................   Passed    0.22 sec
+        Start 5137: architecture.thermalcli-ownership.id-from-position
+ 82/219 Test #5106: architecture.thermalcli-ownership.math-pow ....................................   Passed    0.22 sec
+        Start 5115: architecture.thermalcli-ownership.persist-json
+ 83/219 Test #4993: architecture.checker.eigen-public-header ......................................   Passed    0.20 sec
+        Start 5174: architecture.thermalcli-ownership.header-missing
+ 84/219 Test #5117: architecture.thermalcli-ownership.unit-degc ...................................   Passed    0.25 sec
+        Start 5043: architecture.thermalcmd-ownership.app-edits
+ 85/219 Test #5114: architecture.thermalcli-ownership.persist-save ................................   Passed    0.25 sec
+        Start 5155: architecture.thermalcli-ownership.output-valuefinite-lost
+ 86/219 Test #5124: architecture.thermalcli-ownership.raw-number ..................................   Passed    0.21 sec
+        Start 5096: architecture.thermalcli-ownership.decision-residual
+ 87/219 Test #5137: architecture.thermalcli-ownership.id-from-position ............................   Passed    0.26 sec
+ 88/219 Test #5115: architecture.thermalcli-ownership.persist-json ................................   Passed    0.24 sec
+        Start 5092: architecture.thermalcli-ownership.float-no-leading-digit
+        Start 4977: architecture.checker.mesh-backend-leak
+ 89/219 Test #5174: architecture.thermalcli-ownership.header-missing ..............................   Passed    0.23 sec
+        Start 5085: architecture.thermalcli-ownership.names-gradient
+ 90/219 Test #5043: architecture.thermalcmd-ownership.app-edits ...................................   Passed    0.23 sec
+        Start 5145: architecture.thermalcli-ownership.arith-flux-scale
+ 91/219 Test #5155: architecture.thermalcli-ownership.output-valuefinite-lost .....................   Passed    0.28 sec
+        Start 5134: architecture.thermalcli-ownership.refusal-lost
+ 92/219 Test #5096: architecture.thermalcli-ownership.decision-residual ...........................   Passed    0.27 sec
+        Start 5081: architecture.thermalcli-ownership.spaced-include
+ 93/219 Test #4977: architecture.checker.mesh-backend-leak ........................................   Passed    0.20 sec
+        Start 5139: architecture.thermalcli-ownership.ordinal-is-id-minus-one
+ 94/219 Test #5092: architecture.thermalcli-ownership.float-no-leading-digit ......................   Passed    0.23 sec
+        Start 5098: architecture.thermalcli-ownership.decision-balance
+ 95/219 Test #5085: architecture.thermalcli-ownership.names-gradient ..............................   Passed    0.22 sec
+        Start 5076: architecture.thermalcli-ownership.includes-eigen
+ 96/219 Test #5145: architecture.thermalcli-ownership.arith-flux-scale ............................   Passed    0.22 sec
+        Start 5091: architecture.thermalcli-ownership.float-step
+ 97/219 Test #5134: architecture.thermalcli-ownership.refusal-lost ................................   Passed    0.22 sec
+        Start 5162: architecture.thermalcli-ownership.run-float
+ 98/219 Test #5081: architecture.thermalcli-ownership.spaced-include ..............................   Passed    0.27 sec
+        Start 5126: architecture.thermalcli-ownership.verdict-lost
+ 99/219 Test #5139: architecture.thermalcli-ownership.ordinal-is-id-minus-one .....................   Passed    0.28 sec
+100/219 Test #5076: architecture.thermalcli-ownership.includes-eigen ..............................   Passed    0.24 sec
+        Start 5100: architecture.thermalcli-ownership.decision-status
+        Start 5151: architecture.thermalcli-ownership.macro-paste
+101/219 Test #5098: architecture.thermalcli-ownership.decision-balance ............................   Passed    0.35 sec
+        Start 5010: architecture.balance-ownership.lacks-attribution
+102/219 Test #5091: architecture.thermalcli-ownership.float-step ..................................   Passed    0.33 sec
+103/219 Test #5162: architecture.thermalcli-ownership.run-float ...................................   Passed    0.25 sec
+        Start 4979: architecture.checker.private-include
+        Start 5138: architecture.thermalcli-ownership.id-from-position-in-place
+104/219 Test #5126: architecture.thermalcli-ownership.verdict-lost ................................   Passed    0.31 sec
+        Start 5003: architecture.recovery-ownership.valid
+105/219 Test #5100: architecture.thermalcli-ownership.decision-status .............................   Passed    0.31 sec
+        Start 5111: architecture.thermalcli-ownership.option-facet
+106/219 Test #5151: architecture.thermalcli-ownership.macro-paste .................................   Passed    0.28 sec
+        Start 5116: architecture.thermalcli-ownership.unit-celsius
+107/219 Test #4979: architecture.checker.private-include ..........................................   Passed    0.29 sec
+        Start 5078: architecture.thermalcli-ownership.includes-structural
+108/219 Test #5010: architecture.balance-ownership.lacks-attribution ..............................   Passed    0.33 sec
+        Start 4975: architecture.checker.layer-violation
+109/219 Test #5138: architecture.thermalcli-ownership.id-from-position-in-place ...................   Passed    0.33 sec
+        Start 5127: architecture.thermalcli-ownership.verdict-extra
+110/219 Test #5003: architecture.recovery-ownership.valid .........................................   Passed    0.23 sec
+        Start 5017: architecture.validation-ownership.second-owner
+111/219 Test #5111: architecture.thermalcli-ownership.option-facet ................................   Passed    0.23 sec
+        Start 5074: architecture.thermalcli-ownership.includes-system
+112/219 Test #5116: architecture.thermalcli-ownership.unit-celsius ................................   Passed    0.23 sec
+        Start 5120: architecture.thermalcli-ownership.stream-println
+113/219 Test #4975: architecture.checker.layer-violation ..........................................   Passed    0.20 sec
+        Start 5136: architecture.thermalcli-ownership.ordinal-lost
+114/219 Test #5078: architecture.thermalcli-ownership.includes-structural .........................   Passed    0.24 sec
+        Start 5125: architecture.thermalcli-ownership.raw-quantity
+115/219 Test #5127: architecture.thermalcli-ownership.verdict-extra ...............................   Passed    0.23 sec
+        Start 5005: architecture.recovery-ownership.rewrites-geometry
+116/219 Test #5017: architecture.validation-ownership.second-owner ................................   Passed    0.23 sec
+        Start 5159: architecture.thermalcli-ownership.run-validate-twice
+117/219 Test #5074: architecture.thermalcli-ownership.includes-system .............................   Passed    0.23 sec
+        Start 5083: architecture.thermalcli-ownership.names-assemble
+118/219 Test #5120: architecture.thermalcli-ownership.stream-println ..............................   Passed    0.22 sec
+        Start 5038: architecture.thermalcmd-ownership.parses-text
+119/219 Test #5136: architecture.thermalcli-ownership.ordinal-lost ................................   Passed    0.23 sec
+        Start 4983: architecture.checker.library-reaches-apps
+120/219 Test #5125: architecture.thermalcli-ownership.raw-quantity ................................   Passed    0.23 sec
+        Start 4972: architecture.checker.occt-leak
+121/219 Test #5005: architecture.recovery-ownership.rewrites-geometry .............................   Passed    0.21 sec
+        Start 5153: architecture.thermalcli-ownership.output-tiebreak-lost
+122/219 Test #5159: architecture.thermalcli-ownership.run-validate-twice ..........................   Passed    0.21 sec
+        Start 4978: architecture.checker.mesh-backend-generated-leak
+123/219 Test #5083: architecture.thermalcli-ownership.names-assemble ..............................   Passed    0.21 sec
+        Start 5014: architecture.validation-ownership.reruns
+124/219 Test #5038: architecture.thermalcmd-ownership.parses-text .................................   Passed    0.20 sec
+        Start 5135: architecture.thermalcli-ownership.node-mapping-lost
+125/219 Test #4983: architecture.checker.library-reaches-apps .....................................   Passed    0.19 sec
+        Start 5075: architecture.thermalcli-ownership.includes-linalg
+126/219 Test #4972: architecture.checker.occt-leak ................................................   Passed    0.20 sec
+        Start 5101: architecture.thermalcli-ownership.decision-enumerator
+127/219 Test #5153: architecture.thermalcli-ownership.output-tiebreak-lost ........................   Passed    0.22 sec
+        Start 5167: architecture.thermalcli-ownership.run-builds-settings
+128/219 Test #4978: architecture.checker.mesh-backend-generated-leak ..............................   Passed    0.21 sec
+        Start 5015: architecture.validation-ownership.second-tolerance
+129/219 Test #5014: architecture.validation-ownership.reruns ......................................   Passed    0.22 sec
+        Start 5103: architecture.thermalcli-ownership.correction-clamp
+130/219 Test #5135: architecture.thermalcli-ownership.node-mapping-lost ...........................   Passed    0.22 sec
+        Start 4998: architecture.targets.thermal-links-structural
+131/219 Test #5075: architecture.thermalcli-ownership.includes-linalg .............................   Passed    0.22 sec
+        Start 5013: architecture.validation-ownership.gui-decides
+132/219 Test #5101: architecture.thermalcli-ownership.decision-enumerator .........................   Passed    0.22 sec
+        Start 4991: architecture.checker.meshing-to-cfd
+133/219 Test #5167: architecture.thermalcli-ownership.run-builds-settings .........................   Passed    0.22 sec
+        Start 5147: architecture.thermalcli-ownership.arith-through-locals
+134/219 Test #5015: architecture.validation-ownership.second-tolerance ............................   Passed    0.22 sec
+        Start 5122: architecture.thermalcli-ownership.stream-extra-out
+135/219 Test #4998: architecture.targets.thermal-links-structural .................................   Passed    0.20 sec
+        Start 5021: architecture.thermalviz-ownership.gui-recomputes
+136/219 Test #5103: architecture.thermalcli-ownership.correction-clamp ............................   Passed    0.29 sec
+        Start 5028: architecture.thermalviz-ownership.second-norm
+137/219 Test #5013: architecture.validation-ownership.gui-decides .................................   Passed    0.25 sec
+138/219 Test #4991: architecture.checker.meshing-to-cfd ...........................................   Passed    0.23 sec
+        Start 5042: architecture.thermalcmd-ownership.second-owner
+        Start 5027: architecture.thermalviz-ownership.stale-flag
+139/219 Test #5122: architecture.thermalcli-ownership.stream-extra-out ............................   Passed    0.22 sec
+        Start 5067: architecture.thermalpersist-ownership.weak-strictness
+140/219 Test #5147: architecture.thermalcli-ownership.arith-through-locals ........................   Passed    0.27 sec
+        Start 5097: architecture.thermalcli-ownership.decision-reversed
+141/219 Test #5028: architecture.thermalviz-ownership.second-norm .................................   Passed    0.20 sec
+142/219 Test #5021: architecture.thermalviz-ownership.gui-recomputes ..............................   Passed    0.27 sec
+        Start 5052: architecture.thermalpersist-ownership.includes-third-party
+        Start 5163: architecture.thermalcli-ownership.run-math
+143/219 Test #5042: architecture.thermalcmd-ownership.second-owner ................................   Passed    0.21 sec
+        Start 5132: architecture.thermalcli-ownership.edits-id-cap-lost
+144/219 Test #5027: architecture.thermalviz-ownership.stale-flag ..................................   Passed    0.21 sec
+        Start 5109: architecture.thermalcli-ownership.index-through-a-local
+145/219 Test #5067: architecture.thermalpersist-ownership.weak-strictness .........................   Passed    0.20 sec
+        Start 5036: architecture.thermalcmd-ownership.mesh-identity
+146/219 Test #5097: architecture.thermalcli-ownership.decision-reversed ...........................   Passed    0.22 sec
+        Start 5046: architecture.thermalcmd-ownership.qualified-edit
+147/219 Test #5052: architecture.thermalpersist-ownership.includes-third-party ....................   Passed    0.20 sec
+        Start 4997: architecture.targets.valid
+148/219 Test #5163: architecture.thermalcli-ownership.run-math ....................................   Passed    0.21 sec
+        Start 5072: architecture.thermalcli-ownership.valid
+149/219 Test #5132: architecture.thermalcli-ownership.edits-id-cap-lost ...........................   Passed    0.22 sec
+        Start 5008: architecture.balance-ownership.gui-recomputes
+150/219 Test #5109: architecture.thermalcli-ownership.index-through-a-local .......................   Passed    0.22 sec
+        Start 5029: architecture.thermalviz-ownership.lacks-owners
+151/219 Test #5036: architecture.thermalcmd-ownership.mesh-identity ...............................   Passed    0.20 sec
+        Start 5040: architecture.thermalcmd-ownership.unordered
+152/219 Test #5046: architecture.thermalcmd-ownership.qualified-edit ..............................   Passed    0.23 sec
+        Start 5119: architecture.thermalcli-ownership.stream-printf
+153/219 Test #4997: architecture.targets.valid ....................................................   Passed    0.23 sec
+        Start 5018: architecture.validation-ownership.unordered
+154/219 Test #5072: architecture.thermalcli-ownership.valid .......................................   Passed    0.22 sec
+        Start 5113: architecture.thermalcli-ownership.persist-ofstream
+155/219 Test #5029: architecture.thermalviz-ownership.lacks-owners ................................   Passed    0.24 sec
+        Start 5065: architecture.thermalpersist-ownership.units
+156/219 Test #5008: architecture.balance-ownership.gui-recomputes .................................   Passed    0.28 sec
+        Start 5057: architecture.thermalpersist-ownership.material-copy
+157/219 Test #5040: architecture.thermalcmd-ownership.unordered ...................................   Passed    0.28 sec
+        Start 5004: architecture.recovery-ownership.gui-recomputes
+158/219 Test #5119: architecture.thermalcli-ownership.stream-printf ...............................   Passed    0.22 sec
+        Start 5030: architecture.thermalviz-ownership.no-cardinality
+159/219 Test #5018: architecture.validation-ownership.unordered ...................................   Passed    0.27 sec
+160/219 Test #5113: architecture.thermalcli-ownership.persist-ofstream ............................   Passed    0.25 sec
+        Start 5007: architecture.balance-ownership.valid
+        Start 5157: architecture.thermalcli-ownership.run-link-twice
+161/219 Test #5065: architecture.thermalpersist-ownership.units ...................................   Passed    0.22 sec
+        Start 5041: architecture.thermalcmd-ownership.bypasses-path
+162/219 Test #5057: architecture.thermalpersist-ownership.material-copy ...........................   Passed    0.22 sec
+        Start 5037: architecture.thermalcmd-ownership.positional
+163/219 Test #5004: architecture.recovery-ownership.gui-recomputes ................................   Passed    0.19 sec
+        Start 5141: architecture.thermalcli-ownership.reports-missing
+164/219 Test #5030: architecture.thermalviz-ownership.no-cardinality ..............................   Passed    0.25 sec
+        Start 5064: architecture.thermalpersist-ownership.resolves
+165/219 Test #5007: architecture.balance-ownership.valid ..........................................   Passed    0.25 sec
+        Start 5009: architecture.balance-ownership.reintegrates
+166/219 Test #5157: architecture.thermalcli-ownership.run-link-twice ..............................   Passed    0.31 sec
+        Start 4974: architecture.checker.qt-leak
+167/219 Test #5041: architecture.thermalcmd-ownership.bypasses-path ...............................   Passed    0.36 sec
+168/219 Test #5037: architecture.thermalcmd-ownership.positional ..................................   Passed    0.34 sec
+        Start 5020: architecture.thermalviz-ownership.valid
+        Start 5059: architecture.thermalpersist-ownership.parses-text
+169/219 Test #5141: architecture.thermalcli-ownership.reports-missing .............................   Passed    0.47 sec
+170/219 Test #5064: architecture.thermalpersist-ownership.resolves ................................   Passed    0.40 sec
+        Start 5056: architecture.thermalpersist-ownership.mesh-identity
+        Start 5082: architecture.thermalcli-ownership.names-solve
+171/219 Test #5009: architecture.balance-ownership.reintegrates ...................................   Passed    0.36 sec
+172/219 Test #4974: architecture.checker.qt-leak ..................................................   Passed    0.29 sec
+        Start 5054: architecture.thermalpersist-ownership.derived-name
+        Start 5024: architecture.thermalviz-ownership.index-by-id
+173/219 Test #5020: architecture.thermalviz-ownership.valid .......................................   Passed    0.28 sec
+        Start 5050: architecture.thermalpersist-ownership.spaced-include
+174/219 Test #5059: architecture.thermalpersist-ownership.parses-text .............................   Passed    0.30 sec
+        Start 4973: architecture.checker.examples-occt-leak
+175/219 Test #5056: architecture.thermalpersist-ownership.mesh-identity ...........................   Passed    0.20 sec
+        Start 5061: architecture.thermalpersist-ownership.timestamp
+176/219 Test #5054: architecture.thermalpersist-ownership.derived-name ............................   Passed    0.20 sec
+        Start 5070: architecture.thermalpersist-ownership.vendored-layer-include
+177/219 Test #5082: architecture.thermalcli-ownership.names-solve .................................   Passed    0.23 sec
+        Start 5012: architecture.validation-ownership.valid
+178/219 Test #5024: architecture.thermalviz-ownership.index-by-id .................................   Passed    0.26 sec
+        Start 5066: architecture.thermalpersist-ownership.missing-face-encoding
+179/219 Test #5050: architecture.thermalpersist-ownership.spaced-include ..........................   Passed    0.23 sec
+        Start 5039: architecture.thermalcmd-ownership.stale-flag
+180/219 Test #4973: architecture.checker.examples-occt-leak .......................................   Passed    0.23 sec
+        Start 4995: architecture.checker.linalg-to-structural
+181/219 Test #5061: architecture.thermalpersist-ownership.timestamp ...............................   Passed    0.23 sec
+        Start 5022: architecture.thermalviz-ownership.converts-units
+182/219 Test #5070: architecture.thermalpersist-ownership.vendored-layer-include ..................   Passed    0.22 sec
+        Start 5016: architecture.validation-ownership.lacks-owners
+183/219 Test #5012: architecture.validation-ownership.valid .......................................   Passed    0.27 sec
+        Start 5053: architecture.thermalpersist-ownership.other-project-include
+184/219 Test #5066: architecture.thermalpersist-ownership.missing-face-encoding ...................   Passed    0.22 sec
+        Start 5055: architecture.thermalpersist-ownership.current-check
+185/219 Test #5039: architecture.thermalcmd-ownership.stale-flag ..................................   Passed    0.23 sec
+        Start 5069: architecture.thermalpersist-ownership.dispatch-derived
+186/219 Test #4995: architecture.checker.linalg-to-structural .....................................   Passed    0.20 sec
+        Start 5026: architecture.thermalviz-ownership.mutates
+187/219 Test #5022: architecture.thermalviz-ownership.converts-units ..............................   Passed    0.21 sec
+        Start 5063: architecture.thermalpersist-ownership.mutable
+188/219 Test #5016: architecture.validation-ownership.lacks-owners ................................   Passed    0.22 sec
+        Start 4994: architecture.checker.linalg-to-thermal
+189/219 Test #5053: architecture.thermalpersist-ownership.other-project-include ...................   Passed    0.21 sec
+        Start 5048: architecture.thermalpersist-ownership.valid
+190/219 Test #5055: architecture.thermalpersist-ownership.current-check ...........................   Passed    0.22 sec
+        Start 5051: architecture.thermalpersist-ownership.lookalike-include
+191/219 Test #5069: architecture.thermalpersist-ownership.dispatch-derived ........................   Passed    0.21 sec
+        Start 5060: architecture.thermalpersist-ownership.unordered
+192/219 Test #5026: architecture.thermalviz-ownership.mutates .....................................   Passed    0.20 sec
+        Start 5058: architecture.thermalpersist-ownership.material-id
+193/219 Test #5063: architecture.thermalpersist-ownership.mutable .................................   Passed    0.21 sec
+        Start 5049: architecture.thermalpersist-ownership.includes-solver
+194/219 Test #4994: architecture.checker.linalg-to-thermal ........................................   Passed    0.20 sec
+        Start 5068: architecture.thermalpersist-ownership.io-includes-solver
+195/219 Test #5048: architecture.thermalpersist-ownership.valid ...................................   Passed    0.20 sec
+        Start 5034: architecture.thermalcmd-ownership.includes-third-party
+196/219 Test #5051: architecture.thermalpersist-ownership.lookalike-include .......................   Passed    0.20 sec
+        Start 5044: architecture.thermalcmd-ownership.quoted-include
+197/219 Test #5060: architecture.thermalpersist-ownership.unordered ...............................   Passed    0.21 sec
+        Start 5062: architecture.thermalpersist-ownership.stale-flag
+198/219 Test #5058: architecture.thermalpersist-ownership.material-id .............................   Passed    0.20 sec
+        Start 5025: architecture.thermalviz-ownership.unordered
+199/219 Test #5049: architecture.thermalpersist-ownership.includes-solver .........................   Passed    0.20 sec
+        Start 4989: architecture.checker.cfd-to-structural
+200/219 Test #5068: architecture.thermalpersist-ownership.io-includes-solver ......................   Passed    0.20 sec
+        Start 5035: architecture.thermalcmd-ownership.solves
+201/219 Test #5034: architecture.thermalcmd-ownership.includes-third-party ........................   Passed    0.21 sec
+        Start 4992: architecture.checker.cfd-backend-leak
+202/219 Test #5044: architecture.thermalcmd-ownership.quoted-include ..............................   Passed    0.22 sec
+        Start 4988: architecture.checker.cfd-layer-violation
+203/219 Test #5062: architecture.thermalpersist-ownership.stale-flag ..............................   Passed    0.22 sec
+        Start 4999: architecture.targets.cfd-links-thermal
+204/219 Test #5025: architecture.thermalviz-ownership.unordered ...................................   Passed    0.26 sec
+        Start 5033: architecture.thermalcmd-ownership.includes-solver
+205/219 Test #4989: architecture.checker.cfd-to-structural ........................................   Passed    0.24 sec
+        Start 4990: architecture.checker.cfd-to-thermal
+206/219 Test #5035: architecture.thermalcmd-ownership.solves ......................................   Passed    0.25 sec
+        Start 5032: architecture.thermalcmd-ownership.valid
+207/219 Test #4992: architecture.checker.cfd-backend-leak .........................................   Passed    0.22 sec
+        Start  316: unit.CfdInput_RefusesAnIneligibleBodyBeforeLookingAtTheMesh
+208/219 Test #4988: architecture.checker.cfd-layer-violation ......................................   Passed    0.20 sec
+        Start 5045: architecture.thermalcmd-ownership.io-edits
+209/219 Test #4999: architecture.targets.cfd-links-thermal ........................................   Passed    0.20 sec
+        Start 5000: architecture.targets.cfd-links-structural
+210/219 Test #5033: architecture.thermalcmd-ownership.includes-solver .............................   Passed    0.20 sec
+        Start  317: unit.CfdInput_RefusesWhenNothingHasBeenMeshed
+211/219 Test #4990: architecture.checker.cfd-to-thermal ...........................................   Passed    0.20 sec
+        Start  310: unit.CfdInput_ReachesEveryInputProblemItDeclares
+212/219 Test #5032: architecture.thermalcmd-ownership.valid .......................................   Passed    0.21 sec
+        Start  309: unit.CfdInput_PossessionOfACfdModelIsTheOnlyProof
+213/219 Test #5045: architecture.thermalcmd-ownership.io-edits ....................................   Passed    0.20 sec
+        Start 4996: architecture.targets.link-graph
+214/219 Test #5000: architecture.targets.cfd-links-structural .....................................   Passed    0.20 sec
+215/219 Test  #316: unit.CfdInput_RefusesAnIneligibleBodyBeforeLookingAtTheMesh ...................   Passed    0.25 sec
+216/219 Test #4996: architecture.targets.link-graph ...............................................   Passed    0.07 sec
+217/219 Test  #310: unit.CfdInput_ReachesEveryInputProblemItDeclares ..............................   Passed    0.15 sec
+218/219 Test  #317: unit.CfdInput_RefusesWhenNothingHasBeenMeshed .................................   Passed    0.17 sec
+219/219 Test  #309: unit.CfdInput_PossessionOfACfdModelIsTheOnlyProof .............................   Passed    0.14 sec
+
+99% tests passed, 1 tests failed out of 219
+
+Total Test time (real) =  15.19 sec
+
+The following tests FAILED:
+	312 - unit.CfdInput_RefusesAMaterialThatHasNoDensity (Failed)
+ctest.exe : Errors while running CTest
+At C:\Users\hasib\AppData\Local\Temp\claude\C--Users-hasib-Desktop-CAD\31d55056-e746-4b0d-938c-e551fb84138c\scratchpad\
+mutate-cfd.ps1:37 char:21
++ ... $ctestOut = & ctest --test-dir "C:\Users\hasib\bcdev\bc-build\release ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Errors while running CTest:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Output from these tests are in: C:/Users/hasib/bcdev/bc-build/release-ext/Testing/Temporary/LastTest.log
+Use "--rerun-failed --output-on-failure" to re-run the failed cases verbosely.

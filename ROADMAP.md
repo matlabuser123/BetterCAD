@@ -112,7 +112,10 @@ P18-VALID-001 and P18-VIZ-001 (2026-10-23), P18-CMD-001 (2026-10-24),
 P18-PERSIST-001 (2026-10-25), P18-CLI-001 and P18-REFMOD-001 (2026-10-26) have
 PASSED, and P18 — Thermal Analysis was QUALIFIED on 2026-10-27 by P18-QUAL-001:
 eighteen milestones PASS, 5804/5804 tests in three presets, qualified tree ==
-committed tree. P19 — CFD Integration is next and NOT authorized; see TODO.md.
+committed tree.
+P19 — CFD Integration, authorized 2026-10-27 by the owner's "start
+P19-ARCH-001": P19-ARCH-001 (2026-10-27) has PASSED. P19-DATA-001 is next and
+NOT authorized; see TODO.md.
 ```
 
 Released: `v0.1.0` — Foundation.
@@ -134,7 +137,7 @@ Qualified but not yet separately released: `P11`, `P12`, `P13`, `P14`, `P15`, `P
 | Meshing | `P16` | **Qualified** |
 | Structural FEA | `P17` | **Qualified** |
 | Thermal Analysis | `P18` | **Qualified** |
-| CFD Integration | `P19` | Planned |
+| CFD Integration | `P19` | In progress |
 | Design Optimization | `P20` | Planned |
 | Semantic Topology | `P21` | Planned |
 | Versioning / Collaboration | `P22` | Planned |
@@ -778,7 +781,14 @@ expansion and stress) remain later work. Open owner decisions are listed in
 
 ---
 
-## CFD Integration — Planned
+## CFD Integration — In progress
+
+`P19` starts with laminar, incompressible, Newtonian flow solved by
+cell-centred finite volume on the `P16` Tet4 mesh, steady and transient, with
+the same authority discipline as `P17` and `P18`. `P19-ARCH-001` (PASS
+2026-10-27) fixed the scope, the layer (`cfd` at 42, below thermal and
+structural) and the input boundary; see
+[P19-ARCH-001](docs/verification/P19-ARCH-001/README.md).
 
 ```text
 incompressible laminar

@@ -1,0 +1,39 @@
+﻿Filters: "CfdInput_*"
+Randomness seeded to: 1235600328
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+bettercad_tests.exe is a Catch2 v3.16.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+CfdInput_AcceptsACurrentMeshWithAUsableDensity
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/cfd/CfdAnalysisBoundaryTests.cpp:142
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/cfd/CfdAnalysisBoundaryTests.cpp:172: warning:
+  prepared: 12 tets (= finite-volume cells), 12 boundary triangles (= boundary
+  faces), 9 nodes, rho = 998 kg/m^3
+
+-------------------------------------------------------------------------------
+CfdInput_RefusesAMeshOfGeometryThatHasSinceChanged
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/cfd/CfdAnalysisBoundaryTests.cpp:232
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/cfd/CfdAnalysisBoundaryTests.cpp:265: warning:
+  a mesh of changed geometry: 12 tetrahedra still held and still valid,
+  currency stale: the geometry changed, CFD analysis refused as mesh_stale
+
+-------------------------------------------------------------------------------
+CfdInput_ReachesEveryInputProblemItDeclares
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/cfd/CfdAnalysisBoundaryTests.cpp:504
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/cfd/CfdAnalysisBoundaryTests.cpp:527: warning:
+  7 input problems declared, every one reached by a case in this file
+
+===============================================================================
+All tests passed (450 assertions in 14 test cases)
+

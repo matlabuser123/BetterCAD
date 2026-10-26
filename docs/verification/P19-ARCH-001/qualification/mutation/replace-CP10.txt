@@ -1,0 +1,1 @@
+    if(FALSE AND "BetterCAD::thermal" IN_LIST cfd_targets)

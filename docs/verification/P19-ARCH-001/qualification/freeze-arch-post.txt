@@ -1,0 +1,93 @@
+﻿P19-ARCH-001 freeze
+HEAD      e1a8eb29e4d477cdd5fe3a8b82edac25629420b6
+HEAD tree 4231e53a0b389c1ab88c250e505ef23cd8302ec5
+scratch tree 246a1719fa222f0659af0512b4c70941b3ebded6
+apps               b4e2268d1a42fbdd543c7d4e0d10d58ecb70b117
+include            e4503a1712bc4295710d857727bd00660f6c8621
+src                3dd791701a4516c3ec17daae4994b8c7a4c43ddb
+tests              7967221f04e721f7fb6e91a7a6ddc47cddf6742e
+examples           4da234ebf4779f7c16d5df0075f106f7e3d4c958
+cmake              5a382115d7ed7775189d40b55e40f318eaae6cc7
+CMakeLists.txt     3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd
+CMakePresets.json  3229f0f89b236744d7d5c082bed47c28b718288e
+
+== CFD_MODULE  (4 files)
+   include/bettercad/cfd/CfdAnalysis.hpp                                                      bbfb119a78535e22a64fc8c7bc62372890d31a67
+   src/cfd/CfdAnalysis.cpp                                                                    b6f6107f9c4d76530a0c34098c6480a3f742cf40
+   src/cfd/CMakeLists.txt                                                                     448744a648747e0610f2ed0eca4ddde4661df1e1
+   src/CMakeLists.txt                                                                         7296b6692547f55ecc0e08572646b97cfd4be0ea
+P19_ARCH_CFD_MODULE_FINGERPRINT b6ec0cb7e571c11b41cef17af685b6d11947a42e
+
+== CFD_TESTS  (3 files)
+   tests/cfd/CfdAnalysisBoundaryTests.cpp                                                     ddb7ae78544aebc1613693a9fdb0cfe03a4f384c
+   tests/CMakeLists.txt                                                                       5be4b12be912e9a195e2849999ed555065b237fa
+   tests/cli/ZeroMatchGuard.cmake                                                             09fc61db5480edd01a98d2473ef75952a2879713
+P19_ARCH_CFD_TESTS_FINGERPRINT 44ef629f1995dfb45c92dae3d0f183a49b199887
+
+== ARCHITECTURE_CONTRACT  (27 files)
+   tests/architecture/CheckLayering.cmake                                                     cafc0a389af7162dc807f07450828b8632337f6a
+   tests/architecture/CheckTargetDependencies.cmake                                           4a693763ce7bcb2725d5add4563d79f549cc76d1
+   tests/architecture/CMakeLists.txt                                                          37719ff1c8750892d2588ad6678e6677a12cbfaf
+   tests/architecture/fixtures/cfd-backend-leak/src/cfd/Leak.cpp                              ad983846cc8958ac8b6a45318187efebeab2c33b
+   tests/architecture/fixtures/cfd-layer-violation/src/cfd/Leak.cpp                           3a379f986d04e1ea5af5e5bf91613775ddf26a6d
+   tests/architecture/fixtures/cfd-links-io/src/cfd/CMakeLists.txt                            d958ab5bc013a2a8c9e843793fe0a8c9c9adf1c8
+   tests/architecture/fixtures/cfd-links-io/src/linalg/CMakeLists.txt                         8c6510466a0bcbe7356b920b20ca3d2d0f2eaecf
+   tests/architecture/fixtures/cfd-links-io/src/thermal/CMakeLists.txt                        ed7bd2ef0eaf4f89a2214891da3aafaaadc1e2c6
+   tests/architecture/fixtures/cfd-links-structural/src/cfd/CMakeLists.txt                    0ea5a3578c90c9742772caf5f29b47f024ca23bc
+   tests/architecture/fixtures/cfd-links-structural/src/linalg/CMakeLists.txt                 8c6510466a0bcbe7356b920b20ca3d2d0f2eaecf
+   tests/architecture/fixtures/cfd-links-structural/src/thermal/CMakeLists.txt                ed7bd2ef0eaf4f89a2214891da3aafaaadc1e2c6
+   tests/architecture/fixtures/cfd-links-thermal/src/cfd/CMakeLists.txt                       d33cd5f7a78a1ee890c786513139550945ec31c8
+   tests/architecture/fixtures/cfd-links-thermal/src/linalg/CMakeLists.txt                    8c6510466a0bcbe7356b920b20ca3d2d0f2eaecf
+   tests/architecture/fixtures/cfd-links-thermal/src/thermal/CMakeLists.txt                   ed7bd2ef0eaf4f89a2214891da3aafaaadc1e2c6
+   tests/architecture/fixtures/cfd-to-structural/src/cfd/Leak.cpp                             28a46d7c05d3541d360bf337119c1849852682ad
+   tests/architecture/fixtures/cfd-to-thermal/src/cfd/Leak.cpp                                43b6c1c1c83e594faac543ea8c4509ed79ef038c
+   tests/architecture/fixtures/meshing-to-cfd/src/meshing/Leak.cpp                            c82c43a66867fb2d2ead5d9650a17c90c184a6d6
+   tests/architecture/fixtures/valid/src/cfd/Analysis.cpp                                     e20824f6c59ce0475261c11046e4ab71fb10cf75
+   tests/architecture/fixtures/valid/src/renderer/View.cpp                                    429b13f585d66a5eb4d4ed3ee876ac1f5cad78db
+   tests/architecture/fixtures/valid/src/structural/Analysis.cpp                              ecb0d968529ed329c25d79b2b441bbc7e002785e
+   tests/architecture/fixtures/valid/src/thermal/Analysis.cpp                                 9c2296f5ae0063f52ee5de3eb4d982e6c3f9237f
+   tests/architecture/fixtures/targets-valid/src/cfd/CMakeLists.txt                           d2b4a3d06e3ac7fa939ede6ccb076797a19d1e9b
+   tests/architecture/fixtures/targets-valid/src/linalg/CMakeLists.txt                        8c6510466a0bcbe7356b920b20ca3d2d0f2eaecf
+   tests/architecture/fixtures/targets-valid/src/thermal/CMakeLists.txt                       ed7bd2ef0eaf4f89a2214891da3aafaaadc1e2c6
+   tests/architecture/fixtures/thermal-links-structural/src/cfd/CMakeLists.txt                d2b4a3d06e3ac7fa939ede6ccb076797a19d1e9b
+   tests/architecture/fixtures/thermal-links-structural/src/linalg/CMakeLists.txt             8c6510466a0bcbe7356b920b20ca3d2d0f2eaecf
+   tests/architecture/fixtures/thermal-links-structural/src/thermal/CMakeLists.txt            fb560d1de21d6fa3e4bc92a382fcae1bf09bfda2
+P19_ARCH_ARCHITECTURE_CONTRACT_FINGERPRINT afd8f106a8b16b0b1fe4ff87f5996cc484a180db
+
+== ADRS  (4 files)
+   docs/architecture/decisions/ADR-058-the-first-cfd-solver-is-laminar-incompressible-finite-volume-on-the-p16-tet4-mesh.md 090a1383b39d7ee3f43b9a60905e8f9b989ae876
+   docs/architecture/decisions/ADR-059-a-cfd-module-at-layer-42-below-thermal-and-structural-so-the-results-can-flow-up.md 2ac5040478f6b4fca840cb2f75c0bbd5794df42d
+   docs/architecture/decisions/ADR-060-a-cfd-analysis-input-is-validated-once-the-fluid-is-a-p15-material-and-possession-is-the-proof.md 7e8ddad1aeaa25dd4a25adf2c13e1c6dbce96a2c
+   docs/architecture.md                                                                       775cb4463f1130ebb95fdc5901aa617730e933ec
+P19_ARCH_ADRS_FINGERPRINT 8000581adf54b3a9ef9a51a0758396560e7d195d
+
+== CHANGES against HEAD in the eight qualified paths (git status --short)
+ M src/CMakeLists.txt
+ M tests/CMakeLists.txt
+ M tests/architecture/CMakeLists.txt
+ M tests/architecture/CheckLayering.cmake
+ M tests/architecture/CheckTargetDependencies.cmake
+ M tests/architecture/fixtures/valid/src/structural/Analysis.cpp
+ M tests/architecture/fixtures/valid/src/thermal/Analysis.cpp
+ M tests/cli/ZeroMatchGuard.cmake
+?? include/bettercad/cfd/
+?? src/cfd/
+?? tests/architecture/fixtures/cfd-backend-leak/
+?? tests/architecture/fixtures/cfd-layer-violation/
+?? tests/architecture/fixtures/cfd-links-io/
+?? tests/architecture/fixtures/cfd-links-structural/
+?? tests/architecture/fixtures/cfd-links-thermal/
+?? tests/architecture/fixtures/cfd-to-structural/
+?? tests/architecture/fixtures/cfd-to-thermal/
+?? tests/architecture/fixtures/meshing-to-cfd/
+?? tests/architecture/fixtures/targets-valid/src/cfd/
+?? tests/architecture/fixtures/thermal-links-structural/src/cfd/
+?? tests/architecture/fixtures/valid/src/cfd/
+?? tests/cfd/
+== other uncommitted paths
+ M docs/architecture.md
+?? .claude/
+?? docs/architecture/decisions/ADR-058-the-first-cfd-solver-is-laminar-incompressible-finite-volume-on-the-p16-tet4-mesh.md
+?? docs/architecture/decisions/ADR-059-a-cfd-module-at-layer-42-below-thermal-and-structural-so-the-results-can-flow-up.md
+?? docs/architecture/decisions/ADR-060-a-cfd-analysis-input-is-validated-once-the-fluid-is-a-p15-material-and-possession-is-the-proof.md
+?? docs/verification/P19-ARCH-001/

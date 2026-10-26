@@ -1,0 +1,2 @@
+                                                ? InputProblem::MeshGenerationFailed
+                                                : InputProblem::MeshStale);
