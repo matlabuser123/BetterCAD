@@ -161,4 +161,26 @@ exported free functions and `toString`, each `BETTERCAD_CFD_EXPORT`.
 
 ## The commit record
 
-Written after the commit, in the documentation commit that follows it.
+```text
+commit             42a35516b21cee587fb8b9653b8ba0555e8bbff3
+                   "BetterCAD: define CFD analysis architecture",
+                   parent e1a8eb2, 128 files; committed by
+                   qualification/commit-arch.ps1, which recomputed the
+                   fingerprint from a scratch index (read-tree HEAD + add -A
+                   over the eight paths) and refused to commit unless it
+                   equalled freeze-arch-pre.txt, then read the commit back
+                   with git rev-parse <commit>^{tree}:<path>
+scratch tree       246a1719fa222f0659af0512b4c70941b3ebded6   == frozen
+apps               b4e2268d1a42fbdd543c7d4e0d10d58ecb70b117   == frozen
+include            e4503a1712bc4295710d857727bd00660f6c8621   == frozen
+src                3dd791701a4516c3ec17daae4994b8c7a4c43ddb   == frozen
+tests              7967221f04e721f7fb6e91a7a6ddc47cddf6742e   == frozen
+examples           4da234ebf4779f7c16d5df0075f106f7e3d4c958   == frozen
+cmake              5a382115d7ed7775189d40b55e40f318eaae6cc7   == frozen
+CMakeLists.txt     3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd   == frozen
+CMakePresets.json  3229f0f89b236744d7d5c082bed47c28b718288e   == frozen
+```
+
+All eight equal, before and after the commit: **qualified tree == committed tree**. This record could only be written
+after the commit existed, so it lands in the documentation commit that follows; `docs/` is outside the fingerprint
+by construction.

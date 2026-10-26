@@ -1938,7 +1938,9 @@ incompressible collocated finite volume on the P16 tets), and the input
 boundary requireCfdModel / CfdModel (ADR-060, the fluid is the document's
 P15 material) with 14 boundary cases and 8 architecture fixtures; 554
 files, 0 layering violations. Adversarial review: independent reviewer
-0 blockers, 13 findings disposed; 10 of 10 mutants killed. Evidence:
+0 blockers, 13 findings disposed; 10 of 10 mutants killed. Committed as
+42a3551; all eight subtree hashes of that commit equal the frozen
+fingerprint: qualified tree == committed tree. Evidence:
 docs/verification/P19-ARCH-001/.
 
 P19-DATA-001 is NOT AUTHORIZED. Being next in the plan is not permission.
