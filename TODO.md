@@ -1713,6 +1713,8 @@ transient runs once the time step is small (needs a rounding term, which loosens
 tolerance); F2 no bound on a temperature; F3 no bound on the user's residual
 tolerance. docs/verification/P18-QUAL-001/ADVERSARIAL_REVIEW.md, LIMITATIONS.md.
 Evidence: docs/verification/P18-QUAL-001/.
+Committed b5dce07, and all eight subtree hashes of that commit equal the frozen
+fingerprint: qualified tree == committed tree.
 ```
 
 ### P18 Final Gate

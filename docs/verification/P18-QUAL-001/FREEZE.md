@@ -67,4 +67,4 @@ run before the launch: a failed stage gave `qualify.cmd` exit 2, and a zero-matc
 
 ## Qualified == committed
 
-Read back after the commit (the commit script refuses to commit unless the recomputed eight hashes equal the frozen ones, and reads the eight subtree hashes of the commit back): see the record in `README.md`.
+Committed as `b5dce0773b620ef4c628ae64c534e58a9f66b4ce` (`BetterCAD: qualify P18 thermal analysis`). The commit script recomputed the eight hashes from a scratch index immediately before committing and required each to equal the frozen one, then read the eight subtree hashes of the commit back: **apps, include, src, tests, examples, cmake, CMakeLists.txt and CMakePresets.json of the commit are all equal to the frozen values above. Qualified tree == committed tree.**

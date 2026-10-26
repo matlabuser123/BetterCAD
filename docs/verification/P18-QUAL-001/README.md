@@ -64,6 +64,10 @@ The binaries were proven fresh (newer than their preset's clean and than the new
 * **`TODO.md` ordering.** The brief asks for the Future Phases section to be the absolute end of `TODO.md`. In the repository (as at HEAD and at every earlier milestone) three sections follow it - Workflow, Project Authority
   and CURRENT NEXT STEP. The order was kept and is reported, not changed; the claim "Future Phases is the final section" is therefore **not** true of the file.
 
+## Commit
+
+Committed as `b5dce0773b620ef4c628ae64c534e58a9f66b4ce` (`BetterCAD: qualify P18 thermal analysis`, 930 files); all eight subtree hashes equal the frozen fingerprint (`FREEZE.md`): qualified tree == committed tree.
+
 ## Next
 
 `P19 - CFD Integration`. **Not authorized. Do not start P19.**
