@@ -1,0 +1,36 @@
+{
+  "analysisId": 8,
+  "name": "Study",
+  "mode": "steady",
+  "nodeCount": 9,
+  "tetrahedronCount": 12,
+  "domain": "element",
+  "quantity": "conductive_heat_flux",
+  "unit": "W/m^2",
+  "count": 12,
+  "magnitude": {
+    "min": 999.9999999999955,
+    "max": 1000.0000000000034,
+    "unit": "W/m^2"
+  },
+  "largest": {
+    "element": 5,
+    "magnitude": {
+      "value": 1000.0000000000034,
+      "unit": "W/m^2"
+    },
+    "flux": {
+      "x": 0,
+      "y": 0,
+      "z": 1000.0000000000034,
+      "unit": "W/m^2"
+    }
+  },
+  "smallest": {
+    "element": 8,
+    "magnitude": {
+      "value": 999.9999999999955,
+      "unit": "W/m^2"
+    }
+  }
+}

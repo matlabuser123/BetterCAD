@@ -1,0 +1,2 @@
+bettercad-cli thermal-solve: unexpected argument '--force'
+Usage: bettercad-cli thermal-solve <file.bcad> [--json]

@@ -1,0 +1,6 @@
+Applied 4 edits from C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/batch.txt:
+     2  Added thermal analysis 'Thermal1' over PlateMesh (object:7), mode steady
+     3  Added load 1: volumetric heat generation 1e+05 W/m^3
+     4  Added boundary condition 1: prescribed temperature 300 K on face:Extrude001:start_cap
+     5  Added boundary condition 2: convection 25 W/(m^2 K) to 293.15 K on face:Extrude001:end_cap
+Wrote C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/batch.bcad

@@ -1,0 +1,1 @@
+bettercad-cli thermal-balance: loads_invalid: thermal load:1: its target face names no face of the body as it is now, so the load has nothing to act on. Nothing nearby is substituted

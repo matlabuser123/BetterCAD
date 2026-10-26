@@ -386,6 +386,18 @@ set(_filters
     "refmod\\.thermal\\.(validate|solve)\\." 10
     "refmod\\.thermal\\.refused\\." 5
     "refmod\\.thermal\\.workflow$" 1
+    # P18-QUAL-001. The final-gate cases (the authority matrix over every reference document, the currentness matrix in one sequence and its
+    # edit-back path, a failed regeneration, the unforgeable proof of an accepted input, the units of the transient sum), and one test for
+    # each defect the final audit found and fixed or each gap it closed, each at its own name so a rename or a drop is a failure.
+    "unit\\.P18Qualification_" 7
+    "unit\\.P18Qualification_(RunningTheChainLeavesEveryReferenceDocumentByteIdentical|EveryDependencyEditStalesExactlyTheObjectsItReaches|TheTransientEditsAndTheCapacityStaleTheirOwnObjects|AFailedRegenerationNeverYieldsACurrentResult)$" 4
+    "unit\\.P18Qualification_(AManualEditBackFollowsTheSameTwoRegimesAsUndo|PossessionOfAThermalModelIsTheOnlyProof|TheThermalTimeConstantIsATimeAndTheTransientSumIsDimensionallyLegal)$" 3
+    "unit\\.ThermalPersistence_WhatTheWriterEmitsTheReaderAccepts$" 1
+    "unit\\.ThermalValidation_AMissingOrShortQualitySummaryIsNotAPass$" 1
+    "unit\\.ThermalValidation_AMeshAtTheEdgeOfTheAcceptedBoundsStillSolvesAndBalances$" 1
+    "unit\\.ThermalSolve_(ADisconnectedMeshWithAnUnanchoredComponentFailsEndToEnd|AnUnmeetableToleranceRefusesTheSolveItself|TheSolverSettingDefaultsAreTheKernelDefaults)$" 3
+    "unit\\.ThermalCli_ValidationJsonCarriesAWarningReportWithEveryOptionalFieldItHolds$" 1
+    "compile_fail\\.thermalviz\\.an-inspection-must-state-the-result-state$" 1
 )
 list(LENGTH _filters _count)
 math(EXPR _last "${_count} - 1")

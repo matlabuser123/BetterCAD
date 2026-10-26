@@ -171,7 +171,7 @@ int main() {
     const meshing::Mesh* mesh = nullptr;
     const thermal::ThermalPostResult* post = nullptr;
     if (mesh != nullptr && post != nullptr) {
-        (void)inspectThermalElement(*mesh, *post, 0U, meshing::NodeId{});
+        (void)inspectThermalElement(*mesh, *post, 0U, meshing::NodeId{}, renderer::ThermalResultState::Current);
     }
 #endif
 
@@ -180,7 +180,17 @@ int main() {
     const thermal::ThermalDofMap* map = nullptr;
     const thermal::ThermalPostResult* post = nullptr;
     if (mesh != nullptr && map != nullptr && post != nullptr) {
-        (void)inspectThermalNode(*mesh, *map, *post, 0U, meshing::ElementId{});
+        (void)inspectThermalNode(*mesh, *map, *post, 0U, meshing::ElementId{}, renderer::ThermalResultState::Current);
+    }
+#endif
+
+#if defined(BETTERCAD_CF_AN_INSPECTION_MUST_STATE_THE_RESULT_STATE)
+    // P18-QUAL-001. The inspection used to default the result's currentness to `Current`, so a caller that forgot to ask would
+    // have labelled a stale result current. The state is now a required argument.
+    const meshing::Mesh* mesh = nullptr;
+    const thermal::ThermalPostResult* post = nullptr;
+    if (mesh != nullptr && post != nullptr) {
+        (void)inspectThermalElement(*mesh, *post, 0U, meshing::ElementId{});
     }
 #endif
 

@@ -1,0 +1,400 @@
+{
+  "analysisId": 9,
+  "name": "Thermal1",
+  "mode": "transient",
+  "nodeCount": 81,
+  "tetrahedronCount": 127,
+  "accepted": true,
+  "balanced": true,
+  "worstNormalizedResidual": 6.117084690123233e-14,
+  "stateCount": 4,
+  "final": {
+    "step": 4,
+    "time": {
+      "value": 1,
+      "unit": "s"
+    },
+    "stepSize": {
+      "value": 0.10000000000000009,
+      "unit": "s"
+    },
+    "surfaceHeatInto": {
+      "value": 0,
+      "unit": "W"
+    },
+    "generationInto": {
+      "value": 18.749733120798105,
+      "unit": "W"
+    },
+    "convectionInto": {
+      "value": -0.33267571041138994,
+      "unit": "W"
+    },
+    "dirichletReactionInto": {
+      "value": 57.388337975905934,
+      "unit": "W"
+    },
+    "storedEnergyRate": {
+      "value": 75.80539538628717,
+      "unit": "W"
+    },
+    "storedEnergyChange": {
+      "value": 7.580539538628724,
+      "unit": "J"
+    },
+    "residual": {
+      "value": 5.4711790653527714e-12,
+      "unit": "W"
+    },
+    "normalizedResidual": 3.5929325412013316e-14,
+    "status": "balanced"
+  },
+  "loads": [
+    {
+      "loadId": 1,
+      "type": "volumetric_heat_source",
+      "heatInto": {
+        "value": 18.749733120798105,
+        "unit": "W"
+      }
+    }
+  ],
+  "convections": [
+    {
+      "boundaryConditionId": 2,
+      "area": {
+        "value": 0.004687433280199526,
+        "unit": "m^2"
+      },
+      "heatInto": {
+        "value": -0.33267571041138994,
+        "unit": "W"
+      }
+    }
+  ],
+  "reactionCount": 40,
+  "steps": [
+    {
+      "step": 1,
+      "time": {
+        "value": 0.3,
+        "unit": "s"
+      },
+      "stepSize": {
+        "value": 0.3,
+        "unit": "s"
+      },
+      "surfaceHeatInto": {
+        "value": 0,
+        "unit": "W"
+      },
+      "generationInto": {
+        "value": 18.749733120798105,
+        "unit": "W"
+      },
+      "convectionInto": {
+        "value": -0.29249462552004224,
+        "unit": "W"
+      },
+      "dirichletReactionInto": {
+        "value": 63.84631100190773,
+        "unit": "W"
+      },
+      "storedEnergyRate": {
+        "value": 82.30354949719364,
+        "unit": "W"
+      },
+      "storedEnergyChange": {
+        "value": 24.691064849158092,
+        "unit": "J"
+      },
+      "residual": {
+        "value": -7.844391802791506e-12,
+        "unit": "W"
+      },
+      "normalizedResidual": 4.748648610299905e-14,
+      "status": "balanced"
+    },
+    {
+      "step": 2,
+      "time": {
+        "value": 0.6,
+        "unit": "s"
+      },
+      "stepSize": {
+        "value": 0.3,
+        "unit": "s"
+      },
+      "surfaceHeatInto": {
+        "value": 0,
+        "unit": "W"
+      },
+      "generationInto": {
+        "value": 18.749733120798105,
+        "unit": "W"
+      },
+      "convectionInto": {
+        "value": -0.310125100822666,
+        "unit": "W"
+      },
+      "dirichletReactionInto": {
+        "value": 60.02707816547178,
+        "unit": "W"
+      },
+      "storedEnergyRate": {
+        "value": 78.46668618545503,
+        "unit": "W"
+      },
+      "storedEnergyChange": {
+        "value": 23.540005855636508,
+        "unit": "J"
+      },
+      "residual": {
+        "value": -7.815970093361102e-12,
+        "unit": "W"
+      },
+      "normalizedResidual": 4.960831725568315e-14,
+      "status": "balanced"
+    },
+    {
+      "step": 3,
+      "time": {
+        "value": 0.8999999999999999,
+        "unit": "s"
+      },
+      "stepSize": {
+        "value": 0.3,
+        "unit": "s"
+      },
+      "surfaceHeatInto": {
+        "value": 0,
+        "unit": "W"
+      },
+      "generationInto": {
+        "value": 18.749733120798105,
+        "unit": "W"
+      },
+      "convectionInto": {
+        "value": -0.3270951485676272,
+        "unit": "W"
+      },
+      "dirichletReactionInto": {
+        "value": 58.030101086138984,
+        "unit": "W"
+      },
+      "storedEnergyRate": {
+        "value": 76.45273905836007,
+        "unit": "W"
+      },
+      "storedEnergyChange": {
+        "value": 22.93582171750802,
+        "unit": "J"
+      },
+      "residual": {
+        "value": 9.393374966748524e-12,
+        "unit": "W"
+      },
+      "normalizedResidual": 6.117084690123233e-14,
+      "status": "balanced"
+    },
+    {
+      "step": 4,
+      "time": {
+        "value": 1,
+        "unit": "s"
+      },
+      "stepSize": {
+        "value": 0.10000000000000009,
+        "unit": "s"
+      },
+      "surfaceHeatInto": {
+        "value": 0,
+        "unit": "W"
+      },
+      "generationInto": {
+        "value": 18.749733120798105,
+        "unit": "W"
+      },
+      "convectionInto": {
+        "value": -0.33267571041138994,
+        "unit": "W"
+      },
+      "dirichletReactionInto": {
+        "value": 57.388337975905934,
+        "unit": "W"
+      },
+      "storedEnergyRate": {
+        "value": 75.80539538628717,
+        "unit": "W"
+      },
+      "storedEnergyChange": {
+        "value": 7.580539538628724,
+        "unit": "J"
+      },
+      "residual": {
+        "value": 5.4711790653527714e-12,
+        "unit": "W"
+      },
+      "normalizedResidual": 3.5929325412013316e-14,
+      "status": "balanced"
+    }
+  ],
+  "integrated": {
+    "span": {
+      "value": 1,
+      "unit": "s"
+    },
+    "external": {
+      "value": 78.74743196093,
+      "unit": "J"
+    },
+    "stored": {
+      "value": 78.74743196093135,
+      "unit": "J"
+    },
+    "endpoints": {
+      "value": 78.74743196093137,
+      "unit": "J"
+    },
+    "residual": {
+      "value": -1.3500311979441904e-12,
+      "unit": "J"
+    },
+    "allowed": {
+      "value": 7.632298920440372e-08,
+      "unit": "J"
+    }
+  },
+  "validation": {
+    "status": "PASS",
+    "accepted": true,
+    "inputsAccepted": true,
+    "solveAccepted": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 1,
+    "policy": "p18-valid-v1:f97b835a659f144e",
+    "checks": [
+      {
+        "rule": "TV_ANALYSIS_DEFINITION",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_GEOMETRY_CURRENT",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_MESH_CURRENT",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_MESH_STRUCTURAL",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_MESH_QUALITY",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_MATERIAL",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_LOADS",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_BCS",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_TRANSIENT_SETUP",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_SOURCE_COMPAT",
+        "group": "system",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_WELL_POSED",
+        "group": "system",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_SOLVER_RESIDUAL",
+        "group": "solve",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_RESULT_FINITE",
+        "group": "result",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_POST",
+        "group": "result",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_BALANCE",
+        "group": "balance",
+        "status": "PASS"
+      }
+    ],
+    "findings": [
+      {
+        "code": "initial_condition_overridden_by_prescription",
+        "rule": "TV_SOLVER_RESIDUAL",
+        "severity": "info",
+        "message": "40 unknown(s) had an initial temperature different from their prescription; the prescription dominates at t = 0",
+        "count": 40
+      }
+    ],
+    "metrics": {
+      "tetrahedronCount": 127,
+      "unknownCount": 81,
+      "freeEquations": 41,
+      "constrainedCount": 40,
+      "residualTolerance": 1e-09,
+      "worstResidualStep": 4,
+      "worstResidualTime": {
+        "value": 1,
+        "unit": "s"
+      },
+      "worstResidualStepSize": {
+        "value": 0.10000000000000009,
+        "unit": "s"
+      },
+      "worstTransientResidual": 8.578714595839269e-17,
+      "transientStepCount": 4,
+      "worstBalanceStep": 3,
+      "worstBalanceTime": {
+        "value": 0.8999999999999999,
+        "unit": "s"
+      },
+      "worstBalanceResidual": 6.117084690123233e-14,
+      "minimumTemperature": {
+        "value": 295.81466951741066,
+        "unit": "K"
+      },
+      "maximumTemperature": {
+        "value": 300,
+        "unit": "K"
+      },
+      "maximumHeatFlux": {
+        "value": 9603.382871610975,
+        "unit": "W/m^2"
+      }
+    }
+  }
+}

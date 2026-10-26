@@ -1983,6 +1983,77 @@ TEST_CASE("ThermalPersistence_AnIdentifierAboveTheFileCapIsRefusedOnSaveRatherTh
     }
 }
 
+TEST_CASE("ThermalPersistence_WhatTheWriterEmitsTheReaderAccepts", "[thermal][io][persist][malformed][ids][qual]") {
+    // P18-QUAL-001. THE DIRECTION NO TEST HAD DRIVEN: write, then read. The data model's `validate` admits a FaceName whose feature
+    // is the INVALID handle, and identifiers inside a GeometryReference above the file cap (2^53 - 1); the reader refuses both. The
+    // writer used to check only the load / condition identities, so such a definition saved successfully and then never loaded --
+    // the failure the writer's own comment says it must not allow. A target is writable exactly when it can be read back.
+    TempDir temp;
+    constexpr std::uint64_t kBig = std::uint64_t{1} << 60;
+    VizStudy study;
+    ThermalAnalysisDefinition definition = steadyGolden(study);
+    const auto flux = [](const FaceName& face) {
+        return ThermalLoad{ThermalLoadId::fromValue(1), SurfaceHeatFluxLoad{.face = face, .flux = HeatFlux::fromSi(500.0)}};
+    };
+
+    SECTION("a target of no feature (the invalid handle)") {
+        definition.loads[0] = flux(FaceName{});
+        vztest::define(study, definition);
+        const Result<std::string> written = io::documentToJson(study.document);
+        REQUIRE_FALSE(written.has_value());
+        CHECK(written.error().code == ErrorCode::InvalidArgument);
+        CHECK_THAT(written.error().message, ContainsSubstring("a load targets a face of no feature"));
+        const std::filesystem::path file = temp.path() / "refused.bcad";
+        CHECK_FALSE(io::saveDocument(study.document, file).has_value());
+        CHECK_FALSE(std::filesystem::exists(file));
+    }
+    SECTION("a boundary condition of no feature") {
+        definition.boundaryConditions[0] = vztest::temperatureBc(3, FaceName{}, 300.0);
+        vztest::define(study, definition);
+        const Result<std::string> written = io::documentToJson(study.document);
+        REQUIRE_FALSE(written.has_value());
+        CHECK_THAT(written.error().message, ContainsSubstring("a boundary condition targets a face of no feature"));
+    }
+    SECTION("a feature id above the cap") {
+        FaceName face = study.endCap();
+        face.feature = ObjectId::fromValue(kBig);
+        definition.loads[0] = flux(face);
+        vztest::define(study, definition);
+        const Result<std::string> written = io::documentToJson(study.document);
+        REQUIRE_FALSE(written.has_value());
+        CHECK_THAT(written.error().message, ContainsSubstring("the feature"));
+        CHECK_THAT(written.error().message, ContainsSubstring("exceeds the largest identifier"));
+    }
+    SECTION("an entity id above the cap inside the selector") {
+        FaceName face = study.side(0);
+        face.face.entity = EntityId::fromValue(kBig);
+        definition.loads[0] = flux(face);
+        vztest::define(study, definition);
+        const Result<std::string> written = io::documentToJson(study.document);
+        REQUIRE_FALSE(written.has_value());
+        CHECK_THAT(written.error().message, ContainsSubstring("the entity"));
+    }
+    SECTION("a copying feature above the cap") {
+        FaceName face = study.endCap();
+        face.face.copies.push_back(FaceCopy{ObjectId::fromValue(kBig), 1});
+        definition.loads[0] = flux(face);
+        vztest::define(study, definition);
+        const Result<std::string> written = io::documentToJson(study.document);
+        REQUIRE_FALSE(written.has_value());
+        CHECK_THAT(written.error().message, ContainsSubstring("the copying feature"));
+    }
+    SECTION("the ordinary targets are written and read back") {
+        for (const FaceName& face : {study.startCap(), study.endCap(), study.side(0), study.side(1)}) {
+            definition.loads[0] = flux(face);
+            vztest::define(study, definition);
+            const Result<std::string> written = io::documentToJson(study.document);
+            REQUIRE(written.has_value());
+            const Document loaded = roundTrip(study.document, temp.path() / "ordinary.bcad");
+            CHECK(onlyAnalysis(loaded).definition().loads[0].target() == std::optional<FaceName>{face});
+        }
+    }
+}
+
 TEST_CASE("ThermalPersistence_ARepeatedKeyInTheFileIsLastWinsAsEverywhereInTheFormat",
           "[thermal][io][persist][malformed][format-wide]") {
     // MEASURED, AND FORMAT-WIDE. The JSON parser collapses a repeated key before any reader sees

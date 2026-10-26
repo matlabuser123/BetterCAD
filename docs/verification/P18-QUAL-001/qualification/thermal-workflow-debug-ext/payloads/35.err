@@ -1,0 +1,1 @@
+bettercad-cli thermal-solve: boundary_conditions_invalid: contradictory prescribed temperatures, none chosen over another: thermal boundary condition:1 (300 K) and thermal boundary condition:5 (350 K) disagree on 40 unknown(s), the first being 0

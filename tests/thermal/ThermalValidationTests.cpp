@@ -302,6 +302,45 @@ TEST_CASE("ThermalValidation_ANotANumberMetricIsInvalidAndNeverFallsThroughAComp
     }
 }
 
+TEST_CASE("ThermalValidation_AMissingOrShortQualitySummaryIsNotAPass", "[thermal][validation][mesh][invalid][refusals][qual]") {
+    // P18-QUAL-001. P16 always summarises every metric over every tetrahedron, so a metric with no summary, a summary of count 0 or a
+    // summary over FEWER elements than the mesh has cannot happen today. The validator used to skip such a metric silently, which
+    // would accept a mesh with an element nobody judged the day P16 regressed; it now refuses, by name.
+    meshing::MeshQualityReport report = reportWithOneSummary(QualityMetric::TetRadiusRatio, 0.5);
+    REQUIRE(classifyThermalMesh(report).structural.empty()); // complete and benign: judged and not refused
+
+    const auto refusedFor = [](const meshing::MeshQualityReport& r, QualityMetric metric) {
+        const thermal::ThermalMeshVerdict verdict = classifyThermalMesh(r);
+        for (const ValidationFinding& f : verdict.structural) {
+            if (f.code == ValidationCode::MeshHasInvalidElements && f.severity == ValidationSeverity::Error && f.metric == std::optional{metric}) {
+                return true;
+            }
+        }
+        return false;
+    };
+    SECTION("a summary that is absent") {
+        report.summaries.erase(QualityMetric::TetAspectRatio);
+        CHECK(refusedFor(report, QualityMetric::TetAspectRatio));
+        CHECK_FALSE(refusedFor(report, QualityMetric::TetRadiusRatio));
+    }
+    SECTION("a summary of count zero") {
+        report.summaries[QualityMetric::TetMinDihedralAngle].count = 0;
+        CHECK(refusedFor(report, QualityMetric::TetMinDihedralAngle));
+    }
+    SECTION("a summary over fewer elements than the mesh has") {
+        report.tetCount = 4; // the four summaries each cover one
+        for (const QualityMetric metric : {QualityMetric::TetRadiusRatio, QualityMetric::TetAspectRatio, QualityMetric::TetMinDihedralAngle,
+                                           QualityMetric::TetMaxDihedralAngle}) {
+            CHECK(refusedFor(report, metric));
+        }
+    }
+    SECTION("a mesh with no elements is not accused of an unmeasured metric (other rules refuse an empty mesh)") {
+        report.summaries.clear();
+        report.tetCount = 0;
+        CHECK(classifyThermalMesh(report).structural.empty());
+    }
+}
+
 TEST_CASE("ThermalValidation_AnInvalidElementCountFromP16IsAnErrorOnItsOwn", "[thermal][validation][mesh][invalid][refusals]") {
     // P16 counts the elements it classified Invalid. A report can say so while every structural check passes and every summary is
     // finite, so the count itself must be judged, not inferred from the other two.

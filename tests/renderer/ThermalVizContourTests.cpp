@@ -310,7 +310,7 @@ TEST_CASE("ThermalViz_ManualRangeClampsTheColourAndNeverTheValue", "[thermal][vi
     REQUIRE(lowest.has_value());
     CHECK(lowest->value == 295.0);
     const Result<renderer::ThermalNodeInspection> node =
-        renderer::inspectThermalNode(h.hand.mesh, h.hand.dofs, h.post, 0, meshing::NodeId::fromValue(9001));
+        renderer::inspectThermalNode(h.hand.mesh, h.hand.dofs, h.post, 0, meshing::NodeId::fromValue(9001), renderer::ThermalResultState::Current);
     REQUIRE(node.has_value());
     CHECK(node->temperature.si() == 295.0);
 

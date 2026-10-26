@@ -1643,50 +1643,77 @@ applicable. No nearest-face rebinding.
 
 ## Full P18 Qualification
 
-* [ ] Freeze final P18 tree
-* [ ] Audit every P18 milestone
-* [ ] Verify all TODO items complete
-* [ ] Verify all P18 ADRs
-* [ ] Audit CAD / material / mesh / thermal authority
-* [ ] Audit thermal result currentness
-* [ ] Audit thermal DOF model
-* [ ] Audit Tet4 thermal formulation
-* [ ] Audit thermal loads
-* [ ] Audit thermal BCs
-* [ ] Audit global assembly
-* [ ] Audit steady solver
-* [ ] Audit transient solver
-* [ ] Audit temperature recovery
-* [ ] Audit gradient recovery
-* [ ] Audit heat-flux recovery
-* [ ] Audit heat balance
-* [ ] Audit validation policy
-* [ ] Audit stale-input protection
-* [ ] Audit visualisation
-* [ ] Audit commands
-* [ ] Audit persistence
-* [ ] Audit CLI
-* [ ] Re-run all thermal reference models
-* [ ] Independent analytical validation
-* [ ] Steady residual PASS
-* [ ] Heat balance PASS
-* [ ] Thermal patch test PASS
-* [ ] Slab conduction PASS
-* [ ] Convection benchmark PASS
-* [ ] Transient benchmark PASS
-* [ ] Singular thermal-model failure PASS
-* [ ] Stale-mesh failure PASS
-* [ ] Clean Debug qualification
-* [ ] Clean Release qualification
-* [ ] Clean Debug-shared qualification
-* [ ] Repeated determinism qualification
-* [ ] Cross-preset equivalence
-* [ ] Final adversarial review
-* [ ] Zero-match protection PASS
-* [ ] 0 unexpected warnings
-* [ ] Qualified tree == committed tree
-* [ ] Evidence recorded
-* [ ] Mark P18 qualified
+* [x] Freeze final P18 tree
+* [x] Audit every P18 milestone
+* [x] Verify all TODO items complete
+* [x] Verify all P18 ADRs
+* [x] Audit CAD / material / mesh / thermal authority
+* [x] Audit thermal result currentness
+* [x] Audit thermal DOF model
+* [x] Audit Tet4 thermal formulation
+* [x] Audit thermal loads
+* [x] Audit thermal BCs
+* [x] Audit global assembly
+* [x] Audit steady solver
+* [x] Audit transient solver
+* [x] Audit temperature recovery
+* [x] Audit gradient recovery
+* [x] Audit heat-flux recovery
+* [x] Audit heat balance
+* [x] Audit validation policy
+* [x] Audit stale-input protection
+* [x] Audit visualisation
+* [x] Audit commands
+* [x] Audit persistence
+* [x] Audit CLI
+* [x] Re-run all thermal reference models
+* [x] Independent analytical validation
+* [x] Steady residual PASS
+* [x] Heat balance PASS
+* [x] Thermal patch test PASS
+* [x] Slab conduction PASS
+* [x] Convection benchmark PASS
+* [x] Transient benchmark PASS
+* [x] Singular thermal-model failure PASS
+* [x] Stale-mesh failure PASS
+* [x] Clean Debug qualification
+* [x] Clean Release qualification
+* [x] Clean Debug-shared qualification
+* [x] Repeated determinism qualification
+* [x] Cross-preset equivalence
+* [x] Final adversarial review
+* [x] Zero-match protection PASS
+* [x] 0 unexpected warnings
+* [x] Qualified tree == committed tree
+* [x] Evidence recorded
+* [x] Mark P18 qualified
+
+```text
+PASS 2026-10-27. Qualified against ece7691 plus the working tree, scratch tree
+5386f4fb, apps b4e2268d include f40f760d src 7fae8afb tests ce05767c examples
+4da234eb cmake 5a382115 CMakeLists.txt 3ec3c10f CMakePresets.json 3229f0f8:
+5804/5804 x 3 presets (5789 before + 15 new), 2561 x 5 repeats in two, 0 warnings
+over 743 objects per preset, 17 stages exit 0, 6h50m37s, fingerprints at the freeze
+== before == after; first attempt.
+AUDIT: 18 of 18 predecessor blocks PASS from their own harness verdicts (345 boxes,
+0 open); 127 ADR clauses (122 implemented, 5 text drifts, 0 violated); 330
+requirement rows read against the code and the tests.
+THREE DEFECTS FIXED, each reproduced against the old code first: the persistence
+writer emitted a file the reader refuses (invalid feature handle, ids above 2^53-1);
+the mesh classifier skipped a metric no element was judged for; the thermal
+inspection defaulted a result's currentness to Current. Plus 15 tests closing audit
+gaps (final-gate cases in tests/qualification/P18ThermalQualificationTests.cpp).
+28 production mutants, 27 killed, 1 survivor = an unreachable defensive branch.
+Independent analytical verification of fresh CLI payloads on three presets (28
+checks each, negative control fails); 20 reference documents, 59 payloads and 72
+evidence lines identical across presets to the bit.
+ADVERSARIAL REVIEW: a second, independent reviewer found NO wrong accepted result.
+OPEN, reported and NOT changed (owner decisions): F1 the balance gate refuses correct
+transient runs once the time step is small (needs a rounding term, which loosens a
+tolerance); F2 no bound on a temperature; F3 no bound on the user's residual
+tolerance. docs/verification/P18-QUAL-001/ADVERSARIAL_REVIEW.md, LIMITATIONS.md.
+Evidence: docs/verification/P18-QUAL-001/.
+```
 
 ### P18 Final Gate
 
@@ -1961,6 +1988,36 @@ docs/engineering/
 ---
 
 # CURRENT NEXT STEP
+
+```text
+P18 — Thermal Analysis is QUALIFIED. P18-QUAL-001 PASS, 2026-10-27.
+
+    eighteen milestones audited from their own recorded verdicts, 18 PASS (345 boxes)
+    127 ADR clauses checked against the code: 122 implemented, 5 text drifts,
+      0 violated; 330 requirement rows read against code and tests
+    three defects found at boundaries and fixed, each reproduced first: a writer
+      that emitted a file the reader refuses; a mesh metric that nobody judged;
+      a stale result that could be labelled Current by omission
+    seven final cross-milestone gates (tests/qualification/P18ThermalQualificationTests.cpp)
+    28 production mutants: 27 killed, 1 unreachable defensive branch
+    independent verification of fresh CLI payloads against closed forms, on three
+      presets, with a negative control; a second independent adversarial reviewer
+    qualification: 5804/5804 x 3 presets, 2561 x 5 in two, 0 warnings over 743
+      objects, 17 stages exit 0, 6h50m37s, fingerprints before == after,
+      20 documents, 59 payloads and 72 evidence lines identical across presets
+    OPEN, owner decisions: F1 the balance gate refuses correct transient runs once
+      the time step is small (a missing rounding term; fixing it loosens a
+      tolerance); F2 no bound on a temperature; F3 no bound on the residual
+      tolerance a user may set; see docs/verification/P18-QUAL-001/LIMITATIONS.md
+
+There is no open milestone and nothing is authorized. P19 — CFD Integration is
+next in the sequence and is NOT AUTHORIZED; P18 being qualified is not
+permission to start it.
+```
+
+Evidence: [docs/verification/P18-QUAL-001/](docs/verification/P18-QUAL-001/README.md).
+
+The text below is the standing record as of P17-QUAL-001 (2026-10-15) and is kept as history.
 
 ```text
 P17 — Structural FEA is QUALIFIED. P17-QUAL-001 PASS, 2026-10-15.

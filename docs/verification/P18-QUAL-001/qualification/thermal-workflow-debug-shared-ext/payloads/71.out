@@ -1,0 +1,6 @@
+Solved steady: 81 nodes, 127 tetrahedra, 41 free equations
+  residual:           2.183e-17
+  min T:              300 K at node 1
+  max T:              300.442 K at node 80
+  heat balance:       7.532e-14 (worst normalized residual)
+  validation:         PASS

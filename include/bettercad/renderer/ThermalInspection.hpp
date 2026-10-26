@@ -176,7 +176,7 @@ struct ThermalNodeInspection {
     /// The stored time of the state; nullopt for a steady result.
     std::optional<Time> time{};
     /// Whether the result was current when inspected. A stale inspection says so.
-    ThermalResultState resultState = ThermalResultState::Current;
+    ThermalResultState resultState = ThermalResultState::NoAnalysis;
 
     friend bool operator==(const ThermalNodeInspection&, const ThermalNodeInspection&) = default;
 };
@@ -197,7 +197,7 @@ struct ThermalElementInspection {
     HeatFlux heatFluxMagnitude{};
     std::size_t state = 0;
     std::optional<Time> time{};
-    ThermalResultState resultState = ThermalResultState::Current;
+    ThermalResultState resultState = ThermalResultState::NoAnalysis;
 
     friend bool operator==(const ThermalElementInspection&, const ThermalElementInspection&) = default;
 };
@@ -207,16 +207,18 @@ struct ThermalElementInspection {
 /// Refuses when @p post does not describe @p map, when @p map does not describe @p mesh, when @p node is not a node
 /// of the mesh, or when @p state is out of range. The temperature is found THROUGH THE NUMBERING, never by
 /// `NodeId::value()`. @p resultState is what the application knows about the result's currentness
-/// (`ThermalDisplayState::result`); a result that is not inspectable is refused.
+/// (`ThermalDisplayState::result`); a result that is not inspectable is refused. It has NO DEFAULT (P18-QUAL-001): a caller
+/// that forgot to ask would have stamped a stale result `Current`, and an inspection that says so is the one claim this
+/// layer must never make by omission.
 [[nodiscard]] BETTERCAD_RENDERER_EXPORT Result<ThermalNodeInspection>
 inspectThermalNode(const meshing::Mesh& mesh, const thermal::ThermalDofMap& map,
                    const thermal::ThermalPostResult& post, std::size_t state, meshing::NodeId node,
-                   ThermalResultState resultState = ThermalResultState::Current);
+                   ThermalResultState resultState);
 
 /// The inspection of @p element at stored state @p state, found through POST's `ordinalOf` -- never by the raw id.
 [[nodiscard]] BETTERCAD_RENDERER_EXPORT Result<ThermalElementInspection>
 inspectThermalElement(const meshing::Mesh& mesh, const thermal::ThermalPostResult& post, std::size_t state,
-                      meshing::ElementId element, ThermalResultState resultState = ThermalResultState::Current);
+                      meshing::ElementId element, ThermalResultState resultState);
 
 /// Where the camera should look for @p extreme: the node's position, or the tetrahedron's centroid, in SI metres.
 ///

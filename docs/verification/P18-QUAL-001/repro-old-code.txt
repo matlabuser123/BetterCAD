@@ -1,0 +1,18 @@
+﻿Filters: "ThermalPersistence_WhatTheWriterEmitsTheReaderAccepts","ThermalValidation_AMissingOrShortQualitySummaryIsNotAPass"
+RNG seed: 929221106
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/io/ThermalAnalysisFileTests.cpp:2003: failed: !(written.has_value()) for: !true
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/io/ThermalAnalysisFileTests.cpp:2014: failed: !(written.has_value()) for: !true
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/io/ThermalAnalysisFileTests.cpp:2023: failed: !(written.has_value()) for: !true
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/io/ThermalAnalysisFileTests.cpp:2033: failed: !(written.has_value()) for: !true
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/io/ThermalAnalysisFileTests.cpp:2042: failed: !(written.has_value()) for: !true
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalValidationTests.cpp:323: failed: refusedFor(report, QualityMetric::TetAspectRatio) for: false
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalValidationTests.cpp:328: failed: refusedFor(report, QualityMetric::TetMinDihedralAngle) for: false
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalValidationTests.cpp:334: failed: refusedFor(report, metric) for: false
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalValidationTests.cpp:334: failed: refusedFor(report, metric) for: false
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalValidationTests.cpp:334: failed: refusedFor(report, metric) for: false
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/thermal/ThermalValidationTests.cpp:334: failed: refusedFor(report, metric) for: false
+test cases:   2 |   0 passed |  2 failed
+assertions: 164 | 153 passed | 11 failed
+
+
+

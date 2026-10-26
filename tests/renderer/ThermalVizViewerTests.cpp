@@ -504,7 +504,7 @@ TEST_CASE("ThermalViz_PickMapsARenderTriangleToTheEngineeringElement", "[thermal
     const Result<meshing::ElementId> element = view.elementOfTriangle((*pick)->triangle);
     REQUIRE(element.has_value());
     CHECK(mesh.findTetrahedron(*element) != nullptr);   // a tetrahedron that owns the facet, not a render index
-    const Result<renderer::ThermalElementInspection> inspected = renderer::inspectThermalElement(mesh, *derived->post, 0, *element);
+    const Result<renderer::ThermalElementInspection> inspected = renderer::inspectThermalElement(mesh, *derived->post, 0, *element, renderer::ThermalResultState::Current);
     REQUIRE(inspected.has_value());
     CHECK(inspected->element == *element);
     CHECK(inspected->ordinal == *derived->post->ordinalOf(*element));
@@ -524,7 +524,7 @@ TEST_CASE("ThermalViz_PickMapsARenderTriangleToTheEngineeringElement", "[thermal
     const std::uint32_t corner = view.triangleIndices()[((*pick)->triangle * 3) + 0];
     const Result<meshing::NodeId> node = view.nodeOfVertex(corner);
     REQUIRE(node.has_value());
-    CHECK(renderer::inspectThermalNode(mesh, derived->map, *derived->post, 0, *node).has_value());
+    CHECK(renderer::inspectThermalNode(mesh, derived->map, *derived->post, 0, *node, renderer::ThermalResultState::Current).has_value());
 }
 
 // ===========================================================================

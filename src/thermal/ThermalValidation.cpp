@@ -514,7 +514,19 @@ ThermalMeshVerdict classifyThermalMesh(const meshing::MeshQualityReport& quality
 
     for (const auto& [metric, limit] : thermalQualityThresholds().limits) {
         const auto found = quality.summaries.find(metric);
-        if (found == quality.summaries.end() || found->second.count == 0) {
+        if (found == quality.summaries.end() || found->second.count != quality.tetCount) {
+            // A CLASSIFIABLE METRIC THAT WAS NOT MEASURED FOR EVERY ELEMENT IS NOT A PASS. P16 always summarises every metric over every
+            // tetrahedron, so this is unreachable today; the validator does not rely on that, because skipping the metric would accept
+            // a mesh with an element nobody judged.
+            if (quality.tetCount > 0) {
+                ValidationFinding finding = make(ValidationCode::MeshHasInvalidElements,
+                                                 std::format("the {} was measured for {} of the mesh's {} element(s), so the mesh cannot be judged",
+                                                             meshing::toString(metric), found == quality.summaries.end() ? std::size_t{0} : found->second.count,
+                                                             quality.tetCount));
+                finding.metric = metric;
+                finding.count = quality.tetCount;
+                verdict.structural.push_back(std::move(finding));
+            }
             continue;
         }
         const meshing::MetricSummary& summary = found->second;

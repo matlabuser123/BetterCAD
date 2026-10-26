@@ -218,9 +218,9 @@ TEST_CASE("ThermalViz_DoesNotMapStaleResultToNewMesh", "[thermal][viz][state][st
     CHECK_FALSE(renderer::ThermalResultView::of(m2, view2, *map2, *r1->post).has_value());
     CHECK_FALSE(renderer::ThermalResultView::of(m2, view2, r1->map, *r1->post).has_value());   // nor through the OLD numbering
     CHECK_FALSE(renderer::heatFluxVectorGlyphs(m2, *r1->post, 0).has_value());
-    CHECK_FALSE(renderer::inspectThermalNode(m2, r1->map, *r1->post, 0, m2.nodes()[0].id).has_value());
-    CHECK_FALSE(renderer::inspectThermalNode(m2, *map2, *r1->post, 0, m2.nodes()[0].id).has_value());
-    CHECK_FALSE(renderer::inspectThermalElement(m2, *r1->post, 0, m2.tetrahedra()[0].id).has_value());
+    CHECK_FALSE(renderer::inspectThermalNode(m2, r1->map, *r1->post, 0, m2.nodes()[0].id, renderer::ThermalResultState::Current).has_value());
+    CHECK_FALSE(renderer::inspectThermalNode(m2, *map2, *r1->post, 0, m2.nodes()[0].id, renderer::ThermalResultState::Current).has_value());
+    CHECK_FALSE(renderer::inspectThermalElement(m2, *r1->post, 0, m2.tetrahedra()[0].id, renderer::ThermalResultState::Current).has_value());
 
     // A fresh derivation on the new mesh is current and displays.
     const std::unique_ptr<Derived> r2 = derive(study);
@@ -276,8 +276,8 @@ TEST_CASE("ThermalViz_SameIdsNewMeshStillStale", "[thermal][viz][state][stale][r
     for (const meshing::ElementId id : r1->post->elementIds()) {
         CHECK(study.mesh().findTetrahedron(id) != nullptr);   // every old handle resolves ...
     }
-    CHECK_FALSE(renderer::inspectThermalElement(study.mesh(), *r1->post, 0, tets1.front()).has_value());   // ... and is still refused
-    CHECK_FALSE(renderer::inspectThermalNode(study.mesh(), r1->map, *r1->post, 0, nodes1.front()).has_value());
+    CHECK_FALSE(renderer::inspectThermalElement(study.mesh(), *r1->post, 0, tets1.front(), renderer::ThermalResultState::Current).has_value());   // ... and is still refused
+    CHECK_FALSE(renderer::inspectThermalNode(study.mesh(), r1->map, *r1->post, 0, nodes1.front(), renderer::ThermalResultState::Current).has_value());
     CHECK_FALSE(renderer::heatFluxVectorGlyphs(study.mesh(), *r1->post, 0).has_value());
 }
 
@@ -456,7 +456,7 @@ TEST_CASE("ThermalViz_NodeTemperatureInspection", "[thermal][viz][inspect][node]
     const meshing::Mesh& mesh = study.mesh();
     for (const meshing::Node& node : mesh.nodes()) {
         const Result<renderer::ThermalNodeInspection> inspected =
-            renderer::inspectThermalNode(mesh, derived->map, *derived->post, 0, node.id);
+            renderer::inspectThermalNode(mesh, derived->map, *derived->post, 0, node.id, renderer::ThermalResultState::Current);
         REQUIRE(inspected.has_value());
         const Result<thermal::ThermalDofIndex> dof = derived->map.dofOf(node.id);
         REQUIRE(dof.has_value());
@@ -471,8 +471,8 @@ TEST_CASE("ThermalViz_NodeTemperatureInspection", "[thermal][viz][inspect][node]
         CHECK(inspected->temperature.si() <= 400.0 + 1e-9);
     }
     // A node the mesh does not hold, a state that is not stored, and a result that is not there are refused.
-    CHECK_FALSE(renderer::inspectThermalNode(mesh, derived->map, *derived->post, 0, meshing::NodeId::fromValue(987654)).has_value());
-    CHECK_FALSE(renderer::inspectThermalNode(mesh, derived->map, *derived->post, 3, mesh.nodes()[0].id).has_value());
+    CHECK_FALSE(renderer::inspectThermalNode(mesh, derived->map, *derived->post, 0, meshing::NodeId::fromValue(987654), renderer::ThermalResultState::Current).has_value());
+    CHECK_FALSE(renderer::inspectThermalNode(mesh, derived->map, *derived->post, 3, mesh.nodes()[0].id, renderer::ThermalResultState::Current).has_value());
     CHECK_FALSE(renderer::inspectThermalNode(mesh, derived->map, *derived->post, 0, mesh.nodes()[0].id, ThermalResultState::NoResult).has_value());
     CHECK_FALSE(renderer::inspectThermalNode(mesh, derived->map, *derived->post, 0, mesh.nodes()[0].id, ThermalResultState::InputsUnavailable).has_value());
 }
@@ -485,7 +485,7 @@ TEST_CASE("ThermalViz_ElementThermalInspection", "[thermal][viz][inspect][elemen
     const meshing::Mesh& mesh = study.mesh();
     std::size_t index = 0;
     for (const meshing::Tetrahedron& tet : mesh.tetrahedra()) {
-        const Result<renderer::ThermalElementInspection> e = renderer::inspectThermalElement(mesh, *derived->post, 0, tet.id);
+        const Result<renderer::ThermalElementInspection> e = renderer::inspectThermalElement(mesh, *derived->post, 0, tet.id, renderer::ThermalResultState::Current);
         REQUIRE(e.has_value());
         CHECK(e->element == tet.id);
         CHECK(e->ordinal == index);
@@ -505,10 +505,10 @@ TEST_CASE("ThermalViz_ElementThermalInspection", "[thermal][viz][inspect][elemen
         CHECK(e->heatFlux.x.si() * e->gradient.x.si() + e->heatFlux.y.si() * e->gradient.y.si() + e->heatFlux.z.si() * e->gradient.z.si() <= 1e-9);
         ++index;
     }
-    CHECK_FALSE(renderer::inspectThermalElement(mesh, *derived->post, 0, meshing::ElementId::fromValue(987654)).has_value());
-    CHECK_FALSE(renderer::inspectThermalElement(mesh, *derived->post, 9, mesh.tetrahedra()[0].id).has_value());
+    CHECK_FALSE(renderer::inspectThermalElement(mesh, *derived->post, 0, meshing::ElementId::fromValue(987654), renderer::ThermalResultState::Current).has_value());
+    CHECK_FALSE(renderer::inspectThermalElement(mesh, *derived->post, 9, mesh.tetrahedra()[0].id, renderer::ThermalResultState::Current).has_value());
     // A BOUNDARY TRIANGLE IS NOT A TETRAHEDRON: its id resolves in the mesh and not in the result.
-    CHECK_FALSE(renderer::inspectThermalElement(mesh, *derived->post, 0, mesh.triangles()[0].id).has_value());
+    CHECK_FALSE(renderer::inspectThermalElement(mesh, *derived->post, 0, mesh.triangles()[0].id, renderer::ThermalResultState::Current).has_value());
 }
 
 TEST_CASE("ThermalViz_SparseNodeIdInspection", "[thermal][viz][inspect][sparse]") {
@@ -516,7 +516,7 @@ TEST_CASE("ThermalViz_SparseNodeIdInspection", "[thermal][viz][inspect][sparse]"
     AsmHand hand = sparseTetHand({{{0, 0, 0}, {1, 0, 0}, {0, 1, 0}, {0, 0, 1}}}, {7, 104, 9001, 12000});
     const HandPost h = makeHandPost(std::move(hand), 5.0, {310.0, 350.0, 287.0, 295.0});
     const Result<renderer::ThermalNodeInspection> inspected =
-        renderer::inspectThermalNode(h.hand.mesh, h.hand.dofs, h.post, 0, meshing::NodeId::fromValue(9001));
+        renderer::inspectThermalNode(h.hand.mesh, h.hand.dofs, h.post, 0, meshing::NodeId::fromValue(9001), renderer::ThermalResultState::Current);
     REQUIRE(inspected.has_value());
     CHECK(inspected->node == meshing::NodeId::fromValue(9001));
     CHECK(inspected->dof.value() == 2);
@@ -528,14 +528,14 @@ TEST_CASE("ThermalViz_SparseNodeIdInspection", "[thermal][viz][inspect][sparse]"
         double kelvin;
     };
     for (const Row row : {Row{7, 0, 310.0}, Row{104, 1, 350.0}, Row{9001, 2, 287.0}, Row{12000, 3, 295.0}}) {
-        const auto e = renderer::inspectThermalNode(h.hand.mesh, h.hand.dofs, h.post, 0, meshing::NodeId::fromValue(row.node));
+        const auto e = renderer::inspectThermalNode(h.hand.mesh, h.hand.dofs, h.post, 0, meshing::NodeId::fromValue(row.node), renderer::ThermalResultState::Current);
         REQUIRE(e.has_value());
         CHECK(e->dof.value() == row.dof);
         CHECK(e->temperature.si() == row.kelvin);
     }
     CHECK(h.post.states()[0].temperatures.size() == 4);   // sized by the node count, not by the largest handle
     // A handle that is a number inside the array's range but not a node: refused, not read.
-    CHECK_FALSE(renderer::inspectThermalNode(h.hand.mesh, h.hand.dofs, h.post, 0, meshing::NodeId::fromValue(2)).has_value());
+    CHECK_FALSE(renderer::inspectThermalNode(h.hand.mesh, h.hand.dofs, h.post, 0, meshing::NodeId::fromValue(2), renderer::ThermalResultState::Current).has_value());
 }
 
 TEST_CASE("ThermalViz_SparseElementIdInspection", "[thermal][viz][inspect][sparse]") {
@@ -549,7 +549,7 @@ TEST_CASE("ThermalViz_SparseElementIdInspection", "[thermal][viz][inspect][spars
     for (std::size_t ordinal = 0; ordinal < 4; ++ordinal) {
         const meshing::ElementId id = h.post.elementIds()[ordinal];
         REQUIRE(id.value() == 17 + ordinal);
-        const auto e = renderer::inspectThermalElement(h.hand.mesh, h.post, 0, id);
+        const auto e = renderer::inspectThermalElement(h.hand.mesh, h.post, 0, id, renderer::ThermalResultState::Current);
         REQUIRE(e.has_value());
         CHECK(e->ordinal == ordinal);                                   // the compact ordinal, not the id
         CHECK_THAT(e->gradient.x.si(), WithinAbs(gradients[ordinal][0], 1e-11));
@@ -559,8 +559,8 @@ TEST_CASE("ThermalViz_SparseElementIdInspection", "[thermal][viz][inspect][spars
         CHECK_THAT(e->heatFluxMagnitude.si(), WithinAbs(normOf(gradients[ordinal][0], gradients[ordinal][1], gradients[ordinal][2]), 1e-11));
     }
     // The raw ids 17..20 as INDICES would read past a four-element array; the ordinals 0..3 are ids of boundary TRIANGLES.
-    CHECK_FALSE(renderer::inspectThermalElement(h.hand.mesh, h.post, 0, meshing::ElementId::fromValue(1)).has_value());
-    CHECK_FALSE(renderer::inspectThermalElement(h.hand.mesh, h.post, 0, meshing::ElementId::fromValue(21)).has_value());
+    CHECK_FALSE(renderer::inspectThermalElement(h.hand.mesh, h.post, 0, meshing::ElementId::fromValue(1), renderer::ThermalResultState::Current).has_value());
+    CHECK_FALSE(renderer::inspectThermalElement(h.hand.mesh, h.post, 0, meshing::ElementId::fromValue(21), renderer::ThermalResultState::Current).has_value());
 }
 
 // ===========================================================================
@@ -653,7 +653,7 @@ TEST_CASE("ThermalViz_TransientFrameBindsAllFieldsToTheSameState", "[thermal][vi
             CHECK((*glyphs)[i].flux == stored.fields.heatFluxes[i]);
         }
         // And an inspection at frame f.
-        const auto node = renderer::inspectThermalNode(mesh, derived->map, *derived->post, f, mesh.nodes()[2].id);
+        const auto node = renderer::inspectThermalNode(mesh, derived->map, *derived->post, f, mesh.nodes()[2].id, renderer::ThermalResultState::Current);
         REQUIRE(node.has_value());
         CHECK(node->temperature.si() == stored.temperatures[2].si());
         CHECK(node->time->si() == stored.time->si());
@@ -799,9 +799,9 @@ TEST_CASE("ThermalViz_DisplayStateAndInspectionAreDeterministic", "[thermal][viz
         CHECK(displayStateOf(study, derived.get(), &report) == first);
     }
     const meshing::Mesh& mesh = study.mesh();
-    const auto e = renderer::inspectThermalElement(mesh, *derived->post, 0, mesh.tetrahedra()[3].id);
+    const auto e = renderer::inspectThermalElement(mesh, *derived->post, 0, mesh.tetrahedra()[3].id, renderer::ThermalResultState::Current);
     for (int run = 0; run < 10; ++run) {
-        CHECK(renderer::inspectThermalElement(mesh, *derived->post, 0, mesh.tetrahedra()[3].id) == e);
+        CHECK(renderer::inspectThermalElement(mesh, *derived->post, 0, mesh.tetrahedra()[3].id, renderer::ThermalResultState::Current) == e);
     }
 }
 

@@ -1,0 +1,122 @@
+{
+  "analysisId": 8,
+  "name": "Study",
+  "mode": "steady",
+  "nodeCount": 9,
+  "tetrahedronCount": 12,
+  "accepted": false,
+  "stoppedAt": "solve",
+  "failure": "the steady model has no absolute temperature datum: none of its 1 independent region(s) is tied to a prescribed temperature or a convection face, so the constant temperature is in the null space and the solution is not unique. Prescribe a temperature or add a convection condition (unknown 0 is in the first such region)",
+  "validation": {
+    "status": "FAIL",
+    "accepted": false,
+    "inputsAccepted": true,
+    "solveAccepted": false,
+    "errorCount": 1,
+    "warningCount": 0,
+    "infoCount": 1,
+    "policy": "p18-valid-v1:f97b835a659f144e",
+    "checks": [
+      {
+        "rule": "TV_ANALYSIS_DEFINITION",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_GEOMETRY_CURRENT",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_MESH_CURRENT",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_MESH_STRUCTURAL",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_MESH_QUALITY",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_MATERIAL",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_LOADS",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_BCS",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_TRANSIENT_SETUP",
+        "group": "input",
+        "status": "NOT_APPLICABLE"
+      },
+      {
+        "rule": "TV_SOURCE_COMPAT",
+        "group": "system",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_WELL_POSED",
+        "group": "system",
+        "status": "FAIL"
+      },
+      {
+        "rule": "TV_SOLVER_RESIDUAL",
+        "group": "solve",
+        "status": "SKIPPED",
+        "blockedBy": "TV_WELL_POSED"
+      },
+      {
+        "rule": "TV_RESULT_FINITE",
+        "group": "result",
+        "status": "SKIPPED",
+        "blockedBy": "TV_WELL_POSED"
+      },
+      {
+        "rule": "TV_POST",
+        "group": "result",
+        "status": "SKIPPED",
+        "blockedBy": "TV_WELL_POSED"
+      },
+      {
+        "rule": "TV_BALANCE",
+        "group": "balance",
+        "status": "SKIPPED",
+        "blockedBy": "TV_WELL_POSED"
+      }
+    ],
+    "findings": [
+      {
+        "code": "no_boundary_conditions_configured",
+        "rule": "TV_BCS",
+        "severity": "info",
+        "message": "the analysis has no boundary condition"
+      },
+      {
+        "code": "no_temperature_datum",
+        "rule": "TV_WELL_POSED",
+        "severity": "error",
+        "message": "no part of the model is anchored to an absolute temperature: 1 independent region(s), none with a prescribed temperature or a positive convection coefficient",
+        "count": 1
+      }
+    ],
+    "metrics": {
+      "tetrahedronCount": 12,
+      "unknownCount": 9,
+      "freeEquations": 9,
+      "constrainedCount": 0
+    }
+  }
+}

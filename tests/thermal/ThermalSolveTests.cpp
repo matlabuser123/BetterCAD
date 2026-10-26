@@ -24,6 +24,9 @@
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
 
+#include <bettercad/linalg/SymmetricSolve.hpp>
+
+#include <algorithm>
 #include <bit>
 #include <chrono>
 #include <format>
@@ -1126,4 +1129,69 @@ TEST_CASE("ThermalSolve_StaleReasonsNameEachFieldAlone", "[thermal][solve][curre
     CHECK(only([](auto& s) { s.system.geometry = meshing::GeometryRevision{5}; }) == Reasons{SolutionStaleReason::Geometry});
     CHECK(only([](auto& s) { s.system.materialRevision = 7; }) == Reasons{SolutionStaleReason::Material});
     CHECK(only([](auto& s) { s.system.mode = thermal::ThermalAnalysisMode::Transient; }) == Reasons{SolutionStaleReason::Mode});
+}
+
+TEST_CASE("ThermalSolve_ADisconnectedMeshWithAnUnanchoredComponentFailsEndToEnd", "[thermal][solve][singular][disconnected][qual]") {
+    // P18-QUAL-001. The disconnected-component rule was proven on bare algebra; this is the same rule from an ASSEMBLED system through
+    // the production entry. Two tetrahedra share no node: holding one of them does not anchor the other, and holding both does.
+    const AsmHand hand = makeAsmHand(Nodes{{1, at(0, 0, 0)}, {2, at(1, 0, 0)}, {3, at(0, 1, 0)}, {4, at(0, 0, 1)},
+                                           {5, at(5, 0, 0)}, {6, at(6, 0, 0)}, {7, at(5, 1, 0)}, {8, at(5, 0, 1)}},
+                                     {}, {{0, 1, 2, 3}, {4, 5, 6, 7}});
+    const ThermalSystem system = steadySystemOf(hand, kGridK, noHeat(hand));
+
+    const ThermalConstraintMap oneHeld = constraintsOn(hand, {{0, 300.0}});
+    const auto refused = thermal::solveSteadyThermalSystem(system, hand.dofs, oneHeld, ThermalSolverSettings{});
+    REQUIRE_FALSE(refused.has_value());
+    CHECK(refused.error().problem == SteadySolveProblem::UnanchoredThermalRegion);
+    // The REDUCED system has four regions, not two: the unit tetrahedron has exact-zero couplings between its three free corners, and an
+    // exact zero does not connect (ThermalSolve_ExplicitZerosDoNotConnectRegions). Three singletons are tied to the held corner; the second
+    // tetrahedron, joined to nothing held, is the one region that floats.
+    CHECK_THAT(refused.error().error.message, ContainsSubstring("1 of the model's 4 independent thermal region(s)"));
+    CHECK_THAT(refused.error().error.message, ContainsSubstring("although 3 are"));
+
+    const ThermalConstraintMap bothHeld = constraintsOn(hand, {{0, 300.0}, {4, 400.0}});
+    const auto solved = thermal::solveSteadyThermalSystem(system, hand.dofs, bothHeld, ThermalSolverSettings{});
+    INFO((solved.has_value() ? std::string{} : solved.error().error.message));
+    REQUIRE(solved.has_value());
+    for (std::size_t i = 0; i < 4; ++i) {
+        CHECK_THAT(solved->temperatures()[i].si(), WithinAbs(300.0, 1e-9)); // no source: each component sits at its own held value
+        CHECK_THAT(solved->temperatures()[4 + i].si(), WithinAbs(400.0, 1e-9));
+    }
+}
+
+TEST_CASE("ThermalSolve_AnUnmeetableToleranceRefusesTheSolveItself", "[thermal][solve][residual][qual]") {
+    // P18-QUAL-001. The independent residual gate inside the production solve, not the helper that judges a candidate: a tolerance no
+    // floating-point residual can meet must make the solve REFUSE with the structured problem and the sentence that says the solver's own
+    // success is not accepted. (A generation load makes the residual a real, non-zero rounding quantity.)
+    const AsmHand hand = makeKuhnGrid(6, 0.01);
+    const ThermalSystem system = steadySystemOf(hand, kGridK, generationHeat(hand, 60.0));
+    std::vector<std::pair<std::size_t, double>> prescribed;
+    for (std::size_t k = 0; k < 6; ++k) {
+        for (std::size_t j = 0; j < 6; ++j) {
+            prescribed.emplace_back((k * 6 + j) * 6, 300.0);
+        }
+    }
+    std::sort(prescribed.begin(), prescribed.end());
+    const ThermalConstraintMap constraints = constraintsOn(hand, prescribed);
+
+    const auto accepted = thermal::solveSteadyThermalSystem(system, hand.dofs, constraints, ThermalSolverSettings{});
+    REQUIRE(accepted.has_value());
+    CHECK(accepted->residual().normalized > 0.0); // the control: the residual is not exactly zero, so 1e-30 cannot be met
+
+    const auto refused = thermal::solveSteadyThermalSystem(
+        system, hand.dofs, constraints, ThermalSolverSettings{.relativeResidualTolerance = 1.0e-30, .pivotFloor = 1.0e-12});
+    REQUIRE_FALSE(refused.has_value());
+    CHECK(refused.error().problem == SteadySolveProblem::ResidualTooLarge);
+    CHECK_THAT(refused.error().error.message, ContainsSubstring("The solver reported success"));
+}
+
+TEST_CASE("ThermalSolve_TheSolverSettingDefaultsAreTheKernelDefaults", "[thermal][solve][tolerance][qual]") {
+    // P18-QUAL-001 (tolerance ownership). The numbers 1e-9 and 1e-12 are written in three places -- the kernel's settings, the thermal
+    // canonical record and the structural record. They agree today; this is the test that fails the day one of them moves alone.
+    const ThermalSolverSettings thermalDefaults{};
+    const linalg::SymmetricSolveSettings kernelDefaults{};
+    CHECK(thermalDefaults.relativeResidualTolerance == kernelDefaults.relativeResidualTolerance);
+    CHECK(thermalDefaults.pivotFloor == kernelDefaults.pivotFloor);
+    CHECK(thermalDefaults.relativeResidualTolerance == 1.0e-9);
+    CHECK(thermalDefaults.pivotFloor == 1.0e-12);
 }

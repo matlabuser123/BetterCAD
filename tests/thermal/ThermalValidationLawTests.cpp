@@ -25,6 +25,7 @@
 #include "ThermalAssemblyTestSupport.hpp"
 
 #include <bettercad/meshing/MeshQuality.hpp>
+#include <bettercad/thermal/ThermalBalance.hpp>
 #include <bettercad/thermal/ThermalPost.hpp>
 #include <bettercad/thermal/ThermalSolve.hpp>
 #include <bettercad/thermal/ThermalValidation.hpp>
@@ -351,5 +352,125 @@ TEST_CASE("ThermalValidation_MeasuresHowTheSolveDegradesWithAFlatteningElementIn
         if (!absolute.solved) {
             WARN(std::format("LAW patch refused | s {:.10f} | problem {}", s, absolute.problem.has_value() ? thermal::toString(*absolute.problem) : "none"));
         }
+    }
+}
+
+namespace {
+
+/// The patch of `patchSolve`, solved through the PRODUCTION steady entry and BALANCED, with its mesh judged by the validator's own
+/// classifier. P18-QUAL-001: the two mesh bounds were derived from the GRADIENT accuracy law; nothing asserted that a mesh at the very
+/// edge of what they ACCEPT still solves, still closes its heat balance, and is not refused by the independent residual gate.
+struct EdgePatch {
+    double radiusRatio = 0.0;
+    double aspectRatio = 0.0;
+    bool meshAccepted = false;          // classifyThermalMesh produced no Error
+    bool solved = false;
+    double solveError = 0.0;            // |T(P) - exact| / change
+    bool balanced = false;
+    double worstBalance = 0.0;          // the balance's worst normalised residual
+};
+
+[[nodiscard]] EdgePatch edgePatch(double s, double stretch, const Field& field) {
+    const double L = 0.010;
+    const std::array<std::array<double, 3>, 4> outer{{{0, 0, 0}, {L, 0, 0}, {0, L * stretch, 0}, {0, 0, L * stretch}}};
+    std::array<double, 3> p{};
+    for (std::size_t c = 0; c < 3; ++c) {
+        const double centroid = (outer[0][c] + outer[1][c] + outer[2][c] + outer[3][c]) / 4.0;
+        const double face = (outer[0][c] + outer[1][c] + outer[2][c]) / 3.0;
+        p[c] = (1.0 - s) * centroid + s * face;
+    }
+    Nodes nodes;
+    for (std::size_t i = 0; i < 4; ++i) {
+        nodes.emplace_back(static_cast<NodeId::ValueType>(i + 1), at(outer[i][0], outer[i][1], outer[i][2]));
+    }
+    nodes.emplace_back(5, at(p[0], p[1], p[2]));
+    const AsmHand hand = makeAsmHand(nodes, {}, {{4, 1, 2, 3}, {0, 4, 2, 3}, {0, 1, 4, 3}, {0, 1, 2, 4}});
+
+    EdgePatch out;
+    const meshing::MeshQualityReport quality = meshing::evaluateMeshQuality(hand.mesh, meshing::reportOnlyThresholds());
+    REQUIRE(quality.structurallyValid);
+    out.radiusRatio = quality.summaries.at(QualityMetric::TetRadiusRatio).minimum;
+    out.aspectRatio = quality.summaries.at(QualityMetric::TetAspectRatio).maximum;
+    const thermal::ThermalMeshVerdict verdict = thermal::classifyThermalMesh(quality);
+    out.meshAccepted = std::none_of(verdict.structural.begin(), verdict.structural.end(),
+                                    [](const thermal::ValidationFinding& f) { return f.severity == thermal::ValidationSeverity::Error; }) &&
+                       std::none_of(verdict.quality.begin(), verdict.quality.end(),
+                                    [](const thermal::ValidationFinding& f) { return f.severity == thermal::ValidationSeverity::Error; });
+
+    const auto exact = [&](const std::array<double, 3>& x) { return field.base + field.g[0] * x[0] + field.g[1] * x[1] + field.g[2] * x[2]; };
+    std::vector<thermal::ThermalTemperatureConstraint> prescribed;
+    for (std::size_t i = 0; i < 4; ++i) {
+        const Result<ThermalDofIndex> dof = hand.dofs.dofOf(NodeId::fromValue(static_cast<NodeId::ValueType>(i + 1)));
+        REQUIRE(dof.has_value());
+        prescribed.push_back({*dof, Temperature::fromSi(exact(outer[i]))});
+    }
+    const auto constraints = thermal::buildThermalConstraintMap(hand.dofs, prescribed);
+    REQUIRE(constraints.has_value());
+    const thermal::ThermalSystem system = assemble(hand, 45.0, std::nullopt, noHeat(hand));
+    const auto solved = thermal::solveSteadyThermalSystem(system, hand.dofs, *constraints, thermal::ThermalSolverSettings{});
+    if (!solved.has_value()) {
+        return out;
+    }
+    out.solved = true;
+    const Result<ThermalDofIndex> pDof = hand.dofs.dofOf(NodeId::fromValue(5));
+    REQUIRE(pDof.has_value());
+    const double got = solved->temperatures()[static_cast<std::size_t>(pDof->value())].si();
+    const double change = std::abs(exact(outer[1]) - exact(outer[0])) + std::abs(exact(outer[2]) - exact(outer[0])) + std::abs(exact(outer[3]) - exact(outer[0]));
+    out.solveError = std::abs(got - exact(p)) / change;
+    const auto balance = thermal::balanceSteadySolution(system, hand.dofs, *constraints, {}, {}, *solved);
+    if (balance.has_value()) {
+        out.balanced = balance->balanced();
+        out.worstBalance = balance->worstNormalizedResidual();
+    }
+    return out;
+}
+
+/// The LAST shape the validator's mesh classifier accepts along one degeneration family: a flattening (parameter s, toward a plane)
+/// or a stretching (two axes shrunk, toward a line). Acceptance is monotone in the parameter, so a bisection on the decade finds it.
+struct EdgeShape {
+    double s = 0.0;
+    double stretch = 1.0;
+};
+
+[[nodiscard]] EdgeShape edgeShape(bool stretching) {
+    double lo = 0.0;      // accepted side, in decades
+    double hi = stretching ? 8.0 : 12.0;
+    const auto shapeOf = [&](double decades) {
+        return stretching ? EdgeShape{0.0, std::pow(10.0, -decades)} : EdgeShape{1.0 - std::pow(10.0, -decades), 1.0};
+    };
+    for (int i = 0; i < 80; ++i) {
+        const double mid = 0.5 * (lo + hi);
+        const EdgeShape shape = shapeOf(mid);
+        const EdgePatch probe = edgePatch(shape.s, shape.stretch, kAbsoluteA);
+        const bool accepted = probe.meshAccepted;   // the validator's own verdict, not a re-derived inequality
+        (accepted ? lo : hi) = mid;
+    }
+    return shapeOf(lo);
+}
+} // namespace
+
+TEST_CASE("ThermalValidation_AMeshAtTheEdgeOfTheAcceptedBoundsStillSolvesAndBalances", "[thermal][validation][law][patch][balance][qual]") {
+    // P18-QUAL-001 (finding D-E). The shape bounds were chosen from the gradient law; the solve and the balance gates were chosen
+    // separately. Drive a patch along each degeneration family to the LAST shape the validator's classifier accepts and require that
+    // the production solve converges to the exact affine value and that the heat balance closes. (Stretching reaches the radius-ratio
+    // floor before the aspect ceiling -- measured below -- so the floor is the binding bound of both families.)
+    struct Edge {
+        const char* name;
+        bool stretching;
+    };
+    for (const Edge& edge : {Edge{"flattening", false}, Edge{"stretching", true}}) {
+        const EdgeShape shape = edgeShape(edge.stretching);
+        const EdgePatch patch = edgePatch(shape.s, shape.stretch, kAbsoluteA);
+        WARN(std::format("EDGE {} | s {:.12f} | stretch {:.5e} | 3r/R {:.5e} | aspect {:.5f} | accepted {} | solved {} | T(P) error {:.5e} | balanced {} | worst balance {:.5e}",
+                         edge.name, shape.s, shape.stretch, patch.radiusRatio, patch.aspectRatio, patch.meshAccepted ? "yes" : "NO", patch.solved ? "yes" : "NO",
+                         patch.solveError, patch.balanced ? "yes" : "NO", patch.worstBalance));
+        INFO(edge.name);
+        CHECK(patch.radiusRatio >= thermal::kThermalRadiusRatioFloor);   // the probe really is inside both bounds ...
+        CHECK(patch.aspectRatio <= thermal::kThermalAspectRatioCeiling);
+        CHECK(patch.meshAccepted);                                        // ... so the classifier accepts it ...
+        CHECK(patch.solved);                                              // ... the production solve converges ...
+        CHECK(patch.solveError < 1.0e-6);                                 // ... to the exact value of a field a linear element reproduces ...
+        CHECK(patch.balanced);                                            // ... and the heat balance closes.
+        CHECK(patch.worstBalance < 1.0e-6);
     }
 }

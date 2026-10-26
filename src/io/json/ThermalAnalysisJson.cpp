@@ -512,13 +512,68 @@ Result<Json> thermalAnalysisToJson(const thermal::ThermalAnalysis& analysis) {
     if (const Result<void> ok = fits(d.mesh.value(), "the meshing control"); !ok) {
         return std::unexpected(ok.error());
     }
+    // THE SAME RULE FOR A TARGET. The data model's `validate` admits a FaceName whose feature is the invalid handle (the
+    // reader and the command layer refuse it) and identifiers inside a GeometryReference above the cap; both would save
+    // and then never load. A target is writable exactly when `readFace` would read it back.
+    const auto faceWritable = [&fits](const FaceName& face, std::string_view what) -> Result<void> {
+        if (!face.feature.isValid()) {
+            return makeError(ErrorCode::InvalidArgument,
+                             std::format("{} targets a face of no feature (the invalid feature handle); the file would refuse it on "
+                                         "load, so it is not written",
+                                         what));
+        }
+        const auto check = [&fits, what](std::uint64_t value, std::string_view part) {
+            return fits(value, std::format("{}: the {}", what, part));
+        };
+        if (const Result<void> ok = check(face.feature.value(), "feature"); !ok) {
+            return ok;
+        }
+        const FaceSelector& selector = face.face;
+        if (selector.entity.has_value()) {
+            if (const Result<void> ok = check(selector.entity->value(), "entity"); !ok) {
+                return ok;
+            }
+        }
+        if (selector.along.has_value()) {
+            if (const Result<void> ok = check(selector.along->value(), "path edge"); !ok) {
+                return ok;
+            }
+        }
+        if (selector.alongSketch.has_value()) {
+            if (const Result<void> ok = check(selector.alongSketch->value(), "path sketch"); !ok) {
+                return ok;
+            }
+        }
+        if (selector.edge.has_value()) {
+            if (const Result<void> ok = check(selector.edge->value(), "chamfer edge"); !ok) {
+                return ok;
+            }
+        }
+        for (const FaceCopy& copy : selector.copies) {
+            if (const Result<void> ok = check(copy.feature.value(), "copying feature"); !ok) {
+                return ok;
+            }
+            if (const Result<void> ok = check(static_cast<std::uint64_t>(copy.instance), "copy instance"); !ok) {
+                return ok;
+            }
+        }
+        return Result<void>{};
+    };
     for (const thermal::ThermalLoad& load : d.loads) {
         if (const Result<void> ok = fits(load.id().value(), "the load id"); !ok) {
             return std::unexpected(ok.error());
         }
+        if (const std::optional<FaceName> target = load.target(); target.has_value()) {
+            if (const Result<void> ok = faceWritable(*target, "a load"); !ok) {
+                return std::unexpected(ok.error());
+            }
+        }
     }
     for (const thermal::ThermalBoundaryCondition& condition : d.boundaryConditions) {
         if (const Result<void> ok = fits(condition.id().value(), "the boundary condition id"); !ok) {
+            return std::unexpected(ok.error());
+        }
+        if (const Result<void> ok = faceWritable(condition.face(), "a boundary condition"); !ok) {
             return std::unexpected(ok.error());
         }
     }

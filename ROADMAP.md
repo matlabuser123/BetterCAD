@@ -110,12 +110,14 @@ P18-BC-001 (2026-10-19), P18-ASSEMBLY-001 and P18-SOLVE-001 (2026-10-20),
 P18-TRANSIENT-001 and P18-POST-001 (2026-10-21), P18-BALANCE-001 (2026-10-22),
 P18-VALID-001 and P18-VIZ-001 (2026-10-23), P18-CMD-001 (2026-10-24),
 P18-PERSIST-001 (2026-10-25), P18-CLI-001 and P18-REFMOD-001 (2026-10-26) have
-PASSED; P18-QUAL-001 is next and not yet authorized; see TODO.md.
+PASSED, and P18 — Thermal Analysis was QUALIFIED on 2026-10-27 by P18-QUAL-001:
+eighteen milestones PASS, 5804/5804 tests in three presets, qualified tree ==
+committed tree. P19 — CFD Integration is next and NOT authorized; see TODO.md.
 ```
 
 Released: `v0.1.0` — Foundation.
 
-Qualified but not yet separately released: `P11`, `P12`, `P13`, `P14`, `P15`, `P16`, `P17`.
+Qualified but not yet separately released: `P11`, `P12`, `P13`, `P14`, `P15`, `P16`, `P17`, `P18`.
 
 ---
 

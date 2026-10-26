@@ -1363,6 +1363,10 @@ foreach(_case
         "could not convert|cannot convert|no matching function|no match for|invalid conversion|invalid initialization of reference|conversion from|no known conversion"
         BetterCAD::renderer BetterCAD::thermal BetterCAD::meshing)
 endforeach()
+# P18-QUAL-001: the inspection's result state is a required argument (it used to default to Current).
+bettercad_compile_fail_case(thermalviz "${_thermalviz}" AN_INSPECTION_MUST_STATE_THE_RESULT_STATE
+    "too few arguments|no matching function"
+    BetterCAD::renderer BetterCAD::thermal BetterCAD::meshing)
 foreach(_case
         THE_DISPLAY_STATE_HAS_NO_STALE_FLAG
         THE_DISPLAY_STATE_HAS_NO_OVERRIDE

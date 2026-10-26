@@ -1,0 +1,2 @@
+Added boundary condition 2: convection 25 W/(m^2 K) to 293.15 K on face:Extrude001:end_cap
+Wrote C:/Users/hasib/bcdev/bc-build/debug-shared-ext/tests/cli-output/thermal-workflow/steady.bcad

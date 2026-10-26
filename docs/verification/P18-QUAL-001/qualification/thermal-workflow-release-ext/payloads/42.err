@@ -1,0 +1,2 @@
+bettercad-cli thermal-boundary-add: --temperature: unknown unit 'degC' in '20degC'
+Usage: bettercad-cli thermal-boundary-add <file.bcad> <id> <face> --temperature <K> | --convection <W/(m^2 K)> --ambient <K>

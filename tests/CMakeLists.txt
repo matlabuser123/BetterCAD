@@ -353,6 +353,7 @@ if(TARGET bettercad_reference_models)
         qualification/P15MaterialsQualificationTests.cpp
         qualification/P16MeshingQualificationTests.cpp
         qualification/P17StructuralQualificationTests.cpp
+        qualification/P18ThermalQualificationTests.cpp
         reference/AllModelsTests.cpp
         reference/MaterialModelsTests.cpp
         reference/MeshModelsTests.cpp

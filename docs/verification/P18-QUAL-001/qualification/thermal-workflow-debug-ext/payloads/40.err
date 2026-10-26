@@ -1,0 +1,2 @@
+bettercad-cli thermal-load-add: --flux: 'nan' is not a number
+Usage: bettercad-cli thermal-load-add <file.bcad> <id> --flux <W/m^2> --face <face> | --generation <W/m^3>

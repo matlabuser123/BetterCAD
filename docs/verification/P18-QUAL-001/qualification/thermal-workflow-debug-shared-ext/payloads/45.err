@@ -1,0 +1,2 @@
+bettercad-cli thermal-solve: expected one document
+Usage: bettercad-cli thermal-solve <file.bcad> [--json]

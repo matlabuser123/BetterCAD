@@ -1289,7 +1289,7 @@ TEST_CASE("ThermalCli_MissingMaterialFails", "[cli][thermal][failure][material]"
     const TempDir temp;
     const auto file = saveStudy(study, temp, "no-material");
     const std::string before = bytesOf(file);
-    for (const char* command : {"thermal-solve", "thermal-temperature", "thermal-gradient", "thermal-heat-flux"}) {
+    for (const char* command : {"thermal-solve", "thermal-temperature", "thermal-gradient", "thermal-heat-flux", "thermal-balance"}) {
         INFO(command);
         requireRefused(invoke({command, cliPath(file), "--json"}), "material_missing");
     }
@@ -1757,6 +1757,62 @@ TEST_CASE("ThermalCli_ValidationJsonWritesANonFiniteMeasurementAsNullAndSaysSo",
     CHECK(j["findings"][1]["value"].number() == 2.5e-3);
     CHECK(j["findings"][1]["valueFinite"].boolean());
     CHECK(j["status"].text() == "FAIL");
+}
+
+TEST_CASE("ThermalCli_ValidationJsonCarriesAWarningReportWithEveryOptionalFieldItHolds", "[cli][thermal][validation][warning][qual]") {
+    // P18-QUAL-001. A severity-WARNING finding (the only kind that makes the status PASS_WITH_WARNINGS) cannot be produced by a small
+    // real document, so the report is built by hand and written by the production writer: the status, the acceptance and every
+    // optional field a finding can hold must reach the payload exactly as the core states them.
+    thermal::ThermalValidationReport report;
+    report.policyFingerprint = "p18-valid-v1:test";
+    report.checks.push_back(thermal::ThermalCheck{.rule = thermal::ValidationRule::MeshQuality, .state = thermal::CheckState::Evaluated});
+    thermal::ValidationFinding warning;
+    warning.code = ValidationCode::ElementOutsideQualifiedEnvelope;
+    warning.severity = thermal::ValidationSeverity::Warning;
+    warning.rule = thermal::ValidationRule::MeshQuality;
+    warning.subject = thermal::ValidationSubject::Solution;
+    warning.metric = meshing::QualityMetric::TetRadiusRatio;
+    warning.element = meshing::ElementId::fromValue(42);
+    warning.step = 3;
+    warning.time = 150.0;
+    warning.stepSize = 50.0;
+    warning.value = 1.0e-5;
+    warning.threshold = 7.0e-6;
+    warning.count = 17;
+    warning.unit = "1";
+    warning.cause = "outside_envelope";
+    warning.message = "an element is inside the bound and outside the qualified envelope";
+    report.findings.push_back(warning);
+
+    REQUIRE(report.status() == thermal::ValidationStatus::PassWithWarnings);
+    REQUIRE(report.accepted());
+    cli::FiniteJson fin;
+    const Json j = parseObject(cli::validationJson(fin, report).render());
+    CHECK_FALSE(fin.sawNonFinite());
+    CHECK(j["status"].text() == "PASS_WITH_WARNINGS");
+    CHECK(j["accepted"].boolean());
+    CHECK(j["errorCount"].number() == 0.0);
+    CHECK(j["warningCount"].number() == 1.0);
+    CHECK(j["policy"].text() == "p18-valid-v1:test");
+    REQUIRE(j["findings"].size() == 1U);
+    const Json& f = j["findings"][0];
+    CHECK(f["code"].text() == std::string{thermal::toString(ValidationCode::ElementOutsideQualifiedEnvelope)});
+    CHECK(f["severity"].text() == "warning");
+    CHECK(f["rule"].text() == std::string{thermal::toString(thermal::ValidationRule::MeshQuality)});
+    CHECK(f["subject"].text() == std::string{thermal::toString(thermal::ValidationSubject::Solution)});
+    CHECK(f["metric"].text() == std::string{meshing::toString(meshing::QualityMetric::TetRadiusRatio)});
+    CHECK(f["element"].number() == 42.0);
+    CHECK(f["step"].number() == 3.0);
+    CHECK(f["time"]["value"].number() == 150.0);
+    CHECK(f["time"]["unit"].text() == "s");
+    CHECK(f["stepSize"]["value"].number() == 50.0);
+    CHECK(f["value"].number() == 1.0e-5);
+    CHECK(f["valueFinite"].boolean());
+    CHECK(f["threshold"].number() == 7.0e-6);
+    CHECK(f["count"].number() == 17.0);
+    CHECK(f["unit"].text() == "1");
+    CHECK(f["cause"].text() == "outside_envelope");
+    CHECK(f["message"].text() == warning.message);
 }
 
 TEST_CASE("ThermalCli_ExtremumTieBreakIsTheLowestIdWhateverTheOrder", "[cli][thermal][summary][tie]") {

@@ -1,0 +1,260 @@
+== RM-THERM-01 ThermalPatch
+affine patch test on a mesh with an interior node
+loads 0 conditions 2 mode steady
+nodes 9 tets 12 boundary_facets 12
+sizing global_mm 20 local_controls 0 unresolved_local 0 slabs 0
+validation PASS accepted yes stopped_at none errors 0 warnings 0
+finding info no_loads_configured the analysis applies no heat load
+expected_outcome accepted actual accepted published_result yes
+fields states 1 nodes 9 elements 12 t_min_K 300 t_max_K 400 q_max_W_m2 25000.000000000018
+balance states 1 surface_W 0 generation_W 0 convection_W 0 reaction_W -2.8421709430404007e-14 storage_W 0 residual_W -2.8421709430404007e-14 normalized 4.736952e-16 balanced yes
+solve steady_residual 0.000000e+00 tolerance 1.000000e-09
+after_change patch_a_mm 48 currency stale: the geometry changed accepted no stopped_at model mesh_stale_finding yes published no
+after_remesh nodes 9 tets 12 t_max_K 400
+timing_ms build 1.640 regeneration 7.200 meshing 81.894 solve 31.685 changed_regeneration 5.721 remesh_and_resolve 122.644
+== RM-THERM-02 ThermalSlab
+1D slab conduction: T linear, q = k dT/L, Qdot = k A dT/L
+loads 0 conditions 2 mode steady
+nodes 9 tets 12 boundary_facets 12
+sizing global_mm 500 local_controls 0 unresolved_local 0 slabs 0
+validation PASS accepted yes stopped_at none errors 0 warnings 0
+finding info no_loads_configured the analysis applies no heat load
+expected_outcome accepted actual accepted published_result yes
+fields states 1 nodes 9 elements 12 t_min_K 300 t_max_K 400 q_max_W_m2 800
+balance states 1 surface_W 0 generation_W 0 convection_W 0 reaction_W -7.9580786405131221e-13 storage_W 0 residual_W -7.9580786405131221e-13 normalized 1.989520e-15 balanced yes
+solve steady_residual 0.000000e+00 tolerance 1.000000e-09
+after_change slab_l_mm 1200 currency stale: the geometry changed accepted no stopped_at model mesh_stale_finding yes published no
+after_remesh nodes 9 tets 12 t_max_K 400
+timing_ms build 0.420 regeneration 6.605 meshing 87.163 solve 28.599 changed_regeneration 4.638 remesh_and_resolve 118.896
+== RM-THERM-04 ThermalGeneration
+uniform generation between two held faces: a parabola
+loads 1 conditions 2 mode steady
+nodes 9 tets 12 boundary_facets 12
+sizing global_mm 250 local_controls 0 unresolved_local 0 slabs 0
+validation PASS accepted yes stopped_at none errors 0 warnings 0
+expected_outcome accepted actual accepted published_result yes
+fields states 1 nodes 9 elements 12 t_min_K 300 t_max_K 310.66666666653259 q_max_W_m2 2666.673278651574
+balance states 1 surface_W 0 generation_W 204.80000000000004 convection_W 0 reaction_W -204.8000000000001 storage_W 0 residual_W -5.6843418860808015e-14 normalized 1.387779e-16 balanced yes
+solve steady_residual 0.000000e+00 tolerance 1.000000e-09
+after_change gen_l_mm 200 currency stale: the geometry changed accepted no stopped_at model mesh_stale_finding yes published no
+after_remesh nodes 12 tets 26 t_max_K 309.74188034193338
+timing_ms build 0.347 regeneration 4.762 meshing 87.134 solve 24.383 changed_regeneration 4.911 remesh_and_resolve 116.561
+== RM-THERM-04 ThermalTube
+a thick tube with radial generation and a held outer wall: a smooth non-affine field on a real mesh
+loads 1 conditions 1 mode steady
+nodes 170 tets 291 boundary_facets 324
+sizing global_mm 10 local_controls 0 unresolved_local 0 slabs 0
+validation PASS accepted yes stopped_at none errors 0 warnings 0
+expected_outcome accepted actual accepted published_result yes
+fields states 1 nodes 170 elements 291 t_min_K 300 t_max_K 354.29415027578256 q_max_W_m2 29488.078720591217
+balance states 1 surface_W 0 generation_W 67.679365596488225 convection_W 0 reaction_W -67.679365596488111 storage_W 0 residual_W 1.1368683772161603e-13 normalized 8.398929e-16 balanced yes
+solve steady_residual 3.157370e-17 tolerance 1.000000e-09
+after_change tube_l_mm 24 currency stale: the geometry changed accepted no stopped_at model mesh_stale_finding yes published no
+after_remesh nodes 174 tets 315 t_max_K 358.2275151419052
+timing_ms build 1.160 regeneration 5.618 meshing 418.822 solve 57.999 changed_regeneration 3.440 remesh_and_resolve 493.595
+== RM-THERM-05 ThermalConvection
+conduction in series with convection: a resistance network
+loads 0 conditions 2 mode steady
+nodes 9 tets 12 boundary_facets 12
+sizing global_mm 250 local_controls 0 unresolved_local 0 slabs 0
+validation PASS accepted yes stopped_at none errors 0 warnings 0
+finding info no_loads_configured the analysis applies no heat load
+expected_outcome accepted actual accepted published_result yes
+fields states 1 nodes 9 elements 12 t_min_K 349.99999999999989 t_max_K 400 q_max_W_m2 1000.0000000000034
+balance states 1 surface_W 0 generation_W 0 convection_W -199.99999999999974 reaction_W 200.00000000000074 storage_W 0 residual_W 9.9475983006414026e-13 normalized 2.486900e-15 balanced yes
+solve steady_residual 5.201932e-17 tolerance 1.000000e-09
+after_change conv_l_mm 600 currency stale: the geometry changed accepted no stopped_at model mesh_stale_finding yes published no
+after_remesh nodes 9 tets 12 t_max_K 400
+timing_ms build 0.420 regeneration 4.717 meshing 70.496 solve 21.558 changed_regeneration 4.964 remesh_and_resolve 82.966
+== RM-THERM-06 ThermalTransformedBase
+the base block, at the origin on the XY plane
+loads 0 conditions 2 mode steady
+nodes 9 tets 12 boundary_facets 12
+sizing global_mm 16 local_controls 0 unresolved_local 0 slabs 0
+validation PASS accepted yes stopped_at none errors 0 warnings 0
+finding info no_loads_configured the analysis applies no heat load
+expected_outcome accepted actual accepted published_result yes
+fields states 1 nodes 9 elements 12 t_min_K 300 t_max_K 400 q_max_W_m2 62500.000000000073
+balance states 1 surface_W 0 generation_W 0 convection_W 0 reaction_W 6.1106675275368616e-13 storage_W 0 residual_W 6.1106675275368616e-13 normalized 9.875826e-16 balanced yes
+solve steady_residual 0.000000e+00 tolerance 1.000000e-09
+after_change tbase_a_mm 110 currency stale: the geometry changed accepted no stopped_at model mesh_stale_finding yes published no
+after_remesh nodes 8 tets 6 t_max_K 400
+timing_ms build 0.847 regeneration 4.806 meshing 73.843 solve 17.119 changed_regeneration 4.477 remesh_and_resolve 87.168
+== RM-THERM-06 ThermalTransformedPlaced
+the same block under a compound rotation and a translation
+loads 0 conditions 2 mode steady
+nodes 9 tets 12 boundary_facets 12
+sizing global_mm 16 local_controls 0 unresolved_local 0 slabs 0
+validation PASS accepted yes stopped_at none errors 0 warnings 0
+finding info no_loads_configured the analysis applies no heat load
+expected_outcome accepted actual accepted published_result yes
+fields states 1 nodes 9 elements 12 t_min_K 300 t_max_K 400 q_max_W_m2 62500.000000000065
+balance states 1 surface_W 0 generation_W 0 convection_W 0 reaction_W -1.9895196601282805e-13 storage_W 0 residual_W -1.9895196601282805e-13 normalized 3.215385e-16 balanced yes
+solve steady_residual 0.000000e+00 tolerance 1.000000e-09
+after_change tplaced_a_mm 110 currency stale: the geometry changed accepted no stopped_at model mesh_stale_finding yes published no
+after_remesh nodes 9 tets 12 t_max_K 400
+timing_ms build 0.379 regeneration 5.234 meshing 68.899 solve 18.961 changed_regeneration 4.905 remesh_and_resolve 89.553
+== RM-THERM-07 ThermalLocalBaseline
+the beam with no local control
+loads 1 conditions 2 mode steady
+nodes 9 tets 12 boundary_facets 12
+sizing global_mm 20 local_controls 0 unresolved_local 0 slabs 0
+validation PASS accepted yes stopped_at none errors 0 warnings 0
+expected_outcome accepted actual accepted published_result yes
+fields states 1 nodes 9 elements 12 t_min_K 300 t_max_K 309.34903047091387 q_max_W_m2 934.90308184068272
+balance states 1 surface_W 0 generation_W 23.999999999999989 convection_W 0 reaction_W -23.99999999999995 storage_W 0 residual_W 3.907985046680551e-14 normalized 8.141636e-16 balanced yes
+solve steady_residual 0.000000e+00 tolerance 1.000000e-09
+after_change locb_l_mm 120 currency stale: the geometry changed accepted no stopped_at model mesh_stale_finding yes published no
+after_remesh nodes 8 tets 6 t_max_K 300
+timing_ms build 0.379 regeneration 6.193 meshing 82.233 solve 23.847 changed_regeneration 6.615 remesh_and_resolve 69.278
+== RM-THERM-07 ThermalLocalTarget
+the beam with a 5 mm local control on the start cap
+loads 1 conditions 2 mode steady
+nodes 78 tets 369 boundary_facets 12
+sizing global_mm 20 local_controls 1 unresolved_local 0 slabs 1
+validation PASS accepted yes stopped_at none errors 0 warnings 0
+expected_outcome accepted actual accepted published_result yes
+fields states 1 nodes 78 elements 369 t_min_K 300 t_max_K 307.08608172289416 q_max_W_m2 1273.3236121470909
+balance states 1 surface_W 0 generation_W 24.000000000000046 convection_W 0 reaction_W -24.000000000000028 storage_W 0 residual_W 1.7763568394002505e-14 normalized 3.700743e-16 balanced yes
+solve steady_residual 2.875756e-17 tolerance 1.000000e-09
+after_change loct_l_mm 120 currency stale: the geometry changed accepted no stopped_at model mesh_stale_finding yes published no
+after_remesh nodes 63 tets 289 t_max_K 307.26205241430614
+timing_ms build 0.340 regeneration 4.657 meshing 192.294 solve 51.661 changed_regeneration 5.054 remesh_and_resolve 197.101
+== RM-THERM-07 ThermalLocalMirror
+the mirror: the same control on the end cap instead
+loads 1 conditions 2 mode steady
+nodes 60 tets 271 boundary_facets 12
+sizing global_mm 20 local_controls 1 unresolved_local 0 slabs 1
+validation PASS accepted yes stopped_at none errors 0 warnings 0
+expected_outcome accepted actual accepted published_result yes
+fields states 1 nodes 60 elements 271 t_min_K 300 t_max_K 307.64694937313891 q_max_W_m2 1277.6436415151693
+balance states 1 surface_W 0 generation_W 24.000000000000085 convection_W 0 reaction_W -24.00000000000011 storage_W 0 residual_W -2.4868995751603507e-14 normalized 5.181041e-16 balanced yes
+solve steady_residual 3.295148e-17 tolerance 1.000000e-09
+after_change locm_l_mm 120 currency stale: the geometry changed accepted no stopped_at model mesh_stale_finding yes published no
+after_remesh nodes 63 tets 285 t_max_K 307.8129841200348
+timing_ms build 0.420 regeneration 4.605 meshing 157.953 solve 40.086 changed_regeneration 4.423 remesh_and_resolve 216.887
+== RM-THERM-08 ThermalLumped
+a lumped body cooling by convection, Bi << 0.1: T(t) is an exponential
+loads 0 conditions 6 mode transient
+nodes 9 tets 12 boundary_facets 12
+sizing global_mm 20 local_controls 0 unresolved_local 0 slabs 0
+validation PASS accepted yes stopped_at none errors 0 warnings 0
+finding info no_loads_configured the analysis applies no heat load
+expected_outcome accepted actual accepted published_result yes
+fields states 47 nodes 9 elements 12 t_min_K 300.86837839836414 t_max_K 300.86934780751238 q_max_W_m2 17.220018644701291
+balance states 46 surface_W 0 generation_W 0 convection_W -0.20844182863383498 reaction_W 0 storage_W -0.20844182863297117 residual_W -8.6380902430960305e-13 normalized 2.072063e-12 balanced yes
+solve transient_steps 46 worst_physical_residual 4.437970e-17 tolerance 1.000000e-09
+after_change lump_a_mm 44 currency stale: the geometry changed accepted no stopped_at model mesh_stale_finding yes published no
+after_remesh nodes 9 tets 12 t_max_K 300.99690042366296
+timing_ms build 0.490 regeneration 4.383 meshing 67.004 solve 46.697 changed_regeneration 4.924 remesh_and_resolve 110.822
+== RM-THERM-08 ThermalInsulatedGeneration
+an insulated body with generation: T(t) is a line, exactly
+loads 1 conditions 0 mode transient
+nodes 9 tets 12 boundary_facets 12
+sizing global_mm 20 local_controls 0 unresolved_local 0 slabs 0
+validation PASS accepted yes stopped_at none errors 0 warnings 0
+finding info no_boundary_conditions_configured the analysis has no boundary condition
+finding info transient_without_datum no prescribed temperature and no convection: the body is insulated, and well posed by its capacity and initial temperature
+expected_outcome accepted actual accepted published_result yes
+fields states 5 nodes 9 elements 12 t_min_K 300.28988868274536 t_max_K 300.2898886827461 q_max_W_m2 8.4068015045277882e-09
+balance states 4 surface_W 0 generation_W 64 convection_W 0 reaction_W 0 storage_W 63.999999999999417 residual_W 5.8264504332328215e-13 normalized 9.259260e-14 balanced yes
+solve transient_steps 4 worst_physical_residual 2.282643e-16 tolerance 1.000000e-09
+after_change ins_a_mm 44 currency stale: the geometry changed accepted no stopped_at model mesh_stale_finding yes published no
+after_remesh nodes 9 tets 12 t_max_K 300.28988868274598
+timing_ms build 0.379 regeneration 5.192 meshing 70.813 solve 22.967 changed_regeneration 5.153 remesh_and_resolve 88.509
+== RM-THERM-02 ThermalSurfaceFlux
+a surface heat flux into a slab with one held cap: T(z) = 300 + 100 z
+loads 1 conditions 1 mode steady
+nodes 9 tets 12 boundary_facets 12
+sizing global_mm 50 local_controls 0 unresolved_local 0 slabs 0
+validation PASS accepted yes stopped_at none errors 0 warnings 0
+expected_outcome accepted actual accepted published_result yes
+fields states 1 nodes 9 elements 12 t_min_K 300 t_max_K 309.99999999999977 q_max_W_m2 499.99999999999091
+balance states 1 surface_W 1.2500000000000004 generation_W 0 convection_W 0 reaction_W -1.2499999999999361 storage_W 0 residual_W 6.4392935428259079e-14 normalized 2.575717e-14 balanced yes
+solve steady_residual 1.804673e-17 tolerance 1.000000e-09
+after_change sf_l_mm 120 currency stale: the geometry changed accepted no stopped_at model mesh_stale_finding yes published no
+after_remesh nodes 9 tets 12 t_max_K 311.99999999999983
+timing_ms build 0.562 regeneration 5.264 meshing 67.792 solve 21.870 changed_regeneration 4.621 remesh_and_resolve 91.407
+== RM-THERM-08 ThermalTransientSlab
+a held cap, two different convections and a non-uniform field: an independent backward-Euler integration
+loads 0 conditions 3 mode transient
+nodes 9 tets 12 boundary_facets 12
+sizing global_mm 50 local_controls 0 unresolved_local 0 slabs 0
+validation PASS accepted yes stopped_at none errors 0 warnings 0
+finding info no_loads_configured the analysis applies no heat load
+finding info initial_condition_overridden_by_prescription 4 unknown(s) had an initial temperature different from their prescription; the prescription dominates at t = 0
+expected_outcome accepted actual accepted published_result yes
+fields states 11 nodes 9 elements 12 t_min_K 369.78113407272997 t_max_K 400 q_max_W_m2 15336.48250564816
+balance states 10 surface_W 0 generation_W 0 convection_W -12.599888206315022 reaction_W 30.955014384628001 storage_W 18.355126178311931 residual_W 1.0480505352461478e-12 normalized 1.692861e-14 balanced yes
+solve transient_steps 10 worst_physical_residual 7.769003e-17 tolerance 1.000000e-09
+after_change ts_l_mm 120 currency stale: the geometry changed accepted no stopped_at model mesh_stale_finding yes published no
+after_remesh nodes 9 tets 12 t_max_K 400
+timing_ms build 0.460 regeneration 5.106 meshing 82.895 solve 24.453 changed_regeneration 4.320 remesh_and_resolve 94.154
+== RM-THERM-09 ThermalSingular
+steady conduction with no temperature datum: refused
+loads 1 conditions 0 mode steady
+nodes 9 tets 12 boundary_facets 12
+sizing global_mm 20 local_controls 0 unresolved_local 0 slabs 0
+validation FAIL accepted no stopped_at solve errors 1 warnings 0
+finding info no_boundary_conditions_configured the analysis has no boundary condition
+finding error no_temperature_datum no part of the model is anchored to an absolute temperature: 1 independent region(s), none with a prescribed temperature or a positive convection coefficient
+expected_outcome refusal actual refusal published_result no
+diagnostic the steady model has no absolute temperature datum: none of its 1 independent region(s) is tied to a prescribed temperature or a convection face, so the constant temperature is in the null space and the solution is not unique. Prescribe a temperature or add a convection condition (unknown 0 is in the first such region)
+timing_ms build 0.403 regeneration 4.912 meshing 60.389 solve 18.594
+== RM-THERM-09 ThermalSingularBalanced
+net heat zero, equations consistent, temperature still undetermined: refused
+loads 2 conditions 0 mode steady
+nodes 9 tets 12 boundary_facets 12
+sizing global_mm 20 local_controls 0 unresolved_local 0 slabs 0
+validation FAIL accepted no stopped_at solve errors 1 warnings 0
+finding info no_boundary_conditions_configured the analysis has no boundary condition
+finding error no_temperature_datum no part of the model is anchored to an absolute temperature: 1 independent region(s), none with a prescribed temperature or a positive convection coefficient
+expected_outcome refusal actual refusal published_result no
+diagnostic the steady model has no absolute temperature datum: none of its 1 independent region(s) is tied to a prescribed temperature or a convection face, so the constant temperature is in the null space and the solution is not unique. Prescribe a temperature or add a convection condition (unknown 0 is in the first such region)
+timing_ms build 0.451 regeneration 4.385 meshing 65.431 solve 20.307
+== RM-THERM-10 ThermalStaleMesh
+a geometry edit after meshing: the held mesh is stale
+loads 0 conditions 2 mode steady
+nodes 9 tets 12 boundary_facets 12
+sizing global_mm 20 local_controls 0 unresolved_local 0 slabs 0
+validation PASS accepted yes stopped_at none errors 0 warnings 0
+finding info no_loads_configured the analysis applies no heat load
+expected_outcome accepted actual accepted published_result yes
+fields states 1 nodes 9 elements 12 t_min_K 300 t_max_K 400 q_max_W_m2 16666.666666666679
+balance states 1 surface_W 0 generation_W 0 convection_W 0 reaction_W 5.3290705182007514e-15 storage_W 0 residual_W 5.3290705182007514e-15 normalized 7.993606e-17 balanced yes
+solve steady_residual 0.000000e+00 tolerance 1.000000e-09
+after_change stale_l_mm 36 currency stale: the geometry changed accepted no stopped_at model mesh_stale_finding yes published no
+after_remesh nodes 9 tets 12 t_max_K 400
+timing_ms build 0.499 regeneration 4.477 meshing 75.114 solve 19.291 changed_regeneration 4.185 remesh_and_resolve 107.030
+== RM-THERM-10 ThermalUnresolvedLoad
+a heat flux on a face that does not exist: refused
+loads 1 conditions 2 mode steady
+nodes 9 tets 12 boundary_facets 12
+sizing global_mm 20 local_controls 0 unresolved_local 0 slabs 0
+validation FAIL accepted no stopped_at loads errors 1 warnings 0
+finding error loads_invalid thermal load:1: its target face names no face of the body as it is now, so the load has nothing to act on. Nothing nearby is substituted
+expected_outcome refusal actual refusal published_result no
+diagnostic thermal load:1: its target face names no face of the body as it is now, so the load has nothing to act on. Nothing nearby is substituted
+timing_ms build 0.467 regeneration 5.273 meshing 70.595 solve 18.891
+== RM-THERM-10 ThermalUnresolvedTemperature
+a held temperature on a face that does not exist: refused
+loads 0 conditions 3 mode steady
+nodes 9 tets 12 boundary_facets 12
+sizing global_mm 20 local_controls 0 unresolved_local 0 slabs 0
+validation FAIL accepted no stopped_at boundary errors 1 warnings 0
+finding info no_loads_configured the analysis applies no heat load
+finding error boundary_conditions_invalid thermal boundary condition:3: its target face names no face of the body as it is now, so the condition has nothing to act on. Nothing nearby is substituted
+expected_outcome refusal actual refusal published_result no
+diagnostic thermal boundary condition:3: its target face names no face of the body as it is now, so the condition has nothing to act on. Nothing nearby is substituted
+timing_ms build 0.395 regeneration 4.512 meshing 72.928 solve 19.002
+== RM-THERM-10 ThermalUnresolvedConvection
+a convection on a face that does not exist: refused
+loads 0 conditions 3 mode steady
+nodes 9 tets 12 boundary_facets 12
+sizing global_mm 20 local_controls 0 unresolved_local 0 slabs 0
+validation FAIL accepted no stopped_at boundary errors 1 warnings 0
+finding info no_loads_configured the analysis applies no heat load
+finding error boundary_conditions_invalid thermal boundary condition:3: its target face names no face of the body as it is now, so the condition has nothing to act on. Nothing nearby is substituted
+expected_outcome refusal actual refusal published_result no
+diagnostic thermal boundary condition:3: its target face names no face of the body as it is now, so the condition has nothing to act on. Nothing nearby is substituted
+timing_ms build 0.389 regeneration 4.682 meshing 69.459 solve 18.792

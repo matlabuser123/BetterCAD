@@ -1,0 +1,185 @@
+{
+  "analysisId": 8,
+  "name": "Study",
+  "mode": "transient",
+  "nodeCount": 9,
+  "tetrahedronCount": 12,
+  "freeEquations": 5,
+  "constrainedCount": 4,
+  "temperature": {
+    "unit": "K",
+    "count": 9,
+    "min": {
+      "node": 6,
+      "value": 369.78113407272997,
+      "unit": "K"
+    },
+    "max": {
+      "node": 1,
+      "value": 400,
+      "unit": "K"
+    }
+  },
+  "stepCount": 10,
+  "storedStateCount": 11,
+  "startTime": {
+    "value": 0,
+    "unit": "s"
+  },
+  "endTime": {
+    "value": 500,
+    "unit": "s"
+  },
+  "firstStoredTime": {
+    "value": 0,
+    "unit": "s"
+  },
+  "lastStoredTime": {
+    "value": 500,
+    "unit": "s"
+  },
+  "worstPhysicalResidual": 7.769003389089507e-17,
+  "worstReducedResidual": 4.825065201333311e-17,
+  "heatBalance": {
+    "balanced": true,
+    "worstNormalizedResidual": 1.6928606819944147e-14
+  },
+  "validation": {
+    "status": "PASS",
+    "accepted": true,
+    "inputsAccepted": true,
+    "solveAccepted": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 2,
+    "policy": "p18-valid-v1:f97b835a659f144e",
+    "checks": [
+      {
+        "rule": "TV_ANALYSIS_DEFINITION",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_GEOMETRY_CURRENT",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_MESH_CURRENT",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_MESH_STRUCTURAL",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_MESH_QUALITY",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_MATERIAL",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_LOADS",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_BCS",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_TRANSIENT_SETUP",
+        "group": "input",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_SOURCE_COMPAT",
+        "group": "system",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_WELL_POSED",
+        "group": "system",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_SOLVER_RESIDUAL",
+        "group": "solve",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_RESULT_FINITE",
+        "group": "result",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_POST",
+        "group": "result",
+        "status": "PASS"
+      },
+      {
+        "rule": "TV_BALANCE",
+        "group": "balance",
+        "status": "PASS"
+      }
+    ],
+    "findings": [
+      {
+        "code": "no_loads_configured",
+        "rule": "TV_LOADS",
+        "severity": "info",
+        "message": "the analysis applies no heat load"
+      },
+      {
+        "code": "initial_condition_overridden_by_prescription",
+        "rule": "TV_SOLVER_RESIDUAL",
+        "severity": "info",
+        "message": "4 unknown(s) had an initial temperature different from their prescription; the prescription dominates at t = 0",
+        "count": 4
+      }
+    ],
+    "metrics": {
+      "tetrahedronCount": 12,
+      "unknownCount": 9,
+      "freeEquations": 5,
+      "constrainedCount": 4,
+      "residualTolerance": 1e-09,
+      "worstResidualStep": 8,
+      "worstResidualTime": {
+        "value": 400,
+        "unit": "s"
+      },
+      "worstResidualStepSize": {
+        "value": 50,
+        "unit": "s"
+      },
+      "worstTransientResidual": 7.769003389089507e-17,
+      "transientStepCount": 10,
+      "worstBalanceStep": 10,
+      "worstBalanceTime": {
+        "value": 500,
+        "unit": "s"
+      },
+      "worstBalanceResidual": 1.6928606819944147e-14,
+      "minimumTemperature": {
+        "value": 369.78113407272997,
+        "unit": "K"
+      },
+      "maximumTemperature": {
+        "value": 400,
+        "unit": "K"
+      },
+      "maximumHeatFlux": {
+        "value": 15336.48250564816,
+        "unit": "W/m^2"
+      }
+    }
+  }
+}

@@ -1,0 +1,1 @@
+bettercad-cli thermal-balance: boundary_conditions_invalid: thermal boundary condition:3: its target face names no face of the body as it is now, so the condition has nothing to act on. Nothing nearby is substituted

@@ -1,0 +1,36 @@
+{
+  "analysisId": 9,
+  "name": "Thermal1",
+  "mode": "steady",
+  "nodeCount": 81,
+  "tetrahedronCount": 127,
+  "domain": "element",
+  "quantity": "conductive_heat_flux",
+  "unit": "W/m^2",
+  "count": 127,
+  "magnitude": {
+    "min": 654.994852398604,
+    "max": 1042.9887192737315,
+    "unit": "W/m^2"
+  },
+  "largest": {
+    "element": 113,
+    "magnitude": {
+      "value": 1042.9887192737315,
+      "unit": "W/m^2"
+    },
+    "flux": {
+      "x": 119.15683836168228,
+      "y": 551.5915725136438,
+      "z": -877.1395861183282,
+      "unit": "W/m^2"
+    }
+  },
+  "smallest": {
+    "element": 44,
+    "magnitude": {
+      "value": 654.994852398604,
+      "unit": "W/m^2"
+    }
+  }
+}

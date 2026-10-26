@@ -235,7 +235,7 @@ TEST_CASE("ThermalViz_GradientRemainsKelvinPerMetre", "[thermal][viz][units][gra
     CHECK(renderer::thermalLegendTitle(*legend, std::nullopt) == "Temperature Gradient Magnitude [K/m]");
     // The inspector says the same.
     const Result<renderer::ThermalElementInspection> inspected =
-        renderer::inspectThermalElement(h.hand.mesh, h.post, 0, h.post.elementIds()[0]);
+        renderer::inspectThermalElement(h.hand.mesh, h.post, 0, h.post.elementIds()[0], renderer::ThermalResultState::Current);
     REQUIRE(inspected.has_value());
     CHECK_THAT(inspected->gradientMagnitude.si(), WithinAbs(10.0, 1e-11));
     WARN("gradient stays K/m: source 10 K/m -> field 10 -> legend unit K/m -> inspector 10 (not 0.01 K/mm)");
@@ -250,7 +250,7 @@ TEST_CASE("ThermalViz_HeatFluxRemainsWattPerSquareMetre", "[thermal][viz][units]
     CHECK_THAT(field.values[0], WithinAbs(50.0, 1e-10));
     CHECK(renderer::descriptorOf(renderer::ThermalChannel::HeatFluxMagnitude).unit == "W/m^2");
     const Result<renderer::ThermalElementInspection> inspected =
-        renderer::inspectThermalElement(h.hand.mesh, h.post, 0, h.post.elementIds()[0]);
+        renderer::inspectThermalElement(h.hand.mesh, h.post, 0, h.post.elementIds()[0], renderer::ThermalResultState::Current);
     REQUIRE(inspected.has_value());
     CHECK_THAT(inspected->heatFluxMagnitude.si(), WithinAbs(50.0, 1e-10));
     CHECK_THAT(inspected->heatFlux.x.si(), WithinAbs(-50.0, 1e-10));   // down the gradient: heat flows toward the cold
@@ -573,8 +573,8 @@ TEST_CASE("ThermalViz_DoesNotMutateThermalResult", "[thermal][viz][readonly]") {
     const auto glyphs = renderer::heatFluxVectorGlyphs(h.hand.mesh, h.post, 0);
     REQUIRE(glyphs.has_value());
     REQUIRE(renderer::heatFluxVectorOverlay(*glyphs, 0.5, 12.0).has_value());
-    REQUIRE(renderer::inspectThermalElement(h.hand.mesh, h.post, 0, h.post.elementIds()[2]).has_value());
-    REQUIRE(renderer::inspectThermalNode(h.hand.mesh, h.hand.dofs, h.post, 0, h.hand.dofs.nodes()[3]).has_value());
+    REQUIRE(renderer::inspectThermalElement(h.hand.mesh, h.post, 0, h.post.elementIds()[2], renderer::ThermalResultState::Current).has_value());
+    REQUIRE(renderer::inspectThermalNode(h.hand.mesh, h.hand.dofs, h.post, 0, h.hand.dofs.nodes()[3], renderer::ThermalResultState::Current).has_value());
     const Result<renderer::ThermalPlayback> playback = renderer::ThermalPlayback::of(h.post);
     REQUIRE(playback.has_value());
 

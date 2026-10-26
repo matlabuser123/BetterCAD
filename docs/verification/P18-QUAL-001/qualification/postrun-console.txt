@@ -1,0 +1,398 @@
+﻿postrun-qual started 2026-10-27T00:29:34.7441488+10:00
+== layering checker on the source tree
+-- Architecture check passed: 552 files, 0 violations
+== warnings and errors in the harness build logs (0 unexpected warnings is a requirement)
+  debug-ext : warning: 0  error: 0  objects 743  last step [767/767] Linking CXX executable bin\bettercad_tests.exe
+  debug-ext no-op rebuild edges: 1
+  debug-ext clean: [1/2] Cleaning additional files... [2/2] Cleaning all built files... Cleaning... 766 files.
+  debug-ext ctest: 100% tests passed out of 5804 | Total Test time (real) = 5146.83 sec
+  release-ext : warning: 0  error: 0  objects 743  last step [767/767] Building CXX object tests/compile_fail/CMakeFiles/bettercad_cf_thermalviz_control.dir/ThermalVizMisuse.cpp.obj
+  release-ext no-op rebuild edges: 1
+  release-ext clean: [1/2] Cleaning additional files... [2/2] Cleaning all built files... Cleaning... 766 files.
+  release-ext ctest: 100% tests passed out of 5804 | Total Test time (real) = 4689.96 sec
+  debug-shared-ext : warning: 0  error: 0  objects 743  last step [767/767] Linking CXX executable bin\bettercad_tests.exe
+  debug-shared-ext no-op rebuild edges: 1
+  debug-shared-ext clean: [1/2] Cleaning additional files... [2/2] Cleaning all built files... Cleaning... 778 files.
+  debug-shared-ext ctest: 100% tests passed out of 5804 | Total Test time (real) = 5042.44 sec
+  repeat release-ext : 100% tests passed out of 2561 | Total Test time (real) = 1664.85 sec
+  repeat debug-ext : 100% tests passed out of 2561 | Total Test time (real) = 1936.75 sec
+== harness stderr lines: 270
+== qualification-times last line: qualification finished Tue 10/27/2026  0:17:29.36, 0 stage(s) failed 
+== FRESH BINARY: each preset's binaries are newer than that preset's clean and newer than the newest file of the frozen source tree
+  newest source file: tests\cli\ZeroMatchGuard.cmake  2026-10-26T16:42:37.2770437+10:00
+  debug-ext         bettercad-cli.exe                        422882002 bytes  built 2026-10-26 17:56:26  after clean True  after newest source True  sha256 dbbb6d0688f4005edf9bfa49d71438ac2cda7fa9e6899fd6b4b6aadf407f4a51
+  debug-ext         bettercad_tests.exe                     1450580138 bytes  built 2026-10-26 17:58:28  after clean True  after newest source True  sha256 074208630a9f4ee0a6c61e0c9827325ac47300297231aebc2fab6141d891e7a2
+  debug-ext         bettercad_example_reference_models.exe   423271561 bytes  built 2026-10-26 17:56:34  after clean True  after newest source True  sha256 b553075b6b42f909cdc278559c9f999695e2fbcb71a9fbe0eb4756f62a85d193
+  debug-ext clean at 2026-10-26 17:27:06
+  debug-ext cli version: BetterCAD 0.1.0 revision : ece769106353 (modified) build type : Debug compiler : GCC 16.1.0 language : C++23 (__cplusplus=202302) platform : Windows x86_64 libraries : static
+  release-ext       bettercad-cli.exe                         11585182 bytes  built 2026-10-26 20:02:23  after clean True  after newest source True  sha256 1aa6ff84f1be41eb7f23214b8e37d69339869ab156bd095719205d85250846fc
+  release-ext       bettercad_tests.exe                       61474000 bytes  built 2026-10-26 20:02:53  after clean True  after newest source True  sha256 ff49cc577d64f1cf9ae228ffd7595b2bf473d3c2568556053c4d3375a7d114b9
+  release-ext       bettercad_example_reference_models.exe    10795016 bytes  built 2026-10-26 20:02:31  after clean True  after newest source True  sha256 f282df6204cec4fe8c0632d9d06c1540d70d9058824ef10beaa73409060a0d24
+  release-ext clean at 2026-10-26 19:24:36
+  release-ext cli version: BetterCAD 0.1.0 revision : ece769106353 (modified) build type : Release compiler : GCC 16.1.0 language : C++23 (__cplusplus=202302) platform : Windows x86_64 libraries : static
+  debug-shared-ext  bettercad-cli.exe                         48966994 bytes  built 2026-10-26 21:51:00  after clean True  after newest source True  sha256 29854d5b45201e08c332dabfd918fa38480869ecac377c6f862e72d25e50797b
+  debug-shared-ext  bettercad_tests.exe                     1063478036 bytes  built 2026-10-26 21:52:44  after clean True  after newest source True  sha256 0397b2342ae4ac45979ec55550c86366230e1e461d353ee435a7bce66222f0f6
+  debug-shared-ext  bettercad_example_reference_models.exe    57683605 bytes  built 2026-10-26 21:51:10  after clean True  after newest source True  sha256 d5437ea40ab4e9999e8d8a970fbbe108c08386c21fc1a10a2e0623c81c35a83b
+  debug-shared-ext clean at 2026-10-26 21:21:39
+  debug-shared-ext cli version: BetterCAD 0.1.0 revision : ece769106353 (modified) build type : Debug compiler : GCC 16.1.0 language : C++23 (__cplusplus=202302) platform : Windows x86_64 libraries : shared
+== ZERO-MATCH TABLE: for every group of the guard, per preset: EXPECTED (the guard's minimum), DISCOVERED (ctest -N -R), EXECUTED-AND-PASSED (the full ctest log)
+  groups in the guard: 234
+  debug-ext : 5804 tests passed in the full ctest log
+  release-ext : 5804 tests passed in the full ctest log
+  debug-shared-ext : 5804 tests passed in the full ctest log
+  group                                                                                                                    expected  disc-dbg  disc-rel  disc-shr  exec-dbg  exec-rel  exec-shr
+  unit\.MeshingCli                                                                                                               10        19        19        19        19        19        19 
+  cli\.mesh\.                                                                                                                     5         8         8         8         8         8         8 
+  unit\.MeshingPersistence                                                                                                       10        26        26        26        26        26        26 
+  unit\.MeshingCommand                                                                                                           10        33        33        33        33        33        33 
+  unit\.Mesh(Block|Cylinder|PlateWithHole|Tube|ThinPlate|TransformedBlock|LocalRefinement|OpenProfile|Reference|Curved)          20        28        28        28        28        28        28 
+  refmod\.mesh\.                                                                                                                 15        25        25        25        25        25        25 
+  unit\.P16Qualification                                                                                                          4         6         6         6         6         6         6 
+  unit\.StructuralCli                                                                                                            15        19        19        19        19        19        19 
+  cli\.structural\.                                                                                                               8         9         9         9         9         9         9 
+  unit\.Structural(Patch|AxialBar|Cantilever|PressureBlock|GravityBlock|Transformed|LocalRefinement|UnderConstrained|...         12        16        16        16        16        16        16 
+  refmod\.structural\.                                                                                                           30        41        41        41        41        41        41 
+  unit\.P17Qualification                                                                                                          3         3         3         3         3         3         3 
+  unit\.ThermalInput                                                                                                              8        11        11        11        11        11        11 
+  architecture\.checker\.[a-z-]*thermal                                                                                           4         5         5         5         5         5         5 
+  unit\.ThermalData                                                                                                              20        36        36        36        36        36        36 
+  compile_fail\.thermalids\.                                                                                                     12        24        24        24        24        24        24 
+  unit\.ThermalMaterial                                                                                                          15        31        31        31        31        31        31 
+  unit\.ThermalDof                                                                                                               20        33        33        33        33        33        33 
+  compile_fail\.thermaldof\.                                                                                                      8        15        15        15        15        15        15 
+  unit\.ThermalElement                                                                                                           40        60        60        60        60        60        60 
+  unit\.ThermalElement_(UnitTet|GeneralTet|ShapeGradient|Affine|Constant)                                                         5        10        10        10        10        10        10 
+  unit\.ThermalElement_(Inverted|Coplanar|Coincident|NearDegenerate|NonFinite)                                                    4         6         6         6         6         6         6 
+  unit\.ThermalElement_Conduct                                                                                                    8         9         9         9         9         9         9 
+  unit\.ThermalElement_(Capacity|OnePoint|Density|SpecificHeat)                                                                   8        14        14        14        14        14        14 
+  unit\.ThermalElement_(Translation|Rotation|Gradient|Reflection|Even|Odd)                                                        5         6         6         6         6         6         6 
+  unit\.ThermalElement_(GeometryScaling|ConductivityScaling)                                                                      2         3         3         3         3         3         3 
+  unit\.ThermalElement_(Repeat|NoHidden|BitFingerprint)                                                                           3         3         3         3         3         3         3 
+  compile_fail\.thermalelem\.                                                                                                     8        17        17        17        17        17        17 
+  unit\.ThermalLoad                                                                                                              66        66        66        66        66        66        66 
+  unit\.ThermalLoad_(Surface|SingleTriangle|GeneralTriangle|Triangulation|FacetWinding)                                          10        10        10        10        10        10        10 
+  unit\.ThermalLoad_(Volume|UnitTet|GeneralTet|Generation|SharedVolume|MultiTet)                                                 10        10        10        10        10        10        10 
+  unit\.ThermalLoad_(GeometryReference|Unresolved|Malformed|NoNearest|Empty|Target|OneInvalid)                                    7         7         7         7         7         7         7 
+  unit\.ThermalLoad_(Prepared|Remesh|SameCounts|SameIds|Edit|Material|Solver|Geometry|Document)                                  12        12        12        12        12        12        12 
+  unit\.ThermalLoad_(Sparse|LargeSparse)                                                                                          3         3         3         3         3         3         3 
+  unit\.ThermalLoad_(.*Superposition|SignedCancellation|LoadOrder)                                                                5         5         5         5         5         5         5 
+  unit\.ThermalLoad_(Rejects|Zero|Duplicate|Repeated|ANumbering|Every|NonFinite)                                                 12        12        12        12        12        12        12 
+  unit\.ThermalLoad_(RepeatedPreparation|Diagnostics|BitFingerprint)                                                              3         3         3         3         3         3         3 
+  compile_fail\.thermalload\.                                                                                                    19        19        19        19        19        19        19 
+  unit\.ThermalBC                                                                                                                92        92        92        92        92        92        92 
+  unit\.ThermalBC_(PrescribedTemperatureDef|ConvectionDef|CanonicalGeometry|UnitsContract|SignConvention)                         5         5         5         5         5         5         5 
+  unit\.ThermalBC_(PrescribedTemperature(Maps|Uses|Stores|Dedup|Deter)|MappedFaceDirichlet)                                       6         6         6         6         6         6         6 
+  unit\.ThermalBC_(Duplicate|Conflict|PartialSurface|IdenticalOverlap)                                                            8         8         8         8         8         8         8 
+  unit\.ThermalBC_(SingleTriangle|GeneralTriangle|ConvectionMatrix|ConvectionAmbientEq|ConvectionAbove|ConvectionBelo...         14        14        14        14        14        14        14 
+  unit\.ThermalBC_(ConvectionRejects|ConvectionIsNotLumped|WrongSigns)                                                            3         3         3         3         3         3         3 
+  unit\.ThermalBC_(ConvectionArea|ConvectionCoefficientScaling|ConvectionAmbientScaling|ConvectionDoesNot|ConvectionI...          5         5         5         5         5         5         5 
+  unit\.ThermalBC_(GeometryReference|PreparedBoundaryKeeps|DirichletAndRobin|NoDirichlet|Unresolved|Unsupported|NoNea...          9         9         9         9         9         9         9 
+  unit\.ThermalBC_(PreparedBCBinds|Remesh|SameCounts|SameIds|ADifferentBody|Edit|Material|LoadSolver|GeometryEdit|Doc...         12        12        12        12        12        12        12 
+  unit\.ThermalBC_(ZeroConvection|Negative|NaN|Infinite|BelowZero|InvalidArea|EveryBoundary|SeamRefusals|ConvectionSe...         20        20        20        20        20        20        20 
+  unit\.ThermalBC_(Sparse|LargeSparse)                                                                                            2         2         2         2         2         2         2 
+  unit\.ThermalBC_ConvectionSuperposition                                                                                         2         2         2         2         2         2         2 
+  unit\.ThermalBC_(AFailedPreparation|PreparationDoesNot)                                                                         2         2         2         2         2         2         2 
+  unit\.ThermalBC_(RepeatedPreparation|Diagnostics|BitFingerprint)                                                                3         3         3         3         3         3         3 
+  unit\.ThermalBC_PreparedBoundaryHasNo                                                                                           1         1         1         1         1         1         1 
+  compile_fail\.thermalbc\.                                                                                                      31        31        31        31        31        31        31 
+  unit\.ThermalAssembly                                                                                                          62        62        62        62        62        62        62 
+  unit\.ThermalAssembly_SingleTet                                                                                                 4         4         4         4         4         4         4 
+  unit\.ThermalAssembly_TwoTet                                                                                                    4         4         4         4         4         4         4 
+  unit\.ThermalAssembly_(Convection|RepeatedConvection)                                                                           6         6         6         6         6         6         6 
+  unit\.ThermalAssembly_(SmallSystemMatchesIndependentDenseOracle|BlockMatchesIndependentDenseOracle|EnergyIdentities...          4         4         4         4         4         4         4 
+  unit\.ThermalAssembly_(HeatResultants|BlockHeatResultants)                                                                      2         2         2         2         2         2         2 
+  unit\.ThermalAssembly_(PureConduction|BlockNullMode|ConvectionLifts|TwoTetConstant)                                             4         4         4         4         4         4         4 
+  unit\.ThermalAssembly_(Rejects|Remesh|SameIds|Edits|TransientCapacityEdit|FailureOrder)                                         9         9         9         9         9         9         9 
+  unit\.ThermalAssembly_(StaleReasons|SameBuilder|BlockSourceRecords)                                                             3         3         3         3         3         3         3 
+  unit\.ThermalAssembly_(SteadyKOnly|TransientRequires|TransientCapacityEdit)                                                     3         3         3         3         3         3         3 
+  unit\.ThermalAssembly_(Sparse|LargeSparse|LargeMesh|LargeReal|UsesSparse|Disconnected)                                          8         8         8         8         8         8         8 
+  unit\.ThermalAssembly_(SeamRefusals|HeatVectorRefusesNonFinite|EmptyLoadVector)                                                 3         3         3         3         3         3         3 
+  unit\.ThermalAssembly_(Repeated|BitFingerprint|BlockBitFingerprint)                                                             5         5         5         5         5         5         5 
+  unit\.ThermalAssembly_(AssemblyDoesNotMutate|PrescribedTemperaturesNever|LocalOrder|DefinitionOverload)                         4         4         4         4         4         4         4 
+  compile_fail\.thermalsys\.                                                                                                     36        36        36        36        36        36        36 
+  unit\.ThermalSolve                                                                                                             51        54        54        54        54        54        54 
+  unit\.Linalg_                                                                                                                  10        10        10        10        10        10        10 
+  unit\.ThermalSolve_(DirichletPartition|InterleavedConstraints|NonzeroDirichlet|OneFreeNode|SingleTetThrough)                    5         5         5         5         5         5         5 
+  unit\.ThermalSolve_(ThreeNodeChain|RobinOnly|RobinAnchored|FullyConstrained|OneFreeNode|MatchesIndependentDenseOrac...         13        13        13        13        13        13        13 
+  unit\.ThermalSolve_(PureNeumann|FactorisationSingularity|AnchorTolerance|BlockWithoutAnyDatum)                                  5         5         5         5         5         5         5 
+  unit\.ThermalSolve_(Disconnected|ExplicitZeros)                                                                                 3         3         3         3         3         3         3 
+  unit\.ThermalSolve_(IndependentResidual|BadSolution|RejectsNonFinite|ConstraintViolation|NonFiniteReduced|FreeResid...          8         8         8         8         8         8         8 
+  unit\.ThermalSolve_(StaleReasons|Edits|Remesh|SolutionRecordsExactly|FailedResolve|RejectsStaleBoundary|SeamRefusal...          8         8         8         8         8         8         8 
+  unit\.ThermalSolve_(Deterministic|RepeatedBlockSolve|BitFingerprint|SolveDoesNotMutate)                                         5         5         5         5         5         5         5 
+  unit\.ThermalSolve_(LargeSparse|FineCylinder|SparseNodeIds)                                                                     3         3         3         3         3         3         3 
+  compile_fail\.thermalsolve\.                                                                                                   26        26        26        26        26        26        26 
+  architecture\.targets\.                                                                                                         3         3         3         3         3         3         3 
+  architecture\.checker\.linalg                                                                                                   2         2         2         2         2         2         2 
+  unit\.ThermalTransient                                                                                                         72        72        72        72        72        72        72 
+  unit\.ThermalTransient_TimeGrid                                                                                                10        10        10        10        10        10        10 
+  unit\.ThermalTransient_EffectiveMatrix                                                                                          3         3         3         3         3         3         3 
+  unit\.ThermalTransient_(OneDofHandOracle|NonUniformTwoUnknown)                                                                  2         2         2         2         2         2         2 
+  unit\.ThermalTransient_(PureNeumann|DisconnectedPositive|RegionWithNoCapacity|ZeroCapacityConnected|InsulatedBlock)             5         5         5         5         5         5         5 
+  unit\.ThermalTransient_(NonzeroDirichlet|PrescribedDominates|FullyPrescribed)                                                   3         3         3         3         3         3         3 
+  unit\.ThermalTransient_(LastPartialStep|OutputPolicies|EveryStepEvidence)                                                       3         3         3         3         3         3         3 
+  unit\.ThermalTransient_(AlgebraRefusals|TheUsersSolverSettings|AStepThatCannotBeTaken|AFailureAtALaterStep|AnOverfl...         11        11        11        11        11        11        11 
+  unit\.ThermalTransient_(Acceptance|PhysicalResidual|AnOverflowingResidual)                                                      8         8         8         8         8         8         8 
+  unit\.ThermalTransient_(AnswerIsInvariant|SteadyLimit|TimeStepRefinement|LumpedBody|BlockCooling|BlockRelaxes|Block...         10        10        10        10        10        10        10 
+  unit\.ThermalTransient_(SolutionRecordsExactly|EditsStale|RejectsStaleBoundary|RemeshStales|SteadyAndTransientSyste...         10        10        10        10        10        10        10 
+  unit\.ThermalTransient_(RepeatedRuns|RepeatedBlockRun|TheInputsAreNever|TimeGridIsDeterministic)                                4         4         4         4         4         4         4 
+  unit\.ThermalTransient_(LargeSparse|FineCylinder|SparseNodeIds)                                                                 3         3         3         3         3         3         3 
+  unit\.ThermalTransient_(SeamMatches|SeamRefusals|SparseNodeIds)                                                                 3         3         3         3         3         3         3 
+  unit\.ThermalTransient_DiagnosticNames                                                                                          1         1         1         1         1         1         1 
+  compile_fail\.thermaltransient\.                                                                                               35        35        35        35        35        35        35 
+  unit\.ThermalPost                                                                                                              40        40        40        40        40        40        40 
+  unit\.ThermalPost_(FieldDescriptors|DiagnosticNames|HeatFluxMagnitude)                                                          3         3         3         3         3         3         3 
+  unit\.ThermalPost_(AffineField|MultiTetAffine|XLinear|YLinear|ZLinear|GeneralTet)                                               6         6         6         6         6         6         6 
+  unit\.ThermalPost_(FourierLaw|ConstantTemperature|ConvectionIsNot)                                                              3         3         3         3         3         3         3 
+  unit\.ThermalPost_(TemperatureOffset|TemperatureDifference|ConductivityScaling|GeometryScaling)                                 4         4         4         4         4         4         4 
+  unit\.ThermalPost_(Translation|Rotation)                                                                                        2         2         2         2         2         2         2 
+  unit\.ThermalPost_(SteadySlab|TransientHistory|TransientRecovery|TransientUniform|ALateState)                                   7         7         7         7         7         7         7 
+  unit\.ThermalPost_(Refuses|OneInvalid|RecoveryIsRefused|RemeshStales|AFailedRecovery)                                           6         6         6         6         6         6         6 
+  unit\.ThermalPost_(NodalTemperature|ElementResultsAreKeyed|PreservesTetLocal)                                                   4         4         4         4         4         4         4 
+  unit\.ThermalPost_(Repeated|RecoveryDoesNotMutate)                                                                              3         3         3         3         3         3         3 
+  unit\.ThermalPost_(LargeMesh|FineCylinder)                                                                                      2         2         2         2         2         2         2 
+  compile_fail\.thermalpost\.                                                                                                    31        31        31        31        31        31        31 
+  architecture\.recovery-ownership                                                                                                4         4         4         4         4         4         4 
+  unit\.ThermalBalance                                                                                                           69        69        69        69        69        69        69 
+  unit\.ThermalBalance_(SignConvention|ReactionSignAnalytical|ConvectionSignAbove|ConvectionSignBelow|ConvectionHeatT...          5         5         5         5         5         5         5 
+  unit\.ThermalBalance_(SteadyDirichletReaction|TwoTemperatureReactionsEqualOpposite|AppliedHeatBalancedByDirichletRe...          8         8         8         8         8         8         8 
+  unit\.ThermalBalance_(AppliedSurfaceHeatTotal|VolumetricGenerationTotal|MultipleSurfaceLoads|MultipleConvectionBoun...          6         6         6         6         6         6         6 
+  unit\.ThermalBalance_(PerLoadTotals|PerConvectionTotals|PerReactionTotals|RepeatedAggregation|RepeatedBlockBalance)             5         5         5         5         5         5         5 
+  unit\.ThermalBalance_(SteadyPureConduction|SteadyAppliedHeatAndReaction|SteadyGenerationAndConvection|SteadyRobinOn...          9         9         9         9         9         9         9 
+  unit\.ThermalBalance_(TransientInsulated|TransientLumped|TransientDirichlet|TransientFullyConstrained|TransientConv...          8         8         8         8         8         8         8 
+  unit\.ThermalBalance_(TransientStoredEnergyUsesFullC|NonuniformStoredEnergyUsesConsistentCapacity)                              2         2         2         2         2         2         2 
+  unit\.ThermalBalance_(TransientFinalPartialStep|TransientInsulatedGenerationWithAPartialLastStep)                               2         2         2         2         2         2         2 
+  unit\.ThermalBalance_(TransientNeedsEveryStep|TransientSeamNeedsEveryStep)                                                      2         2         2         2         2         2         2 
+  unit\.ThermalBalance_(GlobalHeatInput|BalanceCannotRescue|AttributionMust|OutOfTolerance|AnIncompleteConstraintMap)             5         5         5         5         5         5         5 
+  unit\.ThermalBalance_(ZeroHeatCase|LargeCancellationScale|MeasuredTolerancePolicy|TolerancePolicyConstantsArePinned)            4         4         4         4         4         4         4 
+  unit\.ThermalBalance_(RefusesWhat|EveryDiagnostic|DiagnosticNames|SeamRefuses|SparseNodeIds)                                    5         5         5         5         5         5         5 
+  unit\.ThermalBalance_(RejectsStale|RejectsMismatched|RemeshStales|FailedRecovery|RecoveryDoesNotMutate)                         6         6         6         6         6         6         6 
+  unit\.ThermalBalance_FineCylinder                                                                                               2         2         2         2         2         2         2 
+  compile_fail\.thermalbalance\.                                                                                                 33        33        33        33        33        33        33 
+  architecture\.balance-ownership                                                                                                 5         5         5         5         5         5         5 
+  unit\.ThermalValidation                                                                                                       138       140       140       140       140       140       140 
+  unit\.ThermalValidation_(PolicyIsAccepted|PolicyConstantsArePinned|PolicyFingerprint|SeverityIsAFunction|EveryRuleH...          5         5         5         5         5         5         5 
+  unit\.ThermalValidation_(StatusAndCountsAreDerived|ASkippedRuleIsNeverAPass|SolveAcceptedIsNot|ModeSpecificChecks)              4         4         4         4         4         4         4 
+  unit\.ThermalValidation_(RejectsAnInvertedTetrahedron|RejectsADegenerateTetrahedron|ANotANumberMetricIsInvalid|Acce...         11        11        11        11        11        11        11 
+  unit\.ThermalValidation_(ThermalMeshQualityRejectOnARealMesh|TheAspectRatioBoundCatches|QualifiedReferenceMeshesAre...          9         9         9         9         9         9         9 
+  unit\.ThermalValidation_(MeasuresHow|TheBoundsGuarantee)                                                                        3         3         3         3         3         3         3 
+  unit\.ThermalValidation_(SteadyRequiresConductivityOnly|TransientRequiresConductivityDensitySpecificHeat|RejectsMis...          5         5         5         5         5         5         5 
+  unit\.ThermalValidation_(RejectsUnresolved|NoLoadsIsNot|AZeroMagnitudeLoad|RejectsConflicting|IdenticalDuplicate|In...          7         7         7         7         7         7         7 
+  unit\.ThermalValidation_(RejectsSameCounts|RejectsSameIds|RejectsMismatchedAssembly|EveryEditStales|EveryTransientE...          9         9         9         9         9         9         9 
+  unit\.ThermalValidation_(SteadyPureNeumann|SteadyDirichlet|SteadyRobin|FullyPrescribedSteady|FullyConstrainedSteady...         16        16        16        16        16        16        16 
+  unit\.ThermalValidation_(AcceptsQualifiedSteadyResidual|RejectsBadSteadyResidual|SolverSuccessDoesNotOverride|Resid...         18        18        18        18        18        18        18 
+  unit\.ThermalValidation_(AcceptsQualifiedSteadyBalance|RejectsBadSteadyBalance|BalanceIsJudgedByBalances|ABalanceTh...         10        10        10        10        10        10        10 
+  unit\.ThermalValidation_(RejectsNonFiniteTemperature|RejectsATemperatureBelow|RejectsAStateOfTheWrongSize|EveryNonF...         10        10        10        10        10        10        10 
+  unit\.ThermalValidation_(AcceptsValidTransientSetup|RejectsInvalidInitialTemperature|RejectsInvalidTimeSettings|Rej...          6         6         6         6         6         6         6 
+  unit\.ThermalValidation_(ValidSteadyAnalysisPasses|ValidTransientAnalysisPasses|ValidationIsReadOnly|ReportOrdering...          6         6         6         6         6         6         6 
+  unit\.ThermalValidation_(EvidenceOfAQualified|APerturbedFreeTemperature|ACorruptedBalanceFailsTheBalanceAlone|ANotA...         11        11        11        11        11        11        11 
+  unit\.ThermalValidation_(RejectsAnAnalysisWhoseMeshingControl|RejectsABodyThatIsNoLonger|RejectsAGeometryEditThat|R...          8         8         8         8         8         8         8 
+  compile_fail\.thermalvalidation\.                                                                                              33        33        33        33        33        33        33 
+  architecture\.validation-ownership                                                                                              8         8         8         8         8         8         8 
+  unit\.ThermalViz                                                                                                              100       100       100       100       100       100       100 
+  unit\.ThermalViz_(ConsumesQualified(Gradient|HeatFlux|Temperature)|TemperatureRemainsKelvin|GradientRemainsKelvinPe...         11        11        11        11        11        11        11 
+  unit\.ThermalViz_(TemperatureContourUsesNodalValues|GradientMagnitudeContourUsesElementResult|HeatFluxMagnitudeCont...         18        18        18        18        18        18        18 
+  unit\.ThermalViz_(HeatFluxVectorDirection|ZeroHeatFluxVector|VectorScalingDoesNotMutateResult|TheDisplayThresholdIs...          8         8         8         8         8         8         8 
+  unit\.ThermalViz_(PositiveAppliedHeatFluxArrow|NegativeAppliedHeatFluxArrow|AZeroAppliedFlux|PrescribedTemperatureS...         13        13        13        13        13        13        13 
+  unit\.ThermalViz_(ClassifierCardinalityMatchesExpected|ZeroClassifiedEntitiesRejected|PartialClassificationNotRepor...          9         9         9         9         9         9         9 
+  unit\.ThermalViz_(ExtremaTieBreakDeterministic|HighestTemperatureNavigation|LowestTemperatureNavigation|HighestHeat...          6         6         6         6         6         6         6 
+  unit\.ThermalViz_(NodeTemperatureInspection|ElementThermalInspection|SparseNodeIdInspection|SparseElementIdInspecti...          5         5         5         5         5         5         5 
+  unit\.ThermalViz_(CurrentResultDisplaysNormally|StaleResultHasExplicitState|SameCountsNewMeshStillStale|SameIdsNewM...         13        13        13        13        13        13        13 
+  unit\.ThermalViz_(ASteadyResultIsOneFrame|TransientCacheInvalidates|TransientFrameBinds|TransientFramesDraw|Transie...          6         6         6         6         6         6         6 
+  unit\.ThermalViz_(DoesNotMutateMeshDuringUnitConversion|DoesNotMutateThermalResult|ViewStateChangesDoNotStale|Viewe...          4         4         4         4         4         4         4 
+  unit\.ThermalViz_(LargeCurvedMeshVisualizationDataSmoke|LargeMeshVisualizationDataSmoke|LargeMeshVisualizationReach...          4         4         4         4         4         4         4 
+  unit\.ThermalViz_(DisplayStateAndInspectionAreDeterministic|FieldExtractionIsDeterministic|VisualizationDataIsDeter...          3         3         3         3         3         3         3 
+  compile_fail\.thermalviz\.                                                                                                     51        52        52        52        52        52        52 
+  architecture\.thermalviz-ownership                                                                                             12        12        12        12        12        12        12 
+  unit\.ThermalCommand_                                                                                                          95        95        95        95        95        95        95 
+  unit\.ThermalCommand_(CreateAnalysis|CreateAnalysisUndoExact|CreateAnalysisRedoExact|CreateAnalysisRedoPreservesId|...          8         8         8         8         8         8         8 
+  unit\.ThermalCommand_(AddLoadUndoRedo|AddVolumetricLoadUndoRedo|EditLoadUndoRedo|EditLoadMayChangeItsKind|RemoveLoa...         15        15        15        15        15        15        15 
+  unit\.ThermalCommand_(AddPrescribedTemperatureUndoRedo|EditPrescribedTemperatureUndoRedo|RemovePrescribedTemperatur...         13        13        13        13        13        13        13 
+  unit\.ThermalCommand_(InitialTemperatureUndoRedoExact|InitialTemperatureHoldsOneValueAndNoField|InitialTemperatureI...          4         4         4         4         4         4         4 
+  unit\.ThermalCommand_(SolverSettingsUndoRedoExact|InvalidSolverSettingsAtomic)$                                                 2         2         2         2         2         2         2 
+  unit\.ThermalCommand_(TransientSettingsUndoRedoExact|TransientSettingsDoNotPersistDerivedTimeGrid|InvalidTransientS...          4         4         4         4         4         4         4 
+  unit\.ThermalCommand_(FailedCommandDoesNotPushHistory|FailedCommandDoesNotChangeSource|UndoMakesRedoAvailable|RedoR...         21        21        21        21        21        21        21 
+  unit\.ThermalCommand_(TwoAnalysesDoNotConfuseTheirIds|ACommandCannotReachAnObjectOfAnotherKind|StrongIdsNotIntercha...          6         6         6         6         6         6         6 
+  unit\.ThermalCommand_(RepeatedSequenceDeterministic|HistorySemanticFingerprintDeterministic|DescriptionsAreStable)$             3         3         3         3         3         3         3 
+  unit\.ThermalCommand_(LoadMutationStalesResult|LoadEditDoesNotInvalidateMesh|BCMutationStalesResult|BoundaryEditDoe...         17        17        17        17        17        17        17 
+  unit\.ThermalCommand_(HistorySurvivesARemesh|HistorySizeIndependentOfThermalResultSize)$                                        2         2         2         2         2         2         2 
+  compile_fail\.thermalcmd\.                                                                                                     52        52        52        52        52        52        52 
+  architecture\.thermalcmd-ownership                                                                                             16        16        16        16        16        16        16 
+  unit\.ThermalPersistence_                                                                                                      48        49        49        49        49        49        49 
+  unit\.ThermalPersistence_(TheWholeSteadyCanonicalIntentRoundTrips|TheWholeTransientCanonicalIntentRoundTrips|EveryE...         10        10        10        10        10        10        10 
+  unit\.ThermalPersistence_(GeometryReferencesSurviveExactlyInEveryForm|AnUnresolvedReferenceIsPreservedAndNotRebound...          5         5         5         5         5         5         5 
+  unit\.ThermalPersistence_(EngineeringValuesAreWrittenInTheirCoreUnits|NoDerivedStateReachesTheFile|TheMaterialStays...          5         5         5         5         5         5         5 
+  unit\.ThermalPersistence_(TheFileIsIdenticalWhateverASteadySolveHasDone|TheFileIsIdenticalWhateverALargeTransientSo...          5         5         5         5         5         5         5 
+  unit\.ThermalPersistence_(SerializationIsByteIdenticalRepeatedlyAndIndependentOfHowItWasBuilt|SaveLoadSaveIsByteIde...          5         5         5         5         5         5         5 
+  unit\.ThermalPersistence_(RejectsMalformedThermalIntent|RejectsWrongFieldTypes|RejectsInvalidValuesRatherThanCorrec...          6         6         6         6         6         6         6 
+  unit\.ThermalPersistence_(APreP18DocumentLoadsAndSimplyHasNoThermalAnalyses|AFutureSchemaVersionIsRefusedNotGuessed...          3         3         3         3         3         3         3 
+  unit\.ThermalPersistence_(ALoadedAnalysisHasIntentAndNoDerivedState|ASteadyDestroyAndLoadRoundTripReSolvesEquivalen...          7         7         7         7         7         7         7 
+  unit\.ThermalPersistence_(TheHandWrittenReferenceFileLoadsAsWritten|TheReferenceFileRegeneratesMeshesAndSolves)$                2         2         2         2         2         2         2 
+  architecture\.thermalpersist-ownership                                                                                         24        24        24        24        24        24        24 
+  unit\.ThermalCli_                                                                                                              85        86        86        86        86        86        86 
+  unit\.ThermalCli_(InspectAnalysis|InspectAnalysisStructured|InspectTransientStructured|InspectDoesNotMutateDocument...          8         8         8         8         8         8         8 
+  unit\.ThermalCli_(AddSteadyAnalysis|AddTransientAnalysis|AnalysisModeCompletenessIsTheCoresAndNeverGuessed|Analysis...          6         6         6         6         6         6         6 
+  unit\.ThermalCli_(AddSurfaceHeatFlux|AddVolumetricGeneration|NegativeFluxIsASinkAndIsNotCorrected|RemoveLoad|LoadId...          7         7         7         7         7         7         7 
+  unit\.ThermalCli_(AddPrescribedTemperature|AddConvection|RemoveBoundaryCondition|InvalidBoundaryConditionFailsAtomi...          6         6         6         6         6         6         6 
+  unit\.ThermalCli_(SteadySolve|SteadyRobinOnly|FullyConstrainedSteady|SingularSteadyFails|SteadyNeedsOnlyConductivity)$          5         5         5         5         5         5         5 
+  unit\.ThermalCli_(TransientSolve|TransientPureNeumann|TransientUsesActualStoredTimes|TransientFinalPartialStep|Tran...          8         8         8         8         8         8         8 
+  unit\.ThermalCli_(TemperatureSummary|TemperatureExtremaTieBreakIsTheAscendingNodeId|ExtremumTieBreakIsTheLowestIdWh...          9         9         9         9         9         9         9 
+  unit\.ThermalCli_(MissingMaterialFails|InvalidLoadFails|InvalidBoundaryConditionFails|AMeshThatCannotBeGeneratedIsT...          8         8         8         8         8         8         8 
+  unit\.ThermalCli_(SteadyCoreEquivalence|TransientCoreEquivalence|AddLoadCoreEquivalence|RemoveLoadCoreEquivalence|A...          7         7         7         7         7         7         7 
+  unit\.ThermalCli_(SolveDoesNotModifyCanonicalBytes|SaveLoadResolveAgreesAcrossFreshRuns|AnEditChangesTheNextSolveAn...          3         3         3         3         3         3         3 
+  unit\.ThermalCli_(StructuredStdoutIsClean|StructuredFailureOutputIsClean|NonFiniteNumbersAreNeverWrittenAsNumbers|A...          7         7         7         7         7         7         7 
+  unit\.ThermalCli_(SuccessExitCode|SyntaxFailureExitCode|DocumentFailureExitCode|AnalysisFailureExitCode|NoFlagBypas...          7         7         7         7         7         7         7 
+  unit\.ThermalCli_(HelpDescribesOnlyWhatIsSupported|ThermalEditsAreBatchVerbs|HelpPrintsEveryReportUsageVerbatim|ABa...          4         4         4         4         4         4         4 
+  unit\.ThermalRun_                                                                                                              20        20        20        20        20        20        20 
+  unit\.ThermalRun_(ARunOfAnEditedGeometryIsStaleAndTheEditedGeometryIsNotRunOnTheOldMesh|ARemeshWithTheSameCountsAnd...          4         4         4         4         4         4         4 
+  cli\.thermal\.                                                                                                                 12        12        12        12        12        12        12 
+  cli\.thermal\.workflow$                                                                                                         1         1         1         1         1         1         1 
+  architecture\.thermalcli-ownership                                                                                            104       104       104       104       104       104       104 
+  unit\.ThermalReference_                                                                                                        47        47        47        47        47        47        47 
+  unit\.ThermalReference_RM01                                                                                                     8         8         8         8         8         8         8 
+  unit\.ThermalReference_RM02                                                                                                     2         2         2         2         2         2         2 
+  unit\.ThermalReference_RM03                                                                                                     3         3         3         3         3         3         3 
+  unit\.ThermalReference_RM04                                                                                                     3         3         3         3         3         3         3 
+  unit\.ThermalReference_RM05                                                                                                     2         2         2         2         2         2         2 
+  unit\.ThermalReference_RM06                                                                                                     3         3         3         3         3         3         3 
+  unit\.ThermalReference_RM07                                                                                                     3         3         3         3         3         3         3 
+  unit\.ThermalReference_RM08                                                                                                     8         8         8         8         8         8         8 
+  unit\.ThermalReference_RM09                                                                                                     4         4         4         4         4         4         4 
+  unit\.ThermalReference_RM10                                                                                                     4         4         4         4         4         4         4 
+  unit\.ThermalReference_Persistence                                                                                              2         2         2         2         2         2         2 
+  unit\.ThermalReference_Determinism                                                                                              2         2         2         2         2         2         2 
+  unit\.ThermalReference_Independence                                                                                             2         2         2         2         2         2         2 
+  unit\.ThermalReference_Intent                                                                                                   1         1         1         1         1         1         1 
+  refmod\.thermal\.                                                                                                              17        17        17        17        17        17        17 
+  refmod\.thermal\.(validate|solve)\.                                                                                            10        10        10        10        10        10        10 
+  refmod\.thermal\.refused\.                                                                                                      5         5         5         5         5         5         5 
+  refmod\.thermal\.workflow$                                                                                                      1         1         1         1         1         1         1 
+  unit\.P18Qualification_                                                                                                         7         7         7         7         7         7         7 
+  unit\.P18Qualification_(RunningTheChainLeavesEveryReferenceDocumentByteIdentical|EveryDependencyEditStalesExactlyTh...          4         4         4         4         4         4         4 
+  unit\.P18Qualification_(AManualEditBackFollowsTheSameTwoRegimesAsUndo|PossessionOfAThermalModelIsTheOnlyProof|TheTh...          3         3         3         3         3         3         3 
+  unit\.ThermalPersistence_WhatTheWriterEmitsTheReaderAccepts$                                                                    1         1         1         1         1         1         1 
+  unit\.ThermalValidation_AMissingOrShortQualitySummaryIsNotAPass$                                                                1         1         1         1         1         1         1 
+  unit\.ThermalValidation_AMeshAtTheEdgeOfTheAcceptedBoundsStillSolvesAndBalances$                                                1         1         1         1         1         1         1 
+  unit\.ThermalSolve_(ADisconnectedMeshWithAnUnanchoredComponentFailsEndToEnd|AnUnmeetableToleranceRefusesTheSolveIts...          3         3         3         3         3         3         3 
+  unit\.ThermalCli_ValidationJsonCarriesAWarningReportWithEveryOptionalFieldItHolds$                                              1         1         1         1         1         1         1 
+  compile_fail\.thermalviz\.an-inspection-must-state-the-result-state$                                                            1         1         1         1         1         1         1 
+  groups with discovered < expected or executed != discovered: 0
+  an impossible filter discovers: Total Tests: 0
+== REFERENCE-MODEL MATRIX (RM01-RM10 and the cross-cutting groups): [refmod][thermal] through the XML reporter on each preset's own test executable
+  debug-ext : <OverallResultsCases successes="47" failures="0" expectedFailures="0" skips="0"/>  <OverallResults successes="52" failures="0" expectedFailures="0" skipped="false"/>
+  release-ext : <OverallResultsCases successes="47" failures="0" expectedFailures="0" skips="0"/>  <OverallResults successes="52" failures="0" expectedFailures="0" skipped="false"/>
+  debug-shared-ext : <OverallResultsCases successes="47" failures="0" expectedFailures="0" skips="0"/>  <OverallResults successes="52" failures="0" expectedFailures="0" skipped="false"/>
+  group            debug-ext (cases ok/all)            release-ext       debug-shared-ext
+  RM01                                8/8                    8/8                    8/8
+  RM02                                2/2                    2/2                    2/2
+  RM03                                3/3                    3/3                    3/3
+  RM04                                3/3                    3/3                    3/3
+  RM05                                2/2                    2/2                    2/2
+  RM06                                3/3                    3/3                    3/3
+  RM07                                3/3                    3/3                    3/3
+  RM08                                8/8                    8/8                    8/8
+  RM09                                4/4                    4/4                    4/4
+  RM10                                4/4                    4/4                    4/4
+  Persistence                         2/2                    2/2                    2/2
+  Determinism                         2/2                    2/2                    2/2
+  Independence                        2/2                    2/2                    2/2
+  Intent                              1/1                    1/1                    1/1
+== CURRENTNESS MATRIX and the final-gate cases: [p18qual] on each preset's own executable (the WARN lines carry the sequence evidence)
+  debug-ext : All tests passed (1012 assertions in 7 test cases) | 
+  release-ext : All tests passed (1012 assertions in 7 test cases) | 
+  debug-shared-ext : All tests passed (1012 assertions in 7 test cases) | 
+== INDEPENDENT ANALYTICAL VERIFICATION of each preset's fresh CLI payloads (verify-independent.ps1; shares no code with BetterCAD)
+  debug-ext : exit 0 ; checks failed: 0
+  release-ext : exit 0 ; checks failed: 0
+  debug-shared-ext : exit 0 ; checks failed: 0
+  negative control (a doctored reaction of 201.5 W): verifier exit 1 (must be non-zero)
+== WORKFLOW thermal-refmod-workflow : the ledger each preset left in its own build tree
+  debug-ext : ledger lines 187
+    cli binary C:/Users/hasib/bcdev/bc-build/debug-ext/bin/bettercad-cli.exe
+    cli size 422882002
+    cli sha256 dbbb6d0688f4005edf9bfa49d71438ac2cda7fa9e6899fd6b4b6aadf407f4a51
+    cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKBO.dll
+    cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKBRep.dll
+    cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKBool.dll
+    cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKCAF.dll
+    cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKCDF.dll
+    cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKDE.dll
+    cli runtime C:/Users/hasib/bcdev/bc-build/debug-ext/bin/libTKDESTEP.dll
+  release-ext : ledger lines 187
+    cli binary C:/Users/hasib/bcdev/bc-build/release-ext/bin/bettercad-cli.exe
+    cli size 11585182
+    cli sha256 1aa6ff84f1be41eb7f23214b8e37d69339869ab156bd095719205d85250846fc
+    cli runtime C:/Users/hasib/bcdev/bc-build/release-ext/bin/libTKBO.dll
+    cli runtime C:/Users/hasib/bcdev/bc-build/release-ext/bin/libTKBRep.dll
+    cli runtime C:/Users/hasib/bcdev/bc-build/release-ext/bin/libTKBool.dll
+    cli runtime C:/Users/hasib/bcdev/bc-build/release-ext/bin/libTKCAF.dll
+    cli runtime C:/Users/hasib/bcdev/bc-build/release-ext/bin/libTKCDF.dll
+    cli runtime C:/Users/hasib/bcdev/bc-build/release-ext/bin/libTKDE.dll
+    cli runtime C:/Users/hasib/bcdev/bc-build/release-ext/bin/libTKDESTEP.dll
+  debug-shared-ext : ledger lines 221
+    cli binary C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/bettercad-cli.exe
+    cli size 48966994
+    cli sha256 29854d5b45201e08c332dabfd918fa38480869ecac377c6f862e72d25e50797b
+    cli runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libTKBO.dll
+    cli runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libTKBRep.dll
+    cli runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libTKBool.dll
+    cli runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libTKCAF.dll
+    cli runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libTKCDF.dll
+    cli runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libTKDE.dll
+    cli runtime C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/libTKDESTEP.dll
+  processes (excluding the runner): debug-ext 57; release-ext 57; debug-shared-ext 57
+  debug-ext vs release-ext: 57 of 57 process lines identical; 0 differ in bytes or hash; 0 differ in EXIT CODE
+  debug-ext vs debug-shared-ext: 57 of 57 process lines identical; 0 differ in bytes or hash; 0 differ in EXIT CODE
+== WORKFLOW thermal-workflow : the ledger each preset left in its own build tree
+  debug-ext : ledger lines 122
+    binary C:/Users/hasib/bcdev/bc-build/debug-ext/bin/bettercad-cli.exe
+    size 422882002
+    sha256 dbbb6d0688f4005edf9bfa49d71438ac2cda7fa9e6899fd6b4b6aadf407f4a51
+    project-libraries-beside-binary 0
+  release-ext : ledger lines 122
+    binary C:/Users/hasib/bcdev/bc-build/release-ext/bin/bettercad-cli.exe
+    size 11585182
+    sha256 1aa6ff84f1be41eb7f23214b8e37d69339869ab156bd095719205d85250846fc
+    project-libraries-beside-binary 0
+  debug-shared-ext : ledger lines 133
+    binary C:/Users/hasib/bcdev/bc-build/debug-shared-ext/bin/bettercad-cli.exe
+    size 48966994
+    sha256 29854d5b45201e08c332dabfd918fa38480869ecac377c6f862e72d25e50797b
+    project-libraries-beside-binary 11
+  processes (excluding the runner): debug-ext 74; release-ext 74; debug-shared-ext 74
+  debug-ext vs release-ext: 50 of 74 process lines identical; 24 differ in bytes or hash; 0 differ in EXIT CODE
+  debug-ext vs debug-shared-ext: 50 of 74 process lines identical; 24 differ in bytes or hash; 0 differ in EXIT CODE
+== CROSS-PRESET: every payload both workflows wrote, as parsed values: key sets and text exactly; numbers by relative difference
+  thermal-refmod-workflow debug-ext vs release-ext: 32 payloads compared; key sets differing: 0; discrete/text fields differing: 0; numeric fields not bit-identical: 0; worst relative difference 0 
+  thermal-refmod-workflow debug-ext vs debug-shared-ext: 32 payloads compared; key sets differing: 0; discrete/text fields differing: 0; numeric fields not bit-identical: 0; worst relative difference 0 
+  thermal-workflow debug-ext vs release-ext: 27 payloads compared; key sets differing: 0; discrete/text fields differing: 0; numeric fields not bit-identical: 0; worst relative difference 0 
+  thermal-workflow debug-ext vs debug-shared-ext: 27 payloads compared; key sets differing: 0; discrete/text fields differing: 0; numeric fields not bit-identical: 0; worst relative difference 0 
+== CROSS-PRESET: the committed reference documents the runner wrote (SHA-256)
+  thermal_convection.bcad                      IDENTICAL in all three presets  386b082b05fdc216
+  thermal_generation.bcad                      IDENTICAL in all three presets  0502a68e4988c444
+  thermal_insulated_generation.bcad            IDENTICAL in all three presets  47ac779a655088c8
+  thermal_local_baseline.bcad                  IDENTICAL in all three presets  088e8fd716039333
+  thermal_local_mirror.bcad                    IDENTICAL in all three presets  badb435e60bdff69
+  thermal_local_target.bcad                    IDENTICAL in all three presets  91f35f036d39fc74
+  thermal_lumped.bcad                          IDENTICAL in all three presets  1d3c016ebf2bb020
+  thermal_patch.bcad                           IDENTICAL in all three presets  ff893e98449936d2
+  thermal_singular.bcad                        IDENTICAL in all three presets  05a9dfae5bf7a0a1
+  thermal_singular_balanced.bcad               IDENTICAL in all three presets  60128df38d844ddd
+  thermal_slab.bcad                            IDENTICAL in all three presets  8f50ede9b1c5eab1
+  thermal_stale_mesh.bcad                      IDENTICAL in all three presets  d53ca6bc9fb4ac07
+  thermal_stale_mesh_edited.bcad               IDENTICAL in all three presets  e07c610df05b5b6e
+  thermal_surface_flux.bcad                    IDENTICAL in all three presets  7931f5d2b6573d60
+  thermal_transformed_base.bcad                IDENTICAL in all three presets  f210acdb6ef3e9b6
+  thermal_transformed_placed.bcad              IDENTICAL in all three presets  c79eadd9c25a136e
+  thermal_transient_slab.bcad                  IDENTICAL in all three presets  e799c1b7762ee83d
+  thermal_tube.bcad                            IDENTICAL in all three presets  0f9f0b7e20704070
+  thermal_unresolved_convection.bcad           IDENTICAL in all three presets  71e7cb30bd188c6f
+  thermal_unresolved_load.bcad                 IDENTICAL in all three presets  e379ed962c7c7ef1
+  thermal_unresolved_temperature.bcad          IDENTICAL in all three presets  ace4e72f1f39c256
+== CROSS-PRESET: the evidence lines of the reference suite (BETTERCAD_REFMOD_EVIDENCE), timing-free
+  debug-ext : 72 evidence lines
+  release-ext : 72 evidence lines
+  debug-shared-ext : 72 evidence lines
+  debug-ext vs release-ext: 72 evidence lines identical to the last digit, 0 differ
+  debug-ext vs debug-shared-ext: 72 evidence lines identical to the last digit, 0 differ
+evidence copied under C:\Users\hasib\OneDrive\Desktop\CAD\docs\verification\P18-QUAL-001\qualification
+postrun-qual finished 2026-10-27T00:38:56.7409566+10:00 ; failures recorded by this script: 0

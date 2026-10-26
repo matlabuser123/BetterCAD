@@ -164,7 +164,14 @@ using Corners = std::array<std::array<double, 3>, 4>;
     report.structurallyValid = true;
     report.tetCount = 1;
     report.validElements = 1;
-    report.summaries[metric] = meshing::MetricSummary{.count = 1, .minimum = value, .maximum = value, .mean = value, .worst = ElementId::fromValue(7)};
+    // EVERY classifiable metric has a summary over the one element (the validator refuses a metric that was not measured), the ones
+    // not under test at a benign value well inside every bound (the dihedral angles are in radians).
+    const auto summary = [](double v) { return meshing::MetricSummary{.count = 1, .minimum = v, .maximum = v, .mean = v, .worst = ElementId::fromValue(7)}; };
+    report.summaries[meshing::QualityMetric::TetRadiusRatio] = summary(0.5);
+    report.summaries[meshing::QualityMetric::TetAspectRatio] = summary(2.0);
+    report.summaries[meshing::QualityMetric::TetMinDihedralAngle] = summary(1.0);
+    report.summaries[meshing::QualityMetric::TetMaxDihedralAngle] = summary(1.6);
+    report.summaries[metric] = summary(value);
     return report;
 }
 

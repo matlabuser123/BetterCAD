@@ -1,0 +1,2 @@
+bettercad-cli batch: C:/Users/hasib/bcdev/bc-build/release-ext/tests/cli-output/thermal-workflow/bad-batch.txt:2: duplicate_id: thermal analysis 9 already has a load 1
+Nothing was written; C:/Users/hasib/bcdev/bc-build/release-ext/tests/cli-output/thermal-workflow/batch.bcad is unchanged.

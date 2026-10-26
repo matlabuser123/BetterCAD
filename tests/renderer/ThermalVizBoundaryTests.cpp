@@ -549,7 +549,7 @@ TEST_CASE("ThermalViz_TheDisplayThresholdIsReadabilityNotPhysics", "[thermal][vi
     // THE ACCOUNTING INVARIANT: every glyph given is exactly one of drawn, skipped, too small or suppressed.
     CHECK(overlay->glyphs + overlay->skipped + overlay->tooSmall + overlay->belowThreshold + overlay->duplicatesGrouped == glyphs->size());
     // Suppression is a display choice: the inspector still reports the actual value of the suppressed element.
-    const auto e = renderer::inspectThermalElement(h.hand.mesh, h.post, 0, h.post.elementIds()[0]);
+    const auto e = renderer::inspectThermalElement(h.hand.mesh, h.post, 0, h.post.elementIds()[0], renderer::ThermalResultState::Current);
     REQUIRE(e.has_value());
     CHECK_THAT(e->heatFluxMagnitude.si(), WithinAbs(5.0, 1e-11));
     CHECK_THAT((*glyphs)[0].magnitude.si(), WithinAbs(5.0, 1e-11));

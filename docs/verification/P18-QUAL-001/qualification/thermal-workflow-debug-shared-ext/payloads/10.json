@@ -1,0 +1,25 @@
+{
+  "analysisId": 9,
+  "name": "Thermal1",
+  "mode": "steady",
+  "nodeCount": 81,
+  "tetrahedronCount": 127,
+  "state": {
+    "index": 0,
+    "time": null
+  },
+  "temperature": {
+    "unit": "K",
+    "count": 81,
+    "min": {
+      "node": 1,
+      "value": 300,
+      "unit": "K"
+    },
+    "max": {
+      "node": 80,
+      "value": 300.442270429665,
+      "unit": "K"
+    }
+  }
+}

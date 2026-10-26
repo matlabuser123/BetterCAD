@@ -1,0 +1,7 @@
+BetterCAD 0.1.0
+  revision   : ece769106353 (modified)
+  build type : Debug
+  compiler   : GCC 16.1.0
+  language   : C++23 (__cplusplus=202302)
+  platform   : Windows x86_64
+  libraries  : shared
