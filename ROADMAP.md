@@ -133,7 +133,7 @@ Qualified but not yet separately released: `P11`, `P12`, `P13`, `P14`, `P15`, `P
 | Materials / Engineering Data | `P15` | **Qualified** |
 | Meshing | `P16` | **Qualified** |
 | Structural FEA | `P17` | **Qualified** |
-| Thermal Analysis | `P18` | In Progress (authorized 2026-10-16) |
+| Thermal Analysis | `P18` | **Qualified** |
 | CFD Integration | `P19` | Planned |
 | Design Optimization | `P20` | Planned |
 | Semantic Topology | `P21` | Planned |
@@ -763,12 +763,18 @@ inherits rather than re-asks.
 
 ---
 
-## Thermal Analysis — Planned
+## Thermal Analysis — Qualified
 
-Steady and transient conduction, volumetric heat generation, prescribed
-temperature, heat flux, convection, and thermal contact later. Temperature
-fields eventually couple into structural analysis for thermal expansion and
-stress.
+`P18` gave BetterCAD steady and transient (backward-Euler) heat conduction on
+Tet4 meshes: volumetric heat generation, surface heat flux, prescribed
+temperature and convection, with the same authority discipline as `P17` — CAD
+geometry, the P15 material and the thermal intent are canonical; the mesh,
+temperatures, gradients, heat fluxes, heat balance and validation report are
+derived and never persisted. Qualified 2026-10-27 by `P18-QUAL-001`: 5804 of
+5804 tests in three presets, qualified tree == committed tree. Thermal contact
+and the coupling of temperature fields into structural analysis (thermal
+expansion and stress) remain later work. Open owner decisions are listed in
+[P18-QUAL-001](docs/verification/P18-QUAL-001/LIMITATIONS.md).
 
 ---
 

@@ -1832,6 +1832,1567 @@ For every credible defect: reproduce → regression test → root cause →
 general fix → requalify the affected milestone → rerun P18-QUAL.
 
 ---
+# P19 — CFD Integration
+
+**NOT AUTHORIZED.** This is the owner's phase plan, recorded so it is not lost. P18 being
+qualified (P18-QUAL-001, 2026-10-27) is not permission to start it: starting P19 needs an
+explicit scope decision, and the open P18 findings F1-F3 are inputs to it. Milestones are
+worked top to bottom, and each is authorized by its predecessor's PASS being recorded here
+and the owner saying so -- P17's and P18's rule, unchanged.
+
+Goal: add qualified incompressible CFD capability without duplicating CAD, material, mesh,
+solver, result, persistence, or CLI authority.
+
+Core authority model:
+
+```text
+CAD geometry
+→ canonical geometry authority
+
+fluid/material definition
+→ canonical fluid-property authority
+
+CFD analysis definition / loads / BCs / solver settings
+→ canonical CFD intent
+
+volume/surface CFD mesh
+→ derived
+
+cell / face / DOF maps
+→ derived
+
+assembled algebraic systems
+→ derived
+
+pressure / velocity / turbulence fields
+→ derived
+
+forces / fluxes / pressure loss / flow split
+→ derived
+
+validation / visualisation buffers
+→ derived
+```
+
+Hard rules:
+
+```text
++ no GUI-only CFD physics
++ no CLI-only CFD physics
++ no mesh-local IDs as persistent CAD/CFD intent
++ stale geometry / stale mesh / stale BC mappings must fail explicitly
++ persistence stores canonical CFD intent, not generated solver fields
++ command history stores canonical CFD intent, not generated fields
++ numerical results are never authority
++ no silent nearest-face rebinding
++ deterministic source/provenance tracking
++ no PASS with zero tests
++ 0 unexpected warnings
++ qualified source/test tree == committed source/test tree
+```
+
+Recommendation: start with laminar incompressible finite-volume CFD only, qualify that
+completely, and add turbulence afterward. That keeps pressure–velocity coupling,
+conservation, mesh geometry, BC mapping, persistence, and CLI correctness separable before
+k-ε / SST adds another major layer of numerical complexity.
+
+---
+# P19-ARCH-001
+
+## CFD Architecture / Authority Contract
+
+Define the complete P19 ownership model before adding CFD physics.
+
+* [ ] Define P19 supported CFD scope
+* [ ] Define canonical CFD intent
+* [ ] Define derived CFD state
+* [ ] Define CAD authority
+* [ ] Define fluid/material authority
+* [ ] Define mesh authority
+* [ ] Define CFD result authority
+* [ ] Define source/currentness model
+* [ ] Define geometry-reference policy
+* [ ] Define field-location policy
+* [ ] Define unit system
+* [ ] Define steady/transient scope
+* [ ] Define incompressible/compressible scope
+* [ ] Define laminar/turbulence scope
+* [ ] Define thermal-coupling scope
+* [ ] Define unsupported-physics policy
+* [ ] Define dependency layers / ADRs
+* [ ] Define failure policy
+* [ ] Define determinism policy
+* [ ] Define evidence structure
+* [ ] Adversarial review PASS
+* [ ] Regression PASS
+* [ ] Evidence recorded
+
+Initial recommended P19 v1 scope:
+
+```text
+3D single-phase incompressible flow
+Newtonian fluid
+constant rho
+constant mu
+steady laminar
+transient laminar
+pressure inlet/outlet or velocity inlet
+no-slip wall
+symmetry/slip where supported
+volumetric/source terms only if explicitly required
+```
+
+Defer initially:
+
+```text
+compressible flow
+multiphase
+species
+combustion
+radiation
+conjugate heat transfer
+moving mesh
+rotating machinery
+non-Newtonian flow
+LES
+DES
+DNS
+porous media
+free surface
+cavitation
+```
+
+---
+# P19-DATA-001
+
+## CFD Analysis Data Model
+
+Define canonical and derived CFD data types.
+
+* [ ] Define `CfdAnalysisId`
+* [ ] Define `CfdBoundaryConditionId`
+* [ ] Define `CfdInitialConditionId` if needed
+* [ ] Define analysis mode
+* [ ] Define fluid model
+* [ ] Define reference pressure policy
+* [ ] Define gravity policy
+* [ ] Define steady settings
+* [ ] Define transient settings
+* [ ] Define nonlinear-iteration settings
+* [ ] Define convergence settings
+* [ ] Define output settings
+* [ ] Define result metadata
+* [ ] Define source/provenance metadata
+* [ ] Define stale/current semantics
+* [ ] Define current accepted result
+* [ ] Define latest failed attempt
+* [ ] Prevent derived fields becoming canonical
+* [ ] Deterministic semantic fingerprint
+* [ ] Adversarial review PASS
+* [ ] Regression PASS
+* [ ] Evidence recorded
+
+Canonical intent may include:
+
+```text
+analysis definition
+fluid reference
+boundary-condition definitions
+initial conditions
+gravity setting
+steady/transient settings
+solver settings
+output settings
+GeometryReferences
+```
+
+Must NOT become canonical:
+
+```text
+cells
+faces
+cell centres
+face normals
+DOF maps
+pressure arrays
+velocity arrays
+mass fluxes
+gradients
+residual vectors
+matrices
+factorisations
+forces
+pressure-drop results
+flow-split results
+visualisation buffers
+```
+
+---
+# P19-FLUID-001
+
+## Fluid Property Resolution
+
+Resolve canonical fluid properties for CFD.
+
+* [ ] Define P19 fluid-property requirements
+* [ ] Define density `rho`
+* [ ] Define dynamic viscosity `mu`
+* [ ] Define kinematic viscosity derivation if used
+* [ ] Validate `rho > 0`
+* [ ] Validate `mu > 0`
+* [ ] Reject NaN / Inf
+* [ ] Reject missing fluid
+* [ ] No default air unless explicitly canonical
+* [ ] Preserve fluid material ID
+* [ ] Preserve revision / generation / fingerprint
+* [ ] Fluid edit stales CFD result
+* [ ] Fluid edit does not stale geometry unnecessarily
+* [ ] No duplicate CFD-only material database
+* [ ] SI units explicit
+* [ ] Determinism PASS
+* [ ] Regression PASS
+* [ ] Evidence recorded
+
+Recommended v1 units:
+
+```text
+rho    kg/m³
+mu     Pa·s = kg/(m·s)
+nu     m²/s derived only
+```
+
+---
+# P19-MESH-001
+
+## CFD Volume / Surface Mesh Contract
+
+Define the CFD mesh representation required by P19.
+
+* [ ] Audit P16 suitability for CFD
+* [ ] Define cell topology supported
+* [ ] Define face topology
+* [ ] Define boundary-face representation
+* [ ] Define owner / neighbour relation
+* [ ] Define cell centres
+* [ ] Define face centres
+* [ ] Define face area vectors
+* [ ] Define cell volumes
+* [ ] Define outward-normal convention
+* [ ] Define internal-face orientation
+* [ ] Define boundary patch mapping
+* [ ] Define named boundary mapping
+* [ ] Define geometry-source binding
+* [ ] Define mesh-source binding
+* [ ] Reject zero / negative cell volume
+* [ ] Reject invalid face ownership
+* [ ] Reject non-manifold volume topology
+* [ ] Reject unclosed fluid domain
+* [ ] Define mesh-quality metrics required by CFD
+* [ ] No nearest-face fallback
+* [ ] Determinism PASS
+* [ ] Regression PASS
+* [ ] Evidence recorded
+
+Critical question:
+
+```text
+Can P16's current Tet4 mesh directly serve as the P19 finite-volume mesh?
+```
+
+If yes, qualify it properly.
+If no, define a derived CFD mesh adapter from P16 rather than creating a second geometry
+authority.
+
+---
+# P19-TOPO-001
+
+## Finite-Volume Topology
+
+Build deterministic cell / face connectivity.
+
+* [ ] Define compact `CellIndex`
+* [ ] Define compact `FaceIndex`
+* [ ] Define boundary-face index
+* [ ] `ElementId != CellIndex`
+* [ ] Define owner cell
+* [ ] Define neighbour cell
+* [ ] Define boundary face
+* [ ] Define internal face
+* [ ] Define boundary patch membership
+* [ ] Define face orientation
+* [ ] Define cell-to-face adjacency
+* [ ] Define face-to-cell adjacency
+* [ ] Reject duplicate internal faces
+* [ ] Reject missing neighbours
+* [ ] Reject boundary faces with two owners
+* [ ] Reject internal faces with one owner
+* [ ] Sparse mesh IDs supported
+* [ ] No max-ID-sized arrays
+* [ ] Exact mesh-source binding
+* [ ] Determinism PASS
+* [ ] Regression PASS
+* [ ] Evidence recorded
+
+---
+# P19-GEOM-001
+
+## Finite-Volume Geometric Metrics
+
+Compute qualified geometric quantities for each CFD cell / face.
+
+* [ ] Cell volume
+* [ ] Cell centroid
+* [ ] Face area
+* [ ] Face centroid
+* [ ] Face unit normal
+* [ ] Face area vector `Sf`
+* [ ] Owner-to-neighbour vector
+* [ ] Cell-to-face vector
+* [ ] Orthogonal distance
+* [ ] Non-orthogonality angle
+* [ ] Skewness metric
+* [ ] Boundary outward normal
+* [ ] Conservation identities
+* [ ] Closed-cell surface-vector sum
+* [ ] Positive cell volume
+* [ ] SI metre units
+* [ ] Rigid-transform covariance
+* [ ] Determinism PASS
+* [ ] Independent analytical validation
+* [ ] Regression PASS
+* [ ] Evidence recorded
+
+Key identity:
+
+```text
+Σ_faces Sf ≈ 0
+```
+
+for a closed polyhedral control volume.
+
+---
+# P19-DOF-001
+
+## CFD Field / DOF Model
+
+Define field locations and compact indexing.
+
+* [ ] Pressure location
+* [ ] Velocity location
+* [ ] Mass-flux location
+* [ ] Cell-centred scalar indexing
+* [ ] Cell-centred vector indexing
+* [ ] Face-field indexing
+* [ ] Boundary-field indexing
+* [ ] `CellIndex != ElementId`
+* [ ] No raw mesh-ID indexing
+* [ ] Deterministic field ordering
+* [ ] Exact mesh-source binding
+* [ ] Remesh invalidates maps
+* [ ] Fluid-property edits do not invalidate topology maps
+* [ ] Boundary edits invalidate boundary-derived state only
+* [ ] No field arrays in canonical state
+* [ ] Regression PASS
+* [ ] Evidence recorded
+
+Recommended initial layout:
+
+```text
+pressure p     cell-centred
+velocity U     cell-centred
+mass flux phi  face-centred
+```
+
+---
+# P19-BC-001
+
+## CFD Boundary Conditions
+
+Implement canonical CFD BC definitions using `GeometryReference`.
+
+* [ ] Velocity inlet
+* [ ] Pressure inlet if supported
+* [ ] Pressure outlet
+* [ ] No-slip wall
+* [ ] Slip / symmetry boundary
+* [ ] Zero-gradient policies
+* [ ] Fixed-value policies
+* [ ] Reference-pressure treatment
+* [ ] Boundary orientation verified
+* [ ] Boundary cardinality verified
+* [ ] Shared / overlapping target policy
+* [ ] Empty target rejected
+* [ ] Unresolved target rejected
+* [ ] No nearest-face fallback
+* [ ] Exact source binding
+* [ ] Multiple boundary patches
+* [ ] Deterministic BC ordering
+* [ ] Invalid values rejected
+* [ ] Regression PASS
+* [ ] Evidence recorded
+
+No mesh face IDs in canonical BC intent.
+
+Canonical BC:
+
+```text
+CfdBoundaryConditionId
+type
+GeometryReference
+typed physical values
+```
+
+Derived:
+
+```text
+resolved boundary faces
+face indices
+matrix/source contributions
+```
+
+---
+# P19-IC-001
+
+## CFD Initial Conditions
+
+Define initial fields for transient / iterative solves.
+
+* [ ] Initial velocity
+* [ ] Initial pressure
+* [ ] Uniform-field policy
+* [ ] Future field-based initialization policy
+* [ ] SI units
+* [ ] Reject NaN / Inf
+* [ ] Source binding
+* [ ] Initial condition remains canonical intent
+* [ ] Expanded cell arrays remain derived
+* [ ] Exact undo / persistence semantics
+* [ ] Regression PASS
+* [ ] Evidence recorded
+
+---
+# P19-DIFF-001
+
+## Diffusion Operator
+
+Implement finite-volume diffusion operator independently and verify it.
+
+For constant viscosity:
+
+```text
+∇·(mu ∇U)
+```
+
+* [ ] Define orthogonal diffusion
+* [ ] Define face interpolation
+* [ ] Define non-orthogonal correction policy
+* [ ] Boundary diffusion treatment
+* [ ] Matrix coefficient sign convention
+* [ ] Conservation across internal faces
+* [ ] Equal/opposite internal contribution
+* [ ] Constant-field null behaviour
+* [ ] Linear-field patch test
+* [ ] Independent 1D diffusion oracle
+* [ ] Symmetry where mathematically expected
+* [ ] Sparse assembly
+* [ ] Regression PASS
+* [ ] Evidence recorded
+
+---
+# P19-GRAD-001
+
+## Gradient Reconstruction
+
+Implement qualified scalar / vector gradient reconstruction.
+
+* [ ] Pressure gradient
+* [ ] Velocity gradient
+* [ ] Gauss gradient
+* [ ] Least-squares gradient if needed
+* [ ] Boundary contribution
+* [ ] Constant-field test
+* [ ] Linear-field exactness / convergence
+* [ ] Skew mesh behaviour
+* [ ] Rigid-transform covariance
+* [ ] SI units
+* [ ] Deterministic ordering
+* [ ] Independent analytical validation
+* [ ] Regression PASS
+* [ ] Evidence recorded
+
+---
+# P19-DIV-001
+
+## Divergence / Flux Operator
+
+Implement finite-volume divergence.
+
+```text
+∫_V ∇·F dV = Σ_f F_f · Sf
+```
+
+* [ ] Scalar flux divergence
+* [ ] Velocity divergence
+* [ ] Face-flux summation
+* [ ] Internal-face cancellation
+* [ ] Boundary-face contribution
+* [ ] Constant-field validation
+* [ ] Linear-field validation
+* [ ] Closed-volume conservation
+* [ ] Independent analytical validation
+* [ ] Determinism PASS
+* [ ] Regression PASS
+* [ ] Evidence recorded
+
+---
+# P19-CONV-001
+
+## Convective Flux
+
+Implement convection discretisation.
+
+* [ ] Define mass flux `phi`
+* [ ] Define interpolation scheme
+* [ ] First-order upwind baseline
+* [ ] Central scheme if in scope
+* [ ] Sign convention for `phi`
+* [ ] Internal-face conservation
+* [ ] Boundary treatment
+* [ ] Boundedness policy
+* [ ] Constant-field transport test
+* [ ] 1D advection test
+* [ ] Reverse-flow behavior
+* [ ] Sparse assembly
+* [ ] Determinism PASS
+* [ ] Regression PASS
+* [ ] Evidence recorded
+
+Recommended first qualified scheme:
+
+```text
+first-order upwind
+```
+
+before higher-order schemes.
+
+---
+# P19-MOM-001
+
+## Momentum Equation
+
+Assemble incompressible momentum equations:
+
+```text
+rho (∂U/∂t + ∇·(U U))
+=
+-∇p
++ mu ∇²U
++ rho g
+```
+
+within v1 scope.
+
+* [ ] Steady momentum form
+* [ ] Transient momentum term
+* [ ] Convection contribution
+* [ ] Diffusion contribution
+* [ ] Pressure-gradient contribution
+* [ ] Gravity/body-force contribution
+* [ ] Boundary contributions
+* [ ] Sparse global matrix
+* [ ] Deterministic assembly
+* [ ] No hidden stabilization
+* [ ] Independent small-system oracle
+* [ ] Regression PASS
+* [ ] Evidence recorded
+
+---
+# P19-CONT-001
+
+## Continuity Equation
+
+For incompressible flow:
+
+```text
+∇·U = 0
+```
+
+or finite-volume mass conservation:
+
+```text
+Σ_f rho Uf · Sf = 0
+```
+
+* [ ] Define mass-flux convention
+* [ ] Cell continuity residual
+* [ ] Global mass imbalance
+* [ ] Boundary mass flow
+* [ ] Internal-face cancellation
+* [ ] Closed-domain check
+* [ ] Inlet/outlet mass-balance check
+* [ ] Relative/absolute tolerance
+* [ ] Multiple inlets / outlets
+* [ ] Deterministic aggregation
+* [ ] Regression PASS
+* [ ] Evidence recorded
+
+---
+# P19-PVCOUPLE-001
+
+## Pressure–Velocity Coupling
+
+Implement the first qualified coupling algorithm.
+
+Recommended v1:
+
+```text
+SIMPLE
+```
+
+for steady incompressible flow.
+
+* [ ] Define predictor
+* [ ] Define pressure correction
+* [ ] Define velocity correction
+* [ ] Define face-flux correction
+* [ ] Define pressure reference
+* [ ] Define under-relaxation policy
+* [ ] Define residual evaluation
+* [ ] Define continuity closure
+* [ ] Define stopping criteria
+* [ ] Define maximum iterations
+* [ ] Reject divergence
+* [ ] Reject NaN / Inf
+* [ ] Structured solver diagnostics
+* [ ] Deterministic iteration behaviour
+* [ ] Independent simple benchmark
+* [ ] Regression PASS
+* [ ] Evidence recorded
+
+Do not silently copy OpenFOAM implementation.
+
+---
+# P19-LINSOLVE-001
+
+## CFD Linear Solver Infrastructure
+
+Audit and qualify reusable sparse linear algebra.
+
+* [ ] Audit existing generic solver
+* [ ] Respect dependency-layer ADRs
+* [ ] Reuse generic lower-layer solver
+* [ ] Pressure-system solver
+* [ ] Momentum-system solver
+* [ ] Define tolerances
+* [ ] Define singular detection
+* [ ] Define non-finite rejection
+* [ ] Independent residual validation
+* [ ] No solver-success-only qualification
+* [ ] Determinism PASS
+* [ ] Large sparse smoke PASS
+* [ ] Regression PASS
+* [ ] Evidence recorded
+
+---
+# P19-STEADY-001
+
+## Steady Incompressible Solver
+
+Implement full steady incompressible CFD orchestration.
+
+* [ ] Validate inputs
+* [ ] Prepare mesh topology
+* [ ] Prepare BCs
+* [ ] Initialize fields
+* [ ] Momentum predictor
+* [ ] Pressure correction
+* [ ] Velocity correction
+* [ ] Flux correction
+* [ ] Residual computation
+* [ ] Mass-balance computation
+* [ ] Convergence loop
+* [ ] Maximum-iteration failure
+* [ ] Divergence detection
+* [ ] NaN / Inf rejection
+* [ ] Deterministic solve behavior
+* [ ] Atomic result publication
+* [ ] Structured diagnostics
+* [ ] Regression PASS
+* [ ] Evidence recorded
+
+---
+# P19-TRANSIENT-001
+
+## Transient Incompressible Solver
+
+Add transient Navier–Stokes integration.
+
+Recommended initial scheme:
+
+```text
+backward Euler
+```
+
+* [ ] Define initial fields
+* [ ] Define `dt`
+* [ ] Define end time
+* [ ] Define output times
+* [ ] Transient momentum term
+* [ ] Pressure-velocity coupling per step
+* [ ] Actual final partial step
+* [ ] Time-dependent BC policy
+* [ ] Time-dependent load policy
+* [ ] Per-step residual
+* [ ] Per-step mass balance
+* [ ] Reject invalid `dt`
+* [ ] Reject time ordering errors
+* [ ] Reject NaN / Inf
+* [ ] Deterministic timestepping
+* [ ] Time-step refinement
+* [ ] Steady-limit comparison
+* [ ] Regression PASS
+* [ ] Evidence recorded
+
+---
+# P19-TURB-ARCH-001
+
+## Turbulence Architecture
+
+Do not jump directly into a turbulence model without defining architecture.
+
+* [ ] Define laminar/turbulent mode
+* [ ] Define turbulence model interface
+* [ ] Define model field ownership
+* [ ] Define wall-treatment interface
+* [ ] Define turbulence BC interface
+* [ ] Define turbulence result fields
+* [ ] Define persistence policy
+* [ ] Define command policy
+* [ ] Define CLI policy
+* [ ] Define validation policy
+* [ ] No turbulence model implemented here unless explicitly included
+* [ ] Regression PASS
+* [ ] Evidence recorded
+
+---
+# P19-KEPS-001
+
+## Realizable / Standard k-epsilon
+
+Only after turbulence architecture is qualified.
+
+* [ ] Define model variant
+* [ ] Define `k`
+* [ ] Define `epsilon`
+* [ ] Define turbulent viscosity
+* [ ] Define production term
+* [ ] Define source terms
+* [ ] Define wall treatment
+* [ ] Define inlet turbulence specification
+* [ ] Define outlet policy
+* [ ] Positivity enforcement policy
+* [ ] Reject non-physical states
+* [ ] Reference benchmarks
+* [ ] Regression PASS
+* [ ] Evidence recorded
+
+If P19 v1 is strictly laminar, defer this whole milestone.
+
+---
+# P19-SST-001
+
+## k-omega SST
+
+Only if explicitly within P19 scope.
+
+* [ ] Define `k`
+* [ ] Define `omega`
+* [ ] Blending functions
+* [ ] Turbulent viscosity
+* [ ] Near-wall treatment
+* [ ] Freestream treatment
+* [ ] Cross diffusion
+* [ ] Positivity handling
+* [ ] Reference benchmarks
+* [ ] Regression PASS
+* [ ] Evidence recorded
+
+Otherwise defer.
+
+---
+# P19-POST-001
+
+## CFD Result Recovery / Derived Fields
+
+Recover qualified engineering outputs.
+
+* [ ] Cell pressure
+* [ ] Cell velocity vector
+* [ ] Velocity magnitude
+* [ ] Face mass flux
+* [ ] Pressure gradient
+* [ ] Velocity gradient
+* [ ] Vorticity if in scope
+* [ ] Wall pressure
+* [ ] Wall shear stress if in scope
+* [ ] Units explicit
+* [ ] All results finite
+* [ ] Deterministic ordering
+* [ ] No GUI recomputation
+* [ ] Source/currentness binding
+* [ ] Regression PASS
+* [ ] Evidence recorded
+
+---
+# P19-INTEGRALS-001
+
+## Forces / Fluxes / Engineering Integrals
+
+Implement engineering-level integrated results.
+
+* [ ] Boundary mass flow
+* [ ] Volumetric flow rate
+* [ ] Pressure average
+* [ ] Total-pressure average if in scope
+* [ ] Pressure drop
+* [ ] Surface force
+* [ ] Pressure force
+* [ ] Viscous force
+* [ ] Moment about reference point
+* [ ] Flow split
+* [ ] Multiple outlets
+* [ ] Deterministic aggregation
+* [ ] Sign conventions frozen
+* [ ] Independent analytical checks
+* [ ] Regression PASS
+* [ ] Evidence recorded
+
+This milestone is critical for the manifold use case.
+
+---
+# P19-MASSBAL-001
+
+## Mass Conservation / Flow Balance
+
+Validate mass continuity independently from solver residuals.
+
+* [ ] Inlet mass flow
+* [ ] Outlet mass flow
+* [ ] Net mass imbalance
+* [ ] Cell continuity residual
+* [ ] Global mass residual
+* [ ] Relative tolerance
+* [ ] Absolute tolerance
+* [ ] Multiple inlets
+* [ ] Multiple outlets
+* [ ] Reverse flow
+* [ ] Transient accumulation policy
+* [ ] Deterministic aggregation
+* [ ] Independent validation
+* [ ] Regression PASS
+* [ ] Evidence recorded
+
+Hard rule:
+
+```text
+linear-solver residual PASS
+does NOT imply
+mass conservation PASS
+```
+
+Both gates matter.
+
+---
+# P19-VALID-001
+
+## CFD Validation / Acceptance
+
+Own final P19 CFD-analysis acceptance.
+
+Every solve validates:
+
+```text
+geometry current
+mesh current
+mesh topology valid
+CFD mesh quality acceptable
+fluid current
+BCs resolved
+system well posed
+solver converged
+residual acceptable
+mass balance acceptable
+result finite
+```
+
+* [ ] Define CFD mesh-acceptance policy
+* [ ] Reuse P16 metrics where applicable
+* [ ] Define FV-specific mesh metrics
+* [ ] Define invalid mesh rejection
+* [ ] Define warning policy
+* [ ] Define fluid validation
+* [ ] Define BC validation
+* [ ] Define stale-input checks
+* [ ] Define solver-convergence acceptance
+* [ ] Define continuity acceptance
+* [ ] Define mass-balance acceptance
+* [ ] Define result-finiteness checks
+* [ ] Structured validation report
+* [ ] Determinism PASS
+* [ ] Adversarial review PASS
+* [ ] Regression PASS
+* [ ] Evidence recorded
+
+---
+# P19-VIZ-001
+
+## CFD Visualisation / Inspection
+
+Critical rule:
+
+```text
+CFD visualization
+=
+read-only view of qualified derived P19 data
+```
+
+* [ ] CFD mesh display
+* [ ] Pressure contour
+* [ ] Velocity-magnitude contour
+* [ ] Velocity-vector display
+* [ ] Streamlines if in scope
+* [ ] Pressure-gradient display
+* [ ] Mass-flux display
+* [ ] Boundary BC symbols
+* [ ] Boundary-set highlighting
+* [ ] Cell inspection
+* [ ] Face inspection
+* [ ] Highest / lowest pressure navigation
+* [ ] Highest velocity navigation
+* [ ] Transient playback
+* [ ] Clear stale-result state
+* [ ] Rendering does not mutate results
+* [ ] GUI does not duplicate CFD physics
+* [ ] SI metre → OCCT millimetre boundary verified
+* [ ] Classifier cardinality verified
+* [ ] Regression PASS
+* [ ] Evidence recorded
+
+---
+# P19-CMD-001
+
+## CFD Commands / Undo / Redo
+
+Canonical history contains CFD intent only.
+
+* [ ] Create-analysis command
+* [ ] Add-BC command
+* [ ] Edit-BC command
+* [ ] Remove-BC command
+* [ ] Fluid-settings command
+* [ ] Gravity-settings command
+* [ ] Solver-settings command
+* [ ] Steady-settings command
+* [ ] Transient-settings command
+* [ ] Undo exact
+* [ ] Redo exact
+* [ ] Failed command atomic
+* [ ] Redo invalidation correct
+* [ ] `GeometryReference` preserved
+* [ ] CFD result invalidated correctly
+* [ ] No pressure / velocity arrays in history
+* [ ] No matrices / flux arrays in history
+* [ ] No cell / face IDs as canonical BC intent
+* [ ] Compile-fail identity misuse where practical
+* [ ] Determinism PASS
+* [ ] Adversarial review PASS
+* [ ] Regression PASS
+* [ ] Evidence recorded
+
+---
+# P19-PERSIST-001
+
+## CFD Persistence
+
+Persist canonical CFD intent only.
+
+Persist:
+
+```text
+analysis definition
+fluid reference
+BCs
+GeometryReferences
+initial conditions
+gravity
+solver settings
+steady/transient settings
+```
+
+Do NOT persist as authority:
+
+```text
+CFD mesh-local mappings
+cell/face indices
+matrices
+pressure
+velocity
+mass flux
+gradients
+forces
+mass-balance arrays
+solver residuals
+```
+
+* [ ] Define P19 schema
+* [ ] Persist analysis definition
+* [ ] Persist fluid reference
+* [ ] Persist CFD BCs
+* [ ] Persist `GeometryReference`s
+* [ ] Persist initial conditions
+* [ ] Persist gravity
+* [ ] Persist solver settings
+* [ ] Persist transient settings
+* [ ] Preserve units
+* [ ] Preserve unresolved references
+* [ ] Exclude generated CFD arrays
+* [ ] Malformed files rejected
+* [ ] Invalid values rejected
+* [ ] Duplicate IDs rejected
+* [ ] Backward compatibility
+* [ ] Deterministic serialization
+* [ ] Full round trip
+* [ ] Save / load / re-solve
+* [ ] Compare re-solved semantics
+* [ ] Pre/post-solve byte identity
+* [ ] Adversarial review PASS
+* [ ] Regression PASS
+* [ ] Evidence recorded
+
+Hard gate:
+
+```text
+same canonical document saved before CFD solve
+==
+same canonical document saved after CFD solve
+
+byte for byte
+```
+
+---
+# P19-CLI-001
+
+## Headless CFD Analysis
+
+Follow existing BetterCAD CLI naming.
+
+* [ ] Inspect CFD analysis
+* [ ] Add / remove CFD BCs
+* [ ] Steady solve
+* [ ] Transient solve
+* [ ] Pressure summary
+* [ ] Velocity summary
+* [ ] Mass-flow summary
+* [ ] Pressure-drop report
+* [ ] Flow-split report
+* [ ] Mass-balance report
+* [ ] Validation report
+* [ ] Structured diagnostics
+* [ ] Correct process exit codes
+* [ ] Stale-geometry failure
+* [ ] Stale-mesh failure
+* [ ] Missing-fluid failure
+* [ ] Invalid-BC failure
+* [ ] Divergence failure
+* [ ] CLI / core equivalence
+* [ ] Multi-process save / load / re-solve
+* [ ] No CLI-only CFD implementation
+* [ ] Fresh-binary proof
+* [ ] Raw structured STDOUT clean
+* [ ] Zero-match protection
+* [ ] End-to-end scripted workflow PASS
+* [ ] Adversarial review PASS
+* [ ] Regression PASS
+* [ ] Evidence recorded
+
+---
+# P19-REFMOD-001
+
+## CFD Reference Models
+
+```text
+RM-CFD-01   Constant-field preservation
+RM-CFD-02   Linear-gradient finite-volume patch
+RM-CFD-03   Plane Poiseuille flow
+RM-CFD-04   Hagen–Poiseuille pipe flow
+RM-CFD-05   Lid-driven cavity
+RM-CFD-06   Backward-facing step or developing channel
+RM-CFD-07   Pressure-driven manifold / flow split
+RM-CFD-08   Rigid-transform invariance
+RM-CFD-09   Mesh-refinement study
+RM-CFD-10   Transient analytical benchmark
+RM-CFD-11   Mass-conservation failure
+RM-CFD-12   Stale / unresolved CFD inputs
+```
+
+* [ ] Define reference suite
+* [ ] Constant-field preservation
+* [ ] Gradient/operator patch test
+* [ ] Plane Poiseuille benchmark
+* [ ] Pipe Poiseuille benchmark
+* [ ] Lid-driven cavity benchmark
+* [ ] Developing-flow benchmark
+* [ ] Pressure-drop validation
+* [ ] Flow-rate validation
+* [ ] Flow-split validation
+* [ ] Mass-balance validation
+* [ ] Rigid-transform invariance
+* [ ] Global mesh-refinement behavior
+* [ ] Local-refinement behavior
+* [ ] Transient analytical benchmark
+* [ ] Divergence/failure benchmark
+* [ ] Stale-mesh failure
+* [ ] Unresolved-reference failure
+* [ ] Save / load / re-solve
+* [ ] CLI validation
+* [ ] Independent analytical validation
+* [ ] Determinism PASS
+* [ ] Three-preset regression PASS
+* [ ] Evidence recorded
+
+### RM-CFD-01 — Constant Field Preservation
+
+Uniform:
+
+```text
+U = constant
+p = constant
+```
+
+must preserve:
+
+```text
+grad(p) = 0
+div(U) = 0
+diffusion(U) = 0
+```
+
+where appropriate.
+
+Validate:
+
+```text
+internal-face cancellation
+boundary treatment
+mass conservation
+```
+
+This is the basic finite-volume null test.
+
+### RM-CFD-02 — Linear Gradient Patch
+
+Use:
+
+```text
+p(x,y,z) = a + bx + cy + dz
+```
+
+Validate reconstructed:
+
+```text
+grad(p) = [b,c,d]
+```
+
+on suitable mesh.
+
+Also validate rigid rotation:
+
+```text
+grad(p)' = R grad(p)
+```
+
+### RM-CFD-03 — Plane Poiseuille Flow
+
+Between parallel plates:
+
+```text
+u(y) =
+(-dp/dx)/(2 mu)
+*
+(H² - y²)
+```
+
+or equivalent coordinate form.
+
+Validate:
+
+```text
+velocity profile
+centreline velocity
+wall velocity = 0
+volumetric flow
+pressure gradient
+wall shear
+mass balance
+```
+
+Excellent laminar Navier–Stokes reference.
+
+### RM-CFD-04 — Hagen–Poiseuille Pipe Flow
+
+For circular pipe:
+
+```text
+DeltaP =
+128 mu L Q / (pi D^4)
+```
+
+or:
+
+```text
+Q =
+pi D^4 DeltaP / (128 mu L)
+```
+
+Validate:
+
+```text
+velocity profile
+centreline velocity
+bulk velocity
+pressure drop
+flow rate
+wall shear
+mass conservation
+```
+
+### RM-CFD-05 — Lid-Driven Cavity
+
+Use published benchmark data.
+
+Validate:
+
+```text
+centreline velocity profiles
+recirculation location
+mass conservation
+mesh convergence
+```
+
+Freeze benchmark source/data.
+Do not compare screenshots.
+
+### RM-CFD-06 — Developing Channel / Backward-Facing Step
+
+Use a geometry suited to testing:
+
+```text
+convection
+recirculation
+pressure recovery
+mesh sensitivity
+```
+
+Keep Reynolds number within qualified laminar scope unless turbulence is already
+qualified.
+
+### RM-CFD-07 — Manifold / Flow Split
+
+Use a four-port manifold-style reference model.
+
+Validate:
+
+```text
+total inlet mass flow
+outlet mass flows
+flow split
+pressure drop
+global mass imbalance
+```
+
+This can later connect directly to the existing manifold project.
+
+Do not use a previous OpenFOAM result as the sole oracle. Use:
+
+```text
+symmetry case
+analytical restriction case
+or independently verified reference solution
+```
+
+for qualification.
+
+### RM-CFD-08 — Rigid Transform
+
+Rigidly rotate/translate model.
+
+Invariant:
+
+```text
+pressure scalar
+velocity magnitude
+mass flow
+pressure drop
+forces magnitude where applicable
+mass balance
+```
+
+Transform:
+
+```text
+U' = R U
+grad(p)' = R grad(p)
+force' = R force
+```
+
+### RM-CFD-09 — Mesh Refinement
+
+Use:
+
+```text
+coarse
+medium
+fine
+```
+
+for Poiseuille or another analytical case.
+
+Validate convergence of:
+
+```text
+velocity
+pressure drop
+mass flow
+```
+
+Separate:
+
+```text
+field error
+integral error
+mass-conservation error
+```
+
+### RM-CFD-10 — Transient Benchmark
+
+Choose an analytically tractable case, for example:
+
+```text
+start-up plane Poiseuille flow
+decaying velocity field
+or manufactured transient solution
+```
+
+Validate:
+
+```text
+U(t)
+pressure behavior
+time-step refinement
+mass balance
+steady limit
+final partial step
+```
+
+### RM-CFD-11 — Failure / Mass-Conservation Case
+
+Create intentionally invalid / nonconverged configuration.
+
+Required:
+
+```text
+FAIL
+```
+
+if:
+
+```text
+continuity unacceptable
+solver diverges
+nonfinite fields
+```
+
+No false PASS from momentum residual alone.
+
+### RM-CFD-12 — Stale / Unresolved Inputs
+
+Test:
+
+```text
+stale geometry
+stale CFD mesh
+same-count new mesh
+same-ID new source
+unresolved inlet
+unresolved outlet
+unresolved wall
+```
+
+Expected:
+
+```text
+solve refused
+no nearest-face rebinding
+no current result published
+```
+
+---
+# P19-QUAL-001
+
+## Full P19 Qualification
+
+* [ ] Freeze final P19 tree
+* [ ] Audit every P19 milestone
+* [ ] Verify all TODO items complete
+* [ ] Verify all P19 ADRs
+* [ ] Audit CAD / fluid / mesh / CFD authority
+* [ ] Audit CFD result currentness
+* [ ] Audit cell / face indexing
+* [ ] Audit FV geometry
+* [ ] Audit gradient operator
+* [ ] Audit divergence operator
+* [ ] Audit diffusion operator
+* [ ] Audit convective flux
+* [ ] Audit CFD BCs
+* [ ] Audit momentum assembly
+* [ ] Audit continuity equation
+* [ ] Audit pressure–velocity coupling
+* [ ] Audit linear solvers
+* [ ] Audit steady solver
+* [ ] Audit transient solver
+* [ ] Audit pressure recovery
+* [ ] Audit velocity recovery
+* [ ] Audit mass flux
+* [ ] Audit forces / pressure drop / flow split
+* [ ] Audit mass balance
+* [ ] Audit validation policy
+* [ ] Audit stale-input protection
+* [ ] Audit visualisation
+* [ ] Audit commands
+* [ ] Audit persistence
+* [ ] Audit CLI
+* [ ] Re-run all CFD reference models
+* [ ] Independent analytical validation
+* [ ] Momentum residual PASS
+* [ ] Continuity residual PASS
+* [ ] Mass balance PASS
+* [ ] Poiseuille benchmark PASS
+* [ ] Pressure-drop benchmark PASS
+* [ ] Transient benchmark PASS
+* [ ] Divergence failure PASS
+* [ ] Stale-mesh failure PASS
+* [ ] Clean Debug qualification
+* [ ] Clean Release qualification
+* [ ] Clean Debug-shared qualification
+* [ ] Repeated determinism qualification
+* [ ] Cross-preset equivalence
+* [ ] Final adversarial review
+* [ ] Zero-match protection PASS
+* [ ] 0 unexpected warnings
+* [ ] Qualified tree == committed tree
+* [ ] Evidence recorded
+* [ ] Mark P19 qualified
+
+### P19 Final Gate
+
+```text
+all P19 milestones PASS
+
++ CAD geometry remains authority
++ canonical fluid/material model remains authority
++ CFD mesh remains derived
++ CFD fields remain derived
+
++ stale geometry rejection PASS
++ stale mesh rejection PASS
++ same-count stale source rejection PASS
++ same-ID stale source rejection PASS
+
++ compact cell/face indexing PASS
++ no raw mesh-ID indexing PASS
+
++ cell volume / centroid PASS
++ face area / normal PASS
++ owner/neighbour topology PASS
++ closed-cell geometric conservation PASS
+
++ gradient operator PASS
++ divergence operator PASS
++ diffusion operator PASS
++ convection operator PASS
+
++ CFD BCs PASS
++ GeometryReference mapping PASS
++ no nearest-face rebinding PASS
+
++ momentum assembly PASS
++ continuity assembly PASS
+
++ pressure–velocity coupling PASS
+
++ linear solver residual validation PASS
+
++ steady solver PASS
++ nonlinear convergence PASS
+
++ transient solver PASS
++ timestep validation PASS
++ final partial timestep PASS
+
++ pressure field PASS
++ velocity field PASS
++ mass flux PASS
+
++ pressure drop PASS
++ mass flow PASS
++ flow split PASS
++ force integration PASS where in scope
+
++ momentum residual PASS
++ continuity residual PASS
++ global mass balance PASS
+
++ CFD mesh-quality acceptance policy explicit
+
++ visual inspection PASS
++ visualisation remains read-only
+
++ undo/redo PASS
++ generated CFD arrays excluded from history
+
++ persistence PASS
++ generated CFD arrays excluded as authority
++ pre/post-solve byte identity PASS
+
++ CLI PASS
++ CLI/core equivalence PASS
++ raw structured STDOUT clean PASS
++ fresh-binary proof PASS
+
++ reference models PASS
++ independent analytical validation PASS
++ Poiseuille benchmark PASS
++ rigid-transform PASS
++ mesh refinement PASS
++ transient benchmark PASS
+
++ expected divergence/failure model PASS
++ stale/unresolved model PASS
+
++ Debug PASS
++ Release PASS
++ Debug-shared PASS
+
++ determinism PASS
++ cross-preset equivalence PASS
++ adversarial review PASS
++ zero-match protection PASS
++ 0 unexpected warnings
+
++ qualified source/test tree == committed source/test tree
+```
+
+---
 # P18 Carried Constraints
 
 Inherited on entering P18, and not P18's to lift without an explicit scope
