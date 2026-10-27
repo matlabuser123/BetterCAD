@@ -132,4 +132,30 @@ checkers           562 files, 0 layering violations; cfd links neither thermal n
 
 ## The commit record
 
-Written after the commit, in the documentation commit that follows it.
+```text
+commit             4e57b0231f9058c693e809f1d71b9624110e51d2
+                   "BetterCAD: resolve CFD fluid properties through P15", parent c8b53f6
+scratch tree       18936e0089916c5139ae24e458ef45aa490489d2   == frozen
+apps               fc398a3d2e524178cf38e8b667236379d8381086   == frozen
+include            833e8b294f7b83ac2f926106975a8720afe0532a   == frozen
+src                27c6be7371eef86e11786172fa4cb0c6bf910a64   == frozen
+tests              2ce7a53c5b3a9a13d879ead9c7ef7c45595e19bc   == frozen
+examples           4da234ebf4779f7c16d5df0075f106f7e3d4c958   == frozen
+cmake              5a382115d7ed7775189d40b55e40f318eaae6cc7   == frozen
+CMakeLists.txt     3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd   == frozen
+CMakePresets.json  3229f0f89b236744d7d5c082bed47c28b718288e   == frozen
+```
+
+All eight are equal: **qualified tree == committed tree**.
+
+**How it got there, recorded rather than smoothed over.** `commit-fluid.ps1` was
+copied from P19-DATA-001's script, whose staging list was hand-written as
+`docs include src tests`. Every earlier milestone left `apps/` untouched, so the list
+never mattered. This milestone changed `apps/bettercad_cli/MaterialVocabulary.cpp`.
+The first commit (`04ec009`) therefore left that file out, and the script's own
+post-commit check printed `apps ... != frozen` and `MISMATCH AFTER COMMIT`. That
+commit was never pushed. It was amended at once to add `apps/`, giving `4e57b02`,
+and all eight subtrees were read back equal to the freeze, as above. The script now
+stages the eight qualified paths from its own `$paths` list instead of a
+hand-written one. This record could be written only once the commit existed, so it
+lands in the documentation commit that follows.

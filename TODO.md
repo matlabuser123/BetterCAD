@@ -2107,7 +2107,9 @@ missing viscosity is FluidViscosityUnusable; a fluid edit stales a CFD
 result for `fluid` alone and neither the geometry nor the mesh. P19-DATA-001's
 CFD-side validate(CfdFluidProperties) retired as a second copy of P15's rule.
 Adversarial review: independent reviewer 0 blockers, 0 major, 8 minor + 3
-nits disposed; 17 of 18 mutants killed, 1 equivalent recorded. Evidence:
+nits disposed; 17 of 18 mutants killed, 1 equivalent recorded. Committed
+as 4e57b02; all eight subtree hashes of that commit equal the frozen
+fingerprint: qualified tree == committed tree. Evidence:
 docs/verification/P19-FLUID-001/.
 
 P19-MESH-001 is NOT AUTHORIZED. Being next in the plan is not permission.

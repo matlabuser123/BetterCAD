@@ -31,7 +31,8 @@ $bytes = Get-Content "$s\commit-message-fluid.txt" -Encoding Byte -TotalCount 3
 if ($bytes[0] -eq 239) { "BOM present -- not committing"; exit 3 }
 $placeholders = Select-String -Path "docs\verification\P19-FLUID-001\*.md", "$s\commit-message-fluid.txt" -Pattern "PLACEHOLDER"
 if ($placeholders) { "PLACEHOLDERS REMAIN -- not committing"; $placeholders | ForEach-Object { $_.Path + ":" + $_.LineNumber }; exit 4 }
-& $git add -- ROADMAP.md TODO.md docs include src tests 2>$null
+# EVERY qualified path, not a hand list: the first P19-FLUID-001 commit used "docs include src tests" and left apps/ out (the first milestone to change apps); the post-commit check caught it. The paths come from $paths.
+& $git add -- ROADMAP.md TODO.md docs $paths 2>$null
 "untracked left behind:"
 & $git status --short | Where-Object { $_ -match '^\?\?' }
 & $git commit -q -F "$s\commit-message-fluid.txt"
