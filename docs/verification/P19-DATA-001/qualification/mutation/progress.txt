@@ -1,0 +1,21 @@
+DP01 | a zero inflow speed is accepted | KILLED | 98% tests passed, 1 tests failed out of 53 | CfdData_BoundaryConditionsAreValidatedOnTheirOwnTerms | restored
+DP02 | a NaN inflow speed is accepted | KILLED | 96% tests passed, 2 tests failed out of 53 | CfdData_BoundaryConditionsAreValidatedOnTheirOwnTerms; CfdData_TheDefinitionIsValidatedPerMode | restored
+DP03 | a moving wall at rest is accepted | KILLED | 98% tests passed, 1 tests failed out of 53 | CfdData_BoundaryConditionsAreValidatedOnTheirOwnTerms | restored
+DP04 | a velocity relaxation above 1 is accepted | KILLED | 98% tests passed, 1 tests failed out of 53 | CfdData_SolverSettingsAreValidated | restored
+DP05 | a divergence factor of 1 is accepted | KILLED | 98% tests passed, 1 tests failed out of 53 | CfdData_SolverSettingsAreValidated | restored
+DP06 | an unknown face role is accepted | KILLED | 98% tests passed, 1 tests failed out of 53 | CfdData_BoundaryConditionsAreValidatedOnTheirOwnTerms | restored
+DP07 | a pressure inlet does not fix the pressure | KILLED | 96% tests passed, 2 tests failed out of 53 | CfdData_TheKindIsTheAlternativeHeld; CfdData_ThePressureDatumIsRequiredIfAndOnlyIfNoBoundaryFixesIt | restored
+DP08 | the gravity reference height is not checked | KILLED | 98% tests passed, 1 tests failed out of 53 | CfdData_InitialConditionReferencePressureAndGravityAreValidated | restored
+DP09 | an overdetermined datum is accepted | KILLED | 98% tests passed, 1 tests failed out of 53 | CfdData_ThePressureDatumIsRequiredIfAndOnlyIfNoBoundaryFixesIt | restored
+DP10 | a steady definition may carry transient settings | KILLED | 98% tests passed, 1 tests failed out of 53 | CfdData_TheDefinitionIsValidatedPerMode | restored
+DP11 | the reference location is not written | KILLED | 96% tests passed, 2 tests failed out of 53 | CfdData_TheFingerprintCoversEveryField; CfdData_TheSecondGoldenCoversEveryKindAndTheTransientLines | restored
+DP12 | the gravity reference height is not written | KILLED | 94% tests passed, 3 tests failed out of 53 | CfdData_TheFingerprintCoversEveryField; CfdData_TheFingerprintIsAGoldenFunctionOfTheText; CfdData_TheSecondGoldenCoversEveryKindAndTheTransientLines | restored
+DP13 | -0.0 is not written as 0 | KILLED | 98% tests passed, 1 tests failed out of 53 | CfdData_TheFingerprintIgnoresIdentityAndEverythingButMeaning | restored
+DP14 | a copy's instance is not written | KILLED | 96% tests passed, 2 tests failed out of 53 | CfdData_TheFingerprintCoversEveryField; CfdData_TheSecondGoldenCoversEveryKindAndTheTransientLines | restored
+DP15 | a fluid revision change is not a stale reason | KILLED | 96% tests passed, 2 tests failed out of 53 | CfdData_AFluidEditStalesTheResultAndNotTheMesh; CfdData_StaleReasonsAreSensitiveToEveryField | restored
+DP16 | an equal definition moves the revision | KILLED | 98% tests passed, 1 tests failed out of 53 | CfdData_ANoOpEditDoesNotMoveTheRevision | restored
+DP17 | a missing pressure datum is Ready | KILLED | 98% tests passed, 1 tests failed out of 53 | CfdData_TheStateMachineReachesEveryStateItDeclares | restored
+DP18 | a failure discards the held result | KILLED | 98% tests passed, 1 tests failed out of 53 | CfdData_FailedAttemptDoesNotResurrectStaleResult | restored
+DP19 | a failure does not outrank a held result | KILLED | 96% tests passed, 2 tests failed out of 53 | CfdData_FailedAttemptDoesNotResurrectStaleResult; CfdData_TheStateMachineReachesEveryStateItDeclares | restored
+DP20 | the source carries no fingerprint | KILLED | 96% tests passed, 2 tests failed out of 53 | CfdData_EveryDefinitionEditMakesTheResultStale; CfdData_TheSourceIsPopulatedFromTheDocumentAndNotDefaulted | restored
+campaign finished 2026-10-27T11:42:34.1971357+10:00

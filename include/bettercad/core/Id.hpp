@@ -81,6 +81,12 @@ struct ThermalLoadIdTag {
 struct ThermalBoundaryConditionIdTag {
     static constexpr std::string_view name = "thermal boundary condition";
 };
+struct CfdAnalysisIdTag {
+    static constexpr std::string_view name = "cfd analysis";
+};
+struct CfdBoundaryConditionIdTag {
+    static constexpr std::string_view name = "cfd boundary condition";
+};
 struct EntityIdTag {
     static constexpr std::string_view name = "entity";
 };
@@ -135,6 +141,8 @@ template <>
 inline constexpr bool isDocumentObjectTag<AnalysisIdTag> = true;
 template <>
 inline constexpr bool isDocumentObjectTag<ThermalAnalysisIdTag> = true;
+template <>
+inline constexpr bool isDocumentObjectTag<CfdAnalysisIdTag> = true;
 
 template <typename Tag, typename Value = std::uint64_t>
 class Id;
@@ -312,6 +320,30 @@ using ThermalLoadId = Id<ThermalLoadIdTag>;
 /// restraint holds a displacement at zero, and this holds a temperature or an
 /// exchange with an ambient.
 using ThermalBoundaryConditionId = Id<ThermalBoundaryConditionIdTag>;
+/// One CFD analysis: which mesh is analysed, in which mode, under which
+/// boundary conditions, initial condition, pressure datum, gravity and solver
+/// settings (P19-DATA-001). A document object, for the argument ADR-030 made
+/// for a meshing control and every analysis since repeated.
+///
+/// IT WIDENS TO ObjectId, AND IT IS NEITHER AN AnalysisId NOR A
+/// ThermalAnalysisId. Three analyses are document objects; a solve that took
+/// the wrong kind would read a velocity inlet as a heat flux. The tags keep
+/// them apart at compile time and nothing converts one into another.
+using CfdAnalysisId = Id<CfdAnalysisIdTag>;
+/// One CFD boundary condition: a velocity inlet, a static-pressure inlet or
+/// outlet, a no-slip, moving or slip wall on a CAD face (P19-DATA-001 defines
+/// the payloads). Unique within its analysis.
+///
+/// CANONICAL INTENT, NOT A MESH ENTITY. The boundary faces it covers, their
+/// FaceIndex values and the matrix rows they touch are derived afresh for
+/// whatever mesh is current (ADR-032, ADR-058). It does not widen to ObjectId
+/// -- it is a member of an analysis's definition -- and it is not a thermal
+/// boundary condition or a restraint.
+///
+/// THERE IS NO CfdInitialConditionId. The initial condition is ONE uniform
+/// record per analysis (ADR-061); an identity would name something there is
+/// exactly one of, and a second identity space with nothing to distinguish.
+using CfdBoundaryConditionId = Id<CfdBoundaryConditionIdTag>;
 /// Sketch entity (point, line, arc, ...); unique within its sketch.
 using EntityId = Id<EntityIdTag>;
 /// Sketch constraint; unique within its sketch.

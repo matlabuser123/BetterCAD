@@ -63,6 +63,7 @@ bettercad_add_executable(bettercad_tests
         structural/StructuralCommandTests.cpp
         structural/Tet4ElementTests.cpp
         cfd/CfdAnalysisBoundaryTests.cpp
+        cfd/CfdDataTests.cpp
         thermal/ThermalAnalysisBoundaryTests.cpp
         thermal/ThermalAnalysisRunTests.cpp
         thermal/ThermalDataTests.cpp

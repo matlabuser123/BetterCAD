@@ -1,0 +1,51 @@
+﻿cmd : 'git' is not recognized as an internal or external command,
+At line:1 char:619
++ ... /bc-build"; cmd /c "`"$q\verify-harness.cmd`"" > "$q\verify-harness.o ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ('git' is not re...ternal command,:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+operable program or batch file.
+'git' is not recognized as an internal or external command,
+operable program or batch file.
+'git' is not recognized as an internal or external command,
+operable program or batch file.
+'git' is not recognized as an internal or external command,
+operable program or batch file.
+'git' is not recognized as an internal or external command,
+operable program or batch file.
+'git' is not recognized as an internal or external command,
+operable program or batch file.
+'git' is not recognized as an internal or external command,
+operable program or batch file.
+'git' is not recognized as an internal or external command,
+operable program or batch file.
+'git' is not recognized as an internal or external command,
+operable program or batch file.
+'git' is not recognized as an internal or external command,
+operable program or batch file.
+'git' is not recognized as an internal or external command,
+operable program or batch file.
+'git' is not recognized as an internal or external command,
+operable program or batch file.
+'git' is not recognized as an internal or external command,
+operable program or batch file.
+'git' is not recognized as an internal or external command,
+operable program or batch file.
+'git' is not recognized as an internal or external command,
+operable program or batch file.
+'git' is not recognized as an internal or external command,
+operable program or batch file.
+'git' is not recognized as an internal or external command,
+operable program or batch file.
+'git' is not recognized as an internal or external command,
+operable program or batch file.
+'git' is not recognized as an internal or external command,
+operable program or batch file.
+'git' is not recognized as an internal or external command,
+operable program or batch file.
+'git' is not recognized as an internal or external command,
+operable program or batch file.
+QUALIFICATION FAILED: 2 stage(s) failed. See "C:\Users\hasib\AppData\Local\Temp\bettercad-harness-check\qualification-times.txt".
+PASS: a failed stage gave qualify.cmd exit 2, and a zero-match
+      repeat filter was counted as a failed stage.

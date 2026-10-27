@@ -72,9 +72,12 @@ namespace bettercad::cfd {
 /// condition that does not resolve, a mesh whose finite-volume quality a CFD
 /// analysis should refuse, a pressure datum that is missing or overdetermined,
 /// prescribed fluxes that do not balance, a system that is not well posed, and a
-/// time step that is not positive are all real input problems -- and each needs a canonical type this milestone deliberately does not
-/// define. They belong to `P19-FLUID-001`, `P19-BC-001`, `P19-MESH-001`,
-/// `P19-VALID-001` and `P19-TRANSIENT-001`, which add both the value and the check.
+/// time step that is not positive are all real input problems. P19-DATA-001
+/// defined the canonical records some of them are about (the boundary
+/// conditions, the reference pressure, `pressureDatumProblem`, the transient
+/// settings, whose own validation already refuses a non-positive step); the
+/// checks against a document and a mesh belong to `P19-FLUID-001`, `P19-BC-001`,
+/// `P19-MESH-001`, `P19-VALID-001` and `P19-TRANSIENT-001`.
 enum class InputProblem : std::uint8_t {
     /// The document has no mesh control with that id.
     ControlNotFound,

@@ -114,8 +114,8 @@ PASSED, and P18 — Thermal Analysis was QUALIFIED on 2026-10-27 by P18-QUAL-001
 eighteen milestones PASS, 5804/5804 tests in three presets, qualified tree ==
 committed tree.
 P19 — CFD Integration, authorized 2026-10-27 by the owner's "start
-P19-ARCH-001": P19-ARCH-001 (2026-10-27) has PASSED. P19-DATA-001 is next and
-NOT authorized; see TODO.md.
+P19-ARCH-001": P19-ARCH-001 and P19-DATA-001 (2026-10-27) have PASSED.
+P19-FLUID-001 is next and NOT authorized; see TODO.md.
 ```
 
 Released: `v0.1.0` — Foundation.
@@ -788,7 +788,10 @@ cell-centred finite volume on the `P16` Tet4 mesh, steady and transient, with
 the same authority discipline as `P17` and `P18`. `P19-ARCH-001` (PASS
 2026-10-27) fixed the scope, the layer (`cfd` at 42, below thermal and
 structural) and the input boundary; see
-[P19-ARCH-001](docs/verification/P19-ARCH-001/README.md).
+[P19-ARCH-001](docs/verification/P19-ARCH-001/README.md). `P19-DATA-001` (PASS
+2026-10-27) defined the canonical analysis definition, its semantic fingerprint
+and the result's provenance, keeping the fluid a P15 material and every field
+derived; see [P19-DATA-001](docs/verification/P19-DATA-001/README.md).
 
 ```text
 incompressible laminar

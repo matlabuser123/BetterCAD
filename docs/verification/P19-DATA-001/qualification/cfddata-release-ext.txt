@@ -1,0 +1,58 @@
+﻿Filters: "CfdData_*","CfdInput_*"
+Randomness seeded to: 445638735
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+bettercad_tests.exe is a Catch2 v3.16.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+CfdInput_AcceptsACurrentMeshWithAUsableDensity
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/cfd/CfdAnalysisBoundaryTests.cpp:142
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/cfd/CfdAnalysisBoundaryTests.cpp:172: warning:
+  prepared: 12 tets (= finite-volume cells), 12 boundary triangles (= boundary
+  faces), 9 nodes, rho = 998 kg/m^3
+
+-------------------------------------------------------------------------------
+CfdInput_ReachesEveryInputProblemItDeclares
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/cfd/CfdAnalysisBoundaryTests.cpp:504
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/cfd/CfdAnalysisBoundaryTests.cpp:527: warning:
+  7 input problems declared, every one reached by a case in this file
+
+-------------------------------------------------------------------------------
+CfdData_SameIdsNewMeshGenerationIsStale
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/cfd/CfdDataTests.cpp:1387
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/cfd/CfdDataTests.cpp:1416: warning:
+  remesh: 9 nodes with identical NodeIds, 12 tetrahedra either way; result
+  stale, reason mesh
+
+-------------------------------------------------------------------------------
+CfdInput_RefusesAMeshOfGeometryThatHasSinceChanged
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/cfd/CfdAnalysisBoundaryTests.cpp:232
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/cfd/CfdAnalysisBoundaryTests.cpp:265: warning:
+  a mesh of changed geometry: 12 tetrahedra still held and still valid,
+  currency stale: the geometry changed, CFD analysis refused as mesh_stale
+
+-------------------------------------------------------------------------------
+CfdData_TheFingerprintIsAGoldenFunctionOfTheText
+-------------------------------------------------------------------------------
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/cfd/CfdDataTests.cpp:890
+...............................................................................
+
+C:/Users/hasib/OneDrive/Desktop/CAD/tests/cfd/CfdDataTests.cpp:939: warning:
+  golden fingerprint cfd-definition-v1:20707079b32e4964
+
+===============================================================================
+All tests passed (2244 assertions in 53 test cases)
+

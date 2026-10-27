@@ -390,6 +390,11 @@ set(_filters
     "unit\\.CfdInput" 14
     "architecture\\.checker\\.(cfd-|meshing-to-cfd)" 5
     "architecture\\.targets\\.cfd-" 3
+    # P19-DATA-001. The data-model cases (identities, records, the definition, the fingerprint, the result, currentness and the slot), and the
+    # compile-fail group that proves the CFD identities do not convert and no derived field or fluid can enter the definition.
+    "unit\\.CfdData_" 39
+    "unit\\.CfdData_(TheFingerprintIsAGoldenFunctionOfTheText|TheSecondGoldenCoversEveryKindAndTheTransientLines|TheFingerprintCoversEveryField|AnEditTypedBackKeepsTheResultStale)$" 4
+    "compile_fail\\.cfdids\\." 28
     # P18-QUAL-001. The final-gate cases (the authority matrix over every reference document, the currentness matrix in one sequence and its
     # edit-back path, a failed regeneration, the unforgeable proof of an accepted input, the units of the transient sum), and one test for
     # each defect the final audit found and fixed or each gap it closed, each at its own name so a rename or a drop is a failure.

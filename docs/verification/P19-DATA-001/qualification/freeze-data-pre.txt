@@ -1,0 +1,56 @@
+﻿P19-DATA-001 freeze
+HEAD      24a1496805e8059336dc5ead1e332dc6e281eabb
+HEAD tree a3e50abb98e8c0a1ee97f2a2cd43db1cce3c47ca
+scratch tree 265fb3de90ea8bb10496f494119ee822fb959ad8
+apps               b4e2268d1a42fbdd543c7d4e0d10d58ecb70b117
+include            859e5bf3abe1c39b25224727d6b4231b2ce72f17
+src                16c042610f108dc717a7ec72be67a54567e4df10
+tests              ada28684ee1f1da0e397f28e31bd64dbd7401d7c
+examples           4da234ebf4779f7c16d5df0075f106f7e3d4c958
+cmake              5a382115d7ed7775189d40b55e40f318eaae6cc7
+CMakeLists.txt     3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd
+CMakePresets.json  3229f0f89b236744d7d5c082bed47c28b718288e
+
+== CFD_DATA_MODEL  (9 files)
+   include/bettercad/core/Id.hpp                                                              9f0543ffb9c5d61120b1dc2d3c5c217eae2a66dc
+   include/bettercad/cfd/CfdData.hpp                                                          2445cfda3121e717968555739415a514aa74c43d
+   include/bettercad/cfd/CfdAnalysisObject.hpp                                                9f1efee6c2c7bc361957a829669de4b4ff49e33a
+   include/bettercad/cfd/CfdResult.hpp                                                        668b7a7e672ee597d01057e2c58e4584c4489b7a
+   include/bettercad/cfd/CfdAnalysis.hpp                                                      6698d0664abfc1261c6b4de25b20f08f5dd9112e
+   src/cfd/CfdData.cpp                                                                        cd1acb70de835a6ed289cfa79c3314d5b05d0b32
+   src/cfd/CfdAnalysisObject.cpp                                                              0b7bf15119bea577aaa6717c77075e46ff4251e2
+   src/cfd/CfdResult.cpp                                                                      1cdaa3b902615b5699ab812c5491959247031125
+   src/cfd/CMakeLists.txt                                                                     d141bc9c53907fe97bfb130602c803e549f8c4ff
+P19_DATA_CFD_DATA_MODEL_FINGERPRINT 86242eabab0776ab15034f190a34c526dbfe1069
+
+== CFD_DATA_TESTS  (5 files)
+   tests/cfd/CfdDataTests.cpp                                                                 4c604bf973ee951cb8301c688c69780dd6a7a868
+   tests/compile_fail/CfdIdMisuse.cpp                                                         af4c832884104b5ac54dbe54b82f053c0f17994f
+   tests/compile_fail/CMakeLists.txt                                                          7fa93167b295ce152b438eb1eb2712ef0dfd2bed
+   tests/CMakeLists.txt                                                                       bebc81b4eb5cad77d1d963640ac14e8e08713071
+   tests/cli/ZeroMatchGuard.cmake                                                             a57f7f0de45d3b5cc09a042dedf06acefca67565
+P19_DATA_CFD_DATA_TESTS_FINGERPRINT 992e8c40d6d16ef020f576da9d0375ec8ef552b4
+
+== ADRS  (1 files)
+   docs/architecture/decisions/ADR-061-the-cfd-analysis-definition-holds-intent-only-and-the-fluid-is-not-in-it.md 6ecefb9bc974a5f2d7dc9523c4ce86ecd7d97449
+P19_DATA_ADRS_FINGERPRINT 347943d89c6dfeb417cf37c688a8600c2b7d73a5
+
+== CHANGES against HEAD in the eight qualified paths (git status --short)
+ M include/bettercad/cfd/CfdAnalysis.hpp
+ M include/bettercad/core/Id.hpp
+ M src/cfd/CMakeLists.txt
+ M tests/CMakeLists.txt
+ M tests/cli/ZeroMatchGuard.cmake
+ M tests/compile_fail/CMakeLists.txt
+?? include/bettercad/cfd/CfdAnalysisObject.hpp
+?? include/bettercad/cfd/CfdData.hpp
+?? include/bettercad/cfd/CfdResult.hpp
+?? src/cfd/CfdAnalysisObject.cpp
+?? src/cfd/CfdData.cpp
+?? src/cfd/CfdResult.cpp
+?? tests/cfd/CfdDataTests.cpp
+?? tests/compile_fail/CfdIdMisuse.cpp
+== other uncommitted paths
+?? .claude/
+?? docs/architecture/decisions/ADR-061-the-cfd-analysis-definition-holds-intent-only-and-the-fluid-is-not-in-it.md
+?? docs/verification/P19-DATA-001/

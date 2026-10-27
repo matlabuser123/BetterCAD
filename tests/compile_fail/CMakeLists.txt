@@ -802,6 +802,56 @@ bettercad_compile_fail_case(thermalids "${_thermalids}" THE_DEFINITION_HAS_NO_CO
     "no member named|has no member" BetterCAD::thermal)
 bettercad_compile_fail_case(thermalids "${_thermalids}" THE_DEFINITION_HAS_NO_RESULT
     "no member named|has no member" BetterCAD::thermal)
+# CFD identity and data model (P19-DATA-001). The CFD sibling of thermalids: two
+# CFD identities that convert neither into each other nor into a mesh handle, an
+# integer, or a structural or thermal identity; face conditions that take a
+# FaceName and a value of the right unit and nothing else; a definition with no
+# member for p, U, phi, cells, a result or THE FLUID (ADR-061: the fluid is the
+# document's P15 assignment); and a result that cannot be written, conjured
+# without its factory, or replaced by a failure. The one widening the model
+# permits, CfdAnalysisId to ObjectId, is exercised by the control.
+set(_cfdids "${CMAKE_CURRENT_SOURCE_DIR}/CfdIdMisuse.cpp")
+bettercad_compile_fail_group(cfdids "${_cfdids}" BetterCAD::cfd)
+foreach(_case
+        CFD_ANALYSIS_ID_AS_BOUNDARY_CONDITION_ID
+        BOUNDARY_CONDITION_ID_AS_CFD_ANALYSIS_ID
+        BOUNDARY_CONDITION_ID_AS_OBJECT_ID
+        NODE_ID_AS_CFD_ANALYSIS_ID
+        NODE_ID_AS_BOUNDARY_CONDITION_ID
+        ELEMENT_ID_AS_BOUNDARY_CONDITION_ID
+        THERMAL_ANALYSIS_ID_AS_CFD_ANALYSIS_ID
+        CFD_ANALYSIS_ID_AS_THERMAL_ANALYSIS_ID
+        STRUCTURAL_ANALYSIS_ID_AS_CFD_ANALYSIS_ID
+        THERMAL_CONDITION_ID_AS_CFD_CONDITION_ID
+        RESTRAINT_ID_AS_CFD_CONDITION_ID
+        A_VELOCITY_INLET_DOES_NOT_TARGET_A_NODE
+        A_PRESSURE_IS_NOT_A_VELOCITY
+        A_VELOCITY_IS_NOT_A_PRESSURE
+        GRAVITY_IS_NOT_A_VELOCITY
+        A_WALL_VELOCITY_IS_NOT_AN_ACCELERATION
+        THE_MODE_IS_NOT_A_BOOL
+        A_FAILURE_IS_NOT_A_RESULT)
+    bettercad_compile_fail_case(cfdids "${_cfdids}" ${_case}
+        "could not convert|cannot convert|no matching function|no match for|invalid conversion"
+        BetterCAD::cfd)
+endforeach()
+bettercad_compile_fail_case(cfdids "${_cfdids}" INTEGER_AS_CFD_CONDITION_ID
+    "conversion from [^ ]*int[^ ]* to non-scalar type|could not convert" BetterCAD::cfd)
+bettercad_compile_fail_case(cfdids "${_cfdids}" A_RESULT_SOURCE_CANNOT_BE_REWRITTEN
+    "read-only|discards qualifiers" BetterCAD::cfd)
+bettercad_compile_fail_case(cfdids "${_cfdids}" A_RESULT_METADATA_IS_READ_ONLY
+    "read-only|discards qualifiers" BetterCAD::cfd)
+bettercad_compile_fail_case(cfdids "${_cfdids}" A_RESULT_CANNOT_BE_BUILT_WITHOUT_ITS_FACTORY
+    "is private within this context|private" BetterCAD::cfd)
+foreach(_case
+        THE_DEFINITION_HAS_NO_PRESSURE_FIELD
+        THE_DEFINITION_HAS_NO_VELOCITY_FIELD
+        THE_DEFINITION_HAS_NO_MASS_FLUX
+        THE_DEFINITION_HAS_NO_CELLS
+        THE_DEFINITION_HAS_NO_RESULT
+        THE_DEFINITION_HAS_NO_FLUID)
+    bettercad_compile_fail_case(cfdids "${_cfdids}" ${_case} "no member named|has no member" BetterCAD::cfd)
+endforeach()
 # Temperature DOF index space (P18-DOF-001). The thermal sibling of structdof:
 # a node ordinal is not a node handle, a row of the reduced system is not an
 # unknown of the full one, neither is an integer, a prescribed temperature is a

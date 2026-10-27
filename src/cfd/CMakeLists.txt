@@ -39,6 +39,9 @@ bettercad_add_library(bettercad_cfd
     EXPORT_HEADER bettercad/cfd/Export.hpp
     SOURCES
         CfdAnalysis.cpp
+        CfdAnalysisObject.cpp
+        CfdData.cpp
+        CfdResult.cpp
     PUBLIC_LINK
         BetterCAD::core
         BetterCAD::features

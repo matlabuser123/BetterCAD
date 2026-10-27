@@ -1988,29 +1988,48 @@ cavitation
 
 Define canonical and derived CFD data types.
 
-* [ ] Define `CfdAnalysisId`
-* [ ] Define `CfdBoundaryConditionId`
-* [ ] Define `CfdInitialConditionId` if needed
-* [ ] Define analysis mode
-* [ ] Define fluid model
-* [ ] Define reference pressure policy
-* [ ] Define gravity policy
-* [ ] Define steady settings
-* [ ] Define transient settings
-* [ ] Define nonlinear-iteration settings
-* [ ] Define convergence settings
-* [ ] Define output settings
-* [ ] Define result metadata
-* [ ] Define source/provenance metadata
-* [ ] Define stale/current semantics
-* [ ] Define current accepted result
-* [ ] Define latest failed attempt
-* [ ] Prevent derived fields becoming canonical
-* [ ] Deterministic semantic fingerprint
-* [ ] Adversarial review PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Define `CfdAnalysisId`
+* [x] Define `CfdBoundaryConditionId`
+* [x] Define `CfdInitialConditionId` if needed
+* [x] Define analysis mode
+* [x] Define fluid model
+* [x] Define reference pressure policy
+* [x] Define gravity policy
+* [x] Define steady settings
+* [x] Define transient settings
+* [x] Define nonlinear-iteration settings
+* [x] Define convergence settings
+* [x] Define output settings
+* [x] Define result metadata
+* [x] Define source/provenance metadata
+* [x] Define stale/current semantics
+* [x] Define current accepted result
+* [x] Define latest failed attempt
+* [x] Prevent derived fields becoming canonical
+* [x] Deterministic semantic fingerprint
+* [x] Adversarial review PASS
+* [x] Regression PASS
+* [x] Evidence recorded
 
+```text
+PASS 2026-10-27. Qualified against 24a1496 plus the working tree:
+5893/5893 x 3 presets, 2622 x 5 in two, 0 warnings over 750 objects,
+17 stages exit 0, 6h43m23s (first attempt), fingerprints before == after.
+CfdAnalysisId (document object) and CfdBoundaryConditionId; no
+CfdInitialConditionId (one initial condition per analysis). The definition
+(ADR-061) holds intent only and NOT the fluid (the document's P15
+assignment); the reference pressure is a value at a point and the reference
+height belongs to gravity; a missing datum is storable but not Ready, an
+overdetermined one is refused; a semantic fingerprint records the content,
+the revision decides currency. Result = provenance + metadata (fields with
+P19-DOF-001); the latest failure is a structured record. 39 data cases, 28
+compile-fail cases; golden fingerprint identical in all three presets.
+Adversarial review: independent reviewer 0 blockers, 15 findings disposed
+and re-verified; 20 of 20 mutants killed. Evidence:
+docs/verification/P19-DATA-001/.
+
+P19-FLUID-001 is NOT AUTHORIZED. Being next in the plan is not permission.
+```
 Canonical intent may include:
 
 ```text
