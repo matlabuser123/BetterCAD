@@ -143,4 +143,25 @@ script is kept as it ran.
 
 ## The commit record
 
-Written after the commit, in the documentation commit that follows it.
+```text
+commit             f08019aedafbddc2c2d27bc8cf5208ceffd45da6
+                   "BetterCAD: add CFD analysis data model", parent 24a1496,
+                   83 files; committed by qualification/commit-data.ps1, which
+                   recomputed the fingerprint from a scratch index and refused to
+                   commit unless it equalled freeze-data-pre.txt, then read the
+                   commit back with git rev-parse <commit>^{tree}:<path>
+scratch tree       265fb3de90ea8bb10496f494119ee822fb959ad8   == frozen
+apps               b4e2268d1a42fbdd543c7d4e0d10d58ecb70b117   == frozen
+include            859e5bf3abe1c39b25224727d6b4231b2ce72f17   == frozen
+src                16c042610f108dc717a7ec72be67a54567e4df10   == frozen
+tests              ada28684ee1f1da0e397f28e31bd64dbd7401d7c   == frozen
+examples           4da234ebf4779f7c16d5df0075f106f7e3d4c958   == frozen
+cmake              5a382115d7ed7775189d40b55e40f318eaae6cc7   == frozen
+CMakeLists.txt     3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd   == frozen
+CMakePresets.json  3229f0f89b236744d7d5c082bed47c28b718288e   == frozen
+```
+
+All eight are equal, before and after the commit: **qualified tree == committed
+tree**. This record could be written only once the commit existed, so it lands in
+the documentation commit that follows it. `docs/` is outside the fingerprint by
+construction.

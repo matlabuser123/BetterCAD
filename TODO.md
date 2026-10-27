@@ -2025,11 +2025,13 @@ the revision decides currency. Result = provenance + metadata (fields with
 P19-DOF-001); the latest failure is a structured record. 39 data cases, 28
 compile-fail cases; golden fingerprint identical in all three presets.
 Adversarial review: independent reviewer 0 blockers, 15 findings disposed
-and re-verified; 20 of 20 mutants killed. Evidence:
-docs/verification/P19-DATA-001/.
+and re-verified; 20 of 20 mutants killed. Committed as f08019a; all eight
+subtree hashes of that commit equal the frozen fingerprint: qualified tree
+== committed tree. Evidence: docs/verification/P19-DATA-001/.
 
 P19-FLUID-001 is NOT AUTHORIZED. Being next in the plan is not permission.
 ```
+
 Canonical intent may include:
 
 ```text
