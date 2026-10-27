@@ -13,7 +13,7 @@ constexpr std::array kConsumerKinds{
     ConsumerKind::MassProperties,   ConsumerKind::FeaLinearStatic,
     ConsumerKind::FeaLinearStaticWithGravity, ConsumerKind::FeaYieldStrength,
     ConsumerKind::ThermalSteady,    ConsumerKind::ThermalTransient,
-    ConsumerKind::ThermoMechanical,
+    ConsumerKind::ThermoMechanical, ConsumerKind::IncompressibleFlow,
 };
 
 using MechKind = MechanicalPropertyKind;
@@ -126,6 +126,8 @@ std::string_view toString(ConsumerKind consumer) noexcept {
             return "transient conduction";
         case ConsumerKind::ThermoMechanical:
             return "thermo-mechanical analysis";
+        case ConsumerKind::IncompressibleFlow:
+            return "incompressible flow";
     }
     return "unknown consumer";
 }
@@ -167,6 +169,12 @@ PropertyRequirement requiredProperties(ConsumerKind consumer) {
         case ConsumerKind::ThermoMechanical:
             return {.mechanical = {MechKind::YoungsModulus, MechKind::PoissonRatio},
                     .thermal = {ThermKind::ThermalExpansion}};
+        case ConsumerKind::IncompressibleFlow:
+            // rho and mu, and NOTHING else (ADR-058, ADR-062). An isothermal
+            // incompressible Newtonian fluid needs no conductivity, no specific
+            // heat and no expansion: requiring them would block a solvable flow.
+            // The density is the material's one density, in the mechanical half.
+            return {.mechanical = {MechKind::Density}, .thermal = {ThermKind::DynamicViscosity}};
     }
     return {};
 }
@@ -256,6 +264,8 @@ bool isAvailable(const ThermalProperties& properties, ThermalPropertyKind kind) 
         case ThermKind::ElectricalResistivity:
             return properties.electricalResistivity.value().has_value() &&
                    properties.electricalResistivity.value()->ohmMetres() > 0.0;
+        case ThermKind::DynamicViscosity:
+            return positiveQuantity(properties.dynamicViscosity);
     }
     return false;
 }

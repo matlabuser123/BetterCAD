@@ -64,6 +64,7 @@ bettercad_add_executable(bettercad_tests
         structural/Tet4ElementTests.cpp
         cfd/CfdAnalysisBoundaryTests.cpp
         cfd/CfdDataTests.cpp
+        cfd/CfdFluidTests.cpp
         thermal/ThermalAnalysisBoundaryTests.cpp
         thermal/ThermalAnalysisRunTests.cpp
         thermal/ThermalDataTests.cpp
@@ -182,6 +183,7 @@ bettercad_add_executable(bettercad_tests
         features/MassPropertiesTests.cpp
         features/MaterialCommandTests.cpp
         features/ProvenanceTests.cpp
+        features/FluidPropertyTests.cpp
         features/MaterialAssignmentTests.cpp
         features/MaterialTests.cpp
         features/DatumTests.cpp
@@ -1179,6 +1181,13 @@ if(TARGET bettercad_cli)
         COMMAND "$<TARGET_FILE:bettercad_cli>"
         ARGS "material-completeness|${_mat}/part.bcad|--consumer|thermo_mechanical"
         EXIT_CODE 1 STDOUT_REGEX "thermo_mechanical: incomplete.*missing_property:thermal_expansion")
+    # P19-FLUID-001: a solid with a density is not a fluid. Incompressible flow
+    # asks for the density, which steel has, and a dynamic viscosity, which it does
+    # not -- and ONLY the viscosity is named missing.
+    bettercad_add_process_test(cli.material.completeness.incompressible-flow
+        COMMAND "$<TARGET_FILE:bettercad_cli>"
+        ARGS "material-completeness|${_mat}/part.bcad|--consumer|incompressible_flow"
+        EXIT_CODE 1 STDOUT_REGEX "incompressible_flow: incomplete.*missing_property:dynamic_viscosity")
 
     # --- the same workflow, where a clone makes a designation AMBIGUOUS ---
     #
@@ -1270,6 +1279,7 @@ if(TARGET bettercad_cli)
         cli.material.show.source-is-untouched cli.material.show.derived-is-labelled
         cli.material.show.unknown-is-not-zero cli.material.mass
         cli.material.completeness.ready cli.material.completeness.incomplete
+        cli.material.completeness.incompressible-flow
         cli.material.exit.not-found cli.material.exit.not-a-material
         cli.material.exit.derived-is-not-settable cli.material.exit.unknown-consumer
         cli.material.exit.unknown-property

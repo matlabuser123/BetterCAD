@@ -2074,25 +2074,44 @@ visualisation buffers
 
 Resolve canonical fluid properties for CFD.
 
-* [ ] Define P19 fluid-property requirements
-* [ ] Define density `rho`
-* [ ] Define dynamic viscosity `mu`
-* [ ] Define kinematic viscosity derivation if used
-* [ ] Validate `rho > 0`
-* [ ] Validate `mu > 0`
-* [ ] Reject NaN / Inf
-* [ ] Reject missing fluid
-* [ ] No default air unless explicitly canonical
-* [ ] Preserve fluid material ID
-* [ ] Preserve revision / generation / fingerprint
-* [ ] Fluid edit stales CFD result
-* [ ] Fluid edit does not stale geometry unnecessarily
-* [ ] No duplicate CFD-only material database
-* [ ] SI units explicit
-* [ ] Determinism PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Define P19 fluid-property requirements
+* [x] Define density `rho`
+* [x] Define dynamic viscosity `mu`
+* [x] Define kinematic viscosity derivation if used
+* [x] Validate `rho > 0`
+* [x] Validate `mu > 0`
+* [x] Reject NaN / Inf
+* [x] Reject missing fluid
+* [x] No default air unless explicitly canonical
+* [x] Preserve fluid material ID
+* [x] Preserve revision / generation / fingerprint
+* [x] Fluid edit stales CFD result
+* [x] Fluid edit does not stale geometry unnecessarily
+* [x] No duplicate CFD-only material database
+* [x] SI units explicit
+* [x] Determinism PASS
+* [x] Regression PASS
+* [x] Evidence recorded
 
+```text
+PASS 2026-10-28. Authorized 2026-10-27 ("start P19-FLUID-001"). Qualified
+against c8b53f6 plus the working tree: 5919/5919 x 3 presets, 2783 x 5 in
+two, 0 warnings over 753 objects, 17 stages exit 0, 6h47m34s (first
+attempt), fingerprints before == after. P15 learned a dynamic viscosity
+(ThermalPropertyKind::DynamicViscosity, in Pa s, validated finite and > 0 at
+entry, optional file key "dynamic_viscosity", CLI code) and an
+IncompressibleFlow consumer requiring { density } and { dynamic viscosity }
+and nothing thermal (ADR-062). CFD resolves a CfdFluid (id, revision, rho,
+mu; nu derived, never stored) through P15 only, with no default fluid; a
+missing viscosity is FluidViscosityUnusable; a fluid edit stales a CFD
+result for `fluid` alone and neither the geometry nor the mesh. P19-DATA-001's
+CFD-side validate(CfdFluidProperties) retired as a second copy of P15's rule.
+Adversarial review: independent reviewer 0 blockers, 0 major, 8 minor + 3
+nits disposed; 17 of 18 mutants killed, 1 equivalent recorded. Evidence:
+docs/verification/P19-FLUID-001/.
+
+P19-MESH-001 is NOT AUTHORIZED. Being next in the plan is not permission.
+```
 Recommended v1 units:
 
 ```text

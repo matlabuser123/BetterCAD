@@ -204,10 +204,9 @@ enum class ResultCurrency : std::uint8_t {
 /// gate ADR-060 established is inherited rather than re-asked. It ALSO fails
 /// when the definition's pressure datum is missing (`pressureDatumProblem`), the
 /// one input problem a definition can carry while being storable. It then reads
-/// the fluid material's revision, the analysis and its revision, and the
-/// fingerprint of the definition as it stands. P19-FLUID-001 adds the viscosity
-/// to what it requires, as P18-MAT-001 added the transient properties to
-/// thermal's.
+/// the fluid's identity and revision (from the `CfdFluid` the boundary resolved,
+/// which requires a usable density AND viscosity since P19-FLUID-001), the
+/// analysis and its revision, and the fingerprint of the definition as it stands.
 [[nodiscard]] BETTERCAD_CFD_EXPORT Result<CfdResultSource>
 currentResultSource(const Document& document, const features::Regenerator& regenerator,
                     const meshing::Mesher& mesher, CfdAnalysisId analysis);

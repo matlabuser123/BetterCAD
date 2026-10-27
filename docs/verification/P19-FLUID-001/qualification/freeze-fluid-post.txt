@@ -1,0 +1,90 @@
+﻿P19-FLUID-001 freeze
+HEAD      c8b53f6a76e3088831679084c85e34e66c311e73
+HEAD tree c28a0b4207d455b3fef2e4d0d9a02d3c7b9c808a
+scratch tree 18936e0089916c5139ae24e458ef45aa490489d2
+apps               fc398a3d2e524178cf38e8b667236379d8381086
+include            833e8b294f7b83ac2f926106975a8720afe0532a
+src                27c6be7371eef86e11786172fa4cb0c6bf910a64
+tests              2ce7a53c5b3a9a13d879ead9c7ef7c45595e19bc
+examples           4da234ebf4779f7c16d5df0075f106f7e3d4c958
+cmake              5a382115d7ed7775189d40b55e40f318eaae6cc7
+CMakeLists.txt     3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd
+CMakePresets.json  3229f0f89b236744d7d5c082bed47c28b718288e
+
+== P15_FLUID_PROPERTY  (8 files)
+   include/bettercad/core/materials/ThermalProperties.hpp                                     4de8a5cd0795fcc38804e2ad18629c1d25e31eec
+   src/core/materials/ThermalProperties.cpp                                                   fbb80e724ef3535ee1f3a67e3e68c6a0a005a0fe
+   include/bettercad/core/materials/Completeness.hpp                                          af3c131b178f88499d90e9939033a88c06b236ed
+   src/core/materials/Completeness.cpp                                                        709fa8efe527c4df42dfd77858ed77d8ed5684d0
+   include/bettercad/features/Materials.hpp                                                   35499652bad9756cb043268665eb6bcf78680ff9
+   src/features/material/Materials.cpp                                                        aa4ed063acb6a6da712959c8e27ded0dba63431b
+   src/io/json/MaterialJson.cpp                                                               c8ac1a0c5b4a9b6bc112b7035bba98b63e48d35e
+   apps/bettercad_cli/MaterialVocabulary.cpp                                                  4210207386440ec299d79eed59e93894f0c76436
+P19_FLUID_P15_FLUID_PROPERTY_FINGERPRINT 536d7746a77c1d7f9d07dafc023ab3b846f2d6a4
+
+== CFD_FLUID  (9 files)
+   include/bettercad/cfd/CfdFluid.hpp                                                         d2671a5bb5f2f4fa5a0ba7d51c9f2fc531042af6
+   src/cfd/CfdFluid.cpp                                                                       52259dcca60d46466b0fe42c62d9c8eb94a3f23c
+   include/bettercad/cfd/CfdAnalysis.hpp                                                      6f9d8fe97923254929d98b8deb8f2d2a5ff2dc96
+   src/cfd/CfdAnalysis.cpp                                                                    3ad2f6d4fbff3d1a506c248a6d7eeb83a001876a
+   src/cfd/CfdResult.cpp                                                                      a08673ee4a890b6693adcb8c92fa4319f08e24b5
+   include/bettercad/cfd/CfdResult.hpp                                                        f26ef3dc1c1c0435ccc7570d293c40e586616207
+   include/bettercad/cfd/CfdData.hpp                                                          48a3b6fed8bb5fdbcff104e7721215c8d23e8e09
+   include/bettercad/cfd/CfdAnalysisObject.hpp                                                4913db9830eb57a9f5df0554e950befb1ad4c950
+   src/cfd/CMakeLists.txt                                                                     003dfcfd168b94e0adb1c7c10f34e27d3f8c6c42
+P19_FLUID_CFD_FLUID_FINGERPRINT 72ada103f802a6b114c42c58150ccdbc2f218692
+
+== FLUID_TESTS  (12 files)
+   tests/features/FluidPropertyTests.cpp                                                      a418342fc03049304198b40ef38c4353919f9b53
+   tests/cfd/CfdFluidTests.cpp                                                                2923a5d30767359cf910e3cd3f5f3418a83d9c6e
+   tests/cfd/CfdAnalysisBoundaryTests.cpp                                                     35f6eb99944b8a4689622db2863bb1225f838310
+   tests/cfd/CfdDataTests.cpp                                                                 365c11a75b60e78f3dd6779d2b755427dc70141b
+   tests/features/ProvenanceTests.cpp                                                         10aadea40da4d7a4713fbf2f44d8e601677f656e
+   tests/core/materials/ThermalPropertiesTests.cpp                                            9d568a06d8330f830cd91c55f929255177015ed2
+   tests/io/MaterialFileTests.cpp                                                             7060d0e347388551329d60837f5cf31a38023b96
+   tests/cli/MaterialCliTests.cpp                                                             a5b9d0807f58ce4be2c5df0108966a174af0c1df
+   tests/compile_fail/ProvenanceMisuse.cpp                                                    87fe518674eeacd708fc9edbba3d609affda11db
+   tests/compile_fail/CMakeLists.txt                                                          0503a4dc3bec8897871df13aba7fcbb954293837
+   tests/CMakeLists.txt                                                                       cb2efa05125b97ddc7c66a7d3d4c786dc86b3dce
+   tests/cli/ZeroMatchGuard.cmake                                                             dcebcb33dd47bbfea9a999304ad5dd323e63e378
+P19_FLUID_FLUID_TESTS_FINGERPRINT a4053f97b38df1a89498a8e507e74240c0f133ad
+
+== ADRS  (1 files)
+   docs/architecture/decisions/ADR-062-the-fluid-is-a-p15-material-with-a-dynamic-viscosity-and-an-incompressible-flow-consumer.md b98c432f52d80a294575aebc793aa864c2cef2f8
+P19_FLUID_ADRS_FINGERPRINT 8c20657bb72046f3871c3f91110f626883f99252
+
+== CHANGES against HEAD in the eight qualified paths (git status --short)
+ M apps/bettercad_cli/MaterialVocabulary.cpp
+ M include/bettercad/cfd/CfdAnalysis.hpp
+ M include/bettercad/cfd/CfdAnalysisObject.hpp
+ M include/bettercad/cfd/CfdData.hpp
+ M include/bettercad/cfd/CfdResult.hpp
+ M include/bettercad/core/materials/Completeness.hpp
+ M include/bettercad/core/materials/ThermalProperties.hpp
+ M include/bettercad/features/Materials.hpp
+ M src/cfd/CMakeLists.txt
+ M src/cfd/CfdAnalysis.cpp
+ M src/cfd/CfdData.cpp
+ M src/cfd/CfdResult.cpp
+ M src/core/materials/Completeness.cpp
+ M src/core/materials/ThermalProperties.cpp
+ M src/features/material/Materials.cpp
+ M src/io/json/MaterialJson.cpp
+ M tests/CMakeLists.txt
+ M tests/cfd/CfdAnalysisBoundaryTests.cpp
+ M tests/cfd/CfdDataTests.cpp
+ M tests/cli/MaterialCliTests.cpp
+ M tests/cli/ZeroMatchGuard.cmake
+ M tests/compile_fail/CMakeLists.txt
+ M tests/compile_fail/ProvenanceMisuse.cpp
+ M tests/core/materials/ThermalPropertiesTests.cpp
+ M tests/features/ProvenanceTests.cpp
+ M tests/io/MaterialFileTests.cpp
+?? include/bettercad/cfd/CfdFluid.hpp
+?? src/cfd/CfdFluid.cpp
+?? tests/cfd/CfdFluidTests.cpp
+?? tests/features/FluidPropertyTests.cpp
+== other uncommitted paths
+?? .claude/
+?? docs/architecture/decisions/ADR-062-the-fluid-is-a-p15-material-with-a-dynamic-viscosity-and-an-incompressible-flow-consumer.md
+?? docs/verification/P19-FLUID-001/

@@ -395,6 +395,14 @@ set(_filters
     "unit\\.CfdData_" 39
     "unit\\.CfdData_(TheFingerprintIsAGoldenFunctionOfTheText|TheSecondGoldenCoversEveryKindAndTheTransientLines|TheFingerprintCoversEveryField|AnEditTypedBackKeepsTheResultStale)$" 4
     "compile_fail\\.cfdids\\." 28
+    # P19-FLUID-001. P15's dynamic viscosity and incompressible-flow consumer, the CFD fluid resolution, the CLI path, and the renamed
+    # guard that keeps an undecided (turbulent) flow consumer out.
+    "unit\\.FluidProperty_" 11
+    "unit\\.CfdFluid_" 13
+    "unit\\.CfdInput_RefusesADensityWithNoViscosity$" 1
+    "unit\\.MaterialCli_Viscosity_" 1
+    "cli\\.material\\.completeness\\.incompressible-flow$" 1
+    "compile_fail\\.prov\\.no-turbulent-flow-consumer$" 1
     # P18-QUAL-001. The final-gate cases (the authority matrix over every reference document, the currentness matrix in one sequence and its
     # edit-back path, a failed regeneration, the unforgeable proof of an accepted input, the units of the transient sum), and one test for
     # each defect the final audit found and fixed or each gap it closed, each at its own name so a rename or a drop is a failure.

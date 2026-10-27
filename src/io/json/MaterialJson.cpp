@@ -65,12 +65,17 @@ constexpr std::array<std::pair<MechanicalPropertyKind, std::string_view>, 9> kMe
     {MechanicalPropertyKind::Hardness, "hardness"},
 }};
 
-constexpr std::array<std::pair<ThermalPropertyKind, std::string_view>, 5> kThermalKeys{{
+// The dynamic viscosity (P19-FLUID-001) is an OPTIONAL key like every other: a
+// file without it reads as Unknown, so every older document loads unchanged and no
+// format version moves (the policy MaterialFileTests pins). An older build refuses
+// a file that carries it, by name, as an unknown thermal property.
+constexpr std::array<std::pair<ThermalPropertyKind, std::string_view>, 6> kThermalKeys{{
     {ThermalPropertyKind::ThermalConductivity, "thermal_conductivity"},
     {ThermalPropertyKind::SpecificHeatCapacity, "specific_heat_capacity"},
     {ThermalPropertyKind::ThermalExpansion, "thermal_expansion"},
     {ThermalPropertyKind::MeltingTemperature, "melting_temperature"},
     {ThermalPropertyKind::ElectricalResistivity, "electrical_resistivity"},
+    {ThermalPropertyKind::DynamicViscosity, "dynamic_viscosity"},
 }};
 
 constexpr std::array<std::pair<SourceKind, std::string_view>, 8> kSourceKinds{{
@@ -406,6 +411,11 @@ template <typename Value>
         put(ThermalPropertyKind::ElectricalResistivity,
             propertyToJson(properties.electricalResistivity, value->ohmMetres()));
     }
+    if (const auto value = properties.dynamicViscosity.value()) {
+        // In Pa s, the coherent SI unit, like every value in the file. The kinematic
+        // viscosity is never written: it is derived, mu / rho.
+        put(ThermalPropertyKind::DynamicViscosity, propertyToJson(properties.dynamicViscosity, value->si()));
+    }
     return json;
 }
 
@@ -471,6 +481,13 @@ template <typename Value>
     if (*resistivity) {
         properties.electricalResistivity = knownFrom(
             **resistivity, materials::ElectricalResistivity::ofOhmMetres((*resistivity)->value));
+    }
+    auto viscosity = read(ThermalPropertyKind::DynamicViscosity);
+    if (!viscosity) {
+        return std::unexpected(viscosity.error());
+    }
+    if (*viscosity) {
+        properties.dynamicViscosity = knownFrom(**viscosity, DynamicViscosity::fromSi((*viscosity)->value));
     }
     return properties;
 }

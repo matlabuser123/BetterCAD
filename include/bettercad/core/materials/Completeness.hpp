@@ -42,12 +42,12 @@ namespace bettercad::materials {
 /// because the requirement is a property of the physics rather than of whoever
 /// implements it.
 ///
-/// Only consumers the roadmap actually has. P19 CFD is deliberately ABSENT: ADR-028
-/// names it as a future consumer but defines no requirements for it, and inventing
-/// them now would be guessing at physics. The mechanism extends to it without a
-/// second framework -- a requirement is a list of property kinds -- though a CFD
-/// consumer will also need a dynamic-viscosity property, which no material carries
-/// yet.
+/// Only consumers the roadmap actually has. P15 left CFD out until its physics
+/// was decided; ADR-058 decided it (laminar, incompressible, Newtonian, constant
+/// properties) and P19-FLUID-001 added the consumer and the dynamic viscosity it
+/// needs, through this same mechanism and no second framework (ADR-062).
+/// Turbulent, compressible or thermal flow is NOT a consumer: each is a later,
+/// separate decision.
 enum class ConsumerKind : std::uint8_t {
     /// Mass, centre of mass and inertia (P15-MASS-001).
     MassProperties,
@@ -64,6 +64,9 @@ enum class ConsumerKind : std::uint8_t {
     ThermalTransient,
     /// Thermal expansion coupled to elasticity.
     ThermoMechanical,
+    /// Laminar incompressible Newtonian flow (P19, ADR-058): density and dynamic
+    /// viscosity, and nothing else.
+    IncompressibleFlow,
 };
 
 /// The consumers, in reporting order.

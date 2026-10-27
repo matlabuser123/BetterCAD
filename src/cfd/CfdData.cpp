@@ -298,20 +298,6 @@ Result<void> validate(const CfdOutputSettings& settings) {
 // Derived value types
 // --------------------------------------------------------------------------
 
-Result<void> validate(const CfdFluidProperties& fluid) {
-    if (!isFinite(fluid.density) || fluid.density.si() <= 0.0) {
-        return makeError(ErrorCode::InvalidArgument,
-                         std::format("the fluid density must be finite and positive, not {} kg/m^3",
-                                     fluid.density.si()));
-    }
-    if (!isFinite(fluid.viscosity) || fluid.viscosity.si() <= 0.0) {
-        return makeError(ErrorCode::InvalidArgument,
-                         std::format("the dynamic viscosity must be finite and positive, not {} Pa s",
-                                     fluid.viscosity.si()));
-    }
-    return Result<void>{};
-}
-
 bool isWellFormed(const CfdResiduals& residuals) noexcept {
     for (const double value : {residuals.momentumX, residuals.momentumY, residuals.momentumZ, residuals.continuity}) {
         if (!std::isfinite(value) || value < 0.0) {

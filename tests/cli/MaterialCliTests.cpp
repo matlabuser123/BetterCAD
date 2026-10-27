@@ -192,6 +192,9 @@ TEST_CASE("MaterialCli_PropertyCodes_AreTheKeysTheDocumentFormatAlreadyUses", "[
     definition.thermal.electricalResistivity =
         materials::MaterialProperty<materials::ElectricalResistivity>::known(
             materials::ElectricalResistivity::ofOhmMetres(1.43e-7));
+    // Synthetic: a code test needs every storable property, not a real fluid.
+    definition.thermal.dynamicViscosity =
+        materials::MaterialProperty<DynamicViscosity>::known(DynamicViscosity::fromSi(1.0e-3));
     REQUIRE(features::createMaterial(document, "Steel", definition).has_value());
     save(document, path);
 
@@ -200,7 +203,8 @@ TEST_CASE("MaterialCli_PropertyCodes_AreTheKeysTheDocumentFormatAlreadyUses", "[
     for (const std::string_view code :
          {"density", "youngs_modulus", "poisson_ratio", "yield_strength", "ultimate_tensile_strength",
           "ultimate_compressive_strength", "shear_strength", "elongation", "hardness", "thermal_conductivity",
-          "specific_heat_capacity", "thermal_expansion", "melting_temperature", "electrical_resistivity"}) {
+          "specific_heat_capacity", "thermal_expansion", "melting_temperature", "electrical_resistivity",
+          "dynamic_viscosity"}) {
         INFO("property code " << code);
         REQUIRE_THAT(text, ContainsSubstring(std::string{"\""} + std::string{code} + "\""));
     }
@@ -902,4 +906,64 @@ TEST_CASE("MaterialCli_Report_IsDeterministic", "[cli][material][determinism]") 
     REQUIRE(first.out == second.out);
     // Ascending ID, which is the creation order and not the alphabet.
     REQUIRE(first.out.find("Zinc") < first.out.find("Aluminium"));
+}
+
+// --- the dynamic viscosity (P19-FLUID-001) --------------------------------------
+
+TEST_CASE("MaterialCli_Viscosity_IsSetInItsUnitAndReadBackByTheCore", "[cli][material][fluid]") {
+    // The CLI writes P15's one viscosity, through the same setter, in Pa s: a
+    // value with a unit is converted, a bare number is SI (Pa s), and the core
+    // reads back exactly what was typed.
+    TempDir dir;
+    const std::string path = documentPath(dir, "fluid.bcad");
+    Document seed{"Part"};
+    const MaterialId id = features::createMaterial(seed, "Water", withDensity(Density::fromSi(998.0))).value();
+    REQUIRE(features::assignMaterial(seed, id).has_value());
+    save(seed, path);
+
+    SECTION("with a unit") {
+        const CliRun set = runCliCommand({"material-set", path, "Water", "dynamic_viscosity", "1.002 mPa s"});
+        INFO(set.err);
+        REQUIRE(set.exitCode == ExitCode::Success);
+        const Document loaded = load(path);
+        const auto mu = features::findMaterial(loaded, id)->definition().thermal.dynamicViscosity.value();
+        REQUIRE(mu.has_value());
+        REQUIRE_THAT(mu->si(), Catch::Matchers::WithinRel(1.002e-3, 1e-12));
+        // And the flow consumer is now ready, as the core says.
+        const auto core = features::materialCompleteness(loaded, id, materials::ConsumerKind::IncompressibleFlow);
+        REQUIRE(core.has_value());
+        REQUIRE(core->ready());
+        const CliRun ready = runCliCommand({"material-completeness", path, "--consumer", "incompressible_flow"});
+        REQUIRE(ready.exitCode == ExitCode::Success);
+        REQUIRE_THAT(ready.out, ContainsSubstring("incompressible_flow: ready"));
+        // And it is shown under its code, in Pa s.
+        const CliRun shown = runCliCommand({"material-show", path, "Water"});
+        REQUIRE(shown.exitCode == ExitCode::Success);
+        REQUIRE_THAT(shown.out, ContainsSubstring("dynamic_viscosity"));
+        // In Pa s exactly -- not mPa s, which would also contain "Pa s".
+        REQUIRE_THAT(shown.out, ContainsSubstring("0.001002 Pa s"));
+        REQUIRE_THAT(shown.out, !ContainsSubstring("mPa s"));
+    }
+    SECTION("a bare number is pascal seconds") {
+        REQUIRE(runCliCommand({"material-set", path, "Water", "dynamic_viscosity", "0.002"}).exitCode ==
+                ExitCode::Success);
+        const Document loaded = load(path);
+        REQUIRE(features::findMaterial(loaded, id)->definition().thermal.dynamicViscosity.value() ==
+                DynamicViscosity::fromSi(0.002));
+    }
+    SECTION("an unusable value is refused and the file is untouched") {
+        const std::string before = test::readFile(std::filesystem::path{path});
+        for (const std::string_view bad : {"0", "-1", "nan"}) {
+            INFO("value " << bad);
+            const CliRun refused = runCliCommand({"material-set", path, "Water", "dynamic_viscosity", std::string{bad}});
+            REQUIRE(refused.exitCode != ExitCode::Success);
+        }
+        REQUIRE(test::readFile(std::filesystem::path{path}) == before);
+    }
+    SECTION("without a viscosity the flow consumer is incomplete and names it") {
+        const CliRun run = runCliCommand({"material-completeness", path, "--consumer", "incompressible_flow"});
+        REQUIRE(run.exitCode == ExitCode::Failure);
+        REQUIRE_THAT(run.out, ContainsSubstring("missing_property:dynamic_viscosity"));
+        REQUIRE_THAT(run.out, !ContainsSubstring("missing_property:density"));
+    }
 }

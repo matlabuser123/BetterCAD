@@ -25,6 +25,7 @@
 #include <bettercad/core/document/Commands.hpp>
 #include <bettercad/core/document/Document.hpp>
 #include <bettercad/core/materials/MechanicalProperties.hpp>
+#include <bettercad/core/materials/ThermalProperties.hpp>
 #include <bettercad/core/units/Literals.hpp>
 #include <bettercad/features/ExtrudeFeature.hpp>
 #include <bettercad/features/Material.hpp>
@@ -140,6 +141,8 @@ struct FlowStudy {
             features::MaterialDefinition water;
             water.designation = "Water";
             water.mechanical.density = materials::MaterialProperty<Density>::known(998_kg_per_m3);
+            // Since P19-FLUID-001 a fluid needs its viscosity, or nothing is Ready.
+            water.thermal.dynamicViscosity = materials::MaterialProperty<DynamicViscosity>::known(1.002_mPa_s);
             const Result<MaterialId> id = features::createMaterial(document, "Water", water);
             REQUIRE(id.has_value());
             material = *id;
@@ -436,17 +439,13 @@ TEST_CASE("CfdData_KinematicViscosityIsDerivedNotStored", "[cfd][data][fluid]") 
     static_assert(sizeof(CfdFluidProperties) == sizeof(PermittedFluid));
 
     const CfdFluidProperties water{.density = 998_kg_per_m3, .viscosity = 1.002_mPa_s};
-    REQUIRE(cfd::validate(water).has_value());
     CHECK_THAT(water.kinematicViscosity().si(), WithinRel(1.002e-3 / 998.0, 1e-15));
 
-    CHECK_THAT(refusalOf(cfd::validate(CfdFluidProperties{.density = 0_kg_per_m3, .viscosity = 1_mPa_s})).message,
-               ContainsSubstring("density"));
-    CHECK_THAT(refusalOf(cfd::validate(CfdFluidProperties{.density = 998_kg_per_m3, .viscosity = 0_Pa_s})).message,
-               ContainsSubstring("viscosity"));
-    CHECK_FALSE(cfd::validate(CfdFluidProperties{.density = Density::fromSi(kNaN), .viscosity = 1_mPa_s}).has_value());
-    CHECK_FALSE(cfd::validate(CfdFluidProperties{.density = 998_kg_per_m3, .viscosity = DynamicViscosity::fromSi(kInf)})
-                    .has_value());
-    CHECK_FALSE(cfd::validate(CfdFluidProperties{.density = Density::fromSi(-1.0), .viscosity = 1_mPa_s}).has_value());
+    // NO CFD-SIDE VALIDATION OF THESE VALUES (P19-FLUID-001, ADR-062). P19-DATA-001
+    // gave this record its own "finite and positive" check; P19-FLUID-001 RETIRED it,
+    // because it restated P15's rule in a second place. The only way a solver now
+    // obtains rho and mu is a `CfdFluid`, which only `resolveCfdFluid` makes, from
+    // values P15 refused to store unless usable (tests/cfd/CfdFluidTests.cpp).
 }
 
 TEST_CASE("CfdData_TheModeIsAnEnumNotABool", "[cfd][data][convention]") {

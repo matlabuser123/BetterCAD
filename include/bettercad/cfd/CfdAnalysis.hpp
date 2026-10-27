@@ -33,6 +33,7 @@
 // See ADR-058 (what the solver is), ADR-059 (the module and its layer) and ADR-060
 // (this boundary, and the fluid as a P15 material).
 
+#include <bettercad/cfd/CfdFluid.hpp>
 #include <bettercad/cfd/Export.hpp>
 #include <bettercad/core/Error.hpp>
 #include <bettercad/core/Id.hpp>
@@ -68,16 +69,17 @@ namespace bettercad::cfd {
 /// cannot occur either. This boundary takes mesh, map and quality from one lookup,
 /// which is why a caller cannot mismatch them.
 ///
-/// WHAT IS NOT HERE YET, and why. A fluid with no dynamic viscosity, a boundary
-/// condition that does not resolve, a mesh whose finite-volume quality a CFD
-/// analysis should refuse, a pressure datum that is missing or overdetermined,
-/// prescribed fluxes that do not balance, a system that is not well posed, and a
-/// time step that is not positive are all real input problems. P19-DATA-001
-/// defined the canonical records some of them are about (the boundary
-/// conditions, the reference pressure, `pressureDatumProblem`, the transient
-/// settings, whose own validation already refuses a non-positive step); the
-/// checks against a document and a mesh belong to `P19-FLUID-001`, `P19-BC-001`,
-/// `P19-MESH-001`, `P19-VALID-001` and `P19-TRANSIENT-001`.
+/// WHAT IS NOT HERE YET, and why. A boundary condition that does not resolve, a
+/// mesh whose finite-volume quality a CFD analysis should refuse, prescribed
+/// fluxes that do not balance, a system that is not well posed, and a time step
+/// that is not positive are all real input problems. P19-DATA-001 defined the
+/// canonical records some of them are about (the boundary conditions, the
+/// reference pressure, `pressureDatumProblem`, the transient settings, whose own
+/// validation already refuses a non-positive step; a missing pressure datum
+/// already makes an analysis InputsUnavailable); the checks against a document and
+/// a mesh belong to `P19-BC-001`, `P19-MESH-001`, `P19-VALID-001` and
+/// `P19-TRANSIENT-001`. A fluid with no dynamic viscosity IS here
+/// (`FluidViscosityUnusable`, P19-FLUID-001).
 enum class InputProblem : std::uint8_t {
     /// The document has no mesh control with that id.
     ControlNotFound,
@@ -101,10 +103,14 @@ enum class InputProblem : std::uint8_t {
     /// should be.
     NoMaterialAssigned,
     /// A material resolves, but it has no usable density. P15 decides that, not
-    /// P19: `requireDensity` refuses a missing, non-finite or non-positive density
-    /// and names the material. The dynamic viscosity a CFD analysis also needs is
-    /// `P19-FLUID-001`'s: no material carries one yet.
+    /// P19, and its diagnostic names the material -- and the viscosity too, when
+    /// that is missing as well.
     FluidDensityUnusable,
+    /// The density is usable, the dynamic viscosity is not: absent, or not a usable
+    /// value (P19-FLUID-001). P15 decides, through
+    /// `requireIncompressibleFlowProperties`. Appended, so every earlier problem
+    /// keeps its position.
+    FluidViscosityUnusable,
 };
 
 [[nodiscard]] BETTERCAD_CFD_EXPORT std::string_view toString(InputProblem problem) noexcept;
@@ -127,11 +133,11 @@ enum class InputProblem : std::uint8_t {
 /// a mesh is held for the control and its currency is Current
 /// the mapping and the quality report came from that same mesh (three accessors
 ///   keyed by the same control, read from one held entry)
-/// the document's material resolves and yields a usable density
+/// the document's material resolves and yields a usable density AND a usable
+///   dynamic viscosity (P19-FLUID-001), held as a `CfdFluid`
 /// ```
 ///
-/// WHAT IT DOES NOT PROVE. That the fluid has a viscosity (`P19-FLUID-001`), that
-/// the mesh is good enough for a finite-volume method (`P19-MESH-001`,
+/// WHAT IT DOES NOT PROVE. That the mesh is good enough for a finite-volume method (`P19-MESH-001`,
 /// `P19-VALID-001`), that boundary conditions resolve (`P19-BC-001`), that the
 /// system is well posed, that a solve converged or that mass is conserved. Those
 /// gates land in a STAGED validation entry that runs after this boundary
@@ -170,15 +176,18 @@ public:
     /// `P19-VALID-001` owns the CFD acceptance policy and reads `summaries`.
     [[nodiscard]] const meshing::MeshQualityReport& quality() const noexcept { return *quality_; }
 
-    /// The P15 material the density was resolved from (the document's single
-    /// assignment in v1). Carried so that two fluids of equal density are still two
-    /// different sources, and so a later source record can name it.
-    [[nodiscard]] MaterialId materialId() const noexcept { return material_; }
+    /// The fluid, resolved through P15 (`resolveCfdFluid`): the material's id and
+    /// revision, rho and mu BY VALUE, nu derived. This module stores no other fluid
+    /// data: ADR-028's hard rule is that a downstream solver maintains no second
+    /// authoritative material database. Constant (ADR-058).
+    [[nodiscard]] const CfdFluid& fluid() const noexcept { return fluid_; }
 
-    /// The fluid's density, resolved through P15. BY VALUE, and this module stores
-    /// no other fluid data: ADR-028's hard rule is that a downstream solver
-    /// maintains no second authoritative material database. Constant (ADR-058).
-    [[nodiscard]] Density density() const noexcept { return density_; }
+    /// The P15 material the fluid was resolved from (the document's single
+    /// assignment in v1). The same as `fluid().id()`.
+    [[nodiscard]] MaterialId materialId() const noexcept { return fluid_.id(); }
+
+    /// The fluid's density. The same as `fluid().density()`.
+    [[nodiscard]] Density density() const noexcept { return fluid_.density(); }
 
     /// The geometry stamp the mesh was built from, and which was still current when
     /// this input was validated.
@@ -189,14 +198,13 @@ public:
 private:
     CfdModel(ObjectId body, MeshControlId control, const meshing::VolumeMesh& mesh,
              const meshing::GeometryMeshMap& map, const meshing::MeshQualityReport& quality,
-             MaterialId material, Density density, meshing::GeometryRevision geometryRevision) noexcept
+             CfdFluid fluid, meshing::GeometryRevision geometryRevision) noexcept
         : body_(body)
         , control_(control)
         , mesh_(&mesh)
         , map_(&map)
         , quality_(&quality)
-        , material_(material)
-        , density_(density)
+        , fluid_(std::move(fluid))
         , geometryRevision_(std::move(geometryRevision)) {}
 
     /// The one function permitted to build one. Possession is the evidence only
@@ -210,8 +218,7 @@ private:
     const meshing::VolumeMesh* mesh_ = nullptr;
     const meshing::GeometryMeshMap* map_ = nullptr;
     const meshing::MeshQualityReport* quality_ = nullptr;
-    MaterialId material_{};
-    Density density_{};
+    CfdFluid fluid_;
     meshing::GeometryRevision geometryRevision_{};
 };
 

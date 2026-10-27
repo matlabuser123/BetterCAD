@@ -15,6 +15,15 @@
 // boundary conditions: P18 owns thermal analysis and consumes this through the
 // requirement functions in features/Materials.hpp.
 //
+// THE DYNAMIC VISCOSITY IS HERE TOO (P19-FLUID-001, ADR-062). ADR-027 named it
+// canonical for P19; this group is the material's non-mechanical physical
+// properties -- it already holds an electrical resistivity -- and a viscosity is a
+// transport property beside the conductivity. One home, the same validation, the
+// same provenance, the same file section and the same completeness machinery as
+// every other property here, rather than a third group that every seam of P15
+// would have to learn. A fluid is a material that carries a viscosity; there is
+// no "is a fluid" flag and no separate fluid database (ADR-028, ADR-060).
+//
 // DENSITY IS NOT HERE, and that is deliberate. A material has ONE density, and it
 // lives in MechanicalProperties because P15-MECH-001 put it there. Thermal
 // consumers read that same property through features::requireDensity() and
@@ -35,6 +44,8 @@ enum class ThermalPropertyKind : std::uint8_t {
     ThermalExpansion,
     MeltingTemperature,
     ElectricalResistivity,
+    /// Appended, so every existing kind keeps its reporting position.
+    DynamicViscosity,
 };
 
 /// The kinds, in reporting order.
@@ -69,6 +80,12 @@ struct ThermalProperties {
     /// than a Quantity (ADR-029): the dimension system has no electric-current
     /// exponent, so this one carries no dimensional checking.
     MaterialProperty<materials::ElectricalResistivity> electricalResistivity{};
+    /// mu, in Pa s = kg/(m s): the NEWTONIAN dynamic viscosity of a fluid, a
+    /// constant (ADR-058). Finite and strictly positive -- a zero viscosity is an
+    /// inviscid fluid, which no consumer solves. The KINEMATIC viscosity nu = mu /
+    /// rho is never stored: it is derived from this and the one density, so it
+    /// cannot disagree with them (ADR-027, ADR-058).
+    MaterialProperty<DynamicViscosity> dynamicViscosity{};
 
     friend bool operator==(const ThermalProperties&, const ThermalProperties&) = default;
 };
@@ -100,6 +117,12 @@ hasSpecificHeatCapacity(const ThermalProperties& properties);
 /// Whether the thermal expansion coefficient is Known and usable.
 [[nodiscard]] BETTERCAD_CORE_EXPORT bool
 hasThermalExpansion(const ThermalProperties& properties);
+
+/// Whether the dynamic viscosity is Known and usable. Incompressible flow needs
+/// it AND the density, which lives in the mechanical half, so the whole question
+/// is features::requireIncompressibleFlowProperties()'s.
+[[nodiscard]] BETTERCAD_CORE_EXPORT bool
+hasDynamicViscosity(const ThermalProperties& properties);
 
 // ---------------------------------------------------------------------------
 // The contract a temperature-dependent property will follow (ADR-027).

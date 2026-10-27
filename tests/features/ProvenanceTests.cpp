@@ -132,6 +132,9 @@ MaterialDefinition characterised() {
     definition.thermal.electricalResistivity =
         MaterialProperty<materials::ElectricalResistivity>::known(
             materials::ElectricalResistivity::ofOhmMetres(3.99e-8));
+    // Synthetic, like everything here: a material need not be a real fluid to
+    // carry a viscosity, and this one must carry every stored property.
+    definition.thermal.dynamicViscosity = MaterialProperty<DynamicViscosity>::known(DynamicViscosity::fromSi(1.0e-3));
     return definition;
 }
 
@@ -715,6 +718,11 @@ TEST_CASE("Provenance_ConsumerRequirementsAreExactAndDoNotOverreach", "[features
     CHECK(required(ConsumerKind::ThermoMechanical).thermal ==
           std::vector{Therm::ThermalExpansion});
 
+    // Incompressible flow (P19-FLUID-001): the density and the dynamic viscosity,
+    // and NOTHING thermal -- the fluid of v1 is isothermal.
+    CHECK(required(ConsumerKind::IncompressibleFlow).mechanical == std::vector{Mech::Density});
+    CHECK(required(ConsumerKind::IncompressibleFlow).thermal == std::vector{Therm::DynamicViscosity});
+
     // NO consumer requires a derived modulus: for an isotropic material both are
     // exactly determined by E and nu, so requiring the independent pair is the
     // honest statement of what is needed.
@@ -733,7 +741,7 @@ TEST_CASE("Provenance_ConsumerRequirementsAreExactAndDoNotOverreach", "[features
     }
     std::ranges::sort(names);
     CHECK(std::ranges::adjacent_find(names) == names.end());
-    CHECK(names.size() == 7);
+    CHECK(names.size() == 8);
 }
 
 TEST_CASE("Provenance_TheRequirementsTableAgreesWithTheFunctionsConsumersActuallyCall",
@@ -743,7 +751,7 @@ TEST_CASE("Provenance_TheRequirementsTableAgreesWithTheFunctionsConsumersActuall
     // call. If the two disagreed, a report would say Ready and the call would fail.
     //
     // So for each consumer, each required property is removed in turn and BOTH must
-    // then object. Six of the seven consumers have a runtime function today;
+    // then object. Seven of the eight consumers have a runtime function today;
     // FeaYieldStrength has none yet, because no yield consumer exists, and that is
     // recorded rather than faked.
     using Mech = MechanicalPropertyKind;
@@ -777,6 +785,10 @@ TEST_CASE("Provenance_TheRequirementsTableAgreesWithTheFunctionsConsumersActuall
          [](const Document& d, MaterialId i) {
              return features::requireLinearElasticConstants(d, i).has_value() &&
                     features::requireThermalExpansion(d, i).has_value();
+         }},
+        {ConsumerKind::IncompressibleFlow,
+         [](const Document& d, MaterialId i) {
+             return features::requireIncompressibleFlowProperties(d, i).has_value();
          }},
     };
 

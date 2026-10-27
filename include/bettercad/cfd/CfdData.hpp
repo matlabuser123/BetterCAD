@@ -535,9 +535,9 @@ struct CfdOutputSettings {
 /// Newtonian fluid with a constant density and a constant dynamic viscosity.
 ///
 /// DERIVED, NEVER CANONICAL. Both values are resolved from the document's P15
-/// material (ADR-060) every time they are needed -- the density today through
-/// `requireDensity`, the viscosity once P19-FLUID-001 gives P15 one -- and are
-/// never stored in a definition, a file or a command. The kinematic viscosity
+/// material (ADR-060) every time they are needed -- both through
+/// `requireIncompressibleFlowProperties`, by `resolveCfdFluid` (P19-FLUID-001) --
+/// and are never stored in a definition, a file or a command. The kinematic viscosity
 /// is computed, never held, so it cannot disagree with the two it comes from.
 struct CfdFluidProperties {
     Density density{};
@@ -549,9 +549,11 @@ struct CfdFluidProperties {
     friend bool operator==(const CfdFluidProperties&, const CfdFluidProperties&) = default;
 };
 
-/// Both finite and positive. A zero viscosity is an inviscid fluid, which v1
-/// does not solve; a zero density divides.
-[[nodiscard]] BETTERCAD_CFD_EXPORT Result<void> validate(const CfdFluidProperties& fluid);
+// THERE IS NO `validate(CfdFluidProperties)`. P19-DATA-001 had one; P19-FLUID-001
+// retired it (ADR-062 §3) because it restated P15's "finite and positive" rule in a
+// second place. Usable values are P15's to guarantee: a solver obtains rho and mu
+// only through a `CfdFluid`, which only `resolveCfdFluid` makes, from values P15
+// refuses to store unless usable.
 
 /// The normalised residuals of one outer iteration: one per momentum component,
 /// in `VectorComponent` order, and continuity. Dimensionless.

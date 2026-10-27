@@ -17,6 +17,7 @@ constexpr ThermalPropertyKind kKinds[] = {
     ThermalPropertyKind::ThermalExpansion,
     ThermalPropertyKind::MeltingTemperature,
     ThermalPropertyKind::ElectricalResistivity,
+    ThermalPropertyKind::DynamicViscosity,
 };
 
 /// The invariants a tabulated property will have to satisfy. Text, so a test can
@@ -89,6 +90,8 @@ std::string_view toString(ThermalPropertyKind kind) noexcept {
         return "melting temperature";
     case ThermalPropertyKind::ElectricalResistivity:
         return "electrical resistivity";
+    case ThermalPropertyKind::DynamicViscosity:
+        return "dynamic viscosity";
     }
     return "unknown property";
 }
@@ -129,9 +132,14 @@ Result<void> validate(const ThermalProperties& properties) {
     checkNotDerived(properties.thermalExpansion, "thermal expansion coefficient", problems);
     checkNotDerived(properties.meltingTemperature, "melting temperature", problems);
     checkNotDerived(properties.electricalResistivity, "electrical resistivity", problems);
+    checkNotDerived(properties.dynamicViscosity, "dynamic viscosity", problems);
 
     checkPositive(properties.thermalConductivity, "thermal conductivity", problems);
     checkPositive(properties.specificHeatCapacity, "specific heat capacity", problems);
+    // mu > 0, finite. Zero is an inviscid fluid and negative is not a viscosity;
+    // no upper bound, by the same policy as every other property here (a
+    // polymer melt's viscosity is twelve orders above a gas's).
+    checkPositive(properties.dynamicViscosity, "dynamic viscosity", problems);
 
     // The thermal expansion coefficient is checked for FINITENESS ONLY. Negative
     // thermal expansion is real -- some materials contract when heated -- so a
@@ -174,6 +182,7 @@ Result<void> validate(const ThermalProperties& properties) {
                               problems);
     checkReferenceTemperature(properties.meltingTemperature, "melting temperature", problems);
     checkReferenceTemperature(properties.electricalResistivity, "electrical resistivity", problems);
+    checkReferenceTemperature(properties.dynamicViscosity, "dynamic viscosity", problems);
 
     if (problems.empty()) {
         return {};
@@ -202,6 +211,11 @@ bool hasSpecificHeatCapacity(const ThermalProperties& properties) {
 bool hasThermalExpansion(const ThermalProperties& properties) {
     const std::optional<ThermalExpansionCoefficient> alpha = properties.thermalExpansion.value();
     return alpha && isFinite(*alpha);
+}
+
+bool hasDynamicViscosity(const ThermalProperties& properties) {
+    const std::optional<DynamicViscosity> mu = properties.dynamicViscosity.value();
+    return mu && isFinite(*mu) && mu->si() > 0.0;
 }
 
 } // namespace bettercad::materials

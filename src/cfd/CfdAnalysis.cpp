@@ -24,8 +24,8 @@ struct Prepared {
     const meshing::VolumeMesh* mesh = nullptr;
     const meshing::GeometryMeshMap* map = nullptr;
     const meshing::MeshQualityReport* quality = nullptr;
-    MaterialId material{};
-    Density density{};
+    /// Engaged exactly when `problem` is not.
+    std::optional<CfdFluid> fluid{};
     meshing::GeometryRevision revision{};
 };
 
@@ -98,19 +98,22 @@ struct Prepared {
                         .error());
     }
 
-    // THE FLUID, THROUGH P15 AND ONLY THROUGH P15. ADR-028: a downstream solver
-    // holds no material data of its own, so there is no typical density to fall back
-    // to here. P15 already refuses a missing, non-finite or non-positive density and
-    // names the material. The dynamic viscosity a CFD analysis also needs is
-    // P19-FLUID-001's: no material carries one yet, and this boundary says so in
-    // its header rather than pretending to have checked it.
-    const Result<const features::Material*> material = features::requireEffectiveMaterial(document);
-    if (!material.has_value()) {
-        return fail(InputProblem::NoMaterialAssigned, material.error());
-    }
-    Result<Density> density = features::requireDensity(document, (*material)->materialId());
-    if (!density.has_value()) {
-        return fail(InputProblem::FluidDensityUnusable, density.error());
+    // THE FLUID, THROUGH P15 AND ONLY THROUGH P15 (P19-FLUID-001). ADR-028: a
+    // downstream solver holds no material data of its own, so there is no typical
+    // density or viscosity to fall back to here. `resolveCfdFluid` asks P15 for
+    // the incompressible-flow consumer's properties -- rho and mu, every missing
+    // one named at once -- and says which category the failure is.
+    Result<CfdFluid> fluid = resolveCfdFluid(document);
+    if (!fluid.has_value()) {
+        switch (*cfdFluidProblem(document)) {
+        case FluidProblem::NoMaterialAssigned:
+            return fail(InputProblem::NoMaterialAssigned, fluid.error());
+        case FluidProblem::DensityUnavailable:
+            return fail(InputProblem::FluidDensityUnusable, fluid.error());
+        case FluidProblem::ViscosityUnavailable:
+            break;
+        }
+        return fail(InputProblem::FluidViscosityUnusable, fluid.error());
     }
 
     return Prepared{.problem = std::nullopt,
@@ -119,8 +122,7 @@ struct Prepared {
                     .mesh = mesh,
                     .map = map,
                     .quality = quality,
-                    .material = (*material)->materialId(),
-                    .density = *density,
+                    .fluid = std::move(*fluid),
                     .revision = meshing::geometryRevision(document, body)};
 }
 
@@ -142,6 +144,8 @@ std::string_view toString(InputProblem problem) noexcept {
         return "no_material_assigned";
     case InputProblem::FluidDensityUnusable:
         return "fluid_density_unusable";
+    case InputProblem::FluidViscosityUnusable:
+        return "fluid_viscosity_unusable";
     }
     return "unknown";
 }
@@ -153,7 +157,7 @@ Result<CfdModel> requireCfdModel(const Document& document, const features::Regen
         return std::unexpected(std::move(prepared.error));
     }
     return CfdModel(prepared.body, control, *prepared.mesh, *prepared.map, *prepared.quality,
-                    prepared.material, prepared.density, std::move(prepared.revision));
+                    std::move(*prepared.fluid), std::move(prepared.revision));
 }
 
 std::optional<InputProblem> cfdInputProblem(const Document& document,

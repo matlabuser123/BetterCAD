@@ -177,6 +177,8 @@ void clearStaleThermalProvenance(const materials::ThermalProperties& before,
                 return before.meltingTemperature != after.meltingTemperature;
             case Kind::ElectricalResistivity:
                 return before.electricalResistivity != after.electricalResistivity;
+            case Kind::DynamicViscosity:
+                return before.dynamicViscosity != after.dynamicViscosity;
         }
         return false;
     };
@@ -382,6 +384,68 @@ Result<TransientConductionProperties> requireTransientConductionProperties(const
     return properties;
 }
 
+Result<DynamicViscosity> requireDynamicViscosity(const Document& document, MaterialId id) {
+    const Material* material = findMaterial(document, id);
+    if (material == nullptr) {
+        return makeError(ErrorCode::NotFound, std::format("there is no material {}", id));
+    }
+    const std::optional<DynamicViscosity> mu = material->definition().thermal.dynamicViscosity.value();
+    if (!mu) {
+        return makeError(ErrorCode::FailedPrecondition,
+                         std::format("{} has no dynamic viscosity, which incompressible flow needs",
+                                     describe(*material)));
+    }
+    if (!isFinite(*mu) || mu->si() <= 0.0) {
+        return makeError(ErrorCode::FailedPrecondition,
+                         std::format("{} has a dynamic viscosity of {}, which is not a usable value",
+                                     describe(*material), toString(*mu, units::Pa_s)));
+    }
+    return *mu;
+}
+
+Result<IncompressibleFlowProperties> requireIncompressibleFlowProperties(const Document& document,
+                                                                        MaterialId id) {
+    const Material* material = findMaterial(document, id);
+    if (material == nullptr) {
+        return makeError(ErrorCode::NotFound, std::format("there is no material {}", id));
+    }
+    const MaterialDefinition& definition = material->definition();
+
+    // Every gap at once, in the enumeration's semantic order: the density (the
+    // material's one density, mechanical half) and then the viscosity.
+    std::vector<std::string> missing;
+    const std::optional<Density> density = definition.mechanical.density.value();
+    if (!density) {
+        missing.emplace_back("no density");
+    } else if (!isFinite(*density) || density->si() <= 0.0) {
+        missing.emplace_back(std::format("a density of {}, which is not a usable value", toString(*density)));
+    }
+    const std::optional<DynamicViscosity> mu = definition.thermal.dynamicViscosity.value();
+    if (!mu) {
+        missing.emplace_back("no dynamic viscosity");
+    } else if (!isFinite(*mu) || mu->si() <= 0.0) {
+        missing.emplace_back(std::format("a dynamic viscosity of {}, which is not a usable value",
+                                         toString(*mu, units::Pa_s)));
+    }
+
+    if (!missing.empty()) {
+        std::string joined;
+        for (const std::string& item : missing) {
+            if (!joined.empty()) {
+                joined += " and ";
+            }
+            joined += item;
+        }
+        return makeError(ErrorCode::FailedPrecondition,
+                         std::format("{} has {}, which incompressible flow needs", describe(*material), joined));
+    }
+
+    IncompressibleFlowProperties properties;
+    properties.density = *density;
+    properties.dynamicViscosity = *mu;
+    return properties;
+}
+
 Result<ThermalExpansionCoefficient> requireThermalExpansion(const Document& document,
                                                             MaterialId id) {
     const Material* material = findMaterial(document, id);
@@ -569,6 +633,9 @@ void clearThermal(materials::ThermalProperties& properties, materials::ThermalPr
         case Kind::ElectricalResistivity:
             properties.electricalResistivity = {};
             return;
+        case Kind::DynamicViscosity:
+            properties.dynamicViscosity = {};
+            return;
     }
 }
 
@@ -694,6 +761,8 @@ bool hasMaterialProperty(const Document& document, MaterialId id,
             return properties.meltingTemperature.hasValue();
         case Kind::ElectricalResistivity:
             return properties.electricalResistivity.hasValue();
+        case Kind::DynamicViscosity:
+            return properties.dynamicViscosity.hasValue();
     }
     return false;
 }

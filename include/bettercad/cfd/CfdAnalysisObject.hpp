@@ -219,7 +219,7 @@ private:
 /// mesh                  WHICH MESH AND WHICH GENERATION; a remesh with equal
 ///                       counts and equal NodeIds is still a different stamp
 /// fluid + revision      which P15 material is the fluid, and whether it was
-///                       edited (density now; viscosity from P19-FLUID-001)
+///                       edited (its density or its viscosity)
 /// analysis + revision   which analysis, and whether its definition was edited
 /// definition            the semantic fingerprint of the definition consumed:
 ///                       what the intent WAS, readable without the document

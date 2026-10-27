@@ -251,8 +251,8 @@ bettercad_compile_fail_case(prov "${_prov}" COMPLETENESS_NEEDS_A_CONSUMER
     "too few arguments to function .*materialCompleteness" BetterCAD::features)
 bettercad_compile_fail_case(prov "${_prov}" CONSUMER_IS_TYPED
     "cannot convert .*int. to .*ConsumerKind" BetterCAD::features)
-bettercad_compile_fail_case(prov "${_prov}" NO_CFD_CONSUMER
-    "Cfd. is not a member of" BetterCAD::features)
+bettercad_compile_fail_case(prov "${_prov}" NO_TURBULENT_FLOW_CONSUMER
+    "TurbulentFlow. is not a member of" BetterCAD::features)
 bettercad_compile_fail_case(prov "${_prov}" DATE_HAS_NO_PUBLIC_CONSTRUCTOR
     "is private within this context|no matching function for call to" BetterCAD::features)
 bettercad_compile_fail_case(prov "${_prov}" DATE_FACTORY_RETURNS_OPTIONAL

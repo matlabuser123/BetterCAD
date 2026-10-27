@@ -22,11 +22,13 @@
 # BELOW IO, which will serialize its analysis intent, and below renderer, which
 # will display its results. Neither direction is reversed.
 #
-# NO FLUID DATA OF ITS OWN. ADR-028's hard rule, which names P19: the density comes
-# through features::requireDensity and the viscosity, from P19-FLUID-001, through
-# the same P15 material; nothing here stores a density, a viscosity or a default.
-# That is why this module links features rather than reaching into core/materials
-# for a second opinion.
+# NO FLUID DATA OF ITS OWN. ADR-028's hard rule, which names P19: the density and
+# the dynamic viscosity come through features::requireIncompressibleFlowProperties
+# from the one P15 material (P19-FLUID-001, ADR-062); nothing here stores a
+# density, a viscosity or a default. It links features for the values and the
+# diagnostic, and reads core/materials only for P15's OWN requirement table and
+# availability rule (to name the category of a failure) -- never for a second
+# opinion of its own.
 #
 # NO LINEAR ALGEBRA LINKED. There is no matrix in this milestone. Admitting one is
 # P19-LINSOLVE-001's decision, and the generic kernel it would reuse is
@@ -41,6 +43,7 @@ bettercad_add_library(bettercad_cfd
         CfdAnalysis.cpp
         CfdAnalysisObject.cpp
         CfdData.cpp
+        CfdFluid.cpp
         CfdResult.cpp
     PUBLIC_LINK
         BetterCAD::core

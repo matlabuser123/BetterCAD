@@ -38,15 +38,16 @@ constexpr std::array<std::pair<MechanicalPropertyKind, std::string_view>, 11> kM
     {MechanicalPropertyKind::Hardness, "hardness"},
 }};
 
-constexpr std::array<std::pair<ThermalPropertyKind, std::string_view>, 5> kThermal{{
+constexpr std::array<std::pair<ThermalPropertyKind, std::string_view>, 6> kThermal{{
     {ThermalPropertyKind::ThermalConductivity, "thermal_conductivity"},
     {ThermalPropertyKind::SpecificHeatCapacity, "specific_heat_capacity"},
     {ThermalPropertyKind::ThermalExpansion, "thermal_expansion"},
     {ThermalPropertyKind::MeltingTemperature, "melting_temperature"},
     {ThermalPropertyKind::ElectricalResistivity, "electrical_resistivity"},
+    {ThermalPropertyKind::DynamicViscosity, "dynamic_viscosity"},
 }};
 
-constexpr std::array<std::pair<ConsumerKind, std::string_view>, 7> kConsumers{{
+constexpr std::array<std::pair<ConsumerKind, std::string_view>, 8> kConsumers{{
     {ConsumerKind::MassProperties, "mass_properties"},
     {ConsumerKind::FeaLinearStatic, "fea_linear_static"},
     {ConsumerKind::FeaLinearStaticWithGravity, "fea_linear_static_with_gravity"},
@@ -54,6 +55,7 @@ constexpr std::array<std::pair<ConsumerKind, std::string_view>, 7> kConsumers{{
     {ConsumerKind::ThermalSteady, "thermal_steady"},
     {ConsumerKind::ThermalTransient, "thermal_transient"},
     {ConsumerKind::ThermoMechanical, "thermo_mechanical"},
+    {ConsumerKind::IncompressibleFlow, "incompressible_flow"},
 }};
 
 constexpr std::array<std::pair<IssueKind, std::string_view>, 4> kIssues{{
@@ -280,6 +282,8 @@ std::string formatProperty(const materials::ThermalProperties& properties, Therm
     case ThermalPropertyKind::ElectricalResistivity:
         return render(properties.electricalResistivity,
                       [](materials::ElectricalResistivity value) { return materials::toString(value); });
+    case ThermalPropertyKind::DynamicViscosity:
+        return render(properties.dynamicViscosity, [](DynamicViscosity value) { return inUnit(value, units::Pa_s); });
     }
     return "UNKNOWN";
 }
@@ -313,6 +317,8 @@ std::string_view displayUnit(const PropertyKind& kind) noexcept {
         return units::per_K.symbol;
     case ThermalPropertyKind::MeltingTemperature:
         return units::K.symbol;
+    case ThermalPropertyKind::DynamicViscosity:
+        return units::Pa_s.symbol;
     case ThermalPropertyKind::ElectricalResistivity:
         break;
     }
@@ -438,6 +444,16 @@ Result<void> setProperty(materials::ThermalProperties& properties, ThermalProper
         }
         properties.electricalResistivity = materials::MaterialProperty<materials::ElectricalResistivity>::known(
             materials::ElectricalResistivity::ofOhmMetres(*value));
+        return {};
+    }
+    case ThermalPropertyKind::DynamicViscosity: {
+        // A bare number is Pa s, the coherent SI unit, as a bare modulus is Pa:
+        // "0.001" is water's order, and "1 mPa s" may be written explicitly.
+        auto value = parseQuantity(text, units::Pa_s);
+        if (!value) {
+            return std::unexpected(value.error());
+        }
+        properties.dynamicViscosity = materials::MaterialProperty<DynamicViscosity>::known(*value);
         return {};
     }
     }

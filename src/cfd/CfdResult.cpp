@@ -151,17 +151,9 @@ Result<CfdResultSource> currentResultSource(const Document& document, const feat
                                      analysis.value(), toString(PressureDatumProblem::Missing)));
     }
 
-    // THE FLUID'S REVISION, from the material the boundary resolved -- the same
-    // object, so the source names exactly what was consumed. A density edit moves
-    // it; so will a viscosity edit once P19-FLUID-001 gives P15 one.
-    const features::Material* fluid = features::findMaterial(document, model->materialId());
-    if (fluid == nullptr) {
-        // requireCfdModel has just resolved this id through the same document, so
-        // this is P15's invariant checked rather than assumed, not a reachable
-        // state; it is not claimed to be tested.
-        return makeError(ErrorCode::Internal,
-                         std::format("the fluid material {} was resolved and then not found", model->materialId()));
-    }
+    // THE FLUID, AS THE BOUNDARY RESOLVED IT: the material's identity and its revision
+    // at resolution, from the same CfdFluid the model holds -- so the source names
+    // exactly what was consumed. A density or a viscosity edit moves the revision.
 
     return CfdResultSource{
         .body = model->body(),
@@ -169,7 +161,7 @@ Result<CfdResultSource> currentResultSource(const Document& document, const feat
         .geometry = model->geometryRevision(),
         .mesh = model->mesh().mesh().stamp(),
         .fluid = model->materialId(),
-        .fluidRevision = fluid->revision(),
+        .fluidRevision = model->fluid().revision(),
         .analysis = analysis,
         .analysisRevision = intent->revision(),
         .definition = fingerprint(intent->definition()),

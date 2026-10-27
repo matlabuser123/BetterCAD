@@ -225,7 +225,7 @@ TEST_CASE("ThermalProperty_ResistivityPrintsItsUnitAndNoConductivityIsDerivedFro
         REQUIRE_THAT(std::string{materials::toString(kind)},
                      !ContainsSubstring("conductivity, electrical"));
     }
-    REQUIRE(kinds.size() == 5);
+    REQUIRE(kinds.size() == 6);
 }
 
 // --- reference temperature is provenance, not a law ------------------------
@@ -395,6 +395,11 @@ TEST_CASE("ThermalProperty_ConductivityHasConductivityDimensionsForAFutureFourie
                                  Temperature>);
     static_assert(std::is_same_v<decltype(ThermalProperties{}.electricalResistivity)::ValueType,
                                  ElectricalResistivity>);
+    // mu is a dynamic viscosity, Pa s = kg/(m s), and NOT a kinematic one (m^2/s):
+    // the kinematic viscosity is derived, mu / rho, and has no field (ADR-027).
+    static_assert(std::is_same_v<decltype(ThermalProperties{}.dynamicViscosity)::ValueType, DynamicViscosity>);
+    static_assert(!std::is_same_v<DynamicViscosity, KinematicViscosity>);
+    static_assert(std::is_same_v<decltype(DynamicViscosity{} / Density{}), KinematicViscosity>);
     SUCCEED("compile-time dimensional checks held");
 }
 
@@ -407,6 +412,8 @@ TEST_CASE("ThermalProperty_EnumeratesItsKindsInAFixedSemanticOrder") {
         ThermalPropertyKind::ThermalExpansion,
         ThermalPropertyKind::MeltingTemperature,
         ThermalPropertyKind::ElectricalResistivity,
+        // Appended by P19-FLUID-001 (ADR-062), so every earlier kind keeps its place.
+        ThermalPropertyKind::DynamicViscosity,
     };
     for (int pass = 0; pass < 10; ++pass) {
         const std::span<const ThermalPropertyKind> kinds = materials::thermalPropertyKinds();

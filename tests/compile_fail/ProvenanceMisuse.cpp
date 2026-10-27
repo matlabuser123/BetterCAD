@@ -75,12 +75,13 @@ int main() {
 #elif defined(BETTERCAD_CF_CONSUMER_IS_TYPED)
     // And it is a ConsumerKind, not an integer a loop counter could wander into.
     [[maybe_unused]] const auto wrong = features::materialCompleteness(document, *id, 0);
-#elif defined(BETTERCAD_CF_NO_CFD_CONSUMER)
-    // ADR-028 names P19 CFD as a future consumer and defines no requirements for it.
-    // Adding one now would be inventing physics; the mechanism extends to it without
-    // a second framework when the requirements are actually decided.
+#elif defined(BETTERCAD_CF_NO_TURBULENT_FLOW_CONSUMER)
+    // A consumer exists only for physics that has been DECIDED. P15 kept CFD out
+    // until ADR-058 decided laminar incompressible flow; P19-FLUID-001 then added
+    // IncompressibleFlow (ADR-062). Turbulent flow is not decided (P19-TURB-ARCH-001
+    // comes first), so it has no consumer and no requirement row to invent.
     [[maybe_unused]] const auto wrong =
-        materials::requiredProperties(materials::ConsumerKind::Cfd);
+        materials::requiredProperties(materials::ConsumerKind::TurbulentFlow);
 #elif defined(BETTERCAD_CF_DATE_HAS_NO_PUBLIC_CONSTRUCTOR)
     // A date is validated on the way in, so there is no way to build one directly
     // from three integers and skip the check.

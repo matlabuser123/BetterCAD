@@ -115,10 +115,15 @@ MaterialDefinition richSteel() {
     definition.thermal.electricalResistivity =
         MaterialProperty<materials::ElectricalResistivity>::known(
             materials::ElectricalResistivity::ofOhmMetres(1.43e-7));
+    // Synthetic, with a reference temperature and its own provenance, so the
+    // viscosity's whole record round-trips (P19-FLUID-001).
+    definition.thermal.dynamicViscosity =
+        MaterialProperty<DynamicViscosity>::known(DynamicViscosity::fromSi(1.002e-3), 293.15_K);
     definition.provenance.material = handbook();
     definition.provenance.mechanical[MechanicalPropertyKind::Density] = measured();
     definition.provenance.mechanical[MechanicalPropertyKind::YoungsModulus] = handbook();
     definition.provenance.thermal[ThermalPropertyKind::ThermalConductivity] = measured();
+    definition.provenance.thermal[ThermalPropertyKind::DynamicViscosity] = handbook();
     return definition;
 }
 

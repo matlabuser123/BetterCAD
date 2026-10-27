@@ -114,8 +114,8 @@ PASSED, and P18 — Thermal Analysis was QUALIFIED on 2026-10-27 by P18-QUAL-001
 eighteen milestones PASS, 5804/5804 tests in three presets, qualified tree ==
 committed tree.
 P19 — CFD Integration, authorized 2026-10-27 by the owner's "start
-P19-ARCH-001": P19-ARCH-001 and P19-DATA-001 (2026-10-27) have PASSED.
-P19-FLUID-001 is next and NOT authorized; see TODO.md.
+P19-ARCH-001": P19-ARCH-001 and P19-DATA-001 (2026-10-27) and P19-FLUID-001
+(2026-10-28) have PASSED. P19-MESH-001 is next and NOT authorized; see TODO.md.
 ```
 
 Released: `v0.1.0` — Foundation.
@@ -792,6 +792,10 @@ structural) and the input boundary; see
 2026-10-27) defined the canonical analysis definition, its semantic fingerprint
 and the result's provenance, keeping the fluid a P15 material and every field
 derived; see [P19-DATA-001](docs/verification/P19-DATA-001/README.md).
+`P19-FLUID-001` (PASS 2026-10-28) gave P15 a dynamic viscosity and an
+incompressible-flow consumer, so a fluid is a P15 material like any other and CFD
+reads it with no fluid data of its own; see
+[P19-FLUID-001](docs/verification/P19-FLUID-001/README.md).
 
 ```text
 incompressible laminar

@@ -88,12 +88,23 @@ struct FluidPart {
         requireReport(regenerator, document);
     }
 
-    /// A material with a density: what P15 can characterise of a fluid today.
+    /// A material with a density and a dynamic viscosity: a fluid, as P15 can
+    /// characterise one since P19-FLUID-001 (water near 20 degC).
     void assignFluid() {
         features::MaterialDefinition definition;
         definition.designation = "Water";
         definition.mechanical.density = materials::MaterialProperty<Density>::known(998_kg_per_m3);
+        definition.thermal.dynamicViscosity = materials::MaterialProperty<DynamicViscosity>::known(1.002_mPa_s);
         assign(definition, "Water");
+    }
+
+    /// A material with a density and NO viscosity: what every fluid was before
+    /// P19-FLUID-001, and now a material a flow refuses.
+    void assignDensityWithoutViscosity() {
+        features::MaterialDefinition definition;
+        definition.designation = "Unflowing";
+        definition.mechanical.density = materials::MaterialProperty<Density>::known(998_kg_per_m3);
+        assign(definition, "Unflowing");
     }
 
     /// A material that resolves but has no density: mechanically uncharacterised.
@@ -167,6 +178,10 @@ TEST_CASE("CfdInput_AcceptsACurrentMeshWithAUsableDensity", "[cfd][arch]") {
     CHECK(model->density() == 998_kg_per_m3);
     CHECK(model->density().si() == 998.0);
     CHECK(model->materialId() == part.material);
+    // And the viscosity (P19-FLUID-001), from the same resolution.
+    CHECK(model->fluid().viscosity() == 1.002_mPa_s);
+    CHECK(model->fluid().id() == part.material);
+    CHECK(model->fluid().density() == model->density());
     CHECK(model->geometryRevision() == meshing::geometryRevision(part.document, part.feature));
 
     WARN(std::format("prepared: {} tets (= finite-volume cells), {} boundary triangles (= boundary "
@@ -175,36 +190,32 @@ TEST_CASE("CfdInput_AcceptsACurrentMeshWithAUsableDensity", "[cfd][arch]") {
                      model->mesh().nodeCount(), toString(model->density())));
 }
 
-TEST_CASE("CfdInput_AcceptsADensityWithNoViscosityBecauseNoMaterialCanCarryOneYet", "[cfd][arch]") {
-    // THE LINE BETWEEN THIS BOUNDARY AND P19-FLUID-001, drawn in the open. A fluid
-    // needs a dynamic viscosity as well as a density, and no P15 material carries a
-    // viscosity: `ConsumerKind` has no CFD value and `MechanicalPropertyKind` and
-    // `ThermalPropertyKind` have no viscosity. So this boundary proves a DENSITY and
-    // its header says it proves nothing more; whether a fluid can drive a solve is
-    // P19-FLUID-001's question, asked through a property and a consumer kind that
-    // do not exist yet.
-    //
-    // THIS CASE IS DESIGNED TO FAIL THE DAY THAT CHANGES. When P19-FLUID-001 adds a
-    // CFD consumer kind, the assertion below stops holding and the boundary has to be
-    // taught to ask it -- the compiler cannot force that, and a test can.
-    FluidPart part;
-    part.assignFluid();
-    part.requireMesh();
-    REQUIRE_FALSE(part.problem().has_value());
+TEST_CASE("CfdInput_RefusesADensityWithNoViscosity", "[cfd][arch]") {
+    // P19-ARCH-001 LEFT A TRIPWIRE HERE, and P19-FLUID-001 tripped it on purpose.
+    // The case used to accept a density with no viscosity "because no material can
+    // carry one yet" and asserted there were seven consumers, so that the day a CFD
+    // consumer appeared it would fail and the boundary would have to be taught to
+    // ask. It was: P15 now has a dynamic viscosity and an IncompressibleFlow
+    // consumer requiring { density } and { dynamic viscosity }, and this boundary
+    // asks P15 for exactly that row (ADR-062).
+    REQUIRE(materials::consumerKinds().size() == 8);
+    REQUIRE(materials::consumerKinds().back() == materials::ConsumerKind::IncompressibleFlow);
+    const materials::PropertyRequirement flow = materials::requiredProperties(materials::ConsumerKind::IncompressibleFlow);
+    CHECK(flow.mechanical == std::vector{materials::MechanicalPropertyKind::Density});
+    CHECK(flow.thermal == std::vector{materials::ThermalPropertyKind::DynamicViscosity});
 
-    // The names below are a heuristic; the COUNT is the tripwire that cannot be dodged
-    // by naming a consumer "laminar incompressible". Two other places assert the
-    // consumer list and move with it (tests/compile_fail/CMakeLists.txt, the
-    // ConsumerKind probe, and tests/CMakeLists.txt's material completeness cases).
-    CHECK(materials::consumerKinds().size() == 7);
-    for (const materials::ConsumerKind consumer : materials::consumerKinds()) {
-        const std::string name{materials::toString(consumer)};
-        INFO("consumer " << name);
-        CHECK_FALSE(name.contains("CFD"));
-        CHECK_FALSE(name.contains("cfd"));
-        CHECK_FALSE(name.contains("flow"));
-        CHECK_FALSE(name.contains("fluid"));
-    }
+    FluidPart part;
+    part.assignDensityWithoutViscosity();
+    part.requireMesh();
+    CHECK(part.problem() == InputProblem::FluidViscosityUnusable);
+    const Result<cfd::CfdModel> model = part.prepare();
+    REQUIRE_FALSE(model.has_value());
+    CHECK(model.error().code == ErrorCode::FailedPrecondition);
+    CHECK_THAT(model.error().message, ContainsSubstring("Unflowing"));
+    CHECK_THAT(model.error().message, ContainsSubstring("no dynamic viscosity"));
+    CHECK_THAT(model.error().message, ContainsSubstring("incompressible flow"));
+    // The density is usable, so the diagnostic does not blame it.
+    CHECK_THAT(model.error().message, !ContainsSubstring("no density"));
 }
 
 TEST_CASE("CfdInput_RefusesAControlTheDocumentDoesNotHave", "[cfd][arch]") {
@@ -405,6 +416,9 @@ TEST_CASE("CfdInput_RefusesAMaterialThatHasNoDensity", "[cfd][arch]") {
     REQUIRE_FALSE(model.has_value());
     CHECK_THAT(model.error().message, ContainsSubstring("density"));
     CHECK_THAT(model.error().message, ContainsSubstring("Unmeasured"));
+    // This material has no viscosity either, and P15 names EVERY gap at once; the
+    // category is the first in P15's order, the density.
+    CHECK_THAT(model.error().message, ContainsSubstring("no density and no dynamic viscosity"));
 }
 
 TEST_CASE("CfdInput_NamesTheSameReasonAsTheThermalBoundaryForTheSameDocument", "[cfd][arch][delegation]") {
@@ -421,6 +435,7 @@ TEST_CASE("CfdInput_NamesTheSameReasonAsTheThermalBoundaryForTheSameDocument", "
         definition.mechanical.density = materials::MaterialProperty<Density>::known(998_kg_per_m3);
         definition.thermal.thermalConductivity =
             materials::MaterialProperty<ThermalConductivity>::known(0.6_W_per_m_K);
+        definition.thermal.dynamicViscosity = materials::MaterialProperty<DynamicViscosity>::known(1.002_mPa_s);
         part.assign(definition, "Water");
     }
 
@@ -453,7 +468,8 @@ TEST_CASE("CfdInput_NamesTheSameReasonAsTheThermalBoundaryForTheSameDocument", "
     const auto structuralAgrees = [&part]() {
         const std::optional<InputProblem> c = part.problem();
         const auto s = structural::structuralInputProblem(part.document, part.regenerator, part.mesher, part.control);
-        if (c.has_value() && *c != InputProblem::NoMaterialAssigned && *c != InputProblem::FluidDensityUnusable) {
+        if (c.has_value() && *c != InputProblem::NoMaterialAssigned && *c != InputProblem::FluidDensityUnusable &&
+            *c != InputProblem::FluidViscosityUnusable) {
             INFO("cfd " << cfd::toString(*c));
             REQUIRE(s.has_value());
             CHECK(cfd::toString(*c) == structural::toString(*s));
@@ -497,14 +513,17 @@ TEST_CASE("CfdInput_PossessionOfACfdModelIsTheOnlyProof", "[cfd][arch][compile]"
     STATIC_REQUIRE(std::is_nothrow_move_constructible_v<CfdModel>);
     STATIC_REQUIRE_FALSE(std::is_constructible_v<CfdModel, ObjectId, MeshControlId, const meshing::VolumeMesh&,
                                                  const meshing::GeometryMeshMap&, const meshing::MeshQualityReport&,
-                                                 MaterialId, Density, meshing::GeometryRevision>);
+                                                 cfd::CfdFluid, meshing::GeometryRevision>);
+    // Nor can its fluid be made except by resolving one (P19-FLUID-001).
+    STATIC_REQUIRE_FALSE(std::is_default_constructible_v<cfd::CfdFluid>);
+    STATIC_REQUIRE_FALSE(std::is_constructible_v<cfd::CfdFluid, MaterialId, std::uint64_t, cfd::CfdFluidProperties>);
     SUCCEED("the proof of an accepted input cannot be forged, copied or made from nothing");
 }
 
 TEST_CASE("CfdInput_ReachesEveryInputProblemItDeclares", "[cfd][arch]") {
     // The enum has no value nothing can return. Each case above reaches one, and this
     // records the roster so that adding a value without a case is visible.
-    const std::array<InputProblem, 7> declared{
+    const std::array<InputProblem, 8> declared{
         InputProblem::ControlNotFound,
         InputProblem::GeometryIneligible,
         InputProblem::NoMesh,
@@ -512,6 +531,7 @@ TEST_CASE("CfdInput_ReachesEveryInputProblemItDeclares", "[cfd][arch]") {
         InputProblem::MeshGenerationFailed,
         InputProblem::NoMaterialAssigned,
         InputProblem::FluidDensityUnusable,
+        InputProblem::FluidViscosityUnusable,
     };
     for (const InputProblem problem : declared) {
         CHECK_FALSE(cfd::toString(problem).empty());

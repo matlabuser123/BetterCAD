@@ -205,6 +205,31 @@ requireTransientConductionProperties(const Document& document, MaterialId id);
 [[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<ThermalExpansionCoefficient>
 requireThermalExpansion(const Document& document, MaterialId id);
 
+/// The dynamic viscosity of the material with @p id, in Pa s (P19-FLUID-001).
+///
+/// Fails naming the material if it has none or an unusable one; never returns a
+/// default. There is no "air" or "water" anywhere to fall back to (ADR-028).
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<DynamicViscosity>
+requireDynamicViscosity(const Document& document, MaterialId id);
+
+/// What laminar incompressible flow needs from a material: its density and its
+/// dynamic viscosity, both concrete (ADR-058, ADR-062).
+///
+/// The density is the material's ONE density, read from the mechanical half --
+/// the same join `TransientConductionProperties` makes. The kinematic viscosity
+/// is NOT here: it is derived, mu / rho, by whoever needs it, and never stored.
+///
+/// Fails with one diagnostic naming the material and EVERY missing input.
+struct IncompressibleFlowProperties {
+    Density density{};
+    DynamicViscosity dynamicViscosity{};
+
+    friend bool operator==(const IncompressibleFlowProperties&, const IncompressibleFlowProperties&) = default;
+};
+
+[[nodiscard]] BETTERCAD_FEATURES_EXPORT Result<IncompressibleFlowProperties>
+requireIncompressibleFlowProperties(const Document& document, MaterialId id);
+
 // --- Material assignment (P15-ASSIGN-001, ADR-026) --------------------------
 //
 // A material assignment is document-level INTENT: one optional MaterialId for
