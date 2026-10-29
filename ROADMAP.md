@@ -101,6 +101,17 @@ P17     Structural FEA
 Current authorized development:
 
 ```text
+P19 — CFD Integration, authorized 2026-10-27 by the owner's "start
+P19-ARCH-001": P19-ARCH-001 and P19-DATA-001 (2026-10-27) and P19-FLUID-001
+(2026-10-28) have PASSED. P19-MESH-001, authorized 2026-10-28, is OPEN and
+BLOCKED: it is implemented and reviewed but NOT qualified and NOT committed,
+because its qualification attempt of 2026-10-28 failed 5 of 17 stages when the
+qualification machine's temp volume filled and no test suite ran. It must be
+re-run from clean before anything is claimed. P19-TOPO-001 is next and NOT
+authorized; see TODO.md.
+
+The phases before it, and how each was qualified:
+
 P18 — Thermal Analysis, authorized 2026-10-16.
 P17 — Structural FEA was QUALIFIED 2026-10-15 by P17-QUAL-001: seventeen
 milestones PASS, 4009/4009 tests in three presets, qualified tree ==
@@ -113,9 +124,6 @@ P18-PERSIST-001 (2026-10-25), P18-CLI-001 and P18-REFMOD-001 (2026-10-26) have
 PASSED, and P18 — Thermal Analysis was QUALIFIED on 2026-10-27 by P18-QUAL-001:
 eighteen milestones PASS, 5804/5804 tests in three presets, qualified tree ==
 committed tree.
-P19 — CFD Integration, authorized 2026-10-27 by the owner's "start
-P19-ARCH-001": P19-ARCH-001 and P19-DATA-001 (2026-10-27) and P19-FLUID-001
-(2026-10-28) have PASSED. P19-MESH-001 is next and NOT authorized; see TODO.md.
 ```
 
 Released: `v0.1.0` — Foundation.
@@ -796,6 +804,19 @@ derived; see [P19-DATA-001](docs/verification/P19-DATA-001/README.md).
 incompressible-flow consumer, so a fluid is a P15 material like any other and CFD
 reads it with no fluid data of its own; see
 [P19-FLUID-001](docs/verification/P19-FLUID-001/README.md).
+
+`P19-MESH-001` is **open and not qualified**. It answers the phase's critical
+question — `P16`'s Tet4 mesh serves directly as the finite-volume mesh, with no
+adapter and no second geometry authority, its interior faces, owner and neighbour
+derived from it and never persisted — and proves what `P16` does not itself
+guarantee through a staged gate with nine named refusals, bound to the mesh stamp
+(`ADR-063`). The implementation and its review are complete; the qualification is
+not. Attempt 1 of 2026-10-28 failed 5 of 17 stages for an environmental reason, so
+no suite ran, nothing is qualified and nothing is committed, and it must be re-run
+from clean; see [P19-MESH-001](docs/verification/P19-MESH-001/README.md). Its one
+measured finding is that the `P16` reference meshes are poor finite-volume meshes,
+which makes the non-orthogonal correction mandatory in the solver and is judged by
+`P19-VALID-001`.
 
 ```text
 incompressible laminar

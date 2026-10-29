@@ -10,45 +10,49 @@
 
 ```text
 Current:
-           P18 — Thermal Analysis. AUTHORIZED 2026-10-16 by an explicit
-           scope decision ("start P18"), with the phase plan below.
+           P19 — CFD Integration. AUTHORIZED 2026-10-27 by an explicit
+           scope decision ("start P19-ARCH-001"), with the phase plan below.
 
 Prerequisite:
-           P17 — Structural FEA — QUALIFIED (P17-QUAL-001, 2026-10-15):
-           seventeen milestones PASS, 4009/4009 x 3 presets, qualified tree
-           == committed tree. Three measured findings stay with the owner,
-           unchanged: F1 (the 1e-12 moment-equilibrium threshold crossed by
-           a correct bending solve), F2 (linear Tet4 locks in bending), F3
-           (OCCT never subdivides a developable wall along its ruling).
+           P18 — Thermal Analysis — QUALIFIED (P18-QUAL-001, 2026-10-27):
+           eighteen milestones PASS (345 boxes), 5804/5804 x 3 presets,
+           qualified tree == committed tree. Three measured findings stay
+           with the owner, unchanged: F1 (the heat-balance gate refuses
+           correct transient runs once the time step is small), F2 (no bound
+           on a temperature), F3 (no bound on the residual tolerance a user
+           may set). P17's F1-F3 stand unchanged beneath them.
 
 Current milestone:
-           none. P18-REFMOD-001 — Thermal Reference Models. COMPLETE at 24 of 24
-           and qualified 2026-10-26 against b274df2 plus the working tree:
-           5789/5789 x 3 presets, 2547 x 5 in two, 0 warnings over 742 objects
-           per preset, 17 stages exit 0, 6h15m48s, fingerprints at the freeze ==
-           before == after, first attempt. Ten reference models (twenty
-           documents, fifteen that solve and five that must be refused) judged
-           against closed forms, hand arithmetic and an independent dense FE
-           solver and backward-Euler integrator that share no code with
-           production; 47 in-process cases, 17 fresh-process tests, a 58-process
-           two-binary workflow; 29 mutation probes all killed; an independent
-           review (0 critical, 17 findings, all disposed of). NO PRODUCTION FILE
-           CHANGED (src, include, apps: 520 files byte-identical to HEAD) and no
-           reference model exposed a production defect. Owner findings, none a
-           P18 defect: F-R1 P16 cannot refine a smooth field on a box, rod or
-           tube (the stack converges on structured meshes, order 1.87/1.96);
-           F-R2 local sizing does not improve gradient accuracy near a held
-           boundary; F-R3 P18 v1 cannot represent a composite wall (RM-THERM-03
-           is recorded as such, not faked).
-           P18-ARCH-001 PASSED 2026-10-16; P18-DATA-001, P18-MAT-001,
-           P18-DOF-001 PASSED 2026-10-17; P18-ELEM-001, P18-LOAD-001 PASSED
-           2026-10-18; P18-BC-001, P18-ASSEMBLY-001 PASSED 2026-10-19/20;
-           P18-SOLVE-001 PASSED 2026-10-20; P18-TRANSIENT-001, P18-POST-001
-           PASSED 2026-10-21; P18-BALANCE-001 PASSED 2026-10-22; P18-VALID-001,
-           P18-VIZ-001 PASSED 2026-10-23; P18-CMD-001 PASSED 2026-10-24;
-           P18-PERSIST-001 PASSED 2026-10-25; P18-CLI-001 and
-           P18-REFMOD-001 PASSED 2026-10-26
-           (docs/verification/P18-*/).Qualified:
+           P19-MESH-001 — CFD Volume / Surface Mesh Contract. AUTHORIZED
+           2026-10-28 ("start P19-MESH-001"). IMPLEMENTED AND REVIEWED, NOT
+           QUALIFIED, and BLOCKED since 2026-10-29. Twenty-one of its
+           twenty-four items are recorded; Determinism PASS, Regression PASS
+           and Evidence recorded stay OPEN because qualification attempt 1
+           (2026-10-28, candidate b1f151c plus the working tree) FAILED 5 of
+           17 stages for an environmental reason: the qualification machine's
+           %TEMP% volume was full, so all three builds aborted writing the
+           compiler's temporary file (debug-ext at object 127 of 780,
+           release-ext at 330, debug-shared-ext at 181), the three full ctest
+           stages were skipped, and the two repeat stages ran against build
+           trees the clean had just emptied. 0 warnings before the abort. NOT
+           a code failure, and NOT a pass: nothing is qualified, and the
+           README and Regression sections keep the word PLACEHOLDER so
+           commit-mesh.ps1 refuses to commit. The candidate tree has not
+           moved since the freeze — all eight subtree hashes and all four
+           milestone fingerprints were re-confirmed on 2026-10-29, and no
+           P16, P17 or P18 production file changed — so the re-run reuses
+           that freeze rather than taking a new one. It must run from clean
+           on the qualification machine.
+           (docs/verification/P19-MESH-001/FREEZE.md.)
+
+           Earlier P19 milestones, each at its own recorded verdict:
+           P19-ARCH-001 PASSED 2026-10-27 (5826/5826 x 3 presets, 745
+           objects, ADR-058/059/060); P19-DATA-001 PASSED 2026-10-27
+           (5893/5893 x 3, 750 objects, ADR-061); P19-FLUID-001 PASSED
+           2026-10-28 (5919/5919 x 3, 753 objects, ADR-062)
+           (docs/verification/P19-*/).
+
+Qualified:
            P0–P10 — BetterCAD v0.1.0
            P11 — Advanced Part Modelling
            P12 — Production Part Modelling
@@ -57,32 +61,37 @@ Current milestone:
            P15 — Materials / Engineering Data
            P16 — Meshing
            P17 — Structural FEA
+           P18 — Thermal Analysis
 
 Next:
-           P18-QUAL-001 — Thermal Analysis Final Qualification. NOT STARTED,
-           NOT AUTHORIZED: P18-REFMOD-001 passing is not permission to start
-           it; each milestone is started by the owner, as every P17 milestone
-           was.
+           nothing. P19-MESH-001 is open and blocked on its own re-run, so no
+           new milestone is authorized: P19-TOPO-001 — Finite-Volume Topology
+           is next in the sequence and is NOT AUTHORIZED. P19-MESH-001's
+           implementation passing its review is not permission to start it;
+           each milestone is started by the owner, as every P17 and P18
+           milestone was.
 
-P17 objective, as delivered:
-           authoritative CAD / material / mesh state
-           → structural analysis definition
-           → linear-elastic FE assembly
-           → boundary conditions / loads
-           → linear solve
-           → displacements / reactions
-           → strain / stress recovery
-           → structural validation
+P19 objective, as planned:
+           authoritative CAD / fluid / mesh state
+           → CFD analysis definition
+           → finite-volume topology and geometric metrics
+           → boundary and initial conditions
+           → momentum / continuity assembly
+           → pressure–velocity coupling
+           → steady and transient incompressible solves
+           → pressure / velocity fields
+           → forces / fluxes / flow balance
+           → CFD validation
            → inspectable, persistent, headless result
 
-P17 does NOT implement:
-           nonlinear material behaviour, plasticity, large deformation,
-           contact, buckling, fatigue, fracture, composites, dynamics or
-           modal analysis, transient structural analysis, topology
-           optimisation, adaptive remeshing, shell or beam elements,
-           multiple-solid contact assemblies
+P19 v1 does NOT implement, and refuses rather than approximates (ADR-058):
+           turbulence (k-epsilon, k-omega SST, LES / DES / DNS), thermal
+           coupling, buoyancy and conjugate heat transfer, compressible flow,
+           multiphase, free surface, cavitation, species, combustion,
+           radiation, non-Newtonian flow, temperature-dependent properties,
+           porous media, moving mesh, rotating machinery
 
-P16 and P17 milestones:
+P16, P17 and P18 milestones:
            recorded in ROADMAP.md with their evidence links. A completed
            phase does not accumulate in this file.
 ```
@@ -1834,11 +1843,12 @@ general fix → requalify the affected milestone → rerun P18-QUAL.
 ---
 # P19 — CFD Integration
 
-**NOT AUTHORIZED.** This is the owner's phase plan, recorded so it is not lost. P18 being
-qualified (P18-QUAL-001, 2026-10-27) is not permission to start it: starting P19 needs an
-explicit scope decision, and the open P18 findings F1-F3 are inputs to it. Milestones are
-worked top to bottom, and each is authorized by its predecessor's PASS being recorded here
-and the owner saying so -- P17's and P18's rule, unchanged.
+**AUTHORIZED 2026-10-27** by the owner's "start P19-ARCH-001", the open P18 findings
+F1-F3 weighed as inputs to it. Milestones are worked top to bottom, and each is authorized
+by its predecessor's PASS being recorded here and the owner saying so -- P17's and P18's
+rule, unchanged. P19-ARCH-001, P19-DATA-001 and P19-FLUID-001 have PASSED; P19-MESH-001 is
+open and BLOCKED on a failed qualification attempt; **nothing after it is authorized**, and
+a predecessor's implementation being reviewed is not permission to start the next.
 
 Goal: add qualified incompressible CFD capability without duplicating CAD, material, mesh,
 solver, result, persistence, or CLI authority.
@@ -1943,7 +1953,8 @@ files, 0 layering violations. Adversarial review: independent reviewer
 fingerprint: qualified tree == committed tree. Evidence:
 docs/verification/P19-ARCH-001/.
 
-P19-DATA-001 is NOT AUTHORIZED. Being next in the plan is not permission.
+P19-DATA-001 was NOT AUTHORIZED when this record was written; being next in the
+plan was not permission. The owner authorized it on 2026-10-27.
 ```
 
 Initial recommended P19 v1 scope:
@@ -2029,7 +2040,8 @@ and re-verified; 20 of 20 mutants killed. Committed as f08019a; all eight
 subtree hashes of that commit equal the frozen fingerprint: qualified tree
 == committed tree. Evidence: docs/verification/P19-DATA-001/.
 
-P19-FLUID-001 is NOT AUTHORIZED. Being next in the plan is not permission.
+P19-FLUID-001 was NOT AUTHORIZED when this record was written; being next in the
+plan was not permission. The owner authorized it on 2026-10-27.
 ```
 
 Canonical intent may include:
@@ -2112,7 +2124,9 @@ as 4e57b02; all eight subtree hashes of that commit equal the frozen
 fingerprint: qualified tree == committed tree. Evidence:
 docs/verification/P19-FLUID-001/.
 
-P19-MESH-001 is NOT AUTHORIZED. Being next in the plan is not permission.
+P19-MESH-001 was NOT AUTHORIZED when this record was written; being next in the
+plan was not permission. The owner authorized it on 2026-10-28; it is OPEN and
+BLOCKED, and nothing it claims is qualified.
 ```
 Recommended v1 units:
 
@@ -2129,30 +2143,41 @@ nu     m²/s derived only
 
 Define the CFD mesh representation required by P19.
 
-* [ ] Audit P16 suitability for CFD
-* [ ] Define cell topology supported
-* [ ] Define face topology
-* [ ] Define boundary-face representation
-* [ ] Define owner / neighbour relation
-* [ ] Define cell centres
-* [ ] Define face centres
-* [ ] Define face area vectors
-* [ ] Define cell volumes
-* [ ] Define outward-normal convention
-* [ ] Define internal-face orientation
-* [ ] Define boundary patch mapping
-* [ ] Define named boundary mapping
-* [ ] Define geometry-source binding
-* [ ] Define mesh-source binding
-* [ ] Reject zero / negative cell volume
-* [ ] Reject invalid face ownership
-* [ ] Reject non-manifold volume topology
-* [ ] Reject unclosed fluid domain
-* [ ] Define mesh-quality metrics required by CFD
-* [ ] No nearest-face fallback
+* [x] Audit P16 suitability for CFD
+* [x] Define cell topology supported
+* [x] Define face topology
+* [x] Define boundary-face representation
+* [x] Define owner / neighbour relation
+* [x] Define cell centres
+* [x] Define face centres
+* [x] Define face area vectors
+* [x] Define cell volumes
+* [x] Define outward-normal convention
+* [x] Define internal-face orientation
+* [x] Define boundary patch mapping
+* [x] Define named boundary mapping
+* [x] Define geometry-source binding
+* [x] Define mesh-source binding
+* [x] Reject zero / negative cell volume
+* [x] Reject invalid face ownership
+* [x] Reject non-manifold volume topology
+* [x] Reject unclosed fluid domain
+* [x] Define mesh-quality metrics required by CFD
+* [x] No nearest-face fallback
 * [ ] Determinism PASS
 * [ ] Regression PASS
 * [ ] Evidence recorded
+
+```text
+BLOCKED 2026-10-29. Authorized 2026-10-28 ("start P19-MESH-001"). Qualification
+attempt 1 (2026-10-28, candidate b1f151c plus the working tree) FAILED 5 of 17
+stages for an environmental reason: the qualification machine's temp volume
+was full, every build aborted with "No space left on device", no full suite
+ran, and the repeat (determinism) stages ran against emptied build trees.
+Not a code failure, and not a pass: Determinism, Regression and Evidence stay
+open until a clean re-run passes every stage. Nothing qualified. Evidence of
+the attempt and the review: docs/verification/P19-MESH-001/FREEZE.md.
+```
 
 Critical question:
 
@@ -3614,6 +3639,110 @@ docs/engineering/
 # CURRENT NEXT STEP
 
 ```text
+P19-MESH-001 — CFD Volume / Surface Mesh Contract is OPEN and BLOCKED.
+Authorized 2026-10-28; qualification attempt 1 FAILED 2026-10-28, environmental.
+
+    implemented and reviewed: the milestone's critical question is answered — P16's
+      Tet4 mesh IS the finite-volume mesh, with no adapter and no second geometry
+      authority — and what P16 does not guarantee is proved by a staged gate,
+      requireCfdMesh(CfdModel) -> CfdMeshContract, with nine named refusals,
+      possession as the proof, and the contract bound to the mesh stamp (ADR-063)
+    21 of the 24 checklist items are recorded; the three that are not are the
+      three gates below
+    review closed before the gate: 6 author questions each resolved by a fix and a
+      test; an independent reviewer at 0 blockers, 1 major (a shared face traversed
+      the same way by both cells passed, so InconsistentFaceOrientation was added),
+      4 minor, 8 nits; re-verification at 0 new major or minor; a second read on
+      another machine at 0 defects; 31 of 31 mutation probes killed, 0 survived
+    attempt 1, Wed 28/10/2026 19:47:09 -> 20:06:44 (19m35s): 5 of 17 stages FAILED,
+      qualify.cmd exit 5. The qualification machine's %TEMP% volume was full, so
+      all three builds aborted writing the compiler's temporary file — debug-ext at
+      object 127 of 780, release-ext at 330, debug-shared-ext at 181 — the three
+      full ctest stages were skipped, and the two repeat stages ran against build
+      trees the clean had just emptied (147 of 352 "no such file or directory").
+      0 warnings before the abort. NOT a code failure, and NOT a pass.
+    OPEN, and not to be ticked without a passing re-run: Determinism PASS,
+      Regression PASS, Evidence recorded. The README and its Regression section
+      keep the word PLACEHOLDER so commit-mesh.ps1 refuses to commit, and the
+      evidence directory is missing every log the failed stages would have written
+    the candidate tree has NOT moved since the freeze: HEAD b1f151c plus the
+      working tree, all eight subtree hashes and all four milestone fingerprints
+      re-confirmed 2026-10-29, and no P16, P17 or P18 production file changed. The
+      re-run reuses this freeze rather than taking a new one
+    the re-run must show three presets configured, cleaned, rebuilt and run
+      unfiltered; 5939 tests in each; 0 warnings over 755 objects; the two 5x
+      repeat stages with a recorded non-zero selection; fingerprints before ==
+      after == the frozen ones; and the CfdMesh census and quality text identical
+      across all three presets. Only then do the last three boxes become [x], and
+      only then does commit-mesh.ps1 run
+    OPEN, owner finding F1: the eight P16 reference meshes are poor finite-volume
+      meshes (non-orthogonality to 89.28 deg, skewness to 6.51). The topology
+      passes everywhere, so the non-orthogonal correction is MANDATORY in the
+      solver, P19-VALID-001 may refuse some of these meshes, and a benchmark will
+      need finer P16 sizing or an owner-decided FV-quality option in P16 — never a
+      CFD-side remesh. This milestone sets no threshold.
+
+The open milestone is P19-MESH-001, blocked on its own re-run, which must be
+launched from clean on the qualification machine after its temp volume is freed.
+Nothing else is authorized: P19-TOPO-001 — Finite-Volume Topology is next in the
+sequence and is NOT AUTHORIZED. P18's F1-F3 and P17's F1-F3 stand as owner
+decisions.
+```
+
+Evidence: [docs/verification/P19-MESH-001/](docs/verification/P19-MESH-001/README.md).
+
+## What is authorized, and what is not
+
+```text
+P18              QUALIFIED 2026-10-27 by P18-QUAL-001: eighteen milestones
+                 PASS (345 boxes), 5804/5804 x 3, 2561 x 5 in two, 0 warnings
+                 over 743 objects, 17 stages exit 0, qualified tree ==
+                 committed tree. Committed as b5dce07, recorded as 4334bf8.
+                 The chain, the figures and the evidence links are in
+                 ROADMAP.md and docs/verification/P18-QUAL-001/.
+
+P19              AUTHORIZED 2026-10-27 by the owner's "start P19-ARCH-001",
+                 with the open P18 findings F1-F3 as inputs. The phase plan
+                 is recorded in this file; authorization is per MILESTONE,
+                 not per phase.
+
+P19-ARCH-001     PASS 2026-10-27. 5826/5826 x 3, 2583 x 5 in two, 0 warnings
+                 over 745 objects, 17 stages exit 0. Committed as 42a3551,
+                 recorded as 24a1496. ADR-058, ADR-059, ADR-060. Evidence
+                 recorded.
+
+P19-DATA-001     PASS 2026-10-27. 5893/5893 x 3, 2622 x 5 in two, 0 warnings
+                 over 750 objects, 17 stages exit 0. Committed as f08019a,
+                 recorded as c8b53f6. ADR-061. Evidence recorded.
+
+P19-FLUID-001    PASS 2026-10-28. 5919/5919 x 3, 2783 x 5 in two, 0 warnings
+                 over 753 objects, 17 stages exit 0. Committed as 4e57b02,
+                 recorded as b1f151c. ADR-062. Evidence recorded.
+
+P19-MESH-001     AUTHORIZED 2026-10-28. OPEN, NOT QUALIFIED, and BLOCKED
+                 since 2026-10-29. Implemented and reviewed on candidate
+                 b1f151c plus the working tree, and NOT COMMITTED:
+                 qualification attempt 1 FAILED 5 of 17 stages for an
+                 environmental reason (the qualification machine's %TEMP%
+                 volume was full), so no suite ran in any preset and nothing
+                 is qualified. Determinism PASS, Regression PASS and
+                 Evidence recorded stay open until a clean re-run passes
+                 every stage; commit-mesh.ps1 refuses to commit until it
+                 does. ADR-063. docs/verification/P19-MESH-001/FREEZE.md.
+
+P19-TOPO-001     NOT AUTHORIZED. Being next in the sequence is not
+                 permission, and P19-MESH-001's implementation having passed
+                 its review is not either. Authorizing it is the owner's
+                 decision, and it cannot sensibly be taken before
+                 P19-MESH-001's re-run passes.
+
+everything after it
+                 likewise.
+```
+
+The text below is the standing record as of P18-QUAL-001 (2026-10-27) and is kept as history.
+
+```text
 P18 — Thermal Analysis is QUALIFIED. P18-QUAL-001 PASS, 2026-10-27.
 
     eighteen milestones audited from their own recorded verdicts, 18 PASS (345 boxes)
@@ -3682,7 +3811,7 @@ boundary regions, undo/redo, a headless CLI and eight independently validated
 reference models.
 [docs/verification/P16-QUAL-001/](docs/verification/P16-QUAL-001/README.md).
 
-## What is authorized, and what is not
+## What was authorized, and what was not — the record as of P17-QUAL-001
 
 ```text
 P17-ARCH-001 .. P17-REFMOD-001
