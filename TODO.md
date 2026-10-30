@@ -2197,7 +2197,9 @@ postrun-mesh.ps1 compared stdout across presets without pinning a seed, on a
 binary whose case order defaults to rand, so the comparison was a coin flip;
 --rng-seed 1, the convention the P12 evidence scripts already use, makes it
 deterministic and strictly stricter. The owner accepted that fix before any mark
-moved. Evidence: docs/verification/P19-MESH-001/.
+moved. Committed as 189b87f, production code and evidence together, with all
+eight subtree hashes equal to the frozen fingerprint before and after the commit:
+qualified tree == committed tree. Evidence: docs/verification/P19-MESH-001/.
 ```
 
 Critical question:
@@ -3748,9 +3750,10 @@ P19-MESH-001     PASS 2026-10-31. 5939/5939 x 3, 2803 x 5 in two with 14015
                  first (ENVIRONMENT-MIGRATION.md); attempt 1 of 2026-10-28
                  FAILED 5 of 17 stages environmentally and stays recorded.
                  The twelve frozen identities unchanged before and after.
-                 ADR-063. Evidence recorded. The commit identity is recorded
-                 separately, as this project's "record the ... commit"
-                 entries do.
+                 Committed as 189b87f; all eight subtree hashes of that commit
+                 equal the frozen fingerprint, checked before and after the
+                 commit: qualified tree == committed tree. ADR-063. Evidence
+                 recorded.
 
 P19-TOPO-001     NOT AUTHORIZED. Being next in the sequence is not
                  permission, and P19-MESH-001 having PASSED is not either.
