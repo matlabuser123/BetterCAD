@@ -1,0 +1,18 @@
+id          model                   cells  intern  bound patch  4C == 2I+B         == ADR-063 F1   
+RM-MESH-01  MeshBlock                   6       6     12     6  24 == 24  OK       OK              
+RM-MESH-02  MeshCylinder              508     946    140     3  2032 == 2032  OK   OK              
+RM-MESH-03  MeshPlateWithHole         126     172    160     7  504 == 504  OK     OK              
+RM-MESH-04  MeshTube                  808    1472    288     4  3232 == 3232  OK   OK              
+RM-MESH-05  MeshThinPlate              12      18     12     6  48 == 48  OK       OK              
+RM-MESH-06  MeshTransformedBase        12      18     12     6  48 == 48  OK       OK              
+RM-MESH-06  MeshTransformedPlaced      12      18     12     6  48 == 48  OK       OK              
+RM-MESH-07  MeshLocalRefinement       267     528     12     6  1068 == 1068  OK   OK              
+
+eight reference meshes checked
+the Tet4 identity 4C == 2I + B holds on all eight:        True
+every internal-face count equals ADR-063's recorded F1:   True
+
+WHY THIS IS INDEPENDENT. The identity is arithmetic on the counts, not a
+re-run of the code that produced them, and the F1 column was recorded by
+P19-MESH-001 three days earlier from the MESH CONTRACT's census and from
+the tests' own faceIncidence -- two code paths that are not this one.

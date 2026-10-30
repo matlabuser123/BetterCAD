@@ -1,0 +1,31 @@
+== P19-MESH-001 preflight: free disk space ==
+   Sat 31/10/2026 04:02:34
+
+threshold   QUALIFY_MIN_FREE_GB = 20 GB, required free on each volume below
+
+%TEMP% (the compiler's cc*.s files)
+    path    C:\Users\Hasib\AppData\Local\Temp
+    volume  C:\   free 2312.06 GB of 3814.25 GB
+    OK
+
+BETTERCAD_BUILD_ROOT (the three build trees)
+    path    C:/bettercad/bc-build
+    volume  C:\   free 2312.06 GB of 3814.25 GB
+    the same volume as %TEMP% (the compiler's cc*.s files) -- counted once
+
+removable if a volume is short. NOTHING under docs/verification/ is removable:
+    [present] the in-tree build/ (stale CMake trees, git-ignored, unused by the harness)
+              C:\Users\Hasib\Desktop\CAD\build
+    [absent ] bettercad-qualify-index (tiny, recreated by the harness)
+              C:\Users\Hasib\AppData\Local\Temp\bettercad-qualify-index
+    [absent ] bettercad-harness-check (tiny, recreated by verify-harness.cmd)
+              C:\Users\Hasib\AppData\Local\Temp\bettercad-harness-check
+    [absent ] no orphaned cc*.s files in %TEMP%
+
+build root  size not measured. Pass -WithSizes for it; it enumerates every
+            file and takes minutes on a populated tree.
+
+RESULT: OK. Every distinct volume has at least 20 GB free.
+preflight-space.ps1 exit 0
+Qualification passed: every stage exited 0.
+qualify.cmd exit 0

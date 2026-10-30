@@ -45,6 +45,7 @@ bettercad_add_library(bettercad_cfd
         CfdData.cpp
         CfdFluid.cpp
         CfdMesh.cpp
+        CfdTopology.cpp
         CfdResult.cpp
     PUBLIC_LINK
         BetterCAD::core

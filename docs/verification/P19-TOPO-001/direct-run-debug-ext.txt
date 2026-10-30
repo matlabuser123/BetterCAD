@@ -1,0 +1,34 @@
+P19-TOPO-001 DIRECT-BINARY EVIDENCE RUN
+
+binary   C:/bettercad/bc-build/debug-ext/bin/bettercad_tests.exe
+preset   debug-ext, as built by the qualification run of 2026-10-31
+command  bettercad_tests.exe "CfdTopology_*" --rng-seed 1 --order decl
+
+The seed is pinned because this binary's --order defaults to rand with a
+per-run seed; an unpinned run is not reproducible evidence. (P12's
+collect-evidence.cmd established the convention; P19-MESH-001's postrun
+check failed for want of it.)
+
+---------------------------------------------------------------------
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdTopologyTests.cpp:466: warning:
+  RM-MESH-06 MeshTransformedPlaced: 12 cells, 18 internal faces, 12 boundary
+  faces, 6 patches
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdTopologyTests.cpp:466: warning:
+  RM-MESH-07 MeshLocalRefinement: 267 cells, 528 internal faces, 12 boundary
+  faces, 6 patches
+
+-------------------------------------------------------------------------------
+CfdTopology_EveryFaceIsWoundOutwardOfItsOwner
+-------------------------------------------------------------------------------
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdTopologyTests.cpp:539
+...............................................................................
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdTopologyTests.cpp:576: warning:
+  worst (normal . toApex) over 1086 faces: -2.871449e-09 (all must be < 0)
+
+===============================================================================
+All tests passed (108373 assertions in 36 test cases)
+
+---------------------------------------------------------------------
+exit 0

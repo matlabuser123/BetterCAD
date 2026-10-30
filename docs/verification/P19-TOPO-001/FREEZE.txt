@@ -1,0 +1,50 @@
+P19-TOPO-001 QUALIFICATION FREEZE
+taken 2026-10-30T18:01:57Z (UTC), before the first build
+
+HEAD          dacbf561abce4451dee420e54118425e5d3ccfbd
+origin/main   dacbf561abce4451dee420e54118425e5d3ccfbd
+
+THE CANDIDATE -- this milestone's own files
+  include/bettercad/cfd/CfdTopology.hpp        022f2cf561423bcec15784bc083c1345a6de8404
+  src/cfd/CfdTopology.cpp                      9023468cc6ca2a952b913bbdac868584698c3055
+  tests/cfd/CfdTopologyTests.cpp               5684a49ee4913b27d2e3fa06b40156347d95d925
+  tests/compile_fail/CfdTopologyMisuse.cpp     9ade65794672ef4a86472ce0b21a23f35d2cb07e
+  ADR-064 (filename elided; one ADR)           cefea02d8ad7b90e8cdb94aa986a22f3b0bd3b13
+
+THE REGISTRATION POINTS it touches, and nothing else
+  src/cfd/CMakeLists.txt                       849b409cfd3629858f7d6ba46d30fb5dc4040521
+  tests/CMakeLists.txt                         bb49034ccf427862f31ad551c410e0034506b31a
+  tests/compile_fail/CMakeLists.txt            53ff23125cca3e9ca7d5a49298a1d6cb96d49b0d
+  tests/cli/ZeroMatchGuard.cmake               8fd442791af3abb10dc37f2ec20eae6a66a045f5
+
+THE HARNESS -- byte-identical to P19-MESH-001's, so the only difference
+between the two qualifications is the tree under test
+  qualify.cmd                                  d313a64070718c44fae290ac042fe259d1a03c8b
+  run-qualification.cmd                        22b19f25052486453b7b7e51b84f3b4b8afb57f0
+  launch.cmd                                   f11039e6dc366d7c469a15cf74fb3867fd5ffeff
+  verify-harness.cmd                           11855b8ff891093b021d1e0351761283d0eedd24
+  preflight-space.cmd                          a65d6578000b6e8a2811d5154bcec24be09c2b54
+  preflight-space.ps1                          2f0d4228488f6a574ca57ec89f0fad0107b16b59
+  qualify.cmd is d313a640, as in every milestone since P12
+
+THE EIGHT QUALIFIED SUBTREES, before the first build
+  apps               fc398a3d2e524178cf38e8b667236379d8381086
+  include            269e4a3f567791b0022ebdd8e000074e588e0207
+  src                450c99d1ad6e02872dfdb18f0e376e64aa3c33ee
+  tests              aaa0243dd3754b6bf0d282ebe67c92b5bbf65eb0
+  examples           4da234ebf4779f7c16d5df0075f106f7e3d4c958
+  cmake              5a382115d7ed7775189d40b55e40f318eaae6cc7
+  CMakeLists.txt     3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd
+  CMakePresets.json  3229f0f89b236744d7d5c082bed47c28b718288e
+
+UNCHANGED FROM P19-MESH-001's FROZEN VALUES (nothing outside this milestone moved)
+  apps               fc398a3d2e524178cf38e8b667236379d8381086
+  examples           4da234ebf4779f7c16d5df0075f106f7e3d4c958
+  cmake              5a382115d7ed7775189d40b55e40f318eaae6cc7
+  CMakeLists.txt     3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd
+  CMakePresets.json  3229f0f89b236744d7d5c082bed47c28b718288e
+
+REQUIRED COUNTS for this milestone, measured on debug-ext before the run
+  full suite per preset   5998   (5939 + 36 unit.CfdTopology_ + 23 compile_fail.cfdtopo)
+  repeat selection        2839   (2803 + 36; the harness filter's unit\.Cfd reaches them)
+  Passed markers per repeat log  14195  (2839 x 5)

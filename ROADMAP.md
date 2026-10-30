@@ -103,12 +103,14 @@ Current authorized development:
 ```text
 P19 — CFD Integration, authorized 2026-10-27 by the owner's "start
 P19-ARCH-001": P19-ARCH-001 and P19-DATA-001 (2026-10-27), P19-FLUID-001
-(2026-10-28) and P19-MESH-001 (2026-10-31) have PASSED. P19-MESH-001 was
-qualified by a second attempt on a replacement machine: its first attempt, on
-2026-10-28, failed 5 of 17 stages when the previous machine's temp volume
-filled and no test suite ran, and that machine was then permanently replaced,
-so the replacement was qualified in its own right before the gate was re-run.
-No milestone is open. P19-TOPO-001 is next and NOT authorized; see TODO.md.
+(2026-10-28), P19-MESH-001 and P19-TOPO-001 (both 2026-10-31) have PASSED.
+P19-MESH-001 was qualified by a second attempt on a replacement machine: its
+first attempt, on 2026-10-28, failed 5 of 17 stages when the previous machine's
+temp volume filled and no test suite ran, and that machine was then permanently
+replaced, so the replacement was qualified in its own right before the gate was
+re-run. P19-TOPO-001 qualified from clean on the first attempt, on the same
+harness. No milestone is open. P19-GEOM-001 is next and NOT authorized; see
+TODO.md.
 
 The phases before it, and how each was qualified:
 
@@ -820,6 +822,25 @@ before the gate was re-run; see
 is that the `P16` reference meshes are poor finite-volume meshes, which makes the
 non-orthogonal correction mandatory in the solver and is judged by
 `P19-VALID-001`.
+
+`P19-TOPO-001` (PASS 2026-10-31) builds the finite-volume topology on that
+proved mesh: a derived, compactly indexed value, never persisted, carrying the
+mesh generation it was built for. Four index spaces become four distinct types,
+so a cell subscript, a face subscript, a boundary-face subscript and a mesh
+handle cannot be confused by a call — zero means "the first cell" in one space
+and "invalid" in the other — and no container is sized by a handle's value
+(`ADR-064`). Eight named refusals are a subset of what `ADR-063`'s gate already
+refuses, so possession of a topology is the proof. Two of them were added during
+adversarial review rather than documented away: `faceNodes` promised outward
+winding unconditionally while the builder checked neither cell volume nor
+shared-face orientation, and that guarantee is what `P19-GEOM-001`'s area vectors
+will rest on. Qualified from clean at 5998/5998 in each of three presets, 2839 x
+5 in two, 0 warnings under `-Werror`, 17 of 17 stages exit 0, and the eight
+qualified subtrees identical before the first build, after the last test run and
+in the committed tree; see
+[P19-TOPO-001](docs/verification/P19-TOPO-001/README.md). Two of its twenty-two
+checklist items are recorded narrower than their wording and one collapses onto
+another, each stated in the evidence rather than glossed.
 
 ```text
 incompressible laminar

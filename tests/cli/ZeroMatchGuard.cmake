@@ -412,6 +412,33 @@ set(_filters
     "unit\\.CfdMesh_EveryP16ReferenceMeshSatisfiesTheContract$" 1
     "unit\\.CfdMesh_RefusesCellsThatAreNotOneFaceConnectedSet$" 1
     "unit\\.CfdMesh_TheFaceTableIsTheOneP16WindsItsBoundaryWith$" 1
+    # P19-TOPO-001. The group, and the cases a renamed test would silently
+    # drop from the qualification: the reference-mesh sweep, the owner rule,
+    # the winding, both adjacency directions, patch membership, sparse
+    # handles, determinism and the stamp binding.
+    "unit\\.CfdTopology_" 30
+    "unit\\.CfdTopology_EveryP16ReferenceMeshYieldsATopology$" 1
+    "unit\\.CfdTopology_OwnerIsTheLowerCellAndEveryInternalFaceHasANeighbour$" 1
+    "unit\\.CfdTopology_EveryFaceIsWoundOutwardOfItsOwner$" 1
+    "unit\\.CfdTopology_CellAndFaceAdjacencyAgreeInBothDirections$" 1
+    "unit\\.CfdTopology_PatchesPartitionTheBoundaryFaces$" 1
+    "unit\\.CfdTopology_IndexesCellsWhoseElementHandlesAreSparse$" 1
+    "unit\\.CfdTopology_TwoBuildsOfOneMeshAreEqual$" 1
+    "unit\\.CfdTopology_RefusesAContractProvedForAnotherMeshGeneration$" 1
+    "unit\\.CfdTopology_RefusesAnInvertedCellBecauseItsFacesAreNotWoundOutward$" 1
+    "unit\\.CfdTopology_RefusesTwoCellsFoldedOntoOneSideOfTheirSharedFace$" 1
+    "unit\\.CfdTopology_RefusesAFaceSharedByThreeCells$" 1
+    "unit\\.CfdTopology_RefusesAFaceWithNoSecondCellAndNoBoundaryTriangle$" 1
+    "unit\\.CfdTopology_RefusesABoundaryTriangleThatIsNoFaceOfAnyCell$" 1
+    "unit\\.CfdTopology_RefusesABoundaryTriangleOnAFaceTwoCellsShare$" 1
+    "unit\\.CfdTopology_RefusesTwoBoundaryTrianglesOnOneFace$" 1
+    "unit\\.CfdTopology_RefusesABoundaryTriangleAttributedToNoPatchOrToSeveral$" 1
+    "unit\\.CfdTopology_PatchFaceNamesTheCadFaceAndNotThePatchIndex$" 1
+    "unit\\.CfdTopology_EqualityDiscriminatesSoDeterminismMeansSomething$" 1
+    "unit\\.CfdTopology_DescribesIsFalseForALaterGenerationOfTheSameMesh$" 1
+    "unit\\.CfdTopology_EveryAccessorIsTotalForAnIndexItDoesNotHold$" 1
+    "unit\\.CfdTopology_TheIndexTranslationsAreMutualInverses$" 1
+    "unit\\.CfdTopology_TheRefusalNamesTheControlAndEveryFindingInOrder$" 1
     # P18-QUAL-001. The final-gate cases (the authority matrix over every reference document, the currentness matrix in one sequence and its
     # edit-back path, a failed regeneration, the unforgeable proof of an accepted input, the units of the transient sum), and one test for
     # each defect the final audit found and fixed or each gap it closed, each at its own name so a rename or a drop is a failure.

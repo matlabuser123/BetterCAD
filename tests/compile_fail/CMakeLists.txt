@@ -843,6 +843,56 @@ bettercad_compile_fail_case(cfdids "${_cfdids}" A_RESULT_METADATA_IS_READ_ONLY
     "read-only|discards qualifiers" BetterCAD::cfd)
 bettercad_compile_fail_case(cfdids "${_cfdids}" A_RESULT_CANNOT_BE_BUILT_WITHOUT_ITS_FACTORY
     "is private within this context|private" BetterCAD::cfd)
+
+# The finite-volume topology's addressing (P19-TOPO-001, ADR-064). FOUR
+# SUBSCRIPTS OVER ONE MESH, three of them std::size_t underneath, and nothing
+# about the numbers tells them apart: cell 3 and face 3 both exist in almost
+# every mesh, so reading a per-cell field with a face index is silent and wrong.
+# The separation therefore cannot rest on naming, and these cases are the proof
+# that it rests on the type system. The milestone's own `ElementId != CellIndex`
+# is here in both directions, together with the node handle, the bare integer,
+# and the arithmetic and comparison a subscript must NOT have.
+set(_cfdtopo "${CMAKE_CURRENT_SOURCE_DIR}/CfdTopologyMisuse.cpp")
+bettercad_compile_fail_group(cfdtopo "${_cfdtopo}" BetterCAD::cfd)
+foreach(_case
+        A_CELL_IS_NOT_A_FACE
+        A_FACE_IS_NOT_A_CELL
+        A_FACE_IS_NOT_A_BOUNDARY_FACE
+        A_BOUNDARY_FACE_IS_NOT_A_FACE
+        A_PATCH_IS_NOT_A_BOUNDARY_FACE
+        A_BOUNDARY_FACE_IS_NOT_A_PATCH
+        AN_ELEMENT_HANDLE_IS_NOT_A_CELL_INDEX
+        A_CELL_INDEX_IS_NOT_AN_ELEMENT_HANDLE
+        A_NODE_HANDLE_IS_NOT_A_CELL_INDEX
+        PASSING_A_FACE_WHERE_A_CELL_IS_WANTED
+        PASSING_A_CELL_WHERE_A_FACE_IS_WANTED
+        PASSING_A_BOUNDARY_FACE_WHERE_A_FACE_IS_WANTED
+        PASSING_A_PATCH_WHERE_A_BOUNDARY_FACE_IS_WANTED
+        PASSING_AN_ELEMENT_WHERE_A_CELL_IS_WANTED
+        PASSING_A_CELL_WHERE_AN_ELEMENT_IS_WANTED
+        PASSING_A_NODE_WHERE_A_CELL_IS_WANTED
+        PASSING_A_CELL_WHERE_AN_INTEGER_IS_WANTED)
+    bettercad_compile_fail_case(cfdtopo "${_cfdtopo}" ${_case}
+        "could not convert|cannot convert|no matching function|no match for|invalid conversion"
+        BetterCAD::cfd)
+endforeach()
+# A bare integer reaching an index, and an index reaching arithmetic or a
+# cross-kind comparison, are refused with their own diagnostics.
+bettercad_compile_fail_case(cfdtopo "${_cfdtopo}" AN_INTEGER_IS_NOT_A_FACE_INDEX
+    "cannot convert [^ ]*int[^ ]* to|conversion from [^ ]*int[^ ]* to non-scalar type|could not convert|no matching function|no match for"
+    BetterCAD::cfd)
+bettercad_compile_fail_case(cfdtopo "${_cfdtopo}" PASSING_AN_INTEGER_WHERE_A_CELL_IS_WANTED
+    "conversion from [^ ]*int[^ ]* to non-scalar type|could not convert|no matching function|no match for"
+    BetterCAD::cfd)
+bettercad_compile_fail_case(cfdtopo "${_cfdtopo}" AN_INDEX_IS_NOT_AN_INTEGER
+    "could not convert|cannot convert|no matching function|no match for|invalid conversion"
+    BetterCAD::cfd)
+bettercad_compile_fail_case(cfdtopo "${_cfdtopo}" AN_INDEX_HAS_NO_ARITHMETIC
+    "no match for|no matching function|invalid operands" BetterCAD::cfd)
+bettercad_compile_fail_case(cfdtopo "${_cfdtopo}" TWO_INDEX_KINDS_DO_NOT_COMPARE
+    "no match for|no matching function|invalid operands" BetterCAD::cfd)
+bettercad_compile_fail_case(cfdtopo "${_cfdtopo}" A_TOPOLOGY_CANNOT_BE_BUILT_WITHOUT_ITS_BUILDER
+    "is private within this context|private" BetterCAD::cfd)
 foreach(_case
         THE_DEFINITION_HAS_NO_PRESSURE_FIELD
         THE_DEFINITION_HAS_NO_VELOCITY_FIELD

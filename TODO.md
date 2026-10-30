@@ -23,6 +23,32 @@ Prerequisite:
            may set). P17's F1-F3 stand unchanged beneath them.
 
 Current milestone:
+           none. P19-TOPO-001 PASSED 2026-10-31 and nothing after it is
+           authorized. P19-GEOM-001 is next in the sequence and is NOT
+           AUTHORIZED: the next milestone is a scope decision, and it is the
+           owner's to make.
+
+Previous milestone:
+           P19-TOPO-001 — Finite-Volume Topology. AUTHORIZED 2026-10-31 by
+           the owner ("implement this and fully verify", with the twenty-two
+           item checklist quoted). PASS 2026-10-31. All twenty-two items are
+           recorded: 17 of 17 stages exit 0, 5998/5998 in each of the three
+           presets, 2839 x 5 in two with 14195 counted per-test Passed markers
+           each, 0 warnings and 0 errors under -Werror, 2h11m16s, and the eight
+           qualified subtrees identical before the first build, after the last
+           test run and in the committed tree. 36 unit cases / 108,373
+           assertions and 23 compile-fail cases. Two independent reviews each
+           found a real defect: faceNodes promised outward winding
+           unconditionally while the builder checked neither cell volume nor
+           shared-face orientation, so the guarantee is now ENFORCED by two
+           added refusals (NonPositiveCellVolume, InconsistentFaceOrientation)
+           rather than documented; and eight claims in ADR-064 had no evidence
+           behind them, each corrected. Two checklist items are recorded
+           narrower than their wording and one collapses onto another; all
+           three are stated in the evidence rather than glossed.
+           (docs/verification/P19-TOPO-001/README.md.)
+
+Milestone before that:
            P19-MESH-001 — CFD Volume / Surface Mesh Contract. AUTHORIZED
            2026-10-28 ("start P19-MESH-001"). PASS 2026-10-31. All twenty-four
            items are now recorded: Determinism PASS, Regression PASS and
@@ -63,12 +89,11 @@ Qualified:
            P18 — Thermal Analysis
 
 Next:
-           nothing. P19-MESH-001 has PASSED and was the last authorized
-           milestone, so no new milestone is authorized: P19-TOPO-001 —
-           Finite-Volume Topology is next in the sequence and is NOT
-           AUTHORIZED. P19-MESH-001 having passed is not permission to start
-           it; each milestone is started by the owner, as every P17 and P18
-           milestone was.
+           nothing is authorized. P19-TOPO-001 PASSED 2026-10-31, and
+           P19-GEOM-001 — next in the sequence — is NOT AUTHORIZED. Each
+           milestone is started by the owner, as every P17 and P18 milestone
+           was, and a predecessor's PASS is not permission to start the one
+           after it. Finishing a milestone is itself a stop condition.
 
 P19 objective, as planned:
            authoritative CAD / fluid / mesh state
@@ -1845,9 +1870,9 @@ general fix → requalify the affected milestone → rerun P18-QUAL.
 **AUTHORIZED 2026-10-27** by the owner's "start P19-ARCH-001", the open P18 findings
 F1-F3 weighed as inputs to it. Milestones are worked top to bottom, and each is authorized
 by its predecessor's PASS being recorded here and the owner saying so -- P17's and P18's
-rule, unchanged. P19-ARCH-001, P19-DATA-001, P19-FLUID-001 and P19-MESH-001 have PASSED;
-**nothing after it is authorized**, and a predecessor's pass is not permission to start the
-next.
+rule, unchanged. P19-ARCH-001, P19-DATA-001, P19-FLUID-001, P19-MESH-001 and P19-TOPO-001 have
+PASSED; **nothing after them is authorized**, and a predecessor's pass is not permission
+to start the next.
 
 Goal: add qualified incompressible CFD capability without duplicating CAD, material, mesh,
 solver, result, persistence, or CLI authority.
@@ -2219,28 +2244,74 @@ authority.
 
 Build deterministic cell / face connectivity.
 
-* [ ] Define compact `CellIndex`
-* [ ] Define compact `FaceIndex`
-* [ ] Define boundary-face index
-* [ ] `ElementId != CellIndex`
-* [ ] Define owner cell
-* [ ] Define neighbour cell
-* [ ] Define boundary face
-* [ ] Define internal face
-* [ ] Define boundary patch membership
-* [ ] Define face orientation
-* [ ] Define cell-to-face adjacency
-* [ ] Define face-to-cell adjacency
-* [ ] Reject duplicate internal faces
-* [ ] Reject missing neighbours
-* [ ] Reject boundary faces with two owners
-* [ ] Reject internal faces with one owner
-* [ ] Sparse mesh IDs supported
-* [ ] No max-ID-sized arrays
-* [ ] Exact mesh-source binding
-* [ ] Determinism PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Define compact `CellIndex`
+* [x] Define compact `FaceIndex`
+* [x] Define boundary-face index
+* [x] `ElementId != CellIndex`
+* [x] Define owner cell
+* [x] Define neighbour cell
+* [x] Define boundary face
+* [x] Define internal face
+* [x] Define boundary patch membership
+* [x] Define face orientation
+* [x] Define cell-to-face adjacency
+* [x] Define face-to-cell adjacency
+* [x] Reject duplicate internal faces
+* [x] Reject missing neighbours
+* [x] Reject boundary faces with two owners
+* [x] Reject internal faces with one owner
+* [x] Sparse mesh IDs supported
+* [x] No max-ID-sized arrays
+* [x] Exact mesh-source binding
+* [x] Determinism PASS
+* [x] Regression PASS
+* [x] Evidence recorded
+
+```text
+PASS 2026-10-31. Authorized 2026-10-31 by the owner's "implement this and fully
+verify", with the twenty-two item checklist quoted. Qualified from clean on the
+first attempt against dacbf561 plus this milestone's candidate files:
+5998/5998 x 3 presets, 2839 x 5 in two with 14195 counted per-test Passed
+markers each, 0 warnings and 0 errors under -Werror, 17 stages exit 0,
+2h11m16s, and the eight qualified subtrees identical before the first build,
+after the last test run and in the committed tree. 36 unit cases / 108,373
+assertions and 23 compile-fail cases; the 28 cfdids cases and 205 architecture
+tests unchanged and passing. The harness is byte-identical to P19-MESH-001's
+(qualify.cmd d313a640), so the only difference between the two qualifications
+is the tree under test.
+
+The topology is a DERIVED value -- built from a mesh and a mapping, never
+persisted, carrying the mesh generation it was built for, so it cannot survive
+a remesh. Four index spaces become four distinct types (CellIndex, FaceIndex,
+BoundaryFaceIndex, PatchIndex, all dense and 0-based) against the mesh's sparse
+1-based ElementId, so zero means "the first cell" in one space and "invalid" in
+the other and the separation rests on the type system, not on naming; no
+container is sized by a handle's value (ADR-064). Eight named refusals are a
+subset of what ADR-063's gate already refuses, so possession of a topology is
+the proof.
+
+Adversarial review found one credible defect: faceNodes promised outward
+winding unconditionally while the builder checked neither cell volume nor
+shared-face orientation, and P19-GEOM-001 is told to build its area vectors on
+that guarantee. It is now ENFORCED by two added refusals,
+NonPositiveCellVolume and InconsistentFaceOrientation, each with a fixture
+built to fail it -- not documented away. A test-gap review found eight claims
+with no evidence behind them, each corrected; the largest was that the
+structural assertions ran on one model each, leaving the transformed body
+untested, so checkStructure now runs every structural claim on all eight
+reference meshes.
+
+Three checklist items are recorded as less than their wording suggests, stated
+rather than glossed: "Reject duplicate internal faces" -- a duplicate internal
+face is not representable, since the key is a sorted node triple, so what is
+rejected is the two reachable attempts; "Reject internal faces with one owner"
+-- the same condition and the same test as "Reject missing neighbours", so it
+collapses onto it rather than being counted twice; "Sparse mesh IDs supported"
+-- MeshBuilder allocates from one counter, so the reachable sparsity is
+interleaving, tested alongside a far-outside lookup. "No max-ID-sized arrays"
+is proved by review and negative lookups, NOT by measuring allocation.
+Evidence: docs/verification/P19-TOPO-001/.
+```
 
 ---
 # P19-GEOM-001
@@ -3662,6 +3733,56 @@ docs/engineering/
 # CURRENT NEXT STEP
 
 ```text
+P19-TOPO-001 — Finite-Volume Topology has PASSED, 2026-10-31. Authorized
+2026-10-31 by the owner's "implement this and fully verify" with the twenty-two
+item checklist quoted, and qualified from clean on the first attempt.
+
+    all 22 checklist items are recorded, two of them narrower than their wording
+      and one collapsing onto another, each stated in the evidence: a duplicate
+      internal face is not representable (the key is a sorted node triple), so
+      what is rejected is the two reachable attempts; "sparse mesh IDs" is
+      interleaving through the real builder plus a far-outside lookup, because
+      MeshBuilder allocates from one counter; "no max-ID-sized arrays" is proved
+      by review and negative lookups, NOT by measuring allocation
+    four index spaces, four types: CellIndex, FaceIndex, BoundaryFaceIndex and
+      PatchIndex are dense and 0-based, an ElementId is sparse and 1-based, and
+      zero means "the first cell" in one space and "invalid" in the other, so the
+      separation rests on the type system and not on naming (ADR-064)
+    possession is the proof: the constructor is private with two friends, and the
+      eight refusals are a subset of what ADR-063's gate already refuses, so none
+      can fire on a mesh holding a CfdMeshContract
+    two refusals were ADDED during adversarial review, not documented away:
+      faceNodes promised outward winding unconditionally while the builder checked
+      neither cell volume nor shared-face orientation, and P19-GEOM-001 is told to
+      build its area vectors on that guarantee. NonPositiveCellVolume and
+      InconsistentFaceOrientation now enforce it, each with a fixture built to
+      fail it
+    a test-gap review found eight claims with no evidence behind them, each
+      corrected: the structural assertions ran on one model each, leaving the
+      transformed body untested, so checkStructure now runs every structural
+      claim on all eight reference meshes; cellByElement_'s sortedness was
+      assumed by lower_bound and never asserted; patchFace was only checked where
+      the expected value coincided with the index passed in; the ADR's motivating
+      sparse mesh cannot be built by MeshBuilder; the "independent" census is an
+      independent transcription, not an independent method; Decision 7's subset
+      mapping was wrong in detail; patchFace returned a bare SIZE_MAX; and
+      equality was never shown to discriminate
+    independent validation: the Tet4 identity 4C == 2I + B on all eight reference
+      meshes, every internal-face count equal to the F1 column P19-MESH-001
+      recorded from two other code paths, and the census's 946 + 140 = 1086 faces
+      for the Cylinder matched by the winding test's own independent count
+    qualification, Sat 31/10/2026 04:02:35 -> 06:13:51 (2h11m16s): 17 of 17
+      stages exit 0, qualify.cmd exit 0. Three presets configured, cleaned, built
+      and run unfiltered at 5998/5998 each; the two 5x repeat stages at a counted
+      selection of 2839 with 14195 per-test Passed markers each; 0 warnings and
+      0 errors under -Werror; 36 unit cases / 108,373 assertions and 23
+      compile-fail cases, with the 28 cfdids cases and 205 architecture tests
+      unchanged and passing; the eight qualified subtrees identical before the
+      first build, after the last test run and in the committed tree
+    the harness is byte-identical to P19-MESH-001's (qualify.cmd d313a640, as
+      since P12), so the only difference between the two qualifications is the
+      tree under test
+
 P19-MESH-001 — CFD Volume / Surface Mesh Contract has PASSED, 2026-10-31.
 Authorized 2026-10-28; qualified by attempt 2, after attempt 1 failed
 environmentally on 2026-10-28 and the qualification machine was then replaced.
@@ -3708,12 +3829,14 @@ environmentally on 2026-10-28 and the qualification machine was then replaced.
       need finer P16 sizing or an owner-decided FV-quality option in P16 — never a
       CFD-side remesh. This milestone sets no threshold.
 
-No milestone is open, and nothing is authorized: P19-TOPO-001 — Finite-Volume
-Topology is next in the sequence and is NOT AUTHORIZED. Authorizing it is the
-owner's decision. P18's F1-F3 and P17's F1-F3 stand as owner decisions.
+No milestone is open. P19-GEOM-001 is next in the sequence and is NOT
+AUTHORIZED; authorizing it is the owner's decision alone. P19-MESH-001's owner
+finding F1 stands unchanged above, and P18's F1-F3 and P17's F1-F3 stand as owner
+decisions.
 ```
 
-Evidence: [docs/verification/P19-MESH-001/](docs/verification/P19-MESH-001/README.md).
+Evidence: [docs/verification/P19-TOPO-001/](docs/verification/P19-TOPO-001/README.md) and
+[docs/verification/P19-MESH-001/](docs/verification/P19-MESH-001/README.md).
 
 ## What is authorized, and what is not
 
@@ -3755,8 +3878,20 @@ P19-MESH-001     PASS 2026-10-31. 5939/5939 x 3, 2803 x 5 in two with 14015
                  commit: qualified tree == committed tree. ADR-063. Evidence
                  recorded.
 
-P19-TOPO-001     NOT AUTHORIZED. Being next in the sequence is not
-                 permission, and P19-MESH-001 having PASSED is not either.
+P19-TOPO-001     PASS 2026-10-31. 5998/5998 x 3, 2839 x 5 in two with 14195
+                 counted per-test Passed markers each, 0 warnings and 0 errors
+                 under -Werror, 17 stages exit 0, 2h11m16s. Qualified from clean
+                 on the first attempt, on the harness byte-identical to
+                 P19-MESH-001's. 36 unit cases / 108,373 assertions, 23
+                 compile-fail cases; the 28 cfdids cases and 205 architecture
+                 tests unchanged. The eight qualified subtrees identical before
+                 the first build, after the last test run and in the committed
+                 tree: qualified tree == committed tree. Two independent reviews
+                 each found a real defect and both are fixed; two checklist items
+                 are recorded narrower than their wording and one collapses onto
+                 another. ADR-064. Evidence recorded.
+
+P19-GEOM-001     NOT AUTHORIZED. Next in the sequence, which is not permission.
                  Authorizing it is the owner's decision alone.
 
 everything after it
