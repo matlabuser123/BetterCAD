@@ -48,3 +48,9 @@ REQUIRED COUNTS for this milestone, measured on debug-ext before the run
   full suite per preset   5998   (5939 + 36 unit.CfdTopology_ + 23 compile_fail.cfdtopo)
   repeat selection        2839   (2803 + 36; the harness filter's unit\.Cfd reaches them)
   Passed markers per repeat log  14195  (2839 x 5)
+
+COMMITTED AS (added after the commit; the freeze above is unchanged)
+  commit             a075abe9957c92cdc4120b769238de9afeb9a644
+  commit tree        89e295baa62fa55d4751322d3e494304731c0548
+  the eight subtrees of that commit, read back from the commit object, each
+  equal the frozen value above: qualified tree == committed tree

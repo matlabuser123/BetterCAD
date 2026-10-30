@@ -464,6 +464,11 @@ CMakePresets.json    3229f0f8       3229f0f8           3229f0f8
 Five of the eight are unchanged from P19-MESH-001's frozen values, confirming
 nothing outside this milestone moved.
 
+Committed as `a075abe`, production code and evidence together. The
+eight subtree hashes of that commit were read back from the commit object and
+each equals its frozen value, so the claim above is checked against what was
+published and not against the working tree. Commit tree `89e295ba`.
+
 ## KNOWN LIMITATIONS
 
 1. **"No max-ID-sized arrays" is proved by review and by negative lookups, not

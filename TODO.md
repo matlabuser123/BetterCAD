@@ -2310,7 +2310,9 @@ collapses onto it rather than being counted twice; "Sparse mesh IDs supported"
 -- MeshBuilder allocates from one counter, so the reachable sparsity is
 interleaving, tested alongside a far-outside lookup. "No max-ID-sized arrays"
 is proved by review and negative lookups, NOT by measuring allocation.
-Evidence: docs/verification/P19-TOPO-001/.
+Committed as a075abe, production code and evidence together; the eight subtree
+hashes were read back from the commit object and each equals its frozen value:
+qualified tree == committed tree. Evidence: docs/verification/P19-TOPO-001/.
 ```
 
 ---
@@ -3886,9 +3888,11 @@ P19-TOPO-001     PASS 2026-10-31. 5998/5998 x 3, 2839 x 5 in two with 14195
                  compile-fail cases; the 28 cfdids cases and 205 architecture
                  tests unchanged. The eight qualified subtrees identical before
                  the first build, after the last test run and in the committed
-                 tree: qualified tree == committed tree. Two independent reviews
-                 each found a real defect and both are fixed; two checklist items
-                 are recorded narrower than their wording and one collapses onto
+                 tree: qualified tree == committed tree. Committed as a075abe,
+                 production code and evidence together, the eight subtree hashes
+                 read back from the commit object. Two independent reviews each
+                 found a real defect and both are fixed; two checklist items are
+                 recorded narrower than their wording and one collapses onto
                  another. ADR-064. Evidence recorded.
 
 P19-GEOM-001     NOT AUTHORIZED. Next in the sequence, which is not permission.
