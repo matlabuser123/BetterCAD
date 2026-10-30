@@ -1,0 +1,60 @@
+﻿P19-MESH-001 freeze
+scratch   C:\Users\Hasib\AppData\Local\Temp\claude\C--Users-Hasib-Desktop-CAD\527dbd1e-d40d-42f7-8715-a186b5519185\scratchpad\freeze-check
+root      C:\Users\Hasib\Desktop\CAD
+HEAD      b474ac81aefa20155fcd46946bd559d18fe37e70
+HEAD tree c44b0fc78c76cfdb3fabff1dad650b89dad88ec8
+scratch tree 399d006cf517f94c824e2e6e0daf9357478b09ca
+apps               fc398a3d2e524178cf38e8b667236379d8381086
+include            aa83af4213b54690223ce805bf5fdc687a3777b0
+src                499bb156787ec3162ffcc7107f463be249953608
+tests              fd735ed14d90480110c10313d90200bdd331f1c0
+examples           4da234ebf4779f7c16d5df0075f106f7e3d4c958
+cmake              5a382115d7ed7775189d40b55e40f318eaae6cc7
+CMakeLists.txt     3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd
+CMakePresets.json  3229f0f89b236744d7d5c082bed47c28b718288e
+
+== CFD_MESH  (5 files)
+   include/bettercad/cfd/CfdMesh.hpp                                                          d24e3bd02efeff0b941585102d790b8dfcf3cc97
+   src/cfd/CfdMesh.cpp                                                                        17099c43ee70fa5da553cd948a6c2571247f2a11
+   src/cfd/CMakeLists.txt                                                                     f73ebbfecf1f81291e618ea41bddf0a75c9f62b8
+   include/bettercad/cfd/CfdAnalysis.hpp                                                      6f9d8fe97923254929d98b8deb8f2d2a5ff2dc96
+   src/cfd/CfdAnalysis.cpp                                                                    3ad2f6d4fbff3d1a506c248a6d7eeb83a001876a
+P19_MESH_CFD_MESH_FINGERPRINT 822ab6ed776c842950264bd410fe3e97e1627e75
+
+== P16_READ  (8 files)
+   include/bettercad/meshing/Mesh.hpp                                                         3d663f0df597bf40a8b0311287af7f199be05066
+   src/meshing/Mesh.cpp                                                                       85debe072a8f9cf1129a59609f9f7cc84e47d8c1
+   include/bettercad/meshing/VolumeMesh.hpp                                                   b52d34b5297dd53e92c517ced187b2caee365a6e
+   src/meshing/VolumeMesh.cpp                                                                 e39bb482fc69d4bcb84fabde6241066a75d891d3
+   include/bettercad/meshing/GeometryMeshMap.hpp                                              3137e31976d7f3a75eb6a23fe1145d5fb58434f3
+   src/meshing/GeometryMeshMap.cpp                                                            0f616c1ac78cc6ba0080735ecab12b8fd2969b6d
+   include/bettercad/meshing/GeometryPreparation.hpp                                          84911c095e438bb93cbb0d1fc5bf4b7fe841a5eb
+   include/bettercad/meshing/MeshIds.hpp                                                      7a8ea76a0367363b1a393ca634b5d58fb461b8f7
+P19_MESH_P16_READ_FINGERPRINT caa1f6e90af0b1f9825dc9444d1d03a337de32e2
+
+== MESH_TESTS  (5 files)
+   tests/cfd/CfdMeshTests.cpp                                                                 468e3a3367ee53fc4be8ad3e3818f8eec0137b4d
+   tests/reference/MeshTestSupport.hpp                                                        2fc76b0102791f3294da64ace35335b3f8042f2b
+   examples/reference_models/MeshReferenceModels.hpp                                          155369733d8e784094a6a8b6734918bd3d5cd6b9
+   tests/CMakeLists.txt                                                                       728e0b3008cca26affb06ceadba410840bfff036
+   tests/cli/ZeroMatchGuard.cmake                                                             cab5da3e7d6aa00e346bc45599ffa2bdb716d967
+P19_MESH_MESH_TESTS_FINGERPRINT af78f3aa7aecf1e6bc853034a3ba46789e7c5190
+
+== ADRS  (1 files)
+   docs/architecture/decisions/ADR-063-the-p16-tet4-mesh-is-the-finite-volume-mesh-and-a-staged-gate-proves-the-contract.md 545f55aa6322443e322606117e4f8c76ae41961a
+P19_MESH_ADRS_FINGERPRINT 6cc03381c76784139abde1eb2d47ca70e739ad5a
+
+== P16 files changed against HEAD (must be empty)
+
+== CHANGES against HEAD in the eight qualified paths (git status --short)
+ M src/cfd/CMakeLists.txt
+ M tests/CMakeLists.txt
+ M tests/cli/ZeroMatchGuard.cmake
+?? include/bettercad/cfd/CfdMesh.hpp
+?? src/cfd/CfdMesh.cpp
+?? tests/cfd/CfdMeshTests.cpp
+== other uncommitted paths
+?? .claude/
+?? AGENTS.md
+?? docs/architecture/decisions/ADR-063-the-p16-tet4-mesh-is-the-finite-volume-mesh-and-a-staged-gate-proves-the-contract.md
+?? docs/verification/P19-MESH-001/

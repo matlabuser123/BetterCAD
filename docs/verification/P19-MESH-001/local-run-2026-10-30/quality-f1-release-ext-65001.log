@@ -1,0 +1,70 @@
+UpdateCTestConfiguration  from :C:/Users/Hasib/Desktop/CAD/DartConfiguration.tcl
+Test project C:/Users/Hasib/bcd/bc-build/release-ext
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 390
+    Start 390: unit.CfdMesh_TheReferenceMeshQualityIsMeasuredNotJudged
+
+390: Test command: C:\Users\Hasib\bcd\bc-build\release-ext\bin\bettercad_tests.exe "CfdMesh_TheReferenceMeshQualityIsMeasuredNotJudged"
+390: Working Directory: C:/Users/Hasib/bcd/bc-build/release-ext/tests
+390: Test timeout computed to be: 10000000
+390: Filters: "CfdMesh_TheReferenceMeshQualityIsMeasuredNotJudged"
+390: Randomness seeded to: 47156142
+390: 
+390: ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+390: bettercad_tests.exe is a Catch2 v3.16.0 host application.
+390: Run with -? for options
+390: 
+390: -------------------------------------------------------------------------------
+390: CfdMesh_TheReferenceMeshQualityIsMeasuredNotJudged
+390: -------------------------------------------------------------------------------
+390: C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:386
+390: ...............................................................................
+390: 
+390: C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:411: warning:
+390:   RM-MESH-01 MeshBlock: 6 interior faces, non-orthogonality max 64.09 deg mean
+390:   47.56 deg, skewness max 0.5376
+390: 
+390: C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:411: warning:
+390:   RM-MESH-02 MeshCylinder: 946 interior faces, non-orthogonality max 89.28 deg
+390:   mean 57.89 deg, skewness max 4.6077
+390: 
+390: C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:411: warning:
+390:   RM-MESH-03 MeshPlateWithHole: 172 interior faces, non-orthogonality max 84.07
+390:   deg mean 56.70 deg, skewness max 6.5099
+390: 
+390: C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:411: warning:
+390:   RM-MESH-04 MeshTube: 1472 interior faces, non-orthogonality max 85.20 deg
+390:   mean 55.27 deg, skewness max 3.7138
+390: 
+390: C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:411: warning:
+390:   RM-MESH-05 MeshThinPlate: 18 interior faces, non-orthogonality max 88.81 deg
+390:   mean 66.48 deg, skewness max 0.8206
+390: 
+390: C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:411: warning:
+390:   RM-MESH-06 MeshTransformedBase: 18 interior faces, non-orthogonality max 66.
+390:   00 deg mean 47.04 deg, skewness max 0.8206
+390: 
+390: C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:411: warning:
+390:   RM-MESH-06 MeshTransformedPlaced: 18 interior faces, non-orthogonality max
+390:   66.00 deg mean 47.04 deg, skewness max 0.8206
+390: 
+390: C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:411: warning:
+390:   RM-MESH-07 MeshLocalRefinement: 528 interior faces, non-orthogonality max 75.
+390:   58 deg mean 31.14 deg, skewness max 1.3109
+390: 
+390: ===============================================================================
+390: All tests passed (104 assertions in 1 test case)
+390: 
+1/1 Test #390: unit.CfdMesh_TheReferenceMeshQualityIsMeasuredNotJudged ...   Passed    1.42 sec
+
+The following tests passed:
+	unit.CfdMesh_TheReferenceMeshQualityIsMeasuredNotJudged
+
+100% tests passed out of 1
+
+Total Test time (real) =   1.55 sec

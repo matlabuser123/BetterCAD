@@ -1,0 +1,44 @@
+# cli.new.unicode-path run from a console on an OEM code page (NOT the harness's 65001).
+# Captured through 'cat -v' so the raw bytes are legible: M-XX is one byte.
+# The ARGUMENT and the FILE ON DISK are correct UTF-8; only the captured stdout is not.
+
+Active code page: 437
+Test project C:/Users/Hasib/bcd/bc-build/debug-ext
+    Start 4767: cli.new.unicode-path
+1/1 Test #4767: cli.new.unicode-path .............***Failed    0.09 sec
+-- command  : C:/Users/Hasib/bcd/bc-build/debug-ext/bin/bettercad-cli.exe new;C:/Users/Hasib/bcd/bc-build/debug-ext/tests/cli-output/PlM-CM-%t M-bM-^\M-^S.bcad;--force
+-- exit code: 0 (expected 0)
+-- stdout:
+Created C:/Users/Hasib/bcd/bc-build/debug-ext/tests/cli-output/PlM-bM-^TM-^\M-CM-^Qt M-NM-^SM-BM-#M-CM-4.bcad (document 'PlM-bM-^TM-^\M-CM-^Qt M-NM-^SM-BM-#M-CM-4', ID 8a35a76d-014e-4138-a471-68db42de1253)
+-- stderr:
+
+-- file head:
+{
+  "format": "bettercad-document",
+  "version": 2,
+  "units": "SI",
+  "document": {
+    "id": "8a35a76d-014e-4138-a471-68db42de1253",
+    "name": "PlM-CM-%t M-bM-^\M-^S",
+    "metadata": {
+      "description": "",
+      "author": "",
+      "properties": {}
+    },
+   
+
+CMake Error at C:/Users/Hasib/Desktop/CAD/tests/cmake/RunAndCheck.cmake:84 (message):
+  Process check failed:
+
+    stdout does not match regex: \(document 'PlM-CM-%t M-bM-^\M-^S'
+
+
+
+
+0% tests passed, 1 tests failed out of 1
+
+Total Test time (real) =   0.24 sec
+
+The following tests FAILED:
+	4767 - cli.new.unicode-path (Failed)
+Errors while running CTest

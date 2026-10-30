@@ -1,0 +1,48 @@
+﻿# cli.new.unicode-path, same binary, same test, under code page 65001 -- the page qualify.cmd:39 sets.
+
+Active code page: 65001
+UpdateCTestConfiguration  from :C:/Users/Hasib/Desktop/CAD/DartConfiguration.tcl
+Test project C:/Users/Hasib/bcd/bc-build/debug-ext
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 4767
+    Start 4767: cli.new.unicode-path
+
+4767: Test command: C:\msys64\ucrt64\bin\cmake.exe "-DCOMMAND=C:/Users/Hasib/bcd/bc-build/debug-ext/bin/bettercad-cli.exe" "-DARGS=new|C:/Users/Hasib/bcd/bc-build/debug-ext/tests/cli-output/Plåt ✓.bcad|--force" "-DEXPECTED_EXIT_CODE=0" "-DEXPECTED_STDOUT_REGEX=\(document 'Plåt ✓'" "-DEXPECTED_STDERR_REGEX=" "-DEXPECTED_FILE=C:/Users/Hasib/bcd/bc-build/debug-ext/tests/cli-output/Plåt ✓.bcad" "-DEXPECTED_FILE_REGEX="name": "Plåt ✓"" "-DCOPY_FROM=" "-DCOPY_TO=" "-P" "C:/Users/Hasib/Desktop/CAD/tests/cmake/RunAndCheck.cmake"
+4767: Working Directory: C:/Users/Hasib/bcd/bc-build/debug-ext/tests
+4767: Test timeout computed to be: 10000000
+4767: -- command  : C:/Users/Hasib/bcd/bc-build/debug-ext/bin/bettercad-cli.exe new;C:/Users/Hasib/bcd/bc-build/debug-ext/tests/cli-output/Plåt ✓.bcad;--force
+4767: -- exit code: 0 (expected 0)
+4767: -- stdout:
+4767: Created C:/Users/Hasib/bcd/bc-build/debug-ext/tests/cli-output/Plåt ✓.bcad (document 'Plåt ✓', ID cb246d98-0934-4fa3-8b97-ea4f1aede1a9)
+4767: -- stderr:
+4767: 
+4767: -- file head:
+4767: {
+4767:   "format": "bettercad-document",
+4767:   "version": 2,
+4767:   "units": "SI",
+4767:   "document": {
+4767:     "id": "cb246d98-0934-4fa3-8b97-ea4f1aede1a9",
+4767:     "name": "Plåt ✓",
+4767:     "metadata": {
+4767:       "description": "",
+4767:       "author": "",
+4767:       "properties": {}
+4767:     },
+4767:    
+4767: 
+1/1 Test #4767: cli.new.unicode-path .............   Passed    0.06 sec
+
+The following tests passed:
+	cli.new.unicode-path
+
+100% tests passed out of 1
+
+Total Test time (real) =   0.21 sec
+
+ctest exit: 0

@@ -1,0 +1,43 @@
+qualification started Wed 10/28/2026 19:47:09.79 
+qualification candidate: 
+b1f151cc648a2b80ef82b1c5beb8321fdf507397
+qualified source trees before the first build: 
+  apps fc398a3d2e524178cf38e8b667236379d8381086 
+  include aa83af4213b54690223ce805bf5fdc687a3777b0 
+  src 499bb156787ec3162ffcc7107f463be249953608 
+  tests fd735ed14d90480110c10313d90200bdd331f1c0 
+  examples 4da234ebf4779f7c16d5df0075f106f7e3d4c958 
+  cmake 5a382115d7ed7775189d40b55e40f318eaae6cc7 
+  CMakeLists.txt 3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd 
+  CMakePresets.json 3229f0f89b236744d7d5c082bed47c28b718288e 
+debug-ext configure started Wed 10/28/2026 19:47:19.25 
+debug-ext configure exit 0 Wed 10/28/2026 19:47:29.50 
+debug-ext clean attempt 1 exit 0 Wed 10/28/2026 19:47:31.58 
+debug-ext build exit 1 Wed 10/28/2026 19:51:04.26 
+debug-ext ctest skipped: the build failed 
+release-ext configure started Wed 10/28/2026 19:51:04.27 
+release-ext configure exit 0 Wed 10/28/2026 19:51:08.95 
+release-ext clean attempt 1 exit 0 Wed 10/28/2026 19:51:09.92 
+release-ext build exit 1 Wed 10/28/2026 20:00:09.66 
+release-ext ctest skipped: the build failed 
+debug-shared-ext configure started Wed 10/28/2026 20:00:09.68 
+debug-shared-ext configure exit 0 Wed 10/28/2026 20:00:14.07 
+debug-shared-ext clean attempt 1 exit 0 Wed 10/28/2026 20:00:15.48 
+debug-shared-ext build exit 1 Wed 10/28/2026 20:05:21.50 
+debug-shared-ext ctest skipped: the build failed 
+repeat release-ext selects 352 test(s) 
+repeat release-ext started Wed 10/28/2026 20:05:21.96 
+repeat release-ext exit 8 Wed 10/28/2026 20:05:56.12 
+repeat debug-ext selects 352 test(s) 
+repeat debug-ext started Wed 10/28/2026 20:05:56.56 
+repeat debug-ext exit 8 Wed 10/28/2026 20:06:35.02 
+qualified source trees after the last test run: 
+  apps fc398a3d2e524178cf38e8b667236379d8381086 
+  include aa83af4213b54690223ce805bf5fdc687a3777b0 
+  src 499bb156787ec3162ffcc7107f463be249953608 
+  tests fd735ed14d90480110c10313d90200bdd331f1c0 
+  examples 4da234ebf4779f7c16d5df0075f106f7e3d4c958 
+  cmake 5a382115d7ed7775189d40b55e40f318eaae6cc7 
+  CMakeLists.txt 3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd 
+  CMakePresets.json 3229f0f89b236744d7d5c082bed47c28b718288e 
+qualification finished Wed 10/28/2026 20:06:44.12, 5 stage(s) failed 

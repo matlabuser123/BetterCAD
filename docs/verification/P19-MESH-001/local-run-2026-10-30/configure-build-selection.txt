@@ -1,0 +1,42 @@
+# Build and selection record for the local run of 2026-10-30.
+# NOT the qualification harness. One preset, no clean build, no determinism repeats.
+
+== toolchain ==
+c++.exe (Rev4, Built by MSYS2 project) 16.2.0
+cmake version 4.4.3
+ninja 1.13.2
+ctest version 4.4.3
+
+== dependencies, built from deps/CMakeLists.txt into a local prefix ==
+prefix  C:/Users/Hasib/AppData/Local/bettercad-deps/gnu-16-mingw-amd64
+OCCT    #define OCC_VERSION_COMPLETE "8.0.1"
+Netgen  set(NETGEN_VERSION "6.2.2604")
+zlib    #define ZLIB_VERSION "1.3.1"
+
+== configure (CMakeCache of the debug-ext tree) ==
+BETTERCAD_BUILD_CLI:BOOL=ON
+BETTERCAD_BUILD_GUI:STRING=OFF
+BETTERCAD_BUILD_TESTS:BOOL=ON
+BETTERCAD_VOLUME_MESHING:STRING=AUTO
+BETTERCAD_WARNINGS_AS_ERRORS:BOOL=ON
+BUILD_SHARED_LIBS:BOOL=OFF
+CMAKE_BUILD_TYPE:STRING=Debug
+CMAKE_CXX_COMPILER:FILEPATH=C:/msys64/ucrt64/bin/c++.exe
+
+== no-op rebuild: the suites ran against the binaries that were built ==
+[1/7] Checking git revision
+rebuild exit: 0 (only the always-run git-revision stamp executed; 6 of 7 planned edges pruned by restat; nothing relinked)
+binary /c/Users/Hasib/bcd/bc-build/debug-ext/bin/bettercad_tests.exe  mtime 2026-10-29 22:07:31.074647400 +1000
+binary /c/Users/Hasib/bcd/bc-build/debug-ext/bin/bettercad-cli.exe  mtime 2026-10-29 22:06:42.462568300 +1000
+both suite runs started later: 2026-10-30 01:05:04 (cp 437) and 01:39:34 (cp 65001)
+
+== selection ==
+Total Tests: 5928
+pre-freeze record selected 5939; the 11 absent are the GUI/Qt-gated registrations:
+  gui.launch.smoke                   1   if(TARGET bettercad)            tests/CMakeLists.txt:2100
+  gui.mesh.<claim>                   9   same block                      tests/CMakeLists.txt:2130
+  infra.deploy.location-independent  1   TARGET bettercad AND BETTERCAD_WINDEPLOYQT   tests/infra/CMakeLists.txt:47
+verified absent:
+  gui.* in the selection:                        0
+  infra.deploy.location-independent:             0
+  other infra.deploy.* present:                  5
