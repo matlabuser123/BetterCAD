@@ -16,10 +16,10 @@
 param(
     [string]$Out = "freeze-mesh.txt",
     [string]$Scratch = "",
-    [string]$RootDir = "C:\Users\hasib\OneDrive\Desktop\CAD",
+    [string]$RootDir = "C:\Users\Hasib\Desktop\CAD",
     [string]$GitExe = ""
 )
-if ($Scratch -eq "") { $Scratch = "C:\Users\hasib\bcdev\p19-mesh-scratch" }
+if ($Scratch -eq "") { $Scratch = "C:\bettercad\p19-mesh-scratch" }
 if (-not (Test-Path -LiteralPath $Scratch)) { New-Item -ItemType Directory -Path $Scratch -Force | Out-Null }
 if ($GitExe -eq "") {
     $GitExe = "$env:LOCALAPPDATA\Microsoft\WinGet\Packages\Git.MinGit_Microsoft.Winget.Source_8wekyb3d8bbwe\cmd\git.exe"

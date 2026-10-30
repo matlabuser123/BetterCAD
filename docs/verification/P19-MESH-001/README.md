@@ -1,10 +1,14 @@
 # P19-MESH-001 — CFD Volume / Surface Mesh Contract
 
 ```text
-STATUS:    BLOCKED. Qualification attempt 1 (2026-10-28) FAILED for an
-           environmental reason (the qualification machine's temp volume was
-           full: every build died, no suite ran). Regression NOT passed; nothing
-           qualified; to be re-run from clean. Details: FREEZE.md.
+STATUS:    PASS. Qualified 2026-10-31 by attempt 2, run on the replacement
+           machine: 17 of 17 stages exit 0, 5939 / 5939 tests in each of the
+           three presets, 2803 x 5 in two, 0 warnings over 755 objects, and the
+           twelve frozen identities unchanged before and after. Attempt 1
+           (2026-10-28) FAILED for an environmental reason (the previous
+           machine's temp volume was full: every build died, no suite ran) and
+           is kept recorded, not erased. Details: FREEZE.md; the machine change
+           itself: ENVIRONMENT-MIGRATION.md.
 MILESTONE: P19-MESH-001, the fourth milestone of P19 — CFD Integration
 SCOPE:     the mesh a CFD analysis runs on: P16's Tet4 mesh, qualified as the
            finite-volume mesh through a staged gate that proves the contract.
@@ -146,15 +150,41 @@ This MinGW toolchain has no ASan/UBSan.
 ## Regression
 
 ```text
-PLACEHOLDER until a re-run passes. Attempt 1, Wed 28/10/2026 19:47:09 -> 20:06:44:
-5 of 17 stages FAILED, qualify.cmd exit 5. All three builds (debug-ext at object
-127, release-ext at 330, debug-shared-ext at 181, of 780 steps) aborted with
-"No space left on device" writing the compiler's temporary file under %TEMP%;
-0 warnings before the abort; the three full ctest stages were skipped; the two
-repeat stages ran against emptied build trees (147 of 352 "no such file or
-directory") and measure nothing. Fingerprints before == after; the eight
-subtree hashes were reproduced from the same tree on a second machine.
-Not a code failure, and not a pass.
+PASS. Attempt 2, the re-run on the replacement machine,
+Fri 30/10/2026 23:04:51 -> Sat 31/10/2026 01:50:59 (2h46m08s):
+17 of 17 stages exit 0, qualify.cmd exit 0, "0 stage(s) failed".
+
+preset              configure  clean      build           ctest
+debug-ext           exit 0     779 files  780/780  8m20s  5939/5939  1993.73s
+release-ext         exit 0       0 files  780/780  9m43s  5939/5939  1922.85s
+debug-shared-ext    exit 0       0 files  780/780  7m51s  5939/5939  2234.29s
+
+repeat release-ext  2803 selected, --repeat until-fail:5, 14015 Passed  962.53s
+repeat debug-ext    2803 selected, --repeat until-fail:5, 14015 Passed 1254.92s
+
+0 warnings and 0 errors in all three build logs, over 755 objects (cfd: 6).
+The no-op rebuild is 1 edge per preset: the git revision stamp target, which
+always runs. debug-ext's clean removed 779 files and the other two removed 0,
+because debug-ext's tree had been populated by the environment-qualification
+build that preceded the run; all three then compiled 780 of 780 edges, so every
+preset did build from clean.
+
+Genuine ctest failure markers -- ***Failed, ***Exception, ***Timeout,
+***Skipped, ***Not Run -- are 0 in all five logs, and the per-test Passed
+markers were counted exactly: 5939 in each full log, 14015 (2803 x 5) in each
+repeat log.
+
+The 11 GUI-dependent tests are present in all three presets. That is what makes
+5939 rather than 5928 the proof that the environment is whole: a build without
+Qt silently omits exactly those eleven and still passes everything it selects.
+cli.new.unicode-path passes in all three, so qualify.cmd's chcp 65001 is in
+force. All 20 unit.CfdMesh_* cases are inside the repeat selection and appear
+100 times (20 x 5) in each repeat log, so the determinism stage exercised this
+milestone's own code rather than passing a selection that excluded it.
+
+Harness stderr is 270 lines, all 270 of them git line-ending notices from the
+harness's own tree captures. The tree captures taken before the first build and
+after the last test run are identical.
 ```
 
 [FREEZE.md](FREEZE.md).
@@ -162,26 +192,41 @@ Not a code failure, and not a pass.
 ## Result
 
 ```text
-RESULT:   PLACEHOLDER -- BLOCKED pending a clean re-run on the qualification
-          machine (attempt 1 FAILED, environmental; see FREEZE.md)
-TESTS:    0 / 0 executed by the harness in any preset (builds aborted); before the
-          freeze, outside the harness, debug-ext only: 5938 / 5939 once, the one
-          failure the code-page-sensitive cli.new.unicode-path, which passed when
-          re-run under 65001; CFD suites 97 cases / 3727 assertions passed
-TREE:     candidate fingerprint recorded in FREEZE.md; it is not a qualified tree
-EVIDENCE: this directory, incomplete: no ctest-*.log, rebuild-*.log,
-          postrun-summary.txt, cfdmesh-*.txt or freeze-mesh-*.txt yet
+RESULT:   PASS
+TESTS:    5939 / 5939 by the harness in each of debug-ext, release-ext and
+          debug-shared-ext; 2803 x 5 in release-ext and debug-ext with 14015
+          counted per-test Passed markers per repeat log; 0 failures, 0
+          exceptions, 0 timeouts, 0 skips, 0 not-run
+VALIDATION: on each preset's own executable, the CFD data, boundary, fluid and
+          mesh cases: 3727 assertions in 97 test cases, identical on all three;
+          the golden fingerprint cfd-definition-v1:20707079b32e4964 identical on
+          all three; the CfdMesh_* census and measured quality byte-identical on
+          all three (six evidence files reduce to two sha256 values, one per
+          invocation type). Architecture check 564 files / 0 violations, and the
+          target-dependency check holds: cfd links neither thermal nor
+          structural. The F1 quality rows are unchanged from ADR-063's.
+TREE:     the twelve frozen identities -- the eight subtree hashes and the four
+          milestone fingerprints -- identical before the first build, after the
+          last test and after all post-run verification; qualify.cmd d313a640,
+          as in all fifty-four milestones
+EVIDENCE: this directory: configure-*.log, clean-*.log, build-*.log,
+          rebuild-*.log, ctest-*.log, ctest-repeat-*.log, qualification-times.txt,
+          run-qualification.out, run-qualification.err, postrun-summary.txt,
+          cfdmesh-*.txt, cfdmesh-census-*.txt
 ADR:      ADR-063
-NEXT:     re-run the qualification from clean after freeing the temp volume;
-          P19-TOPO-001 is NOT AUTHORIZED
+ENVIRONMENT: the previous qualification machine was permanently replaced; the new
+          one was qualified in its own right before the gate was run.
+          ENVIRONMENT-MIGRATION.md
+NEXT:     P19-TOPO-001 is NOT AUTHORIZED
 ```
 
 ## Revision
 
 First issue, 2026-10-28. Second issue, 2026-10-29: the review of attempt 1,
 its cause recorded, the placeholders replaced by the true state; the Regression
-and Result sections keep the word PLACEHOLDER so commit-mesh.ps1 refuses to
-commit until a passing re-run rewrites them.
+and Result sections kept a refusal marker so commit-mesh.ps1 would refuse to
+commit until a passing re-run rewrote them. It has now been rewritten by the
+passing attempt 2 (seventh issue below).
 Third issue, 2026-10-29: the recovery steps possible without the qualification
 machine (fingerprint re-confirmed, harness comment corrected, storage analysed)
 are recorded in FREEZE.md; the re-run itself remains BLOCKED there.
@@ -192,3 +237,35 @@ recorded items in RE_AUDIT.md -- no verdict, no gate closed, no mark changed.
 Fifth issue, 2026-10-30: the frozen candidate built and its whole suite run twice on the second machine, recorded in FREEZE.md and in `local-run-2026-10-30/` -- 5928 / 5928 under code page 65001, one preset, outside the harness. Supporting evidence only: no gate closed, no mark changed, no source or test file touched, and the eight subtree hashes and four milestone fingerprints re-confirmed unchanged.
 
 Sixth issue, 2026-10-30: the second-machine run extended to all three qualification presets and both determinism repeats, recorded in FREEZE.md and in `local-run-2026-10-30/` -- 5928 / 5928 per preset, 2793 x 5 with 13965 Passed lines per repeat stage, all exit 0, and the eight F1 quality rows identical across optimisation levels and equal to ADR-063's. This supersedes the "one preset" scope of the fifth issue above. Supporting evidence only: no gate closed, no mark changed, no source or test file touched, and the eight subtree hashes and four milestone fingerprints re-confirmed unchanged. `Determinism PASS`, `Regression PASS` and `Evidence recorded` stay open, because the gate is three presets through `qualify.cmd` at a counted 2803 on the authorised toolchain.
+
+Seventh issue, 2026-10-31: attempt 2 PASSED and this record is now a pass. The
+previous qualification machine was permanently replaced, so the environment was
+reproduced and qualified in its own right first -- same WinGet WinLibs GCC 16.1.0
+bundle (which also supplies CMake 4.4.1 and Ninja 1.13.2), and Qt 6.11.2, OCCT
+8.0.1, Netgen 6.2.2604 and zlib 1.3.1 built by the repository's own hash-verified
+superbuild with that same compiler; no MSVC-built Qt is involved anywhere
+(ENVIRONMENT-MIGRATION.md). The gate then ran clean: 17 of 17 stages exit 0, 5939
+per preset, 2803 x 5 in two, 0 warnings, twelve identities unchanged.
+
+One gate did fail on the way, and the fix was to the checker, not the product.
+postrun-mesh.ps1 compares the CfdMesh_* census and quality text across presets,
+and it ran the test binary without pinning a seed. That binary's own --help says
+"--order <decl|lex|rand>  test case order (defaults to rand)", so a direct
+invocation shuffles the cases on a per-run seed and the stdout block order is
+random; the CfdMesh_* filter emits two reporting blocks, so three independently
+shuffled runs agree only 1 time in 4. It duly failed, with debug-ext and
+release-ext agreeing and debug-shared-ext not. Every measured value was in fact
+identical -- all 16 RM-MESH census and quality lines matched once sorted, on
+repeated runs of the same binary and across presets -- and running the same
+binary twice reproduced the disagreement, which ruled out the tidier hypothesis
+that static-versus-shared initialiser order was responsible. --rng-seed 1, the
+convention the P12 collect-evidence.cmd scripts already use for direct-binary
+evidence runs, makes all three presets byte-identical and the check deterministic;
+it makes the check STRICTER, since it can no longer pass by luck. The comparison
+itself was not touched and was not made order-insensitive. The failing summary is
+kept outside the repository at C:\bettercad\attempt-1-evidence\ as
+postrun-summary-FAILED-unpinned-seed.txt: a gate that failed is evidence too.
+postrun-mesh.ps1 lives under docs/verification/, in neither the eight
+fingerprinted paths nor the four milestone fingerprints, so the fix did not void
+the freeze -- confirmed by a final freeze capture whose identity portion is
+byte-identical to the pre-run one.

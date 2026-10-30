@@ -4,14 +4,14 @@
 # not a verdict.
 # ASCII ONLY (PowerShell 5.1 reads a .ps1 as ANSI).
 param([string]$Only = "")
-$s = "C:\Users\hasib\AppData\Local\Temp\claude\C--Users-hasib-Desktop-CAD\31d55056-e746-4b0d-938c-e551fb84138c\scratchpad\mutation-mesh"
+$s = "C:\bettercad\p19-mesh-scratch\mutation-mesh"
 New-Item -ItemType Directory -Force $s | Out-Null
-$root = "C:\Users\hasib\OneDrive\Desktop\CAD"
+$root = "C:\Users\Hasib\Desktop\CAD"
 $pk = "$env:LOCALAPPDATA\Microsoft\WinGet\Packages"
 $env:Path = "$pk\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\mingw64\bin;$env:Path"
-$env:BETTERCAD_BUILD_ROOT = "C:/Users/hasib/bcdev/bc-build"
+$env:BETTERCAD_BUILD_ROOT = "C:/bettercad/bc-build"
 $env:CMAKE_BUILD_PARALLEL_LEVEL = "6"
-$tree = "C:\Users\hasib\bcdev\bc-build\debug-ext"
+$tree = "C:\bettercad\bc-build\debug-ext"
 $gate = "$root\src\cfd\CfdMesh.cpp"
 $header = "$root\include\bettercad\cfd\CfdMesh.hpp"
 $probes = @(

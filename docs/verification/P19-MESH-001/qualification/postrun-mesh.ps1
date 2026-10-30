@@ -1,13 +1,18 @@
 # After P19-MESH-001's three-preset qualification: read each preset's logs, prove the binaries are fresh, build the ZERO-MATCH table (expected /
 # discovered / executed per group, per preset), run the CFD boundary cases on each preset's OWN test executable, and compare the presets.
 # Writes nothing into the source tree except the evidence copy it is asked to make (-CopyEvidence). ASCII ONLY (PowerShell 5.1 reads a .ps1 as ANSI).
-param([switch]$CopyEvidence)
+param(
+    [switch]$CopyEvidence,
+    [string]$Out = "C:\bettercad\p19-mesh-scratch\postrun-mesh",
+    [string]$BuildRoot = "C:\bettercad\bc-build",
+    [string]$SourceTree = "C:\Users\Hasib\Desktop\CAD"
+)
 $mingw = "$env:LOCALAPPDATA\Microsoft\WinGet\Packages\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\mingw64\bin"
 $env:Path = "$mingw;$env:Path"
-$out = "C:\Users\hasib\AppData\Local\Temp\claude\C--Users-hasib-Desktop-CAD\31d55056-e746-4b0d-938c-e551fb84138c\scratchpad\postrun-mesh"
+$out = $Out
 New-Item -ItemType Directory -Force $out | Out-Null
-$root = "C:\Users\hasib\bcdev\bc-build"
-$src = "C:\Users\hasib\OneDrive\Desktop\CAD"
+$root = $BuildRoot
+$src = $SourceTree
 $q = "$src\docs\verification\P19-MESH-001\qualification"
 $summary = Join-Path $out "summary.txt"
 $presets = "debug-ext", "release-ext", "debug-shared-ext"
@@ -115,13 +120,27 @@ $golden = @{}
 $meshText = @{}
 foreach ($preset in $presets) {
     $log = Join-Path $out "cfdmesh-$preset.txt"
-    & (Join-Path "$root\$preset\bin" "bettercad_tests.exe") "CfdData_*,CfdInput_*,CfdFluid_*,CfdMesh_*,FluidProperty_*" > $log 2>&1
+    & (Join-Path "$root\$preset\bin" "bettercad_tests.exe") "CfdData_*,CfdInput_*,CfdFluid_*,CfdMesh_*,FluidProperty_*" --rng-seed 1 > $log 2>&1
     $tail = (Get-Content $log | Where-Object { $_.Trim() } | Select-Object -Last 1)
     Note "  $preset : $tail"
     if ($tail -notmatch "All tests passed") { Fail "$preset CfdData_*/CfdInput_*/CfdFluid_*/CfdMesh_* did not pass" }
-    # The mesh cases alone, with their census and quality WARN lines: the text must be identical on every preset (the seed line excepted).
+    # The mesh cases alone, with their census and quality WARN lines: the text
+    # must be identical on every preset (the seed line excepted).
+    # --rng-seed 1 IS REQUIRED, 2026-10-31. This binary's own --help says
+    # '--order <decl|lex|rand>  test case order (defaults to rand)', so a direct
+    # invocation shuffles the test cases on a per-run seed and the stdout block
+    # order is random. Without a pinned seed the cross-preset text comparison
+    # below is a coin flip: the CfdMesh_* filter emits two reporting blocks, so
+    # three independently shuffled runs agree only 1 time in 4. That is exactly
+    # how it failed on 2026-10-31 -- debug-ext and release-ext happened to agree
+    # and debug-shared-ext did not, while every measured value was identical
+    # (all 16 RM-MESH census and quality lines matched once sorted).
+    # Pinning the seed makes the check STRICTER, not weaker: it can no longer
+    # pass by luck. --rng-seed 1 is the convention the P12 collect-evidence.cmd
+    # scripts already use for direct-binary evidence runs, and CLAUDE.md requires
+    # any seed a result depends on to be recorded.
     $meshLog = Join-Path $out "cfdmesh-census-$preset.txt"
-    & (Join-Path "$root\$preset\bin" "bettercad_tests.exe") "CfdMesh_*" > $meshLog 2>&1
+    & (Join-Path "$root\$preset\bin" "bettercad_tests.exe") "CfdMesh_*" --rng-seed 1 > $meshLog 2>&1
     $meshText[$preset] = ((Get-Content $meshLog | Where-Object { $_ -notmatch "Randomness seeded" }) -join "`n")
     $census = @(Select-String -Path $meshLog -Pattern "RM-MESH-0\d").Count
     Note "  $preset CfdMesh_* census and quality lines: $census"

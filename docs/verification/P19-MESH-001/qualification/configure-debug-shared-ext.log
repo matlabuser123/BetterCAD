@@ -1,20 +1,32 @@
--- Using the multi-header code from C:/Users/hasib/bcdev/archives/src/json/include/
+-- The CXX compiler identification is GNU 16.1.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/Users/Hasib/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/bin/c++.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test HAVE_FLAG__ffile_prefix_map_C__bettercad_bc_build_debug_shared_ext__deps_catch2_src__
+-- Performing Test HAVE_FLAG__ffile_prefix_map_C__bettercad_bc_build_debug_shared_ext__deps_catch2_src__ - Success
+-- Using the multi-header code from C:/bettercad/bc-build/debug-shared-ext/_deps/nlohmann_json-src/include/
+-- Performing Test HAVE_STDATOMIC
+-- Performing Test HAVE_STDATOMIC - Success
+-- Performing Test COMPILER_HAS_DEPRECATED_ATTR
+-- Performing Test COMPILER_HAS_DEPRECATED_ATTR - Success
 -- 
 -- BetterCAD 0.1.0 configuration
 --   CMake                 : 4.4.1 (Ninja)
 --   C++ compiler          : GNU 16.1.0
---   Compiler path         : C:/Users/hasib/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/bin/c++.exe
+--   Compiler path         : C:/Users/Hasib/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/bin/c++.exe
 --   C++ standard          : C++23
 --   Target platform       : Windows AMD64
 --   Build type            : Debug
 --   Shared libraries      : ON
 --   Warnings as errors    : ON
 --   CLI                   : ON
---   Desktop app           : ON (Qt 6.11.2, C:/Users/hasib/bcdev/bettercad-deps/gnu-16-mingw-amd64/lib/cmake/Qt6)
+--   Desktop app           : ON (Qt 6.11.2, C:/Users/Hasib/AppData/Local/bettercad-deps/gnu-16-mingw-amd64/lib/cmake/Qt6)
 --   Volume meshing        : ON (Netgen 6.2.2604)
 --   Tests                 : ON (Catch2 3.16.0 (fetched))
---   Dependency prefix     : C:/Users/hasib/bcdev/bettercad-deps/gnu-16-mingw-amd64
+--   Dependency prefix     : C:/Users/Hasib/AppData/Local/bettercad-deps/gnu-16-mingw-amd64
 -- 
--- Configuring done (1.8s)
--- Generating done (2.3s)
--- Build files have been written to: C:/Users/hasib/bcdev/bc-build/debug-shared-ext
+-- Configuring done (15.6s)
+-- Generating done (1.7s)
+-- Build files have been written to: C:/bettercad/bc-build/debug-shared-ext

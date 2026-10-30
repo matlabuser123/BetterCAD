@@ -1,0 +1,144 @@
+﻿Filters: "CfdData_*","CfdInput_*","CfdFluid_*","CfdMesh_*","FluidProperty_*"
+Randomness seeded to: 1
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+bettercad_tests.exe is a Catch2 v3.16.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+CfdMesh_EveryP16ReferenceMeshSatisfiesTheContract
+-------------------------------------------------------------------------------
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:243
+...............................................................................
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:296: warning:
+  RM-MESH-01 MeshBlock: 6 cells, 6 interior faces, 12 boundary faces, 6 patches
+  (0 unnamed)
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:296: warning:
+  RM-MESH-02 MeshCylinder: 508 cells, 946 interior faces, 140 boundary faces, 3
+  patches (0 unnamed)
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:296: warning:
+  RM-MESH-03 MeshPlateWithHole: 126 cells, 172 interior faces, 160 boundary
+  faces, 7 patches (0 unnamed)
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:296: warning:
+  RM-MESH-04 MeshTube: 808 cells, 1472 interior faces, 288 boundary faces, 4
+  patches (0 unnamed)
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:296: warning:
+  RM-MESH-05 MeshThinPlate: 12 cells, 18 interior faces, 12 boundary faces, 6
+  patches (0 unnamed)
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:296: warning:
+  RM-MESH-06 MeshTransformedBase: 12 cells, 18 interior faces, 12 boundary
+  faces, 6 patches (0 unnamed)
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:296: warning:
+  RM-MESH-06 MeshTransformedPlaced: 12 cells, 18 interior faces, 12 boundary
+  faces, 6 patches (0 unnamed)
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:296: warning:
+  RM-MESH-07 MeshLocalRefinement: 267 cells, 528 interior faces, 12 boundary
+  faces, 6 patches (0 unnamed)
+
+-------------------------------------------------------------------------------
+CfdInput_AcceptsACurrentMeshWithAUsableDensity
+-------------------------------------------------------------------------------
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdAnalysisBoundaryTests.cpp:153
+...............................................................................
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdAnalysisBoundaryTests.cpp:187: warning:
+  prepared: 12 tets (= finite-volume cells), 12 boundary triangles (= boundary
+  faces), 9 nodes, rho = 998 kg/m^3
+
+-------------------------------------------------------------------------------
+CfdData_SameIdsNewMeshGenerationIsStale
+-------------------------------------------------------------------------------
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdDataTests.cpp:1386
+...............................................................................
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdDataTests.cpp:1415: warning:
+  remesh: 9 nodes with identical NodeIds, 12 tetrahedra either way; result
+  stale, reason mesh
+
+-------------------------------------------------------------------------------
+CfdFluid_ResolvesDensityAndViscosityThroughP15
+-------------------------------------------------------------------------------
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdFluidTests.cpp:150
+...............................................................................
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdFluidTests.cpp:176: warning:
+  water: rho = 998 kg/m^3, mu = 0.001002 Pa s, nu = 1.0040080160320641e-06 m^2/
+  s (derived)
+
+-------------------------------------------------------------------------------
+CfdInput_ReachesEveryInputProblemItDeclares
+-------------------------------------------------------------------------------
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdAnalysisBoundaryTests.cpp:523
+...............................................................................
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdAnalysisBoundaryTests.cpp:547: warning:
+  8 input problems declared, every one reached by a case in this file
+
+-------------------------------------------------------------------------------
+CfdData_TheFingerprintIsAGoldenFunctionOfTheText
+-------------------------------------------------------------------------------
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdDataTests.cpp:889
+...............................................................................
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdDataTests.cpp:938: warning:
+  golden fingerprint cfd-definition-v1:20707079b32e4964
+
+-------------------------------------------------------------------------------
+CfdMesh_TheReferenceMeshQualityIsMeasuredNotJudged
+-------------------------------------------------------------------------------
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:386
+...............................................................................
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:411: warning:
+  RM-MESH-01 MeshBlock: 6 interior faces, non-orthogonality max 64.09 deg mean
+  47.56 deg, skewness max 0.5376
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:411: warning:
+  RM-MESH-02 MeshCylinder: 946 interior faces, non-orthogonality max 89.28 deg
+  mean 57.89 deg, skewness max 4.6077
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:411: warning:
+  RM-MESH-03 MeshPlateWithHole: 172 interior faces, non-orthogonality max 84.07
+  deg mean 56.70 deg, skewness max 6.5099
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:411: warning:
+  RM-MESH-04 MeshTube: 1472 interior faces, non-orthogonality max 85.20 deg
+  mean 55.27 deg, skewness max 3.7138
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:411: warning:
+  RM-MESH-05 MeshThinPlate: 18 interior faces, non-orthogonality max 88.81 deg
+  mean 66.48 deg, skewness max 0.8206
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:411: warning:
+  RM-MESH-06 MeshTransformedBase: 18 interior faces, non-orthogonality max 66.
+  00 deg mean 47.04 deg, skewness max 0.8206
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:411: warning:
+  RM-MESH-06 MeshTransformedPlaced: 18 interior faces, non-orthogonality max
+  66.00 deg mean 47.04 deg, skewness max 0.8206
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:411: warning:
+  RM-MESH-07 MeshLocalRefinement: 528 interior faces, non-orthogonality max 75.
+  58 deg mean 31.14 deg, skewness max 1.3109
+
+-------------------------------------------------------------------------------
+CfdInput_RefusesAMeshOfGeometryThatHasSinceChanged
+-------------------------------------------------------------------------------
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdAnalysisBoundaryTests.cpp:243
+...............................................................................
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdAnalysisBoundaryTests.cpp:276: warning:
+  a mesh of changed geometry: 12 tetrahedra still held and still valid,
+  currency stale: the geometry changed, CFD analysis refused as mesh_stale
+
+===============================================================================
+All tests passed (3727 assertions in 97 test cases)
+

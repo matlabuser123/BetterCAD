@@ -1,0 +1,86 @@
+﻿Filters: "CfdMesh_*"
+Randomness seeded to: 1
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+bettercad_tests.exe is a Catch2 v3.16.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+CfdMesh_EveryP16ReferenceMeshSatisfiesTheContract
+-------------------------------------------------------------------------------
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:243
+...............................................................................
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:296: warning:
+  RM-MESH-01 MeshBlock: 6 cells, 6 interior faces, 12 boundary faces, 6 patches
+  (0 unnamed)
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:296: warning:
+  RM-MESH-02 MeshCylinder: 508 cells, 946 interior faces, 140 boundary faces, 3
+  patches (0 unnamed)
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:296: warning:
+  RM-MESH-03 MeshPlateWithHole: 126 cells, 172 interior faces, 160 boundary
+  faces, 7 patches (0 unnamed)
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:296: warning:
+  RM-MESH-04 MeshTube: 808 cells, 1472 interior faces, 288 boundary faces, 4
+  patches (0 unnamed)
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:296: warning:
+  RM-MESH-05 MeshThinPlate: 12 cells, 18 interior faces, 12 boundary faces, 6
+  patches (0 unnamed)
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:296: warning:
+  RM-MESH-06 MeshTransformedBase: 12 cells, 18 interior faces, 12 boundary
+  faces, 6 patches (0 unnamed)
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:296: warning:
+  RM-MESH-06 MeshTransformedPlaced: 12 cells, 18 interior faces, 12 boundary
+  faces, 6 patches (0 unnamed)
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:296: warning:
+  RM-MESH-07 MeshLocalRefinement: 267 cells, 528 interior faces, 12 boundary
+  faces, 6 patches (0 unnamed)
+
+-------------------------------------------------------------------------------
+CfdMesh_TheReferenceMeshQualityIsMeasuredNotJudged
+-------------------------------------------------------------------------------
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:386
+...............................................................................
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:411: warning:
+  RM-MESH-01 MeshBlock: 6 interior faces, non-orthogonality max 64.09 deg mean
+  47.56 deg, skewness max 0.5376
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:411: warning:
+  RM-MESH-02 MeshCylinder: 946 interior faces, non-orthogonality max 89.28 deg
+  mean 57.89 deg, skewness max 4.6077
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:411: warning:
+  RM-MESH-03 MeshPlateWithHole: 172 interior faces, non-orthogonality max 84.07
+  deg mean 56.70 deg, skewness max 6.5099
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:411: warning:
+  RM-MESH-04 MeshTube: 1472 interior faces, non-orthogonality max 85.20 deg
+  mean 55.27 deg, skewness max 3.7138
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:411: warning:
+  RM-MESH-05 MeshThinPlate: 18 interior faces, non-orthogonality max 88.81 deg
+  mean 66.48 deg, skewness max 0.8206
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:411: warning:
+  RM-MESH-06 MeshTransformedBase: 18 interior faces, non-orthogonality max 66.
+  00 deg mean 47.04 deg, skewness max 0.8206
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:411: warning:
+  RM-MESH-06 MeshTransformedPlaced: 18 interior faces, non-orthogonality max
+  66.00 deg mean 47.04 deg, skewness max 0.8206
+
+C:/Users/Hasib/Desktop/CAD/tests/cfd/CfdMeshTests.cpp:411: warning:
+  RM-MESH-07 MeshLocalRefinement: 528 interior faces, non-orthogonality max 75.
+  58 deg mean 31.14 deg, skewness max 1.3109
+
+===============================================================================
+All tests passed (958 assertions in 20 test cases)
+

@@ -403,6 +403,15 @@ set(_filters
     "unit\\.MaterialCli_Viscosity_" 1
     "cli\\.material\\.completeness\\.incompressible-flow$" 1
     "compile_fail\\.prov\\.no-turbulent-flow-consumer$" 1
+    # P19-MESH-001. The CFD mesh contract: every P16 reference mesh satisfies it, and every refusal is shown on a mesh built to fail.
+    "unit\\.CfdMesh_" 20
+    "unit\\.CfdMesh_RefusesTwoCellsFoldedOntoOneSideOfTheirFace$" 1
+    "unit\\.CfdMesh_TheRefusalNamesTheControlAndEveryFinding$" 1
+    "unit\\.CfdMesh_AnUnnamedPatchIsCountedNotRefused$" 1
+    "unit\\.CfdMesh_TheReferenceMeshQualityIsMeasuredNotJudged$" 1
+    "unit\\.CfdMesh_EveryP16ReferenceMeshSatisfiesTheContract$" 1
+    "unit\\.CfdMesh_RefusesCellsThatAreNotOneFaceConnectedSet$" 1
+    "unit\\.CfdMesh_TheFaceTableIsTheOneP16WindsItsBoundaryWith$" 1
     # P18-QUAL-001. The final-gate cases (the authority matrix over every reference document, the currentness matrix in one sequence and its
     # edit-back path, a failed regeneration, the unforgeable proof of an accepted input, the units of the transient sum), and one test for
     # each defect the final audit found and fixed or each gap it closed, each at its own name so a rename or a drop is a failure.

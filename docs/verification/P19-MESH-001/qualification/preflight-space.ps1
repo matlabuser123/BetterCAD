@@ -36,7 +36,7 @@
 #
 param(
     [switch]$WithSizes,
-    [string]$SourceTree = "C:\Users\hasib\OneDrive\Desktop\CAD"
+    [string]$SourceTree = "C:\Users\Hasib\Desktop\CAD"
 )
 $ErrorActionPreference = "Stop"
 

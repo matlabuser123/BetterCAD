@@ -9,8 +9,8 @@
 # The commit message had the same defect and no guard at all: exit 7 when it is
 # missing, exit 8 when it is empty or whitespace only.
 param(
-    [string]$Scratch = "C:\Users\hasib\bcdev\p19-mesh-scratch",
-    [string]$RootDir = "C:\Users\hasib\OneDrive\Desktop\CAD",
+    [string]$Scratch = "C:\bettercad\p19-mesh-scratch",
+    [string]$RootDir = "C:\Users\Hasib\Desktop\CAD",
     [string]$GitExe = ""
 )
 if ($GitExe -eq "") {

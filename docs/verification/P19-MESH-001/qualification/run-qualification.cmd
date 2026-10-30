@@ -103,8 +103,34 @@ rem THE FRESHNESS HALF of the fresh-binary proof (the binaries are newer than
 rem the clean and than the newest source) is done by postrun-mesh.ps1, after
 rem the run.
 setlocal
-set "BETTERCAD_BUILD_ROOT=C:/Users/hasib/bcdev/bc-build"
-set "CMAKE_BUILD_PARALLEL_LEVEL=6"
+rem
+rem TOOLCHAIN PINNING, 2026-10-30, replacement machine. A fresh process on
+rem this machine resolves gcc and cmake to MSYS2 UCRT64 -- GCC 16.2.0 and
+rem CMake 4.4.3 -- and NOT to the pinned WinLibs GCC 16.1.0 / CMake 4.4.1;
+rem WinGet's PATH shim does not even satisfy `where gcc`. Without the line
+rem below the harness would silently qualify the WRONG TOOLCHAIN, and no
+rem later check would catch it, because every test count, warning count and
+rem subtree hash would still look exactly right. The pinned bundle carries
+rem gcc, g++, cmake, ctest and ninja together, so putting it first pins all
+rem five in one line. Verified against attempt 1's own configure log: GNU
+rem 16.1.0, CMake 4.4.1 (Ninja), the same WinGet package.
+set "PATH=%LOCALAPPDATA%\Microsoft\WinGet\Packages\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\mingw64\bin;%PATH%"
+rem
+rem TLS TRUST. That bundled CMake ships no CA bundle ("no trust anchors
+rem configured"), so the Catch2 FetchContent download fails certificate
+rem verification and the configure stage dies before anything is built. The
+rem harness runs a bare `cmake --preset` and cannot be passed
+rem -DCMAKE_TLS_CAINFO, but libcurl inside CMake reads these two. This adds
+rem TRANSPORT trust only: TLS verification stays ON and every pinned archive
+rem hash is still enforced, so nothing about content verification changes.
+set "CURL_CA_BUNDLE=C:\Program Files\Git\mingw64\etc\ssl\certs\ca-bundle.crt"
+set "SSL_CERT_FILE=C:\Program Files\Git\mingw64\etc\ssl\certs\ca-bundle.crt"
+set "BETTERCAD_BUILD_ROOT=C:/bettercad/bc-build"
+rem 6 on the old laptop; this machine has 32 logical cores and 63.7 GB
+rem of RAM. Build parallelism changes build time only -- ninja's output is
+rem the same at any -j, and ctest's own -j 8 lives in qualify.cmd, which is
+rem not this milestone's to touch.
+set "CMAKE_BUILD_PARALLEL_LEVEL=16"
 set "QUALIFY_PRESETS=debug-ext release-ext debug-shared-ext"
 set "QUALIFY_REPEAT_PRESETS=release-ext debug-ext"
 set "QUALIFY_MIN_FREE_GB=20"

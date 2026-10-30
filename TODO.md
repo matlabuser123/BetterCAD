@@ -24,25 +24,24 @@ Prerequisite:
 
 Current milestone:
            P19-MESH-001 — CFD Volume / Surface Mesh Contract. AUTHORIZED
-           2026-10-28 ("start P19-MESH-001"). IMPLEMENTED AND REVIEWED, NOT
-           QUALIFIED, and BLOCKED since 2026-10-29. Twenty-one of its
-           twenty-four items are recorded; Determinism PASS, Regression PASS
-           and Evidence recorded stay OPEN because qualification attempt 1
-           (2026-10-28, candidate b1f151c plus the working tree) FAILED 5 of
-           17 stages for an environmental reason: the qualification machine's
-           %TEMP% volume was full, so all three builds aborted writing the
-           compiler's temporary file (debug-ext at object 127 of 780,
-           release-ext at 330, debug-shared-ext at 181), the three full ctest
-           stages were skipped, and the two repeat stages ran against build
-           trees the clean had just emptied. 0 warnings before the abort. NOT
-           a code failure, and NOT a pass: nothing is qualified, and the
-           README and Regression sections keep the word PLACEHOLDER so
-           commit-mesh.ps1 refuses to commit. The candidate tree has not
-           moved since the freeze — all eight subtree hashes and all four
-           milestone fingerprints were re-confirmed on 2026-10-29, and no
-           P16, P17 or P18 production file changed — so the re-run reuses
-           that freeze rather than taking a new one. It must run from clean
-           on the qualification machine.
+           2026-10-28 ("start P19-MESH-001"). PASS 2026-10-31. All twenty-four
+           items are now recorded: Determinism PASS, Regression PASS and
+           Evidence recorded closed on attempt 2, the re-run on the replacement
+           machine — 17 of 17 stages exit 0, 5939/5939 in each of the three
+           presets, 2803 x 5 in two with 14015 counted per-test Passed markers
+           each, 0 warnings over 755 objects, 2h46m08s, and the twelve frozen
+           identities unchanged before the first build, after the last test and
+           after all post-run verification. Attempt 1 (2026-10-28, candidate
+           b1f151c plus the working tree) FAILED 5 of 17 stages for an
+           environmental reason — the previous machine's %TEMP% volume was
+           full, so all three builds aborted writing the compiler's temporary
+           file and no suite ran — and stays recorded, not erased. That
+           machine was then permanently replaced, so the replacement was
+           qualified in its own right before the gate ran: Qt 6.11.2, OCCT
+           8.0.1, Netgen 6.2.2604 and zlib 1.3.1 built by the repository's own
+           hash-verified superbuild with the same WinLibs GCC 16.1.0 bundle
+           (ENVIRONMENT-MIGRATION.md). The candidate tree never moved: every
+           commit since the freeze touched only docs/.
            (docs/verification/P19-MESH-001/FREEZE.md.)
 
            Earlier P19 milestones, each at its own recorded verdict:
@@ -64,11 +63,11 @@ Qualified:
            P18 — Thermal Analysis
 
 Next:
-           nothing. P19-MESH-001 is open and blocked on its own re-run, so no
-           new milestone is authorized: P19-TOPO-001 — Finite-Volume Topology
-           is next in the sequence and is NOT AUTHORIZED. P19-MESH-001's
-           implementation passing its review is not permission to start it;
-           each milestone is started by the owner, as every P17 and P18
+           nothing. P19-MESH-001 has PASSED and was the last authorized
+           milestone, so no new milestone is authorized: P19-TOPO-001 —
+           Finite-Volume Topology is next in the sequence and is NOT
+           AUTHORIZED. P19-MESH-001 having passed is not permission to start
+           it; each milestone is started by the owner, as every P17 and P18
            milestone was.
 
 P19 objective, as planned:
@@ -1846,9 +1845,9 @@ general fix → requalify the affected milestone → rerun P18-QUAL.
 **AUTHORIZED 2026-10-27** by the owner's "start P19-ARCH-001", the open P18 findings
 F1-F3 weighed as inputs to it. Milestones are worked top to bottom, and each is authorized
 by its predecessor's PASS being recorded here and the owner saying so -- P17's and P18's
-rule, unchanged. P19-ARCH-001, P19-DATA-001 and P19-FLUID-001 have PASSED; P19-MESH-001 is
-open and BLOCKED on a failed qualification attempt; **nothing after it is authorized**, and
-a predecessor's implementation being reviewed is not permission to start the next.
+rule, unchanged. P19-ARCH-001, P19-DATA-001, P19-FLUID-001 and P19-MESH-001 have PASSED;
+**nothing after it is authorized**, and a predecessor's pass is not permission to start the
+next.
 
 Goal: add qualified incompressible CFD capability without duplicating CAD, material, mesh,
 solver, result, persistence, or CLI authority.
@@ -2164,19 +2163,41 @@ Define the CFD mesh representation required by P19.
 * [x] Reject unclosed fluid domain
 * [x] Define mesh-quality metrics required by CFD
 * [x] No nearest-face fallback
-* [ ] Determinism PASS
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Determinism PASS
+* [x] Regression PASS
+* [x] Evidence recorded
 
 ```text
-BLOCKED 2026-10-29. Authorized 2026-10-28 ("start P19-MESH-001"). Qualification
-attempt 1 (2026-10-28, candidate b1f151c plus the working tree) FAILED 5 of 17
-stages for an environmental reason: the qualification machine's temp volume
-was full, every build aborted with "No space left on device", no full suite
-ran, and the repeat (determinism) stages ran against emptied build trees.
-Not a code failure, and not a pass: Determinism, Regression and Evidence stay
-open until a clean re-run passes every stage. Nothing qualified. Evidence of
-the attempt and the review: docs/verification/P19-MESH-001/FREEZE.md.
+PASS 2026-10-31. Authorized 2026-10-28 ("start P19-MESH-001"). Qualified by
+attempt 2 against 6a0ed5d plus the working tree -- the same twelve identities as
+the 2026-10-28 freeze, since every commit since then touched only docs/:
+5939/5939 x 3 presets, 2803 x 5 in two with 14015 counted per-test Passed
+markers each, 0 warnings over 755 objects, 17 stages exit 0, 2h46m08s,
+identities before == after == after post-run verification. P16's Tet4 mesh
+serves directly as the finite-volume mesh, with no adapter -- cell = Tet4,
+boundary face = P16 boundary triangle, patch = a CAD face of GeometryMeshMap,
+and interior faces, owner and neighbour derived from P16's connectivity and
+never persisted -- and what P16 does not itself guarantee is proved by
+requireCfdMesh(CfdModel) -> CfdMeshContract with nine named refusals, bound to
+the mesh stamp (ADR-063). Adversarial review: the author's 6 questions each
+resolved by a fix and a test; independent reviewer 0 blockers, 1 major (a shared
+face traversed the same way by both cells passed; InconsistentFaceOrientation
+added), 4 minor, 8 nits disposed; 31 of 31 mutation probes killed, 0 survived;
+a third read re-audited all twenty-one earlier marks and found 0 false marks.
+Finding F1 stands and is measured, not judged: the P16 reference meshes are poor
+finite-volume meshes, which makes the non-orthogonal correction mandatory in the
+solver and is judged by P19-VALID-001.
+
+Attempt 1 (2026-10-28) FAILED 5 of 17 stages for an environmental reason and
+stays recorded, not erased. The machine that produced it was then permanently
+replaced, so the replacement environment was qualified in its own right before
+the gate was run (docs/verification/P19-MESH-001/ENVIRONMENT-MIGRATION.md). One
+post-run check also failed and was fixed in the checker, not the product:
+postrun-mesh.ps1 compared stdout across presets without pinning a seed, on a
+binary whose case order defaults to rand, so the comparison was a coin flip;
+--rng-seed 1, the convention the P12 evidence scripts already use, makes it
+deterministic and strictly stricter. The owner accepted that fix before any mark
+moved. Evidence: docs/verification/P19-MESH-001/.
 ```
 
 Critical question:
@@ -3639,42 +3660,45 @@ docs/engineering/
 # CURRENT NEXT STEP
 
 ```text
-P19-MESH-001 — CFD Volume / Surface Mesh Contract is OPEN and BLOCKED.
-Authorized 2026-10-28; qualification attempt 1 FAILED 2026-10-28, environmental.
+P19-MESH-001 — CFD Volume / Surface Mesh Contract has PASSED, 2026-10-31.
+Authorized 2026-10-28; qualified by attempt 2, after attempt 1 failed
+environmentally on 2026-10-28 and the qualification machine was then replaced.
 
-    implemented and reviewed: the milestone's critical question is answered — P16's
-      Tet4 mesh IS the finite-volume mesh, with no adapter and no second geometry
-      authority — and what P16 does not guarantee is proved by a staged gate,
+    all 24 checklist items are recorded: Determinism PASS, Regression PASS and
+      Evidence recorded closed on attempt 2
+    the milestone's critical question is answered — P16's Tet4 mesh IS the
+      finite-volume mesh, with no adapter and no second geometry authority — and
+      what P16 does not guarantee is proved by a staged gate,
       requireCfdMesh(CfdModel) -> CfdMeshContract, with nine named refusals,
       possession as the proof, and the contract bound to the mesh stamp (ADR-063)
-    21 of the 24 checklist items are recorded; the three that are not are the
-      three gates below
     review closed before the gate: 6 author questions each resolved by a fix and a
       test; an independent reviewer at 0 blockers, 1 major (a shared face traversed
       the same way by both cells passed, so InconsistentFaceOrientation was added),
       4 minor, 8 nits; re-verification at 0 new major or minor; a second read on
       another machine at 0 defects; 31 of 31 mutation probes killed, 0 survived
-    attempt 1, Wed 28/10/2026 19:47:09 -> 20:06:44 (19m35s): 5 of 17 stages FAILED,
-      qualify.cmd exit 5. The qualification machine's %TEMP% volume was full, so
-      all three builds aborted writing the compiler's temporary file — debug-ext at
-      object 127 of 780, release-ext at 330, debug-shared-ext at 181 — the three
-      full ctest stages were skipped, and the two repeat stages ran against build
-      trees the clean had just emptied (147 of 352 "no such file or directory").
-      0 warnings before the abort. NOT a code failure, and NOT a pass.
-    OPEN, and not to be ticked without a passing re-run: Determinism PASS,
-      Regression PASS, Evidence recorded. The README and its Regression section
-      keep the word PLACEHOLDER so commit-mesh.ps1 refuses to commit, and the
-      evidence directory is missing every log the failed stages would have written
-    the candidate tree has NOT moved since the freeze: HEAD b1f151c plus the
-      working tree, all eight subtree hashes and all four milestone fingerprints
-      re-confirmed 2026-10-29, and no P16, P17 or P18 production file changed. The
-      re-run reuses this freeze rather than taking a new one
-    the re-run must show three presets configured, cleaned, rebuilt and run
-      unfiltered; 5939 tests in each; 0 warnings over 755 objects; the two 5x
-      repeat stages with a recorded non-zero selection; fingerprints before ==
-      after == the frozen ones; and the CfdMesh census and quality text identical
-      across all three presets. Only then do the last three boxes become [x], and
-      only then does commit-mesh.ps1 run
+    attempt 2, Fri 30/10/2026 23:04:51 -> Sat 31/10/2026 01:50:59 (2h46m08s):
+      17 of 17 stages exit 0, qualify.cmd exit 0. Three presets configured,
+      cleaned, built at 780/780 edges and run unfiltered at 5939/5939 each; the two
+      5x repeat stages at a counted selection of 2803 with 14015 per-test Passed
+      markers each; 0 warnings and 0 errors over 755 objects; the eleven
+      GUI-dependent tests present in every preset, which is what makes 5939 rather
+      than 5928 the proof that the environment is whole; and the CfdMesh census and
+      quality text byte-identical across all three presets
+    the twelve frozen identities — eight subtree hashes and four milestone
+      fingerprints — unchanged before the first build, after the last test and
+      after all post-run verification; qualify.cmd still d313a640
+    the environment changed and was qualified first: the previous machine was
+      permanently replaced, and the replacement reproduces the pinned toolchain
+      from the same WinGet WinLibs package (GCC 16.1.0, with CMake 4.4.1 and Ninja
+      1.13.2 from that same bundle), with Qt 6.11.2, OCCT 8.0.1, Netgen 6.2.2604
+      and zlib 1.3.1 built by the repository's own hash-verified superbuild
+      (ENVIRONMENT-MIGRATION.md)
+    one post-run check failed and was fixed in the CHECKER, not the product:
+      postrun-mesh.ps1 compared stdout across presets without pinning a seed, on a
+      binary whose case order defaults to rand, so the comparison could pass or
+      fail by luck. --rng-seed 1 — the convention the P12 evidence scripts
+      already use — makes three runs on three presets byte-identical and the
+      check strictly stricter. The owner accepted the fix before any mark moved
     OPEN, owner finding F1: the eight P16 reference meshes are poor finite-volume
       meshes (non-orthogonality to 89.28 deg, skewness to 6.51). The topology
       passes everywhere, so the non-orthogonal correction is MANDATORY in the
@@ -3682,11 +3706,9 @@ Authorized 2026-10-28; qualification attempt 1 FAILED 2026-10-28, environmental.
       need finer P16 sizing or an owner-decided FV-quality option in P16 — never a
       CFD-side remesh. This milestone sets no threshold.
 
-The open milestone is P19-MESH-001, blocked on its own re-run, which must be
-launched from clean on the qualification machine after its temp volume is freed.
-Nothing else is authorized: P19-TOPO-001 — Finite-Volume Topology is next in the
-sequence and is NOT AUTHORIZED. P18's F1-F3 and P17's F1-F3 stand as owner
-decisions.
+No milestone is open, and nothing is authorized: P19-TOPO-001 — Finite-Volume
+Topology is next in the sequence and is NOT AUTHORIZED. Authorizing it is the
+owner's decision. P18's F1-F3 and P17's F1-F3 stand as owner decisions.
 ```
 
 Evidence: [docs/verification/P19-MESH-001/](docs/verification/P19-MESH-001/README.md).
@@ -3719,22 +3741,20 @@ P19-FLUID-001    PASS 2026-10-28. 5919/5919 x 3, 2783 x 5 in two, 0 warnings
                  over 753 objects, 17 stages exit 0. Committed as 4e57b02,
                  recorded as b1f151c. ADR-062. Evidence recorded.
 
-P19-MESH-001     AUTHORIZED 2026-10-28. OPEN, NOT QUALIFIED, and BLOCKED
-                 since 2026-10-29. Implemented and reviewed on candidate
-                 b1f151c plus the working tree, and NOT COMMITTED:
-                 qualification attempt 1 FAILED 5 of 17 stages for an
-                 environmental reason (the qualification machine's %TEMP%
-                 volume was full), so no suite ran in any preset and nothing
-                 is qualified. Determinism PASS, Regression PASS and
-                 Evidence recorded stay open until a clean re-run passes
-                 every stage; commit-mesh.ps1 refuses to commit until it
-                 does. ADR-063. docs/verification/P19-MESH-001/FREEZE.md.
+P19-MESH-001     PASS 2026-10-31. 5939/5939 x 3, 2803 x 5 in two with 14015
+                 counted per-test Passed markers each, 0 warnings over 755
+                 objects, 17 stages exit 0, 2h46m08s. Qualified by attempt 2
+                 on a replacement machine, itself qualified in its own right
+                 first (ENVIRONMENT-MIGRATION.md); attempt 1 of 2026-10-28
+                 FAILED 5 of 17 stages environmentally and stays recorded.
+                 The twelve frozen identities unchanged before and after.
+                 ADR-063. Evidence recorded. The commit identity is recorded
+                 separately, as this project's "record the ... commit"
+                 entries do.
 
 P19-TOPO-001     NOT AUTHORIZED. Being next in the sequence is not
-                 permission, and P19-MESH-001's implementation having passed
-                 its review is not either. Authorizing it is the owner's
-                 decision, and it cannot sensibly be taken before
-                 P19-MESH-001's re-run passes.
+                 permission, and P19-MESH-001 having PASSED is not either.
+                 Authorizing it is the owner's decision alone.
 
 everything after it
                  likewise.
