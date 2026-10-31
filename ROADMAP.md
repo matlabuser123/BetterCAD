@@ -862,8 +862,9 @@ agreeing with `P19-MESH-001`'s recorded figures checks the plumbing and not the
 definition: both transcribe one formula. Qualified from clean at 6058/6058 in
 each of three presets, 2964 x 5 in two, 0 warnings under `-Werror`, 17 of 17
 stages exit 0, and the eight qualified subtrees identical before the first
-build, after the last test run and when recomputed independently afterwards;
-see [P19-GEOM-001](docs/verification/P19-GEOM-001/README.md). Two reviews ran
+build, after the last test run, when recomputed independently afterwards and in
+the committed tree (`9d2b1ed`); see
+[P19-GEOM-001](docs/verification/P19-GEOM-001/README.md). Two reviews ran
 before the freeze and each found a real defect — a compile-fail control target
 that did not build under `-Werror` while `ctest` reported its group 29 of 29
 green, and a claim in the ADR and the public header written without the work

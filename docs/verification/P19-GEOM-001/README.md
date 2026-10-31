@@ -574,7 +574,10 @@ subtree identities before the first build and after the last test run; both equa
 paths, then `git write-tree --prefix=` per directory — and not by
 `git rev-parse HEAD:<path>`, which reads the committed tree and is what went
 wrong once in P19-TOPO-001. All eight identical; all nine candidate file hashes
-unchanged; HEAD still 16cd745.
+unchanged; HEAD still 16cd745. The milestone was then committed as 9d2b1ed,
+production code and evidence together, and the eight subtree hashes were read
+back from the commit object: each equals its frozen value, so the tree that was
+qualified is the tree that is committed.
 
 **H1 did not recur.** Every clean and every build stage exited 0 on the first
 attempt, so no stage was retried and nothing was accepted from a retry inside the

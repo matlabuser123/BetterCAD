@@ -2424,8 +2424,10 @@ because magnitude and the quality metrics go through libm. Nine known
 limitations are listed in the evidence, among them that nothing in the
 repository tests that a compile-fail control builds -- which is how the gate
 failure above stayed invisible -- and that the centroid formula was considered
-and deliberately left unchanged. Evidence:
-docs/verification/P19-GEOM-001/README.md.
+and deliberately left unchanged. Committed as 9d2b1ed, production code and
+evidence together; the eight subtree hashes were read back from the commit
+object and each equals its frozen value: qualified tree == committed tree.
+Evidence: docs/verification/P19-GEOM-001/README.md.
 ```
 
 ---
@@ -3987,8 +3989,11 @@ P19-GEOM-001     PASS 2026-10-31. Authorized the same day by the owner
                  recomputed independently afterwards. Two reviews each found a
                  real defect -- a compile-fail control that did not build while
                  ctest showed its group green, and a claim written without the
-                 work behind it -- both fixed before the freeze. ADR-065.
-                 Evidence recorded.
+                 work behind it -- both fixed before the freeze. Committed as
+                 9d2b1ed, production code and evidence together; the eight
+                 subtree hashes read back from the commit object each equal
+                 their frozen value: qualified tree == committed tree.
+                 ADR-065. Evidence recorded.
 
 everything after it
                  likewise.
