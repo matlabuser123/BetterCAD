@@ -23,12 +23,33 @@ Prerequisite:
            may set). P17's F1-F3 stand unchanged beneath them.
 
 Current milestone:
-           none. P19-TOPO-001 PASSED 2026-10-31 and nothing after it is
-           authorized. P19-GEOM-001 is next in the sequence and is NOT
-           AUTHORIZED: the next milestone is a scope decision, and it is the
-           owner's to make.
+           None. P19-GEOM-001 PASSED 2026-10-31, and finishing a milestone is
+           itself a stop condition: the next one is a scope decision and the
+           owner's alone.
 
 Previous milestone:
+           P19-GEOM-001 — Finite-Volume Geometric Metrics. AUTHORIZED
+           2026-10-31 by the owner ("start", with the twenty-one item checklist
+           quoted). PASS 2026-10-31. All twenty-one items are recorded: 17 of
+           17 stages exit 0, 6058/6058 in each of the three presets, 2964 x 5
+           in two with 14820 counted Passed markers each, 0 warnings and 0
+           errors under -Werror, 3h27m58s, and the eight qualified subtrees
+           identical before the first build, after the last test run and when
+           recomputed independently afterwards. 31 unit cases / 337,203
+           assertions and 29 compile-fail cases; the 36 CfdTopology, 20
+           CfdMesh, 23 cfdtopo, 28 cfdids and 205 architecture tests unchanged
+           and passing, which is the blast-radius evidence for a change to a
+           layer-0 header. Two reviews ran before the freeze and each found a
+           real defect: a compile-fail control target that did not build under
+           -Werror while ctest reported its group 29 of 29 green, and a claim
+           in ADR-065 and the public header written without the work behind it
+           — four builder guards called unreachable are reachable, and each now
+           has a test. The key identity is measured, not asserted away: the
+           per-cell surface-vector sum closes to 2.03e-16 of the cell's own
+           area scale on all eight reference meshes.
+           (docs/verification/P19-GEOM-001/README.md.)
+
+Milestone before that:
            P19-TOPO-001 — Finite-Volume Topology. AUTHORIZED 2026-10-31 by
            the owner ("implement this and fully verify", with the twenty-two
            item checklist quoted). PASS 2026-10-31. All twenty-two items are
@@ -48,7 +69,7 @@ Previous milestone:
            three are stated in the evidence rather than glossed.
            (docs/verification/P19-TOPO-001/README.md.)
 
-Milestone before that:
+Before those:
            P19-MESH-001 — CFD Volume / Surface Mesh Contract. AUTHORIZED
            2026-10-28 ("start P19-MESH-001"). PASS 2026-10-31. All twenty-four
            items are now recorded: Determinism PASS, Regression PASS and
@@ -89,11 +110,11 @@ Qualified:
            P18 — Thermal Analysis
 
 Next:
-           nothing is authorized. P19-TOPO-001 PASSED 2026-10-31, and
-           P19-GEOM-001 — next in the sequence — is NOT AUTHORIZED. Each
-           milestone is started by the owner, as every P17 and P18 milestone
-           was, and a predecessor's PASS is not permission to start the one
-           after it. Finishing a milestone is itself a stop condition.
+           Nothing is authorized. P19-GEOM-001 PASSED and nothing after it has
+           been started: each milestone is started by the owner, as every P17,
+           P18 and P19 milestone was, and a predecessor's PASS is not
+           permission to start the one after it. Finishing a milestone is
+           itself a stop condition.
 
 P19 objective, as planned:
            authoritative CAD / fluid / mesh state
@@ -1870,8 +1891,9 @@ general fix → requalify the affected milestone → rerun P18-QUAL.
 **AUTHORIZED 2026-10-27** by the owner's "start P19-ARCH-001", the open P18 findings
 F1-F3 weighed as inputs to it. Milestones are worked top to bottom, and each is authorized
 by its predecessor's PASS being recorded here and the owner saying so -- P17's and P18's
-rule, unchanged. P19-ARCH-001, P19-DATA-001, P19-FLUID-001, P19-MESH-001 and P19-TOPO-001 have
-PASSED; **nothing after them is authorized**, and a predecessor's pass is not permission
+rule, unchanged. P19-ARCH-001, P19-DATA-001, P19-FLUID-001, P19-MESH-001, P19-TOPO-001
+and P19-GEOM-001 have PASSED; **nothing after them is authorized**, and a predecessor's
+pass is not permission
 to start the next.
 
 Goal: add qualified incompressible CFD capability without duplicating CAD, material, mesh,
@@ -2322,27 +2344,27 @@ qualified tree == committed tree. Evidence: docs/verification/P19-TOPO-001/.
 
 Compute qualified geometric quantities for each CFD cell / face.
 
-* [ ] Cell volume
-* [ ] Cell centroid
-* [ ] Face area
-* [ ] Face centroid
-* [ ] Face unit normal
-* [ ] Face area vector `Sf`
-* [ ] Owner-to-neighbour vector
-* [ ] Cell-to-face vector
-* [ ] Orthogonal distance
-* [ ] Non-orthogonality angle
-* [ ] Skewness metric
-* [ ] Boundary outward normal
-* [ ] Conservation identities
-* [ ] Closed-cell surface-vector sum
-* [ ] Positive cell volume
-* [ ] SI metre units
-* [ ] Rigid-transform covariance
-* [ ] Determinism PASS
-* [ ] Independent analytical validation
-* [ ] Regression PASS
-* [ ] Evidence recorded
+* [x] Cell volume
+* [x] Cell centroid
+* [x] Face area
+* [x] Face centroid
+* [x] Face unit normal
+* [x] Face area vector `Sf`
+* [x] Owner-to-neighbour vector
+* [x] Cell-to-face vector
+* [x] Orthogonal distance
+* [x] Non-orthogonality angle
+* [x] Skewness metric
+* [x] Boundary outward normal
+* [x] Conservation identities
+* [x] Closed-cell surface-vector sum
+* [x] Positive cell volume
+* [x] SI metre units
+* [x] Rigid-transform covariance
+* [x] Determinism PASS
+* [x] Independent analytical validation
+* [x] Regression PASS
+* [x] Evidence recorded
 
 Key identity:
 
@@ -2351,6 +2373,60 @@ Key identity:
 ```
 
 for a closed polyhedral control volume.
+
+```text
+PASS 2026-10-31. Authorized 2026-10-31 by the owner's "start", with the
+twenty-one item checklist quoted. Qualified from clean on the first attempt
+against 16cd7458 plus this milestone's nine candidate files: 6058/6058 x 3
+presets, 2964 x 5 in two with 14820 counted Passed markers each, 0 warnings and
+0 errors under -Werror, 17 stages exit 0, 3h27m58s, and the eight qualified
+subtrees identical before the first build, after the last test run, and when
+recomputed independently afterwards by the harness's own method. 31 unit cases
+/ 337,203 assertions and 29 compile-fail cases; the 36 CfdTopology, 20 CfdMesh,
+23 cfdtopo, 28 cfdids and 205 architecture tests unchanged and passing, which is
+the blast-radius evidence for a change to a layer-0 header. The harness differs
+from P19-TOPO-001's only in the repeat filter (qualify.cmd d313a640), so the
+only difference between the two qualifications is the tree under test.
+
+The metrics are a DERIVED value whose area vector is primary (ADR-065): every
+other face quantity is computed from Sf, so a face's normal and the closure
+identity cannot disagree by construction. Units are carried in the type system
+-- AreaVector3D is three Areas, not three doubles -- so a face normal cannot be
+added to a position, and the dimensionless quality metrics cancel to double at
+the boundary. Three passes in index order; every container ordered; nothing
+keyed by a hash or an address.
+
+The key identity is measured, not asserted away: the per-cell surface-vector
+sum closes to 2.03e-16 of the cell's own area scale on all eight reference
+meshes, and the divergence theorem closes to 1.21e-14 of each cell's volume.
+The quality metrics rest on a closed form this milestone had to derive -- an
+analytic face pair fixing cos = 3/5 and skewness = sqrt(10)/15 -- because the
+cross-milestone agreement with P19-MESH-001's recorded figures checks the
+plumbing and not the definition: both transcribe one formula.
+
+Two reviews ran before the freeze and each found a real defect. The first was a
+hard gate failure: the compile-fail control target did not build under
+-Werror=unused-function, while ctest -R compile_fail.cfdgeom. reported 29 of
+29 passing over a project that did not build -- a control is a build target
+ctest never builds -- and it would have failed all 17 stages. The second found
+that the first round's fixes had reached the ADR but not the public header,
+which kept verbatim a claim written without the work behind it: four builder
+guards called unreachable are REACHABLE, each now has a test, and the quoted
+mechanism for the cosine's conditioning (eps/cos) was disproved by measurement
+and replaced with eps*L/|d|.
+
+Recorded as less than a reader might assume, stated rather than glossed: the
+-1.0 half of the cosine clamp is unreachable dead code; orthogonalDistance is
+the worst-conditioned number here and is deliberately measured, never judged,
+so a consumer can be handed a wholly wrong number with no diagnostic, and a
+bound on it is P19-VALID-001's; cross-preset bit-identity is NOT claimed,
+because magnitude and the quality metrics go through libm. Nine known
+limitations are listed in the evidence, among them that nothing in the
+repository tests that a compile-fail control builds -- which is how the gate
+failure above stayed invisible -- and that the centroid formula was considered
+and deliberately left unchanged. Evidence:
+docs/verification/P19-GEOM-001/README.md.
+```
 
 ---
 # P19-DOF-001
@@ -3831,13 +3907,18 @@ environmentally on 2026-10-28 and the qualification machine was then replaced.
       need finer P16 sizing or an owner-decided FV-quality option in P16 — never a
       CFD-side remesh. This milestone sets no threshold.
 
-No milestone is open. P19-GEOM-001 is next in the sequence and is NOT
-AUTHORIZED; authorizing it is the owner's decision alone. P19-MESH-001's owner
-finding F1 stands unchanged above, and P18's F1-F3 and P17's F1-F3 stand as owner
-decisions.
+P19-GEOM-001 PASSED 2026-10-31, authorized the same day by the owner's "start"
+with the twenty-one item checklist quoted: 6058/6058 x 3 presets, 2964 x 5 in
+two, 17 of 17 stages exit 0, and all twenty-one items recorded. Nothing after
+it is authorized. P19-MESH-001's owner finding F1 stands unchanged above, and
+this milestone neither resolves it nor adds to it: it measured the same eight
+meshes -- non-orthogonality and skewness among them -- and set no threshold,
+because its summary measures and judges nothing. P18's F1-F3 and P17's F1-F3
+stand as owner decisions.
 ```
 
-Evidence: [docs/verification/P19-TOPO-001/](docs/verification/P19-TOPO-001/README.md) and
+Evidence: [docs/verification/P19-GEOM-001/](docs/verification/P19-GEOM-001/README.md),
+[docs/verification/P19-TOPO-001/](docs/verification/P19-TOPO-001/README.md) and
 [docs/verification/P19-MESH-001/](docs/verification/P19-MESH-001/README.md).
 
 ## What is authorized, and what is not
@@ -3895,8 +3976,19 @@ P19-TOPO-001     PASS 2026-10-31. 5998/5998 x 3, 2839 x 5 in two with 14195
                  recorded narrower than their wording and one collapses onto
                  another. ADR-064. Evidence recorded.
 
-P19-GEOM-001     NOT AUTHORIZED. Next in the sequence, which is not permission.
-                 Authorizing it is the owner's decision alone.
+P19-GEOM-001     PASS 2026-10-31. Authorized the same day by the owner
+                 ("start", with the twenty-one item checklist quoted). All
+                 twenty-one items recorded: 6058/6058 x 3 presets, 2964 x 5 in
+                 two with 14820 Passed markers each, 17 of 17 stages exit 0, 0
+                 warnings under -Werror, 31 unit cases / 337,203 assertions and
+                 29 compile-fail cases, and the four unchanged CFD groups and
+                 205 architecture tests passing. The eight qualified subtrees
+                 identical before the first build, after the last test run and
+                 recomputed independently afterwards. Two reviews each found a
+                 real defect -- a compile-fail control that did not build while
+                 ctest showed its group green, and a claim written without the
+                 work behind it -- both fixed before the freeze. ADR-065.
+                 Evidence recorded.
 
 everything after it
                  likewise.

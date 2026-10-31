@@ -438,6 +438,47 @@ set(_filters
     "unit\\.CfdTopology_DescribesIsFalseForALaterGenerationOfTheSameMesh$" 1
     "unit\\.CfdTopology_EveryAccessorIsTotalForAnIndexItDoesNotHold$" 1
     "unit\\.CfdTopology_TheIndexTranslationsAreMutualInverses$" 1
+    # P19-GEOM-001. The group, the compile-fail group that proves the quantities
+    # do not interconvert and that the summary carries no verdict, and EVERY case
+    # by name. The list is EXHAUSTIVE rather than selective: the selective
+    # version of it omitted the case added last, which a test-gap review found,
+    # and three cases have since been renamed because their names did not
+    # describe what they asserted. Two of these exist because an adversarial
+    # review disproved ADR-065's claim that the geometry's own guards were
+    # unreachable.
+    "unit\\.CfdGeometry_" 31
+    "compile_fail\\.cfdgeom\\." 29
+    "unit\\.CfdGeometry_AnAnalyticFacePairFixesTheAngleAndTheSkewnessInClosedForm$" 1
+    "unit\\.CfdGeometry_AnEmptyTopologyYieldsAnEmptyGeometryWithZeroesAndNoRefusal$" 1
+    "unit\\.CfdGeometry_DescribesIsFalseForAnotherGenerationAndAnotherTopology$" 1
+    "unit\\.CfdGeometry_EqualityDiscriminatesSoDeterminismMeansSomething$" 1
+    "unit\\.CfdGeometry_EveryAccessorIsTotalForAnIndexItDoesNotHold$" 1
+    "unit\\.CfdGeometry_EveryP16ReferenceMeshYieldsGeometry$" 1
+    "unit\\.CfdGeometry_EveryQuantityIsSiWithMetreLengths$" 1
+    "unit\\.CfdGeometry_RefusesATopologyDerivedFromAnotherMeshGeneration$" 1
+    "unit\\.CfdGeometry_RefusesAZeroAreaFaceOfACellWhoseVolumeComputedPositive$" 1
+    "unit\\.CfdGeometry_RefusesACentroidThatOverflowedWhileTheVolumeStayedFinite$" 1
+    "unit\\.CfdGeometry_RefusesAnOrthogonalDistanceThatLostItsSignToCancellation$" 1
+    "unit\\.CfdGeometry_SkewnessIsEmptyAtABoundaryFaceAndPresentInside$" 1
+    "unit\\.CfdGeometry_TheAreaVectorOfATriangleIsTheHalfCrossProduct$" 1
+    "unit\\.CfdGeometry_TheAssembledMetricsFollowARigidTransformOfEveryReferenceMesh$" 1
+    "unit\\.CfdGeometry_TheAssembledMetricsFollowARigidTransformOfTheWholeMesh$" 1
+    "unit\\.CfdGeometry_TheBoundarySkewnessDecision6RejectedWouldBeIdenticallyZero$" 1
+    "unit\\.CfdGeometry_TheCellSurfaceVectorSumUsesTheOwnerSignNotTheFaceOrder$" 1
+    "unit\\.CfdGeometry_TheCentroidsAreTheMeansOfTheirVertices$" 1
+    "unit\\.CfdGeometry_TheFourAreaVectorsOfATetrahedronSumToZero$" 1
+    "unit\\.CfdGeometry_TheOrthogonalDistanceIsTheQuarterSumOfTheTwoApexHeights$" 1
+    "unit\\.CfdGeometry_ThePerfectlyOrthogonalFaceIsWhereTheCosineExceedsOne$" 1
+    "unit\\.CfdGeometry_ThePointFormulasAreCovariantUnderARigidTransform$" 1
+    "unit\\.CfdGeometry_TheQualityMetricsAgreeWithThoseP19Mesh001Recorded$" 1
+    "unit\\.CfdGeometry_TheRecommendedConsumerCosineIsInRangeOnEveryFace$" 1
+    "unit\\.CfdGeometry_TheStagedGateNamesTheControlAndTheModelsRevision$" 1
+    "unit\\.CfdGeometry_TheSummaryIsMeasuredAndJudgesNothing$" 1
+    "unit\\.CfdGeometry_TheTotalBoundaryAreaMatchesTheClosedFormOfEveryPlanarBody$" 1
+    "unit\\.CfdGeometry_TheTotalVolumeAgreesWithTwoOraclesAndTwoPlumbingChecks$" 1
+    "unit\\.CfdGeometry_TheTransformedReferenceBodyPairHasInvariantAggregates$" 1
+    "unit\\.CfdGeometry_TheUnitTetrahedronHasItsClosedFormMetrics$" 1
+    "unit\\.CfdGeometry_TwoBuildsOfOneMeshAreEqual$" 1
     "unit\\.CfdTopology_TheRefusalNamesTheControlAndEveryFindingInOrder$" 1
     # P18-QUAL-001. The final-gate cases (the authority matrix over every reference document, the currentness matrix in one sequence and its
     # edit-back path, a failed regeneration, the unforgeable proof of an accepted input, the units of the transient sum), and one test for

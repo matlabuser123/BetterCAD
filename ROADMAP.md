@@ -103,14 +103,15 @@ Current authorized development:
 ```text
 P19 — CFD Integration, authorized 2026-10-27 by the owner's "start
 P19-ARCH-001": P19-ARCH-001 and P19-DATA-001 (2026-10-27), P19-FLUID-001
-(2026-10-28), P19-MESH-001 and P19-TOPO-001 (both 2026-10-31) have PASSED.
+(2026-10-28), P19-MESH-001, P19-TOPO-001 and P19-GEOM-001 (all 2026-10-31) have
+PASSED.
 P19-MESH-001 was qualified by a second attempt on a replacement machine: its
 first attempt, on 2026-10-28, failed 5 of 17 stages when the previous machine's
 temp volume filled and no test suite ran, and that machine was then permanently
 replaced, so the replacement was qualified in its own right before the gate was
-re-run. P19-TOPO-001 qualified from clean on the first attempt, on the same
-harness. No milestone is open. P19-GEOM-001 is next and NOT authorized; see
-TODO.md.
+re-run. P19-TOPO-001 and P19-GEOM-001 each qualified from clean on the first
+attempt, on the same harness. No milestone is open, and nothing after
+P19-GEOM-001 is authorized; see TODO.md.
 
 The phases before it, and how each was qualified:
 
@@ -841,6 +842,35 @@ in the committed tree; see
 [P19-TOPO-001](docs/verification/P19-TOPO-001/README.md). Two of its twenty-two
 checklist items are recorded narrower than their wording and one collapses onto
 another, each stated in the evidence rather than glossed.
+
+`P19-GEOM-001` (PASS 2026-10-31) turns that topology into the finite-volume
+geometric metrics a solver integrates over: the cell volume and centroid, the
+face area vector, area, unit normal and centroid, the owner-to-neighbour and
+cell-to-face vectors, the orthogonal distance, the orthogonality cosine, the
+non-orthogonality angle, the skewness, the boundary outward normal, and the
+per-cell surface-vector sum with its closure. One quantity is primary and the
+rest are derived from it — the area vector `Sf` — so a face's normal and the
+closure identity cannot disagree by construction, and `AreaVector3D` is three
+`Area`s rather than three doubles, so a face normal cannot be added to a
+position while the dimensionless quality metrics cancel to `double` at the
+boundary (`ADR-065`). The key identity is measured rather than asserted away:
+`Σ Sf` closes to 2.03e-16 of each cell's own area scale on all eight reference
+meshes, and the divergence theorem closes to 1.21e-14 of each cell's volume.
+The quality metrics rest on a closed form the milestone had to derive — an
+analytic face pair fixing `cos = 3/5` and skewness `= sqrt(10)/15` — because
+agreeing with `P19-MESH-001`'s recorded figures checks the plumbing and not the
+definition: both transcribe one formula. Qualified from clean at 6058/6058 in
+each of three presets, 2964 x 5 in two, 0 warnings under `-Werror`, 17 of 17
+stages exit 0, and the eight qualified subtrees identical before the first
+build, after the last test run and when recomputed independently afterwards;
+see [P19-GEOM-001](docs/verification/P19-GEOM-001/README.md). Two reviews ran
+before the freeze and each found a real defect — a compile-fail control target
+that did not build under `-Werror` while `ctest` reported its group 29 of 29
+green, and a claim in the ADR and the public header written without the work
+behind it, four guards called unreachable being reachable. The summary measures
+and judges nothing, so `P19-MESH-001`'s owner finding F1 is neither resolved
+nor extended here, and a bound on the worst-conditioned quantity,
+`orthogonalDistance`, is `P19-VALID-001`'s work.
 
 ```text
 incompressible laminar

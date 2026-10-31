@@ -356,6 +356,7 @@ endif()
 if(TARGET bettercad_reference_models)
     target_sources(bettercad_tests PRIVATE
         # P19-MESH-001: the CFD mesh contract is proved on every P16 reference mesh.
+        cfd/CfdGeometryTests.cpp
         cfd/CfdMeshTests.cpp
         cfd/CfdTopologyTests.cpp
         qualification/P15MaterialsQualificationTests.cpp

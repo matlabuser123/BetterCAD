@@ -893,6 +893,57 @@ bettercad_compile_fail_case(cfdtopo "${_cfdtopo}" TWO_INDEX_KINDS_DO_NOT_COMPARE
     "no match for|no matching function|invalid operands" BetterCAD::cfd)
 bettercad_compile_fail_case(cfdtopo "${_cfdtopo}" A_TOPOLOGY_CANNOT_BE_BUILT_WITHOUT_ITS_BUILDER
     "is private within this context|private" BetterCAD::cfd)
+
+# The finite-volume metrics' QUANTITIES (P19-GEOM-001, ADR-065). The cfdtopo
+# group above proves that four subscripts do not mix; this one proves that the
+# quantities do not either. A volume, an area, a length, an angle, a skewness, an
+# oriented area and a displacement are all bare doubles in SI, and a face area of
+# 0.0025 is the same bits as an orthogonal distance of 0.0025 -- so "units are
+# part of correctness" cannot rest on naming. Two ABSENCES are proved here too,
+# because an ADR saying a thing does not exist is not the compiler saying so: the
+# summary has no verdict or threshold (Decision 7, measured never judged) and
+# there is no refusal enum (Decision 5).
+set(_cfdgeom "${CMAKE_CURRENT_SOURCE_DIR}/CfdGeometryMisuse.cpp")
+bettercad_compile_fail_group(cfdgeom "${_cfdgeom}" BetterCAD::cfd)
+foreach(_case
+        A_VOLUME_IS_NOT_AN_AREA
+        AN_AREA_IS_NOT_A_VOLUME
+        AN_AREA_IS_NOT_A_LENGTH
+        A_LENGTH_IS_NOT_AN_AREA
+        A_VOLUME_IS_NOT_A_BARE_NUMBER
+        A_BARE_NUMBER_IS_NOT_A_VOLUME
+        AN_ANGLE_IS_NOT_A_BARE_NUMBER
+        A_SKEWNESS_IS_NOT_AN_ANGLE
+        AN_AREA_VECTOR_IS_NOT_A_TRANSLATION
+        A_TRANSLATION_IS_NOT_AN_AREA_VECTOR
+        AN_AREA_VECTOR_IS_NOT_A_POINT
+        AN_AREA_VECTOR_IS_NOT_A_DIMENSIONLESS_VECTOR
+        AN_AREA_VECTOR_HAS_NO_BARE_COMPONENTS
+        THE_MAGNITUDE_OF_AN_AREA_VECTOR_IS_NOT_A_LENGTH
+        THE_MAGNITUDE_OF_A_TRANSLATION_IS_NOT_AN_AREA
+        A_TRANSLATION_DOT_AN_AREA_VECTOR_IS_NOT_AN_AREA
+        A_POINT_DIFFERENCE_IS_NOT_A_POINT
+        PASSING_A_FACE_WHERE_A_CELL_IS_WANTED_FOR_A_VOLUME
+        PASSING_A_CELL_WHERE_A_FACE_IS_WANTED_FOR_AN_AREA
+        PASSING_A_FACE_WHERE_A_BOUNDARY_FACE_IS_WANTED
+        AN_INTEGER_IS_NOT_A_CELL_FOR_A_VOLUME
+        A_SUMMARY_IS_NOT_A_GEOMETRY)
+    bettercad_compile_fail_case(cfdgeom "${_cfdgeom}" ${_case}
+        "could not convert|cannot convert|no matching function|no match for|invalid conversion|conversion from"
+        BetterCAD::cfd)
+endforeach()
+bettercad_compile_fail_case(cfdgeom "${_cfdgeom}" AN_AREA_VECTOR_AND_A_TRANSLATION_DO_NOT_ADD
+    "no match for|no matching function|invalid operands" BetterCAD::cfd)
+foreach(_case
+        THE_SUMMARY_HAS_NO_VERDICT
+        THE_SUMMARY_HAS_NO_THRESHOLD
+        THE_SUMMARY_HAS_NO_QUALITY_GRADE
+        THE_GEOMETRY_HAS_NO_PROBLEM_ENUM
+        THE_GEOMETRY_CANNOT_BE_REMEASURED_IN_PLACE)
+    bettercad_compile_fail_case(cfdgeom "${_cfdgeom}" ${_case} "no member named|has no member" BetterCAD::cfd)
+endforeach()
+bettercad_compile_fail_case(cfdgeom "${_cfdgeom}" A_GEOMETRY_CANNOT_BE_BUILT_WITHOUT_ITS_BUILDER
+    "is private within this context|private" BetterCAD::cfd)
 foreach(_case
         THE_DEFINITION_HAS_NO_PRESSURE_FIELD
         THE_DEFINITION_HAS_NO_VELOCITY_FIELD

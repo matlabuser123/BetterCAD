@@ -1,0 +1,208 @@
+P19-GEOM-001 — FINITE-VOLUME GEOMETRIC METRICS — QUALIFICATION FREEZE
+=====================================================================
+
+Taken 2026-10-31, before the first build of the qualification run. Two readings
+of the eight identities were taken and compared; they were IDENTICAL, which is
+what makes this a freeze rather than a snapshot of a moving tree.
+
+If any source or test file changes after this point, the qualification is VOID
+and is run again from clean (CLAUDE.md, "Qualification freeze"). Documentation
+that cannot affect the executable or the tests may follow the project's existing
+policy; this file, the ADR and the evidence README are such documentation, and
+none of them is in the frozen set below.
+
+
+AUTHORIZATION
+-------------
+P19-GEOM-001 was AUTHORIZED 2026-10-31 by the owner's "start", with the
+twenty-one item checklist quoted. Recorded in TODO.md in five places before any
+implementation began. Nothing is ticked at the time of this freeze.
+
+
+THE CANDIDATE
+-------------
+  HEAD                 16cd745   (P19-TOPO-001's "record the commit")
+  working tree         the nine files below, uncommitted
+
+  include/bettercad/cfd/CfdGeometry.hpp          11c31e722f09b34588a169e721a880b8b8ea42e9
+  src/cfd/CfdGeometry.cpp                        58b87f11fd5e5eac5df94f04cc5cc48b432c63cb
+  tests/cfd/CfdGeometryTests.cpp                 7e6ce3de75a92cbbe9ce8d4154e3dc5dacc03bb3
+  tests/compile_fail/CfdGeometryMisuse.cpp       d44a8ac91ce80471a47f462578bb3cd1d01698e1
+  include/bettercad/core/math/Vector.hpp         1298ffce8e4db24e5f66a825ea662c23195b4801
+  src/cfd/CMakeLists.txt                         89d2e4cd6a5fe9ffbe9f6fbfb7c082ef53a599f2
+  tests/CMakeLists.txt                           1116b62525ce862623b41889a78637ccc00b39fe
+  tests/compile_fail/CMakeLists.txt              3d1568f742bfe0d21722a3d3fa163ee00bace707
+  tests/cli/ZeroMatchGuard.cmake                 c07c6c5cee0f4e2585726d3aa1e923dadf6587b9
+
+  Four of those nine are the registration points, and they are listed because a
+  milestone whose tests are not registered qualifies nothing:
+
+    src/cfd/CMakeLists.txt             CfdGeometry.cpp joins bettercad_cfd
+    tests/CMakeLists.txt               CfdGeometryTests.cpp joins bettercad_tests
+    tests/compile_fail/CMakeLists.txt  the cfdgeom group and its 29 cases
+    tests/cli/ZeroMatchGuard.cmake     31 case names pinned, group 31, cfdgeom 29
+
+  TODO.md is modified too (the authorization) and is NOT part of the frozen set:
+  it cannot affect the executable or the tests.
+
+  Deliberately untracked and NOT part of the candidate: .claude/ and AGENTS.md.
+
+
+THE EIGHT IDENTITIES
+--------------------
+By qualify.cmd's own method — a scratch GIT_INDEX_FILE, `git read-tree HEAD`,
+`git add -A apps include src tests examples cmake CMakeLists.txt
+CMakePresets.json`, then `git write-tree --prefix=<dir>/` per directory and
+`git ls-files -s <file>` for the two files. NOT `git rev-parse HEAD:<path>`,
+which gives the COMMITTED tree and is what went wrong once in P19-TOPO-001.
+
+  apps               fc398a3d2e524178cf38e8b667236379d8381086
+  include            01475afa2a746715a4f678dd5d81e54a6ef5eb34
+  src                9099bd95d3f4202bf13e742781002917724949a4
+  tests              ef53366b6ef2288bf296916a3ac351acb6231b80
+  examples           4da234ebf4779f7c16d5df0075f106f7e3d4c958
+  cmake              5a382115d7ed7775189d40b55e40f318eaae6cc7
+  CMakeLists.txt     3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd
+  CMakePresets.json  3229f0f89b236744d7d5c082bed47c28b718288e
+
+  apps, examples, cmake, CMakeLists.txt and CMakePresets.json are unchanged from
+  P19-TOPO-001's freeze, which is the expected shape: this milestone touches
+  include, src and tests only.
+
+
+THE HARNESS
+-----------
+Every file in qualification/ except run-qualification.cmd is a byte-identical
+copy of P19-TOPO-001's, verified by hash before the run. qualify.cmd is the one
+P16-SIZE-001 settled on and every milestone since has used, fifty-five in a row
+counting this one.
+
+  qualify.cmd          d313a64070718c44fae290ac042fe259d1a03c8b   IDENTICAL
+  verify-harness.cmd   11855b8ff891093b021d1e0351761283d0eedd24   IDENTICAL
+  launch.cmd           f11039e6dc366d7c469a15cf74fb3867fd5ffeff   IDENTICAL
+  preflight-space.cmd  a65d6578000b6e8a2811d5154bcec24be09c2b54   IDENTICAL
+  preflight-space.ps1  2f0d4228488f6a574ca57ec89f0fad0107b16b59   IDENTICAL
+  run-qualification.cmd                                           this milestone's
+
+So the only differences between this qualification and P19-TOPO-001's are the
+tree under test and the repeat filter.
+
+HARNESS CHECKS RUN BEFORE THE FREEZE, not assumed:
+  verify-harness.cmd   PASS — a failed stage gave qualify.cmd exit 2, and a
+                       zero-match repeat filter was counted as a failed stage
+  preflight-space.cmd  PASS in check-only mode — every distinct volume has at
+                       least 20 GB free (C: has 2.3 TB)
+  line prefixes        all 160 lines of run-qualification.cmd begin with rem,
+                       set, call, echo, setlocal, endlocal or @echo, WHOLE-WORD
+                       matched. The file was first written with LF endings, which
+                       .gitattributes forbids for *.cmd and cmd.exe reads
+                       unreliably; converted to CRLF and re-checked.
+
+
+THE REQUIRED COUNTS
+-------------------
+Measured against this frozen tree, so the logs can be read against a number
+rather than for an absence of the word "fail".
+
+  full suite, per preset        6058     = 5998 (P19-TOPO-001) + 31 unit + 29
+                                           compile-fail, exactly
+  repeat set, per preset        2964     = 2839 (P19-TOPO-001) + 31 matching
+                                           unit\.Cfd + 94 core math/units, exactly
+  repeat markers per log       14820     = 2964 x 5
+
+  Both reconcile with no remainder, which is why they are written as sums: a
+  count needing a fudge term would mean a test had been dropped or registered
+  twice. These were first written here as 6057 and 2963 -- measured before the
+  last case was added -- with a "- 1" invented to make the first sum close. That
+  is the same failure this milestone's two reviews each found in its documents,
+  so it is recorded rather than quietly corrected. Re-measured against the
+  frozen tree with `ctest -N`.
+  presets                          3     debug-ext, release-ext, debug-shared-ext
+  repeat presets                   2     release-ext, debug-ext
+  stages                          17     5 per preset x 3 + 2 repeat
+
+  unit.CfdGeometry_               31
+  compile_fail.cfdgeom.           29
+  unit.CfdTopology_               36     unchanged
+  unit.CfdMesh_                   20     unchanged
+  compile_fail.cfdtopo.           23     unchanged
+  compile_fail.cfdids.            28     unchanged
+  architecture.                  205     unchanged
+
+WHY THE REPEAT SET GREW BEYOND THIS MODULE. This milestone changes a LAYER-0
+header (core/math/Vector.hpp), so the blast radius and not the proximity to the
+edited file decides the regression set (CLAUDE.md section 3). Nine core
+math/units prefixes were added to the repeat filter — RigidTransform, Transform,
+Point, Direction, Frame, Unit, Dimension, MassProperties, SurfaceMesh — 94 tests.
+Every change to that header is additive or the removal of something with no
+caller, so no existing behaviour can move; the full suite on three presets is
+what proves that, and the repeat is the determinism gate.
+
+
+THE TOOLCHAIN
+-------------
+  compiler    GNU 16.1.0, WinLibs POSIX UCRT r4 (pinned by run-qualification.cmd)
+  cmake       4.4.1 and the Ninja it bundles (pinned by the same line)
+  deps        C:/Users/Hasib/AppData/Local/bettercad-deps/gnu-16-mingw-amd64 —
+              Qt 6.11.2, OCCT 8.0.1, zlib 1.3.1, Netgen 6.2.2604, from the
+              hash-verified superbuild. OUTSIDE the build root.
+  build root  C:/bettercad/bc-build
+
+THE PINNING IS STILL NECESSARY, and was re-verified here: a fresh shell on this
+machine resolves gcc and cmake to MSYS2 UCRT64 — GCC 16.2.0 and CMake 4.4.3 —
+not to the pinned bundle. Without the PATH line the harness would qualify the
+wrong toolchain and every count, warning count and subtree hash would still look
+right.
+
+A DEVIATION, RECORDED. The local pre-checks in this session used the pinned
+COMPILER throughout (it comes from the CMake cache, and the build lines show the
+WinLibs path), but reconfigures during development rewrote all three CMake caches
+with MSYS2 CMake 4.4.3. Before this freeze, the pinned CMake 4.4.1 was verified
+to configure cleanly over them and all three caches were re-written by it. All
+three now record 4.4.1. The build trees were NOT deleted, so this run is "from
+clean" in the harness's sense — `ninja -t clean` before each rebuild — which is
+the same sense P19-TOPO-001's PASS used.
+
+
+HAZARDS CARRIED INTO THE RUN
+----------------------------
+H1  ONE TRANSIENT LINK FAILURE was seen before the harness work began. While the
+    1.5 GB debug test executable was relinked interactively alongside other work,
+    ld exited 1; the diagnostic was LOST because the command's own output filter
+    dropped every line without "error:" or "FAILED" in it. Two subsequent links
+    of the SAME objects, with nothing else running, succeeded. The harness links
+    after its compiles finish, so it does not reproduce the conditions. If a
+    build stage fails at the link, that stage is re-run FROM CLEAN and the result
+    is not accepted from a retry inside the same run.
+
+H2  A COMPILE-FAIL CONTROL TARGET IS NOT A TEST. The cfdgeom control did not
+    compile under -Werror=unused-function, and `ctest -R compile_fail.cfdgeom.`
+    reported 29 of 29 passing over a project that did not build — because the
+    control is a build target that ctest never builds. Fixed before the freeze,
+    and the all-targets build now completes clean on all three presets. Nothing
+    in the repository TESTS that a control builds, so the next group making the
+    same mistake is caught only by a full build. Recorded as a recommendation,
+    not fixed here: it is a change to the shared compile-fail harness.
+
+H3  EIGHT REFERENCE-MESH TESTS NOW DEPEND ON P16 EMITTING GAP-FREE ELEMENT
+    HANDLES. `MeshBuilder` has no explicit-handle overload for an element, so the
+    rigid-transform sweep rebuilds a mesh and REQUIREs that the handles come back
+    identical. A future backend that leaves gaps fails that REQUIRE loudly rather
+    than silently comparing different faces, which is the intended shape, but the
+    dependency is not documented anywhere else.
+
+
+WHAT THIS MILESTONE IS
+----------------------
+The finite-volume geometric metrics of a topology derived from a proved mesh
+(ADR-065): the cell volume and centroid, the face area vector, area, unit normal
+and centroid, the owner-to-neighbour and cell-to-face vectors, the orthogonal
+distance, the orthogonality cosine, the non-orthogonality angle, the skewness,
+the boundary outward normal, the per-cell surface-vector sum and its closure, and
+a measured summary that judges nothing.
+
+TWO REVIEWS RAN BEFORE THIS FREEZE and both found real defects, including a hard
+gate failure and a claim in the ADR and the public header that had been written
+without the work behind it. Four of the builder's guards turned out to be
+REACHABLE where the ADR had called them unreachable. The details are in ADR-065,
+Decision 5 and in the evidence README; the freeze is taken after all of it.

@@ -45,6 +45,86 @@ struct Translation3D {
     return {point.x + translation.x, point.y + translation.y, point.z + translation.z};
 }
 
+/// The displacement from @p from to @p to: point - point is a vector, which is
+/// the signature the type system already implies and the one every caller would
+/// otherwise spell out component by component.
+[[nodiscard]] constexpr Translation3D operator-(const Point3D& to, const Point3D& from) noexcept {
+    return {to.x - from.x, to.y - from.y, to.z - from.z};
+}
+
+[[nodiscard]] constexpr Translation3D operator*(const Translation3D& t, double factor) noexcept {
+    return {t.x * factor, t.y * factor, t.z * factor};
+}
+
+/// How far @p t moves a point. `hypot` rather than `sqrt` of a sum of squares,
+/// which is what distance(Point3D, Point3D) already uses: it does not overflow
+/// for a component whose square would.
+[[nodiscard]] inline Length magnitude(const Translation3D& t) noexcept {
+    return Length::fromSi(std::hypot(t.x.si(), t.y.si(), t.z.si()));
+}
+
+/// The component of @p t along @p direction. A Length, because a direction is
+/// dimensionless by construction.
+[[nodiscard]] constexpr Length dot(const Translation3D& t, const Direction3D& direction) noexcept {
+    return t.x * direction.x() + t.y * direction.y() + t.z * direction.z();
+}
+
+/// An ORIENTED area in model space: the area of a surface patch resolved onto X,
+/// Y and Z, which is the face area vector `Sf` of a finite-volume method.
+///
+/// The fifth sibling of Translation3D, Force3D, Traction3D and Moment3D, and
+/// placed here for the reason Force3D records above: an oriented area is a
+/// geometric quantity, not a CFD concept, and thermal, structural and meshing all
+/// have a use for one. Each component is an `Area`, so the type system knows that
+/// `translation . areaVector` is a Volume -- which is what makes the
+/// divergence-theorem identity below type-check rather than merely compile -- and
+/// that a component times a `Pressure` is a `Force`.
+///
+/// There is deliberately NO `operator*(Pressure, AreaVector3D)`. An earlier
+/// version of this comment claimed `pressure * areaVector` was a `Force3D`, which
+/// does not compile and which a test-gap review caught: nothing needs that
+/// product yet, and a pressure load on a face is P19-BC-001's and P17's business,
+/// not this file's.
+///
+/// IT CARRIES NO WINDING CONVENTION. Which way a given patch's area vector points
+/// is decided where the patch is defined -- for a CFD face, by ADR-063 (wound out
+/// of the owner) -- exactly as `meshing::triangleArea` declines to have an opinion
+/// about which way a triangle faces. A sign that means nothing here cannot be got
+/// wrong here.
+struct AreaVector3D {
+    Area x{};
+    Area y{};
+    Area z{};
+
+    friend constexpr bool operator==(const AreaVector3D&, const AreaVector3D&) = default;
+};
+
+[[nodiscard]] constexpr AreaVector3D operator+(const AreaVector3D& a, const AreaVector3D& b) noexcept {
+    return {a.x + b.x, a.y + b.y, a.z + b.z};
+}
+
+/// The same patch traversed the other way. What a neighbour cell sees of a face
+/// its owner wound.
+[[nodiscard]] constexpr AreaVector3D operator-(const AreaVector3D& s) noexcept {
+    return {-s.x, -s.y, -s.z};
+}
+
+/// The unsigned area @p s presents: |Sf|. `hypot`, as magnitude(Translation3D).
+[[nodiscard]] inline Area magnitude(const AreaVector3D& s) noexcept {
+    return Area::fromSi(std::hypot(s.x.si(), s.y.si(), s.z.si()));
+}
+
+[[nodiscard]] inline bool isFinite(const AreaVector3D& s) noexcept {
+    return isFinite(s.x) && isFinite(s.y) && isFinite(s.z);
+}
+
+/// `t . Sf`, which IS a Volume: Length x Area, by dimension rather than by
+/// convention. The divergence theorem for a planar-faced polyhedron is a sum of
+/// these, and the type says so.
+[[nodiscard]] constexpr Volume dot(const Translation3D& t, const AreaVector3D& s) noexcept {
+    return t.x * s.x + t.y * s.y + t.z * s.z;
+}
+
 /// A force in model space, resolved onto X, Y and Z.
 ///
 /// The sibling of Translation3D, and placed beside it for the same reason that
