@@ -889,7 +889,7 @@ canonical state holds neither, so a layout is rebuilt from the topology rather
 than persisted (`ADR-066`). A cell vector is component-blocked, `component *
 cells + cell`, reversing `P17`'s interleaved `3k+c`, because `ADR-058` fixes
 SIMPLE-family segregated coupling. Identity is typed rather than documented:
-`CellIndex`, `CellVectorIndex`, `FaceIndex` and `BoundaryFieldSlot` are mutually
+`CellIndex`, `CellVectorIndex`, `FaceIndex` and `BoundaryFaceIndex` are mutually
 non-interconvertible, no mesh handle can subscript anything, and 35 compile-fail
 gates hold that at build time instead of asserting it at run time. Invalidation
 is three-valued rather than boolean — a remesh invalidates every location, a

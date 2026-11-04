@@ -2539,7 +2539,7 @@ reversing P17's interleaved 3k+c -- because ADR-058 fixes SIMPLE-family
 segregated coupling; the test discriminates the two on a six-cell block where
 both halves of the subscript differ, after review found the earlier two-cell
 fixture could not tell them apart. Identity is typed: CellIndex,
-CellVectorIndex, FaceIndex and BoundaryFieldSlot are mutually
+CellVectorIndex, FaceIndex and BoundaryFaceIndex are mutually
 non-interconvertible, no mesh handle can subscript anything, and 35
 compile-fail gates hold that at BUILD time instead of asserting it at run time.
 Invalidation is three-valued rather than boolean: a remesh invalidates every
