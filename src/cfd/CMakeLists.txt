@@ -43,6 +43,7 @@ bettercad_add_library(bettercad_cfd
         CfdAnalysis.cpp
         CfdAnalysisObject.cpp
         CfdData.cpp
+        CfdFields.cpp
         CfdFluid.cpp
         CfdGeometry.cpp
         CfdMesh.cpp

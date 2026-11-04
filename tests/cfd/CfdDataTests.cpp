@@ -1320,7 +1320,10 @@ TEST_CASE("CfdData_AResultMustMatchItsMeshAndItsMode", "[cfd][data][result]") {
 
 TEST_CASE("CfdData_AResultHoldsProvenanceAndMetadataOnly", "[cfd][data][result]") {
     // ADR-061: the fields of the solution (p, U per cell; phi per face) arrive
-    // with P19-DOF-001, which extends this mirror. Until then the container is a
+    // with the first milestone that computes one, keyed by P19-DOF-001's index
+    // space and extending this mirror (ADR-066, Decision 1, which records why
+    // P19-DOF-001 defined the numbering and did not add the arrays). Until then
+    // the container is a
     // source and a metadata record and nothing else -- in particular not a mesh,
     // so its size does not depend on the mesh.
     struct PermittedResult {

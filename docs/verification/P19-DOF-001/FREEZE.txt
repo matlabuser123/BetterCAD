@@ -1,0 +1,331 @@
+P19-DOF-001 -- CFD Field / DOF Model
+QUALIFICATION FREEZE
+====================================================================
+
+The source and test tree is frozen as of this record. Nothing under the
+frozen surface may change until the qualification finishes; if anything
+does, the qualification is void and runs again from clean.
+
+WHAT THE FROZEN SURFACE IS
+--------------------------------------------------------------------
+qualify.cmd records the identity of exactly these eight paths:
+
+    apps  include  src  tests  examples  cmake
+    CMakeLists.txt  CMakePresets.json
+
+That set is the executable-and-tests surface, and it is the set this
+record freezes. TODO.md, ROADMAP.md, docs/architecture/ and
+docs/verification/ are OUTSIDE it, and are written after the run: they
+cannot affect the executable or the tests, which is the project's
+standing policy for documentation during a freeze. This is not a
+loophole being taken -- it is why the evidence README and the TODO
+checkboxes can be completed after the gate without voiding it, and why
+no source or test file may be.
+
+QUALIFIED SOURCE TREE IDENTITIES
+--------------------------------------------------------------------
+Read by qualify.cmd's own method -- a scratch GIT_INDEX_FILE, git
+read-tree HEAD, git add -A over the eight paths, then git write-tree
+--prefix= per directory and git ls-files -s per file. NOT by
+git rev-parse HEAD:<path>, which would report what is committed rather
+than what is about to be built. Taken twice, independently; the two
+readings were compared and are identical.
+
+    apps               fc398a3d2e524178cf38e8b667236379d8381086
+    include            d6ba794a75efd1786cecdf5c620f48d356e8d93f
+    src                143a993a8e0b6223cd395a963e4c07d115aa8db1
+    tests              6d81bbc1b5bdc4c745f3e5a2d17c7af5f4d44efa
+    examples           4da234ebf4779f7c16d5df0075f106f7e3d4c958
+    cmake              5a382115d7ed7775189d40b55e40f318eaae6cc7
+    CMakeLists.txt     3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd
+    CMakePresets.json  3229f0f89b236744d7d5c082bed47c28b718288e
+
+CANDIDATE FILES (blob hashes of the working tree, frozen now)
+--------------------------------------------------------------------
+New:
+    1ec13f295936f387cc51acfd78487cb42350f9cf  include/bettercad/cfd/CfdFields.hpp
+    a49498f56fb96d220163d0186099e577cf55add1  src/cfd/CfdFields.cpp
+    1bd9ba7cb0c12fe9456b021ea44e5f870b296b36  tests/cfd/CfdFieldTests.cpp
+    94fddd05eb1a510db7cc5691ae5f79ae68a60e1c  tests/compile_fail/CfdFieldMisuse.cpp
+Modified:
+    ba6d45acb2bfcba22913a68766fef2a90ef018ba  include/bettercad/cfd/CfdResult.hpp
+    fc82b45ef58158686bcf953e6ec93236e60afd4f  include/bettercad/cfd/CfdTopology.hpp
+    df465b6486996bb8454777e69b153b771c00b737  src/cfd/CMakeLists.txt
+    b08161b0d07f862b1eca8a0c8a9bb6f616bc0e33  tests/CMakeLists.txt
+    0cfba388b2561f66ba91f7a7b14c97d473c86e38  tests/cfd/CfdDataTests.cpp
+    04f250e8bf3c01cd44d13089a5e8770317169008  tests/cli/ZeroMatchGuard.cmake
+    8cb823e70fde385b4ee593e46d69d0e517ab7d4f  tests/compile_fail/CMakeLists.txt
+
+Outside the frozen surface, written after the run:
+    67473f539a25b41ec15bc46abea66581e289ee19  TODO.md (authorization already recorded; checkboxes still open)
+    docs/architecture/decisions/ADR-066-*.md
+    docs/verification/P19-DOF-001/**
+
+    HEAD at freeze: a9cd4f67db2b4e55bfeecf043cfb4ba22fac2371
+    branch:         main
+    frozen:         2026-11-04 22:39:04 +1000
+
+HARNESS IDENTITY
+--------------------------------------------------------------------
+Five files are inherited from P19-GEOM-001/qualification/ and were
+re-hashed AFTER the copy, so the inheritance is measured rather than
+assumed. All five matched:
+
+    f11039e6dc366d7c469a15cf74fb3867fd5ffeff  launch.cmd
+    a65d6578000b6e8a2811d5154bcec24be09c2b54  preflight-space.cmd
+    2f0d4228488f6a574ca57ec89f0fad0107b16b59  preflight-space.ps1
+    d313a64070718c44fae290ac042fe259d1a03c8b  qualify.cmd
+    11855b8ff891093b021d1e0351761283d0eedd24  verify-harness.cmd
+
+qualify.cmd stays at d313a640, which makes this the FIFTY-SIXTH
+consecutive milestone qualified by a byte-identical gate script. The
+gate is not this milestone's to change and was not changed.
+
+One file is this milestone's own:
+
+    1f355537121cbc8102fa40c674adb514a59617a9  run-qualification.cmd
+
+It is 172 lines, CRLF, ASCII, and every line begins with one of rem,
+set, call, echo, setlocal, endlocal or @echo -- checked by a WHOLE-WORD
+match, not a prefix match, because a "remrem" line slipped past a
+prefix match in P19-ARCH-001. 0 violations, 0 blank lines.
+
+Every `set` line in it was diffed against P19-GEOM-001's and is byte
+identical: the preset list, the repeat presets, BETTERCAD_BUILD_ROOT,
+QUALIFY_MIN_FREE_GB and the whole QUALIFY_REPEAT filter. Only the rem
+narrative differs.
+
+THE REPEAT FILTER IS DELIBERATELY NOT SHRUNK. This milestone's blast
+radius no longer needs the nine core math and units prefixes the
+filter carries. They are kept anyway, byte for byte, because a
+determinism gate that is narrowed for convenience is not the same gate.
+
+PRE-RUN CHECKS
+--------------------------------------------------------------------
+    verify-harness.cmd   PASS (exit 0): a failed stage gave qualify.cmd
+                         exit 2, and a zero-match repeat filter was
+                         counted as a failed stage.
+    preflight-space.ps1  OK (exit 0): 2311.57 GB free of 3814.25 GB on
+                         C:, against QUALIFY_MIN_FREE_GB = 20. %TEMP%
+                         and the build root are the same volume and are
+                         counted once. Build root occupies 11.79 GB.
+
+TOOLCHAIN
+--------------------------------------------------------------------
+    g++    16.1.0  (MinGW-W64 x86_64-ucrt-posix-seh, Brecht Sanders, r4)
+    cmake  4.4.1
+    ctest  4.4.1
+    ninja  1.13.2
+
+    resolved from
+      %LOCALAPPDATA%\Microsoft\WinGet\Packages\
+        BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\
+        mingw64\bin
+
+    NOT the MSYS2 GCC 16.2.0 / CMake 4.4.3 a fresh shell resolves to.
+    The PATH is pinned for every build and test invocation. No MSVC-built
+    Qt library is mixed with any GCC object: the external dependency set
+    is gnu-16-mingw-amd64 throughout.
+
+    build root  C:/bettercad/bc-build
+    deps        gnu-16-mingw-amd64 (Qt 6.11.2, OCCT 8.0.1, Netgen 6.2.2604)
+    presets     debug-ext, release-ext, debug-shared-ext; -Werror
+    NO CMake-cache deviation this time.
+
+EXPECTED COUNTS
+--------------------------------------------------------------------
+    full suite   6120 = 6058 (P19-GEOM-001) + 27 unit + 35 compile_fail
+    repeat set   2991 = 2964 (P19-GEOM-001) + 27 unit
+    repeat marks 14955 = 2991 x 5
+
+6120 is MEASURED, not predicted: the pre-freeze debug-ext run below
+discovered exactly 6120 tests. 2991 and 14955 are predictions from the
+same arithmetic and are checked against the run's own counts.
+
+PRE-FREEZE FULL REGRESSION, debug-ext
+--------------------------------------------------------------------
+    discovered  6120  (equals the written sum above)
+    passed      6119
+    failed         1  cli.new.unicode-path  -- DIAGNOSED, NOT A TREE DEFECT
+
+The failure is an artifact of the shell the ad-hoc run was launched
+from, and is reproducible on demand:
+
+    console code page 437    cli.new.unicode-path  ***Failed
+    console code page 65001  cli.new.unicode-path    Passed
+
+Same binary, same tree, one environment variable apart. The mechanism is
+tests/cmake/RunAndCheck.cmake:40, execute_process(... OUTPUT_VARIABLE)
+with no ENCODING argument, so CMake decodes the child's stdout through
+the active code page. The CLI emits correct UTF-8 -- the captured
+diagnostic shows "Pl<mangled>t" where the expectation is "Plat" with the
+Swedish a-ring and a check mark, i.e. UTF-8 bytes read as OEM. The file
+itself was created with the correct name.
+
+This is a KNOWN and ALREADY-PINNED requirement, not a discovery:
+qualify.cmd line 39 runs `chcp 65001 > nul`, and its line 12 says why --
+"Runs under code page 65001 (the CLI's Unicode test needs it)." The
+ad-hoc run bypassed the harness and inherited an OEM page.
+
+The dependence runs in one direction only, and that was checked rather
+than assumed: exactly THREE lines in the whole of tests/CMakeLists.txt
+contain a non-ASCII byte (488, 489, 490) and all three belong to this
+one test. Every other expectation in the suite is pure ASCII, and all
+6119 of them passed under OEM, so none can flip the other way.
+
+    targeted re-run, all 177 cli.* tests at code page 65001: 177/177
+    PASS, exit 0.
+
+NO SOURCE OR TEST FILE WAS CHANGED to resolve this, which is why the
+tree is freezable as it stands.
+
+LEFT OUT DELIBERATELY: RunAndCheck.cmake could pass ENCODING UTF-8 and
+make the test independent of the console. That is shared test
+infrastructure, outside P19-DOF-001's authorized scope, and the
+dependence is deliberate per the repository's own comment at
+tests/CMakeLists.txt:1829. It is recorded as a recommendation and is
+not in this commit.
+
+WHAT RUNS NOW
+--------------------------------------------------------------------
+17 stages: clean, configure, build, rebuild and ctest on each of
+debug-ext, release-ext and debug-shared-ext, plus the two repeat
+determinism stages on release-ext and debug-ext. Expect roughly 3.5
+hours.
+
+====================================================================
+ATTEMPT 1 -- FAILED. 2 of 17 stages. Evidence kept in
+qualification/attempt-1/, nothing overwritten and nothing deleted.
+====================================================================
+
+Wed 2026-11-04 22:40:11 to Thu 2026-11-05 00:26:24, qualify.cmd exit 2.
+
+    debug-ext         configure 0  clean 0  BUILD 1   ctest SKIPPED
+    release-ext       configure 0  clean 0  build 0   ctest 0
+    debug-shared-ext  configure 0  clean 0  build 0   ctest 0
+    repeat release-ext   selects 2991 test(s)   exit 0
+    repeat debug-ext     selects  352 test(s)   exit 8
+
+TWO FAILED STAGES, ONE ROOT CAUSE.
+
+src/features/SolidSupport.cpp failed to compile with exit 1 and NO
+DIAGNOSTIC AT ALL. qualify.cmd line 68 redirects with 2>&1, so the
+silence is real and not a lost stream; run-qualification.err holds
+nothing but git's CRLF warnings.
+
+Everything else followed from it, and the arithmetic closes exactly:
+
+    the build died -> bettercad_tests.exe was never linked
+                   -> Catch2's build-time discovery never ran
+                   -> the repeat filter selected 352 instead of 2991
+                   -> the binary-dependent ones failed -> exit 8
+
+352 was not accepted as "about right". Counted against the
+independent test list from the pre-freeze run: the tests CMake
+registers itself (not Catch2-discovered) that the repeat filter
+matches UNANCHORED are 205 architecture + 93 refmod + 15 cli.refmod
++ 12 cli.thermal + 9 cli.structural + 8 cli.mesh + 10 gui = 352.
+Exactly the number the stage reported. The 15 cli.refmod tests are
+matched because `ctest -R` is a substring match and the filter
+carries `refmod\.`; an anchored count gives 337 and is wrong.
+
+NOT A DEFECT IN THE TREE. Established four ways, not assumed:
+
+    1. the file compiles alone, exit 0, in 4.2 s
+    2. the SAME frozen tree built clean and passed full ctest under
+       BOTH release-ext and debug-shared-ext in this very run
+    3. qualify.cmd's own subtree identities, recorded before the
+       first build and after the last test run, are identical
+    4. all eight identities re-read after the diagnosis still match
+       this record
+
+ROOT CAUSE: COMMIT EXHAUSTION, MEASURED.
+
+    orphaned %TEMP%\ccy6qeK4.s, 0 bytes, 2026-11-04 22:40:48 -- inside
+        the failure window. GCC deletes its own temporaries; a 0-byte
+        orphan means cc1plus died before writing any assembly, which
+        is also why the driver printed nothing.
+    commit charge before a build   71.3 GB used of an 80.8 GB limit
+                                   -> about 9.5 GB of headroom
+    commit per debug compile job   1.81 GB   (measured over a 692-object
+                                   build at a bound of 6, peak 6
+                                   concurrent cc1plus, 252 samples)
+    the driver's level             16, so about 29 GB wanted against
+                                   9.5 GB available
+    Windows event logs             EMPTY in the window; Defender has no
+                                   detection. An allocation failure, not
+                                   a logged crash.
+
+A CORRECTION TO AN EARLIER READING OF THIS FAILURE. The build did NOT
+run at ninja's default of ~34 jobs. run-qualification.cmd already
+carried `set "CMAKE_BUILD_PARALLEL_LEVEL=16"`, inherited byte-identical
+from P19-GEOM-001. The arithmetic still fails at 16; the figure 34 was
+wrong and is corrected here rather than quietly dropped.
+
+WHICH MEANS THE PARAMETER IS NOT WRONG IN ITSELF. P19-GEOM-001 ran the
+same 16 on this machine on 2026-10-31 and finished with 0 stages failed,
+its debug-ext build taking 8m55s. What differs is the memory pressure of
+the interactive desktop session, which today holds 71.3 GB of commit
+before any build starts. The qualification is sensitive to it, and that
+sensitivity is the real finding.
+
+THIS FAILURE MODE IS A KNOWN FAMILY IN THIS PROJECT, TWICE:
+    P19-ARCH-001  attempt 1 stopped when THE LINKER ran out of memory
+                  while the OneDrive client held 56 GB.
+    P19-MESH-001  attempt 1 had %TEMP% fill and every build abort
+                  writing cc*.s; 5 of 17 stages failed.
+Mine is the cc*.s abort with the disk cause excluded: 2311 GB free.
+
+THE FREEZE HELD. No source or test file was changed to diagnose or to
+fix this, so attempt 2 qualifies the same tree. The eight identities
+above are unchanged, which is the evidence for that claim rather than
+an assertion of it.
+
+MITIGATION FOR ATTEMPT 2, AND ITS LIMIT
+--------------------------------------------------------------------
+ONE LINE of run-qualification.cmd differs from attempt 1:
+
+    set "CMAKE_BUILD_PARALLEL_LEVEL=16"   ->   =4
+
+    run-qualification.cmd  1f355537121cbc8102fa40c674adb514a59617a9  attempt 1
+                           f05e244557c3af889e1072869dc82fcc7f5c214e  attempt 2
+                           202 lines, CRLF, ASCII, 0 prefix violations
+
+Nothing else changed. qualify.cmd is still d313a640, the four
+gate-defining set lines (QUALIFY_PRESETS, QUALIFY_REPEAT_PRESETS,
+QUALIFY_MIN_FREE_GB and the whole QUALIFY_REPEAT filter) are
+byte-identical, and no file in the frozen surface was touched.
+
+THIS IS A RESOURCE PARAMETER, NOT A GATE. ninja compiles the same
+sources with the same flags and the same -Werror at any -j, runs the
+same tests, and ctest's own -j 8 lives in qualify.cmd. Nothing about
+what is built, or what has to pass, has been relaxed. The one real
+cost is wall-clock: the measured 692-object debug build took about
+8.4 min at a bound of 6, against P19-GEOM-001's 8m55s for a full
+build at 16, so the penalty here is small.
+
+WHY 4 AND NOT 6. Both were measured. The compile phase is what the
+bound controls, and the two phases separate cleanly:
+
+    compiles at 6   71.3 + 6 x 1.81 = 82.2 GB peak -> 0.4 GB headroom
+    compiles at 4   71.3 + 4 x 1.81 = 78.5 GB peak -> about 4.3 GB
+    the LINK        81.4 GB peak regardless of -j  -> 1.4 GB headroom
+
+A bound of 6 does complete -- it was run end to end, 692/692 objects,
+link included, no FAILED lines -- but it leaves 0.4 GB, and the
+desktop session's pressure can rise during a multi-hour run. 4 buys
+about 3.7 GB for a small time cost.
+
+THE LIMIT OF THIS FIX, STATED PLAINLY. The link of the 1.40 GB debug
+test executable needs 10.3 GB of commit in ONE process, so no job
+bound protects it. It fits today with 1.4 GB to spare, measured, and
+that margin is not large. If the interactive session's memory
+pressure rises materially during attempt 2, the link can still fail,
+and it would fail the same silent way. That is a property of this
+machine under this load, not of the tree, and it is recorded here
+rather than discovered again later.
+
+NOT DONE, AND WHY: closing the user's applications to free commit is
+not mine to do, and enlarging the page file is a system setting. The
+commit limit did grow on its own under pressure, 80.8 -> 82.8 GB,
+which is where the present margin comes from.

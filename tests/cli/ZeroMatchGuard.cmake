@@ -480,6 +480,43 @@ set(_filters
     "unit\\.CfdGeometry_TheUnitTetrahedronHasItsClosedFormMetrics$" 1
     "unit\\.CfdGeometry_TwoBuildsOfOneMeshAreEqual$" 1
     "unit\\.CfdTopology_TheRefusalNamesTheControlAndEveryFindingInOrder$" 1
+    # P19-DOF-001. The group, the compile-fail group that proves no mesh handle
+    # can subscript a field and that a cell is not its own X component, and EVERY
+    # case by name -- exhaustive, for the reason the geometry block above records.
+    # Two of these exist because this milestone's own measurements contradicted an
+    # assumption: a planar reference body cannot be refined, so a remesh of it
+    # changes the generation and no count; and one re-attribution of a patch is
+    # undetectable by design, recorded as a limitation rather than left to be
+    # found.
+    "unit\\.CfdFields_" 27
+    "compile_fail\\.cfdfield\\." 35
+    "unit\\.CfdFields_ABoundaryConditionEditChangesNoLayout$" 1
+    "unit\\.CfdFields_AFluidEditLeavesTheLayoutCurrentAndEqual$" 1
+    "unit\\.CfdFields_APatchReattributionInvalidatesTheBoundaryLayoutAndNotTheCells$" 1
+    "unit\\.CfdFields_ARemeshInvalidatesEveryLocationOfTheLayout$" 1
+    "unit\\.CfdFields_ASparseCellHandleSpaceIsLaidOutByCountAndNotByHandleValue$" 1
+    "unit\\.CfdFields_ALeadingEmptyPatchStillAttributesEverySlotToItsOwnPatch$" 1
+    "unit\\.CfdFields_APatchSplitThatKeepsTheCountAndTheCadFacesIsStillDetected$" 1
+    "unit\\.CfdFields_ASingleCellTopologyHasNoInternalFaceAndStillLaysOutThreeBlocks$" 1
+    "unit\\.CfdFields_TheStagedGateReplacesThePlainTopologysGeometryRevision$" 1
+    "unit\\.CfdFields_TheArrayLengthsFollowFromTheMeshAloneByAnIndependentCount$" 1
+    "unit\\.CfdFields_AnEmptyPatchHasNoFirstSlotAndACountOfZero$" 1
+    "unit\\.CfdFields_AnEmptyTopologyIsRefusedBecauseANumberingOfNothingIsAbsent$" 1
+    "unit\\.CfdFields_DescribesIsFalseForAnotherMeshGeneration$" 1
+    "unit\\.CfdFields_EqualityDiscriminatesSoDeterminismMeansSomething$" 1
+    "unit\\.CfdFields_EveryAccessorIsTotalForAnIndexItDoesNotHold$" 1
+    "unit\\.CfdFields_EveryP16ReferenceMeshYieldsALayout$" 1
+    "unit\\.CfdFields_EveryVariablesArrayLengthIsItsComponentsTimesItsLocation$" 1
+    "unit\\.CfdFields_NoCanonicalStateHoldsAFieldOrALayout$" 1
+    "unit\\.CfdFields_TheComponentIsTheQuotientWhichIsWhereP17sInterleavingDiffers$" 1
+    "unit\\.CfdFields_TheIndexTypesAreDistinctAndNothingConvertsToAMeshHandle$" 1
+    "unit\\.CfdFields_TheLayoutHoldsNoPerCellOrPerFaceArray$" 1
+    "unit\\.CfdFields_TheOneReattributionTheBindingCannotSeeIsTheOneAdr066Records$" 1
+    "unit\\.CfdFields_TheStagedGateCarriesTheModelsGeometryRevisionAndIgnoresTheFluid$" 1
+    "unit\\.CfdFields_TheStagedGateNamesTheControlAndRefusesAnotherGeneration$" 1
+    "unit\\.CfdFields_TheVariableTableFixesTheThreeLocationsAndTheirSiDimensions$" 1
+    "unit\\.CfdFields_ToStringNamesEveryEnumeratorAndFallsBackForNone$" 1
+    "unit\\.CfdFields_TwoBuildsOfOneTopologyAreEqual$" 1
     # P18-QUAL-001. The final-gate cases (the authority matrix over every reference document, the currentness matrix in one sequence and its
     # edit-back path, a failed regeneration, the unforgeable proof of an accepted input, the units of the transient sum), and one test for
     # each defect the final audit found and fixed or each gap it closed, each at its own name so a rename or a drop is a failure.

@@ -103,15 +103,22 @@ Current authorized development:
 ```text
 P19 — CFD Integration, authorized 2026-10-27 by the owner's "start
 P19-ARCH-001": P19-ARCH-001 and P19-DATA-001 (2026-10-27), P19-FLUID-001
-(2026-10-28), P19-MESH-001, P19-TOPO-001 and P19-GEOM-001 (all 2026-10-31) have
-PASSED.
+(2026-10-28), P19-MESH-001, P19-TOPO-001 and P19-GEOM-001 (all 2026-10-31) and
+P19-DOF-001 (2026-11-05) have PASSED.
 P19-MESH-001 was qualified by a second attempt on a replacement machine: its
 first attempt, on 2026-10-28, failed 5 of 17 stages when the previous machine's
 temp volume filled and no test suite ran, and that machine was then permanently
 replaced, so the replacement was qualified in its own right before the gate was
 re-run. P19-TOPO-001 and P19-GEOM-001 each qualified from clean on the first
-attempt, on the same harness. No milestone is open, and nothing after
-P19-GEOM-001 is authorized; see TODO.md.
+attempt, on the same harness. P19-DOF-001 needed a second attempt as well, for a
+measured resource reason rather than any defect in the tree: the machine ran out
+of Windows commit, so a compile exited 1 with no diagnostic at all, and the dead
+build cost the repeat stage its build-time test discovery, which then selected
+352 tests instead of 2991 and passed every one. Its launcher reported success
+while two of seventeen stages had failed, which is why the harness's own verdict
+is what is read. One line of that milestone's own run driver differs between its
+two attempts, and no frozen file does. No milestone is open, and nothing after
+P19-DOF-001 is authorized; see TODO.md.
 
 The phases before it, and how each was qualified:
 
@@ -872,6 +879,37 @@ behind it, four guards called unreachable being reachable. The summary measures
 and judges nothing, so `P19-MESH-001`'s owner finding F1 is neither resolved
 nor extended here, and a bound on the worst-conditioned quantity,
 `orthogonalDistance`, is `P19-VALID-001`'s work.
+
+`P19-DOF-001` (PASS 2026-11-05) fixes where a CFD field lives, how long an array
+of it is, which subscript addresses one component, and what each kind of edit
+invalidates: pressure and velocity cell-centred, mass flux on faces, under a
+frozen variable table that carries each one's SI dimensions. The layout is a
+derived index space — the Document holds no field array and no layout, and
+canonical state holds neither, so a layout is rebuilt from the topology rather
+than persisted (`ADR-066`). A cell vector is component-blocked, `component *
+cells + cell`, reversing `P17`'s interleaved `3k+c`, because `ADR-058` fixes
+SIMPLE-family segregated coupling. Identity is typed rather than documented:
+`CellIndex`, `CellVectorIndex`, `FaceIndex` and `BoundaryFieldSlot` are mutually
+non-interconvertible, no mesh handle can subscript anything, and 35 compile-fail
+gates hold that at build time instead of asserting it at run time. Invalidation
+is three-valued rather than boolean — a remesh invalidates every location, a
+patch re-attribution invalidates the boundary layout and leaves the cells
+current, and a fluid-property edit invalidates nothing. The array lengths and the
+patch partition are counted off `P16`'s mesh and mapping on all eight reference
+meshes rather than off the implementation, and the blocked subscript is proved a
+bijection onto `[0, 3 cells)` by marking every slot, because a round trip alone
+would pass for a layout that mapped two cells to one slot. Qualified at 6120/6120
+in each of three presets, 2991 x 5 in two, 0 warnings under `-Werror`, 17 of 17
+stages exit 0, and the eight qualified subtrees identical across four readings;
+see [P19-DOF-001](docs/verification/P19-DOF-001/README.md). Two reviews ran
+before the freeze, independently, and both found the same four evidence defects —
+among them a canonical-state proof that was vacuous, having interrogated a struct
+the document never held, and a staged-gate line that was a no-op on every tested
+path. Both of those fixes are verified by mutation: deleting the line now fails
+loudly where before it passed the whole suite. No field values exist yet, and the
+result arrays `CfdResult.hpp` had promised at this milestone are deliberately
+deferred — boundary and initial conditions, the operators and the solve are later
+milestones, each the owner's to authorize.
 
 ```text
 incompressible laminar

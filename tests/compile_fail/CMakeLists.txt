@@ -953,6 +953,59 @@ foreach(_case
         THE_DEFINITION_HAS_NO_FLUID)
     bettercad_compile_fail_case(cfdids "${_cfdids}" ${_case} "no member named|has no member" BetterCAD::cfd)
 endforeach()
+# CFD field layout (P19-DOF-001, ADR-066). The two claims a layout rests on: no
+# mesh handle can subscript a field, and a cell is not its own X component -- which
+# matters because a component-blocked layout makes those two subscripts COINCIDE
+# numerically. Plus three absences: the layout holds no field, offers no mesh
+# handle, and the canonical definition has no member for it.
+set(_cfdfield "${CMAKE_CURRENT_SOURCE_DIR}/CfdFieldMisuse.cpp")
+bettercad_compile_fail_group(cfdfield "${_cfdfield}" BetterCAD::cfd)
+foreach(_case
+        AN_ELEMENT_ID_IS_NOT_A_CELL_INDEX
+        A_CELL_INDEX_IS_NOT_AN_ELEMENT_ID
+        AN_ELEMENT_ID_IS_NOT_A_CELL_VECTOR_INDEX
+        A_NODE_ID_IS_NOT_A_CELL_INDEX
+        AN_ELEMENT_ID_CANNOT_BE_ASKED_OF_THE_LAYOUT
+        A_CELL_INDEX_IS_NOT_A_CELL_VECTOR_INDEX
+        A_CELL_VECTOR_INDEX_IS_NOT_A_CELL_INDEX
+        A_CELL_VECTOR_INDEX_IS_NOT_AN_INTEGER
+        AN_INTEGER_IS_NOT_A_CELL_VECTOR_INDEX
+        PASSING_A_CELL_WHERE_A_VECTOR_SUBSCRIPT_IS_WANTED
+        PASSING_A_VECTOR_SUBSCRIPT_WHERE_A_CELL_IS_WANTED
+        A_FACE_INDEX_IS_NOT_A_BOUNDARY_FIELD_SLOT
+        A_BOUNDARY_FIELD_SLOT_IS_NOT_A_FACE_INDEX
+        A_PATCH_INDEX_IS_NOT_A_BOUNDARY_FIELD_SLOT
+        A_BOUNDARY_FIELD_SLOT_IS_NOT_A_PATCH_INDEX
+        A_CELL_INDEX_IS_NOT_A_FACE_INDEX_FOR_A_SLOT
+        A_FACE_INDEX_IS_NOT_A_CELL_INDEX_FOR_A_SLOT
+        A_VARIABLE_IS_NOT_A_LOCATION
+        A_LOCATION_IS_NOT_A_VARIABLE
+        A_COMPONENT_IS_NOT_AN_INTEGER
+        AN_INTEGER_IS_NOT_A_COMPONENT
+        A_CURRENCY_IS_NOT_A_BOOL
+        A_DIMENSION_IS_NOT_A_BARE_NUMBER)
+    bettercad_compile_fail_case(cfdfield "${_cfdfield}" ${_case}
+        "could not convert|cannot convert|no matching function|no match for|invalid conversion|conversion from"
+        BetterCAD::cfd)
+endforeach()
+foreach(_case
+        THE_LAYOUT_HAS_NO_PRESSURE_FIELD
+        THE_LAYOUT_HAS_NO_VELOCITY_FIELD
+        THE_LAYOUT_HAS_NO_MASS_FLUX
+        THE_LAYOUT_OFFERS_NO_ELEMENT_HANDLE
+        THE_LAYOUT_HAS_NO_FLUID
+        THE_LAYOUT_CANNOT_BE_REBOUND_IN_PLACE
+        THE_PATCH_RANGE_HAS_NO_LAST_SLOT
+        THE_DEFINITION_HAS_NO_FIELD_MAP
+        THE_DEFINITION_HAS_NO_CELL_COUNT
+        THE_DEFINITION_HAS_NO_VELOCITY_ARRAY)
+    bettercad_compile_fail_case(cfdfield "${_cfdfield}" ${_case} "no member named|has no member" BetterCAD::cfd)
+endforeach()
+bettercad_compile_fail_case(cfdfield "${_cfdfield}" A_LAYOUT_CANNOT_BE_BUILT_WITHOUT_ITS_BUILDER
+    "is private within this context|private" BetterCAD::cfd)
+bettercad_compile_fail_case(cfdfield "${_cfdfield}" A_CELL_VECTOR_INDEX_HAS_NO_ARITHMETIC
+    "no match for|invalid operands|no matching function" BetterCAD::cfd)
+
 # Temperature DOF index space (P18-DOF-001). The thermal sibling of structdof:
 # a node ordinal is not a node handle, a row of the reduced system is not an
 # unknown of the full one, neither is an integer, a prescribed temperature is a

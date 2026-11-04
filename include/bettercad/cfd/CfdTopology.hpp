@@ -30,7 +30,7 @@
 // point the other way and every flux across those faces would change sign.
 //
 // WHAT THIS FILE DOES NOT DO. No face area vector, centroid, volume or quality
-// metric (P19-GEOM-001); no field storage (P19-FIELD-001); no boundary condition
+// metric (P19-GEOM-001); no field storage (P19-DOF-001); no boundary condition
 // (P19-BC-001); no matrix and no solve. It is connectivity and nothing else.
 
 #include <bettercad/cfd/CfdMesh.hpp>

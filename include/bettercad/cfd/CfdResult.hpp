@@ -23,10 +23,18 @@
 // P19-TOPO-001 and P19-DOF-001 define from a face enumeration that does not exist
 // yet. A container with p and U but no phi would claim to be a solution and not
 // be one (its mass balance could not be checked), and keying p by a tetrahedron's
-// position would decide P19-DOF-001's numbering here by accident. So the
-// container is defined complete in everything but the arrays, and P19-DOF-001
-// adds them -- extending `CfdData_AResultHoldsProvenanceAndMetadataOnly`'s mirror,
-// which is where that addition is stated.
+// position would decide the numbering of the field maps here by accident. So the
+// container is defined complete in everything but the arrays.
+//
+// P19-DOF-001 DEFINED THAT NUMBERING AND DELIBERATELY DID NOT ADD THE ARRAYS,
+// which this paragraph said it would (ADR-066, Decision 1). Its authorization is a
+// checklist about locations, indexing, binding and invalidation, and the arrays are
+// not on it; and nothing in the tree yet PRODUCES a field, so arrays added there
+// would have been validated against no producer, with `CfdResult::create` taking a
+// topology to check their lengths for a caller that does not exist. They arrive
+// with the first milestone that computes a field, keyed by `CfdFieldMap`'s index
+// space, and `CfdData_AResultHoldsProvenanceAndMetadataOnly`'s mirror is where the
+// addition is stated.
 
 #include <bettercad/cfd/CfdAnalysisObject.hpp>
 #include <bettercad/cfd/CfdData.hpp>

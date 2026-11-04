@@ -23,11 +23,40 @@ Prerequisite:
            may set). P17's F1-F3 stand unchanged beneath them.
 
 Current milestone:
-           None. P19-GEOM-001 PASSED 2026-10-31, and finishing a milestone is
+           None. P19-DOF-001 PASSED 2026-11-05, and finishing a milestone is
            itself a stop condition: the next one is a scope decision and the
            owner's alone.
 
 Previous milestone:
+           P19-DOF-001 — CFD Field / DOF Model. AUTHORIZED 2026-11-04 by the
+           owner ("implement and fully verify", with the seventeen item
+           checklist and the recommended p / U / phi layout quoted). PASS
+           2026-11-05. All seventeen items are recorded: 17 of 17 stages exit
+           0, 6120/6120 in each of the three presets, 2991 x 5 in two with
+           14955 counted Passed markers each, 0 warnings and 0 errors under
+           -Werror, 3h03m28s, and the eight qualified subtrees identical at
+           the freeze, before the first build, after the last test run and
+           when recomputed from the working tree afterwards — four readings.
+           27 unit cases / 58,197 assertions and 35 compile-fail cases.
+           QUALIFIED ON THE SECOND ATTEMPT: attempt 1 failed 2 of 17 stages
+           while its launcher exited 0 — which is why the harness's own
+           verdict, not an exit code, is what is read — and it is preserved
+           under qualification/attempt-1/ rather than erased. Its cause was
+           measured, not guessed: the machine ran out of Windows commit, so a
+           compile exited 1 with no diagnostic at all, and the dead build cost
+           the repeat stage its Catch2 discovery, which selected 352 tests
+           instead of 2991 and passed every one. Exactly one line of this
+           milestone's own driver differs between the attempts
+           (CMAKE_BUILD_PARALLEL_LEVEL 16 → 4); qualify.cmd and all four
+           gate-defining settings are byte-identical, and no file in the
+           frozen surface was touched, so the same tree was qualified. Two
+           independent reviews found the same four evidence defects — among
+           them a canonical-state proof that was VACUOUS and a staged-gate
+           line that was a NO-OP on every tested path — and both of those
+           fixes are verified by mutation.
+           (docs/verification/P19-DOF-001/README.md.)
+
+Milestone before that:
            P19-GEOM-001 — Finite-Volume Geometric Metrics. AUTHORIZED
            2026-10-31 by the owner ("start", with the twenty-one item checklist
            quoted). PASS 2026-10-31. All twenty-one items are recorded: 17 of
@@ -49,7 +78,7 @@ Previous milestone:
            area scale on all eight reference meshes.
            (docs/verification/P19-GEOM-001/README.md.)
 
-Milestone before that:
+Before those:
            P19-TOPO-001 — Finite-Volume Topology. AUTHORIZED 2026-10-31 by
            the owner ("implement this and fully verify", with the twenty-two
            item checklist quoted). PASS 2026-10-31. All twenty-two items are
@@ -69,7 +98,7 @@ Milestone before that:
            three are stated in the evidence rather than glossed.
            (docs/verification/P19-TOPO-001/README.md.)
 
-Before those:
+Earlier still:
            P19-MESH-001 — CFD Volume / Surface Mesh Contract. AUTHORIZED
            2026-10-28 ("start P19-MESH-001"). PASS 2026-10-31. All twenty-four
            items are now recorded: Determinism PASS, Regression PASS and
@@ -110,7 +139,7 @@ Qualified:
            P18 — Thermal Analysis
 
 Next:
-           Nothing is authorized. P19-GEOM-001 PASSED and nothing after it has
+           Nothing is authorized. P19-DOF-001 PASSED and nothing after it has
            been started: each milestone is started by the owner, as every P17,
            P18 and P19 milestone was, and a predecessor's PASS is not
            permission to start the one after it. Finishing a milestone is
@@ -1891,9 +1920,9 @@ general fix → requalify the affected milestone → rerun P18-QUAL.
 **AUTHORIZED 2026-10-27** by the owner's "start P19-ARCH-001", the open P18 findings
 F1-F3 weighed as inputs to it. Milestones are worked top to bottom, and each is authorized
 by its predecessor's PASS being recorded here and the owner saying so -- P17's and P18's
-rule, unchanged. P19-ARCH-001, P19-DATA-001, P19-FLUID-001, P19-MESH-001, P19-TOPO-001
-and P19-GEOM-001 have PASSED; **nothing after them is authorized**, and a predecessor's
-pass is not permission
+rule, unchanged. P19-ARCH-001, P19-DATA-001, P19-FLUID-001, P19-MESH-001, P19-TOPO-001,
+P19-GEOM-001 and P19-DOF-001 have PASSED; **nothing after them is authorized**, and a
+predecessor's pass is not permission
 to start the next.
 
 Goal: add qualified incompressible CFD capability without duplicating CAD, material, mesh,
@@ -2437,23 +2466,28 @@ Evidence: docs/verification/P19-GEOM-001/README.md.
 
 Define field locations and compact indexing.
 
-* [ ] Pressure location
-* [ ] Velocity location
-* [ ] Mass-flux location
-* [ ] Cell-centred scalar indexing
-* [ ] Cell-centred vector indexing
-* [ ] Face-field indexing
-* [ ] Boundary-field indexing
-* [ ] `CellIndex != ElementId`
-* [ ] No raw mesh-ID indexing
-* [ ] Deterministic field ordering
-* [ ] Exact mesh-source binding
-* [ ] Remesh invalidates maps
-* [ ] Fluid-property edits do not invalidate topology maps
-* [ ] Boundary edits invalidate boundary-derived state only
-* [ ] No field arrays in canonical state
-* [ ] Regression PASS
-* [ ] Evidence recorded
+**AUTHORIZED 2026-11-04** by the owner's "implement and fully verify", with the
+seventeen item checklist below and the recommended layout quoted. PASS
+2026-11-05; the record is below the checklist. Nothing after this milestone is
+authorized.
+
+* [x] Pressure location
+* [x] Velocity location
+* [x] Mass-flux location
+* [x] Cell-centred scalar indexing
+* [x] Cell-centred vector indexing
+* [x] Face-field indexing
+* [x] Boundary-field indexing
+* [x] `CellIndex != ElementId`
+* [x] No raw mesh-ID indexing
+* [x] Deterministic field ordering
+* [x] Exact mesh-source binding
+* [x] Remesh invalidates maps
+* [x] Fluid-property edits do not invalidate topology maps
+* [x] Boundary edits invalidate boundary-derived state only
+* [x] No field arrays in canonical state
+* [x] Regression PASS
+* [x] Evidence recorded
 
 Recommended initial layout:
 
@@ -2461,6 +2495,105 @@ Recommended initial layout:
 pressure p     cell-centred
 velocity U     cell-centred
 mass flux phi  face-centred
+```
+
+```text
+PASS 2026-11-05. Authorized 2026-11-04 by the owner's "implement and fully
+verify", with the seventeen item checklist and the recommended p / U / phi
+layout quoted. Qualified against a9cd4f67 plus this milestone's eleven candidate
+files: 6120/6120 x 3 presets, 2991 x 5 in two repeat stages with 14955 counted
+Passed markers each, 0 warnings and 0 errors under -Werror, 17 of 17 stages exit
+0, 3h03m28s, and the eight qualified subtrees identical across FOUR readings --
+at the freeze, by the harness before the first build, by the harness after the
+last test run, and recomputed from the working tree afterwards by the harness's
+own method. 27 unit cases / 58,197 assertions and 35 compile-fail cases.
+
+QUALIFIED ON THE SECOND ATTEMPT, and the first is preserved rather than
+overwritten, under docs/verification/P19-DOF-001/qualification/attempt-1/.
+Attempt 1 failed 2 of 17 stages while its LAUNCHER exited 0, which is why the
+harness's own verdict and not an exit code is what gets read. The cause was
+measured, not guessed: the machine ran out of Windows COMMIT -- 71.3 GB used of
+an 80.8 GB limit before the build began, against about 29 GB wanted at 16
+concurrent compiles -- so src/features/SolidSupport.cpp exited 1 with no
+diagnostic at all and left an orphaned 0-byte %TEMP%\cc*.s behind. The dead
+build took the ctest stage with it and then the repeat stage, which selected 352
+tests instead of 2991 because Catch2 discovery runs at BUILD time and passed
+every one of the 352; the number was reconciled exactly against the test list
+(205 architecture + 93 refmod + 15 cli.refmod + 12 cli.thermal + 9
+cli.structural + 8 cli.mesh + 10 gui). Not a tree defect: the same frozen tree
+built clean and passed full ctest under release-ext and debug-shared-ext in that
+very run. Exactly ONE line differs between the attempts, in this milestone's own
+driver and outside the frozen surface -- CMAKE_BUILD_PARALLEL_LEVEL 16 -> 4 --
+so qualify.cmd stays byte-identical at d313a640 for its 56th milestone, all four
+gate-defining set lines are unchanged, and no source or test file was touched.
+Build parallelism is a resource parameter, not a gate: ninja compiles the same
+sources with the same flags and -Werror at any -j. The cost is recorded rather
+than waved away -- the debug-ext build went 8.9 -> 18.3 min while ninja's edge
+count rose only 786 -> 789.
+
+The layout is a DERIVED index space (ADR-066): the Document holds no field array
+and no layout, canonicalText holds neither, and a layout is rebuilt from the
+topology. A cell vector is COMPONENT-BLOCKED -- component * cells + cell,
+reversing P17's interleaved 3k+c -- because ADR-058 fixes SIMPLE-family
+segregated coupling; the test discriminates the two on a six-cell block where
+both halves of the subscript differ, after review found the earlier two-cell
+fixture could not tell them apart. Identity is typed: CellIndex,
+CellVectorIndex, FaceIndex and BoundaryFieldSlot are mutually
+non-interconvertible, no mesh handle can subscript anything, and 35
+compile-fail gates hold that at BUILD time instead of asserting it at run time.
+Invalidation is three-valued rather than boolean: a remesh invalidates every
+location, a patch re-attribution invalidates the boundary layout and leaves the
+cells current, and a fluid-property edit invalidates nothing.
+
+Validated against instruments the implementation does not share: the SI
+dimensions against exponent sets written out BY HAND as well as against the
+catalog, so the kg/s mass flux is discriminated from kg/(m^2 s); the array
+lengths counted off the P16 mesh on all eight reference meshes, faces by Euler
+bookkeeping; the patch partition counted off the P16 mapping, which is its only
+upstream source; and the blocked subscript proved a BIJECTION onto [0, 3 cells)
+by marking every slot, because a round trip alone would pass for a layout that
+mapped two cells to one slot. The cross-check against CfdTopology is labelled in
+the test as a comparison between two implementations, NOT an independent oracle.
+
+Two reviews ran before the freeze, independently, and both found the same four
+evidence defects -- which is the useful signal. The canonical-state proof was
+VACUOUS: it interrogated a local struct the document never held, so it proved
+only that canonicalText is a pure function; the analysis is now created in the
+document and read back through findCfdAnalysis. The staged gate's one
+distinguishing line was a NO-OP on every tested path, and its fix is verified by
+MUTATION -- deleting the line now fails three assertions, where before it passed
+the whole suite. A header cited a measurement nobody had made, and a test
+comment described a fixture it did not build. Four coverage gaps each became a
+test, two of them mutation-verified, and three assertions that merely restated
+the implementation were DELETED rather than reworded, because they could not
+fail.
+
+Recorded as less than a reader might assume. No performance claim is made or
+measured, and ADR-066's remark about cache lines is labelled an expectation that
+no later milestone may cite as measured. No field VALUES exist yet: the result
+arrays CfdResult.hpp had promised this milestone are deferred by ADR-066
+Decision 1, and the two comments that promised otherwise were corrected rather
+than quietly dropped. There is no cross-preset golden digest, because a layout
+is derived and never persisted, so the three-preset evidence is that the same
+assertions hold in each build. Six known limitations are listed, among them that
+a patch re-attribution preserving every patch's size AND CAD face is not
+detected -- unreachable from a CfdModel, needing hand-built MappedFace spans,
+and held by a test that will FAIL if the binding is ever strengthened, which is
+the intended notice -- and that an empty patch's range carries an invalid first
+slot, so span arithmetic on it is undefined behaviour rather than an empty
+subspan.
+
+One PRE-EXISTING defect, found while checking this run's counts, is deliberately
+NOT fixed here, being outside this milestone: two pairs of distinct Catch2 cases
+share a ctest name -- MeshIssueKind_EveryKindHasAName in
+tests/meshing/MeshDataTests.cpp:904 and tests/meshing/TetValidationTests.cpp:215,
+and "Dependency cycles are reported and block their dependents" in
+tests/features/RegeneratorTests.cpp:245 and tests/features/ValidationTests.cpp:154.
+P19-GEOM-001's log carries the same two pairs, so this milestone did not
+introduce them. Consequence: ctest -R on either name selects two tests, and a
+failure report does not say which source file it came from. All four pass; it is
+naming hygiene, not correctness, and it is the owner's to schedule.
+Evidence: docs/verification/P19-DOF-001/README.md.
 ```
 
 ---
@@ -3911,7 +4044,8 @@ environmentally on 2026-10-28 and the qualification machine was then replaced.
 
 P19-GEOM-001 PASSED 2026-10-31, authorized the same day by the owner's "start"
 with the twenty-one item checklist quoted: 6058/6058 x 3 presets, 2964 x 5 in
-two, 17 of 17 stages exit 0, and all twenty-one items recorded. Nothing after
+two, 17 of 17 stages exit 0, and all twenty-one items recorded. P19-DOF-001
+was authorized on 2026-11-04 and PASSED 2026-11-05; nothing after
 it is authorized. P19-MESH-001's owner finding F1 stands unchanged above, and
 this milestone neither resolves it nor adds to it: it measured the same eight
 meshes -- non-orthogonality and skewness among them -- and set no threshold,
@@ -3994,6 +4128,28 @@ P19-GEOM-001     PASS 2026-10-31. Authorized the same day by the owner
                  subtree hashes read back from the commit object each equal
                  their frozen value: qualified tree == committed tree.
                  ADR-065. Evidence recorded.
+
+P19-DOF-001      PASS 2026-11-05. Authorized 2026-11-04 by the owner
+                 ("implement and fully verify", with the seventeen item
+                 checklist and the recommended p / U / phi layout quoted). All
+                 seventeen items recorded: 6120/6120 x 3 presets, 2991 x 5 in
+                 two with 14955 Passed markers each, 17 of 17 stages exit 0, 0
+                 warnings under -Werror, 27 unit cases / 58,197 assertions and
+                 35 compile-fail cases. The eight qualified subtrees identical
+                 across four readings -- at the freeze, before the first build,
+                 after the last test run, and recomputed from the working tree
+                 afterwards. Qualified on the SECOND attempt: attempt 1 failed
+                 2 of 17 stages on measured commit exhaustion while its
+                 launcher exited 0, and is preserved rather than erased; one
+                 line of this milestone's own driver differs between the
+                 attempts and no frozen file does. Two independent reviews
+                 found the same four evidence defects -- a vacuous
+                 canonical-state proof and a no-op staged-gate line among them
+                 -- all fixed before the freeze, two verified by mutation.
+                 ADR-066. Evidence recorded.
+
+P19-BC-001       NOT AUTHORIZED. Next in the sequence, which is not
+                 permission. Authorizing it is the owner's decision alone.
 
 everything after it
                  likewise.
