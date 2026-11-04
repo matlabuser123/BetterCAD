@@ -36,7 +36,8 @@ Previous milestone:
            14955 counted Passed markers each, 0 warnings and 0 errors under
            -Werror, 3h03m28s, and the eight qualified subtrees identical at
            the freeze, before the first build, after the last test run and
-           when recomputed from the working tree afterwards — four readings.
+           when recomputed from the working tree afterwards and in the
+           committed tree (cdd42a3) — five readings.
            27 unit cases / 58,197 assertions and 35 compile-fail cases.
            QUALIFIED ON THE SECOND ATTEMPT: attempt 1 failed 2 of 17 stages
            while its launcher exited 0 — which is why the harness's own
@@ -2593,6 +2594,9 @@ P19-GEOM-001's log carries the same two pairs, so this milestone did not
 introduce them. Consequence: ctest -R on either name selects two tests, and a
 failure report does not say which source file it came from. All four pass; it is
 naming hygiene, not correctness, and it is the owner's to schedule.
+Committed as cdd42a3, production code and evidence together; the eight
+subtree hashes were read back from the commit object and each equals its
+frozen value: qualified tree == committed tree.
 Evidence: docs/verification/P19-DOF-001/README.md.
 ```
 
@@ -4146,6 +4150,9 @@ P19-DOF-001      PASS 2026-11-05. Authorized 2026-11-04 by the owner
                  found the same four evidence defects -- a vacuous
                  canonical-state proof and a no-op staged-gate line among them
                  -- all fixed before the freeze, two verified by mutation.
+                 Committed as cdd42a3, production code and evidence together; the
+                 eight subtree hashes read back from the commit object each
+                 equal their frozen value: qualified tree == committed tree.
                  ADR-066. Evidence recorded.
 
 P19-BC-001       NOT AUTHORIZED. Next in the sequence, which is not

@@ -900,8 +900,9 @@ meshes rather than off the implementation, and the blocked subscript is proved a
 bijection onto `[0, 3 cells)` by marking every slot, because a round trip alone
 would pass for a layout that mapped two cells to one slot. Qualified at 6120/6120
 in each of three presets, 2991 x 5 in two, 0 warnings under `-Werror`, 17 of 17
-stages exit 0, and the eight qualified subtrees identical across four readings;
-see [P19-DOF-001](docs/verification/P19-DOF-001/README.md). Two reviews ran
+stages exit 0, and the eight qualified subtrees identical across five readings,
+the committed tree (`cdd42a3`) among them; see
+[P19-DOF-001](docs/verification/P19-DOF-001/README.md). Two reviews ran
 before the freeze, independently, and both found the same four evidence defects —
 among them a canonical-state proof that was vacuous, having interrogated a struct
 the document never held, and a staged-gate line that was a no-op on every tested

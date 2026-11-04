@@ -10,7 +10,8 @@ AUTHORIZED:      2026-11-04 by the owner ("implement and fully verify", with the
                  implementation began.
 ARCHITECTURE:    ADR-066.
 RESULT:          PASS. 17 of 17 qualification stages exit 0; 6120 tests on each
-                 of three presets, 2991 x 5 twice over, 0 failures.
+                 of three presets, 2991 x 5 twice over, 0 failures. Committed
+                 as cdd42a3, qualified tree == committed tree.
 ```
 
 ## SCOPE
@@ -322,9 +323,13 @@ cli.new.unicode-path, which failed my pre-freeze run under the OEM code page,
 Passed on all three presets here (test #4861). The harness pins chcp 65001; the
 diagnosis is in FREEZE.txt, and no source or test file was changed for it.
 
-QUALIFIED TREE == COMMITTED TREE. The eight identities were read FOUR times and
+QUALIFIED TREE == COMMITTED TREE. The eight identities were read FIVE times and
 were identical every time: at the freeze, by qualify.cmd before the first build,
-by qualify.cmd after the last test, and from the working tree after the run.
+by qualify.cmd after the last test, from the working tree after the run, and
+read back from the commit object of cdd42a3 -- the commit that carries this evidence
+and the production code together. The fifth reading is the one that closes the
+gate, because the first four could all be true of a tree that was then committed
+with something else in it.
 
     apps               fc398a3d2e524178cf38e8b667236379d8381086
     include            d6ba794a75efd1786cecdf5c620f48d356e8d93f
@@ -472,7 +477,8 @@ tree-identity check.
                       found before the freeze, all resolved, none deferred
     regression        6120 tests x 3 presets, 2991 x 5 x 2 repeat, 0 failures
     determinism       the two repeat stages, 14955 markers each, 0 failures
-    freeze            8 subtree identities, 4 identical readings
+    freeze            8 subtree identities, 5 identical readings, the last
+                      read back from commit cdd42a3 itself
 
 What this does NOT claim: no performance result is measured or asserted, no
 field VALUES exist yet, and the layout is derived and never persisted, so there
