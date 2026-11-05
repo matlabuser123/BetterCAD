@@ -940,7 +940,9 @@ barycentric containment oracle, centroids recomputed from the mesh nodes, and
 facets chosen by a node plane read off the mesh rather than by list order.
 Qualified at 6184/6184 in each of three presets, 3039 x 5 in two, 0 warnings
 under `-Werror`, 17 of 17 stages exit 0 from clean on the first attempt, and
-2,136 assertions in 48 cases identically in all three builds; see
+2,136 assertions in 48 cases identically in all three builds, with the eight
+qualified subtrees identical across six readings, the committed tree
+(`1e0858a`) among them; see
 [P19-BC-001](docs/verification/P19-BC-001/README.md). Thirteen behavioural
 defects were found before the freeze — four by the author's own adversarial
 pass, which two independent reviews then confirmed, and nine more by those

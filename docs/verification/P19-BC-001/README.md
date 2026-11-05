@@ -17,7 +17,9 @@ VALIDATION:      P16's reverse linkage against its forward resolution; the
                  inlet's direction against the owner cell's interior.
 RESULT:          PASS. 17 of 17 qualification stages exit 0; 6184 tests on
                  each of three presets, 3039 x 5 twice over, 0 failures.
-                 The commit and the fifth tree reading are in REVISION r2.
+                 Committed as 1e0858a; the eight subtree identities read
+                 back out of that commit object each equal their frozen
+                 value, so the qualified tree is the committed tree.
 EVIDENCE:        this directory. FREEZE.txt records the tree that was qualified.
 ```
 
@@ -414,13 +416,15 @@ BUILD COST, recorded because it is the one thing that moved: debug-ext 19 min
 P19-DOF-001's 18.3 / 19.1 / 16.8 min at the same -j4. Two new sources and two
 new test translation units account for it; no flag changed.
 
-QUALIFIED TREE == COMMITTED TREE. The eight identities have been read FOUR times
+QUALIFIED TREE == COMMITTED TREE. The eight identities have been read SIX times
 and were identical every time: at the freeze, by qualify.cmd before the first
-build, by qualify.cmd after the last test run, and from the working tree after
-the run by qualify.cmd's own method. The FIFTH reading -- from the commit object
-itself -- is the one that closes the gate, because the first four could all be
-true of a tree that was then committed with something else in it. It is recorded
-in REVISION r2.
+build, by qualify.cmd after the last test run, from the working tree after the
+run by qualify.cmd's own method, out of the STAGED TREE immediately before the
+commit (git write-tree gave cb2809d0, and the eight paths were read out of it),
+and finally back out of the commit object of 1e0858a. The last two are the ones
+that close the gate, because the first four could all be true of a tree that was
+then committed with something else in it; the staged reading catches that before
+the commit and the commit reading proves it after. REVISION r2 records both.
 
     apps               fc398a3d2e524178cf38e8b667236379d8381086
     include            2cea8da0a007ef6790d0f3cb866d1583634cf228
@@ -584,4 +588,40 @@ r1  2026-11-05. Drafted during the work. Every section except REGRESSION, RESULT
     authorized milestone, and is carried forward unchanged as L8: the two pairs
     of distinct Catch2 cases that share a ctest name, reported first by
     P19-DOF-001. All four still pass; it is naming hygiene, not correctness.
+```
+
+```text
+r2  2026-11-05. The commit and the last two tree readings, neither of which
+    existed when r1 was written.
+
+    COMMITTED AS 1e0858a, production code, tests and this evidence together.
+    The eight subtree identities were read back out of the commit object and
+    each equals its frozen value, so the qualified tree IS the committed tree:
+
+        apps               fc398a3d2e524178cf38e8b667236379d8381086
+        include            2cea8da0a007ef6790d0f3cb866d1583634cf228
+        src                b928165c77bdc662e5a655645e31741735bde858
+        tests              df4ae5746e4c62cbe88bb4d7f7dd7a586340da44
+        examples           4da234ebf4779f7c16d5df0075f106f7e3d4c958
+        cmake              5a382115d7ed7775189d40b55e40f318eaae6cc7
+        CMakeLists.txt     3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd
+        CMakePresets.json  3229f0f89b236744d7d5c082bed47c28b718288e
+
+    THE COUNT OF READINGS IS CORRECTED IN REGRESSION ITSELF, not left for a
+    reader to reconcile against this entry. r1 said four readings with a fifth to come from
+    the commit object; there are six. The fifth was taken from the STAGED TREE
+    immediately before the commit -- git write-tree gave cb2809d0 and the eight
+    paths were read out of it with git rev-parse <tree>:<path> -- and it is the
+    reading that would catch a stray file staged along with the milestone
+    BEFORE the commit rather than after it. r1 predates that step, so it could
+    not have named it.
+
+    ONLY .claude/ AND AGENTS.md REMAIN UNTRACKED, deliberately: both are agent
+    tooling, which this repository's own rules call the developer's and
+    optional, so neither is this milestone's to commit. Nothing else in the
+    working tree is uncommitted.
+
+    NOTHING IN THIS REVISION TICKS ANYTHING. The twenty boxes were ticked in
+    1e0858a, on the qualification that commit carries. This revision records a
+    commit hash and corrects a count.
 ```

@@ -36,8 +36,10 @@ Previous milestone:
            3039 x 5 in two with 15195 counted Passed markers each, 0 warnings
            under -Werror, 3h28m32s, and the eight qualified subtrees identical
            at the freeze, before the first build, after the last test run and
-           when recomputed from the working tree afterwards — four readings,
-           the fifth read back from the committed tree.
+           when recomputed from the working tree afterwards, out of the
+           staged tree before the commit and back out of the commit
+           object of 1e0858a — six readings, all identical, so the
+           qualified tree is the committed tree.
            48 unit cases / 2,136 assertions and 16 compile-fail cases, and the
            assertion count is IDENTICAL in all three builds, so no assertion
            here is configuration-dependent.
@@ -2824,6 +2826,11 @@ qualified build tree's own CMakeCache.txt.
 The two PRE-EXISTING duplicate ctest names P19-DOF-001 reported are still there,
 deliberately unfixed as outside this milestone, and carried forward as L8. All
 four of those tests pass; it is naming hygiene, not correctness.
+Committed as 1e0858a, production code, tests and evidence together; the eight
+subtree hashes were read out of the staged tree before the commit and back out
+of the commit object afterwards, and each equals its frozen value: qualified
+tree == committed tree. Only .claude/ and AGENTS.md remain untracked, both
+being agent tooling and so not this milestone's to commit.
 Evidence: docs/verification/P19-BC-001/README.md.
 ```
 
@@ -4346,7 +4353,9 @@ P19-BC-001       PASS 2026-11-05. Authorized the same day by the owner
                  three builds, so no assertion is configuration-dependent. The
                  eight qualified subtrees identical across four readings -- at
                  the freeze, before the first build, after the last test run,
-                 and recomputed from the working tree afterwards. Resolution
+                 recomputed from the working tree afterwards, and read out of
+                 the staged tree and the commit object of 1e0858a — six in
+                 all. Resolution
                  goes through P16 alone with no nearest-face fallback, coverage
                  is proved in both directions with the reverse attribution
                  counted through P16's own sourceFaceOf, and the per-field
