@@ -1,0 +1,173 @@
+P19-BC-001 — QUALIFICATION FREEZE
+=================================
+
+Frozen 2026-11-05, before the first configure of the qualification run.
+
+BASELINE
+--------
+
+    9e76814  BetterCAD: name the boundary field's real index type in TODO and
+             ROADMAP (documentation only)
+    c069035  P19-DOF-001 PASS, committed and pushed. 6120 tests per preset.
+
+THE FROZEN SURFACE
+------------------
+
+qualify.cmd records the identity of exactly these eight paths:
+
+    apps  include  src  tests  examples  cmake  CMakeLists.txt  CMakePresets.json
+
+Read by qualify.cmd's own method -- a scratch GIT_INDEX_FILE, git read-tree
+HEAD, git add -A over the eight paths, then git write-tree --prefix=<dir>/ for
+each directory and git ls-files -s for the two files. NOT git rev-parse
+HEAD:<path>, which would report what is committed rather than what is about to
+be built, and this milestone's production code is not committed yet.
+
+    apps               fc398a3d2e524178cf38e8b667236379d8381086
+    include            2cea8da0a007ef6790d0f3cb866d1583634cf228
+    src                b928165c77bdc662e5a655645e31741735bde858
+    tests              df4ae5746e4c62cbe88bb4d7f7dd7a586340da44
+    examples           4da234ebf4779f7c16d5df0075f106f7e3d4c958
+    cmake              5a382115d7ed7775189d40b55e40f318eaae6cc7
+    CMakeLists.txt     3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd
+    CMakePresets.json  3229f0f89b236744d7d5c082bed47c28b718288e
+
+EXACTLY THREE OF THE EIGHT MOVED, and they are the three this milestone
+touches. The other five are byte-identical to the values P19-DOF-001 froze,
+which is a cross-check on the method as much as on the tree:
+
+    apps               unchanged from P19-DOF-001
+    include            d6ba794a -> 2cea8da0   CfdBoundary.hpp, CfdTarget.hpp
+    src                143a993a -> b928165c   CfdBoundary.cpp, CfdTarget.cpp,
+                                              src/cfd/CMakeLists.txt
+    tests              6d81bbc1 -> df4ae574   CfdBoundaryTests.cpp,
+                                              CfdBoundaryMappedTests.cpp,
+                                              CfdBoundaryMisuse.cpp,
+                                              tests/CMakeLists.txt,
+                                              tests/compile_fail/CMakeLists.txt,
+                                              tests/cli/ZeroMatchGuard.cmake
+    examples           unchanged from P19-DOF-001
+    cmake              unchanged from P19-DOF-001
+    CMakeLists.txt     unchanged from P19-DOF-001
+    CMakePresets.json  unchanged from P19-DOF-001
+
+Everything else this milestone changes -- TODO.md, ROADMAP.md, the ADR, this
+directory -- is OUTSIDE the frozen surface, so documentation written after the
+run cannot void the qualification. That is the project's existing policy and not
+a concession made here.
+
+THE HARNESS
+-----------
+
+Byte-identical to the one P19-DOF-001's second attempt used, every file. No gate
+changed, so this run and that one are comparable without qualification.
+
+    d313a64070718c44fae290ac042fe259d1a03c8b  qualify.cmd            (identical)
+    f11039e6dc366d7c469a15cf74fb3867fd5ffeff  launch.cmd             (identical)
+    a65d6578000b6e8a2811d5154bcec24be09c2b54  preflight-space.cmd    (identical)
+    2f0d4228488f6a574ca57ec89f0fad0107b16b59  preflight-space.ps1    (identical)
+    11855b8ff891093b021d1e0351761283d0eedd24  verify-harness.cmd     (identical)
+    f2a37a172bf1d95c2845c9b356ef6e2964c4f742  run-qualification.cmd  (comments only)
+
+RUN-QUALIFICATION.CMD IS THE ONE FILE THAT DIFFERS, AND ONLY IN ITS COMMENTS.
+P19-DOF-001's copy names that milestone and records ITS expected counts; left
+unchanged it would be misleading documentation sitting in this milestone's
+evidence directory, which is worse than a changed hash. What changed is the
+milestone name, the "byte-identical to" reference and the three count lines.
+
+PROVED, not asserted. Every non-comment line is identical:
+
+    diff <(grep -vE '^rem|^$' <P19-DOF-001's copy>)          <(grep -vE '^rem|^$' <this copy>)
+    -> no output
+
+and the four gate-defining settings are at the same line numbers with the same
+values (193-196). A comment cannot change an executable, and the eight subtree
+hashes above cover the tree under test either way.
+
+These are git blob hashes (git hash-object), not sha1sum of the file on disk:
+the two differ for a CRLF file, and the blob hash is what the repository stores.
+
+qualify.cmd stays at d313a640, which makes this the FIFTY-SEVENTH milestone it
+has run unchanged. The four gate-defining settings in run-qualification.cmd are
+also unchanged:
+
+    QUALIFY_PRESETS=debug-ext release-ext debug-shared-ext
+    QUALIFY_REPEAT_PRESETS=release-ext debug-ext
+    QUALIFY_MIN_FREE_GB=20
+    QUALIFY_REPEAT=...|unit\.Cfd|...          (so unit.CfdBoundary_ is in it)
+
+CMAKE_BUILD_PARALLEL_LEVEL stays at 4, the value P19-DOF-001's second attempt
+established after its first attempt exhausted Windows commit at 16. The machine
+has not changed, so the mitigation is carried rather than re-derived.
+
+THE PRE-FREEZE REGRESSION, AND ITS ONE FAILURE
+----------------------------------------------
+
+An ad-hoc full ctest on debug-ext, before the freeze:
+
+    6183 / 6184 passed      3819.53 s
+    1 failed:  cli.new.unicode-path
+
+THE COUNT ARITHMETIC IS EXACT, checked against a number written down before
+this milestone began rather than by scanning for the absence of the word
+"fail":
+
+    6120   P19-DOF-001's qualified count, from its own evidence
+    + 48   unit.CfdBoundary_          (ctest -N: 48)
+    + 16   compile_fail.cfdbc.        (ctest -N: 16)
+    = 6184                            (ctest -N: 6184)
+
+THE FAILURE IS THE INVOKING SHELL'S CODE PAGE, NOT THE TREE, and that is
+measured rather than asserted. The CLI wrote the correct bytes -- the file on
+disk contains "name": "Platt with a-ring and a check mark" correctly -- and
+CMake decoded the child's stdout through the OEM code page, so the regex saw
+mangled text where the CLI had emitted UTF-8. The same test, the same build and
+the same binary PASS when re-run under chcp 65001:
+
+    cmd /c 'chcp 65001 >nul & ctest -R unicode-path'   ->  1/1 Passed
+
+This is P19-DOF-001's recorded known limitation L6: tests/cmake/RunAndCheck.cmake
+calls execute_process(... OUTPUT_VARIABLE) with no ENCODING argument. qualify.cmd
+pins chcp 65001, so every qualification is unaffected; an ad-hoc ctest from an
+OEM shell is not. Unchanged here, because that is shared test infrastructure and
+outside this milestone's authorized scope. No source or test file was changed
+for it, and the freeze is not void.
+
+A NOTE ON THE FIRST ATTEMPT TO MEASURE THAT
+-------------------------------------------
+
+The first command written to re-run the test under UTF-8 had its regex eaten by
+shell quoting and printed "No tests were found!!!" -- and would have exited 0.
+That is exactly the defect tests/cli/ZeroMatchGuard.cmake exists to prevent, met
+by accident while verifying something else. The filter was checked with ctest -N
+first (Total Tests: 1) before the result above was believed.
+
+EXPECTED COUNTS, WRITTEN DOWN BEFORE THE RUN
+-------------------------------------------
+
+So the logs can be read against a number rather than for the absence of the
+word "fail" -- which is the lesson P19-DOF-001's first attempt taught, where a
+repeat stage ran 352 tests instead of 2991 and passed every one of them:
+
+    full suite, per preset      6184   = 6120 (P19-DOF-001) + 48 unit
+                                       + 16 compile-fail, exactly
+    repeat set, per preset      3039   = 2991 (P19-DOF-001) + 48 matching
+                                       unit\.Cfd, exactly
+    repeat markers per log     15195   = 3039 x 5
+
+Both reconcile with no remainder. All 48 unit cases fall in the repeat filter
+(it carries unit\.Cfd) and none of the 16 compile-fail cases do (the filter
+carries no compile_fail prefix), which is why the two sums differ by exactly 16.
+Verified with ctest -N against the frozen tree before the run.
+
+WHAT IS BEING QUALIFIED
+-----------------------
+
+P19-BC-001: the CFD boundary conditions of one analysis, resolved against one
+mesh (ADR-067). Twenty checklist items. Two new headers and two new sources, two
+new test files and one new compile-fail group, and four registration points. No
+qualified production file's behaviour changes.
+
+Nine behavioural defects found by two independent reviews and the author's own
+pass were fixed BEFORE this freeze, and six of the fixes are mutation-verified.
+ADR-067 records them in "What the reviews changed".

@@ -63,6 +63,7 @@ bettercad_add_executable(bettercad_tests
         structural/StructuralCommandTests.cpp
         structural/Tet4ElementTests.cpp
         cfd/CfdAnalysisBoundaryTests.cpp
+        cfd/CfdBoundaryTests.cpp
         cfd/CfdDataTests.cpp
         cfd/CfdFluidTests.cpp
         thermal/ThermalAnalysisBoundaryTests.cpp
@@ -356,6 +357,7 @@ endif()
 if(TARGET bettercad_reference_models)
     target_sources(bettercad_tests PRIVATE
         # P19-MESH-001: the CFD mesh contract is proved on every P16 reference mesh.
+        cfd/CfdBoundaryMappedTests.cpp
         cfd/CfdFieldTests.cpp
         cfd/CfdGeometryTests.cpp
         cfd/CfdMeshTests.cpp

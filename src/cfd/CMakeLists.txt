@@ -42,11 +42,13 @@ bettercad_add_library(bettercad_cfd
     SOURCES
         CfdAnalysis.cpp
         CfdAnalysisObject.cpp
+        CfdBoundary.cpp
         CfdData.cpp
         CfdFields.cpp
         CfdFluid.cpp
         CfdGeometry.cpp
         CfdMesh.cpp
+        CfdTarget.cpp
         CfdTopology.cpp
         CfdResult.cpp
     PUBLIC_LINK

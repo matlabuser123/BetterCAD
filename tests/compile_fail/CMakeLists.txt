@@ -1006,6 +1006,45 @@ bettercad_compile_fail_case(cfdfield "${_cfdfield}" A_LAYOUT_CANNOT_BE_BUILT_WIT
 bettercad_compile_fail_case(cfdfield "${_cfdfield}" A_CELL_VECTOR_INDEX_HAS_NO_ARITHMETIC
     "no match for|invalid operands|no matching function" BetterCAD::cfd)
 
+# CFD boundary conditions (P19-BC-001, ADR-067). A different claim from the field
+# layout's: not that subscripts do not mix, but that a boundary condition's
+# AUTHORITY cannot be faked. A prepared boundary cannot be conjured, canonical
+# intent holds nothing mesh-local, and a per-field POLICY is not a boolean --
+# which matters because `if (treatment.velocity)` would be true for Symmetry and
+# would silently admit through-flow at a symmetry plane.
+set(_cfdbc "${CMAKE_CURRENT_SOURCE_DIR}/CfdBoundaryMisuse.cpp")
+bettercad_compile_fail_group(cfdbc "${_cfdbc}" BetterCAD::cfd)
+foreach(_case
+        A_CONDITION_HOLDS_A_FACET
+        A_CONDITION_HOLDS_A_BOUNDARY_FACE
+        AN_INLET_HOLDS_A_PATCH
+        A_DEFINITION_HOLDS_A_PREPARED_BOUNDARY
+        A_DEFINITION_HOLDS_RESOLVED_FACETS)
+    bettercad_compile_fail_case(cfdbc "${_cfdbc}" ${_case} "no member named|has no member"
+        BetterCAD::cfd)
+endforeach()
+foreach(_case
+        A_POLICY_IS_A_BOOLEAN
+        A_POLICY_IS_AN_INTEGER
+        AN_INTEGER_IS_A_POLICY
+        A_TARGET_PROBLEM_IS_A_BOUNDARY_PROBLEM
+        A_PRESCRIBED_PRESSURE_IS_A_VELOCITY
+        A_BOUNDARY_FACE_INDEX_IS_A_CELL_INDEX
+        A_RAW_INDEX_SUBSCRIPTS_A_BOUNDARY
+        A_MESH_HANDLE_SUBSCRIPTS_A_BOUNDARY)
+    bettercad_compile_fail_case(cfdbc "${_cfdbc}" ${_case}
+        "could not convert|cannot convert|no matching function|no match for|invalid conversion|conversion from"
+        BetterCAD::cfd)
+endforeach()
+foreach(_case
+        THE_CARDINALITY_IS_WRITABLE
+        THE_SOURCE_IS_WRITABLE)
+    bettercad_compile_fail_case(cfdbc "${_cfdbc}" ${_case}
+        "read-only|assignment of member|discards qualifiers|no match for" BetterCAD::cfd)
+endforeach()
+bettercad_compile_fail_case(cfdbc "${_cfdbc}" FABRICATE_A_PREPARED_BOUNDARY
+    "is private within this context|private" BetterCAD::cfd)
+
 # Temperature DOF index space (P18-DOF-001). The thermal sibling of structdof:
 # a node ordinal is not a node handle, a row of the reduced system is not an
 # unknown of the full one, neither is an integer, a prescribed temperature is a

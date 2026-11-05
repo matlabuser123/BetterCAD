@@ -23,11 +23,57 @@ Prerequisite:
            may set). P17's F1-F3 stand unchanged beneath them.
 
 Current milestone:
-           None. P19-DOF-001 PASSED 2026-11-05, and finishing a milestone is
+           None. P19-BC-001 PASSED 2026-11-05, and finishing a milestone is
            itself a stop condition: the next one is a scope decision and the
            owner's alone.
 
 Previous milestone:
+           P19-BC-001 — CFD Boundary Conditions. AUTHORIZED 2026-11-05 by the
+           owner ("implement and fully verify", with the twenty item checklist
+           and the canonical / derived split quoted). PASS 2026-11-05. All
+           twenty items are recorded: 17 of 17 stages exit 0, qualified from
+           clean on the FIRST attempt, 6184/6184 in each of the three presets,
+           3039 x 5 in two with 15195 counted Passed markers each, 0 warnings
+           under -Werror, 3h28m32s, and the eight qualified subtrees identical
+           at the freeze, before the first build, after the last test run and
+           when recomputed from the working tree afterwards — four readings,
+           the fifth read back from the committed tree.
+           48 unit cases / 2,136 assertions and 16 compile-fail cases, and the
+           assertion count is IDENTICAL in all three builds, so no assertion
+           here is configuration-dependent.
+           ADR-067 freezes the per-field treatment as a TABLE — six condition
+           kinds against p, U and phi — with four policy values rather than the
+           checklist's two, because a slip wall's velocity is a symmetry
+           condition and the mass flux at a pressure boundary is an outcome.
+           Two values would have left every operator to re-derive the treatment
+           from the kind, and the first that forgot would admit through-flow at
+           a symmetry plane: a wrong answer that still converges. Resolution
+           goes through P16 alone and there is NO nearest-face fallback. Every
+           boundary facet carries exactly one condition, coverage is proved in
+           both directions, and the reverse attribution is counted through
+           P16's own sourceFaceOf rather than inferred from the forward pass.
+           THIRTEEN behavioural defects were found before the freeze — four by
+           the author's own adversarial pass, which two independent reviews then
+           confirmed, and nine more by those reviews — all fixed, none
+           deferred, six verified by MUTATION. Among them: a cardinality check
+           that was a tautology; a tangency tolerance that was unsound on a
+           curved target; an over-determined pressure datum that was accepted;
+           and a crash rather than a diagnostic where a claim array was indexed
+           on a precondition established twenty lines earlier.
+           Recorded as less than a reader might assume. There is no matrix, no
+           source vector and no solve, so nothing here is shown to produce a
+           correct flow field — only a correct and fully attributed statement of
+           the boundary intent. No performance result is measured. One
+           enumerator, DegenerateFacet, is UNREACHABLE and is recorded as such
+           rather than claimed tested. L2 is a NARROWING this milestone's own
+           review introduced: a moving wall is planar-only, so a sliding
+           cylindrical wall is refused by name, and that is the owner's to
+           revisit. The authorization was NOT recorded in TODO.md before the
+           implementation, unlike P19-DOF-001's, and the evidence says so in
+           REVISION r1 rather than tidying it away.
+           (docs/verification/P19-BC-001/README.md.)
+
+Milestone before that:
            P19-DOF-001 — CFD Field / DOF Model. AUTHORIZED 2026-11-04 by the
            owner ("implement and fully verify", with the seventeen item
            checklist and the recommended p / U / phi layout quoted). PASS
@@ -57,7 +103,7 @@ Previous milestone:
            fixes are verified by mutation.
            (docs/verification/P19-DOF-001/README.md.)
 
-Milestone before that:
+Before those:
            P19-GEOM-001 — Finite-Volume Geometric Metrics. AUTHORIZED
            2026-10-31 by the owner ("start", with the twenty-one item checklist
            quoted). PASS 2026-10-31. All twenty-one items are recorded: 17 of
@@ -79,7 +125,7 @@ Milestone before that:
            area scale on all eight reference meshes.
            (docs/verification/P19-GEOM-001/README.md.)
 
-Before those:
+Earlier still:
            P19-TOPO-001 — Finite-Volume Topology. AUTHORIZED 2026-10-31 by
            the owner ("implement this and fully verify", with the twenty-two
            item checklist quoted). PASS 2026-10-31. All twenty-two items are
@@ -99,7 +145,7 @@ Before those:
            three are stated in the evidence rather than glossed.
            (docs/verification/P19-TOPO-001/README.md.)
 
-Earlier still:
+Earlier than those:
            P19-MESH-001 — CFD Volume / Surface Mesh Contract. AUTHORIZED
            2026-10-28 ("start P19-MESH-001"). PASS 2026-10-31. All twenty-four
            items are now recorded: Determinism PASS, Regression PASS and
@@ -140,7 +186,7 @@ Qualified:
            P18 — Thermal Analysis
 
 Next:
-           Nothing is authorized. P19-DOF-001 PASSED and nothing after it has
+           Nothing is authorized. P19-BC-001 PASSED and nothing after it has
            been started: each milestone is started by the owner, as every P17,
            P18 and P19 milestone was, and a predecessor's PASS is not
            permission to start the one after it. Finishing a milestone is
@@ -1922,7 +1968,8 @@ general fix → requalify the affected milestone → rerun P18-QUAL.
 F1-F3 weighed as inputs to it. Milestones are worked top to bottom, and each is authorized
 by its predecessor's PASS being recorded here and the owner saying so -- P17's and P18's
 rule, unchanged. P19-ARCH-001, P19-DATA-001, P19-FLUID-001, P19-MESH-001, P19-TOPO-001,
-P19-GEOM-001 and P19-DOF-001 have PASSED; **nothing after them is authorized**, and a
+P19-GEOM-001, P19-DOF-001 and P19-BC-001 have PASSED; **nothing after them is
+authorized**, and a
 predecessor's pass is not permission
 to start the next.
 
@@ -2607,26 +2654,31 @@ Evidence: docs/verification/P19-DOF-001/README.md.
 
 Implement canonical CFD BC definitions using `GeometryReference`.
 
-* [ ] Velocity inlet
-* [ ] Pressure inlet if supported
-* [ ] Pressure outlet
-* [ ] No-slip wall
-* [ ] Slip / symmetry boundary
-* [ ] Zero-gradient policies
-* [ ] Fixed-value policies
-* [ ] Reference-pressure treatment
-* [ ] Boundary orientation verified
-* [ ] Boundary cardinality verified
-* [ ] Shared / overlapping target policy
-* [ ] Empty target rejected
-* [ ] Unresolved target rejected
-* [ ] No nearest-face fallback
-* [ ] Exact source binding
-* [ ] Multiple boundary patches
-* [ ] Deterministic BC ordering
-* [ ] Invalid values rejected
-* [ ] Regression PASS
-* [ ] Evidence recorded
+**AUTHORIZED 2026-11-05** by the owner's "implement and fully verify", with the
+twenty item checklist below and the canonical / derived split quoted. PASS
+2026-11-05; the record is below the checklist. Nothing after this milestone is
+authorized.
+
+* [x] Velocity inlet
+* [x] Pressure inlet if supported
+* [x] Pressure outlet
+* [x] No-slip wall
+* [x] Slip / symmetry boundary
+* [x] Zero-gradient policies
+* [x] Fixed-value policies
+* [x] Reference-pressure treatment
+* [x] Boundary orientation verified
+* [x] Boundary cardinality verified
+* [x] Shared / overlapping target policy
+* [x] Empty target rejected
+* [x] Unresolved target rejected
+* [x] No nearest-face fallback
+* [x] Exact source binding
+* [x] Multiple boundary patches
+* [x] Deterministic BC ordering
+* [x] Invalid values rejected
+* [x] Regression PASS
+* [x] Evidence recorded
 
 No mesh face IDs in canonical BC intent.
 
@@ -2645,6 +2697,134 @@ Derived:
 resolved boundary faces
 face indices
 matrix/source contributions
+```
+
+```text
+PASS 2026-11-05. Authorized the same day by the owner's "implement and fully
+verify", with the twenty item checklist and the canonical / derived split
+quoted. Qualified against 9e76814b plus this milestone's eleven candidate files,
+seven new and four registration points amended:
+6184/6184 x 3 presets, 3039 x 5 in two repeat stages with 15195 counted Passed
+markers each, 0 warnings and 0 errors under -Werror, 17 of 17 stages exit 0,
+3h28m32s, and the eight qualified subtrees identical across FOUR readings -- at
+the freeze, by the harness before the first build, by the harness after the last
+test run, and recomputed from the working tree afterwards by the harness's own
+method. 48 unit cases / 2,136 assertions and 16 compile-fail cases. QUALIFIED
+FROM CLEAN ON THE FIRST ATTEMPT, on the harness P19-DOF-001 settled -- qualify.cmd
+byte-identical at d313a640 for its 57th milestone, all four gate-defining set
+lines unchanged, CMAKE_BUILD_PARALLEL_LEVEL still 4.
+
+The assertion count is IDENTICAL in all three builds -- 2136 in 48 cases on
+debug-ext, release-ext and debug-shared-ext alike -- which is a stronger
+statement than three passes: a count that agreed only in Debug would mean a
+branch compiled out. The whole CFD subsystem reads 509537 assertions in 228
+cases on the qualified debug-ext binary, the same figure the pre-freeze
+measurement gave, which independently says the tree did not move.
+
+ADR-067 freezes the per-field treatment as a TABLE, six condition kinds against
+p, U and phi, and it is the only place that table exists. FOUR policy values,
+not the checklist's two: a slip wall's velocity is neither fixed nor
+zero-gradient (Symmetry) and the mass flux at a pressure boundary is an outcome
+(Computed). Two would have left every operator to re-derive the treatment from
+the kind, and the first that forgot would admit through-flow at a symmetry
+plane -- a wrong answer that still converges. A prescribed value is held PER
+BOUNDARY FACE and not per condition, because a prescribed pressure varies
+hydrostatically along a face that is not level and an inlet's -v n_hat varies
+over a curved one.
+
+Resolution goes through P16 ALONE and there is NO nearest-face fallback.
+cfd::TargetProblem is a third copy of the three-check resolver thermal and
+structural each hold -- SelectorInvalid, Unresolved, WithoutFacets -- written
+out rather than shared, because cfd is layer 42 and may include neither of them
+(ADR-059); fullyResolved() inspects state only, so two of those three checks
+would otherwise be missing. Coverage is proved in BOTH directions: the forward
+count through boundaryFacetsOf, the assigned count off the binding, and the
+reverse attribution counted through P16's own sourceFaceOf. Only the third can
+disagree, and the record carries all three rather than asserting the forward
+count twice.
+
+Twenty refusals, declared in phase order, nineteen of them reached by a test and
+asserted BY TAG rather than by message -- bindCfdBoundaryFailure exists for
+exactly that, after review found eight refusals whose tag could have been
+swapped for another with every message assertion still passing. Atomic: one
+refusal refuses the whole set and a failed preparation publishes nothing.
+
+Validated against instruments the implementation does not share: an independent
+barycentric containment oracle for the point locator, written out again rather
+than called; centroids recomputed from the mesh nodes for the hydrostatic term;
+the datum rule checked against P19-DATA-001's own pressureDatumProblem; facets
+chosen by a node plane read off the mesh, never by list order, so a test cannot
+pass by picking the face the implementation happened to produce. Six mutations
+each fail loudly.
+
+THIRTEEN behavioural defects were found before the freeze and all thirteen are
+fixed, none deferred, six verified by MUTATION. Four came from the author's own
+adversarial pass and two independent reviews then confirmed the same four; nine
+more came from those reviews. The ones worth naming: the cardinality check was a
+TAUTOLOGY, comparing the forward count with itself; the tangency tolerance was
+unsound on a curved target, which is why a moving wall is now planar-only; an
+OVER-DETERMINED pressure datum was accepted; the datum records were not
+validated at all; a repeated facet was misreported as a different problem; the
+seam discarded the tag it was built to expose; and indexing a claim array on a
+precondition established twenty lines earlier CRASHED instead of diagnosing,
+which a mutation exposed rather than a review. Two of the author's own test
+assertions were found VACUOUS and replaced with an oracle, and one measurement
+intended as a bound was found to be measuring the wrong sub-volume.
+
+THREE ASSUMPTIONS OF MINE WERE WRONG AND WERE CORRECTED BY MEASUREMENT, not by
+argument, and each is recorded in the evidence rather than quietly fixed: that a
+geometry edit stales the Geometry reason (GeometryRevision is a mix of logical
+dependency revisions, never a hash of BRep bytes, so two documents built by the
+same call sequence share it whatever their dimensions); that the channel's
+boundary centroids span more than half its length (measured 13.33 mm of 40 mm,
+so the bound is stated at a quarter with the reason); and, in ADR-067 Decision 8
+before any code followed it, that density is not a dependency of the source
+binding (the hydrostatic prescribed pressure contains rho, so it is carried
+exactly when gravity and a pressure-fixing condition are both present).
+
+Recorded as less than a reader might assume. There is NO matrix, no source
+vector, no operator and no solve -- those are P19-LINSOLVE-001's and later, and
+src/cfd/CMakeLists.txt still records that this module links no linear algebra --
+so nothing here has been shown to produce a correct flow field, only a correct
+and fully attributed statement of the boundary intent. No flux-balance check and
+no backflow sign claim: a pressure outlet does not constrain the sign of phi,
+which is the same statement as Computed. No turbulence, temperature or species
+boundary condition, there being no field for them. No performance result is
+measured or claimed. Eight known limitations are listed, among them that
+DegenerateFacet is UNREACHABLE and is recorded as such rather than claimed
+tested, and that one name covering several patches -- permitted by ADR-063
+Decision 3 -- is not demonstrated, because all eight reference bodies come out
+with one name per patch; the refusal direction IS demonstrated.
+
+L2 IS A NARROWING THIS MILESTONE'S OWN REVIEW INTRODUCED, and it is the owner's
+to revisit rather than mine to settle: fixing the unsound tangency tolerance made
+a moving wall PLANAR-ONLY, so a curved target is refused by name. ADR-058's
+authorized uses -- a driven cavity's lid, a Couette plate -- are planar, so
+nothing in v1's scope is lost, but a sliding cylindrical wall is no longer
+expressible and would need a per-facet velocity field this milestone does not
+have.
+
+THE AUTHORIZATION WAS NOT RECORDED HERE BEFORE THE IMPLEMENTATION, unlike
+P19-DOF-001's, which was written into TODO.md in six places before any code was
+written. This file still read "P19-BC-001 NOT AUTHORIZED" at its status table
+while the work was done, and the authorization and the PASS are recorded in the
+same edit. The authorization itself is not in doubt -- the owner pasted this
+whole section and said "implement and fully verify" -- but the repository did
+not say so at the time, and a reader of the tree alone could not have told. The
+evidence records it in REVISION r1 rather than tidying it away.
+
+Two counting errors of mine were caught while reading this run's logs and are
+recorded in the evidence rather than corrected silently: compile_fail.cfdbc. was
+first counted at 4 of 16 by a regex that stops at a hyphen, and the three -ext
+presets were first read as not inheriting BETTERCAD_WARNINGS_AS_ERRORS by a
+script that followed only the first parent of an inherits list. Both were my
+measurements, not the run; the second was then read where it actually binds, the
+qualified build tree's own CMakeCache.txt.
+
+The two PRE-EXISTING duplicate ctest names P19-DOF-001 reported are still there,
+deliberately unfixed as outside this milestone, and carried forward as L8. All
+four of those tests pass; it is naming hygiene, not correctness.
+Evidence: docs/verification/P19-BC-001/README.md.
 ```
 
 ---
@@ -4049,8 +4229,9 @@ environmentally on 2026-10-28 and the qualification machine was then replaced.
 P19-GEOM-001 PASSED 2026-10-31, authorized the same day by the owner's "start"
 with the twenty-one item checklist quoted: 6058/6058 x 3 presets, 2964 x 5 in
 two, 17 of 17 stages exit 0, and all twenty-one items recorded. P19-DOF-001
-was authorized on 2026-11-04 and PASSED 2026-11-05; nothing after
-it is authorized. P19-MESH-001's owner finding F1 stands unchanged above, and
+was authorized on 2026-11-04 and PASSED 2026-11-05, and
+P19-BC-001 was authorized and PASSED on 2026-11-05; nothing after it is
+authorized. P19-MESH-001's owner finding F1 stands unchanged above, and
 this milestone neither resolves it nor adds to it: it measured the same eight
 meshes -- non-orthogonality and skewness among them -- and set no threshold,
 because its summary measures and judges nothing. P18's F1-F3 and P17's F1-F3
@@ -4155,11 +4336,38 @@ P19-DOF-001      PASS 2026-11-05. Authorized 2026-11-04 by the owner
                  equal their frozen value: qualified tree == committed tree.
                  ADR-066. Evidence recorded.
 
-P19-BC-001       NOT AUTHORIZED. Next in the sequence, which is not
-                 permission. Authorizing it is the owner's decision alone.
+P19-BC-001       PASS 2026-11-05. Authorized the same day by the owner
+                 ("implement and fully verify", with the twenty item checklist
+                 and the canonical / derived split quoted). All twenty items
+                 recorded: 6184/6184 x 3 presets, 3039 x 5 in two with 15195
+                 Passed markers each, 17 of 17 stages exit 0 from clean on the
+                 FIRST attempt, 0 warnings under -Werror, 48 unit cases / 2,136
+                 assertions and 16 compile-fail cases -- the same 2,136 in all
+                 three builds, so no assertion is configuration-dependent. The
+                 eight qualified subtrees identical across four readings -- at
+                 the freeze, before the first build, after the last test run,
+                 and recomputed from the working tree afterwards. Resolution
+                 goes through P16 alone with no nearest-face fallback, coverage
+                 is proved in both directions with the reverse attribution
+                 counted through P16's own sourceFaceOf, and the per-field
+                 treatment is a frozen table of six kinds against p, U and phi.
+                 Thirteen behavioural defects found before the freeze -- four by
+                 the author's own pass, which two independent reviews confirmed,
+                 and nine more by those reviews -- all fixed, six verified by
+                 mutation; a tautological cardinality check and a crash where a
+                 claim array was indexed on a stale precondition among them.
+                 Three assumptions of the author's were corrected by
+                 measurement, not argument, and are recorded. No matrix, no
+                 solve and no performance claim; DegenerateFacet is unreachable
+                 and recorded as such; L2 is a narrowing this milestone's own
+                 review introduced, a moving wall being planar-only, and it is
+                 the owner's to revisit. The authorization was not recorded in
+                 this file before the implementation, and the evidence says so.
+                 ADR-067. Evidence recorded.
 
-everything after it
-                 likewise.
+P19-IC-001       NOT AUTHORIZED. Next in the sequence, which is not
+                 permission. Authorizing it is the owner's decision alone, and
+                 everything after it likewise.
 ```
 
 The text below is the standing record as of P18-QUAL-001 (2026-10-27) and is kept as history.

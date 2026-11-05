@@ -517,6 +517,61 @@ set(_filters
     "unit\\.CfdFields_TheVariableTableFixesTheThreeLocationsAndTheirSiDimensions$" 1
     "unit\\.CfdFields_ToStringNamesEveryEnumeratorAndFallsBackForNone$" 1
     "unit\\.CfdFields_TwoBuildsOfOneTopologyAreEqual$" 1
+    # P19-BC-001. The group, the compile-fail group that proves a prepared
+    # boundary cannot be conjured and that a per-field policy is not a boolean,
+    # and each case a rename or a drop would otherwise hide. One prefix covers
+    # both halves of the suite: the hand-built seam cases and the mapped
+    # authority cases.
+    "unit\\.CfdBoundary_" 48
+    "compile_fail\\.cfdbc\\." 16
+    "unit\\.CfdBoundary_ABoundaryFaceWithNoConditionIsRefusedByName$" 1
+    "unit\\.CfdBoundary_AConditionFaultIsReportedBeforeAnUnresolvableTarget$" 1
+    "unit\\.CfdBoundary_ADrilledWallWithNoNameRefusesTheAnalysis$" 1
+    "unit\\.CfdBoundary_AFacetOutsideTheTopologyIsRefusedRatherThanSkipped$" 1
+    "unit\\.CfdBoundary_AFacetTwoConditionsClaimIsRefusedAndNeitherIsChosen$" 1
+    "unit\\.CfdBoundary_AGeometryOfAnotherTopologyIsRefused$" 1
+    "unit\\.CfdBoundary_AHydrostaticBoundaryPressureFollowsTheClosedForm$" 1
+    "unit\\.CfdBoundary_AHydrostaticBoundaryPressureMatchesAnIndependentCentroid$" 1
+    "unit\\.CfdBoundary_AMalformedSelectorIsAConditionFaultAndNotATargetFault$" 1
+    "unit\\.CfdBoundary_AMaterialEditStalesAHydrostaticBoundaryAndNotAGravityFreeOne$" 1
+    "unit\\.CfdBoundary_AMissingPressureDatumIsRefusedAndAReferencePointFixesIt$" 1
+    "unit\\.CfdBoundary_AMovingWallIsAcceptedTangentiallyAndRefusedNormally$" 1
+    "unit\\.CfdBoundary_AMovingWallOnACurvedTargetIsRefusedRatherThanApproximated$" 1
+    "unit\\.CfdBoundary_AMovingWallVelocityMustBeTangentialOnEveryFacet$" 1
+    "unit\\.CfdBoundary_APointOnASharedFaceResolvesToTheLowerCell$" 1
+    "unit\\.CfdBoundary_APressureInletIsBoundLikeAnOutletAndFixesTheLevel$" 1
+    "unit\\.CfdBoundary_ATargetWhoseFacetsRepeatIsRefusedForThatReason$" 1
+    "unit\\.CfdBoundary_ATargetWithNoFacetIsNotAnEmptyCondition$" 1
+    "unit\\.CfdBoundary_ATopologyOfAnotherGenerationIsRefused$" 1
+    "unit\\.CfdBoundary_AnInletVelocityPointsIntoTheDomainOnEveryFacet$" 1
+    "unit\\.CfdBoundary_AnInvalidConditionIsRefusedWithP19Data001sOwnMessage$" 1
+    "unit\\.CfdBoundary_AnUnnamedPatchRefusesTheAnalysisBeforeAnyConditionIsRead$" 1
+    "unit\\.CfdBoundary_AnUnrecognisedKindCannotBecomeAnOpenBoundary$" 1
+    "unit\\.CfdBoundary_AnUnresolvedReferenceIsRefusedAndNothingNearbyIsSubstituted$" 1
+    "unit\\.CfdBoundary_EveryFacetOfTheChannelCarriesExactlyOneCondition$" 1
+    "unit\\.CfdBoundary_EveryP16ReferenceMeshIsEitherCoveredOrRefusedForAStatedReason$" 1
+    "unit\\.CfdBoundary_EverySeamReachableProblemIsAssertedByTag$" 1
+    "unit\\.CfdBoundary_EveryStaleReasonIsReachableAndNamed$" 1
+    "unit\\.CfdBoundary_OnlyTheFixedValueFieldsCarryAValue$" 1
+    "unit\\.CfdBoundary_PartialCoverageAndDoubleCoverageAreBothRefused$" 1
+    "unit\\.CfdBoundary_PreparationMutatesNoCanonicalStateAndNoMesh$" 1
+    "unit\\.CfdBoundary_RepeatedPreparationIsBitIdentical$" 1
+    "unit\\.CfdBoundary_SymmetryAndComputedAreReachableAndDistinct$" 1
+    "unit\\.CfdBoundary_TheCardinalityOfEveryConditionAgreesBothWays$" 1
+    "unit\\.CfdBoundary_TheChannelHasSeveralPatchesWithDifferentConditions$" 1
+    "unit\\.CfdBoundary_TheDatumRuleAgreesWithP19Data001sOwnFunction$" 1
+    "unit\\.CfdBoundary_TheDiagnosticDoesNotDependOnTheOrderConditionsAreListedIn$" 1
+    "unit\\.CfdBoundary_TheHeightAlongGravityIncreasesUpwardWhateverGravityIs$" 1
+    "unit\\.CfdBoundary_TheHydrostaticTermUsesTheGravityItWasGivenNotNineEightOne$" 1
+    "unit\\.CfdBoundary_TheInletVelocityOpposesTheOutwardNormalOnEveryFacet$" 1
+    "unit\\.CfdBoundary_TheLocatorsToleranceIsConstrainedFromBothSides$" 1
+    "unit\\.CfdBoundary_ThePointLocatorAgreesWithTheBarycentricSignTest$" 1
+    "unit\\.CfdBoundary_ThePreparedBoundaryBindsTheExactMeshSource$" 1
+    "unit\\.CfdBoundary_TheTangencyMarginIsMeasuredOnBothSides$" 1
+    "unit\\.CfdBoundary_TheTreatmentTableIsFrozenEntryByEntry$" 1
+    "unit\\.CfdBoundary_ToStringNamesEveryEnumeratorAndFallsBackForNone$" 1
+    "unit\\.CfdBoundary_TwoBindingsOfOneInputAreEqual$" 1
+    "unit\\.CfdBoundary_WithoutGravityAPrescribedPressureIsUniform$" 1
     # P18-QUAL-001. The final-gate cases (the authority matrix over every reference document, the currentness matrix in one sequence and its
     # edit-back path, a failed regeneration, the unforgeable proof of an accepted input, the units of the transient sum), and one test for
     # each defect the final audit found and fixed or each gap it closed, each at its own name so a rename or a drop is a failure.

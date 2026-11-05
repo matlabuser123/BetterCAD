@@ -104,7 +104,7 @@ Current authorized development:
 P19 — CFD Integration, authorized 2026-10-27 by the owner's "start
 P19-ARCH-001": P19-ARCH-001 and P19-DATA-001 (2026-10-27), P19-FLUID-001
 (2026-10-28), P19-MESH-001, P19-TOPO-001 and P19-GEOM-001 (all 2026-10-31) and
-P19-DOF-001 (2026-11-05) have PASSED.
+P19-DOF-001 and P19-BC-001 (both 2026-11-05) have PASSED.
 P19-MESH-001 was qualified by a second attempt on a replacement machine: its
 first attempt, on 2026-10-28, failed 5 of 17 stages when the previous machine's
 temp volume filled and no test suite ran, and that machine was then permanently
@@ -117,8 +117,10 @@ build cost the repeat stage its build-time test discovery, which then selected
 352 tests instead of 2991 and passed every one. Its launcher reported success
 while two of seventeen stages had failed, which is why the harness's own verdict
 is what is read. One line of that milestone's own run driver differs between its
-two attempts, and no frozen file does. No milestone is open, and nothing after
-P19-DOF-001 is authorized; see TODO.md.
+two attempts, and no frozen file does. P19-BC-001 qualified from clean on the
+first attempt, on that same settled harness, which has now run fifty-seven
+milestones unchanged. No milestone is open, and nothing after P19-BC-001 is
+authorized; see TODO.md.
 
 The phases before it, and how each was qualified:
 
@@ -911,6 +913,49 @@ loudly where before it passed the whole suite. No field values exist yet, and th
 result arrays `CfdResult.hpp` had promised at this milestone are deliberately
 deferred — boundary and initial conditions, the operators and the solve are later
 milestones, each the owner's to authorize.
+
+`P19-BC-001` (PASS 2026-11-05) resolves the boundary conditions of one CFD
+analysis against one mesh, and produces what an operator will read: for every
+boundary face, the condition that owns it, that condition's kind, and the values
+it prescribes. The per-field treatment is a FROZEN TABLE — six condition kinds
+against `p`, `U` and `phi` — and `ADR-067` is the only place it exists, with
+four policy values rather than two: a slip wall's velocity is neither fixed nor
+zero-gradient but a symmetry condition, and the mass flux at a pressure boundary
+is an outcome rather than a datum. Two values would have left every operator to
+re-derive the treatment from the kind, and the first that forgot would admit
+through-flow at a symmetry plane — a wrong answer that still converges. A
+prescribed value is held per boundary FACE, not per condition, because a
+prescribed pressure varies hydrostatically along a face that is not level and an
+inlet's `-v n_hat` varies over a curved one. Resolution runs through `P16` alone and
+there is NO nearest-face fallback: a `FaceName` either resolves to facets or is
+refused by name. Coverage is proved in both directions — forward through
+`boundaryFacetsOf`, assigned off the binding, and the reverse attribution
+counted through `P16`'s own `sourceFaceOf` — and all three counts are recorded
+rather than the forward one being asserted twice, because only the third can
+disagree. Twenty refusals are declared in phase order and nineteen are asserted
+by tag rather than by message, after review found eight whose tag could have
+been swapped for another with every message assertion still passing. Validated
+against instruments the implementation does not share: an independent
+barycentric containment oracle, centroids recomputed from the mesh nodes, and
+facets chosen by a node plane read off the mesh rather than by list order.
+Qualified at 6184/6184 in each of three presets, 3039 x 5 in two, 0 warnings
+under `-Werror`, 17 of 17 stages exit 0 from clean on the first attempt, and
+2,136 assertions in 48 cases identically in all three builds; see
+[P19-BC-001](docs/verification/P19-BC-001/README.md). Thirteen behavioural
+defects were found before the freeze — four by the author's own adversarial
+pass, which two independent reviews then confirmed, and nine more by those
+reviews — all fixed, six verified by mutation; among them a cardinality check
+that compared the forward count with itself, an over-determined pressure datum
+that was accepted, and a claim array indexed on a precondition established
+twenty lines earlier, which crashed rather than diagnosed. Three of the author's
+own assumptions were corrected by measurement rather than argument and are
+recorded as such. No matrix, source vector or solve exists, so nothing here is
+shown to produce a correct flow field — only a correct and fully attributed
+statement of the boundary intent; the operators, the coupling and the solve are
+later milestones, each the owner's to authorize. One narrowing came out of this
+milestone's own review and is the owner's to revisit: a moving wall is
+planar-only, so a sliding cylindrical wall is refused by name rather than
+approximated.
 
 ```text
 incompressible laminar
