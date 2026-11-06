@@ -1,0 +1,237 @@
+P19-IC-001 — QUALIFICATION FREEZE
+=================================
+
+Written BEFORE the qualification run, so that every number the evidence later
+cites can be reconciled against something that existed first. P19-DOF-001's
+attempt 1 is why this file exists: it ran 352 tests instead of 2991 and passed
+every one, and only a count written down beforehand caught it.
+
+BASELINE
+--------
+
+  HEAD at the freeze     cf6e37c  BetterCAD: record the P19-BC-001 commit
+  previous milestone     P19-BC-001 PASS 2026-11-05 (code+evidence 1e0858a)
+  authorization          2026-11-05, the owner's "implement and fully verify",
+                         with the twelve item checklist quoted in full.
+                         RECORDED IN TODO.md BEFORE ANY CODE WAS WRITTEN, in
+                         six places — which is the one process deviation
+                         P19-BC-001 had to record against itself.
+
+THE FROZEN SURFACE
+------------------
+
+The eight paths qualify.cmd records, and nothing else:
+
+    apps  include  src  tests  examples  cmake  CMakeLists.txt  CMakePresets.json
+
+TODO.md, ROADMAP.md and docs/ are OUTSIDE it, deliberately: documentation
+written after the run cannot affect the executable or the tests, so it cannot
+void the qualification. Anything under the eight paths changing after this
+point DOES void it, and the run starts again from clean.
+
+THE METHOD IS QUALIFY.CMD'S OWN, not `git rev-parse HEAD:<path>`: a scratch
+GIT_INDEX_FILE, `git read-tree HEAD`, `git add -A` over the eight paths,
+`git write-tree --prefix=<dir>/` for each directory, and `git ls-files -s` for
+the two files. The same commands the harness runs, so the identities it records
+during the run are comparable with these without translation.
+
+THE EIGHT IDENTITIES AT THE FREEZE
+----------------------------------
+
+  apps               fc398a3d2e524178cf38e8b667236379d8381086
+  include            f19541e865d37362d5088e3d0c857a36c1abdd35
+  src                a467077a5ff861692449af407898e6adcb138112
+  tests              7dcc4b8aabc3168f108b886b63556f063e4ae84e
+  examples           4da234ebf4779f7c16d5df0075f106f7e3d4c958
+  cmake              5a382115d7ed7775189d40b55e40f318eaae6cc7
+  CMakeLists.txt     3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd
+  CMakePresets.json  3229f0f89b236744d7d5c082bed47c28b718288e
+
+EXACTLY THREE MOVED, and they are exactly the three this milestone edited:
+
+  include   2cea8da0 -> f19541e8   CfdInitialField.hpp, new
+  src       b928165c -> a467077a   CfdInitialField.cpp, new; src/cfd/CMakeLists.txt
+  tests     df4ae574 -> 7dcc4b8a   CfdInitialFieldTests.cpp and
+                                   CfdInitialFieldMisuse.cpp, new;
+                                   tests/CMakeLists.txt,
+                                   tests/compile_fail/CMakeLists.txt and
+                                   tests/cli/ZeroMatchGuard.cmake amended
+
+FIVE ARE BYTE-IDENTICAL to P19-BC-001's freeze — apps, examples, cmake and both
+root files. That is the check: this milestone touched no app, no example, no
+cmake module and neither root file, and the hashes say so rather than the
+author.
+
+THE HARNESS
+-----------
+
+All five files copied from P19-BC-001's qualification directory and verified
+byte-identical (sha256, first 8):
+
+  launch.cmd            a3bd87be
+  run-qualification.cmd 4435262a
+  qualify.cmd           0dcba54b
+  verify-harness.cmd    145195cd
+  preflight-space.cmd   455c7cc7
+
+So this is the FIFTY-EIGHTH milestone run on an unchanged harness.
+
+AND THE HARNESS WAS SELF-CHECKED FIRST, because an unchanged harness is not the
+same as a working one. verify-harness.cmd points the harness at a preset that
+does not exist and requires a non-zero exit; it also checks that a zero-match
+repeat filter is counted as a failed stage. Result, this freeze:
+
+    QUALIFICATION FAILED: 2 stage(s) failed.
+    PASS: a failed stage gave qualify.cmd exit 2, and a zero-match
+          repeat filter was counted as a failed stage.
+
+A harness that cannot fail would make every number below worthless.
+
+EXPECTED COUNTS — THE NUMBERS THE EVIDENCE MUST RECONCILE AGAINST
+-----------------------------------------------------------------
+
+Predicted from P19-BC-001's figures, then MEASURED with `ctest -N` before the
+run. Both agree, and both are recorded so a disagreement is visible:
+
+  full set, per preset      6240  = 6184 (P19-BC-001) + 36 unit + 20 compile-fail
+  repeat set, per preset    3075  = 3039 (P19-BC-001) + 36 unit
+  repeat markers per log   15375  = 3075 x 5
+
+  measured with ctest -N:   6240 full, 3075 repeat.  Both exact.
+
+COMPILE-FAIL IS EXCLUDED FROM THE REPEAT, as in every milestone, which is why
+the repeat grows by 36 and not 56. The repeat filter is byte-identical to
+P19-BC-001's and matches the new tests through its existing `unit\.Cfd` term —
+no filter was widened for this milestone.
+
+THE NEW TESTS' OWN FIGURES, measured on the pre-freeze tree:
+
+  unit.CfdInitialField_*        36 cases
+  the [ic] tag                6589 assertions in 36 cases, in Debug
+                              6589 assertions in 36 cases, in Release
+                              — identical, so no assertion is
+                                configuration-dependent
+  compile_fail.cfdic.*          20 cases
+  the [cfd] subsystem       516126 assertions in 264 cases
+                              = 509537 + 6589 and 228 + 36, both EXACT, so no
+                                pre-existing cfd assertion moved
+
+A COUNTING TRAP THIS MILESTONE ALREADY FELL INTO
+------------------------------------------------
+
+Recorded here because the same trap is available during the run. The author's
+first mutation sweep reported a test failing on a tree with no mutation in it.
+The cause was the harness, not the code: shutil.copy2 preserves mtimes, so a
+restored file looked OLDER than the object compiled from the mutated one, ninja
+skipped the rebuild, and a STALE BINARY carrying the previous mutation produced
+a failure that was not there.
+
+Same family as the three incidents this project already carries — `ctest -R`
+matching nothing and exiting 0, a hyphen-stopping regex that counted 4 of 16,
+and an `inherits[0]` walk that read -Werror as off. The rule that follows:
+a number is not evidence until the thing that produced it is known to be the
+thing under test.
+
+PRE-FREEZE STATE
+----------------
+
+  36 of 36 unit tests PASS, Debug and Release
+  20 of 20 compile-fail gates PASS
+  205 of 205 architecture tests PASS, layering included
+  cli.mesh.zero-match-guard PASS with the 36 names and both group counts
+  six mutations applied one at a time, each killed by its named test, tree
+    restored and verified at 0 markers afterwards
+  0 warnings, 0 errors under -Werror in debug-ext and release-ext
+
+WHAT THE RUN MUST PRODUCE
+-------------------------
+
+  17 stages, every one exit 0
+  6240/6240 in each of debug-ext, release-ext, debug-shared-ext
+  3075/3075 x 5 in release-ext and debug-ext repeats, 15375 Passed markers each
+  0 warnings under -Werror
+  no-op rebuilds recompiling nothing
+  the eight identities above, unchanged, read by the harness before the first
+    build and again after the last test run
+
+THE LAUNCHER'S EXIT CODE IS NOT THE VERDICT. The verdict is
+run-qualification.out's own sentence and qualification-times.txt's failed-stage
+count, and the evidence quotes those rather than a shell's exit status.
+
+ATTEMPT 1 WAS REFUSED BY THE PREFLIGHT, AND THE HARNESS WAS RIGHT
+-----------------------------------------------------------------
+
+    preflight-space.ps1 exit -196608
+    PREFLIGHT REFUSED THE QUALIFICATION. Nothing was built and no stage ran.
+
+Cause: the author copied the harness by listing the previous milestone's
+directory through a filter -- `grep -iE 'cmd|txt|out|err'` -- which silently
+dropped `preflight-space.ps1`. Five of the six harness files were copied and
+verified byte-identical; the sixth was never seen, so the report that "all five
+harness files are byte-identical" was true and still incomplete.
+
+Nothing was built, nothing was tested and no number was produced, so there is
+nothing to discard: the freeze is untouched and the eight identities were
+re-read and are unchanged. What the incident is worth recording for is that it
+is the SAME FAILURE as the three already listed above -- a filtered listing
+returning a plausible subset, and a count of "five, all matching" that was
+reconciled against nothing. The threshold for the remedy is low: list the
+directory, not a filter of it.
+
+The missing file was then copied and both preflight hashes checked against the
+ones run-qualification.cmd records for itself:
+
+    preflight-space.cmd  a65d6578000b6e8a2811d5154bcec24be09c2b54   matches
+    preflight-space.ps1  2f0d4228488f6a574ca57ec89f0fad0107b16b59   matches
+
+and the preflight was then run directly, where it reports rather than refuses:
+
+    %TEMP% volume C:\  free 2285.93 GB of 3814.25 GB
+    RESULT: OK. Every distinct volume has at least 20 GB free.
+
+ATTEMPT 2 is the run the evidence reports.
+
+ATTEMPT 2 WAS KILLED BY A SESSION TEARDOWN, AND IS VOID
+-------------------------------------------------------
+
+Started 21:47:35 on 2026-11-05 and died at 23:32 the same evening, part way
+through the second preset's test run. It is VOID and nothing in it is reported
+as this milestone's result. Recorded because a voided attempt is part of the
+history, and because one number in it is worth keeping as corroboration.
+
+What the stage record shows:
+
+    debug-ext         configure 0, clean 0, build 0, no-op rebuild 0, ctest 0
+                      100% tests passed out of 6240, 2559.63 s
+    release-ext       configure 0, clean 0, build 0, no-op rebuild 0
+                      ctest exit 1073807364 = 0x40010004, killed at test
+                      5589 of 6240, every test to that point Passed
+    debug-shared-ext  configure exit -1073741205 = 0xC000026B
+    repeats           selected 0 tests and were counted as FAILED stages
+
+THE CAUSE IS IN THE EXIT CODES, not in the code under test. 0x40010004 is
+DBG_TERMINATE_PROCESS -- the process was killed, it did not fail -- and
+0xC000026B is STATUS_DLL_INIT_FAILED_LOGOFF, which a process gets when it
+starts while the window station is shutting down. The client restarted
+(the session's scratchpad path changed with it) and took the process tree with
+it. No test failed and no stage reported a defect.
+
+THE REPEAT STAGES FAILING IS THE GUARD WORKING. Both selected 0 tests against
+a build tree that no longer existed, and qualify.cmd counted each as a failed
+stage rather than letting ctest's "No tests were found!!!" pass as success.
+That is the P19-DOF-001 attempt-1 lesson holding under a condition nobody
+arranged.
+
+WHAT IS WORTH KEEPING FROM IT, clearly labelled as from a voided attempt:
+debug-ext ran 6240 tests and passed every one, which is EXACTLY the count
+predicted and measured above. So the expected-count arithmetic in this file is
+confirmed by an independent full run of one preset, before the attempt that the
+evidence will report.
+
+THE FREEZE IS UNTOUCHED. The eight identities were re-read after the teardown
+with qualify.cmd's own method and every one equals its value above, so attempt
+3 runs against the same tree and no re-freeze is needed.
+
+ATTEMPT 3 was launched DETACHED, so a client restart cannot take it down
+again. Its logs are the ones the evidence reports; attempt 2's are kept under
+qualification/attempt-2-killed-by-a-session-teardown/.

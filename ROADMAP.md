@@ -104,7 +104,8 @@ Current authorized development:
 P19 — CFD Integration, authorized 2026-10-27 by the owner's "start
 P19-ARCH-001": P19-ARCH-001 and P19-DATA-001 (2026-10-27), P19-FLUID-001
 (2026-10-28), P19-MESH-001, P19-TOPO-001 and P19-GEOM-001 (all 2026-10-31) and
-P19-DOF-001 and P19-BC-001 (both 2026-11-05) have PASSED.
+P19-DOF-001 and P19-BC-001 (both 2026-11-05) and P19-IC-001 (2026-11-06) have
+PASSED.
 P19-MESH-001 was qualified by a second attempt on a replacement machine: its
 first attempt, on 2026-10-28, failed 5 of 17 stages when the previous machine's
 temp volume filled and no test suite ran, and that machine was then permanently
@@ -118,9 +119,21 @@ build cost the repeat stage its build-time test discovery, which then selected
 while two of seventeen stages had failed, which is why the harness's own verdict
 is what is read. One line of that milestone's own run driver differs between its
 two attempts, and no frozen file does. P19-BC-001 qualified from clean on the
-first attempt, on that same settled harness, which has now run fifty-seven
-milestones unchanged. No milestone is open, and nothing after P19-BC-001 is
-authorized; see TODO.md.
+first attempt, on that same settled harness. P19-IC-001 needed THREE attempts
+and no defect was involved in either failure. Its first was REFUSED BY THE
+PREFLIGHT before anything was built, because the harness had been copied through
+a filtered directory listing that silently dropped one of its six files, and the
+report that "all five are byte-identical" was true and incomplete. Its second was
+KILLED BY A SESSION TEARDOWN at test 5589 of 6240: the exit codes name the cause
+as DBG_TERMINATE_PROCESS and STATUS_DLL_INIT_FAILED_LOGOFF, so the process was
+killed rather than failing, and that attempt is void — though its first preset
+had already passed 6240 of 6240, independently confirming the predicted count,
+and its repeat stages, pointed at a build tree that no longer existed, selected
+0 tests and were correctly COUNTED AS FAILED rather than passing as ctest's "No
+tests were found!!!". The third ran detached and qualified every stage. The
+harness has now run fifty-eight milestones unchanged, and is self-checked before
+each run, because an unchanged harness is not the same as a working one. No
+milestone is open, and nothing after P19-IC-001 is authorized; see TODO.md.
 
 The phases before it, and how each was qualified:
 
@@ -958,6 +971,57 @@ later milestones, each the owner's to authorize. One narrowing came out of this
 milestone's own review and is the owner's to revisit: a moving wall is
 planar-only, so a sliding cylindrical wall is refused by name rather than
 approximated.
+
+`P19-IC-001` (PASS 2026-11-06) gives a CFD analysis the starting state a solve
+will iterate from, and answers the ownership question `ADR-066` had deliberately
+left open. It is the first milestone to produce a LAYOUT-INDEXED FIELD ARRAY — one
+whose length comes from `size(CfdVariable)` and whose subscript comes from the
+field layout — and the answer `ADR-068` reaches is that **no field storage is
+added at all**: the expansion writes into a `std::span<double>` the caller owns
+and sizes. That discharges `ADR-066` Decision 1 rather than pre-empting it, since
+the clause that decides is "with a use in hand" and the only consumer of an
+initial field is a solve, which is a later milestone; and it turns "expanded cell
+arrays remain derived" from a promise into a structural fact, because the `cfd`
+module owns no field memory for a later edit to persist by accident. The cost is
+accepted and recorded: every consumer sizes its own array, so a wrongly-sized
+array becomes a case refused by name rather than one that cannot be expressed. A
+uniform initial field STAYS UNIFORM and gravity does not enter it, where
+`ADR-067` made a prescribed *boundary* pressure hydrostatic — a boundary pressure
+is a constraint the solve must satisfy along a face that is not level, while an
+initial field is a guess whose only requirement is to be a legal state — and the
+consequence is stated rather than hidden: a gravity-driven case starts further
+from its solution than it needs to. Five of the twelve checklist items were
+LARGELY SATISFIED BEFORE the milestone opened, by `P19-DATA-001` and `ADR-061`,
+and the evidence says so rather than claiming the work; what this milestone adds
+to them is one measured gap closed — the existing NaN/Inf test exercised one
+velocity component and the pressure, so it would have passed unchanged checking
+only `x` — and the structural guarantees that keep them true. Qualified at
+6240/6240 in each of three presets, 3075 x 5 in two, 0 warnings under `-Werror`,
+17 of 17 stages exit 0, and 6,589 assertions in 36 cases identically in Debug and
+Release, with the eight qualified subtrees identical across four readings; see
+[P19-IC-001](docs/verification/P19-IC-001/README.md). Nineteen review findings
+were acted on across three passes — the author's own, written down before either
+independent review reported, and two independent agents given the code but not
+those conclusions — all fixed, none deferred. One was a substantive code defect:
+the analysis's own mesh control was omitted from the source binding with no safety
+argument available, so re-pointing an analysis at another mesh left the field
+reporting itself current for an analysis whose array must now be a different
+length; it is refused by name. THREE DOCUMENTATION CLAIMS WERE WITHDRAWN AS
+MEASURABLY FALSE, each by a review that measured rather than argued — a
+rationale for a check order that did not hold, a "lossless" fingerprint that is a
+64-bit digest, and a claim that every written slot was pinned when reversing the
+cell order passes every test, because a uniform field's array is byte-identical
+under any permutation of cells. That last one is recorded as a live limitation
+rather than repaired: the component-to-block mapping is pinned, the cell arm is
+not, and the first milestone to write a NON-UNIFORM field will be the first able
+to observe it. The two reviews disagreed once, over whether a remesh changes the
+cell count, and the disagreement was settled by measurement rather than by
+seniority. Recorded as less than a reader might assume: there is no solve, so
+nothing here produces a flow field — only a legal, correctly placed and
+correctly bound starting state — no performance result is measured, and "exact
+undo / persistence semantics" is met as value semantics plus the fingerprint,
+not as a round trip, because no CFD serializer and no CFD command exist yet.
+Those are `P19-PERSIST-001` and `P19-CMD-001`, each the owner's to authorize.
 
 ```text
 incompressible laminar

@@ -1,0 +1,32 @@
+qualification started Thu 11/05/2026 21:47:34.02 
+qualification candidate: 
+cf6e37cc7cbbc59730a24878f795e124f4ed18bb
+qualified source trees before the first build: 
+  apps fc398a3d2e524178cf38e8b667236379d8381086 
+  include f19541e865d37362d5088e3d0c857a36c1abdd35 
+  src a467077a5ff861692449af407898e6adcb138112 
+  tests 7dcc4b8aabc3168f108b886b63556f063e4ae84e 
+  examples 4da234ebf4779f7c16d5df0075f106f7e3d4c958 
+  cmake 5a382115d7ed7775189d40b55e40f318eaae6cc7 
+  CMakeLists.txt 3ec3c10f2a4c522f36c60b1ce1a58e99c4db1ecd 
+  CMakePresets.json 3229f0f89b236744d7d5c082bed47c28b718288e 
+debug-ext configure started Thu 11/05/2026 21:47:35.17 
+debug-ext configure exit 0 Thu 11/05/2026 21:47:39.16 
+debug-ext clean attempt 1 exit 0 Thu 11/05/2026 21:47:40.49 
+debug-ext build exit 0 Thu 11/05/2026 22:09:59.37 
+debug-ext no-op rebuild exit 0 Thu 11/05/2026 22:09:59.82 
+debug-ext ctest exit 0 Thu 11/05/2026 22:52:39.59 
+release-ext configure started Thu 11/05/2026 22:52:39.59 
+release-ext configure exit 0 Thu 11/05/2026 22:52:44.13 
+release-ext clean attempt 1 exit 0 Thu 11/05/2026 22:52:44.68 
+release-ext build exit 0 Thu 11/05/2026 23:18:58.64 
+release-ext no-op rebuild exit 0 Thu 11/05/2026 23:18:59.13 
+release-ext ctest exit 1073807364 Thu 11/05/2026 23:32:02.12 
+debug-shared-ext configure started Thu 11/05/2026 23:32:02.12 
+debug-shared-ext configure exit -1073741205 Thu 11/05/2026 23:32:02.21 
+debug-shared-ext build skipped: the configure failed 
+debug-shared-ext ctest skipped: the configure failed 
+repeat release-ext selects 0 test(s) 
+repeat release-ext FAILED: the filter 'architecture|unit\.Linalg|unit\.Structural|unit\.Cfd|unit\.Fluid|unit\.Provenance|unit\.CustomMaterial|unit\.MaterialFile|unit\.MaterialCli|unit\.Thermal|unit\.P18Qualification|unit\.P17Qualification|unit\.Quality|unit\.MeshDofMap|unit\.ConstraintSet|unit\.FreeEquationMap|unit\.Tet4Element|unit\.Mesh|unit\.Volume|unit\.Tet|unit\.Siz|unit\.Id|unit\.ReferenceModel|unit\.Analytic|unit\.View|unit\.RigidTransform|unit\.Transform|unit\.Point|unit\.Direction|unit\.Frame|unit\.Unit|unit\.Dimension|unit\.MassProperties|unit\.SurfaceMesh|refmod\.|gui\.|cli\.thermal\.|cli\.structural\.|cli\.mesh\.' matched no tests 
+repeat debug-ext selects 0 test(s) 
+repeat debug-ext FAILED: the filter 'architecture|unit\.Linalg|unit\.Structural|unit\.Cfd|unit\.Fluid|unit\.Provenance|unit\.CustomMaterial|unit\.MaterialFile|unit\.MaterialCli|unit\.Thermal|unit\.P18Qualification|unit\.P17Qualification|unit\.Quality|unit\.MeshDofMap|unit\.ConstraintSet|unit\.FreeEquationMap|unit\.Tet4Element|unit\.Mesh|unit\.Volume|unit\.Tet|unit\.Siz|unit\.Id|unit\.ReferenceModel|unit\.Analytic|unit\.View|unit\.RigidTransform|unit\.Transform|unit\.Point|unit\.Direction|unit\.Frame|unit\.Unit|unit\.Dimension|unit\.MassProperties|unit\.SurfaceMesh|refmod\.|gui\.|cli\.thermal\.|cli\.structural\.|cli\.mesh\.' matched no tests 

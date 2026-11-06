@@ -524,6 +524,48 @@ set(_filters
     # authority cases.
     "unit\\.CfdBoundary_" 48
     "compile_fail\\.cfdbc\\." 16
+    # P19-IC-001. The group, the compile-fail group that proves the cfd module
+    # owns no field storage and that a prepared field cannot be conjured, and
+    # each case a rename or a drop would otherwise hide. The escaping matches
+    # the rest of this file: \\. is a literal dot, where \. would be a wildcard.
+    "unit\\.CfdInitialField_" 36
+    "compile_fail\\.cfdic\\." 20
+    "unit\\.CfdInitialField_ACloneCarriesTheRecordAndNothingFieldShaped$" 1
+    "unit\\.CfdInitialField_AFiniteExtremeIsAcceptedAndExpandedBitForBit$" 1
+    "unit\\.CfdInitialField_AGeometryRevisionAndAPatchPartitionReachNeitherTheSourceNorTheField$" 1
+    "unit\\.CfdInitialField_ANonFiniteRecordIsRefusedBeforeTheLayoutIsConsulted$" 1
+    "unit\\.CfdInitialField_ANonSiLiteralLandsInTheArrayAsSi$" 1
+    "unit\\.CfdInitialField_APreparedFieldIsASnapshotAndExpandsItsOwnValues$" 1
+    "unit\\.CfdInitialField_ARealAnalysisPreparesAndBindsToItsOwnMesh$" 1
+    "unit\\.CfdInitialField_ARefusedEditLeavesTheInitialConditionUnchanged$" 1
+    "unit\\.CfdInitialField_ARemeshStalesTheFieldAndNamesTheMesh$" 1
+    "unit\\.CfdInitialField_ATopologyOfAnotherMeshIsRefusedByName$" 1
+    "unit\\.CfdInitialField_AUniformPressureFillsEveryCellSlot$" 1
+    "unit\\.CfdInitialField_AUniformPressureIsEqualInEveryCellWithGravityPresent$" 1
+    "unit\\.CfdInitialField_AUniformVelocityIsWrittenComponentBlocked$" 1
+    "unit\\.CfdInitialField_AVelocityOnlyEditIsAnEffectiveChange$" 1
+    "unit\\.CfdInitialField_AWronglySizedArrayIsRefusedAndLeftUntouched$" 1
+    "unit\\.CfdInitialField_AnAnalysisNamingAnotherMeshControlIsRefusedFirst$" 1
+    "unit\\.CfdInitialField_AnInitialConditionEditStalesTheFieldAndNamesIt$" 1
+    "unit\\.CfdInitialField_AnUnknownVariableIsRefusedBeforeTheLength$" 1
+    "unit\\.CfdInitialField_EachStaleReasonIsReportedAloneForItsOwnDependency$" 1
+    "unit\\.CfdInitialField_EveryProblemAndStaleReasonHasADistinctName$" 1
+    "unit\\.CfdInitialField_EveryReferenceBodyExpandsToItsOwnCellCount$" 1
+    "unit\\.CfdInitialField_EveryVelocityComponentAndThePressureRejectNaNAndBothInfinities$" 1
+    "unit\\.CfdInitialField_FieldEqualityDiscriminatesSoDeterminismMeansSomething$" 1
+    "unit\\.CfdInitialField_MassFluxIsRefusedByName$" 1
+    "unit\\.CfdInitialField_SettingAnUnchangedInitialConditionIsNoEffectiveChange$" 1
+    "unit\\.CfdInitialField_StaleReasonsComeOutInTheEnumsOrder$" 1
+    "unit\\.CfdInitialField_TheCanonicalRecordCarriesNothingMeshLocal$" 1
+    "unit\\.CfdInitialField_TheExpansionCarriesTheSignOfASignedZero$" 1
+    "unit\\.CfdInitialField_TheExpansionPredictorAndThePathNeverDisagree$" 1
+    "unit\\.CfdInitialField_TheFingerprintChangesForEveryInitialConditionValue$" 1
+    "unit\\.CfdInitialField_TheOmittedDependenciesLeaveTheFieldCurrent$" 1
+    "unit\\.CfdInitialField_ThePredictorAndThePreparedPathNeverDisagree$" 1
+    "unit\\.CfdInitialField_TheSourcesOwnEqualityAgreesWithIsCurrent$" 1
+    "unit\\.CfdInitialField_TwoAdjacentSubnormalsHaveDifferentCanonicalTexts$" 1
+    "unit\\.CfdInitialField_TwoDefinitionsThatCompareEqualShareAFingerprint$" 1
+    "unit\\.CfdInitialField_TwoExpansionsOfOneFieldAreIdentical$" 1
     "unit\\.CfdBoundary_ABoundaryFaceWithNoConditionIsRefusedByName$" 1
     "unit\\.CfdBoundary_AConditionFaultIsReportedBeforeAnUnresolvableTarget$" 1
     "unit\\.CfdBoundary_ADrilledWallWithNoNameRefusesTheAnalysis$" 1

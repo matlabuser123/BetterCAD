@@ -23,11 +23,90 @@ Prerequisite:
            may set). P17's F1-F3 stand unchanged beneath them.
 
 Current milestone:
-           None. P19-BC-001 PASSED 2026-11-05, and finishing a milestone is
-           itself a stop condition: the next one is a scope decision and the
-           owner's alone.
+           NONE. P19-IC-001 PASSED 2026-11-06, and finishing a milestone is
+           itself a stop condition. The next milestone is a scope decision
+           for the owner, not Claude's to make: P19-DIFF-001 is next in the
+           phase plan below and is NOT authorized.
 
 Previous milestone:
+           P19-IC-001 — CFD Initial Conditions. AUTHORIZED 2026-11-05 by the
+           owner ("implement and fully verify", with the twelve item checklist
+           quoted in full). PASS 2026-11-06. All twelve items are recorded:
+           17 of 17 stages exit 0, 6240/6240 in each of the three presets,
+           3075 x 5 in two with 15375 counted Passed markers each, 0 warnings
+           under -Werror, 5h17m46s, and the eight qualified subtrees identical
+           across FOUR readings — at the freeze, by the harness before the
+           first build, by the harness after the last test run, and recomputed
+           from the working tree afterwards by the harness's own method.
+           36 unit cases / 6,589 assertions and 20 compile-fail cases, and the
+           assertion count is IDENTICAL in Debug and Release, so no assertion
+           here is configuration-dependent. The cfd subsystem reads 516126
+           assertions in 264 cases, which is 509537 + 6589 and 228 + 36
+           EXACTLY, so no pre-existing cfd assertion moved.
+           ADR-068 answers the question ADR-066 Decision 1 deferred, and the
+           answer is that NO FIELD STORAGE IS ADDED: the expansion writes into
+           a std::span<double> the caller owns and sizes. That discharges the
+           deferral rather than pre-empting it — the clause that decides is
+           "with a use in hand", and the only consumer of an initial field is
+           a solve, which is later and unauthorized — and it makes "expanded
+           cell arrays remain derived" STRUCTURAL rather than a promise, since
+           the cfd module owns no field memory for a later edit to persist by
+           accident. A uniform initial field stays uniform and gravity does
+           not enter it, where ADR-067 made a prescribed BOUNDARY pressure
+           hydrostatic; the asymmetry is deliberate and its cost is stated.
+           NINETEEN review findings were acted on across three passes — the
+           author's own, written down before either independent review
+           reported, and two independent agents given the code but not those
+           conclusions — all fixed, none deferred. One was a substantive code
+           defect: CfdAnalysisDefinition::mesh was omitted from the source
+           binding with no safety argument available, so re-pointing an
+           analysis at another mesh control left the field reporting itself
+           CURRENT for an analysis whose array must now be a different length.
+           It is refused by name as DefinitionNamesAnotherMesh, first in phase
+           order. THREE DOCUMENTATION CLAIMS WERE WITHDRAWN AS MEASURABLY
+           FALSE: the silent-no-op rationale for checking the unknown variable
+           before the length, "the fingerprint is LOSSLESS" (it is a 64-bit
+           FNV-1a digest; canonicalText is the lossless one), and ADR-068
+           Decision 4's "every written slot is checked" — a review reversed
+           the cell order and every test still passed, because a uniform
+           field's array is byte-identical under any permutation of cells.
+           Recorded as less than a reader might assume. Five of the twelve
+           items were LARGELY SATISFIED BEFORE this milestone opened, by
+           P19-DATA-001 and ADR-061, and the evidence says so rather than
+           claiming the work; what IC-001 adds to them is one measured gap
+           closed (the NaN/Inf test covered one velocity component, not
+           three) and the structural guarantees that keep them true. There is
+           no solve, so nothing here produces a flow field — only a legal
+           starting state. No performance result is measured. "Exact undo /
+           persistence semantics" is met as value semantics plus the
+           fingerprint, per ADR-068 Decision 9, NOT as a round trip: there is
+           no CFD serializer in src/io/json at all and no CfdCommands.cpp,
+           and P19-PERSIST-001 and P19-CMD-001 are later and unauthorized.
+           Seven limitations are recorded, L2 and L6 among them: the
+           cell-to-offset mapping is UNOBSERVABLE for a uniform field and the
+           first non-uniform field will be the first able to pin it, and the
+           per-mutation pairing table did not survive the client restart that
+           wiped the scratchpad — recorded as a gap rather than filled from
+           memory, because re-running the sweep would modify the frozen
+           surface and void the qualification.
+           QUALIFIED ON THE THIRD ATTEMPT, and both earlier attempts stay
+           recorded. Attempt 1 was REFUSED BY THE PREFLIGHT and the harness
+           was right: the harness had been copied through a grep filter that
+           silently dropped preflight-space.ps1, and the report that "all five
+           harness files are byte-identical" was true and incomplete. Nothing
+           was built and no number was produced. Attempt 2 was KILLED BY A
+           SESSION TEARDOWN at test 5589 of 6240 — 0x40010004 is
+           DBG_TERMINATE_PROCESS and 0xC000026B is
+           STATUS_DLL_INIT_FAILED_LOGOFF, so the cause is in the exit codes
+           and not in the code under test — and it is VOID, but its debug-ext
+           had already passed 6240 of 6240, independently confirming the
+           predicted count before the reported attempt ran. Its repeat stages,
+           running against a build tree that no longer existed, selected 0
+           tests and were COUNTED AS FAILED: the P19-DOF-001 attempt-1 lesson
+           holding under a condition nobody arranged.
+           (docs/verification/P19-IC-001/README.md.)
+
+Milestone before that:
            P19-BC-001 — CFD Boundary Conditions. AUTHORIZED 2026-11-05 by the
            owner ("implement and fully verify", with the twenty item checklist
            and the canonical / derived split quoted). PASS 2026-11-05. All
@@ -75,7 +154,7 @@ Previous milestone:
            REVISION r1 rather than tidying it away.
            (docs/verification/P19-BC-001/README.md.)
 
-Milestone before that:
+Before those:
            P19-DOF-001 — CFD Field / DOF Model. AUTHORIZED 2026-11-04 by the
            owner ("implement and fully verify", with the seventeen item
            checklist and the recommended p / U / phi layout quoted). PASS
@@ -105,7 +184,7 @@ Milestone before that:
            fixes are verified by mutation.
            (docs/verification/P19-DOF-001/README.md.)
 
-Before those:
+Earlier still:
            P19-GEOM-001 — Finite-Volume Geometric Metrics. AUTHORIZED
            2026-10-31 by the owner ("start", with the twenty-one item checklist
            quoted). PASS 2026-10-31. All twenty-one items are recorded: 17 of
@@ -127,7 +206,7 @@ Before those:
            area scale on all eight reference meshes.
            (docs/verification/P19-GEOM-001/README.md.)
 
-Earlier still:
+Earlier than those:
            P19-TOPO-001 — Finite-Volume Topology. AUTHORIZED 2026-10-31 by
            the owner ("implement this and fully verify", with the twenty-two
            item checklist quoted). PASS 2026-10-31. All twenty-two items are
@@ -147,29 +226,12 @@ Earlier still:
            three are stated in the evidence rather than glossed.
            (docs/verification/P19-TOPO-001/README.md.)
 
-Earlier than those:
-           P19-MESH-001 — CFD Volume / Surface Mesh Contract. AUTHORIZED
-           2026-10-28 ("start P19-MESH-001"). PASS 2026-10-31. All twenty-four
-           items are now recorded: Determinism PASS, Regression PASS and
-           Evidence recorded closed on attempt 2, the re-run on the replacement
-           machine — 17 of 17 stages exit 0, 5939/5939 in each of the three
-           presets, 2803 x 5 in two with 14015 counted per-test Passed markers
-           each, 0 warnings over 755 objects, 2h46m08s, and the twelve frozen
-           identities unchanged before the first build, after the last test and
-           after all post-run verification. Attempt 1 (2026-10-28, candidate
-           b1f151c plus the working tree) FAILED 5 of 17 stages for an
-           environmental reason — the previous machine's %TEMP% volume was
-           full, so all three builds aborted writing the compiler's temporary
-           file and no suite ran — and stays recorded, not erased. That
-           machine was then permanently replaced, so the replacement was
-           qualified in its own right before the gate ran: Qt 6.11.2, OCCT
-           8.0.1, Netgen 6.2.2604 and zlib 1.3.1 built by the repository's own
-           hash-verified superbuild with the same WinLibs GCC 16.1.0 bundle
-           (ENVIRONMENT-MIGRATION.md). The candidate tree never moved: every
-           commit since the freeze touched only docs/.
-           (docs/verification/P19-MESH-001/FREEZE.md.)
-
            Earlier P19 milestones, each at its own recorded verdict:
+           P19-MESH-001 PASSED 2026-10-31 on attempt 2 (5939/5939 x 3
+           presets, 2h46m08s; attempt 1 failed 5 of 17 stages because the
+           previous machine's %TEMP% volume was full, and that machine was
+           permanently replaced and re-qualified in its own right —
+           ENVIRONMENT-MIGRATION.md, docs/verification/P19-MESH-001/FREEZE.md);
            P19-ARCH-001 PASSED 2026-10-27 (5826/5826 x 3 presets, 745
            objects, ADR-058/059/060); P19-DATA-001 PASSED 2026-10-27
            (5893/5893 x 3, 750 objects, ADR-061); P19-FLUID-001 PASSED
@@ -188,11 +250,13 @@ Qualified:
            P18 — Thermal Analysis
 
 Next:
-           Nothing is authorized. P19-BC-001 PASSED and nothing after it has
-           been started: each milestone is started by the owner, as every P17,
-           P18 and P19 milestone was, and a predecessor's PASS is not
-           permission to start the one after it. Finishing a milestone is
-           itself a stop condition.
+           NOTHING IS AUTHORIZED. P19-IC-001 passed on 2026-11-06 and no
+           milestone is open. P19-DIFF-001 is next in the phase plan, and
+           being next is not permission: each milestone is started by the
+           owner, as every P17, P18 and P19 milestone was, and a
+           predecessor's PASS is not permission to start the one after it.
+           Finishing a milestone is itself a stop condition. AWAITING AN
+           EXPLICIT SCOPE DECISION.
 
 P19 objective, as planned:
            authoritative CAD / fluid / mesh state
@@ -1970,10 +2034,9 @@ general fix → requalify the affected milestone → rerun P18-QUAL.
 F1-F3 weighed as inputs to it. Milestones are worked top to bottom, and each is authorized
 by its predecessor's PASS being recorded here and the owner saying so -- P17's and P18's
 rule, unchanged. P19-ARCH-001, P19-DATA-001, P19-FLUID-001, P19-MESH-001, P19-TOPO-001,
-P19-GEOM-001, P19-DOF-001 and P19-BC-001 have PASSED; **nothing after them is
-authorized**, and a
-predecessor's pass is not permission
-to start the next.
+P19-GEOM-001, P19-DOF-001 and P19-BC-001 have PASSED and P19-IC-001 is authorized
+and in progress; **nothing after it is authorized**, and a predecessor's pass is
+not permission to start the next.
 
 Goal: add qualified incompressible CFD capability without duplicating CAD, material, mesh,
 solver, result, persistence, or CLI authority.
@@ -2841,18 +2904,198 @@ Evidence: docs/verification/P19-BC-001/README.md.
 
 Define initial fields for transient / iterative solves.
 
-* [ ] Initial velocity
-* [ ] Initial pressure
-* [ ] Uniform-field policy
-* [ ] Future field-based initialization policy
-* [ ] SI units
-* [ ] Reject NaN / Inf
-* [ ] Source binding
-* [ ] Initial condition remains canonical intent
-* [ ] Expanded cell arrays remain derived
-* [ ] Exact undo / persistence semantics
-* [ ] Regression PASS
-* [ ] Evidence recorded
+**AUTHORIZED 2026-11-05** by the owner's "implement and fully verify", with
+the twelve item checklist below quoted in full. PASS 2026-11-06; the record is
+below the checklist. Nothing after this milestone is authorized.
+
+* [x] Initial velocity
+* [x] Initial pressure
+* [x] Uniform-field policy
+* [x] Future field-based initialization policy
+* [x] SI units
+* [x] Reject NaN / Inf
+* [x] Source binding
+* [x] Initial condition remains canonical intent
+* [x] Expanded cell arrays remain derived
+* [x] Exact undo / persistence semantics
+* [x] Regression PASS
+* [x] Evidence recorded
+
+```text
+PASS 2026-11-06. Authorized 2026-11-05 by the owner's "implement and fully
+verify", with the twelve item checklist quoted in full, and that authorization
+was RECORDED HERE BEFORE ANY CODE WAS WRITTEN, which P19-BC-001's was not.
+Qualified against cf6e37cc plus this milestone's nine candidate files, five new
+and four registration points amended:
+6240/6240 x 3 presets, 3075 x 5 in two repeat stages with 15375 counted Passed
+markers each, 0 warnings and 0 errors under -Werror, 17 of 17 stages exit 0,
+5h17m46s, and the eight qualified subtrees identical across FOUR readings -- at
+the freeze, by the harness before the first build, by the harness after the last
+test run, and recomputed from the working tree afterwards by the harness's own
+method (scratch GIT_INDEX_FILE, read-tree HEAD, add -A, write-tree --prefix).
+36 unit cases / 6,589 assertions and 20 compile-fail cases. Exactly three of the
+eight subtrees moved -- include, src and tests -- and they are exactly the three
+this milestone edited. The harness is byte-identical to P19-BC-001's, its 58th
+milestone, and it was SELF-CHECKED FIRST: verify-harness.cmd confirmed that a
+failed stage gives exit 2 and that a zero-match repeat filter is counted as a
+failed stage, because an unchanged harness is not the same as a working one.
+
+The assertion count is IDENTICAL in Debug and Release -- 6589 in 36 cases on
+both -- which is a stronger statement than two passes: a count that agreed only
+in Debug would mean a branch compiled out. The whole CFD subsystem reads 516126
+assertions in 264 cases, which is 509537 + 6589 and 228 + 36 EXACTLY, so no
+pre-existing cfd assertion moved. The full-set arithmetic reconciles the same
+way: 6240 = 6184 + 36 + 20, and the run's own logs give rest = 6184 in each of
+the three presets, 6184 being P19-BC-001's own figure.
+
+ADR-068 answers what ADR-066 Decision 1 deferred. P19-IC-001 is the first
+milestone to produce a LAYOUT-INDEXED FIELD ARRAY -- length from
+size(CfdVariable), subscript from the layout -- and the answer is that NO FIELD
+STORAGE IS ADDED: expandCfdInitialField writes into a std::span<double> the
+caller owns and sizes. That discharges the deferral rather than pre-empting it,
+since the clause that decides is "with a use in hand" and the only consumer of
+an initial field is a solve, which is later and unauthorized. It also makes
+"expanded cell arrays remain derived" STRUCTURAL rather than a promise: the cfd
+module owns no field memory, so there is no field for a later edit to persist by
+accident, and compile-fail gates hold it. The cost is accepted and stated: every
+consumer sizes its own array, and a wrongly-sized array becomes a case refused by
+name rather than one that cannot be expressed.
+
+A uniform initial field STAYS UNIFORM and gravity does not enter it, where
+ADR-067 made a prescribed BOUNDARY pressure hydrostatic. The asymmetry is
+deliberate: a boundary pressure is a constraint the solve must satisfy along a
+face that is not level, an initial field is a starting guess whose only
+requirement is to be a legal state, the record is authorized uniform by ADR-061,
+and a hydrostatic expansion would make density and gravity dependencies of a
+value they provably cannot change. The accepted consequence is recorded -- a
+gravity-driven case starts further from its solution than it needs to.
+
+Six refusals, declared in phase order and each asserted BY TAG rather than by
+message, the lesson P19-BC-001's review recorded. Atomic: the variable and the
+length are both decided before the first write, asserted on a PRE-POISONED array
+in both the too-short and the too-long direction, so a refused expansion leaves
+the caller's array untouched rather than part-initialised.
+
+NINETEEN review findings were acted on, all fixed, none deferred, across three
+passes -- the author's own, written down before either independent review
+reported so that what they confirmed stays distinguishable from what they added,
+and two independent agents given the code and the ADR but not those conclusions.
+Both independent reviews then found the same two things the author's pass had
+found and added the rest.
+
+ONE SUBSTANTIVE CODE DEFECT: CfdAnalysisDefinition::mesh was omitted from the
+source binding and, unlike the other six omissions, no provable safety statement
+was available for it -- re-point an analysis at another mesh control and the
+field reported itself CURRENT for an analysis whose array must now be a
+different LENGTH. Refused by name as DefinitionNamesAnotherMesh, first in phase
+order because it invalidates the length. The sibling CfdBoundarySource omits it
+too; that is a pattern-level gap outside this milestone's scope and is recorded
+for the owner as L3 rather than reached into.
+
+THREE DOCUMENTATION CLAIMS WERE WITHDRAWN AS MEASURABLY FALSE, each by a review
+that measured rather than argued. The silent-no-op rationale for deciding the
+unknown variable before the length is false twice over: with the checks swapped
+(unknown, 0) still reports the variable, and with the check removed entirely the
+expansion's switch has no default, so an unrecognised enumerator falls out to a
+named refusal rather than to success -- the order buys the honest TAG and nothing
+more, and both comments now say that. "The fingerprint is LOSSLESS" is wrong
+because it is a 64-bit FNV-1a digest; canonicalText is the lossless one, and the
+strong claim moved there, where two ADJACENT SUBNORMALS are asserted to produce
+different texts. And ADR-068 Decision 4's "every written slot is checked against
+vectorIndex" did not hold: a review replaced CellIndex::fromValue(c) with
+fromValue(cells-1-c) and ALL TESTS PASSED, because a uniform field's array is
+byte-identical under any permutation of cells. The component-to-block mapping IS
+pinned -- the interleaving mutation fails -- but the cell arm is not, and the ADR
+now says so and names what carries it instead.
+
+Among the rest: a CHECK guarded by its own predicate in the very block the test
+file called "THE DISCRIMINATING PART", which could not fail; a premise printed
+with INFO instead of asserted, where a review then MEASURED that the 3 mm remesh
+keeps the cell count, so the stamp really is what stales the field; twelve NaN
+and Inf rejection cases that all still passed with isFinite weakened to a
+magnitude bound, because nothing asserted that a finite EXTREME is ACCEPTED;
+CfdInitialFieldSource::operator== documented as the guarantee that "a dependency
+added here without being compared is not possible" while being called by no test
+and no production code, so that return true broke nothing; and componentSi,
+a second copy of CartesianVector<Q>::component written out and defended in a
+comment, deleted in favour of the accessor that already existed.
+
+The two reviews DISAGREED once, and the disagreement was settled by measurement
+rather than by seniority: the test-gap review asserted the 3 mm remesh "almost
+certainly" changes the cell count, and the adversarial review measured that it
+does not. The measurement won and the test asserts the measured premise.
+
+Recorded as less than a reader might assume. FIVE of the twelve items were
+LARGELY SATISFIED BEFORE this milestone opened -- initial velocity, initial
+pressure, the uniform-field policy, SI units and NaN/Inf rejection all rest on
+P19-DATA-001's record and ADR-061 -- and the evidence says so rather than
+claiming the work. What IC-001 adds to them is one measured gap closed
+(P19-DATA-001's own validate test exercised NaN in velocity.x and +Inf in the
+pressure and nothing else, so it would have passed unchanged checking only x;
+the new case covers four slots by three non-finite values) and the structural
+guarantees that keep them true. There is NO SOLVE, so nothing here is shown to
+produce a flow field -- only a legal starting state, correctly placed and
+correctly bound. No performance result is measured, and there is no baseline to
+measure against because nothing expanded a field before this milestone. "Exact
+undo / persistence semantics" is met as the value semantics and the fingerprint,
+per ADR-068 Decision 9, NOT as a round trip: there is no CFD serializer in
+src/io/json at all -- thermal and structural have one, cfd does not -- and no
+CfdCommands.cpp, so P19-PERSIST-001 and P19-CMD-001 remain later and
+unauthorized.
+
+SEVEN LIMITATIONS are recorded. L1: a single-cell mesh, the one case where
+blocked and interleaved numbering coincide, is unreachable by construction. L2:
+the cell-to-offset mapping is UNOBSERVABLE for a uniform field, and the first
+milestone to write a non-uniform field will be the first able to pin it. L6: the
+per-mutation pairing table did not survive the client restart that wiped the
+scratchpad, and is recorded as a gap rather than filled from memory -- re-running
+the sweep would modify the frozen surface and void the qualification. The
+contemporaneous sweep result and the pre-fix survival measurements are in the
+evidence; the pairing is not reconstructed.
+
+TWO OF THE AUTHOR'S OWN IMPROVEMENTS WERE DECLINED AFTER THE FREEZE, with the
+reason recorded rather than quietly dropped: asserting the source's stamp against
+the layout's rather than the topology's, and round-tripping every written slot
+through CfdFieldMap::cellOf / componentOf. Both duplicate coverage P19-DOF-001
+already qualified on those same functions, and applying either would have voided
+a five-hour qualification for no new claim. They are the first candidates for
+whichever milestone next touches this file.
+
+QUALIFIED ON THE THIRD ATTEMPT, and both earlier attempts stay recorded rather
+than erased. ATTEMPT 1 WAS REFUSED BY THE PREFLIGHT AND THE HARNESS WAS RIGHT:
+the harness had been copied by listing the previous milestone's directory through
+a grep -iE 'cmd|txt|out|err' filter, which silently dropped preflight-space.ps1,
+so the report that "all five harness files are byte-identical" was true and
+incomplete. Nothing was built, nothing was tested and no number was produced, so
+there was nothing to discard. Both preflight hashes were then checked against the
+ones run-qualification.cmd records for itself. ATTEMPT 2 WAS KILLED BY A SESSION
+TEARDOWN at test 5589 of 6240 in the second preset: 0x40010004 is
+DBG_TERMINATE_PROCESS, which means killed and not failed, and 0xC000026B is
+STATUS_DLL_INIT_FAILED_LOGOFF, which a process gets when it starts while the
+window station is shutting down. The cause is in the exit codes, not in the code
+under test, and no test failed and no stage reported a defect. It is VOID, and
+two things from it are worth keeping, clearly labelled as from a voided run: its
+debug-ext passed 6240 OF 6240, independently confirming the predicted count
+before the reported attempt ran, and its repeat stages, running against a build
+tree that no longer existed, SELECTED 0 TESTS AND WERE COUNTED AS FAILED -- the
+P19-DOF-001 attempt-1 lesson holding under a condition nobody arranged, where
+ctest's "No tests were found!!!" would otherwise have passed as success. Attempt
+3 was launched DETACHED so a client restart could not take it down again.
+
+A FOURTH INSTANCE of this project's counting-trap family occurred while writing
+the evidence, and is recorded there: a check of whether the 20 compile-fail gates
+ran used [A-Za-z0-9_]+, which stops at a hyphen, and the compile-fail test names
+are hyphenated -- so it reported 0 of 20 on a run where all 20 had passed. The
+figure was wrong; the run was not. Alongside ctest -R matching nothing and
+exiting 0, the hyphen-stopping regex that counted 4 of 16, the inherits[0] walk
+that read -Werror as off, and this milestone's own shutil.copy2 mtime artefact
+that made a stale binary report a defect that was not there.
+```
+
+Evidence: docs/verification/P19-IC-001/README.md, with FREEZE.txt written
+before the run and the qualification logs beside it. ADR-068 records the
+decision and what it rejected.
+
 
 ---
 # P19-DIFF-001
@@ -4237,8 +4480,8 @@ P19-GEOM-001 PASSED 2026-10-31, authorized the same day by the owner's "start"
 with the twenty-one item checklist quoted: 6058/6058 x 3 presets, 2964 x 5 in
 two, 17 of 17 stages exit 0, and all twenty-one items recorded. P19-DOF-001
 was authorized on 2026-11-04 and PASSED 2026-11-05, and
-P19-BC-001 was authorized and PASSED on 2026-11-05; nothing after it is
-authorized. P19-MESH-001's owner finding F1 stands unchanged above, and
+P19-BC-001 was authorized and PASSED on 2026-11-05, and P19-IC-001 was
+authorized on 2026-11-05 and is in progress; nothing after it is authorized. P19-MESH-001's owner finding F1 stands unchanged above, and
 this milestone neither resolves it nor adds to it: it measured the same eight
 meshes -- non-orthogonality and skewness among them -- and set no threshold,
 because its summary measures and judges nothing. P18's F1-F3 and P17's F1-F3
@@ -4374,7 +4617,13 @@ P19-BC-001       PASS 2026-11-05. Authorized the same day by the owner
                  this file before the implementation, and the evidence says so.
                  ADR-067. Evidence recorded.
 
-P19-IC-001       NOT AUTHORIZED. Next in the sequence, which is not
+P19-IC-001       AUTHORIZED 2026-11-05 by the owner's "implement and fully
+                 verify", with the twelve item checklist quoted in full. IN
+                 PROGRESS; no item is ticked and no verdict is recorded. This
+                 authorization was written here BEFORE any implementation,
+                 which P19-BC-001's was not.
+
+P19-DIFF-001     NOT AUTHORIZED. Next in the sequence, which is not
                  permission. Authorizing it is the owner's decision alone, and
                  everything after it likewise.
 ```

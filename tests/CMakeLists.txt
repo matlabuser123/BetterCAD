@@ -360,6 +360,7 @@ if(TARGET bettercad_reference_models)
         cfd/CfdBoundaryMappedTests.cpp
         cfd/CfdFieldTests.cpp
         cfd/CfdGeometryTests.cpp
+        cfd/CfdInitialFieldTests.cpp
         cfd/CfdMeshTests.cpp
         cfd/CfdTopologyTests.cpp
         qualification/P15MaterialsQualificationTests.cpp

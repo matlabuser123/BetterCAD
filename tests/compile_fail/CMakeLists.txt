@@ -1045,6 +1045,50 @@ endforeach()
 bettercad_compile_fail_case(cfdbc "${_cfdbc}" FABRICATE_A_PREPARED_BOUNDARY
     "is private within this context|private" BetterCAD::cfd)
 
+# CFD initial field (P19-IC-001, ADR-068). A NARROWER CLAIM than the boundary
+# group's: there is no naming and no attribution in a uniform field, so what has
+# to be impossible is that the cfd module owns field storage, that a prepared
+# field can be conjured, and that a length can stand in for a variable.
+set(_cfdic "${CMAKE_CURRENT_SOURCE_DIR}/CfdInitialFieldMisuse.cpp")
+bettercad_compile_fail_group(cfdic "${_cfdic}" BetterCAD::cfd)
+foreach(_case
+        A_RECORD_HOLDS_A_CELL_ARRAY
+        A_RECORD_HOLDS_A_CELL_COUNT
+        A_RECORD_HOLDS_A_MESH_STAMP
+        A_DEFINITION_HOLDS_A_PREPARED_FIELD
+        A_DEFINITION_HOLDS_AN_EXPANDED_ARRAY
+        A_PREPARED_FIELD_HOLDS_AN_ARRAY
+        A_PREPARED_FIELD_HOLDS_A_PRESSURE_SPAN)
+    bettercad_compile_fail_case(cfdic "${_cfdic}" ${_case} "no member named|has no member"
+        BetterCAD::cfd)
+endforeach()
+foreach(_case
+        A_PREPARED_FIELD_SUBSCRIPTS_A_CELL
+        A_VARIABLE_IS_AN_INTEGER
+        A_LENGTH_IS_A_VARIABLE
+        A_MESH_HANDLE_SIZES_A_FIELD
+        A_LOCATION_IS_A_VARIABLE
+        A_PRESSURE_IS_A_VELOCITY
+        A_STALE_REASON_IS_A_PROBLEM
+        A_CELL_INDEX_IS_A_CELL_VECTOR_INDEX
+        A_CONST_ARRAY_IS_EXPANDABLE)
+    bettercad_compile_fail_case(cfdic "${_cfdic}" ${_case}
+        "could not convert|cannot convert|no matching function|no match for|invalid conversion|conversion from"
+        BetterCAD::cfd)
+endforeach()
+foreach(_case
+        THE_SOURCE_IS_WRITABLE
+        THE_RECORD_IS_WRITABLE)
+    bettercad_compile_fail_case(cfdic "${_cfdic}" ${_case}
+        "read-only|assignment of member|discards qualifiers|no match for" BetterCAD::cfd)
+endforeach()
+foreach(_case
+        DEFAULT_CONSTRUCT_A_PREPARED_FIELD
+        ASSEMBLE_A_PREPARED_FIELD_FROM_PARTS)
+    bettercad_compile_fail_case(cfdic "${_cfdic}" ${_case}
+        "is private within this context|private|no matching function|use of deleted" BetterCAD::cfd)
+endforeach()
+
 # Temperature DOF index space (P18-DOF-001). The thermal sibling of structdof:
 # a node ordinal is not a node handle, a row of the reduced system is not an
 # unknown of the full one, neither is an integer, a prescribed temperature is a
