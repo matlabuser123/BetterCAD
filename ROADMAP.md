@@ -998,7 +998,8 @@ velocity component and the pressure, so it would have passed unchanged checking
 only `x` — and the structural guarantees that keep them true. Qualified at
 6240/6240 in each of three presets, 3075 x 5 in two, 0 warnings under `-Werror`,
 17 of 17 stages exit 0, and 6,589 assertions in 36 cases identically in Debug and
-Release, with the eight qualified subtrees identical across four readings; see
+Release, with the eight qualified subtrees identical across six readings, the
+committed tree (`c7ce82a`) among them; see
 [P19-IC-001](docs/verification/P19-IC-001/README.md). Nineteen review findings
 were acted on across three passes — the author's own, written down before either
 independent review reported, and two independent agents given the code but not

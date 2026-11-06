@@ -572,12 +572,12 @@ architecture             205/205, architecture.layering among them
 qualified candidate      cf6e37cc7cbbc59730a24878f795e124f4ed18bb == HEAD
 ```
 
-**The qualified tree is the committed tree.** The eight frozen identities were
-compared three ways — the freeze record, the harness's reading before the first
-build, and its reading after the last test run — and all three are identical;
-they were then re-read from the live working tree with qualify.cmd's own method
-(scratch `GIT_INDEX_FILE`, `read-tree HEAD`, `add -A`, `write-tree --prefix`)
-and are identical again:
+**The qualified tree is the committed tree**, across SIX readings: the freeze
+record, the harness's reading before the first build, its reading after the last
+test run, a re-read from the live working tree with qualify.cmd's own method
+(scratch `GIT_INDEX_FILE`, `read-tree HEAD`, `add -A`, `write-tree --prefix`),
+the staged tree before the commit, and the commit object of `c7ce82a` itself.
+All six are identical:
 
 ```text
 apps               fc398a3d2e524178cf38e8b667236379d8381086   unchanged

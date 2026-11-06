@@ -35,9 +35,11 @@ Previous milestone:
            17 of 17 stages exit 0, 6240/6240 in each of the three presets,
            3075 x 5 in two with 15375 counted Passed markers each, 0 warnings
            under -Werror, 5h17m46s, and the eight qualified subtrees identical
-           across FOUR readings — at the freeze, by the harness before the
-           first build, by the harness after the last test run, and recomputed
-           from the working tree afterwards by the harness's own method.
+           across SIX readings — at the freeze, by the harness before the
+           first build, by the harness after the last test run, recomputed
+           from the working tree afterwards by the harness's own method, out
+           of the staged tree before the commit, and back out of the commit
+           object of c7ce82a — so the qualified tree is the committed tree.
            36 unit cases / 6,589 assertions and 20 compile-fail cases, and the
            assertion count is IDENTICAL in Debug and Release, so no assertion
            here is configuration-dependent. The cfd subsystem reads 516126
@@ -2929,10 +2931,12 @@ Qualified against cf6e37cc plus this milestone's nine candidate files, five new
 and four registration points amended:
 6240/6240 x 3 presets, 3075 x 5 in two repeat stages with 15375 counted Passed
 markers each, 0 warnings and 0 errors under -Werror, 17 of 17 stages exit 0,
-5h17m46s, and the eight qualified subtrees identical across FOUR readings -- at
+5h17m46s, and the eight qualified subtrees identical across SIX readings -- at
 the freeze, by the harness before the first build, by the harness after the last
-test run, and recomputed from the working tree afterwards by the harness's own
-method (scratch GIT_INDEX_FILE, read-tree HEAD, add -A, write-tree --prefix).
+test run, recomputed from the working tree afterwards by the harness's own
+method (scratch GIT_INDEX_FILE, read-tree HEAD, add -A, write-tree --prefix),
+out of the staged tree before the commit, and back out of the commit object of
+c7ce82a. The qualified tree is the committed tree.
 36 unit cases / 6,589 assertions and 20 compile-fail cases. Exactly three of the
 eight subtrees moved -- include, src and tests -- and they are exactly the three
 this milestone edited. The harness is byte-identical to P19-BC-001's, its 58th
